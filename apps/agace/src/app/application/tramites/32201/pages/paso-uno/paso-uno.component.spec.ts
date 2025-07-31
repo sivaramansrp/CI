@@ -93,13 +93,13 @@ describe('PasoUnoComponent', () => {
     it('should create component successfully', () => {
       createComponent();
       fixture.detectChanges();
-
+      
       expect(component).toBeTruthy();
     });
 
     it('should initialize properties with default values', () => {
       createComponent();
-
+      
       expect(component.indice).toBe(1);
       expect(component.esDatosRespuesta).toBe(false);
       expect(component.persona).toEqual([]);
@@ -108,13 +108,13 @@ describe('PasoUnoComponent', () => {
 
     it('should initialize tipoPersona as undefined', () => {
       createComponent();
-
+      
       expect(component.tipoPersona).toBeUndefined();
     });
 
     it('should have destroyNotifier$ as Subject instance', () => {
       createComponent();
-
+      
       expect(component.destroyNotifier$).toBeDefined();
       expect(typeof component.destroyNotifier$.next).toBe('function');
       expect(typeof component.destroyNotifier$.complete).toBe('function');
@@ -122,7 +122,7 @@ describe('PasoUnoComponent', () => {
 
     it('should have consultaState as undefined initially', () => {
       createComponent();
-
+      
       expect(component.consultaState).toBeUndefined();
     });
   });
@@ -130,13 +130,13 @@ describe('PasoUnoComponent', () => {
   describe('Constructor and Dependency Injection', () => {
     it('should inject ConsultaioQuery correctly', () => {
       createComponent();
-
+      
       expect(component['consultaioQuery']).toBeDefined();
     });
 
     it('should inject SolicitudService correctly', () => {
       createComponent();
-
+      
       expect(component.solicitudService).toBeDefined();
     });
   });
@@ -260,7 +260,7 @@ describe('PasoUnoComponent', () => {
 
     it('should handle null response without calling actualizarEstadoFormulario', fakeAsync(() => {
       mockSolicitudService.getDatosConsulta.mockReturnValue(of(null));
-
+      
       component.esDatosRespuesta = false;
 
       component.fetchGetDatosConsulta();
@@ -273,7 +273,7 @@ describe('PasoUnoComponent', () => {
 
     it('should handle undefined response without calling actualizarEstadoFormulario', fakeAsync(() => {
       mockSolicitudService.getDatosConsulta.mockReturnValue(of(undefined));
-
+      
       component.esDatosRespuesta = false;
 
       component.fetchGetDatosConsulta();
@@ -286,7 +286,7 @@ describe('PasoUnoComponent', () => {
 
     it('should handle false response without calling actualizarEstadoFormulario', fakeAsync(() => {
       mockSolicitudService.getDatosConsulta.mockReturnValue(of(false));
-
+      
       component.esDatosRespuesta = false;
 
       component.fetchGetDatosConsulta();
@@ -299,7 +299,7 @@ describe('PasoUnoComponent', () => {
 
     it('should handle empty string response without calling actualizarEstadoFormulario', fakeAsync(() => {
       mockSolicitudService.getDatosConsulta.mockReturnValue(of(''));
-
+      
       component.esDatosRespuesta = false;
 
       component.fetchGetDatosConsulta();
@@ -312,7 +312,7 @@ describe('PasoUnoComponent', () => {
 
     it('should handle zero response without calling actualizarEstadoFormulario', fakeAsync(() => {
       mockSolicitudService.getDatosConsulta.mockReturnValue(of(0));
-
+      
       component.esDatosRespuesta = false;
 
       component.fetchGetDatosConsulta();
@@ -325,7 +325,7 @@ describe('PasoUnoComponent', () => {
 
     it('should handle NaN response without calling actualizarEstadoFormulario', fakeAsync(() => {
       mockSolicitudService.getDatosConsulta.mockReturnValue(of(NaN));
-
+      
       component.esDatosRespuesta = false;
 
       component.fetchGetDatosConsulta();
@@ -353,7 +353,7 @@ describe('PasoUnoComponent', () => {
       } catch (error) {
         errorOccurred = true;
       }
-
+      
       expect(mockSolicitudService.getDatosConsulta).toHaveBeenCalled();
       expect(mockSolicitudService.actualizarEstadoFormulario).not.toHaveBeenCalled();
       expect(errorOccurred).toBe(true);
@@ -370,7 +370,7 @@ describe('PasoUnoComponent', () => {
       } catch (err) {
         errorOccurred = true;
       }
-
+      
       expect(mockSolicitudService.getDatosConsulta).toHaveBeenCalled();
       expect(errorOccurred).toBe(true);
     }));
@@ -386,7 +386,7 @@ describe('PasoUnoComponent', () => {
       } catch (err) {
         errorOccurred = true;
       }
-
+      
       expect(mockSolicitudService.getDatosConsulta).toHaveBeenCalled();
       expect(errorOccurred).toBe(true);
     }));
@@ -402,7 +402,7 @@ describe('PasoUnoComponent', () => {
       } catch (err) {
         errorOccurred = true;
       }
-
+      
       expect(mockSolicitudService.getDatosConsulta).toHaveBeenCalled();
       expect(errorOccurred).toBe(true);
     }));
@@ -414,7 +414,7 @@ describe('PasoUnoComponent', () => {
         component.fetchGetDatosConsulta();
         tick();
       }).not.toThrow();
-
+      
       expect(mockSolicitudService.getDatosConsulta).toHaveBeenCalled();
     }));
 
@@ -514,7 +514,7 @@ describe('PasoUnoComponent', () => {
       component.seleccionaTab(2);
       component.seleccionaTab(3);
       component.seleccionaTab(4);
-
+      
       expect(component.indice).toBe(4);
     });
 
@@ -585,17 +585,17 @@ describe('PasoUnoComponent', () => {
 
     it('should properly signal all subscriptions to unsubscribe', () => {
       const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
-
+      
       component.ngOnDestroy();
-
+      
       expect(nextSpy).toHaveBeenCalledWith();
     });
 
     it('should complete the Subject properly for garbage collection', () => {
       const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
-
+      
       component.ngOnDestroy();
-
+      
       expect(completeSpy).toHaveBeenCalled();
     });
   });
@@ -644,13 +644,13 @@ describe('PasoUnoComponent', () => {
 
     it('should handle property reassignment after ngAfterViewInit', () => {
       component.ngAfterViewInit();
-
+      
       const originalPersona = component.persona;
       const originalDomicilio = component.domicilioFiscal;
-
+      
       component.persona = [{ test: 'value' } as any];
       component.domicilioFiscal = [{ test: 'value2' } as any];
-
+      
       expect(component.persona).not.toBe(originalPersona);
       expect(component.domicilioFiscal).not.toBe(originalDomicilio);
     });
@@ -668,7 +668,7 @@ describe('PasoUnoComponent', () => {
 
     it('should handle solicitante ViewChild after ngAfterViewInit', () => {
       component.ngAfterViewInit();
-
+      
       expect('solicitante' in component).toBe(true);
     });
   });
@@ -676,7 +676,7 @@ describe('PasoUnoComponent', () => {
   describe('Error Boundaries and Edge Cases', () => {
     it('should handle component creation with minimal configuration', () => {
       createComponent();
-
+      
       expect(() => {
         fixture.detectChanges();
       }).not.toThrow();
@@ -684,7 +684,7 @@ describe('PasoUnoComponent', () => {
 
     it('should handle service injection gracefully', () => {
       createComponent();
-
+      
       expect(component.solicitudService).toBeDefined();
       expect(component['consultaioQuery']).toBeDefined();
     });
@@ -693,16 +693,16 @@ describe('PasoUnoComponent', () => {
       const testState = createMockConsultaioState();
       mockConsultaioQuery.selectConsultaioState$ = of(testState);
       createComponent();
-
+      
       mockSolicitudService.getDatosConsulta.mockReturnValue(of(createMockSolicitud32201State()));
-
+      
       component.ngOnInit();
       component.fetchGetDatosConsulta();
       component.seleccionaTab(5);
       component.ngAfterViewInit();
-
+      
       tick();
-
+      
       expect(component.indice).toBe(5);
       expect(() => component.ngOnDestroy()).not.toThrow();
     }));
@@ -711,90 +711,90 @@ describe('PasoUnoComponent', () => {
       const testState = createMockConsultaioState();
       mockConsultaioQuery.selectConsultaioState$ = of(testState);
       createComponent();
-
+      
       component.ngOnInit();
       tick();
-
+      
       component.ngOnInit();
       tick();
-
+      
       expect(() => {
         component.ngOnDestroy();
       }).not.toThrow();
     }));
   });
 
-  describe('Code Coverage Completeness Verification', () => {
-    it('should verify all public methods are testable', () => {
-      createComponent();
+ describe('Code Coverage Completeness Verification', () => {
+  it('should verify all public methods are testable', () => {
+    createComponent();
 
-      expect(typeof component.ngOnInit).toBe('function');
-      expect(typeof component.ngAfterViewInit).toBe('function');
-      expect(typeof component.ngOnDestroy).toBe('function');
-      expect(typeof component.fetchGetDatosConsulta).toBe('function');
-      expect(typeof component.seleccionaTab).toBe('function');
+    expect(typeof component.ngOnInit).toBe('function');
+    expect(typeof component.ngAfterViewInit).toBe('function');
+    expect(typeof component.ngOnDestroy).toBe('function');
+    expect(typeof component.fetchGetDatosConsulta).toBe('function');
+    expect(typeof component.seleccionaTab).toBe('function');
+  });
+
+  it('should cover all conditional branches in ngOnInit', fakeAsync(() => {
+    jest.spyOn(component, 'fetchGetDatosConsulta').mockImplementation(() => {});
+    (component as any).consultaState = { update: true };
+    component.ngOnInit();
+    tick();
+
+    jest.restoreAllMocks();
+    (component as any).consultaState = { update: false };
+    component.ngOnInit();
+    tick();
+
+    expect(component.esDatosRespuesta).toBe(true);
+  }));
+
+  it('should cover all conditional branches in fetchGetDatosConsulta', fakeAsync(() => {
+    createComponent();
+
+    mockSolicitudService.getDatosConsulta.mockReturnValueOnce(of({ regimen_0: true }));
+    component.fetchGetDatosConsulta();
+    tick();
+
+    expect(component.esDatosRespuesta).toBe(true);
+    expect(mockSolicitudService.actualizarEstadoFormulario).toHaveBeenCalled();
+
+    component.esDatosRespuesta = false;
+    mockSolicitudService.getDatosConsulta.mockReturnValueOnce(of(null));
+    component.fetchGetDatosConsulta();
+    tick();
+
+    expect(component.esDatosRespuesta).toBe(false);
+  }));
+
+  it('should achieve 100% statement coverage', fakeAsync(() => {
+    const mockResponse = createMockSolicitud32201State({
+      regimen_0: true,
+      regimen_1: false,
+      regimen_2: true,
+      regimen_3: false,
+      manifiesto: true
     });
 
-    it('should cover all conditional branches in ngOnInit', fakeAsync(() => {
-      jest.spyOn(component, 'fetchGetDatosConsulta').mockImplementation(() => { });
-      (component as any).consultaState = { update: true };
-      component.ngOnInit();
-      tick();
+    mockSolicitudService.getDatosConsulta.mockReturnValue(of(mockResponse));
+    createComponent();
 
-      jest.restoreAllMocks();
-      (component as any).consultaState = { update: false };
-      component.ngOnInit();
-      tick();
+    component.ngOnInit();
+    component.ngAfterViewInit();
+    component.ngOnDestroy();
 
-      expect(component.esDatosRespuesta).toBe(true);
-    }));
+    component.fetchGetDatosConsulta();
+    tick();
+    
+    component.seleccionaTab(1);
+    component.seleccionaTab(0);
+    component.seleccionaTab(-1);
 
-    it('should cover all conditional branches in fetchGetDatosConsulta', fakeAsync(() => {
-      createComponent();
-
-      mockSolicitudService.getDatosConsulta.mockReturnValueOnce(of({ regimen_0: true }));
-      component.fetchGetDatosConsulta();
-      tick();
-
-      expect(component.esDatosRespuesta).toBe(true);
-      expect(mockSolicitudService.actualizarEstadoFormulario).toHaveBeenCalled();
-
-      component.esDatosRespuesta = false;
-      mockSolicitudService.getDatosConsulta.mockReturnValueOnce(of(null));
-      component.fetchGetDatosConsulta();
-      tick();
-
-      expect(component.esDatosRespuesta).toBe(false);
-    }));
-
-    it('should achieve 100% statement coverage', fakeAsync(() => {
-      const mockResponse = createMockSolicitud32201State({
-        regimen_0: true,
-        regimen_1: false,
-        regimen_2: true,
-        regimen_3: false,
-        manifiesto: true
-      });
-
-      mockSolicitudService.getDatosConsulta.mockReturnValue(of(mockResponse));
-      createComponent();
-
-      component.ngOnInit();
-      component.ngAfterViewInit();
-      component.ngOnDestroy();
-
-      component.fetchGetDatosConsulta();
-      tick();
-
-      component.seleccionaTab(1);
-      component.seleccionaTab(0);
-      component.seleccionaTab(-1);
-
-      expect(component.indice).toBeDefined();
-      expect(component.esDatosRespuesta).toBeDefined();
-      expect(component.persona).toBeDefined();
-      expect(component.domicilioFiscal).toBeDefined();
-    }));
-  });
+    expect(component.indice).toBeDefined();
+    expect(component.esDatosRespuesta).toBeDefined();
+    expect(component.persona).toBeDefined();
+    expect(component.domicilioFiscal).toBeDefined();
+  }));
+});
 
 });

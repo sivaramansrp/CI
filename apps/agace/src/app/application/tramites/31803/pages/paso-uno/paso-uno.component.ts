@@ -13,18 +13,11 @@ import {
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
   PERSONA_MORAL_NACIONAL,
 } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import {
-  RegistroSolicitudService,
-  SolicitudDatosResponse,
-} from '../../services/registro-solicitud-service.service';
-import {
-  SharedModule,
-  SolicitanteComponent,
-} from '@libs/shared/data-access-user/src';
-import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
+import { SharedModule, SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Solicitud31803State } from '../../state/Tramite31803.store';
 import { SolicitudComponent } from '../../components/Solicitud.component';
+import { RegistroSolicitudService } from '../../services/registro-solicitud-service.service';
 
 /**
  * Componente que representa el primer paso del trámite.

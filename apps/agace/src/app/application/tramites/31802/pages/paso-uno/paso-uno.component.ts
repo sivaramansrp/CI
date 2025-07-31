@@ -20,7 +20,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   private destroyNotifier$: Subject<void> = new Subject(); // Subject para manejar la destrucción de suscripciones
   public consultaState!: ConsultaioState; // Estado de la consulta
-  
+
   /**
    * Tipo de persona seleccionada.
    */
@@ -54,29 +54,31 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
  * Contiene los valores actuales del trámite, como renovación, homologación, y otros datos relevantes.
  */
   public solicitudState!: Solicitud31802State;
-  
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
   esFormularioSoloLectura: boolean = false;
   /**
     * Subject para destruir notificador.
     */
   consultaDatos!: ConsultaioState;
-/**
- * Constructor del componente PasoUnoComponent.
- * 
- * @param fb - Servicio FormBuilder utilizado para construir formularios reactivos.
- * @param store - Almacén de estado para gestionar y almacenar datos relacionados con el trámite 31802.
- * @param query - Consulta para obtener datos del estado global del trámite 31802.
- * @param validacionesService - Servicio para realizar validaciones personalizadas en los formularios.
- */
+  /**
+   * Constructor del componente PasoUnoComponent.
+   * 
+   * @param fb - Servicio FormBuilder utilizado para construir formularios reactivos.
+   * @param store - Almacén de estado para gestionar y almacenar datos relacionados con el trámite 31802.
+   * @param query - Consulta para obtener datos del estado global del trámite 31802.
+   * @param validacionesService - Servicio para realizar validaciones personalizadas en los formularios.
+   */
   constructor(
     private consultaQuery: ConsultaioQuery, // Servicio para consultar el estado
     public fb: FormBuilder,
     private store: Tramite31802Store,
-    private query: Tramite31802Query,
     private validacionesService: ValidacionesFormularioService,
-    private solicitud31802Service:RegistroSolicitudService, // Servicio para manejar el estado de la solicitud 31802
+    private solicitud31802Service: RegistroSolicitudService, // Servicio para manejar el estado de la solicitud 31802
   ) {
-     this.consultaQuery.selectConsultaioState$
+    this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -87,7 +89,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
- 
+
   /**
     * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
     * Configura el formulario, obtiene datos iniciales y suscribe al estado global.
@@ -101,7 +103,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-      this.donanteDomicilio();
+    this.donanteDomicilio();
 
     // Inicializa el formulario con los valores actuales del estado
     if (this.consultaState?.update) {
@@ -110,9 +112,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       this.esDatosRespuesta = true;
     }
   }
-
-
-   inicializarEstadoFormulario(): void {
+  inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosDelFormulario();
     } else {
@@ -128,7 +128,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
  * La suscripción se cancela automáticamente al destruir el componente para evitar fugas de memoria.
  */
 
-    guardarDatosFormulario(): void {
+  guardarDatosFormulario(): void {
     // Método para guardar los datos del formulario
     this.solicitud31802Service
       .getDatosDeAvisoRenovacionDoc().pipe(
@@ -142,10 +142,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       });
   }
 
-   /**
- * Establece el valor de renovación en el estado global.
- * @param evento Evento del tipo `Event` que contiene el valor del checkbox.
- */
+  /**
+* Establece el valor de renovación en el estado global.
+* @param evento Evento del tipo `Event` que contiene el valor del checkbox.
+*/
   establecerRenovacion(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).checked;
     this.store.setRenovacion(VALOR);
@@ -165,8 +165,11 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
-
-   guardarDatosDelFormulario(): void {
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Cancela todas las suscripciones activas.
+   */
+  guardarDatosDelFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.registroForm.disable();
     } else {
@@ -218,10 +221,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       homologacion: [{ value: this.solicitudState?.homologacion, disabled: this.esFormularioSoloLectura }, [Validators.required]],
     });
   }
-    /**
-   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
-   * Cancela todas las suscripciones activas.
-   */
+  /**
+ * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+ * Cancela todas las suscripciones activas.
+ */
   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();

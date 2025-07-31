@@ -6,7 +6,11 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class SolicitudService {
- 
+  /**
+   * @constructor
+   * @param http HttpClient para realizar solicitudes HTTP.
+   * @param tramite32201Store Store para manejar el estado del trámite 32201.
+   */
   constructor(private http: HttpClient, private tramite32201Store: Tramite32201Store) { }
 
   /**

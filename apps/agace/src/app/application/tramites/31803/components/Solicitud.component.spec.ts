@@ -71,21 +71,7 @@ describe('SolicitudComponent', () => {
     jest.spyOn(component, 'donanteDomicilio').mockImplementation(() => { });
     jest.spyOn(component, 'inicializarEstadoFormulario').mockImplementation(() => { });
 
-    component.registroForm = component.fb.group({
-      numeroOficio: [''],
-      claveReferencia: [''],
-      cadenaDependencia: [''],
-      importePago: [''],
-      fechaInicial: [''],
-      fechaFinal: [''],
-      banco: [''],
-      llave: [''],
-      manifiesto1: [''],
-      manifiesto2: [''],
-      numeroOperacion: [''],
-      fechaPago: ['']
-    });
-    
+    component.registroForm = new FormBuilder().group({});
     fixture.detectChanges();
   });
 
@@ -100,13 +86,24 @@ describe('SolicitudComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should call obtenerDatosBanco and update bancoCatalogo', fakeAsync(() => {
+    mockRegistroSolicitudService.obtenerDatosBanco.mockClear();
+    fixture = TestBed.createComponent(SolicitudComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+    tick();
+    expect(component.bancoCatalogo.catalogos.length).toBe(0);
+  }));
+
   it('should initialize the form in ngOnInit', fakeAsync(() => {
     component.ngOnInit();
     tick();
     expect(component.registroForm).toBeDefined();
+    expect(component.registroForm.get('banco')?.value).toBe('Banco Test');
   }));
 
   it('should call guardarDatosDelFormulario when esFormularioSoloLectura is true', () => {
+    // Restore the original method for this test
     component.inicializarEstadoFormulario = SolicitudComponent.prototype.inicializarEstadoFormulario;
 
     component.esFormularioSoloLectura = true;
@@ -116,9 +113,11 @@ describe('SolicitudComponent', () => {
     component.inicializarEstadoFormulario();
 
     expect(guardarSpy).toHaveBeenCalled();
+    expect(donanteSpy).not.toHaveBeenCalled();
   });
 
   it('should call donanteDomicilio when esFormularioSoloLectura is false', () => {
+    // Restore the original method for this test
     component.inicializarEstadoFormulario = SolicitudComponent.prototype.inicializarEstadoFormulario;
 
     component.esFormularioSoloLectura = false;
@@ -214,14 +213,17 @@ describe('SolicitudComponent', () => {
   });
 
   it('should set readonly mode and disable form fields', fakeAsync(() => {
+    // Restore the original donanteDomicilio method for this test but mock inicializarEstadoFormulario
     component.donanteDomicilio = SolicitudComponent.prototype.donanteDomicilio;
     jest.spyOn(component, 'inicializarEstadoFormulario').mockImplementation(() => { });
 
+    // Initialize the form by calling donanteDomicilio
     component.donanteDomicilio();
 
     component.ngOnInit();
     tick();
 
+    expect(component.esFormularioSoloLectura).toBe(true); // Based on mockConsultaQuery readonly: true
     expect(component.registroForm).toBeDefined();
   }));
 
@@ -257,28 +259,14 @@ describe('SolicitudComponent', () => {
   });
 
   it('should destroy observables on ngOnDestroy', () => {
-    component.registroForm = component.fb.group({
-      numeroOficio: [''],
-      claveReferencia: [''],
-      cadenaDependencia: [''],
-      importePago: [''],
-      fechaInicial: [''],
-      fechaFinal: [''],
-      banco: [''],
-      llave: [''],
-      manifiesto1: [''],
-      manifiesto2: [''],
-      numeroOperacion: [''],
-      fechaPago: ['']
-    });
-    
-    const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
-    const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
-    
-    component.ngOnDestroy();
+  component.registroForm = new FormBuilder().group({});
+  fixture.detectChanges();
+  const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
+  const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
+  component.ngOnDestroy();
 
-    expect(nextSpy).toHaveBeenCalledWith(true);
-    expect(completeSpy).toHaveBeenCalled();
-  });
+  expect(nextSpy).toHaveBeenCalledWith(true);
+  expect(completeSpy).toHaveBeenCalled();
+});
 
 });

@@ -65,20 +65,27 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * @property {ConsultaioState} consultaState
    * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
    */
-  public consultaState!: ConsultaioState; 
+  public consultaState!: ConsultaioState;
 
   /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   esDatosRespuesta: boolean = false;
-
+  /**
+   * Constructor del componente PasoUnoComponent.
+   * @param consultaioQuery Inyecta el servicio ConsultaioQuery para acceder al estado de la consulta.
+   * @param solicitudService Inyecta el servicio SolicitudService para manejar la lógica de la solicitud.
+   */
   constructor(private consultaioQuery: ConsultaioQuery,
     public solicitudService: SolicitudService
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
-
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente se ha inicializado.
+   * Aquí se inicializan los datos del formulario dinámico.
+   */
   ngOnInit(): void {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -110,7 +117,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((respuesta) => {
         if (respuesta) {
-           this.esDatosRespuesta = true;
+          this.esDatosRespuesta = true;
           this.solicitudService.actualizarEstadoFormulario(respuesta);
         }
       });

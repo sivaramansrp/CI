@@ -169,6 +169,7 @@ describe('RegistroSolicitudService', () => {
 
       service.actualizarEstadoFormulario(datos);
 
+      // Verify all methods were called exactly once
       expect(tramite31803StoreSpy.setNumeroOficio).toHaveBeenCalledTimes(1);
       expect(tramite31803StoreSpy.setClaveReferencia).toHaveBeenCalledTimes(1);
       expect(tramite31803StoreSpy.setCadenaDependencia).toHaveBeenCalledTimes(1);
