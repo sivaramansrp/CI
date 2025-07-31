@@ -9,7 +9,7 @@ import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
-import { DatosDomicilioService } from '../../../tramites/260512/services/datos-domicilio.service'
+import { DatosDomicilioService } from '../../../tramites/260514/services/permiso-importacion.service';
 import { InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
 
@@ -239,6 +239,11 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
    * Lista de rangos de días seleccionarOrigenDelPaisCuatro.
    */
   seleccionarOrigenDelPaisCuatro: string[] = this.crosListaDePaises;
+  /**
+   * Indica si se ha hecho clic en el botón "Seleccionado".
+   * Se utiliza para rastrear el estado de selección del botón dentro del componente.
+   */
+  tieneSeleccionadoBtnClicked: boolean = false;
 
   /**
    * Etiqueta de la lista de fechas.
@@ -300,6 +305,20 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     this.obtenerMercanciasDatos();
     this.configurarGrupoForm(); // Configura el grupo de formularios con los valores iniciales.
 
+    this.datosDomicilioService.event$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((valor) => {
+          this.tieneSeleccionadoBtnClicked = (valor as boolean);
+          if(this.tieneSeleccionadoBtnClicked) {
+            this.domicilio.enable();
+            this.formAgente.enable();
+            this.formMercancias.enable();
+          }
+        })
+      )
+      .subscribe()
+
   }
 
   /**
@@ -328,15 +347,12 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     this.domicilio = this.fb.group({
       codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required, Validators.maxLength(12)]],
       estado: [this.solicitudState?.estado, Validators.required],
-      muncipio: [this.solicitudState?.muncipio, Validators.required , Validators.maxLength(120)],
+      muncipio: [this.solicitudState?.muncipio, [Validators.required , Validators.maxLength(120)]],
       localidad: [this.solicitudState?.localidad],
       colonia: [this.solicitudState?.colonia],
       calle: [this.solicitudState?.calle, [Validators.required, Validators.maxLength(100)]],
       lada: [this.solicitudState?.lada],
-      telefono: [this.solicitudState?.telefono, [Validators.required, Validators.maxLength(30)]],
-      avisoCheckbox: [this.solicitudState?.avisoCheckbox, Validators.required],
-      licenciaSanitaria: [
-        { value: this.solicitudState?.licenciaSanitaria, disabled: false }, [Validators.required]],
+      telefono: [this.solicitudState?.telefono, [Validators.required, Validators.maxLength(30)]]
     });
 
     /** 
@@ -357,9 +373,9 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
       usoEspecifico: [this.solicitudState?.usoEspecifico, Validators.required],
       estadofisico: [this.solicitudState?.estadoFisico, Validators.required],
       fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, Validators.required],
-      descripcionFraccion: [{ value: this.solicitudState?.descripcionFraccion, disabled: true }, Validators.required],
+      descripcionFraccion: [{ value: this.solicitudState?.descripcionFraccion, disabled: true }, [Validators.required]],
       cantidadUMT: [this.solicitudState?.cantidadUMT, Validators.required],
-      UMT: [{ value: this.solicitudState?.UMT, disabled: true }, Validators.required],
+      UMT: [{ value: this.solicitudState?.UMT, disabled: true }, [Validators.required]],
       cantidadUMC: [this.solicitudState?.cantidadUMC, Validators.required],
       UMC: [this.solicitudState?.UMC, Validators.required],
       numerocas: [this.solicitudState?.numeroCas, Validators.required],
@@ -373,7 +389,7 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
      * En caso contrario, habilita los campos para permitir la edición.
      * Esto asegura que el formulario refleje correctamente el estado de solo lectura.
      */
-    if (this.esFormularioSoloLectura && this.domicilio && this.formAgente && this.formMercancias) {
+    if ((this.esFormularioSoloLectura && this.domicilio && this.formAgente && this.formMercancias) || !this.tieneSeleccionadoBtnClicked) {
       this.domicilio.disable();
       this.formAgente.disable();
       this.formMercancias.disable();

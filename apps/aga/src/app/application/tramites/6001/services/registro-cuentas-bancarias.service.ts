@@ -7,6 +7,7 @@ import { ENVIRONMENT } from '@libs/shared/data-access-user/src/enviroments/envir
 import { BehaviorSubject, catchError, Observable, throwError } from 'rxjs';
 import { DatosGenerales, RegistroDeSolicitudesTabla } from '../models/registro-cuentas-bancarias.model';
 import { AgregarCuenta6001State, Tramite6001Store } from '../estados/tramite6001.store';
+import { Tramite6001TablaState, Tramite6001TablaStore } from '../estados/tramite6001tabla.store';
 
 @Injectable({
   providedIn: 'root'
@@ -38,7 +39,8 @@ export class RegistroCuentasBancariasService {
    */
   constructor(
     private http: HttpClient,
-    private tramite6001Store: Tramite6001Store
+    private tramite6001Store: Tramite6001Store,
+    private tramite6001TablaStore: Tramite6001TablaStore
   ) {
     //
    }
@@ -196,13 +198,39 @@ export class RegistroCuentasBancariasService {
    */
   public actualizarEstadoFormulario(DATOS: AgregarCuenta6001State): void {
     this.tramite6001Store.setTitularDeLaCuenta(DATOS.titularDeLaCuenta);
-    this.tramite6001Store.setTipoDePersona(DATOS.tipoDePersona);
+    this.tramite6001Store.setPersona(DATOS.persona);
     this.tramite6001Store.setRfc(DATOS.rfc);
     this.tramite6001Store.setNumeroDeCuenta(DATOS.numeroDeCuenta);
-    this.tramite6001Store.setPaisDondeRadica(DATOS.paisDondeRadica);
+    this.tramite6001Store.setPais(DATOS.pais);
     this.tramite6001Store.setInstitucion(DATOS.institucion);
     this.tramite6001Store.setEstado(DATOS.estado);
     this.tramite6001Store.setSucursal(DATOS.sucursal);
     this.tramite6001Store.setNumeroDePlaza(DATOS.numeroDePlaza);
+  }
+
+  /**
+   * Actualiza el tramite6001TablaStore con los datos proporcionados de la cuenta bancaria.
+   *
+   * @param DATOS - Objeto que contiene el estado de la cuenta bancaria a registrar.
+   *   - titularDeLaCuenta: Nombre del titular de la cuenta.
+   *   - rfc: RFC (identificación fiscal) del titular de la cuenta.
+   *   - persona: Tipo de persona (física o moral).
+   *   - numeroDeCuenta: Número de cuenta bancaria.
+   *   - sucursal: Sucursal bancaria.
+   *   - institucion: Institución de crédito.
+   *   - numeroDePlaza: Número de plaza.
+   *   - pais: País donde se encuentra la cuenta.
+   *   - estado: Estado donde se encuentra la cuenta.
+   */
+  public conjuntoTablaDatos(DATOS: AgregarCuenta6001State): void {
+    this.tramite6001TablaStore.setCuenta(DATOS.titularDeLaCuenta);
+    this.tramite6001TablaStore.setRfc(DATOS.rfc);
+    this.tramite6001TablaStore.setPersona(DATOS.persona);
+    this.tramite6001TablaStore.setNumeroDeCuenta(DATOS.numeroDeCuenta);
+    this.tramite6001TablaStore.setSucursal(DATOS.sucursal);
+    this.tramite6001TablaStore.setInstitucionDeCredito(DATOS.institucion);
+    this.tramite6001TablaStore.setNumero(DATOS.numeroDePlaza);
+    this.tramite6001TablaStore.setRadicaCuenta(DATOS.pais);
+    this.tramite6001TablaStore.setEstado(DATOS.estado);
   }
 }

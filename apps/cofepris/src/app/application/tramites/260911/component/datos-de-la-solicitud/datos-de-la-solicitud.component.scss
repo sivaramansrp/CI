@@ -39,3 +39,46 @@
 .accordion-bar{
   margin-left: -0.5rem;
 }
+
+// Estilos para secciones deshabilitadas - solo afectan controles de formulario, no etiquetas
+.disabled-section {
+  position: relative;
+}
+
+// Mantener las etiquetas completamente visibles y legibles
+.disabled-section label {
+  color: inherit !important;
+  opacity: 1 !important;
+}
+
+// Solo deshabilitar y atenuar los controles de formulario
+.disabled-section .form-control {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #f8f9fa;
+  border-color: #dee2e6;
+}
+
+.disabled-section .btn {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+// Deshabilitar eventos de puntero solo en los controles de formulario
+.disabled-section .form-control,
+.disabled-section .btn {
+  pointer-events: none;
+}
+
+
+.disabled-section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 49%, rgba(0,0,0,0.05) 50%, transparent 51%);
+  pointer-events: none;
+  z-index: 1;
+}

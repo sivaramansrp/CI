@@ -1,14 +1,14 @@
-import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { Catalogo, ConsultaioQuery, RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Catalogo, ConsultaioQuery, RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
-import { PagoDeDerechoComponent } from '../../../../shared/components/pago-de-derecho/pago-de-derecho.component';
+import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
+import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { PagoDeDerecho } from '../../../../shared/models/tercerosrelacionados.model';
+import { PagoDeDerechoComponent } from '../../../../shared/components/pago-de-derecho/pago-de-derecho.component';
 import { PagoDeDerechos } from '../../models/220201/capturar-solicitud.model';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
-import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 /**
  * @fileoverview Componente para la gestión del formulario de pago de derechos.
  * Este componente maneja la lógica y la presentación del formulario de pago de derechos,
@@ -160,9 +160,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   validarFormulario(): boolean {
     if (this.PagoDeDerechoComponent) {
       return this.PagoDeDerechoComponent.validarFormulario();
-    } else {
+    } 
       return false;
-    }
+    
   }
   /**
    * Limpia las suscripciones para evitar fugas de memoria al destruir el componente.

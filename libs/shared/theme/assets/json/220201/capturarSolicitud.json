@@ -80,23 +80,16 @@
   ],
   "datosForma": [
     {
-      "id": 1,
-      "tipoMercancia": "Ganado",
-      "nombre": "Juan",
-      "primerApellido": "Pérez",
-      "segundoApellido": "García",
-      "razonSocial": "Agropecuaria del Norte S.A. de C.V.",
-      "pais": "México",
-      "codigoPostal": "64000",
-      "estado": "Nuevo León",
-      "municipio": "Monterrey",
-      "colonia": "Centro",
-      "calle": "Av. Revolución",
-      "numeroExterior": "123",
-      "numeroInterior": "4B",
-      "lada": "81",
-      "telefono": "12345678",
-      "correo": "juan.perez@agronorte.com"
+      "tipoMercancia": "yes",
+      "nombre": "Ana",
+      "primerApellido": "López",
+      "segundoApellido": "Hernández",
+      "razonSocial": "Exportadora del Sur",
+      "pais": "Colombia",
+      "domicilio": "Carrera 15 #45-60",
+      "lada": "57",
+      "telefono": "3204567890",
+      "correo": "ana.lopez@exportadora.com"
     }
   ]
 }

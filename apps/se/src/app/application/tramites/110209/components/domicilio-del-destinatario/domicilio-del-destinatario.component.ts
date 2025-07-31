@@ -2,9 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { Tramite110209State,Tramite110209Store } from '../../estados/stores/tramite110209.store';
 import { CommonModule } from '@angular/common';
+import { SgpCertificadoService } from '../../services/sgp-certificado/sgp-certificado.service';
 import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
-import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
 
 import { REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL,REGEX_SOLO_DIGITOS } from '@ng-mf/data-access-user';
 /**
@@ -40,6 +41,10 @@ export class DomicilioDelDestinatarioComponent implements OnInit, OnDestroy {
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   esFormularioSoloLectura: boolean = false;
+  /**
+     * Estado interno de la sección actual del trámite 110209.
+     */
+    private seccionState!: Tramite110209State;
 
   /**
    * Constructor para inicializar el formulario con los campos requeridos.
@@ -48,8 +53,11 @@ export class DomicilioDelDestinatarioComponent implements OnInit, OnDestroy {
    * @param {Tramite110209Store} tramite110209Store - El store del trámite 110209.
    * @param {Tramite110209Query} tramite110209Query - La consulta del trámite 110209.
    */
-  constructor(private fb: FormBuilder, private tramite110209Store: Tramite110209Store, private tramite110209Query: Tramite110209Query, private consultaQuery: ConsultaioQuery) {
-    this.crearFormulario();
+  constructor(private fb: FormBuilder, 
+    private tramite110209Store: Tramite110209Store, 
+    private tramite110209Query: Tramite110209Query, 
+    private consultaQuery: ConsultaioQuery,
+    private service: SgpCertificadoService) {
     /**
     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
     *
@@ -62,83 +70,91 @@ export class DomicilioDelDestinatarioComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          this.actualizarEstadoCampos();
+          this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
   }
 
+      /**
+   * Inicializa el estado de los formularios según el modo de solo lectura.
+   *
+   * Si el formulario está en modo solo lectura (`esFormularioSoloLectura`), llama a `guardarDatosFormulario()`
+   * para deshabilitar todos los controles. En caso contrario, inicializa los formularios normalmente.
+   */
+     inicializarEstadoFormulario(): void {
+      if (this.esFormularioSoloLectura) {
+        this.guardarDatosFormulario(); 
+      } else {
+        this.crearFormulario();
+        
+      }
+        
+    }
+  
+      /**
+ * Guarda y actualiza el estado de los formularios según el modo de solo lectura.
+ *
+ * Inicializa los formularios y luego los deshabilita si el formulario está en modo solo lectura,
+ * o los habilita si está en modo edición.
+ */
+  guardarDatosFormulario(): void {
+    this.crearFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.domicilioDelDestinatarioForm.disable();
+     
+    } else {
+      this.domicilioDelDestinatarioForm.enable();
+     
+    } 
+}
+ /**
+   * Suscribe al observable `selectSolicitud$` del query `tramite120501Query` para obtener el estado actual de la solicitud y actualizar la propiedad `seccionState` con los datos recibidos. La suscripción se mantiene activa hasta que se emite un valor en `destroyed$`, evitando fugas de memoria.
+   */
+  obtenerEstadoSolicitud(): void {
+    this.tramite110209Query.selectTramite110209$?.pipe(takeUntil(this.destroyed$))
+      .subscribe((data: Tramite110209State) => {
+        this.seccionState = data;
+      });
+  }
   /**
    * Crea el formulario del componente.
    */
   crearFormulario(): void {
+    this.obtenerEstadoSolicitud();
     this.domicilioDelDestinatarioForm = this.fb.group({
-      calle: ['', [Validators.required, Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL),Validators.maxLength(100)]],
-      numeroLetra: [ '', [Validators.required, Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL),Validators.maxLength(30)]],
-      ciudad: ['' , [Validators.required, Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL),Validators.maxLength(50)]],
-      correoElectronico: ['', [Validators.required, Validators.email,Validators.maxLength(70)]],
-      fax: ['',[Validators.pattern(REGEX_SOLO_DIGITOS),Validators.maxLength(30)]],
-      telefono: ['' , [Validators.pattern(REGEX_SOLO_DIGITOS),Validators.maxLength(30)]],
+      calle: [this.seccionState?.calle, [Validators.required, Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL),Validators.maxLength(100)]],
+      numeroLetra: [this.seccionState?.numeroLetra, [Validators.required, Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL),Validators.maxLength(30)]],
+      ciudad: [this.seccionState?.ciudad, [Validators.required, Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL),Validators.maxLength(50)]],
+      correoElectronico: [this.seccionState?.correoElectronico, [Validators.required, Validators.email,Validators.maxLength(70)]],
+      fax: [this.seccionState?.fax,[Validators.pattern(REGEX_SOLO_DIGITOS),Validators.maxLength(30)]],
+      telefono: [this.seccionState?.telefono, [Validators.pattern(REGEX_SOLO_DIGITOS),Validators.maxLength(30)]],
     });
   }
 
+ 
   /**
    * Hook del ciclo de vida que se llama después de que las propiedades enlazadas a datos de una directiva se inicializan.
    * Crea el formulario del componente.
    */
   ngOnInit(): void {
-    this.getValoresStore()
+    this.tramite110209Query.selectTramite110209$.pipe(
+    takeUntil(this.destroyed$),
+  ).subscribe(storeState => {
+    const ESTA_VACIO = !storeState?.nombre && !storeState?.primerApellido && !storeState?.numeroDeRegistroFiscal;
+    if (ESTA_VACIO) {
+      this.service.getCertificadoDatos().pipe(takeUntil(this.destroyed$)).subscribe(datos => {
+        this.tramite110209Store.setTramite110209(datos);
+        this.inicializarEstadoFormulario();
+      });
+    } else {
+      this.inicializarEstadoFormulario();
+    }
+  });
   }
 
 
-  /**
-   * Habilita o deshabilita dinámicamente los campos del formulario
-   * según el estado de solo lectura del formulario.
-   *
-   * @returns void
-   * @description Si el formulario está en modo solo lectura, deshabilita ambos campos; de lo contrario, los habilita.
-   */
-  actualizarEstadoCampos(): void {
-    const CAMPOS = [
-      'calle',
-      'numeroLetra',
-      'ciudad',
-      'correoElectronico',
-      'fax',
-      'telefono'
-    ];
-    CAMPOS.forEach(campo => {
-      const CONTROL = this.domicilioDelDestinatarioForm.get(campo);
-      if (CONTROL) {
-        if (this.esFormularioSoloLectura) {
-          CONTROL.disable();
-        } else {
-          CONTROL.enable();
-        }
-      }
-    });
-  }
-
-  /**
-   * Obtiene los valores del store y los asigna al formulario.
-   */
-  getValoresStore(): void {
-    this.tramite110209Query.selectTramite110209$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.domicilioDelDestinatarioForm.patchValue({
-            calle: seccionState.calle,
-            numeroLetra: seccionState.numeroLetra,
-            ciudad: seccionState.ciudad,
-            correoElectronico: seccionState.correoElectronico,
-            fax: seccionState.fax,
-            telefono: seccionState.telefono,
-          });
-        })
-      )
-      .subscribe();
-  }
+ 
 
    /**
      * Establece el valor en Tramite110209Store para el campo especificado del formulario.

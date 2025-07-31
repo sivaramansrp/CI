@@ -42,4 +42,6 @@ export class SolicitudPantallasService {
       .get<TipoContenedor>(this.dataUrl)
       .pipe();
   }
+
+  
 }
