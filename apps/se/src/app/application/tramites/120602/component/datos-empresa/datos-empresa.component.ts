@@ -8,7 +8,6 @@ import {
   BtnContinuarComponent,
   Catalogo,
   ConsultaioQuery,
-  DatosPasos,
   ListaPasosWizard,
   TituloComponent
 } from '@ng-mf/data-access-user';
@@ -245,50 +244,42 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
   /**
   * Configuración de columnas para la tabla.
   */
-  public configuracionTabla: ConfiguracionColumna<{ rfc: string; curp: string; nombre: string; apellidoPaterno: string; apellidoMaterno: string }>[] = [
+  public configuracionTabla: ConfiguracionColumna<{ rfc: string; curp: string; nombre: string; apellidoPaterno: string; apellidoMaterno: string; correo: string }>[] = [
     { encabezado: 'RFC', clave: (item) => item.rfc, orden: 1 },
-    { encabezado: 'CURP', clave: (item) => item.curp, orden: 2 },
+    { encabezado: 'Razón social', clave: (item) => item.curp, orden: 2 },
     { encabezado: 'Nombre', clave: (item) => item.nombre, orden: 3 },
     { encabezado: 'Apellido Paterno', clave: (item) => item.apellidoPaterno, orden: 4 },
-    { encabezado: 'Apellido Materno', clave: (item) => item.apellidoMaterno, orden: 5 }
+    { encabezado: 'Apellido Materno', clave: (item) => item.apellidoMaterno, orden: 5 },
+    { encabezado: 'Correo', clave: (item) => item.correo, orden: 6 }
   ];
 
   /**
    * Configuración de columnas para la tabla de direcciones.
    */
-  public tableHeader: ConfiguracionColumna<{ calle: string; númeroExterior: string; númeroInterior: string; códigoPostal: string; colonia: string; municipioAlcaldia: string; estado: string }>[] = [
+  public tableHeader: ConfiguracionColumna<{ calle: string; númeroExterior: string; númeroInterior: string; códigoPostal: string; colonia: string; municipioAlcaldia: string; estado: string}>[] = [
     { encabezado: 'Calle', clave: (item) => item.calle, orden: 1 },
     { encabezado: 'Número exterior', clave: (item) => item.númeroExterior, orden: 2 },
     { encabezado: 'Número interior', clave: (item) => item.númeroInterior, orden: 3 },
     { encabezado: 'Código postal', clave: (item) => item.códigoPostal, orden: 4 },
     { encabezado: 'Colonia', clave: (item) => item.colonia, orden: 5 },
     { encabezado: 'Municipio o alcaldía', clave: (item) => item.municipioAlcaldia, orden: 6 },
-    { encabezado: 'Estado', clave: (item) => item.estado, orden: 7 }
+    { encabezado: 'Estado', clave: (item) => item.estado, orden: 7 },
   ];
 
   /**
    * Configuración de columnas para la tabla de extranjeros.
    */
 
-  public tableHeaderExtranjeros: ConfiguracionColumna<{ taxId: string; razonSocial: string; nombre: string; apellidoPaterno: string; pais: string; cp: string; estado: string }>[] = [
+  public tableHeaderExtranjeros: ConfiguracionColumna<{ taxId: string; razonSocial: string; nombre: string; apellidoPaterno: string; pais: string; cp: string; estado: string; correo: string }>[] = [
     { encabezado: 'TAX ID', clave: (item) => item.taxId, orden: 1 },
     { encabezado: 'Razón social', clave: (item) => item.razonSocial, orden: 2 },
     { encabezado: 'Nombre', clave: (item) => item.nombre, orden: 3 },
     { encabezado: 'Apellido paterno', clave: (item) => item.apellidoPaterno, orden: 4 },
     { encabezado: 'País', clave: (item) => item.pais, orden: 5 },
     { encabezado: 'CP', clave: (item) => item.cp, orden: 6 },
-    { encabezado: 'Estado', clave: (item) => item.estado, orden: 7 }
+    { encabezado: 'Estado', clave: (item) => item.estado, orden: 7 },
+    { encabezado: 'Correo', clave: (item) => item.correo, orden: 8 }
   ];
-
-  /**
-   * Datos de pasos del asistente.
-   */
-  datosPasos: DatosPasos = {
-    nroPasos: this.pasos.length, // El número de pasos se obtiene dinámicamente de la lista `pasos`
-    indice: this.indice, // Índice del paso actual en el formulario
-    txtBtnAnt: 'Anterior', // Texto para el botón de retroceso
-    txtBtnSig: 'Continuar', // Texto para el botón de siguiente
-  };
 
   /**
    * @method cambioDeRadio
