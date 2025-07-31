@@ -189,7 +189,7 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
  * verifica si el formulario es válido y si el campo `rfc` tiene un valor.
  * Si ambas condiciones se cumplen, crea un nuevo objeto `ProductorIndirectoTabla`
  */
-  AgregarProductor(): void {
+  agregarProductor(): void {
     const RFC_VALUE = this.formProductorIndirecto.get('rfc')?.value;
     if (this.formProductorIndirecto.valid && RFC_VALUE) {
       const NUEVO_PRODUCTOR: ProductorIndirectoTabla = {

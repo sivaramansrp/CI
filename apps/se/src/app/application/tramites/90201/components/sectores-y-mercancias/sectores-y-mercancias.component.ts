@@ -422,16 +422,5 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
     };
-  }
-
-  /**
-   * Limpia el valor del control 'fraccion' en el formulario sectoresForm si la bandera `borrar` es verdadera.
-   *
-   * @param borrar - Una bandera booleana que indica si el campo 'fraccion' debe ser limpiado.
-   */
-  // public mercancia(borrar: boolean): void {
-  //   if (borrar) {
-    
-  //   }
-  // }
+  } 
 }
