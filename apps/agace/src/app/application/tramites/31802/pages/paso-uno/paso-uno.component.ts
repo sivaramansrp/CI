@@ -20,7 +20,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   private destroyNotifier$: Subject<void> = new Subject(); // Subject para manejar la destrucción de suscripciones
   public consultaState!: ConsultaioState; // Estado de la consulta
-  
+
   /**
    * Tipo de persona seleccionada.
    */
@@ -54,25 +54,42 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
  * Contiene los valores actuales del trámite, como renovación, homologación, y otros datos relevantes.
  */
   public solicitudState!: Solicitud31802State;
-/**
- * Constructor del componente PasoUnoComponent.
- * 
- * @param fb - Servicio FormBuilder utilizado para construir formularios reactivos.
- * @param store - Almacén de estado para gestionar y almacenar datos relacionados con el trámite 31802.
- * @param query - Consulta para obtener datos del estado global del trámite 31802.
- * @param validacionesService - Servicio para realizar validaciones personalizadas en los formularios.
- */
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+  /**
+    * Subject para destruir notificador.
+    */
+  consultaDatos!: ConsultaioState;
+  /**
+   * Constructor del componente PasoUnoComponent.
+   * 
+   * @param fb - Servicio FormBuilder utilizado para construir formularios reactivos.
+   * @param store - Almacén de estado para gestionar y almacenar datos relacionados con el trámite 31802.
+   * @param query - Consulta para obtener datos del estado global del trámite 31802.
+   * @param validacionesService - Servicio para realizar validaciones personalizadas en los formularios.
+   */
   constructor(
     private consultaQuery: ConsultaioQuery, // Servicio para consultar el estado
     public fb: FormBuilder,
     private store: Tramite31802Store,
-    private query: Tramite31802Query,
     private validacionesService: ValidacionesFormularioService,
-    private solicitud31802Service:RegistroSolicitudService, // Servicio para manejar el estado de la solicitud 31802
+    private solicitud31802Service: RegistroSolicitudService, // Servicio para manejar el estado de la solicitud 31802
   ) {
-    // El constructor se utiliza para la inyección de dependencias.
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.esFormularioSoloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
- 
+
   /**
     * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
     * Configura el formulario, obtiene datos iniciales y suscribe al estado global.
@@ -86,6 +103,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+    this.donanteDomicilio();
+
     // Inicializa el formulario con los valores actuales del estado
     if (this.consultaState?.update) {
       this.guardarDatosFormulario();
@@ -93,17 +112,22 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       this.esDatosRespuesta = true;
     }
   }
-
   /**
- * Obtiene los datos del aviso de renovación desde el servicio y actualiza el estado global del formulario.
- * 
- * Este método realiza una petición al servicio para obtener los datos del aviso de renovación desde un archivo JSON local.
- * Al recibir la respuesta, marca que existen datos de respuesta y actualiza el estado del formulario en el store
- * utilizando el método `actualizarEstadoFormulario` del servicio.
- * La suscripción se cancela automáticamente al destruir el componente para evitar fugas de memoria.
- */
-
-    guardarDatosFormulario(): void {
+   * Método que se ejecuta al destruir el componente.
+   * Cancela todas las suscripciones activas para evitar fugas de memoria.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosDelFormulario();
+    } else {
+      this.donanteDomicilio();
+    }
+  }
+  /**
+   * Método para guardar los datos del formulario.
+   * Se suscribe al servicio de registro de solicitud y actualiza el estado del formulario con los datos obtenidos.
+   */
+  guardarDatosFormulario(): void {
     // Método para guardar los datos del formulario
     this.solicitud31802Service
       .getDatosDeAvisoRenovacionDoc().pipe(
@@ -117,10 +141,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       });
   }
 
-   /**
- * Establece el valor de renovación en el estado global.
- * @param evento Evento del tipo `Event` que contiene el valor del checkbox.
- */
+  /**
+* Establece el valor de renovación en el estado global.
+* @param evento Evento del tipo `Event` que contiene el valor del checkbox.
+*/
   establecerRenovacion(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).checked;
     this.store.setRenovacion(VALOR);
@@ -139,6 +163,17 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Cancela todas las suscripciones activas.
+   */
+  guardarDatosDelFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.registroForm.disable();
+    } else {
+      this.registroForm.enable();
+    }
   }
   /**
      * Verifica si un campo del formulario es válido.
@@ -181,14 +216,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
-      renovacion: [this.solicitudState?.renovacion, [Validators.required]],
-      homologacion: [this.solicitudState?.homologacion, [Validators.required]],
+      renovacion: [{ value: this.solicitudState?.renovacion, disabled: this.esFormularioSoloLectura }, [Validators.required]],
+      homologacion: [{ value: this.solicitudState?.homologacion, disabled: this.esFormularioSoloLectura }, [Validators.required]],
     });
   }
-    /**
-   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
-   * Cancela todas las suscripciones activas.
-   */
+  /**
+ * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+ * Cancela todas las suscripciones activas.
+ */
   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();

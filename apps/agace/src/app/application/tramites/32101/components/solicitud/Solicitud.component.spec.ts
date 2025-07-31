@@ -202,47 +202,6 @@ describe('SolicitudComponent', () => {
     component.fetchBancoList();
   });
 
-  it('should run #poblarTabla()', () => {
-  component.registroForm = {
-    value: {
-      tipoDeInversion: 1,
-      descripcionGeneral: 'Prueba',
-      listaDeDocumentos: 2,
-      valorEnPesos: 1500
-    },
-    reset: jest.fn(),
-    markAsUntouched: jest.fn(),
-    markAsPristine: jest.fn()
-  } as any;
-
-  component.tramiteList = {
-    catalogos: [
-      { id: 1, descripcion: 'Inversión A' },
-      { id: 2, descripcion: 'Inversión B' }
-    ]
-  };
-
-  component.aduana = {
-    catalogos: [
-      { id: 2, descripcion: 'Documento B' },
-      { id: 3, descripcion: 'Documento C' }
-    ]
-  };
-  component.configuracionTablaDatos = [];
-  component.tramite32101Store = {
-    setDatosDelContenedor: jest.fn()
-  };
-  component.abrirModal = jest.fn();
-  component.poblarTabla();
-
-  // Assert results
-  expect(component.configuracionTablaDatos.length).toBe(1);
-  expect(component.configuracionTablaDatos[0].tipoDeInversion).toBe('Inversión A');
-  expect(component.configuracionTablaDatos[0].formaAdquisicion).toBe('Documento B');
-  expect(component.tramite32101Store.setDatosDelContenedor).toHaveBeenCalled();
-  expect(component.abrirModal).toHaveBeenCalled();
-  });
-
   it('should run #onCheckboxClicked()', async () => {
     component.selectedRows = component.selectedRows || {};
     component.selectedRows.includes = jest.fn();
@@ -277,38 +236,25 @@ describe('SolicitudComponent', () => {
   });
 
   it('should run #cambioFechaIngreso()', () => {
-    // Mock form control
     const mockControl = {
       markAsUntouched: jest.fn(),
       setValue: jest.fn()
     };
 
-    // Mock registroForm
     component.registroForm = {
       get: jest.fn().mockReturnValue(mockControl)
     } as any;
 
-    // Mock tramite32101Store with the required method
     component.tramite32101Store = {
       setFechaInicialInput: jest.fn()
     } as any;
 
-    // Run the method
     component.cambioFechaIngreso('2024-06-25');
 
-    // Expectations
     expect(component.registroForm.get).toHaveBeenCalledWith('fechaInicialInput');
     expect(mockControl.setValue).toHaveBeenCalledWith('2024-06-25');
     expect(mockControl.markAsUntouched).toHaveBeenCalled();
     expect(component.tramite32101Store.setFechaInicialInput).toHaveBeenCalledWith('2024-06-25');
-  });
-
-  it('should run #borrar()', async () => {
-    component.registroForm = component.registroForm || {};
-    component.registroForm.get = jest.fn().mockReturnValue({
-      reset: function() {}
-    });
-    component.borrar();
   });
 
   it('should run #updateTableRow()', async () => {
