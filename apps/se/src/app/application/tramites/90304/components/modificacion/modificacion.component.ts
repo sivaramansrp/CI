@@ -150,11 +150,30 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    * @param {unknown} row - Fila de la tabla que contiene la empresa a modificar.
    * @returns {void}
    */
-  alternarValor(row: unknown): void {
-    const INDEX = this.empresasLista.findIndex((x) => x.id === (row as { id: unknown }).id);
-    this.empresasLista[INDEX].estatus = this.empresasLista[INDEX].estatus === 'Baja' ? 'Activada' : 'Baja';
-  }
+  // alternarValor(event: { row: EmpresasLista; column: string }): void {
+  //   const row = event.row;
+  //   const INDEX = this.empresasLista.findIndex((x) => x.id === row.id);
+  
+  //   if (INDEX !== -1) {
+  //     // Toggle the status in the empresasLista array
+  //     this.empresasLista[INDEX].estatus = this.empresasLista[INDEX].estatus === 'Baja' ? 'Activada' : 'Baja';
+  //     this.empresasLista = [...this.empresasLista];
 
+  //   }
+  // }
+  
+  /**
+   * Indica si la tabla está en modo "Baja".
+   */
+  isBaja: boolean = true;
+  onFilaClic(event: Event): void {
+    const TARGET = event.target as HTMLInputElement;
+    if (TARGET.tagName === 'BUTTON' && TARGET.textContent?.trim() === 'BAJA') {
+      this.isBaja = false;
+      TARGET.textContent = 'Activar';
+    }
+    TARGET.textContent = 'Activar';
+  }
   /**
    * Se ejecuta al destruir el componente.
    * Emite un valor y completa el subject `destruirNotificador$` para cancelar las suscripciones.
