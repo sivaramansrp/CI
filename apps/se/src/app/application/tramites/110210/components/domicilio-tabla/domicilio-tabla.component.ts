@@ -10,7 +10,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { DomicilioTabla, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 
 import { DOMICILIO_TABLA_COLUMNAS } from '@ng-mf/data-access-user';
- import { DomicilioTablaService } from '@ng-mf/data-access-user';
+import { DomicilioTablaService } from '../../services/domicilio-tabla/domicilioTabla.service';
 
 /**
  * Este módulo define el componente `DomicilioTablaComponent` que maneja la información de los tratados y acuerdos.
@@ -40,7 +40,7 @@ export class DomicilioTablaComponent implements OnInit, OnDestroy {
    * Datos que se mostrarán en la tabla.
    * @type {DomicilioTabla[]}
    */
-  datosTabla!: DomicilioTabla[];
+  datosTabla: DomicilioTabla[] = [];
 
   /**
    * Subject para manejar la desuscripción cuando el componente se destruye.
