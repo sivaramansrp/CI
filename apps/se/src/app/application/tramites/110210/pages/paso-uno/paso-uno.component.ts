@@ -18,7 +18,7 @@ import { DomicilioTablaService } from '../../services/domicilio-tabla/domicilioT
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss'
 })
-export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
+export class PasoUnoComponent implements AfterViewInit, OnDestroy {
   /**
  * Indica si se ha recibido una respuesta con datos.
  * Se utiliza para mostrar u ocultar información en la interfaz según el estado de la respuesta.
@@ -89,40 +89,8 @@ constructor(
     this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
   }
   }
- /**
- * Método del ciclo de vida que se ejecuta al inicializar el componente.
- *
- * Se suscribe al observable `selectConsultaioState$` para obtener el estado actual de la consulta
- * y lo asigna a la propiedad `consultaState`. Dependiendo del valor de `update` en el estado,
- * decide si debe llamar a `guardarDatosFormulario()` para obtener y actualizar los datos,
- * o simplemente mostrar la información existente.
- */
-  ngOnInit(): void {
-   this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyed$),map((seccionState) => {
-          this.consultaState = seccionState;
-      })).subscribe();
-  
-    if(this.consultaState.update) {
-      this.guardarDatosFormulario();
-    } else {
-      this.esDatosRespuesta = true;
-    }
-  }
-  /**
- * Obtiene los datos vigentes de licitaciones mediante el servicio y actualiza el estado del formulario.
- *
- * Se suscribe al observable que retorna el servicio `getLicitationesVigentesData()`. Si la respuesta es válida,
- * actualiza la bandera `esDatosRespuesta` y llama al método del servicio para actualizar el estado del formulario.
- */
-   guardarDatosFormulario(): void {
-    this.service.getDatosStore().pipe(
-        takeUntil(this.destroyed$)).subscribe((resp) => {
-        if(resp){
-        this.esDatosRespuesta = true;
-        this.service.actualizarEstadoFormulario(resp);
-        }
-      });
-  }
+ 
+
   /**
  * Método del ciclo de vida que se ejecuta al destruir el componente.
  *
