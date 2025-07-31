@@ -1,8 +1,9 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Catalogo, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Observable, Subject, delay, map, takeUntil} from 'rxjs';
-import { CONFIGURACION_MERCANCIA } from '../../constantes/modificacion.enum';
+
+import { CAPTURA_MERCANCIAS, CONFIGURACION_MERCANCIA, CONFIGURACION_TABLA_MERCANCIAS } from '../../constantes/modificacion.enum';
 import { CertificadoDeOrigenComponent } from "../../../../shared/components/certificado-de-origen/certificado-de-origen.component";
 import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
 import { CommonModule } from '@angular/common';
@@ -22,14 +23,33 @@ import { Tramite110202Store } from '../../estados/tramite110202.store';
     ReactiveFormsModule,
     CommonModule,
     CertificadoDeOrigenComponent,
-    MercanciasModalComponent
+    MercanciasModalComponent,TituloComponent,AlertComponent,TablaDinamicaComponent
   ],
   templateUrl: './certificado-origen.component.html',
   styleUrl: './certificado-origen.component.scss'
 })
 
 export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnInit {
-
+   /**
+   * Configuración de las columnas de la tabla de exportadores.
+   * Define el encabezado, clave y el orden de las columnas para la tabla de exportadores.
+   */
+  public checkbox = TablaSeleccion.CHECKBOX;
+    /**
+   * Lista de exportadores obtenida desde un archivo JSON.
+   * Cada exportador contiene información como nombre, teléfono, correo electrónico y domicilio.
+   */
+  exportador: Mercancia[] =[];
+   /**
+   * Configuración de las columnas para la tabla de datos del exportador.
+   * Se basa en el arreglo `CONFIGURATION_TABLA_DATOS`, que define los encabezados,
+   * las claves de acceso a los datos del objeto `Exportador`, y el orden en que se deben mostrar.
+   */
+  configuracionTabla: ConfiguracionColumna<Mercancia>[] =CONFIGURACION_TABLA_MERCANCIAS;
+  /**
+   * Constante que almacena el valor de la mercancía capturada.
+   */
+  MERCANCIA: string = CAPTURA_MERCANCIAS;
   /**
    * Formulario reactivo utilizado para la gestión de los datos del certificado.
    * @type {FormGroup}
@@ -82,7 +102,7 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
    * Configuración de las columnas de la tabla de bitácora.
    * @type {ConfiguracionColumna<Mercancia>[]}
    */
-  configuracionTabla: ConfiguracionColumna<Mercancia>[] = CONFIGURACION_MERCANCIA;
+  configuracionTablas: ConfiguracionColumna<Mercancia>[] = CONFIGURACION_MERCANCIA;
 
   /**
    * Datos de la bitácora obtenidos desde el servicio.
@@ -125,7 +145,11 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
    * @type {Modal}
    */
   modalInstance!: Modal;
-
+  /**
+   * Propiedad que almacena un arreglo de objetos de tipo `Mercancia` seleccionados para ser guardados.
+   * @type {Mercancia[]}
+   */
+  public seleccionadaguardarClicado: Mercancia[] = [];
   /**
    * Referencia al modal de modificación en la plantilla HTML.
    * @type {ElementRef}
@@ -183,7 +207,23 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
     this.datos1$ = this.tramiteQuery.selectBuscarMercancia$;
     this.datosTabla$ = this.tramiteQuery.selectmercanciaTabla$;
   }
-
+ /**
+ * Método que asigna un objeto de tipo `Mercancia` al arreglo de mercancías seleccionadas para guardar.
+ * @param {Mercancia} evento - Objeto de tipo `Mercancia` que ha sido seleccionado.
+ */
+  obtenerSeleccionadoMercancia(evento: Mercancia): void {
+    this.seleccionadaguardarClicado = [evento];
+  }
+  /**
+  * Método que elimina los objetos seleccionados del arreglo de mercancías guardadas.
+  * @remarks
+  * Este método verifica si hay elementos seleccionados antes de vaciar el arreglo `guardarClicado`.
+  */
+  eliminarSeleccionados(): void {
+    if (this.seleccionadaguardarClicado.length > 0) {
+      this.exportador = [];
+    }
+  }
   /**
    * @method obtenerDatosFormulario
    * @description Este método recibe un evento y establece los datos del formulario de certificado en el store.
@@ -309,6 +349,17 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
       this.modalInstance.show();
     }
   }
+    /**
+   * Método para abrir el modal de modificación.
+   * @param {Mercancia} datos1 Los datos de la mercancia seleccionada.
+   */
+  abrirModal(): void {
+
+    if (this.modalInstance) {
+      this.modalInstance.show();
+    }
+  }
+  
 
   /**
    * Cierra el modal de modificación si está abierto.

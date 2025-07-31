@@ -5,9 +5,34 @@
     [datosForm]="formCertificadoValues" [esFormularioSoloLectura]="esFormularioSoloLectura" [tablaSeleccionEvent]="tablaSeleccionEvent"
     [guardarClicado]="(datosTabla$ | async) ||  []" (formaValida)="setFormValida($event)"></app-certificado-de-origen>
 
-
-
 <div class="modal fade" #modifyModal tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
     <app-mercancias-modal [datosSeleccionados]="datosSeleccionados" (guardarClicado)="abrirModificarModal($event)"
         (cerrarClicado)="cerrarModificarModal()"></app-mercancias-modal>
 </div>
+
+
+    <ng-titulo titulo="Carga de mercancías por archivo" /> 
+       <div class="d-flex justify-content-end">
+              <button
+                type="button" [disabled]="esFormularioSoloLectura"
+                class="btn btn-primary pb-3" 
+              >
+                Carga por archivo
+              </button>
+        </div>
+     <ng-alert [CONTENIDO]="MERCANCIA"></ng-alert>
+     <H5>Mercancías seleccionadas</H5>
+      <app-tabla-dinamica
+    [configuracionTabla]="configuracionTablas"
+    [datos]="exportador"
+    [tipoSeleccionTabla]="checkbox"
+    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
+    (filaSeleccionada)="obtenerSeleccionadoMercancia($event)"
+  ></app-tabla-dinamica> 
+  <div class="row d-flex  mt-3 mb-4 justify-content-end">
+                  <div class="col-12 container text-end mt-5">
+                    <button class="btn btn-default me-2" (click)="eliminarSeleccionados()" [disabled]="esFormularioSoloLectura">Eliminar</button>
+                    <button class="btn btn-primary"  (click)="abrirModal()" [disabled]="esFormularioSoloLectura">Modificar</button>
+                  </div>
+   </div>
+

@@ -114,4 +114,38 @@ export const CONFIGURACION_MERCANCIA = [
     orden: 6, // ✔️ Corregido para evitar conflicto con la columna anterior.
   }
 ];
-
+ /**
+ * Mensaje informativo sobre las tablas obligatorias.
+ */
+export const CAPTURA_MERCANCIAS = `
+  <p style="text-align: center;">
+    Para continuar con el trámite, debes agregar por lo menos una mercancía.
+  </p>
+`;
+export const CONFIGURACION_TABLA_MERCANCIAS = [
+  {
+    encabezado: 'Fracción arancelaria',
+    clave: (item: Mercancia): string => item.fraccionArancelaria,
+    orden: 1
+  },
+  {
+    encabezado: 'Cantidad',
+    clave: (item: Mercancia): string => item.cantidad || '',
+    orden: 2
+  },
+  {
+    encabezado: 'Unidad de medida',
+    clave: (item: Mercancia): string => item.umc || '',
+    orden: 3
+  },
+  {
+    encabezado: 'Valor mercancía',
+    clave: (item: Mercancia): string => item.valorMercancia || '',
+    orden: 4
+  },
+  {
+    encabezado: 'Tipo de factura',
+    clave: (item: Mercancia): string => item.tipoFactura || '',
+    orden: 5
+  }
+];
