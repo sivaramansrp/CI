@@ -85,6 +85,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   datosDelEstablecimiento!: FormGroup;
 
   /**
+   * Indica si se ha seleccionado una opción de radio button.
+   */
+  isRadioButtonSelected: boolean = false;
+
+  /**
    * Observable utilizado para gestionar la destrucción de suscripciones y evitar fugas de memoria.
    * Se emite un valor y se completa cuando el componente se destruye.
    * @private
@@ -182,6 +187,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+    
     this.form = this.fb.group({
       btonDeRadio: [this.solicitudState.btonDeRadio, [Validators.required]],
       justificacion: [this.solicitudState.justificacion, [Validators.required]],
@@ -190,7 +196,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.datosDelEstablecimiento = this.fb.group({
       rfcDel: [this.solicitudState?.rfcDel, Validators.required],
       denominacion: [this.solicitudState?.denominacion, Validators.required],
-      correo: [this.solicitudState?.correo, Validators.required],
+      correo: [this.solicitudState?.correo, [Validators.required, Validators.email]],
+    });
+
+    // Verificar si hay un valor inicial en el radio button
+    this.isRadioButtonSelected = Boolean(this.solicitudState.btonDeRadio);
+    
+    // Deshabilitar secciones si no hay radio button seleccionado
+    if (!this.isRadioButtonSelected) {
+      this.disableSections();
+    }
+
+    // Suscribirse a cambios en el radio button
+    this.form.get('btonDeRadio')?.valueChanges.subscribe(value => {
+      this.onRadioButtonChange(value);
     });
   }
 
@@ -198,6 +217,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Método para habilitar los controles del formulario de datos del establecimiento si están deshabilitados.
    */
   toggleFormControls(): void {
+    // Solo permitir habilitar si hay un radio button seleccionado y no está en modo solo lectura
+    if (!this.isRadioButtonSelected || this.esFormularioSoloLectura) {
+      return;
+    }
+
     Object.keys(this.datosDelEstablecimiento.controls).forEach(
       (controlName) => {
         const CONTROL = this.datosDelEstablecimiento.get(controlName);
@@ -219,5 +243,45 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.tramite260911Store.setTramite260911State({
       [control]: VALOR
     });
+  }
+
+  /**
+   * Método que se ejecuta cuando cambia el valor del radio button.
+   * Habilita o deshabilita las secciones según la selección.
+   *
+   * @param value Valor seleccionado del radio button.
+   */
+  onRadioButtonChange(value: string | null): void {
+    this.isRadioButtonSelected = Boolean(value);
+    
+    if (this.isRadioButtonSelected) {
+      this.enableSections();
+    } else {
+      this.disableSections();
+    }
+  }
+
+  /**
+   * Deshabilita todas las secciones excepto el radio button.
+   */
+  disableSections(): void {
+    // Deshabilitar el campo de justificación
+    this.form.get('justificacion')?.disable();
+    
+    // Deshabilitar todos los campos del formulario de datos del establecimiento
+    this.datosDelEstablecimiento.disable();
+  }
+
+  /**
+   * Habilita todas las secciones cuando se selecciona un radio button.
+   */
+  enableSections(): void {
+    if (!this.esFormularioSoloLectura) {
+      // Habilitar el campo de justificación
+      this.form.get('justificacion')?.enable();
+      
+      // Habilitar todos los campos del formulario de datos del establecimiento
+      this.datosDelEstablecimiento.enable();
+    }
   }
 }

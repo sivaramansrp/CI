@@ -518,7 +518,6 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
 
         if (TIPO_PEDIMENTO) {
           this.pedimentos[rowIndex].tipoPedimento = TIPO_PEDIMENTO.id;
-          this.pedimentos[rowIndex].numero = '';
           this.pedimentos[rowIndex].comprobanteValor = '';
 
           if (TIPO_PEDIMENTO.id) {

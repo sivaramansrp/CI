@@ -25,6 +25,9 @@ export interface Cupo {
     fabricante: string;
     importador: string;
     unidadPrimaria: number;
+    montoExpediente: number;
+    montocancelar: number;
+    montoutilizado: number;
   }
   export interface AccionBoton {
     accion: string;

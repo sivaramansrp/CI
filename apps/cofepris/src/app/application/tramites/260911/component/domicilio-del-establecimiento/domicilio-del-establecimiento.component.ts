@@ -257,6 +257,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       licenciaSanitaria: [{ value: this.solicitudState?.licenciaSanitaria, disabled: true }],
       regimen: [this.solicitudState?.regimen],
       aduanasEntradas: [this.solicitudState?.aduanasEntradas],
+      importPermitNumberCNSNS: [{ value: this.solicitudState?.importPermitNumberCNSNS, disabled: false }],
       aifaCheckbox: [true],
       manifests: [true],
     });

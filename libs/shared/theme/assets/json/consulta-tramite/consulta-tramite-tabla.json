@@ -3076,7 +3076,8 @@
         "fechaActualizacion": "2023-10-05",
         "diasTranscurridos": "4",
         "departamento": "AGACE",
-        "numeroDeProcedimiento": "33302"
+        "numeroDeProcedimiento": "33302",
+        "origin": "READ_PROCEDURE"
     },
     {
         "id": "32612",
@@ -3285,6 +3286,26 @@
         "diasTranscurridos": "4",
         "departamento": "AGACE",
         "numeroDeProcedimiento": "32614",
+        "origin": "READ_PROCEDURE"
+    },
+    {
+         "id": "32611",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGACE",
+        "numeroDeProcedimiento": "32611" ,
+        "origin": "READ_PROCEDURE"
+    },
+    {
+        "id": "31802",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGACE",
+        "numeroDeProcedimiento": "31802",
         "origin": "READ_PROCEDURE"
     }
 ]

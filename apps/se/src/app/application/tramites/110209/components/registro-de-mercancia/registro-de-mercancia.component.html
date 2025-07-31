@@ -2,7 +2,7 @@
         <div class="row mt-4">
             <div class="col-md-12">
                 <div class="form-group">
-                    <label for="nombreComercial" class="form-label">Nombre comercial :</label>
+                    <label for="nombreComercial" class="form-label">Nombre comercial:</label>
                     <input type="text" class="form-control" id="nombreComercial" formControlName="nombreComercial">
                 </div>
             </div>
@@ -10,7 +10,7 @@
         <div class="row mt-4">
             <div class="col-md-12">
             <div class="form-group">
-                <label for="nombreIngles" class="form-label">Nombre en inglés :</label>
+                <label for="nombreIngles" class="form-label">Nombre en inglés:</label>
                 <input type="text" class="form-control" id="nombreIngles" formControlName="nombreIngles">
             </div>
             </div>
@@ -19,7 +19,7 @@
         <div class="row mt-4">
             <div class="col-md-12">
                 <div class="form-group">
-                    <label for="descripcion" class="form-label">Complemento de la descripción :</label>
+                    <label for="descripcion" class="form-label">Complemento de la descripción:</label>
                     <input type="text" class="form-control" id="descripcion" formControlName="descripcion"
                   placeholder="pruebas" (change)="setValoresStore(mercanciaFrom,'descripcion')">
                     <div *ngIf="mercanciaFrom.get('descripcion')?.touched && mercanciaFrom.get('descripcion')?.invalid">
@@ -33,7 +33,7 @@
         <div class="row mt-4">
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="marca"class="form-label">Marca :</label>
+                    <label for="marca"class="form-label">Marca:</label>
                     <input type="text" class="form-control" id="marca" formControlName="marca" placeholder="Pruebas de marca"
                     (change)="setValoresStore(mercanciaFrom,'marca')">
                     <div *ngIf="mercanciaFrom.get('marca')?.touched && mercanciaFrom.get('marca')?.invalid">
@@ -44,7 +44,7 @@
 
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="valorMercancia" class="form-label">Valor mercancía :</label>
+                    <label for="valorMercancia" class="form-label">Valor mercancía:</label>
                     <input type="text" class="form-control" id="valorMercancia" formControlName="valorMercancia" placeholder="12"
                     (change)="setValoresStore(mercanciaFrom,'valorMercancia')">
                     <div *ngIf="mercanciaFrom.get('valorMercancia')?.touched && mercanciaFrom.get('valorMercancia')?.invalid">
@@ -55,7 +55,7 @@
 
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="cantidad" class="form-label">Cantidad :</label>
+                    <label for="cantidad" class="form-label">Cantidad:</label>
                     <input type="text" class="form-control" id="cantidad" formControlName="cantidad">
                     <div *ngIf="mercanciaFrom.get('cantidad')?.touched && mercanciaFrom.get('cantidad')?.invalid">
                         <small *ngIf="mercanciaFrom.get('cantidad')?.errors?.['pattern']" class="text-danger">El valor debe ser un número con hasta 15 dígitos enteros y hasta 4 dígitos decimales.</small>
@@ -65,7 +65,7 @@
         </div>
 
         <div class="row mt-4">
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <div class="form-group">
                     <app-catalogo-select [label]="'Unidad de medida de comercialización'" [catalogo]="unidadOptions"  [required]="false" formControlName="unidadMedida"
                     (change)="setValoresStore(mercanciaFrom,'unidadMedida')"></app-catalogo-select>
@@ -76,7 +76,7 @@
         <div class="row mt-4">
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="numeroFactura" class="form-label">Número de factura :</label>
+                    <label for="numeroFactura" class="form-label">Número de factura:</label>
                     <input type="text" class="form-control" id="numeroFactura" formControlName="numeroFactura" placeholder="23432432"
                     (change)="setValoresStore(mercanciaFrom,'numeroFactura')">
                     <div *ngIf="mercanciaFrom.get('numeroFactura')?.touched && mercanciaFrom.get('numeroFactura')?.invalid">
@@ -101,10 +101,5 @@
         </div>
 
     </form>
-    <div class="row mt-4 p-5">
-        <div class="d-flex justify-content-end mt-4">
-            <button type="button" class="btn btn-default" disabled>Cancelar</button>
-            <button type="button" class="btn btn-primary ms-3" (click)="regresar()">Modificar</button>
-        </div>
-    </div>
+    
 
