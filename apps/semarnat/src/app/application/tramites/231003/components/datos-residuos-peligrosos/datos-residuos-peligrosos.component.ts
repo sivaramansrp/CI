@@ -33,7 +33,6 @@ export class DatosResiduosPeligrososComponent implements OnInit {
   * Formulario reactivo que contiene los datos generales del residuo. 
   */
   formularioDatos!: FormGroup;
-
   /** 
    * Formulario reactivo que contiene la información detallada del residuo peligroso.
    */
@@ -54,6 +53,19 @@ export class DatosResiduosPeligrososComponent implements OnInit {
  * Opciones de radio utilizadas en el formulario para etiquetar residuos.
  */
   public etiquetasForm = RADIO_OPCIONES;
+  /**
+   * Objeto que representa el estado de clasificación de los campos de residuos peligrosos.
+   * Cada propiedad indica si el campo correspondiente ha sido clasificado.
+   *
+   * @property claveResiduo - Indica si la clave del residuo ha sido clasificada.
+   * @property nombre - Indica si el nombre ha sido clasificado.
+   * @property descripcion - Indica si la descripción ha sido clasificada.
+   */
+  public clasificacionObj = {
+    claveResiduo: false,
+    nombre: false,
+    descripcion: false,
+  };
 
 
   /**
@@ -205,6 +217,29 @@ export class DatosResiduosPeligrososComponent implements OnInit {
    */
   actualizarCampoFormularioResiduo(field: keyof EstadoFormularioResiduo['formularioResiduo']): void {
     const VALOR = this.formularioResiduo.get(field)?.value;
+    this.formularioStore.actualizarFormularioResiduo({
+      ...this.formularioResiduo.getRawValue(),
+      [field]: VALOR,
+    });
+  }
+
+  /**
+   * Actualiza un campo específico en el formulario "formularioResiduo" y sincroniza las banderas de clasificación relacionadas.
+   *
+   * - Obtiene el valor del campo especificado desde el formulario.
+   * - Establece las banderas correspondientes en `clasificacionObj` según el valor del campo:
+   *   - `claveResiduo` se establece en `true` si el valor es 'Clave de residuo'.
+   *   - `nombre` se establece en `true` si el valor es 'Nombre'.
+   *   - `descripcion` se establece en `true` si el valor es 'Descripción'.
+   * - Actualiza el estado del formulario en `formularioStore` con el nuevo valor para el campo especificado.
+   *
+   * @param field - La clave del campo en el formulario `formularioResiduo` a actualizar.
+   */
+  actualizarCampoFormularioResiduoDos(field: keyof EstadoFormularioResiduo['formularioResiduo']): void {
+    const VALOR = this.formularioResiduo.get(field)?.value;
+    this.clasificacionObj.claveResiduo = VALOR === 'Clave de residuo' ? true : false;
+    this.clasificacionObj.nombre = VALOR === 'Nombre' ? true : false;
+    this.clasificacionObj.descripcion = VALOR === 'Descripción' ? true : false;
     this.formularioStore.actualizarFormularioResiduo({
       ...this.formularioResiduo.getRawValue(),
       [field]: VALOR,
