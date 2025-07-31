@@ -8,7 +8,7 @@
       "fetchActa": "Acta_12345.pdf",
       "numeroNotaria": "45",
       "municipioDelegacion": "Municipio A",
-      "estado": "Estado X"
+      "entidadFederativa": "Entidad X"
     },
     {
       "nombre": "Maria",
@@ -18,7 +18,7 @@
       "fetchActa": "Acta_98765.pdf",
       "numeroNotaria": "12",
       "municipioDelegacion": "Municipio B",
-      "estado": "Estado Y"
+      "entidadFederativa": "Entidad Y"
     },
     {
       "nombre": "Carlos",
@@ -28,7 +28,7 @@
       "fetchActa": "Acta_11223.pdf",
       "numeroNotaria": "78",
       "municipioDelegacion": "Municipio C",
-      "estado": "Estado Z"
+      "entidadFederativa": "Entidad Z"
     }
   ]
 }

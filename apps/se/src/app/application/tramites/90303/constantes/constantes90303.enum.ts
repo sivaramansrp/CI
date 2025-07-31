@@ -1,4 +1,4 @@
-import { ListaTabla, ListaTablaBaja } from "../models/registro.model";
+import { Bitacora, ListaTabla, ListaTablaBaja } from "../models/registro.model";
 import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
 
 /**
@@ -45,4 +45,42 @@ export const LISTA_DE_SECTORS_BAJA: ConfiguracionColumna<ListaTablaBaja>[] = [
         clave: (ele: ListaTablaBaja) => ele.sector, // Clave que define el valor de la columna.
         orden: 3, // Orden en el que se mostrará la columna.
     },
+];
+
+
+export const CONFIGURACION_BITCORA = [
+  {
+    /**
+     * Encabezado de la columna: Tipo modificación.
+     * @property {string} encabezado
+     */
+    encabezado: 'Tipo modificación',
+
+    /**
+     * Función que devuelve el valor del tipo de modificación.
+     * @property {(ele: Bitacora) => string | undefined} clave
+     */
+    clave: (ele: Bitacora): string | undefined => ele.tipoModificacion,
+
+    /**
+     * Orden de la columna.
+     * @property {number} orden
+     */
+    orden: 1,
+  },
+  {
+    encabezado: 'Fecha modificación',
+    clave: (ele: Bitacora): string | undefined => ele.fechaModificacion,
+    orden: 2,
+  },
+  {
+    encabezado: 'Valores anteriores',
+    clave: (ele: Bitacora): string | undefined => ele.valoresAnteriores,
+    orden: 3,
+  },
+  {
+    encabezado: 'Valores nuevos',
+    clave: (ele: Bitacora): string | undefined => ele.valoresNuevos,
+    orden: 4,
+  },
 ];
