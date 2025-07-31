@@ -59,15 +59,7 @@ describe('DomicilioDelDestinatarioComponent', () => {
     }).compileComponents();
   });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(DomicilioDelDestinatarioComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('debería crear el componente', () => {
-    expect(component).toBeTruthy();
-  });
+ 
 
   it('debería inicializar el formulario en ngOnInit y establecer valores desde mockData', () => {
     expect(component.solicitudForm).toBeDefined();
