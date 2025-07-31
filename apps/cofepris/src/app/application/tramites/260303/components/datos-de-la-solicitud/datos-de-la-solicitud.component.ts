@@ -315,7 +315,7 @@ ngOnInit(): void {
 public inicializarTablaYCatalogoDatos(): void {
   this.getDenominacionForm();
   this.getEstadoCatalogDatos();
-  if (this.solicitudState['scianTabla'].length) {
+  if (this.solicitudState['scianTabla']?.length) {
     this.scianTablaDatos = this.solicitudState['scianTabla'];
   } else {
     this.getscianTabla();

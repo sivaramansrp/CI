@@ -1,7 +1,7 @@
 <div class="container">
     <ng-titulo titulo="Datos del establecimiento"></ng-titulo>
     <div class="d-flex justify-content-end">
-        <button class="btn btn-primary" type="button" (click)="seleccionar(template)" tooltip="Selecciona para habilitar los campos del establecimiento" placement="left" [disabled]="consultaState?.readonly">Seleccionar establecimiento</button>
+        <button class="btn btn-primary" type="button" (click)="seleccionar(template)" tooltip="Selecciona para habilitar los campos del establecimiento" placement="left" [disabled]="consultaState.readonly">Seleccionar establecimiento</button>
     </div>
     <div class="row mb-3">
         <div class="col-md-8">
@@ -180,8 +180,8 @@
                 >
             </app-tabla-dinamica>
             <div class="d-flex justify-content-end mt-3">
-                <button class="btn btn-danger me-3" [disabled]="consultaState?.readonly">Eliminar</button>
-                <button class="btn btn-primary" (click)="seleccionarAgregar(scian)" [disabled]="consultaState?.readonly">Agregar</button>
+                <button class="btn btn-danger me-3" [disabled]="consultaState.readonly">Eliminar</button>
+                <button class="btn btn-primary" (click)="seleccionarAgregar(scian)" [disabled]="consultaState.readonly">Agregar</button>
             </div>
         </div>
     </div>
@@ -231,7 +231,7 @@
 >
             </app-tabla-dinamica>
             <div class="d-flex justify-content-end mt-3">
-                <button class="btn btn-primary" (click)="seleccionarAgregar(mercancias)" [disabled]="consultaState?.readonly">Agregar</button>
+                <button class="btn btn-primary" (click)="seleccionarAgregar(mercancias)" [disabled]="consultaState.readonly">Agregar</button>
             </div>
         </div>
     </div>
@@ -297,7 +297,7 @@
                 }
             </div>
             <div class="col-md-4">
-                <button type="button" class="btn btn-primary mt-5" (click)="buscarRepresentanteLegal()" [disabled]="consultaState?.readonly">Buscar</button>
+                <button type="button" class="btn btn-primary mt-5" (click)="buscarRepresentanteLegal()" [disabled]="consultaState.readonly">Buscar</button>
             </div>
           </div>
           <div class="row mb-2">

@@ -1,10 +1,10 @@
+import { Catalogo, JSONResponse } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { Fabricante, MercanciasDatos, Otros, ScianDatos } from '@libs/shared/data-access-user/src';
 import { Observable,catchError, throwError } from 'rxjs';
 import { Solicitud260303State, Tramite260303Store } from '../../../estados/tramites/260303/tramite260303.store';
 import { EstadoCatalogResponse } from '../models/certificados-licencias-permisos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Catalogo, JSONResponse } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 
 // Decorador Injectable que indica que este servicio puede ser inyectado en otros componentes o servicios.
 // providedIn: 'root' significa que el servicio estará disponible en toda la aplicación.
