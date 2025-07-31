@@ -221,7 +221,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     if (this.formularioDeshabilitado) {
       this.pagoDerechosForm.disable();
     }
-    console.log(this.pagoDerechoFormState);
     this.pagoDerechosForm.patchValue(this.pagoDerechoFormState);
   }
 
