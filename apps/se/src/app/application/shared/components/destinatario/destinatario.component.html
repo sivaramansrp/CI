@@ -8,11 +8,29 @@
           <div class="col-md-4 form-group">
             <label class="form-label" for="Calle">Calle*:</label>
             <input type="text" id="calle" class="form-control" formControlName="calle" (change)="setValoresStore('formDestinatario','calle','setFormDestinatario')" />
+           @if(formDestinatario.controls['calle'].invalid && formDestinatario.controls['calle'].touched) {
+    <div class="d-grid">
+      @if(formDestinatario.controls['calle'].errors?.['maxlength']) {
+        <span class="mensaje-error">
+          Por favor, no escribas más de 90 caracteres
+        </span>
+      }
+    </div>
+  }
           </div>
   
           <div class="col-md-4 form-group">
             <label class="form-label" for="numeroLetra">Número y/o letra*:</label>
             <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra" (change)="setValoresStore('formDestinatario','numeroLetra','setFormDestinatario')" />
+           @if(formDestinatario.controls['numeroLetra'].invalid && formDestinatario.controls['numeroLetra'].touched) {
+    <div class="d-grid">
+      @if(formDestinatario.controls['numeroLetra'].errors?.['maxlength']) {
+        <span class="mensaje-error">
+          Por favor, no escribas más de 30 caracteres
+        </span>
+      }
+    </div>
+  }
           </div>
         </div>
         <div class="row">
@@ -21,6 +39,15 @@
               >Ciudad (población, estado o provincia)*:</label
             >
             <input type="text" id="ciudad" class="form-control" formControlName="ciudad"  (change)="setValoresStore('formDestinatario','ciudad','setFormDestinatario')" />
+            @if(formDestinatario.controls['ciudad'].invalid && formDestinatario.controls['ciudad'].touched) {
+    <div class="d-grid">
+      @if(formDestinatario.controls['ciudad'].errors?.['maxlength']) {
+        <span class="mensaje-error">
+          Por favor, no escribas más de 50 caracteres
+        </span>
+      }
+    </div>
+  }
           </div>
           <div class="col-md-4 form-group">
             <app-catalogo-select
@@ -45,10 +72,30 @@
           <div class="col-md-4 form-group">
             <label class="form-label" for="telefono">Teléfono:</label>
             <input type="text" id="telefono" class="form-control" formControlName="telefono" (change)="setValoresStore('formDestinatario','telefono','setFormDestinatario')" />
+            @if(formDestinatario.controls['telefono'].invalid && formDestinatario.controls['telefono'].touched) {
+    <div class="d-grid">
+         @if(formDestinatario.controls['telefono'].errors?.['required']) {
+      <span class="mensaje-error">Este campo es obligatorio</span>
+    }
+      @if(formDestinatario.controls['telefono'].errors?.['maxlength']) {
+        <span class="mensaje-error">Por favor, no escribas más de 30 caracteres</span>
+      }
+    </div>
+  }
           </div>
           <div class="col-md-4 form-group">
             <label class="form-label" for="fax">Fax:</label>
             <input type="text" id="fax" class="form-control" formControlName="fax" (change)="setValoresStore('formDestinatario','fax','setFormDestinatario')" />
+         @if(formDestinatario.controls['fax'].invalid && formDestinatario.controls['fax'].touched) {
+    <div class="d-grid">
+        @if(formDestinatario.controls['fax'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                }
+      @if(formDestinatario.controls['fax'].errors?.['maxlength']) {
+        <span class="mensaje-error">Por favor, no escribas más de 20 caracteres</span>
+      }
+    </div>
+  }
           </div>
         </div>
       </div>
@@ -59,17 +106,44 @@
           >Ciudad (población, estado o provincia)*:</label
         >
         <input type="text" id="ciudad" class="form-control" formControlName="ciudad"  (change)="setValoresStore('formDestinatario','ciudad','setFormDestinatario')" />
+       @if(formDestinatario.controls['ciudad'].invalid && formDestinatario.controls['ciudad'].touched) {
+    <div class="d-grid">
+      @if(formDestinatario.controls['ciudad'].errors?.['maxlength']) {
+        <span class="mensaje-error">
+          Por favor, no escribas más de 50 caracteres
+        </span>
+      }
+    </div>
+  }
       </div>
 
       <div class="row">
         <div class="col-md-4 form-group">
           <label class="form-label" for="Calle">Calle*:</label>
           <input type="text" id="calle" class="form-control" formControlName="calle" (change)="setValoresStore('formDestinatario','calle','setFormDestinatario')" />
+         @if(formDestinatario.controls['calle'].invalid && formDestinatario.controls['calle'].touched) {
+    <div class="d-grid">
+      @if(formDestinatario.controls['calle'].errors?.['maxlength']) {
+        <span class="mensaje-error">
+          Por favor, no escribas más de 90 caracteres
+        </span>
+      }
+    </div>
+  }
         </div>
 
         <div class="col-md-4 form-group">
           <label class="form-label" for="numeroLetra">Número y/o letra*:</label>
           <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra" (change)="setValoresStore('formDestinatario','numeroLetra','setFormDestinatario')" />
+         @if(formDestinatario.controls['numeroLetra'].invalid && formDestinatario.controls['numeroLetra'].touched) {
+    <div class="d-grid">
+      @if(formDestinatario.controls['numeroLetra'].errors?.['maxlength']) {
+        <span class="mensaje-error">
+          Por favor, no escribas más de 30 caracteres
+        </span>
+      }
+    </div>
+  }
         </div>
 
         @if(!ocultarLada){
@@ -82,12 +156,32 @@
         <div class="col-md-3 form-group">
           <label class="form-label" for="telefono">Teléfono:</label>
           <input type="text" id="telefono" class="form-control" formControlName="telefono" (change)="setValoresStore('formDestinatario','telefono','setFormDestinatario')" />
+        @if(formDestinatario.controls['telefono'].invalid && formDestinatario.controls['telefono'].touched) {
+    <div class="d-grid">
+       @if(formDestinatario.controls['telefono'].errors?.['required']) {
+      <span class="mensaje-error">Este campo es obligatorio</span>
+    }  
+      @if(formDestinatario.controls['telefono'].errors?.['maxlength']) {
+        <span class="mensaje-error">Por favor, no escribas más de 30 caracteres</span>
+      }
+    </div>
+  }
         </div>
 
         @if(!ocultarFax){
           <div class="col-md-4 form-group">
             <label class="form-label" for="fax">Fax:</label>
             <input type="text" id="fax" class="form-control" formControlName="fax" (change)="setValoresStore('formDestinatario','fax','setFormDestinatario')" />
+           @if(formDestinatario.controls['fax'].invalid && formDestinatario.controls['fax'].touched) {
+    <div class="d-grid">
+        @if(formDestinatario.controls['fax'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                }
+      @if(formDestinatario.controls['fax'].errors?.['maxlength']) {
+        <span class="mensaje-error">Por favor, no escribas más de 20 caracteres</span>
+      }
+    </div>
+  }
           </div>
         }
 
