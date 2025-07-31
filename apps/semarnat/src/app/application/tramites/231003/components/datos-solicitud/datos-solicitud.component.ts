@@ -5,14 +5,13 @@ import { ConsultaioQuery,ConsultaioState} from '@ng-mf/data-access-user'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RadioOpcion, SolicitudJson } from '@libs/shared/data-access-user/src/core/models/231003/solicitud.model';
 import {Subject, map, takeUntil } from 'rxjs';
-import { AvisoDeReciclajeServiceService } from '../../services/aviso-de-reciclaje-service.service';
+import { AvisoDeReciclajeServiceService } from '../../service/aviso-de-reciclaje-service.service';
 import { CommonModule } from '@angular/common';
 import { DatoSolicitudQuery } from '../../estados/queries/dato-solicitud.query';
 import { DatoSolicitudStore } from '../../estados/tramites/dato-solicitud.store';
 import { DatosResiduosPeligrososComponent } from '../datos-residuos-peligrosos/datos-residuos-peligrosos.component';
 import { Modal } from 'bootstrap';
 import rawData from '@libs/shared/theme/assets/json/231003/solicitud.json';
-
 /**
  * Constante que contiene las opciones de radio y demás datos del archivo JSON.
  * Se hace un cast del JSON importado al tipo `SolicitudJson`.
