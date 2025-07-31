@@ -89,7 +89,7 @@ export class ModificacionVigenciasComponent implements OnInit, OnDestroy {
   private crearFormulario(): void {
 
     this.formularioModificacionVigencias = this.fb.group({
-      modificacionVigencias: [this.solicitudState?.modificacionVigencias ?? 'Si', Validators.required],
+      modificacionVigencias: [this.solicitudState?.modificacionVigencias, Validators.required],
       fechaInicioVigenciaAnterior: [this.solicitudState?.fechaInicioVigenciaAnterior ?? ''],
       fechaFinVigenciaAnterior: [this.solicitudState?.fechaFinVigenciaAnterior ?? ''],
       fechaInicioVigenciaActual: [this.solicitudState?.fechaInicioVigenciaActual ?? ''],
@@ -104,8 +104,7 @@ export class ModificacionVigenciasComponent implements OnInit, OnDestroy {
 
 
   /** Called by (valueChange) on the radio */
-  onCambioModificacionVigencias(valor: string | number, controlName: string): void {
-    this.setValoresStore(this.formularioModificacionVigencias, controlName);
+  onCambioModificacionVigencias(valor: string | number): void {
     this.applyVigenciaValidators(valor === '1');
   }
 

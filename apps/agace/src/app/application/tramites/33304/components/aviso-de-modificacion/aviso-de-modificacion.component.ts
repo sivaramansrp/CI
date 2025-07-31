@@ -334,11 +334,7 @@ export class AvisoDeModificacionComponent implements OnInit, OnDestroy {
     this.formularioAvisoDeModification.reset();
     this.modificacionPartesData = [{ tbodyData: [] }];
   }
-
-   /** Verifica el tipo de modificación seleccionada en el radio y muestra el modal correspondiente */
-  verificaRadioDomicilio(ev: string | number, campo: string): void {    
-        this.setValoresStore(this.formularioAvisoDeModification, campo);
-  }
+  
 
    /** Método para obtener las entidades federativas del servicio */
   getEntidadFederativa(): void {

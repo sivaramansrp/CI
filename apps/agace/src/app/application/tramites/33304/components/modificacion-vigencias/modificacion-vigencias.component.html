@@ -12,7 +12,8 @@
           [layout]="'horizontal'"
           [gap]="'50px'"
           formControlName="modificacionVigencias"
-          (valueChange)="onCambioModificacionVigencias($event,'modificacionVigencias')">
+          (valueChange)="onCambioModificacionVigencias($event)"
+          (change)="setValoresStore(formularioModificacionVigencias,'modificacionVigencias')">
         </app-input-radio>
       </div>
     </div>

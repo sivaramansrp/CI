@@ -94,7 +94,7 @@ export class ModificacionPartesComponent implements OnInit, OnDestroy {
   private crearFormulario(): void {
 
     this.formularioModificationPartes = this.fb.group({
-      modificacionPartes: [this.solicitudState?.modificacionPartes ?? '1', Validators.required],
+      modificacionPartes: [this.solicitudState?.modificacionPartes, Validators.required],
 
       rfcPartesC2: [
         this.solicitudState?.rfcPartesC2 ?? '',
@@ -118,8 +118,7 @@ export class ModificacionPartesComponent implements OnInit, OnDestroy {
   }
 
   /** Maneja el cambio de radio y guarda en el store */
-  verificaRadioDomicilio(valor: string | number, campo: string): void {
-    this.setValoresStore(this.formularioModificationPartes, campo);
+  verificaRadioDomicilio(valor: string | number): void {
     this.aplicarValidadoresPorOpcion(valor);
   }
 

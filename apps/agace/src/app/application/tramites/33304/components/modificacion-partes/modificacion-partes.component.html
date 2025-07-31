@@ -6,14 +6,15 @@
     <div class="row mt-3">
       <div class="col-md-12">
         <div class="form-group">
-          <label class="form-label">Modificación de de las partes:</label>
+          <label class="form-label">Modificación de de las partes</label>
           <app-input-radio
-            [radioOptions]="radioOptions"
-            [layout]="'horizontal'"
-            [gap]="'50px'"
-            formControlName="modificacionPartes"
-            (valueChange)="verificaRadioDomicilio($event,'modificacionPartes')">
-          </app-input-radio>
+          [radioOptions]="radioOptions"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="modificacionPartes"
+          (valueChange)="verificaRadioDomicilio($event)"
+          (change)="setValoresStore(formularioModificationPartes,'modificacionPartes')">
+        </app-input-radio>
         </div>
       </div>
     </div>

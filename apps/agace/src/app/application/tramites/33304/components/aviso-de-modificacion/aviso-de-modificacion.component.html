@@ -187,7 +187,7 @@
           <label for="TipoDomicilio" class="form-label">¿ El domicilio con el que se acreditó legal uso y goce al
             momento de obtener su registro continua siendo el mismo?</label>
           <app-input-radio [radioOptions]="radioOptions" [layout]="'horizontal'" [gap]="'50px'"
-            formControlName="ideGenerica2" (valueChange)="verificaRadioDomicilio($event,'ideGenerica2')"></app-input-radio>
+            formControlName="ideGenerica2" (change)="setValoresStore(formularioAvisoDeModification,'ideGenerica2')"></app-input-radio>
         </div>
       </div>
     </div>
@@ -243,7 +243,7 @@
 
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="fraccionArancelaria" formControlName="cveMunicipio2"
-          [label]="'Alcaldía o municipio*'" [required]="true" name="cveMunicipio2"
+          [label]="'Alcaldía o municipio'" [required]="true" name="cveMunicipio2"
           [isDisabled]="esFormularioSoloLectura" (change)="setValoresStore(formularioAvisoDeModification, 'cveMunicipio2')">
         </app-catalogo-select>
       </div>
