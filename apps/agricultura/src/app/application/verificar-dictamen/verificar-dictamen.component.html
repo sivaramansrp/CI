@@ -34,7 +34,7 @@
     </div>
     <br>
     <form [formGroup]="FormTramite" role="form" *ngIf="!panelVerFirmar">
-        <div class="form-group">            
+        <div class="form-group button-group-top">            
             <div class="col-md-12 text-end">
                 <button type="button" class="btn btn-primary" (click)="firmar()">Dar Vo. Bo.</button>
                 <button type="button" class="btn btn-default ms-3" (click)="observacion()">Observar</button>
@@ -112,7 +112,7 @@
             </div>
         </div>
         <br>
-        <div class="form-group">
+        <div class="form-group button-group-bottom">
             <div class="col-md-12 text-end">
                 <button type="button" class="btn btn-primary ms-3" (click)="observacion()">Vista Preliminar Aceptado</button>
             </div>
