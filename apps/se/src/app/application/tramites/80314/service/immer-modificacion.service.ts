@@ -15,7 +15,8 @@ import { Observable, map } from 'rxjs';
 import { DatosDelModificacion } from '../estados/models/datos-tramite.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RespuestTablaDatos } from '../models/datos-tramite.model';
+
+import { FraccionSensible, RespuestTablaDatos } from '../models/datos-tramite.model';
 import { RespuestaConsulta } from '../models/datos-tramite.model';
 
 /**
@@ -270,5 +271,17 @@ export class ImmerModificacionService {
   getDatosConsulta(): Observable<RespuestaConsulta> {
     return this.http.get<RespuestaConsulta>(`assets/json/80314/consultaDatos.json`);
   }
+
+
+   /**
+     * Obtiene una lista de fracciones sensibles desde un archivo JSON local.
+     * 
+     * @returns {Observable<FraccionSensible[]>} Un observable que emite un arreglo de objetos de tipo `FraccionSensible`.
+     */
+    obteneFraccionSensible(): Observable<FraccionSensible[]> {
+      return this.http.get<{ data: FraccionSensible[] }>('assets/json/80314/fraccionSensible.json').pipe(
+        map((res: { data: FraccionSensible[] }) => res.data)
+      );
+    }
 
 }

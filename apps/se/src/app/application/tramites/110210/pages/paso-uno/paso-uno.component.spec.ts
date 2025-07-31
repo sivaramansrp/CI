@@ -8,6 +8,7 @@ import {
   TIPO_PERSONA,
   SolicitanteComponent
 } from '@ng-mf/data-access-user';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'solicitante',
@@ -16,7 +17,6 @@ import {
 class MockSolicitanteComponent {
   OBTENER_TIPO_PERSONA = jest.fn();
 
-  // Optionally, add any other methods or properties needed for the mock
 }
 
 describe('PasoUnoComponent', () => {
@@ -27,6 +27,7 @@ describe('PasoUnoComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [PasoUnoComponent, MockSolicitanteComponent],
+      imports: [HttpClientModule]
     }).compileComponents();
   });
 

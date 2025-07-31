@@ -1,18 +1,14 @@
 <ng-titulo titulo="Enlace Operativo" />
 <div class="row">
   <div class="col-md-12">
-    <ng-table
-    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
-      [commonTableHeader]="enlaceHeaderData"
-      [commonTableBody]="enlanceBodyData"
-    ></ng-table>
-    <nav aria-label="Page navigation example">
-      <ul class="pagination justify-content-center">
-        <li class="page-item"><a class="page-link" href="#">Anterior</a></li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">Siguiente</a></li>
-      </ul>
-    </nav>
+    <app-tabla-dinamica
+      [tipoSeleccionTabla]="tablaSeleccionCheckbox"
+      [configuracionTabla]="numeroDeEmpleadosConfiguracionColumnas"
+      [datos]="numeroDeEmpleadosLista"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+      (listaDeFilaSeleccionada)="seleccionarNumeroDeEmpleadosDato($event)"
+    >
+    </app-tabla-dinamica>
   </div>
   <div class="row text-right">
     <div>
@@ -25,8 +21,9 @@
       >
         Agregar
       </button>
-      <button [disabled]="esFormularioSoloLectura"  type="button" class="btn btn-default me-3">Modificar</button>
-      <button [disabled]="esFormularioSoloLectura"  type="button" class="btn btn-danger">Eliminar</button>
+      <button [disabled]="esFormularioSoloLectura"  type="button" class="btn btn-default me-3" (click)="modificarSubcontratados()" data-bs-toggle="modal"
+        data-bs-target="#modalAgregar">Modificar</button>
+      <button [disabled]="esFormularioSoloLectura"  type="button" class="btn btn-danger" (click)="eliminarNumeroDeEmpleadosDato()">Eliminar</button>
     </div>
   </div>
 </div>
@@ -198,7 +195,7 @@
           </form>
         </div>
         <div class="modal-footer custom-footer justify-content-center">
-          <button [disabled]="esFormularioSoloLectura"  type="button" class="btn btn-primary" data-bs-dismiss="modal" #closeModal>Aceptar</button>
+          <button [disabled]="esFormularioSoloLectura"  type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="aceptarModalUno()">Aceptar</button>
           <button [disabled]="esFormularioSoloLectura" 
             type="button"
             class="btn btn-default"

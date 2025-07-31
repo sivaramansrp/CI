@@ -2,16 +2,15 @@
  *  Este servicio proporciona métodos para obtener datos relacionados con tratados y acuerdos.
  */
 
+import { CertificadoDisponibles, HttpCoreService } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { DomicilioTabla } from '../../../../tramites/constantes/110210/domicilio-tabla.enum';
-import { HttpCoreService } from '../../shared/http/http.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class DomicilioTablaService {
+export class CertificadoDisponiblesService {
 
   /**
    * {HttpCoreService} http - Servicio HTTP para realizar solicitudes.
@@ -21,9 +20,9 @@ export class DomicilioTablaService {
   /**
    * @method getData
    *  Obtiene los datos de tratados y acuerdos desde un archivo JSON.
-   * @returns {Observable<DomicilioTabla[]>} Un observable que emite los datos obtenidos.
+   * @returns {Observable<CertificadoDisponibles[]>} Un observable que emite los datos obtenidos.
    */
-  getData(): Observable<DomicilioTabla[]> {
-    return this.http.get('./assets/json/110210/domicilio-tabla-data.json');
+  getData(): Observable<CertificadoDisponibles[]> {
+    return this.http.get('./assets/json/110210/certificado-disponibles.json');
   }
 }

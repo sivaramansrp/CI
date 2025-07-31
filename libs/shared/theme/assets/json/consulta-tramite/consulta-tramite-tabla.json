@@ -3297,5 +3297,26 @@
         "departamento": "AGACE",
         "numeroDeProcedimiento": "32611" ,
         "origin": "READ_PROCEDURE"
+    },
+    {
+        "id": "31802",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGACE",
+        "numeroDeProcedimiento": "31802",
+        "origin": "READ_PROCEDURE"
+    },
+    {
+        "id": "32617",
+        "folioTramite": "3261701000320251005000002",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGACE",
+        "numeroDeProcedimiento": "32617" ,
+        "origin": "READ_PROCEDURE"
     }
 ]

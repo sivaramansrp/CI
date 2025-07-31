@@ -183,7 +183,12 @@
       "ccat": "CCAT1234567890"
     }
   ],
-  "comercioExteriorRealizado": "1",
+  "programaIMMEX": "1",
+  "modalidadIVAAeIEPS": "1",
+  "documentaciónDeComercioExterior": "1",
+  "utilizandoSuPropioTransporte": "1",
+  "serviciosTercerosConCertificacion": "1",
+  "comercioExteriorRealizado": "0",
   "fechaInicioComercio": "01/01/2025",
   "fechaDePago": "12/11/2025",
   "monto": "100",
