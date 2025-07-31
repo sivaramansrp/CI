@@ -42,6 +42,9 @@
           name="pagina"
           class="form-control"
           formControlName="paginaWWeb"
+          maxlength="120"
+          onkeyup="this.value = this.value.toUpperCase();"
+          onkeypress="return soloLetras(event)"
         />
       </div>
       <div class="col-md-8">
@@ -52,6 +55,9 @@
           name="localizacion"
           class="form-control"
           formControlName="localizacion"
+          maxlength="120"
+          onkeyup="this.value = this.value.toUpperCase();"
+          onkeypress="return soloLetras(event)"
         />
       </div>
     </div>
@@ -111,6 +117,7 @@
             name="Nombre"
             class="form-control"
             formControlName="nombreDelFederatario"
+            maxlength="120"
            
           />
         </div>
@@ -123,6 +130,7 @@
               name="Numero"
               class="form-control"
               formControlName="nombreDeNotaria"
+              maxlength="10"
             />
           </div>
           <div class="col-4 mb-4 mt-1">
@@ -147,6 +155,8 @@
               name="acta"
               class="form-control"
               formControlName="nombreDeActa"
+              maxlength="10"
+              [class.is-invalid]="formaComplimentos.get('formaModificaciones')?.get('nombreDeActa')?.invalid && formaComplimentos.get('formaModificaciones')?.get('nombreDeActa')?.touched"
             />
           </div>
 

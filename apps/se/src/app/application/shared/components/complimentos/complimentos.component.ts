@@ -313,8 +313,8 @@ this.formaComplimentos.disable();
       modalidad: [{ value: '', disabled: true }],
       programaPreOperativo: [false],
       datosGeneralis: this.fb.group({
-        paginaWWeb: ['', Validators.required],
-        localizacion: ['', Validators.required],
+        paginaWWeb: ['', [Validators.required, Validators.maxLength(120)]],
+        localizacion: ['', [Validators.required, Validators.maxLength(120)]],
       }),
       obligacionesFiscales: this.fb.group({
         opinionPositiva: [{ value: '', disabled: true }],
@@ -322,10 +322,10 @@ this.formaComplimentos.disable();
         aceptarObligacionFiscal: [''],
       }),
       formaModificaciones: this.fb.group({
-        nombreDelFederatario: ['', Validators.required],
-        nombreDeNotaria: ['', Validators.required],
+        nombreDelFederatario: ['', [Validators.required, Validators.maxLength(120)]],
+        nombreDeNotaria: ['', [Validators.required, Validators.maxLength(10)]],
         estado: ['', Validators.required],
-        nombreDeActa: ['', Validators.required],
+        nombreDeActa: ['',[ Validators.required, Validators.maxLength(10)]],
         fechaDeActa: ['', Validators.required],
         rfc: ['', [Validators.required, Validators.maxLength(13)]],
         nombreDeRepresentante: [{ value: '', disabled: true }],
