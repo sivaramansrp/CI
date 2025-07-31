@@ -2,12 +2,14 @@ import {
   BodyTablaTareasTramite,
   HeaderTablaTareasTramite,
 } from '../../../../core/models/shared/consulta-generica.model';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CONSULTA_TAREASTRAMITE } from '../../../../core/enums/consulta-generica.enum';
 import { CommonModule } from '@angular/common';
 import { FolioQuery } from '../../../../core/queries/folio.query';
-import { TareasSolicitud } from '@libs/shared/data-access-user/src/core/models/130118/consulta-tareas-response.model';
+
+
+import { TareasSolicitud } from '../../../../core/models/130118/consulta-tareas-response.model';
 import { TareasTramiteService } from '../../../../core/services/consultagenerica/tareas-tramite-service';
 
 
@@ -18,7 +20,7 @@ import { TareasTramiteService } from '../../../../core/services/consultagenerica
   templateUrl: './tareas-tramite.component.html',
   styleUrl: './tareas-tramite.component.scss',
 })
-export class TareasTramiteComponent implements OnInit, OnDestroy {
+export class TareasTramiteComponent implements OnInit, OnDestroy, OnChanges {
   /**
    * Variable para almacenar el folio
    */
@@ -72,11 +74,12 @@ export class TareasTramiteComponent implements OnInit, OnDestroy {
       .subscribe((folio) => {
         this.folio = folio || '';
       });
+  }
 
-    /**
-     * Llamar al método para obtener obtener las tareas de trámite
-     */
-    this.getTareas();
+   ngOnChanges(changes: SimpleChanges): void {
+    if (changes['tareasSolicitud'] && changes['tareasSolicitud'].currentValue?.length > 0) {
+      this.getTareas();
+    }
   }
 
   /**

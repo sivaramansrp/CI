@@ -94,7 +94,10 @@
             <app-reviewers-tabs [viewChild]="viewChild" [tramite]="tramite"
             [documentos]="documentosSolicitud"
             [tareasSolicitud]="tareasSolicitud"
-                (viewChildcambioDePestana)="viewChildcambioDePestana($event)"></app-reviewers-tabs>
+            [acusesResolucion]="acusesResolucion"
+            (viewChildcambioDePestana)="viewChildcambioDePestana($event)"
+            (tabSeleccionado)="onTabSeleccionado($event)">
+            </app-reviewers-tabs>
         </div>
     </div>
 </div>

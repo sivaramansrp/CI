@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, Type, ViewChild, ViewContainerRef } from "@angular/core";
+import { AcusesResolucionResponse } from "../../../core/models/130118/consulta-acuses-response.model";
 import { AcusesResolucionesComponent } from "../consulta-generica/bandeja-acuses-resoluciones/acuses-resoluciones.component";
 import { CommonModule } from "@angular/common";
 import { ConsultarequerimientosComponent } from "../consulta-generica/consulta-requerimientos/consulta-requerimientos.component";
@@ -68,6 +69,18 @@ export class ReviewersTabsComponent implements OnChanges, OnInit {
   @Input() tareasSolicitud: TareasSolicitud[] = [];
 
   /**
+   * @property {AcusesResolucionResponse[]} acusesResolucion
+   * @description Acuses de resolución asociados al trámite.
+   */
+  @Input() acusesResolucion!: AcusesResolucionResponse;
+
+  /**
+   * @property {EventEmitter<number>} onTabSeleccionado
+   * @description Evento emitido cuando se selecciona una pestaña, enviando el índice de la pestaña seleccionada.
+   */
+  @Output() tabSeleccionado = new EventEmitter<number>();
+
+  /**
    * @property {EventEmitter<Tabulaciones>} viewChildcambioDePestana
    * @description Evento emitido cuando se cambia de pestaña, enviando el objeto de tabulación seleccionado.
    */
@@ -117,6 +130,7 @@ export class ReviewersTabsComponent implements OnChanges, OnInit {
     if (j?.disabled) { return }
     this.indice = i;
     this.viewChildcambioDePestana.emit(j);
+    this.tabSeleccionado.emit(i);
     setTimeout(() => {
       this.updateTabs();
     }, 100);

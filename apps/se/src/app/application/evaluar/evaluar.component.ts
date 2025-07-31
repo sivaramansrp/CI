@@ -20,12 +20,13 @@ import { ConsultaioQuery, ConsultaioState, ConsultaioStore, FECHA_DE_INICIO } fr
 import { Subject, map, takeUntil } from 'rxjs';
 import { LISTA_TRIMITES } from '../shared/constantes/lista-trimites.enums';
 
+import { AcusesResolucionResponse } from '@libs/shared/data-access-user/src/core/models/130118/consulta-acuses-response.model';
 import { DocumentoSolicitud } from "@libs/shared/data-access-user/src/core/models/130118/consulta-documentos-response.model";
 import { EvaluarSolicitudService } from '../core/services/evaluar-tramite/evaluar-solicitud.service';
-import { GuardarDictamenRequest } from '../core/models/request/guardar-dictamen-request.model';
+import { GuardarDictamenRequest } from '../core/models/evaluar/request/guardar-dictamen-request.model';
 import { GuardarDictamenService } from '../core/services/evaluar-tramite/guardar-dictamen.service';
 import { IniciarService } from '../core/services/evaluar-tramite/iniciar.service';
-import { OpcionesEvaluacionRequest } from '../core/models/request/opciones-evaluacion.model';
+import { OpcionesEvaluacionRequest } from '../core/models/evaluar/request/opciones-evaluacion.model';
 import { TabsSolicitudServiceTsService } from "../core/services/evaluar-tramite/tabs-solicitud.service.ts.service";
 import { TareasSolicitud } from "@libs/shared/data-access-user/src/core/models/130118/consulta-tareas-response.model";
 
@@ -150,6 +151,30 @@ export class EvaluarComponent implements OnInit, OnDestroy {
   tareasSolicitud: TareasSolicitud[] = [];
 
   /**
+   * @property {AcusesResolucionResponse[]} acusesResolucion
+   * @description Acuses de resolución asociados al trámite.
+   */
+  acusesResolucion!: AcusesResolucionResponse;
+
+  /**
+   * @property {boolean} yaCargoDocumentos
+   * @description Indica si los documentos de la solicitud ya han sido cargados.
+   */
+  yaCargoDocumentos = false;
+
+  /**
+   * @property {boolean} yaCargoTareas
+   * @description Indica si las tareas de la solicitud ya han sido cargadas.
+   */
+  yaCargoTareas = false;
+
+  /**
+   * @property {boolean} yaCargoAcuses
+   * @description Indica si los acuses de resolución ya han sido cargados.
+   */
+  yaCargoAcuses = false;
+
+  /**
  * @constructor
  * @description Constructor del componente. Inicializa los servicios y suscripciones necesarias para la evaluación del trámite.
  * 
@@ -214,8 +239,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     } else {
       this.router.navigate([`/${this.guardarDatos?.department.toLowerCase()}/seleccion-tramite`]);
     }
-    this.getDocumentosSolicitud();
-    this.getTareasSolicitud();
+
     this.opcionesEvaluacion();
   }
 
@@ -271,6 +295,56 @@ export class EvaluarComponent implements OnInit, OnDestroy {
           console.error('Error al llamar el servicio:', error);
         }
       });
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description Método del ciclo de vida que se ejecuta al destruir el componente.
+   * 
+   * Cancela todas las suscripciones activas para evitar fugas de memoria.
+   * 
+   * @returns {void}
+   */
+  getAcusesResolucion(): void {
+    const NUMFOLIOTRAMITE = '0402600100420214006000153'
+    this.tabsSolicitudServiceTsService.getAcusesResolucion(NUMFOLIOTRAMITE)
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === '00') {
+            this.acusesResolucion = response.datos ?? {} as AcusesResolucionResponse;
+          } else {
+            console.error('Error en respuesta:', response.mensaje);
+          }
+        },
+        error: (error) => {
+          console.error('Error al llamar el servicio:', error);
+        }
+      });
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description Método del ciclo de vida que se ejecuta al destruir el componente.
+   * 
+   * Cancela todas las suscripciones activas para evitar fugas de memoria.
+   * 
+   * @returns {void}
+   */
+  onTabSeleccionado(indice: number): void {
+    if (indice === 1 && !this.yaCargoDocumentos) {
+      this.yaCargoDocumentos = true;
+      this.getDocumentosSolicitud();
+    }
+
+    if (indice === 6 && !this.yaCargoTareas) {
+      this.yaCargoTareas = true;
+      this.getTareasSolicitud();
+    }
+
+    if (indice === 5 && !this.yaCargoAcuses) {
+      this.yaCargoAcuses = true;
+      this.getAcusesResolucion();
+    }
   }
 
   /**
