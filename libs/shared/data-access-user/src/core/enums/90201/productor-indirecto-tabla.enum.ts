@@ -1,4 +1,4 @@
-import { AcuseTablaDatos, DomiciliosDePlantasTabla, ProductorIndirectoTabla, SectoresTabla } from "../../models/90201/expansion-de-productores.model";
+import { AcuseTablaDatos, DomiciliosDePlantasTabla, MercanciasTabla, ProductorIndirectoTabla, SectoresTabla } from "../../models/90201/expansion-de-productores.model";
 import { ConfiguracionColumna } from "../../models/shared/configuracion-columna.model";
 
 /**
@@ -40,7 +40,7 @@ export const DOMICILIOS_PLANTAS: ConfiguracionColumna<DomiciliosDePlantasTabla>[
       clave: (item: ProductorIndirectoTabla) => item.denominacion,
       orden: 2,
     },
-    { encabezado: 'Correo', clave: (item: ProductorIndirectoTabla) => item.correo, orden: 3 },
+    { encabezado: 'Correo electrónico', clave: (item: ProductorIndirectoTabla) => item.correo, orden: 3 },
   ];
 
 
@@ -64,6 +64,24 @@ export const DOMICILIOS_PLANTAS: ConfiguracionColumna<DomiciliosDePlantasTabla>[
     {
       encabezado: 'Clave del sector',
       clave: (item: SectoresTabla) => item.claveDel,
+      orden: 2,
+    },
+  ];
+
+  /**
+   * Arreglo de configuración para las columnas de la tabla de mercancías.
+   * Cada objeto define una columna con su encabezado, la clave para extraer el valor
+   * del objeto `MercanciasTabla` y el orden en el que debe aparecer la columna.
+   */
+    export const FRACCION_TABLA: ConfiguracionColumna<MercanciasTabla>[] = [
+    {
+      encabezado: 'Fracción arancelaria',
+      clave: (item: MercanciasTabla) => item.fraccion,
+      orden: 1,
+    },
+    {
+      encabezado: 'Clave del sector',
+      clave: (item: MercanciasTabla) => item.claveDel,
       orden: 2,
     },
   ];
