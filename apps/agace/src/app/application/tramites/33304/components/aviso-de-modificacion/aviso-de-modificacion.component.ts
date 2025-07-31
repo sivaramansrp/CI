@@ -26,7 +26,6 @@ import { ModificacionPartesComponent } from '../modificacion-partes/modificacion
 import { ModificacionVigenciasComponent } from '../modificacion-vigencias/modificacion-vigencias.component';
 import { PERFILES_FECHA_INPUT } from '../../../32605/constants/perfiles.enum';
 import { RADIO_OPTIONS } from '../../constants/aviso-modificacion-tabla.enum';
-import { Solicitud33304Enum } from '../../constants/solicitud32101.enum';
 import { Solicitud33304Query } from '../../estados/solicitud33304Query';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user'; 
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
@@ -61,8 +60,7 @@ export class AvisoDeModificacionComponent implements OnInit, OnDestroy {
   /** Form principal (existente) */
   formularioAvisoDeModification!: FormGroup;
 
-  /** Estado / enum (se conservan por compatibilidad) */
-  solicitudEnum = Solicitud33304Enum;
+
   public solicitudState!: Solicitud33304State;
  
 
@@ -357,6 +355,7 @@ export class AvisoDeModificacionComponent implements OnInit, OnDestroy {
       .subscribe((resp) => {
         this.fraccionArancelaria = Object.assign([], resp);
       });
+      
   }
 
   getCveTipoDoc(): void {
