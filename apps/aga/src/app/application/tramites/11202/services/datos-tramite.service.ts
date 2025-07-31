@@ -1,6 +1,6 @@
 import { RespuestaConsulta, RespuestaContenedor } from '../models/datos-tramite.model';
 import { Observable, of } from 'rxjs';
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Catalogo } from '../../../../../../../../libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';

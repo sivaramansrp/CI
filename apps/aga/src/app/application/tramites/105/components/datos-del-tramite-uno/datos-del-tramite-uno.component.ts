@@ -1,4 +1,4 @@
-import { Catalogo, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, TableComponent, TituloComponent, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ACUSE_DATOS, FRACCIONES_TABLEDOS_TABLE_BODY_DATA, OPCIONES_DE_BOTON_DE_RADIO, tableDatos } from '../../constantes/datos-del-tramite.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';

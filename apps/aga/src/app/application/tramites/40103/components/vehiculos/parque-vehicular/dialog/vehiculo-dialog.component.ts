@@ -5,12 +5,12 @@
  *
  * @module VehiculoDialogComponent
  */
-import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, Input, Output, EventEmitter, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { CatalogoSelectComponent, CategoriaMensaje, Notificacion, NotificacionesComponent, TipoNotificacionEnum } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent, NotificacionesComponent, Notificacion, TipoNotificacionEnum, CategoriaMensaje } from '@libs/shared/data-access-user/src';
 import { modificarTerrestreService } from '../../../services/modificacar-terrestre.service';
-import { Subject, takeUntil } from 'rxjs';
+import { takeUntil, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-vehiculo-dialog',
@@ -163,7 +163,7 @@ export class VehiculoDialogComponent implements OnInit {
       const maxId = Math.max(...this.vehiculos.map(v => Number(v.idDeVehiculo) || 0));
       nextId = maxId + 1;
     }
-    const isEdit = Boolean(this.vehiculo && this.vehiculo.idDeVehiculo);
+    const isEdit = !!(this.vehiculo && this.vehiculo.idDeVehiculo);
     this.vehiculoForm = this.fb.group({
       numero: [this.vehiculo?.numero || '', [Validators.required, Validators.maxLength(20)]],
       tipoDeVehiculo: [this.vehiculo?.tipoDeVehiculo || '', Validators.required],
@@ -214,7 +214,7 @@ export class VehiculoDialogComponent implements OnInit {
    * @returns {void}
    */
   limpiarVehiculoData(): void {
-    if (!this.vehiculoForm) {return;}
+    if (!this.vehiculoForm) return;
     const idValue = this.vehiculoForm.get('idDeVehiculo')?.value;
     this.vehiculoForm.reset();
     this.vehiculoForm.get('idDeVehiculo')?.setValue(idValue);
