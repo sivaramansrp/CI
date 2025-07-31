@@ -91,7 +91,8 @@
           </div>
         }
 
-        <div class="col-md-4 form-group">
+        <div class="col-md-4">
+            <div class="form-group">
           <label class="form-label" for="correoElectronico"
             >Correo electrónico*:</label
           >
@@ -101,7 +102,18 @@
           data-bs-toggle="tooltip"
         ></span>
           <input type="text" id="correoElectronico" class="form-control" formControlName="correoElectronico" (change)="setValoresStore('formDestinatario','correoElectronico','setFormDestinatario')" />
-                  </div>
+            </div>
+             @if(formDestinatario.controls['correoElectronico'].invalid && formDestinatario.controls['correoElectronico'].touched) {
+  <div class="d-grid">
+    @if(formDestinatario.controls['correoElectronico'].errors?.['required']) {
+      <span class="mensaje-error">Este campo es obligatorio</span>
+    }    
+    @if(formDestinatario.controls['correoElectronico'].errors?.['pattern']) {
+      <span class="mensaje-error">Por favor, escribe una dirección de correo válida.</span>
+    }
+  </div>
+}
+        </div>
 
         @if(paisDestino){
         <div class="col-md-8 form-group">
