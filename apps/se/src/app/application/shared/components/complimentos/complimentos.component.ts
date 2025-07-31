@@ -842,7 +842,7 @@ this.formaComplimentos.disable();
     }
     
     if (RFC_CONTROL.errors['minlength']) {
-      return 'El RFC debe tener al menos 12 caracteres';
+      return 'El RFC no se encontró, favor de verificar';
     }
     
     if (RFC_CONTROL.errors['maxlength']) {
@@ -938,7 +938,7 @@ this.formaComplimentos.disable();
           tipoNotificacion: 'alert',
           categoria: 'danger',
           modo: 'action',
-          titulo: 'RFC Inválido',
+          titulo: '',
           mensaje: ERROR_MESSAGE,
           cerrar: false,
           tiempoDeEspera: 3000,
