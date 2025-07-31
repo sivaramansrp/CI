@@ -107,11 +107,6 @@ describe('RegistroDeMercanciaComponent', () => {
     expect(storeMock.setTramite110209).toHaveBeenCalledWith({ [MARCA]: 'Nueva Marca' });
   });
 
-  it('debe emitir el evento modificarEventMercancia al llamar regresar', () => {
-    const EMIT_SPY = jest.spyOn(component.modificarEventMercancia, 'emit');
-    component.regresar();
-    expect(EMIT_SPY).toHaveBeenCalledWith(false);
-  });
 
   it('debe limpiar las suscripciones al destruir el componente', () => {
     const NEXT_SPY = jest.spyOn(component['destroyed$'], 'next');

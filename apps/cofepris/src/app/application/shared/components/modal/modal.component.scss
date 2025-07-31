@@ -15,7 +15,7 @@
   bottom: 0;
   left: 0;
   /* z-index must be higher than .jw-modal-background */
-  z-index: 1000;
+  z-index: 1050;
   background-color: #ffffff;
   width: 82%;
   margin: 25px auto;
@@ -36,7 +36,7 @@
 
   /* semi-transparent black  */
   background-color: #000;
-  opacity: 0.75;
+  opacity: 0.7;
   
   /* z-index must be below .jw-modal and above everything else  */
   z-index: 900;

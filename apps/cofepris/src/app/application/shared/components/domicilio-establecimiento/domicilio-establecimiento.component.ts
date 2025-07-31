@@ -319,8 +319,8 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Etiquetas para la lista cruzada de países de origen.
    */
   public aduanasEntradaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'Aduanas de entrada disponibles',
-    derecha: 'Aduanas de entrada seleccionadas*',
+    tituluDeLaIzquierda: 'Aduanas de entrada disponibles:',
+    derecha: 'Aduanas de entrada seleccionadas*:',
   };
 
   /**
@@ -465,8 +465,8 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Etiqueta de la lista de fechas.
    * */
   public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País productor del ingrediente activo',
-    derecha: 'País(es) seleccionado(s)',
+    tituluDeLaIzquierda: 'País productor del ingrediente activo:',
+    derecha: 'País(es) seleccionado(s)*:',
   };
 
   /**
@@ -476,8 +476,8 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * @property {string} derecha - Etiqueta que se muestra a la derecha, indicando los países seleccionados.
    */
   public paisDondeSeElabora: CrossListLable = {
-    tituluDeLaIzquierda: 'país donde se elabora el producto',
-    derecha: 'País(es) seleccionado(s)',
+    tituluDeLaIzquierda: 'País donde se elabora el producto:',
+    derecha: 'País(es) seleccionado(s)*:',
   };
 
   /**
@@ -487,8 +487,8 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * @property {string} derecha - Etiqueta que se muestra en el lado derecho de la lista, indicando los países seleccionados.
    */
   public paisDeProcedencia: CrossListLable = {
-    tituluDeLaIzquierda: 'País de procedencia',
-    derecha: 'País(es) seleccionado(s)',
+    tituluDeLaIzquierda: 'País de procedencia:',
+    derecha: 'País(es) seleccionado(s)*:',
   };
 
   /**
@@ -512,8 +512,8 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * @property {string} derecha - Etiqueta que se muestra a la derecha, indicando los países seleccionados.
    */
   public paisDeOrigen: CrossListLable = {
-    tituluDeLaIzquierda: 'País de origen',
-    derecha: 'País(es) seleccionados',
+    tituluDeLaIzquierda: 'País de origen:',
+    derecha: 'País(es) seleccionado(s)*:',
   };
 
   /**

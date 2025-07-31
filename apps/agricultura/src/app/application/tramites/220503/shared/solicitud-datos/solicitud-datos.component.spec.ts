@@ -1,7 +1,6 @@
 import { SolicitudDatosTabComponent } from './solicitud-datos.component';
 import { TEXTOS } from '../../enums/texto-enum';
 import { Solicitud } from '../../models/solicitud-pantallas.model';
-import { Subject } from 'rxjs';
 
 describe('SolicitudDatosTabComponent', () => {
   let component: SolicitudDatosTabComponent;
@@ -10,19 +9,18 @@ describe('SolicitudDatosTabComponent', () => {
     component = new SolicitudDatosTabComponent();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have TEXTOS set to enum TEXTOS', () => {
+  it('debe tener valores por defecto', () => {
+    expect(component.colapsable).toBe(true);
+    expect(component.tablaHeadData).toEqual([]);
+    expect(component.tablaFilaDatos).toEqual([]);
     expect(component.TEXTOS).toBe(TEXTOS);
   });
 
-  it('should have colapsable set to true by default', () => {
-    expect(component.colapsable).toBe(true);
-  });
-
-  it('should toggle colapsable when mostrarColapsable is called', () => {
+  it('debe alternar el valor de colapsable al llamar mostrarColapsable', () => {
     expect(component.colapsable).toBe(true);
     component.mostrarColapsable();
     expect(component.colapsable).toBe(false);
@@ -30,41 +28,19 @@ describe('SolicitudDatosTabComponent', () => {
     expect(component.colapsable).toBe(true);
   });
 
-  it('should have tablaHeadData as an empty array by default', () => {
-    expect(component.tablaHeadData).toEqual([]);
-  });
-
-  it('should have tablaFilaDatos as an empty array by default', () => {
-    expect(component.tablaFilaDatos).toEqual([]);
-  });
-
-  it('should accept tablaHeadData as input', () => {
-    const headData = ['Col1', 'Col2'];
-    component.tablaHeadData = headData;
-    expect(component.tablaHeadData).toBe(headData);
-  });
-
-  it('should accept tablaFilaDatos as input', () => {
-    const filaDatos: Solicitud[] = [{
-      fechaCreacion: new Date().toISOString(),
-      mercancia: 'Mercancia de prueba',
-      cantidad: '10',
-      proovedor: 'Proveedor de prueba'
+  it('debe aceptar datos de entrada para tablaHeadData y tablaFilaDatos', () => {
+    const dummyHead = ['Col1', 'Col2'];
+    const dummyRows: Solicitud[] = [{
+      fechaCreacion: '2024-06-01',
+      mercancia: 'Maíz',
+      cantidad: '1000',
+      proovedor: 'Proveedor S.A.'
     }];
-    component.tablaFilaDatos = filaDatos;
-    expect(component.tablaFilaDatos).toBe(filaDatos);
-  });
 
-  
+    component.tablaHeadData = dummyHead;
+    component.tablaFilaDatos = dummyRows;
 
-  it('should have destroyed$ as a Subject', () => {
-    expect(component['destroyed$']).toBeDefined();
-  });
-  it('should have destroyed$ initialized as a Subject', () => {
-    expect(component['destroyed$']).toBeInstanceOf(Subject);
-  });
-
-  it('should have destroyed$ as a Subject', () => {
-    expect(component['destroyed$']).toBeInstanceOf(Subject);
+    expect(component.tablaHeadData).toBe(dummyHead);
+    expect(component.tablaFilaDatos).toBe(dummyRows);
   });
 });

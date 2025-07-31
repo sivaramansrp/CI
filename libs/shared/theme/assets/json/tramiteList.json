@@ -752,7 +752,7 @@
     "id": 108,
     "tramite": 260210,
     "linkDashboard": "/cofepris/permiso-sanitario-importacion-medicamentos-pruebas",
-    "linkDepartment": "/cofepris/permiso-sanitario-importacion-medicamentos-pruebas",
+    "linkDepartment": "/pago/permiso-sanitario-importacion-medicamentos-pruebas",
     "department": "cofepris"
   },
   {
@@ -4310,6 +4310,20 @@
     "tramite": 32608,
     "linkDashboard": "/agace/seciit-oea-registration/solicitud",
     "linkDepartment": "/pago/seciit-oea-registration/solicitud",
+    "department": "agace"
+  },
+   {
+    "id": 615,
+    "tramite": 32611,
+    "linkDashboard": "/agace/auto-transportista/solicitud",
+    "linkDepartment": "/pago/auto-transportista/solicitud",
+    "department": "agace"
+   },
+   {
+    "id": 32617,
+    "tramite": 32617,
+    "linkDashboard": "/agace/certificacion-empresas-modalidad/oea-tercerizacion-logistica",
+    "linkDepartment": "/pago/certificacion-empresas-modalidad/oea-tercerizacion-logistica",
     "department": "agace"
   }
 ]

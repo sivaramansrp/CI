@@ -1,10 +1,19 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, FormularioDinamico, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
-import { Contenedor11202Store } from '../../../../core/estados/tramites/contenedor11202.store';
-import { DatosTramiteService } from '@libs/shared/data-access-user/src/core/services/11202/datos-tramite.service';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, DatosPasos, FormularioDinamico, ListaPasosWizard, PASOS, SolicitanteComponent, TIPO_PERSONA, WizardComponent } from '@ng-mf/data-access-user';
+import { Contenedor11202Store } from '../../estados/contenedor11202.store';
+import { DatosTramiteService } from 'apps/aga/src/app/application/tramites/11202/services/datos-tramite.service';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
+
+/**
+ * Interfaz que representa una AccionBoton.
+ * Utilizamos esta interfaz para definir la estructura de los datos de una AccionBoton.
+ */
+interface AccionBoton {
+  accion: string;
+  valor: number;
+}
 
 /**
  * Componente que representa el paso uno de un formulario.
@@ -64,6 +73,32 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
    */
   consultaDatos!: ConsultaioState;
+
+  /**
+   * Evento de salida que emite cuando se hace clic en el botón continuar.
+   */
+  @Output() continuarEvento = new EventEmitter<string>();
+
+  /**
+   * Referencia al componente Wizard.
+   */
+  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+   /**
+   * Arreglo que contiene los pasos del wizard.
+   */
+  pasos: ListaPasosWizard[] = PASOS;
+
+  /**
+   * Datos de los pasos del wizard.
+   */
+  datosPasos: DatosPasos = {
+    nroPasos: this.pasos.length,
+    indice: this.indice,
+    txtBtnAnt: 'Anterior',
+    txtBtnSig: 'Continuar',
+  };
+
   constructor(private datosTramiteService: DatosTramiteService,
     private consultaioQuery: ConsultaioQuery,
     private contenedorStore: Contenedor11202Store
@@ -162,6 +197,29 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
       }
     }, 50);
   }
+
+  /**
+   * Emite el evento continuar.
+   */
+  continuar(): void {
+    this.continuarEvento.emit('');
+  }
+
+  /**
+   * Obtiene el valor del índice y navega en el wizard.
+   * @param e El evento de acción del botón.
+   */
+  getValorIndice(e: AccionBoton): void {
+    if (e.valor > 0 && e.valor < 5) {
+      this.indice = e.valor;
+      if (e.accion === 'cont') {
+        this.wizardComponent.siguiente();
+      } else {
+        this.wizardComponent.atras();
+      }
+    }
+  }
+
   /**
   * @method ngOnDestroy
   * @description Método del ciclo de vida que se ejecuta al destruir el componente.

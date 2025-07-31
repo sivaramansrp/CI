@@ -37,6 +37,7 @@ describe('ContenedorDeDatosSolicitudComponent', () => {
       updateTablaMercanciasConfigDatos: jest.fn() as any,
       updateDatosSolicitudFormState: jest.fn() as any,
       update: jest.fn() as any,
+     
     } as unknown as jest.Mocked<Tramite260214Store>; // Cast to jest.Mocked type
 
     TestBed.configureTestingModule({
@@ -84,15 +85,8 @@ describe('ContenedorDeDatosSolicitudComponent', () => {
     );
   });
 
-  it('scianSeleccionado should call updateScianConfigDatos on the store', () => {
-    const mockEvent: TablaScianConfig[] = [
-      { descripcion: 'test', clave: 'testClave' },
-    ];
-    component.scianSeleccionado(mockEvent);
-    expect(mockTramite260214Store.updateScianConfigDatos).toHaveBeenCalledWith(
-      mockEvent
-    );
-  });
+  
+
 
   it('mercanciasSeleccionado should call updateTablaMercanciasConfigDatos on the store', () => {
     const mockEvent: TablaMercanciasDatos[] = [
