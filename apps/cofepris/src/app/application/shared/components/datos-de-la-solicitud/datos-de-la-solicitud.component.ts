@@ -586,7 +586,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       adunasDeEntradas: [
         this.datosSolicitudFormState.adunasDeEntradas
           ? this.datosSolicitudFormState.adunasDeEntradas
-          : '103',
+          : '',
         [Validators.required],
       ],
       aeropuerto: [

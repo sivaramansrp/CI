@@ -1,12 +1,30 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { SharedModule, SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  FormularioDinamico,
+  TIPO_PERSONA,
+} from '@ng-mf/data-access-user';
+import {
+  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
+  PERSONA_MORAL_NACIONAL,
+} from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import {
+  SharedModule,
+  SolicitanteComponent,
+} from '@libs/shared/data-access-user/src';
 import { map, takeUntil } from 'rxjs';
 import { CertificadoDeOrigenComponent } from '../../components/certificado-de-origen/certificado-de-origen.component';
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos_certificado.component';
 import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
+import { HistoricoDeProductoresComponent } from '../../components/historico-de-productores/historico-de-productores.component';
 import { RegistroService } from '../../services/registro.service';
 import { Subject } from 'rxjs';
 import { Tramite110221Store } from '../../../../estados/tramites/Tramite110221.store';
@@ -26,14 +44,18 @@ import { Tramite110221Store } from '../../../../estados/tramites/Tramite110221.s
     CertificadoDeOrigenComponent,
     DatosCertificadoComponent,
     DestinatarioComponent,
-  ]
+    HistoricoDeProductoresComponent,
+  ],
 })
 export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
   /**
    * Catálogo de entidades federativas.
    * @type {Object}
    */
-  entidadFederativa!: { data: string; domicilioFiscal?: { entidadFederativa?: string } };
+  entidadFederativa!: {
+    data: string;
+    domicilioFiscal?: { entidadFederativa?: string };
+  };
 
   /**
    * Datos de consulta del trámite.
@@ -156,37 +178,75 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
       .subscribe((respuesta) => {
         if (respuesta?.success) {
           this.esDatosRespuesta = true;
-          this.tramite110221Store.setTercerOperador(respuesta?.datos?.tercerOperador);
+          this.tramite110221Store.setTercerOperador(
+            respuesta?.datos?.tercerOperador
+          );
           this.tramite110221Store.setTratado(respuesta?.datos?.tratado);
           this.tramite110221Store.setPais(respuesta?.datos?.pais);
-          this.tramite110221Store.setFraccionArancelaria(respuesta?.datos?.fraccionArancelaria);
-          this.tramite110221Store.setNumRegistro(respuesta?.datos?.numeroRegistro);
-          this.tramite110221Store.setNomComercial(respuesta?.datos?.nombreComercial);
-          this.tramite110221Store.setFechInicioB(respuesta?.datos?.fechaInicial);
+          this.tramite110221Store.setFraccionArancelaria(
+            respuesta?.datos?.fraccionArancelaria
+          );
+          this.tramite110221Store.setNumRegistro(
+            respuesta?.datos?.numeroRegistro
+          );
+          this.tramite110221Store.setNomComercial(
+            respuesta?.datos?.nombreComercial
+          );
+          this.tramite110221Store.setFechInicioB(
+            respuesta?.datos?.fechaInicial
+          );
           this.tramite110221Store.setFechFinB(respuesta?.datos?.fechaFinal);
           this.tramite110221Store.setArchivo(respuesta?.datos?.archivo);
-          this.tramite110221Store.setfraccionMercanArancelaria(respuesta?.datos?.fraccionMercanciaArancelaria);
-          this.tramite110221Store.setnombretecnico(respuesta?.datos?.nombreTecnico);
-          this.tramite110221Store.setnombrecomercialdelamercancia(respuesta?.datos?.nombreComercialDelaMercancia);
-          this.tramite110221Store.setcriterioparaconferir(respuesta?.datos?.criterioParaConferir);
-          this.tramite110221Store.setnomreeningles(respuesta?.datos?.nombreEnIngles);
+          this.tramite110221Store.setfraccionMercanArancelaria(
+            respuesta?.datos?.fraccionMercanciaArancelaria
+          );
+          this.tramite110221Store.setnombretecnico(
+            respuesta?.datos?.nombreTecnico
+          );
+          this.tramite110221Store.setnombrecomercialdelamercancia(
+            respuesta?.datos?.nombreComercialDelaMercancia
+          );
+          this.tramite110221Store.setcriterioparaconferir(
+            respuesta?.datos?.criterioParaConferir
+          );
+          this.tramite110221Store.setnomreeningles(
+            respuesta?.datos?.nombreEnIngles
+          );
           this.tramite110221Store.setcantidad(respuesta?.datos?.cantidad);
           this.tramite110221Store.setUMC(respuesta?.datos?.umc);
-          this.tramite110221Store.setvalordelamercancia(respuesta?.datos?.valorDelaMercancia);
-          this.tramite110221Store.setcomplementodeladescripcion(respuesta?.datos?.complementoDelaDescripcion);
+          this.tramite110221Store.setvalordelamercancia(
+            respuesta?.datos?.valorDelaMercancia
+          );
+          this.tramite110221Store.setcomplementodeladescripcion(
+            respuesta?.datos?.complementoDelaDescripcion
+          );
           this.tramite110221Store.setTipoFactura(respuesta?.datos?.tipoFactura);
           this.tramite110221Store.setFecha(respuesta?.datos?.fecha);
           this.tramite110221Store.setNFactura(respuesta?.datos?.numeroFactura);
-          this.tramite110221Store.setObservaciones(respuesta?.datos?.observaciones);
+          this.tramite110221Store.setObservaciones(
+            respuesta?.datos?.observaciones
+          );
           this.tramite110221Store.setIdioma(respuesta?.datos?.idioma);
           this.tramite110221Store.setEntidad(respuesta?.datos?.entidad);
-          this.tramite110221Store.setRepresentacion(respuesta?.datos?.representacion);
-          this.tramite110221Store.setCheckbox(respuesta?.datos?.casillaVerificacion);
-          this.tramite110221Store.setJustificacion(respuesta?.datos?.justificacion);
+          this.tramite110221Store.setRepresentacion(
+            respuesta?.datos?.representacion
+          );
+          this.tramite110221Store.setCheckbox(
+            respuesta?.datos?.casillaVerificacion
+          );
+          this.tramite110221Store.setJustificacion(
+            respuesta?.datos?.justificacion
+          );
           this.tramite110221Store.setNombre(respuesta?.datos?.nombre);
-          this.tramite110221Store.setApellidoPrimer(respuesta?.datos?.apellidoPrimer);
-          this.tramite110221Store.setApellidoSegundo(respuesta?.datos?.apellidoSegundo);
-          this.tramite110221Store.setNumeroFiscal(respuesta?.datos?.numeroFiscal);
+          this.tramite110221Store.setApellidoPrimer(
+            respuesta?.datos?.apellidoPrimer
+          );
+          this.tramite110221Store.setApellidoSegundo(
+            respuesta?.datos?.apellidoSegundo
+          );
+          this.tramite110221Store.setNumeroFiscal(
+            respuesta?.datos?.numeroFiscal
+          );
           this.tramite110221Store.setRazonSocial(respuesta?.datos?.razonSocial);
           this.tramite110221Store.setCiudad(respuesta?.datos?.ciudad);
           this.tramite110221Store.setCalle(respuesta?.datos?.calle);
@@ -194,7 +254,9 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
           this.tramite110221Store.setLada(respuesta?.datos?.lada);
           this.tramite110221Store.setTelefono(respuesta?.datos?.telefono);
           this.tramite110221Store.setFax(respuesta?.datos?.fax);
-          this.tramite110221Store.setCorreoElectronico(respuesta?.datos?.correoElectronico);
+          this.tramite110221Store.setCorreoElectronico(
+            respuesta?.datos?.correoElectronico
+          );
           this.tramite110221Store.setNacion(respuesta?.datos?.nacion);
           this.tramite110221Store.setTransporte(respuesta?.datos?.transporte);
         }

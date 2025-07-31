@@ -1,12 +1,15 @@
 import {
   CONFIGURACION_ANEXOS_IMPORTACION,
   CONFIGURACION_ANEXOS_TABLA,
+  CONFIGURACION_FRACCION_SENSIBLE,
 } from '../../constantes/modificacion.enum';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   ConfiguracionColumna,
   TablaDinamicaComponent,
 } from '@ng-mf/data-access-user';
+import { FraccionSensible } from '../../models/datos-tramite.model';
+
 import { Subject, takeUntil } from 'rxjs';
 import { Anexo } from '../../estados/models/plantas-consulta.model';
 import { ImmerModificacionService } from '../../service/immer-modificacion.service';
@@ -44,6 +47,21 @@ export class DatosAnexosComponent implements OnDestroy, OnInit {
   configuracionTablaImportacion: ConfiguracionColumna<Anexo>[] =
     CONFIGURACION_ANEXOS_IMPORTACION;
 
+    /**
+       * Configuración de las columnas de la tabla para las fracciones sensibles.
+       * Define cómo se mostrarán los datos de las fracciones sensibles en la tabla.
+       * @type {ConfiguracionColumna<FraccionSensible>[]}
+       */
+      configuracionFraccionSensible: ConfiguracionColumna<FraccionSensible>[] =
+        CONFIGURACION_FRACCION_SENSIBLE;
+
+    /**
+       * Datos de las fracciones sensibles obtenidos desde el servicio.
+       * Estos datos se muestran en la tabla de fracciones sensibles.
+       * @type {FraccionSensible[]}
+       */
+      datosFraccionSensible: FraccionSensible[] = [];    
+    
   /**
    * Datos de los anexos obtenidos desde el servicio.
    * @type {Anexo[]}
@@ -62,7 +80,8 @@ export class DatosAnexosComponent implements OnDestroy, OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.obteneComplimentaria(); // Carga los anexos complementarios.
+    this.obteneComplimentaria();// Carga los anexos complementarios.
+    this.obteneFraccionSensible(); 
   }
 
   /**
@@ -83,7 +102,23 @@ export class DatosAnexosComponent implements OnDestroy, OnInit {
         }
       );
   }
-
+/**
+   * Método que obtiene las fracciones sensibles desde el servicio.
+   * Asigna los datos a la variable `datosFraccionSensible`.
+   */
+  obteneFraccionSensible(): void {
+    this.solicitudService
+      .obteneFraccionSensible() // Llama al servicio para obtener las fracciones sensibles.
+      .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando el componente se destruye.
+      .subscribe(
+        (data: FraccionSensible[]) => {
+          this.datosFraccionSensible = [...data]; // Almacena los datos de fracciones sensibles.
+        },
+        () => {
+          this.toastr.error('Error al cargar'); // Manejo de errores.
+        }
+      );
+  }
   /**
    * Método que se ejecuta cuando el componente es destruido.
    * Notifica a todos los observables que deben completarse y limpia las suscripciones.
