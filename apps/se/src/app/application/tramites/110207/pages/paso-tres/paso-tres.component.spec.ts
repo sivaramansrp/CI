@@ -4,8 +4,7 @@ import { Router } from '@angular/router';
 import { FirmaElectronicaComponent, TramiteFolioService } from '@ng-mf/data-access-user';
 import { TramiteStore } from '../../../../estados/tramite.store';
 import { of, throwError } from 'rxjs';
-import { InjectionToken } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoTresComponent', () => {
@@ -31,12 +30,16 @@ describe('PasoTresComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [PasoTresComponent],
-      imports: [FirmaElectronicaComponent,HttpClientTestingModule],
+      imports: [
+        FirmaElectronicaComponent,
+        HttpClientTestingModule,
+        ToastrModule.forRoot()
+      ],
       providers: [
         { provide: Router, useValue: routerMock },
         { provide: TramiteFolioService, useValue: tramiteFolioServiceMock },
         { provide: TramiteStore, useValue: tramiteStoreMock },
-         { provide: ToastrService, useValue: toastrServiceMock }
+        { provide: ToastrService, useValue: toastrServiceMock }
       ]
     }).compileComponents();
 

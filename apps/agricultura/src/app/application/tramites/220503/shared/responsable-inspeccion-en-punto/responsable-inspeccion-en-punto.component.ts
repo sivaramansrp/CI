@@ -157,23 +157,19 @@ export class ResponsableInspeccionEnPuntoComponent
       this.grupoFormularioPadre.addControl(
         this.claveDeControl,
         new FormGroup({
-          nombre: new FormControl(this.Solicitud220503State.nombre, [
+          nombre: new FormControl(this.Solicitud220503State.nombre || '', [
             Validators.required,
             Validators.maxLength(150),
           ]),
           primerapellido: new FormControl(
-            this.Solicitud220503State.primerapellido,
-            [Validators.maxLength(80)]
+            this.Solicitud220503State.primerapellido || ''
           ),
           segundoapellido: new FormControl(
-            this.Solicitud220503State.segundoapellido,
-            [Validators.maxLength(80)]
+            this.Solicitud220503State.segundoapellido || ''
           ),
-          mercancia: new FormControl(this.Solicitud220503State.mercancia, [
-            Validators.required,
-          ]),
+          mercancia: new FormControl(this.Solicitud220503State.mercancia || ''),
           tipocontenedor: new FormControl(
-            this.Solicitud220503State.tipocontenedor,
+            this.Solicitud220503State.tipocontenedor || '',
             []
           ),
         })
@@ -191,11 +187,11 @@ export class ResponsableInspeccionEnPuntoComponent
 
           if (FORM_GROUP) {
             FORM_GROUP.patchValue({
-              nombre: this.Solicitud220503State.nombre,
-              primerapellido: this.Solicitud220503State.primerapellido,
-              segundoapellido: this.Solicitud220503State.segundoapellido,
-              mercancia: this.Solicitud220503State.mercancia,
-              tipocontenedor: this.Solicitud220503State.tipocontenedor,
+              nombre: this.Solicitud220503State.nombre || '',
+              primerapellido: this.Solicitud220503State.primerapellido || '',
+              segundoapellido: this.Solicitud220503State.segundoapellido || '',
+              mercancia: this.Solicitud220503State.mercancia || '',
+              tipocontenedor: this.Solicitud220503State.tipocontenedor || '',
             });
           }
         })
@@ -279,6 +275,10 @@ export class ResponsableInspeccionEnPuntoComponent
    */
   setTipoContenedor(event: Catalogo): void {
     this.Solicitud220503State.tipocontenedor = event.id;
+  }
+  validarFormularios(): boolean {
+    const FORM_GROUP = this.grupoFormularioPadre.get(this.claveDeControl) as FormGroup;
+    return FORM_GROUP ? FORM_GROUP.valid : false;
   }
 
   /**

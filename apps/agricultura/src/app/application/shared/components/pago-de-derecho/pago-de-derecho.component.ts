@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, REGEX_LLAVE_DE_PAGO_DE_DERECHO, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -23,7 +23,7 @@ import { Subject } from 'rxjs';
   templateUrl: './pago-de-derecho.component.html',
   styleUrl: './pago-de-derecho.component.scss',
 })
-export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit {
+export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,OnChanges {
   /**
     * Configuración predeterminada para el campo de fecha de pago.
     */
@@ -138,16 +138,6 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit 
    * @memberof PagoDeDerechoComponent
    */
   ngOnInit(): void {
-    this.pagoForm.patchValue({
-      exentoPago: this.pagoDeDerechos.exentoPago || 'no',
-      justificacion: this.pagoDeDerechos.justificacion || '',
-      claveReferencia: this.pagoDeDerechos.claveReferencia || '450006257',
-      cadenaDependencia: this.pagoDeDerechos.cadenaDependencia || 'DO3456789012',
-      banco: this.pagoDeDerechos.banco || '',
-      llavePago: this.pagoDeDerechos.llavePago || '',
-      importePago: this.pagoDeDerechos.importePago || '2562',
-      fechaPago: this.pagoDeDerechos.fechaPago || PagoDeDerechoComponent.formatDate()
-    });
     if (this.pagoForm.value.exentoPago === 'no') {
       this.pagoForm.get('llavePago')?.enable();
       this.pagoForm.get('fechaPago')?.enable();
@@ -158,6 +148,22 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit 
       Validators.maxLength(30)]);
     }
   }
+  
+  ngOnChanges(changes: SimpleChanges): void {
+  if (changes['pagoDeDerechos'] && changes['pagoDeDerechos'].currentValue) {
+    this.pagoForm.patchValue({
+      exentoPago: this.pagoDeDerechos.exentoPago || 'no',
+      justificacion: this.pagoDeDerechos.justificacion || '',
+      claveReferencia: this.pagoDeDerechos.claveReferencia || '450006257',
+      cadenaDependencia: this.pagoDeDerechos.cadenaDependencia || 'DO3456789012',
+      banco: this.pagoDeDerechos.banco || '',
+      llavePago: this.pagoDeDerechos.llavePago || '',
+      importePago: this.pagoDeDerechos.importePago || '2562',
+      fechaPago: this.pagoDeDerechos.fechaPago || PagoDeDerechoComponent.formatDate()
+    });
+    this.radioChange();
+  }
+}
   /**
    * @inheritdoc
    * @description

@@ -11,21 +11,21 @@
     <div class="row mt-5">
       <div class="col-md-8">
         <label>Número de oficio*:</label>
-        <input type="text" class="form-control gris-color" readonly required />
+        <input type="text" class="form-control gris-color" formControlName="numeroOficio" readonly required />
       </div>
     </div>
     <div class="row mt-5 mb-5">
-      <div class="col-md-4">
-        <input-fecha [datos]="fechaInicialInput" class="disabled-input-fecha"></input-fecha>
+       <div class="col-md-4">
+        <input-fecha [setFecha]="registroForm.get('fechaInicio')?.value" [datos]="fechaInicialInput" class="disabled-input-fecha"></input-fecha>
       </div>
       <div class="col-md-4">
-        <input-fecha [datos]="fechaFinalInput" class="disabled-input-fecha"></input-fecha>
+        <input-fecha [setFecha]="registroForm.get('fechaFinal')?.value" [datos]="fechaFinalInput" class="disabled-input-fecha"></input-fecha>
       </div>
     </div>
     <div class="row mt-5"></div>
     <div class="row mt-5"></div>
     <div class="row mt-5">
-      <div class="col-md-4">
+     <div class="col-md-4">
         <input-fecha [setFecha]="registroForm.get('fechaPago')?.value" [datos]="fechaPagoInput" (valorCambiado)="cambioFechaPago($event)"></input-fecha>
       </div>
       <div class="col-md-4">

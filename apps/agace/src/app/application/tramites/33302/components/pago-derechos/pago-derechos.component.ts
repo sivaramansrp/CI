@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { Subject,map, takeUntil } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import {Solicitud32301Service} from '../../services/solicitud.service';

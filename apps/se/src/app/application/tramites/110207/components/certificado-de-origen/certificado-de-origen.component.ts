@@ -48,7 +48,7 @@ import mercanciaSeleccionadasTable from '@libs/shared/theme/assets/json/110207/m
 
 // Texto de alerta que se muestra cuando no se ha agregado al menos una mercancía al trámite.
 const TERCEROS_TEXTO_DE_ALERTA =
-  'Para continuar con el trámite, debes agregar por lo menos una mercancía.';
+  `<p style="text-align: center;">Para continuar con el trámite, debes agregar por lo menos una mercancía.</p>`;
 /**
  * Componente que representa el formulario de certificado de origen en el trámite.
  */

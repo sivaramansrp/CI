@@ -2,21 +2,23 @@
   <ng-container formGroupName="validacionForm">
     <ng-titulo titulo="Datos del certificado" />
     <div class="row">
-      <div class="col-md-4 mb-3">
-        <label>Observaciones:</label>
-        <div class="col-md-12 align-text-area">
-          <textarea
-            cols="80"
-            rows="5"
-            formControlName="observaciones" 
-            (change)="
-              setValoresStore(
-                validacionForm,
-                'observaciones',
-                'setObservaciones'
-              )
-            "
-          ></textarea>
+      <div class="col-md-8 mb-3">
+        <div class="form-group">
+          <label>Observaciones:</label>
+            <textarea
+              cols="80"
+              rows="5"
+              class="form-control"
+              id="observaciones"
+              formControlName="observaciones"
+              (change)="
+                setValoresStore(
+                  validacionForm,
+                  'observaciones',
+                  'setObservaciones'
+                )
+              "
+            ></textarea>
         </div>
       </div>
     </div>
@@ -28,7 +30,6 @@
           [required]="true"
           id="idioma"
           formControlName="idioma"
-          
           (change)="setValoresStore(validacionForm, 'idioma', 'setIdioma')"
         ></app-catalogo-select>
       </div>
@@ -41,7 +42,7 @@
           <label style="font-weight: bold">
             <input
               type="checkbox"
-              formControlName="casillaVerificacion" 
+              formControlName="casillaVerificacion"
               (change)="
                 setValoresStore(
                   validacionForm,
@@ -61,7 +62,6 @@
                 cols="80"
                 rows="5"
                 formControlName="justificacion"
-                
                 (change)="
                   setValoresStore(
                     validacionForm,
@@ -82,7 +82,6 @@
             [label]="'Entidad federativa'"
             [required]="true"
             formControlName="entidad"
-            
             (change)="setValoresStore(validacionForm, 'entidad', 'setEntidad')"
           ></app-catalogo-select>
         </div>
@@ -93,7 +92,6 @@
             [required]="true"
             id="representacion"
             formControlName="representacion"
-            
             (change)="
               setValoresStore(
                 validacionForm,

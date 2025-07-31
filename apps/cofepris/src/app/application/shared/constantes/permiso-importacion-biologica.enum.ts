@@ -3,7 +3,8 @@
  * Contiene información sobre los requisitos y normatividad aplicable.
  */
 export const MANIFIESTOS_ALERT = {
-  DATOS_MANIFIESTOS: `Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.`,
+  DATOS_MANIFIESTOS: `<p style="text-align: center;">Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.</p>`
+
 };
 
 /**

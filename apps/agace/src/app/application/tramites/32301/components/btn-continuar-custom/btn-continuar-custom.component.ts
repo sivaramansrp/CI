@@ -181,16 +181,12 @@ export class BtnContinuarCustomComponent implements OnInit {
     this.Tramite32301Query.selectState$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((state) => {
-        const INDICES_ACEPTO_253 = [2];
-        const INDICES_MODIFICACION_SOCIOS = [3, 4, 5, 6, 7];
+        const INDICES_MODIFICACION_SOCIOS = [2,3, 4, 5, 6, 7,8];
 
-        if (INDICES_ACEPTO_253.includes(this.currentPasoUnoTab) && state.tipoDevAviso?.acepto253) {
-          this.btngardarClicked = true;
-          this.btngardarClickedModificacionSocios = false;
-        } else if (INDICES_MODIFICACION_SOCIOS.includes(this.currentPasoUnoTab)) {
+        if (INDICES_MODIFICACION_SOCIOS.includes(this.currentPasoUnoTab)) {
           this.btngardarClicked = false;
 
-          this.btngardarClickedModificacionSocios = state.modificacionSocios?.isActive ?? false;
+          this.btngardarClickedModificacionSocios = state.modificacionSocios?.isActive ?? true;
         } else {
           this.btngardarClicked = false;
           this.btngardarClickedModificacionSocios = false;

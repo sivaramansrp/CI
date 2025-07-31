@@ -100,14 +100,11 @@ export class CatalogosService {
    * Obtiene los datos de la tabla de productores indirectos.
    * @returns Un observable con la lista de productores indirectos.
    */
-  obtenerTablaProductor(): Observable<ProductorIndirecto[]> {
-    return this.http.get<ProductorIndirecto[]>('assets/json/90303/productor.json').pipe(
-      catchError((error) => {
-        return throwError(() => error);
-      })
-    );
-  }
+ 
 
+  obtenerTablaProductor(): Observable<ProductorIndirecto[]> {
+    return this.http.get<ProductorIndirecto[]>('assets/json/90303/productor.json');
+  }
   /**
    * Obtiene los datos de la tabla de bitácoras.
    * @returns Un observable con la lista de bitácoras.
