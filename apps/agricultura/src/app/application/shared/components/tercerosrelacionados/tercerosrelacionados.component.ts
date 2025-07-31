@@ -16,6 +16,7 @@ import { CommonModule } from '@angular/common';
 import { DestinatarioForm } from '../../../tramites/220203/models/220203/importacion-de-acuicultura.module';
 import { ModalComponent } from '../modal/modal.component';
 import { RadioOpcion } from '../../../tramites/220201/models/220201/certificado-zoosanitario.model';
+// import { ToastrModule } from 'ngx-toastr'; // Removed unused import
 
 /**
  * Componente para la gestión de terceros relacionados.
@@ -34,7 +35,7 @@ import { RadioOpcion } from '../../../tramites/220201/models/220201/certificado-
     ReactiveFormsModule,
     InputRadioComponent,
     CatalogoSelectComponent,
-    NotificacionesComponent
+    NotificacionesComponent,
   ],
   templateUrl: './tercerosrelacionados.component.html',
 })
@@ -89,6 +90,12 @@ export class TercerosrelacionadosComponent {
    * @type {boolean}
    */
   public eliminarDatoExportador: boolean = false;
+
+  /**
+   * Indica si se debe mostrar el mensaje de error.
+   * @type {boolean}
+   */
+  public mostrarMensajeError: boolean = false;
   /**
    * Indica si el formulario debe mostrarse en modo solo lectura.
    * Cuando es verdadero, el formulario se presenta únicamente para visualización,
@@ -160,15 +167,13 @@ export class TercerosrelacionadosComponent {
     { encabezado: 'País', clave: (fila) => fila.pais, orden: 5 },
   ];
   /**
-    * Evento emitido para abrir el modal de exportador.
-    * @type {abrirModalDestinatario}
-    */
-  @Output() abrirModalDestinatario = new EventEmitter<TercerosrelacionadosdestinoTable>();
+   * Evento emitido para abrir el modal de destinatario.
+   */
+  @Output() abrirModalDestinatario: EventEmitter<TercerosrelacionadosdestinoTable> = new EventEmitter<TercerosrelacionadosdestinoTable>();
   /**
    * Evento emitido para abrir el modal de exportador.
-   * @type {EventEmitter<TercerosrelacionadosdestinoTable>}
    */
-  @Output() abrirModalExportador = new EventEmitter<DestinatarioForm>();
+  @Output() abrirModalExportador: EventEmitter<DestinatarioForm> = new EventEmitter<DestinatarioForm>();
 
   /**
    * Configuración de las columnas para la tabla de destinatarios.
@@ -233,6 +238,7 @@ export class TercerosrelacionadosComponent {
    * @method modificarDestinatario
    */
   modificarDestinatario(): void {
+    if(this.listaDeFilaSeleccionada.length !== 0){
     if (this.listaDeFilaSeleccionada[0]) {
       this.abrirModalDestinatario.emit(this.listaDeFilaSeleccionada[0]);
     }
@@ -240,11 +246,16 @@ export class TercerosrelacionadosComponent {
       this.abrirModalDestinatario.emit();
     }
   }
+  else{
+    this.errorMessageExportador();
+  }
+  }
   /**
  * Navega a la pantalla para modificar un destinatario existente.
  * @method modificarDestinatario
  */
   modificarDestinatarioFinal(): void {
+        if(this.listaDeFilaSeleccionadaFinal.length !== 0){
     if (this.listaDeFilaSeleccionadaFinal[0]) {
       this.abrirModalExportador.emit(this.listaDeFilaSeleccionadaFinal[0]);
     }
@@ -252,6 +263,10 @@ export class TercerosrelacionadosComponent {
       this.abrirModalExportador.emit();
     }
   }
+  else{
+    this.errorMessageExportador();
+  }
+}
 
 
   /**
@@ -276,6 +291,7 @@ export class TercerosrelacionadosComponent {
    * @method emitEliminar
    */
   emitEliminar(): void {
+   if(this.listaDeFilaSeleccionada.length !== 0){    
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
@@ -289,11 +305,17 @@ export class TercerosrelacionadosComponent {
     };
     this.eliminarDatosTabla = true;
   }
+  else{
+    this.errorMessageExportador();
+  }
+
+  }
   /**
   * Emite el evento para eliminar la selección de destinatarios.
   * @method emitEliminar
   */
   emitEliminarFinal(): void {
+            if(this.listaDeFilaSeleccionadaFinal.length !== 0){
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
@@ -306,6 +328,10 @@ export class TercerosrelacionadosComponent {
       txtBtnCancelar: 'Cancelar',
     };
     this.eliminarDatoExportador = true;
+  }
+  else{
+    this.errorMessageExportador();
+  }
   }
 
   /**
@@ -345,6 +371,10 @@ export class TercerosrelacionadosComponent {
       this.eliminarDatoExportador = false;
     }
   }
+
+  eliminarErrorMessage():void {
+    this.mostrarMensajeError =false;
+  }
     validarFormulario(): boolean {
       let VALIDATE = false;
      if(this.exportadorRequired) {
@@ -361,4 +391,22 @@ export class TercerosrelacionadosComponent {
      }
      return VALIDATE;
     }
+
+    errorMessageExportador(): void {
+      if (this.listaDeFilaSeleccionadaFinal.length === 0) {
+        this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'info',
+        titulo: 'Selección requerida',
+        mensaje: 'Debe seleccionar al menos un exportador para continuar.',
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Cancelar',
+        txtBtnCancelar: '',
+        };
+      }
+    this.mostrarMensajeError =true;
+    }
+    
 }

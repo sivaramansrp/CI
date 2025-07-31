@@ -37,7 +37,6 @@ import { TercerosrelacionadosService } from '../../../../shared/components/servi
      CommonModule,
      TercerosrelacionadosComponent,
      ModalComponent
-    
   ],
   templateUrl: './tercerospage.component.html',
   styleUrl: './tercerospage.component.scss',

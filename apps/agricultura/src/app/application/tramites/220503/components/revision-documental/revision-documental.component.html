@@ -11,20 +11,9 @@
           <a data-toggle="tab" (click)="seleccionaTab(3)">Pago de derechos</a>
         </li>
       </ul>
-  
-      <ng-container>
-        @switch (indice) {
-        @case (1) {
-        <app-datos-generales></app-datos-generales>
-        }
-        @case (2) {
-        <app-terceros-relacionados></app-terceros-relacionados>
-        }
-        @case (3) {
-        <app-pago-de-derechos></app-pago-de-derechos>
-        }
-        }
-      </ng-container>
+    <app-datos-generales [hidden]="indice !== 1"></app-datos-generales>
+    <app-terceros-relacionados [hidden]="indice !== 2" #tercerosRelacionadosRef></app-terceros-relacionados>
+    <app-pago-de-derechos [hidden]="indice !== 3" #pagoDeDerechosRef></app-pago-de-derechos>
     </div>
   </div>
   

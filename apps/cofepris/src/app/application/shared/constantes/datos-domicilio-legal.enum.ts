@@ -113,5 +113,5 @@ export const PAIS_DE_PROCEDENCIA_LABEL: CrossListLable = {
 
 export const PAIS_DE_ORIGEN_LABEL: CrossListLable = {
     tituluDeLaIzquierda: 'País de origen',
-    derecha: 'País(es) seleccionado(s)*',
+    derecha: 'País(es) seleccionados',
   }
