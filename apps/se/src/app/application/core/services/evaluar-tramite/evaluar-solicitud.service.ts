@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { API_POST_OPCIONES_EVALUACION, NUMFOLIOTRAMITE } from '../../../constantes/130118/api-constants';
-import { OpcionesEvaluacionRequest } from '../../models/request/opciones-evaluacion.model';
+import { OpcionesEvaluacionRequest } from '../../models/evaluar/request/opciones-evaluacion.model';
 
 @Injectable({
   providedIn: 'root'

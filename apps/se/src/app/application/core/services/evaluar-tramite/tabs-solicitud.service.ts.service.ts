@@ -5,7 +5,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { API_GET_SOLICITUD_DOCUMENTOS,API_GET_TAREAS_DOCUMENTOS,IDSOLICITUD,NUMFOLIOTRAMITE } from '../../../constantes/130118/api-constants';
+import { API_GET_ACUSES_RESOLUCION, API_GET_SOLICITUD_DOCUMENTOS, API_GET_TAREAS_DOCUMENTOS, IDSOLICITUD, NUMFOLIOTRAMITE } from '../../../constantes/130118/api-constants';
+import { AcusesResolucionResponse } from '@libs/shared/data-access-user/src/core/models/130118/consulta-acuses-response.model';
 import { DocumentoSolicitud } from '@libs/shared/data-access-user/src/core/models/130118/consulta-documentos-response.model';
 import { TareasSolicitud } from '@libs/shared/data-access-user/src/core/models/130118/consulta-tareas-response.model';
 @Injectable({
@@ -46,6 +47,16 @@ export class TabsSolicitudServiceTsService {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const params = new HttpParams().set('esFuncionario', 'true');
 
-    return this.http.get<BaseResponse<TareasSolicitud[]>>(ENDPOINT,{params});
+    return this.http.get<BaseResponse<TareasSolicitud[]>>(ENDPOINT, { params });
+  }
+
+  /**
+   * Consulta los acuses de resolución del trámite 130118.
+   * @param numFolioTramite Número de folio del trámite.
+   * @returns Observable con la respuesta del servidor.
+   */
+  getAcusesResolucion(numFolioTramite: string): Observable<BaseResponse<AcusesResolucionResponse>> {
+    const ENDPOINT = `${this.host}${API_GET_ACUSES_RESOLUCION.replace(NUMFOLIOTRAMITE, numFolioTramite)}`;
+    return this.http.get<BaseResponse<AcusesResolucionResponse>>(ENDPOINT);
   }
 }

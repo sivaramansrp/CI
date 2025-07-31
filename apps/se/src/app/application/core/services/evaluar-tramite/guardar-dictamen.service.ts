@@ -5,7 +5,7 @@ import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { Observable } from 'rxjs';
 
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
-import { GuardarDictamenRequest } from '../../models/request/guardar-dictamen-request.model';
+import { GuardarDictamenRequest } from '../../models/evaluar/request/guardar-dictamen-request.model';
 
 import { API_GET_DICTAMEN, API_POST_GUARDAR_DICTAMEN, IDSOLICITUDDICTAMEN, NUMFOLIOTRAMITE } from '../../../constantes/130118/api-constants';
 
