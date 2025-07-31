@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-md-8">
                 <div class="form-group">
-                    <label class="form-label width-unset" for="calle">Calle *:</label>
+                    <label class="form-label width-unset" for="calle">Calle*:</label>
                     <input type="text" (change)="setValoresStore(domicilioDelDestinatarioForm,'calle')"
                         class="form-control" id="calle" formControlName="calle" placeholder="Pruebas" />
                     <div *ngIf="domicilioDelDestinatarioForm.controls['calle'].invalid && domicilioDelDestinatarioForm.controls['calle'].touched">
@@ -16,7 +16,7 @@
 
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label width-unset" for="numeroLetra">Número y/o letra *:</label>
+                    <label class="form-label width-unset" for="numeroLetra">Número y/o letra*:</label>
                     <input type="text"
                         (change)="setValoresStore(domicilioDelDestinatarioForm,'numeroLetra')"
                         class="form-control" id="numeroLetra" formControlName="numeroLetra" placeholder="12 Pruebas"
@@ -37,7 +37,7 @@
         <div class="row mt-4">
             <div class="col-md-8">
                 <div class="form-group">
-                    <label class="form-label width-unset" for="ciudad">Ciudad(población,estado o provincia) *:</label>
+                    <label class="form-label width-unset" for="ciudad">Ciudad(población,estado o provincia)*:</label>
                     <input type="text" (change)="setValoresStore(domicilioDelDestinatarioForm,'ciudad')"
                         class="form-control" id="ciudad" formControlName="ciudad" placeholder="lerdo de tejada ver"
                         required />
@@ -58,7 +58,7 @@
 
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label width-unset" for="correoElectronico">Correo electrónico *:</label>
+                    <label class="form-label width-unset" for="correoElectronico">Correo electrónico*:</label>
                     <input type="email"
                         (change)="setValoresStore(domicilioDelDestinatarioForm,'correoElectronico')"
                         class="form-control" id="correoElectronico" formControlName="correoElectronico"
@@ -83,7 +83,7 @@
         <div class="row mt-4">
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label width-unset" for="fax">Fax :</label>
+                    <label class="form-label width-unset" for="fax">Fax:</label>
                     <input type="text" (change)="setValoresStore(domicilioDelDestinatarioForm,'fax')"
                         class="form-control" id="fax" formControlName="fax" placeholder="44323665654" />
                     <div
@@ -97,7 +97,7 @@
 
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label width-unset" for="telefono">Teléfono :</label>
+                    <label class="form-label width-unset" for="telefono">Teléfono:</label>
                     <input type="text"
                         (change)="setValoresStore(domicilioDelDestinatarioForm,'telefono')"
                         class="form-control" id="telefono" formControlName="telefono" placeholder="44323665654" />

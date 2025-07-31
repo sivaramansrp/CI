@@ -144,6 +144,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
           this.store.setEntidadFederativa(respuesta.datos.entidadFederativa);
           this.store.setRepresentacionFederal(respuesta.datos.representacionFederal);
           this.store.setGrupoReceptor(respuesta.datos.grupoReceptor);
+          this.store.setGrupoOperador(respuesta.datos.grupoOperador); 
           this.store.setGrupoDeDirecciones(respuesta.datos.grupoDeDirecciones);
           this.store.setGrupoRepresentativo(respuesta.datos.grupoRepresentativo);
           this.store.setTercerOperador(respuesta.datos.tercerOperador);
@@ -155,6 +156,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
           this.store.setProductorMismoExportador(respuesta.datos.productorMismoExportador);
           this.store.setProductoresExportador(respuesta.datos.productoresExportador);
           this.store.setHistoricoMercanciaSeleccionadasTablaDatos(respuesta.datos.historicoMercanciaSeleccionadasTablaDatos);
+
+          this.store.setNombreTercerOperador(respuesta.datos.nombreTercerOperador);
+          this.store.setPrimerApellidoTercerOperador(respuesta.datos.primerApellidoTercerOperador);
+          this.store.setSegundoApellidoTercerOperador(respuesta.datos.segundoApellidoTercerOperador);
+          this.store.setRegistroFiscalTercerOperador(respuesta.datos.registroFiscalTercerOperador);
+          this.store.setRazonSocialTercerOperador(respuesta.datos.razonSocialTercerOperador);
         }
       });
   }

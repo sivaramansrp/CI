@@ -30,10 +30,10 @@
         <app-solicitante></app-solicitante>
         }
         @case (2) {
-          <app-datos-del-solicitud-modificacion [showPreFillingOptions]="showPreFillingOptions"></app-datos-del-solicitud-modificacion>
+          <app-datos-del-solicitud-modificacion [showPreFillingOptions]="showPreFillingOptions" [mostrarNumeroYFecha]="false" [showAifaCheckbox]="false"></app-datos-del-solicitud-modificacion>
         }
         @case (3) {
-          <app-terceros-relacionados-fabricante></app-terceros-relacionados-fabricante>
+          <app-terceros-relacionados-fabricante [programTitle]="true"></app-terceros-relacionados-fabricante>
         }
         @case (4) {
           <app-pago-de-derechos-entrada></app-pago-de-derechos-entrada>

@@ -1,7 +1,6 @@
-/* eslint-disable sort-imports */
-import { Injectable } from '@angular/core';
-import { Query } from '@datorama/akita';
 import { AgregarCuenta6001State, Tramite6001Store } from './tramite6001.store';
+import { Inject,Injectable } from '@angular/core';
+import { Query } from '@datorama/akita';
 
 /**
  * Service to query the state of Solicitud31601.
@@ -14,7 +13,7 @@ export class Tramite6001Query extends Query<AgregarCuenta6001State> {
   });
 
   constructor(
-    protected override store: Tramite6001Store) {
+    @Inject(Tramite6001Store) protected override store: Tramite6001Store) {
     super(store);
   }
 }

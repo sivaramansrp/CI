@@ -1,5 +1,5 @@
 export interface RegistroDeSolicitudesTabla {
-    movimiento: number;
+    movimiento: string;
     cuenta: string;
     rfc: string;
     persona: string;

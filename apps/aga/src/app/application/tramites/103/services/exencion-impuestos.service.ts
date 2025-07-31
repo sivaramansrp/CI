@@ -13,6 +13,13 @@ import { Tramite103Store } from '../estados/tramite103.store';
   providedIn: 'root'
 })
 export class ExencionImpuestosService {
+    /**
+     * Obtiene el catálogo de opciones de aduana (opciones-aduana.json).
+     * @returns Observable con la respuesta del catálogo de opciones de aduana.
+     */
+    getOpcionesAduana(): Observable<any[]> {
+      return this.http.get<any[]>('assets/json/103/opciones-aduana.json');
+    }
   /**
    * Constructor para inyección de dependencias.
    * @param {HttpClient} http - Cliente HTTP para realizar peticiones.

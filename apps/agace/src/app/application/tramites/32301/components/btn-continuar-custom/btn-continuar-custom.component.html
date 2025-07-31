@@ -13,7 +13,7 @@
     <button type="button" class="btn btn-primary ms-3" [disabled]="!habilitarBoton" (click)="continuar()">
       {{ datos.txtBtnSig }}
     </button>
-    @if (btngardarClicked || btngardarClickedModificacionSocios) {
+    @if (btngardarClickedModificacionSocios) {
     <button type="button" class="btn btn-default ms-3" (click)="guardar()">
       Guardar
     </button>
