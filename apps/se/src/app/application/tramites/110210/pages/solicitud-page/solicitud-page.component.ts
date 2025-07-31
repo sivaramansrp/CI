@@ -1,5 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
 import { AVISO, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@ng-mf/data-access-user';
+import { Component, ViewChild } from '@angular/core';
 
 /**
  * @descripcion

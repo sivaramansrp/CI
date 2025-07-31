@@ -19,13 +19,16 @@ export class DomicilioTablaService {
   constructor(private http: HttpCoreService, private store: Tramite110210Store) { }
 
   /**
-   * @method getData
    *  Obtiene los datos de tratados y acuerdos desde un archivo JSON.
-   * @returns {Observable<DomicilioTabla[]>} Un observable que emite los datos obtenidos.
+   *  Un observable que emite los datos obtenidos.
    */
   getData(): Observable<DomicilioTabla[]> {
     return this.http.get('./assets/json/110210/domicilio-tabla-data.json');
   }
+  /**
+   * Obtiene los datos del estado de Tramite110210 desde un archivo JSON local.
+   * Observable<Tramite110210State> Un observable que emite el estado de Tramite110210.
+   */
   getDatosStore(): Observable<Tramite110210State> {
     return this.http.get<Tramite110210State>('./assets/json/110210/datos.json');
   }

@@ -132,16 +132,17 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
       }
   }
 
+  /**
+   * nicializa el formulario reactivo para la búsqueda de certificados de origen.
+   * Llama al método para obtener el estado de la solicitud y configura el formulario con los valores actuales del estado de la sección.
+   * Los campos incluyen país/bloque, tratado/acuerdo y clave de registro del productor, aplicando validaciones requeridas.
+   */
   inicializarFormulario(): void {
     this.obtenerEstadoSolicitud();
     this.buscarCertificadoDeOrigenFrom = this.fb.group({
         paisBloqueClave: [this.seccionState?.paisBloqueClave],
         tratadoAcuerdoClave: [this.seccionState?.tratadoAcuerdoClave],
         cveRegistroProductor: [this.seccionState?.cveRegistroProductor, [Validators.required, Validators.maxLength(12)]],
-        // solicitud: this.fb.group({
-        //   idSolicitud: [null],
-        //   idSolicitudProductor: ['']
-        // }),
       });
   }
     /**
