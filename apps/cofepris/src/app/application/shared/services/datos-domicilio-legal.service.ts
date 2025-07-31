@@ -129,6 +129,7 @@ export class DatosDomicilioLegalService {
       this.datosDomicilioLegalStore.setNumeroRegistro(DATOS.numeroRegistro);
       this.datosDomicilioLegalStore.setFechaCaducidad(DATOS.fechaCaducidad);
       this.datosDomicilioLegalStore.setCumplimiento(DATOS.cumplimiento);
+      this.datosDomicilioLegalStore.setMensaje(DATOS.mensaje);
       this.datosDomicilioLegalStore.setRfc(DATOS.rfc);
       this.datosDomicilioLegalStore.setNombre(DATOS.nombre);
       this.datosDomicilioLegalStore.setApellidoPaterno(DATOS.apellidoPaterno);

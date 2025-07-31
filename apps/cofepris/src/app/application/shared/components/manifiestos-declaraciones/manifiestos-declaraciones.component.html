@@ -2,7 +2,7 @@
 <form [formGroup]="manifiestos">
   <div class="form-check bg-light p-0">
   <div class="alert alert-info content-with-checkbox py-6">
-    <input type="checkbox" id="mensaje" formcontrolName="mensaje" [checked]="esFormularioSoloLectura" [disabled]="esFormularioSoloLectura"/>
+    <input type="checkbox" id="mensaje" formcontrolName="mensaje" [checked]="esFormularioSoloLectura || isUpdateDatos" [disabled]="esFormularioSoloLectura" (change)="setValoresStore(manifiestos,'mensaje', 'setMensaje')"/>
     <span class="fw-bold align-middle"> *</span>
     <div>{{ mensaje }} </div>
   </div>
