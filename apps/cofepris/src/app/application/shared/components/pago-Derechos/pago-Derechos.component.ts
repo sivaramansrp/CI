@@ -145,7 +145,7 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
       llavePago: [this.solicitudState?.llavePago], // Campo llavePago.
       fechaPago: [this.solicitudState?.fechaPago, Validators.required], // Campo fechaPago.
       importePago: [
-        '',
+        this.solicitudState?.importePago,
         [
           Validators.required,
           Validators.pattern(/^[0-9]+(\.[0-9]{1,2})?$/), Validators.maxLength(16)

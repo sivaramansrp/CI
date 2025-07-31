@@ -1,13 +1,12 @@
-import { Catalogo, CatalogoSelectComponent, FECHA_FINAL_VIGENCIA, FECHA_FINAL_VIGENCIA_DEL_CUPO, FECHA_INICIO_VIGENCIA, FECHA_INICIO_VIGENCIA_DEL_CUPO, InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, FECHA_FINAL_VIGENCIA, FECHA_FINAL_VIGENCIA_DEL_CUPO, FECHA_INICIO_VIGENCIA, FECHA_INICIO_VIGENCIA_DEL_CUPO, InputFecha, InputFechaComponent, Notificacion, NotificacionesComponent, REGEX_ALTO, REGEX_NUMEROS, REGEX_SOLO_NUMEROS, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, map, merge, takeUntil } from 'rxjs';
-import { CommonModule } from '@angular/common';
-
+import { ConsultaioQuery, ValidacionesFormularioService  } from '@ng-mf/data-access-user';
 import { ExpedicionCertificadosAsignacion120202State, Tramite120202Store } from '../../../estados/tramites/tramite120202.store';
 import { ExpedirMonto, NumeroOficioAsignacionDetalleRespquesta } from '../../../tramites/120202/models/expedicion-certificados-asignacion.model';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, map, merge, takeUntil } from 'rxjs';
 import { CONFIGURACION_PARA_ENCABEZADO_DE_EXPEDIR_MONTO_TABLA } from '../../../tramites/120202/constantes/expedicion-certificados-asignacion-constantes.enum';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 import { ExpedicionCertificadosAsignacionService } from '../../../tramites/120202/services/expedicion-certificados-asignacion/expedicion-certificados-asignacion.service';
 import { Tramite120202Query } from '../../../estados/queries/tramite120202.query';
 
@@ -23,7 +22,8 @@ import { Tramite120202Query } from '../../../estados/queries/tramite120202.query
     TituloComponent,
     CatalogoSelectComponent,
     TablaDinamicaComponent,
-    InputFechaComponent
+    InputFechaComponent,
+    NotificacionesComponent
   ],
   templateUrl: './expedicion-certificados-asignacion-directa.component.html',
   styleUrl: './expedicion-certificados-asignacion-directa.component.scss',
@@ -93,15 +93,46 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
   @Output() mostrarError: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /**
+   * Emisor de eventos para mostrar errores en el número de folio de asignación.
+   * @type {EventEmitter<{mostrarError: boolean, valor: string}>}
+   * @description Emite un valor booleano para indicar si se debe mostrar un error en el número de folio de asignación.
+   */
+  @Output() mostrarNumFolioAsignacionError: EventEmitter<{ mostrarError: boolean, valor: string }> = new EventEmitter<{ mostrarError: boolean, valor: string }>();
+
+  /**
+   * Emisor de eventos para mostrar errores al agregar.
+   * @type {EventEmitter<boolean>}
+   * @description Emite un valor booleano para indicar si se debe mostrar un error al agregar.
+   */
+  @Output() mostrarAgregarError: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+  /**
    * @property {boolean} formularioDeshabilitado
    * @description Indica si el formulario está deshabilitado (solo lectura).
    */
   formularioDeshabilitado: boolean = false;
 
   /**
+   * @property {boolean} invalidoFolioAsignacion
+   * @description Indica si el número de folio de asignación es inválido.
+   */
+  invalidoFolioAsignacion: boolean = false;
+
+  /**
    * Estado de la expedición de certificados de asignación.
    */
   public expedicionCertificadoAsignacionState!: ExpedicionCertificadosAsignacion120202State;
+
+  /**
+   * Notificación para mostrar mensajes al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
+   * Indica si la tabla de montos a expedir es inválida.
+   * @type {boolean}
+   */
+  tablaInvalidoError!: boolean;
 
   /**
    * Subject para destruir notificador.
@@ -115,13 +146,15 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
    * @param tramite120202Query - Query para consultar el estado de la aplicación.
    * @param consultaioQuery - Query para consultar el estado de la consulta.
    * @param expedicionCertificadosAsignacionService - Servicio para gestionar la expedición de certificados de asignación.
+   * @param validacionesService Servicio para validar formularios.
    */
   constructor(
     private fb: FormBuilder,
     private tramite120202Store: Tramite120202Store,
     private tramite120202Query: Tramite120202Query,
     private consultaioQuery: ConsultaioQuery,
-    private expedicionCertificadosAsignacionService: ExpedicionCertificadosAsignacionService
+    private expedicionCertificadosAsignacionService: ExpedicionCertificadosAsignacionService,
+    private validacionesService: ValidacionesFormularioService
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -161,9 +194,7 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
    */
   inicializarEstadoFormulario(): void {
     if (this.formularioDeshabilitado) {
-      this.expedicionCertificadosAsignacionForm.disable();
-    } else if (!this.formularioDeshabilitado) {
-      this.expedicionCertificadosAsignacionForm.enable();
+      this.expedicionCertificadosAsignacionForm?.disable();
     }
   }
 
@@ -179,7 +210,10 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
         ],
         numFolioAsignacionAux: [
           this.expedicionCertificadoAsignacionState.numFolioAsignacionAux,
-          [Validators.required]
+          [
+            Validators.required,
+            Validators.pattern(REGEX_SOLO_NUMEROS)
+          ]
         ]
       }),
       representacionFederalForm: this.fb.group({
@@ -256,7 +290,10 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
         ],
         montoExpedir: [
           this.expedicionCertificadoAsignacionState.montoExpedir,
-          [Validators.required]
+          [
+            Validators.required,
+            Validators.pattern(REGEX_ALTO)
+          ]
         ],
         totalExpedir: [
           { value: this.expedicionCertificadoAsignacionState.totalExpedir, disabled: true }
@@ -407,54 +444,76 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
    * @returns {void}
    */
   buscar(cveAniosAutorizacion: string, numFolioAsignacionAux: string): void {
-    if (cveAniosAutorizacion === '-1' || numFolioAsignacionAux.length <= 0 || numFolioAsignacionAux === null) {
-      this.mostrarError.emit(true);
-    } else {
-      this.mostrarError.emit(false);
-      this.asignacionOficioNumeroForm.reset({ cveAniosAutorizacion: '-1', numFolioAsignacionAux: '' });
-      this.tramite120202Store.setAniosAutorizacion('-1');
-      this.tramite120202Store.setNumFolioAsignacionAux('');
+    const ES_FOLIO_VACIO = !numFolioAsignacionAux || numFolioAsignacionAux.trim().length === 0;
+    const ES_ANIO_VACIO = !cveAniosAutorizacion;
+    const REGEX = new RegExp(REGEX_NUMEROS);
 
-      this.expedicionCertificadosAsignacionService.getNumeroOficioAsignacionDetalle()
-        .pipe((takeUntil(this.destruirNotificador$)))
-        .subscribe((resp: NumeroOficioAsignacionDetalleRespquesta) => {
-          const DATOS = resp.data[0];
-          this.representacionFederalForm.patchValue({
-            estado: DATOS.estado,
-            representacionFederal: DATOS.representacionFederal
-          });
-          this.controlMontosAsignacionForm.patchValue({
-            sumaAprobada: DATOS.sumaAprobada,
-            sumaExpedida: DATOS.sumaExpedida,
-            montoDisponible: DATOS.montoDisponible
-          });
-          this.asignacionDatosForm.patchValue({
-            numOficio: DATOS.numOficio,
-            fechaInicio: DATOS.fechaInicio,
-            fechaFinVigenciaAprobada: DATOS.fechaFinVigenciaAprobada
-          });
-          this.cupoDescripcionForm.patchValue({
-            regimenAduanero: DATOS.regimenAduanero,
-            descripcionProducto: DATOS.descripcionProducto,
-            clasificaionSubproducto: DATOS.clasificaionSubproducto,
-            unidadMedidaOficialCupo: DATOS.unidadMedidaOficialCupo,
-            fechaInicioVigencia: DATOS.fechaInicioVigencia,
-            fechaFinVigencia: DATOS.fechaFinVigencia,
-            mecanismoAsignacion: DATOS.mecanismoAsignacion,
-            tratado: DATOS.tratado,
-            fraccionesArancelarias: DATOS.fraccionesArancelarias,
-            paisesCupo: DATOS.paisesCupo,
-            observaciones: DATOS.observaciones,
-            descripcionFundamento: DATOS.descripcionFundamento
-          });
-          this.distribucionSaldoForm.patchValue({
-            montoDisponibleAsignacion: DATOS.montoDisponibleAsignacion
-          });
-          this.mostrarDetalle = true;
-          this.tramite120202Store.setMostrarDetalle(this.mostrarDetalle);
-          this.setEstablecerDatosCampo();
-        });
+    if (ES_ANIO_VACIO || ES_FOLIO_VACIO) {
+      this.invalidoFolioAsignacion = false;
+      this.mostrarDetalle = false;
+      this.tramite120202Store.setMostrarDetalle(this.mostrarDetalle);
+      this.mostrarNumFolioAsignacionError.emit({ mostrarError: false, valor: '' });
+      this.mostrarError.emit(true);
+      this.asignacionOficioNumeroForm.markAllAsTouched();
+      return;
     }
+
+    if (REGEX.test(numFolioAsignacionAux)) {
+      this.invalidoFolioAsignacion = true;
+      this.mostrarDetalle = false;
+      this.tramite120202Store.setMostrarDetalle(this.mostrarDetalle);
+      this.asignacionOficioNumeroForm?.get('numFolioAsignacionAux')?.markAsTouched();
+      this.mostrarError.emit(false);
+      this.mostrarNumFolioAsignacionError.emit({ mostrarError: true, valor: numFolioAsignacionAux });
+      return;
+    }
+
+    this.invalidoFolioAsignacion = false;
+    this.mostrarError.emit(false);
+    this.mostrarNumFolioAsignacionError.emit({ mostrarError: false, valor: '' });
+    this.asignacionOficioNumeroForm.reset({ cveAniosAutorizacion: null, numFolioAsignacionAux: '' });
+    this.tramite120202Store.setAniosAutorizacion('');
+    this.tramite120202Store.setNumFolioAsignacionAux('');
+
+    this.expedicionCertificadosAsignacionService.getNumeroOficioAsignacionDetalle()
+      .pipe((takeUntil(this.destruirNotificador$)))
+      .subscribe((resp: NumeroOficioAsignacionDetalleRespquesta) => {
+        const DATOS = resp.data[0];
+        this.representacionFederalForm.patchValue({
+          estado: DATOS.estado,
+          representacionFederal: DATOS.representacionFederal
+        });
+        this.controlMontosAsignacionForm.patchValue({
+          sumaAprobada: DATOS.sumaAprobada,
+          sumaExpedida: DATOS.sumaExpedida,
+          montoDisponible: DATOS.montoDisponible
+        });
+        this.asignacionDatosForm.patchValue({
+          numOficio: DATOS.numOficio,
+          fechaInicio: DATOS.fechaInicio,
+          fechaFinVigenciaAprobada: DATOS.fechaFinVigenciaAprobada
+        });
+        this.cupoDescripcionForm.patchValue({
+          regimenAduanero: DATOS.regimenAduanero,
+          descripcionProducto: DATOS.descripcionProducto,
+          clasificaionSubproducto: DATOS.clasificaionSubproducto,
+          unidadMedidaOficialCupo: DATOS.unidadMedidaOficialCupo,
+          fechaInicioVigencia: DATOS.fechaInicioVigencia,
+          fechaFinVigencia: DATOS.fechaFinVigencia,
+          mecanismoAsignacion: DATOS.mecanismoAsignacion,
+          tratado: DATOS.tratado,
+          fraccionesArancelarias: DATOS.fraccionesArancelarias,
+          paisesCupo: DATOS.paisesCupo,
+          observaciones: DATOS.observaciones,
+          descripcionFundamento: DATOS.descripcionFundamento
+        });
+        this.distribucionSaldoForm.patchValue({
+          montoDisponibleAsignacion: DATOS.montoDisponibleAsignacion
+        });
+        this.mostrarDetalle = true;
+        this.tramite120202Store.setMostrarDetalle(this.mostrarDetalle);
+        this.setEstablecerDatosCampo();
+      });
   }
 
   /**
@@ -494,17 +553,36 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
    * @param valor - El valor a agregar.
    */
   agregar(valor: string): void {
-    const MONTO_EXPEDIR_VALOR = parseInt(valor, 10);
-    this.cuerpoTabla = [
-      ...this.cuerpoTabla,
-      { montoExpedir: MONTO_EXPEDIR_VALOR }
-    ];
-    this.tramite120202Store.setCuerpoTabla(this.cuerpoTabla);
-    this.distribucionSaldoForm.get('totalExpedir')?.setValue(valor);
-    this.tramite120202Store.setTotalExpedir(MONTO_EXPEDIR_VALOR);
-    
-    this.distribucionSaldoForm.get('montoExpedir')?.setValue('');
-    this.tramite120202Store.setMontoExpedir(null);
+    const REGEX = new RegExp(REGEX_ALTO);
+    if (valor.length <= 0 || !REGEX.test(valor)) {
+      this.mostrarAgregarError.emit(true);
+    } else {
+      this.mostrarAgregarError.emit(false);
+
+      const MONTO_EXPEDIR_VALOR = parseInt(valor, 10);
+      const MONTO_DISPONIBLE = this.distribucionSaldoForm.get('montoDisponibleAsignacion')?.value;
+      let MONTO_TOTAL_EXPEDIR_VALOR: number = 0;
+
+      if (MONTO_DISPONIBLE > MONTO_EXPEDIR_VALOR) {
+        MONTO_TOTAL_EXPEDIR_VALOR = MONTO_DISPONIBLE - MONTO_EXPEDIR_VALOR;
+      }
+
+      this.cuerpoTabla = [
+        ...this.cuerpoTabla,
+        { montoExpedir: MONTO_EXPEDIR_VALOR }
+      ];
+
+      this.tramite120202Store.setCuerpoTabla(this.cuerpoTabla);
+      this.distribucionSaldoForm.get('totalExpedir')?.setValue(MONTO_TOTAL_EXPEDIR_VALOR);
+      this.distribucionSaldoForm.get('montoDisponibleAsignacion')?.setValue(MONTO_TOTAL_EXPEDIR_VALOR);
+      this.tramite120202Store.setTotalExpedir(MONTO_TOTAL_EXPEDIR_VALOR);
+      this.tramite120202Store.setMontoDisponibleAsignacion(MONTO_TOTAL_EXPEDIR_VALOR);
+
+      this.distribucionSaldoForm.get('montoExpedir')?.setValue(null);
+      this.tramite120202Store.setMontoExpedir(null);
+      this.distribucionSaldoForm.get('montoExpedir')?.markAsPristine();
+      this.distribucionSaldoForm.get('montoExpedir')?.markAsUntouched();
+    }
   }
 
   /**
@@ -513,6 +591,27 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
    */
   eliminar(): void {
     if (this.selectedMonto.length > 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: '¿Está seguro que desea eliminar los registros marcados?',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+      };
+      return;
+    }
+  }
+
+  /**
+   * Confirma la eliminación de los registros seleccionados.
+   * @param {boolean} valor - Valor booleano que indica si se confirma la eliminación.
+   * @returns {void}
+   */
+  confirmacionModal(valor: boolean): void {
+    if (valor) {
       const INDICE = this.cuerpoTabla.findIndex((elemento) =>
         Object.entries(this.selectedMonto[0] || {}).every(
           ([key, value]) => elemento[key as keyof ExpedirMonto] === value
@@ -520,21 +619,44 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
       );
       if (INDICE !== -1) {
         this.cuerpoTabla.splice(INDICE, 1);
+        this.cuerpoTabla = [...this.cuerpoTabla];
         this.tramite120202Store.setCuerpoTabla(this.cuerpoTabla);
       }
       this.selectedMonto = [];
+    } else {
+      return;
     }
-  }  
+  }
+
+  /**
+   * Método para validar el formulario.
+   * @param form Formulario a validar.
+   * @param field Campo a validar.
+   * @returns {boolean} Regresa un booleano si el campo es válido o no.
+   */
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) === true;
+  }
 
   /**
    * Método para validar el formulario.
    * @returns boolean
    */
   validarFormulario(): boolean {
-    if (this.expedicionCertificadosAsignacionForm.invalid) {
+    if(!this.mostrarDetalle) {
+      if (this.expedicionCertificadosAsignacionForm.invalid) {
       this.expedicionCertificadosAsignacionForm.markAllAsTouched();
+      }
+      return this.expedicionCertificadosAsignacionForm.valid;
+    } else {
+      if(this.cuerpoTabla.length > 0) {
+        this.tablaInvalidoError = false;
+        return true;
+      } else {
+        this.tablaInvalidoError = true;
+        return false;
+      }
     }
-    return this.expedicionCertificadosAsignacionForm.valid;
   }
 
   /**

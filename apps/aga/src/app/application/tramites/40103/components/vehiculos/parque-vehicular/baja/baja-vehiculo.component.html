@@ -1,0 +1,34 @@
+<div>
+    <h5>Baja de vehículos</h5>
+    <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="columnasVehiculo"
+        [datos]="vehiculosParque" (listaDeFilaSeleccionada)="onVehiculoRowSelected($event)">
+    </app-tabla-dinamica>
+    <div class="row mt-3">
+        <div class="col-md-12 text-end">
+            <div class="btn-group">
+                <button class="btn btn-default" type="button" (click)="deleteVehiculoRow()"
+                    [disabled]="isReadonly || vehiculosParqueSelected.length === 0">
+                    Eliminar
+                </button>
+                <button class="btn btn-primary ms-2" type="button" (click)="showVehiculoDialog = true" [disabled]="isReadonly">
+                    Buscar
+                </button>
+            </div>
+        </div>
+    </div>
+    @if(showVehiculoDialog) {
+      <div class="modal-backdrop fade show"></div>
+      <div class="modal d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+        <app-vehiculo-dialog
+          [vehiculo]="vehiculoDialogData"
+          [readonly]="isReadonly"
+          [tipoDeVehiculoCatalogo]="tipoDeVehiculoCatalogo"
+          [paisEmisorCatalogo]="paisEmisorCatalogo"
+          [anoCatalogo]="anoCatalogo"
+          [tipoArrastre]="tipoArrastre"
+          (save)="onVehiculoDialogSave($event)"
+          (cancel)="showVehiculoDialog = false">
+        </app-vehiculo-dialog>
+      </div>
+    }
+</div>

@@ -45,8 +45,24 @@
                 "certificadoInternacionalElectronico": ""
               }
             ],
-          "medio":[{ "id": 1, "descripcion": "Terrestre" }], 
-          "verificacion":[{ "id": 1, "descripcion": "NO CRUZA NINGUN PUNTO." }] ,
+          "medio": [
+                { "id": 1, "descripcion": "Terrestre" },
+                { "id": 2, "descripcion": "Aéreo" },
+                { "id": 3, "descripcion": "Marítimo" },
+                { "id": 4, "descripcion": "Ferroviario" },
+                { "id": 5, "descripcion": "Fluvial" },
+                { "id": 6, "descripcion": "Multimodal" },
+                { "id": 7, "descripcion": "Subterráneo" }
+              ], 
+          "verificacion": [
+                { "id": 1, "descripcion": "NO CRUZA NINGUN PUNTO." },
+                { "id": 2, "descripcion": "CRUZA UN SOLO PUNTO." },
+                { "id": 3, "descripcion": "CRUZA VARIOS PUNTOS." },
+                { "id": 4, "descripcion": "PUNTO NO IDENTIFICADO." },
+                { "id": 5, "descripcion": "EN VERIFICACIÓN MANUAL." },
+                { "id": 6, "descripcion": "VERIFICACIÓN EXITOSA." },
+                { "id": 7, "descripcion": "ERROR DE COORDENADAS." }
+              ],
           "exportador": [
               {
                 "nombreDenominacionORazonSocial": "IDAKA & CO. LTD.",

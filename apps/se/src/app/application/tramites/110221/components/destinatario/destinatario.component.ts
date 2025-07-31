@@ -1,13 +1,28 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, ConsultaioState, PAGO_DE_DERECHOS, REGEX_SOLO_DIGITOS, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import {
+  AlertComponent,
+  Catalogo,
+  CatalogoSelectComponent,
+  ConsultaioQuery,
+  ConsultaioState,
+  PAGO_DE_DERECHOS,
+  REGEX_SOLO_DIGITOS,
+  TituloComponent,
+  ValidacionesFormularioService,
+} from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { PAIS_DESTINO_CATALOG } from '../../enums/constantes-alertas.enum';
 import { RegistroService } from '../../services/registro.service';
 import { Solicitud110221State } from '../../../../estados/tramites/Tramite110221.store';
 import { Tramite110221Query } from '../../../../estados/queries/Tramite110221.query';
 import { Tramite110221Store } from '../../../../estados/tramites/Tramite110221.store';
-
 /**
  * Componente que representa el formulario de destinatario en el trámite.
  */
@@ -78,7 +93,11 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * @default false
    */
   soloLectura: boolean = false;
-
+  /**
+   * Catálogo de países de destino.
+   * @type {Catalogo[]}
+   */
+  public paisDestinoCatalog = PAIS_DESTINO_CATALOG;
   /**
    * Constructor del componente.
    * @param registroService Servicio para obtener datos de catálogos.
@@ -148,7 +167,8 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    */
   getPaisDestino(): void {
     this.registroService
-      .getPaisDestino().pipe(takeUntil(this.destroyNotifier$))
+      .getPaisDestino()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
           this.options = resp.data as Catalogo[];
@@ -161,7 +181,8 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    */
   getTransporte(): void {
     this.registroService
-      .getTransporte().pipe(takeUntil(this.destroyNotifier$))
+      .getTransporte()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
           this.options = resp.data as Catalogo[];
@@ -211,6 +232,17 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Maneja el cambio de país de destino en el formulario.
+   * @param {Catalogo} event - El catálogo seleccionado.
+   * @returns {void}
+   */
+  cambioPaisDestino(event: Catalogo): void {
+    this.registroForm.patchValue({
+      paisDestino: event.id,
+    });
+  }
+
+  /**
    * Configura el formulario reactivo con los valores iniciales del estado.
    */
   donanteDomicilio(): void {
@@ -246,6 +278,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
           this.solicitudState?.correoElectronico,
           [Validators.required, Validators.email],
         ],
+        paisDestino: [0, Validators.required],
       }),
     });
     this.inicializarEstadoFormulario();

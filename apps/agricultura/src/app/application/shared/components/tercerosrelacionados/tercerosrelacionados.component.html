@@ -56,13 +56,16 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <h5>Exportador </h5>
+            <h5>Exportador <span *ngIf="exportadorRequired" >*</span></h5>
         </div>
         <div class="col-md-12">
             <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionsoli"
                 [configuracionTabla]="configuracionColumnasExportador" [datos]="cuerpoTablaExportador"
                 [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
                 (listaDeFilaSeleccionada)="onSeleccionDestinatarioFinal($event)"></app-tabla-dinamica>
+                     <div
+          *ngIf="tableErrorMeassageDispalyExportador && cuerpoTablaExportador.length === 0">
+          <small class="mensaje-error">Este campo es obligatorio.</small>
         </div>
         <div class="col-md-12 d-flex justify-content-end" *ngIf="cuerpoTablaExportador.length === 0">
             <button class="btn btn-primary me-3" [disabled]="esFormularioSoloLectura"
@@ -72,21 +75,25 @@
         </div>
         <div class="col-md-12 d-flex justify-content-end" *ngIf="cuerpoTablaExportador.length === 1">
             <button class="btn btn-primary me-3"
-                [disabled]="esFormularioSoloLectura || listaDeFilaSeleccionadaFinal.length === 0"
+                [disabled]="esFormularioSoloLectura"
                 (click)="modificarDestinatarioFinal()">Modificar</button>
             <button class="btn btn-default"
-                [disabled]="esFormularioSoloLectura || listaDeFilaSeleccionadaFinal.length === 0"
+                [disabled]="esFormularioSoloLectura"
                 (click)="emitEliminarFinal()">Eliminar</button>
         </div>
         <div class="row">
             <div class="col-md-12">
-                <h5>Destinatario (destino final)</h5>
+                <h5>Destinatario (destino final) <span *ngIf="destinatarioRequired" >*</span></h5>
             </div>
             <div class="col-md-12">
                 <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionsoli"
                     [configuracionTabla]="configuracionColumnasDestino" [datos]="cuerpoTablaDestino"
                     [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
                     (listaDeFilaSeleccionada)="onSeleccionDestinatario($event)"></app-tabla-dinamica>
+                     <div
+          *ngIf="tableErrorMeassageDispalyDestinatario && cuerpoTablaDestino.length === 0">
+          <small class="mensaje-error">Este campo es obligatorio.</small>
+        </div>
             </div>
             <div class="col-md-12 d-flex justify-content-end" *ngIf="cuerpoTablaDestino.length === 0">
                 <button class="btn btn-primary me-3" [disabled]="esFormularioSoloLectura"
@@ -96,10 +103,10 @@
             </div>
             <div class="col-md-12 d-flex justify-content-end" *ngIf="cuerpoTablaDestino.length === 1">
                 <button class="btn btn-primary me-3"
-                    [disabled]="esFormularioSoloLectura || listaDeFilaSeleccionada.length === 0"
+                    [disabled]="esFormularioSoloLectura"
                     (click)="modificarDestinatario()">Modificar</button>
                 <button class="btn btn-default"
-                    [disabled]="esFormularioSoloLectura || listaDeFilaSeleccionada.length === 0"
+                    [disabled]="esFormularioSoloLectura "
                     (click)="emitEliminar()">Eliminar</button>
             </div>
         </div>
@@ -111,4 +118,8 @@
     @if(eliminarDatoExportador){
     <lib-notificaciones [notificacionInput]="nuevaNotificacion"
         (confirmacionModal)="eliminarExportador($event)"></lib-notificaciones>
+    }
+    @if(mostrarMensajeError){
+            <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+        (confirmacionModal)="eliminarErrorMessage()"></lib-notificaciones>
     }

@@ -42,12 +42,12 @@ import {
 } from '../../../../estados/tramites/tramite260211.store';
 import { Subject,map, takeUntil } from 'rxjs';
 import { CROSLISTA_DE_PAISES } from '@libs/shared/data-access-user/src/core/enums/260211/domicilo.enum';
+
+import { BANCOS_DATA } from '../../constantes/derechos.model';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Tramite260211Query } from '../../../../estados/queries/tramite260211.query';
-
 import { SanitarioService } from '../../services/sanitario.service';
-
+import { Tramite260211Query } from '../../../../estados/queries/tramite260211.query';
  
 /**
  * Interfaz para la respuesta de la tabla de NICO.
@@ -109,6 +109,12 @@ export class DomicilloComponent implements OnInit,OnDestroy {
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
  public esFormularioSoloLectura: boolean = false; 
+ /**
+ * Indica si ningún elemento ha sido seleccionado.
+ * Se utiliza para controlar el estado de selección.
+ */
+  public noSeleccionado: boolean = true; 
+ 
   /**
    * Lista de componentes Crosslist disponibles en la vista.
    */
@@ -145,19 +151,25 @@ export class DomicilloComponent implements OnInit,OnDestroy {
   * Maneja el evento de cambio de selección en la tabla de NICO.
   * @param selected Lista de filas seleccionadas.
   */
-onSeleccionChangeEvent(selected: any[]) {
+onSeleccionChangeEvent(selected: any[]) :void{
   this.selectedRowsEvent = selected;
+  if (this.selectedRowsEvent.length === 1) {
+    this.noSeleccionado = false;
+  }
+  else{
+   this.noSeleccionado = true;
+  }
 }
 /** 
  Recibe los seleccionados del componente tabla
 */
-onSeleccionChange(selected: any[]) {
+onSeleccionChange(selected: any[]):void {
   this.selectedRows = selected;
 }
  /**
   *  Elimina las filas seleccionadas
   *  */
-eliminarSeleccionados() {
+eliminarSeleccionados():void {
   this.nicoTablaDatos = this.nicoTablaDatos.filter(
     (row) => !this.selectedRows.includes(row)
   );
@@ -167,7 +179,7 @@ eliminarSeleccionados() {
  /**
   * Elimina las filas seleccionadas
   */
-eliminarMercanciaSeleccionados() {
+eliminarMercanciaSeleccionados() :void{
   this.mercanciasTablaDatos = this.mercanciasTablaDatos.filter(
     (row) => !this.selectedRowsEvent.includes(row)
   );
@@ -239,7 +251,7 @@ editMercanciaIndex: number | null = null;
   /**
    * Lista de catálogos de estados.
    */
-  estado: Catalogo[] = [];
+  estado: Catalogo[] = BANCOS_DATA;
  
   /**
    * Lista de países para la selección de origen.
@@ -315,8 +327,8 @@ editMercanciaIndex: number | null = null;
    * Etiqueta para el crosslist de país de procedencia.
    */
   public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de procedencia',
-    derecha: 'País(es) seleccionados',
+    tituluDeLaIzquierda: 'País de procedencia*',
+    derecha: 'País(es) seleccionados*',
   };
 
   
@@ -331,17 +343,17 @@ public fechaCaducidadInput: InputFecha = FECHA_DE_PAGO;
  */
 ngOnInit(): void {
     this.inicializarEstadoFormulario();
-  this.obtenerEstadoList();
   this.obtenerTablaDatos();
   this.obtenerMercanciasDatos();
  
  
 }
+
 /**
  * Modifica una fila de la tabla NICO con los datos del formulario de agente.
  * Si hay una fila seleccionada, actualiza el índice de edición y carga los datos en el formulario.
  */
-modificarMercancia() {
+modificarMercancia():void {
   if (this.selectedRowsEvent && this.selectedRowsEvent.length === 1) {
     const ROW = this.selectedRowsEvent[0];
     this.editMercanciaIndex = this.mercanciasTablaDatos.findIndex(
@@ -380,7 +392,7 @@ agregarFilaMercancia():void {
       denominacionEspecifica: this.formMercancias.get('denominacionEspecifica')?.value,
       denominacionDistintiva: this.formMercancias.get('denominacionDistintiva')?.value,
       denominacionComun: this.formMercancias.get('denominacionComun')?.value,
-      formaFarmaceutica: this.formMercancias.get('formaFarmaceutica')?.value,
+      formaFarmaceutica: this.formMercancias.get('fraccionArancelaria')?.value,
       estadoFisico:this.estado.find(item => item.id === Number(this.formMercancias.value.estadoFisico))?.descripcion ?? '',
       fraccionArancelaria: this.formMercancias.get('fraccionArancelaria')?.value,
       descripcionFraccion: this.formMercancias.get('descripcionFraccion')?.value,
@@ -392,12 +404,12 @@ agregarFilaMercancia():void {
       numeroRegistro: this.formMercancias.get('numeroRegistro')?.value,
       paisDeOrigen: this.formMercancias.get('paisDeOrigen')?.value,
       paisDeProcedencia: this.formMercancias.get('paisDeProcedencia')?.value,
-      tipoProducto: this.estado.find(item => item.id === Number(this.formMercancias.value.tipoProducto))?.descripcion ?? '',
+      tipoProducto: this.estado.find(item => item.id === Number(this.formMercancias.value.tipoDeProducto))?.descripcion ?? '',
       usoEspecifico: this.formMercancias.get('usoEspecifico')?.value,
       fechaCaducidad: this.formMercancias.get('fechaCaducidad')?.value,
     };
 
-    if (this.editMercanciaIndex !== null && this.editMercanciaIndex > -1) {
+    if (this.editMercanciaIndex !== null && this.editMercanciaIndex > -1) {      
       const UPDATED = [...this.mercanciasTablaDatos];
       UPDATED[this.editMercanciaIndex] = MERCANCIA_DATA;
       this.mercanciasTablaDatos = UPDATED;
@@ -465,7 +477,7 @@ this.tramite260211Query
     lada: [this.solicitudState?.lada],
     telefono: [this.solicitudState?.telefono, Validators.required],
     avisoCheckbox: [this.solicitudState?.avisoCheckbox],
-    licenciaSanitaria: ['',{disabled: false }],
+    licenciaSanitaria: [this.solicitudState?.licenciaSanitaria,{disabled: false }],
     regimen: [this.solicitudState?.regimen],
     aduanasEntradas: [this.solicitudState?.aduanasEntradas],
     numeroPermiso: [this.solicitudState?.numeroPermiso],
@@ -536,20 +548,7 @@ paisDeProcedenciaBotonsTres = [
   { btnNombre: 'Agregar selección', class: 'btn-default', funcion: ():void => this.crossList.toArray()[2].agregar('') },
   { btnNombre: 'Restar selección', class: 'btn-danger', funcion: ():void => this.crossList.toArray()[2].quitar('') },
   { btnNombre: 'Restar todos', class: 'btn-default', funcion: ():void => this.crossList.toArray()[2].quitar('t') },
-];
- 
-/**
- * Obtiene la lista de estados desde un archivo JSON.
- */
-obtenerEstadoList(): void {
-  this.service.obtenerEstadoList()
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe((data) => {
-      const DATOS = data?.data;
-      this.estado = DATOS;
-    });
-}
- 
+];  
 /**
  * Obtiene los datos para la tabla de NICO desde un archivo JSON.
  */
@@ -576,13 +575,13 @@ obtenerMercanciasDatos(): void {
 /*
   * Limpia el formulario de domicilio.
   */
- limpiarFormAgente() {
+ limpiarFormAgente():void {
   this.formAgente.reset();
 }
 /**
  * Limpia el formulario de mercancías.
  */
-limpiarForm(){
+limpiarForm():void{
   this.formMercancias.reset();
 }
 /**

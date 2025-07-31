@@ -1,7 +1,6 @@
+import { RouterModule, Routes } from '@angular/router';
 import { ImportacionProductosComponent } from './pages/importacion-productos/importacion-productos.component';
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { Routes } from '@angular/router';
 
 export const ROUTES_SOLICITUDES: Routes = [
   {

@@ -13,21 +13,9 @@
       </ul>
   
       <ng-container>
-        @switch (indice) {
-        @case (1) {
-        <solicitante></solicitante>
-        }
-        @case (2) {
-           @if(esDatosRespuesta){
-       <app-solicitud-datos></app-solicitud-datos>
-           }
-        }
-        @case (3) {
-           @if(esDatosRespuesta){
-          <app-revision-documental></app-revision-documental>
-           }
-        }
-        }
+        <solicitante [hidden]="indice !== 1" #solicitanteRef></solicitante>
+        <app-solicitud-datos *ngIf="esDatosRespuesta" [hidden]="indice !== 2" #solicitudDatosRef></app-solicitud-datos>
+        <app-revision-documental *ngIf="esDatosRespuesta" [hidden]="indice !== 3" #revisionDocumentalRef></app-revision-documental>
       </ng-container>
     </div>
   </div>

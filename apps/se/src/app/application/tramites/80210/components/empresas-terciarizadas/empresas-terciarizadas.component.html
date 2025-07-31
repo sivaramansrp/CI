@@ -68,6 +68,9 @@
             <span *ngIf="empresasForm.get('rfc')?.hasError('required')"
               >Este campo es obligatorio.</span
             >
+            <span *ngIf="empresasForm.get('rfc')?.hasError('pattern')">
+            El RFC no es válido
+          </span>
           </div>
         </div>
       </div>

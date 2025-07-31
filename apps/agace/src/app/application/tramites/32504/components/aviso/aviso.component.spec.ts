@@ -187,4 +187,51 @@ describe('AvisoComponent', () => {
     const nextSpy = jest.spyOn(notifier, 'next');
     const completeSpy = jest.spyOn(notifier, 'complete');
   });
+
+  it('accionesBotones sets esManualAsivoAgregarClicked to true on AGREGAR', () => {
+  component.esManualAsivoAgregarClicked = false;
+  component.accionesBotones(BotonAccionesTipos.AGREGAR);
+  expect(component.esManualAsivoAgregarClicked).toBe(true);
+});
+
+it('accionesBotones does nothing on ELIMINAR', () => {
+  component.esManualAsivoAgregarClicked = false;
+  component.mostrarPopupSeleccionRegistro = false;
+  component.accionesBotones(BotonAccionesTipos.ELIMINAR);
+  // No state should change
+  expect(component.esManualAsivoAgregarClicked).toBe(false);
+  expect(component.mostrarPopupSeleccionRegistro).toBe(false);
+});
+
+it('accionesBotones sets mostrarPopupSeleccionRegistro to true on MODIFICAR if no data', () => {
+  component.tableData.data = [];
+  component.filaSeleccionada = null;
+  component.mostrarPopupSeleccionRegistro = false;
+  component.accionesBotones(BotonAccionesTipos.MODIFICAR);
+  expect(component.mostrarPopupSeleccionRegistro).toBe(true);
+});
+
+it('accionesBotones sets mostrarPopupSeleccionRegistro to true on MODIFICAR if no row selected', () => {
+  component.tableData.data = [{ rfc: '1', nombreComercial: '', entidadFederativa: '', alcaldiaMunicipio: '', colonias: '' }];
+  component.filaSeleccionada = null;
+  component.mostrarPopupSeleccionRegistro = false;
+  component.accionesBotones(BotonAccionesTipos.MODIFICAR);
+  expect(component.mostrarPopupSeleccionRegistro).toBe(true);
+});
+
+it('accionesBotones does not set mostrarPopupSeleccionRegistro if data and row selected', () => {
+  component.tableData.data = [{ rfc: '1', nombreComercial: '', entidadFederativa: '', alcaldiaMunicipio: '', colonias: '' }];
+  component.filaSeleccionada = { rfc: '1' };
+  component.mostrarPopupSeleccionRegistro = false;
+  component.accionesBotones(BotonAccionesTipos.MODIFICAR);
+  expect(component.mostrarPopupSeleccionRegistro).toBe(false);
+});
+
+it('accionesBotones does nothing on unknown action', () => {
+  component.esManualAsivoAgregarClicked = false;
+  component.mostrarPopupSeleccionRegistro = false;
+  component.accionesBotones(999 as any);
+  expect(component.esManualAsivoAgregarClicked).toBe(false);
+  expect(component.mostrarPopupSeleccionRegistro).toBe(false);
+});
 });

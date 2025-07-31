@@ -27,7 +27,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { InputFechaComponent, InputRadioComponent,Notificacion } from '@libs/shared/data-access-user/src';
+import { InputFechaComponent, InputRadioComponent, Notificacion } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { CommonModule } from '@angular/common';
@@ -149,6 +149,12 @@ export class FusionOescisionComponent
  * @default FECHA_INGRESO
  */
   public fechaInicioInput: InputFecha = FECHA_INGRESO;
+
+  /**
+   * Indica si se ha seleccionado una opción de fusión o escisión.
+   * Se utiliza para mostrar u ocultar secciones del formulario.
+   */
+  isSelectFusionEscision: boolean = false;
   /**
    * Constructor del componente, inyecta formularios, servicios y manejo de estado.
    */
@@ -279,7 +285,7 @@ export class FusionOescisionComponent
       cantidadBienes: [null, Validators.required],
       fechaInspeccion: [{ value: '' }],
       personaFusionEscisionDTO: this.fb.group({
-        rfc: [''],
+        rfc: ['', Validators.required],
         razonSocial: [{ value: '', disabled: true }],
         numFolioTramite: [{ value: '', disabled: true }],
         fechaInicioVigencia: [{ value: '', disabled: true }],
@@ -291,7 +297,7 @@ export class FusionOescisionComponent
     this.modelFormulario = this.fb.group({
       mCantidadBienes: [null, Validators.required],
       personaFusionEscisionDTO: this.fb.group({
-        rfc: [''],
+        rfc: ['', Validators.required],
         razonSocial: [{ value: '', disabled: true }],
         numFolioTramite: [{ value: '', disabled: true }],
         fechaInicioVigencia: [{ value: '', disabled: true }],
@@ -312,16 +318,18 @@ export class FusionOescisionComponent
 
   /** Cambia dinámicamente los títulos y etiquetas según la opción seleccionada */
   mostrarFusionOEscision(ev: string | number): void {
+    if (ev === 1 || ev === '1') {
+      this.isSelectFusionEscision = true;
+      this.fusionOescisionTitulo = 'Datos de las empresas fusionadas';
+      this.fechaInicioInput.labelNombre = 'Fecha en que surte efecto la fusión';
+    }
+    else {
+      this.isSelectFusionEscision = false;
+      this.fusionOescisionTitulo = 'Datos de las empresas escindidas';
+      this.fechaInicioInput.labelNombre = 'Fecha en que surte efecto la escisión';
+    }
     this.divCompletoVisible = ev === '1' || ev === '0';
-    this.fusionOescisionTitulo =
-      ev === 1
-        ? 'Datos de las empresas fusionadas'
-        : 'Datos de las empresas escindidas';
     this.subFusionOescisionTitulo = this.fusionOescisionTitulo;
-    const ES_FUSION = ev === 1;
-    this.fechaInicioInput.labelNombre = ES_FUSION
-      ? 'Fecha en que surte efecto la fusión'
-      : 'Fecha en que surte efecto la escisión';
   }
 
   /** Muestra u oculta los bloques de certificación según la opción elegida */
@@ -348,6 +356,14 @@ export class FusionOescisionComponent
 
   /** Carga los datos de persona fusionada desde el query del store hacia el modal */
   ModelcargarDatosPersonaFusion(): void {
+    this.AvisoModifyService.cargarDatosPersonaFusion()
+      .pipe(
+        takeUntil(this.destroy$),
+        map((resp) => {
+          this.personaFusionEscisionDTO.patchValue(resp);
+        })
+      )
+      .subscribe();
     this.Tramite32301Query.selectpersonaFusionEscisionDTO$
       .pipe(takeUntil(this.destroy$))
       .subscribe((state) => {

@@ -4,11 +4,23 @@ import { CatalogosSelect } from '@libs/shared/data-access-user/src';
  * Interfaz que representa los datos de un destinatario.
  */
 export interface Destinatario {
-  /** Nombre completo del destinatario. */
-  nombre: string;
+  /** Identificador único del destinatario. */
+  tipoPersona: number;
 
   /** Registro Federal de Contribuyentes (RFC) del destinatario. */
   rfc: string;
+
+  /** Denominación o razón social del destinatario. */
+  denominacion: string;
+
+  /** Nombre completo del destinatario. */
+  nombre: string;
+
+  /** Apellido paterno del destinatario. */
+  apellidoPaterno: string;
+
+  /** Apellido materno del destinatario. */
+  apellidoMaterno: string;
 
   /** Clave Única de Registro de Población (CURP) del destinatario. */
   curp: string;
@@ -29,25 +41,46 @@ export interface Destinatario {
   numeroInterior: string;
 
   /** País donde reside el destinatario. */
-  pais: string;
+  pais: number;
+
+  /** Nombre del país donde reside el destinatario. */
+  paisNombre?: string;
 
   /** Colonia del domicilio del destinatario. */
-  colonia: string;
+  colonia: number;
+
+  /** Nombre de la colonia donde reside el destinatario. */
+  coloniaNombre?: string;
 
   /** Municipio donde reside el destinatario. */
-  municipio: string;
+  municipio: number;
+
+  /** Nombre del municipio donde reside el destinatario. */
+  municipioNombre?: string;
 
   /** Localidad específica del domicilio del destinatario. */
-  localidad: string;
+  localidad: number;
+
+  /** Nombre de la localidad donde reside el destinatario. */
+  localidadNombre?: string;
+
+  /** Clave LADA del teléfono del destinatario. */
+  lada: string;
 
   /** Estado asociado al domicilio del destinatario. */
-  estado: string;
+  estado: number;
+
+  /** Nombre del estado asociado al domicilio del destinatario. */
+  estadoNombre?: string;
 
   /** Estado alternativo (o subdivisión administrativa) asociado al domicilio del destinatario, si aplica. */
   estado2: string;
 
   /** Código postal del domicilio del destinatario. */
-  codigo: string;
+  codigo: number;
+
+  /** Nombre del código postal del domicilio del destinatario. */
+  codigoNombre?: string;
 }
 
 /**

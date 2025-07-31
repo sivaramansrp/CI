@@ -208,6 +208,11 @@ export interface DatosDomicilioLegalState {
    * El valor de garantiasOfrecidas.
    */
   garantiasOfrecidas: string;
+  /**
+   * Mensaje asociado al estado del formulario.
+   * @type {string}
+   */
+  mensaje: boolean;
 }
 
 export function createInitialState(): DatosDomicilioLegalState {
@@ -414,6 +419,11 @@ export function createInitialState(): DatosDomicilioLegalState {
      * El valor de garantiasOfrecidas.
      */
     garantiasOfrecidas: '',
+    /**
+     * Mensaje asociado al estado del formulario.
+     * @type {boolean}
+     */
+    mensaje: false,
   };
 }
 
@@ -944,6 +954,17 @@ export class DatosDomicilioLegalStore extends Store<DatosDomicilioLegalState> {
     this.update((state) => ({
       ...state,
       garantiasOfrecidas,
+    }));
+  }
+
+  /**
+   * Establece el estado de mensaje.
+   * @param mensaje - El valor de mensaje.
+   */
+  public setMensaje(mensaje: boolean): void {
+    this.update((state) => ({
+      ...state,
+      mensaje,
     }));
   }
 }

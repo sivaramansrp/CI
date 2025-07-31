@@ -1,17 +1,17 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  DatosPasos,
+  ListaPasosWizard,
+  WizardComponent
+} from '@ng-mf/data-access-user';
+import { PASOS, TEXTOS } from '../../constants/inicialmente-certificado-origen.enum';
+import { Subject, map, takeUntil } from 'rxjs';
+import {
+  Tramite110216State,
+  Tramite110216Store
+} from '../../../../estados/tramites/tramite110216.store';
 import { AccionBoton } from '../../models/certificado-origen.model';
-import { DatosPasos } from '@ng-mf/data-access-user';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '../../constants/inicialmente-certificado-origen.enum';
-import { Subject } from 'rxjs';
-import { TEXTOS } from '../../constants/inicialmente-certificado-origen.enum';
 import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
-import { Tramite110216State } from '../../../../estados/tramites/tramite110216.store';
-import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
-import { WizardComponent } from '@ng-mf/data-access-user';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
-
 
 /**
  * Componente para gestionar la página del solicitante.

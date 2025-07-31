@@ -16,12 +16,20 @@
     justify-content: flex-end;   
     align-items: center;         
   }
-  
+
   .plus-icon {
-    font-size: 20px;
-    cursor: pointer;
-    user-select: none;           
-  }
+  font-size: 20px;
+  cursor: pointer;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;     
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #888;
+  background: #fff;
+}
   
   .container {
     border: 1px solid #ccc;

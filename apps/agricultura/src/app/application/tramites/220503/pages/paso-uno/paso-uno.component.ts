@@ -20,6 +20,14 @@ import { Solocitud220503Service } from '../../services/service220503.service';
 })
 /** Componente para gestionar el primer paso del trámite */
 export class PasoUnoComponent implements OnDestroy, OnInit {
+    /**
+ * @property solicitante - Referencia al componente `SolicitanteComponent` que se utiliza para manejar
+ *                          la lógica y los datos relacionados con el solicitante en este paso del trámite.
+ * @command Este decorador `@ViewChild` permite acceder al componente hijo para interactuar con sus métodos y propiedades.
+ */
+  @ViewChild('solicitanteRef') solicitante!: SolicitanteComponent;
+  @ViewChild('solicitudDatosRef') solicitudDatos!: SolicitudDatosComponent;
+  @ViewChild('revisionDocumentalRef') revisionDocumental!: RevisionDocumentalComponent;
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
 
@@ -105,6 +113,37 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+
+  public validarFormularios(): boolean {
+    let isValid = true;
+
+    if (this.solicitante?.form) {
+      if (this.solicitante.form.invalid) {
+        this.solicitante.form.markAllAsTouched();
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    if(this.solicitudDatos){
+      if(!this.solicitudDatos.validarFormularios()){
+        isValid = false;
+      }
+    }
+else{
+  isValid=false;
+}
+if(this.revisionDocumental){
+  if(!this.revisionDocumental.validarFormularios()){
+    isValid = false;
+  }
+}
+else{
+  isValid = false;
+}
+
+    return isValid;
   }
 
   /**
