@@ -162,12 +162,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   seleccionaTab(i: number): void {
     this.indice = i; // Actualiza el índice para cambiar la pestaña activa
     this.tabSelected.emit(this.indice); 
-    if (this.indice === 3 || this.indice === 4 || this.indice === 5 || this.indice === 6 || this.indice === 7) {
+    if (this.indice === 2 || this.indice === 3 || this.indice === 4 || this.indice === 5 || this.indice === 6 || this.indice === 7 || this.indice === 8) {
       this.isActive = true; 
       this.Tramite32301Store.setIsActive(true);
-    }
-    else{
-        this.Tramite32301Store.setIsActive(false);
     }
   }
 

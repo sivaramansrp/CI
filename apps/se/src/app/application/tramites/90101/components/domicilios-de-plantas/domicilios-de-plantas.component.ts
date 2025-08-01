@@ -266,9 +266,11 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     if (this.esFormularioSoloLectura) {
       this.forma.disable();
       this.prosecDatos = Array.isArray(this.domiciliosState.plantasDatos) ? this.domiciliosState.plantasDatos : [this.domiciliosState.plantasDatos] as FilaPlantas[];
+      this.seccionStore.establecerFormaValida([true]);
     }
     else {
       this.forma.enable();
+      this.seccionStore.establecerFormaValida([false]);
     } 
   }
 

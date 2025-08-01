@@ -18,7 +18,7 @@
                     </div>
                 </div>
                 <div class="col-md-6 d-flex justify-content-start">
-                    <button type="button" class="btn btn-primary">Buscar</button>
+                    <button type="button" class="btn btn-default">Buscar</button>
                 </div>
             </div>
 
@@ -133,24 +133,24 @@
                 <div class="col-md-8">
                     <label>Clasificación / Tipo*:</label>
                     <app-input-radio [radioOptions]="clasificacionRadioOptions" [isRequired]="true"
-                        [layout]="'horizontal'" formControlName="clasificacion" (change)="actualizarCampoFormularioResiduo('clasificacion')"></app-input-radio>
+                        [layout]="'horizontal'" formControlName="clasificacion" (change)="actualizarCampoFormularioResiduoDos('clasificacion')"></app-input-radio>
                 </div>
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <app-catalogo-select [catalogo]="etiquetasForm.residuo" [label]="'Clave de residuo'" [required]="true"
+                    <app-catalogo-select [catalogo]="etiquetasForm.residuo" [label]="'Clave de residuo'" [required]="true" [isDisabled]="!clasificacionObj.claveResiduo"
                         formControlName="claveResiduo" (change)="actualizarCampoFormularioResiduo('claveResiduo')"></app-catalogo-select>
                 </div>
                 <div class="col-md-6">
-                    <app-catalogo-select [catalogo]="etiquetasForm.tipoNombre" [label]="'Nombre'" [required]="true"
+                    <app-catalogo-select [catalogo]="etiquetasForm.tipoNombre" [label]="'Nombre'" [required]="true" [isDisabled]="!clasificacionObj.nombre"
                         formControlName="nombre" (change)="actualizarCampoFormularioResiduo('nombre')"></app-catalogo-select>
                 </div>
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <app-catalogo-select [catalogo]="etiquetasForm.descripcion" [label]="'Descripción'" [required]="true"
+                    <app-catalogo-select [catalogo]="etiquetasForm.descripcion" [label]="'Descripción'" [required]="true" [isDisabled]="!clasificacionObj.descripcion"
                         formControlName="descripcion" (change)="actualizarCampoFormularioResiduo('descripcion')"></app-catalogo-select>
                 </div>
                 <div class="col-md-6">

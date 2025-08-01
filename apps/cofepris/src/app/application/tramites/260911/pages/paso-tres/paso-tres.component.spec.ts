@@ -31,7 +31,8 @@ describe('PasoTresComponent', () => {
         PasoTresComponent
       ],
       providers: [
-        { provide: ToastrService, useValue: mockToastrService }
+        { provide: ToastrService, useValue: mockToastrService },
+        provideHttpClient()
       ]
     }).compileComponents();
 

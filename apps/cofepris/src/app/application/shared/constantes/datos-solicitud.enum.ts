@@ -60,7 +60,7 @@ export const SCIAN_TABLA = [
     orden: 1,
   },
   {
-    encabezado: 'Descripcion del S.C.I.A.N.',
+    encabezado: 'Descripción del S.C.I.A.N.',
     clave: (ele: TablaScianConfig): string => ele.descripcion,
     orden: 1,
   },
@@ -118,7 +118,7 @@ export const SCIAN_TABLA_DATA: TablaScianConfig[] = [
  * Esta constante puede ser utilizada en componentes o vistas donde se requiera
  * mostrar esta alerta como parte de un flujo de trabajo relacionado con solicitudes.
  */
-export const ALERTA_OPCIONS = `<p>Al dar doble-clic en una Solicitud, se copiarán sus datos en esta Solicitud.</p>`;
+export const ALERTA_OPCIONS = `<p style="text-align: center;">Al dar doble-clic en una Solicitud, se copiarán sus datos en esta Solicitud.</p>`;
 
 /**
  * @const ALERTA_DE_MANIFESTO_Y_DECLARACIONES
@@ -518,7 +518,7 @@ export const REPRESENTANTE_LEGAL = [260208];
  * }
  */
 export const BANCO = [
-  260208, 260209, 260207, 260201, 260219, 260302, 260304, 260103,
+  260104,260208, 260209, 260207, 260201, 260219, 260302, 260304, 260103,
 ];
 
 export const REQUIRED_BANCO = [260902];

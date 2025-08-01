@@ -91,12 +91,6 @@ export class CertificadoComponent {
    * @param tramiteQuery Query para consultar el estado del trámite.
    */
   constructor(private seccionStore: SeccionLibStore, private tramiteQuery: Tramite110222Query) {
-    this.tramiteQuery.FormaValida$.pipe(
-      takeUntil(this.destroyNotifier$)
-    ).subscribe((res) => {
-      this.seccionStore.establecerSeccion([true]);
-      this.seccionStore.establecerFormaValida([res]);
-    });
   }
 
   /**

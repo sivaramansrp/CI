@@ -11,8 +11,8 @@
             id="manifiesto"
             [disabled]="formularioDeshabilitado ? true : false"
           />
-          <span class="fw-bold align-middle">*</span>
-          <div>{{ manifiestosText }} </div>
+          <span class="fw-bold align-middle mt-2">*</span>
+          <div class="ms-5 ps-3">{{ manifiestosText }} </div>
           <div *ngIf="hasError('manifests', 'required')" class="text-danger mt-1">
             Debe aceptar el manifiesto.
           </div>

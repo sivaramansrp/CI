@@ -13,18 +13,11 @@ import {
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
   PERSONA_MORAL_NACIONAL,
 } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import {
-  RegistroSolicitudService,
-  SolicitudDatosResponse,
-} from '../../services/registro-solicitud-service.service';
-import {
-  SharedModule,
-  SolicitanteComponent,
-} from '@libs/shared/data-access-user/src';
-import { Subject, map, takeUntil } from 'rxjs';
+import { SharedModule, SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Solicitud31803State } from '../../state/Tramite31803.store';
 import { SolicitudComponent } from '../../components/Solicitud.component';
+import { RegistroSolicitudService } from '../../services/registro-solicitud-service.service';
 
 /**
  * Componente que representa el primer paso del trámite.
@@ -44,10 +37,34 @@ import { SolicitudComponent } from '../../components/Solicitud.component';
 export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false; // Indica si hay datos de respuesta del servidor
-
-  private destroyNotifier$: Subject<void> = new Subject(); // Subject para manejar la destrucción de suscripciones
+  /**
+     * Subject para manejar la destrucción del componente y evitar fugas de memoria.
+     * Se utiliza para notificar a las suscripciones que deben finalizarse.
+     */
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   public consultaState!: ConsultaioState; // Estado de la consulta
   public datosRespuesta: unknown; // Datos de respuesta del servidor
+
+  /**
+   * Tipo de persona seleccionada.
+   */
+  tipoPersona!: number;
+
+  /**
+   * Configuración del formulario dinámico para la persona.
+   */
+  persona: FormularioDinamico[] = [];
+
+  /**
+   * Configuración del formulario dinámico para el domicilio fiscal.
+   */
+  domicilioFiscal: FormularioDinamico[] = [];
+
+  /**
+   * Índice del paso actual.
+   */
+  indice: number = 1;
+
   /**
    * Constructor del componente PasoUnoComponent.
    * @param router Inyecta el servicio Router para la navegación.
@@ -55,7 +72,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   constructor(
     private consultaQuery: ConsultaioQuery,
     private solicitud31803Service: RegistroSolicitudService // Servicio para manejar el estado de la solicitud 31802
-  ) {}
+  ) { }
 
   /**
    * Inicializa el componente y suscripciones al estado de consulta.
@@ -68,7 +85,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
       .pipe(
-        takeUntil(this.destroyNotifier$),
+        takeUntil(this.destroyed$),
         map((consultaState) => {
           this.consultaState = consultaState;
         })
@@ -92,45 +109,16 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.solicitud31803Service
-      .getSolicitudDatos()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((resp: SolicitudDatosResponse) => {
+      .getRegistroTomaMuestrasMercanciasData().pipe(
+        takeUntil(this.destroyed$)
+      )
+      .subscribe((resp) => {
         if (resp) {
           this.esDatosRespuesta = true;
-          const SOLICITUD_STATE: Solicitud31803State = {
-            numeroOperacion: resp.numeroOperacion,
-            banco: resp.banco,
-            llave: resp.llave,
-            manifiesto1: resp.manifiesto1,
-            manifiesto2: resp.manifiesto2,
-            fechaPago: resp.fechaPago,
-          };
-          this.solicitud31803Service.actualizarEstadoFormulario(
-            SOLICITUD_STATE
-          );
+          this.solicitud31803Service.actualizarEstadoFormulario(resp);
         }
       });
   }
-
-  /**
-   * Tipo de persona seleccionada.
-   */
-  tipoPersona!: number;
-
-  /**
-   * Configuración del formulario dinámico para la persona.
-   */
-  persona: FormularioDinamico[] = [];
-
-  /**
-   * Configuración del formulario dinámico para el domicilio fiscal.
-   */
-  domicilioFiscal: FormularioDinamico[] = [];
-
-  /**
-   * Índice del paso actual.
-   */
-  indice: number = 1;
 
   /**
    * Método que se ejecuta después de que las vistas del componente han sido inicializadas.
@@ -155,7 +143,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * que deben finalizarse, evitando así fugas de memoria.
    */
   ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }
