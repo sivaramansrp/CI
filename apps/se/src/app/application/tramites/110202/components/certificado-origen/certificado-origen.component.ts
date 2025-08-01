@@ -1,20 +1,26 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AlertComponent, Catalogo, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable, Subject, delay, map, takeUntil} from 'rxjs';
 
-import { CAPTURA_MERCANCIAS, CONFIGURACION_MERCANCIA, CONFIGURACION_TABLA_MERCANCIAS } from '../../constantes/modificacion.enum';
+import { CAPTURA_MERCANCIAS, CATALOGOS_DATOS, CONFIGURACION_MERCANCIA, CONFIGURATION_TABLA_MERCANCIAS, FECHA_FINALS, MERCANCIAS_DATOS } from '../../constantes/modificacion.enum';
+import { ConfiguracionColumna, Mercancias } from '../../models/configuracion-columna.model';
+
 import { CertificadoDeOrigenComponent } from "../../../../shared/components/certificado-de-origen/certificado-de-origen.component";
 import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from '../../models/configuracion-columna.model';
+
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Mercancia } from '../../models/configuracion-columna.model';
 import { MercanciasModalComponent } from '../mercancias-modal/mercancias-modal.component';
 import { Modal } from 'bootstrap';
+
 import { ToastrService } from 'ngx-toastr';
 import { Tramite110202Query } from '../../estados/tramite110202.query';
 import { Tramite110202Store } from '../../estados/tramite110202.store';
+
+import { Mercancias110202State, Mercancias110202Store } from '../../estados/mercancias.store';
+import { Mercancias110202Query } from '../../estados/mercancias.query';
 
 @Component({
   selector: 'app-certificado-origen',
@@ -22,14 +28,15 @@ import { Tramite110202Store } from '../../estados/tramite110202.store';
   imports: [
     ReactiveFormsModule,
     CommonModule,
-    CertificadoDeOrigenComponent,
-    MercanciasModalComponent,TituloComponent,AlertComponent,TablaDinamicaComponent
+    CertificadoDeOrigenComponent,FormsModule,
+    MercanciasModalComponent,TituloComponent,AlertComponent,TablaDinamicaComponent,CatalogoSelectComponent,InputFechaComponent
   ],
   templateUrl: './certificado-origen.component.html',
   styleUrl: './certificado-origen.component.scss'
 })
 
 export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnInit {
+   public fechaFinalInput: InputFecha = FECHA_FINALS;
    /**
    * Configuración de las columnas de la tabla de exportadores.
    * Define el encabezado, clave y el orden de las columnas para la tabla de exportadores.
@@ -39,17 +46,19 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
    * Lista de exportadores obtenida desde un archivo JSON.
    * Cada exportador contiene información como nombre, teléfono, correo electrónico y domicilio.
    */
-  exportador: Mercancia[] =[];
+  exportador: Mercancias[] =MERCANCIAS_DATOS;
    /**
    * Configuración de las columnas para la tabla de datos del exportador.
    * Se basa en el arreglo `CONFIGURATION_TABLA_DATOS`, que define los encabezados,
    * las claves de acceso a los datos del objeto `Exportador`, y el orden en que se deben mostrar.
    */
-  configuracionTabla: ConfiguracionColumna<Mercancia>[] =CONFIGURACION_TABLA_MERCANCIAS;
+  configuracionTabla: ConfiguracionColumna<Mercancia>[] =CONFIGURACION_MERCANCIA;
   /**
    * Constante que almacena el valor de la mercancía capturada.
    */
   MERCANCIA: string = CAPTURA_MERCANCIAS;
+
+    mercanciaDatosForm!: FormGroup;
   /**
    * Formulario reactivo utilizado para la gestión de los datos del certificado.
    * @type {FormGroup}
@@ -73,6 +82,12 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
    * @type {boolean}
    */
   tablaSeleccionEvent: boolean = false;
+/**
+ * Referencia al elemento del modal en el DOM.
+ * Se utiliza para abrir o cerrar el modal programáticamente.
+ * Asocia el template variable #modalAgregarRef con esta propiedad.
+ */
+  @ViewChild('modalAgregarRef', { static: false }) modalAgregarRef!: ElementRef;
 
   /**
    * Observable que emite la lista de países y bloques disponibles.
@@ -85,6 +100,27 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
    * @type {Catalogo}
    */
   estado!: Catalogo;
+ /**
+ * Catálogo de unidades de medida para masa bruta.
+ * Se utiliza para poblar el selector correspondiente en el formulario.
+ * Los datos provienen del archivo CATALOGOS_DATOS.
+ */
+masaBrutas: Catalogo[] = CATALOGOS_DATOS;
+
+/**
+ * Catálogo de tipos de factura disponibles.
+ * Usado en el formulario para seleccionar el tipo de factura.
+ * Cargado desde la constante CATALOGOS_DATOS.
+ */
+facturas: Catalogo[] = CATALOGOS_DATOS;
+
+/**
+ * Catálogo de unidades de medida comercial.
+ * Proporciona opciones en el formulario para el campo umc.
+ * Datos obtenidos de CATALOGOS_DATOS.
+ */
+umc: Catalogo[] = CATALOGOS_DATOS;
+
 
   /**
    * País o bloque seleccionado.
@@ -102,7 +138,7 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
    * Configuración de las columnas de la tabla de bitácora.
    * @type {ConfiguracionColumna<Mercancia>[]}
    */
-  configuracionTablas: ConfiguracionColumna<Mercancia>[] = CONFIGURACION_MERCANCIA;
+  configuracionTablas: ConfiguracionColumna<Mercancias>[] = CONFIGURATION_TABLA_MERCANCIAS;
 
   /**
    * Datos de la bitácora obtenidos desde el servicio.
@@ -145,11 +181,17 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
    * @type {Modal}
    */
   modalInstance!: Modal;
+    /**
+   * Instancia del modal de modificación.
+   * @type {Modal}
+   */
+  modalInstances!: Modal;
   /**
    * Propiedad que almacena un arreglo de objetos de tipo `Mercancia` seleccionados para ser guardados.
    * @type {Mercancia[]}
    */
-  public seleccionadaguardarClicado: Mercancia[] = [];
+  public seleccionadaguardarClicado: Mercancias[] = [];
+
   /**
    * Referencia al modal de modificación en la plantilla HTML.
    * @type {ElementRef}
@@ -160,7 +202,10 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
  * Cuando es `true`, los campos del formulario no se pueden editar.
  */
   esFormularioSoloLectura: boolean = false;
-
+ /**
+   * Estado de la solicitud.
+   */
+  public solicitudState!: Mercancias110202State;
   /**
    * Constructor del componente.
    * Inicializa el formulario y las dependencias necesarias para la carga de datos.
@@ -181,7 +226,9 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
     private toastr: ToastrService,
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
-    public consultaQuery: ConsultaioQuery
+    public consultaQuery: ConsultaioQuery,
+    private mercancias110202Store: Mercancias110202Store,
+    private mercancias110202Query: Mercancias110202Query,
   ) {
     // Suscripción para cargar los valores del formulario desde el store
     this.tramiteQuery.formCertificado$.pipe(
@@ -211,7 +258,7 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
  * Método que asigna un objeto de tipo `Mercancia` al arreglo de mercancías seleccionadas para guardar.
  * @param {Mercancia} evento - Objeto de tipo `Mercancia` que ha sido seleccionado.
  */
-  obtenerSeleccionadoMercancia(evento: Mercancia): void {
+  obtenerSeleccionadoMercancia(evento: Mercancias): void {
     this.seleccionadaguardarClicado = [evento];
   }
   /**
@@ -240,6 +287,7 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
    * y suscribirse a los cambios en el formulario.
    */
   ngOnInit(): void {
+    this.inicializarForms();
     this.cargarTratadoAcuerdo();
     this.cargarBloque();
      this.consultaQuery.selectConsultaioState$
@@ -354,13 +402,72 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
    * @param {Mercancia} datos1 Los datos de la mercancia seleccionada.
    */
   abrirModal(): void {
-
-    if (this.modalInstance) {
-      this.modalInstance.show();
+     if (!this.modalAgregarRef) {
+    console.error('Modal reference not yet available');
+    return;
+  }
+ 
+this.modalInstances = new Modal(this.modalAgregarRef.nativeElement);
+this.modalInstances.show();
     }
+    /**
+ * Inicializa el formulario reactivo con datos del estado de la solicitud.
+ * Suscribe al observable del store para obtener los valores iniciales.
+ * Configura los controles del formulario con valores y validaciones.
+ */
+   inicializarForms(): void {
+      this.mercancias110202Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+    this.mercanciaDatosForm = this.fb.group({
+        fraccionArancelaria: [{ value: this.solicitudState.fraccionArancelaria, }],
+        nombreComercialMercancia: [{ value:this.solicitudState.nombreComercialMercancia, disabled: true }],
+        nombreTecnico: [{ value: this.solicitudState.nombreTecnico, disabled: true }],
+        nombreIngles: [{ value: this.solicitudState.nombreIngles, disabled: true }],
+        criterioClasificacion: [{ value: this.solicitudState.criterioClasificacion, disabled: true }],
+        marca: [this.solicitudState.marca],
+        cantidad: [this.solicitudState.cantidad],
+        umc: [this.solicitudState.umc, Validators.required],
+        valorMercancia: [this.solicitudState.valorMercancia, [Validators.required, Validators.min(0)]],
+        complementoClasificacion: ['', Validators.required],
+        masaBrutas: [this.solicitudState.masaBrutas, [Validators.required, Validators.min(0)]],
+        masaBruta: [this.solicitudState.masaBruta, [Validators.required, Validators.min(0)]],
+        unidadMedidaMasaBruta: [this.solicitudState.unidadMedidaMasaBruta, Validators.required],
+        numeroFactura: [this.solicitudState.numeroFactura],
+        tipoFactura: [this.solicitudState.tipoFactura],
+        fechaFinal: [this.solicitudState.fechaFinal, Validators.required],
+        facturas: [this.solicitudState.facturas, Validators.required]
+      });
+      this.mercanciaDatosForm.get('fraccionArancelaria')?.setValue('15800202');
+          }
+          /**
+ * Establece el valor de un campo en el store usando su método correspondiente.
+ * Obtiene el valor del formulario y lo envía al método del store.
+ * Se usa para mantener sincronizado el formulario con el estado global.
+ */
+  setValoresStores(form: FormGroup, campo: string, metodoNombre: keyof Mercancias110202Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.mercancias110202Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+  /**
+ * Actualiza la fecha seleccionada en el formulario y el store.
+ * Parcha el valor de 'fechaFinal' en el formulario reactivo.
+ * Luego propaga ese valor al store mediante setValoresStores().
+ */
+ onFechaCambiada(fecha:string): void {
+    this.mercanciaDatosForm.patchValue({ fechaFinal: fecha });
+    this.setValoresStores(
+      this.mercanciaDatosForm,
+      'fechaFinal',
+      'setFechaFinal'
+    );
   }
   
-
   /**
    * Cierra el modal de modificación si está abierto.
    */
@@ -384,7 +491,25 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
       this.modalInstance = new Modal(this.modifyModal.nativeElement);
     }
   }
-
+onGuardarMercancia(): void {
+ 
+  const FORMDATA = this.mercanciaDatosForm.value;
+  const NUEVAMERCANCIA: Mercancias = {
+    unidadDeMedida: FORMDATA.umc,
+    cantidad: FORMDATA.cantidad,
+    fraccionArancelaria: FORMDATA.fraccionArancelaria,
+    valorMercancia: FORMDATA.valorMercancia,
+    tipoDeFactura: FORMDATA.tipoFactura
+  };
+this.exportador[0] = NUEVAMERCANCIA;
+this.exportador = [...this.exportador];
+   this.cerrarModals();
+}
+cerrarModals(): void {
+  if (this.modalInstances) {
+    this.modalInstances.hide();
+  }
+}
   /**
    * Establece el estado de validez del formulario en el store.
    * @param valida Indica si el formulario es válido o no.
