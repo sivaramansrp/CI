@@ -36,6 +36,9 @@ jobs:
         run: |
           docker build -t $IMAGE_NAME:$TAG -f apps/profepa/Dockerfile.dev .
           docker push $IMAGE_NAME:$TAG
+      
+      - name: Create .kube directory
+        run: mkdir -p $HOME/.kube
 
       - name: Decode Kubeconfig and Set up kubectl
         run: |
