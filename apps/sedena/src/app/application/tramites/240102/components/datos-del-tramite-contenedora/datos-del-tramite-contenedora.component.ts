@@ -1,12 +1,14 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  DatosDelTramiteFormState,
+  MercanciaDetalle
+} from '../../../../shared/models/datos-del-tramite.model';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
-import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
 import { DatosMercanciaContenedoraComponent } from '../datos-mercancia-contenedora/datos-mercancia-contenedora.component';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
-import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { Tramite240102Query } from '../../estados/tramite240102Query.query';
 import { Tramite240102Store } from '../../estados/tramite240102Store.store';
@@ -98,12 +100,15 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * @param {Tramite240102Query} tramiteQuery - Query de Akita para obtener el estado actual del trámite.
    * @param {Tramite240102Store} tramiteStore - Store de Akita para actualizar el estado del trámite.
    * @param {ConsultaioQuery} consultaQuery Servicio para consultar información adicional relacionada con el trámite.
+   * @param {ChangeDetectorRef} cdf - ChangeDetectorRef para detectar cambios en la vista.
    * @returns {void}
    */
   constructor(
     private tramiteQuery: Tramite240102Query,
     private tramiteStore: Tramite240102Store, // eslint-disable-next-line no-empty-function
     private consultaQuery: ConsultaioQuery,
+    private cdf: ChangeDetectorRef
+
   ) {}
 
   /**
@@ -134,6 +139,9 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
       })
     )
     .subscribe();
+    
+  this.cdf.detectChanges()
+
   }
 
   /**

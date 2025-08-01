@@ -1,12 +1,14 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  DatosDelTramiteFormState,
+  MercanciaDetalle
+} from '../../../../shared/models/datos-del-tramite.model';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
-import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
 import { DatosMercanciaContenedoraComponent } from '../datos-mercancia-contenedora/datos-mercancia-contenedora.component';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
-import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { Tramite240105Query } from '../../estados/tramite240105Query.query';
 import { Tramite240105Store } from '../../estados/tramite240105Store.store';
@@ -105,7 +107,7 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
     private tramiteQuery: Tramite240105Query,
     private tramiteStore: Tramite240105Store,
     private consultaQuery: ConsultaioQuery,
-  ) // eslint-disable-next-line no-empty-function
+  ) 
   {}
 
   /**

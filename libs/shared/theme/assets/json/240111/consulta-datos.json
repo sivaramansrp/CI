@@ -17,7 +17,7 @@
         "cadenaDependencia": "CAD456789",
         "banco": "2",
         "llavePago": "LLAVE123456",
-        "fechaPago": "2025-06-01",
+       "fechaPago": "05/06/2025",
         "importePago": "2500.00"
     },
     "destinatarioFinalTablaDatos": [

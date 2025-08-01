@@ -50,9 +50,7 @@
       (fechasSeleccionadasChange)="
         aduanasDisponiblesSeleccionadasChange($event)
       "
-      [isDisabled]="esFormularioSoloLectura"
-    >
-      ></crosslist
+      [isDisabled]="esFormularioSoloLectura"></crosslist
     >
   </div>
   <div class="row mt-5">
@@ -264,16 +262,6 @@
           [disabled]="esFormularioSoloLectura"
         ></app-input-radio>
       </div>
-      <!-- <div class="col-md-4">
-        <app-input-radio
-          [radioOptions]="periodoUnoSemestreRadioOpciones"
-          [isRequired]="true"
-          [layout]="'vertical'"
-          formControlName="dosSemestre"
-          (valueChange)="actualizarDosSemestre($event)"
-          [disabled]="esFormularioSoloLectura"
-        ></app-input-radio>
-      </div> -->
     </div>
 
     <div class="row">
