@@ -263,7 +263,7 @@
           <label for="molino" class="form-label">Molino*:</label>
           <select class="form-control form-select" formControlName="razonSocial" (change)="setValoresStore(datosProducto,'razonSocial', 'setRazonSocial')">
             <option [ngValue]="null">Selecciona una opción</option>
-            <option *ngFor="let molino of molinos" [value]="molino.clave">
+            <option *ngFor="let molino of molinos" [value]="molino.descripcion">
               {{ molino.descripcion }}
             </option>
           </select>
