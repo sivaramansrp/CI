@@ -2,6 +2,7 @@ import { DatoSolicitudStore } from '../estados/tramites/dato-solicitud.store';
 import { EstadoDatoSolicitud } from '../models/datos-solicitud.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { JSONResponse } from '@libs/shared/data-access-user/src';
 import { Observable } from 'rxjs';
 
 /**
@@ -50,6 +51,14 @@ export class AvisoDeReciclajeServiceService {
      */
     obtenerDatosCompletosFormulario(): Observable<EstadoDatoSolicitud> {
       return this.http.get<EstadoDatoSolicitud>('assets/json/231003/inicializar-formulario-datos-residuos.json');
+    }
+
+    /**
+     * Obtiene los datos de residuos desde un archivo JSON local.
+     * @returns Observable con los datos de residuos.
+     */
+    obtenerAvisoDeReciclajeDatos(): Observable<JSONResponse> {
+      return this.http.get<JSONResponse>('assets/json/231003/solicitude-tabla-datos.json');
     }
 
 }

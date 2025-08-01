@@ -1,15 +1,31 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, MERCHANDISE_IMPORTANTE, TituloComponent } from "@libs/shared/data-access-user/src";
-import { Component, OnDestroy, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { Solicitud30901State, Solicitud30901Store } from "../../estados/tramites30901.store";
-import { Subject, Subscription, map, takeUntil } from "rxjs";
-import { BsModalService } from "ngx-bootstrap/modal";
-import { CommonModule } from "@angular/common";
+import {
+  AlertComponent,
+  Catalogo,
+  CatalogoSelectComponent,
+  CatalogosSelect,
+  ConsultaioState,
+  MERCHANDISE_IMPORTANTE,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  Solicitud30901State,
+  Solicitud30901Store,
+} from '../../estados/tramites30901.store';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { ImportanteCatalogoSeleccion } from "../../models/registro-muestras-mercancias.model";
-import { RenovacionesMuestrasMercanciasService } from "../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service";
-import { Solicitud30901Query } from "../../estados/tramites30901.query";
-import { ToastrService } from "ngx-toastr";
+import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-mercancias.model';
+import { RenovacionesMuestrasMercanciasService } from '../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service';
+import { Solicitud30901Query } from '../../estados/tramites30901.query';
+import { ToastrService } from 'ngx-toastr';
 
 /**
  * Componente para el registro de renovaciones de muestras de mercancías.
@@ -110,18 +126,36 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
    */
   esFormularioSoloLectura: boolean = false;
 
-/**
- * Constructor del componente `RegistroRenovacionesMuestrasMercanciasComponent`.
- *
- * Este constructor inyecta los servicios y stores necesarios para gestionar el formulario de registro,
- * el estado del trámite 30901, y la configuración de solo lectura determinada por el estado de consulta.
- *
- * @param {FormBuilder} fb - Instancia de FormBuilder para la creación y gestión de formularios reactivos.
- * @param {RenovacionesMuestrasMercanciasService} renovacionesService - Servicio encargado de las operaciones relacionadas con renovaciones de muestras de mercancías.
- * @param {Solicitud30901Store} solicitud30901Store - Store para el manejo del estado centralizado de la solicitud 30901.
- * @param {Solicitud30901Query} solicitud30901Query - Query que permite observar los cambios en el estado de la solicitud 30901.
- * @param {ConsultaioQuery} consultaioQuery - Query que expone el estado de consulta, incluyendo si el formulario debe estar en modo de solo lectura.
- */
+  /**
+   * Estado actual de la sección del formulario.
+   * Se utiliza para manejar y consultar datos relacionados con la sección.
+   */
+  seccionState!: ConsultaioState;
+
+  /**
+   * Indica si el campo del combo de fracción arancelaria es inválido.
+   * Se establece en `true` cuando el campo no pasa la validación.
+   */
+  isInvalidComboFraccionField: boolean = false;
+
+  /**
+   * Indica si el campo del combo de NICOs es inválido.
+   * Se establece en `true` cuando el campo no pasa la validación.
+   */
+  isInvalidComboNicosField: boolean = false;
+
+  /**
+   * Constructor del componente `RegistroRenovacionesMuestrasMercanciasComponent`.
+   *
+   * Este constructor inyecta los servicios y stores necesarios para gestionar el formulario de registro,
+   * el estado del trámite 30901, y la configuración de solo lectura determinada por el estado de consulta.
+   *
+   * @param {FormBuilder} fb - Instancia de FormBuilder para la creación y gestión de formularios reactivos.
+   * @param {RenovacionesMuestrasMercanciasService} renovacionesService - Servicio encargado de las operaciones relacionadas con renovaciones de muestras de mercancías.
+   * @param {Solicitud30901Store} solicitud30901Store - Store para el manejo del estado centralizado de la solicitud 30901.
+   * @param {Solicitud30901Query} solicitud30901Query - Query que permite observar los cambios en el estado de la solicitud 30901.
+   * @param {ConsultaioQuery} consultaioQuery - Query que expone el estado de consulta, incluyendo si el formulario debe estar en modo de solo lectura.
+   */
   constructor(
     public fb: FormBuilder,
     public renovacionesService: RenovacionesMuestrasMercanciasService,
@@ -141,12 +175,14 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
+          this.seccionState = seccionState;
           this.inicializarEstadoFormulario();
+          if (this.seccionState.create) {
+            this.getImportadorDatos();
+          }
         })
       )
       .subscribe();
-
-    // Si es necesario, se puede agregar aquí la lógica de inicialización
     this.getOpcionImportador();
   }
 
@@ -182,6 +218,23 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
           this.fraccionArancelariaAga = res.fraccionArancelariaAga;
           this.nico = res.nico;
           this.ideGenerica = res.ideGenerica;
+        },
+      });
+  }
+
+  /**
+   * Obtiene las opciones desplegables del importador y las asigna a las propiedades correspondientes.
+   *
+   * Este método realiza una solicitud al servicio `renovacionesService` para obtener las opciones
+   * desplegables relacionadas con el importador y las asigna a las propiedades de la clase.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  getImportadorDatos(): void {
+    this.darseDeBaja = this.renovacionesService
+      .obtenerOpcionesDesplegables()
+      .subscribe({
+        next: (res: ImportanteCatalogoSeleccion) => {
           this.solicitud30901Store.setFraccionDescripcion(
             res.registroMuestrasDatos.fracciondescripcion
           );
@@ -232,7 +285,7 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
     } else {
       descripcion = 'Federal';
     }
-
+    this.isInvalidComboFraccionField = false;
     this.formRegistroMuestras.patchValue({
       fraccionConcatenada: valor.descripcion,
       fracciondescripcion: descripcion,
@@ -315,6 +368,7 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
       descripcion =
         '2 - Para abasto, cuando la importación la realicen empacadoras Tipo Inspección Federal.';
     }
+    this.isInvalidComboNicosField = false;
     this.solicitud30901Store.setNicoDescripcion(descripcion);
     this.solicitud30901Store.setComboNicos(valor.id);
   }
@@ -348,9 +402,17 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
    * @returns boolean
    */
   validarFormulario(): boolean {
+    this.isInvalidComboFraccionField = false; // Reinicia el estado de campos inválidos
+    this.isInvalidComboNicosField = false; // Reinicia el estado de campos inválidos
     // Verifica si el formulario es válido
     if (this.formRegistroMuestras.invalid) {
       this.formRegistroMuestras.markAllAsTouched();
+      if (this.formRegistroMuestras.get('fraccionConcatenada')?.value === '') {
+        this.isInvalidComboFraccionField = true;
+      }
+      if (this.formRegistroMuestras.get('comboNicos')?.value === '') {
+        this.isInvalidComboNicosField = true;
+      }
     }
     return this.formRegistroMuestras.valid;
   }
@@ -403,11 +465,17 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
       comboFraccionConcatenada: [
         this.solicitud30901State.comboFraccionConcatenada,
       ],
-      fraccionConcatenada: [this.solicitud30901State.fraccionConcatenada],
-      fracciondescripcion: [
-        { value: this.solicitud30901State.fracciondescripcion, disabled: false },
+      fraccionConcatenada: [
+        this.solicitud30901State.fraccionConcatenada,
+        [Validators.required],
       ],
-      comboNicos: [this.solicitud30901State.comboNicos],
+      fracciondescripcion: [
+        {
+          value: this.solicitud30901State.fracciondescripcion,
+          disabled: false,
+        },
+      ],
+      comboNicos: [this.solicitud30901State.comboNicos, [Validators.required]],
       nicoDescripcion: [
         { value: this.solicitud30901State.nicoDescripcion, disabled: false },
       ],
@@ -424,7 +492,7 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
         [Validators.maxLength(120)],
       ],
       ideGenerica: [
-        { value: this.solicitud30901State.ideGenerica, disabled: false },
+        { value: this.solicitud30901State.ideGenerica, disabled: true },
       ],
       descClobGenerica: [
         { value: this.solicitud30901State.descClobGenerica, disabled: false },
@@ -437,7 +505,6 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
         takeUntil(this.destroyed$),
         map((response: Solicitud30901State) => {
           this.solicitud30901State = response;
-
           this.formRegistroMuestras.patchValue({
             opcionDeImportador: this.solicitud30901State.opcionDeImportador,
             tomaMuestraDespacho: this.solicitud30901State.tomaMuestraDespacho,
