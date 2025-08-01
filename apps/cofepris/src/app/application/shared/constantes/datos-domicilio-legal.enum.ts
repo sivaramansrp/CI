@@ -101,6 +101,7 @@ export const NUEVA_NOTIFICACION = {
   txtBtnCancelar: 'Cancelar', // Texto del botón para cancelar la notificación.
 };
 
+/** Etiquetas para el campo de uso específico en el componente de selección cruzada. */
 export const USO_ESPECIFICO_LABEL: CrossListLable = {
     tituluDeLaIzquierda: 'Uso específico:',
     derecha: 'Uso específico seleccionado*:',
