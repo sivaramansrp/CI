@@ -3,7 +3,7 @@
   <div class="row">
     <div class="col-md-4">
       <div class="form-group">
-        <label class="form-label" for="codigoPostal">Código postal*:</label>
+        <label class="form-label" for="codigoPostal">Código postal* :</label>
         <input class="form-control" id="codigoPostal" placeholder="" type="text" maxlength="12" size="29"
           formControlName="codigoPostal" (change)="setValoresStore(domicilio, 'codigoPostal', 'setCodigoPostal')" />
         <div class="d-grid">
@@ -32,7 +32,7 @@
     </div>
     <div class="col-md-4">
       <div class="form-group">
-        <label class="form-label" for="muncipio">Municipio y alcaldía*:</label>
+        <label class="form-label" for="muncipio">Municipio y alcaldía* :</label>
         <input class="form-control" id="muncipio" placeholder="" type="text" formControlName="muncipio" maxlength="120"
           (change)="setValoresStore(domicilio, 'muncipio', 'setMuncipio')" />
         <div class="d-grid">
@@ -64,7 +64,7 @@
   <div class="row">
     <div class="col-md-8">
       <div class="form-group">
-        <label class="form-label" for="calle">Calle*:</label>
+        <label class="form-label" for="calle">Calle* :</label>
         <span
               class="bi bi-question-circle-fill"
               title="Calle y número"
@@ -92,7 +92,7 @@
     </div>
     <div class="col-md-3">
       <div class="form-group">
-        <label class="form-label" for="telefono">Teléfono*:</label>
+        <label class="form-label" for="telefono">Teléfono* :</label>
         <input class="form-control" id="telefono" placeholder="" type="number" maxlength="30" size="29"
           formControlName="telefono" (change)="setValoresStore(domicilio, 'telefono', 'setTelefono')" />
         <div class="d-grid">
