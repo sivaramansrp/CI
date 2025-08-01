@@ -1,6 +1,6 @@
 <div class="container">
   <form [formGroup]="formularioEmpresa">
-    @if(consultaState.parameter !== "READ_PROCEDURE")
+    @if(consultaState && consultaState.parameter !== "READ_PROCEDURE")
     {
     <ng-titulo titulo="Representación federal"></ng-titulo>
     <div class="row">
@@ -271,7 +271,7 @@
     <div class="text-end mt-5">
       <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Eliminar</button>
     </div>
-   @if(consultaState.parameter !== "READ_PROCEDURE")
+   @if(consultaState && consultaState.parameter !== "READ_PROCEDURE")
     {
     <ng-titulo titulo="Cargar archivos"></ng-titulo>
     <ng-alert [CONTENIDO]="DATOS_EMPRESA"></ng-alert>
