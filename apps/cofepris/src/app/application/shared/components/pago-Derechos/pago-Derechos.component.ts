@@ -226,12 +226,6 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
   alReiniciar(): void {
     this.derechosForm.reset();
   }
- /**
-   * @observable fechaFinalInput
-   * @description Representa un objeto de tipo InputFecha que contiene la fecha final
-   * utilizada en el contexto del trámite 260402.
-   */
-  //public fechaFinalInput!: InputFecha;
   /**
    * Indica si se ha seleccionado una fecha futura.
    * Cuando es `true`, la fecha seleccionada es futura; cuando es `false`, la fecha es pasada o actual.
