@@ -75,9 +75,7 @@ export interface DatosDelModificacion {
   municipioOAlcaldia?: string;
   entidadFederativa?: string;
   pais?: string;
-  rfc?: string;
-  domicilioFiscal?: string;
-  razonSocial?: string;
+  telefono?: string;
   desEstatus?: string;
 }
 

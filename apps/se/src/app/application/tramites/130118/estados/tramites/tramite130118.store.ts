@@ -5,6 +5,8 @@ import { Injectable } from '@angular/core';
  * Interfaz que define el estado de la solicitud para el trámite 130118.
  */
 export interface Solicitud130118State {
+  /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
+  idSolicitud: number | null;
   /** Régimen de mercancía aplicado. */
   regimenMercancia: string;
   /** Clasificación del régimen de mercancía. */
@@ -59,6 +61,7 @@ export interface Solicitud130118State {
  */
 export function createInitialState(): Solicitud130118State {
   return {
+    idSolicitud: 0,
     regimenMercancia: '',
     clasifiRegimen: '',
     valueTA: '',
@@ -153,6 +156,18 @@ export class Tramite130118Store extends Store<Solicitud130118State> {
     this.update((state) => ({
       ...state,
       nico,
+    }));
+  }
+
+    /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
     }));
   }
 

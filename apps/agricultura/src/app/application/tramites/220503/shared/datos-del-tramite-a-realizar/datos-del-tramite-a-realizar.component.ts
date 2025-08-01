@@ -13,6 +13,7 @@ import { InputFecha } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { PagoDeDerechoComponent } from '../../../../shared/components/pago-de-derecho/pago-de-derecho.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Solicitud220503Query } from '../../estados/tramites220503.query';
 import { Solicitud220503State } from '../../estados/tramites220503.store';
@@ -186,29 +187,27 @@ this.datosServicio.disable();
         this.claveDeControl,
         new FormGroup({
           certificadosAutorizados: new FormControl(
-            this.Solicitud220503State.certificadosAutorizados,
+            this.Solicitud220503State.certificadosAutorizados || '',
             [Validators.required]
           ),
           horaDeInspeccion: new FormControl(
-            this.Solicitud220503State.horaDeInspeccion,
+            this.Solicitud220503State.horaDeInspeccion || '',
             [Validators.required]
           ),
           aduanaDeIngreso: new FormControl(
-            this.Solicitud220503State.aduanaDeIngreso,
-            [Validators.required]
+            this.Solicitud220503State.aduanaDeIngreso || '',
+       
           ),
           sanidadAgropecuaria: new FormControl(
-            this.Solicitud220503State.sanidadAgropecuaria,
-            [Validators.required]
+            this.Solicitud220503State.sanidadAgropecuaria || '',
           ),
           puntoDeInspeccion: new FormControl(
-            this.Solicitud220503State.puntoDeInspeccion,
-            [Validators.required]
+            this.Solicitud220503State.puntoDeInspeccion || '',
+
           ),
           fechaDeInspeccion: new FormControl(
-            this.Solicitud220503State.fechaDeInspeccion,
-            [Validators.required]
-          ),
+            this.Solicitud220503State.fechaDeInspeccion || PagoDeDerechoComponent.formatDate(),
+            ),
         })
       );
       this.cargarDatosIniciales();
@@ -224,13 +223,13 @@ this.datosServicio.disable();
             if (FORM_GROUP) {
               FORM_GROUP.patchValue({
                 certificadosAutorizados:
-                  this.Solicitud220503State.certificadosAutorizados,
-                horaDeInspeccion: this.Solicitud220503State.horaDeInspeccion,
-                aduanaDeIngreso: this.Solicitud220503State.aduanaDeIngreso,
+                  this.Solicitud220503State.certificadosAutorizados || '',
+                horaDeInspeccion: this.Solicitud220503State.horaDeInspeccion || '',
+                aduanaDeIngreso: this.Solicitud220503State.aduanaDeIngreso || '',
                 sanidadAgropecuaria:
-                  this.Solicitud220503State.sanidadAgropecuaria,
-                puntoDeInspeccion: this.Solicitud220503State.puntoDeInspeccion,
-                fechaDeInspeccion: this.Solicitud220503State.fechaDeInspeccion,
+                  this.Solicitud220503State.sanidadAgropecuaria || '',
+                puntoDeInspeccion: this.Solicitud220503State.puntoDeInspeccion || '',
+                fechaDeInspeccion: this.Solicitud220503State.fechaDeInspeccion || '',
               });
             }
           })
@@ -407,7 +406,14 @@ this.datosServicio.disable();
   setPuntoDeInspeccion(event: Catalogo): void {
     this.Solicitud220503Store.setPuntoDeInspeccion(event.id);
   }
+validarFormularios():boolean{
+if(this.grupoFormularioPadre.valid){
+  return true;
+}
+  this.grupoFormularioPadre.markAllAsTouched();
+  return false;
 
+}
   /**
    * Gancho de ciclo de vida para limpiar los controles de formulario cuando se destruye el componente.
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.

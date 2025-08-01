@@ -27,7 +27,7 @@
             <span class="bi bi-question-circle-fill"
         title="En caso de no contar con valor factura proporciona el valor estimado"
         data-bs-toggle="tooltip"></span>
-            <input class="form-control" type="number" id="valorPartidaUSD"
+            <input class="form-control" type="text" id="valorPartidaUSD"
               formControlName="valorPartidaUSDPartidasDeLaMercancia" aria-labelledby="valorPartidaUSD" (change)="
                 setValoresStore(partidasDelaMercanciaForm, 'valorPartidaUSDPartidasDeLaMercancia')
               " />
@@ -97,7 +97,7 @@
         <div class="modal-body">
           <div class="row">
             <div class="container mt-4">
-              <ng-titulo titulo="Carger Archivo"> </ng-titulo>
+              <ng-titulo titulo="Cargar Archivo"> </ng-titulo>
               <div class="row align-items-center mb-3">
                 <div class="col-auto">
                   <label for="archivoNacionales" class="form-label mb-0 me-3">

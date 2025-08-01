@@ -17,12 +17,18 @@ describe('RegistroSolicitudService', () => {
     } as any;
 
     tramite31803StoreSpy = {
-      setBanco: jest.fn(()=> of()),
-      setNumeroOperacion: jest.fn(()=> of()),
-      setLlave: jest.fn(()=> of()),
-      setManifiesto1: jest.fn(()=> of()),
-      setManifiesto2: jest.fn(()=> of()),
-      setFechaPago: jest.fn(()=> of())
+      setNumeroOficio: jest.fn(),
+      setClaveReferencia: jest.fn(),
+      setCadenaDependencia: jest.fn(),
+      setImportePago: jest.fn(),
+      setFechaInicial: jest.fn(),
+      setFechaFinal: jest.fn(),
+      setBanco: jest.fn(),
+      setNumeroOperacion: jest.fn(),
+      setLlave: jest.fn(),
+      setManifiesto1: jest.fn(),
+      setManifiesto2: jest.fn(),
+      setFechaPago: jest.fn()
     } as any;
 
     TestBed.configureTestingModule({
@@ -43,7 +49,13 @@ describe('RegistroSolicitudService', () => {
 
     it('should update the store with provided data', () => {
       const datos = {
-        banco: [{ id: '1', descripcion: 'Banco1' }],
+        numeroOficio: 'OF12345',
+        claveReferencia: 'REF123',
+        cadenaDependencia: 'DEP123',
+        importePago: '1000',
+        fechaInicial: '2024-01-01',
+        fechaFinal: '2024-12-31',
+        banco: 'Banco Test',
         numeroOperacion: '123',
         llave: 'abc',
         manifiesto1: 'man1',
@@ -53,6 +65,12 @@ describe('RegistroSolicitudService', () => {
 
       service.actualizarEstadoFormulario(datos);
 
+      expect(tramite31803StoreSpy.setNumeroOficio).toHaveBeenCalledWith(datos.numeroOficio);
+      expect(tramite31803StoreSpy.setClaveReferencia).toHaveBeenCalledWith(datos.claveReferencia);
+      expect(tramite31803StoreSpy.setCadenaDependencia).toHaveBeenCalledWith(datos.cadenaDependencia);
+      expect(tramite31803StoreSpy.setImportePago).toHaveBeenCalledWith(datos.importePago);
+      expect(tramite31803StoreSpy.setFechaInicial).toHaveBeenCalledWith(datos.fechaInicial);
+      expect(tramite31803StoreSpy.setFechaFinal).toHaveBeenCalledWith(datos.fechaFinal);
       expect(tramite31803StoreSpy.setBanco).toHaveBeenCalledWith(datos.banco);
       expect(tramite31803StoreSpy.setNumeroOperacion).toHaveBeenCalledWith(datos.numeroOperacion);
       expect(tramite31803StoreSpy.setLlave).toHaveBeenCalledWith(datos.llave);
@@ -61,8 +79,14 @@ describe('RegistroSolicitudService', () => {
       expect(tramite31803StoreSpy.setFechaPago).toHaveBeenCalledWith(datos.fechaPago);
     });
 
-    it('should set banco to empty array if undefined', () => {
+    it('should handle undefined values in data', () => {
       const datos = {
+        numeroOficio: undefined,
+        claveReferencia: undefined,
+        cadenaDependencia: undefined,
+        importePago: undefined,
+        fechaInicial: undefined,
+        fechaFinal: undefined,
         banco: undefined,
         numeroOperacion: '123',
         llave: 'abc',
@@ -73,7 +97,18 @@ describe('RegistroSolicitudService', () => {
 
       service.actualizarEstadoFormulario(datos);
 
-      expect(tramite31803StoreSpy.setBanco).toHaveBeenCalledWith([]);
+      expect(tramite31803StoreSpy.setNumeroOficio).toHaveBeenCalledWith(undefined);
+      expect(tramite31803StoreSpy.setClaveReferencia).toHaveBeenCalledWith(undefined);
+      expect(tramite31803StoreSpy.setCadenaDependencia).toHaveBeenCalledWith(undefined);
+      expect(tramite31803StoreSpy.setImportePago).toHaveBeenCalledWith(undefined);
+      expect(tramite31803StoreSpy.setFechaInicial).toHaveBeenCalledWith(undefined);
+      expect(tramite31803StoreSpy.setFechaFinal).toHaveBeenCalledWith(undefined);
+      expect(tramite31803StoreSpy.setBanco).toHaveBeenCalledWith(undefined);
+      expect(tramite31803StoreSpy.setNumeroOperacion).toHaveBeenCalledWith('123');
+      expect(tramite31803StoreSpy.setLlave).toHaveBeenCalledWith('abc');
+      expect(tramite31803StoreSpy.setManifiesto1).toHaveBeenCalledWith('man1');
+      expect(tramite31803StoreSpy.setManifiesto2).toHaveBeenCalledWith('man2');
+      expect(tramite31803StoreSpy.setFechaPago).toHaveBeenCalledWith('2024-01-01');
     });
 
     it('should call http.get with correct URL and return Catalogo[]', (done) => {
@@ -98,10 +133,54 @@ describe('RegistroSolicitudService', () => {
       };
       httpClientSpy.get.mockReturnValue(of(mockResponse));
 
-      service.getSolicitudDatos().subscribe(result => {
+      service.getRegistroTomaMuestrasMercanciasData().subscribe(result => {
         expect(result).toEqual(mockResponse);
         expect(httpClientSpy.get).toHaveBeenCalledWith('assets/json/31803/solicitud-banco.json');
         done();
       });
+    });
+
+    it('should handle empty catalogo response for obtenerDatosBanco', (done) => {
+      const mockCatalogos: Catalogo[] = [];
+      httpClientSpy.get.mockReturnValue(of(mockCatalogos));
+
+      service.obtenerDatosBanco().subscribe(result => {
+        expect(result).toEqual([]);
+        expect(httpClientSpy.get).toHaveBeenCalledWith('assets/json/31803/banco.json');
+        done();
+      });
+    });
+
+    it('should update all store properties with complete data', () => {
+      const datos = {
+        numeroOficio: 'OF12345',
+        claveReferencia: 'REF123',
+        cadenaDependencia: 'DEP123',
+        importePago: '1500.50',
+        fechaInicial: '2024-01-01',
+        fechaFinal: '2024-12-31',
+        banco: 'BBVA',
+        numeroOperacion: 'OP456789',
+        llave: 'KEY123ABC',
+        manifiesto1: 'MAN001',
+        manifiesto2: 'MAN002',
+        fechaPago: '2024-06-15'
+      } as any;
+
+      service.actualizarEstadoFormulario(datos);
+
+      // Verify all methods were called exactly once
+      expect(tramite31803StoreSpy.setNumeroOficio).toHaveBeenCalledTimes(1);
+      expect(tramite31803StoreSpy.setClaveReferencia).toHaveBeenCalledTimes(1);
+      expect(tramite31803StoreSpy.setCadenaDependencia).toHaveBeenCalledTimes(1);
+      expect(tramite31803StoreSpy.setImportePago).toHaveBeenCalledTimes(1);
+      expect(tramite31803StoreSpy.setFechaInicial).toHaveBeenCalledTimes(1);
+      expect(tramite31803StoreSpy.setFechaFinal).toHaveBeenCalledTimes(1);
+      expect(tramite31803StoreSpy.setBanco).toHaveBeenCalledTimes(1);
+      expect(tramite31803StoreSpy.setNumeroOperacion).toHaveBeenCalledTimes(1);
+      expect(tramite31803StoreSpy.setLlave).toHaveBeenCalledTimes(1);
+      expect(tramite31803StoreSpy.setManifiesto1).toHaveBeenCalledTimes(1);
+      expect(tramite31803StoreSpy.setManifiesto2).toHaveBeenCalledTimes(1);
+      expect(tramite31803StoreSpy.setFechaPago).toHaveBeenCalledTimes(1);
     });
 });

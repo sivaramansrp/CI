@@ -1,4 +1,4 @@
-import { ConsultaioQuery, ConsultaioState, REGEX_SOLO_DIGITOS } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, REGEX_CORREO_ELECTRONICO, REGEX_SOLO_DIGITOS } from '@ng-mf/data-access-user';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -9,6 +9,7 @@ import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite110212Query } from '../../../../estados/queries/tramite110212.query';
 import { Tramite110212State } from '../../../../estados/tramites/tramite110212.store';
 import { Tramite110212Store } from '../../../../estados/tramites/tramite110212.store';
@@ -26,7 +27,7 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-destinatario',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, TooltipModule],
   templateUrl: './destinatario.component.html',
   styleUrl: './destinatario.component.scss',
 })
@@ -174,7 +175,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
         ],
         correoElectronico: [
           this.solicitudState?.grupoDeDirecciones?.correoElectronico,
-          [Validators.required, Validators.email],
+          [Validators.required, Validators.pattern(REGEX_CORREO_ELECTRONICO)],
         ],
       }),
 
@@ -283,6 +284,24 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  /**
+   * Limita el número de dígitos en un input de tipo número.
+   *
+   * @param {Event} event - El evento de input.
+   * @param {number} maxLength - El número máximo de dígitos permitidos.
+   */
+  limitDigits(event: Event, maxLength: number): void {
+    const INPUT = event.target as HTMLInputElement;
+    if (INPUT.value.length > maxLength) {
+      INPUT.value = INPUT.value.slice(0, maxLength);
+      // Actualizar el valor del control del formulario
+      const CONTROL = this.registroFormulario.get('grupoDeDirecciones.fax');
+      if (CONTROL) {
+        CONTROL.setValue(INPUT.value);
+      }
+    }
   }
 
   /**

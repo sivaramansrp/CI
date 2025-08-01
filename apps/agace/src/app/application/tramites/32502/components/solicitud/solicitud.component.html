@@ -249,6 +249,7 @@
         <div class="col-md-4">
           <input-fecha
             [datos]="fechaInicioInput"
+            [tooltipQuestionCircle]="true"
             (valorCambiado)="cambioFechaDeIngreso($event)"
             [setFecha]="mercanciaST.get('fechaInicio')?.value"
           ></input-fecha>
@@ -416,25 +417,30 @@
               direccionST.get('codigoPostal')?.invalid
             "
             type="text"
+            maxlength="5"
             formControlName="codigoPostal"
             name="codigoPostal"
             id="codigoPostal"
             (change)="setValoresStore(direccionST)"
+            (keypress)="allowOnlyNumbers($event)"
+           
           />
           <div
-            class="invalid-feedback"
-            *ngIf="
-              direccionST.get('codigoPostal')?.touched &&
-              direccionST.get('codigoPostal')?.invalid
-            "
-          >
-            <span *ngIf="direccionST.get('codigoPostal')?.hasError('required')"
-              >Este campo es obligatorio.</span
-            >
-            <span *ngIf="direccionST.get('codigoPostal')?.hasError('maxlength')"
-              >Este campo debe tener un máximo de 5 caracteres.</span
-            >
-          </div>
+  class="invalid-feedback"
+  *ngIf="
+    direccionST.get('codigoPostal')?.touched &&
+    direccionST.get('codigoPostal')?.invalid
+  "
+>
+  <span *ngIf="direccionST.get('codigoPostal')?.hasError('required')">
+    Este campo es obligatorio.
+  </span>
+  
+  <span *ngIf="direccionST.get('codigoPostal')?.hasError('pattern')">
+    Este campo es obligatorio.
+  </span>
+</div>
+
         </div>
       </div>
     </ng-container>

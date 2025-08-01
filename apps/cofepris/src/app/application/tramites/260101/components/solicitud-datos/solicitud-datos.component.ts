@@ -1,34 +1,55 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputRadioComponent, TablaDinamicaComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
+import {
+  AlertComponent,
+  Catalogo,
+  CatalogoSelectComponent,
+  CatalogosSelect,
+  ConfiguracionColumna,
+  InputRadioComponent,
+  Notificacion,
+  NotificacionesComponent,
+  Pedimento,
+  REGEX_CORREO_ELECTRONICO,
+  REGEX_TELEFONO,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TableComponent,
+  TableData,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  DatosDeSolicitud,
+  RadioOptions,
+  SCIAN,
+  Solicitud,
+  SolicitudDatos,
+} from '../../models/solicitud-datos.model';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  Solicitud260101State,
+  Solicitud260101Store,
+} from '../../estados/tramites260101.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { DatosDeSolicitud } from '../../models/solicitud-datos.model';
-import { ElementRef } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Mercancia } from '../../models/mercancia.model';
 import { Modal } from 'bootstrap';
 import { ModificarMercanciasComponent } from '../modificar-mercancias/modificar-mercancias.component';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { REGEX_CORREO_ELECTRONICO } from '@libs/shared/data-access-user/src';
-import { REGEX_TELEFONO } from '@libs/shared/data-access-user/src';
-import { RadioOptions } from '../../models/solicitud-datos.model';
-import { Solicitud } from '../../models/solicitud-datos.model';
 import { Solicitud260101Query } from '../../estados/tramites260101.query';
-import { Solicitud260101State } from '../../estados/tramites260101.store';
-import { Solicitud260101Store } from '../../estados/tramites260101.store';
-import { SolicitudDatos } from '../../models/solicitud-datos.model';
 import { SolicitudDatosService } from '../../services/solicitud-datos.service';
-import { Subject } from 'rxjs';
 import { TEXTOS } from '../../constantes/constantes';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { TableData } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
-import { ViewChild } from '@angular/core';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * Componente que representa los datos de la solicitud.
@@ -37,24 +58,41 @@ import { takeUntil } from 'rxjs';
   selector: 'app-solicitud-datos',
   templateUrl: './solicitud-datos.component.html',
   styleUrl: './solicitud-datos.component.scss',
-  standalone:true,
-  imports:[
+  standalone: true,
+  imports: [
     CommonModule,
-      ReactiveFormsModule,
-      FormsModule,
-      InputRadioComponent,
-      TablaDinamicaComponent,
-      CatalogoSelectComponent,
-      TableComponent,
-      AlertComponent,
-      TituloComponent,
-      ModificarMercanciasComponent
-    ]
+    ReactiveFormsModule,
+    FormsModule,
+    InputRadioComponent,
+    TablaDinamicaComponent,
+    CatalogoSelectComponent,
+    TableComponent,
+    AlertComponent,
+    TituloComponent,
+    ModificarMercanciasComponent,
+    NotificacionesComponent,
+  ],
 })
 /**
  * Componente que representa los datos de la solicitud
  */
 export class SolicitudDatosComponent implements OnInit, OnDestroy {
+  /**
+   * Array con los datos de los pedimentos.
+   * Se utiliza para almacenar los pedimentos ingresados por el usuario.
+   */
+  pedimentos: Array<Pedimento> = [];
+
+  /**
+   * Elemento a eliminar de la tabla de pedimentos.
+   */
+  elementoParaEliminar!: number;
+
+  /**
+   * @descripcion Notificación para mostrar mensajes al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
+
   /**
    * Obtiene los datos de enumeración y establece valores de TEXTOS.
    * Esta variable contiene los textos estáticos utilizados en el componente.
@@ -74,13 +112,24 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Configuración de la tabla SCIAN.
-   * Contiene encabezados y cuerpo de datos vacíos al inicio.
+   * Lista de identificadores SCIAN seleccionados.
+   *
+   * Contiene los IDs (de tipo `number`) correspondientes a las actividades
+   * económicas seleccionadas por el usuario dentro del formulario.
+   *
+   * @type {number[]}
    */
-  public tableDataSCIAN: TableData = {
-    tableHeader: [],
-    tableBody: [],
-  };
+  scianSeleccionados: number[] = [];
+
+  /**
+   * Lista de identificadores de mercancías seleccionadas.
+   *
+   * Este arreglo almacena los IDs de las mercancías que el usuario ha elegido,
+   * ya sea para registrar, modificar o visualizar en el contexto del formulario.
+   *
+   * @type {number[]}
+   */
+  mercanciasSeleccionados: number[] = [];
 
   /**
    * Configuración de la tabla de mercancías.
@@ -122,10 +171,26 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
   selectedMercanciasDatos: Mercancia[] = [];
 
   /**
-   * Referencia al elemento del modal para agregar mercancías.
-   * Utilizado para manipular el modal mediante su elemento HTML.
+   * Lista de objetos SCIAN seleccionados por el usuario.
+   *
+   * Este arreglo contiene los elementos completos del catálogo SCIAN
+   * que han sido seleccionados en el formulario o componente actual.
+   *
+   * A diferencia de `scianSeleccionados`, que solo guarda los IDs,
+   * esta propiedad almacena los objetos `SCIAN` completos con toda su información.
+   *
+   * @type {SCIAN[]}
    */
-  @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
+  selectedscianDatos: SCIAN[] = [];
+
+  /**
+   * Referencia al elemento del modal para agregar mercancías.
+   * Se utiliza para manipular el modal directamente a través del DOM.
+   *
+   * @type {ElementRef}
+   */
+  @ViewChild('modalAgregarMercancias', { static: false })
+  modalElement!: ElementRef;
 
   /**
    * Opciones de botones de selección por radio.
@@ -150,6 +215,18 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    * Utiliza selección con checkbox.
    */
   mercanciasSeleccionTabla = TablaSeleccion.CHECKBOX;
+
+  /**
+   * Modo de selección de la tabla SCIAN.
+   *
+   * Define el tipo de selección que permite la tabla de actividades económicas SCIAN.
+   * En este caso, se configura como selección por `CHECKBOX`, lo que permite seleccionar múltiples filas.
+   *
+   * Esta propiedad utiliza un valor del enum `TablaSeleccion`.
+   *
+   * @type {TablaSeleccion}
+   */
+  scianSeleccionTabla = TablaSeleccion.CHECKBOX;
 
   /**
    * Configuración para la selección de filas en la tabla de solicitudes.
@@ -284,10 +361,51 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
   ];
 
   /**
+   * Configuración de columnas para la tabla de actividades económicas SCIAN.
+   *
+   * Define las columnas que se mostrarán en la tabla de selección SCIAN,
+   * incluyendo encabezados, claves de acceso a los datos y el orden de aparición.
+   *
+   * Cada objeto en el arreglo representa una columna de la tabla y utiliza
+   * el tipo genérico `ConfiguracionColumna<SCIAN>`, que asume que los datos
+   * provienen de objetos del tipo `SCIAN`.
+   *
+   * - `encabezado`: Título de la columna visible para el usuario.
+   * - `clave`: Función que extrae el valor correspondiente del objeto `SCIAN`.
+   * - `orden`: Determina el orden en que se muestra la columna.
+   *
+   * @type {ConfiguracionColumna<SCIAN>[]}
+   */
+  scianConfiguracionTabla: ConfiguracionColumna<SCIAN>[] = [
+    {
+      encabezado: 'Clave S.C.I.A.N',
+      clave: (item: SCIAN) => item.clave,
+      orden: 1,
+    },
+    {
+      encabezado: 'Descripción del S.C.I.A.N.',
+      clave: (item: SCIAN) => item.descripcion,
+      orden: 2,
+    },
+  ];
+
+  /**
    * Datos de las mercancías.
    * Representados como un arreglo de objetos tipo Mercancia.
    */
   mercanciasDatos: Mercancia[] = [];
+
+  /**
+   * Catálogo completo de actividades económicas SCIAN.
+   *
+   * Este arreglo contiene todos los elementos del catálogo SCIAN disponibles
+   * para mostrar en la tabla o para ser seleccionados por el usuario.
+   *
+   * Los objetos de tipo `SCIAN` pueden incluir propiedades como clave, descripción, etc.
+   *
+   * @type {SCIAN[]}
+   */
+  scianDatos: SCIAN[] = [];
 
   /**
    * Indica si el formulario está en modo solo lectura.
@@ -322,7 +440,7 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.esFormularioSoloLectura = !seccionState.readonly;
+          this.esFormularioSoloLectura = seccionState.readonly;
           this.inicializarEstadoFormulario();
         })
       )
@@ -418,20 +536,50 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
         ],
       ],
       /** Indicador de aviso de funcionamiento del solicitante. */
-      avisoDeFuncionamiento: [this.solicitud260101State.avisoDeFuncionamiento],
+      avisoDeFuncionamiento: [
+        {
+          value: this.solicitud260101State.avisoDeFuncionamiento,
+          disabled: this.esFormularioSoloLectura,
+        },
+      ],
       /** Licencia sanitaria del solicitante. */
-      licenciaSanitaria: [this.solicitud260101State.licenciaSanitaria],
+      licenciaSanitaria: [
+        {
+          value: this.solicitud260101State.licenciaSanitaria,
+          disabled: this.esFormularioSoloLectura,
+        },
+      ],
       /** Estado del producto (fresco, congelado o vivo). */
-      liveFreshFrozen: [this.solicitud260101State.liveFreshFrozen],
+      liveFreshFrozen: [
+        {
+          value: this.solicitud260101State.liveFreshFrozen,
+          disabled: this.esFormularioSoloLectura,
+        },
+      ],
       /** Régimen asociado al trámite. */
-      regimen: [this.solicitud260101State.regimen, [Validators.required]],
+      regimen: [
+        { value: this.solicitud260101State.regimen, disabled: false },
+        [Validators.required],
+      ],
       /** Aduana asociada al trámite. */
-      aduana: [this.solicitud260101State.aduana, [Validators.required]],
+      aduana: [
+        { value: this.solicitud260101State.aduana, disabled: false },
+        [Validators.required],
+      ],
       /** Indicador de selección "hacerlos". */
-      hacerlos: [this.solicitud260101State.hacerlos, [Validators.required]],
+      hacerlos: [
+        {
+          value: this.solicitud260101State.hacerlos,
+          disabled: this.esFormularioSoloLectura,
+        },
+        [Validators.required],
+      ],
       /** RFC del solicitante. */
       rfc: [
-        this.solicitud260101State.rfc,
+        {
+          value: this.solicitud260101State.rfc,
+          disabled: this.esFormularioSoloLectura,
+        },
         [Validators.required, Validators.maxLength(13)],
       ],
       /** Razón social del representante legal. */
@@ -450,7 +598,12 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
         [Validators.maxLength(30)],
       ],
       /** Indicador de manifiesto en el estado actual. */
-      manifesto: [this.solicitud260101State.manifesto],
+      manifesto: [
+        {
+          value: this.solicitud260101State.manifesto,
+          disabled: this.esFormularioSoloLectura,
+        },
+      ],
     });
 
     // Observa cambios en el estado de la solicitud y actualiza el formulario reactivo.
@@ -483,7 +636,12 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
             apellidoMeterno: this.solicitud260101State.apellidoMeterno,
             manifesto: this.solicitud260101State.manifesto,
           });
+          // Actualiza las tablas de
           this.mercanciasDatos = this.solicitud260101State.mercanciasDatos;
+          this.scianSeleccionados =
+            this.solicitud260101State.scianSeleccionados;
+          this.mercanciasSeleccionados =
+            this.solicitud260101State.mercanciasSeleccionados;
         })
       )
       .subscribe();
@@ -509,7 +667,8 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    * Obtiene los datos iniciales de la solicitud y los actualiza en el estado.
    */
   obtenerSolicitud(): void {
-    this.solicitudDatosService.obtenerSolicitud()
+    this.solicitudDatosService
+      .obtenerSolicitud()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (respuesta: Solicitud) => {
@@ -564,7 +723,7 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
         next: (respuesta: DatosDeSolicitud) => {
           this.solicitudDatos = respuesta.tablaFilaDatos;
           this.hacerlosRadioOptions = respuesta.hacerlosRadioOptions;
-          this.tableDataSCIAN = respuesta.tablaFilaDatos[0]?.SCIANLista;
+          this.scianDatos = respuesta.tablaFilaDatos[0]?.SCIANLista;
         },
       });
   }
@@ -692,6 +851,61 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Establece los elementos SCIAN seleccionados por el usuario.
+   *
+   * Este método recibe un arreglo de objetos `SCIAN` seleccionados desde un componente
+   * hijo (como una tabla dinámica), y los asigna a la propiedad `selectedscianDatos`
+   * para su uso posterior (visualización, validación o envío).
+   *
+   * @param {SCIAN[]} evento - Arreglo de objetos `SCIAN` seleccionados.
+   */
+  getscianDatos(evento: SCIAN[]): void {
+    this.selectedscianDatos = evento;
+  }
+
+  /**
+   * Elimina un elemento de la lista de pedimentos en la posición especificada.
+   *
+   * @param {number} i - El índice del elemento a eliminar.
+   *
+   * @remarks
+   * Después de eliminar el elemento, se actualiza el título y mensaje del modal,
+   * y se abre el modal para mostrar un aviso al usuario.
+   */
+  abrirModal(mensaje: string, i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+
+    this.elementoParaEliminar = i;
+  }
+
+  openSeleccionarEstablecimiento(): void {
+    const PEDIMENTO = {
+      patente: 0,
+      pedimento: 0,
+      aduana: 0,
+      idTipoPedimento: 0,
+      descTipoPedimento: 'Por evaluar',
+      numero: '',
+      comprobanteValor: '',
+      pedimentoValidado: false,
+    };
+    this.abrirModal(
+      'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.'
+    );
+    this.pedimentos.push(PEDIMENTO);
+  }
+
+  /**
    * Elimina la primera mercancía seleccionada de la lista en el Store.
    */
   eliminarMercancias(): void {
@@ -727,6 +941,17 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
   setManifesto(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).checked;
     this.solicitud260101Store.setManifesto(VALOR);
+  }
+
+  /**
+   * Elimina un elemento de la tabla de pedimento, si se confirma la acción.
+   * @param borrar Indica si se debe proceder con la eliminación.
+   * @returns {void}
+   */
+  eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
   }
 
   /**

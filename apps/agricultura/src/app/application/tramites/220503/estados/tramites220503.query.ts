@@ -26,4 +26,16 @@ export class Solicitud220503Query extends Query<Solicitud220503State> {
   selectSolicitud$ = this.select((state) => {
     return state;
   });
+  
+  /**
+   * Observable que emite el tercero relacionado actualmente seleccionado.
+   * Proporciona acceso reactivo al tercero que está siendo editado o visualizado.
+   * Utilizado en modales y formularios para mostrar datos del tercero seleccionado.
+   * 
+   * @public
+   * @readonly
+   * @type {Observable<TercerosrelacionadosdestinoTable>}
+   * @memberof AcuiculturaQuery
+   */
+seletedTerceros$ = this.select(estado => estado.selectedTerceros);
 }

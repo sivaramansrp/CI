@@ -8,6 +8,7 @@ import {
   Catalogo,
   CatalogoPaises,
   Catalogos,
+  ConfiguracionColumna,
   CrossListLable,
   DatosAgregarFormulario,
   FechasService,
@@ -408,7 +409,7 @@ export class SolicitudComponent
   /**
    * Encabezado de la tabla de pagos.
    */
-  public encabezadoDeTablaPagos = CONFIGURACION_ENCABEZADO_TABLA_PAGOS;
+  public encabezadoDeTablaPagos: ConfiguracionColumna<LineaCaptura>[] = CONFIGURACION_ENCABEZADO_TABLA_PAGOS;
 
   /**
    * Datos de la tabla de pagos.
@@ -546,6 +547,8 @@ export class SolicitudComponent
     habilitado: true,
   };
 
+  tabla1 = 'tablaPagos'; 
+
   constructor(
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
@@ -631,7 +634,6 @@ export class SolicitudComponent
     // Aqui se busca el nro de patente o autorizacion
     //
     this.obtenerPatente();
-
     this.calcularMontoTotal();
     this.linkGeneraLineaCapturaSeguro =
       this.domSanitizer.bypassSecurityTrustUrl(URL_GENERAR_LINEA_CAPTURA);
@@ -860,6 +862,22 @@ export class SolicitudComponent
     if (CONTROL) {
       const ERROR_NO_MENOS_UNO = CONTROL.hasError('noMenosUno');
       return ERROR_NO_MENOS_UNO && CONTROL.touched;
+    }
+
+    return false;
+  }
+
+  /**
+   * Error whitespace
+   * @returns {boolean} - Retorna `true` si el campo tiene un error de whitespace, de lo contrario `false`.
+   */
+  // eslint-disable-next-line class-methods-use-this
+  isErrorWhitespace(form: FormGroup, field: string): boolean {
+    const CONTROL = form.get(field) as FormControl;
+
+    if (CONTROL) {
+      const ERROR_WHITESPACE = CONTROL.hasError('whitespace');
+      return ERROR_WHITESPACE && CONTROL.touched;
     }
 
     return false;
@@ -1171,11 +1189,11 @@ export class SolicitudComponent
         ],
         descripcionGenerica: [
           this.solicitudState?.descripcionGenerica,
-          [Validators.required, Validators.maxLength(500)],
+          [Validators.required, Validators.maxLength(500), ValidacionesFormularioService.noWhitespaceValidator],
         ],
         justificacion: [
           this.solicitudState?.justificacion,
-          [Validators.required, Validators.maxLength(1000)],
+          [Validators.required, Validators.maxLength(1000), ValidacionesFormularioService.noWhitespaceValidator],
         ],
       }),
 
@@ -2278,9 +2296,7 @@ export class SolicitudComponent
 
     /** Verifica si la tabla de lineas de captura tiene datos y los agrega al formulario. */
     if (this.solicitudState.lineasCaptura.length > 0) {
-      this.datosTablaPagos = [...this.solicitudState.lineasCaptura];
 
-      this.lineasCaptura?.clear();
       this.datosTablaPagos.forEach((linea) => {
         this.lineasCaptura.push(
           this.fb.group({
@@ -2584,7 +2600,7 @@ export class SolicitudComponent
   public agregarPagoSea(): void {
     const LINEA_PAGO: string = this.pagoCaptura.get('lineaCaptura')?.value;
     const MONTO: number = this.pagoCaptura.get('monto')?.value;
-
+    
     if (!LINEA_PAGO || !MONTO) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -2685,7 +2701,7 @@ export class SolicitudComponent
               txtBtnAceptar: TEXTO_ACEPTAR,
               txtBtnCancelar: CAMPO_VACIO,
             };
-            this.datosTablaPagos.push(PAGO);
+            this.datosTablaPagos = [...this.datosTablaPagos, PAGO];
           } else {
             this.nuevaNotificacion = {
               tipoNotificacion: 'alert',
@@ -2704,6 +2720,8 @@ export class SolicitudComponent
 
           /** Actualizar el estado una vez, en lugar de en cada iteración */
           this.tramite5701Store.setLineasCaptura(this.datosTablaPagos);
+
+          
 
           /**  Limpia los campos de la línea de captura y monto */
           this.pagoCaptura.get('lineaCaptura')?.reset();
@@ -3223,7 +3241,6 @@ export class SolicitudComponent
       txtBtnAceptar: TEXTO_ACEPTAR,
       txtBtnCancelar: TEXTO_CANCELAR,
     };
-
     this.procesoModal = 'linea_captura';
   }
 

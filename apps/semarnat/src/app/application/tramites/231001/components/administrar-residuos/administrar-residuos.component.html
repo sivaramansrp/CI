@@ -26,7 +26,7 @@
             />
           </div>
         </div>
-      </form>
+  
 
       <div class="row mb-5">
         <div class="col-md-6 col-sm-6"></div>
@@ -37,6 +37,14 @@
           </div>
         </div>
       </div>
+      <div class="row">
+      <div class="col-md-4">
+        <app-catalogo-select [catalogo]='aduanas' formControlName="aduanas" [label]="'Aduana de entrada'"
+          [required]="true" (change)="setValoresStore(formularioParaRecuentoTotal,'aduanas')" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+      </div>
+    </div>
+        </form>
+       
     </div>
   </div>
 </div>
