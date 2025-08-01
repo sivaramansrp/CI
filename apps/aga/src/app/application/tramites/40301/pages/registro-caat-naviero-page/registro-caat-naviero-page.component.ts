@@ -375,16 +375,21 @@ export class RegistroCaatNavieroPageComponent implements OnInit, OnDestroy {
    * - Mapeo del estado de secciones a la propiedad local del componente
    * - Inicialización de las secciones predeterminadas del trámite 40301
    * - Configuración de validaciones iniciales de formularios
+   * - Habilitación del botón 'Continuar' por defecto estableciendo todas las secciones como válidas
    *
    * @method ngOnInit
    * @implements {OnInit}
    * 
    * @example
    * ```typescript
-   * // Se ejecuta automáticamente por Angular después del constructor:
-   * // 1. Se establece la suscripción al estado de secciones
-   * // 2. Se asignan las secciones iniciales del trámite
-   * // 3. Se configuran las validaciones por defecto
+   * - Se ejecuta automáticamente por Angular después del constructor:
+   * - 1. Se establece la suscripción al estado de secciones
+   * - 2. Se asignan las secciones iniciales del trámite
+   * - 3. Se configuran las validaciones por defecto
+   * - 4. Se habilita el botón 'Continuar' por defecto:
+   * this.asignarSecciones();
+   * const secciones = Object.values(SECCIONES_TRAMITE_40301.PASO_1);
+   * this.seccionStore.establecerFormaValida(secciones.map(() => true));
    * ```
    *
    * @since 1.0.0
@@ -400,6 +405,8 @@ export class RegistroCaatNavieroPageComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.asignarSecciones();
+    const SECCIONES = Object.values(SECCIONES_TRAMITE_40301.PASO_1);
+    this.seccionStore.establecerFormaValida(SECCIONES.map(() => true));
   }
 
   /**

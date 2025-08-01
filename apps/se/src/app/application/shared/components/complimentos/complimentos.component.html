@@ -179,13 +179,13 @@
             [required]="item.required" [formControlName]="item.campo"></app-select-paises>
         </div>
 
-        }@else if (item.tipo_input === 'select-paise') {
+        } @else if (item.tipo_input === 'select-paise') {
         <div [ngClass]="item.class">
           <app-select-paises [catalogosPaises]="item?.opciones || []" [label]="item.labelNombre"
             [required]="item.required" [formControlName]="item.campo"></app-select-paises>
         </div>
 
-        }@else if (item.tipo_input === 'select-catalog') {
+        } @else if (item.tipo_input === 'select-catalog') {
         <div [ngClass]="item.class">
           <app-catalogo-select [catalogo]="item?.opcionesCatalogo || []" [label]="item.labelNombre"
             [required]="item.required" [formControlName]="item.campo"></app-catalogo-select>

@@ -1,38 +1,40 @@
+import {
+  CatalogoSelectComponent,
+  CatalogosSelect,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  Solicitud32401State,
+  Tramite32401Store,
+} from '../../estados/tramite32401.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AutoridadService } from '../../services/autoridad.service';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Solicitud32401State } from '../../estados/tramite32401.store';
-import { Subject } from 'rxjs';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Tramite32401Query } from '../../estados/tramite32401.query';
-import { Tramite32401Store } from '../../estados/tramite32401.store';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * Componente que captura los detalles del requerimiento.
  * Incluye inicialización de formularios y gestión de estados.
  */
 @Component({
-  /** 
+  /**
    * Selector del componente en el HTML.
    */
   selector: 'app-capturar-requerimiento',
-  /** 
+  /**
    * Indica que el componente es autónomo (standalone).
    */
   standalone: true,
-  /** 
+  /**
    * Lista de módulos y componentes necesarios para el funcionamiento del componente.
    */
   imports: [
@@ -42,11 +44,11 @@ import { takeUntil } from 'rxjs';
     TituloComponent,
     CatalogoSelectComponent,
   ],
-  /** 
+  /**
    * Ruta del archivo HTML que define la estructura del componente.
    */
   templateUrl: './capturar-requerimiento.component.html',
-  /** 
+  /**
    * Ruta del archivo CSS que contiene los estilos del componente.
    */
   styleUrl: './capturar-requerimiento.component.css',
@@ -84,11 +86,13 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
   private destroyed$ = new Subject<void>();
 
   /**
-   * Constructor que inicializa los servicios y estados necesarios.
-   * @param autoridadService Servicio de autoridad para interactuar con la API.
-   * @param fb FormBuilder utilizado para construir formularios reactivos.
-   * @param tramite32401Store Store para gestionar el estado de los datos.
-   * @param tramite32401Query Query para seleccionar el estado del store.
+   * Constructor que inicializa los servicios y estados necesarios para el componente.
+   *
+   * @param {AutoridadService} autoridadService - Servicio para interactuar con los catálogos y la API relacionada con autoridad.
+   * @param {FormBuilder} fb - Utilidad para construir formularios reactivos.
+   * @param {Tramite32401Store} tramite32401Store - Store que gestiona el estado interno del trámite 32401.
+   * @param {Tramite32401Query} tramite32401Query - Query que permite consultar el estado actual del trámite desde el store.
+   * @param {ConsultaioQuery} consultaioQuery - Query para acceder a los datos globales del usuario o solicitud actual.
    */
   constructor(
     private autoridadService: AutoridadService,
@@ -150,7 +154,6 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
     }
   }
 
-  
   /**
    * Inicializa el formulario reactivo con los campos requeridos.
    */

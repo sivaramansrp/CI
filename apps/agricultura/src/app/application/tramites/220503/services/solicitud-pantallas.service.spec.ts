@@ -9,11 +9,9 @@ describe('SolicitudPantallasService', () => {
   let service: SolicitudPantallasService;
   let httpClientMock: jest.Mocked<HttpClient>;
 
-  const mockDataUrl = '../../../assets/json/220503/solicitud-pantallas-mock-data.json';
-
   beforeEach(() => {
     httpClientMock = {
-      get: jest.fn()
+      get: jest.fn().mockReturnValue(of({ test: 'data' }))
     } as any;
 
     TestBed.configureTestingModule({
@@ -26,48 +24,69 @@ describe('SolicitudPantallasService', () => {
     service = TestBed.inject(SolicitudPantallasService);
   });
 
-  it('should be created', () => {
+  it('debe crear el servicio', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should call http.get with correct URL in getData', () => {
-    const mockResponse: CargarDatosIniciales = { /* mock properties */ } as any;
+  it('debe llamar a http.get con la URL correcta en getData', () => {
+    const mockResponse = { test: 'data' } as any;
     httpClientMock.get.mockReturnValue(of(mockResponse));
 
-    service.getData().subscribe(data => {
+    const result$ = service.getData();
+
+    expect(httpClientMock.get).toHaveBeenCalledWith(service['dataUrl']);
+    result$.subscribe(data => {
       expect(data).toEqual(mockResponse);
     });
-
-    expect(httpClientMock.get).toHaveBeenCalledWith(mockDataUrl);
   });
 
-  it('should call http.get with correct URL in getDataDatosDelTramite', () => {
-    const mockResponse: DatosDelTramiteRealizar = { /* mock properties */ } as any;
+  it('debe llamar a http.get con la URL correcta en getDataDatosDelTramite', () => {
+    const mockResponse = { test: 'data' } as any;
     httpClientMock.get.mockReturnValue(of(mockResponse));
 
-    service.getDataDatosDelTramite().subscribe(data => {
+    const result$ = service.getDataDatosDelTramite();
+
+    expect(httpClientMock.get).toHaveBeenCalledWith(service['dataUrl']);
+    result$.subscribe(data => {
       expect(data).toEqual(mockResponse);
     });
-
-    expect(httpClientMock.get).toHaveBeenCalledWith(mockDataUrl);
   });
 
-  it('should call http.get with correct URL in getDataResponsableInspeccion', () => {
-    const mockResponse: TipoContenedor = { /* mock properties */ } as any;
+  it('debe llamar a http.get con la URL correcta en getDataResponsableInspeccion', () => {
+    const mockResponse = { test: 'data' } as any;
     httpClientMock.get.mockReturnValue(of(mockResponse));
 
-    service.getDataResponsableInspeccion().subscribe(data => {
+    const result$ = service.getDataResponsableInspeccion();
+
+    expect(httpClientMock.get).toHaveBeenCalledWith(service['dataUrl']);
+    result$.subscribe(data => {
       expect(data).toEqual(mockResponse);
     });
-
-    expect(httpClientMock.get).toHaveBeenCalledWith(mockDataUrl);
   });
 
-  it('should call getData in constructor', () => {
-    const spy = jest.spyOn(SolicitudPantallasService.prototype, 'getData');
-    // Recreate service to trigger constructor
-    new SolicitudPantallasService(httpClientMock);
-    expect(spy).toHaveBeenCalled();
-    spy.mockRestore();
+  it('debe llamar a getData en el constructor', () => {
+    expect(httpClientMock.get).toHaveBeenCalled();
+  });
+
+  it('debe tener la propiedad dataUrl correcta', () => {
+    expect(service['dataUrl']).toBe('../../../assets/json/220503/solicitud-pantallas-mock-data.json');
+  });
+
+  it('debe retornar un observable desde el método getData', () => {
+    const result = service.getData();
+    expect(result).toBeDefined();
+    expect(typeof result.subscribe).toBe('function');
+  });
+
+  it('debe retornar un observable desde el método getDataDatosDelTramite', () => {
+    const result = service.getDataDatosDelTramite();
+    expect(result).toBeDefined();
+    expect(typeof result.subscribe).toBe('function');
+  });
+
+  it('debe retornar un observable desde el método getDataResponsableInspeccion', () => {
+    const result = service.getDataResponsableInspeccion();
+    expect(result).toBeDefined();
+    expect(typeof result.subscribe).toBe('function');
   });
 });

@@ -59,7 +59,8 @@ describe('SanitarioService', () => {
       setbanco: jest.fn(),
       setLlave: jest.fn(),
       settipoFetch: jest.fn(),
-      setimporte: jest.fn()
+      setimporte: jest.fn(),
+      setMensaje: jest.fn(),
     };
 
     TestBed.configureTestingModule({
@@ -130,7 +131,8 @@ describe('SanitarioService', () => {
         banco: 'Banco Test',
         Llave: 'Llave123',
         deFetch: 'Fetch Test',
-        importe: '1000'
+        importe: '1000',
+        mensaje: false
       };
 
       service.getSolicitudData().subscribe(data => {
@@ -399,7 +401,8 @@ describe('SanitarioService', () => {
         banco: 'Banco Test',
         Llave: 'Llave123',
         deFetch: 'Fetch Test',
-        importe: '1000'
+        importe: '1000',
+        mensaje: false
       };
 
       service.actualizarEstadoFormulario(mockDatos);

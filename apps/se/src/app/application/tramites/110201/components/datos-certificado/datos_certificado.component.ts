@@ -1,12 +1,11 @@
 import {
   Catalogo,
-  CatalogoSelectComponent,
-  CatalogosSelect,
   ConsultaioQuery,
   ConsultaioState,
   TituloComponent,
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent, CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -14,7 +13,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
+import { OPTIONS_ENTIDAD_FEDERATIVA, OPTIONS_IDIOMA, OPTIONS_REPRESENTACION_FEDERAL } from '../../models/registro.model';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import {
   Solicitud110201State,
   Tramite110201Store,
@@ -34,20 +34,20 @@ import { Tramite110201Query } from '../../state/Tramite110201.query';
     CommonModule,
     ReactiveFormsModule,
     TituloComponent,
-],
+  ],
   templateUrl: './datos_certificado.component.html',
   styleUrl: './datos_certificado.component.css',
 })
 export class DatosCertificadoComponent implements OnInit, OnDestroy {
- /**
-    * Subject para destruir notificador.
-    */
-   consultaDatos!: ConsultaioState;
-    /**
-    * Indica si el formulario está en modo solo lectura.
-    * Cuando es `true`, los campos del formulario no se pueden editar.
-    */
-   soloLectura: boolean = false;
+  /**
+     * Subject para destruir notificador.
+     */
+  consultaDatos!: ConsultaioState;
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  soloLectura: boolean = false;
   /**
    * Formulario reactivo para los datos del certificado.
    */
@@ -74,11 +74,6 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   public solicitudState!: Solicitud110201State;
 
   /**
-   * Notificador para destruir observables al destruir el componente.
-   */
-  public destroyNotifier$: Subject<void> = new Subject();
-
-  /**
    * Datos de la entidad federativa proporcionados como entrada.
    */
   @Input() entidadFederativaData: unknown;
@@ -92,29 +87,30 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * Descripciones de las entidades federativas.
    */
   entidadDescripcion: unknown[] = [];
-/**
- * Notificador para destruir observables al destruir el componente.
- * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.
- */
-private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  /**
+   * Notificador para destruir observables al destruir el componente.
+   * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.
+   */
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-/**
- * Opciones del catálogo de idiomas.
- * Contiene una lista de objetos del catálogo de idiomas obtenidos desde el servicio.
- */
-optionsIdioma!: Catalogo[];
+  /**
+   * Opciones del catálogo de idiomas.
+   * Contiene una lista de objetos del catálogo de idiomas obtenidos desde el servicio.
+   */
+  public optionsIdioma = OPTIONS_IDIOMA;
 
-/**
- * Opciones del catálogo de entidades federativas.
- * Contiene una lista de objetos del catálogo de entidades federativas obtenidos desde el servicio.
- */
-optionsEntidad!: Catalogo[];
+  /**
+   * Opciones del catálogo de entidades federativas.
+   * Contiene una lista de objetos del catálogo de entidades federativas obtenidos desde el servicio.
+   */
+  public optionsEntidad = OPTIONS_ENTIDAD_FEDERATIVA;
 
-/**
- * Opciones del catálogo de representaciones federales.
- * Contiene una lista de objetos del catálogo de representaciones federales obtenidos desde el servicio.
- */
-optionsRepresentacion!: Catalogo[];
+
+  /**
+   * Opciones del catálogo de representaciones federales.
+   * Contiene una lista de objetos del catálogo de representaciones federales obtenidos desde el servicio.
+   */
+  public optionsRepresentacion = OPTIONS_REPRESENTACION_FEDERAL;
 
   /**
    * Constructor del componente.
@@ -132,16 +128,16 @@ optionsRepresentacion!: Catalogo[];
     private validacionesService: ValidacionesFormularioService,
     private consultaioQuery: ConsultaioQuery
   ) {
-   this.consultaioQuery.selectConsultaioState$
+    this.consultaioQuery.selectConsultaioState$
       .pipe(
-        takeUntil(this.destroyNotifier$),
+        takeUntil(this.destroyed$),
         map((seccionState) => {
           this.consultaDatos = seccionState;
           this.soloLectura = this.consultaDatos.readonly;
           this.inicializarEstadoFormulario();
         })
       )
-      .subscribe()
+      .subscribe();
   }
 
   /**
@@ -159,6 +155,16 @@ optionsRepresentacion!: Catalogo[];
    * Obtiene los catálogos de idiomas, entidades y representaciones.
    */
   ngOnInit(): void {
+    this.registroService
+      .getRegistroTomaMuestrasMercanciasData().pipe(
+        takeUntil(this.destroyed$)
+      )
+      .subscribe((resp) => {
+        if (resp) {
+          this.registroService.actualizarEstadoFormulario(resp);
+        }
+      });
+
     this.getIdioma();
     this.getEntidad();
     this.getRepresentacion();
@@ -166,7 +172,7 @@ optionsRepresentacion!: Catalogo[];
 
     this.query.selectSolicitud$
       .pipe(
-        takeUntil(this.destroyNotifier$),
+        takeUntil(this.destroyed$),
         map((seccionState) => {
           this.solicitudState = seccionState;
         })
@@ -183,12 +189,11 @@ optionsRepresentacion!: Catalogo[];
       this.isJustificacion = false;
     }
 
-   
   }
-/**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.
-   * Además, obtiene la información del catálogo de mercancía.
-   */
+  /**
+     * Evalúa si se debe inicializar o cargar datos en el formulario.
+     * Además, obtiene la información del catálogo de mercancía.
+     */
   inicializarEstadoFormulario(): void {
     if (this.soloLectura) {
       this.guardarDatosFormulario();
@@ -213,16 +218,13 @@ optionsRepresentacion!: Catalogo[];
    * Obtiene el catálogo de idiomas desde el servicio.
    */
   getIdioma(): void {
-   this.registroService
+    this.registroService
       .getIdioma().pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
-        if (resp.code === 200) {
-          this.optionsIdioma = resp.data as Catalogo [];
-          
-        }
+        this.optionsIdioma.catalogos = resp as Catalogo[];
       });
   }
-
+  
   /**
    * Obtiene el catálogo de entidades desde el servicio.
    */
@@ -230,9 +232,7 @@ optionsRepresentacion!: Catalogo[];
     this.registroService
       .getEntidad().pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
-        if (resp.code === 200) {
-          this.optionsEntidad = resp.data as Catalogo [];
-        }
+        this.optionsEntidad.catalogos = resp as Catalogo[];
       });
   }
 
@@ -240,13 +240,10 @@ optionsRepresentacion!: Catalogo[];
    * Obtiene el catálogo de representaciones desde el servicio.
    */
   getRepresentacion(): void {
-    
     this.registroService
       .getRepresentacion().pipe(takeUntil(this.destroyed$))
-      .subscribe((resp) => {
-        if (resp.code === 200) {
-          this.optionsRepresentacion = resp.data as Catalogo [];
-        }
+      .subscribe((resp): void => {
+        this.optionsRepresentacion.catalogos = resp as Catalogo[];
       });
   }
 
@@ -294,27 +291,27 @@ optionsRepresentacion!: Catalogo[];
   /**
    * Configura el formulario reactivo con los valores iniciales del estado.
    */
- donanteDomicilio(): void {
-  this.registroForm = this.fb.group({
-    validacionForm: this.fb.group({
-      observaciones: [{ value: this.solicitudState?.observaciones, disabled: this.soloLectura }, [Validators.required]],
-      presica: [{ value: this.solicitudState?.presica, disabled: this.soloLectura }, [Validators.required]],
-      presenta: [{ value: this.solicitudState?.presenta, disabled: this.soloLectura }, [Validators.required]],
-      idioma: [{ value: this.solicitudState?.idioma, disabled: this.soloLectura }, [Validators.required]],
-      entidad: [{ value: this.solicitudState?.entidad, disabled: this.soloLectura }, [Validators.required]],
-      representacion: [{ value: this.solicitudState?.representacion, disabled: this.soloLectura }, [Validators.required]],
-      casillaVerificacion: [{ value: this.solicitudState?.casillaVerificacion, disabled: this.soloLectura }, [Validators.requiredTrue]],
-      justificacion: [{ value: this.solicitudState?.justificacion, disabled: this.soloLectura }, [Validators.required]],
-    }),
-  });
-}
+  donanteDomicilio(): void {
+    this.registroForm = this.fb.group({
+      validacionForm: this.fb.group({
+        observaciones: [{ value: this.solicitudState?.observaciones, disabled: this.soloLectura }, [Validators.required]],
+        presica: [{ value: this.solicitudState?.presica, disabled: this.soloLectura }, [Validators.required]],
+        presenta: [{ value: this.solicitudState?.presenta, disabled: this.soloLectura }, [Validators.required]],
+        idioma: [{ value: this.solicitudState?.idioma, disabled: this.soloLectura }, [Validators.required]],
+        entidad: [{ value: this.solicitudState?.entidad, disabled: this.soloLectura }, [Validators.required]],
+        representacion: [{ value: this.solicitudState?.representacion, disabled: this.soloLectura }, [Validators.required]],
+        casillaVerificacion: [{ value: this.solicitudState?.casillaVerificacion, disabled: this.soloLectura }, [Validators.requiredTrue]],
+        justificacion: [{ value: this.solicitudState?.justificacion, disabled: this.soloLectura }, [Validators.required]],
+      }),
+    });
+  }
   /**
    * Método que se ejecuta al destruir el componente.
    * Cancela todas las suscripciones activas.
    */
   ngOnDestroy(): void {
-    
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
+
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }

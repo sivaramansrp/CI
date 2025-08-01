@@ -1,4 +1,13 @@
 import {
+  ALERTA_TEXTO,
+  CATALOGOS_ID,
+  OPCIONES_DE_BOTON_DE_RADIO,
+} from '../../constantes/aviso-enum';
+import {
+  AvisoSanitarioState,
+  Tramite260601Store,
+} from '../../../../estados/tramites/tramite260601.store';
+import {
   Component,
   ElementRef,
   OnDestroy,
@@ -17,18 +26,12 @@ import { Observable, Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 import {
-  AvisoSanitarioState,
-  Tramite260601Store,
-} from '../../../../estados/tramites/tramite260601.store';
-import {
-  CATALOGOS_ID,
-  OPCIONES_DE_BOTON_DE_RADIO,
-} from '../../constantes/aviso-enum';
-import {
   CatalogoSelectComponent,
   ConsultaioQuery,
   InputCheckComponent,
   InputRadioComponent,
+  Notificacion,
+  NotificacionesComponent,
   TableBodyData,
   TableComponent,
   TituloComponent,
@@ -60,6 +63,7 @@ import scianTable from '@libs/shared/theme/assets/json/260601/scian-table.json';
     DatosMercanciaComponent,
     InputRadioComponent,
     RepresentanteLegalComponent,
+    NotificacionesComponent
   ],
   providers: [AvisoSanitarioService],
   templateUrl: './datos-del-establecimiento.component.html',
@@ -186,6 +190,18 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura: boolean = false;
 
+    /**
+   * @property {boolean} modalAlerta
+   * @description Indica si el modal de alerta está visible. Se utiliza para mostrar mensajes de advertencia al usuario.
+   */
+  modalAlerta: boolean = false;
+
+  /**
+   * @property {Notificacion} nuevaNotificacion
+   * @description Objeto que contiene la información de la notificación a mostrar en el componente de notificaciones.
+   */
+  public nuevaNotificacion!: Notificacion;
+
   /**
    * Constructor del componente. Utilizado para inyectar servicios necesarios.
    *
@@ -213,7 +229,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destruirNotificador$),
         map((seccionState) => {
-          this.esFormularioSoloLectura = !seccionState.readonly;
+          this.esFormularioSoloLectura = seccionState.readonly;
           this.inicializarEstadoFormulario();
         })
       )
@@ -225,6 +241,8 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
+
+    this.nuevaNotificacion = {} as Notificacion;
   }
 
   /**
@@ -504,10 +522,18 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
    * Muestra el modal para la selección del establecimiento.
    */
   seleccionarEstablecimiento(): void {
-    if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_INSTANCE.show();
-    }
+    this.modalAlerta = true;
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'action',
+      titulo: '',
+      mensaje: ALERTA_TEXTO,
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
   }
 
   /**

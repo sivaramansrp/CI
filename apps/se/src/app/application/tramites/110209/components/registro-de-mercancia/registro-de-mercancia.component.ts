@@ -163,12 +163,6 @@ export class RegistroDeMercanciaComponent implements OnInit, OnDestroy {
     }
   
 
-  /**
-   * Navega a la página anterior y emite un evento de modificación de mercancía.
-   */
-  regresar(): void {
-    this.modificarEventMercancia.emit(false);
-  }
 
   /**
    * Hook del ciclo de vida que se llama cuando la directiva se destruye.

@@ -1,5 +1,5 @@
 <div class="container">
-  <ng-titulo titulo="Validación a posteriori del certificado de circulación de mercancías" />
+  <ng-titulo titulo="Validación inicial del certificado de circulación de mercancías" />
   <form [formGroup]="formularioCertificado">
 
     <div class="row">
@@ -23,19 +23,20 @@
         <div class="row">
           <div class="col-md-4 mb-3">
             <label>Nombre(s):</label>
-            <input type="text" class="form-control" formControlName="nombre"
-              (change)="setValoresStore(grupoOperador, 'nombre', 'setGrupoOperadorNombre')" />
+            <input type="text" class="form-control" [maxlength]="25" formControlName="nombre"
+              (change)="setValoresStore(grupoOperador, 'nombre', 'setGrupoOperadorNombre');actualizarEstadoCampos()" />
           </div>
           <div class="col-md-4 mb-3">
             <label>Primer apellido:</label>
-            <input type="text" class="form-control" id="primerApellido" formControlName="apellidoPrimer"
-              (click)="onClick()"
-              (change)="setValoresStore(grupoOperador, 'apellidoPrimer','setGrupoOperadorApellidoPrimer')" />
+            <input type="text" [maxlength]="15" class="form-control" id="primerApellido"
+              formControlName="apellidoPrimer" (click)="onClick()"
+              (change)="setValoresStore(grupoOperador, 'apellidoPrimer','setGrupoOperadorApellidoPrimer');actualizarEstadoCampos()" />
           </div>
           <div class="col-md-4 mb-3">
             <label>Segundo apellido:</label>
-            <input type="text" class="form-control" id="segundoApellido" formControlName="apellidoSegundo" (change)="
-                    setValoresStore(grupoOperador, 'apellidoSegundo', 'setGrupoOperadorSegundo')" />
+            <input type="text" [maxlength]="15" class="form-control" id="segundoApellido"
+              formControlName="apellidoSegundo" (change)="
+                    setValoresStore(grupoOperador, 'apellidoSegundo', 'setGrupoOperadorSegundo');actualizarEstadoCampos()" />
           </div>
         </div>
         <div class="row">
@@ -44,20 +45,24 @@
             <input type="text" class="form-control" id="numeroFiscal" formControlName="numeroFiscal"
               [ngClass]="isValid(grupoOperador,'numeroFiscal') ? 'required' : ''"
               (change)="setValoresStore(grupoOperador, 'numeroFiscal', 'setGrupoOperadorNumeroFiscal')" />
+              <div class="error-message col-md-12 ps-0">
+                <small
+                  *ngIf="formularioCertificado.get('grupoOperador.numeroFiscal')?.touched && formularioCertificado.get('grupoOperador.numeroFiscal')?.hasError('required')"
+                  class="text-danger">
+                  Este campo es obligatorio.
+                </small>
+                </div>
           </div>
           <div class="col-md-8 mb-3">
             <label>Razón social:</label>
-            {{grupoOperador.get('apellidoPrimer')?.value}}
             <input type="text" class="form-control"
               [ngClass]="{'gray-glass': grupoOperador.get('apellidoPrimer')?.value !== ''}" id="denominacion"
               [readonly]=" grupoOperador.get('apellidoPrimer')?.value !== ''" formControlName="razonSocial"
-              (change)="setValoresStore(grupoOperador, 'razonSocial', 'setGrupoOperadorRazonSocial')" />
+              (change)="setValoresStore(grupoOperador, 'razonSocial', 'setGrupoOperadorRazonSocial');actualizarEstadoCampos()" />
           </div>
         </div>
       </ng-container>
-    </div>
 
-    <div class="row">
       <ng-titulo titulo="Domicilio del tracer operador" />
       <ng-container formGroupName="grupoDeDomicilio">
         <div class="row">
@@ -121,13 +126,13 @@
       <div class="row">
         <ng-titulo titulo="Tratado y país o bloque" />
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="optionsTratado" [label]="'Tratado/Acuerdo*:'" [required]="true" id="tratado"
+          <app-catalogo-select [catalogo]="optionsTratado" [label]="'Tratado/Acuerdo'" [required]="true" id="tratado"
             formControlName="tratado" [ngClass]="isValid(grupoTratado,'tratado') ? 'required' : ''"
             (change)=" setValoresStore(grupoTratado, 'tratado', 'setGrupoTratadoTratado') "
             [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="optionsPais" [label]="'País / Bloque*:'" [required]="true" id="pais"
+          <app-catalogo-select [catalogo]="optionsPais" [label]="'País / Bloque'" [required]="true" id="pais"
             formControlName="pais" [ngClass]="isValid(grupoTratado,'pais') ? 'required' : ''"
             (change)="setValoresStore(grupoTratado, 'pais', 'setGrupoTratadoPais')"
             [isDisabled]="soloLectura"></app-catalogo-select>
@@ -202,11 +207,11 @@
       <div class="table-container mt-5">
         <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.RADIO" [configuracionTabla]="seleccionadasEncabezados"
           [datos]="mercanciaSeleccionadasTablaDatos" (filaSeleccionada)="seleccionDeFilas($event)"
-          [disableSeleccionTablaRadio]="soloLectura"></app-tabla-dinamica>
+          [disableSeleccionTablaRadio]="soloLectura" ></app-tabla-dinamica>
         <div class="col-md-12 mt-5 d-flex justify-content-end">
           <button type="button" class="btn btn-danger ms-3" (click)="eliminar()"
             [disabled]="soloLectura">Eliminar</button>
-          <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura"> Modificar </button>
+          <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura" (click)="modificarMercanciaSeleccionada(mercanciaSeleccionadasFila!)"> Modificar </button>
         </div>
       </div>
     </ng-container>
@@ -244,7 +249,8 @@
     </div>
   </div>
 </div>
-<div class="modal fade" id="modalBuscar" tabindex="-1" #modalBuscar aria-labelledby="modalBuscar" aria-hidden="true">
+
+ <div class="modal fade" id="modalBuscar" tabindex="-1" #modalBuscar aria-labelledby="modalBuscar" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body">
@@ -300,6 +306,13 @@
                 <input type="number" class="form-control" formControlName="cantidad"
                   [ngClass]="isValid(formularioMercancia,'cantidad') ? 'required' : ''"
                   (change)=" setValoresStore( formularioMercancia, 'cantidad', 'setCantidad' ) " />
+                <div class="error-message col-md-12 ps-0">
+                  <small
+                    *ngIf="formularioMercancia.get('cantidad')?.touched && formularioMercancia.get('cantidad')?.hasError('required')"
+                    class="text-danger">
+                    Este campo es obligatorio.
+                  </small>
+                </div>
               </div>
               <div class="col-md-4">
                 <app-catalogo-select [catalogo]="optionsPais" [label]="'UMC'" [required]="true" id="pais"
@@ -315,12 +328,26 @@
                 <input type="text" required="true" class="form-control" formControlName="valorDelaMercancia"
                   [ngClass]="isValid(formularioMercancia,'valorDelaMercancia') ? 'required' : ''"
                   (change)=" setValoresStore( formularioMercancia, 'valorDelaMercancia', 'setValorDelaMercancia' ) " />
+                        <div class="error-message col-md-12 ps-0">
+                  <small
+                    *ngIf="formularioMercancia.get('valorDelaMercancia')?.touched && formularioMercancia.get('valorDelaMercancia')?.hasError('required')"
+                    class="text-danger">
+                    Este campo es obligatorio.
+                  </small>
+                </div>
               </div>
               <div class="col-md-8">
                 <label>Complemento de la descripción*:</label>
                 <textarea rows="3" class="w-100" formControlName="complementoDelaDescripcion"
                   [ngClass]="isValid(formularioMercancia,'complementoDelaDescripcion') ? 'required' : ''"
                   (change)=" setValoresStore( formularioMercancia, 'complementoDelaDescripcion', 'setComplementoDelaDescripcion' ) "></textarea>
+                        <div class="error-message col-md-12 ps-0">
+                  <small
+                    *ngIf="formularioMercancia.get('complementoDelaDescripcion')?.touched && formularioMercancia.get('complementoDelaDescripcion')?.hasError('required')"
+                    class="text-danger">
+                    Este campo es obligatorio.
+                  </small>
+                </div>
               </div>
             </div>
 
@@ -347,7 +374,7 @@
       </div>
       <div class="modal-footer custom-footer mt-4">
         <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal> Cancelar </button>
-        <button type="submit" class="btn btn-primary" #closeModal> Agregar </button>
+        <button type="submit" class="btn btn-primary" #closeModal  (click)="activarModal(formularioMercancia)"> Agregar </button>
       </div>
     </div>
   </div>

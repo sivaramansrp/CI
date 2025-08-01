@@ -1,11 +1,6 @@
-import { AccionBoton } from '@ng-mf/data-access-user';
-import { Component } from '@angular/core';
-import { DatosPasos } from '@ng-mf/data-access-user';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '../../constants/importacion-armas-explosivo.enum';
-import { TITULO_MENSAJE } from '../../constants/importacion-armas-explosivo.enum';
-import { ViewChild } from '@angular/core';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
+import { Component, ViewChild } from '@angular/core';
+import { PASOS, TITULO_MENSAJE } from '../../constants/importacion-armas-explosivo.enum';
 
 /**
  * @title Página de Solicitud

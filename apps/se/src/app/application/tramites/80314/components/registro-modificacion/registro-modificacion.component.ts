@@ -61,6 +61,8 @@ export class RegistroModificacionComponent implements OnInit, OnDestroy {
     },
   ];
 
+  isTableCollapsed: boolean = false;
+
   /**
    * Arreglo que almacena los datos de la tabla relacionados con los contenedores.
    *
@@ -81,7 +83,9 @@ export class RegistroModificacionComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.llenarLaTabla();
   }
-
+ toggleTableVisibility(): void {
+    this.isTableCollapsed = !this.isTableCollapsed;
+  }
   /**
    * Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
    * Úselo para limpiar recursos, desuscribirse de observables o realizar otras tareas de limpieza.

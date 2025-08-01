@@ -1,3 +1,4 @@
+import { Catalogo } from '@libs/shared/data-access-user/src';
 export const PASOS = [
   {
     indice: 1,
@@ -10,5 +11,16 @@ export const PASOS = [
     titulo: 'Firmar solicitud',
     activo: false,
     completado: false,
-  }
+  },
+];
+
+export const PAIS_DESTINO_CATALOG: Catalogo[] = [
+  {
+    id: 1,
+    descripcion: 'Mexico',
+  },
+  {
+    id: 2,
+    descripcion: 'USA',
+  },
 ];

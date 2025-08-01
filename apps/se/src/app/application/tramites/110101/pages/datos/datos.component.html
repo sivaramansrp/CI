@@ -20,7 +20,7 @@
             </li>
             } @else {
 
-            @if (consultaState.parameter === "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO") {
+            @if (consultaState.parameter === "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO" || bandejaSolicitud) {
 
             <li [ngClass]="{ active: indice === 3 }">
                 <a data-toggle="tab" (keyup)="seleccionaTab(3)" (click)="seleccionaTab(3)">Datos de la mercancia</a>
@@ -36,7 +36,7 @@
 
 
             @if (consultaState.parameter !== "READ_PROCEDURE") {
-            @if (consultaState.parameter === "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO") {
+            @if (consultaState.parameter === "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO" || bandejaSolicitud) {
 
             <li [ngClass]="{ active: indice === 4 }">
                 <a data-toggle="tab" (keyup)="seleccionaTab(4)" (click)="seleccionaTab(4)">Datos adicionales</a>

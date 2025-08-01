@@ -268,6 +268,12 @@ const ROUTES: Routes = [
         (m) => m.AvisoDeModificacionModule)
   },
   {
+      path: 'recinto-fiscalizado',
+    loadChildren: () => 
+      import('./tramites/32615/recinto-fiscalizado.module').then(
+        (m) => m.RecintoFiscalizadoModule)
+      },
+      {
         path: 'esquema-de-certificacion',
     loadChildren: () =>
       import('./tramites/32612/esquema-de-certificacion/esquema-de-certificacion.module').then(
@@ -337,6 +343,12 @@ const ROUTES: Routes = [
         (m) => m.SolicitudDeRegistroInvocarModule)
   },
   {
+     path: 'sce-socio-almacenamiento',
+    loadChildren: () => 
+      import('./tramites/32618/sce-socio-almacen.module').then(
+        (m) => m.SceSocioAlmacenModule)
+      },
+  {
     path: 'registro-oae-rfe',
     loadChildren: () =>
       import('./tramites/32610/registro-oae-rfe.module').then(
@@ -347,6 +359,39 @@ const ROUTES: Routes = [
     path: 'economico',
     loadChildren: () =>
       import('./tramites/32606/economico.module').then((m) => m.EconomicoModule),
+  },
+    {
+    path: 'importador-y-o-exportador2',
+    loadChildren: () =>
+      import('./tramites/32614/importador-y-o-exportador.module').then(
+        (m) => m.ImportadorYOExportadorModule
+      ),
+  },
+    {
+    path: 'seciit-oea-registration',
+    loadChildren: () =>
+      import('./tramites/32608/seciit-oea-registration.module').then(
+        (m) => m.SeciitOeaRegistrationModule
+      ),
+  },
+   {
+    path: 'auto-transportista',
+    loadChildren: () =>
+      import('./tramites/32611/auto-transportista.module').then(
+        (m) => m.AutoTransportistaModule
+      ),
+  },
+  {
+    path: 'certificacion-empresas-modalidad',
+    loadChildren: () => 
+      import('./tramites/32617/oea-tercerizacion-logistica-registro.module').then(
+        (m) => m.OeaTercerizacionLogisticaRegistroModule)
+  },
+  {
+      path: 'aviso-comercializadora-modification-importadora',
+    loadChildren: () => 
+      import('./tramites/33304/Aviso-De-Ampliacion.module').then(
+        (m) => m.AvisoDeAmpliacionModule)
   }
 ];
 

@@ -66,6 +66,7 @@
             class="form-control"
             id="rfcSanitario"
             type="text"
+            maxlength="13"
             formControlName="rfcSanitario"
             [ngClass]="
               isValid(datosSolicitudForm, 'rfcSanitario') ? 'required' : ''
@@ -133,7 +134,7 @@
       </div>
     </div>
 
-    <ng-titulo titulo="Domicilio del establecimiento"></ng-titulo>
+    <ng-titulo titulo="Domicillio del establecimiento"></ng-titulo>
 
     <div class="row">
       <div class="col-md-4">
@@ -758,6 +759,7 @@
             class="form-control"
             id="representanteRfc"
             type="text"
+            maxlength="13"
             formControlName="representanteRfc"
             [ngClass]="
               isValid(datosSolicitudForm, 'representanteRfc') ? 'required' : ''

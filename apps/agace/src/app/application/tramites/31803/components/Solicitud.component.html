@@ -9,22 +9,22 @@
     <div class="row mt-5">
       <div class="col-md-8">
         <label>Número de oficio*:</label>
-        <input type="text" class="form-control gris-color" readonly required />
+        <input type="text" class="form-control gris-color" formControlName="numeroOficio" readonly required />
       </div>
     </div>
     <div class="row mt-5">
       <div class="col-md-4">
-        <input-fecha [datos]="fechaInicialInput" class="disabled-input-fecha"></input-fecha>
+        <input-fecha [setFecha]="registroForm.get('fechaInicial')?.value" [datos]="fechaInicialInput" class="disabled-input-fecha"></input-fecha>
       </div>
       <div class="col-md-4">
-        <input-fecha [datos]="fechaFinalInput" class="disabled-input-fecha"></input-fecha>
+        <input-fecha [setFecha]="registroForm.get('fechaFinal')?.value" [datos]="fechaFinalInput" class="disabled-input-fecha"></input-fecha>
       </div>
     </div>
     <ng-titulo titulo="Pago de derechos" />
     <div class="row mt-5">
       <div class="col-md-6">
         <label>Clave de referencia:</label>
-        <input type="text" class="form-control gris-color" readonly required />
+        <input type="text" class="form-control gris-color" formControlName="claveReferencia" readonly required />
       </div>
       <div class="col-md-6">
         <label>Número de operación:</label>
@@ -34,7 +34,7 @@
     <div class="row mt-5">
       <div class="col-md-6">
         <label>Cadena de la dependencia:</label>
-        <input type="text" class="form-control gris-color" readonly required />
+        <input type="text" class="form-control gris-color" formControlName="cadenaDependencia" readonly required />
       </div>
       <div class="col-md-6">
         <app-catalogo-select [catalogo]="bancoCatalogo.catalogos" [label]="'Banco'" formControlName="banco" (change)="setValoresStore(registroForm, 'banco', 'setBanco')"></app-catalogo-select>
@@ -50,7 +50,7 @@
       </div>
       <div class="col-md-4">
         <label>Importe de pago:</label>
-        <input type="text" class="form-control gris-color" readonly />
+        <input type="text" class="form-control gris-color" formControlName="importePago" readonly />
       </div>
     </div>
     <div class="row mt-5">

@@ -74,7 +74,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @property {string} infoAlert
    * Tipo de alerta visual mostrada en la interfaz.
    */
-  public infoAlert = 'alert-info';
+  public infoAlert = 'alert-info text-center';
 
   /**
    * @property {string} MENSAJE_TABLA_OBLIGATORIA

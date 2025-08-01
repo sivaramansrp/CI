@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
-
+import { provideHttpClient } from '@angular/common/http';
 import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
 
 /**
@@ -19,7 +19,8 @@ describe('PasoUnoComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [PasoUnoComponent, MockSolicitanteComponent], // Declare the mock
-      schemas: [NO_ERRORS_SCHEMA], // Ignore unknown elements
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [provideHttpClient()]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);

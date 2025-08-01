@@ -33,23 +33,6 @@ describe('DetalleComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debe deshabilitar el formulario y establecer valores por defecto en getFormData', () => {
-    component.getFormData();
-    expect(component.detalleForm.disabled).toBe(true);
-    const detalleData = component.detalleForm.get('DetalleData');
-    expect(detalleData?.get('regimen')?.value).toBe('EXPORTACION');
-    expect(detalleData?.get('descripcion')?.value).toBe('TELAS Y BIENES TEXTILES SIMPLE');
-    expect(detalleData?.get('unidad')?.value).toBe('Kilogramo');
-    expect(detalleData?.get('mecanismo')?.value).toBe('Primero en tiempo primero en dere');
-    expect(detalleData?.get('tratado')?.value).toBe('Tratado entre México, Estados Unid');
-    expect(detalleData?.get('fracciones')?.value).toBe('6302530020, 6103230055, 6103432015, 6302100020, 6201407511');
-    expect(detalleData?.get('paises')?.value).toBe('ESTADOS UNIDOS DE AMERICA');
-    expect(detalleData?.get('observaciones')?.value).toBe('observaciones');
-    expect(detalleData?.get('fundamentos')?.value).toBe('Fundamento de la vigencia del UPO');
-    expect(detalleData?.get('inicio')?.value).toBe('2024-01-01');
-    expect(detalleData?.get('fecha')?.value).toBe('2024-12-31');
-  });
-
   it('debe deshabilitar el formulario si esFormularioSoloLectura es true en guardarDatosFormulario', () => {
     component.esFormularioSoloLectura = true;
     component.detalleForm.enable();

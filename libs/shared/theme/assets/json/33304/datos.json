@@ -1,0 +1,34 @@
+{
+  "cambioDocumentoUsoGoce": true,
+  "fusionEscisionEmpresas": true,
+  "reestructuracion": true,
+  "transportistas": true,
+  "BAJO_MANIFIESTO": true,
+  "avisoDeOperacion": "2",
+  "tipoOperacion": "1",
+  "cuenta": "0",
+  "rfc": "AAL0409235E6",
+  "denominacion": "nombre social",
+  "fechaFusioneEfecto": "30/05/2025",
+  "folioAcuse": "273646637463776354637463",
+  "empresaFusionadasLista": [
+    {
+      "id": 1,
+      "rfc": "AAL040923565",
+      "denominacion": "INTEGRADORA DE URBANIZACIONES SIGNUM S DE",
+      "folioVucem": "2500301700020259910000040",
+      "fechaInicioVigencia": "30/05/2025",
+      "fechaFinVigencia": "02/07/2025"
+    }
+  ],
+  "transportistasLista": [
+    {
+      "id": 1,
+      "rfc":"AAL0409235E6",
+      "denominacion": "EUROFOODS DE MEXICO",
+      "domicilio": "LIBERTAD SN 34000 VICTORIA DE DURANGO VICTORIA DE DURANGO CENTRO DURANGO DURANGO ESTADOS UNIDOS MEXICANOS",
+      "registroCaat": "BLEV",
+      "estatus": "1"
+    }
+  ]
+}

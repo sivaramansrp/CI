@@ -6,7 +6,6 @@ import {
   CatalogoSelectComponent,
   CatalogosSelect,
   ConsultaioQuery,
-  InputRadioComponent,
   TituloComponent,
   
 } from '@ng-mf/data-access-user';
@@ -43,7 +42,7 @@ import { takeUntil } from 'rxjs';
     ReactiveFormsModule,
     TituloComponent,
     CatalogoSelectComponent,
-    InputRadioComponent,
+    
   ],
 })
 export class DatosGeneralesComponent implements OnInit, OnDestroy {
@@ -248,44 +247,44 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
   inicializarFormulario(): void {
  this.forma = this.fb.group({
       foliodel: [
-        { value: this.Solicitud220503State.fetchapago, disabled: true },
+        { value: this.Solicitud220503State.fetchapago || '', disabled: true },
       ],
       aduanaIngreso: [
-        this.Solicitud220503State.aduanaIngreso,
+        this.Solicitud220503State.aduanaIngreso || '',
         Validators.required, 
       ],
       oficinaInspeccion: [
-        this.Solicitud220503State.oficinaInspeccion,
+        this.Solicitud220503State.oficinaInspeccion || '',
         Validators.required,
       ],
       puntoInspeccion: [
-        this.Solicitud220503State.puntoInspeccion,
+        this.Solicitud220503State.puntoInspeccion || '',
         Validators.required,
       ],
       claveUCON: [
-        { value: this.Solicitud220503State.claveUCON, disabled: true },
+        { value: this.Solicitud220503State.claveUCON || '', disabled: true },
       ],
       establecimientoTIF: [
-        this.Solicitud220503State.establecimientoTIF,
+        this.Solicitud220503State.establecimientoTIF || '',
         Validators.required,
       ],
-      nombre: [this.Solicitud220503State.nombre, Validators.required],
+      nombre: [this.Solicitud220503State.nombre || '', Validators.required],
       numeroguia: [
-        { value: this.Solicitud220503State.numeroguia, disabled: true },
+        { value: this.Solicitud220503State.numeroguia || '', disabled: true },
         Validators.required,
       ],
-      regimen: [this.Solicitud220503State.regimen, Validators.required],
+      regimen: [this.Solicitud220503State.regimen || '', Validators.required],
 
       movilizacion: [
-        this.Solicitud220503State.movilizacion,
+        this.Solicitud220503State.movilizacion || '',
         Validators.required,
       ],
       transporte: [
-        { value: this.Solicitud220503State.transporte, disabled: true },
+        { value: this.Solicitud220503State.transporte || '', disabled: true },
       ],
-      punto: [this.Solicitud220503State.punto, [Validators.required]],
+      punto: [this.Solicitud220503State.punto || '', [Validators.required]],
       nombreEmpresa: [
-        this.Solicitud220503State.nombreEmpresa,
+        this.Solicitud220503State.nombreEmpresa || '',
         Validators.required,
       ],
     });
@@ -296,19 +295,19 @@ this.forma.disable();
         map((data: Solicitud220503State) => {
           this.Solicitud220503State = data;
           this.forma.patchValue({
-            foliodel: this.Solicitud220503State.foliodel,
-            aduanaIngreso: this.Solicitud220503State.aduanaIngreso,
-            oficinaInspeccion: this.Solicitud220503State.oficinaInspeccion,
-            puntoInspeccion: this.Solicitud220503State.puntoInspeccion,
-            claveUCON: this.Solicitud220503State.claveUCON,
-            establecimientoTIF: this.Solicitud220503State.establecimientoTIF,
-            nombre: this.Solicitud220503State.nombre,
-            numeroguia: this.Solicitud220503State.numeroguia,
-            regimen: this.Solicitud220503State.regimen,
-            movilizacion: this.Solicitud220503State.movilizacion,
-            transporte: this.Solicitud220503State.transporte,
-            punto: this.Solicitud220503State.punto,
-            nombreEmpresa: this.Solicitud220503State.nombreEmpresa,
+            foliodel: this.Solicitud220503State.foliodel || '',
+            aduanaIngreso: this.Solicitud220503State.aduanaIngreso || '',
+            oficinaInspeccion: this.Solicitud220503State.oficinaInspeccion || '',
+            puntoInspeccion: this.Solicitud220503State.puntoInspeccion || '',
+            claveUCON: this.Solicitud220503State.claveUCON || '',
+            establecimientoTIF: this.Solicitud220503State.establecimientoTIF || '',
+            nombre: this.Solicitud220503State.nombre || '',
+            numeroguia: this.Solicitud220503State.numeroguia || '',
+            regimen: this.Solicitud220503State.regimen || '',
+            movilizacion: this.Solicitud220503State.movilizacion || '',
+            transporte: this.Solicitud220503State.transporte || '',
+            punto: this.Solicitud220503State.punto || '',
+            nombreEmpresa: this.Solicitud220503State.nombreEmpresa || '',
           });
         })
       )

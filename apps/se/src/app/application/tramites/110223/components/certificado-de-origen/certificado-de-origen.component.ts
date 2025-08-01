@@ -1,8 +1,35 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, ConfiguracionColumna, InputFecha, REGEX_PATRON_DECIMAL_2, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TableBodyData, TableComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { ColumnasTabla, FECHA_FACTURA, FECHA_FINAL, FECHA_INICIAL, SeleccionadasTabla } from '../../models/registro.model';
+import {
+  AlertComponent,
+  Catalogo,
+  CatalogoSelectComponent,
+  CatalogosSelect,
+  ConfiguracionColumna,
+  InputFecha,
+  REGEX_PATRON_DECIMAL_2,
+  REGEX_SOLO_DIGITOS,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TableBodyData,
+  TableComponent,
+  TituloComponent,
+  ValidacionesFormularioService,
+} from '@libs/shared/data-access-user/src';
+import {
+  ColumnasTabla,
+  FECHA_FACTURA,
+  FECHA_FINAL,
+  FECHA_INICIAL,
+  SeleccionadasTabla,
+} from '../../models/registro.model';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { HEADER_DATA_MERCANCIA } from '../../enums/constantes-alertas.enum';
@@ -16,7 +43,8 @@ import mercanciaDisponsibleTable from '@libs/shared/theme/assets/json/110223/mer
 import mercanciaSeleccionadasTable from '@libs/shared/theme/assets/json/110223/mercancias-seleccionadas.json';
 import mercanciaTable from '@libs/shared/theme/assets/json/110223/mercancia.json';
 
-const TERCEROS_TEXTO_DE_ALERTA = 'Para continuar con el trámite, debes agregar por lo menos una mercancía.';
+const TERCEROS_TEXTO_DE_ALERTA =
+  'Para continuar con el trámite, debes agregar por lo menos una mercancía.';
 
 /**
  * Componente que representa el formulario de certificado de origen en el trámite.
@@ -246,13 +274,14 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Configuración de las columnas de la tabla de mercancías disponibles.
    * Define los encabezados y las claves asociadas a cada columna de la tabla de mercancías disponibles.
    */
-  public headers: ConfiguracionColumna<ColumnasTabla>[] = HEADER_DISPONIBLES
+  public headers: ConfiguracionColumna<ColumnasTabla>[] = HEADER_DISPONIBLES;
 
   /**
    * Configuración de las columnas de la tabla de mercancías seleccionadas.
    * Define los encabezados y las claves asociadas a cada columna de la tabla de mercancías seleccionadas.
    */
-  public headersData: ConfiguracionColumna<SeleccionadasTabla>[] = HEADER_DATA_MERCANCIA;
+  public headersData: ConfiguracionColumna<SeleccionadasTabla>[] =
+    HEADER_DATA_MERCANCIA;
 
   /**
    * Constructor del componente.
@@ -270,7 +299,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     private validacionesService: ValidacionesFormularioService,
     private consultaioQuery: ConsultaioQuery
   ) {
-        // El constructor se utiliza para la inyección de dependencias.
+    // El constructor se utiliza para la inyección de dependencias.
   }
 
   /**
@@ -281,7 +310,8 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       this.esFormulario = false;
     } else {
       this.esFormulario = true;
-    } }
+    }
+  }
 
   /**
    * Valida el formulario del destinatario.
@@ -420,7 +450,8 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       this.esFormulario = false;
       this.mercanciaSeleccionadasTablaData.splice(0, 1, {
         fraccionArancelaria:
-          this.mercanciaForm?.value.validacionMercanciaForm.fraccionMercanArancelaria,
+          this.mercanciaForm?.value.validacionMercanciaForm
+            .fraccionMercanArancelaria,
         cantidad: this.mercanciaForm?.value.validacionMercanciaForm.cantidad,
         unidadMedida:
           this.mercanciaForm?.value.validacionMercanciaForm.unidadMedida,
@@ -431,7 +462,8 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         numFactura:
           this.mercanciaForm?.value.validacionMercanciaForm.numeroFactura,
         complementoDescripcion:
-          this.mercanciaForm?.value.validacionMercanciaForm.complementoDelaDescripcion,
+          this.mercanciaForm?.value.validacionMercanciaForm
+            .complementoDelaDescripcion,
         fechaFactura: this.mercanciaForm?.value.validacionMercanciaForm.fecha,
       });
     }
@@ -655,16 +687,24 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         otrasInstancias: ['', [Validators.required]],
         cantidad: [
           this.solicitudState?.cantidad,
-          [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
+          [
+            Validators.required,
+            Validators.pattern(REGEX_SOLO_DIGITOS),
+            Validators.maxLength(15),
+          ],
         ],
         umc: [this.solicitudState?.umc, [Validators.required]],
         valorDelaMercancia: [
           this.solicitudState?.valorDelaMercancia,
-          [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)],
+          [
+            Validators.required,
+            Validators.pattern(REGEX_PATRON_DECIMAL_2),
+            Validators.maxLength(15),
+          ],
         ],
         complementoDelaDescripcion: [
           this.solicitudState?.complementoDelaDescripcion,
-          [Validators.required],
+          [Validators.required, Validators.maxLength(200)],
         ],
         tipoFactura: [this.solicitudState?.tipoFactura, [Validators.required]],
         fecha: [this.solicitudState?.fecha, [Validators.required]],
@@ -672,10 +712,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
           this.solicitudState?.numeroFactura,
           [Validators.required],
         ],
-        numeroSerie: [
-          this.solicitudState?.numeroSerie,
-          [Validators.required],
-        ],
+        numeroSerie: [this.solicitudState?.numeroSerie, [Validators.required]],
       }),
     });
     this.inicializarEstadoFormulario();
@@ -715,15 +752,15 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   /**
    * Inicializa el estado del formulario según el modo de solo lectura.
    */
-    inicializarEstadoFormulario(): void {
-      if (this.soloLectura) {
-        this.registroForm?.disable();
-        this.mercanciaForm?.disable();
-        this.hayMercanciasDisponibles = true;
-        this.esMercanciaEnEdicion = true;
-      } else {
-        this.registroForm?.enable();
-        this.mercanciaForm?.enable();
-      }
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.registroForm?.disable();
+      this.mercanciaForm?.disable();
+      this.hayMercanciasDisponibles = true;
+      this.esMercanciaEnEdicion = true;
+    } else {
+      this.registroForm?.enable();
+      this.mercanciaForm?.enable();
     }
+  }
 }
