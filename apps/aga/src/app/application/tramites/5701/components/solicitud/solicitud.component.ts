@@ -3395,17 +3395,7 @@ export class SolicitudComponent
               this.despacho.get('tipoDespacho')?.enable();
               this.activarCatalogoDespacho = false;
             } else {
-              // RFC is not authorized - show error message
-              this.nuevaNotificacion = {
-                tipoNotificacion: 'alert',
-                categoria: 'danger',
-                modo: 'action',
-                titulo: TITULO_MODAL_AVISO,
-                mensaje: MSJ_ERROR_RFC_AUTORIZACION_LDA,
-                cerrar: false,
-                txtBtnAceptar: 'Aceptar',
-                txtBtnCancelar: '',
-              };
+              
               this.despacho.get('idAduanaDespacho')?.enable();
               this.despacho.get('tipoDespacho')?.enable();
               this.activarCatalogoDespacho = false;
