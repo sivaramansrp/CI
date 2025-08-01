@@ -1,9 +1,9 @@
 name: Build and Deploy profepa App
 on:
- workflow_dispatch
- on:
-   push:
-    branches: [develop]
+  workflow_dispatch:
+  push:
+    branches:
+      - develop
     paths:
       - 'apps/profepa/Dockerfile.dev**'
       - 'docker/**'
