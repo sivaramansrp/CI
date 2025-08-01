@@ -38,14 +38,12 @@
       </div>
 
       <div class="col-md-4 mt-5">
-        <div class="input-group">
           <input-fecha [setFecha]="pagoDerechos.get('fechaDePago')?.value" [datos]="fechaFinalInput"
             (valorCambiado)="cambioFechaDePago($event)"
             [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
-          <div *ngIf="fechaFuturaSeleccionada" class="text-danger mt-1">
+          <div *ngIf="fechaFuturaSeleccionada" class="mensaje-error mt-1">
             La fecha de pago debe ser menor o igual a la fecha actual.
           </div>
-        </div>
       </div>
 
       <div class="col-md-4 mt-5">
