@@ -106,11 +106,13 @@ export const USO_ESPECIFICO_LABEL: CrossListLable = {
     derecha: 'Uso específico seleccionado*:',
   }
 
+/** Etiquetas para el campo de país de procedencia en el componente de selección cruzada. */
 export const PAIS_DE_PROCEDENCIA_LABEL: CrossListLable = {
     tituluDeLaIzquierda: 'País de procedencia:',
     derecha: 'País(es) seleccionado(s)*:',
   }
 
+/** Etiquetas para el campo de país de origen en el componente de selección cruzada. */
 export const PAIS_DE_ORIGEN_LABEL: CrossListLable = {
     tituluDeLaIzquierda: 'País de origen:',
     derecha: 'País(es) seleccionado(s)*:',
