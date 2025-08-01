@@ -8,6 +8,7 @@ import {
   BtnContinuarComponent,
   Catalogo,
   ConsultaioQuery,
+  ConsultaioState,
   ListaPasosWizard,
   TituloComponent
 } from '@ng-mf/data-access-user';
@@ -142,6 +143,13 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
   */
   public esFormularioSoloLectura: boolean = false; 
 
+    /**
+    * @property consultaState
+    * @description
+    * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+    */
+    public consultaState!: ConsultaioState;
+
   /**
   * Constructor de la clase.
   * @param fb - Instancia de FormBuilder para construir formularios reactivos.
@@ -169,6 +177,7 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
+      this.consultaState = seccionState;
        this.esFormularioSoloLectura = seccionState.readonly;
       })
     )

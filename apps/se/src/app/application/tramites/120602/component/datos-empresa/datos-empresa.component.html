@@ -271,7 +271,7 @@
     <div class="text-end mt-5">
       <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Eliminar</button>
     </div>
-    @if(consultaState.parameter === "READ_PROCEDURE")
+   @if(consultaState.parameter !== "READ_PROCEDURE")
     {
     <ng-titulo titulo="Cargar archivos"></ng-titulo>
     <ng-alert [CONTENIDO]="DATOS_EMPRESA"></ng-alert>
