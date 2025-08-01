@@ -5,28 +5,22 @@
     <div class="row mb-5">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="reporteAnualFechaInicio">Incio:</label>
-          <input
-            type="text"
-            class="form-control input-date"
-            formControlName="reporteAnualFechaInicio"
-            id="reporteAnualFechaInicio"
-            bsDatepicker
-            [bsConfig]="bsConfig"
-          />
+          <input-fecha
+            (valorCambiado)="onFechaInicio($event)"
+            [setFecha]="
+              periodoReporteAnual.get('reporteAnualFechaInicio')?.value
+            "
+            [datos]="fechaIncio"
+          ></input-fecha>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="reporteAnualFechaFin">Fin:</label>
-          <input
-            type="text"
-            class="form-control input-date"
-            formControlName="reporteAnualFechaFin"
-            id="reporteAnualFechaFin"
-            bsDatepicker
-            [bsConfig]="bsConfig"
-          />
+          <input-fecha
+            (valorCambiado)="onFechaFin($event)"
+            [setFecha]="periodoReporteAnual.get('reporteAnualFechaFin')?.value"
+            [datos]="fechaFin"
+          ></input-fecha>
         </div>
       </div>
       <div class="col-md-4 mb-5"></div>
