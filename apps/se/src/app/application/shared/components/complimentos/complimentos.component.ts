@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 /**
  * Importaciones necesarias para el componente de empresas.
  * Incluye servicios, modelos, componentes compartidos y decoradores de Angular.
@@ -387,7 +388,7 @@ this.formaComplimentos.disable();
   this.transformarValoresRadio(DATOS_TRANSFORMADOS);
     
     
-    const PROGRAMA_PREOPERATIVO_VALUE = ComplimentosComponent.transformarCheckboxValue(DATOS_TRANSFORMADOS.programaPreOperativo);
+    const PROGRAMA_PREOPERATIVO_VALUE = this.transformarCheckboxValue(DATOS_TRANSFORMADOS.programaPreOperativo);
 
   
     this.formaComplimentos.patchValue(DATOS_TRANSFORMADOS, { emitEvent: false });
@@ -447,8 +448,8 @@ this.formaComplimentos.disable();
         apellidoMaterno: PRIMER_REGISTRO.apellidoMaterno || '',
         rfc: PRIMER_REGISTRO.rfc || ''
       };
-    } else if (ComplimentosComponent.esEstructuraFormaDatosInvalida(datos.formaSocioAccionistas.formaDatos)) {
-      datos.formaSocioAccionistas.formaDatos = ComplimentosComponent.crearFormaDatosVacio();
+    } else if (this.esEstructuraFormaDatosInvalida(datos.formaSocioAccionistas.formaDatos)) {
+      datos.formaSocioAccionistas.formaDatos = this.crearFormaDatosVacio();
     }
   }
 
@@ -486,7 +487,7 @@ this.formaComplimentos.disable();
   /**
    * Checks if formaDatos structure is invalid
    */
-  private static esEstructuraFormaDatosInvalida(formaDatos: { [key: string]: string }): boolean {
+  private esEstructuraFormaDatosInvalida(formaDatos: { [key: string]: string }): boolean {
     return !formaDatos || 
            typeof formaDatos !== 'object' ||
            Object.keys(formaDatos).some(key => key.startsWith('socio'));
@@ -495,7 +496,7 @@ this.formaComplimentos.disable();
   /**
    * Creates empty formaDatos structure
    */
-  private static crearFormaDatosVacio(): { [key: string]: string } {
+  private crearFormaDatosVacio(): { [key: string]: string } {
     return {
       taxId: '',
       razonSocial: '',
@@ -513,7 +514,7 @@ this.formaComplimentos.disable();
   /**
    * Transforms checkbox values
    */
-  private static transformarCheckboxValue(valor: string): boolean | string {
+  private transformarCheckboxValue(valor: string): boolean | string {
     if (valor === 'Sí' || valor === 'Si') {
       return true;
     } else if (valor === 'No') {
