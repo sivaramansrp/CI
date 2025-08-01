@@ -174,19 +174,6 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Opens a modal dialog to edit the selected row of national drivers.
-   *
-   * @param template Reference to the modal template to display.
-   *
-   * - If no rows are selected in `datosDelChoferNacionalSelected`, logs a warning and does nothing.
-   * - If at least one row is selected, assigns the first selected row to `datosChofere`, finds its index in `datosDelChoferNacional`,
-   *   and calls `editarRegistro` on the dialog component (if available), then opens the modal.
-   *
-   * @remarks
-   * This method is typically triggered by a UI action (e.g., clicking the "Modificar" button).
-   * It ensures only the first selected row is edited, and synchronizes the dialog state before opening.
-   */
-  /**
    * Abre un diálogo modal para editar la fila seleccionada de chofer nacional.
    *
    * @param template Referencia a la plantilla del modal que se debe abrir.
@@ -196,7 +183,6 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
    */
   editarFilaSeleccionada(template: TemplateRef<unknown>): void {
     if (this.datosDelChoferNacionalSelected.length === 0) {
-      console.warn('No hay filas seleccionadas para editar.');
       return;
     }
     const seleccionado = this.datosDelChoferNacionalSelected[0];
