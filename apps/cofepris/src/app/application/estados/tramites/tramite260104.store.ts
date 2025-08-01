@@ -699,7 +699,6 @@ export class Tramite260104StoreDos extends Store<Solicitud260104State> {
        * @param nombre - El valor de rfc.
        */
     public setNumero(nombres: string) {
-        console.log(nombres,"==========");
         this.update((state) => ({
             ...state,
             nombres,

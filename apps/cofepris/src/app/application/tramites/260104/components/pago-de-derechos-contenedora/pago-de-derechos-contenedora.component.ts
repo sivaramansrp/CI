@@ -52,7 +52,6 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
  * 
  * @example
  * // Access the procedure ID
- * console.log(this.idProcedimiento); // 260104
  */
  idProcedimiento:number = 260104;
 
