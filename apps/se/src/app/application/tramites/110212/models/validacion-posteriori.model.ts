@@ -57,6 +57,7 @@ export interface GrupoDeDirecciones {
   telefono: string;
   fax: string;
   correoElectronico: string;
+  pais: string;
 }
 /**
  * Representa los datos del grupo representativo.
@@ -108,6 +109,7 @@ export interface GrupoTratado {
  * Representa los datos de la tabla de mercancías disponibles.
  */
 export interface DisponiblesTabla {
+  id?: number;
   fraccionArancelaria: string;
   nombreTecnico: string;
   nombreComercial: string;
