@@ -145,13 +145,9 @@
             (change)="setValoresStore(domicilio, 'licenciaSanitaria', 'setLicenciaSanitaria')" 
             />
         </div>
-        @if(domicilio.controls['licenciaSanitaria'].invalid && domicilio.controls['licenciaSanitaria'].touched) {
-          <div class="d-grid">
-            @if(domicilio.controls['licenciaSanitaria'].errors?.['maxlength']) {
-              <span class="mensaje-error">No puede tener más de 20 caracteres</span>
-            }          
-          </div>
-        }
+        <div *ngIf="domicilio.controls['licenciaSanitaria']?.invalid && domicilio.controls['licenciaSanitaria']?.touched" class="d-grid">
+          <span class="mensaje-error" *ngIf="domicilio.controls['licenciaSanitaria']?.errors?.['maxlength']">No puede tener más de 20 caracteres</span>
+        </div>
       </div>
     </div>
   <div class="row">

@@ -365,7 +365,9 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
       colonia: [this.solicitudState?.colonia],
       calle: [this.solicitudState?.calle, [Validators.required, Validators.maxLength(100)]],
       lada: [this.solicitudState?.lada],
-      telefono: [this.solicitudState?.telefono, [Validators.required, Validators.maxLength(30)]]
+      telefono: [this.solicitudState?.telefono, [Validators.required, Validators.maxLength(30)]],
+      avisoCheckbox: [this.solicitudState?.avisoCheckbox],
+      licenciaSanitaria: [this.solicitudState?.licenciaSanitaria, [Validators.required, Validators.maxLength(20)]],
     });
 
     /** 
