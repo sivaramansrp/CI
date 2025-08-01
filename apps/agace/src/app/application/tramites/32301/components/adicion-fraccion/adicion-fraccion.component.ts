@@ -4,11 +4,13 @@ import {
   ElementRef,
   OnDestroy,
   OnInit,
+  QueryList,
   ViewChild,
+  ViewChildren,
 } from '@angular/core';
 import {
   AlertComponent,
-  Catalogo, 
+  Catalogo,
   ConsultaioQuery,
   Notificacion,
   NotificacionesComponent,
@@ -16,7 +18,7 @@ import {
   TablePaginationComponent,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent, CrosslistComponent,InputCheckComponent,InputRadioComponent} from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent, CrosslistComponent, InputCheckComponent, InputRadioComponent } from '@libs/shared/data-access-user/src';
 import {
   FormBuilder,
   FormControl,
@@ -124,6 +126,10 @@ export class AdicionFraccionComponent
    * Rango de días seleccionados, basado en la lista de países.
    */
   selectRangoDias: string[] = this.crosListaDePaises;
+  /**
+   * Referencia a los componentes de la lista de fechas.
+   */
+  @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
 
   /**
    * Configuración de botones para acciones sobre la selección.
@@ -132,22 +138,22 @@ export class AdicionFraccionComponent
     {
       btnNombre: 'Agregar',
       class: 'btn-primary',
-      funcion: (): void => this.agregar(''),
+      funcion: (): void => this.crossList.toArray()[0].agregar(''),
     },
     {
       btnNombre: 'Agregar todos',
       class: 'btn-default',
-      funcion: (): void => this.agregar('t'),
+      funcion: (): void => this.crossList.toArray()[0].agregar('t'),
     },
     {
       btnNombre: 'Eliminar',
       class: 'btn-danger',
-      funcion: (): void => this.quitar(''),
+      funcion: (): void => this.crossList.toArray()[0].quitar(''),
     },
     {
       btnNombre: 'Eliminar todos',
       class: 'btn-default',
-      funcion: (): void => this.quitar('t'),
+      funcion: (): void => this.crossList.toArray()[0].quitar('t'),
     },
   ];
 
@@ -325,7 +331,7 @@ export class AdicionFraccionComponent
     this.getAdicianFraccionActivRelProcModOption();
     this.getAdicianFraccioncveFraccionCorrelacionModOption();
     this.getAdicianFraccionUnidadMedidaModOption();
-  
+
   }
   /**
    * Obtiene las opciones para los botones de radio relacionados con fracciones.

@@ -2,7 +2,8 @@
   <div class="row">
     <ul class="nav nav-tabs">
       <li [ngClass]="indice === 1 ? 'active' : ''">
-        <a class="font-weight-bold" data-toggle="tab" (click)="seleccionaTab(1)" (keydown.enter)="seleccionaTab(1)" tabindex="0">Solicitante</a>
+        <a class="font-weight-bold" data-toggle="tab" (click)="seleccionaTab(1)" (keydown.enter)="seleccionaTab(1)"
+          tabindex="0">Solicitante</a>
       </li>
 
       <li [ngClass]="indice === 2 ? 'active' : ''">
@@ -22,7 +23,7 @@
           tabindex="3">Aviso de modificaciones de proveedores nacionales
         </a>
       </li>
-      }  @if (datosInputCheck.changesToLegalDocuments) {
+      } @if (datosInputCheck.changesToLegalDocuments) {
 
       <li [ngClass]="indice === 6 ? 'active' : ''">
         <a class="font-weight-bold" data-toggle="tab" (click)="seleccionaTab(6)" (keydown.enter)="seleccionaTab(6)"
@@ -62,16 +63,16 @@
       @switch (indice) { @case (1) {
       <solicitante></solicitante>
       } @case (2) { @if(esDatosRespuesta){
-      <app-tipo-de-aviso  (tabEnabledData)="getValoreEnable($event)"></app-tipo-de-aviso>
+      <app-tipo-de-aviso (tabEnabledData)="getValoreEnable($event)"></app-tipo-de-aviso>
       } } @case (3) { @if(esDatosRespuesta){
       <app-proveedor-extranjero [proveedortype]="'extranjero'"></app-proveedor-extranjero>
       } } @case (4) { @if(esDatosRespuesta){
       <app-proveedor-extranjero [proveedortype]="'nacionales'"></app-proveedor-extranjero>
       } } @case (5) { @if(esDatosRespuesta){
-      <app-modificacion-socios></app-modificacion-socios>
+      <app-modificacion-goce-inmueble></app-modificacion-goce-inmueble>
       } } @case (6) {
       @if(esDatosRespuesta){
-      <app-modificacion-goce-inmueble></app-modificacion-goce-inmueble>
+      <app-modificacion-socios></app-modificacion-socios>
       }
       } @case (7) {
       @if(esDatosRespuesta){

@@ -287,7 +287,7 @@ export class ProveedorExtranjeroComponent implements OnInit, OnDestroy {
       /**
        * Mensaje de la notificación, indicando que El archivo debe contener almenos un registro.
        */
-      mensaje: 'El archivo debe contener almenos un registro.',
+      mensaje: 'Existen registros con información incompleta',
 
       /**
        * Indica si la notificación debe cerrarse automáticamente (false = no se cerrará).

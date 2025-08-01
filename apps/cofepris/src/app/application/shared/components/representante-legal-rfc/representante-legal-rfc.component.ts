@@ -102,9 +102,9 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
 
     this.representante = this.fb.group({
       rfc: [this.solicitudState?.rfc, Validators.required],
-      nombre: [{ value: '', disabled: true }, Validators.required],
-      apellidoPaterno: [{ value: '', disabled: true }, Validators.required],
-      apellidoMaterno: [{ value: '', disabled: true }],
+      nombre: [{ value: this.solicitudState.nombre, disabled: true }, Validators.required],
+      apellidoPaterno: [{ value: this.solicitudState.apellidoPaterno, disabled: true }, Validators.required],
+      apellidoMaterno: [{ value: this.solicitudState.apellidoMaterno, disabled: true }],
     });
 
      /*

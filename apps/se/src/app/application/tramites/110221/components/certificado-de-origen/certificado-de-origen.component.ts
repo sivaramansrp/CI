@@ -1,8 +1,41 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, InputFecha, REGEX_PATRON_DECIMAL_2, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TableBodyData, TableComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { ColumnasTabla, FECHA_FACTURA, FECHA_FINAL, FECHA_INICIAL, HEADERS, HEADERS_DATA, SeleccionadasTabla } from '../../models/registro.model';
+import {
+  AlertComponent,
+  Catalogo,
+  CatalogoSelectComponent,
+  CatalogosSelect,
+  InputFecha,
+  REGEX_PATRON_DECIMAL_2,
+  REGEX_SOLO_DIGITOS,
+  REG_X,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TableBodyData,
+  TableComponent,
+  TituloComponent,
+  ValidacionesFormularioService,
+} from '@libs/shared/data-access-user/src';
+import {
+  ColumnasTabla,
+  FECHA_FACTURA,
+  FECHA_FINAL,
+  FECHA_INICIAL,
+  HEADERS,
+  HEADERS_DATA,
+  SeleccionadasTabla,
+} from '../../models/registro.model';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  InputRadioComponent,
+} from '@ng-mf/data-access-user';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
@@ -14,8 +47,18 @@ import mercanciaDisponsibleTable from '@libs/shared/theme/assets/json/110221/mer
 import mercanciaSeleccionadasTable from '@libs/shared/theme/assets/json/110221/mercancias-seleccionadas.json';
 import mercanciaTable from '@libs/shared/theme/assets/json/110221/mercancia.json';
 
-const TERCEROS_TEXTO_DE_ALERTA = 'Para continuar con el trámite, debes agregar por lo menos una mercancía.';
-
+const TERCEROS_TEXTO_DE_ALERTA =
+  'Para continuar con el trámite, debes agregar por lo menos una mercancía.';
+interface RadioOpcion {
+  /**
+   * Etiqueta visible para el usuario.
+   */
+  label: string;
+  /**
+   * Valor interno asignado a la opción seleccionada.
+   */
+  value: string;
+}
 /**
  * Componente que representa el formulario de certificado de origen en el trámite.
  */
@@ -32,6 +75,7 @@ const TERCEROS_TEXTO_DE_ALERTA = 'Para continuar con el trámite, debes agregar 
     AlertComponent,
     TablaDinamicaComponent,
     InputFechaComponent,
+    InputRadioComponent,
   ],
   templateUrl: './certificado-de-origen.component.html',
   styleUrl: './certificado-de-origen.component.css',
@@ -226,7 +270,10 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Indica si el formulario está en modo de solo lectura.
    */
   soloLectura: boolean = false;
-
+  /**
+   * Valor seleccionado en el grupo de opciones de radio.
+   */
+  valorSeleccionado!: string;
   /**
    * Configuración de las columnas de la tabla de mercancías disponibles.
    */
@@ -236,7 +283,20 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Configuración de las columnas de la tabla de mercancías seleccionadas.
    */
   public headersData = HEADERS_DATA;
-
+  /**
+   * Opciones para el botón de radio.
+   * @property {RadioOpcion[]} opcionDeBotonDeRadio
+   */
+  opcionDeBotonDeRadio: RadioOpcion[] = [
+    {
+      label: 'Periodo',
+      value: 'periodo',
+    },
+    {
+      label: 'Una sola importación:',
+      value: 'sola',
+    },
+  ];
   /**
    * Constructor del componente.
    * @param registroService Servicio para obtener datos de catálogos
@@ -339,6 +399,18 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.setValoresStore(this.validacionForm, 'fechaInicial', 'setFechInicioB');
   }
 
+  /**
+   * Cambia el valor seleccionado en el grupo de radio y actualiza el almacén.
+   * @param {string | number} value Nuevo valor seleccionado.
+   */
+  radioBotonSeleccionado(event: Event): void {
+    const VAL = (event.target as HTMLInputElement).value;
+    this.registroForm.patchValue({
+      validacionForm: {
+        rangoDeFecha: VAL,
+      },
+    });
+  }
   /**
    * Actualiza la fecha final en el formulario.
    * @param nuevo_fechaFinal Nueva fecha final
@@ -604,10 +676,14 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       validacionForm: this.fb.group({
         tercerOperador: [this.solicitudState?.tercerOperador],
         tratado: [this.solicitudState?.tratado, [Validators.required]],
+        rangoDeFecha: [''],
         pais: [this.solicitudState?.pais, [Validators.required]],
         fraccionArancelaria: [
           this.solicitudState?.fraccionArancelaria,
-          [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
+          [
+            Validators.required,
+            Validators.pattern(REG_X.REGEX_FRACCION_ARANCELARIA),
+          ],
         ],
         numeroRegistro: [
           this.solicitudState?.numeroRegistro,
@@ -627,11 +703,26 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     });
     this.mercanciaForm = this.fb.group({
       validacionMercanciaForm: this.fb.group({
-        fraccionMercanciaArancelaria: [this.solicitudState?.fraccionMercanciaArancelaria, [Validators.required]],
-        nombreTecnico: [this.solicitudState?.nombreTecnico, [Validators.required]],
-        nombreComercialDelaMercancia: [this.solicitudState?.nombreComercialDelaMercancia, [Validators.required]],
-        criterioParaConferir: [this.solicitudState?.criterioParaConferir, [Validators.required]],
-        nombreEnIngles: [this.solicitudState?.nombreEnIngles, [Validators.required]],
+        fraccionMercanciaArancelaria: [
+          this.solicitudState?.fraccionMercanciaArancelaria,
+          [Validators.required],
+        ],
+        nombreTecnico: [
+          this.solicitudState?.nombreTecnico,
+          [Validators.required],
+        ],
+        nombreComercialDelaMercancia: [
+          this.solicitudState?.nombreComercialDelaMercancia,
+          [Validators.required],
+        ],
+        criterioParaConferir: [
+          this.solicitudState?.criterioParaConferir,
+          [Validators.required],
+        ],
+        nombreEnIngles: [
+          this.solicitudState?.nombreEnIngles,
+          [Validators.required],
+        ],
         cantidad: [
           this.solicitudState?.cantidad,
           [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],

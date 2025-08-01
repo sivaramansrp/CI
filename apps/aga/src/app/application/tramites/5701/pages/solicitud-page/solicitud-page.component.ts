@@ -158,6 +158,11 @@ export class SolicitudPageComponent implements OnInit {
    */
   public folioTemporal: number = 0;
 
+  /**
+   * Indica si hay archivos seleccionados.
+   */
+  public hayArchivosSeleccionados: boolean = false;
+
   constructor(
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
@@ -252,7 +257,7 @@ export class SolicitudPageComponent implements OnInit {
                 categoria: 'success',
                 modo: 'action',
                 titulo: '',
-                mensaje: MSG_REGISTRO_EXITOSO(this.folioTemporal.toString()),
+                mensaje: MSG_REGISTRO_EXITOSO(String(this.folioTemporal)),
                 cerrar: true,
                 txtBtnAceptar: '',
                 txtBtnCancelar: '',
@@ -690,8 +695,8 @@ export class SolicitudPageComponent implements OnInit {
    * {void} No retorna ningún valor.
    */
   onClickCargaArchivos(): void {
-    this.cargarArchivosEvento.emit();
-  }
+      this.cargarArchivosEvento.emit();
+    }
 
   /**
    * Método para navegar a la sección anterior del wizard.
@@ -733,7 +738,6 @@ export class SolicitudPageComponent implements OnInit {
    */
   anteriorSeccionCargarDocumento(): void {
     this.regresarSeccionCargarDocumentoEvento.emit();
-    this.seccionCargarDocumentos = true;
   }
 
   /**
@@ -744,5 +748,20 @@ export class SolicitudPageComponent implements OnInit {
    */
   cargaRealizada(cargaRealizada: boolean): void {
     this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  /**
+   * Método para verificar si hay archivos seleccionados
+   * Este método debería ser llamado desde el componente hijo cuando se seleccionen archivos
+   */
+  onArchivosSeleccionados(hayArchivos: boolean): void {
+    this.hayArchivosSeleccionados = hayArchivos;
+  }
+
+  /**
+   * Método para resetear el estado cuando se cambie de paso
+   */
+  resetearEstadoArchivos(): void {
+    this.hayArchivosSeleccionados = false;
   }
 }

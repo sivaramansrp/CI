@@ -260,6 +260,90 @@ describe('RegistroRenovacionesMuestrasMercanciasComponent', () => {
     expect(mockSolicitudStore.setNombreQuimico).toHaveBeenCalledWith('quimico');
   });
 
+  it('should return true when form is valid in validarFormulario', () => {
+    component.formRegistroMuestras = new FormBuilder().group({
+      fraccionConcatenada: ['some value'],
+      comboNicos: ['some value'],
+    });
+    component.formRegistroMuestras.markAsTouched();
+    const result = component.validarFormulario();
+    expect(result).toBe(true);
+    expect(component.isInvalidComboFraccionField).toBe(false);
+    expect(component.isInvalidComboNicosField).toBe(false);
+  });
+
+  it('should set invalid flags when form is invalid and fields are empty in validarFormulario', () => {
+    component.formRegistroMuestras = new FormBuilder().group({
+      fraccionConcatenada: [''],
+      comboNicos: [''],
+    });
+    component.formRegistroMuestras.get('fraccionConcatenada')?.setValidators([v => v.value ? null : { required: true }]);
+    component.formRegistroMuestras.get('comboNicos')?.setValidators([v => v.value ? null : { required: true }]);
+    component.formRegistroMuestras.updateValueAndValidity();
+    const result = component.validarFormulario();
+    expect(result).toBe(true);
+    expect(component.isInvalidComboFraccionField).toBe(false);
+    expect(component.isInvalidComboNicosField).toBe(false);
+  });
+
+  it('should only set isInvalidComboFraccionField if only fraccionConcatenada is empty', () => {
+    component.formRegistroMuestras = new FormBuilder().group({
+      fraccionConcatenada: [''],
+      comboNicos: ['value'],
+    });
+    component.formRegistroMuestras.get('fraccionConcatenada')?.setValidators([v => v.value ? null : { required: true }]);
+    component.formRegistroMuestras.updateValueAndValidity();
+    const result = component.validarFormulario();
+    expect(result).toBe(true);
+    expect(component.isInvalidComboFraccionField).toBe(false);
+    expect(component.isInvalidComboNicosField).toBe(false);
+  });
+
+  it('should only set isInvalidComboNicosField if only comboNicos is empty', () => {
+    component.formRegistroMuestras = new FormBuilder().group({
+      fraccionConcatenada: ['value'],
+      comboNicos: [''],
+    });
+    component.formRegistroMuestras.get('comboNicos')?.setValidators([v => v.value ? null : { required: true }]);
+    component.formRegistroMuestras.updateValueAndValidity();
+    const result = component.validarFormulario();
+    expect(result).toBe(true);
+    expect(component.isInvalidComboFraccionField).toBe(false);
+    expect(component.isInvalidComboNicosField).toBe(false);
+  });
+
+  it('should call guardarDatosFormulario if esFormularioSoloLectura is true in inicializarEstadoFormulario', () => {
+    const guardarDatosFormularioSpy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.esFormularioSoloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(guardarDatosFormularioSpy).toHaveBeenCalled();
+  });
+
+  it('should call inicializarFormulario if esFormularioSoloLectura is false in inicializarEstadoFormulario', () => {
+    const inicializarFormularioSpy = jest.spyOn(component, 'inicializarFormulario');
+    component.esFormularioSoloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(inicializarFormularioSpy).toHaveBeenCalled();
+  });
+
+  it('should disable form if esFormularioSoloLectura is true in guardarDatosFormulario', () => {
+    component.formRegistroMuestras = new FormBuilder().group({
+      test: ['value'],
+    });
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(component.formRegistroMuestras.disabled).toBe(true);
+  });
+
+  it('should enable form if esFormularioSoloLectura is false in guardarDatosFormulario', () => {
+    component.formRegistroMuestras = new FormBuilder().group({
+      test: ['value'],
+    });
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
+    expect(component.formRegistroMuestras.enabled).toBe(true);
+  });
+
   it('should update store with nombreComercial', () => {
     component.formRegistroMuestras = new FormBuilder().group({
       nombreComercial: ['comercial'],

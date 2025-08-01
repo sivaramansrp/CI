@@ -208,9 +208,9 @@ export interface DatosDomicilioLegalState {
    * El valor de garantiasOfrecidas.
    */
   garantiasOfrecidas: string;
-
   /**
-   * Mensaje de manifiestos.
+   * Mensaje asociado al estado del formulario.
+   * @type {string}
    */
   mensaje: boolean;
 }
@@ -420,7 +420,8 @@ export function createInitialState(): DatosDomicilioLegalState {
      */
     garantiasOfrecidas: '',
     /**
-     * Mensaje de manifiestos.
+     * Mensaje asociado al estado del formulario.
+     * @type {boolean}
      */
     mensaje: false,
   };
@@ -955,9 +956,10 @@ export class DatosDomicilioLegalStore extends Store<DatosDomicilioLegalState> {
       garantiasOfrecidas,
     }));
   }
+
   /**
-   * Establece el mensaje de manifiestos.
-   * @param mensaje - El mensaje de manifiestos.
+   * Establece el estado de mensaje.
+   * @param mensaje - El valor de mensaje.
    */
   public setMensaje(mensaje: boolean): void {
     this.update((state) => ({

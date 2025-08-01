@@ -1,4 +1,3 @@
-import { OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
@@ -7,6 +6,7 @@ import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { PermisosCancelar } from '../../models/permisos-cancelar.model';
 import { PermisosCancelarData } from '../../models/permisos-cancelar.model';
 
@@ -33,12 +33,13 @@ import { takeUntil } from 'rxjs';
   templateUrl: './permisos-cancelar.component.html',
   styleUrls: ['./permisos-cancelar.component.scss'],
 })
-export class PermisosCancelarComponent implements OnInit, OnDestroy, OnChanges {
+export class PermisosCancelarComponent implements OnInit, OnDestroy {
    /**
    * Indica si el formulario es de solo lectura.
    * @property {boolean} esSoloLectura
    */
   esSoloLectura!: boolean;
+  update!: boolean;
 
   /** Enum para el tipo de selección de tabla */
   public TablaSeleccion: TablaSeleccion = TablaSeleccion.CHECKBOX;
@@ -58,10 +59,10 @@ export class PermisosCancelarComponent implements OnInit, OnDestroy, OnChanges {
   permisosCancelar: PermisosCancelar[] = [];
 
   /** Subject para notificar la destrucción del componente */
-  private destroy$ = new Subject<void>();
+  public destroy$ = new Subject<void>();
 
   /** Texto del manifiesto de veracidad */
-  public manifestoDeVeracidad = 'De conformidad con el artículo 57, fracción 11, y 58 de la ley Federal de Procedimiento Administrativo* Manifiesto decir verdad';
+  public manifestoDeVeracidad = 'De conformidad con el artículo 57, fracción I I, y 58 de la ley Federal de Procedimiento Administrativo Manifiesto decir verdad';
 
   /** Cuadro de texto para motivo desistimiento */
   public motivoDesistimientotextBox = '';
@@ -80,7 +81,7 @@ export class PermisosCancelarComponent implements OnInit, OnDestroy, OnChanges {
   /** Grupo de formulario para motivo desistimiento */
   solicitud: FormGroup = this.fb.group({
     descripcionClobGenerica1: ['', [Validators.required]],
-    declaracionBoolean: ['', Validators.required]
+    declaracionBoolean: [false, Validators.requiredTrue]
   });
 
   /**
@@ -91,9 +92,9 @@ export class PermisosCancelarComponent implements OnInit, OnDestroy, OnChanges {
    * @param fb FormBuilder para crear grupos de formularios
    */
   constructor(
-    private PermisosCancelarService: PermisosCancelarService,
     private store: Tramite140112Store,
     private query: Tramite140112Query,
+    private PermisosCancelarService: PermisosCancelarService,
     private fb: FormBuilder, private consultaQuery: ConsultaioQuery
   ) {
     //constructer
@@ -101,41 +102,31 @@ export class PermisosCancelarComponent implements OnInit, OnDestroy, OnChanges {
       .pipe(takeUntil(this.destroyed$))
       .subscribe((estadoConsulta) => {
         this.esSoloLectura = estadoConsulta.readonly;
-      })
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-      // Verifica si el formulario ha cambiado y actualiza su estado
-      if (changes['estadoConsulta']) {
+        this.update = estadoConsulta.update;
         if (this.esSoloLectura) {
-        this.solicitud.disable();
-        }else{
+          this.solicitud.disable();
+        } else {
           this.solicitud.enable();
         }
-      }
-    }
+      })
+  }
 
   /**
    * Gancho de ciclo de vida OnInit
    */
   ngOnInit(): void {
+    this.loadPermisoCancelar();
     this.query.selectDesistimiento$?.pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
       this.solicitud?.patchValue({
-        descripcionClobGenerica1: data
+        descripcionClobGenerica1: data.descripcionClobGenerica1,
+        declaracionBoolean:data.declaracionBoolean
       });
     });
-    this.loadPermisoCancelar();
-     if (this.esSoloLectura) {
-      this.solicitud.disable();
-
-    } else{
-      this.solicitud.enable();
-
-    } 
+  
   }
 
-  /**
+/**
    * Cargar datos de permisos cancelar
    */
   loadPermisoCancelar(): void {
@@ -143,30 +134,7 @@ export class PermisosCancelarComponent implements OnInit, OnDestroy, OnChanges {
       .pipe(takeUntil(this.destroy$))
       .subscribe(response => {
         this.permisosCancelar = response;
-        this.solicitud.patchValue({
-          descripcionClobGenerica1: response[0]?.descripcionClobGenerica1 || ''
-        });
       });
-  }
-
-  /**
-   * Seleccionar o deseleccionar todas las filas
-   * @param event Objeto de evento
-   */
-  seleccionarDeseleccionarTodos(event: Event): void {
-    const INPUT = event.target as HTMLInputElement;
-    this.declaracionEstaMarcado = INPUT.checked;
-    if (this.declaracionEstaMarcado) {
-      this.confirmarVeracidad = 'De conformidad con el artículo 57, fracción 11, y 58 de la ley Federal de Procedimiento Administrativo* Manifiesto decir verdad';
-      this.solicitud.patchValue({
-        declaracionBoolean: this.confirmarVeracidad
-      });
-    } else {
-      this.solicitud.patchValue({
-        declaracionBoolean: null
-      });
-      this.confirmarVeracidad = '';
-    }
   }
 
   /**
@@ -178,11 +146,19 @@ export class PermisosCancelarComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   /**
-   * Establecer valores en Tramite140112Store
-   */
-  setValoresStore(): void {
-    this.store.setDesistimiento(this.solicitud.get('descripcionClobGenerica1')?.value);
-  }
+     * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
+     * @param form - El formulario reactivo.
+     * @param campo - El nombre del campo en el formulario.
+     */
+    setValoresStore(form: FormGroup | null, campo: string): void {
+      if (!form) {
+        return;
+      }
+      const CONTROL = form.get(campo);
+      if (CONTROL && CONTROL.value !== null && CONTROL.value !== undefined) {
+        this.store.establecerDatos({ [campo]: CONTROL.value });
+      }
+    }
 
   /**
      * Validar campo del formulario

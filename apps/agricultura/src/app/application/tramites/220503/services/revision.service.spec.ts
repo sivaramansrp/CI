@@ -1,159 +1,162 @@
-import { HttpClient } from '@angular/common/http';
-import { of } from 'rxjs';
+import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { RevisionService } from './revision.service';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { PagoDeDerechos } from '../models/pago-de-derechos.model';
 import { Solicitud220503State } from '../estados/tramites220503.store';
 import { Movilizacion } from '../models/datos-generales.model';
 
-jest.mock('@angular/common/http');
-
 describe('RevisionService', () => {
   let service: RevisionService;
-  let httpClientMock: jest.Mocked<HttpClient>;
+  let httpMock: HttpTestingController;
 
   beforeEach(() => {
-    httpClientMock = {
-      get: jest.fn()
-    } as any;
-    service = new RevisionService(httpClientMock);
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [RevisionService]
+    });
+    service = TestBed.inject(RevisionService);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
-  it('should be created', () => {
+  afterEach(() => {
+    httpMock.verify();
+  });
+
+  it('debe crear el servicio', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should get AduanaIngreso', (done) => {
+  it('debe obtener AduanaIngreso', () => {
     const mockData: RespuestaCatalogos = { data: [], code: 200, message: '' };
-    httpClientMock.get.mockReturnValue(of(mockData));
     service.getAduanaIngreso().subscribe(res => {
       expect(res).toEqual(mockData);
-      expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/220503/aduana-ingreso.json');
-      done();
     });
+    const req = httpMock.expectOne('assets/json/220503/aduana-ingreso.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockData);
   });
 
-  it('should get OficianaInspeccion', (done) => {
+  it('debe obtener OficianaInspeccion', () => {
     const mockData: RespuestaCatalogos = { data: [], code: 200, message: '' };
-    httpClientMock.get.mockReturnValue(of(mockData));
     service.getOficianaInspeccion().subscribe(res => {
       expect(res).toEqual(mockData);
-      expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/220503/oficiana-de-inspeccion.json');
-      done();
     });
+    const req = httpMock.expectOne('assets/json/220503/oficiana-de-inspeccion.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockData);
   });
 
-  it('should get PuntoInspeccion', (done) => {
+  it('debe obtener PuntoInspeccion', () => {
     const mockData: RespuestaCatalogos = { data: [], code: 200, message: '' };
-    httpClientMock.get.mockReturnValue(of(mockData));
     service.getPuntoInspeccion().subscribe(res => {
       expect(res).toEqual(mockData);
-      expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/220503/punto-de-inspeccion.json');
-      done();
     });
+    const req = httpMock.expectOne('assets/json/220503/punto-de-inspeccion.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockData);
   });
 
-  it('should get Establecimiento', (done) => {
+  it('debe obtener Establecimiento', () => {
     const mockData: RespuestaCatalogos = { data: [], code: 200, message: '' };
-    httpClientMock.get.mockReturnValue(of(mockData));
     service.getEstablecimiento().subscribe(res => {
       expect(res).toEqual(mockData);
-      expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/220503/establecimiento.json');
-      done();
     });
+    const req = httpMock.expectOne('assets/json/220503/establecimiento.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockData);
   });
 
-  it('should get RegimenDestinaran', (done) => {
+  it('debe obtener RegimenDestinaran', () => {
     const mockData: RespuestaCatalogos = { data: [], code: 200, message: '' };
-    httpClientMock.get.mockReturnValue(of(mockData));
     service.getRegimenDestinaran().subscribe(res => {
       expect(res).toEqual(mockData);
-      expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/220503/regimen-destinaran.json');
-      done();
     });
+    const req = httpMock.expectOne('assets/json/220503/regimen-destinaran.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockData);
   });
 
-  it('should get MovilizacionNacional', (done) => {
+  it('debe obtener MovilizacionNacional', () => {
     const mockData: RespuestaCatalogos = { data: [], code: 200, message: '' };
-    httpClientMock.get.mockReturnValue(of(mockData));
     service.getMovilizacionNacional().subscribe(res => {
       expect(res).toEqual(mockData);
-      expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/220503/movilizacion-nacional.json');
-      done();
     });
+    const req = httpMock.expectOne('assets/json/220503/movilizacion-nacional.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockData);
   });
 
-  it('should get PuntoVerificacion', (done) => {
+  it('debe obtener PuntoVerificacion', () => {
     const mockData: RespuestaCatalogos = { data: [], code: 200, message: '' };
-    httpClientMock.get.mockReturnValue(of(mockData));
     service.getPuntoVerificacion().subscribe(res => {
       expect(res).toEqual(mockData);
-      expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/220503/punto-verificacion.json');
-      done();
     });
+    const req = httpMock.expectOne('assets/json/220503/punto-verificacion.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockData);
   });
 
-  it('should get EmpresaTransportista', (done) => {
+  it('debe obtener EmpresaTransportista', () => {
     const mockData: RespuestaCatalogos = { data: [], code: 200, message: '' };
-    httpClientMock.get.mockReturnValue(of(mockData));
     service.getEmpresaTransportista().subscribe(res => {
       expect(res).toEqual(mockData);
-      expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/220503/empresa-transportista.json');
-      done();
     });
+    const req = httpMock.expectOne('assets/json/220503/empresa-transportista.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockData);
   });
 
-  it('should get Justificacion', (done) => {
+  it('debe obtener Justificacion', () => {
     const mockData: RespuestaCatalogos = { data: [], code: 200, message: '' };
-    httpClientMock.get.mockReturnValue(of(mockData));
     service.getJustificacion().subscribe(res => {
       expect(res).toEqual(mockData);
-      expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/220503/justificacion.json');
-      done();
     });
+    const req = httpMock.expectOne('assets/json/220503/justificacion.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockData);
   });
 
-  it('should get Banco', (done) => {
+  it('debe obtener Banco', () => {
     const mockData: RespuestaCatalogos = { data: [], code: 200, message: '' };
-    httpClientMock.get.mockReturnValue(of(mockData));
     service.getBanco().subscribe(res => {
       expect(res).toEqual(mockData);
-      expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/220503/banco.json');
-      done();
     });
+    const req = httpMock.expectOne('assets/json/220503/banco.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockData);
   });
 
-  it('should get PagoDeDerechos', (done) => {
+  it('debe obtener PagoDeDerechos', () => {
     const mockData: PagoDeDerechos = {
-      exentoPagoNo: 'false',
-      exentoPagoSi: 'false',
+      exentoPago: 'false',
       justificacion: '',
       claveReferencia: '',
-      fetchapago: '',
-      banco: 0,
       cadenaDependencia: '',
+      banco: 'Test Bank',
       llavePago: '',
-      importePago: '0'
+      importePago: '0',
+      fechaPago: ''
     };
-    httpClientMock.get.mockReturnValue(of(mockData));
     service.getPagoDeDerechos().subscribe(res => {
       expect(res).toEqual(mockData);
-      expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/220503/pago-de-derechos.json');
-      done();
     });
+    const req = httpMock.expectOne('assets/json/220503/pago-de-derechos.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockData);
   });
 
-  it('should get DatosDelaSolicitud', (done) => {
+  it('debe obtener DatosDelaSolicitud', () => {
     const mockData = { solicitud: 'test' } as unknown as Solicitud220503State;
-    httpClientMock.get.mockReturnValue(of(mockData));
     service.getDatosDelaSolicitud().subscribe(res => {
       expect(res).toEqual(mockData);
-      expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/220503/datos-dela-solicitud.json');
-      done();
     });
+    const req = httpMock.expectOne('assets/json/220503/datos-dela-solicitud.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockData);
   });
 
-  it('should get Movilizacion', (done) => {
+  it('debe obtener Movilizacion', () => {
     const mockData: Movilizacion = {
       coordenadas: '',
       nombre: '',
@@ -161,11 +164,11 @@ describe('RevisionService', () => {
       transporte: '',
       punto: ''
     };
-    httpClientMock.get.mockReturnValue(of(mockData));
     service.getMovilizacion().subscribe(res => {
       expect(res).toEqual(mockData);
-      expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/220503/movilizacion.json');
-      done();
     });
+    const req = httpMock.expectOne('assets/json/220503/movilizacion.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockData);
   });
 });
