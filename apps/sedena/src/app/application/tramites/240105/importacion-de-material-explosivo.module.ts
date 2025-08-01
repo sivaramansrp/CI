@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
-
 import { ImportacionDeMaterialExplosivoRoutingModule } from './importacion-de-material-explosivo-routing.module';
+import { NgModule } from '@angular/core';
 
 
 @NgModule({

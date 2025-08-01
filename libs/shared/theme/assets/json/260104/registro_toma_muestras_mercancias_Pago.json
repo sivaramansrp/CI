@@ -27,6 +27,8 @@
         "municipioAlcaldia": "3",
         "nombreRazonSocial": "Nombre Prime Segund",
         "nombres": "Nombre",
+        "apellidoPaterno":"Apellido",
+        "apellidoMaterno":"Materno",
         "numeroExterior": "Numero",
         "numeroInterior": "Numero",
         "pais": "3",

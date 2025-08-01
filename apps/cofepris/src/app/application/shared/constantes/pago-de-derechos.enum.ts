@@ -18,10 +18,13 @@ export const FECHA = {
     habilitado: true,
   };
 
-  export const ALERTA = {
-    mensaje: `
-    <div class="text-center">
-      <p><strong>¡Precaución!</strong> Debes capturar todos los campos de pago de derechos</p>
-    </div>
-    `,
-  };
+/**
+ * Configuración para el campo de clave de referencia.
+ */
+  export const DEBES_CAPTURAR =
+  {
+    /**
+     * Contenido del mensaje de alerta que se mostrará al usuario.
+     */
+    CONTENIDO: '¡Precaución! Debes capturar todos los campos de pago de derechos',
+  } 
