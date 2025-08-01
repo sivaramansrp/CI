@@ -44,15 +44,13 @@
   <div class="row mt-3">
     <crosslist
       [fechas]="seleccionarAduanasDisponibles"
-      [label]="aduanasDisponiblesLabel"
+      [label]="aduanasDisponiblesLabelTipo? aduanasDisponiblesLabelRequired : aduanasDisponiblesLabel"
       [fechasSeleccionadas]="seleccionarAduanasDisponiblesDatos"
-      [botones]="aduanasBotones"
+      [botones]="usarBotonesPersonalizados ? aduanasEntradaBotons : aduanasBotones"
       (fechasSeleccionadasChange)="
         aduanasDisponiblesSeleccionadasChange($event)
       "
-      [isDisabled]="esFormularioSoloLectura"
-    >
-      ></crosslist
+      [isDisabled]="esFormularioSoloLectura"></crosslist
     >
   </div>
   <div class="row mt-5">
@@ -235,7 +233,7 @@
         <button
           type="button"
           name="agregarClave"
-          class="btn btn-primary ms-2"
+          class="btn btn-primary m-2"
           [disabled]="esFormularioSoloLectura"
           (click)="irAAcciones()"
         >
@@ -257,19 +255,10 @@
         <app-input-radio
           [radioOptions]="periodoUnoSemestreOpciones"
           [isRequired]="true"
-          [layout]="'vertical'"
+          [layout]="'horizontal'"
+          [gap]="'10px'"
           formControlName="unoSemestre"
           (valueChange)="actualizarUnoSemestre($event)"
-          [disabled]="esFormularioSoloLectura"
-        ></app-input-radio>
-      </div>
-      <div class="col-md-4">
-        <app-input-radio
-          [radioOptions]="periodoUnoSemestreRadioOpciones"
-          [isRequired]="true"
-          [layout]="'vertical'"
-          formControlName="dosSemestre"
-          (valueChange)="actualizarDosSemestre($event)"
           [disabled]="esFormularioSoloLectura"
         ></app-input-radio>
       </div>

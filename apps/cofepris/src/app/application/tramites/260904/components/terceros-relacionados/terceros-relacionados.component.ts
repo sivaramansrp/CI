@@ -14,14 +14,13 @@
 import { AlertComponent, ConfiguracionColumna, TablaSeleccion } from '@ng-mf/data-access-user';
 import { CapturarColumns, FABRICANTE_TABLE_COLUMNS } from '../../modelos/fabricante-datos.model';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery,
-  ConsultaioStore,} from "@ng-mf/data-access-user";
-import { DESTINATARIO_TABLE_COLUMNS, DestinatarioCapturarColumns } from '../../modelos/destinatario-datos.model';
+
+import { DESTINATARIO_TABLE_COLUMNS, DestinatarioCapturarColumns, FACTURADOR_TABLE_COLUMNS, FacturadorCapturarColumns, PROVEEDOR_TABLE_COLUMNS, ProveedorCapturarColumns } from '../../modelos/destinatario-datos.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject ,map, takeUntil } from 'rxjs';
 import { TablaDinamicaComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
- 
+import { ConsultaioQuery} from "@ng-mf/data-access-user";
 import { TEXTOS } from '@libs/shared/data-access-user/src/tramites/constantes/octava-temporal.enum';
 import { TercerosRelacionadosService } from '../../services/terceros-relacionados/terceros-relacionados.service';
  
@@ -104,6 +103,25 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @public
    */
   destinatarioDatosTabla!: DestinatarioCapturarColumns[];
+
+   /**
+   * @property {ProveedorCapturarColumns[]} proveedorDatosTabla
+   * @description Almacena los datos de la tabla de proveedores que se mostrarán en la
+   * interfaz. Esta propiedad se inicializa con datos obtenidos del servicio.
+   * @public
+   */
+
+   proveedorDatosTabla!: ProveedorCapturarColumns[];
+
+  /**
+   * facturadorDatosTabla
+    * @property {FacturadorCapturarColumns[]} facturadorDatosTabla
+    * @description Almacena los datos de la tabla de facturadores que se mostrarán en la
+    * interfaz. Esta propiedad se inicializa con datos obtenidos del servicio.
+    * @public
+    */
+ facturadorDatosTabla!: FacturadorCapturarColumns[];
+  /**
  
   /**
    * @property {ConfiguracionColumna<CapturarColumns>[]} fabricanteTableColumns
@@ -120,6 +138,21 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @public
    */
   destinatarioTableColumns: ConfiguracionColumna<DestinatarioCapturarColumns>[] = DESTINATARIO_TABLE_COLUMNS;
+
+  /**
+    * @property {ConfiguracionColumna<ProveedorCapturarColumns>[]} proveedorTableColumns
+    * @description Configuración para las columnas de la tabla de proveedores, incluyendo
+    * títulos, anchos, visibilidad y formato de presentación de cada columna.
+    * @public
+    */
+ proveedorTableColumns: ConfiguracionColumna<ProveedorCapturarColumns>[] = PROVEEDOR_TABLE_COLUMNS;
+/**
+    * @property {ConfiguracionColumna<DestinatarioCapturarColumns>[]} facturadorTableColumns
+    * @description Configuración para las columnas de la tabla de facturadores, incluyendo
+    * títulos, anchos, visibilidad y formato de presentación de cada columna.
+    * @public
+    */
+ facturadorTableColumns: ConfiguracionColumna<FacturadorCapturarColumns>[] = FACTURADOR_TABLE_COLUMNS;
 
   /**
    * Indica si el formulario está en modo solo lectura.
@@ -170,6 +203,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.obtenerFabricanteTableIData();
     this.obtenerDestinatarioTableIData();
+    this.obtenerproveedorTableIData();
+    this.obtenerFacturadorTableIData();
   }
  
   /**
@@ -182,7 +217,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @public
    */
   obtenerFabricanteTableIData(): void {
-    this.fabricanteService.obtenerInformaciónDeTablaDeFabricantes().pipe(
+    this.fabricanteService.obtenerInformacionDeTablaDeFabricantes().pipe(
       takeUntil(this.destroyed$)
     ).subscribe(
       (data: CapturarColumns[]) => {
@@ -190,6 +225,35 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       }
     );
   }
+
+   obtenerproveedorTableIData(): void {
+   this.fabricanteService.obtenerInformacionDeTablaDeproveedors().pipe(
+     takeUntil(this.destroyed$)
+   ).subscribe(
+     (data: DestinatarioCapturarColumns[]) => {
+       this.proveedorDatosTabla = data;
+     }
+   );
+ }
+  /**
+    * @method obtenerFacturadorTableIData
+    * @description Obtiene datos para la tabla de facturadores desde el servicio mediante
+    * una suscripción. Los datos recibidos se asignan a la propiedad facturadorDatosTabla
+    * para su visualización en la interfaz.
+    *
+    * @returns {void}
+    * @public
+    */
+
+  obtenerFacturadorTableIData(): void {
+   this.fabricanteService.obtenerInformacionDeTablaDeFacturadores().pipe(
+     takeUntil(this.destroyed$)
+   ).subscribe(
+     (data: FacturadorCapturarColumns[]) => {
+       this.facturadorDatosTabla = data;
+     }
+   );
+ }
  
   /**
    * @method obtenerDestinatarioTableIData
@@ -201,7 +265,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @public
    */
   obtenerDestinatarioTableIData(): void {
-    this.fabricanteService.obtenerInformaciónDeTablaDeDestinatraios().pipe(
+    this.fabricanteService.obtenerInformacionDeTablaDeDestinatraios().pipe(
       takeUntil(this.destroyed$)
     ).subscribe(
       (data: DestinatarioCapturarColumns[]) => {
