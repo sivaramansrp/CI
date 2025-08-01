@@ -16,6 +16,9 @@
                     'sector',
                     'setSector'
                     )"></app-catalogo-select>
+                    <div *ngIf="sectoresYMercancias.get('sector')?.touched && sectoresYMercancias.get('sector')?.invalid">
+                    <small *ngIf="sectoresYMercancias.get('sector')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+                    </div>
                 </div>
             </div>
         </div>

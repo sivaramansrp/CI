@@ -3,6 +3,12 @@ import {
   MENSAJE_DE_ALERTA_MERCANCIA,
   MOVIMIENTO_CROSSLIST_LABEL,
 } from '../../enum/autorizaciones.enum';
+import { AfterViewInit, Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import {
+  CROSLISTA_ENTRADA,
+  CrosslistBoton,
+  OBTENER_BOTONES_CROSSLIST,
+} from '../../enum/crosslist-botons.enum';
 import {
   Catalogo,
   ConfiguracionColumna,
@@ -12,11 +18,6 @@ import {
   REGEX_SEPARADO_POR_COMAS,
   TablaSeleccion,
 } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import {
-  CrosslistBoton,
-  OBTENER_BOTONES_CROSSLIST,
-} from '../../enum/crosslist-botons.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   MERCANCIA_TABLA_CONFIGURACION,
@@ -39,11 +40,11 @@ import { Tramite230901Query } from '../../estados/query/tramite230901.query';
   templateUrl: './datos-solicitud.component.html',
   styleUrls: ['./datos-solicitud.component.scss'],
 })
-export class DatosSolicitudComponent implements OnInit, OnDestroy {
+export class DatosSolicitudComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
-   * Referencia al componente Crosslist para gestionar listas dinámicas.
+   * Referencia a los componentes Crosslist para gestionar listas dinámicas.
    */
-  @ViewChild(CrosslistComponent) crosslistComponent!: CrosslistComponent;
+  @ViewChildren('CrosslistComponent') crosslistComponents!: QueryList<CrosslistComponent>;
 
   /**
    * Formulario reactivo para los datos de la solicitud.
@@ -83,7 +84,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Lista original de aduanas disponibles.
    */
-  listaOriginalAduanas: string[] = [];
+  listaOriginalAduanas: string[] = CROSLISTA_ENTRADA;
 
   /**
    * Lista de aduanas seleccionadas.
@@ -103,7 +104,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Lista original de movimientos disponibles.
    */
-  listaOriginalMovimientos: string[] = [];
+  listaOriginalMovimientos: string[] = CROSLISTA_ENTRADA;
 
   /**
    * Lista de movimientos seleccionados.
@@ -232,20 +233,85 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         this.estadoSolicitud230901 = state;
       });
 
-    this.botonesAduanas = OBTENER_BOTONES_CROSSLIST(this.crosslistComponent);
-    this.botonesMovimientos = OBTENER_BOTONES_CROSSLIST(
-      this.crosslistComponent
-    );
-
     this.crearFormularioSolicitud();
-    this.manejarCambioTipoMovimiento();
     this.datosTablaMercancia = this.estadoSolicitud230901.mercanciaTablaDatos;
+
+    // Suscribirse a los cambios del tipo de movimiento para asegurar la inicialización correcta
+    this.formularioSolicitud.get('tipodemovimiento')?.valueChanges
+      .pipe(takeUntil(this.notificadorDestruccion$))
+      .subscribe((valor) => {
+        if (valor && this.crosslistComponents && this.crosslistComponents.length > 0) {
+          // Dar tiempo para que el ViewChildren se inicialice si es necesario
+          setTimeout(() => {
+            this.manejarCambioTipoMovimiento();
+          }, 0);
+        }
+      });
 
     if(this.esFormularioSoloLectura) {
       this.formularioSolicitud.disable();
     } else {
       this.formularioSolicitud.enable();
     }
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta después de que las vistas del componente se han inicializado.
+   * Aquí inicializamos los botones del crosslist ya que el ViewChild está disponible.
+   */
+  ngAfterViewInit(): void {
+    // Usar setTimeout con mayor delay para asegurar que los crosslist estén completamente renderizados
+    setTimeout(() => {
+      this.inicializarBotonesCrosslist();
+      // Solo llamar manejarCambioTipoMovimiento si hay un valor inicial en el formulario
+      const TIPO_MOVIMIENTO_INICIAL = this.formularioSolicitud?.get('tipodemovimiento')?.value;
+      if (TIPO_MOVIMIENTO_INICIAL) {
+        this.manejarCambioTipoMovimiento();
+      }
+    }, 100);
+  }
+
+  /**
+   * Inicializa los botones del crosslist cuando el ViewChildren está disponible.
+   */
+  private inicializarBotonesCrosslist(): void {
+    if (this.crosslistComponents && this.crosslistComponents.length > 0) {
+      // Verificar que los componentes estén completamente inicializados
+      const COMPONENTS_ARRAY = this.crosslistComponents.toArray();
+      if (COMPONENTS_ARRAY.length > 0 && COMPONENTS_ARRAY[0]) {
+        const FIRST_CROSSLIST_COMPONENT = COMPONENTS_ARRAY[0];
+        const SECOND_CROSSLIST_COMPONENT = COMPONENTS_ARRAY[1];
+        this.botonesAduanas = OBTENER_BOTONES_CROSSLIST(FIRST_CROSSLIST_COMPONENT).slice(1);
+        this.botonesMovimientos = OBTENER_BOTONES_CROSSLIST(SECOND_CROSSLIST_COMPONENT);
+      }
+    } else {
+      // Reintentar después de un breve delay si los componentes no están listos
+      setTimeout(() => {
+        this.inicializarBotonesCrosslist();
+      }, 200);
+    }
+  }
+
+  /**
+   * Inicializa los botones con reintento para asegurar que estén disponibles.
+   */
+  private inicializarBotonesConReintento(): boolean {
+    if (this.crosslistComponents && this.crosslistComponents.length > 0) {
+      const COMPONENTS_ARRAY = this.crosslistComponents.toArray();
+      if (COMPONENTS_ARRAY.length > 0 && COMPONENTS_ARRAY[0]) {
+        const FIRST_CROSSLIST_COMPONENT = COMPONENTS_ARRAY[0];
+        const SECOND_CROSSLIST_COMPONENT = COMPONENTS_ARRAY[1];
+        // Verificar si los botones están definidos, si no, usar los del enum
+        if (!this.botonesAduanas || this.botonesAduanas.length === 0) {
+          this.botonesAduanas = OBTENER_BOTONES_CROSSLIST(FIRST_CROSSLIST_COMPONENT);
+        }
+        if (!this.botonesMovimientos || this.botonesMovimientos.length === 0) {
+          this.botonesMovimientos = OBTENER_BOTONES_CROSSLIST(SECOND_CROSSLIST_COMPONENT);
+        }
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -355,17 +421,46 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Maneja el cambio en el tipo de movimiento seleccionado.
    */
   manejarCambioTipoMovimiento(): void {
+    // Verificar que el formulario existe antes de intentar obtener valores
+    if (!this.formularioSolicitud) {
+      return;
+    }
+
     const TIPO_DE_MOVIMIENTO =
       this.formularioSolicitud.get('tipodemovimiento')?.value;
-      this.tramite230901Store.establecerDatos({ tipoDeMovimiento: TIPO_DE_MOVIMIENTO });
-    if (TIPO_DE_MOVIMIENTO === '1') {
-      this.botonesAduanas = OBTENER_BOTONES_CROSSLIST(
-        this.crosslistComponent
-      ).slice(1);
+      
+    // Actualizar el store con el tipo de movimiento
+    this.tramite230901Store.establecerDatos({ tipoDeMovimiento: TIPO_DE_MOVIMIENTO });
+    
+    // Intentar inicializar los botones con reintento
+    const BOTONES_INICIALIZADOS = this.inicializarBotonesConReintento();
+    
+    if (BOTONES_INICIALIZADOS && this.crosslistComponents && this.crosslistComponents.length > 0) {
+      const COMPONENTS_ARRAY = this.crosslistComponents.toArray();
+      
+      if (COMPONENTS_ARRAY.length > 0 && COMPONENTS_ARRAY[0]) {
+        const FIRST_CROSSLIST_COMPONENT = COMPONENTS_ARRAY[0];
+        const SECOND_CROSSLIST_COMPONENT = COMPONENTS_ARRAY[1];
+        if (TIPO_DE_MOVIMIENTO === '1') {
+          this.botonesAduanas = OBTENER_BOTONES_CROSSLIST(
+            FIRST_CROSSLIST_COMPONENT
+          ).slice(1);
+        } else {
+          this.botonesAduanas = OBTENER_BOTONES_CROSSLIST(FIRST_CROSSLIST_COMPONENT);
+        }
+        this.botonesMovimientos = OBTENER_BOTONES_CROSSLIST(SECOND_CROSSLIST_COMPONENT);
+      }
     } else {
-      this.botonesAduanas = OBTENER_BOTONES_CROSSLIST(this.crosslistComponent);
+      // Si los botones no se pueden inicializar, reintentar después de un delay
+      setTimeout(() => {
+        this.manejarCambioTipoMovimiento();
+      }, 100);
     }
-    this.tipoMovimientoSeleccionada = parseInt(TIPO_DE_MOVIMIENTO, 10);
+    
+    // Actualizar la variable de tipo de movimiento seleccionado
+    if (TIPO_DE_MOVIMIENTO) {
+      this.tipoMovimientoSeleccionada = parseInt(TIPO_DE_MOVIMIENTO, 10);
+    }
   }
 
   /**

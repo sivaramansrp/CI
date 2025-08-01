@@ -222,6 +222,86 @@ export interface NicoInfo {
   ];
 
   /**
+   * Configuración de la tabla para la visualización de datos de mercancías.
+   * 
+   * Esta constante define las columnas y el orden en que se mostrarán los datos.
+   */
+  export const MERCANCIA_DATA = [
+    {
+      encabezado: 'Clasificación del producto',
+      clave: (ele: MercanciasInfo): string => ele.clasificacion,
+      orden: 1,
+    },
+    {
+      encabezado: 'Especificar clasificación del producto',
+      clave: (ele: MercanciasInfo): string => ele.especificar,
+      orden: 2,
+    },
+    {
+      encabezado: 'Denominación específica del producto',
+      clave: (ele: MercanciasInfo): string => ele.denominacionEspecifica,
+      orden: 3,
+    },
+    {
+      encabezado: 'Marca',
+      clave: (ele: MercanciasInfo): string => ele.denominacionEspecifica,
+      orden: 4,
+    },
+    {
+      encabezado: 'Fracción arancelaria',
+      clave: (ele: MercanciasInfo): string => ele.fraccionArancelaria,
+      orden: 5,
+    },
+    {
+      encabezado: 'Descripción de la fracción',
+      clave: (ele: MercanciasInfo): string => ele.descripcionFraccion,
+      orden: 6,
+    },
+    {
+      encabezado: 'Unidad de medida de comercialización (UMC)',
+      clave: (ele: MercanciasInfo): string => ele.unidad,
+      orden: 7,
+    },
+    {
+      encabezado: 'Cantidad UMC',
+      clave: (ele: MercanciasInfo): string => ele.cantidadUMC,
+      orden: 8,
+    },
+    {
+      encabezado: 'Unidad de medida de tarifa (UMT)',
+      clave: (ele: MercanciasInfo): string => ele.unidadUMT,
+      orden: 9,
+    },
+    {
+      encabezado: 'Cantidad UMT',
+      clave: (ele: MercanciasInfo): string => ele.cantidadUMT,
+      orden: 10,
+    },
+    {
+      encabezado: 'País de origen',
+      clave: (ele: MercanciasInfo): string => ele.paisDeOrigen,
+      orden: 11,
+    },
+    {
+      encabezado: 'País de procedencia',
+      clave: (ele: MercanciasInfo): string => ele.paisDeProcedencia,
+      orden: 12,
+    },
+    {
+      encabezado: 'Tipo producto',
+      clave: (ele: MercanciasInfo): string => ele.tipoProducto,
+      orden: 13,
+    },
+    {
+      encabezado: 'Uso específico',
+      clave: (ele: MercanciasInfo): string => ele.usoEspecifico,
+      orden: 14,
+    },
+   
+  ];
+
+
+  /**
    * Representa el formulario completo que contiene la información de la solicitud,
    * el agente y las mercancías.
    *

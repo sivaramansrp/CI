@@ -74,6 +74,9 @@ export class Solocitud260104Service {
     this.tramite260104StoreDos.setFechaFabricacion(DATOS.fechaFabricacion);
     this.tramite260104StoreDos.setTipoDeProducto(DATOS.tipoDeProducto);
     this.tramite260104StoreDos.setRfc(DATOS.rfc);
+    this.tramite260104StoreDos.setNumero(DATOS.nombres);
+    this.tramite260104StoreDos.setApellidoPaterno(DATOS.apellidoPaterno);
+    this.tramite260104StoreDos.setApellidoMaterno(DATOS.apellidoMaterno);
   }
   /**
    * Obtiene los datos precargados desde un archivo JSON relacionado con el registro de toma de muestras de mercancías.
