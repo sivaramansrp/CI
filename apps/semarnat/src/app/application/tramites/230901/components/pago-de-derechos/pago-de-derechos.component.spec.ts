@@ -54,7 +54,6 @@ describe('PagoDeDerechosComponent', () => {
   });
 
   it('should disable specific form controls', () => {
-    component.ngOnInit();
     expect(component.formularioPagoDerechos.get('claveDeReferencia')?.disabled).toBeTruthy();
     expect(component.formularioPagoDerechos.get('cadenaPagoDependencia')?.disabled).toBeTruthy();
     expect(component.formularioPagoDerechos.get('impPago')?.disabled).toBeTruthy();
@@ -94,7 +93,7 @@ describe('PagoDeDerechosComponent', () => {
   });
 
   it('should call inicializaPagoDeDerechosDatosCatalogos on ngOnInit', () => {
-    component.ngOnInit();
+    // The method is already called during component initialization in beforeEach
     expect(autorizacionesDeVidaSilvestreServiceMock.inicializaPagoDeDerechosDatosCatalogos).toHaveBeenCalled();
   });
 
