@@ -54,4 +54,9 @@ export interface Documento {
      * Nombre del archivo del documento
      */
     nombre: string;
+
+    /**
+     * Tipo de documento
+     */
+    tipo_documento: string;
 }

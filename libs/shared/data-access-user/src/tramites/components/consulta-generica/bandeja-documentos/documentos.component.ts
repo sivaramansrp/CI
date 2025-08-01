@@ -97,7 +97,7 @@ export class DocumentosComponent implements OnChanges , OnDestroy {
    */
   getDocumentos(): void {
      this.datosTablaDocumentos = this.documentos.map((doc) => ({
-      tipoDocumento: doc.documento.nombre,
+      tipoDocumento: doc.documento.tipo_documento,
       estatus: doc.estado_documento_solicitud,
       fechaAdjunto: doc.fecha_asociacion,
       nombreArchivo: doc.documento.nombre,
