@@ -361,13 +361,83 @@ get selectedTipoPersona(): string | undefined {
       .getDestinatarioData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
-        this.tableData = data as unknown as FilaData2[];
+        this.tableData = (data as unknown as FilaData2[]).map((row) => ({
+          ...row,
+          datosDelTramiteRealizar: {
+            ...row.datosDelTramiteRealizar,
+            tipoPersona: row.datosDelTramiteRealizar.tipoPersona || 'moral', // Add default value if missing
+          },
+        }));
       });
   }
 
   /**
    * Método para manejar el envío del formulario.
    */
+  // enEnviar(): void {
+  //   console.log('Form submission started');
+  //   const FORM_DATA = this.destinatarioForm.value;
+  
+  //   // Check if the form is valid
+  //   if (!this.destinatarioForm.valid) {
+  //     console.log('Form is invalid');
+  //     this.destinatarioForm.markAllAsTouched();
+  //     return;
+  //   }
+  
+  //   console.log('Form Data:', FORM_DATA);
+  
+  //   // Check if the form data is empty
+  //   if (!FORM_DATA || Object.keys(FORM_DATA).length === 0) {
+  //     console.log('Form data is empty');
+  //     return;
+  //   }
+  
+  //   // Map the selected country ID to its description
+  //   const PAIS_DATA_VALUE = this.paisData.catalogos.find(
+  //     (item: Catalogo) =>
+  //       String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.pais).trim()
+  //   )?.descripcion;
+  
+  //   FORM_DATA.datosDelTramiteRealizar.pais = PAIS_DATA_VALUE;
+  
+  //   console.log('Mapped Form Data:', FORM_DATA);
+  
+  //   if (this.selectedRow) {
+  //     const INDEX = this.tableData.indexOf(this.selectedRow);
+  //     console.log('Selected Row Index:', INDEX);
+  //     if (INDEX !== -1) {
+  //       this.tableData[INDEX] = { ...FORM_DATA, id: this.selectedRow.id }; // Ensure the id is carried over
+  //       console.log('Updated Row:', this.tableData[INDEX]);
+  //     }
+  //   } else {
+  //     const NEW_ID = this.tableData.length > 0
+  //       ? Math.max(...this.tableData.map((row) => row.id || 0)) + 1
+  //       : 1; // Ensure a unique ID is generated
+  //     const NEW_ROW: FilaData2 = { ...FORM_DATA, id: NEW_ID }; // Explicitly define the type
+  //     this.tableData.push({ ...FORM_DATA, id: NEW_ID }); // Use push to add the new row to the array
+  //     console.log('New Row Added:', NEW_ROW);
+  //   }
+  
+  //   console.log('Table Data After Update:', this.tableData);
+  
+  //   // Refresh the table data
+  //   this.tableData = [...this.tableData];
+  //   this.changeDetectorRef.markForCheck();
+  
+  //   // Reset the form and close the modal
+  //   this.destinatarioForm.reset();
+  //   this.esFormularioVisible = false;
+  //   this.selectedRow = null;
+  
+  //   // Close the modal programmatically
+  //   const MODAL_ELEMENT = document.getElementById('tercerosRelacionadosModal');
+  //   if (MODAL_ELEMENT) {
+  //     const MODAL_INSTANCE = new Modal(MODAL_ELEMENT);
+  //     MODAL_INSTANCE.hide();
+  //     console.log('Modal closed');
+  //   }
+  // }
   enEnviar(): void {
     const FORM_DATA = this.destinatarioForm.value;
    if (!this.destinatarioForm.valid) {
@@ -441,6 +511,8 @@ onLimpiar(): void {
  onSelectedRowsChange(selectedRows: FilaData2[]): void {
      
      this.selectedRows = new Set(selectedRows.map((row) => row.id)); 
+     this.selectedRow = selectedRows.length > 0 ? selectedRows[0] : null;
+
      this.esFormularioVisible = false; 
    
    }
@@ -467,8 +539,8 @@ onLimpiar(): void {
 
       this.destinatarioForm.patchValue({
         datosDelTramiteRealizar: {
-          tipoPersona: this.selectedRow.datosDelTramiteRealizar.tipoPersona,
-          denominacion: this.selectedRow.datosDelTramiteRealizar.denominacion,
+          tipoPersona: this.selectedRow.datosDelTramiteRealizar.tipoPersona || 'moral',
+          denominacion:this.selectedRow.datosDelTramiteRealizar.denominacion,
           domicilio: this.selectedRow.datosDelTramiteRealizar.domicilio,
           pais: PAIS_ID || '', 
           codigopostal: this.selectedRow.datosDelTramiteRealizar.codigopostal,
@@ -478,6 +550,7 @@ onLimpiar(): void {
         },
       });
 
+      this.tipoPersonaSeleccionada = this.selectedRow.datosDelTramiteRealizar.tipoPersona;
       this.esFormularioVisible = true;
     }
   
@@ -499,6 +572,14 @@ onLimpiar(): void {
     this.destinatarioForm.reset();
     this.esFormularioVisible = false;
   }
+}
+onCancelar(): void {
+  const MODAL_ELEMENT = document.getElementById('destinatarioModalLabel');
+  if (MODAL_ELEMENT) {
+    const MODAL_INSTANCE = new Modal(MODAL_ELEMENT);
+    MODAL_INSTANCE.hide(); // Close the modal
+  }
+  this.esFormularioVisible = false; // Hide the form
 }
   /**
    * Método para manejar el clic en una fila de la tabla.

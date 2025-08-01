@@ -2,4 +2,7 @@
     border: 1px solid red !important;
     border-radius: 4px;
   }
- 
+  .custom-modal-size {
+    max-width: 100% !important; /* Allow full width */
+    width: auto !important; /* Let the modal size adjust automatically */
+  }
