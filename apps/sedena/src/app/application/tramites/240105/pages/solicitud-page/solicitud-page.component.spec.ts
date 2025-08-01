@@ -5,9 +5,9 @@ import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
-
 import { Component } from '@angular/core';
 import { SolicitudPageComponent } from './solicitud-page.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 
 describe('SolicitudPageComponent', () => {
@@ -16,7 +16,7 @@ describe('SolicitudPageComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+      imports: [ FormsModule, ReactiveFormsModule,HttpClientTestingModule ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
 
@@ -56,12 +56,24 @@ describe('SolicitudPageComponent', () => {
     expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('should run #obtenerNombreDelTítulo()', async () => {
-    component.obtenerNombreDelTítulo(1);
-    let title = component.obtenerNombreDelTítulo(2);
-    expect(title).toBe('Cargar requisitos');
-    component.obtenerNombreDelTítulo(3);
-    component.obtenerNombreDelTítulo(4);
+  describe('obtenerNombreDelTítulo', () => {
+    it('should return TITULOMENSAJE for valor 1', () => {
+      expect(SolicitudPageComponent.obtenerNombreDelTítulo(1)).toBe(component.tituloMensaje);
+    });
+
+    it('should return "Cargar requisitos" for valor 2', () => {
+      expect(SolicitudPageComponent.obtenerNombreDelTítulo(2)).toBe('Cargar requisitos');
+    });
+
+    it('should return "Firmar" for valor 3', () => {
+      expect(SolicitudPageComponent.obtenerNombreDelTítulo(3)).toBe('Firmar');
+    });
+
+    it('should return TITULOMENSAJE for other values', () => {
+      expect(SolicitudPageComponent.obtenerNombreDelTítulo(0)).toBe(component.tituloMensaje);
+      expect(SolicitudPageComponent.obtenerNombreDelTítulo(99)).toBe(component.tituloMensaje);
+      expect(SolicitudPageComponent.obtenerNombreDelTítulo(-1)).toBe(component.tituloMensaje);
+    });
   });
 
 });

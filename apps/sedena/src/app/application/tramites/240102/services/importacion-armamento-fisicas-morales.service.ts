@@ -1,14 +1,19 @@
+import { Tramite240102State,Tramite240102Store } from '../estados/tramite240102Store.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Tramite240102State } from '../estados/tramite240102Store.store';
-import { Tramite240102Store } from '../estados/tramite240102Store.store';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ImportacionArmamentoFisicasMoralesService {
 
+  /**
+   * Constructor del servicio ImportacionArmamentoFisicasMoralesService.
+   * Inyecta el HttpClient y el store del trámite 240102.
+   * @param httpClient - Cliente HTTP para realizar peticiones.
+   * @param tramite240102Store - Store que gestiona el estado del trámite 240102.
+   */
   constructor(private httpClient: HttpClient,
     public tramite240102Store: Tramite240102Store) { }
 
