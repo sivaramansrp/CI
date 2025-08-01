@@ -17,3 +17,11 @@ export const FECHA = {
      */
     habilitado: true,
   };
+
+  export const ALERTA = {
+    mensaje: `
+    <div class="text-center">
+      <p><strong>¡Precaución!</strong> Debes capturar todos los campos de pago de derechos</p>
+    </div>
+    `,
+  };

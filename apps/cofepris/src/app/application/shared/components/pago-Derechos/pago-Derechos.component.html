@@ -1,5 +1,10 @@
 <div class="container mt-4">
   <ng-titulo titulo="Pago de derechos"></ng-titulo>
+  @if (mostrarNotificacionAlerta) {
+    <div class="mt-5">
+      <ng-alert [CONTENIDO]="notificacionAlerta" [CUSTOMECLASS]="infoAlert"></ng-alert>
+    </div>
+  }
   <form [formGroup]="derechosForm">
     <div class="row g-3">
       <!-- Clave de referencia -->

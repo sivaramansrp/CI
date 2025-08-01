@@ -1,8 +1,9 @@
+import { AlertComponent, Catalogo, InputFecha, InputFechaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { AvisocalidadStore, SolicitudState } from '../../estados/stores/aviso-calidad.store';
-import { Catalogo, InputFecha, InputFechaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { map, takeUntil } from 'rxjs';
+import { ALERTA } from '../../constantes/pago-de-derechos.enum';
 import { AvisoImportacionService } from '../../services/parmiso-importacion.service';
 import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
@@ -23,11 +24,21 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'app-pago-derechos',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, CatalogoSelectComponent, TituloComponent, InputFechaComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, CatalogoSelectComponent, TituloComponent, InputFechaComponent, AlertComponent],
   templateUrl: './pago-Derechos.component.html',
   styleUrl: './pago-Derechos.component.scss',
 })
 export class PagoDerechosComponent implements OnDestroy, OnInit {
+
+  @Input() mostrarNotificacionAlerta: boolean = false;
+
+  public notificacionAlerta: string = ALERTA.mensaje;
+
+  /**
+   * Representa el tipo de alerta que se mostrará.
+   * El valor es típicamente una cadena que indica el estilo de alerta, como 'alert-warning'.
+   */
+  public infoAlert = 'alert-warning';
   /**
    * property {FormGroup} derechosForm - Formulario reactivo para capturar los datos del pago de derechos.
    */

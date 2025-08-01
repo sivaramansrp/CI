@@ -1,5 +1,5 @@
+import { AVISO, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '@ng-mf/data-access-user';
 import { PANTA_PASOS } from '@ng-mf/data-access-user';
 
@@ -55,6 +55,15 @@ export class PaginasComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
+  /**
+  * compo doc
+  * Mensaje relacionado con el aviso de privacidad simplificado.
+  * 
+  * @type {string}
+  * @memberof PantallasComponent
+  */
+   public avisoPrivacidadAlert: string = AVISO.Aviso;
  
   /**
    * @method getValorIndice
