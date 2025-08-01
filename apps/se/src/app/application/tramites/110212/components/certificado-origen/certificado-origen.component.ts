@@ -257,6 +257,21 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
   modalInstances: Modal | null = null;
 
   /**
+   * ID de la última fila seleccionada para detectar doble clic.
+   */
+  ultimaFilaSeleccionadaId: number | null = null;
+
+  /**
+   * Timestamp del último clic para detectar doble clic.
+   */
+  ultimoClickTimestamp: number = 0;
+
+  /**
+   * Tiempo máximo entre clics para considerar doble clic (en milisegundos).
+   */
+  tiempoMaximoDobleClick: number = 400;
+
+  /**
    * Constructor del componente CertificadoOrigenComponent.
    *
    * Este constructor inicializa las dependencias necesarias para el funcionamiento del componente.
@@ -690,29 +705,58 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * Este método asigna la fila seleccionada a `disponiblesSeleccionadasFila`, 
    * popula el formulario de mercancías con los datos de la fila seleccionada
    * y muestra el modal de búsqueda si está disponible.
+   * Ahora requiere doble clic para ejecutar la acción.
    *
    * @param {DisponiblesTabla} evento - La fila seleccionada en la tabla de mercancías disponibles.
    */
   disponiblesSeleccionDeFilas(evento: DisponiblesTabla): void {
-    if (!this.soloLectura) {      
-      this.disponiblesSeleccionadasFila = evento;
-      if (this.modalBuscar) {
-        if (!this.modalInstances) {
-          this.modalInstances = new Modal(this.modalBuscar.nativeElement);
-        }
-        this.formularioMercancia.reset()
-        this.formularioMercancia.patchValue({
-          id: this.disponiblesSeleccionadasFila.id,
-          fraccionMercanciaArancelaria: this.disponiblesSeleccionadasFila.fraccionArancelaria,
-          nombreComercialDelaMercancia: this.disponiblesSeleccionadasFila.nombreComercial,
-          nombreTecnico: this.disponiblesSeleccionadasFila.nombreTecnico,
-          nombreEnIngles: 'abc',
-          criterioParaConferir: 'abc',
-          fechaVencimiento: this.disponiblesSeleccionadasFila.fechaVencimiento,
-          
-        });
-        this.modalInstances?.show();
+    if (!this.soloLectura) {
+      const AHORA = Date.now();
+      const EVENTO_ID = evento.id ?? 0;
+      
+      // Verificar si es el mismo elemento y si el tiempo entre clics es válido para doble clic
+      const ES_MISMA_FILA = this.ultimaFilaSeleccionadaId === EVENTO_ID;
+      const TIEMPO_TRANSCURRIDO = AHORA - this.ultimoClickTimestamp;
+      const ES_DOBLE_CLICK = ES_MISMA_FILA && TIEMPO_TRANSCURRIDO <= this.tiempoMaximoDobleClick && TIEMPO_TRANSCURRIDO > 50;
+
+      if (ES_DOBLE_CLICK) {
+        // Ejecutar acción de doble clic
+        this.abrirModalMercancia(evento);
+        
+        // Resetear para evitar múltiples ejecuciones
+        this.ultimaFilaSeleccionadaId = null;
+        this.ultimoClickTimestamp = 0;
+      } else {
+        // Primer clic: solo guardar la información
+        this.ultimaFilaSeleccionadaId = EVENTO_ID;
+        this.ultimoClickTimestamp = AHORA;
+        this.disponiblesSeleccionadasFila = evento;
       }
+    }
+  }
+
+  /**
+   * Abre el modal de mercancía con los datos seleccionados.
+   * 
+   * @param {DisponiblesTabla} evento - La fila seleccionada en la tabla de mercancías disponibles.
+   */
+  private abrirModalMercancia(evento: DisponiblesTabla): void {
+    this.disponiblesSeleccionadasFila = evento;
+    if (this.modalBuscar) {
+      if (!this.modalInstances) {
+        this.modalInstances = new Modal(this.modalBuscar.nativeElement);
+      }
+      this.formularioMercancia.reset();
+      this.formularioMercancia.patchValue({
+        id: this.disponiblesSeleccionadasFila.id,
+        fraccionMercanciaArancelaria: this.disponiblesSeleccionadasFila.fraccionArancelaria,
+        nombreComercialDelaMercancia: this.disponiblesSeleccionadasFila.nombreComercial,
+        nombreTecnico: this.disponiblesSeleccionadasFila.nombreTecnico,
+        nombreEnIngles: 'abc',
+        criterioParaConferir: 'abc',
+        fechaVencimiento: this.disponiblesSeleccionadasFila.fechaVencimiento,
+      });
+      this.modalInstances?.show();
     }
   }
   /**
