@@ -79,6 +79,13 @@ export class TareasTramiteComponent implements OnInit, OnDestroy, OnChanges {
    ngOnChanges(changes: SimpleChanges): void {
     if (changes['tareasSolicitud'] && changes['tareasSolicitud'].currentValue?.length > 0) {
       this.getTareas();
+    }else{
+      this.tareasTramiteService
+      .getTareasTramite()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.datosTablaTareasTramite = data;
+      });
     }
   }
 

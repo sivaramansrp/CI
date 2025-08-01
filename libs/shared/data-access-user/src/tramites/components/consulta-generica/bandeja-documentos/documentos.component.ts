@@ -1,6 +1,6 @@
 import { BodyTablaDocumentos, HeaderTablaDocumentos } from '../../../../core/models/shared/consulta-generica.model';
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 import { CONSULTA_DOCUMENTOS } from '../../../../core/enums/consulta-generica.enum';
 import { CommonModule } from '@angular/common';
@@ -69,6 +69,13 @@ export class DocumentosComponent implements OnChanges , OnDestroy {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['documentos'] && changes['documentos'].currentValue?.length > 0) {
       this.getDocumentos();
+    }else{
+      this.documentosService
+      .getDocumentos()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.datosTablaDocumentos = data;
+      });
     }
   }
 

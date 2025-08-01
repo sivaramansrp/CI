@@ -15,7 +15,7 @@ import {
   OnDestroy,
   SimpleChanges,
 } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 import { AcusesResolucionResponse } from '../../../../core/models/130118/consulta-acuses-response.model';
 import { AcusesService } from '../../../../core/services/consultagenerica/acuses-service';
@@ -122,6 +122,19 @@ export class AcusesResolucionesComponent
     if (changes['acusesResolucion'] && changes['acusesResolucion'].currentValue) {
       this.getAcuses();
       this.getResolucion();
+    } else {
+      this.acusesService
+        .getAcuses()
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe((data) => {
+          this.datosTablaAcuse = data;
+        });
+      this.resolucionesService
+        .getResoluciones()
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe((data) => {
+          this.datosTablaResolucion = data;
+        });
     }
   }
   /**
@@ -143,7 +156,7 @@ export class AcusesResolucionesComponent
    */
   getAcuses(): void {
     this.datosTablaAcuse = this.acusesResolucion.acuses.map((ac, index) => ({
-      id: index + 1 ,
+      id: index + 1,
       idDocumento: ac.id_documento_oficial.toString(),
       documento: ac.desc_documento,
       urlPdf: ac.documento_minio ?? '',
