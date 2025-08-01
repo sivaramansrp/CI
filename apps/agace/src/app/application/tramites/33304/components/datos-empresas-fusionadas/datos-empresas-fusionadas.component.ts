@@ -446,7 +446,7 @@ export class DatosEmpresasFusionadasComponent implements OnInit, OnDestroy {
       this.fusionadasEmpresasForm.markAllAsTouched();
       return;
     }
-    this.abrirMultipleSeleccionPopup('', 'Datos guardados correctamente');
+    // this.abrirMultipleSeleccionPopup('', 'Datos guardados correctamente');
     this.esFilaSeleccionada = true;
     this.enlaceInfoDatos();
     this.limpiarFormulario();
