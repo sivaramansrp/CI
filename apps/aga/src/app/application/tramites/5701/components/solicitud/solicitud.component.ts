@@ -46,7 +46,9 @@ import {
   TransporteDespacho,
   ValidaRfcService,
   ValidacionesFormularioService,
+  limpiarYDeshabilitarControl,
 } from '@ng-mf/data-access-user';
+
 import {
   AbstractControl,
   FormArray,
@@ -3626,6 +3628,23 @@ export class SolicitudComponent
       texto: '',
       disabled: true,
     };
+
+    limpiarYDeshabilitarControl('desProgramaFomento','textbox');
+    limpiarYDeshabilitarControl('programa','checkbox');
+
+    limpiarYDeshabilitarControl('desImmex','textbox');
+    limpiarYDeshabilitarControl('checkIMMEX','checkbox');
+
+    limpiarYDeshabilitarControl('desIndustrialAutomotriz','textbox');
+    limpiarYDeshabilitarControl('industriaAutomotriz','checkbox');
+
+    limpiarYDeshabilitarControl('socioComercial','checkbox');
+
+    limpiarYDeshabilitarControl('desSocioComercial','checkbox');
+
+    limpiarYDeshabilitarControl('idSocioComercial','textbox');
+
+    limpiarYDeshabilitarControl('desNumeroRegistro','textbox', true);
 
     // Reset each checkbox component programmatically
     this.checkPrograma(EMPTY_CHECKBOX_DATA);
