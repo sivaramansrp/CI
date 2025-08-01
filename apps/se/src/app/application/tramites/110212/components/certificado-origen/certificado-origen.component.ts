@@ -1,5 +1,5 @@
 import { AbstractControl, FormBuilder, FormGroup,ValidatorFn, Validators } from '@angular/forms';
-import { AlertComponent, ConsultaioQuery, ConsultaioState, REGEX_CORREO_ELECTRONICO, REGEX_PATRON_DECIMAL_15_4, REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
+import { AlertComponent, ConsultaioQuery, ConsultaioState, Notificacion, NotificacionesComponent, REGEX_CORREO_ELECTRONICO, REGEX_PATRON_DECIMAL_15_4, REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 import { COLUMNAS_DSPONIBLES, COLUMNAS_SELECCIONADAS, FECHAFACTURA } from '../../constants/validacion-posteriori.enum';
 import { Catalogo } from '../../models/validacion-posteriori.model';
 import { CatalogoLista } from '../../models/validacion-posteriori.model';
@@ -24,6 +24,7 @@ import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { ToastrService } from 'ngx-toastr';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite110212Query } from '../../../../estados/queries/tramite110212.query';
 import { Tramite110212State } from '../../../../estados/tramites/tramite110212.store';
 import { Tramite110212Store } from '../../../../estados/tramites/tramite110212.store';
@@ -52,6 +53,8 @@ import { takeUntil } from 'rxjs';
     AlertComponent,
     CatalogoSelectComponent,
     InputFechaComponent,
+    NotificacionesComponent,
+    TooltipModule
   ],
   providers: [ToastrService],
   templateUrl: './certificado-origen.component.html',
@@ -241,6 +244,16 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    */
   soloLectura: boolean = false;
 
+  /**
+   * Configuración de notificación para mostrar popups de validación.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
+   * Instancia del modal para gestionar archivos.
+   *
+   * Se utiliza para abrir o cerrar el modal de archivos.
+   */
   modalInstances: Modal | null = null;
 
   /**
@@ -423,19 +436,16 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
      grupoDeDirecciones: this.fb.group({
            pais: [
              this.solicitudState?.grupoDeDirecciones?.pais,
-             [Validators.required],
            ],
            ciudad: [
              this.solicitudState?.grupoDeDirecciones?.ciudad,
-             [Validators.required],
            ],
            calle: [
              this.solicitudState?.grupoDeDirecciones?.calle,
-             [Validators.required],
            ],
            numeroLetra: [
              this.solicitudState?.grupoDeDirecciones?.numeroLetra,
-             [Validators.required],
+            
            ],
            lada: [this.solicitudState?.grupoDeDirecciones?.lada, []],
            telefono: [
@@ -448,7 +458,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
            ],
            correoElectronico: [
              this.solicitudState?.grupoDeDirecciones?.correoElectronico,
-             [Validators.required, Validators.pattern(REGEX_CORREO_ELECTRONICO)],
+             [Validators.pattern(REGEX_CORREO_ELECTRONICO)],
            ],
          }),
     });
@@ -475,7 +485,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
         [],
       ],
       nombreEnIngles: [
-        this.solicitudState?.formularioMercancia?.nombreEnIngles,
+        this.solicitudState?.formularioMercancia?.nombreEnIngles || 'abc',
         [],
       ],
       otrasInstancias: [
@@ -604,12 +614,60 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * Este método obtiene las mercancías disponibles desde el servicio `CertificadosOrigenService` y las asigna a `mercanciaDisponsiblesTablaDatos`.
    */
   cargarMercanciasDisponibles(): void {
+    this.formularioCertificado.markAllAsTouched();
+
+    if (!this.validarCamposRequeridos()) {
+      this.mostrarNotificacionValidacion();
+      return;
+    }
+
     this.validacionPosterioriService
       .obtenerMercanciasDisponibles()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((respuesta) => {
         this.mercanciaDisponsiblesTablaDatos = respuesta;
       });
+  }
+
+  /**
+   * Valida que todos los campos requeridos estén completos.
+   * 
+   * @returns {boolean} true si todos los campos requeridos están completos, false en caso contrario
+   */
+  private validarCamposRequeridos(): boolean {
+    // Validar campos de "Domicilio del tercer operador" si el checkbox está marcado
+    if (this.solicitudState?.tercerOperador) {
+      const GRUPO_OPERADOR = this.formularioCertificado.get('grupoOperador');
+      if (GRUPO_OPERADOR?.get('numeroFiscal')?.invalid) {
+        return false;
+      }
+    }
+    // Validar campos de "Tratado y país o bloque"
+    const GRUPO_TRATADO = this.formularioCertificado.get('grupoTratado');
+    if (GRUPO_TRATADO?.get('tratado')?.invalid) {
+      return false;
+    }
+    if (GRUPO_TRATADO?.get('pais')?.invalid) {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Muestra una notificación con los campos que faltan por completar.
+   */
+  private mostrarNotificacionValidacion(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Los datos marcados con asterisco son obligatorios. Favor de capturarlos.',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
   }
 
   /**
@@ -648,6 +706,8 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
           fraccionMercanciaArancelaria: this.disponiblesSeleccionadasFila.fraccionArancelaria,
           nombreComercialDelaMercancia: this.disponiblesSeleccionadasFila.nombreComercial,
           nombreTecnico: this.disponiblesSeleccionadasFila.nombreTecnico,
+          nombreEnIngles: 'abc',
+          criterioParaConferir: 'abc',
           fechaVencimiento: this.disponiblesSeleccionadasFila.fechaVencimiento,
           
         });
