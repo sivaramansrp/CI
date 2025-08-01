@@ -3041,5 +3041,32 @@
     "diasTranscurridos": "4",
     "departamento": "AGACE",
     "numeroDeProcedimiento": "32614"
+  },
+   {
+    "id": 32611,
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2024-10-01",
+    "fechaActualizacion": "2024-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32611"
+   },
+   {
+    "id": 80316,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "80316"
+  },
+  {
+    "id": 32617,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32617"
   }
 ]

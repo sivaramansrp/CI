@@ -1,4 +1,5 @@
-import { PersonaTerceros } from "@libs/shared/data-access-user/src";
+import { Catalogo } from "@libs/shared/data-access-user/src";
+import { TercerosrelacionadosdestinoTable } from "../../../../shared/models/tercerosrelacionados.model";
 
 /**
  * @fileoverview
@@ -11,6 +12,7 @@ import { PersonaTerceros } from "@libs/shared/data-access-user/src";
 /**
  * Interfaz que define la estructura de los pasos en un componente tipo wizard para el trámite 220203.
  * @interface ListaPasosWizard220203
+ * @memberof importacionDeAcuiculturaModule
  * @property {number} indice - Índice del paso.
  * @property {string} titulo - Título del paso.
  * @property {boolean} activo - Indica si el paso está activo.
@@ -26,6 +28,7 @@ export interface ListaPasosWizard220203 {
 /**
  * Interfaz que define la estructura de las acciones de los botones.
  * @interface AccionBoton
+ * @memberof importacionDeAcuiculturaModule
  * @property {string} accion - Acción del botón (ej: 'siguiente', 'anterior').
  * @property {number} valor - Valor asociado a la acción (ej: índice del paso).
  */
@@ -37,6 +40,7 @@ export interface AccionBoton {
 /**
  * Interfaz que define la estructura de las opciones de un radio button.
  * @interface OpcionDeRadio
+ * @memberof importacionDeAcuiculturaModule
  * @property {string} label - Etiqueta o texto visible para la opción de radio.
  * @property {string} value - Valor asociado a la opción de radio.
  */
@@ -45,22 +49,11 @@ export interface OpcionDeRadio {
     value: string;
 }
 
-/**
- * Interfaz que agrupa los datos de la mercancía para el trámite 220203.
- * @interface DatosMercancia220203
- * @property {RealizarGroup} realizarGroup - Datos de ingreso y verificación.
- * @property {MercanciaGroup} mercanciaGroup - Datos específicos de la mercancía.
- * @property {Detalles} detalles - Detalles adicionales de la mercancía.
- */
-export interface DatosMercancia220203 {
-    realizarGroup: RealizarGroup;
-    mercanciaGroup: MercanciaGroup;
-    detalles: Detalles;
-}
 
 /**
  * Interfaz que define los datos de ingreso y verificación de la mercancía.
  * @interface RealizarGroup
+ * @memberof importacionDeAcuiculturaModule
  * @property {string} aduanaIngreso - Aduana de ingreso.
  * @property {string} oficinaInspeccion - Oficina de inspección.
  * @property {string} puntoInspeccion - Punto de inspección.
@@ -76,27 +69,28 @@ export interface RealizarGroup {
 }
 
 /**
- * Interfaz que define los datos específicos de la mercancía.
+ * Interfaz que define los datos específicos de la mercancía para el trámite de importación de acuicultura.
  * @interface MercanciaGroup
- * @property {string} tipoRequisito
- * @property {string} requisito
- * @property {string} numeroCertificadoInternacional
- * @property {string} numeroOficioCasoEspecial
- * @property {string} fraccionArancelaria
- * @property {string} descripcionFraccionArancelaria
- * @property {string} nico
- * @property {string} descripcionNico
- * @property {string} descripcion
- * @property {string} cantidadUMT
- * @property {string} umt
- * @property {string} cantidadUMC
- * @property {string} umc
- * @property {string} uso
- * @property {string} numeroDeLote
- * @property {string} faseDeDesarrollo
- * @property {string} especie
- * @property {string} paisDeOrigen
- * @property {string} paisDeProcedencia
+ * @memberof importacionDeAcuiculturaModule
+ * @property {string} tipoRequisito - Tipo de requisito aplicable a la mercancía
+ * @property {string} requisito - Descripción específica del requisito
+ * @property {string} numeroCertificadoInternacional - Número del certificado internacional asociado
+ * @property {string} numeroOficioCasoEspecial - Número de oficio para casos especiales
+ * @property {string} fraccionArancelaria - Código de fracción arancelaria de la mercancía
+ * @property {string} descripcionFraccionArancelaria - Descripción detallada de la fracción arancelaria
+ * @property {string} nico - Código NICO (Nomenclatura de Identificación Comercial)
+ * @property {string} descripcionNico - Descripción del código NICO
+ * @property {string} descripcion - Descripción general de la mercancía
+ * @property {string} cantidadUMT - Cantidad en unidad de medida de tarifa
+ * @property {string} umt - Unidad de medida de tarifa
+ * @property {string} cantidadUMC - Cantidad en unidad de medida comercial
+ * @property {string} umc - Unidad de medida comercial
+ * @property {string} uso - Uso destinado de la mercancía
+ * @property {string} numeroDeLote - Número de lote de la mercancía
+ * @property {string} faseDeDesarrollo - Fase de desarrollo del producto acuícola
+ * @property {string} especie - Especie del producto acuícola
+ * @property {string} paisDeOrigen - País de origen de la mercancía
+ * @property {string} paisDeProcedencia - País de procedencia de la mercancía
  */
 export interface MercanciaGroup {
     tipoRequisito: string;
@@ -123,6 +117,7 @@ export interface MercanciaGroup {
 /**
  * Interfaz que define los detalles adicionales de la mercancía.
  * @interface Detalles
+ * @memberof importacionDeAcuiculturaModule
  * @property {string} nombreCientifico - Nombre científico de la mercancía.
  */
 export interface Detalles {
@@ -132,6 +127,7 @@ export interface Detalles {
 /**
  * Interfaz que define los datos del formulario de movilización.
  * @interface FormularioMovilizacion
+ * @memberof importacionDeAcuiculturaModule
  * @property {string} medioDeTransporte - Medio de transporte utilizado.
  * @property {string} identificacionTransporte - Identificación del transporte.
  * @property {string} puntoVerificacion - Punto de verificación.
@@ -145,16 +141,17 @@ export interface FormularioMovilizacion {
 }
 
 /**
- * Interfaz que define los datos del formulario de pago.
+ * Interfaz que define los datos del formulario de pago para el trámite de acuicultura.
  * @interface FormularioPago
- * @property {string} exentoPago
- * @property {string} justificacion
- * @property {string} claveReferencia
- * @property {string} cadenaDependencia
- * @property {string} banco
- * @property {string} llavePago
- * @property {string} fechaPago
- * @property {string} importePago
+ * @memberof importacionDeAcuiculturaModule
+ * @property {string} exentoPago - Indicador de exención de pago (Sí/No)
+ * @property {string} justificacion - Justificación para la exención de pago
+ * @property {string} claveReferencia - Clave de referencia del pago
+ * @property {string} cadenaDependencia - Cadena de dependencia para el pago
+ * @property {string} banco - Entidad bancaria donde se realiza el pago
+ * @property {string} llavePago - Llave única de identificación del pago
+ * @property {string} fechaPago - Fecha en que se efectuó el pago
+ * @property {string} importePago - Monto total del pago realizado
  */
 export interface FormularioPago {
     exentoPago: string;
@@ -170,6 +167,7 @@ export interface FormularioPago {
 /**
  * Interfaz que indica el estado de validez de los datos para cada sección del trámite.
  * @interface EnviarDatos
+ * @memberof importacionDeAcuiculturaModule
  * @property {boolean} pagoDeformaValida - Indica si el pago es válido.
  * @property {boolean} dataParaMovilizacion - Indica si los datos de movilización son válidos.
  * @property {boolean} dataDeLaSolicitud - Indica si los datos de la solicitud son válidos.
@@ -181,18 +179,19 @@ export interface EnviarDatos {
 }
 
 /**
- * Interfaz que define los datos de consulta del trámite.
+ * Interfaz que define los datos de consulta del trámite de importación de acuicultura.
  * @interface Consulta
- * @property {string} procedureId
- * @property {string} parameter
- * @property {string} department
- * @property {string} folioTramite
- * @property {string} tipoDeTramite
- * @property {string} estadoDeTramite
- * @property {boolean} readonly
- * @property {boolean} create
- * @property {boolean} update
- * @property {string} consultaioSolicitante
+ * @memberof importacionDeAcuiculturaModule
+ * @property {string} procedureId - Identificador único del procedimiento
+ * @property {string} parameter - Parámetro de consulta específico
+ * @property {string} department - Departamento o dependencia responsable
+ * @property {string} folioTramite - Número de folio del trámite
+ * @property {string} tipoDeTramite - Tipo específico de trámite
+ * @property {string} estadoDeTramite - Estado actual del trámite
+ * @property {boolean} readonly - Indicador de solo lectura
+ * @property {boolean} create - Permiso de creación
+ * @property {boolean} update - Permiso de actualización
+ * @property {string} consultaioSolicitante - Información del solicitante de la consulta
  */
 export interface Consulta {
     procedureId: string, 
@@ -208,85 +207,257 @@ export interface Consulta {
 }
 
 /**
- * Interfaz principal que agrupa todos los datos del trámite de importación de acuicultura.
+ * Interfaz principal que agrupa todos los datos del trámite de importación de acuicultura 220203.
  * @interface Acuicultura
- * @property {FormularioPago} formularioPago - Datos del formulario de pago.
- * @property {FormularioMovilizacion} formularioMovilizacion - Datos del formulario de movilización.
- * @property {DatosMercancia220203} datosMercancia - Datos de la mercancía.
- * @property {EnviarDatos} formaValida - Estado de validez de cada sección.
- * @property {PersonaTerceros[]} tercerosRelacionados - Lista de terceros relacionados.
+ * @memberof importacionDeAcuiculturaModule
+ * @property {FormularioMovilizacion} formularioMovilizacion - Datos del formulario de movilización de mercancías
+ * @property {RealizarGroup} realizarGroup - Datos de ingreso y verificación de la mercancía
+ * @property {Fila[]} mercanciaGroup - Lista de filas de mercancía del trámite
+ * @property {TercerosrelacionadosdestinoTable[]} tercerosRelacionados - Lista de terceros relacionados al trámite
+ * @property {PagoDeDerechos} pagoDeDerechos - Información de pago de derechos
+ * @property {Fila} selectedmercanciaGroupDatos - Datos de la fila de mercancía seleccionada
+ * @property {DestinatarioForm[]} datosForma - Lista de formularios de destinatarios
+ * @property {TercerosrelacionadosdestinoTable} selectedTerceros - Tercero relacionado actualmente seleccionado
+ * @property {DestinatarioForm} seletedExdora - Destinatario exportador seleccionado
  */
 export interface Acuicultura {
-    formularioPago: FormularioPago;
     formularioMovilizacion: FormularioMovilizacion;
-    datosMercancia: DatosMercancia220203;
-    formaValida: EnviarDatos;
-    tercerosRelacionados: PersonaTerceros[];
+    realizarGroup: RealizarGroup;
+    mercanciaGroup: Fila[];
+  tercerosRelacionados: TercerosrelacionadosdestinoTable[];
+    pagoDeDerechos:PagoDeDerechos;
+    selectedmercanciaGroupDatos:Fila;
+    datosForma: DestinatarioForm[];
+  selectedTerceros: TercerosrelacionadosdestinoTable;
+  seletedExdora: DestinatarioForm;
 }
 
 /**
  * Función para crear el estado inicial del trámite de acuicultura, permitiendo sobreescribir valores por defecto.
  * @function createDatosState
+ * @memberof importacionDeAcuiculturaModule
  * @param {Partial<Acuicultura>} [params={}] - Parámetros opcionales para inicializar el estado.
  * @returns {Acuicultura} Estado inicial de tipo Acuicultura.
  * @description Devuelve un objeto con todas las propiedades inicializadas, útil para el store Akita.
  */
 export function createDatosState(params: Partial<Acuicultura> = {}): Acuicultura {
     return {
-        formularioPago: params.formularioPago || {
-            exentoPago: '',
-            justificacion: '',
-            claveReferencia: '',
-            cadenaDependencia: '',
-            banco: '',
-            llavePago: '',
-            fechaPago: '',
-            importePago: ''
-        },
         formularioMovilizacion: params.formularioMovilizacion || {
             medioDeTransporte: '',
             identificacionTransporte: '',
             puntoVerificacion: '',
             nombreEmpresaTransportista: ''
         },
-        datosMercancia: params?.datosMercancia || {
-            realizarGroup: {
+        realizarGroup: params?.realizarGroup || 
+          {
                 aduanaIngreso: '',
                 oficinaInspeccion: '',
                 puntoInspeccion: '',
                 numeroGuia: '',
                 regimen: ''
-            },
-            mercanciaGroup: {
-                tipoRequisito: '',
-                requisito: '',
-                numeroCertificadoInternacional: '',
-                numeroOficioCasoEspecial: '',
-                fraccionArancelaria: '',
-                descripcionFraccionArancelaria: '',
-                nico: '',
-                descripcionNico: '',
-                descripcion: '',
-                cantidadUMT: '',
-                umt: '',
-                cantidadUMC: '',
-                umc: '',
-                uso: '',
-                numeroDeLote: '',
-                faseDeDesarrollo: '',
-                especie: '',
-                paisDeOrigen: '',
-                paisDeProcedencia: ''
-            },
-            detalles: {
-                nombreCientifico: ''
-            },
+            }
+        ,
+        pagoDeDerechos: params?.pagoDeDerechos || {
+            exentoPago: '',
+            justificacion: '',
+            claveReferencia: '',
+            cadenaDependencia: '',
+            banco: '',
+            llavePago: '',
+            importePago: '',
+            fechaPago: ''
         },
+        mercanciaGroup: params?.mercanciaGroup || [],
+        selectedmercanciaGroupDatos: params?.selectedmercanciaGroupDatos || {} as Fila,
         tercerosRelacionados: params.tercerosRelacionados || [],
-        formaValida: params?.formaValida || {
-            pagoDeformaValida: false,
-            dataParaMovilizacion: false,
-            dataDeLaSolicitud: false
-        },
+        datosForma: params.datosForma || [] as DestinatarioForm[],
+        selectedTerceros: params.selectedTerceros || {} as TercerosrelacionadosdestinoTable,
+        seletedExdora: params.seletedExdora || {} as DestinatarioForm
     };
+}
+/**
+ * Modelo para capturar la información correspondiente al pago de derechos.
+ * @interface PagoDeDerechos
+ * @memberof importacionDeAcuiculturaModule
+ * @property {string} exentoPago - Indica si el pago está exento (Sí/No).
+ * @property {string} justificacion - Justificación del motivo de exención (si aplica).
+ * @property {string} claveReferencia - Clave de referencia para el pago.
+ * @property {string} cadenaDependencia - Cadena generada por la dependencia para pago.
+ * @property {string} banco - Nombre del banco donde se realiza el pago.
+ * @property {string} llavePago - Llave única para realizar el pago.
+ * @property {string} importePago - Monto del pago.
+ * @property {string} fechaPago - Fecha en que se realizó el pago.
+ */
+export interface PagoDeDerechos {
+  /**
+   * Indica si el pago está exento (Sí/No).
+   */
+  exentoPago: string;
+  /**
+   * Justificación del motivo de exención (si aplica).
+   */
+  justificacion: string;
+  /**
+   * Clave de referencia para el pago.
+   */
+  claveReferencia: string;
+  /**
+   * Cadena generada por la dependencia para pago.
+   */
+  cadenaDependencia: string;
+  /**
+   * Nombre del banco donde se realiza el pago.
+   */
+  banco: string;
+  /**
+   * Llave única para realizar el pago.
+   */
+  llavePago: string;
+  /**
+   * Monto del pago.
+   */
+  importePago: string;
+  /**
+   * Fecha en que se realizó el pago.
+   */
+  fechaPago: string;
+}
+/**
+ * Interfaz para los datos de la tabla de solicitudes.
+ * @interface DatoTabla
+ * @memberof importacionDeAcuiculturaModule
+ * @property {string} solicitud - Número de solicitud.
+ * @property {string} fechaCreacion - Fecha de creación de la solicitud.
+ * @property {string} mercancia - Nombre de la mercancía.
+ * @property {number} cantidad - Cantidad de mercancía.
+ * @property {string} proveedor - Nombre del proveedor.
+ */
+export interface DatoTabla {
+  solicitud: string;
+  fechaCreacion: string;
+  mercancia: string;
+  cantidad: number;
+  proveedor: string;
+}
+
+/**
+ * Interfaz para los datos de las filas de mercancía en el trámite de importación de acuicultura.
+ * @interface Fila
+ * @memberof importacionDeAcuiculturaModule
+ * @property {string} noPartida - Número de partida arancelaria.
+ * @property {string} tipoRequisito - Tipo de requisito sanitario aplicable.
+ * @property {string} requisito - Descripción específica del requisito.
+ * @property {string} numeroCertificado - Número de certificado internacional.
+ * @property {string} fraccionArancelaria - Código de fracción arancelaria.
+ * @property {string} descripcionFraccion - Descripción de la fracción arancelaria.
+ * @property {string} nico - Código NICO (Nomenclatura de Identificación Comercial).
+ * @property {string} descripcionNico - Descripción del código NICO.
+ * @property {string} descripcion - Descripción general del producto.
+ * @property {string} medidadetarifa - Medida de tarifa aplicable.
+ * @property {string} cantidadUMT - Cantidad en unidad de medida de tarifa.
+ * @property {string} umc - Unidad de medida comercial.
+ * @property {string} cantidadUMC - Cantidad en unidad de medida comercial.
+ * @property {string} uso - Uso destinado del producto acuícola.
+ * @property {string} especie - Especie del producto acuícola.
+ * @property {string} paisDeOrigen - País de origen del producto.
+ * @property {string} paisDeProcedencia - País de procedencia del producto.
+ * @property {string} numeroDeLote - Número de lote del producto.
+ * @property {string} faseDeDesarrollo - Fase de desarrollo del producto acuícola.
+ * @property {string} certificadoInternacional - Certificado internacional requerido.
+ * @property {string} [numeroCertificadoInternacional] - Número del certificado internacional (opcional).
+ * @property {string} [numeroOficioCasoEspecial] - Número de oficio para casos especiales (opcional).
+ * @property {string} [descripcionFraccionArancelaria] - Descripción detallada de la fracción arancelaria (opcional).
+ * @property {string} [umt] - Unidad de medida de tarifa (opcional).
+ */
+export interface Fila {
+  noPartida: string;
+  tipoRequisito: string;
+  requisito: string;
+  numeroCertificado: string;
+  fraccionArancelaria: string;
+  descripcionFraccion: string;
+  nico: string;
+  descripcionNico:string;
+  descripcion:string;
+  medidadetarifa:string;
+  cantidadUMT:string;
+  umc: string;
+  cantidadUMC:string;
+  uso: string;
+  especie:string;
+  paisDeOrigen: string;
+  paisDeProcedencia: string;
+  numeroDeLote: string;
+  faseDeDesarrollo: string;
+  certificadoInternacional: string;
+  numeroCertificadoInternacional?:string
+  numeroOficioCasoEspecial?:string;
+  descripcionFraccionArancelaria?: string;
+  umt?:string;
+}
+
+/**
+ * Interfaz para los datos de la tabla de solicitudes.
+ * @interface FilaSolicitud
+ * @memberof importacionDeAcuiculturaModule
+ * @property {string} solicitud - Número de solicitud.
+ * @property {string} fechaCreacion - Fecha de creación de la solicitud.
+ * @property {string} mercancia - Nombre de la mercancía.
+ * @property {number} cantidad - Cantidad de mercancía.
+ * @property {string} proveedor - Nombre del proveedor.
+ */
+export interface FilaSolicitud {
+  fechaCreacion: string;
+  mercancia: string;
+  cantidad: number;
+  proveedor: string;
+}
+/**
+ * Interfaz que define la estructura de datos de catálogos utilizados en el trámite de acuicultura.
+ * @interface CatalogoData
+ * @memberof importacionDeAcuiculturaModule
+ * @property {Catalogo[]} tipoRequisitoList - Lista de catálogo de tipos de requisito.
+ * @property {Catalogo[]} arancelariaList - Lista de catálogo de fracciones arancelarias.
+ * @property {Catalogo[]} nicoList - Lista de catálogo de códigos NICO.
+ * @property {Catalogo[]} usoList - Lista de catálogo de usos de mercancía.
+ * @property {Catalogo[]} paisDeOrigenList - Lista de catálogo de países de origen.
+ * @property {Catalogo[]} paisDeProcedenciaList - Lista de catálogo de países de procedencia.
+ * @property {Catalogo[]} umcList - Lista de catálogo de unidades de medida comercial.
+ */
+export interface CatalogoData {
+  tipoRequisitoList: Catalogo[];
+  arancelariaList: Catalogo[];
+  nicoList: Catalogo[];
+  usoList: Catalogo[];
+  paisDeOrigenList: Catalogo[];
+  paisDeProcedenciaList: Catalogo[];
+  umcList: Catalogo[];
+}
+
+/**
+ * Interfaz que define el formulario de datos del destinatario en el trámite de acuicultura.
+ * @interface DestinatarioForm
+ * @memberof importacionDeAcuiculturaModule
+ * @property {'yes' | 'no'} tipoMercancia - Indicador del tipo de mercancía (sí/no).
+ * @property {string} nombre - Nombre del destinatario.
+ * @property {string} primerApellido - Primer apellido del destinatario.
+ * @property {string} segundoApellido - Segundo apellido del destinatario.
+ * @property {string} razonSocial - Razón social del destinatario (persona moral).
+ * @property {string} pais - País del destinatario.
+ * @property {string} domicilio - Domicilio completo del destinatario.
+ * @property {string} lada - Código de área telefónica (LADA).
+ * @property {string} telefono - Número telefónico del destinatario.
+ * @property {string} correo - Dirección de correo electrónico del destinatario.
+ */
+export interface DestinatarioForm {
+  tipoMercancia: 'yes' | 'no'; 
+  nombre: string;
+  primerApellido: string;
+  segundoApellido: string;
+  razonSocial: string;
+  pais: string;
+  domicilio: string;
+  lada: string;
+  telefono: string;
+  correo: string;
 }

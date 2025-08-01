@@ -106,17 +106,17 @@ describe('PagoDeDerechosComponent', () => {
     
     const mockBancoList = [{ id: 1, descripcion: 'Banco 1' }];
 
-    // Ensure the mock is set up before the component is initialized
+    // Asegúrate de que el mock esté configurado antes de inicializar el componente
     (mockPagoDeDerechosService.onBancoList as jest.Mock).mockReturnValue(of(mockBancoList));
   
-    // Recreate the component to trigger ngOnInit
+    // Recrea el componente para disparar ngOnInit
     fixture = TestBed.createComponent(PagoDeDerechosComponent);
     component = fixture.componentInstance;
     component.bancoList = mockBancoList;
     component.ngOnInit();
-    // expect(mockPagoDeDerechosService.onBancoList).toHaveBeenCalled();
-    fixture.detectChanges(); // Trigger change detection
-    expect(component.bancoList).toEqual(mockBancoList); // Verify the component's state
+    
+    fixture.detectChanges(); // Dispara la detección de cambios
+    expect(component.bancoList).toEqual(mockBancoList); // Verifica el estado del componente
   });
 
  

@@ -361,4 +361,15 @@ export class Tramite110210Store extends Store<Tramite110210State> {
       observaciones,
     }));
   }
+
+    /**
+   * Actualiza el estado del store con los valores proporcionados.
+   * Valores parciales para actualizar el estado.
+   */
+  public actualizarEstado(valores: Partial<Tramite110210State>): void {
+    this.update((state) => ({
+      ...state,
+      ...valores,
+    }));
+  }
 }

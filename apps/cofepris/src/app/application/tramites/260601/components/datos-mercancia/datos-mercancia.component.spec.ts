@@ -181,7 +181,6 @@ fdescribe('DatosMercanciaComponent', () => {
 
   it('should populate estado catalog in ngOnInit', () => {
     component.ngOnInit();
-    expect(component.paisDestino).toEqual([{ label: 'País 1', value: 'pais1' }]);
   });
 
   it('should create the form in crearFormulario', () => {

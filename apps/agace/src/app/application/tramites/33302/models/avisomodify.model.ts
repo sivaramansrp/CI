@@ -84,6 +84,27 @@ export interface DatosPrevios {
    * @type {string}
    */
   numeroDe: string;
+  /**
+   * Modalidad de certificación.
+   * @type {string}
+   */
+  foreignClientsSuppliers: boolean,
+  /** Indica si es un proveedor nacional */
+  nationalSuppliers: boolean,
+  /** Indica si hay modificaciones de socios */
+  modificationsMembers: boolean,
+  /** Indica si hay cambios en los documentos legales */
+  changesToLegalDocuments: boolean,
+  /** Indica si es un aviso de fusión o escisión */
+  mergerOrSplitNotice: boolean,
+  /** Indica si hay fracciones adicionales */
+  additionFractions: boolean,
+  presenten: boolean, // Indica si se selecciona 'Presenten'
+  contratados: boolean, // Indica si se selecciona 'Contratados'
+  expirado: boolean, // Indica si se selecciona 'Expirado'
+  derechos: boolean, // Indica si se selecciona 'Derechos'
+  /** Aceptación de la sección 253 */
+  acepto253: boolean,
 }
 
 export interface PagoDeDerechos {

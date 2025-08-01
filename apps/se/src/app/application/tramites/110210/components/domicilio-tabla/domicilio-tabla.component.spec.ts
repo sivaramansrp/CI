@@ -4,12 +4,13 @@ import { CommonModule } from '@angular/common';
 import { DomicilioTablaComponent } from './domicilio-tabla.component';
 
 import { DOMICILIO_TABLA_COLUMNAS, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
-import { DomicilioTablaService } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
+import { DomicilioTablaService } from '../../services/domicilio-tabla/domicilioTabla.service';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('DomicilioTablaComponent', () => {
-  let component: DomicilioTablaComponent<any>;
-  let fixture: ComponentFixture<DomicilioTablaComponent<any>>;
+  let component: DomicilioTablaComponent;
+  let fixture: ComponentFixture<DomicilioTablaComponent>;
   let service: DomicilioTablaService;
 
   beforeEach(async () => {
@@ -18,7 +19,7 @@ describe('DomicilioTablaComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [DomicilioTablaComponent, CommonModule, TablaDinamicaComponent],
+      imports: [DomicilioTablaComponent, CommonModule, TablaDinamicaComponent,HttpClientModule],
       providers: [{ provide: DomicilioTablaService, useValue: SERVICE_MOCK }],
     }).compileComponents();
 

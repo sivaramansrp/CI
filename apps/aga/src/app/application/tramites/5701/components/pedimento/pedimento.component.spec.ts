@@ -179,4 +179,41 @@ describe('PedimentoComponent', () => {
     // expect(component.tiposPedimento.find).toHaveBeenCalled();
   });
 
+  it('should preserve numero when changing tipoPedimento', async () => {
+    // Setup: Create a pedimento with a numero value
+    const mockPedimento = {
+      idPedimento: 1,
+      patente: '3061',
+      pedimento: '3838292',
+      aduana: 20,
+      tipoPedimento: 1,
+      descTipoPedimento: 'Normal',
+      numero: '1020',
+      comprobanteValor: 'Si',
+      pedimentoValidado: false
+    };
+    component.pedimentos = [mockPedimento];
+    
+    // Setup: Mock tiposPedimento to return a valid tipo when searching
+    component.tiposPedimento = [
+      { id: 1, descripcion: 'Normal' },
+      { id: 2, descripcion: 'Copia simple' }
+    ];
+    
+    // Setup: Mock the editar object
+    component.editar = {};
+    
+    // Act: Change tipoPedimento from 'Normal' to 'Copia simple'
+    const mockEvent = {
+      target: { value: 'Copia simple' }
+    };
+    
+    component.actualizarValor(mockEvent as any, 'descTipoPedimento', 0);
+    
+    // Assert: The numero should be preserved (not cleared)
+    expect(component.pedimentos[0].numero).toBe('1020');
+    expect(component.pedimentos[0].descTipoPedimento).toBe('Copia simple');
+    expect(component.pedimentos[0].tipoPedimento).toBe(2);
+  });
+
 });

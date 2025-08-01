@@ -86,7 +86,7 @@ export class DatosCertificacionComponent implements OnInit, OnDestroy {
    */
   inicializarFormulario(): void {
     this.certificionForm = this.fb.group({
-      certificion: [{ value: this.solicitudState?.certificion, disabled: this.esFormularioSoloLectura }],
+      certificion: [{ value: this.solicitudState?.certificion|| 'Si', disabled: this.esFormularioSoloLectura }],
       fechaInicio: [{ value: this.solicitudState?.fechaInicio, disabled: this.esFormularioSoloLectura }],
       fechaVigencia: [{ value: this.solicitudState?.fechaVigencia, disabled: this.esFormularioSoloLectura }]
     });
@@ -103,9 +103,9 @@ export class DatosCertificacionComponent implements OnInit, OnDestroy {
   */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
-      this.certificionForm?.disable();
-    } else {
       this.certificionForm?.enable();
+    } else {
+      this.certificionForm?.disable();
     }
   }
 

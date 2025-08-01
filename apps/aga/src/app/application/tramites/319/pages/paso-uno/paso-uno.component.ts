@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { ConsultaioState, SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject,map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user'
 import { OperacionService } from '../../services/operacion.service';
 import { OperacionesDeComercioExterioComponent } from '../../components/operaciones-de-comercio-exterior/operaciones-de-comercio-exterior.component';
 

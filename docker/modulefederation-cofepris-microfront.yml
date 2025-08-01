@@ -1,13 +1,12 @@
 services:
 #----------------------------------------------------------------
   modulefederation-cofepris-microfront:
-    image: ghcr.io/vucem30/dockerized-modulefederation-cofepris-microfront:1.0.4
+    image: ghcr.io/vucem30/dockerized-modulefederation-cofepris-microfront:1.0.7
     build: 
       context: ./../
       dockerfile: apps/cofepris/Dockerfile.dev
       args:
         - NODE_ENV=production
-        - IMAGE_TAG_ID=${IMAGE_TAG_ID:-1.0.4}
     container_name: modulefederation-cofepris-microfront
     restart: unless-stopped
     expose:

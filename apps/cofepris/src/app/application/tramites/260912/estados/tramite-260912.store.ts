@@ -98,6 +98,11 @@ export interface Tramites260912State {
   
   /** Apellido materno del solicitante */
   apellidoMaterno: string;
+
+  /** Número de programa IMMEX si aplica */
+  immexProgramNumber?: string;
+  /** Año del programa IMMEX si aplica */
+  ano?: string;
 }
 
 /**
@@ -139,6 +144,8 @@ export function createInitialState(): Tramites260912State {
     nombre: '',
     apellidoPaterno: '',
     apellidoMaterno: '',
+    immexProgramNumber: '',
+    ano: '',
   };
 }
 

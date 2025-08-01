@@ -24,7 +24,7 @@
     <div class="row">
       <div class="col-md-8">
         <div class="form-group">
-          <app-catalogo-select [catalogo]="verificacion" [label]="'Punto de verificación federal:'" [required]="true" [isDisabled]="esFormularioSoloLectura"
+          <app-catalogo-select [catalogo]="verificacion" [label]="'Punto de verificación federal'" [tooltipQuestionCircle]="true" [isDisabled]="esFormularioSoloLectura"
             name="verificacion" formControlName="verificacion" (change)="setValoresStore(MedioForm, 'verificacion', 'setVerificacion')">
           </app-catalogo-select>
         </div>
@@ -35,7 +35,7 @@
     <div class="row">
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="empresa">Nombre de la empresa transportista:*</label>
+          <label class="form-label" for="empresa">Nombre de la empresa transportista*:</label>
           <input class="form-control" id="empresa" formControlName="empresa" type="text"
             (change)="setValoresStore(MedioForm, 'empresa', 'setEmpresa')" />
         </div>

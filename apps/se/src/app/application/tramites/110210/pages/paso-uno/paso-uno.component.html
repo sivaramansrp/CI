@@ -7,8 +7,8 @@
         <li [ngClass]="indice === 2 ? 'active' : ''">
           <a (click)="seleccionaTab(2)" (keyup.enter)="seleccionaTab(2)" (keydown.space)="seleccionaTab(2)" tabindex="0" data-toggle="tab" >Duplicado de Certificado de Origen</a>
         </li>
-        <li [ngClass]="indice === 3 ? 'active' : ''">
-          <a (click)="seleccionaTab(3)" (keyup.enter)="seleccionaTab(3)" (keydown.space)="seleccionaTab(3)" tabindex="0" data-toggle="tab" >Certificado de origen</a>
+        <li [ngClass]="indice === 3 ? 'active' : ''" [class.disabled]="!certificadoTabEnabled">
+          <a (click)="certificadoTabEnabled && seleccionaTab(3)" (keyup.enter)="seleccionaTab(3)" (keydown.space)="seleccionaTab(3)" tabindex="0" data-toggle="tab" >Certificado de origen</a>
         </li>
       </ul>
   
@@ -18,10 +18,14 @@
         <solicitante #Solicitante></solicitante>
         }
         @case (2) {
-        <app-duplicado-de-certificado></app-duplicado-de-certificado>
+          @if(esDatosRespuesta){
+        <app-duplicado-de-certificado (rowClicked)="enableCertificadoTab()"></app-duplicado-de-certificado>
+          }
         }
         @case (3) {
+          @if(esDatosRespuesta){
           <app-certificado-de-origen></app-certificado-de-origen>
+          }
           }
         }
       </ng-container>
