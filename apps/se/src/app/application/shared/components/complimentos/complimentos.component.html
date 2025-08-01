@@ -35,24 +35,36 @@
     <ng-titulo titulo="Datos generales" />
     <div class="row col-12">
       <div class="col-md-8 mb-4">
-        <label for="pagina">Página web</label>
+        <label for="pagina">Página web*:</label>
         <input
           type="text"
           id="pagina"
           name="pagina"
           class="form-control"
+          maxlength="120"
           formControlName="paginaWWeb"
         />
+         <div
+          *ngIf="formaComplimentos.get('datosGeneralis.paginaWWeb')?.invalid && formaComplimentos.get('datosGeneralis.paginaWWeb')?.touched"
+          class="text-danger">
+          Este campo es obligatorio.
+        </div>
       </div>
       <div class="col-md-8">
-        <label for="localizacion">localización</label>
+        <label for="localizacion">localización*:</label>
         <input
           type="text"
           id="localizacion"
           name="localizacion"
           class="form-control"
+          maxlength="120"
           formControlName="localizacion"
         />
+        <div
+            *ngIf="formaComplimentos.get('datosGeneralis.localizacion')?.invalid && formaComplimentos.get('datosGeneralis.localizacion')?.touched"
+            class="text-danger">
+            Este campo es obligatorio.
+          </div>
       </div>
     </div>
   </div>
@@ -61,7 +73,7 @@
     <ng-titulo titulo="Obligaciones fiscales" />
     <div class="row">
       <div class="col-md-4">
-        <label for="Opinion">Opinión positiva del SAT</label>
+        <label for="Opinion">Opinión positiva del SAT*:</label>
         <input
           type="text"
           id="Opinion"
@@ -69,14 +81,24 @@
           class="form-control"
           formControlName="opinionPositiva"
         />
+        <div
+          *ngIf="formaComplimentos.get('obligacionesFiscales.opinionPositiva')?.invalid && formaComplimentos.get('datosGeneralis.localizacion')?.touched"
+          class="text-danger">
+          Este campo es obligatorio.
+        </div>
       </div>
       <div class="col-md-4">
-        <label for="expedicion">Fecha de expedición</label>
+        <label for="expedicion">Fecha de expedición*:</label>
         <input
           type="date"
           class="form-control"
           formControlName="fechaExpedicion"
         />
+                <div
+                  *ngIf="formaComplimentos.get('obligacionesFiscales.fechaExpedicion')?.invalid && formaComplimentos.get('datosGeneralis.localizacion')?.touched"
+                  class="text-danger">
+                  Este campo es obligatorio.
+                </div>
       </div>
       <div class="col-12 mt-5">
         <div class="alert alert-info text-start">
@@ -88,7 +110,7 @@
               aria-label="Seleccionar"
               formControlName="aceptarObligacionFiscal"
               class="mr-3"
-            />* Compromiso de vantas anuales por un valor superior a 500.000
+            /> * Compromiso de vantas anuales por un valor superior a 500,000
             dólares de los Estados Unidos de América, o su equivalente en moneda
             nacional, o bien facturar exportaciones, cuanda menos por el 10% de
             su facturación total.
@@ -107,77 +129,92 @@
       <div class="col-12">
         <div class="col-12 mb-4">
           <label for="Nombre"
-            >Nombre del federatario que expide el documento</label
+            >Nombre del federatario que expide el documento*:</label
           >
           <input
             type="text"
             id="Nombre"
             name="Nombre"
             class="form-control"
+            maxlength="120"
             formControlName="nombreDelFederatario"
           />
+          <div *ngIf="formaComplimentos.get('nombreDelFederatario')?.hasError('required') && formaComplimentos.get('nombreDelFederatario')?.touched" class="text-danger">
+            Este campo es obligatorio.
+          </div>
         </div>
         <div class="row">
-          <div class="col-md-4 mb-4 mt-3">
-            <label for="Numero"> Número de Notario</label>
-            <input
-              type="text"
-              id="Numero"
-              name="Numero"
-              class="form-control"
-              formControlName="nombreDeNotaria"
-            />
-          </div>
-          <div class="col-4 mb-4 mt-1">
-            <app-catalogo-select
-              [catalogo]="estados || []"
-              [label]="'Estado'"
-              [required]="true"
-              name="estado"
-              formControlName="estado"
-              [isDisabled]="formularioDeshabilitado"
-            ></app-catalogo-select>
-          </div>
+            <div class="col-md-4 mb-4 mt-3">
+              <label for="Numero"> Número de Notario*:</label>
+              <input
+                type="text"
+                id="Numero"
+                name="Numero"
+                class="form-control"
+                maxlength="10"
+                formControlName="nombreDeNotaria"
+              />
+              <div *ngIf="formaComplimentos.get('nombreDeNotaria')?.hasError('required') && formaComplimentos.get('nombreDeNotaria')?.touched" class="text-danger">
+                Este campo es obligatorio.
+              </div>
+            </div>
+            <div class="col-4 mb-4 mt-1">
+              <app-catalogo-select
+                [catalogo]="estados || []"
+                [label]="'Estado'"
+                [required]="true"
+                name="estado"
+                formControlName="estado"
+                [isDisabled]="formularioDeshabilitado"
+              ></app-catalogo-select>
+              <div *ngIf="formaComplimentos.get('estado')?.hasError('required') && formaComplimentos.get('estado')?.touched" class="text-danger">
+                Este campo es obligatorio.
+              </div>
+            </div>
         </div>
 
         <div class="row mb-4">
-          <div class="col-md-4">
-            <label for="acta"> Número de acta:</label>
-            <input
-              type="text"
-              id="acta"
-              name="acta"
-              class="form-control"
-              formControlName="nombreDeActa"
-            />
-          </div>
+            <div class="col-md-4">
+              <label for="acta"> Número de acta*:</label>
+              <input
+                type="text"
+                id="acta"
+                name="acta"
+                class="form-control"
+                maxlength="10"
+                formControlName="nombreDeActa"
+              />
+              <div *ngIf="formaComplimentos.get('nombreDeActa')?.hasError('required') && formaComplimentos.get('nombreDeActa')?.touched" class="text-danger">
+                Este campo es obligatorio.
+              </div>
+            </div>
 
           <div class="col-md-4">
-            <label for="emision"> fecha de emision del acta:</label>
-            <input
-              type="text"
-              id="emision"
-              name="emision"
-              class="form-control"
-              formControlName="fechaDeActa"
-            />
+            <div class="form-group">
+              <input-fecha [datos]="fechaInicioInput" [isDisabled]="formularioDeshabilitado"
+                (valorCambiado)="onFechaCambiada($event)" [setFecha]="formaComplimentos.get('fechaDeActa')?.value"></input-fecha>
+            </div>
           </div>
         </div>
         <div class="row mb-4">
           <div class="col-md-4">
-            <label for="rfc"> RFC del representante legal</label>
+            <label for="rfc"> RFC del representante legal*:</label>
             <input
               type="text"
               id="rfc"
               name="rfc"
               class="form-control"
               formControlName="rfc"
+              maxlength="13"
             />
+            <div *ngIf="formaComplimentos.get('rfc')?.hasError('required') && formaComplimentos.get('rfc')?.touched" class="text-danger">
+              Este campo es obligatorio.
+            </div>
           </div>
         </div>
         <div class="row mb-4">
-          <div class="col-md-10">
-            <label for="representante"> Nombre del representante legal</label>
+            <div class="col-md-10">
+            <label for="representante"> Nombre del representante legal*:</label>
             <input
               type="text"
               id="representante"
@@ -185,7 +222,10 @@
               class="form-control"
               formControlName="nombreDeRepresentante"
             />
-          </div>
+            <div *ngIf="formaComplimentos.get('nombreDeRepresentante')?.hasError('required') && formaComplimentos.get('nombreDeRepresentante')?.touched" class="text-danger">
+              Este campo es obligatorio.
+            </div>
+            </div>
         </div>
       </div>
     </div>
@@ -280,8 +320,8 @@
         class="row mb-4"
         *ngIf="obtenerControles()"
       >
-        @for (item of camposFormulario; track $index) { @if (item.tipo_input ===
-        'select') {
+        @for (item of camposFormulario; track $index) { 
+        @if (item.tipo_input === 'select') {
         <div [ngClass]="item.class">
           <app-select-paises
             [catalogosPaises]="item?.opciones || []"
@@ -289,9 +329,12 @@
             [required]="item.required"
             [formControlName]="item.campo"
           ></app-select-paises>
+          <div *ngIf=" formaComplimentos.get(item.campo)?.hasError('required') &&  formaComplimentos.get(item.campo)?.touched" class="text-danger">
+            Este campo es obligatorio.
+          </div>
         </div>
 
-        }@else if (item.tipo_input === 'select-paise') {
+        } @else if (item.tipo_input === 'select-paise') {
         <div [ngClass]="item.class">
           <app-select-paises
             [catalogosPaises]="item?.opciones || []"
@@ -299,9 +342,12 @@
             [required]="item.required"
             [formControlName]="item.campo"
           ></app-select-paises>
+          <div *ngIf=" formaComplimentos.get(item.campo)?.hasError('required') &&  formaComplimentos.get(item.campo)?.touched" class="text-danger">
+            Este campo es obligatorio.
+          </div>
         </div>
 
-        }@else if (item.tipo_input === 'select-catalog') {
+        } @else if (item.tipo_input === 'select-catalog') {
         <div [ngClass]="item.class">
           <app-catalogo-select
             [catalogo]="item?.opcionesCatalogo || []"
@@ -309,19 +355,27 @@
             [required]="item.required"
             [formControlName]="item.campo"
           ></app-catalogo-select>
+          <div *ngIf=" formaComplimentos.get(item.campo)?.hasError('required') &&  formaComplimentos.get(item.campo)?.touched" class="text-danger">
+            Este campo es obligatorio.
+          </div>
         </div>
 
         } @else {
         <div [ngClass]="item.class">
-          <label for="{{ item.campo }}"
-            >{{ item.labelNombre }} @if (item.required) {*}:</label
-          >
+          <label for="{{ item.campo }}">
+            {{ item.labelNombre }} 
+            @if (item.required) {*}:
+          </label>
           <input
             class="form-control"
             [type]="item.tipo_input"
             id="{{ item.campo }}"
+            maxlength="{{ item.maxLength }}"
             [formControlName]="item.campo"
           />
+          <div *ngIf=" formaComplimentos.get(item.campo)?.hasError('required') &&  formaComplimentos.get(item.campo)?.touched" class="text-danger">
+            Este campo es obligatorio.
+          </div>
         </div>
 
         } }
@@ -343,8 +397,7 @@
 
     <div class="col-12">
       <label> Socios y accionistas </label>
-      <label class="my-3 col-12">Datos de los Socios y/o accionistas </label>
-
+      <label class="my-3 col-12">Datos de los Socios y/o accionistas: </label>
       <app-tabla-dinamica
         [configuracionTabla]="tablaSociaAccionistas"
         [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
@@ -358,7 +411,7 @@
         <button
           name="eliminar"
           class="btn btn-danger"
-          (click)="eliminarAccionistas()"
+          (click)="abrirEliminarUnoConfirmationModal()"
           [disabled]="formularioDeshabilitado"
         >
           Eliminar
@@ -368,6 +421,7 @@
 
     <div class="col-12">
       <label> Socios y accionistas Extranjeros </label>
+      <label class="my-3 col-12">Datos de los Socios y/o accionistas: </label>
       <app-tabla-dinamica
         [configuracionTabla]="tablaSociaAccionistasExtranjeros"
         [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
@@ -381,7 +435,7 @@
         <button
           name="eliminar"
           class="btn btn-danger"
-          (click)="eliminarAccionistasExtrenjeros()"
+          (click)="abrirEliminarDosConfirmationModal()"
           [disabled]="formularioDeshabilitado"
         >
           Eliminar
@@ -431,3 +485,22 @@
     </div>
   </div>
 </form>
+
+@if (eliminarNotificacion && eliminarNotificacion.cerrar) {
+<section>
+    <lib-notificaciones [notificacionInput]="eliminarNotificacion" (confirmacionModal)="closePlantasModal()">
+    </lib-notificaciones>
+</section>
+}
+@if (eliminarUnoConfirmationNotificacion && eliminarUnoConfirmationNotificacion.cerrar) {
+<section>
+    <lib-notificaciones [notificacionInput]="eliminarUnoConfirmationNotificacion" (confirmacionModal)="eliminarAccionistas()">
+    </lib-notificaciones>
+</section>
+}
+@if (eliminarDosConfirmationNotificacion && eliminarDosConfirmationNotificacion.cerrar) {
+<section>
+    <lib-notificaciones [notificacionInput]="eliminarDosConfirmationNotificacion" (confirmacionModal)="eliminarAccionistasExtrenjeros()">
+    </lib-notificaciones>
+</section>
+}

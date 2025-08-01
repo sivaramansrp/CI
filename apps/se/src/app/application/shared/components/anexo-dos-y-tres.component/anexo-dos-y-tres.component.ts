@@ -1,6 +1,6 @@
+import { AlertComponent, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { Component, OnInit } from '@angular/core';
 import { ANEXO_TRES_ALERTA } from '../../constantes/anexo-dos-y-tres.enum';
-import { AlertComponent } from '@ng-mf/data-access-user';
 import { Anexo1y3Configuartion } from '../../models/nuevo-programa-industrial.model';
 import { AnexoEncabezado } from '../../models/nuevo-programa-industrial.model';
 import { CommonModule } from '@angular/common';
@@ -23,6 +23,7 @@ import { Validators } from '@angular/forms';
     ReactiveFormsModule,
     TablaDinamicaComponent,
     AlertComponent,
+    NotificacionesComponent
   ],
   templateUrl: './anexo-dos-y-tres.component.html',
   styleUrl: './anexo-dos-y-tres.component.scss',
@@ -84,6 +85,20 @@ export class AnexoDosYTresComponent implements OnInit {
     new EventEmitter<AnexoEncabezado[]>(true);
 
   /**
+   * @description
+   * Objeto que representa una nueva notificación.
+   * Se utiliza para mostrar mensajes de alerta o información al usuario.
+   */
+  public nuevaDosNotificacion!: Notificacion;
+
+  /**
+   * @description
+   * Objeto que representa una nueva notificación.
+   * Se utiliza para mostrar mensajes de alerta o información al usuario.
+   */
+  public nuevaTresNotificacion!: Notificacion;
+
+  /**
    * Constructor del componente
    * @param fb FormBuilder para crear formularios
    */
@@ -108,8 +123,8 @@ export class AnexoDosYTresComponent implements OnInit {
    */
   crearFormularioAnexoDos(): void {
     this.anexoDosFormGroup = this.fb.group({
-      fraccionArancelaria: ['', Validators.required],
-      descripcion: ['', Validators.required],
+      fraccionArancelaria: ['', [Validators.required, Validators.maxLength(10)]],
+      descripcion: ['', [Validators.required, Validators.maxLength(1000)]],
     });
   }
 
@@ -118,8 +133,8 @@ export class AnexoDosYTresComponent implements OnInit {
    */
   crearFormularioAnexoTres(): void {
     this.anexoTresFormGroup = this.fb.group({
-      fraccionArancelaria: ['', Validators.required],
-      descripcion: ['', Validators.required],
+      fraccionArancelaria: ['', [Validators.required, Validators.maxLength(10)]],
+      descripcion: ['', [Validators.required, Validators.maxLength(1000)]],
     });
   }
 
@@ -130,7 +145,40 @@ export class AnexoDosYTresComponent implements OnInit {
     this.anexoDosTablaLista = this.anexoDosTablaLista.filter((idx) => {
       return !idx.estatus;
     });
+    this.nuevaDosNotificacion.cerrar = false;
     this.obtenerAnexoDosDevolverLaLlamada.emit(this.anexoDosTablaLista);
+  }
+
+  /**
+   * Abre un modal con una notificación configurada para confirmar una acción de eliminación.
+   * 
+   * Este método inicializa un objeto de notificación con los siguientes parámetros:
+   * - `tipoNotificacion`: Define el tipo de notificación como "alerta".
+   * - `categoria`: Establece la categoría de la notificación como "peligro".
+   * - `modo`: Configura el modo de la notificación como "acción".
+   * - `titulo`: Campo para el título de la notificación (vacío por defecto).
+   * - `mensaje`: Mensaje que se muestra en la notificación, en este caso,
+   *   pregunta si el usuario está seguro de que desea eliminar.
+   * - `cerrar`: Indica si la notificación puede cerrarse manualmente (true).
+   * - `tiempoDeEspera`: Tiempo en milisegundos antes de que la notificación desaparezca automáticamente (2000 ms).
+   * - `txtBtnAceptar`: Texto del botón de aceptación ("Aceptar").
+   * - `txtBtnCancelar`: Texto del botón de cancelación (vacío por defecto).
+   * 
+   * @returns {void} Este método no devuelve ningún valor.
+   */
+  abrirDosModal(): void {
+    this.nuevaDosNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        '¿Estás seguro de que deseas eliminar?',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
   }
 
   /**
@@ -143,9 +191,44 @@ export class AnexoDosYTresComponent implements OnInit {
       encabezadoDescripcion: this.anexoDosFormGroup.get('descripcion')?.value,
       estatus: false,
     };
+    if(OBJECTO_IDX.encabezadoFraccion.trim() === '' || OBJECTO_IDX.encabezadoDescripcion.trim() === '') {
+      return; // No agregar si los campos están vacíos
+    }
     this.anexoDosTablaLista.push(OBJECTO_IDX);
     this.obtenerAnexoDosDevolverLaLlamada.emit(this.anexoDosTablaLista);
     this.anexoDosFormGroup.reset();
+  }
+
+    /**
+   * Abre un modal con una notificación configurada para confirmar una acción de eliminación.
+   * 
+   * Este método inicializa un objeto de notificación con los siguientes parámetros:
+   * - `tipoNotificacion`: Define el tipo de notificación como "alerta".
+   * - `categoria`: Establece la categoría de la notificación como "peligro".
+   * - `modo`: Configura el modo de la notificación como "acción".
+   * - `titulo`: Campo para el título de la notificación (vacío por defecto).
+   * - `mensaje`: Mensaje que se muestra en la notificación, en este caso,
+   *   pregunta si el usuario está seguro de que desea eliminar.
+   * - `cerrar`: Indica si la notificación puede cerrarse manualmente (true).
+   * - `tiempoDeEspera`: Tiempo en milisegundos antes de que la notificación desaparezca automáticamente (2000 ms).
+   * - `txtBtnAceptar`: Texto del botón de aceptación ("Aceptar").
+   * - `txtBtnCancelar`: Texto del botón de cancelación (vacío por defecto).
+   * 
+   * @returns {void} Este método no devuelve ningún valor.
+   */
+  abrirTresModal(): void {
+    this.nuevaTresNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        '¿Estás seguro de que deseas eliminar?',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
   }
 
   /**
@@ -168,6 +251,9 @@ export class AnexoDosYTresComponent implements OnInit {
       encabezadoDescripcion: this.anexoTresFormGroup.get('descripcion')?.value,
       estatus: false,
     };
+    if(OBJECTO_IDX.encabezadoFraccion.trim() === '' || OBJECTO_IDX.encabezadoDescripcion.trim() === '') {
+      return; // No agregar si los campos están vacíos
+    }
     this.anexoTresTablaLista.push(OBJECTO_IDX);
     this.obtenerAnexoTresDevolverLaLlamada.emit(this.anexoTresTablaLista);
     this.anexoTresFormGroup.reset();
@@ -184,7 +270,7 @@ export class AnexoDosYTresComponent implements OnInit {
         (obj) => obj.encabezadoFraccion === idx.encabezadoFraccion
       );
       if (INDICE !== -1) {
-        idx.estatus = true;
+        idx.estatus = false;
       }
       return idx;
     });

@@ -1,4 +1,4 @@
-import { CrosslistComponent } from "@libs/shared/data-access-user/src";
+import { CrosslistComponent } from "@ng-mf/data-access-user";
 
 /**
  * Interfaz que define la estructura de un botón utilizado en el componente Crosslist.
@@ -66,3 +66,18 @@ export const OBTENER_BOTONES_CROSSLIST = (crosslistComponent: CrosslistComponent
     },
   },
 ];
+
+export const CROSLISTA_ENTRADA: string[] = [
+    'ACAPULCO, PUERTO Y AEROPUERTO',
+    'ADUANA DE PANTACO',
+    'AEROPUERTO INT. DE LA CD DE MEXI',
+    'AEROPUERTO INTERNACIONAL FELIF',
+    'AGUA PRIETA',
+    'AGUASCALIENTES, AGS.',
+    'ALTAMIRA',
+    'CANCUN, AEROPUERTO',
+    'CD. CAMARGO, TAMPS.',
+    'CD. DEL CARMEN',
+    'CD. JUAREZ',
+    'CHIHUAHUA, CHIH.'
+  ];

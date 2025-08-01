@@ -1,4 +1,5 @@
 name: Build and Deploy profepa App
+
 on:
   workflow_dispatch:
   push:
@@ -14,8 +15,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      IMAGE_NAME: ghcr.io/${{ vucem30-dev/frontend }}/dockerized-modulefederation-profepa-microfront
-      TAG: ${{ 1.0.1 }}
+      IMAGE_NAME: ghcr.io/vucem30-dev/dockerized-modulefederation-profepa-microfront
+      TAG: 1.0.1
 
     steps:
       - name: Checkout source
@@ -29,12 +30,15 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GHCR_TOKEN }}
+          password: ${{ secrets.GHCR_PAT }}
 
       - name: Build and push Docker image
         run: |
-          docker build -t $IMAGE_NAME:$TAG -f Dockerfile .
+          docker build -t $IMAGE_NAME:$TAG -f apps/profepa/Dockerfile.dev .
           docker push $IMAGE_NAME:$TAG
+      
+      - name: Create .kube directory
+        run: mkdir -p $HOME/.kube
 
       - name: Decode Kubeconfig and Set up kubectl
         run: |
@@ -43,7 +47,5 @@ jobs:
 
       - name: Set image and deploy to Kubernetes
         run: |
-          microk8s kubectl apply -f profepa-microfront-deployment-dev.yaml
-          microk8s kubectl rollout restart deployment modulefederation-profepa-microfront-deployment-dev -n default
-
-          
+          kubectl apply -f profepa-microfront-deployment-dev.yaml
+          kubectl rollout restart deployment modulefederation-profepa-microfront-deployment-dev -n default

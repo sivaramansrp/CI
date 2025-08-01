@@ -1,5 +1,5 @@
 
-import { AlertComponent, ConfiguracionColumna, Fabricante, LASTABLA, Otros, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, ConfiguracionColumna, Fabricante, LASTABLA, Otros260303, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FABRICANTE_TABLA, OTROS_TABLA } from '../../services/certificados-licencias-permisos.enum';
@@ -70,7 +70,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    * Representa una colección de objetos "Otros" utilizada para almacenar datos para el componente.
    * Este arreglo se inicializa como vacío y puede ser llenado con instancias del tipo `Otros`.
    */
-  public otrosTablaDatos: Otros[] = [];
+  public otrosTablaDatos: Otros260303[] = [];
   /**
    * Representa el tipo de selección de casilla de verificación utilizado en la tabla.
    * Esto se asigna desde la enumeración `TablaSeleccion.CHECKBOX`.
@@ -95,7 +95,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   public configuracionFacturadorTabla: ConfiguracionColumna<Fabricante>[] = TercerosRelacionadosComponent.generateConfiguracionTabla(this.configuracionFabricante);
   public configuracionProveedorTabla: ConfiguracionColumna<Fabricante>[] = TercerosRelacionadosComponent.generateConfiguracionTabla(this.configuracionFabricante);
   public configuracionCertificadoAnaliticoTabla: ConfiguracionColumna<Fabricante>[] = TercerosRelacionadosComponent.generateConfiguracionTabla(this.configuracionFabricante);
-  public configuracionOtrosTabla: ConfiguracionColumna<Otros>[] = TercerosRelacionadosComponent.generateConfiguracionTabla(this.configuracionOtros);
+  public configuracionOtrosTabla: ConfiguracionColumna<Otros260303>[] = TercerosRelacionadosComponent.generateConfiguracionTabla(this.configuracionOtros);
 
   /**
    * Notificador para destruir observables activos.
@@ -220,7 +220,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    */
   public getOtrosTablaDatos(): void {
     this.certificadosLicenciasSvc.getOtrosDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
-      const DATA = TercerosRelacionadosComponent.deepCopy<Otros[]>(response);
+      const DATA = TercerosRelacionadosComponent.deepCopy<Otros260303[]>(response);
       this.otrosTablaDatos = DATA;
     });
   }
@@ -253,12 +253,42 @@ private static generateConfiguracionTabla<T>(
    */
   public abrirFabricanteModal(titulo: string): void {
     const INITIAL_STATE: ModalOptions = {
-      class: 'modal-lg',
+      class: 'modal-xl',
       initialState: {
         titulo: titulo
       }
     };
     this.bsModalRef = this.modalService.show(FabricanteModalComponent, INITIAL_STATE);
+
+    this.bsModalRef.content.guardarFabricante.subscribe((nuevoDato: Record<string, unknown>) => {
+        const DATO = {
+          nombre: (nuevoDato as never)['razonSocial'] || (nuevoDato as never)['denominacionSocial'],
+          rfc: (nuevoDato as never)['rfc'],
+          curp: (nuevoDato as never)['curp'],
+          telefono: (nuevoDato as never)['telefono'],
+          correoElectronico: (nuevoDato as never)['correoElectronico'],
+          calle: (nuevoDato as never)['calle'],
+          numeroExterior: (nuevoDato as never)['numeroExterior'],
+          numeroInterior: (nuevoDato as never)['numeroInterior'],
+          pais: (nuevoDato as never)['pais'],
+          colonia: (nuevoDato as never)['colonia'],
+          municipio: (nuevoDato as never)['municipio'],
+          localidad: (nuevoDato as never)['localidad'],
+          entidadFederativa: 'valor ficticio',
+          estado: (nuevoDato as never)['estado'],
+          cp: (nuevoDato as never)['codigoPostal'],
+          tercero: (nuevoDato as never)['terceroNombre']
+        }
+        if (titulo === 'Agregar otros') {
+          this.otrosTablaDatos = [...this.otrosTablaDatos, DATO];
+        } else if (titulo === 'Agregar certificado analítico') {
+          this.certificadoAnaliticoTablaDatos = [...this.certificadoAnaliticoTablaDatos, DATO];
+        } else if (titulo === 'Agregar proveedor/distribuidor') {
+          this.proveedorTablaDatos = [...this.proveedorTablaDatos, DATO]
+        } else {
+          this.facturadorTablaDatos = [...this.facturadorTablaDatos, DATO]
+        }
+      });
   }
 
   /**
