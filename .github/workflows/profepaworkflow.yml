@@ -47,5 +47,5 @@ jobs:
 
       - name: Set image and deploy to Kubernetes
         run: |
-          microk8s kubectl apply -f profepa-microfront-deployment-dev.yaml
-          microk8s kubectl rollout restart deployment modulefederation-profepa-microfront-deployment-dev -n default
+          kubectl apply -f profepa-microfront-deployment-dev.yaml
+          kubectl rollout restart deployment modulefederation-profepa-microfront-deployment-dev -n default
