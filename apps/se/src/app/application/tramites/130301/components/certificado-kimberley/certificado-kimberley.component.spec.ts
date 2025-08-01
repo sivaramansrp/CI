@@ -49,7 +49,7 @@ describe('CertificadoKimberleyComponent', () => {
   });
 
   it('debe inicializar el formulario con los valores por defecto', () => {
-    expect(component.certificadoKimberley.value).toEqual({
+    expect(component.certificadoKimberley.getRawValue()).toEqual({
       certificadosEmitidos: undefined,
       numeroCertificadokimberley: undefined,
       paisEmisorCertificado: 'MX',
@@ -102,7 +102,7 @@ describe('CertificadoKimberleyComponent', () => {
     // Simular la llamada y el patchValue
     (mockService.obtenerCertificadoKimberleyFormDatos as jest.Mock).mockReturnValueOnce(of(mockData));
     component.ngOnInit();
-    expect(component.certificadoKimberley.value).toEqual({
+    expect(component.certificadoKimberley.getRawValue()).toEqual({
       certificadosEmitidos: '123',
       numeroCertificadokimberley: '456',
       paisEmisorCertificado: 'MX',

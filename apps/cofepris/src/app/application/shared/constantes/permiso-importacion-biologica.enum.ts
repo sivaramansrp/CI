@@ -28,7 +28,7 @@ export const FECHA_PAGO= {
  * @property {boolean} habilitado - Indica si el campo está habilitado.
  */
 export const PAGO = {
-  labelNombre:'Fecha de pago',
+  labelNombre:'Fecha de pago:',
   required: false,
   habilitado: true,
 }

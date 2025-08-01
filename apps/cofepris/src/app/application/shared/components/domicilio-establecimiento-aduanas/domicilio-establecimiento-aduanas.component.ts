@@ -1,7 +1,7 @@
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, } from '@angular/core';
 import { AvisocalidadStore, SolicitudState } from '../../estados/stores/aviso-calidad.store';
 import { CROSLISTA_DE_PAISES, INPUT_FECHA_CADUCIDAD_CONFIG, } from '../../constantes/datos-domicilio-legal.enum';
 import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrossListLable, CrosslistComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit, QueryList, ViewChildren, } from '@angular/core';
 import { DATOS_MERCANCIAS, MercanciasInfo, NICO_TABLA, NicoInfo, } from '../../models/datos-domicilio-legal.model';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators, } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -77,10 +77,7 @@ export interface MercanciasTabla {
   templateUrl: './domicilio-establecimiento-aduanas.component.html',
   styleUrls: ['./domicilio-establecimiento-aduanas.component.css'],
 })
-export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestroy {
-
-
-  
+export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Referencia a los componentes de la lista de fechas.
    */
@@ -92,6 +89,10 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
   public solicitudState!: SolicitudState;
 
   /**
+   * Lista de datos de partidas.
+   */
+  public seleccionados: MercanciasInfo[] = [];
+  /**
    * Notificador para destruir observables.
    */
   private destroyNotifier$: Subject<void> = new Subject();
@@ -100,7 +101,7 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
    * Constante para el mensaje de alerta.
    */
   INPUT_FECHA_CADUCIDAD_CONFIG = INPUT_FECHA_CADUCIDAD_CONFIG;
-  
+
   /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
@@ -124,6 +125,14 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     // Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
 
+  /**
+   * Referencia al modal para agregar agentes de mercancías.
+   */
+  @ViewChild('modalAddAgentMercancias', { static: false }) 
+  /**
+   * Referencia al elemento del DOM que representa el modal para agregar agentes de mercancías.
+   */
+  modalAddAgentMercancias!: ElementRef;
   /**
    * Grupo de formularios principal.
    * @property {FormGroup} domicilio
@@ -257,22 +266,22 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
   * Etiqueta de la lista de fechas.
   * */
   public paisDeOrigenLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de origen:',
-    derecha: 'País(es) seleccionado(s)*:',
+    tituluDeLaIzquierda: 'País de origen',
+    derecha: 'País(es) seleccionado(s)*',
   };
 
   /**
     * Etiqueta de la lista de fechas.
     * */
   public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de procedencia:',
-    derecha: 'País(es) seleccionado(s)*:',
+    tituluDeLaIzquierda: 'País de procedencia',
+    derecha: 'País(es) seleccionado(s)*',
   };
 
- /**
-   * Catálogo de fracciones arancelarias y sus descripciones.
-   * @property {Array<{ fraccion: string, descripcion: string }>} fraccionesCatalogo
-   */
+  /**
+    * Catálogo de fracciones arancelarias y sus descripciones.
+    * @property {Array<{ fraccion: string, descripcion: string }>} fraccionesCatalogo
+    */
   fraccionesCatalogo = [
     { fraccion: '0101.21.01', descripcion: 'Caballos de carrera' },
     { fraccion: '0201.30.00', descripcion: 'Carne de bovino congelada' },
@@ -280,17 +289,27 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     { fraccion: '1006.30.99', descripcion: 'Arroz semiblanqueado' }
   ];
   /**
+  * Ciclo de vida `AfterViewInit`.
+  * Inicializa la instancia del modal de Bootstrap.
+  */
+  ngAfterViewInit(): void {
+    if (this.modalAddAgentMercancias) {
+      this.modalInstance = new Modal(this.modalAddAgentMercancias.nativeElement);
+    }
+  }
+
+  /**
    * Etiqueta de la lista de fechas.
    * */
   ngOnInit(): void {
 
-     /**
-    * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
-    *
-    * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
-    * - Llama a `configurarGrupoForm()` para aplicar configuraciones basadas en el estado recibido.
-    * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
-    */
+    /**
+   * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+   *
+   * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+   * - Llama a `configurarGrupoForm()` para aplicar configuraciones basadas en el estado recibido.
+   * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+   */
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -310,7 +329,7 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
         takeUntil(this.destroyNotifier$),
         map((valor) => {
           this.tieneSeleccionadoBtnClicked = (valor as boolean);
-          if(this.tieneSeleccionadoBtnClicked) {
+          if (this.tieneSeleccionadoBtnClicked) {
             this.domicilio.enable();
             this.formAgente.enable();
             this.formMercancias.enable();
@@ -332,7 +351,7 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
    * @memberof DatosDelEstablecimientoRfcComponent
    */
   configurarGrupoForm(): void {
-     this.avisocalidadQuery.selectSolicitud$
+    this.avisocalidadQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -347,12 +366,14 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     this.domicilio = this.fb.group({
       codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required, Validators.maxLength(12)]],
       estado: [this.solicitudState?.estado, Validators.required],
-      muncipio: [this.solicitudState?.muncipio, [Validators.required , Validators.maxLength(120)]],
+      muncipio: [this.solicitudState?.muncipio, [Validators.required, Validators.maxLength(120)]],
       localidad: [this.solicitudState?.localidad],
       colonia: [this.solicitudState?.colonia],
       calle: [this.solicitudState?.calle, [Validators.required, Validators.maxLength(100)]],
       lada: [this.solicitudState?.lada],
-      telefono: [this.solicitudState?.telefono, [Validators.required, Validators.maxLength(30)]]
+      telefono: [this.solicitudState?.telefono, [Validators.required, Validators.maxLength(30)]],
+      avisoCheckbox: [this.solicitudState?.avisoCheckbox],
+      licenciaSanitaria: [this.solicitudState?.licenciaSanitaria, [Validators.required, Validators.maxLength(20)]],
     });
 
     /** 
@@ -365,30 +386,30 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
 
     /** 
      * Inicializa el grupo de formularios para las mercancías con los valores del estado de la solicitud.
-     */ 
+     */
     this.formMercancias = this.fb.group({
-      nombreComercial: [this.solicitudState?.nombreComercial, Validators.required],
-      nombreComun: [this.solicitudState?.nombreComun, Validators.required],
-      nombreCientifico: [this.solicitudState?.nombreCientifico, Validators.required],
-      usoEspecifico: [this.solicitudState?.usoEspecifico, Validators.required],
+      nombreComercial: [this.solicitudState?.nombreComercial, [Validators.required, Validators.maxLength(1000)]],
+      nombreComun: [this.solicitudState?.nombreComun, [Validators.required, Validators.maxLength(256)]],
+      nombreCientifico: [this.solicitudState?.nombreCientifico, [Validators.required, Validators.maxLength(256)]],
+      usoEspecifico: [this.solicitudState?.usoEspecifico, [Validators.required, Validators.maxLength(5000)]],
       estadofisico: [this.solicitudState?.estadoFisico, Validators.required],
-      fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, Validators.required],
-      descripcionFraccion: [{ value: this.solicitudState?.descripcionFraccion, disabled: true }, [Validators.required]],
-      cantidadUMT: [this.solicitudState?.cantidadUMT, Validators.required],
-      UMT: [{ value: this.solicitudState?.UMT, disabled: true }, [Validators.required]],
-      cantidadUMC: [this.solicitudState?.cantidadUMC, Validators.required],
+      fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, [Validators.required, Validators.maxLength(8)]],
+      descripcionFraccion: [{ value: this.solicitudState?.descripcionFraccion, disabled: true }, Validators.required],
+      cantidadUMT: [this.solicitudState?.cantidadUMT, [Validators.required, Validators.maxLength(20)]],
+      UMT: [{ value: this.solicitudState?.UMT, disabled: true }, Validators.required],
+      cantidadUMC: [this.solicitudState?.cantidadUMC, [Validators.required, Validators.maxLength(20)]],
       UMC: [this.solicitudState?.UMC, Validators.required],
-      numerocas: [this.solicitudState?.numeroCas, Validators.required],
-      porcentajeConcentracion: [this.solicitudState?.porcentajeConcentracion, Validators.required],
+      numerocas: [this.solicitudState?.numeroCas, [Validators.required, Validators.maxLength(20)]],
+      porcentajeConcentracion: [this.solicitudState?.porcentajeConcentracion, [Validators.required, Validators.maxLength(100)]],
       clasificacionToxicologica: [this.solicitudState?.clasificacionToxicologica, Validators.required],
       objetoImportacion: [this.solicitudState?.objetoImportacion, Validators.required],
     });
 
-     /*
-     * Si el formulario está en modo solo lectura, deshabilita todos los campos.
-     * En caso contrario, habilita los campos para permitir la edición.
-     * Esto asegura que el formulario refleje correctamente el estado de solo lectura.
-     */
+    /*
+    * Si el formulario está en modo solo lectura, deshabilita todos los campos.
+    * En caso contrario, habilita los campos para permitir la edición.
+    * Esto asegura que el formulario refleje correctamente el estado de solo lectura.
+    */
     if ((this.esFormularioSoloLectura && this.domicilio && this.formAgente && this.formMercancias) || !this.tieneSeleccionadoBtnClicked) {
       this.domicilio.disable();
       this.formAgente.disable();
@@ -399,7 +420,6 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
       this.formAgente.enable();
       this.formMercancias.enable();
     }
-
   }
   /**
    * Botones de acción disponibles para gestionar las listas de fechas.
@@ -495,40 +515,46 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
       });
     }
   }
-
-   /**
-   * @method limpiarScianForm
-   * @description Limpia y reinicia el formulario asociado al agente SCian.
-   * @returns {void}
-   * 
-   * @memberof DomicilioEstablecimientoComponent
+  /**
+   * Abre el modal SCIAN.
    */
+  abrirModalMercancia(): void {
+    this.modalInstance.show();
+  }
+
+  /**
+  * @method limpiarScianForm
+  * @description Limpia y reinicia el formulario asociado al agente SCian.
+  * @returns {void}
+  * 
+  * @memberof DomicilioEstablecimientoComponent
+  */
   limpiarScianForm(): void {
     this.formAgente.reset();
   }
 
-/**
-   * Guarda los datos del formulario del agente SCIAN en la tabla Nico.
-   * 
-   * Si el formulario `formAgente` es válido, crea un nuevo objeto `NicoInfo` con los valores
-   * de los campos `claveScianModal` y `claveDescripcionModal`, lo agrega al arreglo `nicoTablaDatos`,
-   * limpia el formulario y cierra el modal correspondiente.
-   *
-   * @returns {void}
-   * @memberof DomicilioComponent
-   */
+  /**
+     * Guarda los datos del formulario del agente SCIAN en la tabla Nico.
+     * 
+     * Si el formulario `formAgente` es válido, crea un nuevo objeto `NicoInfo` con los valores
+     * de los campos `claveScianModal` y `claveDescripcionModal`, lo agrega al arreglo `nicoTablaDatos`,
+     * limpia el formulario y cierra el modal correspondiente.
+     *
+     * @returns {void}
+     * @memberof DomicilioComponent
+     */
   guardarScian(): void {
     if (this.formAgente.valid) {
       const NUEVO_DATO: NicoInfo = {
         clave_Scian: this.formAgente.get('claveScianModal')?.value,
         descripcion_Scian: this.formAgente.get('claveDescripcionModal')?.value,
       };
-this.nicoTablaDatos.push(NUEVO_DATO);
-  this.formAgente.reset();
-   this.cerrarModalScian();
-}
-  
-this.formMercancias.get('fraccionArancelaria')?.valueChanges.subscribe((valor: string) => {
+      this.nicoTablaDatos.push(NUEVO_DATO);
+      this.formAgente.reset();
+      this.cerrarModalScian();
+    }
+
+    this.formMercancias.get('fraccionArancelaria')?.valueChanges.subscribe((valor: string) => {
       const MATCHED = this.fraccionesCatalogo.find(item =>
         item.fraccion.startsWith(valor)
       );
@@ -536,14 +562,13 @@ this.formMercancias.get('fraccionArancelaria')?.valueChanges.subscribe((valor: s
       this.formMercancias.get('descripcionFraccion')?.setValue(DESCRIPCION);
     });
   }
-
- /**
-   * @method cerrarModalScian
-   * @description Oculta el modal relacionado con el catálogo SCIAN.
-   * @returns {void}
-   *
-   * @memberof DomicilioEstablecimientoComponent
-   */
+  /**
+    * @method cerrarModalScian
+    * @description Oculta el modal relacionado con el catálogo SCIAN.
+    * @returns {void}
+    *
+    * @memberof DomicilioEstablecimientoComponent
+    */
   cerrarModalScian(): void {
     this.modalInstance.hide();
   }
@@ -559,6 +584,81 @@ this.formMercancias.get('fraccionArancelaria')?.valueChanges.subscribe((valor: s
     (this.avisocalidadStore[metodoNombre] as (value: string | number) => void)(VALOR);
   }
 
+  /** * Método que se ejecuta al enviar el formulario de domicilio.
+   * Actualiza el estado del store
+   */
+  onSeleccionChange(event: MercanciasInfo[]): void {
+    this.seleccionados = event;
+  }
+  /**
+   * Método que se ejecuta al enviar el formulario de domicilio.
+   * Actualiza el estado del store con los valores del formulario de domicilio.
+   */
+  eliminarMercancia(): void {
+    this.seleccionados.forEach(row => {
+      const INDEX = this.mercanciasTablaDatos.indexOf(row);
+      if (INDEX > -1) {
+        this.mercanciasTablaDatos.splice(INDEX, 1);
+      }
+    });
+    this.seleccionados = [];
+  }
+  /**
+   * Método que se ejecuta al enviar el formulario de domicilio.
+   * Actualiza el estado del store con los valores del formulario de domicilio.
+   */
+
+  limpiarMercanciaForm(): void {
+    this.formMercancias.reset();
+    this.modalInstance.show();
+  }
+  /**
+   * Método que se ejecuta al enviar el formulario de domicilio.
+   * Agrega un nuevo producto a la tabla de mercancías si el formulario es válido.
+   * Si el formulario no es válido, marca todos los campos como tocados para mostrar errores.
+   */
+
+  agregarProducto(): void {
+    if (this.formMercancias.valid) {
+      const PRODUCTO = {
+        nombreComercial: this.formMercancias.get('nombreComercial')?.value,
+        nombreComun: this.formMercancias.get('nombreComun')?.value,
+        nombreCientifico: this.formMercancias.get('nombreCientifico')?.value,
+        porcentajeConcentracion: this.formMercancias.get('porcentajeConcentracion')?.value,
+        clasificacionToxicologica: '',
+        objetoImportacion: '',
+        fraccionArancelaria: this.formMercancias.get('fraccionArancelaria')?.value,
+        descripcionFraccion: this.formMercancias.get('descripcionFraccion')?.value,
+        unidadMedidaTarifa: '',
+        cantidadUmt: '',
+        cantidadUmc: this.formMercancias.get('cantidadUmc')?.value,
+        paisProduccionIngredienteActivo: '',
+        paisElaboracionProducto: '',
+        paisProcedenciaUltimoPuerto: '',
+        paisOrigen: '',
+        numeroRegistroSanitario: '',
+        numeroCas: this.formMercancias.get('numeroCas')?.value,
+        estadoFisico: '',
+        usoEspecifico: this.formMercancias.get('usoEspecifico')?.value,
+        umc: '',
+      };
+
+      this.mercanciasTablaDatos.push(PRODUCTO);
+
+      this.formMercancias.reset();
+    } else {
+      this.formMercancias.markAllAsTouched();
+    }
+  }
+
+  /**
+   * Método que se ejecuta al cambiar la fracción arancelaria.
+   * Actualiza los valores de descripción de fracción y UMT en el formulario de mercancías.
+   */
+  onFraccionChange(): void {
+    this.formMercancias.get('descripcionFraccion')?.setValue('Fracción válida');
+    this.formMercancias.get('UMT')?.setValue('KG');
+  }
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
    * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.

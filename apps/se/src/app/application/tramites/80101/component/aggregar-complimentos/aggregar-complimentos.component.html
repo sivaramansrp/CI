@@ -10,3 +10,10 @@
   (accionistasExtranjerosEliminado)="accionistasExtranjerosEliminado($event)"
   [formularioDeshabilitado]="formularioDeshabilitado"
 ></app-complimentos>
+
+@if (plantasNotificacion && plantasNotificacion.cerrar) {
+<section>
+    <lib-notificaciones [notificacionInput]="plantasNotificacion" (confirmacionModal)="closePlantasModal()">
+    </lib-notificaciones>
+</section>
+}

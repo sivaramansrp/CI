@@ -2,8 +2,7 @@ import { CROSLISTA_DE_PAISES, ETIQUETA, FECHA_DE_FABRICACION, FECHA_DE_PAGO, OPC
 import { Catalogo, CatalogoSelectComponent, CatalogosSelect, ConfiguracionColumna, CrosslistComponent, InputFecha, InputFechaComponent, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import {
-  MERCANCIAS_DATA,
+import {MERCANCIA_DATA,
   MercanciasInfo,
   NICO_TABLA,
   NicoInfo,
@@ -111,7 +110,7 @@ export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy{
   /**
    * Configuración de columnas para la tabla de mercancías.
    */
-  mercanciasTabla: ConfiguracionColumna<MercanciasInfo>[] = MERCANCIAS_DATA;
+  mercanciasTabla: ConfiguracionColumna<MercanciasInfo>[] = MERCANCIA_DATA;
 
   /**
    * Datos cargados para la tabla de mercancías.

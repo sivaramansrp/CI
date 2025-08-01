@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { SolicitudService } from '../../services/solicitud.service';
 
 @Component({

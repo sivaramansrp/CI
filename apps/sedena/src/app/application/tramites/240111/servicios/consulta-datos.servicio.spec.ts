@@ -4,11 +4,13 @@ import { ConsultaDatosService } from './consulta-datos.servicio';
 import { Tramite240111Store } from '../estados/tramite240111Store.store';
 
 class MockTramite240111Store {
+  update = jest.fn();
   updateDatosDelTramiteFormState = jest.fn();
   updatePagoDerechosFormState = jest.fn();
   updateDestinatarioFinalTablaDatos = jest.fn();
   updateProveedorTablaDatos = jest.fn();
   updateMercanciaTablaDatos = jest.fn();
+  actualizarEstadoFormulario = jest.fn();
 }
 
 describe('ConsultaDatosService', () => {
@@ -44,7 +46,7 @@ describe('ConsultaDatosService', () => {
 
   it('should handle error in getDatosDeLaSolicitudData', (done) => {
     service.getDatosDeLaSolicitudData().subscribe({
-      next: () => {},
+      next: () => { },
       error: (err) => {
         expect(err.status).toBe(500);
         done();
@@ -90,19 +92,40 @@ describe('ConsultaDatosService', () => {
     expect(tramiteStore.updateMercanciaTablaDatos).toHaveBeenCalledWith(datos);
   });
 
-  it('should call all update methods in actualizarEstadoFormulario', () => {
-    const datos: any = {
-      datosDelTramite: { permisoGeneral: '', usoFinal: '', aduanasSeleccionadas: [], paisDestino: '' },
-      pagoDerechos: { claveReferencia: '', cadenaDependencia: '', banco: '', llavePago: '', fechaPago: '', monto: 0, importePago: '' },
-      destinatarioFinalTablaDatos: [{ nombre: '', direccion: '', pais: '' }],
-      proveedorTablaDatos: [{ nombre: '', rfc: '', direccion: '' }],
-      merccancialTablaDatos: [{ descripcion: '', cantidad: 0, unidad: '' }]
+  it('should run #actualizarEstadoFormulario()', () => {
+    const datos = {
+      datosDelTramite: {
+        permisoGeneral: 'ABC',
+        usoFinal: 'XYZ',
+        aduanasSeleccionadas: [],
+        paisDestino: 'MX',
+      },
+      pagoDerechos: {
+        claveReferencia: '',
+        cadenaDependencia: '',
+        banco: '',
+        llavePago: '',
+        fechaPago: '',
+        monto: 0,
+        importePago: '',
+      },
+      destinatarioFinalTablaDatos: [],
+      proveedorTablaDatos: [],
+      merccancialTablaDatos: [],
     };
+
     service.actualizarEstadoFormulario(datos);
-    expect(tramiteStore.updateDatosDelTramiteFormState).toHaveBeenCalledWith(datos.datosDelTramite);
-    expect(tramiteStore.updatePagoDerechosFormState).toHaveBeenCalledWith(datos.pagoDerechos);
-    expect(tramiteStore.updateDestinatarioFinalTablaDatos).toHaveBeenCalledWith(datos.destinatarioFinalTablaDatos);
-    expect(tramiteStore.updateProveedorTablaDatos).toHaveBeenCalledWith(datos.proveedorTablaDatos);
-    expect(tramiteStore.updateMercanciaTablaDatos).toHaveBeenCalledWith(datos.merccancialTablaDatos);
+
+    expect(tramiteStore.update).toHaveBeenCalled();
+
+    const updateFn = tramiteStore.update.mock.calls[0][0];
+
+    const prevState = {};
+    const newState = updateFn(prevState);
+
+    expect(newState).toEqual({
+      ...prevState,
+      ...datos,
+    });
   });
 });
