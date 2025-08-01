@@ -228,6 +228,12 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
       this.esFormularioSoloLectura = true;
       this.inicializarEstadoFormulario();
     }
+    this.sectors = Array.isArray(this.sectoresState.sectorDatos)
+        ? this.sectoresState.sectorDatos as FilaSectors[]
+        : [this.sectoresState.sectorDatos as FilaSectors];
+    this.producir = Array.isArray(this.sectoresState.producirDatos)
+      ? this.sectoresState.producirDatos as FilaProducir[]
+      : [this.sectoresState.producirDatos as FilaProducir];
   }
 
   /**
@@ -242,15 +248,11 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.sectoresYMercancias.disable();
-      this.sectors = Array.isArray(this.sectoresState.sectorDatos)
-        ? this.sectoresState.sectorDatos as FilaSectors[]
-        : [this.sectoresState.sectorDatos as FilaSectors];
-      this.producir = Array.isArray(this.sectoresState.producirDatos)
-        ? this.sectoresState.producirDatos as FilaProducir[]
-        : [this.sectoresState.producirDatos as FilaProducir];
+      this.seccionStore.establecerFormaValida([true]);
     }
     else {
       this.sectoresYMercancias.enable();
+      this.seccionStore.establecerFormaValida([false]);
     } 
   }
   
@@ -271,7 +273,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
       ],
       Fraccion_arancelaria: [
         this.sectoresState.Fraccion_arancelaria
-      ]
+      ],
     })
   }
 
@@ -331,6 +333,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
       (response) => {
         if (response && Array.isArray(response)) {
           this.sectors = response as FilaSectors[];
+          this.AutorizacionProsecStore.setSectorDatos(this.sectors);
         }
       }
     );
@@ -349,6 +352,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
       (response) => {
         if (response && Array.isArray(response)) {
           this.producir = response as FilaProducir[];
+          this.AutorizacionProsecStore.setProducirDatos(this.producir);
         }
       }
     );

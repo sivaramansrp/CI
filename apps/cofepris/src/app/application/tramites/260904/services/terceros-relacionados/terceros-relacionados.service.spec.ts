@@ -27,7 +27,7 @@ describe('TercerosRelacionadosService', () => {
     it('should fetch manufacturer table data successfully', () => {
       const mockData = [{ id: 1, name: 'Fabricante 1' }];
 
-      service.obtenerInformaciónDeTablaDeFabricantes().subscribe((data) => {
+      service.obtenerInformacionDeTablaDeFabricantes().subscribe((data) => {
         expect(data).toEqual(mockData);
       });
 
@@ -37,7 +37,7 @@ describe('TercerosRelacionadosService', () => {
     });
 
     it('should handle errors and return an empty array', () => {
-      service.obtenerInformaciónDeTablaDeFabricantes().subscribe((data) => {
+      service.obtenerInformacionDeTablaDeFabricantes().subscribe((data) => {
         expect(data).toEqual([]);
       });
 
@@ -51,7 +51,7 @@ describe('TercerosRelacionadosService', () => {
     it('should fetch recipient table data successfully', () => {
       const mockData = [{ id: 1, name: 'Destinatario 1' }];
 
-      service.obtenerInformaciónDeTablaDeDestinatraios().subscribe((data) => {
+      service.obtenerInformacionDeTablaDeDestinatraios().subscribe((data) => {
         expect(data).toEqual(mockData);
       });
 
@@ -61,7 +61,7 @@ describe('TercerosRelacionadosService', () => {
     });
 
     it('should handle errors and return an empty array', () => {
-      service.obtenerInformaciónDeTablaDeDestinatraios().subscribe((data) => {
+      service.obtenerInformacionDeTablaDeDestinatraios().subscribe((data) => {
         expect(data).toEqual([]);
       });
 

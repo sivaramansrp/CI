@@ -6,6 +6,8 @@
   [esFormularioSoloLectura]="esFormularioSoloLectura"
   (cancelarEventListener)="cerrar.emit()"
   (openModal)="openModal($event)"
+  [usarBotonesPersonalizados]="usarBotonesPersonalizados"
+  [aduanasDisponiblesLabelTipo]="usarBotonesPersonalizados"
   (eliminarMercanciaFinalEvent)="eliminarMercanciasDatos($event)"
 ></app-datos-del-tramite>
 <app-modal #modal></app-modal>

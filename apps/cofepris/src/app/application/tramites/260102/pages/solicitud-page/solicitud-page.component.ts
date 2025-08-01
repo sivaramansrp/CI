@@ -1,5 +1,5 @@
 import { AccionBoton } from '@ng-mf/data-access-user';
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';

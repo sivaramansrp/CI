@@ -123,7 +123,6 @@ export class ModificacionComponent implements OnInit, OnDestroy, AfterViewInit {
         map((seccionState) => {
           this.consultaDatos = seccionState;
           this.soloLectura = this.consultaDatos.readonly;
-          this.inicializarEstadoFormulario();
         })
       )
       .subscribe()
@@ -168,17 +167,19 @@ export class ModificacionComponent implements OnInit, OnDestroy, AfterViewInit {
     this.obtenerTablaMercancia();
     this.obtenerTablaProductor();
     this.obtenerTablaListaBaja();
-    this.inicializarEstadoFormulario();
     
      this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+          this.donanteDomicilio();
+
         })
       )
       .subscribe();
-    this.donanteDomicilio();
+    this.inicializarEstadoFormulario();
+
   }
 /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.

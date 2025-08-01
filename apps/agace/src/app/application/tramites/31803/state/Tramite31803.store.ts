@@ -15,6 +15,12 @@ export interface Catalogo {
  * Estado inicial para la interfaz del trámite 31803.
  */
 export interface Solicitud31803State {
+  numeroOficio: string;
+  claveReferencia: string;
+  cadenaDependencia: string;
+  importePago: string;
+  fechaInicial: string;
+  fechaFinal: string;
   /** Número de operación asociado a la solicitud. */
   numeroOperacion: string;
   /** Lista de bancos asociados a la solicitud. */
@@ -35,6 +41,12 @@ export interface Solicitud31803State {
  */
 export function createInitialState(): Solicitud31803State {
   return {
+    numeroOficio: '',
+    claveReferencia: '',
+    cadenaDependencia: '',
+    importePago: '',
+    fechaInicial: '',
+    fechaFinal: '',
     numeroOperacion: '',
     banco:'',
     llave: '',
@@ -59,6 +71,48 @@ export class Tramite31803Store extends Store<Solicitud31803State> {
    */
   constructor() {
     super(createInitialState());
+  }
+  /**
+   * Actualiza el número de oficio en el estado.
+   * @param numeroOficio Número de oficio de tipo `string`.
+   */
+  public setNumeroOficio(numeroOficio: string): void {
+    this.update((state) => ({ ...state, numeroOficio }));
+  }
+  /**
+   * Actualiza la clave de referencia en el estado.
+   * @param claveReferencia Clave de referencia de tipo `string`.
+   */
+  public setClaveReferencia(claveReferencia: string): void {
+    this.update((state) => ({ ...state, claveReferencia }));
+  }
+  /**
+   * Actualiza la cadena de dependencia en el estado.
+   * @param cadenaDependencia Cadena de dependencia de tipo `string`.
+   */
+  public setCadenaDependencia(cadenaDependencia: string): void {
+    this.update((state) => ({ ...state, cadenaDependencia }));
+  }
+  /**
+   * Actualiza el importe de pago en el estado.
+   * @param importePago Importe de pago de tipo `string`.
+   */
+  public setImportePago(importePago: string): void {
+    this.update((state) => ({ ...state, importePago }));
+  }
+  /**
+   * Actualiza la fecha inicial en el estado.
+   * @param fechaInicial Fecha inicial de tipo `string`.
+   */
+  public setFechaInicial(fechaInicial: string): void {
+    this.update((state) => ({ ...state, fechaInicial }));
+  }
+  /**
+   * Actualiza la fecha final en el estado.
+   * @param fechaFinal Fecha final de tipo `string`.
+   */
+  public setFechaFinal(fechaFinal: string): void {
+    this.update((state) => ({ ...state, fechaFinal }));
   }
 
   /**
