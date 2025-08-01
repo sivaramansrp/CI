@@ -125,6 +125,9 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     // Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
 
+ /**
+  * Referencia al modal para agregar agentes de mercancías.
+  */
    @ViewChild('modalAddAgentMercancias', { static: false })
    modalAddAgentMercancias!: ElementRef; 
   /**

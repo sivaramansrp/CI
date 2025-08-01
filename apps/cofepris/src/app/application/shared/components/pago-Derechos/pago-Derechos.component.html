@@ -33,16 +33,6 @@
       </div>
       <!-- Fecha de pago -->
       <div class="col-md-4">
-        <!-- <div class="form-group">
-          <input-fecha [datos]="fechaInicioInput" [setFecha]="
-                  derechosForm.get('fechaPago')
-                    ?.value
-                " (valorCambiado)="cambioFechaPago($event)"
-            [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
-              <div *ngIf="fechaFuturaSeleccionada" class="text-danger mt-1">
-            La fecha de pago debe ser menor o igual a la fecha actual.
-          </div>
-        </div> -->
           <div class="input-group">
           <input-fecha [setFecha]="derechosForm.get('fechaDePago')?.value" [datos]="fechaInicioInput"
             (valorCambiado)="cambioFechaDePago($event)"
