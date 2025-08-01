@@ -1,4 +1,23 @@
 /**
+ * Interfaz que define la configuración de la tabla de unidades de arrastre.
+ * Contiene encabezados y datos para la visualización en una tabla.
+ */
+export interface UnidadTablaConfig {
+  /**
+   * Lista de encabezados de la tabla.
+   */
+  encabezadas: {
+    encabezado: string;
+    clave: (item: UnidadTabla) => string;
+    orden: number;
+  }[];
+
+  /**
+   * Lista de datos de unidades de arrastre que se mostrarán en la tabla.
+   */
+  datos: UnidadTabla[];
+}
+/**
  * Interfaz que representa un catálogo importante de selección.
  *
  */
@@ -454,7 +473,7 @@ export interface DatosVehiculo {
 export interface DatosUnidad{
   vinVehiculo: string;
   tipoDeUnidadArrastre: string;
-  idDeVehiculo: string;
+  idDeVehiculoUnidad: string;
   numeroEconomico: string;
   numeroPlaca: string;
   paisEmisor: string;
@@ -497,13 +516,13 @@ export interface VehiculoTablaDatos {
  * @property estado - Estado.
  */
 export interface UnidadTabla {
+  idDeVehiculoUnidad: number;
   vinVehiculo: string;
   tipoDeUnidadArrastre: string;
   numeroEconomico: string;
   numeroPlaca: string;
   paisEmisor: string;
   estado: string;
-  
 }
 
 /**

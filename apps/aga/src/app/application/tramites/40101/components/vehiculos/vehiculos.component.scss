@@ -85,3 +85,6 @@
         padding-top: 0px !important;
     }
 }
+::ng-deep .mensaje-error{
+    display: none!important;
+}
