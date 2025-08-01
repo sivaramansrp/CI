@@ -136,3 +136,11 @@ export const BOTONS = [
     class: 'btn-default'
   },
 ];
+
+/**
+ * @const ALERTA_TEXTO
+ * @description
+ * Mensaje de alerta mostrado cuando no hay comunicación con el Sistema de COFEPRIS.
+ * Indica al usuario que debe capturar su establecimiento manualmente.
+ */
+export const ALERTA_TEXTO = 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar suestablecimiento.';

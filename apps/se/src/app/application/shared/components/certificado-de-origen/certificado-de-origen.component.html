@@ -18,8 +18,7 @@
                             'formCertificado',
                         'si',
                         'setFormCertificadoGenric')"
-                          [isDisabled]="esFormularioSoloLectura"
-                          ></lib-input-check>
+                          [isDisabled]="esFormularioSoloLectura"></lib-input-check>
                         </div>
                     </div>
                 </div>
@@ -58,7 +57,8 @@
                         (change)="setValoresStore('formCertificado','razonSocial','setFormCertificadoGenric')" />
                 </div>
             </div>
-            <div class="my-4">
+            @if(domicilio){
+            <div class="my-4" >
                 <ng-titulo titulo="Domicilio del tercer operador" />
                 <div class="row">
                     <div class="col-md-4 form-group">
@@ -74,6 +74,7 @@
                     </div>
                 </div>
             </div>
+        }
         </div>
 
         <ng-titulo titulo="Tratado y país o bloque" />
@@ -87,6 +88,7 @@
                         'formCertificado',
                       'entidadFederativa',
                       'setFormCertificadoGenric')"
+                      [isDisabled]="esFormularioSoloLectura"
                     ></app-catalogo-select>
             </div>
 
@@ -99,7 +101,7 @@
                     'formCertificado',
                   'bloque',
                   'setFormCertificadoGenric')"
-                    ></app-catalogo-select>
+                   [isDisabled]="esFormularioSoloLectura" ></app-catalogo-select>
             </div>
         </div>
         <div class="row mb-3">
@@ -146,11 +148,11 @@
 
         @if(mercanciasDisponibles){
             <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-                <button class="btn btn-primary" [disabled]="(formCertificado.invalid || esFormularioSoloLectura)" (click)="buscarMercancia()">Buscar mercancías</button>
+                <button class="btn btn-primary"  (click)="buscarMercancia()" [disabled]="esFormularioSoloLectura">Buscar mercancías</button>
             </div>
         } @else {
             <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-                <button class="btn btn-primary" [disabled]="(formCertificado.invalid || esFormularioSoloLectura)" (click)="buscarMercancia()">Mercancías Disponibles</button>
+                <button class="btn btn-primary" [disabled]="formCertificado.invalid || esFormularioSoloLectura" (click)="buscarMercancia()" >Mercancías Disponibles</button>
             </div>
         }
 
@@ -190,7 +192,7 @@
 
                 <div class="row d-flex justify-content-end">
                     <div class="col-12 container text-end">
-                      <button class="btn btn-primary my-5" [disabled]="esFormularioSoloLectura" >Carga por archivo</button>
+                      <button class="btn btn-primary my-5" [disabled]="esFormularioSoloLectura">Carga por archivo</button>
                     </div>
                 </div>
 
@@ -223,8 +225,8 @@
            
               <div class="row d-flex  mt-3 mb-4 justify-content-end">
                   <div class="col-12 container text-end mt-5">
-                    <button class="btn btn-default me-2" (click)="eliminarSeleccionados()">Eliminar</button>
-                    <button class="btn btn-primary"  (click)="abrirModal(tableData[0])">Modificar</button>
+                    <button class="btn btn-default me-2" (click)="eliminarSeleccionados()" [disabled]="esFormularioSoloLectura">Eliminar</button>
+                    <button class="btn btn-primary"  (click)="abrirModal(tableData[0])" [disabled]="esFormularioSoloLectura">Modificar</button>
                   </div>
               </div>
 

@@ -469,6 +469,17 @@ export const REGEX_LLAVE_DE_PAGO_DE_DERECHO =/^[a-zA-Z0-9]+$/;
  */
 export const REGEX_SOLO_NÚMERO =/^[0-9]$/;
 
+/**
+ * Expresión regular que valida si una cadena contiene únicamente ceros.
+ * 
+ * Esta expresión regular asegura que la cadena esté compuesta exclusivamente por el carácter '0'.
+ * 
+ * Ejemplo de uso:
+ * - Válido: "0", "00", "0000"
+ * - Inválido: "1", "01", "10", "abc"
+ */
+export const REGEX_TODOS_CEROS = /^0+$/;
+
 
 /**
  * Expresión regular para validar números enteros con hasta 9 dígitos y opcionalmente dos decimales.
@@ -780,3 +791,15 @@ export const REGEX_CORREO_ELECTRONICO_EXPORTADOR = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-
  * - "abc" (no es un número)
  */
 export const REGEX_7_ENTEROS_3_DECIMALES = /^\d{1,7}(\.\d{1,3})?$/;
+
+/**
+ * Expresión regular para validar números de teléfono opcionales.
+ * Permite hasta 30 caracteres, incluyendo dígitos, espacios, paréntesis, signos más y guiones.
+ */
+export const REGEX_TELEFONO_OPCIONAL = /^[0-9\s()+-]{0,30}$/;
+
+/**
+ * Expresión regular para validar que la cadena no contenga solo números.
+ * Requiere al menos una letra y permite letras, números, espacios y algunos signos de puntuación.
+ */
+export const REGEX_NO_SOLO_NUMEROS = /^(?=.*\D).*$/;

@@ -1,16 +1,12 @@
-import { AlertComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, TEXTOS, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 import { AutoridadService } from '../../services/autoridad.service';
 import { CapturarElTextoLibre } from '../../models/datos-tramite.model';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { OnDestroy } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import { TEXTOS } from '@libs/shared/data-access-user/src';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { takeUntil } from 'rxjs';
+
 
 /**
  * Componente que captura el texto libre

@@ -85,7 +85,8 @@ export class AgregarCuentaComponent implements OnInit,OnDestroy {
       private _registroCuentasBancariasSvc: RegistroCuentasBancariasService,
       private fb: FormBuilder,
       private tramite6001Store: Tramite6001Store,
-      private tramite6001Query: Tramite6001Query) { 
+      private tramite6001Query: Tramite6001Query,
+    ) { 
         //
   }
 
@@ -149,10 +150,10 @@ export class AgregarCuentaComponent implements OnInit,OnDestroy {
   public crearAgregarCuentaForm():void {
     this.agregarCuentaForm = this.fb.group({
       titularDeLaCuenta: [this.agregarCuentaState.titularDeLaCuenta,[Validators.required,Validators.maxLength(90)]],
-      persona: [this.agregarCuentaState.tipoDePersona],
+      persona: [this.agregarCuentaState.persona],
       rfc: [this.agregarCuentaState.rfc,[Validators.required,Validators.pattern(REGEX_RFC)]],
       numeroDeCuenta: [this.agregarCuentaState.numeroDeCuenta,[Validators.required,Validators.maxLength(30)]],
-      pais: [this.agregarCuentaState.paisDondeRadica],
+      pais: [this.agregarCuentaState.pais],
       institucion: [this.agregarCuentaState.institucion],
       estado: [this.agregarCuentaState.estado],
       sucursal: [this.agregarCuentaState.sucursal,[Validators.required,Validators.maxLength(10),Validators.pattern(/[^0-9A-Za-z&_-]/)]],
@@ -243,6 +244,7 @@ export class AgregarCuentaComponent implements OnInit,OnDestroy {
   public guardar(): void {
     this.tieneAgregarCuentaFormEnviado = true;
     if(this.agregarCuentaForm.valid) {
+      this._registroCuentasBancariasSvc.conjuntoTablaDatos(this.agregarCuentaForm.value);
       this._registroCuentasBancariasSvc.cambiarComponente('DatosGenerales');
     }
   }

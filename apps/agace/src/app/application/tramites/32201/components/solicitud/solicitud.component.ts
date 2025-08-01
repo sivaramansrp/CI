@@ -1,28 +1,13 @@
 import * as XLSX from 'xlsx'; // Importa XLSX para leer archivos Excel
-import { AlertComponent, ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
+import { AlertComponent, ConsultaioQuery, ConsultaioState, InputCheckComponent, Notificacion, NotificacionesComponent, TituloComponent, VALID_FILE_REGEX } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Solicitud32201State, Tramite32201Store } from '../../estados/tramite32201.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
-import { InputCheckComponent } from '@libs/shared/data-access-user/src';
-import { InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { Notificacion } from '@libs/shared/data-access-user/src';
-import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { SOLICITUD_32201_ENUM } from '../../constantes/anexo';
-import { Solicitud32201State } from '../../estados/tramite32201.store';
-import { Subject } from 'rxjs';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite32201Query } from '../../estados/tramite32201.query';
-import { Tramite32201Store } from '../../estados/tramite32201.store';
-import { VALID_FILE_REGEX } from '@libs/shared/data-access-user/src';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
 
 /**
  * Componente que representa la funcionalidad de la solicitud del trámite 32201.
@@ -35,7 +20,6 @@ import { takeUntil } from 'rxjs';
     FormsModule,
     ReactiveFormsModule,
     TituloComponent,
-    InputRadioComponent,
     AlertComponent,
     InputCheckComponent,
     NotificacionesComponent,
@@ -129,15 +113,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private tramite32201Query: Tramite32201Query,
     private consultaioQuery: ConsultaioQuery
   ) {
-    // Constructor no vacío para evitar el error de ESLint.
-  }
-
-  /**
-   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * Llama a los métodos para obtener datos de establecimientos, empleados, domicilios e instalaciones.
-   */
-  ngOnInit(): void {
-    this.consultaioQuery.selectConsultaioState$
+   this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -147,6 +123,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Llama a los métodos para obtener datos de establecimientos, empleados, domicilios e instalaciones.
+   */
+  ngOnInit(): void {
     this.tramite32201Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -155,15 +138,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    // Inicializa el formulario reactivo con los valores del estado.
-    this.solicitudForm = this.fb.group({
-      regimen_0: [this.solicitudState?.regimen_0],
-      regimen_1: [this.solicitudState?.regimen_1],
-      regimen_2: [this.solicitudState?.regimen_2],
-      regimen_3: [this.solicitudState?.regimen_3],
-      manifiesto: [this.solicitudState?.manifiesto],
-    });
+    this.donanteDomicilio();
     this.inicializarEstadoFormulario();
   }
 
@@ -178,12 +153,24 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
-      this.solicitudForm?.disable();
+      this.guardarDatosFormulario();
     } else {
-      this.solicitudForm?.enable();
+      this.donanteDomicilio();
     }
   }
 
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.donanteDomicilio();
+    if (this.esFormularioSoloLectura) {
+      this.solicitudForm.disable();
+    } else {
+      this.solicitudForm.enable();
+    }
+  }
   /**
    * Método para cargar un archivo de proveedores.
    * Valida que el archivo sea de formato Excel (.xls o .xlsx) y verifica el número de columnas.
@@ -294,7 +281,20 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       FIELD_VALUE
     );
   }
-
+  /**
+   * Método para inicializar el formulario reactivo con los valores del estado de la solicitud.
+   * Este método se llama al inicializar el componente y establece los valores del formulario
+   * basándose en el estado actual de la solicitud.
+   */
+  donanteDomicilio(): void {
+    this.solicitudForm = this.fb.group({
+      regimen_0: [{value: this.solicitudState?.regimen_0, disabled: this.esFormularioSoloLectura}],
+      regimen_1: [{value: this.solicitudState?.regimen_1, disabled: this.esFormularioSoloLectura}],
+      regimen_2: [{value: this.solicitudState?.regimen_2, disabled: this.esFormularioSoloLectura}],
+      regimen_3: [{value: this.solicitudState?.regimen_3, disabled: this.esFormularioSoloLectura}],
+      manifiesto: [{value: this.solicitudState?.manifiesto, disabled: this.esFormularioSoloLectura}],
+    });
+  }
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Completa el observable `destroyed$` para evitar fugas de memoria.

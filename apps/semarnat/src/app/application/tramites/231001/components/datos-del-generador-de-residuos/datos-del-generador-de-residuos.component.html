@@ -37,16 +37,8 @@
   </div>
 <div class="container">
   <form [formGroup]="datosForm">
-    <div class="row">
-      <div class="col-md-4">
-        <app-catalogo-select [catalogo]='aduanas' formControlName="aduanas" [label]="'Aduana de entrada'"
-          [required]="true" (change)="setValoresStore(datosForm,'aduanas')" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
-      </div>
-    </div>
     <div *ngIf="selectedAduana">
     </div>
-    <div class="row mt-5">
-        <ng-alert [CONTENIDO]="texto"></ng-alert>
-    </div>
+   
   </form>
 </div>

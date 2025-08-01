@@ -1,12 +1,12 @@
 import { Catalogo, CatalogoSelectComponent, FECHA_FINAL_VIGENCIA, FECHA_FINAL_VIGENCIA_DEL_CUPO, FECHA_INICIO_VIGENCIA, FECHA_INICIO_VIGENCIA_DEL_CUPO, InputFecha, InputFechaComponent, Notificacion, NotificacionesComponent, REGEX_ALTO, REGEX_NUMEROS, REGEX_SOLO_NUMEROS, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
+import { ConsultaioQuery, ValidacionesFormularioService  } from '@ng-mf/data-access-user';
 import { ExpedicionCertificadosAsignacion120202State, Tramite120202Store } from '../../../estados/tramites/tramite120202.store';
 import { ExpedirMonto, NumeroOficioAsignacionDetalleRespquesta } from '../../../tramites/120202/models/expedicion-certificados-asignacion.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 import { CONFIGURACION_PARA_ENCABEZADO_DE_EXPEDIR_MONTO_TABLA } from '../../../tramites/120202/constantes/expedicion-certificados-asignacion-constantes.enum';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ExpedicionCertificadosAsignacionService } from '../../../tramites/120202/services/expedicion-certificados-asignacion/expedicion-certificados-asignacion.service';
 import { Tramite120202Query } from '../../../estados/queries/tramite120202.query';
 
@@ -129,6 +129,12 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
   public nuevaNotificacion!: Notificacion;
 
   /**
+   * Indica si la tabla de montos a expedir es inválida.
+   * @type {boolean}
+   */
+  tablaInvalidoError!: boolean;
+
+  /**
    * Subject para destruir notificador.
    */
   private destruirNotificador$: Subject<void> = new Subject();
@@ -140,13 +146,15 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
    * @param tramite120202Query - Query para consultar el estado de la aplicación.
    * @param consultaioQuery - Query para consultar el estado de la consulta.
    * @param expedicionCertificadosAsignacionService - Servicio para gestionar la expedición de certificados de asignación.
+   * @param validacionesService Servicio para validar formularios.
    */
   constructor(
     private fb: FormBuilder,
     private tramite120202Store: Tramite120202Store,
     private tramite120202Query: Tramite120202Query,
     private consultaioQuery: ConsultaioQuery,
-    private expedicionCertificadosAsignacionService: ExpedicionCertificadosAsignacionService
+    private expedicionCertificadosAsignacionService: ExpedicionCertificadosAsignacionService,
+    private validacionesService: ValidacionesFormularioService
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -187,9 +195,6 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
   inicializarEstadoFormulario(): void {
     if (this.formularioDeshabilitado) {
       this.expedicionCertificadosAsignacionForm?.disable();
-    } else if (!this.formularioDeshabilitado) {
-      this.asignacionOficioNumeroForm?.enable();
-      this.distribucionSaldoForm.get('montoExpedir')?.enable();
     }
   }
 
@@ -457,7 +462,7 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
       this.invalidoFolioAsignacion = true;
       this.mostrarDetalle = false;
       this.tramite120202Store.setMostrarDetalle(this.mostrarDetalle);
-      this.asignacionOficioNumeroForm.get('numFolioAsignacionAux')?.markAsTouched();
+      this.asignacionOficioNumeroForm?.get('numFolioAsignacionAux')?.markAsTouched();
       this.mostrarError.emit(false);
       this.mostrarNumFolioAsignacionError.emit({ mostrarError: true, valor: numFolioAsignacionAux });
       return;
@@ -600,6 +605,11 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
     }
   }
 
+  /**
+   * Confirma la eliminación de los registros seleccionados.
+   * @param {boolean} valor - Valor booleano que indica si se confirma la eliminación.
+   * @returns {void}
+   */
   confirmacionModal(valor: boolean): void {
     if (valor) {
       const INDICE = this.cuerpoTabla.findIndex((elemento) =>
@@ -609,6 +619,7 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
       );
       if (INDICE !== -1) {
         this.cuerpoTabla.splice(INDICE, 1);
+        this.cuerpoTabla = [...this.cuerpoTabla];
         this.tramite120202Store.setCuerpoTabla(this.cuerpoTabla);
       }
       this.selectedMonto = [];
@@ -618,13 +629,13 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
   }
 
   /**
-   * Método para validar si un campo del formulario es inválido.
-   * @param campo - El nombre del campo a validar.
-   * @return {boolean} - Retorna true si el campo es inválido y ha sido tocado o modificado, de lo contrario false.
+   * Método para validar el formulario.
+   * @param form Formulario a validar.
+   * @param field Campo a validar.
+   * @returns {boolean} Regresa un booleano si el campo es válido o no.
    */
-  esInvalido(campo: string): boolean {
-    const CONTROL = this.asignacionOficioNumeroForm.get(campo);
-    return Boolean(CONTROL && CONTROL.invalid && (CONTROL.touched || CONTROL.dirty));
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) === true;
   }
 
   /**
@@ -632,10 +643,20 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
    * @returns boolean
    */
   validarFormulario(): boolean {
-    if (this.expedicionCertificadosAsignacionForm.invalid) {
+    if(!this.mostrarDetalle) {
+      if (this.expedicionCertificadosAsignacionForm.invalid) {
       this.expedicionCertificadosAsignacionForm.markAllAsTouched();
+      }
+      return this.expedicionCertificadosAsignacionForm.valid;
+    } else {
+      if(this.cuerpoTabla.length > 0) {
+        this.tablaInvalidoError = false;
+        return true;
+      } else {
+        this.tablaInvalidoError = true;
+        return false;
+      }
     }
-    return this.expedicionCertificadosAsignacionForm.valid;
   }
 
   /**

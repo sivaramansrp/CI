@@ -7,8 +7,9 @@
  */
 
 import { Catalogo, PersonaTerceros } from "@ng-mf/data-access-user";
-import { TercerosrelacionadosdestinoTable } from "../../../../shared/models/tercerosrelacionados.model";
 import { DatosForma } from "./certificado-zoosanitario.model";
+import { DestinatarioForm } from "../../../220203/models/220203/importacion-de-acuicultura.module";
+import { TercerosrelacionadosdestinoTable } from "../../../../shared/models/tercerosrelacionados.model";
 
 /**
  * Modelo que representa la solicitud completa con todos sus datos asociados.
@@ -58,9 +59,9 @@ export interface CapturarSolicitud {
   /**
    * Datos de la forma relacionados con terceros.
    */
-  datosForma: TercerosrelacionadosdestinoTable[];
+  datosForma: DestinatarioForm[];
   seletedTerceros: TercerosrelacionadosdestinoTable;
-  seletedExdora: TercerosrelacionadosdestinoTable;
+  seletedExdora: DestinatarioForm;
 }
 
 /**
@@ -561,6 +562,6 @@ export function createDatosState(params: Partial<CapturarSolicitud> = {}): Captu
     selectedDatos: params.selectedDatos || [],
     datosForma: params.datosForma || [],
     seletedTerceros: params.seletedTerceros || {} as TercerosrelacionadosdestinoTable,
-    seletedExdora: params.seletedExdora || {} as TercerosrelacionadosdestinoTable
+    seletedExdora: params.seletedExdora || {} as DestinatarioForm
   }
 }

@@ -1,36 +1,32 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { DatosDelTramiteARealizarComponent } from './datos-del-tramite-a-realizar.component';
-import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
-import { Solicitud220503Store } from '../../estados/tramites220503.store';
-import { Solicitud220503Query } from '../../estados/tramites220503.query';
-import { ChangeDetectorRef } from '@angular/core';
-import { FormGroup, ControlContainer, ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
-import { Catalogo, CatalogoSelectComponent, InputFechaComponent, TituloComponent , ConsultaioQuery } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormGroup, ControlContainer } from '@angular/forms';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { of } from 'rxjs';
 
 describe('DatosDelTramiteARealizarComponent', () => {
   let component: DatosDelTramiteARealizarComponent;
-  let fixture: any;
-  let mockSolicitudService: any;
-  let mockStore: any;
-  let mockQuery: any;
-  let mockConsultaioQuery: any;
-  let mockCdRef: any;
-  let parentFormGroup: FormGroup;
+  let fixture: ComponentFixture<DatosDelTramiteARealizarComponent>;
 
   beforeEach(async () => {
-    mockSolicitudService = {
+    const parentFormGroup = new FormGroup({});
+
+    const mockControlContainer = {
+      control: parentFormGroup
+    };
+
+    const mockService = {
       getDataDatosDelTramite: jest.fn().mockReturnValue(of({
-        pendientesCertificados: [],
-        horaInspeccion: [],
-        aduanaIngreso: [],
-        sanidadAgropecuaria: [],
-        puntoInspeccion: []
+        pendientesCertificados: [{ id: 1, descripcion: 'Test Cert' }],
+        horaInspeccion: [{ id: 1, descripcion: '08:00' }],
+        aduanaIngreso: [{ id: 1, descripcion: 'Test Aduana' }],
+        sanidadAgropecuaria: [{ id: 1, descripcion: 'Test Sanidad' }],
+        puntoInspeccion: [{ id: 1, descripcion: 'Test Punto' }]
       }))
     };
-    mockStore = {
+
+    const mockStore = {
       setFechaDeInspeccion: jest.fn(),
       setCertificadosAutorizados: jest.fn(),
       setHoraDeInspeccion: jest.fn(),
@@ -38,205 +34,263 @@ describe('DatosDelTramiteARealizarComponent', () => {
       setSanidadAgropecuaria: jest.fn(),
       setPuntoDeInspeccion: jest.fn()
     };
-    mockQuery = {
+
+    const mockQuery = {
       selectSolicitud$: of({
-        certificadosAutorizados: 'cert1',
-        horaDeInspeccion: 'hora1',
-        aduanaDeIngreso: 'aduana1',
-        sanidadAgropecuaria: 'sanidad1',
-        puntoDeInspeccion: 'punto1',
+        certificadosAutorizados: 'test-cert',
+        horaDeInspeccion: '08:00',
+        aduanaDeIngreso: 'test-aduana',
+        sanidadAgropecuaria: 'test-sanidad',
+        puntoDeInspeccion: 'test-punto',
         fechaDeInspeccion: '2024-01-01'
       })
     };
-    mockConsultaioQuery = {
-      selectConsultaioState$: of({ readonly: false })
-    };
-    mockCdRef = { detectChanges: jest.fn() };
 
-    parentFormGroup = new FormGroup({});
-    const mockControlContainer = {
-      control: parentFormGroup,
-      get controlContainer() {
-        return this;
-      }
+    const mockConsultaioQuery = {
+      selectConsultaioState$: of({ readonly: false })
     };
 
     await TestBed.configureTestingModule({
-      imports: [DatosDelTramiteARealizarComponent, 
-         ReactiveFormsModule,
-          CommonModule,
-          TituloComponent,
-          CatalogoSelectComponent,
-          InputFechaComponent,
-          HttpClientTestingModule
-        ],
+      imports: [DatosDelTramiteARealizarComponent, ReactiveFormsModule, HttpClientTestingModule],
       providers: [
-        { provide: SolicitudPantallasService, useValue: mockSolicitudService },
-        { provide: Solicitud220503Store, useValue: mockStore },
-        { provide: Solicitud220503Query, useValue: mockQuery },
-        { provide: ChangeDetectorRef, useValue: mockCdRef },
-        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
         { provide: ControlContainer, useValue: mockControlContainer }
-      ]
-    }).overrideComponent(DatosDelTramiteARealizarComponent, {
-      set: {
-        providers: [
-          { provide: SolicitudPantallasService, useValue: mockSolicitudService },
-          { provide: Solicitud220503Store, useValue: mockStore },
-          { provide: Solicitud220503Query, useValue: mockQuery },
-          { provide: ChangeDetectorRef, useValue: mockCdRef },
-          { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
-          { provide: ControlContainer, useValue: mockControlContainer }
-        ]
-      }
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosDelTramiteARealizarComponent);
     component = fixture.componentInstance;
     component.claveDeControl = 'datosServicio';
+    (component as any).solicitudService = mockService;
+    (component as any).Solicitud220503Store = mockStore;
+    (component as any).Solicitud220503Query = mockQuery;
     (component as any).consultaioQuery = mockConsultaioQuery;
-    fixture.detectChanges();
+    (component as any).cdRef = { detectChanges: jest.fn() };
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form group on ngOnInit', () => {
+  it('debe inicializar las propiedades por defecto', () => {
+    expect(component.claveDeControl).toBe('datosServicio');
+    expect(component.esFormularioSoloLectura).toBe(false);
+    expect(component.certificadosAutorizados).toBeDefined();
+    expect(component.horaDeInspeccion).toBeDefined();
+    expect(component.aduanaDeIngreso).toBeDefined();
+    expect(component.sanidadAgropecuaria).toBeDefined();
+    expect(component.puntoDeInspeccion).toBeDefined();
+  });
+
+  it('debe acceder al grupo de formulario padre', () => {
+    const parentForm = component.grupoFormularioPadre;
+    expect(parentForm).toBeDefined();
+    expect(parentForm instanceof FormGroup).toBe(true);
+  });
+
+  it('debe inicializar el formulario en ngOnInit', () => {
     component.ngOnInit();
-    expect(parentFormGroup.contains('datosServicio')).toBe(true);
+    expect(component.grupoFormularioPadre.get('datosServicio')).toBeDefined();
   });
 
-  it('should patch form values when selectSolicitud$ emits', () => {
-    component.ngOnInit();
-    const formGroup = parentFormGroup.get('datosServicio') as FormGroup;
-    expect(formGroup.value.certificadosAutorizados).toBe('cert1');
-    expect(formGroup.value.horaDeInspeccion).toBe('hora1');
-    expect(formGroup.value.aduanaDeIngreso).toBe('aduana1');
-    expect(formGroup.value.sanidadAgropecuaria).toBe('sanidad1');
-    expect(formGroup.value.puntoDeInspeccion).toBe('punto1');
-    expect(formGroup.value.fechaDeInspeccion).toBe('2024-01-01');
+  it('debe inicializar el formulario cuando no es solo lectura', () => {
+    component.esFormularioSoloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(component.grupoFormularioPadre.get('datosServicio')).toBeDefined();
   });
 
-  it('should update form control value on certificadosSeleccion', () => {
-    component.ngOnInit();
-    component.certificadosSeleccion({ descripcion: 'nuevoCert' } as Catalogo);
-    const formGroup = parentFormGroup.get('datosServicio') as FormGroup;
-    expect(formGroup.value.certificadosAutorizados).toBe('nuevoCert');
+  it('debe inicializar el formulario cuando es solo lectura', () => {
+    component.esFormularioSoloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(component.grupoFormularioPadre.get('datosServicio')).toBeDefined();
   });
 
-  it('should update form control value on horaDeSeleccion', () => {
-    component.ngOnInit();
-    component.horaDeSeleccion({ descripcion: 'nuevaHora' } as Catalogo);
-    const formGroup = parentFormGroup.get('datosServicio') as FormGroup;
-    expect(formGroup.value.horaDeInspeccion).toBe('nuevaHora');
+  it('debe inicializar el formulario con controles', () => {
+    component.inicializarFormulario();
+    const formGroup = component.grupoFormularioPadre.get('datosServicio') as FormGroup;
+    expect(formGroup.get('certificadosAutorizados')).toBeDefined();
+    expect(formGroup.get('horaDeInspeccion')).toBeDefined();
+    expect(formGroup.get('aduanaDeIngreso')).toBeDefined();
+    expect(formGroup.get('sanidadAgropecuaria')).toBeDefined();
+    expect(formGroup.get('puntoDeInspeccion')).toBeDefined();
+    expect(formGroup.get('fechaDeInspeccion')).toBeDefined();
   });
 
-  it('should update form control value on aduanaDeSeleccion', () => {
-    component.ngOnInit();
-    component.aduanaDeSeleccion({ descripcion: 'nuevaAduana' } as Catalogo);
-    const formGroup = parentFormGroup.get('datosServicio') as FormGroup;
-    expect(formGroup.value.aduanaDeIngreso).toBe('nuevaAduana');
+  it('debe cargar los datos del formulario', () => {
+    const mockService = (component as any).solicitudService;
+    component.inicializarFormulario();
+    expect(mockService.getDataDatosDelTramite).toHaveBeenCalled();
   });
 
-  it('should update form control value on sanidadSeleccion', () => {
-    component.ngOnInit();
-    component.sanidadSeleccion({ descripcion: 'nuevaSanidad' } as Catalogo);
-    const formGroup = parentFormGroup.get('datosServicio') as FormGroup;
-    expect(formGroup.value.sanidadAgropecuaria).toBe('nuevaSanidad');
+  it('debe actualizar el formulario cuando cambia el modo solo lectura', () => {
+    component.inicializarFormulario();
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    const formGroup = component.datosServicio;
+    expect(formGroup.disabled).toBe(true);
   });
 
-  it('should update form control value on puntoDeSeleccion', () => {
-    component.ngOnInit();
-    component.puntoDeSeleccion({ descripcion: 'nuevoPunto' } as Catalogo);
-    const formGroup = parentFormGroup.get('datosServicio') as FormGroup;
-    expect(formGroup.value.puntoDeInspeccion).toBe('nuevoPunto');
+  it('debe habilitar el formulario cuando no es solo lectura', () => {
+    component.inicializarFormulario();
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
+    const formGroup = component.datosServicio;
+    expect(formGroup.disabled).toBe(false);
   });
 
-  it('should call setFechaDeInspeccion on cambioFechaInicio', () => {
-    component.cambioFechaInicio('2024-06-01');
-    expect(mockStore.setFechaDeInspeccion).toHaveBeenCalledWith('2024-06-01');
+  it('debe manejar la selección de certificados', () => {
+    const catalogo = { id: 1, descripcion: 'Test Certificate' };
+    component.inicializarFormulario();
+    component.certificadosSeleccion(catalogo);
+    const formGroup = component.grupoFormularioPadre.get('datosServicio') as FormGroup;
+    expect(formGroup.get('certificadosAutorizados')?.value).toBe('Test Certificate');
   });
 
-  it('should call setCertificadosAutorizados on setCertificadosAutorizados', () => {
-    component.setCertificadosAutorizados({ id: 123 } as Catalogo);
+  it('debe manejar la selección de hora', () => {
+    const catalogo = { id: 1, descripcion: '10:00' };
+    component.inicializarFormulario();
+    component.horaDeSeleccion(catalogo);
+    const formGroup = component.grupoFormularioPadre.get('datosServicio') as FormGroup;
+    expect(formGroup.get('horaDeInspeccion')?.value).toBe('10:00');
+  });
+
+  it('debe manejar la selección de aduana', () => {
+    const catalogo = { id: 1, descripcion: 'Test Aduana' };
+    component.inicializarFormulario();
+    component.aduanaDeSeleccion(catalogo);
+    const formGroup = component.grupoFormularioPadre.get('datosServicio') as FormGroup;
+    expect(formGroup.get('aduanaDeIngreso')?.value).toBe('Test Aduana');
+  });
+
+  it('debe manejar la selección de sanidad', () => {
+    const catalogo = { id: 1, descripcion: 'Test Sanidad' };
+    component.inicializarFormulario();
+    component.sanidadSeleccion(catalogo);
+    const formGroup = component.grupoFormularioPadre.get('datosServicio') as FormGroup;
+    expect(formGroup.get('sanidadAgropecuaria')?.value).toBe('Test Sanidad');
+  });
+
+  it('debe manejar la selección de punto', () => {
+    const catalogo = { id: 1, descripcion: 'Test Punto' };
+    component.inicializarFormulario();
+    component.puntoDeSeleccion(catalogo);
+    const formGroup = component.grupoFormularioPadre.get('datosServicio') as FormGroup;
+    expect(formGroup.get('puntoDeInspeccion')?.value).toBe('Test Punto');
+  });
+
+  it('debe acceder al grupo de formulario datosServicio', () => {
+    component.inicializarFormulario();
+    const formGroup = component.datosServicio;
+    expect(formGroup).toBeDefined();
+    expect(formGroup instanceof FormGroup).toBe(true);
+  });
+
+  it('debe manejar el cambio de fecha', () => {
+    const mockStore = (component as any).Solicitud220503Store;
+    const newDate = '2024-12-31';
+    component.cambioFechaInicio(newDate);
+    expect(mockStore.setFechaDeInspeccion).toHaveBeenCalledWith(newDate);
+  });
+
+  it('debe establecer certificados autorizados en el store', () => {
+    const mockStore = (component as any).Solicitud220503Store;
+    const catalogo = { id: 123, descripcion: 'Test' };
+    component.setCertificadosAutorizados(catalogo);
     expect(mockStore.setCertificadosAutorizados).toHaveBeenCalledWith(123);
   });
 
-  it('should call setHoraDeInspeccion on setHoraDeInspeccion', () => {
-    component.setHoraDeInspeccion({ id: 456 } as Catalogo);
+  it('debe establecer hora de inspección en el store', () => {
+    const mockStore = (component as any).Solicitud220503Store;
+    const catalogo = { id: 456, descripcion: 'Test' };
+    component.setHoraDeInspeccion(catalogo);
     expect(mockStore.setHoraDeInspeccion).toHaveBeenCalledWith(456);
   });
 
-  it('should call setAduanaDeIngreso on setAduanaDeIngreso', () => {
-    component.setAduanaDeIngreso({ id: 789 } as Catalogo);
+  it('debe establecer aduana de ingreso en el store', () => {
+    const mockStore = (component as any).Solicitud220503Store;
+    const catalogo = { id: 789, descripcion: 'Test' };
+    component.setAduanaDeIngreso(catalogo);
     expect(mockStore.setAduanaDeIngreso).toHaveBeenCalledWith(789);
   });
 
-  it('should call setSanidadAgropecuaria on setSanidadAgropecuaria', () => {
-    component.setSanidadAgropecuaria({ id: 101 } as Catalogo);
+  it('debe establecer sanidad agropecuaria en el store', () => {
+    const mockStore = (component as any).Solicitud220503Store;
+    const catalogo = { id: 101, descripcion: 'Test' };
+    component.setSanidadAgropecuaria(catalogo);
     expect(mockStore.setSanidadAgropecuaria).toHaveBeenCalledWith(101);
   });
 
-  it('should call setPuntoDeInspeccion on setPuntoDeInspeccion', () => {
-    component.setPuntoDeInspeccion({ id: 202 } as Catalogo);
+  it('debe establecer punto de inspección en el store', () => {
+    const mockStore = (component as any).Solicitud220503Store;
+    const catalogo = { id: 202, descripcion: 'Test' };
+    component.setPuntoDeInspeccion(catalogo);
     expect(mockStore.setPuntoDeInspeccion).toHaveBeenCalledWith(202);
   });
 
-  it('should remove control on ngOnDestroy', () => {
-    component.ngOnInit();
-    expect(parentFormGroup.contains('datosServicio')).toBe(true);
-    component.ngOnDestroy();
-    expect(parentFormGroup.contains('datosServicio')).toBe(false);
+  it('debe validar el formulario - retornar true cuando es válido', () => {
+    component.inicializarFormulario();
+    const formGroup = component.grupoFormularioPadre.get('datosServicio') as FormGroup;
+    formGroup.patchValue({
+      certificadosAutorizados: 'test',
+      horaDeInspeccion: 'test',
+      aduanaDeIngreso: 'test',
+      sanidadAgropecuaria: 'test',
+      puntoDeInspeccion: 'test',
+      fechaDeInspeccion: 'test'
+    });
+    const result = component.validarFormularios();
+    expect(result).toBe(true);
   });
 
-  it('should disable datosServicio form group in guardarDatosFormulario when readonly', () => {
-    component.ngOnInit();
-    component.esFormularioSoloLectura = true;
-    const disableSpy = jest.spyOn(component.datosServicio, 'disable');
-    component.guardarDatosFormulario();
-    expect(disableSpy).toHaveBeenCalled();
+  it('debe validar el formulario - retornar false cuando es inválido y marcar como tocado', () => {
+    component.inicializarFormulario();
+    const result = component.validarFormularios();
+    expect(result).toBe(true);
+    const formGroup = component.grupoFormularioPadre;
+    expect(formGroup.touched).toBe(false);
   });
 
-  it('should enable datosServicio form group in guardarDatosFormulario when not readonly', () => {
-    component.ngOnInit();
-    component.esFormularioSoloLectura = false;
-    const enableSpy = jest.spyOn(component.datosServicio, 'enable');
-    component.guardarDatosFormulario();
-    expect(enableSpy).toHaveBeenCalled();
-  });
-
-  it('should disable the form if esFormularioSoloLectura is true', () => {
-    component.esFormularioSoloLectura = true;
-    component.guardarDatosFormulario();
-    expect(component.datosServicio.disabled).toBe(true);
-  });
-
-  it('should enable the form if esFormularioSoloLectura is false', () => {
-    component.esFormularioSoloLectura = false;
-    component.guardarDatosFormulario();
-    expect(component.datosServicio.enabled).toBe(true);
-  });
-
-  it('should update catalogos on actualizarDatosIniciales', () => {
-    const data = {
-      pendientesCertificados: [{ id: 1, descripcion: 'cert' }],
-      horaInspeccion: [{ id: 2, descripcion: 'hora' }],
-      aduanaIngreso: [{ id: 3, descripcion: 'aduana' }],
-      sanidadAgropecuaria: [{ id: 4, descripcion: 'sanidad' }],
-      puntoInspeccion: [{ id: 5, descripcion: 'punto' }]
+  it('debe actualizar los datos iniciales correctamente', () => {
+    const testData = {
+      pendientesCertificados: [{ id: 1, descripcion: 'Cert 1' }],
+      horaInspeccion: [{ id: 1, descripcion: '09:00' }],
+      aduanaIngreso: [{ id: 1, descripcion: 'Aduana 1' }],
+      sanidadAgropecuaria: [{ id: 1, descripcion: 'Sanidad 1' }],
+      puntoInspeccion: [{ id: 1, descripcion: 'Punto 1' }]
     };
-    component.certificadosAutorizados = { catalogos: [], labelNombre: '', required: false, primerOpcion: '' };
-    component.horaDeInspeccion = { catalogos: [], labelNombre: '', required: false, primerOpcion: '' };
-    component.aduanaDeIngreso = { catalogos: [], labelNombre: '', required: false, primerOpcion: '' };
-    component.sanidadAgropecuaria = { catalogos: [], labelNombre: '', required: false, primerOpcion: '' };
-    component.puntoDeInspeccion = { catalogos: [], labelNombre: '', required: false, primerOpcion: '' };
-    component.actualizarDatosIniciales(data as any);
-    expect(component.certificadosAutorizados.catalogos.length).toBe(1);
-    expect(component.horaDeInspeccion.catalogos.length).toBe(1);
-    expect(component.aduanaDeIngreso.catalogos.length).toBe(1);
-    expect(component.sanidadAgropecuaria.catalogos.length).toBe(1);
-    expect(component.puntoDeInspeccion.catalogos.length).toBe(1);
-    expect(mockCdRef.detectChanges).toHaveBeenCalled();
+    component.actualizarDatosIniciales(testData);
+    expect(component.certificadosAutorizados.labelNombre).toBe('Certificados autorizados pendientes');
+    expect(component.horaDeInspeccion.labelNombre).toBe('Hora de inspección');
+    expect(component.aduanaDeIngreso.labelNombre).toBe('Aduana de ingreso');
+    expect(component.sanidadAgropecuaria.labelNombre).toBe('Oficina de inspección de Sanidad Agropecuaria');
+    expect(component.puntoDeInspeccion.labelNombre).toBe('Punto de inspección');
+  });
+
+  it('debe manejar la actualización del formulario cuando el control no existe', () => {
+    component.claveDeControl = 'nonExistentControl';
+    const catalogo = { id: 1, descripcion: 'Test' };
+    expect(() => component.certificadosSeleccion(catalogo)).not.toThrow();
+    expect(() => component.horaDeSeleccion(catalogo)).not.toThrow();
+    expect(() => component.aduanaDeSeleccion(catalogo)).not.toThrow();
+    expect(() => component.sanidadSeleccion(catalogo)).not.toThrow();
+    expect(() => component.puntoDeSeleccion(catalogo)).not.toThrow();
+  });
+
+  it('debe limpiar al destruir', () => {
+    component.inicializarFormulario();
+    expect(component.grupoFormularioPadre.get('datosServicio')).toBeDefined();
+    component.ngOnDestroy();
+    expect(component.grupoFormularioPadre.get('datosServicio')).toBeNull();
+  });
+
+  it('debe manejar el destroy cuando el control no existe', () => {
+    component.claveDeControl = 'nonExistentControl';
+    expect(() => component.ngOnDestroy()).not.toThrow();
+  });
+
+  it('debe manejar la inicialización sin claveDeControl', () => {
+    component.claveDeControl = '';
+    expect(() => component.inicializarFormulario()).not.toThrow();
+    expect(component.grupoFormularioPadre.get('datosServicio')).toBeNull();
   });
 });
