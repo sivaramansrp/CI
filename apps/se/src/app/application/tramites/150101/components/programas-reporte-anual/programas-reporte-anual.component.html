@@ -2,7 +2,7 @@
   <form [formGroup]="periodoReporteAnual">
     <ng-titulo titulo="Periodo que cubre reporte anual" />
 
-    <div class="row">
+    <div class="row mb-5">
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="reporteAnualFechaInicio">Incio:</label>
@@ -29,10 +29,10 @@
           />
         </div>
       </div>
-      <div class="col-md-4"></div>
+      <div class="col-md-4 mb-5"></div>
     </div>
-    <div class="row mt-5">
-      <div class="col-md-12">
+    <div class="row mt-5 mb-5">
+      <div class="col-md-12 mt-5">
         <app-tabla-dinamica
           [tipoSeleccionTabla]="solicitudSeleccionTabla"
           [datos]="solicitudDatos"
