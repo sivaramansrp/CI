@@ -384,17 +384,16 @@ this.formaComplimentos.disable();
     // Create a copy of the data for transformation
     const DATOS_TRANSFORMADOS = JSON.parse(JSON.stringify(this.datosFormaComplimentos));
 
-    // Transform radio button values
-    ComplimentosComponent.transformarValoresRadio(DATOS_TRANSFORMADOS);
+  this.transformarValoresRadio(DATOS_TRANSFORMADOS);
     
-    // Transform checkbox values
+    
     const PROGRAMA_PREOPERATIVO_VALUE = ComplimentosComponent.transformarCheckboxValue(DATOS_TRANSFORMADOS.programaPreOperativo);
 
-    // First apply the basic form data without triggering form modifications
+  
     this.formaComplimentos.patchValue(DATOS_TRANSFORMADOS, { emitEvent: false });
     this.formaComplimentos.get('programaPreOperativo')?.setValue(PROGRAMA_PREOPERATIVO_VALUE, { emitEvent: false });
 
-    // Now handle the dynamic form data
+    
     if (DATOS_TRANSFORMADOS.formaSocioAccionistas) {
       this.aplicarDatosDinamicos(DATOS_TRANSFORMADOS);
     }
@@ -403,20 +402,19 @@ this.formaComplimentos.disable();
   /**
    * Transforms radio button values to the expected format
    */
-  private static transformarValoresRadio(datos: DatosComplimentos): void {
-    if (!datos.formaSocioAccionistas) {
+  private transformarValoresRadio(datos: DatosComplimentos): void {
+   
+    if (!datos.formaSocioAccionistas || !this.formaComplimentos) {
       return;
     }
-
-    // Transform nacionalidad values
-    if (datos.formaSocioAccionistas.nationalidadMaxicana === 'Sí' || 
+ if (datos.formaSocioAccionistas.nationalidadMaxicana === 'Sí' || 
         datos.formaSocioAccionistas.nationalidadMaxicana === 'Si') {
       datos.formaSocioAccionistas.nationalidadMaxicana = 'true';
     } else if (datos.formaSocioAccionistas.nationalidadMaxicana === 'No') {
       datos.formaSocioAccionistas.nationalidadMaxicana = 'false';
     }
 
-    // Transform tipo de persona values
+    
     if (datos.formaSocioAccionistas.tipoDePersona === 'Física' || 
         datos.formaSocioAccionistas.tipoDePersona === 'Persona Física') {
       datos.formaSocioAccionistas.tipoDePersona = 'true';
@@ -458,13 +456,13 @@ this.formaComplimentos.disable();
    * Applies dynamic form data with single form modification
    */
   private aplicarDatosDinamicos(datos: DatosComplimentos): void {
-    // Prepare the form data first
+   
     this.transformarFormaDatos(datos);
     
-    // Store the form data that we want to apply
+  
     const FORM_DATA_TO_APPLY = datos.formaSocioAccionistas.formaDatos;
     
-    // Store it in preserved data to avoid losing it during form modification
+    
     if (FORM_DATA_TO_APPLY) {
       Object.keys(FORM_DATA_TO_APPLY).forEach(key => {
         this.PRESERVED_FORM_DATA[key] = FORM_DATA_TO_APPLY[key];
