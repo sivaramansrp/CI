@@ -30,5 +30,57 @@
       "registroCaat": "BLEV",
       "estatus": "1"
     }
-  ]
+  ],
+
+
+
+
+
+  "colonia": "abc",
+    "codigoPostal": "55555",
+    "direccion": "abc",
+    "rfcPartesC": "AAL0409235E6",
+    "rfcPartesCons": "AAL0409235E6",
+    "nombrePartesCons": "Nombre Partes",
+    "caracterDeCons": "Caracter De Cons",
+    "fechaInicioAnterior": "21/07/2025",
+    "fechaFinAnterior": "25/07/2025",
+    "cveEntidad": "4",
+    "cveMunicipio": "2",
+    "cveTipoDoc": "3",
+    "observaciones": "OK",
+    "ideGenerica2": "1",
+    "direccionNuevo": "Colonia",
+    "codigoPostalNuevo": "88888",
+    "cveEntidadNuevo": "abc",
+    "cveMunicipioNuevo": "abc",
+    "cveTipoDocNuevo": "abc",
+    "fechaInicioAnteriorNuevo": "abc",
+    "fechaFinAnteriorNuevo": "abc",
+    "rfcPartesCNuevo": "AAL0409235E6",
+    "rfcPartesConsNuevo": "AAL0409235E6",
+    "nombrePartesConsNuevo": "Nombre Partes Cons",
+    "caracterDeConsNuevo": "Caracter De Cons",
+    "observacionesNuevo": "OK",
+    "modificacionVigencias": "1",
+    "modificacionPartes": "1",
+    "fechaInicioVigenciaAnterior": "1/07/2025",
+    "fechaFinVigenciaAnterior": "10/07/2025",
+    "fechaInicioVigenciaActual": "21/07/2025",
+    "fechaFinVigenciaActual":"25/07/2025",
+    "cveTipoDoc2": "1",
+    "direccion2": "Colonia",
+    "codigoPostal2": "66666",
+    "cveEntidad2": "4",
+    "cveMunicipio2": "2",
+    "cveTipo2": "2",
+    "fechaInicioAnterior2": "5/07/2025",
+    "fechaFinAnterior2": "15/07/2025",
+    "rfcPartesC2": "AAL0409235E6",
+    "rfcPartesCons2": "AAL0409235E6",
+    "nombrePartesCons2": "Nombre Partes Cons",
+    "caracterDeCons2": "Caracter De Cons",
+    "observaciones2": "OK"
+
+
 }

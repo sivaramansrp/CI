@@ -155,9 +155,6 @@
           </ng-table>
 
         </div>
-        <!-- <app-tabla-dinamica [configuracionTabla]="tableHeaderData" [datos]="tableBodyData" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
-          [tipoSeleccionTabla]="CHECKBOX">
-        </app-tabla-dinamica> -->
         
       </div>
     </div>
@@ -267,7 +264,6 @@
             [isDisabled]="esFormularioSoloLectura"
             (valorCambiado)="actualizarFecha($event, 'fechaInicioAnterior2'); setValoresStore(formularioAvisoDeModification,'fechaInicioAnterior2')">
           </input-fecha>
-          <!-- <input class="form-control" type="date" id="fechaInicialAnteriorCon" formControlName="fechaInicioAnterior" /> -->
         </div>
       </div>
       <div class="col-md-4">
@@ -282,13 +278,12 @@
       </div>
     </div>
 
-    <!-- Partes contratantes -->
     <div class="row mt-3">
       <div class="col-md-4">
         <div class="form-group">
           <label for="rfcPartesC" class="form-label">Registro Federal de Contribuyentes*:</label>
-          <input type="text" id="rfcPartesC" formControlName="rfcPartesC2" class="form-control"
-          (change)="setValoresStore(formularioAvisoDeModification,'rfcPartesC2')" />
+          <input type="text" id="rfcPartesC" formControlName="rfcPartesCNuevo" class="form-control"
+          (change)="setValoresStore(formularioAvisoDeModification,'rfcPartesCNuevo')" />
         </div>
       </div>
       <div class="col-md-4">
@@ -302,29 +297,29 @@
       </div>
     </div>
 
-    <!-- <div class="row mt-3">
+    <div class="row mt-3">
       <div class="col-md-4">
         <div class="form-group">
           <label for="rfcPartesCons" class="form-label">RFC</label>
-          <input type="text" id="rfcPartesCons" formControlName="rfcPartesCons2" class="form-control"
-          (change)="setValoresStore(formularioAvisoDeModification,'rfcPartesCons2')" />
+          <input type="text" id="rfcPartesCons" formControlName="rfcPartesConsNuevo" class="form-control"
+          (change)="setValoresStore(formularioAvisoDeModification,'rfcPartesConsNuevo')" />
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label for="nombrePartesCons" class="form-label">Nombre</label>
-          <input type="text" id="nombrePartesCons" formControlName="nombrePartesCons2" class="form-control"
-          (change)="setValoresStore(formularioAvisoDeModification,'nombrePartesCons2')" />
+          <input type="text" id="nombrePartesCons" formControlName="nombrePartesConsNuevo" class="form-control"
+          (change)="setValoresStore(formularioAvisoDeModification,'nombrePartesConsNuevo')" />
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label for="caracterDeCons" class="form-label">En su carácter de*:</label>
-          <input type="text" id="caracterDeCons" formControlName="caracterDeCons2" class="form-control"
-          (change)="setValoresStore(formularioAvisoDeModification,'caracterDeCons2')" />
+          <input type="text" id="caracterDeCons" formControlName="caracterDeConsNuevo" class="form-control"
+          (change)="setValoresStore(formularioAvisoDeModification,'caracterDeConsNuevo')" />
         </div>
       </div>
-    </div> -->
+    </div>
 
     </ng-container>
 

@@ -158,6 +158,9 @@ export class AvisoDeModificacionComponent implements OnInit, OnDestroy {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
       this.formularioAvisoDeModification.disable();
+      this.modificacionPartesData = [
+        { tbodyData: ['AAL0409235E6', 'Nombre de la parte (ejemplo)', 'Caracter'] }
+      ];
     } else {
       this.formularioAvisoDeModification.enable();
     }
@@ -209,10 +212,10 @@ export class AvisoDeModificacionComponent implements OnInit, OnDestroy {
       cveTipo2: [this.solicitudState?.cveTipo2 || '', Validators.required],
       fechaInicioAnterior2: [this.solicitudState?.fechaInicioAnterior2 || '', Validators.required],
       fechaFinAnterior2: [this.solicitudState?.fechaFinAnterior2 || '', Validators.required],
-      rfcPartesC2: [this.solicitudState?.rfcPartesC2 || '', [Validators.required, Validators.maxLength(13), Validators.pattern(/^[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3}$/i)]],
-      rfcPartesCons2: [this.solicitudState?.rfcPartesCons2 || ''],
-      nombrePartesCons2: [this.solicitudState?.nombrePartesCons2 || ''],
-      caracterDeCons2: [this.solicitudState?.caracterDeCons2 || '', [Validators.required, Validators.maxLength(30)]],
+      rfcPartesCNuevo: [this.solicitudState?.rfcPartesCNuevo || '', [Validators.required, Validators.maxLength(13), Validators.pattern(/^[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3}$/i)]],
+      rfcPartesConsNuevo: [this.solicitudState?.rfcPartesConsNuevo || ''],
+      nombrePartesConsNuevo: [this.solicitudState?.nombrePartesConsNuevo || ''],
+      caracterDeConsNuevo: [this.solicitudState?.caracterDeConsNuevo || '', [Validators.required, Validators.maxLength(30)]],
     });
 
     this.getEntidadFederativa(); 
@@ -245,6 +248,15 @@ export class AvisoDeModificacionComponent implements OnInit, OnDestroy {
       rfcPartesCons: RFC,
       nombrePartesCons: 'Nombre de la parte (ejemplo)',
     });
+
+      const RFC2 = this.formularioAvisoDeModification.get('rfcPartesCNuevo')?.value || '';
+
+    if (RFC2) {
+      this.formularioAvisoDeModification.patchValue({
+        rfcPartesConsNuevo: RFC2,
+        nombrePartesConsNuevo: 'Nombre de la parte (ejemplo)',
+      });
+    }
   }
 
   limpiaCamposParteC(): void {

@@ -1,7 +1,5 @@
 import {
-  Catalogo,
   CatalogoSelectComponent,
-  InputFecha,
   InputFechaComponent,
   InputRadioComponent,
   NotificacionesComponent,
@@ -44,13 +42,15 @@ export class ModificacionPartesComponent implements OnInit, OnDestroy {
 
   /** Form de este bloque */
   formularioModificationPartes!: FormGroup;
- 
-  solicitudState!: Solicitud33304State;
 
+  /** App state (optional if you need it) */
+  public solicitudState!: Solicitud33304State;
+
+  /** Opciones para los radios de selección: "Domicilio nuevo" o "Modificar domicilio" */
   radioOptions = RADIO_OPTIONS;
 
   /** Readonly desde Consultaio */
-  esFormularioSoloLectura = false;
+  esFormularioSoloLectura: boolean = false;
 
   /** Destroy notifier */
   private destroy$ = new Subject<void>();
@@ -60,34 +60,53 @@ export class ModificacionPartesComponent implements OnInit, OnDestroy {
     private solicitud33304Store: Solicitud33304Store,
     private solicitud33304Query: Solicitud33304Query,
     private consultaioQuery: ConsultaioQuery,
-  ) {}
+  ) {
 
-  ngOnInit(): void {
-    // Readonly flag
+    // Sin condiciones extra: solo gestionar readonly
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroy$),
-        map(seccion => {
-          this.esFormularioSoloLectura = !seccion.readonly;
-        //   if (this.formularioModificationPartes) {
-        //     this.esFormularioSoloLectura
-        //       ? this.formularioModificationPartes.disable({ emitEvent: false })
-        //       : this.formularioModificationPartes.enable({ emitEvent: false });
-        //   }
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
+      this.crearFormulario();
 
-    // Cargar estado actual (si existe) y construir form
-    this.solicitud33304Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroy$),
-        map(state => {
-          this.solicitudState = state;
-          this.crearFormulario();
-        })
-      )
-      .subscribe();
+  }
+
+  ngOnInit(): void {
+ this.solicitud33304Query.selectSolicitud$
+       .pipe(
+         takeUntil(this.destroy$),
+         map((seccionState) => {
+           this.solicitudState = seccionState;
+ 
+         })
+       )
+       .subscribe();
+ 
+     this.inicializarEstadoFormulario();
+  }
+
+  /** Readonly vs editable (sin otras condiciones) */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+    this.crearFormulario();
+    }
+  }
+
+  /** Aplica enable/disable según readonly */
+   guardarDatosFormulario(): void {
+    this.crearFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.formularioModificationPartes.disable();
+    } else {
+      this.formularioModificationPartes.enable();
+    }
   }
 
   /** Construye/rehidrata el formulario */
@@ -103,8 +122,6 @@ export class ModificacionPartesComponent implements OnInit, OnDestroy {
       rfcPartesCons2: [this.solicitudState?.rfcPartesCons2 ?? ''],
       nombrePartesCons2: [this.solicitudState?.nombrePartesCons2 ?? ''],
       caracterDeCons2: [this.solicitudState?.caracterDeCons2 ?? '', [Validators.maxLength(30)]],
-
-      // Observaciones (para el caso '2')
       observaciones2: [this.solicitudState?.observaciones2 ?? '', [Validators.maxLength(500)]],
     });
 
@@ -120,6 +137,7 @@ export class ModificacionPartesComponent implements OnInit, OnDestroy {
   /** Maneja el cambio de radio y guarda en el store */
   verificaRadioDomicilio(valor: string | number): void {
     this.aplicarValidadoresPorOpcion(valor);
+    this.setValoresStore(this.formularioModificationPartes, 'modificacionPartes');
   }
 
   /** Reglas de validación condicionales */
@@ -191,6 +209,9 @@ export class ModificacionPartesComponent implements OnInit, OnDestroy {
       rfcPartesCons2: RFC,
       nombrePartesCons2: 'Nombre de la parte (ejemplo)',
     });
+    this.setValoresStore(this.formularioModificationPartes, 'rfcPartesCons2');
+    this.setValoresStore(this.formularioModificationPartes, 'nombrePartesCons2');
+    this.setValoresStore(this.formularioModificationPartes, 'caracterDeCons2');
   }
 
   /**
@@ -203,29 +224,20 @@ export class ModificacionPartesComponent implements OnInit, OnDestroy {
       this.formularioModificationPartes.markAllAsTouched();
     //   return;
     }
-    // const { RFCPARTESC2, RFCPARTESCONS2, nombrePartesCons2, caracterDeCons2 } =
-    //   this.formularioModificationPartes.getRawValue();
-
-    // // Persistir en el store los campos (o construir una lista si corresponde)
-    // this.solicitud33304Store.actualizarEstado({
-    //   rfcPartesC2,
-    //   rfcPartesCons2,
-    //   nombrePartesCons2,
-    //   caracterDeCons2,
-    // });
-
-    // Si deseas limpiar tras aceptar:
-    // this.limpiaCamposParteC();
+    
   }
 
   /** Setter genérico para el store, usado desde el template */
-  setValoresStore(form: FormGroup | null, campo: string): void {
-    if (!form){
-        return;
+   setValoresStore(form: FormGroup | null, campo: string): void {
+    if (!form) {
+      return;
     }
     const CONTROL = form.get(campo);
-    if (CONTROL && CONTROL.value !== undefined) {
-      this.solicitud33304Store.actualizarEstado({ [campo]: CONTROL.value });
+    if (CONTROL && CONTROL.value !== null && CONTROL.value !== undefined) {
+      this.solicitud33304Store.actualizarEstado( { [campo]: CONTROL.value } );
+    }
+    if(campo === 'modificacionPartes') {
+      this.aplicarValidadoresPorOpcion(form.get(campo)?.value);
     }
   }
 
