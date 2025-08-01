@@ -1664,7 +1664,7 @@
     "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "221602"
   },
-    {
+  {
     "id": 260704,
     "tipoDeTramite": "Solicitud Procedure 260704",
     "fecha": "2024-11-01",
@@ -1710,15 +1710,15 @@
     "numeroDeProcedimiento": "31802"
   },
   {
-   "id": 31803,
-   "tipoDeTramite": "Solicitud de acuso",
-   "fecha": "2023-10-01",
-   "fechaActualizacion": "2023-10-05",
-   "diasTranscurridos": "4",
-   "departamento": "AGACE",
-   "numeroDeProcedimiento": "31803"
-},
-{
+    "id": 31803,
+    "tipoDeTramite": "Solicitud de acuso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "31803"
+  },
+  {
     "id": 260104,
     "tipoDeTramite": "Antecesor",
     "fecha": "2023-10-01",
@@ -1800,15 +1800,6 @@
     "numeroDeProcedimiento": "32401"
   },
   {
-    "id": 260203,
-    "tipoDeTramite": "Solicitud de Permiso",
-    "fecha": "2023-10-01",
-    "fechaActualizacion": "2023-10-05",
-    "diasTranscurridos": "4",
-    "departamento": "COFEPRIS",
-    "numeroDeProcedimiento": "260203"
-  },
-  {
     "id": 80303,
     "tipoDeTramite": "Cancelación de Programa de la SE IMMEX",
     "fecha": "2023-10-01",
@@ -1852,8 +1843,8 @@
     "diasTranscurridos": "4",
     "departamento": "SE",
     "numeroDeProcedimiento": "120401"
-},
-{
+  },
+  {
     "id": 31203,
     "tipoDeTramite": "Solicitud proceso Interno",
     "fecha": "2023-10-01",
@@ -1924,8 +1915,8 @@
     "diasTranscurridos": "4",
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260516"
-},
-{
+  },
+  {
     "id": 32506,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
@@ -2141,7 +2132,7 @@
     "departamento": "SEDENA",
     "numeroDeProcedimiento": "240121"
   },
-    {
+  {
     "id": 90102,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
@@ -2150,7 +2141,7 @@
     "departamento": "SE",
     "numeroDeProcedimiento": "90102"
   },
-    {
+  {
     "id": 90202,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
@@ -2195,7 +2186,7 @@
     "departamento": "AGACE",
     "numeroDeProcedimiento": "31501"
   },
-  {  
+  {
     "id": 6102,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
@@ -2286,13 +2277,13 @@
     "numeroDeProcedimiento": "261601"
   },
   {
-  "id": 6402,
-  "tipoDeTramite": "Solicitud de Permiso",
-  "fecha": "2023-10-01",
-  "fechaActualizacion": "2023-10-05",
-  "diasTranscurridos": "4",
-  "departamento": "AGA",
-  "numeroDeProcedimiento": "6402"
+    "id": 6402,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "6402"
   },
   {
     "id": 31202,
@@ -2302,15 +2293,16 @@
     "diasTranscurridos": "4",
     "departamento": "AGA",
     "numeroDeProcedimiento": "31202"
-},
-{ "id": 90303,
+  },
+  {
+    "id": 90303,
     "tipoDeTramite": "Solicitudddd certificado CAM",
     "fecha": "2022-10-05",
     "fechaActualizacion": "2022-10-25",
     "diasTranscurridos": "4",
     "departamento": "SE",
     "numeroDeProcedimiento": "90303"
-    },
+  },
   {
     "id": 32101,
     "tipoDeTramite": "Solicitud de cs Permiso",
@@ -2319,15 +2311,15 @@
     "diasTranscurridos": "4",
     "departamento": "AGACE",
     "numeroDeProcedimiento": "32101"
-},
+  },
   {
-  "id": 240105,
-  "tipoDeTramite": "Solicitud de Permiso",
-  "fecha": "2023-10-01",
-  "fechaActualizacion": "2023-10-05",
-  "diasTranscurridos": "4",
-  "departamento": "SEDENA",
-  "numeroDeProcedimiento": "240105"
+    "id": 240105,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SEDENA",
+    "numeroDeProcedimiento": "240105"
   },
   {
     "id": 32503,
@@ -2374,7 +2366,7 @@
     "departamento": "SE",
     "numeroDeProcedimiento": "120201"
   },
-   {
+  {
     "id": 130302,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2025-06-10",
@@ -2446,7 +2438,7 @@
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260302"
   },
-    {
+  {
     "id": 260702,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
@@ -2473,24 +2465,24 @@
     "departamento": "AGA",
     "numeroDeProcedimiento": "11102"
   },
-    {
-  "id": 260103,
-  "tipoDeTramite": "Solicitud de Permiso",
-  "fecha": "2023-10-01",
-  "fechaActualizacion": "2023-10-05",
-  "diasTranscurridos": "4",
-  "departamento": "COFEPRIS",
-  "numeroDeProcedimiento": "260103"
-},
-{
+  {
+    "id": 260103,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260103"
+  },
+  {
     "id": 260909,
-     "tipoDeTramite": "Solicitud de se Permiso",
-     "fecha": "2023-10-01",
-     "fechaActualizacion": "2023-10-05",
-     "diasTranscurridos": "4",
-     "departamento": "COFEPRIS",
-     "numeroDeProcedimiento": "260909"
-    },
+    "tipoDeTramite": "Solicitud de se Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260909"
+  },
   {
     "id": 260913,
     "tipoDeTramite": "Solicitud de Permiso",
@@ -2508,15 +2500,15 @@
     "diasTranscurridos": "4",
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260914"
-    },
-    {
-      "id": 260219,
-      "tipoDeTramite": "Solicitud de Permiso",
-      "fecha": "2023-10-01",
-      "fechaActualizacion": "2023-10-05",
-      "diasTranscurridos": "4",
-      "departamento": "COFEPRIS",
-      "numeroDeProcedimiento": "260219"
+  },
+  {
+    "id": 260219,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260219"
   },
   {
     "id": 120702,
@@ -2528,14 +2520,13 @@
     "numeroDeProcedimiento": "120702"
   },
   {
-      "id": 31401,
-      "tipoDeTramite": "Solicitud de Permiso",
-      "fecha": "2023-10-01",
-      "fechaActualizacion": "2023-10-05",
-      "diasTranscurridos": "4",
-      "departamento": "AGACE",
-      "numeroDeProcedimiento": "31401"
-
+    "id": 31401,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "31401"
   },
   {
     "id": 260919,
@@ -2545,8 +2536,7 @@
     "diasTranscurridos": "4",
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260919"
-
-},
+  },
   {
     "id": 120202,
     "tipoDeTramite": "Solicitud de Permiso",
@@ -2574,15 +2564,15 @@
     "departamento": "SENER",
     "numeroDeProcedimiento": "140216"
   },
-   {   
+  {
     "id": 260916,
-     "fecha": "2023-10-01",
-     "tipoDeTramite": "Solicitud de se Permiso",
-     "fechaActualizacion": "2023-10-05",
-     "diasTranscurridos": "4",
-     "departamento": "COFEPRIS",
-     "numeroDeProcedimiento": "260916"
-    },
+    "fecha": "2023-10-01",
+    "tipoDeTramite": "Solicitud de se Permiso",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260916"
+  },
   {
     "id": 260906,
     "tipoDeTramite": "Solicitud Procedure 260906",
@@ -2601,7 +2591,7 @@
     "departamento": "SE",
     "numeroDeProcedimiento": "80103"
   },
-    {
+  {
     "id": 80104,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
@@ -2609,7 +2599,7 @@
     "diasTranscurridos": "4",
     "departamento": "SE",
     "numeroDeProcedimiento": "80104"
-    },
+  },
   {
     "id": 32502,
     "tipoDeTramite": "Solicitud de Permiso",
@@ -2628,7 +2618,7 @@
     "departamento": "AGACE",
     "numeroDeProcedimiento": "32102"
   },
-   {
+  {
     "id": 140205,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
@@ -2647,13 +2637,13 @@
     "numeroDeProcedimiento": "32201"
   },
   {
-  "id": 31101,
-  "tipoDeTramite": "Solicitudddd certificado CAM",
-  "fecha": "2022-10-05",
-  "fechaActualizacion": "2022-10-25",
-  "diasTranscurridos": "4",
-  "departamento": "AGACE",
-  "numeroDeProcedimiento": "31101"
+    "id": 31101,
+    "tipoDeTramite": "Solicitudddd certificado CAM",
+    "fecha": "2022-10-05",
+    "fechaActualizacion": "2022-10-25",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "31101"
   },
   {
     "id": 130401,
@@ -2683,7 +2673,7 @@
     "numeroDeProcedimiento": "231002"
   },
   {
-     "id": 260507,
+    "id": 260507,
     "tipoDeTramite": "Solicitud Procedure 260507",
     "fecha": "2024-11-01",
     "fechaActualizacion": "2024-11-07",
@@ -2692,7 +2682,7 @@
     "numeroDeProcedimiento": "260507"
   },
   {
-     "id": 11101,
+    "id": 11101,
     "tipoDeTramite": "Solicitud Procedure 11101",
     "fecha": "2024-11-01",
     "fechaActualizacion": "2024-11-07",
@@ -2702,24 +2692,24 @@
   },
   {
     "id": 6403,
-  "tipoDeTramite": "Solicitud de Permiso",
-  "fecha": "2023-10-01",
-  "fechaActualizacion": "2023-10-05",
-  "diasTranscurridos": "4",
-  "departamento": "AGA",
-  "numeroDeProcedimiento": "6403"
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "6403"
   },
-  {   
-    "id": 140218,
-     "fecha": "2023-11-01",
-     "tipoDeTramite": "Solicitud",
-     "fechaActualizacion": "2023-12-05",
-     "diasTranscurridos": "4",
-     "departamento": "SENER",
-     "numeroDeProcedimiento": "140218"
-    },
   {
-     "id": 260507,
+    "id": 140218,
+    "fecha": "2023-11-01",
+    "tipoDeTramite": "Solicitud",
+    "fechaActualizacion": "2023-12-05",
+    "diasTranscurridos": "4",
+    "departamento": "SENER",
+    "numeroDeProcedimiento": "140218"
+  },
+  {
+    "id": 260507,
     "tipoDeTramite": "Solicitud Procedure 260507",
     "fecha": "2024-11-01",
     "fechaActualizacion": "2024-11-07",
@@ -2781,7 +2771,7 @@
     "departamento": "SE",
     "numeroDeProcedimiento": "80105"
   },
-   {
+  {
     "id": 32505,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
@@ -2791,14 +2781,14 @@
     "numeroDeProcedimiento": "32505"
   },
   {
-      "id": 40201,
-      "tipoDeTramite": "Expedición de Certificados de Cupo Licitación pública",
-      "fecha": "2023-10-01",
-      "fechaActualizacion": "2023-10-05",
-      "diasTranscurridos": "4",
-      "departamento": "AGA",
-      "numeroDeProcedimiento": "40201"
-    },
+    "id": 40201,
+    "tipoDeTramite": "Expedición de Certificados de Cupo Licitación pública",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "40201"
+  },
   {
     "id": 11105,
     "tipoDeTramite": "Solicitud de Permiso",
@@ -2809,13 +2799,13 @@
     "numeroDeProcedimiento": "11105"
   },
   {
-  "id": 130120,
-  "tipoDeTramite": "Solicitud de Permiso",
-  "fecha": "2023-10-01",
-  "fechaActualizacion": "2023-10-05",
-  "diasTranscurridos": "4",
-  "departamento": "SE",
-  "numeroDeProcedimiento": "130120"
+    "id": 130120,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "130120"
   },
   {
     "id": 570102,
@@ -2845,7 +2835,7 @@
     "numeroDeProcedimiento": "6001"
   },
   {
-    "id":80301,
+    "id": 80301,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
     "fechaActualizacion": "2023-10-05",
@@ -2889,7 +2879,7 @@
     "departamento": "AGACE",
     "numeroDeProcedimiento": "33302"
   },
-   {
+  {
     "id": 33303,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
@@ -2998,7 +2988,7 @@
     "numeroDeProcedimiento": "32610"
   },
   {
-     "id": 32606,
+    "id": 32606,
     "tipoDeTramite": "Solicitud de cs Permiso",
     "fecha": "2024-10-01",
     "fechaActualizacion": "2024-10-05",
@@ -3006,7 +2996,7 @@
     "departamento": "AGACE",
     "numeroDeProcedimiento": "32606"
   },
-   {
+  {
     "id": 32618,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2025-10-07",
@@ -3014,9 +3004,9 @@
     "diasTranscurridos": "4",
     "departamento": "AGACE",
     "numeroDeProcedimiento": "32618"
-   },
-    {
-     "id": 32605,
+  },
+  {
+    "id": 32605,
     "tipoDeTramite": "Solicitud de cs Permiso",
     "fecha": "2024-10-01",
     "fechaActualizacion": "2024-10-05",
@@ -3024,8 +3014,8 @@
     "departamento": "AGACE",
     "numeroDeProcedimiento": "32605"
   },
-    {
-     "id": 40301,
+  {
+    "id": 40301,
     "tipoDeTramite": "Registro del código",
     "fecha": "2025-07-25",
     "fechaActualizacion": "2025-07-30",
@@ -3077,5 +3067,14 @@
     "diasTranscurridos": "4",
     "departamento": "AGACE",
     "numeroDeProcedimiento": "33304"
+  },
+  {
+    "id": 260102,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260102"
   }
 ]

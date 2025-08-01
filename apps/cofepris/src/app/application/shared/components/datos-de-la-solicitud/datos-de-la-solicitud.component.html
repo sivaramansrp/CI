@@ -66,6 +66,7 @@
             class="form-control"
             id="rfcSanitario"
             type="text"
+            maxlength="13"
             formControlName="rfcSanitario"
             [ngClass]="
               isValid(datosSolicitudForm, 'rfcSanitario') ? 'required' : ''
@@ -758,6 +759,7 @@
             class="form-control"
             id="representanteRfc"
             type="text"
+            maxlength="13"
             formControlName="representanteRfc"
             [ngClass]="
               isValid(datosSolicitudForm, 'representanteRfc') ? 'required' : ''
