@@ -141,7 +141,7 @@ export class ModificacionPartesComponent implements OnInit, OnDestroy {
   }
 
   /** Reglas de validación condicionales */
-  private aplicarValidadoresPorOpcion(valor: string | number): void {
+  public aplicarValidadoresPorOpcion(valor: string | number): void {
     const ISOPCION1 = String(valor) === '1';
     const CONTROLSPARTES = ['rfcPartesC2', 'caracterDeCons2'];
     const CONTROLOBS = 'observaciones2';
