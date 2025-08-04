@@ -36,6 +36,11 @@ import { Mercancias110202Query } from '../../estados/mercancias.query';
 })
 
 export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnInit {
+  /**
+ * Configuración del campo de fecha final en el formulario.
+ * Define etiqueta, validación y habilitación del input de fecha.
+ * Se utiliza para parametrizar el componente <input-fecha>.
+ */
    public fechaFinalInput: InputFecha = FECHA_FINALS;
    /**
    * Configuración de las columnas de la tabla de exportadores.
@@ -491,6 +496,11 @@ this.modalInstances.show();
       this.modalInstance = new Modal(this.modifyModal.nativeElement);
     }
   }
+  /**
+ * Guarda los datos del formulario como una nueva mercancía.
+ * Crea un objeto de tipo Mercancias con los valores ingresados.
+ * Puede ser usado para actualizar o agregar en la tabla de datos.
+ */
 onGuardarMercancia(): void {
  
   const FORMDATA = this.mercanciaDatosForm.value;
@@ -505,6 +515,11 @@ this.exportador[0] = NUEVAMERCANCIA;
 this.exportador = [...this.exportador];
    this.cerrarModals();
 }
+/**
+ * Cierra el modal si la instancia del mismo está disponible.
+ * Verifica que exista la referencia antes de ejecutar el cierre.
+ * Se utiliza después de guardar o cancelar una operación.
+ */
 cerrarModals(): void {
   if (this.modalInstances) {
     this.modalInstances.hide();
