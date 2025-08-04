@@ -1,8 +1,8 @@
 import { CONTINUAR } from "./permiso-cites.enum";
 
 export const AQUANDAS_LABEL = {
-    tituluDeLaIzquierda: 'Aduanas disponibles',
-    derecha: 'Aduanas seleccionadas',
+    tituluDeLaIzquierda: 'Aduanas disponibles:',
+    derecha: 'Aduanas seleccionadas*:',
 };
  
 export const ADUANA_BOTONS= [

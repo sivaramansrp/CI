@@ -1,10 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { of } from 'rxjs';
 import { TercerosComponent } from './terceros.component';
 import { PermisoCitesService } from '../../services/permiso-cites.service';
 import { Tramite230902Store } from '../../estados/tramite230902.store';
 import { Tramite230902Query } from '../../estados/tramite230902.query';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ConfiguracionItem, DESTINARIO_TABLE_ENTRY } from '../../enum/tereceors.enum';
 
 describe('TercerosComponent', () => {
@@ -17,26 +18,39 @@ describe('TercerosComponent', () => {
   beforeEach(async () => {
     const permisoCitesServiceMock = {
       inicializaTercerosDatosCatalogos: jest.fn(),
+      entidadFederativa: [],
     };
     const tramite230902StoreMock = {
       setIsPopupOpen: jest.fn(),
       setIsPopupClose: jest.fn(),
       setEntidadFederativa: jest.fn(),
       establecerDatos: jest.fn(),
+      setTercerosTablaDatos: jest.fn(),
     };
     const tramite230902QueryMock = {
-      selectSolicitud$: jest.fn().mockReturnValue(of({ entidadFederativa: 'Test' })),
+      selectSolicitud$: of({ entidadFederativa: 'Test' }),
+      getValue: jest.fn().mockReturnValue({ 
+        entidadFederativa: 'Test', 
+        tercerosTablaDatos: [] 
+      }),
+    };
+    const consultaioQueryMock = {
+      selectConsultaioState$: of({ readonly: false }),
     };
 
     await TestBed.configureTestingModule({
       declarations: [TercerosComponent],
       imports: [ReactiveFormsModule],
       providers: [
+        FormBuilder,
         { provide: PermisoCitesService, useValue: permisoCitesServiceMock },
         { provide: Tramite230902Store, useValue: tramite230902StoreMock },
         { provide: Tramite230902Query, useValue: tramite230902QueryMock },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
       ],
-    }).compileComponents();
+    })
+    .overrideTemplate(TercerosComponent, '<div></div>') // Use a simple template to avoid template-related issues
+    .compileComponents();
 
     fixture = TestBed.createComponent(TercerosComponent);
     component = fixture.componentInstance;
@@ -117,6 +131,7 @@ describe('TercerosComponent', () => {
     expect(component.tablaDatos.length).toBe(1);
     expect(component.tablaDatos[0]).toEqual(DESTINARIO_TABLE_ENTRY);
     expect(tramite230902Store.establecerDatos).toHaveBeenCalledWith({ entidadFederativa: 'NuevaEntidad' });
+    expect(tramite230902Store.setTercerosTablaDatos).toHaveBeenCalledWith(component.tablaDatos);
   });
 
   it('no debería agregar a la tabla si ya hay datos', () => {
@@ -133,11 +148,14 @@ describe('TercerosComponent', () => {
       declarations: [TercerosComponent],
       imports: [ReactiveFormsModule],
       providers: [
-        { provide: PermisoCitesService, useValue: { inicializaTercerosDatosCatalogos: jest.fn() } },
-        { provide: Tramite230902Store, useValue: { setIsPopupOpen: jest.fn(), setIsPopupClose: jest.fn(), setEntidadFederativa: jest.fn(), establecerDatos: jest.fn() } },
-        { provide: Tramite230902Query, useValue: { selectSolicitud$: jest.fn().mockReturnValue(of({ entidadFederativa: 'Test' })) } },
+        FormBuilder,
+        { provide: PermisoCitesService, useValue: { inicializaTercerosDatosCatalogos: jest.fn(), entidadFederativa: [] } },
+        { provide: Tramite230902Store, useValue: { setIsPopupOpen: jest.fn(), setIsPopupClose: jest.fn(), setEntidadFederativa: jest.fn(), establecerDatos: jest.fn(), setTercerosTablaDatos: jest.fn() } },
+        { provide: Tramite230902Query, useValue: { selectSolicitud$: of({ entidadFederativa: 'Test' }), getValue: jest.fn().mockReturnValue({ entidadFederativa: 'Test', tercerosTablaDatos: [] }) } },
+        { provide: ConsultaioQuery, useValue: { selectConsultaioState$: of({ readonly: false }) } },
       ],
-    });
+    })
+    .overrideTemplate(TercerosComponent, '<div></div>');
     TestBed.createComponent(TercerosComponent);
     expect(spy).toHaveBeenCalled();
     spy.mockRestore();

@@ -182,6 +182,11 @@ export class TercerosComponent implements OnInit, OnDestroy {
     } else {
       this.crearFormularioDestinatario();
     }
+    
+    // Después de crear el formulario, intentar poblar la tabla si es necesario
+    setTimeout(() => {
+      this.onEntidadFederativaChange();
+    }, 100);
   }
 
   /**
@@ -202,9 +207,19 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * Configura los formularios, datos iniciales y suscripciones necesarias.
    */
   ngOnInit(): void {
+    // Inicializar tablaDatos desde el estado del store
+    const CURRENT_STATE = this.tramite230902Query.getValue();
+    if (CURRENT_STATE.tercerosTablaDatos && CURRENT_STATE.tercerosTablaDatos.length > 0) {
+      this.tablaDatos = [...CURRENT_STATE.tercerosTablaDatos];
+    }
+    
     this.inicializarEstadoFormulario()
     this.permisoCitesService.inicializaTercerosDatosCatalogos();
-    this.onEntidadFederativaChange();
+    
+    // Llamar onEntidadFederativaChange después de que el formulario esté inicializado
+    setTimeout(() => {
+      this.onEntidadFederativaChange();
+    });
   }
 
   /**
@@ -278,6 +293,15 @@ export class TercerosComponent implements OnInit, OnDestroy {
         Validators.required,
       ],
     });
+
+    // Suscribirse a los cambios del formulario para actualizar los datos de la tabla
+    this.subscription.add(
+      this.destinatarioForm.get('entidadFederativa')?.valueChanges
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(() => {
+          this.onEntidadFederativaChange();
+        }) || new Subscription()
+    );
   }
 
   /**
@@ -285,10 +309,27 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * Actualiza el estado y los datos de la tabla relacionados con la entidad seleccionada.
    */
   onEntidadFederativaChange(): void {
+    // Verificar si el formulario está inicializado primero
+    if (!this.destinatarioForm) {
+      return;
+    }
+    
     const ENTIDAD_FEDERATIVA = this.destinatarioForm.get('entidadFederativa')?.value;
+    
+    // Agregar entrada cuando la entidad federativa tiene un valor y la tabla está vacía
     if (ENTIDAD_FEDERATIVA && this.tablaDatos.length === 0) {
       this.tramite230902Store.establecerDatos({ entidadFederativa: ENTIDAD_FEDERATIVA });
-      this.tablaDatos.push(DESTINARIO_TABLE_ENTRY);
+      
+      // Crear nuevo array con actualización inmutable para activar la detección de cambios
+      this.tablaDatos = [...this.tablaDatos, DESTINARIO_TABLE_ENTRY];
+      
+      // Persistir en el store
+      this.tramite230902Store.setTercerosTablaDatos(this.tablaDatos);
+    }
+    // Si la entidad federativa se limpia, limpiar la tabla
+    else if (!ENTIDAD_FEDERATIVA && this.tablaDatos.length > 0) {
+      this.tablaDatos = [];
+      this.tramite230902Store.setTercerosTablaDatos(this.tablaDatos);
     }
   }
 

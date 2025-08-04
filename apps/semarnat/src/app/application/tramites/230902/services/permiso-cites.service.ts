@@ -178,6 +178,8 @@ export class PermisoCitesService {
     this.Tramite230902Store.setIsPopupOpen(DATOS.popupAbierto);
     this.Tramite230902Store.setIsPopupClose(DATOS.popupCerrado);
     this.Tramite230902Store.setMercanciaTablaDatos(DATOS.mercanciaTablaDatos);
+    this.Tramite230902Store.setListaOriginalAduanas(DATOS.listaOriginalAduanas);
+    this.Tramite230902Store.setListaSeleccionadaAduanas(DATOS.listaSeleccionadaAduanas);
   }
   
   /**
