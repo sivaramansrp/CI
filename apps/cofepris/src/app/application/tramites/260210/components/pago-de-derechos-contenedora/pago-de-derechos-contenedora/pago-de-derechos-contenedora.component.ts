@@ -23,32 +23,63 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
   /**
    * @property {PagoDerechosFormState} pagoDerechos
    * @description Estado actual del formulario de pago de derechos, obtenido del store del trámite.
+   * Contiene toda la información relacionada con los datos del formulario de pago de derechos,
+   * incluyendo los montos, conceptos y demás información necesaria para el proceso de pago.
+   *
+   * @public
+   * @type {PagoDerechosFormState}
+   * @memberof PagoDeDerechosContenedoraComponent
    */
-
   public pagoDerechos: PagoDerechosFormState;
 
   /**
-  * Indica si el formulario está en modo solo lectura.
-  * Cuando es `true`, los campos del formulario no se pueden editar.
-  */
-  public esFormularioSoloLectura: boolean = false; 
-
-   /**
-   * Notificador utilizado para manejar la destrucción o desuscripción de observables.
-   * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
+   * @property {boolean} esFormularioSoloLectura
+   * @description Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar y solo se pueden visualizar.
+   * Esta propiedad se actualiza dinámicamente basándose en el estado de consulta del sistema.
    *
-   * @property {Subject<void>} destroyNotifier$
+   * @public
+   * @type {boolean}
+   * @default false
+   * @memberof PagoDeDerechosContenedoraComponent
    */
-   private destroyNotifier$: Subject<void> = new Subject();
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
+   * @property {Subject<void>} destroyNotifier$
+   * @description Notificador utilizado para manejar la destrucción o desuscripción de observables.
+   * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido,
+   * evitando así fugas de memoria y comportamientos inesperados.
+   * Este Subject emite un valor cuando el componente va a ser destruido.
+   *
+   * @private
+   * @type {Subject<void>}
+   * @memberof PagoDeDerechosContenedoraComponent
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * @constructor
-   * @description Constructor que inyecta el store `Tramite260214Store` para gestionar el estado del trámite.
-   * Inicializa la propiedad `pagoDerechos` con el valor actual del store.
+   * @description Constructor que inyecta las dependencias necesarias para el funcionamiento del componente.
+   * Inicializa el store `Tramite260214Store` para gestionar el estado del trámite y el query `ConsultaioQuery`
+   * para manejar el estado de consulta. También configura la suscripción para detectar cambios en el modo
+   * de solo lectura del formulario y establece el valor inicial del pago de derechos.
    *
-   * @param tramiteStore - Store que administra el estado del trámite 260214.
+   * El constructor realiza las siguientes operaciones:
+   * 1. Suscribe al estado de consulta para detectar cambios en el modo de solo lectura
+   * 2. Inicializa la propiedad `pagoDerechos` con el valor actual del store
+   * 3. Gestiona la limpieza automática de suscripciones mediante `takeUntil`
+   *
+   * @param {Tramite260214Store} tramiteStore - Store que administra el estado del trámite 260214.
+   *                                            Proporciona métodos para actualizar y obtener el estado del formulario.
+   * @param {ConsultaioQuery} consultaQuery - Query service para manejar el estado de consulta del sistema.
+   *                                          Permite detectar si el formulario debe estar en modo de solo lectura.
+   *
+   * @memberof PagoDeDerechosContenedoraComponent
    */
-  constructor(public tramiteStore: Tramite260214Store, private consultaQuery: ConsultaioQuery
+  constructor(
+    public tramiteStore: Tramite260214Store,
+    private consultaQuery: ConsultaioQuery
   ) {
     this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -64,9 +95,29 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
   /**
    * @method updatePagoDerechos
    * @description Actualiza los datos del formulario de pago de derechos en el store del trámite.
+   * Este método actúa como un puente entre el componente hijo `PagoDeDerechosComponent` y el store
+   * del trámite, permitiendo que los cambios realizados en el formulario se reflejen en el estado global.
+   *
+   * Cuando se produce un cambio en el formulario hijo, este método recibe el nuevo estado
+   * y lo propaga al store correspondiente, asegurando que la información esté sincronizada
+   * en toda la aplicación.
    *
    * @param {PagoDerechosFormState} event - Estado actualizado del formulario de pago de derechos.
+   *                                        Contiene todos los datos del formulario incluyendo montos,
+   *                                        conceptos, fechas y demás información relevante del pago.
+   *
    * @returns {void} Este método no retorna ningún valor.
+   *
+   * @example
+   * // Ejemplo de uso cuando se actualiza el formulario
+   * const nuevoEstado: PagoDerechosFormState = {
+   *   monto: 1500.00,
+   *   concepto: 'Permiso de importación',
+   *   // ... otros campos
+   * };
+   * this.updatePagoDerechos(nuevoEstado);
+   *
+   * @memberof PagoDeDerechosContenedoraComponent
    */
   updatePagoDerechos(event: PagoDerechosFormState): void {
     this.tramiteStore.updatePagoDerechos(event);
@@ -77,7 +128,20 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    * @description Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
    * Se utiliza para limpiar las suscripciones activas y evitar fugas de memoria.
    *
-   * @returns {void}
+   * Este método es crucial para el manejo adecuado de recursos y memoria en la aplicación.
+   * Al ejecutarse cuando el componente va a ser destruido, se encarga de:
+   * 1. Emitir una señal a través del `destroyNotifier$` para notificar a todas las suscripciones activas
+   * 2. Completar el Subject `destroyNotifier$` para liberar todos los recursos asociados
+   *
+   * Esto es especialmente importante en aplicaciones Angular para prevenir:
+   * - Fugas de memoria por suscripciones no cerradas
+   * - Comportamientos inesperados por observables que continúan ejecutándose
+   * - Problemas de rendimiento por acumulación de suscripciones
+   *
+   * @implements {OnDestroy}
+   * @returns {void} Este método no retorna ningún valor.
+   *
+   * @memberof PagoDeDerechosContenedoraComponent
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

@@ -3,12 +3,45 @@ import { Solicitud31803State, Tramite31803Store } from '../state/Tramite31803.st
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+/**
+ * Representa la respuesta de datos de una solicitud relacionada con un pago realizado.
+ *
+ * Esta interfaz es comúnmente utilizada para mostrar o validar la información de pagos en el sistema.
+ */
 export interface SolicitudDatosResponse {
+  /**
+   * Número único que identifica la operación del pago.
+   * Puede ser proporcionado por el banco o el sistema de pago.
+   */
   numeroOperacion: string;
-  banco: string ;
+
+  /**
+   * Nombre del banco en el que se realizó el pago.
+   * Ejemplo: "BBVA", "Santander", "Banorte".
+   */
+  banco: string;
+
+  /**
+   * Llave única o folio de la transacción bancaria.
+   * Usada como referencia para el cruce con plataformas como VUCEM.
+   */
   llave: string;
+
+  /**
+   * Primer manifiesto o folio que respalda la operación de pago.
+   * Puede estar vinculado a un documento de aduana o trámite de exportación.
+   */
   manifiesto1: string;
+
+  /**
+   * Segundo manifiesto adicional relacionado con la operación de pago.
+   * Puede ser utilizado para complementar la trazabilidad.
+   */
   manifiesto2: string;
+
+  /**
+   * Fecha en la que se realizó el pago, usualmente en formato ISO (ej. '2025-07-03').
+   */
   fechaPago: string;
 }
 
@@ -46,7 +79,13 @@ export class RegistroSolicitudService {
    */
 
   public actualizarEstadoFormulario(DATOS: Solicitud31803State): void {
-    this.tramite31803Store.setBanco(DATOS.banco ?? []);
+    this.tramite31803Store.setNumeroOficio(DATOS.numeroOficio);
+    this.tramite31803Store.setCadenaDependencia(DATOS.cadenaDependencia);
+    this.tramite31803Store.setImportePago(DATOS.importePago);
+    this.tramite31803Store.setFechaInicial(DATOS.fechaInicial);
+    this.tramite31803Store.setFechaFinal(DATOS.fechaFinal);
+    this.tramite31803Store.setClaveReferencia(DATOS.claveReferencia);
+    this.tramite31803Store.setBanco(DATOS.banco);
     this.tramite31803Store.setNumeroOperacion(DATOS.numeroOperacion);
     this.tramite31803Store.setLlave(DATOS.llave);
     this.tramite31803Store.setManifiesto1(DATOS.manifiesto1);
@@ -71,7 +110,7 @@ export class RegistroSolicitudService {
  *
  * @returns Un observable que emite una lista de objetos de tipo `Catalogo`.
  */
-getSolicitudDatos(): Observable<SolicitudDatosResponse> {
-  return this.http.get<SolicitudDatosResponse>('assets/json/31803/solicitud-banco.json');
-}
+getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud31803State> {
+    return this.http.get<Solicitud31803State>('assets/json/31803/solicitud-banco.json');
+  }
 }

@@ -1,6 +1,8 @@
+// ...existing code...
 import { CONFIGURATION_TABLA_GENERALES, CONFIGURATION_TABLA_MERCANCIA, MUNICIPIODE_OPCIONS, RADIO_OPCIONS } from '../../constantes/certificado-zoosanitario.enum';
-import { CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, ConsultaioState, FECHA_FINAL, FECHA_INICIO, InputRadioComponent, Notificacion, NotificacionesComponent, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { CatalogoSelectComponent, ConfiguracionColumna, FECHA_FINAL, FECHA_INICIO, InputRadioComponent, Notificacion, NotificacionesComponent, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, ChangeDetectorRef, ElementRef, OnDestroy, OnInit, ViewChild, Input } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, } from '@ng-mf/data-access-user';
 import { DatosGenerales, TablaMercancia } from '../../models/pantallas-captura.model';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud220402State, Solicitud220402Store } from '../../estados/tramites/tramites220402.store';
@@ -13,7 +15,6 @@ import { Modal } from 'bootstrap';
 import { Solicitud220402Query } from '../../estados/queries/tramites220402.query';
 import { ToastrService } from 'ngx-toastr';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
-
 
 /**
  * Componente para la vista de la solicitud de la sección de "220402".
@@ -42,6 +43,22 @@ import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
  */
 
 export class SolicitudComponent implements OnInit, OnDestroy {
+  /**
+ * Indica el origen del flujo. Si es 'READ_PROCEDURE', se muestran tabs y vistas específicas para solo lectura.
+ * Este valor se recibe como input desde el componente padre.
+ */
+  @Input() origin?: string;
+  /**
+   * Marca todos los campos del formulario principal y del modal como tocados para mostrar errores.
+   */
+  public markAllAsTouched(): void {
+    if (this.FormSolicitud) {
+      this.FormSolicitud.markAllAsTouched();
+    }
+    if (this.generalesMercanciaForm) {
+      this.generalesMercanciaForm.markAllAsTouched();
+    }
+  }
 
   /**
    * Estado de la solicitud.
@@ -156,9 +173,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   seleccionarDatosGeneralesArr: DatosGenerales[] = [];
   /**
    * Constructor del componente.
-   * @param fb FormBuilder para crear formularios.
+   * @param fb FormBuilder para crear formularios reactivos.
    * @param validacionesService Servicio para validaciones de formularios.
-   * @param tramite220402Store Almacén de estado para el trámite 220402.
+   * @param mediodetransporteService Servicio para obtener medios de transporte.
+   * @param solicitud220402Store Almacén de estado para el trámite 220402.
+   * @param solicitud220402Query Consulta de estado para el trámite 220402.
+   * @param consultaioQuery Consulta de estado general del trámite.
+   * @param cdr ChangeDetectorRef para detección de cambios manual.
    */
   constructor(
     public fb: FormBuilder,
@@ -167,6 +188,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private solicitud220402Store: Solicitud220402Store,
     private solicitud220402Query: Solicitud220402Query,
     private consultaioQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef
   ) { }
 
   /**
@@ -290,7 +312,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       datosDelTramiteRealizar: this.fb.group({
         tipoDeCertificado: [this.solicitudState?.tipoDeCertificado, [Validators.required]],
         seccionAduanera: [this.solicitudState?.seccionAduanera, [Validators.required]],
-        puntoDestino: [this.solicitudState?.puntoDestino, [Validators.required]],
+        puntoDestino: [this.solicitudState?.puntoDestino, [Validators.required, Validators.maxLength(245)]],
         paisDeDestino: [this.solicitudState?.paisDeDestino, [Validators.required]],
         paisDeProcedencia: [this.solicitudState?.paisDeProcedencia, [Validators.required]]
       }),
@@ -332,16 +354,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         nombreComun: [this.solicitudState?.nombreComun, [Validators.required]],
         nombreCientifico: [this.solicitudState?.nombreCientifico, [Validators.required]],
         descripcionProducto: [this.solicitudState?.descripcionProducto, [Validators.required]],
-        fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, [Validators.pattern(REGEX_SOLO_DIGITOS), Validators.minLength(8)]],
+        fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, [Validators.pattern(REGEX_SOLO_DIGITOS), Validators.minLength(8), Validators.maxLength(8)]],
         descdelaFraccion: [{ value: this.solicitudState?.descdelaFraccion, disabled: true }, []],
         cantidadUMT: [{ value: this.solicitudState?.cantidadUMT, disabled: true }, []],
         UMT: [{ value: this.solicitudState?.UMT, disabled: true }, []],
-        cantidadUMC: [this.solicitudState?.cantidadUMC, [Validators.required, Validators.maxLength(15), Validators.pattern(REGEX_SOLO_DIGITOS), Validators.max(999999999999.99)]],
+        cantidadUMC: [this.solicitudState?.cantidadUMC, [Validators.required, Validators.maxLength(15), Validators.pattern(REGEX_SOLO_DIGITOS)]],
         UMC: [this.solicitudState?.UMC, [Validators.required]],
         paisdeOrigen: [this.solicitudState?.paisdeOrigen, [Validators.required]],
         entidadFederativadeOrigen: [this.solicitudState?.entidadFederativadeOrigen, []],
         municipiodeOrigen: [this.solicitudState?.municipiodeOrigen, []],
-        marcasDistintivas: [this.solicitudState?.marcasDistintivas, []],
+        marcasDistintivas: [this.solicitudState?.marcasDistintivas, [Validators.required, Validators.maxLength(60)]],
         USO: [this.solicitudState?.USO, [Validators.required]]
       }),
       numeroDescDeLosEmpaques: this.fb.group({
@@ -531,6 +553,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.datosMercancia.touched
     );
   }
+
   /**
    * Maneja el cambio de tipo de certificado.
    * 
@@ -665,6 +688,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.datosGenerales.get('UMT')?.setValue('');
     }
   }
+
+
   /**
    * Este método se utiliza para destruir la suscripción.
    * @returns destroyNotifier$
@@ -672,6 +697,20 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+   * Muestra los errores del formulario principal marcando todos los campos como tocados.
+   * 
+   * Este método es útil para activar la visualización de errores de validación en el formulario.
+   * Se asegura de que todos los campos del formulario principal sean marcados como tocados,
+   * lo que desencadena la visualización de mensajes de error para los campos inválidos.
+   * 
+   * @returns {void}
+   */
+  public mostrarErrores() {
+    this.FormSolicitud?.markAllAsTouched?.();
+    this.cdr.detectChanges();
   }
 
 }

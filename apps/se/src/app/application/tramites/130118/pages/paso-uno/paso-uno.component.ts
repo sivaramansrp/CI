@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { FormularioDinamico, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
+import { FormularioDinamico } from '@ng-mf/data-access-user';
 import { PeximService } from '../../service/pexim.service';
 import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
 
@@ -15,13 +14,7 @@ import { SolicitudComponent } from '../../components/solicitud/solicitud.compone
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss'
 })
-export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
-
-  /**
-   * Referencia al componente SolicitanteComponent.
-   * Permite interactuar con el formulario de datos del solicitante.
-   */
-  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+export class PasoUnoComponent implements OnInit, OnDestroy {
 
   /**
    * Referencia al componente SolicitudComponent.
@@ -63,27 +56,29 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * Indica si existen datos de respuesta del servidor para actualizar el formulario.
    */
   public esDatosRespuesta: boolean = false;
-  
+
+  /**
+   * Evento para cargar archivos.
+   * Se utiliza para notificar a otros componentes que se debe realizar una acción de carga de archivos.
+   */
   cargaArchivosEvento = new Subject<any>();
 
   /**
    * Constructor del componente.
-   * Se utiliza para la inyección de dependencias.
-   * @param cdr Servicio para detectar cambios manualmente.
    * @param consultaQuery Consulta para obtener el estado de la consulta.
-   * @param peximService Servicio para obtener y actualizar datos del formulario.
+   * @param peximService Servicio para manejar la lógica de negocio relacionada con el trámite.
    */
   constructor(
-    private cdr: ChangeDetectorRef,
-    private consultaQuery: ConsultaioQuery,
+    public consultaQuery: ConsultaioQuery,
     private peximService: PeximService
-  ) {}
+  ) { }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * Suscribe al estado de consulta y carga datos si es necesario.
    */
   ngOnInit(): void {
+    // Suscribirse al estado de consulta para obtener datos actualizados
     this.consultaQuery.selectConsultaioState$.pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
@@ -115,26 +110,21 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   /**
-   * Método del ciclo de vida de Angular que se ejecuta después de que la vista ha sido inicializada.
-   * Configura los datos de persona y domicilio fiscal y asigna el tipo de persona en el componente `SolicitanteComponent`.
-   */
-  ngAfterViewInit(): void {
-    this.persona = PERSONA_MORAL_NACIONAL;
-    this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
-
-    setTimeout(() => {
-      this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
-      this.cdr.detectChanges();
-    }, 0);
-  }
-
-  /**
-   * Cambia la pestaña seleccionada en la UI.
-   * @param i Índice de la pestaña a activar.
-   */
+  * Cambia la pestaña seleccionada en la UI.
+  * @param i Índice de la pestaña a activar.
+  */
   seleccionaTab(i: number): void {
     this.indice = i;
   }
+
+  
+  /**
+   * Este método se utiliza para validar el formulario antes de proceder con la solicitud.
+   * @returns Devuelve true si el formulario de solicitud es válido, false en caso contrario.
+   */
+  validarFormulario(): boolean {
+  return this.solicitudComponent?.validarFormulario() ?? false;
+}
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.

@@ -3,7 +3,8 @@
  * Contiene información sobre los requisitos y normatividad aplicable.
  */
 export const MANIFIESTOS_ALERT = {
-  DATOS_MANIFIESTOS: `Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.`,
+  DATOS_MANIFIESTOS: `<p style="text-align: center;">Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.</p>`
+
 };
 
 /**
@@ -15,7 +16,7 @@ export const MANIFIESTOS_ALERT = {
  */
 export const FECHA_PAGO= {
   labelNombre:'Fecha de pago',
-  required: true,
+  required: false,
   habilitado: true,
 }
 
@@ -27,7 +28,7 @@ export const FECHA_PAGO= {
  * @property {boolean} habilitado - Indica si el campo está habilitado.
  */
 export const PAGO = {
-  labelNombre:'Fecha de pago',
+  labelNombre:'Fecha de pago:',
   required: false,
   habilitado: true,
 }

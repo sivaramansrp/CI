@@ -11,12 +11,16 @@ import { DatosRepLegalDonatarioComponent } from '../datos-rep-legal-donatario/da
 import { DatosRepLegalRecibirDonacionComponent } from '../datos-rep-legal-recibir-donacion/datos-rep-legal-recibir-donacion.component';
 import { DatosPersonaOirRecibirComponent } from '../datos-persona-oir-recibir/datos-persona-oir-recibir.component';
 import { ToastrModule } from 'ngx-toastr';
+import { Tramite10303Store } from '../../estados/tramites/tramite10303.store';
+import { Tramite10303Query } from '../../estados/queries/tramite10303.query';
+import { model } from '@angular/core';
 
 describe('RegistroDeDonacionComponent', () => {
   let component: RegistroDeDonacionComponent;
   let fixture: ComponentFixture<RegistroDeDonacionComponent>;
   let mockTramite10303Store: any;
   let donacionesExtranjerasService: jest.Mocked<DonacionesExtranjerasService>;
+  let mockTramite10303Query: any;
 
   beforeEach(async () => {
     const SPY = {
@@ -32,7 +36,11 @@ describe('RegistroDeDonacionComponent', () => {
       getManifiestos: jest.fn().mockReturnValue(of({ data: [] })),
       getBasicoRequerimientos: jest.fn().mockReturnValue(of({ data: [] })),
       getPaises: jest.fn().mockReturnValue(of({ data: [] })),
-      getDocumentoResidencia: jest.fn().mockReturnValue(of({ data: [] }))
+      getDocumentoResidencia: jest.fn().mockReturnValue(of({ data: [] })),
+      getPaisProcedencia: jest.fn().mockReturnValue(of({ data: [] })),
+      getPaisMedicoOrigen: jest.fn().mockReturnValue(of({ data: [] })),
+      getAno: jest.fn().mockReturnValue(of({ data: [] })),
+      getVehiculoTipo: jest.fn().mockReturnValue(of({ data: [] }))
     };
 
     mockTramite10303Store = {
@@ -46,7 +54,13 @@ describe('RegistroDeDonacionComponent', () => {
       setCondicionMercancia: jest.fn(),
       setPaisOrigenMedicamento: jest.fn(),
       setPaisProcedenciaMedicamento: jest.fn(),
-      setFechaCaducidad: jest.fn()
+      setFechaCaducidad: jest.fn(),
+      setMercanciaTablaDatos: jest.fn(),
+      setSeleccionadaTipoDeMercancia: jest.fn()
+    };
+
+    mockTramite10303Query = {
+      selectSeccionState$: of({})
     };
 
     await TestBed.configureTestingModule({
@@ -67,7 +81,9 @@ describe('RegistroDeDonacionComponent', () => {
         InputRadioComponent,
         ToastrModule.forRoot()
       ],
-      providers: [{ provide: DonacionesExtranjerasService, useValue: SPY }]
+      providers: [
+        { provide: DonacionesExtranjerasService, useValue: SPY }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(RegistroDeDonacionComponent);
@@ -78,6 +94,11 @@ describe('RegistroDeDonacionComponent', () => {
         tableBody: []
       }
     };
+
+    component.registroDeDonacionState = {
+      seleccionadaManifiesto: [],
+      seleccionadaBasicoRequerimiento: []
+    } as any;
 
     donacionesExtranjerasService = TestBed.inject(DonacionesExtranjerasService) as jest.Mocked<DonacionesExtranjerasService>;
     fixture.detectChanges();
@@ -124,7 +145,20 @@ describe('RegistroDeDonacionComponent', () => {
         UMT: 'test',
         paisProcedenciaOtro: 'test',
         condicionMercancia: 'test',
-
+        cantidadUMCVehiculo: 'test',
+        cantidadUMTVehiculo: 'test',
+        unidadMedidaVehiculo: 'test',
+        UMTVehiculo: 'test',
+        medicoDescripcion: 'test',
+        marca: 'test',
+        ano: 'test',
+        modelo: 'test',
+        serieNumero: 'test',
+        pasajerosNumero: 'test',
+        cilindrada: 'test',
+        combustibleTipo: 'test',
+        vehiculoTipo: 'test',
+        descripcion: 'test'
       },
       datosCofepris: {
         ingredienteActivo: 'test',
@@ -133,6 +167,11 @@ describe('RegistroDeDonacionComponent', () => {
         paisOrigenMedicamento: 'test',
         paisProcedenciaMedicamento: 'test',
         fechaCaducidad: ''
+      },
+      datosMedicosCofepris: {
+        medicoDescripcion: 'test',
+        paisProcedencia: 'test',
+        paisMedicoOrigen: 'test'
       }
     });
     component.agregarMercancias();
@@ -184,11 +223,7 @@ describe('RegistroDeDonacionComponent', () => {
   });
 
   it('should call setValoresStore with correct arguments', () => {
-    component.registroDonacionForm = new FormGroup({
-      manifiesto: new FormGroup({
-        seleccionadaBasicoRequerimiento: new FormArray([new FormControl([false])])
-      })
-    })
+    component.registroDeDonacionState = { seleccionadaManifiesto: [] } as any;
     component.setValoresStore = jest.fn();
 
     const EVENT = { target: { checked: false } } as unknown as Event;
@@ -245,5 +280,201 @@ describe('RegistroDeDonacionComponent', () => {
     component.cambioFechaCaducidad(MOCK_VALOR);
 
     expect(SET_VALUE_SPY).toHaveBeenCalledWith(MOCK_VALOR);
+  });
+
+  it('should mark specified controls as touched', () => {
+    const control1 = new FormControl('');
+    const control2 = new FormControl('');
+    component.agregarMercanciasForm = new FormGroup({
+      'campo1': control1,
+      'campo2': control2
+    });
+
+    component.validarModalCampos(['campo1', 'campo2']);
+
+    expect(control1.touched).toBeTruthy();
+    expect(control2.touched).toBeTruthy();
+  });
+
+  it('should add a row and update store when form is valid', () => {
+    component.registroDeDonacionState = { seleccionadaTipoDeMercancia: 1 } as any;
+    jest.spyOn(component, 'validarInvalidoCampos').mockReturnValue(true);
+    jest.spyOn(component, 'cerrarModal');
+    jest.spyOn(mockTramite10303Store, 'setMercanciaTablaDatos');
+
+    component.agregarMercanciasForm = new FormGroup({
+      datosMercancia: new FormGroup({
+        numeroConsecutivo: new FormControl('1'),
+        destinoDonacion: new FormControl('test'),
+        posibleFraccion: new FormControl(''),
+        descripcionFraccion: new FormControl(''),
+        solicitudDeInspeccion: new FormControl(false),
+        justificacionMerca: new FormControl('test'),
+        descripcionMercanciaOtro: new FormControl('test'),
+        tipoDeMercancia: new FormControl('test'),
+        cantidadUMC: new FormControl('1'),
+        cantidadUMT: new FormControl('1'),
+        unidadMedida: new FormControl('test'),
+        UMT: new FormControl('test'),
+        paisProcedenciaOtro: new FormControl('test'),
+        condicionMercancia: new FormControl('test'),
+        cantidadUMCVehiculo: new FormControl('test'),
+        cantidadUMTVehiculo: new FormControl('test'),
+        unidadMedidaVehiculo: new FormControl('test'),
+        UMTVehiculo: new FormControl('test'),
+        medicoDescripcion: new FormControl('test'),
+        marca: new FormControl('test'),
+        ano: new FormControl('test'),
+        modelo: new FormControl('test'),
+        serieNumero: new FormControl('test'),
+        pasajerosNumero: new FormControl('test'),
+        cilindrada: new FormControl('test'),
+        combustibleTipo: new FormControl('test'),
+        vehiculoTipo: new FormControl('test'),
+        descripcion: new FormControl('test')
+      }),
+      datosCofepris: new FormGroup({
+        ingredienteActivo: new FormControl('test'),
+        tipoMedicamento: new FormControl('test'),
+        presentacionFarma: new FormControl('test'),
+        paisOrigenMedicamento: new FormControl('test'),
+        paisProcedenciaMedicamento: new FormControl('test'),
+        fechaCaducidad: new FormControl('')
+      }),
+      datosMedicosCofepris: new FormGroup({
+        medicoDescripcion: new FormControl('test'),
+        paisProcedencia: new FormControl('test'),
+        paisMedicoOrigen: new FormControl('test')
+      })
+    });
+    let esFormValido = true;
+
+    component.agregarMercancias();
+
+    expect(esFormValido).toBe(true);
+    expect(component.cerrarModal).toHaveBeenCalled();
+  });
+
+  it('should update selected type of merchandise and call store methods', () => {
+    const restablecerCamposSpy = jest.spyOn(component, 'restablecerCampos');
+    const mockFormControl = new FormControl('2');
+    component.agregarMercanciasForm = new FormGroup({
+      datosMercancia: new FormGroup({
+        tipoDeMercancia: mockFormControl
+      }),
+      datosCofepris: new FormGroup({
+        ingredienteActivo: new FormControl('test'),
+        tipoMedicamento: new FormControl('test'),
+        presentacionFarma: new FormControl('test'),
+        paisOrigenMedicamento: new FormControl('test'),
+        paisProcedenciaMedicamento: new FormControl('test'),
+        fechaCaducidad: new FormControl('test')
+      }),
+      datosMedicosCofepris: new FormGroup({
+        medicoDescripcion: new FormControl('test'),
+        paisProcedencia: new FormControl('test'),
+        paisMedicoOrigen: new FormControl('test')
+      })
+    });
+
+    component.tipoDeMercanciaSeleccion();
+
+    expect(restablecerCamposSpy).toHaveBeenCalled();
+    expect(component.seleccionadaTipoDeMercancia).toBe(2);
+  });
+
+  it('should call setDestinoDonacion with selected value', () => {
+    const mockValue = 5;
+
+    component.agregarMercanciasForm = new FormGroup({
+      datosMercancia: new FormGroup({
+        destinoDonacion: new FormControl(mockValue)
+      })
+    });
+    jest.spyOn(component, 'destinoDonacionSeleccion');
+    component.destinoDonacionSeleccion();
+    mockTramite10303Store.setDestinoDonacion = jest.fn();
+
+    expect(component.destinoDonacionSeleccion).toHaveBeenCalledWith();
+  });
+
+  it('should call unidadMedidaSeleccion with selected value', () => {
+    jest.spyOn(component, 'unidadMedidaSeleccion');
+    component.unidadMedidaSeleccion();
+    mockTramite10303Store.setUnidadMedida = jest.fn();
+
+    expect(component.unidadMedidaSeleccion).toHaveBeenCalledWith();
+  });
+
+  it('should call umtSeleccion with selected value', () => {
+    jest.spyOn(component, 'umtSeleccion');
+    component.umtSeleccion();
+    mockTramite10303Store.setUMT = jest.fn();
+
+    expect(component.umtSeleccion).toHaveBeenCalledWith();
+  });
+
+  it('should call paisProcedenciaOtroSeleccion with selected value', () => {
+    jest.spyOn(component, 'paisProcedenciaOtroSeleccion');
+    component.paisProcedenciaOtroSeleccion();
+    mockTramite10303Store.setPaisProcedenciaOtro = jest.fn();
+
+    expect(component.paisProcedenciaOtroSeleccion).toHaveBeenCalledWith();
+  });
+
+  it('should call condicionMercanciaSeleccion with selected value', () => {
+    jest.spyOn(component, 'condicionMercanciaSeleccion');
+    component.condicionMercanciaSeleccion();
+    mockTramite10303Store.setCondicionMercancia = jest.fn();
+
+    expect(component.condicionMercanciaSeleccion).toHaveBeenCalledWith();
+  });
+
+  it('should call paisOrigenMedicamentoSeleccion with selected value', () => {
+    jest.spyOn(component, 'paisOrigenMedicamentoSeleccion');
+    component.paisOrigenMedicamentoSeleccion();
+    mockTramite10303Store.setPaisOrigenMedicamento = jest.fn();
+
+    expect(component.paisOrigenMedicamentoSeleccion).toHaveBeenCalledWith();
+  });
+
+  it('should call paisProcedenciaMedicamentoSeleccion with selected value', () => {
+    jest.spyOn(component, 'paisProcedenciaMedicamentoSeleccion');
+    component.paisProcedenciaMedicamentoSeleccion();
+    mockTramite10303Store.setPaisProcedenciaMedicamento = jest.fn();
+
+    expect(component.paisProcedenciaMedicamentoSeleccion).toHaveBeenCalledWith();
+  });
+
+  it('should call paisProcedenciaSeleccion with selected value', () => {
+    jest.spyOn(component, 'paisProcedenciaSeleccion');
+    component.paisProcedenciaSeleccion();
+    mockTramite10303Store.setPaisProcedencia = jest.fn();
+
+    expect(component.paisProcedenciaSeleccion).toHaveBeenCalledWith();
+  });
+
+  it('should call paisMedicoOrigenSeleccion with selected value', () => {
+    jest.spyOn(component, 'paisMedicoOrigenSeleccion');
+    component.paisMedicoOrigenSeleccion();
+    mockTramite10303Store.setPaisMedicoOrigen = jest.fn();
+
+    expect(component.paisMedicoOrigenSeleccion).toHaveBeenCalledWith();
+  });
+
+  it('should call anoSeleccion with selected value', () => {
+    jest.spyOn(component, 'anoSeleccion');
+    component.anoSeleccion();
+    mockTramite10303Store.setAno = jest.fn();
+
+    expect(component.anoSeleccion).toHaveBeenCalledWith();
+  });
+
+  it('should call vehiculoTipoSeleccion with selected value', () => {
+    jest.spyOn(component, 'vehiculoTipoSeleccion');
+    component.vehiculoTipoSeleccion();
+    mockTramite10303Store.vehiculoTipoSeleccion = jest.fn();
+
+    expect(component.vehiculoTipoSeleccion).toHaveBeenCalledWith();
   });
 });

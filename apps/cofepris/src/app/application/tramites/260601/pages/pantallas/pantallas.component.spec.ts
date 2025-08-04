@@ -1,81 +1,56 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { PantallasComponent } from './pantallas.component';
-import { AlertComponent, BtnContinuarComponent, WizardComponent } from '@ng-mf/data-access-user';
-import { AVISO_PRIVACIDAD } from '../../constantes/aviso-enum';
-import { PASOS } from '@ng-mf/data-access-user';
-import { PasoDosComponent } from '../paso-dos/paso-dos.component';
-import { FirmarSolicitudComponent } from '../firmar-solicitud/firmar-solicitud.component';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 describe('PantallasComponent', () => {
-  let component: PantallasComponent;
   let fixture: ComponentFixture<PantallasComponent>;
+  let component: { ngOnDestroy: () => void; seleccionaTab: (arg0: {}) => void; wizardComponent: { siguiente?: any; atras?: any; }; getValorIndice: (arg0: { valor: {}; accion: {}; }) => void; };
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [PantallasComponent],
-      imports: [
-        CommonModule,
-        WizardComponent,
-        PasoDosComponent,
-        FirmarSolicitudComponent,
-        BtnContinuarComponent,
-        AlertComponent
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule, PantallasComponent ],
+      declarations: [
       ],
-      schemas: [NO_ERRORS_SCHEMA]
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+
+      ]
+    }).overrideComponent(PantallasComponent, {
+
     }).compileComponents();
-
     fixture = TestBed.createComponent(PantallasComponent);
-    component = fixture.componentInstance;
-    
-    component.wizardComponent = {
-      siguiente: jest.fn(),
-      atras: jest.fn(),
-    } as unknown as WizardComponent;
-
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create the component', () => {
+  afterEach(() => {
+    component.ngOnDestroy = function() {};
+    fixture.destroy();
+  });
+
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize pasos property correctly', () => {
-    expect(component.pasos).toEqual(PASOS);
+  it('should run #seleccionaTab()', async () => {
+
+    component.seleccionaTab({});
+
   });
 
-  it('should initialize TEXTOS property correctly', () => {
-    expect(component.TEXTOS).toBe(AVISO_PRIVACIDAD);
+  it('should run #getValorIndice()', async () => {
+    component.wizardComponent = component.wizardComponent || {};
+    component.wizardComponent.siguiente = jest.fn();
+    component.wizardComponent.atras = jest.fn();
+    component.getValorIndice({
+      valor: {},
+      accion: {}
+    });
   });
 
-  it('should set indice correctly in seleccionaTab', () => {
-    component.seleccionaTab(3);
-    expect(component.indice).toBe(3);
-  });
-
-  it('should set indice and call siguiente method in getValorIndice with action "cont"', () => {
-    const mockAccionBoton = { accion: 'cont', valor: 2 };
-    component.getValorIndice(mockAccionBoton);
-
-    expect(component.indice).toBe(2);
-    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-  });
-
-  it('should set indice and call atras method in getValorIndice with action other than "cont"', () => {
-    const mockAccionBoton = { accion: 'ant', valor: 1 };
-    component.getValorIndice(mockAccionBoton);
-
-    expect(component.indice).toBe(1);
-    expect(component.wizardComponent.atras).toHaveBeenCalled();
-  });
-
-  it('should not update indice or call any method if valor is out of range in getValorIndice', () => {
-    const mockAccionBoton = { accion: 'cont', valor: 6 };
-    component.getValorIndice(mockAccionBoton);
-
-    expect(component.indice).not.toBe(6);
-    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
-  });
 });

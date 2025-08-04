@@ -6,11 +6,20 @@ import { ENVIRONMENT } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { PagoDeDerechos } from '../models/pago-de-derechos.model';
+import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { TercerosrelacionadosdestinoTable } from '../../../shared/models/tercerosrelacionados.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Solocitud220503Service {
+    /**
+   * URL base para los archivos JSON de catálogos.
+   * @property {string}
+   */
+  url: string = 'assets/json/220503/';
+
   /**
    * AppConfig es una inyección de dependencias que proporciona la configuración de la aplicación.
    */
@@ -72,10 +81,6 @@ export class Solocitud220503Service {
     this.solicitud220503Store.setEstablecimientoTIF(DATOS.establecimientoTIF);
     this.solicitud220503Store.setNumeroguia(DATOS.numeroguia);
     this.solicitud220503Store.setRegimen(DATOS.regimen);
-    this.solicitud220503Store.setCapturaDatosMercancia(
-      DATOS.capturaDatosMercancia
-    );
-    this.solicitud220503Store.setCoordenadas(DATOS.coordenadas);
     this.solicitud220503Store.setMovilizacion(DATOS.movilizacion);
     this.solicitud220503Store.setTransporte(DATOS.transporte);
     this.solicitud220503Store.setNombreEmpresa(DATOS.nombreEmpresa);
@@ -87,6 +92,15 @@ export class Solocitud220503Service {
     this.solicitud220503Store.setBanco(DATOS.banco);
     this.solicitud220503Store.setIlavePago(DATOS.llavePago);
     this.solicitud220503Store.setImportePago(DATOS.importePago);
+    this.solicitud220503Store.updateTercerosRelacionados(DATOS.tercerosRelacionados);
+    this.solicitud220503Store.updatedatosForma(DATOS.datosForma); 
+    this.solicitud220503Store.actualizarSelectedTerceros(
+      DATOS.selectedTerceros
+    );
+    this.solicitud220503Store.actualizarSelectedExdora(
+      DATOS.seletedExdora
+    );
+    this.solicitud220503Store.actualizarPagoDeDerechos(DATOS.pagoDeDerechos);
   }
 
   /**
@@ -102,4 +116,40 @@ export class Solocitud220503Service {
       'assets/json/220503/registro_toma_muestras_mercancias.json'
     );
   }
+
+     /**
+     * Actualiza la lista de terceros relacionados con la solicitud.
+     * @method updateTercerosRelacionados
+     * @param {TercerosrelacionadosdestinoTable[]} tercerosRelacionados Lista de terceros.
+     * @memberof CertificadoZoosanitarioServiceService
+     */
+      updateTercerosRelacionado(tercerosRelacionados: TercerosrelacionadosdestinoTable[]): void {
+        this.solicitud220503Store.updateTercerosRelacionados(tercerosRelacionados);
+      }
+           /**
+            * @description Obtiene todos los datos del formulario como observable.
+            * @returns {Observable<ListaDeDatosFinal>} Observable con todos los datos del formulario.
+            */
+            getAllDatosForma(): Observable<Solicitud220503State> {
+              return this.solicitud220503Store._select(state => state); // Select the entire state
+            }
+              /**
+               * Actualizar el formulario de pago en el store.
+               * @method actualizarFormularioPago
+               * @param formularioPago Datos del formulario de pago.
+               * @returns {void}
+               */
+              public actualizarPagoDeDerechos(pagoDeDerechos: PagoDeDerechos): void {
+                this.solicitud220503Store.actualizarPagoDeDerechos(pagoDeDerechos);
+              }
+              /**
+               * Obtiene los detalles de un catálogo desde un archivo JSON.
+               * @method obtenerDetallesDelCatalogo
+               * @param nombreDelArchivo Nombre del archivo JSON del catálogo.
+               * @returns {Observable<RespuestaCatalogos>} Observable con la respuesta del catálogo.
+               */
+              obtenerDetallesDelCatalogo(nombreDelArchivo: string): Observable<RespuestaCatalogos> {
+                const BASEURL: string = this.url + nombreDelArchivo;
+                return this.http.get<RespuestaCatalogos>(BASEURL);
+              }
 }

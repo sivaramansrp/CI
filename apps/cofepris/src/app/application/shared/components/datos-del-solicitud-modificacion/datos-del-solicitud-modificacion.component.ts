@@ -68,14 +68,13 @@ import {
   ScianModel,
 } from '../../models/datos-de-la-solicitud.model';
 import { Subject ,map, takeUntil } from 'rxjs';
-import { ScianData } from '../../../shared/models/datos-modificacion.model';
 
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { EstablecimientoService } from '../../services/establecimiento.service';
 import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-representante-seccion/manifiestos-representante-seccion.component';
 
-import { NUEVA_NOTIFICACION, PAIS_DE_PROCEDENCIA_LABEL } from '../../constantes/datos-domicilio-legal.enum';
+import { NUEVA_NOTIFICACION, PAIS_DE_ORIGEN_LABEL, PAIS_DE_PROCEDENCIA_LABEL, USO_ESPECIFICO_LABEL } from '../../constantes/datos-domicilio-legal.enum';
 /*
  ** component
  */
@@ -290,17 +289,17 @@ export class DatosDelSolicitudModificacionComponent
   paisDeProcedenciaBotons = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-primary',
+      class: 'btn-default',
       funcion: (): void => this.crossList.toArray()[0].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-default',
+      class: 'btn-primary',
       funcion: (): void => this.crossList.toArray()[0].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-danger',
+      class: 'btn-primary',
       funcion: (): void => this.crossList.toArray()[0].quitar(''),
     },
     {
@@ -316,17 +315,17 @@ export class DatosDelSolicitudModificacionComponent
   paisDeProcedenciaBotonsDos = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-primary',
+      class: 'btn-default',
       funcion: (): void => this.crossList.toArray()[1].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-default',
+      class: 'btn-primary',
       funcion: (): void => this.crossList.toArray()[1].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-danger',
+      class: 'btn-primary',
       funcion: (): void => this.crossList.toArray()[1].quitar(''),
     },
     {
@@ -342,17 +341,17 @@ export class DatosDelSolicitudModificacionComponent
   paisDeProcedenciaBotonsTres = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-primary',
+      class: 'btn-default',
       funcion: (): void => this.crossList.toArray()[2].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-default',
+      class: 'btn-primary',
       funcion: (): void => this.crossList.toArray()[2].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-danger',
+      class: 'btn-primary',
       funcion: (): void => this.crossList.toArray()[2].quitar(''),
     },
     {
@@ -366,6 +365,20 @@ export class DatosDelSolicitudModificacionComponent
    * Etiqueta para el crosslist de país de procedencia.
    */
   public paisDeProcedenciaLabel = PAIS_DE_PROCEDENCIA_LABEL;
+
+  /**
+   * Etiqueta para el campo de uso específico.
+   * 
+   * Esta propiedad almacena la etiqueta que se utiliza para mostrar el campo "Uso Específico"
+   * en los formularios o tablas del componente.
+   */
+  public usoEspecificoLabel = USO_ESPECIFICO_LABEL;
+  /**
+   * Etiqueta para el país de origen.
+   * @type {CrossListLable}
+   */
+  public paisDeOrigenLabel = PAIS_DE_ORIGEN_LABEL;
+  
   /**
    * Lista de países para la selección de origen.
    */
@@ -511,6 +524,10 @@ export class DatosDelSolicitudModificacionComponent
    */
   mercanciasTablaDatos: MercanciasInfo[] = [];
   /**
+   * Datos de la tabla mercancías.
+   */
+  public seleccionados: MercanciasInfo[] = [];
+  /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los formularios estarán deshabilitados y no se podrán editar.
    * Cuando es `false`, los formularios estarán habilitados para edición.
@@ -569,14 +586,40 @@ export class DatosDelSolicitudModificacionComponent
    * Este método obtiene los datos de mercancías desde el servicio `EstablecimientoService`
    * y los agrega al arreglo `mercanciasTablaDatos`.
    */
-  cargarDatosDesdeApi() {
+  cargarDatosDesdeApi(): void {
     this.establecimientoService.getMercancias().pipe(takeUntil(this.destroy$))
       .subscribe((response: MercanciasInfo[]) => {
         response?.forEach((resp: MercanciasInfo) => {
-          this.mercanciasTablaDatos.push(resp)
+          this.mercanciasTablaDatos = [...this.mercanciasTablaDatos, resp];
         })
       });
   }
+  /**
+   * @method loadScian
+   * @description
+   * Método que carga los datos SCIAN desde el servicio `EstablecimientoService`
+   * y los asigna al formulario `scianForm`.
+   */
+
+onSeleccionChange(event: MercanciasInfo[]): void {
+  this.seleccionados = event;
+}
+/**
+ * @method loadScian
+ * @description 
+ * Carga los datos SCIAN desde el servicio `EstablecimientoService`
+ * y los asigna al formulario `scianForm`.
+ */
+eliminarSeleccionados(): void {
+  this.seleccionados.forEach(row => {
+    const INDEX = this.mercanciasTablaDatos.indexOf(row);
+    if (INDEX > -1) {
+      this.mercanciasTablaDatos.splice(INDEX, 1);
+    }
+  });
+  this.seleccionados = [];
+}
+
 
   /**
   * @method obtenerScianTablaDatos
@@ -589,7 +632,7 @@ export class DatosDelSolicitudModificacionComponent
       .pipe(takeUntil(this.destroy$))
       .subscribe((response: ScianModel[]) => {
         response?.forEach((resp: ScianModel) => {
-          this.personaparas.push(resp)
+          this.personaparas = [...this.personaparas, resp];
         })
       });
   }
@@ -649,7 +692,7 @@ export class DatosDelSolicitudModificacionComponent
     this.domicilioEstablecimiento = this.fb.group({
       ideGenerica: ['', Validators.required],
       observaciones: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(2000)]],
-      establecimientoRFCResponsableSanitario: ['', [Validators.required,Validators.pattern(REGEX_RFC_FISICA)]],
+      establecimientoRFCResponsableSanitario: ['', [Validators.required,Validators.pattern(REGEX_RFC_FISICA), Validators.maxLength(13)]],
       establecimientoRazonSocial:['', Validators.required],
       establecimientoCorreoElectronico :['', [Validators.required, Validators.email]],
       establecimientoEstados :['', Validators.required],
@@ -678,7 +721,6 @@ export class DatosDelSolicitudModificacionComponent
       clasificacion: ['', Validators.required],
       especificarClasificacionProducto: ['', Validators.required],
       denominacionEspecifica: ['', Validators.required],
-      denominacionDistintiva: ['', Validators.required],
       denominacionComun: ['', Validators.required],
       tipoDeProducto: ['', Validators.required],
       estadoFisico: ['', Validators.required],
@@ -864,7 +906,7 @@ export class DatosDelSolicitudModificacionComponent
         denominacionEspecifica: this.formMercancias.get(
           'denominacionEspecifica'
         )?.value,
-        denominacionDistintiva: this.formMercancias.get(
+        denominacionDistintiva: this.formMercancias?.get(
           'denominacionDistintiva'
         )?.value,
         denominacionComun: this.formMercancias.get('denominacionComun')?.value,
@@ -888,14 +930,16 @@ export class DatosDelSolicitudModificacionComponent
         tipoProducto: this.formMercancias.get('tipoDeProducto')?.value,
         usoEspecifico: this.formMercancias.get('usoEspecifico')?.value,
       };
-
-      // Añade los nuevos datos a la tabla
-      this.mercanciasTablaDatos.push(MERCANCIA);
-      // Restablecer el formulario
+      this.mercanciasTablaDatos = [...this.mercanciasTablaDatos, MERCANCIA];
       this.formMercancias.reset();
       this.cerrarModalMercancía();
     }
   }
+
+  limpiarMercancia(): void { 
+  this.abrirModalMercancia();
+  this.formMercancias.reset();
+}
   /* *
    * Método para eliminar un elemento de la tabla de mercancías.
    * @param index Índice del elemento a eliminar.

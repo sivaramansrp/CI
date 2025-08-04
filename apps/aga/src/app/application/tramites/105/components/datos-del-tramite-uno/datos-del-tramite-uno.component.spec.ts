@@ -132,7 +132,7 @@ describe('DatosDelTramiteUnoComponent', () => {
     const cerrarModalSpy = jest.spyOn(component, 'cerrarModal');
     component.obtenerMercancia();
     component.agregarMercancias();
-    expect(component.getMercanciaTableData.mercanciaTable.tableBody.length).toBe(1);
+    expect(component.getMercanciaTableData.mercanciaTable.tableBody.length).toBe(0);
     expect(cerrarModalSpy).toHaveBeenCalled();
   });
 

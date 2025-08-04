@@ -1,7 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  SolicitanteComponent,
+} from '@ng-mf/data-access-user';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { ModificarDestinatarioComponent } from '../../components/modificar-destinatario/modificar-destinatario.component';
+import { ModificarMercanciasComponent } from '../../components/modificar-mercancias/modificar-mercancias.component';
+import { PagoDerechosComponent } from '../../components/pago-derechos/pago-derechos.component';
 import { Service260101Service } from '../../services/service260101.service';
+import { SolicitudDatosComponent } from '../../components/solicitud-datos/solicitud-datos.component';
+import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component';
 
 /**
  * El componente PasoUnoComponent se encarga de gestionar la lógica para el primer paso (Paso Uno) de un proceso.
@@ -11,6 +22,18 @@ import { Service260101Service } from '../../services/service260101.service';
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styles: ``,
+  standalone: true,
+  imports: [
+    SolicitudDatosComponent,
+    ModificarMercanciasComponent,
+    PagoDerechosComponent,
+    TercerosRelacionadosComponent,
+    ModificarDestinatarioComponent,
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    SolicitanteComponent,
+  ],
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
@@ -28,23 +51,23 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
 
- /**
- * Constructor del componente `PasoUnoComponent`.
- * 
- * Inyecta los servicios necesarios para:
- * - Consultar el estado actual del formulario desde el store (`consultaQuery`).
- * - Obtener y actualizar los datos del formulario del trámite 260101 (`service260101Service`).
- * 
- * @param consultaQuery Servicio que proporciona acceso al estado de la consulta.
- * @param service260101Service Servicio encargado de manejar los datos del formulario 260101.
- */
-constructor(
-  private consultaQuery: ConsultaioQuery,
-  private service260101Service: Service260101Service
-) {
-  // Constructor del componente PasoUnoComponent.
-  // Inyecta los servicios necesarios para la consulta del estado desde el store y la obtención de datos del formulario.
-}
+  /**
+   * Constructor del componente `PasoUnoComponent`.
+   *
+   * Inyecta los servicios necesarios para:
+   * - Consultar el estado actual del formulario desde el store (`consultaQuery`).
+   * - Obtener y actualizar los datos del formulario del trámite 260101 (`service260101Service`).
+   *
+   * @param consultaQuery Servicio que proporciona acceso al estado de la consulta.
+   * @param service260101Service Servicio encargado de manejar los datos del formulario 260101.
+   */
+  constructor(
+    private consultaQuery: ConsultaioQuery,
+    private service260101Service: Service260101Service
+  ) {
+    // Constructor del componente PasoUnoComponent.
+    // Inyecta los servicios necesarios para la consulta del estado desde el store y la obtención de datos del formulario.
+  }
 
   /**
    * Método del ciclo de vida `ngOnInit`.
@@ -62,11 +85,11 @@ constructor(
         })
       )
       .subscribe();
-       if (this.consultaState.update) {
-            this.guardarDatosFormulario();
-          } else {
-            this.esDatosRespuesta = true;
-          }
+    if (this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
   }
 
   /**

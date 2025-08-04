@@ -53,6 +53,10 @@ export class Tramite130120Query extends Query<DatosGrupos> {
   selectDatosFederal$ = this.select((state) => {
     return state.datosFederal;
   });
+
+  selectDatos$ = this.select((state) => {
+    return state;
+  });
   
   /**
    * Constructor de la clase Tramite130120Query.

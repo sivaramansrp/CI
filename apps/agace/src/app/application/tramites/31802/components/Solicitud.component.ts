@@ -1,12 +1,11 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
-  CatalogoSelectComponent,
   ConsultaioState,
   InputFecha,
   InputFechaComponent,
   TituloComponent,
   ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FECHA_FINAL, FECHA_INICIAL, FECHA_PAGO } from '../model/registro.model';
 import {
   FormBuilder,
@@ -36,9 +35,8 @@ import { Tramite31802Query } from '../state/Tramite31802.query';
     CommonModule,
     TituloComponent,
     InputFechaComponent,
-    CatalogoSelectComponent,
-    ReactiveFormsModule,
-  ],
+    ReactiveFormsModule
+],
   providers: [RegistroSolicitudService],
   templateUrl: './Solicitud.component.html',
   styleUrl: './Solicitud.component.css',
@@ -144,7 +142,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosDelFormulario();
     } else {
-      this.datosDeAvisoForm()
+      this.donanteDomicilio();
     }
   }
   /**
@@ -152,23 +150,20 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    *
    * @param nuevo_fechaPago Nueva fecha de pago seleccionada.
    */
-  cambioFechaPago(nuevo_fechaPago: string): void {
+ cambioFechaPago(nuevo_fechaPago: string): void {
     this.registroForm.patchValue({
       fechaPago: nuevo_fechaPago,
     });
     this.setValoresStore(this.registroForm, 'fechaPago', 'setFechaPago');
   }
-
-  /**
+    /**
    * Maneja el envío del formulario.
    * Valida el formulario antes de realizar acciones adicionales.
    */
   enviarFormulario(): void {
     if (this.registroForm.valid) {
       // Aquí se implementará la lógica para manejar el envío del formulario.
-    } else {
-      this.validarDestinatarioFormulario();
-    }
+    } 
   }
 
   /**
@@ -221,30 +216,17 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
-      llave: [this.solicitudState?.llave, [Validators.required]],
-      manifiesto1: [this.solicitudState?.manifiesto1, [Validators.required]],
-      manifiesto2: [this.solicitudState?.manifiesto2, [Validators.required]],
-      manifiesto3: [this.solicitudState?.manifiesto3, [Validators.required]],
-      numeroOperacion: [this.solicitudState?.numeroOperacion, [Validators.required]],
-      fechaPago: [this.solicitudState?.fechaPago, [Validators.required]],
-      monedaNacional: [this.solicitudState?.monedaNacional, [Validators.required]],
+      numeroOficio: [{value: this.solicitudState?.numeroOficio, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      llave: [{value: this.solicitudState?.llave, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      manifiesto1: [{value: this.solicitudState?.manifiesto1, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      manifiesto2: [{value: this.solicitudState?.manifiesto2, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      manifiesto3: [{value: this.solicitudState?.manifiesto3, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      numeroOperacion: [{value: this.solicitudState?.numeroOperacion, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      fechaPago: [{value : this.solicitudState?.fechaPago,disabled :this.esFormularioSoloLectura}, [Validators.required]],
+      monedaNacional: [{value: this.solicitudState?.monedaNacional, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      fechaInicio:[{value: this.solicitudState?.fechaInicio, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      fechaFinal: [{value: this.solicitudState?.fechaFinal, disabled: this.esFormularioSoloLectura}, [Validators.required]],
     });
-
-    this.inicializarEstadoFormulario();
-  }
-
-  /**
- * datosDeltrimiteForm los campos del formulario si es de solo lectura.
- * Si el formulario es de solo lectura, deshabilita los campos del formulario de importador/exportador.
- */
-
-  datosDeAvisoForm(): void {
-    if (this.esFormularioSoloLectura) {
-      this.registroForm.get('llave')?.disable();
-      this.registroForm.get('numeroOperacion')?.disable();
-      this.registroForm.get('fechaPago')?.disable();
-      this.registroForm.get('monedaNacional')?.disable();
-    }
   }
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.

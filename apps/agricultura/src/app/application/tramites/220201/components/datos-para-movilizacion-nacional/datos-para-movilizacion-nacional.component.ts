@@ -1,7 +1,6 @@
 import {
   Catalogo,
   CatalogoSelectComponent,
-  ConsultaioQuery,
   RespuestaCatalogos,
   SharedModule,
   TituloComponent
@@ -12,6 +11,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Subject, map, takeUntil } from 'rxjs';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 
@@ -130,15 +130,6 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @method ngAfterViewInit
    */
   ngAfterViewInit(): void {
-    this.movilizacionForm.valueChanges
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(() => {
-        const FORMA_VALIDA_ACTUALIZADA = {
-          dataParaMovilizacion: this.movilizacionForm.valid
-        };
-        this.certificadoZoosanitarioServices.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
-      });
-
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -220,6 +211,20 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
     this.certificadoZoosanitarioServices.updateDatosParaMovilizacionNacional(VALOR);
   }
 
+  /**
+   * @description
+   * Valida el formulario de movilización. Si el formulario es válido, retorna `true`.
+   * Si no es válido, marca todos los campos como tocados para mostrar los errores y retorna `false`.
+   *
+   * @returns {boolean} `true` si el formulario es válido, de lo contrario `false`.
+   */
+  validarFormulario(): boolean {
+    if (this.movilizacionForm.valid) {
+      return true;
+    }
+    this.movilizacionForm.markAllAsTouched();
+    return false;
+  }
   /**
    * Ciclo de vida que se ejecuta al destruir el componente. Libera recursos y cancela las suscripciones.
    * @method ngOnDestroy

@@ -1,0 +1,18 @@
+{
+    "code": 200,
+    "data": [
+        {
+            "id": 0,
+            "descripcion": "AGUASCALIENTES"
+        },
+        {
+            "id": 1,
+            "descripcion": "BAJA CALIFORNIA"
+        },
+        {
+            "id": 2,
+            "descripcion": "HIDALGO"
+        }
+    ],
+    "message": "Seleccione un valor"
+}

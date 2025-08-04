@@ -13,10 +13,11 @@ import {
   Input,
   OnChanges,
   OnDestroy,
-  OnInit,
   SimpleChanges,
 } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
+
+import { AcusesResolucionResponse } from '../../../../core/models/130118/consulta-acuses-response.model';
 import { AcusesService } from '../../../../core/services/consultagenerica/acuses-service';
 import { CommonModule } from '@angular/common';
 import { ResolucionesService } from '../../../../core/services/consultagenerica/resoluciones-service';
@@ -30,8 +31,7 @@ import { Router } from '@angular/router';
   styleUrl: './acuses-resoluciones.component.scss',
 })
 export class AcusesResolucionesComponent
-  implements OnChanges, OnInit, OnDestroy
-{  
+  implements OnChanges, OnDestroy {
   /**
    * Título del componente.
    * @type {string}
@@ -43,6 +43,12 @@ export class AcusesResolucionesComponent
    * @type {string}
    */
   @Input() txtAlerta!: string;
+
+  /**
+   * Lista de acuses de resolución.
+   * @type {AcusesResolucionResponse[]}
+   */
+  @Input() acusesResolucion!: AcusesResolucionResponse;
 
   /**
    * Subtítulo del componente.
@@ -104,18 +110,7 @@ export class AcusesResolucionesComponent
     private router: Router,
     private acusesService: AcusesService,
     private resolucionesService: ResolucionesService
-  ) {}
-
-  ngOnInit(): void {
-    /**
-     * Llamar al método para obtener los acuses al inicializar el componente
-     */
-    this.getAcuses();
-    /**
-     * Llamar al método para obtener las resoluciones al inicializar el componente
-     */
-    this.getResoluciones();
-  }
+  ) { }
 
   /**
    * Método que se ejecuta cuando uno o más inputs del componente cambian.
@@ -124,8 +119,22 @@ export class AcusesResolucionesComponent
    * @returns void
    */
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['txtAlerta'].currentValue) {
-      this.txtAlerta = changes['txtAlerta'].currentValue;
+    if (changes['acusesResolucion'] && changes['acusesResolucion'].currentValue) {
+      this.getAcuses();
+      this.getResolucion();
+    } else {
+      this.acusesService
+        .getAcuses()
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe((data) => {
+          this.datosTablaAcuse = data;
+        });
+      this.resolucionesService
+        .getResoluciones()
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe((data) => {
+          this.datosTablaResolucion = data;
+        });
     }
   }
   /**
@@ -146,25 +155,26 @@ export class AcusesResolucionesComponent
    * suscribe - Se suscribe al observable del servicio para obtener los datos.
    */
   getAcuses(): void {
-    this.acusesService
-      .getAcuses()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.datosTablaAcuse = data;
-      });
+    this.datosTablaAcuse = this.acusesResolucion.acuses.map((ac, index) => ({
+      id: index + 1,
+      idDocumento: ac.id_documento_oficial.toString(),
+      documento: ac.desc_documento,
+      urlPdf: ac.documento_minio ?? '',
+    }));
   }
+
   /**
    * Método para obtener los documentos desde el servicio.
    * unsubscribe$ - Subject para manejar la cancelación de suscripciones.
    * suscribe - Se suscribe al observable del servicio para obtener los datos.
    */
-  getResoluciones(): void {
-    this.resolucionesService
-      .getResoluciones()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.datosTablaResolucion = data;
-      });
+  getResolucion(): void {
+    this.datosTablaResolucion = this.acusesResolucion.documentos_oficiales.map((doc, index) => ({
+      id: index + 1,
+      idDocumento: doc.id_documento_oficial.toString(),
+      documento: doc.desc_documento,
+      urlPdf: doc.documento_minio ?? '',
+    }));
   }
 
   /**

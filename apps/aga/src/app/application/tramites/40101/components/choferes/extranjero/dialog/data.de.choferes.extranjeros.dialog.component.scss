@@ -1,0 +1,16 @@
+    .btn {
+        margin: 2px !important;
+    }
+
+    .modal-body {
+        form {
+            ::ng-deep label {
+                font-size: 1.6rem !important;
+            }
+        }
+
+    }
+
+    ::ng-deep .mensaje-error {
+        display: none !important;
+    }

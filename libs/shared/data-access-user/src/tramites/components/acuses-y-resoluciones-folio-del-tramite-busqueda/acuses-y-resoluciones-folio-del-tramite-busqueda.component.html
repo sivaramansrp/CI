@@ -1,11 +1,11 @@
 <div class="page">
   <div class="container">
-    <form [formGroup]="formBusqueda">
-      <div class="row">
-        <div class="col-md p-2">
-          <h1>Acuses y Resoluciones</h1>
-        </div>
+    <div class="row">
+      <div class="col-md mb-3">
+        <h1>Acuses y resoluciones</h1>
       </div>
+    </div>
+    <form [formGroup]="formBusqueda">
       <div class="row">
         <div class="col-md-8 form-group">
           <label class="form-label" for="solicitante">Solicitante:</label>
@@ -18,21 +18,37 @@
           <label>RFC:</label>
           <p>{{ formBusqueda.get('rfc')?.value }}</p>
         </div>
-        <div class="acuses-y-resolutiones-busqueda">
+      </div>
+      <div class="row">
+        <div class="col acuses-y-resolutiones-busqueda">
           <div class="acuses-y-resoluciones-folio-tramite">
             <div class="acuses-y-resoluciones-cuerpo p-0">
               <div class="row">
                 <div class="col-md-4 form-group">
                   <label class="form-label" for="folio"
-                    >Folio del trámite:</label
+                    >Folio:</label
                   >
                   <input
                     class="form-control"
                     id="folio"
-                    placeholder="Ingrese un folio"
                     type="text"
                     formControlName="folio"
+                    [class.is-invalid]="
+                      folio.invalid && (folio.dirty || folio.touched)
+                    "
                   />
+
+                  <div
+                    *ngIf="folio.invalid && (folio.dirty || folio.touched)"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="folio.hasError('maxlength')">
+                      Por favor, no escriba más de 25 caracteres
+                    </div>
+                    <div *ngIf="folio.hasError('pattern')">
+                      Existen datos incorrectos que no cumplen con el formato.
+                    </div>
+                  </div>
                 </div>
                 <div class="col-md-4">
                   <input-fecha
@@ -49,7 +65,9 @@
               </div>
               <div class="row">
                 <div class="col-md" (click)="folioTramite()">
-                  <button type="button" class="btn boton-buscar">Buscar</button>
+                  <button type="button" class="btn btn-primary me-2">
+                    Buscar
+                  </button>
                 </div>
               </div>
             </div>

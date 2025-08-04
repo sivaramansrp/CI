@@ -6,8 +6,8 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { DatosDomicilioService } from '../../../tramites/260514/services/permiso-importacion.service';
 import { Notificacion } from '@ng-mf/data-access-user';
-
 /**
  * @description
  * Componente que gestiona los datos del establecimiento.
@@ -87,6 +87,12 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false;
 
   /**
+   * Indica si el botón de selección ha sido clicado.
+   * Se utiliza para rastrear el estado de clic del botón de selección dentro del componente.
+   */
+  tieneElBotonSeleccionClicado: boolean = false;
+
+  /**
    * @description
    * Constructor del componente.
    * @param fb Constructor de formularios reactivos.
@@ -98,6 +104,7 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
     private avisocalidadStore: AvisocalidadStore,
     private avisocalidadQuery: AvisocalidadQuery,
     private consultaioQuery: ConsultaioQuery,
+    private datosDomicilioSvc: DatosDomicilioService
   ) {
     // Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
@@ -146,6 +153,8 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
     }
 
     this.elementoParaEliminar = i;
+    this.tieneElBotonSeleccionClicado = true;
+    this.datosDomicilioSvc.emitEvent(this.tieneElBotonSeleccionClicado);
   }
 
   /**
@@ -157,6 +166,9 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+    if(this.tieneElBotonSeleccionClicado) {
+      this.datosDelForm.enable();
     }
   }
   /**
@@ -190,8 +202,8 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
      * */
 
     this.datosDelForm = this.fb.group({
-      rfcDel: [this.solicitudState?.rfcDel, [Validators.maxLength(254)]],
-      denominacionRazonSocial: [this.solicitudState?.denominacionRazonSocial, [Validators.required, Validators.maxLength(254)]],
+      rfcDel: [this.solicitudState?.rfcDel, [Validators.maxLength(13)]],
+      denominacionRazonSocial: [this.solicitudState?.denominacionRazonSocial, [Validators.required, Validators.maxLength(100)]],
       correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required, Validators.email, Validators.maxLength(320)]]
     });
 
@@ -200,10 +212,10 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
      * En caso contrario, habilita los campos para permitir la edición.
      * Esto asegura que el formulario refleje correctamente el estado de solo lectura.
      */
-    if (this.esFormularioSoloLectura && this.datosDelForm) {
-      this.datosDelForm.disable();
+    if ((this.esFormularioSoloLectura && this.datosDelForm) || !this.tieneElBotonSeleccionClicado) {
+      this.datosDelForm?.disable();
     } else {
-      this.datosDelForm.enable();
+      this.datosDelForm?.enable();
     }
   }
   /**

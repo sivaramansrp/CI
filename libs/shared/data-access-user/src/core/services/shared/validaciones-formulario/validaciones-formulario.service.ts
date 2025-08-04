@@ -103,4 +103,18 @@ export class ValidacionesFormularioService {
   static noMenosUnoValor(control: AbstractControl): ValidationErrors | null {
     return control.value < 1 ? { noMenosUno: true } : null;
   }
+
+  /**
+   * Valida que el campo no contenga solo espacios en blanco.
+   * @param control - Control del formulario que contiene el valor a validar.
+   * @returns Un objeto con el error `whitespace` si el campo contiene solo espacios, o `null` si es válido.
+   */
+  static noWhitespaceValidator(control: AbstractControl): ValidationErrors | null {
+    if (control.value === null || control.value === undefined) {
+      return null; // Deja que el validador 'required' maneje valores nulos/indefinidos
+    }
+    
+    const isWhitespace = (control.value || '').toString().trim().length === 0;
+    return isWhitespace ? { whitespace: true } : null;
+  }
 }

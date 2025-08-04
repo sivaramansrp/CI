@@ -23,14 +23,19 @@
  * @see ElegibilidadDeTextilesStore
  * @see TextilesState
  */
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
+
 import {
   ElegibilidadDeTextilesStore,
   TextilesState,
 } from '../../estados/elegibilidad-de-textiles.store';
-import { Observable, map } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { FitosanitarioForm } from '../../models/elegibilidad-de-textiles.model';
 
 /**
  * Servicio para la gestión de elegibilidad de textiles.
@@ -76,6 +81,24 @@ export class ElegibilidadTextilesService {
   obtenerTablaDatos<T>(fileName: string): Observable<T[]> {
     const JSONURL = this.url + fileName;
     return this.http.get<T[]>(JSONURL);
+  }
+
+  /**
+   * @description Actualiza los datos de la solicitud en el store.
+   * @param solicitudState Datos de la solicitud.
+   */
+  updateSolicitud(solicitudState: FitosanitarioForm): void {
+    this.elegibilidadDeTextilesStore.setTextilesState({
+      ...this.elegibilidadDeTextilesStore.getValue(),
+      SolicitudState: solicitudState
+    });
+  }
+    /**
+   * @description Actualiza el estado completo del formulario en el store.
+   * @param {TextilesState} DATOS - Objeto con todos los datos del formulario.
+   */
+  actualizarEstadoFormulario(DATOS: TextilesState): void {
+    this.elegibilidadDeTextilesStore.setTextilesState(DATOS);
   }
 
   /**

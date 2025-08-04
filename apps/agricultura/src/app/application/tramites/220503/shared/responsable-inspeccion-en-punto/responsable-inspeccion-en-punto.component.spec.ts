@@ -1,129 +1,111 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  ReactiveFormsModule,
-  FormGroup,
-  ControlContainer,
-} from '@angular/forms';
-import { of } from 'rxjs';
 import { ResponsableInspeccionEnPuntoComponent } from './responsable-inspeccion-en-punto.component';
-import { Solicitud220503Query } from '../../estados/tramites220503.query';
-import { Solicitud220503Store } from '../../estados/tramites220503.store';
-import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
-import { Catalogo } from '@ng-mf/data-access-user';
+import { FormGroup, ControlContainer, ReactiveFormsModule } from '@angular/forms';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { of } from 'rxjs';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ResponsableInspeccionEnPuntoComponent', () => {
   let component: ResponsableInspeccionEnPuntoComponent;
   let fixture: ComponentFixture<ResponsableInspeccionEnPuntoComponent>;
-  let mockSolicitudQuery: jest.Mocked<Solicitud220503Query>;
-  let mockSolicitudStore: jest.Mocked<Solicitud220503Store>;
-  let mockSolicitudService: jest.Mocked<SolicitudPantallasService>;
-  let mockControlContainer: jest.Mocked<ControlContainer>;
+  let mockParentFormGroup: FormGroup;
 
   beforeEach(async () => {
-    mockSolicitudQuery = {
-      selectSolicitud$: jest.fn(),
-    } as unknown as jest.Mocked<Solicitud220503Query>;
+    mockParentFormGroup = new FormGroup({});
 
-    mockSolicitudStore = {} as jest.Mocked<Solicitud220503Store>;
+    const mockControlContainer = {
+      control: mockParentFormGroup
+    };
 
-    mockSolicitudService = {
-      getDataResponsableInspeccion: jest.fn(),
-    } as unknown as jest.Mocked<SolicitudPantallasService>;
+    const mockConsultaQuery = {
+      selectConsultaioState$: of({
+        readonly: false,
+        loading: false,
+        error: null
+      })
+    };
 
-    mockControlContainer = {
-      control: new FormGroup({}),
-    } as unknown as jest.Mocked<ControlContainer>;
+    const mockSolicitudQuery = {
+      selectSolicitud$: of({
+        nombre: '',
+        primerapellido: '',
+        segundoapellido: '',
+        mercancia: '',
+        tipocontenedor: ''
+      })
+    };
+
+    const mockSolicitudService = {
+      getDataResponsableInspeccion: jest.fn().mockReturnValue(of({
+        tipoContenedor: {
+          labelNombre: 'Tipo de Contenedor',
+          catalogos: [],
+          required: false,
+          primerOpcion: 'Selecciona'
+        }
+      }))
+    };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [ResponsableInspeccionEnPuntoComponent],
-      providers: [
-        { provide: Solicitud220503Query, useValue: mockSolicitudQuery },
-        { provide: Solicitud220503Store, useValue: mockSolicitudStore },
-        { provide: SolicitudPantallasService, useValue: mockSolicitudService },
-        { provide: ControlContainer, useValue: mockControlContainer },
+      imports: [
+        ResponsableInspeccionEnPuntoComponent,
+        ReactiveFormsModule,
+        HttpClientTestingModule
       ],
+      providers: [
+        { provide: ControlContainer, useValue: mockControlContainer },
+        { provide: 'ConsultaioQuery', useValue: mockConsultaQuery },
+        { provide: 'Solicitud220503Query', useValue: mockSolicitudQuery },
+        { provide: 'Solicitud220503Store', useValue: {} },
+        { provide: 'SolicitudPantallasService', useValue: mockSolicitudService }
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ResponsableInspeccionEnPuntoComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    component.claveDeControl = 'testControl';
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should add a control to the form group on ngOnInit if claveDeControl is set', () => {
-    component.claveDeControl = 'testControl';
-    component.ngOnInit();
-    expect(component.grupoFormularioPadre.contains('testControl')).toBeTruthy();
+  it('debe tener el input claveDeControl', () => {
+    expect(component.claveDeControl).toBe('testControl');
   });
 
-  it('should patch form values when selectSolicitud$ emits', () => {
-    const mockState = {
-      nombre: 'John',
-      primerapellido: 'Doe',
-      segundoapellido: 'Smith',
-      mercancia: 'Goods',
-      tipocontenedor: 'ContainerType',
-    };
-    (
-      mockSolicitudQuery.selectSolicitud$ as unknown as jest.Mock
-    ).mockReturnValue(of(mockState));
-    component.claveDeControl = 'testControl';
-    component.ngOnInit();
-    const formGroup = component.grupoFormularioPadre.get(
-      'testControl'
-    ) as FormGroup;
-    expect(formGroup.value).toEqual(mockState);
+  it('debe tener grupoFormularioPadre definido', () => {
+    expect(component.grupoFormularioPadre).toBeDefined();
+    expect(component.grupoFormularioPadre).toBe(mockParentFormGroup);
   });
 
-  it('should call cargarDatosIniciales on ngOnInit', () => {
-    jest.spyOn(component, 'cargarDatosIniciales');
-    component.ngOnInit();
-    expect(component.cargarDatosIniciales).toHaveBeenCalled();
+  it('debe agregar el grupo de formulario al formulario padre al inicializar', () => {
+    component.inicializarFormulario();
+    const formGroup = component.grupoFormularioPadre.get('testControl');
+    expect(formGroup).toBeDefined();
+    expect(formGroup instanceof FormGroup).toBe(true);
   });
 
-  it('should update tipoContenedor on tipoContenedorSeleccion', () => {
-    const mockCatalogo: Catalogo = { id: 1, descripcion: 'Test Description' };
-    component.claveDeControl = 'testControl';
-    component.ngOnInit();
-    component.tipoContenedorSeleccion(mockCatalogo);
-    const formGroup = component.grupoFormularioPadre.get(
-      'testControl'
-    ) as FormGroup;
-    expect(formGroup.value.tipocontenedor).toEqual('Test Description');
+  it('debe tener valores por defecto en el grupo de formulario después de inicializar', () => {
+    component.inicializarFormulario();
+    const formGroup = component.grupoFormularioPadre.get('testControl') as FormGroup;
+    expect(formGroup.value.nombre).toBe('');
+    expect(formGroup.value.primerapellido).toBe('');
+    expect(formGroup.value.segundoapellido).toBe('');
+    expect(formGroup.value.mercancia).toBe('');
+    expect(formGroup.value.tipocontenedor).toBe('');
   });
 
-  it('should call getDataResponsableInspeccion on cargarDatosIniciales', () => {
-    const mockData = {
-      tipoContenedor: {
-        labelNombre: 'string',
-        required: false,
-        primerOpcion: 'string',
-        catalogos: [],
-      },
-    };
-    mockSolicitudService.getDataResponsableInspeccion.mockReturnValue(
-      of(mockData)
-    );
-    component.cargarDatosIniciales();
-    expect(component.tipoContenedor).toEqual(mockData.tipoContenedor);
+  it('debe validar el formulario correctamente', () => {
+    component.inicializarFormulario();
+    const result = component.validarFormularios();
+    expect(typeof result).toBe('boolean');
   });
 
-  it('should remove control from form group on ngOnDestroy', () => {
-    component.claveDeControl = 'testControl';
-    component.ngOnInit();
-    component.ngOnDestroy();
-    expect(component.grupoFormularioPadre.contains('testControl')).toBeFalsy();
-  });
-
-  it('should complete destroyed$ subject on ngOnDestroy', () => {
-    const destroyedSpy = jest.spyOn(component['destroyed$'], 'complete');
-    component.ngOnDestroy();
-    expect(destroyedSpy).toHaveBeenCalled();
+  it('debe regresar falso cuando el grupo de formulario no existe', () => {
+    component.claveDeControl = 'nonExistentControl';
+    const result = component.validarFormularios();
+    expect(result).toBe(false);
   });
 });

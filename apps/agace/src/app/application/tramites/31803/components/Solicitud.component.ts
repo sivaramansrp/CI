@@ -162,7 +162,7 @@ inicializarEstadoFormulario(): void {
   if (this.esFormularioSoloLectura) {
     this.guardarDatosDelFormulario();
   } else {
-    this.datosDeAvisoForm();
+    this.donanteDomicilio();
   }
 }
 
@@ -260,36 +260,21 @@ inicializarEstadoFormulario(): void {
  */
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
-      banco: [this.solicitudState?.banco, [Validators.required]],
-      llave: [this.solicitudState?.llave, [Validators.required]],
-      manifiesto1: [this.solicitudState?.manifiesto1, [Validators.required]],
-      manifiesto2: [this.solicitudState?.manifiesto2, [Validators.required]],
-      numeroOperacion: [
-        this.solicitudState?.numeroOperacion,
-        [Validators.required],
-      ],
-      fechaPago: [this.solicitudState?.fechaPago, [Validators.required]],
+      numeroOficio: [{value : this.solicitudState?.numeroOficio, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      claveReferencia: [{value: this.solicitudState?.claveReferencia, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      cadenaDependencia: [{value: this.solicitudState?.cadenaDependencia, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      importePago: [{value: this.solicitudState?.importePago, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      fechaInicial: [{value: this.solicitudState?.fechaInicial, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      fechaFinal: [{value: this.solicitudState?.fechaFinal, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      banco: [{value: this.solicitudState?.banco, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      llave: [{value: this.solicitudState?.llave, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      manifiesto1: [{value: this.solicitudState?.manifiesto1, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      manifiesto2: [{value: this.solicitudState?.manifiesto2, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      numeroOperacion: [{value: this.solicitudState?.numeroOperacion, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      fechaPago: [{value: this.solicitudState?.fechaPago, disabled: this.esFormularioSoloLectura}, [Validators.required]],
     });
     this.inicializarEstadoFormulario();
   }
-
-  /**
-   * datosDeltrimiteForm los campos del formulario si es de solo lectura.
-   * Si el formulario es de solo lectura, deshabilita los campos del formulario de importador/exportador.
-   */
-
-  datosDeAvisoForm(): void {
-    if (this.esFormularioSoloLectura) {
-      this.registroForm.get('banco')?.disable();
-      this.registroForm.get('manifiesto1')?.disable();
-      this.registroForm.get('manifiesto2')?.disable();
-      this.registroForm.get('llave')?.disable();
-      this.registroForm.get('numeroOperacion')?.disable();
-      this.registroForm.get('fechaPago')?.disable();
-      this.registroForm.get('monedaNacional')?.disable();
-    }
-  }
-
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.

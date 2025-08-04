@@ -1,26 +1,40 @@
-import { Catalogo, ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  CatalogosSelect,
+  ConfiguracionColumna,
+  CrosslistComponent,
+  InputFecha,
+  InputFechaComponent,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  CrossList,
+  Mercancia,
+  MercanciaCatalogos,
+  MercanciaCrossList,
+} from '../../models/mercancia.model';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  Solicitud260101State,
+  Solicitud260101Store,
+} from '../../estados/tramites260101.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { ClavesDeLotes } from '../../models/claves-de-lotes.model';
-import { Component } from '@angular/core';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { CrossList } from '../../models/mercancia.model';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { InputFecha } from '@libs/shared/data-access-user/src';
-import { Mercancia } from '../../models/mercancia.model';
-import { MercanciaCatalogos } from '../../models/mercancia.model';
-import { MercanciaCrossList } from '../../models/mercancia.model';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Solicitud260101Query } from '../../estados/tramites260101.query';
-import { Solicitud260101State } from '../../estados/tramites260101.store';
-import { Solicitud260101Store } from '../../estados/tramites260101.store';
 import { SolicitudDatosService } from '../../services/solicitud-datos.service';
-import { Subject } from 'rxjs';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
 /**
  * Componente ModificarMercanciasComponent.
  * Este componente gestiona la lógica y funcionalidad para la modificación de mercancías en el sistema.
@@ -29,6 +43,17 @@ import { takeUntil } from 'rxjs';
   selector: 'app-modificar-mercancias',
   templateUrl: './modificar-mercancias.component.html',
   styleUrl: './modificar-mercancias.component.scss',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    CrosslistComponent,
+    TablaDinamicaComponent,
+    InputFechaComponent,
+    CatalogoSelectComponent,
+    TituloComponent,
+  ],
 })
 export class ModificarMercanciasComponent implements OnInit, OnDestroy {
   /**

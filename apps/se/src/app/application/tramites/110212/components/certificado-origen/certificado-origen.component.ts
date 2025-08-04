@@ -1,4 +1,5 @@
-import { AlertComponent, ConsultaioQuery, ConsultaioState, REGEX_PATRON_DECIMAL_2 } from '@libs/shared/data-access-user/src';
+import { AbstractControl, FormBuilder, FormGroup,ValidatorFn, Validators } from '@angular/forms';
+import { AlertComponent, ConsultaioQuery, ConsultaioState, Notificacion, NotificacionesComponent, REGEX_CORREO_ELECTRONICO, REGEX_PATRON_DECIMAL_15_4, REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 import { COLUMNAS_DSPONIBLES, COLUMNAS_SELECCIONADAS, FECHAFACTURA } from '../../constants/validacion-posteriori.enum';
 import { Catalogo } from '../../models/validacion-posteriori.model';
 import { CatalogoLista } from '../../models/validacion-posteriori.model';
@@ -10,14 +11,11 @@ import { DisponiblesTabla } from '../../models/validacion-posteriori.model';
 import { ElementRef } from '@angular/core';
 import { FECHAFINAL } from '../../constants/validacion-posteriori.enum';
 import { FECHAINICIAL } from '../../constants/validacion-posteriori.enum';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
 import { InputFecha } from '@libs/shared/data-access-user/src';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SeleccionadasTabla } from '../../models/validacion-posteriori.model';
 import { Subject } from 'rxjs';
@@ -26,12 +24,12 @@ import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { ToastrService } from 'ngx-toastr';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite110212Query } from '../../../../estados/queries/tramite110212.query';
 import { Tramite110212State } from '../../../../estados/tramites/tramite110212.store';
 import { Tramite110212Store } from '../../../../estados/tramites/tramite110212.store';
 import { ValidacionPosterioriService } from '../../service/validacion-posteriori.service';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
 import { ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
@@ -55,6 +53,8 @@ import { takeUntil } from 'rxjs';
     AlertComponent,
     CatalogoSelectComponent,
     InputFechaComponent,
+    NotificacionesComponent,
+    TooltipModule
   ],
   providers: [ToastrService],
   templateUrl: './certificado-origen.component.html',
@@ -245,6 +245,33 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
   soloLectura: boolean = false;
 
   /**
+   * Configuración de notificación para mostrar popups de validación.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
+   * Instancia del modal para gestionar archivos.
+   *
+   * Se utiliza para abrir o cerrar el modal de archivos.
+   */
+  modalInstances: Modal | null = null;
+
+  /**
+   * ID de la última fila seleccionada para detectar doble clic.
+   */
+  ultimaFilaSeleccionadaId: number | null = null;
+
+  /**
+   * Timestamp del último clic para detectar doble clic.
+   */
+  ultimoClickTimestamp: number = 0;
+
+  /**
+   * Tiempo máximo entre clics para considerar doble clic (en milisegundos).
+   */
+  tiempoMaximoDobleClick: number = 400;
+
+  /**
    * Constructor del componente CertificadoOrigenComponent.
    *
    * Este constructor inicializa las dependencias necesarias para el funcionamiento del componente.
@@ -263,6 +290,40 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     private validacionesService: ValidacionesFormularioService,
     private consultaioQuery: ConsultaioQuery,
   ) { }
+
+  /**
+   * Validador personalizado para fechas que no permite fechas futuras.
+   * @returns {ValidatorFn} Función de validación
+   */
+  static noFutureDateValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: unknown } | null => {
+      if (!control.value) {
+        return null; // No validar si no hay valor
+      }
+
+      // Parsear la fecha del formato DD/MM/YYYY
+      const DATE_STRING = control.value;
+      const DATE_PARTS = DATE_STRING.split('/');
+      
+      if (DATE_PARTS.length !== 3) {
+        return null; // Formato inválido, dejar que otros validadores lo manejen
+      }
+
+      const DAY = parseInt(DATE_PARTS[0], 10);
+      const MONTH = parseInt(DATE_PARTS[1], 10) - 1; // Los meses en JavaScript son 0-indexados
+      const YEAR = parseInt(DATE_PARTS[2], 10);
+      
+      const SELECTED_DATE = new Date(YEAR, MONTH, DAY);
+      const TODAY = new Date();
+      TODAY.setHours(23, 59, 59, 999); // Establecer al final del día de hoy
+      
+      if (SELECTED_DATE > TODAY) {
+        return { futureDate: true };
+      }
+      
+      return null;
+    };
+  }
 
   /**
    * Inicializa el componente.
@@ -325,6 +386,15 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Obtiene el grupo de formulario relacionado con el operador.
+   *
+   * @returns {FormGroup} El grupo de formulario del operador.
+   */
+  get grupoDeDirecciones(): FormGroup {
+    return this.formularioCertificado.get('grupoDeDirecciones') as FormGroup;
+  }
+
+  /**
    * Obtiene el grupo de formulario relacionado con el tratado.
    *
    * @returns {FormGroup} El grupo de formulario del tratado.
@@ -378,6 +448,34 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
           [],
         ],
       }),
+     grupoDeDirecciones: this.fb.group({
+           pais: [
+             this.solicitudState?.grupoDeDirecciones?.pais,
+           ],
+           ciudad: [
+             this.solicitudState?.grupoDeDirecciones?.ciudad,
+           ],
+           calle: [
+             this.solicitudState?.grupoDeDirecciones?.calle,
+           ],
+           numeroLetra: [
+             this.solicitudState?.grupoDeDirecciones?.numeroLetra,
+            
+           ],
+           lada: [this.solicitudState?.grupoDeDirecciones?.lada, []],
+           telefono: [
+             this.solicitudState?.grupoDeDirecciones?.telefono,
+             [Validators.pattern(REGEX_SOLO_DIGITOS)],
+           ],
+           fax: [
+             this.solicitudState?.grupoDeDirecciones?.fax,
+             [Validators.pattern(REGEX_SOLO_DIGITOS)],
+           ],
+           correoElectronico: [
+             this.solicitudState?.grupoDeDirecciones?.correoElectronico,
+             [Validators.pattern(REGEX_CORREO_ELECTRONICO)],
+           ],
+         }),
     });
     this.inicializarEstadoFormulario();
   }
@@ -402,7 +500,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
         [],
       ],
       nombreEnIngles: [
-        this.solicitudState?.formularioMercancia?.nombreEnIngles,
+        this.solicitudState?.formularioMercancia?.nombreEnIngles || 'abc',
         [],
       ],
       otrasInstancias: [
@@ -415,21 +513,24 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
       ],
       cantidad: [
         this.solicitudState?.formularioMercancia?.cantidad,
-        [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
+        [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_15_4)],
       ],
       pais: ['', [Validators.required]],
       valorDelaMercancia: [
         this.solicitudState?.formularioMercancia?.valorDelaMercancia,
-        [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)],
+        [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_15_4)],
       ],
       complementoDelaDescripcion: [
         this.solicitudState?.formularioMercancia?.complementoDelaDescripcion,
-        [Validators.required],
+        [Validators.required, Validators.maxLength(200)],
       ],
-      fecha: [this.solicitudState?.formularioMercancia?.fecha, []],
+      fecha: [
+        this.solicitudState?.formularioMercancia?.fecha, 
+        [Validators.required, CertificadoOrigenComponent.noFutureDateValidator()]
+      ],
       numeroFactura: [
         this.solicitudState?.formularioMercancia?.numeroFactura,
-        [],
+        [Validators.required],
       ],
       tipoFactura: [this.solicitudState?.formularioMercancia?.tipoFactura, []],
     });
@@ -528,12 +629,60 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * Este método obtiene las mercancías disponibles desde el servicio `CertificadosOrigenService` y las asigna a `mercanciaDisponsiblesTablaDatos`.
    */
   cargarMercanciasDisponibles(): void {
+    this.formularioCertificado.markAllAsTouched();
+
+    if (!this.validarCamposRequeridos()) {
+      this.mostrarNotificacionValidacion();
+      return;
+    }
+
     this.validacionPosterioriService
       .obtenerMercanciasDisponibles()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((respuesta) => {
         this.mercanciaDisponsiblesTablaDatos = respuesta;
       });
+  }
+
+  /**
+   * Valida que todos los campos requeridos estén completos.
+   * 
+   * @returns {boolean} true si todos los campos requeridos están completos, false en caso contrario
+   */
+  private validarCamposRequeridos(): boolean {
+    // Validar campos de "Domicilio del tercer operador" si el checkbox está marcado
+    if (this.solicitudState?.tercerOperador) {
+      const GRUPO_OPERADOR = this.formularioCertificado.get('grupoOperador');
+      if (GRUPO_OPERADOR?.get('numeroFiscal')?.invalid) {
+        return false;
+      }
+    }
+    // Validar campos de "Tratado y país o bloque"
+    const GRUPO_TRATADO = this.formularioCertificado.get('grupoTratado');
+    if (GRUPO_TRATADO?.get('tratado')?.invalid) {
+      return false;
+    }
+    if (GRUPO_TRATADO?.get('pais')?.invalid) {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Muestra una notificación con los campos que faltan por completar.
+   */
+  private mostrarNotificacionValidacion(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Los datos marcados con asterisco son obligatorios. Favor de capturarlos.',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
   }
 
   /**
@@ -553,17 +702,61 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
   /**
    * Maneja la selección de filas en la tabla de mercancías disponibles.
    *
-   * Este método asigna la fila seleccionada a `disponiblesSeleccionadasFila` y muestra el modal de búsqueda si está disponible.
+   * Este método asigna la fila seleccionada a `disponiblesSeleccionadasFila`, 
+   * popula el formulario de mercancías con los datos de la fila seleccionada
+   * y muestra el modal de búsqueda si está disponible.
+   * Ahora requiere doble clic para ejecutar la acción.
    *
    * @param {DisponiblesTabla} evento - La fila seleccionada en la tabla de mercancías disponibles.
    */
   disponiblesSeleccionDeFilas(evento: DisponiblesTabla): void {
     if (!this.soloLectura) {
-      this.disponiblesSeleccionadasFila = evento;
-      if (this.modalBuscar) {
-        const MODAL_INSTANCE = new Modal(this.modalBuscar.nativeElement);
-        MODAL_INSTANCE.show();
+      const AHORA = Date.now();
+      const EVENTO_ID = evento.id ?? 0;
+      
+      // Verificar si es el mismo elemento y si el tiempo entre clics es válido para doble clic
+      const ES_MISMA_FILA = this.ultimaFilaSeleccionadaId === EVENTO_ID;
+      const TIEMPO_TRANSCURRIDO = AHORA - this.ultimoClickTimestamp;
+      const ES_DOBLE_CLICK = ES_MISMA_FILA && TIEMPO_TRANSCURRIDO <= this.tiempoMaximoDobleClick && TIEMPO_TRANSCURRIDO > 50;
+
+      if (ES_DOBLE_CLICK) {
+        // Ejecutar acción de doble clic
+        this.abrirModalMercancia(evento);
+        
+        // Resetear para evitar múltiples ejecuciones
+        this.ultimaFilaSeleccionadaId = null;
+        this.ultimoClickTimestamp = 0;
+      } else {
+        // Primer clic: solo guardar la información
+        this.ultimaFilaSeleccionadaId = EVENTO_ID;
+        this.ultimoClickTimestamp = AHORA;
+        this.disponiblesSeleccionadasFila = evento;
       }
+    }
+  }
+
+  /**
+   * Abre el modal de mercancía con los datos seleccionados.
+   * 
+   * @param {DisponiblesTabla} evento - La fila seleccionada en la tabla de mercancías disponibles.
+   */
+  private abrirModalMercancia(evento: DisponiblesTabla): void {
+    this.disponiblesSeleccionadasFila = evento;
+    if (this.modalBuscar) {
+      if (!this.modalInstances) {
+        this.modalInstances = new Modal(this.modalBuscar.nativeElement);
+      }
+      this.formularioMercancia.reset();
+      this.formularioMercancia.patchValue({
+        id: this.disponiblesSeleccionadasFila.id,
+        fraccionMercanciaArancelaria: this.disponiblesSeleccionadasFila.fraccionArancelaria,
+        nombreComercialDelaMercancia: this.disponiblesSeleccionadasFila.nombreComercial,
+        nombreTecnico: this.disponiblesSeleccionadasFila.nombreTecnico,
+        nombreEnIngles: 'abc',
+        criterioParaConferir: 'abc',
+        fechaVencimiento: this.disponiblesSeleccionadasFila.fechaVencimiento,
+      });
+      this.modalInstances?.show();
     }
   }
   /**
@@ -686,8 +879,83 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    */
   cambioFechaFactura(nuevo_fechaFin: string): void {
     this.formularioMercancia.patchValue({ fecha: nuevo_fechaFin });
+    this.formularioMercancia.get('fecha')?.markAsTouched();
     this.setValoresStore(this.formularioMercancia, 'fecha', 'setFecha');
   }
+
+    /**
+   * Agrega una nueva mercancía a la tabla de mercancías seleccionadas.
+   *
+   * Este método toma los datos del formulario de mercancías y los transforma en un
+   * objeto `SeleccionadasTabla` y actualiza el arreglo `mercanciaSeleccionadasTablaDatos`.
+   * Si ya existe un elemento con el mismo ID, lo actualiza; de lo contrario, agrega el nuevo elemento.
+   * El arreglo actualizado se almacena usando `store.setMercanciaTablaDatos`.
+   * Finalmente, cierra el modal si está abierto.
+   *
+   * @param formularioMercancia - El formulario reactivo que contiene los datos de la mercancía.
+   */
+  activarModal(formularioMercancia: FormGroup): void {
+    const FORM_VALUES = formularioMercancia.value;
+
+    const NUEVA_MERCANCIA: SeleccionadasTabla = {
+      id: FORM_VALUES.id || this.mercanciaSeleccionadasTablaDatos.length + 1,
+      fraccionArancelaria: FORM_VALUES.fraccionMercanciaArancelaria,
+      cantidad: FORM_VALUES.cantidad,
+      unidadMedida: FORM_VALUES.pais,
+      valorMercancia: FORM_VALUES.valorDelaMercancia,
+      tipoFactura: FORM_VALUES.tipoFactura,
+      numFactura: FORM_VALUES.numeroFactura,
+      complementoDescripcion: FORM_VALUES.complementoDelaDescripcion,
+      fechaFactura: FORM_VALUES.fecha,
+    };
+
+    const INDEX = this.mercanciaSeleccionadasTablaDatos.findIndex(
+      item => item.id === NUEVA_MERCANCIA.id
+    );
+
+    if (INDEX !== -1) {
+      this.mercanciaSeleccionadasTablaDatos[INDEX] = NUEVA_MERCANCIA;
+    } else {
+      this.mercanciaSeleccionadasTablaDatos = [
+        ...this.mercanciaSeleccionadasTablaDatos,
+        NUEVA_MERCANCIA
+      ];
+    }
+    this.store.setMercanciaTablaDatos(this.mercanciaSeleccionadasTablaDatos);
+
+    if (this.modalInstances) {
+      this.modalInstances.hide();
+    }
+  }
+
+  /**
+   * Abre el modal para modificar la mercancía seleccionada.
+   * 
+   * Este método popula el formulario con los datos de la mercancía seleccionada
+   * y también incluye datos de las mercancías disponibles si hay una fila seleccionada.
+   */
+modificarMercanciaSeleccionada(mercanciaSeleccionadasTablaDatos: SeleccionadasTabla): void {
+  this.mercanciaSeleccionadasFila = mercanciaSeleccionadasTablaDatos;
+  const FORM_VALUES = mercanciaSeleccionadasTablaDatos;
+     if (this.modalBuscar) {
+        if (!this.modalInstances) {
+          this.modalInstances = new Modal(this.modalBuscar.nativeElement);
+        }
+      }
+      this.modalInstances?.show();
+    this.formularioMercancia.patchValue({
+      id: FORM_VALUES.id,
+      fraccionArancelaria: FORM_VALUES.fraccionArancelaria,
+      cantidad: FORM_VALUES.cantidad,
+      unidadMedida: FORM_VALUES.unidadMedida,
+      valorMercancia: FORM_VALUES.valorMercancia,
+      tipoFactura: FORM_VALUES.tipoFactura,
+      numFactura: FORM_VALUES.numFactura,
+      complementoDescripcion: FORM_VALUES.complementoDescripcion,
+      fechaFactura: FORM_VALUES.fechaFactura,
+    });
+}
+
 
   /**
    * Limpia los observables al destruir el componente.

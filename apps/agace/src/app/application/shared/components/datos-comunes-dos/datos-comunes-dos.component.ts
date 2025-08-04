@@ -1,3 +1,5 @@
+import { Component, Input } from '@angular/core';
+import { EventEmitter, Output } from '@angular/core';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -5,7 +7,6 @@ import { CONTROL_INVENTARIOS_TABLA } from '../../models/datos-comunes.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ControlInventarios } from '../../models/datos-comunes.model';
@@ -36,8 +37,6 @@ import { map } from 'rxjs';
 import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
 import { takeUntil } from 'rxjs';
 
-
-
 /**
  * Componente que representa la sección "Datos Comunes Dos".
  * Este componente es un componente independiente de Angular que gestiona formularios y datos
@@ -55,13 +54,16 @@ import { takeUntil } from 'rxjs';
     TablaDinamicaComponent,
     InputRadioComponent,
     TituloComponent,
-    InputCheckComponent
+    InputCheckComponent,
   ],
   templateUrl: './datos-comunes-dos.component.html',
   styleUrl: './datos-comunes-dos.component.scss',
 })
 export class DatosComunesDosComponent implements OnInit,OnDestroy {
 
+  @Input() datosComunesObj = {
+    tieneProcedure: { numero: '', activo: false }
+  };
   /**
    * Un subject utilizado para emitir una señal para limpiar suscripciones y otros recursos
    * cuando el componente es destruido. Esto ayuda a prevenir fugas de memoria asegurando
@@ -166,7 +168,13 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
    * Cuando se establece en `true`, los campos del formulario no son editables por el usuario.
    */
   public esFormularioSoloLectura: boolean = false;
-
+/**
+ * Evento emitido cuando se produce un cambio en algún control tipo radio del formulario.
+ *
+ * El evento emite un objeto que contiene el nombre del control (`controlName`) y el valor seleccionado (`value`).
+ * Este evento permite a los componentes padres reaccionar ante cambios en los botones de radio del formulario.
+ */
+  @Output() radioChanged = new EventEmitter<{ controlName: string, value: unknown }>();
 
   /**
    * Constructor de la clase DatosComunesDosComponent.
@@ -284,6 +292,7 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
             Validators.required,
             Validators.minLength(3),
             Validators.maxLength(250),
+            Validators.pattern(/^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑüÜ.,-]*$/)
           ],
         ],
         lugarDeRadicacion: [
@@ -292,6 +301,7 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
             Validators.required,
             Validators.minLength(3),
             Validators.maxLength(250),
+            Validators.pattern(/^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑüÜ.,-]*$/)
           ],
         ],
         contabilidad: [this.solicitudState?.contabilidad, Validators.required],
@@ -299,7 +309,14 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
         vinculacionRegistroCancelado: [this.solicitudState?.vinculacionRegistroCancelado, Validators.required],
         proveedoresListadoSAT: [this.solicitudState?.proveedoresListadoSAT, Validators.required],
         numeroAutorizacionCITES: ['',[Validators.required,Validators.pattern(REGEX_RFC)]],
-        archivoNacionales: ['']
+        archivoNacionales: [''],
+        ensucaso: [this.solicitudState?.ensucaso],
+        alMomento: [this.solicitudState?.alMomento],
+        delMismomodo: [this.solicitudState?.delMismomodo],
+        encuentra: [this.solicitudState?.encuentra],
+        susCertificados: [this.solicitudState?.susCertificados],
+        afirmativo: [this.solicitudState?.afirmativo],
+        actualizado: [this.solicitudState?.actualizado]
     });
   }
 
@@ -427,6 +444,30 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
   public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof DatosComunesStore): void {
     const VALOR = form.get(campo)?.value;
     (this.datosComunesStore[metodoNombre] as (value: unknown) => void)(VALOR);
+
+    /** Lista de nombres de controles tipo radio que deben emitir el evento radioChanged. 
+     * Se utiliza para identificar los controles relevantes en el formulario. */
+  const RADIO_CONTROLS = [
+    'encuentraSus',
+    'rmfRadio',
+    'vinculacionRegistroCancelado',
+    'proveedoresListadoSAT',
+    'ingresar',
+    'momentoIngresar',
+    'indiqueCuenta',
+    'contabilidad'
+  ];
+
+  /**
+   * Si el campo modificado está incluido en la lista de controles tipo radio (`RADIO_CONTROLS`),
+   * emite el evento `radioChanged` con el nombre del control y el valor seleccionado.
+   *
+   * Esto permite que los componentes padres reaccionen ante cambios en los botones de radio
+   * relevantes del formulario.
+   */
+if (RADIO_CONTROLS.includes(campo)) {
+  this.radioChanged.emit({ controlName: campo, value: VALOR });
+}
   }
 
   /**

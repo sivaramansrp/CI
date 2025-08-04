@@ -1,5 +1,3 @@
-
-
 export { AcusesYResolucionesFolioDelTramiteBusquedaComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-busqueda/acuses-y-resoluciones-folio-del-tramite-busqueda.component';
 export { AcusesYResolucionesFolioDelTramiteDetallesComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-detalles/acuses-y-resoluciones-folio-del-tramite-detalles.component';
 export { LibBandejaComponent } from './tramites/components/lib-bandeja/lib-bandeja.component';
@@ -82,9 +80,6 @@ export * from './core/services/110102/datos-tratados-acuerdos/datosTratadosacuer
 export * from './core/services/110102/exportador-autorizado/exportadorAutorizado.service';
 export * from './core/services/110102/mercancia-asociada/mercanciaAsociada.service';
 export * from './core/services/110102/representacion-federal/representacionFederal.service';
-export * from './core/services/110210/buscar-certificado-de-origen/buscarCertificadoDeOrigen.service';
-export * from './core/services/110210/certificado-disponibles/certificadoDisponibles.service';
-export * from './core/services/110210/domicilio-tabla/domicilioTabla.service';
 export * from './core/services/120402/asignacion-directa-de-cupo.enum';
 export * from './core/services/120402/descripcion-del-cupo/descripcionDelCupo.service';
 export * from './core/services/120402/representacionFederal/representacion-federal.service';
@@ -199,8 +194,16 @@ export * from './core/enums/crosslist.enums';
 export * from './core/services/shared/desplazarse-hacia-arriba/desplazarse-hacia-arriba.service';
 export * from './core/enums/tipoIdentificacion.enum';
 
-
 export * from './core/enums/mensajes-modal-comunes.enum';
 export * from './tramites/directives/alfanumerico/alfanumerico-formato.directive';
 export * from './tramites/components/pie-pagina-informacion/pie-pagina-informacion.component';
 export * from './core/services/shared/cadena-original/cadena-original.service';
+
+export * from './core/services/shared/catalogos/entidades-federativas.service';
+export * from './core/services/shared/catalogos/regimen.service';
+export * from './core/services/shared/catalogos/fraccion-arancelaria.service';
+export * from './tramites/components/paginador-tabla/paginador-tabla.component';
+export * from './core/interceptor/http.interceptor';
+
+export * from './tramites/directives/solo-alfabetos/solo-alfabetos.directive';
+export * from './tramites/constantes/regex.constants';

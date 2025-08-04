@@ -6,16 +6,39 @@
       <div class="row mb-3">
         <div class="col-md-4">
           <div class="form-group">
-            <app-catalogo-select [catalogo]="regimenMercancia" formControlName="regimenMercancia"
-              [label]="'Régimen al que se destinará la mercancía'" [required]="true" name="regimenMercancia"
-              [isDisabled]="esFormularioSoloLectura" (change)="regimenMercanciaSeleccion()"></app-catalogo-select>
+            <label class="form-label" for="">Régimen al que se destinará la mercancía*: <span
+                class="bi bi-question-circle-fill" title="Régimen al que se destinará la mercancía"
+                data-bs-toggle="tooltip"></span></label>
+            <select class="form-control form-select" formControlName="regimenMercancia" (change)="changeRegimen()">
+              <option [ngValue]="null">Selecciona una opción</option>
+              <option *ngFor="let regimen of regimenMercancia" [title]="regimen.descripcion" [value]="regimen.clave">
+                {{ regimen.descripcion }}
+              </option>
+            </select>
+            <div
+              *ngIf="datosRegimen.get('regimenMercancia')?.errors?.['required'] && datosRegimen.get('regimenMercancia')?.touched"
+              class="mensaje-error">
+              Este campo es obligatorio.
+            </div>
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group clasifi-regimen-catalogo">
-            <app-catalogo-select [catalogo]="clasifiRegimen" formControlName="clasifiRegimen"
-              [label]="'Clasificación de régimen'" [required]="true" name="clasifiRegimen"
-              [isDisabled]="esFormularioSoloLectura" (change)="clasifiRegimenSeleccion()"></app-catalogo-select>
+
+            <label class="form-label" for="">Clasificación de régimen<span>*</span>:</label>
+            <select class="form-control form-select" formControlName="clasifiRegimen"
+              (change)="clasifiRegimenSeleccion()">
+              <option [ngValue]="null">Selecciona una opción</option>
+              <option *ngFor="let clasificacion of clasifiRegimen" [title]="clasificacion.descripcion"
+                [value]="clasificacion.clave">
+                {{ clasificacion.descripcion }}
+              </option>
+            </select>
+            <div
+              *ngIf="datosRegimen.get('clasifiRegimen')?.errors?.['required'] && datosRegimen.get('clasifiRegimen')?.touched"
+              class="mensaje-error">
+              Este campo es obligatorio.
+            </div>
           </div>
         </div>
       </div>
@@ -26,7 +49,7 @@
       <div class="row mb-3">
         <div class="col-md-8">
           <div class="form-group">
-            <label for="descripcion" class="form-label">Descripción de la mercancía * :</label>
+            <label for="descripcion" class="form-label">Descripción de la mercancía<span>*</span>:</label>
             <textarea class="form-control" cols="60" rows="10" id="valueTA" formControlName="valueTA"
               (change)="setValoresStore(datosMercancia,'valueTA', 'setValueTA')"
               [ngClass]="isValid(datosMercancia, 'valueTA') ? 'required' : ''"></textarea>
@@ -43,30 +66,63 @@
       </div>
       <div class="row mb-3">
         <div class="col-md-8">
-          <app-catalogo-select [catalogo]="fraccionArancelaria" [id]="'cveFraccionArancelaria'"
-            formControlName="fraccionArancelaria" [label]="'Fracción arancelaria'" [required]="true"
-            [isDisabled]="esFormularioSoloLectura" name="fraccionArancelaria"
-            (change)="fraccionArancelariaSeleccion()"></app-catalogo-select>
+
+          <label class="form-label" for="">Fracción arancelaria<span>*</span>:</label>
+          <select class="form-control form-select" formControlName="fraccionArancelaria"
+            (change)="fraccionArancelariaChange()">
+            <option [ngValue]="null">Selecciona una opción</option>
+            <option *ngFor="let fraccion of fraccionArancelaria" [title]="fraccion.descripcion"
+              [value]="fraccion.clave">
+              {{ fraccion.descripcion }}
+            </option>
+          </select>
+          <div
+            *ngIf="datosMercancia.get('fraccionArancelaria')?.errors?.['required'] && datosMercancia.get('fraccionArancelaria')?.touched"
+            class="mensaje-error">
+            Este campo es obligatorio.
+          </div>
         </div>
       </div>
       <div class="row mb-3">
         <div class="col-md-8">
-          <app-catalogo-select [catalogo]="nico" [id]="'cveSubdivision'" formControlName="nico" [label]="'NICO'"
-            [required]="true" name="nico" (change)="nicoSeleccion()"
-            [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+
+
+          <label class="form-label" for="">Nico<span>*</span>:</label>
+          <select class="form-control form-select" formControlName="nico" (change)="nicoSeleccion()">
+            <option [ngValue]="null">Selecciona una opción</option>
+            <option *ngFor="let n of nico" [title]="n.descripcion" [value]="n.clave">
+              {{ n.descripcion }}
+            </option>
+          </select>
+          <div *ngIf="datosMercancia.get('nico')?.errors?.['required'] && datosMercancia.get('nico')?.touched"
+            class="mensaje-error">
+            Este campo es obligatorio.
+          </div>
         </div>
       </div>
       <div class="row mb-3">
         <div class="col-md-8">
-          <app-catalogo-select [catalogo]="unidadMedidaTarifaria" [id]="'unidadTarifariaCombold'"
-            formControlName="unidadMedidaTarifaria" [label]="'Unidad de medida de la tarifa (UMT)'"
-            [tooltipQuestionCircle]="true" [required]="true" name="unidadMedidaTarifaria"
-            [isDisabled]="esFormularioSoloLectura" (change)="unidadMedidaTarifariaSeleccion()"></app-catalogo-select>
+
+
+          <label class="form-label" for="">Unidad de medida de la tarifa (UMT)*: <span
+              class="bi bi-question-circle-fill" data-bs-toggle="tooltip"></span></label>
+          <select class="form-control form-select" formControlName="unidadMedidaTarifaria"
+            (change)="unidadMedidaTarifariaSeleccion()">
+            <option [ngValue]="null">Selecciona una opción</option>
+            <option *ngFor="let unidad of unidadMedidaTarifaria" [title]="unidad.descripcion" [value]="unidad.clave">
+              {{ unidad.descripcion }}
+            </option>
+          </select>
+          <div
+            *ngIf="datosMercancia.get('unidadMedidaTarifaria')?.errors?.['required'] && datosMercancia.get('unidadMedidaTarifaria')?.touched"
+            class="mensaje-error">
+            Este campo es obligatorio.
+          </div>
         </div>
       </div>
       <div class="row mb-3">
         <div class="col-md-8">
-          <label for="cantidadTarifaria" class="form-label">Cantidad * :</label>
+          <label for="cantidadTarifaria" class="form-label">Cantidad*:</label>
           <input class="form-control onceEnterosDosdecimals"
             [ngClass]="isValid(datosMercancia, 'cantidadTarifaria') ? 'required' : ''" type="number"
             formControlName="cantidadTarifaria" min="0" max="999999999.99"
@@ -76,15 +132,15 @@
           datosMercancia.controls['cantidadTarifaria'].touched) { <div class="d-grid">
             @if(datosMercancia.controls['cantidadTarifaria'].errors?.['required']) { <span class="mensaje-error">Este
               campo es obligatorio.</span> } @if (datosMercancia.controls['cantidadTarifaria'].errors?.['pattern']) {
-            <span class="mensaje-error">Este campo permite 11 enteros y 2 decimales.</span> } </div> }
+            <span class="mensaje-error">Este campo permite 11 enteros y 2 decimales.</span> }
+          </div> }
         </div>
       </div>
       <div class="row mb-3">
         <div class="col-md-8">
-          <label for="valorFacturaUSD" class="form-label">Valor factura USD * :</label>
-          <span class="bi bi-question-circle-fill"
-            title="En caso de no contar con valor factura proporciona el valor estimado"
-            data-bs-toggle="tooltip"></span>
+          <label for="valorFacturaUSD" class="form-label">Valor factura USD*: <span class="bi bi-question-circle-fill"
+              title="En caso de no contar con valor factura proporciona el valor estimado"
+              data-bs-toggle="tooltip"></span></label>
           <input class="form-control" [ngClass]="isValid(datosMercancia, 'valorFacturaUSD') ? 'required' : ''"
             type="number" formControlName="valorFacturaUSD" min="0" max="999999999.999"
             (change)="setValoresStore(datosMercancia,'valorFacturaUSD', 'setValorFacturaUSD')" name="valorFacturaUSD"
@@ -109,23 +165,42 @@
       </div>
       <div class="row mb-3">
         <div class="col-md-8">
-          <app-catalogo-select [catalogo]="paisOrigen" formControlName="paisOrigen"
-            [label]="'País origen del acero/País origen de la mercancía'" [required]="true"
-            [isDisabled]="esFormularioSoloLectura" name="paisOrigen"
-            (change)="paisOrigenSeleccion()"></app-catalogo-select>
+
+          <label class="form-label" for="">País origen del acero/País origen de la mercancía:*</label>
+          <select class="form-control form-select" formControlName="paisOrigen" (change)="paisOrigenSeleccion()">
+            <option [ngValue]="null">Selecciona una opción</option>
+            <option *ngFor="let pais of paisDestino" [title]="pais.descripcion" [value]="pais.clave">
+              {{ pais.descripcion }}
+            </option>
+          </select>
+          <div
+            *ngIf="datosMercancia.get('paisOrigen')?.errors?.['required'] && datosMercancia.get('paisOrigen')?.touched"
+            class="mensaje-error">
+            Este campo es obligatorio.
+          </div>
         </div>
       </div>
       <div class="row mb-3">
         <div class="col-md-8">
-          <app-catalogo-select [catalogo]="paisDestino" formControlName="paisDestino" [label]="'País exportador'"
-            [required]="true" name="paisDestino" [isDisabled]="esFormularioSoloLectura"
-            (change)="paisDestinoSeleccion()"></app-catalogo-select>
+
+          <label class="form-label" for="">País exportador:*</label>
+          <select class="form-control form-select" formControlName="paisDestino" (change)="paisDestinoSeleccion()">
+            <option [ngValue]="null">Selecciona una opción</option>
+            <option *ngFor="let pais of paisDestino" [title]="pais.descripcion" [value]="pais.clave">
+              {{ pais.descripcion }}
+            </option>
+          </select>
+          <div
+            *ngIf="datosMercancia.get('paisDestino')?.errors?.['required'] && datosMercancia.get('paisDestino')?.touched"
+            class="mensaje-error">
+            Este campo es obligatorio.
+          </div>
         </div>
       </div>
       <div class="row mb-3">
         <div class="col-md-4">
-          <label for="lote" class="form-label">Número de certificado de molino o de calidad * : <span
-              class="bi bi-question-circle-fill" title="Número de certificado de molino o de calidad"
+          <label for="lote" class="form-label">Número de certificado de molino o de calidad:*
+            <span class="bi bi-question-circle-fill" title="Número de certificado de molino o de calidad"
               data-bs-toggle="tooltip"></span>
           </label>
           <input type="text" [ngClass]="isValid(datosMercancia, 'lote') ? 'required' : ''" class="form-control"
@@ -138,7 +213,8 @@
         <div class="col-md-4">
           <div class="input-group">
             <input-fecha [setFecha]="datosMercancia.get('fechaSalida')?.value" [datos]="fechaFinalInput"
-              [tooltipQuestionCircle]="true" (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
+              [tooltipQuestionCircle]="true" [deshabilitarFuturas]="true"
+              (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
           </div>
         </div>
       </div>
@@ -159,7 +235,7 @@
     <!--Datos Productor-->
     <ng-titulo titulo="Datos del productor" />
     <ng-container formGroupName="datosProducto">
-      <div class="row mb-3" id="tipoPer">
+      <div class="row mb-3" id="tipoPer" *ngIf="!mostrarComboMolinos">
         <div class="col-md-4">
           <div class="form-group">
             <label for="tipoPersona" class="form-label">Tipo de persona * :</label>
@@ -181,6 +257,24 @@
           </div>
         </div>
       </div>
+
+      <div class="row mb-3" *ngIf="mostrarComboMolinos">
+        <div class="col-md-8">
+          <label for="molino" class="form-label">Molino*:</label>
+          <select class="form-control form-select" formControlName="razonSocial" (change)="setValoresStore(datosProducto,'razonSocial', 'setRazonSocial')">
+            <option [ngValue]="null">Selecciona una opción</option>
+            <option *ngFor="let molino of molinos" [value]="molino.descripcion">
+              {{ molino.descripcion }}
+            </option>
+          </select>
+           <div *ngIf="datosProducto.get('razonSocial')?.errors?.['required'] && datosProducto.get('razonSocial')?.touched"
+              class="mensaje-error">
+              Este campo es obligatorio.
+            </div>
+        </div>
+      </div>
+
+     
       <div class="row mb-3">
         <br>
       </div> @if(isVisibleFisica){ <div class="row mb-3">
@@ -219,7 +313,7 @@
           <div class="form-group">
             <label for="razonSocial" class="form-label">Denominación o razón social * :</label>
             <input type="text" class="form-control" [ngClass]="isValid(datosProducto, 'razonSocial') ? 'required' : ''"
-              name="razonSocial" id="razonSocial" formControlName="razonSocial" maxlength="250" [disabled]="esFormularioSoloLectura"
+              name="razonSocial" id="razonSocial" formControlName="razonSocial" maxlength="250"
               (change)="setValoresStore(datosProducto,'razonSocial', 'setRazonSocial')" />
             @if(datosProducto.controls['razonSocial'].invalid && datosProducto.controls['razonSocial'].touched) { <div
               class="d-grid"> @if(datosProducto.controls['razonSocial'].errors?.['required']) { <span
@@ -249,20 +343,48 @@
       <div class="row mb-3">
         <div class="col-md-4">
           <div class="form-group">
-            <app-catalogo-select [catalogo]="estado" formControlName="estado" [label]="'Estado'" [required]="true"
-              name="estado" (change)="estadoSeleccion()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
-            <input type="hidden" name="entidadSolicitud" />
+
+
+            <label class="form-label" for="">Estado*</label>
+            <select class="form-control form-select" formControlName="estado" (change)="changeEntidad()">
+              <option [ngValue]="null">Selecciona una opción</option>
+              <option *ngFor="let estado of estado" [title]="estado.descripcion" [value]="estado.clave">
+                {{ estado.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="registroFederal.get('estado')?.errors?.['required'] && registroFederal.get('estado')?.touched"
+              class="mensaje-error">
+              Este campo es obligatorio.
+            </div>
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <input type="hidden" name="idRepresetancionFederalSeleccionado" id="idRepresetancionFederalSeleccionado" />
-            <app-catalogo-select [catalogo]="representacionFederal" formControlName="representacionFederal"
-              [label]="'Representación federal'" [required]="true" name="representacionFederal"
-              [isDisabled]="esFormularioSoloLectura" (change)="representacionFederalSeleccion()"></app-catalogo-select>
+
+            <label class="form-label" for="">Representación federal*</label>
+            <select class="form-control form-select" formControlName="representacionFederal"
+              (change)="representacionFederalSeleccion()">
+              <option [ngValue]="null">Selecciona una opción</option>
+              <option *ngFor="let federal of representacionFederal" [title]="federal.descripcion"
+                [value]="federal.clave">
+                {{ federal.descripcion }}
+              </option>
+            </select>
+            <div
+              *ngIf="registroFederal.get('representacionFederal')?.errors?.['required'] && registroFederal.get('representacionFederal')?.touched"
+              class="mensaje-error">
+              Este campo es obligatorio.
+            </div>
           </div>
         </div>
       </div>
     </ng-container>
   </form>
 </div>
+
+@if(nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+  </lib-notificaciones>
+</section>
+}

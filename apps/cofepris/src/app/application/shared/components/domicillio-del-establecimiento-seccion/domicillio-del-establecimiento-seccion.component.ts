@@ -158,6 +158,12 @@ export class DomicillioDelEstablecimientoSeccionComponent
   scianJson: Catalogo[] = [];
 
   /**
+   * Almacena la lista de entradas del catálogo SCIAN como un arreglo de objetos `Catalogo`.
+   * Este arreglo se utiliza para representar las descripciones SCIAN relevantes para el componente.
+   */
+  descripcionScianJson: Catalogo[] = [];
+
+  /**
    * Configuración de las columnas de la tabla dinámica para los datos SCIAN.
    */
   configuracionTabla: ConfiguracionColumna<ScianModel>[] = SCIAN_TABLE_CONFIG;
@@ -181,6 +187,7 @@ export class DomicillioDelEstablecimientoSeccionComponent
     this.loadRegimen();
     this.loadEstado();
     this.loadScian();
+    this.loadScianDescription();
     this.inicializarEstadoFormulario();
         // Cargar el estado inicial en el formulario
 
@@ -195,9 +202,19 @@ export class DomicillioDelEstablecimientoSeccionComponent
    * @param controlName Nombre del control que cambió.
    */
   onControlChange(controlName: string): void {
-    const UPDATED_VALUE = { [controlName]: this.domicilioEstablecimiento.get(controlName)?.value };
+    let DATOS = [];
+    if(controlName === 'scian') {
+      DATOS = this.descripcionScianJson.filter((item) => {
+        return item.id === Number(this.scianForm.get(controlName)?.value);
+      })
+      this.descripcionScianJson = DATOS.length > 0 ? DATOS : this.descripcionScianJson;
+      this.scianForm.get('descripcionScian')?.setValue(this.descripcionScianJson[0]?.descripcion);
+      this.scianForm.updateValueAndValidity();
+    }
+    const UPDATED_VALUE = { [controlName]: this.scianForm.get(controlName)?.value };
     this.domicilioEstablecimientoStore.update(UPDATED_VALUE);
   }
+
   /**
    * Carga los datos del catálogo de régimen.
    */
@@ -247,6 +264,23 @@ export class DomicillioDelEstablecimientoSeccionComponent
   }
 
   /**
+   * Carga los datos de descripción SCIAN (Sistema de Clasificación Industrial de América del Norte)
+   * llamando al establecimientoService y asigna el resultado a `descripcionScianJson`.
+   * La suscripción se cancela automáticamente cuando el componente es destruido.
+   *
+   * @remarks
+   * Este método utiliza el operador `takeUntil` de RxJS para gestionar el ciclo de vida de la suscripción.
+   *
+   * @returns void
+   */
+  loadScianDescription(): void {
+    this.establecimientoService.getDescripcionScianData().pipe(takeUntil(this.destroy$))
+      .subscribe((resp: Catalogo[]) => {
+        this.descripcionScianJson = resp;
+      });
+  }
+
+  /**
    * Abre el modal SCIAN.
    */
   openScianModal(): void {
@@ -271,12 +305,10 @@ export class DomicillioDelEstablecimientoSeccionComponent
    * Guarda un nuevo dato SCIAN y lo agrega a la tabla.
    */
   guardarScian(): void {
-    if (this.scianForm.valid) {
       const SCIAN_DATA: ScianModel = {
-        claveScian: this.scianForm.get('scian')?.value,
-        descripcionScian: this.scianForm.get('descripcionScian')?.value,
+        claveScian: this.scianJson.find(item => item.id === Number(this.scianForm.get('scian')?.value))?.descripcion ?? '',
+        descripcionScian: this.descripcionScianJson.find(item => item.descripcion === String(this.scianForm.get('descripcionScian')?.value))?.descripcion ?? ''
       };
-
       // Agregar el nuevo dato a la tabla
       this.personaparas.push(SCIAN_DATA);
 
@@ -285,7 +317,7 @@ export class DomicillioDelEstablecimientoSeccionComponent
 
       // Cerrar el modal
       this.closeScianModal();
-    }
+      this.loadScianDescription();
   }
 
   /**
@@ -359,6 +391,14 @@ export class DomicillioDelEstablecimientoSeccionComponent
 
   }
 
+  /**
+   * Maneja el evento de cambio en el campo de RFC del representante.
+   * Llama a la función para buscar el representante por RFC.
+   */
+  hasError(controlName: string, errorName: string) {
+    return this.domicilioEstablecimiento.get(controlName)?.touched &&
+           this.domicilioEstablecimiento.get(controlName)?.hasError(errorName);
+  }
 
   /**
    * Ciclo de vida `OnDestroy`.

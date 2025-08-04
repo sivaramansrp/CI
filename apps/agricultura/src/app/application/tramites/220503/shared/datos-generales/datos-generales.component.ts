@@ -6,7 +6,6 @@ import {
   CatalogoSelectComponent,
   CatalogosSelect,
   ConsultaioQuery,
-  InputRadioComponent,
   TituloComponent,
   
 } from '@ng-mf/data-access-user';
@@ -43,7 +42,7 @@ import { takeUntil } from 'rxjs';
     ReactiveFormsModule,
     TituloComponent,
     CatalogoSelectComponent,
-    InputRadioComponent,
+    
   ],
 })
 export class DatosGeneralesComponent implements OnInit, OnDestroy {
@@ -248,73 +247,67 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
   inicializarFormulario(): void {
  this.forma = this.fb.group({
       foliodel: [
-        { value: this.Solicitud220503State.fetchapago, disabled: true },
+        { value: this.Solicitud220503State.fetchapago || '', disabled: true },
       ],
       aduanaIngreso: [
-        this.Solicitud220503State.aduanaIngreso,
-        Validators.required,
+        this.Solicitud220503State.aduanaIngreso || '',
+        Validators.required, 
       ],
       oficinaInspeccion: [
-        this.Solicitud220503State.oficinaInspeccion,
+        this.Solicitud220503State.oficinaInspeccion || '',
         Validators.required,
       ],
       puntoInspeccion: [
-        this.Solicitud220503State.puntoInspeccion,
+        this.Solicitud220503State.puntoInspeccion || '',
         Validators.required,
       ],
       claveUCON: [
-        { value: this.Solicitud220503State.claveUCON, disabled: true },
+        { value: this.Solicitud220503State.claveUCON || '', disabled: true },
       ],
       establecimientoTIF: [
-        this.Solicitud220503State.establecimientoTIF,
+        this.Solicitud220503State.establecimientoTIF || '',
         Validators.required,
       ],
-      nombre: [this.Solicitud220503State.nombre, Validators.required],
+      nombre: [this.Solicitud220503State.nombre || '', Validators.required],
       numeroguia: [
-        { value: this.Solicitud220503State.numeroguia, disabled: true },
+        { value: this.Solicitud220503State.numeroguia || '', disabled: true },
         Validators.required,
       ],
-      regimen: [this.Solicitud220503State.regimen, Validators.required],
-      capturaDatosMercancia: [this.Solicitud220503State.capturaDatosMercancia],
-      coordenadas: [
-        { value: this.Solicitud220503State.coordenadas, disabled: true },
-      ],
+      regimen: [this.Solicitud220503State.regimen || '', Validators.required],
+
       movilizacion: [
-        this.Solicitud220503State.movilizacion,
+        this.Solicitud220503State.movilizacion || '',
         Validators.required,
       ],
       transporte: [
-        { value: this.Solicitud220503State.transporte, disabled: true },
+        { value: this.Solicitud220503State.transporte || '', disabled: true },
       ],
-      punto: [this.Solicitud220503State.punto, [Validators.required]],
+      punto: [this.Solicitud220503State.punto || '', [Validators.required]],
       nombreEmpresa: [
-        this.Solicitud220503State.nombreEmpresa,
+        this.Solicitud220503State.nombreEmpresa || '',
         Validators.required,
       ],
     });
-
+this.forma.disable();
     this.Solicitud220503Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
         map((data: Solicitud220503State) => {
           this.Solicitud220503State = data;
           this.forma.patchValue({
-            foliodel: this.Solicitud220503State.foliodel,
-            aduanaIngreso: this.Solicitud220503State.aduanaIngreso,
-            oficinaInspeccion: this.Solicitud220503State.oficinaInspeccion,
-            puntoInspeccion: this.Solicitud220503State.puntoInspeccion,
-            claveUCON: this.Solicitud220503State.claveUCON,
-            establecimientoTIF: this.Solicitud220503State.establecimientoTIF,
-            nombre: this.Solicitud220503State.nombre,
-            numeroguia: this.Solicitud220503State.numeroguia,
-            regimen: this.Solicitud220503State.regimen,
-            capturaDatosMercancia:
-              this.Solicitud220503State.capturaDatosMercancia,
-            coordenadas: this.Solicitud220503State.coordenadas,
-            movilizacion: this.Solicitud220503State.movilizacion,
-            transporte: this.Solicitud220503State.transporte,
-            punto: this.Solicitud220503State.punto,
-            nombreEmpresa: this.Solicitud220503State.nombreEmpresa,
+            foliodel: this.Solicitud220503State.foliodel || '',
+            aduanaIngreso: this.Solicitud220503State.aduanaIngreso || '',
+            oficinaInspeccion: this.Solicitud220503State.oficinaInspeccion || '',
+            puntoInspeccion: this.Solicitud220503State.puntoInspeccion || '',
+            claveUCON: this.Solicitud220503State.claveUCON || '',
+            establecimientoTIF: this.Solicitud220503State.establecimientoTIF || '',
+            nombre: this.Solicitud220503State.nombre || '',
+            numeroguia: this.Solicitud220503State.numeroguia || '',
+            regimen: this.Solicitud220503State.regimen || '',
+            movilizacion: this.Solicitud220503State.movilizacion || '',
+            transporte: this.Solicitud220503State.transporte || '',
+            punto: this.Solicitud220503State.punto || '',
+            nombreEmpresa: this.Solicitud220503State.nombreEmpresa || '',
           });
         })
       )
@@ -376,7 +369,6 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
           );
           this.Solicitud220503Store.setNombre(resp.nombre);
           this.Solicitud220503Store.setNumeroguia(resp.numeroguia);
-          this.Solicitud220503Store.setCoordenadas(resp.coordenadas);
           this.Solicitud220503Store.setTransporte(resp.transporte);
           this.Solicitud220503Store.setNombreEmpresa(resp.nombreEmpresa);
         },
@@ -644,16 +636,6 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    */
   seleccionarMovilizacionNacional(event: Catalogo): void {
     this.Solicitud220503Store.setMovilizacion(event.id);
-  }
-
-  /**
-   * Método para establecer el valor de captura de datos de mercancía.
-   * Actualiza el estado con el valor proporcionado.
-   *
-   * @param value - Valor de tipo string o number que representa la captura de datos de la mercancía.
-   */
-  setCapturaDatosMercancia(value: string | number): void {
-    this.Solicitud220503Store.setCapturaDatosMercancia(value);
   }
 
   /**

@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ViewChild } from '@angular/core';
 
-import { AccionBoton } from '@ng-mf/data-access-user';
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
-import { DatosPasos } from '@ng-mf/data-access-user';
+import { AccionBoton } from '@libs/shared/data-access-user/src';
+import { BtnContinuarComponent } from '@libs/shared/data-access-user/src';
+import { DatosPasos } from '@libs/shared/data-access-user/src';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 

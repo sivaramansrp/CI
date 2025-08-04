@@ -1,3 +1,5 @@
+import { PATRON_LETRAS_NUMEROS_ESPACIOS, PATRON_MAYUSCULAS_NUMEROS_SIMBOLOS, PATRON_NUMERO_DECIMAL_10_2, PATRON_NUMERO_DECIMAL_3_18, REGEX_ALFANUMERICO_CON_ESPACIOS, REGEX_CORREO_ELECTRONICO, REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO, REGEX_PATRON_ALFANUMERICO, REGEX_TELEFONO } from "@libs/shared/data-access-user/src";
+
 /**
  * Lista de pasos del proceso de captura y firma de solicitud.
  * Cada paso contiene un índice, un título, y estados de activación y finalización.
@@ -32,10 +34,14 @@ export const DATOS_DEL_SOLICITANTE = [
     labelNombre: 'Ingresos acumulables', // Etiqueta visible
     campo: 'acumulables', // Nombre del campo para el binding
     clase: 'col-md-4', // Clase para el diseño del formulario (Bootstrap)
-    tipoInput: 'number', // Tipo de campo
+    tipoInput: 'text', // Tipo de campo
     desactivado: false, // Indica si está deshabilitado
     soloLectura: false, // Indica si solo es de lectura
-    validadores: [{ tipo: 'required', mensaje: '' }], // Validadores asociados
+    validadores: [{ tipo: 'required', mensaje: '' }, {
+        tipo: 'maxlength',
+        valor: 50,
+        
+      }], // Validadores asociados
     marcadorDePosicion: '', // Texto de placeholder
     valorPredeterminado: '', // Valor inicial
     marginTop: 0, // Margen superior personalizado
@@ -45,10 +51,14 @@ export const DATOS_DEL_SOLICITANTE = [
     labelNombre: 'Capital social mínimo pagado',
     campo: 'socialPagado',
     clase: 'col-md-4',
-    tipoInput: 'number',
+    tipoInput: 'text',
     desactivado: false,
     soloLectura: false,
-    validadores: [{ tipo: 'required', mensaje: '' }],
+    validadores: [{ tipo: 'required', mensaje: '' }, {
+        tipo: 'maxlength',
+        valor: 50,
+        
+      }],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -67,7 +77,14 @@ export const REPRESENTANTE_LEGAL = [
     tipoInput: 'text',
     desactivado: false,
     soloLectura: false,
-    validadores: [{ tipo: 'required', mensaje: '' }],
+    validadores: [{ tipo: 'required', mensaje: '' },
+      {
+        tipo: 'maxlength',
+        valor: 13,
+        
+      },
+      { tipo: 'pattern', valor: PATRON_MAYUSCULAS_NUMEROS_SIMBOLOS, mensaje: 'Solo se permiten letras mayúsculas, números y los símbolos' }
+    ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -77,10 +94,16 @@ export const REPRESENTANTE_LEGAL = [
     labelNombre: 'Nombre',
     campo: 'nombre',
     clase: 'col-md-4',
-    tipoInput: 'number', // Nota: se recomienda cambiar a 'text' si es un nombre de persona
+    tipoInput: 'text', // Nota: se recomienda cambiar a 'text' si es un nombre de persona
     desactivado: false,
     soloLectura: false,
-    validadores: [{ tipo: 'required', mensaje: '' }],
+    validadores: [{ tipo: 'required', mensaje: '' },
+      {
+        tipo: 'maxlength',
+        valor: 50,
+        
+      },
+      { tipo: 'pattern', valor: PATRON_LETRAS_NUMEROS_ESPACIOS, mensaje: 'Solo se permiten letras, números y espacios.' }],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -93,7 +116,13 @@ export const REPRESENTANTE_LEGAL = [
     tipoInput: 'text',
     desactivado: false,
     soloLectura: false,
-    validadores: [{ tipo: 'required', mensaje: '' }],
+    validadores: [{ tipo: 'required', mensaje: '' },
+      {
+        tipo: 'maxlength',
+        valor: 50,
+        
+      },
+      { tipo: 'pattern', valor: PATRON_LETRAS_NUMEROS_ESPACIOS, mensaje: 'Solo se permiten letras, números y espacios.' }],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -106,7 +135,13 @@ export const REPRESENTANTE_LEGAL = [
     tipoInput: 'text',
     desactivado: false,
     soloLectura: false,
-    validadores: [{ tipo: 'required', mensaje: '' }],
+    validadores: [{ tipo: 'required', mensaje: '' },
+      {
+        tipo: 'maxlength',
+        valor: 50,
+        
+      },
+      { tipo: 'pattern', valor: PATRON_LETRAS_NUMEROS_ESPACIOS, mensaje: 'Solo se permiten letras, números y espacios.' }],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -119,7 +154,14 @@ export const REPRESENTANTE_LEGAL = [
     tipoInput: 'text',
     desactivado: false,
     soloLectura: false,
-    validadores: [{ tipo: 'required', mensaje: '' }],
+    validadores: [{ tipo: 'required', mensaje: '' },
+      {
+        tipo: 'maxlength',
+        valor: 15,
+        
+      },
+      { tipo: 'pattern', valor: REGEX_TELEFONO, mensaje: 'Solo se permiten números.' }],
+  
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -132,7 +174,14 @@ export const REPRESENTANTE_LEGAL = [
     tipoInput: 'text',
     desactivado: false,
     soloLectura: false,
-    validadores: [{ tipo: 'required', mensaje: '' }],
+    validadores: [{ tipo: 'required', mensaje: '' },
+      {
+        tipo: 'maxlength',
+        valor: 50,
+        
+      },
+      { tipo: 'pattern', valor: REGEX_CORREO_ELECTRONICO, mensaje: 'Formato de correo electrónico inválido.' }
+    ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -158,7 +207,7 @@ export const DATOS_DEL_SEGURO = [
     habilitado: true,
   },
   {
-    id: 'representante.fechaDeTerminoVigencia',
+    id: 'datosDelSeguro.fechaDeTerminoVigencia',
     labelNombre: 'Fecha de término de la vigencia del seguro',
     campo: 'fechaDeTerminoVigencia',
     clase: 'col-md-6',
@@ -193,25 +242,51 @@ export const DATOS_DEL_SEGURO = [
     tipoInput: 'text',
     desactivado: false,
     soloLectura: false,
-    validadores: [{ tipo: 'required' }],
+    validadores: [{ tipo: 'required' , mensaje: ''},
+      {
+        tipo: 'maxlength',
+        valor: 13,
+        
+      },
+      {
+        tipo: 'pattern',
+        valor: PATRON_NUMERO_DECIMAL_10_2,
+        mensaje: 'No cumple con el formato esperado: 9999999999.99'
+      }
+    ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
     habilitado: true,
+    tooltipQuestionCircle: true,
+    tooltipTxt:"Indicará el monto total pagado por la póliza de seguro global del año anterior o la vigente al momento de la importación, según se trate:"
   },
   {
     id: 'datosDelSeguro.valorTotalMercancias',
-    labelNombre: 'Valor total de las mercancías',
+    labelNombre: 'Valor de las mercancías',
     campo: 'valorTotalMercancias',
     clase: 'col-md-4',
     tipoInput: 'text',
     desactivado: false,
     soloLectura: false,
-    validadores: [{ tipo: 'required' }],
+    validadores: [{ tipo: 'required' , mensaje: ''},
+      {
+        tipo: 'maxlength',
+        valor: 13,
+        
+      },
+      {
+        tipo: 'pattern',
+        valor: PATRON_NUMERO_DECIMAL_10_2,
+        mensaje: 'No cumple con el formato esperado: 9999999999.99'
+      }
+    ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
     habilitado: true,
+    tooltipQuestionCircle: true,
+    tooltipTxt:"Señalar el valor de transacción de las mercancías importadas en el año anterior o las que estime importar durante el año de cobertura de la pólíza, según se trate."
   },
   {
     id: 'datosDelSeguro.factorAplicable',
@@ -221,11 +296,24 @@ export const DATOS_DEL_SEGURO = [
     tipoInput: 'text',
     desactivado: false,
     soloLectura: false,
-    validadores: [{ tipo: 'required' }],
+    validadores: [{ tipo: 'required', mensaje: '' },
+      {
+        tipo: 'maxlength',
+        valor: 22,
+        
+      },
+      {
+        tipo: 'pattern',
+        valor: PATRON_NUMERO_DECIMAL_3_18,
+        mensaje: 'No cumple con el formato esperado 999.999999999999999999'
+      }
+    ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
     habilitado: true,
+    tooltipQuestionCircle: true,
+    tooltipTxt: 'El factor que resulte de dividir los conceptos anteriores, conforme lo dispuesto en el artículo 117, fracción I del Reglamento de la Ley Adunera.',
   },
 ];
 
@@ -241,7 +329,18 @@ export const INFORMACION_DE_COMPANIA = [
     tipoInput: 'text',
     desactivado: false,
     soloLectura: false,
-    validadores: [{ tipo: 'required' }],
+    validadores: [{ tipo: 'required' },
+      {
+        tipo: 'maxlength',
+        valor: 13,
+        
+      },
+      {
+        tipo: 'pattern',
+        valor: REGEX_PATRON_ALFANUMERICO,
+        mensaje: 'Solo se permiten letras y números.'
+      }
+    ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -255,7 +354,18 @@ export const INFORMACION_DE_COMPANIA = [
     tipoInput: 'text',
     desactivado: false,
     soloLectura: false,
-    validadores: [{ tipo: 'required' }],
+    validadores: [{ tipo: 'required' },
+      {
+        tipo: 'maxlength',
+        valor: 50,
+        
+      },
+      {
+        tipo: 'pattern',
+        valor: REGEX_ALFANUMERICO_CON_ESPACIOS,
+        mensaje: 'Solo se permiten letras, números y espacios.'
+      }
+    ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -308,7 +418,18 @@ export const INFORMACION_DE_COMPANIA = [
     tipoInput: 'text',
     desactivado: false,
     soloLectura: false,
-    validadores: [{ tipo: 'required' }],
+    validadores: [{ tipo: 'required' },
+      {
+        tipo: 'maxlength',
+        varlor: 15
+      },
+      {
+        tipo: 'pattern',
+        valor: REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO,
+        mensaje: 'Solo se permiten letras, números, comas, paréntesis y espacios.'
+      }
+      
+    ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -322,7 +443,17 @@ export const INFORMACION_DE_COMPANIA = [
     tipoInput: 'text',
     desactivado: false,
     soloLectura: false,
-    validadores: [{ tipo: 'required' }],
+    validadores: [{ tipo: 'required' },
+       {
+        tipo: 'maxlength',
+        varlor: 250
+      },
+      {
+        tipo: 'pattern',
+        valor: REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO,
+        mensaje: 'Solo se permiten letras, números, comas, paréntesis y espacios.'
+      }
+    ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -336,7 +467,18 @@ export const INFORMACION_DE_COMPANIA = [
     tipoInput: 'text',
     desactivado: false,
     soloLectura: false,
-    validadores: [{ tipo: 'required' }],
+    validadores: [{ tipo: 'required' },
+
+       {
+        tipo: 'maxlength',
+        varlor: 15
+      },
+      {
+        tipo: 'pattern',
+        valor: REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO,
+        mensaje: 'Solo se permiten letras, números, comas, paréntesis y espacios.'
+      }
+    ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -350,11 +492,21 @@ export const INFORMACION_DE_COMPANIA = [
     tipoInput: 'text',
     desactivado: false,
     soloLectura: false,
-    validadores: [{ tipo: 'required' }],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
     habilitado: true,
+    validadores: [
+      {
+        tipo: 'maxlength',
+        varlor: 50
+      },
+      {
+        tipo: 'pattern',
+        valor: REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO,
+        mensaje: 'Solo se permiten letras, números, comas, paréntesis y espacios.'
+      }
+    ],
   },
   {
     id: 'datosDelSeguro.codigoPostal',
@@ -364,10 +516,31 @@ export const INFORMACION_DE_COMPANIA = [
     tipoInput: 'text',
     desactivado: false,
     soloLectura: false,
-    validadores: [{ tipo: 'required' }],
+    validadores: [{ tipo: 'required' },
+      {
+        tipo: 'maxlength',
+        varlor: 50
+      },
+      {
+        tipo: 'pattern',
+        valor: REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO,
+        mensaje: 'Solo se permiten letras, números, comas, paréntesis y espacios.'
+      }
+    ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
     habilitado: true,
   },
 ];
+
+export const ERROR_FORMA_ALERT =
+`
+<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+      Faltan campos por capturar.
+    </div>
+  </div>
+</div>
+`;

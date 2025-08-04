@@ -104,7 +104,7 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
   */
   @Input() public idProcedimiento!: number;
 
-  public requiredLabel:boolean = true;
+  public requiredLabel:boolean = false;
 
   public maxLength!: { [key: string]: number };
 
@@ -242,7 +242,7 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.requiredLabel = REQUIRED_BANCO.includes(this.idProcedimiento) ? false : true;
+    this.requiredLabel = REQUIRED_BANCO.includes(this.idProcedimiento) ? true : false;
 
     this.fechaFinalInput = REQUIRED_BANCO.includes(this.idProcedimiento) ? PAGO : FECHA_PAGO;
 
@@ -331,11 +331,32 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
  * @param nuevo_valor Nuevo valor de la fecha final.
 
  */
+fechaFuturaSeleccionada = false;
   cambioFechaDePago(nuevo_valor: string): void {
     this.pagoDerechos.patchValue({
       fechaDePago: nuevo_valor,
     });
-    this.permisoImportacionBiologicaStore.setFechaDePago(nuevo_valor);
+   this.permisoImportacionBiologicaStore.setFechaDePago(nuevo_valor);
+  this.pagoDerechos.get('fechaDePago')?.setValue(nuevo_valor);
+
+  let seleccionada: Date | null = null;
+  if (nuevo_valor && nuevo_valor.includes('/')) {
+    const [DAY, MONTH, YEAR] = nuevo_valor.split('/').map(Number);
+    seleccionada = new Date(YEAR, MONTH - 1, DAY);
+  } else {
+    seleccionada = new Date(nuevo_valor); 
+  }
+
+  const HOY = new Date();
+  HOY.setHours(0, 0, 0, 0);
+
+  if (seleccionada && seleccionada > HOY) {
+    this.fechaFuturaSeleccionada = true;
+    this.pagoDerechos.get('fechaDePago')?.setErrors({ futureDate: true });
+  } else {
+    this.fechaFuturaSeleccionada = false;
+    this.pagoDerechos.get('fechaDePago')?.setErrors(null);
+  }
   }
 
    /**
@@ -343,7 +364,15 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
    * @description Limpia todos los campos del formulario de pago de derechos.
    */
   onReset(): void {
-    this.pagoDerechos.reset();
+this.pagoDerechos.reset({
+  claveDeReferncia: '',
+  cadenaDeLaDependencia: '',
+  banco: '',
+  llaveDePago: '',
+  fechaDePago: this.pagoDerechos.get('fechaDePago')?.setValue(''),
+  importeDePago: ''
+});
+
   }
 
   /*

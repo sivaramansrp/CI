@@ -132,7 +132,7 @@
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label for="rfc" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Title"
+              <label for="rfc" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1" title="R.F.C"
                   ata-bs-toggle="tooltip"></span>
               </label>
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
@@ -173,7 +173,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <label for="curp" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span>
+                  title="R.F.C" ata-bs-toggle="tooltip"></span>
               </label>
               <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
             </div>
@@ -336,7 +336,7 @@
             <div class="col-md-8">
               <div class="form-group">
                 <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1"
-                    title="Title" ata-bs-toggle="tooltip"></span></label>
+                    title="Calle" ata-bs-toggle="tooltip"></span></label>
                 <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" />
               </div>
             </div>
@@ -377,7 +377,7 @@
           <div class="col-md-4 mt-5">
             <div class="form-group">
               <label class="form-label" for="correoElectronico">Correo electrónico:<span
-                  class="bi bi-question-circle-fill fs-4 m-1" title="Title" ata-bs-toggle="tooltip"></span></label>
+                  class="bi bi-question-circle-fill fs-4 m-1" title="Correo electrónico" ata-bs-toggle="tooltip"></span></label>
               <input class="form-control" type="text" id="correoElectronico" formControlName="correoElectronico"
                 name="correoElectronico" />
             </div>
@@ -427,25 +427,26 @@
           </div>
         </div>
       </div>
-      <hr />
+   <hr />
       <div class="row">
-        <div>
+        
           <div class="col-md-4">
             <div class="form-group">
-              <label for="rfc" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Title"
+              <label for="rfc" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1" title="R.F.C"
                   ata-bs-toggle="tooltip"></span>
               </label>
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
             </div>
-          </div>
+          
         </div>
+      </div>
 
         @if (fisica || (!fisica && !moral)){
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
               <label for="curp" class="form-label">C.U.R.P*:<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span>
+                  title="C.U.R.P" ata-bs-toggle="tooltip"></span>
               </label>
               <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
             </div>
@@ -512,7 +513,7 @@
 
           <div class="col-md-4 mt-5">
             <div class="form-group">
-              <app-catalogo-select [catalogo]="coloniaDropdownData" [label]="'Colonia:'" for="colonia" id="colonia"
+              <app-catalogo-select [catalogo]="coloniaDropdownData" [label]="'Colonia'" for="colonia" id="colonia"
                 formControlName="colonia" [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
             </div>
           </div>
@@ -523,7 +524,7 @@
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span></label>
+                  title="Calle" ata-bs-toggle="tooltip"></span></label>
               <input type="text" id="calle" formControlName="calle" class="form-control" name="calle" />
             </div>
           </div>
@@ -562,7 +563,7 @@
           <div class="col-md-4 mt-5">
             <div class="form-group">
               <label class="form-label" for="correoElectronico">Correo electrónico:<span
-                  class="bi bi-question-circle-fill fs-4 m-1" title="Title" ata-bs-toggle="tooltip"></span></label>
+                  class="bi bi-question-circle-fill fs-4 m-1" title="Correo electrónico" ata-bs-toggle="tooltip"></span></label>
               <input type="text" id="correoElectronico" formControlName="correoElectronico" class="form-control"
                 name="correoElectronico" />
             </div>
@@ -588,7 +589,7 @@
             </div>
           </div>
         </div>
-      </div>
+      
     </form>
   </div>
 </app-modal>
@@ -694,7 +695,7 @@
 
         <div class="col-md-8">
           <div class="form-group">
-            <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Title"
+            <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Calle"
                 ata-bs-toggle="tooltip"></span></label>
             <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" />
           </div>
@@ -734,7 +735,7 @@
         <div class="col-md-4 mt-5">
           <div class="form-group">
             <label class="form-label" for="correoElectronico">Correo electrónico:<span
-                class="bi bi-question-circle-fill fs-4 m-1" title="Title" ata-bs-toggle="tooltip"></span></label>
+                class="bi bi-question-circle-fill fs-4 m-1" title="Correo electrónico" ata-bs-toggle="tooltip"></span></label>
             <input type="text" class="form-control" id="correoElectronico" formControlName="correoElectronico"
               name="correoElectronico" />
           </div>
@@ -863,7 +864,7 @@
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span></label>
+                  title="Calle" ata-bs-toggle="tooltip"></span></label>
               <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" />
             </div>
           </div>
@@ -902,7 +903,7 @@
           <div class="col-md-4 mt-5">
             <div class="form-group">
               <label class="form-label" for="correoElectronico">Correo electrónico:<span
-                  class="bi bi-question-circle-fill fs-4 m-1" title="Title" ata-bs-toggle="tooltip"></span></label>
+                  class="bi bi-question-circle-fill fs-4 m-1" title="Correo electrónico" ata-bs-toggle="tooltip"></span></label>
               <input class="form-control" type="text" id="correoElectronico" formControlName="correoElectronico"
                 name="correoElectronico" />
             </div>

@@ -17,6 +17,7 @@ import {
   TercerosQuery,
   TercerosState,
   TransporteDespacho,
+  formatearFechaConMoment,
 } from '@ng-mf/data-access-user';
 import {
   ListFechasSevex,
@@ -157,6 +158,11 @@ export class SolicitudPageComponent implements OnInit {
    */
   public folioTemporal: number = 0;
 
+  /**
+   * Indica si hay archivos seleccionados.
+   */
+  public hayArchivosSeleccionados: boolean = false;
+
   constructor(
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
@@ -251,7 +257,7 @@ export class SolicitudPageComponent implements OnInit {
                 categoria: 'success',
                 modo: 'action',
                 titulo: '',
-                mensaje: MSG_REGISTRO_EXITOSO(this.folioTemporal.toString()),
+                mensaje: MSG_REGISTRO_EXITOSO(String(this.folioTemporal)),
                 cerrar: true,
                 txtBtnAceptar: '',
                 txtBtnCancelar: '',
@@ -361,7 +367,7 @@ export class SolicitudPageComponent implements OnInit {
               tipo_transporte: TIPO_TRANSPORTE_ARRIBO_SALIDA,
               emp_transportista: (transporte.emp_transportista || '') as string,
               numero_porte: transporte.numero_porte || '',
-              fecha_porte: (transporte.fecha_porte || '') as string,
+              fecha_porte: (formatearFechaConMoment(transporte.fecha_porte || '')) as string,
               marca_transporte: transporte.marca_transporte || '',
               modelo_transporte: transporte.modelo_transporte || '',
               placas_transporte: transporte.placas_transporte || '',
@@ -450,7 +456,7 @@ export class SolicitudPageComponent implements OnInit {
               tipo_transporte: TIPO_TRANSPORTE_DESPACHO,
               emp_transportista: (transporte.emp_transportista || '') as string,
               numero_porte: transporte.numero_porte || '',
-              fecha_porte: (transporte.fecha_porte || '') as string,
+              fecha_porte: (formatearFechaConMoment(transporte.fecha_porte || '')) as string,
               marca_transporte: transporte.marca_transporte || '',
               modelo_transporte: transporte.modelo_transporte || '',
               placas_transporte: transporte.placas_transporte || '',
@@ -537,6 +543,7 @@ export class SolicitudPageComponent implements OnInit {
           ? null
           : this.solicitudState.idSolicitud,
       id_tipo_tramite: TIPO_TRAMITE,
+      cve_unidad_administrativa: "CV1",
       costo_total: '',
       rfc: this.solicitudState.RFCImportadorExportador, //Este viene del store con los datos del inicio de sesión
       representante_legal: {
@@ -688,8 +695,8 @@ export class SolicitudPageComponent implements OnInit {
    * {void} No retorna ningún valor.
    */
   onClickCargaArchivos(): void {
-    this.cargarArchivosEvento.emit();
-  }
+      this.cargarArchivosEvento.emit();
+    }
 
   /**
    * Método para navegar a la sección anterior del wizard.
@@ -741,5 +748,20 @@ export class SolicitudPageComponent implements OnInit {
    */
   cargaRealizada(cargaRealizada: boolean): void {
     this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  /**
+   * Método para verificar si hay archivos seleccionados
+   * Este método debería ser llamado desde el componente hijo cuando se seleccionen archivos
+   */
+  onArchivosSeleccionados(hayArchivos: boolean): void {
+    this.hayArchivosSeleccionados = hayArchivos;
+  }
+
+  /**
+   * Método para resetear el estado cuando se cambie de paso
+   */
+  resetearEstadoArchivos(): void {
+    this.hayArchivosSeleccionados = false;
   }
 }

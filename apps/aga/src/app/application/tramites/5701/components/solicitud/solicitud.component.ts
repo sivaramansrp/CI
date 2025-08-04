@@ -8,10 +8,12 @@ import {
   Catalogo,
   CatalogoPaises,
   Catalogos,
+  ConfiguracionColumna,
   CrossListLable,
   DatosAgregarFormulario,
   FechasService,
   FormulariosService,
+  InputFecha,
   InputHoraComponent,
   MENSAJE_ALERTA_NO_FECHAS,
   MSG_ALERTA_ELIMINAR_ELEMENTO,
@@ -32,6 +34,7 @@ import {
   TEXTO_ACEPTAR,
   TEXTO_CANCELAR,
   TEXTO_CERRAR,
+  TEXTO_ELIMINAR_SOLICITUD,
   TIPO_SOLICITUD,
   TablaSeleccion,
   TipoDespachoService,
@@ -56,7 +59,6 @@ import {
 } from '@angular/forms';
 import {
   CONFIGURACION_ENCABEZADO_TABLA_PAGOS,
-  EMPRESAS_CERTIFICADAS,
   ERR_RFC_NO_VALIDO,
   ESTATUS_PAGADO,
   ID_NAME_DD,
@@ -75,8 +77,9 @@ import {
   URL_GENERAR_LINEA_CAPTURA,
   VEHICULO,
 } from '../../../../core/enums/5701/tramite5701.enum';
+// eslint-disable-next-line sort-imports
 import {
-  AfterViewInit,
+  
   ChangeDetectorRef,
   Component,
   Input,
@@ -101,7 +104,6 @@ import {
   map,
   merge,
   switchMap,
-  take,
   takeUntil,
   tap,
   throwError,
@@ -140,11 +142,14 @@ import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
 import rfcs from 'libs/shared/theme/assets/json/5701/rfcs.json';
 
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+
 import {
+  CONFIRMAR_ELIMINAR_SOLICITUD,
   MSG_ADUANA_PEDIMENTO,
   MSG_BORRAR_CAMPOS_RECINTOS,
   MSG_ERROR_NO_INFORMACION,
   MSG_ERROR_RFC_NO_ENCONTRADO,
+  MSG_ERROR_SELECCIONE_REGISTRO,
   MSG_MONTO_PAGADO_CUBIERTO,
   MSJ_ERROR_FECHAS_NO_SELECCIONADAS,
   MSJ_ERROR_FECHA_DIA,
@@ -168,6 +173,8 @@ import { BodyValidaHorario } from '../../../../core/models/5701/ValidaHorario.mo
 import { BodyValidarEncargoConferido } from '../../../../core/models/5701/encargo-conferido.models';
 import { CheckInputTextComponent } from '../../../../shared/components/check-input-text/check-input-text.component';
 import { EncargoConferidoService } from '../../../../core/services/5701/encargo-conferido.service';
+import { GuardaSolicitudService } from '../../../../core/services/5701/guardar/guarda-solicitud.service';
+import { Router } from '@angular/router';
 import { SIN_VALOR_SELECT } from '@libs/shared/data-access-user/src/core/enums/transporte-componente.enum';
 import { ValidaDespachoService } from '../../../../core/services/5701/valida-despacho.service';
 import { ValidaHorarioService } from '../../../../core/services/5701/valida-horario.service';
@@ -177,7 +184,7 @@ import { ValidaHorarioService } from '../../../../core/services/5701/valida-hora
   styleUrl: './solicitud.component.scss',
 })
 export class SolicitudComponent
-  implements OnInit, OnChanges, OnDestroy, AfterViewInit
+  implements OnInit, OnChanges, OnDestroy
 {
   /**
    * Índice de tabulación para el control de enfoque en la interfaz.
@@ -347,11 +354,6 @@ export class SolicitudComponent
   idTipoDespacho!: string;
 
   /**
-   * Opciones disponibles para empresas certificadas.
-   */
-  radioOpciones = EMPRESAS_CERTIFICADAS;
-
-  /**
    * Notificador para gestionar la destrucción de suscripciones y evitar fugas de memoria.
    * @private
    */
@@ -407,7 +409,7 @@ export class SolicitudComponent
   /**
    * Encabezado de la tabla de pagos.
    */
-  public encabezadoDeTablaPagos = CONFIGURACION_ENCABEZADO_TABLA_PAGOS;
+  public encabezadoDeTablaPagos: ConfiguracionColumna<LineaCaptura>[] = CONFIGURACION_ENCABEZADO_TABLA_PAGOS;
 
   /**
    * Datos de la tabla de pagos.
@@ -445,6 +447,11 @@ export class SolicitudComponent
   readonly SIN_VALOR = SIN_VALOR;
 
   /**
+   * @description Mensaje de error cuando el RFC no es válido
+   */
+  readonly ERR_RFC_NO_VALIDO = ERR_RFC_NO_VALIDO;
+
+  /**
    *@description Alamcena las lineas de capturas seleccionadas por el usuario en la tabla.
    */
   lineaCapturaSeleccionados: LineaCaptura[] = [];
@@ -466,11 +473,10 @@ export class SolicitudComponent
 
   //Estas variables se van a eliminar
   /**
-   * Arrelgo de patentes de la empresa
+   * Arreglo de patentes de la empresa, con label y value.
    */
-  radioPatentes = patentes.patentes;
-  rfcs = rfcs.rfcs;
-
+  radioPatentes: { label: string; value: string | number; hint?: string }[] = [];
+  rfcs: Catalogo[] = [];
   /**
    * @description Bandera para indicar si la hora de inicio del servicio no ha sido marcada.
    */
@@ -502,9 +508,22 @@ export class SolicitudComponent
   revisionDisabled: boolean = true;
 
   /**
+   * @description Banderas para deshabilitar los campos de tipo de empresa certificada.
+   */
+  tipoEmpresaCertificadaADisabled: boolean = false;
+  tipoEmpresaCertificadaAADisabled: boolean = false;
+  tipoEmpresaCertificadaAAADisabled: boolean = false;
+
+  /**
    * @description Bandera para deshabilitar el campo de certificación industria automotriz.
    */
   industriaAutomotriz!: CheckInputTextComponent;
+
+  /**
+   * Referencia al componente IMMEX.
+   * Debe ser asignada por @ViewChild si es un componente hijo.
+   */
+  programaImmex?: { isDisabled: boolean };
 
   /**
    * Bandera para indicar si se debe resetear la fecha de inicio del servicio.
@@ -515,6 +534,20 @@ export class SolicitudComponent
    * Bandera para indicar si debe mostrar el select de tipo despacho.
    */
   mostarSelectTipoDespacho: boolean = false;
+
+  readonly DatosFechaFinal: InputFecha = {
+    labelNombre: 'Fecha final*',
+    required: true,
+    habilitado: true,
+  };
+
+  readonly DatosFechaInicio: InputFecha = {
+    labelNombre: 'Fecha inicial*',
+    required: true,
+    habilitado: true,
+  };
+
+  tabla1 = 'tablaPagos'; 
 
   constructor(
     private seccionQuery: SeccionLibQuery,
@@ -550,10 +583,18 @@ export class SolicitudComponent
     private validaDespachosService: ValidaDespachoService,
     private domSanitizer: DomSanitizer,
     private readonly validaHorarioService: ValidaHorarioService,
-    private readonly encargoConferidoService: EncargoConferidoService
+    private readonly encargoConferidoService: EncargoConferidoService,
+    private readonly guardarSolicitudService: GuardaSolicitudService,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
+    this.radioPatentes = patentes?.patentes?.map((p: { label: string; value: string | number; hint?: string }) => ({
+      label: p.label,
+      value: p.value,
+      hint: p.hint
+    })) ?? [];
+    this.rfcs = rfcs?.rfcs;
     this.validaTipoPersona();
     this.inicializaCatalogos();
 
@@ -577,7 +618,7 @@ export class SolicitudComponent
 
     this.crearFormSolicitud();
 
-    this.datosImportadorExportador.get('tipoEmpresaCertificada')?.disable();
+    this.initializeTipoEmpresaCertificadaStates();
 
     this.FormSolicitud.statusChanges
       .pipe(
@@ -593,13 +634,12 @@ export class SolicitudComponent
     // Aqui se busca el nro de patente o autorizacion
     //
     this.obtenerPatente();
-
     this.calcularMontoTotal();
     this.linkGeneraLineaCapturaSeguro =
       this.domSanitizer.bypassSecurityTrustUrl(URL_GENERAR_LINEA_CAPTURA);
   }
 
-  ngAfterViewInit(): void {}
+  
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['folioSolicitud'] && changes['folioSolicitud'].currentValue) {
@@ -822,6 +862,22 @@ export class SolicitudComponent
     if (CONTROL) {
       const ERROR_NO_MENOS_UNO = CONTROL.hasError('noMenosUno');
       return ERROR_NO_MENOS_UNO && CONTROL.touched;
+    }
+
+    return false;
+  }
+
+  /**
+   * Error whitespace
+   * @returns {boolean} - Retorna `true` si el campo tiene un error de whitespace, de lo contrario `false`.
+   */
+  // eslint-disable-next-line class-methods-use-this
+  isErrorWhitespace(form: FormGroup, field: string): boolean {
+    const CONTROL = form.get(field) as FormControl;
+
+    if (CONTROL) {
+      const ERROR_WHITESPACE = CONTROL.hasError('whitespace');
+      return ERROR_WHITESPACE && CONTROL.touched;
     }
 
     return false;
@@ -1075,7 +1131,9 @@ export class SolicitudComponent
           [Validators.maxLength(25)],
         ],
 
-        tipoEmpresaCertificada: [this.solicitudState?.tipoEmpresaCertificada],
+        tipoEmpresaCertificadaA: [this.solicitudState?.tipoEmpresaCertificada === 'a'],
+        tipoEmpresaCertificadaAA: [this.solicitudState?.tipoEmpresaCertificada === 'aa'],
+        tipoEmpresaCertificadaAAA: [this.solicitudState?.tipoEmpresaCertificada === 'aaa'],
         socioComercial: [this.solicitudState?.socioComercial],
         certificacionOEA: [this.solicitudState?.certificacionOEA],
         revision: [this.solicitudState?.revision],
@@ -1131,11 +1189,11 @@ export class SolicitudComponent
         ],
         descripcionGenerica: [
           this.solicitudState?.descripcionGenerica,
-          [Validators.required, Validators.maxLength(500)],
+          [Validators.required, Validators.maxLength(500), ValidacionesFormularioService.noWhitespaceValidator],
         ],
         justificacion: [
           this.solicitudState?.justificacion,
-          [Validators.required, Validators.maxLength(1000)],
+          [Validators.required, Validators.maxLength(1000), ValidacionesFormularioService.noWhitespaceValidator],
         ],
       }),
 
@@ -1289,7 +1347,7 @@ export class SolicitudComponent
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
-        titulo: 'Avisos',
+        titulo: TITULO_MODAL_AVISO,
         mensaje: ERR_RFC_NO_VALIDO,
         cerrar: false,
         txtBtnAceptar: 'Aceptar',
@@ -1347,7 +1405,7 @@ export class SolicitudComponent
                 tipoNotificacion: 'alert',
                 categoria: 'danger',
                 modo: 'action',
-                titulo: 'Avisos',
+                titulo: TITULO_MODAL_AVISO,
                 mensaje: MSG_ERROR_RFC_NO_ENCONTRADO,
                 cerrar: false,
                 txtBtnAceptar: 'Aceptar',
@@ -1457,7 +1515,7 @@ export class SolicitudComponent
           tipoNotificacion: 'alert',
           categoria: 'danger',
           modo: 'action',
-          titulo: 'Avisos',
+          titulo: TITULO_MODAL_AVISO,
           mensaje: MSJ_ERROR_FECHA,
           cerrar: false,
           txtBtnAceptar: 'Aceptar',
@@ -1494,7 +1552,7 @@ export class SolicitudComponent
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
-        titulo: 'Avisos',
+        titulo: TITULO_MODAL_AVISO,
         mensaje: MSG_ADUANA_PEDIMENTO,
         cerrar: false,
         txtBtnAceptar: 'Cerrar',
@@ -1564,6 +1622,62 @@ export class SolicitudComponent
   }
 
   /**
+   * Maneja el cambio de selección en los checkboxes de tipo de empresa certificada.
+   * Implementa la lógica de mutua exclusión: solo un checkbox puede estar seleccionado a la vez.
+   * @param value - El valor de la opción seleccionada ('a', 'aa', 'aaa')
+   * @param controlName - El nombre del control del formulario que cambió
+   */
+  onTipoEmpresaChange(value: string, controlName: string): void {
+    const IS_CHECKED = this.datosImportadorExportador.get(controlName)?.value;
+    
+    if (IS_CHECKED) {
+      // Si se selecciona uno, deseleccionar los otros y deshabilitarlos
+      const CONTROLS = ['tipoEmpresaCertificadaA', 'tipoEmpresaCertificadaAA', 'tipoEmpresaCertificadaAAA'];
+      CONTROLS.forEach(ctrl => {
+        if (ctrl !== controlName) {
+          this.datosImportadorExportador.get(ctrl)?.setValue(false);
+        }
+      });
+      
+      // Actualizar estados disabled
+      this.tipoEmpresaCertificadaADisabled = controlName !== 'tipoEmpresaCertificadaA';
+      this.tipoEmpresaCertificadaAADisabled = controlName !== 'tipoEmpresaCertificadaAA';
+      this.tipoEmpresaCertificadaAAADisabled = controlName !== 'tipoEmpresaCertificadaAAA';
+      
+      // Guardar el valor en el store
+      this.tramite5701Store.setTipoEmpresaCertificada(value);
+    } else {
+      // Si se deselecciona, habilitar todos los checkboxes
+      this.tipoEmpresaCertificadaADisabled = false;
+      this.tipoEmpresaCertificadaAADisabled = false;
+      this.tipoEmpresaCertificadaAAADisabled = false;
+      
+      // Limpiar el valor en el store
+      this.tramite5701Store.setTipoEmpresaCertificada('');
+    }
+  }
+
+  /**
+   * Inicializa los estados de deshabilitado para los checkboxes de tipo de empresa certificada
+   * basándose en el valor actual del store.
+   */
+  initializeTipoEmpresaCertificadaStates(): void {
+    const CURRENT_VALUE = this.solicitudState?.tipoEmpresaCertificada;
+    
+    if (CURRENT_VALUE) {
+      // Si hay un valor seleccionado, deshabilitar los otros
+      this.tipoEmpresaCertificadaADisabled = CURRENT_VALUE !== 'a';
+      this.tipoEmpresaCertificadaAADisabled = CURRENT_VALUE !== 'aa';
+      this.tipoEmpresaCertificadaAAADisabled = CURRENT_VALUE !== 'aaa';
+    } else {
+      // Si no hay valor seleccionado, habilitar todos
+      this.tipoEmpresaCertificadaADisabled = false;
+      this.tipoEmpresaCertificadaAADisabled = false;
+      this.tipoEmpresaCertificadaAAADisabled = false;
+    }
+  }
+
+  /**
    * Establece los valores en el store de tramite5701.
    *
    * @param {FormGroup} form - El formulario del cual se obtiene el valor.
@@ -1624,7 +1738,7 @@ export class SolicitudComponent
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
-        titulo: 'Avisos',
+        titulo: TITULO_MODAL_AVISO,
         mensaje: MSJ_ERROR_FECHA,
         cerrar: false,
         txtBtnAceptar: 'Aceptar',
@@ -1671,7 +1785,7 @@ export class SolicitudComponent
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
-        titulo: 'Avisos',
+        titulo: TITULO_MODAL_AVISO,
         mensaje: MSJ_ERROR_FECHA,
         cerrar: false,
         txtBtnAceptar: 'Aceptar',
@@ -1704,7 +1818,7 @@ export class SolicitudComponent
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
-        titulo: 'Avisos',
+        titulo: TITULO_MODAL_AVISO,
         mensaje: MSJ_ERROR_HORA_FINAL_MENOR_INICIAL,
         cerrar: false,
         txtBtnAceptar: 'Aceptar',
@@ -1731,7 +1845,7 @@ export class SolicitudComponent
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
-        titulo: 'Avisos',
+        titulo: TITULO_MODAL_AVISO,
         mensaje: MSJ_ERROR_FECHA,
         cerrar: false,
         txtBtnAceptar: 'Aceptar',
@@ -1930,6 +2044,12 @@ export class SolicitudComponent
   }
 
   /**
+   * Referencia al componente de Programa Fomento.
+   * Debe ser asignada por @ViewChild si es un componente hijo.
+   */
+  programaFomento?: { isDisabled: boolean };
+
+  /**
    * Actualiza los valores del campo Programa Fomento y almacena los cambios en el store.
    * @param valores - Objeto que contiene el estado del checkbox y el texto asociado.
    * @returns {void}
@@ -1949,6 +2069,11 @@ export class SolicitudComponent
       'desProgramaFomento',
       'setDescripcionProgramaFomento'
     );
+    
+    // Update the component's disabled state based on the data
+    if (this.programaFomento) {
+      this.programaFomento.isDisabled = valores.disabled || false;
+    }
   }
 
   /**
@@ -1971,6 +2096,11 @@ export class SolicitudComponent
       'desImmex',
       'setDescripcionImmex'
     );
+    
+    // Update the component's disabled state based on the data
+    if (this.programaImmex) {
+      this.programaImmex.isDisabled = valores.disabled || false;
+    }
   }
 
   /**
@@ -1995,6 +2125,11 @@ export class SolicitudComponent
       'desIndustrialAutomotriz',
       'setDescripcionIndustriaAutomotriz'
     );
+    
+    // Update the component's disabled state based on the data
+    if (this.industriaAutomotriz) {
+      this.industriaAutomotriz.isDisabled = valores.disabled || false;
+    }
   }
 
   /**
@@ -2110,6 +2245,7 @@ export class SolicitudComponent
       const DATOS_PROGRAMA: DatosCheckInputText = {
         checkbox: this.solicitudState.programa,
         texto: this.solicitudState.descripcionProgramaFomento,
+        disabled: false,
       };
       this.checkPrograma(DATOS_PROGRAMA);
     }
@@ -2119,6 +2255,7 @@ export class SolicitudComponent
       const DATOS_IMMEX: DatosCheckInputText = {
         checkbox: this.solicitudState.checkIMMEX,
         texto: this.solicitudState.descripcionImmex,
+        disabled:true
       };
       this.checkImmex(DATOS_IMMEX);
     }
@@ -2128,6 +2265,7 @@ export class SolicitudComponent
       const DATOS_AUTOMOTRIZ: DatosCheckInputText = {
         checkbox: this.solicitudState.industriaAutomotriz,
         texto: this.solicitudState.descripcionIndustrialAutomotriz,
+        disabled: false,
       };
       this.checkAutomotriz(DATOS_AUTOMOTRIZ);
     }
@@ -2158,9 +2296,7 @@ export class SolicitudComponent
 
     /** Verifica si la tabla de lineas de captura tiene datos y los agrega al formulario. */
     if (this.solicitudState.lineasCaptura.length > 0) {
-      this.datosTablaPagos = [...this.solicitudState.lineasCaptura];
 
-      this.lineasCaptura?.clear();
       this.datosTablaPagos.forEach((linea) => {
         this.lineasCaptura.push(
           this.fb.group({
@@ -2315,6 +2451,7 @@ export class SolicitudComponent
             const VALORES_IMMEX: DatosCheckInputText = {
               checkbox: response.datos.immex,
               texto: response.datos.des_immex,
+              disabled: true,
             };
             this.checkImmex(VALORES_IMMEX);
           }
@@ -2334,6 +2471,7 @@ export class SolicitudComponent
             const VALORES_PROGRAMA_FOMENTO: DatosCheckInputText = {
               checkbox: response.datos.programa_fomento,
               texto: response.datos.des_programa_fomento,
+              disabled: false,
             };
 
             this.checkPrograma(VALORES_PROGRAMA_FOMENTO);
@@ -2437,17 +2575,17 @@ export class SolicitudComponent
             this.datosImportadorExportador
               .get('certificacionOEA')
               ?.setValue(true);
-            this.datosImportadorExportador
-              .get('tipoEmpresaCertificada')
-              ?.disable();
+            // Deshabilitar todos los checkboxes de tipo empresa certificada
+            this.tipoEmpresaCertificadaADisabled = true;
+            this.tipoEmpresaCertificadaAADisabled = true;
+            this.tipoEmpresaCertificadaAAADisabled = true;
             this.certificacionOEADisabled = true;
           } else {
             this.datosImportadorExportador
               .get('certificacionOEA')
               ?.setValue(false);
-            this.datosImportadorExportador
-              .get('tipoEmpresaCertificada')
-              ?.enable();
+            // Habilitar checkboxes según el estado actual
+            this.initializeTipoEmpresaCertificadaStates();
             this.certificacionOEADisabled = false;
           }
         })
@@ -2462,7 +2600,7 @@ export class SolicitudComponent
   public agregarPagoSea(): void {
     const LINEA_PAGO: string = this.pagoCaptura.get('lineaCaptura')?.value;
     const MONTO: number = this.pagoCaptura.get('monto')?.value;
-
+    
     if (!LINEA_PAGO || !MONTO) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -2563,7 +2701,7 @@ export class SolicitudComponent
               txtBtnAceptar: TEXTO_ACEPTAR,
               txtBtnCancelar: CAMPO_VACIO,
             };
-            this.datosTablaPagos.push(PAGO);
+            this.datosTablaPagos = [...this.datosTablaPagos, PAGO];
           } else {
             this.nuevaNotificacion = {
               tipoNotificacion: 'alert',
@@ -2582,6 +2720,8 @@ export class SolicitudComponent
 
           /** Actualizar el estado una vez, en lugar de en cada iteración */
           this.tramite5701Store.setLineasCaptura(this.datosTablaPagos);
+
+          
 
           /**  Limpia los campos de la línea de captura y monto */
           this.pagoCaptura.get('lineaCaptura')?.reset();
@@ -2717,6 +2857,19 @@ export class SolicitudComponent
           );
 
           this.procesoModal = '';
+        }
+        break;
+
+      case 'eliminar_solicitud':
+        if (confirmar) {
+          const ID_SOLICITUD = this.solicitudState.idSolicitud
+            ? this.solicitudState?.idSolicitud
+            : 0;
+          if (ID_SOLICITUD !== 0) {
+            this.peticionEliminarSolicitud(ID_SOLICITUD);
+            this.limpiarNotificacion();
+            this.procesoModal = '';
+          }
         }
         break;
       default:
@@ -3070,7 +3223,7 @@ export class SolicitudComponent
         categoria: '',
         modo: 'action',
         titulo: TITULO_MODAL_AVISO,
-        mensaje: MSG_ERROR_NO_INFORMACION,
+        mensaje: MSG_ERROR_SELECCIONE_REGISTRO,
         cerrar: false,
         txtBtnAceptar: 'Cerrar',
         txtBtnCancelar: '',
@@ -3088,7 +3241,6 @@ export class SolicitudComponent
       txtBtnAceptar: TEXTO_ACEPTAR,
       txtBtnCancelar: TEXTO_CANCELAR,
     };
-
     this.procesoModal = 'linea_captura';
   }
 
@@ -3393,7 +3545,9 @@ export class SolicitudComponent
     this.datosImportadorExportador.patchValue({
       RFCImpExp: '',
       nombre: '',
-      tipoEmpresaCertificada: '',
+      tipoEmpresaCertificadaA: false,
+      tipoEmpresaCertificadaAA: false,
+      tipoEmpresaCertificadaAAA: false,
       certificacionOEA: false,
       revision: false,
     });
@@ -3416,7 +3570,10 @@ export class SolicitudComponent
       descripcionIndustrialAutomotriz: '',
     });
 
-    this.datosImportadorExportador.get('tipoEmpresaCertificada')?.disable();
+    // Deshabilitar todos los checkboxes de tipo empresa certificada
+    this.tipoEmpresaCertificadaADisabled = true;
+    this.tipoEmpresaCertificadaAADisabled = true;
+    this.tipoEmpresaCertificadaAAADisabled = true;
     this.certificacionOEADisabled = true;
     this.revisionDisabled = true;
     this.certificacionesDisabled = true;
@@ -3596,5 +3753,77 @@ export class SolicitudComponent
         )
       )
     );
+  }
+
+  /**
+   * Muestra un modal de confirmación para eliminar una solicitud.
+   * @returns {void} No retorna ningún valor.
+   */
+  eliminarSolicitud(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'action',
+      titulo: TITULO_MODAL_AVISO,
+      mensaje: CONFIRMAR_ELIMINAR_SOLICITUD,
+      cerrar: false,
+      tamanioModal: 'md',
+      txtBtnAceptar: TEXTO_ELIMINAR_SOLICITUD,
+      txtBtnCancelar: TEXTO_CERRAR,
+    };
+    this.procesoModal = 'eliminar_solicitud';
+  }
+
+  /**
+   * Petición para eliminar una solicitud.
+   * {number} idSolicitud - ID de la solicitud a eliminar.
+   */
+  peticionEliminarSolicitud(idSolicitud: number): void {
+    this.guardarSolicitudService
+      .deleteSolicitud(idSolicitud)
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        tap((response) => {
+          if (response.datos) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'success',
+              modo: 'action',
+              titulo: TITULO_MODAL_AVISO,
+              mensaje: 'Solicitud eliminada correctamente',
+              cerrar: false,
+              txtBtnAceptar: TEXTO_CERRAR,
+              txtBtnCancelar: CAMPO_VACIO,
+            };
+            this.tramite5701Store.limpiarSolicitud();
+            this.router.navigate(['/seleccion-tramite']);
+          } else {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: TITULO_MODAL_AVISO,
+              mensaje: 'MSJ_ERROR_ELIMINAR_SOLICITUD',
+              cerrar: false,
+              txtBtnAceptar: TEXTO_CERRAR,
+              txtBtnCancelar: CAMPO_VACIO,
+            };
+          }
+        }),
+        catchError((_error) => {
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'alert',
+            categoria: 'danger',
+            modo: 'action',
+            titulo: TITULO_MODAL_AVISO,
+            mensaje: 'MSJ_ERROR_ELIMINAR_SOLICITUD',
+            cerrar: false,
+            txtBtnAceptar: TEXTO_CERRAR,
+            txtBtnCancelar: CAMPO_VACIO,
+          };
+          return EMPTY;
+        })
+      )
+      .subscribe();
   }
 }

@@ -16,8 +16,18 @@
               (change)="setValorStore(form, 'codigoPostal')"
             />
             <div *ngIf="form.get('codigoPostal')?.touched && form.get('codigoPostal')?.hasError('required')" class="text-danger">
-              Por favor, corrija la codigoPostal.
+              Este campo es obligatorio
             </div>
+            <small
+            *ngIf="form.get('codigoPostal')?.errors?.['maxlength']" class="text-danger"
+            >
+              La Código postal no debe exceder los 12 caracteres.
+            </small>
+            <small
+              *ngIf="form.get('codigopostal')?.errors?.['pattern']" class="text-danger"
+            >
+              Por favor, escribe un número entero válido.
+            </small>
           </div>
         </div>
 
@@ -54,8 +64,13 @@
               (change)="setValorStore(form, 'municipioOAlcaldia')"
             />
             <div *ngIf="form.get('municipioOAlcaldia')?.touched && form.get('municipioOAlcaldia')?.hasError('required')" class="text-danger">
-              Por favor, corrija el municipio.
+              Este campo es obligatorio
             </div>
+            <small
+              *ngIf="form.get('municipioOAlcaldia')?.errors?.['maxlength']" class="text-danger"
+            >
+              La Municipio o alcaldía no debe exceder los 120 caracteres.
+            </small>
           </div>
         </div>
       </div>
@@ -83,12 +98,22 @@
             <div *ngIf="form.get('localidad')?.touched && form.get('localidad')?.hasError('required')" class="text-danger">
               Por favor, corrija el localidad.
             </div>
+            <small
+              *ngIf="form.get('localidad')?.errors?.['required']" class="text-danger"
+            >
+              Este campo es obligatorio.
+            </small>
+            <small
+              *ngIf="form.get('localidad')?.errors?.['maxlength']" class="text-danger"
+            >
+              La localidad no debe exceder los 120 caracteres.
+            </small>
           </div>
         </div>
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="colonias">Colonias:</label>
+            <label class="form-label" for="colonias">Colonia:</label>
             <input
               class="form-control"
               type="text"
@@ -101,6 +126,18 @@
             <div *ngIf="form.get('colonias')?.touched && form.get('colonias')?.hasError('required')" class="text-danger">
               Por favor, corrija la colonias.
             </div>
+            <small
+              *ngIf="form.get('colonias')?.errors?.['required']"
+              class="text-danger"
+            >
+              Este campo es obligatorio.
+            </small>
+            <small
+              *ngIf="form.get('colonias')?.errors?.['maxlength']"
+              class="text-danger"
+            >
+              La colonia no debe exceder los 120 caracteres.
+            </small>
           </div>
         </div>
       </div>
@@ -109,6 +146,11 @@
         <div class="col-md-8">
           <div class="form-group">
             <label class="form-label" for="calle">Calle*:</label>
+            <span
+            class="bi bi-question-circle-fill"
+            title="Domicilio, calle, numero interior, numero exterior, lote"
+            data-bs-toggle="tooltip"
+            ></span>
             <input
               class="form-control"
               type="text"
@@ -119,8 +161,13 @@
               (change)="setValorStore(form, 'calle')"
             />
             <div *ngIf="form.get('calle')?.touched && form.get('calle')?.hasError('required')" class="text-danger">
-              Por favor, corrija la calle.
+              Este campo es obligatorio
             </div>
+            <small
+              *ngIf="form.get('calle')?.errors?.['maxlength']" class="text-danger"
+            >
+              La Calle no debe exceder los 120 caracteres.
+            </small>
           </div>
         </div>
       </div>
@@ -141,6 +188,21 @@
             <div *ngIf="form.get('lada')?.touched && form.get('lada')?.hasError('required')" class="text-danger">
               Por favor, corrija la lada.
             </div>
+            <small
+              *ngIf="form.get('lada')?.errors?.['required']" class="text-danger"
+            >
+              Este campo es obligatorio.
+            </small>
+            <small
+              *ngIf="form.get('lada')?.errors?.['minlength'] || form.get('lada')?.errors?.['maxlength']" class="text-danger"
+            >
+              La lada debe tener exactamente 5 números.
+            </small>
+            <small
+              *ngIf="form.get('lada')?.errors?.['pattern']" class="text-danger"
+            >
+              Por favor, ingresa solo números.
+            </small>
           </div>
         </div>
         <div class="col-md-3">
@@ -157,12 +219,21 @@
             />
           
             <div *ngIf="form.get('telefono')?.touched && form.get('telefono')?.invalid" class="text-danger">
-              <div *ngIf="form.get('telefono')?.errors?.['required']">
-                El teléfono es obligatorio.
-              </div>
-              <div *ngIf="form.get('telefono')?.errors?.['pattern']">
-                El teléfono debe contener exactamente 10 dígitos numéricos.
-              </div>
+              <small
+                *ngIf="form.get('telefono')?.errors?.['required']"
+              >
+                Este campo es obligatorio.
+              </small>
+              <small
+                *ngIf="form.get('telefono')?.errors?.['maxlength']"
+              >
+                El teléfono no debe exceder los 30 números.
+              </small>
+              <small
+                *ngIf="form.get('telefono')?.errors?.['pattern']"
+              >
+                Por favor, ingresa solo números.
+              </small>
             </div>
           </div>
           
@@ -198,7 +269,7 @@
       <div class="col-md-4 mt-5">
         <lib-input-check
           [id]="'avisoCheckbox'"
-          [label]="'Aviso de funcionamiento'"
+          [label]="'Aviso de funcionamiento:'"
           [required]="true"
           formControlName="avisoCheckbox"
           [isDisabled]="esFormularioSoloLectura"
@@ -258,6 +329,48 @@
         </div>
       </div>
     </div>
+  <div class="row">
+    <div class="col-md-4">
+      <label class="form-label" for="immexProgramNumber"
+        >No. Programa IMMEX:  
+        <span
+          class="bi bi-question-circle-fill"
+          title="No. de licencia sanitaria"
+          data-bs-toggle="tooltip"
+        ></span>
+      </label>
+        <input
+          class="form-control"
+          type="text"
+          id="immexProgramNumber"
+          formControlName="immexProgramNumber"
+          appUppercase
+          aria-labelledby="immexProgramNumber"
+          (change)="setValorStore(form, 'immexProgramNumber')"
+          />   
+          <div *ngIf="domicilio.get('immexProgramNumber')?.touched && domicilio.get('immexProgramNumber')?.hasError('required')" class="text-danger">
+          Por favor, corrija la estadoLocalidad.
+        </div>
+      </div>
+
+      <div class="col-md-4">
+      <label class="form-label" for="ano"
+        >Año:</label>
+        <input
+          class="form-control"
+          type="text"
+          id="ano"
+          formControlName="ano"
+          appUppercase
+          aria-labelledby="ano"
+          (change)="setValorStore(form, 'ano')"
+          />   
+          <div *ngIf="domicilio.get('ano')?.touched && domicilio.get('ano')?.hasError('required')" class="text-danger">
+          Por favor, corrija la estadoLocalidad.
+        </div>
+      </div>
+  </div>
+
     <div class="row mt-5">
       <div class="col-md-4"></div>
       <div class="col-md-4"></div>
@@ -304,7 +417,7 @@
 
     <div class="row mt-2">
       <div class="col-md-12">
-        <ng-titulo titulo="Manifiesto bajo protesta" />
+        <ng-titulo titulo="Manifiestos y declaraciones" />
         <div class="form-check bg-light p-0">
           <div class="alert alert-info content-with-checkbox py-6">
             <lib-input-check
@@ -314,8 +427,8 @@
           formControlName="manifests"
           [isDisabled]="esFormularioSoloLectura"
           (change)="setValorStore(domicilio, 'manifests')"
-      ></lib-input-check>
-            <span class="fw-bold align-middle"> *</span>
+      > <span class="fw-bold align-middle"> *</span></lib-input-check>
+           
             <div>{{ manifests }}</div>
           </div>
         </div>
@@ -356,7 +469,7 @@
           </div>
         </div>
         <div class="col-md-3 mt-5">
-          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Modificar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Buscar</button>
         </div>
       </div>
 

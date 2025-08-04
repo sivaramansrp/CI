@@ -12,15 +12,16 @@
  * @import { SECTORCOLUMNS } from '../../../../shared/constantes/prosec/prosec.module';
  */
 
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, SoloNumerosDirective, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, forwardRef } from '@angular/core';
+import { FilaProducir, FilaSectors } from '../../models/prosec.module';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { FilaSectors } from '../../models/prosec.module';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PARATEXTO } from '../../constantes/prosec.module';
 import { ProsecService } from '../../services/prosec.service';
@@ -48,7 +49,7 @@ import { TablaSeleccion } from '@ng-mf/data-access-user';
   templateUrl: './sectores-y-mercancias.component.html',
   styleUrl: './sectores-y-mercancias.component.scss',
   standalone: true,
-  imports: [ ReactiveFormsModule,AlertComponent, TablaDinamicaComponent, CatalogoSelectComponent, TituloComponent, CommonModule ]
+  imports: [ ReactiveFormsModule,AlertComponent, TablaDinamicaComponent, CatalogoSelectComponent, TituloComponent, CommonModule, forwardRef(() => SoloNumerosDirective), ]
 })
 export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
 
@@ -98,6 +99,8 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    */
   sectors: FilaSectors[] = [];
 
+  producir: FilaProducir[] = [];
+
   /**
    * @property {ConfiguracionColumna<FilaSectors>[]} sectorColumnsConfiguracion
    * @description
@@ -109,6 +112,11 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
   sectorColumnsConfiguracion: ConfiguracionColumna<FilaSectors>[] = [
     { encabezado: 'Lista de sectores', clave: (fila) => fila.sectorLista, orden: 1 },
     { encabezado: 'Clave del sector', clave: (fila) => fila.sectorClave, orden: 2 },
+  ];
+
+  producirColumnConfiguracion: ConfiguracionColumna<FilaProducir>[] = [
+    { encabezado: 'Fracción arancelaria', clave: (fila) => fila.arancelaria, orden: 1 },
+    { encabezado: 'Clave del sector', clave: (fila) => fila.sector, orden: 2 },
   ];
 
   /**
@@ -154,7 +162,6 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @param AUtorizacionProsecQuery - Query para consultar el estado de autorización Prosec.
    * @param seccionStore - Store para manejar el estado de la sección.
    * @param seccionQuery - Query para consultar el estado de la sección.
-   * @param consultaQuery - Query para realizar consultas adicionales.
    * @compodoc
    */
   constructor(
@@ -164,7 +171,6 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
     private AUtorizacionProsecQuery: AUtorizacionProsecQuery,
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery,
-    private consultaQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -202,7 +208,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
       .subscribe();
     this.initActionFormBuild();
     this.obtenserListaEstado();
-    this.recuperarDatos();
+    
 
     this.seccionStore.establecerFormaValida([false]);
 
@@ -218,10 +224,16 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
     if (this.formularioDeshabilitado) {
+      this.esFormularioSoloLectura = true;
       this.inicializarEstadoFormulario();
     }
+    this.sectors = Array.isArray(this.sectoresState.sectorDatos)
+        ? this.sectoresState.sectorDatos as FilaSectors[]
+        : [this.sectoresState.sectorDatos as FilaSectors];
+    this.producir = Array.isArray(this.sectoresState.producirDatos)
+      ? this.sectoresState.producirDatos as FilaProducir[]
+      : [this.sectoresState.producirDatos as FilaProducir];
   }
 
   /**
@@ -236,9 +248,11 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.sectoresYMercancias.disable();
+      this.seccionStore.establecerFormaValida([true]);
     }
     else {
       this.sectoresYMercancias.enable();
+      this.seccionStore.establecerFormaValida([false]);
     } 
   }
   
@@ -259,7 +273,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
       ],
       Fraccion_arancelaria: [
         this.sectoresState.Fraccion_arancelaria
-      ]
+      ],
     })
   }
 
@@ -319,9 +333,51 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
       (response) => {
         if (response && Array.isArray(response)) {
           this.sectors = response as FilaSectors[];
+          this.AutorizacionProsecStore.setSectorDatos(this.sectors);
         }
       }
     );
+  }
+
+    /**
+   * @method recuperarProducirDatos
+   * @description
+   * Recupera los datos de producción desde el archivo 'producirDatos.json' utilizando el servicio ProsecService.
+   * Si la respuesta es un arreglo, asigna los datos a la propiedad `producir` como un arreglo de `FilaProducir`.
+   * 
+   * @returns {void}
+   */
+  recuperarProducirDatos(): void {
+    this.ProsecService.obtenerTablaDatos('producirDatos.json').subscribe(
+      (response) => {
+        if (response && Array.isArray(response)) {
+          this.producir = response as FilaProducir[];
+          this.AutorizacionProsecStore.setProducirDatos(this.producir);
+        }
+      }
+    );
+  }
+
+  /**
+   * @method agregarSector
+   * @description
+   * Llama al método `recuperarDatos()` para obtener la información más reciente de los sectores y actualizar la tabla.
+   * 
+   * @returns {void}
+   */
+  agregarSector(): void {
+    this.recuperarDatos();
+  }
+
+  /**
+   * @method agregarProducir
+   * @description
+   * Llama al método `recuperarProducirDatos()` para obtener la información más reciente de los datos de producción y actualizar la tabla.
+   * 
+   * @returns {void}
+   */
+  agregarProducir(): void {
+    this.recuperarProducirDatos();
   }
 
   /**

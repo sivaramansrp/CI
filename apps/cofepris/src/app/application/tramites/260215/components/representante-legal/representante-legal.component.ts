@@ -1,3 +1,34 @@
+/**
+ * Componente principal para gestionar el formulario de representante legal.
+ * 
+ * Este componente permite la gestión del formulario de representante legal, incluyendo:
+ * - Inicialización y validación de campos reactivos.
+ * - Consulta de datos del representante legal a partir del RFC.
+ * - Manejo de modo solo lectura.
+ * - Sincronización con el store de estado de la solicitud.
+ * - Utilización de servicios para obtener datos y validaciones.
+ * 
+ * Ciclo de vida:
+ * - Al inicializar, configura el formulario y suscriptores.
+ * - Al destruir, libera recursos y cancela suscripciones.
+ * 
+ * Métodos principales:
+ * - esValido: Valida campos individuales.
+ * - buscar: Consulta datos del representante legal.
+ * - guardarDatosFormulario: Sincroniza datos y estado del formulario.
+ * - inicializarFormulario: Configura el formulario reactivo.
+ * - setValoresStore: Actualiza valores en el store.
+ * - obtenerValor: Ejemplo de actualización de valores.
+ * 
+ * Propiedades:
+ * - solicitudState: Estado actual de la solicitud.
+ * - representante: FormGroup principal del formulario.
+ * - esFormularioSoloLectura: Indica si el formulario es solo lectura.
+ * 
+ * Servicios y dependencias:
+ * - FormBuilder, Tramite260215Store, Tramite260215Query, ConsultaioQuery,
+ *   ValidacionesFormularioService, ServiciosPermisoSanitarioService
+ */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -10,13 +41,42 @@ import {
   Tramite260215Store,
 } from '../../estados/tramites/tramite260215.store';
 import { Subject, map, takeUntil } from 'rxjs';
+import { TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
 import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 
 /**
- * Componente principal para gestionar el formulario de representante.
+ * Componente principal para gestionar el formulario de representante legal.
+ * 
+ * Este componente permite la gestión del formulario de representante legal, incluyendo:
+ * - Inicialización y validación de campos reactivos.
+ * - Consulta de datos del representante legal a partir del RFC.
+ * - Manejo de modo solo lectura.
+ * - Sincronización con el store de estado de la solicitud.
+ * - Utilización de servicios para obtener datos y validaciones.
+ * 
+ * Ciclo de vida:
+ * - Al inicializar, configura el formulario y suscriptores.
+ * - Al destruir, libera recursos y cancela suscripciones.
+ * 
+ * Métodos principales:
+ * - esValido: Valida campos individuales.
+ * - buscar: Consulta datos del representante legal.
+ * - guardarDatosFormulario: Sincroniza datos y estado del formulario.
+ * - inicializarFormulario: Configura el formulario reactivo.
+ * - setValoresStore: Actualiza valores en el store.
+ * - obtenerValor: Ejemplo de actualización de valores.
+ * 
+ * Propiedades:
+ * - solicitudState: Estado actual de la solicitud.
+ * - representante: FormGroup principal del formulario.
+ * - esFormularioSoloLectura: Indica si el formulario es solo lectura.
+ * 
+ * Servicios y dependencias:
+ * - FormBuilder, Tramite260215Store, Tramite260215Query, ConsultaioQuery,
+ *   ValidacionesFormularioService, ServiciosPermisoSanitarioService
  */
 @Component({
   selector: 'app-representante-legal',
@@ -28,13 +88,25 @@ import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   /**
    * Estado de la solicitud.
+   * Contiene la información actual de la solicitud gestionada por el formulario.
    */
   public solicitudState!: Solicitud260215State;
 
   /**
-   * Notificador para destruir observables.
+   * Notificador para destruir observables y evitar fugas de memoria.
+   * Se utiliza en combinación con takeUntil en las suscripciones.
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
+    /**
+   * Verifica si un campo específico del formulario es válido.
+   * @param field Nombre del campo del formulario a validar.
+   * @returns `true` si el campo es válido; de lo contrario, `false`.
+   */
+  
+  esValido(field: string): boolean {
+    return Boolean(this.validacionesService.isValid(this.representante, field));
+  }
 
 /**
    * Indica si el formulario está en modo solo lectura.
@@ -44,15 +116,22 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
 
   /**
    * Constructor del componente.
-   * @param fb
-   * @param tramite260215Store
-   * @param tramite260215Query
+   * Inicializa servicios, suscriptores y determina el modo de solo lectura.
+   * @param fb FormBuilder para crear el formulario reactivo.
+   * @param tramite260215Store Store para manipular el estado de la solicitud.
+   * @param tramite260215Query Query para consultar el estado de la solicitud.
+   * @param consultaioQuery Query para consultar el estado de consulta IO.
+   * @param validacionesService Servicio para validaciones de formulario.
+   * @param service Servicio para obtener datos del representante legal.
    */
   constructor(
     private readonly fb: FormBuilder,
     private tramite260215Store: Tramite260215Store,
     private tramite260215Query: Tramite260215Query,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private validacionesService: ValidacionesFormularioService,
+    private service: ServiciosPermisoSanitarioService,
+    
   ) {
    this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -68,6 +147,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   /**
      * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
      * Luego reinicializa el formulario con los valores actualizados desde el store.
+     * Si el formulario está en modo solo lectura, lo deshabilita; de lo contrario, lo habilita.
      */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
@@ -78,10 +158,33 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     }
   }
 
+   /**
+   * Busca los datos del representante legal a partir del RFC proporcionado.
+   * Si el campo RFC está vacío, marca todos los campos como tocados para mostrar errores de validación.
+   * Si el RFC está presente, consulta el servicio para obtener los datos del representante y los asigna al formulario.
+   */
+  buscar(): void {
+    if (!this.representante.get('rfc')?.value) {
+      this.representante.get('rfc')?.markAllAsTouched();
+    } else {
+      this.service.ObtenerReprestantanteData()
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe((response) => {
+        this.representante.patchValue({
+          nombre: response.nombre,
+          primerApellido: response.apellidoPaterno,
+          segundoApellido: response.apellidoMaterno
+        });
+      });
+    }
+  }
+
 
   /**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.  
-   * Además, obtiene la información del catálogo de mercancía.
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Si está en modo solo lectura, carga los datos y deshabilita el formulario.
+   * Si no, inicializa el formulario para edición.
    */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
@@ -93,12 +196,12 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
 
   /**
    * Inicializa el formulario del representante legal.
-   * 
+   *
    * - Suscribe al observable `selectSolicitud$` para obtener el estado actual de la solicitud
    *   y lo asigna a la propiedad `solicitudState`.
    * - Crea el formulario reactivo `representante` con los campos requeridos y sus validaciones.
    * - Los campos `nombre`, `apellidoPaterno` y `apellidoMaterno` se inicializan deshabilitados.
-   * 
+   *
    * @remarks
    * Este método debe llamarse durante la inicialización del componente para asegurar que el formulario
    * esté correctamente configurado con los datos actuales de la solicitud.
@@ -114,29 +217,31 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
       .subscribe();
     this.representante = this.fb.group({
       rfc: [this.solicitudState?.rfc, Validators.required],
-      nombre: [{ value: '', disabled: true }, Validators.required],
-      apellidoPaterno: [{ value: '', disabled: true }, Validators.required],
-      apellidoMaterno: [{ value: '', disabled: true }],
+      nombre: [{ value: this.solicitudState?.nombre, disabled: true }, Validators.required],
+      apellidoPaterno: [{ value: this.solicitudState?.apellidoPaterno, disabled: true }, Validators.required],
+      apellidoMaterno: [{ value: this.solicitudState?.apellidoMaterno, disabled: true }],
     });
   }
 
   /**
    * Grupo de formularios principal.
-   * @property {FormGroup} representante
+   * Contiene los controles reactivos del formulario de representante legal.
    */
  public representante!: FormGroup;
 
   /**
-   * Inicializa el componente.
+   * Inicializa el componente y el estado del formulario.
+   * Llama a la función para inicializar o cargar datos según el modo de solo lectura.
    */
   ngOnInit(): void {
  this.inicializarEstadoFormulario()
   }
 
   /**
-   * Obtiene el valor de un campo en el store de Tramite31601.
+   * Ejemplo de método para actualizar valores del formulario.
+   * Asigna valores de ejemplo a los campos del representante legal.
    */
-  obtenerValor():void {
+  obtenerValor(): void {
     this.representante.patchValue({
       nombre: 47875,
       apellidoPaterno: 'Paterno',
@@ -163,7 +268,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
 
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
-   * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
+   * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas y evitar fugas de memoria.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

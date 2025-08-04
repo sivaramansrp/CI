@@ -1,10 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Mercancias, PlantasTabla, ProductorIndirecto, SectorTabla } from '../../../../shared/models/complementaria.model';
 import { ReplaySubject, takeUntil } from 'rxjs';
+
+import { ConfiguracionColumna, TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { Bitacora } from '../../../../shared/models/bitacora.model';
 import { BitacoraTablaComponent } from '../../../../shared/components/bitacora/bitacora.component';
 import { CatalogosService } from '../../service/catalogos.service';
 import { CommonModule } from '@angular/common';
+
+import { CONFIGURACION_BITCORA } from '../../constantes/constantes90303.enum';
 import { PlantasComponent } from '../../../../shared/components/plantas/plantas.component';
 import { ProducirMercanciasComponent } from '../../../../shared/components/producir-mercancias/producir-mercancias.component';
 import { ProductorIndirectoComponent } from '../../../../shared/components/productor-indirecto/productor-indirecto.component';
@@ -18,7 +22,7 @@ import { SectorComponent } from '../../../../shared/components/sector/sector.com
 @Component({
   selector: 'app-bitacora',
   standalone: true,
-  imports: [CommonModule, BitacoraTablaComponent, PlantasComponent, SectorComponent, ProducirMercanciasComponent, ProductorIndirectoComponent],
+  imports: [CommonModule, BitacoraTablaComponent, PlantasComponent, SectorComponent, ProducirMercanciasComponent, ProductorIndirectoComponent,TablaDinamicaComponent],
   templateUrl: './bitacora.component.html',
   styleUrl: './bitacora.component.css',
 })
@@ -54,6 +58,19 @@ export class BitacoraComponent implements OnInit, OnDestroy {
    */
   listaTablaBitacora: Bitacora[] = [];
 
+  
+    /**
+     * Arreglo que almacena los datos de la bitácora.
+     * @property {Bitacora[]} datosBitacora
+     */
+    datosBitacora: Bitacora[] = [];
+
+  /**
+   * Configuración de la tabla para la bitácora.
+   * Define las columnas y su configuración utilizando la constante `CONFIGURACION_BITCORA`.
+   * @property {ConfiguracionColumna<Bitacora>[]} configuracionTablaBitacora
+   */
+  configuracionTablaBitacora: ConfiguracionColumna<Bitacora>[] = CONFIGURACION_BITCORA;
   /**
    * Constructor del componente.
    * @param catalogo Servicio utilizado para obtener los datos de las tablas.
@@ -75,7 +92,7 @@ export class BitacoraComponent implements OnInit, OnDestroy {
   /**
    * Obtiene los datos de la tabla de bitácoras desde el servicio.
    */
-  public obtenerTablaBitacora(): void {
+  obtenerTablaBitacora(): void {
     this.catalogo
       .obtenerTablaBitacora()
       .pipe(takeUntil(this.destroyed$))

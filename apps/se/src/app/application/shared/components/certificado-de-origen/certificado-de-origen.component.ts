@@ -1,5 +1,5 @@
 import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, MERCANCIA_SELECCIONADAS, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
+import { CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, MERCANCIA_SELECCIONADAS, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -19,8 +19,8 @@ import { Subject } from 'rxjs';
  * @property {boolean} habilitado - Indica si el campo de fecha de inicio está habilitado.
  */
 export const FECHA_INICIO = {
-  labelNombre: 'Fecha inicio',
-  required: true,
+  labelNombre: 'Fecha inicio:',
+  required: false,
   habilitado: true,
 };
 
@@ -34,8 +34,8 @@ export const FECHA_INICIO = {
  * @property {boolean} habilitado - Indica si el campo de fecha final está habilitado.
  */
 export const FECHA_FINAL = {
-  labelNombre: 'Fecha final',
-  required: true,
+  labelNombre: 'Fecha final:',
+  required: false,
   habilitado: true,
 };
 
@@ -57,6 +57,13 @@ export const FECHA_FINAL = {
 })
 
 export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
+  /**
+ * Título mostrado en el componente.  
+ * Puede ser personalizado desde el componente padre mediante [title].  
+ * Si no se proporciona, se mostrará el valor por defecto: "Validación inicial del certificado de circulación de mercancías".
+ */
+    @Input() title: string = 'Validación inicial del certificado de circulación de mercancías';
+    
   /**
    * Propiedad de entrada que recibe un arreglo de menús desplegables.
    * @type {MenusDesplegables[]}
@@ -123,6 +130,12 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
   @Input() guardarClicado!: Mercancia[];
 
   /**
+   * Indica si hay mercancías disponibles en la tabla para su procesamiento o visualización.
+   * @type {boolean}
+   */
+  @Input() mercanciasDisponiblesTabla!: boolean;
+
+  /**
    * Propiedad de salida que emite el valor del formulario cuando se actualiza.
    * @type {EventEmitter<undefined>}
    */
@@ -175,7 +188,18 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
    * @type {InputFecha}
    */
   public fechaInicioInput: InputFecha = FECHA_INICIO;
+
+  /**
+   * Configuración de la fecha final en el formulario de certificado de origen.
+   * @type {InputFecha}
+   */
   public fechaFinalInput: InputFecha = FECHA_FINAL;
+  
+  /**
+   * Indicates whether the domicile information should be displayed.
+   * Set to `true` to show domicile details; otherwise, set to `false`.
+   */
+  @Input() public domicilio: boolean = true
 
   /**
   * Texto que contiene los requisitos y mensajes informativos.
@@ -200,6 +224,12 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
    * @type {ConfiguracionColumna<Mercancia>[]}
    */
   configuracionTablaMercancia: ConfiguracionColumna<Mercancia>[] = MERCANCIA_SELECCIONADAS;
+
+  /**
+   * Configuración de las columnas de la tabla de mercancía disponible.
+   * @type {ConfiguracionColumna<Mercancia>[]}
+   */
+  configuracionTablaMercanciaDisponible: ConfiguracionColumna<Mercancia>[] = CONFIGURACION_MERCANCIA_TABLA;
 
   /**
    * Configuración de las columnas de la tabla de mercancia seleccionada.
@@ -246,11 +276,6 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
   datosSeleccionados!: Mercancia;
 
   /**
-   * Propiedad booleana que indica si el formulario está siendo actualizado.
-   * @type {boolean}
-   */
-
-  /**
     * Emisor de eventos para indicar si el formulario es válido.
     * @type {EventEmitter<boolean>}
     */
@@ -290,19 +315,19 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
     this.formCertificado = this.fb.group({
       si: [false],
       entidadFederativa: ['', [Validators.required, Validators.min(0)]],
-      bloque: ['', [Validators.required, Validators.min(0)]],
-      fraccionArancelariaForm: [''],
-      registroProductoForm: [''],
-      nombreComercialForm: [''],
-      fechaInicioInput: ['', [Validators.required]],
-      fechaFinalInput: ['', [Validators.required]],
-      nombres: ['' ],
-      primerApellido: [''],
-      segundoApellido: [''],
-      numeroDeRegistroFiscal: [''],
-      razonSocial: [''],
-      calle: [''],
-      numeroLetra: [''],
+  bloque: ['', [Validators.required, Validators.min(0)]],
+  fraccionArancelariaForm: ['', [Validators.maxLength(8)]],
+  registroProductoForm: ['', [Validators.maxLength(12)]],
+  nombreComercialForm: ['', [Validators.maxLength(200)]],
+  fechaInicioInput: [''],
+  fechaFinalInput: [''],
+  nombres: ['', [Validators.maxLength(20)]],
+  primerApellido: ['', [Validators.required,Validators.maxLength(20)]],
+  segundoApellido: ['', [Validators.maxLength(20)]],
+  numeroDeRegistroFiscal: ['', [Validators.maxLength(30)]],
+  razonSocial: [''],
+  calle: ['', [Validators.maxLength(90)]],
+  numeroLetra: ['', [Validators.maxLength(30)]],
     });
   }
   /**

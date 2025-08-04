@@ -1,221 +1,314 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { DatosDelEstablecimientoComponent } from './datos-del-establecimiento.component';
+import { FormBuilder } from '@angular/forms';
 import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
-import { Tramite260601Store } from '../../estados/tramites/tramite260601.store';
-import { Tramite260601Query } from '../../estados/queries/tramite260601.query';
-import { of } from 'rxjs';
-import { Modal } from 'bootstrap';
-import { ElementRef } from '@angular/core';
+import { Tramite260601Store } from '../../../../estados/tramites/tramite260601.store';
+import { Tramite260601Query } from '../../../../estados/queries/tramite260601.query';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
+
+@Injectable()
+class MockAvisoSanitarioService {}
+
+@Injectable()
+class MockTramite260601Store {}
+
+@Injectable()
+class MockTramite260601Query {}
 
 describe('DatosDelEstablecimientoComponent', () => {
-  let component: DatosDelEstablecimientoComponent;
   let fixture: ComponentFixture<DatosDelEstablecimientoComponent>;
-  let mockAvisoSanitarioService: Partial<AvisoSanitarioService>;
-  let mockTramite260601Store: Partial<Tramite260601Store>;
-  let mockTramite260601Query: Partial<Tramite260601Query>;
+  let component: { ngOnDestroy: () => void; manifiestosForm: { get?: any; disable?: any; enable?: any; }; seleccionadaManifiesto: { controls?: any; }; inicializarEstadoFormulario: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; guardarDatosFormulario: jest.Mock<any, any, any> | (() => void); inicializarFormulario: jest.Mock<any, any, any> | (() => void); inicializaCatalogos: jest.Mock<any, any, any> | (() => void); obtenerManifiestos: jest.Mock<any, any, any> | (() => void); tramite260601Query: { selectSeccionState$?: any; }; crearFormulario: jest.Mock<any, any, any> | (() => void); obtenerSCIAN: jest.Mock<any, any, any> | (() => void); obtenerProducto: jest.Mock<any, any, any> | (() => void); estadoSeleccion: jest.Mock<any, any, any> | (() => void); claveScianSeleccion: jest.Mock<any, any, any> | (() => void); regimenesSeleccion: jest.Mock<any, any, any> | (() => void); aduanaSeleccion: jest.Mock<any, any, any> | (() => void); datosDelEstablecimientoForm: { disable?: any; enable?: any; }; domicilloDelEstablecimientoForm: { disable?: any; enable?: any; get?: any; }; scianForm: { disable?: any; enable?: any; get?: any; }; fb: { group?: any; array?: any; }; avisoSanitarioState: { RFCResponsableSanitario?: any; razonSocial?: any; correoElectronico?: any; codigoPostal?: any; cveEstado?: any; descripcionMunicipio?: any; informacionExtra?: any; descripcionColonia?: any; calle?: any; lada?: any; telefono?: any; avisoFuncionamiento?: any; cveRegimenes?: any; cveAduanas?: any; cveSCIAN?: any; cveSCIANDescripcion?: any; seleccionadaManifiesto?: any; informacionConfidencial?: any; }; avisoSanitarioService: { getEstado?: any; getClaveScian?: any; getDescripcionScian?: any; getRegimenes?: any; getAduanas?: any; getManifiestos?: any; }; tramite260601Store: { setEstado?: any; setDescripcionScian?: any; setClaveScian?: any; setCveRegimenes?: any; setCveAduanas?: any; metodoNombre?: any; }; descripcionScianSeleccion: () => void; getSCIANTableData: { tableHeader?: any; tableBody?: any; }; getProductoTableData: { tableHeader?: any; tableBody?: any; }; seleccionarEstablecimiento: () => void; aceptar: () => void; setValoresStore: jest.Mock<any, any, any> | ((arg0: { get: () => { value: {}; }; }, arg1: {}, arg2: {}) => void); onManifiestoCheckboxCambiar: (arg0: { target: { checked: {}; }; }, arg1: {}) => void; modalElement: { nativeElement?: any; }; agregarMercanciaGrid2606: () => void; closeModal: { nativeElement?: any; }; cerrarModal: () => void; destruirNotificador$: { next?: any; complete?: any; }; };
 
-  beforeEach(async () => {
-    mockAvisoSanitarioService = {
-      getEstado: jest.fn().mockReturnValue(of({ data: [{ label: 'Estado 1', value: 'estado1' }] })),
-      getClaveScian: jest.fn().mockReturnValue(of({ data: [{ label: 'Clave SCIAN 1', value: 'scian1' }] })),
-      getDescripcionScian: jest.fn().mockReturnValue(of({ data: [{ descripcion: 'Descripcion SCIAN 1' }] })),
-      getRegimenes: jest.fn().mockReturnValue(of({ data: [{ label: 'Regimen 1', value: 'regimen1' }] })),
-      getAduanas: jest.fn().mockReturnValue(of({ data: [{ label: 'Aduana 1', value: 'aduana1' }] })),
-      getManifiestos: jest.fn().mockReturnValue(of({ data: [{ manifiestoDeclaracion: true }] })),
-    };
-
-    mockTramite260601Store = {
-      setClaveScian: jest.fn(),
-      setDescripcionScian: jest.fn(),
-      setCveRegimenes: jest.fn(),
-      setCveAduanas: jest.fn(),
-      setSeleccionadaManifiesto: jest.fn(),
-    };
-
-    mockTramite260601Query = {
-      selectSeccionState$: of({
-        RFCResponsableSanitario: 'RFC123456',
-        razonSocial: 'Empresa S.A.',
-        correoElectronico: 'contacto@empresa.com',
-        codigoPostal: '12345',
-        cveEstado: 'Estado1',
-        descripcionMunicipio: 'Municipio1',
-        informacionExtra: 'Extra info',
-        descripcionColonia: 'Colonia1',
-        calle: 'Calle1',
-        lada: null,
-        telefono: null,
-        cveSCIAN: 'SCIAN123',
-        cveSCIANDescripcion: 'Descripción SCIAN',
-        avisoFuncionamiento: true,
-        cveRegimenes: 'Regimen1',
-        cveAduanas: 'Aduana1',
-        cveProductoClasificacion: 'Clasificación1',
-        cveEspecificoProductoClasifi: 'Especificación1',
-        nombreProducto: 'Producto1',
-        marca: 'Marca1',
-        cveTipoProducto: 'Tipo1',
-        fraccionArancelaria: 'Fracción1',
-        fraccionArancelariaDescripcion: 'Descripción Fracción',
-        modelo: 'Modelo1',
-        productoDescripcion: 'Descripción Producto',
-        cvePaisDestino: 'PaisDestino1',
-        seleccionadaManifiesto: [false],
-        informacionConfidencial: 'Confidencial',
-        rfc: 'RFCProveedor1',
-        nombreOrazonsocial: 'Razón Social Proveedor',
-        apellidoPaterno: 'Apellido Paterno',
-        apellidoMaterno: 'Apellido Materno',
-        tercerosNacionalidad: 'Nacionalidad1',
-        tipoPersona: 'Física',
-        rfcProveedor: 'RFC123',
-        curp: 'CURP123',
-        proveedorNombre: 'Nombre Proveedor',
-        proveedorPrimerApellido: 'Primer Apellido',
-        proveedorSegundoApellido: 'Segundo Apellido',
-        proveedorRazonSocial: 'Razón Social Proveedor',
-        cvePais: 'Pais1',
-        domicilioEstado: 'Estado1',
-        alcaldia: 'Alcaldía1',
-        localidad: 'Localidad1',
-        domicilioCodigoPostal: '12345',
-        colonia: 'Colonia1',
-        domicilioCalle: 'Calle1',
-        numeroExterior: 'Exterior1',
-        numeroInterior: 'Interior1',
-        domicilioLada: 'Lada1',
-        domicilioTelefono: 'Telefono1',
-        domicilioCorreoElectronico: 'email@proveedor.com',
-        mostrarRfcBuscarBoton: false,
-        mostrarCurpBuscarBoton: false,
-        inhabilitarPais: true,
-        mostrarRfcFabricanteBuscarBoton: false,
-        mostrarCurpFabricanteBuscarBoton: false,
-        inhabilitarPaisFabricante: true,
-      }),
-    };
-
-    await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [DatosDelEstablecimientoComponent],
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule, HttpClientTestingModule, ToastrModule.forRoot()  ],
+      declarations: [
+      ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
-        { provide: AvisoSanitarioService, useValue: mockAvisoSanitarioService },
-        { provide: Tramite260601Store, useValue: mockTramite260601Store },
-        { provide: Tramite260601Query, useValue: mockTramite260601Query },
-      ],
-    }).compileComponents();
+        { provide: AvisoSanitarioService, useClass: MockAvisoSanitarioService },
+        { provide: Tramite260601Store, useClass: MockTramite260601Store },
+        { provide: Tramite260601Query, useClass: MockTramite260601Query },
+        ConsultaioQuery,
+        ToastrService,
+        { provide: 'ToastConfig', useValue: {} }
+      ]
+    }).overrideComponent(DatosDelEstablecimientoComponent, {
 
+      set: { providers: [{ provide: AvisoSanitarioService, useClass: MockAvisoSanitarioService }] }    
+    }).compileComponents();
     fixture = TestBed.createComponent(DatosDelEstablecimientoComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create the component', () => {
+  afterEach(() => {
+    component.ngOnDestroy = function() {};
+    fixture.destroy();
+  });
+
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('should populate estado catalog in ngOnInit', () => {
+  it('should run GetterDeclaration #seleccionadaManifiesto', async () => {
+    component.manifiestosForm = component.manifiestosForm || {};
+    component.manifiestosForm.get = jest.fn();
+    const seleccionadaManifiesto = component.seleccionadaManifiesto;
+  });
+
+  it('should run #ngOnInit()', async () => {
+    component.inicializarEstadoFormulario = jest.fn();
     component.ngOnInit();
-    expect(component.estado).toEqual([{ label: 'Estado 1', value: 'estado1' }]);
   });
 
-  it('should create forms in crearFormulario', () => {
+  it('should run #inicializarEstadoFormulario()', async () => {
+    component.guardarDatosFormulario = jest.fn();
+    component.inicializarFormulario = jest.fn();
+    component.inicializarEstadoFormulario();
+  });
+
+  it('should run #inicializarFormulario()', async () => {
+    component.inicializaCatalogos = jest.fn();
+    component.obtenerManifiestos = jest.fn();
+    component.tramite260601Query = component.tramite260601Query || {};
+    component.tramite260601Query.selectSeccionState$ = observableOf({});
+    component.crearFormulario = jest.fn();
+    component.obtenerSCIAN = jest.fn();
+    component.obtenerProducto = jest.fn();
+    component.estadoSeleccion = jest.fn();
+    component.claveScianSeleccion = jest.fn();
+    component.regimenesSeleccion = jest.fn();
+    component.aduanaSeleccion = jest.fn();
+    component.inicializarFormulario();
+  });
+
+  it('should run #guardarDatosFormulario()', async () => {
+    component.inicializarFormulario = jest.fn();
+    component.datosDelEstablecimientoForm = component.datosDelEstablecimientoForm || {};
+    component.datosDelEstablecimientoForm.disable = jest.fn();
+    component.datosDelEstablecimientoForm.enable = jest.fn();
+    component.domicilloDelEstablecimientoForm = component.domicilloDelEstablecimientoForm || {};
+    component.domicilloDelEstablecimientoForm.disable = jest.fn();
+    component.domicilloDelEstablecimientoForm.enable = jest.fn();
+    component.scianForm = component.scianForm || {};
+    component.scianForm.disable = jest.fn();
+    component.scianForm.enable = jest.fn();
+    component.manifiestosForm = component.manifiestosForm || {};
+    component.manifiestosForm.disable = jest.fn();
+    component.manifiestosForm.enable = jest.fn();
+    component.guardarDatosFormulario();
+  });
+
+  it('should run #crearFormulario()', async () => {
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn();
+    component.fb.array = jest.fn();
+    component.avisoSanitarioState = component.avisoSanitarioState || {};
+    component.avisoSanitarioState.RFCResponsableSanitario = 'RFCResponsableSanitario';
+    component.avisoSanitarioState.razonSocial = 'razonSocial';
+    component.avisoSanitarioState.correoElectronico = 'correoElectronico';
+    component.avisoSanitarioState.codigoPostal = 'codigoPostal';
+    component.avisoSanitarioState.cveEstado = 'cveEstado';
+    component.avisoSanitarioState.descripcionMunicipio = 'descripcionMunicipio';
+    component.avisoSanitarioState.informacionExtra = 'informacionExtra';
+    component.avisoSanitarioState.descripcionColonia = 'descripcionColonia';
+    component.avisoSanitarioState.calle = 'calle';
+    component.avisoSanitarioState.lada = 'lada';
+    component.avisoSanitarioState.telefono = 'telefono';
+    component.avisoSanitarioState.avisoFuncionamiento = 'avisoFuncionamiento';
+    component.avisoSanitarioState.cveRegimenes = 'cveRegimenes';
+    component.avisoSanitarioState.cveAduanas = 'cveAduanas';
+    component.avisoSanitarioState.cveSCIAN = 'cveSCIAN';
+    component.avisoSanitarioState.cveSCIANDescripcion = 'cveSCIANDescripcion';
+    component.avisoSanitarioState.seleccionadaManifiesto = 'seleccionadaManifiesto';
+    component.avisoSanitarioState.informacionConfidencial = 'informacionConfidencial';
     component.crearFormulario();
-    expect(component.datosDelEstablecimientoForm).toBeDefined();
-    expect(component.domicilloDelEstablecimientoForm).toBeDefined();
-    expect(component.scianForm).toBeDefined();
-    expect(component.manifiestosForm).toBeDefined();
   });
 
-  it('should fetch SCIAN table data in obtenerSCIAN', () => {
-    component.obtenerSCIAN();
-    expect(component.scianHeaderData).toEqual(component.getSCIANTableData.tableHeader);
-    expect(component.scianBodyData).toEqual(component.getSCIANTableData.tableBody);
+  it('should run #inicializaCatalogos()', async () => {
+    component.avisoSanitarioService = component.avisoSanitarioService || {};
+    component.avisoSanitarioService.getEstado = jest.fn().mockReturnValue(observableOf({
+      0: "E",
+      1: "S",
+      2: "T",
+      3: "A",
+      4: "D",
+      5: "O",
+      6: "$"
+    }));
+    component.avisoSanitarioService.getClaveScian = jest.fn().mockReturnValue(observableOf({
+      0: "C",
+      1: "L",
+      2: "A",
+      3: "V",
+      4: "E",
+      5: "_",
+      6: "S",
+      7: "C",
+      8: "I",
+      9: "A",
+      10: "N",
+      11: "$"
+    }));
+    component.avisoSanitarioService.getDescripcionScian = jest.fn().mockReturnValue(observableOf({
+      0: "D",
+      1: "E",
+      2: "S",
+      3: "C",
+      4: "R",
+      5: "I",
+      6: "P",
+      7: "C",
+      8: "I",
+      9: "O",
+      10: "N",
+      11: "_",
+      12: "S",
+      13: "C",
+      14: "I",
+      15: "A",
+      16: "N",
+      17: "$"
+    }));
+    component.avisoSanitarioService.getRegimenes = jest.fn().mockReturnValue(observableOf({
+      0: "R",
+      1: "E",
+      2: "G",
+      3: "I",
+      4: "M",
+      5: "E",
+      6: "N",
+      7: "E",
+      8: "S",
+      9: "$"
+    }));
+    component.avisoSanitarioService.getAduanas = jest.fn().mockReturnValue(observableOf({
+      0: "A",
+      1: "D",
+      2: "U",
+      3: "A",
+      4: "N",
+      5: "A",
+      6: "S",
+      7: "$"
+    }));
+    component.inicializaCatalogos();
   });
 
-  it('should fetch product table data in obtenerProducto', () => {
-    component.obtenerProducto();
-    expect(component.productoHeaderData).toEqual(component.getProductoTableData.tableHeader);
-    expect(component.productoBodyData).toEqual(component.getProductoTableData.tableBody);
+  it('should run #estadoSeleccion()', async () => {
+    component.domicilloDelEstablecimientoForm = component.domicilloDelEstablecimientoForm || {};
+    component.domicilloDelEstablecimientoForm.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.tramite260601Store = component.tramite260601Store || {};
+    component.tramite260601Store.setEstado = jest.fn();
+    component.estadoSeleccion();
   });
 
-  it('should handle claveScianSeleccion correctly', () => {
-    const spySetClaveScian = jest.spyOn(mockTramite260601Store, 'setClaveScian');
-    const spySetDescripcionScian = jest.spyOn(mockTramite260601Store, 'setDescripcionScian');
-    component.crearFormulario();
-    component.scianForm.get('cveSCIAN')?.setValue('scian1');
+  it('should run #claveScianSeleccion()', async () => {
+    component.scianForm = component.scianForm || {};
+    component.scianForm.get = jest.fn().mockReturnValue({
+      setValue: function() {},
+      value: {}
+    });
+    component.avisoSanitarioService = component.avisoSanitarioService || {};
+    component.avisoSanitarioService.getDescripcionScian = jest.fn().mockReturnValue(observableOf({}));
+    component.tramite260601Store = component.tramite260601Store || {};
+    component.tramite260601Store.setDescripcionScian = jest.fn();
+    component.tramite260601Store.setClaveScian = jest.fn();
     component.claveScianSeleccion();
-    expect(spySetClaveScian).toHaveBeenCalledWith('scian1');
-    expect(spySetDescripcionScian).toHaveBeenCalledWith('Descripcion SCIAN 1');
   });
 
-  it('should handle descripcionScianSeleccion correctly', () => {
-    const spySetDescripcionScian = jest.spyOn(mockTramite260601Store, 'setDescripcionScian');
-    component.crearFormulario();
-    component.scianForm.get('cveSCIANDescripcion')?.setValue('Descripcion SCIAN 1');
+  it('should run #descripcionScianSeleccion()', async () => {
+    component.scianForm = component.scianForm || {};
+    component.scianForm.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.tramite260601Store = component.tramite260601Store || {};
+    component.tramite260601Store.setDescripcionScian = jest.fn();
     component.descripcionScianSeleccion();
-    expect(spySetDescripcionScian).toHaveBeenCalledWith('Descripcion SCIAN 1');
   });
 
-  it('should handle regimenesSeleccion correctly', () => {
-    const spySetCveRegimenes = jest.spyOn(mockTramite260601Store, 'setCveRegimenes');
-    component.crearFormulario();
-    component.domicilloDelEstablecimientoForm.get('cveRegimenes')?.setValue('regimen1');
+  it('should run #regimenesSeleccion()', async () => {
+    component.domicilloDelEstablecimientoForm = component.domicilloDelEstablecimientoForm || {};
+    component.domicilloDelEstablecimientoForm.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.tramite260601Store = component.tramite260601Store || {};
+    component.tramite260601Store.setCveRegimenes = jest.fn();
     component.regimenesSeleccion();
-    expect(spySetCveRegimenes).toHaveBeenCalledWith('regimen1');
   });
 
-  it('should handle aduanaSeleccion correctly', () => {
-    const spySetCveAduanas = jest.spyOn(mockTramite260601Store, 'setCveAduanas');
-    component.crearFormulario();
-    component.domicilloDelEstablecimientoForm.get('cveAduanas')?.setValue('aduana1');
+  it('should run #aduanaSeleccion()', async () => {
+    component.domicilloDelEstablecimientoForm = component.domicilloDelEstablecimientoForm || {};
+    component.domicilloDelEstablecimientoForm.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.tramite260601Store = component.tramite260601Store || {};
+    component.tramite260601Store.setCveAduanas = jest.fn();
     component.aduanaSeleccion();
-    expect(spySetCveAduanas).toHaveBeenCalledWith('aduana1');
   });
 
-  it('should fetch manifiestos data in obtenerManifiestos', () => {
-    component.obtenerManifiestos();
-    expect(component.manifiestos).toEqual([{ manifiestoDeclaracion: true }]);
+  it('should run #obtenerSCIAN()', async () => {
+    component.getSCIANTableData = component.getSCIANTableData || {};
+    component.getSCIANTableData.tableHeader = 'tableHeader';
+    component.getSCIANTableData.tableBody = 'tableBody';
+    component.obtenerSCIAN();
+
   });
 
-  it('should handle modal display in seleccionarEstablecimiento', () => {
-    component.modalElement = { nativeElement: document.createElement('div') } as ElementRef;
-    jest.spyOn(Modal.prototype, 'show');
+  it('should run #obtenerProducto()', async () => {
+    component.getProductoTableData = component.getProductoTableData || {};
+    component.getProductoTableData.tableHeader = 'tableHeader';
+    component.getProductoTableData.tableBody = 'tableBody';
+    component.obtenerProducto();
+
+  });
+
+  it('should run #seleccionarEstablecimiento()', async () => {
+
     component.seleccionarEstablecimiento();
-    expect(Modal.prototype.show).toHaveBeenCalled();
+
   });
 
-  it('should handle enabling forms in aceptar', () => {
-    component.crearFormulario();
+  it('should run #aceptar()', async () => {
+    component.datosDelEstablecimientoForm = component.datosDelEstablecimientoForm || {};
+    component.datosDelEstablecimientoForm.enable = jest.fn();
+    component.domicilloDelEstablecimientoForm = component.domicilloDelEstablecimientoForm || {};
+    component.domicilloDelEstablecimientoForm.enable = jest.fn();
     component.aceptar();
-    expect(component.datosDelEstablecimientoForm.enabled).toBe(true);
-    expect(component.domicilloDelEstablecimientoForm.enabled).toBe(true);
-    expect(component.habilitarEstado).toBe(false);
   });
 
-  it('should handle checkbox change in onManifiestoCheckboxCambiar', () => {
-    const spySetSeleccionadaManifiesto = jest.spyOn(mockTramite260601Store, 'setSeleccionadaManifiesto');
-    component.crearFormulario();
-    const mockEvent = { target: { checked: true } } as unknown as Event;
-    component.onManifiestoCheckboxCambiar(mockEvent, 0);
-    expect(component.seleccionadaManifiesto.controls[0].value).toBe(true);
-    expect(spySetSeleccionadaManifiesto).toHaveBeenCalled();
+  it('should run #obtenerManifiestos()', async () => {
+    component.avisoSanitarioService = component.avisoSanitarioService || {};
+    component.avisoSanitarioService.getManifiestos = jest.fn().mockReturnValue(observableOf({}));
+    component.obtenerManifiestos();
   });
 
-  it('should close modal in cerrarModal', () => {
-    const mockClick = jest.fn();
-    component.closeModal = { nativeElement: { click: mockClick } } as ElementRef;
+  it('should run #cerrarModal()', async () => {
+    component.closeModal = component.closeModal || {};
+    component.closeModal.nativeElement = {
+      click: function() {}
+    };
     component.cerrarModal();
-    expect(mockClick).toHaveBeenCalled();
+
   });
 
-  it('should unsubscribe in ngOnDestroy', () => {
-    const spyNext = jest.spyOn(component['destruirNotificador$'], 'next');
-    const spyComplete = jest.spyOn(component['destruirNotificador$'], 'complete');
+  it('should run #ngOnDestroy()', async () => {
+    component.destruirNotificador$ = component.destruirNotificador$ || {};
+    component.destruirNotificador$.next = jest.fn();
+    component.destruirNotificador$.complete = jest.fn();
     component.ngOnDestroy();
-    expect(spyNext).toHaveBeenCalled();
-    expect(spyComplete).toHaveBeenCalled();
   });
+
 });

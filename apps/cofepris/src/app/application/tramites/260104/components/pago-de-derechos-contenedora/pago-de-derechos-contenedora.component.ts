@@ -44,6 +44,17 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    */
  public esFormularioSoloLectura: boolean = false;
 
+/**
+ * Unique identifier for the current procedure.
+ * 
+ * @remarks
+ * This value corresponds to the specific procedure being handled in the component.
+ * 
+ * @example
+ * // Access the procedure ID
+ */
+ idProcedimiento:number = 260104;
+
  /**
     * Sujeto utilizado para manejar la destrucción de observables.
     */

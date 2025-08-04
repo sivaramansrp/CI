@@ -9,6 +9,7 @@ import { REGEX_RFC } from '@libs/shared/data-access-user/src/tramites/constantes
 import { RegistroCuentasBancariasService } from '../../services/registro-cuentas-bancarias.service';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite6001Query } from '../../estados/tramite6001.query';
+import { resetStores } from '@datorama/akita/src/lib/resetStores';
 
 
 /**
@@ -69,6 +70,10 @@ export class AgregarCuentaComponent implements OnInit,OnDestroy {
    * Este estado se utiliza para gestionar los datos y el comportamiento asociado con el proceso de adición de cuentas.
    */
   public agregarCuentaState!: AgregarCuenta6001State;
+  /**
+   * Indica si el formulario "Agregar Cuenta" ha sido enviado.
+   */
+  public tieneAgregarCuentaFormEnviado: boolean = false;
 
   /**
    * Constructor del componente AgregarCuentaComponent.
@@ -80,7 +85,8 @@ export class AgregarCuentaComponent implements OnInit,OnDestroy {
       private _registroCuentasBancariasSvc: RegistroCuentasBancariasService,
       private fb: FormBuilder,
       private tramite6001Store: Tramite6001Store,
-      private tramite6001Query: Tramite6001Query) { 
+      private tramite6001Query: Tramite6001Query,
+    ) { 
         //
   }
 
@@ -144,10 +150,10 @@ export class AgregarCuentaComponent implements OnInit,OnDestroy {
   public crearAgregarCuentaForm():void {
     this.agregarCuentaForm = this.fb.group({
       titularDeLaCuenta: [this.agregarCuentaState.titularDeLaCuenta,[Validators.required,Validators.maxLength(90)]],
-      persona: [this.agregarCuentaState.tipoDePersona],
+      persona: [this.agregarCuentaState.persona],
       rfc: [this.agregarCuentaState.rfc,[Validators.required,Validators.pattern(REGEX_RFC)]],
       numeroDeCuenta: [this.agregarCuentaState.numeroDeCuenta,[Validators.required,Validators.maxLength(30)]],
-      pais: [this.agregarCuentaState.paisDondeRadica],
+      pais: [this.agregarCuentaState.pais],
       institucion: [this.agregarCuentaState.institucion],
       estado: [this.agregarCuentaState.estado],
       sucursal: [this.agregarCuentaState.sucursal,[Validators.required,Validators.maxLength(10),Validators.pattern(/[^0-9A-Za-z&_-]/)]],
@@ -236,6 +242,20 @@ export class AgregarCuentaComponent implements OnInit,OnDestroy {
    * @returns {void}
    */
   public guardar(): void {
+    this.tieneAgregarCuentaFormEnviado = true;
+    if(this.agregarCuentaForm.valid) {
+      this._registroCuentasBancariasSvc.conjuntoTablaDatos(this.agregarCuentaForm.value);
+      this._registroCuentasBancariasSvc.cambiarComponente('DatosGenerales');
+    }
+  }
+
+  /**
+   * Cancela la operación actual de agregar una cuenta bancaria.
+   */
+  public cancelar(): void {
+    this.agregarCuentaForm.reset(this.agregarCuentaForm.value);
+    this.agregarCuentaForm.updateValueAndValidity();
+    resetStores(); 
     this._registroCuentasBancariasSvc.cambiarComponente('DatosGenerales');
   }
 

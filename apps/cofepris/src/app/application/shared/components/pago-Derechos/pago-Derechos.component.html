@@ -1,11 +1,12 @@
 <div class="container mt-4">
   <ng-titulo titulo="Pago de derechos"></ng-titulo>
+   <ng-alert [CONTENIDO]="DEBES_CAPTURAR" [CUSTOMECLASS]="infoAlert"></ng-alert>
   <form [formGroup]="derechosForm">
     <div class="row g-3">
       <!-- Clave de referencia -->
       <div class="col-md-4">
         <label for="claveReferencia" class="form-label">Clave de referencia:</label>
-        <input type="text" id="claveReferencia" class="form-control" formControlName="claveReferencia"
+        <input type="text" id="claveReferencia" class="form-control" formControlName="claveReferencia" maxlength="9"
           (change)="setValoresStore(derechosForm,'claveReferencia', 'setclaveReferencia')" />
       </div>
 
@@ -13,11 +14,11 @@
       <div class="col-md-4">
         <label for="cadenaDependencia" class="form-label">Cadena de la dependencia:</label>
         <input type="text" id="cadenaDependencia" class="form-control" formControlName="cadenaDependencia"
-          (change)="setValoresStore(derechosForm,'cadenaDependencia', 'setcadenaDependencia')" />
+          maxlength="14" (change)="setValoresStore(derechosForm,'cadenaDependencia', 'setcadenaDependencia')" />
       </div>
 
       <div class="col-md-4">
-        <app-catalogo-select [catalogo]="derechosList" formControlName="banco" [label]="'Banco'" [required]="true"
+        <app-catalogo-select [catalogo]="derechosList" formControlName="banco" [label]="'Banco'" [required]="false"
           (change)="setValoresStore(derechosForm,'banco', 'setbanco')"
           [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
       </div>
@@ -27,37 +28,34 @@
       <!-- Llave de pago -->
       <div class="col-md-4">
         <label for="llavePago" class="form-label">Llave de pago:</label>
-        <input type="text" id="llavePago" class="form-control" formControlName="llavePago"
+        <input type="text" id="llavePago" class="form-control" formControlName="llavePago" maxlength="30"
           (change)="setValoresStore(derechosForm,'llavePago', 'setllavePago')" />
       </div>
       <!-- Fecha de pago -->
       <div class="col-md-4">
-        <div class="form-group">
-          <input-fecha [datos]="fechaInicioInput" [setFecha]="
-                  derechosForm.get('fechaPago')
-                    ?.value
-                " (valorCambiado)="cambioFechaPago($event)"
+          <div class="input-group">
+          <input-fecha [setFecha]="derechosForm.get('fechaDePago')?.value" [datos]="fechaInicioInput"
+            (valorCambiado)="cambioFechaDePago($event)"
             [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
+          <div *ngIf="fechaFuturaSeleccionada" class="text-danger mt-1">
+            La fecha de pago debe ser menor o igual a la fecha actual.
+          </div>
         </div>
-        @if (derechosForm.get('datosImportadorExportador.fechaPago')?.touched &&
-        derechosForm.get('datosImportadorExportador.fechaPago')?.invalid) {
-        <div class="mensaje-error">
-          @if (derechosForm.get('datosImportadorExportador.fechaPago')?.errors?.['required']) {
-          <span>Todos los campos de pago son requeridos</span>
-          } @else if (derechosForm.get('datosImportadorExportador.fechaPago')?.errors?.['fechaFuturaInvalida']) {
-          <span>La fecha de pago debe ser menor o igual a la fecha actual.</span>
-          }
-        </div>
-        }
       </div>
-      <!-- Importe de pago -->
       <div class="col-md-4">
         <label for="importePago" class="form-label">Importe de pago:</label>
         <input type="text" id="importePago" class="form-control" formControlName="importePago"
-          (change)="setValoresStore(derechosForm,'importePago', 'setimportePago')" />
+          (change)="setValoresStore(derechosForm,'importePago', 'setimportePago')" maxlength="16" />
+        <div *ngIf="importePago?.invalid && (importePago?.dirty || importePago?.touched)" class="text-danger mt-1">
+          <div *ngIf="importePago?.errors?.['required']">
+            El campo es obligatorio.
+          </div>
+          <div *ngIf="importePago?.errors?.['pattern']">
+            Solo se permiten valores numéricos
+          </div>
+        </div>
       </div>
     </div>
-
     <div class="row mt-5">
       <div class="col-md-12">
         <div class="pull-right">

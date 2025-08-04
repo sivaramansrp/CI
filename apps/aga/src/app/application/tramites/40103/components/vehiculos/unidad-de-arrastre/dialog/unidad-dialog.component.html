@@ -1,0 +1,143 @@
+<div class="modal-dialog modal-dialog-centered modal-fullscreen">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Datos de la unidad de arrastre</h5>
+            <button type="button" class="btn-close" (click)="cancel.emit()"></button>
+        </div>
+        <div class="modal-body">
+            <div class="container-fluid">
+                <form [formGroup]="unidadForm">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Número de identificación de unidad*:</label>
+                            <input type="text" class="form-control" formControlName="numero" [required]="true"
+                                maxlength="20" />
+                            <div *ngIf="unidadForm.get('numero')?.invalid && (unidadForm.get('numero')?.dirty || unidadForm.get('numero')?.touched)" class="text-danger">
+                                <small *ngIf="unidadForm.get('numero')?.errors?.['required']">Este campo es obligatorio.</small>
+                                <small *ngIf="unidadForm.get('numero')?.errors?.['maxLength']">El número no puede tener más de 20 caracteres.</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <app-catalogo-select [catalogo]="tipoDeUnidadCatalogo" [label]="'Tipo de unidad'" [required]="true" id="tipoDeUnidad" formControlName="tipoDeUnidad"></app-catalogo-select>
+                            <div *ngIf="unidadForm.get('tipoDeUnidad')?.invalid && unidadForm.get('tipoDeUnidad')?.touched" class="text-danger">
+                                <small *ngIf="unidadForm.get('tipoDeUnidad')?.errors?.['required']">Este campo es obligatorio.</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label>ID de unidad*:</label>
+                            <input type="text" class="form-control" formControlName="idDeUnidad" />
+                            <div *ngIf="unidadForm.get('idDeUnidad')?.invalid && (unidadForm.get('idDeUnidad')?.dirty || unidadForm.get('idDeUnidad')?.touched)" class="text-danger">
+                                <small *ngIf="unidadForm.get('idDeUnidad')?.errors?.['required']">Este campo es obligatorio.</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <label for="numeroPlaca" class="form-label">Número de placas*:</label>
+                            <input id="numeroPlaca" type="text" class="form-control" formControlName="numeroPlaca"
+                                [readonly]="readonly" maxlength="10" />
+                            <div *ngIf="unidadForm.get('numeroPlaca')?.invalid && (unidadForm.get('numeroPlaca')?.dirty || unidadForm.get('numeroPlaca')?.touched)"
+                                class="text-danger"><small>Este campo es obligatorio.</small></div>
+                        </div>
+                        <div class="col-md-4">
+                            <app-catalogo-select [catalogo]="paisEmisorCatalogo" [label]="'País emisor'"
+                                [required]="true" id="paisEmisor" formControlName="paisEmisor"></app-catalogo-select>
+                            <div *ngIf="unidadForm.get('paisEmisor')?.invalid && unidadForm.get('paisEmisor')?.touched"
+                                class="text-danger"><small>Este campo es obligatorio.</small></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="estado" class="form-label">Estado o provincia*:</label>
+                            <input id="estado" type="text" class="form-control" formControlName="estado"
+                                [readonly]="readonly" />
+                            <div *ngIf="unidadForm.get('estado')?.invalid && (unidadForm.get('estado')?.dirty || unidadForm.get('estado')?.touched)"
+                                class="text-danger"><small>Este campo es obligatorio.</small></div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <label for="marca" class="form-label">Marca*:</label>
+                            <input id="marca" type="text" class="form-control" formControlName="marca"
+                                [readonly]="readonly" maxlength="50" />
+                            <div *ngIf="unidadForm.get('marca')?.invalid && (unidadForm.get('marca')?.dirty || unidadForm.get('marca')?.touched)"
+                                class="text-danger"><small>Este campo es obligatorio.</small></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="modelo" class="form-label">Modelo*:</label>
+                            <input id="modelo" type="text" class="form-control" formControlName="modelo"
+                                [readonly]="readonly" maxlength="50" />
+                            <div *ngIf="unidadForm.get('modelo')?.invalid && (unidadForm.get('modelo')?.dirty || unidadForm.get('modelo')?.touched)"
+                                class="text-danger"><small>Este campo es obligatorio.</small></div>
+                        </div>
+                        <div class="col-md-4">
+                            <app-catalogo-select [catalogo]="anoCatalogo" [label]="'Año'" [required]="true" id="ano"
+                                formControlName="ano"></app-catalogo-select>
+                            <div *ngIf="unidadForm.get('ano')?.invalid && unidadForm.get('ano')?.touched"
+                                class="text-danger"><small>Este campo es obligatorio.</small></div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <label for="transponder" class="form-label">Transponder*:</label>
+                            <input id="transponder" type="text" class="form-control" formControlName="transponder"
+                                [readonly]="readonly" maxlength="50" />
+                            <div *ngIf="unidadForm.get('transponder')?.invalid && (unidadForm.get('transponder')?.dirty || unidadForm.get('transponder')?.touched)"
+                                class="text-danger"><small>Este campo es obligatorio.</small></div>
+                        </div>
+                        <div class="col-md-4">
+                            <app-catalogo-select [catalogo]="tipoArrastre" [label]="'Color de unidad'"
+                                [required]="true" id="colorUnidad"
+                                formControlName="colorUnidad"></app-catalogo-select>
+                            <div *ngIf="unidadForm.get('colorUnidad')?.invalid && unidadForm.get('colorUnidad')?.touched"
+                                class="text-danger"><small>Este campo es obligatorio.</small></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="numeroEconomico" class="form-label">Número económico*:</label>
+                            <input id="numeroEconomico" type="text" class="form-control"
+                                formControlName="numeroEconomico" [readonly]="readonly" maxlength="50" />
+                            <div *ngIf="unidadForm.get('numeroEconomico')?.invalid && (unidadForm.get('numeroEconomico')?.dirty || unidadForm.get('numeroEconomico')?.touched)"
+                                class="text-danger"><small>Este campo es obligatorio.</small></div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <label for="numero2daPlaca" class="form-label">Número 2da placa:</label>
+                            <input id="numero2daPlaca" type="text" class="form-control" formControlName="numero2daPlaca"
+                                [readonly]="readonly" maxlength="20" />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="estado2daPlaca" class="form-label">Estado emisor de 2da placa:</label>
+                            <input id="estado2daPlaca" type="text" class="form-control" formControlName="estado2daPlaca"
+                                [readonly]="readonly" maxlength="50" />
+                        </div>
+                        <div class="col-md-4">
+                            <app-catalogo-select [catalogo]="paisEmisorCatalogo" [label]="'País emisor 2da placa'"
+                                [required]="false" id="paisEmisor2daPlaca"
+                                formControlName="paisEmisor2daPlaca"></app-catalogo-select>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-8">
+                            <label for="descripcion" class="form-label">Descripción de la unidad:</label>
+                            <input id="descripcion" type="text" class="form-control" formControlName="descripcion"
+                                [readonly]="readonly" maxlength="200" />
+                        </div>
+                    </div>
+
+                    <div class="modal-footer custom-footer justify-content-end mt-4">
+                        <button type="button" class="btn btn-primary" (click)="limpiarUnidadData()">
+                            Limpiar
+                        </button>
+                        <button type="button" class="btn btn-default" (click)="cancel.emit()"> Cancelar </button>
+                        <button type="submit" class="btn btn-primary"
+                            (click)="guardarUnidadData(); unidadForm.markAllAsTouched()"> Guardar </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

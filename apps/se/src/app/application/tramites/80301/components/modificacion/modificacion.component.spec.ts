@@ -5,6 +5,8 @@ import { of } from 'rxjs';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Tramite80301Store } from '../../estados/tramite80301.store';
 import { Tramite80301Query } from '../../estados/tramite80301.query';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideToastr, ToastrService } from 'ngx-toastr';
 
 describe('ModificacionComponent', () => {
 
@@ -29,13 +31,17 @@ describe('ModificacionComponent', () => {
         };
 
         await TestBed.configureTestingModule({
-            imports: [ReactiveFormsModule, ModificacionComponent],
+            imports: [ReactiveFormsModule, ModificacionComponent, HttpClientTestingModule],
             declarations: [],
             providers: [
                 FormBuilder,
-        { provide: SolicitudService, useValue: solicitudServiceMock },
-        { provide: Tramite80301Store, useValue: tramite80301StoreMock },
-        { provide: Tramite80301Query, useValue: tramite80301QueryMock }
+                ToastrService,
+                provideToastr({
+                    positionClass: 'toast-top-right',
+                }),
+                { provide: SolicitudService, useValue: solicitudServiceMock },
+                { provide: Tramite80301Store, useValue: tramite80301StoreMock },
+                { provide: Tramite80301Query, useValue: tramite80301QueryMock }
             ]
         }).compileComponents();
     });

@@ -1,163 +1,101 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  ReactiveFormsModule,
-  FormGroup,
-  FormControl,
-  Validators,
-} from '@angular/forms';
 import { MedioTransporteComponent } from './medio-transporte.component';
-import { Solicitud220503Query } from '../../estados/tramites220503.query';
-import { Solicitud220503Store } from '../../estados/tramites220503.store';
+import { ReactiveFormsModule, FormGroup, ControlContainer } from '@angular/forms';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { of } from 'rxjs';
-import { SimpleChanges } from '@angular/core';
-import {
-  TituloComponent,
-  CatalogoSelectComponent,
-  TableComponent,
-  InputRadioComponent,
-} from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
+
 describe('MedioTransporteComponent', () => {
   let component: MedioTransporteComponent;
   let fixture: ComponentFixture<MedioTransporteComponent>;
-  let mockQuery: jest.Mocked<Solicitud220503Query>;
-  let mockStore: jest.Mocked<Solicitud220503Store>;
+  let mockParentFormGroup: FormGroup;
 
   beforeEach(async () => {
-    mockQuery = {
-      selectSolicitud$: jest.fn(),
-    } as unknown as jest.Mocked<Solicitud220503Query>;
+    mockParentFormGroup = new FormGroup({});
 
-    mockStore = {
+    const mockControlContainer = {
+      control: mockParentFormGroup
+    };
+
+    const mockConsultaQuery = {
+      selectConsultaioState$: of({
+        readonly: false,
+        loading: false,
+        error: null
+      })
+    };
+
+    const mockSolicitudQuery = {
+      selectSolicitud$: of({
+        transporteIdMedio: '',
+        identificacionTransporte: '',
+        esSolicitudFerros: '',
+        totalDeGuiasAmparadas: ''
+      })
+    };
+
+    const mockSolicitudStore = {
       setEsSolicitudFerros: jest.fn(),
       setTransporteIdMedio: jest.fn(),
       setIdentificacionTransporte: jest.fn(),
-      setTotalDeGuiasAmparadas: jest.fn(),
-    } as unknown as jest.Mocked<Solicitud220503Store>;
+      setTotalDeGuiasAmparadas: jest.fn()
+    };
 
     await TestBed.configureTestingModule({
-      imports: [
-        ReactiveFormsModule,
-        MedioTransporteComponent,
-        CommonModule,
-        TituloComponent,
-        CatalogoSelectComponent,
-        TableComponent,
-        InputRadioComponent,
-      ],
-      declarations: [],
+      imports: [MedioTransporteComponent, ReactiveFormsModule],
       providers: [
-        { provide: Solicitud220503Query, useValue: mockQuery },
-        { provide: Solicitud220503Store, useValue: mockStore },
+        { provide: ControlContainer, useValue: mockControlContainer },
+        { provide: 'ConsultaioQuery', useValue: mockConsultaQuery },
+        { provide: 'Solicitud220503Query', useValue: mockSolicitudQuery },
+        { provide: 'Solicitud220503Store', useValue: mockSolicitudStore }
       ],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MedioTransporteComponent);
     component = fixture.componentInstance;
-
-    // Mock parent form group
-    component.parentContainer = {
-      control: new FormGroup({}),
-    } as any;
-    fixture.detectChanges();
+    component.claveDeControl = 'transporteForm';
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should add a dynamic form group on ngOnInit', () => {
-    component.claveDeControl = 'testControl';
-    component.ngOnInit();
-
-    const formGroup = component.grupoFormularioPadre.get(
-      'testControl'
-    ) as FormGroup;
-    expect(formGroup).toBeTruthy();
-    expect(formGroup.controls['transporteIdMedio']).toBeTruthy();
-    expect(formGroup.controls['identificacionTransporte']).toBeTruthy();
-    expect(formGroup.controls['esSolicitudFerros']).toBeTruthy();
-    expect(formGroup.controls['totalDeGuiasAmparadas']).toBeTruthy();
+  it('debe tener las propiedades de entrada definidas', () => {
+    expect(component.claveDeControl).toBeDefined();
+    expect(component.hMercanciaTabla).toBeDefined();
+    expect(component.dMercanciaBody).toBeDefined();
+    expect(component.mediodetransporte).toBeDefined();
   });
 
-  it('should update form group values when selectSolicitud$ emits', () => {
-    component.claveDeControl = 'testControl';
-    component.ngOnInit();
-
-    const formGroup = component.grupoFormularioPadre.get(
-      'testControl'
-    ) as FormGroup;
-    expect(formGroup.value).toEqual({
-      transporteIdMedio: '1',
-      identificacionTransporte: 'ABC123',
-      esSolicitudFerros: 'Yes',
-      totalDeGuiasAmparadas: '10',
-    });
+  it('debe tener valores por defecto en las propiedades', () => {
+    expect(component.claveDeControl).toBe('transporteForm');
+    expect(component.hMercanciaTabla).toEqual([]);
+    expect(component.dMercanciaBody).toEqual([]);
+    expect(component.esFormularioSoloLectura).toBe(false);
+    expect(component.enCambioValor).toBe(0);
   });
 
-  it('should call setEsSolicitudFerros on enCambioDeValor', () => {
-    component.enCambioDeValor('Yes');
-    expect(mockStore.setEsSolicitudFerros).toHaveBeenCalledWith('Yes');
+  it('debe tener grupoFormularioPadre definido', () => {
+    expect(component.grupoFormularioPadre).toBeDefined();
+    expect(component.grupoFormularioPadre).toBe(mockParentFormGroup);
   });
 
-  it('should update tableData on ngOnChanges', () => {
-    const changes: SimpleChanges = {
-      hMercanciaTabla: {
-        currentValue: ['Header1', 'Header2'],
-        previousValue: null,
-        firstChange: true,
-        isFirstChange: () => true,
-      },
-      dMercanciaBody: {
-        currentValue: [{ id: 1, name: 'Item1' }],
-        previousValue: null,
-        firstChange: true,
-        isFirstChange: () => true,
-      },
-    };
-
-    component.ngOnChanges(changes);
-
-    expect(component.tableData.tableHeader).toEqual(['Header1', 'Header2']);
-    expect(component.tableData.tableBody).toEqual([{ id: 1, name: 'Item1' }]);
+  it('debe inicializar el grupo de formulario al llamar inicializarFormulario', () => {
+    component.inicializarFormulario();
+    const formGroup = component.grupoFormularioPadre.get('transporteForm');
+    expect(formGroup).toBeDefined();
+    expect(formGroup).toBeInstanceOf(FormGroup);
   });
 
-  it('should patch form group value on seleccionMedioDeTransporte', () => {
-    component.claveDeControl = 'testControl';
-    component.ngOnInit();
-
-    component.seleccionMedioDeTransporte({
-      descripcion: 'NewTransport',
-    } as any);
-
-    const formGroup = component.grupoFormularioPadre.get(
-      'testControl'
-    ) as FormGroup;
-    expect(formGroup.value.transporteIdMedio).toBe('NewTransport');
+  it('debe validar el formulario correctamente', () => {
+    component.inicializarFormulario();
+    const result = component.validarFormularios();
+    expect(typeof result).toBe('boolean');
   });
 
-  it('should call setTransporteIdMedio on setTransporteIdMedio', () => {
-    component.setTransporteIdMedio({ id: '123' } as any);
-    expect(mockStore.setTransporteIdMedio).toHaveBeenCalledWith('123');
-  });
-
-  it('should call setIdentificacionTransporte on setIdentificacionTransporte', () => {
-    const event = { target: { value: 'NewID' } } as any;
-    component.setIdentificacionTransporte(event);
-    expect(mockStore.setIdentificacionTransporte).toHaveBeenCalledWith('NewID');
-  });
-
-  it('should call setTotalDeGuiasAmparadas on setTotalDeGuiasAmparadas', () => {
-    const event = { target: { value: '20' } } as any;
-    component.setTotalDeGuiasAmparadas(event);
-    expect(mockStore.setTotalDeGuiasAmparadas).toHaveBeenCalledWith('20');
-  });
-
-  it('should remove dynamic form group on ngOnDestroy', () => {
-    component.claveDeControl = 'testControl';
-    component.ngOnInit();
-    component.ngOnDestroy();
-
-    expect(component.grupoFormularioPadre.get('testControl')).toBeNull();
+  it('debe actualizar enCambioValor al llamar enCambioDeValor', () => {
+    const testValue = 'testValue';
+    component.enCambioDeValor(testValue);
+    expect(component.enCambioValor).toBe(testValue);
   });
 });

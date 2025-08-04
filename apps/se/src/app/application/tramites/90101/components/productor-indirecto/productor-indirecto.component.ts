@@ -10,8 +10,8 @@
  */
 
 import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { Component, Input, OnDestroy, OnInit, forwardRef } from '@angular/core';
+import { ConfiguracionColumna, SeccionLibState, SeccionLibStore, SoloLetrasNumerosDirective, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
@@ -36,7 +36,9 @@ import { TablaSeleccion } from '@ng-mf/data-access-user';
   imports: [
     TablaDinamicaComponent,
     ReactiveFormsModule,
-    CommonModule
+    CommonModule,
+    TituloComponent,
+    forwardRef(() => SoloLetrasNumerosDirective)
   ]
 })
 export class ProductorIndirectoComponent implements OnInit, OnDestroy {
@@ -95,6 +97,8 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  public seccionState!: SeccionLibState;
+
   /**
    * @descripcion
    * Estado actual del productor, obtenido del store de Prosec.
@@ -108,7 +112,6 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
    * @param ProsecService - Servicio para operaciones relacionadas con PROSEC.
    * @param AutorizacionProsecStore - Store para manejar el estado de autorizaciones PROSEC.
    * @param AUtorizacionProsecQuery - Query para consultar el estado de autorizaciones PROSEC.
-   * @param consultaQuery - Query para consultar información adicional relacionada.
    * 
    * @description
    * Constructor del componente ProductorIndirecto. Inicializa el formulario reactivo y
@@ -120,7 +123,7 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
     private ProsecService: ProsecService,
     private AutorizacionProsecStore: AutorizacionProsecStore,
     private AUtorizacionProsecQuery: AUtorizacionProsecQuery,
-     private consultaQuery: ConsultaioQuery
+    public seccionStore: SeccionLibStore,
   ) {
     this.productorIndirecto = this.fb.group({
       contribuyentes: [''],
@@ -143,7 +146,8 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.initActionFormBuild();
-    this.recuperarDatos();
+
+    this.seccionStore.establecerFormaValida([false]);
 
     this.productorIndirecto.statusChanges
       .pipe(
@@ -159,6 +163,7 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
       .subscribe();
 
     if(this.formularioDeshabilitado) {
+      this.esFormularioSoloLectura = true;
       this.inicializarEstadoFormulario();
     }
   }
@@ -173,9 +178,14 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.productorIndirecto.disable();
+      this.productorDato = Array.isArray(this.productorState.productorDatos) 
+        ? this.productorState.productorDatos 
+        : [this.productorState.productorDatos] as FilaProductos[];
+      this.seccionStore.establecerFormaValida([true]);
     }
     else {
       this.productorIndirecto.enable();
+      this.seccionStore.establecerFormaValida([false]);
     } 
   }
 
@@ -230,6 +240,18 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
           this.productorDato = response as FilaProductos[];
         }
       });
+  }
+
+   /**
+   * @method agregarProductor
+   * @description
+   * Agrega un productor indirecto recuperando los datos actualizados desde el servicio.
+   * Llama al método `recuperarDatos()` para obtener la información más reciente de los productores indirectos y actualizar la tabla.
+   * 
+   * @returns {void}
+   */
+  agregarProductor(): void {
+    this.recuperarDatos();
   }
 
   /**

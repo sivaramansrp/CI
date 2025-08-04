@@ -184,6 +184,22 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
         item.encabezado !== 'Origin'
     );
   }
+
+  /*
+   * Maneja el cambio de selección de un departamento
+   * Emite el evento con el campo y valor del departamento seleccionado
+   */
+  borrar(): void {
+    this.dinamicasBandejaForma.reset();
+    this.configuracionTablaDatos = [];
+    this.hasValidForm = false;
+    this.tieneConfiguracionTablaDatos = false;
+    this.seleccionadoDepartamento = {
+      tieneDepartamento: false,
+      numeroDeProcedimiento: '',
+      nombreDelDepartamento: '',
+    };
+  }
   /*
    * Envía los datos del formulario. Marca el formulario como válido si no hay errores
    */
@@ -372,5 +388,19 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
         this.tieneConfiguracionTablaDatos = false;
       }
     }
+  }
+
+  /**
+   * Restablece el formulario `bandejaSolicitudeFormGroup` a su estado inicial,
+   * actualiza su validez y reinicia las banderas de estado relacionadas del componente.
+   *
+   * - Establece `hasValidForm` en `false`.
+   * - Establece `tieneConfiguracionTablaDatos` en `false`.
+   */
+  public enLimpiar(): void {
+    this.bandejaSolicitudeFormGroup.reset();
+    this.bandejaSolicitudeFormGroup.updateValueAndValidity();
+    this.hasValidForm = false;
+    this.tieneConfiguracionTablaDatos = false;
   }
 }

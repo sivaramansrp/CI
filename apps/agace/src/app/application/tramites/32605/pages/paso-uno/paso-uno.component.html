@@ -1,76 +1,55 @@
 <div class="container">
   <div class="row">
     <ul class="nav nav-tabs">
-      <li [ngClass]="indice === 1 ? 'active' : ''">
-        <a
-          data-toggle="tab"
-          (click)="seleccionaTab(1)"
-          (keydown.enter)="seleccionaTab(1)"
-          (keydown.space)="seleccionaTab(1)"
-          tabindex="1"
-          role="button"
-          >Solicitante</a
+      <li 
+        *ngFor="let tab of seccionesDeLaSolicitud" 
+        [ngClass]="indice === tab.index ? 'active' : ''"
+        
+      >
+        <a 
+          *ngIf="tab.index !== 5 || reconocimientoMutuoValue === '1'"
+         
+          [class.active]="indice === tab.index"
+          (click)="seleccionaTab(tab.index)"
         >
-      </li>
-      <li [ngClass]="indice === 2 ? 'active' : ''">
-        <a
-          data-toggle="tab"
-          (click)="seleccionaTab(2)"
-          (keydown.enter)="seleccionaTab(1)"
-          (keydown.space)="seleccionaTab(1)"
-          tabindex="2"
-          role="button"
-          >Datos Comunes</a
-        >
-      </li>
-
-      <li [ngClass]="indice === 3 ? 'active' : ''">
-        <a
-          data-toggle="tab"
-          (click)="seleccionaTab(3)"
-          (keydown.enter)="seleccionaTab(3)"
-          (keydown.space)="seleccionaTab(3)"
-          tabindex="3"
-          role="button"
-          >Terceros relacionados</a
-        >
-      </li>
-      <li [ngClass]="indice === 4 ? 'active' : ''">
-        <a
-          data-toggle="tab"
-          (click)="seleccionaTab(4)"
-          (keydown.enter)="seleccionaTab(4)"
-          (keydown.space)="seleccionaTab(4)"
-          tabindex="4"
-          role="button"
-          >Importador y/o Exportador</a
-        >
-      </li>
-      <li [ngClass]="indice === 5 ? 'active' : ''">
-        <a
-          data-toggle="tab"
-          (click)="seleccionaTab(5)"
-          (keydown.enter)="seleccionaTab(5)"
-          (keydown.space)="seleccionaTab(5)"
-          tabindex="5"
-          role="button"
-          >C-TPAT</a
-        >
+          {{ tab.title }}
+        </a>
       </li>
     </ul>
 
     <ng-container>
-      @switch (indice) { @case (1) {
-      <solicitante #Solicitante></solicitante>
-      } @case (2) { @if(esDatosRespuesta){
-      <app-datos-comunes></app-datos-comunes>
-      } } @case (3) { @if(esDatosRespuesta){
-      <app-terceros-relacionados></app-terceros-relacionados>
-      } } @case (4) { @if(esDatosRespuesta){
-      <app-importador-exportador></app-importador-exportador>
-      } } @case (5) { @if(esDatosRespuesta){
-      <app-c-tpat></app-c-tpat>
-      } } }
+      <solicitante #solicitanteRef [hidden]="indice !== 1"></solicitante>
+      
+      @if(esDatosRespuesta){
+        <app-datos-comunes
+          #datosComunesRef 
+          (reconocimientoMutuoCTPATChange)="onReconocimientoMutuoChange($event)"
+          [hidden]="indice !== 2">
+        </app-datos-comunes>
+      }
+
+      @if(esDatosRespuesta){
+        <app-terceros-relacionados 
+          #tercerosRelacionadosRef  
+          [hidden]="indice !== 3">
+        </app-terceros-relacionados>
+      }
+
+      @if(esDatosRespuesta){
+        <app-importador-exportador 
+          #importadorExportadorRef 
+          [hidden]="indice !== 4">
+        </app-importador-exportador>
+      }
+
+      @if(esDatosRespuesta && reconocimientoMutuoValue === '1'){
+        <app-c-tpat #ctpatRef [hidden]="indice !== 5"></app-c-tpat>
+      }
+
+      @if(esDatosRespuesta){
+        <app-perfiles #perfilesRef [hidden]="indice !== 6"></app-perfiles>
+      }
     </ng-container>
+
   </div>
 </div>

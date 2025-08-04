@@ -4,7 +4,7 @@ import {
   DatosDeMercancias,
   HistorialInspeccionFisica,
 } from '../../models/solicitud-pantallas.model';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
@@ -71,6 +71,14 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    */
   public destroyed$ = new Subject<void>();
 
+  @ViewChild('datosDelTramiteARealizarRef') datosDelTramiteARealizar!: DatosDelTramiteARealizarComponent;
+
+  @ViewChild('solicitudDatosTabRef') revisionDocumental!: SolicitudDatosTabComponent;
+
+  @ViewChild('responsableInspeccionEnPuntoRef') responsableInspeccionEnPunto!: ResponsableInspeccionEnPuntoComponent;
+
+  @ViewChild('medioTransporteRef') medioTransporte!: MedioTransporteComponent;
+
   /** Constructor para inyectar dependencias */
   constructor(
     private fb: FormBuilder,
@@ -107,6 +115,34 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
       });
   }
 
+  validarFormularios(): boolean {
+    let isValid = true;
+
+    if (this.datosDelTramiteARealizar) {
+      if (!this.datosDelTramiteARealizar.validarFormularios()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.responsableInspeccionEnPunto) {
+      if (!this.responsableInspeccionEnPunto.validarFormularios()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.medioTransporte) {
+      if (!this.medioTransporte.validarFormularios()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    return isValid;
+  }
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Desuscribe el componente de todos los observables.

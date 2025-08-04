@@ -1,49 +1,32 @@
 {
-  "aduna": [
-    {
-      "id": 0,
-      "descripcion": "AGUA PRIETA"
-    },
-    {
-      "id": 1,
-      "descripcion": "AEROPUERTOS"
-    },
-    {
-      "id": 2,
-      "descripcion": "PUERTOS MARÍTIMOS"
-    },
-    {
-      "id": 3,
-      "descripcion": "FRONTERAS TERRESTRES"
-    }    
-  ],
-  "nombre": "Electronica",
-  "calle": "Calle Principal",
-  "numeroExterior": "100",
-  "numeroInterior": "15",
-  "telefono": "5551234567",
-  "correoElectronico": "usuario@ejemplo.com",
-  "codigoPostal": "12345",
-  "pais": [
-    {
-      "id": 0,
-      "descripcion": "SPAIN"
-    },
-    {
-      "id": 1,
-      "descripcion": "MEXICO"
-    },
-    {
-      "id": 2,
-      "descripcion": "REPUBLICA DOMINICANA"
-    },
-    {
-      "id": 3,
-      "descripcion": "HONDURAS"
-    }
-  ],
-
-  "estado": "11122",
-  "colonia": "55",
-  "opcion":true
+  "success": true,
+  "message": "",
+  "datos": {
+    "manifesto": true,
+    "aduna": 1,
+    "nombre": "Electronica",
+    "calle": "Calle Principal",
+    "numeroExterior": "100",
+    "numeroInterior": "15",
+    "telefono": "5551234567",
+    "correoElectronico": "usuario@ejemplo.com",
+    "codigoPostal": "12345",
+    "pais": 1,
+    "estado": "11122",
+    "colonia": "55",
+    "opcion": "sí",
+    "mercanciaDatos": [
+      {
+        "id": 1,
+        "fines": "Exportación temporal",
+        "tipoMercancia": "Electrónica",
+        "ano": "2023",
+        "modelo": "Modelo Y",
+        "marca": "Marca Z",
+        "serie": "0987654321",
+        "usoEspecifico": "Uso personal",
+        "condicion": "Usado"
+      }
+    ]
+  }
 }

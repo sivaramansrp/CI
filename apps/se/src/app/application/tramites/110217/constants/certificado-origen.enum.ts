@@ -39,7 +39,7 @@ export const TERCEROS_TEXTO_DE_ALERTA =
  * Define las propiedades de la fecha inicial, como el nombre de la etiqueta, si es requerida y si está habilitada.
  */
 export const FECHA_INICIAL = {
-  labelNombre: 'Fecha inicio',
+  labelNombre: 'Fecha inicio:',
   required: false,
   habilitado: true,
 };
@@ -50,7 +50,7 @@ export const FECHA_INICIAL = {
  * Define las propiedades de la fecha final, como el nombre de la etiqueta, si es requerida y si está habilitada.
  */
 export const FECHA_FINAL = {
-  labelNombre: 'Fecha fin',
+  labelNombre: 'Fecha fin:',
   required: false,
   habilitado: true,
 };

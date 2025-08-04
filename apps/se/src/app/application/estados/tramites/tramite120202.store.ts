@@ -176,7 +176,7 @@ export interface ExpedicionCertificadosAsignacion120202State {
  */
 export function createInitialState(): ExpedicionCertificadosAsignacion120202State {
     return {
-        cveAniosAutorizacion: '-1',
+        cveAniosAutorizacion: '',
         numFolioAsignacionAux: '',
 
         estado: '',

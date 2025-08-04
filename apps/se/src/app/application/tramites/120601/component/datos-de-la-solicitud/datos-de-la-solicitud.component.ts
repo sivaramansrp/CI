@@ -20,7 +20,7 @@ import { Tramite120601Store } from '../../estados/tramite-120601.store';
     ReactiveFormsModule
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
-  styleUrls: ['./datos-de-la-solicitud.component.css'],
+  styleUrls: ['./datos-de-la-solicitud.component.scss'],
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
@@ -99,6 +99,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @description Verifica si un control del formulario es inválido.
+   * @param nombreControl El nombre del control a verificar.
+   * @returns Verdadero si el control es inválido y está tocado o modificado, de lo contrario, falso.
+   */
+  esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.solicitudForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
+  }
+
+  /**
    * Crea el formulario para los datos de la solicitud.
    */
   crearFormulario(): void {
@@ -127,6 +139,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   public docSeleccionado(_e: Event): void {
     // Esta es una función dinámica; una vez que tengamos la API, la implementaremos.
     this.store.setTipoDeEmpresa(this.solicitudForm.get('tipoDeEmpresa')?.value);
+  }
+
+  /**
+   * Actualiza la clave de actividad económica en el store.
+   * 
+   * @method setActividadEconomicaClave
+   * @description Obtiene el valor actual del campo 'actividadEconomicaClave' del formulario
+   *              y lo establece en el store mediante el método setActividadEconomicaClave.
+   */
+  public setActividadEconomicaClave(): void {
+    this.store.setActividadEconomicaClave(this.solicitudForm.get('actividadEconomicaClave')?.value);
   }
 /**
    * @method crearFormCombinacion

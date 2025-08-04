@@ -111,4 +111,71 @@ describe('AvisoDeRenovacionComponent', () => {
     component.ngOnDestroy();
     expect(spy).toHaveBeenCalled();
   });
+
+  it('should disable the form when esFormularioSoloLectura is true', () => {
+    component.ngOnInit();
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosDelFormulario();
+    expect(component.avisoForm.disabled).toBe(true);
+  });
+
+  it('should enable the form when esFormularioSoloLectura is false', () => {
+    component.ngOnInit();
+    component.esFormularioSoloLectura = false;
+    component.avisoForm.disable(); 
+    component.guardarDatosDelFormulario();
+    expect(component.avisoForm.enabled).toBe(true);
+  });
+
+  it('should disable specific form controls when esFormularioSoloLectura is true', () => {
+    component.ngOnInit();
+    component.esFormularioSoloLectura = true;
+    component.datosDeAvisoForm();
+
+    expect(component.avisoForm.get('mapTipoTramite')?.disabled).toBe(true);
+    expect(component.avisoForm.get('mapDeclaracionSolicitud')?.disabled).toBe(true);
+    expect(component.avisoForm.get('envioAviso')?.disabled).toBe(true);
+    expect(component.avisoForm.get('numeroAviso')?.disabled).toBe(true);
+    expect(component.avisoForm.get('claveReferencia')?.disabled).toBe(true);
+    expect(component.avisoForm.get('numeroOperacion')?.disabled).toBe(true);
+    expect(component.avisoForm.get('banco')?.disabled).toBe(true);
+    expect(component.avisoForm.get('llavePago')?.disabled).toBe(true);
+    expect(component.avisoForm.get('fechaPago')?.disabled).toBe(true);
+    expect(component.avisoForm.get('importePago')?.disabled).toBe(true);
+  });
+
+  it('should not disable controls if esFormularioSoloLectura is false', () => {
+    component.ngOnInit();
+    component.esFormularioSoloLectura = false;
+
+    component.datosDeAvisoForm();
+
+ 
+  });
+
+  describe('guardarDatosDelFormulario', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+    });
+
+    it('should disable the form when esFormularioSoloLectura is true', () => {
+      component.esFormularioSoloLectura = true;
+      component.guardarDatosDelFormulario();
+      expect(component.avisoForm.disabled).toBe(true);
+    });
+
+    it('should enable the form when esFormularioSoloLectura is false', () => {
+      component.avisoForm.disable();
+      component.esFormularioSoloLectura = false;
+      component.guardarDatosDelFormulario();
+      expect(component.avisoForm.enabled).toBe(true);
+    });
+
+    it('should not throw if called multiple times', () => {
+      component.esFormularioSoloLectura = true;
+      component.guardarDatosDelFormulario();
+      component.esFormularioSoloLectura = false;
+      expect(() => component.guardarDatosDelFormulario()).not.toThrow();
+    });
+  });
 });

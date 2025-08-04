@@ -89,9 +89,9 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
     const STATE = this.chofer40102Store?.getValue();
 
     this.directorGeneralForm = this.fb.group({
-      nombre: [STATE.nombre, [Validators.required]],
-      primerApellido: [STATE.primerApellido, [Validators.required]],
-      segundoApellido: [STATE.segundoApellido, [Validators.required]],
+      nombre: [{ value: STATE.nombre, disabled: true }, [Validators.required]],
+      primerApellido: [{ value: STATE.primerApellido, disabled: true }, [Validators.required]],
+      segundoApellido: [{ value: STATE.segundoApellido, disabled: true }, [Validators.required]],
     });
   }
 

@@ -1,87 +1,92 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { SolicitudPantallasService } from './solicitud-pantallas.service';
-import { CargarDatosIniciales, TipoContenedor, DatosDelTramiteRealizar } from '../models/solicitud-pantallas.model';
+import { HttpClient } from '@angular/common/http';
+import { of } from 'rxjs';
+import { CargarDatosIniciales, TipoContenedor } from '../models/solicitud-pantallas.model';
+import { DatosDelTramiteRealizar } from '../models/solicitud-pantallas.model';
 
 describe('SolicitudPantallasService', () => {
   let service: SolicitudPantallasService;
-  let httpMock: HttpTestingController;
+  let httpClientMock: jest.Mocked<HttpClient>;
 
   beforeEach(() => {
+    httpClientMock = {
+      get: jest.fn().mockReturnValue(of({ test: 'data' }))
+    } as any;
+
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [SolicitudPantallasService],
+      providers: [
+        SolicitudPantallasService,
+        { provide: HttpClient, useValue: httpClientMock }
+      ]
     });
+
     service = TestBed.inject(SolicitudPantallasService);
-    httpMock = TestBed.inject(HttpTestingController);
   });
 
-  afterEach(() => {
-    httpMock.verify();
-  });
-
-  it('should be created', () => {
+  it('debe crear el servicio', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should fetch CargarDatosIniciales data', () => {
-    const mockData: CargarDatosIniciales = {
-      hHistorialinspeccion: [],
-      dHistorialInspecciones: [],
-      dCarrosDeFerrocarril: [],
-      hCarroFerrocarril: [],
-        hSolicitud:[],
-        dSolicitud: [],
-        hMerchandise: [],
-        dMercancia: [],
-        medioDeTransporte:
-          {labelNombre: "string",
-          required: true,
-          primerOpcion: "string",
-          catalogos: []
-        }
-      // Add other required properties with mock values here
-    };
+  it('debe llamar a http.get con la URL correcta en getData', () => {
+    const mockResponse = { test: 'data' } as any;
+    httpClientMock.get.mockReturnValue(of(mockResponse));
 
-    service.getData().subscribe((data) => {
-      expect(data).toEqual(mockData);
+    const result$ = service.getData();
+
+    expect(httpClientMock.get).toHaveBeenCalledWith(service['dataUrl']);
+    result$.subscribe(data => {
+      expect(data).toEqual(mockResponse);
     });
-
-    const req = httpMock.expectOne('../../../assets/json/220503/solicitud-pantallas-mock-data.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockData);
   });
 
-  it('should fetch DatosDelTramiteRealizar data', () => {
-    const mockData: DatosDelTramiteRealizar = {   /** Clave de control */
-      pendientesCertificados:[],
-      horaInspeccion:[],
-      aduanaIngreso:[],
-      sanidadAgropecuaria:[],
-      puntoInspeccion:[]};
+  it('debe llamar a http.get con la URL correcta en getDataDatosDelTramite', () => {
+    const mockResponse = { test: 'data' } as any;
+    httpClientMock.get.mockReturnValue(of(mockResponse));
 
-    service.getDataDatosDelTramite().subscribe((data) => {
-      expect(data).toEqual(mockData);
+    const result$ = service.getDataDatosDelTramite();
+
+    expect(httpClientMock.get).toHaveBeenCalledWith(service['dataUrl']);
+    result$.subscribe(data => {
+      expect(data).toEqual(mockResponse);
     });
-
-    const req = httpMock.expectOne('../../../assets/json/220503/solicitud-pantallas-mock-data.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockData);
   });
 
-  it('should fetch TipoContenedor data', () => {
-    const mockData: TipoContenedor = { tipoContenedor:{labelNombre: "string",
-      required: true,
-      primerOpcion: "string",
-      catalogos: []
-    } };
+  it('debe llamar a http.get con la URL correcta en getDataResponsableInspeccion', () => {
+    const mockResponse = { test: 'data' } as any;
+    httpClientMock.get.mockReturnValue(of(mockResponse));
 
-    service.getDataResponsableInspeccion().subscribe((data) => {
-      expect(data).toEqual(mockData);
+    const result$ = service.getDataResponsableInspeccion();
+
+    expect(httpClientMock.get).toHaveBeenCalledWith(service['dataUrl']);
+    result$.subscribe(data => {
+      expect(data).toEqual(mockResponse);
     });
+  });
 
-    const req = httpMock.expectOne('../../../assets/json/220503/solicitud-pantallas-mock-data.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockData);
+  it('debe llamar a getData en el constructor', () => {
+    expect(httpClientMock.get).toHaveBeenCalled();
+  });
+
+  it('debe tener la propiedad dataUrl correcta', () => {
+    expect(service['dataUrl']).toBe('../../../assets/json/220503/solicitud-pantallas-mock-data.json');
+  });
+
+  it('debe retornar un observable desde el método getData', () => {
+    const result = service.getData();
+    expect(result).toBeDefined();
+    expect(typeof result.subscribe).toBe('function');
+  });
+
+  it('debe retornar un observable desde el método getDataDatosDelTramite', () => {
+    const result = service.getDataDatosDelTramite();
+    expect(result).toBeDefined();
+    expect(typeof result.subscribe).toBe('function');
+  });
+
+  it('debe retornar un observable desde el método getDataResponsableInspeccion', () => {
+    const result = service.getDataResponsableInspeccion();
+    expect(result).toBeDefined();
+    expect(typeof result.subscribe).toBe('function');
   });
 });

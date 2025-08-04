@@ -7,6 +7,16 @@
                     [isDisabled]="esFormularioSoloLectura"
                     name="tipoDeEmpresa" formControlName="tipoDeEmpresa" (change)="docSeleccionado($event)" [required]="true">
                 </app-catalogo-select>
+                <div
+                *ngIf="esInvalido('tipoDeEmpresa')"
+                    class="text-danger"
+                >
+                    <small
+                    *ngIf="solicitudForm.get('tipoDeEmpresa')?.errors?.['required']"
+                    >
+                    Este campo es obligatorio.
+                    </small>
+                </div>
             </div>
             <div class="col-md-8">
                 <div class="form-group">
@@ -36,9 +46,16 @@
                       class="form-control"
                       id="actividadEconomicaClave"
                       formControlName="actividadEconomicaClave"
-                      readonly
                       placeholder="1122"
+                      (change)="setActividadEconomicaClave()"
+                      [class.is-invalid]="solicitudForm.get('actividadEconomicaClave')?.touched && solicitudForm.get('actividadEconomicaClave')?.invalid"
+                      required
                     />
+                    <div *ngIf="esInvalido('actividadEconomicaClave')" class="text-danger">
+                      <small *ngIf="solicitudForm.controls['actividadEconomicaClave'].errors?.['required']">
+                        Este campo es obligatorio.
+                      </small>
+                    </div>
                   </div>
             </div>
         </div>

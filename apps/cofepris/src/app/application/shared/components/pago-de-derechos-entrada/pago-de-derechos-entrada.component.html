@@ -8,7 +8,7 @@
         <div class="form-group">
           <label class="form-label" for="claveDeReferncia">Clave de referencia:</label>
           <input class="form-control" type="text" id="claveDeReferncia" formControlName="claveDeReferncia"
-            (input)="updateClaveDeReferncia()" [maxlength]="maxLength['claveDeReferencia']"/>
+            (input)="updateClaveDeReferncia()" [maxlength]="maxLength['claveDeReferencia']" />
         </div>
       </div>
 
@@ -16,14 +16,16 @@
         <div class="form-group">
           <label class="form-label" for="cadenaDeLaDependencia">Cadena de la dependencia:</label>
           <input class="form-control" type="text" id="cadenaDeLaDependencia" formControlName="cadenaDeLaDependencia"
-            (input)="updateCadenaDeLaDependencia()" [maxlength]="maxLength['cadenaDependencia']"/>
+            (input)="updateCadenaDeLaDependencia()" [maxlength]="maxLength['cadenaDependencia']" />
         </div>
       </div>
 
       <div class="col-md-4 mt-5">
         <div class="form-group">
-          <app-catalogo-select [catalogo]="dropdownData" [label]="'Banco'" [required]="requiredLabel" name="dropdownData"
-            id="banco" formControlName="banco" (change)="getMunicipios()" placeholder="Seleccione un valor" [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
+          <app-catalogo-select [catalogo]="dropdownData" [label]="'Banco'" [required]="requiredLabel"
+            name="dropdownData" id="banco" formControlName="banco" (change)="getMunicipios()"
+            placeholder="Seleccione un valor"
+            [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
         </div>
       </div>
 
@@ -31,22 +33,24 @@
         <div class="form-group">
           <label class="form-label" for="llaveDePago">Llave de pago:</label>
           <input class="form-control" type="text" id="llaveDePago" formControlName="llaveDePago"
-            (input)="updateLlaveDePago()" [maxlength]="maxLength['liaveDePago']"/>
+            (input)="updateLlaveDePago()" [maxlength]="maxLength['liaveDePago']" />
         </div>
       </div>
 
       <div class="col-md-4 mt-5">
-        <div class="input-group">
           <input-fecha [setFecha]="pagoDerechos.get('fechaDePago')?.value" [datos]="fechaFinalInput"
-            (valorCambiado)="cambioFechaDePago($event)" [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
-        </div>
+            (valorCambiado)="cambioFechaDePago($event)"
+            [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
+          <div *ngIf="fechaFuturaSeleccionada" class="mensaje-error mt-1">
+            La fecha de pago debe ser menor o igual a la fecha actual.
+          </div>
       </div>
 
       <div class="col-md-4 mt-5">
         <div class="form-group">
           <label class="form-label" for="importeDePago">Importe de pago:</label>
           <input class="form-control" type="text" id="importeDePago" formControlName="importeDePago"
-            (input)="updateImporteDePago()" [maxlength]="maxLength['importeDePago']"/>
+            (input)="updateImporteDePago()" [maxlength]="maxLength['importeDePago']" />
         </div>
       </div>
     </div>
@@ -54,7 +58,8 @@
 
   <!-- borrar datos button -->
   <div class="col-md-12 text-end mt-3">
-    <button class="btn btn-danger" (click)="onReset()" [disabled]="esFormularioSoloLectura ? true : false">Borrar datos del pago</button>
+    <button class="btn btn-danger" (click)="onReset()" [disabled]="esFormularioSoloLectura ? true : false">Borrar datos
+      del pago</button>
   </div>
 
 </div>

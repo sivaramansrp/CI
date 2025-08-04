@@ -1,4 +1,3 @@
-/* eslint-disable no-empty-function */
 import { Chofer40101Store, Choferesnacionales40101State } from '../../estado/chofer40101.store';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -46,13 +45,24 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
    */
   public solicitud40101State!: Choferesnacionales40101State;
 
+  /**
+   * Constructor de la clase DirectorGeneralComponent.
+   *
+   * @param fb Instancia de FormBuilder para la creación y gestión de formularios reactivos.
+   * @param chofer40101Store Store para el manejo del estado de los choferes.
+   * @param chofer40101Service Servicio para operaciones relacionadas con choferes.
+   * @param chofer40101Query Query para consultar el estado de los choferes.
+   * @param consultaioQuery Query para consultar el estado de consulta IO.
+   */
   constructor(
     private fb: FormBuilder,
     private chofer40101Store: Chofer40101Store,
     private chofer40101Service: Chofer40101Service,
     private chofer40101Query: Chofer40101Query,
     private consultaioQuery: ConsultaioQuery
-  ) {}
+  ) {
+    // Lógica para el constructor si es necesario.
+  }
 
   /**
    * Método del ciclo de vida de Angular que se llama después de que las propiedades enlazadas a datos se inicializan.
@@ -91,7 +101,7 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
     this.directorGeneralForm = this.fb.group({
       nombre: [STATE.nombre, [Validators.required]],
       primerApellido: [STATE.primerApellido, [Validators.required]],
-      segundoApellido: [STATE.segundoApellido, [Validators.required]],
+      segundoApellido: [STATE.segundoApellido],
     });
   }
 

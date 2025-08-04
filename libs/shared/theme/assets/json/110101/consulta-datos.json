@@ -12,5 +12,8 @@
       "descripcion": "Descripción de producto ficticio",
       "valorTransaccion": "1000.00",
       "entidad": "1",
-      "representacion": "1"
+      "representacion": "1",
+      "metodoSeparacion": true,
+      "exportadorAutorizado": false,
+      "informacionRadios":"programaImmex"
 }

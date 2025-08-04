@@ -1,6 +1,9 @@
+import { DestinatarioForm } from '../../220203/models/220203/importacion-de-acuicultura.module';
 import { Injectable } from '@angular/core';
+import { PagoDeDerechos } from '../models/pago-de-derechos.model';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
+import { TercerosrelacionadosdestinoTable } from '../../../shared/models/tercerosrelacionados.model';
 
 /**
  * Interfaz que define la estructura del estado de la solicitud.
@@ -29,8 +32,6 @@ export interface Solicitud220503State {
   establecimientoTIF: string;
   numeroguia: string;
   regimen: number;
-  capturaDatosMercancia: string | number;
-  coordenadas: string;
   movilizacion: number;
   transporte: string;
   punto: number;
@@ -43,6 +44,11 @@ export interface Solicitud220503State {
   banco: number;
   llavePago: string;
   importePago: string;
+  tercerosRelacionados: TercerosrelacionadosdestinoTable[]; 
+  datosForma: DestinatarioForm[];
+  selectedTerceros: TercerosrelacionadosdestinoTable;
+  seletedExdora: DestinatarioForm;
+  pagoDeDerechos:PagoDeDerechos;
 }
 
 /**
@@ -75,8 +81,6 @@ export function crearEstadoInicial(): Solicitud220503State {
     establecimientoTIF: '',
     numeroguia: '',
     regimen: 0,
-    capturaDatosMercancia: 0,
-    coordenadas: '',
     movilizacion: 0,
     transporte: '',
     punto: 0,
@@ -89,6 +93,11 @@ export function crearEstadoInicial(): Solicitud220503State {
     banco: 0,
     llavePago: '',
     importePago: '',
+    datosForma: [],
+    tercerosRelacionados: [],
+    selectedTerceros:{} as TercerosrelacionadosdestinoTable,
+    seletedExdora: {} as DestinatarioForm,
+    pagoDeDerechos: {} as PagoDeDerechos
   };
 }
 
@@ -382,32 +391,6 @@ export class Solicitud220503Store extends Store<Solicitud220503State> {
   }
 
   /**
-   * Método para establecer los datos de captura de mercancía.
-   *
-   * @param capturaDatosMercancia - Cadena de texto o número con los datos de captura.
-   */
-  public setCapturaDatosMercancia(
-    capturaDatosMercancia: string | number
-  ): void {
-    this.update((state) => ({
-      ...state,
-      capturaDatosMercancia,
-    }));
-  }
-
-  /**
-   * Método para establecer las coordenadas de ubicación.
-   *
-   * @param coordenadas - Cadena de texto con las coordenadas.
-   */
-  public setCoordenadas(coordenadas: string): void {
-    this.update((state) => ({
-      ...state,
-      coordenadas,
-    }));
-  }
-
-  /**
    * Método para establecer el tipo de movilización.
    *
    * @param movilizacion - Número que representa la movilización.
@@ -539,6 +522,24 @@ export class Solicitud220503Store extends Store<Solicitud220503State> {
     }));
   }
 
+   /**
+   * Método para actualizar el store con la lista de terceros relacionados.
+   * Actualiza la información de las personas asociadas como terceros en el trámite.
+   * Utilizado para gestionar destinatarios, importadores y otros terceros involucrados.
+   * 
+   * @public
+   * @method updateTercerosRelacionados
+   * @param {TercerosrelacionadosdestinoTable[]} tercerosRelacionados - Lista de personas terceros relacionadas
+   * @memberof AcuiculturaStore
+   * @returns {void}
+   */
+  public updateTercerosRelacionados(tercerosRelacionados: TercerosrelacionadosdestinoTable[]): void {
+    this.update(state => ({
+      ...state,
+      tercerosRelacionados: tercerosRelacionados,
+    }));
+  }
+
   /**
    * Método para establecer la fecha de pago.
    *
@@ -550,7 +551,74 @@ export class Solicitud220503Store extends Store<Solicitud220503State> {
       fetchapago,
     }));
   }
-
+ /**
+   * Método para actualizar los datos del formulario de destinatarios.
+   * Actualiza la información específica de los destinatarios finales del trámite.
+   * Utilizado para gestionar la lista de destinatarios y exportadores.
+   * 
+   * @public
+   * @method updatedatosForma
+   * @param {DestinatarioForm[]} tercerosRelacionados - Lista de formularios de destinatarios
+   * @memberof AcuiculturaStore
+   * @returns {void}
+   */
+  public updatedatosForma(tercerosRelacionados: DestinatarioForm[]): void {
+    this.update(state => ({
+      ...state,
+      datosForma: tercerosRelacionados,
+    }));
+  }
+     /**
+  * Método para actualizar el destinatario exportador seleccionado en el store.
+  * Establece el destinatario que está siendo editado o visualizado en el formulario.
+  * Utilizado para mantener el estado del exportador seleccionado en modales y formularios.
+  * 
+  * @public
+  * @method actualizarSelectedExdora
+  * @param {DestinatarioForm} datosParaMovilizacionNacional - Datos del destinatario exportador seleccionado
+  * @memberof AcuiculturaStore
+  * @returns {void}
+  */
+  public actualizarSelectedExdora(datosParaMovilizacionNacional: DestinatarioForm): void {
+    this.update(state => ({
+      ...state,
+      seletedExdora: datosParaMovilizacionNacional
+    }));
+  }
+      /**
+ * Método para actualizar el tercero relacionado seleccionado en el store.
+ * Establece el tercero que está siendo editado o visualizado en el formulario.
+ * Utilizado para mantener el estado del tercero seleccionado en modales y formularios.
+ * 
+ * @public
+ * @method actualizarSelectedTerceros
+ * @param {TercerosrelacionadosdestinoTable} datosParaMovilizacionNacional - Datos del tercero seleccionado
+ * @memberof AcuiculturaStore
+ * @returns {void}
+ */
+  public actualizarSelectedTerceros(datosParaMovilizacionNacional: TercerosrelacionadosdestinoTable): void {
+    this.update(state => ({
+      ...state,
+      selectedTerceros: datosParaMovilizacionNacional as TercerosrelacionadosdestinoTable
+    }));
+  }
+    /**
+       * Método para actualizar el estado con la información del pago de derechos.
+       * Actualiza la sección de pago de derechos en el estado global del store.
+       * Utilizado cuando el usuario completa o modifica la información de pago.
+       * 
+       * @public
+       * @method actualizarPagoDeDerechos
+       * @param {PagoDeDerechos} pagoDeDerechos - Datos completos del formulario de pago de derechos
+       * @memberof AcuiculturaStore
+       * @returns {void}
+       */
+      public actualizarPagoDeDerechos(pagoDeDerechos: PagoDeDerechos): void {
+          this.update(state => ({
+              ...state,
+              pagoDeDerechos: pagoDeDerechos,
+          }));
+      }
   /**
    * Restaura el estado al valor inicial.
    */

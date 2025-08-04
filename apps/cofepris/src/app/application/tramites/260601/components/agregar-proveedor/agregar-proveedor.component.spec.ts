@@ -1,43 +1,114 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder, FormsModule } from '@angular/forms';
-import { of } from 'rxjs';
 import { AgregarProveedorComponent } from './agregar-proveedor.component';
-import { Tramite260601Store } from '../../estados/tramites/tramite260601.store';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { of, Subject } from 'rxjs';
 import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
-import { DATOS_CATEGORIAS_TERCEROS } from '../../constantes/aviso-enum';
-import { CommonModule } from '@angular/common';
-import { CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Tramite260601Store } from '../../../../estados/tramites/tramite260601.store';
+import { Tramite260601Query } from '../../../../estados/queries/tramite260601.query';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { CATALOGOS_ID, DATOS_CATEGORIAS_TERCEROS } from '../../constantes/aviso-enum';
 
 describe('AgregarProveedorComponent', () => {
   let component: AgregarProveedorComponent;
   let fixture: ComponentFixture<AgregarProveedorComponent>;
-  let avisoSanitarioServiceMock: Partial<AvisoSanitarioService>;
-  let tramite260601StoreMock: Partial<Tramite260601Store>;
+
+  let mockTramite260601Store: Partial<Tramite260601Store>;
+  let mockTramite260601Query: Partial<Tramite260601Query>;
+  let mockAvisoSanitarioService: Partial<AvisoSanitarioService>;
+  let mockConsultaioQuery: Partial<ConsultaioQuery>;
+
+  const destroy$ = new Subject<void>();
 
   beforeEach(async () => {
-    avisoSanitarioServiceMock = {
-      getProductoClasificacion: jest.fn().mockReturnValue(of({ data: [{ label: 'País 1', value: 'pais1' }] })),
+    mockTramite260601Store = {
+      setTipoProducto: jest.fn(),
+      setTercerosNacionalidad: jest.fn(),
+      setTipoPersona: jest.fn(),
+      setMostrarRfcBuscarBoton: jest.fn(),
+      setMostrarCurpBuscarBoton: jest.fn(),
+      setInhabilitarPais: jest.fn(),
+      setRfcProveedorInhabilitar: jest.fn(),
+      setCurpInhabilitar: jest.fn(),
+      setProveedorNombreInhabilitar: jest.fn(),
+      setProveedorPrimerApellidoInhabilitar: jest.fn(),
+      setProveedorSegundoApellidoInhabilitar: jest.fn(),
+      setProveedorRazonSocialInhabilitar: jest.fn(),
+      setPais: jest.fn(),
+      setDomicilioEstado: jest.fn(),
+      setAlcaldia: jest.fn(),
+      setLocalidad: jest.fn(),
+      setDomicilioCodigoPostal: jest.fn(),
+      setColonia: jest.fn(),
+      setDomicilioCalle: jest.fn(),
+      setNumeroExterior: jest.fn(),
+      setNumeroInterior: jest.fn(),
+      setDomicilioLada: jest.fn(),
+      setDomicilioTelefono: jest.fn(),
+      setDomicilioCorreoElectronico: jest.fn(),
+      setPaisInhabilitar: jest.fn(),
+      setDomicilioEstadoInhabilitar: jest.fn(),
+      setAlcaldiaInhabilitar: jest.fn(),
+      setLocalidadInhabilitar: jest.fn(),
+      setDomicilioCodigoPostalInhabilitar: jest.fn(),
+      setColoniaInhabilitar: jest.fn(),
+      setDomicilioCalleInhabilitar: jest.fn(),
+      setNumeroExteriorInhabilitar: jest.fn(),
+      setNumeroInteriorInhabilitar: jest.fn(),
+      setDomicilioLadaInhabilitar: jest.fn(),
+      setDomicilioTelefonoInhabilitar: jest.fn(),
+      setDomicilioCorreoElectronicoInhabilitar: jest.fn(),
+      setProveedorNombre: jest.fn(),
+      setProveedorPrimerApellido: jest.fn(),
+      setProveedorSegundoApellido: jest.fn(),
+      setProveedorRazonSocial: jest.fn(),
     };
 
-    tramite260601StoreMock = {
-      setTipoProducto: jest.fn(),
+    mockTramite260601Query = {
+      selectSeccionState$: of({
+        RFCResponsableSanitario: '',
+        razonSocial: '',
+        correoElectronico: '',
+        codigoPostal: '',
+      } as any),
+    };
+
+    mockAvisoSanitarioService = {
+      getProductoClasificacion: jest.fn(() =>
+        of({
+          code: 200,
+          message: 'OK',
+          data: [{ id: 1, descripcion: 'México' }]
+        })
+      ),
+    };
+
+    mockConsultaioQuery = {
+      selectConsultaioState$: of({
+        procedureId: '',
+        parameter: '',
+        department: '',
+        folioTramite: '',
+        readonly: false,
+        usuario: '',
+        nombre: '',
+        apellidoPaterno: '',
+        apellidoMaterno: '',
+        tipoDeTramite: '',
+        estadoDeTramite: '',
+        create: false,
+        update: false,
+        consultaioSolicitante: null,
+      }),
     };
 
     await TestBed.configureTestingModule({
-      imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        TituloComponent,
-        InputRadioComponent,
-        CatalogoSelectComponent,
-        AgregarProveedorComponent
-      ],
-      declarations: [],
+      imports: [ReactiveFormsModule, AgregarProveedorComponent],
       providers: [
-        { provide: FormBuilder, useValue: new FormBuilder() },
-        { provide: AvisoSanitarioService, useValue: avisoSanitarioServiceMock },
-        { provide: Tramite260601Store, useValue: tramite260601StoreMock },
+        FormBuilder,
+        { provide: Tramite260601Store, useValue: mockTramite260601Store },
+        { provide: Tramite260601Query, useValue: mockTramite260601Query },
+        { provide: AvisoSanitarioService, useValue: mockAvisoSanitarioService },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
       ],
     }).compileComponents();
 
@@ -47,156 +118,73 @@ describe('AgregarProveedorComponent', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
-    component.ngOnDestroy();
+    destroy$.next();
+    destroy$.complete();
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should populate pais catalog in ngOnInit', () => {
-    component.ngOnInit();
-    expect(component.pais).toEqual([{ label: 'País 1', value: 'pais1' }]);
-    expect(avisoSanitarioServiceMock.getProductoClasificacion).toHaveBeenCalledTimes(1);
+  it('should initialize form with correct structure', () => {
+    component.inicializarFormulario();
+    expect(component.agregarProveedorForm.contains('datosGeneralesForm')).toBeTruthy();
+    expect(component.agregarProveedorForm.contains('datosPersonalesForm')).toBeTruthy();
+    expect(component.agregarProveedorForm.contains('domicilioForm')).toBeTruthy();
   });
 
-  it('should initialize the form with nested groups', () => {
-    component.crearFormulario();
-    expect(component.agregarProveedorForm).toBeDefined();
-    expect(component.datosGeneralesForm).toBeDefined();
-    expect(component.datosPersonalesForm).toBeDefined();
-    expect(component.domicilioForm).toBeDefined();
+  it('should disable fields if esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(component.agregarProveedorForm.disabled).toBe(true);
+    expect(component.datosGeneralesForm.disabled).toBe(true);
+    expect(component.datosPersonalesForm.disabled).toBe(true);
   });
 
-  it('should handle paisSeleccion correctly', () => {
-    component.crearFormulario();
-    const spy = jest.spyOn(tramite260601StoreMock, 'setTipoProducto');
-    component.domicilioForm.get('cvePais')?.setValue('pais1');
-    component.paisSeleccion();
-    expect(spy).toHaveBeenCalledWith('pais1');
-  });
-
-  it('should handle onNacionalidadCambio for extranjero', () => {
-    component.crearFormulario();
-    component.onNacionalidadCambio(DATOS_CATEGORIAS_TERCEROS.EXTRANJERO);
-    expect(component.tipoPersonaOpciones.some(option => option.value === DATOS_CATEGORIAS_TERCEROS.NO_CONTRIBUYENTE)).toBe(false);
-    expect(component.inhabilitarPais).toBe(true);
-  });
-
-  it('should handle onNacionalidadCambio for nacional', () => {
-    component.crearFormulario();
+  it('should reset forms on nacionalidad change', () => {
+    const resetDatosPersonalesSpy = jest.spyOn(component, 'resetDatosPersonalesForm');
+    const resetDomicilioSpy = jest.spyOn(component, 'resetDomicilioForm');
     component.onNacionalidadCambio(DATOS_CATEGORIAS_TERCEROS.NACIONAL);
-    expect(component.tipoPersonaOpciones).toEqual(component.inicialTipoPersonaOpciones);
-    expect(component.inhabilitarPais).toBe(true);
+    expect(resetDatosPersonalesSpy).toHaveBeenCalled();
+    expect(resetDomicilioSpy).toHaveBeenCalled();
+    expect(mockTramite260601Store.setTercerosNacionalidad).toHaveBeenCalled();
   });
 
-  it('should handle onTipoPersonaCambio for fisica', () => {
+  it('should update tipoPersonaOpciones on nacionalidad extranjero', () => {
+    component.onNacionalidadCambio(DATOS_CATEGORIAS_TERCEROS.EXTRANJERO);
+    const noContribuyenteOption = component.tipoPersonaOpciones.find(
+      (op) => op.value === DATOS_CATEGORIAS_TERCEROS.NO_CONTRIBUYENTE
+    );
+    expect(noContribuyenteOption).toBeUndefined();
+  });
+
+  it('should call store methods on tipo persona cambio for FISICA', () => {
+    component.avisoSanitarioState = {
+      tercerosNacionalidad: DATOS_CATEGORIAS_TERCEROS.NACIONAL,
+      tipoPersona: DATOS_CATEGORIAS_TERCEROS.FISICA,
+    } as any;
     component.crearFormulario();
     component.onTipoPersonaCambio(DATOS_CATEGORIAS_TERCEROS.FISICA);
-    expect(component.datosGeneralesForm.get('rfcProveedor')?.enabled).toBeTruthy();
-    expect(component.mostrarCurpBuscarBoton).toBe(false);
-    expect(component.mostrarRfcBuscarBoton).toBe(true);
+    expect(mockTramite260601Store.setRfcProveedorInhabilitar).toHaveBeenCalledWith(false);
+    expect(mockTramite260601Store.setMostrarRfcBuscarBoton).toHaveBeenCalledWith(true);
   });
 
-  it('should handle onTipoPersonaCambio for no contribuyente', () => {
+  it('should set value in store using setValoresStore()', () => {
     component.crearFormulario();
-    component.onTipoPersonaCambio(DATOS_CATEGORIAS_TERCEROS.NO_CONTRIBUYENTE);
-    expect(component.datosGeneralesForm.get('curp')?.enabled).toBeTruthy();
-    expect(component.mostrarCurpBuscarBoton).toBe(true);
-    expect(component.mostrarRfcBuscarBoton).toBe(false);
+    const form = component.datosGeneralesForm;
+    form.get('rfcProveedor')?.setValue('ABC123');
+    component.setValoresStore(form, 'rfcProveedor', 'setRfcProveedorInhabilitar');
+    expect(mockTramite260601Store.setRfcProveedorInhabilitar).toHaveBeenCalledWith('ABC123');
   });
 
-  it('should reset datosPersonalesForm correctly', () => {
-    component.crearFormulario();
-    component.resetDatosPersonalesForm();
-    expect(component.datosGeneralesForm.get('rfcProveedor')?.disabled).toBeTruthy();
-    expect(component.datosGeneralesForm.get('curp')?.disabled).toBeTruthy();
-    Object.keys(component.datosPersonalesForm.controls).forEach(key => {
-      expect(component.datosPersonalesForm.get(key)?.disabled).toBeTruthy();
-    });
+  it('should load catalogos on init', () => {
+    component.inicializaCatalogos();
+    expect(mockAvisoSanitarioService.getProductoClasificacion).toHaveBeenCalledWith(CATALOGOS_ID.CAT_PAIS);
   });
 
-  it('should reset domicilioForm correctly', () => {
-    component.crearFormulario();
-    component.resetDomicilioForm();
-    Object.keys(component.domicilioForm.controls).forEach(key => {
-      expect(component.domicilioForm.get(key)?.disabled).toBeTruthy();
-    });
-  });
-
-  it('should call setValoresStore with correct parameters', () => {
-    component.crearFormulario();
-    const spy = jest.spyOn(tramite260601StoreMock, 'setTipoProducto');
-    component.datosGeneralesForm.get('tercerosNacionalidad')?.setValue(DATOS_CATEGORIAS_TERCEROS.EXTRANJERO);
-    component.setValoresStore(component.datosGeneralesForm, 'tercerosNacionalidad', 'setTipoProducto');
-    expect(spy).toHaveBeenCalledWith(DATOS_CATEGORIAS_TERCEROS.EXTRANJERO);
-  });
-
-  it('should reset and disable DatosPersonalesForm in resetDatosPersonalesForm', () => {
-    component.resetDatosPersonalesForm();
-
-    expect(component.datosGeneralesForm.get('rfcProveedor')?.disabled).toBeTruthy();
-    expect(component.datosGeneralesForm.get('curp')?.disabled).toBeTruthy();
-
-    expect(tramite260601StoreMock.setRfcProveedorInhabilitar).toHaveBeenCalledWith(true);
-    expect(tramite260601StoreMock.setCurpInhabilitar).toHaveBeenCalledWith(true);
-
-    Object.keys(component.datosPersonalesForm.controls).forEach((key) => {
-      expect(component.datosPersonalesForm.get(key)?.value).toBeNull();
-      expect(component.datosPersonalesForm.get(key)?.disabled).toBeTruthy();
-    });
-
-    expect(tramite260601StoreMock.setProveedorNombre).toHaveBeenCalledWith('');
-    expect(tramite260601StoreMock.setProveedorPrimerApellido).toHaveBeenCalledWith('');
-    expect(tramite260601StoreMock.setProveedorSegundoApellido).toHaveBeenCalledWith('');
-    expect(tramite260601StoreMock.setProveedorRazonSocial).toHaveBeenCalledWith('');
-  });
-
-  it('should disable DatosPersonalesForm in inhabilitarDatosPersonalesForm', () => {
-    component.inhabilitarDatosPersonalesForm(true);
-
-    expect(tramite260601StoreMock.setProveedorNombreInhabilitar).toHaveBeenCalledWith(true);
-    expect(tramite260601StoreMock.setProveedorPrimerApellidoInhabilitar).toHaveBeenCalledWith(true);
-    expect(tramite260601StoreMock.setProveedorSegundoApellidoInhabilitar).toHaveBeenCalledWith(true);
-    expect(tramite260601StoreMock.setProveedorRazonSocialInhabilitar).toHaveBeenCalledWith(true);
-  });
-
-  it('should reset and disable DomicilioForm in resetDomicilioForm', () => {
-    component.resetDomicilioForm();
-
-    expect(tramite260601StoreMock.setPais).toHaveBeenCalledWith('');
-    expect(tramite260601StoreMock.setDomicilioEstado).toHaveBeenCalledWith('');
-    expect(tramite260601StoreMock.setAlcaldia).toHaveBeenCalledWith('');
-    expect(tramite260601StoreMock.setLocalidad).toHaveBeenCalledWith('');
-    expect(tramite260601StoreMock.setDomicilioCodigoPostal).toHaveBeenCalledWith('');
-    expect(tramite260601StoreMock.setColonia).toHaveBeenCalledWith('');
-    expect(tramite260601StoreMock.setDomicilioCalle).toHaveBeenCalledWith('');
-    expect(tramite260601StoreMock.setNumeroExterior).toHaveBeenCalledWith('');
-    expect(tramite260601StoreMock.setNumeroInterior).toHaveBeenCalledWith('');
-    expect(tramite260601StoreMock.setDomicilioLada).toHaveBeenCalledWith('');
-    expect(tramite260601StoreMock.setDomicilioTelefono).toHaveBeenCalledWith('');
-    expect(tramite260601StoreMock.setDomicilioCorreoElectronico).toHaveBeenCalledWith('');
-
-    Object.keys(component.domicilioForm.controls).forEach((key) => {
-      expect(component.domicilioForm.get(key)?.disabled).toBeTruthy();
-    });
-  });
-
-  it('should disable DomicilioForm in inhabilitarDomicilioForm', () => {
-    component.inhabilitarDatosPersonalesForm(true);
-
-    expect(tramite260601StoreMock.setProveedorNombreInhabilitar).toHaveBeenCalledWith(true);
-    expect(tramite260601StoreMock.setProveedorPrimerApellidoInhabilitar).toHaveBeenCalledWith(true);
-    expect(tramite260601StoreMock.setProveedorSegundoApellidoInhabilitar).toHaveBeenCalledWith(true);
-    expect(tramite260601StoreMock.setProveedorRazonSocialInhabilitar).toHaveBeenCalledWith(true);
-  });
-
-  it('should unsubscribe in ngOnDestroy', () => {
-    const spyNext = jest.spyOn(component['destruirNotificador$'], 'next');
-    const spyComplete = jest.spyOn(component['destruirNotificador$'], 'complete');
+  it('should emit destroy signal on ngOnDestroy', () => {
+    const completeSpy = jest.spyOn(component['destruirNotificador$'], 'complete');
     component.ngOnDestroy();
-    expect(spyNext).toHaveBeenCalled();
-    expect(spyComplete).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

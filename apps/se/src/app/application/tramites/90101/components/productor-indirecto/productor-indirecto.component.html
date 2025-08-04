@@ -1,5 +1,11 @@
 <div class="container">
     <form [formGroup]="productorIndirecto">
+        <div class="row">
+            <div class="col-md-12">
+                <ng-titulo titulo="Productor indirecto"></ng-titulo>
+            </div>
+        </div>
+        <div class="row">
         <div class="col-md-4">
             <div class="form-group">
             <label class="form-label" for="contribuyentes">Registro federal de contribuyentes:</label>
@@ -15,14 +21,17 @@
                   'contribuyentes',
                   'setcontribuyentes'
                 )"
+            maxlength="13"
+            soloLetrasNumeros
                 >
             </div>
+        </div>
         </div>
     </form>
     <div class="row mb-5">
         <div class=" text-end mt-5">
-            <button class="btn btn-default me-2">Eliminar Productor</button>
-            <button class="btn btn-primary">Agregar Productor</button>
+            <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar Productor</button>
+            <button class="btn btn-primary" (click)="agregarProductor()" [disabled]="esFormularioSoloLectura">Agregar Productor</button>
         </div>
     </div>
     <div class="row">

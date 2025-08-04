@@ -10,12 +10,15 @@
     <div class="col-md-4">
       <div class="form-group">
         <label for="rfc" class="form-label">RFC *:</label>
-        <input type="text" id="rfc" formControlName="rfc" class="form-control" />
+        <input type="text" id="rfc" formControlName="rfc" class="form-control" [ngClass]="esValido('rfc') ? 'required' : ''"/>
+        @if (personaForm.get('rfc')?.hasError('required') && personaForm.get('rfc')?.touched) {
+          <div class="mensaje-error">Este campo es obligatorio.</div>
+        }
       </div>
     </div>
     <div class="col-md-4 d-flex align-items-end">
       <div class="form-group">
-        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Buscar</button>
+        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="buscar()">Buscar</button>
       </div>
     </div>
   </div>

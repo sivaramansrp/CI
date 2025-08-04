@@ -1,4 +1,4 @@
-import { AlertComponent, InputCheckComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, InputCheckComponent, REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite260912Store, Tramites260912State } from '../../estados/tramite-260912.store';
@@ -249,14 +249,14 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.form = this.fb.group({
-      codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required]],
+      codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required, Validators.maxLength(12), Validators.pattern(REGEX_SOLO_DIGITOS)]],
       estado: [this.solicitudState?.estado],
-      municipioOAlcaldia: [this.solicitudState?.municipioOAlcaldia, [Validators.required]],
-      localidad: [this.solicitudState?.localidad],
-      colonias: [this.solicitudState?.colonias],
-      calle: [this.solicitudState?.calle, [Validators.required]],
-      lada: [this.solicitudState?.lada],
-      telefono: [this.solicitudState.telefono, [Validators.required]],
+      municipioOAlcaldia: [this.solicitudState?.municipioOAlcaldia, [Validators.required, Validators.maxLength(120)]],
+      localidad: [this.solicitudState?.localidad, [Validators.maxLength(120)]],
+      colonias: [this.solicitudState?.colonias, [Validators.maxLength(120)]],
+      calle: [this.solicitudState?.calle, [Validators.required, Validators.maxLength(100)]],
+      lada: [this.solicitudState?.lada, [Validators.minLength(5), Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)]],
+      telefono: [this.solicitudState.telefono, [Validators.required, Validators.maxLength(30), Validators.pattern(REGEX_SOLO_DIGITOS)]],
     });
 
     this.domicilio = this.fb.group({
@@ -264,6 +264,8 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       licenciaSanitaria: [{ value: this.solicitudState?.licenciaSanitaria, disabled: true }],
       regimen: [this.solicitudState?.regimen],
       aduanasEntradas: [this.solicitudState?.aduanasEntradas],
+      immexProgramNumber: [this.solicitudState?.immexProgramNumber],
+      ano: [this.solicitudState?.ano],
       aifaCheckbox: [true],
       manifests: [true],
     });

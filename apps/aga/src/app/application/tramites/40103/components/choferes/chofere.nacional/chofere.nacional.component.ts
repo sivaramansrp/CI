@@ -6,7 +6,7 @@ import {
   TablaDinamicaComponent,
   TablaSeleccion,
 } from '@libs/shared/data-access-user/src';
-import { CHOFERES_NACIONALES_ALTA } from '../../../enum/choferes-enum';
+import { CHOFERES_NACIONALES_ALTA } from '../../../enum/choferes.enum';
 import { Chofer40103Query } from '../../../estados/chofer40103.query';
 import { Chofer40103Service } from '../../../estados/chofer40103.service';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
@@ -204,7 +204,7 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
    * Esta función verifica si existe una referencia al modal (`modalRef`), 
    * y en caso afirmativo, lo oculta y establece la referencia a `null`.
    */
-  cancelModal(): void {
+  cancelarModal(): void {
     this.modalRef?.hide();
     this.modalRef = null;
   }
@@ -215,12 +215,12 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
    *
    * @param data - Los datos del chofer nacional a agregar.
    */
-  addModal(data: DatosDelChoferNacional): void {
+  agregarModal(data: DatosDelChoferNacional): void {
     this.datosDelChoferNacional.push(data);
     this.datosDelChoferNacionalSelected = [];
 
     this.chofer40103Service.updateDatosDelChoferNacional(this.datosDelChoferNacional);
-    this.cancelModal();
+    this.cancelarModal();
   }
 
   

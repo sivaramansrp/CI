@@ -6,6 +6,7 @@ import { FirmaElectronicaComponent, TramiteFolioService } from '@libs/shared/dat
 import { of, throwError } from 'rxjs';
 import { ToastrModule } from 'ngx-toastr';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
@@ -29,7 +30,7 @@ describe('PasoDosComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [PasoDosComponent],
-      imports: [FirmaElectronicaComponent, ToastrModule.forRoot()],
+      imports: [FirmaElectronicaComponent, ToastrModule.forRoot(), HttpClientTestingModule],
       providers: [
         { provide: TramiteFolioService, useValue: tramiteFolioServiceMock },
         { provide: TramiteStore, useValue: tramiteStoreMock },

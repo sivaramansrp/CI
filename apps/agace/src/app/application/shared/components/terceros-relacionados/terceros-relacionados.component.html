@@ -1,6 +1,6 @@
 <div class="conatiner">
     <form [formGroup]="represtantanteLegalForma">
-        <div class="row mb-3">  
+        <div class="row mb-3"> 
             <formas-dinamicas 
                 [formularioTitulo]="'Representante Legal'"
                 [forma]="represtantanteLegalFormGroup" 
@@ -18,16 +18,17 @@
         <app-tabla-dinamica
             [configuracionTabla]="configuracionTabla"
             [datos]="enlaceOperativoDatos"
-            [tipoSeleccionTabla]="checkbox">
+            [tipoSeleccionTabla]="checkbox"
+            (listaDeFilaSeleccionada)="onSeleccionCambiada($event)">
         </app-tabla-dinamica>
         <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="abrirModal(template)">
+            <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="abrirModalAgregar(template)">
                 Agregar
             </button>
-            <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura">
+            <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura || elementosSeleccionados.length !== 1" (click)="abrirModalModificar(template)">
                 Modificar
             </button>
-            <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura">
+            <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura || elementosSeleccionados.length === 0" (click)="eliminarElementosSeleccionados()">
                 Eliminar
             </button>
         </div>
@@ -46,11 +47,11 @@
 <!-- Modal -->
 <ng-template #template>
     <div class="modal-header">
-      <h4 class="modal-title pull-left">Agregar</h4>
+      <h4 class="modal-title pull-left">{{ esModalEdicion ? 'Modificar' : 'Agregar' }}</h4>
     </div>
     <div class="modal-body">
         <form [formGroup]="enlaceOperativoForm">
-          <h6>*Registro Federal de Contribuyentes:</h6>
+          <h6><span class="text-danger">* </span>Registro Federal de Contribuyentes:</h6>
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
@@ -82,6 +83,7 @@
                   formControlName="irfc"
                   (change)="eventoDeCambioDeValor($event, 'irfc')"
                   type="text"
+                  readonly
                 />
               </div>
               @if(enlaceOperativoForm.controls['irfc'].invalid && enlaceOperativoForm.controls['irfc'].touched) {
@@ -99,6 +101,7 @@
                   formControlName="inombre"
                   (change)="eventoDeCambioDeValor($event, 'inombre')"
                   type="text"
+                  readonly
                 />
               </div>
               @if(enlaceOperativoForm.controls['inombre'].invalid && enlaceOperativoForm.controls['inombre'].touched) {
@@ -116,6 +119,7 @@
                   formControlName="apellidoPaterno"
                   (change)="eventoDeCambioDeValor($event, 'apellidoPaterno')"
                   type="text"
+                  readonly
                 />
               </div>
               @if(enlaceOperativoForm.controls['apellidoPaterno'].invalid && enlaceOperativoForm.controls['apellidoPaterno'].touched) {
@@ -133,6 +137,7 @@
                   formControlName="apellidoMaterno"
                   (change)="eventoDeCambioDeValor($event, 'apellidoMaterno')"
                   type="text"
+                  readonly
                 />
               </div>
               @if(enlaceOperativoForm.controls['apellidoMaterno'].invalid && enlaceOperativoForm.controls['apellidoMaterno'].touched) {
@@ -144,7 +149,7 @@
             <div class="col-md-8">
               <div class="form-group">
                 <label class="form-label" for="cuidad"
-                  >Cuidad o Estado de Residencia</label
+                  >Ciudad o Estado de Residencia</label
                 >
                 <input
                   class="form-control"
@@ -152,6 +157,7 @@
                   formControlName="cuidad"
                   (change)="eventoDeCambioDeValor($event, 'cuidad')"
                   type="text"
+                  readonly
                 />
               </div>
               @if(enlaceOperativoForm.controls['cuidad'].invalid && enlaceOperativoForm.controls['cuidad'].touched) {
@@ -229,7 +235,7 @@
         </form>
       </div>
       <div class="modal-footer d-flex justify-content-end">
-        <button type="button" class="btn btn-primary">
+        <button type="button" class="btn btn-primary" (click)="guardarDatosFormulario()">
           Aceptar
         </button>
         <button type="button" class="btn btn-danger" (click)="modalRef?.hide()">

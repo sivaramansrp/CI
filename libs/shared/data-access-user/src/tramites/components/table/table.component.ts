@@ -41,7 +41,8 @@ export class TableComponent implements OnInit, OnChanges {
   * @description
   * Si no se pasa ningún valor desde el componente padre, tomará el valor predeterminado como verdadero
   */
-  @Output() seleccionCambio = new EventEmitter<boolean>();
+  @Output() seleccionCambio = new EventEmitter<boolean>(); 
+  
 
   /**
    * @description

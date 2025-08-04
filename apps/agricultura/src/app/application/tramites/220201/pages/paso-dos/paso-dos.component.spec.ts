@@ -11,22 +11,22 @@ import { PasoDosComponent } from './paso-dos.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 @Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
+class MY_CUSTOM_DIRECTIVE {
   @Input() myCustom;
 }
 
 @Pipe({ name: 'translate' })
-class TranslatePipe implements PipeTransform {
+class TRANSLATE_PIPE implements PipeTransform {
   transform(value) { return value; }
 }
 
 @Pipe({ name: 'phoneNumber' })
-class PhoneNumberPipe implements PipeTransform {
+class PHONE_NUMBER_PIPE implements PipeTransform {
   transform(value) { return value; }
 }
 
 @Pipe({ name: 'safeHtml' })
-class SafeHtmlPipe implements PipeTransform {
+class SAFE_HTML_PIPE implements PipeTransform {
   transform(value) { return value; }
 }
 
@@ -38,8 +38,8 @@ describe('PasoDosComponent', () => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule,PasoDosComponent,HttpClientTestingModule],
       declarations: [
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
+        TRANSLATE_PIPE, PHONE_NUMBER_PIPE, SAFE_HTML_PIPE,
+        MY_CUSTOM_DIRECTIVE
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
@@ -57,7 +57,7 @@ describe('PasoDosComponent', () => {
     fixture.destroy();
   });
 
-  it('should run #constructor()', async () => {
+  it('debería ejecutar #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 

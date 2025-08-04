@@ -1,12 +1,12 @@
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import {
     TablaDinamicaComponent,
   TablaSeleccion,
 } from '@libs/shared/data-access-user/src';
-import { CHOFERES_NACIONALES_ALTA } from '../../../../enum/choferes-enum';
+import { CHOFERES_NACIONALES_ALTA } from '../../../../enum/choferes.enum';
 import { Chofer40103Query } from '../../../../estados/chofer40103.query';
 import { Chofer40103Service } from '../../../../estados/chofer40103.service';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
@@ -26,7 +26,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
   ],
   providers: [BsModalService],
 })
-export class ChofereNacionalRetiradaComponent implements OnInit {
+export class ChofereNacionalRetiradaComponent implements OnInit, OnDestroy {
 
   // ======================= PROPIEDADES =======================
 
@@ -56,18 +56,19 @@ export class ChofereNacionalRetiradaComponent implements OnInit {
    */
   datosDelChoferNacionalSelected: DatosDelChoferNacional[] = [];
 
+    /**
+   * Indica si el formulario o componente está en modo solo lectura.
+   * Cuando es `true`, los campos no pueden ser editados por el usuario.
+   * @type {boolean}
+   */
+  esSoloLectura: boolean = false;
+
   /**
    * Estado de consulta relacionado con los choferes nacionales.
    * @type {ConsultaioState}
    */
   datosConsulta!: ConsultaioState;
 
-  /**
-   * Indica si el formulario o componente está en modo solo lectura.
-   * Cuando es `true`, los campos no pueden ser editados por el usuario.
-   * @type {boolean}
-   */
-  isReadonly: boolean = false;
 
   /**
    * Referencia al modal de Bootstrap utilizado en el componente.
@@ -111,7 +112,9 @@ export class ChofereNacionalRetiradaComponent implements OnInit {
     private chofer40103Service: Chofer40103Service,
     private chofer40103Query: Chofer40103Query,
     private consultaioQuery: ConsultaioQuery
-  ) {}
+  ) {
+    // Lógica constructora
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -119,9 +122,6 @@ export class ChofereNacionalRetiradaComponent implements OnInit {
    * Establece el modo de solo lectura según el estado recibido.
    */
   ngOnInit(): void {
-    
-    this.isReadonly = true;
-
     this.chofer40103Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -135,14 +135,24 @@ export class ChofereNacionalRetiradaComponent implements OnInit {
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
-          if(seccionState.readonly) {
+          if (seccionState.readonly) {
             this.datosConsulta = seccionState;
-            this.isReadonly = seccionState?.readonly ?? true;
-          } 
+            this.esSoloLectura = this.datosConsulta.readonly;
+          }
         })
       ).subscribe();
 
   }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Limpia las suscripciones y evita fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
+
 
   /**
    * Maneja el evento de selección de filas en la tabla de choferes nacionales.
@@ -157,7 +167,7 @@ export class ChofereNacionalRetiradaComponent implements OnInit {
    * Inicializa un nuevo objeto de chofer nacional y abre el modal para agregar un nuevo registro.
    * @param template - Referencia al template del modal a mostrar.
    */
-  addNewRow(template: TemplateRef<unknown>): void {
+  agregarNuevaFila(template: TemplateRef<unknown>): void {
     this.datosChofere = {} as DatosDelChoferNacional;
     this.openModal(template);
   }
@@ -180,7 +190,7 @@ export class ChofereNacionalRetiradaComponent implements OnInit {
    * Elimina los registros seleccionados de la lista de choferes nacionales.
    * Si no hay ningún registro seleccionado, muestra una advertencia en consola.
    */
-  deleteSelectedRow(): void {
+  eliminarFilaSeleccionada(): void {
     if (this.datosDelChoferNacionalSelected.length > 0) {
       this.datosDelChoferNacional = this.datosDelChoferNacional.filter(
         (item) => !this.datosDelChoferNacionalSelected.includes(item)
@@ -204,7 +214,7 @@ export class ChofereNacionalRetiradaComponent implements OnInit {
   /**
    * Cierra el modal de Bootstrap y limpia la referencia.
    */
-  cancelModal(): void {
+  cancelarModal(): void {
     this.modalRef?.hide();
     this.modalRef = null;
   }
@@ -215,12 +225,12 @@ export class ChofereNacionalRetiradaComponent implements OnInit {
    *
    * @param data - El objeto de datos que representa al chofer nacional que se va a agregar.
    */
-  addModal(data: DatosDelChoferNacional): void {
+  agregarModal(data: DatosDelChoferNacional): void {
     if (this.modalComponent) {
       this.datosDelChoferNacional.push(data);
       this.datosDelChoferNacionalSelected = [];
       this.chofer40103Service.updateDatosDelChoferNacionalRetirada(this.datosDelChoferNacional);
     }
-    this.cancelModal();
+    this.cancelarModal();
   }
 }

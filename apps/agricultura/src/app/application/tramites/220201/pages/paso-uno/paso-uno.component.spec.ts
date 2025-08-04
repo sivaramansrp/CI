@@ -1,26 +1,144 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { Subject, of, throwError } from 'rxjs';
 import { PasoUnoComponent } from './paso-uno.component';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
-  let fixture: ComponentFixture<PasoUnoComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [],
-      imports: [SolicitanteComponent, HttpClientTestingModule,PasoUnoComponent]
-    })
-      .compileComponents();
+  let seccionStoreMock: any;
+  let certificadoServiceMock: any;
+  let consultaQueryMock: any;
+  let certificadoZoosanitarioStoreMock: any;
 
-    fixture = TestBed.createComponent(PasoUnoComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  beforeEach(() => {
+    seccionStoreMock = {
+      establecerFormaValida: jest.fn(),
+      establecerSeccion: jest.fn(),
+    };
+
+    certificadoServiceMock = {
+      guardarDatosFormulario: jest.fn().mockReturnValue(of({})),
+      storeDatosFormulario: jest.fn(),
+    };
+
+    consultaQueryMock = {
+      selectConsultaioState$: new Subject<any>(),
+    };
+
+    certificadoZoosanitarioStoreMock = {};
+
+    component = new PasoUnoComponent(
+      seccionStoreMock,
+      certificadoServiceMock,
+      consultaQueryMock,
+      certificadoZoosanitarioStoreMock
+    );
+
+    component.solicitante = {
+      form: {
+        invalid: false,
+        markAllAsTouched: jest.fn()
+      }
+    } as any;
+
+    component.datosDelaSolicitu = {
+      validarFormulario: jest.fn(() => true)
+    } as any;
+
+    component.datosParaMovilizacionNacional = {
+      validarFormulario: jest.fn(() => true)
+    } as any;
+
+    component.pagoDeDerechosComponent = {
+      validarFormulario: jest.fn(() => true)
+    } as any;
   });
 
-  it('should create', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('debe suscribirse y llamar guardarDatosFormulario cuando update=true', (done) => {
+    const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
+
+    component.ngOnInit();
+
+    (consultaQueryMock.selectConsultaioState$ as Subject<any>).next({ update: true });
+
+    setTimeout(() => {
+      expect(guardarSpy).toHaveBeenCalled();
+      done();
+    }, 0);
+  });
+
+  it('debe llamar los métodos del servicio correctamente al guardarDatosFormulario exitoso', (done) => {
+    const fakeData = { foo: 'bar' };
+    certificadoServiceMock.guardarDatosFormulario.mockReturnValue(of(fakeData));
+
+    component.guardarDatosFormulario();
+
+    setTimeout(() => {
+      expect(certificadoServiceMock.guardarDatosFormulario).toHaveBeenCalled();
+      expect(certificadoServiceMock.storeDatosFormulario).toHaveBeenCalledWith(fakeData);
+      expect(seccionStoreMock.establecerFormaValida).toHaveBeenCalledWith([true]);
+      expect(seccionStoreMock.establecerSeccion).toHaveBeenCalledWith([true]);
+      done();
+    }, 0);
+  });
+
+  it('debe manejar el error en guardarDatosFormulario', (done) => {
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
+    certificadoServiceMock.guardarDatosFormulario.mockReturnValue(throwError(() => new Error('API error')));
+
+    component.guardarDatosFormulario();
+
+    setTimeout(() => {
+      expect(certificadoServiceMock.guardarDatosFormulario).toHaveBeenCalled();
+      expect(certificadoServiceMock.storeDatosFormulario).not.toHaveBeenCalled();
+      expect(consoleSpy).toHaveBeenCalledWith(expect.any(Error));
+      consoleSpy.mockRestore();
+      done();
+    }, 0);
+  });
+
+  describe('validarFormularios', () => {
+
+    it('debe regresar falso si falta algún componente hijo o es inválido', () => {
+      component.solicitante = undefined as any;
+      expect(component.validarFormularios()).toBe(false);
+
+      component.solicitante = {
+        form: { invalid: false, markAllAsTouched: jest.fn() }
+      } as any;
+      component.datosDelaSolicitu = undefined as any;
+      expect(component.validarFormularios()).toBe(false);
+
+      component.datosDelaSolicitu = { validarFormulario: () => true } as any;
+      component.datosParaMovilizacionNacional = undefined as any;
+      expect(component.validarFormularios()).toBe(false);
+
+      component.datosParaMovilizacionNacional = { validarFormulario: () => true } as any;
+      component.pagoDeDerechosComponent = undefined as any;
+      expect(component.validarFormularios()).toBe(false);
+    });
+  });
+
+  it('debe actualizar el índice al seleccionar una pestaña', () => {
+    expect(component.indice).toBe(1);
+    component.seleccionaTab(3);
+    expect(component.indice).toBe(3);
+  });
+
+  it('debe llamar next y complete en destroyNotifier$ al ejecutar ngOnDestroy', () => {
+    const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
+
+    component.ngOnDestroy();
+
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

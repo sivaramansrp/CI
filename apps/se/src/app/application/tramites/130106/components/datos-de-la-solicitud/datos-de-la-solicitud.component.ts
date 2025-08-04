@@ -138,15 +138,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
     // Inicializa el formulario con los valores del estado de la solicitud
     this.formulario = this.fb.group({
-      solicitud: [this.solicitudState.solicitud, Validators.required], // Campo de solicitud, requerido
+      solicitud: [this.solicitudState.solicitud || 'inicial', Validators.required], // Campo de solicitud, requerido
       regimen: [this.solicitudState.regimen, Validators.required], // Campo de régimen, requerido
       clasificacion: [this.solicitudState.clasificacion, Validators.required], // Campo de clasificación, requerido
       solicitudDescripcion: [this.solicitudState.solicitudDescripcion, Validators.required], // Campo de descripción de la solicitud, requerido
-      producto: [this.solicitudState.producto, Validators.required], // Campo de solicitud, requerido
+      producto: [this.solicitudState.producto || 'Nuevo', Validators.required], // Campo de solicitud, requerido
     });
   }
  /* Configuraciones de catálogos utilizados en los selectores del formulario.  
-   Cada entrada representa un conjunto de opciones cargado desde un archivo JSON. */
+   Cada entrada representa un conjunto de opciones cargado desde un archivo JSON. */ 
   configuracionesDropdown = [
     { catalogos: SolicitudeDropdown?.tramite}, // Configuración para el catálogo de trámites
     { catalogos: SolicitudeDropdown?.regimen}, // Configuración para el catálogo de regímenes

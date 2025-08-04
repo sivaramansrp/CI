@@ -101,7 +101,20 @@ export const NUEVA_NOTIFICACION = {
   txtBtnCancelar: 'Cancelar', // Texto del botón para cancelar la notificación.
 };
 
+/** Etiquetas para el campo de uso específico en el componente de selección cruzada. */
+export const USO_ESPECIFICO_LABEL: CrossListLable = {
+    tituluDeLaIzquierda: 'Uso específico:',
+    derecha: 'Uso específico seleccionado*:',
+  }
+
+/** Etiquetas para el campo de país de procedencia en el componente de selección cruzada. */
 export const PAIS_DE_PROCEDENCIA_LABEL: CrossListLable = {
-    tituluDeLaIzquierda: ' País de orígen',
-    derecha: 'País(es) seleccionado(s)',
+    tituluDeLaIzquierda: 'País de procedencia:',
+    derecha: 'País(es) seleccionado(s)*:',
+  }
+
+/** Etiquetas para el campo de país de origen en el componente de selección cruzada. */
+export const PAIS_DE_ORIGEN_LABEL: CrossListLable = {
+    tituluDeLaIzquierda: 'País de origen:',
+    derecha: 'País(es) seleccionado(s)*:',
   }

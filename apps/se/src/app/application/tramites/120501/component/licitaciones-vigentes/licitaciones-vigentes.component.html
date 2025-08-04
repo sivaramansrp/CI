@@ -1,16 +1,11 @@
 <div class="container">
-  <div>
-    <ng-titulo
-      titulo="Administrar residuos y/o materia prima a importar"
-    ></ng-titulo>
-
     <div>
       <h6>Licitaciones disponibles</h6>
       <app-tabla-dinamica [configuracionTabla]="configTableArray"
       [datos] = "datos" (filaClic)="abrirModificarModal($event)"
       ></app-tabla-dinamica>
 
-      <div class="container" *ngIf="showRepresentacionFederal">
+      <div class="container" *ngIf="showRepresentacionFederal || esFormularioSoloLectura">
       <!-- Representación federal  -->
       <div>
         <ng-titulo titulo="Representación federal" />
@@ -157,5 +152,5 @@
       <ng-alert [CONTENIDO]="texto"></ng-alert>
   </div>
    </div>
-  </div>
+
 </div>

@@ -199,6 +199,13 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * Constructor que se utiliza para la inyección de dependencias.
    * @param catalogosServices Servicio de catálogos.
    * @param importarExportar Servicio de importador/exportador.
+   * @param store Store del trámite 10301.
+   * @param query Consulta del trámite 10301.
+   * @param fb FormBuilder para crear formularios reactivos.
+   * @param validacionesService Servicio de validaciones de formularios.
+ *  @remarks
+ *  Este componente se encarga de manejar el paso dos del trámite 10301, que
+ *  incluye la gestión de documentos y la validación de formularios.
    */
   constructor(
     public catalogosServices: CatalogosService,
@@ -237,13 +244,6 @@ export class PasoDosComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.donanteDomicilio();
-
-    this.subscriptions.push(
-      this.query.selectFechasSeleccionadas$.subscribe((fechas) => {
-        this.fechasSeleccionadas = fechas ?? [];
-      })
-    );
-
     this.subscriptions.push(
       this.query.selectTipoDocumento$.subscribe((tipoDocumento) => {
         this.tipoDocumento = {
@@ -279,12 +279,12 @@ export class PasoDosComponent implements OnInit, OnDestroy {
             this.documentosSeleccionados = resp;
           } else {
             this.catalogoDocumentos = [];
-            this.documentosSeleccionados = []; 
+            this.documentosSeleccionados = [];
           }
         },
         error: () => {
           this.catalogoDocumentos = [];
-          this.documentosSeleccionados = []; 
+          this.documentosSeleccionados = [];
         }
       });
   }

@@ -4,7 +4,9 @@ import {
   EventEmitter,
   HostListener,
   Input,
-  OnInit, Output
+  OnChanges,
+  OnInit, Output,
+  SimpleChanges
 } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MESES, SEMANA } from '../../../core/enums/constantes-alertas.enum';
@@ -19,7 +21,7 @@ import { InputFecha } from '../../../core/models/shared/components.model';
   templateUrl: './input-fecha.component.html',
   styleUrl: './input-fecha.component.scss',
 })
-export class InputFechaComponent implements OnInit {
+export class InputFechaComponent implements OnInit, OnChanges {
   /**
    * Emite el valor seleccionado cuando cambia.
    */
@@ -39,6 +41,9 @@ export class InputFechaComponent implements OnInit {
    * Indica si se debe mostrar el ícono de ayuda (círculo con signo de interrogación).
    */
   @Input() tooltipQuestionCircle: boolean = false;
+
+  @Input() deshabilitarFuturas: boolean = false;
+
 
   /**
    * Arreglo con los nombres de los meses.
@@ -88,17 +93,60 @@ export class InputFechaComponent implements OnInit {
     this.generarFormulario(OBJECT_DATE);
   }
 
+  /**
+ * Método del ciclo de vida `ngOnChanges` de Angular.
+ *
+ * Se ejecuta automáticamente cuando cambia alguna de las propiedades con decorador `@Input()` del componente.
+ * En este caso, detecta cambios en la propiedad `setFecha` y actualiza internamente el valor,
+ * llamando al método `setFechaEnInput()` para reflejar el cambio en la interfaz.
+ *
+ * @param {SimpleChanges} changes - Objeto que contiene los cambios detectados en las propiedades de entrada.
+ */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['setFecha']) {
+      this.setFecha = changes['setFecha'].currentValue;
+
+      if (this.setFecha === null) {
+        this.Formulario.get('fechaString')?.reset();
+      } else {
+        this.setFechaEnInput();
+      }
+    }
+  }
+
+
+  /**
+ * Método del ciclo de vida `ngOnInit` de Angular.
+ *
+ * Se ejecuta una vez que el componente ha sido inicializado.
+ * En este caso, llama al método `setFechaEnInput()` para establecer el valor inicial
+ * del campo de fecha basado en el valor recibido por el `@Input`.
+ */
   ngOnInit(): void {
+    this.setFechaEnInput();
+  }
+
+  /**
+ * Establece el valor inicial del campo de fecha en el formulario.
+ *
+ * Si `setFecha` contiene una fecha válida en formato `DD/MM/YYYY`, la convierte
+ * a un objeto `moment`, inicializa el formulario con esa fecha y actualiza
+ * el campo `fechaString`. El campo se habilita temporalmente para asignar el valor
+ * y luego se desactiva nuevamente para mantener el modo de solo lectura.
+ *
+ * Si `setFecha` está vacío o no es válida, limpia el campo y lo desactiva.
+ */
+  setFechaEnInput(): void {
     if (this.setFecha) {
       const FECHA = this.setFecha.split('/');
-      if(FECHA.length === 3) {
-      const OBJECT_DATE = moment(`${FECHA[2]}-${FECHA[1]}-${FECHA[0]}`);
-      this.generarFormulario(OBJECT_DATE);
-      this.Formulario.controls['fechaString'].enable();
-      this.Formulario.get('fechaString')?.setValue(
-        moment(OBJECT_DATE).format('DD/MM/YYYY')
-      );
-    }
+      if (FECHA.length === 3) {
+        const OBJECT_DATE = moment(`${FECHA[2]}-${FECHA[1]}-${FECHA[0]}`);
+        this.generarFormulario(OBJECT_DATE);
+        this.Formulario.controls['fechaString'].enable();
+        this.Formulario.get('fechaString')?.setValue(
+          moment(OBJECT_DATE).format('DD/MM/YYYY')
+        );
+      }
       this.Formulario.controls['fechaString'].disable();
     } else {
       this.Formulario.controls['fechaString'].enable();
@@ -287,4 +335,20 @@ export class InputFechaComponent implements OnInit {
       this.mostrar = false;
     }
   }
+
+  isFutureDate(day: { value: number; indexWeek: number }): boolean {
+  if (!this.deshabilitarFuturas) {
+    return false;
+  }
+
+  const SELECTED_YEAR = this.Formulario.get('anio')?.value;
+  const SELECTMONTH = this.Formulario.get('mes')?.value;
+  const DAYVALUE = day.value;
+
+  const FECHADIA = moment(`${SELECTED_YEAR}-${SELECTMONTH}-${DAYVALUE}`, 'YYYY-M-D');
+  const HOY = moment().startOf('day');
+
+  return FECHADIA.isAfter(HOY);
+}
+
 }

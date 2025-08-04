@@ -1,18 +1,47 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  AlertComponent,
+  Catalogo,
+  CatalogoSelectComponent,
+  ConfiguracionColumna,
+  Notificacion,
+  NotificacionesComponent,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import {
+  DatosDeFila,
+  DatosForma,
+  FilaSolicitud,
+  RadioOpcion,
+  SolicitudFilaTabla,
+} from '../../models/220202/fitosanitario.model';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
+import { AgregarMercanciaComponent } from '../agregar-mercancia/agregar-mercancia.component';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
-
-import { DatosDeFila, DatosForma, FilaSolicitud, SolicitudFilaTabla } from '../../models/220202/fitosanitario.model';
-
-import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/220202/fitosanitario.enums';
-
-import { Subject,map, takeUntil } from 'rxjs';
-
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { FitosanitarioStore } from '../../estados/fitosanitario.store';
+import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/220202/fitosanitario.enums';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 
+/**
+ * @description Constructor del componente.
+ * @param fb - FormBuilder para crear formularios reactivos.
+ * @param agriculturaApiService - Servicio para realizar peticiones HTTP relacionadas con la agricultura.
+ * @param consultaioQuery - Query para obtener el estado de la consulta.
+ * @param router - Router para navegar entre rutas.
+ * @param activatedROute - Ruta activada para obtener parámetros de la ruta actual.
+ * @param fitosanitarioStore - Store para manejar el estado del fitosanitario.
+ */
 @Component({
   selector: 'app-datos-de-la-solicitud',
   templateUrl: './datos-de-la-solicitud.component.html',
@@ -24,136 +53,140 @@ import { CommonModule } from '@angular/common';
     AlertComponent,
     TablaDinamicaComponent,
     CatalogoSelectComponent,
-    CommonModule
+    CommonModule,
+    NotificacionesComponent,
+    ModalComponent,
   ],
 })
+
 /**
  * Componente encargado de gestionar y mostrar los datos de la solicitud en el trámite agrícola.
- * 
+ *
  * Este componente administra el formulario principal de la solicitud, así como la visualización y manipulación
  * de las tablas relacionadas con los datos de la solicitud y mercancías. Permite la carga de catálogos para los
  * selectores del formulario, la gestión del estado de solo lectura, y la actualización de los datos en el store.
- * 
+ *
  * Además, implementa la lógica para inicializar los campos del formulario, manejar la selección de filas en las tablas,
  * y controlar la suscripción a los servicios para evitar fugas de memoria.
- * 
+ *
  * @remarks
  * - Utiliza servicios para obtener datos de catálogos y del formulario.
  * - Permite alternar entre modo edición y solo lectura.
  * - Implementa OnInit y OnDestroy para el ciclo de vida del componente.
- * 
+ *
  * @example
  * ```html
  * <app-datos-de-la-solicitud></app-datos-de-la-solicitud>
  * ```
- * 
+ *
  * @see {@link AgriculturaApiService}
  * @see {@link FormBuilder}
  * @see {@link ConsultaioQuery}
  */
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
-
   /** @description Indica si el panel de detalle está colapsado o no. */
   colapsable: boolean = false;
 
-  /** 
-   * @description Datos para las columnas de la tabla. 
+  /**
+   * @description Datos para las columnas de la tabla.
    * Cada elemento del array representa una columna y contiene la información para mostrar en la cabecera y las celdas de la tabla.
    */
   mesaColumnas: string[] = [];
 
-  /** 
-   * @description Rango de días seleccionados. 
+  @ViewChild('modalRef') modalRef!: ModalComponent;
+
+  /**
+   * @description Rango de días seleccionados.
    * Este array contiene las fechas seleccionadas por el usuario para filtrar la información mostrada en la tabla.
    */
   selectRangoDias: string[] = [];
 
-  /** 
-   * @description Instrucción para el doble clic. 
+  /**
+   * @description Instrucción para el doble clic.
    * Este string contiene el mensaje que se muestra al usuario indicando que debe hacer doble clic en una celda para ver más detalles.
    */
   instruccionDobleClic: string = INSTRUCCION_DOBLE_CLIC;
 
-  /** 
-   * @description Datos para el cuerpo de la tabla. 
+  /**
+   * @description Datos para el cuerpo de la tabla.
    * Este array contiene la información que se muestra en las celdas de la tabla, excluyendo la cabecera.
    */
   mesaCuerpo: string[] = [];
 
-  /** 
-   * @description Datos de las filas de la tabla. 
+  /**
+   * @description Datos de las filas de la tabla.
    * Este array de objetos contiene la información de cada fila de la tabla. Cada objeto representa una fila y contiene las propiedades necesarias para mostrar los datos en las celdas.
    */
   tablaDeDatosDeCelda: DatosDeFila[] = [];
 
-  /** 
-   * @description Formulario para los datos del trámite. 
+  /**
+   * @description Formulario para los datos del trámite.
    * Este `FormGroup` contiene los controles para los campos del formulario relacionados con los datos del trámite.
    */
   procedureData?: FormGroup;
 
-  /** 
-   * @description Lista de aduanas. 
+  /**
+   * @description Lista de aduanas.
    * Este array contiene los objetos `Catalogo` que se utilizan para poblar el selector de aduanas en el formulario.
    */
   aduanaList: Catalogo[] = [];
 
-  /** 
-   * @description Lista de establecimientos agropecuarios. 
+  /**
+   * @description Lista de establecimientos agropecuarios.
    * Este array contiene los objetos `Catalogo` que se utilizan para poblar el selector de establecimientos agropecuarios en el formulario.
    */
   agropecuariaList: Catalogo[] = [];
 
-  /** 
-   * @description Lista de puntos de verificación. 
+  /**
+   * @description Lista de puntos de verificación.
    * Este array contiene los objetos `Catalogo` que se utilizan para poblar el selector de puntos de verificación en el formulario.
    */
   puntoList: Catalogo[] = [];
 
-  /** 
-   * @description Lista de regímenes. 
+  /**
+   * @description Lista de regímenes.
    * Este array contiene los objetos `Catalogo` que se utilizan para poblar el selector de regímenes en el formulario.
    */
   regimeList: Catalogo[] = [];
 
-  /** 
-   * @description Lista de productos. 
+  /**
+   * @description Lista de productos.
    * Este array contiene los objetos `Catalogo` que se utilizan para poblar el selector de productos en el formulario.
    */
   productoList: Catalogo[] = [];
 
-  /** 
-   * @description Lista de usos. 
+  /**
+   * @description Lista de usos.
    * Este array contiene los objetos `Catalogo` que se utilizan para poblar el selector de usos en el formulario.
    */
   usoList: Catalogo[] = [];
 
-  /** 
-   * @description Lista de unidades de medida de cantidad (UMC). 
+  /**
+   * @description Lista de unidades de medida de cantidad (UMC).
    * Este array contiene los objetos `Catalogo` que se utilizan para poblar el selector de UMC en el formulario.
    */
   umcList: Catalogo[] = [];
 
-  /** 
-   * @description Lista de NICO (Número de Identificación Comercial). 
+  /**
+   * @description Lista de NICO (Número de Identificación Comercial).
    * Este array contiene los objetos `Catalogo` que se utilizan para poblar el selector de NICO en el formulario.
    */
   nicoList: Catalogo[] = [];
 
-  /** 
-   * @description Lista de fracciones arancelarias. 
+  /**
+   * @description Lista de fracciones arancelarias.
    * Este array contiene los objetos `Catalogo` que se utilizan para poblar el selector de fracciones arancelarias en el formulario.
    */
   arancelariaList: Catalogo[] = [];
 
-  /** 
-   * @description Formulario principal. 
+  /**
+   * @description Formulario principal.
    * Este `FormGroup` contiene todos los controles del formulario.
    */
   forma!: FormGroup;
 
-  /** 
-   * @description Formulario para el transporte. 
+  /**
+   * @description Formulario para el transporte.
    * Este `FormGroup` contiene los controles para los campos del formulario relacionados con la información de transporte.
    */
   formularioDeTransporte?: FormGroup;
@@ -163,19 +196,41 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @type {DatosForma}
    */
   formulariodataStore: DatosForma = {} as DatosForma;
-  
+
   /**
    * @description Tipo de selección para la tabla de solicitudes.
    * @type {TablaSeleccion}
    */
   tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
-  
+
   /**
    * @description Tipo de selección para la tabla de mercancías.
    * @type {TablaSeleccion}
    */
   tipoSeleccionsoliMercancias: TablaSeleccion = TablaSeleccion.CHECKBOX;
-  
+
+  /**
+   * @property moduloEmergente
+   * @description Indica si el módulo emergente está activo.
+   * @type {boolean}
+   * @default false
+   */
+  public moduloEmergente: boolean = false;
+
+  /**
+   * @property moduloEmergente
+   * @description Indica si el módulo emergente está activo.
+   * @type {boolean}
+   * @default false
+   */
+  public eliminarDatosTabla: boolean = false;
+
+    /**
+   * Representa una nueva notificación que será utilizada en el componente.
+   * @type {Notificacion}
+   */
+  public nuevaNotificacion!: Notificacion;
+
   /**
    * @description Configuración de las columnas de la tabla de solicitudes.
    * Cada objeto define el encabezado, la clave de acceso y el orden de la columna.
@@ -183,25 +238,80 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   configuracionColumnasoli: ConfiguracionColumna<FilaSolicitud>[] = [
     { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
-    { encabezado: 'Tipo de requisito', clave: (fila) => fila.tipoRequisito, orden: 2 },
+    {
+      encabezado: 'Tipo de requisito',
+      clave: (fila) => fila.tipoRequisito,
+      orden: 2,
+    },
     { encabezado: 'Requisito', clave: (fila) => fila.requisito, orden: 3 },
-    { encabezado: 'Número de Certificado Internacional', clave: (fila) => fila.numeroCertificadoInternacional, orden: 4 },
-    { encabezado: 'Fracción arancelaria', clave: (fila) => fila.fraccionArancelaria, orden: 5 },
-    { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccion, orden: 6 },
+    {
+      encabezado: 'Número de Certificado Internacional',
+      clave: (fila) => fila.numeroCertificadoInternacional,
+      orden: 4,
+    },
+    {
+      encabezado: 'Fracción arancelaria',
+      clave: (fila) => fila.fraccionArancelaria,
+      orden: 5,
+    },
+    {
+      encabezado: 'Descripción de la fracción',
+      clave: (fila) => fila.descripcionFraccion,
+      orden: 6,
+    },
     { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
-    { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
-    { encabezado: 'Descripción Nico', clave: (fila) => fila.descripcionNico, orden: 8 },
+    {
+      encabezado: 'Descripción Nico',
+      clave: (fila) => fila.descripcionNico,
+      orden: 8,
+    },
     { encabezado: 'Descripción', clave: (fila) => fila.descripcion, orden: 9 },
-    { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila) => fila.umt, orden: 10 },
-    { encabezado: 'Cantidad UMT', clave: (fila) => fila.cantidadUMT, orden: 11 },
-    { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila) => fila.umc, orden: 12 },
-    { encabezado: 'Cantidad UMC', clave: (fila) => fila.cantidadUMC, orden: 13 },
+    {
+      encabezado: 'Unidad de medida de tarifa (UMT)',
+      clave: (fila) => fila.umt,
+      orden: 10,
+    },
+    {
+      encabezado: 'Cantidad UMT',
+      clave: (fila) => fila.cantidadUMT,
+      orden: 11,
+    },
+    {
+      encabezado: 'Unidad de medida de comercialización (UMC)',
+      clave: (fila) => fila.umc,
+      orden: 12,
+    },
+    {
+      encabezado: 'Cantidad UMC',
+      clave: (fila) => fila.cantidadUMC,
+      orden: 13,
+    },
     { encabezado: 'Uso', clave: (fila) => fila.uso, orden: 14 },
-    { encabezado: 'Tipo de Producto', clave: (fila) => fila.tipoDeProducto, orden: 15 },
-    { encabezado: 'Número de lote', clave: (fila) => fila.numeroDeLote, orden: 16 },
-    { encabezado: 'País de origen', clave: (fila) => fila.paisDeOrigen, orden: 17 },
-    { encabezado: 'País de procedencia', clave: (fila) => fila.paisDeProcedencia, orden: 18 },
-    { encabezado: 'Certificado Internacional Electrónico', clave: (fila) => fila.certificadoInternacionalElectronico, orden: 19 }
+    {
+      encabezado: 'Tipo de Producto',
+      clave: (fila) => fila.tipoDeProducto,
+      orden: 15,
+    },
+    {
+      encabezado: 'Número de lote',
+      clave: (fila) => fila.numeroDeLote,
+      orden: 16,
+    },
+    {
+      encabezado: 'País de origen',
+      clave: (fila) => fila.paisDeOrigen,
+      orden: 17,
+    },
+    {
+      encabezado: 'País de procedencia',
+      clave: (fila) => fila.paisDeProcedencia,
+      orden: 18,
+    },
+    {
+      encabezado: 'Certificado Internacional Electrónico',
+      clave: (fila) => fila.certificadoInternacionalElectronico,
+      orden: 19,
+    },
   ];
 
   /**
@@ -209,36 +319,120 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Cada objeto define el encabezado, la clave de acceso y el orden de la columna.
    * @type {ConfiguracionColumna<SolicitudFilaTabla>[]}
    */
-  solicitudConfigurationColumnasoli: ConfiguracionColumna<SolicitudFilaTabla>[] = [
-    { encabezado: 'Fecha Creación', clave: (fila) => fila.fechaCreacion, orden: 1 },
-    { encabezado: 'Mercancía', clave: (fila) => fila.mercancia, orden: 2 },
-    { encabezado: 'Cantidad', clave: (fila) => fila.cantidad, orden: 3 },
-    { encabezado: 'Proovedor', clave: (fila) => fila.proveedor, orden: 4 },
-  ];
+  solicitudConfigurationColumnasoli: ConfiguracionColumna<SolicitudFilaTabla>[] =
+    [
+      {
+        encabezado: 'Fecha Creación',
+        clave: (fila) => fila.fechaCreacion,
+        orden: 1,
+      },
+      { encabezado: 'Mercancía', clave: (fila) => fila.mercancia, orden: 2 },
+      { encabezado: 'Cantidad', clave: (fila) => fila.cantidad, orden: 3 },
+      { encabezado: 'Proovedor', clave: (fila) => fila.proveedor, orden: 4 },
+    ];
 
   /**
    * @description Datos de la tabla principal.
    * @type {FilaSolicitud[]}
    */
-    cuerpoTabla: FilaSolicitud[] = [];
+  cuerpoTabla: FilaSolicitud[] = [];
 
   /**
    * @description Lista de solicitudes para la tabla.
    * @type {SolicitudFilaTabla[]}
    */
-    solicitubLista: SolicitudFilaTabla[] = [];
+  solicitubLista: SolicitudFilaTabla[] = [];
 
   /**
    * @description Subject utilizado para destruir las suscripciones y evitar fugas de memoria cuando el componente se destruye.
    * @type {Subject<void>}
    */
   public destroyNotifier$ = new Subject<void>();
-  
+
   /**
    * @description Indica si el formulario se encuentra en modo solo lectura.
    * @type {boolean}
    */
   public esFormularioSoloLectura: boolean = false;
+
+  /**
+   * @description Fila seleccionada en la tabla.
+   * @type {FilaSolicitud[]}
+   */
+  selectedRow: FilaSolicitud[] = [];
+
+  /**
+   * Opciones para el botón de radio.
+   * @property {RadioOpcion[]} opcionDeBotonDeRadio
+   */
+  opcionDeBotonDeRadio: RadioOpcion[] = [
+    {
+      label: 'Animales Vivos',
+      value: 'yes',
+    },
+    {
+      label: 'Productos Subproductos',
+      value: 'no',
+    },
+  ];
+
+  /**
+   * Estado de la consulta actual, contiene la información relevante del solicitante.
+   * @type {ConsultaioState}
+   */
+  public consultaState!: ConsultaioState;
+
+  /**
+   * @description Indica si se debe mostrar la notificación de verificación.
+   * Esta propiedad se utiliza para controlar la visibilidad de una notificación en la interfaz de usuario.
+   *
+   * @type {boolean}
+   */
+  public notificationCheck: boolean = true;
+
+  /**
+   * @description Indica si se debe mostrar la tabla de solicitudes.
+   * Esta propiedad se utiliza para controlar la visibilidad de la tabla de solicitudes en la interfaz de usuario.
+   * @type {boolean}
+   */
+  public mostrarSolicitudTabla: boolean = true;
+
+  /**
+   * Arreglo que contiene las filas de la tabla de solicitudes.
+   * @type {SolicitudFilaTabla[]}
+   */
+  cuerpoTablaSolicitud: SolicitudFilaTabla[] = [
+    {
+      fechaCreacion: '2025-06-17 10:30:00',
+      mercancia: 'Laptop HP',
+      cantidad: 5,
+      proveedor: 'Tech Solutions Inc.',
+    },
+    {
+      fechaCreacion: '2025-06-16 14:15:30',
+      mercancia: 'Monitor Dell 27"',
+      cantidad: 10,
+      proveedor: 'Global Electronics',
+    },
+    {
+      fechaCreacion: '2025-06-15 09:00:00',
+      mercancia: 'Teclado Mecánico RGB',
+      cantidad: 8,
+      proveedor: 'Peripherals World',
+    },
+    {
+      fechaCreacion: '2025-06-14 17:45:10',
+      mercancia: 'Mouse Inalámbrico Logitech',
+      cantidad: 12,
+      proveedor: 'Tech Accessories Co.',
+    },
+    {
+      fechaCreacion: '2025-06-13 11:20:05',
+      mercancia: 'Impresora Epson EcoTank',
+      cantidad: 3,
+      proveedor: 'Print Masters',
+    },
+  ];
 
   /**
    * @constructor
@@ -249,25 +443,35 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     public agriculturaApiService: AgriculturaApiService,
     public consultaioQuery: ConsultaioQuery,
+    public router: Router,
+    public activatedRoute: ActivatedRoute,
+    public fitosanitarioStore: FitosanitarioStore
   ) {
-    this.agriculturaApiService.getAllDatosForma()
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe((datos) => {
-      this.formulariodataStore = datos.datos;
-      this.cuerpoTabla = datos.tablaDatos;      
-      this.createFromFields(); 
-    });
+    this.agriculturaApiService
+      .getAllDatosForma()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos) => {
+        this.formulariodataStore = datos.datos;
+        this.cuerpoTabla = datos.tablaDatos;
+        this.createFromFields();
+      });
 
-  this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.esFormularioSoloLectura = seccionState.readonly;
-        this.inicializarEstadoFormulario();
-      })
-    )
-    .subscribe();
-
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+          this.esFormularioSoloLectura = seccionState.readonly;
+          if (
+            seccionState.parameter ===
+            'FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO'
+          ) {
+            this.mostrarSolicitudTabla = false;
+          }
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -278,17 +482,23 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
-   this.forma?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe(() => {
-    const FORMA_VALIDA_ACTUALIZADA = {
-      datosFormaValidacion: false,
-    };
-    FORMA_VALIDA_ACTUALIZADA.datosFormaValidacion = this.forma?.valid ? true : false;
-    this.agriculturaApiService.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
-  });
-  this.obtenerTodosLosDatosDeLaLista();
-  this.createFromFields();
+    this.forma?.valueChanges
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(() => {
+        const FORMA_VALIDA_ACTUALIZADA = {
+          datosFormaValidacion: false,
+        };
+        FORMA_VALIDA_ACTUALIZADA.datosFormaValidacion = this.forma?.valid
+          ? true
+          : false;
+        this.agriculturaApiService.actualizarFormaValida(
+          FORMA_VALIDA_ACTUALIZADA
+        );
+      });
+    this.obtenerTodosLosDatosDeLaLista();
+    this.createFromFields();
   }
-  
+
   /**
    * @description Inicializa el estado del formulario dependiendo si está en modo solo lectura o edición.
    * Si el formulario está en modo solo lectura, deshabilita los campos; de lo contrario, los habilita y crea los campos del formulario.
@@ -296,13 +506,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   inicializarEstadoFormulario(): void {
-      if (this.esFormularioSoloLectura) {
-        this.guardarDatosFormulario();
-      } else {
-        this.createFromFields();
-      }  
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.createFromFields();
+    }
   }
-  
+
   /**
    * @description Habilita o deshabilita el formulario según el modo de solo lectura.
    * Si el formulario está en modo solo lectura, deshabilita todos los controles; si no, los habilita.
@@ -310,22 +520,25 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   guardarDatosFormulario(): void {
-      if (this.esFormularioSoloLectura) {
-        this.forma.disable();
-      } else {
-        this.forma.enable();
-      }
+    if (this.esFormularioSoloLectura) {
+      this.forma.disable();
+    } else {
+      this.forma.enable();
+    }
   }
-  
+
   /**
    * @description Crea los campos del formulario y los agrupa en un `FormGroup`.
-   * Inicializa el formulario principal (`forma`) con los controles para los datos de la solicitud, 
+   * Inicializa el formulario principal (`forma`) con los controles para los datos de la solicitud,
    * incluyendo un `FormArray` para las mercancías.
    * @method createFromFields
    * @returns {void}
    */
-  createFromFields():void {
+  createFromFields(): void {
     this.forma = this.fb.group(this.inicializarCamposFormulario());
+    if (this.forma) {
+      this.notificationCheck = true;
+    }
   }
 
   /**
@@ -335,7 +548,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   inicializarCamposFormulario(): Record<string, unknown> {
     return {
       ...this.crearCamposRequeridos(),
-      ...this.crearCamposOpcionales(),
     };
   }
 
@@ -347,31 +559,52 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   crearCamposRequeridos(): Record<string, unknown> {
     const FORMULARIO = this.formulariodataStore;
     return {
-      aduanaDeIngreso: [{ value: FORMULARIO.aduanaDeIngreso || '', disabled: this.esFormularioSoloLectura }, Validators.required],
-      oficinaDeInspeccion: [{ value: FORMULARIO.oficinaDeInspeccion || '', disabled: this.esFormularioSoloLectura }, Validators.required],
-      puntoDeInspeccion: [{ value: FORMULARIO.puntoDeInspeccion || '', disabled: this.esFormularioSoloLectura }, Validators.required],
-      regimen: [{ value: FORMULARIO.regimen || '', disabled: this.esFormularioSoloLectura }, Validators.required],
-      numeroDeGuia: [{ value: FORMULARIO.numeroDeGuia || '', disabled: this.esFormularioSoloLectura }],
-      numeroDeCarro: [{ value: FORMULARIO.numeroDeCarro || '', disabled: this.esFormularioSoloLectura }],
+      tipoMercancia: [
+        { value: 'yes', disabled: this.esFormularioSoloLectura },
+        Validators.required,
+      ],
+      aduanaDeIngreso: [
+        {
+          value: FORMULARIO.aduanaDeIngreso || '',
+          disabled: this.esFormularioSoloLectura,
+        },
+        Validators.required,
+      ],
+      oficinaDeInspeccion: [
+        {
+          value: FORMULARIO.oficinaDeInspeccion || '',
+          disabled: this.esFormularioSoloLectura,
+        },
+        Validators.required,
+      ],
+      puntoDeInspeccion: [
+        {
+          value: FORMULARIO.puntoDeInspeccion || '',
+          disabled: this.esFormularioSoloLectura,
+        },
+        Validators.required,
+      ],
+      regimen: [
+        {
+          value: FORMULARIO.regimen || '',
+          disabled: this.esFormularioSoloLectura,
+        },
+        Validators.required,
+      ],
+      numeroDeGuia: [
+        {
+          value: FORMULARIO.numeroDeGuia || '',
+          disabled: this.esFormularioSoloLectura,
+        },
+      ],
+      numeroDeCarro: [
+        {
+          value: FORMULARIO.numeroDeCarro || '',
+          disabled: this.esFormularioSoloLectura,
+        },
+      ],
     };
   }
-  
-  /**
-   * Método para crear campos opcionales del formulario.
-   * @param FORMULARIO Datos de formulariodataStore.
-   * @returns Objeto con los campos opcionales.
-   */
-   crearCamposOpcionales(): Record<string, unknown> {
-     const FORMULARIO = this.formulariodataStore;
-     return {
-       numeroDeGuia: [{ value: FORMULARIO.numeroDeGuia || '', disabled: this.esFormularioSoloLectura }],
-       requisito: [{ value: FORMULARIO.requisito || '', disabled: this.esFormularioSoloLectura }],
-       numeroCertificadoInternacional: [{ value: FORMULARIO.numeroCertificadoInternacional || '', disabled: this.esFormularioSoloLectura }],
-       descripcionFraccion: [{ value: FORMULARIO.descripcionFraccion || '', disabled: this.esFormularioSoloLectura }],
-       descripcionNico: [{ value: FORMULARIO.descripcionNico || '', disabled: this.esFormularioSoloLectura }],
-       descripcion: [{ value: FORMULARIO.descripcion || '', disabled: this.esFormularioSoloLectura }],
-     };
-   }
 
   /**
    * @description Obtiene todos los datos para las listas de opciones (selects) del formulario.
@@ -405,10 +638,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @method getaduanaLista
    * @returns {void}
    */
-  getaduanaLista():void {
-    this.agriculturaApiService.obtenerSelectorList('aduana_de_ingreso.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      this.aduanaList = data as Catalogo[];
-    })
+  getaduanaLista(): void {
+    this.agriculturaApiService
+      .obtenerSelectorList('aduana_de_ingreso.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.aduanaList = data as Catalogo[];
+      });
   }
 
   /**
@@ -417,9 +653,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getagropecuariaLista(): void {
-    this.agriculturaApiService.obtenerSelectorList('aduana_de_ingreso.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      this.agropecuariaList = data as Catalogo[];
-    })
+    this.agriculturaApiService
+      .obtenerSelectorList('aduana_de_ingreso.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.agropecuariaList = data as Catalogo[];
+      });
   }
 
   /**
@@ -428,9 +667,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getPuntoLista(): void {
-    this.agriculturaApiService.obtenerSelectorList('punto.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      this.puntoList = data as Catalogo[];
-    })
+    this.agriculturaApiService
+      .obtenerSelectorList('punto.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.puntoList = data as Catalogo[];
+      });
   }
 
   /**
@@ -439,9 +681,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getRegimenLista(): void {
-    this.agriculturaApiService.obtenerSelectorList('regimen.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      this.regimeList = data as Catalogo[];
-    })
+    this.agriculturaApiService
+      .obtenerSelectorList('regimen.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.regimeList = data as Catalogo[];
+      });
   }
 
   /**
@@ -450,9 +695,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getArancelariaLista(): void {
-    this.agriculturaApiService.obtenerSelectorList('nombre.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      this.arancelariaList = data as Catalogo[];
-    })
+    this.agriculturaApiService
+      .obtenerSelectorList('nombre.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.arancelariaList = data as Catalogo[];
+      });
   }
 
   /**
@@ -460,10 +708,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @method getNicoLista
    * @returns {void}
    */
-  getNicoLista():void {
-    this.agriculturaApiService.obtenerSelectorList('nombre.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      this.nicoList = data as Catalogo[];
-    })
+  getNicoLista(): void {
+    this.agriculturaApiService
+      .obtenerSelectorList('nombre.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.nicoList = data as Catalogo[];
+      });
   }
 
   /**
@@ -472,9 +723,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getUmCLista(): void {
-    this.agriculturaApiService.obtenerSelectorList('nombre.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      this.umcList = data as Catalogo[];
-    })
+    this.agriculturaApiService
+      .obtenerSelectorList('nombre.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.umcList = data as Catalogo[];
+      });
   }
 
   /**
@@ -483,9 +737,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getusoLista(): void {
-    this.agriculturaApiService.obtenerSelectorList('nombre.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      this.usoList = data as Catalogo[];
-    });
+    this.agriculturaApiService
+      .obtenerSelectorList('nombre.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.usoList = data as Catalogo[];
+      });
   }
 
   /**
@@ -494,8 +751,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getProductoLista(): void {
-    this.agriculturaApiService.obtenerSelectorList('nombre.json')
-      .pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+    this.agriculturaApiService
+      .obtenerSelectorList('nombre.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
         this.productoList = data as Catalogo[];
       });
   }
@@ -504,38 +763,114 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @description Actualiza los datos almacenados en el store.
    * @method setValoresStore
    */
-  setValoresStore(
-    _forma?: FormGroup,
-    _campo?: string
-  ): void {
+  setValoresStore(_forma?: FormGroup, _campo?: string): void {
     const VALOR = this.forma.value;
-    (this.agriculturaApiService.updateDatosForma as (value: DatosForma) => void)(VALOR);
+    (
+      this.agriculturaApiService.updateDatosForma as (value: DatosForma) => void
+    )(VALOR);
   }
 
   /**
    * Maneja la selección de una fila en la tabla de solicitudes.
    *
    * Cuando se selecciona una fila, este método actualiza los valores del formulario (`forma`)
-   * con datos predefinidos relacionados con la solicitud seleccionada.
+   * con datos predefinidos relacionados con la solicitud seleccionada, usando los IDs correctos de los catálogos.
    *
    * @param event - Objeto de tipo `SolicitudFilaTabla` que representa la fila seleccionada en la tabla.
    */
   seleccionFila(event: SolicitudFilaTabla): void {
     if (event) {
       this.forma.patchValue({
-        aduanaDeIngreso: "1",
-        oficinaDeInspeccion: "1",
-        puntoDeInspeccion: "1",
-        numeroDeGuia: "GUIA123456",
-        regimen: "1",
-        numeroDeCarro: "CARRO7890",
-        requisito: "Certificado Zoosanitario",
-        numeroCertificadoInternacional: "CERTINTL2024",
-        descripcionFraccion: "Caballos de raza pura",
-        descripcionNico: "Caballos para carreras",
-        descripcion: "Importación de caballos de carreras"
+        aduanaDeIngreso: '1',
+        oficinaDeInspeccion: '1',
+        puntoDeInspeccion: '1',
+        numeroDeGuia: 'GUIA123456',
+        regimen: '1',
+        numeroDeCarro: 'CARRO7890',
+        requisito: 'Certificado Zoosanitario',
+        numeroCertificadoInternacional: 'CERTINTL2024',
+        descripcionFraccion: 'Caballos de raza pura',
+        descripcionNico: 'Caballos para carreras',
+        descripcion: 'Importación de caballos de carreras',
       });
     }
+  }
+
+  /**
+   * @description Getter que indica si hay registros seleccionados en la tabla.
+   * @returns {boolean} true si hay al menos un registro seleccionado, false en caso contrario.
+   */
+  get tieneRegistrosSeleccionados(): boolean {
+    const SELECTED_DATA = this.fitosanitarioStore.getValue().selectedDatos;
+    return SELECTED_DATA && SELECTED_DATA.length > 0;
+  }
+
+  /**
+   * @description Navega a la página de agregar mercancía.
+   * Este método redirige al usuario a la ruta relativa 'mercancia-form' para agregar una nueva mercancía.
+   * @method agregarMercancia
+   * @returns {void}
+   */
+  agregarMercancia(): void {
+    this.seleccionTabla([]);
+    this.modalRef.abrir(AgregarMercanciaComponent);
+  }
+
+  /**
+   * @description Selecciona una fila de la tabla de solicitudes y actualiza el estado del store.
+   * Este método se llama cuando se selecciona una fila en la tabla de solicitudes.
+   * Actualiza el estado del store con los datos de la fila seleccionada.
+   * @method seleccionTabla
+   * @param {FilaSolicitud} event - Datos de la fila seleccionada.
+   */
+  seleccionTabla(event: FilaSolicitud[]): void {
+    this.fitosanitarioStore.update((state) => ({
+      ...state,
+      selectedDatos: event,
+    }));
+  }
+
+  /**
+   * @description Navega a la página de modificar mercancía.
+   * Este método redirige al usuario a la ruta relativa '../mercancia-form' para modificar una mercancía existente.
+   * Solo permite la navegación si hay al menos un registro seleccionado.
+   * Mantiene los datos seleccionados en el store para pre-llenar el formulario.
+   * @method modificarMercancia
+   * @returns {void}
+   */
+  modificarMercancia(): void {
+    const SELECTED_DATA = this.fitosanitarioStore.getValue().selectedDatos;
+    // Verificar si hay al menos un registro seleccionado
+    if (!SELECTED_DATA || SELECTED_DATA.length === 0) {
+      // Si no hay registros seleccionados, no realizar ninguna acción
+      return;
+    }
+    // Si hay datos seleccionados, abrir el modal con el componente de agregar/modificar mercancía
+    this.modalRef.abrir(AgregarMercanciaComponent);
+  }
+
+  /**
+   * @description Elimina mercancía seleccionada directamente sin confirmación.
+   * @method eliminarMercancia
+   * @returns {void}
+   */
+  eliminarMercancia(): void {
+      const VALOR = this.fitosanitarioStore.getValue().tablaDatos;
+      if (VALOR.length === 0) {
+        return;
+      }
+      const FILTERED_VALOR = VALOR.filter(
+        (item) => !this.fitosanitarioStore.getValue().selectedDatos.includes(item)
+      );
+      this.fitosanitarioStore.update(
+        (state) => ({
+          ...state,
+          tablaDatos: FILTERED_VALOR
+        })
+      );
+      
+      // Limpiar selección después de eliminar
+      this.seleccionTabla([]);
   }
 
   /**
@@ -546,5 +881,43 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+    /**
+   * Elimina un pedimento de la lista si el parámetro `borrar` es verdadero.
+   * @method eliminarPedimento
+   * @param borrar - Indica si se debe eliminar el pedimento seleccionado.
+   */
+  eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.moduloEmergente = false;
+    }
+  }
+
+  /**
+  * Elimina un pedimento de la lista si el parámetro `borrar` es verdadero.
+  * @method eliminarPedimento
+  * @param borrar - Indica si se debe eliminar el pedimento seleccionado.
+  */
+  eliminarPedimentoDatos(borrar: boolean): void {
+    if (borrar) {
+      this.eliminarDatosTabla = false;
+      const VALOR = this.fitosanitarioStore.getValue().tablaDatos;
+      if (VALOR.length === 0) {
+        return;
+      }
+      const FILTERED_VALOR = VALOR.filter(
+        (item) => !this.fitosanitarioStore.getValue().selectedDatos.includes(item)
+      );
+      this.fitosanitarioStore.update(
+        (state) => ({
+          ...state,
+          tablaDatos: FILTERED_VALOR
+        })
+      );
+    }
+    else {
+      this.eliminarDatosTabla = false;
+    }
   }
 }

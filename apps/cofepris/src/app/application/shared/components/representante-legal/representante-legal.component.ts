@@ -40,6 +40,17 @@ export class RepresentanteLegalComponent implements OnInit {
    */
   representanteLegalForm!: FormGroup;
 
+   /**
+   * Obtiene el valor de un campo en el store de Tramite31601.
+   */
+  obtenerValor(): void {
+    this.representanteLegalForm.patchValue({
+      nombreRazonSocial: 47875,
+      apellidoPaterno: 'Paterno',
+      apellidoMaterno: 'Materno',
+    });
+  }
+
   /**
    * @description
    * Estado actual de la solicitud.

@@ -1,5 +1,5 @@
 {
-    "seleccionadaManifiesto": [true, false, false, false, false],
+    "seleccionadaManifiesto": [true, true, true, true, true],
     "aduana": "1",
     "seleccionadaBasicoRequerimiento": [true, false, false, false, false, false],
 
@@ -76,5 +76,9 @@
     "codigoPostalDonatario": "32688",
     "cvePaisDonatario": "1",
     "correoElectronicoDonatario": "wfsrtuhv@trpxjle.ker.no",
-    "telefonoDonatario": "656-238-5662"    
+    "telefonoDonatario": "656-238-5662",
+    "seleccionadaTipoDeMercancia": 4,
+    "medicoDescripcion": "Medico Descripcion",
+    "paisProcedencia": "Pais Procedencia",
+    "paisMedicoOrigen": "Pais Medico Origen"
 }

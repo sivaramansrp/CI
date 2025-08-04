@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ConsultaioQuery, SeccionLibStore, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { CapturarSolicitud } from '../../models/220201/capturar-solicitud.model';
@@ -8,6 +8,7 @@ import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solici
 import { DatosParaMovilizacionNacionalComponent } from '../../components/datos-para-movilizacion-nacional/datos-para-movilizacion-nacional.component';
 import { PagoDeDerechosComponent } from '../../components/pago-de-derechos/pago-de-derechos.component';
 import { TercerospageComponent } from '../../components/tercerospage/tercerospage.component';
+import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
 
 /**
  * @fileoverview Componente para el asistente de solicitud.
@@ -29,8 +30,8 @@ import { TercerospageComponent } from '../../components/tercerospage/tercerospag
   templateUrl: './paso-uno.component.html',
   styleUrls: ['./paso-uno.component.scss'],
   standalone: true,
-  imports:[SolicitanteComponent,DatosDeLaSolicitudComponent,
-      DatosParaMovilizacionNacionalComponent,PagoDeDerechosComponent,TercerospageComponent,CommonModule]
+  imports: [SolicitanteComponent, DatosDeLaSolicitudComponent,
+    DatosParaMovilizacionNacionalComponent, PagoDeDerechosComponent, TercerospageComponent, CommonModule]
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
@@ -58,6 +59,32 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     { index: 4, title: 'Terceros relacionados', component: 'terceror-relacionados' },
     { index: 5, title: 'Pago de derechos', component: 'pago-de-derechos' }
   ];
+  /**
+ * @property solicitante - Referencia al componente `SolicitanteComponent` que se utiliza para manejar
+ *                          la lógica y los datos relacionados con el solicitante en este paso del trámite.
+ * @command Este decorador `@ViewChild` permite acceder al componente hijo para interactuar con sus métodos y propiedades.
+ */
+  @ViewChild('solicitanteRef') solicitante!: SolicitanteComponent;
+
+  /**
+* @property solicitante - Referencia al componente `SolicitanteComponent` que se utiliza para manejar
+*                          la lógica y los datos relacionados con el solicitante en este paso del trámite.
+* @command Este decorador `@ViewChild` permite acceder al componente hijo para interactuar con sus métodos y propiedades.
+*/
+  @ViewChild('datosDeLaSolicitudRef') datosDelaSolicitu!: DatosDeLaSolicitudComponent;
+  /**
+* @property solicitante - Referencia al componente `SolicitanteComponent` que se utiliza para manejar
+*                          la lógica y los datos relacionados con el solicitante en este paso del trámite.
+* @command Este decorador `@ViewChild` permite acceder al componente hijo para interactuar con sus métodos y propiedades.
+*/
+  @ViewChild('datosParaMovilizacionNacionalRef') datosParaMovilizacionNacional!: DatosParaMovilizacionNacionalComponent;
+  /**
+* @property solicitante - Referencia al componente `SolicitanteComponent` que se utiliza para manejar
+*                          la lógica y los datos relacionados con el solicitante en este paso del trámite.
+* @command Este decorador `@ViewChild` permite acceder al componente hijo para interactuar con sus métodos y propiedades.
+*/
+  @ViewChild('padoDeRef') pagoDeDerechosComponent!: PagoDeDerechosComponent;
+
 
   /**
    * Constructor del componente.
@@ -70,11 +97,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   constructor(
     private readonly seccionStore: SeccionLibStore,
     private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    public certificadoZoosanitarioStore: ZoosanitarioStore
   ) {
-    this.seccionStore.establecerFormaValida([false]);
-    this.seccionStore.establecerSeccion([true]);
+
   }
+
 
   /**
    * Ciclo de vida de Angular que se ejecuta al iniciar el componente.
@@ -99,7 +127,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.certificadoZoosanitarioServices.guardarDatosFormulario()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
-        this.certificadoZoosanitarioServices.storeDatosFormulario(data as CapturarSolicitud);
+        this.certificadoZoosanitarioStore.actualizarTodoElEstado(data as CapturarSolicitud);
+        this.seccionStore.establecerFormaValida([true]);
+        this.seccionStore.establecerSeccion([true]);
       }, (error) => {
         console.error(error);
       });
@@ -119,8 +149,60 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
-    this.tabChanged.emit(i);
   }
+  /**
+   * @description
+   * Valida los formularios de los diferentes componentes hijos del paso uno del trámite.
+   * 
+   * Este método verifica si los formularios de los componentes `solicitante`, `datosDelaSolicitu`,
+   * `datosParaMovilizacionNacional` y `pagoDeDerechosComponent` son válidos. Si alguno de ellos es inválido
+   * o no está presente, el método retorna `false`. Además, marca todos los campos del formulario de solicitante
+   * como tocados si es inválido para mostrar los errores de validación.
+   * 
+   * @returns {boolean} `true` si todos los formularios son válidos y existen, `false` en caso contrario.
+   */
+  public validarFormularios(): boolean {
+    let isValid = true;
+
+    if (this.solicitante?.form) {
+      if (this.solicitante.form.invalid) {
+        this.solicitante.form.markAllAsTouched();
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.datosDelaSolicitu) {
+      if (!this.datosDelaSolicitu.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.datosParaMovilizacionNacional) {
+      if (!this.datosParaMovilizacionNacional.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.pagoDeDerechosComponent) {
+      if (!this.pagoDeDerechosComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
+
+
+
 
   /**
    * Ciclo de vida de Angular que se ejecuta al destruir el componente.

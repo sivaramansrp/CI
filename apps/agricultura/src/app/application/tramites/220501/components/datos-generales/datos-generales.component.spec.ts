@@ -91,7 +91,7 @@ describe('DatosGeneralesComponent', () => {
     jest.spyOn(component, 'getEmpresaTransportista');
     jest.spyOn(component, 'actualizarDatosDelaSolicitud');
 
-    component.ngOnInit();
+    component.inicializarFormulario();
 
     expect(component.getAduanaIngreso).toHaveBeenCalled();
     expect(component.getOficianaInspeccion).toHaveBeenCalled();

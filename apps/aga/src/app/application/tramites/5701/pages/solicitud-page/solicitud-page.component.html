@@ -1,5 +1,12 @@
 <div class="page">
   <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <h1 *ngIf="!cargarArchivosEvento">Solicitud servicios extraordinarios</h1>
+        <h1 *ngIf="cargarArchivosEvento">Cargar Archivos</h1>
+      </div>
+    </div>
+
     <div class="row mt-5" *ngIf="indice === 2">
       <div class="col-md-12">
         <lib-notificaciones
@@ -8,9 +15,9 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-md-6">
-        <h1>Solicitud servicios extraordinarios</h1>
+    <div class="row mt-5" *ngIf="indice === 2">
+      <div class="col-md-12">
+        <ng-titulo titulo="Requisitos opcionales" />
       </div>
     </div>
 
@@ -54,22 +61,33 @@
           </button>
 
           <button
+            class="btn btn-primary ms-3"
+            (click)="
+              onClickCargaArchivos() 
+            "
+            [disabled]="!regresarSeccionCargarDocumentoEvento "
+            *ngIf="seccionCargarDocumentos"
+          >
+            Cargar archivos
+          </button>
+
+          <button
             type="button"
             class="btn btn-default ms-3"
             (click)="anteriorSeccionCargarDocumento()"
             *ngIf="!seccionCargarDocumentos"
           >
             Anterior
-          </button>
+          </button>   
 
           <button
             class="btn btn-primary ms-3"
             (click)="
-              seccionCargarDocumentos ? onClickCargaArchivos() : siguiente()
+              siguiente()
             "
-            [disabled]="!activarBotonCargaArchivos && seccionCargarDocumentos"
+            
           >
-            {{ seccionCargarDocumentos ? 'Cargar archivos' : 'Continuar' }}
+          Continuar
           </button>
         </div>
         }

@@ -1,28 +1,34 @@
-import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import {
+  BsDatepickerConfig,
+  BsDatepickerModule,
+} from 'ngx-bootstrap/datepicker';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
+import {
+  ConfiguracionColumna,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  ProgramasReporte,
+  ReporteFechas,
+} from '../../models/programas-reporte.model';
+import {
+  Solicitud150102State,
+  Solicitud150102Store,
+} from '../../estados/solicitud150102.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { EventEmitter } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
-import { ProgramasReporte } from '../../models/programas-reporte.model';
-import { ReactiveFormsModule } from '@angular/forms';
-import { ReporteFechas } from '../../models/programas-reporte.model';
+import { ConsultaioQuery } from "@ng-mf/data-access-user";
 import { Solicitud150102Query } from '../../estados/solicitud150102.query';
-import { Solicitud150102State } from '../../estados/solicitud150102.store';
-import { Solicitud150102Store } from '../../estados/solicitud150102.store';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Subject } from 'rxjs';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * @description Componente para gestionar el reporte anual de programas.
@@ -105,6 +111,12 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Índice que representa la posición del registro actual dentro de la lista de programas.
+   * Se utiliza para identificar o acceder al programa seleccionado en operaciones de edición o visualización.
+   */
+  indiceDeRegistroDelPrograma!: number;
 
   /**
    * @description Constructor que inicializa los servicios y estado necesarios.
@@ -209,9 +221,11 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
             fin: this.solicitud150102State.fin,
             folioPrograma: this.solicitud150102State.folioPrograma,
             modalidad: this.solicitud150102State.modalidad,
-            tipoPrograma: this.solicitud150102State.folioPrograma,
+            tipoPrograma: this.solicitud150102State.tipoPrograma,
             estatus: this.solicitud150102State.estatus,
           });
+          this.indiceDeRegistroDelPrograma =
+            this.solicitud150102State.indiceDeRegistroDelPrograma;
         })
       )
       .subscribe();
@@ -253,6 +267,10 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
    * @param evento Objeto que contiene los datos del programa seleccionado.
    */
   actualizarProgramasReporte(evento: ProgramasReporte): void {
+    const INDEX = this.solicitudDatos.findIndex(
+      (x) => x.folioPrograma === evento.folioPrograma
+    );
+    this.solicitud150102Store.actualizarIndiceDeRegistroDelPrograma(INDEX);
     this.solicitud150102Store.actualizarFolioPrograma(evento.folioPrograma);
     this.solicitud150102Store.actualizarModalidad(evento.modalidad);
     this.solicitud150102Store.actualizarTipoPrograma(evento.tipoPrograma);

@@ -1,119 +1,96 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudDatosComponent } from './SolicitudDatos.component';
-import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
-import { from, of } from 'rxjs';
 import { FormBuilder } from '@angular/forms';
-import { CargarDatosIniciales } from '../../models/solicitud-pantallas.model';
-import { DatosDelTramiteARealizarComponent } from '../../shared/datos-del-tramite-a-realizar/datos-del-tramite-a-realizar.component';
-import { MedioTransporteComponent } from '../../shared/medio-transporte/medio-transporte.component';
-import { ResponsableInspeccionEnPuntoComponent } from '../../shared/responsable-inspeccion-en-punto/responsable-inspeccion-en-punto.component';
-import { SolicitudDatosTabComponent } from '../../shared/solicitud-datos/solicitud-datos.component';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import {SharedModule, WizardComponent} from "@ng-mf/data-access-user";
+import { of } from 'rxjs';
+import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
+
 describe('SolicitudDatosComponent', () => {
   let component: SolicitudDatosComponent;
-  let fixture: ComponentFixture<SolicitudDatosComponent>;
-  let solicitudServiceMock: jest.Mocked<SolicitudPantallasService>;
-
-  beforeEach(async () => {
-    solicitudServiceMock = {
-      getData: jest.fn(),
-    } as unknown as jest.Mocked<SolicitudPantallasService>;
-
-    await TestBed.configureTestingModule({
-      imports: [
-        SolicitudDatosComponent,
-        CommonModule,
-        ReactiveFormsModule,
-        SolicitudDatosTabComponent,
-        DatosDelTramiteARealizarComponent,
-        ResponsableInspeccionEnPuntoComponent,
-        MedioTransporteComponent,
-        RouterModule,
-        FormsModule,
-        HttpClientModule,
-        WizardComponent,
-        SharedModule,
-      ],
-      providers: [
-        FormBuilder,
-        { provide: SolicitudPantallasService, useValue: solicitudServiceMock },
-      ],
-    }).compileComponents();
-  });
+  let mockService: Partial<SolicitudPantallasService>;
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SolicitudDatosComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    mockService = {
+      getData: jest.fn().mockReturnValue(
+        of({
+          hHistorialinspeccion: ['header1'],
+          dHistorialInspecciones: [{ id: 1 }],
+          dCarrosDeFerrocarril: [{ id: 2 }],
+          hCarroFerrocarril: ['carroHeader'],
+          hSolicitud: ['solicitudHeader'],
+          dSolicitud: [{ id: 3 }],
+          hMerchandise: ['mercanciaHeader'],
+          dMercancia: [{ id: 4 }],
+          medioDeTransporte: { id: 5, nombre: 'camion' }
+        })
+      )
+    };
+
+    component = new SolicitudDatosComponent(new FormBuilder(), mockService as SolicitudPantallasService);
+
+    component.datosDelTramiteARealizar = {
+      validarFormularios: jest.fn(() => true)
+    } as any;
+
+    component.responsableInspeccionEnPunto = {
+      validarFormularios: jest.fn(() => true)
+    } as any;
+
+    component.medioTransporte = {
+      validarFormularios: jest.fn(() => true)
+    } as any;
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form group', () => {
-    expect(component.form).toBeDefined();
+  it('debe tener valores por defecto', () => {
+    expect(component.form).toBeTruthy();
+    expect(component.hMercanciaTabla).toEqual([]);
+    expect(component.dMercanciaBody).toEqual([]);
+    expect(component.hSolicitud).toEqual([]);
+    expect(component.dSolicitud).toEqual([]);
+    expect(component.hCarroFerrocarril).toEqual([]);
+    expect(component.dCarrosDeFerrocarril).toEqual([]);
+    expect(component.hHistorialinspeccion).toEqual([]);
+    expect(component.dHistorialInspecciones).toEqual([]);
+    expect(component.tableData).toEqual({ tableBody: [], tableHeader: [] });
   });
 
-  it('should call cargarDatosIniciales on ngOnInit', () => {
-    const cargarDatosInicialesSpy = jest.spyOn(
-      component,
-      'cargarDatosIniciales'
-    );
+  it('debe llamar validarFormularios y retornar true si todos los hijos retornan true', () => {
+    const result = component.validarFormularios();
+    expect(result).toBe(true);
+    expect(component.datosDelTramiteARealizar.validarFormularios).toHaveBeenCalled();
+    expect(component.responsableInspeccionEnPunto.validarFormularios).toHaveBeenCalled();
+    expect(component.medioTransporte.validarFormularios).toHaveBeenCalled();
+  });
+
+  it('debe retornar false si alguna validación de hijo falla', () => {
+    component.medioTransporte.validarFormularios = jest.fn(() => false);
+    const result = component.validarFormularios();
+    expect(result).toBe(false);
+  });
+
+  it('debe cargar los datos iniciales en ngOnInit', () => {
     component.ngOnInit();
-    expect(cargarDatosInicialesSpy).toHaveBeenCalled();
+
+    expect(component.hHistorialinspeccion.length).toBeGreaterThan(0);
+    expect(component.dHistorialInspecciones.length).toBeGreaterThan(0);
+    expect(component.dCarrosDeFerrocarril.length).toBeGreaterThan(0);
+    expect(component.hCarroFerrocarril.length).toBeGreaterThan(0);
+    expect(component.hSolicitud.length).toBeGreaterThan(0);
+    expect(component.dSolicitud.length).toBeGreaterThan(0);
+    expect(component.hMercanciaTabla.length).toBeGreaterThan(0);
+    expect(component.dMercanciaBody.length).toBeGreaterThan(0);
+    expect(component.mediodetransporte).toBeDefined();
   });
 
-  it('should load initial data from the service', () => {
-    const mockData: CargarDatosIniciales = {
-      hHistorialinspeccion: ['Header1', 'Header2'],
-      dHistorialInspecciones: [],
-      dCarrosDeFerrocarril: [],
-      hCarroFerrocarril: ['Header3'],
-      hSolicitud: ['Header4'],
-      dSolicitud: [],
-      hMerchandise: ['Header5'],
-      dMercancia: [],
-      medioDeTransporte: {
-        labelNombre: 'test',
-        required: true,
-        primerOpcion: 'string',
-        catalogos: [],
-      },
-    };
+  it('debe limpiar las suscripciones en ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component.destroyed$, 'next');
+    const completeSpy = jest.spyOn(component.destroyed$, 'complete');
 
-    solicitudServiceMock.getData.mockReturnValue(of(mockData));
-
-    component.cargarDatosIniciales();
-
-    expect(component.hHistorialinspeccion).toEqual(
-      mockData.hHistorialinspeccion
-    );
-    expect(component.dHistorialInspecciones).toEqual(
-      mockData.dHistorialInspecciones
-    );
-    expect(component.dCarrosDeFerrocarril).toEqual(
-      mockData.dCarrosDeFerrocarril
-    );
-    expect(component.hCarroFerrocarril).toEqual(mockData.hCarroFerrocarril);
-    expect(component.hSolicitud).toEqual(mockData.hSolicitud);
-    expect(component.dSolicitud).toEqual(mockData.dSolicitud);
-    expect(component.hMercanciaTabla).toEqual(mockData.hMerchandise);
-    expect(component.dMercanciaBody).toEqual(mockData.dMercancia);
-    expect(component.mediodetransporte).toEqual(mockData.medioDeTransporte);
-  });
-
-  it('should unsubscribe from observables on ngOnDestroy', () => {
-    const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
     component.ngOnDestroy();
-    expect(destroyedSpy).toHaveBeenCalled();
+
+    expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
-  
 });

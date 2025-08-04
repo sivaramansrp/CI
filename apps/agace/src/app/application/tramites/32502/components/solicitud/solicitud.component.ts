@@ -11,6 +11,7 @@ import { Tramite32502Query } from '../../../../estados/queries/tramite32502.quer
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 
 
+
 /**
  * Componente para la vista de la solicitud de la sección de "32502".
  */
@@ -28,8 +29,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
     public fechaInicioInput: InputFecha = {
       labelNombre: 'Fecha Aproximada Importacion',
-      required: false,
-      habilitado: false,
+      required: true,
+      habilitado: true,
     };
 
   /**
@@ -171,6 +172,22 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   isValid(form: FormGroup, field: string): boolean | null {
     return this.validacionesService.isValid(form, field);
   }
+ /*
+  * Método para permitir solo números en un campo de entrada.
+  * @param event Evento de teclado que se dispara al presionar una tecla.
+  * @return {void}
+  * Este método previene la entrada de cualquier carácter que no sea un dígito del 0 al 9.
+  * Se utiliza una expresión regular para verificar si el carácter ingresado es un número.
+  * Si el carácter no es un número, se previene la acción predeterminada del evento.
+  * @param {KeyboardEvent} event - Evento de teclado que se dispara al presionar una tecla.
+  * @return {void}
+  */
+  allowOnlyNumbers(event: KeyboardEvent): void {
+    const charCode = event.key;
+    if (!/^\d$/.test(charCode)) {
+      event.preventDefault();
+    }
+  }
 
   /**
    * Método para crear el formulario principal de la solicitud.
@@ -186,113 +203,115 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     .subscribe()
     this.FormSolicitud = this.fb.group({
       adaceForm: this.fb.group({
-        adace: [
-          { value: this.seccionState?.adace || 'Centro', disabled: true }
-        ]
+      adace: [
+        { value: this.seccionState?.adace || 'Centro', disabled: true }
+      ]
       }),
       extranjeroAvisoAgace: this.fb.group({
-        razonSocial: [
-          this.seccionState?.razonSocial || '',
-          Validators.required
-        ],
-        rfc: [
-          this.seccionState?.rfc,
-          Validators.required
-        ],
-        rfcExtranjero: [
-          this.seccionState?.rfcExtranjero,
-          Validators.required
-        ]
+      razonSocial: [
+        this.seccionState?.razonSocial || '',
+        Validators.required
+      ],
+      rfc: [
+        this.seccionState?.rfc,
+        Validators.required
+      ],
+      rfcExtranjero: [
+        this.seccionState?.rfcExtranjero,
+        Validators.required
+      ]
       }),
       mercanciaST: this.fb.group({
-        cveFraccionArancelaria: [
-          this.seccionState?.cveFraccionArancelaria,
-          Validators.required
-        ],
-        reglaFraccion: [
-          this.seccionState?.reglaFraccion,
-          Validators.required
-        ],
-        nico: [
-          this.seccionState?.nico,
-          Validators.required
-        ],
-        valorUSD: [
-          this.seccionState?.valorUSD,
-          Validators.required
-        ],
-        marca: [
-          this.seccionState?.marca,
-          Validators.required
-        ],
-        peso: [
-          this.seccionState?.peso,
-          Validators.required
-        ],
-        fechaInicio: [
-          this.seccionState?.fechaInicio,
-          Validators.required
-        ],
-        numeroSerie: [
-          this.seccionState?.numeroSerie,
-          Validators.required
-        ],
-        descripcionMercancia: [
-          this.seccionState?.descripcionMercancia,
-          Validators.required
-        ]
+      cveFraccionArancelaria: [
+        this.seccionState?.cveFraccionArancelaria,
+        Validators.required
+      ],
+      reglaFraccion: [
+        this.seccionState?.reglaFraccion,
+        Validators.required
+      ],
+      nico: [
+        this.seccionState?.nico,
+        Validators.required
+      ],
+      valorUSD: [
+        this.seccionState?.valorUSD,
+        Validators.required
+      ],
+      marca: [
+        this.seccionState?.marca,
+        Validators.required
+      ],
+      peso: [
+        this.seccionState?.peso,
+        Validators.required
+      ],
+      fechaInicio: [
+        this.seccionState?.fechaInicio,
+        Validators.required
+      ],
+      numeroSerie: [
+        this.seccionState?.numeroSerie,
+        Validators.required
+      ],
+      descripcionMercancia: [
+        this.seccionState?.descripcionMercancia,
+        Validators.required
+      ]
       }),
       direccionST: this.fb.group({
-        informacionExtra: [
-          this.seccionState?.informacionExtra,
-          Validators.required
-        ],
-        entidadFederativa: [
-          this.seccionState?.entidadFederativa,
-          Validators.required
-        ],
-        delegacionMunicipio: [
-          this.seccionState?.delegacionMunicipio,
-          Validators.required
-        ],
-        colonia: [
-          this.seccionState?.colonia,
-          Validators.required
-        ],
-        calle: [
-          this.seccionState?.calle,
-          Validators.required
-        ],
-        numeroExterior: [
-          this.seccionState?.numeroExterior,
-          Validators.required
-        ],
-        numeroInterior: [
-          this.seccionState?.numeroInterior,
-          Validators.required
-        ],
-        codigoPostal: [
-          this.seccionState?.codigoPostal,
-          Validators.required
-        ]
+      informacionExtra: [
+        this.seccionState?.informacionExtra,
+        Validators.required
+      ],
+      entidadFederativa: [
+        this.seccionState?.entidadFederativa,
+        Validators.required
+      ],
+      delegacionMunicipio: [
+        this.seccionState?.delegacionMunicipio,
+        Validators.required
+      ],
+      colonia: [
+        this.seccionState?.colonia,
+        Validators.required
+      ],
+      calle: [
+        this.seccionState?.calle,
+        Validators.required
+      ],
+      numeroExterior: [
+        this.seccionState?.numeroExterior,
+        Validators.required
+      ],
+      numeroInterior: [
+        this.seccionState?.numeroInterior,
+        Validators.required
+      ],
+      codigoPostal: [
+        this.seccionState?.codigoPostal,
+        [ Validators.required,
+          Validators.maxLength(5),
+          Validators.pattern(/^\d{1,5}$/)]
+      ]
       }),
       pedimentoST: this.fb.group({
-        patenteAutorizacion: [
-          this.seccionState?.patenteAutorizacion,
-          Validators.required
-        ],
-        rfcAgenteAduanal: [
-          this.seccionState?.rfcAgenteAduanal,
-          Validators.required
-        ],
-        numeroPedimento: [
-          this.seccionState?.numeroPedimento,
-          Validators.required
-        ],
-        claveAduana: [
-          this.seccionState?.claveAduana,
-          Validators.required
-        ]
+      patenteAutorizacion: [
+        this.seccionState?.patenteAutorizacion,
+        [Validators.required, Validators.maxLength(4)]
+      ],
+      rfcAgenteAduanal: [
+        this.seccionState?.rfcAgenteAduanal,
+        [Validators.required, Validators.maxLength(12)]
+      ],
+      numeroPedimento: [
+        this.seccionState?.numeroPedimento,
+        Validators.required
+      ],
+      claveAduana: [
+        this.seccionState?.claveAduana,
+        Validators.required
+      ]
       })
     });
     if (this.esFormularioSoloLectura) {
@@ -335,7 +354,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Selecciona la fracción arancelaria.
    */
   fraccionArancelariaSeleccion(): void {
-    const FRACCION_ARANCELATIA = this.FormSolicitud.get('fraccionArancelaria')?.value;
+    const FRACCION_ARANCELATIA = this.mercanciaST.get('cveFraccionArancelaria')?.value;
     this.tramite32502Store.setCveFraccionArancelaria(FRACCION_ARANCELATIA);
     if (this.esFormularioSoloLectura) {
       this.FormSolicitud.disable();
@@ -348,24 +367,24 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Selecciona la fracción regla.
    */
   fraccionReglaSeleccion(): void {
-    const REGLAFRACCION = this.FormSolicitud.get('reglaFraccion')?.value;
-    Tramite32502Store.setFraccionRegla(REGLAFRACCION);
+    const REGLAFRACCION = this.mercanciaST.get('reglaFraccion')?.value;
+    this.tramite32502Store.setFraccionRegla("reglaFraccion",REGLAFRACCION);
   }
 
   /**
    * Selecciona la Entidad Federativa.
    */
   onEntidadFederativaChange(): void {
-    const ENTIDADFEDERATIVA = this.FormSolicitud.get('reglaFraccion')?.value;
-    Tramite32502Store.setFraccionRegla(ENTIDADFEDERATIVA);
+    const ENTIDADFEDERATIVA = this.mercanciaST.get('entidadFederativa')?.value;
+    this.tramite32502Store.setFraccionRegla("entidadFederativa",ENTIDADFEDERATIVA);
   }
 
   /**
    * Selecciona la Num Pedimento.
    */
   sanitizarNumeroPedimento(): void {
-    const NUMPEDIMENTO = this.FormSolicitud.get('reglaFraccion')?.value;
-    Tramite32502Store.setFraccionRegla(NUMPEDIMENTO);
+    const NUMPEDIMENTO = this.mercanciaST.get('numeroPedimento')?.value;
+    this.tramite32502Store.setFraccionRegla("numeroPedimento",NUMPEDIMENTO);
   }
 
   /**
@@ -432,8 +451,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * store 'tramite32502Store'.
    */
   public cambioFechaDeIngreso(nuevo_valor: string): void {
-    this.mercanciaST.get('fechaInicio')?.setValue(nuevo_valor);
-    this.mercanciaST.get('fechaInicio')?.markAsUntouched();
+    this.mercanciaST.patchValue({
+      fechaInicio: nuevo_valor
+    });
     this.tramite32502Store.setFechaInicio(nuevo_valor);
   }
 

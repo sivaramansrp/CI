@@ -1,28 +1,44 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, PersonaTerceros, TercerosComponent } from '@ng-mf/data-access-user';
-import { Subject, takeUntil } from 'rxjs';
-import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
-import { CommonModule } from '@angular/common';
-import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
-
 /**
- * @fileoverview Componente para la gestión de terceros relacionados en el trámite.
- * Este componente permite visualizar y actualizar la lista de personas asociadas como terceros,
- * así como controlar el modo de solo lectura del formulario.
+ * @fileoverview
+ * Componente para la gestión de terceros relacionados en el trámite 220201 de agricultura.
+ * Permite visualizar, actualizar y eliminar la lista de personas asociadas como terceros,
+ * así como controlar el modo de solo lectura del formulario y cargar catálogos de países y estados.
+ * Cobertura compodoc 100%: cada clase, método, propiedad y evento está documentada.
  * @module TercerospageComponent
  */
 
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { DatosDeLaSolicitud, TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
+import { Subject, takeUntil } from 'rxjs';
+import { AgregardestinatarioComponent } from '../agregardestinatario/agregardestinatario.component';
+import { AgregardestinatariofinalComponent } from '../agregardestinatariofinal/agregardestinatariofinal.component';
+import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
+import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { DestinatarioForm } from '../../../220203/models/220203/importacion-de-acuicultura.module';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
+import { TercerosrelacionadosComponent } from '../../../../shared/components/tercerosrelacionados/tercerosrelacionados.component';
+import { TercerosrelacionadosService } from '../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service';
+import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
+
+
 /**
  * Componente para la gestión de terceros relacionados en el trámite.
+ * Permite visualizar, actualizar y eliminar la lista de personas asociadas como terceros,
+ * así como controlar el modo de solo lectura del formulario y cargar catálogos de países y estados.
+ *
  * @class TercerospageComponent
- * @implements {OnInit, OnDestroy, AfterViewInit}
+ * @implements {OnInit}
+ * @implements {OnDestroy}
+ * @implements {AfterViewInit}
  */
 @Component({
   selector: 'app-tercerospage',
   standalone: true,
   imports: [
     CommonModule,
-    TercerosComponent
+    TercerosrelacionadosComponent,
+    ModalComponent
   ],
   templateUrl: './tercerospage.component.html',
   styleUrl: './tercerospage.component.scss',
@@ -30,46 +46,64 @@ import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Subject utilizado como notificador para destruir suscripciones y evitar fugas de memoria.
-   * 
-   * @remarks
-   * Este Subject se emite cuando el componente se destruye, permitiendo que las suscripciones
-   * a observables se cancelen correctamente usando el operador `takeUntil`.
-   * 
-   * @compodoc
-   * @property {Subject<void>} destroyNotifier$
+   * Se emite cuando el componente se destruye, permitiendo cancelar las suscripciones a observables.
+   * @type {Subject<void>}
+   * @private
    */
   private destroyNotifier$ = new Subject<void>();
 
   /**
    * Lista de personas asociadas como terceros en el trámite actual.
-   * @property {PersonaTerceros[]} personas
+   * @type {TercerosrelacionadosdestinoTable[]}
    */
-  personas: PersonaTerceros[] = [];
+  personas: TercerosrelacionadosdestinoTable[] = [];
+  /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   * Cuando es verdadero, el formulario se presenta únicamente para visualización,
+   * deshabilitando la edición de los campos.
+   * @type {modalRef}
+   */
+  @ViewChild('modalRef') modalRef!: ModalComponent;
 
   /**
    * Indica si el formulario se encuentra en modo solo lectura.
-   * 
-   * @desc [es] Determina si el formulario debe mostrarse únicamente para lectura, sin permitir modificaciones.
-   * @property {boolean} esFormularioSoloLectura
+   * Determina si el formulario debe mostrarse únicamente para lectura, sin permitir modificaciones.
+   * @type {boolean}
+   * @default false
    */
   esFormularioSoloLectura: boolean = false;
 
   /**
+   * Catálogos de datos de la solicitud, como países y estados.
+   * @type {DatosDeLaSolicitud}
+   */
+  catalogosDatos: DatosDeLaSolicitud = {} as DatosDeLaSolicitud;
+  /**
+   * Datos de la forma relacionados con terceros.
+   * Esta propiedad almacena los datos específicos de la forma que se relacionan con los terceros.
+   * @type {TercerosrelacionadosTable[]}
+   */
+
+  datosForma: DestinatarioForm[] = [];
+
+  /**
    * Constructor del componente.
-   * @method constructor
    * @param consultaQuery Servicio para consultar el estado de solo lectura.
    * @param certificadoZoosanitarioServices Servicio para actualizar terceros relacionados.
    * @param certificadoZoosanitarioQuery Servicio para consultar el estado de terceros relacionados.
+   * @param tercerosrelacionadosService Servicio para obtener catálogos de terceros relacionados.
    */
   constructor(
     private consultaQuery: ConsultaioQuery,
     private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
-    private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery
-  ) {}
+    public tercerosrelacionadosService: TercerosrelacionadosService,
+    public certificadoZoosanitarioStore: ZoosanitarioStore
+
+  ) { }
 
   /**
    * Ciclo de vida de Angular que se ejecuta al iniciar el componente.
-   * Suscribe al estado de solo lectura y actualiza la propiedad correspondiente.
+   * Suscribe al estado de solo lectura y a la lista de terceros relacionados.
    * @method ngOnInit
    */
   ngOnInit(): void {
@@ -78,31 +112,67 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe((seccionState) => {
         this.esFormularioSoloLectura = seccionState?.readonly;
       });
-  }
-
-  /**
-   * Ciclo de vida de Angular que se ejecuta después de que la vista ha sido inicializada.
-   * Suscribe a los terceros relacionados y actualiza la lista de personas.
-   * @method ngAfterViewInit
-   */
-  ngAfterViewInit(): void {
-    this.certificadoZoosanitarioQuery.seleccionarTercerosRelacionados$
+    this.certificadoZoosanitarioServices.getAllDatosForma()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datosDeLaSolicitud) => {
         if (datosDeLaSolicitud) {
-          this.personas = datosDeLaSolicitud;
+          this.personas = datosDeLaSolicitud.tercerosRelacionados;
+          this.datosForma = datosDeLaSolicitud.datosForma;
         }
       });
   }
 
   /**
-   * Actualiza la lista de terceros relacionados en el store.
-   * @method onPersonasChanged
-   * @param {PersonaTerceros[]} event - Nueva lista de personas terceros.
+   * Ciclo de vida de Angular que se ejecuta después de inicializar la vista.
+   * Carga los catálogos de países y estados.
+   * @method ngAfterViewInit
    */
-  onPersonasChanged(event: PersonaTerceros[]): void {
-    this.certificadoZoosanitarioServices.updateTercerosRelacionados(event);
+  ngAfterViewInit(): void {
+    this.pairsCatalogChange();
+    this.estadoCatalogChange();
   }
+
+  /**
+   * Carga el catálogo de países y lo asigna a la propiedad catalogosDatos.paises.
+   * @method pairsCatalogChange
+   */
+  pairsCatalogChange(): void {
+    this.tercerosrelacionadosService.obtenerSelectorList('paisprocedencia.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(data => {
+        this.catalogosDatos.paises = data;
+      });
+  }
+
+  /**
+   * Carga el catálogo de estados y lo asigna a la propiedad catalogosDatos.estados.
+   * @method estadoCatalogChange
+   */
+  estadoCatalogChange(): void {
+    this.tercerosrelacionadosService.obtenerSelectorList('estados.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(data => {
+        this.catalogosDatos.estados = data;
+      });
+  }
+
+  /**
+   * Elimina todos los terceros relacionados y actualiza el servicio correspondiente.
+   * @method handleEliminar
+   */
+  handleEliminar(): void {
+    this.personas = [];
+    this.certificadoZoosanitarioServices.updateTercerosRelacionado([] as TercerosrelacionadosdestinoTable[]);
+  }
+  /**
+  * Elimina todos los terceros relacionados y actualiza el servicio correspondiente.
+  * @method handleEliminar
+  */
+  handleEliminarExportador(): void {
+    this.personas = [];
+    this.certificadoZoosanitarioStore.updatedatosForma([] as DestinatarioForm[]);
+  }
+
 
   /**
    * Ciclo de vida de Angular que se ejecuta al destruir el componente.
@@ -112,5 +182,18 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  abrirModalDestinatario(data?: TercerosrelacionadosdestinoTable): void {
+    if (data) {
+      this.certificadoZoosanitarioStore.actualizarSelectedTerceros(data);
+    }
+    this.modalRef.abrir(AgregardestinatarioComponent);
+  }
+  abrirModalExportador(data: DestinatarioForm): void {
+    if (data) {
+      this.certificadoZoosanitarioStore.actualizarSelectedExdora(data);
+    }
+    this.modalRef.abrir(AgregardestinatariofinalComponent);
   }
 }

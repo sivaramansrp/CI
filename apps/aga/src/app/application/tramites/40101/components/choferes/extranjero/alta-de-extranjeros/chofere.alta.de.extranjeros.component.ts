@@ -6,7 +6,7 @@ import {
   TablaDinamicaComponent,
   TablaSeleccion,
 } from '@libs/shared/data-access-user/src';
-import { CHOFERES_EXTRANJEROS_TABLA } from '../../../../enum/choferes-enum';
+import { CHOFERES_EXTRANJEROS_TABLA } from '../../../../enum/choferes.enum';
 import { Chofer40101Query } from '../../../../estado/chofer40101.query';
 import { Chofer40101Service } from '../../../../estado/chofer40101.service';
 import { ChoferesExtranjeros } from '../../../../models/registro-muestras-mercancias.model';
@@ -85,7 +85,7 @@ export class ChofereAltaDeExtranjerosComponent implements OnInit, OnDestroy {
    * Indica si el formulario o componente está en modo solo lectura.
    * Cuando es `true`, los campos no pueden ser editados por el usuario.
    */
-  isReadonly: boolean = false;
+  esSoloLectura: boolean = false;
 
   /**
    * Constructor del componente ChofereNacional.
@@ -100,13 +100,15 @@ export class ChofereAltaDeExtranjerosComponent implements OnInit, OnDestroy {
     private chofer40101Service: Chofer40101Service,
     private chofer40101Query: Chofer40101Query,
     private consultaioQuery: ConsultaioQuery
-  ) {}
+  ) {
+     // Lógica para el constructor si es necesario.
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * 
    * - Suscribe a los observables `selectSolicitud$` y `selectConsultaioState$` para obtener y actualizar los datos del chofer nacional y el estado de consulta.
-   * - Actualiza las propiedades `datosDelChoferExtranjeros`, `datosConsulta` e `isReadonly` según los datos recibidos.
+   * - Actualiza las propiedades `datosDelChoferExtranjeros`, `datosConsulta` e `esSoloLectura` según los datos recibidos.
    * - Utiliza `takeUntil(this.destroy$)` para gestionar la desuscripción automática y evitar fugas de memoria.
    */
   ngOnInit(): void {
@@ -126,7 +128,7 @@ export class ChofereAltaDeExtranjerosComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           if (seccionState.readonly) {
             this.datosConsulta = seccionState;
-            this.isReadonly = this.datosConsulta.readonly;
+            this.esSoloLectura = this.datosConsulta.readonly;
           }
         })
       ).subscribe();
