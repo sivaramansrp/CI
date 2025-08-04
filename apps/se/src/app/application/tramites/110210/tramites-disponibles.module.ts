@@ -1,4 +1,4 @@
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, InputCheckComponent, InputFechaComponent, InputHoraComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputHoraComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
@@ -12,6 +12,7 @@ import { DomicilioDelDestinatarioComponent } from './components/domicilio-del-de
 import { DomicilioTablaComponent } from './components/domicilio-tabla/domicilio-tabla.component';
 import { DuplicadoDeCertificadoComponent } from './pages/duplicado-de-certificado/duplicado-de-certificado.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
+import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { TramitesDisponiblesRoutingModule } from './tramites-disponibles-routing.module';
@@ -34,6 +35,7 @@ import { TramitesDisponiblesRoutingModule } from './tramites-disponibles-routing
      */
     PasoUnoComponent,
     PasoDosComponent,
+    PasoTresComponent,
     SolicitudPageComponent,
     DuplicadoDeCertificadoComponent,
     CertificadoDeOrigenComponent
@@ -53,6 +55,7 @@ import { TramitesDisponiblesRoutingModule } from './tramites-disponibles-routing
     SolicitanteComponent,
     BuscarCertificadoDeOrigenComponent,
     AnexarDocumentosComponent,
+    FirmaElectronicaComponent,
     AlertComponent,
     TituloComponent,
     CertificadoDisponiblesComponent,

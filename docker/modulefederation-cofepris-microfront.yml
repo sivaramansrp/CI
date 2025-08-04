@@ -1,7 +1,7 @@
 services:
 #----------------------------------------------------------------
   modulefederation-cofepris-microfront:
-    image: ghcr.io/vucem30/dockerized-modulefederation-cofepris-microfront:1.0.6
+    image: ghcr.io/vucem30/dockerized-modulefederation-cofepris-microfront:1.0.9
     build: 
       context: ./../
       dockerfile: apps/cofepris/Dockerfile.dev

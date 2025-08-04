@@ -4,12 +4,13 @@ import { CommonModule } from '@angular/common';
 import { CertificadoDisponiblesComponent } from './certificado-disponibles.component';
 
 import { CERTIFICADO_DISPONIBLES_COLUMNAS, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
-import { CertificadoDisponiblesService } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
+import { CertificadoDisponiblesService } from '../../services/certificado-disponibles/certificadoDisponibles.service';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('CertificadoDisponiblesComponent', () => {
-  let component: CertificadoDisponiblesComponent<any>;
-  let fixture: ComponentFixture<CertificadoDisponiblesComponent<any>>;
+  let component: CertificadoDisponiblesComponent;
+  let fixture: ComponentFixture<CertificadoDisponiblesComponent>;
   let service: CertificadoDisponiblesService;
 
   beforeEach(async () => {
@@ -18,7 +19,7 @@ describe('CertificadoDisponiblesComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [CertificadoDisponiblesComponent, CommonModule, TablaDinamicaComponent],
+      imports: [CertificadoDisponiblesComponent, CommonModule, TablaDinamicaComponent,HttpClientModule],
       providers: [{ provide: CertificadoDisponiblesService, useValue: SERVICE_MOCK }],
     }).compileComponents();
 

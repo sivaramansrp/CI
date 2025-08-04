@@ -3,7 +3,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { TercerosRelacionadosComponent } from './terceros-relacionados.component';
 import { CommonModule } from '@angular/common';
-import { TituloComponent, TablaDinamicaComponent, TableComponent } from '@ng-mf/data-access-user';
+import { TituloComponent, TablaDinamicaComponent, TableComponent, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 import { HttpClientModule } from '@angular/common/http'; 
 import { HttpClientTestingModule } from '@angular/common/http/testing'; 
@@ -61,7 +61,13 @@ describe('TercerosRelacionadosComponent', () => {
   beforeEach(async () => {
     const spy = {
       obtenerInformaciónDeTablaDeFabricantes: jest.fn().mockReturnValue(of(mockFabricanteData)),
-      obtenerInformaciónDeTablaDeDestinatraios: jest.fn().mockReturnValue(of(mockDestinatarioData))
+      obtenerInformacionDeTablaDeDestinatraios: jest.fn().mockReturnValue(of(mockDestinatarioData)),
+      obtenerInformacionDeTablaDeproveedors: jest.fn().mockReturnValue(of([])),
+      obtenerInformacionDeTablaDeFacturadores: jest.fn().mockReturnValue(of([]))
+    };
+
+    const consultaioQuerySpy = {
+      selectConsultaioState$: of({ readonly: false })
     };
  
     await TestBed.configureTestingModule({
@@ -77,14 +83,22 @@ describe('TercerosRelacionadosComponent', () => {
         TableComponent
       ],
       providers: [
-        { provide: TercerosRelacionadosService, useValue: spy }
+        { provide: TercerosRelacionadosService, useValue: spy },
+        { provide: ConsultaioQuery, useValue: consultaioQuerySpy }
       ]
-    }).compileComponents();
+    })
+    .overrideComponent(TercerosRelacionadosComponent, {
+      set: {
+        providers: []
+      }
+    })
+    .compileComponents();
  
     tercerosServiceSpy = TestBed.inject(TercerosRelacionadosService) as jest.Mocked<TercerosRelacionadosService>;
  
     fixture = TestBed.createComponent(TercerosRelacionadosComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
   });
  
   it('should create the component', () => {
@@ -101,27 +115,25 @@ describe('TercerosRelacionadosComponent', () => {
     expect(destinatarioDataSpy).toHaveBeenCalledTimes(1);
   });
  
-  it('should fetch fabricante data and assign it to fabricantedatosTabla', () => {
+  it('should fetch fabricante data and assign it to fabricantedatosTabla', fakeAsync(() => {
+    // Limpiar llamadas previas de ngOnInit
+    tercerosServiceSpy.obtenerInformaciónDeTablaDeFabricantes.mockClear();
+    
     component.obtenerFabricanteTableIData();
- 
-    expect(tercerosServiceSpy.obtenerInformaciónDeTablaDeFabricantes).toHaveBeenCalledTimes(0);
-    tercerosServiceSpy.obtenerInformaciónDeTablaDeFabricantes().subscribe(
-      (data: CapturarColumns[]) => {
-        expect(data).toEqual(mockFabricanteData);
-      }
-    );
-  });
- 
- 
+    tick();
+
+    expect(tercerosServiceSpy.obtenerInformaciónDeTablaDeFabricantes).toHaveBeenCalledTimes(1);
+    expect(component.fabricantedatosTabla).toEqual(mockFabricanteData);
+  })); 
   it('should fetch destinatario data and assign it to destinatarioDatosTabla', fakeAsync(() => {
+    // Limpiar llamadas previas de ngOnInit
+    tercerosServiceSpy.obtenerInformacionDeTablaDeDestinatraios.mockClear();
+    
     component.obtenerDestinatarioTableIData();
     tick();
-    expect(tercerosServiceSpy.obtenerInformaciónDeTablaDeDestinatraios).toHaveBeenCalledTimes(0);
-    tercerosServiceSpy.obtenerInformaciónDeTablaDeDestinatraios().subscribe(
-      (data: DestinatarioCapturarColumns[]) => {
-        expect(data).toEqual(mockDestinatarioData);
-      }
-    );
+    
+    expect(tercerosServiceSpy.obtenerInformacionDeTablaDeDestinatraios).toHaveBeenCalledTimes(1);
+    expect(component.destinatarioDatosTabla).toEqual(mockDestinatarioData);
   }));
  
   it('should properly complete subscription on ngOnDestroy', () => {

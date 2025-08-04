@@ -51,7 +51,9 @@ describe('PagoDeDerechosComponent', () => {
         rfc: '',
       }),
     };
-    mockTramite260904Store = {};
+    mockTramite260904Store = {
+      setTramite260904State: jest.fn(),
+    };
 
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, HttpClientModule, PagoDeDerechosComponent],
@@ -133,8 +135,7 @@ it('should fetch bancoList on obtenerBancoList call', () => {
 
   it('should call setTramite260904State with the correct value when setValoresStore is called', () => {
   component.pagoDeDerechosForm.get('clave')?.setValue('VALOR_CLAVE');
-  const store = TestBed.inject(Tramite260904Store);
-  const spy = jest.spyOn(store, 'setTramite260904State');
+  const spy = jest.spyOn(mockTramite260904Store, 'setTramite260904State');
   component.setValoresStore(component.pagoDeDerechosForm, 'clave');
   expect(spy).toHaveBeenCalledWith({ clave: 'VALOR_CLAVE' });
 });

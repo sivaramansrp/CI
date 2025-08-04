@@ -1,17 +1,14 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { DatosDelTramiteFormState, MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
-import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
 import { DatosMercanciaContenedoraComponent } from '../datos-mercancia-contenedora/datos-mercancia-contenedora.component';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-explosivo.enum';
-import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
 import { Tramite240108Query } from '../../estados/tramite240108Query.query';
 import { Tramite240108Store } from '../../estados/tramite240108Store.store';
-import { takeUntil } from 'rxjs';
 
 /**
  * @title Datos del Trámite Contenedora
@@ -28,7 +25,19 @@ import { takeUntil } from 'rxjs';
 })
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
 
-   @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
+    /**
+   * @description Indica si se deben usar botones personalizados en el formulario.
+   * @default true
+   * @type {boolean}
+   */
+  usarBotonesPersonalizados: boolean = true;
+
+  /**
+   * @event cerrar
+   * @description Evento emitido para indicar que se debe cerrar el componente.
+   * @remarks Este evento no envía ningún valor, simplemente notifica a los componentes padres que se debe realizar la acción de cierre.
+   */
+  @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
 
      /**
       * Identificador del procedimiento.
@@ -61,17 +70,28 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   *
+   * @type {boolean}
+   * @memberof DatosDelTramiteContenedoraComponent
+   * @default false
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
    *
    * @method constructor
    * @param {Tramite240108Query} tramiteQuery - Query de Akita para obtener el estado actual del trámite.
    * @param {Tramite240108Store} tramiteStore - Store de Akita para actualizar el estado del trámite.
+   * @param {ConsultaioQuery} consultaQuery - Query para obtener el estado de la consulta.
    * @returns {void}
    */
   constructor(
     private tramiteQuery: Tramite240108Query,
-    private tramiteStore: Tramite240108Store
-  ) // eslint-disable-next-line no-empty-function
+    private tramiteStore: Tramite240108Store,
+    private consultaQuery: ConsultaioQuery
+  )
   {}
 
   /**
@@ -93,6 +113,14 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.datosDelTramiteFormState = data;
       });
+         this.consultaQuery.selectConsultaioState$
+            .pipe(
+              takeUntil(this.destroy$),
+              map((seccionState) => {
+                this.esFormularioSoloLectura = seccionState.readonly;
+              })
+            )
+            .subscribe();
   }
 
   /**

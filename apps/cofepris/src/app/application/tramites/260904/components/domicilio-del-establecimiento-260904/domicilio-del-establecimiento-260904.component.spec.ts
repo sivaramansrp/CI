@@ -170,10 +170,13 @@ it('should update estadoSeleccionado when getValorStore is called', () => {
     municipioOAlcaldia: 'Test Municipio'
   } as any;
 
-  const query = TestBed.inject(Tramite260904Query);
-  jest.spyOn(query, 'selectTramite260904$', 'get').mockReturnValue(of(testState));
+  // Create a new mock query with the updated selectTramite260904$ observable
+  const mockQueryWithNewState = {
+    selectTramite260904$: of(testState)
+  };
 
-  component['tramite260904Query'] = query;
+  // Replace the injected query with our new mock
+  component['tramite260904Query'] = mockQueryWithNewState as any;
   component.getValorStore();
 
   expect(component.estadoSeleccionado).toEqual(testState);
