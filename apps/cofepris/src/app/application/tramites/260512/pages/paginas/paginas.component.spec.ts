@@ -30,11 +30,11 @@ describe('PaginasComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize pantallasPasos and datosPasos correctly', () => {
+  it('debe inicializar pantallasPasos y datosPasos correctamente', () => {
     expect(component.pantallasPasos).toEqual(PANTA_PASOS);
     expect(component.datosPasos).toEqual({
       nroPasos: PANTA_PASOS.length,
@@ -44,7 +44,7 @@ describe('PaginasComponent', () => {
     });
   });
 
-  it('should advance when getValorIndice is called with "cont" and form is valid', () => {
+  it('debe avanzar cuando se llama a getValorIndice con "cont" y el formulario es válido', () => {
     jest.spyOn(component, 'verificarLaValidezDelFormulario').mockReturnValue(true);
 
     const siguienteSpy = jest.fn();
@@ -67,7 +67,7 @@ describe('PaginasComponent', () => {
     expect(atrasSpy).not.toHaveBeenCalled();
   });
 
-  it('should go back when getValorIndice is called with "ant" and form is valid', () => {
+  it('debe retroceder cuando se llama a getValorIndice con "ant" y el formulario es válido', () => {
     jest.spyOn(component, 'verificarLaValidezDelFormulario').mockReturnValue(true);
 
     const siguienteSpy = jest.fn();
@@ -89,7 +89,7 @@ describe('PaginasComponent', () => {
     expect(siguienteSpy).not.toHaveBeenCalled();
   });
 
-  it('should not navigate if form is invalid', () => {
+  it('debe no navegar si el formulario es inválido', () => {
     jest.spyOn(component, 'verificarLaValidezDelFormulario').mockReturnValue(false);
 
     const siguienteSpy = jest.fn();
@@ -111,7 +111,7 @@ describe('PaginasComponent', () => {
     expect(atrasSpy).not.toHaveBeenCalled();
   });
 
-  it('should navigate even if form is invalid when readonly is true', () => {
+  it('debe navegar incluso si el formulario es inválido cuando readonly es true', () => {
     component['consultaState'] = { readonly: true } as any;
 
     const siguienteSpy = jest.fn();
@@ -133,7 +133,7 @@ describe('PaginasComponent', () => {
     expect(atrasSpy).not.toHaveBeenCalled();
   });
 
-  it('should not update index if valor is out of range', () => {
+  it('debe no actualizar el índice si el valor está fuera de rango', () => {
     jest.spyOn(component, 'verificarLaValidezDelFormulario').mockReturnValue(true);
 
     const siguienteSpy = jest.fn();
@@ -155,7 +155,7 @@ describe('PaginasComponent', () => {
     expect(atrasSpy).not.toHaveBeenCalled();
   });
 
-  it('should return true only if all forms are valid in verificarLaValidezDelFormulario', () => {
+  it('debe retornar true solo si todos los formularios son válidos en verificarLaValidezDelFormulario', () => {
     const servicioMock = {
       isFormValid: jest.fn().mockReturnValue(true),
     };
@@ -165,7 +165,7 @@ describe('PaginasComponent', () => {
     expect(servicioMock.isFormValid).toHaveBeenCalledTimes(5);
   });
 
-  it('should return false if any form is invalid in verificarLaValidezDelFormulario', () => {
+  it('debe retornar false si algún formulario es inválido en verificarLaValidezDelFormulario', () => {
     const servicioMock = {
       isFormValid: jest
         .fn()
