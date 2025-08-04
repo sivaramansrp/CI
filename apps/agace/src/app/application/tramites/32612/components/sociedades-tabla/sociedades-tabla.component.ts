@@ -2,7 +2,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CONFIGURACION_AGREGAR, CONFIGURACION_IDIQUESI, CONFIGURACION_MODIFICAR, CONFIGURACION_SOCIEDADES, MANDATARIOS_DEL_AGENT } from '../../constants/sociedades-tabla.enum';
 import { CONFIGURACION_INSTALACIONES, CONFIGURACION_INSTALACIONES_TABLA, DatosDeLasInstalaciones, ENLACE_TABLA, Instalaciones, MANDATARIOS_DE_AGENTE_ADUANAL, MandatariosDeAgenteAduanal, Sociedades } from '../../models/sociedades.model';
 import { Component, Inject, OnDestroy, OnInit, TemplateRef } from '@angular/core';
-import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ConfiguracionColumna, ModeloDeFormaDinamica, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitude32612State, Tramite32612Store } from '../../estados/solicitud32612.store';
 import { Subject,map, takeUntil } from 'rxjs';
@@ -78,6 +78,8 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
    * Se utiliza para almacenar y gestionar la lista de sociedades mostradas en la tabla.
    */
   public sociedadesDatos: Sociedades[] = [];
+
+  public seleccionarlistaSociedades: Sociedades[] = [];
   /**
    * Configuración de las columnas para la tabla de sociedades, basada en la estructura de datos de las instalaciones.
    *
@@ -278,11 +280,33 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudeState = seccionState;
+            if (
+              this.solicitudeState &&
+              typeof this.solicitudeState === 'object' &&
+              this.solicitudeState !== null &&
+              'Sociedades' in this.solicitudeState
+            ) {
+              const DATOS = this.solicitudeState['Sociedades'] as Sociedades[];
+              DATOS.forEach((dato: Sociedades) => {
+                const IS_ALREADY_ADDED = this.sociedadesDatos.some(
+                  (item: Sociedades) => item.rfc === dato.rfc
+                );
+  
+                if (!IS_ALREADY_ADDED) {
+                  this.sociedadesDatos = [...this.sociedadesDatos, dato];
+                }
+              });
+            }
         })
       ).subscribe();
-    this.getSociedadesTabla();
+      if(!this.solicitudeState['Sociedades']) {
+        this.getSociedadesTabla();
+      }
     this.getDatosDeLasInstalacionesDatos();
     this.getMandatariosDeAgenteTablaDatos();
+    this.getAduanaActuaCatalogDatos();
+    this.getRfcDelAgenteCatalogDatos();
+    this.getEntidadFederativaCatalogDatos();
   }
 
   /**
@@ -390,8 +414,11 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
    * @remarks
    * El modal se muestra con tamaño grande (clase `modal-lg`).
    */
-  public abrirModal(template: TemplateRef<void>) {
+  public abrirModal(template: TemplateRef<void>,Valor?: string): void {
     this.modalRef = this.modalService.show(template,{ class: 'modal-lg',});
+    if(Valor === 'modificarSociedades') {
+      this.modificarSociedades();
+    }
   }
 
   /**
@@ -403,6 +430,155 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
    */
   public emitirCambioDeValor(event: {campo: string, valor: string}): void {
     this.tramite32612Store.setDynamicFieldValue(event.campo, event.valor);
+  }
+
+  public aceptar(): void {
+    if(!this.seleccionarlistaSociedades.length) {
+      const NUEVO_MIEMBRO = {
+        rfc: this.agregarSociedadesFormGroup.get('rfc')?.value,
+        denominacion: this.agregarSociedadesFormGroup.get('denominacion')?.value,
+        aduanaEnLaQueActua: this.agregarSociedadesFormGroup.get('aduanaEnLaQueActua')?.value,
+        fiscales: this.agregarSociedadesFormGroup.get('fiscales')?.value,
+      };
+      this.sociedadesDatos = [...this.sociedadesDatos, NUEVO_MIEMBRO];
+      this.tramite32612Store.setDynamicFieldValue('Sociedades', this.sociedadesDatos);
+    } else {
+      const INDICE = this.sociedadesDatos.findIndex((el: Sociedades) => el.rfc === this.seleccionarlistaSociedades[0]?.rfc);
+      if (INDICE >= 0) {
+        this.sociedadesDatos = this.sociedadesDatos.map((item, index) => {
+        if (index === INDICE) {
+            return {
+              rfc: this.agregarSociedadesFormGroup.get('rfc')?.value,
+              denominacion: this.agregarSociedadesFormGroup.get('denominacion')?.value,
+              aduanaEnLaQueActua: this.agregarSociedadesFormGroup.get('aduanaEnLaQueActua')?.value,
+              fiscales: this.agregarSociedadesFormGroup.get('fiscales')?.value,
+            };
+          }
+          return item;
+        });
+        this.tramite32612Store.setDynamicFieldValue('Sociedades', this.sociedadesDatos);
+      }
+    }
+    this.modalRef?.hide();
+  }
+
+  public buscarEvento(): void {
+    if (this.agregarSociedadesFormGroup.get('resigtro')?.value) {
+      this.agregarSociedadesFormGroup.patchValue({
+        rfc: 'RFT453DF998',
+        denominacion: 'CDY YTRWQ SAHCH'
+      })
+    }
+  }
+
+  public seleccionarlistaSeccionSociedades(event: Sociedades[]): void {
+    this.seleccionarlistaSociedades = event;
+  }
+
+  public limpiarAgregarSociedadesFormulario(): void {
+    this.agregarSociedadesFormGroup.reset();
+  }
+
+  public eliminarSociedades(): void {
+    if (this.seleccionarlistaSociedades.length > 0) {
+
+      this.sociedadesDatos = this.sociedadesDatos.filter(item => {
+
+        return !this.seleccionarlistaSociedades.some(selectedItem =>
+          selectedItem.rfc === item.rfc ||
+          (selectedItem.denominacion === item.denominacion &&
+            selectedItem.fiscales === item.fiscales)
+        );
+      });
+
+      this.seleccionarlistaSociedades = [];
+      this.tramite32612Store.setDynamicFieldValue('Sociedades', this.sociedadesDatos);
+    }
+  }
+
+  public modificarSociedades(): void {
+    if (this.seleccionarlistaSociedades.length !== 0) {
+      
+      this.agregarSociedadesFormGroup.get('rfc')?.setValue(this.seleccionarlistaSociedades[0]?.rfc);
+      this.agregarSociedadesFormGroup.get('denominacion')?.setValue(this.seleccionarlistaSociedades[0]?.denominacion);
+      this.agregarSociedadesFormGroup.get('aduanaEnLaQueActua')?.setValue(this.seleccionarlistaSociedades[0]?.aduanaEnLaQueActua);
+      this.agregarSociedadesFormGroup.get('fiscales')?.setValue(this.seleccionarlistaSociedades[0]?.fiscales);
+    }
+  }
+
+  public getAduanaActuaCatalogDatos(): void {
+    this.esquemaDeCertificacionSvc.getAduanaActuaCatalog().pipe(takeUntil(this.destroyNotifier$)).subscribe({
+      next: (response) => {
+        const API_RESPONSE = JSON.parse(JSON.stringify(response));
+        const DATOS = API_RESPONSE.data;
+        const CLASIFICACION_FIELD = this.agregarSociedadesDatos.find(
+          (datos: ModeloDeFormaDinamica) => datos.id === 'aduanaEnLaQueActua'
+        ) as ModeloDeFormaDinamica;
+        if (CLASIFICACION_FIELD) {
+          if (!CLASIFICACION_FIELD.opciones) {
+            CLASIFICACION_FIELD.opciones = DATOS.map(
+              (item: { id: string; descripcion: string }) => ({
+                descripcion: item.descripcion,
+                id: item.id,
+              })
+            );
+          }
+        }
+      },
+      error: (error) => {
+        // Manejo de errores
+      }
+    });
+  }
+
+  public getRfcDelAgenteCatalogDatos(): void {
+    this.esquemaDeCertificacionSvc.getRfcDelAgenteCatalog().pipe(takeUntil(this.destroyNotifier$)).subscribe({
+      next: (response) => {
+        const API_RESPONSE = JSON.parse(JSON.stringify(response));
+        const DATOS = API_RESPONSE.data;
+        const CLASIFICACION_FIELD = this.agregarDatos.find(
+          (datos: ModeloDeFormaDinamica) => datos.id === 'rfcDelAgente'
+        ) as ModeloDeFormaDinamica;
+        if (CLASIFICACION_FIELD) {
+          if (!CLASIFICACION_FIELD.opciones) {
+            CLASIFICACION_FIELD.opciones = DATOS.map(
+              (item: { id: string; descripcion: string }) => ({
+                descripcion: item.descripcion,
+                id: item.id,
+              })
+            );
+          }
+        }
+      },
+      error: (error) => {
+        // Manejo de errores
+      }
+    });
+  }
+
+  public getEntidadFederativaCatalogDatos(): void {
+    this.esquemaDeCertificacionSvc.getEntidadFederativaCatalog().pipe(takeUntil(this.destroyNotifier$)).subscribe({
+      next: (response) => {
+        const API_RESPONSE = JSON.parse(JSON.stringify(response));
+        const DATOS = API_RESPONSE.data;
+        const CLASIFICACION_FIELD = this.agregarDatos.find(
+          (datos: ModeloDeFormaDinamica) => datos.id === 'entidadFederativa'
+        ) as ModeloDeFormaDinamica;
+        if (CLASIFICACION_FIELD) {
+          if (!CLASIFICACION_FIELD.opciones) {
+            CLASIFICACION_FIELD.opciones = DATOS.map(
+              (item: { id: string; descripcion: string }) => ({
+                descripcion: item.descripcion,
+                id: item.id,
+              })
+            );
+          }
+        }
+      },
+      error: (error) => {
+        // Manejo de errores
+      }
+    });
   }
 
   /**

@@ -240,4 +240,29 @@ export class EsquemaDeCertificacionService {
         })
       );
     }
-}
+
+    getAduanaActuaCatalog(): Observable<JSONResponse> {
+      return this.http.get<JSONResponse>('assets/json/32612/aduana-catalog.json').pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
+    }
+
+
+    getRfcDelAgenteCatalog(): Observable<JSONResponse> {
+      return this.http.get<JSONResponse>('assets/json/32612/rfc-del-agente-catalog.json').pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
+    }
+
+    getEntidadFederativaCatalog(): Observable<JSONResponse> {
+      return this.http.get<JSONResponse>('assets/json/32612/entidad-federativa.json').pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
+    }
+  }
