@@ -3,14 +3,14 @@
 
     <div class="modal-header">
       <h5 class="modal-title">Datos de Choferes</h5>
-      <button type="button" class="btn-close" (click)="closeModal()"></button>
+      <button type="button" class="btn-close" (click)="cerrarModal()"></button>
     </div>
     <div class="modal-body ">
       <div class="container-fluid">
         <form [formGroup]="formChoferes">
           <div class="row">
             <div class="col-md-12">
-              <h3>Datos de chofer nacional</h3>
+              <h3>Datos del chofer nacional</h3>
               <hr class="red" />
             </div>
           </div>
@@ -25,12 +25,16 @@
               <div>
                 <input type="text" maxlength="18" class="form-control" formControlName="curp" />
               </div>
-              <div *ngIf="formChoferes.get('curp')?.invalid && (formChoferes.get('curp')?.touched || submitted)"
-                class="text-danger">
-                <small *ngIf="formChoferes.get('curp')?.errors?.['pattern']">Existen datos incorrectos que no cumplen
-                  con el formato esperado.</small>
-                <small *ngIf="formChoferes.get('curp')?.errors?.['required']">Este campo es obligatorio.</small>
-              </div>
+              @if (formChoferes.get('curp')?.errors?.['required'] && (formChoferes.get('curp')?.touched || submitted)) {
+                <div class="text-danger">
+                  <small class="text-danger">Este campo es obligatorio.</small>
+                </div>
+              }
+              @if (formChoferes.get('curp')?.errors?.['pattern'] && (formChoferes.get('curp')?.touched || submitted)) {
+                <div class="text-danger">
+                  <small>Existen datos incorrectos que no cumplen con el formato esperado.</small>
+                </div>
+              }
             </div>
             <div class="col-md-4">
               <div>
@@ -39,15 +43,18 @@
                   </span></label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="rfc" maxlength="13"/>
+                <input type="text" class="form-control" formControlName="rfc" maxlength="13" />
               </div>
-              <div *ngIf="formChoferes.get('rfc')?.invalid && (formChoferes.get('rfc')?.touched || submitted)"
-                class="text-danger">
-                <small *ngIf="formChoferes.get('rfc')?.errors?.['required']">Este campo es obligatorio.</small>
-                <small *ngIf="formChoferes.get('rfc')?.errors?.['pattern']">Existen datos incorrectos que no cumplen
-                  con el formato esperado.</small>
-
-              </div>
+              @if (formChoferes.get('rfc')?.errors?.['required'] && (formChoferes.get('rfc')?.touched || submitted)) {
+                <div class="text-danger">
+                  <small class="text-danger">Este campo es obligatorio.</small>
+                </div>
+              }
+              @if (formChoferes.get('rfc')?.errors?.['pattern'] && (formChoferes.get('rfc')?.touched || submitted)) {
+                <div class="text-danger">
+                  <small>Existen datos incorrectos que no cumplen con el formato esperado.</small>
+                </div>
+              }
             </div>
           </div>
           <div class="row">
@@ -71,10 +78,12 @@
                 <input type="text" class="form-control" formControlName="nombre" size="30" id="nombreCHN"
                   maxlength="120" readonly />
               </div>
-              <div *ngIf="formChoferes.get('nombre')?.invalid && (formChoferes.get('nombre')?.touched || submitted)"
-                class="text-danger">
-                <small *ngIf="formChoferes.get('nombre')?.errors?.['required']">Este campo es obligatorio.</small>
+              @if (formChoferes.get('nombre')?.errors?.['required'] && (formChoferes.get('nombre')?.touched ||
+              submitted)) {
+              <div class="text-danger">
+                <small class="text-danger">Este campo es obligatorio.</small>
               </div>
+              }
             </div>
 
             <div class="col-md-4">
@@ -84,12 +93,12 @@
               <div>
                 <input type="text" class="form-control" formControlName="primerApellido" />
               </div>
-              <div
-                *ngIf="formChoferes.get('primerApellido')?.invalid && (formChoferes.get('primerApellido')?.touched || submitted)"
-                class="text-danger">
-                <small *ngIf="formChoferes.get('primerApellido')?.errors?.['required']">Este campo es
-                  obligatorio.</small>
+              @if (formChoferes.get('primerApellido')?.errors?.['required'] &&
+              (formChoferes.get('primerApellido')?.touched || submitted)) {
+              <div class="text-danger">
+                <small class="text-danger">Este campo es obligatorio.</small>
               </div>
+              }
             </div>
             <div class="col-md-4">
               <div>
@@ -98,12 +107,12 @@
               <div>
                 <input type="text" class="form-control" formControlName="segundoApellido" readonly />
               </div>
-              <div
-                *ngIf="formChoferes.get('segundoApellido')?.invalid && (formChoferes.get('segundoApellido')?.touched || submitted)"
-                class="text-danger">
-                <small *ngIf="formChoferes.get('segundoApellido')?.errors?.['required']">Este campo es
-                  obligatorio.</small>
+              @if (formChoferes.get('segundoApellido')?.errors?.['required'] &&
+              (formChoferes.get('segundoApellido')?.touched || submitted)) {
+              <div class="text-danger">
+                <small class="text-danger">Este campo es obligatorio.</small>
               </div>
+              }
             </div>
           </div>
 
@@ -115,12 +124,12 @@
               <div>
                 <input type="text" class="form-control" formControlName="numeroDeGafete" />
               </div>
-              <div
-                *ngIf="formChoferes.get('numeroDeGafete')?.invalid && (formChoferes.get('numeroDeGafete')?.touched || submitted)"
-                class="text-danger">
-                <small *ngIf="formChoferes.get('numeroDeGafete')?.errors?.['required']">Este campo es
-                  obligatorio.</small>
+              @if (formChoferes.get('numeroDeGafete')?.errors?.['required'] &&
+              (formChoferes.get('numeroDeGafete')?.touched || submitted)) {
+              <div class="text-danger">
+                <small class="text-danger">Este campo es obligatorio.</small>
               </div>
+              }
             </div>
             <div class="col-md-4">
               <div>
@@ -129,18 +138,18 @@
               <div>
                 <input type="text" class="form-control" formControlName="vigenciaGafete" />
               </div>
-              <div
-                *ngIf="formChoferes.get('vigenciaGafete')?.invalid && (formChoferes.get('vigenciaGafete')?.touched || submitted)"
-                class="text-danger">
-                <small *ngIf="formChoferes.get('vigenciaGafete')?.errors?.['required']">Este campo es
-                  obligatorio.</small>
+              @if (formChoferes.get('vigenciaGafete')?.errors?.['required'] &&
+              (formChoferes.get('vigenciaGafete')?.touched || submitted)) {
+              <div class="text-danger">
+                <small class="text-danger">Este campo es obligatorio.</small>
               </div>
+              }
             </div>
           </div>
 
 
           <div class="row">
-            <ng-titulo titulo="Domicilio Fiscal"></ng-titulo>
+            <ng-titulo titulo="Domicilio fiscal"></ng-titulo>
           </div>
 
           <div class="row mb-3">
@@ -149,26 +158,28 @@
                 <label for="calle">Calle*:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="calle" maxlength="100"/>
+                <input type="text" class="form-control" formControlName="calle" maxlength="100" />
               </div>
-              <div *ngIf="formChoferes.get('calle')?.invalid && (formChoferes.get('calle')?.touched || submitted)"
-                class="text-danger">
-                <small *ngIf="formChoferes.get('calle')?.errors?.['required']">Este campo es obligatorio.</small>
+              @if (formChoferes.get('calle')?.errors?.['required'] && (formChoferes.get('calle')?.touched || submitted))
+              {
+              <div class="text-danger">
+                <small class="text-danger">Este campo es obligatorio.</small>
               </div>
+              }
             </div>
             <div class="col-md-4">
               <div>
                 <label for="numeroExterior">Número exterior*:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="numeroExterior" maxlength="55"/>
+                <input type="text" class="form-control" formControlName="numeroExterior" maxlength="55" />
               </div>
-              <div
-                *ngIf="formChoferes.get('numeroExterior')?.invalid && (formChoferes.get('numeroExterior')?.touched || submitted)"
-                class="text-danger">
-                <small *ngIf="formChoferes.get('numeroExterior')?.errors?.['required']">Este campo es
-                  obligatorio.</small>
+              @if (formChoferes.get('numeroExterior')?.errors?.['required'] &&
+              (formChoferes.get('numeroExterior')?.touched || submitted)) {
+              <div class="text-danger">
+                <small class="text-danger">Este campo es obligatorio.</small>
               </div>
+              }
             </div>
             <div class="col-md-4">
               <div>
@@ -195,26 +206,24 @@
                 <app-catalogo-select class="estado" [catalogo]="estadoList" formControlName="estado"
                   placeholder="Seleccione un valor" [required]="true" [isDisabled]="readonly" name="estado"
                   label="Estado" (selectionChange)="onEstadoChange($event)"></app-catalogo-select>
-                <div *ngIf="formChoferes.get('estado')?.invalid && (formChoferes.get('estado')?.touched || submitted)"
-                  class="text-danger">
-                  <small *ngIf="formChoferes.get('estado')?.errors?.['required']">Este campo es obligatorio.</small>
-                </div>
+                @if (formChoferes.get('estado')?.errors?.['required'] && (formChoferes.get('estado')?.touched ||
+                submitted)) {
+                <small class="text-danger">Este campo es obligatorio.</small>
+                }
               </div>
             </div>
+          </div>
 
-            <div class="col-md-4">
-              <div>
-                <app-catalogo-select class="municipioAlcaldia" [catalogo]="municipioList"
-                  formControlName="municipioAlcaldia" placeholder="Seleccione un valor" [required]="true"
-                  [isDisabled]="readonly" name="municipioAlcaldia" label="Municipio o alcaldía"
-                  (selectionChange)="onMunicipioChange($event)"></app-catalogo-select>
-                <div
-                  *ngIf="formChoferes.get('municipioAlcaldia')?.invalid && (formChoferes.get('municipioAlcaldia')?.touched || submitted)"
-                  class="text-danger">
-                  <small *ngIf="formChoferes.get('municipioAlcaldia')?.errors?.['required']">Este campo es
-                    obligatorio.</small>
-                </div>
-              </div>
+          <div class="col-md-4" style="padding-left: 0;">
+            <div>
+              <app-catalogo-select class="municipioAlcaldia" [catalogo]="municipioList"
+                formControlName="municipioAlcaldia" placeholder="Seleccione un valor" [required]="true"
+                [isDisabled]="readonly" name="municipioAlcaldia" label="Municipio o alcaldía"
+                (selectionChange)="onMunicipioChange($event)"></app-catalogo-select>
+              @if (formChoferes.get('municipioAlcaldia')?.errors?.['required'] &&
+              (formChoferes.get('municipioAlcaldia')?.touched || submitted)) {
+              <small class="text-danger">Este campo es obligatorio.</small>
+              }
             </div>
           </div>
 
@@ -224,10 +233,10 @@
                 <app-catalogo-select class="colonia" [catalogo]="coloniaList" formControlName="colonia"
                   placeholder="Seleccione un valor" [required]="true" [isDisabled]="readonly" name="colonia"
                   label="Colonia"></app-catalogo-select>
-                <div *ngIf="formChoferes.get('colonia')?.invalid && (formChoferes.get('colonia')?.touched || submitted)"
-                  class="text-danger">
-                  <small *ngIf="formChoferes.get('colonia')?.errors?.['required']">Este campo es obligatorio.</small>
-                </div>
+                @if (formChoferes.get('colonia')?.errors?.['required'] && (formChoferes.get('colonia')?.touched ||
+                submitted)) {
+                <small class="text-danger">Este campo es obligatorio.</small>
+                }
               </div>
             </div>
             <div class="col-md-4 mb-3">
@@ -235,12 +244,10 @@
                 <app-catalogo-select class="paisDeResidencia" [catalogo]="paisList" formControlName="paisDeResidencia"
                   placeholder="Seleccione un valor" [required]="true" [isDisabled]="readonly" name="paisDeResidencia"
                   label="País de residencia"></app-catalogo-select>
-                <div
-                  *ngIf="formChoferes.get('paisDeResidencia')?.invalid && (formChoferes.get('paisDeResidencia')?.touched || submitted)"
-                  class="text-danger">
-                  <small *ngIf="formChoferes.get('paisDeResidencia')?.errors?.['required']">Este campo es
-                    obligatorio.</small>
-                </div>
+                @if (formChoferes.get('paisDeResidencia')?.errors?.['required'] &&
+                (formChoferes.get('paisDeResidencia')?.touched || submitted)) {
+                <small class="text-danger">Este campo es obligatorio.</small>
+                }
               </div>
             </div>
 
@@ -249,12 +256,14 @@
                 <label for="ciudad">Ciudad*:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="ciudad" maxlength="20"/>
+                <input type="text" class="form-control" formControlName="ciudad" maxlength="20" />
               </div>
-              <div *ngIf="formChoferes.get('ciudad')?.invalid && (formChoferes.get('ciudad')?.touched || submitted)"
-                class="text-danger">
-                <small *ngIf="formChoferes.get('ciudad')?.errors?.['required']">Este campo es obligatorio.</small>
+              @if (formChoferes.get('ciudad')?.errors?.['required'] && (formChoferes.get('ciudad')?.touched ||
+              submitted)) {
+              <div class="text-danger">
+                <small class="text-danger">Este campo es obligatorio.</small>
               </div>
+              }
             </div>
           </div>
 
@@ -264,26 +273,28 @@
                 <label for="localidad">Localidad*:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="localidad" maxlength="120"/>
+                <input type="text" class="form-control" formControlName="localidad" maxlength="120" />
               </div>
-              <div
-                *ngIf="formChoferes.get('localidad')?.invalid && (formChoferes.get('localidad')?.touched || submitted)"
-                class="text-danger">
-                <small *ngIf="formChoferes.get('localidad')?.errors?.['required']">Este campo es obligatorio.</small>
+              @if (formChoferes.get('localidad')?.errors?.['required'] && (formChoferes.get('localidad')?.touched ||
+              submitted)) {
+              <div class="text-danger">
+                <small class="text-danger">Este campo es obligatorio.</small>
               </div>
+              }
             </div>
             <div class="col-md-4 mb-3">
               <div>
                 <label for="codigoPostal">Código postal*:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="codigoPostal" maxlength="12"/>
+                <input type="text" class="form-control" formControlName="codigoPostal" maxlength="12" />
               </div>
-              <div
-                *ngIf="formChoferes.get('codigoPostal')?.invalid && (formChoferes.get('codigoPostal')?.touched || submitted)"
-                class="text-danger">
-                <small *ngIf="formChoferes.get('codigoPostal')?.errors?.['required']">Este campo es obligatorio.</small>
+              @if (formChoferes.get('codigoPostal')?.errors?.['required'] && (formChoferes.get('codigoPostal')?.touched
+              || submitted)) {
+              <div class="text-danger">
+                <small class="text-danger">Este campo es obligatorio.</small>
               </div>
+              }
             </div>
           </div>
 
@@ -293,48 +304,46 @@
                 <label for="solicitud.correo">Correo electrónico:</label>
               </div>
               <div>
-                <input type="email" class="form-control" formControlName="correoElectronico" maxlength="55"/>
+                <input type="email" class="form-control" formControlName="correoElectronico" maxlength="55" />
               </div>
-              <div
-                *ngIf="formChoferes.get('correoElectronico')?.invalid && (formChoferes.get('correoElectronico')?.touched || submitted)"
-                class="text-danger">
-                <small *ngIf="formChoferes.get('correoElectronico')?.errors?.['email']">Por favor, escribe una dirección
-                  de correo válida.</small>
+              @if (formChoferes.get('correoElectronico')?.errors?.['required'] &&
+              (formChoferes.get('correoElectronico')?.touched || submitted)) {
+              <div class="text-danger">
+                <small class="text-danger">Este campo es obligatorio.</small>
               </div>
+              }
             </div>
             <div class="col-md-4">
               <div>
-                <label for="solicitud.telefono">Teléfono</label>
+                <label for="solicitud.telefono">Teléfono:</label>
               </div>
               <div>
-                <input type="tel" class="form-control" formControlName="telefono" maxlength="12"/>
+                <input type="tel" class="form-control" formControlName="telefono" maxlength="12" />
               </div>
-              <div *ngIf="formChoferes.get('telefono')?.invalid && (formChoferes.get('telefono')?.touched || submitted)"
-                class="text-danger">
-                <small *ngIf="formChoferes.get('telefono')?.errors?.['pattern']">Teléfono debe contener solo
-                  dígitos.</small>
+              @if (formChoferes.get('telefono')?.errors?.['required'] && (formChoferes.get('telefono')?.touched ||
+              submitted)) {
+              <div class="text-danger">
+                <small class="text-danger">Este campo es obligatorio.</small>
+              </div>
+              }
+            </div>
+          </div>
+          <div class="row mt-3 mb-3">
+            <div class="col-md-12">
+              <div class="pull-right justify-content-end">
+                <button type="button" class="btn btn-default mr-3" (click)="limpiarFormulario()">Limpiar</button>
+                <button type="button" class="btn btn-danger mr-3" (click)="cerrarModal()">Cancelar</button>
+                <button type="button" class="btn btn-primary mr-3" (click)="guardarFilaEditada()">Guardar</button>
               </div>
             </div>
           </div>
-
-
         </form>
-        <div class="row mt-3 mb-3">
-          <div class="col-md-12">
-            <div class="pull-right justify-content-end">
-              <button type="button" class="btn btn-default mr-3" (click)="resetForm()">Limpiar</button>
-              <button type="button" class="btn btn-danger mr-3" (click)="closeModal()">Cancelar</button>
-              <button type="button" class="btn btn-primary mr-3" (click)="guardarFilaEditada()">Guardar</button>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
-</div>
 
 @if(alertaNotificacion) {
-<section>
-  <lib-notificaciones [notificacionInput]="alertaNotificacion"></lib-notificaciones>
-</section>
+  <section>
+    <lib-notificaciones [notificacionInput]="alertaNotificacion"></lib-notificaciones>
+  </section>
 }

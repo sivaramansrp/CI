@@ -1,13 +1,156 @@
-<app-certificado-de-origen  (formCertificadoEvent)="setValoresStore($event)"
+<app-certificado-de-origen  (formCertificadoEvent)="setValoresStore($event)"  title="Validación a posteriori del certificado de circulación de mercancías"
     (tipoEstadoSeleccionEvent)="tipoEstadoSeleccion($event)" (paisBloquEvent)="tipoSeleccion($event)"
     (setbuscarMercanciaEvent)="buscarrMercancia()" [tratadoAcuerdo]="(estados$ | async ) || []"
     [paisBloqu]="(pais$ | async) || []" [tableData]="(datos1$ | async) || []" (filaClics)="abrirModificarModal($event)"
     [datosForm]="formCertificadoValues" [esFormularioSoloLectura]="esFormularioSoloLectura" [tablaSeleccionEvent]="tablaSeleccionEvent"
     [guardarClicado]="(datosTabla$ | async) ||  []" (formaValida)="setFormValida($event)"></app-certificado-de-origen>
 
-
-
 <div class="modal fade" #modifyModal tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
     <app-mercancias-modal [datosSeleccionados]="datosSeleccionados" (guardarClicado)="abrirModificarModal($event)"
         (cerrarClicado)="cerrarModificarModal()"></app-mercancias-modal>
 </div>
+    <ng-titulo titulo="Carga de mercancías por archivo" /> 
+       <div class="d-flex justify-content-end">
+              <button
+                type="button" [disabled]="esFormularioSoloLectura"
+                class="btn btn-primary mb-3" 
+              >
+                Carga por archivo
+              </button>
+        </div>
+     <ng-alert [CONTENIDO]="MERCANCIA"></ng-alert>
+     <H5>Mercancías seleccionadas</H5>
+      <app-tabla-dinamica
+    [configuracionTabla]="configuracionTablas"
+    [datos]="exportador"    
+    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
+    [tipoSeleccionTabla]="checkbox" 
+     (filaSeleccionada)="obtenerSeleccionadoMercancia($event)"  
+  ></app-tabla-dinamica> 
+  <div class="row d-flex  mt-3 mb-4 justify-content-end">
+                  <div class="col-12 container text-end mt-5">
+                    <button class="btn btn-danger me-2" (click)="eliminarSeleccionados()" [disabled]="esFormularioSoloLectura">Eliminar</button>
+                    <button class="btn btn-primary"  (click)="abrirModal()" [disabled]="esFormularioSoloLectura">Modificar</button>
+                  </div>
+   </div>
+
+
+  <div
+    #modalAgregarRef
+    class="modal fade"
+    id="modalAgregar"
+    tabindex="-1"
+    aria-labelledby="modalAgregarLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Instalaciones</h4>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="mercanciaDatosForm">
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label class="form-label" for="fraccionArancelaria">Fracción arancelaria: </label>
+              <input type="text" class="form-control" formControlName="fraccionArancelaria" [readonly]="true" (change)="setValoresStores(mercanciaDatosForm,'fraccionArancelaria', 'setFraccionArancelaria')">
+            </div>
+            <div class="col-md-8">
+              <label for="nombreComercialMercancia">Nombre comercial de la mercancía (igual que en la factura):</label>
+              <input type="text" class="form-control" formControlName="nombreComercialMercancia" (change)="setValoresStores(mercanciaDatosForm,'nombreComercialMercancia', 'setNombreComercialMercancia')">
+            </div>
+          </div>
+      
+          <div class="row mt-3 mb-3">
+            <div class="col-md-8">
+              <label for="nombreTecnico">Nombre técnico:</label>
+              <input type="text" class="form-control" formControlName="nombreTecnico" (change)="setValoresStores(mercanciaDatosForm,'nombreTecnico', 'setNombreTecnico')">
+            </div>
+          </div>
+      
+          <div class="row mt-3 mb-3">
+            <div class="col-md-6">
+              <label for="nombreIngles">Nombre en inglés:</label>
+              <input type="text" class="form-control" formControlName="nombreIngles" (change)="setValoresStores(mercanciaDatosForm,'nombreIngles', 'setNombreIngles')">
+            </div>
+            <div class="col-md-6">
+              <label for="criterioClasificacion">Criterio para clasificación:</label>
+              <input type="text" class="form-control" formControlName="criterioClasificacion" (change)="setValoresStores(mercanciaDatosForm,'criterioClasificacion', 'setCriterioClasificacion')">
+            </div>
+          </div>
+      
+          <div class="row mt-3 mb-3">
+            <div class="col-md-6">
+              <label for="marca">Marca:</label>
+              <input type="text" class="form-control" formControlName="marca" (change)="setValoresStores(mercanciaDatosForm,'marca', 'setMarca')">
+            </div>
+            <div class="col-md-6">
+              <label for="cantidad">Cantidad:</label>
+              <input type="number" class="form-control" formControlName="cantidad" (change)="setValoresStores(mercanciaDatosForm,'cantidad', 'setCantidad')">
+            </div>
+          </div>
+          <div class="row mt-3 mb-3">
+            <div class="col-md-7">
+             
+             <app-catalogo-select [catalogo]="umc" [label]="'UMC'" [required]="true" name="UMC"
+            formControlName="umc" [isDisabled]="esFormularioSoloLectura ? true : false"
+            (change)="setValoresStores(mercanciaDatosForm,'umc', 'setUmc')"></app-catalogo-select>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="valorMercancia">Valor de la mercancía (dólares)*:</label>
+              <input type="number" class="form-control" formControlName="valorMercancia" (change)="setValoresStores(mercanciaDatosForm,'valorMercancia', 'setValorMercancia')">
+            </div>
+            <div class="col-md-6">
+              <label for="complementoClasificacion">Complemento de la clasificación*:</label>
+              <textarea class="mb-4 h-20 w-100 form-control" formControlName="complementoClasificacion" rows="2"></textarea>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="masaBruta">Masa Bruta*:</label>
+              <input type="number" class="form-control" formControlName="masaBrutas" (change)="setValoresStores(mercanciaDatosForm,'masaBrutas', 'setMasaBrutas')">
+            </div>
+            <div class="col-md-6">              
+             <app-catalogo-select [catalogo]="masaBrutas" [label]="'Unidad de medida de la masa bruta'" [required]="true" name="masaBruta"
+            formControlName="masaBruta" [isDisabled]="esFormularioSoloLectura ? true : false"
+            (change)="setValoresStores(mercanciaDatosForm,'masaBruta', 'setMasaBruta')"></app-catalogo-select>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-3">
+              <input-fecha [datos]="fechaFinalInput" [setFecha]="mercanciaDatosForm.get('fechaFinal')?.value" (valorCambiado)="onFechaCambiada($event)"></input-fecha>
+            </div>
+            <div class="col-md-4">
+              <label for="numeroFactura">N° factura:</label>
+              <input type="text" class="form-control" formControlName="numeroFactura" (change)="setValoresStores(mercanciaDatosForm,'numeroFactura', 'setNumeroFactura')">
+            </div>
+            <div class="col-md-4 mr-2">
+            <app-catalogo-select [catalogo]="facturas" [label]="'Tipo de factura'" [required]="true" name="facturas"
+            formControlName="facturas" [isDisabled]="esFormularioSoloLectura ? true : false"
+            (change)="setValoresStores(mercanciaDatosForm,'facturas', 'setFacturas')"></app-catalogo-select>
+            </div>
+          </div>
+        </form>
+        </div>
+        <div class="modal-footer custom-footer justify-content-center">
+          <button
+            type="button" class="btn btn-primary"  (click)="onGuardarMercancia()"
+  [disabled]="esFormularioSoloLectura">
+            Aceptar
+          </button>
+            <button
+            type="button"
+            class="btn btn-default"
+            data-bs-dismiss="modal"
+            #closeModal
+            (click)="closeModal.click()"
+            >
+            Cancelar
+            </button>
+        </div>
+      </div> 
+    </div>
+  </div>
+

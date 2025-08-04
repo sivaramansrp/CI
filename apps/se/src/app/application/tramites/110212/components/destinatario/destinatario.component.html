@@ -4,17 +4,26 @@
     <div class="row">
       <div class="col-md-4 mb-3">
         <label>Nombre(s):</label>
-        <input type="text" class="form-control" formControlName="nombre" id="nombre" maxlength="20"
+        <input type="text" class="form-control" 
+          [ngClass]="{'gray-glass': registroFormulario.get('grupoReceptor.razonSocial')?.value !== ''}"
+          [readonly]="registroFormulario.get('grupoReceptor.razonSocial')?.value !== ''"
+          formControlName="nombre" id="nombre" maxlength="20"
           (change)="setValoresStore(grupoReceptor, 'nombre', 'setGrupoReceptorNombre')" />
       </div>
       <div class="col-md-4 mb-3">
         <label>Primer apellido:</label>
-        <input type="text" class="form-control" id="primerApellido" formControlName="apellidoPrimer" maxlength="20" (click)="onClick()"
+        <input type="text" class="form-control" 
+          [ngClass]="{'gray-glass': registroFormulario.get('grupoReceptor.razonSocial')?.value !== ''}"
+          [readonly]="registroFormulario.get('grupoReceptor.razonSocial')?.value !== ''"
+          id="primerApellido" formControlName="apellidoPrimer" maxlength="20" (click)="onClick()"
           (change)="setValoresStore(grupoReceptor, 'apellidoPrimer','setGrupoReceptorApellidoPrimer')" />
       </div>
       <div class="col-md-4 mb-3">
         <label>Segundo apellido:</label>
-        <input type="text" class="form-control" id="segundoApellido" formControlName="apellidoSegundo" maxlength="20" (change)="
+        <input type="text" class="form-control" 
+          [ngClass]="{'gray-glass': registroFormulario.get('grupoReceptor.razonSocial')?.value !== ''}"
+          [readonly]="registroFormulario.get('grupoReceptor.razonSocial')?.value !== ''"
+          id="segundoApellido" formControlName="apellidoSegundo" maxlength="20" (change)="
             setValoresStore(grupoReceptor,    'apellidoSegundo', 'setGrupoReceptorApellidoSegundo')" />
       </div>
     </div>
@@ -34,8 +43,8 @@
       <div class="col-md-8 mb-3">
         <label>Razón social:</label>
         <input type="text" class="form-control"
-          [ngClass]="{'gray-glass': registroFormulario.get('grupoReceptor.apellidoPrimer')?.value !== ''}"
-          id="denominacion" [readonly]=" registroFormulario.get('grupoReceptor.apellidoPrimer')?.value !== ''"
+          [ngClass]="{'gray-glass': registroFormulario.get('grupoReceptor.nombre')?.value !== '' || registroFormulario.get('grupoReceptor.apellidoPrimer')?.value !== '' || registroFormulario.get('grupoReceptor.apellidoSegundo')?.value !== ''}"
+          id="denominacion" [readonly]="registroFormulario.get('grupoReceptor.nombre')?.value !== '' || registroFormulario.get('grupoReceptor.apellidoPrimer')?.value !== '' || registroFormulario.get('grupoReceptor.apellidoSegundo')?.value !== ''"
           formControlName="razonSocial" maxlength="70"
           (change)="setValoresStore(grupoReceptor, 'razonSocial', 'setGrupoReceptorRazonSocial')" />
       </div>
@@ -105,8 +114,8 @@
       <div class="row">
         <div class="col-md-4 mb-3">
           <label>Fax:</label>
-          <input type="number" class="form-control" id="fax" formControlName="fax"
-            (input)="limitDigits($event, 20)"
+          <input type="text" class="form-control" id="fax" formControlName="fax" maxlength="20"
+            [ngClass]="grupoDeDirecciones.get('fax')?.invalid && grupoDeDirecciones.get('fax')?.touched ? 'required' : ''"
             (change)="setValoresStore(grupoDeDirecciones, 'fax', 'setGrupoDeDireccionesFax')" />
             @if (grupoDeDirecciones.get('fax')?.hasError('pattern') &&
             grupoDeDirecciones.get('fax')?.touched) {
@@ -206,7 +215,12 @@
           <div class="text-danger">
             <small>Este campo es obligatorio</small>
           </div>
-          }
+          } @else if (grupoRepresentativo.get('telefono')?.hasError('pattern') &&
+            grupoRepresentativo.get('telefono')?.touched) {
+            <div class="text-danger">
+              <small>Por favor, ingrese solo dígitos</small>
+            </div>
+            }
       </div>
 
       <div class="row">
@@ -220,11 +234,16 @@
             <div class="text-danger">
               <small>Este campo es obligatorio</small>
             </div>
+            } @else if (grupoRepresentativo.get('fax')?.hasError('pattern') &&
+            grupoRepresentativo.get('fax')?.touched) {
+            <div class="text-danger">
+              <small>Por favor, ingrese solo dígitos</small>
+            </div>
             }
         </div>
         <div class="col-md-4 mb-3">
           <label>Correo electrónico*:</label><span class="bi bi-question-circle-fill mx-2" tooltip="ejemplo@dominio.com" placement="top"></span>
-          <input type="text" class="form-control" id="correoElectronico" formControlName="correoElectronico" maxlength="20"
+          <input type="text" class="form-control" id="correoElectronico" formControlName="correoElectronico" maxlength="70"
             [ngClass]="grupoRepresentativo.get('correoElectronico')?.invalid && grupoRepresentativo.get('correoElectronico')?.touched ? 'required' : ''"
             (change)="setValoresStore( grupoRepresentativo,'correoElectronico','setGrupoRepresentativoCorreoElectronico')" />
              @if (grupoRepresentativo.get('correoElectronico')?.hasError('required') &&

@@ -15,7 +15,7 @@
             id="contenidoOpcionTipoPersona"
             formControlName="tipoPersona"
             [showTooltip]="true"
-            (change)="changeNacionalidad()"
+            (valueChange)="changeNacionalidad($event)"
           >
           </app-input-radio>
         </div>
@@ -39,6 +39,7 @@
           formControlName="rfc"
         />
       </div>
+      @if(this.tipoPersonaValor !== 'Fisica' && this.tipoPersonaValor !== 'Moral') {
       <div class="form-group col-md-4">
         <label class="form-label mt-3 fs-2" for="curp">C.U.R.P.*:</label>
         <input
@@ -50,6 +51,7 @@
           formControlName="curp"
         />
       </div>
+      }
       <div class="row">
         <div class="col-md-4 mt-2">
           <div class="pull-right">
@@ -69,8 +71,7 @@
     }
 
     <!-- Datos Personales -->
-    @if(agregarDatosForm.get('tipoPersona')?.value === tipoPersona.FISICA ||
-    agregarDatosForm.get('tipoPersona')?.value === tipoPersona.NO_CONTRIBUYENTE)
+    @if(tipoPersonaValor === "Fisica" || tipoPersonaValor === '')
     {
     <h4 class="mt-4">Datos personales</h4>
     <div class="row">
@@ -95,7 +96,7 @@
         />
       </div>
     </div>
-    } @if(agregarDatosForm.get('tipoPersona')?.value === tipoPersona.MORAL) {
+    } @if(tipoPersonaValor === 'Moral') {
     <div class="row">
       <div class="form-group">
         <label
@@ -276,7 +277,7 @@
           <button
             type="button"
             name="eliminarMercancias"
-            class="btn btn-danger ms-2"
+            class="btn btn-default ms-2"
             (click)="limpiarFormulario()"
           >
             Limpar

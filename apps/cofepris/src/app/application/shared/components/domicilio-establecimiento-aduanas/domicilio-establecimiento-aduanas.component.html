@@ -21,7 +21,7 @@
     <div class="col-md-4">
       <app-catalogo-select [catalogo]="estado" formControlName="estado" [label]="'Estado'" [required]="true"
         name="estado" (change)="setValoresStore(domicilio, 'estado', 'setEstado')"
-        [isDisabled]="esFormularioSoloLectura || !tieneSeleccionadoBtnClicked"></app-catalogo-select>
+        [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
       <div class="d-grid">
         <div *ngIf="domicilio.get('estado')?.touched">
           <small class="mensaje-error" *ngIf="domicilio.get('estado')?.hasError('required')">
