@@ -93,3 +93,57 @@
       descripcionModalidad: string;
   
   }
+
+  export interface FracciónArancelaria {
+    id?: number;
+    fraccionArancelariaFraccion?: string;
+    cantidad?: string;
+    valor?: string;
+    unidadMedidaTarifaria?: string;
+  }
+
+  export interface DatosImmex {
+    rfc?: string;
+    domicilioFiscal?:string;
+    calle?: string;
+    numeroInterior?: string;
+    numeroExterior?: string;
+    codigoPostal?: string;
+    colonia?: string;
+    localidad?: string;
+    entidadFederativa?: string;
+    pais?: string;
+    telefono?: string;
+   
+}
+
+export interface DatosDelModificacion {
+  id?: number;
+  calle?: string;
+  numeroExterior?: number;
+  numeroInterior?: number;
+  codigoPosta?: number;
+  colonia?: string;
+  municipioOAlcaldia?: string;
+  entidadFederativa?: string;
+  pais?: string;
+  telefono?: string;
+  desEstatus?: string;
+}
+
+
+
+export interface DatosDelServicios {
+  id?: number;
+  desEstatus?: string;
+  descripcion?: string;
+  tipoDeServicio?: string;
+  testado?: string;
+}
+
+export interface DatosDelModificaciondos {
+  id?: number;
+  desEstatus?: string;
+  descripcion?: string;
+  tipoDeServicio?: string;
+}
