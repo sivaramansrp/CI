@@ -1,19 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { FormGroup } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-
 import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
+import { Component, OnInit } from '@angular/core';
+import { DIRECTOS, Directos } from '../../constantes/empleados.enum';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Subject,map,takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
 import { ComplementarQuery } from '../../../estados/queries/complementar.query';
-import { DIRECTOS } from '../../constantes/empleados.enum';
 import { FECHA_DE_CEDULA } from '../../constantes/empleados.enum';
 import { FECHA_DE_FIRMA } from '../../constantes/empleados.enum';
 import { FECHA_FIN_VIGENCIA } from '../../constantes/empleados.enum';
+import { FormGroup } from '@angular/forms';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { Location } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
@@ -81,7 +80,7 @@ export class EmpleadosComponent implements OnInit {
    * Datos para la tabla de empleados directos.
    * @property {Array} directosDatos
    */
-  directosDatos = [];
+  directosDatos!: Directos[];
 
   /**
    * Configuración de la fecha de cédula.
@@ -117,6 +116,9 @@ export class EmpleadosComponent implements OnInit {
    */
   ngOnInit(): void {
    this.crearFormularioEmpleados();
+    if (!this.directosDatos) {
+      this.directosDatos = [];
+    }
   }
   /**
    * Crea el formulario de empleados.
@@ -195,6 +197,120 @@ export class EmpleadosComponent implements OnInit {
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof ComplementarStore): void {
     const VALOR = form.get(campo)?.value;
+    if(campo === 'directos') {
+      this.setDirectosValidation();
+    } else if (campo === 'indirectos') {
+      this.setIndirectosValidation();
+    }
     (this.complementarStore[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+
+  /**
+   * Maneja los cambios en el campo "Razon Social".
+   * Actualiza el estado del almacén con la razón social proporcionada.  
+   */
+  setIndirectosValidation(): void {
+    if (this.empleadosForm.get('indirectos')?.value) {
+      this.empleadosForm.patchValue({
+        indirectosDatos: this.solicitudState.indirectosDatos,
+        contrato: this.solicitudState.contrato,
+        objeto: this.solicitudState.objeto,
+        fechaFirma: this.solicitudState.fechaFirma,
+        fechaFinVigencia: this.solicitudState.fechaFinVigencia,
+        rfcEmpresa: this.solicitudState.rfcEmpresa,
+        razonSocial: this.solicitudState.razonSocial
+      });
+      this.empleadosForm.get('indirectosDatos')?.setValidators([Validators.required]);
+      this.empleadosForm.get('contrato')?.setValidators([Validators.required]);
+      this.empleadosForm.get('objeto')?.setValidators([Validators.required]);
+      this.empleadosForm.get('fechaFirma')?.setValidators([Validators.required]);
+      this.empleadosForm.get('fechaFinVigencia')?.setValidators([Validators.required]);
+      this.empleadosForm.get('rfcEmpresa')?.setValidators([Validators.required]);
+      this.empleadosForm.get('razonSocial')?.setValidators([Validators.required]);
+    } else {
+      this.empleadosForm.get('indirectosDatos')?.clearValidators();
+      this.empleadosForm.get('contrato')?.clearValidators();
+      this.empleadosForm.get('objeto')?.clearValidators();
+      this.empleadosForm.get('fechaFirma')?.clearValidators();
+      this.empleadosForm.get('fechaFinVigencia')?.clearValidators();
+      this.empleadosForm.get('rfcEmpresa')?.clearValidators();
+      this.empleadosForm.get('razonSocial')?.clearValidators();
+    }
+    this.empleadosForm.get('indirectosDatos')?.updateValueAndValidity();
+    this.empleadosForm.get('contrato')?.updateValueAndValidity();
+    this.empleadosForm.get('objeto')?.updateValueAndValidity();
+    this.empleadosForm.get('fechaFirma')?.updateValueAndValidity();
+    this.empleadosForm.get('fechaFinVigencia')?.updateValueAndValidity();
+    this.empleadosForm.get('rfcEmpresa')?.updateValueAndValidity();
+    this.empleadosForm.get('razonSocial')?.updateValueAndValidity();
+  }
+
+  /**
+   * Maneja los cambios en el campo "Razon Social".
+   * Actualiza el estado del almacén con la razón social proporcionada.  
+   */
+  setDirectosValidation(): void {
+    if (this.empleadosForm.get('directos')?.value) {
+      this.empleadosForm.get('directo')?.setValidators([Validators.required]);
+      this.empleadosForm.get('cedula')?.setValidators([Validators.required]);
+      this.empleadosForm.get('fechaCedula')?.setValidators([Validators.required]);
+    } else {
+      this.empleadosForm.get('directo')?.clearValidators();
+      this.empleadosForm.get('cedula')?.clearValidators();
+      this.empleadosForm.get('fechaCedula')?.clearValidators();
+    }
+    this.empleadosForm.get('directo')?.updateValueAndValidity();
+    this.empleadosForm.get('cedula')?.updateValueAndValidity();
+    this.empleadosForm.get('fechaCedula')?.updateValueAndValidity();
+  }
+
+  /**
+   * Maneja los cambios en el campo "Razon Social".
+   * Actualiza el estado del almacén con la razón social proporcionada.  
+   */
+  agregar(): void {
+  const DIRECTOS = this.empleadosForm.get('directos')?.value;
+  const INDIRECTOS = this.empleadosForm.get('indirectos')?.value;
+  const TABLA_VALOR: Directos = {
+    PLANTA: this.empleadosForm.get('directo')?.value,
+    TOTAL: this.empleadosForm.get('totalDeEmpleados')?.value,
+    DIRECTOS: DIRECTOS ? this.empleadosForm.get('directo')?.value : '',
+    CEDULA_DE_CUOTAS: DIRECTOS ? this.empleadosForm.get('cedula')?.value : '',
+    FECHA_DE_CEDULA: DIRECTOS ? this.empleadosForm.get('fechaCedula')?.value : '',
+    INDIRECTOS: INDIRECTOS,
+    CONTRATO: INDIRECTOS ? this.empleadosForm.get('contrato')?.value : '',
+    OBJETO_DEL_CONTRATO_DEL_SERVICIO: INDIRECTOS ? this.empleadosForm.get('objeto')?.value : '',
+    FECHA_FIRMA: INDIRECTOS ? this.empleadosForm.get('fechaFirma')?.value : '',
+    FECHA_FIN_VIGENCIA: INDIRECTOS ? this.empleadosForm.get('fechaFinVigencia')?.value : '',
+    RFC: INDIRECTOS ? this.empleadosForm.get('rfcEmpresa')?.value : '',
+    RAZON_SOCIAL: INDIRECTOS ? this.empleadosForm.get('razonSocial')?.value : ''
+  };
+  this.directosDatos.push(TABLA_VALOR);
+  this.limpiar();
+  }
+
+  /**
+   * Restablece el formulario de empleados a su estado inicial.
+   * 
+   * Este método realiza las siguientes acciones:
+   * - Reinicia todos los campos del formulario `empleadosForm` a sus valores predeterminados.
+   * - Desactiva el campo `razonSocial` en el formulario.
+   * - Establece la propiedad `disableRazonSocial` en `true` para reflejar el estado deshabilitado.
+   * - Limpia la lista de datos `directosDatos`.
+   * - Establece los valores de los campos `directos` e `indirectos` en `false`.
+   * - Configura las validaciones para los campos `directos` e `indirectos` llamando a los métodos `setDirectosValidation` y `setIndirectosValidation`.
+   * 
+   * Este método es útil para reiniciar el formulario y asegurarse de que todos los campos y validaciones
+   * estén en su estado inicial.
+   */
+  limpiar(): void {
+    this.empleadosForm.reset();
+    this.empleadosForm.get('razonSocial')?.disable();
+    this.disableRazonSocial = true;
+    this.empleadosForm.get('directos')?.setValue(false);
+    this.empleadosForm.get('indirectos')?.setValue(false);
+    this.setDirectosValidation();
+    this.setIndirectosValidation();
+  }
+  
 }

@@ -789,7 +789,7 @@
               <div class="panel panel-default">
                 <div class="panel-heading" (click)="mostrar_colapsable()" tabindex="0">
                   <p class="panel-title">País de orígen</p>
-                  <button type="button" class="collpase-button collapsed"></button>
+                  <button type="button" class="collpase-button" [ngClass]="{ 'collapsed': !colapsable }"></button>
                 </div>
                 @if(colapsable){
                 <div class="panel-collapse collapse in" id="panel-01">
@@ -808,7 +808,7 @@
               <div class="panel panel-default">
                 <div class="panel-heading" (click)="mostrar_colapsableDos()" tabindex="0">
                   <p class="panel-title">País de procedencia</p>
-                  <button type="button" class="collpase-button collapsed"></button>
+                  <button type="button" class="collpase-button" [ngClass]="{ 'collapsed': !colapsableDos }"></button>
                 </div>
                 @if(colapsableDos){
                 <div class="panel-collapse collapse in" id="panel-01">
@@ -827,7 +827,7 @@
               <div class="panel panel-default">
                 <div class="panel-heading" (click)="mostrar_colapsableTres()" tabindex="0">
                   <p class="panel-title">Uso específico</p>
-                  <button type="button" class="collpase-button collapsed"></button>
+                  <button type="button" class="collpase-button" [ngClass]="{ 'collapsed': !colapsableTres }"></button>
                 </div>
                 @if(colapsableTres){
                 <div class="panel-collapse collapse in" id="panel-01">

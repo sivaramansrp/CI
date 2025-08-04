@@ -1,7 +1,11 @@
-export interface DomicilioNotificacion{
-    calle:string;
+/**
+ * @description
+ * Interfaz que define la estructura del domicilio de notificación.
+ */
+export interface DomicilioNotificacion {
+    calle: string;
     numeroExterior: string;
-    apellidoMaterno:string;
+    apellidoMaterno: string;
 }
 
 /**
@@ -23,6 +27,10 @@ export interface CancelacionDeAutorizaciones {
      * Modalidad seleccionada.
      */
     seleccionaLaModalidad: string;
+    /**
+     * Motivo de cancelación.
+     */
+    estatus: string;
 }
 
 /**
@@ -42,4 +50,4 @@ export const FECHA_DE_PAGO = {
     * Indica si el campo está habilitado para edición.
     */
     habilitado: true,
-  };
+};

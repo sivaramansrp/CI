@@ -10,7 +10,7 @@
                 [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="consultaState.readonly">
             </app-tabla-dinamica>
             <div class="d-flex justify-content-end mt-4">
-                <button type="button" class="btn btn-primary" (click)="abrirFabricanteModal('Agregar fabricante')">Agregar</button>
+                <button type="button" class="btn btn-primary" (click)="abrirFabricanteModal('Agregar fabricante')" [disabled]="consultaState.readonly">Agregar</button>
             </div>
         </div>
     </div>
@@ -23,7 +23,7 @@
                 [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="consultaState.readonly">
             </app-tabla-dinamica>
             <div class="d-flex justify-content-end mt-4">
-                <button type="button" class="btn btn-primary" (click)="abrirFabricanteModal('Agregar facturador')">Agregar</button>
+                <button type="button" class="btn btn-primary" (click)="abrirFabricanteModal('Agregar facturador')" [disabled]="consultaState.readonly">Agregar</button>
             </div>
         </div>
     </div>
@@ -36,7 +36,7 @@
                 [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="consultaState.readonly">
             </app-tabla-dinamica>
             <div class="d-flex justify-content-end mt-4">
-                <button type="button" class="btn btn-primary" (click)="abrirFabricanteModal('Agregar proveedor/distribuidor')">Agregar</button>
+                <button type="button" class="btn btn-primary" (click)="abrirFabricanteModal('Agregar proveedor/distribuidor')" [disabled]="consultaState.readonly">Agregar</button>
             </div>
         </div>
     </div>
@@ -49,7 +49,7 @@
                 [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="consultaState.readonly">
             </app-tabla-dinamica>
             <div class="d-flex justify-content-end mt-4">
-                <button type="button" class="btn btn-primary" (click)="abrirFabricanteModal('Agregar certificado analítico')">Agregar</button>
+                <button type="button" class="btn btn-primary" (click)="abrirFabricanteModal('Agregar certificado analítico')" [disabled]="consultaState.readonly">Agregar</button>
             </div>
         </div>
     </div>
@@ -62,7 +62,7 @@
                 [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="consultaState.readonly">
             </app-tabla-dinamica>
             <div class="d-flex justify-content-end mt-4">
-                <button type="button" class="btn btn-primary" (click)="abrirFabricanteModal('Agregar otros')">Agregar</button>
+                <button type="button" class="btn btn-primary" (click)="abrirFabricanteModal('Agregar otros')" [disabled]="consultaState.readonly">Agregar</button>
             </div>
         </div>
     </div>
