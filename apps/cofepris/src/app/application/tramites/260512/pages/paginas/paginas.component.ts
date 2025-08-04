@@ -1,5 +1,5 @@
 import { AVISO, DatosPasos, ListaPasosWizard, WizardComponent, WizardService } from '@libs/shared/data-access-user/src';
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AccionBoton } from '@ng-mf/data-access-user';
@@ -18,7 +18,7 @@ import { ServicioDeFormularioService } from '../../../../shared/services/forma-s
   selector: 'app-paginas',
   templateUrl: './paginas.component.html',
 })
-export class PaginasComponent implements OnInit {
+export class PaginasComponent implements OnInit, OnDestroy {
 
   /**
    * @property pantallasPasos
@@ -188,5 +188,16 @@ export class PaginasComponent implements OnInit {
       }
     }
     }
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Notifica y completa el subject para cancelar todas las suscripciones activas y evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
