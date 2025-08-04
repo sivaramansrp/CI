@@ -1,17 +1,17 @@
-import { CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ADMINISTRAR_RESIDUOS,Administrar, EstadoDatoSolicitud } from '../../models/datos-solicitud.model';
+import { CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery,ConsultaioState} from '@ng-mf/data-access-user'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RadioOpcion, SolicitudJson } from '@libs/shared/data-access-user/src/core/models/231003/solicitud.model';
 import {Subject, map, takeUntil } from 'rxjs';
+import { AvisoDeReciclajeServiceService } from '../../service/aviso-de-reciclaje-service.service';
 import { CommonModule } from '@angular/common';
 import { DatoSolicitudQuery } from '../../estados/queries/dato-solicitud.query';
 import { DatoSolicitudStore } from '../../estados/tramites/dato-solicitud.store';
 import { DatosResiduosPeligrososComponent } from '../datos-residuos-peligrosos/datos-residuos-peligrosos.component';
-import { EstadoDatoSolicitud } from '../../models/datos-solicitud.model';
 import { Modal } from 'bootstrap';
 import rawData from '@libs/shared/theme/assets/json/231003/solicitud.json';
-
 /**
  * Constante que contiene las opciones de radio y demás datos del archivo JSON.
  * Se hace un cast del JSON importado al tipo `SolicitudJson`.
@@ -26,17 +26,16 @@ const RADIO_OPCIONES = rawData as SolicitudJson;
   imports: [CommonModule,
     CatalogoSelectComponent,
     TituloComponent,
-    ReactiveFormsModule, TableComponent, InputRadioComponent, DatosResiduosPeligrososComponent],
+    ReactiveFormsModule, TablaDinamicaComponent, InputRadioComponent, DatosResiduosPeligrososComponent],
   templateUrl: './datos-solicitud.component.html',
   styleUrl: './datos-solicitud.component.scss',
 })
-export class DatosSolicitudComponent implements OnInit {
+export class DatosSolicitudComponent implements OnInit,OnDestroy {
 
   /** 
    * Referencia al elemento del DOM del modal para agregar mercancías.
    */
   @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
-
   /** 
    * Formulario principal de solicitud.
    */
@@ -81,9 +80,27 @@ export class DatosSolicitudComponent implements OnInit {
   /**
    * Subject utilizado para destruir las suscripciones y evitar fugas de memoria.
    */
-  private destroy$ = new Subject<void>();
+  private destroy$: Subject<void> = new Subject<void>();
 
-
+/**
+ * Almacena la configuración de la tabla para el tipo de dato "Administrar".
+ * Utiliza la configuración de columnas predefinida de `ADMINISTRAR_RESIDUOS`.
+ */
+public configuracionTabla: ConfiguracionColumna<Administrar>[] = ADMINISTRAR_RESIDUOS;
+/**
+ * Arreglo que contiene la lista de objetos `Administrar` que representan los registros de gestión de residuos
+ * asociados a la solicitud actual.
+ */
+public administrarResiduos: Administrar[] = [];
+/**
+ * Especifica el modo de selección de la tabla como selección por casilla de verificación (checkbox).
+ */
+public tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
+/**
+ * Indica si actualmente hay una fila seleccionada en la tabla.
+ * Se utiliza para controlar el comportamiento de la interfaz según el estado de selección de la fila de la tabla.
+ */
+public tieneTablaRowSeleccionado: boolean = false;
   /**
    * Constructor del componente. Inyecta el FormBuilder, el store y el query de Akita.
    */
@@ -91,12 +108,23 @@ export class DatosSolicitudComponent implements OnInit {
     public fb: FormBuilder,
     private datoSolicitudStore: DatoSolicitudStore,
     private datoSolicitudQuery: DatoSolicitudQuery,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    private avisoDeReciclajeSvc: AvisoDeReciclajeServiceService
   ) {
     // Lógica del constructor si se necesita
   }
 
 
+  /**
+   * Método del ciclo de vida que se llama después de que Angular ha inicializado todas las propiedades enlazadas a datos del componente.
+   * 
+   * - Inicializa múltiples formularios relacionados con la solicitud, empresa de reciclaje, lugar de reciclaje, empresa transportista y precauciones de manejo.
+   * - Recupera valores almacenados desde el store de gestión de estado para poblar los formularios.
+   * - Se suscribe al estado de consulta y actualiza el estado local en consecuencia.
+   * - Deshabilita los formularios si el estado de consulta está en modo solo lectura.
+   * - Deshabilita controles específicos en el formulario de lugar de reciclaje según su valor.
+   * - Invoca el método para obtener los datos de gestión de residuos.
+   */
   ngOnInit(): void {
     /** 
      * Inicializa el formulario principal de solicitud.
@@ -141,6 +169,13 @@ export class DatosSolicitudComponent implements OnInit {
     if (this.consultaState.readonly) {
       this.deshabilitarFormularios();
     }
+
+    if(this.formularioLugarReciclaje.get('reciclajeInstalaciones')?.value === 'Si') {
+      this.formularioLugarReciclaje.get('lugarReciclaje')?.disable();
+      this.formularioLugarReciclaje.get('numeroAutorizacionEmpresaReciclaje')?.disable();
+    }
+
+    this.getAdministrarResiduos();
   }
 
   /** 
@@ -166,7 +201,7 @@ export class DatosSolicitudComponent implements OnInit {
   private inicializarFormularioEmpresaReciclaje(): void {
     this.formularioEmpresaReciclaje = this.fb.group({
       /** Indica si se requiere empresa de reciclaje (valor por defecto: "Si") */
-      requiereEmpresa: ['Si', Validators.required],
+      requiereEmpresa: ['', Validators.required],
 
       /** Nombre de la empresa recicladora */
       nombreEmpresa: ['', Validators.required],
@@ -329,7 +364,7 @@ export class DatosSolicitudComponent implements OnInit {
 
     // Si el campo actualizado es 'reciclajeInstalaciones', controla la habilitación de campos relacionados
     if (campo === 'reciclajeInstalaciones') {
-      const DEBE_HABILITAR = VALOR === 'Si';
+      const DEBE_HABILITAR = VALOR === 'No';
       const CAMPOS_A_CONTROLAR = ['lugarReciclaje', 'numeroAutorizacionEmpresaReciclaje'];
 
       CAMPOS_A_CONTROLAR.forEach((campoExtra: string): void => {
@@ -391,6 +426,16 @@ export class DatosSolicitudComponent implements OnInit {
     }
   }
 
+  /**
+   * Establece el estado de selección de la fila de la tabla.
+   * Actualiza la propiedad `tieneTablaRowSeleccionado` según si hay filas seleccionadas.
+   *
+   * @param rowSeleccion - Un arreglo de objetos `Administrar` que representan las filas seleccionadas.
+   */
+  public setTablaSeleccion(rowSeleccion: Administrar[]) {
+    this.tieneTablaRowSeleccionado = rowSeleccion.length > 0 ? true : false;
+  }
+
     /**
      * Habilita o deshabilita todos los formularios según el estado de solo lectura.
      * Si el estado es de solo lectura, deshabilita todos los formularios para evitar edición.
@@ -412,5 +457,30 @@ export class DatosSolicitudComponent implements OnInit {
         this.formularioEmpresaTransportista.enable();
         this.formularioPrecaucionesManejo.enable();
       }
+    }
+
+    /**
+     * Obtiene los datos del aviso de reciclaje desde el servicio y los asigna a `administrarResiduos`.
+     * 
+     * Se suscribe al observable `obtenerAvisoDeReciclajeDatos` de `avisoDeReciclajeSvc`,
+     * asegurando que la suscripción se limpie correctamente usando `takeUntil(this.destroy$)`.
+     * La respuesta se copia profundamente antes de asignarla para evitar problemas de referencia.
+     */
+    public getAdministrarResiduos(): void {
+      this.avisoDeReciclajeSvc.obtenerAvisoDeReciclajeDatos()
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((response) => {
+          const API_DATOS = JSON.parse(JSON.stringify(response));
+          this.administrarResiduos = API_DATOS;
+        });
+    }
+
+    /**
+     * Método del ciclo de vida que se llama cuando el componente es destruido.
+     * Emite un valor y completa el subject `destroy$` para limpiar suscripciones y evitar fugas de memoria.
+     */
+    ngOnDestroy(): void {
+      this.destroy$.next();
+      this.destroy$.complete();
     }
 }

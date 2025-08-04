@@ -69,13 +69,6 @@ describe('DomicilioDelDestinatarioComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería inicializar el formulario en ngOnInit y establecer valores desde mockData', () => {
-    expect(component.solicitudForm).toBeDefined();
-    expect(component.solicitudForm.get('ciudad')?.value).toBe('Mock City');
-    expect(component.solicitudForm.get('calle')?.value).toBe('Mock Street');
-    expect(component.solicitudForm.get('numeroLetra')?.value).toBe('123C');
-  });
-
   it('debería establecer manualmente los valores del formulario usando setFormValues()', () => {
     component.setFormValues();
 
@@ -114,4 +107,13 @@ describe('DomicilioDelDestinatarioComponent', () => {
     expect(destroySpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
+
+  
+  it('debería inicializar el formulario en ngOnInit y establecer valores desde mockData', () => {
+    expect(component.solicitudForm).toBeDefined();
+    expect(component.solicitudForm.get('ciudad')?.value).toBe('Mock City');
+    expect(component.solicitudForm.get('calle')?.value).toBe('Mock Street');
+    expect(component.solicitudForm.get('numeroLetra')?.value).toBe('123C');
+  });
+  
 });

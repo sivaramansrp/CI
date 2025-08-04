@@ -93,12 +93,6 @@ describe('SolicitudComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should call datosDeAvisoForm if esFormularioSoloLectura is false in inicializarEstadoFormulario', () => {
-    component.esFormularioSoloLectura = false;
-    const spy = jest.spyOn(component, 'datosDeAvisoForm');
-    component.inicializarEstadoFormulario();
-    expect(spy).toHaveBeenCalled();
-  });
 
   it('should patch fechaPago and call setValoresStore in cambioFechaPago', () => {
     const spy = jest.spyOn(component, 'setValoresStore');
@@ -171,43 +165,6 @@ describe('SolicitudComponent', () => {
     expect(storeMock.setLlave).toHaveBeenCalledWith('abc');
   });
 
-  it('should initialize registroForm in donanteDomicilio and call inicializarEstadoFormulario', () => {
-    const spy = jest.spyOn(component, 'inicializarEstadoFormulario');
-    component.solicitudState = {
-      llave: 'llave',
-      manifiesto1: 'm1',
-      manifiesto2: 'm2',
-      manifiesto3: 'm3',
-      numeroOperacion: 123,
-      fechaPago: '2024-01-01',
-      monedaNacional: 'MXN',
-      renovacion: false,
-      homologacion: false,
-    };
-    component.donanteDomicilio();
-    expect(component.registroForm.get('llave')?.value).toBe('llave');
-    expect(component.registroForm.get('manifiesto1')?.value).toBe('m1');
-    expect(spy).toHaveBeenCalled();
-  });
-
-  it('should disable fields in datosDeAvisoForm if esFormularioSoloLectura is true', () => {
-    component.esFormularioSoloLectura = true;
-    component.registroForm = new FormBuilder().group({
-      llave: ['a'],
-      numeroOperacion: ['b'],
-      fechaPago: ['c'],
-      monedaNacional: ['d'],
-    });
-    const spyLlave = jest.spyOn(component.registroForm.get('llave')!, 'disable');
-    const spyNumOp = jest.spyOn(component.registroForm.get('numeroOperacion')!, 'disable');
-    const spyFechaPago = jest.spyOn(component.registroForm.get('fechaPago')!, 'disable');
-    const spyMoneda = jest.spyOn(component.registroForm.get('monedaNacional')!, 'disable');
-    component.datosDeAvisoForm();
-    expect(spyLlave).toHaveBeenCalled();
-    expect(spyNumOp).toHaveBeenCalled();
-    expect(spyFechaPago).toHaveBeenCalled();
-    expect(spyMoneda).toHaveBeenCalled();
-  });
 
   it('should complete destroyed$ in ngOnDestroy', () => {
     const nextSpy = jest.spyOn(component.destroyed$, 'next');

@@ -252,7 +252,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
           this.solicitudState?.observaciones,
           [Validators.required],
         ],
-        idioma: [this.solicitudState?.idioma, [Validators.required]],
+       
         entidad: [this.solicitudState?.entidad, [Validators.required]],
         representacion: [
           this.solicitudState?.representacion,

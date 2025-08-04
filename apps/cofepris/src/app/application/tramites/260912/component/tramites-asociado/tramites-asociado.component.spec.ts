@@ -46,13 +46,13 @@ describe('TramitesAsociadoComponent', () => {
     expect(component.configuracionTabla).toBeDefined();
     expect(component.configuracionTabla.length).toBe(5);
   
-    // Validate each column configuration
+    // Validar la configuración de cada columna
     component.configuracionTabla.forEach((col, index) => {
       expect(col.encabezado).toBe(expectedConfiguracionTabla[index].encabezado);
       expect(col.orden).toBe(expectedConfiguracionTabla[index].orden);
       expect(col.clave).toEqual(expectedConfiguracionTabla[index].clave);
   
-      // Test the `clave` function for each column
+      // Probar la función `clave` para cada columna
       const mockItem = {
         id: 1,
         folioTramite: '12345',

@@ -3,14 +3,17 @@
     <div class="row w-100">
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="importPermitNumber">Número de permiso de importación de PLAFEST*</label>
+          <label class="form-label" for="importPermitNumber">Número de permiso de importación de PLAFEST*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Número de permiso de importación de PLAFEST" ata-bs-toggle="tooltip"></span></label>
           <input class="form-control" id="numeroDPmiso" formControlName="numeroDePermiso" type="text"
             (change)="setValoresStore(aduanerasInformacionesForm,'numeroDePermiso', 'setNumeroDPmiso')" />
+            <div *ngIf="aduanerasInformacionesForm.get('numeroDePermiso')?.touched && aduanerasInformacionesForm.get('numeroDePermiso')?.hasError('required')" class="text-danger mt-1 small">
+              Este campo es obligatorio
+            </div>
         </div>
       </div>
       <div class="col-md-4 m-top">
         <div class="btn-group">
-          <button class="btn btn-default" type="button" (click)="enEnviar()">Cargar Aduanas</button>
+          <button class="btn btn-default" type="button" (click)="enEnviar()" [disabled]="esFormularioSoloLectura">Cargar Aduanas</button>
         </div>
       </div>
     </div>
@@ -41,10 +44,14 @@
         <div class="col-md-8">
           <div class="form-group">
             <label class="form-label" for="technicalJustification">Justificación técnica para importar o exportar la
-              cantidad solicitada*:</label>
+              cantidad solicitada*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Justificación técnica para importar o exportar la
+              cantidad solicitada" ata-bs-toggle="tooltip"></span></label>
             <textarea class="form-control cstm-ht" id="cstumbresAtuales" formControlName="cstumbresAtuales"
               (change)="setValoresStore(aduanerasInformacionesForm,'cstumbresAtuales', 'setCstumbresAtuales')"
               rows="3"></textarea>
+              <div *ngIf="aduanerasInformacionesForm.get('cstumbresAtuales')?.touched && aduanerasInformacionesForm.get('cstumbresAtuales')?.hasError('required')" class="text-danger mt-1 small">
+              Este campo es obligatorio
+              </div>
           </div>
         </div>
       </div>

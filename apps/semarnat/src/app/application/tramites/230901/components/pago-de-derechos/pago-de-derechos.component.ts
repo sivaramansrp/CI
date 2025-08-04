@@ -101,7 +101,14 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     if(this.esFormularioSoloLectura) {
       this.formularioPagoDerechos.disable();
     } else {
-      this.formularioPagoDerechos.enable();
+      // Enable only the editable controls, keep the read-only ones disabled
+      this.formularioPagoDerechos.get('banco')?.enable();
+      this.formularioPagoDerechos.get('llaveDePago')?.enable();
+      this.formularioPagoDerechos.get('fecPago')?.enable();
+      // Keep these controls disabled as they are read-only
+      this.formularioPagoDerechos.get('claveDeReferencia')?.disable();
+      this.formularioPagoDerechos.get('cadenaPagoDependencia')?.disable();
+      this.formularioPagoDerechos.get('impPago')?.disable();
     }
   }
 

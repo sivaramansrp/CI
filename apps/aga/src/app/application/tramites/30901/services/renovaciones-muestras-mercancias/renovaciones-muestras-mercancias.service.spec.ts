@@ -37,7 +37,7 @@ describe('RenovacionesMuestrasMercanciasService', () => {
     service.obtenerOpcionesDesplegables().subscribe(result => {
       expect(result).toEqual(mockResponse);
       expect(httpClientMock.get).toHaveBeenCalledWith(
-        '../../../../../assets/json/30901/registro-muestras-mercancias.json'
+        'assets/json/30901/registro-muestras-mercancias.json'
       );
       done();
     });

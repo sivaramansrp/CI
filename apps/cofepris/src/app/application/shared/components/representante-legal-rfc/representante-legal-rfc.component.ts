@@ -35,6 +35,11 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false;
 
   /**
+   * Grupo de formularios para el representante legal.
+   */
+  updateDatos: boolean = false;
+
+  /**
    * Constructor del componente.
    * @param fb
    * @param DatosDomicilioLegalStore
@@ -71,6 +76,7 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
+          this.updateDatos = seccionState.update;
         })
       )
       .subscribe()
@@ -96,9 +102,9 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
 
     this.representante = this.fb.group({
       rfc: [this.solicitudState?.rfc, Validators.required],
-      nombre: [{ value: '', disabled: true }, Validators.required],
-      apellidoPaterno: [{ value: '', disabled: true }, Validators.required],
-      apellidoMaterno: [{ value: '', disabled: true }],
+      nombre: [{ value: this.solicitudState.nombre, disabled: true }, Validators.required],
+      apellidoPaterno: [{ value: this.solicitudState.apellidoPaterno, disabled: true }, Validators.required],
+      apellidoMaterno: [{ value: this.solicitudState.apellidoMaterno, disabled: true }],
     });
 
      /*
@@ -108,8 +114,13 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
      */
     if (this.esFormularioSoloLectura && this.representante ) {
       this.representante.disable();
+      
     } else {
       this.representante.enable();
+    }
+
+    if(this.updateDatos) {
+      this.obtenerValor(); // Obtiene valores predeterminados si el formulario es de solo lectura.
     }
   }
   /**

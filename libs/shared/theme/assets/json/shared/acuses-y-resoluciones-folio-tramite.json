@@ -360,14 +360,6 @@
     "numeroDeProcedimiento": "11105"
   },
   {
-    "folioTramite": "010000100032025100500000331803",
-    "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
-    "dependencia": "AGACE ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
-    "fechInicioTramite": "2025-3-09 0035:05:00",
-    "departamento": "AGACE",
-    "numeroDeProcedimiento": "31803"
-  },
-  {
     "folioTramite": "0100001000320251005000003260702",
     "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
     "dependencia": "COFEPRIS ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
@@ -966,5 +958,37 @@
     "fechInicioTramite": "2025-3-09 0035:05:00",
     "departamento": "AGACE",
     "numeroDeProcedimiento": "32618"
+  },
+  {
+    "folioTramite": "010000100032025100500000331802",
+    "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
+    "dependencia": "AGACE ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "31802"
+  },
+  {
+    "folioTramite": "0100001000320251005000003420102",
+    "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
+    "dependencia": "AGA ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "420102"
+  },
+  {
+    "folioTramite": "0100001000320251005000003130121",
+    "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
+    "dependencia": "SENER ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "SENER",
+    "numeroDeProcedimiento": "130121"
+  },
+  {
+    "folioTramite": "01000010003202510050000032617",
+    "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
+    "dependencia": "AGACE ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32617"
   }
 ]

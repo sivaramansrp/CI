@@ -1,5 +1,5 @@
 import { UnidadTabla, VehiculoTabla, VehiculoTablaConfig } from "../models/registro-muestras-mercancias.model";
-import { UnidadTablaConfig } from "../../40102/models/registro-muestras-mercancias.model";
+import { UnidadTablaConfig } from "../models/registro-muestras-mercancias.model";
 
 export const CHOFERES_PAGE = {
   MODAL: 'modal',
@@ -69,6 +69,11 @@ export const VEHICULO_PAGE= {
 export const VEHICULOS_TABLA_CONFIG: VehiculoTablaConfig = {
   encabezadas: [
     {
+      encabezado: 'ID',
+      clave: (item: VehiculoTabla) => item.idDeVehiculo,
+      orden: 0,
+    },
+    {
       encabezado: 'Número de identificación vehicular',
       clave: (item: VehiculoTabla) => item.numero,
       orden: 1,
@@ -124,6 +129,11 @@ export const VEHICULOS_TABLA_CONFIG: VehiculoTablaConfig = {
 
 export const UNIDAD_TABLA_CONFIG: UnidadTablaConfig = {
   encabezadas: [
+    {
+      encabezado: 'ID',
+      clave: (item: UnidadTabla) => String(item.idDeVehiculoUnidad), 
+      orden: 0,
+    },  
     {
       encabezado: 'VIN del vehículo',
       clave: (item: UnidadTabla) => item.vinVehiculo,

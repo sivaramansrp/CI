@@ -268,6 +268,12 @@ const ROUTES: Routes = [
         (m) => m.AvisoDeModificacionModule)
   },
   {
+     path: 'certificacion-empresas',
+    loadChildren: () => 
+      import('./tramites/32609/oea-textil-registro.module').then(
+        (m) => m.OeaTextilRegistroModule)
+  },
+  {
       path: 'recinto-fiscalizado',
     loadChildren: () => 
       import('./tramites/32615/recinto-fiscalizado.module').then(
@@ -380,8 +386,19 @@ const ROUTES: Routes = [
       import('./tramites/32611/auto-transportista.module').then(
         (m) => m.AutoTransportistaModule
       ),
+  },
+  {
+    path: 'certificacion-empresas-modalidad',
+    loadChildren: () => 
+      import('./tramites/32617/oea-tercerizacion-logistica-registro.module').then(
+        (m) => m.OeaTercerizacionLogisticaRegistroModule)
+  },
+  {
+      path: 'aviso-comercializadora-modification-importadora',
+    loadChildren: () => 
+      import('./tramites/33304/Aviso-De-Ampliacion.module').then(
+        (m) => m.AvisoDeAmpliacionModule)
   }
-
 ];
 
 @NgModule({

@@ -25,7 +25,7 @@
           <div class="form-group">
             <app-catalogo-select
               [catalogo]="estado"
-              [label]="'Estado*'"
+              [label]="'Estado'"
               name="estado"
               [required]="true"
               formControlName="estado"
@@ -88,7 +88,7 @@
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="colonias">Colonias:</label>
+            <label class="form-label" for="colonias">Colonia:</label>
             <input
               class="form-control"
               type="text"
@@ -174,7 +174,7 @@
   <div class="row mt-5">
     <label class="form-label mt-4 text-start">S.C.I.A.N.*:</label>
   </div>
-  <div class="row">
+  <div class="row mt-5">
     <app-tabla-dinamica
       [tipoSeleccionTabla]="tablaSeleccionCheckbox"
       [configuracionTabla]="nicoTabla"
@@ -270,7 +270,11 @@
           formControlName="aifaCheckbox"
           (change)="setValorStore(domicilio, 'aifaCheckbox')"
           [isDisabled]="esFormularioSoloLectura"
-      ></lib-input-check>
+      >  <span
+              class="bi bi-question-circle-fill"
+              title="Marcar la&#10;casilla si&#10;requiere usar&#10;esta aduana."
+              data-bs-toggle="tooltip"
+            ></span></lib-input-check>
       </div>
     </div>
 
@@ -304,7 +308,7 @@
 
     <div class="row mt-2">
       <div class="col-md-12">
-        <ng-titulo titulo="Manifiesto bajo protesta" />
+        <ng-titulo titulo="Manifiestos y declaraciones" />
         <div class="form-check bg-light p-0">
           <div class="alert alert-info content-with-checkbox py-6">
             <lib-input-check
@@ -314,8 +318,9 @@
           formControlName="manifests"
           (change)="setValorStore(domicilio, 'manifests')"
           [isDisabled]="esFormularioSoloLectura"
-      ></lib-input-check>
-            <span class="fw-bold align-middle"> *</span>
+          ><span class="fw-bold align-middle"> *</span>
+          </lib-input-check>
+            
             <div>{{ manifests }}</div>
           </div>
         </div>
@@ -356,7 +361,7 @@
           </div>
         </div>
         <div class="col-md-3 mt-5">
-          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Modificar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Buscar</button>
         </div>
       </div>
 

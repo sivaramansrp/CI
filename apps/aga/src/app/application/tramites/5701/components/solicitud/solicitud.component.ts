@@ -8,6 +8,7 @@ import {
   Catalogo,
   CatalogoPaises,
   Catalogos,
+  ConfiguracionColumna,
   CrossListLable,
   DatosAgregarFormulario,
   FechasService,
@@ -408,7 +409,7 @@ export class SolicitudComponent
   /**
    * Encabezado de la tabla de pagos.
    */
-  public encabezadoDeTablaPagos = CONFIGURACION_ENCABEZADO_TABLA_PAGOS;
+  public encabezadoDeTablaPagos: ConfiguracionColumna<LineaCaptura>[] = CONFIGURACION_ENCABEZADO_TABLA_PAGOS;
 
   /**
    * Datos de la tabla de pagos.
@@ -546,6 +547,8 @@ export class SolicitudComponent
     habilitado: true,
   };
 
+  tabla1 = 'tablaPagos'; 
+
   constructor(
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
@@ -631,7 +634,6 @@ export class SolicitudComponent
     // Aqui se busca el nro de patente o autorizacion
     //
     this.obtenerPatente();
-
     this.calcularMontoTotal();
     this.linkGeneraLineaCapturaSeguro =
       this.domSanitizer.bypassSecurityTrustUrl(URL_GENERAR_LINEA_CAPTURA);
@@ -2294,9 +2296,7 @@ export class SolicitudComponent
 
     /** Verifica si la tabla de lineas de captura tiene datos y los agrega al formulario. */
     if (this.solicitudState.lineasCaptura.length > 0) {
-      this.datosTablaPagos = [...this.solicitudState.lineasCaptura];
 
-      this.lineasCaptura?.clear();
       this.datosTablaPagos.forEach((linea) => {
         this.lineasCaptura.push(
           this.fb.group({
@@ -2600,7 +2600,7 @@ export class SolicitudComponent
   public agregarPagoSea(): void {
     const LINEA_PAGO: string = this.pagoCaptura.get('lineaCaptura')?.value;
     const MONTO: number = this.pagoCaptura.get('monto')?.value;
-
+    
     if (!LINEA_PAGO || !MONTO) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -2720,6 +2720,8 @@ export class SolicitudComponent
 
           /** Actualizar el estado una vez, en lugar de en cada iteración */
           this.tramite5701Store.setLineasCaptura(this.datosTablaPagos);
+
+          
 
           /**  Limpia los campos de la línea de captura y monto */
           this.pagoCaptura.get('lineaCaptura')?.reset();
@@ -3239,7 +3241,6 @@ export class SolicitudComponent
       txtBtnAceptar: TEXTO_ACEPTAR,
       txtBtnCancelar: TEXTO_CANCELAR,
     };
-    this.datosTablaPagos = []
     this.procesoModal = 'linea_captura';
   }
 

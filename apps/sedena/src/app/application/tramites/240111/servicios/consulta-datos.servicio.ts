@@ -73,11 +73,10 @@ export class ConsultaDatosService {
    * @param {Tramite240111State} DATOS - Objeto con todos los datos del formulario.
    */
   actualizarEstadoFormulario(DATOS: Tramite240111State): void {
-    this.tramiteStore.updateDatosDelTramiteFormState(DATOS.datosDelTramite);
-    this.tramiteStore.updatePagoDerechosFormState(DATOS.pagoDerechos);
-    this.tramiteStore.updateDestinatarioFinalTablaDatos(DATOS.destinatarioFinalTablaDatos);
-    this.tramiteStore.updateProveedorTablaDatos(DATOS.proveedorTablaDatos);
-    this.tramiteStore.updateMercanciaTablaDatos(DATOS.merccancialTablaDatos);
+       this.tramiteStore.update((state) => ({
+      ...state,
+      ...DATOS
+    }))
   }
 
   /**

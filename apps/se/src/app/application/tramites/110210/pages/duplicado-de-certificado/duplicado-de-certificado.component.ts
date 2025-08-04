@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 /**
  * @descripcion
@@ -13,4 +13,6 @@ import { Component } from '@angular/core';
   templateUrl: './duplicado-de-certificado.component.html',
   standalone: false, // Indica que este componente no es independiente.
 })
-export class DuplicadoDeCertificadoComponent {}
+export class DuplicadoDeCertificadoComponent {
+  @Output() rowClicked = new EventEmitter<void>();
+}
