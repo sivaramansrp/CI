@@ -1,4 +1,4 @@
-import { Catalogo, CatalogoSelectComponent, Notificacion, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { map, Subject, takeUntil } from 'rxjs';
@@ -13,7 +13,7 @@ import { SolicitudOpinionesQuery } from '../../../estados/queries/opiniones.quer
 @Component({
   selector: 'app-capturar-solictud-opinion',
   standalone: true,
-  imports: [CommonModule, CatalogoSelectComponent, ReactiveFormsModule],
+  imports: [CommonModule, CatalogoSelectComponent, ReactiveFormsModule, TablaDinamicaComponent, NotificacionesComponent],
   templateUrl: './capturar-solictud-opinion.component.html',
   styleUrl: './capturar-solictud-opinion.component.scss',
 })
