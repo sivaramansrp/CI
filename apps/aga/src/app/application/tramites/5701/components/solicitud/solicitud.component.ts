@@ -3394,21 +3394,13 @@ export class SolicitudComponent
         .pipe(
           takeUntil(this.destroyNotifier$),
           tap((response) => {
-            if (response.datos.length > 0 || !response.datos) {
+            if (response.datos && response.datos.length > 0) {
+              // RFC is authorized - enable controls without showing error
               this.despacho.get('idAduanaDespacho')?.enable();
               this.despacho.get('tipoDespacho')?.enable();
               this.activarCatalogoDespacho = false;
             } else {
-              this.nuevaNotificacion = {
-                tipoNotificacion: 'alert',
-                categoria: 'danger',
-                modo: 'action',
-                titulo: TITULO_MODAL_AVISO,
-                mensaje: MSJ_ERROR_RFC_AUTORIZACION_LDA,
-                cerrar: false,
-                txtBtnAceptar: 'Aceptar',
-                txtBtnCancelar: '',
-              };
+              
               this.despacho.get('idAduanaDespacho')?.enable();
               this.despacho.get('tipoDespacho')?.enable();
               this.activarCatalogoDespacho = false;
