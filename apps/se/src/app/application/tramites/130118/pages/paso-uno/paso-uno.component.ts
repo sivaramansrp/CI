@@ -93,7 +93,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       this.esDatosRespuesta = true;
     }
 
-    if(this.consultaState.procedureId === "130118"){
+    if(this.consultaState.readonly === true){
       this.ocultarForm = true;
     }
   }
