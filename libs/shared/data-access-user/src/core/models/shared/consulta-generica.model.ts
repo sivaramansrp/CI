@@ -142,7 +142,7 @@ export interface BodyTablaDocumentos {
   estatus: string;
   fechaAdjunto: string;
   nombreArchivo: string;
-  urlPdf: string;
+  urlPdf: string | null;
 }
 
 /**

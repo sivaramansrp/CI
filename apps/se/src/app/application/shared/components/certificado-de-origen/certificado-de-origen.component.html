@@ -1,7 +1,7 @@
 <div>
     <form [formGroup]="formCertificado">
         <div>
-            <ng-titulo titulo="Validación inicial del certificado de circulación de mercancías" />
+            <ng-titulo [titulo]="title" />
             @if(operador){
                 <div class="row">
                     <div class="col-md-12">
@@ -33,44 +33,110 @@
                         (change)="setValoresStore('formCertificado','nombres','setFormCertificadoGenric')" />
                 </div>
             
-                <div class="col-md-4 form-group">
+                <div class="col-md-4">
+                <div class="form-group">
                     <label class="form-label" for="primerApellido">Primer apellido*:</label>
                     <input type="text" id="primerApellido" class="form-control" formControlName="primerApellido"
                         (change)="setValoresStore('formCertificado','primerApellido','setFormCertificadoGenric')" />
                 </div>
+                  @if(formCertificado.controls['primerApellido'].invalid && formCertificado.controls['primerApellido'].touched) {
+      <div class="d-grid">
+        @if(formCertificado.controls['primerApellido'].errors?.['required']) {
+          <span class="mensaje-error">Este campo es obligatorio</span>
+        }
+        @if(formCertificado.controls['primerApellido'].errors?.['maxlength']) {
+          <span class="mensaje-error">Por favor, no escribas más de 20 caracteres</span>
+        }
+      </div>
+    }
+                </div>
             
-                <div class="col-md-4 form-group">
+                <div class="col-md-4">
+                <div class="form-group">
                     <label class="form-label" for="segundoApellido">Segundo apellido:</label>
                     <input type="text" id="segundoApellido" class="form-control" formControlName="segundoApellido"
                         (change)="setValoresStore('formCertificado','segundoApellido','setFormCertificadoGenric')" />
                 </div>
+                 @if(formCertificado.controls['segundoApellido'].invalid && formCertificado.controls['segundoApellido'].touched) {
+      <div class="d-grid">
+        @if(formCertificado.controls['segundoApellido'].errors?.['maxlength']) {
+          <span class="mensaje-error">Por favor, no escribas más de 20 caracteres</span>
+        }
+      </div>
+    }
+                </div>
             
-                <div class="col-md-4 form-group">
+              <div class="col-md-4">
+              <div class="form-group">
                     <label class="form-label" for="numeroDeRegistroFiscal">Número de registro fiscal*:</label>
                     <input type="text" id="numeroDeRegistroFiscal" class="form-control" formControlName="numeroDeRegistroFiscal"
                         (change)="setValoresStore('formCertificado','numeroDeRegistroFiscal','setFormCertificadoGenric')" />
                 </div>
+                 @if(formCertificado.controls['numeroDeRegistroFiscal'].invalid && formCertificado.controls['numeroDeRegistroFiscal'].touched) {
+      <div class="d-grid">
+        @if(formCertificado.controls['numeroDeRegistroFiscal'].errors?.['maxlength']) {
+          <span class="mensaje-error">Por favor, no escribas más de 30 caracteres</span>
+        }
+      </div>
+    }
+                </div>
             
-                <div class="col-md-8 form-group">
+                <div class="col-md-8">
+                <div class="form-group">
                     <label class="form-label" for="razonSocial">Razón social*:</label>
                     <input type="text" id="razonSocial" class="form-control" formControlName="razonSocial"
                         (change)="setValoresStore('formCertificado','razonSocial','setFormCertificadoGenric')" />
+                </div>
+                 @if(formCertificado.controls['razonSocial'].invalid && formCertificado.controls['razonSocial'].touched) {
+      <div class="d-grid">
+        @if(formCertificado.controls['razonSocial'].errors?.['required']) {
+          <span class="mensaje-error">Este campo es obligatorio</span>
+        }
+        @if(formCertificado.controls['razonSocial'].errors?.['maxlength']) {
+          <span class="mensaje-error">Por favor, no escribas más de 200 caracteres</span>
+        }
+      </div>
+    }
                 </div>
             </div>
             @if(domicilio){
             <div class="my-4" >
                 <ng-titulo titulo="Domicilio del tercer operador" />
                 <div class="row">
-                    <div class="col-md-4 form-group">
+                    <div class="col-md-4">
+                    <div class="form-group">
                         <label class="form-label" for="calle">Calle*:</label>
                         <input type="text" id="calle" class="form-control" formControlName="calle"
                             (change)="setValoresStore('formCertificado','calle','setFormCertificadoGenric')" />
                     </div>
+                    @if(formCertificado.controls['calle'].invalid && formCertificado.controls['calle'].touched) {
+    <div class="d-grid">
+      @if(formCertificado.controls['calle'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+      }
+      @if(formCertificado.controls['calle'].errors?.['maxlength']) {
+        <span class="mensaje-error">Por favor, no escribas más de 90 caracteres</span>
+      }
+    </div>
+  }
+                    </div>
                 
-                    <div class="col-md-4 form-group">
+                    <div class="col-md-4">
+                    <div class="form-group">
                         <label class="form-label" for="numeroLetra">Número y/o letra*:</label>
                         <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra"
                             (change)="setValoresStore('formCertificado','numeroLetra','setFormCertificadoGenric')" />
+                    </div>
+                    @if(formCertificado.controls['numeroLetra'].invalid && formCertificado.controls['numeroLetra'].touched) {
+    <div class="d-grid">
+      @if(formCertificado.controls['numeroLetra'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+      }
+      @if(formCertificado.controls['numeroLetra'].errors?.['maxlength']) {
+        <span class="mensaje-error">Por favor, no escribas más de 30 caracteres</span>
+      }
+    </div>
+  }
                     </div>
                 </div>
             </div>
@@ -106,6 +172,7 @@
         </div>
         <div class="row mb-3">
             <div class="col-md-4">
+                  <div class="form-group">
                 <label for="fracciónArancelaria" class="form-label">Fracción arancelaria:</label>
                 <input type="text" class="form-control" formControlName="fraccionArancelariaForm"
                 (change)="setValoresStore(
@@ -114,20 +181,56 @@
                   'setFormCertificadoGenric')"
                     id="fracciónArancelaria">
             </div>
+              @if(formCertificado.controls['fraccionArancelariaForm'].invalid && formCertificado.controls['fraccionArancelariaForm'].touched) {
+    <div class="d-grid">
+      @if(formCertificado.controls['fraccionArancelariaForm'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+      }
+      @if(formCertificado.controls['fraccionArancelariaForm'].errors?.['maxlength']) {
+        <span class="mensaje-error">Por favor, no escribas más de 8 caracteres</span>
+      }
+    </div>
+}
+  
+            </div>
 
             <div class="col-md-4">
+                <div class="form-group">
                 <label for="registroProducto" class="form-label"># Registro producto:</label>
                 <input type="text" class="form-control" formControlName="registroProductoForm"   (change)="setValoresStore(
                     'formCertificado',
                   'registroProductoForm',
                   'setFormCertificadoGenric')" id="registroProducto">
             </div>
+              @if(formCertificado.controls['registroProductoForm'].invalid && formCertificado.controls['registroProductoForm'].touched) {
+    <div class="d-grid">
+      @if(formCertificado.controls['registroProductoForm'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+      }
+      @if(formCertificado.controls['registroProductoForm'].errors?.['maxlength']) {
+        <span class="mensaje-error">Por favor, no escribas más de 12 caracteres</span>
+      }
+    </div>
+  }
+            </div>
             <div class="col-md-4">
+                <div class="form-group">
                 <label for="nombreComercial" class="form-label">Nombre comercial:</label>
                 <input type="text" class="form-control" formControlName="nombreComercialForm" (change)="setValoresStore(
                     'formCertificado',
                   'nombreComercialForm',
                   'setFormCertificadoGenric')" id="nombreComercial">
+            </div>
+             @if(formCertificado.controls['nombreComercialForm'].invalid && formCertificado.controls['nombreComercialForm'].touched) {
+    <div class="d-grid">
+      @if(formCertificado.controls['nombreComercialForm'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+      }
+      @if(formCertificado.controls['nombreComercialForm'].errors?.['maxlength']) {
+        <span class="mensaje-error">Por favor, no escribas más de 200 caracteres</span>
+      }
+    </div>
+  }
             </div>
         </div>
 
@@ -152,7 +255,7 @@
             </div>
         } @else {
             <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-                <button class="btn btn-primary" [disabled]="formCertificado.invalid || esFormularioSoloLectura" (click)="buscarMercancia()" >Mercancías Disponibles</button>
+                <button class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="buscarMercancia()" >Mercancías Disponibles</button>
             </div>
         }
 

@@ -64,6 +64,12 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
 
   /**
    * @description
+   * Grupo de formularios para capturar los datos de manifiestos.
+   */
+  isUpdateDatos: boolean = false;
+
+  /**
+   * @description
    * Constructor del componente.
    * @param fb Constructor de formularios reactivos.
    * @param DatosDomicilioLegalStore Store para gestionar el estado del domicilio legal.
@@ -104,6 +110,7 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
+          this.isUpdateDatos = seccionState.update;
         })
       )
       .subscribe()

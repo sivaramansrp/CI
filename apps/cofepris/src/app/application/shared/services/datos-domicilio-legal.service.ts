@@ -11,7 +11,7 @@ import { DatosDomicilioLegalQuery } from '../estados/queries/datos-domicilio-leg
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PermisoModel } from '../models/datos-domicilio-legal.model';
+import { FraccionArancelaria, PermisoModel } from '../models/datos-domicilio-legal.model';
 
 @Injectable({
   providedIn: 'root',
@@ -140,6 +140,7 @@ export class DatosDomicilioLegalService {
       this.datosDomicilioLegalStore.setNumeroRegistro(DATOS.numeroRegistro);
       this.datosDomicilioLegalStore.setFechaCaducidad(DATOS.fechaCaducidad);
       this.datosDomicilioLegalStore.setCumplimiento(DATOS.cumplimiento);
+      this.datosDomicilioLegalStore.setMensaje(DATOS.mensaje);
       this.datosDomicilioLegalStore.setRfc(DATOS.rfc);
       this.datosDomicilioLegalStore.setNombre(DATOS.nombre);
       this.datosDomicilioLegalStore.setApellidoPaterno(DATOS.apellidoPaterno);
@@ -174,5 +175,13 @@ export class DatosDomicilioLegalService {
       return this.http.get<MercanciasTabla>(
         'assets/json/cofepris/mercancias-tabla.json'
       );
+    }
+    /**
+     * Obtiene los datos de la fracción arancelaria desde un archivo JSON local.
+     *
+     * @returns Observable que emite un objeto FraccionArancelaria.
+     */
+    getFraccionArancelaria():Observable<FraccionArancelaria>{
+      return this.http.get<FraccionArancelaria>('assets/json/cofepris/fraccion-arancelaria.json');
     }
 }

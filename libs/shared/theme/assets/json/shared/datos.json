@@ -15,6 +15,8 @@
         "noLicenciaSanitaria": "1",
         "regimenDestinado": "1",
         "aduanaregimenDestinado": "1",
-        "aduana": "1"
-        
+        "aduana": "1",
+        "nombreRazonSocial": "valor ficticio",
+        "apellidoPaterno": "valor ficticio",
+        "apellidoMaterno": "valor ficticio"
       }

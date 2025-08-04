@@ -10,3 +10,6 @@
         }
 
     }
+    :ng-deep .form-label .require{
+        color: unset !important;
+    }

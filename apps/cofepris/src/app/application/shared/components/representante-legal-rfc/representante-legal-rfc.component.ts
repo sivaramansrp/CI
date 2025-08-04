@@ -36,6 +36,11 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false;
 
   /**
+   * Grupo de formularios para el representante legal.
+   */
+  updateDatos: boolean = false;
+
+  /**
    * Constructor del componente.
    * @param fb
    * @param DatosDomicilioLegalStore
@@ -73,6 +78,7 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
+          this.updateDatos = seccionState.update;
         })
       )
       .subscribe()
@@ -103,6 +109,8 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
       apellidoMaterno: [{ value: this.solicitudState.apellidoMaterno, disabled: true }],
     });
 
+    this.servicioDeFormularioService.registerForm('representanteForm', this.representante);
+
      /*
      * Si el formulario está en modo solo lectura, deshabilita todos los campos.
      * En caso contrario, habilita los campos para permitir la edición.
@@ -110,9 +118,11 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
      */
     if (this.esFormularioSoloLectura && this.representante ) {
       this.representante.disable();
-    }
+    } 
 
-    this.servicioDeFormularioService.registerForm('representanteForm', this.representante);
+    if(this.updateDatos) {
+      this.obtenerValor(); // Obtiene valores predeterminados si el formulario es de solo lectura.
+    }
   }
   /**
    * Obtiene el valor de un campo en el store de Tramite31601.

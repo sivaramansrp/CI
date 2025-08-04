@@ -5,7 +5,7 @@
         <div class="alert alert-info content-with-checkbox py-6">
           <div class="col-md-1">
             <input type="checkbox" id="mensaje" 
-            formcontrolName="mensaje" [checked]="esFormularioSoloLectura ? true : false" 
+            formcontrolName="mensaje" [checked]="esFormularioSoloLectura ? true : false || isUpdateDatos" 
             [disabled]="esFormularioSoloLectura"
             (change)="setValoresStore(manifiestos,'mensaje', 'setMensaje')"
             />
