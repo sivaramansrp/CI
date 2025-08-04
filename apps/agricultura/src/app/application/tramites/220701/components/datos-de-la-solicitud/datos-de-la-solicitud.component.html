@@ -18,8 +18,7 @@
                 </div>
               </div>
             </div>
-            }
-            <div class="row">
+             <div class="row">
               <div class="d-flex justify-content-end">
                 <div class="btn-group m-4">
                   <button class="btn btn-primary me-2" type="submit">
@@ -28,6 +27,8 @@
                 </div>
               </div>
             </div>
+            }
+           
           </div>
         </div>
       </div>
@@ -51,12 +52,13 @@
               formControlName="certificadosAutorizados" [disabled]="esFormularioSoloLectura"/>
           </div>
           <div class="col-md-4">
-            <input-fecha [datos]="fechaInicioInput" formControlName="fechaInicio" [setFecha]="datosDeLaSolicitudForm.get('fechaInicioInput')?.value" [isDisabled]="esFormularioSoloLectura"></input-fecha>
+            <input-fecha [datos]="fechaInicioInput" [setFecha]="datosDeLaSolicitudForm.get('fechaInicio')?.value" [isDisabled]="esFormularioSoloLectura" (valorCambiado)="cambioFechaInicio($event)"></input-fecha>
           </div>
           <div class="col-md-4">
             <div class="form-group">
               <app-catalogo-select [catalogo]="horaDeInspeccion.catalogos" [label]="horaDeInspeccion.labelNombre"
                 [placeholder]="horaDeInspeccion.primerOpcion"
+                [required]="true"
                 formControlName="horaDeInspeccion" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
             </div>
           </div>
@@ -73,7 +75,7 @@
             <div class="form-group">
               <app-catalogo-select [catalogo]="oficinaDeInspeccion.catalogos" [label]="oficinaDeInspeccion.labelNombre"
                 [placeholder]="oficinaDeInspeccion.primerOpcion" [isDisabled]="esFormularioSoloLectura"
-                formControlName="sanidadAgropecuaria"></app-catalogo-select>
+                formControlName="oficinaDeInspeccion"></app-catalogo-select>
             </div>
           </div>
         </div>
@@ -107,7 +109,8 @@
         </div>
         <div class="col-md-4 form-group">
           <label for="mercancia" id="mercancia">
-            Cantidad de contenedores en que arriba la mercancía*:
+            Cantidad de contenedores en que arriba la mercancía<br>
+            *:
             <span class="bi bi-question-circle-fill"
               title="Número de tolvas, furgones o contenedores en que arriba la mercancía"
               data-bs-toggle="tooltip"></span>
@@ -128,7 +131,7 @@
         <ng-titulo titulo="Medio de transporte" />
         <div class="col-md-4 mb-4 form-group">
           <app-catalogo-select [catalogo]="medioDeTransporte.catalogos" [label]="medioDeTransporte.labelNombre"
-            [placeholder]="medioDeTransporte.primerOpcion" [isDisabled]="esFormularioSoloLectura"
+            [placeholder]="medioDeTransporte.primerOpcion" [required]="true" [isDisabled]="esFormularioSoloLectura"
             formControlName="medioDeTransporte"></app-catalogo-select>
         </div>
         <div class="col-md-4 form-group">
@@ -144,17 +147,17 @@
 
         <div class="col-md-12">
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="esSolicitudFerros" id="SiSolicitudFerros" value="1"
-             formControlName="esSolicitudFerros" />
-            <label class="form-check-label" for="SiSolicitudFerros">Sí</label>
+            <input class="form-check-input" type="radio" name="esSolicitudFerros" id="esSolicitudFerrosSi" value="1"
+             formControlName="esSolicitudFerros"/>
+            <label class="form-check-label" for="esSolicitudFerrosSi">Sí</label>
           </div>
         </div>
 
         <div class="col-md-12 mb-4">
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="esSolicitudFerros" id="NoSolicitudFerros" value="0"
-              formControlName="esSolicitudFerros" />
-            <label class="form-check-label" for="NoSolicitudFerros">No</label>
+            <input class="form-check-input" type="radio" name="esSolicitudFerros" id="esSolicitudFerrosNo" value="0"
+              formControlName="esSolicitudFerros"/>
+            <label class="form-check-label" for="esSolicitudFerrosNo">No</label>
           </div>
         </div>
         <div class="row">

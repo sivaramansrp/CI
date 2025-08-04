@@ -328,21 +328,21 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
      */
 
     this.datosDeLaSolicitudForm = this.fb.group({
-      justificacion: ['', Validators.required],
-      certificadosAutorizados: ['', Validators.required],
-      fechaInicio: ['', Validators.required],
-      horaDeInspeccion: ['', Validators.required],
-      aduanaDeIngreso: ['', Validators.required],
-      oficinaDeInspeccion: ['', Validators.required],
-      puntoDeInspeccion: ['', Validators.required],
-      nombreInspector: ['', Validators.required],
-      primerApellido: ['', Validators.required],
-      segundoApellido: ['', Validators.required],
-      cantidadContenedores: ['', Validators.required],
-      tipoContenedor: ['', Validators.required],
-      medioDeTransporte: ['', Validators.required],
-      identificacionTransporte: ['', Validators.required],
-      esSolicitudFerros: ['', Validators.required],
+      justificacion: [this.solicitudState.justificacion, Validators.required],
+      certificadosAutorizados: [this.solicitudState.certificadosAutorizados, Validators.required],
+      fechaInicio: [this.solicitudState.fechaInicio, Validators.required],
+      horaDeInspeccion: [this.solicitudState.horaDeInspeccion, Validators.required],
+      aduanaDeIngreso: [this.solicitudState.aduanaDeIngreso, Validators.required],
+      oficinaDeInspeccion: [this.solicitudState.horaDeInspeccion, Validators.required],
+      puntoDeInspeccion: [this.solicitudState.puntoDeInspeccion, Validators.required],
+      nombreInspector: [this.solicitudState.nombreInspector, Validators.required],
+      primerApellido: [this.solicitudState.primerApellido, Validators.required],
+      segundoApellido: [this.solicitudState.segundoApellido, Validators.required],
+      cantidadContenedores: [this.solicitudState.cantidadContenedores, Validators.required],
+      tipoContenedor: [this.solicitudState.tipoContenedor, Validators.required],
+      medioDeTransporte: [this.solicitudState.medioDeTransporte, Validators.required],
+      identificacionTransporte: [this.solicitudState.identificacionTransporte, Validators.required],
+      esSolicitudFerros: [{value: this.solicitudState.esSolicitudFerros, disabled: true}, Validators.required],
     });
   }
 
@@ -629,6 +629,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       .subscribe((data: ResponsableInspección) => {
         this.datosDeLaSolicitudForm.patchValue(data);
       });
+  }
+
+  /**
+   * Cambia el valor de la fecha de inicio en el formulario.
+   * @param nuevo_valor El nuevo valor de la fecha de inicio.
+   */
+  public cambioFechaInicio(nuevo_valor: string): void {
+    this.datosDeLaSolicitudForm.get('fechaInicio')?.setValue(nuevo_valor);
+    this.datosDeLaSolicitudForm.get('fechaInicio')?.markAsUntouched();
   }
 
   /**

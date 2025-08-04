@@ -45,7 +45,7 @@ export function createInitialState(): TramiteState {
             tipoContenedor: '',
             medioDeTransporte: '',
             identificacionTransporte: '',
-            esSolicitudFerros: ''
+            esSolicitudFerros: '0',
         },
         InternaDatosGeneralesState: {
             folioControlUnico: 0,
