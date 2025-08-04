@@ -5,8 +5,11 @@ import { ConfiguracionColumna } from '@ng-mf/data-access-user';
  * @description Mensaje que indica que las tablas marcadas con asterisco son obligatorias
  * y se debe agregar al menos un registro.
  */
-export const MENSAJE_TABLA_OBLIGATORIA =
-  'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
+export const MENSAJE_TABLA_OBLIGATORIA = `
+  <p style="text-align: center;">
+    Las tablas marcadas con un asterisco son obligatorias. Debes agregar al menos un registro para continuar.
+  </p>
+`;
 
 /**
  * @interface Fabricante

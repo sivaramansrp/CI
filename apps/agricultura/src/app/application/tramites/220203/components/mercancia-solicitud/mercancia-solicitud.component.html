@@ -1,0 +1,289 @@
+    <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <ng-titulo [titulo]="'Datos mercancía'"></ng-titulo>
+      </div>
+    </div>
+    <div class="row" [formGroup]="mercanciaGroup">
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="detallesCatalogo.tipoRequisitoList"
+          formControlName="tipoRequisito"
+          [label]="'Tipo de requisito'"
+          [required]="true"
+          name="tipoRequisito"
+          [isDisabled]="esFormularioSoloLectura"
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-4 form-group">
+        <label class="form-label" for="requisito">Requisito *:</label>
+        <input
+          class="form-control"
+          id="requisito"
+          formControlName="requisito"
+          placeholder=""
+          name="requisito"
+          type="text"
+           [maxlength]="50"
+        />
+      </div>
+      <div class="col-md-4 form-group">
+        <label class="form-label" for="numeroCertificadoInternacional"
+          >Número de certificado internacional<i class="bi bi-question-circle-fill" style="margin-bottom: '5px'"
+              [title]="'Si la normatividad no le solicita el Certificado puede capturar NO APLICA ó'"></i> *:</label
+        >
+        <input
+          class="form-control"
+          id="numeroCertificadoInternacional"
+          formControlName="numeroCertificadoInternacional"
+          placeholder=""
+          name="numeroCertificadoInternacional"
+          type="text"
+          [maxlength]="50"
+        />
+      </div>
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="detallesCatalogo.arancelariaList"
+          formControlName="fraccionArancelaria"
+          [label]="'Fracción arancelaria'"
+          [required]="true"
+          name="fraccionArancelaria"
+          [isDisabled]="esFormularioSoloLectura"
+          [tooltipQuestionCircle]="true"
+          [tooltipQuestionCircleText]="'Fracción arancelaria de la mercancía'"
+          (change)="setValoresStore(mercanciaGroup, 'fraccionArancelaria')"
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-8 form-group">
+        <label class="form-label" for="descripcionFraccionArancelaria"
+          >Descripción de la fracción arancelaria  *:</label
+        >
+        <input
+          class="form-control"
+          id="descripcionFraccionArancelaria"
+          formControlName="descripcionFraccionArancelaria"
+          placeholder=""
+          name="descripcionFraccionArancelaria"
+          type="text"
+        />
+      </div>
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="detallesCatalogo.nicoList"
+          formControlName="nico"
+          [label]="'Nico'"
+          [required]="true"
+          name="nico"
+          (change)="setValoresStore(mercanciaGroup, 'nico')"
+          [isDisabled]="esFormularioSoloLectura"
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-8 form-group">
+        <label class="form-label" for="descripcionFraccionArancelaria"
+          >Descripción Nico <i class="bi bi-question-circle-fill" style="margin-bottom: '5px'"
+              [title]="'Ingrese una fracción Nico'"></i>*:</label
+        >
+        <input
+          class="form-control"
+          id="descripcionNico"
+          formControlName="descripcionNico"
+          placeholder=""
+          name="descripcionNico"
+          type="text"
+        />
+      </div>
+      <div class="col-md-12">
+        <label for="descripcion">Descripción *:</label>
+        <textarea
+          class="form-control"
+          name="descripcion"
+          id="descripcion"
+          rows="10"
+          formControlName="descripcion"
+        ></textarea>
+      </div>
+      <div class="col-md-4 form-group">
+        <label class="form-label" for="cantidadUMT">Cantidad UMT*:</label>
+        <input
+          class="form-control"
+          id="cantidadUMT"
+          formControlName="cantidadUMT"
+          placeholder=""
+          name="cantidadUMT"
+          type="text"
+          [maxlength]="16"
+          (change)="setValoresStore(mercanciaGroup, 'cantidadUMT')"
+        />
+      </div>
+      <div class="col-md-4 form-group">
+        <label class="form-label" for="umt">UMT*:<i class="bi bi-question-circle-fill" style="margin-bottom: '5px'"
+              [title]="'Sólo para usuarios que cuenten con la contraseña UCON e importen productos cárnicos'"></i></label>
+        <input
+          class="form-control"
+          id="umt"
+          formControlName="umt"
+          placeholder=""
+          name="umt"
+          type="text"
+          [maxlength]="100"
+        />
+      </div>
+      <div class="col-md-4"></div>
+      <div class="col-md-4 form-group">
+        <label class="form-label" for="cantidadUMC">Cantidad UMC*:</label>
+        <input
+          class="form-control"
+          id="cantidadUMC"
+          formControlName="cantidadUMC"
+          placeholder=""
+          name="cantidadUMC"
+          type="text"
+          [maxlength]="16"
+        />
+      </div>
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="detallesCatalogo.umcList"
+          formControlName="umc"
+          [label]="'UMC'"
+          [required]="true"
+          name="umc" 
+          [isDisabled]="esFormularioSoloLectura"
+          [tooltipQuestionCircle]="true"
+          [tooltipQuestionCircleText]="'Unidad de medida comercial de la mercancía'"
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="detallesCatalogo.usoList"
+          formControlName="uso"
+          [label]="'Uso'"
+          [required]="true"
+          name="uso"
+          [isDisabled]="esFormularioSoloLectura"
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-4 form-group">
+        <label class="form-label" for="numeroDeLote">Número de lote*:</label>
+        <input
+          class="form-control"
+          id="numeroDeLote"
+          formControlName="numeroDeLote"
+          placeholder=""
+          name="numeroDeLote"
+          type="text"
+          [maxlength]="16"
+        />
+      </div>
+      <div class="col-md-4 form-group">
+        <label class="form-label" for="faseDeDesarrollo"
+          >Fase de desarrollo*:</label
+        >
+        <input
+          class="form-control"
+          id="faseDeDesarrollo"
+          formControlName="faseDeDesarrollo"
+          placeholder=""
+          name="faseDeDesarrollo"
+          type="text"
+            [maxlength]="50"
+        />
+      </div>
+      <div class="col-md-4 form-group">
+        <label class="form-label" for="especie">Especie*:</label>
+        <input
+          class="form-control"
+          id="especie"
+          formControlName="especie"
+          placeholder=""
+          name="especie"
+          type="text"
+            [maxlength]="50"
+        />
+      </div>
+      <div class="col-md-8">
+        <app-catalogo-select
+          [catalogo]="detallesCatalogo.paisDeOrigenList"
+          formControlName="paisDeOrigen"
+          [label]="'País de origen'"
+          [required]="true"
+          name="paisDeOrigen"
+          [isDisabled]="esFormularioSoloLectura"
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-8">
+        <app-catalogo-select
+          [catalogo]="detallesCatalogo.paisDeProcedenciaList"
+          formControlName="paisDeProcedencia"
+          [label]="'País de procedencia'"
+          [required]="true"
+          name="paisDeProcedencia"
+          [isDisabled]="esFormularioSoloLectura"
+
+        ></app-catalogo-select>
+      </div>
+    </div>
+       <div class="row">
+      <ng-titulo [titulo]="'Detalle'"></ng-titulo>
+       </div>
+       <form [formGroup]="detallesGroup">
+      <div class="row" >
+      <div class="col-md-8 form-group">
+        <label class="form-label" for="especie">Nombre científico:</label>
+        <input
+          class="form-control"
+          id="nombreCientifico"
+          formControlName="nombreCientifico"
+          placeholder=""
+          name="nombreCientifico"
+          type="text"
+          [maxlength]="40"
+          (change)="
+          setValoresDetalleStore(
+          )
+        " 
+        />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 mt-2 d-flex justify-content-end">
+        <div>
+          <button class="btn btn-danger me-2" type="button" (click)="eliminarFilaDetalle()">
+            Eliminar detalle
+          </button>
+        </div>
+        <div>
+          <button class="btn btn-primary" type="button" (click)="agregarFilaDetalle()">Agregar detalle</button>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <label class="form-label" for="especie">Detalle:</label>
+      </div>
+      <div class="col-md-4">
+        <app-tabla-dinamica
+          [tipoSeleccionTabla]="tipoSeleccion"
+          [configuracionTabla]="configuracionColumnas"
+          [datos]="cuerpoTablaDetalle"
+          (listaDeFilaSeleccionada)="seleccionTabla($event)"
+        ></app-tabla-dinamica>
+      </div>
+       <div class="col-md-12 d-flex justify-content-end mb-2">
+          <button type="button" class="btn btn-default me-5" [disabled]="esFormularioSoloLectura"
+                            (click)="onLimpiarDestinatario()">
+                            Limpiar
+                        </button>
+                        <button type="button" class="btn btn-danger me-5" [disabled]="esFormularioSoloLectura"
+                          (click)="eliminarFila()">
+                            Cancelar
+                        </button>
+                          <button class="btn btn-primary me-2" type="button" (click)="agregarFila()" [disabled]="mercanciaGroup.invalid">Agregar</button>
+
+      </div>
+    </div>
+    </form> 
+      @if(eliminarDatosTabla){
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+      (confirmacionModal)="eliminarPedimentoDatos($event)"></lib-notificaciones>
+    }
+    </div>

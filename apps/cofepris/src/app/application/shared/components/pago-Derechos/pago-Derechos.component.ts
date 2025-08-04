@@ -3,15 +3,15 @@ import { Catalogo, InputFecha, InputFechaComponent, TituloComponent } from '@lib
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { map, takeUntil } from 'rxjs';
+import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { AvisoImportacionService } from '../../services/parmiso-importacion.service';
 import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { DEBES_CAPTURAR } from '../../constantes/pago-de-derechos.enum';
 import { FECHA_DE_PAGO } from '../../models/pago-derechos.model';
 import { Subject } from 'rxjs';
-
-
 /**
  * Component Define el componente de Angular.
  * selector 'app-pago-derechos' Selector del componente.
@@ -23,7 +23,7 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'app-pago-derechos',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, CatalogoSelectComponent, TituloComponent, InputFechaComponent],
+  imports: [AlertComponent,CommonModule, FormsModule, ReactiveFormsModule, CatalogoSelectComponent, TituloComponent, InputFechaComponent],
   templateUrl: './pago-Derechos.component.html',
   styleUrl: './pago-Derechos.component.scss',
 })
@@ -64,6 +64,17 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
    * Cuando es `true`, la fecha es válida; cuando es `false`, la fecha es inválida o pasada.
    */
   public esFechaValida: boolean = true;
+
+  /**
+   * Mensaje de alerta que indica que se deben capturar todos los campos de pago de derechos.
+   * Este mensaje se muestra al usuario para recordarle que debe completar todos los campos necesarios.
+   */
+  public DEBES_CAPTURAR = DEBES_CAPTURAR.CONTENIDO; 
+  /**
+   * property infoAlert
+   * description Clase CSS para mostrar alertas informativas.
+   */
+  public infoAlert = 'alert-info';
   /**
    * constructor
    * param {FormBuilder} fb - Constructor para formularios reactivos.
@@ -134,7 +145,7 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
       llavePago: [this.solicitudState?.llavePago], // Campo llavePago.
       fechaPago: [this.solicitudState?.fechaPago, Validators.required], // Campo fechaPago.
       importePago: [
-        '',
+        this.solicitudState?.importePago,
         [
           Validators.required,
           Validators.pattern(/^[0-9]+(\.[0-9]{1,2})?$/), Validators.maxLength(16)
@@ -215,20 +226,42 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
   alReiniciar(): void {
     this.derechosForm.reset();
   }
-
+  /**
+   * Indica si se ha seleccionado una fecha futura.
+   * Cuando es `true`, la fecha seleccionada es futura; cuando es `false`, la fecha es pasada o actual.
+   */
+public fechaFuturaSeleccionada = false;
   /**
    * Actualiza el campo de fecha de pago en el formulario y en el estado global.
    *
    * @param nuevo_fechaPago Nueva fecha de pago seleccionada.
    */
-  cambioFechaPago(nuevo_fechaPago: string): void {
-    this.derechosForm.patchValue({
-      fechaPago: nuevo_fechaPago,
+  cambioFechaDePago(nuevo_valor: string): void { 
+   this.derechosForm.patchValue({
+      fechaDePago: nuevo_valor,
     });
-    this.setValoresStore(this.derechosForm, 'fechaPago', 'setfechaPago');
+    this.avisocalidadStore.setfechaPago(nuevo_valor);
+  this.derechosForm.get('fechaDePago')?.setValue(nuevo_valor);
+
+  let seleccionada: Date | null = null;
+  if (nuevo_valor && nuevo_valor.includes('/')) {
+    const [DAY, MONTH, YEAR] = nuevo_valor.split('/').map(Number);
+    seleccionada = new Date(YEAR, MONTH - 1, DAY);
+  } else {
+    seleccionada = new Date(nuevo_valor); 
   }
 
+  const HOY = new Date();
+  HOY.setHours(0, 0, 0, 0);
 
+  if (seleccionada && seleccionada > HOY) {
+    this.fechaFuturaSeleccionada = true;
+    this.derechosForm.get('fechaDePago')?.setErrors({ futureDate: true });
+  } else {
+    this.fechaFuturaSeleccionada = false;
+    this.derechosForm.get('fechaDePago')?.setErrors(null);
+  }
+  }
 
   /**
    * @description Verifica si un control del formulario es inválido.

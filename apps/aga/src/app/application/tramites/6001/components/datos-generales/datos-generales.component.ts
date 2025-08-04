@@ -1,13 +1,16 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable sort-imports */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RegistroCuentasBancariasService } from '../../services/registro-cuentas-bancarias.service';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { Notificacion, NotificacionesComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RegistroDeSolicitudesTabla, Sociedad } from '../../models/registro-cuentas-bancarias.model';
+import { Tramite6001TablaState, Tramite6001TablaStore } from '../../estados/tramite6001tabla.store';
+import { Tramite6001TablaQuery } from '../../estados/tramite6001tabla.query';
+import { map, Subject, takeUntil } from 'rxjs';
 
 
 /**
@@ -25,7 +28,7 @@ import { RegistroDeSolicitudesTabla, Sociedad } from '../../models/registro-cuen
     templateUrl: './datos-generales.component.html',
     styleUrl: './datos-generales.component.scss',
 })
-export class DatosGeneralesComponent implements OnInit {
+export class DatosGeneralesComponent implements OnInit, OnDestroy {
 
     /**
      * Una instancia de FormGroup que representa el formulario para datos generales.
@@ -74,6 +77,23 @@ export class DatosGeneralesComponent implements OnInit {
      */
     public selectedRowIndex: number | null = null;
 
+    /**
+     * Subject utilizado para notificar y completar las suscripciones cuando el componente se destruye.
+     * Normalmente se usa con el operador `takeUntil` de RxJS para evitar fugas de memoria.
+     * Emite un valor `void` para señalar la finalización.
+     * @private
+     */
+    private destroyNotifier$: Subject<void> = new Subject();
+
+    /**
+     * Objeto de estado que representa el estado actual y los datos de la operación "agregar cuenta"
+     * dentro del flujo de trabajo Tramite 6001. Esta propiedad contiene información como la lista de cuentas,
+     * paginación, filtros y cualquier otro estado relevante de la UI para el componente de tabla correspondiente.
+     *
+     * @type {Tramite6001TablaState}
+     */
+    public agregarCuentaState!: Tramite6001TablaState;
+
 
     /**
      * Constructor para el componente DatosGenerales.
@@ -84,8 +104,14 @@ export class DatosGeneralesComponent implements OnInit {
     constructor(
         private _registroCuentasBancariasSvc: RegistroCuentasBancariasService,
         private fb: FormBuilder,
+        private tramite6001TablaStore: Tramite6001TablaStore,
+        private tramite6001TablaQuery: Tramite6001TablaQuery
     ) {
-        //
+        this.tramite6001TablaQuery.tramiteTabla$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+                this.agregarCuentaState = seccionState;
+                this.getSolicitudesTabla();
+              })
+            ).subscribe();
     }
 
 
@@ -166,9 +192,9 @@ export class DatosGeneralesComponent implements OnInit {
      * @returns {void}
      */
     public getSolicitudesTabla(): void {
-        this._registroCuentasBancariasSvc.getSolicitudesTabla().subscribe((data) => {
-            this.registroDeSolicitudesTablaDatos = data;
-        });
+        const DATOS = this.registroDeSolicitudesTablaDatos.length > 0 ? this.registroDeSolicitudesTablaDatos : [];
+        DATOS.push(this.agregarCuentaState);
+        this.registroDeSolicitudesTablaDatos = [...new Set(DATOS)];
     }
 
     /**
@@ -292,5 +318,14 @@ export class DatosGeneralesComponent implements OnInit {
             txtBtnAceptar: 'Aceptar',
             txtBtnCancelar: '',
         };
+    }
+
+ /**
+   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
+   * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
+   */
+    ngOnDestroy(): void {
+      this.destroyNotifier$.next();
+      this.destroyNotifier$.complete();
     }
 }

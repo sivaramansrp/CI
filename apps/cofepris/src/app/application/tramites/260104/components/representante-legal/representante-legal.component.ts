@@ -103,9 +103,9 @@ export class RepresentanteLegalComponent implements OnDestroy {
   crearFormulario(): void {
     this.representante = this.fb.group({
       rfc: [this.solicitudState?.rfc, Validators.required],
-      nombre: [{ value: '', disabled: true }, Validators.required],
-      apellidoPaterno: [{ value: '', disabled: true }, Validators.required],
-      apellidoMaterno: [{ value: '', disabled: true }],
+      nombre: [{ value: this.solicitudState?.nombres, disabled: true }, Validators.required],
+      apellidoPaterno: [{ value: this.solicitudState?.apellidoPaterno, disabled: true }, Validators.required],
+      apellidoMaterno: [{ value: this.solicitudState?.apellidoMaterno, disabled: true }],
     });
   }
 

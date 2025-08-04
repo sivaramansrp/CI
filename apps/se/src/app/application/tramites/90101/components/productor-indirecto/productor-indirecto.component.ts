@@ -11,7 +11,7 @@
 
 import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
 import { Component, Input, OnDestroy, OnInit, forwardRef } from '@angular/core';
-import { ConfiguracionColumna, SoloLetrasNumerosDirective, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna, SeccionLibState, SeccionLibStore, SoloLetrasNumerosDirective, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
@@ -97,6 +97,8 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  public seccionState!: SeccionLibState;
+
   /**
    * @descripcion
    * Estado actual del productor, obtenido del store de Prosec.
@@ -121,6 +123,7 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
     private ProsecService: ProsecService,
     private AutorizacionProsecStore: AutorizacionProsecStore,
     private AUtorizacionProsecQuery: AUtorizacionProsecQuery,
+    public seccionStore: SeccionLibStore,
   ) {
     this.productorIndirecto = this.fb.group({
       contribuyentes: [''],
@@ -143,6 +146,8 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.initActionFormBuild();
+
+    this.seccionStore.establecerFormaValida([false]);
 
     this.productorIndirecto.statusChanges
       .pipe(
@@ -176,9 +181,11 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
       this.productorDato = Array.isArray(this.productorState.productorDatos) 
         ? this.productorState.productorDatos 
         : [this.productorState.productorDatos] as FilaProductos[];
+      this.seccionStore.establecerFormaValida([true]);
     }
     else {
       this.productorIndirecto.enable();
+      this.seccionStore.establecerFormaValida([false]);
     } 
   }
 

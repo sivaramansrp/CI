@@ -34,24 +34,24 @@ describe('CertificadoZoosanitarioServiceService', () => {
     service = TestBed.inject(CertificadoZoosanitarioServiceService);
   });
 
-  it('should be created', () => {
+  it('debe crear el servicio', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should return all form data from store via getAllDatosForma()', (done) => {
+  it('debe retornar todos los datos del formulario desde el store usando getAllDatosForma()', (done) => {
     service.getAllDatosForma().subscribe((data) => {
       expect(mockZoosanitarioStore._select).toHaveBeenCalled();
       expect(data).toEqual(MOCK_STORE_DATA);
       done();
     });
   });
-  it('should call http.get with the correct URL in obtenerRespuestaPorUrl', (done) => {
+
+  it('debe llamar a http.get con la URL correcta en obtenerRespuestaPorUrl', (done) => {
     const HTTP_CLIENT_SPY = { get: jest.fn() };
     const TEST_URL = 'testfile.json';
     const EXPECTED_URL = `../../../../../assets/json/220201/${TEST_URL}`;
     const EXPECTED_RESPONSE = { some: 'data' };
 
-    // Replace the http client in the service with our spy
     (service as any).http = HTTP_CLIENT_SPY;
     HTTP_CLIENT_SPY.get.mockReturnValue(of(EXPECTED_RESPONSE));
 
@@ -61,14 +61,16 @@ describe('CertificadoZoosanitarioServiceService', () => {
       done();
     });
   });
-  it('should return all form data from store via getFormData()', (done) => {
+
+  it('debe retornar todos los datos del formulario desde el store usando getFormData()', (done) => {
     service.getFormData().subscribe((data) => {
       expect(mockZoosanitarioStore._select).toHaveBeenCalled();
       expect(data).toEqual(MOCK_STORE_DATA);
       done();
     });
   });
-  it('should return validarEnvio from store via getValidarEnvio()', (done) => {
+
+  it('debe retornar validarEnvio desde el store usando getValidarEnvio()', (done) => {
     const VALIDAR_ENVIO_MOCK = { seccion1: true, seccion2: false };
     mockZoosanitarioStore._select.mockReturnValueOnce(of(VALIDAR_ENVIO_MOCK));
 
@@ -78,5 +80,5 @@ describe('CertificadoZoosanitarioServiceService', () => {
       done();
     });
   });
-  
+
 });

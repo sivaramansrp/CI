@@ -61,7 +61,8 @@ export class AcuseReciboComponent implements OnInit, OnDestroy {
    * @type {TablaAcciones[]}
    */
   public acuseAcciones: TablaAcciones[] = [
-    TablaAcciones.VER
+    TablaAcciones.VER,
+    TablaAcciones.DESCARGAR
   ];
 
   /**
@@ -145,31 +146,19 @@ export class AcuseReciboComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
-    this.pantalla = this.router?.url === '/confirmar-resolucion' ? 'confirmar-resolucion' : 'confirmar-notificacion';
-    
-    if(this.pantalla === 'confirmar-notificacion'){
-      this.confirmarNotificacionService
-      .getAcuseReciboDatos()
+    this.confirmarNotificacionService
+      .getAcuseConfirmarResolucionTablaDatos()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.acuseReciboTablaDatos = data;
-      });
-    }
-    if(this.pantalla === 'confirmar-resolucion'){
-      this.confirmarNotificacionService
-        .getAcuseConfirmarResolucionTablaDatos()
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((data: AcuseNotificacionRequerimiento[]) => {
-          this.acuseConfirmarResolucionTablaDatos = data;
-      });
+      .subscribe((data: AcuseNotificacionRequerimiento[]) => {
+        this.acuseConfirmarResolucionTablaDatos = data;
+    });
 
-      this.confirmarNotificacionService
-        .getResolucionConfirmarResolucionTablaDatos()
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((data: AcuseNotificacionRequerimiento[]) => {
-          this.resolucionConfirmarResolucionTablaDatos = data;
-      });
-    } 
+    this.confirmarNotificacionService
+      .getResolucionConfirmarResolucionTablaDatos()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data: AcuseNotificacionRequerimiento[]) => {
+        this.resolucionConfirmarResolucionTablaDatos = data;
+    });
   }
 
   /**

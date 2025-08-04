@@ -238,7 +238,7 @@ datosInputCheck: TipoDevAviso = {
       .subscribe();
 
     if (this.consultaState.update) {
-      this.formularioDeshabilitado = true;
+      this.formularioDeshabilitado = this.consultaState.readonly;
       this.guardarDatosFormulario();
     } else {
       this.esDatosRespuesta = true;

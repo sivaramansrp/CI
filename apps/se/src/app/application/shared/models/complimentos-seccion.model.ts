@@ -128,6 +128,7 @@ export interface DatosCatalago {
   opciones?: CatalogoPaises[]; // Opciones de países
   opcionesCatalogo?: Catalogo[]; // Opciones del catálogo
   orden: number; // Orden de aparición
+  maxlength?: number; // Longitud máxima de caracteres
 }
 
 /**

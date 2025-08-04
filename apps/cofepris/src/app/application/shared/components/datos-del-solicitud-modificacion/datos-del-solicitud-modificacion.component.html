@@ -304,7 +304,7 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="establishomentoColonias"
-              >Colonias:</label
+              >Colonia:</label
             >
             <input
               class="form-control"
@@ -505,7 +505,7 @@
       
         <div class="container text-end mt-5">
         <button class="btn btn-danger me-2" (click)="eliminarSeleccionados()" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
-        <button class="btn btn-default me-2" data-bs-toggle="modal" (click)="abrirModalMercancia()" [disabled]="esFormularioSoloLectura ? true : false">Modificar</button>
+        <button class="btn btn-primary me-2" data-bs-toggle="modal" (click)="abrirModalMercancia()" [disabled]="esFormularioSoloLectura ? true : false">Modificar</button>
         <button class="btn btn-primary me-2" data-bs-toggle="modal" (click)="abrirModalMercancia()" [disabled]="esFormularioSoloLectura ? true : false">
           Agregar
         </button>
@@ -628,7 +628,7 @@
               {{ getErrorMessage('denominacionComun') }}
             </div>
           </div>
-          <div class="form-group pt-1">
+          <div class="form-group mt-4">
             <app-catalogo-select
               [catalogo]="estado"
               formControlName="tipoDeProducto"
@@ -647,7 +647,7 @@
               {{ getErrorMessage('estadoFormaFarmaceutica') }}
             </div>
           </div>
-          <div class="form-group pt-1">
+          <div class="form-group mt-4">
             <app-catalogo-select
               [catalogo]="estado"
               formControlName="estadoFisico"
@@ -789,7 +789,7 @@
               <div class="panel panel-default">
                 <div class="panel-heading" (click)="mostrar_colapsable()" tabindex="0">
                   <p class="panel-title">País de orígen</p>
-                  <button type="button" class="collpase-button collapsed"></button>
+                  <button type="button" class="collpase-button" [ngClass]="{ 'collapsed': !colapsable }"></button>
                 </div>
                 @if(colapsable){
                 <div class="panel-collapse collapse in" id="panel-01">
@@ -808,7 +808,7 @@
               <div class="panel panel-default">
                 <div class="panel-heading" (click)="mostrar_colapsableDos()" tabindex="0">
                   <p class="panel-title">País de procedencia</p>
-                  <button type="button" class="collpase-button collapsed"></button>
+                  <button type="button" class="collpase-button" [ngClass]="{ 'collapsed': !colapsableDos }"></button>
                 </div>
                 @if(colapsableDos){
                 <div class="panel-collapse collapse in" id="panel-01">
@@ -827,7 +827,7 @@
               <div class="panel panel-default">
                 <div class="panel-heading" (click)="mostrar_colapsableTres()" tabindex="0">
                   <p class="panel-title">Uso específico</p>
-                  <button type="button" class="collpase-button collapsed"></button>
+                  <button type="button" class="collpase-button" [ngClass]="{ 'collapsed': !colapsableTres }"></button>
                 </div>
                 @if(colapsableTres){
                 <div class="panel-collapse collapse in" id="panel-01">

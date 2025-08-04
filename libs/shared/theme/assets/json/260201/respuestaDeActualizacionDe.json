@@ -34,8 +34,8 @@
     "marca": "MarcaEjemplo",
     "especifique": "Especificación adicional",
     "claveDeLos": "CLAVE123",
-    "fechaDeFabricacio": "2024-01-01",
-    "fechaDeCaducidad": "2025-01-01",
+    "fechaDeFabricacio": "01/01/2024",
+    "fechaDeCaducidad": "01/30/2025",
     "regimenLaMercancia": "Definitivo",
     "aduana": "Aduana Norte"
   },

@@ -19,6 +19,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   AlertComponent,
+  InputRadioComponent,
   Notificacion,
   NotificacionesComponent,
   Pedimento,
@@ -56,6 +57,7 @@ import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaScianConfig } from '../../models/datos-solicitud.model';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json';
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
@@ -69,6 +71,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     FormsModule,
     NotificacionesComponent,
     TooltipModule,
+    InputRadioComponent
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
@@ -376,6 +379,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   /** Nueva notificación relacionada con el RFC. */
   public seleccionarFilaNotificacion!: Notificacion;
+  /**
+   * Representa el estado de un grupo de botones de radio, inicializado con el valor `radio_si_no`.
+   * Esto se utiliza típicamente para manejar opciones binarias (por ejemplo, Sí/No).
+   */
+  public radioBtn = radio_si_no;
+  /**
+   * Representa el valor de selección predeterminado para un componente específico.
+   * Esto puede ser una cadena o un número, inicializado como una cadena vacía.
+   */
+  public predeterminadoSeleccionar: string | number = '';
 
   /**
    * @constructor
@@ -518,6 +531,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       rfcSanitario: [
         this.datosSolicitudFormState.rfcSanitario,
         [
+          Validators.required,
           Validators.minLength(2),
           Validators.maxLength(120),
           Validators.pattern(REGEX_RFC),
@@ -525,11 +539,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       ],
       denominacionRazon: [
         this.datosSolicitudFormState.denominacionRazon,
-        [Validators.minLength(2), Validators.maxLength(120)],
+        [Validators.required, Validators.minLength(2), Validators.maxLength(120)],
       ],
       correoElectronico: [
         this.datosSolicitudFormState.correoElectronico,
-        [Validators.minLength(2), Validators.maxLength(120), Validators.email],
+        [Validators.required,Validators.minLength(2), Validators.maxLength(120), Validators.email],
       ],
       codigoPostal: [
         this.datosSolicitudFormState.codigoPostal,
@@ -586,7 +600,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       adunasDeEntradas: [
         this.datosSolicitudFormState.adunasDeEntradas
           ? this.datosSolicitudFormState.adunasDeEntradas
-          : '103',
+          : '',
         [Validators.required],
       ],
       aeropuerto: [
@@ -1068,6 +1082,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
+  }
+
+  /**
+   * Actualiza el valor de `predeterminadoSeleccionar` basado en el valor proporcionado.
+   *
+   * @param value - El nuevo valor a establecer para `predeterminadoSeleccionar`.
+   *                Puede ser una cadena o un número.
+   */
+  public cambioDeValorIndique(value: string | number): void {
+    this.predeterminadoSeleccionar = value;
   }
 
   /**
