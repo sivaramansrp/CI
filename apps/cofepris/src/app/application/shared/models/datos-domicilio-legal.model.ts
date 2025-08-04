@@ -266,3 +266,8 @@ export interface PermisoModel {
     paisProveedor: boolean;
     paisProcedencia: boolean;
   }
+
+  export interface FraccionArancelaria {
+    descripcion: string;
+    umt: string;
+  }

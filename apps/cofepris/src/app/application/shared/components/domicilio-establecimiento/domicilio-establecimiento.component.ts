@@ -899,6 +899,24 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       INDICE_INICIAL + this.elementosPorPagina
     );
   }
+/**   * Autocompleta el campo de fracción arancelaria con la descripción correspondiente.
+   *   * Si el campo de fracción arancelaria tiene un valor, realiza una solicitud al servicio para obtener
+   *   * la descripción asociada y actualiza el formulario con esa información.
+   */
+  autoCompleteFraccionArancelaria(): void {
+    const FRACCION = this.formMercancias.get('fraccionArancelaria')?.value;
+    if (FRACCION) {
+      this.service
+        .getFraccionArancelaria()
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((data): void => {
+          this.formMercancias.patchValue({
+            descripcionFraccion: data?.descripcion,
+            UMT: data?.umt
+          });
+        });
+    }
+  }
 
   /**
      * Método que se ejecuta cuando se cambia de página en la paginación.

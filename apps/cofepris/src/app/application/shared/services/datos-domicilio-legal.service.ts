@@ -11,7 +11,7 @@ import { DatosDomicilioLegalQuery } from '../estados/queries/datos-domicilio-leg
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PermisoModel } from '../models/datos-domicilio-legal.model';
+import { FraccionArancelaria, PermisoModel } from '../models/datos-domicilio-legal.model';
 
 @Injectable({
   providedIn: 'root',
@@ -164,5 +164,9 @@ export class DatosDomicilioLegalService {
       return this.http.get<MercanciasTabla>(
         'assets/json/cofepris/mercancias-tabla.json'
       );
+    }
+
+    getFraccionArancelaria():Observable<FraccionArancelaria>{
+      return this.http.get<FraccionArancelaria>('assets/json/cofepris/fraccion-arancelaria.json');
     }
 }
