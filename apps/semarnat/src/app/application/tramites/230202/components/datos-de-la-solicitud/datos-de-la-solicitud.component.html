@@ -6,12 +6,12 @@
           <div class="col-md-8">
             <app-catalogo-select
               [catalogo]="numeroDeCertificado"
-              [label]="'Número de certificado fitosanitario de reexportación'"
+              [label]="'Número de certificado fitosanitario de importación'"
               formControlName="numeroDeCertificado"
-              
               [isDisabled]="soloLectura"
               (change)="numeroDeCertificadoSeleccion()"
               name="numeroDeCertificado"
+              [placeholder]="'Seleccione un valor'"
             >
             </app-catalogo-select>
           </div>
@@ -23,7 +23,7 @@
               [catalogo]="aduana"
               [label]="'Aduana de salida'"
               formControlName="aduana"
-              
+              [placeholder]="'Seleccione un valor'"
               [isDisabled]="soloLectura"
               (change)="aduanaSeleccion()"
               name="aduana"
@@ -131,8 +131,7 @@
             </app-catalogo-select>
           </div>
           <div class="col-md-8">
-            <label>Número y descripción de los bultos y/o contenedores</label>
-            <span class="require">*</span>
+            <label>Número y descripción de los bultos y/o contenedores*:</label>
             <input
               type="text"
               class="form-control"
@@ -145,8 +144,7 @@
         <ng-titulo titulo="Datos de la ubicación de la Mercancía"></ng-titulo>
         <div class="row">
           <div class="col-md-4">
-            <label>Código Postal o equivalente</label>
-            <span class="require">*</span>
+            <label>Código Postal o equivalente*:</label>
             <input
               type="text"
               class="form-control"
@@ -169,8 +167,7 @@
             </app-catalogo-select>
           </div>
           <div class="col-md-4">
-            <label>Calle</label>
-            <span class="require">*</span>
+            <label>Calle*:</label>
             <input
               type="text"
               class="form-control"
@@ -183,8 +180,7 @@
         </div>
         <div class="row">
           <div class="col-md-4">
-            <label>Colonia</label>
-            <span class="require">*</span>
+            <label>Colonia*:</label>
             <input
               type="text"
               class="form-control"
@@ -195,8 +191,7 @@
             />
           </div>
           <div class="col-md-4">
-            <label>Número exterior</label>
-            <span class="require">*</span>
+            <label>Número exterior*:</label>
             <input
               type="text"
               class="form-control"
@@ -207,8 +202,7 @@
             />
           </div>
           <div class="col-md-4">
-            <label>Número interior</label>
-            <span class="require">*</span>
+            <label>Número interior*:</label>
             <input
               type="text"
               class="form-control"
@@ -313,9 +307,9 @@
                     [catalogo]="genero"
                     formControlName="genero"
                     [label]="'Género'"
-                    
                     name="genero"
                   ></app-catalogo-select>
+                                      <!-- (change)="onGeneroChange($event)" -->
                   <div *ngIf="isInvalid('genero')" class="mensaje-error">
                     Este campo es obligatorio.
                   </div>
@@ -327,9 +321,9 @@
                     [catalogo]="especie"
                     formControlName="especie"
                     [label]="'Especie'"
-                    
                     name="especie"
                   ></app-catalogo-select>
+                  <!-- (change)="onEspecieChange($event)" -->
                   <div *ngIf="isInvalid('especie')" class="mensaje-error">
                     Este campo es obligatorio.
                   </div>
@@ -341,19 +335,27 @@
                     [catalogo]="nombreComun"
                     formControlName="nombreComun"
                     [label]="'Nombre común'"
-                    
                     name="nombreComun"
                   ></app-catalogo-select>
+                  <!-- (change)="onNombreComunChange($event)" -->
                   <div *ngIf="isInvalid('nombreComun')" class="mensaje-error">
                     Este campo es obligatorio.
                   </div>
                 </div>
               </div>
             </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div *ngIf="mostrarOtroNombreComun" class="form-group mt-2">
+                  <label for="otroNombreComun">Otro:</label>
+                  <input type="text" formControlName="otroNombreComun" id="otroNombreComun" class="form-control" />
+                </div>
+              </div>
+            </div>
             <div class="modal-footer justify-content-end">
               <button
                 type="button"
-                class="btn btn-default"
+                class="btn btn-danger"
                 [disabled]="soloLectura"
                 (click)="eliminarDetalle()"
               >
@@ -380,7 +382,7 @@
               ></app-tabla-dinamica>
             </div>
             <div class="col-md-12 mt-5 d-flex justify-content-end">
-              <button type="button" [disabled]="soloLectura" class="btn btn-default">Limpiar</button>
+              <button type="button" [disabled]="soloLectura" class="btn btn-default" (click)="limpiar()">Limpiar</button>
               <button type="button" [disabled]="soloLectura" class="btn btn-danger ms-3" data-bs-dismiss="modal" #closeModal>
                 Cancelar
               </button>

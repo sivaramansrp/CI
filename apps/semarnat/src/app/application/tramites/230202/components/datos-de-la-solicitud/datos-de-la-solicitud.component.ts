@@ -260,7 +260,34 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @default false
    */
   soloLectura: boolean = false;
+
+  /**
+   * @property {boolean} detalles
+   * @description Indica si se deben mostrar los detalles de la solicitud.
+   * @default undefined
+   */
   detalles: never[] | undefined;
+
+  /**
+   * @property {boolean} generoEnabled
+   * @description Indica si el campo de género está habilitado.
+   * @default false
+   */
+  especieEnabled = false;
+
+  /**
+   * @property {boolean} nombreComunEnabled
+   * @description Indica si el campo de nombre común está habilitado.
+   * @default false
+   */
+  nombreComunEnabled = false;
+
+  /**
+   * @property {boolean} mostrarOtroNombreComun
+   * @description Indica si se debe mostrar el campo para otro nombre común.
+   * @default false
+   */
+  mostrarOtroNombreComun = false;
 
   /**
    * Constructor del componente.
@@ -671,6 +698,34 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.store.setEstado(ESTADO);
   }
 
+  // onGeneroChange(event: Event | { value?: string } | undefined): void {
+  //   const value = 'value' in (event ?? {}) ? (event as { value?: string }).value
+  //     : (event && (event as Event).target && ((event as Event).target as HTMLSelectElement).value) || '';
+  //   this.setValoresStore(this.agregarMercanciasForm.get('datosMercancia') as FormGroup, 'genero', 'setGenero');
+  //   this.especieEnabled = !!value;
+  //   this.agregarMercanciasForm.get('datosMercancia.especie')?.reset();
+  //   this.nombreComunEnabled = false;
+  //   this.agregarMercanciasForm.get('datosMercancia.nombreComun')?.reset();
+  // }
+
+  // onEspecieChange(event: Event | { value?: string } | undefined): void {
+  //   const value = 'value' in (event ?? {}) ? (event as { value?: string }).value
+  //     : (event && (event as Event).target && ((event as Event).target as HTMLSelectElement).value) || '';
+  //   this.setValoresStore(this.agregarMercanciasForm.get('datosMercancia') as FormGroup, 'especie', 'setEspecie');
+  //   this.nombreComunEnabled = !!value;
+  //   this.agregarMercanciasForm.get('datosMercancia.nombreComun')?.reset();
+  // }
+
+  // onNombreComunChange(event: Event | { value?: string } | undefined): void {
+  //   const value = 'value' in (event ?? {}) ? (event as { value?: string }).value
+  //     : (event && (event as Event).target && ((event as Event).target as HTMLSelectElement).value) || '';
+  //   this.setValoresStore(this.agregarMercanciasForm.get('datosMercancia') as FormGroup, 'nombreComun', 'setNombreComun');
+  //   this.mostrarOtroNombreComun = value === 'Otro';
+  // }
+
+  /**
+   * Cierra el modal de agregar mercancías.
+   */
   public getCrossListBtn(index: number): Array<{ btnNombre: string; class: string; funcion: () => void }> {
     return [
       {
@@ -829,6 +884,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       this.selectedRowsDetalle = [];
     }
   }
+
+  /**
+   * Limpiar formulario.
+   */
+  limpiar(): void {
+    this.agregarMercanciasForm.reset();
+  }
+
 
   /**
    * Cierra el modal actual.
