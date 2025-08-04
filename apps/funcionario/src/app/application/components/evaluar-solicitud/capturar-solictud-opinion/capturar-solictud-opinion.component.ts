@@ -1,10 +1,12 @@
-import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, Notificacion, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { map, Subject, takeUntil } from 'rxjs';
 import { OpinionesStates, SolicitudOpinionesState } from '../../../estados/evaluacion-solicitud/opiniones.store';
 import { CommonModule } from '@angular/common';
+import { CONFIGURACION_ENCABEZADO_OPINIONES } from '../../../core/enums/opiniones.enum';
 import data from '@libs/shared/theme/assets/json/funcionario/cat-dependencias.json';
+import { ListaOpiniones } from '../../../core/models/lista-opiniones.model';
 import { Router } from '@angular/router';
 import { SolicitudOpinionesQuery } from '../../../estados/queries/opiniones.query';
 
@@ -18,8 +20,8 @@ import { SolicitudOpinionesQuery } from '../../../estados/queries/opiniones.quer
 export class CapturarSolictudOpinionComponent implements OnInit, OnDestroy {
 
   /**
-     * Catálogo de tipo de requerimiento
-     */
+    * Catálogo de tipo de requerimiento
+    */
   catDependencia!: Catalogo[];
 
   /**
@@ -32,7 +34,15 @@ export class CapturarSolictudOpinionComponent implements OnInit, OnDestroy {
    * Se utiliza para almacenar las opiniones capturadas por el usuario
    * y mostrarlas en una tabla.
    */
-  opinionesSeleccionados: { dependencia: string; justificacion: string }[] = [];
+  listadoOpiniones: ListaOpiniones[] = [];
+  /**
+   * lista de opiniones seleccionadas para eliminar o editar opiniones
+   */
+  opinionesSeleccionados: ListaOpiniones[] = [];
+  /**
+   * encabezado de tabla opiniones
+   */
+  encabezadoDeTablaOpiniones = CONFIGURACION_ENCABEZADO_OPINIONES;
 
   /** 
    * Declaración de variable para controlar la visualización de la tabla
@@ -40,10 +50,10 @@ export class CapturarSolictudOpinionComponent implements OnInit, OnDestroy {
    * dependiendo de si hay opiniones capturadas o no.
    */
   visualizaTabla: boolean = true;
-/**
- * Declaración de variable para controlar la visualización de los botones
- * Se utiliza para mostrar u ocultar los botones de enviar y cancelar
- */
+  /**
+   * Declaración de variable para controlar la visualización de los botones
+   * Se utiliza para mostrar u ocultar los botones de enviar y cancelar
+   */
   visualizaBotones: boolean = false;
 
   /**
@@ -56,6 +66,20 @@ export class CapturarSolictudOpinionComponent implements OnInit, OnDestroy {
     */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /** 
+   * Enum para la selección en la tabla
+   */
+  tablaSeleccion = TablaSeleccion;
+
+  /** 
+   * Notificación para mostrar mensajes al usuario 
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
+   * Indice para editar registro seleccionado 
+   */
+  indiceOpinionEditando: number | null = null;
   /**
    * 
    * @param fb FormBuilder
@@ -84,11 +108,11 @@ export class CapturarSolictudOpinionComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudOpinionesState = seccionState;
+          this.visualizaTabla = this.solicitudOpinionesState.parametroDesplegable;
+          this.listadoOpiniones = this.solicitudOpinionesState.listaOpciones;
         })
       )
       .subscribe();
-    this.visualizaTabla = this.solicitudOpinionesState.parametroDesplegable;
-    this.opinionesSeleccionados = this.solicitudOpinionesState.listaOpciones;
   }
 
   /**
@@ -108,7 +132,7 @@ export class CapturarSolictudOpinionComponent implements OnInit, OnDestroy {
   crearFormRequerimiento(): void {
     this.formCapturaOpinion = this.fb.group({
       dependencia: ['', [Validators.required]],
-      justificacion: ['', [Validators.required]]
+      justificacion: ['', [Validators.required, Validators.maxLength(1000)]]
     });
   }
 
@@ -122,55 +146,137 @@ export class CapturarSolictudOpinionComponent implements OnInit, OnDestroy {
       dependencia: null,
       justificacion: ''
     });
+    this.indiceOpinionEditando = null;
   }
 
   /**
    * Método para guardar la opinión
    */
   guardarOpinion(): void {
-    if (this.formCapturaOpinion.valid) {
-      if (this.opinionesSeleccionados.length === 0) {
-        this.opinionesSeleccionados = [];
-        this.visualizaBotones = true;
-      }
-      this.visualizaTabla = true;
-      this.opinionesStates.setValorDesplegableOpinion(this.visualizaTabla ?? false);
-      const DEPENDENCIA_ID = this.formCapturaOpinion.get('dependencia')?.value;
-      const JUSTIFICACION = this.formCapturaOpinion.get('justificacion')?.value;
-      const DEPENDENCIA_OBJ = this.catDependencia.find(dep => dep.id === Number(DEPENDENCIA_ID));
-      this.opinionesSeleccionados.push({
-        dependencia: DEPENDENCIA_OBJ?.descripcion || 'Desconocido',
-        justificacion: JUSTIFICACION
-      });
-      this.opinionesStates.setSolicitudOpiniones(this.opinionesSeleccionados);
-    } else {
-      this.formCapturaOpinion.markAllAsTouched(); // muestra errores si el form está inválido
+    const DEPENDENCIA_ID = this.formCapturaOpinion.get('dependencia')?.value;
+    const JUSTIFICACION = this.formCapturaOpinion.get('justificacion')?.value?.trim();
+
+    if (!DEPENDENCIA_ID || !JUSTIFICACION) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Alerta',
+        mensaje: 'Por favor, completa todos los campos requeridos antes de guardar la opinión.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
     }
-  }
+    const DEPENDENCIA_OBJ = this.catDependencia.find(dep => dep.id === Number(DEPENDENCIA_ID));
 
-  /**
-   * Método para eliminar un requerimiento
-   * @param index índice del requerimiento a eliminar
-   */
-  eliminarOpinion(index: number): void {
-    this.opinionesSeleccionados.splice(index, 1);
-  }
-
-  /**
-   * Método para editar una opinión
-   * @param index índice de la opinión a editar
-   */
-  editarOpinion(index: number): void {
-    const OPINION = this.opinionesSeleccionados[index];
-    const DEPENDENCIA_ID = this.catDependencia.find(dep => dep.descripcion === OPINION.dependencia);
-    this.formCapturaOpinion.setValue({
-      dependencia: DEPENDENCIA_ID?.id ?? '',
-      justificacion: OPINION.justificacion,
+    const NUEVA_TABLA_OPINIONES = [...this.listadoOpiniones];
+    NUEVA_TABLA_OPINIONES.push({
+      idDependencia: String(DEPENDENCIA_ID),
+      dependencia: DEPENDENCIA_OBJ?.descripcion || 'Desconocido',
+      Justificación: JUSTIFICACION,
+      estadoRequerimento: 'Capturada'
     });
-    this.eliminarOpinion(index);
+    if (this.indiceOpinionEditando !== null) {
+      this.listadoOpiniones = NUEVA_TABLA_OPINIONES;
+      this.indiceOpinionEditando = null;
+    } else {
+      if (this.listadoOpiniones.length === 0) {
+        this.listadoOpiniones = [];
+      }
+      this.listadoOpiniones = NUEVA_TABLA_OPINIONES;
+    }
+    this.opinionesStates.setSolicitudOpiniones(this.listadoOpiniones);
+    this.opinionesStates.setValorDesplegableOpinion(true);
+    this.visualizaTabla = true;
+    this.visualizaBotones = true;
+    this.limpiarFormulario();
   }
 
-  enviarOpiniones(){
-     this.router.navigate(['funcionario/firma-electronica']);
+  /**
+   * Editar registros seleccionados 
+   */
+  editarOpinion(): void {
+    if (!this.opinionesSeleccionados || this.opinionesSeleccionados.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Atención',
+        mensaje: 'Selecciona una opinión para editar.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    if (this.opinionesSeleccionados.length > 1) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: 'Atención',
+        mensaje: 'Para editar una opinión, selecciona únicamente un registro de la tabla.',
+        cerrar: false,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    const OPINION_SELECCIONADA = this.opinionesSeleccionados[0];
+
+    // Eliminar del listado la opinión seleccionada
+    this.listadoOpiniones = this.listadoOpiniones.filter(
+      opinion => opinion.idDependencia !== OPINION_SELECCIONADA.idDependencia
+    );
+
+    // Actualizar el estado global
+    this.opinionesStates.setSolicitudOpiniones(this.listadoOpiniones);
+
+    // Cargar valores al formulario para editar
+    this.formCapturaOpinion.patchValue({
+      dependencia: OPINION_SELECCIONADA.idDependencia,
+      justificacion: OPINION_SELECCIONADA.Justificación,
+    });
+
+    // Limpiar selección
+    this.opinionesSeleccionados = [];
+  }
+
+  /**
+   * Metodo para eliminar registros dentro de la tabla opiniones
+   */
+  eliminarOpinion(): void {
+    if (!this.opinionesSeleccionados || this.opinionesSeleccionados.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Atención',
+        mensaje: 'Selecciona una opinión para eliminar.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+    const IDS_TO_DELETE = this.opinionesSeleccionados.map(opinion => opinion.idDependencia);
+    this.listadoOpiniones = this.listadoOpiniones.filter(opinion => !IDS_TO_DELETE.includes(opinion.idDependencia));
+    this.opinionesStates.setSolicitudOpiniones(this.listadoOpiniones);
+    this.opinionesSeleccionados = [];
+  }
+
+  /**
+   * Método para enviar registros de opiniones
+   */
+  enviarOpiniones(): void {
+    this.router.navigate(['funcionario/firma-electronica']);
   }
 }
