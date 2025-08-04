@@ -29,6 +29,7 @@ import { Subject } from 'rxjs';
 })
 export class PagoDerechosComponent implements OnDestroy, OnInit {
 
+  /** Indica si se debe mostrar la notificación de alerta en el componente. */
   @Input() mostrarNotificacionAlerta: boolean = false;
 
   /**

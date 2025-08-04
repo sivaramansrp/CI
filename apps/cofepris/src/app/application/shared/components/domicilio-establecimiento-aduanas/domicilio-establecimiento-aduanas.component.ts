@@ -268,6 +268,7 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
    */
   tieneSeleccionadoBtnClicked: boolean = false;
 
+  /** Etiqueta que se muestra para el campo de número de licencia sanitaria en el formulario. */
   public licenseLabel: string = "No. de licencia sanitaria*:"
 
   /**
@@ -597,6 +598,10 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     }
   }
 
+  /**
+ * Agrega una nueva mercancía a la tabla si el formulario es válido.
+ * Si el formulario no es válido, marca todos los campos como tocados para mostrar los errores.
+ */
   agregarMercancia(): void {
     if (this.formMercancias.valid) {
       const DATOS = {
