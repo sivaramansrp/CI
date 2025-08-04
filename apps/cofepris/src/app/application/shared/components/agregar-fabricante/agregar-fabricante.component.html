@@ -147,7 +147,10 @@
     } @if(agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL) {
     <div class="row mt-3">
       <div class="col-md-8">
-        <label class="form-label">Denominación/razón social * :</label>
+        <label class="form-label">Denominación/razón social           
+          @if(agregarFabricanteForm.controls['razonSocial'].errors?.['required']){
+          <span class="text-danger">*</span>
+          } :</label>
         <input type="text" class="form-control" [maxlength]="250" formControlName="razonSocial" [ngClass]="esInvalido('razonSocial') ? 'required' : ''" />
         <div *ngIf="esInvalido('razonSocial')" class="text-danger">
           <small *ngIf="agregarFabricanteForm.controls['razonSocial'].errors?.['required']">
@@ -267,7 +270,10 @@
 
     <div class="row mt-3">
       <div class="col-md-8">
-        <label class="form-label">Calle * :</label>
+        <label class="form-label">Calle  
+          @if(agregarFabricanteForm.controls['calle'].errors?.['required']){
+          <span class="text-danger">*</span>
+          } :</label>
         <span
         class="bi bi-question-circle-fill mx-1"
         title="Domicilio, calle, número interior, número exterior, lote"
@@ -281,7 +287,11 @@
         </div>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Número exterior * :</label>
+        <label class="form-label">Número exterior 
+          @if(agregarFabricanteForm.controls['numeroExterior'].errors?.['required']){
+          <span class="text-danger">*</span>
+          }
+           :</label>
         <input
           type="text"
           class="form-control"

@@ -53,7 +53,10 @@
 
     <div class="row mt-5">
       <div class="col-md-4">
-        <label class="form-label">R.F.C * :</label>
+        <label class="form-label">R.F.C 
+          @if(agregarDestinatarioFinal.controls['rfc'].errors?.['required']){
+          <span class="text-danger">*</span>
+          }:</label>
         <span
         class="bi bi-question-circle-fill mx-1"
         title="Registro Federal de Contribuyente"
@@ -79,7 +82,10 @@
         <label
           class="form-label row mt-3 mover-izquierda fs-2"
           for="denominacionRazon"
-          >Denominación/razón social * :</label
+          >Denominación/razón social 
+          @if(agregarDestinatarioFinal.controls['denominacionRazon'].errors?.['required']){
+          <span class="text-danger">*</span>
+          }:</label
         >
         <input
           class="form-control"
@@ -248,7 +254,11 @@
     <div class="row mt-3">
       <div class="col-md-8">
         <label class="form-label">Calle</label>
-        <span class="form-label mx-2" *ngIf="elementosRequeridos.includes('calle')">*</span>
+        <span class="form-label mx-2" *ngIf="elementosRequeridos.includes('calle')">
+          @if(agregarDestinatarioFinal.controls['calle'].errors?.['required']){
+          <span class="text-danger">*</span>
+          }
+        </span>
         <span class="form-label">:</span>
         <span
         class="bi bi-question-circle-fill mx-1"
@@ -264,7 +274,11 @@
       </div>
       <div class="col-md-4">
         <label class="form-label">Número exterior</label>
-        <span class="form-label mx-2" *ngIf="elementosRequeridos.includes('numeroExterior')">*</span>
+        <span class="form-label mx-2" *ngIf="elementosRequeridos.includes('numeroExterior')">
+          @if(agregarDestinatarioFinal.controls['numeroExterior'].errors?.['required']){
+          <span class="text-danger">*</span>
+          }
+        </span>
         <span class="form-label">:</span>
         <input
           type="text"

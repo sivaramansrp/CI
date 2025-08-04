@@ -191,7 +191,7 @@ export interface TablaMercanciasDatos {
   marcaComercialDenominacion?:string;
   especifique?: string;
   especifiqueObligatorio?:string;
-
+  fechaCaducidad?: string;
 }
 
 /**

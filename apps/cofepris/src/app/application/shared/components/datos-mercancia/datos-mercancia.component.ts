@@ -93,7 +93,7 @@ export class DatosMercanciaComponent implements OnInit {
    * @property {TablaMercanciasDatos} datoSeleccionado
    * Dato seleccionado de la tabla de mercancías recibido como entrada desde el componente padre.
    */
-  @Input() public datoSeleccionado!:TablaMercanciasDatos;
+  @Input() public datoSeleccionado!: TablaMercanciasDatos;
 
   /**
    * @event mercanciaSeleccionado
@@ -253,16 +253,16 @@ export class DatosMercanciaComponent implements OnInit {
    */
   public elementosDeshabilitados: string[] = [];
 
-/**
- * @property {typeof TIPO_PRODUCTO_ESPECIAL} tipoProductoEspecial - Referencia a la constante que define los tipos especiales de producto.
- * 
- * @remarks
- * Esta propiedad se utiliza para acceder y manejar los diferentes tipos de productos especiales dentro del componente.
- * 
- * @comando
- * Utilice esta propiedad para mostrar o validar los tipos de productos especiales en la interfaz de usuario.
- */
- tipoProductoEspecial = TIPO_PRODUCTO_ESPECIAL;
+  /**
+   * @property {typeof TIPO_PRODUCTO_ESPECIAL} tipoProductoEspecial - Referencia a la constante que define los tipos especiales de producto.
+   *
+   * @remarks
+   * Esta propiedad se utiliza para acceder y manejar los diferentes tipos de productos especiales dentro del componente.
+   *
+   * @comando
+   * Utilice esta propiedad para mostrar o validar los tipos de productos especiales en la interfaz de usuario.
+   */
+  tipoProductoEspecial = TIPO_PRODUCTO_ESPECIAL;
 
   /**
    * @constructor
@@ -368,9 +368,21 @@ export class DatosMercanciaComponent implements OnInit {
    * Esta función verifica si los elementos requeridos están presentes y actualiza las etiquetas
    */
   crossListRequirdos(): void {
-    this.paisDeOriginLabel.derecha = this.elementosRequirdos.includes('paisDeOrigen') ? 'País(es) seleccionado(s)*' : 'País(es) seleccionado(s)';
-    this.paisDeProcedenciaLabel.derecha = this.elementosRequirdos.includes('paisDeProcedencia') ? 'País(es) seleccionado(s)*' : 'País(es) seleccionado(s)';
-    this.usoEspesificoLabel.derecha = this.elementosRequirdos.includes('usoEspecífico') ? 'País(es) seleccionado(s)*' : 'País(es) seleccionado(s)';
+    this.paisDeOriginLabel.derecha = this.elementosRequirdos.includes(
+      'paisDeOrigen'
+    )
+      ? 'País(es) seleccionado(s)*'
+      : 'País(es) seleccionado(s)';
+    this.paisDeProcedenciaLabel.derecha = this.elementosRequirdos.includes(
+      'paisDeProcedencia'
+    )
+      ? 'País(es) seleccionado(s)*'
+      : 'País(es) seleccionado(s)';
+    this.usoEspesificoLabel.derecha = this.elementosRequirdos.includes(
+      'usoEspecífico'
+    )
+      ? 'País(es) seleccionado(s)*'
+      : 'País(es) seleccionado(s)';
   }
 
   /**
@@ -411,7 +423,11 @@ export class DatosMercanciaComponent implements OnInit {
         this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
         break;
       case 260219:
-        this.elementosAnadidos = ['especifique', 'especifiqueForma', 'especifiqueEstado'];
+        this.elementosAnadidos = [
+          'especifique',
+          'especifiqueForma',
+          'especifiqueEstado',
+        ];
         this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
         break;
       case 260201:
@@ -419,9 +435,12 @@ export class DatosMercanciaComponent implements OnInit {
         this.elementosRequirdos = [
           'paisDeOrigen',
           'paisDeProcedencia',
-          'usoEspecífico'
-        ]
-        break
+          'usoEspecífico',
+        ];
+        break;
+      case 260213:
+        this.elementosNoValidos = ['formaFarmaceutica','numeroRegistroSanitario', 'fechaCaducidad'];
+        break;
       default:
         if (this.detalleMercancia) {
           this.elementosNoValidos = [
@@ -565,29 +584,29 @@ export class DatosMercanciaComponent implements OnInit {
         Validators.required,
       ],
       especificarClasificacionProducto: [
-       this.obtenerValor('especificarClasificacionProducto'),
+        this.obtenerValor('especificarClasificacionProducto'),
         Validators.required,
       ],
       denominacionEspecificaProducto: [
-      this.obtenerValor('denominacionEspecificaProducto'),
+        this.obtenerValor('denominacionEspecificaProducto'),
         Validators.required,
       ],
       denominacionDistintiva: [
-         this.obtenerValor('denominacionDistintiva'),
+        this.obtenerValor('denominacionDistintiva'),
         Validators.required,
       ],
       denominacionComun: [
-       this.obtenerValor('denominacionComun'),
+        this.obtenerValor('denominacionComun'),
         Validators.required,
       ],
       tipoProducto: [this.obtenerValor('tipoProducto'), Validators.required],
       formaFarmaceutica: [
-       this.obtenerValor('formaFarmaceutica'),
+        this.obtenerValor('formaFarmaceutica'),
         Validators.required,
       ],
       estadoFisico: [this.obtenerValor('estadoFisico'), Validators.required],
       fraccionArancelaria: [
-      this.obtenerValor('fraccionArancelaria'),
+        this.obtenerValor('fraccionArancelaria'),
         Validators.required,
       ],
       descripcionFraccion: [
@@ -600,11 +619,11 @@ export class DatosMercanciaComponent implements OnInit {
         Validators.required,
       ],
       cantidadUmtValor: [
-       this.obtenerValor('cantidadUmtValor'),
-        [Validators.required,
-        Validators.pattern(REGEX_NUMERO_12_ENTEROS_5_DECIMALES),
-        ]
-
+        this.obtenerValor('cantidadUmtValor'),
+        [
+          Validators.required,
+          Validators.pattern(REGEX_NUMERO_12_ENTEROS_5_DECIMALES),
+        ],
       ],
       cantidadUmt: [
         {
@@ -614,28 +633,29 @@ export class DatosMercanciaComponent implements OnInit {
         Validators.required,
       ],
       cantidadUmcValor: [
-this.obtenerValor('cantidadUmcValor'),
-        [Validators.required,
+        this.obtenerValor('cantidadUmcValor'),
+        [
+          Validators.required,
           Validators.pattern(REGEX_NUMERO_12_ENTEROS_5_DECIMALES),
         ],
       ],
       cantidadUmc: [this.obtenerValor('cantidadUmc'), Validators.required],
       presentacion: [this.obtenerValor('presentacion'), Validators.required],
       numeroRegistroSanitario: [
-       this.obtenerValor('numeroRegistroSanitario'),
+        this.obtenerValor('numeroRegistroSanitario'),
         Validators.required,
       ],
       fechaCaducidad: [this.obtenerValor('fechaCaducidad')],
       paisDeOriginDatos: [
-      this.obtenerValor('paisDeOriginDatos') || [],
+        this.obtenerValor('paisDeOriginDatos') || [],
         Validators.required,
       ],
       paisDeProcedenciaDatos: [
-         this.obtenerValor('paisDeProcedenciaDatos') || [],
+        this.obtenerValor('paisDeProcedenciaDatos') || [],
         Validators.required,
       ],
       usoEspecifico: [
-         this.obtenerValor('usoEspecifico') || [],
+        this.obtenerValor('usoEspecifico') || [],
         Validators.required,
       ],
     });
@@ -659,7 +679,7 @@ this.obtenerValor('cantidadUmcValor'),
           this.mercanciaForm.addControl(
             NOMBRE_DEL_CONTROL,
             new FormControl(
-             this.obtenerValor(NOMBRE_DEL_CONTROL as keyof MercanciaForm),
+              this.obtenerValor(NOMBRE_DEL_CONTROL as keyof MercanciaForm),
               { validators: [Validators.required] }
             )
           );
@@ -673,8 +693,13 @@ this.obtenerValor('cantidadUmcValor'),
    * @param {keyof TablaMercanciasDatos | keyof MercanciaForm} field - Nombre del campo a obtener.
    * @returns {string | number | undefined | string[]} - Valor del campo especificado.
    */
-  public obtenerValor(field: keyof TablaMercanciasDatos | keyof MercanciaForm): string | number | undefined | string[] {
-    return this.datoSeleccionado?.[field as keyof TablaMercanciasDatos] ?? this.mercanciaFormState[field as keyof MercanciaForm];
+  public obtenerValor(
+    field: keyof TablaMercanciasDatos | keyof MercanciaForm
+  ): string | number | undefined | string[] {
+    return (
+      this.datoSeleccionado?.[field as keyof TablaMercanciasDatos] ??
+      this.mercanciaFormState[field as keyof MercanciaForm]
+    );
   }
 
   /**
@@ -759,16 +784,23 @@ this.obtenerValor('cantidadUmcValor'),
    * @returns {void} Este método no devuelve ningún valor.
    */
   agregarMercancia(): void {
-    const VALORTABLAMERCANCIA: TablaMercanciasDatos = this.mercanciaForm.getRawValue();
-    VALORTABLAMERCANCIA.paisOrigen = this.mercanciaForm.get('paisDeOriginDatos')?.value[0];
+    const VALORTABLAMERCANCIA: TablaMercanciasDatos =
+      this.mercanciaForm.getRawValue();
+    VALORTABLAMERCANCIA.paisOrigen =
+      this.mercanciaForm.get('paisDeOriginDatos')?.value[0];
     VALORTABLAMERCANCIA.paisProcedencia = this.mercanciaForm.get(
       'paisDeProcedenciaDatos'
     )?.value[0];
-    VALORTABLAMERCANCIA.usoEspecifico = this.mercanciaForm.get('usoEspecifico')?.value[0];
-    VALORTABLAMERCANCIA.unidadMedidaComercializacion=this.mercanciaForm.get('cantidadUmcValor')?.value
-    VALORTABLAMERCANCIA.cantidadUMC=this.mercanciaForm.get('cantidadUmc')?.value
-    VALORTABLAMERCANCIA.unidadMedidaTarifa=this.mercanciaForm.get('cantidadUmtValor')?.value
-    VALORTABLAMERCANCIA.cantidadUMT=this.mercanciaForm.get('cantidadUmt')?.value
+    VALORTABLAMERCANCIA.usoEspecifico =
+      this.mercanciaForm.get('usoEspecifico')?.value[0];
+    VALORTABLAMERCANCIA.unidadMedidaComercializacion =
+      this.mercanciaForm.get('cantidadUmcValor')?.value;
+    VALORTABLAMERCANCIA.cantidadUMC =
+      this.mercanciaForm.get('cantidadUmc')?.value;
+    VALORTABLAMERCANCIA.unidadMedidaTarifa =
+      this.mercanciaForm.get('cantidadUmtValor')?.value;
+    VALORTABLAMERCANCIA.cantidadUMT =
+      this.mercanciaForm.get('cantidadUmt')?.value;
     this.mercanciaSeleccionado.emit(VALORTABLAMERCANCIA);
     this.ubicaccion.back();
   }

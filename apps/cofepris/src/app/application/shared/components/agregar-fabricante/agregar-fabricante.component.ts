@@ -2,6 +2,7 @@ import {
   Catalogo,
   REGEX_CORREO_ELECTRONICO,
   REGEX_NOMBRE,
+  REGEX_TELEFONO_DIGITOS,
   TELEFONO_DIGITOS,
   TipoPersona,
 } from '@ng-mf/data-access-user';
@@ -299,7 +300,7 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
           value: this.obtenerValor('telefono') ? '3461235' : '',
           disabled: this.elementosDeshabilitados.includes('telefono'),
         },
-        [Validators.pattern(TELEFONO_DIGITOS)],
+        [Validators.pattern(REGEX_TELEFONO_DIGITOS)],
       ],
       correoElectronico: [
         {

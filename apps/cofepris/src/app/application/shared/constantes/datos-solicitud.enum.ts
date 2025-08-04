@@ -268,6 +268,11 @@ export const PRODUCTO_TABLA = [
     clave: (ele: TablaMercanciasDatos): string => ele.usoEspecifico, // Reemplaza 'ele.usoEspecifico' con la clave correcta
     orden: 19,
   },
+  {
+    encabezado: 'Fecha de caducidad',
+    clave: (ele: TablaMercanciasDatos): string => ele.fechaCaducidad ?? '', // Reemplaza 'ele.fechaCaducidad' con la clave correcta
+    orden: 20,
+  },
 ];
 
 /**
@@ -386,7 +391,7 @@ export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
  */
 export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE = [
   260206, 260214, 260216, 260205, 260217, 260218, 260102, 260301, 260208,
-  260207, 260209, 260201, 260219, 260302, 260304, 260103,
+  260207, 260209, 260201, 260219, 260302, 260304, 260103, 260213
 ];
 
 /**
@@ -412,7 +417,7 @@ export const OCULTAR_FACTURADOR = [260102];
  * @example
  * // Ejemplo de uso:
  */
-export const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE = [260216, 260208, 260209];
+export const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE = [260216, 260208, 260209,260213];
 
 /**
  * @const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC
@@ -441,7 +446,7 @@ export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC = [
  * }
  */
 export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO = [
-  260301, 260208, 260302, 260304, 260103,
+  260301, 260208, 260302, 260304, 260103, 260213
 ];
 
 /**
@@ -504,7 +509,7 @@ export const PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA = [
  * @description Arreglo que contiene los identificadores relacionados con el representante legal.
  * @type {number[]}
  */
-export const REPRESENTANTE_LEGAL = [260208];
+export const REPRESENTANTE_LEGAL = [260208, 260213];
 
 /**
  * @const BANCO
