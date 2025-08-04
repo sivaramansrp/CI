@@ -1,9 +1,9 @@
 import { Component, TemplateRef } from '@angular/core';
 
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { Catalogo, CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
 import { AvisoCatalogo } from '../../models/aviso-catalogo.model';
 import { AvisoOpcionesDeRadio } from '../../models/aviso-catalogo.model';
-import { CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src'; 
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
@@ -98,6 +98,21 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Opción seleccionada para Entidad Federativa.
    */
   opcionEntidadFederativa: CatalogosSelect = {} as CatalogosSelect;
+
+  /**
+   * Catálogo de opciones para Entidad Federativa.
+   */
+  catalogosOpcionEntidadFederativa: Catalogo[] = [];
+
+  /**
+   * Catálogo de opciones para Delegación o Municipio.
+   */
+  catalogosOpcionDelegacionMunicipio: Catalogo[] = [];
+
+  /**
+   * Catálogo de opciones para Colonia.
+   */
+  catalogosOpcionColonia: Catalogo[] = [];
 
   /**
    * Opción seleccionada para Delegación o Municipio.
@@ -407,6 +422,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         next: (respuesta: AvisoCatalogo) => {
           this.opcionFraccionArancelaria = respuesta.cveFraccionArancelaria;
           this.opcionEntidadFederativa = respuesta.entidadFederativa;
+          this.catalogosOpcionEntidadFederativa = respuesta.entidadFederativa.catalogos;
           this.opcionDelegacionMunicipio = respuesta.delegacionMunicipio;
           this.opcionColonia = respuesta.colonia;
         },
@@ -469,6 +485,12 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     * en el estado de la solicitud utilizando el store `solicitud32501Store`.
     */
   establecerValoresEnEstado(formulario: FormGroup, campo: string): void {
+    if(campo === 'entidadFederativa') {
+      this.catalogosOpcionDelegacionMunicipio = this.opcionDelegacionMunicipio.catalogos;
+    }
+    if(campo === 'delegacionMunicipio') {
+      this.catalogosOpcionColonia = this.opcionColonia.catalogos;
+    }
     const VALOR = formulario.get(campo)?.value;
     this.solicitud32501Store.establecerDatos({ [campo]: VALOR });
   }
