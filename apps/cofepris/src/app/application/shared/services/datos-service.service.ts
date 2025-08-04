@@ -60,6 +60,9 @@ export class DatosServiceService {
     if (DATOS.autorizacionIVAIEPS) {
       this.domicilioStore.setAutorizacionIVAIEPS(DATOS.autorizacionIVAIEPS);
     }
+    this.domicilioStore.setNombreRazonSocial(DATOS.nombreRazonSocial);
+    this.domicilioStore.setApellidoPaterno(DATOS.apellidoPaterno);
+    this.domicilioStore.setApellidoMaterno(DATOS.apellidoMaterno);
   }
 
   /**
