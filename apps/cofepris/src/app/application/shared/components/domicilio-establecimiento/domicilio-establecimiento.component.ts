@@ -782,7 +782,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       .getObtenerEstadoList()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data): void => {
-        this.estado = data?.data;
+        this.estado = data;
       });
   }
   /**

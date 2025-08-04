@@ -1,8 +1,13 @@
 <div class="container mt-5">
     <div class="row">
-        <div class="col-md-6">
-            <h4>Permiso de importación de muestras experimentales con fines de pruebas de calidad relativas a la garantía de composición de las sustancias tóxicas</h4>
+        <div class="col-md-12 mb-3">
+            <h1>Permiso de importación de muestras experimentales con fines de pruebas de calidad relativas a la garantía de composición de las sustancias tóxicas</h1>
         </div>
+        @if (!esFormaValido && esFormaValido !== undefined) {
+          <div class="col-md-12">
+            <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+          </div>
+        }
         <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
       </div>
       <div class="row">
@@ -18,6 +23,7 @@
       </div>
       <btn-continuar
       [datos]="datosPasos"
+      [dePadre]="consultaState.readonly ? false : true"
       (continuarEvento)="getValorIndice($event)"
     >
     </btn-continuar>

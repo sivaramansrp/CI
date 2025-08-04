@@ -5,6 +5,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
+import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 /**
@@ -45,6 +46,7 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
     private DatosDomicilioLegalStore: DatosDomicilioLegalStore,
     private DatosDomicilioLegalQuery: DatosDomicilioLegalQuery,
     private consultaioQuery: ConsultaioQuery,
+    private servicioDeFormularioService: ServicioDeFormularioService,
   ) {
     //Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
@@ -108,9 +110,9 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
      */
     if (this.esFormularioSoloLectura && this.representante ) {
       this.representante.disable();
-    } else {
-      this.representante.enable();
     }
+
+    this.servicioDeFormularioService.registerForm('representanteForm', this.representante);
   }
   /**
    * Obtiene el valor de un campo en el store de Tramite31601.
@@ -140,6 +142,10 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
         value: string | number
       ) => void
     )(VALOR);
+
+    this.servicioDeFormularioService.setFormValue('representanteForm', {
+        [campo]: VALOR,
+      });
   }
 
   /**
