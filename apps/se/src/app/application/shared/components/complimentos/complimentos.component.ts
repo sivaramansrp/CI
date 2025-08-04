@@ -926,7 +926,7 @@ this.formaComplimentos.disable();
     if (this.datosFormaComplimentos?.formaSocioAccionistas?.formaDatos) {
       Object.keys(this.datosFormaComplimentos.formaSocioAccionistas.formaDatos).forEach(key => {
         const VALUE = this.datosFormaComplimentos?.formaSocioAccionistas?.formaDatos?.[key];
-        if (VALUE !== undefined && VALUE !== null && VALUE !== '') {
+        if (VALUE) {
           this.PRESERVED_FORM_DATA[key] = VALUE;
         }
       });
