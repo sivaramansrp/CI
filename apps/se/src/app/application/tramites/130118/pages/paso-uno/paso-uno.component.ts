@@ -63,6 +63,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   cargaArchivosEvento = new Subject<any>();
 
+  ocultarForm: boolean = false;
+
   /**
    * Constructor del componente.
    * @param consultaQuery Consulta para obtener el estado de la consulta.
@@ -89,6 +91,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       this.guardarDatosFormularios();
     } else {
       this.esDatosRespuesta = true;
+    }
+
+    if(this.consultaState.procedureId === "130118"){
+      this.ocultarForm = true;
     }
   }
 
