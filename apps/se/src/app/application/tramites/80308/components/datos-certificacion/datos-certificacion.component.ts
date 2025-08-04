@@ -39,7 +39,7 @@ export class DatosCertificacionComponent implements OnDestroy {
          private consultaioQuery: ConsultaioQuery,
   ) {
     this.certificionForm = this.fb.group({
-      certificion: [{ value: 'Si', disabled: true}], // El campo de certificación con valor "Si" y deshabilitado.
+      certificion: [{ value: 'No', disabled: true}], // El campo de certificación con valor "Si" y deshabilitado.
     });
     /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
