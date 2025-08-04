@@ -266,7 +266,9 @@ export interface PermisoModel {
     paisProveedor: boolean;
     paisProcedencia: boolean;
   }
-
+/**
+ * Interfaz que define la estructura de un objeto de fracción arancelaria.
+ */
   export interface FraccionArancelaria {
     descripcion: string;
     umt: string;

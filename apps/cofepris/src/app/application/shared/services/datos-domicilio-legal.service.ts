@@ -165,7 +165,11 @@ export class DatosDomicilioLegalService {
         'assets/json/cofepris/mercancias-tabla.json'
       );
     }
-
+    /**
+     * Obtiene los datos de la fracción arancelaria desde un archivo JSON local.
+     *
+     * @returns Observable que emite un objeto FraccionArancelaria.
+     */
     getFraccionArancelaria():Observable<FraccionArancelaria>{
       return this.http.get<FraccionArancelaria>('assets/json/cofepris/fraccion-arancelaria.json');
     }
