@@ -518,7 +518,7 @@ export const REPRESENTANTE_LEGAL = [260208];
  * }
  */
 export const BANCO = [
-  260208, 260209, 260207, 260201, 260219, 260302, 260304, 260103,
+  260104,260208, 260209, 260207, 260201, 260219, 260302, 260304, 260103,
 ];
 
 export const REQUIRED_BANCO = [260902];
@@ -703,7 +703,7 @@ export const MENSAJE_SIN_FILA_SELECCIONADA = 'Seleciona un registro';
  * @description
  *  Identificadores de notificación.
  */
-export const MOSTRAR_NOTIFICACION = [260219,260302,260304, 260206, 260201,260103];
+export const MOSTRAR_NOTIFICACION = [260219,260302,260304, 260206, 260201,260103,260203];
 
 /**
  * Enumera los tipos de actualización que se pueden realizar.

@@ -4,8 +4,8 @@
     "nombreComercialForm": "Producto X",
     "registroProductoForm": "12345678",
     "fraccionArancelariaForm": "0101.21.00",
-    "fechaInicioInput": "2025-05-01",
-    "fechaFinalInput": "2025-06-01",
+    "fechaInicioInput": "01/01/2025",
+    "fechaFinalInput": "01/06/2025",
     "nombres": "Juan",
     "primerApellido": "Pérez",
     "segundoApellido": "Gómez",
@@ -34,10 +34,10 @@
     "unidadMedidaMasaBruta": "kg",
     "numeroFactura": "INV-001234",
     "tipoFactura": "1",
-    "fechaFinal": "2025-06-01",
+    "fechaFinal": "01/06/2025",
     "normaOrigen": "Regla 1",
     "id": "MERC-0001",
-    "fechaFinalInput": "2025-06-01",
+    "fechaFinalInput": "01/06/2025",
     "nalad": "NALAD123"
   },
   "mercanciaTabla": [
@@ -53,6 +53,7 @@
   "formDatosCertificado": {
     "observacionesDates": "Certificado válido por 1 mes",
     "idiomaDates": "1",
+    "presenta": "Presenta en español",
     "precisaDates": "Certificado válido por 1 mes",
     "EntidadFederativaDates": "2",
     "representacionFederalDates": "1"
@@ -123,7 +124,7 @@
     "complemento": "Alta resistencia térmica y química",
     "numeroFactura": "INV-2025-0001",
     "tipoFactura": "1",
-    "fechaFactura": "2025-05-15",
+    "fechaFactura": "15/05/2025",
     "otrasInstancias":"Ninguna"
   },
   "destinatarioForm":{

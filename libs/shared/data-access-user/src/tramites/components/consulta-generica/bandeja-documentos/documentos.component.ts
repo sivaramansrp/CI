@@ -1,9 +1,13 @@
 import { BodyTablaDocumentos, HeaderTablaDocumentos } from '../../../../core/models/shared/consulta-generica.model';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
+
 import { CONSULTA_DOCUMENTOS } from '../../../../core/enums/consulta-generica.enum';
 import { CommonModule } from '@angular/common';
 import { DocumentosService } from '../../../../core/services/consultagenerica/bandeja-documentos-service';
+
+
+import { DocumentoSolicitud } from '../../../../core/models/130118/consulta-documentos-response.model';
 
 @Component({
   selector: 'lib-documentos',
@@ -12,12 +16,18 @@ import { DocumentosService } from '../../../../core/services/consultagenerica/ba
   templateUrl: './documentos.component.html',
   styleUrl: './documentos.component.scss',
 })
-export class DocumentosComponent implements OnInit, OnDestroy {  
+export class DocumentosComponent implements OnChanges , OnDestroy {  
   /**
    * Subject utilizado para manejar la cancelación de suscripciones.
    * @type {Subject<void>}
    */
   public unsubscribe$ = new Subject<void>();
+
+  /**
+   * @property {DocumentoSolicitud[]} documentos
+   * @description Documentos de solicitud.
+   */
+  @Input() documentos: DocumentoSolicitud[] = [];
 
   /**
    * Encabezado de la tabla de documentos.
@@ -53,13 +63,20 @@ export class DocumentosComponent implements OnInit, OnDestroy {
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * Llama al método para obtener los documentos desde el servicio.
+   * Se suscribe al observable del servicio para obtener los datos.
+   * @returns {void}
    */
-  ngOnInit(): void {
-    /**
-     * Llamar al método para obtener los documentos al inicializar el componente.
-     */
-    this.getDocumentos();
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['documentos'] && changes['documentos'].currentValue?.length > 0) {
+      this.getDocumentos();
+    }else{
+      this.documentosService
+      .getDocumentos()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.datosTablaDocumentos = data;
+      });
+    }
   }
 
   /**
@@ -86,12 +103,13 @@ export class DocumentosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getDocumentos(): void {
-    this.documentosService
-      .getDocumentos()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.datosTablaDocumentos = data;
-      });
+     this.datosTablaDocumentos = this.documentos.map((doc) => ({
+      tipoDocumento: doc.documento.tipo_documento,
+      estatus: doc.estado_documento_solicitud,
+      fechaAdjunto: doc.fecha_asociacion,
+      nombreArchivo: doc.documento.nombre,
+      urlPdf: doc.documento_uuid
+    }));
   }
 
   /**

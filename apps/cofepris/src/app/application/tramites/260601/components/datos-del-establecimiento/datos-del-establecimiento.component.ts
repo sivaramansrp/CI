@@ -229,7 +229,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destruirNotificador$),
         map((seccionState) => {
-          this.esFormularioSoloLectura = !seccionState.readonly;
+          this.esFormularioSoloLectura = seccionState.readonly;
           this.inicializarEstadoFormulario();
         })
       )

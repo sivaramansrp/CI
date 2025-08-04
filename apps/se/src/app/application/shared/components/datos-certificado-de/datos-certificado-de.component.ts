@@ -26,6 +26,12 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit {
    * @input
    */
   @Input() idioma!: boolean;
+  /**
+ * Propiedad de entrada booleana que indica si se muestra el contenido.
+ * Si es `true`, se renderiza la sección correspondiente.
+ * Se utiliza para controlar la visibilidad desde el componente padre.
+ */
+    @Input() presenta!: boolean;
 
   /**
    * Bandera que indica si se requiere precisión en los datos.
@@ -180,6 +186,7 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit {
   createForm(): void {
     this.formDatosCertificado = this.fb.group({
       observacionesDates: [''],
+      presenta: [''],
       idiomaDates: ['', [Validators.required, Validators.min(0)]],
       EntidadFederativaDates: ['', [Validators.required, Validators.min(0)]],
       representacionFederalDates: ['', [Validators.required, Validators.min(0)]],

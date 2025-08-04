@@ -531,6 +531,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       rfcSanitario: [
         this.datosSolicitudFormState.rfcSanitario,
         [
+          Validators.required,
           Validators.minLength(2),
           Validators.maxLength(120),
           Validators.pattern(REGEX_RFC),
@@ -538,11 +539,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       ],
       denominacionRazon: [
         this.datosSolicitudFormState.denominacionRazon,
-        [Validators.minLength(2), Validators.maxLength(120)],
+        [Validators.required, Validators.minLength(2), Validators.maxLength(120)],
       ],
       correoElectronico: [
         this.datosSolicitudFormState.correoElectronico,
-        [Validators.minLength(2), Validators.maxLength(120), Validators.email],
+        [Validators.required,Validators.minLength(2), Validators.maxLength(120), Validators.email],
       ],
       codigoPostal: [
         this.datosSolicitudFormState.codigoPostal,

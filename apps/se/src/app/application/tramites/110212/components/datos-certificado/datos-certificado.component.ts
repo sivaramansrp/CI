@@ -163,7 +163,6 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
         [Validators.required, Validators.min(0)],
       ],
     });
-    this.formDatosCertificado.markAllAsTouched();
     this.certificadoFormulario();
   }
 

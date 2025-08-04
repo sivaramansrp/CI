@@ -55,6 +55,23 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
    */
   public solicitudState!: Solicitud130301State;
 
+  /** Lista de nombres de campos del formulario certificadoKimberley. */
+  /** Se usan para asignar valores y desactivar controles en el formulario. */
+  private readonly kimberleyFields: string[] = [
+    'certificadosEmitidos',
+    'numeroCertificadokimberley',
+    'nombreIngles',
+    'nombreExportador',
+    'direccionExportador',
+    'nombreImportador',
+    'direccionImportador',
+    'numeroEnLetra',
+    'numeroEnLetraIngles',
+    'numeroFactura',
+    'cantidadQuilates',
+    'valorDiamantes'
+  ];
+
   /**
    * Constructor del componente.
    * @param fb Constructor de formularios reactivos.
@@ -113,7 +130,21 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
       Object.keys(this.certificadoKimberley.controls).forEach((key) => {
         this.certificadoKimberley.get(key)?.enable();
       });
-    }
+
+      this.patchAndDisableKimberleyFields();
+   }
+  }
+
+/** Asigna valores desde certificadoKimberleyDatos al formulario y desactiva los campos especificados. */
+/** Solo actualiza campos definidos en los datos y luego los deshabilita en el FormGroup certificadoKimberley. */
+private patchAndDisableKimberleyFields(): void {
+    const DATA = this.certificadoKimberleyDatos?.[0] || {};
+    this.kimberleyFields.forEach(field => {
+      if (DATA[field as keyof CertificadoKimberleyForma] !== undefined) {
+        this.certificadoKimberley.get(field)?.patchValue(DATA[field as keyof CertificadoKimberleyForma]);
+      }
+      this.certificadoKimberley.get(field)?.disable();
+    });
   }
 
  /**
@@ -161,6 +192,12 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
           numeroFactura: this.certificadoKimberleyDatos[0].numeroFactura,
           cantidadQuilates: this.certificadoKimberleyDatos[0].cantidadQuilates,
           valorDiamantes: this.certificadoKimberleyDatos[0].valorDiamantes,
+        });
+
+        /** Desactiva los campos del formulario definidos en kimberleyFields. */
+        /** Utiliza disable() en cada control del FormGroup certificadoKimberley si existe. */
+         this.kimberleyFields.forEach(field => {
+          this.certificadoKimberley.get(field)?.disable();
         });
       });
   }
