@@ -1,13 +1,12 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { of, Subject } from 'rxjs';
-import { PagoDerechosComponent } from './pago-Derechos.component';
 import { AvisoImportacionService } from '../../services/parmiso-importacion.service';
 import { AvisocalidadStore } from '../../estados/stores/aviso-calidad.store';
 import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
 import { FECHA_DE_PAGO } from '../../models/pago-derechos.model';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-
+import { PagoDerechosComponent } from './pago-Derechos.component';
 const consultaioQuerySimulado = {
   selectConsultaioState$: of({ readonly: true }),
 };
@@ -70,7 +69,7 @@ describe('ComponentePagoDerechos', () => {
   });
 
   it('debería actualizar fechaPago en el formulario y store al cambiar la fecha', () => {
-    componente.cambioFechaPago('2023-02-01');
+    componente.cambioFechaDePago('2023-02-01');
     expect(componente.derechosForm.get('fechaPago')?.value).toBe('2023-02-01');
     expect(storeSimulado.setfechaPago).toHaveBeenCalledWith('2023-02-01');
   });
@@ -159,8 +158,8 @@ describe('ComponentePagoDerechos', () => {
   });
 
   it('debería manejar cambioFechaPago con undefined/null', () => {
-    expect(() => componente.cambioFechaPago(undefined as any)).not.toThrow();
-    expect(() => componente.cambioFechaPago(null as any)).not.toThrow();
+    expect(() => componente.cambioFechaDePago(undefined as any)).not.toThrow();
+    expect(() => componente.cambioFechaDePago(null as any)).not.toThrow();
   });
 
   it('debería permitir llamar ngOnDestroy varias veces sin error', () => {

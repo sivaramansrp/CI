@@ -8,7 +8,7 @@ import { ExportacionService } from '../../shared/services/exportacion.service';
 import { ManifiestosComponent } from '../../shared/components/manifiestos-declaraciones/manifiestos-declaraciones.component';
 import { NgModule } from '@angular/core';
 import { PaginasComponent } from './pages/paginas/paginas.component';
-import { PagoDerechosComponent } from '../../shared/components/pago-derechos/pago-derechos.component';
+import { PagoDerechosComponent } from '../../shared/components/pago-derechos/pago-Derechos.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PermisoDeImportacionRoutingModule } from './permiso-de-importacion-routing.module';

@@ -24,8 +24,8 @@ import { Subject } from 'rxjs';
   selector: 'app-pago-derechos',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, CatalogoSelectComponent, TituloComponent, InputFechaComponent, AlertComponent],
-  templateUrl: './pago-derechos.component.html',
-  styleUrl: './pago-derechos.component.scss',
+  templateUrl: './pago-Derechos.component.html',
+  styleUrl: './pago-Derechos.component.scss',
 })
 export class PagoDerechosComponent implements OnDestroy, OnInit {
 
