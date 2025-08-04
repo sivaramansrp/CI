@@ -341,17 +341,17 @@ export class DatosDelSolicitudModificacionComponent
   paisDeProcedenciaBotonsTres = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-primary',
+      class: 'btn-default',
       funcion: (): void => this.crossList.toArray()[2].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-default',
+      class: 'btn-primary',
       funcion: (): void => this.crossList.toArray()[2].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-danger',
+      class: 'btn-primary',
       funcion: (): void => this.crossList.toArray()[2].quitar(''),
     },
     {
