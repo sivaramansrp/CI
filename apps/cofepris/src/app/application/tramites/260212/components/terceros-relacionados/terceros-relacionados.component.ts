@@ -778,7 +778,29 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de fabricantes.
    */
-  fabricanteRowData: TablaDatos[] = [];
+  fabricanteRowData: TablaDatos[] = [
+     {
+    tbodyData: [
+      'Laboratorios S.A.',
+      'LAB123456789',
+      'CURP123456HDFRRL01',
+      '55-12345678',
+      'contacto@laboratorios.com',
+      'Calle 1',
+      '100',
+      '2',
+      'México',
+      'Centro',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      '06000'
+    ]
+  }
+  
+  ];
 
   /**
    * Datos de las filas para la tabla de destinatarios.
