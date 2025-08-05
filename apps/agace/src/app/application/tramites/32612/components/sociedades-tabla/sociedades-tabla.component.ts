@@ -79,6 +79,11 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
    */
   public sociedadesDatos: Sociedades[] = [];
 
+  /**
+   * Un arreglo que contiene los datos de las sociedades seleccionadas.
+   * Se utiliza para almacenar temporalmente las sociedades que el usuario ha seleccionado
+   * para realizar acciones específicas, como eliminar o modificar sus datos.
+   */
   public seleccionarlistaSociedades: Sociedades[] = [];
   /**
    * Configuración de las columnas para la tabla de sociedades, basada en la estructura de datos de las instalaciones.
@@ -97,6 +102,11 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
    */
   public instalacionesDatos: DatosDeLasInstalaciones[] = [];
 
+  /**
+   * Un arreglo que contiene los datos de las instalaciones seleccionadas.
+   * Se utiliza para almacenar temporalmente las instalaciones que el usuario ha seleccionado
+   * para realizar acciones específicas, como eliminar o modificar sus datos.
+   */
   public seleccionarlistaInstalaciones: DatosDeLasInstalaciones[] = [];
   /**
    * Un FormGroup anidado que representa la estructura del formulario para agregar sociedades.
@@ -185,6 +195,12 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
    */
   public mandatariosDatos: MandatariosDeAgenteAduanal[] = [];
 
+  /**
+   * Arreglo que contiene los mandatarios seleccionados para realizar operaciones de modificación o eliminación.
+   * 
+   * Este arreglo se utiliza para almacenar temporalmente los mandatarios que el usuario ha seleccionado
+   * para realizar acciones específicas, como eliminar o modificar sus datos.
+   */
   public seleccionarlistaMandatarios: MandatariosDeAgenteAduanal[] = [];
   /**
    * Grupo de formulario que representa los mandatarios del agente.
@@ -385,6 +401,11 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
     return this.forma.get('modificarFormGroup') as FormGroup;
   }
 
+  /**
+   * Obtiene el 'agregarFormGroup' como un FormGroup desde el formulario principal.
+   * 
+   * @returns La instancia de FormGroup asociada a 'agregarFormGroup'.
+   */
   get agregarFormGroup(): FormGroup {
     return this.agregarForma.get('agregarFormGroup') as FormGroup;
   }
@@ -480,6 +501,14 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
     this.tramite32612Store.setDynamicFieldValue(event.campo, event.valor);
   }
 
+  /**
+   * Acepta los cambios realizados en el formulario de agregar sociedades.
+   * 
+   * Este método verifica si hay sociedades seleccionadas para actualizar o si se debe agregar una nueva sociedad.
+   * Si no hay sociedades seleccionadas, crea un nuevo objeto `NUEVO_MIEMBRO` con los valores del formulario
+   * y lo agrega a `sociedadesDatos`. Si hay sociedades seleccionadas, actualiza la primera sociedad
+   * con los valores del formulario.
+   */
   public aceptar(): void {
     if(!this.seleccionarlistaSociedades.length) {
       const NUEVO_MIEMBRO = {
@@ -510,6 +539,12 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
     this.modalRef?.hide();
   }
 
+  /**
+   * Cierra el modal actual.
+   * 
+   * Este método se utiliza para ocultar el modal activo, permitiendo al usuario
+   * cerrar la ventana emergente sin realizar ninguna acción adicional.
+   */
   public buscarEvento(): void {
     if (this.agregarSociedadesFormGroup.get('resigtro')?.value) {
       this.agregarSociedadesFormGroup.patchValue({
@@ -519,14 +554,36 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
     }
   }
 
+  /**
+   * Selecciona una lista de sociedades y las asigna a `seleccionarlistaSociedades`.
+   * 
+   * Este método se utiliza para actualizar la lista de sociedades seleccionadas
+   * en el componente, permitiendo al usuario realizar acciones sobre estas sociedades.
+   *
+   * @param event - Un arreglo de objetos `Sociedades` que representa las sociedades seleccionadas.
+   */
   public seleccionarlistaSeccionSociedades(event: Sociedades[]): void {
     this.seleccionarlistaSociedades = event;
   }
 
+  
+  /**   * Limpia el formulario `agregarSociedadesFormGroup` reseteando todos sus valores
+   * y restableciendo su estado a su valor inicial.
+   * * Este método se utiliza para reiniciar el formulario, permitiendo al usuario comenzar de nuevo
+   * con un formulario vacío o con los valores predeterminados.
+   */
   public limpiarAgregarSociedadesFormulario(): void {
     this.agregarSociedadesFormGroup.reset();
   }
 
+
+  /**
+   * Elimina las sociedades seleccionadas de la lista `sociedadesDatos`.
+   * 
+   * Este método filtra el arreglo `sociedadesDatos` para eliminar aquellos elementos
+   * que coinciden con los RFC, denominación, aduana y fiscales de las sociedades
+   * presentes en `seleccionarlistaSociedades`. Luego, actualiza el store con los datos restantes.
+   */
   public eliminarSociedades(): void {
     if (this.seleccionarlistaSociedades.length > 0) {
 
@@ -545,6 +602,12 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
     }
   }
 
+  /**
+   * Modifica los datos de las sociedades seleccionadas y los asigna al formulario `agregarSociedadesFormGroup`.
+   * 
+   * Este método se utiliza para prellenar el formulario con los datos de la primera sociedad seleccionada
+   * en `seleccionarlistaSociedades`, permitiendo al usuario editar la información antes de guardarla.
+   */
   public modificarSociedades(): void {
     if (this.seleccionarlistaSociedades.length !== 0) {
       
@@ -555,6 +618,12 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
     }
   }
 
+  /**
+   * Obtiene los datos del catálogo de aduanas en las que actúa y los asigna al campo correspondiente en `agregarDatos`.
+   * 
+   * Este método se suscribe al servicio `getAduanaActuaCatalog` y actualiza las opciones del campo
+   * 'aduanaEnLaQueActua' con los datos obtenidos. Utiliza `takeUntil` para manejar la cancelación de la suscripción.
+   */
   public getAduanaActuaCatalogDatos(): void {
     this.esquemaDeCertificacionSvc.getAduanaActuaCatalog().pipe(takeUntil(this.destroyNotifier$)).subscribe({
       next: (response) => {
@@ -580,6 +649,12 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
     });
   }
 
+  /**
+   * Obtiene los datos del catálogo de RFC del agente y los asigna al campo correspondiente en `agregarDatos`.
+   * 
+   * Este método se suscribe al servicio `getRfcDelAgenteCatalog` y actualiza las opciones del campo
+   * 'rfcDelAgente' con los datos obtenidos. Utiliza `takeUntil` para manejar la cancelación de la suscripción.
+   */
   public getRfcDelAgenteCatalogDatos(): void {
     this.esquemaDeCertificacionSvc.getRfcDelAgenteCatalog().pipe(takeUntil(this.destroyNotifier$)).subscribe({
       next: (response) => {
@@ -605,6 +680,12 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
     });
   }
 
+  /**
+   * Obtiene los datos del catálogo de entidades federativas y los asigna al campo correspondiente en `agregarDatos`.
+   * 
+   * Este método se suscribe al servicio `getEntidadFederativaCatalog` y actualiza las opciones del campo
+   * 'entidadFederativa' con los datos obtenidos. Utiliza `takeUntil` para manejar la cancelación de la suscripción.
+   */
   public getEntidadFederativaCatalogDatos(): void {
     this.esquemaDeCertificacionSvc.getEntidadFederativaCatalog().pipe(takeUntil(this.destroyNotifier$)).subscribe({
       next: (response) => {
@@ -630,6 +711,14 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
     });
   }
 
+  /**
+   * Maneja la aceptación de agregar una nueva instalación.
+   * 
+   * - Crea un objeto `AGREGAR_FORMA_DATOS` con los valores del formulario `agregarFormGroup`.
+   * - Agrega este objeto al arreglo `instalacionesDatos`.
+   * - Actualiza el store con los nuevos datos de instalaciones.
+   * - Cierra el modal actual.
+   */
   public aceptarAgregar(): void {
     const AGREGAR_FORMA_DATOS = {
       rfc: this.agregarFormGroup.get('rfcDelAgente')?.value,
@@ -648,6 +737,13 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
     this.modalRef?.hide();
   }
 
+  /**
+   * Elimina las instalaciones seleccionadas de la lista `instalacionesDatos`.
+   * 
+   * Filtra el arreglo `instalacionesDatos` para eliminar aquellos elementos que coincidan
+   * con los RFC y entidades federativas de los elementos en `seleccionarlistaInstalaciones`.
+   * Luego, limpia la lista de instalaciones seleccionadas y actualiza el store con los datos restantes.
+   */
   public eliminarInstalaciones(): void {
     if (this.seleccionarlistaInstalaciones.length > 0) {
       this.instalacionesDatos = this.instalacionesDatos.filter(item => {
@@ -661,6 +757,11 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
     }
   }
 
+  /**
+   * Actualiza los controles del formulario `agregarFormGroup` con los valores
+   * del primer elemento en el arreglo `seleccionarlistaInstalaciones`, si el arreglo no está vacío.
+   * Específicamente, establece los controles 'rfc' y 'entidadFederativa'.
+   */
   public modificarInstalaciones(): void {
     if (this.seleccionarlistaInstalaciones.length !== 0) {
       this.agregarFormGroup.get('rfc')?.setValue(this.seleccionarlistaInstalaciones[0]?.rfc);
@@ -668,13 +769,35 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
     }
   }
 
+  /**
+   * Actualiza la lista de sociedades seleccionadas en el componente.
+   * 
+   * @param event - Un arreglo de objetos `Sociedades` que representa las sociedades seleccionadas.
+   * 
+   * Este método se utiliza para actualizar la propiedad `seleccionarlistaSociedades` con los datos
+   * proporcionados por el evento, permitiendo al componente gestionar y mostrar la lista de sociedades seleccionadas.
+   */
   public seleccionarlistaSeccionInstalaciones(event: DatosDeLasInstalaciones[]): void {
     this.seleccionarlistaInstalaciones = event;
   }
 
+  /**
+   * Actualiza la lista de mandatarios seleccionados en el componente.
+   * 
+   * @param event - Un arreglo de objetos `MandatariosDeAgenteAduanal` que representa los mandatarios seleccionados.
+   * 
+   * Este método se utiliza para actualizar la propiedad `seleccionarlistaMandatarios` con los datos
+   * proporcionados por el evento, permitiendo al componente gestionar y mostrar la lista de mandatarios seleccionados.
+   */
   public seleccionarlistaSeccionMandatarios(event: MandatariosDeAgenteAduanal[]): void {
     this.seleccionarlistaMandatarios = event;
   }
+
+  /**
+   * Busca y actualiza los datos de un mandatario del agente aduanal basado en el RFC ingresado.
+   * Si el campo 'rfcRegistro' tiene un valor, se actualizan los campos 'rfc' y 'razonSocial'
+   * con valores predeterminados.
+   */
   public buscarMandatariosEvento(): void {
     if (this.mandatariosDelAgenteFormGroup.get('rfcRegistro')?.value) {
       this.mandatariosDelAgenteFormGroup.patchValue({
@@ -684,6 +807,20 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
     }
   }
 
+  /**
+   * Maneja la aceptación de "Mandatarios" (representantes) para un agente.
+   * 
+   * - Si no hay representantes seleccionados (`seleccionarlistaMandatarios` está vacío),
+   *   crea un nuevo objeto de representante a partir de los valores del formulario y lo agrega a la lista.
+   * - Si hay un representante seleccionado, actualiza la entrada correspondiente en la lista
+   *   con los nuevos valores del formulario.
+   * - Actualiza el store con la nueva lista de representantes.
+   * - Cierra el cuadro de diálogo modal después de procesar.
+   *
+   * @remarks
+   * Este método interactúa con un grupo de formulario (`mandatariosDelAgenteFormGroup`) y un store (`tramite32612Store`)
+   * para gestionar la lista de representantes (`mandatariosDatos`) de un agente.
+   */
   public aceptarMandatarios(): void {
     if(!this.seleccionarlistaMandatarios.length) {
       const FORMA_DATOS = {
@@ -712,6 +849,11 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
     this.modalRef?.hide();
   }
 
+  /**
+   * Actualiza los controles del formulario `mandatariosDelAgenteFormGroup` con los valores
+   * del primer elemento en el arreglo `seleccionarlistaMandatarios`, si el arreglo no está vacío.
+   * Específicamente, establece los controles 'rfc', 'razonSocial' y 'fiscales'.
+   */
   public modificarMandatarios(): void {
     if (this.seleccionarlistaMandatarios.length !== 0) {
       this.mandatariosDelAgenteFormGroup.get('rfc')?.setValue(this.seleccionarlistaMandatarios[0]?.rfc);
@@ -720,10 +862,22 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
     }
   }
 
+  /**
+   * Restablece el grupo de formulario asociado a los mandatarios del agente.
+   * Este método limpia todos los campos del formulario y restaura su estado inicial.
+   */
   public limpiarMandatariosFormulario(): void {
     this.mandatariosDelAgenteFormGroup.reset();
   }
 
+  /**
+   * Elimina los "mandatarios" seleccionados del arreglo `mandatariosDatos` según la coincidencia
+   * de las propiedades `rfc`, `razonSocial` y `fiscales` con los elementos en `seleccionarlistaMandatarios`.
+   * Después de eliminar, limpia la lista de selección y actualiza el valor dinámico
+   * 'MandatariosDeAgenteAduanal' en el `tramite32612Store`.
+   *
+   * No realiza ninguna acción si no hay elementos seleccionados.
+   */
   public eliminarMandatarios(): void {
     if (this.seleccionarlistaMandatarios.length > 0) {
       this.mandatariosDatos = this.mandatariosDatos.filter(item => {

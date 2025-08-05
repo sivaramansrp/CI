@@ -175,6 +175,22 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.tercerosRelacionadosQuery.selectImportacion$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
       this.importacionstate = seccionState;
+      if (
+        this.importacionstate &&
+        typeof this.importacionstate === 'object' &&
+        this.importacionstate !== null &&
+        'enlaceOperativo' in this.importacionstate
+      ) {
+        const DATOS = this.importacionstate['enlaceOperativo'] as unknown as EnlaceOperativo[];
+        DATOS.forEach((dato: EnlaceOperativo) => {
+          const IS_ALREADY_ADDED = this.enlaceOperativoDatos.some(
+            (item: EnlaceOperativo) => item.rfc === dato.rfc
+          )
+          if (!IS_ALREADY_ADDED) {
+            this.enlaceOperativoDatos = [...this.enlaceOperativoDatos, dato];
+          }
+        });
+      }
     })
     ).subscribe();
     this.getEnlaceOperativo();
