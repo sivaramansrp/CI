@@ -477,4 +477,28 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.agregarFabricanteFormGroup.get('curp')?.enabled).toBe(true);
     expect(component.agregarFabricanteFormGroup.get('denominacionRazonSocial')?.enabled).toBe(true);
   });
+    it('debería limpiar el formulario de Fabricante', () => {
+    component.agregarFabricanteFormGroup.patchValue({ nombre: 'Fabricante Test' });
+    component.limpiarFabricanteForm();
+    expect(component.agregarFabricanteFormGroup.get('nombre')?.value).toBeNull();
+  });
+
+  it('debería limpiar el formulario de Destinatario', () => {
+    component.agregarDestinatarioFormGroup.patchValue({ nombre: 'Destinatario Test' });
+    component.limpiarDestinatarioForm();
+    expect(component.agregarDestinatarioFormGroup.get('nombre')?.value).toBeNull();
+  });
+
+  it('debería limpiar el formulario de Proveedor', () => {
+    component.agregarProveedorFormGroup.patchValue({ nombre: 'Proveedor Test' });
+    component.limpiarProveedorForm();
+    expect(component.agregarProveedorFormGroup.get('nombre')?.value).toBeNull();
+  });
+
+  it('debería limpiar el formulario de Facturador', () => {
+    component.agregarFacturadorFormGroup.patchValue({ nombre: 'Facturador Test' });
+    component.limpiarFacturadorForm();
+    expect(component.agregarFacturadorFormGroup.get('nombre')?.value).toBeNull();
+  });
+
 });

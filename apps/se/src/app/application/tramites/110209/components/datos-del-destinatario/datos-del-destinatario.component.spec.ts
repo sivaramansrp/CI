@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
 import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
 import { of } from 'rxjs';
+import { HttpClientModule } from '@angular/common/http';
 
 const NOMBRE = 'nombre';
 const PRIMER_APELLIDO = 'primerApellido';
@@ -33,7 +34,7 @@ describe('DatosDelDestinatarioComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, DatosDelDestinatarioComponent],
+      imports: [ReactiveFormsModule, DatosDelDestinatarioComponent,HttpClientModule],
       providers: [
         FormBuilder,
         { provide: Tramite110209Store, useValue: storeMock },

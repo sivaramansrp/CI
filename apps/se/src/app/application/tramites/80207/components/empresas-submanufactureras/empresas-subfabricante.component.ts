@@ -1,13 +1,13 @@
 import { BehaviorSubject, Subject,map, takeUntil } from 'rxjs';
 import {
   Catalogo,
-  CatalogoSelectComponent,
   ConfiguracionColumna,
   ConsultaioQuery,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -15,13 +15,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-
-import { CommonModule } from '@angular/common';
-
-import { SUBFABRICANTE_TABLA_CONFIGURACION } from '../../constantes/subfabricante-tabla-configuracion.enum';
-import {
-  SubfabricanteDireccionModelo,
+import { PLANTAS_TABLA_CONFIGURACION,SUBFABRICANTE_TABLA_CONFIGURACION } from '../../constantes/subfabricante-tabla-configuracion.enum';
+import {PlantasDireccionModelo,SubfabricanteDireccionModelo
 } from '../../modelos/subfabricante.model';
+import {CatalogoSelectComponent} from '@libs/shared/data-access-user/src'
+import { CommonModule } from '@angular/common';
 import { SubfabricanteService } from '../../servicios/servicios-subfabricante.service';
 import { Tramites80207Queries } from '../../estados/tramite80207.query';
 import { Tramites80207Store } from '../../estados/tramite80207.store';
@@ -85,6 +83,13 @@ export class EmpresasSubFabricanteComponent implements OnInit, OnDestroy {
    */
   configuracionTabla: ConfiguracionColumna<SubfabricanteDireccionModelo>[] =
   SUBFABRICANTE_TABLA_CONFIGURACION;
+ /**
+  * 
+  * Configuración de las columnas de la tabla de plantas.
+  * @property {ConfiguracionColumna<PlantasDireccionModelo>[]} configuracionTablaPlantas
+  */
+  configuracionTablaPlantas: ConfiguracionColumna<PlantasDireccionModelo>[] =
+  PLANTAS_TABLA_CONFIGURACION;
 
   /**
    * Datos del subfabricante seleccionado.
@@ -99,6 +104,13 @@ export class EmpresasSubFabricanteComponent implements OnInit, OnDestroy {
   datosSubfabricanteParaSerAgregados: SubfabricanteDireccionModelo[] = [];
 
   /**
+   * Datos de las plantas para ser agregadas.
+   * @property {PlantasDireccionModelo[]} datosPlantasParaSerAgregados
+   */
+
+  datosPlantasParaSerAgregados: PlantasDireccionModelo[] = [];
+
+  /**
    * Datos de la tabla de subfabricantes disponibles.
    * @property {SubfabricanteDireccionModelo[]} datosTablaSubfabricantesDisponibles
    */
@@ -108,7 +120,7 @@ export class EmpresasSubFabricanteComponent implements OnInit, OnDestroy {
    * Lista de subfabricantes por eliminar.
    * @property {SubfabricanteDireccionModelo[]} listaDeSubfabricantesPorEliminar
    */
-  listaDeSubfabricantesPorEliminar: SubfabricanteDireccionModelo[] = [];
+listaDeSubfabricantesPorEliminar:PlantasDireccionModelo[] = [];
 
   /**
    * Controla la visualización de la tabla de subfabricantes disponibles.
@@ -130,7 +142,15 @@ export class EmpresasSubFabricanteComponent implements OnInit, OnDestroy {
    * @property {Subject<void>} destroyNotifier$
    */
   private destroyNotifier$: Subject<void> = new Subject();
-
+  
+  /**
+  * Número de identificación del Sistema de Información Nacional (SIN).
+  * Este número se utiliza para identificar de manera única el registro en el sistema.
+  * @property {number} SIN
+  * @default -1
+  * @type {number}
+  */
+  SIN:number=-1;
   /**
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
@@ -198,7 +218,7 @@ export class EmpresasSubFabricanteComponent implements OnInit, OnDestroy {
     this.query.datosSubcontratistaEstado$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datosSubcontratista) => {
-        this.formularioDatosSubcontratista.setValue(datosSubcontratista);
+        this.formularioDatosSubcontratista.patchValue({rfc:datosSubcontratista.rfc,estado: datosSubcontratista.estado});
         this.store.setFormValida({
           esDatosSubcontratistaValido: this.formularioDatosSubcontratista.valid,
         });
@@ -213,14 +233,21 @@ export class EmpresasSubFabricanteComponent implements OnInit, OnDestroy {
         }
       })
 
+      this.query.plantas$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((plantas)=>{
+        if(plantas.length>0){
+          this.datosPlantasParaSerAgregados=plantas;
+        }
+      })
+
 
 
     this.query.plantasSubfabricantesAgregar$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((plantasSubfabricantesAgregar) => {
         if (plantasSubfabricantesAgregar.length > 0) {
-          this.datosSubfabricanteParaSerAgregados =
-            plantasSubfabricantesAgregar;
+      
             this.mostrarTablaSubfabricantesSeleccionadas = true;
         }
         else{
@@ -241,9 +268,9 @@ export class EmpresasSubFabricanteComponent implements OnInit, OnDestroy {
    * @method enEstadoSeleccionado
    * @param {Catalogo} estadoSeleccionado - Objeto que contiene el estado seleccionado, con su propiedad `id`.
    */
-  enEstadoSeleccionado(estadoSeleccionado: Catalogo): void {
+  enEstadoSeleccionado(): void {
     this.formularioDatosSubcontratista.patchValue({
-      estado: estadoSeleccionado.id.toString(),
+      estado: this.formularioDatosSubcontratista.value.estado.toString(),
     })
     this.store.setDatosContr(this.formularioDatosSubcontratista.value);
   }
@@ -281,6 +308,8 @@ export class EmpresasSubFabricanteComponent implements OnInit, OnDestroy {
         }
       });
   }
+
+ 
 
   /**
    * Inicializa el formulario de información de registro con los datos obtenidos o con valores vacíos si no hay datos disponibles.
@@ -332,7 +361,7 @@ export class EmpresasSubFabricanteComponent implements OnInit, OnDestroy {
   inicializarFormularioDatosSubcontratista(): void {
     this.formularioDatosSubcontratista = this.fb.group({
       rfc: ['', Validators.required],
-      estado: ['', Validators.required],
+      estado: ['1', Validators.required],
     });
   }
 
@@ -360,8 +389,8 @@ export class EmpresasSubFabricanteComponent implements OnInit, OnDestroy {
       .getSubfabricantesDisponibles()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((response: SubfabricanteDireccionModelo[]) => {
-        if (response.length>0) {
-          this.store.setPlantasBuscadas(response)
+        if (response.length > 0) {
+          this.store.addPlantasBuscadas(response)
         }
       });
   }
@@ -385,10 +414,10 @@ export class EmpresasSubFabricanteComponent implements OnInit, OnDestroy {
    * @method realizarBusqueda
    */
   realizarBusqueda(): void {
-    if (
-      this.formularioDatosSubcontratista.get('rfc')?.value !== '' &&
-      this.formularioDatosSubcontratista.get('estado')?.value !== ''
-    ) {
+    const RFC_VALUE = this.formularioDatosSubcontratista.get('rfc')?.value;
+    const ESTADO_VALUE = this.formularioDatosSubcontratista.get('estado')?.value;
+  
+    if (RFC_VALUE !== '' && ESTADO_VALUE > -1) {
       this.obtenerSubfabricantesDisponibles();
     }
   }
@@ -398,10 +427,29 @@ export class EmpresasSubFabricanteComponent implements OnInit, OnDestroy {
    * @method agregarPlantas
    */
   agregarPlantas(): void {
-    this.store.setPlantasSubfabricantesAgregar(
-      this.datosDelSubfabricanteSeleccionado
-    );
+    if (this.datosDelSubfabricanteSeleccionado.length > 0) {
+      this.subfabricanteDatosService
+        .getPlantasDisponibles()
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((response: PlantasDireccionModelo[]) => {
+          if (response.length > 0) {
+            const DATOS: PlantasDireccionModelo[] = [];
+  
+            for (let i = 0; i < this.datosDelSubfabricanteSeleccionado.length; i++) {
+              response.forEach((item) => {
+                DATOS.push(JSON.parse(JSON.stringify(item)));
+              });
+            }
+  
+            this.store.addPlantas(DATOS);
+          }
+        });
+    }
   }
+
+  
+    
+  
 
   /**
    * Obtiene los datos del subfabricante por eliminar.
@@ -409,10 +457,12 @@ export class EmpresasSubFabricanteComponent implements OnInit, OnDestroy {
    * @param {SubfabricanteDireccionModelo[]} event - Evento con los datos del subfabricante por eliminar.
    */
   datosDelSubfabricantePorEliminar(
-    event: SubfabricanteDireccionModelo[]
+    event: PlantasDireccionModelo[]
   ): void {
     this.listaDeSubfabricantesPorEliminar = event;
   }
+
+  
 
   /**
    * Elimina las plantas de subfabricantes de la lista de subfabricantes a eliminar.
@@ -423,9 +473,16 @@ export class EmpresasSubFabricanteComponent implements OnInit, OnDestroy {
    * @method eliminarPlantas
    */
   eliminarPlantas(): void {
-    this.store.eliminarPlantas(this.listaDeSubfabricantesPorEliminar);
+    const DATOS = this.listaDeSubfabricantesPorEliminar?.length || 0;
+  
+    if (DATOS === 0) { return }
+    const DATOSRES = [...this.datosPlantasParaSerAgregados];
+    DATOSRES.splice(0, DATOS);
+    this.datosPlantasParaSerAgregados = DATOSRES;
+    this.store.setPlantas(DATOSRES);
+    this.listaDeSubfabricantesPorEliminar= [];
   }
-
+  
     /**
    * @description Verifica si un control del formulario es inválido.
    * @param nombreControl El nombre del control a verificar.

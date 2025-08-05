@@ -1,7 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, map, throwError } from 'rxjs';
-import { API_GET_PAISES } from '../../../constants/api-constants';
+
+import { API_GET_PAISES, API_GET_PAISES_SAT_T130118 } from '../../../constants/api-constants';
 import { CatalogoPaisesResponse } from '../../../models/shared/catalogos.model';
+import { CatalogosResponse } from '../../../models/shared/catalogo.model';
 import { ENVIRONMENT } from '../../../../enviroments/enviroment';
 import { Injectable } from '@angular/core';
 
@@ -31,6 +33,26 @@ export class PaisesService {
     };
 
     return this.http.get<CatalogoPaisesResponse>(ENDPOINT, HEADER).pipe(
+      map((response) => {
+        return response;
+      }),
+      catchError(() => {
+        const ERROR = new Error(
+          `Ocurrió un error al devolver la información ${ENDPOINT} `
+        );
+        return throwError(() => ERROR);
+      })
+    );
+  }
+
+  /**
+  * Obtiene el catálogo de países para el trámite T130118.
+  * @returns Observable con la lista de respuestas del catálogo.
+  */
+  getPaisesT130118(): Observable<CatalogosResponse> {
+    const ENDPOINT = `${this.host}${API_GET_PAISES_SAT_T130118}`;
+
+    return this.http.get<CatalogosResponse>(ENDPOINT).pipe(
       map((response) => {
         return response;
       }),

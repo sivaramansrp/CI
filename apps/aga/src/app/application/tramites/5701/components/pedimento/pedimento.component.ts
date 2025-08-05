@@ -280,7 +280,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
             tipoNotificacion: 'alert',
             categoria: 'danger',
             modo: 'action',
-            titulo: 'Aviso',
+            titulo: TITULO_MODAL_AVISO,
             mensaje: MSG_NRO_PEDIMENTO,
             cerrar: false,
             txtBtnAceptar: 'Cerrar',
@@ -349,7 +349,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
                         descTipoPedimento: 'Por evaluar',
                         numero: '',
                         comprobanteValor: '',
-                        pedimentoValidado: response.datos.pedimento_valido,
+                        pedimentoValidado: 'false',
                       };
 
                       this.nuevaNotificacion = {
@@ -373,7 +373,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
                       tipoNotificacion: 'alert',
                       categoria: 'danger',
                       modo: 'action',
-                      titulo: 'Aviso',
+                      titulo: TITULO_MODAL_AVISO,
                       mensaje: MSG_PEDIMENTO_NO_VALIDO,
                       cerrar: false,
                       txtBtnAceptar: 'Aceptar',
@@ -518,7 +518,6 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
 
         if (TIPO_PEDIMENTO) {
           this.pedimentos[rowIndex].tipoPedimento = TIPO_PEDIMENTO.id;
-          this.pedimentos[rowIndex].numero = '';
           this.pedimentos[rowIndex].comprobanteValor = '';
 
           if (TIPO_PEDIMENTO.id) {

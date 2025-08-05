@@ -1,10 +1,10 @@
+import { Catalogo, JSONResponse } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { Fabricante, MercanciasDatos, Otros, ScianDatos } from '@libs/shared/data-access-user/src';
 import { Observable,catchError, throwError } from 'rxjs';
 import { Solicitud260303State, Tramite260303Store } from '../../../estados/tramites/260303/tramite260303.store';
 import { EstadoCatalogResponse } from '../models/certificados-licencias-permisos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { JSONResponse } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 
 // Decorador Injectable que indica que este servicio puede ser inyectado en otros componentes o servicios.
 // providedIn: 'root' significa que el servicio estará disponible en toda la aplicación.
@@ -34,11 +34,11 @@ export class CertificadosLicenciasPermisosService {
     this.tramite260303Store.setDenominacionRazon(DATOS.denominacionRazon);
     this.tramite260303Store.setCodigoPostal(DATOS.codigoPostal);
     this.tramite260303Store.setEstado(DATOS.estado);
-    this.tramite260303Store.SetMunicipio(DATOS.municipio);
+    this.tramite260303Store.setMunicipio(DATOS.municipio);
     this.tramite260303Store.setLocalidad(DATOS.localidad);
     this.tramite260303Store.setColonia(DATOS.colonia);
-    this.tramite260303Store.SetCalleYNumero(DATOS.calleYNumero);
-    this.tramite260303Store.SetCorreoElecronico(DATOS.correoElecronico);
+    this.tramite260303Store.setCalleYNumero(DATOS.calleYNumero);
+    this.tramite260303Store.setCorreoElecronico(DATOS.correoElecronico);
     this.tramite260303Store.setLada(DATOS.lada);
     this.tramite260303Store.setTelefono(DATOS.telefono);
 
@@ -55,8 +55,8 @@ export class CertificadosLicenciasPermisosService {
     this.tramite260303Store.setNumeroPermiso(DATOS.numeroPermiso);
 
     // Datos adicionales
+    this.tramite260303Store.setManifiestos(DATOS.manifiestos);
     this.tramite260303Store.setLosDatosNo(DATOS.losDatosNo);
-    this.tramite260303Store.setLosDatosYes(DATOS.losDatosYes);
     this.tramite260303Store.setNombreORazon(DATOS.nombreORazon);
 
     // Información del producto
@@ -103,38 +103,35 @@ export class CertificadosLicenciasPermisosService {
 
     // Registro y referencia
     this.tramite260303Store.setNumeroDeRegistro(DATOS.numeroDeRegistro);
-    this.tramite260303Store.SetClaveDeReferencia(DATOS.claveDeReferencia);
+    this.tramite260303Store.setClaveDeReferencia(DATOS.claveDeReferencia);
 
     // Información bancaria y de pago
-    this.tramite260303Store.SetCadenaDaLaDependencia(DATOS.cadenaDaLaDependencia);
-    this.tramite260303Store.SetBanco(DATOS.banco);
-    this.tramite260303Store.SetLaveDePago(DATOS.laveDePago);
-    this.tramite260303Store.SetFechaDePago(DATOS.fechaDePago);
-    this.tramite260303Store.SetImporteDePago(DATOS.importeDePago);
+    this.tramite260303Store.setCadenaDaLaDependencia(DATOS.cadenaDaLaDependencia);
+    this.tramite260303Store.setBanco(DATOS.banco);
+    this.tramite260303Store.setLaveDePago(DATOS.laveDePago);
+    this.tramite260303Store.setFechaDePago(DATOS.fechaDePago);
+    this.tramite260303Store.setImporteDePago(DATOS.importeDePago);
 
     // Documentos
-    this.tramite260303Store.SetTipoDocumento(DATOS.tipoDocumento);
+    this.tramite260303Store.setTipoDocumento(DATOS.tipoDocumento);
 
     // Terceros relacionados
-    this.tramite260303Store.SetTercerosRelacionadosDenominacionSocial(DATOS.tercerosRelacionadosDenominacionSocial);
-    this.tramite260303Store.SetTercerosRelacionadosTerceroNombre(DATOS.tercerosRelacionadosTerceroNombre);
-    this.tramite260303Store.SetTercerosRelacionadosNacional(DATOS.tercerosRelacionadosNacional);
-    this.tramite260303Store.SetTercerosRelacionadosExtranjero(DATOS.tercerosRelacionadosExtranjero);
-    this.tramite260303Store.SetTercerosRelacionadosFisica(DATOS.tercerosRelacionadosFisica);
-    this.tramite260303Store.SetTercerosRelacionadosMoral(DATOS.tercerosRelacionadosMoral);
-    this.tramite260303Store.SetTercerosRelacionadosNoContribuyente(DATOS.tercerosRelacionadosNoContribuyente);
-    this.tramite260303Store.SetTercerosRelacionadosRfc(DATOS.tercerosRelacionadosRfc);
-    this.tramite260303Store.SetTercerosRelacionadosCurp(DATOS.tercerosRelacionadosCurp);
-    this.tramite260303Store.SetTercerosRelacionadosRazonSocial(DATOS.tercerosRelacionadosRazonSocial);
-    this.tramite260303Store.SetTercerosRelacionadosPais(DATOS.tercerosRelacionadosPais);
-    this.tramite260303Store.SetTercerosRelacionadosEstado(DATOS.tercerosRelacionadosEstado);
-    this.tramite260303Store.SetTercerosRelacionadosCodigoPostal(DATOS.tercerosRelacionadosCodigoPostal);
-    this.tramite260303Store.SetTercerosRelacionadosCalle(DATOS.tercerosRelacionadosCalle);
-    this.tramite260303Store.SetTercerosRelacionadosNumeroExterior(DATOS.tercerosRelacionadosNumeroExterior);
-    this.tramite260303Store.SetTercerosRelacionadosNumeroInterior(DATOS.tercerosRelacionadosNumeroInterior);
-    this.tramite260303Store.SetTercerosRelacionadosLada(DATOS.tercerosRelacionadosLada);
-    this.tramite260303Store.SetTercerosRelacionadosTelefono(DATOS.tercerosRelacionadosTelefono);
-    this.tramite260303Store.SetTercerosRelacionadosCorreoElectronico(DATOS.tercerosRelacionadosCorreoElectronico);
+    this.tramite260303Store.setTercerosRelacionadosDenominacionSocial(DATOS.tercerosRelacionadosDenominacionSocial);
+    this.tramite260303Store.setTercerosRelacionadosTerceroNombre(DATOS.tercerosRelacionadosTerceroNombre);
+    this.tramite260303Store.setTercerosNacionalidad(DATOS.tercerosNacionalidad);
+    this.tramite260303Store.setTipoPersona(DATOS.tipoPersona);
+    this.tramite260303Store.setTercerosRelacionadosRfc(DATOS.tercerosRelacionadosRfc);
+    this.tramite260303Store.setTercerosRelacionadosCurp(DATOS.tercerosRelacionadosCurp);
+    this.tramite260303Store.setTercerosRelacionadosRazonSocial(DATOS.tercerosRelacionadosRazonSocial);
+    this.tramite260303Store.setTercerosRelacionadosPais(DATOS.tercerosRelacionadosPais);
+    this.tramite260303Store.setTercerosRelacionadosEstado(DATOS.tercerosRelacionadosEstado);
+    this.tramite260303Store.setTercerosRelacionadosCodigoPostal(DATOS.tercerosRelacionadosCodigoPostal);
+    this.tramite260303Store.setTercerosRelacionadosCalle(DATOS.tercerosRelacionadosCalle);
+    this.tramite260303Store.setTercerosRelacionadosNumeroExterior(DATOS.tercerosRelacionadosNumeroExterior);
+    this.tramite260303Store.setTercerosRelacionadosNumeroInterior(DATOS.tercerosRelacionadosNumeroInterior);
+    this.tramite260303Store.setTercerosRelacionadosLada(DATOS.tercerosRelacionadosLada);
+    this.tramite260303Store.setTercerosRelacionadosTelefono(DATOS.tercerosRelacionadosTelefono);
+    this.tramite260303Store.setTercerosRelacionadosCorreoElectronico(DATOS.tercerosRelacionadosCorreoElectronico);
   }
 
 
@@ -330,4 +327,16 @@ export class CertificadosLicenciasPermisosService {
     getFormularioData(): Observable<Solicitud260303State> {
       return this.http.get<Solicitud260303State>('assets/json/260303/inicializar-formulario.json');
     }
+
+    /**
+   * @method getPaisDatos
+   * @description
+   * Obtiene el catálogo de pais desde un archivo JSON local.
+   * @returns {Observable<Catalogo>} Observable con los datos del catálogo de pais.
+   */
+    getPaisDatos(): Observable<Catalogo[]> {
+      return this.http.get<Catalogo[]>('assets/json/260303/pais.json');
+    }
+
+
 }

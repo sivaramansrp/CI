@@ -2,10 +2,14 @@ import {
   AlertComponent,
   CatalogoSelectComponent,
   CatalogosSelect,
+  ConfiguracionColumna,
   ConsultaioQuery,
+  ConsultaioState,
   CrosslistComponent,
   InputRadioComponent,
-  TableComponent,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TableBodyData,
   TituloComponent,
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
@@ -14,8 +18,9 @@ import {
   Solicitud10301State,
   Tramite10301Store,
 } from '../../estados/tramite10301.store';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import {
+  FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -23,11 +28,12 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Subject, Subscription, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ImportadorExportadorService } from '../../services/importador-exportador.service';
-import { SELECCION } from '../../constantes/importador-exportador.enum';
 import { Tramite10301Query } from '../../estados/tramite10301.query';
+import mercanciaTable from '@libs/shared/theme/assets/json/10301/mercancia-table.json';
+import { DatosMercancia } from '../../models/importador-exportador.model';
 
 /**
  * Texto de adjuntar para terceros.
@@ -46,7 +52,7 @@ const TERCEROS_TEXTO_DE_ADJUNTAR =
     CommonModule,
     CatalogoSelectComponent,
     TituloComponent,
-    TableComponent,
+    TablaDinamicaComponent,
     AlertComponent,
     CrosslistComponent,
     InputRadioComponent,
@@ -95,21 +101,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   TEXTO_DE_ADJUNTAR: string = TERCEROS_TEXTO_DE_ADJUNTAR;
 
   /**
-   * Indica si la tabla debe mostrarse.
-   */
-  showTabla = true;
-
-  /**
-   * Indica si el popup está abierto.
-   */
-  isPopupOpen = false;
-
-  /**
-   * Indica si el popup está cerrado.
-   */
-  isPopupClose = true;
-
-  /**
    * Lista de fines elegidos.
    */
   finesElegidos: string[] = [];
@@ -142,17 +133,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   /**
    * Lista de rangos de días seleccionados.
    */
-  selectRangoDias: [] = [];
-  /**
-   * Lista de fechas seleccionadas.
-   */
+  selectRangoDias: string[] = [];
 
-  fechasSeleccionadas: Catalogo[] = [];
-
-  /**
-   * Lista de datos de fechas disponibles.
-   */
-  fechasDatos: Catalogo[] = [];
   /**
    * Control de formulario para la fecha.
    */
@@ -173,33 +155,23 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   valorSeleccionado!: string;
 
   /**
-   * Encabezados de la tabla.
-   */
-  encabezadosTabla: string[] = [
-    'Fines a los que se destinará la mercancía',
-    'Tipo de mercancía',
-    'Año',
-    'Modelo',
-    'Marca',
-    'Número de serie',
-    'Uso específico de la mercancía',
-  ];
-  tableData = [
-    {
-      "tbodyData": ["Ananas comosus", "P&iacute;na"]
-    }
-  ]
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
   esFormularioSoloLectura: boolean = false;
+
   /**
    * Indica si el formulario es de solo lectura.
    * 
    */
   formularioDeshabilitado: boolean = true;
+
   /**
    * Indicates whether the selected location is a country.
    * Set to `true` if the location is a country, otherwise `false`.
    */
   isPais: boolean = false;
+
     /**
    * Indicates whether the selected location is a country.
    * Set to `true` if the location is a country, otherwise `false`.
@@ -210,30 +182,137 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Set to `true` if the location is a country, otherwise `false`.
    */
   isAdunaMarcancia: boolean = false;
+
   /**
-   * Botones de acción disponibles para gestionar las listas de fechas.
+   * Referencia a los componentes Crosslist en la vista.
    */
-  botonField = [
+  @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
+  
+  /**
+   * Botones para gestionar la lista de países de origen.
+   */
+  public finesDeMercanciaBotons = this.obtenerCrossListBtn();
+
+  /**
+   * Devuelve la configuración de los botones para gestionar la lista de países de origen en el Crosslist.
+   * Cada botón ejecuta una acción sobre todos o la selección actual del Crosslist.
+   */
+  public obtenerCrossListBtn(): Array<{ btnNombre: string; class: string; funcion: () => void }> {
+    return [
+      {
+        btnNombre: 'Agregar todos',
+        class: 'btn-default',
+        funcion: (): void => this.crossList.forEach(cmp => cmp.agregar('t')),
+      },
+      {
+        btnNombre: 'Agregar selección',
+        class: 'btn-primary',
+        funcion: (): void => this.crossList.forEach(cmp => cmp.agregar('')),
+      },
+      {
+        btnNombre: 'Restar selección',
+        class: 'btn-primary',
+        funcion: (): void => this.crossList.forEach(cmp => cmp.quitar('')),
+      },
+      {
+        btnNombre: 'Restar todos',
+        class: 'btn-default',
+        funcion: (): void => this.crossList.forEach(cmp => cmp.quitar('t')),
+      },
+    ];
+  }
+
+  /**
+   * Lista de catálogos disponibles para países.
+   */
+  fines!: Catalogo[];
+
+  /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * Referencia al elemento del modal para agregar mercancías.
+   */
+  @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
+
+   /**
+   * Referencia al modal de confirmación.
+   */
+  @ViewChild('modalConfirmacion', { static: false }) modalConfirmacion!: ElementRef;
+
+  /**
+   * Referencia al botón para cerrar el modal.
+   */
+  @ViewChild('closeModal') closeModal!: ElementRef;
+
+  /**
+   * Referencia al botón para cerrar el modal Confirmacion.
+   */
+  @ViewChild('closeModalConfirmacion') closeModalConfirmacion!: ElementRef;
+  
+  /**
+   * Formulario para agregar mercancías.
+   */
+  agregarMercanciasForm!: FormGroup;
+
+  /**
+   * Filas seleccionadas en la tabla.
+   */
+  filaSeleccionadas: number[] = [];
+
+  /**
+   * Configuración de la tabla de selección.
+   */
+  TablaSeleccion = TablaSeleccion;
+
+  /**
+   * Lista de datos de la solicitud.
+   */
+  public mercanciaDatos: DatosMercancia[] = [];
+
+  /**
+   * Configuración de las columnas de la tabla de solicitudes.
+   */
+  public encabezadoDeTabla: ConfiguracionColumna<DatosMercancia>[] = [
+    { encabezado: '', clave: (articulo) => articulo.id, orden: 1 },
     {
-      btnNombre: 'Agregar',
-      class: 'btn-primary',
-      funcion: (): void => this.agregar(''),
+      encabezado: 'Fines a los que se destinará la mercancía',
+      clave: (articulo) => articulo.fines,
+      orden: 2,
     },
     {
-      btnNombre: 'Agregar todo',
-      class: 'btn-default',
-      funcion: ():void => this.agregar(SELECCION.SELECT_ALL),
+      encabezado: 'Tipo de mercancía',
+      clave: (articulo) => articulo.tipoMercancia,
+      orden: 3,
     },
     {
-      btnNombre: 'Remover',
-      class: 'btn-danger',
-      funcion: ():void => this.quitar(''),
+      encabezado: 'Año',
+      clave: (articulo) => articulo.ano,
+      orden: 4,
     },
     {
-      btnNombre: 'Remover todo',
-      class: 'btn-default',
-      funcion: ():void => this.quitar(SELECCION.SELECT_ALL),
+      encabezado: 'Modelo',
+      clave: (articulo) => articulo.modelo,
+      orden: 5,
     },
+    {
+      encabezado: 'Marca',
+      clave: (articulo) => articulo.marca,
+      orden: 6,
+    },
+    {
+      encabezado: 'Número de serie',
+      clave: (articulo) => articulo.serie,
+      orden: 7,
+    },
+    {
+      encabezado: 'Uso específico de la mercancía',
+      clave: (articulo) => articulo.usoEspecifico,
+      orden: 8,
+    }
   ];
 
   /**
@@ -262,15 +341,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     private validacionesService: ValidacionesFormularioService
   ) {
     // El constructor se utiliza para la inyección de dependencias.
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-          this.datosDeltrimiteForm()
-        })
-      )
-      .subscribe()
   }
 
   /**
@@ -290,12 +360,15 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
-
-    this.getAduanaIngresara();
-    this.getAno();
-    this.getCondicion();
-    this.getPais();
-
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.esFormularioSoloLectura = this.consultaDatos.readonly;
+        })
+      )
+      .subscribe();
     this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -304,13 +377,14 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+    this.donanteDomicilio();
+    this.getAduanaIngresara();
+    this.getAno();
+    this.getCondicion();
+    this.getPais();
+    this.inicializaCatalogos();
     this.inicializarEstadoFormulario();
 
-    this.subscriptions.push(
-      this.query.selectFechasSeleccionadas$.subscribe((fechas) => {
-        this.fechasSeleccionadas = fechas ?? [];
-      })
-    );
     this.subscriptions.push(
       this.query.selectAduana$.subscribe((aduana) => {
         this.aduana = {
@@ -352,6 +426,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       })
     );
   }
+
   /**
    * Inicializa el estado del formulario según si es de solo lectura o no.
    * Si es de solo lectura, guarda los datos del formulario; de lo contrario, inicializa el formulario con los datos del donante y domicilio.
@@ -359,55 +434,10 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosDelFormulario();
+      this.agregarMercancia();
     } else {
       this.donanteDomicilio();
     }
-  }
-
-  /**
-   * Agrega elementos a la lista de fechas según el tipo especificado.
-   * @param {string} tipo - Tipo de acción a realizar.
-   */
-  agregar(tipo: string): void {
-    if (tipo === SELECCION.SELECT_ALL) {
-      this.fechasSeleccionadas = [...this.selectRangoDias];
-      this.fechasDatos = [];
-    } else {
-      const FECHA_VALOR = this.fecha.value;
-      const SELECTEDFECHA = this.fechasDatos.find(
-        (fecha) => fecha.id === FECHA_VALOR
-      );
-      if (SELECTEDFECHA) {
-        this.fechasSeleccionadas.push(SELECTEDFECHA);
-        this.fechasDatos = this.fechasDatos.filter(
-          (fecha) => fecha.id !== FECHA_VALOR
-        );
-      }
-    }
-    this.store.setFechasSeleccionadas(this.fechasSeleccionadas);
-  }
-
-  /**
-   * Elimina elementos de la lista de fechas según el tipo especificado.
-   * @param {string} tipo - Tipo de acción a realizar.
-   */
-  quitar(tipo: string = ''): void {
-    if (tipo === SELECCION.SELECT_ALL) {
-      this.fechasDatos = [...this.fechasSeleccionadas];
-      this.fechasSeleccionadas = [];
-    } else {
-      const FECHA_VALOR = this.fechaSeleccionada.value;
-      const SELECTEDFECHA = this.fechasSeleccionadas.find(
-        (fecha) => fecha.id === FECHA_VALOR
-      );
-      if (SELECTEDFECHA) {
-        this.fechasDatos.push(SELECTEDFECHA);
-        this.fechasSeleccionadas = this.fechasSeleccionadas.filter(
-          (fecha) => fecha.id !== FECHA_VALOR
-        );
-      }
-    }
-    this.store.setFechasSeleccionadas(this.fechasSeleccionadas);
   }
 
   /**
@@ -468,6 +498,21 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Inicializa los catálogos necesarios para el componente.
+   */
+  inicializaCatalogos(): void {
+    const FINES$ = this.importarExportar.getFinesDeMercancia().pipe(
+      map((resp) => {
+        this.fines = resp.data;
+        this.selectRangoDias = this.pais.catalogos.map(
+          (fines: Catalogo) => fines.descripcion
+        );
+      })
+    );
+    merge(FINES$).pipe(takeUntil(this.destroyNotifier$)).subscribe();
+
+  }
 
   /**
    * Obtiene la información de la aduana por la que ingresará la mercancía y actualiza el store con los datos obtenidos.
@@ -489,29 +534,11 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Abre el popup.
+   * Maneja el cambio de filas seleccionadas en la tabla de solicitudes.
+   * @param filaSeleccionadas Lista de filas seleccionadas en la tabla de solicitudes.
    */
-  openPopup():void{
-    this.isPopupOpen = true;
-    this.store.setIsPopupOpen(this.isPopupOpen);
-  }
-
-  /**
-   * Cierra el popup.
-   */
-  closePopup():void {
-    this.isPopupOpen = false;
-    this.isPopupClose = false;
-    this.store.setIsPopupOpen(this.isPopupOpen);
-    this.store.setIsPopupClose(this.isPopupClose);
-  }
-
-  /**
-   * Muestra la siguiente tabla.
-   */
-  nextTabla():void{
-    this.showTabla = false;
-    this.store.setShowTabla(this.showTabla);
+  onSelectedRowsChange(filaSeleccionadas: DatosMercancia[]): void {
+    this.filaSeleccionadas = filaSeleccionadas.map(row => row.id);
   }
 
   /**
@@ -564,6 +591,16 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   get importadorExportador(): FormGroup {
     return this.tramiteForm.get('importadorExportador') as FormGroup;
   }
+
+  /**
+   * Obtiene el grupo de formulario de datos de mercancía.
+   *
+   * @returns {FormGroup} - El grupo de formulario de datos de mercancía.
+   */
+  get datosMercancia(): FormGroup {
+    return this.agregarMercanciasForm.get('datosMercancia') as FormGroup;
+  }
+
   /**
    * Inicializa el formulario de donante y domicilio con los valores del estado de la solicitud.
    */
@@ -574,28 +611,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         aduana: [this.solicitudState?.aduana, [Validators.required]],
         nombre: [
           this.solicitudState?.nombre,
-          [Validators.required, Validators.maxLength(50)],
-        ],
-        tipoMercancia: [
-          this.solicitudState?.tipoMercancia,
-          [Validators.required, Validators.maxLength(100)],
-        ],
-        usoEspecifico: [
-          this.solicitudState?.usoEspecifico,
-          [Validators.required, Validators.maxLength(512)],
-        ],
-        condicion: [this.solicitudState?.condicion, Validators.required],
-        marca: [
-          this.solicitudState?.marca,
-          [Validators.required, Validators.maxLength(50)],
-        ],
-        ano: [this.solicitudState?.ano, [Validators.required]],
-        modelo: [
-          this.solicitudState?.modelo,
-          [Validators.required, Validators.maxLength(50)],
-        ],
-        serie: [
-          this.solicitudState?.serie,
           [Validators.required, Validators.maxLength(50)],
         ],
         manifesto: [this.solicitudState?.manifesto, Validators.required],
@@ -636,33 +651,103 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       }),
     });
 
-    this.datosDeltrimiteForm()
+    this.agregarMercanciasForm = this.fb.group({
+      datosMercancia: this.fb.group({
+        tipoMercancia: [
+          this.solicitudState?.tipoMercancia,
+          [Validators.required, Validators.maxLength(100)],
+        ],
+        usoEspecifico: [
+          this.solicitudState?.usoEspecifico,
+          [Validators.required, Validators.maxLength(512)],
+        ],
+        condicion: [this.solicitudState?.condicion, Validators.required],
+        marca: [
+          this.solicitudState?.marca,
+          [Validators.required, Validators.maxLength(50)],
+        ],
+        ano: [this.solicitudState?.ano, [Validators.required]],
+        modelo: [
+          this.solicitudState?.modelo,
+          [Validators.required, Validators.maxLength(50)],
+        ],
+        serie: [
+          this.solicitudState?.serie,
+          [Validators.required, Validators.maxLength(50)],
+        ]
+      }),
+    });
+
   }
+
   /**
-   * datosDeltrimiteForm los campos del formulario si es de solo lectura.
-   * Si el formulario es de solo lectura, deshabilita los campos del formulario de importador/exportador.
+   * Cierra el modal actual.
    */
-  datosDeltrimiteForm(): void {
-    if (this.esFormularioSoloLectura) {
-      this.importadorExportador?.get('aduana')?.disable();
-      this.importadorExportador?.get('nombre')?.disable();
-      this.importadorExportador?.get('calle')?.disable();
-      this.importadorExportador?.get('numeroExterior')?.disable();
-      this.importadorExportador?.get('numeroInterior')?.disable();
-      this.importadorExportador?.get('telefono')?.disable();
-      this.importadorExportador?.get('correoElectronico')?.disable();
-      this.importadorExportador?.get('pais')?.disable();
-      this.importadorExportador?.get('codigoPostal')?.disable();
-      this.importadorExportador?.get('estado')?.disable();
-      this.importadorExportador?.get('colonia')?.disable();
-      this.importadorExportador?.get('opcion')?.disable();
-      this.isDesplegableDepaises = true;
-      this.isAdunaMarcancia = true;
-      this.isPais = true;
-      this.formularioDeshabilitado = true;
+  cerrarModal(): void {
+    if (this.closeModal) {
+      this.closeModal.nativeElement.click();
     }
   }
 
+  /**
+   * Agregar mercancia.
+   */
+  agregarMercancia(): void {
+    this.importarExportar.agregarMercancia().pipe(takeUntil(this.destroyNotifier$)).subscribe(
+      (respuesta) => {
+        if (respuesta?.success) {
+          respuesta.datos.id = this.mercanciaDatos.length + 1;
+          this.mercanciaDatos.push(respuesta.datos);
+          (this.store.setDatosMercancia as (valor: DatosMercancia[]) => void)(this.mercanciaDatos);
+          this.agregarMercanciasForm.reset();
+          this.agregarMercanciasForm.markAsUntouched();
+          this.agregarMercanciasForm.markAsPristine();
+          this.cerrarModal();
+        }
+      }
+    );
+  }
+
+  /**
+   * Limpiar mercancias del formulario.
+   */
+  limpiarMercancias(): void {
+    this.agregarMercanciasForm.reset();
+  }
+
+  /**
+   * Elimina las filas seleccionadas de la tabla de solicitudes.
+   */
+  eliminar(): void {
+    if (this.filaSeleccionadas && this.filaSeleccionadas.length > 0) {
+      this.mercanciaDatos = this.mercanciaDatos.filter(row => !this.filaSeleccionadas.includes(row.id));
+      this.store.setDatosMercancia(this.mercanciaDatos);
+      this.filaSeleccionadas = [];
+    }
+  }
+
+/**
+   * Obtiene el array del formulario 'fechasSeleccionadas' del grupo de formulario  'datosServicio'.
+   *
+   * @returns {FormArray} El array de formulario 'fechasSeleccionadas'.
+   */
+  get fechasSeleccionadas(): FormArray {
+    return this.tramiteForm.get('fechasSeleccionadas') as FormArray;
+  }
+
+  /**
+   * Actualiza la lista de fechas seleccionadas y las almacena en el estado.
+   * 
+   * @param fechas - Arreglo de fechas a agregar.
+   * @returns void
+   */
+  changeCrosslist(fechas: string[]): void {
+    fechas.forEach((fecha) => {
+      this.fechasSeleccionadas.push(new FormControl(fecha));
+    });
+    this.store.setFechasSeleccionadas(fechas);
+  }
+  
   /**
    * Método de limpieza que se ejecuta cuando el componente se destruye.
    */
@@ -680,5 +765,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       this.getCondicionSubscription.unsubscribe();
     }
     this.subscriptions.forEach((sub) => sub.unsubscribe());
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

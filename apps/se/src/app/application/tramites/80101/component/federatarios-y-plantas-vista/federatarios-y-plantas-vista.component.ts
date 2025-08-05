@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
 import {
+  CatalogoDatosIdx,
   FEDERATARIOS,
   FederatariosEncabezado,
   PLANTAS_DIPONIBLES,
@@ -12,6 +13,7 @@ import {
 } from '../../../../shared/models/federatarios-y-plantas.model';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { FederatariosYPlantasComponent } from '../../../../shared/components/federatarios-y-plantas/federatarios-y-plantas.component';
+import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-industrial.service';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
 
@@ -95,6 +97,7 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
    */
   public federatariosTablaLista$!: Observable<FederatariosEncabezado[]>;
 
+  public estadoOptionsConfig!: CatalogoDatosIdx;
   /**
    * Constructor de la clase FederatariosYPlantasVistaComponent.
    *
@@ -105,9 +108,16 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
    */
   constructor(
     private store: Tramite80101Store,
-    private query: Tramite80101Query
+    private query: Tramite80101Query,
+    public nuevoProgramaIndustrialService: NuevoProgramaIndustrialService
   ) {
     this.federatariosTablaLista$ = this.query.selectDatosFederatarios$;
+    this.nuevoProgramaIndustrialService
+      .getFederataiosyPlantaCatalogosData()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp) => {
+        this.estadoOptionsConfig = resp
+      });
   }
 
   /**

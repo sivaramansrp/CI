@@ -176,7 +176,7 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
     private documentosStore: DocumentosStore,
     private cdr: ChangeDetectorRef,
     private catalogoDocumentosService: CatalogoDocumentosService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.documentosQuery.selectDocumentoState$
@@ -210,8 +210,13 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['idTipoTRamite'] && this.idTipoTRamite) {
-      this.getListaDocumentoObligatorios();
-      this.getListaDocumentoOpcionales();
+      if (this.idTipoTRamite === '130118') {
+        this.getDocumentosDesdeSolicitud130118();
+        this.getDocumentosDesdeSolicitud130118Opcionales();
+      } else {
+        this.getListaDocumentoObligatorios();
+        this.getListaDocumentoOpcionales();
+      }
     }
   }
 
@@ -267,6 +272,54 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
   }
 
   /**
+   * Obtiene los documentos desde la solicitud 130118.
+   * @description Esta función realiza una llamada al servicio de documentos para obtener los documentos obligatorios y opcionales de la solicitud 130118.
+   * @returns {void} No retorna nada.
+   */
+  getDocumentosDesdeSolicitud130118(): void {
+    const ESPECIFICO = true;
+    this.catalogoDocumentosService
+      .getDocumentosSolicitud130118(ESPECIFICO)
+      .pipe(takeUntilDestroyed(this.destroyRef$))
+      .subscribe({
+        next: (response) => {
+          this.catalogoDocumentosObligatorios = response.datos.documento_tramite.map((doc) => ({
+            ...doc.tipo_documento,
+            adicionales: [],
+            cargado: false,
+          }));
+        },
+        error: (err) => {
+          console.error('Error obteniendo documentos desde 130118', err);
+        }
+      });
+  }
+
+  /**
+   * Obtiene los documentos opcionales desde la solicitud 130118.
+   * @description Esta función realiza una llamada al servicio de documentos para obtener los documentos opcionales de la solicitud 130118.
+   * @returns {void} No retorna nada.
+   */
+  getDocumentosDesdeSolicitud130118Opcionales(): void {
+    const ESPECIFICO = false;
+    this.catalogoDocumentosService
+      .getDocumentosSolicitud130118(ESPECIFICO)
+      .pipe(takeUntilDestroyed(this.destroyRef$))
+      .subscribe({
+        next: (response) => {
+          this.catalogoDocumentosOpcionales = response.datos.documento_fraccion.map((doc) => ({
+            ...doc.tipo_documento,
+            adicionales: [],
+            cargado: false,
+          }));
+        },
+        error: (err) => {
+          console.error('Error obteniendo documentos desde 130118', err);
+        }
+      });
+  }
+
+  /**
    * Maneja la carga de un documento.
    * @param {Event} event - El evento de carga del archivo.
    * @param fileInput file proveniente del input
@@ -305,11 +358,11 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
       this.documentoSeleccionado =
         tipo === OPCIONAL
           ? (this.catalogoDocumentosOpcionales.find(
-              (doc) => doc.id_tipo_documento === id
-            ) as TipoDocumentos)
+            (doc) => doc.id_tipo_documento === id
+          ) as TipoDocumentos)
           : (this.catalogoDocumentosObligatorios.find(
-              (doc) => doc.id_tipo_documento === id
-            ) as TipoDocumentos);
+            (doc) => doc.id_tipo_documento === id
+          ) as TipoDocumentos);
 
       const TAMANIO_REQUERIDO: number =
         CargaDocumentoComponent.convertirMbaBytes(
@@ -537,6 +590,7 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
       this.documentosOpcionalesSeleccionados
     );
     this.listDocOpcionalesAgregar = [];
+
   }
 
   /**

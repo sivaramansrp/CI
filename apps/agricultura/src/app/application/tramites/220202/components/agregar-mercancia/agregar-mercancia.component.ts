@@ -1,5 +1,5 @@
 import { AnimalesEventos, AnimalesFormularioSolicitud, DatosDeLaSolicitud } from '../../../../shared/models/datos-de-la-solicitue.model';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 
@@ -51,6 +51,8 @@ export class AgregarMercanciaComponent implements OnDestroy{
    */
   public destroyNotifier$ = new Subject<void>();
 
+  @Output() cerrar = new EventEmitter<void>();
+
   /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es true, los campos del formulario no serán editables por el usuario.
@@ -100,20 +102,20 @@ export class AgregarMercanciaComponent implements OnDestroy{
             this.formularioSolicitud = {
               tipoRequisito: VALOR.tipoRequisito || '',
               requisito: VALOR.requisito || '',
-              numeroCertificado: '',
+              numeroCertificado: VALOR.numeroCertificadoInternacional || '',
               fraccionArancelaria: VALOR.fraccionArancelaria || '',
               descripcionFraccion: VALOR.descripcionFraccion || '',
               nico: VALOR.nico || '',
               descripcionNico: VALOR.descripcionNico || '',
               descripcion: VALOR.descripcion || '',
               cantidadUMT: String(VALOR.cantidadUMT || ''),
-              umt: VALOR.umt || '',
+              umt: VALOR.umt || '1',
               cantidadUMC: String(VALOR.cantidadUMC || ''),
               umc: VALOR.umc || '',
               especie: '',
               uso: VALOR.uso || '',
               paisOrigen: '',
-              paisDeProcedencia: VALOR.paisDeProcedencia || ''
+              paisDeProcedencia: VALOR.paisDeProcedencia || '',
             };
           }
         })
@@ -137,7 +139,7 @@ export class AgregarMercanciaComponent implements OnDestroy{
       nico: valor.formulario.nico || '',
       descripcionNico: valor.formulario.descripcionNico || '',
       descripcion: valor.formulario.descripcion || '',
-      umt: '',
+      umt: '1',
       cantidadUMT: valor.formulario.cantidadUMT || '',
       umc: valor.formulario.umc || '',
       cantidadUMC: valor.formulario.cantidadUMC || '',

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -7,20 +7,28 @@ import {
   TEXTO_FILA_REGISTRO,
 } from '../../../tramites/constantes/constantes';
 import {
+  PAGINATION_MODE,
   TablaAcciones,
   TablaSeleccion,
 } from '../../../core/enums/tabla-seleccion.enum';
+import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-columna.model';
+import { TablePaginationComponent } from '../table-pagination/table-pagination.component';
 
 @Component({
   selector: 'app-tabla-dinamica',
   templateUrl: './tabla-dinamica.component.html',
   styleUrl: './tabla-dinamica.component.scss',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TablePaginationComponent],
   host: {},
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TablaDinamicaComponent<T> implements OnChanges {
+
+export class TablaDinamicaComponent<T> implements OnChanges, OnInit, OnDestroy {
+
+  /** Modo de paginación: 'client' o 'server' */
+  @Input() mode: string = PAGINATION_MODE.SERVER;
 
   /**
    * indice el tipo de selección para la tabla.
@@ -70,6 +78,15 @@ export class TablaDinamicaComponent<T> implements OnChanges {
    * @type {T[]}
    */
   @Input() datos: T[] = [];
+
+  /** Almacena los datos paginados que se mostrarán en la tabla según la página actual y los filtros aplicados. */
+  public paginatedDatos: T[] = [];
+
+  /** Almacena los datos filtrados localmente según el término de búsqueda ingresado por el usuario. */
+  private datosFiltrados: T[] = [];
+
+  /** Almacena el conjunto original de datos antes de aplicar filtros o búsquedas, para restaurar el estado inicial si es necesario. */
+  private originalDatos: T[] = [];
 
   /**
    * Identificador único para la tabla dinámica.
@@ -179,6 +196,98 @@ export class TablaDinamicaComponent<T> implements OnChanges {
   public batonValor: string = ESTADO_REGISTRO.BAJA;
 
   @Input() desactivarButton: boolean = false;
+
+  /**
+   * Número total de elementos en la tabla.
+  */
+  @Input() totalItems: number = 0;
+
+  /**
+   * Cantidad de elementos por página en la paginación.
+  */
+  @Input() itemsPerPage: number = 5;
+
+  /**
+   * Página actual de la paginación.
+  */
+  @Input() currentPage: number = 1;
+
+  /** Indica si se muestra la opción de ordenamiento de columnas en la tabla. */
+  @Input() showSort: boolean = false;
+
+  /** Indica si se muestra la opción de búsqueda en la tabla. */
+  @Input() showSearch: boolean = false;
+
+  /** Indica si se muestra la paginación en la tabla dinámica. */
+  @Input() showPagination: boolean = false;
+
+  /** Evento que se emite cuando el usuario cambia de página en la tabla. */
+  @Output() pageChange: EventEmitter<number> = new EventEmitter<number>();
+
+  /** Evento que se emite cuando el usuario cambia la cantidad de elementos por página en la tabla. */
+  @Output() itemsPerPageChange: EventEmitter<number> = new EventEmitter<number>(); 
+
+  /** Evento que se emite cuando el usuario ordena una columna de la tabla. */
+  @Output() sortEvent = new EventEmitter<{ column: ConfiguracionColumna<T>; direction: 'asc' | 'desc' }>();
+
+  /** Evento que se emite cuando el usuario realiza una búsqueda en la tabla. */
+  @Output() searchChanged = new EventEmitter<string>();
+  
+  /** Subject utilizado para gestionar y emitir los términos de búsqueda ingresados por el usuario. */
+  private searchSubject = new Subject<string>();
+
+  /** Columna actualmente seleccionada para aplicar el ordenamiento en la tabla. */
+  public sortColumn: ConfiguracionColumna<T> | null = null;
+
+  /** Dirección actual del ordenamiento aplicado en la tabla: ascendente o descendente. */
+  public sortDirection: 'asc' | 'desc' = 'asc';
+  
+  /**
+ * Método del ciclo de vida que se ejecuta al inicializar el componente.
+ * Suscribe al Subject de búsqueda para manejar los términos ingresados por el usuario,
+ * aplicando un debounce y evitando búsquedas repetidas.
+ */
+  ngOnInit(): void {
+    this.searchSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(searchTerm => {
+      const SEARCH_VALOR = searchTerm.trim().toLowerCase();
+      if (this.mode === PAGINATION_MODE.SERVER) {
+        this.searchChanged.emit(SEARCH_VALOR);
+      } else {
+        this.filtrarDatosLocal(SEARCH_VALOR);
+      }
+    });
+    this.getUpdatePagination();
+  }
+
+  /**
+   * Método que se ejecuta cuando se ingresa un valor en el campo de búsqueda.
+   * Este método emite el valor ingresado al observable `searchSubject` para su procesamiento.
+   *
+   * @param valor - El valor ingresado por el usuario.
+   */
+  filtrarDatosLocal(valor: string): void {
+    if (!valor) {
+      this.datosFiltrados = [];
+      this.getUpdatePagination();
+    } else {
+      this.paginatedDatos = this.originalDatos;
+      this.datosFiltrados = this.paginatedDatos.filter(item =>
+        this.configuracionTabla.some(col =>
+          col.clave(item)?.toString().toLowerCase().includes(valor)
+        )
+      );
+      if (this.datosFiltrados.length) {
+        this.getUpdatePagination();
+      } else {
+        this.paginatedDatos = this.datosFiltrados;
+      }
+    }
+  }
+
+
 
   /**
    * Método para obtener la configuración de las columnas ordenada según el campo "orden".
@@ -302,6 +411,55 @@ export class TablaDinamicaComponent<T> implements OnChanges {
   }
 
   /**
+   * Método que se ejecuta cuando se cambia de página en la paginación.
+   * @param {number} page - Número de la página seleccionada.
+   */
+  onPageChange(page: number):void {
+    this.currentPage = page;
+    if (this.mode === PAGINATION_MODE.CLIENT) {
+      this.getUpdatePagination();
+    } else {
+      this.pageChange.emit(page);
+    }
+  }
+
+  /**
+   * Actualiza la paginación de la tabla de establecimientos.
+   * Corta los datos de la tabla según la página actual y el número de elementos por página.
+   */
+  getUpdatePagination(): void {
+    const SOURCE = this.datosFiltrados.length ? this.datosFiltrados : this.datos;
+    this.paginatedDatos = [];
+    if (this.showPagination) {
+      if (this.mode !== PAGINATION_MODE.CLIENT) {
+      this.paginatedDatos = [...SOURCE];
+      } else {
+        const STARTINDEX = (this.currentPage - 1) * this.itemsPerPage;
+        this.paginatedDatos = SOURCE.slice(STARTINDEX, STARTINDEX + this.itemsPerPage);
+        this.originalDatos = SOURCE.slice(STARTINDEX, STARTINDEX + this.itemsPerPage);
+      }
+    } else {
+      this.paginatedDatos = [...SOURCE];
+    }
+  }
+
+
+  /**
+   * Método que se ejecuta cuando cambia el número de elementos por página.
+   * @param {number} itemsPerPage - Número de elementos a mostrar por página.
+   */
+  onItemsPerPageChange(itemsPerPage: number):void{
+    this.itemsPerPage = itemsPerPage;
+    this.currentPage = 1;
+    if (this.mode === PAGINATION_MODE.CLIENT) {
+      this.getUpdatePagination();
+    } else {
+      this.itemsPerPageChange.emit(itemsPerPage)
+    }
+    
+  }
+
+  /**
    * Se ejecuta cuando cambia alguna de las propiedades @Input del componente.
    * En este caso, si cambia el arreglo de datos, se limpia la selección actual de filas.
    *
@@ -311,5 +469,79 @@ export class TablaDinamicaComponent<T> implements OnChanges {
     if(cambios['datos']) {
       this.filasSeleccionadas = [];
     }
+    this.getUpdatePagination();
   }
+
+  /**
+ * Maneja el evento de ordenamiento cuando el usuario hace clic en el encabezado de una columna.
+ * Cambia la dirección del ordenamiento si la columna ya está seleccionada, o selecciona una nueva columna para ordenar.
+ * Si el modo es CLIENT, ordena y actualiza los datos localmente; si es SERVER, emite el evento para que el padre procese el ordenamiento.
+ *
+ * @param column - Columna sobre la que se aplicará el ordenamiento.
+ */
+  onSort(column: ConfiguracionColumna<T>): void {
+    if (this.sortColumn === column) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortColumn = column;
+      this.sortDirection = 'asc';
+    }
+    if (this.mode === PAGINATION_MODE.CLIENT) {
+      this.sortData();
+      this.getUpdatePagination();
+    } else {
+      this.sortEvent.emit({ column: column, direction: this.sortDirection });
+    }
+  }
+
+  /**
+ * Ordena los datos de la tabla según la columna y dirección seleccionadas.
+ * Si la columna es de tipo string, utiliza localeCompare; si es numérica, compara valores numéricos.
+ */
+  private sortData(): void {
+    if (!this.sortColumn) {
+      return;
+    }
+    const CLAVE_FN = this.sortColumn.clave;
+    this.datos.sort((a, b) => {
+      const VAL_A = CLAVE_FN(a);
+      const VAL_B = CLAVE_FN(b);
+
+      if (VAL_A === null) {
+        return 1;
+      }
+      if (VAL_B === null) {
+        return -1;
+      }
+      const RESULT = typeof VAL_A === 'string'
+        ? VAL_A.localeCompare(VAL_B as string)
+        : (VAL_A as number) > (VAL_B as number)
+          ? 1
+          : (VAL_A as number) < (VAL_B as number)
+            ? -1
+            : 0;
+
+      return this.sortDirection === 'asc' ? RESULT : -RESULT;
+    });
+  }
+
+  /**
+ * Maneja el evento de entrada en el campo de búsqueda.
+ * Envía el valor ingresado al Subject para procesar el filtrado o búsqueda.
+ *
+ * @param event - Evento de entrada del usuario en el campo de búsqueda.
+ */
+  onSearchInput(event: Event): void {
+    const VALOR = (event.target as HTMLInputElement).value;
+    this.searchSubject.next(VALOR);
+  }
+
+  /**
+ * Método del ciclo de vida que se ejecuta al destruir el componente.
+ * Completa el Subject de búsqueda para evitar fugas de memoria.
+ */
+  ngOnDestroy(): void {
+    this.searchSubject.complete();
+  }
+
 }

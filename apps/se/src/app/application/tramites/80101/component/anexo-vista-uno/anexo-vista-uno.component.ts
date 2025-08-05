@@ -1,5 +1,5 @@
+import { ANEXO_II_SERVICIO, ANEXO_IMPORTACION_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { Component, Input } from '@angular/core';
-import { ANEXO_IMPORTACION_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { ANEXO_I_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { ActivatedRoute } from '@angular/router';
 import { AnexoDosEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
@@ -115,6 +115,28 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
     anexoUnoEncabezadoDeTabla: ANEXO_I_SERVICIO,
   };
 
+  /**
+   * Configuración para el componente "Anexo Vista Uno".
+   * 
+   * Esta propiedad define los parámetros utilizados para configurar la tabla
+   * y el encabezado en el componente. Los valores especificados son utilizados
+   * para determinar el tipo de selección en la tabla y el encabezado que se muestra.
+   * 
+   * Propiedades:
+   * - `anexoUnoTablaSeleccionRadio`: Define el tipo de selección en la tabla como RADIO.
+   *   Utiliza la constante `TablaSeleccion.RADIO` para especificar este comportamiento.
+   * - `anexoUnoEncabezadoDeTabla`: Especifica el encabezado de la tabla utilizando la constante
+   *   `ANEXO_I_SERVICIO`, que representa el texto o configuración del encabezado.
+   * 
+   * Uso:
+   * Esta configuración es utilizada para personalizar la funcionalidad y apariencia
+   * del componente "Anexo Vista Uno", asegurando que cumpla con los requisitos específicos
+   * del módulo de trámites.
+   */
+  public anexoDosConfig = {
+    anexoDosTablaSeleccionRadio: TablaSeleccion.RADIO,
+    anexoDosEncabezadoDeTabla: ANEXO_II_SERVICIO,
+  };
 
   /**
    * Configuración para la importación de anexos en el componente.

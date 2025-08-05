@@ -57,25 +57,30 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   public esDatosRespuesta: boolean = false;
 
+  /**
+   * Evento para cargar archivos.
+   * Se utiliza para notificar a otros componentes que se debe realizar una acción de carga de archivos.
+   */
   cargaArchivosEvento = new Subject<any>();
+
+  ocultarForm: boolean = false;
 
   /**
    * Constructor del componente.
-   * Se utiliza para la inyección de dependencias.
-   * @param cdr Servicio para detectar cambios manualmente.
    * @param consultaQuery Consulta para obtener el estado de la consulta.
-   * @param peximService Servicio para obtener y actualizar datos del formulario.
+   * @param peximService Servicio para manejar la lógica de negocio relacionada con el trámite.
    */
   constructor(
     public consultaQuery: ConsultaioQuery,
     private peximService: PeximService
-  ) {}
+  ) { }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * Suscribe al estado de consulta y carga datos si es necesario.
    */
   ngOnInit(): void {
+    // Suscribirse al estado de consulta para obtener datos actualizados
     this.consultaQuery.selectConsultaioState$.pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
@@ -86,6 +91,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       this.guardarDatosFormularios();
     } else {
       this.esDatosRespuesta = true;
+    }
+
+    if(this.consultaState.readonly === true){
+      this.ocultarForm = true;
     }
   }
 
@@ -106,13 +115,22 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       });
   }
 
-   /**
-   * Cambia la pestaña seleccionada en la UI.
-   * @param i Índice de la pestaña a activar.
-   */
+  /**
+  * Cambia la pestaña seleccionada en la UI.
+  * @param i Índice de la pestaña a activar.
+  */
   seleccionaTab(i: number): void {
     this.indice = i;
   }
+
+  
+  /**
+   * Este método se utiliza para validar el formulario antes de proceder con la solicitud.
+   * @returns Devuelve true si el formulario de solicitud es válido, false en caso contrario.
+   */
+  validarFormulario(): boolean {
+  return this.solicitudComponent?.validarFormulario() ?? false;
+}
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.

@@ -94,8 +94,8 @@ export const DESTINATARIO_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Destinatario
   { encabezado: 'País', clave: (fila) => fila.pais, orden: 9 },
   { encabezado: 'Colonia', clave: (fila) => fila.colonia, orden: 10 },
   { encabezado: 'Municipio o Alcaldía', clave: (fila) => fila.municipioAlcaldia, orden: 11 },
-  { encabezado: 'Localidad', clave: (fila) => fila.localidad, orden: 12 },
-  { encabezado: 'Estado/Localidad', clave: (fila) => fila.localidad, orden: 13 },
+  { encabezado: 'Estado', clave: (fila) => fila.localidad, orden: 12 },
+  { encabezado: 'Estado', clave: (fila) => fila.localidad, orden: 13 },
   { encabezado: 'Código Postal', clave: (fila) => fila.codigoPostal, orden: 14 },
 ];
 
@@ -123,8 +123,8 @@ export const FABRICANTE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Fabricante>[] 
   { encabezado: 'País', clave: (fila) => fila.pais, orden: 9 },
   { encabezado: 'Colonia', clave: (fila) => fila.colonia, orden: 10 },
   { encabezado: 'Municipio o Alcaldía', clave: (fila) => fila.municipioAlcaldia, orden: 11 },
-  { encabezado: 'Localidad', clave: (fila) => fila.localidad, orden: 12 },
-  { encabezado: 'Estado/Localidad', clave: (fila) => fila.localidad, orden: 13 },
+  { encabezado: 'Estado', clave: (fila) => fila.localidad, orden: 12 },
+  { encabezado: 'Estado', clave: (fila) => fila.localidad, orden: 13 },
   { encabezado: 'Código Postal', clave: (fila) => fila.codigoPostal, orden: 14 },
 ];
 

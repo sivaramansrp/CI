@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { ConfiguracionColumna, GENERAR_LINEA_CAPTURA_URL, InputFechaComponent, Notificacion, NotificacionesComponent, REGEX_LINEA_CAPTURA, REGEX_REEMPLAZAR, TablaDinamicaComponent, TablaSeleccion, TableData, TituloComponent } from "@libs/shared/data-access-user/src";
+import { ConfiguracionColumna, GENERAR_LINEA_CAPTURA_URL, InputFechaComponent, Notificacion, NotificacionesComponent, REGEX_LINEA_CAPTURA, REGEX_REEMPLAZAR, TITULO_MODAL_AVISO, TablaDinamicaComponent, TablaSeleccion, TableData, TituloComponent } from "@libs/shared/data-access-user/src";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ImportanteCatalogoSeleccion, PagoDerechosLista } from "../../models/registro-muestras-mercancias.model";
 import { Solicitud30901State, Solicitud30901Store } from "../../estados/tramites30901.store";
@@ -334,7 +334,7 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
-        titulo: 'Avisos',
+        titulo: TITULO_MODAL_AVISO,
         mensaje: 'Selecciona por lo menos un registro',
         cerrar: false,
         txtBtnAceptar: 'Aceptar',

@@ -1,17 +1,17 @@
 import { Component, ViewChild } from '@angular/core';
+import { Subject, map,takeUntil } from 'rxjs';
 import { AgregarDestinatarioFinalContenedoraComponent } from '../agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
 import { AgregarProveedorContenedoraComponent } from '../agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240111Query } from '../../estados/tramite240111Query.query';
 import { Tramite240111Store } from '../../estados/tramite240111Store.store';
-import { takeUntil } from 'rxjs';
 
 /**
  * @title Terceros Relacionados Contenedora
@@ -63,6 +63,14 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
   proveedorTablaDatos: Proveedor[] = [];
 
   /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   *
+   * @type {boolean}
+   * @default false
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
    *
    * @method constructor
@@ -72,7 +80,8 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
    */
   constructor(
     private tramiteStore: Tramite240111Store,
-    private tramiteQuery: Tramite240111Query
+    private tramiteQuery: Tramite240111Query,
+      private consultaQuery: ConsultaioQuery
   ) // eslint-disable-next-line no-empty-function
   {}
 
@@ -95,6 +104,14 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
       .subscribe((data) => {
         this.proveedorTablaDatos = data;
       });
+        this.consultaQuery.selectConsultaioState$
+            .pipe(
+              takeUntil(this.destroy$),
+              map((seccionState) => {
+                this.esFormularioSoloLectura = seccionState.readonly;
+              })
+            )
+            .subscribe();
   }
 
   /**

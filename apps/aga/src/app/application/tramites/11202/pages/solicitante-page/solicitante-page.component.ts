@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '../../../../constantes/11202/retorno-contenedores.enum';
+import { PASOS } from '../../constantes/retorno-contenedores.enum';
 import { WizardComponent } from '@ng-mf/data-access-user';
 interface AccionBoton {
   accion: string;

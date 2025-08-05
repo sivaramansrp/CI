@@ -73,6 +73,13 @@
                             (change)="setValoresStore(agregarDatosProductorFormulario,'numeroRegistroFiscal', 'setAgregarDatosProductorNumeroRegistroFiscal')"
                             formControlName="numeroRegistroFiscal"
                             [ngClass]="isValid(agregarDatosProductorFormulario, 'numeroRegistroFiscal') ? 'required' : ''">
+                             <div class="error-message col-md-12 ps-0">
+          <small
+            *ngIf="agregarDatosProductorFormulario.get('numeroRegistroFiscal')?.touched && agregarDatosProductorFormulario.get('numeroRegistroFiscal')?.hasError('required')"
+            class="text-danger">
+            Este campo es obligatorio.
+          </small>
+        </div>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label" for="fax">Fax:</label>

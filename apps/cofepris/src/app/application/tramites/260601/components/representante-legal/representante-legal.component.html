@@ -4,15 +4,22 @@
     <div class="row">
         <div class="col-md-4">
             <label for="rfc" class="form-label">RFC*:</label>
-            <input type="text" class="form-control" formControlName="rfc" id="representanteLegalRFC"
+            <input type="text" class="form-control" formControlName="rfc" id="representanteLegalRFC" maxlength="13"
                 (change)="setValoresStore(representanteLegalForm,'rfc', 'setRfc')">
             <input type="hidden" name="resultadoIDC" id="resultadoIDC">
+            <div *ngIf="representanteLegalForm.get('rfc')?.touched && representanteLegalForm.get('rfc')?.invalid">
+          <small *ngIf="representanteLegalForm.get('rfc')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+        </div>
         </div>
         <div class="col-md-4 btn-buscar">
-            <button type="button" class="btn btn-primary" name="consultarIDC" id="consultarIDC"
+            <button type="button" class="btn btn-primary" name="consultarIDC" id="consultarIDC" [disabled]="esFormularioSoloLectura"
                 (click)="obtenerRespuestaIDCPorRFC()">Buscar</button>
         </div>
     </div>
+    @if(modalAlerta) {
+        <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+        (confirmacionModal)="aceptar()"></lib-notificaciones>
+    }
     <div class="row mt-3">
         <div class="col-md-4">
             <label for="nombreOrazonsocial" class="form-label">Nombre o Razón Social*:</label>

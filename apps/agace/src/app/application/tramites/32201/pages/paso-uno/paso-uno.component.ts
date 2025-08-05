@@ -1,6 +1,5 @@
 import { AfterViewInit, OnDestroy, OnInit } from '@angular/core';
-import { AlertComponent, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
@@ -11,7 +10,6 @@ import { SolicitudComponent } from '../../components/solicitud/solicitud.compone
 import { SolicitudService } from '../../services/solicitud.service';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { Tramite32201Store } from '../../estados/tramite32201.store';
 import { ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
@@ -27,9 +25,7 @@ import { takeUntil } from 'rxjs';
   imports: [
     SolicitanteComponent,
     CommonModule,
-    BtnContinuarComponent,
     TituloComponent,
-    AlertComponent,
     SolicitudComponent,
   ],
 })
@@ -66,33 +62,40 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   public destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * @property {ConsultaioState} consultaDatos
+   * @property {ConsultaioState} consultaState
    * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
    */
-  consultaDatos!: ConsultaioState;
+  public consultaState!: ConsultaioState;
 
   /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   esDatosRespuesta: boolean = false;
-
-  constructor(private consultaioQuery: ConsultaioQuery, public tramite32201Store: Tramite32201Store,
+  /**
+   * Constructor del componente PasoUnoComponent.
+   * @param consultaioQuery Inyecta el servicio ConsultaioQuery para acceder al estado de la consulta.
+   * @param solicitudService Inyecta el servicio SolicitudService para manejar la lógica de la solicitud.
+   */
+  constructor(private consultaioQuery: ConsultaioQuery,
     public solicitudService: SolicitudService
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
-
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente se ha inicializado.
+   * Aquí se inicializan los datos del formulario dinámico.
+   */
   ngOnInit(): void {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.consultaDatos = seccionState;
+          this.consultaState = seccionState;
         })
       )
       .subscribe();
-    if (this.consultaDatos.update) {
+    if (this.consultaState.update) {
       this.fetchGetDatosConsulta();
     } else {
       this.esDatosRespuesta = true;
@@ -113,10 +116,9 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
       .getDatosConsulta()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((respuesta) => {
-        if (respuesta.success) {
-          this.tramite32201Store.setRegimen_0(respuesta.datos.regimen_0);
-          this.tramite32201Store.setRegimen_2(respuesta.datos.regimen_2);
-          this.tramite32201Store.setManifiesto(respuesta.datos.manifiesto);
+        if (respuesta) {
+          this.esDatosRespuesta = true;
+          this.solicitudService.actualizarEstadoFormulario(respuesta);
         }
       });
   }

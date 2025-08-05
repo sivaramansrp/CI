@@ -11,26 +11,12 @@
             "mercancia": "Grasa butrica Dashidratada...",
             "cantidad": "10000",
             "proovedor": "AGRICOLA ALPE S DE RL DE CV",
-            "SCIANLista": {
-                "tableHeader": [
-                    "Clave S.C.I.A.N",
-                    "Descripción del S.C.I.A.N."
-                ],
-                "tableBody": [
-                    {
-                        "tbodyData": [
-                            "311321",
-                            "Deshidratación  de productos agrícolas alimecticios."
-                        ]
-                    },
-                    {
-                        "tbodyData": [
-                            "614074",
-                            "Deshidratación  de productos agrícolas alimecticios."
-                        ]
-                    }
-                ]
-            },
+            "SCIANLista": [
+                {
+                    "clave": "311321",
+                    "descripcion": "Deshidratación  de productos agrícolas alimecticios."
+                }
+            ],
             "mercancias": {
                 "tableHeader": [
                     "CerClasificación del producto",
@@ -59,26 +45,12 @@
             "mercancia": "Grasa butrica Dashidratada...",
             "cantidad": "10000",
             "proovedor": "AGRICOLA ALPE S DE RL DE CV",
-            "SCIANLista": {
-                "tableHeader": [
-                    "Clave S.C.I.A.N",
-                    "Descripción del S.C.I.A.N."
-                ],
-                "tableBody": [
-                    {
-                        "tbodyData": [
-                            "311321",
-                            "Deshidratación  de productos agrícolas alimecticios."
-                        ]
-                    },
-                    {
-                        "tbodyData": [
-                            "614074",
-                            "Deshidratación  de productos agrícolas alimecticios."
-                        ]
-                    }
-                ]
-            },
+            "SCIANLista": [
+                {
+                    "clave": "311322",
+                    "descripcion": "Deshidratación  de productos agrícolas alimecticios."
+                }
+            ],
             "mercancias": {
                 "tableHeader": [
                     "CerClasificación del producto",
@@ -107,26 +79,12 @@
             "mercancia": "Grasa butrica Dashidratada...",
             "cantidad": "10000",
             "proovedor": "AGRICOLA ALPE S DE RL DE CV",
-            "SCIANLista": {
-                "tableHeader": [
-                    "Clave S.C.I.A.N",
-                    "Descripción del S.C.I.A.N."
-                ],
-                "tableBody": [
-                    {
-                        "tbodyData": [
-                            "311321",
-                            "Deshidratación  de productos agrícolas alimecticios."
-                        ]
-                    },
-                    {
-                        "tbodyData": [
-                            "614074",
-                            "Deshidratación  de productos agrícolas alimecticios."
-                        ]
-                    }
-                ]
-            },
+            "SCIANLista": [
+                {
+                    "clave": "311323",
+                    "descripcion": "Deshidratación  de productos agrícolas alimecticios."
+                }
+            ],
             "mercancias": {
                 "tableHeader": [
                     "CerClasificación del producto",

@@ -218,7 +218,7 @@ const ROUTES: Routes = [
       import('./detalle-v-dictamen/detalle-v-dictamen.component').then((m) => m.DetalleVDictamenComponent),
   },
   {
-    path: 'permiso-ordinario-importacion-material-explosivo',
+    path: 'permiso-ordinario-importacion-material',
     loadChildren: () =>
       import(
         './tramites/240108/permiso-ordinario-importacion-exlposivo.module'

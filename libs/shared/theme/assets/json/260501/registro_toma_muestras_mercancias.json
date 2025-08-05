@@ -40,6 +40,7 @@
   "numeroRegistro": "REG-2025-001",
   "fechaCaducidad": "02/05/2025",
   "cumplimiento": "No",
+  "mensaje": true,
   "rfc": "XYZ123456T89",
   "nombre": "Juan",
   "apellidoPaterno": "Pérez",

@@ -1,6 +1,21 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, ConsultaioState, PAGO_DE_DERECHOS, REGEX_SOLO_DIGITOS, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import {
+  AlertComponent,
+  Catalogo,
+  CatalogoSelectComponent,
+  ConsultaioQuery,
+  ConsultaioState,
+  PAGO_DE_DERECHOS,
+  REGEX_SOLO_DIGITOS,
+  TituloComponent,
+  ValidacionesFormularioService,
+} from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { RegistroService } from '../../services/registro.service';
@@ -128,15 +143,15 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
 
     this.donanteDomicilio();
     this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.consultaDatos = seccionState;
-        this.soloLectura = this.consultaDatos.readonly;
-        this.inicializarEstadoFormulario();
-      })
-    )
-    .subscribe();
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -214,28 +229,60 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
       validacionForm: this.fb.group({
-        nombre: [this.solicitudState?.nombre, [Validators.required]],
+        nombre: [
+          this.solicitudState?.nombre,
+          [Validators.required, Validators.maxLength(150)],
+        ],
         numeroFiscal: [
           this.solicitudState?.numeroFiscal,
-          [Validators.required],
+          [Validators.required, Validators.maxLength(32)],
         ],
-        ciudad: [this.solicitudState?.ciudad, [Validators.required]],
-        calle: [this.solicitudState?.calle, [Validators.required]],
+        ciudad: [
+          this.solicitudState?.ciudad,
+          [Validators.required, Validators.maxLength(50)],
+        ],
+        calle: [
+          this.solicitudState?.calle,
+          [Validators.required, Validators.maxLength(90)],
+        ],
         numeroLetra: [this.solicitudState?.numeroLetra, [Validators.required]],
         numeroDeRegistroFiscal: [
           this.solicitudState?.numeroDeRegistroFiscal,
-          [Validators.required],
+          [Validators.required, Validators.maxLength(13)],
         ],
         telefono: [
           this.solicitudState?.telefono,
-          [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
+          [
+            Validators.required,
+            Validators.pattern(REGEX_SOLO_DIGITOS),
+            Validators.maxLength(30),
+          ],
         ],
-        fax: [this.solicitudState?.fax, [Validators.pattern(REGEX_SOLO_DIGITOS)]],
+        fax: [
+          this.solicitudState?.fax,
+          [Validators.pattern(REGEX_SOLO_DIGITOS), Validators.maxLength(20)],
+        ],
         correoElectronico: [
           this.solicitudState?.correoElectronico,
-          [Validators.required, Validators.email],
+          [Validators.required, Validators.email, Validators.maxLength(50)],
         ],
-        nacion: [this.solicitudState?.nacion]
+        nacion: [this.solicitudState?.nacion],
+        lugar: [
+          this.solicitudState?.lugar,
+          [Validators.required, Validators.maxLength(70)],
+        ],
+        nombreRepresentanteLegalExportador: [
+          this.solicitudState?.nombreRepresentanteLegalExportador,
+          [Validators.required, Validators.maxLength(250)],
+        ],
+        empresa: [
+          this.solicitudState?.empresa,
+          [Validators.required, Validators.maxLength(90)],
+        ],
+        cargo: [
+          this.solicitudState?.cargo,
+          [Validators.required, Validators.maxLength(30)],
+        ],
       }),
     });
     this.inicializarEstadoFormulario();
@@ -250,14 +297,14 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.complete();
   }
 
-    /**
+  /**
    * Inicializa el estado del formulario (habilitado/deshabilitado) basado en el modo de solo lectura.
    */
-    inicializarEstadoFormulario(): void {
-      if (this.soloLectura) {
-        this.registroForm?.disable();
-      } else {
-        this.registroForm?.enable();
-      }
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.registroForm?.disable();
+    } else {
+      this.registroForm?.enable();
     }
+  }
 }

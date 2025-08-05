@@ -66,7 +66,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   /**
    * Fila seleccionada en la tabla.
    */
-  selectedRow: FilaData2 | null = null;
+  filaSeleccionada: FilaData2 | null = null;
 
   /**
    * Bandera para mostrar u ocultar el formulario.
@@ -85,9 +85,9 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    * Datos del catálogo de países.
    */
   public paisData: CatalogosSelect = {
-    labelNombre: 'País',
+    labelNombre: 'País*',
     required: true,
-    primerOpcion: 'Selecciona una opción',
+    primerOpcion: 'Seleccione una opción',
     catalogos: [],
   };
   /**
@@ -98,7 +98,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   /**
    * Método para manejar el cambio de selección de tipo de persona.
    */
-  selectedRows: Set<number> = new Set();
+  filaSeleccionadas: Set<number> = new Set();
 
   /**
    * Estado para verificar si los datos de respuesta están disponibles.
@@ -229,7 +229,8 @@ public coloniaData: CatalogosSelect = {
       .subscribe();
      
       this.getDestinatarioData();
-    this.createForm();
+  
+      this.createForm();
     this.getEntidadFederativaData();
     this.getAlcaldiaMunicipo();
     this.getColonia();
@@ -361,48 +362,74 @@ get selectedTipoPersona(): string | undefined {
       .getDestinatarioData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
-        this.tableData = data as unknown as FilaData2[];
+        const FORMATTED_DATA = (data as unknown as FilaData2[]).map((row) => ({
+          ...row,
+          datosDelTramiteRealizar: {
+            ...row.datosDelTramiteRealizar,
+            tipoPersona: row.datosDelTramiteRealizar.tipoPersona || 'moral', 
+          },
+        }));
+          this.solicitud290201Store.setDatosDeTabla(FORMATTED_DATA);
+          this.tableData = FORMATTED_DATA;
       });
   }
 
   /**
    * Método para manejar el envío del formulario.
    */
+  
   enEnviar(): void {
     const FORM_DATA = this.destinatarioForm.value;
-   if (!this.destinatarioForm.valid) {
-    this.destinatarioForm.markAllAsTouched();
-    return;
-  }
-    if (!FORM_DATA || Object.keys(FORM_DATA).length === 0) {
-      return;
-    }
-  
-    const PAIS_DATA_VALUE = this.paisData.catalogos.find(
-      (item: Catalogo) =>
-        String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.pais).trim()
-    )?.descripcion;
-  
-    FORM_DATA.datosDelTramiteRealizar.pais = PAIS_DATA_VALUE;
-  
-    if (this.selectedRow) {
-      const INDEX = this.tableData.indexOf(this.selectedRow);
-      if (INDEX !== -1) {
-        this.tableData[INDEX] = { ...FORM_DATA, id: this.selectedRow.id }; 
-      }
-    } else {
-      const NEW_ID = this.tableData.length > 0
-        ? Math.max(...this.tableData.map((row) => row.id || 0)) + 1
-        : 1;
-      this.tableData.push({ ...FORM_DATA, id: NEW_ID }); 
+
+    if (!this.destinatarioForm.valid) {
+        this.destinatarioForm.markAllAsTouched();
+        return;
     }
 
-    this.tableData = [...this.tableData]; 
-    this.changeDetectorRef.markForCheck();
-    this.destinatarioForm.reset();
-    this.esFormularioVisible = false;
-    this.selectedRow = null;
-  }
+    if (!FORM_DATA || Object.keys(FORM_DATA).length === 0) {
+        return;
+    }
+
+    const PAIS_DATA_VALUE = this.paisData.catalogos.find(
+        (item: Catalogo) =>
+            String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.pais).trim()
+    )?.descripcion;
+
+    FORM_DATA.datosDelTramiteRealizar.pais = PAIS_DATA_VALUE;
+
+    if (this.filaSeleccionada) {
+      const INDEX = this.tableData.findIndex((row) => row.id === this.filaSeleccionada?.id);
+      if (INDEX !== -1) {
+        this.tableData[INDEX] = { ...this.tableData[INDEX], ...FORM_DATA, id: this.filaSeleccionada.id };
+        this.tableData = [...this.tableData];
+      }
+  
+    } else {
+        const NEW_ID = this.tableData.length > 0
+            ? Math.max(...this.tableData.map((row) => row.id || 0)) + 1
+            : 1;
+
+        const NEW_ROW: FilaData2 = { ...FORM_DATA, id: NEW_ID };
+       
+
+        this.tableData = [...this.tableData, NEW_ROW];
+       }
+
+       this.changeDetectorRef.detectChanges();
+
+   
+      this.destinatarioForm.reset();
+      this.esFormularioVisible = false;
+      this.filaSeleccionada = null;
+      
+  
+const MODAL_ELEMENT = document.getElementById('tercerosRelacionadosModal');
+if (MODAL_ELEMENT) {
+    const MODAL_INSTANCE = new Modal(MODAL_ELEMENT);
+    MODAL_INSTANCE.hide();
+}
+
+}
  
  /**
  * Método para limpiar el formulario.
@@ -438,10 +465,13 @@ onLimpiar(): void {
    * @param item Fila seleccionada.
    * @param event Evento del checkbox.
    */
- onSelectedRowsChange(selectedRows: FilaData2[]): void {
+ onfilaSeleccionadasChange(filaSeleccionadas: FilaData2[]): void {
      
-     this.selectedRows = new Set(selectedRows.map((row) => row.id)); 
+     this.filaSeleccionadas = new Set(filaSeleccionadas.map((row) => row.id)); 
+     this.filaSeleccionada = filaSeleccionadas.length > 0 ? filaSeleccionadas[0] : null;
+
      this.esFormularioVisible = false; 
+
    
    }
   /**
@@ -457,27 +487,28 @@ onLimpiar(): void {
     if (!this.isPaisdatoscargados) {
       return;
     }
-    if (this.selectedRow) {
+    if (this.filaSeleccionada) {
       const PAIS_ID = this.paisData.catalogos.find(
         (item: Catalogo) =>
-          item.descripcion === this.selectedRow?.datosDelTramiteRealizar?.pais ||
-          String(item.id) === String(this.selectedRow?.datosDelTramiteRealizar?.pais)
+          item.descripcion === this.filaSeleccionada?.datosDelTramiteRealizar?.pais ||
+          String(item.id) === String(this.filaSeleccionada?.datosDelTramiteRealizar?.pais)
       )?.id;
 
 
       this.destinatarioForm.patchValue({
         datosDelTramiteRealizar: {
-          tipoPersona: this.selectedRow.datosDelTramiteRealizar.tipoPersona,
-          denominacion: this.selectedRow.datosDelTramiteRealizar.denominacion,
-          domicilio: this.selectedRow.datosDelTramiteRealizar.domicilio,
+          tipoPersona: this.filaSeleccionada.datosDelTramiteRealizar.tipoPersona || 'moral',
+          denominacion:this.filaSeleccionada.datosDelTramiteRealizar.denominacion,
+          domicilio: this.filaSeleccionada.datosDelTramiteRealizar.domicilio,
           pais: PAIS_ID || '', 
-          codigopostal: this.selectedRow.datosDelTramiteRealizar.codigopostal,
-          telefono: this.selectedRow.datosDelTramiteRealizar.telefono,
+          codigopostal: this.filaSeleccionada.datosDelTramiteRealizar.codigopostal,
+          telefono: this.filaSeleccionada.datosDelTramiteRealizar.telefono,
           correoelectronico:
-            this.selectedRow.datosDelTramiteRealizar.correoelectronico,
+            this.filaSeleccionada.datosDelTramiteRealizar.correoelectronico,
         },
       });
 
+      this.tipoPersonaSeleccionada = this.filaSeleccionada.datosDelTramiteRealizar.tipoPersona;
       this.esFormularioVisible = true;
     }
   
@@ -489,16 +520,29 @@ onLimpiar(): void {
  /**
  * Método para eliminar una fila seleccionada.
  */
- onDeleteSelectedRows(): void {
-  if (this.selectedRows.size > 0) {
+ onDeletefilaSeleccionadas(): void {
+  if (this.filaSeleccionadas.size > 0) {
 
        this.tableData = this.tableData.filter(
-      (row: { id: number }) => !this.selectedRows.has(row.id)
+      (row: { id: number }) => !this.filaSeleccionadas.has(row.id)
     );
-    this.selectedRows.clear();
+    this.filaSeleccionadas.clear();
     this.destinatarioForm.reset();
     this.esFormularioVisible = false;
   }
+}
+/**
+ * @method onCancelar
+ * @description Método para cerrar el modal de destinatarios y ocultar el formulario.
+ * @returns {void}
+ */
+onCancelar(): void {
+  const MODAL_ELEMENT = document.getElementById('destinatarioModalLabel');
+  if (MODAL_ELEMENT) {
+    const MODAL_INSTANCE = new Modal(MODAL_ELEMENT);
+    MODAL_INSTANCE.hide(); 
+  }
+  this.esFormularioVisible = false; 
 }
   /**
    * Método para manejar el clic en una fila de la tabla.
@@ -520,8 +564,9 @@ onLimpiar(): void {
         correoelectronico: rowData.datosDelTramiteRealizar.correoelectronico,
       },
     });
-    this.selectedRow = rowData;
+    this.filaSeleccionada = rowData;
     this.esFormularioVisible = true;
+    
   }
 
   /**
@@ -593,7 +638,25 @@ get isPaisInvalid(): boolean {
  * lo que permite que el formulario sea visible en la interfaz de usuario.
  */
 onAgregar(): void {
-  this.esFormularioVisible = true; 
+    this.esFormularioVisible = true;
+    this.destinatarioForm.reset();
+    this.destinatarioForm.patchValue({
+        datosDelTramiteRealizar: {
+            tipoPersona: '',
+            denominacion: '',
+            domicilio: '',
+            pais: '',
+            codigopostal: '',
+            telefono: '',
+            correoelectronico: '',
+        },
+    });
+
+    // Clear the selected row to ensure it's a new entry
+    this.filaSeleccionada = null;
+
+    // Trigger change detection to update the UI
+    this.changeDetectorRef.detectChanges();
 }
   /**
    * Método para establecer valores en el store.

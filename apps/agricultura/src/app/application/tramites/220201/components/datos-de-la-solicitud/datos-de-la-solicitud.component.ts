@@ -10,17 +10,17 @@ import { HttpClient } from '@angular/common/http';
 
 import { DatosForma, RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
 
-import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { Subject, debounceTime, map, takeUntil } from 'rxjs';
-import { ModalComponent } from '../../../../shared/components/modal/modal.component';
-import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
 import { FilaSolicitud, SolicitudData } from '../../models/220201/capturar-solicitud.model';
-import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
-import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
+import { Subject, debounceTime, map, takeUntil } from 'rxjs';
 import { AnimalesVivoContenedoraComponent } from '../animales-vivo-contenedora/animales-vivo-contenedora.component';
+import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
+import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { SubProductosContenedoraComponent } from '../sub-productos-contenedora/sub-productos-contenedora.component';
+import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
+import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
 
 /**
  * @fileoverview Componente para la gestión del formulario de datos de la solicitud.
@@ -697,10 +697,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     if (this.forma.valid) {
       return true;
     }
-    else {
-      this.forma.markAllAsTouched();
-      return false
-    }
+    this.forma.markAllAsTouched();
+    return false
   }
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.

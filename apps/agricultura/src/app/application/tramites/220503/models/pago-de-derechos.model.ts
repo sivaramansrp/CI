@@ -2,30 +2,36 @@
  * Interfaz que representa los datos del pago de derechos.
  */
 export interface PagoDeDerechos {
-  /** Indica si el pago no está exento. */
-  exentoPagoNo: string | number;
-
-  /** Indica si el pago está exento. */
-  exentoPagoSi: string;
-
-  /** Justificación en caso de exención de pago. */
+  /**
+   * Indica si el pago está exento (Sí/No).
+   */
+  exentoPago: string;
+  /**
+   * Justificación del motivo de exención (si aplica).
+   */
   justificacion: string;
-
-  /** Clave de referencia del pago. */
+  /**
+   * Clave de referencia para el pago.
+   */
   claveReferencia: string;
-
-  /** Cadena de dependencia asociada al pago. */
+  /**
+   * Cadena generada por la dependencia para pago.
+   */
   cadenaDependencia: string;
-
-  /** Nombre del banco donde se realizó el pago. */
-  banco: number;
-
-  /** Llave única de identificación del pago. */
+  /**
+   * Nombre del banco donde se realiza el pago.
+   */
+  banco: string;
+  /**
+   * Llave única para realizar el pago.
+   */
   llavePago: string;
-
-  /** Importe total del pago realizado. */
+  /**
+   * Monto del pago.
+   */
   importePago: string;
-
-  /** Fecha en la que se efectuó el pago. */
-  fetchapago: string;
+  /**
+   * Fecha en que se realizó el pago.
+   */
+  fechaPago: string;
 }

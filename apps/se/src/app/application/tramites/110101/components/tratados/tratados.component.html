@@ -1,5 +1,5 @@
-<ng-titulo titulo="Datos generales del solicitante" />
 @if (consultaState.parameter !== "READ_PROCEDURE") {
+  <ng-titulo titulo="Datos generales del solicitante" />
 <ng-alert [CONTENIDO]="alerta.MENSAJE_ALERTA"></ng-alert>
 <form [formGroup]="formularioTratados">
   <div class="row">
@@ -49,6 +49,7 @@
 }
 
 @if(consultaState.parameter === "READ_PROCEDURE"){
+  <ng-titulo titulo="País/bloque-tratado/acuerdo seleccionados por el solicitante" />
 <div class="col-md-12">
   <app-tabla-dinamica [configuracionTabla]="tablaSeleccionada" [datos]="tratadosTablaDatos"
     [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false">
