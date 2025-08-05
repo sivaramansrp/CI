@@ -1,24 +1,3 @@
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
-// import { SharedPagoDerechosComponent } from './shared-pago-derechos.component';
-
-// describe('SharedPagoDerechosComponent', () => {
-//   let component: SharedPagoDerechosComponent;
-//   let fixture: ComponentFixture<SharedPagoDerechosComponent>;
-
-//   beforeEach(async () => {
-//     await TestBed.configureTestingModule({
-//       imports: [SharedPagoDerechosComponent],
-//     }).compileComponents();
-
-//     fixture = TestBed.createComponent(SharedPagoDerechosComponent);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
-
-//   it('should create', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });
 
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
