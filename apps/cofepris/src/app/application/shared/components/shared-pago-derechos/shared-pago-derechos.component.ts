@@ -21,14 +21,13 @@ import { Subject } from 'rxjs';
  * styleUrl Ruta de los estilos CSS del componente.
  */
 @Component({
-  selector: 'app-pago-derechos',
+  selector: 'app-shared-pago-derechos',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, CatalogoSelectComponent, TituloComponent, InputFechaComponent, AlertComponent],
-  templateUrl: './pago-derechos.component.html',
-  styleUrl: './pago-derechos.component.scss',
+  templateUrl: './shared-pago-derechos.component.html',
+  styleUrl: './shared-pago-derechos.component.scss',
 })
-export class PagoDerechosComponent implements OnDestroy, OnInit {
-
+export class SharedPagoDerechosComponent {
   /** Indica si se debe mostrar la notificación de alerta en el componente. */
   @Input() mostrarNotificacionAlerta: boolean = false;
 

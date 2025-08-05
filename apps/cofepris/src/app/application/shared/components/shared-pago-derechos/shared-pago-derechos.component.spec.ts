@@ -1,3 +1,25 @@
+// import { ComponentFixture, TestBed } from '@angular/core/testing';
+// import { SharedPagoDerechosComponent } from './shared-pago-derechos.component';
+
+// describe('SharedPagoDerechosComponent', () => {
+//   let component: SharedPagoDerechosComponent;
+//   let fixture: ComponentFixture<SharedPagoDerechosComponent>;
+
+//   beforeEach(async () => {
+//     await TestBed.configureTestingModule({
+//       imports: [SharedPagoDerechosComponent],
+//     }).compileComponents();
+
+//     fixture = TestBed.createComponent(SharedPagoDerechosComponent);
+//     component = fixture.componentInstance;
+//     fixture.detectChanges();
+//   });
+
+//   it('should create', () => {
+//     expect(component).toBeTruthy();
+//   });
+// });
+
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { of, Subject } from 'rxjs';
@@ -6,15 +28,15 @@ import { AvisocalidadStore } from '../../estados/stores/aviso-calidad.store';
 import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
 import { FECHA_DE_PAGO } from '../../models/pago-derechos.model';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { PagoDerechosComponent } from './pago-derechos.component';
+import { SharedPagoDerechosComponent } from './shared-pago-derechos.component';
 
 const consultaioQuerySimulado = {
   selectConsultaioState$: of({ readonly: true }),
 };
 
 describe('ComponentePagoDerechos', () => {
-  let componente: PagoDerechosComponent;
-  let fixture: ComponentFixture<PagoDerechosComponent>;
+  let componente: SharedPagoDerechosComponent;
+  let fixture: ComponentFixture<SharedPagoDerechosComponent>;
   let servicioSimulado: any;
   let storeSimulado: any;
   let querySimulado: any;
@@ -38,7 +60,7 @@ describe('ComponentePagoDerechos', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, PagoDerechosComponent],
+      imports: [ReactiveFormsModule, SharedPagoDerechosComponent],
       providers: [
         FormBuilder,
         { provide: AvisoImportacionService, useValue: servicioSimulado },
@@ -48,7 +70,7 @@ describe('ComponentePagoDerechos', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PagoDerechosComponent);
+    fixture = TestBed.createComponent(SharedPagoDerechosComponent);
     componente = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -293,5 +315,6 @@ describe('ComponentePagoDerechos', () => {
     });
   });
 });
+
 
 
