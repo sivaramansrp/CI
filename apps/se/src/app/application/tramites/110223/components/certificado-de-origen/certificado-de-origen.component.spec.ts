@@ -133,19 +133,24 @@ describe('CertificadoDeOrigenComponent', () => {
   });
 
   it('should handle agregar logic', () => {
-    component.mercanciaForm.patchValue({
-      validacionMercanciaForm: {
-        fraccionMercanArancelaria: '123',
-        cantidad: 10,
-        unidadMedida: 'kg',
-        valordelamercancia: 100,
-        tipoFactura: 'Factura',
-        numeroFactura: '12345',
-        complementoDelaDescripcion: 'Test',
-        fecha: '2025-04-28',
-      },
+    const validacionMercanciaFormGroup = component.fb.group({
+      fraccionMercanArancelaria: ['123'],
+      cantidad: [10],
+      unidadMedida: ['kg'],
+      valordelamercancia: [100],
+      tipoFactura: ['Factura'],
+      numeroFactura: ['12345'],
+      complementoDelaDescripcion: ['Test'],
+      fecha: ['2025-04-28'],
     });
+
+    component.mercanciaForm.setControl(
+      'validacionMercanciaForm',
+      validacionMercanciaFormGroup
+    );
+
     component.agregar();
+
     expect(component.esMercanciaEnEdicion).toBe(true);
     expect(component.mercanciaSeleccionadasTablaData.length).toBe(1);
   });
