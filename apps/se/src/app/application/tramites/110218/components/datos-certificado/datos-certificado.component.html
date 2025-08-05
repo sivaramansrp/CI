@@ -4,8 +4,8 @@
         <form [formGroup]="datosDelCertificado" novalidate>
             <div class="row">
 
-                <div class="col-md-12">
-                    <label class="form-label" for="lugar">Lugar *:</label>
+                <div class="col-md-12 mb-4">
+                    <label class="form-label" for="lugar">Lugar*:</label>
                     <input type="text" class="form-control" id="lugar" placeholder="Tamaulipas 15 cl: centro"
                         formControlName="lugar"
                         [class.bg-white]="!datosDelCertificado.get('lugar')?.disabled"
@@ -15,10 +15,10 @@
                     <div class="invalid-feedback">Este campo es obligatorio.</div>
                 </div>
 
-                <div class="col-md-12">
+                <div class="col-md-12 mb-5">
                     <label class="form-label" for="observaciones">Observaciones:</label>
                     <textarea class="form-control custom-textarea" id="observaciones"
-                        placeholder="OTRAS OBSERVACIONES" formControlName="observaciones"
+                        placeholder="Este es un texto de prueba para el llenado de los formularios del sistema." formControlName="observaciones"
                         [class.bg-white]="!datosDelCertificado.get('observaciones')?.disabled"
                         [class.is-invalid]="datosDelCertificado.get('observaciones')?.touched && datosDelCertificado.get('observaciones')?.invalid"
                         (change)="setValorStore(datosDelCertificado,'observaciones')"
@@ -31,7 +31,7 @@
         </form>
 
     </div>
-    <h6>Mercancías seleccionadas</h6>
+    <label class="form-label mt-5" for="mercanciasseleccionadas">Mercancías seleccionadas</label>
     <app-tabla-dinamica
     [configuracionTabla]="arregloConfiguracionTabla"
     [datos]="datos || []"
@@ -47,4 +47,26 @@
         </button>
     </div>
 
+</div>
+
+
+<div class="modal fade custom-backdrop" id="mercanciasSeleccionadas" tabindex="-1"
+  aria-labelledby="mercanciasSeleccionadasLabel" data-bs-backdrop="static"
+  #mercanciasSeleccionadas>
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title mt-0">Modificar</h4>
+      </div>
+ 
+      <div class="modal-body">
+       <app-mercancias-seleccionadas-form></app-mercancias-seleccionadas-form>
+ 
+        <footer class="footer d-flex py-5 gap-3 justify-content-end">
+          <button type="button" class="btn btn-primary" (click)="modalCancelar()">Cancelar</button>
+          <button type="button" class="btn btn-primary">Modificar</button>
+        </footer>
+      </div>
+    </div>
+  </div>
 </div>
