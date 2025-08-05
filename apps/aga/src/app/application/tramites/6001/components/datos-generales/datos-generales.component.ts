@@ -228,18 +228,21 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
      * @returns {void}
      */
     public altaDeCuenta(): void {
-        this.sociedadNotificacion = {
-            tipoNotificacion: 'alert',
-            categoria: 'danger',
-            modo: 'action',
-            titulo: 'Error',
-            mensaje: 'Seleccione una sociedad.',
-            cerrar: false,
-            tiempoDeEspera: 2000,
-            txtBtnAceptar: 'Aceptar',
-            txtBtnCancelar: '',
-        };
-        this._registroCuentasBancariasSvc.cambiarComponente('AgregarCuenta');
+        if(this.selectedRowIndex === null) {
+            this.sociedadNotificacion = {
+                tipoNotificacion: 'alert',
+                categoria: 'danger',
+                modo: 'action',
+                titulo: 'Error',
+                mensaje: 'Selecciona una sociedad.',
+                cerrar: false,
+                tiempoDeEspera: 2000,
+                txtBtnAceptar: 'Aceptar',
+                txtBtnCancelar: '',
+            };
+        } else {
+            this._registroCuentasBancariasSvc.cambiarComponente('AgregarCuenta');
+        }
     }
 
 
@@ -312,7 +315,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
             categoria: 'danger',
             modo: 'action',
             titulo: 'Error',
-            mensaje: 'Seleccione un renglón.',
+            mensaje: 'Selecciona un renglón.',
             cerrar: false,
             tiempoDeEspera: 2000,
             txtBtnAceptar: 'Aceptar',
