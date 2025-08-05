@@ -28,7 +28,7 @@
        </div>
        <div class="modal-body">
          <div class="container"  *ngIf="esFormularioVisible">
-            <form [formGroup]="dataCafeForm" (ngSubmit)="onSubmit()">
+            <form [formGroup]="dataCafeForm" (ngSubmit)="enEnviar()">
              <ng-titulo titulo="Datos de café" />
             <ng-container formGroupName="datosDelTramiteRealizar"> 
          <div class="row">

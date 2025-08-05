@@ -5,17 +5,17 @@
   [configuracionTabla]="configuracionColumnasoli"
   [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
    [datos]="tableData"
-   (listaDeFilaSeleccionada)="onSelectedRowsChange($event)"
+   (listaDeFilaSeleccionada)="onfilaSeleccionadasChange($event)"
 
    >
 </app-tabla-dinamica>
 <div class="col-md-12 d-flex justify-content-end mt-3">
   <div class="btn-group">
           <button class="btn btn-primary me-3" type="button" *ngIf="!tableData?.length" (click)="onAgregar()" data-bs-toggle="modal" data-bs-target="#tercerosRelacionadosModal">Agregar</button>
-          @if(selectedRow){
+          @if(filaSeleccionada){
             <button class="btn btn-default  me-3" type="button"  
-   [disabled]="!selectedRow" (click)="enModificar()" data-bs-toggle="modal" data-bs-target="#tercerosRelacionadosModal">Modificar</button>
-    <button  class="btn btn-danger me-3" type="button" [disabled]="!selectedRow" (click)="onDeleteSelectedRows()">Eliminar</button>
+   [disabled]="!filaSeleccionada" (click)="enModificar()" data-bs-toggle="modal" data-bs-target="#tercerosRelacionadosModal">Modificar</button>
+    <button  class="btn btn-danger me-3" type="button" [disabled]="!filaSeleccionada" (click)="onDeletefilaSeleccionadas()">Eliminar</button>
           }
     
   </div>

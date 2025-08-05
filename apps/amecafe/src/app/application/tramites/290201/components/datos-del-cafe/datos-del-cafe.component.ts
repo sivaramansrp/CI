@@ -441,7 +441,7 @@ editingRowId: number | null = null;
  * Este método se ejecuta al enviar el formulario. Su propósito es procesar los datos ingresados
  * en el formulario, transformarlos según los catálogos correspondientes y agregarlos a la tabla de datos.
  */
-onSubmit(): void {
+enEnviar(): void {
 
   const OTRAS_CARACTERISTICAS_CONTROL = this.dataCafeForm.get('datosDelTramiteRealizar.otrasCaracteristicas');
   if (OTRAS_CARACTERISTICAS_CONTROL?.invalid || !OTRAS_CARACTERISTICAS_CONTROL?.value) {

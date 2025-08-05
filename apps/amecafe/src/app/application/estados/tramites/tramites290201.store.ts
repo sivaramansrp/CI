@@ -990,7 +990,7 @@ public setOtrasCaracteristicas(otrasCaracteristicas: string): void {
  * @description Actualiza el estado con los datos de la tabla proporcionados.
  * @param {FilaData2[]} tableData - Lista de datos de la tabla.
  */
-public setTableData(tableData: FilaData2[]): void {
+public setDatosDeTabla(tableData: FilaData2[]): void {
   this.update((state) => ({
     ...state,
     tableData
