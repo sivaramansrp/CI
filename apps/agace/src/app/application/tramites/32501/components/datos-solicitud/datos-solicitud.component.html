@@ -275,7 +275,7 @@
       <div class="col-md-4 mt-3">
         <app-catalogo-select
           formControlName="entidadFederativa"
-          [catalogo]="catalogosOpcionEntidadFederativa"
+          [catalogo]="opcionEntidadFederativa.catalogos"
           [label]="opcionEntidadFederativa.labelNombre"
           [required]="opcionEntidadFederativa.required"
           name="entidadFederativa"
@@ -289,7 +289,7 @@
       <div class="col-md-4 mt-3">
         <app-catalogo-select
           formControlName="delegacionMunicipio"
-          [catalogo]="catalogosOpcionDelegacionMunicipio"
+          [catalogo]="opcionDelegacionMunicipio.catalogos"
           [label]="opcionDelegacionMunicipio.labelNombre"
           [required]="opcionDelegacionMunicipio.required"
           name="delegacionMunicipio"
@@ -304,7 +304,7 @@
       <div class="col-md-4 mt-3">
         <app-catalogo-select
           formControlName="colonia"
-          [catalogo]="catalogosOpcionColonia"
+          [catalogo]="opcionColonia.catalogos"
           [label]="opcionColonia.labelNombre"
           [required]="opcionColonia.required"
           [isDisabled]="!formAviso.get('delegacionMunicipio')?.value"

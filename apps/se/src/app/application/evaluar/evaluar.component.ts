@@ -239,7 +239,6 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     } else {
       this.router.navigate([`/${this.guardarDatos?.department.toLowerCase()}/seleccion-tramite`]);
     }
-
     this.opcionesEvaluacion();
   }
 
@@ -255,7 +254,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
  */
   getDocumentosSolicitud(): void {
     const IDSOLICITUD = '202757440'
-    this.tabsSolicitudServiceTsService.getDocumentosSolicitud(IDSOLICITUD)
+    this.tabsSolicitudServiceTsService.getDocumentosSolicitud(this.tramite,IDSOLICITUD)
       .subscribe({
         next: (response) => {
           if (response.codigo === '00') {
@@ -282,7 +281,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
  */
   getTareasSolicitud(): void {
     const NUMFOLIOTRAMITE = '0201100100120242540000372'
-    this.tabsSolicitudServiceTsService.getTareasSolicitud(NUMFOLIOTRAMITE)
+    this.tabsSolicitudServiceTsService.getTareasSolicitud(this.tramite,NUMFOLIOTRAMITE)
       .subscribe({
         next: (response) => {
           if (response.codigo === '00') {
@@ -307,7 +306,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    */
   getAcusesResolucion(): void {
     const NUMFOLIOTRAMITE = '0402600100420214006000153'
-    this.tabsSolicitudServiceTsService.getAcusesResolucion(NUMFOLIOTRAMITE)
+    this.tabsSolicitudServiceTsService.getAcusesResolucion(this.tramite, NUMFOLIOTRAMITE)
       .subscribe({
         next: (response) => {
           if (response.codigo === '00') {

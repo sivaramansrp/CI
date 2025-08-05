@@ -1,9 +1,8 @@
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AlertComponent, Catalogo, InputFecha, InputFechaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { AvisocalidadStore, SolicitudState } from '../../estados/stores/aviso-calidad.store';
-import { Catalogo, InputFecha, InputFechaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { map, takeUntil } from 'rxjs';
-import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { AvisoImportacionService } from '../../services/parmiso-importacion.service';
 import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
@@ -11,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DEBES_CAPTURAR } from '../../constantes/pago-de-derechos.enum';
 import { FECHA_DE_PAGO } from '../../models/pago-derechos.model';
+import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 import { Subject } from 'rxjs';
 /**
  * Component Define el componente de Angular.
@@ -21,13 +21,21 @@ import { Subject } from 'rxjs';
  * styleUrl Ruta de los estilos CSS del componente.
  */
 @Component({
-  selector: 'app-pago-derechos',
+  selector: 'app-shared-pago-derechos',
   standalone: true,
-  imports: [AlertComponent,CommonModule, FormsModule, ReactiveFormsModule, CatalogoSelectComponent, TituloComponent, InputFechaComponent],
-  templateUrl: './pago-Derechos.component.html',
-  styleUrl: './pago-Derechos.component.scss',
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, CatalogoSelectComponent, TituloComponent, InputFechaComponent, AlertComponent],
+  templateUrl: './shared-pago-derechos.component.html',
+  styleUrl: './shared-pago-derechos.component.scss',
 })
-export class PagoDerechosComponent implements OnDestroy, OnInit {
+export class SharedPagoDerechosComponent {
+  /** Indica si se debe mostrar la notificación de alerta en el componente. */
+  @Input() mostrarNotificacionAlerta: boolean = false;
+
+  /**
+   * Representa el tipo de alerta que se mostrará.
+   * El valor es típicamente una cadena que indica el estilo de alerta, como 'alert-warning'.
+   */
+  public infoAlert = 'alert-warning';
   /**
    * property {FormGroup} derechosForm - Formulario reactivo para capturar los datos del pago de derechos.
    */
@@ -70,11 +78,7 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
    * Este mensaje se muestra al usuario para recordarle que debe completar todos los campos necesarios.
    */
   public DEBES_CAPTURAR = DEBES_CAPTURAR.CONTENIDO; 
-  /**
-   * property infoAlert
-   * description Clase CSS para mostrar alertas informativas.
-   */
-  public infoAlert = 'alert-info';
+
   /**
    * constructor
    * param {FormBuilder} fb - Constructor para formularios reactivos.
@@ -88,6 +92,7 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
     private avisocalidadStore: AvisocalidadStore, // Inyección del store para manejar el estado.
     private avisocalidadQuery: AvisocalidadQuery,// Inyección de la query para consultar el estado.
     private consultaioQuery: ConsultaioQuery, // Inyección de la query para consultar datos de la aplicación.
+    private servicioDeFormularioService: ServicioDeFormularioService,
   ) {
     //Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
@@ -143,7 +148,7 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
       cadenaDependencia: [this.solicitudState?.cadenaDependencia], // Campo cadenaDependencia.
       banco: [this.solicitudState?.banco, Validators.required], // Campo banco.
       llavePago: [this.solicitudState?.llavePago], // Campo llavePago.
-      fechaPago: [this.solicitudState?.fechaPago, Validators.required], // Campo fechaPago.
+      fechaDePago: [this.solicitudState?.fechaPago, Validators.required], // Campo fechaDePago.
       importePago: [
         this.solicitudState?.importePago,
         [
@@ -153,6 +158,10 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
       ],
     });
 
+    if (this.solicitudState?.fechaPago) {
+      this.derechosForm.get('fechaDePago')?.setValue(this.solicitudState.fechaPago);
+    }
+
     /*
     * Si el formulario está en modo solo lectura, deshabilita todos los campos.
     * En caso contrario, habilita los campos para permitir la edición.
@@ -160,17 +169,16 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
     */
     if (this.esFormularioSoloLectura && this.derechosForm) {
       this.derechosForm.disable();
-    } else {
-      this.derechosForm.enable();
     }
 
+    this.servicioDeFormularioService.registerForm('derechosForm', this.derechosForm);
   }
 /**
  * Obtiene el control del formulario 'importePago' del formulario 'derechosForm'.
  * 
  * @returns {AbstractControl} El control 'importePago' del formulario.
  */
-  get importePago() {
+  get importePago(): AbstractControl | null {
     return this.derechosForm.get('importePago');
   }
   /**
@@ -216,6 +224,10 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
     } else {
       console.error(`Store method '${String(metodoNombre)}' is not a function`);
     }
+
+    this.servicioDeFormularioService.setFormValue('derechosForm', {
+        [campo]: VALOR as string | object,
+      });
   }
 
 
@@ -234,7 +246,7 @@ public fechaFuturaSeleccionada = false;
   /**
    * Actualiza el campo de fecha de pago en el formulario y en el estado global.
    *
-   * @param nuevo_fechaPago Nueva fecha de pago seleccionada.
+   * @param nuevo_fechaDePago Nueva fecha de pago seleccionada.
    */
   cambioFechaDePago(nuevo_valor: string): void { 
    this.derechosForm.patchValue({
@@ -270,20 +282,20 @@ public fechaFuturaSeleccionada = false;
    */
   esInvalido(nombreControl: string): boolean {
     if (
-      nombreControl === 'fechaPago' &&
-      this.derechosForm.get('fechaPago')?.value !== '' &&
-      this.derechosForm.get('fechaPago')?.value !== null
+      nombreControl === 'fechaDePago' &&
+      this.derechosForm.get('fechaDePago')?.value !== '' &&
+      this.derechosForm.get('fechaDePago')?.value !== null
     ) {
-      this.esFechaPasada(this.derechosForm.get('fechaPago')?.value);
+      this.esFechaPasada(this.derechosForm.get('fechaDePago')?.value);
       if (!this.esFechaValida) {
         this.derechosForm
-          .get('fechaPago')
+          .get('fechaDePago')
           ?.setErrors({ esFechaPasada: true });
         return true;
       }
 
       this.derechosForm
-        .get('fechaPago')
+        .get('fechaDePago')
         ?.setErrors({ esFechaPasada: false });
       return false;
     }
@@ -328,8 +340,8 @@ public fechaFuturaSeleccionada = false;
 
 
   /**
-   * method ngOnDestroy
-   * description Método para limpiar las suscripciones al destruir el componente.
+   * @method ngOnDestroy
+   * @description Método para limpiar las suscripciones al destruir el componente.
    */
   ngOnDestroy(): void {
     this.destroyed$.next(); // Emite un valor para finalizar las suscripciones.

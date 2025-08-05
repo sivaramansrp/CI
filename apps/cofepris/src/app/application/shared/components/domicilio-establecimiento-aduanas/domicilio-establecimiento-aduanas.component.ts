@@ -12,6 +12,8 @@ import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal
 import { DatosDomicilioService } from '../../../tramites/260514/services/permiso-importacion.service';
 import { InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
+import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 /**
  * Representa la estructura de la respuesta de una tabla.
@@ -72,7 +74,8 @@ export interface MercanciasTabla {
     CatalogoSelectComponent,
     TablaDinamicaComponent,
     CrosslistComponent,
-    InputCheckComponent
+    InputCheckComponent,
+    TooltipModule
   ],
   templateUrl: './domicilio-establecimiento-aduanas.component.html',
   styleUrls: ['./domicilio-establecimiento-aduanas.component.css'],
@@ -120,7 +123,8 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     private avisocalidadQuery: AvisocalidadQuery,
     private service: DatosDomicilioLegalService,
     private consultaioQuery: ConsultaioQuery,
-    private datosDomicilioService: DatosDomicilioService
+    private datosDomicilioService: DatosDomicilioService,
+    private servicioDeFormularioService: ServicioDeFormularioService,
   ) {
     // Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
@@ -133,6 +137,11 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
    * Referencia al elemento del DOM que representa el modal para agregar agentes de mercancías.
    */
   modalAddAgentMercancias!: ElementRef;
+
+  /**
+   * Referencia al modal para agregar agentes de mercancías.
+   */
+  @ViewChild('modalAddAgentScian', { static: false }) modalAddAgentScian!: ElementRef;
   /**
    * Grupo de formularios principal.
    * @property {FormGroup} domicilio
@@ -170,6 +179,11 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
    * Control de formulario para la aduanasDeEntradaFechaSeleccionada.
    */
   estado: Catalogo[] = [];
+
+  /**
+   * Control de formulario para la aduanasDeEntradaFechaSeleccionada.
+   */
+  public estadoDescripcion: Catalogo[] = [];
 
   /**
    * Lista de paises.
@@ -254,12 +268,15 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
    */
   tieneSeleccionadoBtnClicked: boolean = false;
 
+  /** Etiqueta que se muestra para el campo de número de licencia sanitaria en el formulario. */
+  public licenseLabel: string = "No. de licencia sanitaria*:"
+
   /**
    * Etiqueta de la lista de fechas.
    * */
   public aduanasDeLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'Aduanas de entrada disponibles',
-    derecha: 'Aduanas de entrada seleccionadas*',
+    tituluDeLaIzquierda: 'Aduanas de entrada disponibles:',
+    derecha: 'Aduanas de entrada seleccionadas*:',
   };
 
   /**
@@ -320,7 +337,8 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
       .subscribe()
 
     this.obtenerEstadoList();
-    // this.obtenerTablaDatos();
+    this.obtenerEstadoDescripcionList();
+    this.obtenerTablaDatos();
     this.obtenerMercanciasDatos();
     this.configurarGrupoForm(); // Configura el grupo de formularios con los valores iniciales.
 
@@ -381,7 +399,7 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
      */
     this.formAgente = this.fb.group({
       claveScianModal: [this.solicitudState?.claveScianModal, Validators.required],
-      claveDescripcionModal: [this.solicitudState?.claveDescripcionModal],
+      claveDescripcionModal: [{value: this.solicitudState?.claveDescripcionModal, disabled: true}],
     });
 
     /** 
@@ -410,16 +428,16 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     * En caso contrario, habilita los campos para permitir la edición.
     * Esto asegura que el formulario refleje correctamente el estado de solo lectura.
     */
-    if ((this.esFormularioSoloLectura && this.domicilio && this.formAgente && this.formMercancias) || !this.tieneSeleccionadoBtnClicked) {
+    if ((this.esFormularioSoloLectura && this.domicilio && this.formAgente && this.formMercancias)) {
       this.domicilio.disable();
-      this.formAgente.disable();
-      this.formMercancias.disable();
-
-    } else {
-      this.domicilio.enable();
-      this.formAgente.enable();
-      this.formMercancias.enable();
     }
+
+    if (!this.esFormularioSoloLectura && !this.tieneSeleccionadoBtnClicked) {
+      this.domicilio.disable();
+      this.domicilio.get('licenciaSanitaria')?.enable();
+    }
+
+    this.servicioDeFormularioService.registerForm('domicilioForm', this.domicilio);
   }
   /**
    * Botones de acción disponibles para gestionar las listas de fechas.
@@ -428,22 +446,22 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     {
       btnNombre: 'Agregar todos',
       class: 'btn-primary',
-      funcion: (): void => this.crossList.toArray()[0].agregar('t'),
+      funcion: (): void => this.crossList.forEach(cmp => cmp.agregar('t')),
     },
     {
       btnNombre: 'Agregar selección',
       class: 'btn-default',
-      funcion: (): void => this.crossList.toArray()[0].agregar(''),
+      funcion: (): void => this.crossList.forEach(cmp => cmp.agregar('')),
     },
     {
       btnNombre: 'Restar selección',
       class: 'btn-danger',
-      funcion: (): void => this.crossList.toArray()[0].quitar(''),
+      funcion: (): void => this.crossList.forEach(cmp => cmp.quitar('')),
     },
     {
       btnNombre: 'Restar todos',
       class: 'btn-default',
-      funcion: (): void => this.crossList.toArray()[0].quitar('t'),
+      funcion: (): void => this.crossList.forEach(cmp => cmp.quitar('t')),
     },
   ];
 
@@ -456,7 +474,20 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
       .getObtenerEstadoList()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data): void => {
-        this.estado = data?.data;
+        this.estado = data;
+      });
+  }
+
+  /**
+   * Método para obtener el valor de la fecha seleccionada.
+   * @param event
+   */
+  obtenerEstadoDescripcionList(): void {
+    this.service
+      .getObtenerEstadoDescripcionList()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.estadoDescripcion = data;
       });
   }
 
@@ -468,7 +499,8 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
       .getObtenerTablaDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data): void => {
-        this.nicoTablaDatos = data?.data;
+        const DATOS = Array.isArray(data?.data) ? data.data : [data.data];
+        this.nicoTablaDatos = [...this.nicoTablaDatos, ...DATOS];
       });
   }
 
@@ -506,20 +538,29 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
    * @param {Event} event - Evento de cambio del dropdown.
    */
   onClaveScianChange(event: Event): void {
-    const SELECTED_VALUE = (event.target as HTMLSelectElement).value;
-    const SELECTED_OPTION = this.estado.find((item) => item.id === Number(SELECTED_VALUE));
-
-    if (SELECTED_OPTION) {
-      this.formAgente.patchValue({
-        claveDescripcionModal: SELECTED_OPTION.descripcion,
-      });
+    if (event) {
+      this.formAgente.get('claveDescripcionModal')?.setValue(this.estadoDescripcion?.[0].id);
     }
   }
+  
   /**
    * Abre el modal SCIAN.
    */
   abrirModalMercancia(): void {
-    this.modalInstance.show();
+    if (this.modalAddAgentMercancias) {
+      this.modalInstance = new Modal(this.modalAddAgentMercancias.nativeElement);
+      this.modalInstance.show();
+    }
+  }
+
+  /**
+   * Abre el modal SCIAN.
+   */
+  abrirModalScian(): void {
+    if (this.modalAddAgentScian) {
+      this.modalInstance = new Modal(this.modalAddAgentScian.nativeElement);
+      this.modalInstance.show();
+    }
   }
 
   /**
@@ -546,22 +587,64 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
   guardarScian(): void {
     if (this.formAgente.valid) {
       const NUEVO_DATO: NicoInfo = {
-        clave_Scian: this.formAgente.get('claveScianModal')?.value,
-        descripcion_Scian: this.formAgente.get('claveDescripcionModal')?.value,
+        clave_Scian: DomicilioEstablecimientoAduanasComponent.obtenerDescripcion(this.estado, this.formAgente.get('claveScianModal')?.value),
+        descripcion_Scian: DomicilioEstablecimientoAduanasComponent.obtenerDescripcion(this.estadoDescripcion, this.formAgente.get('claveDescripcionModal')?.value),
       };
-      this.nicoTablaDatos.push(NUEVO_DATO);
+      this.nicoTablaDatos = [...this.nicoTablaDatos, NUEVO_DATO];
       this.formAgente.reset();
       this.cerrarModalScian();
+    } else {
+      this.formAgente.markAllAsTouched();
     }
-
-    this.formMercancias.get('fraccionArancelaria')?.valueChanges.subscribe((valor: string) => {
-      const MATCHED = this.fraccionesCatalogo.find(item =>
-        item.fraccion.startsWith(valor)
-      );
-      const DESCRIPCION = MATCHED ? MATCHED.descripcion : '';
-      this.formMercancias.get('descripcionFraccion')?.setValue(DESCRIPCION);
-    });
   }
+
+  /**
+ * Agrega una nueva mercancía a la tabla si el formulario es válido.
+ * Si el formulario no es válido, marca todos los campos como tocados para mostrar los errores.
+ */
+  agregarMercancia(): void {
+    if (this.formMercancias.valid) {
+      const DATOS = {
+        nombreComercial: this.formMercancias.get('nombreComercial')?.value,
+        nombreComun: this.formMercancias.get('nombreComun')?.value,
+        nombreCientifico: this.formMercancias.get('nombreCientifico')?.value,
+        porcentajeConcentracion: this.formMercancias.get('porcentajeConcentracion')?.value,
+        clasificacionToxicologica: this.formMercancias.get('clasificacionToxicologica')?.value,
+        objetoImportacion: this.formMercancias.get('objetoImportacion')?.value,
+        fraccionArancelaria: this.formMercancias.get('fraccionArancelaria')?.value,
+        descripcionFraccion: this.formMercancias.get('descripcionFraccion')?.value,
+        unidadMedidaTarifa: 'VALOR FICITIO',
+        cantidadUmt: this.formMercancias.get('cantidadUMT')?.value,
+        cantidadUmc: this.formMercancias.get('cantidadUMC')?.value,
+        paisProduccionIngredienteActivo: this.formMercancias.get('')?.value,
+        paisElaboracionProducto: this.formMercancias.get('')?.value,
+        paisProcedenciaUltimoPuerto: this.formMercancias.get('')?.value,
+        paisOrigen: 'VALOR FICITIO',
+        numeroRegistroSanitario: 'VALOR FICITIO',
+        numeroCas: this.formMercancias.get('numerocas')?.value,
+        estadoFisico: this.formMercancias.get('estadofisico')?.value,
+        usoEspecifico: this.formMercancias.get('usoEspecifico')?.value,
+        umc: this.formMercancias.get('UMC')?.value,
+      };
+      this.mercanciasTablaDatos = [...this.mercanciasTablaDatos, DATOS];
+      this.formMercancias.reset();
+      this.modalInstance.hide();
+    } else {
+      this.formMercancias.markAllAsTouched();
+    }
+  }
+
+  /**
+ * @method obtenerDescripcion
+ * @description
+ * Obtiene la descripción de la fracción arancelaria seleccionada en el formulario dinámico.
+ * @returns {string} Descripción de la fracción arancelaria seleccionada o una cadena vacía si no existe.
+ */
+  public static obtenerDescripcion(array: Catalogo[], id: string): string {
+    const DESCRIPCION = array.find((ele: Catalogo) => Number(ele.id) === Number(id))?.descripcion;
+    return DESCRIPCION ?? '';
+  }
+
   /**
     * @method cerrarModalScian
     * @description Oculta el modal relacionado con el catálogo SCIAN.
@@ -580,8 +663,16 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
  * @param metodoNombre Nombre del método del store que se invocará.
  */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof AvisocalidadStore): void {
+    if (campo === 'avisoCheckbox' && form.get(campo)?.value) {
+      this.licenseLabel = "No. de licencia sanitaria:"
+    } else if (campo === 'avisoCheckbox' && !form.get(campo)?.value) {
+      this.licenseLabel = "No. de licencia sanitaria*:"
+    }
     const VALOR = form.get(campo)?.value;
     (this.avisocalidadStore[metodoNombre] as (value: string | number) => void)(VALOR);
+    this.servicioDeFormularioService.setFormValue('domicilioForm', {
+        [campo]: VALOR,
+      });
   }
 
   /** * Método que se ejecuta al enviar el formulario de domicilio.
@@ -595,12 +686,10 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
    * Actualiza el estado del store con los valores del formulario de domicilio.
    */
   eliminarMercancia(): void {
-    this.seleccionados.forEach(row => {
-      const INDEX = this.mercanciasTablaDatos.indexOf(row);
-      if (INDEX > -1) {
-        this.mercanciasTablaDatos.splice(INDEX, 1);
-      }
-    });
+    const ID = this.seleccionados.map(item => item.nombreComercial);
+    this.mercanciasTablaDatos = this.mercanciasTablaDatos.filter(
+      item => !ID.includes(item.nombreComercial)
+    );
     this.seleccionados = [];
   }
   /**
@@ -659,6 +748,7 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     this.formMercancias.get('descripcionFraccion')?.setValue('Fracción válida');
     this.formMercancias.get('UMT')?.setValue('KG');
   }
+
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
    * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.

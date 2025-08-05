@@ -91,19 +91,25 @@ export const API_GET_DICTAMEN = `sat-t130118/solicitud/${IDSOLICITUDDICTAMEN}/di
 export const API_POST_GUARDAR_DICTAMEN = `sat-t130118/tramite/${NUMFOLIOTRAMITE}/dictamen/generar/guardar`;
 
 /**
+ * Tramite que se utilizará en las consultas.
+ * Este valor debe ser reemplazado por el tramite correspondiente.
+ */
+export const TRAMITE= '{tramite}';
+
+/**
  * API para Consultar documentos de solicitud del tramite 130118.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitudes/consulta-documentos-solicitud
  */
-export const API_GET_SOLICITUD_DOCUMENTOS = `sat-t130118/solicitud/${IDSOLICITUD}/documentos`;
+export const API_GET_SOLICITUD_DOCUMENTOS = `sat-t${TRAMITE}/solicitud/${IDSOLICITUD}/documentos`;
 
 /**
  * API para Consultar tareas de solicitud del tramite 130118.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitudes/get-tareas-tramite 
  */
-export const API_GET_TAREAS_DOCUMENTOS = `sat-t130118/tramite/${NUMFOLIOTRAMITE}/bitacora`;
+export const API_GET_TAREAS_DOCUMENTOS = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/bitacora`;
 
 /**
  * API para Consultar acuses de resolución del tramite 130118.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Acuse/consulta-acuse-resoluciones-funcionario
  */
-export const API_GET_ACUSES_RESOLUCION = `sat-t130118/tramite/${NUMFOLIOTRAMITE}/funcionario/acuses-resoluciones`;
+export const API_GET_ACUSES_RESOLUCION = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/funcionario/acuses-resoluciones`;

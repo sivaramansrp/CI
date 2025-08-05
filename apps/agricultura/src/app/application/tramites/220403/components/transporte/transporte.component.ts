@@ -200,11 +200,6 @@ export class TransporteComponent implements OnInit, OnDestroy {
     if (this.formulario.get('transporte')?.valid) {
       const VALIDA = this.formulario.get('transporte')?.valid ? true : false;
       this.tramite220403store.setTransporteValidada(VALIDA);
-      this.exportaccionAcuicolaServcios.actualizarFormaValida();
-    }
-    else{
-      this.seccionStore.establecerSeccion([true]);
-      this.seccionStore.establecerFormaValida([false]);
     }
   });
 
