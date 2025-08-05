@@ -19,7 +19,7 @@
       type="button" (click)="onAgregar()" data-bs-toggle="modal" data-bs-target="#datosCafeModal">Agregar</button>
    </div>
 </div>
-<div class="modal fade" id="datosCafeModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="datosCafeModalLabel" aria-hidden="true">
+<div class="modal fade" id="datosCafeModal" tabindex="-1" aria-labelledby="datosCafeModalLabel" aria-hidden="true">
    <div class="modal-dialog modal-xl custom-modal-size">
      <div class="modal-content">
        <div class="modal-header">
@@ -28,7 +28,7 @@
        </div>
        <div class="modal-body">
          <div class="container"  *ngIf="esFormularioVisible">
-            <form [formGroup]="dataCafeForm" (ngSubmit)="onSubmit()">
+            <form [formGroup]="dataCafeForm" (ngSubmit)="enEnviar()">
              <ng-titulo titulo="Datos de café" />
             <ng-container formGroupName="datosDelTramiteRealizar"> 
          <div class="row">
@@ -471,7 +471,7 @@
                       (change)="setValoresStore(datosDelTramiteRealizar,'observaciones','setObservaciones')"
                       [disabled]="esFormularioSoloLectura"></textarea>
                       @if(isObservacionesMaxLengthExceeded){
-                        <small >
+                        <small class="text-danger">
                           Por favor, no escribas más de 250 caracteres.
                         </small>
                       }
@@ -482,10 +482,10 @@
      </div>  
      <div class="col-md-12 d-flex justify-content-end">      
       <div class="btn-group" style="margin-bottom: 1rem;"> 
-        <button class="btn btn-danger me-2"
+        <button class="btn btn-default me-2"
               type="button" data-bs-dismiss="modal">Cancelar</button>
               <button class="btn btn-primary me-2"
-              type="submit" data-bs-dismiss="modal">Agregar</button>
+              type="submit" >Agregar</button>
           </div>    
          </div>
           </ng-container>
