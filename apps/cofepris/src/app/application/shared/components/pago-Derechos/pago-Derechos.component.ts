@@ -341,8 +341,8 @@ public fechaFuturaSeleccionada = false;
 
 
   /**
-   * method ngOnDestroy
-   * description Método para limpiar las suscripciones al destruir el componente.
+   * @method ngOnDestroy
+   * @description Método para limpiar las suscripciones al destruir el componente.
    */
   ngOnDestroy(): void {
     this.destroyed$.next(); // Emite un valor para finalizar las suscripciones.

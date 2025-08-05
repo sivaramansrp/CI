@@ -7,6 +7,7 @@ import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
 import { FECHA_DE_PAGO } from '../../models/pago-derechos.model';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { PagoDerechosComponent } from './pago-derechos.component';
+
 const consultaioQuerySimulado = {
   selectConsultaioState$: of({ readonly: true }),
 };
