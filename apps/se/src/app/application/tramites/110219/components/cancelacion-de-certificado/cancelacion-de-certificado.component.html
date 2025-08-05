@@ -6,7 +6,7 @@
     <ng-titulo titulo="Buscar certificado de origen" />
     <div class="row mt-5">
       <div class="col-md-4">
-        <label>Número de certificado de origen*:</label>
+        <label>Número de certificado de origen<span [ngClass]="validacionForm.get('numeroCertificado')?.invalid && validacionForm.get('numeroCertificado')?.touched ? 'text-danger' : ''">*</span>:</label>
         <input
           type="text"
           required="true"
