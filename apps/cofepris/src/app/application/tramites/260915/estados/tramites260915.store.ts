@@ -27,6 +27,8 @@ export interface Solicitud260915State {
   primerApellido: string;
   /** Segundo apellido de la persona */
   segundoApellido: string;
+  /** RFC del responsable sanitario */
+  rfcdelResponsableSanitario: string;
   /** Denominación o razón social */
   denominacion: string;
   /** País de residencia */
@@ -149,6 +151,8 @@ export function createInitialSolicitudState(): Solicitud260915State {
     primerApellido: '',
     /** Segundo apellido de la persona */
     segundoApellido: '',
+    /** RFC del responsable sanitario */
+    rfcdelResponsableSanitario: '',
     /** Denominación o razón social */
     denominacion: '',
     /** País de residencia */

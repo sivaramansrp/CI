@@ -111,7 +111,7 @@ export const CONFIGURACION_COLUMNAS_SOLI: ConfiguracionColumna<FilaData>[] = [
   },
   {
     /** Configuración de la columna para la descripción del S.C.I.A.N. */
-    encabezado: 'Description del S.C.I.A.N',
+    encabezado: 'Descripción del S.C.I.A.N.',
     clave: (fila) => fila.claveScianG.descripcionDelScian,
     orden: 2,
   },

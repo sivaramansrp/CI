@@ -1,5 +1,5 @@
 import { ADUANA_DATA, CLASIFICACION_PRODUCTO_DATA, CLAVE_SCIAN_DATA, DESCRIPCION_SCIAN_DATA, ESPECIFICAR_DATA, ESTADO_DATA, ESTADO_FISICO_DATA, REGIMEN_AL_QUE_DATA, TIPO_PRODUCTO_DATA } from '../../constants/catalogs.enum';
-import { Catalogo, InputFecha, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Catalogo, InputFecha, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, REGEX_CORREO_ELECTRONICO_EXPORTADOR, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
@@ -13,12 +13,11 @@ import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud260915State, Solicitud260915Store } from '../../estados/tramites260915.store';
 import { CommonModule } from '@angular/common';
 
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 
 import { CrosslistComponent } from '@libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
 
 import { DatosEmpresaComponent } from '../datos-empresa/datos-empresa.component';
-import { InputFechaComponent } from '@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
 
 import { InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
@@ -27,6 +26,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Solicitud260915Query } from '../../estados/tramites260915.query';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 /**
  * Componente para gestionar los datos de la solicitud.
@@ -34,7 +34,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule,InputRadioComponent,TituloComponent,CatalogoSelectComponent,TablaDinamicaComponent,InputRadioComponent,InputFechaComponent,CrosslistComponent,InputCheckComponent,NotificacionesComponent,DatosEmpresaComponent],
+  imports: [CommonModule,ReactiveFormsModule,InputRadioComponent,TituloComponent,CatalogoSelectComponent,TablaDinamicaComponent,InputRadioComponent,CrosslistComponent,InputCheckComponent,NotificacionesComponent,DatosEmpresaComponent,TooltipModule],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrls: ['./datos-de-la-solicitud.component.scss'],
 })
@@ -87,6 +87,8 @@ export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
 
   /** Referencia al modal de alerta */
   @ViewChild('modalAlerta') modalElement!: ElementRef;
+
+  @ViewChild('agreagarClaveScian') agreagarClaveScianElemento!: ElementRef;
 
 /** 
  * Configuración para la notificación actual.
@@ -220,9 +222,7 @@ public estadoFisicoData = ESTADO_FISICO_DATA;
       this.createForm();
       this.createclaveScianForm();
 
-       setTimeout(() => {
-      this.changeEvent();
-    }, 0);
+   
   }
     
   }
@@ -243,9 +243,7 @@ public estadoFisicoData = ESTADO_FISICO_DATA;
       this.clavaScianForm.enable();
       this.datosDelTramiteRealizar.enable();
       
-       setTimeout(() => {
-      this.changeEvent();
-    }, 0);
+      
     }
   }
 
@@ -306,9 +304,9 @@ createForm(): void{
       )
       .subscribe();
   this.dataDeLaSolicitudForm = this.fb.group({
-      descripcionFraccionArancelaria: [this.dataDeLaSolicitudState?.descripcionFraccionArancelaria, Validators.required],
+      descripcionFraccionArancelaria: [{value: this.dataDeLaSolicitudState?.descripcionFraccionArancelaria, disabled: true}],
       cantidadUMT:[this.dataDeLaSolicitudState?.cantidadUMT, Validators.required],
-      umt:[this.dataDeLaSolicitudState?.descripcionFraccionArancelaria, Validators.required],
+      umt:[{value: this.dataDeLaSolicitudState?.descripcionFraccionArancelaria, disabled: true}],
       cantidadUMC:[this.dataDeLaSolicitudState?.cantidadUMC, Validators.required],
       umc:[this.dataDeLaSolicitudState?.umc, Validators.required],
       tipoProducto: [this.dataDeLaSolicitudState?.tipoProducto, Validators.required],
@@ -330,8 +328,15 @@ createForm(): void{
           disabled: true 
         }
       ],
+      rfcdelResponsableSanitario:[this.dataDeLaSolicitudState?.rfcdelResponsableSanitario],
       denominacion: [this.dataDeLaSolicitudState?.denominacion, Validators.required],
-      correoElectronico: [this.dataDeLaSolicitudState?.correoElectronico, Validators.required],
+      correoElectronico: [
+      this.dataDeLaSolicitudState?.correoElectronico, 
+        [
+          Validators.required, 
+          Validators.pattern(REGEX_CORREO_ELECTRONICO_EXPORTADOR)
+        ]
+      ],
       codigopostal: [this.dataDeLaSolicitudState?.codigopostal, Validators.required],
       estado: [this.dataDeLaSolicitudState?.estado, Validators.required],
       municipoyalcaldia: [this.dataDeLaSolicitudState?.municipoyalcaldia, Validators.required],
@@ -358,9 +363,7 @@ createForm(): void{
     }),
    
   });
-    setTimeout(() => {
-    this.changeEvent();
-  }, 0);
+   
 }
 
 /**
@@ -433,7 +436,8 @@ eliminarPedimento(borrar: boolean): void {
     cerrar: false,
     tiempoDeEspera: 2000,
     txtBtnAceptar: 'Aceptar',
-    txtBtnCancelar: 'Cancelar',
+    txtBtnCancelar: '',
+    tamanioModal: 'modal-sm',
   };
 }
  
@@ -609,7 +613,12 @@ onAgregar(): void{
   
     /** Cancela la acción de agregar clave SCIAN */
   onCancelar(): void {
-    this.showClavaScianForm = false; 
+     const MODAL_INSTANCIA = Modal.getInstance(
+      this.agreagarClaveScianElemento.nativeElement
+    );
+    if (MODAL_INSTANCIA) {
+      MODAL_INSTANCIA.hide();
+    }
     this.clavaScianForm.reset(); 
   }
 
@@ -758,7 +767,7 @@ changeEvent(): void{
   const TIPO_OPERACION = this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar.tipoOperacion')?.value;
   const JUSTIFICACION_CONTROL = this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar.justification'); 
 
-  if (TIPO_OPERACION === 'modificacion' || TIPO_OPERACION === '1') {
+  if (TIPO_OPERACION === '0' || TIPO_OPERACION === '1' || TIPO_OPERACION === '2') {
     JUSTIFICACION_CONTROL?.enable(); 
     JUSTIFICACION_CONTROL?.setValidators([Validators.required]);
   } else {
@@ -798,5 +807,22 @@ getMercanciasDatosData(): void {
   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();
+  }
+  get isCorreoElectronicoInvalid(): boolean {
+  const CORREO_CONTROL = this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar.correoElectronico');
+  return Boolean(CORREO_CONTROL?.invalid && (CORREO_CONTROL?.touched || CORREO_CONTROL?.dirty));
+  }
+ 
+   /**
+   * Abre el cuadro de diálogo modal para el registro de vehículos.
+   */
+  agregarClaveScian(): void {
+    if (this.agreagarClaveScianElemento) {
+      const MODAL_INSTANCIA = new Modal(
+        this.agreagarClaveScianElemento?.nativeElement,
+        { backdrop: false }
+      );
+      MODAL_INSTANCIA.show();
+    }
   }
 }
