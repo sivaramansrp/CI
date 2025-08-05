@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, merge, takeUntil } from 'rxjs';
@@ -136,7 +136,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   certificadoAntiguedadMaximoMeses: number = 0;
 
-
+  @Input() ocultarForm: boolean = false;
   /**
    * Constructor del componente.
    * @param peximService Servicio para obtener datos de PEXIM.
@@ -181,8 +181,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           this.solicitudState = seccionState;
         })
       ).subscribe();
-
-    this.crearFormSolicitud();
+    if(this.ocultarForm === true){
+      this.esFormularioSoloLectura = true
+    }
+    this.inicializarEstadoFormulario();
 
     const REGIMEN_VALUE = this.datosRegimen.get('regimenMercancia')?.value;
     if (REGIMEN_VALUE && REGIMEN_VALUE !== '-1') {
