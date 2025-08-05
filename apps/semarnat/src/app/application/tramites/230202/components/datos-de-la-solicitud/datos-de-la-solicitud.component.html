@@ -57,7 +57,6 @@
               [catalogo]="descripcionProducto"
               [label]="'Descripción del producto'"
               fromControlName="descripcionProducto"
-              
               [isDisabled]="soloLectura"
               (change)="descripcionProductoSeleccion()"
               name="descripcionProducto"
@@ -83,9 +82,8 @@
           <button
             type="button"
             class="btn btn-primary ms-3"
-            data-bs-toggle="modal"
-            data-bs-target="#modalAgregarMercancias"
             [disabled]="soloLectura"
+            (click)="agregarMercancia()"
           >
             Agregar
           </button>
@@ -150,7 +148,6 @@
               class="form-control"
               formControlName="codigoPostal"
               id="codigoPostal"
-              
               (change)="setValoresStore(reexportacionForm, 'codigoPostal', 'setCodigoPostal')"
             />
           </div>
@@ -159,7 +156,6 @@
               [catalogo]="estado"
               [label]="'Estado'"
               formControlName="estado"
-              
               [isDisabled]="soloLectura"
               (change)="estadoSeleccion()"
               name="estado"
@@ -230,7 +226,6 @@
     <div class="modal-content">
       <div class="modal-body mb-4">
         <form [formGroup]="agregarMercanciasForm">
-          <!--Datos de la mercancía-->
           <ng-container formGroupName="datosMercancia">
             <ng-titulo titulo="Mercancía"></ng-titulo>
             <div class="row">
@@ -309,7 +304,6 @@
                     [label]="'Género'"
                     name="genero"
                   ></app-catalogo-select>
-                                      <!-- (change)="onGeneroChange($event)" -->
                   <div *ngIf="isInvalid('genero')" class="mensaje-error">
                     Este campo es obligatorio.
                   </div>
@@ -323,7 +317,6 @@
                     [label]="'Especie'"
                     name="especie"
                   ></app-catalogo-select>
-                  <!-- (change)="onEspecieChange($event)" -->
                   <div *ngIf="isInvalid('especie')" class="mensaje-error">
                     Este campo es obligatorio.
                   </div>
@@ -336,8 +329,8 @@
                     formControlName="nombreComun"
                     [label]="'Nombre común'"
                     name="nombreComun"
+                    (change)="onNombreComunChange($event)"
                   ></app-catalogo-select>
-                  <!-- (change)="onNombreComunChange($event)" -->
                   <div *ngIf="isInvalid('nombreComun')" class="mensaje-error">
                     Este campo es obligatorio.
                   </div>

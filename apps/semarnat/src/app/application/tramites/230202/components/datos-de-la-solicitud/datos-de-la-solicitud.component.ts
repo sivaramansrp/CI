@@ -330,7 +330,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
     this.updateEstadoFormulario();
   }
 
@@ -698,30 +697,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.store.setEstado(ESTADO);
   }
 
-  // onGeneroChange(event: Event | { value?: string } | undefined): void {
-  //   const value = 'value' in (event ?? {}) ? (event as { value?: string }).value
-  //     : (event && (event as Event).target && ((event as Event).target as HTMLSelectElement).value) || '';
-  //   this.setValoresStore(this.agregarMercanciasForm.get('datosMercancia') as FormGroup, 'genero', 'setGenero');
-  //   this.especieEnabled = !!value;
-  //   this.agregarMercanciasForm.get('datosMercancia.especie')?.reset();
-  //   this.nombreComunEnabled = false;
-  //   this.agregarMercanciasForm.get('datosMercancia.nombreComun')?.reset();
-  // }
-
-  // onEspecieChange(event: Event | { value?: string } | undefined): void {
-  //   const value = 'value' in (event ?? {}) ? (event as { value?: string }).value
-  //     : (event && (event as Event).target && ((event as Event).target as HTMLSelectElement).value) || '';
-  //   this.setValoresStore(this.agregarMercanciasForm.get('datosMercancia') as FormGroup, 'especie', 'setEspecie');
-  //   this.nombreComunEnabled = !!value;
-  //   this.agregarMercanciasForm.get('datosMercancia.nombreComun')?.reset();
-  // }
-
-  // onNombreComunChange(event: Event | { value?: string } | undefined): void {
-  //   const value = 'value' in (event ?? {}) ? (event as { value?: string }).value
-  //     : (event && (event as Event).target && ((event as Event).target as HTMLSelectElement).value) || '';
-  //   this.setValoresStore(this.agregarMercanciasForm.get('datosMercancia') as FormGroup, 'nombreComun', 'setNombreComun');
-  //   this.mostrarOtroNombreComun = value === 'Otro';
-  // }
+  onNombreComunChange(event: Event | { value?: string } | undefined): void {
+    const VALUE = 'value' in (event ?? {}) ? (event as { value?: string }).value
+      : (event && (event as Event).target && ((event as Event).target as HTMLSelectElement).value) || '';
+    this.setValoresStore(this.agregarMercanciasForm.get('datosMercancia') as FormGroup, 'nombreComun', 'setNombreComun');
+    this.mostrarOtroNombreComun = VALUE === 'Otro';
+  }
 
   /**
    * Cierra el modal de agregar mercancías.
@@ -861,6 +842,26 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     } else {
       if (this.modalConfirmacion) {
         const MODEL = new Modal(this.modalConfirmacion.nativeElement);
+        MODEL.show();
+      }
+    }
+  }
+
+  /**
+   * Agrega mercancías al formulario de solicitud.
+   * Si no hay descripción del producto, muestra un modal de confirmación.
+   * Si hay descripción del producto, muestra el modal para agregar mercancías.
+   */
+  agregarMercancia(): void {
+    const DESCRIPCION_PRODUCTO = this.reexportacionForm.get('descripcionProducto')?.value;
+    if (!DESCRIPCION_PRODUCTO) {
+      if (this.modalConfirmacion) {
+        const MODEL = new Modal(this.modalConfirmacion.nativeElement);
+        MODEL.show();
+      }
+    } else {
+      if (this.modalRef) {
+        const MODEL = new Modal(this.modalRef.nativeElement);
         MODEL.show();
       }
     }
