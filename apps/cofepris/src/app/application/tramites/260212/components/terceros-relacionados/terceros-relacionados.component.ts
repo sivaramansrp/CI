@@ -808,7 +808,26 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de destinatarios.
    */
-  destinatarioRowData: TablaDatos[] = [];
+  destinatarioRowData: TablaDatos[] = [{
+    tbodyData: [
+      'Empresa Destino S.A.',
+      'DES123456789',
+      'CURPDESTINO01',
+      '55-98765432',
+      'contacto@destino.com',
+      'Calle Destino',
+      '500',
+      '10',
+      'México',
+      'Colonia Centro',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      '07000'
+      ]
+  }];
 
   /**
    * Datos de las filas para la tabla de proveedores.
@@ -816,7 +835,28 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de proveedores.
    */
-  proveedorRowData: TablaDatos[] = [];
+  proveedorRowData: TablaDatos[] = [
+    {
+    tbodyData: [
+      'Proveedor Global S.A.',
+      'PRO123456789',
+      'CURPPROV001',
+      '55-11223344',
+      'contacto@proveedor.com',
+      'Av. Comercio',
+      '150',
+      '10',
+      'México',
+      'Colonia Industrial',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      '06500'
+      ]
+  }
+  ];
 
   /**
    * Datos de las filas para la tabla de facturadores.
@@ -824,7 +864,28 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de facturadores.
    */
-  facturadorRowData: TablaDatos[] = [];
+  facturadorRowData: TablaDatos[] = [
+    {
+    tbodyData: [
+      'Facturador Uno S.A.',
+      'FAC123456789',
+      'CURPFACT001',
+      '55-99887766',
+      'facturas@uno.com',
+      'Calle Factura',
+      '400',
+      '12',
+      'México',
+      'Colonia Centro',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      '08000'
+      ]
+  },
+  ];
 
   /**
    * Maneja el cambio en los checkboxes para seleccionar el tipo de persona.
