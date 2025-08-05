@@ -228,7 +228,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
      * @returns {void}
      */
     public altaDeCuenta(): void {
-        if(this.selectedRowIndex === null) {
+        if(!this.selectedRowIndex) {
             this.sociedadNotificacion = {
                 tipoNotificacion: 'alert',
                 categoria: 'danger',
