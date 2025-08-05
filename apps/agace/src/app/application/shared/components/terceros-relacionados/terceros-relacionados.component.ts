@@ -175,6 +175,22 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.tercerosRelacionadosQuery.selectImportacion$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
       this.importacionstate = seccionState;
+      if (
+        this.importacionstate &&
+        typeof this.importacionstate === 'object' &&
+        this.importacionstate !== null &&
+        'enlaceOperativo' in this.importacionstate
+      ) {
+        const DATOS = this.importacionstate['enlaceOperativo'] as unknown as EnlaceOperativo[];
+        DATOS.forEach((dato: EnlaceOperativo) => {
+          const IS_ALREADY_ADDED = this.enlaceOperativoDatos.some(
+            (item: EnlaceOperativo) => item.rfc === dato.rfc
+          )
+          if (!IS_ALREADY_ADDED) {
+            this.enlaceOperativoDatos = [...this.enlaceOperativoDatos, dato];
+          }
+        });
+      }
     })
     ).subscribe();
     this.getEnlaceOperativo();
@@ -452,6 +468,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       this.enlaceOperativoDatos = [...this.enlaceOperativoDatos, { ...ENLACE_OPERATIVO }];
     }
 
+    this.tercerosRelacionadosStore.setDynamicFieldValue('enlaceOperativo', JSON.stringify(this.enlaceOperativoDatos));
     this.modalRef?.hide();
     this.enlaceOperativoForm.reset();
     this.elementosSeleccionados = [];
@@ -479,6 +496,26 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   public onSeleccionCambiada(elementosSeleccionados: EnlaceOperativo[]): void {
     this.elementosSeleccionados = elementosSeleccionados;
+  }
+
+  /**
+   * Busca un evento y, si el campo 'resigtro' en el formulario 'represtantanteLegalForma' tiene un valor,
+   * actualiza el formulario con información predefinida del representante legal.
+   * Los campos actualizados incluyen:
+   * - rfc: El identificador RFC.
+   * - nombre: El nombre o identificador.
+   * - apellidoPaterno: El apellido paterno.
+   * - apellidoMaterno: El apellido materno.
+   */
+  public buscarEvento(): void {
+    if (this.represtantanteLegalFormGroup.get('resigtro')?.value) {
+      this.represtantanteLegalFormGroup.patchValue({
+        rfc: 'AL5453DF998',
+        nombre: '78665439902',
+        apellidoPaterno: 'HCBDVYU GURGFRE',
+        apellidoMaterno: 'CTTYYTR HBVYUCUD'
+      })
+    }
   }
 
   /**

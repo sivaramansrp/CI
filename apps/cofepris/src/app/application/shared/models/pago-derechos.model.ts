@@ -8,7 +8,7 @@ export interface PagoDerechosFormState {
   }
 
 export const FECHA_DE_PAGO = {
-    labelNombre: 'Fecha de pago',
+    labelNombre: 'Fecha de pago:',
     required: false,
     habilitado: true,
   };

@@ -27,8 +27,10 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(() => {
     mockRegistroService = {
-      getRegistroTomaMuestrasMercanciasData: jest.fn(),
+      getRegistroTomaMuestrasMercanciasData: jest.fn().mockReturnValue(of(null)),
       actualizarEstadoFormulario: jest.fn(),
+      obtenerDatos: jest.fn().mockReturnValue(of(null)),
+      actualizarEstado: jest.fn()
     };
     mockConsultaQuery = {
       selectConsultaioState$: of({ update: true }),
@@ -61,14 +63,14 @@ describe('PasoUnoComponent', () => {
   });
 
   it('debe asignar consultaState y llamar guardarDatosFormulario si update es true en ngOnInit', () => {
-  const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario').mockImplementation(() => {});
-  component.consultaQuery = {
-    selectConsultaioState$: of({ update: true }),
-  } as any;
-  component.ngOnInit();
-  expect(component.consultaState).toEqual({ update: true });
-  expect(guardarSpy).toHaveBeenCalled();
-});
+    const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario').mockImplementation(() => {});
+    component.consultaQuery = {
+      selectConsultaioState$: of({ update: true }),
+    } as any;
+    component.ngOnInit();
+    expect(component.consultaState).toEqual({ update: true });
+    expect(guardarSpy).toHaveBeenCalled();
+  });
 
   it('debe asignar consultaState y establecer esDatosRespuesta en true si update es false en ngOnInit', () => {
     component.consultaQuery = {
@@ -81,19 +83,32 @@ describe('PasoUnoComponent', () => {
 
   it('guardarDatosFormulario debe establecer esDatosRespuesta en true y llamar actualizarEstadoFormulario si resp existe', () => {
     const respMock = { data: 'mock' };
-    mockRegistroService.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(respMock));
+    mockRegistroService.obtenerDatos.mockReturnValue(of(respMock));
     
     component.guardarDatosFormulario();
     
     expect(component.esDatosRespuesta).toBe(true);
-    expect(mockRegistroService.actualizarEstadoFormulario).toHaveBeenCalledWith('mock');
+    expect(mockRegistroService.actualizarEstado).toHaveBeenCalledWith(respMock);
   });
 
   it('guardarDatosFormulario debe establecer esDatosRespuesta en false si resp no existe', () => {
-    mockRegistroService.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(null));
+    mockRegistroService.obtenerDatos.mockReturnValue(of(null));
     component.guardarDatosFormulario();
     expect(component.esDatosRespuesta).toBe(false);
-    expect(mockRegistroService.actualizarEstadoFormulario).not.toHaveBeenCalled();
+    expect(mockRegistroService.actualizarEstado).not.toHaveBeenCalled();
+  });
+
+  it('debe manejar errores en guardarDatosFormulario', () => {
+    mockRegistroService.obtenerDatos.mockReturnValue(of(null));
+    
+    expect(() => component.guardarDatosFormulario()).not.toThrow();
+  });
+
+  it('debe manejar respuesta sin data en guardarDatosFormulario', () => {
+    mockRegistroService.obtenerDatos.mockReturnValue(of({}));
+    component.guardarDatosFormulario();
+    expect(component.esDatosRespuesta).toBe(true);
+    expect(mockRegistroService.actualizarEstado).toHaveBeenCalled();
   });
 
   // Pruebas exhaustivas para el método validarFormularios
@@ -267,35 +282,27 @@ describe('PasoUnoComponent', () => {
 
   // Casos límite y manejo de errores
   describe('Casos edge y manejo de errores', () => {
-    it('debe manejar errores en guardarDatosFormulario', () => {
-      mockRegistroService.getRegistroTomaMuestrasMercanciasData.mockReturnValue(
-        throwError('Error de servicio')
-      );
-      
-      expect(() => component.guardarDatosFormulario()).not.toThrow();
-    });
 
-    it('debe manejar respuesta sin data en guardarDatosFormulario', () => {
-      const respMockSinData = { otherProp: 'test' };
-      mockRegistroService.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(respMockSinData));
-      
-      component.guardarDatosFormulario();
-      expect(component.esDatosRespuesta).toBe(false);
-      expect(mockRegistroService.actualizarEstadoFormulario).not.toHaveBeenCalled();
-    });
-
-    it('debe manejar consultaState undefined en ngOnInit', () => {
-      // Simular el método del servicio para retornar un observable
-      const testRespMock = { data: 'test' };
-      mockRegistroService.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(testRespMock));
-      
-      component.consultaState = undefined as any;
+    it('debe manejar correctamente cuando consultaState es undefined en ngOnInit', () => {
+      // Simula que el observable emite undefined
       component.consultaQuery = {
-        selectConsultaioState$: of({ update: true }),
+        selectConsultaioState$: of(undefined),
       } as any;
-      
-      expect(() => component.ngOnInit()).not.toThrow();
-      expect(component.consultaState).toEqual({ update: true });
+
+      // Espía el método guardarDatosFormulario para asegurar que no se llama
+      const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
+
+      // Ejecuta ngOnInit
+      component.ngOnInit();
+
+      // consultaState debe ser undefined
+      expect(component.consultaState).toBeUndefined();
+
+      // esDatosRespuesta no debe cambiar a true porque no hay update
+      expect(component.esDatosRespuesta).toBe(true);
+
+      // guardarDatosFormulario no debe ser llamado
+      expect(guardarSpy).not.toHaveBeenCalled();
     });
 
     it('debe manejar seleccionaTab con valores límite', () => {
@@ -327,35 +334,102 @@ describe('PasoUnoComponent', () => {
       expect(guardarSpy).toHaveBeenCalled();
     });
 
-  it('debe completar el flujo completo de ngOnInit con update false', () => {
-    const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
-    
-    component.consultaQuery = {
-      selectConsultaioState$: of({ update: false }),
-    } as any;
-    
-    component.ngOnInit();
-    
-    expect(component.consultaState).toEqual({ update: false });
-    expect(component.esDatosRespuesta).toBe(true);
-    expect(guardarSpy).not.toHaveBeenCalled();
+    it('debe completar el flujo completo de ngOnInit con update false', () => {
+      const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
+      
+      component.consultaQuery = {
+        selectConsultaioState$: of({ update: false }),
+      } as any;
+      
+      component.ngOnInit();
+      
+      expect(component.consultaState).toEqual({ update: false });
+      expect(component.esDatosRespuesta).toBe(true);
+      expect(guardarSpy).not.toHaveBeenCalled();
+    });
+
+    it('debe limpiar correctamente en ngOnDestroy después de suscripción', () => {
+      // Simula una suscripción y verifica que destroyNotifier$ se complete
+      const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
+      const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
+      component.ngOnDestroy();
+      expect(nextSpy).toHaveBeenCalled();
+      expect(completeSpy).toHaveBeenCalled();
+    });
   });
 
-  it('debe limpiar correctamente en ngOnDestroy después de suscripción', () => {
-    // Mock del método de servicio para retornar un observable para ngOnInit
-    const testRespMock = { data: 'test' };
-    mockRegistroService.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(testRespMock));
-    
-    // Simular una suscripción
-    component.ngOnInit();
-    
-    const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
-    const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
-    
-    component.ngOnDestroy();
-    
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
-  });
+  // Nuevos tests adicionales
+  describe('Cobertura adicional y casos límite', () => {
+    it('debe permitir llamar validarFormularios si todos los componentes son undefined', () => {
+      component.solicitante = undefined as any;
+      component.datosComunesComponent = undefined as any;
+      component.tercerosRelacionadosComponent = undefined as any;
+      component.importadorExportadorComponent = undefined as any;
+      component.ctpatComponent = undefined as any;
+      expect(component.validarFormularios()).toBe(false);
+    });
+
+    it('debe permitir llamar validarFormularios si algunos componentes son undefined', () => {
+      component.solicitante = { form: { invalid: false, markAllAsTouched: jest.fn() } } as any;
+      component.datosComunesComponent = undefined as any;
+      component.tercerosRelacionadosComponent = { validarFormulario: jest.fn().mockReturnValue(true) } as any;
+      component.importadorExportadorComponent = undefined as any;
+      component.ctpatComponent = { validarFormulario: jest.fn().mockReturnValue(true) } as any;
+      expect(component.validarFormularios()).toBe(false);
+    });
+
+    it('debe manejar correctamente onReconocimientoMutuoChange con valores nulos', () => {
+      // @ts-expect-error pasando null intencionalmente
+      component.onReconocimientoMutuoChange(null);
+      expect(component.reconocimientoMutuoValue).toBe(null);
+    });
+
+    it('debe mantener el valor de reconocimientoMutuoValue si se llama con el mismo valor', () => {
+      const value: [string, string] = ['a', 'b'];
+      component.onReconocimientoMutuoChange(value);
+      component.onReconocimientoMutuoChange(value);
+      expect(component.reconocimientoMutuoValue).toEqual(['a', 'b']);
+    });
+
+    it('debe permitir llamar seleccionaTab con undefined y asignar indice', () => {
+      // @ts-expect-error pasando undefined intencionalmente
+      component.seleccionaTab(undefined);
+      expect(component.indice).toBe(undefined);
+    });
+
+    it('debe permitir llamar seleccionaTab con string y asignar indice', () => {
+      // @ts-expect-error pasando string intencionalmente
+      component.seleccionaTab('3');
+      expect(component.indice).toBe('3');
+    });
+
+    it('debe permitir llamar seleccionaTab con null y asignar indice', () => {
+      // @ts-expect-error pasando null intencionalmente
+      component.seleccionaTab(null);
+      expect(component.indice).toBe(null);
+    });
+
+    it('debe manejar correctamente guardarDatosFormulario si registroService lanza error', () => {
+      mockRegistroService.obtenerDatos = jest.fn().mockReturnValue(throwError(() => new Error('fallo')));
+      component.registroService = mockRegistroService;
+      expect(() => component.guardarDatosFormulario()).not.toThrow();
+    });
+
+    it('debe manejar correctamente guardarDatosFormulario si registroService devuelve undefined', () => {
+      mockRegistroService.obtenerDatos = jest.fn().mockReturnValue(of(undefined));
+      component.registroService = mockRegistroService;
+      component.guardarDatosFormulario();
+      expect(component.esDatosRespuesta).toBe(false);
+    });
+
+    it('debe actualizar esDatosRespuesta y llamar actualizarEstado si resp existe en guardarDatosFormulario', () => {
+      const resp = { foo: 'bar' };
+      mockRegistroService.obtenerDatos.mockReturnValue(of(resp));
+      
+      component.guardarDatosFormulario();
+      
+      expect(component.esDatosRespuesta).toBe(true);
+      expect(mockRegistroService.actualizarEstado).toHaveBeenCalledWith(resp);
+    });
   });
 });

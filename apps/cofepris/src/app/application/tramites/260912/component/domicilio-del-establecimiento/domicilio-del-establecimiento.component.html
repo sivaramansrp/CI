@@ -269,7 +269,7 @@
       <div class="col-md-4 mt-5">
         <lib-input-check
           [id]="'avisoCheckbox'"
-          [label]="'Aviso de funcionamiento'"
+          [label]="'Aviso de funcionamiento:'"
           [required]="true"
           formControlName="avisoCheckbox"
           [isDisabled]="esFormularioSoloLectura"
@@ -329,6 +329,48 @@
         </div>
       </div>
     </div>
+  <div class="row">
+    <div class="col-md-4">
+      <label class="form-label" for="immexProgramNumber"
+        >No. Programa IMMEX:  
+        <span
+          class="bi bi-question-circle-fill"
+          title="No. de licencia sanitaria"
+          data-bs-toggle="tooltip"
+        ></span>
+      </label>
+        <input
+          class="form-control"
+          type="text"
+          id="immexProgramNumber"
+          formControlName="immexProgramNumber"
+          appUppercase
+          aria-labelledby="immexProgramNumber"
+          (change)="setValorStore(form, 'immexProgramNumber')"
+          />   
+          <div *ngIf="domicilio.get('immexProgramNumber')?.touched && domicilio.get('immexProgramNumber')?.hasError('required')" class="text-danger">
+          Por favor, corrija la estadoLocalidad.
+        </div>
+      </div>
+
+      <div class="col-md-4">
+      <label class="form-label" for="ano"
+        >Año:</label>
+        <input
+          class="form-control"
+          type="text"
+          id="ano"
+          formControlName="ano"
+          appUppercase
+          aria-labelledby="ano"
+          (change)="setValorStore(form, 'ano')"
+          />   
+          <div *ngIf="domicilio.get('ano')?.touched && domicilio.get('ano')?.hasError('required')" class="text-danger">
+          Por favor, corrija la estadoLocalidad.
+        </div>
+      </div>
+  </div>
+
     <div class="row mt-5">
       <div class="col-md-4"></div>
       <div class="col-md-4"></div>
@@ -375,7 +417,7 @@
 
     <div class="row mt-2">
       <div class="col-md-12">
-        <ng-titulo titulo="Manifiesto bajo protesta" />
+        <ng-titulo titulo="Manifiestos y declaraciones" />
         <div class="form-check bg-light p-0">
           <div class="alert alert-info content-with-checkbox py-6">
             <lib-input-check
@@ -385,8 +427,8 @@
           formControlName="manifests"
           [isDisabled]="esFormularioSoloLectura"
           (change)="setValorStore(domicilio, 'manifests')"
-      ></lib-input-check>
-            <span class="fw-bold align-middle"> *</span>
+      > <span class="fw-bold align-middle"> *</span></lib-input-check>
+           
             <div>{{ manifests }}</div>
           </div>
         </div>
@@ -427,7 +469,7 @@
           </div>
         </div>
         <div class="col-md-3 mt-5">
-          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Modificar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Buscar</button>
         </div>
       </div>
 

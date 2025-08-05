@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CAMPO_DE_DESTINATARIO } from '../../constantes/modificacion.enum';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
@@ -100,10 +100,11 @@ export class DatosDelDestinatarioComponent implements OnDestroy, OnInit {
    */
   createForm(): void {
     this.formDatosDelDestinatario = this.fb.group({
-      nombres: [''],
-      primerApellido: [''],
-      segundoApellido: [''],
-      numeroDeRegistroFiscal: [''],
+      nombres: ['', [Validators.maxLength(20)]],
+      primerApellido:['', [Validators.required,Validators.maxLength(20)]],
+
+      segundoApellido: ['', [Validators.maxLength(20)]],
+      numeroDeRegistroFiscal: ['', [Validators.maxLength(30)]],
       razonSocial: [''],
     });
   }

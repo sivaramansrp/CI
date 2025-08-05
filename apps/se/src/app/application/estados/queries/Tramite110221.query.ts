@@ -1,4 +1,7 @@
-import { Solicitud110221State, Tramite110221Store } from '../tramites/Tramite110221.store';
+import {
+  Solicitud110221State,
+  Tramite110221Store,
+} from '../tramites/Tramite110221.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
@@ -179,4 +182,20 @@ export class Tramite110221Query extends Query<Solicitud110221State> {
    * Selecciona el catálogo de tipos de factura.
    */
   selectTipoFactura$ = this.select((state) => state.tipoFactura);
+
+  /**
+   * @descripcion
+   *  Observable que selecciona los datos del formulario de certificado.
+   */
+  agregarDatosProductorFormulario$ = this.select((state) => {
+    return state.agregarDatosProductorFormulario;
+  });
+
+  /**
+   * @descripcion
+   * Observable que selecciona los datos del formulario de certificado.
+   */
+  formulario$ = this.select((state) => {
+    return state.formulario;
+  });
 }

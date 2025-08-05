@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 /**
  * Importaciones necesarias para el componente de empresas.
  * Incluye servicios, modelos, componentes compartidos y decoradores de Angular.
@@ -6,6 +7,10 @@ import {
   CATALOGOS_ID,
   Catalogo,
   CatalogosService,
+  InputFecha,
+  InputFechaComponent,
+  NotificacionesComponent,
+  REGEX_RFC,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -14,6 +19,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Output,
@@ -24,6 +30,7 @@ import {
 } from '../../models/complimentos.model';
 import {
   ESTADO,
+  FECHA_DE_PAGO,
   FORMA_SOCIO,
   FORMA_SOCIO_ACCIONISTAS,
   FORMA_SOCIO_ACCIONISTAS_EXTRANJEROS,
@@ -44,8 +51,11 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/trami
 import { CommonModule } from '@angular/common';
 import { ComplimentosService } from '../../services/complimentos.service';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { DatosCatalago } from '../../../tramites/80102/models/autorizacion-programa-nuevo.model';
+import { Notificacion } from '@ng-mf/data-access-user';
+
+import { DatosCatalago, INPUT_FECHA_CONFIG } from '../../../tramites/80102/models/autorizacion-programa-nuevo.model';
 import { SelectPaisesComponent } from '@libs/shared/data-access-user/src/tramites/components/select-paises/select-paises.component';
+import { TramiteStore } from '../../../estados/tramite.store';
 
 /**
  * Componente Complimentos.
@@ -63,6 +73,8 @@ import { SelectPaisesComponent } from '@libs/shared/data-access-user/src/tramite
     TituloComponent,
     CatalogoSelectComponent,
     SelectPaisesComponent,
+    InputFechaComponent,
+    NotificacionesComponent
   ],
   templateUrl: './complimentos.component.html',
   styleUrl: './complimentos.component.scss',
@@ -71,7 +83,7 @@ import { SelectPaisesComponent } from '@libs/shared/data-access-user/src/tramite
  * Clase ComplimentosComponent.
  * Gestiona la lógica del componente Complimentos, incluyendo inicialización y limpieza.
  */
-export class ComplimentosComponent implements OnInit, OnDestroy {
+export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
 
   /**
    * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
@@ -85,16 +97,46 @@ export class ComplimentosComponent implements OnInit, OnDestroy {
   formaComplimentos!: FormGroup;
 
   /**
+   * @type {FormGroup}
+   * @description Grupo de formularios para las obligaciones fiscales.
+   */
+  obligacionesFiscales!: FormGroup;
+
+   /**
+   * Constante para configurar el input de fecha.
+   * Define las propiedades del campo de entrada de fecha.
+   */
+    INPUT_FECHA_CONFIG = INPUT_FECHA_CONFIG;
+
+  /**
    * @type {Catalogo[]}
    * @description lista de catálogos.
    */
   estados!: Catalogo[];
 
   /**
+   * @description
+   * Objeto que representa una nueva notificación para RFC.
+   * Se utiliza para mostrar mensajes de alerta o información al usuario.
+   */
+  public nuevaNotificacionRfc!: Notificacion;
+
+  /**
+   * Flag to track if we're currently processing RFC validation
+   * Prevents interference from other form events
+   */
+  private isProcessingRfcValidation: boolean = false;
+
+  /**
    * @type {Subscription}
    * @description Suscripción privada inicializada como una nueva suscripción.
    */
   private subscription: Subscription = new Subscription();
+
+  /**
+   * Storage for form data to preserve across radio button changes
+   */
+  private PRESERVED_FORM_DATA: { [key: string]: string | number | boolean } = {};
 
   /**
    * @type {DatosCatalago[]}
@@ -221,6 +263,34 @@ export class ComplimentosComponent implements OnInit, OnDestroy {
   /** Indica si el formulario debe mostrarse en modo solo lectura.  
  *  Controla la habilitación o deshabilitación de los campos. */
   esFormularioSoloLectura: boolean = false;
+
+  /**
+  * @description
+  * Objeto que representa una nueva notificación.
+  * Se utiliza para mostrar mensajes de alerta o información al usuario.
+  */
+    public eliminarNotificacion!: Notificacion;
+
+  /**
+  * @description
+  * Objeto que representa una nueva notificación.
+  * Se utiliza para mostrar mensajes de alerta o información al usuario.
+  */
+    public eliminarUnoConfirmationNotificacion!: Notificacion;
+
+     /**
+  * @description
+  * Objeto que representa una nueva notificación.
+  * Se utiliza para mostrar mensajes de alerta o información al usuario.
+  */
+    public eliminarDosConfirmationNotificacion!: Notificacion;
+
+      /**
+       * Configuración del input de fecha de inicio
+       * @property {InputFecha} fechaInicioInput
+       */
+      fechaInicioInput: InputFecha = FECHA_DE_PAGO;
+
   /**
    * Constructor para inicializar el formulario de datos del subcontratista.
    * @param {FormBuilder} fb - FormBuilder para la creación del formulario reactivo.
@@ -232,6 +302,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy {
     private catalogosServices: CatalogosService,
     private complimentosService: ComplimentosService,
      private consultaioQuery: ConsultaioQuery,
+     private tramiteStore: TramiteStore
   ) {
     
        this.consultaioQuery.selectConsultaioState$
@@ -260,6 +331,18 @@ export class ComplimentosComponent implements OnInit, OnDestroy {
      this.inicializarFormulario();
     }  
   }
+
+  /**
+ * Verifica si un control del formulario es inválido.
+ * @param fechaDeActa El nombre del control a verificar.
+ * @returns Verdadero si el control es inválido y está tocado o modificado, de lo contrario, falso.
+ */
+  onFechaCambiada(fecha: string): void {
+    if (fecha) {
+      this.formaComplimentos.patchValue({ fechaDeActa: fecha });
+    }
+  }
+
     /**
    * @comdoc
    * Guarda los datos del formulario de combinación requerida.
@@ -290,22 +373,27 @@ this.formaComplimentos.disable();
       modalidad: [{ value: '', disabled: true }],
       programaPreOperativo: [false],
       datosGeneralis: this.fb.group({
-        paginaWWeb: ['', Validators.required],
-        localizacion: ['', Validators.required],
+        paginaWWeb: ['', [Validators.required, Validators.maxLength(120)]],
+        localizacion: ['', [Validators.required, Validators.maxLength(120)]],
       }),
       obligacionesFiscales: this.fb.group({
         opinionPositiva: [{ value: '', disabled: true }],
-        fechaExpedicion: [{ value: '', disabled: true }],
+        fechaExpedicion: ['', Validators.required],
         aceptarObligacionFiscal: [''],
       }),
       formaModificaciones: this.fb.group({
-        nombreDelFederatario: ['', Validators.required],
-        nombreDeNotaria: ['', Validators.required],
+        nombreDelFederatario: ['', [Validators.required, Validators.maxLength(120)]],
+        nombreDeNotaria: ['', [Validators.required, Validators.maxLength(10)]],
         estado: ['', Validators.required],
-        nombreDeActa: ['', Validators.required],
+        nombreDeActa: ['',[ Validators.required, Validators.maxLength(10)]],
         fechaDeActa: ['', Validators.required],
-        rfc: ['', Validators.required],
-        nombreDeRepresentante: ['', Validators.required],
+        rfc: ['', [
+          Validators.required, 
+          Validators.minLength(12),
+          Validators.maxLength(13),
+          Validators.pattern(REGEX_RFC)
+        ]],
+        nombreDeRepresentante: [{ value: '', disabled: true }],
       }),
       formaCertificacion: this.fb.group({
         certificada: [{ value: '', disabled: true }],
@@ -318,9 +406,163 @@ this.formaComplimentos.disable();
         formaDatos: this.obtainerFormaDatos(TIPO_FORMA.DEFAULT),
       }),
     });
+
+    // Apply initial data if available
     if (this.datosFormaComplimentos) {
-      this.formaComplimentos.patchValue(this.datosFormaComplimentos);
+      // Use immediate execution for better user experience
+      setTimeout(() => {
+        this.aplicarDatosFormulario();
+      }, 0);
     }
+  }
+
+  /**
+   * Aplica los datos del complemento al formulario, transformando los valores según sea necesario.
+   */
+  private aplicarDatosFormulario(): void {
+    if (!this.datosFormaComplimentos || !this.formaComplimentos) {
+      return;
+    }
+
+    // Create a copy of the data for transformation
+    const DATOS_TRANSFORMADOS = JSON.parse(JSON.stringify(this.datosFormaComplimentos));
+
+  this.transformarValoresRadio(DATOS_TRANSFORMADOS);
+    
+    
+    const PROGRAMA_PREOPERATIVO_VALUE = this.transformarCheckboxValue(DATOS_TRANSFORMADOS.programaPreOperativo);
+
+  
+    this.formaComplimentos.patchValue(DATOS_TRANSFORMADOS, { emitEvent: false });
+    this.formaComplimentos.get('programaPreOperativo')?.setValue(PROGRAMA_PREOPERATIVO_VALUE, { emitEvent: false });
+
+    
+    if (DATOS_TRANSFORMADOS.formaSocioAccionistas) {
+      this.aplicarDatosDinamicos(DATOS_TRANSFORMADOS);
+    }
+  }
+
+  /**
+   * Transforms radio button values to the expected format
+   */
+  private transformarValoresRadio(datos: DatosComplimentos): void {
+   
+    if (!datos.formaSocioAccionistas || !this.formaComplimentos) {
+      return;
+    }
+ if (datos.formaSocioAccionistas.nationalidadMaxicana === 'Sí' || 
+        datos.formaSocioAccionistas.nationalidadMaxicana === 'Si') {
+      datos.formaSocioAccionistas.nationalidadMaxicana = 'true';
+    } else if (datos.formaSocioAccionistas.nationalidadMaxicana === 'No') {
+      datos.formaSocioAccionistas.nationalidadMaxicana = 'false';
+    }
+
+    
+    if (datos.formaSocioAccionistas.tipoDePersona === 'Física' || 
+        datos.formaSocioAccionistas.tipoDePersona === 'Persona Física') {
+      datos.formaSocioAccionistas.tipoDePersona = 'true';
+    } else if (datos.formaSocioAccionistas.tipoDePersona === 'Moral' || 
+               datos.formaSocioAccionistas.tipoDePersona === 'Persona Moral') {
+      datos.formaSocioAccionistas.tipoDePersona = 'false';
+    }
+  }
+
+  /**
+   * Transforms formaDatos structure to match form expectations
+   */
+  private transformarFormaDatos(datos: DatosComplimentos): void {
+    if (!datos.formaSocioAccionistas) {
+      return;
+    }
+
+    // Check if we have tablaDatosComplimentos data to populate the dynamic form
+    if (this.datosSocioAccionistas && this.datosSocioAccionistas.length > 0) {
+      const PRIMER_REGISTRO = this.datosSocioAccionistas[0];
+      datos.formaSocioAccionistas.formaDatos = {
+        taxId: PRIMER_REGISTRO.taxId || '',
+        razonSocial: PRIMER_REGISTRO.razonSocial || '',
+        pais: PRIMER_REGISTRO.pais || '',
+        codigoPostal: PRIMER_REGISTRO.codigoPostal || '',
+        estado: PRIMER_REGISTRO.estado || '',
+        correoElectronico: PRIMER_REGISTRO.correoElectronico || '',
+        nombre: PRIMER_REGISTRO.nombre || '',
+        apellidoPaterno: PRIMER_REGISTRO.apellidoPaterno || '',
+        apellidoMaterno: PRIMER_REGISTRO.apellidoMaterno || '',
+        rfc: PRIMER_REGISTRO.rfc || ''
+      };
+    } else if (this.esEstructuraFormaDatosInvalida(datos.formaSocioAccionistas.formaDatos)) {
+      datos.formaSocioAccionistas.formaDatos = this.crearFormaDatosVacio();
+    }
+  }
+
+  /**
+   * Applies dynamic form data with single form modification
+   */
+  private aplicarDatosDinamicos(datos: DatosComplimentos): void {
+   
+    this.transformarFormaDatos(datos);
+    
+  
+    const FORM_DATA_TO_APPLY = datos.formaSocioAccionistas.formaDatos;
+    
+    
+    if (FORM_DATA_TO_APPLY) {
+      Object.keys(FORM_DATA_TO_APPLY).forEach(key => {
+        this.PRESERVED_FORM_DATA[key] = FORM_DATA_TO_APPLY[key];
+      });
+    }
+
+    // Determine the correct form type based on radio values
+    const NACIONALIDAD_MEXICANA = datos.formaSocioAccionistas.nationalidadMaxicana === 'true';
+    const PERSONA_FISICA = datos.formaSocioAccionistas.tipoDePersona === 'true';
+
+    // Apply the appropriate form modification once
+    if (NACIONALIDAD_MEXICANA) {
+      this.modificarFormulario(TIPO_FORMA.NATIONALIDAD_MEXICANA, this.camposFormularioNationalidad);
+    } else if (PERSONA_FISICA) {
+      this.modificarFormulario(TIPO_FORMA.TIPO_PERSONA, this.camposFormularioTipoPersona);
+    } else {
+      this.modificarFormulario(TIPO_FORMA.DEFAULT, this.camposFormularioDefault);
+    }
+  }
+
+  /**
+   * Checks if formaDatos structure is invalid
+   */
+  private esEstructuraFormaDatosInvalida(formaDatos: { [key: string]: string }): boolean {
+    return !formaDatos || 
+           typeof formaDatos !== 'object' ||
+           Object.keys(formaDatos).some(key => key.startsWith('socio'));
+  }
+
+  /**
+   * Creates empty formaDatos structure
+   */
+  private crearFormaDatosVacio(): { [key: string]: string } {
+    return {
+      taxId: '',
+      razonSocial: '',
+      pais: '',
+      codigoPostal: '',
+      estado: '',
+      correoElectronico: '',
+      nombre: '',
+      apellidoPaterno: '',
+      apellidoMaterno: '',
+      rfc: ''
+    };
+  }
+
+  /**
+   * Transforms checkbox values
+   */
+  private transformarCheckboxValue(valor: string): boolean | string {
+    if (valor === 'Sí' || valor === 'Si') {
+      return true;
+    } else if (valor === 'No') {
+      return false;
+    }
+    return valor;
   }
 
   /**
@@ -342,12 +584,27 @@ this.formaComplimentos.disable();
         this.formaValida.emit(this.formaComplimentos.valid);
       });
 
+    // Apply data after catalogs are loaded and form is ready
     if (this.datosFormaComplimentos) {
-      this.formaComplimentos.patchValue(this.datosFormaComplimentos);
+      // Use immediate application for better performance
+      setTimeout(() => {
+        this.aplicarDatosFormulario();
+      }, 100);
     }
 
     if(this.formularioDeshabilitado ) {
       this.formaComplimentos.disable();
+    }
+  }
+
+  /**
+   * Lifecycle hook that is called when any data-bound property changes.
+   * Handles changes to input properties.
+   */
+  ngOnChanges(): void {
+    if (this.formaComplimentos && this.datosFormaComplimentos) {
+      // Apply immediately for better user experience
+      this.aplicarDatosFormulario();
     }
   }
 
@@ -364,24 +621,29 @@ this.formaComplimentos.disable();
           taxId: ['', Validators.required],
           razonSocial: ['', Validators.required],
           pais: ['', Validators.required],
-          codigoPostal: ['', Validators.required],
+          codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
           estado: ['', Validators.required],
-          correoElectronico: ['', Validators.required],
+          correoElectronico: ['', [Validators.required, Validators.maxLength(200)]],
         });
 
       case TIPO_FORMA.TIPO_PERSONA:
         return this.fb.group({
-          taxId: ['', Validators.required],
-          nombre: ['', Validators.required],
+          taxId: ['', [Validators.required, Validators.maxLength(12)]],
+          nombre: ['', [Validators.required, Validators.maxLength(200)]],
           pais: ['', Validators.required],
-          codigoPostal: ['', Validators.required],
-          estado: ['', Validators.required],
-          correoElectronico: ['', Validators.required],
-          apellidoPaterno: ['', Validators.required],
+          codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
+          estado: ['', [Validators.required, Validators.maxLength(250)]],
+          correoElectronico: ['', [Validators.required, Validators.maxLength(200)]],
+          apellidoPaterno: ['', [Validators.required, Validators.maxLength(200)]],
         });
       case TIPO_FORMA.NATIONALIDAD_MEXICANA:
         return this.fb.group({
-          rfc: ['', Validators.required],
+          rfc: ['', [
+            Validators.required, 
+            Validators.minLength(12),
+            Validators.maxLength(13),
+            Validators.pattern(REGEX_RFC)
+          ]],
         });
 
       default:
@@ -389,9 +651,9 @@ this.formaComplimentos.disable();
           taxId: ['', Validators.required],
           razonSocial: ['', Validators.required],
           pais: ['', Validators.required],
-          codigoPostal: ['', Validators.required],
+          codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
           estado: ['', Validators.required],
-          correoElectronico: ['', Validators.required],
+          correoElectronico: ['', [Validators.required, Validators.maxLength(200)]],
         });
         break;
     }
@@ -410,13 +672,38 @@ this.formaComplimentos.disable();
     const CONTROL = this.formaComplimentos.get(
       'formaSocioAccionistas'
     ) as FormGroup;
+    
+    // Save current form data before removing the control
+    const CURRENT_FORM_DATA = CONTROL.get('formaDatos')?.value || {};
+    
+    // Store ALL current form data in persistent storage
+    Object.keys(CURRENT_FORM_DATA).forEach(key => {
+      const VALUE = CURRENT_FORM_DATA[key];
+      if (VALUE !== undefined && VALUE !== null && VALUE !== '') {
+        this.PRESERVED_FORM_DATA[key] = VALUE;
+      }
+    });
+    
+    // Update form structure synchronously
     CONTROL.removeControl('formaDatos', { emitEvent: false });
     this.camposFormulario = [...camposDelFormulario];
-    setTimeout(() => {
-      CONTROL.setControl('formaDatos', this.obtainerFormaDatos(tipoForma), {
-        emitEvent: false,
-      });
-    }, 10);
+    const NEW_FORM_CONTROL = this.obtainerFormaDatos(tipoForma);
+    CONTROL.setControl('formaDatos', NEW_FORM_CONTROL, {
+      emitEvent: false,
+    });
+    
+   const DATA_TO_RESTORE: { [key: string]: string | number | boolean } = {};
+  const NEW_FORM_CONTROLS = Object.keys(NEW_FORM_CONTROL.controls);
+    
+   NEW_FORM_CONTROLS.forEach(controlName => {
+      if (this.PRESERVED_FORM_DATA[controlName] !== undefined) {
+        DATA_TO_RESTORE[controlName] = this.PRESERVED_FORM_DATA[controlName];
+      }
+    });
+    if (Object.keys(DATA_TO_RESTORE).length > 0) {
+      NEW_FORM_CONTROL.patchValue(DATA_TO_RESTORE, { emitEvent: false });
+    }
+  this.tipoFormulario = tipoForma;
   }
 
   /**
@@ -482,6 +769,7 @@ this.formaComplimentos.disable();
     const VALUE = CONTROL.get('formaDatos')?.value;
     if (VALUE) {
       this.accionistasAgregados.emit(VALUE);
+      this.formaComplimentos.reset();
     }
   }
 
@@ -490,9 +778,90 @@ this.formaComplimentos.disable();
    * @returns {void}
    */
   eliminarAccionistas(): void {
+      this.eliminarUnoConfirmationNotificacion.cerrar = false;
     if (this.empresaAccionistasSeleccionados.length) {
       this.accionistasEliminados.emit(this.empresaAccionistasSeleccionados);
+    } else {
+      this.abrirEliminarModal();
     }
+  }
+
+  /**
+   * Abre un modal relacionado con las plantas Immex y configura una notificación
+   * para alertar al usuario en caso de que no se hayan seleccionado datos de las plantas.
+   *
+   * La notificación configurada tiene las siguientes características:
+   * - Tipo de notificación: 'alert'
+   * - Categoría: 'danger'
+   * - Modo: 'action'
+   * - Título: vacío
+   * - Mensaje: 'No se seleccionaron datos de las plantas Immex.'
+   * - Cierre automático: habilitado
+   * - Tiempo de espera: 2000 milisegundos
+   * - Texto del botón Aceptar: 'Aceptar'
+   * - Texto del botón Cancelar: vacío
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  abrirEliminarModal(): void {
+    this.eliminarNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'No hay datos seleccionados en la tabla.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+
+    /**
+   * Abre un modal relacionado con las plantas Immex y configura una notificación
+   * para alertar al usuario en caso de que no se hayan seleccionado datos de las plantas.
+   *
+   * La notificación configurada tiene las siguientes características:
+   * - Tipo de notificación: 'alert'
+   * - Categoría: 'danger'
+   * - Modo: 'action'
+   * - Título: vacío
+   * - Mensaje: 'No se seleccionaron datos de las plantas Immex.'
+   * - Cierre automático: habilitado
+   * - Tiempo de espera: 2000 milisegundos
+   * - Texto del botón Aceptar: 'Aceptar'
+   * - Texto del botón Cancelar: vacío
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  abrirEliminarUnoConfirmationModal(): void {
+    if(!this.empresaAccionistasSeleccionados.length) {
+      this.abrirEliminarModal();
+      return;
+    }
+    this.eliminarUnoConfirmationNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: '¿Estás seguro de que quieres eliminar?',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+
+      /**
+   * Método para manejar la selección de plantas IMMEX.
+   * 
+   * Este método recibe un evento de tipo `PlantasImmex` y lo agrega al arreglo
+   * `plantasImmexSeleccionadoDatos`, asegurando que no se dupliquen entradas.
+   * 
+   * @param {PlantasImmex} event - Objeto de tipo `PlantasImmex` que representa la planta seleccionada.
+   */
+  closePlantasModal(): void {
+    this.eliminarNotificacion.cerrar = false;
   }
 
   /**
@@ -500,19 +869,80 @@ this.formaComplimentos.disable();
    * @returns {void}
    */
   eliminarAccionistasExtrenjeros(): void {
+    this.eliminarDosConfirmationNotificacion.cerrar = false;
     if (this.accionistasExtranjerosSeleccionados.length) {
       this.accionistasExtranjerosEliminado.emit(
         this.accionistasExtranjerosSeleccionados
       );
+    } else {
+      this.abrirEliminarModal();
     }
   }
 
+      /**
+   * Abre un modal relacionado con las plantas Immex y configura una notificación
+   * para alertar al usuario en caso de que no se hayan seleccionado datos de las plantas.
+   *
+   * La notificación configurada tiene las siguientes características:
+   * - Tipo de notificación: 'alert'
+   * - Categoría: 'danger'
+   * - Modo: 'action'
+   * - Título: vacío
+   * - Mensaje: 'No se seleccionaron datos de las plantas Immex.'
+   * - Cierre automático: habilitado
+   * - Tiempo de espera: 2000 milisegundos
+   * - Texto del botón Aceptar: 'Aceptar'
+   * - Texto del botón Cancelar: vacío
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  abrirEliminarDosConfirmationModal(): void {
+      if(!this.accionistasExtranjerosSeleccionados.length) {
+      this.abrirEliminarModal();
+      return;
+    }
+    this.eliminarDosConfirmationNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: '¿Estás seguro de que quieres eliminar?',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
   /**
    * @description Maneja la modificación del formulario basado en la nacionalidad y el tipo de persona.
    * @returns {void}
    */
   handleModificarForma(): void {
+    // First, save current form data immediately
+    const CONTROL = this.formaComplimentos.get('formaSocioAccionistas') as FormGroup;
+    const CURRENT_DATA = CONTROL.get('formaDatos')?.value || {};
+    
+    // Store initial data from datosFormaComplimentos if available
+    if (this.datosFormaComplimentos?.formaSocioAccionistas?.formaDatos) {
+      Object.keys(this.datosFormaComplimentos.formaSocioAccionistas.formaDatos).forEach(key => {
+        const VALUE = this.datosFormaComplimentos?.formaSocioAccionistas?.formaDatos?.[key];
+        if (VALUE) {
+          this.PRESERVED_FORM_DATA[key] = VALUE;
+        }
+      });
+    }
+    
+    // Preserve all current fields
+    Object.keys(CURRENT_DATA).forEach(key => {
+      const VALUE = CURRENT_DATA[key];
+      if (VALUE !== undefined && VALUE !== null && VALUE !== '') {
+        this.PRESERVED_FORM_DATA[key] = VALUE;
+      }
+    });
+    
+    // Execute form modification immediately without timeout
     const VALUE = this.formaComplimentos.value;
+    
     if (VALUE.formaSocioAccionistas.nationalidadMaxicana === 'true') {
       this.modificarFormulario(
         TIPO_FORMA.NATIONALIDAD_MEXICANA,
@@ -532,6 +962,182 @@ this.formaComplimentos.disable();
       }
     }
   }
+
+  /**
+   * Maneja los cambios en el campo "Fecha de Pago".
+   * Actualiza el estado del almacén con la fecha de pago proporcionada.  
+   */
+   cambioFechaFinal(nuevo_valor: string): void {
+    this.formaComplimentos.patchValue({
+      fechaExpedicion: nuevo_valor,
+    });
+    this.tramiteStore.setfechaExpedicion(nuevo_valor);
+  }
+
+  /**
+   * Clears all preserved form data
+   */
+  private clearPreservedData(): void {
+    this.PRESERVED_FORM_DATA = {};
+  }
+
+  /**
+   * Gets the appropriate error message for the main RFC field validation (formaModificaciones.rfc only)
+   * @returns {string} The error message to display
+   */
+  getRfcErrorMessage(): string {
+    if (!this.formaComplimentos) {
+      return 'Formulario no inicializado';
+    }
+    
+    // ONLY get errors from the main RFC field, not the dynamic form RFC
+    const RFC_CONTROL = this.formaComplimentos.get('formaModificaciones')?.get('rfc');
+    
+    if (!RFC_CONTROL?.errors) {
+      return '';
+    }
+
+    if (RFC_CONTROL.errors['required']) {
+      return 'El RFC es obligatorio';
+    }
+    
+    if (RFC_CONTROL.errors['minlength']) {
+      return 'El RFC no se encontró, favor de verificar';
+    }
+    
+    if (RFC_CONTROL.errors['maxlength']) {
+      return 'El RFC no puede exceder los 13 caracteres';
+    }
+    
+    if (RFC_CONTROL.errors['pattern']) {
+      return 'Formato inválido. Debe ser: 3-4 letras, 6 dígitos, 3 caracteres alfanuméricos';
+    }
+
+    return 'El RFC tiene errores de validación';
+  }
+
+  /**
+   * Handles MAIN RFC field blur event to show validation popup (formaModificaciones.rfc only)
+   */
+  onRfcBlur(): void {
+    // Set flag to indicate we're processing RFC validation
+    this.isProcessingRfcValidation = true;
+    
+    // Only target the main RFC field in formaModificaciones
+    const RFC_CONTROL = this.formaComplimentos.get('formaModificaciones')?.get('rfc');
+    if (RFC_CONTROL) {
+      RFC_CONTROL.markAsTouched();
+      // Only check validation for the main RFC field specifically on blur
+      this.checkRfcValidationOnly();
+    }
+    
+    // Reset flag after a delay
+    setTimeout(() => {
+      this.isProcessingRfcValidation = false;
+    }, 200);
+  }
+
+  /**
+   * Handles MAIN RFC field input change to show validation popup (formaModificaciones.rfc only)
+   * Only triggers when called directly from the main RFC input field
+   */
+  onRfcChange(): void {
+    // Set flag to indicate we're processing RFC validation
+    this.isProcessingRfcValidation = true;
+    
+    // Clear any existing notification first
+    this.clearRfcNotification();
+    
+    // Check validation after a slight delay to allow the value to be updated
+    setTimeout(() => {
+      // Only target the main RFC field in formaModificaciones
+      const RFC_CONTROL = this.formaComplimentos.get('formaModificaciones')?.get('rfc');
+      if (RFC_CONTROL && RFC_CONTROL.value) {
+        RFC_CONTROL.markAsTouched();
+        RFC_CONTROL.updateValueAndValidity();
+        // Only check validation for the main RFC field specifically and only if it has a value
+        this.checkRfcValidationOnly();
+      }
+      
+      // Reset flag
+      this.isProcessingRfcValidation = false;
+    }, 100);
+  }
+
+  /**
+   * Checks ONLY the main RFC validation (formaModificaciones.rfc) and shows notification if invalid
+   * This method is separate from other form validations to avoid interference
+   * Specifically ignores the dynamic form RFC field (formaDatos.rfc)
+   */
+  private checkRfcValidationOnly(): void {
+    if (!this.formaComplimentos) {
+      return;
+    }
+
+    // ONLY proceed if we're explicitly processing RFC validation
+    if (!this.isProcessingRfcValidation) {
+      return;
+    }
+
+    // ONLY check the main RFC field in formaModificaciones, NOT the dynamic form RFC
+    const RFC_CONTROL = this.formaComplimentos.get('formaModificaciones')?.get('rfc');
+    
+    // Additional check: ensure we're not processing other form events
+    const ACTIVE_ELEMENT = document.activeElement as HTMLInputElement;
+    const IS_RFC_FIELD = ACTIVE_ELEMENT?.id === 'rfc' || 
+                        (RFC_CONTROL?.touched && RFC_CONTROL?.value && RFC_CONTROL?.value.trim() !== '');
+    
+    // Ensure we're only checking the specific main RFC field and user is actually interacting with it
+    if (RFC_CONTROL?.invalid && RFC_CONTROL?.touched && RFC_CONTROL?.value && 
+        RFC_CONTROL?.value.trim() !== '' && IS_RFC_FIELD) {
+      const ERROR_MESSAGE = this.getRfcErrorMessage();
+      
+      // Only show notification if there's actually an error message and no notification is already shown
+      if (ERROR_MESSAGE && ERROR_MESSAGE.trim() !== '' && !this.nuevaNotificacionRfc) {
+        this.nuevaNotificacionRfc = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: '',
+          mensaje: ERROR_MESSAGE,
+          cerrar: false,
+          tiempoDeEspera: 3000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+      }
+    } else if (RFC_CONTROL?.valid && IS_RFC_FIELD) {
+      // Clear notification if main RFC field becomes valid and we're in RFC context
+      this.clearRfcNotification();
+    }
+  }
+
+  /**
+   * Clears the RFC notification
+   */
+  private clearRfcNotification(): void {
+    if (this.nuevaNotificacionRfc) {
+      this.nuevaNotificacionRfc = undefined as unknown as Notificacion;
+    }
+  }
+
+  /**
+   * Handles notification confirmation for RFC validation
+   * @param confirmar Indicates if the user confirmed the notification
+   */
+  confirmarNotificacionRfc(confirmar: boolean): void {
+    if (confirmar) {
+      // Clear the notification
+      this.clearRfcNotification();
+      
+      // Optionally focus back on the RFC field
+      const RFC_INPUT = document.getElementById('rfc');
+      if (RFC_INPUT) {
+        RFC_INPUT.focus();
+      }
+    }
+  }
+
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.
@@ -540,5 +1146,6 @@ this.formaComplimentos.disable();
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+    this.clearPreservedData();
   }
 }

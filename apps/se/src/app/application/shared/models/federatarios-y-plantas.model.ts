@@ -298,6 +298,50 @@ export interface EmpresasEXtranjeras {
 
 
 /**
+ * Representa un índice de catálogos de datos utilizados en la aplicación.
+ * 
+ * Esta interfaz define las propiedades necesarias para almacenar diferentes
+ * tipos de catálogos relacionados con estados federativos, municipios, 
+ * estados IMMEX, representaciones federales y actividades productivas.
+ */
+export interface CatalogoDatosIdx {
+  /**
+   * Lista de catálogos que representan los estados federativos.
+   * 
+   * Cada elemento de esta lista contiene información sobre un estado federativo.
+   */
+  estadosFederatarios: Catalogo[];
+
+  /**
+   * Lista de catálogos que representan los municipios.
+   * 
+   * Cada elemento de esta lista contiene información sobre un municipio.
+   */
+  municipio: Catalogo[];
+
+  /**
+   * Lista de catálogos que representan los estados IMMEX.
+   * 
+   * Cada elemento de esta lista contiene información sobre un estado IMMEX.
+   */
+  estadoImmex: Catalogo[];
+
+  /**
+   * Lista de catálogos que representan las representaciones federales.
+   * 
+   * Cada elemento de esta lista contiene información sobre una representación federal.
+   */
+  representacionFederal: Catalogo[];
+
+  /**
+   * Lista de catálogos que representan las actividades productivas.
+   * 
+   * Cada elemento de esta lista contiene información sobre una actividad productiva.
+   */
+  actividadProductiva: Catalogo[];
+}
+
+/**
  * Constante que define una lista de configuraciones para las propiedades de las plantas IMMEX.
  * Cada elemento de la lista contiene información sobre el encabezado, la clave para acceder
  * a la propiedad correspondiente de un objeto `PlantasImmex` y el orden en el que debe aparecer.

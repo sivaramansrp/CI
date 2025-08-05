@@ -1,4 +1,5 @@
 <div class="container">
+  @if (consultaDatos.parameter !== 'FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO'){
   <div class="row mt-3">
     <div class="col-md-12">
       <div class="panel-group ficha-collapse" id="accordion">
@@ -40,85 +41,119 @@
       </div>
     </div>
   </div>
-    <form [formGroup]="formulario">
-      @for(fieldGroup of configuracion; let groupIndex = $index; track groupIndex) {
-      <div class="form" [formGroupName]="fieldGroup.formGroupName">
-        <ng-titulo [titulo]="fieldGroup.title" />
-  
-        <div class="row align-items-center">
-          @for (item of fieldGroup.menu; let menuIndex = $index; track menuIndex) {
-          <div [ngClass]="item.class" [ngStyle]="{ visibility: item.visibility }">
-            <div class="form-group">
-              @switch (item.inputType) { @case(inputTypes.SELECT) {
-              <app-catalogo-select [catalogo]="item.props.catalogos" [label]="item.props.labelNombre" [formControlName]="item.props.campo" [isDisabled]="esFormularioSoloLectura"
-              [required]="true" name="tipoSolicitud" (change)="seleccionCatalogo(item.props.labelNombre, $event)"></app-catalogo-select>
-              } @case(inputTypes.TEXT) {
-                @if((!item.props.availableRadioOptions) || (item.props.availableRadioOptions && configuracion[groupIndex].menu[0].props && configuracion[groupIndex].menu[0].props.radioSelectedValue && item.props.availableRadioOptions.includes(configuracion[groupIndex].menu[0].props.radioSelectedValue))) {
-                  <label class="form-label" [for]="item.props.campo">{{
-                    item.props.labelNombre
-                  }}</label>
-                  <input
-                    class="form-control"
-                    [type]="item.props.tipo_input"
-                    [id]="item.props.campo"
-                    [placeholder]="item.props.placeholder"
-                    [formControlName]="item.props.campo"
-                    appUppercase
-                  />
-                }
-              } @case(inputTypes.BREAK_CONTENT) {
-              <div class="w-100"></div>
-              } @case (inputTypes.DATE) {
-              <input-fecha
-                [datos]="item.props"
-                (valorCambiado)="fechaCambiado($event)"
-              ></input-fecha>
-              } @case (inputTypes.RADIO) {
-              <label class="form-label" [for]="item.props.campo">{{
-                item.props.labelNombre
-              }}</label>@if(item.props.required){<span>*</span>}:
-              <app-input-radio
-                [radioOptions]="item.props.radioOptions"
-                [isRequired]="item.props.required"
-                (valueChange)="cambioValorRadio('radio', groupIndex, menuIndex,  $event)"
-                [layout]="'vertical'"
-                [formControlName]="item.props.campo"
-              ></app-input-radio>
-              }
-            @case (inputTypes.BUTTON){
-              <button
-                type="button"
-                class="btn btn-primary"
-                style="margin-top: 3rem;"
-              >
-                {{ item.props.labelNombre }}
-              </button>
+  }
+  <form [formGroup]="formulario">
+    @for(fieldGroup of configuracion; let groupIndex = $index; track groupIndex)
+    {
+    <div class="form" [formGroupName]="fieldGroup.formGroupName">
+      <ng-titulo [titulo]="fieldGroup.title" />
+
+      <div class="row align-items-center">
+        @for (item of fieldGroup.menu; let menuIndex = $index; track menuIndex)
+        {
+        <div [ngClass]="item.class" [ngStyle]="{ visibility: item.visibility }">
+          <div class="form-group">
+            @switch (item.inputType) { @case(inputTypes.SELECT) {
+            <app-catalogo-select
+              [catalogo]="item.props.catalogos"
+              [label]="item.props.labelNombre"
+              [formControlName]="item.props.campo"
+              [isDisabled]="esFormularioSoloLectura"
+              [required]="true"
+              name="tipoSolicitud"
+              (change)="seleccionCatalogo(item.props.labelNombre, $event)"
+            ></app-catalogo-select>
+            } @case(inputTypes.TEXT) { @if((!item.props.availableRadioOptions)
+            || (item.props.availableRadioOptions &&
+            configuracion[groupIndex].menu[0].props &&
+            configuracion[groupIndex].menu[0].props.radioSelectedValue &&
+            item.props.availableRadioOptions.includes(configuracion[groupIndex].menu[0].props.radioSelectedValue)))
+            {
+            <label class="form-label" [for]="item.props.campo">{{
+              item.props.labelNombre
+            }}</label>
+            <input
+              class="form-control"
+              [type]="item.props.tipo_input"
+              [id]="item.props.campo"
+              [placeholder]="item.props.placeholder"
+              [formControlName]="item.props.campo"
+              appUppercase
+            />
+            } } @case(inputTypes.BREAK_CONTENT) {
+            <div class="w-100"></div>
+            } @case (inputTypes.DATE) {
+            <input-fecha
+              [datos]="item.props"
+              (valorCambiado)="fechaCambiado($event)"
+            ></input-fecha>
+            } @case (inputTypes.RADIO) {
+            <label class="form-label" [for]="item.props.campo">{{
+              item.props.labelNombre
+            }}</label
+            >@if(item.props.required){<span>*</span>}:
+            <app-input-radio
+              [radioOptions]="item.props.radioOptions"
+              [isRequired]="item.props.required"
+              (valueChange)="
+                cambioValorRadio('radio', groupIndex, menuIndex, $event)
+              "
+              [layout]="'vertical'"
+              [formControlName]="item.props.campo"
+            ></app-input-radio>
+            } @case (inputTypes.BUTTON){
+            <button
+              type="button"
+              class="btn btn-primary"
+              style="margin-top: 3rem"
+              [disabled]="esFormularioSoloLectura"
+            >
+              {{ item.props.labelNombre }}
+            </button>
             }}
-            </div>
           </div>
-          }
         </div>
+        }
       </div>
-      }
-      <div class="row mt-5">
-        <app-tabla-dinamica 
-        [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" 
-        [configuracionTabla]="tableData.headers" 
-        [datos]="tableData.data" 
-        ></app-tabla-dinamica>
-      </div>
-    </form>
+    </div>
+    }
     <div class="row mt-5">
-      <div class="col-md-12 d-flex justify-content-end">
-          <div>
-            <button class="btn btn-primary me-2" type="button">Modificar</button>
-          </div>
-          <div>
-            <button class="btn btn-default me-2" type="button">Eliminar</button>
-          </div>
-          <div>
-            <button class="btn btn-default me-2" type="button">Agregar</button>
-          </div>
+      <app-tabla-dinamica
+        [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+        [configuracionTabla]="tableData.headers"
+        [datos]="tableData.data"
+      ></app-tabla-dinamica>
+    </div>
+  </form>
+  <div class="row mt-5">
+    <div class="col-md-12 d-flex justify-content-end">
+      <div>
+        <button
+          class="btn btn-primary me-2"
+          type="button"
+          [disabled]="esFormularioSoloLectura"
+        >
+          Modificar
+        </button>
+      </div>
+      <div>
+        <button
+          class="btn btn-default me-2"
+          type="button"
+          [disabled]="esFormularioSoloLectura"
+        >
+          Eliminar
+        </button>
+      </div>
+      <div>
+        <button
+          class="btn btn-default me-2"
+          type="button"
+          [disabled]="esFormularioSoloLectura"
+        >
+          Agregar
+        </button>
       </div>
     </div>
   </div>
+</div>

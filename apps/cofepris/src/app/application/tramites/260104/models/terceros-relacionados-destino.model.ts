@@ -371,7 +371,7 @@ export const DESTINATARIO_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Destinatario
     },
     { encabezado: 'Localidad', clave: (fila) => fila.descLocalidad, orden: 12 },
     {
-      encabezado: 'Estado/Localidad',
+      encabezado: 'Estado',
       clave: (fila) => fila.descEstado,
       orden: 13,
     },

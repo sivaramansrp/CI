@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud32614TercerosState, Tramite32614TercerosStore } from '../../estados/tramites/tramite32614_terceros.store';
@@ -8,11 +9,13 @@ import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { SolicitudDeRegistroInvocarService } from '../../services/solicitudDeRegistroInvocar/solicitud-de-registro-invocar.service';
 import { Subject } from 'rxjs';
+import { TERCEROS, TERCEROS_TABLA } from '../../constants/terceros.enum';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite32614TercerosQuery } from '../../estados/queries/terceros.query';
 import enlace from '@libs/shared/theme/assets/json/31601/enlace.json';
 import enlaceData from '@libs/shared/theme/assets/json/31601/enlace-data.json';
 import operativo from '@libs/shared/theme/assets/json/32614/operativo-tabla.json';
+import { TercerosTablaInfo } from '@libs/shared/data-access-user/src/core/models/32614/dato-comunes.model';
 /**
  * Componente encargado de gestionar la información del enlace del trámite 32614.
  */
@@ -25,6 +28,7 @@ import operativo from '@libs/shared/theme/assets/json/32614/operativo-tabla.json
     TituloComponent,
     ReactiveFormsModule,
     FormsModule,
+    TablaDinamicaComponent
   ],
   templateUrl: './enlace.component.html',
   styleUrl: './enlace.component.scss',
@@ -34,6 +38,10 @@ export class EnlaceComponent implements OnInit, OnDestroy {
    * Encabezados de la tabla de enlace.
    */
   public enlaceHeaderData: string[] = [];
+
+  
+  /** Tipo de tabla utilizada para mostrar número de empleados (checkbox) */
+  public tablaSeleccionCheckbox = TablaSeleccion.CHECKBOX;
 
   /**
    * Cuerpo de la tabla de enlace.
@@ -74,6 +82,18 @@ export class EnlaceComponent implements OnInit, OnDestroy {
    * Controla la visibilidad del modal.
    */
   public modal: string = 'modal';
+  
+  /** Configuración de columnas para la tabla de número de empleados */
+  public numeroDeEmpleadosConfiguracionColumnas: ConfiguracionColumna<TercerosTablaInfo>[] = TERCEROS;
+
+  /** Lista completa de número de empleados */
+  public numeroDeEmpleadosLista: TercerosTablaInfo[] = TERCEROS_TABLA as TercerosTablaInfo[];
+  
+  /** Lista de empleados seleccionados en la tabla */
+  public seleccionarNumeroDeEmpleadosLista: TercerosTablaInfo[] = [] as TercerosTablaInfo[];
+  
+  /** Indica si el modal está en modo de edición (true) o creación (false). */
+  public esModalEdicion: boolean = false;
 
   /**
    * Referencia al botón de cierre del modal.
@@ -165,8 +185,14 @@ export class EnlaceComponent implements OnInit, OnDestroy {
    * Abre el modal y carga el formulario con los datos del representante.
    */
   public abrirModal(): void {
+    this.esModalEdicion = false; // Set mode to "add"
     this.modal = 'show';
     this.getRegistroForm();
+  }
+
+    /** Guarda la selección de número de empleados hecha por el usuario.*/
+  seleccionarNumeroDeEmpleadosDato(evento: TercerosTablaInfo[]): void {
+    this.seleccionarNumeroDeEmpleadosLista = evento;
   }
 
   /**
@@ -240,6 +266,98 @@ export class EnlaceComponent implements OnInit, OnDestroy {
     (this.tramite32614Store[metodoNombre] as (value: string) => void)(VALOR);
   }
 
+  
+  /** Muestra el modal de subcontratados y carga los datos del primer empleado seleccionado en el formulario modal. */
+  modificarSubcontratados(): void {
+    if (this.seleccionarNumeroDeEmpleadosLista.length !== 0) {
+      this.esModalEdicion = true; // Set mode to "edit"
+      this.modal = 'show'; // Open the modal
+      
+     this.enlace.patchValue({
+        rfc: this.seleccionarNumeroDeEmpleadosLista[0]?.rfc,
+        nombre: this.seleccionarNumeroDeEmpleadosLista[0]?.nombre,
+        apellidoPaterno: this.seleccionarNumeroDeEmpleadosLista[0]?.apellidoPaterno,
+        apellidoMaterno: this.seleccionarNumeroDeEmpleadosLista[0]?.apellidoMaterno,
+        ciudad: this.seleccionarNumeroDeEmpleadosLista[0]?.ciudadOEstadoDeResidencia,
+        cargo: this.seleccionarNumeroDeEmpleadosLista[0]?.cargoOPuesto,
+        telefonoEnlace: this.seleccionarNumeroDeEmpleadosLista[0]?.telefono,
+        correoEnlace: this.seleccionarNumeroDeEmpleadosLista[0]?.correoElectronico,
+        suplente: this.seleccionarNumeroDeEmpleadosLista[0]?.suplente,
+      });
+    }
+  }
+
+  
+  /** Elimina los registros de número de empleados seleccionados.*/
+  eliminarNumeroDeEmpleadosDato(): void {
+    if (this.seleccionarNumeroDeEmpleadosLista.length > 0) {
+    
+      this.numeroDeEmpleadosLista = this.numeroDeEmpleadosLista.filter(item => {
+        
+        return !this.seleccionarNumeroDeEmpleadosLista.some(selectedItem =>
+          selectedItem.rfc === item.rfc &&
+          selectedItem.nombre === item.nombre &&
+          selectedItem.apellidoPaterno === item.apellidoPaterno &&
+          selectedItem.apellidoMaterno === item.apellidoMaterno &&
+          selectedItem.ciudadOEstadoDeResidencia === item.ciudadOEstadoDeResidencia &&
+          selectedItem.cargoOPuesto === item.cargoOPuesto &&
+          selectedItem.telefono === item.telefono &&
+          selectedItem.correoElectronico === item.correoElectronico &&
+          selectedItem.suplente === item.suplente
+        );
+      });
+
+      this.seleccionarNumeroDeEmpleadosLista = [];
+    }
+  }
+
+  
+  /** Guarda o actualiza el registro de número de empleados en la lista y muestra el modal de confirmación. */
+  aceptarModalUno(): void {
+    if (!this.esModalEdicion) {
+      
+      const NUEVO_EMPLEADO: TercerosTablaInfo = {
+        rfc: this.enlace.get('rfc')?.value,
+        nombre: this.enlace.get('nombre')?.value,
+        apellidoPaterno: this.enlace.get('apellidoPaterno')?.value,
+        apellidoMaterno: this.enlace.get('apellidoMaterno')?.value,
+        ciudadOEstadoDeResidencia: this.enlace.get('ciudad')?.value,
+        cargoOPuesto: this.enlace.get('cargo')?.value,
+        telefono: this.enlace.get('telefonoEnlace')?.value,
+        correoElectronico: this.enlace.get('correoEnlace')?.value,
+        suplente: this.enlace.get('suplente')?.value,
+      };
+      
+      
+      this.numeroDeEmpleadosLista = [...this.numeroDeEmpleadosLista, NUEVO_EMPLEADO];
+    } else {
+      
+      const INDICE = this.numeroDeEmpleadosLista.findIndex((item) => item.rfc === this.seleccionarNumeroDeEmpleadosLista?.[0]?.rfc);
+      if (INDICE >= 0) {
+       
+        this.numeroDeEmpleadosLista = this.numeroDeEmpleadosLista.map((item, index) => {
+          if (index === INDICE) {
+            return {
+              rfc: this.enlace.get('rfc')?.value,
+              nombre: this.enlace.get('nombre')?.value,
+              apellidoPaterno: this.enlace.get('apellidoPaterno')?.value,
+              apellidoMaterno: this.enlace.get('apellidoMaterno')?.value,
+              ciudadOEstadoDeResidencia: this.enlace.get('ciudad')?.value,
+              cargoOPuesto: this.enlace.get('cargo')?.value,
+              telefono: this.enlace.get('telefonoEnlace')?.value,
+              correoElectronico: this.enlace.get('correoEnlace')?.value,
+              suplente: this.enlace.get('suplente')?.value,
+            };
+          }
+          return item;
+        });
+      }
+    }
+      
+    this.seleccionarNumeroDeEmpleadosLista = [];
+    this.modal = 'hide';
+    this.enlace.reset();
+  }
 
   /**
    * Método del ciclo de vida que se ejecuta al destruir el componente.

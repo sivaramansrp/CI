@@ -2,14 +2,14 @@
  * Este módulo define el componente `CertificadoDisponiblesComponent` que maneja la información de los tratados y acuerdos.
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 
-import { CERTIFICADO_DISPONIBLES_COLUMNAS, CertificadoDisponibles, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
+import { CERTIFICADO_DISPONIBLES_COLUMNAS, CertificadoDisponibles, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
+import { CertificadoDisponiblesService } from '../../services/certificado-disponibles/certificadoDisponibles.service';
 
-import { CertificadoDisponiblesService } from '@ng-mf/data-access-user';
 
 /**
  * Este módulo define el componente `CertificadoDisponiblesComponent` que maneja la información de los tratados y acuerdos.
@@ -39,21 +39,37 @@ export class CertificadoDisponiblesComponent implements OnInit, OnDestroy {
    * Datos que se mostrarán en la tabla.
    * @type {any}
    */
-  public datosTabla!: CertificadoDisponibles[];
+  public datosTabla: CertificadoDisponibles[] = [];
 
   /**
    * Subject para manejar la desuscripción cuando el componente se destruye.
    * @type {Subject<void>}
    */
   private destroyed$ = new Subject<void>();
+  /**
+   * Evento que se emite cuando se hace clic en una fila de la tabla.
+   * @type {EventEmitter<void>}
+   */
+  @Output() rowClicked = new EventEmitter<void>();
+
+  @Input() esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente.
    * Servicio para obtener datos para el componente.
    * @param {CertificadoDisponiblesService} service - Servicio para obtener datos de tratados y acuerdos.
    */
-  constructor(private service: CertificadoDisponiblesService) {
-    // Lógica del constructor puede ser añadida aquí si es necesario
+  constructor(private service: CertificadoDisponiblesService,
+    private consultaioQuery: ConsultaioQuery
+  ) {
+     this.consultaioQuery.selectConsultaioState$
+          .pipe(
+            takeUntil(this.destroyed$),
+            map((seccionState) => {
+              this.esFormularioSoloLectura = seccionState.readonly;
+            })
+          )
+          .subscribe();
   }
 
   /**
@@ -77,5 +93,12 @@ export class CertificadoDisponiblesComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
+  }
+
+  onFilaClick(): void{
+     if (this.esFormularioSoloLectura) {
+      return; 
+    }
+    this.rowClicked.emit();
   }
 }

@@ -44,7 +44,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Cuando es verdadero, los controles del formulario estarán deshabilitados y no se podrán editar.
    */
   formularioDeshabilitado: boolean = false;
-
+  
   /**
    * @constructor
    * @param exportaccionAcuicolaService Servicio para gestionar operaciones relacionadas con la exportación acuícola.
@@ -72,13 +72,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Realiza la suscripción al estado de consulta para habilitar o deshabilitar el formulario según corresponda.
    */
   ngOnInit(): void {
-
     this.consultaQuery.selectConsultaioState$
     .pipe(takeUntil(this.destroyNotifier$))
     .subscribe((seccionState) => {
       if(seccionState.update){
         this.formularioDeshabilitado = false;
-              this.guardarDatosFormulario();
+        this.guardarDatosFormulario();
       }
       if (seccionState.readonly) {
         this.formularioDeshabilitado = true;

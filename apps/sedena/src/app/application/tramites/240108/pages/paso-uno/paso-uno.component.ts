@@ -1,19 +1,11 @@
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, PersonaTerceros } from '@ng-mf/data-access-user';
+import { Subject,map,takeUntil } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { Component } from '@angular/core';
 import { ConsultaDatosService } from '../../servicios/consulta-datos.servicio';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { ConsultaioState } from '@ng-mf/data-access-user';
-import { EventEmitter } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
-import { PersonaTerceros } from '@ng-mf/data-access-user';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
-import { Subject } from 'rxjs';
 import { Tramite240108Query } from '../../estados/tramite240108Query.query';
 import { Tramite240108Store } from '../../estados/tramite240108Store.store';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 /**
  * Componente para el asistente de solicitud.
@@ -71,6 +63,10 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    *
    * @param Tramite260210Query Query to access procedure state.
    * @param tramite260214Store Store to update procedure state.
+   * @param consultaDatosService Service to fetch data related to the request.
+   * @param consultaQuery Query to access consultation state.
+   * @param seccionStore Store to manage section state.
+   * @returns {void}
    */
   constructor(
     private route: ActivatedRoute,
