@@ -432,7 +432,11 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * @property {boolean} colapsableTres
    */
   colapsableTres: boolean = false;
-
+ /**
+   * Indica si la sección es colapsableTres.
+   * @property {boolean} colapsableTress
+   */
+  colapsableTress: boolean = false;
   /**
    * Lista de rangos de días seleccionarOrigenDelPais.
    */
@@ -467,6 +471,30 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   public paisDeProcedenciaLabel: CrossListLable = {
     tituluDeLaIzquierda: 'País productor del ingrediente activo:',
     derecha: 'País(es) seleccionado(s)*:',
+  };
+
+ /**
+   * Etiqueta de la lista de fechas.
+   * */
+  public paisDeDondeLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'País donde se elabora el producto',
+    derecha: 'País(es) seleccionado(s)',
+  };
+
+  /**
+   * Etiqueta de la lista de fechas.
+   * */
+  public paisOrigenLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'País de origen',
+    derecha: 'País(es) seleccionado(s)',
+  };
+
+  /**
+   * Etiqueta de la lista de fechas.
+   * */
+  public paisEmbarqueLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'País de procedencia',
+    derecha: 'País(es) seleccionado(s)',
   };
 
   /**
@@ -846,6 +874,23 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
   mostrar_colapsableTres(): void {
     this.colapsableTres = !this.colapsableTres;
+  }
+
+   /**
+   * Alterna el estado colapsable de la sección del formulario.
+   * @method mostrar_colapsableTress
+   */
+  mostrar_procedencia(): void {
+    this.colapsableTress = !this.colapsableTress;
+  }
+
+  /**
+   * Sets the value of the 'descripcionFraccion' field in the 'formMercancias' form group to the string 'descripcionFraccion'.
+   * If the control does not exist, no action is taken.
+   */
+  setDescripcionFraccion():void{
+    this.formMercancias.get('descripcionFraccion')?.setValue('descripcionFraccion');
+    this.formMercancias.get('UMT')?.setValue('UMT32131');
   }
   /**
    * Establece el valor de un campo en el store de Tramite31601.

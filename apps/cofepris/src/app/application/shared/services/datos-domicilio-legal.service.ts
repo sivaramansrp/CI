@@ -147,6 +147,10 @@ export class DatosDomicilioLegalService {
       this.datosDomicilioLegalStore.setApellidoMaterno(DATOS.apellidoMaterno);
       if (Array.isArray(DATOS.aduanasDeEntrada)) {this.datosDomicilioLegalStore.setPaisDeOriginDatos(DATOS.aduanasDeEntrada);}
       this.datosDomicilioLegalStore.setGarantiasOfrecidas(DATOS.garantiasOfrecidas);
+      this.datosDomicilioLegalStore.setNombre(DATOS.nombre);
+      this.datosDomicilioLegalStore.setApellidoPaterno(DATOS.apellidoPaterno);
+      this.datosDomicilioLegalStore.setApellidoMaterno(DATOS.apellidoMaterno);
+      this.datosDomicilioLegalStore.setMensaje(DATOS.mensaje);
   }
 
   /**
