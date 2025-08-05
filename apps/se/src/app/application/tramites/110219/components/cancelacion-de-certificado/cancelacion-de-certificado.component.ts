@@ -326,35 +326,49 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
    * Activa el estado de búsqueda y emite eventos relacionados con el número de certificado.
    */
   alBuscarClic(): void {
-    const CONTROL = this.cancelacionForm.get('validacionForm.numeroCertificado')?.value;
-    if (!CONTROL) {
-      this.estaBuscando = true;
-      this.isNumeroCertificado.emit(this.estaBuscando);
-    } else if (CONTROL) {
-      this.estaBuscando = false;
-      this.certificadoDisponsiblesTablaDatos[0].numeroCertificado = (this.cancelacionForm.get('validacionForm.numeroCertificado')?.value);
-      this.isNumeroCertificado.emit(this.estaBuscando);
-    }
-
-    if (CONTROL.invalid) {
-      this.mensajeError = '1.(Número de certificado) es un campo requerido';
-    }
-
-    const CERTIFICADO_EXISTE = this.buscarCertificado(CONTROL.value);
-
-    if (!CERTIFICADO_EXISTE) {
-      this.mensajeError = 'El certificado de origen no existe';
-    }
-
-    if ((this.cancelacionForm.get('validacionForm.numeroCertificado')?.hasError('pattern')) && !(this.cancelacionForm.get('validacionForm.numeroCertificado')?.hasError('required'))) {
-      this.mostrarErrores = true;
-      this.isNumeroCertificadoPattern.emit(this.mostrarErrores);
-    } else {
-      this.mostrarErrores = false;
-      this.isNumeroCertificadoPattern.emit(this.mostrarErrores);
-    }
-
+    const CONTROL = this.cancelacionForm.get('validacionForm.numeroCertificado');
+    const NUMERO_CERTIFICADO = CONTROL?.value;
+    
+    // Reset error message
     this.mensajeError = '';
+
+    // Check if field is empty (null, undefined, or only whitespace)
+    if (!NUMERO_CERTIFICADO || NUMERO_CERTIFICADO.trim() === '') {
+      this.estaBuscando = true;
+      this.mensajeError = '1.(Número de certificado) es un campo requerido';
+      this.isNumeroCertificado.emit(this.estaBuscando);
+      this.isNumeroCertificadoPattern.emit(false);
+      return;
+    }
+
+    // Check if field has validation errors (pattern, format, etc.)
+    if (CONTROL?.invalid) {
+      this.estaBuscando = true;
+      
+      if (CONTROL.hasError('pattern')) {
+        this.mensajeError = '1.(Número de certificado) tiene un formato inválido';
+        // For pattern errors, don't emit isNumeroCertificado as true (to avoid showing empty field error)
+        this.isNumeroCertificado.emit(false);
+        this.isNumeroCertificadoPattern.emit(true);
+      } else {
+        this.mensajeError = '1.(Número de certificado) es inválido';
+        this.isNumeroCertificado.emit(this.estaBuscando);
+        this.isNumeroCertificadoPattern.emit(true);
+      }
+      return;
+    }
+
+    // Show table data when searching - always set estaBuscando to false to display table
+    this.estaBuscando = false;
+    this.mostrarErrores = false;
+    
+    // Always update certificate data regardless of whether it already exists
+    // This ensures dynamic changes are reflected every time user searches
+    this.buscarYActualizarCertificado(NUMERO_CERTIFICADO.trim());
+    
+    // Always emit success state to show the table with available certificates
+    this.isNumeroCertificado.emit(false);
+    this.isNumeroCertificadoPattern.emit(false);
   }
 
   /**
@@ -363,7 +377,79 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
    * @returns `true` si el certificado existe, de lo contrario `false`.
    */
   buscarCertificado(numero: string): boolean {
-    return false;
+    if (!numero || numero.trim() === '') {
+      return false;
+    }
+    
+    return this.certificadoDisponsiblesTablaDatos.some(
+      certificado => String(certificado.numeroCertificado).trim() === numero.trim()
+    );
+  }
+
+  /**
+   * Busca y actualiza el certificado en la tabla con el nuevo número.
+   * Si no existe, reemplaza el primer registro o crea uno nuevo.
+   * @param numero Número de certificado a buscar y actualizar.
+   */
+  buscarYActualizarCertificado(numero: string): void {
+    if (!numero || numero.trim() === '') {
+      return;
+    }
+
+    const NUMERO_LIMPIO = numero.trim();
+    
+    // Always update the table data with the new certificate number
+    // This ensures dynamic changes are reflected immediately
+    if (this.certificadoDisponsiblesTablaDatos.length > 0) {
+      // Update the first record with new certificate number
+      this.certificadoDisponsiblesTablaDatos[0] = {
+        ...this.certificadoDisponsiblesTablaDatos[0],
+        numeroCertificado: NUMERO_LIMPIO
+      };
+    } else {
+      // If no data exists, create a new record
+      this.certificadoDisponsiblesTablaDatos = [{
+        numeroCertificado: NUMERO_LIMPIO,
+        pais: 'México',
+        tratado: 'TLCAN/T-MEC', 
+        fechaExpedicion: new Date().toLocaleDateString('es-ES'),
+        fechaVencimiento: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toLocaleDateString('es-ES')
+      }];
+    }
+
+    // Force change detection to update the view
+    this.certificadoDisponsiblesTablaDatos = [...this.certificadoDisponsiblesTablaDatos];
+  }
+
+  /**
+   * Limpia el formulario y resetea la tabla de certificados.
+   */
+  limpiarBusqueda(): void {
+    this.cancelacionForm.get('validacionForm.numeroCertificado')?.setValue('');
+    this.estaBuscando = true;
+    this.mostrarErrores = true;
+    this.mensajeError = '';
+    this.isNumeroCertificado.emit(false);
+    this.isNumeroCertificadoPattern.emit(false);
+  }
+
+  /**
+   * Maneja los cambios en el input del número de certificado
+   * @param event Evento del input
+   */
+  onNumeroCertificadoChange(event: Event): void {
+    const TARGET = event.target as HTMLInputElement;
+    const VALOR = TARGET.value;
+    
+    // Update the store with the new value
+    this.setValoresStore(this.validacionForm, 'numeroCertificado', 'setNumeroCertificado');
+    
+    // Reset search state when user modifies the input
+    if (VALOR && VALOR.trim() !== '') {
+      this.estaBuscando = true;
+      this.mostrarErrores = true;
+      this.mensajeError = '';
+    }
   }
 
   /**
@@ -465,30 +551,31 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
    * @param evt Evento de mouse.
    */
   onTablaDblClick(evt: MouseEvent): void {
-    // 1️⃣ ¿Dónde hizo dblclick? Busca el <td>
     const TD = (evt.target as HTMLElement).closest('td');
     if (!TD) { return; }
 
-    // 2️⃣ ¿En qué columna? Compara el índice del <td> con tu headers[]
     const TR = TD.parentElement;
     if (!TR) { return; }
-    const CLICKED_COL_INDEX = Array.from(TR.children).indexOf(TD);
-    const TARGET_COL_INDEX = this.headers.findIndex(h => h.encabezado === 'Número de certificado');
-
-    if (CLICKED_COL_INDEX !== TARGET_COL_INDEX) {
-      // no es la columna “Certificado”
-      return;
-    }
-
-    // 3️⃣ Extrae el VALOR mostrado en la celda y busca el objeto
-    const VALOR = TD.textContent ? TD.textContent.trim() : '';
-    const MATCH = this.certificadoDisponsiblesTablaDatos
-      .find(item => String(item.numeroCertificado) === VALOR);
-
-    if (MATCH) {
-      this.isCertificadoOriginEnable = true;
-      this.certificadoOriginEnable.emit(this.isCertificadoOriginEnable);
-      this.handleCertificadoDblClick(MATCH);
+    
+    // Get the row index to find the corresponding data
+    const TABLE = TR.closest('table');
+    if (!TABLE) { return; }
+    
+    const TBODY = TABLE.querySelector('tbody');
+    if (!TBODY) { return; }
+    
+    const ROWS = Array.from(TBODY.querySelectorAll('tr'));
+    const ROW_INDEX = ROWS.indexOf(TR as HTMLTableRowElement);
+    
+    // Find the matching certificate data by row index
+    if (ROW_INDEX >= 0 && ROW_INDEX < this.certificadoDisponsiblesTablaDatos.length) {
+      const MATCH = this.certificadoDisponsiblesTablaDatos[ROW_INDEX];
+      
+      if (MATCH) {
+        this.isCertificadoOriginEnable = true;
+        this.certificadoOriginEnable.emit(this.isCertificadoOriginEnable);
+        this.handleCertificadoDblClick(MATCH);
+      }
     }
   }
 
@@ -496,7 +583,7 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
    * Maneja la lógica al hacer doble clic sobre un certificado.
    * @param cert Certificado seleccionado.
    */
-  private handleCertificadoDblClick(cert: ColumnasTabla) {
+  private handleCertificadoDblClick(_cert: ColumnasTabla):void {
     // Aquí tu lógica: navegar, abrir modal, etc.
     // p.ej. this.router.navigate(['/detalle', cert.numeroCertificado]);
   }

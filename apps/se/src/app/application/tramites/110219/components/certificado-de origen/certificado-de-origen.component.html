@@ -5,14 +5,14 @@
       <div class="col-md-4 mb-3">
         <div class="col-md-12 align-text-area">
         <label>Motivo de cancelación<span
-            [ngClass]="{'error-star': cancelacionForm.get('validacionForm.motivoCancelacion')?.invalid }">*</span>:
+            [ngClass]="{'error-star': cancelacionForm.get('validacionForm.motivoCancelacion')?.invalid && cancelacionForm.get('validacionForm.motivoCancelacion')?.touched}">*</span>:
         </label></div>
         <div class="col-md-12 align-text-area">
           <textarea cols="60" rows="5" formControlName="motivoCancelacion" 
-            [ngClass]="{'error-border': cancelacionForm.get( 'validacionForm.motivoCancelacion' )?.invalid  }"
+            [ngClass]="{'error-border': cancelacionForm.get('validacionForm.motivoCancelacion')?.invalid && cancelacionForm.get('validacionForm.motivoCancelacion')?.touched}"
             (change)=" setValoresStore(validacionForm, 'motivoCancelacion', 'setMotivoCancelacion' )"></textarea>
         
-        <div *ngIf=" cancelacionForm.get('validacionForm.motivoCancelacion')?.invalid " class="error-msg"> Este campo es
+        <div *ngIf="cancelacionForm.get('validacionForm.motivoCancelacion')?.invalid && cancelacionForm.get('validacionForm.motivoCancelacion')?.touched" class="error-msg"> Este campo es
           obligatorio. </div>
           </div>
       </div>

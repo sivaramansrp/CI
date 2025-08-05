@@ -322,11 +322,6 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     correoElectronico: [{ value: this.solicitudState?.correoElectronico, disabled: this.soloLectura }, [Validators.required, Validators.email]],
   }),
 });
-
-    if (this.cancelacionForm.invalid) {
-      this.cancelacionForm.markAllAsTouched();
-      this.cancelacionForm.markAsDirty();
-    }
   }
 
   /**
@@ -334,7 +329,6 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    */
   emitirEventoClick(): void {
     if (!(this.cancelacionForm.get('validacionForm.motivoCancelacion')?.hasError('required'))) {
-      this.datosPasos;
       this.dataEventContinuar.emit(3);
       this.isDataEventContinuar.emit(false);
     } else {
