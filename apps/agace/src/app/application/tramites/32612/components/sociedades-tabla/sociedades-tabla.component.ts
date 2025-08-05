@@ -96,6 +96,8 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
    * @type {DatosDeLasInstalaciones[]}
    */
   public instalacionesDatos: DatosDeLasInstalaciones[] = [];
+
+  public seleccionarlistaInstalaciones: DatosDeLasInstalaciones[] = [];
   /**
    * Un FormGroup anidado que representa la estructura del formulario para agregar sociedades.
    * 
@@ -182,13 +184,15 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
    * Esta propiedad se utiliza normalmente para mostrar o gestionar los mandatarios dentro del componente.
    */
   public mandatariosDatos: MandatariosDeAgenteAduanal[] = [];
+
+  public seleccionarlistaMandatarios: MandatariosDeAgenteAduanal[] = [];
   /**
    * Grupo de formulario que representa los mandatarios del agente.
    * 
    * Este grupo de formulario contiene un FormGroup anidado llamado `mandatariosDelAgenteFormGroup`,
    * que puede utilizarse para gestionar y validar los datos relacionados con los mandatarios del agente.
    */
-  public mandatariosDelAgenteFormGroup: FormGroup = new FormGroup({
+  public mandatariosDelAgenteForma: FormGroup = new FormGroup({
     mandatariosDelAgenteFormGroup: new FormGroup({})
   });
   /**
@@ -297,13 +301,48 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
                 }
               });
             }
+            if( this.solicitudeState && 
+              typeof this.solicitudeState === 'object' && 
+              this.solicitudeState !== null && 
+              'MandatariosDeAgenteAduanal' in this.solicitudeState) {
+                const DATOS = this.solicitudeState['MandatariosDeAgenteAduanal'] as MandatariosDeAgenteAduanal[];
+                DATOS.forEach((dato: MandatariosDeAgenteAduanal) => {
+                  const IS_ALREADY_ADDED = this.mandatariosDatos.some(
+                    (item: MandatariosDeAgenteAduanal) => item.rfc === dato.rfc
+                  );
+  
+                  if (!IS_ALREADY_ADDED) {
+                    this.mandatariosDatos = [...this.mandatariosDatos, dato];
+                  }
+                });
+            }
+
+            if( this.solicitudeState && 
+              typeof this.solicitudeState === 'object' && 
+              this.solicitudeState !== null && 
+              'Instalaciones' in this.solicitudeState) {
+                const DATOS = this.solicitudeState['Instalaciones'] as DatosDeLasInstalaciones[];
+                DATOS.forEach((dato: DatosDeLasInstalaciones) => {
+                  const IS_ALREADY_ADDED = this.instalacionesDatos.some(
+                    (item: DatosDeLasInstalaciones) => item.rfc === dato.rfc
+                  );
+  
+                  if (!IS_ALREADY_ADDED) {
+                    this.instalacionesDatos = [...this.instalacionesDatos, dato];
+                  }
+                });
+            }
         })
       ).subscribe();
       if(!this.solicitudeState['Sociedades']) {
         this.getSociedadesTabla();
       }
-    this.getDatosDeLasInstalacionesDatos();
-    this.getMandatariosDeAgenteTablaDatos();
+      if(!this.solicitudeState['MandatariosDeAgenteAduanal']) {
+        this.getMandatariosDeAgenteTablaDatos();
+      }
+      if(!this.solicitudeState['Instalaciones']) {
+        this.getDatosDeLasInstalacionesDatos();
+      }
     this.getAduanaActuaCatalogDatos();
     this.getRfcDelAgenteCatalogDatos();
     this.getEntidadFederativaCatalogDatos();
@@ -325,8 +364,8 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
    *
    * @returns El `FormGroup` correspondiente a 'agregarFormGroup'.
    */
-  get agregarFormGroup(): FormGroup {
-    return this.agregarForma.get('agregarFormGroup') as FormGroup;
+  get mandatariosDelAgenteFormGroup(): FormGroup {
+    return this.mandatariosDelAgenteForma.get('mandatariosDelAgenteFormGroup') as FormGroup;
   }
 
   /**
@@ -344,6 +383,10 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
    */
   get modificarFormGroup(): FormGroup {
     return this.forma.get('modificarFormGroup') as FormGroup;
+  }
+
+  get agregarFormGroup(): FormGroup {
+    return this.agregarForma.get('agregarFormGroup') as FormGroup;
   }
 
   /**
@@ -418,7 +461,12 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
     this.modalRef = this.modalService.show(template,{ class: 'modal-lg',});
     if(Valor === 'modificarSociedades') {
       this.modificarSociedades();
+    } else if(Valor === 'modificarMandatarios') {
+      this.modificarMandatarios();
+    } else if(Valor === 'modificarInstalaciones') {
+      this.modificarInstalaciones();
     }
+
   }
 
   /**
@@ -485,8 +533,9 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
       this.sociedadesDatos = this.sociedadesDatos.filter(item => {
 
         return !this.seleccionarlistaSociedades.some(selectedItem =>
-          selectedItem.rfc === item.rfc ||
-          (selectedItem.denominacion === item.denominacion &&
+          selectedItem.rfc === item.rfc &&
+          (selectedItem.denominacion === item.denominacion && 
+          selectedItem.aduanaEnLaQueActua === item.aduanaEnLaQueActua &&
             selectedItem.fiscales === item.fiscales)
         );
       });
@@ -579,6 +628,114 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
         // Manejo de errores
       }
     });
+  }
+
+  public aceptarAgregar(): void {
+    const AGREGAR_FORMA_DATOS = {
+      rfc: this.agregarFormGroup.get('rfcDelAgente')?.value,
+      entidadFederativa: this.agregarFormGroup.get('entidadFederativa')?.value,
+      instalacionesPrincipales: 'vcvdscdvcd',
+      tipoDeInstalacion: 'ftyewyfu hefhw',
+      municipioDelegacion: 'cvdscvdytytcfdcdsc',
+      colonia: 'cvdscvdytytcfdcdsc',
+      codigoPostal: 'GH3456',
+      realizaLaValidacion: 'vcvdscdvcd',
+      actualizarPerfil: 'AC3453DF998',
+
+    };
+    this.instalacionesDatos = [...this.instalacionesDatos, AGREGAR_FORMA_DATOS];
+    this.tramite32612Store.setDynamicFieldValue('Instalaciones', this.instalacionesDatos);
+    this.modalRef?.hide();
+  }
+
+  public eliminarInstalaciones(): void {
+    if (this.seleccionarlistaInstalaciones.length > 0) {
+      this.instalacionesDatos = this.instalacionesDatos.filter(item => {
+        return !this.seleccionarlistaInstalaciones.some(selectedItem =>
+          selectedItem.rfc === item.rfc &&
+          (selectedItem.entidadFederativa === item.entidadFederativa)
+        );
+      });
+      this.seleccionarlistaInstalaciones = [];
+      this.tramite32612Store.setDynamicFieldValue('Instalaciones', this.instalacionesDatos);
+    }
+  }
+
+  public modificarInstalaciones(): void {
+    if (this.seleccionarlistaInstalaciones.length !== 0) {
+      this.agregarFormGroup.get('rfc')?.setValue(this.seleccionarlistaInstalaciones[0]?.rfc);
+      this.agregarFormGroup.get('entidadFederativa')?.setValue(this.seleccionarlistaInstalaciones[0]?.entidadFederativa);
+    }
+  }
+
+  public seleccionarlistaSeccionInstalaciones(event: DatosDeLasInstalaciones[]): void {
+    this.seleccionarlistaInstalaciones = event;
+  }
+
+  public seleccionarlistaSeccionMandatarios(event: MandatariosDeAgenteAduanal[]): void {
+    this.seleccionarlistaMandatarios = event;
+  }
+  public buscarMandatariosEvento(): void {
+    if (this.mandatariosDelAgenteFormGroup.get('rfcRegistro')?.value) {
+      this.mandatariosDelAgenteFormGroup.patchValue({
+        rfc: 'AC3453DF998',
+        razonSocial: 'AAD FDYUSADY HGDAYUDGYW'
+      });
+    }
+  }
+
+  public aceptarMandatarios(): void {
+    if(!this.seleccionarlistaMandatarios.length) {
+      const FORMA_DATOS = {
+        rfc: this.mandatariosDelAgenteFormGroup.get('rfc')?.value,
+        razonSocial: this.mandatariosDelAgenteFormGroup.get('razonSocial')?.value,
+        fiscales: this.mandatariosDelAgenteFormGroup.get('fiscales')?.value,
+      };
+      this.mandatariosDatos = [...this.mandatariosDatos, FORMA_DATOS];
+      this.tramite32612Store.setDynamicFieldValue('MandatariosDeAgenteAduanal', this.mandatariosDatos);
+    } else {
+      const INDICE = this.mandatariosDatos.findIndex((el: MandatariosDeAgenteAduanal) => el.rfc === this.seleccionarlistaMandatarios[0]?.rfc);
+      if (INDICE >= 0) {
+        this.mandatariosDatos = this.mandatariosDatos.map((item, index) => {
+          if (index === INDICE) {
+            return {
+              rfc: this.mandatariosDelAgenteFormGroup.get('rfcRegistro')?.value,
+              razonSocial: this.mandatariosDelAgenteFormGroup.get('razonSocial')?.value,
+              fiscales: this.mandatariosDelAgenteFormGroup.get('fiscales')?.value,
+            };
+          }
+          return item;
+        });
+        this.tramite32612Store.setDynamicFieldValue('MandatariosDeAgenteAduanal', this.mandatariosDatos);
+      }
+    }
+    this.modalRef?.hide();
+  }
+
+  public modificarMandatarios(): void {
+    if (this.seleccionarlistaMandatarios.length !== 0) {
+      this.mandatariosDelAgenteFormGroup.get('rfc')?.setValue(this.seleccionarlistaMandatarios[0]?.rfc);
+      this.mandatariosDelAgenteFormGroup.get('razonSocial')?.setValue(this.seleccionarlistaMandatarios[0]?.razonSocial);
+      this.mandatariosDelAgenteFormGroup.get('fiscales')?.setValue(this.seleccionarlistaMandatarios[0]?.fiscales);
+    }
+  }
+
+  public limpiarMandatariosFormulario(): void {
+    this.mandatariosDelAgenteFormGroup.reset();
+  }
+
+  public eliminarMandatarios(): void {
+    if (this.seleccionarlistaMandatarios.length > 0) {
+      this.mandatariosDatos = this.mandatariosDatos.filter(item => {
+        return !this.seleccionarlistaMandatarios.some(selectedItem =>
+          selectedItem.rfc === item.rfc &&
+          (selectedItem.razonSocial === item.razonSocial && 
+          selectedItem.fiscales === item.fiscales)
+        );
+      });
+      this.seleccionarlistaMandatarios = [];
+      this.tramite32612Store.setDynamicFieldValue('MandatariosDeAgenteAduanal', this.mandatariosDatos);
+    }
   }
 
   /**

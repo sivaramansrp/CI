@@ -194,10 +194,10 @@ export const CONFIGURACION_IDIQUESI = [
  */
 export const MANDATARIOS_DEL_AGENT = [
     {
-      id: 'rfc',
+      id: 'rfcRegistro',
       row: 1,
       labelNombre: 'RFC',
-      campo: 'rfc',
+      campo: 'rfcRegistro',
       clase: 'col-md-4',
       tipoInput: 'text',
       desactivado: false,
