@@ -1,42 +1,17 @@
-import { AvisoCatalogo } from '../../models/aviso-catalogo.model';
-import { AvisoOpcionesDeRadio } from '../../models/aviso-catalogo.model';
-import { CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src'; 
+import { AvisoCatalogo, AvisoOpcionesDeRadio, OperacionDeImportacion } from '../../models/aviso-catalogo.model';
+import { CatalogoSelectComponent, CatalogosSelect, ConfiguracionColumna, InputFecha, InputFechaComponent, InputRadioComponent, REGEX_NUMEROS_USD, REGEX_REEMPLAZAR, REGEX_SOLO_NUMEROS, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import { Solicitud32501State, Solicitud32501Store } from '../../estados/solicitud32501.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { ElementRef } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FECHA_INGRESO } from '../../enums/solicitud32501.enum';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { InputFecha } from '@libs/shared/data-access-user/src';
-import { InputFechaComponent } from '@libs/shared/data-access-user/src';
-import { InputRadioComponent } from "@libs/shared/data-access-user/src";
 import { MercanciasDesmontadasOSinMontarService } from '../../services/mercancias-desmontadas-o-sin-montar.service';
 import { Modal } from 'bootstrap';
 import { ModalOperacionComponent } from '../modal-operacion/modal-operacion.component';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { OperacionDeImportacion } from '../../models/aviso-catalogo.model';
-import { REGEX_NUMEROS_USD } from '@libs/shared/data-access-user/src';
-import { REGEX_REEMPLAZAR } from '@libs/shared/data-access-user/src';
-import { REGEX_SOLO_NUMEROS } from '@libs/shared/data-access-user/src';
-import {ReactiveFormsModule } from '@angular/forms';
 import { Solicitud32501Query } from '../../estados/solicitud32501.query';
-import { Solicitud32501State } from '../../estados/solicitud32501.store';
-import { Solicitud32501Store } from '../../estados/solicitud32501.store';
-import { Subject } from 'rxjs';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
-import { ViewChild } from '@angular/core';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
-
-import {ConsultaioQuery } from '@ng-mf/data-access-user';
 
 /**
  * Componente `DatosSolicitudComponent` que gestiona la lógica y la interfaz de usuario
@@ -56,8 +31,8 @@ import {ConsultaioQuery } from '@ng-mf/data-access-user';
     TituloComponent,
     TablaDinamicaComponent,
     ModalOperacionComponent,
-    InputRadioComponent
-],
+    InputRadioComponent,
+  ],
   providers: [MercanciasDesmontadasOSinMontarService],
   templateUrl: './datos-solicitud.component.html',
   styleUrl: './datos-solicitud.component.scss',
@@ -68,7 +43,7 @@ import {ConsultaioQuery } from '@ng-mf/data-access-user';
  *
  */
 export class DatosSolicitudComponent implements OnInit, OnDestroy {
-   /**
+  /**
    * Indica si el formulario está en modo solo lectura.
    */
   esSoloLectura!: boolean;
@@ -106,6 +81,16 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Opción seleccionada para Colonia.
    */
   opcionColonia: CatalogosSelect = {} as CatalogosSelect;
+
+  /**
+   * Lista de entidades federativas.
+   */
+  delegacionMunicipioLista: CatalogosSelect = {} as CatalogosSelect;
+
+  /**
+   * Lista de delegaciones o municipios.
+   */
+  coloniaLista: CatalogosSelect = {} as CatalogosSelect;
 
   /**
    * Observable para manejar la destrucción de suscripciones.
@@ -171,6 +156,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * @param MercanciasDesmontadasOSinMontarService - Servicio para manejar operaciones relacionadas con mercancías desmanteladas sin monitoreo.
    * @param solicitud32501Query - Servicio para realizar consultas relacionadas con la solicitud 32501.
    * @param solicitud32501Store - Almacén para gestionar el estado de la solicitud 32501.
+   * @param consultaQuery - Servicio para realizar consultas relacionadas con la consulta de IO.
    *
    * Este constructor inicializa el componente obteniendo el aviso del catálogo
    * y la operación de importación mediante las funciones `obtenerAvisoDelCatalogo`
@@ -182,9 +168,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     public solicitud32501Query: Solicitud32501Query,
     public solicitud32501Store: Solicitud32501Store,
     private consultaQuery: ConsultaioQuery
-  ) {
-    
-  }
+  ) {}
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -199,17 +183,20 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.obtenerValoresDelStore();
     this.inicializarFormulario();
-    this.obtenerAvisoDelCatalogo();
+
     this.obtenerOperacionDeImportacion();
     this.obtenerAvisoOpcionesDeRadio();
     this.consultaQuery.selectConsultaioState$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((estadoSeccion) => {
         this.esSoloLectura = estadoSeccion.readonly;
+        if (estadoSeccion.create) {
+          this.getAvisoDelCatalogo();
+        } else {
+          this.obtenerAvisoDelCatalogo();
+        }
         this.habilitarDeshabilitarFormulario();
       });
-
-
   }
 
   /**
@@ -269,8 +256,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       ],
       descripcionMercancia: [
         this.solicitud32501State?.descripcionMercancia,
-        [Validators.required,
-        Validators.maxLength(250)],
+        [Validators.required, Validators.maxLength(250)],
       ],
       nombreComercial: [
         this.solicitud32501State?.nombreComercial,
@@ -354,6 +340,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyed$),
         map((respuesta: Solicitud32501State) => {
+          this.tipoAviso = respuesta.ideGenerica1;
           this.solicitud32501State = respuesta;
         })
       )
@@ -376,6 +363,27 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
           this.opcionEntidadFederativa = respuesta.entidadFederativa;
           this.opcionDelegacionMunicipio = respuesta.delegacionMunicipio;
           this.opcionColonia = respuesta.colonia;
+        },
+      });
+  }
+
+  /**
+   * Obtiene un aviso del catálogo utilizando el servicio `mercanciasDesmontadasOSinMontarService`.
+   * Se suscribe al observable y actualiza las opciones relacionadas con la fracción arancelaria,
+   * entidad federativa, delegación/municipio y colonia con los valores obtenidos de la respuesta.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  getAvisoDelCatalogo(): void {
+    this.mercanciasDesmontadasOSinMontarService
+      .obtenerAvisoDelCatalogo()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (respuesta: AvisoCatalogo) => {
+          this.opcionFraccionArancelaria = respuesta.cveFraccionArancelaria;
+          this.opcionEntidadFederativa = respuesta.entidadFederativa;
+          this.delegacionMunicipioLista = respuesta.delegacionMunicipio;
+          this.coloniaLista = respuesta.colonia;
         },
       });
   }
@@ -426,28 +434,34 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.tipoAviso = evento;
     this.solicitud32501Store.establecerDatos({ ideGenerica1: evento });
   }
-/*
-    * Establece los valores del formulario en el estado de la solicitud.
-    *
-    * @param formulario - El formulario del cual se obtienen los valores.
-    * @param campo - El nombre del campo cuyo valor se desea establecer en el estado.
-    *
-    * Este método obtiene el valor del campo especificado en el formulario y lo establece
-    * en el estado de la solicitud utilizando el store `solicitud32501Store`.
-    */
+  /*
+   * Establece los valores del formulario en el estado de la solicitud.
+   *
+   * @param formulario - El formulario del cual se obtienen los valores.
+   * @param campo - El nombre del campo cuyo valor se desea establecer en el estado.
+   *
+   * Este método obtiene el valor del campo especificado en el formulario y lo establece
+   * en el estado de la solicitud utilizando el store `solicitud32501Store`.
+   */
   establecerValoresEnEstado(formulario: FormGroup, campo: string): void {
     const VALOR = formulario.get(campo)?.value;
+    if (campo === 'entidadFederativa') {
+      this.opcionDelegacionMunicipio = this.delegacionMunicipioLista;
+    } else if (campo === 'delegacionMunicipio') {
+      this.opcionColonia = this.coloniaLista;
+    } 
+    
     this.solicitud32501Store.establecerDatos({ [campo]: VALOR });
   }
-/**
- * Cambia el valor del campo `fechaIniExposicion` en el formulario y actualiza el estado de la solicitud.
- * @param evento - El nuevo valor de la fecha de inicio de exposición.
- */
+  /**
+   * Cambia el valor del campo `fechaIniExposicion` en el formulario y actualiza el estado de la solicitud.
+   * @param evento - El nuevo valor de la fecha de inicio de exposición.
+   */
   cambiarInputFecha(evento: string): void {
-  this.formAviso.patchValue({
-    fechaIniExposicion: evento,
-  });
-  this.establecerValoresEnEstado(this.formAviso, 'fechaIniExposicion');
+    this.formAviso.patchValue({
+      fechaIniExposicion: evento,
+    });
+    this.establecerValoresEnEstado(this.formAviso, 'fechaIniExposicion');
   }
 
   /**
