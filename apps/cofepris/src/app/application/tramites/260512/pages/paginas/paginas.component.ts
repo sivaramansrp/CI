@@ -107,10 +107,13 @@ export class PaginasComponent implements OnInit, OnDestroy {
  */
   wizardService = inject(WizardService);
 
-   constructor(
-    private consultaQuery: ConsultaioQuery,
-    public servicioDeFormularioService: ServicioDeFormularioService,
-   ) { }
+  /**
+ * Constructor del componente. Inyecta los servicios necesarios para la consulta de datos y la gestión de formularios.
+ */
+  constructor(
+  private consultaQuery: ConsultaioQuery,
+  public servicioDeFormularioService: ServicioDeFormularioService,
+  ) { }
 
    /**
     * @method ngOnInit
