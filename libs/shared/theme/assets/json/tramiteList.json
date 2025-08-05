@@ -4214,7 +4214,14 @@
     "linkDepartment": "/pago/cancelaciones-certificado/solicitud",
     "department": "se"
   },
-    {
+  {
+    "id": 32609,
+    "tramite": 32609,
+    "linkDashboard": "/agace/certificacion-empresas/operador-economico-autorizado-textil",
+    "linkDepartment": "/pago/certificacion-empresas/operador-economico-autorizado-textil",
+    "department": "agace"
+  },
+  {
     "id": 606,
     "tramite": 32614,
     "linkDashboard": "/agace/importador-y-o-exportador2/solicitud",

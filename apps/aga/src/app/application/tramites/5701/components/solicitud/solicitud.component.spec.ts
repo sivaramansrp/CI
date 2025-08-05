@@ -145,4 +145,120 @@ describe('SolicitudComponent', () => {
     it('should have default mostarSelectTipoDespacho as false', () => {
         expect(component.mostarSelectTipoDespacho).toBe(false);
     });
+
+    // Tests for RFC clearing functionality
+    describe('RFC Field Clearing', () => {
+        beforeEach(() => {
+            // Setup form controls for RFC testing
+            component.datosImportadorExportador.addControl('RFCImpExp', mockFormBuilder.control(''));
+            component.datosImportadorExportador.addControl('nombre', mockFormBuilder.control(''));
+            component.datosImportadorExportador.addControl('programa', mockFormBuilder.control(false));
+            component.datosImportadorExportador.addControl('desProgramaFomento', mockFormBuilder.control(''));
+            component.datosImportadorExportador.addControl('checkIMMEX', mockFormBuilder.control(false));
+            component.datosImportadorExportador.addControl('desImmex', mockFormBuilder.control(''));
+            component.datosImportadorExportador.addControl('industriaAutomotriz', mockFormBuilder.control(false));
+            component.datosImportadorExportador.addControl('desIndustrialAutomotriz', mockFormBuilder.control(''));
+            component.datosImportadorExportador.addControl('tipoEmpresaCertificadaA', mockFormBuilder.control(false));
+            component.datosImportadorExportador.addControl('tipoEmpresaCertificadaAA', mockFormBuilder.control(false));
+            component.datosImportadorExportador.addControl('tipoEmpresaCertificadaAAA', mockFormBuilder.control(false));
+            component.datosImportadorExportador.addControl('certificacionOEA', mockFormBuilder.control(false));
+            component.datosImportadorExportador.addControl('revision', mockFormBuilder.control(false));
+
+            // Mock the store using bracket notation to access private property
+            (component as any).tramite5701Store = {
+                update: jest.fn(),
+                setPrograma: jest.fn(),
+                setDescripcionProgramaFomento: jest.fn(),
+                setCheckIMMEX: jest.fn(),
+                setDescripcionImmex: jest.fn(),
+                setIndustriaAutomotriz: jest.fn(),
+                setDescripcionIndustriaAutomotriz: jest.fn()
+            };
+        });
+
+        it('should clear all RFC-related fields when desactivaCamposCertificaciones is called', () => {
+            // Set some initial values
+            component.datosImportadorExportador.patchValue({
+                RFCImpExp: 'RFC123456789',
+                nombre: 'Test Company',
+                programa: true,
+                desProgramaFomento: 'Test Program',
+                checkIMMEX: true,
+                desImmex: 'Test IMMEX',
+                industriaAutomotriz: true,
+                desIndustrialAutomotriz: 'Test Auto',
+                tipoEmpresaCertificadaA: true,
+                certificacionOEA: true
+            });
+
+            // Call the method
+            component.desactivaCamposCertificaciones();
+
+            // Verify all fields are cleared
+            expect(component.datosImportadorExportador.get('RFCImpExp')?.value).toBe('');
+            expect(component.datosImportadorExportador.get('nombre')?.value).toBe('');
+            expect(component.datosImportadorExportador.get('programa')?.value).toBe(false);
+            expect(component.datosImportadorExportador.get('desProgramaFomento')?.value).toBe('');
+            expect(component.datosImportadorExportador.get('checkIMMEX')?.value).toBe(false);
+            expect(component.datosImportadorExportador.get('desImmex')?.value).toBe('');
+            expect(component.datosImportadorExportador.get('industriaAutomotriz')?.value).toBe(false);
+            expect(component.datosImportadorExportador.get('desIndustrialAutomotriz')?.value).toBe('');
+            expect(component.datosImportadorExportador.get('tipoEmpresaCertificadaA')?.value).toBe(false);
+            expect(component.datosImportadorExportador.get('certificacionOEA')?.value).toBe(false);
+            expect(component.datosImportadorExportador.get('revision')?.value).toBe(false);
+
+            // Verify store update was called
+            expect((component as any).tramite5701Store.update).toHaveBeenCalled();
+        });
+
+        it('should clear previous RFC data without clearing RFC and name in limpiarDatosPreviosRFC', () => {
+            // Set some initial values including RFC and name
+            component.datosImportadorExportador.patchValue({
+                RFCImpExp: 'RFC123456789',
+                nombre: 'Test Company',
+                programa: true,
+                desProgramaFomento: 'Test Program',
+                checkIMMEX: true,
+                desImmex: 'Test IMMEX',
+                industriaAutomotriz: true,
+                desIndustrialAutomotriz: 'Test Auto',
+                tipoEmpresaCertificadaA: true,
+                certificacionOEA: true
+            });
+
+            // Call the private method using bracket notation
+            (component as any).limpiarDatosPreviosRFC();
+
+            // Verify RFC and name are preserved
+            expect(component.datosImportadorExportador.get('RFCImpExp')?.value).toBe('RFC123456789');
+            expect(component.datosImportadorExportador.get('nombre')?.value).toBe('Test Company');
+
+            // Verify certification fields are cleared
+            expect(component.datosImportadorExportador.get('programa')?.value).toBe(false);
+            expect(component.datosImportadorExportador.get('desProgramaFomento')?.value).toBe('');
+            expect(component.datosImportadorExportador.get('checkIMMEX')?.value).toBe(false);
+            expect(component.datosImportadorExportador.get('desImmex')?.value).toBe('');
+            expect(component.datosImportadorExportador.get('industriaAutomotriz')?.value).toBe(false);
+            expect(component.datosImportadorExportador.get('desIndustrialAutomotriz')?.value).toBe('');
+            expect(component.datosImportadorExportador.get('tipoEmpresaCertificadaA')?.value).toBe(false);
+            expect(component.datosImportadorExportador.get('certificacionOEA')?.value).toBe(false);
+            expect(component.datosImportadorExportador.get('revision')?.value).toBe(false);
+
+            // Verify store update was called
+            expect((component as any).tramite5701Store.update).toHaveBeenCalled();
+        });
+
+        it('should disable certification checkboxes when desactivaCamposCertificaciones is called', () => {
+            // Call the method
+            component.desactivaCamposCertificaciones();
+
+            // Verify all certification checkboxes are disabled
+            expect(component.tipoEmpresaCertificadaADisabled).toBe(true);
+            expect(component.tipoEmpresaCertificadaAADisabled).toBe(true);
+            expect(component.tipoEmpresaCertificadaAAADisabled).toBe(true);
+            expect(component.certificacionOEADisabled).toBe(true);
+            expect(component.revisionDisabled).toBe(true);
+            expect(component.certificacionesDisabled).toBe(true);
+        });
+    });
 });

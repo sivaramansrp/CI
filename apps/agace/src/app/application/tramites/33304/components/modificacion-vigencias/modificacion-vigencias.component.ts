@@ -36,18 +36,21 @@ import { Solicitud33304Query } from '../../estados/solicitud33304Query';
   styleUrls: ['./modificacion-vigencias.component.scss'],
 })
 export class ModificacionVigenciasComponent implements OnInit, OnDestroy {
+
+  /** Form de este bloque */
   formularioModificacionVigencias!: FormGroup;
 
+  /** Opciones para los radios de selección: "Domicilio nuevo" o "Modificar domicilio" */
   radioOptions = RADIO_OPTIONS;
 
   /** Config for <input-fecha> */
   fechaInputDatos: InputFecha = PERFILES_FECHA_INPUT;
 
   /** Readonly flag from Consultaio */
-  esFormularioSoloLectura = false;
+  esFormularioSoloLectura: boolean = false;
 
   /** App state (optional if you need it) */
-  solicitudState!: Solicitud33304State;
+  public solicitudState!: Solicitud33304State;
 
   /** Destroy notifier */
   private destroy$ = new Subject<void>();
@@ -57,35 +60,56 @@ export class ModificacionVigenciasComponent implements OnInit, OnDestroy {
     private solicitud33304Store: Solicitud33304Store,
     private solicitud33304Query: Solicitud33304Query,
     private consultaioQuery: ConsultaioQuery,
-  ) {}
-
-  ngOnInit(): void {
+  ) {
+     // Sin condiciones extra: solo gestionar readonly
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroy$),
-        map(seccion => {
-          this.esFormularioSoloLectura = !seccion.readonly;
-          // if (this.formularioModificacionVigencias) {
-          //   this.esFormularioSoloLectura
-          //     ? this.formularioModificacionVigencias.disable({ emitEvent: false })
-          //     : this.formularioModificacionVigencias.enable({ emitEvent: false });
-          // }
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
+      this.crearFormulario();
 
-    // Load current state & build form
-    this.solicitud33304Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroy$),
-        map(state => {
-          this.solicitudState = state;
-          this.crearFormulario();
-        })
-      )
-      .subscribe();
+
   }
 
+  ngOnInit(): void {
+     this.solicitud33304Query.selectSolicitud$
+       .pipe(
+         takeUntil(this.destroy$),
+         map((seccionState) => {
+           this.solicitudState = seccionState;
+ 
+         })
+       )
+       .subscribe();
+ 
+     this.inicializarEstadoFormulario();
+  }
+
+  /** Readonly vs editable (sin otras condiciones) */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+    this.crearFormulario();
+    }
+  }
+
+   /** Aplica enable/disable según readonly */
+   guardarDatosFormulario(): void {
+    this.crearFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.formularioModificacionVigencias.disable();
+    } else {
+      this.formularioModificacionVigencias.enable();
+    }
+  }
+
+    /** Construye/rehidrata el formulario */
   private crearFormulario(): void {
 
     this.formularioModificacionVigencias = this.fb.group({
@@ -96,25 +120,18 @@ export class ModificacionVigenciasComponent implements OnInit, OnDestroy {
       fechaFinVigenciaActual: [this.solicitudState?.fechaFinVigenciaActual ?? ''],
     });
 
-    // if (this.esFormularioSoloLectura) {
-    //   this.formularioModificacionVigencias.disable({ emitEvent: false });
-    // }
   }
 
-
-
-  /** Called by (valueChange) on the radio */
-  onCambioModificacionVigencias(valor: string | number): void {
-    this.applyVigenciaValidators(valor === '1');
+  /**
+   * Actualiza el valor de la fecha de inicio de comercio en el formulario.
+   * Establece el valor y marca el campo como no tocado.
+   * 
+   * param nuevo_valor - Nuevo valor de la fecha en formato string
+   */
+  actualizarFecha(nuevo_valor: string, compo:string): void {
+    this.formularioModificacionVigencias.get(compo)?.setValue(nuevo_valor);
+    this.formularioModificacionVigencias.get(compo)?.markAsUntouched();
   }
-
-  // /** Centralized date setter used by (valorCambiado) of <input-fecha> */
-  // actualizarFecha(nuevoValor: string, control: string): void {
-  //   const ctr = this.formularioModificacionVigencias.get(control);
-  //   ctr?.setValue(nuevoValor);
-  //   ctr?.markAsDirty();
-  //   ctr?.updateValueAndValidity();
-  // }
 
   /** Generic store setter used in (change) or along with actualizarFecha */
   setValoresStore(form: FormGroup | null, campo: string): void {
@@ -125,10 +142,15 @@ export class ModificacionVigenciasComponent implements OnInit, OnDestroy {
     if (CONTROL && CONTROL.value !== undefined) {
       this.solicitud33304Store.actualizarEstado({ [campo]: CONTROL.value });
     }
+
+    if(campo === 'modificacionVigencias'){
+      this.applyVigenciaValidators(form.get(campo)?.value === '1');
+    }
   }
 
   /** Add/remove required validators on dates depending on radio selection */
   private applyVigenciaValidators(requiereFechas: boolean): void {
+    
     const CONTROLS = [
       'fechaInicioVigenciaAnterior',
       'fechaFinVigenciaAnterior',

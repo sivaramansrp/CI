@@ -287,7 +287,7 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    * Abre el modal de choferes.
    * @returns {void}
    */
-  openModal(): void {
+  abiertoModal(): void {
     this.modalRef = this.modalService.show(this.datosDeChoferesModal, { class: 'modal-xl' });
   }
 
@@ -295,7 +295,7 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    * Cierra el modal de choferes y emite el evento de cancelación.
    * @returns {void}
    */
-  closeModal(): void {
+  cerrarModal(): void {
     this.modalRef?.hide();
     this.cancelEvent.emit();
   }
@@ -306,7 +306,8 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    * Este método reinicia todos los campos del formulario `formChoferes` con valores vacíos o por defecto,
    * permitiendo limpiar el formulario para una nueva entrada de datos.
    */
-  resetForm(): void {
+  limpiarFormulario(): void {
+    this.formChoferes.reset();
     this.formChoferes.reset({
        curp: '',
        rfc: '',
@@ -327,7 +328,6 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
       correoElectronico: '',
       telefono: ''
     });
-
   }
 
   /**
@@ -384,14 +384,6 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
   }
 
   /**
-   * Limpia todos los campos del formulario de choferes.
-   * @returns {void}
-   */
-  limpiarFormulario(): void {
-    this.formChoferes.reset();
-  }
-
-  /**
    * Guarda los datos editados del chofer nacional si el formulario es válido, emite el evento y cierra el modal.
    * Si el formulario es inválido, muestra una notificación de alerta.
    * @returns {void}
@@ -413,7 +405,7 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
 
       // Aquí puedes realizar la lógica para guardar los datos del chofer
       this.addModalEvent.emit(DATA);
-      this.closeModal();
+      this.cerrarModal();
     } else {
       this.alertaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,

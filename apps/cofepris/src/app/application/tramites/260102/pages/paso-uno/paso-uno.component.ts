@@ -57,9 +57,7 @@ export class PasoUnoComponent implements OnDestroy {
    * @param {ConsumoPersonalService} ConsumoPersonalService - Servicio para gestionar el consumo personal.
    */
   constructor(private seccionStore: SeccionLibStore, private consultaQuery: ConsultaioQuery, private ConsumoPersonalService: ConsumoPersonalService) {
-    this.asignarSecciones();
-
-    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
+     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
       this.consultaState = seccionState;
     })).subscribe();
     if (this.consultaState && this.consultaState.procedureId === this.idProcedimiento.toString() &&

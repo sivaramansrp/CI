@@ -33,6 +33,9 @@
       "fechaCaducidad": "2",
       "fechaFabricacion": "3",
       "tipoDeProducto": "4",
-      "rfc": "rfc"
+      "rfc": "rfc",
+      "nombres": "Nombre",
+      "apellidoPaterno": "Apellido",            
+      "apellidoMaterno": "Materno"
 }
 

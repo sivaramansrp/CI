@@ -11,7 +11,7 @@
  */
 
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, SECCIONES_TRAMITE_220404, SeccionLibQuery, SeccionLibState, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
+import { DatosPasos, ListaPasosWizard, SeccionLibQuery, SeccionLibState, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { DESISTIMIENTO_PASOS } from '../../enum/desistimiento.enum';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
@@ -125,25 +125,6 @@ export class DesistimientoPageComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    /** Llama al método para asignar las secciones iniciales al componente o al estado. */
-    this.asignarSecciones();
-  }
-
-  /**
-   * Método para asignar las secciones existentes al store.
-   * Inicializa las secciones visibles y su estado de validación.
-   */
-  public asignarSecciones(): void {
-    const SECCIONES: boolean[] = Object.values(SECCIONES_TRAMITE_220404.PASO_1);
-    const FORM_VALIDA: boolean[] = [];
-    for (const LLAVE_SECCIONE in SECCIONES_TRAMITE_220404.PASO_1) {
-      if (LLAVE_SECCIONE) {
-        FORM_VALIDA.push(false);
-      }
-    }
-    this.seccionStore.establecerSeccion(SECCIONES);
-    this.seccionStore.establecerFormaValida(FORM_VALIDA);
   }
 
   /**
