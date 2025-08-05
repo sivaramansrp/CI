@@ -329,7 +329,7 @@
             <label for="fraccionArancelaria">Fracción arancelaria*:</label>
             <span class="bi bi-question-circle-fill fs-4 m-1" [title]="'Fracción arancelaria'" ata-bs-toggle="tooltip">
             </span>
-            <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control"
+            <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control" (focusout)="autoCompleteFraccionArancelaria()"
               (change)="
                 setValoresStore(
                   formMercancias,

@@ -3,7 +3,13 @@ export interface PlantasSubfabricante {
     numExterior :number,
     numInterior :number,
     codigoPostal:number
-    colonia :string
+    colonia :string,
+    municipio :string,
+    entidadFederativa :string,
+    pais :string,
+    rfc :string,
+    domicilioFiscal :string,
+    razonSocial :string
   }
 
   export interface DatosSubcontratista {

@@ -79,6 +79,7 @@ export class FabricanteDatosComponent implements OnInit, OnDestroy {
 
 
   id?:number
+  public tipoPersonaValor: string | number = '';
 
   /**
    * @constructor
@@ -100,7 +101,7 @@ export class FabricanteDatosComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute
   ) {
     this.crearFormulario();
-    this.changeNacionalidad();
+    this.changeNacionalidad('');
   }
   /**
    * Crea y inicializa el formulario con los campos y validaciones necesarios.
@@ -241,7 +242,8 @@ this.id=ID;
    * Si la nacionalidad no es 'true', habilita todos los campos del formulario.
    * Si la nacionalidad es 'true', deshabilita algunos campos y habilita otros dependiendo de la tipoPersona.
    */
-  changeNacionalidad(): void {
+  changeNacionalidad(value: string | number): void {
+    this.tipoPersonaValor = value;
     if (this.agregarDatosForm?.value?.nacionalidad !== 'true') {
       this.agregarDatosForm.enable();
     } else {

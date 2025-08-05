@@ -7,6 +7,7 @@ import { Injectable } from '@angular/core';
 export interface TramiteState {
   idTramite: string | null;
   firma: string | null;
+  fechaExpedicion?: string;
 }
 
 /**
@@ -17,6 +18,7 @@ export function createInitialState(): TramiteState {
   return {
     idTramite: null,
     firma: null,
+    fechaExpedicion: '',
   };
 }
 
@@ -48,5 +50,16 @@ export class TramiteStore extends Store<TramiteState> {
 
   public limpiarTramite():void {
     this.reset();
+  }
+
+   /**
+   * Actualiza el estado con la fecha proporcionada.
+   * @param {string} fecha La fecha a establecer.
+   */
+  public setfechaExpedicion(fechaExpedicion: string): void {
+    this.update((state) => ({
+      ...state,
+      fechaExpedicion,
+    }));
   }
 }

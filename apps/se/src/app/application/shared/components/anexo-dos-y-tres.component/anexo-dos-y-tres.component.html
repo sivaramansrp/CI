@@ -4,7 +4,8 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label" for="fraccionArancelaria">Contenedores, cajas de trailer:</label>
+                               <label class="form-label" for="claveArancelaria">
+Contenedores, cajas de trailer:</label>
                     <label class="form-label" for="fraccionArancelaria">Fracción arancelaria:</label>
                     <input class="form-control min-hgt" maxlength="10" id="fraccionArancelaria" formControlName="fraccionArancelaria"
                         type="text">
@@ -23,7 +24,7 @@
         </div>
         <div class="row">
             <div class="col-12 container text-end mt-5">
-              <button class="btn btn-danger me-2" (click)="abrirDosModal()">Eliminar</button>
+              <button class="btn btn-primary me-2 custom-btn-Eliminar" (click)="eliminarAnexoDos()">Eliminar</button>
               <button class="btn btn-primary" (click)="agregarAnexoDos()">Agregar</button>
             </div>
           </div>
@@ -31,6 +32,7 @@
             <label>Descripción anexo II:</label>
         </div>
         <div class="row mt-5">
+            <h2>Descripción anexo II:</h2>
             <app-tabla-dinamica [tipoSeleccionTabla]="anexo1y3Configuartion.anexoDosTablaSeleccionCheckbox" 
              [configuracionTabla]="anexo1y3Configuartion.anexoDosEncabezadoDeTabla"
              [datos]="anexoDosTablaLista"
@@ -66,7 +68,7 @@
         </div>
         <div class="row">
             <div class="col-12 container text-end mt-5">
-              <button class="btn btn-danger me-2" (click)="abrirTresModal()">Eliminar</button>
+              <button class="btn btn-primary me-2 custom-btn-Eliminar" (click)="eliminarAnexoTres()">Eliminar</button>
               <button class="btn btn-primary" (click)="agregarAnexoTres()">Agregar</button>
             </div>
           </div>
@@ -74,6 +76,7 @@
             <label>Descripción anexo III:</label>
         </div>
         <div class="row mt-5">
+            <h2>Descripción anexo III:</h2>
             <app-tabla-dinamica [tipoSeleccionTabla]="anexo1y3Configuartion.anexoTresTablaSeleccionCheckbox" 
              [configuracionTabla]="anexo1y3Configuartion.anexoTresEncabezadoDeTabla"
              [datos]="anexoTresTablaLista"

@@ -15,7 +15,6 @@
       [configuracionTabla]="configuracionTablaDestinatario"
       [datos]="(destinatarioTablaDatos$ | async) || []"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
-      [acciones]="accionesServcios"
       (listaDeFilaSeleccionada)="onListaDeFilaSeleccionada($event,'destinatario')"
     ></app-tabla-dinamica>
   </div>
@@ -61,7 +60,6 @@
       [configuracionTabla]="configuracionTablaFabricante"
       [datos]="(fabricanteTablaDatos$ | async) || []"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
-      [acciones]="accionesServcios"
       (listaDeFilaSeleccionada)="onListaDeFilaSeleccionada($event,'fabricante')"
     ></app-tabla-dinamica>
   </div>
