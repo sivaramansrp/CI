@@ -41,6 +41,12 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   soloLectura: boolean = false;
 
   /**
+   * Indica si se debe mostrar los errores de validación.
+   * Se activa cuando el usuario intenta continuar con el formulario inválido.
+   */
+  mostrarErroresValidacion: boolean = false;
+
+  /**
    * Formulario reactivo para el certificado de origen.
    */
   cancelacionForm!: FormGroup;
@@ -247,15 +253,6 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Valida el formulario del destinatario. Marca todos los campos como tocados si es inválido.
-   */
-  validarDestinatarioFormulario(): void {
-    if (this.cancelacionForm.invalid) {
-      this.cancelacionForm.markAllAsTouched();
-    }
-  }
-
-  /**
    * Obtiene los datos de la tabla de mercancías del certificado.
    */
   public getMercanciaCertificadoTabla(): void {
@@ -328,10 +325,13 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Emite un evento al hacer clic en un botón.
    */
   emitirEventoClick(): void {
-    if (!(this.cancelacionForm.get('validacionForm.motivoCancelacion')?.hasError('required'))) {
+    if (this.cancelacionForm.get('validacionForm')?.valid) {
+      this.mostrarErroresValidacion = false;
       this.dataEventContinuar.emit(3);
       this.isDataEventContinuar.emit(false);
     } else {
+      this.mostrarErroresValidacion = true;
+      this.cancelacionForm.get('validacionForm')?.markAllAsTouched();
       this.datosPasos.indice = 1;
       this.isDataEventContinuar.emit(true);
       this.dataEventContinuar.emit(3);

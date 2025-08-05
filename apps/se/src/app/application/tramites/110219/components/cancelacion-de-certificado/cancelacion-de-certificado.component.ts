@@ -2,6 +2,7 @@
 /* eslint-disable class-methods-use-this */
 import {
   BtnContinuarComponent,
+  CERTIFICATE_OF_ORIGIN_NUMBER,
   Catalogo,
   CatalogoSelectComponent,
   CatalogosSelect,
@@ -324,6 +325,12 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
 
   /**
    * Activa el estado de búsqueda y emite eventos relacionados con el número de certificado.
+   * Pattern validation: ^[A-Za-z0-9]{8,20}$ (8-20 alphanumeric characters)
+   * 
+   * Flow:
+   * 1. Empty input → isNumeroCertificado.emit(true) → shows "campo requerido"
+   * 2. Invalid pattern → isNumeroCertificadoPattern.emit(true) → shows "El certificado de origen no existe"
+   * 3. Valid pattern → both emit(false) → shows certificate table
    */
   alBuscarClic(): void {
     const CONTROL = this.cancelacionForm.get('validacionForm.numeroCertificado');
@@ -346,7 +353,8 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
       this.estaBuscando = true;
       
       if (CONTROL.hasError('pattern')) {
-        this.mensajeError = '1.(Número de certificado) tiene un formato inválido';
+        // Pattern validation failed: not 8-20 alphanumeric characters
+        this.mensajeError = 'El certificado de origen no existe';
         // For pattern errors, don't emit isNumeroCertificado as true (to avoid showing empty field error)
         this.isNumeroCertificado.emit(false);
         this.isNumeroCertificadoPattern.emit(true);
@@ -358,7 +366,7 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Show table data when searching - always set estaBuscando to false to display table
+    // Valid input: show table data
     this.estaBuscando = false;
     this.mostrarErrores = false;
     
@@ -523,7 +531,10 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
   donanteDomicilio(): void {
    this.cancelacionForm = this.fb.group({
   validacionForm: this.fb.group({
-    numeroCertificado: [{ value: this.solicitudState?.numeroCertificado, disabled: this.soloLectura }, [Validators.required]],
+    numeroCertificado: [{ value: this.solicitudState?.numeroCertificado, disabled: this.soloLectura }, [
+      Validators.required, 
+      Validators.pattern(CERTIFICATE_OF_ORIGIN_NUMBER)
+    ]],
     tratado: [{ value: this.solicitudState?.tratado, disabled: this.soloLectura }, [Validators.required]],
     pais: [{ value: this.solicitudState?.pais, disabled: this.soloLectura }, [Validators.required]],
     fechaInicial: [{ value: this.solicitudState?.fechaInicial, disabled: this.soloLectura }, [Validators.required]],
