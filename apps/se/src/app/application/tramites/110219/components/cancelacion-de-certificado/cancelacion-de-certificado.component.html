@@ -96,35 +96,29 @@
     </div>
     <div class="table-container centered-table-wrapper mt-5">
       <ng-titulo titulo="Certificados disponibles" />
-      <ng-container
-        *ngIf="!estaBuscando && !mostrarErrores"
-        (dblclick)="onTablaDblClick($event)"
-      >
+      @if (!estaBuscando && !mostrarErrores) {
         <app-tabla-dinamica
           (dblclick)="onTablaDblClick($event)"
           [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
           [configuracionTabla]="headers"
           [datos]="certificadoDisponsiblesTablaDatos"
         ></app-tabla-dinamica>
-      </ng-container>
-      <ng-container *ngIf="estaBuscando && mostrarErrores">
+      } @else if (estaBuscando && mostrarErrores) {
         <app-tabla-dinamica
           [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
           [configuracionTabla]="headers"
         ></app-tabla-dinamica>
-      </ng-container>
-      <ng-container *ngIf="!estaBuscando && mostrarErrores">
+      } @else if (!estaBuscando && mostrarErrores) {
         <app-tabla-dinamica
           [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
           [configuracionTabla]="headers"
         ></app-tabla-dinamica>
-      </ng-container>
-      <ng-container *ngIf="estaBuscando && !mostrarErrores">
+      } @else if (estaBuscando && !mostrarErrores) {
         <app-tabla-dinamica
           [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
           [configuracionTabla]="headers"
         ></app-tabla-dinamica>
-      </ng-container>
+      }
     </div>
   </ng-container>
 </form>

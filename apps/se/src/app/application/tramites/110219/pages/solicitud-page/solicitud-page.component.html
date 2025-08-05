@@ -4,8 +4,8 @@
       <div class="col-md-12">
         <h2>Cancelación de certificado</h2>
       </div>
+      @if (isNumeroDe) {
       <div
-        *ngIf="isNumeroDe"
         class="alert alert-danger text-center"
         role="alert"
       >
@@ -14,8 +14,9 @@
           (Número de certificado) es un campo requerido
         </span>
       </div>
+      }
+      @if (isNumeroPattern) {
       <div
-        *ngIf="isNumeroPattern"
         class="alert alert-danger text-center"
         role="alert"
       >
@@ -24,14 +25,16 @@
           El certificado de origen no existe
         </span>
       </div>
+      }
+      @if (isNumeroDatos) {
       <div
         class="col-md-12 alert alert-danger"
         style="text-align: center"
         role="alert"
-        *ngIf="isNumeroDatos"
       >
         Favor de verificar los campos que marcan error
       </div>
+      }
       <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
     <div class="row">
@@ -44,11 +47,12 @@
         (isDatosNumero)="isDatosNumero($event)"
       ></app-paso-uno>
       } @case (2) { <app-paso-tres></app-paso-tres> } }
+      @if (nombre === 1) {
       <btn-continuar
-        *ngIf="nombre === 1"
         [datos]="datosPasos"
         (continuarEvento)="getValorIndice($event)"
       ></btn-continuar>
+      }
     </div>
   </div>
 </div>
