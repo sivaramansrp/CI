@@ -3,14 +3,12 @@
    <ng-alert [CONTENIDO]="DEBES_CAPTURAR" [CUSTOMECLASS]="infoAlert"></ng-alert>
   <form [formGroup]="derechosForm">
     <div class="row g-3">
-      <!-- Clave de referencia -->
       <div class="col-md-4">
         <label for="claveReferencia" class="form-label">Clave de referencia:</label>
         <input type="text" id="claveReferencia" class="form-control" formControlName="claveReferencia" maxlength="9"
           (change)="setValoresStore(derechosForm,'claveReferencia', 'setclaveReferencia')" />
       </div>
 
-      <!-- Cadena de la dependencia -->
       <div class="col-md-4">
         <label for="cadenaDependencia" class="form-label">Cadena de la dependencia:</label>
         <input type="text" id="cadenaDependencia" class="form-control" formControlName="cadenaDependencia"
@@ -25,21 +23,17 @@
     </div>
 
     <div class="row g-3 mt-2">
-      <!-- Llave de pago -->
       <div class="col-md-4">
         <label for="llavePago" class="form-label">Llave de pago:</label>
         <input type="text" id="llavePago" class="form-control" formControlName="llavePago" maxlength="30"
           (change)="setValoresStore(derechosForm,'llavePago', 'setllavePago')" />
       </div>
-      <!-- Fecha de pago -->
       <div class="col-md-4">
-          <div class="input-group">
-          <input-fecha [setFecha]="derechosForm.get('fechaDePago')?.value" [datos]="fechaInicioInput"
-            (valorCambiado)="cambioFechaDePago($event)"
-            [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
-          <div *ngIf="fechaFuturaSeleccionada" class="text-danger mt-1">
-            La fecha de pago debe ser menor o igual a la fecha actual.
-          </div>
+        <input-fecha [setFecha]="derechosForm.get('fechaDePago')?.value" [datos]="fechaInicioInput"
+          (valorCambiado)="cambioFechaDePago($event)"
+          [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
+        <div *ngIf="fechaFuturaSeleccionada" class="mensaje-error mt-1">
+          La fecha de pago debe ser menor o igual a la fecha actual.
         </div>
       </div>
       <div class="col-md-4">
