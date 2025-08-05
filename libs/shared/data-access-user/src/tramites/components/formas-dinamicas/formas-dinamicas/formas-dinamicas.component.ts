@@ -1,4 +1,4 @@
-import { AbstractControl, ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { CommonModule, NgTemplateOutlet } from '@angular/common';
 import { Component, HostListener, Input, OnInit, Output, TemplateRef, forwardRef } from '@angular/core';
 import { ModeloDeFormaDinamica, Validadores } from '../../../../core/models/shared/forms-model';
@@ -324,6 +324,7 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   */
   static obtenerValidadores(listaDeValidadores: Validadores[]): ValidatorFn[] {
     const VALIDATORS: ValidatorFn[] = [];
+
     listaDeValidadores.forEach((validadore: Validadores) => {
       if (!validadore || !validadore.tipo) {
         return;
@@ -334,13 +335,27 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
       if (validadore.tipo.includes('minlength') && typeof validadore.valor === 'number') {
         VALIDATORS.push(Validators.minLength(validadore.valor));
       }
-      if (validadore.tipo.includes('maxlength') && typeof validadore.valor === 'number') {
-        VALIDATORS.push(Validators.maxLength(validadore.valor));
-      }
-      if (validadore.tipo.includes('pattern') && validadore.valor instanceof RegExp) {
-        VALIDATORS.push(Validators.pattern(validadore.valor));
-      }
     });
+
+    const PATTERN_VALIDATORS = listaDeValidadores.filter(v => v.tipo === 'pattern');
+    if (PATTERN_VALIDATORS.length > 0) {
+    VALIDATORS.push((control: AbstractControl): ValidationErrors | null => {
+      const VALOR = control.value;
+      if (VALOR === null || VALOR === '') {
+        return null;
+      }
+
+      for (const VALIDADOR of PATTERN_VALIDATORS) {
+        if (VALIDADOR.valor instanceof RegExp && !VALIDADOR.valor.test(VALOR)) {
+          const ERROR_KEY = VALIDADOR.tipo + '_' + (VALIDADOR.valor.toString().replace(/\W/g, ''));
+          return { [ERROR_KEY]: VALIDADOR.mensaje };
+        }
+      }
+
+      return null;
+    });
+    }
+
     return VALIDATORS;
   }
 
@@ -652,5 +667,18 @@ registerOnChange(fn: (value: Record<string, unknown>) => void): void {
   public obtenerControlsPorFilas(row: number): ModeloDeFormaDinamica[] {
     return this.formularioDatos.filter(control => (control.row !== undefined ? control.row : 0) === row);
   }
-  
+
+  /**
+ * Obtiene el valor máximo de caracteres permitido (maxlength) de la lista de validadores de un campo.
+ * @param validadores - Arreglo de validadores asociados al campo.
+ * @returns El valor de maxlength si existe, o null en caso contrario.
+ */
+  // eslint-disable-next-line class-methods-use-this
+  public obtenerMaxlength(validadores: Validadores[] | undefined): number | null {
+    if (validadores?.length) {
+      const MAXLENGTH = validadores.find(v => v.tipo === 'maxlength');
+      return MAXLENGTH && typeof MAXLENGTH.valor === 'number' ? MAXLENGTH.valor : null;
+    }
+    return null;
+  }
 }
