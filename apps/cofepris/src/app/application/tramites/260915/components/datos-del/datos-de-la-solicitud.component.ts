@@ -219,7 +219,12 @@ public estadoFisicoData = ESTADO_FISICO_DATA;
     } else {
       this.createForm();
       this.createclaveScianForm();
-    }
+
+       setTimeout(() => {
+      this.changeEvent();
+    }, 0);
+  }
+    
   }
 
   /**
@@ -237,7 +242,10 @@ public estadoFisicoData = ESTADO_FISICO_DATA;
       this.dataDeLaSolicitudForm.enable();
       this.clavaScianForm.enable();
       this.datosDelTramiteRealizar.enable();
-     
+      
+       setTimeout(() => {
+      this.changeEvent();
+    }, 0);
     }
   }
 
@@ -316,7 +324,12 @@ createForm(): void{
       
       datosDelTramiteRealizar: this.fb.group({
       tipoOperacion:[this.dataDeLaSolicitudState?.tipoOperacion],
-      justification: [{ value: this.dataDeLaSolicitudState.justification || '', disabled: true }],
+      justification: [
+        { 
+          value: this.dataDeLaSolicitudState?.justification || '', 
+          disabled: true 
+        }
+      ],
       denominacion: [this.dataDeLaSolicitudState?.denominacion, Validators.required],
       correoElectronico: [this.dataDeLaSolicitudState?.correoElectronico, Validators.required],
       codigopostal: [this.dataDeLaSolicitudState?.codigopostal, Validators.required],
@@ -345,6 +358,9 @@ createForm(): void{
     }),
    
   });
+    setTimeout(() => {
+    this.changeEvent();
+  }, 0);
 }
 
 /**
@@ -742,13 +758,15 @@ changeEvent(): void{
   const TIPO_OPERACION = this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar.tipoOperacion')?.value;
   const JUSTIFICACION_CONTROL = this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar.justification'); 
 
-      if (TIPO_OPERACION === 'modificacion') {
-        JUSTIFICACION_CONTROL?.enable(); 
-      } else {
-        JUSTIFICACION_CONTROL?.disable(); 
-        JUSTIFICACION_CONTROL?.setValue(''); 
-      }
-    
+  if (TIPO_OPERACION === 'modificacion' || TIPO_OPERACION === '1') {
+    JUSTIFICACION_CONTROL?.enable(); 
+    JUSTIFICACION_CONTROL?.setValidators([Validators.required]);
+  } else {
+    JUSTIFICACION_CONTROL?.disable(); 
+    JUSTIFICACION_CONTROL?.setValue(''); 
+    JUSTIFICACION_CONTROL?.clearValidators();
+  }
+  JUSTIFICACION_CONTROL?.updateValueAndValidity();
 }
 /**
  * Obtiene los datos de las mercancías desde el servicio.
