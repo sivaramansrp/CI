@@ -168,7 +168,7 @@
             [required]="true"
             [tooltipQuestionCircle]="true"
             [isDisabled]="esFormularioSoloLectura"
-            (selectionChange)="datosMercancia.get('umc')?.setValue($event?.id)"
+            (selectionChange)="datosMercancia.get('umc')?.setValue($event.id)"
           ></app-catalogo-select>
           <div class="error-message">
             <small
@@ -191,7 +191,7 @@
             [label]="'Tipo moneda'"
             [required]="true"
             [isDisabled]="esFormularioSoloLectura"
-            (selectionChange)="datosMercancia.get('tipoMoneda')?.setValue($event?.id)"
+            (selectionChange)="datosMercancia.get('tipoMoneda')?.setValue($event.id)"
           ></app-catalogo-select>
           <div class="error-message">
             <small
