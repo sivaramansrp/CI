@@ -196,8 +196,9 @@ export class SolicitanteComponent implements OnInit,OnDestroy {
    * @returns void
    */
   getDatosGenerales(RFC: string): void {
-    this.solicitanteServicio
-      .getDatosGenerales(RFC)
+    if(RFC !== undefined || RFC !== null || RFC !== '') {
+      this.solicitanteServicio
+      .getDatosGeneralesAPI(RFC)
       .pipe(
         tap((response) => {
           if (response) {
@@ -206,7 +207,48 @@ export class SolicitanteComponent implements OnInit,OnDestroy {
         })
       )
       .subscribe();
+    } else {
+
+    this.solicitanteServicio
+      .getDatosGenerales(CATALOGOS_ID.DATOS_PERSONA_FISICA)
+      .pipe(
+        tap((response) => {
+          if (response) {
+
+            const DATOS = JSON.parse(response.data);
+            const DATOS_SOLICITANTE = DATOS.datosGenerales;
+            const DATOS_DOMICILIO_FISCAL = DATOS.domicilioFiscal;
+
+            const CAMPOS_DATOS_GENERALES =
+            FormulariosService.obtenerNombresCamposForm(
+                this.datosGeneralesForm
+              );
+            const CAMPOS_DATOS_DOMICILIO_FISCAL =
+            FormulariosService.obtenerNombresCamposForm(
+                this.domicilioFiscalForm
+              );
+
+            CAMPOS_DATOS_GENERALES.forEach((campo) => {
+              FormulariosService.agregarValorCampoDesactivado(
+                this.datosGeneralesForm,
+                campo,
+                DATOS_SOLICITANTE[campo]
+              );
+            });
+
+            CAMPOS_DATOS_DOMICILIO_FISCAL.forEach((campo) => {
+              FormulariosService.agregarValorCampoDesactivado(
+                this.domicilioFiscalForm,
+                campo,
+                DATOS_DOMICILIO_FISCAL[campo]
+              );
+            });
+          }
+        })
+      )
+      .subscribe();
   }
+}
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
