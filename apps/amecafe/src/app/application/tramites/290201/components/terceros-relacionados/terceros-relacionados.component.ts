@@ -85,7 +85,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    * Datos del catálogo de países.
    */
   public paisData: CatalogosSelect = {
-    labelNombre: 'País',
+    labelNombre: 'País*',
     required: true,
     primerOpcion: 'Seleccione una opción',
     catalogos: [],
@@ -229,7 +229,8 @@ public coloniaData: CatalogosSelect = {
       .subscribe();
      
       this.getDestinatarioData();
-    this.createForm();
+  
+      this.createForm();
     this.getEntidadFederativaData();
     this.getAlcaldiaMunicipo();
     this.getColonia();
@@ -361,118 +362,74 @@ get selectedTipoPersona(): string | undefined {
       .getDestinatarioData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
-        this.tableData = (data as unknown as FilaData2[]).map((row) => ({
+        const FORMATTED_DATA = (data as unknown as FilaData2[]).map((row) => ({
           ...row,
           datosDelTramiteRealizar: {
             ...row.datosDelTramiteRealizar,
-            tipoPersona: row.datosDelTramiteRealizar.tipoPersona || 'moral', // Add default value if missing
+            tipoPersona: row.datosDelTramiteRealizar.tipoPersona || 'moral', 
           },
         }));
+          this.solicitud290201Store.setTableData(FORMATTED_DATA);
+          this.tableData = FORMATTED_DATA;
       });
   }
 
   /**
    * Método para manejar el envío del formulario.
    */
-  // enEnviar(): void {
-  //   console.log('Form submission started');
-  //   const FORM_DATA = this.destinatarioForm.value;
   
-  //   // Check if the form is valid
-  //   if (!this.destinatarioForm.valid) {
-  //     console.log('Form is invalid');
-  //     this.destinatarioForm.markAllAsTouched();
-  //     return;
-  //   }
-  
-  //   console.log('Form Data:', FORM_DATA);
-  
-  //   // Check if the form data is empty
-  //   if (!FORM_DATA || Object.keys(FORM_DATA).length === 0) {
-  //     console.log('Form data is empty');
-  //     return;
-  //   }
-  
-  //   // Map the selected country ID to its description
-  //   const PAIS_DATA_VALUE = this.paisData.catalogos.find(
-  //     (item: Catalogo) =>
-  //       String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.pais).trim()
-  //   )?.descripcion;
-  
-  //   FORM_DATA.datosDelTramiteRealizar.pais = PAIS_DATA_VALUE;
-  
-  //   console.log('Mapped Form Data:', FORM_DATA);
-  
-  //   if (this.selectedRow) {
-  //     const INDEX = this.tableData.indexOf(this.selectedRow);
-  //     console.log('Selected Row Index:', INDEX);
-  //     if (INDEX !== -1) {
-  //       this.tableData[INDEX] = { ...FORM_DATA, id: this.selectedRow.id }; // Ensure the id is carried over
-  //       console.log('Updated Row:', this.tableData[INDEX]);
-  //     }
-  //   } else {
-  //     const NEW_ID = this.tableData.length > 0
-  //       ? Math.max(...this.tableData.map((row) => row.id || 0)) + 1
-  //       : 1; // Ensure a unique ID is generated
-  //     const NEW_ROW: FilaData2 = { ...FORM_DATA, id: NEW_ID }; // Explicitly define the type
-  //     this.tableData.push({ ...FORM_DATA, id: NEW_ID }); // Use push to add the new row to the array
-  //     console.log('New Row Added:', NEW_ROW);
-  //   }
-  
-  //   console.log('Table Data After Update:', this.tableData);
-  
-  //   // Refresh the table data
-  //   this.tableData = [...this.tableData];
-  //   this.changeDetectorRef.markForCheck();
-  
-  //   // Reset the form and close the modal
-  //   this.destinatarioForm.reset();
-  //   this.esFormularioVisible = false;
-  //   this.selectedRow = null;
-  
-  //   // Close the modal programmatically
-  //   const MODAL_ELEMENT = document.getElementById('tercerosRelacionadosModal');
-  //   if (MODAL_ELEMENT) {
-  //     const MODAL_INSTANCE = new Modal(MODAL_ELEMENT);
-  //     MODAL_INSTANCE.hide();
-  //     console.log('Modal closed');
-  //   }
-  // }
   enEnviar(): void {
     const FORM_DATA = this.destinatarioForm.value;
-   if (!this.destinatarioForm.valid) {
-    this.destinatarioForm.markAllAsTouched();
-    return;
-  }
-    if (!FORM_DATA || Object.keys(FORM_DATA).length === 0) {
-      return;
-    }
-  
-    const PAIS_DATA_VALUE = this.paisData.catalogos.find(
-      (item: Catalogo) =>
-        String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.pais).trim()
-    )?.descripcion;
-  
-    FORM_DATA.datosDelTramiteRealizar.pais = PAIS_DATA_VALUE;
-  
-    if (this.selectedRow) {
-      const INDEX = this.tableData.indexOf(this.selectedRow);
-      if (INDEX !== -1) {
-        this.tableData[INDEX] = { ...FORM_DATA, id: this.selectedRow.id }; 
-      }
-    } else {
-      const NEW_ID = this.tableData.length > 0
-        ? Math.max(...this.tableData.map((row) => row.id || 0)) + 1
-        : 1;
-      this.tableData.push({ ...FORM_DATA, id: NEW_ID }); 
+
+    if (!this.destinatarioForm.valid) {
+        this.destinatarioForm.markAllAsTouched();
+        return;
     }
 
-    this.tableData = [...this.tableData]; 
-    this.changeDetectorRef.markForCheck();
-    this.destinatarioForm.reset();
-    this.esFormularioVisible = false;
-    this.selectedRow = null;
-  }
+    if (!FORM_DATA || Object.keys(FORM_DATA).length === 0) {
+        return;
+    }
+
+    const PAIS_DATA_VALUE = this.paisData.catalogos.find(
+        (item: Catalogo) =>
+            String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.pais).trim()
+    )?.descripcion;
+
+    FORM_DATA.datosDelTramiteRealizar.pais = PAIS_DATA_VALUE;
+
+    if (this.selectedRow) {
+      const INDEX = this.tableData.findIndex((row) => row.id === this.selectedRow?.id);
+      if (INDEX !== -1) {
+        this.tableData[INDEX] = { ...this.tableData[INDEX], ...FORM_DATA, id: this.selectedRow.id };
+        this.tableData = [...this.tableData];
+      }
+  
+    } else {
+        const NEW_ID = this.tableData.length > 0
+            ? Math.max(...this.tableData.map((row) => row.id || 0)) + 1
+            : 1;
+
+        const NEW_ROW: FilaData2 = { ...FORM_DATA, id: NEW_ID };
+       
+
+        this.tableData = [...this.tableData, NEW_ROW];
+       }
+
+       this.changeDetectorRef.detectChanges();
+
+   
+      this.destinatarioForm.reset();
+      this.esFormularioVisible = false;
+      this.selectedRow = null;
+      
+  
+const MODAL_ELEMENT = document.getElementById('tercerosRelacionadosModal');
+if (MODAL_ELEMENT) {
+    const MODAL_INSTANCE = new Modal(MODAL_ELEMENT);
+    MODAL_INSTANCE.hide();
+}
+
+}
  
  /**
  * Método para limpiar el formulario.
@@ -514,6 +471,7 @@ onLimpiar(): void {
      this.selectedRow = selectedRows.length > 0 ? selectedRows[0] : null;
 
      this.esFormularioVisible = false; 
+
    
    }
   /**
@@ -573,13 +531,18 @@ onLimpiar(): void {
     this.esFormularioVisible = false;
   }
 }
+/**
+ * @method onCancelar
+ * @description Método para cerrar el modal de destinatarios y ocultar el formulario.
+ * @returns {void}
+ */
 onCancelar(): void {
   const MODAL_ELEMENT = document.getElementById('destinatarioModalLabel');
   if (MODAL_ELEMENT) {
     const MODAL_INSTANCE = new Modal(MODAL_ELEMENT);
-    MODAL_INSTANCE.hide(); // Close the modal
+    MODAL_INSTANCE.hide(); 
   }
-  this.esFormularioVisible = false; // Hide the form
+  this.esFormularioVisible = false; 
 }
   /**
    * Método para manejar el clic en una fila de la tabla.
@@ -603,6 +566,7 @@ onCancelar(): void {
     });
     this.selectedRow = rowData;
     this.esFormularioVisible = true;
+    
   }
 
   /**
@@ -674,7 +638,25 @@ get isPaisInvalid(): boolean {
  * lo que permite que el formulario sea visible en la interfaz de usuario.
  */
 onAgregar(): void {
-  this.esFormularioVisible = true; 
+    this.esFormularioVisible = true;
+    this.destinatarioForm.reset();
+    this.destinatarioForm.patchValue({
+        datosDelTramiteRealizar: {
+            tipoPersona: '',
+            denominacion: '',
+            domicilio: '',
+            pais: '',
+            codigopostal: '',
+            telefono: '',
+            correoelectronico: '',
+        },
+    });
+
+    // Clear the selected row to ensure it's a new entry
+    this.selectedRow = null;
+
+    // Trigger change detection to update the UI
+    this.changeDetectorRef.detectChanges();
 }
   /**
    * Método para establecer valores en el store.

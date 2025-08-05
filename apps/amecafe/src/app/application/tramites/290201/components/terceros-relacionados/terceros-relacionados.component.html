@@ -6,6 +6,7 @@
   [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
    [datos]="tableData"
    (listaDeFilaSeleccionada)="onSelectedRowsChange($event)"
+
    >
 </app-tabla-dinamica>
 <div class="col-md-12 d-flex justify-content-end mt-3">
@@ -145,7 +146,7 @@
               id="paisData"
               formControlName="pais"
               [catalogo]="paisData.catalogos"
-              [label]="'Pais*'"
+              [label]="'País*'"
               [placeholder]="paisData.primerOpcion"
               (change)="setValoresStore(datosDelTramiteRealizar,'pais', 'setPais')"
               [disabled]="esFormularioSoloLectura"
@@ -167,12 +168,14 @@
           <div class="row">
             <div class="col-md-4 mb-3">
               <div class="form-group">
-              <label class="form-label" for="codigopostal">Codigo postal:</label>
+              <label class="form-label" for="codigopostal">Codigo postal*:</label>
               <input class="form-control" id="codigopostal" type="text" formControlName="codigopostal"
               (change)="setValoresStore(datosDelTramiteRealizar,'codigopostal', 'setCodigopostal')"
               [disabled]="esFormularioSoloLectura"
               [ngClass]="{
-                'is-invalid': isCodigoPostalMaxLengthExceeded
+                'is-invalid': isCodigoPostalMaxLengthExceeded || 
+                              (destinatarioForm.get('datosDelTramiteRealizar.codigopostal')?.touched &&
+                               destinatarioForm.get('datosDelTramiteRealizar.codigopostal')?.hasError('pattern'))
               }"
               />
               @if(isCodigoPostalMaxLengthExceeded){
@@ -180,6 +183,11 @@
                   Por favor, no escribas más de 5 caracteres.
                 </small>
               }
+
+              <div *ngIf="destinatarioForm.get('datosDelTramiteRealizar.codigopostal')?.touched &&
+              destinatarioForm.get('datosDelTramiteRealizar.codigopostal')?.hasError('pattern')" class="text-danger">
+               Por favor, sólo escribe dígitos.
+           </div>
               
             </div>
           </div>
@@ -187,7 +195,7 @@
         
           <div class="row">
             <div class="col-md-4 mb-3">
-              <label class="form-label" for="telefono">Telefono:</label>
+              <label class="form-label" for="telefono">Telefono*:</label>
               <input class="form-control" id="telefono" type="text" formControlName="telefono"
               (change)="setValoresStore(datosDelTramiteRealizar,'telefono','setTelefono')"
               [disabled]="esFormularioSoloLectura"
@@ -203,7 +211,7 @@
 
             </div>
               <div class="col-md-4 mb-3">
-                <label class="form-label" for="correoelectronico">Correo electronico:</label>
+                <label class="form-label" for="correoelectronico">Correo electronico*:</label>
                 <input class="form-control" id="correoelectronico" type="text" formControlName="correoelectronico"
                 (change)="setValoresStore(datosDelTramiteRealizar,'correoelectronico','setCorreoelectronico')"
                 [disabled]="esFormularioSoloLectura"
@@ -221,8 +229,8 @@
 
         </ng-container> 
           <div class="col-md-12 d-flex justify-content-end">
-            <div class="btn-group">
-              <button class="btn btn-danger"
+            <div class="btn-group" style="margin-bottom: 20px;">
+              <button class="btn btn-default me-2"
                 type="button" (click)="onCancelar()"data-bs-dismiss="modal" >Cancelar</button>
                 <button class="btn btn-primary me-2"
                 type="button"(click)="onLimpiar()">Limpiar</button>

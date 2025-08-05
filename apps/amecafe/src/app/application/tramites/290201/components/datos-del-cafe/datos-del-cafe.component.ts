@@ -442,6 +442,18 @@ editingRowId: number | null = null;
  * en el formulario, transformarlos según los catálogos correspondientes y agregarlos a la tabla de datos.
  */
 onSubmit(): void {
+
+  const OTRAS_CARACTERISTICAS_CONTROL = this.dataCafeForm.get('datosDelTramiteRealizar.otrasCaracteristicas');
+  if (OTRAS_CARACTERISTICAS_CONTROL?.invalid || !OTRAS_CARACTERISTICAS_CONTROL?.value) {
+    OTRAS_CARACTERISTICAS_CONTROL?.markAsTouched(); 
+    const MODAL_ELEMENT = document.getElementById('datosCafeModal');
+    if (MODAL_ELEMENT) {
+      const MODAL_INSTANCE = Modal.getInstance(MODAL_ELEMENT) || new Modal(MODAL_ELEMENT);
+      MODAL_INSTANCE.show();
+    }
+    return; 
+  }
+
   if (this.dataCafeForm.invalid) {
     this.dataCafeForm.markAllAsTouched();
     return;
@@ -457,46 +469,21 @@ onSubmit(): void {
     (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.utilizoCafeComo),
   )?.descripcion;
 
-  FORM_DATA.datosDelTramiteRealizar.paisdeimportacion = this.paisdeimportacionData.catalogos.find(
-    (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.paisdeimportacion),
-  )?.descripcion;
-
-  FORM_DATA.datosDelTramiteRealizar.fraccionarancelaria = this.fraccionarancelariaData.catalogos.find(
-    (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.fraccionarancelaria),
-  )?.descripcion;
-
-  FORM_DATA.datosDelTramiteRealizar.unidaddemedida = this.unidaddemedidaData.catalogos.find(
-    (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.unidaddemedida),
-  )?.descripcion;
-
-  FORM_DATA.datosDelTramiteRealizar.dolar = this.dolarData.catalogos.find(
-    (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.dolar),
-  )?.descripcion;
-
-  FORM_DATA.datosDelTramiteRealizar.elcafe = this.elcafeData.catalogos.find(
-    (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.elcafe),
-  )?.descripcion;
-
-  FORM_DATA.datosDelTramiteRealizar.paisdetransbordo = this.paisdetransbordoData.catalogos.find(
-    (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.paisdetransbordo),
-  )?.descripcion;
-
-  FORM_DATA.datosDelTramiteRealizar.mediodetransporte = this.mediodetransporteData.catalogos.find(
-    (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.mediodetransporte),
-  )?.descripcion;
-
 
   if (!this.isEditMode) {
     FORM_DATA.id = this.tableData.length > 0 ? Math.max(...this.tableData.map(row => row.id)) + 1 : 1;
   }
+
   if (this.isEditMode && this.editingRowId !== null) {
     const INDEX = this.tableData.findIndex((row) => row.id === this.editingRowId);
+
     if (INDEX !== -1) {
       this.tableData[INDEX] = FORM_DATA;
     }
   } else {
-    this.tableData.push(FORM_DATA);
+    this.tableData = [...this.tableData, FORM_DATA];   
   }
+
 
   this.isEditMode = false;
   this.editingRowId = null;
@@ -505,30 +492,32 @@ onSubmit(): void {
       datosDelTramiteRealizar: {
         envasadoen: '',
         utilizoCafeComo: '',
-        
       }
     },
-    { emitEvent: false } 
-
+    { emitEvent: false }
   );
- 
-  this.esFormularioVisible = false;
 
+  this.esFormularioVisible = false;
   const MODAL_ELEMENT = document.getElementById('datosCafeModal');
-if (MODAL_ELEMENT) {
-  const MODAL_INSTANCE = Modal.getInstance(MODAL_ELEMENT);
-  if (MODAL_INSTANCE) {
-    MODAL_INSTANCE.hide();
+
+  if (MODAL_ELEMENT) {
+    const MODAL_INSTANCE = Modal.getInstance(MODAL_ELEMENT) || new Modal(MODAL_ELEMENT);
+    if (MODAL_INSTANCE) {
+      MODAL_INSTANCE.hide(); 
+      
+    }
+
+    const BACKDROP_ELEMENTS = document.querySelectorAll('.modal-backdrop');
+    BACKDROP_ELEMENTS.forEach((backdrop) => backdrop.remove());
   }
-}
- 
+  
 }
 /**
  * Este método se utiliza para mostrar el formulario al usuario.
  */
-  onAgregar(): void {
-    this.esFormularioVisible = true;
-  }
+onAgregar(): void {
+  this.esFormularioVisible = true;
+}
   /**
    * Este método se ejecuta cuando el usuario selecciona una fila de la tabla. Su propósito es
  */
