@@ -1,24 +1,34 @@
 <div class="container-fluid px-0">
-  <ng-titulo titulo="Destinatarios" />
+  <ng-titulo titulo="Destinatario" />
   <form [formGroup]="destinatarioForm">
     <div class="row">
       <app-catalogo-select [catalogo]="permisoCitesService.entidadFederativa" formControlName="entidadFederativa"
         class="col-md-4" [label]="'Entidad federativa'" [isDisabled]="esFormularioSoloLectura" (change)="onEntidadFederativaChange()"></app-catalogo-select>
     </div>
     <div class="">
-        <label class="mt-5">destinatarios*:</label>
+        <label class="mt-5">Destinatarios*:</label>
       <div class="mt-4">
         <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="tablaDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           [tipoSeleccionTabla]="TablaSeleccion" (listaDeFilaSeleccionada)="onFilaSeleccionada($event)"></app-tabla-dinamica>
       </div>
     </div>
-    <div class="row text-end pb-3">
+    <div class="row text-end pb-3" *ngIf="tablaDatos.length > 0">
       <div>
         <button type="button" [disabled]="esFormularioSoloLectura" class="btn btn-default me-2">Eliminar Seleccionados</button>
         <button type="button" [disabled]="esFormularioSoloLectura" class="btn btn-danger me-2">Eliminar no seleccionados</button>
         <button type="button" [disabled]="esFormularioSoloLectura" class="btn btn-primary me-2" (click)="openPopup()">
           Modificar
         </button>
+      </div>
+    </div>
+
+    <div
+      class="row justify-content-end"
+      style="padding-bottom: 20px; text-align: right"
+      *ngIf="tablaDatos.length === 0"
+    >
+      <div class="col-md-6">
+        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Agregar</button>
       </div>
     </div>
   </form>

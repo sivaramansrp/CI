@@ -480,6 +480,7 @@ listaDeSubfabricantesPorEliminar:PlantasDireccionModelo[] = [];
     DATOSRES.splice(0, DATOS);
     this.datosPlantasParaSerAgregados = DATOSRES;
     this.store.setPlantas(DATOSRES);
+    this.listaDeSubfabricantesPorEliminar= [];
   }
   
     /**

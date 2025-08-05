@@ -40,6 +40,17 @@ export class RepresentanteLegalComponent implements OnInit {
    */
   representanteLegalForm!: FormGroup;
 
+   /**
+   * Obtiene el valor de un campo en el store de Tramite31601.
+   */
+  obtenerValor(): void {
+    this.representanteLegalForm.patchValue({
+      nombreRazonSocial: 47875,
+      apellidoPaterno: 'Paterno',
+      apellidoMaterno: 'Materno',
+    });
+  }
+
   /**
    * @description
    * Estado actual de la solicitud.
@@ -128,21 +139,21 @@ this.inicializarEstadoFormulario();
        * Campo para capturar el nombre o razón social del representante legal.
        * Este campo está deshabilitado por defecto y es obligatorio.
        */
-      nombreRazonSocial: [{ value: '', disabled: true }, Validators.required],
+      nombreRazonSocial: [{ value: this.solicitudState?.nombreRazonSocial, disabled: true }, Validators.required],
 
       /**
        * @description
        * Campo para capturar el apellido paterno del representante legal.
        * Este campo está deshabilitado por defecto y es obligatorio.
        */
-      apellidoPaterno: [{ value: '', disabled: true }, Validators.required],
+      apellidoPaterno: [{ value: this.solicitudState?.apellidoPaterno, disabled: true }, Validators.required],
 
       /**
        * @description
        * Campo para capturar el apellido materno del representante legal.
        * Este campo está deshabilitado por defecto y es opcional.
        */
-      apellidoMaterno: [{ value: '', disabled: true }],
+      apellidoMaterno: [{ value: this.solicitudState?.apellidoMaterno, disabled: true }],
     });
   }
 
