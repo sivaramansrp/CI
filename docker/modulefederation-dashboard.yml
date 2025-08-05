@@ -1,7 +1,7 @@
 services:
 #----------------------------------------------------------------
   modulefederation-dashboard:
-    image: ghcr.io/vucem30/dockerized-modulefederation-dashboard:1.0.8
+    image: ghcr.io/vucem30/dockerized-modulefederation-dashboard:1.0.9
     build: 
       context: ./../
       dockerfile: apps/dashboard/Dockerfile.dev
