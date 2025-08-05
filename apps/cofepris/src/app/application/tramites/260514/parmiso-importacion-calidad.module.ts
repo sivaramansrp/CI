@@ -6,7 +6,7 @@ import { DatosDelEstablecimientoRFCComponent } from '../../shared/components/dat
 import { DomicilioEstablecimientoAduanasComponent } from '../../shared/components/domicilio-establecimiento-aduanas/domicilio-establecimiento-aduanas.component';
 import { ManifiestosComponent } from '../../shared/components/manifiestos-declaraciones/manifiestos-declaraciones.component';
 import { NgModule } from '@angular/core';
-import { PagoDerechosComponent } from '../../shared/components/pago-derechos/pago-Derechos.component';
+import { PagoDerechosComponent } from '../../shared/components/pago-derechos/pago-derechos.component';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
 import { ParmisoImportacionCalidadRoutingModule } from './parmiso-importacion-calidad-routing.module';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
