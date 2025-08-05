@@ -77,7 +77,15 @@ export interface DomicilioState {
   paisProcedencia: string;
   /** RFC del solicitante. */
   rfc: string;
+  /** Nombre o razón social del representante legal. */
+  nombreRazonSocial: string;
+  /** Apellido paterno del representante legal. */
+  apellidoPaterno: string;
+  /** Apellido materno del representante legal. */
+  apellidoMaterno: string;
+
   manifesto: boolean; // Indica si se requiere el manifiesto de aceptación
+
 }
 
 /**
@@ -159,8 +167,12 @@ export function createInitialState(): DomicilioState {
     paisProcedencia: '',
     /** RFC del solicitante. */
     rfc: '',
-    /** Indica si se requiere el manifiesto de aceptación. */
-    manifesto: false
+    /** Nombre o razón social del representante legal. */
+    nombreRazonSocial: '',
+    /** Apellido paterno del representante legal. */
+    apellidoPaterno: '',
+    /** Apellido materno del representante legal. */
+    apellidoMaterno: '',
   };
 }
 
@@ -599,6 +611,37 @@ export class DomicilioStore extends Store<DomicilioState> {
     this.update((state) => ({
       ...state,
       rfc,
+    }));
+  }
+  /**
+   * Actualiza el estado con el nombre o razón social del representante legal.
+   * @param nombreRazonSocial El nombre o razón social a establecer.
+   */
+  public setNombreRazonSocial(nombreRazonSocial: string): void {
+    this.update((state) => ({
+      ...state,
+      nombreRazonSocial,
+    }));
+  }
+  /**
+   * Actualiza el estado con el apellido paterno del representante legal.
+   * @param apellidoPaterno El apellido paterno a establecer.
+   */
+  public setApellidoPaterno(apellidoPaterno: string): void {
+    this.update((state) => ({
+      ...state,
+      apellidoPaterno,
+    }));
+  }
+
+  /**
+   * Actualiza el estado con el apellido materno del representante legal.
+   * @param apellidoMaterno El apellido materno a establecer.
+   */
+  public setApellidoMaterno(apellidoMaterno: string): void {
+    this.update((state) => ({
+      ...state,
+      apellidoMaterno,
     }));
   }
 

@@ -268,6 +268,12 @@ const ROUTES: Routes = [
         (m) => m.AvisoDeModificacionModule)
   },
   {
+     path: 'certificacion-empresas',
+    loadChildren: () => 
+      import('./tramites/32609/oea-textil-registro.module').then(
+        (m) => m.OeaTextilRegistroModule)
+  },
+  {
       path: 'recinto-fiscalizado',
     loadChildren: () => 
       import('./tramites/32615/recinto-fiscalizado.module').then(

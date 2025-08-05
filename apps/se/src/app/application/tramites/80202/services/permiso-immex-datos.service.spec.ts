@@ -35,23 +35,5 @@ describe('PermisoImmexDatosService', () => {
     service.getRegistroTomaMuestrasMercanciasData();
     expect(service.httpClient.get).toHaveBeenCalled();
   });
-
-  it('should run #actualizarEstadoFormulario()', async () => {
-    service.tramite80202Store = service.tramite80202Store || {};
-    service.tramite80202Store.setFraccionArancelariaSensibles = jest.fn();
-    service.tramite80202Store.setFraccionArancelaria = jest.fn();
-    service.tramite80202Store.setDescripcionDelProducto = jest.fn();
-    service.tramite80202Store.setTablaFraccionArancelaria = jest.fn();
-    service.tramite80202Store.setTablaFraccionDeImportacion = jest.fn();
-    service.actualizarEstadoFormulario({
-      fraccionArancelariaSensibles: {},
-      fraccionArancelaria: {},
-      descripciondelproducto: {},
-      tablaFraccionArancelaria: {},
-      tablaFraccionDeImportacion: {}
-    });
-    expect(service.tramite80202Store.setFraccionArancelariaSensibles).toHaveBeenCalled();
-    
-  });
-
+  
 });

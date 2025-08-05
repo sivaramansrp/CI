@@ -18,27 +18,19 @@
  * - enviarFormularioMercancia: Envía el formulario de mercancía y agrega los datos a la tabla.
  * - ngOnDestroy: Limpia las suscripciones cuando el componente se destruye.
  */
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { CONFIGURACION_TABLA_MERCANCIA, ConfiguracionItem } from '../../enum/mercancia.enum';
+import { CROSLISTA_ENTRADA, CROSSLIST_BOTONS, CrosslistBoton } from '../../enum/crossList-botons.enum';
+import { Catalogo, CategoriaMensaje, ConfiguracionColumna, CrossListLable, CrosslistComponent, Notificacion, REGEX_SEPARADO_POR_COMAS, TablaSeleccion, TipoNotificacionEnum } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Solicitud230902State, Tramite230902Store} from '../../estados/tramite230902.store';
+import { Subject, Subscription } from 'rxjs';
 import { map, takeUntil } from 'rxjs';
 import { ALERTA_MERCANCIA } from '../../enum/mercancia-alert.enum';
 import { AQUANDAS_LABEL } from '../../enum/adnuana-botons.enum';
-import { CROSSLIST_BOTONS } from '../../enum/crossList-botons.enum';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-
-import { CONFIGURACION_TABLA_MERCANCIA } from '../../enum/mercancia.enum';
-import { ConfiguracionItem } from '../../enum/mercancia.enum';
-
-import { CrosslistBoton } from '../../enum/crossList-botons.enum';
 import { MOVIMIENTO_LABEL } from '../../enum/movimiento.enum';
-
-import { Catalogo, CategoriaMensaje, ConfiguracionColumna, CrossListLable, CrosslistComponent, Notificacion, REGEX_SEPARADO_POR_COMAS, TablaSeleccion, TipoNotificacionEnum } from '@libs/shared/data-access-user/src';
-
 import { PermisoCitesService } from '../../services/permiso-cites.service';
-import { Subject } from 'rxjs';
-import { Subscription, } from 'rxjs';
-
-import { Solicitud230902State, Tramite230902Store } from '../../estados/tramite230902.store';
 import { Tramite230902Query } from '../../estados/tramite230902.query';
 
 @Component({
@@ -46,13 +38,13 @@ import { Tramite230902Query } from '../../estados/tramite230902.query';
   templateUrl: './datos-solicitud.component.html',
   styleUrls: ['./datos-solicitud.component.scss'],
 })
-export class DatosSolicitudComponent implements OnInit, OnDestroy {
+export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Referencia al componente Crosslist.
    * Se utiliza para interactuar con el componente Crosslist desde este componente.
    */
-  @ViewChild(CrosslistComponent) crosslistComponent!: CrosslistComponent;
-
+  @ViewChild("CrosslistComponentAduanas") crosslistComponent!: CrosslistComponent;
+  @ViewChild("CrosslistComponentFinalidad") crosslistComponentFinalidad!: CrosslistComponent;
   /** Botones para la lista cruzada. */
   crossListBotons!: CrosslistBoton[];
 
@@ -81,7 +73,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   aquandasLabel: CrossListLable = AQUANDAS_LABEL;
 
   /** Lista original de aduanas. Contiene las aduanas disponibles antes de realizar selecciones. */
-  listaOriginalAduanas: string[] = [];
+  listaOriginalAduanas: string[] = CROSLISTA_ENTRADA;
 
   /** Lista seleccionada de aduanas. Contiene las aduanas seleccionadas por el usuario. */
   listaSeleccionadaAduanas: string[] = [];
@@ -96,7 +88,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   public alert_message: string = ALERTA_MERCANCIA;
 
   /** Lista original de movimientos. Contiene los movimientos disponibles antes de realizar selecciones. */
-  listaOriginalMovimiento: string[] = [];
+  listaOriginalMovimiento: string[] = CROSLISTA_ENTRADA;
 
   /** Lista seleccionada de movimientos. Contiene los movimientos seleccionados por el usuario. */
   listSeleccionadaMovimiento: string[] = [];
@@ -216,17 +208,62 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
     this.permisoCitesService.inicializaDatosSolicitudDatosCatalogos();
-    this.crossListBotons = CROSSLIST_BOTONS(this.crosslistComponent);
-    this.movimientoBotons = this.crossListBotons;
-    this.aduanasBotons = this.crossListBotons;
 
     this.tramite230902Query.selectSolicitud$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((state) => {
         this.solicitud230902State = state;
-      });
+        
+        // Initialize tablaDatos from store to maintain data across component switches
+        if (state.mercanciaTablaDatos) {
+          this.tablaDatos = [...state.mercanciaTablaDatos];
+        }
+        
+        // Initialize tipoMovimientoSeleccionada when state is updated
+        if (state.tipodeMovimiento) {
+          this.tipoMovimientoSeleccionada = parseInt(state.tipodeMovimiento, 10);
+        } else {
+          this.tipoMovimientoSeleccionada = 0;
+        }
 
+        this.storeCrosslistaDatos();
+      });
+  }
+
+  /**
+   * Se ejecuta después de que la vista del componente se ha inicializado.
+   * Configura los componentes crosslist cuando están disponibles.
+   */
+  async ngAfterViewInit(): Promise<void> {
+    await this.esperarComponentesCrosslistListos();
+    this.configurarComponentesCrosslist();
     this.cambiarTipoDeMovimiento();
+  }
+
+  /**
+   * Espera hasta que los componentes crosslist estén listos para su uso.
+   * Implementa un mecanismo de polling asíncrono para verificar la disponibilidad.
+   */
+  private esperarComponentesCrosslistListos(): Promise<void> {
+    return new Promise<void>((resolve) => {
+      const VERIFICAR_COMPONENTES = (): void => {
+        if (this.crosslistComponent && this.crosslistComponentFinalidad) {
+          resolve();
+        } else {
+          setTimeout(VERIFICAR_COMPONENTES, 50);
+        }
+      };
+      VERIFICAR_COMPONENTES();
+    });
+  }
+
+  /**
+   * Configura los componentes crosslist una vez que están disponibles.
+   */
+  private configurarComponentesCrosslist(): void {
+    this.crossListBotons = CROSSLIST_BOTONS(this.crosslistComponent);
+    this.movimientoBotons = CROSSLIST_BOTONS(this.crosslistComponentFinalidad);
+    this.aduanasBotons = this.crossListBotons;
   }
 
   /**
@@ -248,6 +285,20 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       tipodeMovimiento: [this.solicitud230902State.tipodeMovimiento, Validators.required],
       tipoRegimen: [this.solicitud230902State.tipoRegimen, Validators.required],
     });
+
+    // Initialize tipoMovimientoSeleccionada based on stored value
+    if (this.solicitud230902State.tipodeMovimiento) {
+      this.tipoMovimientoSeleccionada = parseInt(this.solicitud230902State.tipodeMovimiento, 10);
+    }
+
+    // Subscribe to form changes to update crosslist buttons
+    this.subscription.add(
+      this.formSolicitud.get('tipodeMovimiento')?.valueChanges
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(() => {
+          this.cambiarTipoDeMovimiento();
+        }) || new Subscription()
+    );
   }
 
   /**
@@ -317,17 +368,63 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Limpia todos los campos del formulario de mercancía.
+   * Resetea el formulario a sus valores iniciales y restaura el estado de "otraFraccion".
+   */
+  limpiarFormularioMercancia(): void {
+    this.formMercancia.reset();
+    this.otraFraccionSeleccionada = false;
+    
+    if (this.formMercancia.contains('fraccionVigenteTIGIE')) {
+      this.formMercancia.removeControl('fraccionVigenteTIGIE');
+    }
+    
+    this.formMercancia.patchValue({
+      id: 0,
+      fraccionArancelaria: '',
+      fraccionDescripcion: '',
+      otraFraccion: false,
+      descripcion: '',
+      rendimientoProducto: '',
+      clasificacionTaxonomica: '',
+      nombreCientifico: '',
+      nombreComun: '',
+      marca: '',
+      cantidad: '',
+      unidadMedida: '',
+      paisOrigen: '',
+      paisProcedencia: '',
+    });
+    
+    this.formMercancia.get('fraccionDescripcion')?.disable();
+    
+    this.formMercancia.markAsUntouched();
+    this.formMercancia.markAsPristine();
+  }
+
+  /**
    * Maneja el cambio en el tipo de movimiento seleccionado.
    * Actualiza el estado y los botones relacionados con el movimiento.
    */
   cambiarTipoDeMovimiento(): void {
     const TIPO_DE_MOVIMIENTO = this.formSolicitud.get('tipodeMovimiento')?.value;
+     
     this.tramite230902Store.establecerDatos({ tipodeMovimiento: TIPO_DE_MOVIMIENTO });
-    if (TIPO_DE_MOVIMIENTO === '1') {
-      this.aduanasBotons = this.crossListBotons.slice(1);
-    } else {
-      this.aduanasBotons = this.crossListBotons;
+    
+    // Recreate crosslist buttons if they are undefined or empty
+    if (!this.crossListBotons || this.crossListBotons.length === 0) {
+      this.configurarComponentesCrosslist();
     }
+    
+    // Ensure crosslist components are initialized before using them
+    if (this.crossListBotons && this.crossListBotons.length > 0) {
+      if (TIPO_DE_MOVIMIENTO === '1' || TIPO_DE_MOVIMIENTO === '3') {
+        this.aduanasBotons = this.crossListBotons.slice(1);
+      } else {
+        this.aduanasBotons = this.crossListBotons;
+      }
+    }
+    
     this.tipoMovimientoSeleccionada = parseInt(TIPO_DE_MOVIMIENTO, 10);
   }
 
@@ -466,7 +563,11 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Elimina los elementos seleccionados de la tabla de mercancías.
    * Actualiza el estado global con los datos restantes.
    */
-  eliminarMercanciaItem(): void {
+  eliminarMercanciaItem(event: boolean): void {
+    if(event === false || this.listaFilaSeleccionadaMercancia.length === 0) {
+      this.cerrarEliminarConfirmationPopup();
+      return;
+    }
     const IDS_TO_DELETE = this.listaFilaSeleccionadaMercancia.map(item => item.id);
 
     this.tablaDatos = this.tablaDatos.filter(
@@ -610,6 +711,34 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.tramite230902Store.setMercanciaTablaDatos(this.tablaDatos);
     this.formMercancia.reset();
     this.alternarVisibilidadModalMercancia();
+  }
+
+  /**
+   * Actualiza los datos de las listas cruzadas basándose en el estado actual.
+   * 
+   * Sincroniza las listas seleccionadas y originales con el estado de la aplicación.
+   * Si las matrices del estado están vacías o indefinidas, utiliza valores predeterminados.
+   */
+  storeCrosslistaDatos(): void {
+    // Función auxiliar para verificar si una matriz es válida y no está vacía
+    const ES_MATRIZ_VALIDA = (array: string[] | undefined | null): boolean => 
+      Array.isArray(array) && array.length > 0;
+
+    // Usar CROSLISTA_ENTRADA si listaOriginalAduanas es indefinida, nula o está vacía
+    this.listaOriginalAduanas = ES_MATRIZ_VALIDA(this.solicitud230902State.listaOriginalAduanas)
+      ? this.solicitud230902State.listaOriginalAduanas as string[]
+      : CROSLISTA_ENTRADA;
+    
+    // Usar matriz vacía o la matriz del estado si listaSeleccionadaAduanas existe
+    this.listaSeleccionadaAduanas = this.solicitud230902State.listaSeleccionadaAduanas || [];
+
+    // Usar CROSLISTA_ENTRADA si listaOriginalMovimiento es indefinida, nula o está vacía
+    this.listaOriginalMovimiento = ES_MATRIZ_VALIDA(this.solicitud230902State.listaOriginalMovimiento)
+      ? this.solicitud230902State.listaOriginalMovimiento as string[]
+      : CROSLISTA_ENTRADA;
+    
+    // Usar matriz vacía o la matriz del estado si listaSeleccionadaMovimiento existe
+    this.listSeleccionadaMovimiento = this.solicitud230902State.listaSeleccionadaMovimiento || [];
   }
 
   /**

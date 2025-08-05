@@ -52,10 +52,10 @@ export const CONFIGURACION_SOCIEDADES = [
       marginTop: 3
     },
     {
-      id: 'razonSocial',
+      id: 'denominacion',
       row: 3,
       labelNombre: 'Denominación o razón social',
-      campo: 'razonSocial',
+      campo: 'denominacion',
       clase: 'col-md-12',
       tipoInput: 'text',
       desactivado: true,
@@ -67,10 +67,10 @@ export const CONFIGURACION_SOCIEDADES = [
       marginTop: 3
     },
     {
-      id: 'aduana',
+      id: 'aduanaEnLaQueActua',
       row: 4,
       labelNombre: 'Aduana en la que actua',
-      campo: 'aduana',
+      campo: 'aduanaEnLaQueActua',
       clase: 'col-md-5',
       tipoInput: 'select-catalogos',
       desactivado: false,
@@ -194,10 +194,10 @@ export const CONFIGURACION_IDIQUESI = [
  */
 export const MANDATARIOS_DEL_AGENT = [
     {
-      id: 'rfc',
+      id: 'rfcRegistro',
       row: 1,
       labelNombre: 'RFC',
-      campo: 'rfc',
+      campo: 'rfcRegistro',
       clase: 'col-md-4',
       tipoInput: 'text',
       desactivado: false,

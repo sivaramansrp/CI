@@ -6,7 +6,6 @@ import { DatosDelEstablecimientoRFCComponent } from '../../shared/components/dat
 import { DomicilioEstablecimientoAduanasComponent } from '../../shared/components/domicilio-establecimiento-aduanas/domicilio-establecimiento-aduanas.component';
 import { ManifiestosComponent } from '../../shared/components/manifiestos-declaraciones/manifiestos-declaraciones.component';
 import { NgModule } from '@angular/core';
-import { PagoDerechosComponent } from '../../shared/components/pago-Derechos/pago-Derechos.component';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
 import { ParmisoImportacionCalidadRoutingModule } from './parmiso-importacion-calidad-routing.module';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
@@ -14,6 +13,7 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { RepresentanteLegalRfcComponent } from '../../shared/components/representante-legal-rfc/representante-legal-rfc.component';
 import { ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
+import { SharedPagoDerechosComponent } from '../../shared/components/shared-pago-derechos/shared-pago-derechos.component';
 
 @NgModule({
   declarations: [DatosComponent, PantallasComponent, PasoDosComponent, PasoTresComponent
@@ -28,7 +28,7 @@ import { provideHttpClient } from '@angular/common/http';
     AlertComponent,
     FirmaElectronicaComponent,
     WizardComponent,
-    PagoDerechosComponent,
+    SharedPagoDerechosComponent,
     AvisoTercerosRelacionadosComponent,
     DatosDelEstablecimientoRFCComponent,
     DomicilioEstablecimientoAduanasComponent,

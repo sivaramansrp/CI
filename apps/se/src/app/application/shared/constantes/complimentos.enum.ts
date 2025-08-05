@@ -39,7 +39,7 @@ export const FORMA_SOCIO_ACCIONISTAS: DatosCatalago[] = [
     class: 'col-md-7 col-sm-10 pr-5',
     tipo_input: 'text',
     required: true,
-    maxLength: 12,
+    maxlength: 12,
     orden: 1,
   },
   {
@@ -48,6 +48,7 @@ export const FORMA_SOCIO_ACCIONISTAS: DatosCatalago[] = [
     class: 'col-md-6 col-sm-10 mt-3',
     tipo_input: 'text',
     required: true,
+    maxlength: 200,
     orden: 2,
   },
   {
@@ -58,22 +59,23 @@ export const FORMA_SOCIO_ACCIONISTAS: DatosCatalago[] = [
     required: true,
     opciones: [],
     orden: 3,
-  },
+    },
   {
     labelNombre: 'Código postal',
     campo: 'codigoPostal',
     class: 'col-md-6 col-10 mt-3',
     tipo_input: 'text',
     required: true,
-    maxLength: 12,
+    maxlength: 12,
     orden: 4,
   },
   {
     labelNombre: 'Estado',
     campo: 'estado',
     class: 'col-md-6 col-10  mt-1',
-    tipo_input: 'select-catalog',
+    tipo_input: 'text',
     required: true,
+    maxlength: 250,
     opciones: [],
     orden: 5,
   },
@@ -83,7 +85,7 @@ export const FORMA_SOCIO_ACCIONISTAS: DatosCatalago[] = [
     class: 'col-md-6 col-10 mt-3',
     tipo_input: 'text',
     required: true,
-    maxLength: 200,
+    maxlength: 200,
     orden: 6,
   },
 ];
@@ -117,7 +119,7 @@ export const FORMA_SOCIO_ACCIONISTAS_EXTRANJEROS: DatosCatalago[] = [
     class: 'col-md-6 col-sm-10 mt-3',
     tipo_input: 'text',
     required: true,
-    maxLength: 200,
+    maxlength: 200,
     orden: 1,
   },
   {
@@ -126,7 +128,7 @@ export const FORMA_SOCIO_ACCIONISTAS_EXTRANJEROS: DatosCatalago[] = [
     class: 'col-md-6 col-sm-10 mt-3',
     tipo_input: 'text',
     required: true,
-    maxLength: 200,
+    maxlength: 200,
     orden: 2,
   },
   {
@@ -144,7 +146,7 @@ export const FORMA_SOCIO_ACCIONISTAS_EXTRANJEROS: DatosCatalago[] = [
     class: 'col-md-6 col-10 mt-3',
     tipo_input: 'text',
     required: true,
-    maxLength: 12,
+    maxlength: 12,
     orden: 4,
   },
   {
@@ -154,6 +156,7 @@ export const FORMA_SOCIO_ACCIONISTAS_EXTRANJEROS: DatosCatalago[] = [
     tipo_input: 'select-catalog ',
     required: true,
     opciones: [],
+    maxlength: 250,
     orden: 5,
   },
   {
@@ -162,7 +165,7 @@ export const FORMA_SOCIO_ACCIONISTAS_EXTRANJEROS: DatosCatalago[] = [
     class: 'col-md-6 col-10 mt-3',
     tipo_input: 'text',
     required: true,
-    maxLength: 200,
+    maxlength: 200,
     orden: 6,
   },
   {
@@ -171,7 +174,7 @@ export const FORMA_SOCIO_ACCIONISTAS_EXTRANJEROS: DatosCatalago[] = [
     class: 'col-md-6 col-sm-10 mt-3',
     tipo_input: 'text',
     required: true,
-    maxLength: 12,
+    maxlength: 12,
     orden: 7,
   },
 ];
@@ -205,7 +208,7 @@ export const FORMA_SOCIO: DatosCatalago[] = [
     class: 'col-md-6 col-10 mt-3',
     tipo_input: 'text',
     required: true,
-    maxLength: 13,
+    maxlength: 13,
     orden: 1,
   },
 ];
