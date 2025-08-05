@@ -1,3 +1,4 @@
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import {
   Catalogo,
   ConsultaioQuery,
@@ -6,7 +7,6 @@ import {
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent, CatalogosSelect } from '@libs/shared/data-access-user/src';
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -21,8 +21,9 @@ import {
 } from '../../state/Tramite110201.store';
 import { CommonModule } from '@angular/common';
 import { RegistroService } from '../../services/registro.service';
-import { Tramite110201Query } from '../../state/Tramite110201.query';
 import { Tooltip } from 'bootstrap';
+import { Tramite110201Query } from '../../state/Tramite110201.query';
+
 /**
  * Componente que representa el formulario de destinatario en el trámite.
  */
@@ -184,9 +185,9 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
    * Este método se ejecuta una vez que la vista del componente ha sido completamente renderizada.
    */
   ngAfterViewInit(): void {
-    const tooltipTriggerList = this.elRef.nativeElement.querySelectorAll('[data-bs-toggle="tooltip"]');
-    tooltipTriggerList.forEach((tooltipTriggerEl: any) => {
-      new Tooltip(tooltipTriggerEl);
+    const TOOLTIP_TRIGGER_LIST = this.elRef.nativeElement.querySelectorAll('[data-bs-toggle="tooltip"]');
+    TOOLTIP_TRIGGER_LIST.forEach((tooltipTriggerEl: unknown) => {
+      return new Tooltip(tooltipTriggerEl as Element);
     });
   }
   /**

@@ -7,11 +7,9 @@
  *
  * @module TramiteStore
  */
+import { HechosInfo, MercanciaForm, SolicitudForm } from '../modelos/acta-de-hechos.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { MercanciaForm } from '../modelos/acta-de-hechos.model';
-import { SolicitudForm } from '../modelos/acta-de-hechos.model';
-import { HechosInfo } from '../modelos/acta-de-hechos.model';
 
 /**
  * Interfaz que define la estructura del estado del trámite 32516.
@@ -194,10 +192,10 @@ export class TramiteStore extends Store<TramiteState> {
     public addHechosTableData(hecho: HechosInfo): void {
         
         this.update((state) => {
-            const newData = [...state.HechosTableData, hecho];
+            const NEW_DATA = [...state.HechosTableData, hecho];
             return {
                 ...state,
-                HechosTableData: newData,
+                HechosTableData: NEW_DATA,
             };
         });
     }

@@ -15,7 +15,6 @@ import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 import { TramiteState } from '../estados/tramite32516Store.store';
 import { TramiteStore } from '../estados/tramite32516Store.store';
-import { HechosInfo } from '../modelos/acta-de-hechos.model';
 
 /**
  * Clase Query de Akita para el manejo del estado del trámite 32516.

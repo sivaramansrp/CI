@@ -14,7 +14,6 @@ import { Tramite32506Store } from '../../estados/tramite32506.store';
 import { ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-import { ConsultaDatos } from '../../models/aviso-destruccion.model';
 
 /**
  * Componente para gestionar el paso uno del trámite 32506.
