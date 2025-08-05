@@ -349,7 +349,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
                         descTipoPedimento: 'Por evaluar',
                         numero: '',
                         comprobanteValor: '',
-                        pedimentoValidado: response.datos.pedimento_valido,
+                        pedimentoValidado: 'false',
                       };
 
                       this.nuevaNotificacion = {

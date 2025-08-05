@@ -1,3 +1,4 @@
+import { AlertComponent, Notificacion, NotificacionesComponent } from '@libs/shared/data-access-user/src';
 import {
   AnexoDosConfiguartion,
   AnexoDosEncabezado,
@@ -7,7 +8,6 @@ import {
 } from '../../models/nuevo-programa-industrial.model';
 import { Component, OnInit } from '@angular/core';
 import { ANEXO_UNO_ALERTA } from '../../constantes/anexo-dos-y-tres.enum';
-import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
@@ -28,6 +28,7 @@ import { Validators } from '@angular/forms';
     AlertComponent,
     ReactiveFormsModule,
     TablaDinamicaComponent,
+    NotificacionesComponent
   ],
   templateUrl: './anexo-uno.component.html',
   styleUrl: './anexo-uno.component.scss',
@@ -99,6 +100,20 @@ export class AnexoUnoComponent implements OnInit {
     | AnexoUnoEncabezado;
 
   /**
+   * @description
+   * Objeto que representa una nueva notificación.
+   * Se utiliza para mostrar mensajes de alerta o información al usuario.
+   */
+  public nuevaDosNotificacion!: Notificacion;
+
+  /**
+   * @description
+   * Objeto que representa una nueva notificación.
+   * Se utiliza para mostrar mensajes de alerta o información al usuario.
+   */
+  public nuevaUnoNotificacion!: Notificacion;
+
+  /**
    * Constructor de la clase AnexoUnoComponent
    * @param {FormBuilder} fb - Constructor para crear formularios reactivos
    */
@@ -107,6 +122,69 @@ export class AnexoUnoComponent implements OnInit {
     this.crearFormularioAnexoDos();
   }
 
+    /**
+   * Abre un modal con una notificación configurada para confirmar una acción de eliminación.
+   * 
+   * Este método inicializa un objeto de notificación con los siguientes parámetros:
+   * - `tipoNotificacion`: Define el tipo de notificación como "alerta".
+   * - `categoria`: Establece la categoría de la notificación como "peligro".
+   * - `modo`: Configura el modo de la notificación como "acción".
+   * - `titulo`: Campo para el título de la notificación (vacío por defecto).
+   * - `mensaje`: Mensaje que se muestra en la notificación, en este caso,
+   *   pregunta si el usuario está seguro de que desea eliminar.
+   * - `cerrar`: Indica si la notificación puede cerrarse manualmente (true).
+   * - `tiempoDeEspera`: Tiempo en milisegundos antes de que la notificación desaparezca automáticamente (2000 ms).
+   * - `txtBtnAceptar`: Texto del botón de aceptación ("Aceptar").
+   * - `txtBtnCancelar`: Texto del botón de cancelación (vacío por defecto).
+   * 
+   * @returns {void} Este método no devuelve ningún valor.
+   */
+  abrirUnoModal(): void {
+    this.nuevaUnoNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        '¿Estás seguro de que deseas eliminar?',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+  /**
+   * Abre un modal con una notificación configurada para confirmar una acción de eliminación.
+   * 
+   * Este método inicializa un objeto de notificación con los siguientes parámetros:
+   * - `tipoNotificacion`: Define el tipo de notificación como "alerta".
+   * - `categoria`: Establece la categoría de la notificación como "peligro".
+   * - `modo`: Configura el modo de la notificación como "acción".
+   * - `titulo`: Campo para el título de la notificación (vacío por defecto).
+   * - `mensaje`: Mensaje que se muestra en la notificación, en este caso,
+   *   pregunta si el usuario está seguro de que desea eliminar.
+   * - `cerrar`: Indica si la notificación puede cerrarse manualmente (true).
+   * - `tiempoDeEspera`: Tiempo en milisegundos antes de que la notificación desaparezca automáticamente (2000 ms).
+   * - `txtBtnAceptar`: Texto del botón de aceptación ("Aceptar").
+   * - `txtBtnCancelar`: Texto del botón de cancelación (vacío por defecto).
+   * 
+   * @returns {void} Este método no devuelve ningún valor.
+   */
+  abrirDosModal(): void {
+    this.nuevaDosNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        '¿Estás seguro de que deseas eliminar?',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+  
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * Si el formulario está deshabilitado (`formularioDeshabilitado` es verdadero),
@@ -125,8 +203,8 @@ export class AnexoUnoComponent implements OnInit {
    */
   crearFormularioAnexoUno(): void {
     this.anexoUnoFormGroup = this.fb.group({
-      fraccionArancelaria: ['', Validators.required],
-      descripcion: ['', Validators.required],
+      fraccionArancelaria: ['', [Validators.required, Validators.maxLength(10)]],
+      descripcion: ['', [Validators.required, Validators.maxLength(1000)]],
     });
   }
 
@@ -135,8 +213,8 @@ export class AnexoUnoComponent implements OnInit {
    */
   crearFormularioAnexoDos(): void {
     this.anexoDosFormGroup = this.fb.group({
-      fraccionArancelaria: ['', Validators.required],
-      descripcion: ['', Validators.required],
+      fraccionArancelaria: ['', [Validators.required, Validators.maxLength(10)]],
+      descripcion: ['', [Validators.required, Validators.maxLength(1000)]],
     });
   }
   /**
@@ -144,7 +222,7 @@ export class AnexoUnoComponent implements OnInit {
    */
   eliminarAnexoUno(): void {
     this.anexoUnoTablaLista = this.anexoUnoTablaLista.filter((idx) => {
-      return !idx.estatus;
+      return idx !== this.datosImportacionSeleccionados;
     });
     this.obtenerAnexoUnoDevolverLaLlamada.emit(this.anexoUnoTablaLista);
   }
@@ -154,7 +232,7 @@ export class AnexoUnoComponent implements OnInit {
    */
   eliminarAnexoDos(): void {
     this.anexoDosTablaLista = this.anexoDosTablaLista.filter((idx) => {
-      return !idx.estatus;
+      return idx !== this.datosExportacionSeleccionados;
     });
     this.obtenerAnexoDosDevolverLaLlamada.emit(this.anexoDosTablaLista);
   }
@@ -163,6 +241,11 @@ export class AnexoUnoComponent implements OnInit {
    * Agrega un nuevo elemento al Anexo Uno
    */
   agregarAnexoUno(): void {
+    if (this.anexoUnoFormGroup.invalid) {
+      this.anexoUnoFormGroup.markAllAsTouched();
+      return;
+    }
+
     const OBJECTO_IDX: AnexoUnoEncabezado = {
       encabezadoFraccion: this.anexoUnoFormGroup.get('fraccionArancelaria')
         ?.value,
@@ -176,15 +259,21 @@ export class AnexoUnoComponent implements OnInit {
       encabezadoCategoria: '',
       encabezadoValorEnMercado: '',
     };
+    this.anexoUnoFormGroup.reset();
+    // Reinicia el formulario después de agregar el objeto
     this.anexoUnoTablaLista.push(OBJECTO_IDX);
     this.obtenerAnexoUnoDevolverLaLlamada.emit(this.anexoUnoTablaLista);
-    this.anexoUnoFormGroup.reset();
   }
 
   /**
    * Agrega un nuevo elemento al Anexo Dos
    */
   agregarAnexoDos(): void {
+    if (this.anexoDosFormGroup.invalid) {
+      this.anexoDosFormGroup.markAllAsTouched();
+      return;
+    }
+
     const OBJECTO_IDX: AnexoDosEncabezado = {
       encabezadoFraccion: this.anexoDosFormGroup.get('fraccionArancelaria')
         ?.value,
@@ -194,9 +283,10 @@ export class AnexoUnoComponent implements OnInit {
       encabezadoFraccionImportacion: '',
       estatus: false,
     };
+    this.anexoDosFormGroup.reset();
+    // Reinicia el formulario después de agregar el objeto
     this.anexoDosTablaLista.push(OBJECTO_IDX);
     this.obtenerAnexoDosDevolverLaLlamada.emit(this.anexoDosTablaLista);
-    this.anexoDosFormGroup.reset();
   }
 
   /**

@@ -3,7 +3,7 @@
   <div class="row">
     <div class="col-md-4">
       <div class="form-group">
-        <label class="form-label" for="codigoPostal">Código postal*:</label>
+        <label class="form-label" for="codigoPostal">Código postal* :</label>
         <input class="form-control" id="codigoPostal" placeholder="" type="text" maxlength="12" size="29"
           formControlName="codigoPostal" (change)="setValoresStore(domicilio, 'codigoPostal', 'setCodigoPostal')" />
         <div class="d-grid">
@@ -21,7 +21,7 @@
     <div class="col-md-4">
       <app-catalogo-select [catalogo]="estado" formControlName="estado" [label]="'Estado'" [required]="true"
         name="estado" (change)="setValoresStore(domicilio, 'estado', 'setEstado')"
-        [isDisabled]="esFormularioSoloLectura || !tieneSeleccionadoBtnClicked"></app-catalogo-select>
+        [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
       <div class="d-grid">
         <div *ngIf="domicilio.get('estado')?.touched">
           <small class="mensaje-error" *ngIf="domicilio.get('estado')?.hasError('required')">
@@ -32,7 +32,7 @@
     </div>
     <div class="col-md-4">
       <div class="form-group">
-        <label class="form-label" for="muncipio">Municipio y alcaldía*:</label>
+        <label class="form-label" for="muncipio">Municipio y alcaldía* :</label>
         <input class="form-control" id="muncipio" placeholder="" type="text" formControlName="muncipio" maxlength="120"
           (change)="setValoresStore(domicilio, 'muncipio', 'setMuncipio')" />
         <div class="d-grid">
@@ -64,7 +64,7 @@
   <div class="row">
     <div class="col-md-8">
       <div class="form-group">
-        <label class="form-label" for="calle">Calle*:</label>
+        <label class="form-label" for="calle">Calle* :</label>
         <span
               class="bi bi-question-circle-fill"
               title="Calle y número"
@@ -92,7 +92,7 @@
     </div>
     <div class="col-md-3">
       <div class="form-group">
-        <label class="form-label" for="telefono">Teléfono*:</label>
+        <label class="form-label" for="telefono">Teléfono* :</label>
         <input class="form-control" id="telefono" placeholder="" type="number" maxlength="30" size="29"
           formControlName="telefono" (change)="setValoresStore(domicilio, 'telefono', 'setTelefono')" />
         <div class="d-grid">
@@ -114,20 +114,51 @@
     </div>
   </div>
   <div class="row">
-    <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"
+    <div class="col-md-12">
+      <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"
       [datos]="nicoTablaDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"></app-tabla-dinamica>
-    <div class="container text-end mt-5">
+    </div>
+    <div class="col-md-12 text-end mt-5">
       <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
-      <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura ? true : false" data-bs-toggle="modal"
-        data-bs-target="#modalAddAgent" (click)="guardarScian()">
+      <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura ? true : false" (click)="abrirModalScian()">
         Agregar
       </button>
     </div>
   </div>
-  <div class="row">
-    <crosslist [fechas]="seleccionarOrigenDelPais" [label]="aduanasDeLabel" [botones]="paisDeProcedenciaBotones"
-      [isDisabled]="esFormularioSoloLectura ? true : false">
-    </crosslist>
+    <div class="row align-item-center">
+      <div class="col-md-4 mt-5">
+        <lib-input-check
+          [label]="'Aviso de funcionamiento:'"
+          [id]="'avisoCheckbox'"
+          [required]="true"
+          formControlName="avisoCheckbox"
+          [isDisabled]="esFormularioSoloLectura"
+          (change)="setValoresStore(domicilio, 'avisoCheckbox', 'setAvisoCheckbox');"
+        ></lib-input-check>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="licenciaSanitaria">{{licenseLabel}}
+            <span class="p-2" tooltip="Número de la autorización indicado en el documento emitido por la autoridad sanitaria competente." placement="top">
+              <i class="bi bi-question-circle-fill"></i>
+            </span>
+          </label>
+          <input class="form-control" id="licenciaSanitaria" placeholder="" type="text"
+            formControlName="licenciaSanitaria" 
+            (change)="setValoresStore(domicilio, 'licenciaSanitaria', 'setLicenciaSanitaria')" 
+            />
+        </div>
+        <div *ngIf="domicilio.controls['licenciaSanitaria']?.invalid && domicilio.controls['licenciaSanitaria']?.touched" class="d-grid">
+          <span class="mensaje-error" *ngIf="domicilio.controls['licenciaSanitaria']?.errors?.['maxlength']">No puede tener más de 20 caracteres</span>
+        </div>
+      </div>
+    </div>
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <crosslist [fechas]="seleccionarOrigenDelPais" [label]="aduanasDeLabel" [botones]="paisDeProcedenciaBotones"
+        [isDisabled]="esFormularioSoloLectura ? true : false">
+      </crosslist>
+    </div>
   </div>
   <div class="row">
     <div class="col-md-12 mt-5">
@@ -135,24 +166,29 @@
     </div>
   </div>
   <div class="row mt-5">
-    <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla"
+    <div class="col-md-12">
+      <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla"
       [datos]="mercanciasTablaDatos"
-      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"></app-tabla-dinamica>
-    <div class="container text-end mt-5">
-      <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false" data-bs-toggle="modal"
-        data-bs-target="#modalAddAgentMercancias">
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
+      (listaDeFilaSeleccionada)="onSeleccionChange($event)" ></app-tabla-dinamica>
+    </div>
+    <div class="col-md-12 text-end mt-5">
+      @if (mercanciasTablaDatos.length) {
+        <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false" (click)="abrirModalMercancia()">
         Modificar
       </button>
-      <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
-      <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura ? true : false" data-bs-toggle="modal"
-        data-bs-target="#modalAddAgentMercancias">
+      <button class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura ? true : false" (click)="eliminarMercancia()">Eliminar</button>
+      }
+      @if (!mercanciasTablaDatos.length) {
+        <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura ? true : false" (click)="abrirModalMercancia()">
         Agregar
       </button>
+      }
     </div>
   </div>
 </form>
 
-<div class="modal fade" id="modalAddAgent" tabindex="-1" aria-labelledby="modalAddAgentLabel" aria-hidden="true">
+<div class="modal fade" #modalAddAgentScian id="modalAddAgent" tabindex="-1" aria-labelledby="modalAddAgentLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-xl">
     <div class="modal-content overflow-auto">
       <div class="modal-header">
@@ -166,43 +202,49 @@
               (change)="onClaveScianChange($event);setValoresStore(formAgente, 'claveScianModal', 'setClaveScianModal')" ></app-catalogo-select>
           </div>
           <div class="form-group">
-            <app-catalogo-select [catalogo]="estado" formControlName="claveDescripcionModal"
+            <app-catalogo-select [catalogo]="estadoDescripcion" formControlName="claveDescripcionModal"
               [label]="'Descripción del S.C.I.A.N.'" [required]="false" name="claveDescripcionModal"
               [isDisabled]="esFormularioSoloLectura ? true : false"
               (change)="setValoresStore(formAgente, 'claveDescripcionModal', 'setClaveDescripcionModal')"></app-catalogo-select>
           </div>
         </form>
       </div>
-      <div class="modal-footer custom-footer">
-        <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura ? true : false"
+      <div class="mt-5 mb-5 d-flex justify-content-between align-items-center col-md-12">
+        <div>
+          <p class="text-muted m-0">* Campos obligatorios</p>
+        </div>
+        <div class="d-flex">
+          <button type="button" class="btn btn-default me-3" [disabled]="esFormularioSoloLectura ? true : false"
           data-bs-dismiss="modal" (click)="limpiarScianForm()">
           Limpiar
         </button>
-        <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura ? true : false"
+          <button type="button" class="btn btn-default me-3" [disabled]="esFormularioSoloLectura ? true : false"
           data-bs-dismiss="modal">
           Cancelar
         </button>
-        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura ? true : false"
-          data-bs-dismiss="modal">
+          <button type="button" class="btn btn-primary me-3" [disabled]="esFormularioSoloLectura ? true : false"
+           (click)="guardarScian()">
           Agregar
         </button>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="modal fade" id="modalAddAgentMercancias" tabindex="-1" aria-labelledby="modalAddAgentMercanciasLabel"
+<div class="modal fade" #modalAddAgentMercancias tabindex="-1" aria-labelledby="modalAddAgentMercanciasLabel"
   aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" style="max-width: 80vw">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">Datos mercancías</h4>
       </div>
       <div class="modal-body modal-height">
         <form [formGroup]="formMercancias">
+         <ng-titulo titulo="Identificación del producto"></ng-titulo> 
           <div class="form-group">
-            <label for="nombreComercial">Nombre comercial*:</label>
-            <input type="text" id="nombreComercial" formControlName="nombreComercial" class="form-control"
+            <label for="nombreComercial">Nombre comercial* :</label>
+            <input type="text" id="nombreComercial" formControlName="nombreComercial" class="form-control" maxlength="1000"
               (change)="setValoresStore(formMercancias, 'nombreComercial', 'setNombreComercial')" />
             <div class="d-grid">
               <div *ngIf="formMercancias.get('nombreComercial')?.touched">
@@ -213,8 +255,8 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="nombreComun">Nombre común*:</label>
-            <input type="text" id="nombreComun" formControlName="nombreComun" class="form-control"
+            <label for="nombreComun">Nombre común* :</label>
+            <input type="text" id="nombreComun" formControlName="nombreComun" class="form-control" maxlength="256"
               (change)="setValoresStore(formMercancias, 'nombreComun', 'setNombreComun')" />
             <div class="d-grid">
               <div *ngIf="formMercancias.get('nombreComun')?.touched">
@@ -225,8 +267,8 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="nombreCientifico">Nombre científico*:</label>
-            <input type="text" id="nombreCientifico" formControlName="nombreCientifico" class="form-control"
+            <label for="nombreCientifico">Nombre científico* :</label>
+            <input type="text" id="nombreCientifico" formControlName="nombreCientifico" class="form-control" maxlength="256"
               (change)="setValoresStore(formMercancias, 'nombreCientifico', 'setNombreCientifico')" />
             <div class="d-grid">
               <div *ngIf="formMercancias.get('nombreCientifico')?.touched">
@@ -237,8 +279,8 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="usoEspecifico" class="form-label text-start">Uso específico*:</label>
-            <textarea id="usoEspecifico" class="form-control" formControlName="usoEspecifico"
+            <label for="usoEspecifico" class="form-label text-start">Uso específico* :</label>
+            <textarea id="usoEspecifico" class="form-control" formControlName="usoEspecifico" maxlength="5000"
               (change)="setValoresStore(formMercancias, 'usoEspecifico', 'setUsoEspecifico')"></textarea>
             <div class="d-grid">
               <div *ngIf="formMercancias.get('usoEspecifico')?.touched">
@@ -256,9 +298,15 @@
           </div>
 
           <div class="form-group">
-            <label for="fraccionArancelaria">Fracción arancelaria * :</label>
-            <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control"
-              (change)="setValoresStore(formMercancias, 'fraccionArancelaria', 'setFraccionArancelaria')" />
+            <label for="fraccionArancelaria">Fracción arancelaria * :
+               <span
+              class="bi bi-question-circle-fill"
+              title="No. de licencia sanitaria"
+              data-bs-toggle="tooltip"
+              ></span>
+            </label>
+            <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control" maxlength="8"
+              (change)="setValoresStore(formMercancias, 'fraccionArancelaria', 'setFraccionArancelaria');onFraccionChange()" />
             <div class="d-grid">
               <div *ngIf="formMercancias.get('fraccionArancelaria')?.touched">
                 <small class="mensaje-error" *ngIf="formMercancias.get('fraccionArancelaria')?.hasError('required')">
@@ -282,7 +330,7 @@
           <div class="form-group row">
             <div class="col-md-6">
               <label for="cantidadUMT">Cantidad UMT * :</label>
-              <input type="text" id="cantidadUMT" formControlName="cantidadUMT" class="form-control"
+              <input type="text" id="cantidadUMT" formControlName="cantidadUMT" class="form-control" maxlength="20"
                 (change)="setValoresStore(formMercancias, 'cantidadUMT', 'setCantidadUMT')" />
               <div class="d-grid">
                 <div *ngIf="formMercancias.get('cantidadUMT')?.touched">
@@ -293,7 +341,12 @@
               </div>
             </div>
             <div class="col-md-6">
-              <label for="UMT">UMT * :</label>
+              <label for="UMT">UMT * :  
+                <span
+                   class="bi bi-question-circle-fill"
+                   title="UMT"
+                  data-bs-toggle="tooltip"
+                  ></span></label>
               <input type="text" id="UMT" formControlName="UMT" class="form-control"
                 (change)="setValoresStore(formMercancias, 'UMT', 'setUMT')" />
               <div class="d-grid">
@@ -309,7 +362,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label for="cantidadUMC">Cantidad UMC * :</label>
-                <input type="text" id="cantidadUMC" formControlName="cantidadUMC" class="form-control"
+                <input type="text" id="cantidadUMC" formControlName="cantidadUMC" class="form-control" maxlength="20"
                   (change)="setValoresStore(formMercancias, 'cantidadUMC', 'setCantidadUMC')" />
                 <div class="d-grid">
                   <div *ngIf="formMercancias.get('cantidadUMC')?.touched">
@@ -323,14 +376,14 @@
             <div class="col-md-6">
               <div class="form-group">
                 <app-catalogo-select [catalogo]="estado" formControlName="UMC" [label]="'UMC'" [required]="true"
-                  name="UMC" [isDisabled]="esFormularioSoloLectura ? true : false"
+                  name="UMC"  [tooltipQuestionCircle]="true" [isDisabled]="esFormularioSoloLectura ? true : false"
                   (change)="setValoresStore(formMercancias, 'UMC', 'setUMC')"></app-catalogo-select>
               </div>
             </div>
           </div>
           <div class="form-group">
             <label for="numerocas">Número CAS * :</label>
-            <input type="text" id="numerocas" formControlName="numerocas" class="form-control"
+            <input type="text" id="numerocas" formControlName="numerocas" class="form-control" maxlength="20"
               (change)="setValoresStore(formMercancias, 'numerocas', 'setNumerocas')" />
             <div class="d-grid">
               <div *ngIf="formMercancias.get('numerocas')?.touched">
@@ -342,7 +395,7 @@
           </div>
           <div class="form-group">
             <label for="porcentajeConcentracion">Porcentaje de concentración * :</label>
-            <input type="text" id="porcentajeConcentracion" formControlName="porcentajeConcentracion"
+            <input type="text" id="porcentajeConcentracion" formControlName="porcentajeConcentracion" maxlength="100"
               class="form-control"
               (change)="setValoresStore(formMercancias, 'porcentajeConcentracion', 'setPorcentajeConcentracion')" />
             <div class="d-grid">
@@ -360,7 +413,7 @@
               <div class="panel panel-default">
                 <div class="panel-heading" (click)="mostrar_colapsableTres()" tabindex="0">
                   <p class="panel-title">País de origen</p>
-                  <button type="button" class="collpase-button collapsed"></button>
+                  <button type="button" class="collpase-button" [ngClass]="{ 'collapsed': !colapsableTres }"></button>
                 </div>
                 @if(colapsableTres){
                 <div class="panel-collapse collapse in" id="panel-01">
@@ -379,7 +432,7 @@
               <div class="panel panel-default">
                 <div class="panel-heading" (click)="mostrar_colapsableDuos()" tabindex="0">
                   <p class="panel-title">País de procedencia/país de último puerto de embarque</p>
-                  <button type="button" class="collpase-button collapsed"></button>
+                  <button type="button" class="collpase-button" [ngClass]="{ 'collapsed': !colapsableDuos }"></button>
                 </div>
                 @if(colapsableDuos){
                 <div class="panel-collapse collapse in" id="panel-01">
@@ -407,19 +460,24 @@
           </div>
         </form>
       </div>
-      <div class="modal-footer custom-footer">
-        <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura ? true : false"
-          data-bs-dismiss="modal">
+      <div class="mt-5 mb-5 d-flex justify-content-between align-items-center col-md-12">
+        <div>
+          <p class="text-muted m-0">* Campos obligatorios</p>
+        </div>
+        <div class="d-flex">
+          <button type="button" class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura ? true : false"
+         (click)="limpiarMercanciaForm()">
           Limpiar
         </button>
-        <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura ? true : false"
+        <button type="button" class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura ? true : false"
           data-bs-dismiss="modal">
           Cancelar
         </button>
-        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura ? true : false"
-          data-bs-dismiss="modal">
+        <button type="button" class="btn btn-primary ms-2" [disabled]="esFormularioSoloLectura ? true : false"
+          (click)="agregarMercancia()">
           Agregar
         </button>
+        </div>
       </div>
     </div>
   </div>

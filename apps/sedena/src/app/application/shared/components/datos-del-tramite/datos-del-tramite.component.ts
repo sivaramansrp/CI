@@ -25,7 +25,9 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  QueryList,
   SimpleChanges,
+  ViewChildren,
 } from '@angular/core';
 import {
   ConfiguracionColumna,
@@ -96,6 +98,18 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy ,OnChanges{
    * @decorador @Input
    */
   @Input() public idProcedimiento!: number;
+
+  /**
+   * Indica si se deben usar botones personalizados en el componente.
+   * Cuando es `true`, se aplicarán plantillas o lógica de botones personalizados en lugar de los botones predeterminados.
+   */
+  @Input() public usarBotonesPersonalizados!: boolean;
+
+  /**
+   * Indica si se deben mostrar las etiquetas de tipo de aduanas disponibles.
+   * Cuando es `true`, se mostrarán etiquetas específicas para los tipos de aduanas disponibles.
+   */
+  @Input() public aduanasDisponiblesLabelTipo!: boolean;
 
   /**
    * Indica si el elemento está ocultarBotones o visible.
@@ -234,6 +248,19 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy ,OnChanges{
   public aduanasDisponiblesLabel: CrossListLable = {
     tituluDeLaIzquierda: 'Aduanas disponibles',
     derecha: 'Aduanas seleccionadas',
+    showUnoTitulo: true,
+    showDosTitulo: true,
+  };
+
+   /**
+   * Etiquetas que se utilizan en el componente Crosslist para mostrar los títulos de los listados.
+   * @property {CrossListLable} aduanasDisponiblesLabelRequired
+   */
+  public aduanasDisponiblesLabelRequired: CrossListLable = {
+    tituluDeLaIzquierda: 'Aduanas disponibles:',
+    derecha: 'Aduanas seleccionadas*:',
+    showUnoTitulo: false,
+    showDosTitulo: false,
   };
 
   /**
@@ -370,6 +397,12 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy ,OnChanges{
    * @event openModal
    * */
   @Output() openModal = new EventEmitter<string>();
+  
+  /**
+   * Referencia al componente Crosslist utilizado para gestionar aduanas.
+   * @viewChild crossList
+   */
+  @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
 
   /**
    * Evento emitido cuando se actualiza el formulario de justificación del trámite.
@@ -389,6 +422,43 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy ,OnChanges{
     class: string;
     funcion?: () => void;
   }[];
+
+  /**
+   * Un arreglo de objetos de configuración de botones para gestionar acciones de entrada de aduanas.
+   *
+   * Cada objeto en el arreglo representa un botón con las siguientes propiedades:
+   * - `btnNombre`: El nombre que se muestra en el botón.
+   * - `class`: La clase CSS que se aplica para el estilo del botón.
+   * - `funcion`: La función de callback que se ejecuta al hacer clic en el botón.
+   *
+   * Las acciones disponibles son:
+   * - "Agregar todos": Agrega todos los elementos invocando `agregar('t')` en el primer elemento de `crossList`.
+   * - "Agregar selección": Agrega los elementos seleccionados invocando `agregar('')` en el primer elemento de `crossList`.
+   * - "Restar selección": Quita los elementos seleccionados invocando `quitar('')` en el primer elemento de `crossList`.
+   * - "Restar todos": Quita todos los elementos invocando `quitar('t')` en el primer elemento de `crossList`.
+   */
+   aduanasEntradaBotons = [
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[0].agregar('t'),
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[0].agregar(''),
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-danger',
+      funcion: (): void => this.crossList.toArray()[0].quitar(''),
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[0].quitar('t'),
+    },
+  ];
 
   /**
    * Constructor del componente `DatosDelTramiteComponent`.

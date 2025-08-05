@@ -1,6 +1,6 @@
 import { API_POST_CADENA_ORIGINAL, IDSOLICITUD } from '../../../constantes/130118/api-constants';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
-import { CadenaOriginalRequest } from '../../models/request/cadena-original-request.model';
+import { CadenaOriginalRequest } from '../../models/130118/request/cadena-original-request.model';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';

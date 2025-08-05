@@ -28,7 +28,7 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { BienesProducidos } from '../../models/programas-reporte.model';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from "@ng-mf/data-access-user";
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Solicitud150102Query } from '../../estados/solicitud150102.query';
 import { SolicitudService } from '../../services/solicitud.service';
 
@@ -400,12 +400,14 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
     this.mensajesDeValidacion = [];
     const VENTASTOTALES = this.formReporteAnnual.get('ventasTotales')?.value;
     if (!VENTASTOTALES) {
+      this.abrirModal();
       this.mensajesDeValidacion.push(MENSAJES_VENTAS_TOTALES);
       return false;
     }
     const EXPORTACIONESTOTALS =
       this.formReporteAnnual.get('totalExportaciones')?.value;
     if (!EXPORTACIONESTOTALS) {
+      this.abrirModal();
       this.mensajesDeValidacion.push(MENSAJES_EXPORTACIONES_TOTALS);
       return false;
     }
@@ -494,10 +496,10 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
   }
 
   /**
- * Abre el modal de confirmación para eliminar un pedimento.
- * 
- * @param i Índice del elemento a eliminar. Valor predeterminado: 0.
- */
+   * Abre el modal de confirmación para eliminar un pedimento.
+   *
+   * @param i Índice del elemento a eliminar. Valor predeterminado: 0.
+   */
   abrirModal(i: number = 0): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
@@ -516,7 +518,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
 
   /**
    * Elimina un pedimento si el usuario ha confirmado la acción.
-   * 
+   *
    * @param borrar Valor booleano que indica si se debe proceder con la eliminación.
    */
   eliminarPedimento(borrar: boolean): void {

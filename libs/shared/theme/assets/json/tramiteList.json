@@ -1102,7 +1102,7 @@
     "id": 158,
     "tramite": 110210,
     "linkDashboard": "/se/tramites-disponibles/solicitud",
-    "linkDepartment": "/se/tramites-disponibles/solicitud",
+    "linkDepartment": "/pago/tramites-disponibles/solicitud",
     "department": "se"
   },
   {
@@ -1794,8 +1794,8 @@
   {
     "id": 257,
     "tramite": 240108,
-    "linkDashboard": "/sedena/permiso-ordinario-importacion-material-explosivo/contenedor-de-pasos",
-    "linkDepartment": "/pago/permiso-ordinario-importacion-material-explosivo/contenedor-de-pasos",
+    "linkDashboard": "/sedena/permiso-ordinario-importacion-material/contenedor-de-pasos",
+    "linkDepartment": "/pago/permiso-ordinario-importacion-material/contenedor-de-pasos",
     "department": "sedena"
   },
   {
@@ -4214,7 +4214,14 @@
     "linkDepartment": "/pago/cancelaciones-certificado/solicitud",
     "department": "se"
   },
-    {
+  {
+    "id": 32609,
+    "tramite": 32609,
+    "linkDashboard": "/agace/certificacion-empresas/operador-economico-autorizado-textil",
+    "linkDepartment": "/pago/certificacion-empresas/operador-economico-autorizado-textil",
+    "department": "agace"
+  },
+  {
     "id": 606,
     "tramite": 32614,
     "linkDashboard": "/agace/importador-y-o-exportador2/solicitud",
@@ -4324,6 +4331,13 @@
     "tramite": 32617,
     "linkDashboard": "/agace/certificacion-empresas-modalidad/oea-tercerizacion-logistica",
     "linkDepartment": "/pago/certificacion-empresas-modalidad/oea-tercerizacion-logistica",
+    "department": "agace"
+  },
+  {
+    "id": 616,
+    "tramite": 33304,
+    "linkDashboard": "/agace/aviso-comercializadora-modification-importadora/solicitud",
+    "linkDepartment": "/pago/aviso-comercializadora-modification-importadora/solicitud",
     "department": "agace"
   }
 ]

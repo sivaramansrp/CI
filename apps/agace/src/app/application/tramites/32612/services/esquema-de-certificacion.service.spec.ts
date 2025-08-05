@@ -250,6 +250,60 @@ describe('EsquemaDeCertificacionService', () => {
     });
   });
 
+  it('getAduanaActuaCatalog should call http.get with correct URL', () => {
+    httpClientMock.get.mockReturnValue(of({}));
+    service.getAduanaActuaCatalog().subscribe();
+    expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/32612/aduana-catalog.json');
+  });
+
+  it('should getAduanaActuaCatalog (error)', (done) => {
+    const error = new Error('fail');
+    httpClientMock.get.mockReturnValueOnce(throwError(() => error));
+    service.getAduanaActuaCatalog().subscribe({
+      next: () => fail('should error'),
+      error: (err) => {
+        expect(err).toBe(error);
+        done();
+      }
+    });
+  });
+
+  it('getRfcDelAgenteCatalog should call http.get with correct URL', () => {
+    httpClientMock.get.mockReturnValue(of({}));
+    service.getRfcDelAgenteCatalog().subscribe();
+    expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/32612/rfc-del-agente-catalog.json');
+  });
+
+  it('should getRfcDelAgenteCatalog (error)', (done) => {
+    const error = new Error('fail');
+    httpClientMock.get.mockReturnValueOnce(throwError(() => error));
+    service.getRfcDelAgenteCatalog().subscribe({
+      next: () => fail('should error'),
+      error: (err) => {
+        expect(err).toBe(error);
+        done();
+      }
+    });
+  });
+
+  it('getEntidadFederativaCatalog should call http.get with correct URL', () => {
+    httpClientMock.get.mockReturnValue(of({}));
+    service.getEntidadFederativaCatalog().subscribe();
+    expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/32612/entidad-federativa.json');
+  });
+
+  it('should getEntidadFederativaCatalog (error)', (done) => {
+    const error = new Error('fail');
+    httpClientMock.get.mockReturnValueOnce(throwError(() => error));
+    service.getEntidadFederativaCatalog().subscribe({
+      next: () => fail('should error'),
+      error: (err) => {
+        expect(err).toBe(error);
+        done();
+      }
+    });
+  });
+
   it('getPrefilesConsultaAccodiane should call http.get with correct URL', () => {
     httpClientMock.get.mockReturnValue(of({}));
     service.getPrefilesConsultaAccodiane().subscribe();

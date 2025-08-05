@@ -1,4 +1,4 @@
-<app-datos-certificado-de [precisa]="precisa" [idioma]="idioma" [idiomaDatos]="(idiomaDatos$ | async) || []"
+<app-datos-certificado-de [precisa]="precisa" [idioma]="idioma"  [presenta]="presenta" [idiomaDatos]="(idiomaDatos$ | async) || []" 
   (formDatosCertificadoEvent)="setValoresStore($event)" (idiomaSeleccionEvent)="idiomaSeleccion($event)"
   (entidadFederativaSeleccionEvent)="entidadFederativaSeleccion($event)"
   (representacionFederalSeleccionEvent)="representacionFederalSeleccion($event)"

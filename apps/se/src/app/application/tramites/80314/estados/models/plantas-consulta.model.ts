@@ -75,7 +75,7 @@
     fetchActa?: string;
     numeroNotaria?: string;
     municipioDelegacion?: string;
-    estado?: string;
+    entidadFederativa?: string;
 
   }
 

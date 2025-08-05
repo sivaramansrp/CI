@@ -9,6 +9,7 @@ import CumplimientoOptions from '@libs/shared/theme/assets/json/260501/cumplimie
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
 import { MANIFIESTOS_DECLARACION } from '../../constantes/aviso-de-funcionamiento.enum';
 import { MENSAJE_DE_ALERTA } from '../../constantes/datos-domicilio-legal.enum';
+import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 
 /**
  * @description
@@ -63,6 +64,12 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
 
   /**
    * @description
+   * Grupo de formularios para capturar los datos de manifiestos.
+   */
+  isUpdateDatos: boolean = false;
+
+  /**
+   * @description
    * Constructor del componente.
    * @param fb Constructor de formularios reactivos.
    * @param DatosDomicilioLegalStore Store para gestionar el estado del domicilio legal.
@@ -73,6 +80,7 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
     private DatosDomicilioLegalStore: DatosDomicilioLegalStore,
     private DatosDomicilioLegalQuery: DatosDomicilioLegalQuery,
     private consultaioQuery: ConsultaioQuery,
+    private servicioDeFormularioService: ServicioDeFormularioService,
   ) {
     //Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
@@ -102,6 +110,7 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
+          this.isUpdateDatos = seccionState.update;
         })
       )
       .subscribe()
@@ -139,6 +148,8 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
     } else {
       this.manifiestos.enable();
     }
+
+    this.servicioDeFormularioService.registerForm('manifiestosForm', this.manifiestos);
 }
   /**
    * @description
@@ -158,6 +169,10 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
         value: string | number | boolean
       ) => void
     )(VALOR);
+
+    this.servicioDeFormularioService.setFormValue('domicilioForm', {
+        [campo]: VALOR,
+      });
   }
 
   /**

@@ -130,6 +130,7 @@
             <div class="form-group">
               <input-fecha
                 [datos]="INPUT_FECHA_CONFIG"
+                [deshabilitarFuturas]="true"
                 [setFecha]="
                   formSolicitud.get('datosImportadorExportador.fechaPago')
                     ?.value

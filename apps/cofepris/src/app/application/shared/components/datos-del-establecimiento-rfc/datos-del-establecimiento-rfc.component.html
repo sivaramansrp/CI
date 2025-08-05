@@ -1,67 +1,65 @@
-<div class="container">
-  <ng-titulo titulo="Datos del establecimiento" />
-  <form [formGroup]="datosDelForm">
-    <div class="container text-end mt-5">
-      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregar"
-        (click)="abrirModal()" [disabled]="esFormularioSoloLectura ? true : false">Seleccionar establecimiento</button>
-    </div>
-    <div class="row">
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="form-label" for="rfcdel">RFC del responsable sanitario:</label>
-          <input class="form-control" id="rfcDel" formControlName="rfcDel" placeholder="" type="text" maxlength="13"
-        (change)="setValoresStore(datosDelForm,'rfcDel', 'setRfcDel')">
-        </div>
-        <div class="d-grid">
-          <div *ngIf="datosDelForm.controls['rfcDel'].invalid && datosDelForm.controls['rfcDel'].touched">
-        <span *ngIf="datosDelForm.controls['rfcDel'].errors?.['maxlength']" class="mensaje-error">
-          El texto excede el límite de caracteres permitido.
-        </span>
-          </div>
-        </div>
+<ng-titulo titulo="Datos del establecimiento" />
+<form [formGroup]="datosDelForm">
+  <div class="text-end">
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregar"
+      (click)="abrirModal()" [disabled]="esFormularioSoloLectura ? true : false">Seleccionar establecimiento</button>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="form-label" for="rfcdel">RFC del responsable sanitario:</label>
+        <input class="form-control" id="rfcDel" formControlName="rfcDel" placeholder="" type="text" maxlength="13"
+      (change)="setValoresStore(datosDelForm,'rfcDel', 'setRfcDel')">
       </div>
-      <div class="col-md-8">
-        <div class="form-group">
-          <label class="form-label" for="denominacionRazonSocial">Denominación o razón social*:</label>
-          <input class="form-control" id="denominacionRazonSocial" placeholder="" type="text" maxlength="100" size="75"
-        formControlName="denominacionRazonSocial"
-        (change)="setValoresStore(datosDelForm,'denominacionRazonSocial', 'setDenominacionRazonSocial')">
-        </div>
-        <div class="d-grid">
-          <div *ngIf="datosDelForm.controls['denominacionRazonSocial'].invalid && datosDelForm.controls['denominacionRazonSocial'].touched">
-        <span *ngIf="datosDelForm.controls['denominacionRazonSocial'].errors?.['required']" class="mensaje-error">
-          Este campo es obligatorio.
-        </span>
-        <span *ngIf="datosDelForm.controls['denominacionRazonSocial'].errors?.['maxlength']" class="mensaje-error">
-          El texto excede el límite de caracteres permitido.
-        </span>
-          </div>
+      <div class="d-grid">
+        <div *ngIf="datosDelForm.controls['rfcDel'].invalid && datosDelForm.controls['rfcDel'].touched">
+      <span *ngIf="datosDelForm.controls['rfcDel'].errors?.['maxlength']" class="mensaje-error">
+        El texto excede el límite de caracteres permitido.
+      </span>
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="form-label" for="correoElectronico">Correo electrónico*:<i
-          class="bi bi-question-circle-fill"></i></label>
-          <input class="form-control" id="correoElectronico" maxlength="320" size="29"
-        formControlName="correoElectronico" placeholder="" type="text"
-        (change)="setValoresStore(datosDelForm,'correoElectronico', 'setCorreoElectronico')">
-        </div>
-        <div class="d-grid">
-          <div *ngIf="datosDelForm.controls['correoElectronico'].invalid && datosDelForm.controls['correoElectronico'].touched">
-        <span *ngIf="datosDelForm.controls['correoElectronico'].errors?.['required']" class="mensaje-error">
-          Este campo es obligatorio.
-        </span>
-        <span *ngIf="datosDelForm.controls['correoElectronico'].errors?.['maxlength']" class="mensaje-error">
-         Por favor, escribe una dirección de correo válida
-        </span>
-          </div>
+    <div class="col-md-8">
+      <div class="form-group">
+        <label class="form-label" for="denominacionRazonSocial">Denominación o razón social* :</label>
+        <input class="form-control" id="denominacionRazonSocial" placeholder="" type="text" maxlength="100" size="75"
+      formControlName="denominacionRazonSocial"
+      (change)="setValoresStore(datosDelForm,'denominacionRazonSocial', 'setDenominacionRazonSocial')">
+      </div>
+      <div class="d-grid">
+        <div *ngIf="datosDelForm.controls['denominacionRazonSocial'].invalid && datosDelForm.controls['denominacionRazonSocial'].touched">
+      <span *ngIf="datosDelForm.controls['denominacionRazonSocial'].errors?.['required']" class="mensaje-error">
+        Este campo es obligatorio.
+      </span>
+      <span *ngIf="datosDelForm.controls['denominacionRazonSocial'].errors?.['maxlength']" class="mensaje-error">
+        El texto excede el límite de caracteres permitido.
+      </span>
         </div>
       </div>
     </div>
-  </form>
-</div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="form-label" for="correoElectronico">Correo electrónico* :<i
+        class="bi bi-question-circle-fill"></i></label>
+        <input class="form-control" id="correoElectronico" maxlength="320" size="29"
+      formControlName="correoElectronico" placeholder="" type="text"
+      (change)="setValoresStore(datosDelForm,'correoElectronico', 'setCorreoElectronico')">
+      </div>
+      <div class="d-grid">
+        <div *ngIf="datosDelForm.controls['correoElectronico'].invalid && datosDelForm.controls['correoElectronico'].touched">
+      <span *ngIf="datosDelForm.controls['correoElectronico'].errors?.['required']" class="mensaje-error">
+        Este campo es obligatorio.
+      </span>
+      <span *ngIf="datosDelForm.controls['correoElectronico'].errors?.['maxlength']" class="mensaje-error">
+        Por favor, escribe una dirección de correo válida
+      </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
 
 
 @if (nuevaNotificacion) {

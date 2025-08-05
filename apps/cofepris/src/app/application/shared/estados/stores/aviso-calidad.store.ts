@@ -122,7 +122,7 @@ export function createInitialState(): SolicitudState {
         porcentajeConcentracion: '',
         clasificacionToxicologica: '',
         objetoImportacion: '',
-    };
+        };
 }
 
 /**

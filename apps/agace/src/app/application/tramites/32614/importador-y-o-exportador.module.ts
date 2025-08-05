@@ -6,7 +6,6 @@ import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { CrosslistComponent } from '@ng-mf/data-access-user';
-import { DatoComunesComponent } from './components/dato-comunes/dato-comunes.component';
 import { DatosComunesTresComponent } from '../../shared/components/datos-comunes-tres/datos-comunes-tres.component';
 import { EnlaceComponent } from './components/enlace/enlace.component';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
@@ -71,7 +70,6 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     CTPATComponent,
     TercerosRelacionadosComponent,
     BtnContinuarComponent,
-    DatoComunesComponent,
     ReprestantanteComponent,
     PersonaComponent,
     EnlaceComponent,

@@ -36,6 +36,26 @@
           <small class="text-danger">El campo Fracción es obligatorio.</small>
         </div>
       </div>
+      @if(agregarDestinatarioFinal.get('tipoPersona')?.value !== '0' && agregarDestinatarioFinal.get('tipoPersona')?.value !== '1') {
+    <div class="col-md-6">
+      <div class="form-group">
+        <label
+          class="form-label row  mover-izquierda fs-2"
+          for="curp"
+          >C.U.R.P*:</label
+        >
+        <input
+          class="form-control "
+          id="curp"
+          type="text"
+          formControlName="curp"
+        />
+        <div *ngIf="agregarDestinatarioFinal.get('curp')?.errors?.['required'] && (agregarDestinatarioFinal.get('curp')?.touched || agregarDestinatarioFinal.get('curp')?.dirty)">
+          <small class="text-danger">El campo Fracción es obligatorio.</small>
+        </div>
+      </div>
+    </div>
+    }
     </div>
 
     @if(agregarDestinatarioFinal.get('tipoPersona')?.value === '0') {

@@ -55,3 +55,19 @@ export const CROSSLIST_BOTONS = (component: CrosslistComponent): CrosslistBoton[
     },
   },
 ];
+
+
+export const CROSLISTA_ENTRADA: string[] = [
+    'ACAPULCO, PUERTO Y AEROPUERTO',
+    'ADUANA DE PANTACO',
+    'AEROPUERTO INT. DE LA CD DE MEXI',
+    'AEROPUERTO INTERNACIONAL FELIF',
+    'AGUA PRIETA',
+    'AGUASCALIENTES, AGS.',
+    'ALTAMIRA',
+    'CANCUN, AEROPUERTO',
+    'CD. CAMARGO, TAMPS.',
+    'CD. DEL CARMEN',
+    'CD. JUAREZ',
+    'CHIHUAHUA, CHIH.'
+  ];
