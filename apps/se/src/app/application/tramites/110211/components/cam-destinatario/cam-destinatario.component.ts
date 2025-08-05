@@ -1,12 +1,12 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { CamState, camCertificadoStore } from '../../estados/cam-certificado.store';
-import { ConsultaioQuery, SeccionLibQuery, SeccionLibState, TituloComponent } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ConsultaioQuery, SeccionLibQuery, SeccionLibState, TituloComponent } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
 import { DatosDelDestinatarioComponent } from '../../../../shared/components/datos-del-destinatario/datos-del-destinatario.component';
 import { DestinatarioComponent } from '../../../../shared/components/destinatario/destinatario.component';
 import { camCertificadoQuery } from '../../estados/cam-certificado.query';
+import { CamState, camCertificadoStore } from '../../estados/cam-certificado.store';
 
 /**
  * @interface FormValues
@@ -213,15 +213,40 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy, AfterViewIni
    */
   initActionFormBuild(): void {
     this.exportadorForm = this.fb.group({
-      lugar: [this.exportadoState.lugar, Validators.required],
-      exportador: [this.exportadoState.exportador, Validators.required],
-      empresa: [this.exportadoState.empresa, Validators.required],
-      cargo: [this.exportadoState.cargo, Validators.required],
-      lada: [this.exportadoState.lada],
-      telfono: [this.exportadoState.telfono, Validators.required],
-      fax: [this.exportadoState.fax, Validators.required],
-      correo: [this.exportadoState.correo, Validators.required],
+      lugar: [
+        this.exportadoState.lugar,
+        [Validators.required, Validators.maxLength(100)] // Optional maxLength
+      ],
+      exportador: [
+        this.exportadoState.exportador,
+        [Validators.required, Validators.maxLength(100), Validators.pattern(/^[a-zA-ZÀ-ÿ\s'.-]+$/)]
+      ],
+      empresa: [
+        this.exportadoState.empresa,
+        [Validators.required, Validators.maxLength(100), Validators.pattern(/^[a-zA-Z0-9\s&.,'-]+$/)]
+      ],
+      cargo: [
+        this.exportadoState.cargo,
+        [Validators.required, Validators.maxLength(50), Validators.pattern(/^[a-zA-ZÀ-ÿ\s'.-]+$/)]
+      ],
+      lada: [
+        this.exportadoState.lada,
+        [Validators.maxLength(5), Validators.pattern(/^\d+$/)]
+      ],
+      telfono: [
+        this.exportadoState.telfono,
+        [Validators.required, Validators.maxLength(15), Validators.pattern(/^\d+$/)]
+      ],
+      fax: [
+        this.exportadoState.fax,
+        [Validators.required, Validators.maxLength(15), Validators.pattern(/^\d+$/)]
+      ],
+      correo: [
+        this.exportadoState.correo,
+        [Validators.required, Validators.email, Validators.maxLength(100)]
+      ]
     });
+
   }
 
   /**
