@@ -14,10 +14,13 @@
  * @requires ./constantes/elegibilidad-de-textiles.enums - Constantes y enumeraciones
  */
 
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { CategoriaMensaje, DatosPasos, Notificacion, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
 import { FormControl, FormGroup } from '@angular/forms';
-import { DatosPasos, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
+import { IniciarRequest } from '../../../../core/models/120301/request/iniciar-request.model';
+import { IniciarService } from '../../../../core/services/120301/iniciar.service';
 import { ListaPasosWizard } from '../../models/elegibilidad-de-textiles.model';
+import { Location } from '@angular/common';
 import { PASOS } from '../../constantes/elegibilidad-de-textiles.enums';
 
 /**
@@ -45,7 +48,7 @@ interface AccionBoton {
    * @example 'cont' | 'prev' | 'back'
    */
   accion: string;
-  
+
   /**
    * @property {number} valor
    * @description Índice del paso de destino en el wizard (comenzando desde 1)
@@ -122,6 +125,12 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit {
    * ```
    */
   pasos: Array<ListaPasosWizard> = PASOS;
+
+  /**
+   * @property {Notificacion | null} nuevaNotificacion
+   * @description Objeto que representa una notificación para el usuario.
+   */
+  nuevaNotificacion: Notificacion | null = null;
 
   /**
    * @property {string | null} tituloMensaje
@@ -237,7 +246,10 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit {
    * @see {@link FormGroup} - Documentación de FormGroup de Angular
    * @see {@link FormControl} - Documentación de FormControl de Angular
    */
-  constructor(private seccionStore: SeccionLibStore) {
+  constructor(
+    private iniciarService: IniciarService,
+    private seccionStore: SeccionLibStore,
+    private location: Location,) {
     this.formGroup = new FormGroup({
       campo1: new FormControl(''),
       campo2: new FormControl(''),
@@ -347,10 +359,58 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit {
    * }
    * ```
    */
-  ngOnInit() {
+  ngOnInit(): void {
     this.datosPasos.indice = 1;
     this.indice = 1;
     this.asignarSecciones();
+    this.iniciar();
+  }
+
+  /**
+   * @method iniciar
+   * @description Método que inicia el trámite 120301 enviando una solicitud
+   * al servicio IniciarService. Maneja la respuesta del servidor
+   */
+  iniciar(): void {
+    const PAYLOAD: IniciarRequest = {
+      rfc_solicitante: 'LEQI810131GA8',
+      rol_actual: 'SOLICITANTE'
+    };
+
+    // Realiza la solicitud de inicio del trámite
+    this.iniciarService.postIniciar(PAYLOAD).subscribe({
+      next: (response) => {
+        if (response.codigo !== '00') {
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: response.error || 'Error al iniciar el trámite.',
+            mensaje:
+              response.causa ||
+              response.mensaje ||
+              'Ocurrió un error al guardar la solicitud.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+          this.location.back();
+        }
+      },
+      error: (error) => {
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: CategoriaMensaje.ERROR,
+          modo: 'action',
+          titulo: '',
+          mensaje: error?.error?.error || 'Error inesperado al iniciar el trámite.',
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        };
+        this.location.back();
+      }
+    });
   }
 
   /**
