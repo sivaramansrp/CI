@@ -139,7 +139,7 @@
             maxlength="120"
             formControlName="nombreDelFederatario"
           />
-          <div *ngIf="formaComplimentos.get('nombreDelFederatario')?.hasError('required') && formaComplimentos.get('nombreDelFederatario')?.touched" class="text-danger">
+          <div *ngIf="formaComplimentos.get('formaModificaciones.nombreDelFederatario')?.hasError('required') && formaComplimentos.get('formaModificaciones.nombreDelFederatario')?.touched" class="text-danger">
             Este campo es obligatorio.
           </div>
         </div>
@@ -154,7 +154,7 @@
                 maxlength="10"
                 formControlName="nombreDeNotaria"
               />
-              <div *ngIf="formaComplimentos.get('nombreDeNotaria')?.hasError('required') && formaComplimentos.get('nombreDeNotaria')?.touched" class="text-danger">
+              <div *ngIf="formaComplimentos.get('formaModificaciones.nombreDeNotaria')?.hasError('required') && formaComplimentos.get('formaModificaciones.nombreDeNotaria')?.touched" class="text-danger">
                 Este campo es obligatorio.
               </div>
             </div>
@@ -167,7 +167,7 @@
                 formControlName="estado"
                 [isDisabled]="formularioDeshabilitado"
               ></app-catalogo-select>
-              <div *ngIf="formaComplimentos.get('estado')?.hasError('required') && formaComplimentos.get('estado')?.touched" class="text-danger">
+              <div *ngIf="formaComplimentos.get('formaModificaciones.estado')?.hasError('required') && formaComplimentos.get('formaModificaciones.estado')?.touched" class="text-danger">
                 Este campo es obligatorio.
               </div>
             </div>
@@ -184,7 +184,7 @@
                 maxlength="10"
                 formControlName="nombreDeActa"
               />
-              <div *ngIf="formaComplimentos.get('nombreDeActa')?.hasError('required') && formaComplimentos.get('nombreDeActa')?.touched" class="text-danger">
+              <div *ngIf="formaComplimentos.get('formaModificaciones.nombreDeActa')?.hasError('required') && formaComplimentos.get('formaModificaciones.nombreDeActa')?.touched" class="text-danger">
                 Este campo es obligatorio.
               </div>
             </div>
@@ -192,7 +192,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <input-fecha [datos]="fechaInicioInput" [isDisabled]="formularioDeshabilitado"
-                (valorCambiado)="onFechaCambiada($event)" [setFecha]="formaComplimentos.get('fechaDeActa')?.value"></input-fecha>
+                (valorCambiado)="onFechaCambiada($event)" [setFecha]="formaComplimentos.get('formaModificaciones.fechaDeActa')?.value"></input-fecha>
             </div>
           </div>
         </div>
@@ -207,7 +207,7 @@
               formControlName="rfc"
               maxlength="13"
             />
-            <div *ngIf="formaComplimentos.get('rfc')?.hasError('required') && formaComplimentos.get('rfc')?.touched" class="text-danger">
+            <div *ngIf="formaComplimentos.get('formaModificaciones.rfc')?.hasError('required') && formaComplimentos.get('formaModificaciones.rfc')?.touched" class="text-danger">
               Este campo es obligatorio.
             </div>
           </div>
@@ -222,7 +222,7 @@
               class="form-control"
               formControlName="nombreDeRepresentante"
             />
-            <div *ngIf="formaComplimentos.get('nombreDeRepresentante')?.hasError('required') && formaComplimentos.get('nombreDeRepresentante')?.touched" class="text-danger">
+            <div *ngIf="formaComplimentos.get('formaModificaciones.nombreDeRepresentante')?.hasError('required') && formaComplimentos.get('formaModificaciones.nombreDeRepresentante')?.touched" class="text-danger">
               Este campo es obligatorio.
             </div>
             </div>

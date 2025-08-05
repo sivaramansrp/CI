@@ -87,7 +87,7 @@ export class NuevoProgramaIndustrialService {
           'assets/json/80207/submanufactureras-disponibles-datos.json'
         )
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .pipe(map((response: any) => response.data))
+        .pipe(map((response: any) => response))
     );
   }
 
