@@ -204,14 +204,35 @@ export class DomicilioComponent implements OnInit, OnDestroy {
     this.obtenerTablaDatos();
     this.obtenerMercanciasDatos();
     this.domicilio = this.fb.group({
-      codigoPostal: [this.solicitudState?.codigoPostal, Validators.required],
+      codigoPostal: [
+        this.solicitudState?.codigoPostal,
+        [Validators.required, Validators.pattern('^[0-9]*$')]
+      ],
       estado: [this.solicitudState?.estado, Validators.required],
-      muncipio: [this.solicitudState?.muncipio, Validators.required],
-      localidad: [this.solicitudState?.localidad],
-      colonia: [this.solicitudState?.colonia],
-      calle: [this.solicitudState?.calle],
-      lada: [this.solicitudState?.lada],
-      telefono: [this.solicitudState?.telefono, Validators.required],
+      muncipio: [
+        this.solicitudState?.muncipio,
+        [Validators.required, Validators.maxLength(120)]
+      ],
+      localidad: [
+        this.solicitudState?.localidad,
+        [Validators.maxLength(120)]
+      ],
+      colonia: [
+        this.solicitudState?.colonia,
+        [Validators.maxLength(120)]
+      ],
+      calle: [
+        this.solicitudState?.calle,
+        [Validators.required, Validators.maxLength(100)]
+      ],
+      lada: [
+        this.solicitudState?.lada,
+        [Validators.pattern('^[0-9]*$')]
+      ],
+      telefono: [
+        this.solicitudState?.telefono,
+        [Validators.required, Validators.pattern('^[0-9]*$')]
+      ],
       avisoCheckbox: [this.solicitudState?.avisoCheckbox],
       licenciaSanitaria: [
         { value: this.solicitudState?.licenciaSanitaria, disabled: false },
@@ -240,8 +261,6 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       cantidadUMC: ['', Validators.required],
       UMC: ['', Validators.required],
       presentacion: ['', Validators.required],
-      numeroRegistro: ['', Validators.required],
-      fechaCaducidad: [''],
     });
   }
 
@@ -475,6 +494,76 @@ export class DomicilioComponent implements OnInit, OnDestroy {
         this.estado = data?.data;
       });
   }
+
+  /**
+ * Maneja el cambio en el campo de licencia sanitaria
+ * @param event - El evento del input
+ */
+onLicenciaSanitariaChange(event: Event): void {
+  const INPUT = event.target as HTMLInputElement;
+  const VALUE = INPUT.value.trim();
+  
+  // Si hay valor en licencia sanitaria, deshabilitar el checkbox de aviso
+  if (VALUE) {
+    this.domicilio.get('avisoCheckbox')?.setValue(false);
+    this.domicilio.get('avisoCheckbox')?.disable();
+  } else {
+    // Si no hay valor, habilitar el checkbox
+    this.domicilio.get('avisoCheckbox')?.enable();
+  }
+}
+
+  /**
+   * Maneja la selección de agentes aduanales en la tabla NICO.
+   * Actualiza la lista de seleccionados con los elementos seleccionados.
+   * @param event - Evento que contiene los elementos seleccionados.
+   */
+
+public seleccionados: NicoInfo[] = [];
+
+/**
+ * Maneja el cambio en la selección de elementos en la tabla NICO.
+ * @param event Evento que contiene los elementos seleccionados de la tabla NICO.
+ * Actualiza la lista de seleccionados con los elementos seleccionados.
+ * 
+ */
+onSeleccionChange(event: NicoInfo[]): void {
+  this.seleccionados = event;
+}
+/**
+ * Elimina los elementos seleccionados de la tabla NICO.
+ * Recorre la lista de seleccionados y elimina cada uno de ellos de la tabla de
+ */
+eliminarFila(): void {
+  this.seleccionados.forEach(row => {
+    const INDEX = this.nicoTablaDatos.indexOf(row);
+    if (INDEX > -1) {
+      this.nicoTablaDatos.splice(INDEX, 1);
+    }
+  });
+  this.seleccionados = [];
+}
+
+
+/**
+ * Agrega una nueva fila a la tabla NICO con valores del formulario
+ */
+agregarFila(): void { debugger;
+  // Verificar que el formulario sea válido antes de agregar
+  if (this.formAgente.valid) {
+    const NUEVO_ITEM: NicoInfo = {
+      clave_Scian: this.formAgente.get('claveScianModal')?.value || '',
+      descripcion_Scian: this.formAgente.get('claveDescripcionModal')?.value || ''
+    };
+    
+    // Agregar el nuevo item a la tabla de NICO
+    this.nicoTablaDatos = [...this.nicoTablaDatos, NUEVO_ITEM];
+    
+    // Limpiar el formulario después de agregar
+    this.formAgente.reset();
+  }
+}
+
 
   /**
    * Método para obtener los datos de la tabla NICO desde el servicio y asignarlos a la tabla correspondiente.
