@@ -22,6 +22,7 @@ import {
   Notificacion,
   NotificacionesComponent,
   Pedimento,
+  REGEX_IMPORTE_PAGO,
   REGEX_RFC,
   REGEX_SOLO_DIGITOS,
   REGEX_SOLO_NUMEROS,
@@ -559,7 +560,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           Validators.maxLength(120),
         ],
       ],
-      localidad: [this.datosSolicitudFormState.localidad],
+      localidad: [this.datosSolicitudFormState.localidad,
+        [Validators.pattern(REGEX_IMPORTE_PAGO)]
+      ],
       colonia: [this.datosSolicitudFormState.colonia],
       calleYNumero: [
         this.datosSolicitudFormState.calleYNumero,

@@ -487,7 +487,7 @@ export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS = [
  *   deshabilitarCampoMunicipio();
  * }
  */
-export const PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA = [260301];
+export const PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA = [260301, 260214];
 
 /**
  * @const PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA
@@ -708,7 +708,7 @@ export const MENSAJE_SIN_FILA_SELECCIONADA = 'Seleciona un registro';
  * @description
  *  Identificadores de notificación.
  */
-export const MOSTRAR_NOTIFICACION = [260219,260302,260304, 260206, 260201,260103,260203];
+export const MOSTRAR_NOTIFICACION = [260219,260302,260304, 260206, 260201,260103,260203,260214];
 
 /**
  * Enumera los tipos de actualización que se pueden realizar.
