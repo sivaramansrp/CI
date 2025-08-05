@@ -26,5 +26,9 @@ export const FECHA = {
     /**
      * Contenido del mensaje de alerta que se mostrará al usuario.
      */
-    CONTENIDO: '¡Precaución! Debes capturar todos los campos de pago de derechos',
+    CONTENIDO: `
+      <div class="text-center">
+        <p><strong>¡Precaución!</strong> Debes capturar todos los campos de pago de derechos</p>
+      </div>
+    `,
   } 

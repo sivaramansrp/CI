@@ -1,8 +1,8 @@
 import { CONTINUAR } from "./permiso-cites.enum";
 
 export const MOVIMIENTO_LABEL = {
-    tituluDeLaIzquierda: 'Movimientos disponibles',
-    derecha: 'Movimientos seleccionadas',
+    tituluDeLaIzquierda: 'Movimientos disponibles:',
+    derecha: 'Movimientos seleccionados*:',
 }
 
 
