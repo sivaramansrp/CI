@@ -15,3 +15,21 @@ export const API_POST_TPL = 'sat-t120301/instrumentos-tpl';
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/sat-t120301/swagger-ui/index.html#/Catalogos/consulta-anios-autorizacion
  */
 export const API_GET_ANIOS_AUTORIZACION = 'sat-t120301/catalogo/anios/autorizacion'
+
+/**
+ * Id asignacion que se utilizará en las consultas.
+ * Este valor debe ser reemplazado por el id asignacion correspondiente.
+ */
+export const IDASIGNACION= '{idAsignacion}';
+
+/**
+ * API para consultar la unidad administrativa asociada a una asignación tramite 120301.
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/sat-t120301/swagger-ui/index.html#/Registro-Solicitud/obtener-unidad-administrativa
+ */
+export const API_GET_REPRESENTACION_FEDERAL = `sat-t120301/asignacion/${IDASIGNACION}/unidad-administrativa`;
+
+/**
+ * API para consultar detalle de tpl de asignación tramite 120301.
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/sat-t120301/swagger-ui/index.html#/Registro-Solicitud/detalle-instrumento-TPL
+ */
+export const API_POST_DETALLE_TPL = 'sat-t120301/instrumento-tpl/detalle';
