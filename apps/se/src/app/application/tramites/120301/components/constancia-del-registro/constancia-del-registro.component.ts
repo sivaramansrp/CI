@@ -11,7 +11,7 @@ import {
   Validators,
 } from '@angular/forms';
 
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, catchError, forkJoin, map, of, takeUntil } from 'rxjs';
 
 import radioOptionsData from '@libs/shared/theme/assets/json/120301/mostrar.json';
 
@@ -39,6 +39,7 @@ import {
 import { AnioConstanciaService } from '../../../../core/services/120301/catalogos/anio-constancia.service';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
+import { TplDetalleRequest } from '../../../../core/models/120301/request/tpl-detalle-request.model';
 import { TplRequest } from '../../../../core/models/120301/request/tpl-request.model';
 import { TplService } from '../../../../core/services/120301/Tpl.service';
 
@@ -424,7 +425,13 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
             descripcionCategoriaTextil: '',
             PaisDestino: '',
             unidadMedidaCategoriaTextil: '',
-            factorConversionCategoriaTextil: ''
+            factorConversionCategoriaTextil: '',
+
+            idAsignacion: item.id_asignacion,
+            idMecanismoAsignacion: item.id_mecanismo_asignacion,
+            idCategoriaTextil: item.id_categoria_textil,
+            cvePais: item.cve_pais,
+            idFraccionHtsUsa: item.id_fraccion_hts_usa
           }));
         } else {
           // Mostrar mensaje de error
@@ -557,18 +564,66 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
     if (!fila) {
       return;
     }
-    const ANO_DE_LA_CONSTANCIA =
+
+   const ANO_DE_LA_CONSTANCIA =
       this.fitosanitarioForm.get('anoDeLaConstancia')?.value;
     const NUMERO_DE_LA_CONSTANCIA = this.fitosanitarioForm.get(
       'numeroDeLaConstancia'
     )?.value;
+    
+    const PAYLOAD: TplDetalleRequest = {
+      id_mecanismo_asignacion: fila.idMecanismoAsignacion ?? 0,
+      cve_fraccion: fila.fraccionArancelaria,
+      codigo_pais: fila.cvePais ?? '',
+      id_categoria_textil: fila.idCategoriaTextil ?? 0,
+      id_fraccion_hts_usa: fila.idFraccionHtsUsa ?? 0
+    };
+    
+    forkJoin({
+    representacion: this.tplService.getRepresentacionFederal(fila.idAsignacion ?? 0).pipe(
+      catchError(err => {
+        console.error('Error en representacion:', err);
+        return of(null);
+      })
+    ),
+    detalle: this.tplService.postTplDetalle(PAYLOAD).pipe(
+      catchError(err => {
+        console.error('Error en detalle:', err);
+        return of(null);
+      })
+    )
+  }).subscribe(({ representacion, detalle }) => {
+    if (representacion?.codigo === '00' && representacion?.datos) {
+      const REPRESENTACIONFEDERAL = representacion.datos;
+      fila.estado = REPRESENTACIONFEDERAL.nombre_entidad;
+      fila.representacionFederal = REPRESENTACIONFEDERAL.nombre;
+    }
+
+    if (detalle?.codigo === '00' && detalle?.datos) {
+       const DATOS = detalle.datos;
+      fila.descripcionProducto = DATOS.descripcion_producto;
+      fila.tratado = DATOS.tratado_bloque;
+      fila.subproducto = DATOS.clasificacion_subproducto;
+      fila.mecanismo = DATOS.mecanismo_asignacion;
+      fila.typoCategoria = DATOS.categoria_textil;
+      fila.typoRegimen = DATOS.regimen;
+      fila.descripcionCategoriaTextil = DATOS.descripcion_categoria_textil;
+      fila.PaisDestino = DATOS.pais_origen_destino;
+      fila.unidadMedidaCategoriaTextil = DATOS.unidad_medida;
+      fila.factorConversionCategoriaTextil = DATOS.factor_conversion.toString();
+      fila.fechaInicioVigencia = DATOS.fecha_inicio_vigencia;
+      fila.fechaFinVigencia= DATOS.fecha_fin_vigencia;
+    }
+
+     
+    
     const FORM_VALUES = {
-      anoDeLaConstancia: ANO_DE_LA_CONSTANCIA ? ANO_DE_LA_CONSTANCIA : '',
+     anoDeLaConstancia: ANO_DE_LA_CONSTANCIA ? ANO_DE_LA_CONSTANCIA : '',
       numeroDeLaConstancia: NUMERO_DE_LA_CONSTANCIA
         ? NUMERO_DE_LA_CONSTANCIA
-        : '',
-      estado: fila.estado || '',
-      representacionFederal: fila.representacionFederal || '',
+        : '', 
+      estado: fila.estado,
+      representacionFederal: fila.representacionFederal,
       fraccionArancelaria: fila.fraccionArancelaria || '',
       descripcionProducto: fila.descripcionProducto || '',
       tratado: fila.tratado || '',
@@ -579,8 +634,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
       descripcionCategoriaTextil: fila.descripcionCategoriaTextil || '',
       PaisDestino: fila.PaisDestino || '',
       unidadMedidaCategoriaTextil: fila.unidadMedidaCategoriaTextil || '',
-      factorConversionCategoriaTextil:
-        fila.factorConversionCategoriaTextil || '',
+      factorConversionCategoriaTextil: fila.factorConversionCategoriaTextil || '',
       fechaInicioVigencia: fila.fechaInicioVigencia || '',
       fechaFinVigencia: fila.fechaFinVigencia || '',
     };
@@ -601,6 +655,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
     }));
     this.guardarBandera = true;
     this.ElegibilidadDeTextilesStore.setguardarBandera(true);
+  })
   }
 
   /**
@@ -644,6 +699,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
   guardarEvaluate(): void {
     this.mostrarTabs.emit(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    
   }
 
   /**
