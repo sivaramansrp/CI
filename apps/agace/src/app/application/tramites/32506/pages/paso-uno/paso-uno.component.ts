@@ -8,13 +8,13 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { SolicitanteComponent } from '../../components/solicitante/solicitante.component';
 import { Subject } from 'rxjs';
-import { Tramite32506Aviso } from '../../models/aviso-destruccion.model';
 import { Tramite32506Query } from '../../estados/tramite32506.query';
 import { Tramite32506State } from '../../estados/tramite32506.store';
 import { Tramite32506Store } from '../../estados/tramite32506.store';
 import { ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
+import { ConsultaDatos } from '../../models/aviso-destruccion.model';
 
 /**
  * Componente para gestionar el paso uno del trámite 32506.
@@ -118,12 +118,58 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.avisoDestruccionService
-      .guardarDatosFormulario()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((resp: Tramite32506Aviso) => {
-        if (resp) {
+      .guardarDatosFormulario().pipe(takeUntil(this.destroyNotifier$)).subscribe((resp) => {
+        if (resp.success) {
           this.esDatosRespuesta = true;
-          this.avisoDestruccionService.actualizarEstadoFormulario(resp);
+          const FORM1 = resp?.datos?.avisoFormulario;
+          const FORM2 = resp?.datos?.desperdicioFormulario;
+          const FORM3 = resp?.datos?.pedimentoFormulario;
+          const FORM4 = resp?.datos?.procesoFormulario;
+          const FORM5 = resp?.datos?.domicilioFormulario;
+
+          this.store.setAvisoFormularioAdace(FORM1?.adace);
+          this.store.setAvisoFormularioCalle(FORM1?.calle);
+          this.store.setAvisoFormularioCodigoPostal(FORM1?.codigoPostal);
+          this.store.setAvisoFormularioColonia(FORM1?.claveColonia);
+          this.store.setAvisoFormularioDelegacionMunicipio(FORM1?.claveDelegacionMunicipio);
+          this.store.setAvisoFormularioEntidadFederativa(FORM1?.claveEntidadFederativa);
+          this.store.setAvisoFormularioFechaTranslado(FORM1?.fechaTranslado);
+          this.store.setAvisoFormularioJustificacion(FORM1?.justificacion);
+          this.store.setAvisoFormularioNombreComercial(FORM1?.nombreComercial);
+          this.store.setAvisoFormularioNumeroExterior(FORM1?.numeroExterior);
+          this.store.setAvisoFormularioNumeroInterior(FORM1?.numeroInterior);
+          this.store.setAvisoFormularioTipoAviso(FORM1?.tipoAviso);
+          this.store.setAvisoFormularioTipoCarga(FORM1?.tipoCarga);
+          this.store.setAvisoFormularioValorAnioProgramaImmex(FORM1?.valorAnioProgramaImmex);
+          this.store.setAvisoFormularioValorProgramaImmex(FORM1?.valorProgramaImmex);
+
+          // Desperdicio Formulario
+          this.store.setCantidadDesp(FORM2?.cantidadDesp);
+          this.store.setCircunstanciaHechos(FORM2?.circunstanciaHechos);
+          this.store.setClaveUnidadMedidaDesp(FORM2?.claveUnidadMedidaDesp);
+          this.store.setDescripcionDesperdicio(FORM2?.descripcionDesperdicio);
+          this.store.setDescripcionMercancia(FORM2?.descripcionMercancia);
+
+          // Pedimento Formulario
+          this.store.setCantidadPedimento(FORM3?.cantidadPedimento);
+          this.store.setClaveAduanaPedimento(FORM3?.claveAduanaPedimento);
+          this.store.setClaveFraccionArancelariaPedimento(FORM3?.claveFraccionArancelariaPedimento);
+          this.store.setClaveUnidadMedidaPedimento(FORM3?.claveUnidadMedidaPedimento);
+
+          // Proceso Formulario
+          this.store.setDescripcionProcesoDestruccion(FORM4?.descripcionProcesoDestruccion);
+
+          // Domicilio Formulario
+          this.store.setDomicilioFormularioCalle(FORM5?.calle);
+          this.store.setDomicilioFormularioCodigoPostal(FORM5?.codigoPostal);
+          this.store.setDomicilioFormularioColonia(FORM5?.claveColonia);
+          this.store.setDomicilioFormularioDelegacionMunicipio(FORM5?.claveDelegacionMunicipio);
+          this.store.setDomicilioFormularioEntidadFederativa(FORM5?.claveEntidadFederativa);
+          this.store.setDomicilioFormularioNombreComercial(FORM5?.nombreComercial);
+          this.store.setDomicilioFormularioNumeroExterior(FORM5?.numeroExterior);
+          this.store.setDomicilioFormularioNumeroInterior(FORM5?.numeroInterior);
+          this.store.setDomicilioFormularioRfc(FORM5?.rfc);
+
         }
       });
   }

@@ -16,7 +16,6 @@ import { Router } from '@angular/router';
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
   constructor(
-    private router: Router,
     private consultaioQuery: ConsultaioQuery,
     private tramite32508Store: Tramite32508Store,
     private adaceService: AdaceService,
@@ -56,7 +55,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
    */
   consultaDatos!: ConsultaioState;
-
+  /**
+   * @property {FormGroup} solicitanteForm
+   * @description Formulario reactivo que contiene los datos del solicitante.
+   */
   solicitanteForm!: FormGroup;
 
   /**

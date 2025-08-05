@@ -7,16 +7,10 @@
     </div>
     <div class="row">
       <div class="col-md-8">
-        <app-catalogo-select
-          id="cveGenerica1Carta"
-          [catalogo]="nombreInstitucionCatalogo.catalogos"
-          [label]="nombreInstitucionCatalogo.labelNombre"
-          [placeholder]="nombreInstitucionCatalogo.primerOpcion"
-          [isDisabled]="esFormularioSoloLectura"
-          [required]="nombreInstitucionCatalogo.required"
-          formControlName="polizaDeFianzaActual"
-          (selectionChange)="seleccionaNombreInstitucion($event)"
-        >
+        <app-catalogo-select id="cveGenerica1Carta" [catalogo]="nombreInstitucionCatalogo.catalogos"
+          [label]="nombreInstitucionCatalogo.labelNombre" [placeholder]="nombreInstitucionCatalogo.primerOpcion"
+          [isDisabled]="esFormularioSoloLectura" [required]="nombreInstitucionCatalogo.required"
+          formControlName="polizaDeFianzaActual" (selectionChange)="seleccionaNombreInstitucion($event)">
         </app-catalogo-select>
       </div>
       <div class="col-md-4"></div>
@@ -24,107 +18,58 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="descripcionGenerica1Carta"
-            >Numero de folio:</label
-          >
-          <input
-            class="form-control"
-            type="text"
-            size="80"
-            id="descripcionGenerica1Carta"
-            formControlName="numeroFolio"
-          />
+          <label class="form-label" for="descripcionGenerica1Carta">Numero de folio:</label>
+          <span class="bi bi-question-circle-fill" title="Numero de folio" data-bs-toggle="tooltip"></span>
+          <input class="form-control" type="text" size="80" id="descripcionGenerica1Carta"
+            formControlName="numeroFolio" />
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="cveGenerica1Carta"
-            >RFC de la institución de fianza:</label
-          >
-          <input
-            class="form-control"
-            type="text"
-            id="cveGenerica1Carta"
-            size="80"
-            formControlName="rfcInstitucion"
-          />
+          <label class="form-label" for="cveGenerica1Carta">RFC de la institución de fianza:</label>
+          <input class="form-control" type="text" id="cveGenerica1Carta" size="80" formControlName="rfcInstitucion" />
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="fechaGenerica1Carta"
-            >Fecha de expedición:</label
-          >
-          <input
-            class="form-control"
-            type="text"
-            id="fechaGenerica1Carta"
-            size="30"
-            formControlName="fechaExpedicion"
-          />
+          <label class="form-label" for="fechaGenerica1Carta">Fecha de expedición:</label>
+          <input class="form-control" type="text" id="fechaGenerica1Carta" size="30"
+            formControlName="fechaExpedicion" />
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="fecInicioVigenciaCartaNoEditable"
-            >Fecha de inicio de vigencia:</label
-          >
-          <input
-            class="form-control"
-            type="text"
-            id="fecInicioVigenciaCartaNoEditable"
-            size="30"
-            formControlName="fechaInicioVigenciaNo"
-          />
+          <label class="form-label" for="fecInicioVigenciaCartaNoEditable">Fecha de inicio de vigencia:</label>
+          <input class="form-control" type="text" id="fecInicioVigenciaCartaNoEditable" size="30"
+            formControlName="fechaInicioVigenciaNo" />
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="fecFinVigenciaCartaNoEditable"
-            >Fecha de fin de vigencia:</label
-          >
-          <input
-            class="form-control"
-            type="text"
-            id="fecFinVigenciaCartaNoEditable"
-            size="30"
-            formControlName="fechaFinVigenciaNo"
-          />
+          <label class="form-label" for="fecFinVigenciaCartaNoEditable">Fecha de fin de vigencia:</label>
+          <input class="form-control" type="text" id="fecFinVigenciaCartaNoEditable" size="30"
+            formControlName="fechaFinVigenciaNo" />
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-4">
-        <input-fecha
-        class="width"
-        [isDisabled]="esFormularioSoloLectura"
-        [setFecha]="polizaDeFianzaForm.get('fechaInicioVigencia')?.value"
-        [datos]="configuracionFechaInicioVigencia"
-      ></input-fecha>
+        <input-fecha class="width" [isDisabled]="esFormularioSoloLectura"
+          [setFecha]="polizaDeFianzaForm.get('fechaInicioVigencia')?.value" [datos]="configuracionFechaInicioVigencia"
+          [tooltipQuestionCircle]="true"></input-fecha>
       </div>
       <div class="col-md-4">
-        <input-fecha
-        class="width"
-        [isDisabled]="esFormularioSoloLectura"
-        [setFecha]="polizaDeFianzaForm.get('fechaFinVigencia')?.value"
-        [datos]="configuracionFechaFinVigencia"
-      ></input-fecha>
+        <input-fecha class="width" [isDisabled]="esFormularioSoloLectura"
+          [setFecha]="polizaDeFianzaForm.get('fechaFinVigencia')?.value" [datos]="configuracionFechaFinVigencia"
+          [tooltipQuestionCircle]="true"></input-fecha>
       </div>
     </div>
     <div class="row">
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="importeGenerico1Carta"
-            >Importe total en moneda nacional que ampara la póliza de
-            fianza:</label
-          >
-          <input
-            class="form-control"
-            type="text"
-            id="importeGenerico1Carta"
-            size="30"
-            formControlName="importeTotal"
-          />
+          <label class="form-label" for="importeGenerico1Carta">Importe total en moneda nacional que ampara la póliza de
+            fianza:</label>
+          <input class="form-control" type="text" id="importeGenerico1Carta" size="30" formControlName="importeTotal" />
         </div>
       </div>
       <div class="col-md-4"></div>

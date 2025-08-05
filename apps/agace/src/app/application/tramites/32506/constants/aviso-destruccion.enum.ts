@@ -80,7 +80,7 @@ export const TIPACA = [
   },
   {
     value: 'carga_masiva',
-    label: 'Carga Masiva',
+    label: 'Carga masiva',
   }
 ];
 

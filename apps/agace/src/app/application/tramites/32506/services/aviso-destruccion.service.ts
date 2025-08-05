@@ -1,16 +1,17 @@
 import {
   AvisoTablaDatos,
   CatalogoLista,
+  ConsultaDatos,
   DatosSolicitante,
   DesperdicioTablaDatos,
   PedimentoTablaDatos,
   ProcesoTablaDatos,
-  Tramite32506Aviso,
+  RespuestaConsulta,
 } from '../models/aviso-destruccion.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Tramite32506Store } from '../estados/tramite32506.store';
+import { Tramite32506State, Tramite32506Store } from '../estados/tramite32506.store';
 /**
  * Servicio para gestionar las operaciones relacionadas con el aviso de traslado.
  *
@@ -32,7 +33,79 @@ export class AvisoDestruccionService {
   ) {
     // Constructor
   }
+
   /**
+   * Actualiza el estado del formulario en el store con los datos recibidos.
+   *
+   * @param {Tramite32506Aviso} respuesta - Objeto que contiene toda la información del aviso, desperdicio, pedimento, proceso y domicilio.
+   */
+ actualizarEstadoFormulario(respuesta: Tramite32506State): void {
+
+  // Guard clause to prevent errors if data is missing
+  if (!respuesta?.avisoFormulario || !respuesta?.desperdicioFormulario || !respuesta?.pedimentoFormulario || !respuesta?.procesoFormulario || !respuesta?.domicilioFormulario) {
+    // Optionally log or handle the missing data here
+    return;
+  }
+  // Aviso Formulario
+  this.tramite32506Store.setAvisoFormularioAdace(respuesta.avisoFormulario.adace);
+  this.tramite32506Store.setAvisoFormularioCalle(respuesta.avisoFormulario.calle);
+  this.tramite32506Store.setAvisoFormularioCodigoPostal(respuesta.avisoFormulario.codigoPostal);
+  this.tramite32506Store.setAvisoFormularioColonia(respuesta.avisoFormulario.claveColonia);
+  this.tramite32506Store.setAvisoFormularioDelegacionMunicipio(respuesta.avisoFormulario.claveDelegacionMunicipio);
+  this.tramite32506Store.setAvisoFormularioEntidadFederativa(respuesta.avisoFormulario.claveEntidadFederativa);
+  this.tramite32506Store.setAvisoFormularioFechaTranslado(respuesta.avisoFormulario.fechaTranslado);
+  this.tramite32506Store.setAvisoFormularioJustificacion(respuesta.avisoFormulario.justificacion);
+  this.tramite32506Store.setAvisoFormularioNombreComercial(respuesta.avisoFormulario.nombreComercial);
+  this.tramite32506Store.setAvisoFormularioNumeroExterior(respuesta.avisoFormulario.numeroExterior);
+  this.tramite32506Store.setAvisoFormularioNumeroInterior(respuesta.avisoFormulario.numeroInterior);
+  this.tramite32506Store.setAvisoFormularioTipoAviso(respuesta.avisoFormulario.tipoAviso);
+  this.tramite32506Store.setAvisoFormularioTipoCarga(respuesta.avisoFormulario.tipoCarga);
+  this.tramite32506Store.setAvisoFormularioValorAnioProgramaImmex(respuesta.avisoFormulario.valorAnioProgramaImmex);
+  this.tramite32506Store.setAvisoFormularioValorProgramaImmex(respuesta.avisoFormulario.valorProgramaImmex);
+
+  // Desperdicio Formulario
+  this.tramite32506Store.setCantidadDesp(respuesta.desperdicioFormulario.cantidadDesp);
+  this.tramite32506Store.setCircunstanciaHechos(respuesta.desperdicioFormulario.circunstanciaHechos);
+  this.tramite32506Store.setClaveUnidadMedidaDesp(respuesta.desperdicioFormulario.claveUnidadMedidaDesp);
+  this.tramite32506Store.setDescripcionDesperdicio(respuesta.desperdicioFormulario.descripcionDesperdicio);
+  this.tramite32506Store.setDescripcionMercancia(respuesta.desperdicioFormulario.descripcionMercancia);
+
+  // Pedimento Formulario
+  this.tramite32506Store.setCantidadPedimento(respuesta.pedimentoFormulario.cantidadPedimento);
+  this.tramite32506Store.setClaveAduanaPedimento(respuesta.pedimentoFormulario.claveAduanaPedimento);
+  this.tramite32506Store.setClaveFraccionArancelariaPedimento(respuesta.pedimentoFormulario.claveFraccionArancelariaPedimento);
+  this.tramite32506Store.setClaveUnidadMedidaPedimento(respuesta.pedimentoFormulario.claveUnidadMedidaPedimento);
+
+  // Proceso Formulario
+  this.tramite32506Store.setDescripcionProcesoDestruccion(respuesta.procesoFormulario.descripcionProcesoDestruccion);
+
+  // Domicilio Formulario
+  this.tramite32506Store.setDomicilioFormularioCalle(respuesta.domicilioFormulario.calle);
+  this.tramite32506Store.setDomicilioFormularioCodigoPostal(respuesta.domicilioFormulario.codigoPostal);
+  this.tramite32506Store.setDomicilioFormularioColonia(respuesta.domicilioFormulario.claveColonia);
+  this.tramite32506Store.setDomicilioFormularioDelegacionMunicipio(respuesta.domicilioFormulario.claveDelegacionMunicipio);
+  this.tramite32506Store.setDomicilioFormularioEntidadFederativa(respuesta.domicilioFormulario.claveEntidadFederativa);
+  this.tramite32506Store.setDomicilioFormularioNombreComercial(respuesta.domicilioFormulario.nombreComercial);
+  this.tramite32506Store.setDomicilioFormularioNumeroExterior(respuesta.domicilioFormulario.numeroExterior);
+  this.tramite32506Store.setDomicilioFormularioNumeroInterior(respuesta.domicilioFormulario.numeroInterior);
+  this.tramite32506Store.setDomicilioFormularioRfc(respuesta.domicilioFormulario.rfc);
+
+  // Datos del solicitante
+  this.tramite32506Store.setDatosSolicitante(respuesta.datosSolicitante);
+}
+
+ /**
+   * Recupera los datos del formulario desde un archivo JSON local.
+   *
+   * @returns {Observable<RespuestaConsulta>} Un observable con los datos del trámite 32506 para el aviso.
+   */
+  guardarDatosFormulario(): Observable<RespuestaConsulta> {
+    return this.http.get<RespuestaConsulta>(
+      `assets/json/32506/tramite-32506-aviso.json`
+    );
+  }
+
+    /**
    * Obtiene los datos del solicitante.
    *
    * @returns {Observable<DatosSolicitante>} Un observable con los datos del solicitante.
@@ -133,125 +206,4 @@ export class AvisoDestruccionService {
     );
   }
 
-  /**
-   * Recupera los datos del formulario desde un archivo JSON local.
-   *
-   * @returns {Observable<Tramite32506Aviso>} Un observable con los datos del trámite 32506 para el aviso.
-   */
-  guardarDatosFormulario(): Observable<Tramite32506Aviso> {
-    return this.http.get<Tramite32506Aviso>(
-      `assets/json/32506/tramite-32506-aviso.json`
-    );
-  }
-
-  /**
-   * Actualiza el estado del formulario en el store con los datos recibidos.
-   *
-   * @param {Tramite32506Aviso} respuesta - Objeto que contiene toda la información del aviso, desperdicio, pedimento, proceso y domicilio.
-   */
-  actualizarEstadoFormulario(respuesta: Tramite32506Aviso): void {
-    this.tramite32506Store.setAvisoFormularioAdace(
-      respuesta.avisoFormulario.adace
-    );
-    this.tramite32506Store.setAvisoFormularioCalle(
-      respuesta.avisoFormulario.calle
-    );
-    this.tramite32506Store.setAvisoFormularioCodigoPostal(
-      respuesta.avisoFormulario.codigoPostal
-    );
-    this.tramite32506Store.setAvisoFormularioColonia(
-      respuesta.avisoFormulario.claveColonia
-    );
-    this.tramite32506Store.setAvisoFormularioDelegacionMunicipio(
-      respuesta.avisoFormulario.claveDelegacionMunicipio
-    );
-    this.tramite32506Store.setAvisoFormularioEntidadFederativa(
-      respuesta.avisoFormulario.claveEntidadFederativa
-    );
-    this.tramite32506Store.setAvisoFormularioFechaTranslado(
-      respuesta.avisoFormulario.fechaTranslado
-    );
-    this.tramite32506Store.setAvisoFormularioJustificacion(
-      respuesta.avisoFormulario.justificacion
-    );
-    this.tramite32506Store.setAvisoFormularioNombreComercial(
-      respuesta.avisoFormulario.nombreComercial
-    );
-    this.tramite32506Store.setAvisoFormularioNumeroExterior(
-      respuesta.avisoFormulario.numeroExterior
-    );
-    this.tramite32506Store.setAvisoFormularioNumeroInterior(
-      respuesta.avisoFormulario.numeroInterior
-    );
-    this.tramite32506Store.setAvisoFormularioTipoAviso(
-      respuesta.avisoFormulario.tipoAviso
-    );
-    this.tramite32506Store.setAvisoFormularioTipoCarga(
-      respuesta.avisoFormulario.tipoCarga
-    );
-    this.tramite32506Store.setAvisoFormularioValorAnioProgramaImmex(
-      respuesta.avisoFormulario.valorAnioProgramaImmex
-    );
-    this.tramite32506Store.setAvisoFormularioValorProgramaImmex(
-      respuesta.avisoFormulario.valorProgramaImmex
-    );
-    this.tramite32506Store.setCantidadDesp(
-      respuesta.desperdicioFormulario.cantidadDesp
-    );
-    this.tramite32506Store.setCantidadPedimento(
-      respuesta.pedimentoFormulario.cantidadPedimento
-    );
-    this.tramite32506Store.setCircunstanciaHechos(
-      respuesta.desperdicioFormulario.circunstanciaHechos
-    );
-    this.tramite32506Store.setClaveAduanaPedimento(
-      respuesta.pedimentoFormulario.claveAduanaPedimento
-    );
-    this.tramite32506Store.setClaveFraccionArancelariaPedimento(
-      respuesta.pedimentoFormulario.claveFraccionArancelariaPedimento
-    );
-    this.tramite32506Store.setClaveUnidadMedidaDesp(
-      respuesta.desperdicioFormulario.claveUnidadMedidaDesp
-    );
-    this.tramite32506Store.setClaveUnidadMedidaPedimento(
-      respuesta.pedimentoFormulario.claveUnidadMedidaPedimento
-    );
-    this.tramite32506Store.setDatosSolicitante(respuesta.datosSolicitante);
-    this.tramite32506Store.setDescripcionDesperdicio(
-      respuesta.desperdicioFormulario.descripcionDesperdicio
-    );
-    this.tramite32506Store.setDescripcionMercancia(
-      respuesta.desperdicioFormulario.descripcionMercancia
-    );
-    this.tramite32506Store.setDescripcionProcesoDestruccion(
-      respuesta.procesoFormulario.descripcionProcesoDestruccion
-    );
-    this.tramite32506Store.setDomicilioFormularioCalle(
-      respuesta.domicilioFormulario.calle
-    );
-    this.tramite32506Store.setDomicilioFormularioCodigoPostal(
-      respuesta.domicilioFormulario.codigoPostal
-    );
-    this.tramite32506Store.setDomicilioFormularioColonia(
-      respuesta.domicilioFormulario.claveColonia
-    );
-    this.tramite32506Store.setDomicilioFormularioDelegacionMunicipio(
-      respuesta.domicilioFormulario.claveDelegacionMunicipio
-    );
-    this.tramite32506Store.setDomicilioFormularioEntidadFederativa(
-      respuesta.domicilioFormulario.claveEntidadFederativa
-    );
-    this.tramite32506Store.setDomicilioFormularioNombreComercial(
-      respuesta.domicilioFormulario.nombreComercial
-    );
-    this.tramite32506Store.setDomicilioFormularioNumeroExterior(
-      respuesta.domicilioFormulario.numeroExterior
-    );
-    this.tramite32506Store.setDomicilioFormularioNumeroInterior(
-      respuesta.domicilioFormulario.numeroInterior
-    );
-    this.tramite32506Store.setDomicilioFormularioRfc(
-      respuesta.domicilioFormulario.rfc
-    );
-  }
 }

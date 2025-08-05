@@ -6,7 +6,7 @@ import {
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent, CatalogosSelect } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -22,6 +22,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { RegistroService } from '../../services/registro.service';
 import { Tramite110201Query } from '../../state/Tramite110201.query';
+import { Tooltip } from 'bootstrap';
 /**
  * Componente que representa el formulario de destinatario en el trámite.
  */
@@ -37,7 +38,7 @@ import { Tramite110201Query } from '../../state/Tramite110201.query';
   templateUrl: './destinatario.component.html',
   styleUrl: './destinatario.component.css',
 })
-export class DestinatarioComponent implements OnInit, OnDestroy {
+export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
      * Subject para destruir notificador.
      */
@@ -76,7 +77,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * Indica si el formulario está vacío.
    */
   estaVacio: boolean = false;
-  
+
   /**
    * Opciones del catálogo de países de destino.
    * Contiene la configuración y lista de países disponibles para seleccionar como destino.
@@ -116,7 +117,8 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     public store: Tramite110201Store,
     private query: Tramite110201Query,
     private validacionesService: ValidacionesFormularioService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private elRef: ElementRef
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -175,8 +177,17 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.donanteDomicilio();
-
-
+  }
+  /**
+   * Inicializa los tooltips después de que la vista se haya inicializado.
+   * Utiliza Bootstrap para crear tooltips en los elementos con el atributo `data-bs-toggle="tooltip"`.
+   * Este método se ejecuta una vez que la vista del componente ha sido completamente renderizada.
+   */
+  ngAfterViewInit(): void {
+    const tooltipTriggerList = this.elRef.nativeElement.querySelectorAll('[data-bs-toggle="tooltip"]');
+    tooltipTriggerList.forEach((tooltipTriggerEl: any) => {
+      new Tooltip(tooltipTriggerEl);
+    });
   }
   /**
      * Evalúa si se debe inicializar o cargar datos en el formulario.
