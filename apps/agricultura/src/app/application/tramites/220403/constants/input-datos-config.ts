@@ -29,8 +29,8 @@ export const DATOS_TRAMITE_REALIZAR = [
         placeholder: '',
     },
     {
-        labelNombre: 'París origen',
-        campo: 'parisOrigen',
+        labelNombre: 'País origen',
+        campo: 'paisOrigen',
         required: true,
         primerOpcion: 'Selecciona un valor',
         catalogos: [],
@@ -66,7 +66,7 @@ export const DATOS_TRAMITE_REALIZAR = [
  */
 export const DATOS_COMBINACION_REQUERIDA = [
     {
-        labelNombre: 'Especie:',
+        labelNombre: 'Especie',
         campo: 'especie',
         required: true,
         primerOpcion: 'Selecciona un valor',
@@ -80,7 +80,7 @@ export const DATOS_COMBINACION_REQUERIDA = [
         catalogos: [],
     },
     {
-        labelNombre: 'Nombre, denominación o razón social de la empresa productora(Instalación acuícola):',
+        labelNombre: 'Nombre, denominación o razón social de la empresa productora(Instalación acuícola)',
         campo: 'instalacionAcuicola',
         required: true,
         primerOpcion: 'Selecciona un valor',
@@ -100,7 +100,7 @@ export const DATOS_COMBINACION_REQUERIDA = [
  */
 export const DATOS_TRANSPORTE = [
     {
-        labelNombre: 'Medio de transporte:',
+        labelNombre: 'Medio de transporte',
         campo: 'medioTransporte',
         required: true,
         primerOpcion: 'Selecciona un valor',
@@ -144,32 +144,34 @@ export const DATOS_TRANSPORTE = [
  */
 export const DATOS_PAGO_DERECHOS = [
     {
-        labelNombre: 'Clave de referencia:',
+        labelNombre: 'Clave de referencia*:',
         campo: 'claveReferencia',
         class: 'col-md-12',
         tipo_input: 'text',
         placeholder: '',
+        disabled: true
     },
     {
-        labelNombre: 'Cadena de la dependencia:',
+        labelNombre: 'Cadena de la dependencia*:',
         campo: 'cadenaDependencia',
         class: 'col-md-12',
         tipo_input: 'text',
         placeholder: '',
+        disabled: true
     },
     {
-        labelNombre: 'Banco:',
+        labelNombre: 'Banco',
         campo: 'banco',
         required: true,
         primerOpcion: 'Selecciona un valor',
         catalogos: [],
     },
     {
-        labelNombre: 'Llave de pago',
+        labelNombre: 'Llave de pago*:',
         campo: 'llavePago',
         class: 'col-md-12',
         tipo_input: 'text',
-        placeholder: '',
+        placeholder: ''
     },
     {
         labelNombre: 'Fecha de pago',
@@ -178,10 +180,11 @@ export const DATOS_PAGO_DERECHOS = [
         habilitado: true,
     },
     {
-        labelNombre: 'importe de pago:',
+        labelNombre: 'Importe de pago*:',
         campo: 'importePago',
         class: 'col-md-12',
         tipo_input: 'text',
         placeholder: '',
+        disabled: true
     },
 ];
