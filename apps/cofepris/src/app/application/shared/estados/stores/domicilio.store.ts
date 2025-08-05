@@ -77,6 +77,7 @@ export interface DomicilioState {
   paisProcedencia: string;
   /** RFC del solicitante. */
   rfc: string;
+  manifesto: boolean; // Indica si se requiere el manifiesto de aceptación
 }
 
 /**
@@ -157,7 +158,9 @@ export function createInitialState(): DomicilioState {
     /** País de procedencia del producto. */
     paisProcedencia: '',
     /** RFC del solicitante. */
-    rfc: ''
+    rfc: '',
+    /** Indica si se requiere el manifiesto de aceptación. */
+    manifesto: false
   };
 }
 

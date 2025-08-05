@@ -9,6 +9,7 @@ import {
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO,
+  PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES,
   PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA,
   PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO,
   PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO,
@@ -377,6 +378,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /** Nueva notificación relacionada con el RFC. */
   public seleccionarFilaNotificacion!: Notificacion;
 
+  /** Indica si el trámite es un manifiesto. */
+  esManifesto: boolean = false;
+
   /**
    * @constructor
    * Inyecta los servicios necesarios para el enrutamiento y construcción del formulario.
@@ -435,6 +439,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
+    this.esManifesto = PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES.includes(this.idProcedimiento);
     this.mostrarNotificacion = MOSTRAR_NOTIFICACION.includes(
       this.idProcedimiento
     )

@@ -698,6 +698,7 @@
       </div>
     </div>
 
+     @if(!esManifesto){
     <div class="row-mt-2">
       <ng-titulo
         titulo="Manifiestos y declaraciones"
@@ -711,6 +712,7 @@
         [CUSTOMECLASS]="infoAlert"
       ></ng-alert>
     </div>
+  }
     <div class="row mt-3">
       <div class="col-md-12">
         <label class="form-label"

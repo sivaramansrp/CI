@@ -722,4 +722,12 @@ export enum TIPO_ACTUALIZACION {
  * @remarks
  * Utilice esta constante para identificar solicitudes relacionadas con productos de tipo especial.
  */
-export const TIPO_PRODUCTO_ESPECIAL = '3'
+export const TIPO_PRODUCTO_ESPECIAL = '3';
+
+/**
+ * Constante que representa los procedimientos que no son aplicables para manifiestos y declaraciones.
+ * 
+ * @remarks
+ * Esta constante se utiliza para filtrar procedimientos que no deben ser considerados en el contexto de manifiestos y declaraciones.
+ */
+export const PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES = [260217];
