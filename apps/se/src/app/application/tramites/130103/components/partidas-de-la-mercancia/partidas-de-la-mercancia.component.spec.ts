@@ -95,11 +95,16 @@ describe('PartidasDeLaMercanciaComponent', () => {
       totalUsd: 10,
       fraccionArancelariaTigie: 'FRA',
     };
+    component.modificarPartidaForm.setControl('cantidad_partidas', new FormControl(''));
+    component.modificarPartidaForm.setControl('descripcion_partidas', new FormControl(''));
+    component.modificarPartidaForm.setControl('valor_partidas_usd', new FormControl(''));
+    component.modificarPartidaForm.setControl('fraccion_partidas', new FormControl(''));
+
     component.onPartidasSeleccion([row]);
+    component.abrirModalEditar();
+
     expect(component.partidasSeleccionadas[0].id).toBe(1);
-    expect(
-      component.modificarPartidaForm.get('modificar_cantidad')?.value
-    ).toBe(1);
+    expect(component.modificarPartidaForm.get('cantidad_partidas')?.value).toBe(1);
   });
 
   it('debería eliminar las partidas seleccionadas en eliminar', () => {
@@ -172,12 +177,17 @@ describe('PartidasDeLaMercanciaComponent', () => {
     };
     component.datosTabla = [partida];
     component.partidasSeleccionadas = [partida];
+
+    component.modificarPartidaForm.setControl('cantidad_partidas', new FormControl(null));
+    component.modificarPartidaForm.setControl('descripcion_partidas', new FormControl(''));
+    component.modificarPartidaForm.setControl('valor_partidas_usd', new FormControl(null));
+    component.modificarPartidaForm.setControl('fraccion_partidas', new FormControl(''));
+
     component.modificarPartidaForm.patchValue({
-      modificar_cantidad: 10,
+      cantidad_partidas: 10,
       descripcion_partidas: 'Updated',
       valor_partidas_usd: 200,
       fraccion_partidas: 'New',
-      cantidad_partidas: null,
     });
 
     const modalElement = document.createElement('div');
@@ -191,6 +201,7 @@ describe('PartidasDeLaMercanciaComponent', () => {
     expect(component.datosTabla[0].fraccionArancelariaTigie).toBe('New');
     modalElement.remove();
   });
+
 
   it('debería limpiar en ngOnDestroy', () => {
     const nextSpy = jest.spyOn<any, any>(component['destroyNotifier$'], 'next');
