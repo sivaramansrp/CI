@@ -149,7 +149,7 @@ export class ModificacionMercanciaComponent implements OnInit, OnDestroy {
       numeroFolioResolucion: [{ value: this.tramiteState?.mercancia?.numeroFolioResolucion, disabled: true }, []],
       cantidadLibreMercancia: [{ value: this.tramiteState?.mercancia?.cantidadLibreMercancia, disabled: true }, []],
       descripcion: [{ value: this.tramiteState?.mercancia?.descripcion, disabled: true }, []],
-      descripcionModificacion: [this.tramiteState?.mercancia?.descripcionModificacion, [Validators.required]],
+      descripcionModificacion: [this.tramiteState?.mercancia?.descripcionModificacion, [Validators.required, Validators.maxLength(500)]],
     });
     this.inicializarEstadoFormulario();
   }
