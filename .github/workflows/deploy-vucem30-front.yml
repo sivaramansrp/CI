@@ -19,11 +19,11 @@ jobs:
     steps:
       # Obtiene el código de tu repositorio.
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v1
 
       #  Configura la versión de Node.js requerida (22.14.0).
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v1
         with:
           node-version: '22.14.0'
           
