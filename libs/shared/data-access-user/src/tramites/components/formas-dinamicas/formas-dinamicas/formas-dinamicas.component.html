@@ -111,7 +111,7 @@
                         [required]="seRequiere(item.campo)"
                         [readonly]="item.soloLectura"
                         [ngClass]="esValido(item.campo) ? 'required' : ''"
-                        [attr.maxlength]="obtenerMaxlength(item.validadores)"
+                        [attr.maxlength]="item.maxlength"
                         (change)="eventoDeCambioDeValor($event, item.campo)"
                       ></textarea>
               

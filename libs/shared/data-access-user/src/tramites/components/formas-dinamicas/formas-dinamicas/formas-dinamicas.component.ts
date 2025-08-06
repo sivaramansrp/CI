@@ -287,7 +287,9 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
       if (!campo || !campo.campo || campo.tipoInput === 'button' || campo.tipoInput === '') {
         return;
       }
-  
+
+      campo.maxlength = campo?.maxlength ?? FormasDinamicasComponent.obtenerMaxlength(campo.validadores);
+
       if (!this.forma?.contains(campo.campo)) {
         const VALIDADORES = FormasDinamicasComponent.obtenerValidadores(campo.validadores ?? []);
         const DESACTIVADO = this.establecerDesactivar(campo.desactivado);
@@ -673,8 +675,7 @@ registerOnChange(fn: (value: Record<string, unknown>) => void): void {
  * @param validadores - Arreglo de validadores asociados al campo.
  * @returns El valor de maxlength si existe, o null en caso contrario.
  */
-  // eslint-disable-next-line class-methods-use-this
-  public obtenerMaxlength(validadores: Validadores[] | undefined): number | null {
+  public static obtenerMaxlength(validadores: Validadores[] | undefined): number | null {
     if (validadores?.length) {
       const MAXLENGTH = validadores.find(v => v.tipo === 'maxlength');
       return MAXLENGTH && typeof MAXLENGTH.valor === 'number' ? MAXLENGTH.valor : null;

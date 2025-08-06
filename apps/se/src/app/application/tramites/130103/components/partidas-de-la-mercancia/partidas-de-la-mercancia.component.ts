@@ -514,7 +514,6 @@ export class PartidasDeLaMercanciaComponent
   /*
    * @method abrirModalEditar
    */
-  // eslint-disable-next-line class-methods-use-this
   abrirModalEditar(): void {
     if (this.partidasSeleccionadas.length) {
       const MODAL_ELEMENT = document.getElementById('modalEditarPartida');
