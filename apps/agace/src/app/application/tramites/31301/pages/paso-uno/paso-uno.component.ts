@@ -1,20 +1,16 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { ConsultaioState } from '@libs/shared/data-access-user/src';
 import { DatosGeneralesDeLaSolicitudComponent } from '../../components/datos-generales-de-la-solicitud/datos-generales-de-la-solicitud.component';
 import { DatosPorGarantiaComponent } from '../../components/datos-por-garantia/datos-por-garantia.component';
 import { ModificacionDeDenominacionORazorsSocialComponent } from '../../components/modificacion-de-denominacion-o-razors-social/modificacion-de-denominacion-o-razors-social.component';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { Solicitud31301State } from '../../estados/solicitud31301.store';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
 
 /**
  * Componente que representa el primer paso de un trámite.
@@ -107,9 +103,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   /**
    * Determina si la pestaña de modificación de denominación o razón social debe estar habilitada.
-   * @type {boolean}
+   * @type {number}
    */
-  isEnableModificacionTab: boolean = false;
+  isEnableModificacionTab: string | number = 0;
 
   /**
    * Cambia la pestaña activa según el índice proporcionado.
@@ -126,11 +122,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @param evento - El tipo de endoso seleccionado (puede ser string o número).
    */
   tipoDeEndosoChanges(evento: string | number): void {
-    if (evento === 3) {
-      this.isEnableModificacionTab = true;
-    } else {
-      this.isEnableModificacionTab = false;
-    }
+    this.isEnableModificacionTab = evento;
   }
 
   /**

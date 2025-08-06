@@ -12,7 +12,7 @@
           [catalogo]="nombreInstitucionCatalogo.catalogos"
           [label]="nombreInstitucionCatalogo.labelNombre"
           [placeholder]="nombreInstitucionCatalogo.primerOpcion"
-          [isDisabled]="esFormularioSoloLectura"
+          [isDisabled]="true"
           [required]="nombreInstitucionCatalogo.required"
           formControlName="polizaDeFianzaActual"
           (selectionChange)="seleccionaNombreInstitucion($event)"
@@ -25,8 +25,14 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="descripcionGenerica1Carta"
-            >Numero de folio:</label
-          >
+            >Número de folio:
+            <span
+              tooltip="Marcar la casilla si requiere usar esta aduana."
+              data-bs-toggle="tooltip"
+            >
+              <i class="bi bi-question-circle-fill"></i
+            ></span>
+          </label>
           <input
             class="form-control"
             type="text"
@@ -64,51 +70,25 @@
           />
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="form-label" for="fecInicioVigenciaCartaNoEditable"
-            >Fecha de inicio de vigencia:</label
-          >
-          <input
-            class="form-control"
-            type="text"
-            id="fecInicioVigenciaCartaNoEditable"
-            size="30"
-            formControlName="fechaInicioVigenciaNo"
-          />
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="form-label" for="fecFinVigenciaCartaNoEditable"
-            >Fecha de fin de vigencia:</label
-          >
-          <input
-            class="form-control"
-            type="text"
-            id="fecFinVigenciaCartaNoEditable"
-            size="30"
-            formControlName="fechaFinVigenciaNo"
-          />
-        </div>
-      </div>
     </div>
     <div class="row">
       <div class="col-md-4">
         <input-fecha
-        class="width"
-        [isDisabled]="esFormularioSoloLectura"
-        [setFecha]="polizaDeFianzaForm.get('fechaInicioVigencia')?.value"
-        [datos]="configuracionFechaInicioVigencia"
-      ></input-fecha>
+          class="width"
+          [isDisabled]="esFormularioSoloLectura"
+          [setFecha]="polizaDeFianzaForm.get('fechaInicioVigencia')?.value"
+          [datos]="configuracionFechaInicioVigencia"
+          [tooltipQuestionCircle]="true"
+        ></input-fecha>
       </div>
       <div class="col-md-4">
         <input-fecha
-        class="width"
-        [isDisabled]="esFormularioSoloLectura"
-        [setFecha]="polizaDeFianzaForm.get('fechaFinVigencia')?.value"
-        [datos]="configuracionFechaFinVigencia"
-      ></input-fecha>
+          class="width"
+          [isDisabled]="esFormularioSoloLectura"
+          [setFecha]="polizaDeFianzaForm.get('fechaFinVigencia')?.value"
+          [datos]="configuracionFechaFinVigencia"
+          [tooltipQuestionCircle]="true"
+        ></input-fecha>
       </div>
     </div>
     <div class="row">
