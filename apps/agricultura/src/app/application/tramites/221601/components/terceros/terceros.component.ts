@@ -3,6 +3,7 @@ import {
   Catalogo,
   CatalogoSelectComponent,
   ConfiguracionColumna,
+  InputRadioComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -17,6 +18,7 @@ import {
 import {
   Exportador,
   MENSAJE_TABLA_OBLIGATORIA,
+  PreOperativo,
 } from '@libs/shared/data-access-user/src/core/models/221601/zoosanitario.model';
 
 import { CONFIGURATION_TABLA_DATOS, CONFIGURATION_TABLA_DESTINATARIO } from '@libs/shared/data-access-user/src/core/models/221601/zoosanitario.model';
@@ -44,6 +46,7 @@ import { Tramite221601Query } from '../../../../estados/queries/tramite221601.qu
 import realizar from '@libs/shared/theme/assets/json/221601/zoosanitario.json';
 
 import { CommonModule } from '@angular/common';
+import { ZoosanitarioService } from '../../service/zoosanitario.service';
 
 /**
  * Componente para la gestión de terceros en el trámite 221601 de zoosanitario.
@@ -73,12 +76,25 @@ import { CommonModule } from '@angular/common';
     ReactiveFormsModule,
     CatalogoSelectComponent,
     ModalComponent,
-    CommonModule
+    CommonModule,
+    InputRadioComponent
   ],
   templateUrl: './terceros.component.html',
   styleUrls: ['./terceros.component.scss']
 })
 export class TercerosComponent implements OnInit, OnDestroy {
+
+  /**
+   * property destroyed$
+   * description Sujeto para manejar la destrucción de suscripciones.
+   */
+  private destroyed$ = new Subject<void>();
+
+  /**
+   * property tipoPersonaOptions
+   * description Opciones para el tipo de persona (física o moral).
+   */
+  tipoPersonaOptions: PreOperativo[] = [];
   
   /** 
    * Formulario reactivo para datos personales del tercero.
@@ -252,6 +268,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
     private consultaioQuery: ConsultaioQuery,
     private readonly cdr: ChangeDetectorRef,
     private validacionesService: ValidacionesFormularioService,
+    private service: ZoosanitarioService
   ) {
     this.exportadorSeleccionado = [];
     this.consultaioQuery.selectConsultaioState$
@@ -274,6 +291,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.inicializarCertificadoFormulario();
+    this.cargarRadio();
   }
 
   /**
@@ -419,16 +437,16 @@ export class TercerosComponent implements OnInit, OnDestroy {
     (this.tramite221601Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
-  /**
-   * Método del ciclo de vida OnDestroy.
-   * Limpia las suscripciones para evitar memory leaks.
-   * 
-   * @memberof TercerosComponent
-   */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
-  }
+  // /**
+  //  * Método del ciclo de vida OnDestroy.
+  //  * Limpia las suscripciones para evitar memory leaks.
+  //  * 
+  //  * @memberof TercerosComponent
+  //  */
+  // ngOnDestroy(): void {
+  //   this.destroyNotifier$.next();
+  //   this.destroyNotifier$.complete();
+  // }
 
   /**
    * Guarda un nuevo destinatario basado en los datos del formulario.
@@ -557,5 +575,59 @@ export class TercerosComponent implements OnInit, OnDestroy {
       correoElectronico: '',
       entidadFederativa: ''
     });
+  }
+   cargarRadio(): void {
+    this.service.obtenerRadio()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp) => {
+        this.tipoPersonaOptions = resp;
+      });
+  }
+
+  
+  /**
+   * property fisica
+   * description Indica si el tipo de persona es física.
+   */
+  public fisica = false;
+
+  /**
+   * property moral
+   * description Indica si el tipo de persona es moral.
+   */
+  public moral = false;
+
+/**
+   * method inputChecked
+   * description Cambia el estado de los checkboxes según el tipo de persona.
+   * param checkBoxName Nombre del checkbox seleccionado.
+   */
+  public inputChecked(checkBoxName: string): void {
+    if (checkBoxName === 'fisica') {
+      this.fisica = true;
+      this.moral = false;
+    } else {
+      this.fisica = false;
+      this.moral = true;
+    }
+  }
+   /**
+   * method cambiarRadioFisica
+   * description Cambia el estado del radio button según el valor seleccionado.
+   * param value Valor seleccionado.
+   */
+  cambiarRadioFisica(value: string | number): void {
+    const VALOR_SELECCIONADO = value as string;
+    this.inputChecked(VALOR_SELECCIONADO);
+  }
+
+  
+  /**
+   * method ngOnDestroy
+   * description Método para limpiar suscripciones al destruir el componente.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

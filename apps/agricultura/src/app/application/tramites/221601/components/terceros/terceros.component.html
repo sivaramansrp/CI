@@ -55,7 +55,17 @@
             <label class="form-label">Tipo persona*:</label>
           </div>
         </div>
-        <div class="row mb-3">
+        <div class="row">
+        <app-input-radio
+                                [radioOptions]="tipoPersonaOptions"
+                                [isRequired]="true"
+                                formControlName="tipoPersona"
+                                [layout]="'vertical'"
+                                (valueChange)="cambiarRadioFisica($event)"
+                                (change)="setValoresStore(tipoPersonaForm,'tipoPersona','setTipoPersona')"
+                              ></app-input-radio>
+                              </div>
+        <!-- <div class="row mb-3">
           <div class="col-md-6">
             <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona"
               value="fisica" id="fisica"
@@ -76,7 +86,7 @@
               (change)="setValoresStore(tipoPersonaForm,'tipoPersona', 'setTipoPersona')" />
             <label for="moral">Moral</label>
           </div>
-        </div>
+        </div> -->
       </form>
 
       <!-- Planta TIF Search Block -->

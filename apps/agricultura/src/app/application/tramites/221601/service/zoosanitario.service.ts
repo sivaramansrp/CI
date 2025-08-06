@@ -2,7 +2,10 @@ import { Observable,map,take,tap } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Solicitud221601State } from '../../../estados/tramites/tramite221601.store';
 import { Tramite221601Query } from '../../../estados/queries/tramite221601.query';
-import { ZoosanitarioPayload } from '@libs/shared/data-access-user/src/core/models/221601/zoosanitario.model';
+
+import { HttpClient } from '@angular/common/http';
+
+import { PreOperativo, ZoosanitarioPayload } from '@libs/shared/data-access-user/src/core/models/221601/zoosanitario.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +17,7 @@ export class ZoosanitarioService {
 // Constructor que inyecta el servicio `Tramite221601Query` en la clase, lo que permite consultar el 
 // estado de la solicitud. El servicio se utiliza para obtener y manejar el estado relacionado con 
 // la solicitud del trámite 221601
-  constructor(private tramite221601Query: Tramite221601Query) {}
+  constructor(private tramite221601Query: Tramite221601Query, private http: HttpClient) {}
  // Variable para almacenar el payload
 
   public storedPayload: ZoosanitarioPayload | null = null; //store payload data 
@@ -87,6 +90,20 @@ export class ZoosanitarioService {
           })
         );
     }   
+
+    /**
+   * @description Obtiene una lista de objetos de tipo PreOperativo desde un archivo JSON local.
+   * @returns {Observable<PreOperativo[]>} Un observable que emite un arreglo de objetos PreOperativo.
+   * @method obtenerRadio
+   * @memberof ExportacionService
+   * @example
+   * this.exportacionService.obtenerRadio().subscribe((data: PreOperativo[]) => {
+   *   console.log(data);
+   * });
+   */
+  obtenerRadio(): Observable<PreOperativo[]> {
+    return this.http.get<PreOperativo[]>('assets/json/221601/tipoPersonaradio.json');
+  }
   }
   
   

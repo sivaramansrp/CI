@@ -268,6 +268,43 @@ fechaFuturaSeleccionada = false;
   }
 
   /**
+   * Método para borrar todos los datos del formulario de pago de derechos.
+   * Resetea los valores del formulario y actualiza el store con valores vacíos,
+   * manteniendo los campos deshabilitados que no deben ser editables.
+   */
+  borrarDatosPago(): void {
+    // Reset form values
+    this.pagoDerechosForm.patchValue({
+      claves: realizar.formData.claves, // Keep default value
+      dependencia: realizar.formData.dependencia, // Keep default value
+      banco: '',
+      llave: '',
+      fecha: '',
+      importe: realizar.formData.importe // Keep default value
+    });
+
+    // Clear form validation errors
+    this.pagoDerechosForm.markAsUntouched();
+    this.pagoDerechosForm.markAsPristine();
+
+    // Reset future date validation flag
+    this.fechaFuturaSeleccionada = false;
+
+    // Update store with cleared values
+    const CLEARED_PAGO_FORM: Solicitud221601State = {
+      ...this.solicitudState,
+      claves: realizar.formData.claves,
+      dependencia: realizar.formData.dependencia,
+      banco: '',
+      llave: '',
+      fecha: '',
+      importe: realizar.formData.importe
+    };
+
+    this.tramite221601Store.update(CLEARED_PAGO_FORM);
+  }
+
+  /**
    * Método que se ejecuta cuando el componente es destruido.
    * 
    * Libera los recursos y completa la notificación de destrucción del componente.
