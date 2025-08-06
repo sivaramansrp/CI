@@ -259,7 +259,7 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
    * */
   public aduanasDeLabel: CrossListLable = {
     tituluDeLaIzquierda: 'Aduanas de entrada disponibles',
-    derecha: 'Aduanas de entrada seleccionadas*',
+    derecha: 'Aduanas de entrada seleccionadas*:',
   };
 
   /**
