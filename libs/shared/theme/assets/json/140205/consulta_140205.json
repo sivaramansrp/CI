@@ -28,12 +28,12 @@
       "municipio": "Coyoacán"
     },
     "GrupoCupo": {
-      "aduanero": "3",
+      "aduanero": "1",
       "mecanismo": "1",
-      "tratado": "3",
-      "nombreProducto": "4",
-      "nombreSubproducto": "5",
-      "federal": "2"
+      "tratado": "1",
+      "nombreProducto": "1",
+      "nombreSubproducto": "1",
+      "federal": "1"
     },
     "GrupoDatalleCupo": {
       "aduanero": "Aduana de Veracruz",

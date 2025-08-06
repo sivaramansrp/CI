@@ -34,7 +34,7 @@ export const SELECCION_DE_SUCURSAL_DATA: ConfiguracionColumna<SeleccionDeSucursa
     },
     {
       encabezado: 'Municipio o alcaldia',
-      clave: (fila) => fila.municipiooAlcaldia,
+      clave: (fila) => fila.municipioAlcaldia,
       orden: 6
     },
     {
