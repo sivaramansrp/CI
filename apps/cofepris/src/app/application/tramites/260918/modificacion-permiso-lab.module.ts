@@ -16,6 +16,7 @@ import { PagoDeDerechosEntradaComponent } from '../../shared/components/pago-de-
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
+import { RepresentanteLegalComponent } from '../../shared/components/representante-legal/representante-legal.component';
 import { TercerosRelacionadosFabSeccionComponent } from '../../shared/components/terceros-relacionados-fab-seccion/terceros-relacionados-fab-seccion.component';
 import { TramitesAsociadosSeccionComponent } from '../../shared/components/tramites-asociados-seccion/tramites-asociados-seccion.component';
 
@@ -39,7 +40,8 @@ import { TramitesAsociadosSeccionComponent } from '../../shared/components/trami
     TituloComponent,
     AlertComponent,
     AnexarDocumentosComponent,
-    FirmaElectronicaComponent
+    FirmaElectronicaComponent,
+    RepresentanteLegalComponent
   ],
 })
 export class ModificacionPermisoLabModule {}
