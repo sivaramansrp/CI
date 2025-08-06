@@ -108,5 +108,12 @@ export const FECHA_FACTURA = {
   habilitado: false,
 };
 
+export interface DatosDelDestinatario {
+  nombre: string;
+  primerApellido: string;
+  segundoApellido: string;
+  numeroDeRegistroFiscal: string;
+  razonSocial: string;
+}
 
 

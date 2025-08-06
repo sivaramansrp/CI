@@ -42,4 +42,19 @@ describe('VerificarDictamenComponent', () => {
     component.viewChildcambioDePestana(TAB);
       expect(component.tramite).toBe(3);
     });
+    
+  it('Debe tener la estructura de Bootstrap grid correcta', () => {
+    const compiled = fixture.nativeElement;
+    // Verificar que los botones están en un contenedor con row
+    const buttonContainer = compiled.querySelector('.container form .row');
+    expect(buttonContainer).toBeTruthy();
+    
+    // Verificar que las secciones de form tienen estructura row/col correcta
+    const formRows = compiled.querySelectorAll('.form-group .row.mb-3');
+    expect(formRows.length).toBeGreaterThan(0);
+    
+    // Verificar que las columnas md-6 están dentro de rows
+    const colMd6Elements = compiled.querySelectorAll('.row .col-md-6');
+    expect(colMd6Elements.length).toBeGreaterThan(0);
+  });
 });

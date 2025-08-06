@@ -1,13 +1,13 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
-import { GuadarSolicitudResponse } from '../../models/response/guardar-solicitud-response.model';
+import { GuadarSolicitudResponse } from '../../models/130118/response/guardar-solicitud-response.model';
 import { Injectable } from '@angular/core';
 
 import { Observable, catchError, map, throwError } from 'rxjs';
 
 import { API_GET_CERTIFICADO_ANTIGUEDAD, API_GET_MOLINOS_ACERO_HABILITAR, API_POST_SOLICITUD, CVEFRACCION } from '../../../constantes/130118/api-constants';
-import { GuadarSolicitudRequest } from '../../models/request/guardar-solicitud-request.model';
+import { GuadarSolicitudRequest } from '../../models/130118/request/guardar-solicitud-request.model';
 
 @Injectable({
   providedIn: 'root'

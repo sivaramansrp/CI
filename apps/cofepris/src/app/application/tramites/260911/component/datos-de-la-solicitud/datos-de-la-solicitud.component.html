@@ -51,7 +51,7 @@
 
       <div class="row">
         <div class="col-md-12">
-          <div class="form-group">
+          <div class="form-group" [ngClass]="{'disabled-section': !isRadioButtonSelected}">
             <label class="form-label">Justificación*:</label>
             <textarea
               class="form-control"
@@ -68,7 +68,7 @@
       </div>
     </form>
   </div>
-  <div class="row">
+  <div class="row" [ngClass]="{'disabled-section': !isRadioButtonSelected}">
     <form [formGroup]="datosDelEstablecimiento">
       <ng-titulo titulo="Datos del establecimiento"></ng-titulo>
       <div class="row">
@@ -78,7 +78,7 @@
             type="button"
             class="btn btn-primary"
             (click)="toggleFormControls()"
-            [disabled]="esFormularioSoloLectura"
+            [disabled]="esFormularioSoloLectura || !isRadioButtonSelected"
           >
             Seleccionar establecimiento
           </button>

@@ -104,6 +104,7 @@ export class OperacionService {
  * this.actualizarEstadoFormulario(nuevosDatos);
  */
     actualizarEstadoFormulario(resp:FinalDataToSend): void {
+      this.solocitud319Service.actualizarOperacion(resp.operacion);
       this.solocitud319Service.actualizarTodo(resp); 
 
     }

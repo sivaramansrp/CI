@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../shared/models/pago-de-derechos.model';
 import { Tramite240102Query } from '../../estados/tramite240102Query.query';

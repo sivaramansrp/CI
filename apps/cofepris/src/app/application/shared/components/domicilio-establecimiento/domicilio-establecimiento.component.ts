@@ -319,8 +319,8 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Etiquetas para la lista cruzada de países de origen.
    */
   public aduanasEntradaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'Aduanas de entrada disponibles',
-    derecha: 'Aduanas de entrada seleccionadas*',
+    tituluDeLaIzquierda: 'Aduanas de entrada disponibles:',
+    derecha: 'Aduanas de entrada seleccionadas*:',
   };
 
   /**
@@ -432,7 +432,11 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * @property {boolean} colapsableTres
    */
   colapsableTres: boolean = false;
-
+ /**
+   * Indica si la sección es colapsableTres.
+   * @property {boolean} colapsableTress
+   */
+  colapsableTress: boolean = false;
   /**
    * Lista de rangos de días seleccionarOrigenDelPais.
    */
@@ -465,7 +469,31 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Etiqueta de la lista de fechas.
    * */
   public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País productor del ingrediente activo',
+    tituluDeLaIzquierda: 'País productor del ingrediente activo:',
+    derecha: 'País(es) seleccionado(s)*:',
+  };
+
+ /**
+   * Etiqueta de la lista de fechas.
+   * */
+  public paisDeDondeLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'País donde se elabora el producto',
+    derecha: 'País(es) seleccionado(s)',
+  };
+
+  /**
+   * Etiqueta de la lista de fechas.
+   * */
+  public paisOrigenLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'País de origen',
+    derecha: 'País(es) seleccionado(s)',
+  };
+
+  /**
+   * Etiqueta de la lista de fechas.
+   * */
+  public paisEmbarqueLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'País de procedencia',
     derecha: 'País(es) seleccionado(s)',
   };
 
@@ -476,8 +504,8 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * @property {string} derecha - Etiqueta que se muestra a la derecha, indicando los países seleccionados.
    */
   public paisDondeSeElabora: CrossListLable = {
-    tituluDeLaIzquierda: 'país donde se elabora el producto',
-    derecha: 'País(es) seleccionado(s)',
+    tituluDeLaIzquierda: 'País donde se elabora el producto:',
+    derecha: 'País(es) seleccionado(s)*:',
   };
 
   /**
@@ -487,8 +515,8 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * @property {string} derecha - Etiqueta que se muestra en el lado derecho de la lista, indicando los países seleccionados.
    */
   public paisDeProcedencia: CrossListLable = {
-    tituluDeLaIzquierda: 'País de procedencia',
-    derecha: 'País(es) seleccionado(s)',
+    tituluDeLaIzquierda: 'País de procedencia:',
+    derecha: 'País(es) seleccionado(s)*:',
   };
 
   /**
@@ -512,8 +540,8 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * @property {string} derecha - Etiqueta que se muestra a la derecha, indicando los países seleccionados.
    */
   public paisDeOrigen: CrossListLable = {
-    tituluDeLaIzquierda: 'País de origen',
-    derecha: 'País(es) seleccionados',
+    tituluDeLaIzquierda: 'País de origen:',
+    derecha: 'País(es) seleccionado(s)*:',
   };
 
   /**
@@ -782,7 +810,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       .getObtenerEstadoList()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data): void => {
-        this.estado = data?.data;
+        this.estado = data;
       });
   }
   /**
@@ -847,6 +875,23 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   mostrar_colapsableTres(): void {
     this.colapsableTres = !this.colapsableTres;
   }
+
+   /**
+   * Alterna el estado colapsable de la sección del formulario.
+   * @method mostrar_colapsableTress
+   */
+  mostrar_procedencia(): void {
+    this.colapsableTress = !this.colapsableTress;
+  }
+
+  /**
+   * Sets the value of the 'descripcionFraccion' field in the 'formMercancias' form group to the string 'descripcionFraccion'.
+   * If the control does not exist, no action is taken.
+   */
+  setDescripcionFraccion():void{
+    this.formMercancias.get('descripcionFraccion')?.setValue('descripcionFraccion');
+    this.formMercancias.get('UMT')?.setValue('UMT32131');
+  }
   /**
    * Establece el valor de un campo en el store de Tramite31601.
    * @param form - El grupo de formularios que contiene el campo.
@@ -898,6 +943,24 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       INDICE_INICIAL,
       INDICE_INICIAL + this.elementosPorPagina
     );
+  }
+/**   * Autocompleta el campo de fracción arancelaria con la descripción correspondiente.
+   *   * Si el campo de fracción arancelaria tiene un valor, realiza una solicitud al servicio para obtener
+   *   * la descripción asociada y actualiza el formulario con esa información.
+   */
+  autoCompleteFraccionArancelaria(): void {
+    const FRACCION = this.formMercancias.get('fraccionArancelaria')?.value;
+    if (FRACCION) {
+      this.service
+        .getFraccionArancelaria()
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((data): void => {
+          this.formMercancias.patchValue({
+            descripcionFraccion: data?.descripcion,
+            UMT: data?.umt
+          });
+        });
+    }
   }
 
   /**

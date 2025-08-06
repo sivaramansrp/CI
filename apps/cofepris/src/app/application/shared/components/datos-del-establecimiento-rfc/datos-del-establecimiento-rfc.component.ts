@@ -6,8 +6,9 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { DatosDomicilioService } from '../../../tramites/260514/services/permiso-importacion.service';
 import { Notificacion } from '@ng-mf/data-access-user';
-
+import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 /**
  * @description
  * Componente que gestiona los datos del establecimiento.
@@ -87,6 +88,12 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false;
 
   /**
+   * Indica si el botón de selección ha sido clicado.
+   * Se utiliza para rastrear el estado de clic del botón de selección dentro del componente.
+   */
+  tieneElBotonSeleccionClicado: boolean = false;
+
+  /**
    * @description
    * Constructor del componente.
    * @param fb Constructor de formularios reactivos.
@@ -98,6 +105,8 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
     private avisocalidadStore: AvisocalidadStore,
     private avisocalidadQuery: AvisocalidadQuery,
     private consultaioQuery: ConsultaioQuery,
+    private datosDomicilioSvc: DatosDomicilioService,
+    private servicioDeFormularioService: ServicioDeFormularioService,
   ) {
     // Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
@@ -146,6 +155,8 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
     }
 
     this.elementoParaEliminar = i;
+    this.tieneElBotonSeleccionClicado = true;
+    this.datosDomicilioSvc.emitEvent(this.tieneElBotonSeleccionClicado);
   }
 
   /**
@@ -157,6 +168,9 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+    if(this.tieneElBotonSeleccionClicado) {
+      this.datosDelForm.enable();
     }
   }
   /**
@@ -195,15 +209,15 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
       correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required, Validators.email, Validators.maxLength(320)]]
     });
 
+    this.servicioDeFormularioService.registerForm('datosDelEstablecimientoRFCForm', this.datosDelForm);
+
     /*
      * Si el formulario está en modo solo lectura, deshabilita todos los campos.
      * En caso contrario, habilita los campos para permitir la edición.
      * Esto asegura que el formulario refleje correctamente el estado de solo lectura.
      */
-    if (this.esFormularioSoloLectura && this.datosDelForm) {
-      this.datosDelForm.disable();
-    } else {
-      this.datosDelForm.enable();
+    if ((this.esFormularioSoloLectura && this.datosDelForm) || !this.tieneElBotonSeleccionClicado) {
+      this.datosDelForm?.disable();
     }
   }
   /**
@@ -216,6 +230,9 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof AvisocalidadStore): void {
     const VALOR = form.get(campo)?.value;
     (this.avisocalidadStore[metodoNombre] as (value: string | number) => void)(VALOR);
+    this.servicioDeFormularioService.setFormValue('datosDelEstablecimientoRFCForm', {
+        [campo]: VALOR,
+      });
   }
 
   /**

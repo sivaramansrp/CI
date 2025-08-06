@@ -469,6 +469,17 @@ export const REGEX_LLAVE_DE_PAGO_DE_DERECHO =/^[a-zA-Z0-9]+$/;
  */
 export const REGEX_SOLO_NÚMERO =/^[0-9]$/;
 
+/**
+ * Expresión regular que valida si una cadena contiene únicamente ceros.
+ * 
+ * Esta expresión regular asegura que la cadena esté compuesta exclusivamente por el carácter '0'.
+ * 
+ * Ejemplo de uso:
+ * - Válido: "0", "00", "0000"
+ * - Inválido: "1", "01", "10", "abc"
+ */
+export const REGEX_TODOS_CEROS = /^0+$/;
+
 
 /**
  * Expresión regular para validar números enteros con hasta 9 dígitos y opcionalmente dos decimales.

@@ -1,13 +1,12 @@
 services:
 #----------------------------------------------------------------
   modulefederation-dashboard:
-    image: ghcr.io/vucem30/dockerized-modulefederation-dashboard:1.0.2
+    image: ghcr.io/vucem30/dockerized-modulefederation-dashboard:1.0.8
     build: 
       context: ./../
       dockerfile: apps/dashboard/Dockerfile.dev
       args:
         - NODE_ENV=production
-        - IMAGE_TAG_ID=${IMAGE_TAG_ID:-1.0.2}
     container_name: modulefederation-dashboard
     restart: unless-stopped
     expose:

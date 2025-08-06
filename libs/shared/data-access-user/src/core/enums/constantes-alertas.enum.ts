@@ -36,24 +36,24 @@ export const CONSTANTES = {
  * @property {string} INSTRUCCIONES_AGREGAR_NUEVO - Instrucciones para agregar un nuevo documento.
  */
 export const TEXTOS = {
-  INSTRUCCIONES: `<h5>Nota: </h5>
-  <ul>
+  INSTRUCCIONES: `<h5 style="text-align: left;">Instrucciones: </h5>
+  <ul style="text-align: left;">
     <li>De acuerdo al caso particular, algunos documentos podrían ser obligatorios</li>
     <li>En caso de que no requieras algún documento, selecciónalo y elimínalo</li>
     <li>Si necesitas anexar más de un documento del mismo tipo, da clic en el botón <i class="bi bi-plus-circle-fill"></i> para agregar cuantos necesites.</li>
   </ul>`,
-  ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar dcumentos"</p>`,
-  ADJUNTAR_DOCUMENTOS: `<p>Para poder adjuntar tu documento, deberá cumplir las signuientes características:</p>
-  <p><b>•</b> Debe ser formato PDF que no contenga formularios, objetos OLE incrustrados, código java script, etc.</p>
-  <p><b>•</b> No debe contener páginas en blanco.</p>`,
-  ADJUNTAR_WARNING: `<p>La carga del documento puede tardar varios segundos, este tiempo dependerá del tamaño de tu archivo y de la velocidad de tu conexión.</p>`,
-  DECLARACION_DE_RESPONSABILIDAD_SOLIDARIA: `*? En mi calidad de Residente en Territorio Nacional, manifiesto mi voluntad y disposición de asumir la responsabilidad solidaria a que se refiere la fracción VIII del artículo 26 del Código Fiscal de la Federación, por los créditos fiscales que lleguen a derivarse por no retornar las Mercancías a que el presente aviso se refiere, al extranjero dentro del plazo establecido en la Ley"`,
-  SELECCION_UN_CRITERIO_DE_BUSQUEDA: `Selecciona un criterio de búsqueda`,
-  REQUISITOS_GUARDADOS_CORRECTAMENTE: `Requisitos guardados correctamente`,
-  INSTRUCCIONES_AGREGAR_NUEVO: `<h6>Instrucciones</h6>
-  <p>- De acuerdo al caso particular, algunos documentos podrían ser obligatorios</p>
-  <p>- En caso de que no requieras algún documento, selecciónalo y elimínalo</p>
-  <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona "Agregar nuevo"</p>`,
+  ADJUNTAR: `<p style="text-align: left;">Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar dcumentos"</p>`,
+  ADJUNTAR_DOCUMENTOS: `<p style="text-align: left;">Para poder adjuntar tu documento, deberá cumplir las signuientes características:</p>
+  <p style="text-align: left;"><b>•</b> Debe ser formato PDF que no contenga formularios, objetos OLE incrustrados, código java script, etc.</p>
+  <p style="text-align: left;"><b>•</b> No debe contener páginas en blanco.</p>`,
+  ADJUNTAR_WARNING: `<p style="text-align: left;">La carga del documento puede tardar varios segundos, este tiempo dependerá del tamaño de tu archivo y de la velocidad de tu conexión.</p>`,
+  DECLARACION_DE_RESPONSABILIDAD_SOLIDARIA: `<span style="text-align: left;">*? En mi calidad de Residente en Territorio Nacional, manifiesto mi voluntad y disposición de asumir la responsabilidad solidaria a que se refiere la fracción VIII del artículo 26 del Código Fiscal de la Federación, por los créditos fiscales que lleguen a derivarse por no retornar las Mercancías a que el presente aviso se refiere, al extranjero dentro del plazo establecido en la Ley"</span>`,
+  SELECCION_UN_CRITERIO_DE_BUSQUEDA: `<span style="text-align: left;">Selecciona un criterio de búsqueda</span>`,
+  REQUISITOS_GUARDADOS_CORRECTAMENTE: `<span style="text-align: left;">Requisitos guardados correctamente</span>`,
+  INSTRUCCIONES_AGREGAR_NUEVO: `<h6 style="text-align: left;">Instrucciones</h6>
+  <p style="text-align: left;">- De acuerdo al caso particular, algunos documentos podrían ser obligatorios</p>
+  <p style="text-align: left;">- En caso de que no requieras algún documento, selecciónalo y elimínalo</p>
+  <p style="text-align: left;">- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona "Agregar nuevo"</p>`,
 };
 
 export const MESES = [
@@ -229,15 +229,6 @@ export const TODOS_PASOS = {
   efectos de identificar tu Solicitud. Un folio oficial le será asignado a la Solicitud al momento en que ésta sea firmada.</p>`,
 };
 
-export const MANIFIESTOS = {
-  Importante: `<div class="form-check d-flex">
-   <input class="form-check-input" type="checkbox" id="manifiestos">* 
-  <label class="form-check-label" for="manifiestos">
-    Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio Exterior por los mecanismos de la misma.
-  </label>
-  </div>`
-};
-
 export const REQUISITOS = {
   Importante: `<p>La solicitud ha quedado registrada con el número temporal 202767918. Éste no tiene validez legal y sirve solamente para
 efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.</p>`
@@ -257,7 +248,11 @@ Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo do
 
 
 export const LASTABLA = {
-  Importante: `<p>Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.</p>`
+  Importante: `
+    <div class="text-center">
+      <p>Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.</p>
+    </div>
+  `
 };
 
 export const TERCEROS = {
@@ -362,4 +357,23 @@ export const FECHA_FINAL_VIGENCIA_DEL_CUPO = {
   labelNombre: 'Fecha fin vigencia del cupo:',
   required: false,
   habilitado: false,
+};
+
+/**
+ * Constante que contiene los textos de instrucciones para la sección de selección de documentos.
+ *
+ * @constant
+ * @type {{ INSTRUCCIONES: string }}
+ *
+ * @property {string} INSTRUCCIONES - Texto HTML que contiene las instrucciones para solicitar o eliminar documentos adicionales.
+ *
+ * Ejemplo de uso:
+ * ```
+ * const instrucciones = SELECCIONAR_DOCUMENTOS.INSTRUCCIONES;
+ * ```
+ */
+export const SELECCIONAR_DOCUMENTOS = {
+  INSTRUCCIONES: `<h6>Instrucciones:</h6>
+  <p>-Para solicitar documentos adicionales, selecciona el documento y presiona "Agregar nuevo".</p>
+  <p>-En caso de que no requieras algún documento, selecciónalo y elimínalo.</p>`,
 };

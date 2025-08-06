@@ -289,17 +289,17 @@ export class DatosDelSolicitudModificacionComponent
   paisDeProcedenciaBotons = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-primary',
+      class: 'btn-default',
       funcion: (): void => this.crossList.toArray()[0].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-default',
+      class: 'btn-primary',
       funcion: (): void => this.crossList.toArray()[0].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-danger',
+      class: 'btn-primary',
       funcion: (): void => this.crossList.toArray()[0].quitar(''),
     },
     {
@@ -315,17 +315,17 @@ export class DatosDelSolicitudModificacionComponent
   paisDeProcedenciaBotonsDos = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-primary',
+      class: 'btn-default',
       funcion: (): void => this.crossList.toArray()[1].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-default',
+      class: 'btn-primary',
       funcion: (): void => this.crossList.toArray()[1].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-danger',
+      class: 'btn-primary',
       funcion: (): void => this.crossList.toArray()[1].quitar(''),
     },
     {
@@ -341,17 +341,17 @@ export class DatosDelSolicitudModificacionComponent
   paisDeProcedenciaBotonsTres = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-primary',
+      class: 'btn-default',
       funcion: (): void => this.crossList.toArray()[2].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-default',
+      class: 'btn-primary',
       funcion: (): void => this.crossList.toArray()[2].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-danger',
+      class: 'btn-primary',
       funcion: (): void => this.crossList.toArray()[2].quitar(''),
     },
     {
@@ -586,11 +586,11 @@ export class DatosDelSolicitudModificacionComponent
    * Este método obtiene los datos de mercancías desde el servicio `EstablecimientoService`
    * y los agrega al arreglo `mercanciasTablaDatos`.
    */
-  cargarDatosDesdeApi() {
+  cargarDatosDesdeApi(): void {
     this.establecimientoService.getMercancias().pipe(takeUntil(this.destroy$))
       .subscribe((response: MercanciasInfo[]) => {
         response?.forEach((resp: MercanciasInfo) => {
-          this.mercanciasTablaDatos.push(resp)
+          this.mercanciasTablaDatos = [...this.mercanciasTablaDatos, resp];
         })
       });
   }
@@ -632,7 +632,7 @@ eliminarSeleccionados(): void {
       .pipe(takeUntil(this.destroy$))
       .subscribe((response: ScianModel[]) => {
         response?.forEach((resp: ScianModel) => {
-          this.personaparas.push(resp)
+          this.personaparas = [...this.personaparas, resp];
         })
       });
   }
@@ -930,10 +930,7 @@ eliminarSeleccionados(): void {
         tipoProducto: this.formMercancias.get('tipoDeProducto')?.value,
         usoEspecifico: this.formMercancias.get('usoEspecifico')?.value,
       };
-
-      // Añade los nuevos datos a la tabla
-      this.mercanciasTablaDatos.push(MERCANCIA);
-      // Restablecer el formulario
+      this.mercanciasTablaDatos = [...this.mercanciasTablaDatos, MERCANCIA];
       this.formMercancias.reset();
       this.cerrarModalMercancía();
     }

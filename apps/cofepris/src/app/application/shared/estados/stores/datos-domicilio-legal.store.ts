@@ -189,7 +189,7 @@ export interface DatosDomicilioLegalState {
   /**
    * El valor de nombre.
    */
-  nombre: string;
+   nombre: string;
   /**
    * El valor de apellidoPaterno.
    */
@@ -208,6 +208,11 @@ export interface DatosDomicilioLegalState {
    * El valor de garantiasOfrecidas.
    */
   garantiasOfrecidas: string;
+
+   /**
+   * El valor de garantiasOfrecidas.
+   */
+  mensaje: boolean;
 }
 
 export function createInitialState(): DatosDomicilioLegalState {
@@ -414,6 +419,10 @@ export function createInitialState(): DatosDomicilioLegalState {
      * El valor de garantiasOfrecidas.
      */
     garantiasOfrecidas: '',
+ /**
+     * El valor de mensaje.
+     */
+    mensaje: false
   };
 }
 
@@ -946,4 +955,26 @@ export class DatosDomicilioLegalStore extends Store<DatosDomicilioLegalState> {
       garantiasOfrecidas,
     }));
   }
+   /**
+       * Establece el estado de rfc.
+       * @param nombre - El valor de rfc.
+       */
+    public setNumero(nombre: string):void {
+        this.update((state) => ({
+            ...state,
+            nombre,
+        }));
+    }
+
+     /**
+       * Establece el estado de rfc.
+       * @param mensaje - El valor de rfc.
+       */
+    public setMensaje(mensaje: boolean):void {
+        this.update((state) => ({
+            ...state,
+            mensaje,
+        }));
+    }
+    
 }

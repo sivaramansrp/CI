@@ -1,11 +1,12 @@
 import { Store, StoreConfig } from '@datorama/akita';
+import { CatalogoTipoDocumento } from '../models/shared/catalogos.model';
 import { Injectable } from "@angular/core";
 
 export interface SolicitudDocumentosState {
     /**
      * Parametro de la lista de documentos seleccionados
      */
-    documentosSeleccionados: string[];
+    listaDocumentos: CatalogoTipoDocumento[];
 }
 /**
  * Creación del estado inicial para la interfaz de solicitud de documentos
@@ -13,7 +14,7 @@ export interface SolicitudDocumentosState {
  */
 export function createInitialSolicitudDocumentosStates(): SolicitudDocumentosState {
     return {
-        documentosSeleccionados: []
+        listaDocumentos: []
     };
 }
 
@@ -31,9 +32,9 @@ export class SolicitudDocumentosStore extends Store<SolicitudDocumentosState> {
     }
     /**
      * Guarda la lista de documentos requeridos
-     * @param documentosSeleccionados 
+     * @param listaDocumentos
      */
-    setSolicitudDocumentos(documentosSeleccionados: string[]): void {
-        this.update(state => ({ ...state, documentosSeleccionados }));
+    setSolicitudDocumentos(listaDocumentos: CatalogoTipoDocumento[]): void {
+        this.update(state => ({ ...state, listaDocumentos }));
     }
 }

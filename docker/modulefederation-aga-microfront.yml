@@ -1,13 +1,12 @@
 services:
 #----------------------------------------------------------------
   modulefederation-aga-microfront:
-    image: ghcr.io/vucem30/dockerized-modulefederation-aga-microfront:1.0.8
+    image: ghcr.io/vucem30/dockerized-modulefederation-aga-microfront:1.0.15
     build: 
       context: ./../
       dockerfile: apps/aga/Dockerfile.dev
       args:
         - NODE_ENV=production
-        - IMAGE_TAG_ID=${IMAGE_TAG_ID:-1.0.8}
     container_name: modulefederation-aga-microfront
     restart: unless-stopped
     expose:

@@ -142,6 +142,7 @@ export function createInitialState(): Tramite110212State {
       telefono: '',
       fax: '',
       correoElectronico: '',
+      pais: '',
     },
     grupoRepresentativo: {
       lugar: '',

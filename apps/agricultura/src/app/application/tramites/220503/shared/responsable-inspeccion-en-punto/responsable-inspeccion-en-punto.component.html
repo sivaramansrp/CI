@@ -24,7 +24,7 @@
       <div class="col-md-4">
         <div class="form-field">
             <label for="primerapellido" class="form-label">Primer apellido:</label>
-            <input class="form-control" type="text" formControlName="primerapellido" id="primerapellido" (change)="setPrimerapellido($event)" />
+            <input class="form-control" type="text" formControlName="primerapellido" id="primerapellido" (change)="setPrimerapellido($event)" [maxLength]="80" />
               <div class="d-grid"
           *ngIf="grupoFormularioPadre.get(claveDeControl)?.get('primerapellido')?.errors?.['maxlength'] &&
           grupoFormularioPadre.get(claveDeControl)?.get('primerapellido')?.touched
@@ -37,7 +37,7 @@
       <div class="col-md-4">
         <div class="form-field">
             <label for="segundoapellido" class="form-label">Segundo apellido:</label>
-            <input class="form-control" type="text" formControlName="segundoapellido" id="segundoapellido" (change)="setSegundoapellido($event)" />
+            <input class="form-control" type="text" formControlName="segundoapellido" id="segundoapellido" (change)="setSegundoapellido($event)"  [maxLength]="80" />
               <div class="d-grid"
           *ngIf="grupoFormularioPadre.get(claveDeControl)?.get('segundoapellido')?.errors?.['maxlength'] &&
           grupoFormularioPadre.get(claveDeControl)?.get('segundoapellido')?.touched

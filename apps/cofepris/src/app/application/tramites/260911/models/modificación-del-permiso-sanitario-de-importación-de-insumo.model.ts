@@ -262,7 +262,15 @@ export interface MercanciasInfo {
    * @example "Tratamiento de infecciones bacterianas"
    */
   usoEspecifico: string;
+
+  /** 
+   * Fecha de caducidad del producto
+   * @type {string}
+   * @example "2025-12-31"
+   */
+  fechaCaducidad: string;
 }
+
 
 /**
  * Configuración de columnas para la tabla de información de mercancías
@@ -649,5 +657,25 @@ export const MERCANCIAS_DATA = [
      * @type {number}
      */
     orden: 19,
+  },
+   {
+    /** 
+     * Texto del encabezado de la columna para mostrar en la interfaz
+     * @type {string}
+     */
+    encabezado: 'Fecha de caducidad',
+    
+    /** 
+     * Función que extrae la fecha de caducidad de un objeto MercanciasInfo
+     * @param {MercanciasInfo} ele - Objeto con información de mercancía
+     * @returns {string} Fecha de caducidad del producto
+     */
+    clave: (ele: MercanciasInfo): string => ele.fechaCaducidad,
+    
+    /** 
+     * Número que define el orden de aparición de la columna en la tabla
+     * @type {number}
+     */
+    orden: 20,
   },
 ];
