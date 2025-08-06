@@ -103,6 +103,20 @@ export interface Tramite110217State {
    * Información del formulario de mercancía.
    */
   formularioMercancia: FormularioMercancia;
+  
+  /**
+   * Lista de mercancías seleccionadas para ser mostradas en la tabla de datos.
+   * 
+   * Contiene los datos de las mercancías que han sido seleccionadas por el usuario durante el trámite.
+   */
+  mercanciaSeleccionadasTablaDatos: SeleccionadasTabla[];
+  
+  /**
+   * Lista de mercancías disponibles para ser mostradas en la tabla de datos.
+   * 
+   * Contiene los datos de las mercancías que están disponibles para ser seleccionadas por el usuario durante el trámite.
+   */
+  mercanciaDisponsiblesTablaDatos: DisponiblesTabla[];
 }
 
 /**
@@ -198,7 +212,9 @@ export function createInitialState(): Tramite110217State {
       tipoFactura: '',
       fecha: '',
       numeroFactura: '',
-    }
+    },
+    mercanciaSeleccionadasTablaDatos: [],
+    mercanciaDisponsiblesTablaDatos: []
   };
 }
 /**
