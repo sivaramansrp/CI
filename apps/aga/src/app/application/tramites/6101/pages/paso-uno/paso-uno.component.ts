@@ -1,6 +1,5 @@
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { ConsultaioState } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Solicitud6101Store } from '../../estados/solicitud6101.store';

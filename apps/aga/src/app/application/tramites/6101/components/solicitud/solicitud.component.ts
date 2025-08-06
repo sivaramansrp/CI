@@ -1,7 +1,7 @@
-import { Catalogo, ConsultaioState } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DivideFraccion } from '../../models/solicitud.model';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -109,7 +109,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
         this.solicitud6101State = seccionState;
-        console.log('Estado de la solicitud:', this.solicitud6101State);
       })
     )
     .subscribe();

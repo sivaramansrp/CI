@@ -205,11 +205,18 @@
                     <div class="row mb-3">
                         <div class="col-md-4">
                             <ng-titulo titulo="Datos generales" />
-                            <app-catalogo-select [catalogo]="catalogoList" [label]="aduana.labelNombre"
-                                [placeholder]="aduana.primerOpcion" [required]="true"
-                                formControlName="aduanaMenuDesplegable"
-                                (change)="setValoresStore(solicitudForm,'aduanaMenuDesplegable', 'setAduanaMenuDesplegable')"
-                                [isDisabled]="soloLectura"></app-catalogo-select>
+                            <div class="form-group" [ngClass]="{'has-error': esInvalido('aduanaMenuDesplegable')}">
+                                <app-catalogo-select [catalogo]="catalogoList" [label]="aduana.labelNombre"
+                                    [placeholder]="aduana.primerOpcion" [required]="true"
+                                    formControlName="aduanaMenuDesplegable"
+                                    (change)="setValoresStore(solicitudForm,'aduanaMenuDesplegable', 'setAduanaMenuDesplegable')"
+                                    [isDisabled]="soloLectura"></app-catalogo-select>
+                                <div *ngIf="esInvalido('aduanaMenuDesplegable')" class="text-danger">
+                                    <small *ngIf="solicitudForm.controls['aduanaMenuDesplegable'].errors?.['required']">
+                                        Este campo es obligatorio.
+                                    </small>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row">
@@ -242,34 +249,9 @@
                         </div>
                         <div class="col-md-4 d-flex justify-content-end width-dos">
                             <button
-                                [disabled]="!solicitudForm.get('aduanaMenuDesplegable')?.value || !solicitudForm.get('fechaDeIngreso')?.value"
-                                type="button" class="btn btn-default" (click)="adjuntarArchivo() ">Cargar
+                                type="button" class="btn btn-default" (click)="adjuntarArchivo()">Cargar
                                 archivo</button>
                         </div>
-                        <div class="row margin-top-dos" *ngIf="mostrarArchivoSeleccionadoTable">
-                            <div class="col-md-8">
-                                <ng-titulo titulo="Cargar archivo" />
-                                <div class="col-md-8">
-                                    <label for="cargarArchivo" class="form-label d-flex">Archivo*:</label>
-                                    <button class="mb-2" type="button" for="cargarArchivo" class="file-upload"
-                                        (click)="activarSeleccionArchivo()">
-                                        Elegir archivo
-                                    </button>
-                                    <span class="ml-2 custom-input-file">{{ etiquetaDeArchivo || 'No se eligió ningún archivo' }}</span>
-                                    <input type="file" id="cargarArchivo" class="file-upload display-dos"
-                                        accept=".csv" (change)="onCambioDeArchivo($event)">
-                                    @if (nuevaNotificacion) { <section>
-                                        <lib-notificaciones [notificacionInput]="nuevaNotificacion"
-                                            (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
-                                    </section> }
-                                </div>
-                            </div>
-                            <div class="col-md-4 d-flex justify-content-end p-5 gap-3 width-dos">
-                                <button type="button" class="btn btn-default" (click)="regresar()">Regresar</button>
-                                <button type="button" class="btn btn-default" (click)="archivo()">Enviar</button>
-                            </div>
-                        </div>
-
                         <div *ngIf="!solicitud11201State?.tipoBusqueda || solicitud11201State?.tipoBusqueda === 'Archivo CSV'"
                             class="table-container">
                             <app-tabla-dinamica [configuracionTabla]="encabezadoDeTablaManifiesto"
@@ -316,4 +298,37 @@
             </button>
         </div>
     </ng-template>
+    <div class="modal fade" id="modalArchivoCsv" tabindex="-1" role="dialog" aria-labelledby="modalArchivoCsv"
+        aria-hidden="true" #modalArchivoCsv>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="row margin-top-dos" *ngIf="mostrarArchivoSeleccionadoTable">
+                    <div class="col-md-12">
+                        <ng-titulo titulo="Cargar archivo" />
+                        <div class="col-md-12">
+                            <label for="cargarArchivo" class="form-label d-flex">Archivo*:</label>
+                            <div class="d-flex justify-content-between">
+                                <button class="mb-2" type="button" for="cargarArchivo" class="file-upload" (click)="activarSeleccionArchivo()">
+                                    Elegir archivo
+                                </button>
+                                <span class="ml-2 custom-input-file">{{ etiquetaDeArchivo || 'No se eligió ningún archivo'
+                                    }}</span>
+                            </div>
+                            
+                            <input type="file" id="cargarArchivo" class="file-upload display-dos" accept=".csv"
+                                (change)="onCambioDeArchivo($event)">
+                            @if (nuevaNotificacion) { <section>
+                                <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+                                    (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
+                            </section> }
+                        </div>
+                    </div>
+                    <div class="col-md-4 d-flex justify-content-end p-5 gap-3 width-dos">
+                        <button type="button" class="btn btn-default" data-bs-dismiss="modal" (click)="regresar()">Regresar</button>
+                        <button type="button" class="btn btn-default" (click)="archivo()" data-bs-dismiss="modal">Enviar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
