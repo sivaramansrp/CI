@@ -16,6 +16,7 @@ import {
   PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA,
   PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL,
   REPRESENTANTE_LEGAL,
+  TEXTO_MANIFESTO_Y_DECLARACIONES,
 } from '../../constantes/datos-solicitud.enum';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -199,6 +200,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Mensaje de alerta relacionado con el manifiesto y declaraciones.
    */
   public alertaDeManifestoContenido = ALERTA_DE_MANIFESTO_Y_DECLARACIONES;
+
+  /**
+   * @property {string} textoManifestoContenido
+   * Texto que se muestra en el manifiesto y declaraciones.
+   */
+  public textoManifestoContenido = TEXTO_MANIFESTO_Y_DECLARACIONES;
+
 
   /**
    * @property {string} alertaOpicion
@@ -646,6 +654,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       ],
       regimenLaMercancia: ['101', [Validators.required]],
       aduana: [this.datosSolicitudFormState.aduana, [Validators.required]],
+      manifesto: [
+        this.datosSolicitudFormState.manifesto,
+        [Validators.required],
+      ]
     });
 
     if (this.mostrarNotificacion) {

@@ -84,8 +84,6 @@ export interface DomicilioState {
   /** Apellido materno del representante legal. */
   apellidoMaterno: string;
 
-  manifesto: boolean; // Indica si se requiere el manifiesto de aceptación
-
 }
 
 /**
