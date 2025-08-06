@@ -90,6 +90,11 @@ export interface EmpresaSubmanufacturera {
    * Permite la comunicación digital con la empresa.
    */
   correoElectronico: string;
+
+  /**
+   * Descripción del estatus de la empresa submanufacturera.
+   */
+  desEstatus: string;
 }
 
 /**
