@@ -157,6 +157,7 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   * `ModeloDeFormaDinamica`, que contiene información sobre el campo dinámico
   * relacionado con el botón clicado.
   */
+  // Se agregó 'type' porque el valor puede ser de cualquier tipo (string, number, boolean, etc.).
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @Output() emitirCambioDeValor: EventEmitter<{ campo: string; valor: any}> = new EventEmitter<{ campo: string; valor: any}>();
 
@@ -188,7 +189,7 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
  * };
  */
   public static onChange: (value: Record<string, unknown>) => void = () => {
-  // eslint-disable-next-line no-empty-function
+  // 
   };
   
   /**
@@ -210,7 +211,7 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
  * };
  */
   public static onTouched: () => void = () => {
-  // eslint-disable-next-line no-empty-function
+  // 
   };
   
   /**
@@ -293,10 +294,14 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
       if (!this.forma?.contains(campo.campo)) {
         const VALIDADORES = FormasDinamicasComponent.obtenerValidadores(campo.validadores ?? []);
         const DESACTIVADO = this.establecerDesactivar(campo.desactivado);
-        FORMGROUP[campo.campo] = this.fb.control(
-          { value: this.estado && this.estado[campo.campo] ? this.estado[campo.campo] : campo.valorPredeterminado, disabled: DESACTIVADO },
-          { validators: VALIDADORES }
-        );
+        const CONTROL = this.fb.control(
+        { value: this.estado && this.estado[campo.campo] ? this.estado[campo.campo] : campo.valorPredeterminado, disabled: DESACTIVADO },
+        { validators: VALIDADORES }
+      );
+
+        FORMGROUP[campo.campo] = CONTROL;
+        const VALIDATOR_RESULT = CONTROL.validator ? CONTROL.validator({} as AbstractControl) : null;
+        campo.esRequerido = Boolean(VALIDATOR_RESULT?.['required']);
       }
     });
 
@@ -395,7 +400,6 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   * @param item El nombre del campo que se desea validar.
   * @returns {boolean} Un valor booleano que indica si el campo es válido.
   */
-  // eslint-disable-next-line class-methods-use-this
   public seRequiere(campo: string): boolean {
     const CONTROL = this.forma.get(campo);
     if (CONTROL && CONTROL.validator) {
@@ -439,6 +443,7 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   * eventoDeCambioDeValor({ target: { value: 'nuevo valor' } }, 'nombreCampo');
   * // Emitirá: { campo: 'nombreCampo', valor: 'nuevo valor' }
   */
+  // Se agregó 'type' porque el valor puede ser de cualquier tipo (string, number, boolean, etc.).
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 public eventoDeCambioDeValor(event: any, campo: string, tipo?: string): void {
   let VALOR;
@@ -539,6 +544,8 @@ registerOnChange(fn: (value: Record<string, unknown>) => void): void {
   * 
   * @memberof FormasDinamicasComponent
   */
+  /** // Si eliminas esta regla ESLint, marcará error porque el método no utiliza 'this', pero es 
+   * necesario para implementar la interfaz 'ControlValueAccessor'. */
   // eslint-disable-next-line class-methods-use-this
   registerOnTouched(fn: () => void): void {
     FormasDinamicasComponent.onTouched = fn;
