@@ -143,28 +143,6 @@ export class ModificacionComponent implements OnInit, OnDestroy {
         this.empresasLista = empresas.data.length > 0 ? empresas.data : [];
       });
   }
-
-  /**
-   * Alterna el valor de estatus de una empresa en la lista.
-   * Cambia el estatus de 'Baja' a 'Activada' o viceversa.
-   * @param {unknown} row - Fila de la tabla que contiene la empresa a modificar.
-   * @returns {void}
-   */
-  // alternarValor(event: { row: EmpresasLista; column: string }): void {
-  //   const row = event.row;
-  //   const INDEX = this.empresasLista.findIndex((x) => x.id === row.id);
-  
-  //   if (INDEX !== -1) {
-  //     // Toggle the status in the empresasLista array
-  //     this.empresasLista[INDEX].estatus = this.empresasLista[INDEX].estatus === 'Baja' ? 'Activada' : 'Baja';
-  //     this.empresasLista = [...this.empresasLista];
-
-  //   }
-  // }
-  
-  /**
-   * Indica si la tabla está en modo "Baja".
-   */
   isBaja: boolean = true;
   onFilaClic(event: Event): void {
     const TARGET = event.target as HTMLInputElement;

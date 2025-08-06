@@ -7,7 +7,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { SociosYAccionistasData, SociosYAccionistasExtranjerosData } from '../../models/filaData.modal';
+import { SeleccionDeSucursalData, SociosYAccionistasData, SociosYAccionistasExtranjerosData } from '../../models/filaData.modal';
 import { Solicitud120603State, Solicitud120603Store } from '../../estados/tramite120603.store';
 import { CommonModule } from '@angular/common';
 import { RegistroComoEmpresaService } from '../../services/registro-como-empresa.service';
@@ -73,6 +73,8 @@ nacionalidadMexicanaNo = NacionalidadMexicana.NO;
   /** Datos de la tabla de socios y accionistas extranjeros */
   datosTablaExtranjeros: SociosYAccionistasExtranjerosData[] = [];
 
+  sucursalDeData: SeleccionDeSucursalData[] = [];
+
   /** Tipo de selección de la tabla */
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
 
@@ -84,8 +86,8 @@ nacionalidadMexicanaNo = NacionalidadMexicana.NO;
 
   /** Opciones de selección mexicana */
   opcionSeleccionPersona = [
-    { label: 'Persona Física', value: TipoPersona.FISICA },
-    { label: 'Persona Moral', value: TipoPersona.MORAL },
+    { label: 'Persona física', value: TipoPersona.FISICA },
+    { label: 'Persona moral', value: TipoPersona.MORAL },
   ];
 
   /** Opciones de selección mexicana */
@@ -165,6 +167,7 @@ opcionSeleccionMexicana = [
     this.getSociosYAccionistasExtranjerosData();
     this.getPaisData();
     this.subscribeToEstadoDataChanges();
+    this.getSucursalData();
     this.registroComoEmpresa.getRepresentacionFederalData().pipe(takeUntil(this.destroyed$)).subscribe(() => {
       this.subscribeToEstadoDataChanges();
     });
@@ -356,6 +359,15 @@ opcionSeleccionMexicana = [
         this.datosTablaExtranjeros = data as unknown as SociosYAccionistasExtranjerosData[];
       });
   }
+  /** Método para obtener los datos de sucursales */
+  getSucursalData(): void {
+    this.registroComoEmpresa
+      .getSucursalData()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.sucursalDeData = data as unknown as SeleccionDeSucursalData[];
+      });
+  }
 
   /** Método para obtener los datos del país */
   getPaisData(): void {
@@ -383,8 +395,8 @@ opcionSeleccionMexicana = [
       id: 0
     };
 
-    this.datosTablaExtranjeros.push(NEW_ENTRY);
-    this.formularioEmpresa.patchValue({
+    this.datosTablaExtranjeros = [...this.datosTablaExtranjeros, NEW_ENTRY];
+        this.formularioEmpresa.patchValue({
       taxId: '',
       razonSocial: '',
       datosPais: '',
@@ -448,9 +460,6 @@ opcionSeleccionMexicana = [
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.formularioEmpresa?.disable();
-    }
-    else {
-      this.formularioEmpresa?.enable();
     }
 }
 

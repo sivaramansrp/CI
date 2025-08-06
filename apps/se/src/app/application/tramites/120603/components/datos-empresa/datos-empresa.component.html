@@ -39,6 +39,9 @@
 
     <app-tabla-dinamica 
      [configuracionTabla]="sucursalData" 
+     [tipoSeleccionTabla]="tipoSeleccionTabla" 
+     [datos]="sucursalDeData"
+     [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     ></app-tabla-dinamica>
 
     <ng-titulo titulo="Datos de la solicitud"></ng-titulo>
@@ -129,7 +132,7 @@
         </div>
         <div class="col-md-3">
             <label for="Teléfono" class="form-label">Teléfono:</label>
-            <input type="text" id="Teléfono" class="form-control" formControlName="telefono" readonly [disabled]="true">
+            <input type="text" id="Teléfono" class="form-control" formControlName="telefono" readonly [disabled]="true" [disabled]="esFormularioSoloLectura">
         </div>
     </div>
 
@@ -189,7 +192,7 @@
       @if(selectedTipoPersona === tipoPersonaFisica) {
      <div class="row">
         <div class="col-md-6">
-            <label for="nombre" class="form-label">Nombre:</label>
+            <label for="nombre" class="form-label">Nombre*:</label>
             <input type="text" id="nombre" class="form-control" formControlName="nombre"
             (change)="setValoresStore(formularioEmpresa,'nombre', 'setNombre')"
             [disabled]="esFormularioSoloLectura"
@@ -216,7 +219,7 @@
      <div class="row" >
         <div class="row" *ngIf="selectedTipoPersona !== tipoPersonaFisica">
          <div class="col-md-6">
-            <label for="razonSocial" class="form-label">Denominación o razón social:</label>
+            <label for="razonSocial" class="form-label">Denominación o razón social*:</label>
             <input type="text" id="razonSocial" class="form-control" formControlName="razonSocial"
             (change)="setValoresStore(formularioEmpresa,'razonSocial', 'setRazonSocial')"
             [disabled]="esFormularioSoloLectura"
