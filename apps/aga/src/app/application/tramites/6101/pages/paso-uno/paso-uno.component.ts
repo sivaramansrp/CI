@@ -1,12 +1,8 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Component } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Solicitud6101Store } from '../../estados/solicitud6101.store';
 import { SolicitudService } from '../../services/solicitud/solicitud.service';
-import { Subject } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * Componente que representa el primer paso de un trámite.
