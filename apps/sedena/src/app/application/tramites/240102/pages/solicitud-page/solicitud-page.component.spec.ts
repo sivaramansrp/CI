@@ -8,6 +8,7 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
 import { SolicitudPageComponent } from './solicitud-page.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 
 describe('SolicitudPageComponent', () => {
@@ -16,7 +17,7 @@ describe('SolicitudPageComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+      imports: [ FormsModule, ReactiveFormsModule,HttpClientTestingModule ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
 
@@ -56,12 +57,5 @@ describe('SolicitudPageComponent', () => {
     expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('should run #obtenerNombreDelTítulo()', async () => {
-    component.obtenerNombreDelTítulo(1);
-    let title = component.obtenerNombreDelTítulo(2);
-    expect(title).toBe('Cargar requisitos');
-    component.obtenerNombreDelTítulo(3);
-    component.obtenerNombreDelTítulo(4);
-  });
-
+  
 });

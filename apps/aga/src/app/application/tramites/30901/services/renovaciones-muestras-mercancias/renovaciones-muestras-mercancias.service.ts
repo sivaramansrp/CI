@@ -29,7 +29,7 @@ export class RenovacionesMuestrasMercanciasService {
    * @returns {Observable<ImportanteCatalogoSeleccion>} Un observable que emite el catálogo de opciones desplegables.
    */
   obtenerOpcionesDesplegables(): Observable<ImportanteCatalogoSeleccion> {
-    return this.httpClient.get<ImportanteCatalogoSeleccion>('../../../../../assets/json/30901/registro-muestras-mercancias.json');
+    return this.httpClient.get<ImportanteCatalogoSeleccion>('assets/json/30901/registro-muestras-mercancias.json');
   }
 
 }

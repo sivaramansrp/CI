@@ -140,28 +140,28 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   donanteDomicilio(): void {
     this.registroFormulario = this.fb.group({
       grupoReceptor: this.fb.group({
-        nombre: [this.solicitudState?.grupoReceptor?.nombre, []],
-        apellidoPrimer: [this.solicitudState?.grupoReceptor?.apellidoPrimer, []],
-        apellidoSegundo: [this.solicitudState?.grupoReceptor?.apellidoSegundo, []],
-        numeroFiscal: [this.solicitudState?.grupoReceptor?.numeroFiscal, [Validators.required]],
+        nombre: [this.solicitudState?.grupoReceptor?.nombre, [Validators.maxLength(20)]],
+        apellidoPrimer: [this.solicitudState?.grupoReceptor?.apellidoPrimer, [Validators.maxLength(20)]],
+        apellidoSegundo: [this.solicitudState?.grupoReceptor?.apellidoSegundo, [Validators.maxLength(20)]],
+        numeroFiscal: [this.solicitudState?.grupoReceptor?.numeroFiscal, [Validators.required, Validators.maxLength(30)]],
         razonSocial: [this.solicitudState?.grupoReceptor?.razonSocial, []],
       }),
-
+  
       grupoDeDirecciones: this.fb.group({
-        ciudad: [this.solicitudState?.grupoDeDirecciones?.ciudad, [Validators.required]],
-        calle: [this.solicitudState?.grupoDeDirecciones?.calle, [Validators.required]],
-        numeroLetra: [this.solicitudState?.grupoDeDirecciones?.numeroLetra, [Validators.required]],
-        telefono: [this.solicitudState?.grupoDeDirecciones?.telefono, [Validators.pattern(REGEX_SOLO_DIGITOS)]],
-        correoElectronico: [this.solicitudState?.grupoDeDirecciones?.correoElectronico, [Validators.required, Validators.email]],
+        ciudad: [this.solicitudState?.grupoDeDirecciones?.ciudad, [Validators.required, Validators.maxLength(50)]],
+        calle: [this.solicitudState?.grupoDeDirecciones?.calle, [Validators.required, Validators.maxLength(90)]],
+        numeroLetra: [this.solicitudState?.grupoDeDirecciones?.numeroLetra, [Validators.required, Validators.maxLength(30)]],
+        telefono: [this.solicitudState?.grupoDeDirecciones?.telefono, [Validators.required, Validators.pattern(/^\d+$/), Validators.maxLength(16)]],
+        correoElectronico: [this.solicitudState?.grupoDeDirecciones?.correoElectronico, [Validators.required, Validators.email, Validators.maxLength(50)]],
       }),
-
+  
       grupoRepresentativo: this.fb.group({
-        lugar: [this.solicitudState?.grupoRepresentativo?.lugar, [Validators.required, Validators.maxLength(40)]],
-        nombreExportador: [this.solicitudState?.grupoRepresentativo?.nombreExportador, [Validators.required, Validators.maxLength(40)]],
-        empresa: [this.solicitudState?.grupoRepresentativo?.empresa, [Validators.required, Validators.maxLength(40)]],
-        cargo: [this.solicitudState?.grupoRepresentativo?.cargo, [Validators.required, Validators.maxLength(40)]],
-        telefono: [this.solicitudState?.grupoRepresentativo?.telefono, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
-        correoElectronico: [this.solicitudState?.grupoRepresentativo?.correoElectronico, [Validators.required, Validators.email]],
+        lugar: [this.solicitudState?.grupoRepresentativo?.lugar, [Validators.required, Validators.maxLength(70)]],
+        nombreExportador: [this.solicitudState?.grupoRepresentativo?.nombreExportador, [Validators.required, Validators.maxLength(70)]],
+        empresa: [this.solicitudState?.grupoRepresentativo?.empresa, [Validators.required, Validators.maxLength(90)]],
+        cargo: [this.solicitudState?.grupoRepresentativo?.cargo, [Validators.required, Validators.maxLength(70)]],
+        telefono: [this.solicitudState?.grupoRepresentativo?.telefono, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS), Validators.maxLength(16)]],
+        correoElectronico: [this.solicitudState?.grupoRepresentativo?.correoElectronico, [Validators.required, Validators.email, Validators.maxLength(50)]],
       }),
     });
     this.inicializarEstadoFormulario();

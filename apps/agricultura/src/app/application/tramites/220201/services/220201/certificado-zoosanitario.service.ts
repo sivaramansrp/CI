@@ -12,8 +12,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { Observable, map } from 'rxjs';
-import { TercerosrelacionadosTable, TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
+import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
+import { DestinatarioForm } from '../../../220203/models/220203/importacion-de-acuicultura.module';
 
 /**
  * Servicio para la gestión de solicitudes del certificado zoosanitario.
@@ -210,7 +211,7 @@ export class CertificadoZoosanitarioServiceService {
     this.updateTercerosRelacionado(datos?.tercerosRelacionados || {} as TercerosrelacionadosdestinoTable[]);
     this.updateValidarEnvio(datos?.validarEnvio || {} as ValidarEnvio);
     this.zoosanitarioStore.updateFilaSolicitud(datos?.tablaDatos || [] as FilaSolicitud[]);
-    this.zoosanitarioStore.updatedatosForma(datos?.datosForma || [] as TercerosrelacionadosTable[]);
+    this.zoosanitarioStore.updatedatosForma(datos?.datosForma || [] as DestinatarioForm[]);
   }
   /**
  * @description Obtiene los datos de la solicitud a partir de una URL específica.

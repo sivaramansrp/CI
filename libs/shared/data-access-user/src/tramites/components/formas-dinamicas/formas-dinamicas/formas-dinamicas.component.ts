@@ -1,4 +1,4 @@
-import { AbstractControl, ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { CommonModule, NgTemplateOutlet } from '@angular/common';
 import { Component, HostListener, Input, OnInit, Output, TemplateRef, forwardRef } from '@angular/core';
 import { ModeloDeFormaDinamica, Validadores } from '../../../../core/models/shared/forms-model';
@@ -8,6 +8,7 @@ import { InputFecha } from '../../../../../src/core/models/shared/components.mod
 import { InputFechaComponent } from '../../input-fecha/input-fecha.component';
 import { InputRadioComponent } from '../../input-radio/input-radio.component';
 import { TituloComponent } from '../../titulo/titulo.component';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 import { ValidadoresDeFormulariosComponent } from '../../validadores-de-formularios/validadores-de-formularios/validadores-de-formularios.component';
 
@@ -44,7 +45,8 @@ import { ValidadoresDeFormulariosComponent } from '../../validadores-de-formular
     InputRadioComponent,
     TituloComponent,
     InputFechaComponent,
-    NgTemplateOutlet
+    NgTemplateOutlet,
+    TooltipModule
   ],
   templateUrl: './formas-dinamicas.component.html',
   styleUrl: './formas-dinamicas.component.scss',
@@ -155,6 +157,7 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   * `ModeloDeFormaDinamica`, que contiene información sobre el campo dinámico
   * relacionado con el botón clicado.
   */
+  // Se agregó 'type' porque el valor puede ser de cualquier tipo (string, number, boolean, etc.).
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @Output() emitirCambioDeValor: EventEmitter<{ campo: string; valor: any}> = new EventEmitter<{ campo: string; valor: any}>();
 
@@ -186,7 +189,7 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
  * };
  */
   public static onChange: (value: Record<string, unknown>) => void = () => {
-  // eslint-disable-next-line no-empty-function
+  // 
   };
   
   /**
@@ -208,7 +211,7 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
  * };
  */
   public static onTouched: () => void = () => {
-  // eslint-disable-next-line no-empty-function
+  // 
   };
   
   /**
@@ -285,14 +288,20 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
       if (!campo || !campo.campo || campo.tipoInput === 'button' || campo.tipoInput === '') {
         return;
       }
-  
+
+      campo.maxlength = campo?.maxlength ?? FormasDinamicasComponent.obtenerMaxlength(campo.validadores);
+
       if (!this.forma?.contains(campo.campo)) {
         const VALIDADORES = FormasDinamicasComponent.obtenerValidadores(campo.validadores ?? []);
         const DESACTIVADO = this.establecerDesactivar(campo.desactivado);
-        FORMGROUP[campo.campo] = this.fb.control(
-          { value: this.estado && this.estado[campo.campo] ? this.estado[campo.campo] : campo.valorPredeterminado, disabled: DESACTIVADO },
-          { validators: VALIDADORES }
-        );
+        const CONTROL = this.fb.control(
+        { value: this.estado && this.estado[campo.campo] ? this.estado[campo.campo] : campo.valorPredeterminado, disabled: DESACTIVADO },
+        { validators: VALIDADORES }
+      );
+
+        FORMGROUP[campo.campo] = CONTROL;
+        const VALIDATOR_RESULT = CONTROL.validator ? CONTROL.validator({} as AbstractControl) : null;
+        campo.esRequerido = Boolean(VALIDATOR_RESULT?.['required']);
       }
     });
 
@@ -322,6 +331,7 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   */
   static obtenerValidadores(listaDeValidadores: Validadores[]): ValidatorFn[] {
     const VALIDATORS: ValidatorFn[] = [];
+
     listaDeValidadores.forEach((validadore: Validadores) => {
       if (!validadore || !validadore.tipo) {
         return;
@@ -332,13 +342,27 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
       if (validadore.tipo.includes('minlength') && typeof validadore.valor === 'number') {
         VALIDATORS.push(Validators.minLength(validadore.valor));
       }
-      if (validadore.tipo.includes('maxlength') && typeof validadore.valor === 'number') {
-        VALIDATORS.push(Validators.maxLength(validadore.valor));
-      }
-      if (validadore.tipo.includes('pattern') && validadore.valor instanceof RegExp) {
-        VALIDATORS.push(Validators.pattern(validadore.valor));
-      }
     });
+
+    const PATTERN_VALIDATORS = listaDeValidadores.filter(v => v.tipo === 'pattern');
+    if (PATTERN_VALIDATORS.length > 0) {
+    VALIDATORS.push((control: AbstractControl): ValidationErrors | null => {
+      const VALOR = control.value;
+      if (VALOR === null || VALOR === '') {
+        return null;
+      }
+
+      for (const VALIDADOR of PATTERN_VALIDATORS) {
+        if (VALIDADOR.valor instanceof RegExp && !VALIDADOR.valor.test(VALOR)) {
+          const ERROR_KEY = VALIDADOR.tipo + '_' + (VALIDADOR.valor.toString().replace(/\W/g, ''));
+          return { [ERROR_KEY]: VALIDADOR.mensaje };
+        }
+      }
+
+      return null;
+    });
+    }
+
     return VALIDATORS;
   }
 
@@ -376,7 +400,6 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   * @param item El nombre del campo que se desea validar.
   * @returns {boolean} Un valor booleano que indica si el campo es válido.
   */
-  // eslint-disable-next-line class-methods-use-this
   public seRequiere(campo: string): boolean {
     const CONTROL = this.forma.get(campo);
     if (CONTROL && CONTROL.validator) {
@@ -420,6 +443,7 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   * eventoDeCambioDeValor({ target: { value: 'nuevo valor' } }, 'nombreCampo');
   * // Emitirá: { campo: 'nombreCampo', valor: 'nuevo valor' }
   */
+  // Se agregó 'type' porque el valor puede ser de cualquier tipo (string, number, boolean, etc.).
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 public eventoDeCambioDeValor(event: any, campo: string, tipo?: string): void {
   let VALOR;
@@ -520,6 +544,8 @@ registerOnChange(fn: (value: Record<string, unknown>) => void): void {
   * 
   * @memberof FormasDinamicasComponent
   */
+  /** // Si eliminas esta regla ESLint, marcará error porque el método no utiliza 'this', pero es 
+   * necesario para implementar la interfaz 'ControlValueAccessor'. */
   // eslint-disable-next-line class-methods-use-this
   registerOnTouched(fn: () => void): void {
     FormasDinamicasComponent.onTouched = fn;
@@ -650,5 +676,17 @@ registerOnChange(fn: (value: Record<string, unknown>) => void): void {
   public obtenerControlsPorFilas(row: number): ModeloDeFormaDinamica[] {
     return this.formularioDatos.filter(control => (control.row !== undefined ? control.row : 0) === row);
   }
-  
+
+  /**
+ * Obtiene el valor máximo de caracteres permitido (maxlength) de la lista de validadores de un campo.
+ * @param validadores - Arreglo de validadores asociados al campo.
+ * @returns El valor de maxlength si existe, o null en caso contrario.
+ */
+  public static obtenerMaxlength(validadores: Validadores[] | undefined): number | null {
+    if (validadores?.length) {
+      const MAXLENGTH = validadores.find(v => v.tipo === 'maxlength');
+      return MAXLENGTH && typeof MAXLENGTH.valor === 'number' ? MAXLENGTH.valor : null;
+    }
+    return null;
+  }
 }

@@ -39,6 +39,20 @@ export class DatosComponent implements OnInit, OnDestroy {
   @Output() mostrarErrorDirecto: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /**
+   * Evento que se emite para indicar si se debe mostrar un error en el número de folio de asignación.
+   * @type {EventEmitter<{mostrarError: boolean, valor: string}>}
+   * @description Este evento se utiliza para notificar al componente padre si se debe mostrar un error en el número de folio de asignación.
+   */
+  @Output() mostrarNumFolioAsignacionErrorDirecto: EventEmitter<{mostrarError: boolean, valor: string}> = new EventEmitter<{mostrarError: boolean, valor: string}>();
+
+  /**
+   * Evento que se emite para indicar si se debe mostrar un error al agregar datos.
+   * @type {EventEmitter<boolean>}
+   * @description Este evento se utiliza para notificar al componente padre si se debe mostrar un error al agregar datos.
+   */
+  @Output() mostrarAgregarErrorDirecto: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+  /**
    * Índice de la pestaña seleccionada.
    */
   indice: number = 1;
@@ -126,6 +140,22 @@ export class DatosComponent implements OnInit, OnDestroy {
    */
   mostrarErrorEvent(event: boolean) : void {
     this.mostrarErrorDirecto.emit(event);
+  }
+
+  /**
+   * Muestra un error en el número de folio de asignación.
+   * @param event - Indica si se debe mostrar un error en el número de folio de asignación.
+   */
+  mostrarNumFolioAsignacionErrorEvent(event: {mostrarError: boolean, valor: string}): void {
+    this.mostrarNumFolioAsignacionErrorDirecto.emit(event);
+  }
+
+  /**
+   * Muestra un error al agregar datos.
+   * @param event - Indica si se debe mostrar un error al agregar.
+   */
+  mostrarAgregarErrorEvento(event: boolean): void {
+    this.mostrarAgregarErrorDirecto.emit(event);
   }
 
   /**

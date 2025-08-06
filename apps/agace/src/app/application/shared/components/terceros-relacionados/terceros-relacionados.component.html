@@ -8,6 +8,7 @@
                 [estado]="importacionstate"
                 [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="establecerCambioDeValor($event)"
+                (emitirEventoDeClic)="buscarEvento()"
                 >
             </formas-dinamicas>
         </div>
@@ -18,16 +19,17 @@
         <app-tabla-dinamica
             [configuracionTabla]="configuracionTabla"
             [datos]="enlaceOperativoDatos"
-            [tipoSeleccionTabla]="checkbox">
+            [tipoSeleccionTabla]="checkbox"
+            (listaDeFilaSeleccionada)="onSeleccionCambiada($event)">
         </app-tabla-dinamica>
         <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="abrirModal(template)">
+            <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="abrirModalAgregar(template)">
                 Agregar
             </button>
-            <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura">
+            <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura || elementosSeleccionados.length !== 1" (click)="abrirModalModificar(template)">
                 Modificar
             </button>
-            <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura">
+            <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura || elementosSeleccionados.length === 0" (click)="eliminarElementosSeleccionados()">
                 Eliminar
             </button>
         </div>
@@ -46,7 +48,7 @@
 <!-- Modal -->
 <ng-template #template>
     <div class="modal-header">
-      <h4 class="modal-title pull-left">Agregar</h4>
+      <h4 class="modal-title pull-left">{{ esModalEdicion ? 'Modificar' : 'Agregar' }}</h4>
     </div>
     <div class="modal-body">
         <form [formGroup]="enlaceOperativoForm">
@@ -234,7 +236,7 @@
         </form>
       </div>
       <div class="modal-footer d-flex justify-content-end">
-        <button type="button" class="btn btn-primary">
+        <button type="button" class="btn btn-primary" (click)="guardarDatosFormulario()">
           Aceptar
         </button>
         <button type="button" class="btn btn-danger" (click)="modalRef?.hide()">

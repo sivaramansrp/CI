@@ -373,6 +373,8 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
       // Habilita los formularios si el estado permite edición
       this.fomentoExportacionForm.enable();
       this.formularioDireccion.enable();
+
+      this.formularioDireccion.get('pais')?.disable(); // Deshabilita el campo 'pais' del formulario de dirección.
     }
   }
 

@@ -1,3 +1,5 @@
+import { RFC_GENERICO } from "./constantes-generales";
+
 /**
  * API para recuperar el catálogo de aduanas
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/catalogo/swagger-ui/index.html#/Aduana./consulta-cat%C3%A1logo-aduanas
@@ -138,3 +140,99 @@ export const API_ENVIAR_FIRMA = 'api/tramite/firmar';
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/bandeja-tarea/swagger-ui/index.html#/Bandeja%20tarea/consultar-tareas-servicio
  */
 export const API_GET_BANDEJATAREA = 'bandeja-tarea/usuario/tarea';
+
+/**
+ * API para recuperar el catálogo de regímenes aduaneros.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Catalogos/consulta-regimenes
+ */
+export const API_GET_REGIMEN = `sat-t130118/catalogo/regimenes`;
+
+/**
+ * La clave del régimen aduanero por el que se filtrará la información.
+ */
+export const CLASIFICACION = '{cveRegimen}';
+
+/**
+ * API para recuperar la clasificación de un régimen aduanero.
+ * @param CLASIFICACION La clave del régimen aduanero
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Catalogos/consulta-clasificacion
+ */
+export const API_GET_REGIMENES_CLASIFICACION = `sat-t130118/catalogo/regimenes/${CLASIFICACION}/clasificacion`;
+
+/**
+ * API para recuperar el catálogo de países para el trámite T130118.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Catalogos/consulta-paises
+ */
+export const API_GET_PAISES_SAT_T130118 = 'sat-t130118/catalogo/paises';
+
+/**
+ * API para recuperar el catálogo de entidades federativas.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Catalogos/consulta-entidades-federativas
+ */
+export const API_GET_ENTIDADES_FEDERATIVAS = 'sat-t130118/catalogo/entidades-federativas';
+
+/**
+ * La clave de la entidad federativa por la que se filtrará la información.
+ */
+export const CVEENTIDAD = '{cveEntidad}';
+
+/**
+ * API para recuperar las unidades administrativas de una entidad federativa.
+ * @param CVEENTIDAD La clave de la entidad federativa
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Catalogos/consulta-unidades-administrativas
+ */
+export const API_GET_ENTIDADES_FEDERATIVAS_CLAVE = `sat-t130118/catalogo/entidad-federativa/${CVEENTIDAD}/unidades-administrativas`;
+
+/**
+ * API para recuperar el catálogo de fracciones arancelarias.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Catalogos/consulta-fraccion-arancelaria
+ */
+export const API_GET_FRACCION_ARANCELARIA = 'sat-t130118/catalogo/fracciones-arancelarias';
+
+/**
+ * La clave de la fracción arancelaria por la que se filtrará la información.
+ */
+export const CVEFRACCION = '{cveFraccion}';
+
+/**
+ * API para recuperar el catálogo de fracciones arancelarias.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Catalogos/consulta-unidades-medidas
+ */
+export const API_GET_FRACCION_ARANCELARIA_CVE = `sat-t130118/catalogo/fraccion-arancelaria/${CVEFRACCION}/unidades-medida`;
+
+/**
+ * API para recuperar el catálogo de subdivisiones y fracciones arancelarias.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Catalogos/consulta-subdivisiones-fracciones-arancelarias
+ */
+export const API_GET_NICO = `sat-t130118/catalogo/fraccion-arancelaria/${CVEFRACCION}/subdiviciones`;
+
+/**
+ * ID de la solicitud que se utilizará en las rutas de la API.
+ */
+export const IDSOLICITUD = '{idSolicitud}';
+
+/**
+ * API para guardar el acuse de una solicitud.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/guardar-documento
+ */
+export const API_POST_GUARDAR_ACUSE = `sat-t130118/solicitud/${IDSOLICITUD}/acuse/guardar`;
+
+/**
+ * API para generar la vista previa del acuse de una solicitud.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/genera-documento
+ */
+export const API_POST_VISTA_PREVIA = `sat-t130118/solicitud/${IDSOLICITUD}/acuse/vista-previa`;
+
+/**
+ * API para obtener los documentos
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/consulta-documentos
+ */
+export const API_GET_DOCUMENTOS130118 = 'sat-t130118/solicitud/documentos';
+
+/**
+ * Ruta de la API para obtener la información del contribuyente IDC.
+ * Utiliza el RFC genérico como parte de la URL.
+ *
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/idc/swagger-ui/index.html#/idc-ws-end-point-controller/informacionContribuyente
+ */
+export const API_GET_IDC_CONTRIBUYENTE = `idc/contribuyente/${RFC_GENERICO}/informacion`;

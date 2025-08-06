@@ -1,290 +1,184 @@
 <div class="container">
   <form [formGroup]="formularioEmpresa">
+    @if(consultaState && consultaState.parameter !== "READ_PROCEDURE")
+    {
     <ng-titulo titulo="Representación federal"></ng-titulo>
     <div class="row">
       <div class="col-md-3">
-        <app-catalogo-select
-          id="estado"
-          [catalogo]="federalEstatal"
-          [label]="'Estado'"
-          [required]="false"
-          name="Estado"
-          formControlName="estado"
-          [isDisabled]="esFormularioSoloLectura ? true : false"
-          (change)="setValoresStore(formularioEmpresa, 'estado', 'setEstado')"
-        >
+        <app-catalogo-select id="estado" [catalogo]="federalEstatal" [label]="'Estado'" [required]="false" name="Estado"
+          formControlName="estado" [isDisabled]="esFormularioSoloLectura ? true : false"
+          (change)="setValoresStore(formularioEmpresa, 'estado', 'setEstado')">
         </app-catalogo-select>
       </div>
       <div class="col-md-3">
-        <app-catalogo-select
-          id="representacionFederal"
-          [catalogo]="federalEstatal"
-          [label]="'Representación federal'"
-          [required]="true"
-          name="Representación federal"
-          formControlName="representacionFederal"
-          [isDisabled]="esFormularioSoloLectura ? true : false"
-          (change)="
+        <app-catalogo-select id="representacionFederal" [catalogo]="federalEstatal" [label]="'Representación federal'"
+          [required]="true" name="Representación federal" formControlName="representacionFederal"
+          [isDisabled]="esFormularioSoloLectura ? true : false" (change)="
             setValoresStore(
               formularioEmpresa,
               'representacionFederal',
               'setRepresentacionFederal'
             )
-          "
-        >
+          ">
         </app-catalogo-select>
       </div>
     </div>
 
     <h6 class="gap">Selección de sucursal</h6>
 
-    <app-tabla-dinamica
-      [configuracionTabla]="tableHeader"
-      [datos]="tablaDatosSucursal"
-    ></app-tabla-dinamica>
-
+    <app-tabla-dinamica [configuracionTabla]="tableHeader" [datos]="tablaDatosSucursal"></app-tabla-dinamica>
+    }
     <ng-titulo titulo="Datos de la solicitud"></ng-titulo>
 
     <div class="row">
       <div class="col-md-4">
-        <app-catalogo-select
-          [catalogo]="federalEstatal"
-          [label]="'Tipo de empresa'"
-          [required]="true"
-          name="Tipo de empresa"
-          formControlName="tipoEmpresa"
-          [isDisabled]="esFormularioSoloLectura ? true : false"
+        <app-catalogo-select [catalogo]="federalEstatal" [label]="'Tipo de empresa'" [required]="true"
+          name="Tipo de empresa" formControlName="tipoEmpresa" [isDisabled]="esFormularioSoloLectura ? true : false"
           (change)="
             setValoresStore(formularioEmpresa, 'tipoEmpresa', 'setTipoEmpresa')
-          "
-        ></app-catalogo-select>
+          "></app-catalogo-select>
       </div>
       <div class="col-md-8">
         <label for="especifique" class="form-label">Especifique:</label>
-        <input
-          type="text"
-          class="form-control"
-          id="especifique"
-          formControlName="especifique"
-        />
+        <input type="text" class="form-control" id="especifique" formControlName="especifique" />
       </div>
       <div class="col-md-12">
-        <label for="actividad-economica-preponderante" class="form-label"
-          >Clasificación del Catálogo de Actividades Económicas del SAT conforme
-          a la Actividad Económica Preponderante:</label
-        >
-        <input
-          type="text"
-          id="actividad-economica-preponderante"
-          class="form-control"
-          name="actividadEconomicaPreponderante"
-          formControlName="actividadEconomicaPreponderante"
-          (change)="
+        <label for="actividad-economica-preponderante" class="form-label">Clasificación del Catálogo de Actividades
+          Económicas del SAT conforme
+          a la Actividad Económica Preponderante:</label>
+        <input type="text" id="actividad-economica-preponderante" class="form-control"
+          name="actividadEconomicaPreponderante" formControlName="actividadEconomicaPreponderante" (change)="
             setValoresStore(
               formularioEmpresa,
               'actividadEconomicaPreponderante',
               'setActividadEconomicaPreponderante'
             )
-          "
-        />
+          " />
       </div>
       <div class="col-md-12">
         <label for="descripcion" class="form-label">Descripción de la Actividad Económica del SAT:</label>
-        <textarea
-          id="descripcion"
-          class="form-control"
-          formControlName="descripcion"
-          (change)="
+        <textarea id="descripcion" class="form-control" formControlName="descripcion" (change)="
             setValoresStore(
               formularioEmpresa,
               'descripcion',
               'setDescripcion'
             )
-          "
-        ></textarea>
+          "></textarea>
       </div>
     </div>
 
     <div class="row">
-      <ng-titulo
-        titulo="Domicilio donde se almacenarán las mercancías a importar"
-      ></ng-titulo>
+      <ng-titulo titulo="Domicilio donde se almacenarán las mercancías a importar"></ng-titulo>
 
       <div class="col-md-4">
         <label for="País" class="form-label">País:</label>
-        <input
-          type="text"
-          id="País"
-          class="form-control"
-          formControlName="pais"
-          (change)="
+        <input type="text" id="País" class="form-control" formControlName="pais" (change)="
             setValoresStore(
               formularioEmpresa,
               'pais',
               'setPais'
             )
-          "
-        />
+          " />
       </div>
       <div class="col-md-4">
         <label for="Código postal" class="form-label">Código postal: </label>
-        <input
-          type="text"
-          id="Código postal"
-          class="form-control"
-          formControlName="codigoPostal"
-          (change)="
+        <input type="text" id="Código postal" class="form-control" formControlName="codigoPostal" (change)="
             setValoresStore(
               formularioEmpresa,
               'codigoPostal',
               'setCodigoPostal'
             )
-          "
-        />
+          " />
       </div>
       <div class="col-md-4">
         <label for="Estado" class="form-label">Estado</label>
-        <input
-          type="text"
-          id="Estado"
-          class="form-control"
-          formControlName="estado"
-          (change)="
+        <input type="text" id="Estado" class="form-control" formControlName="estado" (change)="
             setValoresStore(
               formularioEmpresa,
               'estado',
               'setEstadoDomicilio'
             )
-          "
-        />
+          " />
       </div>
       <div class="col-md-4">
         <label for="alcaldía:" class="form-label">Municipio o alcaldía:</label>
-        <input
-          type="text"
-          id="alcaldía:"
-          class="form-control"
-          formControlName="municipioAlcaldia"
-          (change)="
+        <input type="text" id="alcaldía:" class="form-control" formControlName="municipioAlcaldia" (change)="
             setValoresStore(
               formularioEmpresa,
               'municipioAlcaldia',
               'setMunicipioAlcaldia'
             )
-          "
-        />
+          " />
       </div>
       <div class="col-md-4">
         <label for="Localidad" class="form-label">Localidad:</label>
-        <input
-          type="text"
-          id="Localidad"
-          class="form-control"
-          formControlName="localidad"
-          (change)="
+        <input type="text" id="Localidad" class="form-control" formControlName="localidad" (change)="
             setValoresStore(
               formularioEmpresa,
               'localidad',
               'setLocalidad'
             )
-          "
-        />
+          " />
       </div>
       <div class="col-md-4">
         <label for="Colonia" class="form-label">Colonia:</label>
-        <input
-          type="text"
-          id="Colonia"
-          class="form-control"
-          formControlName="colonia"
-          (change)="
+        <input type="text" id="Colonia" class="form-control" formControlName="colonia" (change)="
             setValoresStore(
               formularioEmpresa,
               'colonia',
               'setColonia'
             )
-          "
-        />
+          " />
       </div>
       <div class="col-md-8">
         <label for="Calle" class="form-label">Calle:</label>
-        <input
-          type="text"
-          id="Calle"
-          class="form-control"
-          formControlName="calle"
-          (change)="
+        <input type="text" id="Calle" class="form-control" formControlName="calle" (change)="
             setValoresStore(
               formularioEmpresa,
               'calle',
               'setCalle'
             )
-          "
-        />
+          " />
       </div>
       <div class="col-md-4">
         <label for="exterior" class="form-label">Número exterior:</label>
-        <input
-          type="text"
-          id="exterior"
-          class="form-control"
-          formControlName="numeroExterior"
-          (change)="
+        <input type="text" id="exterior" class="form-control" formControlName="numeroExterior" (change)="
             setValoresStore(
               formularioEmpresa,
               'numeroExterior',
               'setNumeroExterior'
             )
-          "
-        />
+          " />
       </div>
       <div class="col-md-4">
         <label for="interior" class="form-label">Número interior:</label>
-        <input
-          type="text"
-          id="interior"
-          class="form-control"
-          formControlName="numeroInterior"
-          (change)="
+        <input type="text" id="interior" class="form-control" formControlName="numeroInterior" (change)="
             setValoresStore(
               formularioEmpresa,
               'numeroInterior',
               'setNumeroInterior'
             )
-          "
-        />
+          " />
       </div>
       <div class="col-md-2">
         <label for="Lada" class="form-label">Lada:</label>
-        <input
-          type="text"
-          id="Lada"
-          class="form-control"
-          formControlName="lada"
-          (change)="
+        <input type="text" id="Lada" class="form-control" formControlName="lada" (change)="
             setValoresStore(
               formularioEmpresa,
               'lada',
               'setLada'
             )
-          "
-        />
+          " />
       </div>
       <div class="col-md-3">
         <label for="Teléfono" class="form-label">Teléfono:</label>
-        <input
-          type="text"
-          id="Teléfono"
-          class="form-control"
-          formControlName="telefono"
-          (change)="
+        <input type="text" id="Teléfono" class="form-control" formControlName="telefono" (change)="
             setValoresStore(
               formularioEmpresa,
               'telefono',
               'setTelefono'
             )
-          "
-        />
+          " />
       </div>
     </div>
 
@@ -292,124 +186,76 @@
       <ng-titulo titulo="Datos generales socios accionistas"></ng-titulo>
       <div class="col-md-6">
         <label class="form-label">Nacionalidad mexicana:</label>
-        <app-input-radio
-          [radioOptions]="opcionSeleccionMexicana"
-          [isRequired]="false"
-          [layout]="'horizontal'"
+        <app-input-radio [radioOptions]="opcionSeleccionMexicana" [isRequired]="false" [layout]="'horizontal'"
           formControlName="nacionalidad"
-          (valueChange)="cambioDeRadio($event, 'nacionalidad', 'setNacionalidad')"
-        ></app-input-radio>
+          (valueChange)="cambioDeRadio($event, 'nacionalidad', 'setNacionalidad')"></app-input-radio>
       </div>
       <div class="col-md-6">
         <label class="form-label">Tipo de persona:</label>
-        <app-input-radio
-          [radioOptions]="opcionSeleccionPersona"
-          [isRequired]="false"
-          [layout]="'horizontal'"
+        <app-input-radio [radioOptions]="opcionSeleccionPersona" [isRequired]="false" [layout]="'horizontal'"
           formControlName="tipoDePersona"
-          (valueChange)="cambioDeRadio($event, 'tipoDePersona', 'setTipoDePersona')"
-        ></app-input-radio>
+          (valueChange)="cambioDeRadio($event, 'tipoDePersona', 'setTipoDePersona')"></app-input-radio>
       </div>
     </div>
     <div class="row">
       <div class="col-md-6">
         <label for="taxId" class="form-label">TAX ID*:</label>
-        <input
-          type="text"
-          id="taxId"
-          class="form-control"
-          formControlName="taxId"
-          (change)="setValoresStore(formularioEmpresa, 'taxId', 'setTaxId')"
-        />
+        <input type="text" id="taxId" class="form-control" formControlName="taxId"
+          (change)="setValoresStore(formularioEmpresa, 'taxId', 'setTaxId')" />
       </div>
     </div>
     <div class="row">
       <div class="col-md-6">
-        <label for="Denominación" class="form-label"
-          >Denominación o razón social:</label
-        >
-        <input
-          type="text"
-          id="denominación"
-          class="form-control"
-          formControlName="denominacion"
-          (change)="
+        <label for="Denominación" class="form-label">Denominación o razón social:</label>
+        <input type="text" id="denominación" class="form-control" formControlName="denominacion" (change)="
             setValoresStore(
               formularioEmpresa,
               'denominacion',
               'setDenominacion'
             )
-          "
-        />
+          " />
       </div>
       <div class="col-md-6">
-        <app-catalogo-select
-          [catalogo]="federalEstatal"
-          [label]="'País'"
-          [required]="true"
-          name="País"
-          formControlName="datosPais"
-          [isDisabled]="esFormularioSoloLectura ? true : false"
-          (change)="setValoresStore(formularioEmpresa, 'datosPais', 'setDatosPais')"
-        ></app-catalogo-select>
+        <app-catalogo-select [catalogo]="federalEstatal" [label]="'País'" [required]="true" name="País"
+          formControlName="datosPais" [isDisabled]="esFormularioSoloLectura ? true : false"
+          (change)="setValoresStore(formularioEmpresa, 'datosPais', 'setDatosPais')"></app-catalogo-select>
       </div>
       <div class="col-md-6">
         <label for="Código postal" class="form-label">Código postal:</label>
-        <input
-          type="text"
-          id="Código postal"
-          class="form-control"
-          formControlName="datosCodigoPostal"
-          (change)="
+        <input type="text" id="Código postal" class="form-control" formControlName="datosCodigoPostal" (change)="
             setValoresStore(
               formularioEmpresa,
               'datosCodigoPostal',
               'setDatosCodigoPostal'
             )
-          "
-        />
+          " />
       </div>
       <div class="col-md-6">
         <label for="Estado" class="form-label">Estado:</label>
-        <input
-          type="text"
-          id="Estado"
-          class="form-control"
-          formControlName="datosEstado"
-          (change)="
+        <input type="text" id="Estado" class="form-control" formControlName="datosEstado" (change)="
             setValoresStore(formularioEmpresa, 'datosEstado', 'setDatosEstado')
-          "
-        />
+          " />
       </div>
       <div class="col-md-6">
-        <label for="Correo electrónico" class="form-label"
-          >Correo electrónico:</label
-        >
-        <input
-          type="text"
-          id="Correo electrónico"
-          class="form-control"
-          formControlName="correoElectronico"
-          (change)="
+        <label for="Correo electrónico" class="form-label">Correo electrónico:</label>
+        <input type="text" id="Correo electrónico" class="form-control" formControlName="correoElectronico" (change)="
             setValoresStore(
               formularioEmpresa,
               'correoElectronico',
               'setCorreoElectronico'
             )
-          "
-        />
+          " />
       </div>
       <div class="col-md-12 d-flex justify-content-end mt-2 mb-4">
         <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Agregar</button>
       </div>
     </div>
 
-    <app-tabla-dinamica
-      [tipoSeleccionTabla]="tipoSeleccionTabla"
-      [configuracionTabla]="configuracionTabla"
+    <h6 class="margin-header">Socios y Accionistas</h6>
+    <h6>Datos de los socios y/o accionistas:</h6>
+    <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="configuracionTabla"
       [datos]="datosGenerales"
-      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
-    ></app-tabla-dinamica>
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"></app-tabla-dinamica>
 
     <div class="text-end">
       <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Eliminar</button>
@@ -418,19 +264,17 @@
     <h6 class="margin-header">Socios y Accionistas Extranjeros</h6>
     <h6>Datos de los socios y/o accionistas:</h6>
 
-    <app-tabla-dinamica
-      [tipoSeleccionTabla]="tipoSeleccionTabla"
-      [configuracionTabla]="tableHeaderExtranjeros"
+    <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="tableHeaderExtranjeros"
       [datos]="datosTablaExtranjeros"
-      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
-    ></app-tabla-dinamica>
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"></app-tabla-dinamica>
 
     <div class="text-end mt-5">
       <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Eliminar</button>
     </div>
-
-    <btn-continuar [datos]="datosPasos"></btn-continuar>
-
+   @if(consultaState && consultaState.parameter !== "READ_PROCEDURE")
+    {
+    <ng-titulo titulo="Cargar archivos"></ng-titulo>
     <ng-alert [CONTENIDO]="DATOS_EMPRESA"></ng-alert>
+    }
   </form>
 </div>

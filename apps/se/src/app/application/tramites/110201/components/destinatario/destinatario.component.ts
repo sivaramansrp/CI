@@ -1,27 +1,29 @@
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import {
   Catalogo,
-  CatalogoSelectComponent,
   ConsultaioQuery,
   ConsultaioState,
   TituloComponent,
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
-import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
+import { CatalogoSelectComponent, CatalogosSelect } from '@libs/shared/data-access-user/src';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
-import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
+import { OPTIONS_NACION, OPTIONS_TRANSPORTE } from '../../models/registro.model';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import {
   Solicitud110201State,
   Tramite110201Store,
 } from '../../state/Tramite110201.store';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
 import { RegistroService } from '../../services/registro.service';
+import { Tooltip } from 'bootstrap';
 import { Tramite110201Query } from '../../state/Tramite110201.query';
+
 /**
  * Componente que representa el formulario de destinatario en el trámite.
  */
@@ -37,16 +39,16 @@ import { Tramite110201Query } from '../../state/Tramite110201.query';
   templateUrl: './destinatario.component.html',
   styleUrl: './destinatario.component.css',
 })
-export class DestinatarioComponent implements OnInit, OnDestroy {
+export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
      * Subject para destruir notificador.
      */
-    consultaDatos!: ConsultaioState;
-     /**
-     * Indica si el formulario está en modo solo lectura.
-     * Cuando es `true`, los campos del formulario no se pueden editar.
-     */
-    soloLectura: boolean = false;
+  consultaDatos!: ConsultaioState;
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  soloLectura: boolean = false;
   /**
    * Formulario reactivo para el destinatario.
    */
@@ -68,11 +70,6 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   public solicitudState!: Solicitud110201State;
 
   /**
-   * Notificador para destruir observables al destruir el componente.
-   */
-  public destroyNotifier$: Subject<void> = new Subject();
-
-  /**
    * Indica si el formulario está deshabilitado.
    */
   isDisabled: boolean = false;
@@ -81,12 +78,19 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * Indica si el formulario está vacío.
    */
   estaVacio: boolean = false;
+
   /**
-   * Opciones del catálogo.
-   * Contiene una lista de objetos del catálogo obtenidos desde el servicio.
-   * Estas opciones se utilizan para poblar los selectores en el formulario.
+   * Opciones del catálogo de países de destino.
+   * Contiene la configuración y lista de países disponibles para seleccionar como destino.
    */
-  options!: Catalogo[];
+  public nacionOptions = OPTIONS_NACION;
+
+  /**
+   * Opciones del catálogo de medios de transporte.
+   * Contiene la configuración y lista de medios de transporte disponibles para la mercancía.
+   */
+  public transporteOptions = OPTIONS_TRANSPORTE;
+
   /**
    * Opciones del catálogo de transporte.
    * Contiene una lista de objetos del catálogo obtenidos desde el servicio.
@@ -94,10 +98,10 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    */
   option!: Catalogo[];
 
-/**
- * Notificador para destruir observables al destruir el componente.
- * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.
- */
+  /**
+   * Notificador para destruir observables al destruir el componente.
+   * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.
+   */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
@@ -114,11 +118,12 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     public store: Tramite110201Store,
     private query: Tramite110201Query,
     private validacionesService: ValidacionesFormularioService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private elRef: ElementRef
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
-        takeUntil(this.destroyNotifier$),
+        takeUntil(this.destroyed$),
         map((seccionState) => {
           this.consultaDatos = seccionState;
           this.soloLectura = this.consultaDatos.readonly;
@@ -152,32 +157,43 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.registroService
       .getRegistroTomaMuestrasMercanciasData().pipe(
-        takeUntil(this.destroyNotifier$)
+        takeUntil(this.destroyed$)
       )
       .subscribe((resp) => {
         if (resp) {
           this.registroService.actualizarEstadoFormulario(resp);
         }
       });
+
     this.getPaisDestino();
     this.getTransporte();
     this.inicializarEstadoFormulario();
 
     this.query.selectSolicitud$
       .pipe(
-        takeUntil(this.destroyNotifier$),
+        takeUntil(this.destroyed$),
         map((seccionState) => {
           this.solicitudState = seccionState;
         })
       )
       .subscribe();
     this.donanteDomicilio();
-
   }
-/**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.
-   * Además, obtiene la información del catálogo de mercancía.
+  /**
+   * Inicializa los tooltips después de que la vista se haya inicializado.
+   * Utiliza Bootstrap para crear tooltips en los elementos con el atributo `data-bs-toggle="tooltip"`.
+   * Este método se ejecuta una vez que la vista del componente ha sido completamente renderizada.
    */
+  ngAfterViewInit(): void {
+    const TOOLTIP_TRIGGER_LIST = this.elRef.nativeElement.querySelectorAll('[data-bs-toggle="tooltip"]');
+    TOOLTIP_TRIGGER_LIST.forEach((tooltipTriggerEl: unknown) => {
+      return new Tooltip(tooltipTriggerEl as Element);
+    });
+  }
+  /**
+     * Evalúa si se debe inicializar o cargar datos en el formulario.
+     * Además, obtiene la información del catálogo de mercancía.
+     */
   inicializarEstadoFormulario(): void {
     if (this.soloLectura) {
       this.guardarDatosFormulario();
@@ -202,11 +218,10 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    */
   getPaisDestino(): void {
     this.registroService
-      .getPaisDestino().pipe(takeUntil(this.destroyed$))
+      .getPaisDestino()
+      .pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
-       if (resp.code === 200) {
-          this.options = resp.data as Catalogo[];
-        }
+        this.nacionOptions.catalogos = resp as Catalogo[];
       });
   }
 
@@ -216,10 +231,8 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   getTransporte(): void {
     this.registroService
       .getTransporte().pipe(takeUntil(this.destroyed$))
-      .subscribe((resp) => {
-        if (resp.code === 200) {
-          this.option = resp.data as Catalogo[];
-        }
+      .subscribe((resp): void => {
+        this.transporteOptions.catalogos = resp as Catalogo[];
       });
   }
 
@@ -267,26 +280,26 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   /**
    * Configura el formulario reactivo con los valores iniciales del estado.
    */
- donanteDomicilio(): void {
-  this.registroForm = this.fb.group({
-    validacionForm: this.fb.group({
-      nacion: [{ value: this.solicitudState?.nacion, disabled: this.soloLectura }],
-      transporte: [{ value: this.solicitudState?.transporte, disabled: this.soloLectura }, [Validators.required]],
-      nombre: [{ value: this.solicitudState?.nombre, disabled: this.soloLectura }, [Validators.required]],
-      apellidoPrimer: [{ value: this.solicitudState?.apellidoPrimer, disabled: this.soloLectura }, [Validators.required]],
-      apellidoSegundo: [{ value: this.solicitudState?.apellidoSegundo, disabled: this.soloLectura }, [Validators.required]],
-      numeroFiscal: [{ value: this.solicitudState?.numeroFiscal, disabled: this.soloLectura }, [Validators.required]],
-      razonSocial: [{ value: this.solicitudState?.razonSocial, disabled: this.soloLectura }, [Validators.required]],
-      ciudad: [{ value: this.solicitudState?.ciudad, disabled: this.soloLectura }, [Validators.required]],
-      calle: [{ value: this.solicitudState?.calle, disabled: this.soloLectura }, [Validators.required]],
-      numeroLetra: [{ value: this.solicitudState?.numeroLetra, disabled: this.soloLectura }, [Validators.required]],
-      lada: [{ value: this.solicitudState?.lada, disabled: this.soloLectura }, [Validators.required]],
-      telefono: [{ value: this.solicitudState?.telefono, disabled: this.soloLectura }, [Validators.required, Validators.pattern(/^\d+$/)]],
-      fax: [{ value: this.solicitudState?.fax, disabled: this.soloLectura }, [Validators.pattern(/^\d+$/)]],
-      correoElectronico: [{ value: this.solicitudState?.correoElectronico, disabled: this.soloLectura }, [Validators.required, Validators.email]],
-    }),
-  });
-}
+  donanteDomicilio(): void {
+    this.registroForm = this.fb.group({
+      validacionForm: this.fb.group({
+        nacion: [{ value: this.solicitudState?.nacion, disabled: this.soloLectura }, [Validators.required]],
+        transporte: [{ value: this.solicitudState?.transporte, disabled: this.soloLectura }, [Validators.required]],
+        nombre: [{ value: this.solicitudState?.nombre, disabled: this.soloLectura }, [Validators.required]],
+        apellidoPrimer: [{ value: this.solicitudState?.apellidoPrimer, disabled: this.soloLectura }, [Validators.required]],
+        apellidoSegundo: [{ value: this.solicitudState?.apellidoSegundo, disabled: this.soloLectura }, [Validators.required]],
+        numeroFiscal: [{ value: this.solicitudState?.numeroFiscal, disabled: this.soloLectura }, [Validators.required]],
+        razonSocial: [{ value: this.solicitudState?.razonSocial, disabled: this.soloLectura }, [Validators.required]],
+        ciudad: [{ value: this.solicitudState?.ciudad, disabled: this.soloLectura }, [Validators.required]],
+        calle: [{ value: this.solicitudState?.calle, disabled: this.soloLectura }, [Validators.required]],
+        numeroLetra: [{ value: this.solicitudState?.numeroLetra, disabled: this.soloLectura }, [Validators.required]],
+        lada: [{ value: this.solicitudState?.lada, disabled: this.soloLectura }, [Validators.required]],
+        telefono: [{ value: this.solicitudState?.telefono, disabled: this.soloLectura }, [Validators.required, Validators.pattern(/^\d+$/)]],
+        fax: [{ value: this.solicitudState?.fax, disabled: this.soloLectura }, [Validators.pattern(/^\d+$/)]],
+        correoElectronico: [{ value: this.solicitudState?.correoElectronico, disabled: this.soloLectura }, [Validators.required, Validators.email]],
+      }),
+    });
+  }
 
   /**
    * Método que se ejecuta al destruir el componente.
@@ -294,7 +307,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(): void {
 
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }

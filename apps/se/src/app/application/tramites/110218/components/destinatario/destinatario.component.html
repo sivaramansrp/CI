@@ -6,58 +6,48 @@
             <div class="row">
 
                 <div class="col-md-4">
-                    <label class="form-label" for="nombre">Nombre(s)*:</label>
+                    <label class="form-label" for="nombre">Nombre(s):</label>
                     <input type="text" class="form-control" id="nombre" formControlName="nombre"
                     [class.bg-white]="!datosDelDestinatario.get('nombre')?.disabled"
-                        [class.is-invalid]="datosDelDestinatario.get('nombre')?.touched && datosDelDestinatario.get('nombre')?.invalid"
+                    placeholder="Pedro"
                         (change)="setValorStore(datosDelDestinatario,'nombre')">
-                    <div class="invalid-feedback">
-                        Corrija el nombre.
-                    </div>
+                   
                 </div>
 
                 <div class="col-md-4">
-                    <label class="form-label" for="primerApellido">Primer apellido*:</label>
+                    <label class="form-label" for="primerApellido">Primer apellido:</label>
                     <input type="text" class="form-control" id="primerApellido" formControlName="primerApellido"
                     [class.bg-white]="!datosDelDestinatario.get('primerApellido')?.disabled"
-                        [class.is-invalid]="datosDelDestinatario.get('primerApellido')?.touched && datosDelDestinatario.get('primerApellido')?.invalid"
+                    placeholder="Juarez"
                         (change)="setValorStore(datosDelDestinatario,'primerApellido')">
-                    <div class="invalid-feedback">
-                        Corrija el nombre.
-                    </div>
+                   
                 </div>
 
                 <div class="col-md-4">
-                    <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
-                    <input type="text" class="form-control" id="segundoApellido" formControlName="segundoApellido" [class.is-invalid]="datosDelDestinatario.get('segundoApellido')?.touched && datosDelDestinatario.get('segundoApellido')?.invalid"
+                    <label class="form-label" for="segundoApellido">Segundo apellido:</label>
+                    <input type="text" class="form-control" id="segundoApellido" formControlName="segundoApellido" 
                         (change)="setValorStore(datosDelDestinatario,'segundoApellido')"
+                        placeholder="Hernández"
                         [class.bg-white]="!datosDelDestinatario.get('segundoApellido')?.disabled">
-                    <div class="invalid-feedback">
-                        Este campo es obligatorio.
-                    </div>
+                    
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-4 mt-4">
                     <label class="form-label" for="numeroderegistroFiscal">Número de registro fiscal*:</label>
                     <input type="text" class="form-control" id="numeroderegistroFiscal"
-                        placeholder="12867612783" formControlName="numeroderegistroFiscal"
-                        [class.is-invalid]="datosDelDestinatario.get('numeroderegistroFiscal')?.touched && datosDelDestinatario.get('numeroderegistroFiscal')?.invalid"
+                        formControlName="numeroderegistroFiscal"
+                        placeholder="OBAE800904L9"
                         (change)="setValorStore(datosDelDestinatario,'numeroderegistroFiscal')"
                         [class.bg-white]="!datosDelDestinatario.get('numeroderegistroFiscal')?.disabled">
-                    <div class="invalid-feedback">
-                        Corrija el RFC.
-                    </div>
+                  
                 </div>
 
-                <div class="col-md-8">
-                    <label class="form-label" for="razonSocial">Razón social*:</label>
+                <div class="col-md-8 mt-4">
+                    <label class="form-label" for="razonSocial">Razón social:</label>
                     <input type="text" class="form-control" id="razonSocial" formControlName="razonSocial"
-                        [class.is-invalid]="datosDelDestinatario.get('razonSocial')?.touched && datosDelDestinatario.get('razonSocial')?.invalid"
                         (change)="setValorStore(datosDelDestinatario,'razonSocial')"
                         [class.bg-white]="!datosDelDestinatario.get('razonSocial')?.disabled">
-                    <div class="invalid-feedback">
-                        Este campo es obligatorio.
-                    </div>
+                    
                 </div>
 
             </div>
@@ -91,8 +81,8 @@
                     <div class="invalid-feedback">Este campo es obligatorio.</div>
                 </div>
 
-                <div class="col-md-8">
-                    <label class="form-label" for="ciudad">Ciudad (población, estado o provincia) *:</label>
+                <div class="col-md-8 mt-4">
+                    <label class="form-label" for="ciudad">Ciudad (población, estado o provincia)*:</label>
                     <input type="text" class="form-control"id="ciudad" placeholder="CIUDAD"
                         formControlName="ciudad"
                         [class.is-invalid]="domicilioDelDestinatario.get('ciudad')?.touched && domicilioDelDestinatario.get('ciudad')?.invalid"
@@ -101,7 +91,7 @@
                     <div class="invalid-feedback">Este campo es obligatorio.</div>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-4 mt-4">
                     <label class="form-label" for="correoElectronico">Correo electrónico*:</label>
                     <input type="email" class="form-control" id="correoElectronico"
                         placeholder="correo@correo.com" formControlName="correoElectronico"
@@ -111,14 +101,14 @@
                     <div class="invalid-feedback">Ingrese una dirección de correo válida.</div>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-4 mt-4">
                     <label class="form-label" for="fax">Fax:</label>
                     <input type="text" class="form-control"id="fax" placeholder="546456" formControlName="fax"
                         (change)="setValorStore(domicilioDelDestinatario,'fax')"
                         [class.bg-white]="!domicilioDelDestinatario.get('fax')?.disabled">
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-4 mt-4">
                     <label class="form-label" for="telefono">Teléfono:</label>
                     <input type="text" class="form-control"id="telefono" placeholder="5555687"
                         formControlName="telefono" (change)="setValorStore(domicilioDelDestinatario,'telefono')"

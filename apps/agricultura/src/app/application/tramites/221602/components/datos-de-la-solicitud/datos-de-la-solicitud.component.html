@@ -1,7 +1,8 @@
 <div class="custom-table-wrapper">
   <div class="container">
-    <div class="header">
-      <span class="plus-icon" tabindex="0" (click)="toggleContent()" (keyup.enter)="toggleContent()" (keyup.space)="toggleContent()">+</span>
+    <div class="header d-flex justify-content-between align-items-center">
+      <i class="bi bi-repeat"></i>
+      <span class="plus-icon" tabindex="0" (click)="toggleContent()" (keyup.enter)="toggleContent()" (keyup.space)="toggleContent()">{{ showContent ? '+' : '-' }}</span>
     </div>
     
     <div *ngIf="showContent" class="content">

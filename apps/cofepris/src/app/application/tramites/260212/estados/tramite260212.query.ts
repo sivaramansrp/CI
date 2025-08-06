@@ -9,6 +9,12 @@ import { Tramite260212State, Tramite260212Store } from './tramite260212.store';
 
 @Injectable({ providedIn: 'root' })
 export class Tramite260212Query extends Query<Tramite260212State> {
+   /**
+   * Selecciona el estado completo de la solicitud
+   */
+  selectSolicitud$ = this.select((state) => {
+    return state;
+  });
   selectedEstado$ = this.select((state) => state.estado);
   selectedClave$ = this.select((state) => state.selectedClave);
   selectedDescripcion$ = this.select((state) => state.selectedDescripcion);

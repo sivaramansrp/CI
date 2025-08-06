@@ -42,4 +42,25 @@ export class CadenaOriginalService {
       })
     );
   }
+
+  /**
+   * @description
+   * Este método realiza una solicitud HTTP GET a un archivo JSON local ubicado en `assets/json
+   * 
+   * @returns {Observable<BaseResponse<T>>}
+   */
+   generarCadena130118<T>(): Observable<BaseResponse<T>>{
+    const ENDPOINT = 'assets/json/130118/cadena-original.json';
+    return this.http.get<BaseResponse<T>>(ENDPOINT).pipe(
+      tap((response) => {
+        return response;
+      }),
+      catchError(() => {
+        const ERROR = new Error(
+          `Ocurrió un error al devolver la información ${ENDPOINT} `
+        );
+        return throwError(() => ERROR);
+      })
+    );
+  }
 }

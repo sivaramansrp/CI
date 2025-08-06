@@ -56,11 +56,13 @@
           [isDisabled]="esFormularioSoloLectura"
           (change)="
           setValoresStore(
-            datosMercanciaFormGroup,
-            'aduanaIngreso'
           )
         " 
         ></app-catalogo-select>
+          <div
+          *ngIf="datosMercanciaFormGroup.get(('realizarGroup.aduanaIngreso'))?.invalid && datosMercanciaFormGroup.get(('realizarGroup.aduanaIngreso'))?.touched">
+          <small class="mensaje-error">Este campo es obligatorio.</small>
+        </div>
       </div>
       <div class="col-md-8">
         <app-catalogo-select
@@ -72,11 +74,13 @@
           [isDisabled]="esFormularioSoloLectura"
           (change)="
           setValoresStore(
-            datosMercanciaFormGroup,
-            'oficinaInspeccion'
           )
         " 
         ></app-catalogo-select>
+           <div
+          *ngIf="datosMercanciaFormGroup.get(('realizarGroup.oficinaInspeccion'))?.invalid && datosMercanciaFormGroup.get(('realizarGroup.oficinaInspeccion'))?.touched">
+          <small class="mensaje-error">Este campo es obligatorio.</small>
+        </div>
       </div>
       <div class="col-md-8">
         <app-catalogo-select
@@ -88,11 +92,13 @@
           [isDisabled]="esFormularioSoloLectura"
           (change)="
           setValoresStore(
-            datosMercanciaFormGroup,
-            'puntoInspeccion'
           )
         " 
         ></app-catalogo-select>
+          <div
+          *ngIf="datosMercanciaFormGroup.get(('realizarGroup.puntoInspeccion'))?.invalid && datosMercanciaFormGroup.get(('realizarGroup.puntoInspeccion'))?.touched">
+          <small class="mensaje-error">Este campo es obligatorio.</small>
+        </div>
       </div>
       <div class="col-md-4"></div>
       <div class="col-md-4 form-group">
@@ -106,8 +112,6 @@
           type="text"
           (change)="
           setValoresStore(
-            datosMercanciaFormGroup,
-            'numeroGuia'
           )
         " 
         />
@@ -122,11 +126,15 @@
           [isDisabled]="esFormularioSoloLectura"
           (change)="
           setValoresStore(
-            datosMercanciaFormGroup,
-            'regimen'
           )
         " 
+        [tooltipQuestionCircle]="true"
+        [tooltipQuestionCircleText]="'Régimen al que se destinará la mercancía'"
         ></app-catalogo-select>
+           <div
+          *ngIf="datosMercanciaFormGroup.get(('realizarGroup.regimen'))?.invalid && datosMercanciaFormGroup.get(('realizarGroup.regimen'))?.touched">
+          <small class="mensaje-error">Este campo es obligatorio.</small>
+        </div>
       </div>
     </div>
     <div class="row">
@@ -138,384 +146,32 @@
           [tipoSeleccionTabla]="tipoSeleccion"
           [configuracionTabla]="configuracionColumnas"
           [datos]="cuerpoTablaFila"
+          (listaDeFilaSeleccionada)="seleccionTabla($event)"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
         >
         </app-tabla-dinamica>
+        <div
+          *ngIf="tableErrorMeassageDispaly && cuerpoTablaFila.length === 0">
+          <small class="mensaje-error">Este campo es obligatorio.</small>
+        </div>
       </div>
       <div class="col-md-12 d-flex justify-content-end">
         <div>
-          <button class="btn btn-primary me-2" type="button">Modificar</button>
+          <button class="btn btn-default me-2" type="button" [disabled]="listSelectedView.length === 0 ||esFormularioSoloLectura" (click)="modificarFila()">Modificar</button>
         </div>
         <div>
-          <button class="btn btn-default me-2" type="button">Eliminar</button>
+          <button class="btn btn-danger me-2" type="button" [disabled]="listSelectedView.length === 0 ||esFormularioSoloLectura " (click)="eliminarFila()">Eliminar</button>
         </div>
         <div>
-          <button class="btn btn-default me-2" type="button">Agregar</button>
+          <button class="btn btn-primary  me-2" type="button" (click)="agregarFila()" [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-12">
-        <ng-titulo [titulo]="'Datos mercancía'"></ng-titulo>
-      </div>
-    </div>
-    <div class="row" formGroupName="mercanciaGroup">
-      <div class="col-md-4">
-        <app-catalogo-select
-          [catalogo]="tipoRequisitoList"
-          formControlName="tipoRequisito"
-          [label]="'Tipo de requisito'"
-          [required]="true"
-          name="tipoRequisito"
-          [isDisabled]="esFormularioSoloLectura"
-          (change)="
-          setValoresStore(
-            datosMercanciaFormGroup,
-            'tipoRequisito'
-          )
-        " 
-        ></app-catalogo-select>
-      </div>
-      <div class="col-md-4 form-group">
-        <label class="form-label" for="requisito">Requisito:</label>
-        <input
-          class="form-control"
-          id="requisito"
-          formControlName="requisito"
-          placeholder=""
-          name="requisito"
-          type="text"
-          (change)="
-          setValoresStore(
-            datosMercanciaFormGroup,
-            'requisito'
-          )
-        " 
-        />
-      </div>
-      <div class="col-md-4 form-group">
-        <label class="form-label" for="numeroCertificadoInternacional"
-          >Número de certificado internacional *:</label
-        >
-        <input
-          class="form-control"
-          id="numeroCertificadoInternacional"
-          formControlName="numeroCertificadoInternacional"
-          placeholder=""
-          name="numeroCertificadoInternacional"
-          type="text"
-          (change)="
-          setValoresStore(
-            datosMercanciaFormGroup,
-            'numeroCertificadoInternacional'
-          )
-        " 
-        />
-      </div>
-      <div class="col-md-4">
-        <app-catalogo-select
-          [catalogo]="arancelariaList"
-          formControlName="fraccionArancelaria"
-          [label]="'Fracción arancelaria'"
-          [required]="true"
-          name="fraccionArancelaria"
-          [isDisabled]="esFormularioSoloLectura"
-          (change)="
-          setValoresStore(
-            datosMercanciaFormGroup,
-            'fraccionArancelaria'
-          )
-        " 
-        ></app-catalogo-select>
-      </div>
-      <div class="col-md-8 form-group">
-        <label class="form-label" for="descripcionFraccionArancelaria"
-          >Descripción de la fracción arancelaria *:</label
-        >
-        <input
-        readonly
-          class="form-control"
-          id="descripcionFraccionArancelaria"
-          formControlName="descripcionFraccionArancelaria"
-          placeholder=""
-          name="descripcionFraccionArancelaria"
-          type="text"
-          (change)="
-          setValoresStore(
-            datosMercanciaFormGroup,
-            'descripcionFraccionArancelaria'
-          )
-        " 
-        />
-      </div>
-      <div class="col-md-4">
-        <app-catalogo-select
-        
-          [catalogo]="nicoList"
-          formControlName="nico"
-          [label]="'Nico'"
-          [required]="true"
-          name="nico"
-          [isDisabled]="esFormularioSoloLectura"
-          (change)="
-          setValoresStore(
-            datosMercanciaFormGroup,
-            'nico'
-          )
-        " 
-        ></app-catalogo-select>
-      </div>
-      <div class="col-md-8 form-group">
-        <label class="form-label" for="descripcionFraccionArancelaria"
-          >Descripción Nico*:</label
-        >
-        <input
-        readonly
-          class="form-control"
-          id="descripcionNico"
-          formControlName="descripcionNico"
-          placeholder=""
-          name="descripcionNico"
-          type="text"
-          (change)="
-          setValoresStore(
-            datosMercanciaFormGroup,
-            'descripcionNico'
-          )
-        " 
-        />
-      </div>
-      <div class="col-md-12">
-        <label for="descripcion">Descripción:</label>
-        <textarea
-          class="form-control"
-          name="descripcion"
-          id="descripcion"
-          rows="10"
-          formControlName="descripcion"
-          (change)="
-          setValoresStore(
-            datosMercanciaFormGroup,
-            'descripcion'
-          )
-        " 
-        ></textarea>
-      </div>
-      <div class="col-md-4 form-group">
-        <label class="form-label" for="cantidadUMT">Cantidad UMT*:</label>
-        <input
-          class="form-control"
-          id="cantidadUMT"
-          formControlName="cantidadUMT"
-          placeholder=""
-          name="cantidadUMT"
-          type="text"
-          (change)="
-          setValoresStore(
-            datosMercanciaFormGroup,
-            'cantidadUMT'
-          )
-        " 
-        />
-      </div>
-      <div class="col-md-4 form-group">
-        <label class="form-label" for="umt">UMT*:</label>
-        <input
-        readonly
-          class="form-control"
-          id="umt"
-          formControlName="umt"
-          placeholder=""
-          name="umt"
-          type="text"
-          disable="true"
-          (change)="
-          setValoresStore(
-            datosMercanciaFormGroup,
-            'umt'
-          )
-        " 
-        />
-      </div>
-      <div class="col-md-4"></div>
-      <div class="col-md-4 form-group">
-        <label class="form-label" for="cantidadUMC">Cantidad UMC*:</label>
-        <input
-          class="form-control"
-          id="cantidadUMC"
-          formControlName="cantidadUMC"
-          placeholder=""
-          name="cantidadUMC"
-          type="text"
-          (change)="
-          setValoresStore(
-            datosMercanciaFormGroup,
-            'cantidadUMC'
-          )
-        " 
-        />
-      </div>
-      <div class="col-md-4">
-        <app-catalogo-select
-          [catalogo]="nicoList"
-          formControlName="umc"
-          [label]="'UMC'"
-          [required]="true"
-          name="umc" 
-          [isDisabled]="esFormularioSoloLectura"
-          (change)="
-          setValoresStore(
-            datosMercanciaFormGroup,
-            'umc'
-          )
-        " 
-          
-        ></app-catalogo-select>
-      </div>
-      <div class="col-md-4">
-        <app-catalogo-select
-          [catalogo]="usoList"
-          formControlName="uso"
-          [label]="'Uso'"
-          [required]="true"
-          name="uso"
-          [isDisabled]="esFormularioSoloLectura"
-          (change)="
-          setValoresStore(
-            datosMercanciaFormGroup,
-            'uso'
-          )
-        " 
-        ></app-catalogo-select>
-      </div>
-      <div class="col-md-4 form-group">
-        <label class="form-label" for="numeroDeLote">Número de lote*:</label>
-        <input
-          class="form-control"
-          id="numeroDeLote"
-          formControlName="numeroDeLote"
-          placeholder=""
-          name="numeroDeLote"
-          type="text"
-          (change)="
-          setValoresStore(
-            datosMercanciaFormGroup,
-            'numeroDeLote'
-          )
-        " 
-        />
-      </div>
-      <div class="col-md-4 form-group">
-        <label class="form-label" for="faseDeDesarrollo"
-          >Fase de desarrollo*:</label
-        >
-        <input
-          class="form-control"
-          id="faseDeDesarrollo"
-          formControlName="faseDeDesarrollo"
-          placeholder=""
-          name="faseDeDesarrollo"
-          type="text"
-          (change)="
-          setValoresStore(
-            datosMercanciaFormGroup,
-            'faseDeDesarrollo'
-          )
-        " 
-        />
-      </div>
-      <div class="col-md-4 form-group">
-        <label class="form-label" for="especie">Especie*:</label>
-        <input
-          class="form-control"
-          id="especie"
-          formControlName="especie"
-          placeholder=""
-          name="especie"
-          type="text"
-          (change)="
-          setValoresStore(
-            datosMercanciaFormGroup,
-            'especie'
-          )
-        " 
-        />
-      </div>
-      <div class="col-md-8">
-        <app-catalogo-select
-          [catalogo]="paisDeOrigenList"
-          formControlName="paisDeOrigen"
-          [label]="'País de origen'"
-          [required]="true"
-          name="paisDeOrigen"
-          [isDisabled]="esFormularioSoloLectura"
-          (change)="
-          setValoresStore(
-            datosMercanciaFormGroup,
-            'paisDeOrigen'
-          )
-        " 
-        ></app-catalogo-select>
-      </div>
-      <div class="col-md-8">
-        <app-catalogo-select
-          [catalogo]="paisDeProcedenciaList"
-          formControlName="paisDeProcedencia"
-          [label]="'País de procedencia'"
-          [required]="true"
-          name="paisDeProcedencia"
-          [isDisabled]="esFormularioSoloLectura"
-          (change)="
-          setValoresStore(
-            datosMercanciaFormGroup,
-            'paisDeProcedencia'
-          )
-        " 
-        ></app-catalogo-select>
-      </div>
-    </div>
-    <div class="row">
-      <ng-titulo [titulo]="'Detalle'"></ng-titulo>
-    </div>
-    <div class="row" formGroupName="detalles">
-      <div class="col-md-8 form-group">
-        <label class="form-label" for="especie">Nombre científico:</label>
-        <input
-          class="form-control"
-          id="nombreCientifico"
-          formControlName="nombreCientifico"
-          placeholder=""
-          name="nombreCientifico"
-          type="text"
-          (change)="
-          setValoresStore(
-            datosMercanciaFormGroup,
-            'nombreCientifico'
-          )
-        " 
-        />
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12 mt-2 d-flex justify-content-end">
-        <div>
-          <button class="btn btn-primary me-2" type="button">
-            Eliminar detalle
-          </button>
-        </div>
-        <div>
-          <button class="btn btn-default" type="button">Agregar detalle</button>
-        </div>
-      </div>
-      <div class="col-md-12">
-        <label class="form-label" for="especie">Detalle:</label>
-      </div>
-      <div class="col-md-4">
-        <ng-table
-          [commonTableHeader]="detalleTable"
-          [commonTableBody]="detallecuerpoTabla"
-          [enableScrollbar]="myScrollbarValue"
-        ></ng-table>
-      </div>
-    </div>
+
   </form>
 </div>
+  @if(eliminarDatosTabla){
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+      (confirmacionModal)="eliminarPedimentoDatos($event)"></lib-notificaciones>
+    }
+<app-modal #modalRef></app-modal>

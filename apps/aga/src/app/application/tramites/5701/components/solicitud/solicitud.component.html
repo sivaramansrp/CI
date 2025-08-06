@@ -748,7 +748,7 @@
             "
           ></textarea>
           <div
-            *ngIf="isRequired(mercancia, 'descripcionGenerica')"
+            *ngIf="isErrorWhitespace(mercancia, 'descripcionGenerica')"
             class="mensaje-error"
           >
             Este campo es obligatorio.
@@ -771,7 +771,7 @@
             "
           ></textarea>
           <div
-            *ngIf="isRequired(mercancia, 'justificacion')"
+            *ngIf="isErrorWhitespace(mercancia, 'justificacion')"
             class="mensaje-error"
           >
             Este campo es obligatorio.
@@ -900,9 +900,13 @@
           [tipoSeleccionTabla]="tablaSeleccionPagos.CHECKBOX"
           [configuracionTabla]="encabezadoDeTablaPagos"
           [datos]="datosTablaPagos"
+          [itemsPerPage]="10"
+          [tableId]="'tablaPagos'"
           (listaDeFilaSeleccionada)="lineaCapturaSeleccionados = $event"
+          
         >
         </app-tabla-dinamica>
+        
       </div>
       <div class="col-md-2"></div>
     </div>
@@ -911,6 +915,7 @@
       <div class="col-md-12 d-flex justify-content-center">
         <app-paginador-tabla [totalPaginas]="1"></app-paginador-tabla>
       </div>
+      <div class="col-md-2"></div>
     </div>
   </div>
   }

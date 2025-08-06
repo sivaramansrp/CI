@@ -39,6 +39,7 @@
               [disabled]="esFormularioSoloLectura"
               (change)="setValoresStore()"
               [formControlName]="item.props.campo"
+              [attr.maxlength]="item.props.maxlength ? item.props.maxlength : null"
               libUppercase
             />
             } } @case(inputTypes.BREAK_CONTENT) {
@@ -49,24 +50,26 @@
               (valorCambiado)="fechaCambiado($event)"
             ></input-fecha>
             } @case (inputTypes.RADIO) {
-            <label class="form-label" [for]="item.props.campo">{{
-              item.props.labelNombre
-            }}</label
-            >@if(item.props.required){<span>*</span>}:
-            <app-input-radio
-              [radioOptions]="item.props.radioOptions"
-              [selectedValue]="item.props.radioSelectedValue"
-              [isRequired]="item.props.required"
-              (valueChange)="
-                cambioValorRadio(
-                  'radio' + groupIndex,
-                  groupIndex,
-                  menuIndex,
-                  $event
-                )
-              "
-              [layout]="'horizontal'"
-            ></app-input-radio>
+            <div class="tipo-carga">
+              <label class="form-label mb-0" [for]="item.props.campo">
+                {{ item.props.labelNombre }}
+                <ng-container *ngIf="item.props.required"><span>*</span></ng-container>:
+              </label>
+              <app-input-radio
+                [radioOptions]="item.props.radioOptions"
+                [selectedValue]="item.props.radioSelectedValue"
+                [isRequired]="item.props.required"
+                (valueChange)="
+                  cambioValorRadio(
+                    'radio' + groupIndex,
+                    groupIndex,
+                    menuIndex,
+                    $event
+                  )
+                "
+                [layout]="'horizontal'"
+              ></app-input-radio>
+            </div>
             }}
           </div>
         </div>
@@ -75,7 +78,7 @@
     </div>
     } @if (configuracion[1] && configuracion[1].menu[0] && configuracion[1].menu[0].props && configuracion[1].menu[0].props.radioSelectedValue && configuracion[1].menu[0].props.radioSelectedValue === cargaTipo.MANUAL) {
     <div
-      class="form"
+      class="form mt-5"
       formGroupName="manualDatos"
       [ngClass]="{ 'd-none': esManualAsivoAgregarClicked }"
     >
@@ -89,8 +92,8 @@
         <div class="d-flex justify-content-end">
           <button
             type="button"
-            class="btn btn-primary ms-3"
-            [disabled]="true"
+            class="btn btn-danger ms-3"
+            [disabled]="false"
             (click)="accionesBotones(botonAccionesTipos.ELIMINAR)"
           >
             Eliminar
@@ -116,10 +119,54 @@
     </div>
     } @if (esManualAsivoAgregarClicked) {
     <app-manual-aviso
+      (agregarFila)="agregarFilaTabla($event)"
       (emitButtonAction)="esManualAsivoAgregarClicked = $event"
+      (registroAgregado)="mostrarPopupRegistroAgregado = true"
     ></app-manual-aviso>
     } @if (configuracion[1] && configuracion[1].menu[0] && configuracion[1].menu[0].props && configuracion[1].menu[0].props.radioSelectedValue && configuracion[1].menu[0].props.radioSelectedValue === cargaTipo.CARGA_MASIVA) {
     <app-carga-masiva></app-carga-masiva>
     }
   </form>
+</div>
+<div
+  class="modal fade show popup"
+  tabindex="-1"
+  role="dialog"
+  *ngIf="mostrarPopupSeleccionRegistro"
+>
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+      </div>
+      <div class="modal-body">
+        <p>{{ mensajePopupSeleccionRegistro }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="mostrarPopupSeleccionRegistro = false">
+          Aceptar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="modal fade show popup"
+  tabindex="-1"
+  role="dialog"
+  *ngIf="mostrarPopupRegistroAgregado"
+  style="display: block; background: rgba(0,0,0,0.3);"
+>
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header"></div>
+      <div class="modal-body">
+        <p>El registro fue agregado correctamente.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="mostrarPopupRegistroAgregado = false">
+          Aceptar
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

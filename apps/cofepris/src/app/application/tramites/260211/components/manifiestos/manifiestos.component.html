@@ -1,4 +1,5 @@
 <ng-titulo titulo="Manifiestos y declaraciones"></ng-titulo>
+<form [formGroup]="manifiestos">
   <div class="form-check bg-light p-0">
   <div class="alert alert-info content-with-checkbox py-6">
     <input type="checkbox" id="mensaje" formcontrolName="mensaje" [checked]="esFormularioSoloLectura" [disabled]="esFormularioSoloLectura"/>
@@ -6,7 +7,7 @@
     <div>{{ MANIFIESTOS_ALERT }} </div>
   </div>
 </div>
-<form [formGroup]="manifiestos">
+
     <div class="form mt-5">
  <div class="form-group">
           <label for="producto">Los datos o anexos pueden contener información confidencial ¿Está de acuerdo en hacerlos públicos?*:</label>

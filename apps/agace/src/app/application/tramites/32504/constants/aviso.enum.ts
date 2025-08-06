@@ -8,32 +8,34 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
  */
 export const DATOS_EMPRESA = [
     {
-        labelNombre: 'Número de programa IMMEX:',
+        labelNombre: 'Número de programa IMMEX*:',
         campo: 'numeroPrograma',
         class: 'col-md-12',
         tipo_input: 'text',
         disabled: true,
         validators: ['required'],
         placeholder: '',
+        maxlength: 9,
     },
     {
-        labelNombre: 'Año de programa IMMEX:',
+        labelNombre: 'Año de programa IMMEX*:',
         campo: 'anoPrograma',
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
         validators: ['required'],
         placeholder: '',
+        maxlength: 4,
     },
     {
-        labelNombre: 'Mes al que corresponde el aviso:',
+        labelNombre: 'Mes al que corresponde el aviso',
         campo: 'mesCorrespondeAviso',
         required: true,
         primerOpcion: 'Selecciona un valor',
         catalogos: [],
     },
     {
-        labelNombre: 'Año al que corresponde el aviso:',
+        labelNombre: 'Año al que corresponde el aviso',
         campo: 'anoCorrespondeAviso',
         required: true,
         primerOpcion: 'Selecciona un valor',
@@ -66,13 +68,14 @@ export const CARGO_TIPO = [
  */
 export const DATOS_QUIEN_RECIBE = [
     {
-        labelNombre: 'RFC:',
+        labelNombre: 'RFC*:',
         campo: 'rfc',
         class: 'col-md-12',
         tipo_input: 'text',
         disabled: true,
         validators: ['required'],
         placeholder: '',
+        maxlength: 13,
     },
     {
         labelNombre: 'Número de programa IMMEX:',
@@ -82,6 +85,7 @@ export const DATOS_QUIEN_RECIBE = [
         disabled: true,
         validators: ['required'],
         placeholder: '',
+        maxlength: 9,
     },
     {
         labelNombre: 'Año de programa IMMEX:',
@@ -91,6 +95,7 @@ export const DATOS_QUIEN_RECIBE = [
         disabled: true,
         validators: ['required'],
         placeholder: '',
+        maxlength: 4,
     },
 ];
 
@@ -109,45 +114,49 @@ export const DATOS_DOMICILIO_LUGAR = [
         disabled: true,
         validators: ['required'],
         placeholder: '',
+        maxlength: 250
     },
     {
-        labelNombre: 'Entidad federativa:',
+        labelNombre: 'Entidad federativa',
         campo: 'entidadFederativa',
         required: true,
         primerOpcion: 'Selecciona un valor',
-        catalogos: [],
+        catalogos: [] as Catalogo[],
     },
     {
-        labelNombre: 'Alcaldía o Municipio:',
-        campo: 'alcalida_municipio',
+        labelNombre: 'Alcaldía o Municipio',
+        campo: 'alcaldiaMunicipio',
         required: true,
         primerOpcion: 'Selecciona un valor',
-        catalogos: [],
+        catalogos: [] as Catalogo[],
     },
     {
-        labelNombre: 'Colonia:',
+        labelNombre: 'Colonia',
         campo: 'colonias',
         required: true,
         primerOpcion: 'Selecciona un valor',
-        catalogos: [],
+        catalogos: [] as Catalogo[],
     },
     {
-        labelNombre: 'Calle:',
+        labelNombre: 'Calle*:',
         campo: 'calles',
         class: 'col-md-4',
         tipo_input: 'text',
+        required: true,
         disabled: true,
         validators: ['required'],
         placeholder: '',
+        maxlength: 250
     },
     {
-        labelNombre: 'Número exterior:',
+        labelNombre: 'Número exterior*:',
         campo: 'numeroExterior',
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
         validators: ['required'],
         placeholder: '',
+        maxlength: 15
     },
     {
         labelNombre: 'Número interior:',
@@ -157,15 +166,17 @@ export const DATOS_DOMICILIO_LUGAR = [
         disabled: true,
         validators: ['required'],
         placeholder: '',
+        maxlength: 15
     },
     {
-        labelNombre: 'Código postal:',
+        labelNombre: 'Código postal*:',
         campo: 'codigoPostal',
         class: 'col-md-4',
         tipo_input: 'text',
         disabled: true,
         validators: ['required'],
         placeholder: '',
+        maxlength: 5
     },
 ];
 
@@ -177,52 +188,49 @@ export const DATOS_DOMICILIO_LUGAR = [
  */
 export const DATOS_MERCANCIA_SUBMANUFACTURA = [
     {
-        labelNombre: 'Fracción arancelaria:',
+        labelNombre: 'Fracción arancelaria',
         campo: 'fracArancelaria',
         required: true,
         primerOpcion: 'Selecciona un valor',
-        catalogos: [],
+        catalogos: [] as Catalogo[],
     },
     {
-        labelNombre: 'NICO:',
+        labelNombre: 'NICO*:',
         campo: 'nico',
+        required: true,
         class: 'col-md-4',
         tipo_input: 'text',
-        disabled: true,
         validators: ['required'],
         placeholder: '',
     },
     {
-        labelNombre: 'Unidad de medida:',
+        labelNombre: 'Unidad de medida',
         campo: 'unidadMedida',
         required: true,
         primerOpcion: 'Selecciona un valor',
-        catalogos: [],
+        catalogos: [] as Catalogo[],
     },
     {
-        labelNombre: 'Cantidad:',
+        labelNombre: 'Cantidad*:',
         campo: 'cantidad',
         class: 'col-md-4',
         tipo_input: 'text',
-        disabled: true,
         validators: ['required'],
         placeholder: '',
     },
     {
-        labelNombre: 'Valor USD:',
+        labelNombre: 'Valor USD*:',
         campo: 'valorUsd',
         class: 'col-md-4',
         tipo_input: 'text',
-        disabled: true,
         validators: ['required'],
         placeholder: '',
     },
     {
-        labelNombre: 'Descripcíon de la mercancía:',
+        labelNombre: 'Descripcíon de la mercancía*:',
         campo: 'descripcionMercancia',
         class: 'col-md-4',
         tipo_input: 'text',
-        disabled: true,
         validators: ['required'],
         placeholder: '',
     },
@@ -236,9 +244,9 @@ export const DATOS_MERCANCIA_SUBMANUFACTURA = [
  */
 export const TEXTOS = {
     INSTRUCCIONES: `
-    <p>- El archivo no debe exceder los 1000 registros. Para descargar plantilla del archivo de excel de click</p>`,
-    CARGA_DE_ARCHIVOS: `Seleccionar archivo`,
-    CARGA_DE_ARCHIVO_DE_TEXTO: `Sin archivos seleccionados`,
+    <p> El archivo no debe exceder los 1000 registros. Para descargar plantilla del archivo de excel de click* </br> <strong><a href="#">Descargar plantilla</a></strong> </p>`,
+    CARGA_DE_ARCHIVOS: `Choose File`,
+    CARGA_DE_ARCHIVO_DE_TEXTO: ` No file chosen`,
     CARGA_DE_ARCHIVO_DE_TEXTO_EXITOSO: `El formato del archivo es correcto. Se enviará un correo de notificación con el resultado.`,
 };
 
@@ -307,4 +315,80 @@ export const ANIO_CONFIG: Catalogo[] = [
     { descripcion: '2025', id: 2025 },
     { descripcion: '2026', id: 2026 },
     { descripcion: '2027', id: 2027 },
+];
+
+/**
+ * Catálogo de unidades de medida disponibles.
+ * Contiene una lista de objetos con la descripción y el identificador de cada unidad.
+ */
+export const UNIDAD_MEDIDA_CONFIG: Catalogo[] = [
+    { descripcion: 'Kilogramo', id: 1 },
+    { descripcion: 'Litro', id: 2 },
+    { descripcion: 'Metro', id: 3 },
+    { descripcion: 'Unidad', id: 4 },
+    { descripcion: 'Caja', id: 5 },
+];
+
+/**
+ * Catálogo de fracciones arancelarias disponibles.
+ * Contiene una lista de descripciones e identificadores correspondientes a productos específicos para comercio exterior.
+ */
+export const FRACCION_ARANCELARIA_CONFIG: Catalogo[] = [
+    { descripcion: '0101.21.01 - Caballos pura sangre para carreras', id: 1012101 },
+    { descripcion: '0207.14.01 - Muslos de pollo congelados', id: 2071401 },
+    { descripcion: '2710.12.15 - Gasolina sin plomo', id: 27101215 },
+    { descripcion: '8471.30.01 - Computadoras portátiles', id: 84713001 },
+    { descripcion: '8703.21.02 - Vehículos de turismo con motor eléctrico', id: 87032102 },
+];
+
+/**
+ * Catálogo de entidades federativas de México.
+ * Contiene una lista con la descripción y el identificador de cada estado o entidad.
+ */
+export const ENTIDAD_FEDERATIVA_CONFIG: Catalogo[] = [
+    { descripcion: 'Aguascalientes', id: 1 },
+    { descripcion: 'Baja California', id: 2 },
+    { descripcion: 'Baja California Sur', id: 3 },
+    { descripcion: 'Campeche', id: 4 },
+    { descripcion: 'Chiapas', id: 5 },
+    { descripcion: 'Chihuahua', id: 6 },
+    { descripcion: 'Ciudad de México', id: 7 },
+    { descripcion: 'Coahuila', id: 8 },
+    { descripcion: 'Colima', id: 9 },
+    { descripcion: 'Durango', id: 10 },
+];
+
+/**
+ * Catálogo de alcaldías de la Ciudad de México.
+ * Contiene una lista con la descripción y el identificador de cada alcaldía.
+ */
+export const ALCALDIA_CONFIG: Catalogo[] = [
+  { descripcion: 'Álvaro Obregón', id: 1 },
+  { descripcion: 'Azcapotzalco', id: 2 },
+  { descripcion: 'Benito Juárez', id: 3 },
+  { descripcion: 'Coyoacán', id: 4 },
+  { descripcion: 'Cuajimalpa de Morelos', id: 5 },
+  { descripcion: 'Cuauhtémoc', id: 6 },
+  { descripcion: 'Gustavo A. Madero', id: 7 },
+  { descripcion: 'Iztacalco', id: 8 },
+  { descripcion: 'Iztapalapa', id: 9 },
+  { descripcion: 'La Magdalena Contreras', id: 10 },
+  { descripcion: 'Miguel Hidalgo', id: 11 },
+  { descripcion: 'Milpa Alta', id: 12 },
+  { descripcion: 'Tláhuac', id: 13 },
+  { descripcion: 'Tlalpan', id: 14 },
+  { descripcion: 'Venustiano Carranza', id: 15 },
+  { descripcion: 'Xochimilco', id: 16 },
+];
+
+/**
+ * Catálogo de colonias disponibles.
+ * Lista con la descripción y el identificador de cada colonia.
+ */
+export const COLONIA_CONFIG: Catalogo[] = [
+    { descripcion: 'Colonia 1', id: 1 },
+    { descripcion: 'Colonia 2', id: 2 },
+    { descripcion: 'Colonia 3', id: 3 },
+    { descripcion: 'Colonia 4', id: 4 },
+    { descripcion: 'Colonia 5', id: 5 },
 ];

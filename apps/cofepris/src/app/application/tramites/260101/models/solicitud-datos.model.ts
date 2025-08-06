@@ -17,7 +17,7 @@ export interface SolicitudDatos {
   proovedor: string;
 
   /** Datos del catálogo SCIAN relacionados con la mercancía. */
-  SCIANLista: TableData;
+  SCIANLista: SCIAN[];
 
   /** Lista opcional de otras mercancías relacionadas. */
   mercancias?: TableData;
@@ -32,6 +32,9 @@ export interface RadioOptions {
 
   /** Valor asociado a la opción, que puede ser una cadena o un número. */
   value: string | number;
+
+  /** Descripción opcional para la opción */
+  hint?: string; 
 }
 
 /**
@@ -111,4 +114,15 @@ export interface Solicitud {
 
   /** Apellido materno del solicitante. */
   apellidoMeterno: string;
+}
+
+/**
+ * Representa un elemento del catálogo SCIAN, que incluye una clave y una descripción.
+ * Esta interfaz es utilizada para describir las categorías de actividades económicas.
+ */
+export interface SCIAN {
+  /** Clave única del SCIAN. */
+  clave: string;
+  /** Descripción de la actividad económica asociada a la clave. */
+  descripcion: string;
 }

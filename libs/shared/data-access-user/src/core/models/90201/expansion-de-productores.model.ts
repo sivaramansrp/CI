@@ -24,3 +24,13 @@ export interface SectoresTabla {
   sectores: string;
   claveDel: string;
 }
+
+/**
+ * Arreglo de configuraciones de columnas para la tabla de Domicilios de Plantas.
+ * Cada objeto define la configuración de una columna, incluyendo el encabezado,
+ * el campo asociado y otras propiedades de estilo.
+ */
+export interface MercanciasTabla {
+  fraccion: string;
+  claveDel: string;
+}

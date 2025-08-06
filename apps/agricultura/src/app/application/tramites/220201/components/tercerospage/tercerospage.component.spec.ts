@@ -53,24 +53,23 @@ describe('TercerospageComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize readonly flag and load personas/datosForma on init', () => {
+  it('debe inicializar la bandera de solo lectura y cargar personas/datosForma al iniciar', () => {
     expect(component.esFormularioSoloLectura).toBe(false);
     expect(component.personas.length).toBe(1);
     expect(component.datosForma.length).toBe(1);
   });
 
-  it('should load country and state catalogs in ngAfterViewInit', () => {
+  it('debe cargar los catálogos de país y estado en ngAfterViewInit', () => {
     component.ngAfterViewInit();
     expect(MOCK_TERCEROS_SERVICE.obtenerSelectorList).toHaveBeenCalledWith('paisprocedencia.json');
     expect(MOCK_TERCEROS_SERVICE.obtenerSelectorList).toHaveBeenCalledWith('estados.json');
   });
 
-  it('should clear personas and call updateTercerosRelacionado on handleEliminar', () => {
-    // Add a sample TercerosrelacionadosdestinoTable object to personas
+  it('debe limpiar personas y llamar updateTercerosRelacionado en handleEliminar', () => {
     component.personas = [{
       tipoMercancia: 'Física',
       nombre: 'Juan',
@@ -87,7 +86,7 @@ describe('TercerospageComponent', () => {
     expect(MOCK_CERTIFICADO_SERVICE.updateTercerosRelacionado).toHaveBeenCalledWith([]);
   });
 
-  it('should clean up subscriptions on destroy', () => {
+  it('debe limpiar las suscripciones al destruir el componente', () => {
     const DESTROY_SPY = jest.spyOn((component as any).destroyNotifier$, 'next');
     const COMPLETE_SPY = jest.spyOn((component as any).destroyNotifier$, 'complete');
     component.ngOnDestroy();

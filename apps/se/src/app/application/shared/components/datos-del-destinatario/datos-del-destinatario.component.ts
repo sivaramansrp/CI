@@ -1,9 +1,9 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CAMPO_DE_DESTINATARIO } from '../../constantes/modificacion.enum';
 import { CommonModule } from '@angular/common';
-import { Subject } from 'rxjs';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { Subject } from 'rxjs';
+import { CAMPO_DE_DESTINATARIO } from '../../constantes/modificacion.enum';
 
 @Component({
   selector: 'app-datos-del-destinatario',
@@ -28,6 +28,8 @@ export class DatosDelDestinatarioComponent implements OnDestroy, OnInit {
    * @type {number}
    */
   @Input() idProcedimiento!: number;
+
+  @Input() razonSocialEditable: boolean = false;
 
   /**
    * Evento que se emite cuando cambian los datos del formulario del destinatario
@@ -100,11 +102,11 @@ export class DatosDelDestinatarioComponent implements OnDestroy, OnInit {
    */
   createForm(): void {
     this.formDatosDelDestinatario = this.fb.group({
-      nombres: [''],
-      primerApellido: [''],
-      segundoApellido: [''],
-      numeroDeRegistroFiscal: [''],
-      razonSocial: [''],
+      nombres: ['', [Validators.maxLength(20)]],
+      primerApellido: ['', [Validators.required, Validators.maxLength(20)]],
+      segundoApellido: ['', [Validators.maxLength(20)]],
+      numeroDeRegistroFiscal: ['', [Validators.maxLength(30)]],
+      razonSocial: [{ value: '', disabled: this.razonSocialEditable }],
     });
   }
   /**
@@ -134,7 +136,7 @@ export class DatosDelDestinatarioComponent implements OnDestroy, OnInit {
    * y su estado asociado en el store.
    */
   setValoresStore(formGroupName: string, campo: string, storeStateName: string): void {
-    const VALOR = this.formDatosDelDestinatario.get(campo)?.value;
+    const VALOR = this.formDatosDelDestinatario.get(campo)?.getRawValue();
     this.formaValida.emit(this.formDatosDelDestinatario.valid);
     this.formDatosDelDestinatarioEvent.emit({ formGroupName, campo, valor: VALOR, storeStateName });
   }

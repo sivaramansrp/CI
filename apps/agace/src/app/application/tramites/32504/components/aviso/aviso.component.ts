@@ -1,3 +1,4 @@
+import {ALCALDIA_CONFIG, COLONIA_CONFIG, ENTIDAD_FEDERATIVA_CONFIG} from '../../constants/aviso.enum';
 import { ANIO_CONFIG } from '../../constants/aviso.enum';
 import { AvisoDatosService } from '../../services/aviso-datos.service';
 import { BotonAccionesTipos } from '@ng-mf/data-access-user';
@@ -111,7 +112,7 @@ export class AvisoComponent implements OnInit {
       clave: (ele: ColumnasTabla) => string,
       orden: number
     }[],
-    data: [],
+    data: ColumnasTabla[];
   } = {
       headers:
       [
@@ -123,17 +124,26 @@ export class AvisoComponent implements OnInit {
         },
         {
           encabezado: 'Entidad federativa',
-          clave: (ele: ColumnasTabla) => ele.entidadFederativa,
+          clave: (ele: ColumnasTabla): string => {
+            const VALOR = ENTIDAD_FEDERATIVA_CONFIG.find(c => c.id === Number(ele.entidadFederativa));
+            return VALOR ? VALOR.descripcion : ele.entidadFederativa;
+        },
           orden: 3,
         },
         {
           encabezado: 'Alcaldía o Municipio',
-          clave: (ele: ColumnasTabla) => ele.alcaldioOMuncipio,
+          clave: (ele: ColumnasTabla): string => {
+            const VALOR = ALCALDIA_CONFIG.find(c => c.id === Number(ele.alcaldiaMunicipio));
+            return VALOR ? VALOR.descripcion : ele.alcaldiaMunicipio;
+        },
           orden: 4,
         },
         {
           encabezado: 'Colonia',
-          clave: (ele: ColumnasTabla) => ele.colonia,
+          clave: (ele: ColumnasTabla): string => {
+            const VALOR = COLONIA_CONFIG.find(c => c.id === Number(ele.colonias));
+            return VALOR ? VALOR.descripcion : ele.colonias;
+          },
           orden: 5,
         },
       ],
@@ -152,6 +162,11 @@ export class AvisoComponent implements OnInit {
   esFormularioSoloLectura: boolean = false;
 
   /**
+   * Propiedad para almacenar la fila seleccionada en la tabla.
+   */
+  filaSeleccionada: unknown = null;
+
+  /**
    * @private
    * @description
    * Notificador utilizado para destruir las suscripciones activas cuando el componente se destruye,
@@ -162,6 +177,22 @@ export class AvisoComponent implements OnInit {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+  * Indica si se debe mostrar el popup de selección de registro.
+  * Valor booleano utilizado para controlar la visibilidad del componente emergente.
+  */
+  public mostrarPopupSeleccionRegistro = false;
+  
+  /**
+  * Mensaje que se muestra en el popup cuando no se ha seleccionado un registro.
+  * Se utiliza para informar al usuario antes de modificar datos.
+  */
+  public mensajePopupSeleccionRegistro = 'Debe seleccionar un registro para modificar sus datos';
+
+  /**
+ * Indica si se debe mostrar el popup de confirmación de registro agregado.
+ */
+  public mostrarPopupRegistroAgregado = false;
 
 /**
    * @constructor
@@ -260,10 +291,12 @@ export class AvisoComponent implements OnInit {
         });
       }
     });
+    let firstLoad = true;
     this.query.selectformulario$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
-      if (datos) {
+      if (datos && firstLoad) {
         this.formulario.patchValue(datos);
         this.formulario.get('cargaTipo')?.disable();
+        firstLoad = false;
       }
     });
   }
@@ -374,14 +407,36 @@ export class AvisoComponent implements OnInit {
       case BotonAccionesTipos.ELIMINAR:
         
         break;
-      case BotonAccionesTipos.MODIFICAR:
-        
+      case BotonAccionesTipos.MODIFICAR: {
+        const HAY_DATOS = this.tableData.data && this.tableData.data.length > 0;
+        const FILA_SELECCIONADA = this.obtenerFilaSeleccionada();
+
+        if (!HAY_DATOS || !FILA_SELECCIONADA) {
+          this.mostrarPopupSeleccionRegistro = true;
+        }
         break;
+      }
     
       default:
         break;
     }
   }
+  
+  /**
+ * Devuelve la fila seleccionada si existe, de lo contrario retorna null.
+ * Utilizado para obtener el registro actualmente seleccionado por el usuario.
+ */
+obtenerFilaSeleccionada(): unknown {
+  return this.filaSeleccionada ? this.filaSeleccionada : null;
+}
+
+/**
+ * Agrega una nueva fila a la tabla.
+ * La fila se añade al final del arreglo de datos existente.
+ */
+agregarFilaTabla(nuevaFila: ColumnasTabla):void {
+  this.tableData.data = [...this.tableData.data, nuevaFila];
+}
 
   /**
   *  @method onSubmit

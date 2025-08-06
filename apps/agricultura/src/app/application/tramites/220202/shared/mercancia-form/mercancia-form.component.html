@@ -11,6 +11,7 @@
           [required]="true"
           name="tipoRequisito"
           [isDisabled]="mercanciaForm.disabled"
+          (selectionChange)="tipoSelecionada($event)"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4 form-group">
@@ -20,23 +21,49 @@
           class="form-control"
           formControlName="requisito"
           maxlength="50"
+          [ngClass]="
+            mercanciaForm.get('requisito')?.invalid &&
+            mercanciaForm.get('requisito')?.touched
+              ? 'required'
+              : ''
+          "
         />
+        @if (mercanciaForm.get('requisito')?.hasError('required') &&
+        mercanciaForm.get('requisito')?.touched) {
+        <div class="text-danger">
+          <small>Este campo es obligatorio</small>
+        </div>
+        }
       </div>
       <div class="col-md-4 form-group">
         <label class="form-label"
           >Número certificado internacional*:
           <span
-            title="Si la normatividad no le solicita el Certificado puede capturar NO APLICA"
-            data-bs-toggle="tooltip"
             class="bi bi-question-circle-fill"
-          ></span>
+            tooltip="Si la normatividad no le solicita el Certificado puede capturar NO APLICA"
+            placement="top"
+          >
+          </span>
         </label>
         <input
           type="text"
           class="form-control"
-          formControlName="numeroCertificado"
+          formControlName="numeroCertificadoInternacional"
           maxlength="50"
+          [ngClass]="
+            mercanciaForm.get('numeroCertificadoInternacional')?.invalid &&
+            mercanciaForm.get('numeroCertificadoInternacional')?.touched
+              ? 'required'
+              : ''
+          "
         />
+        @if
+        (mercanciaForm.get('numeroCertificadoInternacional')?.hasError('required')
+        && mercanciaForm.get('numeroCertificadoInternacional')?.touched) {
+        <div class="text-danger">
+          <small>Este campo es obligatorio</small>
+        </div>
+        }
       </div>
     </div>
 
@@ -55,10 +82,11 @@
         <label class="form-label"
           >Descripción de la fracción arancelaria*:
           <span
-            title="Ingrese una fracción"
-            data-bs-toggle="tooltip"
             class="bi bi-question-circle-fill"
-          ></span>
+            tooltip="Ingrese una fracción"
+            placement="top"
+          >
+          </span>
         </label>
         <input
           type="text"
@@ -90,10 +118,11 @@
         <label class="form-label"
           >Descripción Nico*:
           <span
-            title="Ingrese una fracción Nico"
-            data-bs-toggle="tooltip"
             class="bi bi-question-circle-fill"
-          ></span>
+            tooltip="Ingrese una fracción Nico"
+            placement="top"
+          >
+          </span>
         </label>
         <input
           type="text"
@@ -111,11 +140,24 @@
           class="form-control"
           style="height: 60%; resize: none"
           formControlName="descripcion"
+          maxlength="1000"
+          [ngClass]="
+            mercanciaForm.get('descripcion')?.invalid &&
+            mercanciaForm.get('descripcion')?.touched
+              ? 'required'
+              : ''
+          "
         ></textarea>
-        @if ( mercanciaForm.get('descripcion')?.hasError('maxlength') &&
+
+        @if (mercanciaForm.get('descripcion')?.hasError('required') &&
+        mercanciaForm.get('descripcion')?.touched) {
+        <div class="text-danger">
+          <small>Este campo es obligatorio</small>
+        </div>
+        } @else if ( mercanciaForm.get('descripcion')?.hasError('maxlength') &&
         mercanciaForm.get('descripcion')?.touched){
         <div class="text-danger">
-          Por favor, no escribas más de 1000 caracteres
+          <small>Por favor, no escribas más de 1000 caracteres</small>
         </div>
         }
       </div>
@@ -128,31 +170,40 @@
         @if ( mercanciaForm.get('cantidadUMT')?.hasError('maxDecimals') &&
         mercanciaForm.get('cantidadUMT')?.touched){
         <div class="text-danger">
-          Este campo permite doce números enteros y hasta tres decimales
+          <small
+            >Este campo permite doce números enteros y hasta tres
+            decimales</small
+          >
         </div>
         } @else if (
         mercanciaForm.get('cantidadUMT')?.hasError('maxWholeNumbers') &&
         mercanciaForm.get('cantidadUMT')?.touched) {
         <div class="text-danger">
-          Por favor, escribe un valor menor o igual a 999999999999.999
+          <small
+            >Por favor, escribe un valor menor o igual a 999999999999.999</small
+          >
         </div>
         } @else if ( mercanciaForm.get('cantidadUMT')?.hasError('required') &&
         mercanciaForm.get('cantidadUMT')?.touched) {
-        <div class="text-danger">Este campo es obligatorio</div>
+        <div class="text-danger">
+          <small>Este campo es obligatorio</small>
+        </div>
         }
       </div>
 
       <div class="col-md-4">
-        <app-catalogo-select
-          [catalogo]="umtList"
-          formControlName="umt"
-          [label]="'UMT'"
-          [required]="true"
-          name="umt"
-          [tooltipQuestionCircle]="true"
-          [tooltipQuestionCircleText]="'Unidad de medida de la tarifa'"
-          [isDisabled]="mercanciaForm.disabled"
-        ></app-catalogo-select>
+        <div class="form-group">
+          <label class="form-label"
+            >UMT*:
+            <span
+              class="bi bi-question-circle-fill"
+              tooltip="Unidad de medida de la tarifa"
+              placement="top"
+            >
+            </span>
+          </label>
+          <input type="text" class="form-control" formControlName="umt" />
+        </div>
       </div>
 
       <div class="col-md-4 form-group">
@@ -165,7 +216,10 @@
           "
           class="text-danger"
         >
-          Este campo permite doce números enteros y hasta tres decimales
+          <small
+            >Este campo permite doce números enteros y hasta tres
+            decimales</small
+          >
         </div>
         <div
           *ngIf="
@@ -174,7 +228,9 @@
           "
           class="text-danger"
         >
-          Por favor, escribe un valor menor o igual a 999999999999.999
+          <small
+            >Por favor, escribe un valor menor o igual a 999999999999.999</small
+          >
         </div>
         <div
           *ngIf="
@@ -183,7 +239,7 @@
           "
           class="text-danger"
         >
-          Este campo es obligatorio
+          <small>Este campo es obligatorio</small>
         </div>
       </div>
     </div>
@@ -271,24 +327,29 @@
   </form>
 
   <div class="row my-5">
-    <div class="col-md-12 d-flex justify-content-end">
-      <button
-        type="button"
-        class="btn btn-default ms-3"
-        (click)="limpiarAnimalesVivo()"
-      >
-        Limpiar
-      </button>
-      <button type="button" class="btn btn-default ms-3" (click)="cancelar()">
-        Cancelar
-      </button>
-      <button
-        type="button"
-        class="btn btn-primary ms-3"
-        (click)="agregarAnimales()"
-      >
-        Agregar
-      </button>
+    <div class="col-md-6">
+      <p>* Campos obligatorios</p>
+    </div>
+    <div class="col-md-6">
+      <div class="pull-right mb-5">
+        <button
+          type="button"
+          class="btn btn-default ms-3"
+          (click)="limpiarAnimalesVivo()"
+        >
+          Limpiar
+        </button>
+        <button type="button" class="btn btn-default ms-3" (click)="cancelar()">
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary ms-3"
+          (click)="agregarAnimales()"
+        >
+          Agregar
+        </button>
+      </div>
     </div>
   </div>
 </div>

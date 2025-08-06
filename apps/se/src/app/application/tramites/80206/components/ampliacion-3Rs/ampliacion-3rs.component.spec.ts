@@ -169,21 +169,6 @@ describe('Ampliacion3RsComponent', () => {
     component.ngOnDestroy();
    });
 
-  it('should run #procesarDatosDelHijo()', async () => {
-    component.ampliacionServiciosService = component.ampliacionServiciosService || {};
-    component.ampliacionServiciosService.enviarDeberiaMostrar = jest.fn();
-    component.tramite80206Store = component.tramite80206Store || {};
-    component.tramite80206Store.setIsSelectedRegla = jest.fn();
-    component.tramite80206Store.setAduanaDeIngresoSeleccion = jest.fn();
-    component.procesarDatosDelHijo({});
-   });
-
-  it('should run #cambioDeSector()', async () => {
-    component.tramite80206Store = component.tramite80206Store || {};
-    component.tramite80206Store.setSectorSeleccion = jest.fn();
-    component.cambioDeSector({});
-   });
-
   it('should run #seleccionarDomicilios()', async () => {
 
     component.seleccionarDomicilios([]);

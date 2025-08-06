@@ -36,7 +36,7 @@
                             [isInline]="true"
                             formControlName="persona"
                             name="persona"  
-                            (change)="setValoresStore(agregarCuentaForm,'persona', 'setTipoDePersona')" >
+                            (change)="setValoresStore(agregarCuentaForm,'persona', 'setPersona')" >
                         </app-catalogo-select>
                         @if((agregarCuentaForm.controls['persona'].invalid && tieneAgregarCuentaFormEnviado)) {
                             <div class="d-grid">
@@ -100,7 +100,7 @@
                             [isInline]="true" 
                             name="pais"
                             formControlName="pais"
-                            (change)="setValoresStore(agregarCuentaForm,'pais', 'setPaisDondeRadica')" >
+                            (change)="setValoresStore(agregarCuentaForm,'pais', 'setPais')" >
                         </app-catalogo-select>
                         @if((agregarCuentaForm.controls['pais'].invalid && tieneAgregarCuentaFormEnviado)) {
                             <div class="d-grid">
@@ -143,7 +143,7 @@
                             [isInline]="true"
                             formControlName="estado"
                             name="estado"  
-                            (change)="setValoresStore(agregarCuentaForm,'institucion', 'setInstitucion')" >
+                            (change)="setValoresStore(agregarCuentaForm,'estado', 'setEstado')" >
                         </app-catalogo-select>
                         @if((agregarCuentaForm.controls['estado'].invalid && tieneAgregarCuentaFormEnviado)) {
                             <div class="d-grid">

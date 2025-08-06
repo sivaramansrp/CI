@@ -1,8 +1,8 @@
-import { API_GET_DOCUMENTOS_OBLIGATORIOS, TRAMITE } from "../../../constants/api-constants";
+import { API_GET_DOCUMENTOS130118, API_GET_DOCUMENTOS_OBLIGATORIOS, TRAMITE } from "../../../constants/api-constants";
 import { CatalogoDocumentosResponse, ParametrosGetDocumentos } from "../../../models/shared/anexar-documentos.model";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { Observable, catchError, map, throwError } from "rxjs";
 import { ENVIRONMENT } from "../../../../enviroments/enviroment";
-import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 
 @Injectable({
@@ -35,6 +35,29 @@ export class CatalogoDocumentosService {
         )
     }
 
+    /**
+     * Obtiene los documentos de la solicitud 130118.
+     * @param especifico Indica si se deben obtener documentos específicos.
+     * @param idSolicitud ID de la solicitud (opcional).
+     * @returns Observable con la respuesta del catálogo de documentos.
+     */
+    getDocumentosSolicitud130118(especifico: boolean, idSolicitud?: number): Observable<CatalogoDocumentosResponse> {
+        let params = new HttpParams().set('especifico', String(especifico));
+
+        if (idSolicitud) {
+            params = params.set('idSolicitud', idSolicitud);
+        }
+
+        const URL = `${this.host}/${API_GET_DOCUMENTOS130118}`;
+
+        return this.http.get<CatalogoDocumentosResponse>(URL, { params }).pipe(
+            map((response) => response),
+            catchError((error) => {
+                console.error('Error en getDocumentosSolicitud:', error);
+                return throwError(() => new Error('Error al obtener documentos'));
+            })
+        );
+    }
 
 
 }

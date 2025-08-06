@@ -8,8 +8,7 @@
         <div>
             <label>
                 <app-input-radio [radioOptions]="tipoPersonaOptions" [isRequired]="true" formControlName="mapTipoTramite"
-                    [layout]="'vertical'" [selectedValue]="valorSeleccionado" (valueChange)="cambiarRadio($event)"
-                    (change)="setValoresStore(avisoForm,'mapTipoTramite', 'setmapTipoTramite')"></app-input-radio>
+                    [layout]="'vertical'" (change)="setValoresStore(avisoForm,'mapTipoTramite', 'setmapTipoTramite')"></app-input-radio>
             </label>
         </div>
         <div class="mt-3">

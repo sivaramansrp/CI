@@ -9,12 +9,17 @@ export const CANCELACION_DE_AUTORIZACIONES=[
       {
         encabezado: 'Tipo programa',
         clave: (ele: CancelacionDeAutorizaciones): string => ele.tipoPrograma,
-        orden: 1,
+        orden: 2,
       },
       {
         encabezado: 'Selecciona la modalidad',
         clave: (ele: CancelacionDeAutorizaciones): string => ele.seleccionaLaModalidad,
-        orden: 1,
+        orden: 3,
+      },
+      {
+        encabezado: 'Estatus',
+        clave: (ele: CancelacionDeAutorizaciones): string => ele.estatus,
+        orden: 4,
       }
 
 ]

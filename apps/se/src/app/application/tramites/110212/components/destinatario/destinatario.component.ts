@@ -1,4 +1,4 @@
-import { ConsultaioQuery, ConsultaioState, REGEX_SOLO_DIGITOS } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, REGEX_CORREO_ELECTRONICO, REGEX_SOLO_DIGITOS } from '@ng-mf/data-access-user';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -9,6 +9,7 @@ import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite110212Query } from '../../../../estados/queries/tramite110212.query';
 import { Tramite110212State } from '../../../../estados/tramites/tramite110212.store';
 import { Tramite110212Store } from '../../../../estados/tramites/tramite110212.store';
@@ -26,7 +27,7 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-destinatario',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, TooltipModule],
   templateUrl: './destinatario.component.html',
   styleUrl: './destinatario.component.scss',
 })
@@ -174,26 +175,26 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
         ],
         correoElectronico: [
           this.solicitudState?.grupoDeDirecciones?.correoElectronico,
-          [Validators.required, Validators.email],
+          [Validators.required, Validators.pattern(REGEX_CORREO_ELECTRONICO)],
         ],
       }),
 
       grupoRepresentativo: this.fb.group({
         lugar: [
           this.solicitudState?.grupoRepresentativo?.lugar,
-          [Validators.required, Validators.maxLength(40)],
+          [Validators.required],
         ],
         nombreExportador: [
           this.solicitudState?.grupoRepresentativo?.nombreExportador,
-          [Validators.required, Validators.maxLength(40)],
+          [Validators.required],
         ],
         empresa: [
           this.solicitudState?.grupoRepresentativo?.empresa,
-          [Validators.required, Validators.maxLength(40)],
+          [Validators.required],
         ],
         cargo: [
           this.solicitudState?.grupoRepresentativo?.cargo,
-          [Validators.required, Validators.maxLength(40)],
+          [Validators.required],
         ],
         lada: [this.solicitudState?.grupoRepresentativo?.lada, []],
         telefono: [
@@ -206,7 +207,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
         ],
         correoElectronico: [
           this.solicitudState?.grupoRepresentativo?.correoElectronico,
-          [Validators.required, Validators.email],
+          [Validators.required, Validators.pattern(REGEX_CORREO_ELECTRONICO)],
         ],
       }),
     });
@@ -284,6 +285,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+
 
   /**
    * Obtiene el grupo receptor del formulario.

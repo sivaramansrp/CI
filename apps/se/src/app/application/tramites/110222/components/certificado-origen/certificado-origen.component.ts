@@ -29,6 +29,20 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
   estado: Catalogo[] = [];
 
   /**
+   * Indicates whether the domicile option is selected.
+   * When set to `true`, the domicile is considered active or chosen.
+   */
+  domicilio: boolean = false;
+
+  /**
+   * Indicates the current language state.
+   * 
+   * When `true`, the application is set to an alternate language (e.g., English).
+   * When `false`, the default language is used (e.g., Spanish).
+   */
+  idioma:boolean = false;
+
+  /**
    * @descripcion
    * Lista de países disponibles.
    */

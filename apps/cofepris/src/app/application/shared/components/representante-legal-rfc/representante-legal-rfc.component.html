@@ -13,6 +13,9 @@
                         formControlName="rfc"
                         (change)="setValoresStore(representante,'rfc', 'setRfc')"
                     />
+                    <div *ngIf="representante.get('rfc')?.touched && representante.get('rfc')?.hasError('required')" class="text-danger">
+                        Este campo es obligatorio.
+                    </div>
                 </div>
             </div>
             <div class="col-md-4">
@@ -27,7 +30,7 @@
                         class="form-control"
                         id="nombre"
                         placeholder=""
-                        type="number"
+                        type="text"
                         formControlName="nombre"
                         (change)="setValoresStore(representante,'nombre', 'setNombre')"
                     />

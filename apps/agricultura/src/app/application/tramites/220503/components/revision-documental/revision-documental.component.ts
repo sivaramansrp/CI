@@ -1,6 +1,5 @@
-import { AlertComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DatosGeneralesComponent } from '../../shared/datos-generales/datos-generales.component';
 import { PagoDeDerechosComponent } from '../../shared/pago-de-derechos/pago-de-derechos.component';
 import { TercerosRelacionadosComponent } from '../../shared/terceros-relacionados/terceros-relacionados.component';
@@ -16,9 +15,7 @@ import { TercerosRelacionadosComponent } from '../../shared/terceros-relacionado
     CommonModule,
     DatosGeneralesComponent,
     TercerosRelacionadosComponent,
-    PagoDeDerechosComponent,
-    TituloComponent,
-    AlertComponent,
+    PagoDeDerechosComponent
   ],
 })
 export class RevisionDocumentalComponent {
@@ -47,7 +44,9 @@ export class RevisionDocumentalComponent {
    * @type {any}
    */
   forma: string = '';
+  @ViewChild('tercerosRelacionadosRef') tercerosRelacionados!: TercerosRelacionadosComponent;
 
+  @ViewChild('pagoDeDerechosRef') pagoDeDerechos!: PagoDeDerechosComponent;
   /**
    * Selecciona un tab específico.
    * @param {number} i - El índice del tab a seleccionar.
@@ -55,4 +54,21 @@ export class RevisionDocumentalComponent {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
+validarFormularios(): boolean {
+  let isValid = true;
+  if(this.pagoDeDerechos){
+if(!this.pagoDeDerechos.validarFormulario()){
+  isValid = false;
+}
+  }
+  else{
+    isValid =false;
+  }
+  if(this.tercerosRelacionados){
+if(!this.tercerosRelacionados.validarFormulario()){
+  isValid = false;
+}
+  }
+return isValid
+}
 }

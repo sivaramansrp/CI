@@ -9,7 +9,7 @@ import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { ClaveModel, MercanciaModel, SolicitudModel } from '../../models/permiso-maquila.models';
 import { SolicitudService } from '../../services/solicitud.service';
 
-import { DATOS_ALERT, MANIFIESTOS_ALERT } from '../../constantes/permiso-maquila.enum';
+import { ADUANAS_DATA, DATOS_ALERT, MANIFIESTOS_ALERT } from '../../constantes/permiso-maquila.enum';
 import { ClaveScianComponent } from '../clave-scian/clave-scian.component';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
@@ -122,7 +122,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Arreglo que almacena los estados obtenidos del catálogo.
    * Este arreglo es utilizado en el componente para gestionar la información de estados.
    */
-  estado: CatalogoResponse[] = []
+  estado: CatalogoResponse[] =ADUANAS_DATA;
 
   /**
    * Arreglo que almacena los datos relacionados con las claves S.C.I.A.N.
@@ -468,7 +468,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     { encabezado: 'Cantidad UMC', clave: (item: MercanciaModel) => item.cantidadUMC, orden: 12 },
     { encabezado: 'UMC', clave: (item: MercanciaModel) => item.UMC, orden: 13 },
     { encabezado: 'Presentación farmacéutica o tipo de envase', clave: (item: MercanciaModel) => item.tipoDeEnvase, orden: 14 },
-    
+    { encabezado: 'Presentación', clave: (item: MercanciaModel) => item.tipoDePresentacion, orden: 15 },
+    { encabezado: 'Número de registro sanitario', clave: (item: MercanciaModel) => item.numeroRegistroSanitario, orden: 16 },
+    { encabezado: 'País de origen', clave: (item: MercanciaModel) => item.paisDeOrigen, orden: 17 },
+    { encabezado: 'Pais de procedencia', clave: (item: MercanciaModel) => item.paisDeProcedencia, orden: 18 },
+    { encabezado: 'Tipo producto', clave: (item: MercanciaModel) => item.tipoProducto, orden: 19 },
+    { encabezado: 'Uso específico', clave: (item: MercanciaModel) => item.usoEspecifico, orden: 20 },
+    { encabezado: 'Fecha de caducidad', clave: (item: MercanciaModel) => item.fechaCaducidad, orden: 21 },
+
   ];
 
   /**
