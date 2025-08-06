@@ -415,7 +415,6 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         next: (respuesta: AvisoCatalogo) => {
           this.opcionFraccionArancelaria = respuesta.cveFraccionArancelaria;
           this.opcionEntidadFederativa = respuesta.entidadFederativa;
-          this.catalogosOpcionEntidadFederativa = respuesta.entidadFederativa.catalogos;
           this.opcionDelegacionMunicipio = respuesta.delegacionMunicipio;
           this.opcionColonia = respuesta.colonia;
         },
