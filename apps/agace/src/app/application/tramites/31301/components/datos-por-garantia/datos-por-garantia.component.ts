@@ -1,27 +1,21 @@
-import { Catalogo } from '@libs/shared/data-access-user/src';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  CatalogosSelect,
+  InputFecha,
+  InputFechaComponent,
+  TituloComponent
+} from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Solicitud31301State, Solicitud31301Store } from '../../estados/solicitud31301.store';
+import { Subject,map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosPorGarantia } from '../../models/solicitud.model';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { InputFecha } from '@libs/shared/data-access-user/src';
-import { InputFechaComponent } from '@libs/shared/data-access-user/src';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { Solicitud31301Query } from '../../estados/solicitud31301.query';
-import { Solicitud31301State } from '../../estados/solicitud31301.store';
-import { Solicitud31301Store } from '../../estados/solicitud31301.store';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Subject } from 'rxjs';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 /**
  * Componente encargado de mostrar y gestionar los datos relacionados
  * con la garantía de una póliza de fianza. Incluye la visualización de
@@ -87,6 +81,7 @@ export class DatosPorGarantiaComponent implements OnInit, OnDestroy {
    * @param solicitudService Servicio para acceder a datos del backend
    * @param solicitud31301Store Store para actualizar el estado de la solicitud
    * @param solicitud31301Query Query para observar el estado de la solicitud
+   * @param consultaioQuery -  Query que permite consultar datos relacionados del contexto general
    */
   constructor(
     public fb: FormBuilder,

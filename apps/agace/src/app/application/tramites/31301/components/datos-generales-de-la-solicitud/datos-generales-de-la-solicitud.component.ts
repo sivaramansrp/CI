@@ -1,42 +1,42 @@
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
+import {
+  CatalogoSelectComponent,
+  CatalogosSelect,
+  ConfiguracionColumna,
+  InputRadioComponent,
+  REGEX_SOLO_NUMEROS,
+  REG_X,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent
+} from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  DOMICILIOS_CONFIGURACION_COLUMNAS,
+  SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS,
+  SUB_CONTRATISTAS_CONFIGURACION,
+  TIPO_DE_INVERSION_CONFIGURACION_COLUMNAS
+} from '../../constants/solicitud.enum';
+import {
+  DatosGeneralesDeLaSolicitudCatologo,
+  DatosGeneralesDeLaSolicitudDatos,
+  DatosGeneralesDeLaSolicitudRadioLista,
+  Domicilios,
+  InputRadio,
+  LabelModels,
+  NotaMensaja,
+  SeccionSociosIC,
+  SubContratistas,
+  TipoDeInversion,
+} from '../../models/solicitud.model';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { LABELS, NOTA_MENSAJE } from '../../constants/constants.enum';
+import { Solicitud31301State, Solicitud31301Store } from '../../estados/solicitud31301.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { DOMICILIOS_CONFIGURACION_COLUMNAS } from '../../constants/solicitud.enum';
-import { DatosGeneralesDeLaSolicitudCatologo } from '../../models/solicitud.model';
-import { DatosGeneralesDeLaSolicitudDatos } from '../../models/solicitud.model';
-import { DatosGeneralesDeLaSolicitudRadioLista } from '../../models/solicitud.model';
-import { Domicilios } from '../../models/solicitud.model';
-import { EventEmitter } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { InputRadio } from '../../models/solicitud.model';
-import { InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
-import { REGEX_SOLO_NUMEROS } from '@libs/shared/data-access-user/src';
-import { REG_X } from '@libs/shared/data-access-user/src';
-import { ReactiveFormsModule } from '@angular/forms';
-import { SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS } from '../../constants/solicitud.enum';
-import { SUB_CONTRATISTAS_CONFIGURACION } from '../../constants/solicitud.enum';
-import { SeccionSociosIC } from '../../models/solicitud.model';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Solicitud31301Query } from '../../estados/solicitud31301.query';
-import { Solicitud31301State } from '../../estados/solicitud31301.store';
-import { Solicitud31301Store } from '../../estados/solicitud31301.store';
 import { SolicitudService } from '../../services/solicitud.service';
-import { SubContratistas } from '../../models/solicitud.model';
-import { Subject } from 'rxjs';
-import { TIPO_DE_INVERSION_CONFIGURACION_COLUMNAS } from '../../constants/solicitud.enum';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { TipoDeInversion } from '../../models/solicitud.model';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
 @Component({
   selector: 'app-datos-generales-de-la-solicitud',
   standalone: true,
@@ -119,12 +119,38 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   @Output() tipoDeEndosoChanges = new EventEmitter();
 
   /**
+   * Contiene los mensajes informativos relacionados con las garantías fiscales.
+   * 
+   * Se utiliza para acceder fácilmente a los textos definidos en la constante `NOTA_MENSAJE`
+   * del archivo de configuración, usando la interfaz `NotaMensaja` para asegurar el tipado.
+   */
+  NOTA_MENSAJE: NotaMensaja = NOTA_MENSAJE;
+
+  /**
+   * Contiene todas las etiquetas mostradas en el formulario.
+   * 
+   * Cada entrada representa una instrucción, advertencia o descripción
+   * de campo, basada en la interfaz `LabelModels` (LABELS).
+   */
+  labels: LabelModels = LABELS;
+
+  /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   esFormularioSoloLectura: boolean = false;
 
-  /** Constructor del componente que inyecta dependencias y obtiene datos iniciales */
+  /**
+ * Constructor del componente que inyecta las dependencias necesarias
+ * para el manejo de formularios reactivos, servicios de solicitud
+ * y consultas de estado.
+ *
+ * @param fb - Servicio de FormBuilder para construir formularios reactivos.
+ * @param solicitudService - Servicio que gestiona la lógica relacionada con la solicitud.
+ * @param solicitud31301Store - Almacén (store) que contiene el estado de la solicitud 31301.
+ * @param solicitud31301Query - Query que permite consultar el estado de la solicitud 31301.
+ * @param consultaioQuery - Query que permite consultar datos relacionados del contexto general (Consultaio).
+ */
   constructor(
     public fb: FormBuilder,
     public solicitudService: SolicitudService,
