@@ -327,7 +327,7 @@
           </div>
           <div class="form-group">
             <label for="fraccionArancelaria">Fracción arancelaria*:</label>
-            <span class="bi bi-question-circle-fill fs-4 m-1" [title]="'Fracción arancelaria'" ata-bs-toggle="tooltip">
+            <span class="bi bi-question-circle-fill fs-4 m-1" [title]="'Descripción numérica o desglose de un código de clasificación que otorga el Sistema Armonizado'" ata-bs-toggle="tooltip">
             </span>
             <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control" (focusout)="autoCompleteFraccionArancelaria()"
               (change)="
@@ -394,7 +394,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label for="UMT">UMT:</label>
-                <span class="bi bi-question-circle-fill fs-4 m-1" [title]="'UMT'" ata-bs-toggle="tooltip">
+                <span class="bi bi-question-circle-fill fs-4 m-1" [title]="'Unidad de medida de la tarifa'" ata-bs-toggle="tooltip">
                 </span>
                 <input type="text" id="UMT" formControlName="UMT" class="form-control"
                   (change)="setValoresStore(formMercancias, 'UMT', 'setUMT')" />
@@ -432,7 +432,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <app-catalogo-select [catalogo]="estado" formControlName="UMC" [label]="'UMC'" [required]="true"
-                  name="UMC" [placeholder]="'Seleccione un valor'" [tooltipQuestionCircle]="true"
+                  name="UMC" [placeholder]="'Seleccione un valor'" [tooltipQuestionCircle]="true" [tooltipQuestionCircleText]="'Unidad de medida de comercialización'"
                   (change)="setValoresStore(formMercancias, 'UMC', 'setUMC')"
                   [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
               </div>
@@ -440,7 +440,7 @@
           </div>
 
           <div class="form-group">
-            <label for="porcentajeConcentracion">Porcentaje de concentración *:</label>
+            <label for="porcentajeConcentracion">Porcentaje de concentración*:</label>
             <input type="text" id="porcentajeConcentracion" formControlName="porcentajeConcentracion"
               class="form-control" (change)="
                 setValoresStore(
@@ -461,7 +461,7 @@
               </small>
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group" *ngIf="mostrarNumeroRegistro">
             <label for="numeroRegistro">Número de registro sanitario*:</label>
             <input type="text" id="numeroRegistro" formControlName="numeroRegistro" class="form-control" (change)="
                 setValoresStore(
