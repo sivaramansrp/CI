@@ -3084,5 +3084,14 @@
     "fechaActualizacion": "2023-10-05",
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260102"
+  },
+  {
+    "id": 32508,
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2024-10-01",
+    "fechaActualizacion": "2024-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32508"
   }
 ]

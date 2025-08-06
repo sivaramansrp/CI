@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, TituloComponent } from '@libs/shared/data-access-user/src';
 import { ConsultaioState } from '@libs/shared/data-access-user/src';
 import { DatosGeneralesDeLaSolicitudComponent } from '../../components/datos-generales-de-la-solicitud/datos-generales-de-la-solicitud.component';
 import { DatosPorGarantiaComponent } from '../../components/datos-por-garantia/datos-por-garantia.component';
@@ -31,6 +31,7 @@ import { takeUntil } from 'rxjs';
     DatosPorGarantiaComponent,
     ModificacionDeDenominacionORazorsSocialComponent,
     TercerosRelacionadosComponent,
+    TituloComponent
   ],
   templateUrl: './paso-uno.component.html',
   styleUrls: ['./paso-uno.component.scss'],

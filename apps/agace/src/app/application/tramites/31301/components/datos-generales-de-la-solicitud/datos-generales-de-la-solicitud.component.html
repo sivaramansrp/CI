@@ -3,247 +3,139 @@
     <div class="row mt-5">
       <div class="col-md-12">
         <label class="form-label">Tipo de endoso *:</label>
-        <app-input-radio
-          formControlName="tipoDeEndoso"
-          [selectedValue]="datosGeneralesForm.get('tipoDeEndoso')?.value"
-          [radioOptions]="tipoDeEndosoOpcion.radioOptions"
-          [isRequired]="tipoDeEndosoOpcion.isRequired"
-          [layout]="'vertical'"
-          (valueChange)="getTipoDeEndoso($event)"
-        ></app-input-radio>
+        <app-input-radio formControlName="tipoDeEndoso" [selectedValue]="datosGeneralesForm.get('tipoDeEndoso')?.value"
+          [radioOptions]="tipoDeEndosoOpcion.radioOptions" [isRequired]="tipoDeEndosoOpcion.isRequired"
+          [layout]="'vertical'" (valueChange)="getTipoDeEndoso($event)"></app-input-radio>
       </div>
       <div class="col-md-12">
         <label class="form-label">Tipo de garantía *:</label>
-        <app-input-radio
-          formControlName="tipoDeGarantia"
+        <app-input-radio formControlName="tipoDeGarantia"
           [selectedValue]="datosGeneralesForm.get('tipoDeGarantia')?.value"
-          [radioOptions]="tipoDeGarantiaOpcion.radioOptions"
-          [isRequired]="tipoDeGarantiaOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-        ></app-input-radio>
+          [radioOptions]="tipoDeGarantiaOpcion.radioOptions" [isRequired]="tipoDeGarantiaOpcion.isRequired"
+          [layout]="'horizontal'" [gap]="'50px'"></app-input-radio>
       </div>
       <div class="col-md-12">
         <label class="form-label">Nota:</label><br />
         <label class="form-label">Modalidad de la garantía *:</label>
-        <app-input-radio
-          formControlName="modalidadDeLaGarantia"
-          [selectedValue]="
+        <app-input-radio formControlName="modalidadDeLaGarantia" [selectedValue]="
             datosGeneralesForm.get('modalidadDeLaGarantia')?.value
-          "
-          [radioOptions]="modalidadDeLaGarantiaOpcion.radioOptions"
-          [isRequired]="modalidadDeLaGarantiaOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-        ></app-input-radio>
+          " [radioOptions]="modalidadDeLaGarantiaOpcion.radioOptions"
+          [isRequired]="modalidadDeLaGarantiaOpcion.isRequired" [layout]="'horizontal'"
+          [gap]="'50px'"></app-input-radio>
       </div>
       <div class="col-md-8">
         <label class="form-label">Tipo sector *:</label>
-        <app-input-radio
-          formControlName="tipoSector"
-          [selectedValue]="datosGeneralesForm.get('tipoSector')?.value"
-          [radioOptions]="tipoSectorOpcion.radioOptions"
-          [isRequired]="tipoSectorOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-        ></app-input-radio>
+        <app-input-radio formControlName="tipoSector" [selectedValue]="datosGeneralesForm.get('tipoSector')?.value"
+          [radioOptions]="tipoSectorOpcion.radioOptions" [isRequired]="tipoSectorOpcion.isRequired"
+          [layout]="'horizontal'" [gap]="'50px'"></app-input-radio>
       </div>
       <div class="col-md-4">
-        <app-catalogo-select
-          formControlName="concepto"
-          [catalogo]="conceptoLista.catalogos"
-          [label]="conceptoLista.labelNombre"
-          [placeholder]="conceptoLista.primerOpcion"
-          [required]="false"
-          [isDisabled]="esFormularioSoloLectura"
-          name="concepto"
-          id="concepto"
-        ></app-catalogo-select>
+        <app-catalogo-select formControlName="concepto" [catalogo]="conceptoLista.catalogos"
+          [label]="conceptoLista.labelNombre" [placeholder]="conceptoLista.primerOpcion" [required]="false"
+          [isDisabled]="esFormularioSoloLectura" name="concepto" id="concepto"></app-catalogo-select>
       </div>
       <div class="col-md-12">
         <ng-titulo titulo="Requisitos" />
       </div>
       <div class="col-md-12">
-        <label class="form-label text-start"
-          >Señale si al momento de ingresar su solicitud se encuentra al
+        <label class="form-label text-start">Señale si al momento de ingresar su solicitud se encuentra al
           corriente en el cumplimiento de sus obligaciones fiscales y
-          aduaneras.</label
-        >
-        <app-input-radio
-          [radioOptions]="sinoOpcion.radioOptions"
-          [isRequired]="sinoOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-          formControlName="3500"
-        ></app-input-radio>
+          aduaneras.</label>
+        <app-input-radio [radioOptions]="sinoOpcion.radioOptions" [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'" [gap]="'50px'" formControlName="3500"></app-input-radio>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Indique si autorizó al SAT hacer pública su opinión positiva sobre el
-          cumplimiento de obligaciones fiscales.</label
-        >
-        <app-input-radio
-          [radioOptions]="sinoOpcion.radioOptions"
-          [isRequired]="sinoOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-          formControlName="3501"
-        ></app-input-radio>
+        <label class="form-label text-start">Indique si autorizó al SAT hacer pública su opinión positiva sobre el
+          cumplimiento de obligaciones fiscales.</label>
+        <app-input-radio [radioOptions]="sinoOpcion.radioOptions" [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'" [gap]="'50px'" formControlName="3501"></app-input-radio>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Indique si cuenta con la totalidad de personal registrado ante el
+        <label class="form-label text-start">Indique si cuenta con la totalidad de personal registrado ante el
           IMSS, del SUA, y realiza el pago de las cuotas obrero patronales, así
           como que cumple con la obligación de retener y enterar el ISR de los
-          trabajadores.</label
-        >
-        <app-input-radio
-          [radioOptions]="sinoOpcion.radioOptions"
-          [isRequired]="sinoOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-          formControlName="3502"
-        ></app-input-radio>
+          trabajadores.</label>
+        <app-input-radio [radioOptions]="sinoOpcion.radioOptions" [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'" [gap]="'50px'" formControlName="3502"></app-input-radio>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Indique la denominación o razón social de los subcontratistas de
+        <label class="form-label text-start">Indique la denominación o razón social de los subcontratistas de
           quienes reciba los servicios especializados o la ejecución de obras
-          especializadas.</label
-        >
+          especializadas.</label>
       </div>
       <div class="col-md-4">
-        <label class="form-label text-start" for="RFC">RFC:</label>
-        <input
-          class="form-control"
-          type="text"
-          size="80"
-          id="RFC"
-          name="RFC"
-          formControlName="datosGeneralesRFC"
-        />
+        <label class="form-label text-start" for="RFC">R F C:</label>
+        <input class="form-control" type="text" size="80" id="RFC" name="RFC" formControlName="datosGeneralesRFC" />
       </div>
       <div class="col-md-8"></div>
       <div class="col-md-12">
         <div class="form-group pull-right">
-          <button
-            type="button"
-            name="Agregar"
-            id="btnBusqRfc"
-            [disabled]="esFormularioSoloLectura"
-            class="btn btn-primary me-5"
-          >
+          <button type="button" name="Agregar" id="btnBusqRfc" [disabled]="esFormularioSoloLectura"
+            class="btn btn-primary me-5 btn-custom-gray">
             Agregar
           </button>
         </div>
       </div>
       <div class="col-md-12 mt-5">
-        <app-tabla-dinamica
-          [tipoSeleccionTabla]="tipoSeleccionTabla"
-          [configuracionTabla]="configuracionColumnas"
-          [datos]="listaDeSubcontratistas"
-        >
+        <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="configuracionColumnas"
+          [datos]="listaDeSubcontratistas">
         </app-tabla-dinamica>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination justify-content-center">
+            <li class="page-item"><a class="page-link">1</a></li>
+          </ul>
+        </nav>
       </div>
       <div class="col-md-12">
         <div class="form-group pull-right">
-          <button
-            type="button"
-            name="eliminar"
-            [disabled]="esFormularioSoloLectura"
-            id="btnBusqRfcEliminar"
-            class="btn btn-danger me-5"
-          >
+          <button type="button" name="eliminar" [disabled]="esFormularioSoloLectura" id="btnBusqRfcEliminar"
+            class="btn btn-danger me-5 btn-custom-gray">
             Eliminar
           </button>
         </div>
       </div>
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Señale si se encuentra en el listado de empresas publicadas por el
-          SAT en términos del artículo 69 del CFF, con excepción de lo dispuesto
-          en la fracción VI del referido artículo.</label
-        >
-        <app-input-radio
-          [radioOptions]="sinoOpcion.radioOptions"
-          [isRequired]="sinoOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-          formControlName="3503"
-        ></app-input-radio>
+        <label class="form-label text-start">Señale si se encuentra en el listado de empresas publicadas por el SAT en términos del artículo 69 del CFF, con excepción de lo dispuesto en la fracción II y VI del referido artículo.</label>
+        <app-input-radio [radioOptions]="sinoOpcion.radioOptions" [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'" [gap]="'50px'" formControlName="3503"></app-input-radio>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Del mismo modo indique si se encuentra en el listado de empresas
+        <label class="form-label text-start">Del mismo modo indique si se encuentra en el listado de empresas
           publicadas por el SAT en términos del artículo 69-B, párrafo cuarto
-          del CFF.</label
-        >
-        <app-input-radio
-          [radioOptions]="sinoOpcion.radioOptions"
-          [isRequired]="sinoOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-          formControlName="3504"
-        ></app-input-radio>
+          del CFF.</label>
+        <app-input-radio [radioOptions]="sinoOpcion.radioOptions" [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'" [gap]="'50px'" formControlName="3504"></app-input-radio>
       </div>
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Indique si se encuentra en el listado de empresas publicadas por el
+        <label class="form-label text-start">Indique si se encuentra en el listado de empresas publicadas por el
           SAT en términos del articulo 69-B Bis noveno párrafo, párrafo cuarto
-          del CFF.</label
-        >
-        <app-input-radio
-          [radioOptions]="sinoOpcion.radioOptions"
-          [isRequired]="sinoOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-          formControlName="3505"
-        ></app-input-radio>
+          del CFF.</label>
+        <app-input-radio [radioOptions]="sinoOpcion.radioOptions" [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'" [gap]="'50px'" formControlName="3505"></app-input-radio>
       </div>
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Señale si sus certificados de sellos digitales están vigentes.</label
-        >
-        <app-input-radio
-          [radioOptions]="sinoOpcion.radioOptions"
-          [isRequired]="sinoOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-          formControlName="3506"
-        ></app-input-radio>
+        <label class="form-label text-start">Señale si sus certificados de sellos digitales están vigentes.</label>
+        <app-input-radio [radioOptions]="sinoOpcion.radioOptions" [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'" [gap]="'50px'" formControlName="3506"></app-input-radio>
       </div>
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Señale si tiene actualizado sus medios de contacto para efectos del
+        <label class="form-label text-start">Señale si tiene actualizado sus medios de contacto para efectos del
           buzón tributario en términos del artículo 17-K, penúltimo párrafo del
-          CFF.</label
-        >
-        <app-input-radio
-          [radioOptions]="sinoOpcion.radioOptions"
-          [isRequired]="sinoOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-          formControlName="3507"
-        ></app-input-radio>
+          CFF.</label>
+        <app-input-radio [radioOptions]="sinoOpcion.radioOptions" [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'" [gap]="'50px'" formControlName="3507"></app-input-radio>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Señale si se encuentra suspendida en el Padrón de Importadores o en
+        <label class="form-label text-start">Señale si se encuentra suspendida en el Padrón de Importadores o en
           el Padrón de Importadores de Sectores Específicos o Padrón de
-          Exportadores Sectorial.</label
-        >
-        <app-input-radio
-          [radioOptions]="sinoOpcion.radioOptions"
-          [isRequired]="sinoOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-          formControlName="3508"
-        ></app-input-radio>
+          Exportadores Sectorial.</label>
+        <app-input-radio [radioOptions]="sinoOpcion.radioOptions" [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'" [gap]="'50px'" formControlName="3508"></app-input-radio>
       </div>
 
       <div class="col-md-12">
@@ -251,39 +143,25 @@
       </div>
 
       <div class="col-md-12">
-        <label class="form-label text-start"
-          >Archivo con la totalidad de sus clientes y proveedores en el
+        <label class="form-label text-start">Archivo con la totalidad de sus clientes y proveedores en el
           extranjero, directa o indirectamente vinculados con el régimen
           aduanero con el que se solicita la certificación, con los que haya
           realizado operaciones de comercio exterior durante los últimos 12
-          meses.</label
-        >
+          meses.</label>
         <div class="mt-3">
           <b>Para descargar plantilla del archivo de excel de click </b>
           <a href="/assets/pdf/carga_proveedoresExtranjeros_aviso.xlsx">aquí</a>
         </div>
         <div class="row" style="margin-top: 20px">
           <div class="col-md-4">
-            <input
-              type="file"
-              accept=".xlsx"
-              class="form-control sfile"
-              name="archivoExtranjero"
-              id="archivoExtranjero"
-              disabled="true"
-              title="Examinar"
-            />
+            <input type="file" accept=".xlsx" class="form-control sfile" name="archivoExtranjero" id="archivoExtranjero"
+              disabled="true" title="Examinar" />
           </div>
           <div class="col-md-8"></div>
           <div class="col-md-8"></div>
           <div class="col-md-4 d-flex justify-content-end">
-            <button
-              type="button"
-              name="cargaArchivoProcesos"
-              id="cargaArchivoProcesos"
-              [disabled]="esFormularioSoloLectura"
-              class="btn btn-primary me-md-3"
-            >
+            <button type="button" name="cargaArchivoProcesos" id="cargaArchivoProcesos"
+              [disabled]="esFormularioSoloLectura" class="btn btn-primary me-md-3 btn-custom-gray">
               Cargar archivo
             </button>
           </div>
@@ -295,37 +173,23 @@
       </div>
 
       <div class="col-md-12">
-        <label class="form-label text-start"
-          >Archivo que contiene el RFC de los proveedores de insumos adquiridos
+        <label class="form-label text-start">Archivo que contiene el RFC de los proveedores de insumos adquiridos
           en territorio nacional, vinculados al proceso bajo el régimen que
-          solicita de los últimos 6 meses.</label
-        >
+          solicita de los últimos 6 meses.</label>
         <div class="mt-3">
           <b>Para descargar plantilla del archivo de excel de click </b>
           <a href="/assets/pdf/carga_proveedoresExtranjeros_aviso.xlsx">aquí</a>
         </div>
         <div class="row" style="margin-top: 20px">
           <div class="col-md-4">
-            <input
-              type="file"
-              accept=".xlsx"
-              class="form-control sfile"
-              name="archivoExtranjero"
-              id="archivoExtranjero"
-              disabled="true"
-              title="Examinar"
-            />
+            <input type="file" accept=".xlsx" class="form-control sfile" name="archivoExtranjero" id="archivoExtranjero"
+              disabled="true" title="Examinar" />
           </div>
           <div class="col-md-8"></div>
           <div class="col-md-8"></div>
           <div class="col-md-4 d-flex justify-content-end">
-            <button
-              type="button"
-              name="cargaArchivoProcesos"
-              id="cargaArchivoProcesos"
-              [disabled]="esFormularioSoloLectura"
-              class="btn btn-primary me-md-3"
-            >
+            <button type="button" name="cargaArchivoProcesos" id="cargaArchivoProcesos"
+              [disabled]="esFormularioSoloLectura" class="btn btn-primary me-md-3 btn-custom-gray">
               Cargar archivo
             </button>
           </div>
@@ -333,21 +197,14 @@
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Señale si el SAT ha interpuesto querella o denuncia penal en contra
+        <label class="form-label text-start">Señale si el SAT ha interpuesto querella o denuncia penal en contra
           de los socios, accionistas, representante legal con facultad para
           actos de administración o de dominio, o integrantes de la
           administración de la empresa solicitante o, en su caso declaratoria de
           perjuicio, durante los últimos tres años anteriores a la presentación
-          de la solicitud.</label
-        >
-        <app-input-radio
-          [radioOptions]="sinoOpcion.radioOptions"
-          [isRequired]="sinoOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-          formControlName="3511"
-        ></app-input-radio>
+          de la solicitud.</label>
+        <app-input-radio [radioOptions]="sinoOpcion.radioOptions" [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'" [gap]="'50px'" formControlName="3511"></app-input-radio>
       </div>
 
       <div class="col-md-12">
@@ -355,35 +212,21 @@
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Señale si el SAT ha interpuesto querella o denuncia penal en contra
+        <label class="form-label text-start">Señale si el SAT ha interpuesto querella o denuncia penal en contra
           de los socios, accionistas, representante legal con facultad para
           actos de administración o de dominio, o integrantes de la
           administración de la empresa solicitante o, en su caso declaratoria de
           perjuicio, durante los últimos tres años anteriores a la presentación
-          de la solicitud.</label
-        >
-        <app-input-radio
-          [radioOptions]="sinoOpcion.radioOptions"
-          [isRequired]="sinoOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-          formControlName="3512"
-        ></app-input-radio>
+          de la solicitud.</label>
+        <app-input-radio [radioOptions]="sinoOpcion.radioOptions" [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'" [gap]="'50px'" formControlName="3512"></app-input-radio>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Indique, si cuenta con un sistema de control de inventarios de
-          conformidad con las disposiciones previstas por el Anexo 24.</label
-        >
-        <app-input-radio
-          [radioOptions]="sinoOpcion.radioOptions"
-          [isRequired]="sinoOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-          formControlName="3513"
-        ></app-input-radio>
+        <label class="form-label text-start">Indique, si cuenta con un sistema de control de inventarios de
+          conformidad con las disposiciones previstas por el Anexo 24.</label>
+        <app-input-radio [radioOptions]="sinoOpcion.radioOptions" [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'" [gap]="'50px'" formControlName="3513"></app-input-radio>
       </div>
 
       <div class="col-md-12 mt-4">
@@ -399,57 +242,31 @@
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Nombre del sistema o datos para su identificación</label
-        >
-        <textarea
-          formControlName="textoGenerico1"
-          id="textoGenerico1"
-          class="form-control"
-          rows="3"
-          style="height: 50px"
-        ></textarea>
+        <label class="form-label text-start">Nombre del sistema o datos para su identificación</label>
+        <textarea formControlName="textoGenerico1" id="textoGenerico1" class="form-control" rows="3"
+          style="height: 50px"></textarea>
       </div>
 
       <div class="col-md-12 mt-4">
         <label class="form-label text-start"> Lugar de radicación</label>
-        <textarea
-          formControlName="textoGenerico2"
-          id="textoGenerico2"
-          class="form-control"
-          rows="3"
-          style="height: 50px"
-        ></textarea>
+        <textarea formControlName="textoGenerico2" id="textoGenerico2" class="form-control" rows="3"
+          style="height: 50px"></textarea>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Señale si lleva la contabilidad en medios electrónicos de conformidad
+        <label class="form-label text-start">Señale si lleva la contabilidad en medios electrónicos de conformidad
           con el artículo 28, fracción III, del CFF y la regla 2.8.1.5. de la
-          RMF.</label
-        >
-        <app-input-radio
-          [radioOptions]="sinoOpcion.radioOptions"
-          [isRequired]="sinoOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-          formControlName="3514"
-        ></app-input-radio>
+          RMF.</label>
+        <app-input-radio [radioOptions]="sinoOpcion.radioOptions" [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'" [gap]="'50px'" formControlName="3514"></app-input-radio>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Señale si ingresa mensualmente su información contable a través del
+        <label class="form-label text-start">Señale si ingresa mensualmente su información contable a través del
           portal del SAT. de conformidad con el artículo 28, fracción IV. del
-          CFF y la regla 2.8.1.6. de la RMF.</label
-        >
-        <app-input-radio
-          [radioOptions]="sinoOpcion.radioOptions"
-          [isRequired]="sinoOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-          formControlName="3515"
-        ></app-input-radio>
+          CFF y la regla 2.8.1.6. de la RMF.</label>
+        <app-input-radio [radioOptions]="sinoOpcion.radioOptions" [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'" [gap]="'50px'" formControlName="3515"></app-input-radio>
       </div>
 
       <div class="col-md-12">
@@ -457,241 +274,153 @@
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Señale si los socios, accionistas, según corresponda, representante
+        <label class="form-label text-start">Señale si los socios, accionistas, según corresponda, representante
           legal con facultad para actos de administración o de dominio, e
           integrantes de la administración de conformidad con la constitución de
           la empresa solicitante, se encuentran al corriente en el cumplimiento
-          de sus obligaciones fiscales.</label
-        >
-        <app-input-radio
-          [radioOptions]="sinoOpcion.radioOptions"
-          [isRequired]="sinoOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-          formControlName="3516"
-        ></app-input-radio>
+          de sus obligaciones fiscales.</label>
+        <app-input-radio [radioOptions]="sinoOpcion.radioOptions" [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'" [gap]="'50px'" formControlName="3516"></app-input-radio>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Opinión positiva vigente del cumplimiento de obligaciones fiscales de
+        <label class="form-label text-start">Opinión positiva vigente del cumplimiento de obligaciones fiscales de
           la solicitante, los socios, accionistas, representante legal con
           facultad para actos de administración o de dominio, administrador
           único o miembros del consejo de administración, según sea el
-          caso.</label
-        >
-        <textarea
-          id="textoGenerico3"
-          class="form-control"
-          rows="3"
-          style="height: 70px"
-          formControlName="textoGenerico3"
-        ></textarea>
+          caso.</label>
+        <textarea id="textoGenerico3" class="form-control" rows="3" style="height: 70px"
+          formControlName="textoGenerico3"></textarea>
       </div>
 
       <div class="col-md-12">
-        <ng-titulo titulo="Miembros de la empresa" />
+        <ng-titulo titulo="Miembro de la empresa" />
       </div>
 
       <div class="col-md-12">
-        <app-tabla-dinamica
-          [tipoSeleccionTabla]="tipoSeleccionTabla"
-          [configuracionTabla]="seccionSociosICConfiguracionColumnas"
-          [datos]="listaSeccionSociosIC"
-        >
+        <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla"
+          [configuracionTabla]="seccionSociosICConfiguracionColumnas" [datos]="listaSeccionSociosIC">
         </app-tabla-dinamica>
+         <nav aria-label="Page navigation example">
+          <ul class="pagination justify-content-center">
+            <li class="page-item"><a class="page-link">1</a></li>
+          </ul>
+        </nav>
       </div>
 
       <div class="col-md-12">
         <div class="d-flex justify-content-end">
-          <button type="button" id="eliminarSocio" class="btn btn-danger" [disabled]="esFormularioSoloLectura">
+          <button type="button" id="eliminarSocio" class="btn btn-danger btn-custom-gray" [disabled]="esFormularioSoloLectura">
             Eliminar
           </button>
-          <button
-            type="button"
-            [disabled]="esFormularioSoloLectura"
-            id="modificarSocio"
-            class="btn btn-secondary ms-3"
-          >
+          <button type="button" [disabled]="esFormularioSoloLectura" id="modificarSocio" class="btn btn-secondary ms-3 btn-custom-gray">
             Modificar
           </button>
-          <button type="button" id="agregarSocio" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura">
+          <button type="button" id="agregarSocio" class="btn btn-primary ms-3 btn-custom-gray" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
         </div>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Manifieste si sus socios o accionistas, e integrantes de la
+        <label class="form-label text-start">Manifieste si sus socios o accionistas, e integrantes de la
           administración, su representante legal con facultad para actos de
           administración o de dominio, o sus partes relacionadas en términos de
           la Ley del ISR no se encuentren vinculados con alguna empresa a la que
           se hubiere cancelado su Registro en el Esquema de Certificación de
           Empresas, de conformidad con las fracciones V, VI y VII del Apartado
           A; II y III del Apartado B de la regla 7.2.4 .; y/o VI, VII y XI de la
-          regla 7.2.5.</label
-        >
-        <app-input-radio
-          [radioOptions]="sinoOpcion.radioOptions"
-          [isRequired]="sinoOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-          formControlName="3517"
-        ></app-input-radio>
+          regla 7.2.5.</label>
+        <app-input-radio [radioOptions]="sinoOpcion.radioOptions" [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'" [gap]="'50px'" formControlName="3517"></app-input-radio>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Indique si sus proveedores se encuentran en el listado de empresas
+        <label class="form-label text-start">Indique si sus proveedores se encuentran en el listado de empresas
           publicadas por el SAT, en términos del 69 del CFF, con excepción de la
           fracción VI, articulo 69-B, párrafo cuarto y 69-B Bis noveno párrafo
-          del CFF.</label
-        >
-        <app-input-radio
-          [radioOptions]="sinoOpcion.radioOptions"
-          [isRequired]="sinoOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-          formControlName="3518"
-        ></app-input-radio>
+          del CFF.</label>
+        <app-input-radio [radioOptions]="sinoOpcion.radioOptions" [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'" [gap]="'50px'" formControlName="3518"></app-input-radio>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Manifieste si se le ha determinado algún crédito fiscal firme en los
+        <label class="form-label text-start">Manifieste si se le ha determinado algún crédito fiscal firme en los
           doce meses anteriores a la fecha de presentación de la
-          solicitud.</label
-        >
-        <app-input-radio
-          [radioOptions]="sinoOpcion.radioOptions"
-          [isRequired]="sinoOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-          formControlName="3519"
-        ></app-input-radio>
+          solicitud.</label>
+        <app-input-radio [radioOptions]="sinoOpcion.radioOptions" [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'" [gap]="'50px'" formControlName="3519"></app-input-radio>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Manifieste si cuenta con inversión en territorio nacional y acredita
+        <label class="form-label text-start">Manifieste si cuenta con inversión en territorio nacional y acredita
           la legal posesión de la misma, sin que sea admisible aquella que se
-          obtiene de manera gratuita.</label
-        >
-        <app-input-radio
-          [radioOptions]="sinoOpcion.radioOptions"
-          [isRequired]="sinoOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-          formControlName="3520"
-        ></app-input-radio>
+          obtiene de manera gratuita.</label>
+        <app-input-radio [radioOptions]="sinoOpcion.radioOptions" [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'" [gap]="'50px'" formControlName="3520"></app-input-radio>
       </div>
       <div class="col-md-4 mt-4">
-        <app-catalogo-select
-          formContorlName="tipoInversion"
-          [catalogo]="tipoDeInversionLista.catalogos"
-          [label]="tipoDeInversionLista.labelNombre"
-          [placeholder]="tipoDeInversionLista.primerOpcion"
-          [required]="true"
-          [isDisabled]="esFormularioSoloLectura"
-          name="tipoInversion"
-          id="tipoInversion"
-        ></app-catalogo-select>
+        <app-catalogo-select formContorlName="tipoInversion" [catalogo]="tipoDeInversionLista.catalogos"
+          [label]="tipoDeInversionLista.labelNombre" [placeholder]="tipoDeInversionLista.primerOpcion" [required]="true"
+          [isDisabled]="esFormularioSoloLectura" name="tipoInversion" id="tipoInversion"></app-catalogo-select>
       </div>
       <div class="col-md-4 mt-4">
-        <label class="form-label text-start" for="valorenpesos"
-          >Valor en pesos *:</label
-        >
-        <input
-          class="form-control"
-          type="text"
-          size="80"
-          id="valorenpesos"
-          name="valorenpesos"
-          formControlName="cantidadInversion"
-        />
+        <label class="form-label text-start" for="valorenpesos">Valor en pesos *:</label>
+        <input class="form-control" type="text" size="80" id="valorenpesos" name="valorenpesos"
+          formControlName="cantidadInversion" />
       </div>
       <div class="col-md-4 mt-4"></div>
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start" for="valorenpesos"
-          >Descripción general *:</label
-        >
-        <input
-          class="form-control"
-          type="text"
-          size="80"
-          id="valorenpesos"
-          name="valorenpesos"
-          formControlName="descInversion"
-        />
+        <label class="form-label text-start" for="valorenpesos">Descripción general *:</label>
+        <input class="form-control" type="text" size="80" id="valorenpesos" name="valorenpesos"
+          formControlName="descInversion" />
       </div>
       <div class="col-md-12 mt-5">
-        <app-tabla-dinamica
-          [tipoSeleccionTabla]="tipoSeleccionTabla"
-          [configuracionTabla]="tipoDeInversionConfiguracionColumnas"
-          [datos]="tipoDeInversionDatos"
-        >
+        <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla"
+          [configuracionTabla]="tipoDeInversionConfiguracionColumnas" [datos]="tipoDeInversionDatos">
         </app-tabla-dinamica>
+         <nav aria-label="Page navigation example">
+          <ul class="pagination justify-content-center">
+            <li class="page-item"><a class="page-link">1</a></li>
+          </ul>
+        </nav>
       </div>
 
       <div class="col-md-12">
         <div class="d-flex justify-content-end">
-          <button type="button" id="eliminarSocio" class="btn btn-danger" [disabled]="esFormularioSoloLectura">
+          <button type="button" id="eliminarSocio" class="btn btn-danger btn-custom-gray" [disabled]="esFormularioSoloLectura">
             Eliminar
           </button>
-          <button type="button" id="agregarSocio" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura">
+          <button type="button" id="agregarSocio" class="btn btn-primary ms-3 btn-custom-gray" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
         </div>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Señale si previamente contó con la Certificación en materia de IVA e
+        <label class="form-label text-start">Señale si previamente contó con la Certificación en materia de IVA e
           IEPS, el Registro en el Esquema de Certificación de Empresas bajo la
           modalidad IVA e IEPS o Garantía del interés fiscal del IVA e
-          IEPS.</label
-        >
-        <app-input-radio
-          [radioOptions]="sinoOpcion.radioOptions"
-          [isRequired]="sinoOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-          formControlName="3521"
-        ></app-input-radio>
+          IEPS.</label>
+        <app-input-radio [radioOptions]="sinoOpcion.radioOptions" [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'" [gap]="'50px'" formControlName="3521"></app-input-radio>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >En caso afirmativo, señale si se encuentra al corriente en el
+        <label class="form-label text-start">En caso afirmativo, señale si se encuentra al corriente en el
           cumplimiento de las obligaciones relativas al Anexo 30 sobre dicho
-          registro.</label
-        >
-        <app-input-radio
-          [radioOptions]="sinoOpcion.radioOptions"
-          [isRequired]="sinoOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-          formControlName="3522"
-        ></app-input-radio>
+          registro.</label>
+        <app-input-radio [radioOptions]="sinoOpcion.radioOptions" [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'" [gap]="'50px'" formControlName="3522"></app-input-radio>
       </div>
 
       <div class="col-md-12 mt-4 text-start">
         <h5 class="form-label text-start">Régimen aduanero*:</h5>
-        <div
-          *ngFor="let regimen of listaRegimenAduanero; let i = index"
-          class="mb-2"
-        >
+        <div *ngFor="let regimen of listaRegimenAduanero; let i = index" class="mb-2">
           <div class="d-flex align-items-center">
             <div class="form-check">
-              <input
-                type="checkbox"
-                [formControlName]="'claveEnumeracionD'+ i"
-                class="form-check-input"
-                [id]="'regimen_valorPorDefecto' + i"
-                [readonly]="true"
-              />
+              <input type="checkbox" [formControlName]="'claveEnumeracionD'+ i" class="form-check-input"
+                [id]="'regimen_valorPorDefecto' + i" [readonly]="true" />
 
               <span class="ms-3">{{ regimen }}</span>
             </div>
@@ -700,61 +429,52 @@
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Indique todos los domicilios registrados ante el SAT de la persona
+        <label class="form-label text-start">Indique todos los domicilios registrados ante el SAT de la persona
           moral solicitante e indique aquellos en que se desarrollen actividades
           relacionadas con su proceso productivo y/o la prestación de servicios
           (Se requiere tabla, agregar las filas necesarias de acuerdo al número
-          de instalaciones).</label
-        >
+          de instalaciones).</label>
       </div>
       <div class="col-md-12 mt-4">
-        <app-tabla-dinamica
-          [tipoSeleccionTabla]="tipoSeleccionTabla"
-          [configuracionTabla]="domiciliosConfiguracionColumnas"
-          [datos]="domiciliosDatos"
-        >
+        <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla"
+          [configuracionTabla]="domiciliosConfiguracionColumnas" [datos]="domiciliosDatos">
         </app-tabla-dinamica>
+         <nav aria-label="Page navigation example">
+          <ul class="pagination justify-content-center">
+            <li class="page-item"><a class="page-link">1</a></li>
+          </ul>
+        </nav>
       </div>
       <div class="col-md-12">
         <div class="d-flex justify-content-end">
-          <button type="button" id="modificarSocio" class="btn btn-secondary" [disabled]="esFormularioSoloLectura">
+          <button type="button" id="modificarSocio" class="btn btn-outline-secondary btn-custom-gray" [disabled]="esFormularioSoloLectura">
             Modificar
           </button>
 
-          <button type="button" id="eliminarSocio" class="btn btn-danger ms-3" [disabled]="esFormularioSoloLectura">
+          <button type="button" id="eliminarSocio" class="btn btn-danger ms-3 btn-custom-gray" [disabled]="esFormularioSoloLectura">
             Eliminar
           </button>
 
-          <button type="button" id="agregarSocio" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura">
+          <button type="button" id="agregarSocio" class="btn btn-primary ms-3 btn-custom-gray" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
         </div>
       </div>
       <div class="col-md-6 mt-5">
-        <label class="form-label text-start" for=""
-          >Número de Programa I M M E X *:</label
-        >
-        <input class="form-control" formControlName="textoGenerico4" type="text" size="80" id="textoGenerico4" name="textoGenerico4" />
+        <label class="form-label text-start" for="">Número de Programa I M M E X *:</label>
+        <input class="form-control" formControlName="textoGenerico4" type="text" size="80" id="textoGenerico4"
+          name="textoGenerico4" />
       </div>
       <div class="col-md-6 mt-5">
-        <label class="form-label text-start" for=""
-          >Modalidad del Programa I M M E X *:</label
-        >
-        <input class="form-control" formControlName="textoGenerico5" type="text" size="80" id="textoGenerico5" name="textoGenerico5" />
+        <label class="form-label text-start" for="">Modalidad del Programa I M M E X *:</label>
+        <input class="form-control" formControlName="textoGenerico5" type="text" size="80" id="textoGenerico5"
+          name="textoGenerico5" />
       </div>
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Señale si ha realizado operaciones al amparo de su programa
-          IMMEX.</label
-        >
-        <app-input-radio
-          [radioOptions]="sinoOpcion.radioOptions"
-          [isRequired]="sinoOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-          formControlName="3523"
-        ></app-input-radio>
+        <label class="form-label text-start">Señale si ha realizado operaciones al amparo de su programa
+          IMMEX.</label>
+        <app-input-radio [radioOptions]="sinoOpcion.radioOptions" [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'" [gap]="'50px'" formControlName="3523"></app-input-radio>
       </div>
 
       <div class="col-md-12">
@@ -762,99 +482,64 @@
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Señale si al momento de su solicitud cuenta con la infraestructura
+        <label class="form-label text-start">Señale si al momento de su solicitud cuenta con la infraestructura
           necesaria para realizar la operación, el proceso productivo o de
           servicios, según corresponda al régimen aduanero por el que se
-          solicita el registro.</label
-        >
-        <app-input-radio
-          [radioOptions]="sinoOpcion.radioOptions"
-          [isRequired]="sinoOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-          formControlName="3528"
-        ></app-input-radio>
+          solicita el registro.</label>
+        <app-input-radio [radioOptions]="sinoOpcion.radioOptions" [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'" [gap]="'50px'" formControlName="3528"></app-input-radio>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Manifieste si se le ha emitido resolución de improcedencia de las
+        <label class="form-label text-start">Manifieste si se le ha emitido resolución de improcedencia de las
           devoluciones del IVA cuyo monto represente más del 20% del total de
           las devoluciones autorizadas y/o que el monto negado resultante supere
           los $5,000,000.00 (cinco millones de pesos 00/100 m.n.) en lo
           individual o en su conjunto, durante los últimos seis meses contados a
-          partir de la fecha de presentación de la solicitud.</label
-        >
-        <app-input-radio
-          [radioOptions]="sinoOpcion.radioOptions"
-          [isRequired]="sinoOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-          formControlName="3529"
-        ></app-input-radio>
+          partir de la fecha de presentación de la solicitud.</label>
+        <app-input-radio [radioOptions]="sinoOpcion.radioOptions" [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'" [gap]="'50px'" formControlName="3529"></app-input-radio>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >En caso afirmativo, señale el porcentaje y el monto que representan
+        <label class="form-label text-start">En caso afirmativo, señale el porcentaje y el monto que representan
           de la totalidad de solicitudes de devolución autorizadas, aquéllas en
-          que la autoridad haya emitido resolución de improcedencia.</label
-        >
+          que la autoridad haya emitido resolución de improcedencia.</label>
       </div>
       <div class="col-md-4 mt-4">
         <label class="form-label text-start" for="textoGenerico6">Porcentaje *:</label>
-        <input class="form-control" formControlName="textoGenerico6" type="text" id="textoGenerico6" name="textoGenerico6" />
+        <input class="form-control" formControlName="textoGenerico6" type="text" id="textoGenerico6"
+          name="textoGenerico6" />
       </div>
       <div class="col-md-4 mt-4">
         <label class="form-label text-start" for="textoGenerico7">Monto *:</label>
-        <input class="form-control" formControlName="textoGenerico7" type="text" id="textoGenerico7" name="textoGenerico7" />
+        <input class="form-control" formControlName="textoGenerico7" type="text" id="textoGenerico7"
+          name="textoGenerico7" />
       </div>
       <div class="col-md-4 mt-4"></div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Manifiesta que cuenta con la capacidad financiera para llevar a cabo
+        <label class="form-label text-start">Manifiesta que cuenta con la capacidad financiera para llevar a cabo
           su proyecto productivo o de servicios, a través de solvencia económica
-          propia o asumiendo la responsabilidad solidaria.</label
-        >
-        <app-input-radio
-          [radioOptions]="sinoOpcion.radioOptions"
-          [isRequired]="sinoOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-          formControlName="3530"
-        ></app-input-radio>
+          propia o asumiendo la responsabilidad solidaria.</label>
+        <app-input-radio [radioOptions]="sinoOpcion.radioOptions" [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'" [gap]="'50px'" formControlName="3530"></app-input-radio>
       </div>
 
       <div class="col-md-12">
-        <label class="form-label text-start"
-          >Archivo con monto anual de las importaciones temporales que realizará
+        <label class="form-label text-start">Archivo con monto anual de las importaciones temporales que realizará
           por fracción arancelaria. El monto deberá ser acorde en su capacidad
-          productiva y financiera.</label
-        >
+          productiva y financiera.</label>
         <div class="row" style="margin-top: 20px">
           <div class="col-md-4">
-            <input
-              type="file"
-              accept=".xlsx"
-              class="form-control sfile"
-              name=""
-              disabled="true"
-              id=""
-              title="Examinar"
-            />
+            <input type="file" accept=".xlsx" class="form-control sfile" name="" disabled="true" id=""
+              title="Examinar" />
           </div>
           <div class="col-md-8"></div>
           <div class="col-md-8"></div>
           <div class="col-md-4 d-flex justify-content-end">
-            <button
-              type="button"
-              name="cargaArchivoProcesos"
-              id="cargaArchivoProcesos"
-              [disabled]="esFormularioSoloLectura"
-              class="btn btn-primary me-md-3"
-            >
+            <button type="button" name="cargaArchivoProcesos" id="cargaArchivoProcesos"
+              [disabled]="esFormularioSoloLectura" class="btn btn-primary me-md-3 btn-custom-gray">
               Cargar archivo
             </button>
           </div>
@@ -862,58 +547,43 @@
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
-          >Indique si durante los últimos doce meses ha importado temporalmente
+        <label class="form-label text-start">Indique si durante los últimos doce meses ha importado temporalmente
           mercancías y que, al menos el 50% de las importaciones temporales de
           insumos realizadas durante el mismo período fueron transformadas y
           retoradas, retornadas en su mismo estado, transferidas, destruidas, o
-          se les prestó un servicio.</label
-        >
-        <app-input-radio
-          [radioOptions]="sinoOpcion.radioOptions"
-          [isRequired]="sinoOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-          formControlName="3531"
-        ></app-input-radio>
+          se les prestó un servicio.</label>
+        <app-input-radio [radioOptions]="sinoOpcion.radioOptions" [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'" [gap]="'50px'" formControlName="3531"></app-input-radio>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start" for="textoGenerico9"
-          >Capture el valor en aduana total en moneda nacional de sus
+        <label class="form-label text-start" for="textoGenerico9">Capture el valor en aduana total en moneda nacional de
+          sus
           importaciones temporales de insumos del periodo requerido conforme al
-          parrafo anterior *:</label
-        >
-        <input class="form-control" formControlName="textoGenerico9" type="text" id="textoGenerico9" name="textoGenerico9" />
+          parrafo anterior *:</label>
+        <input class="form-control" formControlName="textoGenerico9" type="text" id="textoGenerico9"
+          name="textoGenerico9" />
       </div>
 
       <div class="row">
         <div class="col-md-3 mt-4">
           <p class="text-center">(A)</p>
-          <label class="form-label text-start" for=""
-            >Concepto (declare solo los que apliquen)</label
-          >
+          <label class="form-label text-start" for="">Concepto (declare solo los que apliquen)</label>
         </div>
         <div class="col-md-3 mt-4">
           <p class="text-center">(B)</p>
-          <label class="form-label text-start" for=""
-            >Valor comercial del concepto indicado en la Columna A (moneda
-            nacional)</label
-          >
+          <label class="form-label text-start" for="">Valor comercial del concepto indicado en la Columna A (moneda
+            nacional)</label>
         </div>
         <div class="col-md-3 mt-4">
           <p class="text-center">(C)</p>
-          <label class="form-label text-start" for=""
-            >Valor en Aduana de los insumos importados temporalmente incluidos
-            en concepto de la columna A</label
-          >
+          <label class="form-label text-start" for="">Valor en Aduana de los insumos importados temporalmente incluidos
+            en concepto de la columna A</label>
         </div>
         <div class="col-md-3 mt-4">
           <p class="text-center">(D)</p>
-          <label class="form-label text-start" for=""
-            >Porcentaje que representa respecto del total de importaciones
-            temporales de materiales directos einsumos</label
-          >
+          <label class="form-label text-start" for="">Porcentaje que representa respecto del total de importaciones
+            temporales de materiales directos einsumos</label>
         </div>
       </div>
 
@@ -922,30 +592,34 @@
           <label class="form-label text-start" for="">Retornos</label>
         </div>
         <div class="col-md-3 mt-4">
-          <input type="text" formControlName="textoGenerico10" class="form-control" name="textoGenerico10" id="textoGenerico10" />
+          <input type="text" formControlName="textoGenerico10" class="form-control" name="textoGenerico10"
+            id="textoGenerico10" />
         </div>
         <div class="col-md-3 mt-4">
-          <input type="text" formControlName="textoGenerico11" class="form-control" name="textoGenerico11" id="textoGenerico11" />
+          <input type="text" formControlName="textoGenerico11" class="form-control" name="textoGenerico11"
+            id="textoGenerico11" />
         </div>
         <div class="col-md-3 mt-4">
-          <input type="text" formControlName="textoGenerico12" class="form-control" name="textoGenerico12" id="textoGenerico12" />
+          <input type="text" formControlName="textoGenerico12" class="form-control" name="textoGenerico12"
+            id="textoGenerico12" />
         </div>
       </div>
 
       <div class="row">
         <div class="col-md-3 mt-4">
-          <label class="form-label text-start" for=""
-            >Transferencias virtuales de mercancías</label
-          >
+          <label class="form-label text-start" for="">Transferencias virtuales de mercancías</label>
         </div>
         <div class="col-md-3 mt-4">
-          <input type="text" class="form-control"  formControlName="textoGenerico13" name="textoGenerico13" id="textoGenerico13" />
+          <input type="text" class="form-control" formControlName="textoGenerico13" name="textoGenerico13"
+            id="textoGenerico13" />
         </div>
         <div class="col-md-3 mt-4">
-          <input type="text" class="form-control" formControlName="textoGenerico14" name="textoGenerico14" id="textoGenerico14" />
+          <input type="text" class="form-control" formControlName="textoGenerico14" name="textoGenerico14"
+            id="textoGenerico14" />
         </div>
         <div class="col-md-3 mt-4">
-          <input type="text" class="form-control" formControlName="textoGenerico15" name="textoGenerico15" id="textoGenerico15" />
+          <input type="text" class="form-control" formControlName="textoGenerico15" name="textoGenerico15"
+            id="textoGenerico15" />
         </div>
       </div>
 
@@ -954,30 +628,34 @@
           <label class="form-label text-start" for="">Desperdicios</label>
         </div>
         <div class="col-md-3 mt-4">
-          <input type="text" class="form-control" formControlName="textoGenerico16" name="textoGenerico16" id="textoGenerico16" />
+          <input type="text" class="form-control" formControlName="textoGenerico16" name="textoGenerico16"
+            id="textoGenerico16" />
         </div>
         <div class="col-md-3 mt-4">
-          <input type="text" class="form-control" formControlName="textoGenerico17" name="textoGenerico17" id="textoGenerico17" />
+          <input type="text" class="form-control" formControlName="textoGenerico17" name="textoGenerico17"
+            id="textoGenerico17" />
         </div>
         <div class="col-md-3 mt-4">
-          <input type="text" class="form-control" formControlName="textoGenerico18" name="textoGenerico18" id="textoGenerico18" />
+          <input type="text" class="form-control" formControlName="textoGenerico18" name="textoGenerico18"
+            id="textoGenerico18" />
         </div>
       </div>
 
       <div class="row">
         <div class="col-md-3 mt-4">
-          <label class="form-label text-start" for=""
-            >Constancias de Transferencia de Mercancías ( C T M)</label
-          >
+          <label class="form-label text-start" for="">Constancias de Transferencia de Mercancías ( C T M)</label>
         </div>
         <div class="col-md-3 mt-4">
-          <input type="text" class="form-control" formControlName="textoGenerico19" name="textoGenerico19" id="textoGenerico19" />
+          <input type="text" class="form-control" formControlName="textoGenerico19" name="textoGenerico19"
+            id="textoGenerico19" />
         </div>
         <div class="col-md-3 mt-4">
-          <input type="text" class="form-control" formControlName="textoGenerico20" name="textoGenerico20" id="textoGenerico20" />
+          <input type="text" class="form-control" formControlName="textoGenerico20" name="textoGenerico20"
+            id="textoGenerico20" />
         </div>
         <div class="col-md-3 mt-4">
-          <input type="text" class="form-control" formControlName="textoGenerico21" name="textoGenerico21" id="textoGenerico21" />
+          <input type="text" class="form-control" formControlName="textoGenerico21" name="textoGenerico21"
+            id="textoGenerico21" />
         </div>
       </div>
 
@@ -986,13 +664,16 @@
           <label class="form-label text-start" for="">Totales</label>
         </div>
         <div class="col-md-3 mt-4">
-          <input type="text" class="form-control" formControlName="textoGenerico22" name="textoGenerico22" id="textoGenerico22" />
+          <input type="text" class="form-control" formControlName="textoGenerico22" name="textoGenerico22"
+            id="textoGenerico22" />
         </div>
         <div class="col-md-3 mt-4">
-          <input type="text" class="form-control" formControlName="textoGenerico23" name="textoGenerico23" id="textoGenerico23" />
+          <input type="text" class="form-control" formControlName="textoGenerico23" name="textoGenerico23"
+            id="textoGenerico23" />
         </div>
         <div class="col-md-3 mt-4">
-          <input type="text" class="form-control" formControlName="textoGenerico24" name="textoGenerico24" id="textoGenerico24" />
+          <input type="text" class="form-control" formControlName="textoGenerico24" name="textoGenerico24"
+            id="textoGenerico24" />
         </div>
       </div>
 
@@ -1010,9 +691,7 @@
       </div>
 
       <div class="col-md-12">
-        <ng-titulo
-          titulo="Manifestaciones de acuerdo a lo establecido en la regla 7.4.2 en las RGCE"
-        />
+        <ng-titulo titulo="Manifestaciones de acuerdo a lo establecido en la regla 7.4.2 en las RGCE" />
         <div class="alert alert-info">
           <div class="form-check text-start">
             <input type="checkbox" class="form-check-input" formControlName="alerta1" /> &nbsp;

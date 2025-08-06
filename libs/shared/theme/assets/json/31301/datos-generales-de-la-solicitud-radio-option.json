@@ -10,7 +10,7 @@
                 "value": 2
             },
             {
-                "label": "Modificación de denominación o razórrsocial",
+                "label": "Modificación de denominación o razón social",
                 "value": 3
             },
             {
@@ -62,7 +62,7 @@
     "requisitos": {
         "radioOptions": [
             {
-                "label": "Sí",
+                "label": "Si",
                 "value": 1
             },
             {
