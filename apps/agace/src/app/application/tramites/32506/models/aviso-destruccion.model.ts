@@ -568,20 +568,30 @@ export interface ArchivoDocumentos {
 
 }
 
+export interface RespuestaConsulta {
+  /**
+   * Indica si la consulta fue exitosa.
+   * @type {boolean}
+   */
+  success: boolean;
+
+  /**
+   * Datos resultantes de la consulta.
+   * @type {ConsultaDatos}
+   */
+  datos: ConsultaDatos;
+
+  /**
+   * Mensaje de la respuesta.
+   * @type {string}
+   */
+  message: string;
+}
 /**
  * Representa la estructura de los datos del trámite 32506 para el aviso.
  */
-export interface Tramite32506Aviso {
-  /**
-   * Paso actual en el formulario o flujo del trámite.
-   */
-  pasoActivo: number;
-
-  /**
-   * Pestaña actualmente activa en la interfaz del formulario.
-   */
-  pestanaActiva: number;
-
+export interface ConsultaDatos {
+ 
   /**
    * Información del solicitante que realiza el trámite.
    */

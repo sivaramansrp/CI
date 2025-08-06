@@ -260,7 +260,34 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @default false
    */
   soloLectura: boolean = false;
+
+  /**
+   * @property {boolean} detalles
+   * @description Indica si se deben mostrar los detalles de la solicitud.
+   * @default undefined
+   */
   detalles: never[] | undefined;
+
+  /**
+   * @property {boolean} generoEnabled
+   * @description Indica si el campo de género está habilitado.
+   * @default false
+   */
+  especieEnabled = false;
+
+  /**
+   * @property {boolean} nombreComunEnabled
+   * @description Indica si el campo de nombre común está habilitado.
+   * @default false
+   */
+  nombreComunEnabled = false;
+
+  /**
+   * @property {boolean} mostrarOtroNombreComun
+   * @description Indica si se debe mostrar el campo para otro nombre común.
+   * @default false
+   */
+  mostrarOtroNombreComun = false;
 
   /**
    * Constructor del componente.
@@ -303,7 +330,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
     this.updateEstadoFormulario();
   }
 
@@ -671,6 +697,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.store.setEstado(ESTADO);
   }
 
+  /**
+   * Maneja el cambio en el campo de nombre común.
+   * Si el valor es 'Otro', muestra un campo adicional para ingresar otro nombre común.
+   */
+  onNombreComunChange(event: Event | { value?: string } | undefined): void {
+    const VALUE = 'value' in (event ?? {}) ? (event as { value?: string }).value
+      : (event && (event as Event).target && ((event as Event).target as HTMLSelectElement).value) || '';
+    this.setValoresStore(this.agregarMercanciasForm.get('datosMercancia') as FormGroup, 'nombreComun', 'setNombreComun');
+    this.mostrarOtroNombreComun = VALUE === 'Otro';
+  }
+
+  /**
+   * Cierra el modal de agregar mercancías.
+   */
   public getCrossListBtn(index: number): Array<{ btnNombre: string; class: string; funcion: () => void }> {
     return [
       {
@@ -812,6 +852,26 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Agrega mercancías al formulario de solicitud.
+   * Si no hay descripción del producto, muestra un modal de confirmación.
+   * Si hay descripción del producto, muestra el modal para agregar mercancías.
+   */
+  agregarMercancia(): void {
+    const DESCRIPCION_PRODUCTO = this.reexportacionForm.get('descripcionProducto')?.value;
+    if (!DESCRIPCION_PRODUCTO) {
+      if (this.modalConfirmacion) {
+        const MODEL = new Modal(this.modalConfirmacion.nativeElement);
+        MODEL.show();
+      }
+    } else {
+      if (this.modalRef) {
+        const MODEL = new Modal(this.modalRef.nativeElement);
+        MODEL.show();
+      }
+    }
+  }
+
+  /**
    * Maneja el cambio de filas seleccionadas en la tabla de detalles.
    * @param selectedRowsDetalle Lista de filas seleccionadas en la tabla de detalles.
    */
@@ -829,6 +889,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       this.selectedRowsDetalle = [];
     }
   }
+
+  /**
+   * Limpiar formulario.
+   */
+  limpiar(): void {
+    this.agregarMercanciasForm.reset();
+  }
+
 
   /**
    * Cierra el modal actual.
