@@ -336,10 +336,10 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
     const CONTROL = this.cancelacionForm.get('validacionForm.numeroCertificado');
     const NUMERO_CERTIFICADO = CONTROL?.value;
     
-    // Reset error message
+    // Restablecer mensaje de error
     this.mensajeError = '';
 
-    // Check if field is empty (null, undefined, or only whitespace)
+    // Comprobar si el campo está vacío (nulo, indefinido o solo espacios en blanco)
     if (!NUMERO_CERTIFICADO || NUMERO_CERTIFICADO.trim() === '') {
       this.estaBuscando = true;
       this.mensajeError = '1.(Número de certificado) es un campo requerido';
@@ -348,14 +348,14 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Check if field has validation errors (pattern, format, etc.)
+    // Comprobar si el campo tiene errores de validación (patrón, formato, etc.)
     if (CONTROL?.invalid) {
       this.estaBuscando = true;
       
       if (CONTROL.hasError('pattern')) {
-        // Pattern validation failed: not 8-20 alphanumeric characters
+        // Fallo en la validación de patrón: no 8-20 caracteres alfanuméricos
         this.mensajeError = 'El certificado de origen no existe';
-        // For pattern errors, don't emit isNumeroCertificado as true (to avoid showing empty field error)
+        // Para errores de patrón, no emitir isNumeroCertificado como verdadero (para evitar mostrar el error de campo vacío)
         this.isNumeroCertificado.emit(false);
         this.isNumeroCertificadoPattern.emit(true);
       } else {
@@ -366,15 +366,15 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Valid input: show table data
+    // Entrada válida: mostrar datos de la tabla
     this.estaBuscando = false;
     this.mostrarErrores = false;
     
-    // Always update certificate data regardless of whether it already exists
-    // This ensures dynamic changes are reflected every time user searches
+    // Actualice siempre los datos del certificado independientemente de si ya existen
+    // Esto asegura que los cambios dinámicos se reflejen cada vez que el usuario busca
     this.buscarYActualizarCertificado(NUMERO_CERTIFICADO.trim());
-    
-    // Always emit success state to show the table with available certificates
+
+    // Siempre emita el estado de éxito para mostrar la tabla con los certificados disponibles
     this.isNumeroCertificado.emit(false);
     this.isNumeroCertificadoPattern.emit(false);
   }
