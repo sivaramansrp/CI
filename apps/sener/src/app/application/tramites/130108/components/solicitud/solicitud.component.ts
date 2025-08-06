@@ -964,9 +964,8 @@ tituloParte = TITULO_ORIGEN;
         // Actualizar el store con los nuevos datos
         this.tramite130108Store.establecerDatos({ 
           rangoDias: this.selectRangoDias,
-          seleccionada: [] // Reset selected countries when loading all countries
+          seleccionada: []
         });
-        // Reset fechaSeleccionada locally as well
         this.fechaSeleccionada = [];
       });
   }
@@ -996,9 +995,8 @@ tituloParte = TITULO_ORIGEN;
         // Actualizar el store con los nuevos datos
         this.tramite130108Store.establecerDatos({ 
           rangoDias: this.selectRangoDias,
-          seleccionada: [] // Reset selected countries when changing block
+          seleccionada: []
         });
-        // Reset fechaSeleccionada locally as well
         this.fechaSeleccionada = [];
       });
   }

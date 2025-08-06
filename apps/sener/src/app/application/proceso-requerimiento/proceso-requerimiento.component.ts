@@ -249,7 +249,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
     if (this.tramite) {
       this.selectTramite(this.tramite);
     } else {
-      this.router.navigate([`/${this.departamento}/seleccion-tra  mite`]);
+      this.router.navigate([`/${this.departamento}/seleccion-tramite`]);
     }
 
     /**
