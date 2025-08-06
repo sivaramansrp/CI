@@ -401,20 +401,31 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
   public seleccionarOrigenDelPaisTres: string[] = this.crosListaDePaises;
 
-  /**
-   * Etiqueta de la lista de fechas para países de procedencia.
-   * Define los textos de los lados izquierdo y derecho de la lista cruzada.
-   */
+/**
+ * @description
+ * Etiqueta de la lista de fechas para países de origen.
+ * Define los textos de los lados izquierdo y derecho de la lista cruzada.
+ * Utilizada para mostrar la selección de países de origen en el formulario.
+ */
   public paisDeOrigenLabel: CrossListLable = {
     tituluDeLaIzquierda: 'País de origen:',
     derecha: 'País(es) seleccionado(s)*:',
   };
 
+  /**
+   * @description
+   * Etiqueta de la lista de fechas para países de procedencia (segunda lista).
+   * Define los textos de los lados izquierdo y derecho de la lista cruzada.
+   */
     public paisDeProcedenciaLabel: CrossListLable = {
     tituluDeLaIzquierda: 'País de procedencia:',
     derecha: 'País(es) seleccionado(s)*:',
   };
 
+ /**
+  * @description Uso específico de la mercancía.
+  * Define los textos de los lados izquierdo y derecho de la lista cruzada.
+  */
     public usoEspecifico: CrossListLable = {
     tituluDeLaIzquierda: 'Uso específico:',
     derecha: 'Uso específico seleccionado*:',
