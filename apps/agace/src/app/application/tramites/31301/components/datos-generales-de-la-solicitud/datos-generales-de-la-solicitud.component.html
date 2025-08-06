@@ -24,7 +24,52 @@
         ></app-input-radio>
       </div>
       <div class="col-md-12">
-        <label class="form-label">Nota:</label><br />
+        @if(datosGeneralesForm.get('tipoDeEndoso')?.value === 1 ||
+        datosGeneralesForm.get('tipoDeEndoso')?.value === 2 ||
+        datosGeneralesForm.get('tipoDeEndoso')?.value === 3 ||
+        datosGeneralesForm.get('tipoDeEndoso')?.value === 4) {
+        <label class="form-label">Nota:</label>
+        <p class="form-text">
+          Es importante señalar que para cumplir con todos los requisitos
+          establecidos en la normatividad vigente, para la aceptación de la
+          garantía (póliza de fianza), DEBERÁ presentar en las oficinas de la
+          AGACE ubicadas en: Avenida Hidalgo, número 77, Módulo III, Planta
+          Baja, Colonia Guerrero, Alcaldía Cuauhtémoc, Ciudad de México, CP
+          06300, el original de la póliza de fianza en materia de IVA e IEPS
+          emitida en papelería oficial o archivo .xml, según sea el caso.
+        </p>
+        <p class="form-text">
+          Dicha póliza de fianza deberá ser presentada mediante escrito libre
+          que contenga los requisitos establecidos en los artículos 18 y 18-A
+          del Código Fiscal de la Federación, y acreditando la personalidad del
+          representante legal de conformidad con el artículo 19 del Código
+          Fiscal de la Federación
+        </p>
+        } @if(datosGeneralesForm.get('tipoDeEndoso')?.value === 2 ||
+        datosGeneralesForm.get('tipoDeEndoso')?.value === 4) {
+        <p class="italic-bold">
+          "Es importante señalar que para cumplir con todos los requisitos
+          establecidos en la normatividad vigente, para la aceptación de la
+          garantía (póliza de fianza), DEBERÁ presentar en las oficinas de la
+          AGACE ubicadas en: Avenida Hidalgo, número 77, Módulo IV, Piso 1,
+          Colonia Guerrero, Alcaldía Cuauhtémoc, C.P. 06300, Ciudad de México,
+          el original de la carta de crédito en materia de IVA e IEPS emitida en
+          hoja membretada de la Institución de Crédito emisora.
+          @if(datosGeneralesForm.get('tipoDeEndoso')?.value === 4) {
+          <span class="italic-bold">"</span>
+          }
+        </p>
+        } @if(datosGeneralesForm.get('tipoDeEndoso')?.value === 2) {
+        <p class="italic-bold">
+          Dicha póliza de fianza deberá ser presentada mediante escrito libre
+          que contenga los requisitos establecidos en los artículos 18 y 18-A
+          del Código Fiscal de la Federación, y acreditando la personalidad del
+          representante legal de conformidad con el artículo 19 del Código
+          Fiscal de la Federación."
+        </p>
+        }
+      </div>
+      <div class="col-md-12">
         <label class="form-label">Modalidad de la garantía *:</label>
         <app-input-radio
           formControlName="modalidadDeLaGarantia"
@@ -55,7 +100,7 @@
           [label]="conceptoLista.labelNombre"
           [placeholder]="conceptoLista.primerOpcion"
           [required]="false"
-          [isDisabled]="esFormularioSoloLectura"
+          [isDisabled]="true"
           name="concepto"
           id="concepto"
         ></app-catalogo-select>
@@ -116,7 +161,7 @@
         >
       </div>
       <div class="col-md-4">
-        <label class="form-label text-start" for="RFC">RFC:</label>
+        <label class="form-label text-start" for="RFC">R F C:</label>
         <input
           class="form-control"
           type="text"
@@ -133,7 +178,7 @@
             type="button"
             name="Agregar"
             id="btnBusqRfc"
-            [disabled]="esFormularioSoloLectura"
+            [disabled]="true"
             class="btn btn-primary me-5"
           >
             Agregar
@@ -145,6 +190,8 @@
           [tipoSeleccionTabla]="tipoSeleccionTabla"
           [configuracionTabla]="configuracionColumnas"
           [datos]="listaDeSubcontratistas"
+          [disableSeleccionTablaCheckBox]="true"
+          [showPagination]="true"
         >
         </app-tabla-dinamica>
       </div>
@@ -153,7 +200,7 @@
           <button
             type="button"
             name="eliminar"
-            [disabled]="esFormularioSoloLectura"
+            [disabled]="true"
             id="btnBusqRfcEliminar"
             class="btn btn-danger me-5"
           >
@@ -260,19 +307,36 @@
         >
         <div class="mt-3">
           <b>Para descargar plantilla del archivo de excel de click </b>
-          <a href="/assets/pdf/carga_proveedoresExtranjeros_aviso.xlsx">aquí</a>
+          <a
+            href="/assets/pdf/carga_proveedoresExtranjeros_aviso.xlsx"
+            class="disabled-link"
+            tabindex="-1"
+            >aquí</a
+          >
         </div>
         <div class="row" style="margin-top: 20px">
-          <div class="col-md-4">
-            <input
-              type="file"
-              accept=".xlsx"
-              class="form-control sfile"
-              name="archivoExtranjero"
-              id="archivoExtranjero"
-              disabled="true"
-              title="Examinar"
-            />
+          <div class="col-md-6">
+            <div class="costumbre-file-upload">
+              <input
+                type="file"
+                id="archivoExtranjero"
+                name="archivoExtranjero"
+                accept=".xlsx"
+                (change)="enArchivoSeleccionado($event)"
+                [disabled]="true"
+                hidden
+              />
+              <label
+                for="archivoExtranjero"
+                class="btn btn-default costumbre-label"
+                [class.disabled]="true"
+              >
+                Elija archivo
+              </label>
+              <span>{{
+                nombreDelArchivo || 'No se eligió ningún archivo'
+              }}</span>
+            </div>
           </div>
           <div class="col-md-8"></div>
           <div class="col-md-8"></div>
@@ -281,8 +345,8 @@
               type="button"
               name="cargaArchivoProcesos"
               id="cargaArchivoProcesos"
-              [disabled]="esFormularioSoloLectura"
-              class="btn btn-primary me-md-3"
+              [disabled]="true"
+              class="btn btn-default me-md-3"
             >
               Cargar archivo
             </button>
@@ -302,19 +366,36 @@
         >
         <div class="mt-3">
           <b>Para descargar plantilla del archivo de excel de click </b>
-          <a href="/assets/pdf/carga_proveedoresExtranjeros_aviso.xlsx">aquí</a>
+          <a
+            href="/assets/pdf/carga_proveedoresExtranjeros_aviso.xlsx"
+            class="disabled-link"
+            tabindex="-1"
+            >aquí</a
+          >
         </div>
         <div class="row" style="margin-top: 20px">
-          <div class="col-md-4">
-            <input
-              type="file"
-              accept=".xlsx"
-              class="form-control sfile"
-              name="archivoExtranjero"
-              id="archivoExtranjero"
-              disabled="true"
-              title="Examinar"
-            />
+          <div class="col-md-6">
+            <div class="costumbre-file-upload">
+              <input
+                type="file"
+                id="archivoExtranjero"
+                name="archivoExtranjero"
+                accept=".xlsx"
+                (change)="enArchivoSeleccionado($event)"
+                [disabled]="true"
+                hidden
+              />
+              <label
+                for="archivoExtranjero"
+                class="btn btn-default costumbre-label"
+                [class.disabled]="true"
+              >
+                Elija archivo
+              </label>
+              <span>{{
+                nombreDelArchivo || 'No se eligió ningún archivo'
+              }}</span>
+            </div>
           </div>
           <div class="col-md-8"></div>
           <div class="col-md-8"></div>
@@ -323,8 +404,8 @@
               type="button"
               name="cargaArchivoProcesos"
               id="cargaArchivoProcesos"
-              [disabled]="esFormularioSoloLectura"
-              class="btn btn-primary me-md-3"
+              [disabled]="true"
+              class="btn btn-default me-md-3"
             >
               Cargar archivo
             </button>
@@ -334,12 +415,9 @@
 
       <div class="col-md-12 mt-4">
         <label class="form-label text-start"
-          >Señale si el SAT ha interpuesto querella o denuncia penal en contra
-          de los socios, accionistas, representante legal con facultad para
-          actos de administración o de dominio, o integrantes de la
-          administración de la empresa solicitante o, en su caso declaratoria de
-          perjuicio, durante los últimos tres años anteriores a la presentación
-          de la solicitud.</label
+          >Indique si cuenta con un sistema de control de inventarios, para el
+          registro de sus operaciones de comercio exterior de conformidad con el
+          artículo 59, fracción I de la Ley.</label
         >
         <app-input-radio
           [radioOptions]="sinoOpcion.radioOptions"
@@ -405,9 +483,9 @@
         <textarea
           formControlName="textoGenerico1"
           id="textoGenerico1"
-          class="form-control"
-          rows="3"
-          style="height: 50px"
+          class="form-control no-resize"
+          rows="4"
+          style="height: 60px"
         ></textarea>
       </div>
 
@@ -416,9 +494,9 @@
         <textarea
           formControlName="textoGenerico2"
           id="textoGenerico2"
-          class="form-control"
-          rows="3"
-          style="height: 50px"
+          class="form-control no-resize"
+          rows="4"
+          style="height: 60px"
         ></textarea>
       </div>
 
@@ -440,7 +518,7 @@
       <div class="col-md-12 mt-4">
         <label class="form-label text-start"
           >Señale si ingresa mensualmente su información contable a través del
-          portal del SAT. de conformidad con el artículo 28, fracción IV. del
+          portal del SAT, de conformidad con el artículo 28, fracción IV, del
           CFF y la regla 2.8.1.6. de la RMF.</label
         >
         <app-input-radio
@@ -453,7 +531,7 @@
       </div>
 
       <div class="col-md-12">
-        <ng-titulo titulo="Miembros de la empresa" />
+        <ng-titulo titulo="Miembro de la empresa" />
       </div>
 
       <div class="col-md-12 mt-4">
@@ -491,7 +569,7 @@
       </div>
 
       <div class="col-md-12">
-        <ng-titulo titulo="Miembros de la empresa" />
+        <ng-titulo titulo="Miembro de la empresa" />
       </div>
 
       <div class="col-md-12">
@@ -499,24 +577,36 @@
           [tipoSeleccionTabla]="tipoSeleccionTabla"
           [configuracionTabla]="seccionSociosICConfiguracionColumnas"
           [datos]="listaSeccionSociosIC"
+          [showPagination]="true"
+          [disableSeleccionTablaCheckBox]="true"
         >
         </app-tabla-dinamica>
       </div>
 
       <div class="col-md-12">
         <div class="d-flex justify-content-end">
-          <button type="button" id="eliminarSocio" class="btn btn-danger" [disabled]="esFormularioSoloLectura">
+          <button
+            type="button"
+            id="eliminarSocio"
+            class="btn btn-danger"
+            [disabled]="true"
+          >
             Eliminar
           </button>
           <button
             type="button"
-            [disabled]="esFormularioSoloLectura"
+            [disabled]="true"
             id="modificarSocio"
-            class="btn btn-secondary ms-3"
+            class="btn btn-default ms-3"
           >
             Modificar
           </button>
-          <button type="button" id="agregarSocio" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura">
+          <button
+            type="button"
+            id="agregarSocio"
+            class="btn btn-primary ms-3"
+            [disabled]="true"
+          >
             Agregar
           </button>
         </div>
@@ -594,7 +684,7 @@
           [label]="tipoDeInversionLista.labelNombre"
           [placeholder]="tipoDeInversionLista.primerOpcion"
           [required]="true"
-          [isDisabled]="esFormularioSoloLectura"
+          [isDisabled]="true"
           name="tipoInversion"
           id="tipoInversion"
         ></app-catalogo-select>
@@ -631,16 +721,28 @@
           [tipoSeleccionTabla]="tipoSeleccionTabla"
           [configuracionTabla]="tipoDeInversionConfiguracionColumnas"
           [datos]="tipoDeInversionDatos"
+          [showPagination]="true"
+          [disableSeleccionTablaCheckBox]="true"
         >
         </app-tabla-dinamica>
       </div>
 
       <div class="col-md-12">
         <div class="d-flex justify-content-end">
-          <button type="button" id="eliminarSocio" class="btn btn-danger" [disabled]="esFormularioSoloLectura">
+          <button
+            type="button"
+            id="eliminarSocio"
+            class="btn btn-danger"
+            [disabled]="true"
+          >
             Eliminar
           </button>
-          <button type="button" id="agregarSocio" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura">
+          <button
+            type="button"
+            id="agregarSocio"
+            class="btn btn-primary ms-3"
+            [disabled]="true"
+          >
             Agregar
           </button>
         </div>
@@ -687,7 +789,7 @@
             <div class="form-check">
               <input
                 type="checkbox"
-                [formControlName]="'claveEnumeracionD'+ i"
+                [formControlName]="'claveEnumeracionD' + i"
                 class="form-check-input"
                 [id]="'regimen_valorPorDefecto' + i"
                 [readonly]="true"
@@ -713,20 +815,37 @@
           [tipoSeleccionTabla]="tipoSeleccionTabla"
           [configuracionTabla]="domiciliosConfiguracionColumnas"
           [datos]="domiciliosDatos"
+          [showPagination]="true"
+          [disableSeleccionTablaCheckBox]="true"
         >
         </app-tabla-dinamica>
       </div>
       <div class="col-md-12">
         <div class="d-flex justify-content-end">
-          <button type="button" id="modificarSocio" class="btn btn-secondary" [disabled]="esFormularioSoloLectura">
+          <button
+            type="button"
+            id="modificarSocio"
+            class="btn btn-default"
+            [disabled]="true"
+          >
             Modificar
           </button>
 
-          <button type="button" id="eliminarSocio" class="btn btn-danger ms-3" [disabled]="esFormularioSoloLectura">
+          <button
+            type="button"
+            id="eliminarSocio"
+            class="btn btn-danger ms-3"
+            [disabled]="true"
+          >
             Eliminar
           </button>
 
-          <button type="button" id="agregarSocio" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura">
+          <button
+            type="button"
+            id="agregarSocio"
+            class="btn btn-primary ms-3"
+            [disabled]="true"
+          >
             Agregar
           </button>
         </div>
@@ -735,13 +854,27 @@
         <label class="form-label text-start" for=""
           >Número de Programa I M M E X *:</label
         >
-        <input class="form-control" formControlName="textoGenerico4" type="text" size="80" id="textoGenerico4" name="textoGenerico4" />
+        <input
+          class="form-control"
+          formControlName="textoGenerico4"
+          type="text"
+          size="80"
+          id="textoGenerico4"
+          name="textoGenerico4"
+        />
       </div>
       <div class="col-md-6 mt-5">
         <label class="form-label text-start" for=""
           >Modalidad del Programa I M M E X *:</label
         >
-        <input class="form-control" formControlName="textoGenerico5" type="text" size="80" id="textoGenerico5" name="textoGenerico5" />
+        <input
+          class="form-control"
+          formControlName="textoGenerico5"
+          type="text"
+          size="80"
+          id="textoGenerico5"
+          name="textoGenerico5"
+        />
       </div>
       <div class="col-md-12 mt-4">
         <label class="form-label text-start"
@@ -803,12 +936,28 @@
         >
       </div>
       <div class="col-md-4 mt-4">
-        <label class="form-label text-start" for="textoGenerico6">Porcentaje *:</label>
-        <input class="form-control" formControlName="textoGenerico6" type="text" id="textoGenerico6" name="textoGenerico6" />
+        <label class="form-label text-start" for="textoGenerico6"
+          >Porcentaje *:</label
+        >
+        <input
+          class="form-control"
+          formControlName="textoGenerico6"
+          type="text"
+          id="textoGenerico6"
+          name="textoGenerico6"
+        />
       </div>
       <div class="col-md-4 mt-4">
-        <label class="form-label text-start" for="textoGenerico7">Monto *:</label>
-        <input class="form-control" formControlName="textoGenerico7" type="text" id="textoGenerico7" name="textoGenerico7" />
+        <label class="form-label text-start" for="textoGenerico7"
+          >Monto *:</label
+        >
+        <input
+          class="form-control"
+          formControlName="textoGenerico7"
+          type="text"
+          id="textoGenerico7"
+          name="textoGenerico7"
+        />
       </div>
       <div class="col-md-4 mt-4"></div>
 
@@ -834,16 +983,28 @@
           productiva y financiera.</label
         >
         <div class="row" style="margin-top: 20px">
-          <div class="col-md-4">
-            <input
-              type="file"
-              accept=".xlsx"
-              class="form-control sfile"
-              name=""
-              disabled="true"
-              id=""
-              title="Examinar"
-            />
+          <div class="col-md-6">
+            <div class="costumbre-file-upload">
+              <input
+                type="file"
+                id="archivoExtranjero"
+                name="archivoExtranjero"
+                accept=".xlsx"
+                (change)="enArchivoSeleccionado($event)"
+                [disabled]="true"
+                hidden
+              />
+              <label
+                for="archivoExtranjero"
+                class="btn btn-default costumbre-label"
+                [class.disabled]="true"
+              >
+                Elija archivo
+              </label>
+              <span>{{
+                nombreDelArchivo || 'No se eligió ningún archivo'
+              }}</span>
+            </div>
           </div>
           <div class="col-md-8"></div>
           <div class="col-md-8"></div>
@@ -852,8 +1013,8 @@
               type="button"
               name="cargaArchivoProcesos"
               id="cargaArchivoProcesos"
-              [disabled]="esFormularioSoloLectura"
-              class="btn btn-primary me-md-3"
+              [disabled]="true"
+              class="btn btn-default me-md-3"
             >
               Cargar archivo
             </button>
@@ -884,7 +1045,13 @@
           importaciones temporales de insumos del periodo requerido conforme al
           parrafo anterior *:</label
         >
-        <input class="form-control" formControlName="textoGenerico9" type="text" id="textoGenerico9" name="textoGenerico9" />
+        <input
+          class="form-control"
+          formControlName="textoGenerico9"
+          type="text"
+          id="textoGenerico9"
+          name="textoGenerico9"
+        />
       </div>
 
       <div class="row">
@@ -922,13 +1089,31 @@
           <label class="form-label text-start" for="">Retornos</label>
         </div>
         <div class="col-md-3 mt-4">
-          <input type="text" formControlName="textoGenerico10" class="form-control" name="textoGenerico10" id="textoGenerico10" />
+          <input
+            type="text"
+            formControlName="textoGenerico10"
+            class="form-control"
+            name="textoGenerico10"
+            id="textoGenerico10"
+          />
         </div>
         <div class="col-md-3 mt-4">
-          <input type="text" formControlName="textoGenerico11" class="form-control" name="textoGenerico11" id="textoGenerico11" />
+          <input
+            type="text"
+            formControlName="textoGenerico11"
+            class="form-control"
+            name="textoGenerico11"
+            id="textoGenerico11"
+          />
         </div>
         <div class="col-md-3 mt-4">
-          <input type="text" formControlName="textoGenerico12" class="form-control" name="textoGenerico12" id="textoGenerico12" />
+          <input
+            type="text"
+            formControlName="textoGenerico12"
+            class="form-control"
+            name="textoGenerico12"
+            id="textoGenerico12"
+          />
         </div>
       </div>
 
@@ -939,13 +1124,31 @@
           >
         </div>
         <div class="col-md-3 mt-4">
-          <input type="text" class="form-control"  formControlName="textoGenerico13" name="textoGenerico13" id="textoGenerico13" />
+          <input
+            type="text"
+            class="form-control"
+            formControlName="textoGenerico13"
+            name="textoGenerico13"
+            id="textoGenerico13"
+          />
         </div>
         <div class="col-md-3 mt-4">
-          <input type="text" class="form-control" formControlName="textoGenerico14" name="textoGenerico14" id="textoGenerico14" />
+          <input
+            type="text"
+            class="form-control"
+            formControlName="textoGenerico14"
+            name="textoGenerico14"
+            id="textoGenerico14"
+          />
         </div>
         <div class="col-md-3 mt-4">
-          <input type="text" class="form-control" formControlName="textoGenerico15" name="textoGenerico15" id="textoGenerico15" />
+          <input
+            type="text"
+            class="form-control"
+            formControlName="textoGenerico15"
+            name="textoGenerico15"
+            id="textoGenerico15"
+          />
         </div>
       </div>
 
@@ -954,13 +1157,31 @@
           <label class="form-label text-start" for="">Desperdicios</label>
         </div>
         <div class="col-md-3 mt-4">
-          <input type="text" class="form-control" formControlName="textoGenerico16" name="textoGenerico16" id="textoGenerico16" />
+          <input
+            type="text"
+            class="form-control"
+            formControlName="textoGenerico16"
+            name="textoGenerico16"
+            id="textoGenerico16"
+          />
         </div>
         <div class="col-md-3 mt-4">
-          <input type="text" class="form-control" formControlName="textoGenerico17" name="textoGenerico17" id="textoGenerico17" />
+          <input
+            type="text"
+            class="form-control"
+            formControlName="textoGenerico17"
+            name="textoGenerico17"
+            id="textoGenerico17"
+          />
         </div>
         <div class="col-md-3 mt-4">
-          <input type="text" class="form-control" formControlName="textoGenerico18" name="textoGenerico18" id="textoGenerico18" />
+          <input
+            type="text"
+            class="form-control"
+            formControlName="textoGenerico18"
+            name="textoGenerico18"
+            id="textoGenerico18"
+          />
         </div>
       </div>
 
@@ -971,13 +1192,31 @@
           >
         </div>
         <div class="col-md-3 mt-4">
-          <input type="text" class="form-control" formControlName="textoGenerico19" name="textoGenerico19" id="textoGenerico19" />
+          <input
+            type="text"
+            class="form-control"
+            formControlName="textoGenerico19"
+            name="textoGenerico19"
+            id="textoGenerico19"
+          />
         </div>
         <div class="col-md-3 mt-4">
-          <input type="text" class="form-control" formControlName="textoGenerico20" name="textoGenerico20" id="textoGenerico20" />
+          <input
+            type="text"
+            class="form-control"
+            formControlName="textoGenerico20"
+            name="textoGenerico20"
+            id="textoGenerico20"
+          />
         </div>
         <div class="col-md-3 mt-4">
-          <input type="text" class="form-control" formControlName="textoGenerico21" name="textoGenerico21" id="textoGenerico21" />
+          <input
+            type="text"
+            class="form-control"
+            formControlName="textoGenerico21"
+            name="textoGenerico21"
+            id="textoGenerico21"
+          />
         </div>
       </div>
 
@@ -986,13 +1225,31 @@
           <label class="form-label text-start" for="">Totales</label>
         </div>
         <div class="col-md-3 mt-4">
-          <input type="text" class="form-control" formControlName="textoGenerico22" name="textoGenerico22" id="textoGenerico22" />
+          <input
+            type="text"
+            class="form-control"
+            formControlName="textoGenerico22"
+            name="textoGenerico22"
+            id="textoGenerico22"
+          />
         </div>
         <div class="col-md-3 mt-4">
-          <input type="text" class="form-control" formControlName="textoGenerico23" name="textoGenerico23" id="textoGenerico23" />
+          <input
+            type="text"
+            class="form-control"
+            formControlName="textoGenerico23"
+            name="textoGenerico23"
+            id="textoGenerico23"
+          />
         </div>
         <div class="col-md-3 mt-4">
-          <input type="text" class="form-control" formControlName="textoGenerico24" name="textoGenerico24" id="textoGenerico24" />
+          <input
+            type="text"
+            class="form-control"
+            formControlName="textoGenerico24"
+            name="textoGenerico24"
+            id="textoGenerico24"
+          />
         </div>
       </div>
 
@@ -1015,10 +1272,14 @@
         />
         <div class="alert alert-info">
           <div class="form-check text-start">
-            <input type="checkbox" class="form-check-input" formControlName="alerta1" /> &nbsp;
-            <b>*</b> Bajo protesta de decir verdad manifiesto, que continúo
-            cumpliendo los requisitos establecidos en la regla 7.4.1., 7.4.2.,
-            7.4.3. y 7.4.7.
+            <input
+              type="checkbox"
+              class="form-check-input"
+              formControlName="alerta1"
+            />
+            &nbsp; <b>*</b> Bajo protesta de decir verdad manifiesto, que
+            continúo cumpliendo los requisitos establecidos en la regla 7.4.1.,
+            7.4.2., 7.4.3. y 7.4.7.
           </div>
         </div>
       </div>
@@ -1027,11 +1288,14 @@
         <ng-titulo titulo="Manifiesto bajo protesta" />
         <div class="alert alert-info">
           <div class="form-check text-start">
-            <input type="checkbox" class="form-check-input" formControlName="alerta2" />&nbsp;
-            <b>*</b>Bajo protesta de decir la verdad, manifiesto que los datos
-            asentados en el presente documento son ciertos y que las facultades
-            que me fueron otorgadas para representar al solicitante no me han
-            sido modificadas y/o revocadas
+            <input
+              type="checkbox"
+              class="form-check-input"
+              formControlName="alerta2"
+            />&nbsp; <b>*</b>Bajo protesta de decir la verdad, manifiesto que
+            los datos asentados en el presente documento son ciertos y que las
+            facultades que me fueron otorgadas para representar al solicitante
+            no me han sido modificadas y/o revocadas
           </div>
         </div>
       </div>

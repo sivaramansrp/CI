@@ -18,6 +18,7 @@ import { Solicitud31301Store } from '../../estados/solicitud31301.store';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
@@ -35,6 +36,7 @@ import { takeUntil } from 'rxjs';
     TituloComponent,
     CatalogoSelectComponent,
     InputFechaComponent,
+    TooltipModule
   ],
   providers: [SolicitudService],
   templateUrl: './datos-por-garantia.component.html',

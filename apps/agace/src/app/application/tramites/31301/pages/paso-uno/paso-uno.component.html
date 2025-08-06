@@ -32,10 +32,10 @@
           (keydown.space)="seleccionaTab(3)"
           tabindex="3"
           role="button"
-          >Datos por garantia</a
+          >Datos por garantía</a
         >
       </li>
-      @if(isEnableModificacionTab){
+      @if(isEnableModificacionTab === 3) {
       <li [ngClass]="indice === 4 ? 'active' : ''">
         <a
           data-toggle="tab"
@@ -44,7 +44,7 @@
           (keydown.space)="seleccionaTab(4)"
           tabindex="4"
           role="button"
-          >Modificacion de denominacion o razors social</a
+          >Modificación de denominación o razón social</a
         >
       </li>
       }

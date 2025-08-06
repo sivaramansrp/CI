@@ -150,6 +150,9 @@ export interface SeccionSociosIC {
   /** Carácter o rol dentro de la empresa */
   caracterDe: string;
 
+  /** Almacena la nacionalidad del usuario o solicitante */
+  nacionalidad: string;
+
   /** Nombre del país de origen */
   paisNombre: string;
 

@@ -56,6 +56,9 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   /** Formulario principal que contiene los datos generales */
   datosGeneralesForm!: FormGroup;
 
+  /** Nombre del archivo seleccionado */
+  nombreDelArchivo: string = '';
+
   /** Subject utilizado para destruir observables y evitar fugas de memoria */
   public destroy$: Subject<void> = new Subject<void>();
 
@@ -145,14 +148,6 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.conseguirDatosGeneralesOpcionDeRadio();
-    this.conseguirDatosGeneralesCatologo();
-    this.conseguirListaDeSubcontratistas();
-    this.conseguirRegimenAduanero();
-    this.conseguirMiembrosDeLaEmpresa();
-    this.conseguirTipoDeInversionDatos();
-    this.conseguirDomicilios();
-    this.conseguirDatosGeneralesDeLaSolicitudDatos();
   }
 
   /**
@@ -164,6 +159,14 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
    * - Emite el cambio de `tipoDeEndoso` una vez que los datos se actualizan.
    */
   ngOnInit(): void {
+    this.conseguirDatosGeneralesOpcionDeRadio();
+    this.conseguirDatosGeneralesCatologo();
+    this.conseguirListaDeSubcontratistas();
+    this.conseguirRegimenAduanero();
+    this.conseguirMiembrosDeLaEmpresa();
+    this.conseguirTipoDeInversionDatos();
+    this.conseguirDomicilios();
+    this.conseguirDatosGeneralesDeLaSolicitudDatos();
     this.inicializarEstadoFormulario();
   }
 
@@ -202,7 +205,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     // Inicialización del formulario con los valores actuales del estado
     this.datosGeneralesForm = this.fb.group({
       tipoDeEndoso: [
-        this.solicitud31301State.tipoDeEndoso,
+        { value: this.solicitud31301State.tipoDeEndoso, disabled: true },
         [Validators.required],
       ],
       tipoDeGarantia: [
@@ -414,8 +417,8 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
       textoGenerico24: [
         { value: this.solicitud31301State.textoGenerico24, disabled: true },
       ],
-      alerta1: [this.solicitud31301State.alerta1],
-      alerta2: [this.solicitud31301State.alerta2],
+      alerta1: [{ value: this.solicitud31301State.alerta1, disabled: true }],
+      alerta2: [{ value: this.solicitud31301State.alerta2, disabled: true }],
     });
 
     /**
@@ -760,6 +763,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
           );
           this.solicitud31301Store.actualizarAlerta1(respuesta.alerta1);
           this.solicitud31301Store.actualizarAlerta2(respuesta.alerta2);
+          this.solicitud31301Store.actualizarTipoDeEndoso(respuesta.tipoDeEndoso);
         },
       });
   }
@@ -773,6 +777,25 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   getTipoDeEndoso(evento: string | number): void {
     this.tipoDeEndosoChanges.emit(evento);
     this.solicitud31301Store.actualizarTipoDeEndoso(evento);
+  }
+
+  /**
+   * Maneja el evento de selección de archivo desde un input tipo file.
+   *
+   * Este método se activa cuando el usuario selecciona un archivo.
+   * Si hay al menos un archivo seleccionado, se guarda el nombre del archivo
+   * en la propiedad `nombreDelArchivo`. Si no se seleccionó ningún archivo,
+   * se asigna una cadena vacía.
+   *
+   * @param evento - El evento generado por la acción del usuario en el input file.
+   */
+  enArchivoSeleccionado(evento: Event): void {
+    const INPUT = evento.target as HTMLInputElement;
+    if (INPUT?.files?.length) {
+      this.nombreDelArchivo = INPUT.files[0].name;
+    } else {
+      this.nombreDelArchivo = '';
+    }
   }
 
   /**

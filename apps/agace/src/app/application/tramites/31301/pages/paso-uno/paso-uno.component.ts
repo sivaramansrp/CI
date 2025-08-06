@@ -107,9 +107,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   /**
    * Determina si la pestaña de modificación de denominación o razón social debe estar habilitada.
-   * @type {boolean}
+   * @type {number}
    */
-  isEnableModificacionTab: boolean = false;
+  isEnableModificacionTab: string | number = 0;
 
   /**
    * Cambia la pestaña activa según el índice proporcionado.
@@ -126,11 +126,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @param evento - El tipo de endoso seleccionado (puede ser string o número).
    */
   tipoDeEndosoChanges(evento: string | number): void {
-    if (evento === 3) {
-      this.isEnableModificacionTab = true;
-    } else {
-      this.isEnableModificacionTab = false;
-    }
+    this.isEnableModificacionTab = evento;
   }
 
   /**
