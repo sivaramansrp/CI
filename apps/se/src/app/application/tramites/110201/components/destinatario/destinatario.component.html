@@ -84,7 +84,7 @@
       </div>
       <div class="col-md-4 mb-3">
         <label>Correo electrónico*:</label>
-        <span class="bi bi-question-circle-fill" title="ejemplo@dominio.com" data-bs-toggle="tooltip"></span>
+        <span class="bi bi-question-circle-fill fs-4 m-1" data-bs-title="ejemplo@dominio.com" data-bs-toggle="tooltip"></span>
         <input type="email" class="form-control" id="primerApellido" formControlName="correoElectronico" maxlength="70" (change)=" setValoresStore( validacionForm, 'correoElectronico', 'setCorreoElectronico' ) " />
         <div *ngIf="registroForm.get('validacionForm.correoElectronico')?.invalid && registroForm.get('validacionForm.correoElectronico')?.touched" class="text-danger">
           <small class="text-danger" *ngIf="registroForm.get('validacionForm.correoElectronico')?.errors?.['email']">Por favor, escribe una dirección de correo válida</small>
