@@ -803,3 +803,9 @@ export const REGEX_TELEFONO_OPCIONAL = /^[0-9\s()+-]{0,30}$/;
  * Requiere al menos una letra y permite letras, números, espacios y algunos signos de puntuación.
  */
 export const REGEX_NO_SOLO_NUMEROS = /^(?=.*\D).*$/;
+
+/**
+ * Expresión regular para validar un número de certificado de origen.
+ * Debe contener entre 8 y 20 caracteres alfanuméricos (letras y números).
+ */
+export const CERTIFICATE_OF_ORIGIN_NUMBER = /^[A-Za-z0-9]{8,20}$/;

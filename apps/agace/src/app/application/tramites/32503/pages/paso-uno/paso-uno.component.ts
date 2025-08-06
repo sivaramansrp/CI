@@ -99,6 +99,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy, AfterViewInit {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.consultaDatos = seccionState;
+          this.esDatosRespuesta = this.consultaDatos.readonly;
         })
       )
       .subscribe();
@@ -108,6 +109,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy, AfterViewInit {
       this.esDatosRespuesta = true;
     }
   }
+
   /**
    * Obtiene los datos de consulta desde el servicio y actualiza el estado del store.
    * 

@@ -9,7 +9,6 @@ import {
   InputRadioComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
-  TableBodyData,
   TituloComponent,
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
@@ -30,10 +29,9 @@ import {
 } from '@angular/forms';
 import { Subject, Subscription, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { DatosMercancia } from '../../models/importador-exportador.model';
 import { ImportadorExportadorService } from '../../services/importador-exportador.service';
 import { Tramite10301Query } from '../../estados/tramite10301.query';
-import mercanciaTable from '@libs/shared/theme/assets/json/10301/mercancia-table.json';
-import { DatosMercancia } from '../../models/importador-exportador.model';
 
 /**
  * Texto de adjuntar para terceros.
@@ -312,6 +310,11 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       encabezado: 'Uso específico de la mercancía',
       clave: (articulo) => articulo.usoEspecifico,
       orden: 8,
+    },
+    {
+      encabezado: 'Condición de la mercancía',
+      clave: (articulo) => articulo.condicionMercancia,
+      orden: 9,
     }
   ];
 
@@ -674,7 +677,11 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         serie: [
           this.solicitudState?.serie,
           [Validators.required, Validators.maxLength(50)],
-        ]
+        ],
+        condicionMercancia: [
+          this.solicitudState?.condicionMercancia,
+          [Validators.required, Validators.maxLength(50)],
+        ],
       }),
     });
 

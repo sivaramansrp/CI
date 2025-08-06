@@ -1,11 +1,13 @@
 <div class="container mt-4">
-<ng-titulo titulo="Datos del aviso del que procede el acta"></ng-titulo>
+  <ng-titulo titulo="Datos del aviso del que procede el acta"></ng-titulo>
   <form [formGroup]="solicitudForm">
     <div class="row">
       <div class="col-md-10">
         <div class="form-group">
           <app-catalogo-select [label]="'Aviso del que procede el acta de hechos'" [catalogo]="actaDeHechos"
-            formControlName="descripcionGenerica1" [required]="true" name="actaDeHechos" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+            [placeholder]="'Selecciona un valor'" formControlName="descripcionGenerica1" [required]="true"
+            name="actaDeHechos" [isDisabled]="esFormularioSoloLectura"
+            [tooltipQuestionCircle]="true"></app-catalogo-select>
         </div>
       </div>
     </div>
@@ -17,7 +19,7 @@
           <label>&iquest;Acudió la ADACE?</label>
           <div class="form-check ms-3">
             <app-input-radio [radioOptions]="radioOpcion" formControlName="capacidadAlmacenamiento"
-                             [layout]="'horizontal'" [disabled]="esFormularioSoloLectura"></app-input-radio>
+              [layout]="'horizontal'" [disabled]="esFormularioSoloLectura"></app-input-radio>
           </div>
         </div>
       </div>
@@ -27,7 +29,8 @@
       <div class="col-md-4">
         <div class="form-group text-left">
           <app-catalogo-select [label]="'ADACE a la que le corresponde levantar el acta'" [catalogo]="levantarActa"
-          formControlName="descripcionGenerica2" [required]="true" name="levantarActa" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+            [tooltipQuestionCircle]="true" [placeholder]="'Selecciona un valor'" formControlName="descripcionGenerica2"
+            [required]="true" name="levantarActa" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
         </div>
       </div>
     </div>
@@ -42,8 +45,8 @@
         <div class="form-group d-flex align-items-center">
           <label>&iquest;Cuenta con el ID de transacci&oacute;n de VUCEM por la presentaci&oacute;n del aviso de
             destrucci&oacute;n?</label>
-            <app-input-radio [radioOptions]="radioOpcion" formControlName="cantidadBienes"
-            [layout]="'horizontal'" [disabled]="esFormularioSoloLectura"></app-input-radio>
+          <app-input-radio [radioOptions]="radioOpcion" formControlName="cantidadBienes" [layout]="'horizontal'"
+            [disabled]="esFormularioSoloLectura"></app-input-radio>
         </div>
       </div>
     </div>
@@ -59,7 +62,7 @@
         </div>
         <div class="col-md-4">
           <input type="text" formControlName="descripcionGenerica3" id="numeroIMMEX" maxlength="250"
-            class="form-control" [required]="true" [disabled]="esFormularioSoloLectura"/>
+            class="form-control" [required]="true" [disabled]="esFormularioSoloLectura" />
         </div>
       </div>
     </div>
@@ -69,10 +72,9 @@
       <div class="col-md-12 mt-4">
         <div class="table-responsive">
           <div class="table-container">
-            <app-tabla-dinamica *ngIf="hechosTableDatos.length > 0"
-                [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="hechosTabla"
-                [datos]="hechosTableDatos"></app-tabla-dinamica>
-        </div>
+            <app-tabla-dinamica *ngIf="hechosTableDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionCheckbox"
+              [configuracionTabla]="hechosTabla" [datos]="hechosTableDatos"></app-tabla-dinamica>
+          </div>
         </div>
       </div>
     </div>
@@ -81,7 +83,8 @@
     <div class="row">
       <div class="col-md-12">
         <div class="d-flex justify-content-end">
-          <button type="button" class="btn btn-primary me-2" (click)="irAPaginaAgregar()" [disabled]="solicitudForm.invalid">Agregar</button>
+          <button type="button" class="btn btn-primary me-2" (click)="irAPaginaAgregar()"
+            [disabled]="solicitudForm.invalid">Agregar</button>
         </div>
       </div>
     </div>

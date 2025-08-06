@@ -36,13 +36,13 @@ export interface ProductoresAsociados {
 }
 
 export const FECHAI_NICIAL = {
-  labelNombre: 'Fecha incial',
+  labelNombre: 'Fecha incial:',
   required: false,
   habilitado: true,
 };
 
 export const FECHA_FINAL = {
-  labelNombre: 'Fecha final',
+  labelNombre: 'Fecha final:',
   required: false,
   habilitado: true,
 };

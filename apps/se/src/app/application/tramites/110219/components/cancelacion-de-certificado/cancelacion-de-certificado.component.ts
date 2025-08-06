@@ -2,6 +2,7 @@
 /* eslint-disable class-methods-use-this */
 import {
   BtnContinuarComponent,
+  CERTIFICATE_OF_ORIGIN_NUMBER,
   Catalogo,
   CatalogoSelectComponent,
   CatalogosSelect,
@@ -324,37 +325,58 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
 
   /**
    * Activa el estado de búsqueda y emite eventos relacionados con el número de certificado.
+   * Pattern validation: ^[A-Za-z0-9]{8,20}$ (8-20 alphanumeric characters)
+   * 
+   * Flow:
+   * 1. Empty input → isNumeroCertificado.emit(true) → shows "campo requerido"
+   * 2. Invalid pattern → isNumeroCertificadoPattern.emit(true) → shows "El certificado de origen no existe"
+   * 3. Valid pattern → both emit(false) → shows certificate table
    */
   alBuscarClic(): void {
-    const CONTROL = this.cancelacionForm.get('validacionForm.numeroCertificado')?.value;
-    if (!CONTROL) {
-      this.estaBuscando = true;
-      this.isNumeroCertificado.emit(this.estaBuscando);
-    } else if (CONTROL) {
-      this.estaBuscando = false;
-      this.certificadoDisponsiblesTablaDatos[0].numeroCertificado = (this.cancelacionForm.get('validacionForm.numeroCertificado')?.value);
-      this.isNumeroCertificado.emit(this.estaBuscando);
-    }
-
-    if (CONTROL.invalid) {
-      this.mensajeError = '1.(Número de certificado) es un campo requerido';
-    }
-
-    const CERTIFICADO_EXISTE = this.buscarCertificado(CONTROL.value);
-
-    if (!CERTIFICADO_EXISTE) {
-      this.mensajeError = 'El certificado de origen no existe';
-    }
-
-    if ((this.cancelacionForm.get('validacionForm.numeroCertificado')?.hasError('pattern')) && !(this.cancelacionForm.get('validacionForm.numeroCertificado')?.hasError('required'))) {
-      this.mostrarErrores = true;
-      this.isNumeroCertificadoPattern.emit(this.mostrarErrores);
-    } else {
-      this.mostrarErrores = false;
-      this.isNumeroCertificadoPattern.emit(this.mostrarErrores);
-    }
-
+    const CONTROL = this.cancelacionForm.get('validacionForm.numeroCertificado');
+    const NUMERO_CERTIFICADO = CONTROL?.value;
+    
+    // Restablecer mensaje de error
     this.mensajeError = '';
+
+    // Comprobar si el campo está vacío (nulo, indefinido o solo espacios en blanco)
+    if (!NUMERO_CERTIFICADO || NUMERO_CERTIFICADO.trim() === '') {
+      this.estaBuscando = true;
+      this.mensajeError = '1.(Número de certificado) es un campo requerido';
+      this.isNumeroCertificado.emit(this.estaBuscando);
+      this.isNumeroCertificadoPattern.emit(false);
+      return;
+    }
+
+    // Comprobar si el campo tiene errores de validación (patrón, formato, etc.)
+    if (CONTROL?.invalid) {
+      this.estaBuscando = true;
+      
+      if (CONTROL.hasError('pattern')) {
+        // Fallo en la validación de patrón: no 8-20 caracteres alfanuméricos
+        this.mensajeError = 'El certificado de origen no existe';
+        // Para errores de patrón, no emitir isNumeroCertificado como verdadero (para evitar mostrar el error de campo vacío)
+        this.isNumeroCertificado.emit(false);
+        this.isNumeroCertificadoPattern.emit(true);
+      } else {
+        this.mensajeError = '1.(Número de certificado) es inválido';
+        this.isNumeroCertificado.emit(this.estaBuscando);
+        this.isNumeroCertificadoPattern.emit(true);
+      }
+      return;
+    }
+
+    // Entrada válida: mostrar datos de la tabla
+    this.estaBuscando = false;
+    this.mostrarErrores = false;
+    
+    // Actualice siempre los datos del certificado independientemente de si ya existen
+    // Esto asegura que los cambios dinámicos se reflejen cada vez que el usuario busca
+    this.buscarYActualizarCertificado(NUMERO_CERTIFICADO.trim());
+
+    // Siempre emita el estado de éxito para mostrar la tabla con los certificados disponibles
+    this.isNumeroCertificado.emit(false);
+    this.isNumeroCertificadoPattern.emit(false);
   }
 
   /**
@@ -363,7 +385,79 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
    * @returns `true` si el certificado existe, de lo contrario `false`.
    */
   buscarCertificado(numero: string): boolean {
-    return false;
+    if (!numero || numero.trim() === '') {
+      return false;
+    }
+    
+    return this.certificadoDisponsiblesTablaDatos.some(
+      certificado => String(certificado.numeroCertificado).trim() === numero.trim()
+    );
+  }
+
+  /**
+   * Busca y actualiza el certificado en la tabla con el nuevo número.
+   * Si no existe, reemplaza el primer registro o crea uno nuevo.
+   * @param numero Número de certificado a buscar y actualizar.
+   */
+  buscarYActualizarCertificado(numero: string): void {
+    if (!numero || numero.trim() === '') {
+      return;
+    }
+
+    const NUMERO_LIMPIO = numero.trim();
+    
+    // Actualice siempre los datos de la tabla con el nuevo número de certificado
+    // Esto asegura que los cambios dinámicos se reflejen inmediatamente
+    if (this.certificadoDisponsiblesTablaDatos.length > 0) {
+      // Actualizar el primer registro con el nuevo número de certificado
+      this.certificadoDisponsiblesTablaDatos[0] = {
+        ...this.certificadoDisponsiblesTablaDatos[0],
+        numeroCertificado: NUMERO_LIMPIO
+      };
+    } else {
+      // Si no existen datos, crear un nuevo registro
+      this.certificadoDisponsiblesTablaDatos = [{
+        numeroCertificado: NUMERO_LIMPIO,
+        pais: 'México',
+        tratado: 'TLCAN/T-MEC', 
+        fechaExpedicion: new Date().toLocaleDateString('es-ES'),
+        fechaVencimiento: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toLocaleDateString('es-ES')
+      }];
+    }
+
+    // Forzar la detección de cambios para actualizar la vista
+    this.certificadoDisponsiblesTablaDatos = [...this.certificadoDisponsiblesTablaDatos];
+  }
+
+  /**
+   * Limpia el formulario y resetea la tabla de certificados.
+   */
+  limpiarBusqueda(): void {
+    this.cancelacionForm.get('validacionForm.numeroCertificado')?.setValue('');
+    this.estaBuscando = true;
+    this.mostrarErrores = true;
+    this.mensajeError = '';
+    this.isNumeroCertificado.emit(false);
+    this.isNumeroCertificadoPattern.emit(false);
+  }
+
+  /**
+   * Maneja los cambios en el input del número de certificado
+   * @param event Evento del input
+   */
+  onNumeroCertificadoChange(event: Event): void {
+    const TARGET = event.target as HTMLInputElement;
+    const VALOR = TARGET.value;
+    
+    // Actualizar la tienda con el nuevo valor
+    this.setValoresStore(this.validacionForm, 'numeroCertificado', 'setNumeroCertificado');
+
+    // Resetear el estado de búsqueda cuando el usuario modifica la entrada
+    if (VALOR && VALOR.trim() !== '') {
+      this.estaBuscando = true;
+      this.mostrarErrores = true;
+      this.mensajeError = '';
+    }
   }
 
   /**
@@ -437,7 +531,10 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
   donanteDomicilio(): void {
    this.cancelacionForm = this.fb.group({
   validacionForm: this.fb.group({
-    numeroCertificado: [{ value: this.solicitudState?.numeroCertificado, disabled: this.soloLectura }, [Validators.required]],
+    numeroCertificado: [{ value: this.solicitudState?.numeroCertificado, disabled: this.soloLectura }, [
+      Validators.required, 
+      Validators.pattern(CERTIFICATE_OF_ORIGIN_NUMBER)
+    ]],
     tratado: [{ value: this.solicitudState?.tratado, disabled: this.soloLectura }, [Validators.required]],
     pais: [{ value: this.solicitudState?.pais, disabled: this.soloLectura }, [Validators.required]],
     fechaInicial: [{ value: this.solicitudState?.fechaInicial, disabled: this.soloLectura }, [Validators.required]],
@@ -465,30 +562,31 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
    * @param evt Evento de mouse.
    */
   onTablaDblClick(evt: MouseEvent): void {
-    // 1️⃣ ¿Dónde hizo dblclick? Busca el <td>
     const TD = (evt.target as HTMLElement).closest('td');
     if (!TD) { return; }
 
-    // 2️⃣ ¿En qué columna? Compara el índice del <td> con tu headers[]
     const TR = TD.parentElement;
     if (!TR) { return; }
-    const CLICKED_COL_INDEX = Array.from(TR.children).indexOf(TD);
-    const TARGET_COL_INDEX = this.headers.findIndex(h => h.encabezado === 'Número de certificado');
-
-    if (CLICKED_COL_INDEX !== TARGET_COL_INDEX) {
-      // no es la columna “Certificado”
-      return;
-    }
-
-    // 3️⃣ Extrae el VALOR mostrado en la celda y busca el objeto
-    const VALOR = TD.textContent ? TD.textContent.trim() : '';
-    const MATCH = this.certificadoDisponsiblesTablaDatos
-      .find(item => String(item.numeroCertificado) === VALOR);
-
-    if (MATCH) {
-      this.isCertificadoOriginEnable = true;
-      this.certificadoOriginEnable.emit(this.isCertificadoOriginEnable);
-      this.handleCertificadoDblClick(MATCH);
+    
+    // Obtenga el índice de fila para encontrar los datos correspondientes
+    const TABLE = TR.closest('table');
+    if (!TABLE) { return; }
+    
+    const TBODY = TABLE.querySelector('tbody');
+    if (!TBODY) { return; }
+    
+    const ROWS = Array.from(TBODY.querySelectorAll('tr'));
+    const ROW_INDEX = ROWS.indexOf(TR as HTMLTableRowElement);
+    
+    // Find the matching certificate data by row index
+    if (ROW_INDEX >= 0 && ROW_INDEX < this.certificadoDisponsiblesTablaDatos.length) {
+      const MATCH = this.certificadoDisponsiblesTablaDatos[ROW_INDEX];
+      
+      if (MATCH) {
+        this.isCertificadoOriginEnable = true;
+        this.certificadoOriginEnable.emit(this.isCertificadoOriginEnable);
+        this.handleCertificadoDblClick(MATCH);
+      }
     }
   }
 
@@ -496,7 +594,7 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
    * Maneja la lógica al hacer doble clic sobre un certificado.
    * @param cert Certificado seleccionado.
    */
-  private handleCertificadoDblClick(cert: ColumnasTabla) {
+  private handleCertificadoDblClick(_cert: ColumnasTabla):void {
     // Aquí tu lógica: navegar, abrir modal, etc.
     // p.ej. this.router.navigate(['/detalle', cert.numeroCertificado]);
   }
