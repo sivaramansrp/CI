@@ -659,7 +659,7 @@ tituloParte = TITULO_ORIGEN;
        * @default ''
        * @disabled true
        */
-      cantidadTotal: [{ value: this.seccionState?.tablaDatos[0]?.cantidad, disabled: true }],
+      cantidadTotal: [{ value: this.seccionState?.tablaDatos?.[0]?.cantidad || '', disabled: true }],
 
       /**
        * @description
@@ -669,7 +669,7 @@ tituloParte = TITULO_ORIGEN;
        * @default ''
        * @disabled true
        */
-      valorTotalUSD: [{ value: this.seccionState?.tablaDatos[0]?.totalUSD, disabled: true }],
+      valorTotalUSD: [{ value: this.seccionState?.tablaDatos?.[0]?.totalUSD || '', disabled: true }],
     });
   }
   /**
