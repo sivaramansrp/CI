@@ -240,4 +240,47 @@ export class EsquemaDeCertificacionService {
         })
       );
     }
-}
+
+    /**
+     * Recupera el catálogo de aduanas activas desde un archivo JSON local.
+     *
+     * @returns Un Observable que emite un JSONResponse con los datos del catálogo de aduanas.
+     * @throws Emite un error si la solicitud HTTP falla.
+     */
+    getAduanaActuaCatalog(): Observable<JSONResponse> {
+      return this.http.get<JSONResponse>('assets/json/32612/aduana-catalog.json').pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
+    }
+
+
+    /**
+     * Recupera el catálogo de RFC para agentes desde un archivo JSON local.
+     *
+     * @returns Un Observable que emite un JSONResponse con los datos del catálogo de RFC.
+     * @throws Emite un error si la solicitud HTTP falla.
+     */
+    getRfcDelAgenteCatalog(): Observable<JSONResponse> {
+      return this.http.get<JSONResponse>('assets/json/32612/rfc-del-agente-catalog.json').pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
+    }
+
+    /**
+     * Recupera el catálogo de entidades federativas desde un archivo JSON local.
+     *
+     * @returns Un Observable que emite un JSONResponse con los datos del catálogo.
+     * @throws Emite un error si la solicitud HTTP falla.
+     */
+    getEntidadFederativaCatalog(): Observable<JSONResponse> {
+      return this.http.get<JSONResponse>('assets/json/32612/entidad-federativa.json').pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
+    }
+  }

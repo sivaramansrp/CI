@@ -27,6 +27,7 @@ import { TercerosRelacionadosComponent } from '../../components/terceros-relacio
     DatosPorGarantiaComponent,
     ModificacionDeDenominacionORazorsSocialComponent,
     TercerosRelacionadosComponent,
+    TituloComponent
   ],
   templateUrl: './paso-uno.component.html',
   styleUrls: ['./paso-uno.component.scss'],

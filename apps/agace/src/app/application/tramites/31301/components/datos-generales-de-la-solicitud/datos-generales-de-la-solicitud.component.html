@@ -3,25 +3,16 @@
     <div class="row mt-5">
       <div class="col-md-12">
         <label class="form-label">Tipo de endoso *:</label>
-        <app-input-radio
-          formControlName="tipoDeEndoso"
-          [selectedValue]="datosGeneralesForm.get('tipoDeEndoso')?.value"
-          [radioOptions]="tipoDeEndosoOpcion.radioOptions"
-          [isRequired]="tipoDeEndosoOpcion.isRequired"
-          [layout]="'vertical'"
-          (valueChange)="getTipoDeEndoso($event)"
-        ></app-input-radio>
+        <app-input-radio formControlName="tipoDeEndoso" [selectedValue]="datosGeneralesForm.get('tipoDeEndoso')?.value"
+          [radioOptions]="tipoDeEndosoOpcion.radioOptions" [isRequired]="tipoDeEndosoOpcion.isRequired"
+          [layout]="'vertical'" (valueChange)="getTipoDeEndoso($event)"></app-input-radio>
       </div>
       <div class="col-md-12">
         <label class="form-label">Tipo de garantía *:</label>
-        <app-input-radio
-          formControlName="tipoDeGarantia"
+        <app-input-radio formControlName="tipoDeGarantia"
           [selectedValue]="datosGeneralesForm.get('tipoDeGarantia')?.value"
-          [radioOptions]="tipoDeGarantiaOpcion.radioOptions"
-          [isRequired]="tipoDeGarantiaOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-        ></app-input-radio>
+          [radioOptions]="tipoDeGarantiaOpcion.radioOptions" [isRequired]="tipoDeGarantiaOpcion.isRequired"
+          [layout]="'horizontal'" [gap]="'50px'"></app-input-radio>
       </div>
       <div class="col-md-12">
         @if(datosGeneralesForm.get('tipoDeEndoso')?.value === 1 ||
@@ -51,27 +42,17 @@
       </div>
       <div class="col-md-12">
         <label class="form-label">Modalidad de la garantía *:</label>
-        <app-input-radio
-          formControlName="modalidadDeLaGarantia"
-          [selectedValue]="
+        <app-input-radio formControlName="modalidadDeLaGarantia" [selectedValue]="
             datosGeneralesForm.get('modalidadDeLaGarantia')?.value
-          "
-          [radioOptions]="modalidadDeLaGarantiaOpcion.radioOptions"
-          [isRequired]="modalidadDeLaGarantiaOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-        ></app-input-radio>
+          " [radioOptions]="modalidadDeLaGarantiaOpcion.radioOptions"
+          [isRequired]="modalidadDeLaGarantiaOpcion.isRequired" [layout]="'horizontal'"
+          [gap]="'50px'"></app-input-radio>
       </div>
       <div class="col-md-8">
         <label class="form-label">Tipo sector *:</label>
-        <app-input-radio
-          formControlName="tipoSector"
-          [selectedValue]="datosGeneralesForm.get('tipoSector')?.value"
-          [radioOptions]="tipoSectorOpcion.radioOptions"
-          [isRequired]="tipoSectorOpcion.isRequired"
-          [layout]="'horizontal'"
-          [gap]="'50px'"
-        ></app-input-radio>
+        <app-input-radio formControlName="tipoSector" [selectedValue]="datosGeneralesForm.get('tipoSector')?.value"
+          [radioOptions]="tipoSectorOpcion.radioOptions" [isRequired]="tipoSectorOpcion.isRequired"
+          [layout]="'horizontal'" [gap]="'50px'"></app-input-radio>
       </div>
       <div class="col-md-4">
         <app-catalogo-select
@@ -166,6 +147,11 @@
           [showPagination]="true"
         >
         </app-tabla-dinamica>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination justify-content-center">
+            <li class="page-item"><a class="page-link">1</a></li>
+          </ul>
+        </nav>
       </div>
       <div class="col-md-12">
         <div class="form-group pull-right">
@@ -174,7 +160,7 @@
             name="eliminar"
             [disabled]="true"
             id="btnBusqRfcEliminar"
-            class="btn btn-danger me-5"
+            class="btn btn-danger me-5 btn-custom-gray"
           >
             Eliminar
           </button>
@@ -304,7 +290,7 @@
               name="cargaArchivoProcesos"
               id="cargaArchivoProcesos"
               [disabled]="true"
-              class="btn btn-default me-md-3"
+              class="btn btn-default me-md-3 btn-custom-gray"
             >
               Cargar archivo
             </button>
@@ -361,7 +347,7 @@
               name="cargaArchivoProcesos"
               id="cargaArchivoProcesos"
               [disabled]="true"
-              class="btn btn-default me-md-3"
+              class="btn btn-default me-md-3 btn-custom-gray"
             >
               Cargar archivo
             </button>
@@ -500,6 +486,7 @@
 
       <div class="col-md-12">
         <ng-titulo titulo="Miembro de la empresa" />
+        <ng-titulo titulo="Miembro de la empresa" />
       </div>
 
       <div class="col-md-12">
@@ -511,6 +498,11 @@
           [disableSeleccionTablaCheckBox]="true"
         >
         </app-tabla-dinamica>
+         <nav aria-label="Page navigation example">
+          <ul class="pagination justify-content-center">
+            <li class="page-item"><a class="page-link">1</a></li>
+          </ul>
+        </nav>
       </div>
 
       <div class="col-md-12">
@@ -518,7 +510,7 @@
           <button
             type="button"
             id="eliminarSocio"
-            class="btn btn-danger"
+            class="btn btn-danger btn-custom-gray"
             [disabled]="true"
           >
             Eliminar
@@ -527,14 +519,14 @@
             type="button"
             [disabled]="true"
             id="modificarSocio"
-            class="btn btn-default ms-3"
+            class="btn btn-default ms-3 btn-custom-gray"
           >
             Modificar
           </button>
           <button
             type="button"
             id="agregarSocio"
-            class="btn btn-primary ms-3"
+            class="btn btn-primary ms-3 btn-custom-gray"
             [disabled]="true"
           >
             Agregar
@@ -606,31 +598,15 @@
         ></app-catalogo-select>
       </div>
       <div class="col-md-4 mt-4">
-        <label class="form-label text-start" for="valorenpesos"
-          >Valor en pesos *:</label
-        >
-        <input
-          class="form-control"
-          type="text"
-          size="80"
-          id="valorenpesos"
-          name="valorenpesos"
-          formControlName="cantidadInversion"
-        />
+        <label class="form-label text-start" for="valorenpesos">Valor en pesos *:</label>
+        <input class="form-control" type="text" size="80" id="valorenpesos" name="valorenpesos"
+          formControlName="cantidadInversion" />
       </div>
       <div class="col-md-4 mt-4"></div>
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start" for="valorenpesos"
-          >Descripción general *:</label
-        >
-        <input
-          class="form-control"
-          type="text"
-          size="80"
-          id="valorenpesos"
-          name="valorenpesos"
-          formControlName="descInversion"
-        />
+        <label class="form-label text-start" for="valorenpesos">Descripción general *:</label>
+        <input class="form-control" type="text" size="80" id="valorenpesos" name="valorenpesos"
+          formControlName="descInversion" />
       </div>
       <div class="col-md-12 mt-5">
         <app-tabla-dinamica
@@ -641,6 +617,11 @@
           [disableSeleccionTablaCheckBox]="true"
         >
         </app-tabla-dinamica>
+         <nav aria-label="Page navigation example">
+          <ul class="pagination justify-content-center">
+            <li class="page-item"><a class="page-link">1</a></li>
+          </ul>
+        </nav>
       </div>
 
       <div class="col-md-12">
@@ -648,7 +629,7 @@
           <button
             type="button"
             id="eliminarSocio"
-            class="btn btn-danger"
+            class="btn btn-danger btn-custom-gray"
             [disabled]="true"
           >
             Eliminar
@@ -656,7 +637,7 @@
           <button
             type="button"
             id="agregarSocio"
-            class="btn btn-primary ms-3"
+            class="btn btn-primary ms-3 btn-custom-gray"
             [disabled]="true"
           >
             Agregar
@@ -692,10 +673,7 @@
 
       <div class="col-md-12 mt-4 text-start">
         <h5 class="form-label text-start">Régimen aduanero*:</h5>
-        <div
-          *ngFor="let regimen of listaRegimenAduanero; let i = index"
-          class="mb-2"
-        >
+        <div *ngFor="let regimen of listaRegimenAduanero; let i = index" class="mb-2">
           <div class="d-flex align-items-center">
             <div class="form-check">
               <input
@@ -726,13 +704,18 @@
           [disableSeleccionTablaCheckBox]="true"
         >
         </app-tabla-dinamica>
+         <nav aria-label="Page navigation example">
+          <ul class="pagination justify-content-center">
+            <li class="page-item"><a class="page-link">1</a></li>
+          </ul>
+        </nav>
       </div>
       <div class="col-md-12">
         <div class="d-flex justify-content-end">
           <button
             type="button"
             id="modificarSocio"
-            class="btn btn-default"
+            class="btn btn-default btn-custom-gray"
             [disabled]="true"
           >
             Modificar
@@ -741,7 +724,7 @@
           <button
             type="button"
             id="eliminarSocio"
-            class="btn btn-danger ms-3"
+            class="btn btn-danger ms-3 btn-custom-gray"
             [disabled]="true"
           >
             Eliminar
@@ -750,7 +733,7 @@
           <button
             type="button"
             id="agregarSocio"
-            class="btn btn-primary ms-3"
+            class="btn btn-primary ms-3 btn-custom-gray"
             [disabled]="true"
           >
             Agregar
@@ -906,7 +889,7 @@
               name="cargaArchivoProcesos"
               id="cargaArchivoProcesos"
               [disabled]="true"
-              class="btn btn-default me-md-3"
+              class="btn btn-default me-md-3 btn-custom-gray"
             >
               Cargar archivo
             </button>
@@ -943,30 +926,22 @@
       <div class="row">
         <div class="col-md-3 mt-4">
           <p class="text-center">(A)</p>
-          <label class="form-label text-start" for=""
-            >Concepto (declare solo los que apliquen)</label
-          >
+          <label class="form-label text-start" for="">Concepto (declare solo los que apliquen)</label>
         </div>
         <div class="col-md-3 mt-4">
           <p class="text-center">(B)</p>
-          <label class="form-label text-start" for=""
-            >Valor comercial del concepto indicado en la Columna A (moneda
-            nacional)</label
-          >
+          <label class="form-label text-start" for="">Valor comercial del concepto indicado en la Columna A (moneda
+            nacional)</label>
         </div>
         <div class="col-md-3 mt-4">
           <p class="text-center">(C)</p>
-          <label class="form-label text-start" for=""
-            >Valor en Aduana de los insumos importados temporalmente incluidos
-            en concepto de la columna A</label
-          >
+          <label class="form-label text-start" for="">Valor en Aduana de los insumos importados temporalmente incluidos
+            en concepto de la columna A</label>
         </div>
         <div class="col-md-3 mt-4">
           <p class="text-center">(D)</p>
-          <label class="form-label text-start" for=""
-            >Porcentaje que representa respecto del total de importaciones
-            temporales de materiales directos einsumos</label
-          >
+          <label class="form-label text-start" for="">Porcentaje que representa respecto del total de importaciones
+            temporales de materiales directos einsumos</label>
         </div>
       </div>
 
@@ -1005,9 +980,7 @@
 
       <div class="row">
         <div class="col-md-3 mt-4">
-          <label class="form-label text-start" for=""
-            >Transferencias virtuales de mercancías</label
-          >
+          <label class="form-label text-start" for="">Transferencias virtuales de mercancías</label>
         </div>
         <div class="col-md-3 mt-4">
           <input
@@ -1073,9 +1046,7 @@
 
       <div class="row">
         <div class="col-md-3 mt-4">
-          <label class="form-label text-start" for=""
-            >Constancias de Transferencia de Mercancías ( C T M)</label
-          >
+          <label class="form-label text-start" for="">Constancias de Transferencia de Mercancías ( C T M)</label>
         </div>
         <div class="col-md-3 mt-4">
           <input
@@ -1148,9 +1119,7 @@
       </div>
 
       <div class="col-md-12">
-        <ng-titulo
-          titulo="Manifestaciones de acuerdo a lo establecido en la regla 7.4.2 en las RGCE"
-        />
+        <ng-titulo titulo="Manifestaciones de acuerdo a lo establecido en la regla 7.4.2 en las RGCE" />
         <div class="alert alert-info">
           <div class="form-check text-start">
             <input

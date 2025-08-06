@@ -259,7 +259,7 @@ export class AnexoUnoComponent implements OnInit {
       encabezadoCategoria: '',
       encabezadoValorEnMercado: '',
     };
-    this.anexoUnoFormGroup.reset();
+    
     // Reinicia el formulario después de agregar el objeto
     this.anexoUnoTablaLista.push(OBJECTO_IDX);
     this.obtenerAnexoUnoDevolverLaLlamada.emit(this.anexoUnoTablaLista);

@@ -143,18 +143,15 @@ export class ModificacionComponent implements OnInit, OnDestroy {
         this.empresasLista = empresas.data.length > 0 ? empresas.data : [];
       });
   }
-
-  /**
-   * Alterna el valor de estatus de una empresa en la lista.
-   * Cambia el estatus de 'Baja' a 'Activada' o viceversa.
-   * @param {unknown} row - Fila de la tabla que contiene la empresa a modificar.
-   * @returns {void}
-   */
-  alternarValor(row: unknown): void {
-    const INDEX = this.empresasLista.findIndex((x) => x.id === (row as { id: unknown }).id);
-    this.empresasLista[INDEX].estatus = this.empresasLista[INDEX].estatus === 'Baja' ? 'Activada' : 'Baja';
+  isBaja: boolean = true;
+  onFilaClic(event: Event): void {
+    const TARGET = event.target as HTMLInputElement;
+    if (TARGET.tagName === 'BUTTON' && TARGET.textContent?.trim() === 'BAJA') {
+      this.isBaja = false;
+      TARGET.textContent = 'Activar';
+    }
+    TARGET.textContent = 'Activar';
   }
-
   /**
    * Se ejecuta al destruir el componente.
    * Emite un valor y completa el subject `destruirNotificador$` para cancelar las suscripciones.

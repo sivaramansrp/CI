@@ -4,9 +4,9 @@
     <ng-titulo *ngIf="detalleDelPermiso" titulo="Detalle del permiso" />
     <div *ngIf="!detalleDelPermiso">
         <form [formGroup]="busquedaForm">
-            <div class="row">
+            <div class="row mt-5">
                 <div class="col-md-8">
-                    <label class="form-label" for="tramite">Folio Trámite*:</label>
+                    <label class="form-label" for="tramite">Folio trámite*:</label>
                     <input type="text" class="form-control" id="tramite" formControlName="tramite">
                     <div *ngIf="busquedaForm.controls['tramite'].invalid && busquedaForm.controls['tramite'].touched">
                         <small *ngIf="busquedaForm.controls['tramite'].errors?.['required']">*El campo no puede estar vacío.</small>
@@ -18,9 +18,9 @@
         <div class="row">
             <div class="col-md-8 d-flex justify-content-end"></div>
         </div>
-        <div class="row mt-2">
+        <div class="row mt-5">
             <div class="col-md-8 d-flex justify-content-end">
-                <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas"
+                <button type="button" class="btn btn-primary me-3" data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
                     (click)="cancelar($event)">Cancelar</button>
                 <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas"
@@ -126,9 +126,9 @@
         <div class="row">
             <div class="col-md-12 d-flex justify-content-end"></div>
         </div>
-        <div class="row mt-2">
+        <div class="row mt-5">
             <div class="col-md-12 d-flex justify-content-end">
-                <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas"
+                <button type="button" class="btn btn-primary me-3" data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
                     (click)="detalleCancelar($event)">Cancelar</button>
                 <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas"
