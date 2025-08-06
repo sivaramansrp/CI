@@ -1,6 +1,7 @@
 import { AMBIENTES, TramiteDetails } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, inject} from '@angular/core';
 import { APPINJECT } from '../../app.inject';
+import pkg from '@package-json';
 import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json'
 
 @Component({
@@ -23,6 +24,7 @@ export class SeleccionTramiteComponent implements OnInit, OnDestroy {
    * Estos datos se utilizan para gestionar y mostrar información relacionada con diferentes trámites.
    */
   public tramiteData: TramiteDetails[] = [];
+  version = pkg.version;
     
   ngOnInit(): void {
     if (window.location.host.indexOf('localhost') !== -1) {
