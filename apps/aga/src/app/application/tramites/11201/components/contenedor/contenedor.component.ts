@@ -308,22 +308,22 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.transporteList = {
       catalogos: [],
       labelNombre: 'Tipo de transporte',
-      primerOpcion: 'Seleccione un valor',
+      primerOpcion: 'Seleccione una opción',
     };
     this.aduana = {
       catalogos: [],
       labelNombre: 'Aduana/sección aduanera',
-      primerOpcion: 'Seleccione un valor',
+      primerOpcion: 'Seleccione una opción',
     };
     this.aduanaList = {
       catalogos: [],
       labelNombre: 'Aduana/sección aduanera',
-      primerOpcion: 'Seleccione un valor',
+      primerOpcion: 'Seleccione una opción',
     };
     this.contenedores = {
       catalogos: [],
       labelNombre: 'Tipo de equipo',
-      primerOpcion: 'Seleccione un valor',
+      primerOpcion: 'Seleccione una opción',
     };
   }
 
@@ -623,6 +623,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.mostrarSeccionNoManifiesto = false;
     this.mostrarSeccionExcel = false;
     this.mostrarMensaje = false;
+    this.mostrarCargarArchivoTable = false;
+    this.mostrarArchivoSeleccionadoTable = false;
     // Deshabilitar controles específicos si es necesario
     this.solicitudForm.get('archivoSeleccionado')?.disable();
     this.radioContenedor = false;
@@ -630,6 +632,15 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.radioManifesto = false;
     // Restablecer la etiqueta del archivo
     this.etiquetaDeArchivo = '';
+    
+    // Resetear datos de las tablas a estado inicial
+    this.datosTabla = [];
+    this.datosDelContenedor = [];
+    this.pedimentos = [];
+    
+    // Resetear archivo seleccionado
+    this.archivoMedicamentos = null;
+    this.archivoNoEsCSV = false;
     
     // Limpiar el estado de validación usando el método auxiliar
     this.clearFormValidationState();
@@ -666,9 +677,34 @@ export class ContenedorComponent implements OnInit, OnDestroy {
 
   /**
    * Adjuntar archivo CSV y parsear su contenido.
+   * Valida los campos obligatorios antes de abrir el modal.
    */
   adjuntarArchivo(): void {
+    // Validar los campos obligatorios antes de abrir el modal
+    const ADUANA_VALIDA = this.solicitudForm.get('aduanaMenuDesplegable')?.valid;
+    const FECHA_VALIDA = this.solicitudForm.get('fechaDeIngreso')?.valid;
+
+    // Marcar los campos como tocados para mostrar los errores de validación
+    this.solicitudForm.get('aduanaMenuDesplegable')?.markAsTouched();
+    this.solicitudForm.get('fechaDeIngreso')?.markAsTouched();
+
+    // Solo abrir el modal si ambos campos son válidos
+    if (ADUANA_VALIDA && FECHA_VALIDA) {
+      this.abrirModalArchivo();
+    }
+  }
+
+  /**
+   * Abre el modal de carga de archivo utilizando Bootstrap.
+   * Este método se llama solo después de validar los campos obligatorios.
+   */
+  abrirModalArchivo(): void {
     this.mostrarArchivoSeleccionadoTable = true;
+    const MODAL_ELEMENT = document.getElementById('modalArchivoCsv');
+    if (MODAL_ELEMENT) {
+      const BOOTSTRAP_MODAL = new (window as any).bootstrap.Modal(MODAL_ELEMENT);
+      BOOTSTRAP_MODAL.show();
+    }
   }
 
   /**

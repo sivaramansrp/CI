@@ -43,10 +43,38 @@ export interface DivideFraccion {
    */
   subdivision: string;
 }
+
+export interface RespuestaConsulta {
+  /**
+   * Indica si la consulta fue exitosa.
+   * @type {boolean}
+   */
+  success: boolean;
+
+  /**
+   * Datos resultantes de la consulta.
+   * @type {ConsultaDatos}
+   */
+  datos: ConsultaDatos;
+
+  /**
+   * Mensaje de la respuesta.
+   * @type {string}
+   */
+  message: string;
+}
+
+export interface ConsultaDatos {
+  /**
+   * Información sobre exención de impuestos.
+   * @type {SolicitudForm}
+   */
+  solicitudForm: SolicitudForm;
+}
 /**
  * Interfaz que representa los datos del formulario a guardar.
  */
-export interface GuardarDatosFormulario {
+export interface SolicitudForm {
   /**
    * Clave o número de la aduana auxiliar.
    */
