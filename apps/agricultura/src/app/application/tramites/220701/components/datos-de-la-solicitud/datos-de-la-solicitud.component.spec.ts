@@ -141,9 +141,25 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.tramiteStoreQuery = component.tramiteStoreQuery || {};
     component.tramiteStoreQuery.selectSolicitudTramite$ = observableOf({});
     component.fb = component.fb || {};
-    component.fb.group = jest.fn();
-    component.inicializarFormulario();
-    //expect(component.fb.group).toHaveBeenCalled();
+    component.fb.group = jest.fn().mockReturnValue({
+      controls: {
+        justificacion: {},
+      },
+      patchValue: jest.fn(),
+      get: jest.fn(),
+      value: {},
+      statusChanges: observableOf({}),
+    });
+    component.datosDeLaSolicitudForm = {
+      controls: {
+        justificacion: {},
+      },
+      patchValue: jest.fn(),
+      get: jest.fn(),
+      value: {},
+      statusChanges: observableOf({}),
+    };
+      expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #ngOnInit()', async () => {

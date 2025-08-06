@@ -153,7 +153,7 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
-  esFormularioSoloLectura: boolean = false;
+  esFormularioSoloLectura: boolean = true;
 
   /**
    * Subject para manejar la desuscripción de observables.
@@ -229,13 +229,12 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
-    if (this.esFormularioSoloLectura) {
-      this.formularioPago.disable();
-    } else if (!this.esFormularioSoloLectura) {
+    // The form is created disabled by default
+    // Only enable it if esFormularioSoloLectura is false
+    if (!this.esFormularioSoloLectura) {
       this.formularioPago.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
     }
+    // If esFormularioSoloLectura is true, keep the form disabled (default state)
   }
   /**
    * Inicializa el formulario reactivo con los campos requeridos.
@@ -251,16 +250,21 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
       )
       .subscribe()
 
-    const ES_EXENTO = this.formularioPagoStore.exentoPago === 'Si';
+    // Ensure exentoPagoValor is always 'Si' by default
+    this.exentoPagoValor = 'Si';
+
     this.formularioPago = this.fb.group({
-      exentoPago: [this.formularioPagoStore.exentoPago || 'Si', Validators.required],
-      justificacion: [this.formularioPagoStore.justificacion, Validators.required],
-      claveReferencia: [{ value: this.formularioPagoStore.claveReferencia }, Validators.required],
-      cadenaDependencia: [{ value: this.formularioPagoStore.cadenaDependencia }, Validators.required],
-      banco: [this.formularioPagoStore.banco, Validators.required],
-      llavePago: [{ value: this.formularioPagoStore.llavePago, disabled: ES_EXENTO }, Validators.required],
-      fechaPago: [{ value: this.formularioPagoStore.fechaPago }, Validators.required],
-      importePago: [{ value: this.formularioPagoStore.importePago }, Validators.required],
+      exentoPago: [
+        {value: 'Si', disabled: true}, // Always default to 'Si'
+        Validators.required,
+      ],
+      justificacion: [{ value: this.formularioPagoStore?.justificacion, disabled: true }, Validators.required],
+      claveReferencia: [{ value: this.formularioPagoStore?.claveReferencia, disabled: true }, Validators.required],
+      cadenaDependencia: [{ value: this.formularioPagoStore?.cadenaDependencia, disabled: true }, Validators.required],
+      banco: [{ value: this.formularioPagoStore.banco, disabled: true }, Validators.required],
+      llavePago: [{ value: this.formularioPagoStore.llavePago, disabled: true }, Validators.required],
+      fechaPago: [{ value: this.formularioPagoStore.fechaPago, disabled: true }, Validators.required],
+      importePago: [{ value: this.formularioPagoStore.importePago, disabled: true }, Validators.required],
     });
   }
   /**
@@ -282,13 +286,16 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
    * @method ngOnInit
    */
   ngOnInit(): void {
+    // Ensure default values are set immediately
+    this.exentoPagoValor = 'Si';
          
-         this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.formularioPagoState = seccionState.FormularioPagoState;
-          })
-        ).subscribe();
+    this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.formularioPagoState = seccionState.FormularioPagoState;
+      })
+    ).subscribe();
+    
     this.formularioPago.statusChanges
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
@@ -307,6 +314,10 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
             if (seccionState) {
               this.formularioPagoState = seccionState.FormularioPagoState;
               this.formularioPago.patchValue(this.formularioPagoState);
+              
+              // Always ensure 'Si' is selected for exentoPago after patching values
+              this.formularioPago.patchValue({ exentoPago: 'Si' });
+              this.exentoPagoValor = 'Si';
             }
           })
         ).subscribe();
@@ -331,6 +342,14 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
           })
         )
         .subscribe();
+  
+    // Final enforcement: ensure exentoPago is always 'Si' after all initializations
+    setTimeout(() => {
+      if (this.formularioPago) {
+        this.formularioPago.patchValue({ exentoPago: 'Si' });
+        this.exentoPagoValor = 'Si';
+      }
+    }, 100);
   
     /**
      * Observa los cambios en el estado del formulario y actualiza la validación de la sección correspondiente.

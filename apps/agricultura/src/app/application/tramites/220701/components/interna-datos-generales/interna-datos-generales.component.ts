@@ -331,6 +331,16 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
           } else {
             this.forma.enable();
             this.movilizacionForm.enable();
+            // Keep specific fields disabled
+            this.forma.get('datosDelaSolicitud')?.get('claveControlUnico')?.disable();
+            this.forma.get('datosDelaSolicitud')?.get('folioControlUnico')?.disable();
+            this.forma.get('datosDelaSolicitud')?.get('establecimientoTIFs')?.disable();
+            this.forma.get('datosDelaSolicitud')?.get('nombreVeterinario')?.disable();
+            this.forma.get('datosDelaSolicitud')?.get('numeroGuia')?.disable();
+            this.forma.get('datosDelaSolicitud')?.get('tipoMercancia')?.disable();
+            this.movilizacionForm.get('coordenadas')?.disable();
+            this.movilizacionForm.get('identTransporte')?.disable();
+            this.movilizacionForm.get('empresaTransportista')?.disable();
           }
         })
       )
@@ -369,6 +379,17 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
             if (this.esFormularioSoloLectura) {
               this.forma.disable();
               this.movilizacionForm.disable();
+            } else {
+              // Keep specific fields disabled even when form is enabled
+              this.forma.get('datosDelaSolicitud')?.get('claveControlUnico')?.disable();
+              this.forma.get('datosDelaSolicitud')?.get('folioControlUnico')?.disable();
+              this.forma.get('datosDelaSolicitud')?.get('establecimientoTIFs')?.disable();
+              this.forma.get('datosDelaSolicitud')?.get('nombreVeterinario')?.disable();
+              this.forma.get('datosDelaSolicitud')?.get('numeroGuia')?.disable();
+              this.forma.get('datosDelaSolicitud')?.get('tipoMercancia')?.disable();
+              this.movilizacionForm.get('coordenadas')?.disable();
+              this.movilizacionForm.get('identTransporte')?.disable();
+              this.movilizacionForm.get('empresaTransportista')?.disable();
             }
           }
         })
@@ -425,6 +446,16 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
     } else {
       this.forma.enable();
       this.movilizacionForm.enable();
+      // Keep specific fields disabled
+      this.forma.get('datosDelaSolicitud')?.get('claveControlUnico')?.disable();
+      this.forma.get('datosDelaSolicitud')?.get('folioControlUnico')?.disable();
+      this.forma.get('datosDelaSolicitud')?.get('establecimientoTIFs')?.disable();
+      this.forma.get('datosDelaSolicitud')?.get('nombreVeterinario')?.disable();
+      this.forma.get('datosDelaSolicitud')?.get('numeroGuia')?.disable();
+      this.forma.get('datosDelaSolicitud')?.get('tipoMercancia')?.disable();
+      this.movilizacionForm.get('coordenadas')?.disable();
+      this.movilizacionForm.get('identTransporte')?.disable();
+      this.movilizacionForm.get('empresaTransportista')?.disable();
     }
   }
   /**
@@ -439,6 +470,15 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
     } else if (!this.esFormularioSoloLectura) {
       this.forma.enable();
       this.movilizacionForm.enable();
+      // Keep specific fields disabled
+      this.forma.get('datosDelaSolicitud')?.get('claveControlUnico')?.disable();
+      this.forma.get('datosDelaSolicitud')?.get('folioControlUnico')?.disable();
+      this.forma.get('datosDelaSolicitud')?.get('establecimientoTIFs')?.disable();
+      this.forma.get('datosDelaSolicitud')?.get('nombreVeterinario')?.disable();
+      this.forma.get('datosDelaSolicitud')?.get('numeroGuia')?.disable();
+      this.forma.get('datosDelaSolicitud')?.get('tipoMercancia')?.disable();
+      this.movilizacionForm.get('identTransporte')?.disable();
+      this.movilizacionForm.get('empresaTransportista')?.disable();
     } else {
       // No se requiere ninguna acción en el formulario
     }
@@ -459,27 +499,38 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
         oficinaInspeccion: ['', Validators.required],
         puntoInspeccion: ['', Validators.required],
         claveControlUnico: [{ value: '', disabled: true }, Validators.required],
-        establecimientoTIFs: ['', Validators.required],
-        nombreVeterinario: ['', Validators.required],
+        establecimientoTIFs: [{ value: '', disabled: true }, Validators.required],
+        nombreVeterinario: [{ value: '', disabled: true }, Validators.required],
         regimen: ['', Validators.required],
-        folioControlUnico: [''],
-        numeroGuia: [''],
-        tipoMercancia: [''],
+        folioControlUnico: [{ value: '', disabled: true }],
+        numeroGuia: [{ value: '', disabled: true }],
+        tipoMercancia: [{ value: this.internaDatosGeneralesState?.tipoMercancia || 'subproductos', disabled: true }],
       }),
     });
 
     this.movilizacionForm = this.fb.group({
-      coordenadas: [''],
+      coordenadas: [{ value: this.internaDatosGeneralesState?.coordenadas || '', disabled: true }],
       movilizacionNacional: [''],
-      identTransporte: [''],
+      identTransporte: [{ value: this.internaDatosGeneralesState?.identTransporte || '', disabled: true }],
       puntoVerificacion: [''],
-      empresaTransportista: [''],
+      empresaTransportista: [{ value: '', disabled: true }],
     });
 
     // Disable forms if flag is set
     if (this.esFormularioSoloLectura) {
       this.forma.disable();
       this.movilizacionForm.disable();
+    } else {
+      // Keep specific fields disabled even when form is enabled
+      this.forma.get('datosDelaSolicitud')?.get('claveControlUnico')?.disable();
+      this.forma.get('datosDelaSolicitud')?.get('folioControlUnico')?.disable();
+      this.forma.get('datosDelaSolicitud')?.get('establecimientoTIFs')?.disable();
+      this.forma.get('datosDelaSolicitud')?.get('nombreVeterinario')?.disable();
+      this.forma.get('datosDelaSolicitud')?.get('numeroGuia')?.disable();
+      this.forma.get('datosDelaSolicitud')?.get('tipoMercancia')?.disable();
+      this.movilizacionForm.get('coordenadas')?.disable();
+      this.movilizacionForm.get('identTransporte')?.disable();
+      this.movilizacionForm.get('empresaTransportista')?.disable();
     }
   }
 
@@ -770,7 +821,7 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
           this.movilizacionNacional = {
-            labelNombre: 'Movilización Nacional',
+            labelNombre: 'Datos para movilización nacional',
             required: false,
             primerOpcion: 'Aéreo',
             catalogos: RESPONSE,

@@ -5,60 +5,60 @@
       <ng-titulo titulo="Pago de derechos" />
       <div class="row">
         <div class="col-md-8 form-group">
-          <label class="form-label" for="coordenadas">Exento de pago*:</label>
+          <label class="form-label" for="coordenadas">Exento de pago:</label>
           <app-input-radio [radioOptions]="exentoPagoRadio" [selectedValue]="exentoPagoValor" [isRequired]="true"
-            [layout]="'horizontal'" formControlName="exentoPago" [required]="true"
+            [layout]="'vertical'" formControlName="exentoPago" [required]="true"
             (valueChange)="cambioValorRadio('exentoPago', $event.toString())"></app-input-radio>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-8">`
           <ng-container *ngIf="exentoPagoValor === 'Si'; else noTrack">
             <app-catalogo-select [catalogo]="justificacionCatalogo" formControlName="justificacion"
-              [label]="'Justificación'" [required]="true" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+              [label]="'Justificación'" [required]="false" [isDisabled]="true || esFormularioSoloLectura"></app-catalogo-select>
           </ng-container>
           <ng-template #noTrack>
             <app-catalogo-select [catalogo]="justificacionCatalogo" formControlName="justificacion"
-              [label]="'Justificación'" [required]="true" [isDisabled]="esFormularioSoloLectura"
+              [label]="'Justificación'" [required]="false" [isDisabled]="true || esFormularioSoloLectura"
               name="justificacion"></app-catalogo-select>
           </ng-template>
         </div>
       </div>
       <div class="row">
         <div class="col-md-4 form-group">
-          <label class="form-label" for="claveDeReferencia">Clave de referencia*:</label>
+          <label class="form-label" for="claveDeReferencia">Clave de referencia:</label>
           <input type="text" id="claveDeReferencia" class="form-control" formControlName="claveDeReferencia"
-            [required]="true" [disabled]="esFormularioSoloLectura"/>
+            [required]="true" [disabled]="true || esFormularioSoloLectura"/>
         </div>
 
         <div class="col-md-4 form-group">
           <label class="form-label" for="cadenaDependencia">Cadena de la dependencia*:</label>
           <input type="text" id="cadenaDependencia" class="form-control" formControlName="cadenaDependencia"
-            [required]="true" [disabled]="esFormularioSoloLectura"/>
+            [required]="true" [disabled]="true || esFormularioSoloLectura"/>
         </div>
 
         <div class="col-md-4">
           <div class="form-group">
             <app-catalogo-select [catalogo]="banco.catalogos" [label]="banco.labelNombre"
-              [placeholder]="banco.primerOpcion" [isDisabled]="esFormularioSoloLectura" formControlName="banco" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+              [placeholder]="banco.primerOpcion" [isDisabled]="true || esFormularioSoloLectura" formControlName="banco"></app-catalogo-select>
           </div>
         </div>
       </div>
 
       <div class="row">
         <div class="col-md-4 form-group">
-          <label class="form-label" for="llaveDePago">Llave de pago*:</label>
-          <input type="text" id="llaveDePago" class="form-control" formControlName="llaveDePago" [required]="true" [disabled]="esFormularioSoloLectura"/>
+          <label class="form-label" for="llaveDePago">Llave de pago:</label>
+          <input type="text" id="llaveDePago" class="form-control" formControlName="llaveDePago" [required]="true" [disabled]="true || esFormularioSoloLectura"/>
         </div>
 
         <div class="col-md-4">
-          <input-fecha [datos]="fechaInicioInput" formControlName="fechaInicio" [disabled]="esFormularioSoloLectura"></input-fecha>
+          <input-fecha [datos]="fechaInicioInput" formControlName="fechaInicio" [disabled]="true || esFormularioSoloLectura"></input-fecha>
         </div>
 
         <div class="col-md-4 form-group">
-          <label class="form-label" for="importeDePago">Importe de pago*:</label>
+          <label class="form-label" for="importeDePago">Importe de pago:</label>
           <input type="text" id="importeDePago" class="form-control" formControlName="importeDePago"
-            [required]="true" [disabled]="esFormularioSoloLectura"/>
+            [required]="true" [disabled]="true || esFormularioSoloLectura"/>
         </div>
       </div>
 
@@ -76,9 +76,10 @@
       <ng-titulo titulo="Pago de derechos revisión documental" />
       <div class="row">
         <div class="col-md-8 form-group">
-          <label class="form-label" for="coordenadas">Exento de pago*:</label>
+          <label class="form-label" for="coordenadas">Exento de pago:</label>
           <app-input-radio [radioOptions]="exentoPagoRevisionRadio" [selectedValue]="exentoPagoRevisionValor"
-            [isRequired]="true" [layout]="'horizontal'" formControlName="exentoPagoRevision" [required]="true"
+            [isRequired]="true" [layout]="'vertical'" formControlName="exentoPagoRevision" [required]="true"
+            [disabled]="true"
             (valueChange)="cambioValorRadioRevision('exentoPagoRevision', $event.toString())"></app-input-radio>
         </div>
       </div>
@@ -86,11 +87,11 @@
         <div class="col-md-4">
           <ng-container *ngIf="exentoPagoRevisionValor  === 'Si'; else noTrack">
             <app-catalogo-select [catalogo]="justificacionCatalogo" formControlName="justificacionRevision"
-              [label]="'Justificación'" [required]="true" [isDisabled]="esFormularioSoloLectura" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+              [label]="'Justificación'" [required]="false" [isDisabled]="true || esFormularioSoloLectura"></app-catalogo-select>
           </ng-container>
           <ng-template #noTrack>
             <app-catalogo-select [catalogo]="justificacionCatalogo" formControlName="justificacionRevision"
-              [label]="'Justificación'" [required]="true" [isDisabled]="esFormularioSoloLectura"
+              [label]="'Justificación'" [required]="false" [isDisabled]="true || esFormularioSoloLectura"
               name="justificacion"></app-catalogo-select>
           </ng-template>
         </div>
@@ -104,7 +105,7 @@
       <div class="col-md-4 form-group">
         <label class="form-label" for="cadenaDependenciaRevision">Cadena de la dependencia:</label>
         <input type="text" id="cadenaDependenciaRevision" class="form-control"
-          formControlName="cadenaDependenciaRevision" [disabled]="esFormularioSoloLectura"/>
+          formControlName="cadenaDependenciaRevision" [disabled]="true || esFormularioSoloLectura"/>
       </div>
 
       <div class="col-md-4 form-group">

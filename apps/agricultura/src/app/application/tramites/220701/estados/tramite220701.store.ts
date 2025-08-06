@@ -63,7 +63,8 @@ export function createInitialState(): TramiteState {
             movilizacionNacional: '',
             identTransporte: '',
             puntoVerificacion: '',
-            empresaTransportista: ''
+            empresaTransportista: '',
+            tipoMercancia: 'subproductos', 
         },
         FormularioPagoState: {
             exentoPago: '',
@@ -87,7 +88,8 @@ export function createInitialState(): TramiteState {
             bancoRevision: '',
             llaveDePagoRevision: '',
             fechaInicioRevision: '',
-            importeDePagoRevision: ''
+            importeDePagoRevision: '',
+            exentoPagoRevision: '',
         }
     };
 }

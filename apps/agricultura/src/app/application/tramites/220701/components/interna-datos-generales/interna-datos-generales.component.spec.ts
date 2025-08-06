@@ -133,6 +133,10 @@ describe('InternaDatosGeneralesComponent', () => {
     }
   });
   it('should initialize forms with expected values', () => {
+    // Mock or initialize the dependency or property expected to have 'coordenadas'
+    component.mercanciaDatosService = {
+      getDatos: jest.fn().mockReturnValue(observableOf({ mercanciaApiDatos: [{ coordenadas: {} }] }))
+    };
     component.inicializarFormulario();
     expect(component.forma).toBeDefined();
     expect(component.movilizacionForm).toBeDefined();
@@ -239,9 +243,10 @@ it('should call patchValue on forma and movilizacionForm in ngOnInit if they exi
   });
 
   it('should run #inicializarFormulario()', () => {
-    component.fb = {
-      group: jest.fn().mockReturnValue({ disable: function () {} }),
-    };
+    const formBuilder = TestBed.inject(FormBuilder);
+    component.fb = formBuilder;
+    component.forma = formBuilder.group({ test: [''] });
+    component.movilizacionForm = formBuilder.group({ test: [''] });
     component.inicializarFormulario();
   });
 

@@ -99,7 +99,7 @@ describe('PagoDeDerechosComponent', () => {
     component.pagosDeDerechosForm.controls['fechaInicio'].disable();
     component.generarFormulario = jest.fn();
     component.ngOnChanges();
-    expect(component.pagosDeDerechosForm.controls['fechaInicio'].enabled).toBe(true);
+    expect(component.pagosDeDerechosForm.controls['fechaInicio'].disabled).toBe(false);
     expect(component.generarFormulario).toHaveBeenCalled();
   });
 
