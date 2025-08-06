@@ -61,8 +61,8 @@ export const FECHA_FINAL = {
  * Define las propiedades de la fecha de factura, como el nombre de la etiqueta, si es requerida y si está habilitada.
  */
 export const FECHA_FACTURA = {
-  labelNombre: 'Fecha de factura',
-  required: true,
+  labelNombre: 'Fecha de factura*:',
+  required: false,
   habilitado: true,
 };
 

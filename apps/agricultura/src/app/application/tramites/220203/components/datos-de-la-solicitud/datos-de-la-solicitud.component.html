@@ -147,6 +147,7 @@
           [configuracionTabla]="configuracionColumnas"
           [datos]="cuerpoTablaFila"
           (listaDeFilaSeleccionada)="seleccionTabla($event)"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
         >
         </app-tabla-dinamica>
         <div
