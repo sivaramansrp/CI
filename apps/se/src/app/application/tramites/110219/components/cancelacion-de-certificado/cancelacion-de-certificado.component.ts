@@ -406,16 +406,16 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
 
     const NUMERO_LIMPIO = numero.trim();
     
-    // Always update the table data with the new certificate number
-    // This ensures dynamic changes are reflected immediately
+    // Actualice siempre los datos de la tabla con el nuevo número de certificado
+    // Esto asegura que los cambios dinámicos se reflejen inmediatamente
     if (this.certificadoDisponsiblesTablaDatos.length > 0) {
-      // Update the first record with new certificate number
+      // Actualizar el primer registro con el nuevo número de certificado
       this.certificadoDisponsiblesTablaDatos[0] = {
         ...this.certificadoDisponsiblesTablaDatos[0],
         numeroCertificado: NUMERO_LIMPIO
       };
     } else {
-      // If no data exists, create a new record
+      // Si no existen datos, crear un nuevo registro
       this.certificadoDisponsiblesTablaDatos = [{
         numeroCertificado: NUMERO_LIMPIO,
         pais: 'México',
@@ -425,7 +425,7 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
       }];
     }
 
-    // Force change detection to update the view
+    // Forzar la detección de cambios para actualizar la vista
     this.certificadoDisponsiblesTablaDatos = [...this.certificadoDisponsiblesTablaDatos];
   }
 
@@ -449,10 +449,10 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
     const TARGET = event.target as HTMLInputElement;
     const VALOR = TARGET.value;
     
-    // Update the store with the new value
+    // Actualizar la tienda con el nuevo valor
     this.setValoresStore(this.validacionForm, 'numeroCertificado', 'setNumeroCertificado');
-    
-    // Reset search state when user modifies the input
+
+    // Resetear el estado de búsqueda cuando el usuario modifica la entrada
     if (VALOR && VALOR.trim() !== '') {
       this.estaBuscando = true;
       this.mostrarErrores = true;
@@ -568,7 +568,7 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
     const TR = TD.parentElement;
     if (!TR) { return; }
     
-    // Get the row index to find the corresponding data
+    // Obtenga el índice de fila para encontrar los datos correspondientes
     const TABLE = TR.closest('table');
     if (!TABLE) { return; }
     
