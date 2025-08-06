@@ -95,45 +95,35 @@ describe('PasoUnoComponent', () => {
 
   describe('inicializarEstadoFormulario', () => {
     beforeEach(() => {
-      // Initialize the form before testing
       component.ngOnInit();
     });
 
     it('should disable adace form control when esFormularioSoloLectura is true', () => {
-      // Arrange
       component.esFormularioSoloLectura = true;
       
-      // Act
       component.inicializarEstadoFormulario();
       
-      // Assert
       expect(component.solicitanteForm.get('adace')?.disabled).toBe(true);
     });
 
     it('should enable adace form control when esFormularioSoloLectura is false', () => {
-      // Arrange
       component.esFormularioSoloLectura = false;
       
-      // Act
       component.inicializarEstadoFormulario();
       
-      // Assert
       expect(component.solicitanteForm.get('adace')?.disabled).toBe(false);
     });
 
     it('should handle null form control gracefully', () => {
-      // Arrange
       component.solicitanteForm = component['fb'].group({});
       component.esFormularioSoloLectura = true;
       
-      // Act & Assert - should not throw error
       expect(() => component.inicializarEstadoFormulario()).not.toThrow();
     });
   });
 
   describe('fetchGetDatosConsulta', () => {
     it('should call all store setters when response is successful', () => {
-      // Arrange
       const mockResponse = {
         success: true,
         datos: {
@@ -162,10 +152,8 @@ describe('PasoUnoComponent', () => {
       };
       mockAdaceService.getDatosConsulta.mockReturnValue(of(mockResponse));
 
-      // Act
       component.fetchGetDatosConsulta();
 
-      // Assert
       expect(mockAdaceService.getDatosConsulta).toHaveBeenCalled();
       expect(mockTramite32508Store.setClaveFiscalizador).toHaveBeenCalledWith('test-clave');
       expect(mockTramite32508Store.setAdace).toHaveBeenCalledWith('ADACE-01');
@@ -191,17 +179,14 @@ describe('PasoUnoComponent', () => {
     });
 
     it('should not call store setters when response is unsuccessful', () => {
-      // Arrange
       const mockResponse = {
         success: false,
         datos: null
       };
       mockAdaceService.getDatosConsulta.mockReturnValue(of(mockResponse));
 
-      // Act
       component.fetchGetDatosConsulta();
 
-      // Assert
       expect(mockAdaceService.getDatosConsulta).toHaveBeenCalled();
       expect(mockTramite32508Store.setClaveFiscalizador).not.toHaveBeenCalled();
       expect(mockTramite32508Store.setAdace).not.toHaveBeenCalled();
@@ -227,30 +212,23 @@ describe('PasoUnoComponent', () => {
     });
 
     it('should handle service errors gracefully', () => {
-      // Arrange
       const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
       mockAdaceService.getDatosConsulta.mockReturnValue(of(null));
 
-      // Act & Assert - should not throw error
       expect(() => component.fetchGetDatosConsulta()).not.toThrow();
       
-      // Cleanup
       errorSpy.mockRestore();
     });
 
     it('should use takeUntil operator for subscription management', () => {
-      // Arrange
       const mockResponse = { success: true, datos: {} };
       mockAdaceService.getDatosConsulta.mockReturnValue(of(mockResponse));
       const takeUntilSpy = jest.spyOn(component.destroyNotifier$, 'next');
 
-      // Act
       component.fetchGetDatosConsulta();
 
-      // Assert
       expect(mockAdaceService.getDatosConsulta).toHaveBeenCalled();
       
-      // Verify subscription is properly managed by triggering destroy
       component.ngOnDestroy();
       expect(takeUntilSpy).toHaveBeenCalled();
     });
@@ -258,31 +236,25 @@ describe('PasoUnoComponent', () => {
 
   describe('ngOnInit integration tests', () => {
     it('should call fetchGetDatosConsulta when consultaDatos.update is true', () => {
-      // Arrange
       mockConsultaioQuery.selectConsultaioState$ = of({
         readonly: false,
         update: true
       });
       const fetchSpy = jest.spyOn(component, 'fetchGetDatosConsulta').mockImplementation(() => {});
 
-      // Act
       component.ngOnInit();
 
-      // Assert
       expect(fetchSpy).toHaveBeenCalled();
     });
 
     it('should set esFormularioSoloLectura to true when readonly is true', () => {
-      // Arrange
       mockConsultaioQuery.selectConsultaioState$ = of({
         readonly: true,
         update: false
       });
 
-      // Act
       component.ngOnInit();
 
-      // Assert
       expect(component.esFormularioSoloLectura).toBe(true);
     });
   });

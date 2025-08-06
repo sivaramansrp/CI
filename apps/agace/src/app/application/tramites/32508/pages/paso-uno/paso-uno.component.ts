@@ -1,10 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, FormularioDinamico } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Solicitud32508State, Tramite32508Store } from '../../state/Tramite32508.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AdaceService } from '../../services/adace.service';
-import { Router } from '@angular/router';
 
 /**
  * Componente que representa el primer paso del trámite.

@@ -32,7 +32,6 @@ import { CommonModule } from '@angular/common';
 import { DatosMercancia } from '../../models/importador-exportador.model';
 import { ImportadorExportadorService } from '../../services/importador-exportador.service';
 import { Tramite10301Query } from '../../estados/tramite10301.query';
-// import mercanciaTable from '@libs/shared/theme/assets/json/10301/mercancia-table.json';
 
 /**
  * Texto de adjuntar para terceros.

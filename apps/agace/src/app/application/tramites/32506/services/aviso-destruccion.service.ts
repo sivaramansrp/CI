@@ -40,12 +40,9 @@ export class AvisoDestruccionService {
    */
   actualizarEstadoFormulario(respuesta: Tramite32506State): void {
 
-    // Guard clause to prevent errors if data is missing
     if (!respuesta?.avisoFormulario || !respuesta?.desperdicioFormulario || !respuesta?.pedimentoFormulario || !respuesta?.procesoFormulario || !respuesta?.domicilioFormulario) {
-      // Optionally log or handle the missing data here
       return;
     }
-    // Aviso Formulario
     this.tramite32506Store.setAvisoFormularioAdace(respuesta.avisoFormulario.adace);
     this.tramite32506Store.setAvisoFormularioCalle(respuesta.avisoFormulario.calle);
     this.tramite32506Store.setAvisoFormularioCodigoPostal(respuesta.avisoFormulario.codigoPostal);
@@ -62,23 +59,19 @@ export class AvisoDestruccionService {
     this.tramite32506Store.setAvisoFormularioValorAnioProgramaImmex(respuesta.avisoFormulario.valorAnioProgramaImmex);
     this.tramite32506Store.setAvisoFormularioValorProgramaImmex(respuesta.avisoFormulario.valorProgramaImmex);
 
-    // Desperdicio Formulario
     this.tramite32506Store.setCantidadDesp(respuesta.desperdicioFormulario.cantidadDesp);
     this.tramite32506Store.setCircunstanciaHechos(respuesta.desperdicioFormulario.circunstanciaHechos);
     this.tramite32506Store.setClaveUnidadMedidaDesp(respuesta.desperdicioFormulario.claveUnidadMedidaDesp);
     this.tramite32506Store.setDescripcionDesperdicio(respuesta.desperdicioFormulario.descripcionDesperdicio);
     this.tramite32506Store.setDescripcionMercancia(respuesta.desperdicioFormulario.descripcionMercancia);
 
-    // Pedimento Formulario
     this.tramite32506Store.setCantidadPedimento(respuesta.pedimentoFormulario.cantidadPedimento);
     this.tramite32506Store.setClaveAduanaPedimento(respuesta.pedimentoFormulario.claveAduanaPedimento);
     this.tramite32506Store.setClaveFraccionArancelariaPedimento(respuesta.pedimentoFormulario.claveFraccionArancelariaPedimento);
     this.tramite32506Store.setClaveUnidadMedidaPedimento(respuesta.pedimentoFormulario.claveUnidadMedidaPedimento);
 
-    // Proceso Formulario
     this.tramite32506Store.setDescripcionProcesoDestruccion(respuesta.procesoFormulario.descripcionProcesoDestruccion);
 
-    // Domicilio Formulario
     this.tramite32506Store.setDomicilioFormularioCalle(respuesta.domicilioFormulario.calle);
     this.tramite32506Store.setDomicilioFormularioCodigoPostal(respuesta.domicilioFormulario.codigoPostal);
     this.tramite32506Store.setDomicilioFormularioColonia(respuesta.domicilioFormulario.claveColonia);
@@ -89,7 +82,6 @@ export class AvisoDestruccionService {
     this.tramite32506Store.setDomicilioFormularioNumeroInterior(respuesta.domicilioFormulario.numeroInterior);
     this.tramite32506Store.setDomicilioFormularioRfc(respuesta.domicilioFormulario.rfc);
 
-    // Datos del solicitante
     this.tramite32506Store.setDatosSolicitante(respuesta.datosSolicitante);
   }
 
