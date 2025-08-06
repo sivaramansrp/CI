@@ -1,27 +1,29 @@
 <ng-titulo titulo="Manifiestos y declaraciones"></ng-titulo>
 <form [formGroup]="manifiestos">
-  <div class="form-check bg-light p-0">
-  <div class="alert alert-info content-with-checkbox py-6">
-    <input type="checkbox" id="mensaje" 
-      formcontrolName="mensaje" [checked]="esFormularioSoloLectura ? true : false" 
-      [disabled]="esFormularioSoloLectura"
-      (change)="setValoresStore(manifiestos,'mensaje', 'setMensaje')"
-      />
-    <span class="fw-bold align-middle"> *</span>
-    <div>{{ mensaje }} </div>
+  <div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-info content-with-checkbox py-6">
+          <div class="col-md-1">
+            <input type="checkbox" id="mensaje" 
+            formcontrolName="mensaje" [checked]="esFormularioSoloLectura ? true : false || isUpdateDatos" 
+            [disabled]="esFormularioSoloLectura"
+            (change)="setValoresStore(manifiestos,'mensaje', 'setMensaje')"
+            />
+            <span class="fw-bold align-middle"> *</span>
+          </div>
+          <div class="col-md-11">{{ mensaje }} </div>
+      </div>
+    </div>
   </div>
-</div>
-  <div class="form mt-5">
-    <div class="row">
-      <div class="col-md-12">
-        <label class="control-label" for="buscar">Los datos o anexos pueden contener información confidencial ¿Está de
-          acuerdo en hacerlos públicos?* :</label>
-      </div>
-      <div class="col-md-2">
-        <app-input-radio [radioOptions]="cumplimientoOptions" [isRequired]="true" formControlName="cumplimiento"
-          [layout]="'horizontal'"
-          (change)="setValoresStore(manifiestos,'cumplimiento', 'setCumplimiento')"></app-input-radio>
-      </div>
+  <div class="row">
+    <div class="col-md-12">
+      <label class="control-label" for="buscar">Los datos o anexos pueden contener información confidencial ¿Está de
+        acuerdo en hacerlos públicos?* :</label>
+    </div>
+    <div class="col-md-2">
+      <app-input-radio [radioOptions]="cumplimientoOptions" [isRequired]="true" formControlName="cumplimiento"
+        [layout]="'horizontal'"
+        (change)="setValoresStore(manifiestos,'cumplimiento', 'setCumplimiento')"></app-input-radio>
     </div>
   </div>
 </form>

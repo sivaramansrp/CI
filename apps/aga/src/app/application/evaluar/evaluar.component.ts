@@ -245,7 +245,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
         this.guardarFirmar();
         break;
       case 'cancelar':
-        this.indice = 0;
+        this.indice = 1;
         break;
       default:
     }
@@ -281,13 +281,13 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @description Método para restablecer los índices de las pestañas principales y de dictamen.
    * 
    * Este método se utiliza para reiniciar el flujo de navegación en el componente:
-   * - Establece el índice de la pestaña principal (`indice`) en 0.
+   * - Establece el índice de la pestaña principal (`indice`) en 1 para mostrar el tab "Dictamen".
    * - Establece el índice de la pestaña de dictamen (`indiceDictamen`) en 1.
    * 
    * @returns {void}
    */
   cancelar(): void {
-    this.indice = 0;
+    this.indice = 1;
     this.indiceDictamen = 1;
   }
   /**

@@ -1,5 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
+import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { PagoDeDerechosComponent } from '../../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
@@ -116,13 +117,16 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    */
   constructor(
     public tramiteStore: Tramite260217Store,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef
+
   ) {
       this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
+          this.cdr.detectChanges();
         })
       )
       .subscribe();

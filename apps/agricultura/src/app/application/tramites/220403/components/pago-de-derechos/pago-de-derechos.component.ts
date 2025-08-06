@@ -220,11 +220,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
           if( (this.formulario.get('pagoDerechos')?.valid) ){
             const VALIDA = this.formulario.get('pagoDerechos')?.valid ? true : false;
             this.tramite220403store.setPagoDerechosValidada(VALIDA);
-            this.exportaccionAcuicolaServcios.actualizarFormaValida();
-          }
-          else{
-            this.seccionStore.establecerSeccion([true]);
-            this.seccionStore.establecerFormaValida([false]);
           }
         });
 

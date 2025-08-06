@@ -42,7 +42,7 @@ export const PASOS = [
  * @type {string}
  */
 export const TITULOMENSAJE =
-  'Registro de solicitud de modificación programa IMMEX (Modificación Alta a domicilio de una planta, bodega o almacén)';
+  'Registro de solicitud IMMEX modalidad servicios';
 
 /**
  * @const TEXTOS_REQUISITOS

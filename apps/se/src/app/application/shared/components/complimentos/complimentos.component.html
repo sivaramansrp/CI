@@ -1,17 +1,11 @@
 <form class="complimentos-container container" [formGroup]="formaComplimentos">
   <div class="row">
-    <ng-titulo titulo="Datos de la solicitude" />
+    <ng-titulo titulo="Datos de la solicitud" />
 
     <div class="row">
       <div class="col-md-4">
-        <label for="modalidad">Modalidad</label>
-        <input
-          type="text"
-          id="modalidad"
-          name="modalidad"
-          class="form-control"
-          formControlName="modalidad"
-        />
+        <label for="modalidad">Modalidad:</label>
+        <input type="text" id="modalidad" name="modalidad" class="form-control" formControlName="modalidad" />
       </div>
     </div>
   </div>
@@ -19,14 +13,9 @@
     <ng-titulo titulo="Programa Pre operativo" />
     <div class="col-md-12">
       <div class="row">
-        <label class="control-label"
-          ><input
-            class="form-check-input me-3"
-            type="checkbox"
-            formControlName="programaPreOperativo"
-          />
-          Trámite IMMEX Pre operativo</label
-        >
+        <label class="control-label"><input class="form-check-input me-3" type="checkbox"
+            formControlName="programaPreOperativo" />
+          Trámite IMMEX Pre operativo</label>
       </div>
     </div>
   </div>
@@ -36,35 +25,13 @@
     <div class="row col-12">
       <div class="col-md-8 mb-4">
         <label for="pagina">Página web*:</label>
-        <input
-          type="text"
-          id="pagina"
-          name="pagina"
-          class="form-control"
-          maxlength="120"
-          formControlName="paginaWWeb"
-        />
-         <div
-          *ngIf="formaComplimentos.get('datosGeneralis.paginaWWeb')?.invalid && formaComplimentos.get('datosGeneralis.paginaWWeb')?.touched"
-          class="text-danger">
-          Este campo es obligatorio.
-        </div>
+        <input type="text" id="pagina" name="pagina" class="form-control" formControlName="paginaWWeb" maxlength="120"
+          onkeyup="this.value = this.value.toUpperCase();" onkeypress="return soloLetras(event)" />
       </div>
       <div class="col-md-8">
-        <label for="localizacion">localización*:</label>
-        <input
-          type="text"
-          id="localizacion"
-          name="localizacion"
-          class="form-control"
-          maxlength="120"
-          formControlName="localizacion"
-        />
-        <div
-            *ngIf="formaComplimentos.get('datosGeneralis.localizacion')?.invalid && formaComplimentos.get('datosGeneralis.localizacion')?.touched"
-            class="text-danger">
-            Este campo es obligatorio.
-          </div>
+        <label for="localizacion">Localización*:</label>
+        <input type="text" id="localizacion" name="localizacion" class="form-control" formControlName="localizacion"
+          maxlength="120" onkeyup="this.value = this.value.toUpperCase();" onkeypress="return soloLetras(event)" />
       </div>
     </div>
   </div>
@@ -74,46 +41,21 @@
     <div class="row">
       <div class="col-md-4">
         <label for="Opinion">Opinión positiva del SAT*:</label>
-        <input
-          type="text"
-          id="Opinion"
-          name="Opinion"
-          class="form-control"
-          formControlName="opinionPositiva"
-        />
-        <div
-          *ngIf="formaComplimentos.get('obligacionesFiscales.opinionPositiva')?.invalid && formaComplimentos.get('datosGeneralis.localizacion')?.touched"
-          class="text-danger">
-          Este campo es obligatorio.
-        </div>
+        <input type="text" id="Opinion" name="Opinion" class="form-control" formControlName="opinionPositiva" />
       </div>
       <div class="col-md-4">
-        <label for="expedicion">Fecha de expedición*:</label>
-        <input
-          type="date"
-          class="form-control"
-          formControlName="fechaExpedicion"
-        />
-                <div
-                  *ngIf="formaComplimentos.get('obligacionesFiscales.fechaExpedicion')?.invalid && formaComplimentos.get('datosGeneralis.localizacion')?.touched"
-                  class="text-danger">
-                  Este campo es obligatorio.
-                </div>
+        <input-fecha [datos]="INPUT_FECHA_CONFIG" [setFecha]="formaComplimentos.get('fechaExpedicion')?.value"
+          (valorCambiado)="cambioFechaFinal($event)">
+        </input-fecha>
       </div>
       <div class="col-12 mt-5">
         <div class="alert alert-info text-start">
-          <label>
-            <input
-              id="filaSeleccion"
-              class="cursor-pointer"
-              type="checkbox"
-              aria-label="Seleccionar"
-              formControlName="aceptarObligacionFiscal"
-              class="mr-3"
-            /> * Compromiso de vantas anuales por un valor superior a 500,000
-            dólares de los Estados Unidos de América, o su equivalente en moneda
-            nacional, o bien facturar exportaciones, cuanda menos por el 10% de
-            su facturación total.
+          <label class="d-flex align-items-start">
+            <input id="filaSeleccion" class="cursor-pointer custom-checkbox me-5 mt-4" type="checkbox"
+              aria-label="Seleccionar" formControlName="aceptarObligacionFiscal" />
+            <span>* Compromiso de ventas anuales por un valor superios a 500,000 dólares de los Estados Unidos de
+              América, o su equivalente en moneda nacional, o bien facturar exportaciones, cuando menos por el 10% de su
+              facturación total.</span>
           </label>
         </div>
       </div>
@@ -121,111 +63,66 @@
   </div>
 
   <div class="row" formGroupName="formaModificaciones">
-    <ng-titulo
-      titulo="Datos federatario(s) constitución y modificaciones de la sociedad"
-    />
+    <ng-titulo titulo="Datos federatario(s) Constitución y modificaciones de la sociedad" />
 
     <div class="row">
       <div class="col-12">
         <div class="col-12 mb-4">
-          <label for="Nombre"
-            >Nombre del federatario que expide el documento*:</label
-          >
-          <input
-            type="text"
-            id="Nombre"
-            name="Nombre"
-            class="form-control"
-            maxlength="120"
-            formControlName="nombreDelFederatario"
-          />
-          <div *ngIf="formaComplimentos.get('nombreDelFederatario')?.hasError('required') && formaComplimentos.get('nombreDelFederatario')?.touched" class="text-danger">
+          <label for="Nombre">Nombre del federatario que expide el documento*:</label>
+          <input type="text" id="Nombre" name="Nombre" class="form-control" formControlName="nombreDelFederatario"
+            maxlength="120" />
+             <div *ngIf="formaComplimentos.get('formaModificaciones.nombreDelFederatario')?.hasError('required') && formaComplimentos.get('formaModificaciones.nombreDelFederatario')?.touched" class="text-danger">
             Este campo es obligatorio.
           </div>
         </div>
         <div class="row">
-            <div class="col-md-4 mb-4 mt-3">
-              <label for="Numero"> Número de Notario*:</label>
-              <input
-                type="text"
-                id="Numero"
-                name="Numero"
-                class="form-control"
-                maxlength="10"
-                formControlName="nombreDeNotaria"
-              />
-              <div *ngIf="formaComplimentos.get('nombreDeNotaria')?.hasError('required') && formaComplimentos.get('nombreDeNotaria')?.touched" class="text-danger">
-                Este campo es obligatorio.
-              </div>
-            </div>
-            <div class="col-4 mb-4 mt-1">
-              <app-catalogo-select
-                [catalogo]="estados || []"
-                [label]="'Estado'"
-                [required]="true"
-                name="estado"
-                formControlName="estado"
-                [isDisabled]="formularioDeshabilitado"
-              ></app-catalogo-select>
-              <div *ngIf="formaComplimentos.get('estado')?.hasError('required') && formaComplimentos.get('estado')?.touched" class="text-danger">
-                Este campo es obligatorio.
-              </div>
-            </div>
+          <div class="col-md-4 mb-4 mt-3">
+            <label for="Numero"> Número de Notaria*:</label>
+            <input type="text" id="Numero" name="Numero" class="form-control" formControlName="nombreDeNotaria"
+              maxlength="10" />
+               <div *ngIf="formaComplimentos.get('formaModificaciones.nombreDeNotaria')?.hasError('required') && formaComplimentos.get('formaModificaciones.nombreDeNotaria')?.touched" class="text-danger">Este campo es obligatorio.</div>
+          </div>
+          <div class="col-4 mb-4 mt-1">
+            <app-catalogo-select [catalogo]="estados || []" [label]="'Estado'" [required]="false" name="estado"
+              formControlName="estado" [isDisabled]="formularioDeshabilitado"
+              [placeholder]="'Seleccione un valor'"></app-catalogo-select>
+               <div *ngIf="formaComplimentos.get('formaModificaciones.estado')?.hasError('required') && formaComplimentos.get('formaModificaciones.estado')?.touched" class="text-danger">Este campo es obligatorio.</div>
+          </div>
         </div>
 
         <div class="row mb-4">
-            <div class="col-md-4">
-              <label for="acta"> Número de acta*:</label>
-              <input
-                type="text"
-                id="acta"
-                name="acta"
-                class="form-control"
-                maxlength="10"
-                formControlName="nombreDeActa"
-              />
-              <div *ngIf="formaComplimentos.get('nombreDeActa')?.hasError('required') && formaComplimentos.get('nombreDeActa')?.touched" class="text-danger">
-                Este campo es obligatorio.
-              </div>
+          <div class="col-md-4">
+            <label for="acta"> Número de acta*</label>
+            <input type="text" id="acta" name="acta" class="form-control" formControlName="nombreDeActa" maxlength="10"
+              [class.is-invalid]="formaComplimentos.get('formaModificaciones')?.get('nombreDeActa')?.invalid && formaComplimentos.get('formaModificaciones')?.get('nombreDeActa')?.touched" />
+           <div *ngIf="formaComplimentos.get('formaModificaciones.nombreDeActa')?.hasError('required') && formaComplimentos.get('formaModificaciones.nombreDeActa')?.touched" class="text-danger">Este campo es obligatorio.</div>
             </div>
 
           <div class="col-md-4">
-            <div class="form-group">
-              <input-fecha [datos]="fechaInicioInput" [isDisabled]="formularioDeshabilitado"
-                (valorCambiado)="onFechaCambiada($event)" [setFecha]="formaComplimentos.get('fechaDeActa')?.value"></input-fecha>
-            </div>
+            <label for="emision"> Fecha de emisión del acta*</label>
+            <input type="text" id="emision" name="emision" class="form-control" formControlName="fechaDeActa" />
+            <div *ngIf="formaComplimentos.get('formaModificaciones.fechaDeActa')?.hasError('required') && formaComplimentos.get('formaModificaciones.fechaDeActa')?.touched" class="text-danger">Este campo es obligatorio.</div>
           </div>
         </div>
         <div class="row mb-4">
           <div class="col-md-4">
-            <label for="rfc"> RFC del representante legal*:</label>
-            <input
-              type="text"
-              id="rfc"
-              name="rfc"
-              class="form-control"
-              formControlName="rfc"
-              maxlength="13"
-            />
-            <div *ngIf="formaComplimentos.get('rfc')?.hasError('required') && formaComplimentos.get('rfc')?.touched" class="text-danger">
-              Este campo es obligatorio.
+            <label for="rfc"> RFC del Representante Legal*:</label>
+            <div class="position-relative">
+              <input type="text" id="rfc" name="rfc" class="form-control" formControlName="rfc" maxlength="13"
+                onkeyup="this.value = this.value.toUpperCase();"
+                onkeypress="return /^[A-ZÑ&0-9]$/i.test(event.key) || event.key === 'Backspace' || event.key === 'Delete' || event.key === 'Tab'"
+                (blur)="onRfcBlur()" (input)="onRfcChange()" />
             </div>
+             <div *ngIf="formaComplimentos.get('formaModificaciones.rfc')?.hasError('required') && formaComplimentos.get('formaModificaciones.rfc')?.touched" class="text-danger">Este campo es obligatorio.</div>
           </div>
         </div>
         <div class="row mb-4">
-            <div class="col-md-10">
-            <label for="representante"> Nombre del representante legal*:</label>
-            <input
-              type="text"
-              id="representante"
-              name="representante"
-              class="form-control"
-              formControlName="nombreDeRepresentante"
-            />
-            <div *ngIf="formaComplimentos.get('nombreDeRepresentante')?.hasError('required') && formaComplimentos.get('nombreDeRepresentante')?.touched" class="text-danger">
-              Este campo es obligatorio.
-            </div>
-            </div>
+          <div class="col-md-10">
+            <label for="representante"> Nombre del Representante Legal*:</label>
+            <input type="text" id="representante" name="representante" class="form-control"
+              formControlName="nombreDeRepresentante" />
+          </div>
+            <div *ngIf="formaComplimentos.get('formaModificaciones.nombreDeRepresentante')?.hasError('required') && formaComplimentos.get('formaModificaciones.nombreDeRepresentante')?.touched" class="text-danger">Este campo es obligatorio.</div>
         </div>
       </div>
     </div>
@@ -239,38 +136,23 @@
         <div class="row">
           <div class="col-md-12">
             <label class="control-label" for="buscar">
-              Nacionalidad maxicana</label
-            >
+              Nacionalidad Mexicana</label>
           </div>
           <div class="col-md-6">
             <div class="row">
               <label class="control-label">
-                <input
-                  class="form-check-input me-3"
-                  type="radio"
-                  name="nationalidadMaxicana"
-                  formControlName="nationalidadMaxicana"
-                  value="true"
-                  id="nationalidadMaxicana"
-                  (change)="handleModificarForma()"
-                />
-                Si</label
-              >
+                <input class="form-check-input me-3" type="radio" name="nationalidadMaxicana"
+                  formControlName="nationalidadMaxicana" value="true" id="nationalidadMaxicana"
+                  (change)="handleModificarForma()" />
+                Si</label>
             </div>
           </div>
           <div class="col-md-6">
             <div class="row">
               <label class="control-label">
-                <input
-                  class="form-check-input me-3"
-                  type="radio"
-                  name="nationalidadMaxicana"
-                  formControlName="nationalidadMaxicana"
-                  value="false"
-                  (change)="handleModificarForma()"
-                />
-                No</label
-              >
+                <input class="form-check-input me-3" type="radio" name="nationalidadMaxicana"
+                  formControlName="nationalidadMaxicana" value="false" (change)="handleModificarForma()" />
+                No</label>
             </div>
           </div>
         </div>
@@ -282,100 +164,92 @@
           </div>
           <div class="col-md-6">
             <div class="row">
-              <label class="control-label"
-                ><input
-                  class="form-check-input me-3"
-                  type="radio"
-                  name="tipoDePersona"
-                  formControlName="tipoDePersona"
-                  value="true"
-                  id="tipoDePersona"
-                  (change)="handleModificarForma()"
-                />
-                Persona fisica</label
-              >
+              <label class="control-label"><input class="form-check-input me-3" type="radio" name="tipoDePersona"
+                  formControlName="tipoDePersona" value="true" id="tipoDePersona" (change)="handleModificarForma()" />
+                Persona física</label>
             </div>
           </div>
           <div class="col-md-6">
             <div class="row">
-              <label class="control-label"
-                ><input
-                  class="form-check-input me-3"
-                  type="radio"
-                  name="tipoDePersona"
-                  formControlName="tipoDePersona"
-                  value="false"
-                  (change)="handleModificarForma()"
-                />
-                Persona Moral</label
-              >
+              <label class="control-label"><input class="form-check-input me-3" type="radio" name="tipoDePersona"
+                  formControlName="tipoDePersona" value="false" (change)="handleModificarForma()" />
+                Persona moral</label>
             </div>
           </div>
         </div>
       </div>
     </div>
     <div class="row mt-4">
-      <div
-        formGroupName="formaDatos"
-        class="row mb-4"
-        *ngIf="obtenerControles()"
-      >
-        @for (item of camposFormulario; track $index) { 
-        @if (item.tipo_input === 'select') {
+      <div formGroupName="formaDatos" class="row mb-4" *ngIf="obtenerControles()">
+        @for (item of camposFormulario; track $index) { @if (item.tipo_input ===
+        'select') {
         <div [ngClass]="item.class">
-          <app-select-paises
-            [catalogosPaises]="item?.opciones || []"
-            [label]="item.labelNombre"
-            [required]="item.required"
-            [formControlName]="item.campo"
-          ></app-select-paises>
-          <div *ngIf=" formaComplimentos.get(item.campo)?.hasError('required') &&  formaComplimentos.get(item.campo)?.touched" class="text-danger">
-            Este campo es obligatorio.
-          </div>
+          <app-select-paises [catalogosPaises]="item?.opciones || []" [label]="item.labelNombre"
+            [required]="item.required" [formControlName]="item.campo"></app-select-paises>
         </div>
 
         } @else if (item.tipo_input === 'select-paise') {
         <div [ngClass]="item.class">
-          <app-select-paises
-            [catalogosPaises]="item?.opciones || []"
-            [label]="item.labelNombre"
-            [required]="item.required"
-            [formControlName]="item.campo"
-          ></app-select-paises>
-          <div *ngIf=" formaComplimentos.get(item.campo)?.hasError('required') &&  formaComplimentos.get(item.campo)?.touched" class="text-danger">
-            Este campo es obligatorio.
-          </div>
+          <app-select-paises [catalogosPaises]="item?.opciones || []" [label]="item.labelNombre"
+            [required]="item.required" [formControlName]="item.campo"></app-select-paises>
         </div>
 
         } @else if (item.tipo_input === 'select-catalog') {
         <div [ngClass]="item.class">
-          <app-catalogo-select
-            [catalogo]="item?.opcionesCatalogo || []"
-            [label]="item.labelNombre"
-            [required]="item.required"
-            [formControlName]="item.campo"
-          ></app-catalogo-select>
-          <div *ngIf=" formaComplimentos.get(item.campo)?.hasError('required') &&  formaComplimentos.get(item.campo)?.touched" class="text-danger">
-            Este campo es obligatorio.
-          </div>
+          <app-catalogo-select [catalogo]="item?.opcionesCatalogo || []" [label]="item.labelNombre"
+            [required]="item.required" [formControlName]="item.campo"></app-catalogo-select>
         </div>
 
         } @else {
         <div [ngClass]="item.class">
-          <label for="{{ item.campo }}">
-            {{ item.labelNombre }} 
-            @if (item.required) {*}:
-          </label>
-          <input
-            class="form-control"
-            [type]="item.tipo_input"
-            id="{{ item.campo }}"
-            maxlength="{{ item.maxLength }}"
-            [formControlName]="item.campo"
-          />
-          <div *ngIf=" formaComplimentos.get(item.campo)?.hasError('required') &&  formaComplimentos.get(item.campo)?.touched" class="text-danger">
-            Este campo es obligatorio.
+          <label for="{{ item.campo }}">{{ item.labelNombre }} @if (item.required) {*}:</label>
+          <input class="form-control" [type]="item.tipo_input" id="{{ item.campo }}" [formControlName]="item.campo"
+            [maxlength]="item.maxlength || (item.campo === 'rfc' ? 13 : null)"
+            [class.is-invalid]="formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.invalid && formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.touched" />
+          @if (formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.invalid &&
+          formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.touched) {
+          <div class="invalid-feedback">
+            @if
+            (formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.errors?.['required']) {
+            <small>Este campo es obligatorio.</small>
+            }
+            @if
+            (formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.errors?.['maxlength'])
+            {
+            <small>
+              @switch (item.campo) {
+              @case ('nombre') {
+              El nombre no puede exceder los 200 caracteres.
+              }
+              @case ('apellidoPaterno') {
+              El apellido paterno no puede exceder los 200 caracteres.
+              }
+              @case ('codigoPostal') {
+              El código postal no puede exceder los 12 caracteres.
+              }
+              @case ('estado') {
+              El estado no puede exceder los 250 caracteres.
+              }
+              @case ('correoElectronico') {
+              El correo electrónico no puede exceder los 200 caracteres.
+              }
+              @case ('taxId') {
+              El Tax ID no puede exceder los 12 caracteres.
+              }
+              @case ('razonSocial') {
+              La razón social no puede exceder los 200 caracteres.
+              }
+              @case ('rfc') {
+              El RFC no puede exceder los 13 caracteres.
+              }
+              @default {
+              Este campo excede la longitud máxima permitida.
+              }
+              }
+            </small>
+            }
           </div>
+          }
         </div>
 
         } }
@@ -384,60 +258,43 @@
 
     <div class="col-12">
       <div class="pull-right">
-        <button
-          name="agregar"
-          class="btn btn-primary mx-2"
-          (click)="aggregarAccionistas()"
-          [disabled]="formularioDeshabilitado"
-        >
+        <button name="agregar" class="btn btn-primary mx-2" (click)="aggregarAccionistas()"
+          [disabled]="formularioDeshabilitado">
           Agregar
         </button>
       </div>
     </div>
 
     <div class="col-12">
-      <label> Socios y accionistas </label>
-      <label class="my-3 col-12">Datos de los Socios y/o accionistas: </label>
-      <app-tabla-dinamica
-        [configuracionTabla]="tablaSociaAccionistas"
-        [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
-        (listaDeFilaSeleccionada)="empresaAccionistasSeleccionados = $event"
-        [datos]="datosSocioAccionistas"
-        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
-      ></app-tabla-dinamica>
+      <label> Socios y Accionistas</label>
+      <label class="my-3 col-12">Datos de los socios y/o accionistas:</label>
+
+      <app-tabla-dinamica [configuracionTabla]="tablaSociaAccionistas" [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
+        (listaDeFilaSeleccionada)="empresaAccionistasSeleccionados = $event" [datos]="datosSocioAccionistas"
+        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"></app-tabla-dinamica>
     </div>
     <div class="col-12">
       <div class="pull-right">
-        <button
-          name="eliminar"
-          class="btn btn-danger"
-          (click)="abrirEliminarUnoConfirmationModal()"
-          [disabled]="formularioDeshabilitado"
-        >
+        <button name="eliminar" class="btn btn-danger" (click)="eliminarAccionistas()"
+          [disabled]="formularioDeshabilitado">
           Eliminar
         </button>
       </div>
     </div>
 
     <div class="col-12">
-      <label> Socios y accionistas Extranjeros </label>
-      <label class="my-3 col-12">Datos de los Socios y/o accionistas: </label>
-      <app-tabla-dinamica
-        [configuracionTabla]="tablaSociaAccionistasExtranjeros"
+      <label> Socios y Accionistas Extranjeros </label>
+      <label class="my-3 col-12">Datos de los socios y/o accionistas:</label>
+      <app-tabla-dinamica [configuracionTabla]="tablaSociaAccionistasExtranjeros"
         [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
         (listaDeFilaSeleccionada)="accionistasExtranjerosSeleccionados = $event"
         [datos]="datosSocioAccionistasExtrenjeros"
-        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
-      ></app-tabla-dinamica>
+        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"></app-tabla-dinamica>
     </div>
     <div class="col-12">
       <div class="pull-right">
-        <button
-          name="eliminar"
-          class="btn btn-danger"
-          (click)="abrirEliminarDosConfirmationModal()"
-          [disabled]="formularioDeshabilitado"
-        >
+        <button name="eliminar" class="btn btn-danger" (click)="eliminarAccionistasExtrenjeros()"
+          [disabled]="formularioDeshabilitado">
           Eliminar
         </button>
       </div>
@@ -449,58 +306,26 @@
 
     <div class="row" formGroupName="formaCertificacion">
       <div class="col-md-4">
-        <label class="form-label text-start" for="certificion"
-          >Certificada (Si/NO)</label
-        >
-        <input
-          class="form-control"
-          type="text"
-          id="certificion"
-          formControlName="certificada"
-        />
+        <label class="form-label text-start" for="certificion">Certificada (Si/NO)</label>
+        <input class="form-control" type="text" id="certificion" formControlName="certificada" />
       </div>
 
       <div class="col-md-4">
-        <label class="form-label text-start" for="certificion"
-          >Fecha inicio de vigencia:</label
-        >
-        <input
-          class="form-control"
-          type="text"
-          id="certificion"
-          formControlName="fechaInicio"
-        />
+        <label class="form-label text-start" for="certificion">Fecha inicio de vigencia:</label>
+        <input class="form-control" type="text" id="certificion" formControlName="fechaInicio" />
       </div>
       <div class="col-md-4">
-        <label class="form-label text-start" for="certificion"
-          >fecha fin de vigencia:</label
-        >
-        <input
-          class="form-control"
-          type="text"
-          id="certificion"
-          formControlName="fechaVigencia"
-        />
+        <label class="form-label text-start" for="certificion">fecha fin de vigencia:</label>
+        <input class="form-control" type="text" id="certificion" formControlName="fechaVigencia" />
       </div>
     </div>
   </div>
 </form>
 
-@if (eliminarNotificacion && eliminarNotificacion.cerrar) {
+<!-- RFC Validation Notification -->
+@if (nuevaNotificacionRfc) {
 <section>
-    <lib-notificaciones [notificacionInput]="eliminarNotificacion" (confirmacionModal)="closePlantasModal()">
-    </lib-notificaciones>
-</section>
-}
-@if (eliminarUnoConfirmationNotificacion && eliminarUnoConfirmationNotificacion.cerrar) {
-<section>
-    <lib-notificaciones [notificacionInput]="eliminarUnoConfirmationNotificacion" (confirmacionModal)="eliminarAccionistas()">
-    </lib-notificaciones>
-</section>
-}
-@if (eliminarDosConfirmationNotificacion && eliminarDosConfirmationNotificacion.cerrar) {
-<section>
-    <lib-notificaciones [notificacionInput]="eliminarDosConfirmationNotificacion" (confirmacionModal)="eliminarAccionistasExtrenjeros()">
-    </lib-notificaciones>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacionRfc" (confirmacionModal)="confirmarNotificacionRfc($event)">
+  </lib-notificaciones>
 </section>
 }

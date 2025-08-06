@@ -93,3 +93,39 @@ export function dateLessThanOrEqualToday(control: AbstractControl): ValidationEr
         const DATESTRING = new Date(fecha);
         return moment(DATESTRING).format('YYYY-MM-DD HH:mm:ss');
     }
+
+    /**
+     * Limpia y deshabilita el input con id 'desProgramaFomento'.
+     */
+    /**
+     * Limpia y deshabilita un control de formulario HTML según su tipo.
+     *
+     * @param id - El identificador del elemento HTML a manipular.
+     * @param tipo - El tipo de control, puede ser 'textbox' (campo de texto) o 'checkbox' (casilla de verificación).
+     * @param soloLimpiarTextbox - Opcional. Si es verdadero y el tipo es 'textbox', solo limpia el valor sin deshabilitar el control.
+     *
+     * Si el tipo es 'textbox', se limpia el valor del campo y se deshabilita el control, a menos que `soloLimpiarTextbox` sea verdadero.
+     * Si el tipo es 'checkbox', se desmarca la casilla y se habilita el control.
+     * Si el elemento no existe, la función no realiza ninguna acción.
+     */
+    export function limpiarYDeshabilitarControl(
+        id: string,
+        tipo: 'textbox' | 'checkbox',
+        soloLimpiarTextbox?: boolean
+    ): void {
+        const ELEMENT = document.getElementById(id) as HTMLInputElement;
+        if (!ELEMENT) {
+            return;
+        }
+
+        if (tipo === 'textbox') {
+            ELEMENT.value = '';
+            if (!soloLimpiarTextbox) {
+                ELEMENT.disabled = true;
+            }
+        } else if (tipo === 'checkbox') {
+            ELEMENT.checked = false;
+            ELEMENT.disabled = false;
+        }
+    }
+

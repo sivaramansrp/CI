@@ -5,12 +5,19 @@
     <div class="col-md-4">
       <div class="form-group">
         <label class="form-label text-nowrap text-truncate-ellipsis" [title]="'Registro federal de contribuyentes'"
-          for="rfc">Registro federal de contribuyentes
-          <span class="require">*</span>:
+          for="rfc">Registro federal de contribuyentes:
+          <span class="require">*</span>
         </label>
         <input type="text" id="rfc" formControlName="rfc" class="form-control mt-custom" size="30" maxlength="13"
           (change)="cambiarRFC()" />
-      </div>
+          </div>
+     @if(formularioDatosSubcontratista.controls['rfc'].invalid && formularioDatosSubcontratista.controls['rfc'].touched) {
+              <div class="d-grid">
+                @if(formularioDatosSubcontratista.controls['rfc'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                }              
+                </div>
+              }
     </div>
 
     <div class="col-md-4">
@@ -58,7 +65,7 @@
   <div class="row justify-content-end">
     <button type="button" class="btn btn-danger col-auto mt-3 complementar-margin-right" data-bs-toggle="modal"
       data-bs-target="#complementarPlanta" (click)="abrirDialogoComplementarPlanta()" [disabled]="esFormularioSoloLectura">
-      Complementar plantas
+      Complementar planta
 
     </button>
 

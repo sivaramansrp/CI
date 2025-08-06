@@ -722,4 +722,25 @@ export enum TIPO_ACTUALIZACION {
  * @remarks
  * Utilice esta constante para identificar solicitudes relacionadas con productos de tipo especial.
  */
-export const TIPO_PRODUCTO_ESPECIAL = '3'
+export const TIPO_PRODUCTO_ESPECIAL = '3';
+
+/**
+ * Constante que representa los procedimientos que no son aplicables para manifiestos y declaraciones.
+ * 
+ * @remarks
+ * Esta constante se utiliza para filtrar procedimientos que no deben ser considerados en el contexto de manifiestos y declaraciones.
+ */
+export const PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES = [260217];
+
+/**
+ * Constante que representa el texto del manifiesto y declaraciones.
+ * 
+ * @remarks
+ * Este texto se utiliza para informar al usuario sobre los requisitos y normatividad aplicable,
+ * así como las sanciones por falsedad de declaraciones.
+ */
+
+export const TEXTO_MANIFESTO_Y_DECLARACIONES = `Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su
+      cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una
+      autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio
+      Exterior por los mecanismos de la misma.`;

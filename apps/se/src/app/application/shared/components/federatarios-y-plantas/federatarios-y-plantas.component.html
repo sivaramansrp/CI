@@ -125,7 +125,7 @@
             <button class="btn btn-danger me-2"
             [disabled]="formularioDeshabilitado" (click)="eliminarDatos()">Eliminar</button>
             <button class="btn btn-primary" (click)="aggregarDatos()"
-            [disabled]="formularioDeshabilitado || !federatariosFormGroup.valid">
+            [disabled]="formularioDeshabilitado || federatariosFormGroup.invalid">
               Agregar
             </button>
           </div>

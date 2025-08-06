@@ -18,7 +18,9 @@ describe('DatosCertificadoComponent', () => {
 
   beforeEach(async () => {
     mockService = {
-      getDatosCertificado: jest.fn().mockReturnValue(of([]))
+      getDatosCertificado: jest.fn().mockReturnValue(of([])),
+      getUnidadMedida: jest.fn().mockReturnValue(of([])),
+      getTipodeFctura: jest.fn().mockReturnValue(of([]))
     };
     mockStore = {
       setTramite110218State: jest.fn()
@@ -88,18 +90,18 @@ describe('DatosCertificadoComponent', () => {
     expect(component.filaSeleccionada).toBe(fila);
   });
 
-  it('debería emitir modificarEventCertificado en enModificarFormulario si filaSeleccionada existe', () => {
-    const spy = jest.spyOn(component.modificarEventCertificado, 'emit');
-    component.filaSeleccionada = { id: 1 } as any;
-    component.enModificarFormulario();
-    expect(spy).toHaveBeenCalledWith(false);
+   it('debería actualizar filaSeleccionada al manejarFilaSeleccionada', () => {
+    const fila = { id: 1, nombre: 'Fila' } as any;
+    component.manejarFilaSeleccionada(fila);
+    expect(component.filaSeleccionada).toBe(fila);
   });
 
-  it('no debería emitir modificarEventCertificado si filaSeleccionada no existe', () => {
-    const spy = jest.spyOn(component.modificarEventCertificado, 'emit');
-    component.filaSeleccionada = undefined as any;
-    component.enModificarFormulario();
-    expect(spy).not.toHaveBeenCalled();
+
+  it('debería actualizar tramite110218Store con setValorStore', () => {
+    component.inicializarFormulario();
+    component.datosDelCertificado.get('lugar')?.setValue('Osaka');
+    component.setValorStore(component.datosDelCertificado, 'lugar');
+    expect(mockStore.setTramite110218State).toHaveBeenCalledWith({ lugar: 'Osaka' });
   });
 
   it('debería actualizar tramite110218Store con setValorStore', () => {

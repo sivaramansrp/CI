@@ -1,22 +1,14 @@
 import {
-  Component,
-
-  ViewChild
-} from '@angular/core';
-
-import {
   AccionBoton,
-
   DatosPasos,
-
   ListaPasosWizard,
-
-  SeccionLibStore,
-
   WizardComponent
 } from '@ng-mf/data-access-user';
+import {
+  Component,
+  ViewChild
+} from '@angular/core';
 import { PASOS } from '../../constantes/fitosanitario.enum';
-
 
 /**
  * Componente principal de la página de solicitud, que gestiona la navegación de pasos dentro de un formulario tipo wizard.
@@ -55,18 +47,6 @@ export class SolicitudPageComponent {
     txtBtnAnt: 'Guardar',
     txtBtnSig: 'Continuar',
   };
-
-  /**
-   * Constructor del componente, que inyecta `SeccionLibStore` para manejar el estado de la sección.
-   * 
-   * El constructor establece el estado inicial de la sección en falso y la sección como activa.
-   * 
-   * @param seccionStore - El servicio encargado de gestionar el estado de las secciones en la aplicación.
-   */
-  constructor(private readonly seccionStore: SeccionLibStore) {
-    this.seccionStore.establecerFormaValida([false]);
-    this.seccionStore.establecerSeccion([true]);
-  }
 
   /**
    * Referencia al componente `WizardComponent` para poder controlar la navegación entre pasos.
