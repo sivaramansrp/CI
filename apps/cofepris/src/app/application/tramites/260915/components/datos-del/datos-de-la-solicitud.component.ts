@@ -53,6 +53,11 @@ export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
  
    /** Sujeto para manejar la destrucción de observables */
    private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+   /**
+   * Indica si el formulario es colapsable.
+   * Permite mostrar u ocultar el contenido del formulario.
+   */
+  colapsable = false;
  
    /** Formulario para la clave SCIAN */
    clavaScianForm!: FormGroup;
@@ -221,7 +226,6 @@ public estadoFisicoData = ESTADO_FISICO_DATA;
     } else {
       this.createForm();
       this.createclaveScianForm();
-
    
   }
     
@@ -270,7 +274,7 @@ public estadoFisicoData = ESTADO_FISICO_DATA;
     this.getEstadoFisicoData();
     this.getMercanciasDatosData();
   }
- 
+
  /**
  * Método para crear el formulario de clave SCIAN.
  * Inicializa un formulario reactivo con los campos `claveScian` y `descripcionDelScian`,
@@ -319,6 +323,28 @@ createForm(): void{
       presentacionFarmaceutica:[this.dataDeLaSolicitudState?.presentacionFarmaceutica, Validators.required],
       fraccionArancelaria:[this.dataDeLaSolicitudState?.fraccionArancelaria, Validators.required],
       
+       datosMercanciaForm: this.fb.group({
+        clasificaionProductos: [this.dataDeLaSolicitudState?.clasificaionProductos, Validators.required],
+        especificarProducto: [this.dataDeLaSolicitudState?.especificarProducto, Validators.required],
+        nombreProductoEspecifico: [this.dataDeLaSolicitudState?.nombreProductoEspecifico, Validators.required],
+        denominacionDistintiva: [this.dataDeLaSolicitudState?.denominacionDistintiva, Validators.required],
+        denominacionNombre: [this.dataDeLaSolicitudState?.denominacionNombre, Validators.required],
+        tipoProducto: [this.dataDeLaSolicitudState?.tipoProducto, Validators.required],
+        estadoFisico: [this.dataDeLaSolicitudState?.estadoFisico, Validators.required],
+        fraccionArancelaria: [this.dataDeLaSolicitudState?.fraccionArancelaria, Validators.required],
+        descripcionFraccionArancelaria: [{
+          value: this.dataDeLaSolicitudState?.descripcionFraccionArancelaria, 
+          disabled: true
+        }, Validators.required],
+        cantidadUMT: [this.dataDeLaSolicitudState?.cantidadUMT, Validators.required],
+        umt: [{
+          value: this.dataDeLaSolicitudState?.umt, 
+          disabled: true
+        }, Validators.required],
+        cantidadUMC: [this.dataDeLaSolicitudState?.cantidadUMC, Validators.required],
+        umc: [this.dataDeLaSolicitudState?.umc, Validators.required],
+        presentacionFarmaceutica: [this.dataDeLaSolicitudState?.presentacionFarmaceutica, Validators.required]
+      }),
       
       datosDelTramiteRealizar: this.fb.group({
       tipoOperacion:[this.dataDeLaSolicitudState?.tipoOperacion],
@@ -485,6 +511,14 @@ paisProcedencis_colapsable(): void {
 }
 
 /**
+ * Alterna el estado de la propiedad `colapsable` entre verdadero y falso.
+ * Cambia el estado del panel colapsable en la interfaz de usuario.
+ */
+paisDeColapsable(): void{
+  this.paisProcedencisColapsable = !this.paisProcedencisColapsable;
+}
+
+/**
 * Método para alternar el estado colapsable del uso específico.
 * Cambia el valor de `usoEspecifico` entre verdadero y falso.
 */
@@ -591,6 +625,25 @@ usoEspecificoColapsable(): void {
     this.clavaScianForm.reset();
   }
 
+
+  /**
+ * Limpia todos los campos del formulario de datos de mercancía.
+ * Restablece el formulario a su estado inicial con valores vacíos.
+ */
+onLimpiarDatosMercancia(): void {
+   this.datosMercanciaForm.reset();
+  
+  this.indiceFilaSeleccionada = null;
+  this.filasSeleccionadas.clear();
+  
+  this.paisOrigen = false;
+  this.paisProcedencisColapsable = false;
+  this.usoEspecifico = false;
+  
+  this.clearNotificacion();
+  
+  this.cdr.detectChanges();
+}
 /**
  * Muestra el formulario para agregar una nueva clave SCIAN.
  */  
@@ -622,7 +675,7 @@ onAgregar(): void{
     this.clavaScianForm.reset(); 
   }
 
-    /** Agrega una nueva mercancia a la tabla */
+  /** Agrega una nueva mercancia a la tabla */
   agregarMercanciaGrid(): void {
     if (this.modalElement) {
      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
@@ -631,17 +684,20 @@ onAgregar(): void{
  }
 
   /** Maneja la selección de filas */
-    onfilasSeleccionadas(filasSeleccionadas: FilaData[] | MercanciasInfo[]): void {
-      if (filasSeleccionadas.length > 0 && 'clasificaionProductos' in filasSeleccionadas[0]) {
-        this.filasSeleccionadas = new Set((filasSeleccionadas as MercanciasInfo[]).map((row) => row.id));
-       }
-      else if (filasSeleccionadas.length > 0 && 'claveScianG' in filasSeleccionadas[0] && 'claveScian' in filasSeleccionadas[0].claveScianG) {
-        this.filasSeleccionadas = new Set((filasSeleccionadas as FilaData[]).map((row) => Number(row.claveScianG.claveScian)));
-      } else {
-        this.filasSeleccionadas.clear();
-      }
-    }
-    
+  onfilasSeleccionadas(filasSeleccionadas: FilaData[] | MercanciasInfo[]): void {
+  
+  if (filasSeleccionadas.length > 0 && 'clasificaionProductos' in filasSeleccionadas[0]) {
+    const ID = (filasSeleccionadas as MercanciasInfo[]).map((row) => row.id);
+    this.filasSeleccionadas = new Set(ID);
+  }
+  else if (filasSeleccionadas.length > 0 && 'claveScianG' in filasSeleccionadas[0] && 'claveScian' in filasSeleccionadas[0].claveScianG) {
+    const SELECTED_IDS = (filasSeleccionadas as FilaData[]).map((row) => Number(row.claveScianG.claveScian));
+    this.filasSeleccionadas = new Set(SELECTED_IDS);
+  } else {
+    this.filasSeleccionadas.clear();
+  }
+  
+}
    /** Maneja el envío del formulario de clave SCIAN. 
  * Busca las descripciones correspondientes en los catálogos y las asigna al formulario.
  * Luego, agrega los datos a la tabla y reinicia el formulario.
@@ -665,6 +721,10 @@ onAgregar(): void{
 get datosDelTramiteRealizar(): FormGroup {
   return this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar') as FormGroup;
 }
+
+get datosMercanciaForm(): FormGroup {
+  return this.dataDeLaSolicitudForm.get('datosMercanciaForm') as FormGroup;
+}
 /** Alterna el estado del campo de licencia sanitaria en función del aviso de funcionamiento. 
  * Si el aviso de funcionamiento está activado, deshabilita el campo de licencia sanitaria. 
  * De lo contrario, lo habilita.
@@ -681,7 +741,8 @@ toggleLicenciaSanitaria(): void {
 }
 /** Guarda los datos del formulario de la solicitud. */
 onSave(): void {
-    const FORM_DATA = { ...this.dataDeLaSolicitudForm.value };
+    const FORM_DATA = { ...this.datosMercanciaForm.value };
+    
     FORM_DATA.tipoProducto = this.tipoProductoData.catalogos.find(
       (item: Catalogo) => String(item.id) === String(FORM_DATA.tipoProducto)
     )?.descripcion || FORM_DATA.tipoProducto;
@@ -697,26 +758,44 @@ onSave(): void {
     FORM_DATA.estadoFisico = this.estadoFisicoData.catalogos.find(
       (item: Catalogo) => String(item.id) === String(FORM_DATA.estadoFisico)
     )?.descripcion || FORM_DATA.estadoFisico;
+
     if (this.indiceFilaSeleccionada !== null) {
-      this.mercanciasData[this.indiceFilaSeleccionada] = { ...this.mercanciasData[this.indiceFilaSeleccionada], ...FORM_DATA };
+      this.mercanciasData = [
+        ...this.mercanciasData.slice(0, this.indiceFilaSeleccionada),
+        { ...this.mercanciasData[this.indiceFilaSeleccionada], ...FORM_DATA },
+        ...this.mercanciasData.slice(this.indiceFilaSeleccionada + 1)
+      ];
       this.indiceFilaSeleccionada = null; 
     } else {
-      this.mercanciasData.push(FORM_DATA);
+      const NEW_ID = this.mercanciasData.length > 0 ? 
+        Math.max(...this.mercanciasData.map(item => item.id || 0)) + 1 : 1;
+      
+      this.mercanciasData = [...this.mercanciasData, {
+        ...FORM_DATA,
+        id: NEW_ID
+      }];
     }
-    this.dataDeLaSolicitudForm.reset();
-  
+    
+    this.datosMercanciaForm.reset();
+    this.filasSeleccionadas.clear();
+    
+    this.cdr.detectChanges();
+    this.closeModal();
 }
 /** Modifica una fila seleccionada de la tabla de mercancías. 
  * Verifica que solo haya una fila seleccionada. Si la fila existe, 
  * carga sus datos en el formulario y muestra el modal para editarla.
  */
 onModificar(): void {
-  if (!this.filasSeleccionadas || this.filasSeleccionadas.size > 1) {
+  if (!this.filasSeleccionadas || this.filasSeleccionadas.size !== 1) {
     return;
   }
 
   const SELECTED_ID = Array.from(this.filasSeleccionadas)[0];
-  const SELECTED_ROW_INDEX = this.mercanciasData.findIndex((row) => row.id === SELECTED_ID);
+  
+  const SELECTED_ROW_INDEX = this.mercanciasData.findIndex((row) => {
+    return row.id === SELECTED_ID;
+  });
 
   if (SELECTED_ROW_INDEX === -1) {
     return;
@@ -725,38 +804,38 @@ onModificar(): void {
   this.indiceFilaSeleccionada = SELECTED_ROW_INDEX;
   const SELECTED_ROW = this.mercanciasData[SELECTED_ROW_INDEX];
 
-  // Parche los valores del formulario con la asignación correcta para los campos del catálogo
-  this.dataDeLaSolicitudForm.patchValue({
-    descripcionFraccionArancelaria: SELECTED_ROW.descripcionFraccion,
-    cantidadUMT: SELECTED_ROW.cantidadUMT,
-    umt: SELECTED_ROW.unidadUMT,
-    cantidadUMC: SELECTED_ROW.cantidadUMC,
-    umc: SELECTED_ROW.unidad,
+  this.datosMercanciaForm.patchValue({
+    clasificaionProductos: this.delProducto.catalogos.find(
+      (item) => item.descripcion === SELECTED_ROW.clasificaionProductos
+    )?.id || SELECTED_ROW.clasificaionProductos,
+    especificarProducto: this.especificarData.catalogos.find(
+      (item) => item.descripcion === SELECTED_ROW.especificarProducto
+    )?.id || SELECTED_ROW.especificarProducto,
+    nombreProductoEspecifico: SELECTED_ROW.nombreProductoEspecifico || '',
+    denominacionDistintiva: SELECTED_ROW.denominacionDistintiva || '',
+    denominacionNombre: SELECTED_ROW.denominacionNombre || '',
     tipoProducto: this.tipoProductoData.catalogos.find(
       (item) => item.descripcion === SELECTED_ROW.tipoProducto
     )?.id || SELECTED_ROW.tipoProducto,
-    clasificaionProductos: this.delProducto.catalogos.find(
-      (item) => item.descripcion === SELECTED_ROW.clasificacion
-    )?.id || SELECTED_ROW.clasificacion,
-    especificarProducto: this.especificarData.catalogos.find(
-      (item) => item.descripcion === SELECTED_ROW.especificar
-    )?.id || SELECTED_ROW.especificar,
-    nombreProductoEspecifico: SELECTED_ROW.denominacionEspecifica,
-    denominacionDistintiva: SELECTED_ROW.denominacionDistintiva,
-    denominacionNombre: SELECTED_ROW.denominacionComun,
     estadoFisico: this.estadoFisicoData.catalogos.find(
       (item) => item.descripcion === SELECTED_ROW.estadoFisico
     )?.id || SELECTED_ROW.estadoFisico,
-    presentacionFarmaceutica: SELECTED_ROW.presentacion,
-    fraccionArancelaria: SELECTED_ROW.fraccionArancelaria,
+    fraccionArancelaria: SELECTED_ROW.fraccionArancelaria || '',
+    descripcionFraccionArancelaria: SELECTED_ROW.descripcionFraccionArancelaria || '',
+    cantidadUMT: SELECTED_ROW.cantidadUMT || '',
+    umt: SELECTED_ROW.umt || '',
+    cantidadUMC: SELECTED_ROW.cantidadUMC || '',
+    umc: SELECTED_ROW.umc || '',
+    presentacionFarmaceutica: SELECTED_ROW.presentacionFarmaceutica || ''
   });
 
-  // mostrar el modal
   const MODAL_ELEMENT = document.getElementById('modalAgregarMercancia');
   if (MODAL_ELEMENT) {
     const MODAL_INSTANCE = new Modal(MODAL_ELEMENT);
     MODAL_INSTANCE.show();
-  } 
+  } else {
+    console.error('Modal element not found.');
+  }
 }
 /**
  * Maneja el evento de cambio en el tipo de operación.

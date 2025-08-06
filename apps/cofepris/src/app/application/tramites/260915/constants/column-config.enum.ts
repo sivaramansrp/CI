@@ -124,19 +124,19 @@ export const CONFIGURACION_COLUMNAS_MERCANCIAS: ConfiguracionColumna<MercanciasI
   {
     /** Configuración de la columna para la clasificación del producto */
     encabezado: 'Clasificación del producto',
-    clave: (fila) => fila.clasificacion,
+    clave: (fila) => fila.clasificaionProductos,
     orden: 1,
   },
   {
     /** Configuración de la columna para especificar la clasificación del producto */
     encabezado: 'Especificar Clasificación del producto',
-    clave: (fila) => fila.especificar,
+    clave: (fila) => fila.especificarProducto,
     orden: 2,
   },
   {
     /** Configuración de la columna para la denominación específica del producto */
     encabezado: 'Denominación específico del producto',
-    clave: (fila) => fila.denominacionEspecifica,
+    clave: (fila) => fila.nombreProductoEspecifico,
     orden: 3,
   },
   {
@@ -148,86 +148,80 @@ export const CONFIGURACION_COLUMNAS_MERCANCIAS: ConfiguracionColumna<MercanciasI
   {
     /** Configuración de la columna para la denominación o nombre científico */
     encabezado: 'Denominación común, nombre común o nombre científico',
-    clave: (fila) => fila.denominacionComun,
+    clave: (fila) => fila.denominacionNombre,
     orden: 5,
   },
   {
     /** Configuración de la columna para el tipo de producto */
-    encabezado: 'Forma farmacéutica',
-    clave: (fila) => fila.formaFarmaceutica,
-    orden: 6,
-  },
-  {
-    /** Configuración de la columna para el uso específico */
     encabezado: 'Tipo de producto',
     clave: (fila) => fila.tipoProducto,
-    orden: 7,
+    orden: 6,
   },
   {
     /** Configuración de la columna para el estado físico */
     encabezado: 'Estado fisico',
     clave: (fila) => fila.estadoFisico,
-    orden: 8,
+    orden: 7,
   },
   {
     /** Configuración de la columna para la fracción arancelaria */
     encabezado: 'Fracción arancelaria',
     clave: (fila) => fila.fraccionArancelaria,
-    orden: 9,
+    orden: 8,
   },
   {
     /** Configuración de la columna para la descripción de la fracción arancelaria */
     encabezado: 'Descripción de la fracción arancelaria',
-    clave: (fila) => fila.descripcionFraccion,
-    orden: 10,
+    clave: (fila) => fila.descripcionFraccionArancelaria,
+    orden: 9,
   },
   {
     /** Configuración de la columna para la unidad de medida de comercialización (UMC) */
     encabezado: 'Unidad de medida de comercialización (UMC)',
-    clave: (fila) => fila.unidad,
-    orden: 11,
+    clave: (fila) => fila.umc,
+    orden: 10,
   },
   {
     /** Configuración de la columna para la cantidad UMC */
     encabezado: 'Cantidad UMC',
     clave: (fila) => fila.cantidadUMC,
-    orden: 12,
+    orden: 11,
   },
   {
     /** Configuración de la columna para la unidad de medida de tarifa (UMT) */
     encabezado: 'Unidad de medida de tarifa (UMT)',
-    clave: (fila) => fila.unidadUMT,
-    orden: 13,
+    clave: (fila) => fila.umt,
+    orden: 12,
   },
   {
     /** Configuración de la columna para la cantidad UMT */
     encabezado: 'Cantidad UMT',
     clave: (fila) => fila.cantidadUMT,
-    orden: 14,
+    orden: 13,
   },
   {
     /** Configuración de la columna para la presentación farmacéutica o tipo de envase */
-    encabezado: 'presentacion farmaceutica o tipo de envase',
-    clave: (fila) => fila.presentacion,
-    orden: 15,
+    encabezado: 'Presentación farmacéutica o tipo de envase',
+    clave: (fila) => fila.presentacionFarmaceutica,
+    orden: 14,
   },
   {
     /** Configuración de la columna para el país de origen */
     encabezado: 'País de origen',
     clave: (fila) => fila.paisDeOrigen,
-    orden: 16,
+    orden: 15,
   },
   {
     /** Configuración de la columna para el país de procedencia */
     encabezado: 'País de procedencia',
     clave: (fila) => fila.paisDeProcedencia,
-    orden: 17,
+    orden: 16,
   },
   {
     /** Configuración de la columna para el uso específico */
     encabezado: 'Uso específico',
     clave: (fila) => fila.usoEspecifico,
-    orden: 18,
+    orden: 17,
   },
 ];
 

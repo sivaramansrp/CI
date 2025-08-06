@@ -7,3 +7,17 @@
     z-index: 1045 !important;
     background: rgba(0, 0, 0, 0.5) !important;
 }
+
+.checkbox-row {
+  display: flex;
+  align-items: center; 
+  gap: 5px; 
+}
+
+.asterisk {
+  font-weight: bold;
+  margin-top: 5px;
+}
+.fontweight{
+    font-weight: normal;
+}

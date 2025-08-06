@@ -259,16 +259,16 @@
         </app-catalogo-select>
         </div>
       </div>
-    </ng-container>
+</ng-container>
       <div class="col-md-12 mt-4">
         <label class="form-label mb-5" for="">mercancías*:</label>
         <app-tabla-dinamica 
-  [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
-  [configuracionTabla]="mercanciasDatos"
-  [datos]="mercanciasData"
-  (listaDeFilaSeleccionada)="onfilasSeleccionadas($event)"
-  [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
-</app-tabla-dinamica>
+        [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
+        [configuracionTabla]="mercanciasDatos"
+        [datos]="mercanciasData"
+        (listaDeFilaSeleccionada)="onfilasSeleccionadas($event)"
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
+      </app-tabla-dinamica>
       </div>
      
       <div class="modal fade" id="modalAgregarMercancia" tabindex="-1" aria-labelledby="modalAgregarMercanciaLabel" aria-hidden="true">
@@ -278,7 +278,9 @@
               <h4 class="modal-title">Datos mercancía</h4>
             </div>
             <div class="modal-body">
-              <div class="row mt-5">
+              <form [formGroup]="dataDeLaSolicitudForm">
+               <ng-container formGroupName="datosMercanciaForm">
+                <div class="row mt-3">
                 <div class="col-md-6">
                   <app-catalogo-select 
                   id="delProductoData"
@@ -291,7 +293,7 @@
                   ></app-catalogo-select>
                 </div>
               </div>
-              <div class="row mt-5">
+              <div class="row mt-3">
                 <div class="col-md-6">
                   <app-catalogo-select 
                   id="especificarData"
@@ -303,28 +305,28 @@
                   [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
                 </div>
               </div>
-              <div class="row mt-5">
+              <div class="row mt-3">
                 <div class="col-md-6">
                   <label class="form-label" for="denominacionProducto">Denominación especifica del producto*:</label>
                   <input class="form-control" formControlName="nombreProductoEspecifico" placeholder="" type="text"
                   (change)="setValoresStore(datosDelTramiteRealizar,'nombreProductoEspecifico')" />
                 </div>
               </div>
-              <div class="row mt-5">
+              <div class="row mt-3">
                 <div class="col-md-6">
                   <label class="form-label">Denominación distintiva*:</label>
                   <input class="form-control" formControlName="denominacionDistintiva" placeholder="" type="text"
                   (change)="setValoresStore(datosDelTramiteRealizar,'denominacionDistintiva')"/>
                 </div>
               </div>
-              <div class="row mt-5">
+              <div class="row mt-3">
                 <div class="col-md-6">
                   <label class="form-label">Denominación o nombre científico*:</label>
                   <input class="form-control" formControlName="denominacionNombre" placeholder="" type="text"
                   (change)="setValoresStore(datosDelTramiteRealizar,'denominacionNombre')"/>
                 </div>
               </div>
-              <div class="row mt-5">
+              <div class="row mt-3">
                 <div class="col-md-6">
                   <app-catalogo-select 
                   id="tipoProductoData"
@@ -336,7 +338,7 @@
                   [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
                 </div>
               </div>
-              <div class="row mt-5">
+              <div class="row mt-3">
                 <div class="col-md-6">
                   <app-catalogo-select 
                   id="estadoFisicoData"
@@ -349,7 +351,7 @@
                 </div>
               </div>
               
-              <div class="row mt-5">
+              <div class="row mt-3">
                 <div class="col-md-6">
                   <label class="form-label">Fracción arancelaria*: 
                      <span  tooltip="Fracción arancelaria">
@@ -360,14 +362,14 @@
                   (change)="setValoresStore(datosDelTramiteRealizar,'fraccionArancelaria')"/>
                 </div>
               </div>
-              <div class="row mt-5">
+              <div class="row mt-3">
                 <div class="col-md-6">
                   <label class="form-label">Descripción de la fracción arancelaria*:</label>
                   <input class="form-control" placeholder="" type="text" formControlName="descripcionFraccionArancelaria" 
                   (change)="setValoresStore(datosDelTramiteRealizar,'descripcionFraccionArancelaria')"/>
                 </div>
               </div>
-              <div class="row mt-5">
+              <div class="row mt-3">
                 <div class="col-md-3">
                   <label class="form-label">Cantidad UMT*:</label>
                   <input class="form-control" placeholder="" formControlName="cantidadUMT" type="text" 
@@ -383,7 +385,7 @@
                   (change)="setValoresStore(datosDelTramiteRealizar,'umt')"/>
                 </div>
               </div>
-              <div class="row mt-5">
+              <div class="row mt-3">
                 <div class="col-md-3">
                   <label class="form-label">Cantidad UMC*:</label>
                   <input class="form-control" placeholder="" formControlName="cantidadUMC" type="text" 
@@ -399,24 +401,25 @@
                   (change)="setValoresStore(datosDelTramiteRealizar,'umc')"/>
                 </div>
               </div>
-              <div class="row">
+              <div class="row mt-3">
                 <div class="col-md-6">
                  <div class="form-group">
                    <label class="form-label" for="presentacionFarmaceutica">Presentación farmacéutica o tipo de envase*:</label>
                    <textarea class="form-control" id="presentacionFarmaceutica" rows="2" height="50"
-                   placeholder="" style="height: 100px" formControlName="presentacionFarmaceutica"
+                   placeholder="" style="height: 100px; overflow: hidden;" formControlName="presentacionFarmaceutica"
                    (change)="setValoresStore(datosDelTramiteRealizar,'presentacionFarmaceutica')"></textarea>
                  </div>
                </div>
            </div>
               <!-- collapsed crosslist -->
-              <div class="col-md-12 mt-4">
+              <div class="mt-5">
                 <div class="panel-group ficha-collapse" id="accordion">
                   <div class="panel panel-default">
                     <div class="panel-heading" (click)="paisOrigenColapsable()" tabindex="0">
                       <h4 class="panel-title">País de origen</h4>
-                      <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
-                    </div> @if(paisOrigen){ <div class="panel-collapse collapse in" id="panel-01">
+                      <button type="button" class="collpase-button collapsed" [ngClass]="{ 'expanded': paisOrigen,'collapsed': !paisOrigen}" [disabled]="esFormularioSoloLectura"></button>
+                    </div> 
+                    @if(paisOrigen){ <div class="panel-collapse collapse in" [ngClass]="{ 'in': paisOrigen, 'collapse': !paisOrigen}" id="panel-01">
                       <div class="panel-body">
                         <crosslist [label]="paisOrigenCrossList.label" [fechas]="paisOrigenCrossList.fechas"></crosslist>
                       </div>
@@ -424,17 +427,18 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-12 mt-4">
+              <div class="mt-3">
                 <div class="panel-group ficha-collapse" id="accordion">
                   <div class="panel panel-default">
-                    <div class="panel-heading" (click)="paisOrigenColapsable()" tabindex="0">
+                    <div class="panel-heading" (click)="paisDeColapsable()" tabindex="0">
                       <h4 class="panel-title">País de procedencia</h4>
-                      <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
+                      <button type="button" class="collpase-button collapsed" [ngClass]="{ 'expanded': paisProcedencisColapsable,'collapsed': !paisProcedencisColapsable}" [disabled]="esFormularioSoloLectura"></button>
                     </div>
                     @if(paisProcedencisColapsable){
-                    <div class="panel-collapse collapse in" id="panel-01" *ngIf="paisOrigenCrossList">
+                    <div class="panel-collapse collapse in" [ngClass]="{ 'in': paisProcedencisColapsable, 'collapse': !paisProcedencisColapsable}" id="panel-01" *ngIf="paisOrigenCrossList">
                       <div class="panel-body">
-                        <crosslist [label]="paisOrigenCrossList.label" [fechas]="paisOrigenCrossList.fechas"></crosslist>
+                        <crosslist [label]="paisOrigenCrossList.label" [fechas]="paisOrigenCrossList.fechas"  [showSearchInput1]="true"
+    [showSearchInput2]="true"></crosslist>
                       </div>
                     </div>
                     }
@@ -442,13 +446,14 @@
                 </div>
               </div>
               <!-- udospecifico crosslist -->
-              <div class="col-md-12 mt-4">
+              <div class="mt-3">
                 <div class="panel-group ficha-collapse" id="accordion">
                   <div class="panel panel-default">
                     <div class="panel-heading" (click)="usoEspecificoColapsable()" tabindex="0">
                       <h4 class="panel-title">Uso específico</h4>
-                      <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
-                    </div> @if(usoEspecifico){ <div class="panel-collapse collapse in" id="panel-01">
+                      <button type="button" class="collpase-button collapsed" [ngClass]="{ 'expanded': usoEspecifico,'collapsed': !usoEspecifico}" [disabled]="esFormularioSoloLectura"></button>
+                    </div> 
+                    @if(usoEspecifico){ <div class="panel-collapse collapse in" [ngClass]="{ 'in': usoEspecifico, 'collapse': !usoEspecifico}" id="panel-01">
                       <div class="panel-body">
                         <crosslist [fechas]="usoEspecificoCrossList.fechas" [label]="usoEspecificoCrossList.label"></crosslist>
                       </div>
@@ -456,12 +461,19 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-12 d-flex justify-content-end align-items-end">
-                <div class="btn-group">
-                  <button class="btn btn-default ms-3" type="button" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">Cancelar</button>
-                  <button class="btn btn-primary ms-3" type="button" data-bs-dismiss="modal" (click)="onSave()"[disabled]="esFormularioSoloLectura">Agregar</button>
+              </ng-container>  
+            </form>
+              
+                <div class="col-md-12 mb-5 mt-3">
+                    <div class="col-md-5 text-muted pull-left">
+                        <p>* Campos obligatorios</p>
+                    </div>
+                    <div class="col-md-5 pull-right">
+                    <button class="btn btn-default" type="button" (click)="onLimpiarDatosMercancia()" [disabled]="esFormularioSoloLectura">Limpiar</button>
+                    <button class="btn btn-default ms-2" type="button" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">Cancelar</button>
+                    <button class="btn btn-primary ms-2" type="button" data-bs-dismiss="modal" (click)="onSave()"[disabled]="esFormularioSoloLectura">Agregar</button>
+                    </div>
                 </div>
-              </div>
             </div>
           </div>
         </div>
@@ -475,12 +487,12 @@
   <ng-titulo titulo="Manifiestos y declaraciones" />
   <div formGroupName="datosDelTramiteRealizar">
   <div class="alert alert-info">
-    <label style="font-weight: normal">
-      <div class="col-md-1 mt-5">
-        <input type="checkbox" class="mt-5" formControlName="maniFestos"/>
-        <b> *</b>
-      </div>
-      <div class="col-md-11 mt-4">{{ TEXTOS.TEXTOS_MANIFIESTOS}} </div>
+    <label>
+        <label class="checkbox-row">
+          <input type="checkbox" />
+          <span class="asterisk"><b>*</b></span>
+          <div class="col-md-11 mt-4 fontweight">{{ TEXTOS.TEXTOS_MANIFIESTOS}} </div>
+        </label>
     </label>
   </div>
   <div class="col-md-12 mt-4">
