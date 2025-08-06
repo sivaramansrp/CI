@@ -1,10 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, FormularioDinamico } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Solicitud32508State, Tramite32508Store } from '../../state/Tramite32508.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AdaceService } from '../../services/adace.service';
-import { Router } from '@angular/router';
 
 /**
  * Componente que representa el primer paso del trámite.
@@ -16,7 +15,6 @@ import { Router } from '@angular/router';
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
   constructor(
-    private router: Router,
     private consultaioQuery: ConsultaioQuery,
     private tramite32508Store: Tramite32508Store,
     private adaceService: AdaceService,
@@ -56,7 +54,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
    */
   consultaDatos!: ConsultaioState;
-
+  /**
+   * @property {FormGroup} solicitanteForm
+   * @description Formulario reactivo que contiene los datos del solicitante.
+   */
   solicitanteForm!: FormGroup;
 
   /**

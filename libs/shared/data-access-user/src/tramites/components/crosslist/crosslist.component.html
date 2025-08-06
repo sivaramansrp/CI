@@ -1,8 +1,8 @@
 <div class="row">
   <div class="col-md-4">
     <div *ngIf="showSearchInput1" class="mb-4">
-      <label>País disponible</label>
-      <input type="text" class="form-control mb-2" placeholder="País disponible" >
+      <label>{{searchInput1Label}}</label>
+      <input type="text" class="form-control mb-2" placeholder="{{showSearchPlaceholder ? searchInput1Label : ''}}" >
     </div>
     <label class="form-label" *ngIf="label?.tituluDeLaIzquierda">{{ label?.tituluDeLaIzquierda }}
       <span class="bi bi-question-circle-fill" *ngIf="label?.showUnoTitulo" title="{{label?.tituluDeLaIzquierda}}" data-bs-toggle="tooltip"></span>
@@ -45,8 +45,8 @@
   <div class="col-md-4">
 
     <div *ngIf="showSearchInput2" class="mb-4"> 
-      <label>País seleccionado</label>
-      <input type="text" class="form-control mb-2" placeholder="País seleccionado" >
+      <label>{{searchInput2Label}}</label>
+      <input type="text" class="form-control mb-2" placeholder="{{showSearchPlaceholder ? searchInput2Label : ''}}" >
      </div>
      <label class="form-label text-start" *ngIf="label?.derecha">{{ label?.derecha }}
       <span class="bi bi-question-circle-fill" *ngIf="label?.showDosTitulo" title="{{label?.derecha}}" data-bs-toggle="tooltip"></span>
