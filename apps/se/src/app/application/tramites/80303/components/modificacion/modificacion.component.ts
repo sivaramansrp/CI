@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import {
   EMPRESA_SUBMANUFACTURERA_ENCABEZADO_DE_TABLA,
   EmpresaSubmanufacturera,
@@ -88,7 +88,8 @@ export class ModificacionComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     public modificacionProgramaImmexBajaSubmanufactureraService: ModificacionProgramaImmexBajaSubmanufactureraService,
-    public tramite80303Querry: Tramite80303Query
+    public tramite80303Querry: Tramite80303Query,
+    private cd: ChangeDetectorRef
   ) {}
 
   /**
@@ -135,6 +136,19 @@ export class ModificacionComponent implements OnInit, OnDestroy {
         { value: 'Empresa submanufacturera', disabled: true },
       ],
     });
+  }
+
+  /**
+   * Alterna el valor de la columna "Estatus" de una empresa submanufacturera.
+   * 
+   * @param event - El evento que contiene la fila y la columna a modificar.
+   */
+  alternarValorSubmanufactureras(event: { row: EmpresaSubmanufacturera; column: string }): void {
+    const ROW = event.row; // Obtiene el registro de la fila.
+    const INDEX = this.submanufacturerasTablaDatos.findIndex((x) => x.rfc === ROW.rfc); // Busca el índice del registro en la tabla.
+    // Alterna el estado entre 'Baja' y 'Activada'.
+    this.submanufacturerasTablaDatos[INDEX].desEstatus = this.submanufacturerasTablaDatos[INDEX].desEstatus === 'Baja' ? 'Activada' : 'Baja';
+    this.cd.detectChanges();
   }
 
   /**
