@@ -145,6 +145,14 @@ export class PaisDeOrigenComponent implements OnChanges {
    * @tipo {EventEmitter<{ form: FormGroup; campo: string; metodoNombre: string }>}
    */
   @Output() setValoresStoreEvent = new EventEmitter<{ form: FormGroup; campo: string}>();
+
+  /**
+   * @evento
+   * @nombre fechasSeleccionadasChangeEvent
+   * @descripcion Evento que se emite cuando cambian las fechas seleccionadas en el crosslist.
+   * @tipo {EventEmitter<string[]>}
+   */
+  @Output() fechasSeleccionadasChangeEvent = new EventEmitter<string[]>();
  
   /**
    * @propiedad
@@ -249,6 +257,17 @@ export class PaisDeOrigenComponent implements OnChanges {
    */
   setValoresStore(form: FormGroup, campo: string): void {
     this.setValoresStoreEvent.emit({ form, campo });
+  }
+
+  /**
+   * @metodo
+   * @nombre onFechasSeleccionadasChange
+   * @descripcion Maneja el cambio de fechas seleccionadas en el crosslist.
+   * @param {string[]} fechasSeleccionadas - Array de fechas seleccionadas.
+   */
+  onFechasSeleccionadasChange(fechasSeleccionadas: string[]): void {
+    this.fechaSeleccionada = fechasSeleccionadas;
+    this.fechasSeleccionadasChangeEvent.emit(fechasSeleccionadas);
   }
 }
  

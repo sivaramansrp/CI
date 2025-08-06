@@ -625,7 +625,10 @@ tituloParte = TITULO_ORIGEN;
           this.tableBodyData = [...state.tablaDatos];
         }
         
-        this.storeCrosslistaDatos();
+        // Solo actualizar crosslist datos si es la primera vez o si hay cambios específicos en rangoDias/seleccionada
+        if (!this.selectRangoDias.length && !this.fechaSeleccionada.length) {
+          this.storeCrosslistaDatos();
+        }
       });
 
     this.tramite130108Query.mostrarTabla$
@@ -958,6 +961,13 @@ tituloParte = TITULO_ORIGEN;
         this.selectRangoDias = data.map(
             (item) => item.descripcion
           );
+        // Actualizar el store con los nuevos datos
+        this.tramite130108Store.establecerDatos({ 
+          rangoDias: this.selectRangoDias,
+          seleccionada: [] // Reset selected countries when loading all countries
+        });
+        // Reset fechaSeleccionada locally as well
+        this.fechaSeleccionada = [];
       });
   }
 
@@ -983,6 +993,13 @@ tituloParte = TITULO_ORIGEN;
         this.selectRangoDias = this.paisesPorBloque.map(
           (pais: Catalogo) => pais.descripcion
         );
+        // Actualizar el store con los nuevos datos
+        this.tramite130108Store.establecerDatos({ 
+          rangoDias: this.selectRangoDias,
+          seleccionada: [] // Reset selected countries when changing block
+        });
+        // Reset fechaSeleccionada locally as well
+        this.fechaSeleccionada = [];
       });
   }
 
@@ -1025,7 +1042,7 @@ tituloParte = TITULO_ORIGEN;
   }
 
 
-/**
+  /**
    * Actualiza los datos de las listas cruzadas basándose en el estado actual.
    * 
    * Sincroniza las listas seleccionadas y originales con el estado de la aplicación.
@@ -1036,16 +1053,29 @@ tituloParte = TITULO_ORIGEN;
     const ES_MATRIZ_VALIDA = (array: string[] | undefined | null): boolean => 
       Array.isArray(array) && array.length > 0;
 
-    // Usar CROSLISTA_ENTRADA si listaOriginalAduanas es indefinida, nula o está vacía
-    this.selectRangoDias = ES_MATRIZ_VALIDA(this.seccionState.rangoDias)
-      ? this.seccionState.rangoDias as string[]
-      : [];
+    // Solo actualizar selectRangoDias si hay datos en el estado y no hay datos locales
+    if (ES_MATRIZ_VALIDA(this.seccionState.rangoDias) && !this.selectRangoDias.length) {
+      this.selectRangoDias = this.seccionState.rangoDias as string[];
+    }
 
-    // Usar matriz vacía o la matriz del estado si listaSeleccionadaAduanas existe
-    this.fechaSeleccionada = this.seccionState.seleccionada || [];
+    // Solo actualizar fechaSeleccionada si hay datos en el estado y no hay datos locales
+    if (ES_MATRIZ_VALIDA(this.seccionState.seleccionada) && !this.fechaSeleccionada.length) {
+      this.fechaSeleccionada = this.seccionState.seleccionada || [];
+    }
   }
 
- /**
+  /**
+   * @metodo
+   * @nombre onFechasSeleccionadasChange
+   * @descripcion Maneja el cambio de fechas seleccionadas en el crosslist del componente pais-de-origen.
+   * Actualiza la propiedad local y almacena los cambios en el store.
+   * @param {string[]} fechasSeleccionadas - Array de fechas seleccionadas.
+   */
+  onFechasSeleccionadasChange(fechasSeleccionadas: string[]): void {
+    this.fechaSeleccionada = fechasSeleccionadas;
+    // Actualizar el store con las fechas seleccionadas
+    this.tramite130108Store.establecerDatos({ seleccionada: fechasSeleccionadas });
+  } /**
  * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
  * Se encarga de limpiar las suscripciones activas para evitar fugas de memoria.
  * Emite un valor en el Subject `destroyed$` y lo completa para notificar a todos
