@@ -20,9 +20,9 @@
     </div>
     <div class="row">
       <div class="col-md-4 mb-3">
-        <label>Número de registro fiscal*:</label>
+        <label>Número de registro fiscal<span [ngClass]="grupoReceptor.get('numeroFiscal')?.invalid && grupoReceptor.get('numeroFiscal')?.touched ? 'text-danger' : ''">*</span>:</label>
         <input type="text" class="form-control" id="numeroFiscal" formControlName="numeroFiscal" maxlength="30"
-          [ngClass]="isValid(grupoReceptor,'numeroFiscal') ? 'required' : ''"
+          [ngClass]="grupoReceptor.get('numeroFiscal')?.invalid && grupoReceptor.get('numeroFiscal')?.touched ? 'required' : ''"
           (change)="setValoresStore(grupoReceptor, 'numeroFiscal', 'setGrupoReceptorNumeroFiscal')" />
 
           @if (registroFormulario.get('grupoReceptor.numeroFiscal')?.hasError('required') &&
@@ -47,9 +47,9 @@
   <ng-container formGroupName="grupoDeDirecciones">
     <div class="row">
       <div class="col-md-8 mb-3">
-        <label>Ciudad (población, estado o provincia)*:</label>
+        <label>Ciudad (población, estado o provincia)<span [ngClass]="grupoDeDirecciones.get('ciudad')?.invalid && grupoDeDirecciones.get('ciudad')?.touched ? 'text-danger' : ''">*</span>:</label>
         <input type="text" class="form-control" id="ciudad" formControlName="ciudad" maxlength="50"
-          [ngClass]="isValid(grupoDeDirecciones,'ciudad') ? 'required' : ''"
+          [ngClass]="grupoDeDirecciones.get('ciudad')?.invalid && grupoDeDirecciones.get('ciudad')?.touched ? 'required' : ''"
           (change)="setValoresStore(grupoDeDirecciones, 'ciudad','setGrupoDeDireccionesCiudad')" />
 
           @if (registroFormulario.get('grupoDeDirecciones.ciudad')?.hasError('required') &&
@@ -62,9 +62,9 @@
     </div>
     <div class="row">
       <div class="col-md-4 mb-3">
-        <label>Calle*:</label>
+        <label>Calle<span [ngClass]="grupoDeDirecciones.get('calle')?.invalid && grupoDeDirecciones.get('calle')?.touched ? 'text-danger' : ''">*</span>:</label>
         <input type="text" class="form-control" id="nombre" formControlName="calle" maxlength="90"
-          [ngClass]="isValid(grupoDeDirecciones,'calle') ? 'required' : ''"
+          [ngClass]="grupoDeDirecciones.get('calle')?.invalid && grupoDeDirecciones.get('calle')?.touched ? 'required' : ''"
           (change)="setValoresStore(grupoDeDirecciones, 'calle', 'setGrupoDeDireccionesCalle')" />
 
           @if (registroFormulario.get('grupoDeDirecciones.calle')?.hasError('required') &&
@@ -75,9 +75,9 @@
           }
       </div>
       <div class="col-md-4 mb-3">
-        <label>Número y/o letra*:</label>
+        <label>Número y/o letra<span [ngClass]="grupoDeDirecciones.get('numeroLetra')?.invalid && grupoDeDirecciones.get('numeroLetra')?.touched ? 'text-danger' : ''">*</span>:</label>
         <input type="text" class="form-control" id="numeroLetra" formControlName="numeroLetra" maxlength="30"
-          [ngClass]="isValid(grupoDeDirecciones,'numeroLetra') ? 'required' : ''"
+          [ngClass]="grupoDeDirecciones.get('numeroLetra')?.invalid && grupoDeDirecciones.get('numeroLetra')?.touched ? 'required' : ''"
           (change)="setValoresStore(grupoDeDirecciones, 'numeroLetra', 'setGrupoDeDireccionesNumeroLetra')" />
 
           @if (registroFormulario.get('grupoDeDirecciones.numeroLetra')?.hasError('required') &&
@@ -95,7 +95,14 @@
       <div class="col-md-3 mb-3">
         <label>Teléfono:</label>
         <input type="text" class="form-control" id="telefono" formControlName="telefono" maxlength="20"
-          (change)="setValoresStore(grupoDeDirecciones, 'telefono', 'setGrupoDeDireccionesTelefono')" />
+          (change)="setValoresStore(grupoDeDirecciones, 'telefono', 'setGrupoDeDireccionesTelefono')"
+           />
+          @if (grupoDeDirecciones.get('telefono')?.hasError('pattern') &&
+            grupoDeDirecciones.get('telefono')?.touched) {
+            <div class="text-danger">
+              <small>Por favor, ingrese solo dígitos</small>
+            </div>
+            }
       </div>
       <div class="row">
         <div class="col-md-4 mb-3">
@@ -104,10 +111,9 @@
             (change)="setValoresStore(grupoDeDirecciones, 'fax', 'setGrupoDeDireccionesFax')" />
         </div>
         <div class="col-md-4 mb-3">
-          <label>Correo electrónico*:</label><span class="bi bi-question-circle-fill mx-2" title="ejemplo@dominio.com"
-            data-bs-toggle="tooltip"></span>
+          <label>Correo electrónico<span [ngClass]="grupoDeDirecciones.get('correoElectronico')?.invalid && grupoDeDirecciones.get('correoElectronico')?.touched ? 'text-danger' : ''">*</span>:</label> <span class="bi bi-question-circle-fill mx-2" tooltip="ejemplo@dominio.com" placement="top"></span>
           <input type="text" class="form-control" id="correoElectronico" formControlName="correoElectronico" maxlength="70"
-            [ngClass]="isValid(grupoDeDirecciones,'correoElectronico') ? 'required' : ''"
+            [ngClass]="grupoDeDirecciones.get('correoElectronico')?.invalid && grupoDeDirecciones.get('correoElectronico')?.touched ? 'required' : ''"
             (change)="setValoresStore(grupoDeDirecciones,'correoElectronico','setGrupoDeDireccionesCorreoElectronico')" />
 
           @if (registroFormulario.get('grupoDeDirecciones.correoElectronico')?.hasError('required') &&
@@ -115,7 +121,12 @@
           <div class="text-danger">
             <small>Este campo es obligatorio.</small>
           </div>
-          }
+          } @else if (grupoDeDirecciones.get('correoElectronico')?.hasError('pattern') &&
+              grupoDeDirecciones.get('correoElectronico')?.touched) {
+              <div class="text-danger">
+                <small>Por favor, escribe una dirección de correo válida</small>
+              </div>
+            }
         </div>
       </div>
     </div>
@@ -125,9 +136,9 @@
   <ng-container formGroupName="grupoRepresentativo">
     <div class="row">
       <div class="col-md-8 mb-3">
-        <label>Lugar*:</label>
+        <label>Lugar<span [ngClass]="grupoRepresentativo.get('lugar')?.invalid && grupoRepresentativo.get('lugar')?.touched ? 'text-danger' : ''">*</span>:</label>
         <input type="text" class="form-control" id="lugar" formControlName="lugar" maxlength="70"
-          [ngClass]="isValid(grupoRepresentativo,'lugar') ? 'required' : ''"
+          [ngClass]="grupoRepresentativo.get('lugar')?.invalid && grupoRepresentativo.get('lugar')?.touched ? 'required' : ''"
           (change)="setValoresStore(grupoRepresentativo, 'lugar', 'setGrupoRepresentativoLugar')" />
           @if (registroFormulario.get('grupoRepresentativo.lugar')?.hasError('required') &&
           registroFormulario.get('grupoRepresentativo.lugar')?.touched) {
@@ -139,9 +150,9 @@
     </div>
     <div class="row">
       <div class="col-md-8 mb-3">
-        <label>Nombre del representante legal del exportador*:</label>
+        <label>Nombre del representante legal del exportador<span [ngClass]="grupoRepresentativo.get('nombreExportador')?.invalid && grupoRepresentativo.get('nombreExportador')?.touched ? 'text-danger' : ''">*</span>:</label>
         <input type="text" class="form-control" id="nombreExportador" formControlName="nombreExportador" maxlength="70"
-          [ngClass]="isValid(grupoRepresentativo,'nombreExportador') ? 'required' : ''"
+          [ngClass]="grupoRepresentativo.get('nombreExportador')?.invalid && grupoRepresentativo.get('nombreExportador')?.touched ? 'required' : ''"
           (change)="setValoresStore(grupoRepresentativo, 'nombreExportador', 'setGrupoRepresentativoNombreExportador')" />
 
           @if (registroFormulario.get('grupoRepresentativo.nombreExportador')?.hasError('required') &&
@@ -154,9 +165,9 @@
     </div>
     <div class="row">
       <div class="col-md-4 mb-3">
-        <label>Empresa*:</label>
+        <label>Empresa<span [ngClass]="grupoRepresentativo.get('empresa')?.invalid && grupoRepresentativo.get('empresa')?.touched ? 'text-danger' : ''">*</span>:</label>
         <input type="text" class="form-control" id="empresa" formControlName="empresa" maxlength="90"
-          [ngClass]="isValid(grupoRepresentativo,'empresa') ? 'required' : ''"
+          [ngClass]="grupoRepresentativo.get('empresa')?.invalid && grupoRepresentativo.get('empresa')?.touched ? 'required' : ''"
           (change)="setValoresStore(grupoRepresentativo, 'empresa', 'setGrupoRepresentativoEmpresa')" />
 
           @if (registroFormulario.get('grupoRepresentativo.empresa')?.hasError('required') &&
@@ -167,9 +178,9 @@
           }
       </div>
       <div class="col-md-4 mb-3">
-        <label>Cargo*:</label>
+        <label>Cargo<span [ngClass]="grupoRepresentativo.get('cargo')?.invalid && grupoRepresentativo.get('cargo')?.touched ? 'text-danger' : ''">*</span>:</label>
         <input type="text" class="form-control" id="cargo" formControlName="cargo" maxlength="70"
-          [ngClass]="isValid(grupoRepresentativo,'cargo') ? 'required' : ''"
+          [ngClass]="grupoRepresentativo.get('cargo')?.invalid && grupoRepresentativo.get('cargo')?.touched ? 'required' : ''"
           (change)="setValoresStore(grupoRepresentativo, 'cargo', 'setGrupoRepresentativoCargo')" />
 
           @if (registroFormulario.get('grupoRepresentativo.cargo')?.hasError('required') &&
@@ -185,7 +196,7 @@
           (change)="setValoresStore(grupoRepresentativo, 'lada', 'setGrupoRepresentativoLada')" />
       </div>
       <div class="col-md-3 mb-3">
-        <label>Teléfono*:</label>
+        <label>Teléfono<span [ngClass]="grupoRepresentativo.get('telefono')?.invalid && grupoRepresentativo.get('telefono')?.touched ? 'text-danger' : ''">*</span>:</label>
         <input type="text" class="form-control" id="telefono" formControlName="telefono" maxlength="20"
           [ngClass]="isValid(grupoRepresentativo,'telefono') ? 'required' : ''"
           (change)="setValoresStore(grupoRepresentativo, 'telefono', 'setGrupoRepresentativoTelefono')" />
@@ -195,14 +206,19 @@
           <div class="text-danger">
             <small>Este campo es obligatorio.</small>
           </div>
-          }
+          } @if (registroFormulario.get('grupoRepresentativo.telefono')?.hasError('pattern') &&
+            registroFormulario.get('grupoRepresentativo.telefono')?.touched) {
+            <div class="text-danger">
+              <small>Por favor, ingrese solo dígitos</small>
+            </div>
+            }
       </div>
 
       <div class="row">
         <div class="col-md-4 mb-3">
-          <label>Fax*:</label>
+          <label>Fax<span [ngClass]="grupoRepresentativo.get('fax')?.invalid && grupoRepresentativo.get('fax')?.touched ? 'text-danger' : ''">*</span>:</label>
           <input type="text" class="form-control" id="fax" formControlName="fax" maxlength="20"
-            [ngClass]="isValid(grupoRepresentativo,'fax') ? 'required' : ''"
+            [ngClass]="grupoRepresentativo.get('fax')?.invalid && grupoRepresentativo.get('fax')?.touched ? 'required' : ''"
             (change)="setValoresStore(grupoRepresentativo, 'fax', 'setGrupoRepresentativoFax')" />
 
           @if (registroFormulario.get('grupoRepresentativo.fax')?.hasError('required') &&
@@ -213,10 +229,9 @@
           }
         </div>
         <div class="col-md-4 mb-3">
-          <label>Correo electrónico*:</label><span class="bi bi-question-circle-fill mx-2" title="ejemplo@dominio.com"
-            data-bs-toggle="tooltip"></span>
+          <label>Correo electrónico<span [ngClass]="grupoRepresentativo.get('correoElectronico')?.invalid && grupoRepresentativo.get('correoElectronico')?.touched ? 'text-danger' : ''">*</span>:</label><span class="bi bi-question-circle-fill mx-2" tooltip="ejemplo@dominio.com" placement="top"></span>
           <input type="text" class="form-control" id="correoElectronico" formControlName="correoElectronico"
-            [ngClass]="isValid(grupoRepresentativo,'correoElectronico') ? 'required' : ''"
+            [ngClass]="grupoRepresentativo.get('correoElectronico')?.invalid && grupoRepresentativo.get('correoElectronico')?.touched ? 'required' : ''"
             (change)="setValoresStore( grupoRepresentativo,'correoElectronico','setGrupoRepresentativoCorreoElectronico')" />
 
           @if (registroFormulario.get('grupoRepresentativo.correoElectronico')?.hasError('required') &&
@@ -224,7 +239,12 @@
           <div class="text-danger">
             <small>Este campo es obligatorio.</small>
           </div>
-          }
+          } @else if (registroFormulario.get('grupoRepresentativo.correoElectronico')?.hasError('pattern') &&
+              registroFormulario.get('grupoRepresentativo.correoElectronico')?.touched) {
+              <div class="text-danger">
+                <small>Por favor, escribe una dirección de correo válida</small>
+              </div>
+            }
         </div>
       </div>
     </div>

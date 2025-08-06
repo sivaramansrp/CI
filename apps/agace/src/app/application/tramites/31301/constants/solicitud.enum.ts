@@ -50,6 +50,12 @@ export const SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS: ConfiguracionColumna<Secci
       orden: 1,
     },
     {
+      /** Carácter Nacionalidad */
+      encabezado: 'Nacionalidad',
+      clave: (item: SeccionSociosIC) => item.nacionalidad,
+      orden: 1,
+    },
+    {
       /** ¿Obligado a tributar en México? */
       encabezado: 'Obligado a tributar en México',
       clave: (item: SeccionSociosIC) => item.tributarMexico,
@@ -127,7 +133,7 @@ export const DOMICILIOS_CONFIGURACION_COLUMNAS: ConfiguracionColumna<Domicilios>
     },
     {
       /** Registro ante SE/SAT */
-      encabezado: 'Registro an SE/SAT',
+      encabezado: 'Registro ante SE/SAT',
       clave: (item: Domicilios) => item.registroSESAT,
       orden: 1,
     },
