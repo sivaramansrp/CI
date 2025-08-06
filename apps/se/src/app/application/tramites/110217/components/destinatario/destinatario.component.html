@@ -20,7 +20,7 @@
     </div>
     <div class="row">
       <div class="col-md-4 mb-3">
-        <label>Número de registro fiscal*:</label>
+        <label>Número de registro fiscal<span [ngClass]="grupoReceptor.get('numeroFiscal')?.invalid && grupoReceptor.get('numeroFiscal')?.touched ? 'text-danger' : ''">*</span>:</label>
         <input type="text" class="form-control" id="numeroFiscal" formControlName="numeroFiscal" maxlength="30"
           [ngClass]="grupoReceptor.get('numeroFiscal')?.invalid && grupoReceptor.get('numeroFiscal')?.touched ? 'required' : ''"
           (change)="setValoresStore(grupoReceptor, 'numeroFiscal', 'setGrupoReceptorNumeroFiscal')" />
@@ -47,7 +47,7 @@
   <ng-container formGroupName="grupoDeDirecciones">
     <div class="row">
       <div class="col-md-8 mb-3">
-        <label>Ciudad (población, estado o provincia)*:</label>
+        <label>Ciudad (población, estado o provincia)<span [ngClass]="grupoDeDirecciones.get('ciudad')?.invalid && grupoDeDirecciones.get('ciudad')?.touched ? 'text-danger' : ''">*</span>:</label>
         <input type="text" class="form-control" id="ciudad" formControlName="ciudad" maxlength="50"
           [ngClass]="grupoDeDirecciones.get('ciudad')?.invalid && grupoDeDirecciones.get('ciudad')?.touched ? 'required' : ''"
           (change)="setValoresStore(grupoDeDirecciones, 'ciudad','setGrupoDeDireccionesCiudad')" />
@@ -62,7 +62,7 @@
     </div>
     <div class="row">
       <div class="col-md-4 mb-3">
-        <label>Calle*:</label>
+        <label>Calle<span [ngClass]="grupoDeDirecciones.get('calle')?.invalid && grupoDeDirecciones.get('calle')?.touched ? 'text-danger' : ''">*</span>:</label>
         <input type="text" class="form-control" id="nombre" formControlName="calle" maxlength="90"
           [ngClass]="grupoDeDirecciones.get('calle')?.invalid && grupoDeDirecciones.get('calle')?.touched ? 'required' : ''"
           (change)="setValoresStore(grupoDeDirecciones, 'calle', 'setGrupoDeDireccionesCalle')" />
@@ -75,7 +75,7 @@
           }
       </div>
       <div class="col-md-4 mb-3">
-        <label>Número y/o letra*:</label>
+        <label>Número y/o letra<span [ngClass]="grupoDeDirecciones.get('numeroLetra')?.invalid && grupoDeDirecciones.get('numeroLetra')?.touched ? 'text-danger' : ''">*</span>:</label>
         <input type="text" class="form-control" id="numeroLetra" formControlName="numeroLetra" maxlength="30"
           [ngClass]="grupoDeDirecciones.get('numeroLetra')?.invalid && grupoDeDirecciones.get('numeroLetra')?.touched ? 'required' : ''"
           (change)="setValoresStore(grupoDeDirecciones, 'numeroLetra', 'setGrupoDeDireccionesNumeroLetra')" />
@@ -104,8 +104,7 @@
             (change)="setValoresStore(grupoDeDirecciones, 'fax', 'setGrupoDeDireccionesFax')" />
         </div>
         <div class="col-md-4 mb-3">
-          <label>Correo electrónico*:</label><span class="bi bi-question-circle-fill mx-2" title="ejemplo@dominio.com"
-            data-bs-toggle="tooltip"></span>
+          <label>Correo electrónico<span [ngClass]="grupoDeDirecciones.get('correoElectronico')?.invalid && grupoDeDirecciones.get('correoElectronico')?.touched ? 'text-danger' : ''">*</span>:</label> <span class="bi bi-question-circle-fill mx-2" tooltip="ejemplo@dominio.com" placement="top"></span>
           <input type="text" class="form-control" id="correoElectronico" formControlName="correoElectronico" maxlength="70"
             [ngClass]="grupoDeDirecciones.get('correoElectronico')?.invalid && grupoDeDirecciones.get('correoElectronico')?.touched ? 'required' : ''"
             (change)="setValoresStore(grupoDeDirecciones,'correoElectronico','setGrupoDeDireccionesCorreoElectronico')" />
@@ -125,7 +124,7 @@
   <ng-container formGroupName="grupoRepresentativo">
     <div class="row">
       <div class="col-md-8 mb-3">
-        <label>Lugar*:</label>
+        <label>Lugar<span [ngClass]="grupoRepresentativo.get('lugar')?.invalid && grupoRepresentativo.get('lugar')?.touched ? 'text-danger' : ''">*</span>:</label>
         <input type="text" class="form-control" id="lugar" formControlName="lugar" maxlength="70"
           [ngClass]="grupoRepresentativo.get('lugar')?.invalid && grupoRepresentativo.get('lugar')?.touched ? 'required' : ''"
           (change)="setValoresStore(grupoRepresentativo, 'lugar', 'setGrupoRepresentativoLugar')" />
@@ -139,7 +138,7 @@
     </div>
     <div class="row">
       <div class="col-md-8 mb-3">
-        <label>Nombre del representante legal del exportador*:</label>
+        <label>Nombre del representante legal del exportador<span [ngClass]="grupoRepresentativo.get('nombreExportador')?.invalid && grupoRepresentativo.get('nombreExportador')?.touched ? 'text-danger' : ''">*</span>:</label>
         <input type="text" class="form-control" id="nombreExportador" formControlName="nombreExportador" maxlength="70"
           [ngClass]="grupoRepresentativo.get('nombreExportador')?.invalid && grupoRepresentativo.get('nombreExportador')?.touched ? 'required' : ''"
           (change)="setValoresStore(grupoRepresentativo, 'nombreExportador', 'setGrupoRepresentativoNombreExportador')" />
@@ -154,7 +153,7 @@
     </div>
     <div class="row">
       <div class="col-md-4 mb-3">
-        <label>Empresa*:</label>
+        <label>Empresa<span [ngClass]="grupoRepresentativo.get('empresa')?.invalid && grupoRepresentativo.get('empresa')?.touched ? 'text-danger' : ''">*</span>:</label>
         <input type="text" class="form-control" id="empresa" formControlName="empresa" maxlength="90"
           [ngClass]="grupoRepresentativo.get('empresa')?.invalid && grupoRepresentativo.get('empresa')?.touched ? 'required' : ''"
           (change)="setValoresStore(grupoRepresentativo, 'empresa', 'setGrupoRepresentativoEmpresa')" />
@@ -167,7 +166,7 @@
           }
       </div>
       <div class="col-md-4 mb-3">
-        <label>Cargo*:</label>
+        <label>Cargo<span [ngClass]="grupoRepresentativo.get('cargo')?.invalid && grupoRepresentativo.get('cargo')?.touched ? 'text-danger' : ''">*</span>:</label>
         <input type="text" class="form-control" id="cargo" formControlName="cargo" maxlength="70"
           [ngClass]="grupoRepresentativo.get('cargo')?.invalid && grupoRepresentativo.get('cargo')?.touched ? 'required' : ''"
           (change)="setValoresStore(grupoRepresentativo, 'cargo', 'setGrupoRepresentativoCargo')" />
@@ -185,7 +184,7 @@
           (change)="setValoresStore(grupoRepresentativo, 'lada', 'setGrupoRepresentativoLada')" />
       </div>
       <div class="col-md-3 mb-3">
-        <label>Teléfono*:</label>
+        <label>Teléfono<span [ngClass]="grupoRepresentativo.get('telefono')?.invalid && grupoRepresentativo.get('telefono')?.touched ? 'text-danger' : ''">*</span>:</label>
         <input type="text" class="form-control" id="telefono" formControlName="telefono" maxlength="20"
           [ngClass]="isValid(grupoRepresentativo,'telefono') ? 'required' : ''"
           (change)="setValoresStore(grupoRepresentativo, 'telefono', 'setGrupoRepresentativoTelefono')" />
@@ -200,7 +199,7 @@
 
       <div class="row">
         <div class="col-md-4 mb-3">
-          <label>Fax*:</label>
+          <label>Fax<span [ngClass]="grupoRepresentativo.get('fax')?.invalid && grupoRepresentativo.get('fax')?.touched ? 'text-danger' : ''">*</span>:</label>
           <input type="text" class="form-control" id="fax" formControlName="fax" maxlength="20"
             [ngClass]="grupoRepresentativo.get('fax')?.invalid && grupoRepresentativo.get('fax')?.touched ? 'required' : ''"
             (change)="setValoresStore(grupoRepresentativo, 'fax', 'setGrupoRepresentativoFax')" />
@@ -213,8 +212,7 @@
           }
         </div>
         <div class="col-md-4 mb-3">
-          <label>Correo electrónico*:</label><span class="bi bi-question-circle-fill mx-2" title="ejemplo@dominio.com"
-            data-bs-toggle="tooltip"></span>
+          <label>Correo electrónico<span [ngClass]="grupoRepresentativo.get('correoElectronico')?.invalid && grupoRepresentativo.get('correoElectronico')?.touched ? 'text-danger' : ''">*</span>:</label><span class="bi bi-question-circle-fill mx-2" tooltip="ejemplo@dominio.com" placement="top"></span>
           <input type="text" class="form-control" id="correoElectronico" formControlName="correoElectronico"
             [ngClass]="grupoRepresentativo.get('correoElectronico')?.invalid && grupoRepresentativo.get('correoElectronico')?.touched ? 'required' : ''"
             (change)="setValoresStore( grupoRepresentativo,'correoElectronico','setGrupoRepresentativoCorreoElectronico')" />

@@ -5,6 +5,7 @@ import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { Tramite110217State, Tramite110217Store } from '../../../../estados/tramites/tramite110217.store';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite110217Query } from '../../../../estados/queries/tramite110217.query';
 
 /**
@@ -20,6 +21,7 @@ import { Tramite110217Query } from '../../../../estados/queries/tramite110217.qu
     CommonModule,
     TituloComponent,
     ReactiveFormsModule,
+    TooltipModule
   ],
   templateUrl: './destinatario.component.html',
   styleUrl: './destinatario.component.scss',
