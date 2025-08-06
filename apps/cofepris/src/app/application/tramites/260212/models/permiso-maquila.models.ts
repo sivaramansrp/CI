@@ -42,6 +42,18 @@ export interface MercanciaModel {
   UMC: string;
   
   tipoDeEnvase: string;
+
+  numeroDeregistroSanitario?: string;
+
+  paisDeorigen?: string;
+
+  paisDeprocedencia?: string;
+
+  tipoProducto?: string;
+
+  usoEspecifico?: string;
+
+  fechaDeCaducidad?: string;
   
 }
 

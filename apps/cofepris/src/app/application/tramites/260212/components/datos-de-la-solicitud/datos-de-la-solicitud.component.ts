@@ -217,9 +217,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.fomInitialize();
     this.inicializarEstadoFormulario();
      this.solicitudService.getScianDatos().pipe(takeUntil(this.destroy$))
-          .subscribe((response: ClaveModel[]) => {
-            this.claveScianDatas = response;
-          });
+      .subscribe((response: ClaveModel[]) => {
+        this.claveScianDatas = [...this.claveScianDatas, ...response];
+      });
   }
 
   /**
@@ -341,8 +341,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  * - Define las columnas y los datos que se muestran en la tabla.
  */
   configuracionTablaScian: ConfiguracionColumna<ClaveModel>[] = [
-    { encabezado: 'Clave S.C.A.N.', clave: (item: ClaveModel) => item.clave, orden: 1 },
-    { encabezado: 'Descripcíon del S.C.I.A.N', clave: (item: ClaveModel) => item.descripcion, orden: 2 },
+    { encabezado: 'Clave S.C.I.A.N.', clave: (item: ClaveModel) => item.clave, orden: 1 },
+    { encabezado: 'Descripcíon del S.C.I.A.N.', clave: (item: ClaveModel) => item.descripcion, orden: 2 },
   ];
 
   /**
@@ -361,11 +361,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       municipio: [{value: '', disabled: true}, [Validators.required]],
       localidad: [{value: '', disabled: true}, [Validators.required]],
       colonia: [{value: '', disabled: true}, [Validators.required]],
-      calle: [{value: '', disabled: true}],
+      calle: [{value: '', disabled: true}, [Validators.required]],
       lada: [{value: '', disabled: true}, [Validators.required]],
       telefono: [{value: '', disabled: true}, [Validators.required]],
       datosManifiestos: [false, [Validators.required]],
     });
+
+    if (this.seleccionarEstablecimientoState) {
+      this.datosEstablecimientoForm.enable();
+    }
+
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroy$),
@@ -423,7 +428,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   agregarScian(form: {clave: string, descripcion: string}): void {
     if (form) {
-      this.claveScianDatas.push(form);
+      this.claveScianDatas = [...this.claveScianDatas, {
+        clave: form.clave,
+        descripcion: form.descripcion
+      }];
     }
   }
 
@@ -462,13 +470,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     { encabezado: 'Forma farmacéutica', clave: (item: MercanciaModel) => item.formaFarmaceutica, orden: 6 },
     { encabezado: 'Estado físico', clave: (item: MercanciaModel) => item.estadoFsico, orden: 7 },
     { encabezado: 'Fracción arancelaria', clave: (item: MercanciaModel) => item.fraccionArancelaria, orden: 8 },
-    { encabezado: 'Descripción de la fracción arancelaria', clave: (item: MercanciaModel) => item.descripcionFraccion, orden: 9 },
-    { encabezado: 'Cantidad UMT', clave: (item: MercanciaModel) => item.cantidadUMT, orden: 10 },
-    { encabezado: 'UMT', clave: (item: MercanciaModel) => item.UMT, orden: 11 },
-    { encabezado: 'Cantidad UMC', clave: (item: MercanciaModel) => item.cantidadUMC, orden: 12 },
-    { encabezado: 'UMC', clave: (item: MercanciaModel) => item.UMC, orden: 13 },
-    { encabezado: 'Presentación farmacéutica o tipo de envase', clave: (item: MercanciaModel) => item.tipoDeEnvase, orden: 14 },
-    
+    { encabezado: 'Descripción de la fracción', clave: (item: MercanciaModel) => item.descripcionFraccion, orden: 9 },
+    { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (item: MercanciaModel) => item.UMC, orden: 10 },
+    { encabezado: 'Cantidad UMC', clave: (item: MercanciaModel) => item.cantidadUMC, orden: 11 },
+    { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (item: MercanciaModel) => item.UMT, orden: 12 },
+    { encabezado: 'Cantidad UMT', clave: (item: MercanciaModel) => item.cantidadUMT, orden: 13 },
+    { encabezado: 'Presentación', clave: (item: MercanciaModel) => item.tipoDeEnvase, orden: 14 },
+    { encabezado: 'Número de registro sanitario', clave: (item: MercanciaModel) => item.numeroDeregistroSanitario, orden: 15 },
+    { encabezado: 'País de orígen', clave: (item: MercanciaModel) => item.paisDeorigen, orden: 16 },
+    { encabezado: 'País de procedencia', clave: (item: MercanciaModel) => item.paisDeprocedencia, orden: 17 },
+    { encabezado: 'Tipo producto', clave: (item: MercanciaModel) => item.tipoProducto, orden: 18 },
+    { encabezado: 'Uso específico', clave: (item: MercanciaModel) => item.usoEspecifico, orden: 19 },
+    { encabezado: 'Fecha de caducidad', clave: (item: MercanciaModel) => item.fechaDeCaducidad, orden: 20 },
+
   ];
 
   /**
@@ -621,6 +635,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     Object.keys(this.datosEstablecimientoForm.controls).forEach(controlName => {
           this.datosEstablecimientoForm.get(controlName)?.enable();
       });
+    this.solicitudService.updateSeleccionarEstablecimientoState();
+  }
+
+  public get seleccionarEstablecimientoState(): boolean { 
+    return this.solicitudService.getSeleccionarEstablecimientoState();
   }
 
   /**
@@ -638,7 +657,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   agregarMercanciasTabla(event: {form: MercanciaModel}): void {
     if (event) {
-      this.mercanicaData.push(event.form);
+      this.mercanicaData = [...this.mercanicaData, event.form];
     }
   }
 

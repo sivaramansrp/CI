@@ -43,6 +43,9 @@
               <label class="form-label" for="denominacionRazonSocial">Denominación o razón social*:</label>
               <input class="form-control" type="text" id="denominacionRazonSocial"
                 formControlName="denominacionRazonSocial" (input)="updateDenominacionRazonSocial()">
+                @if (datosEstablecimientoForm.get('denominacionRazonSocial')?.hasError('required') && datosEstablecimientoForm.get('denominacionRazonSocial')?.touched) {
+                <div class="mensaje-error">Este campo es obligatorio.</div>
+              }
             </div>
           </div>
           <div class="col-md-4">
@@ -51,6 +54,9 @@
                 <span class="bi bi-question-circle-fill fs-4 m-1" title="Correo electrónico" data-bs-toggle="tooltip"></span>
               </label>
               <input type="text" class="form-control" id="correoElectronico" formControlName="correoElectronico"(input)="updateCorreoElectronico()">
+              @if (datosEstablecimientoForm.get('correoElectronico')?.hasError('required') && datosEstablecimientoForm.get('correoElectronico')?.touched) {
+                <div class="mensaje-error">Este campo es obligatorio.</div>
+              }
             </div>
           </div>
         </div>
@@ -62,6 +68,9 @@
             <div class="form-group">
               <label class="form-label" for="códigoPostal">Código postal*:</label>
               <input class="form-control" type="text" id="códigoPostal" formControlName="codigoPostal" (input)="updateCodigoPostal()">
+              @if (datosEstablecimientoForm.get('codigoPostal')?.hasError('required') && datosEstablecimientoForm.get('codigoPostal')?.touched) {
+                <div class="mensaje-error">Este campo es obligatorio.</div>
+              }
             </div>
           </div>
           <div class="col-md-4">
@@ -76,6 +85,9 @@
               <label class="form-label" for="municipio">Municipio o alcaldía*:
               </label>
               <input type="text" class="form-control" id="municipio" formControlName="municipio" (input)="updateMunicipio()">
+              @if (datosEstablecimientoForm.get('municipio')?.hasError('required') && datosEstablecimientoForm.get('municipio')?.touched) {
+                <div class="mensaje-error">Este campo es obligatorio.</div>
+              }
             </div>
           </div>
           <div class="col-md-4">
@@ -94,10 +106,13 @@
           </div>
           <div class="col-md-8">
             <div class="form-group">
-              <label class="form-label" for="Calle">Calle:<span class="bi bi-question-circle-fill fs-4 m-1"
+              <label class="form-label" for="Calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1"
                   title="Calle" ata-bs-toggle="tooltip"></span>
               </label>
               <input type="text" class="form-control" id="Calle" formControlName="calle" (input)="updateCalle()">
+              @if (datosEstablecimientoForm.get('calle')?.hasError('required') && datosEstablecimientoForm.get('calle')?.touched) {
+                <div class="mensaje-error">Este campo es obligatorio.</div>
+              }
             </div>
           </div>
         </div>
@@ -114,6 +129,9 @@
             <div class="form-group">
               <label class="form-label" for="teléfono">Teléfono*:</label>
               <input class="form-control" type="text" id="teléfono" formControlName="telefono" (input)="updateTelefono()">
+              @if (datosEstablecimientoForm.get('telefono')?.hasError('required') && datosEstablecimientoForm.get('telefono')?.touched) {
+                <div class="mensaje-error">Este campo es obligatorio.</div>
+              }
             </div>
           </div>
         </div>
@@ -125,16 +143,18 @@
           </app-tabla-dinamica>
         </div>
 
-        <div class="row">
-          <div class="col-md-12 d-flex justify-content-end">
-            <button name="eliminarServicio" class="btn btn-danger" [disabled]="esFormularioSoloLectura">
-              Eliminar
-            </button>
-            <button name="agregarServicio" class="btn btn-primary mx-2" (click)="toggleScianFormulario()" [disabled]="esFormularioSoloLectura">
-              Agregar
-            </button>
+        @if (seleccionarEstablecimientoState) {
+           <div class="row">
+            <div class="col-md-12 d-flex justify-content-end">
+              <button name="eliminarServicio" class="btn btn-danger" [disabled]="esFormularioSoloLectura">
+                Eliminar
+              </button>
+              <button name="agregarServicio" class="btn btn-primary mx-2" (click)="toggleScianFormulario()" [disabled]="esFormularioSoloLectura">
+                Agregar
+              </button>
+            </div>
           </div>
-        </div>
+        }
 
         <app-formulario-operacion-comercial></app-formulario-operacion-comercial>
         <h5>Mercancias*:</h5>
@@ -175,11 +195,7 @@
 </div>
 
 <div class="modal fade" tabindex="-1" role="dialog" id="myModal" #modalScianRef>
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <app-clave-scian (agregarDatos)="agregarScian($event)" (cancel)="cerrarScianFormulario()"></app-clave-scian>
-    </div>
-  </div>
+  <app-clave-scian (agregarDatos)="agregarScian($event)" (cancel)="cerrarScianFormulario()"></app-clave-scian>
 </div>
 
 <div id="modalSeleccionarEstablesmiento" aria-labelledby="modalSeleccionarEstablesmiento" class="modal fade" tabindex="-1" role="dialog" #modalSeleccionarEstablesmiento>

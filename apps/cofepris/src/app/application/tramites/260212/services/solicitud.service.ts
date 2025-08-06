@@ -15,6 +15,8 @@ import { ReprestantanteData } from '../../260605/models/aduaneras-informaciones.
   providedIn: 'root'
 })
 export class SolicitudService {
+
+  public isSeleccionarEstablecimientoClicked: boolean = false;
   
   /**
    * Constructor del servicio SolicitudService.
@@ -72,7 +74,7 @@ export class SolicitudService {
    * @returns {Observable<ClaveModel[]>} Un observable con los datos de SCIAN.
   */
   getScianDatos(): Observable<ClaveModel[]> {
-    return this.http.get<ClaveModel[]>('assets/json/260402/scianDatos.json');
+    return this.http.get<ClaveModel[]>('assets/json/260212/clave-scian-tabla-datos.json');
    }
 
     /**
@@ -94,5 +96,12 @@ export class SolicitudService {
           })
         );
     }
- 
+
+    updateSeleccionarEstablecimientoState(): void {
+      this.isSeleccionarEstablecimientoClicked = !this.isSeleccionarEstablecimientoClicked;
+    }
+
+    getSeleccionarEstablecimientoState(): boolean {
+      return this.isSeleccionarEstablecimientoClicked;  
+    }
 }
