@@ -238,7 +238,6 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
   inicializarFormulario(): void {
     if (this.soloLectura) {
       this.solicitudForm.disable();
-  //  this.filaDisposible([]);
       this.cargarCuposTabla();
     } 
     else {

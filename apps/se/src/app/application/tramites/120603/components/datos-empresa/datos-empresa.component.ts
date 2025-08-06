@@ -383,7 +383,7 @@ opcionSeleccionMexicana = [
   onAgregar(): void {
     const PAIS_ID = this.formularioEmpresa.get('datosPais')?.value;
     const PAIS_DESCRIPTION = this.paisData.catalogos.find((pais) => pais.id === Number(PAIS_ID))?.descripcion || '';
-    const NEW_ENTRY: SociosYAccionistasExtranjerosData = {
+    const NUEVA_ENTRADA: SociosYAccionistasExtranjerosData = {
       taxId: this.formularioEmpresa.get('taxId')?.value,
       razonSocial: this.formularioEmpresa.get('razonSocial')?.value,
       datosPais: PAIS_DESCRIPTION,
@@ -395,7 +395,7 @@ opcionSeleccionMexicana = [
       id: 0
     };
 
-    this.datosTablaExtranjeros = [...this.datosTablaExtranjeros, NEW_ENTRY];
+    this.datosTablaExtranjeros = [...this.datosTablaExtranjeros, NUEVA_ENTRADA];
         this.formularioEmpresa.patchValue({
       taxId: '',
       razonSocial: '',
