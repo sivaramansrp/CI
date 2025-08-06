@@ -19,7 +19,7 @@
         @for (btn of botonField; track $index) {
           <button 
           type="button"
-          class="btn w-100"
+          class="btn w-70 mt-4"
           [ngClass]="btn.class"
           (click)="btn.funcion ? btn.funcion() : null"
           [disabled]="isDisabled">
@@ -31,7 +31,7 @@
         @for (btn of botones; track $index) {
           <button
           type="button"
-          class="btn w-100"
+          class="btn w-70 mt-4"
           [ngClass]="btn.class"
           (click)="btn.funcion ? btn.funcion() : null"
           [disabled]="isDisabled">
