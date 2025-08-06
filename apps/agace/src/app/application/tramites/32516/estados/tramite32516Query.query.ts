@@ -67,4 +67,26 @@ export class TramiteStoreQuery extends Query<TramiteState> {
     selectSolicitudTramite$ = this.select((state) => {
         return state;
     });
+
+    /**
+     * Selector reactivo para obtener los datos de la tabla de hechos.
+     *
+     * Este observable proporciona acceso reactivo específicamente a los datos de la tabla de hechos,
+     * emitiendo automáticamente cada vez que este array cambia en el store.
+     * 
+     * @property {Observable<HechosInfo[]>} selectHechosTableData$
+     * @readonly
+     * @returns {Observable<HechosInfo[]>} Observable que emite el array de datos de hechos
+     * @memberof TramiteStoreQuery
+     * @example
+     * ```typescript
+     * // Suscribirse a los datos de la tabla de hechos
+     * this.tramiteQuery.selectHechosTableData$.subscribe(hechosData => {
+     *   console.log('Datos de tabla de hechos:', hechosData);
+     * });
+     * ```
+     */
+    selectHechosTableData$ = this.select((state) => {
+        return state.HechosTableData;
+    });
 }

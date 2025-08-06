@@ -26,8 +26,7 @@ import { Solicitud220503Store } from '../../estados/tramites220503.store';
 import { Subject } from 'rxjs';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+import { takeUntil,map,forkJoin } from 'rxjs';
 
 /**
  * Componente para gestionar los datos generales.
@@ -234,7 +233,19 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-   this.inicializarEstadoFormulario();
+      forkJoin([
+    this.getAduanaIngreso(),
+    this.getOficianaInspeccion(),
+    this.getPuntoInspeccion(),
+    this.getEstablecimiento(),
+    this.getRegimenDestinaran(),
+    this.getMovilizacionNacional(),
+    this.getPuntoVerificacion(),
+    this.getEmpresaTransportista()
+  ]).subscribe(() => {
+    this.inicializarEstadoFormulario(); 
+  });
+
   }
 
   /**
@@ -313,15 +324,7 @@ this.forma.disable();
       )
       .subscribe();
 
-    this.getAduanaIngreso();
-    this.getOficianaInspeccion();
-    this.getPuntoInspeccion();
-    this.getEstablecimiento();
-    this.getRegimenDestinaran();
-    this.getMovilizacionNacional();
-    this.getPuntoVerificacion();
-    this.getEmpresaTransportista();
-    this.actualizarDatosDelaSolicitud();
+
   }
 
    /**
@@ -344,11 +347,7 @@ this.forma.disable();
       this.inicializarFormulario();
       if (this.esFormularioSoloLectura) {
         this.forma.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.forma.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
-      }
+      } 
   }
 
   /**

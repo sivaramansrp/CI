@@ -6,11 +6,12 @@ import { Tramite32506Store } from '../estados/tramite32506.store';
 import {
   AvisoTablaDatos,
   CatalogoLista,
+  ConsultaDatos,
   DatosSolicitante,
   DesperdicioTablaDatos,
   PedimentoTablaDatos,
   ProcesoTablaDatos,
-  Tramite32506Aviso,
+  RespuestaConsulta,
 } from '../models/aviso-destruccion.model';
 
 describe('AvisoDestruccionService', () => {
@@ -196,7 +197,7 @@ describe('AvisoDestruccionService', () => {
   });
 
   it('guardarDatosFormulario should call http.get with correct URL', (done) => {
-    const mockData: Tramite32506Aviso = {} as any;
+    const mockData: RespuestaConsulta = {} as any;
     httpClientSpy.get.mockReturnValue(of(mockData));
     service.guardarDatosFormulario().subscribe((data) => {
       expect(data).toBe(mockData);
@@ -207,141 +208,243 @@ describe('AvisoDestruccionService', () => {
     });
   });
 
-  it('actualizarEstadoFormulario should update store with correct values', () => {
-    const mockRespuesta: Tramite32506Aviso = {
-      pasoActivo: 1,
-      pestanaActiva: 2,
-      datosSolicitante: {
-        rfc: 'AAL0409235E6',
-        denominacion: 'AGRICOLA ALPE S DE RL DE CV',
-        actividadEconomica: 'Siembra, cultivo y cosecha de otros cultivos',
-        correoElectronico: 'caguileram@ultrasist.com.mx',
-        pais: 'ESTADOSUNIDOSMEXICANOS',
-        codigoPostal: '34078',
-        entidadFederativa: 'DURANGO',
-        municipio: 'DURANGO',
-        localidad: 'VICTORIADEDURANGO',
-        colonia: 'LOSSAUCES',
-        calle: 'PRIV.PINOPIÑON',
-        nExt: '703',
-        nInt: '',
-        lada: '',
-        telefono: '',
-        adace: 'Occidente',
-        horaDestruccion: '00:00',
-        fechaDestruccion: '2023-10-01',
-      },
-      domicilioFormulario: {
-        nombreComercial: 'NOMBRE COMERCIAL',
-        claveEntidadFederativa: 'Test',
-        claveDelegacionMunicipio: 'Test',
-        claveColonia: 'Test',
-        calle: 'Test',
-        numeroExterior: '10',
-        numeroInterior: '20',
-        codigoPostal: '12345',
-        rfc: 'AAL0409235E6',
-      },
-      avisoFormulario: {
-        adace: 'adace',
-        valorProgramaImmex: 'Test',
-        valorAnioProgramaImmex: 'Test',
-        tipoAviso: 'Test',
-        justificacion: 'Test',
-        periodicidadMensualDestruccion: 'Test',
-        fechaTranslado: 'Test',
-        nombreComercial: 'NOMBRE COMERCIAL',
-        claveEntidadFederativa: 'Test',
-        claveDelegacionMunicipio: 'Test',
-        claveColonia: 'Test',
-        calle: 'calle',
-        numeroExterior: '10',
-        numeroInterior: '20',
-        codigoPostal: '12345',
-        horaDestruccion: '00:00',
-        fechaDestruccion: '2023-10-01',
-        tipoCarga: 'Test',
-      },
-      procesoFormulario: {
-        descripcionProcesoDestruccion:
-          'esta es una descripción de prueba del proceso de destrucción',
-      },
-      desperdicioFormulario: {
-        descripcionDesperdicio: 'Test',
-        cantidadDesp: 'Test',
-        claveUnidadMedidaDesp: 'Test',
-        porcentaje: 'Test',
-        descripcionMercancia: 'Test',
-        circunstanciaHechos: 'Test',
-      },
-      pedimentoFormulario: {
-        patenteAutorizacion: '2452',
-        pedimento: '5254782',
-        claveAduanaPedimento: 'ALTAMIRA',
-        claveFraccionArancelariaPedimento: 'certificado',
-        nicoPedimento: '02',
-        cantidadPedimento: '25',
-        claveUnidadMedidaPedimento: 'Litro',
-      },
-      tipoDocumento: '',
-    };
-    service.actualizarEstadoFormulario(mockRespuesta);
+  describe('actualizarEstadoFormulario', () => {
+    it('should update all store properties when valid data is provided', () => {
+      const mockResponse = {
+        avisoFormulario: {
+          adace: 'ADACE-001',
+          calle: 'Test Street',
+          codigoPostal: '12345',
+          claveColonia: 'COL-001',
+          claveDelegacionMunicipio: 'DEL-001',
+          claveEntidadFederativa: 'ENT-001',
+          fechaTranslado: '2024-01-01',
+          justificacion: 'Test justification',
+          nombreComercial: 'Test Company',
+          numeroExterior: '123',
+          numeroInterior: '456',
+          tipoAviso: 'TIPO-001',
+          tipoCarga: 'CARGA-001',
+          valorAnioProgramaImmex: '2024',
+          valorProgramaImmex: 'IMMEX-001'
+        },
+        desperdicioFormulario: {
+          cantidadDesp: '100',
+          circunstanciaHechos: 'Test circumstances',
+          claveUnidadMedidaDesp: 'KG',
+          descripcionDesperdicio: 'Test desperdicio',
+          descripcionMercancia: 'Test mercancia'
+        },
+        pedimentoFormulario: {
+          cantidadPedimento: '200',
+          claveAduanaPedimento: 'ADU-001',
+          claveFraccionArancelariaPedimento: 'FRAC-001',
+          claveUnidadMedidaPedimento: 'KG'
+        },
+        procesoFormulario: {
+          descripcionProcesoDestruccion: 'Test destruction process'
+        },
+        domicilioFormulario: {
+          calle: 'Domicilio Street',
+          codigoPostal: '67890',
+          claveColonia: 'COL-002',
+          claveDelegacionMunicipio: 'DEL-002',
+          claveEntidadFederativa: 'ENT-002',
+          nombreComercial: 'Domicilio Company',
+          numeroExterior: '789',
+          numeroInterior: '012',
+          rfc: 'RFC123456789'
+        },
+        datosSolicitante: {
+          rfc: 'SOL123456789',
+          denominacion: 'Test Solicitante',
+          actividadEconomica: 'Test Activity',
+          correoElectronico: 'test@example.com'
+        }
+      } as any;
 
-    expect(storeSpy.setAvisoFormularioAdace).toHaveBeenCalledWith('adace');
-    expect(storeSpy.setAvisoFormularioCalle).toHaveBeenCalledWith('calle');
-    expect(storeSpy.setAvisoFormularioCodigoPostal).toHaveBeenCalledWith('12345');
-    expect(storeSpy.setAvisoFormularioColonia).toHaveBeenCalledWith('Test');
-    expect(storeSpy.setAvisoFormularioDelegacionMunicipio).toHaveBeenCalledWith('Test');
-    expect(storeSpy.setAvisoFormularioEntidadFederativa).toHaveBeenCalledWith('Test');
-    expect(storeSpy.setAvisoFormularioFechaTranslado).toHaveBeenCalledWith('Test');
-    expect(storeSpy.setAvisoFormularioJustificacion).toHaveBeenCalledWith('Test');
-    expect(storeSpy.setAvisoFormularioNombreComercial).toHaveBeenCalledWith('NOMBRE COMERCIAL');
-    expect(storeSpy.setAvisoFormularioNumeroExterior).toHaveBeenCalledWith('10');
-    expect(storeSpy.setAvisoFormularioNumeroInterior).toHaveBeenCalledWith('20');
-    expect(storeSpy.setAvisoFormularioTipoAviso).toHaveBeenCalledWith('Test');
-    expect(storeSpy.setAvisoFormularioTipoCarga).toHaveBeenCalledWith('Test');
-    expect(storeSpy.setAvisoFormularioValorAnioProgramaImmex).toHaveBeenCalledWith('Test');
-    expect(storeSpy.setAvisoFormularioValorProgramaImmex).toHaveBeenCalledWith('Test');
-    expect(storeSpy.setCantidadDesp).toHaveBeenCalledWith('Test');
-    expect(storeSpy.setCantidadPedimento).toHaveBeenCalledWith('25');
-    expect(storeSpy.setCircunstanciaHechos).toHaveBeenCalledWith('Test');
-    expect(storeSpy.setClaveAduanaPedimento).toHaveBeenCalledWith('ALTAMIRA');
-    expect(storeSpy.setClaveFraccionArancelariaPedimento).toHaveBeenCalledWith('certificado');
-    expect(storeSpy.setClaveUnidadMedidaDesp).toHaveBeenCalledWith('Test');
-    expect(storeSpy.setClaveUnidadMedidaPedimento).toHaveBeenCalledWith('Litro');
-    expect(storeSpy.setDatosSolicitante).toHaveBeenCalledWith({
-      rfc: 'AAL0409235E6',
-      denominacion: 'AGRICOLA ALPE S DE RL DE CV',
-      actividadEconomica: 'Siembra, cultivo y cosecha de otros cultivos',
-      correoElectronico: 'caguileram@ultrasist.com.mx',
-      pais: 'ESTADOSUNIDOSMEXICANOS',
-      codigoPostal: '34078',
-      entidadFederativa: 'DURANGO',
-      municipio: 'DURANGO',
-      localidad: 'VICTORIADEDURANGO',
-      colonia: 'LOSSAUCES',
-      calle: 'PRIV.PINOPIÑON',
-      nExt: '703',
-      nInt: '',
-      lada: '',
-      telefono: '',
-      adace: 'Occidente',
-      horaDestruccion: '00:00',
-      fechaDestruccion: '2023-10-01',
+      service.actualizarEstadoFormulario(mockResponse);
+
+      expect(storeSpy.setAvisoFormularioAdace).toHaveBeenCalledWith('ADACE-001');
+      expect(storeSpy.setAvisoFormularioCalle).toHaveBeenCalledWith('Test Street');
+      expect(storeSpy.setAvisoFormularioCodigoPostal).toHaveBeenCalledWith('12345');
+      expect(storeSpy.setAvisoFormularioColonia).toHaveBeenCalledWith('COL-001');
+      expect(storeSpy.setAvisoFormularioDelegacionMunicipio).toHaveBeenCalledWith('DEL-001');
+      expect(storeSpy.setAvisoFormularioEntidadFederativa).toHaveBeenCalledWith('ENT-001');
+      expect(storeSpy.setAvisoFormularioFechaTranslado).toHaveBeenCalledWith('2024-01-01');
+      expect(storeSpy.setAvisoFormularioJustificacion).toHaveBeenCalledWith('Test justification');
+      expect(storeSpy.setAvisoFormularioNombreComercial).toHaveBeenCalledWith('Test Company');
+      expect(storeSpy.setAvisoFormularioNumeroExterior).toHaveBeenCalledWith('123');
+      expect(storeSpy.setAvisoFormularioNumeroInterior).toHaveBeenCalledWith('456');
+      expect(storeSpy.setAvisoFormularioTipoAviso).toHaveBeenCalledWith('TIPO-001');
+      expect(storeSpy.setAvisoFormularioTipoCarga).toHaveBeenCalledWith('CARGA-001');
+      expect(storeSpy.setAvisoFormularioValorAnioProgramaImmex).toHaveBeenCalledWith('2024');
+      expect(storeSpy.setAvisoFormularioValorProgramaImmex).toHaveBeenCalledWith('IMMEX-001');
+
+      expect(storeSpy.setCantidadDesp).toHaveBeenCalledWith('100');
+      expect(storeSpy.setCircunstanciaHechos).toHaveBeenCalledWith('Test circumstances');
+      expect(storeSpy.setClaveUnidadMedidaDesp).toHaveBeenCalledWith('KG');
+      expect(storeSpy.setDescripcionDesperdicio).toHaveBeenCalledWith('Test desperdicio');
+      expect(storeSpy.setDescripcionMercancia).toHaveBeenCalledWith('Test mercancia');
+
+      expect(storeSpy.setCantidadPedimento).toHaveBeenCalledWith('200');
+      expect(storeSpy.setClaveAduanaPedimento).toHaveBeenCalledWith('ADU-001');
+      expect(storeSpy.setClaveFraccionArancelariaPedimento).toHaveBeenCalledWith('FRAC-001');
+      expect(storeSpy.setClaveUnidadMedidaPedimento).toHaveBeenCalledWith('KG');
+
+      expect(storeSpy.setDescripcionProcesoDestruccion).toHaveBeenCalledWith('Test destruction process');
+
+      expect(storeSpy.setDomicilioFormularioCalle).toHaveBeenCalledWith('Domicilio Street');
+      expect(storeSpy.setDomicilioFormularioCodigoPostal).toHaveBeenCalledWith('67890');
+      expect(storeSpy.setDomicilioFormularioColonia).toHaveBeenCalledWith('COL-002');
+      expect(storeSpy.setDomicilioFormularioDelegacionMunicipio).toHaveBeenCalledWith('DEL-002');
+      expect(storeSpy.setDomicilioFormularioEntidadFederativa).toHaveBeenCalledWith('ENT-002');
+      expect(storeSpy.setDomicilioFormularioNombreComercial).toHaveBeenCalledWith('Domicilio Company');
+      expect(storeSpy.setDomicilioFormularioNumeroExterior).toHaveBeenCalledWith('789');
+      expect(storeSpy.setDomicilioFormularioNumeroInterior).toHaveBeenCalledWith('012');
+      expect(storeSpy.setDomicilioFormularioRfc).toHaveBeenCalledWith('RFC123456789');
+
+      expect(storeSpy.setDatosSolicitante).toHaveBeenCalledWith(mockResponse.datosSolicitante);
     });
-    expect(storeSpy.setDescripcionDesperdicio).toHaveBeenCalledWith('Test');
-    expect(storeSpy.setDescripcionMercancia).toHaveBeenCalledWith('Test');
-    expect(storeSpy.setDescripcionProcesoDestruccion).toHaveBeenCalledWith(
-      'esta es una descripción de prueba del proceso de destrucción'
-    );
-    expect(storeSpy.setDomicilioFormularioCalle).toHaveBeenCalledWith('Test');
-    expect(storeSpy.setDomicilioFormularioCodigoPostal).toHaveBeenCalledWith('12345');
-    expect(storeSpy.setDomicilioFormularioColonia).toHaveBeenCalledWith('Test');
-    expect(storeSpy.setDomicilioFormularioDelegacionMunicipio).toHaveBeenCalledWith('Test');
-    expect(storeSpy.setDomicilioFormularioEntidadFederativa).toHaveBeenCalledWith('Test');
-    expect(storeSpy.setDomicilioFormularioNombreComercial).toHaveBeenCalledWith('NOMBRE COMERCIAL');
-    expect(storeSpy.setDomicilioFormularioNumeroExterior).toHaveBeenCalledWith('10');
-    expect(storeSpy.setDomicilioFormularioNumeroInterior).toHaveBeenCalledWith('20');
-    expect(storeSpy.setDomicilioFormularioRfc).toHaveBeenCalledWith('AAL0409235E6');
+
+    it('should return early when avisoFormulario is missing', () => {
+      const mockResponse = {
+        avisoFormulario: null,
+        desperdicioFormulario: { cantidadDesp: '100' },
+        pedimentoFormulario: { cantidadPedimento: '200' },
+        procesoFormulario: { descripcionProcesoDestruccion: 'test' },
+        domicilioFormulario: { calle: 'test' },
+        datosSolicitante: { rfc: 'test' }
+      } as any;
+
+      service.actualizarEstadoFormulario(mockResponse);
+
+      expect(storeSpy.setAvisoFormularioAdace).not.toHaveBeenCalled();
+      expect(storeSpy.setCantidadDesp).not.toHaveBeenCalled();
+      expect(storeSpy.setCantidadPedimento).not.toHaveBeenCalled();
+      expect(storeSpy.setDescripcionProcesoDestruccion).not.toHaveBeenCalled();
+      expect(storeSpy.setDomicilioFormularioCalle).not.toHaveBeenCalled();
+      expect(storeSpy.setDatosSolicitante).not.toHaveBeenCalled();
+    });
+
+    it('should return early when desperdicioFormulario is missing', () => {
+      const mockResponse = {
+        avisoFormulario: { adace: 'test' },
+        desperdicioFormulario: null,
+        pedimentoFormulario: { cantidadPedimento: '200' },
+        procesoFormulario: { descripcionProcesoDestruccion: 'test' },
+        domicilioFormulario: { calle: 'test' },
+        datosSolicitante: { rfc: 'test' }
+      } as any;
+
+      service.actualizarEstadoFormulario(mockResponse);
+
+      expect(storeSpy.setAvisoFormularioAdace).not.toHaveBeenCalled();
+      expect(storeSpy.setCantidadDesp).not.toHaveBeenCalled();
+    });
+
+    it('should return early when pedimentoFormulario is missing', () => {
+      const mockResponse = {
+        avisoFormulario: { adace: 'test' },
+        desperdicioFormulario: { cantidadDesp: '100' },
+        pedimentoFormulario: null,
+        procesoFormulario: { descripcionProcesoDestruccion: 'test' },
+        domicilioFormulario: { calle: 'test' },
+        datosSolicitante: { rfc: 'test' }
+      } as any;
+
+      service.actualizarEstadoFormulario(mockResponse);
+
+      expect(storeSpy.setAvisoFormularioAdace).not.toHaveBeenCalled();
+      expect(storeSpy.setCantidadPedimento).not.toHaveBeenCalled();
+    });
+
+    it('should return early when procesoFormulario is missing', () => {
+      const mockResponse = {
+        avisoFormulario: { adace: 'test' },
+        desperdicioFormulario: { cantidadDesp: '100' },
+        pedimentoFormulario: { cantidadPedimento: '200' },
+        procesoFormulario: null,
+        domicilioFormulario: { calle: 'test' },
+        datosSolicitante: { rfc: 'test' }
+      } as any;
+
+      service.actualizarEstadoFormulario(mockResponse);
+
+      expect(storeSpy.setAvisoFormularioAdace).not.toHaveBeenCalled();
+      expect(storeSpy.setDescripcionProcesoDestruccion).not.toHaveBeenCalled();
+    });
+
+    it('should return early when domicilioFormulario is missing', () => {
+      const mockResponse = {
+        avisoFormulario: { adace: 'test' },
+        desperdicioFormulario: { cantidadDesp: '100' },
+        pedimentoFormulario: { cantidadPedimento: '200' },
+        procesoFormulario: { descripcionProcesoDestruccion: 'test' },
+        domicilioFormulario: null,
+        datosSolicitante: { rfc: 'test' }
+      } as any;
+
+      service.actualizarEstadoFormulario(mockResponse);
+
+      expect(storeSpy.setAvisoFormularioAdace).not.toHaveBeenCalled();
+      expect(storeSpy.setDomicilioFormularioCalle).not.toHaveBeenCalled();
+    });
+
+    it('should return early when response is null', () => {
+      service.actualizarEstadoFormulario(null as any);
+
+      expect(storeSpy.setAvisoFormularioAdace).not.toHaveBeenCalled();
+      expect(storeSpy.setCantidadDesp).not.toHaveBeenCalled();
+      expect(storeSpy.setCantidadPedimento).not.toHaveBeenCalled();
+      expect(storeSpy.setDescripcionProcesoDestruccion).not.toHaveBeenCalled();
+      expect(storeSpy.setDomicilioFormularioCalle).not.toHaveBeenCalled();
+      expect(storeSpy.setDatosSolicitante).not.toHaveBeenCalled();
+    });
+
+    it('should return early when response is undefined', () => {
+      service.actualizarEstadoFormulario(undefined as any);
+
+      expect(storeSpy.setAvisoFormularioAdace).not.toHaveBeenCalled();
+      expect(storeSpy.setCantidadDesp).not.toHaveBeenCalled();
+      expect(storeSpy.setCantidadPedimento).not.toHaveBeenCalled();
+      expect(storeSpy.setDescripcionProcesoDestruccion).not.toHaveBeenCalled();
+      expect(storeSpy.setDomicilioFormularioCalle).not.toHaveBeenCalled();
+      expect(storeSpy.setDatosSolicitante).not.toHaveBeenCalled();
+    });
+
+    it('should handle empty response object gracefully', () => {
+      const mockResponse = {} as any;
+
+      service.actualizarEstadoFormulario(mockResponse);
+
+      expect(storeSpy.setAvisoFormularioAdace).not.toHaveBeenCalled();
+      expect(storeSpy.setCantidadDesp).not.toHaveBeenCalled();
+      expect(storeSpy.setCantidadPedimento).not.toHaveBeenCalled();
+      expect(storeSpy.setDescripcionProcesoDestruccion).not.toHaveBeenCalled();
+      expect(storeSpy.setDomicilioFormularioCalle).not.toHaveBeenCalled();
+      expect(storeSpy.setDatosSolicitante).not.toHaveBeenCalled();
+    });
+
+    it('should handle partial data gracefully when some sub-objects are undefined', () => {
+      const mockResponse = {
+        avisoFormulario: undefined,
+        desperdicioFormulario: undefined,
+        pedimentoFormulario: undefined,
+        procesoFormulario: undefined,
+        domicilioFormulario: undefined,
+        datosSolicitante: undefined
+      } as any;
+
+      service.actualizarEstadoFormulario(mockResponse);
+
+      expect(storeSpy.setAvisoFormularioAdace).not.toHaveBeenCalled();
+      expect(storeSpy.setCantidadDesp).not.toHaveBeenCalled();
+      expect(storeSpy.setCantidadPedimento).not.toHaveBeenCalled();
+      expect(storeSpy.setDescripcionProcesoDestruccion).not.toHaveBeenCalled();
+      expect(storeSpy.setDomicilioFormularioCalle).not.toHaveBeenCalled();
+      expect(storeSpy.setDatosSolicitante).not.toHaveBeenCalled();
+    });
   });
+
 });
