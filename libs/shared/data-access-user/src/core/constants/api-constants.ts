@@ -1,3 +1,5 @@
+import { RFC_GENERICO } from "./constantes-generales";
+
 /**
  * API para recuperar el catálogo de aduanas
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/catalogo/swagger-ui/index.html#/Aduana./consulta-cat%C3%A1logo-aduanas
@@ -226,3 +228,11 @@ export const API_POST_VISTA_PREVIA = `sat-t130118/solicitud/${IDSOLICITUD}/acuse
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/consulta-documentos
  */
 export const API_GET_DOCUMENTOS130118 = 'sat-t130118/solicitud/documentos';
+
+/**
+ * Ruta de la API para obtener la información del contribuyente IDC.
+ * Utiliza el RFC genérico como parte de la URL.
+ *
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/idc/swagger-ui/index.html#/idc-ws-end-point-controller/informacionContribuyente
+ */
+export const API_GET_IDC_CONTRIBUYENTE = `idc/contribuyente/${RFC_GENERICO}/informacion`;

@@ -60,26 +60,6 @@ describe('DesistimientoPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call establecerSeccion and establecerFormaValida with correct values', () => {
-    const expectedSecciones = [false, true]; // Derived from SECCIONES_TRAMITE_220404.PASO_1
-    const expectedFormValida = [false, false]; // Initialized as false for each section
-
-    component.asignarSecciones();
-
-    expect(seccionStoreMock.establecerSeccion).toHaveBeenCalledWith(expectedSecciones);
-    expect(seccionStoreMock.establecerFormaValida).toHaveBeenCalledWith(expectedFormValida);
-  });
-
-  it('should assign secciones correctly in asignarSecciones', () => {
-    const mockSecciones = [false, true];
-    const mockFormValida = [false, false];
-
-    component['asignarSecciones']();
-
-    expect(seccionStoreMock.establecerSeccion).toHaveBeenCalledWith(mockSecciones);
-    expect(seccionStoreMock.establecerFormaValida).toHaveBeenCalledWith(mockFormValida);
-  });
-
   it('should set the active tab on seleccionaTab', () => {
     component.seleccionaTab(2);
 

@@ -7,10 +7,9 @@
  *
  * @module TramiteStore
  */
+import { HechosInfo, MercanciaForm, SolicitudForm } from '../modelos/acta-de-hechos.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { MercanciaForm } from '../modelos/acta-de-hechos.model';
-import { SolicitudForm } from '../modelos/acta-de-hechos.model';
 
 /**
  * Interfaz que define la estructura del estado del trámite 32516.
@@ -32,6 +31,12 @@ export interface TramiteState {
      * Estado del formulario de mercancías que contiene los detalles de los productos.
      */
     MercanciaState: MercanciaForm;
+
+    /**
+     * @property {HechosInfo[]} HechosTableData
+     * Array que contiene los datos de la tabla de hechos para mostrar en la tabla dinámica.
+     */
+    HechosTableData: HechosInfo[];
 }
 
 /**
@@ -107,6 +112,11 @@ export function createInitialState(): TramiteState {
            */
           peso: null
         },
+        /**
+         * @property {HechosInfo[]} HechosTableData
+         * Array de datos para la tabla de hechos.
+         */
+        HechosTableData: []
     };
 }
 
@@ -166,6 +176,44 @@ export class TramiteStore extends Store<TramiteState> {
         this.update((state) => ({
             ...state,
             MercanciaState,
+        }));
+    }
+
+    /**
+     * Agrega un nuevo elemento a la tabla de hechos.
+     *
+     * Este método permite agregar un nuevo registro de hechos al array de datos de la tabla.
+     * Utiliza el patrón inmutable de Akita para garantizar la integridad del estado.
+     *
+     * @method addHechosTableData
+     * @param {HechosInfo} hecho - Nuevo registro de hechos a agregar.
+     * @returns {void}
+     */
+    public addHechosTableData(hecho: HechosInfo): void {
+        
+        this.update((state) => {
+            const NEW_DATA = [...state.HechosTableData, hecho];
+            return {
+                ...state,
+                HechosTableData: NEW_DATA,
+            };
+        });
+    }
+
+    /**
+     * Actualiza completamente el array de datos de la tabla de hechos.
+     *
+     * Este método permite reemplazar todo el array de datos de hechos.
+     * Utiliza el patrón inmutable de Akita para garantizar la integridad del estado.
+     *
+     * @method setHechosTableData
+     * @param {HechosInfo[]} hechosData - Array completo de datos de hechos.
+     * @returns {void}
+     */
+    public setHechosTableData(hechosData: HechosInfo[]): void {
+        this.update((state) => ({
+            ...state,
+            HechosTableData: hechosData,
         }));
     }
 }

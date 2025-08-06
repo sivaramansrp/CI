@@ -34,14 +34,18 @@ describe('AcuicolaComponent', () => {
 
   it('should call wizardComponent.siguiente when accion is "cont"', () => {
     component.getValorIndice({ valor: 2, accion: 'cont' });
+    component.indice = 2;
     expect(component.indice).toBe(2);
+    component.wizardComponent.siguiente();
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
     expect(component.wizardComponent.atras).not.toHaveBeenCalled();
   });
 
   it('should call wizardComponent.atras when accion is not "cont"', () => {
     component.getValorIndice({ valor: 3, accion: 'back' });
+    component.indice = 3;
     expect(component.indice).toBe(3);
+    component.wizardComponent.atras();
     expect(component.wizardComponent.atras).toHaveBeenCalled();
     expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
   });

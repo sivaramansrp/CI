@@ -295,6 +295,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     });
     this.cargarCatalogos();
     this.fetchgetaduanaLista();
+    this.loadDatosTablaData();
   }
 
   /**
@@ -327,7 +328,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.mostrarCampos();
     if (this.soloLectura) {
       this.solicitudForm?.disable();
-      this.loadDatosTablaData();
     } else {
       this.solicitudForm?.enable();
     }

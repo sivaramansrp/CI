@@ -12,7 +12,6 @@
           [layout]="'horizontal'"
           [gap]="'50px'"
           formControlName="modificacionVigencias"
-          (valueChange)="onCambioModificacionVigencias($event)"
           (change)="setValoresStore(formularioModificacionVigencias,'modificacionVigencias')">
         </app-input-radio>
       </div>
@@ -30,7 +29,7 @@
             [datos]="fechaInputDatos"
             [setFecha]="formularioModificacionVigencias.get('fechaInicioVigenciaAnterior')?.value"
             [isDisabled]="esFormularioSoloLectura"
-            (valorCambiado)="setValoresStore(formularioModificacionVigencias,'fechaInicioVigenciaAnterior')">
+            (valorCambiado)="actualizarFecha($event, 'fechaInicioVigenciaAnterior'); setValoresStore(formularioModificacionVigencias,'fechaInicioVigenciaAnterior')">
           </input-fecha>
         </div>
       </div>
@@ -44,7 +43,7 @@
             [datos]="fechaInputDatos"
             [setFecha]="formularioModificacionVigencias.get('fechaFinVigenciaAnterior')?.value"
             [isDisabled]="esFormularioSoloLectura"
-            (valorCambiado)="setValoresStore(formularioModificacionVigencias,'fechaFinVigenciaAnterior')">
+            (valorCambiado)="actualizarFecha($event, 'fechaFinVigenciaAnterior'); setValoresStore(formularioModificacionVigencias,'fechaFinVigenciaAnterior')">
           </input-fecha>
         </div>
       </div>
@@ -60,7 +59,7 @@
             [datos]="fechaInputDatos"
             [setFecha]="formularioModificacionVigencias.get('fechaInicioVigenciaActual')?.value"
             [isDisabled]="esFormularioSoloLectura"
-            (valorCambiado)="setValoresStore(formularioModificacionVigencias,'fechaInicioVigenciaActual')">
+            (valorCambiado)="actualizarFecha($event, 'fechaInicioVigenciaActual'); setValoresStore(formularioModificacionVigencias,'fechaInicioVigenciaActual')">
           </input-fecha>
         </div>
       </div>
@@ -74,7 +73,7 @@
             [datos]="fechaInputDatos"
             [setFecha]="formularioModificacionVigencias.get('fechaFinVigenciaActual')?.value"
             [isDisabled]="esFormularioSoloLectura"
-            (valorCambiado)="setValoresStore(formularioModificacionVigencias,'fechaFinVigenciaActual')">
+            (valorCambiado)="actualizarFecha($event, 'fechaFinVigenciaActual'); setValoresStore(formularioModificacionVigencias,'fechaFinVigenciaActual')">
           </input-fecha>
         </div>
       </div>

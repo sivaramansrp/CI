@@ -4,16 +4,18 @@
         <app-tabla-dinamica
             [configuracionTabla]="configuracionTabla"
             [datos]="sociedadesDatos"
-            [tipoSeleccionTabla]="checkbox">
+            [tipoSeleccionTabla]="checkbox"
+            (listaDeFilaSeleccionada)="seleccionarlistaSeccionSociedades($event)"
+            >
         </app-tabla-dinamica>
          <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="abrirModal(sociedades)">
+            <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="abrirModal(sociedades,'agregarSociedades')">
                 Agregar
             </button>
-            <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura">
+            <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura || seleccionarlistaSociedades.length !== 1" (click)="abrirModal(sociedades,'modificarSociedades')">
                 Modificar
             </button>
-            <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura">
+            <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura || seleccionarlistaSociedades.length === 0" (click)="eliminarSociedades()">
                 Eliminar
             </button>
         </div>
@@ -22,16 +24,18 @@
         <app-tabla-dinamica
             [configuracionTabla]="configuracionDatosTabla"
             [datos]="instalacionesDatos"
-            [tipoSeleccionTabla]="checkbox">
+            [tipoSeleccionTabla]="checkbox"
+            (listaDeFilaSeleccionada)="seleccionarlistaSeccionInstalaciones($event)"
+            >
         </app-tabla-dinamica>
         <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="abrirModal(agregar)">
+            <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="abrirModal(agregar,'agregarInstalaciones')">
                 Agregar
             </button>
-            <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura" (click)="abrirModal(modificar)">
+            <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura || seleccionarlistaInstalaciones.length !== 1" (click)="abrirModal(modificar,'modificarInstalaciones')">
                 Modificar
             </button>
-            <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura">
+            <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura || seleccionarlistaInstalaciones.length === 0" (click)="eliminarInstalaciones()">
                 Eliminar
             </button>
         </div>
@@ -54,16 +58,18 @@
         <app-tabla-dinamica
             [configuracionTabla]="configuracionMandatariosTabla"
             [datos]="mandatariosDatos"
-            [tipoSeleccionTabla]="checkbox">
+            [tipoSeleccionTabla]="checkbox"
+            (listaDeFilaSeleccionada)="seleccionarlistaSeccionMandatarios($event)"
+            >
         </app-tabla-dinamica>
         <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="abrirModal(mandatarios)">
+            <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="abrirModal(mandatarios,'agregarMandatarios')">
                 Agregar
             </button>
-            <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura">
+            <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura || seleccionarlistaMandatarios.length !== 1" (click)="abrirModal(mandatarios,'modificarMandatarios')">
                 Modificar
             </button>
-            <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura">
+            <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura || seleccionarlistaMandatarios.length === 0" (click)="eliminarMandatarios()">
                 Eliminar
             </button>
         </div>
@@ -79,14 +85,15 @@
     <formas-dinamicas 
         [forma]="agregarSociedadesFormGroup" 
         [formularioDatos]="agregarSociedadesDatos"
+        (emitirEventoDeClic)="buscarEvento()"
         >
     </formas-dinamicas>
   </div>
   <div class="modal-footer d-flex justify-content-end">
-    <button type="button" class="btn btn-primary">
+    <button type="button" class="btn btn-primary" (click)="aceptar()">
         Aceptar
     </button>
-    <button type="button" class="btn btn-default me-2" (click)="modalRef?.hide()">
+    <button type="button" class="btn btn-default me-2" (click)="limpiarAgregarSociedadesFormulario()">
         Limpiar
     </button>
     <button type="button" class="btn btn-danger" (click)="modalRef?.hide()">
@@ -113,7 +120,7 @@
     </app-tabla-dinamica>
   </div>
   <div class="modal-footer d-flex justify-content-end">
-    <button type="button" class="btn btn-primary">
+    <button type="button" class="btn btn-primary" (click)="aceptarAgregar()">
         Aceptar
     </button>
     <button type="button" class="btn btn-default me-2" (click)="modalRef?.hide()">
@@ -133,14 +140,15 @@
     <formas-dinamicas 
         [forma]="mandatariosDelAgenteFormGroup" 
         [formularioDatos]="mandatariosDelAgenteDatos"
+        (emitirEventoDeClic)="buscarMandatariosEvento()"
         >
     </formas-dinamicas>
   </div>
   <div class="modal-footer d-flex justify-content-end">
-    <button type="button" class="btn btn-primary">
+    <button type="button" class="btn btn-primary" (click)="aceptarMandatarios()">
         Aceptar
     </button>
-    <button type="button" class="btn btn-default me-2" (click)="modalRef?.hide()">
+    <button type="button" class="btn btn-default me-2" (click)="limpiarMandatariosFormulario()">
         Limpiar
     </button>
     <button type="button" class="btn btn-danger" (click)="modalRef?.hide()">
