@@ -24,6 +24,9 @@ export class SeleccionTramiteComponent implements OnInit, OnDestroy {
    * Estos datos se utilizan para gestionar y mostrar información relacionada con diferentes trámites.
    */
   public tramiteData: TramiteDetails[] = [];
+  /**
+   * Versión actual de la aplicación desde package.json
+   */
   version = pkg.version;
     
   ngOnInit(): void {
