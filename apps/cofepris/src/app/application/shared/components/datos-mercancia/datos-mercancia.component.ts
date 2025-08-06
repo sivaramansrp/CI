@@ -30,7 +30,7 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { CommonModule, Location } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { DetalleMercancia } from '../../models/detalle-mercancia.model';
 import { DetalleMercanciaComponent } from '../detalle-mercancia/detalle-mercancia.component';
@@ -111,6 +111,11 @@ export class DatosMercanciaComponent implements OnInit {
     new EventEmitter<DetalleMercancia>(true);
 
   /**
+   * Referencias a los componentes de listas cruzadas.
+   */
+  @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
+
+  /**
    * @event eliminarMercanciaDatos
    * @description EventEmitter that emits an array of merchandise items to be deleted.
    * This is used to notify the parent component about the deletion of selected merchandise items.
@@ -180,7 +185,7 @@ export class DatosMercanciaComponent implements OnInit {
 
   /** Etiquetas personalizadas para los crosslists */
   public paisDeOriginLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de origen',
+    tituluDeLaIzquierda: 'País de origen:',
     derecha: 'País(es) seleccionado(s)',
   };
 
@@ -190,7 +195,7 @@ export class DatosMercanciaComponent implements OnInit {
    * Define los títulos mostrados en la parte izquierda y derecha del componente.
    */
   public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de procedencia',
+    tituluDeLaIzquierda: 'País de procedencia:',
     derecha: 'País(es) seleccionados',
   };
 
@@ -200,9 +205,87 @@ export class DatosMercanciaComponent implements OnInit {
    * Define los títulos para los elementos disponibles y seleccionados.
    */
   public usoEspesificoLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'Uso específico',
+    tituluDeLaIzquierda: 'Uso específico:',
     derecha: 'Uso específico',
   };
+
+        /**
+   * Botones de acción para gestionar listas de países en la tercera sección.
+   */
+  paisDeProcedenciaBotonsUno = [
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[2].agregar('t'),
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[2].agregar(''),
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[2].quitar(''),
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[2].quitar('t'),
+    },
+  ];
+
+      /**
+   * Botones de acción para gestionar listas de países en la tercera sección.
+   */
+  paisDeProcedenciaBotonsDos = [
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[2].agregar('t'),
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[2].agregar(''),
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[2].quitar(''),
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[2].quitar('t'),
+    },
+  ];
+
+    /**
+   * Botones de acción para gestionar listas de países en la tercera sección.
+   */
+  paisDeProcedenciaBotonsTres = [
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[2].agregar('t'),
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[2].agregar(''),
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[2].quitar(''),
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[2].quitar('t'),
+    },
+  ];
 
   /**
    * @property {string[]} seleccionadasPaisDeOriginDatos
@@ -368,9 +451,9 @@ export class DatosMercanciaComponent implements OnInit {
    * Esta función verifica si los elementos requeridos están presentes y actualiza las etiquetas
    */
   crossListRequirdos(): void {
-    this.paisDeOriginLabel.derecha = this.elementosRequirdos.includes('paisDeOrigen') ? 'País(es) seleccionado(s)*' : 'País(es) seleccionado(s)';
-    this.paisDeProcedenciaLabel.derecha = this.elementosRequirdos.includes('paisDeProcedencia') ? 'País(es) seleccionado(s)*' : 'País(es) seleccionado(s)';
-    this.usoEspesificoLabel.derecha = this.elementosRequirdos.includes('usoEspecífico') ? 'País(es) seleccionado(s)*' : 'País(es) seleccionado(s)';
+    this.paisDeOriginLabel.derecha = this.elementosRequirdos.includes('paisDeOrigen') ? 'País(es) seleccionado(s)*:' : 'País(es) seleccionado(s)*:';
+    this.paisDeProcedenciaLabel.derecha = this.elementosRequirdos.includes('paisDeProcedencia') ? 'País(es) seleccionado(s)*:' : 'País(es) seleccionado(s)*:';
+    this.usoEspesificoLabel.derecha = this.elementosRequirdos.includes('usoEspecífico') ? 'Uso específico seleccionado*:' : 'Uso específico seleccionado*:';
   }
 
   /**

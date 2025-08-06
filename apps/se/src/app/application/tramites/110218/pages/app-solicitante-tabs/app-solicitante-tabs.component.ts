@@ -1,5 +1,5 @@
 /* eslint-disable dot-notation */
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { Solicitud110218State } from '../../estados/tramites/tramite110218.store';
@@ -18,11 +18,6 @@ import { CertificadoTecnicoJaponService } from '../../service/certificadoTecnico
   templateUrl: './app-solicitante-tabs.component.html',
 })
 export class AppSolicitanteTabsComponent implements OnInit {
- 
-  /**
-   * Evento emitido cuando se produce una acción relacionada con el certificado.
-   */
-  @Output() SolicitanteEventCertificado: EventEmitter<boolean> = new EventEmitter<boolean>(false);
 
   /**
    * Índice de la pestaña actualmente seleccionada.

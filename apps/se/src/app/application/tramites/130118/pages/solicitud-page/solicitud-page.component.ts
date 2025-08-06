@@ -5,13 +5,13 @@ import { Location } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 
 import { AVISO, CategoriaMensaje, DatosPasos, ListaPasosWizard, Notificacion, PASOS, WizardComponent } from '@ng-mf/data-access-user';
-import { GuadarSolicitudRequest } from '../../../../core/models/request/guardar-solicitud-request.model';
+import { GuadarSolicitudRequest } from '../../../../core/models/130118/request/guardar-solicitud-request.model';
 import { GuardarService } from '../../../../core/services/130118/guardar.service';
 import { IniciarService } from '../../../../core/services/130118/iniciar.service';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 import { Observable, Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
-import { IniciarRequest } from '../../../../core/models/request/iniciar-request.model';
+import { IniciarRequest } from '../../../../core/models/130118/request/iniciar-request.model';
 
 import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
 

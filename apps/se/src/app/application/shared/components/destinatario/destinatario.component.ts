@@ -1,10 +1,10 @@
-import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CAMPO_DE_DESTINATARIO } from '../../constantes/modificacion.enum';
-import { CommonModule } from '@angular/common';
-import { MenusDesplegables } from '../../models/modificacion.enum';
+import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Subject } from 'rxjs';
+import { CAMPO_DE_DESTINATARIO } from '../../constantes/modificacion.enum';
+import { MenusDesplegables } from '../../models/modificacion.enum';
 
 
 
@@ -30,10 +30,10 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * Este identificador se utiliza para enlazar el componente con un procedimiento específico.
    */
   @Input() idProcedimiento!: number;
-    /**
-   * Indica si el formulario debe mostrarse solo en modo de lectura.
-   * @type {boolean}
-   */
+  /**
+ * Indica si el formulario debe mostrarse solo en modo de lectura.
+ * @type {boolean}
+ */
   @Input() esFormularioSoloLectura!: boolean;
 
   /**
@@ -60,7 +60,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * @memberof DestinatarioComponent
    */
   @Input() ocultarFax!: boolean;
-  
+
   /**
    * Datos para los menús desplegables
    * @type {MenusDesplegables[]}
@@ -157,7 +157,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     this.inicializarEstadoFormulario();
     this.formDestinatario.patchValue(this.datosForm);
   }
-    /**
+  /**
 * Evalúa si se debe inicializar o cargar datos en el formulario.
 */
   inicializarEstadoFormulario(): void {
@@ -170,27 +170,27 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
 
     }
   }
-  
- /**
-   * Crea e inicializa el formulario reactivo `formDatosCertificado` con los controles y validaciones necesarios.
-   * 
-   * @remarks
-   * Este método configura los campos del formulario, asignando validadores según los requisitos del negocio.
-   * 
-   * @command
-   * Genera el formulario para capturar los datos del certificado, incluyendo observaciones, idioma, entidad federativa,
-   * representación federal y precisión, aplicando las validaciones correspondientes.
-   */
+
+  /**
+    * Crea e inicializa el formulario reactivo `formDatosCertificado` con los controles y validaciones necesarios.
+    * 
+    * @remarks
+    * Este método configura los campos del formulario, asignando validadores según los requisitos del negocio.
+    * 
+    * @command
+    * Genera el formulario para capturar los datos del certificado, incluyendo observaciones, idioma, entidad federativa,
+    * representación federal y precisión, aplicando las validaciones correspondientes.
+    */
   createForm(): void {
     this.formDestinatario = this.fb.group({
       paisDestin: ['', [Validators.required, Validators.min(0)]],
-      ciudad: [''],
+      ciudad: ['', [Validators.required]],
       calle: ['', [Validators.required]],
       numeroLetra: ['', [Validators.required]],
       lada: [''],
-      telefono: [''],
+      telefono: ['', [Validators.required]],
       fax: [''],
-      correoElectronico: ['', [Validators.required]],
+      correoElectronico: ['', [Validators.required, Validators.email, Validators.pattern(/^[a-zA-Z0-9._%+-]+@gmail\.com$/)]],
     });
   }
 
@@ -209,21 +209,21 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-  
-   /**
-   * Establece valores en el store y emite eventos relacionados con el formulario.
-   *
-   * @param formGroupName - El nombre del grupo de formulario al que pertenece el campo.
-   * @param campo - El nombre del campo cuyo valor se desea obtener y procesar.
-   * @param storeStateName - El nombre del estado en el store asociado al campo.
-   * 
-   * @remarks
-   * Este método obtiene el valor de un campo específico del formulario `formDatosDelDestinatario`,
-   * emite un evento para indicar si el formulario es válido y otro evento con los datos del campo
-   * y su estado asociado en el store.
-   */
-  setValoresStore(formGroupName: string, campo: string, storeStateName: string):void {    
-    const VALOR = this.formDestinatario.get(campo)?.value;    
+
+  /**
+  * Establece valores en el store y emite eventos relacionados con el formulario.
+  *
+  * @param formGroupName - El nombre del grupo de formulario al que pertenece el campo.
+  * @param campo - El nombre del campo cuyo valor se desea obtener y procesar.
+  * @param storeStateName - El nombre del estado en el store asociado al campo.
+  * 
+  * @remarks
+  * Este método obtiene el valor de un campo específico del formulario `formDatosDelDestinatario`,
+  * emite un evento para indicar si el formulario es válido y otro evento con los datos del campo
+  * y su estado asociado en el store.
+  */
+  setValoresStore(formGroupName: string, campo: string, storeStateName: string): void {
+    const VALOR = this.formDestinatario.get(campo)?.value;
     this.formaValida.emit(this.formDestinatario.valid);
     this.formDestinatarioEvent.emit({ formGroupName, campo, valor: VALOR, storeStateName });
   }

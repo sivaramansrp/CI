@@ -1,12 +1,4 @@
 import { AGREGAR, EDITAR, IMPORTANTE } from '../../constantes/fitosanitario.enum';
-import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
-import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user'
-import { DatosMercanciaService } from '../../services/datos-mercancia/datos-mercancia.service';
-import { MercanciaForm } from '../../models/fitosanitario.model';
-
 import {
   AlertComponent,
   Catalogo,
@@ -16,6 +8,13 @@ import {
   TablaSeleccion,
   TituloComponent
 } from '@libs/shared/data-access-user/src';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, REGEX_PATRON_DECIMAL_12_3, REGEX_SOLO_NUMEROS, ValidacionesFormularioService } from '@ng-mf/data-access-user'
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { DatosMercanciaService } from '../../services/datos-mercancia/datos-mercancia.service';
+import { MercanciaForm } from '../../models/fitosanitario.model';
 
 
 /**
@@ -52,7 +51,7 @@ import {
     CommonModule
   ]
 })
-export class DatosMercanciaComponent implements OnInit, OnDestroy, AfterViewInit {
+export class DatosMercanciaComponent implements OnInit, OnDestroy {
   /**
    * Tipo de selección para la tabla de solicitudes.
    * @property {TablaSeleccion}
@@ -96,12 +95,6 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy, AfterViewInit
    * @property {FormGroup}
    */
   formMercancia!: FormGroup;
-
-  /**
-   * Variable para controlar el estado de visibilidad de un elemento (ej. un formulario).
-   * @property {boolean}
-   */
-  estadoChecker: boolean = false;
 
   /**
    * Subject para notificar la destrucción del componente y desuscribir observables.
@@ -166,24 +159,34 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy, AfterViewInit
   esFormularioSoloLectura: boolean = false;
 
   /**
+   * Referencia al modal de mercancías.
+   */
+  @ViewChild('cerrarModal') cerrarModalRef!: ElementRef;
+
+  /**
    * Constructor del componente.
    * Inyecta los servicios necesarios para la gestión de datos y formularios.
    * @param {FormBuilder} fb Servicio para la construcción de formularios reactivos.
    * @param {DatosMercanciaService} datosMercanciaService Servicio para obtener datos de la mercancía.
    * @param {ChangeDetectorRef} cdr Servicio para detectar cambios en la vista.
    * @param {ConsultaioQuery} consultaioQuery Servicio para consultar el estado de solo lectura.
+   * @param validacionesService Servicio para validar formularios.
    */
   constructor(
     private readonly fb: FormBuilder,
     private readonly datosMercanciaService: DatosMercanciaService,
     private readonly cdr: ChangeDetectorRef,
-    private readonly consultaioQuery: ConsultaioQuery
+    private readonly consultaioQuery: ConsultaioQuery,
+    private validacionesService: ValidacionesFormularioService
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
+          if(seccionState.readonly || seccionState.update) {
+             this.inicializarEstadoFormulario();
+          }
         })
       )
       .subscribe();
@@ -217,17 +220,14 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   /**
-   * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
-   * Habilita o deshabilita el formulario `formMercancia` según el valor de `esFormularioSoloLectura`.
-   * Si el formulario está en modo solo lectura, se desactiva para evitar modificaciones.
-   * @method ngAfterViewInit
-   * @returns {void}
+   * Determina si se debe cargar un formulario nuevo o uno existente.
+   * Ejecuta la lógica correspondiente según el estado del componente.
    */
-  ngAfterViewInit(): void {
+  inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
-      this.formMercancia.disable();
-    } else {
-      this.formMercancia.enable();
+      this.formMercancia?.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.formMercancia?.enable();
     }
   }
 
@@ -246,14 +246,16 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy, AfterViewInit
       paisOrigen: ['', Validators.required],
       paisProcedencia: ['', Validators.required],
       tipoProducto: ['', Validators.required],
-      fraccionArancelaria: ['', Validators.required],
+      fraccionArancelaria: ['', [Validators.required, Validators.minLength(8), Validators.pattern(REGEX_SOLO_NUMEROS)]],
       descripcionFraccionArancelaria: ['', Validators.required],
-      cantidadUMT: [''],
+      cantidadUMT: ['', [Validators.pattern(REGEX_PATRON_DECIMAL_12_3)]],
       umt: [''],
-      cantidadUMC: ['', Validators.required],
+      cantidadUMC: ['', [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_12_3)]],
       umc: ['', Validators.required],
-      descripcion: ['', Validators.required]
+      descripcion: ['', [Validators.required, Validators.maxLength(1000)]]
     });
+
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -372,14 +374,15 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy, AfterViewInit
    * @step Paso 4: Actualiza el servicio y limpia el formulario.
    */
   almacenarDatoEnTabla(nombre: string): void {
-    this.estadoChecker = !this.estadoChecker;
     if (nombre === AGREGAR) {
       this.formMercancia.patchValue({
         id: Math.floor(Math.random() * 90) + 10
       })
-      this.cuerpoTabla.push(this.formMercancia.value as MercanciaForm);
+      this.cuerpoTabla = [...this.cuerpoTabla, this.formMercancia.value as MercanciaForm];
       this.datosMercanciaService.actualizarFormularioMovilizacion(this.cuerpoTabla as MercanciaForm[]);
       this.datosMercanciaService.botonDesactivarCampos(this.cuerpoTabla.length > 0 ? true : false)
+      this.formMercancia.reset();
+      this.cerrarModal();
     }
     else if (nombre === EDITAR) {
       const ARTICULOACTUALIZADO = this.formMercancia.value as MercanciaForm;
@@ -390,6 +393,15 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy, AfterViewInit
       this.datosMercanciaService.actualizarFormularioMovilizacion(this.cuerpoTabla as MercanciaForm[]);
     }
     this.limpiarDatosFormulario();
+  }
+
+  /**
+   * Cierra el modal de mercancías.
+   */
+  cerrarModal(): void {
+    if (this.cerrarModalRef) {
+      this.cerrarModalRef.nativeElement.click();
+    }
   }
 
   /**
@@ -447,18 +459,26 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy, AfterViewInit
    * Cuando se selecciona una fila, los valores del formulario (`formMercancia`) se llenan con los datos de ese elemento.
    * @method seleccionarParaModificacion
    * @returns {void}
-   * @step Paso 1: Cambia el estado de `estadoChecker` a true para indicar que se está en modo edición.
-   * @step Paso 2: Obtiene el ID del primer elemento seleccionado en `listaDeTablasSeleccionadas`.
-   * @step Paso 3: Si el ID existe, filtra el arreglo `cuerpoTabla` para encontrar el elemento correspondiente.
-   * @step Paso 4: Actualiza el formulario `formMercancia` con los valores del elemento encontrado.
+   * @step Paso 1: Obtiene el ID del primer elemento seleccionado en `listaDeTablasSeleccionadas`.
+   * @step Paso 2: Si el ID existe, filtra el arreglo `cuerpoTabla` para encontrar el elemento correspondiente.
+   * @step Paso 3: Actualiza el formulario `formMercancia` con los valores del elemento encontrado.
    */
   seleccionarParaModificacion(): void {
-    this.estadoChecker = true;
     const ID = this.listaDeTablasSeleccionadas[0]?.id;
     if (ID !== undefined) {
       const VALOR = this.cuerpoTabla.filter(item => item.id === ID);
       this.formMercancia.patchValue(VALOR[0]);
     }
+  }
+
+  /**
+   * Método para validar el formulario.
+   * @param form Formulario a validar.
+   * @param field Campo a validar.
+   * @returns {boolean} Regresa un booleano si el campo es válido o no.
+   */
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) === true;
   }
 
   /**

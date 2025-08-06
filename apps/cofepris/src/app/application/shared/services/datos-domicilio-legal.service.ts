@@ -11,7 +11,7 @@ import { DatosDomicilioLegalQuery } from '../estados/queries/datos-domicilio-leg
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PermisoModel } from '../models/datos-domicilio-legal.model';
+import { FraccionArancelaria, PermisoModel } from '../models/datos-domicilio-legal.model';
 
 @Injectable({
   providedIn: 'root',
@@ -29,11 +29,22 @@ export class DatosDomicilioLegalService {
   /**
    * Obtiene los datos de selección desde un archivo JSON local.
    *
-   * @returns Observable que emite un objeto RespuestaCatalogos.
+   * @returns Observable que emite un objeto Catalogo.
    */
-  getObtenerEstadoList(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>(
-      'assets/json/260501/seleccion.json'
+  getObtenerEstadoList(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>(
+      'assets/json/260512/clavescian.json'
+    );
+  }
+
+  /**
+   * Obtiene los datos de selección desde un archivo JSON local.
+   *
+   * @returns Observable que emite un objeto Catalogo.
+   */
+  getObtenerEstadoDescripcionList(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>(
+      'assets/json/260512/clavescian-descripcion.json'
     );
   }
 
@@ -129,12 +140,17 @@ export class DatosDomicilioLegalService {
       this.datosDomicilioLegalStore.setNumeroRegistro(DATOS.numeroRegistro);
       this.datosDomicilioLegalStore.setFechaCaducidad(DATOS.fechaCaducidad);
       this.datosDomicilioLegalStore.setCumplimiento(DATOS.cumplimiento);
+      this.datosDomicilioLegalStore.setMensaje(DATOS.mensaje);
       this.datosDomicilioLegalStore.setRfc(DATOS.rfc);
       this.datosDomicilioLegalStore.setNombre(DATOS.nombre);
       this.datosDomicilioLegalStore.setApellidoPaterno(DATOS.apellidoPaterno);
       this.datosDomicilioLegalStore.setApellidoMaterno(DATOS.apellidoMaterno);
       if (Array.isArray(DATOS.aduanasDeEntrada)) {this.datosDomicilioLegalStore.setPaisDeOriginDatos(DATOS.aduanasDeEntrada);}
       this.datosDomicilioLegalStore.setGarantiasOfrecidas(DATOS.garantiasOfrecidas);
+      this.datosDomicilioLegalStore.setNombre(DATOS.nombre);
+      this.datosDomicilioLegalStore.setApellidoPaterno(DATOS.apellidoPaterno);
+      this.datosDomicilioLegalStore.setApellidoMaterno(DATOS.apellidoMaterno);
+      this.datosDomicilioLegalStore.setMensaje(DATOS.mensaje);
   }
 
   /**
@@ -163,5 +179,13 @@ export class DatosDomicilioLegalService {
       return this.http.get<MercanciasTabla>(
         'assets/json/cofepris/mercancias-tabla.json'
       );
+    }
+    /**
+     * Obtiene los datos de la fracción arancelaria desde un archivo JSON local.
+     *
+     * @returns Observable que emite un objeto FraccionArancelaria.
+     */
+    getFraccionArancelaria():Observable<FraccionArancelaria>{
+      return this.http.get<FraccionArancelaria>('assets/json/cofepris/fraccion-arancelaria.json');
     }
 }

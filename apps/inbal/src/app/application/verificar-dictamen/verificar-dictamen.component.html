@@ -32,30 +32,33 @@
         </div>
     </div>
     </div>
-    <br>
-    <form [formGroup]="FormTramite" role="form" *ngIf="!panelVerFirmar">
-        <div class="form-group">            
-            <div class="col-md-12 text-end">
-                <button type="button" class="btn btn-primary" (click)="firmar()">Dar Vo. Bo.</button>
-                <button type="button" class="btn btn-default ms-3" (click)="observacion()">Observar</button>
-            </div>            
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <h4 class="fw-bold my-5 titulo-tasks">Verificar dictamen</h4> 
+    <div class="container" *ngIf="!panelVerFirmar">
+        <form [formGroup]="FormTramite" role="form">
+            <br>
+            <div class="row">
+            <div class="col-md-12 text-end d-flex align-items-center justify-content-end" style="gap: 1rem;">
+                <button type="button" class="btn btn-primary" style="margin-top: 12px; margin-bottom: 12px;" (click)="firmar()">Dar Vo. Bo.</button>
+                <button type="button" class="btn btn-default" style="margin-top: 12px; margin-bottom: 12px;" (click)="observacion()">Observar</button>
+            </div>
+            </div>
+            <br>
+            <div class="card">
+            <div class="card-body">            
+                <div class="form-group">            
+                    <label for="folio" class="form-label control-label me-3 text-title">Verificar dictamen:</label>
+                    <div class="radio d-flex align-items-left">
+                            <label class="radio-inline control-label me-3">*Sentido del dictamen:</label>
+                            <label class="radio-inline me-3">
+                                <input type="radio" name="radio-01" value="opcion-01" checked="checked" disabled="disabled">Aceptado
+                            </label>
+                            <label class="radio-inline me-3">
+                                <input type="radio" name="radio-01" value="opcion-02" disabled="disabled"> Rechazado
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="radio-01" value="opcion-03" disabled="disabled"> Parcial
+                            </label>
+                        </div>
                 </div>
-                <div  class="radio ">
-                    <label class="radio-inline control-label">*Sentido del dictamen:</label>
-                    <label class="radio-inline">
-                    <input type="radio" name="radio-01" value="opcion-01"  checked="checked" disabled="disabled">Aceptado</label>
-                    <label class="radio-inline">
-                    <input type="radio" name="radio-01" value="opcion-02" disabled="disabled"> Rechazado
-                    </label>
-                    <label class="radio-inline">
-                    <input type="radio" name="radio-01" value="opcion-03" disabled="disabled"> Parcial
-                    </label>            
-                </div>                 
             </div>
         </div>
         <br>
@@ -75,8 +78,8 @@
                     <textarea id="justificacion" formControlName="justificacion" class="form-control"
                         placeholder="Fundamento del dictamen"  rows="8"></textarea>
                 </div>
-                <div class="form-inline">
-                    <div class="form-group">
+                <div class="form-group">
+                    <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="folio" class="form-label text-title">Plazo:</label>
                             <input type="textarea" id="plazo" formControlName="plazo"
@@ -95,8 +98,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-inline">
-                    <div class="form-group">
+                <div class="form-group">
+                    <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="folio" class="form-label text-title">Tipo de análisis:</label>
                             <textarea id="tipoAnalisis" formControlName="tipoAnalisis" class="form-control"
@@ -112,12 +115,14 @@
             </div>
         </div>
         <br>
-        <div class="form-group">
-            <div class="col-md-12 text-end">
-                <button type="button" class="btn btn-primary ms-3" (click)="observacion()">Vista Preliminar Aceptado</button>
+            <div class="row">
+                <div class="col-md-12 text-end d-flex align-items-center justify-content-end" style="gap: 1rem;">
+                    <button type="button" class="btn btn-primary ms-3" style="margin-top: 12px; margin-bottom: 12px;" (click)="observacion()">
+                        Vista Preliminar Aceptado
+                    </button>
+                </div>
             </div>
-        </div>
-        <br>
+            <br>
         <div class="card">
             <div class="card-body">            
                 <div class="form-group">
@@ -130,7 +135,7 @@
                         <div class="col-md-6">
                             <div class="ajuste-label-combo-catalogos">
                                 <app-catalogo-select
-                                    [placeholder]="'Seleccione una opción'"                                
+                                    [placeholder]="'Seleccione una opcion'"                                
                                     [catalogo]="asignarAutorizadorCombo"
                                     formControlName="asignarAutorizador"
                                     [isDisabled]="true"
@@ -142,7 +147,8 @@
                 </div>
             </div>
         </div>
-    </form>
+        </form>
+    </div>
     <br>
     <br>
     <div class="row mb-5 mt-5">

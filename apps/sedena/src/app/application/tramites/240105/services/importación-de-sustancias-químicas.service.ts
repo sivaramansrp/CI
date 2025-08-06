@@ -12,6 +12,13 @@ export class ImportaciónDeSustanciasQuímicasService {
    * URL del archivo JSON que contiene los datos del permiso IMMEX.
    */
   private jsonUrl = 'assets/json/240105';
+
+  /**
+   * Constructor del servicio ImportaciónDeSustanciasQuímicasService.
+   * Inyecta el HttpClient y el store del trámite 240105.
+   * @param httpClient - Cliente HTTP para realizar peticiones.
+   * @param tramite240105Store - Store que gestiona el estado del trámite 240105.
+   */
   constructor(private httpClient: HttpClient,
     public tramite240105Store: Tramite240105Store) { }
 

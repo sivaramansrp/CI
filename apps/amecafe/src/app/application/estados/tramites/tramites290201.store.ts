@@ -1,6 +1,8 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
+import { FilaData2 } from '../../tramites/290201/models/fila-model';
+
 /**
  * Creacion del estado inicial para la interfaz de tramite 290201
  * @returns Solicitud290201
@@ -236,6 +238,11 @@ numeroInterior: string;
  * @description Otras características del domicilio.
  */
 otrasCaracteristicas: string;
+/**
+ * @property {FilaData2[]} tableData
+ * @description Lista de datos de la tabla utilizada para almacenar información relacionada con el trámite.
+ */
+tableData: FilaData2[];
 }
 export function createInitialSolicitudState(): Solicitud290201State {
   return {
@@ -466,7 +473,13 @@ numeroInterior: '',
  * @property {string} otrasCaracteristicas
  * @description Otras características del domicilio.
  */
-otrasCaracteristicas: ''
+otrasCaracteristicas: '',
+
+/**
+ * @property {FilaData2[]} tableData
+ * @description Lista de datos de la tabla utilizada para almacenar información relacionada con el trámite.
+ */
+tableData: [],
   };
 }
 @Injectable({
@@ -970,6 +983,17 @@ public setOtrasCaracteristicas(otrasCaracteristicas: string): void {
   this.update((state) => ({
       ...state,
       otrasCaracteristicas,
+  }));
+}
+/**
+ * @method setTableData
+ * @description Actualiza el estado con los datos de la tabla proporcionados.
+ * @param {FilaData2[]} tableData - Lista de datos de la tabla.
+ */
+public setDatosDeTabla(tableData: FilaData2[]): void {
+  this.update((state) => ({
+    ...state,
+    tableData
   }));
 }
 }

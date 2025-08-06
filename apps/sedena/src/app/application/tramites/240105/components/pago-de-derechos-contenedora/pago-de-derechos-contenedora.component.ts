@@ -1,16 +1,12 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../shared/models/pago-de-derechos.model';
-import { Subject } from 'rxjs';
 import { Tramite240105Query } from '../../estados/tramite240105Query.query';
 import { Tramite240105Store } from '../../estados/tramite240105Store.store';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * @title Pago de Derechos Contenedora

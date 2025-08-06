@@ -250,7 +250,7 @@ export interface DatosSolicitudFormState {
   denominacionRazon: string;
   correoElectronico: string;
   codigoPostal: string;
-  estado: string;
+  estado: string | number;
   municipioAlcaldia: string;
   localidad: string;
   colonia: string;
@@ -260,8 +260,8 @@ export interface DatosSolicitudFormState {
   telefono: string;
   aviso: string;
   licenciaSanitaria: string;
-  regimen: string;
-  adunasDeEntradas: string;
+  regimen: string | number;
+  adunasDeEntradas: string | number;
   aeropuerto: boolean;
   publico: string;
   representanteRfc: string;
@@ -275,6 +275,7 @@ export interface DatosSolicitudFormState {
   fechaDeCaducidad?: string;
   regimenLaMercancia?:string
   aduana?:string
+  manifesto?: boolean
 }
 
 /**

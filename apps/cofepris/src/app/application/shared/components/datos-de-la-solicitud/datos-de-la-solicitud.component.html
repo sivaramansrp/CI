@@ -66,6 +66,7 @@
             class="form-control"
             id="rfcSanitario"
             type="text"
+            maxlength="13"
             formControlName="rfcSanitario"
             [ngClass]="
               isValid(datosSolicitudForm, 'rfcSanitario') ? 'required' : ''
@@ -658,7 +659,7 @@
             *ngIf="tablaMercanciasConfig.datos.length > 0"
             type="button"
             name="eliminarMercancias"
-            class="btn btn-danger ms-2"
+            class="btn btn-primary ms-2"
             (click)="eliminarMercancias()"
             [disabled]="formularioDeshabilitado"
           >
@@ -697,6 +698,7 @@
       </div>
     </div>
 
+     @if(!esManifesto){
     <div class="row-mt-2">
       <ng-titulo
         titulo="Manifiestos y declaraciones"
@@ -710,40 +712,34 @@
         [CUSTOMECLASS]="infoAlert"
       ></ng-alert>
     </div>
+  }
+  @if(esManifesto) {
+    <ng-titulo titulo="Manifiestos y declaraciones"></ng-titulo>
+    <div class="row">
+      <div class="alert alert-info">
+        <label style="font-weight: normal">
+          <input type="checkbox" id="manifesto" formControlName="manifesto"/>
+          <span class="form-label" *ngIf="esCampoRequerido('manifesto')"> *</span>
+           {{textoManifestoContenido}}
+        </label>
+      </div>
+    </div>
+  }
     <div class="row mt-3">
       <div class="col-md-12">
         <label class="form-label"
           >Los datos o anexos pueden contener información confidencial ¿Está de
-          acuerdo en hacerlos públicos? * :</label
-        >
-        <div class="row">
-          <div class="col-md-1">
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="publico"
-                id="publicoNo"
-                value="no"
-                formControlName="publico"
-              />
-              <label class="form-check-label" for="publicoNo">No</label>
-            </div>
-          </div>
-          <div class="col-md-1">
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="publico"
-                id="publicoSi"
-                value="si"
-                formControlName="publico"
-              />
-              <label class="form-check-label" for="publicoSi">Si</label>
-            </div>
-          </div>
-        </div>
+          acuerdo en hacerlos públicos? * :</label>
+          <app-input-radio
+            [radioOptions]="radioBtn"
+            [selectedValue]="predeterminadoSeleccionar"
+            (valueChange)="cambioDeValorIndique($event)"
+            [isRequired]="true"
+            [layout]="'horizontal'"
+            [gap]="'50px'"
+            formControlName="publico"
+            >
+          </app-input-radio>
       </div>
     </div>
 
@@ -758,6 +754,7 @@
             class="form-control"
             id="representanteRfc"
             type="text"
+            maxlength="13"
             formControlName="representanteRfc"
             [ngClass]="
               isValid(datosSolicitudForm, 'representanteRfc') ? 'required' : ''

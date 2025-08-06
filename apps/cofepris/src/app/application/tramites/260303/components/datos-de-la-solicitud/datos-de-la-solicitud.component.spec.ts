@@ -181,7 +181,9 @@ describe('DatosDeLaSolicitudComponent', () => {
       updateNumeroDePiezas: jest.fn(),
       updateDescripcionDelNumeroDePiezas: jest.fn(),
       updateNumeroDeRegistro: jest.fn(),
-      updatePresentacion: jest.fn()
+      updatePresentacion: jest.fn(),
+      setScianTabla: jest.fn(),
+      setAvisoCheckbox: jest.fn()
     } as unknown as jest.Mocked<Tramite260303Store>;
 
     mockQuery = {
@@ -318,11 +320,11 @@ describe('DatosDeLaSolicitudComponent', () => {
     it('debería tener la configuración correcta para la tabla de mercancías', () => {
       expect(component.configuracionMercancias.length).toBe(24);
       expect(component.configuracionMercancias[0].encabezado).toBe('Clasificación del producto');
-      expect(component.configuracionMercancias[23].encabezado).toBe('Presentación');
+      expect(component.configuracionMercancias[23].encabezado).toBe('Unidad de medida de tarifa (UMT)');
       
       const mercanciaItem = mockMercanciasDatos[0];
       expect(component.configuracionMercancias[0].clave(mercanciaItem)).toBe("Medicamento controlado");
-      expect(component.configuracionMercancias[23].clave(mercanciaItem)).toBe("Caja con 100 tabletas");
+      expect(component.configuracionMercancias[23].clave(mercanciaItem)).toBe("Caja");
     });
   });
 });

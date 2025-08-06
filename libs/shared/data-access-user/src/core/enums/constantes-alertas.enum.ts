@@ -229,15 +229,6 @@ export const TODOS_PASOS = {
   efectos de identificar tu Solicitud. Un folio oficial le será asignado a la Solicitud al momento en que ésta sea firmada.</p>`,
 };
 
-export const MANIFIESTOS = {
-  Importante: `<div class="form-check d-flex">
-   <input class="form-check-input" type="checkbox" id="manifiestos">* 
-  <label class="form-check-label" for="manifiestos">
-    Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio Exterior por los mecanismos de la misma.
-  </label>
-  </div>`
-};
-
 export const REQUISITOS = {
   Importante: `<p>La solicitud ha quedado registrada con el número temporal 202767918. Éste no tiene validez legal y sirve solamente para
 efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.</p>`
@@ -257,7 +248,11 @@ Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo do
 
 
 export const LASTABLA = {
-  Importante: `<p>Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.</p>`
+  Importante: `
+    <div class="text-center">
+      <p>Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.</p>
+    </div>
+  `
 };
 
 export const TERCEROS = {

@@ -24,7 +24,9 @@ export class DatosCertificadoComponent implements OnDestroy, OnInit {
   
   // Variable booleana que indica si el idioma está habilitado o no
   idioma: boolean = true;
-
+  
+  // Variable booleana que indica si el idioma está habilitado o no
+  presenta: boolean = true;
   /**
    * Formulario reactivo que contiene los datos del certificado.
    * Utilizado para la validación y gestión de los datos en el formulario.

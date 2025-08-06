@@ -4,8 +4,10 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
+                               <label class="form-label" for="claveArancelaria">
+Contenedores, cajas de trailer:</label>
                     <label class="form-label" for="fraccionArancelaria">Fracción arancelaria:</label>
-                    <input class="form-control min-hgt" id="fraccionArancelaria" formControlName="fraccionArancelaria"
+                    <input class="form-control min-hgt" maxlength="10" id="fraccionArancelaria" formControlName="fraccionArancelaria"
                         type="text">
                 </div>
             </div>
@@ -15,19 +17,22 @@
             <div class="col-md-8">
                 <div class="form-group">
                     <label for="descripcion" class="form-label text-start">Descripción:</label>
-                      <textarea id="descripcion" class="form-control" 
+                      <textarea id="descripcion" class="form-control" maxlength="1000"
                        style="height: 60%; resize: none;" formControlName="descripcion"></textarea>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-12 container text-end mt-5">
-              <button class="btn btn-default me-2" (click)="eliminarAnexoDos()">Eliminar</button>
-              <button class="btn btn-primary" (click)="agregarAnexoDos()">Agregar</button>
+              <button class="btn btn-primary me-2 custom-btn-Eliminar" (click)="eliminarAnexoDos()" [disabled]="formularioDeshabilitado">Eliminar</button>
+              <button class="btn btn-primary" (click)="agregarAnexoDos()" [disabled]="formularioDeshabilitado">Agregar</button>
             </div>
           </div>
-
+        <div class="row">
+            <label>Descripción anexo II:</label>
+        </div>
         <div class="row mt-5">
+            <h2>Descripción anexo II:</h2>
             <app-tabla-dinamica [tipoSeleccionTabla]="anexo1y3Configuartion.anexoDosTablaSeleccionCheckbox" 
              [configuracionTabla]="anexo1y3Configuartion.anexoDosEncabezadoDeTabla"
              [datos]="anexoDosTablaLista"
@@ -46,7 +51,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="fraccionArancelaria">Fracción arancelaria:</label>
-                    <input class="form-control min-hgt" id="fraccionArancelaria" formControlName="fraccionArancelaria"
+                    <input class="form-control min-hgt" maxlength="100" id="fraccionArancelaria" formControlName="fraccionArancelaria"
                         type="text">
                 </div>
             </div>
@@ -56,19 +61,22 @@
             <div class="col-md-8">
                 <div class="form-group">
                     <label for="descripcion" class="form-label text-start">Descripción:</label>
-                      <textarea id="descripcion" class="form-control" 
+                      <textarea id="descripcion" class="form-control" maxlength="1000" 
                        style="height: 60%; resize: none;" formControlName="descripcion"></textarea>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-12 container text-end mt-5">
-              <button class="btn btn-default me-2" (click)="eliminarAnexoTres()">Eliminar</button>
-              <button class="btn btn-primary" (click)="agregarAnexoTres()">Agregar</button>
+              <button class="btn btn-primary me-2 custom-btn-Eliminar" (click)="eliminarAnexoTres()" [disabled]="formularioDeshabilitado">Eliminar</button>
+              <button class="btn btn-primary" (click)="agregarAnexoTres()" [disabled]="formularioDeshabilitado">Agregar</button>
             </div>
           </div>
-
+        <div class="row">
+            <label>Descripción anexo III:</label>
+        </div>
         <div class="row mt-5">
+            <h2>Descripción anexo III:</h2>
             <app-tabla-dinamica [tipoSeleccionTabla]="anexo1y3Configuartion.anexoTresTablaSeleccionCheckbox" 
              [configuracionTabla]="anexo1y3Configuartion.anexoTresEncabezadoDeTabla"
              [datos]="anexoTresTablaLista"
@@ -78,3 +86,15 @@
         </div>
     </form>
 </div>
+@if (nuevaDosNotificacion && nuevaDosNotificacion.cerrar) {
+<section>
+    <lib-notificaciones [notificacionInput]="nuevaDosNotificacion" (confirmacionModal)="eliminarAnexoDos()">
+    </lib-notificaciones>
+</section>
+}
+@if (nuevaTresNotificacion && nuevaTresNotificacion.cerrar) {
+<section>
+    <lib-notificaciones [notificacionInput]="nuevaTresNotificacion" (confirmacionModal)="eliminarAnexoTres()">
+    </lib-notificaciones>
+</section>
+}
