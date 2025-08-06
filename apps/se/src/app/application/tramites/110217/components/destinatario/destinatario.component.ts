@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, REGEX_SOLO_DIGITOS, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, REGEX_CORREO_ELECTRONICO, REGEX_SOLO_DIGITOS, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { Tramite110217State, Tramite110217Store } from '../../../../estados/tramites/tramite110217.store';
@@ -166,7 +166,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
         lada: [this.solicitudState?.grupoDeDirecciones?.lada, []],
         telefono: [this.solicitudState?.grupoDeDirecciones?.telefono, [Validators.pattern(REGEX_SOLO_DIGITOS),Validators.maxLength(20)]],
         fax: [this.solicitudState?.grupoDeDirecciones?.fax, [Validators.pattern(REGEX_SOLO_DIGITOS)]],
-        correoElectronico: [this.solicitudState?.grupoDeDirecciones?.correoElectronico, [Validators.required, Validators.email,Validators.maxLength(70)]],
+        correoElectronico: [this.solicitudState?.grupoDeDirecciones?.correoElectronico, [Validators.required, Validators.pattern(REGEX_CORREO_ELECTRONICO), Validators.maxLength(70)]],
       }),
 
       grupoRepresentativo: this.fb.group({
@@ -177,7 +177,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
         lada: [this.solicitudState?.grupoRepresentativo?.lada, []],
         telefono: [this.solicitudState?.grupoRepresentativo?.telefono, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
         fax: [this.solicitudState?.grupoRepresentativo?.fax, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
-        correoElectronico: [this.solicitudState?.grupoRepresentativo?.correoElectronico, [Validators.required, Validators.email]],
+        correoElectronico: [this.solicitudState?.grupoRepresentativo?.correoElectronico, [Validators.required, Validators.pattern(REGEX_CORREO_ELECTRONICO)]],
       }),
 
       grupoDeTransporte: this.fb.group({
