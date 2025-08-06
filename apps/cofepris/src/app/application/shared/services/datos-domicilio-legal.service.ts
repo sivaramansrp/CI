@@ -29,11 +29,22 @@ export class DatosDomicilioLegalService {
   /**
    * Obtiene los datos de selección desde un archivo JSON local.
    *
-   * @returns Observable que emite un objeto RespuestaCatalogos.
+   * @returns Observable que emite un objeto Catalogo.
    */
-  getObtenerEstadoList(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>(
-      'assets/json/260501/seleccion.json'
+  getObtenerEstadoList(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>(
+      'assets/json/260512/clavescian.json'
+    );
+  }
+
+  /**
+   * Obtiene los datos de selección desde un archivo JSON local.
+   *
+   * @returns Observable que emite un objeto Catalogo.
+   */
+  getObtenerEstadoDescripcionList(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>(
+      'assets/json/260512/clavescian-descripcion.json'
     );
   }
 
@@ -136,6 +147,10 @@ export class DatosDomicilioLegalService {
       this.datosDomicilioLegalStore.setApellidoMaterno(DATOS.apellidoMaterno);
       if (Array.isArray(DATOS.aduanasDeEntrada)) {this.datosDomicilioLegalStore.setPaisDeOriginDatos(DATOS.aduanasDeEntrada);}
       this.datosDomicilioLegalStore.setGarantiasOfrecidas(DATOS.garantiasOfrecidas);
+      this.datosDomicilioLegalStore.setNombre(DATOS.nombre);
+      this.datosDomicilioLegalStore.setApellidoPaterno(DATOS.apellidoPaterno);
+      this.datosDomicilioLegalStore.setApellidoMaterno(DATOS.apellidoMaterno);
+      this.datosDomicilioLegalStore.setMensaje(DATOS.mensaje);
   }
 
   /**

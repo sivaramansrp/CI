@@ -21,7 +21,7 @@ describe('DatosSolicitudComponent', () => {
       inicializaMercanciaDatosCatalogos: jest.fn(),
       loadTablaDatos: jest.fn().mockReturnValue(of([])),
       fraccionArancelaria: [{ id: '1', descripcion: '0101.21.01' }],
-      fraccionArancelariaDescripcion: [{ id: '0101.21.01', descripcion: 'Caballos pura sangre' }],
+      fraccionArancelariaDescripcion: [{ id: '1', descripcion: 'Caballos pura sangre' }],
       clasificacionTaxonomica: [{ descripcion: 'Mamífero' }],
       nombreCientifico: [{ descripcion: 'Equus ferus caballus' }],
       nombreComun: [{ descripcion: 'Caballo' }],
@@ -171,7 +171,7 @@ describe('DatosSolicitudComponent', () => {
     };
     component.tablaDatos = [row];
     component.listaFilaSeleccionadaMercancia = [row];
-    component.eliminarMercanciaItem();
+    component.eliminarMercanciaItem(true);
     expect(component.tablaDatos.length).toBe(0);
   });
 
@@ -230,7 +230,9 @@ describe('DatosSolicitudComponent', () => {
 
   it('debería manejar el cambio de fracción arancelaria', () => {
     component.crearNuevoFormularioMercancia();
-    const event = { descripcion: '0101.21.01' };
+    // El evento contiene el id de la fracción arancelaria seleccionada (que viene como descripcion del dropdown)
+    // El método busca en fraccionArancelariaDescripcion usando Number() para hacer la comparación
+    const event = { descripcion: '1' };
     component.manejarCambioFraccionArancelaria(event as any);
     expect(component.formMercancia.get('fraccionDescripcion')?.value).toBe('Caballos pura sangre');
   });

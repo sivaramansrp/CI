@@ -32,7 +32,9 @@
         <app-tipo-de-aviso></app-tipo-de-aviso>
         }
         } @case (3) {
+        @if(esDatosRespuesta){
         <app-aviso-de-modificacion></app-aviso-de-modificacion>
+        }
         } @case (4) {
         @if(esDatosRespuesta){
         <app-aviso-por-fusion></app-aviso-por-fusion>

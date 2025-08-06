@@ -39,7 +39,7 @@ export const PASOS = [
  * @type {{Importante: string}}
  */
 export const IMPORTANTE = {
-    Importante: `Para continuar con el trámite,debes agregar por lo menos una mercancía`,
+    Importante: `<p style="text-align: center;">Para continuar con el trámite,debes agregar por lo menos una mercancía.</p>`,
 };
 
 /**
