@@ -9,13 +9,11 @@
     <div class="row mt-3">
         <div class="col-md-12">
             <label for="justificacionObservacion" class="form-label">*Justificación de la observación:</label>
-            <textarea id="justificacionObservacion" class="form-control text-height" 
-                      formControlName="justificacionObservacion"
-                      placeholder=""
-                      maxlength="2000"
-                      rows="6"
-                      [ngClass]="isValid('justificacionObservacion') ? 'required' : ''"></textarea>
-            @if (observacionForm.get('justificacionObservacion')?.invalid && observacionForm.get('justificacionObservacion')?.touched) {
+            <textarea id="justificacionObservacion" class="form-control text-height"
+                formControlName="justificacionObservacion" placeholder="" maxlength="2000" rows="6"
+                [ngClass]="isValid('justificacionObservacion') ? 'required' : ''"></textarea>
+            @if (observacionForm.get('justificacionObservacion')?.invalid &&
+            observacionForm.get('justificacionObservacion')?.touched) {
             <div class="text-danger">
                 Este campo es obligatorio.
             </div>

@@ -1,6 +1,6 @@
 import { AccuseComponentes, ListaComponentes, Tabulaciones } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
 import { Component, OnDestroy } from "@angular/core";
-import { ConsultaioQuery, FECHA_DE_INICIO } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, FECHA_DE_INICIO, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from "@angular/common";
 import { ConsultaioState } from '@ng-mf/data-access-user';
@@ -48,7 +48,8 @@ import { takeUntil } from 'rxjs';
     FormsModule, ReactiveFormsModule,
     GenerarDictamenComponent,
     GenerarObservacionComponent,
-    FirmaElectronicaComponent
+    FirmaElectronicaComponent,
+    NotificacionesComponent
   ],
   templateUrl: './autorizar.component.html',
   styleUrl: './autorizar.component.scss',
@@ -95,6 +96,10 @@ export class AutorizarComponent implements OnInit, OnDestroy {
    * @description Estado actual del trámite consultado.
    */
   guardarDatos!: ConsultaioState;
+  /** 
+     * Notificación para mostrar mensajes al usuario 
+     */
+  public nuevaNotificacion!: Notificacion;
   /**
    * @constructor
    * @description Constructor del componente. Inicializa los servicios y suscripciones necesarias para la autorización del trámite.
@@ -214,10 +219,18 @@ export class AutorizarComponent implements OnInit, OnDestroy {
   enviarEventoObservacion(e: { events: string, datos: unknown }): void {
     switch (e.events) {
       case 'generar':
-        // Aquí se procesaría la observación
-        console.log('Generando observación:', e.datos);
         // Mostrar mensaje de éxito
-        alert('Se ha generado una Observación al Dictamen exitosamente.');
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'success',
+          modo: 'simple',
+          titulo: 'Éxito',
+          mensaje: 'Se ha generado una Observación al Dictamen exitosamente.',
+          cerrar: false,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
         // Regresar a la vista principal
         this.mostrarObservacion = false;
         break;
