@@ -1,8 +1,8 @@
-import { Catalogo, CatalogoSelectComponent, RespuestaDocuemntosRequeridos } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, CatalogoTipoDocumento, RespuestaDocuemntosRequeridos } from '@ng-mf/data-access-user';
 import { Component, OnInit } from '@angular/core';
 import { DocumentosStates, SolicitudDocumentosState } from '../../../estados/evaluacion-solicitud/documentos.store';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { map,Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import data from '@libs/shared/theme/assets/json/funcionario/cat-tipo-documento.json';
 import dataDocuemtos from '@libs/shared/theme/assets/json/funcionario/lista-documentos-requeridos.json'
@@ -32,11 +32,11 @@ export class SolicitarDocumentosEvaluacionComponent implements OnInit {
   /**
    * Lista de documentos agregados a la tabla
    */
-  documentosSeleccionados: string[] = [];
+  documentosSeleccionados: CatalogoTipoDocumento[] = [];
   /**
    * Documento seleccionado para agregar a requerimiento
    */
-  documentoSeleccionado: string = '';
+  documentoSeleccionado: CatalogoTipoDocumento | null = null;
   /**
  * Variable para identificar el Id del tipo de documento
  */
@@ -53,9 +53,9 @@ export class SolicitarDocumentosEvaluacionComponent implements OnInit {
      * Estado de la documentación.
      */
   public solicitudDocumentosState!: SolicitudDocumentosState;
-/**
- * Selecciona el tipo de documento que obtiene del catálogo documentos
- */
+  /**
+   * Selecciona el tipo de documento que obtiene del catálogo documentos
+   */
   selectedOption: Catalogo | undefined;
   /**
    * Obtiene el nombre de la opcion seleccionada del documento
@@ -97,16 +97,24 @@ export class SolicitarDocumentosEvaluacionComponent implements OnInit {
    * Metodo para agregar documento seleccionado a la tabla 
    */
   agregarDocumento() {
+
+    const DEPENDENCIA_ID = this.formSolicitudDocumentos.get('tipoDocumento')?.value;
+    const NUEVO_TIPO_DOCUMENTO: CatalogoTipoDocumento = {
+      id: DEPENDENCIA_ID,
+      description: this.formSolicitudDocumentos.get('tipoDocumento')?.value,
+    }
     if (this.documentosSeleccionados.length === 0) {
       this.documentosSeleccionados = [];
     }
-    this.tipoDocumentoId = this.formSolicitudDocumentos.get('tipoDocumento')?.value;
-    this.selectedOption = this.catTipoDocumento.find(option => option.id === Number(this.tipoDocumentoId));
-    this.description = this.selectedOption ? this.selectedOption.descripcion : 'No description found';
-    if (this.description && !this.documentosSeleccionados.includes(this.description)) {
-      this.documentosSeleccionados.push(this.description.toString());
-    }
+    this.documentosSeleccionados.push(NUEVO_TIPO_DOCUMENTO);
     this.documentosStates.setSolicitudDocumentos(this.documentosSeleccionados);
+    this.limpiarFormulario();
+  }
+
+  limpiarFormulario() {
+    this.formSolicitudDocumentos.reset({
+      tipoDocumento: ''
+    });
   }
   /**
    * Método para eliminar el documento de la tabla 
