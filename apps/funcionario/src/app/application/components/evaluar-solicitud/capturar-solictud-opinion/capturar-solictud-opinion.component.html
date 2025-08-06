@@ -5,6 +5,12 @@
                 <div class="col-md-12">
                     <app-catalogo-select [catalogo]="catDependencia" formControlName="dependencia"
                         [label]="'Dependencia'" [required]="true" name="dependencia"></app-catalogo-select>
+                    <div
+                        *ngIf="formCapturaOpinion.get('dependencia')?.touched && formCapturaOpinion.get('dependencia')?.invalid">
+                        <small class="text-danger" *ngIf="formCapturaOpinion.get('dependencia')?.errors?.['required']">
+                            La dependencia es obligatoria.
+                        </small>
+                    </div>
                 </div>
                 <div class="col-md-12 left">
                     <label for="justificacion" class="form-label">Justificación*:</label>

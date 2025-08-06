@@ -158,6 +158,8 @@ export class CapturarSolictudOpinionComponent implements OnInit, OnDestroy {
    * Método para guardar la opinión
    */
   guardarOpinion(): void {
+    // Marcar todos los campos como touched para mostrar mensajes de validación
+    this.formCapturaOpinion.markAllAsTouched();
     if (this.formCapturaOpinion.invalid) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -172,52 +174,52 @@ export class CapturarSolictudOpinionComponent implements OnInit, OnDestroy {
       };
       return;
     }
-      const DEPENDENCIA_ID = this.formCapturaOpinion.get('dependencia')?.value;
-      const JUSTIFICACION = this.formCapturaOpinion.get('justificacion')?.value?.trim();
+    const DEPENDENCIA_ID = this.formCapturaOpinion.get('dependencia')?.value;
+    const JUSTIFICACION = this.formCapturaOpinion.get('justificacion')?.value?.trim();
 
-      if (!DEPENDENCIA_ID || !JUSTIFICACION) {
-        this.nuevaNotificacion = {
-          tipoNotificacion: 'alert',
-          categoria: 'danger',
-          modo: 'action',
-          titulo: 'Alerta',
-          mensaje: 'Por favor, completa todos los campos requeridos antes de guardar la opinión.',
-          cerrar: false,
-          tiempoDeEspera: 2000,
-          txtBtnAceptar: 'Aceptar',
-          txtBtnCancelar: '',
-        };
-        return;
-      }
-      const DEPENDENCIA_OBJ = this.catDependencia.find(dep => dep.id === Number(DEPENDENCIA_ID));
-      const NUEVA_TABLA_OPINIONES = [...this.listadoOpiniones];
-      NUEVA_TABLA_OPINIONES.push({
-        idDependencia: String(DEPENDENCIA_ID),
-        dependencia: DEPENDENCIA_OBJ?.descripcion || 'Desconocido',
-        Justificación: JUSTIFICACION,
-        estadoRequerimento: 'Capturada'
-      });
-      if (this.indiceOpinionEditando !== null) {
-        this.listadoOpiniones = NUEVA_TABLA_OPINIONES;
-        this.indiceOpinionEditando = null;
-      } else {
-        if (this.listadoOpiniones.length === 0) {
-          this.listadoOpiniones = [];
-        }
-        this.listadoOpiniones = NUEVA_TABLA_OPINIONES;
-      }
-      this.opinionesStates.setSolicitudOpiniones(this.listadoOpiniones);
-      this.opinionesStates.setValorDesplegableOpinion(true);
-      this.visualizaTabla = true;
-      this.visualizaBotones = true;
-      this.limpiarFormulario();
+    if (this.formCapturaOpinion.invalid) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Alerta',
+        mensaje: 'Por favor, completa todos los campos requeridos antes de guardar la opinión.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
     }
+    const DEPENDENCIA_OBJ = this.catDependencia.find(dep => dep.id === Number(DEPENDENCIA_ID));
+    const NUEVA_TABLA_OPINIONES = [...this.listadoOpiniones];
+    NUEVA_TABLA_OPINIONES.push({
+      idDependencia: String(DEPENDENCIA_ID),
+      dependencia: DEPENDENCIA_OBJ?.descripcion || 'Desconocido',
+      Justificación: JUSTIFICACION,
+      estadoRequerimento: 'Capturada'
+    });
+    if (this.indiceOpinionEditando !== null) {
+      this.listadoOpiniones = NUEVA_TABLA_OPINIONES;
+      this.indiceOpinionEditando = null;
+    } else {
+      if (this.listadoOpiniones.length === 0) {
+        this.listadoOpiniones = [];
+      }
+      this.listadoOpiniones = NUEVA_TABLA_OPINIONES;
+    }
+    this.opinionesStates.setSolicitudOpiniones(this.listadoOpiniones);
+    this.opinionesStates.setValorDesplegableOpinion(true);
+    this.visualizaTabla = true;
+    this.visualizaBotones = true;
+    this.limpiarFormulario();
+  }
 
-    /**
-     * Editar registros seleccionados 
-     */
-    editarOpinion(): void {
-      if(!this.opinionesSeleccionados || this.opinionesSeleccionados.length === 0) {
+  /**
+   * Editar registros seleccionados 
+   */
+  editarOpinion(): void {
+    if (!this.opinionesSeleccionados || this.opinionesSeleccionados.length === 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
