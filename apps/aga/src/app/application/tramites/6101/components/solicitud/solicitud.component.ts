@@ -1,4 +1,4 @@
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { Catalogo, ConsultaioState } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { Component } from '@angular/core';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
@@ -60,6 +60,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura: boolean = false;
 
+     /**
+     * @property {ConsultaioState} consultaDatos
+     * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+     */
+    consultaDatos!: ConsultaioState;
+
   /**
    * Constructor con inyecciones de dependencias
    * @param fb - FormBuilder para crear el formulario
@@ -98,7 +104,26 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Configura el formulario y se suscribe a cambios en el estado.
    */
   ngOnInit(): void {
-    this.inicializarEstadoFormulario();
+    this.solicitud6101Query.seleccionarSolicitud$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.solicitud6101State = seccionState;
+        console.log('Estado de la solicitud:', this.solicitud6101State);
+      })
+    )
+    .subscribe();
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.consultaDatos = seccionState;
+        this.esFormularioSoloLectura = this.consultaDatos.readonly;
+        this.guardarDatosFormulario();
+      })
+    )
+    .subscribe();
+    this.inicializarFormulario();
   }
 
   /**

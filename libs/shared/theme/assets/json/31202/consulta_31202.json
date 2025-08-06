@@ -6,7 +6,7 @@
 
   "datos": {
 
-    "mapTipoTramite": "RubroA",
+    "mapTipoTramite": "Rubro AA",
 
     "mapDeclaracionSolicitud": "Bajo protesta de decir verdad",
 
@@ -24,7 +24,7 @@
 
     "llavePago": "LLP-1122334455",
 
-    "fechaPago": "2025-06-10",
+    "fechaPago": "2025/06/10",
 
     "importePago": "1500.00 MXN"
 

@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { ConsultaioState } from '@libs/shared/data-access-user/src';
-import { GuardarDatosFormulario } from '../../models/solicitud.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Solicitud6101Store } from '../../estados/solicitud6101.store';
 import { SolicitudService } from '../../services/solicitud/solicitud.service';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs';
@@ -44,7 +44,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   constructor(
     private consultaQuery: ConsultaioQuery,
-    public solicitudService: SolicitudService
+    public solicitudService: SolicitudService,
+    private solicitud6101Store: Solicitud6101Store
   ) {
     // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
@@ -72,14 +73,35 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
-  guardarDatosFormulario(): void {
+  guardarDatosFormulario(): void { 
     this.solicitudService
       .guardarDatosFormulario()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((resp: GuardarDatosFormulario) => {
-        if (resp) {
+      .subscribe((respuesta) => {
+        if (respuesta.success) {
+          const FORM = respuesta?.datos?.solicitudForm;
           this.esDatosRespuesta = true;
-          this.solicitudService.actualizarEstadoFormulario(resp);
+          this.solicitud6101Store.actualizarAduanaAux(FORM?.aduanaAux);
+          this.solicitud6101Store.actualizarJuntaTecnicaDerivada(FORM?.juntaTecnicaDerivada);
+          this.solicitud6101Store.actualizarNumeroPedimento(FORM?.numeroPedimento);
+          this.solicitud6101Store.actualizarNombreComercialMercancia(FORM?.nombreComercialMercancia);
+          this.solicitud6101Store.actualizarDescDetalladaMercancia(FORM?.descDetalladaMercancia);
+          this.solicitud6101Store.actualizarFraccionI(FORM?.fraccionI);
+          this.solicitud6101Store.actualizarCapitulo(FORM?.capitulo);
+          this.solicitud6101Store.actualizarPartida(FORM?.partida);
+          this.solicitud6101Store.actualizarSubpartida(FORM?.subpartida);
+          this.solicitud6101Store.actualizarSubdivision(FORM?.subdivision);
+          this.solicitud6101Store.actualizarFraccionII(FORM?.fraccionII);
+          this.solicitud6101Store.actualizarCapituloII(FORM?.capituloII);
+          this.solicitud6101Store.actualizarPartidaII(FORM?.partidaII);
+          this.solicitud6101Store.actualizarSubpartidaII(FORM?.subpartidaII);
+          this.solicitud6101Store.actualizarSubdivisionII(FORM?.subdivisionII);
+          this.solicitud6101Store.actualizarFraccionIII(FORM?.fraccionIII);
+          this.solicitud6101Store.actualizarCapituloIII(FORM?.capituloIII);
+          this.solicitud6101Store.actualizarPartidaIII(FORM?.partidaIII);
+          this.solicitud6101Store.actualizarSubpartidaIII(FORM?.subpartidaIII);
+          this.solicitud6101Store.actualizarSubdivisionIII(FORM?.subdivisionIII);
+          this.solicitud6101Store.actualizarManifiestosSeleccionados(FORM?.manifiestosSeleccionados);
         }
       });
   }
