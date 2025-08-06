@@ -9,6 +9,8 @@ import {
   CrossListLable,
   CrosslistComponent,
   InputFechaComponent,
+  Notificacion,
+  NotificacionesComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -83,6 +85,7 @@ export interface MercanciasTabla {
     TablaDinamicaComponent,
     CrosslistComponent,
     InputFechaComponent,
+    NotificacionesComponent
   ],
   templateUrl: './domicilio-establecimiento.component.html',
   styleUrls: ['./domicilio-establecimiento.component.css'],
@@ -254,13 +257,38 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       denominacionComun: ['', Validators.required],
       tipoDeProducto: ['', Validators.required],
       estadoFisico: ['', Validators.required],
-      fraccionArancelaria: ['', Validators.required],
+      fraccionArancelaria: [
+        this.solicitudState?.fraccionArancelaria,
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.pattern(/^\d+$/)
+        ]
+      ],
       descripcionFraccion: [{ value: '', disabled: true }, Validators.required],
-      cantidadUMT: ['', Validators.required],
+      cantidadUMT: [
+        this.solicitudState?.cantidadUMT,
+        [
+          Validators.required,
+          Validators.pattern(/^\d{1,12}(\.\d{1,5})?$/) // 12 integers, up to 5 decimals
+        ]
+      ],
       UMT: [{ value: '', disabled: true }, Validators.required],
-      cantidadUMC: ['', Validators.required],
+      cantidadUMC: [
+        this.solicitudState?.cantidadUMC,
+        [
+          Validators.required,
+          Validators.pattern(/^\d{1,12}(\.\d{1,10})?$/) // 12 integers, up to 10 decimals
+        ]
+      ],
       UMC: ['', Validators.required],
-      presentacion: ['', Validators.required],
+      presentacion: [
+        this.solicitudState?.presentacion,
+        [
+          Validators.required,
+          Validators.maxLength(250)
+        ]
+      ],
     });
   }
 
@@ -377,10 +405,26 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Etiqueta de la lista de fechas para países de procedencia.
    * Define los textos de los lados izquierdo y derecho de la lista cruzada.
    */
-  public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de procedencia',
-    derecha: 'País(es) seleccionados',
+  public paisDeOrigenLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'País de origen:',
+    derecha: 'País(es) seleccionado(s)*:',
   };
+
+    public paisDeProcedenciaLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'País de procedencia:',
+    derecha: 'País(es) seleccionado(s)*:',
+  };
+
+    public usoEspecifico: CrossListLable = {
+    tituluDeLaIzquierda: 'Uso específico:',
+    derecha: 'Uso específico seleccionado*:',
+  };
+  /**
+    * @description
+    * Objeto que representa una nueva notificación.
+    * Se utiliza para mostrar mensajes de alerta o información al usuario.
+    */
+  public nuevaNotificacion!: Notificacion;
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -499,19 +543,19 @@ export class DomicilioComponent implements OnInit, OnDestroy {
  * Maneja el cambio en el campo de licencia sanitaria
  * @param event - El evento del input
  */
-onLicenciaSanitariaChange(event: Event): void {
-  const INPUT = event.target as HTMLInputElement;
-  const VALUE = INPUT.value.trim();
-  
-  // Si hay valor en licencia sanitaria, deshabilitar el checkbox de aviso
-  if (VALUE) {
-    this.domicilio.get('avisoCheckbox')?.setValue(false);
-    this.domicilio.get('avisoCheckbox')?.disable();
-  } else {
-    // Si no hay valor, habilitar el checkbox
-    this.domicilio.get('avisoCheckbox')?.enable();
+  onLicenciaSanitariaChange(event: Event): void {
+    const INPUT = event.target as HTMLInputElement;
+    const VALUE = INPUT.value.trim();
+
+    // Si hay valor en licencia sanitaria, deshabilitar el checkbox de aviso
+    if (VALUE) {
+      this.domicilio.get('avisoCheckbox')?.setValue(false);
+      this.domicilio.get('avisoCheckbox')?.disable();
+    } else {
+      // Si no hay valor, habilitar el checkbox
+      this.domicilio.get('avisoCheckbox')?.enable();
+    }
   }
-}
 
   /**
    * Maneja la selección de agentes aduanales en la tabla NICO.
@@ -519,50 +563,65 @@ onLicenciaSanitariaChange(event: Event): void {
    * @param event - Evento que contiene los elementos seleccionados.
    */
 
-public seleccionados: NicoInfo[] = [];
+  public seleccionados: NicoInfo[] = [];
 
-/**
- * Maneja el cambio en la selección de elementos en la tabla NICO.
- * @param event Evento que contiene los elementos seleccionados de la tabla NICO.
- * Actualiza la lista de seleccionados con los elementos seleccionados.
- * 
- */
-onSeleccionChange(event: NicoInfo[]): void {
-  this.seleccionados = event;
-}
-/**
- * Elimina los elementos seleccionados de la tabla NICO.
- * Recorre la lista de seleccionados y elimina cada uno de ellos de la tabla de
- */
-eliminarFila(): void {
-  this.seleccionados.forEach(row => {
-    const INDEX = this.nicoTablaDatos.indexOf(row);
-    if (INDEX > -1) {
-      this.nicoTablaDatos.splice(INDEX, 1);
-    }
-  });
-  this.seleccionados = [];
-}
-
-
-/**
- * Agrega una nueva fila a la tabla NICO con valores del formulario
- */
-agregarFila(): void { debugger;
-  // Verificar que el formulario sea válido antes de agregar
-  if (this.formAgente.valid) {
-    const NUEVO_ITEM: NicoInfo = {
-      clave_Scian: this.formAgente.get('claveScianModal')?.value || '',
-      descripcion_Scian: this.formAgente.get('claveDescripcionModal')?.value || ''
-    };
-    
-    // Agregar el nuevo item a la tabla de NICO
-    this.nicoTablaDatos = [...this.nicoTablaDatos, NUEVO_ITEM];
-    
-    // Limpiar el formulario después de agregar
-    this.formAgente.reset();
+  /**
+   * Maneja el cambio en la selección de elementos en la tabla NICO.
+   * @param event Evento que contiene los elementos seleccionados de la tabla NICO.
+   * Actualiza la lista de seleccionados con los elementos seleccionados.
+   * 
+   */
+  onSeleccionChange(event: NicoInfo[]): void {
+    this.seleccionados = event;
   }
-}
+  /**
+   * Elimina los elementos seleccionados de la tabla NICO.
+   * Recorre la lista de seleccionados y elimina cada uno de ellos de la tabla de
+   */
+  eliminarFila(): void {
+     if (!this.seleccionados || this.seleccionados.length === 0) {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Selecciona un registro para eliminar.',
+      cerrar: true,
+      tiempoDeEspera: 3000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    return;
+  }
+
+    this.seleccionados.forEach(row => {
+      const INDEX = this.nicoTablaDatos.indexOf(row);
+      if (INDEX > -1) {
+        this.nicoTablaDatos.splice(INDEX, 1);
+      }
+    });
+   this.seleccionados = [];
+  }
+ 
+
+  /**
+   * Agrega una nueva fila a la tabla NICO con valores del formulario
+   */
+  agregarFila(): void {
+    // Verificar que el formulario sea válido antes de agregar
+    if (this.formAgente.valid) {
+      const NUEVO_ITEM: NicoInfo = {
+        clave_Scian: this.formAgente.get('claveScianModal')?.value || '',
+        descripcion_Scian: this.formAgente.get('claveDescripcionModal')?.value || ''
+      };
+
+      // Agregar el nuevo item a la tabla de NICO
+      this.nicoTablaDatos = [...this.nicoTablaDatos, NUEVO_ITEM];
+
+      // Limpiar el formulario después de agregar
+      this.formAgente.reset();
+    }
+  }
 
 
   /**
