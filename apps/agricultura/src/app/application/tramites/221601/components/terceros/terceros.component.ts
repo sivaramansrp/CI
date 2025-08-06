@@ -352,9 +352,9 @@ export class TercerosComponent implements OnInit, OnDestroy {
       colonia: [this.solicitudState.colonia],
       calle: [this.solicitudState.calle, [Validators.required, Validators.maxLength(100)]],
       exterior: [this.solicitudState.exterior, [Validators.required, Validators.maxLength(55)]],
-      interior: [this.solicitudState.interior],
+      interior: [this.solicitudState.interior, Validators.maxLength(55)],
       lada: [this.solicitudState.lada, Validators.maxLength(5)],
-      telefono: [this.solicitudState.telefono],
+      telefono: [this.solicitudState.telefono,[Validators.maxLength(30)]],
       correoElectronico: [this.solicitudState.correoElectronico, Validators.required],
       tif: [this.solicitudState.tif],
     });

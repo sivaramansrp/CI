@@ -114,7 +114,7 @@
           <div class="col-md-4 mb-3">
             <div class="form-group">
               <label class="form-label" for="nombre">Nombre(s)*:</label>
-              <input class="form-control" id="nombre" type="number" formControlName="nombre" maxlength="200"
+              <input class="form-control" id="nombre" type="text" formControlName="nombre" maxlength="200"
                 (change)="setValoresStore(datosPersonales,'nombre', 'setNombre')" />
               <div class="d-grid">
                 <div *ngIf="datosPersonales.get('nombre')?.touched">
@@ -128,7 +128,7 @@
           <div class="col-md-4 mb-3">
             <div class="form-group">
               <label class="form-label" for="primerApellido">Primer apellido*:</label>
-              <input class="form-control" id="primerApellido" type="text" formControlName="primerApellido"
+              <input class="form-control" id="primerApellido" type="text" formControlName="primerApellido" maxlength="200"
                 (change)="setValoresStore(datosPersonales,'primerApellido', 'setPrimerApellido')" />
               <div class="d-grid">
                 <div *ngIf="datosPersonales.get('primerApellido')?.touched">
@@ -143,7 +143,7 @@
           <div class="col-md-4 mb-3">
             <div class="form-group">
               <label class="form-label" for="segundoApellido">Segundo apellido:</label>
-              <input class="form-control" id="segundoApellido" type="text" formControlName="segundoApellido"
+              <input class="form-control" id="segundoApellido" type="text" formControlName="segundoApellido" maxlength="200"
                 (change)="setValoresStore(datosPersonales,'segundoApellido', 'setSegundoApellido')" />
               <div class="d-grid">
                 <div *ngIf="datosPersonales.get('segundoApellido')?.touched">
@@ -196,7 +196,7 @@
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="codigo">Código postal</label>
+              <label class="form-label" for="codigo">Código postal:</label>
               <input class="form-control" id="codigo" type="text" formControlName="codigo" maxlength="5" size="5"
                 (change)="setValoresStore(datosPersonales,'codigo', 'setCodigo')" />
             </div>
@@ -222,7 +222,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <app-catalogo-select [catalogo]="municipioCatalogo" formControlName="municipio"
-                [label]="'Municipio o Alcaldía'" [isDisabled]="showPlantaRow" [isDisabled]="esFormularioSoloLectura"
+                [label]="'Municipio o Alcaldía:'" [isDisabled]="showPlantaRow" [isDisabled]="esFormularioSoloLectura"
                 [required]="true" name="municipio"
                 (change)="setValoresStore(datosPersonales, 'municipio', 'setMunicipio')">
               </app-catalogo-select>
@@ -230,7 +230,7 @@
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <app-catalogo-select [catalogo]="coloniaCatalogo" formControlName="colonia" [label]="'Colonia'"
+              <app-catalogo-select [catalogo]="coloniaCatalogo" formControlName="colonia" [label]="'Colonia:'"
                 [isDisabled]="showPlantaRow" [isDisabled]="esFormularioSoloLectura" [required]="true" name="colonia"
                 (change)="setValoresStore(datosPersonales, 'colonia', 'setColonia')">
               </app-catalogo-select>
@@ -255,7 +255,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="exterior">Número exterior*:</label>
-              <input class="form-control" id="exterior" type="number" formControlName="exterior" maxlength="55"
+              <input class="form-control" id="exterior" type="text" formControlName="exterior" maxlength="55"
                 (change)="setValoresStore(datosPersonales,'exterior', 'setExterior')" />
 
               <div class="d-grid">
@@ -274,7 +274,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="interior">Número interior:</label>
-              <input class="form-control" id="interior" type="number" formControlName="interior" maxlength="55"
+              <input class="form-control" id="interior" type="text" formControlName="interior" maxlength="55"
                 (change)="setValoresStore(datosPersonales,'interior', 'setInterior')" />
               <div class="d-grid">
                 <div *ngIf="datosPersonales.get('interior')?.touched">
@@ -291,7 +291,7 @@
           <div class="col-md-1 mb-3">
             <div class="form-group">
               <label class="form-label" for="lada">Lada:</label>
-              <input class="form-control" id="lada" type="number" formControlName="lada" maxlength="5" size="5"
+              <input class="form-control" id="lada" type="text" formControlName="lada" maxlength="5" size="5"
                 (change)="setValoresStore(datosPersonales,'lada', 'setLada')" />
               <div class="d-grid">
                 <div *ngIf="datosPersonales.get('lada')?.touched">
@@ -306,7 +306,7 @@
           <div class="col-md-3 mb-3">
             <div class="form-group">
               <label class="form-label" for="telefono">Teléfono:</label>
-              <input class="form-control" id="telefono" type="number" formControlName="telefono" maxlength="30"
+              <input class="form-control" id="telefono" type="text" formControlName="telefono" maxlength="30"
                 size="29" (change)="setValoresStore(datosPersonales,'telefono', 'setTelefono')" />
               <div class="d-grid">
                 <div *ngIf="datosPersonales.get('telefono')?.touched">
