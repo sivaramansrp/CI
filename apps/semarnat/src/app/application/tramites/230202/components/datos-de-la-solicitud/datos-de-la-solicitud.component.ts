@@ -697,6 +697,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.store.setEstado(ESTADO);
   }
 
+  /**
+   * Maneja el cambio en el campo de nombre común.
+   * Si el valor es 'Otro', muestra un campo adicional para ingresar otro nombre común.
+   */
   onNombreComunChange(event: Event | { value?: string } | undefined): void {
     const VALUE = 'value' in (event ?? {}) ? (event as { value?: string }).value
       : (event && (event as Event).target && ((event as Event).target as HTMLSelectElement).value) || '';

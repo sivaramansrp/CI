@@ -39,6 +39,7 @@
           [botones]="paisDeOrigenBotons"
           [fechasSeleccionadas]="solicitudState.fechasSeleccionadas"
           [isDisabled]="soloLectura"
+          [formControlName]="'pais'"
           (fechasSeleccionadasChange)="changeCrosslist($event)"
         ></crosslist>
         <br />
@@ -49,6 +50,7 @@
           [fechas]="selectEntidades"
           [label]="entidadesLabel"
           [botones]="entidadesBotons"
+          [formControlName]="'entidades'"
           [isDisabled]="soloLectura"
         ></crosslist>
         <div class="row">
