@@ -13,7 +13,7 @@
   (setValoresStoreEvent)="setValoresStore($event.form, $event.campo)"></app-partidas-de-la-mercancia>
 
 <app-pais-de-origen [paisForm]="paisForm" [elementosDeBloque]="elementosDeBloque" [paisesPorBloque]="paisesPorBloque" [esFormularioSoloLectura]="esFormularioSoloLectura"
-  [selectRangoDias]="selectRangoDias" (bloqueCambiar)="enCambioDeBloque($event)" (eventoAlHacerClicEnTodasLasCiudades)="obtenerListaDeCiudades()"
+  [selectRangoDias]="selectRangoDias" [fechaSeleccionada]="fechaSeleccionada" (bloqueCambiar)="enCambioDeBloque($event)" (eventoAlHacerClicEnTodasLasCiudades)="obtenerListaDeCiudades()"
  (setValoresStoreEvent)="setValoresStore($event.form, $event.campo)" [titulo]="tituloParte"></app-pais-de-origen>
 
 <app-representacion [frmRepresentacionForm]="frmRepresentacionForm" [estado]="estado" [esFormularioSoloLectura]="esFormularioSoloLectura"

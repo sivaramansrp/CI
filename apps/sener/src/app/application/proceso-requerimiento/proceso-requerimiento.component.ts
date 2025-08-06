@@ -190,6 +190,14 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
     private tramiteQueries: TramiteFolioQueries,
     private desplazarseHaciaArribaService: DesplazarseHaciaArribaService
   ) {
+ this.consultaioStore.establecerConsultaio(
+      '130108',
+      'this.guardarDatos?.parameter',
+      'sener',
+      ' this.guardarDatos?.folioTramite',
+      'this.guardarDatos?.tipoDeTramite',
+      'this.guardarDatos?.estadoDeTramite',
+      true, false, true);
 
     /**
      * Suscripción al estado de consulta.
@@ -241,7 +249,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
     if (this.tramite) {
       this.selectTramite(this.tramite);
     } else {
-      this.router.navigate([`/${this.departamento}/seleccion-tramite`]);
+      this.router.navigate([`/${this.departamento}/seleccion-tra  mite`]);
     }
 
     /**
