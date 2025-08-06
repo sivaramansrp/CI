@@ -7,8 +7,8 @@
   <!-- Exportador table -->
   <div class="row">
     <h6>Exportador*</h6>
-    <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="exportador"
-      [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+    <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="exportador" [tipoSeleccionTabla]="checkbox"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
       (listaDeFilaSeleccionada)="onExportadorSeleccionado($event)">
     </app-tabla-dinamica>
     <nav aria-label="Page navigation example">
@@ -55,16 +55,13 @@
             <label class="form-label">Tipo persona*:</label>
           </div>
         </div>
-        <div class="row">
-        <app-input-radio
-                                [radioOptions]="tipoPersonaOptions"
-                                [isRequired]="true"
-                                formControlName="tipoPersona"
-                                [layout]="'vertical'"
-                                (valueChange)="cambiarRadioFisica($event)"
-                                (change)="setValoresStore(tipoPersonaForm,'tipoPersona','setTipoPersona')"
-                              ></app-input-radio>
-                              </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <app-input-radio [radioOptions]="tipoPersonaOptions" [isRequired]="true" formControlName="tipoPersona"
+              [layout]="'horizontal'" (valueChange)="cambiarRadioFisica($event)"
+              (change)="setValoresStore(tipoPersonaForm,'tipoPersona','setTipoPersona')"></app-input-radio>
+          </div>
+        </div>
         <!-- <div class="row mb-3">
           <div class="col-md-6">
             <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona"
@@ -106,10 +103,10 @@
         </div>
         <div class="d-flex justify-content-end">
           <button type="button" class="btn btn-default me-2" (click)="limpiarBusquedaTif()">Limpiar</button>
-          <button type="button" class="btn btn-primary" >Buscar</button>
+          <button type="button" class="btn btn-primary">Buscar</button>
         </div>
       </div>
-<!-- Datos personales form -->
+      <!-- Datos personales form -->
       <ng-titulo titulo="Datos personales" />
       <form [formGroup]="datosPersonales">
         @if (showFisicaRow) {
@@ -356,17 +353,17 @@
   <app-modal [active]="showBuscarTercerosModal">
     <div>
       <ng-titulo titulo="Terceros relacionados" />
-      
+
       <form [formGroup]="buscarTercerosForm" class="form">
         <!-- Radio buttons for Física and Moral -->
         <div class="row mb-3">
           <div class="col-md-6">
-            <input class="form-check-input me-2" type="radio" name="tipoPersonaBuscar" 
+            <input class="form-check-input me-2" type="radio" name="tipoPersonaBuscar"
               formControlName="tipoPersonaBuscar" value="fisica" id="fisicaBuscar" />
             <label for="fisicaBuscar">Física</label>
           </div>
           <div class="col-md-6">
-            <input class="form-check-input me-2" type="radio" name="tipoPersonaBuscar" 
+            <input class="form-check-input me-2" type="radio" name="tipoPersonaBuscar"
               formControlName="tipoPersonaBuscar" value="moral" id="moralBuscar" />
             <label for="moralBuscar">Moral</label>
           </div>
@@ -407,27 +404,29 @@
         <div class="row mb-3">
           <div class="col-md-6">
             <app-catalogo-select [catalogo]="paisCatalogo" formControlName="pais" [label]="'País'" [isDisabled]="true"
-                [isDisabled]="esFormularioSoloLectura" [required]="true" name="pais"></app-catalogo-select>
+              [isDisabled]="esFormularioSoloLectura" [required]="true" name="pais"></app-catalogo-select>
           </div>
-        
+
           <div class="col-md-6">
-            <app-catalogo-select [catalogo]="estadoCatalogo" formControlName="entidadFederativa" [label]="'Entidad Federativa'" [isDisabled]="true"
-                [isDisabled]="esFormularioSoloLectura" [required]="true" name="entidadFederativa" [placeholder]="'Selecciona una valor'"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="estadoCatalogo" formControlName="entidadFederativa"
+              [label]="'Entidad Federativa'" [isDisabled]="true" [isDisabled]="esFormularioSoloLectura"
+              [required]="true" name="entidadFederativa" [placeholder]="'Selecciona una valor'"></app-catalogo-select>
           </div>
-</div>
-<!-- Action buttons -->
+        </div>
+        <!-- Action buttons -->
         <div class="d-flex justify-content-end">
           <button type="button" class="btn btn-primary me-2" (click)="cerrarBuscarTercerosModal()">Cerrar</button>
-          <button type="button" class="btn btn-outline-secondary me-2" (click)="limpiarBuscarTerceros()">Limpiar</button>
-          <button type="button" class="btn btn-primary" >Buscar</button>
+          <button type="button" class="btn btn-outline-secondary me-2"
+            (click)="limpiarBuscarTerceros()">Limpiar</button>
+          <button type="button" class="btn btn-primary">Buscar</button>
         </div>
       </form>
     </div>
-     <div class="row">
-    <h6>Terceros</h6>
-    <app-tabla-dinamica [configuracionTabla]="configuracionTablaDatos" [datos]="destinatario"
-      [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
-    </app-tabla-dinamica>
+    <div class="row">
+      <h6>Terceros</h6>
+      <app-tabla-dinamica [configuracionTabla]="configuracionTablaDatos" [datos]="destinatario"
+        [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
+      </app-tabla-dinamica>
     </div>
   </app-modal>
 </div>

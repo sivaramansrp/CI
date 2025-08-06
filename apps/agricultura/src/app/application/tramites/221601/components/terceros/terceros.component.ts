@@ -584,6 +584,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
       });
   }
 
+  public planta = false;
   
   /**
    * property fisica
@@ -606,11 +607,18 @@ export class TercerosComponent implements OnInit, OnDestroy {
     if (checkBoxName === 'fisica') {
       this.fisica = true;
       this.moral = false;
-    } else {
+      this.planta = false;
+    } else if (checkBoxName === 'moral') {
       this.fisica = false;
       this.moral = true;
+      this.planta = false;
+    } else if (checkBoxName === 'planta') {
+      this.fisica = false;
+      this.moral = false;
+      this.planta = true;
     }
   }
+
    /**
    * method cambiarRadioFisica
    * description Cambia el estado del radio button según el valor seleccionado.
