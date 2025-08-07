@@ -41,7 +41,7 @@ export class ComplementariaComponent implements OnInit, OnDestroy {
    * Lista de mercancías obtenidas del servicio
    * @type {Mercancias[]}
    */
-  mercanciasProducirDatos: Mercancias[] = [];
+  listaTablaMercancia: Mercancias[] = [];
 
   /**
    * Lista de productores indirectos obtenidos del servicio
@@ -104,11 +104,13 @@ export class ComplementariaComponent implements OnInit, OnDestroy {
    * Método para obtener los datos de las mercancías a producir
    * @returns {void}
    */
-  obtenerMercanciasProducir(): void {
-    this.prosecService.obtenerMercanciasProducir()
+
+ obtenerMercanciasProducir(): void {
+    this.prosecService
+      .obtenerMercanciasProducir()
       .pipe(takeUntil(this.destruirNotificador$))
-      .subscribe((mercancias: MercanciasResquesta) => {
-        this.mercanciasProducirDatos = mercancias.data.length > 0 ? mercancias.data : [];
+      .subscribe((data: MercanciasResquesta) => {
+        this.listaTablaMercancia = data.data;
       });
   }
 

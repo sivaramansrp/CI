@@ -1,4 +1,3 @@
-import { AlertComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DatosGeneralesComponent } from '../../shared/datos-generales/datos-generales.component';
@@ -70,7 +69,6 @@ if(!this.tercerosRelacionados.validarFormulario()){
   isValid = false;
 }
   }
-  console.log(isValid,'revision-documental');
 return isValid
 }
 }

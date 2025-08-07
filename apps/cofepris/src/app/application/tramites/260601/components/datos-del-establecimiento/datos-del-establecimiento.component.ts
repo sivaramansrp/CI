@@ -7,6 +7,7 @@ import {
   AvisoSanitarioState,
   Tramite260601Store,
 } from '../../../../estados/tramites/tramite260601.store';
+import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
 import {
   Component,
   ElementRef,
@@ -27,7 +28,6 @@ import { CommonModule } from '@angular/common';
 
 import {
   CatalogoSelectComponent,
-  ConsultaioQuery,
   InputCheckComponent,
   InputRadioComponent,
   Notificacion,
@@ -38,7 +38,6 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { Manifiestos, ManifiestosRespuesta } from '../../models/aviso-model';
 import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
-import { Catalogo } from '@ng-mf/data-access-user';
 import { DatosMercanciaComponent } from '../datos-mercancia/datos-mercancia.component';
 import { Modal } from 'bootstrap';
 import { RepresentanteLegalComponent } from '../representante-legal/representante-legal.component';

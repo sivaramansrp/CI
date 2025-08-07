@@ -23,12 +23,14 @@ import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { ConsultaioState } from '@ng-mf/data-access-user';
+import { DatosGeneralesModel } from '../../../core/models/datos-generales.model';
 import { FormularioDinamico } from '../../../core/models/shared/forms-model';
 import { FormulariosService } from '../../../core/services/shared/formularios/formularios.service';
 import { SolicitanteService } from '../../../core/services/shared/solicitante/solicitante.service';
 import { TituloComponent } from '../titulo/titulo.component';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { UppercaseDirective } from '../../directives/Uppercase/uppercase.directive';
+
 
 @Component({
   selector: 'solicitante',
@@ -56,6 +58,10 @@ export class SolicitanteComponent implements OnInit,OnDestroy {
   form!: FormGroup;
   guardarDatos!: ConsultaioState;
   private destroyNotifier$: Subject<void> = new Subject();
+
+  @Input() RFC: string= 'SAAE5901017V9';
+
+  datosGenerales?:DatosGeneralesModel;
 
   constructor(
     private solicitanteServicio: SolicitanteService,
@@ -86,7 +92,7 @@ export class SolicitanteComponent implements OnInit,OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   ngOnInit(): void {
-    this.getDatosGenerales();
+    this.getDatosGenerales(this.RFC);
   }
 
   /**
@@ -189,12 +195,26 @@ export class SolicitanteComponent implements OnInit,OnDestroy {
    * Obtiene los datos generales del solicitante con una peticion get.
    * @returns void
    */
-  getDatosGenerales(): void {
+  getDatosGenerales(RFC: string): void {
+    if(RFC !== undefined || RFC !== null || RFC !== '') {
+      this.solicitanteServicio
+      .getDatosGeneralesAPI(RFC)
+      .pipe(
+        tap((response) => {
+          if (response) {
+            this.datosGenerales = response;
+          }
+        })
+      )
+      .subscribe();
+    } else {
+
     this.solicitanteServicio
       .getDatosGenerales(CATALOGOS_ID.DATOS_PERSONA_FISICA)
       .pipe(
         tap((response) => {
           if (response) {
+
             const DATOS = JSON.parse(response.data);
             const DATOS_SOLICITANTE = DATOS.datosGenerales;
             const DATOS_DOMICILIO_FISCAL = DATOS.domicilioFiscal;
@@ -228,6 +248,7 @@ export class SolicitanteComponent implements OnInit,OnDestroy {
       )
       .subscribe();
   }
+}
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

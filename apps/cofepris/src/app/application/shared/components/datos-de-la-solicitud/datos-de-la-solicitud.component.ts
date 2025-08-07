@@ -1,6 +1,7 @@
 import {
   ALERTA_DE_MANIFESTO_Y_DECLARACIONES,
   ALERTA_OPCIONS,
+  ES_PUNTO_Y_COMA,
   MENSAJE_SIN_FILA_SELECCIONADA,
   MOSTRAR_NOTIFICACION,
   NUMERO_TRAMITE,
@@ -9,12 +10,14 @@ import {
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO,
+  PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES,
   PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA,
   PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO,
   PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO,
   PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA,
   PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL,
   REPRESENTANTE_LEGAL,
+  TEXTO_MANIFESTO_Y_DECLARACIONES,
 } from '../../constantes/datos-solicitud.enum';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -198,6 +201,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Mensaje de alerta relacionado con el manifiesto y declaraciones.
    */
   public alertaDeManifestoContenido = ALERTA_DE_MANIFESTO_Y_DECLARACIONES;
+
+  /**
+   * @property {string} textoManifestoContenido
+   * Texto que se muestra en el manifiesto y declaraciones.
+   */
+  public textoManifestoContenido = TEXTO_MANIFESTO_Y_DECLARACIONES;
+
 
   /**
    * @property {string} alertaOpicion
@@ -390,6 +400,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   public predeterminadoSeleccionar: string | number = '';
 
+  /** Indica si el trámite es un manifiesto. */
+  esManifesto: boolean = false;
+
+  /**
+   * Indica si el campo utiliza punto y coma como separador.
+   */
+  esPuntoYComa: boolean = false;
+
   /**
    * @constructor
    * Inyecta los servicios necesarios para el enrutamiento y construcción del formulario.
@@ -448,6 +466,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
+    this.esManifesto = PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES.includes(this.idProcedimiento);
+    this.esPuntoYComa = ES_PUNTO_Y_COMA.includes(this.idProcedimiento);
     this.mostrarNotificacion = MOSTRAR_NOTIFICACION.includes(
       this.idProcedimiento
     )
@@ -641,6 +661,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       ],
       regimenLaMercancia: ['101', [Validators.required]],
       aduana: [this.datosSolicitudFormState.aduana, [Validators.required]],
+      manifesto: [
+        this.datosSolicitudFormState.manifesto,
+        [Validators.required],
+      ]
     });
 
     if (this.mostrarNotificacion) {

@@ -109,20 +109,20 @@
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="entidadFederativa" [label]="'Entidad federativa'" [required]="true"
-            id="claveEntidadFederativa" formControlName="claveEntidadFederativa"
+            id="claveEntidadFederativa" formControlName="claveEntidadFederativa" [placeholder]="'Seleccione un valor'"
             [ngClass]="isValid(direccionOrigen,'claveEntidadFederativa') ? 'required' : ''"
             (change)="setValoresStore(direccionOrigen, 'claveEntidadFederativa', 'setAvisoFormularioEntidadFederativa')"
             [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="delegacionMunicipio" [label]="'Alcaldía o Municipio'" [required]="true"
-            id="claveDelegacionMunicipio" formControlName="claveDelegacionMunicipio"
+            id="claveDelegacionMunicipio" formControlName="claveDelegacionMunicipio" [placeholder]="'Seleccione un valor'"
             [ngClass]="isValid(direccionOrigen,'claveDelegacionMunicipio') ? 'required' : ''"
             (change)="setValoresStore(direccionOrigen, 'claveDelegacionMunicipio', 'setAvisoFormularioDelegacionMunicipio')"
             [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="colonia" [label]="'Colonia'" [required]="true" id="claveColonia"
+          <app-catalogo-select [catalogo]="colonia" [label]="'Colonia'" [required]="true" id="claveColonia" [placeholder]="'Seleccione un valor'"
             formControlName="claveColonia" [ngClass]="isValid(direccionOrigen,'claveColonia') ? 'required' : ''"
             (change)="setValoresStore(direccionOrigen, 'claveColonia', 'setAvisoFormularioColonia')"
             [isDisabled]="soloLectura"></app-catalogo-select>
@@ -288,21 +288,21 @@
               </div>
               <div class="col-md-4">
                 <app-catalogo-select [catalogo]="entidadFederativa" [label]="'Entidad federativa'" [required]="true"
-                  id="claveEntidadFederativa" formControlName="claveEntidadFederativa"
+                  id="claveEntidadFederativa" formControlName="claveEntidadFederativa" [placeholder]="'Seleccione un valor'"
                   [ngClass]="isValid(domicilioFormulario,'claveEntidadFederativa') ? 'required' : ''"
                   (change)="setValoresStore(domicilioFormulario, 'claveEntidadFederativa', 'setDomicilioFormularioEntidadFederativa')"
                   [isDisabled]="soloLectura"></app-catalogo-select>
               </div>
               <div class="col-md-4">
                 <app-catalogo-select [catalogo]="delegacionMunicipio" [label]="'Alcaldía o Municipio'" [required]="true"
-                  id="claveDelegacionMunicipio" formControlName="claveDelegacionMunicipio"
+                  id="claveDelegacionMunicipio" formControlName="claveDelegacionMunicipio" [placeholder]="'Seleccione un valor'"
                   [ngClass]="isValid(domicilioFormulario,'claveDelegacionMunicipio') ? 'required' : ''"
                   (change)="setValoresStore(domicilioFormulario, 'claveDelegacionMunicipio', 'setDomicilioFormularioDelegacionMunicipio')"
                   [isDisabled]="soloLectura"></app-catalogo-select>
               </div>
               <div class="col-md-4">
                 <app-catalogo-select [catalogo]="colonia" [label]="'Colonia'" [required]="true" id="claveColonia"
-                  formControlName="claveColonia"
+                  formControlName="claveColonia" [placeholder]="'Seleccione un valor'"
                   [ngClass]="isValid(domicilioFormulario,'claveColonia') ? 'required' : ''"
                   (change)="setValoresStore(domicilioFormulario, 'claveColonia', 'setDomicilioFormularioColonia')"
                   [isDisabled]="soloLectura"></app-catalogo-select>
@@ -403,7 +403,7 @@
             <div class="row">
               <div class="col-md-4 mb-2">
                 <app-catalogo-select [catalogo]="fraccionArancelaria" [label]="'Fracción arancelaria'" [required]="true"
-                  id="claveFraccionArancelaria" formControlName="claveFraccionArancelaria"
+                  id="claveFraccionArancelaria" formControlName="claveFraccionArancelaria" [placeholder]="'Seleccione un valor'"
                   [ngClass]="isValid(mercanciaFormulario,'claveFraccionArancelaria') ? 'required' : ''"
                   (change)="setValoresStore(mercanciaFormulario, 'claveFraccionArancelaria', 'setFraccionArancelaria')"
                   [isDisabled]="soloLectura"></app-catalogo-select>
@@ -432,7 +432,7 @@
               </div>
               <div class="col-md-4">
                 <app-catalogo-select [catalogo]="unidadMedida" [label]="'Unidad de medida'" [required]="true"
-                  id="claveUnidadMedida" formControlName="claveUnidadMedida"
+                  id="claveUnidadMedida" formControlName="claveUnidadMedida" [placeholder]="'Seleccione un valor'"
                   [ngClass]="isValid(mercanciaFormulario,'claveUnidadMedida') ? 'required' : ''"
                   (change)="setValoresStore(mercanciaFormulario, 'claveUnidadMedida', 'setMercanciaFormularioUnidadMedida')"
                   [isDisabled]="soloLectura"></app-catalogo-select>

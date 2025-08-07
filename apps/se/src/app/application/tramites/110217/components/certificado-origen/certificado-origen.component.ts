@@ -4,6 +4,7 @@ import {
   ConfiguracionColumna,
   InputFecha,
   InputFechaComponent,
+  REGEX_CORREO_ELECTRONICO,
   REGEX_SOLO_DIGITOS,
   TablaDinamicaComponent,
   TablaSeleccion,
@@ -222,14 +223,14 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    *
    * Contiene una lista de opciones que el usuario puede seleccionar para el Tratado Comercial.
    */
-  optionsTratado!: Catalogo[];
+  optionsTratado: Catalogo[] = [];
 
   /**
    * Opciones disponibles para los países.
    *
    * Contiene una lista de países que el usuario puede seleccionar.
    */
-  optionsPais!: Catalogo[];
+  optionsPais: Catalogo[] = [];
 
   /**
    * Fecha inicial predefinida para el formulario.
@@ -264,7 +265,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    *
    * Contiene una lista de tipos de factura que el usuario puede seleccionar.
    */
-  optionsTipoFactura!: Catalogo[];
+  optionsTipoFactura: Catalogo[] = [];
 
   /**
    * Indica si el modal está en modo edición.
@@ -319,7 +320,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
-                  })
+        })
       )
       .subscribe();
 
@@ -333,7 +334,8 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
+    this.mercanciaDisponsiblesTablaDatos = this.solicitudState?.mercanciaDisponsiblesTablaDatos ?? [];
+    this.mercanciaSeleccionadasTablaDatos = this.solicitudState?.mercanciaSeleccionadasTablaDatos ?? [];
     this.inicializarFormularioCertificado();
     this.inicializarFormularioMercancia();
     this.inicializarFormularioArchivo();
@@ -451,7 +453,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
         ],
         correoElectronico: [
           this.solicitudState?.grupoDeDomicilio?.correoElectronico,
-          [Validators.email, Validators.maxLength(70)],
+          [Validators.pattern(REGEX_CORREO_ELECTRONICO)],
         ],
       }),
       grupoTratado: this.fb.group({
@@ -516,7 +518,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
         this.solicitudState?.formularioMercancia?.cantidad,
         [Validators.required, Validators.pattern(/^\d+$/)],
       ],
-      pais: ['', [Validators.required]],
+      pais: [this.solicitudState?.formularioMercancia?.pais, [Validators.required]],
       valorDelaMercancia: [
         this.solicitudState?.formularioMercancia?.valorDelaMercancia,
         [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)],
@@ -538,6 +540,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
         [Validators.required],
       ],
     });
+    
   }
 
   /**
@@ -640,33 +643,21 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * @param {DisponiblesTabla} evento - La fila seleccionada en la tabla de mercancías disponibles.
    */
   disponiblesSeleccionDeFilas(evento: DisponiblesTabla): void {
-    this.disponiblesSeleccionadasFila = evento;
-    
-    // Resetear modo edición para asegurar que estamos agregando, no editando
-    this.modoEdicion = false;
-    this.mercanciaEditandoId = null;
-    
-    // Poblar el formulario de mercancías con los datos de la fila seleccionada
-    this.formularioMercancia.patchValue({
-      fraccionMercanciaArancelaria: evento.fraccionArancelaria || '',
-      nombreComercialDelaMercancia: evento.nombreComercial || '',
-      nombreTecnico: evento.nombreTecnico || '',
-      // Los demás campos se mantienen vacíos para que el usuario los complete manualmente
-      nombreEnIngles: '',
-      otrasInstancias: '',
-      criterioParaConferir: '',
-      cantidad: '',
-      pais: '',
-      valorDelaMercancia: '',
-      complementoDelaDescripcion: '',
-      fecha: '',
-      numeroFactura: '',
-      tipoFactura: ''
-    });
-    
-    if (this.modalBuscar) {
-      const MODAL_INSTANCE = new Modal(this.modalBuscar.nativeElement);
-      MODAL_INSTANCE.show();
+    if (!this.soloLectura) {      
+      this.disponiblesSeleccionadasFila = evento;
+      if (this.modalBuscar) {
+        if (!this.modalInstances) {
+          this.modalInstances = new Modal(this.modalBuscar.nativeElement);
+        }
+        this.formularioMercancia.reset()
+        this.formularioMercancia.patchValue({
+          id: this.disponiblesSeleccionadasFila.id,
+          fraccionMercanciaArancelaria: this.disponiblesSeleccionadasFila.fraccionArancelaria,
+          nombreComercialDelaMercancia: this.disponiblesSeleccionadasFila.nombreComercial,
+          nombreTecnico: this.disponiblesSeleccionadasFila.nombreTecnico,
+        });
+        this.modalInstances?.show();
+      }
     }
   }
   /**
@@ -729,65 +720,50 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     this.cerrarModal();
   }
 
+    modalInstances: Modal | null = null;
+
   /**
    * Agrega una nueva mercancía a la tabla de mercancías seleccionadas.
    *
-   * Este método toma los datos del formulario de mercancías y los agrega a la tabla de seleccionadas.
+   * Este método toma los datos del formulario de mercancías y los transforma en un
+   * objeto `SeleccionadasTabla` y actualiza el arreglo `mercanciaSeleccionadasTablaDatos`.
+   * Si ya existe un elemento con el mismo ID, lo actualiza; de lo contrario, agrega el nuevo elemento.
+   * El arreglo actualizado se almacena usando `store.setMercanciaTablaDatos`.
+   * Finalmente, cierra el modal si está abierto.
+   *
+   * @param formularioMercancia - El formulario reactivo que contiene los datos de la mercancía.
    */
-  agregarMercancia(): void {
-    if (this.formularioMercancia) {
-      const FORM_DATA = this.formularioMercancia.value;
-      
-      if (this.modoEdicion && this.mercanciaEditandoId !== null) {
-        // Modo edición: actualizar mercancía existente
-        const INDEX = this.mercanciaSeleccionadasTablaDatos.findIndex(
-          item => item.id === this.mercanciaEditandoId
-        );
-        
-        if (INDEX !== -1) {
-          this.mercanciaSeleccionadasTablaDatos[INDEX] = {
-            id: this.mercanciaEditandoId,
-            fraccionArancelaria: FORM_DATA.fraccionMercanciaArancelaria,
-            cantidad: FORM_DATA.cantidad,
-            unidadMedida: FORM_DATA.pais,
-            valorMercancia: FORM_DATA.valorDelaMercancia,
-            tipoFactura: FORM_DATA.tipoFactura,
-            numFactura: FORM_DATA.numeroFactura,
-            complementoDescripcion: FORM_DATA.complementoDelaDescripcion,
-            fechaFactura: FORM_DATA.fecha
-          };
-        }
-      } else {
-        // Modo agregar: crear nueva mercancía
-        const NUEVO_ID = this.mercanciaSeleccionadasTablaDatos.length > 0 
-          ? Math.max(...this.mercanciaSeleccionadasTablaDatos.map(item => item.id)) + 1 
-          : 1;
-        
-        const NUEVA_MERCANCIA: SeleccionadasTabla = {
-          id: NUEVO_ID,
-          fraccionArancelaria: FORM_DATA.fraccionMercanciaArancelaria,
-          cantidad: FORM_DATA.cantidad,
-          unidadMedida: FORM_DATA.pais,
-          valorMercancia: FORM_DATA.valorDelaMercancia,
-          tipoFactura: FORM_DATA.tipoFactura,
-          numFactura: FORM_DATA.numeroFactura,
-          complementoDescripcion: FORM_DATA.complementoDelaDescripcion,
-          fechaFactura: FORM_DATA.fecha
-        };
-        
-        this.mercanciaSeleccionadasTablaDatos.push(NUEVA_MERCANCIA);
-      }
-      
-      // Resetear modo edición
-      this.modoEdicion = false;
-      this.mercanciaEditandoId = null;
-      
-      // Limpiar el formulario
-      this.formularioMercancia.reset();
-      this.inicializarFormularioMercancia();
-      
-      // Cerrar el modal
-      this.cerrarModal();
+  activarModal(formularioMercancia: FormGroup): void {
+    const FORM_VALUES = formularioMercancia.value;
+
+    const NUEVA_MERCANCIA: SeleccionadasTabla = {
+      id: FORM_VALUES.id || this.mercanciaSeleccionadasTablaDatos.length + 1,
+      fraccionArancelaria: FORM_VALUES.fraccionMercanciaArancelaria,
+      cantidad: FORM_VALUES.cantidad,
+      unidadMedida: FORM_VALUES.pais,
+      valorMercancia: FORM_VALUES.valorDelaMercancia,
+      tipoFactura: FORM_VALUES.tipoFactura,
+      numFactura: FORM_VALUES.numeroFactura,
+      complementoDescripcion: FORM_VALUES.complementoDelaDescripcion,
+      fechaFactura: FORM_VALUES.fecha,
+    };
+
+    const INDEX = this.mercanciaSeleccionadasTablaDatos.findIndex(
+      item => item.id === NUEVA_MERCANCIA.id
+    );
+
+    if (INDEX !== -1) {
+      this.mercanciaSeleccionadasTablaDatos[INDEX] = NUEVA_MERCANCIA;
+    } else {
+      this.mercanciaSeleccionadasTablaDatos = [
+        ...this.mercanciaSeleccionadasTablaDatos,
+        NUEVA_MERCANCIA
+      ];
+    }
+    this.store.setMercanciaTablaDatos(this.mercanciaSeleccionadasTablaDatos);
+
+    if (this.modalInstances) {
+      this.modalInstances.hide();
     }
   }
 
@@ -797,38 +773,27 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * Este método popula el formulario con los datos de la mercancía seleccionada
    * y también incluye datos de las mercancías disponibles si hay una fila seleccionada.
    */
-  modificarMercancia(): void {
-    if (this.mercanciaSeleccionadasFila) {
-      // Activar modo edición
-      this.modoEdicion = true;
-      this.mercanciaEditandoId = this.mercanciaSeleccionadasFila.id;
-      
-      // Poblar el formulario con los datos de la mercancía seleccionada
-      this.formularioMercancia.patchValue({
-        fraccionMercanciaArancelaria: this.mercanciaSeleccionadasFila.fraccionArancelaria,
-        cantidad: this.mercanciaSeleccionadasFila.cantidad,
-        pais: this.mercanciaSeleccionadasFila.unidadMedida,
-        valorDelaMercancia: this.mercanciaSeleccionadasFila.valorMercancia,
-        tipoFactura: this.mercanciaSeleccionadasFila.tipoFactura,
-        numeroFactura: this.mercanciaSeleccionadasFila.numFactura,
-        complementoDelaDescripcion: this.mercanciaSeleccionadasFila.complementoDescripcion,
-        fecha: this.mercanciaSeleccionadasFila.fechaFactura,
-        // Usar datos de las mercancías disponibles si están disponibles
-        nombreComercialDelaMercancia: this.disponiblesSeleccionadasFila?.nombreComercial || '',
-        nombreTecnico: this.disponiblesSeleccionadasFila?.nombreTecnico || '',
-        // Campos que no están en ninguna tabla
-        nombreEnIngles: '',
-        otrasInstancias: '',
-        criterioParaConferir: ''
-      });
-
-      // Abrir el modal
-      if (this.modalBuscar) {
-        const MODAL_INSTANCE = new Modal(this.modalBuscar.nativeElement);
-        MODAL_INSTANCE.show();
+modificarMercanciaSeleccionada(mercanciaSeleccionadasTablaDatos: SeleccionadasTabla): void {
+  this.mercanciaSeleccionadasFila = mercanciaSeleccionadasTablaDatos;
+  const FORM_VALUES = mercanciaSeleccionadasTablaDatos;
+     if (this.modalBuscar) {
+        if (!this.modalInstances) {
+          this.modalInstances = new Modal(this.modalBuscar.nativeElement);
+        }
       }
-    }
-  }
+      this.modalInstances?.show();
+    this.formularioMercancia.patchValue({
+      id: FORM_VALUES.id,
+      fraccionArancelaria: FORM_VALUES.fraccionArancelaria,
+      cantidad: FORM_VALUES.cantidad,
+      unidadMedida: FORM_VALUES.unidadMedida,
+      valorMercancia: FORM_VALUES.valorMercancia,
+      tipoFactura: FORM_VALUES.tipoFactura,
+      numFactura: FORM_VALUES.numFactura,
+      complementoDescripcion: FORM_VALUES.complementoDescripcion,
+      fechaFactura: FORM_VALUES.fechaFactura,
+    });
+}
 
   /**
    * Cierra el modal activo.
@@ -842,8 +807,8 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     this.mercanciaEditandoId = null;
     
     // Limpiar el formulario
-    this.formularioMercancia.reset();
-    this.inicializarFormularioMercancia();
+    // this.formularioMercancia.reset();
+    // this.inicializarFormularioMercancia();
     
     if (this.closeModal) {
       this.closeModal.nativeElement.click();

@@ -1,5 +1,5 @@
 {
-    "tipoDeEndoso": "1",
+    "tipoDeEndoso": 1,
     "tipoDeGarantia": 1,
     "modalidadDeLaGarantia": 1,
     "tipoSector": "",

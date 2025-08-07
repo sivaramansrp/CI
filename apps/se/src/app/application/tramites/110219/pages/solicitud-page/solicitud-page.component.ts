@@ -134,7 +134,7 @@ export class SolicitudPageComponent implements OnInit {
    * Actualiza el estado de validez del número de certificado.
    * @param event Valor booleano que indica si el número es válido.
    */
-  isNumeroDeCertificado(event: boolean) {
+  isNumeroDeCertificado(event: boolean): void {
     this.isNumeroDe = event;
   }
 
@@ -142,7 +142,7 @@ export class SolicitudPageComponent implements OnInit {
    * Actualiza el estado de validez del patrón del número.
    * @param event Valor booleano que indica si el patrón es válido.
    */
-  isNumeroDePattern(event: boolean) {
+  isNumeroDePattern(event: boolean): void {
     this.isNumeroPattern = event;
   }
 
@@ -150,7 +150,7 @@ export class SolicitudPageComponent implements OnInit {
    * Obtiene y actualiza el número de certificado.
    * @param event Número del certificado.
    */
-  getDatosCertificado(event: number) {
+  getDatosCertificado(event: number): void {
     this.nombre = event;
   }
 
@@ -158,8 +158,9 @@ export class SolicitudPageComponent implements OnInit {
    * Actualiza el estado de los datos del número y avanza al siguiente paso si no son válidos.
    * @param event Valor booleano que indica si los datos del número son válidos.
    */
-  isDatosNumero(event: boolean) {
+  isDatosNumero(event: boolean): void {
     this.isNumeroDatos = event;
+    this.isNumeroPattern = false;
     if (!this.isNumeroDatos) {
       this.getValorIndice({
         accion: 'cont',

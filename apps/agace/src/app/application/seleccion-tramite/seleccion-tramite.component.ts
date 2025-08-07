@@ -1,5 +1,6 @@
 import { AMBIENTES, TramiteDetails } from '@ng-mf/data-access-user';
 import { Component, OnInit } from '@angular/core';
+import pkg from '@package-json';
 import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json'
 
 @Component({
@@ -20,6 +21,10 @@ export class SeleccionTramiteComponent implements OnInit {
    */
   
   public tramiteData: TramiteDetails[] = [];
+  /**
+   * Versión actual de la aplicación desde package.json
+   */
+  version = pkg.version;
   
   ngOnInit(): void {
     if (window.location.host.indexOf('localhost') !== -1) {

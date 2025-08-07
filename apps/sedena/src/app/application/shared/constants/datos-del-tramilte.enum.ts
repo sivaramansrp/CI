@@ -72,6 +72,7 @@ export const PAISE_DENTINO_EITIQUETA: Map<number, string> = new Map<
   string
 >([
   [240119, 'País de procedencia'],
+  [240117, 'País de procedencia'],
   [240120, 'País de procedencia'],
   [240118, 'País de procedencia'],
   [240123, 'País de procedencia'],
@@ -82,7 +83,10 @@ export const PAISE_DENTINO_EITIQUETA: Map<number, string> = new Map<
   [240411, 'paise destino'],
   [240407, 'País destino'],
   [240102, 'País destino'],
+  [240101, 'País destino'],
   [240105, 'País destino'],
+  [240107, 'País destino'],
+  [240106, 'País destino'],
 ]);
 
 /**
@@ -248,4 +252,4 @@ export const DESACTIVADO_PERMISO_GENERAL = [240405, 240411, 240321];
  * @description Contiene un arreglo de identificadores numéricos relacionados con aduanas específicas.
  * Este valor es utilizado en el sistema para identificar trámites o permisos asociados a estas aduanas.
  */
-export const ADUANA_TEXTO = [240123, 240120, 240118];
+export const ADUANA_TEXTO = [240123, 240120, 240118,240119];

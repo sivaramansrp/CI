@@ -1,37 +1,9 @@
-import {
-  AfterViewInit,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
-import {
-  Catalogo,
-  CatalogoSelectComponent,
-  InputRadioComponent,
-  TipoPersona,
-  TituloComponent,
-} from '@ng-mf/data-access-user';
-import {
-  DestinoFinal,
-  Proveedor,
-} from '../../models/terceros-relacionados.model';
-
-import { CommonModule, Location } from '@angular/common';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   CAMPO_OBLIGATORIO_DESTINATARIO,
   MOSTRAR_ASTERISCO,
   MOSTRAR_INFORMACION,
+  NUMERO_TRAMITE,
   PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE,
   PROVEEDOR_TITULO_CUSTOM,
   TERCEROS_NACIONALIDAD_OPCIONES,
@@ -39,12 +11,13 @@ import {
   TIPO_PERSONA_OPCIONES,
   TIPO_PERSONA_OPCIONES_NO_CONTRIBUYENTE,
 } from '../../constants/datos-solicitud.enum';
-import { Subject, takeUntil } from 'rxjs';
+import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
+import { CommonModule, Location } from '@angular/common';
+import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.model';
+import { ES_CURP, ES_NACIONAL, ES_RFC } from '../../constants/datos-del-tramilte.enum';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject,takeUntil } from 'rxjs';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-import { ES_CURP } from '../../constants/datos-del-tramilte.enum';
-import { ES_NACIONAL } from '../../constants/datos-del-tramilte.enum';
-import { ES_RFC } from '../../constants/datos-del-tramilte.enum';
-import { NUMERO_TRAMITE } from '../../constants/datos-solicitud.enum';
 
 /**
  * @component AgregarProveedorComponent
@@ -482,7 +455,7 @@ export class AgregarProveedorCustomComponent
       codigoPostal: this.agregarProveedorForm.value.codigoPostal || '',
     };
 
-    this.proveedores.push(NUEVO_PROVEEDOR);
+    this.proveedores = [...this.proveedores, NUEVO_PROVEEDOR];
     if (this.formaDatos) {
       if ('tableindex' in this.formaDatos) {
         this.proveedores[0].tableIndex = (

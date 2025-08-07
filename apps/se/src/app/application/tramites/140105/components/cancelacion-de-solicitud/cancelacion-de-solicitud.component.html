@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container mt-6">
   <div class="row">
     <div class="col-md-12">
       <h5>Permisos a cancelar</h5>
@@ -7,9 +7,9 @@
 
     </div>
   </div>
-  <div class="row mt-2">
+  <div class="row">
     <div class="col-md-12 d-flex justify-content-end">
-      <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+      <button type="button" class="btn btn-primary me-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
         aria-controls="offcanvasRight" [disabled]="cuerpoTablaCancelacion.length === 0" (click)="eliminarRegistro($event)">Eliminar registro</button>
       <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
         aria-controls="offcanvasRight" (click)="busqueda($event)">Búsqueda folio</button>
@@ -24,6 +24,15 @@
           <textarea rows="3" style="height: 80px" class="form-control" id="motivoCancelacion"
             formControlName="motivoCancelacion"></textarea>
         </div>
+        <div *ngIf="cancelacionForm.get('motivoCancelacion')?.hasError('required') && cancelacionForm.get('motivoCancelacion')?.touched" class="text-danger">
+            Este campo es obligatorio.
+          </div>
+          <div
+  *ngIf="cancelacionForm.get('motivoCancelacion')?.hasError('maxlength') && cancelacionForm.get('motivoCancelacion')?.touched"
+  class="text-danger"
+>
+  No puede exceder 250 caracteres.
+</div>
 
       </div>
     </form>

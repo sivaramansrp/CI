@@ -9,6 +9,7 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { PasoTresComponent } from './paso-tres.component';
 import { ToastrModule } from 'ngx-toastr';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 
 describe('PasoTresComponent', () => {
@@ -17,7 +18,7 @@ describe('PasoTresComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [PasoTresComponent, FormsModule, ReactiveFormsModule, ToastrModule.forRoot() ],
+      imports: [PasoTresComponent, FormsModule, ReactiveFormsModule, ToastrModule.forRoot(),HttpClientTestingModule ],
       declarations: [
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
