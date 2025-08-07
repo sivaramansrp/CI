@@ -124,12 +124,7 @@
           <label>Teléfono:</label>
           <input type="text" class="form-control" id="telefono" formControlName="telefono" maxlength="20"
             (change)="setValoresStore(grupoDeDirecciones, 'telefono', 'setGrupoDeDireccionesTelefono')" />
-          @if (grupoDeDirecciones.get('telefono')?.hasError('pattern') &&
-          grupoDeDirecciones.get('telefono')?.touched) {
-          <div class="text-danger">
-            <small>Por favor, ingrese solo dígitos</small>
-          </div>
-          }
+    
         </div>
   
         <div class="col-md-4 mb-3">
@@ -137,12 +132,7 @@
           <input type="text" class="form-control" id="fax" formControlName="fax" maxlength="20"
             [ngClass]="grupoDeDirecciones.get('fax')?.invalid && grupoDeDirecciones.get('fax')?.touched ? 'required' : ''"
             (change)="setValoresStore(grupoDeDirecciones, 'fax', 'setGrupoDeDireccionesFax')" />
-          @if (grupoDeDirecciones.get('fax')?.hasError('pattern') &&
-          grupoDeDirecciones.get('fax')?.touched) {
-          <div class="text-danger">
-            <small>Por favor, ingrese solo dígitos</small>
-          </div>
-          }
+      
         </div>
         <div class="col-md-4 mb-3">
           <label>Correo electrónico:</label><span class="bi bi-question-circle-fill mx-2" tooltip="ejemplo@dominio.com"
@@ -191,7 +181,7 @@
       <div class="row mt-5">
         <div class="col-md-4">
           <label>Fracción arancelaria:</label>
-          <input type="number" class="form-control" formControlName="fraccionArancelaria" maxlength="8"
+          <input type="text" class="form-control" formControlName="fraccionArancelaria" maxlength="8"
             [ngClass]="isValid(grupoTratado,'fraccionArancelaria') ? 'required' : ''"
             (change)=" setValoresStore( grupoTratado, 'fraccionArancelaria', 'setGrupoTratadoFraccionArancelaria' ) " />
         </div>
