@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { PASOS, TEXTO_DE_ALERTA, TEXTO_DE_PELIGRO } from '../../constants/validar-inicialmente-certificado.enum';
+import { Tramite110214State,Tramite110214Store } from '../../../../estados/tramites/tramite110214.store';
+
 import { Subject,map,takeUntil } from 'rxjs';
 import { AccionBoton } from '../../models/validar-inicialmente-certificado.model';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { Tramite110214Query } from '../../../../estados/queries/tramite110214.query';
-import { Tramite110214State } from '../../../../estados/tramites/tramite110214.store';
-import { Tramite110214Store } from '../../../../estados/tramites/tramite110214.store';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 
