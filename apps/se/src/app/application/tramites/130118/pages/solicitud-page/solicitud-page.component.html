@@ -9,6 +9,14 @@
         <ng-alert [CONTENIDO]="ALERTA" [CUSTOMECLASS]="infoError"></ng-alert>
       }
 
+      <div class="row mt-5" *ngIf="indice === 2">
+      <div class="col-md-12">
+        <lib-notificaciones
+          [notificacionInput]="alertaNotificacion"
+        ></lib-notificaciones>
+      </div>
+    </div>
+
       <!-- ✅ Agrega #wizard -->
       <app-wizard #wizard [listaPasos]="pasos"></app-wizard>
     </div>
