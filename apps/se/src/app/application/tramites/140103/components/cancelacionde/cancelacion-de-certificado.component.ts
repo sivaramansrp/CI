@@ -1,6 +1,7 @@
 import {
   Catalogo,
   ConsultaioQuery,
+  TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
 import { Component, EventEmitter,OnDestroy, OnInit, Output } from '@angular/core';
@@ -96,6 +97,7 @@ interface Cupos {
     CatalogoSelectComponent,
     FormsModule,
     ReactiveFormsModule,
+    // TablaSeleccion (removed because it's not a module or component)
   ],
   templateUrl: './cancelacion-de-certificado.component.html',
   styleUrl: './cancelacion-de-certificado.component.css',
@@ -161,9 +163,12 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
    *
    * @type {Cupo[]}
    */
-  Cancelacion: Cupo[] = cancelacions;
+  Cancelacion: Cupo[] = [];
   cancelacionForm!: FormGroup;
-
+/**
+   * Configuración del tipo de selección en la tabla (en este caso, se usa un checkbox).
+   */
+  TablaSeleccion = TablaSeleccion.CHECKBOX;
   /**
    * Lista de catálogos para el régimen que se utiliza en la cancelación de certificados. Esta propiedad permite acceder
    * a las opciones del régimen desde un archivo JSON cargado.
@@ -400,8 +405,45 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
    * Este método emite un evento con el estado del formulario, indicando si fue enviado y si es inválido.
    * Si el formulario es inválido, se puede implementar lógica adicional para manejar los errores.
    */
+  // buscarCupos(): void {
+  //   this.submitted = true;
+  //   this.buscarIntento.emit({submitted: this.submitted, invalid: this.cancelacionForm.invalid});
+  //  }
+
   buscarCupos(): void {
-    this.submitted = true;
-    this.buscarIntento.emit({submitted: this.submitted, invalid: this.cancelacionForm.invalid});
-   }
+  this.submitted = true;
+  const form = this.cancelacionForm;
+
+  // Emit state for external usage (optional)
+  this.buscarIntento.emit({
+    submitted: this.submitted,
+    invalid: form.invalid
+  });
+
+  if (form.invalid) {
+    form.markAllAsTouched();
+    return;
+  }
+
+  // Create a new Cupo from form values
+  const nuevoCupo: Cupos = {
+    cupo: Math.floor(Math.random() * 1000) + 1, // Generate random cupo or logic-based
+    nombreProducto: this.obtenerNombreDelCatalogo(this.producto, form.value.producto),
+    nombreSubproducto: this.obtenerNombreDelCatalogo(this.subproducto, form.value.subproducto),
+    mecanismoAsignacion: this.obtenerNombreDelCatalogo(this.mecanismo, form.value.mecanismo),
+    tipoCupo: 'General' // You can change this logic or fetch from form/catalog
+  };
+
+  // Push to table
+  this.Cancelacion.push(nuevoCupo);
+  // Force table refresh (in some component designs)
+  this.Cancelacion = [...this.Cancelacion];
+}
+
+// Helper function to get catalog name from ID
+obtenerNombreDelCatalogo(catalogo: Catalogo[], id: any): string {
+  const item = catalogo.find(i => i.id === id);
+  return item ? item.descripcion : '';
+}
+
 }

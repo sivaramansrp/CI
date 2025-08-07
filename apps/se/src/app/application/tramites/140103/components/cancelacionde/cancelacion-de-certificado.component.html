@@ -51,8 +51,13 @@
     </div>
   </div>
   <H6> Cupos disponibles</H6>
-  <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="Cancelacion">
-  </app-tabla-dinamica>
+  
+   <app-tabla-dinamica 
+  [configuracionTabla]="configuracionTabla" 
+  [datos]="Cancelacion"
+  [tipoSeleccionTabla]="TablaSeleccion" 
+  [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
+</app-tabla-dinamica>
   <div text-align ="center" id="paginGridContenedoresITC">
     <nav aria-label="Page navigation example">
       <ul class="pagination d-flex justify-content-center">
