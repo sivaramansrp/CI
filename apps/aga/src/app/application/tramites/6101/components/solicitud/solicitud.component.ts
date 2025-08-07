@@ -97,6 +97,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.conseguirSolicitudCatologo();
+    this.opcionAduanaAux = {
+      catalogos: [],
+      labelNombre: 'Aduana',
+      primerOpcion: 'Seleccione un opción',
+      required: true,
+    };
+    this.opcionJuntaTecnicaDerivada = {
+        catalogos: [],
+        labelNombre: 'Junta técnica derivada de',
+        primerOpcion: 'Seleccione un opción',
+        required: true,
+      };
   }
 
   /**
@@ -122,7 +134,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       })
     )
     .subscribe();
-    this.inicializarFormulario();
+    this.inicializarEstadoFormulario();
   }
 
   /**
