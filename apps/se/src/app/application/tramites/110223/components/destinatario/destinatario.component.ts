@@ -137,7 +137,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
-          this.donanteDomicilio(); // ✅ moved inside after state is ready
+          this.donanteDomicilio();
         })
       )
       .subscribe();
