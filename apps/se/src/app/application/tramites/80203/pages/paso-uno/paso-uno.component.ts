@@ -96,7 +96,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     } else {
       this.esDatosRespuesta = true;
     }
-    // this.asignarSecciones();
   }
   /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.

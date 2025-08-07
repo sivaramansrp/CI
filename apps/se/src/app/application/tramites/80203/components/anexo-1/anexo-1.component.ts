@@ -405,8 +405,6 @@ export class Anexo1Component implements OnInit, OnDestroy, AfterViewInit {
             this.immexRegistroform.valid || CONTROL === 'VALID';
           FORMAS_VALIDADAS[SECCION] =
             this.immexRegistroform.valid || CONTROL2 === 'VALID';
-
-          // this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
         })
       )
       .subscribe();
