@@ -437,18 +437,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
     (this.tramite221601Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
-  // /**
-  //  * Método del ciclo de vida OnDestroy.
-  //  * Limpia las suscripciones para evitar memory leaks.
-  //  * 
-  //  * @memberof TercerosComponent
-  //  */
-  // ngOnDestroy(): void {
-  //   this.destroyNotifier$.next();
-  //   this.destroyNotifier$.complete();
-  // }
-
-  /**
+/**
    * Guarda un nuevo destinatario basado en los datos del formulario.
    * Crea un objeto destinatario y lo agrega a la lista.
    * Cierra el modal después de guardar.
@@ -576,6 +565,13 @@ export class TercerosComponent implements OnInit, OnDestroy {
       entidadFederativa: ''
     });
   }
+
+  /**
+   * Carga las opciones de tipo de persona desde el servicio.
+   * Realiza una llamada al servicio para obtener los datos y los asigna a tipoPersonaOptions.
+   * 
+   * @memberof TercerosComponent
+   */
    cargarRadio(): void {
     this.service.obtenerRadio()
       .pipe(takeUntil(this.destroyed$))
@@ -583,6 +579,10 @@ export class TercerosComponent implements OnInit, OnDestroy {
         this.tipoPersonaOptions = resp;
       });
   }
+  /**
+   * property planta
+   * description Indica si el tipo de persona es planta TIF.
+   */
 
   public planta = false;
   

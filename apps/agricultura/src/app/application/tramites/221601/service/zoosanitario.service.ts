@@ -20,6 +20,11 @@ export class ZoosanitarioService {
   constructor(private tramite221601Query: Tramite221601Query, private http: HttpClient) {}
  // Variable para almacenar el payload
 
+/**
+   * @property {ZoosanitarioPayload | null} storedPayload
+   * @description Almacena los datos del payload de tipo ZoosanitarioPayload. 
+   * Puede ser nulo si no hay datos disponibles.
+   */
   public storedPayload: ZoosanitarioPayload | null = null; //store payload data 
  /**
    * Método para obtener el payload desde el estado de la solicitud.
