@@ -266,7 +266,7 @@ export class VehiculoDialogComponent implements OnInit, OnDestroy {
         ...this.vehiculoForm.getRawValue()
       };
       this.save.emit(vehiculoData);
-      // Close modal after successful save
+      // Cerrar modal después de guardar exitosament
       this.cancel.emit();
     } else {
       // El formulario es inválido, los errores de validación se mostrarán en la plantilla
@@ -294,8 +294,8 @@ export class VehiculoDialogComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Lifecycle hook that is called when the component is destroyed.
-   * Used to clean up subscriptions and prevent memory leaks.
+   * Gancho del ciclo de vida que se llama cuando se destruye el componente.
+   * Se utiliza para limpiar suscripciones y evitar fugas de memoria.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

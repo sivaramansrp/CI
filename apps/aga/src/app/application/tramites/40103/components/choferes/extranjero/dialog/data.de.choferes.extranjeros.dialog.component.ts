@@ -3,7 +3,7 @@ import { Catalogo, CategoriaMensaje, Notificacion, NotificacionesComponent, Tipo
 import { CatalogoSelectComponent, SharedModule, TituloComponent } from "@libs/shared/data-access-user/src";
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
 import { Subject, firstValueFrom, takeUntil } from "rxjs";
-import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+import { REGEX_SOLO_DIGITOS, REGEX_SIN_DIGITOS } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 import { Chofer40103Service } from "../../../../estados/chofer40103.service";
 import { ChoferesExtranjeros } from '../../../../models/registro-muestras-mercancias.model';
 import { CommonModule } from "@angular/common";
@@ -75,7 +75,7 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
   enInputSoloDigitos(event: Event): void {
     const input = event.target as HTMLInputElement;
     const valorOriginal = input.value;
-    const soloDigitos = valorOriginal.replace(/\D/g, '');
+    const soloDigitos = valorOriginal.replace(REGEX_SIN_DIGITOS, '');
     this.showDigitsOnlyError = valorOriginal !== soloDigitos;
     input.value = soloDigitos;
     this.formChoferes.get('numeroDelSeguroSocial')?.setValue(soloDigitos, { emitEvent: false });
