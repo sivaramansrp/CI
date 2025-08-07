@@ -5,7 +5,7 @@ export interface SolicitudRequerimientosState {
     /**
      * Parametro del tipo de requerimieto
      */
-    idTipoRequerimiento: number;
+    idTipoRequerimiento: string;
     /**
      * Parametro justificación de evaluación
      */
@@ -13,7 +13,7 @@ export interface SolicitudRequerimientosState {
 }
 export function createInitialState(): SolicitudRequerimientosState {
     return {
-        idTipoRequerimiento: 0,
+        idTipoRequerimiento: '',
         justificacionRequerimiento: ''
     };
 }
@@ -33,7 +33,7 @@ export class RequerimientosStates extends Store<SolicitudRequerimientosState> {
      * Guarda el tipo de requerimiento seleccionado 
      * @param idTipoRequerimiento parametro del tipo de requerimieto
      */
-    settipoRequerimientoValue(idTipoRequerimiento: number) {
+    settipoRequerimientoValue(idTipoRequerimiento: string) {
         this.update(state => ({ ...state, idTipoRequerimiento }));
     }
     /**

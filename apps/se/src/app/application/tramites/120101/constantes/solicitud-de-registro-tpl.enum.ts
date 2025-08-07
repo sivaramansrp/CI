@@ -305,7 +305,7 @@ export const DOMICILIO_FISCAL_DEL_SOLICITANTE = [
 export const CONSULTAR_CUPO = [
   {
     id: 'tratado',
-    labelNombre: 'Tratado 0 acuerado',
+    labelNombre: 'Tratado o acuerdo',
     campo: 'tratado',
     clase: 'col-md-4',
     tipoInput: 'select-catalogos',

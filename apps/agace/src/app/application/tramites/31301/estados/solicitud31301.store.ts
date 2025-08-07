@@ -259,7 +259,7 @@ export interface Solicitud31301State {
  */
 export function createInitialSolicitudState(): Solicitud31301State {
   return {
-    tipoDeEndoso: '',
+    tipoDeEndoso: 0,
     tipoDeGarantia: 0,
     modalidadDeLaGarantia: 0,
     tipoSector: '',
