@@ -25,12 +25,7 @@
         <div class="text-end mb-5">
           <button type="button" class="btn btn-primary" name="seleccionarEstablecimiento" id="btnEstablecimiento" title="Selecciona para habilitar los campos del establecimiento" (click)="seleccionarEstablecimiento()" [disabled]="esFormularioSoloLectura">Seleccionar establecimiento</button>
         </div>
-        @if (nuevaNotificacion) {
-          <section>
-          <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
-          </lib-notificaciones>
-          </section>
-          }
+       
         <div class="row">
           <div class="col-md-4">
                 <label class="form-label" for="rfcdelResponsableSanitario">RFC del responsable sanitario:</label>
@@ -144,13 +139,7 @@
             type="submit" (click)="agregarClaveScian()" [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
     </div>
-    @if (nuevaNotificacion) {
-      <section>
-      <lib-notificaciones 
-      [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
-      </lib-notificaciones>
-      </section>
-      }
+   
     <div class="modal fade custom-backdrop"
         id="agreagarClaveScian"
         tabindex="-1"
@@ -480,8 +469,8 @@
    </div>
       
 <div class="col-md-12 d-flex justify-content-end">
-  <button type="button" class="btn btn-primary me-2" name="eliminar" id="btneliminar" [disabled]="esFormularioSoloLectura">Eliminar</button>
-  <button type="button" class="btn btn-primary me-2" name="modificar" id="btnmodificar"  (click)="onModificar()" [disabled]="esFormularioSoloLectura" >Modificar</button>
+  <button type="button" class="btn btn-primary me-2" name="eliminar" id="btneliminar" [disabled]="esFormularioSoloLectura" (click)="onEliminarMercancias()">Eliminar</button>
+  <button type="button" class="btn btn-primary me-2" name="modificar" id="btnmodificar"  (click)="onModificarMercancias()" [disabled]="esFormularioSoloLectura" >Modificar</button>
   <button type="button" class="btn btn-primary" name="agregarAduana" id="btnagregarAduana" [disabled]="esFormularioSoloLectura">Agregar</button>
 </div>
   <ng-titulo titulo="Manifiestos y declaraciones" />
@@ -543,3 +532,10 @@
 </ng-container>
 </form>
 </div>
+@if (nuevaNotificacion) {
+  <lib-notificaciones
+    [notificacionInput]="nuevaNotificacion"
+    (confirmacionModal)="eliminarPedimento($event)"
+    (cerrarModal)="clearNotificacion()">
+  </lib-notificaciones>
+}

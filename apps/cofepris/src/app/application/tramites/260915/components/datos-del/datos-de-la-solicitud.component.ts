@@ -1,11 +1,11 @@
 import { ADUANA_DATA, CLASIFICACION_PRODUCTO_DATA, CLAVE_SCIAN_DATA, DESCRIPCION_SCIAN_DATA, ESPECIFICAR_DATA, ESTADO_DATA, ESTADO_FISICO_DATA, REGIMEN_AL_QUE_DATA, TIPO_PRODUCTO_DATA } from '../../constants/catalogs.enum';
-import { Catalogo, InputFecha, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, REGEX_CORREO_ELECTRONICO_EXPORTADOR, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Catalogo, CategoriaMensaje, InputFecha, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, REGEX_CORREO_ELECTRONICO_EXPORTADOR, TablaSeleccion, TipoNotificacionEnum } from '@libs/shared/data-access-user/src';
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { CONFIGURACION_COLUMNAS_MERCANCIAS, CONFIGURACION_COLUMNAS_SOLI } from '../../constants/column-config.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HACERLOS_RADIO_OPTIONS, OPCION_DE_BOTON_DE_RADIO, TEXTOS } from '../../constants/constantes.enum';
+import { HACERLOS_RADIO_OPTIONS, NOTA, OPCION_DE_BOTON_DE_RADIO, TEXTOS } from '../../constants/constantes.enum';
 
 import { CrossList,MercanciaCrossList,MercanciasInfo } from '../../models/mercancia.model';
 import { FilaData, FilaData2, ListaClave } from '../../models/fila-modal';
@@ -34,7 +34,18 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule,InputRadioComponent,TituloComponent,CatalogoSelectComponent,TablaDinamicaComponent,InputRadioComponent,CrosslistComponent,InputCheckComponent,NotificacionesComponent,DatosEmpresaComponent,TooltipModule],
+  imports: [CommonModule,
+    ReactiveFormsModule,
+    InputRadioComponent,
+    TituloComponent,
+    CatalogoSelectComponent,
+    TablaDinamicaComponent,
+    InputRadioComponent,
+    CrosslistComponent,
+    InputCheckComponent,
+    NotificacionesComponent,
+    DatosEmpresaComponent,
+    TooltipModule],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrls: ['./datos-de-la-solicitud.component.scss'],
 })
@@ -193,6 +204,23 @@ mercanciasData: MercanciasInfo[] = [];
  * Datos de configuración para el estado físico de la mercancía.
  */
 public estadoFisicoData = ESTADO_FISICO_DATA;
+/**
+   * Mensaje que indica un requisito obligatorio para acceder a la nota.
+   */
+  REQUISITO_OBLIGATORIO = NOTA.REQUISITO_OBLIGATORIO_PARA_ACCEDER_NOTA;
+  /**
+   * Mensaje que indica que se debe capturar información obligatoria.
+   */
+  DEBE_CAPTURAR = NOTA.DEBE_CAPTURAR;
+
+/**
+   * Indica si el diálogo de notificación está habilitado.
+   */
+  public esHabilitarElDialogo: boolean = false;
+  
+  /**
+   * Notificación que se muestra al usuario.
+   */
 
   /** Constructor del componente 
    * @param consultaioQuery Consulta de estado de solo lectura.*/
@@ -355,7 +383,7 @@ createForm(): void{
       tipoOperacion:[this.dataDeLaSolicitudState?.tipoOperacion],
       justification: [
         { 
-          value: this.dataDeLaSolicitudState?.justification || '', 
+          value: this.dataDeLaSolicitudState?.justification, 
           disabled: true 
         }
       ],
@@ -421,20 +449,34 @@ closeModal(): void {
 }
 
 /**
- * Método para eliminar un pedimento de la lista.
- * @param borrar Indica si se debe proceder con la eliminación del pedimento.
+ * Método actualizado para eliminar un pedimento/mercancía de la lista.
+ * @param borrar Indica si se debe proceder con la eliminación.
  */
 eliminarPedimento(borrar: boolean): void {
-  if (borrar) {
-    // Filtrar las filas seleccionadas
-    this.tableData = this.tableData.filter((row) => {
-      const ROW_ID = row.id || (row.claveScianG && row.claveScianG.claveScian);
-      return !this.filasSeleccionadas.has(Number(ROW_ID));
+  if (borrar && this.filasSeleccionadas && this.filasSeleccionadas.size > 0) {
+    // Filter out selected rows from mercanciasData
+    this.mercanciasData = this.mercanciasData.filter((row) => {
+      return !this.filasSeleccionadas.has(row.id || 0);
     });
 
-    // Borrar la selección y la notificación
+    // Clear selection
     this.filasSeleccionadas.clear();
-    this.nuevaNotificacion = null;
+  }
+  
+  // Always clear notification when modal is closed
+  this.clearNotificacion();
+}
+/**
+ * Maneja el evento de eliminar mercancías.
+ * Verifica si hay filas seleccionadas antes de mostrar el modal de confirmación.
+ */
+onEliminarMercancias(): void {
+  if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
+    // Show warning: no rows selected
+    this.abrirModal(0, true, false);
+  } else {
+    // Show delete confirmation
+    this.abrirModal(0, false, false);
   }
 }
 
@@ -446,34 +488,49 @@ eliminarPedimento(borrar: boolean): void {
  * @param i Índice del elemento que se desea eliminar (por defecto 0).
  * @param isSeleccionarEstablecimiento Indica si se debe mostrar el mensaje para seleccionar un establecimiento.
  */
- abrirModal(i: number = 0,isSeleccionarEstablecimiento: boolean = false): void {
-  if(this.filasSeleccionadas && this.filasSeleccionadas.size > 0){
-  this.nuevaNotificacion = {
-    tipoNotificacion: 'alert',
-    categoria: 'danger',
-    modo: 'action',
-    titulo: '',
-    mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
-    cerrar: false,
-    tiempoDeEspera: 0,
-    txtBtnAceptar: 'Aceptar',
-    txtBtnCancelar: 'Cancelar',
+ abrirModal(i: number = 0, isNoRowsSelected: boolean = false, isModificarSinSeleccion: boolean = false): void {
+if (isNoRowsSelected) {
+    // No rows selected for deletion
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'info',
+      titulo: '',
+      mensaje: 'Selecciona un registro.',
+      cerrar: false,
+      tiempoDeEspera: 0,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+      tamanioModal: 'modal-sm',
+    };
+  } else if (isModificarSinSeleccion) {
+    // No rows selected for modification
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'info',
+      titulo: '',
+      mensaje: 'Selecciona sólo un registro para modificar.',
+      cerrar: false,
+      tiempoDeEspera: 0,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+      tamanioModal: 'modal-sm',
+    };
+  }else if (this.filasSeleccionadas && this.filasSeleccionadas.size > 0) {
+    // Delete confirmation when rows are selected
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
+      cerrar: false,
+      tiempoDeEspera: 0,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
   }
-} else if(isSeleccionarEstablecimiento){
-  this.nuevaNotificacion = {
-    tipoNotificacion: 'alert',
-    categoria: 'danger',
-    modo: 'action',
-    titulo: '',
-    mensaje: 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.',
-    cerrar: false,
-    tiempoDeEspera: 2000,
-    txtBtnAceptar: 'Aceptar',
-    txtBtnCancelar: '',
-    tamanioModal: 'modal-sm',
-  };
-}
- 
   this.elementoParaEliminar = i;
 }
 
@@ -789,6 +846,34 @@ onSave(): void {
     this.cdr.detectChanges();
     this.closeModal();
 }
+
+/**
+ * Maneja el evento de modificar mercancías.
+ * Verifica que haya exactamente una fila seleccionada.
+ */
+onModificarMercancias(): void {
+  if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
+    // Show warning: no rows selected
+    this.abrirModal(0,false, true);
+  } else if (this.filasSeleccionadas.size > 1) {
+    // Show warning: multiple rows selected
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Debe seleccionar exactamente un registro para modificar.',
+      cerrar: false,
+      tiempoDeEspera: 0,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+      tamanioModal: 'modal-sm',
+    };
+  } else {
+    // Proceed with modification (call existing onModificar method)
+    this.onModificar();
+  }
+}
 /** Modifica una fila seleccionada de la tabla de mercancías. 
  * Verifica que solo haya una fila seleccionada. Si la fila existe, 
  * carga sus datos en el formulario y muestra el modal para editarla.
@@ -910,5 +995,30 @@ getMercanciasDatosData(): void {
       );
       MODAL_INSTANCIA.show();
     }
+  }
+
+   /**
+   * Envía los datos del formulario y muestra el modal de confirmación.
+   * Si el formulario es inválido, marca todos los campos como tocados.
+   */
+  enviarDialogData(datos?:string): void {
+    this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'modal',
+        titulo: '',
+        mensaje: datos ? datos : this.REQUISITO_OBLIGATORIO,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+        tamanioModal: 'modal-md',
+      };
+  }
+    /**
+   * Método para cerrar el modal de confirmación.
+   * @returns {void}
+   */
+  cerrarModal(): void {
+    this.esHabilitarElDialogo = false;
   }
 }

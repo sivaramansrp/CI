@@ -53,7 +53,7 @@
   "denominacionNombre": "Paracetamol",
   "estadoFisico": "Sólido",
   "presentacionFarmaceutica": "Tableta",
-  "tipoOperacion": "1",
+  "tipoOperacion": "0",
   "LosDatosNotifier": "1",
   
   "tableData":[
