@@ -41,7 +41,7 @@
         "justificacion": "2",
         "claveReferencia": "REF-2025-001",
         "cadenaDependencia": "CD-987654",
-        "banco": "BANCOMER",
+        "banco": "2",
         "llavePago": "LLAVE-1234",
         "fechaFactura": "30/05/2025",
         "importePago": "1500.00"
@@ -51,7 +51,7 @@
         "justificacion": "1",
         "claveDeReferencia": "REF-2025-002",
         "cadenaDependencia": "CD-987655",
-        "banco": "BANCOMER",
+        "banco": "1",
         "llaveDePago": "LLAVE-5678",
         "fechaInicio": "30/05/2025",
         "importeDePago": "2000.00",
@@ -59,7 +59,7 @@
         "justificacionRevision": "1",
         "claveDeReferenciaRevision": "REF-2025-003",
         "cadenaDependenciaRevision": "CD-987656",
-        "bancoRevision": "SANTANDER",
+        "bancoRevision": "1",
         "llaveDePagoRevision": "LLAVE-9101",
         "fechaInicioRevision": "30/05/2025",
         "importeDePagoRevision": "500.00"
