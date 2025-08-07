@@ -11,15 +11,14 @@ import { PreOperativo, ZoosanitarioPayload } from '@libs/shared/data-access-user
   providedIn: 'root'
 })
 export class ZoosanitarioService {
-// Variable para almacenar el estado de la solicitud. Se asume que será inicializada más tarde
- solicitudState!: Solicitud221601State;
+/** Variable para almacenar el estado de la solicitud. Se asume que será inicializada más tarde */
+  solicitudState!: Solicitud221601State;
 
-// Constructor que inyecta el servicio `Tramite221601Query` en la clase, lo que permite consultar el 
-// estado de la solicitud. El servicio se utiliza para obtener y manejar el estado relacionado con 
-// la solicitud del trámite 221601
+/** Constructor que inyecta el servicio `Tramite221601Query` en la clase, lo que permite consultar el
+* estado de la solicitud. El servicio se utiliza para obtener y manejar el estado relacionado con
+* la solicitud del trámite 221601
+*/
   constructor(private tramite221601Query: Tramite221601Query, private http: HttpClient) {}
- // Variable para almacenar el payload
-
 /**
    * @property {ZoosanitarioPayload | null} storedPayload
    * @description Almacena los datos del payload de tipo ZoosanitarioPayload. 
