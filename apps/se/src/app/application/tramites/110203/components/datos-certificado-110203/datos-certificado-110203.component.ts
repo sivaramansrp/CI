@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 
 import { Subject, map, takeUntil } from 'rxjs';
 
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Mercancia } from '@libs/shared/data-access-user/src/core/models/110203/tecnicos.model';
 
 import { Solicitud110203State, Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
@@ -140,12 +140,65 @@ export class DatosCertificado110203Component implements OnInit, OnDestroy {
    * @param tramite110203Store - Store que gestiona los valores persistentes del trámite 110203.
    * @param tramite110203Query - Query que se utiliza para obtener el estado actual de la solicitud 110203.
    */
+
+/**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false;
+
   constructor(
     private fb: FormBuilder,
     private tramite110203Store: Tramite110203Store,
-    private tramite110203Query: Tramite110203Query
-  ) { // Método constructor, utilizado para inicializar las dependencias
+    private tramite110203Query: Tramite110203Query,
+    private consultaioQuery: ConsultaioQuery
+  ) { 
+/**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+
      }
+
+
+/**
+     * Evalúa si se debe inicializar o cargar datos en el formulario.  
+     * Además, obtiene la información del catálogo de mercancía.
+     */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+
+   /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.certificadoForm?.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.certificadoForm.enable();
+    }
+  }
+
 
   /**
    * Variable que controla la visibilidad del modal.
