@@ -98,7 +98,7 @@ interface Cupos {
     CatalogoSelectComponent,
     FormsModule,
     ReactiveFormsModule,
-    // TablaSeleccion (removed because it's not a module or component)
+   
   ],
   templateUrl: './cancelacion-de-certificado.component.html',
   styleUrl: './cancelacion-de-certificado.component.css',
@@ -166,10 +166,7 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
    */
   Cancelacion: Cupo[] = [];
   cancelacionForm!: FormGroup;
-/**
-   * Configuración del tipo de selección en la tabla (en este caso, se usa un checkbox).
-   */
-  TablaSeleccion = TablaSeleccion.CHECKBOX;
+
   /**
    * Lista de catálogos para el régimen que se utiliza en la cancelación de certificados. Esta propiedad permite acceder
    * a las opciones del régimen desde un archivo JSON cargado.
@@ -406,10 +403,7 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
    * Este método emite un evento con el estado del formulario, indicando si fue enviado y si es inválido.
    * Si el formulario es inválido, se puede implementar lógica adicional para manejar los errores.
    */
-  // buscarCupos(): void {
-  //   this.submitted = true;
-  //   this.buscarIntento.emit({submitted: this.submitted, invalid: this.cancelacionForm.invalid});
-  //  }
+  
 
   buscarCupos(): void {
   this.submitted = true;
