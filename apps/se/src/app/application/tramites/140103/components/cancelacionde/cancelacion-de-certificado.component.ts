@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import {
   Catalogo,
   ConsultaioQuery,
@@ -412,38 +413,37 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
 
   buscarCupos(): void {
   this.submitted = true;
-  const form = this.cancelacionForm;
+  const FORM = this.cancelacionForm;
 
   // Emit state for external usage (optional)
   this.buscarIntento.emit({
     submitted: this.submitted,
-    invalid: form.invalid
+    invalid: FORM.invalid
   });
 
-  if (form.invalid) {
-    form.markAllAsTouched();
+  if (FORM.invalid) {
+    FORM.markAllAsTouched();
     return;
   }
 
   // Create a new Cupo from form values
-  const nuevoCupo: Cupos = {
+  const NUEVO_CUPO: Cupos = {
     cupo: Math.floor(Math.random() * 1000) + 1, // Generate random cupo or logic-based
-    nombreProducto: this.obtenerNombreDelCatalogo(this.producto, form.value.producto),
-    nombreSubproducto: this.obtenerNombreDelCatalogo(this.subproducto, form.value.subproducto),
-    mecanismoAsignacion: this.obtenerNombreDelCatalogo(this.mecanismo, form.value.mecanismo),
+    nombreProducto: this.obtenerNombreDelCatalogo(this.producto, FORM.value.producto),
+    nombreSubproducto: this.obtenerNombreDelCatalogo(this.subproducto, FORM.value.subproducto),
+    mecanismoAsignacion: this.obtenerNombreDelCatalogo(this.mecanismo, FORM.value.mecanismo),
     tipoCupo: 'General' // You can change this logic or fetch from form/catalog
   };
 
   // Push to table
-  this.Cancelacion.push(nuevoCupo);
+  this.Cancelacion.push(NUEVO_CUPO);
   // Force table refresh (in some component designs)
   this.Cancelacion = [...this.Cancelacion];
 }
 
 // Helper function to get catalog name from ID
-obtenerNombreDelCatalogo(catalogo: Catalogo[], id: any): string {
-  const item = catalogo.find(i => i.id === id);
-  return item ? item.descripcion : '';
+obtenerNombreDelCatalogo(catalogo: Catalogo[], id: number | string): string {
+  const CATALOG_ITEM = catalogo.find(i => i.id === id);
+  return CATALOG_ITEM ? CATALOG_ITEM.descripcion : '';
 }
-
 }
