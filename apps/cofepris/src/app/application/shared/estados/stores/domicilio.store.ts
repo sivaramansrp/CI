@@ -83,6 +83,7 @@ export interface DomicilioState {
   apellidoPaterno: string;
   /** Apellido materno del representante legal. */
   apellidoMaterno: string;
+
 }
 
 /**

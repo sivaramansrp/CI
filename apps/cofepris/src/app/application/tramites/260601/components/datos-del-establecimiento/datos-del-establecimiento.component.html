@@ -51,7 +51,7 @@
         </div>
         <div class="col-md-4">
             <app-catalogo-select [catalogo]="estado" formControlName="cveEstado" [label]="'Estado'" [required]="true"
-                name="cveEstado" (change)="estadoSeleccion()" [isDisabled]="habilitarEstado"></app-catalogo-select>
+                name="cveEstado" (change)="estadoSeleccion()" [isDisabled]="habilitarEstado || esFormularioSoloLectura"></app-catalogo-select>
             <input type="hidden" name="clave" id="idClaveEntidadFederativa">
         </div>
         <div class="col-md-4">

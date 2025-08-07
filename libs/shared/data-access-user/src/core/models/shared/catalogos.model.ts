@@ -155,3 +155,14 @@ export interface RespuestaDocuemntosRequeridos {
   /** Estatus del documento requerido. */
   estatus: string;
 }
+
+export interface CatalogoTipoDocumento {
+  /**
+   * Identificador único del documento.
+   */
+  id: number;
+  /**
+   * Descripción del documento.
+   */
+  description: string;
+}
