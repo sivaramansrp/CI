@@ -106,4 +106,12 @@ export class RegistroComoEmpresaService {
   getPaisData(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('./assets/json/120603/paisData.json');
   }
+
+  /**
+   * Obtiene los datos de sucursales desde un archivo JSON local.
+   * @returns Un Observable que emite una lista de objetos de tipo Catalogo.
+   */
+  getSucursalData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('./assets/json/120603/seleccionDeSucursal.json');
+  }
 }

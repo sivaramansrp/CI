@@ -4,7 +4,7 @@
     <div class="col-md-12">
       <h5>Alta de choferes extranjeros:</h5>
 
-      <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="ConfiguracionColumna"
+      <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="configuracionColumna"
         [datos]="datosDelChoferExtranjeros" (listaDeFilaSeleccionada)="onChofereNationalSelected($event)">
       </app-tabla-dinamica>
 
@@ -14,15 +14,15 @@
   <div class="row mt-3">
     <div class="col-md-12 text-end">
       <div class="btn-group">
-        <button class="btn btn-default" type="button" (click)="editSelectedRow(agregarModalDialog)"
+        <button class="btn btn-default" type="button" (click)="editarFilaSeleccionada(datosDeChoferesModal)"
           [disabled]="isReadonly">
           Modificar
         </button>
         <button class="btn btn-default ms-2" type="button" [disabled]="isReadonly"
-          (click)="deleteSelectedRow()">
+          (click)="eliminarFilaSeleccionada()">
           Eliminar
         </button>
-        <button class="btn btn-primary ms-2" (click)="addNewRow(agregarModalDialog)"
+        <button class="btn btn-primary ms-2" (click)="agregarNuevaFila(datosDeChoferesModal)"
           [disabled]="isReadonly">
           Agregar
         </button>
@@ -30,8 +30,8 @@
     </div>
     <ng-template #datosDeChoferesModal>
       <div id="datosDeChoferesModal">
-        <app-choferes-datos-extranjeros-dialog [datosDeChofere]="datosChofere" #datosDeChoferesModal [readonly]="isReadonly"
-          (addModalEvent)="addModal($event)" (cancelEvent)="cancelModal()"></app-choferes-datos-extranjeros-dialog>
+        <app-choferes-datos-extranjeros-dialog [datosDeChofere]="datosChofere" [readonly]="isReadonly"
+          (eventoAgregarModal)="agregarModal($event)" (cancelarEvent)="cancelarModal()"></app-choferes-datos-extranjeros-dialog>
       </div>
     </ng-template>
   </div>

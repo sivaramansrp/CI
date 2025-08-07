@@ -1,26 +1,26 @@
 [
   {
-    "numero": "Juan Pérez",
-    "primerApellido": "Pérez",
-    "segundoApellido": "Gómez",
+    "numero": "EXT001",
+    "primerApellido": "Smith",
+    "segundoApellido": "Johnson",
 
-    "nacionalidad": "Indian",
-    "numeroDeGafete": "GAFETE124",
+    "nacionalidad": "México",
+    "numeroDeGafete": "GAFETE789",
     "vigenciaGafete": "2024-12-31",
 
     "numeroDelSeguroSocial": "12345678901",
-    "numberDeIdeFiscal": "123456789",
+    "numberDeIdeFiscal": "TAX123456789",
 
-    "pais": "Pune",
-    "codigoPostal": "12445",
-    "estado": "Aprobado",
+    "pais": "México",
+    "codigoPostal": "12345",
+    "estado": "Jalisco",
 
-    "calle": "Calle Falsa",
-    "numeroExterior": "124",
-    "numeroInterior": "A",
-    "paisDeResidencia": "Pune",
-    "ciudad": "Ciudad 1",
-    "telefono": "312443124",
-    "correoElectronico": "abc@xyz.com"
+    "calle": "Main Street",
+    "numeroExterior": "456",
+    "numeroInterior": "B",
+    "paisDeResidencia": "México",
+    "ciudad": "Ciudad Internacional",
+    "telefono": "5551234567",
+    "correoElectronico": "smith.johnson@example.com"
   }
 ]

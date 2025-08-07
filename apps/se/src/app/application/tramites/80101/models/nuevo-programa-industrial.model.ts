@@ -266,3 +266,13 @@ export interface AnnexoUno {
    */
   seccionActiva: string;
 }
+/**
+ * Obtiene los datos de la submanufacturera desde un archivo local JSON.
+ * Devuelve un observable con los datos de modalidad, folio y año.
+ * Utilizado para inicializar el formulario con información precargada.
+ */
+export interface SubmanufactureraDisponible {
+  modalidad: string;
+  folio: string;
+  ano: string;
+}

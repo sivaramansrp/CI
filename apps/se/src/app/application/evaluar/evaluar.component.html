@@ -50,7 +50,7 @@
                         <li [ngClass]="{'active': indiceDictamen === 2,'disabled': deshabilitarSolicitarDocumentos}">
                             <a data-toggle="tab" (click)="seleccionaTabRequerimiento(2)"
                                 (keydown.enter)="seleccionaTabRequerimiento(2)"
-                                (keydown.space)="seleccionaTabRequerimiento(2)" role="button" tabindex="2">Solicitar
+                                (keydown.space)="seleccionaTabRequerimiento(2)" role="button" tabindex="2">Seleccionar
                                 documentos</a>
                         </li>
                     </ul>
@@ -64,7 +64,7 @@
                         }
                         }
                     </ng-container>
-                    <div class="d-flex justify-content-lg-end h1">
+                    <div class="d-flex justify-content-lg-end h3">
                         <button type="button" class="btn btn-default ms-2" (click)="cancelar()">Cancelar</button>
                         <button class="btn  btn-primary ms-2" type="button" (click)="continuar()">Continuar</button>
                     </div>
@@ -91,12 +91,10 @@
         </div>
 
         <div class="row mb-5 mt-5">
-            <app-reviewers-tabs [viewChild]="viewChild" [tramite]="tramite"
-            [documentos]="documentosSolicitud"
-            [tareasSolicitud]="tareasSolicitud"
-            [acusesResolucion]="acusesResolucion"
-            (viewChildcambioDePestana)="viewChildcambioDePestana($event)"
-            (tabSeleccionado)="onTabSeleccionado($event)">
+            <app-reviewers-tabs [viewChild]="viewChild" [tramite]="tramite" [documentos]="documentosSolicitud"
+                [tareasSolicitud]="tareasSolicitud" [acusesResolucion]="acusesResolucion"
+                (viewChildcambioDePestana)="viewChildcambioDePestana($event)"
+                (tabSeleccionado)="onTabSeleccionado($event)">
             </app-reviewers-tabs>
         </div>
     </div>

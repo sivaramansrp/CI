@@ -8,7 +8,7 @@
               class="panel-heading"
               (click)="mostrar_colapsable()"
             >
-            <h4 class="panel-title spaced-text fs-3"><i class="bi bi-clipboard"></i>Opciones de pre-llenado de Solicitud
+            <h4 class="panel-title spaced-text fs-3"><i class="bi bi-file-earmark-text"></i>Opciones de pre-llenado de Solicitud
               </h4>
               <button [disabled]="esFormularioSoloLectura" type="button" class="collpase-button collapsed"></button>
             </div>
@@ -59,6 +59,11 @@
             formControlName="rfcDel"
             (change)="setValoresStore(forma, 'rfcDel', 'setRfcDel')"
           />
+          <div *ngIf="forma.get('rfcDel')?.invalid && (forma.get('rfcDel')?.dirty || forma.get('rfcDel')?.touched)" class="text-danger">
+            <div *ngIf="forma.get('rfcDel')?.errors?.['pattern']">
+              El RFC no tiene un formato valido.
+            </div>
+          </div>
         </div>
       </div>
       <div class="col-md-8">
@@ -69,11 +74,20 @@
           <input
             class="form-control"
             id="denominacion"
+            maxlength="100"
             placeholder=""
             type="text"
             formControlName="denominacion"
             (change)="setValoresStore(forma, 'denominacion', 'setDenominacion')"
           />
+        </div>
+        <div *ngIf="forma.get('denominacion')?.invalid && (forma.get('denominacion')?.dirty || forma.get('denominacion')?.touched)" class="text-danger">
+          <div *ngIf="forma.get('denominacion')?.errors?.['maxlength']">
+            Máximo 100 caracteres permitidos
+          </div>
+          <div *ngIf="forma.get('denominacion')?.errors && !forma.get('denominacion')?.errors?.['maxlength']">
+            Por favor, corrige la descripción/dirección
+          </div>
         </div>
       </div>
     </div>
@@ -85,11 +99,23 @@
             class="form-control"
             id="correo"
             placeholder=""
-            type="text"
+            type="email"
             formControlName="correo"
+            maxlength="320"
+            data-bs-toggle="tooltip"
+            title="ejemplo@dominio.com"
             (change)="setValoresStore(forma, 'correo', 'setCorreo')"
           />
+          <div *ngIf="forma.get('correo')?.invalid && (forma.get('correo')?.dirty || forma.get('correo')?.touched)" class="text-danger">
+            <div *ngIf="forma.get('correo')?.errors?.['email']">
+              El valor Ingresado no es una dirección válida de correo electrónico
+            </div>
+            <div *ngIf="forma.get('correo')?.errors?.['maxlength']">
+              Máximo 320 caracteres permitidos
+            </div>
+          </div>
         </div>
+        
       </div>
     </div>
   </form>

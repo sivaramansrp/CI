@@ -113,24 +113,24 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   public encabezadoDeTabla: ConfiguracionColumna<DatosDeLaTabla>[] = [
     { encabezado: '', clave: (artículo) => artículo.id, orden: 0 },
     {
-      encabezado: 'Folio Tramite',
+      encabezado: 'Folio trámite',
       clave: (artículo) => artículo.folioTramite,
       orden: 1,
       hiperenlace: true,
     },
     {
-      encabezado: 'Tipo Tramite',
+      encabezado: 'Tipo trámite',
       clave: (artículo) => artículo.tipoTramite,
       orden: 2,
     },
     { encabezado: 'RFC', clave: (artículo) => artículo.rfc, orden: 3 },
     {
-      encabezado: 'Razon social',
+      encabezado: 'Razón social',
       clave: (artículo) => artículo.razonSocial,
       orden: 4,
     },
     {
-      encabezado: 'Estado del tramite',
+      encabezado: 'Estado del trámite',
       clave: (artículo) => artículo.estadoDelTramite,
       orden: 5,
     },
@@ -286,7 +286,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       // Manejar éxito, posiblemente refrescar la grilla o mostrar mensaje
       if (respuesta?.success) {
         respuesta.datos.id = this.datosDelContenedor.length + 1;
-        this.datosDelContenedor.push(respuesta.datos);
+        this.datosDelContenedor = [...this.datosDelContenedor, respuesta.datos];
         (
           this.tramite31501Store.setDelContenedor as (
             valor: DatosDeLaTabla[]

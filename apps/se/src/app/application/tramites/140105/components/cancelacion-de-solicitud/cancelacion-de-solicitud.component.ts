@@ -104,7 +104,7 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
       valorSolicitado: ['', [Validators.required]],
     });
     this.cancelacionForm = this.fb.group({
-      motivoCancelacion: ['', Validators.required],
+     motivoCancelacion: ['', [Validators.required, Validators.maxLength(250)]],
     });
     
 

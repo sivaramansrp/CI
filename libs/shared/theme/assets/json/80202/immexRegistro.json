@@ -1,5 +1,7 @@
 {
-  "immexRegistro": {
+  "fraccionArancelariaSensibles":"01022902",
+  "descripciondelproducto": "Descripción genérica del producto",
+  "fraccionArancelaria":"01022902",
   "candidadPorPeriodo": "1000",
   "capacidadPeriodo": "Mensual",
   "candiadAnual": "12000",
@@ -21,6 +23,5 @@
   "commodityImportacion": 789012,
   "commodityDescImportacion": "Importación de circuitos electrónicos",
   "nicoDescImportacion": "Descripción del NICo para importación"
-}
 
 }

@@ -10,14 +10,14 @@
         <label class="form-label">Tipo persona*:</label>
         <div class="form-check">
           <app-input-radio [radioOptions]="tipoPersonaRadioOpcions" id="contenidoOpcionTipoPersona"
-            formControlName="tipoPersona" [showTooltip]="true">
+            formControlName="tipoPersona" [showTooltip]="true" (valueChange)="cambioDeValorIndique($event)">
           </app-input-radio>
         </div>
       </div>
     </div>
 
     <div class="row mt-5">
-      <div class="col-md-6">
+      <div class="col-md-4">
         <label class="form-label">R.F.C*:</label>
         <span class="bi bi-question-circle-fill" title="R.F.C" data-bs-toggle="tooltip"></span>
         <input type="text" class="form-control" formControlName="rfc" />
@@ -29,10 +29,16 @@
           Máximo 15 caracteres permitidos.
         </small>
       </div>
+      @if(tipoPersonaValor === 'Fisica' || tipoPersonaValor === '') {
+      <div class="col-md-4">
+        <label class="form-label">C.U.R.P*:</label>
+        <input type="text" class="form-control" formControlName="curp" />
+      </div>
+      }
     </div>
 
     <!-- Datos Personales -->
-    @if(agregarDatosForm.get('tipoPersona')?.value === tipoPersona.FISICA) {
+    @if(tipoPersonaValor === 'Fisica' || tipoPersonaValor === '') {
     <label class="form-label text-start fs-2">Datos personales</label>
     <div class="row mb-5">
       <div class="col-md-4">
@@ -57,12 +63,11 @@
         <input type="text" class="form-control" formControlName="segundoApellido" />
       </div>
     </div>
-    } @if(agregarDatosForm.get('tipoPersona')?.value === tipoPersona.MORAL) {
-    <div class="row">
-      <div class="form-group col-md-8 mb-5">
-        <label class="form-label mover-izquierda fs-2" for="denominacionRazon">Denominación/razón social*:</label>
-        <input class="form-control col-md-4" id="terceros_rSocial" size="75" maxlength="254" type="text"
-          formControlName="denominacionRazon" />
+    } @else if(tipoPersonaValor === 'Moral') {
+    <div class="row mb-5">
+      <div class="col-md-8">
+        <label class="form-label">Denominación/razón social*:</label>
+        <input type="text" class="form-control" maxlength="254" formControlName="denominacionRazon" />
         <small
           *ngIf="agregarDatosForm.get('denominacionRazon')?.touched && agregarDatosForm.get('denominacionRazon')?.hasError('required')"
           class="text-danger">
@@ -71,7 +76,6 @@
         <small *ngIf="agregarDatosForm.get('denominacionRazon')?.hasError('maxlength')" class="text-danger">
           Máximo 254 caracteres permitidos.
         </small>
-
       </div>
     </div>
     }
@@ -79,31 +83,31 @@
     <div class="row mt-5">
       <label class="form-label text-start fs-2">Domicilio</label>
       <div class="col-md-4">
-        <app-catalogo-select [catalogo]="paisesDatos" formControlName="pais" [label]="'País'" [required]="true"
+        <app-catalogo-select [catalogo]="paisesDatos" formControlName="pais" [label]="'País'" [required]="true" [isDisabled]="tipoPersonaValor === ''"
           [isDisabled]="true"></app-catalogo-select>
       </div>
       <div class="col-md-4">
-        <app-catalogo-select [catalogo]="estadosDatos" formControlName="estado" [label]="'Estado/localidad'"
+        <app-catalogo-select [catalogo]="estadosDatos" formControlName="estado" [label]="'Estado/localidad'" [isDisabled]="tipoPersonaValor === ''"
           [required]="true"></app-catalogo-select>
       </div>
 
       <div class="col-md-4">
-        <app-catalogo-select [catalogo]="municipiosDatos" formControlName="municipioAlcaldia"
-          [label]="'Municipio/alcaldía'" [required]="true" [isDisabled]="false"></app-catalogo-select>
+        <app-catalogo-select [catalogo]="municipiosDatos" formControlName="municipioAlcaldia" [isDisabled]="tipoPersonaValor === ''"
+          [label]="'Municipio/alcaldía'" [required]="true"></app-catalogo-select>
       </div>
     </div>
 
     <div class="row mt-3">
       <div class="col-md-4">
-        <app-catalogo-select [catalogo]="localidadesDatos" formControlName="localidad" [label]="'Localidad'"
+        <app-catalogo-select [catalogo]="localidadesDatos" formControlName="localidad" [label]="'Localidad'" [isDisabled]="tipoPersonaValor === ''"
           [required]="true"></app-catalogo-select>
       </div>
       <div class="col-md-4">
-        <app-catalogo-select [catalogo]="codigosPostalesDatos" formControlName="codigoPostal"
+        <app-catalogo-select [catalogo]="codigosPostalesDatos" formControlName="codigoPostal" [isDisabled]="tipoPersonaValor === ''"
           [label]="'Código postal o equivalente'" [required]="true"></app-catalogo-select>
       </div>
       <div class="col-md-4">
-        <app-catalogo-select [catalogo]="coloniasDatos" formControlName="colonia" [label]="'Colonia'"
+        <app-catalogo-select [catalogo]="coloniasDatos" formControlName="colonia" [label]="'Colonia'" [isDisabled]="tipoPersonaValor === ''"
           [required]="false"></app-catalogo-select>
       </div>
     </div>
@@ -188,7 +192,7 @@
           <button type="button" name="modificarMercancias" class="btn btn-default" (click)="cancelar()">
             Cancelar
           </button>
-          <button type="button" name="eliminarMercancias" class="btn btn-danger ms-2" (click)="limpiarFormulario()">
+          <button type="button" name="eliminarMercancias" class="btn btn-default ms-2" (click)="limpiarFormulario()">
             Limpiar
           </button>
           <button type="button" name="agregarMercancias" class="btn btn-primary ms-2" (click)="guardarDatos()" [disabled]="agregarDatosForm.invalid">
