@@ -302,4 +302,20 @@ export const CONFIGURATION_TABLAS_MERCANCIAS: ConfiguracionColumna<Mercancias>[]
     tipoPersonaForm: TipoPersonaForm;
     datosPersonales: DatosPersonales;
   }
+
+  /**
+ * Interfaz que representa una opción preoperativa.
+ */
+export interface PreOperativo {
+  /**
+   * Etiqueta que describe la opción preoperativa.
+   */
+  label: string;
+
+  /**
+   * Valor asociado a la opción preoperativa.
+   */
+  value: string;
+}
+
   
