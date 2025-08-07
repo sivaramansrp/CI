@@ -501,7 +501,7 @@
             formControlName="aviso"
           />
           <label class="form-check-label" for="aviso"
-            >Aviso de funcionamiento
+            >Aviso de funcionamiento <span *ngIf="esPuntoYComa">:</span>
             <span *ngIf="!datosSolicitudForm.value.aviso">*</span>
           </label>
         </div>
