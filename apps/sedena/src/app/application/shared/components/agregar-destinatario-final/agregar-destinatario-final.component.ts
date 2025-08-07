@@ -7,7 +7,6 @@ import {
   TIPO_PERSONA_OPCIONES_NO_CONTRIBUYENTE
 } from '../../constants/datos-solicitud.enum';
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
-import { CommonModule, Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   DestinoFinal,
@@ -15,6 +14,7 @@ import {
 } from '../../models/terceros-relacionados.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { ES_CURP } from '../../constants/datos-del-tramilte.enum';
@@ -260,6 +260,7 @@ export class AgregarDestinatarioFinalComponent
       this.agregarDestinatarioFinal.markAllAsTouched();
       return;
     }
+    
     const NUEVO_DESTINATARIO: DestinoFinal = {
       nombreRazonSocial: `${this.agregarDestinatarioFinal.value.nombres} ${this.agregarDestinatarioFinal.value.primerApellido
         } ${this.agregarDestinatarioFinal.value.segundoApellido || ''}`.trim(),
@@ -282,7 +283,7 @@ export class AgregarDestinatarioFinalComponent
       estado: this.agregarDestinatarioFinal.value.estado,
     };
 
-    this.destinatarios.push(NUEVO_DESTINATARIO);
+    this.destinatarios = [...this.destinatarios, NUEVO_DESTINATARIO];
     this.updateDestinatarioFinalTablaDatos.emit(this.destinatarios);
     this.agregarDestinatarioFinal.reset();
   }

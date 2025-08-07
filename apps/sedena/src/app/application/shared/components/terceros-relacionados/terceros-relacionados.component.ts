@@ -1,20 +1,10 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { AlertComponent } from '@ng-mf/data-access-user';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AlertComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { DESTINO_FINAL_ENCABEZADO_DE_TABLA, DestinoFinal, PROVEEDOR_ENCABEZADO_DE_TABLA, Proveedor, TERCEROR_TEXTO_DE_ALERTA } from '../../models/terceros-relacionados.model';
+import { OCULTAR_BOTON_MODIFICAR_TERCEROS, TERCEROS_NACIONALIDAD } from '../../constants/datos-solicitud.enum';
 import { CommonModule } from '@angular/common';
-import { DESTINO_FINAL_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacionados.model';
-import { DestinoFinal } from '../../models/terceros-relacionados.model';
-import { Input } from '@angular/core';
-import { OCULTAR_BOTONES } from '../../constants/datos-del-tramilte.enum';
-import { OCULTAR_BOTON_MODIFICAR_TERCEROS } from '../../constants/datos-solicitud.enum';
-import { PROVEEDOR_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacionados.model';
-import { Proveedor } from '../../models/terceros-relacionados.model';
-import { Router } from '@angular/router';
-import { TERCEROR_TEXTO_DE_ALERTA } from '../../models/terceros-relacionados.model';
-import { TERCEROS_NACIONALIDAD } from '../../constants/datos-solicitud.enum';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
+import { OCULTAR_BOTONES } from '../../constants/datos-del-tramilte.enum'
 
 /**
  * @title Terceros Relacionados
