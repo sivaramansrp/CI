@@ -5,7 +5,9 @@ import {
 import {
   CatalogoSelectComponent,
   CatalogosSelect,
+  ConfiguracionColumna,
   ConsultaioQuery,
+  TablaDinamicaComponent,
   TituloComponent,
   
 } from '@libs/shared/data-access-user/src';
@@ -14,13 +16,13 @@ import { Catalogo } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FOLIODELLBL } from '../../constantes/importador-exportador.enum';
+import { FilaSolicitudTabla } from '../../models/datos-generales.model';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RevisionService } from '../../services/revision.service';
-import { Row } from '../../models/datos-generales.model';
 import { Solicitud220503Query } from '../../estados/tramites220503.query';
 import { Solicitud220503State } from '../../estados/tramites220503.store';
 import { Solicitud220503Store } from '../../estados/tramites220503.store';
@@ -40,6 +42,7 @@ import { Validators } from '@angular/forms';
     ReactiveFormsModule,
     TituloComponent,
     CatalogoSelectComponent,
+    TablaDinamicaComponent
     
   ],
 })
@@ -204,6 +207,45 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
   esFormularioSoloLectura: boolean = false;
+
+  configuracionColumnasTabla: ConfiguracionColumna<FilaSolicitudTabla>[] = [
+    {
+      encabezado: 'No. partida',
+      clave: (solicitud) => solicitud.Partida,
+      orden: 1
+    },
+    {
+      encabezado: 'Tipo de requisito',
+      clave: (solicitud) => solicitud.Tiporequisito,
+      orden: 2
+    },
+    {
+      encabezado: 'Requisito',
+      clave: (solicitud) => solicitud.Requisito,
+      orden: 3
+    },
+    {
+      encabezado: 'Número de certificado internacional',
+      clave: (solicitud) => solicitud.Certificado,
+      orden: 4
+    },
+    {
+      encabezado: 'Fracción arancelaria',
+      clave: (solicitud) => solicitud.Fraccion,
+      orden: 5
+    },
+    {
+      encabezado: 'Descripción de la fracción',
+      clave: (solicitud) => solicitud.Descripcion,
+      orden: 6
+    },
+    {
+      encabezado: 'Nico',
+      clave: (solicitud) => solicitud.Nico,
+      orden: 7
+    }
+  ];
+
 
   constructor(
     private readonly fb: FormBuilder,
@@ -377,7 +419,7 @@ this.forma.disable();
    * Filas de datos.
    * @type {Row[]}
    */
-  rows: Row[] = MERCANCIA;
+  tablaFilaDatos: FilaSolicitudTabla[] = MERCANCIA;
 
   /**
    * Muestra u oculta el contenido colapsable.
@@ -392,16 +434,6 @@ this.forma.disable();
    */
   currentIndex = 0;
 
-  /**
-   * Rota la fila en la dirección especificada.
-   * @param {number} direction - La dirección de rotación.
-   * @returns {void}
-   */
-  rotateRow(direction: number): void {
-    const TOTALROWS = this.rows.length;
-    this.currentDirection = direction;
-    this.currentIndex = (this.currentIndex + direction + TOTALROWS) % TOTALROWS;
-  }
 
   /**
    * Verifica si un campo del formulario es válido.
