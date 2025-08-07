@@ -8,7 +8,7 @@ import { TEXTOS } from '../../constants/modificacion-descripcion.enum';
 import { Tramite130401Query } from '../../../../estados/queries/tramite130401.query';
 import { Tramite130401State } from '../../../../estados/tramites/tramite130401.store';
 import { Tramite130401Store } from '../../../../estados/tramites/tramite130401.store';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 

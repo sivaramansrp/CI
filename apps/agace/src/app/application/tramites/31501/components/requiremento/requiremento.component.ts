@@ -92,8 +92,8 @@ export class RequirementoComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const FOLIO_TRAMITE = history.state.data;
     this.folioTramite = {
-            folioTramite: FOLIO_TRAMITE.folioTramite,
-            tipoTramite: FOLIO_TRAMITE.tipoTramite,
+            folioTramite: FOLIO_TRAMITE?.row?.folioTramite,
+            tipoTramite: FOLIO_TRAMITE?.row?.tipoTramite,
           };
     this.consultaioQuery.selectConsultaioState$
     .pipe(

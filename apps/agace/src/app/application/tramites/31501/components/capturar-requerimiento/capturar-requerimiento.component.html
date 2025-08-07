@@ -9,9 +9,21 @@
         </div>
         <div class="row mb-3">
             <div class="col-md-4">
-                <label>Justificacion del requerimiento*:</label>
-                <textarea cols="60" rows="5" class="form-control area-de-texto" formControlName="motivoCancelacion" required
-                    (change)=" setValoresStore(capturarRequirementoForm, 'motivoCancelacion', 'setMotivoCancelacion' )"></textarea>
+              <label>Justificación del requerimiento*:</label>
+              <textarea cols="60" rows="5" 
+                [ngClass]="{
+                  'form-control area-de-texto': true,
+                  'is-invalid': capturarRequirementoForm.get('motivoCancelacion')?.invalid && 
+                               (capturarRequirementoForm.get('motivoCancelacion')?.touched || 
+                                capturarRequirementoForm.get('motivoCancelacion')?.dirty)
+                }"
+                formControlName="motivoCancelacion" required
+                (change)=" setValoresStore(capturarRequirementoForm, 'motivoCancelacion', 'setMotivoCancelacion' )"></textarea>
+              @if (capturarRequirementoForm.get('motivoCancelacion')?.invalid &&
+              (capturarRequirementoForm.get('motivoCancelacion')?.touched ||
+              capturarRequirementoForm.get('motivoCancelacion')?.dirty)) {
+              <div class="text-danger small mt-1">Este campo es obligatorio.</div>
+              }
             </div>
         </div>
     </form>

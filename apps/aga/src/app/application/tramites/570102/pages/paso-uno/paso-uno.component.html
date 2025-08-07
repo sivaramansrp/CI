@@ -15,7 +15,7 @@
       }
       @case (2) {
       @if(esDatosRespuesta){
-      <app-solicitud [tabIndex]="2"></app-solicitud> } }
+      <app-solicitud (dataEvent)="emitirCancelacion($event)" (isdataEvent)="isDataEvent($event) " [tabIndex]="2"></app-solicitud> } }
       }
     </ng-container>
   </div>

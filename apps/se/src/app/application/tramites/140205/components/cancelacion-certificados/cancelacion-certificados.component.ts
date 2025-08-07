@@ -7,13 +7,13 @@ import {
 } from '../../model/cancelaciones-certificado.model';
 import {
   CatalogoSelectComponent,
-  ConsultaioQuery,
-  ConsultaioState,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
   ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -207,20 +207,6 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Destruye el componente y libera recursos.
-   *
-   * Este método se llama cuando el componente se destruye, asegurando que no queden suscripciones activas.
-   */
-  inicializarFormulario(): void {
-    if (this.soloLectura) {
-      this.solicitudForm.disable();
-  //  this.filaDisposible([]);
-      this.cargarCuposTabla();
-    } else {
-      this.solicitudForm.enable();
-    }
-  }
-  /**
    * @method grupoCupo
    * @description Getter para obtener el grupo de formulario relacionado con los datos del cupo.
    * @returns {FormGroup} Grupo de formulario del cupo.
@@ -244,7 +230,20 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
   get grupoFolio(): FormGroup {
     return this.solicitudForm.get('grupoFolio') as FormGroup;
   }
-
+  /**
+   * Destruye el componente y libera recursos.
+   *
+   * Este método se llama cuando el componente se destruye, asegurando que no queden suscripciones activas.
+   */
+  inicializarFormulario(): void {
+    if (this.soloLectura) {
+      this.solicitudForm.disable();
+      this.cargarCuposTabla();
+    } 
+    else {
+      this.solicitudForm.enable();
+    }
+  }
   /**
    * @method initImpresaDatosFormulario
    * @description Inicializa el formulario reactivo con los datos de la solicitud.
@@ -304,6 +303,9 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
     });
     this.inicializarFormulario();
   }
+
+  
+
   /**
    * @property {TablaSeleccion} tablaSeleccion
    * @description Tabla de selección para la tabla de cupos.
