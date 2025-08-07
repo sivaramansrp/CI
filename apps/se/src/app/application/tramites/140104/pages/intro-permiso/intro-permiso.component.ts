@@ -3,7 +3,8 @@ import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { PASOS } from '../../constants/intropermiso.enum';
+
+import { PASOS, TEXTOS_CANCELACIONS } from '../../constants/intropermiso.enum';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 import { Subject } from 'rxjs';
 import { ViewChild } from '@angular/core';
@@ -21,6 +22,20 @@ interface AccionBoton {
 
 })
 export class IntroPermisoComponent implements OnInit, OnDestroy{
+    /**
+   * Indica si se debe mostrar la alerta en la interfaz de usuario.
+   * Se utiliza para controlar la visibilidad de mensajes de advertencia o error.
+   */
+  public showAlert = false;
+    /**
+   * Contiene los textos que se muestran al usuario cuando ocurre una cancelación.
+   * Los textos provienen del archivo de constantes TEXTOS_CANCELACIONS.
+   */
+   TEXTOS = TEXTOS_CANCELACIONS;
+   /**
+   * Clase CSS para la alerta de información.
+   */
+  infoAlert = 'alert-info';
   /**
  * @description Array de objetos que definen los pasos del formulario.
  * Cada objeto contiene información sobre un paso específico,
@@ -110,6 +125,11 @@ export class IntroPermisoComponent implements OnInit, OnDestroy{
       .subscribe((mensaje) => {
         this.mostrarDevolverFacturas = mensaje;
       });
+      this.servicioDeMensajesService.obtenerMostrarAlerta().subscribe(
+      (valor) => {
+        this.showAlert = valor;
+      }
+    );
   }
   /**
    * @description Lifecycle method executed when the component is destroyed.
@@ -144,4 +164,5 @@ export class IntroPermisoComponent implements OnInit, OnDestroy{
       }
     }
   }
+  
 }

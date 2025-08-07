@@ -1,8 +1,9 @@
-import * as certificadosACancelarDatos from '@libs/shared/theme/assets/json/140104/certificados-a-cancelar.json';
-import * as certificadosDisponiblesDatos from '@libs/shared/theme/assets/json/140104/certificados-disponibles.json';
-import * as cuposDisponiblesDatos from '@libs/shared/theme/assets/json/140104/cupos-disponibles.json';
-import * as mecanismoAsignacionDatos from '@libs/shared/theme/assets/json/140104/mecanismo-asignacion.json';
-import * as regimenAduaneroListDatos from '@libs/shared/theme/assets/json/140104/regimen-aduanero-list.json';
+import certificadosACancelarDatos from '@libs/shared/theme/assets/json/140104/certificados-a-cancelar.json';
+import certificadosDisponiblesDatos from '@libs/shared/theme/assets/json/140104/certificados-disponibles.json';
+import cuposDisponiblesDatos from '@libs/shared/theme/assets/json/140104/cupos-disponibles.json';
+import mecanismoAsignacionDatos from '@libs/shared/theme/assets/json/140104/mecanismo-asignacion.json';
+import regimenAduaneroListDatos from '@libs/shared/theme/assets/json/140104/regimen-aduanero-list.json';
+
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CertificadosDisponibles } from '../../models/cancelacion-de-certificados.model';
 import { Component } from '@angular/core';
@@ -224,6 +225,11 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
    * Ejecuta la acción de buscar registros y muestra los datos precargados en las tablas.
    */
   public buscar(_event: Event): void {
+ if (!this.formularioGrupo.valid) {
+      this.servicioDeMensajesService.establecerMostrarAlerta(true);
+    } else {
+      this.servicioDeMensajesService.establecerMostrarAlerta(false);
+    }
     this.mostrarDetalleDelCupo = true;
     this.cuposDisponiblesTabla = [cuposDisponiblesDatos as CuposDisponibles];
     this.CertificadosDisponiblesTabla = [certificadosDisponiblesDatos as CertificadosDisponibles];
