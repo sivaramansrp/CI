@@ -1,13 +1,7 @@
 .form-control {
-    height: 35PX;
     background-color: #80808024;
-    font-size: 15px;
-    font-weight: 500;
 }
 
-.form-label {
-    font-size: 15px;
-}
 
 .custom-textarea {
     height: 120px;
@@ -22,11 +16,18 @@
 }
 
 .label-width {
-    width: 38px;
     text-align: center;
-    font-size: 15px;
 }
 
 .bg-white {
     background-color: white !important;
+}
+
+textarea{
+    resize: none;
+    overflow: hidden;
+}
+.custom-backdrop{
+    z-index: 1045 !important;
+    background: rgba(0, 0, 0, 0.5) !important;
 }

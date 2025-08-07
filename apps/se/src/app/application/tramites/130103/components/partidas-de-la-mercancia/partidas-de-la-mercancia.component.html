@@ -129,9 +129,22 @@
          <formas-dinamicas [forma]="modificarPartidaForm" [formularioDatos]="modificarPartidasFormData"
             [estado]="importacionstate" (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-primary" (click)="guardarEdicion()" >Guardar cambios</button>
+      <div class="row mt-5 mb-5">
+          <div class="form-group">
+              <div class="col-md-12">
+                  <div class="pull-left text-muted text-vertical-align-button" id="lblCamposObligatorios">
+                      * Campos obligatorios
+                  </div>
+                  <div class="pull-right row">
+                      <div class="col-md-5">
+                          <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancelar</button>
+                      </div>
+                      <div class="col-md-5" id="botonGuardar">
+                          <button type="button" class="btn btn-primary" (click)="guardarEdicion()" >Modificar</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
       </div>
     </div>
   </div>

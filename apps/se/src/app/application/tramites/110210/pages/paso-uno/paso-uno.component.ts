@@ -98,16 +98,19 @@ constructor(
  * o simplemente mostrar la información existente.
  */
   ngOnInit(): void {
-   this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyed$),map((seccionState) => {
-          this.consultaState = seccionState;
-      })).subscribe();
-  
-    if(this.consultaState.update) {
-      this.guardarDatosFormulario();
-    } else {
-      this.esDatosRespuesta = true;
-    }
-  }
+  this.consultaQuery.selectConsultaioState$.pipe(
+    takeUntil(this.destroyed$),
+    map((seccionState) => {
+      this.consultaState = seccionState;
+      
+      if(this.consultaState.update) {
+        this.guardarDatosFormulario();
+      } else {
+        this.esDatosRespuesta = true;
+      }
+    })
+  ).subscribe();
+}
   
   /**
  * Método del ciclo de vida que se ejecuta al destruir el componente.

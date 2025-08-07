@@ -5,6 +5,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
+import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 /**
@@ -50,6 +51,7 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
     private DatosDomicilioLegalStore: DatosDomicilioLegalStore,
     private DatosDomicilioLegalQuery: DatosDomicilioLegalQuery,
     private consultaioQuery: ConsultaioQuery,
+    private servicioDeFormularioService: ServicioDeFormularioService,
   ) {
     //Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
@@ -102,10 +104,12 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
 
     this.representante = this.fb.group({
       rfc: [this.solicitudState?.rfc, Validators.required],
-      nombre: [{ value: this.solicitudState.nombre, disabled: true }, Validators.required],
-      apellidoPaterno: [{ value: this.solicitudState.apellidoPaterno, disabled: true }, Validators.required],
-      apellidoMaterno: [{ value: this.solicitudState.apellidoMaterno, disabled: true }],
+      nombre: [{ value: this.solicitudState?.nombre, disabled: true }, Validators.required],
+      apellidoPaterno: [{ value: this.solicitudState?.apellidoPaterno, disabled: true }, Validators.required],
+      apellidoMaterno: [{ value: this.solicitudState?.apellidoMaterno, disabled: true }],
     });
+
+    this.servicioDeFormularioService.registerForm('representanteForm', this.representante);
 
      /*
      * Si el formulario está en modo solo lectura, deshabilita todos los campos.
@@ -114,10 +118,7 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
      */
     if (this.esFormularioSoloLectura && this.representante ) {
       this.representante.disable();
-      
-    } else {
-      this.representante.enable();
-    }
+    } 
 
     if(this.updateDatos) {
       this.obtenerValor(); // Obtiene valores predeterminados si el formulario es de solo lectura.
@@ -151,6 +152,10 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
         value: string | number
       ) => void
     )(VALOR);
+
+    this.servicioDeFormularioService.setFormValue('representanteForm', {
+        [campo]: VALOR,
+      });
   }
 
   /**

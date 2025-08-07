@@ -10,7 +10,14 @@
         </label>
         <input type="text" id="rfc" formControlName="rfc" class="form-control mt-custom" size="30" maxlength="13"
           (change)="cambiarRFC()" />
-      </div>
+          </div>
+     @if(formularioDatosSubcontratista.controls['rfc'].invalid && formularioDatosSubcontratista.controls['rfc'].touched) {
+              <div class="d-grid">
+                @if(formularioDatosSubcontratista.controls['rfc'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                }              
+                </div>
+              }
     </div>
 
     <div class="col-md-4">

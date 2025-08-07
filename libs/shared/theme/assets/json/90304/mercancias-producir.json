@@ -1,5 +1,9 @@
 {
-    "code": 200,
-    "data": [],
-    "message": "Consulta exitosa"
-}
+    "data": [
+      {
+        "fraccionArancelaria": "84864001",
+        "claveDelSector": "XIXa",
+        "eStatus": "Autorizada"
+      }
+    ]
+  }

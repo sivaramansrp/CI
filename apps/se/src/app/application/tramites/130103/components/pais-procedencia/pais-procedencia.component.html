@@ -7,6 +7,9 @@
         <crosslist
             [showSearchInput1]="true"
             [showSearchInput2]="true"
+            [showSearchPlaceholder]="false"
+            [searchInput1Label]="'País disponible:'"
+            [searchInput2Label]="'País seleccionados*:'"
             [fechas]="seleccionarOrigenDelPais"
             [label]="paisDeProcedenciaLabel"
             [botonField]="paisDeProcedenciaBotones"
@@ -45,13 +48,9 @@
                 name="observaciones"
                 formControlName="observaciones"
                 rows="5"
+                maxlength="512"
                 (change)="eventoDeCambioDeValor($event, 'observaciones')"
                 ></textarea>
-                @if (forma.get('observaciones')?.errors?.['maxlength'] && forma.get('observaciones')?.touched) {
-                    <div class="mensaje-error">
-                        Debe tener como máximo 512 caracteres.
-                    </div> 
-                }
             </div>
         </div>
     </div>

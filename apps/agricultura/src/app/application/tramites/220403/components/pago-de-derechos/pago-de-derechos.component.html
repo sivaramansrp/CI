@@ -32,6 +32,7 @@
                 [datos]="item.props"
                 (valorCambiado)="fechaCambiado($event)"
                 name="item.props.campo"
+                [isDisabled]="esFormularioSoloLectura"
                 [setFecha]="fechaPagoDate" 
               ></input-fecha>
               } @case (inputTypes.RADIO) {
@@ -55,7 +56,7 @@
     </form>
     <div class="row mt-5 mb-5">
     <div class="col-md-12 d-flex justify-content-end">
-      <button type="button" class="btn btn-primary"> Borrar datos del pago </button>
+      <button type="button" class="btn btn-danger" [disabled]="esFormularioSoloLectura"> Borrar datos del pago </button>
     </div>
   </div>
   </div>
