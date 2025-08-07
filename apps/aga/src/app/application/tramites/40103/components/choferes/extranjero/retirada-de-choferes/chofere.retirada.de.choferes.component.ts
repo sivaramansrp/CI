@@ -115,7 +115,11 @@ export class ChofereRetiradaDeChoferesComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         map((data) => {
-          this.datosDelChoferExtranjeros = this.datosDelChoferExtranjeros.concat(data?.datosDelChoferExtranjerosRetirada ?? []);
+          // Solo inicializar los datos si el arreglo está vacío para evitar sobrescribir cambios locales
+          if (this.datosDelChoferExtranjeros.length === 0) {
+            // Crear una copia mutable del arreglo para evitar problemas de inmutabilidad
+            this.datosDelChoferExtranjeros = [...(data?.datosDelChoferExtranjerosRetirada ?? [])];
+          }
         })
       )
       .subscribe();
@@ -149,7 +153,7 @@ export class ChofereRetiradaDeChoferesComponent implements OnInit, OnDestroy {
    */
   addNewRow(template: TemplateRef<unknown>): void {
     this.datosChofere = {} as ChoferesExtranjeros;
-    this.openModal(template);
+    this.abrirModal(template);
   }
 
   /**
@@ -166,7 +170,7 @@ export class ChofereRetiradaDeChoferesComponent implements OnInit, OnDestroy {
       return;
     }
     this.datosChofere = this.datosDelChoferExtranjerosSelected[0];
-    this.openModal(template);
+    this.abrirModal(template);
   }
 
   /**
@@ -191,7 +195,7 @@ export class ChofereRetiradaDeChoferesComponent implements OnInit, OnDestroy {
    * 
    * @param template Referencia al template que se mostrará dentro del modal.
    */
-  openModal(template: TemplateRef<unknown>): void {
+  abrirModal(template: TemplateRef<unknown>): void {
     this.modalRef = this.bsModalService.show(template, {
       class: 'modal-fullscreen',
     });
@@ -210,13 +214,33 @@ export class ChofereRetiradaDeChoferesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Agrega un nuevo objeto de tipo `ChoferesExtranjeros` al arreglo `datosDelChoferExtranjeros`.
+   * Agrega un nuevo objeto de tipo `ChoferesExtranjeros` al arreglo `datosDelChoferExtranjeros`
+   * o actualiza uno existente si se está modificando.
    * Limpia la selección actual de choferes y cierra el modal.
    *
-   * @param data - Los datos del chofer extranjero a agregar.
+   * @param data - Los datos del chofer extranjero a agregar o actualizar.
    */
-  addModal(data: ChoferesExtranjeros): void {
-    this.datosDelChoferExtranjeros.push(data);
+  agregarModal(data: ChoferesExtranjeros): void {
+    // Crear una copia mutable del arreglo para evitar errores de inmutabilidad
+    const arregloMutable = [...this.datosDelChoferExtranjeros];
+    
+    // Verificar si estamos actualizando un registro existente o agregando uno nuevo
+    const indiceExistente = arregloMutable.findIndex(item => item.numero === data.numero);
+    
+    if (indiceExistente >= 0) {
+      // Actualizar registro existente
+      arregloMutable[indiceExistente] = data;
+    } else {
+      // Agregar nuevo registro
+      arregloMutable.push(data);
+    }
+    
+    // Asignar el arreglo modificado de vuelta a la propiedad
+    this.datosDelChoferExtranjeros = arregloMutable;
+    
+    // Actualizar el estado en el servicio para persistir los cambios
+    this.chofer40103Service.updateDatosDelChoferExtranjeroRetirada(this.datosDelChoferExtranjeros);
+    
     this.datosDelChoferExtranjerosSelected = [];
     this.cancelModal();
   }
