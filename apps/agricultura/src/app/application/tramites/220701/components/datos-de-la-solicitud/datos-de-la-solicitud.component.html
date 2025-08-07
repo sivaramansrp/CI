@@ -52,7 +52,7 @@
               formControlName="certificadosAutorizados" [disabled]="esFormularioSoloLectura"/>
           </div>
           <div class="col-md-4">
-            <input-fecha [datos]="fechaInicioInput" [setFecha]="datosDeLaSolicitudForm.get('fechaInicio')?.value" [isDisabled]="esFormularioSoloLectura" (valorCambiado)="cambioFechaInicio($event)"></input-fecha>
+            <input-fecha [datos]="fechaInicioInput" formControlName="fechaInicio" [setFecha]="datosDeLaSolicitudForm.get('fechaInicio')?.value" [isDisabled]="esFormularioSoloLectura" (valorCambiado)="cambioFechaInicio($event)"></input-fecha>
           </div>
           <div class="col-md-4">
             <div class="form-group">
@@ -167,7 +167,7 @@
           <div class="col-md-12 mt-5">
             <div class="table-container">
               <app-tabla-dinamica *ngIf="medioTableDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionCheckbox"
-                [configuracionTabla]="exportadorTabla" [datos]="medioTableDatos"></app-tabla-dinamica>
+                [configuracionTabla]="exportadorTabla" [datos]="medioTableDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
             </div>
           </div>
         </div>

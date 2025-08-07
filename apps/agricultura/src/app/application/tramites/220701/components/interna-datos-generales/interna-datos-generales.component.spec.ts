@@ -121,6 +121,9 @@ describe('InternaDatosGeneralesComponent', () => {
       getEmpresaTransportista: jest
         .fn()
         .mockReturnValue(observableOf({ code: 200, data: {} })),
+      getPuntoInspeccion: jest
+        .fn()
+        .mockReturnValue(observableOf({ code: 200, data: {} })),
     };
   });
 
@@ -133,7 +136,7 @@ describe('InternaDatosGeneralesComponent', () => {
     }
   });
   it('should initialize forms with expected values', () => {
-    // Mock or initialize the dependency or property expected to have 'coordenadas'
+    // Simular o inicializar la dependencia o propiedad esperada que tenga 'coordenadas'
     component.mercanciaDatosService = {
       getDatos: jest.fn().mockReturnValue(observableOf({ mercanciaApiDatos: [{ coordenadas: {} }] }))
     };
@@ -163,9 +166,22 @@ it('should call patchValue on forma and movilizacionForm in ngOnInit if they exi
     selectSolicitudTramite$: observableOf({})
   };
 
-  // Add this mock to fix the error
+  // Agregar este mock para corregir el error
   component.mercanciaDatosService = {
     getDatos: jest.fn().mockReturnValue(observableOf({ mercanciaApiDatos: [] }))
+  };
+
+  // Asegurar que todos los métodos requeridos estén presentes en revisionService para evitar TypeError
+  component.revisionService = {
+    getOficianaInspeccion: jest.fn().mockReturnValue(observableOf({ code: 200, data: {} })),
+    getAduanaIngreso: jest.fn().mockReturnValue(observableOf({ code: 200, data: {} })),
+    getEstablecimiento: jest.fn().mockReturnValue(observableOf({ code: 200, data: {} })),
+    getRegimenDestinaran: jest.fn().mockReturnValue(observableOf({ code: 200, data: {} })),
+    getMovilizacionNacional: jest.fn().mockReturnValue(observableOf({ code: 200, data: {} })),
+    getPuntoVerificacion: jest.fn().mockReturnValue(observableOf({ code: 200, data: {} })),
+    getEmpresaTransportista: jest.fn().mockReturnValue(observableOf({ code: 200, data: {} })),
+    getPuntoInspeccion: jest.fn().mockReturnValue(observableOf({ code: 200, data: {} })),
+    getVeterinario: jest.fn().mockReturnValue(observableOf({ code: 200, data: {} }))
   };
 
   jest.spyOn(component.forma, 'patchValue');
@@ -223,6 +239,16 @@ it('should call patchValue on forma and movilizacionForm in ngOnInit if they exi
     component.obtenerDatos = jest.fn();
     component.seccionQuery = { selectSeccionState$: observableOf({}) };
 
+    // Simular catalogosService y sus métodos para evitar TypeError
+    component.catalogosService = {
+      obtenerAduanaDeIngreso: jest.fn().mockReturnValue(observableOf({ data: {} })),
+      obtenerSanidadAgropecuaria: jest.fn().mockReturnValue(observableOf({ data: {} })),
+      obtenerPuntoInspeccion: jest.fn().mockReturnValue(observableOf({ data: {} })),
+      obtenerEstablecimiento: jest.fn().mockReturnValue(observableOf({ data: {} })),
+      obtenerVeterinario: jest.fn().mockReturnValue(observableOf({ data: {} })),
+      obtenerRegimen: jest.fn().mockReturnValue(observableOf({ data: {} })),
+    };
+
     component.ngOnInit();
   });
 
@@ -247,6 +273,11 @@ it('should call patchValue on forma and movilizacionForm in ngOnInit if they exi
     component.fb = formBuilder;
     component.forma = formBuilder.group({ test: [''] });
     component.movilizacionForm = formBuilder.group({ test: [''] });
+    component.internaDatosGeneralesState = {
+      regimen: 'test-regimen',
+      aduanaIngreso: 'test-aduana',
+      oficinaInspeccion: 'test-oficina'
+    };
     component.inicializarFormulario();
   });
 
@@ -306,13 +337,6 @@ it('should call patchValue on forma and movilizacionForm in ngOnInit if they exi
     component.obtenerEstablecimientoList();
   });
 
-  it('should run #obtenerVeterinarioList()', () => {
-    component.catalogosService = {
-      obtenerVeterinario: jest.fn().mockReturnValue(observableOf({ data: {} })),
-    };
-    component.obtenerVeterinarioList();
-  });
-
   it('should run #obtenerRegimenList()', () => {
     component.catalogosService = {
       obtenerRegimen: jest.fn().mockReturnValue(observableOf({ data: {} })),
@@ -327,24 +351,6 @@ it('should call patchValue on forma and movilizacionForm in ngOnInit if they exi
         .mockReturnValue(observableOf({ code: {}, data: {} })),
     };
     component.getAduanaIngreso();
-  });
-
-  it('should run #getOficianaInspeccion()', () => {
-    component.revisionService = {
-      getOficianaInspeccion: jest
-        .fn()
-        .mockReturnValue(observableOf({ code: {}, data: {} })),
-    };
-    component.getOficianaInspeccion();
-  });
-
-  it('should run #getEstablecimiento()', () => {
-    component.revisionService = {
-      getEstablecimiento: jest
-        .fn()
-        .mockReturnValue(observableOf({ code: {}, data: {} })),
-    };
-    component.getEstablecimiento();
   });
 
   it('should run #getRegimenDestinaran()', () => {

@@ -109,6 +109,13 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    */
   pagosDeDerechosState!: PagosDeDerechosFormInt;
 
+   /**
+   * Configuración para el input de fecha de salida.
+   * Proporciona un valor inicial para el campo de fecha.
+   * @type {InputFecha}
+   */
+  fechaFinalInput: InputFecha = EXPEDICION_FACTURA_FECHA;
+
   /**
    * @property {CatalogosSelect} banco
    * @description Información del banco seleccionado en el formulario.
@@ -258,14 +265,14 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
       )
       .subscribe();
 
-    // Set exentoPagoValor to 'Si' if not already set from state
+    // Establecer exentoPagoValor a 'Si' si no está ya establecido desde el estado
     if (!this.pagosDeDerechosState?.exentoPago) {
       this.exentoPagoValor = 'Si';
     } else {
       this.exentoPagoValor = this.pagosDeDerechosState.exentoPago;
     }
 
-    // Set exentoPagoRevisionValor to 'Si' if not already set from state
+    // Establecer exentoPagoRevisionValor a 'Si' si no está ya establecido desde el estado
     if (!this.pagosDeDerechosState?.exentoPagoRevision) {
       this.exentoPagoRevisionValor = 'Si';
     } else {
@@ -298,7 +305,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
         Validators.required,
       ],
       fechaInicio: [
-        {value: this.pagosDeDerechosState?.fechaInicio || '', disabled: true},
+        this.pagosDeDerechosState?.fechaInicio,
         Validators.required,
       ],
       importeDePago: [
@@ -374,18 +381,18 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
             if (seccionState) {
               this.pagosDeDerechosState = seccionState.PagosDeDerechosState;
               const PATCH_DATA = { ...this.pagosDeDerechosState };
-              // Ensure exentoPago remains 'Si' and disabled
+              // Asegurar que exentoPago permanezca 'Si' y deshabilitado
               if (PATCH_DATA.exentoPago !== 'Si') {
                 PATCH_DATA.exentoPago = 'Si';
                 this.exentoPagoValor = 'Si';
               }
-              // Ensure exentoPagoRevision remains 'Si' and disabled
+              // Asegurar que exentoPagoRevision permanezca 'Si' y deshabilitado
               if (PATCH_DATA.exentoPagoRevision !== 'Si') {
                 PATCH_DATA.exentoPagoRevision = 'Si';
                 this.exentoPagoRevisionValor = 'Si';
               }
               this.pagosDeDerechosForm.patchValue(PATCH_DATA);
-              // Re-disable all the specified controls after patching
+              // Volver a deshabilitar todos los controles especificados después del parcheo
               this.pagosDeDerechosForm.get('justificacion')?.disable();
               this.pagosDeDerechosForm.get('claveDeReferencia')?.disable();
               this.pagosDeDerechosForm.get('cadenaDependencia')?.disable();
@@ -460,14 +467,14 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
       .pagoDeCargarDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data: PagoDeDerechos) => {
-        // Create patch data with exentoPago set to 'Si'
+        // Crear datos de parcheo con exentoPago establecido a 'Si'
         const PATCH_DATA = { 
           ...data, 
           exentoPago: 'Si' 
         };
         this.exentoPagoValor = 'Si';
         this.pagosDeDerechosForm.patchValue(PATCH_DATA);
-        // Re-disable all the specified controls after patching
+        // Volver a deshabilitar todos los controles especificados después del parcheo
         this.pagosDeDerechosForm.get('justificacion')?.disable();
         this.pagosDeDerechosForm.get('claveDeReferencia')?.disable();
         this.pagosDeDerechosForm.get('cadenaDependencia')?.disable();
@@ -543,7 +550,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data: PagoDeDerechosRevision) => {
         this.pagosDeDerechosForm.patchValue(data);
-        // Ensure all specified controls remain disabled after any patch
+        // Asegurar que todos los controles especificados permanezcan deshabilitados después de cualquier parcheo
         this.pagosDeDerechosForm.get('justificacion')?.disable();
         this.pagosDeDerechosForm.get('claveDeReferencia')?.disable();
         this.pagosDeDerechosForm.get('cadenaDependencia')?.disable();
@@ -605,7 +612,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
         if (typeof this.generarFormulario === 'function') {
           this.generarFormulario(OBJECT_DATE);
         }
-        // Keep fechaInicio disabled since it's in the list of fields to disable
+        // Mantener fechaInicio deshabilitado ya que está en la lista de campos a deshabilitar
         if (
           this.pagosDeDerechosForm &&
           this.pagosDeDerechosForm.controls['fechaInicio']
@@ -630,6 +637,19 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
       });
     }
   }
+  
+  /**
+   * Actualiza la fecha de pago en el formulario.
+   * @method cambioFechaFinal
+   * @param {string} nuevoValor - Nueva fecha de pago.
+   */
+  cambioFechaFinal(nuevoValor: string): void {
+    this.pagosDeDerechosForm.patchValue({
+      fechaPago: nuevoValor,
+    });
+    this.fechaPagoDate = nuevoValor;
+  }
+
 
   /**
    * @method ngOnDestroy
@@ -640,6 +660,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    *
    * @see {@link destroyNotifier$} Subject utilizado para cancelar suscripciones activas.
    */
+
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

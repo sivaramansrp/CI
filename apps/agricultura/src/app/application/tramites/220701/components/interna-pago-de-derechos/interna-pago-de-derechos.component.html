@@ -147,14 +147,13 @@
             />
           </div>
           <div class="col-md-4 form-group">
-            <input-fecha
-              [datos]="fechaFinalInput"
-              (valorCambiado)="cambioFechaFinal($event)"
-              name="fechaPago"
-              [setFecha]="fechaPagoDate" 
-              formControlName="fechaFactura"
-            ></input-fecha>
+            <input-fecha [datos]="fechaFinalInput" 
+            formControlName="fechaFactura" 
+            [setFecha]="formularioPago.get('fechaFactura')?.value" 
+            [isDisabled]="esFormularioSoloLectura" 
+            (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
           </div>
+      
           <div class="col-md-4 form-group">
             <label class="form-label" for="claveUCON">Importe de pago:</label>
             <input

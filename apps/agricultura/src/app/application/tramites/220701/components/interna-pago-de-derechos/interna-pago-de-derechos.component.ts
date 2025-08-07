@@ -28,18 +28,19 @@ import {
 import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 
 import {
+  Catalogo,
+  CatalogoSelectComponent,
   ConsultaioQuery,
+  InputFecha,
+  InputFechaComponent,
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-
 import {
-  Catalogo,
-  CatalogoSelectComponent,
-  InputFecha,
-  InputFechaComponent,
+ 
+
   InputRadioComponent,
 } from '@ng-mf/data-access-user';
 
@@ -229,12 +230,12 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
-    // The form is created disabled by default
-    // Only enable it if esFormularioSoloLectura is false
+    // El formulario se crea deshabilitado por defecto
+    // Solo habilitarlo si esFormularioSoloLectura es false
     if (!this.esFormularioSoloLectura) {
       this.formularioPago.enable();
     }
-    // If esFormularioSoloLectura is true, keep the form disabled (default state)
+    // Si esFormularioSoloLectura es true, mantener el formulario deshabilitado (estado por defecto)
   }
   /**
    * Inicializa el formulario reactivo con los campos requeridos.
@@ -250,12 +251,12 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
       )
       .subscribe()
 
-    // Ensure exentoPagoValor is always 'Si' by default
+    // Asegurar que exentoPagoValor sea siempre 'Si' por defecto
     this.exentoPagoValor = 'Si';
 
     this.formularioPago = this.fb.group({
       exentoPago: [
-        {value: 'Si', disabled: true}, // Always default to 'Si'
+        {value: 'Si', disabled: true}, // Siempre por defecto a 'Si'
         Validators.required,
       ],
       justificacion: [{ value: this.formularioPagoStore?.justificacion, disabled: true }, Validators.required],
@@ -265,6 +266,7 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
       llavePago: [{ value: this.formularioPagoStore.llavePago, disabled: true }, Validators.required],
       fechaPago: [{ value: this.formularioPagoStore.fechaPago, disabled: true }, Validators.required],
       importePago: [{ value: this.formularioPagoStore.importePago, disabled: true }, Validators.required],
+      fechaFactura: [this.formularioPagoStore?.fechaFactura, Validators.required],
     });
   }
   /**
@@ -286,7 +288,7 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
    * @method ngOnInit
    */
   ngOnInit(): void {
-    // Ensure default values are set immediately
+    // Asegurar que los valores por defecto se establezcan inmediatamente
     this.exentoPagoValor = 'Si';
          
     this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
@@ -315,7 +317,7 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
               this.formularioPagoState = seccionState.FormularioPagoState;
               this.formularioPago.patchValue(this.formularioPagoState);
               
-              // Always ensure 'Si' is selected for exentoPago after patching values
+              // Siempre asegurar que 'Si' esté seleccionado para exentoPago después de parchear valores
               this.formularioPago.patchValue({ exentoPago: 'Si' });
               this.exentoPagoValor = 'Si';
             }
@@ -343,7 +345,7 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
         )
         .subscribe();
   
-    // Final enforcement: ensure exentoPago is always 'Si' after all initializations
+    // Aplicación final: asegurar que exentoPago sea siempre 'Si' después de todas las inicializaciones
     setTimeout(() => {
       if (this.formularioPago) {
         this.formularioPago.patchValue({ exentoPago: 'Si' });

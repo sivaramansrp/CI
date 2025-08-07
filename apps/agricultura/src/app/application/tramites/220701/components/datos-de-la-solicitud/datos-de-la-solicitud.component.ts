@@ -35,7 +35,6 @@ import {
   CatalogoSelectComponent,
   CatalogosSelect,
   ConfiguracionColumna,
-  ConsultaioQuery,
   InputFecha,
   InputFechaComponent,
   SeccionLibQuery,
@@ -44,7 +43,9 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 
+
 import {
+  ConsultaioQuery,
   TablaDinamicaComponent,
   TablaSeleccion,
 } from '@ng-mf/data-access-user';
@@ -227,10 +228,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   medioContenido: medioInfo[] = [];
 
   /**
-   * Indica si el formulario debe mostrarse solo en modo de lectura.
-   * @type {boolean}
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
    */
-  @Input() esFormularioSoloLectura!: boolean;
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Subject para manejar la desuscripción de observables.
@@ -302,10 +303,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
       this.datosDeLaSolicitudForm.disable();
-    } else if (!this.esFormularioSoloLectura) {
-      this.datosDeLaSolicitudForm.enable();
     } else {
-      // No se requiere ninguna acción en el formulario
+      this.datosDeLaSolicitudForm.enable();
     }
   }
 
@@ -362,6 +361,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+    this.inicializarEstadoFormulario();
     this.getHoraDeInspeccion();
     this.cargarDatos();
     this.getAduanaDeIngreso();
@@ -370,7 +370,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.getTipoContenedor();
     this.obtenerResponsableDatos();
     this.getMedioDeTransporte();
-    this.inicializarEstadoFormulario();
+  
 
     /**
      * Se suscribe a los cambios en el estado del formulario.

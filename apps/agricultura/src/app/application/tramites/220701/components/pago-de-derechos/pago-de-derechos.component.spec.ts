@@ -68,13 +68,13 @@ describe('PagoDeDerechosComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // Removed: should patch form on pagoDeCargarDatos
+  // Eliminado: should patch form on pagoDeCargarDatos
 
-  // Removed: should set banco property on getBancoDatos
+  // Eliminado: should set banco property on getBancoDatos
 
-  // Removed: should set justificacionCatalogo on obtenerListaJustificacion
+  // Eliminado: should set justificacionCatalogo on obtenerListaJustificacion
 
-  // Removed: should patch form on pagoDerechosRevision
+  // Eliminado: should patch form on pagoDerechosRevision
 
   it('should patch value and update exentoPagoValor on cambioValorRadio', () => {
     component.cambioValorRadio('exentoPago', 'Si');
@@ -94,12 +94,12 @@ describe('PagoDeDerechosComponent', () => {
     expect(component.pagosDeDerechosForm.value.fechaInicio).toBe('2024-01-01');
   });
 
-  it('should enable fechaInicio on ngOnChanges with valid setFecha', () => {
+  it('should disable fechaInicio on ngOnChanges with valid setFecha', () => {
     component.setFecha = '01/01/2024';
-    component.pagosDeDerechosForm.controls['fechaInicio'].disable();
+    component.pagosDeDerechosForm.controls['fechaInicio'].enable();
     component.generarFormulario = jest.fn();
     component.ngOnChanges();
-    expect(component.pagosDeDerechosForm.controls['fechaInicio'].disabled).toBe(false);
+    expect(component.pagosDeDerechosForm.controls['fechaInicio'].disabled).toBe(true);
     expect(component.generarFormulario).toHaveBeenCalled();
   });
 

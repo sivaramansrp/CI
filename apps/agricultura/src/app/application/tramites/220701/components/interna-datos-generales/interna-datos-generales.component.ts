@@ -33,9 +33,9 @@ import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 
 import {
   Catalogo,
+  CatalogoSelectComponent,
   CatalogosSelect,
   ConfiguracionColumna,
-  ConsultaioQuery,
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
@@ -44,7 +44,7 @@ import {
 } from '@libs/shared/data-access-user/src';
 
 import {
-  CatalogoSelectComponent,
+  ConsultaioQuery,
   TablaDinamicaComponent,
 } from '@ng-mf/data-access-user';
 
@@ -136,10 +136,7 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    */
   dropdownData = [];
 
-  /**
-   * Catálogo seleccionado de la aduana de ingreso.
-   */
-  aduanaIngreso!: CatalogosSelect;
+ 
 
   /**
    * Lista de opciones de aduana de ingreso.
@@ -149,12 +146,12 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
   /**
    * Lista de opciones de sanidad agropecuaria.
    */
-  sanidadAgropecuaria: Catalogo[] = [];
+  sanidadAgropecuaria!: CatalogosSelect;
 
   /**
    * Lista de puntos de inspección.
    */
-  puntoInspeccion: Catalogo[] = [];
+  puntoInspeccion!: CatalogosSelect;
 
   /**
    * Punto de verificación seleccionado.
@@ -164,17 +161,19 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
   /**
    * Oficina de inspección seleccionada.
    */
-  oficianaInspeccion!: CatalogosSelect;
-
-  /**
-   * Establecimiento seleccionado.
-   */
-  establecimiento!: CatalogosSelect;
+  oficinaInspeccion!: CatalogosSelect;
 
   /**
    * Régimen al que se destinarán los productos.
    */
   regimenDestinaran!: CatalogosSelect;
+
+   /**
+   * Catálogo seleccionado de la aduana de ingreso.
+   */
+ 
+
+  aduanaIngreso!: CatalogosSelect;
 
   /**
    * Tipo de movilización nacional seleccionada.
@@ -184,12 +183,12 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
   /**
    * Lista de establecimientos TIF disponibles.
    */
-  establecimientoTIF: Catalogo[] = [];
+  establecimientoTIF!: CatalogosSelect;
 
   /**
    * Lista de veterinarios disponibles.
    */
-  veterinario: Catalogo[] = [];
+  veterinario!: CatalogosSelect;
 
   /**
    * Identificador único del registro (opcional).
@@ -300,7 +299,7 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    *
    * - Crea la estructura inicial del formulario con `crearFormulario()`.
    * - Desactiva campos específicos mediante `disableFormControls()`.
-   * - Carga catálogos y opciones desplegables a través de varios métodos (`getOficianaInspeccion`, `getEstablecimiento`, etc.).
+   * - Carga catálogos y opciones desplegables a través de varios métodos (`getOficinaInspeccion`, `obtenerEstablecimientoList`, `obtenerVeterinarioList`, etc.).
    * - Se suscribe al estado del store `TramiteStoreQuery` para recuperar y aplicar datos previos al formulario.
    * - Se suscribe a los cambios del estado del formulario (`statusChanges`) para guardar automáticamente los datos en el store.
    * - Llama al método `obtenerDatos()` para cargar datos adicionales (dependiendo del negocio).
@@ -313,6 +312,12 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.esFormularioSoloLectura = this.consultaioQuery.getValue().readonly;
+    
+    // Inicializar internaDatosGeneralesState si está indefinido
+    if (!this.internaDatosGeneralesState) {
+      this.internaDatosGeneralesState = {} as InternaDatosGeneralesInt;
+    }
+    
     this.inicializarFormulario();
     /**
      * Se suscribe al estado de `ConsultaioQuery` para obtener si el formulario debe estar en modo de solo lectura.
@@ -331,11 +336,9 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
           } else {
             this.forma.enable();
             this.movilizacionForm.enable();
-            // Keep specific fields disabled
+            // Mantener campos específicos deshabilitados
             this.forma.get('datosDelaSolicitud')?.get('claveControlUnico')?.disable();
             this.forma.get('datosDelaSolicitud')?.get('folioControlUnico')?.disable();
-            this.forma.get('datosDelaSolicitud')?.get('establecimientoTIFs')?.disable();
-            this.forma.get('datosDelaSolicitud')?.get('nombreVeterinario')?.disable();
             this.forma.get('datosDelaSolicitud')?.get('numeroGuia')?.disable();
             this.forma.get('datosDelaSolicitud')?.get('tipoMercancia')?.disable();
             this.movilizacionForm.get('coordenadas')?.disable();
@@ -346,8 +349,9 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.getOficianaInspeccion();
-    this.getEstablecimiento();
+    this.getAduanaIngreso();
+    this.obtenerSanidadAgropecuariaList();
+    this.getOficinaInspeccion();
     this.getRegimenDestinaran();
     this.getMovilizacionNacional();
     this.getPuntoVerificacion();
@@ -380,11 +384,9 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
               this.forma.disable();
               this.movilizacionForm.disable();
             } else {
-              // Keep specific fields disabled even when form is enabled
+              // Mantener campos específicos deshabilitados incluso cuando el formulario está habilitado
               this.forma.get('datosDelaSolicitud')?.get('claveControlUnico')?.disable();
               this.forma.get('datosDelaSolicitud')?.get('folioControlUnico')?.disable();
-              this.forma.get('datosDelaSolicitud')?.get('establecimientoTIFs')?.disable();
-              this.forma.get('datosDelaSolicitud')?.get('nombreVeterinario')?.disable();
               this.forma.get('datosDelaSolicitud')?.get('numeroGuia')?.disable();
               this.forma.get('datosDelaSolicitud')?.get('tipoMercancia')?.disable();
               this.movilizacionForm.get('coordenadas')?.disable();
@@ -446,11 +448,9 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
     } else {
       this.forma.enable();
       this.movilizacionForm.enable();
-      // Keep specific fields disabled
+      // Mantener campos específicos deshabilitados
       this.forma.get('datosDelaSolicitud')?.get('claveControlUnico')?.disable();
       this.forma.get('datosDelaSolicitud')?.get('folioControlUnico')?.disable();
-      this.forma.get('datosDelaSolicitud')?.get('establecimientoTIFs')?.disable();
-      this.forma.get('datosDelaSolicitud')?.get('nombreVeterinario')?.disable();
       this.forma.get('datosDelaSolicitud')?.get('numeroGuia')?.disable();
       this.forma.get('datosDelaSolicitud')?.get('tipoMercancia')?.disable();
       this.movilizacionForm.get('coordenadas')?.disable();
@@ -470,11 +470,9 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
     } else if (!this.esFormularioSoloLectura) {
       this.forma.enable();
       this.movilizacionForm.enable();
-      // Keep specific fields disabled
+      // Mantener campos específicos deshabilitados
       this.forma.get('datosDelaSolicitud')?.get('claveControlUnico')?.disable();
       this.forma.get('datosDelaSolicitud')?.get('folioControlUnico')?.disable();
-      this.forma.get('datosDelaSolicitud')?.get('establecimientoTIFs')?.disable();
-      this.forma.get('datosDelaSolicitud')?.get('nombreVeterinario')?.disable();
       this.forma.get('datosDelaSolicitud')?.get('numeroGuia')?.disable();
       this.forma.get('datosDelaSolicitud')?.get('tipoMercancia')?.disable();
       this.movilizacionForm.get('identTransporte')?.disable();
@@ -493,39 +491,42 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    * @memberof InternaDatosGeneralesComponent
    */
   inicializarFormulario(): void {
+    // Inicializar internaDatosGeneralesState si está indefinido
+    if (!this.internaDatosGeneralesState) {
+      this.internaDatosGeneralesState = {} as InternaDatosGeneralesInt;
+    }
+    
     this.forma = this.fb.group({
       datosDelaSolicitud: this.fb.group({
-        aduanaIngreso: [Validators.required],
-        oficinaInspeccion: ['', Validators.required],
-        puntoInspeccion: ['', Validators.required],
-        claveControlUnico: [{ value: '', disabled: true }, Validators.required],
-        establecimientoTIFs: [{ value: '', disabled: true }, Validators.required],
-        nombreVeterinario: [{ value: '', disabled: true }, Validators.required],
-        regimen: ['', Validators.required],
-        folioControlUnico: [{ value: '', disabled: true }],
-        numeroGuia: [{ value: '', disabled: true }],
-        tipoMercancia: [{ value: this.internaDatosGeneralesState?.tipoMercancia || 'subproductos', disabled: true }],
+        aduanaIngreso: [this.internaDatosGeneralesState?.aduanaIngreso, Validators.required],
+        oficinaInspeccion: [this.internaDatosGeneralesState?.oficinaInspeccion, Validators.required],
+        puntoInspeccion: [this.internaDatosGeneralesState?.puntoInspeccion, Validators.required],
+        claveControlUnico: [this.internaDatosGeneralesState?.claveControlUnico, { disabled: true }, Validators.required],
+        establecimientoTIFs: [this.internaDatosGeneralesState?.establecimientoTIFs, Validators.required],
+        nombreVeterinario: [this.internaDatosGeneralesState?.nombreVeterinario, Validators.required],
+        regimen: [this.internaDatosGeneralesState?.regimen],
+        folioControlUnico: [this.internaDatosGeneralesState?.folioControlUnico, { disabled: true }],
+        numeroGuia: [this.internaDatosGeneralesState?.numeroGuia, { disabled: true }],
+        tipoMercancia: [this.internaDatosGeneralesState?.tipoMercancia || 'subproductos', { disabled: true }],
       }),
     });
 
     this.movilizacionForm = this.fb.group({
       coordenadas: [{ value: this.internaDatosGeneralesState?.coordenadas || '', disabled: true }],
-      movilizacionNacional: [''],
+      movilizacionNacional: [this.internaDatosGeneralesState?.movilizacionNacional],
       identTransporte: [{ value: this.internaDatosGeneralesState?.identTransporte || '', disabled: true }],
-      puntoVerificacion: [''],
-      empresaTransportista: [{ value: '', disabled: true }],
+      puntoVerificacion: [this.internaDatosGeneralesState?.puntoVerificacion],
+      empresaTransportista: [{ value: this.internaDatosGeneralesState?.empresaTransportista || '', disabled: true }],
     });
 
-    // Disable forms if flag is set
+    // Deshabilitar formularios si la bandera está establecida
     if (this.esFormularioSoloLectura) {
       this.forma.disable();
       this.movilizacionForm.disable();
     } else {
-      // Keep specific fields disabled even when form is enabled
+      // Mantener campos específicos deshabilitados incluso cuando el formulario está habilitado
       this.forma.get('datosDelaSolicitud')?.get('claveControlUnico')?.disable();
       this.forma.get('datosDelaSolicitud')?.get('folioControlUnico')?.disable();
-      this.forma.get('datosDelaSolicitud')?.get('establecimientoTIFs')?.disable();
-      this.forma.get('datosDelaSolicitud')?.get('nombreVeterinario')?.disable();
       this.forma.get('datosDelaSolicitud')?.get('numeroGuia')?.disable();
       this.forma.get('datosDelaSolicitud')?.get('tipoMercancia')?.disable();
       this.movilizacionForm.get('coordenadas')?.disable();
@@ -636,60 +637,89 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
     this.catalogosService
       .obtenerSanidadAgropecuaria()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data): void => {
-        const DATOS = data?.data;
-        this.sanidadAgropecuaria = DATOS;
+      .subscribe((resp) => {
+        if(resp.code === 200) {
+          const RESPONSE = resp.data;
+       
+        this.sanidadAgropecuaria = {
+          labelNombre: 'Oficina de inspección de sanidad Agropecuaria',
+          required: false,
+          primerOpcion: 'Selecciona un valor',
+          catalogos: RESPONSE,
+        };
+      }
       });
   }
 
   /**
-   * Obtiene la lista de puntos de inspección desde el servicio de catálogos
+   * Obtiene la lista de puntos de inspección desde el servicio de revisión
    * y asigna los datos a la propiedad `puntoInspeccion`.
    *
    * @returns {void}
    * @memberof InternaDatosGeneralesComponent
    */
   obtenerPuntoInspeccionList(): void {
-    this.catalogosService
-      .obtenerPuntoInspeccion()
+    this.revisionService
+      .getPuntoInspeccion()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data): void => {
-        const DATOS = data?.data;
-        this.puntoInspeccion = DATOS;
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.puntoInspeccion = {
+            labelNombre: 'Punto de inspección',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
       });
   }
 
   /**
-   * Obtiene la lista de establecimientos TIF desde el servicio de catálogos
+   * Obtiene la lista de establecimientos TIF desde el servicio de revisión
    * y asigna los datos a la propiedad `establecimientoTIF`.
    *
    * @returns {void}
    * @memberof InternaDatosGeneralesComponent
    */
   obtenerEstablecimientoList(): void {
-    this.catalogosService
-      .obtenerEstablecimiento()
+    this.revisionService
+      .getEstablecimiento()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data): void => {
-        const DATOS = data?.data;
-        this.establecimientoTIF = DATOS;
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.establecimientoTIF = {
+            labelNombre: 'Establecimiento TIF',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
       });
   }
 
   /**
-   * Obtiene la lista de veterinarios desde el servicio de catálogos
+   * Obtiene la lista de veterinarios desde el servicio de revisión
    * y asigna los datos a la propiedad `veterinario`.
    *
    * @returns {void}
    * @memberof InternaDatosGeneralesComponent
    */
   obtenerVeterinarioList(): void {
-    this.catalogosService
-      .obtenerVeterinario()
+    this.revisionService
+      .getVeterinario()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data): void => {
-        const DATOS = data?.data;
-        this.veterinario = DATOS;
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.veterinario = {
+            labelNombre: 'Nombre del médico veterinario',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
       });
   }
 
@@ -736,44 +766,20 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
 
   /**
    * Obtiene la oficina de inspección desde el servicio de revisión
-   * y asigna la configuración al control `oficianaInspeccion`.
+   * y asigna la configuración al control `oficinaInspeccion`.
    *
    * @returns {void}
    * @memberof InternaDatosGeneralesComponent
    */
-  getOficianaInspeccion(): void {
+  getOficinaInspeccion(): void {
     this.revisionService
       .getOficianaInspeccion()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
-          this.oficianaInspeccion = {
+          this.oficinaInspeccion = {
             labelNombre: 'Oficina de Inspección de Sanidad Agropecuaria',
-            required: false,
-            primerOpcion: 'Selecciona un valor',
-            catalogos: RESPONSE,
-          };
-        }
-      });
-  }
-
-  /**
-   * Obtiene los establecimientos desde el servicio de revisión
-   * y asigna la configuración al control `establecimiento`.
-   *
-   * @returns {void}
-   * @memberof InternaDatosGeneralesComponent
-   */
-  getEstablecimiento(): void {
-    this.revisionService
-      .getEstablecimiento()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((resp) => {
-        if (resp.code === 200) {
-          const RESPONSE = resp.data;
-          this.establecimiento = {
-            labelNombre: 'Establecimiento TIF',
             required: false,
             primerOpcion: 'Selecciona un valor',
             catalogos: RESPONSE,

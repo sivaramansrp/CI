@@ -15,19 +15,26 @@
         <ng-titulo titulo="Datos del trámite a realizar"></ng-titulo>
         <div class="row">
           <div class="col-md-4">
-            <app-catalogo-select [catalogo]="aduanaDeIngreso" formControlName="aduanaIngreso"
-              [label]="'Aduana de ingreso'" name="aduanaIngreso"
+            <app-catalogo-select 
+            [catalogo]="aduanaIngreso.catalogos" 
+            formControlName="aduanaIngreso"
+              [label]="'Aduana de ingreso'" 
+              name="aduanaIngreso"
               [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
           </div>
           <div class="col-md-8">
-            <app-catalogo-select [catalogo]="sanidadAgropecuaria" formControlName="oficinaInspeccion"
+            <app-catalogo-select 
+              [catalogo]="oficinaInspeccion.catalogos" 
+              formControlName="oficinaInspeccion"
               [label]="'Oficina de inspección de sanidad Agropecuaria'"
-               name="oficinaInspeccion" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+              name="oficinaInspeccion" 
+              [isDisabled]="esFormularioSoloLectura">
+            </app-catalogo-select>
           </div>
         </div>
         <div class="row">
           <div class="col-md-4">
-            <app-catalogo-select [catalogo]="puntoInspeccion" formControlName="puntoInspeccion"
+            <app-catalogo-select [catalogo]="puntoInspeccion.catalogos" formControlName="puntoInspeccion"
               [label]="'Punto de inspección'" name="puntoInspeccion"
               [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
           </div>
@@ -42,12 +49,12 @@
             </div>
           </div>
           <div class="col-md-4">
-            <app-catalogo-select [catalogo]="establecimientoTIF" formControlName="establecimientoTIFs"
+            <app-catalogo-select [catalogo]="establecimientoTIF.catalogos" formControlName="establecimientoTIFs"
               [label]="'Establecimiento TIF'" name="establecimientoTIFs"
               [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
           </div>
           <div class="col-md-4">
-            <app-catalogo-select [catalogo]="veterinario" formControlName="nombreVeterinario"
+            <app-catalogo-select [catalogo]="veterinario.catalogos" formControlName="nombreVeterinario"
               [label]="'Nombre del médico veterinario'" name="nombreVeterinario"
               [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
           </div>
@@ -61,8 +68,13 @@
             </div>
           </div>
           <div class="col-md-8">
-            <app-catalogo-select [catalogo]="regimen" formControlName="regimen" [label]="'Régimen'"
-              name="regimen" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+            <app-catalogo-select 
+              [catalogo]="regimenDestinaran.catalogos" 
+              formControlName="regimen" 
+              [label]="'Régimen'"
+              name="regimen" 
+              [isDisabled]="esFormularioSoloLectura">
+            </app-catalogo-select>
           </div>
         </div>
         <div class="row">
