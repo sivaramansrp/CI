@@ -158,6 +158,34 @@ describe('PaisDeOrigenComponent', () => {
     expect(Array.isArray(component.fechasDatos)).toBe(true);
   });
 
+  it('debería alternar paisDeProcedenciaPlegable cuando se llama mostrarPaisDeProcedencia', () => {
+    const estadoInicial = component.paisDeProcedenciaPlegable;
+    component.mostrarPaisDeProcedencia();
+    expect(component.paisDeProcedenciaPlegable).toBe(!estadoInicial);
+  });
+
+  it('debería alternar usoEspecificoPlegable cuando se llama mostrarUsoEpecifico', () => {
+    const estadoInicial = component.usoEspecificoPlegable;
+    component.mostrarUsoEpecifico();
+    expect(component.usoEspecificoPlegable).toBe(!estadoInicial);
+  });
+
+  it('no debería lanzar error si fecha.value no es un array', () => {
+    component.fechasDatos = ['2023-01-01'];
+    component.fechasSeleccionadas = [];
+    (component as any).fecha = { value: ['0'] };
+    expect(() => component.agregar('')).not.toThrow();
+  });
+
+  it('no debería lanzar error si fechaSeleccionada.value no es un array', () => {
+    component.fechasSeleccionadas = ['2023-01-01'];
+    component.fechasDatos = [];
+    (component as any).fechaSeleccionada = { value: ['0'] };
+    expect(() => component.quitar('')).not.toThrow();
+  });
+
+
+
 });
 
 
