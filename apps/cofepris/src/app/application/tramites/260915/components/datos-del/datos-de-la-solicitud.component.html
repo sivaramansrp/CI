@@ -130,8 +130,8 @@
       </ng-container>
         <ng-titulo titulo="S.C.I.A.N.:" />
         <app-tabla-dinamica
-      [configuracionTabla]="configuracionColumnasoli"
-       [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
+        [configuracionTabla]="configuracionColumnasoli"
+        [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
         [datos]="tableData"
         (listaDeFilaSeleccionada)="onfilasSeleccionadas($event)"
         [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
@@ -489,7 +489,7 @@
   <div class="alert alert-info">
     <label>
         <label class="checkbox-row">
-          <input type="checkbox" />
+          <input type="checkbox" [disabled]="esFormularioSoloLectura"/>
           <span class="asterisk"><b>*</b></span>
           <div class="col-md-11 mt-4 fontweight">{{ TEXTOS.TEXTOS_MANIFIESTOS}} </div>
         </label>
@@ -503,14 +503,20 @@
   <ng-container formGroupName="datosDelTramiteRealizar"> 
 
 <ng-titulo titulo="Representante legal" />
-<div class="row mt-5">
-  <div class="col-md-4 mt-2">
+<div class="row">
+  <div class="col-md-4">
     <label class="form-label" for="rfc">RFC*:</label>
     <input class="form-control" type="text" formControlName="rfc"
     (change)="setValoresStore(datosDelTramiteRealizar,'rfc')"
+    [ngClass]="{
+      'is-invalid': datosDelTramiteRealizar.get('rfc')?.touched && datosDelTramiteRealizar.get('rfc')?.hasError('required')
+    }"
     />
+    <div *ngIf="datosDelTramiteRealizar.get('rfc')?.touched && datosDelTramiteRealizar.get('rfc')?.hasError('required')" class="text-danger mt-1 small">
+      Este campo es obligatorio
+    </div>
   </div>
-  <div class="col-md-2 mt-4">
+  <div class="col-md-2 mt-5">
     <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Buscar</button>
   </div>
 </div>

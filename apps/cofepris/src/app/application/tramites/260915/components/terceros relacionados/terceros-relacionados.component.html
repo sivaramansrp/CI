@@ -9,6 +9,7 @@
             [tipoSeleccionTabla]="destinatarioSeleccionTabla"
             [configuracionTabla]="destinatarioConfiguracionTabla"
             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+            [datos]="fabricanteDatos"
           >
           </app-tabla-dinamica>
         </div>
@@ -31,6 +32,7 @@
             [tipoSeleccionTabla]="destinatarioSeleccionTabla"
             [configuracionTabla]="destinatarioConfiguracionTabla"
             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+            [datos]="destinatarioDatos"
           >
           </app-tabla-dinamica>
         </div>
@@ -48,11 +50,11 @@
           </div>
         </div>
         <div class="col-md-12">
-          <label class="form-label" for="">Proveedor*:</label>
+          <label class="form-label" for="">Proveedor:</label>
           <app-tabla-dinamica
             [tipoSeleccionTabla]="destinatarioSeleccionTabla"
             [configuracionTabla]="destinatarioConfiguracionTabla"
-             [datos]="tableData"
+             [datos]="proveedorDatos"
              (listaDeFilaSeleccionada)="onSelectedRowsChange($event)"
              [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
              >
@@ -97,11 +99,12 @@
           </div>  
       </div>
         <div class="col-md-12 mt-5">
-          <label class="form-label" for="">Facturador*:</label>
+          <label class="form-label" for="">Facturador:</label>
           <app-tabla-dinamica
             [tipoSeleccionTabla]="destinatarioSeleccionTabla"
             [configuracionTabla]="destinatarioConfiguracionTabla"
             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+            [datos]="facturadorDatos"
           >
           </app-tabla-dinamica>
         </div>

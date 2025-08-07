@@ -16,7 +16,6 @@ import { Modal } from 'bootstrap';
 import { PermisoSanitarioDispositivosMedicosService } from '../../services/permiso-sanitario-dispositivos-medicos.service';
 import { ReplaySubject } from 'rxjs';
 import { Solicitud260915Query } from '../../estados/tramites260915.query';
-import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 
 /**
  * Componente para gestionar los terceros relacionados en el trámite 260915.
@@ -44,7 +43,6 @@ import { TercerosRelacionadosComponent } from '../../../../shared/components/ter
   standalone: true,
   imports: [
     CommonModule,
-    TercerosRelacionadosComponent,
     AlertComponent,
     TituloComponent,
     TablaDinamicaComponent,
@@ -129,7 +127,13 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
   pedimentos: Array<Pedimento> = [];
 
   /** Datos de la tabla de destinatarios */
-  tableData: Destinatario[] = [];
+  proveedorDatos: Destinatario[] = [];
+
+  fabricanteDatos: Destinatario[] = [];
+
+  destinatarioDatos: Destinatario[] = [];
+
+  facturadorDatos: Destinatario[] = [];
 
   /** Configuración de las columnas de la tabla */
   destinatarioConfiguracionTabla = DESTINATARIO_CONFIGURACION_TABLA;
@@ -222,6 +226,18 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyed$),
         map((seccionState: Solicitud260915State) => {
           this.agregarDestinatarioState = seccionState;
+          if (this.esFormularioSoloLectura && seccionState) {
+          this.proveedorDatos = [...(seccionState.proveedorDatos )];
+          this.fabricanteDatos = [...(seccionState.fabricanteDatos)];
+          this.destinatarioDatos = [...(seccionState.destinatarioDatos )];
+          this.facturadorDatos = [...(seccionState.facturadorDatos)];
+        } else if (seccionState) {
+          // Load data even in editable mode if available
+          this.proveedorDatos = [...(seccionState.proveedorDatos )];
+          this.fabricanteDatos = [...(seccionState.fabricanteDatos)];
+          this.destinatarioDatos = [...(seccionState.destinatarioDatos)];
+          this.facturadorDatos = [...(seccionState.facturadorDatos)];
+        }
         })
       )
       .subscribe();
@@ -339,7 +355,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
             ...FORM_DATA.datosPersonales,
             pais: this.getPaisName(FORM_DATA.datosPersonales.pais),
         };
-      this.tableData.push(DESTINATARIO);
+      this.proveedorDatos.push(DESTINATARIO);
     }
     this.destinatarioForm.reset();
   }
@@ -370,7 +386,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
    */
   eliminarMercancias(): void {
     if (this.selectedRows.size > 0) {
-      this.tableData = this.tableData.filter(
+      this.proveedorDatos = this.proveedorDatos.filter(
         (row) => !this.selectedRows.has(row.id)
       );
       this.selectedRows.clear();
@@ -383,7 +399,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
   openModificarMercancias(): void {
     if (this.selectedRows.size === 1) {
       const SELECTED_ID = Array.from(this.selectedRows)[0];
-      const SELECTED_ROW_DATA = this.tableData.find(
+      const SELECTED_ROW_DATA = this.proveedorDatos.find(
         (row) => row.id === SELECTED_ID
       );
 
@@ -399,8 +415,10 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
             denominacion: SELECTED_ROW_DATA.denominacion,
             pais: SELECTED_ROW_DATA.pais,
             domicilio: SELECTED_ROW_DATA.domicilio,
-            estado: SELECTED_ROW_DATA.estado,
+            entidadFederativa: SELECTED_ROW_DATA.entidadFederativa,
+            estadoLocalidad: SELECTED_ROW_DATA.estadoLocalidad,
             codigopostal: SELECTED_ROW_DATA.codigopostal,
+            coloniaEquivalente: SELECTED_ROW_DATA.coloniaEquivalente,
             calle: SELECTED_ROW_DATA.calle,
             numeroExterior: SELECTED_ROW_DATA.numeroExterior,
             numeroInterior: SELECTED_ROW_DATA.numeroInterior,

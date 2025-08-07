@@ -304,6 +304,11 @@ createForm(): void{
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.dataDeLaSolicitudState = seccionState;
+          if (this.esFormularioSoloLectura && seccionState.tableData) {
+            this.tableData = [...seccionState.tableData];
+          } else if (seccionState.tableData) {
+            this.tableData = [...seccionState.tableData];
+          }
         })
       )
       .subscribe();
@@ -389,6 +394,8 @@ createForm(): void{
     }),
    
   });
+
+  //this.tableData = [...this.dataDeLaSolicitudState.tableData];
    
 }
 

@@ -45,13 +45,18 @@ export interface Destinatario {
   localidad: string;
 
   /** Estado del domicilio del destinatario. */
-  estado: string;
+  entidadFederativa: string;
 
   /** Estado alternativo del domicilio del destinatario. */
-  estado2: string;
+  estadoLocalidad: string;
 
   /** Código postal del domicilio del destinatario. */
   codigopostal: string;
+
+  /**
+   * Colonia equivalente del destinatario.
+   */
+  coloniaEquivalente: string;
 
   /** Domicilio completo del destinatario. */
   domicilio: string;

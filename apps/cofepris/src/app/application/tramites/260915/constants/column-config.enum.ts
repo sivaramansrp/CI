@@ -81,14 +81,14 @@ export const DESTINATARIO_CONFIGURACION_TABLA: ConfiguracionColumna<Destinatario
   },
   {
     /** Configuración de la columna para el estado */
-    encabezado: 'Estado',
-    clave: (fila) => fila?.estado || '---',
+    encabezado: 'Entidad federativa',
+    clave: (fila) => fila?.entidadFederativa || '---',
     orden: 13,
   },
   {
     /** Configuración de la columna para el estado alternativo */
-    encabezado: 'Estado',
-    clave: (fila) => fila?.estado2 || '---',
+    encabezado: 'Estado/Localidad',
+    clave: (fila) => fila?.estadoLocalidad || '---',
     orden: 14,
   },
   {
@@ -97,6 +97,12 @@ export const DESTINATARIO_CONFIGURACION_TABLA: ConfiguracionColumna<Destinatario
     clave: (fila) => fila?.codigopostal || 'N/A',
     orden: 15,
   },
+  {
+    /** Configuración de la columna para la colonia o equivalente */
+    encabezado: 'Colonia o equivalente',
+    clave: (fila) => fila?.coloniaEquivalente || 'N/A',
+    orden: 16,
+  }
 ];
 
 /**
