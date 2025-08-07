@@ -69,8 +69,8 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   ) { }
 
   /**
-   * Angular lifecycle method that runs on component initialization.
-   * Subscribes to the selected tab from state and updates `indice`.
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Se suscribe al tab seleccionado desde el estado y actualiza `indice`.
    *
    * @returns {void}
    */
@@ -112,9 +112,9 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   }
 
   /**
-   * Updates the selected tab index in the store.
+   * Actualiza el índice de la pestaña seleccionada en el store.
    *
-   * @param i Index of the selected tab.
+   * @param i Índice de la pestaña seleccionada.
    * @returns {void}
    */
   public seleccionaTab(i: number): void {
@@ -122,8 +122,8 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   }
 
   /**
-   * Angular lifecycle method that runs just before the component is destroyed.
-   * Emits and completes the `destroyNotifier$` to unsubscribe observables.
+   * Método del ciclo de vida de Angular que se ejecuta justo antes de que el componente sea destruido.
+   * Emite y completa el `destroyNotifier$` para cancelar las suscripciones a los observables.
    *
    * @returns {void}
    */

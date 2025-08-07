@@ -67,8 +67,7 @@
             paisEtiqueta.get(idProcedimiento)
             ? paisEtiqueta.get(idProcedimiento)
             : 'País de'
-            }}
-            :</label>
+            }}:</label>
           <input type="text" id="paisDestino" class="form-control" formControlName="paisDestino" readonly
             [disabled]="esFormularioSoloLectura" />
         </div>
@@ -174,7 +173,7 @@
 
     <div class="row">
       <div class="col-md-4">
-        <lib-input-check [id]="'anoEnCurso'" [label]="'Año en curso'" [required]="false" formControlName="anoEnCurso"
+        <lib-input-check [id]="'anoEnCurso'" [fontWeight]="true" [label]="'Año en curso:'" [required]="false" formControlName="anoEnCurso"
           [isDisabled]="esFormularioSoloLectura"></lib-input-check>
         <div class="error-message">
           <small class="text-danger" *ngIf="
