@@ -355,9 +355,9 @@ export class PartidasDeLaMercanciaComponent
         fraccionArancelariaTigie: this.obtenerFraccionArancelaria(),
         descripcion: this.ninoFormGroup.get('partidas_descripcion')?.value,
         precioUnitario: '1.000',
-        totalUsd: this.ninoFormGroup.get('valor_partida_usd')?.value,
+        totalUsd: this.ninoFormGroup.get('partidas_valor_factura_USD')?.value,
       };
-      this.datosTabla?.push(PRODUCTOS);
+      this.datosTabla = [...this.datosTabla, PRODUCTOS];
       this.tramite130103Store.setDynamicFieldValue('partidas_tabla', this.datosTabla);
       this.ninoFormGroup.reset();
     }
@@ -490,21 +490,6 @@ export class PartidasDeLaMercanciaComponent
    */
   onPartidasSeleccion(lista: Partidas[]): void {
     this.partidasSeleccionadas = lista;
-    if (!this.partidasSeleccionadas.length) {
-      return;
-    }
-    // Tomar la primera fila seleccionada (puedes adaptar para selección múltiple si lo necesitas)
-    const FILA_SELECCIONADA = this.partidasSeleccionadas[0];
-    if (FILA_SELECCIONADA) {
-      this.modificarPartidaForm.patchValue({
-        modificar_cantidad: FILA_SELECCIONADA.cantidad,
-        modificar_descripcion: FILA_SELECCIONADA.descripcion,
-        valor_partidas_usd: FILA_SELECCIONADA.totalUsd,
-        fraccion_partidas: FILA_SELECCIONADA.fraccionArancelariaTigie,
-
-        // Agrega aquí más campos si tu modelo los tiene
-      });
-    }
   }
 
   /**
@@ -529,12 +514,22 @@ export class PartidasDeLaMercanciaComponent
   /*
    * @method abrirModalEditar
    */
-  // eslint-disable-next-line class-methods-use-this
   abrirModalEditar(): void {
-    const MODAL_ELEMENT = document.getElementById('modalEditarPartida');
-    if (MODAL_ELEMENT) {
-      const MODAL_INSTANCE = Modal.getOrCreateInstance(MODAL_ELEMENT);
-      MODAL_INSTANCE.show();
+    if (this.partidasSeleccionadas.length) {
+      const MODAL_ELEMENT = document.getElementById('modalEditarPartida');
+      if (MODAL_ELEMENT) {
+        const MODAL_INSTANCE = Modal.getOrCreateInstance(MODAL_ELEMENT);
+        MODAL_INSTANCE.show();
+        const FILA_SELECCIONADA = this.partidasSeleccionadas[0];
+        if (FILA_SELECCIONADA) {
+          this.modificarPartidaForm.patchValue({
+            cantidad_partidas: FILA_SELECCIONADA.cantidad,
+            descripcion_partidas: FILA_SELECCIONADA.descripcion,
+            valor_partidas_usd: FILA_SELECCIONADA.totalUsd,
+            fraccion_partidas: 1,
+          });
+        }
+      }
     }
   }
   /*
@@ -543,11 +538,11 @@ export class PartidasDeLaMercanciaComponent
    */
   guardarEdicion(): void {
     if (this.partidasSeleccionadas.length) {
-      const INDEX = this.datosTabla.findIndex((item) => item === this.partidasSeleccionadas[0]);
+      const INDEX = this.datosTabla.findIndex((item) => item.cantidad === this.partidasSeleccionadas[0].cantidad);
       if (INDEX !== -1) {
         this.datosTabla[INDEX] = {
           ...this.datosTabla[INDEX],
-          cantidad: this.modificarPartidaForm.get('modificar_cantidad')?.value,
+          cantidad: this.modificarPartidaForm.get('cantidad_partidas')?.value,
           descripcion: this.modificarPartidaForm.get('descripcion_partidas')?.value,
           totalUsd: this.modificarPartidaForm.get('valor_partidas_usd')?.value,
           fraccionArancelariaTigie: this.modificarPartidaForm.get('fraccion_partidas')?.value,

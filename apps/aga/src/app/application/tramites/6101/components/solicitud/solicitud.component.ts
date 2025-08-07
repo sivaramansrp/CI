@@ -1,7 +1,7 @@
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DivideFraccion } from '../../models/solicitud.model';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -60,6 +60,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura: boolean = false;
 
+     /**
+     * @property {ConsultaioState} consultaDatos
+     * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+     */
+    consultaDatos!: ConsultaioState;
+
   /**
    * Constructor con inyecciones de dependencias
    * @param fb - FormBuilder para crear el formulario
@@ -91,6 +97,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.conseguirSolicitudCatologo();
+    this.opcionAduanaAux = {
+      catalogos: [],
+      labelNombre: 'Aduana',
+      primerOpcion: 'Seleccione un opción',
+      required: true,
+    };
+    this.opcionJuntaTecnicaDerivada = {
+        catalogos: [],
+        labelNombre: 'Junta técnica derivada de',
+        primerOpcion: 'Seleccione un opción',
+        required: true,
+      };
   }
 
   /**
@@ -98,6 +116,24 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Configura el formulario y se suscribe a cambios en el estado.
    */
   ngOnInit(): void {
+    this.solicitud6101Query.seleccionarSolicitud$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.solicitud6101State = seccionState;
+      })
+    )
+    .subscribe();
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.consultaDatos = seccionState;
+        this.esFormularioSoloLectura = this.consultaDatos.readonly;
+        this.guardarDatosFormulario();
+      })
+    )
+    .subscribe();
     this.inicializarEstadoFormulario();
   }
 

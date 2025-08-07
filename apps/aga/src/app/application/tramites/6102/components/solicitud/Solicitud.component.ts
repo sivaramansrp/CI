@@ -118,11 +118,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       map((seccionState) => {
         this.consultaDatos = seccionState;
         this.soloLectura = this.consultaDatos.readonly;
-        this.guardarDatosFormulario();
       })
     )
     .subscribe();
     this.inicializarFormulario();
+    this.guardarDatosFormulario();
     this.cargarContenedoresOpciones();
     this.cargarAduanaOpciones();
   }

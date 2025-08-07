@@ -53,6 +53,8 @@ export interface ModeloDeFormaDinamica {
   gridLayout?: boolean; // grid layout for radio
   tooltipTxt?: string;
   templateKey?: string; // for injecting dynamic content
+  maxlength?: number | null; // maximum length for input fields
+  esRequerido?: boolean; // is required field
 }
 
 export interface Validadores {

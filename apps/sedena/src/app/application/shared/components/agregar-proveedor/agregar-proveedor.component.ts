@@ -3,6 +3,14 @@ import {
   CAMPO_OBLIGATORIO_PROVEEDOR,
   TIPO_PERSONA_OPCIONES,
 } from '../../constants/datos-solicitud.enum';
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  ConsultaioQuery,
+  InputRadioComponent,
+  TipoPersona,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
 import { CommonModule, Location } from '@angular/common';
 import {
   Component,
@@ -22,16 +30,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { Subject, map, takeUntil } from 'rxjs';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-import { InputRadioComponent } from '@ng-mf/data-access-user';
-import { Subject } from 'rxjs';
-import { TipoPersona } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { map } from 'rxjs/operators';
-import { takeUntil } from 'rxjs';
 
 /**
  * @component AgregarProveedorComponent
@@ -300,9 +300,8 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
       return;
     }
     const NUEVO_PROVEEDOR: Proveedor = {
-      nombreRazonSocial: `${this.agregarProveedorForm.value.nombres} ${
-        this.agregarProveedorForm.value.primerApellido
-      } ${this.agregarProveedorForm.value.segundoApellido || ''}`.trim(),
+      nombreRazonSocial: `${this.agregarProveedorForm.value.nombres} ${this.agregarProveedorForm.value.primerApellido
+        } ${this.agregarProveedorForm.value.segundoApellido || ''}`.trim(),
       rfc: '',
       curp: '',
       telefono: this.agregarProveedorForm.value.telefono || '',
@@ -320,7 +319,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
       codigoPostal: this.agregarProveedorForm.value.codigoPostal || '',
     };
 
-    this.proveedores.push(NUEVO_PROVEEDOR);
+    this.proveedores = [...this.proveedores, NUEVO_PROVEEDOR];
     this.updateProveedorTablaDatos.emit(this.proveedores);
     this.agregarProveedorForm.reset();
     this.ubicaccion.back();
@@ -330,7 +329,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    * @description Resetea el formulario reactivo `agregarProveedorForm` para limpiar todos los campos.
    *
    * @returns {void} Este método no retorna ningún valor.
-   */
+ */
   limpiarFormulario(): void {
     this.agregarProveedorForm.reset();
     this.agregarProveedorForm.disable();

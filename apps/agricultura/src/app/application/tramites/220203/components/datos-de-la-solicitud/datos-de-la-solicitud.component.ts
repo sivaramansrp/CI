@@ -1,11 +1,11 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { DatoTabla, Fila, FilaSolicitud, RealizarGroup } from '../../models/220203/importacion-de-acuicultura.module';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Observable, Subject, catchError, forkJoin, map, of, takeUntil } from 'rxjs';
 import { AcuiculturaStore } from '../../estados/220203/sanidad-certificado.store';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 import { MENSAJE_DOBLE_CLIC } from '../../constantes/220203/importacion-de-acuicultura.enum';
 import { MercanciaSolicitudComponent } from '../mercancia-solicitud/mercancia-solicitud.component';
@@ -46,7 +46,7 @@ import { ModalComponent } from '../../../../shared/components/modal/modal.compon
     NotificacionesComponent
   ],
 })
-export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterViewInit {
+export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
   /**
    * Representa una nueva notificación que será utilizada en el componente.
    * Contiene la configuración de alertas y mensajes de confirmación para el usuario.
@@ -360,7 +360,40 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
     private consultaQuery: ConsultaioQuery,
     private readonly acuiculturaStore: AcuiculturaStore
   ) {
+    forkJoin([
+       this.obtenerCatalogosTransporte(),
+    this.obtenerCatalogosArancelaria(),
+    this.obtenerCatalogosUMC(),
+    this.obtenerCatalogosUMT(),
+    this.obtenerCatalogosUSO()
+    ]).pipe(takeUntil(this.DESTROY_NOTIFIER$))
+    .subscribe({
+      next: ([transporte, arancelaria, umc, umt, uso]) => {
+      this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.DESTROY_NOTIFIER$)).subscribe((datos) => {
+      this.cuerpoTablaFila = datos.mercanciaGroup;
+      this.datosMercanciaStore = datos.realizarGroup;
+      if(this.datosMercanciaFormGroup) {
+          this.datosMercanciaFormGroup.patchValue({
+            realizarGroup: this.datosMercanciaStore
+          });
+      }
+       this.inicializarEstadoFormulario();
+    })
   
+      }
+      , error: (err) => {
+        console.error('Error loading catalogs:', err);
+      }
+    });
+   this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.DESTROY_NOTIFIER$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+         
+        }
+      )
+    ).subscribe();
   }
 
   /**
@@ -407,44 +440,10 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
    * @memberof DatosDeLaSolicitudComponent
    * @returns {void}
    */
-  public ngOnInit(): void {
-      this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.DESTROY_NOTIFIER$)).subscribe((datos) => {
-      this.cuerpoTablaFila = datos.mercanciaGroup ;
-      this.datosMercanciaStore = datos.realizarGroup;
-      if(this.datosMercanciaFormGroup) {
-        this.datosMercanciaFormGroup.patchValue({
-          realizarGroup: this.datosMercanciaStore
-        });
-      }
-    })
-    this.createFromGroup();
-    this.obtenerCatalogosTransporte();
-    this.obtenerCatalogosArancelaria();
-    this.obtenerCatalogosUMC();
-    this.obtenerCatalogosUMT();
-    this.obtenerCatalogosUSO();
+  async ngOnInit(): Promise<void> {
+      await this.createFromGroup();
   }
 
-  /**
-   * Método del ciclo de vida AfterViewInit de Angular.
-   * Se ejecuta después de inicializar la vista y configura la suscripción al estado de solo lectura.
-   * 
-   * @public
-   * @method ngAfterViewInit
-   * @memberof DatosDeLaSolicitudComponent
-   * @returns {void}
-   */
-  public ngAfterViewInit(): void {
-    this.consultaQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.DESTROY_NOTIFIER$),
-        map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-          this.inicializarEstadoFormulario();
-        }
-      )
-    ).subscribe();
-  }
 
   /**
    * Obtiene los datos del catálogo de transporte y puntos de inspección.
@@ -455,16 +454,19 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
    * @memberof DatosDeLaSolicitudComponent
    * @returns {void}
    */
-  public obtenerCatalogosTransporte(): void {
-    this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json')
-      .pipe(takeUntil(this.DESTROY_NOTIFIER$))
-      .subscribe((data) => {
-        this.aduanaDeIngresoList = data.data as Catalogo[];
-        this.tipoRequisitoList = data.data as Catalogo[];
-      }, (_error) => {
-        console.error(_error);
-      });
-  }
+public obtenerCatalogosTransporte(): Observable<Catalogo[]> {
+  return this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json').pipe(
+    map((data) => {
+      this.aduanaDeIngresoList = data.data as Catalogo[];
+      this.tipoRequisitoList = data.data as Catalogo[];
+      return data.data as Catalogo[];
+    }),
+    catchError((err) => {
+      return of([]); 
+    })
+  );
+}
+
 
   /**
    * Obtiene los datos del catálogo de fracciones arancelarias.
@@ -475,15 +477,19 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
    * @memberof DatosDeLaSolicitudComponent
    * @returns {void}
    */
-  public obtenerCatalogosArancelaria(): void {
-    this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json')
-      .pipe(takeUntil(this.DESTROY_NOTIFIER$))
-      .subscribe((data) => {
-        this.oficinaInspeccionList = data.data as Catalogo[];
-      }, (_error) => {
-        console.error(_error);
-      });
-  }
+  public obtenerCatalogosArancelaria(): Observable<Catalogo[]> {
+  return this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json').pipe(
+    map((data) => {
+      this.oficinaInspeccionList = data.data as Catalogo[];
+      return data.data as Catalogo[];
+    }),
+    catchError((err) => {
+      console.error('Error loading arancelaria catalog:', err);
+      return of([]); // fallback to empty array on error
+    })
+  );
+}
+
 
   /**
    * Obtiene los datos del catálogo de Unidades de Medida Comercial (UMC).
@@ -494,16 +500,20 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
    * @memberof DatosDeLaSolicitudComponent
    * @returns {void}
    */
-  public obtenerCatalogosUMC(): void {
-    this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('aduana_de_ingreso.json')
-      .pipe(takeUntil(this.DESTROY_NOTIFIER$))
-      .subscribe((data) => {
-        this.umcList = data.data as Catalogo[];
-        this.arancelariaList = data.data as Catalogo[];
-      }, (_error) => {
-        console.error(_error);
-      });
-  }
+public obtenerCatalogosUMC(): Observable<Catalogo[]> {
+  return this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('aduana_de_ingreso.json').pipe(
+    map((data) => {
+      this.umcList = data.data as Catalogo[];
+      this.arancelariaList = data.data as Catalogo[];
+      return data.data as Catalogo[];
+    }),
+    catchError((err) => {
+      console.error('Error loading UMC catalog:', err);
+      return of([]); // fallback to empty array
+    })
+  );
+}
+
 
   /**
    * Obtiene los datos del catálogo de Unidades de Medida de Tarifa (UMT).
@@ -514,17 +524,20 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
    * @memberof DatosDeLaSolicitudComponent
    * @returns {void}
    */
-  public obtenerCatalogosUMT(): void {
-    this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('empresa.json')
-      .pipe(takeUntil(this.DESTROY_NOTIFIER$))
-      .subscribe((data) => {
-        this.regimenList = data.data as Catalogo[];
-        this.nicoList = data.data as Catalogo[];
-        this.puntoInspeccionList = data.data as Catalogo[];
-      }, (_error) => {
-        console.error(_error);
-      });
-  }
+ public obtenerCatalogosUMT(): Observable<Catalogo[]> {
+  return this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('empresa.json').pipe(
+    map((data) => {
+      this.regimenList = data.data as Catalogo[];
+      this.nicoList = data.data as Catalogo[];
+      this.puntoInspeccionList = data.data as Catalogo[];
+      return data.data as Catalogo[];
+    }),
+    catchError((err) => {
+      return of([]);
+    })
+  );
+}
+
 
   /**
    * Obtiene los datos del catálogo de usos y países.
@@ -535,16 +548,18 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
    * @memberof DatosDeLaSolicitudComponent
    * @returns {void}
    */
-  public obtenerCatalogosUSO(): void {
-    this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('oficina_de_inspeccion.json')
-      .pipe(takeUntil(this.DESTROY_NOTIFIER$))
-      .subscribe((data) => {
+  public obtenerCatalogosUSO(): Observable<Catalogo[]> {
+    return this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('oficina_de_inspeccion.json').pipe(
+      map((data) => {
         this.usoList = data.data as Catalogo[];
         this.paisDeOrigenList = data.data as Catalogo[];
         this.paisDeProcedenciaList = data.data as Catalogo[];
-      }, (_error) => {
-        console.error(_error);
-      });
+        return data.data as Catalogo[];
+      }),
+      catchError((err) => {
+        return of([]); // fallback to empty array on error
+      })
+    );
   }
 
   /**

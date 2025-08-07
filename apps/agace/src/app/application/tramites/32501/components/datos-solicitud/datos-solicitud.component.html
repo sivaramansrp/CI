@@ -37,7 +37,7 @@
       </div>
     </div>
 
-    @if (tipoAviso === 'por defecto' || tipoAviso === 'TAV.MON') {
+    @if (formAviso.get('ideGenerica1')?.value === 'por defecto' || formAviso.get('ideGenerica1')?.value === 'TAV.MON') {
     <!-- Datos del aviso de importación previa relacionado -->
     <div class="row">
       <div class="col-md-12 mt-5">
@@ -73,7 +73,8 @@
         </div>
       </div>
     </div>
-    } @if (tipoAviso === 'por defecto' || tipoAviso === 'TAV.MON') {
+    } 
+    @if (formAviso.get('ideGenerica1')?.value === 'por defecto' || formAviso.get('ideGenerica1')?.value === 'TAV.MON') {
     <!-- Fecha de inicio de uso de la mercancía importada -->
     <div class="row">
       <div class="col-md-12">
@@ -402,13 +403,14 @@
           [tipoSeleccionTabla]="tipoSeleccionTabla"
           [configuracionTabla]="configuracionColumnas"
           [datos]="operacionDeImportacionLista"
+          (filaSeleccionada)="onFilaSeleccionada($event)"
           [disableSeleccionTablaCheckBox]="esSoloLectura"
         >
         </app-tabla-dinamica>
       </div>
       <div class="col-md-12">
         <div class="d-flex justify-content-end">
-          <button id="idEliminarOperacionImp" class="btn btn-secondary me-3" [disabled]="esSoloLectura">
+          <button id="idEliminarOperacionImp" class="btn btn-secondary me-3" [disabled]="esSoloLectura" (click)="eliminarOperacionImp()">
             Eliminar
           </button>
           <button
@@ -437,6 +439,49 @@
     }
   </form>
 </div>
+
+<ng-template #templateSeleccionRequerida>
+  <div class="modal-header">
+    <h6 class="modal-title text-warning">Mensaje</h6>
+  </div>
+  <div class="modal-body">
+    <p class="mb-0">{{ mensajeSeleccion }}</p>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="cerrarModalSeleccionRequerida()"
+    >
+      Aceptar
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #templateConfirmacionEliminacion>
+  <div class="modal-header">
+    <h4 class="modal-title text-danger"></h4>
+  </div>
+  <div class="modal-body">
+    <p class="mb-0">¿Está seguro que desea eliminar los registros marcados?</p>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="confirmarEliminacionOperacionImportacion()"
+    >
+      Aceptar
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="cerrarModalConfirmacionEliminacion()"
+    >
+      Cancelar
+    </button>
+  </div>
+</ng-template>
 
 <div
   class="modal fade"
