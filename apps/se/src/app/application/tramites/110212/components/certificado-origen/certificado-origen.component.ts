@@ -746,7 +746,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
       if (!this.modalInstances) {
         this.modalInstances = new Modal(this.modalBuscar.nativeElement);
       }
-      this.formularioMercancia.reset();
       this.formularioMercancia.patchValue({
         id: this.disponiblesSeleccionadasFila.id,
         fraccionMercanciaArancelaria: this.disponiblesSeleccionadasFila.fraccionArancelaria,
