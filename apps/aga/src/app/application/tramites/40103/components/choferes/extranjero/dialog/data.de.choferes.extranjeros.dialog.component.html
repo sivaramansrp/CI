@@ -2,15 +2,15 @@
   <div class="modal-content">
 
     <div class="modal-header">
-      <h5 class="modal-title">Datos de Choferes</h5>
+      <h5 class="modal-title">Datos del chofer extranjero</h5>
       <button type="button" class="btn-close" (click)="cerrarModal()"></button>
     </div>
     <div class="modal-body ">
       <div class="container-fluid">
-        <form [formGroup]="formChoferes">
+        <form [formGroup]="formChoferes" *ngIf="formChoferes">
           <div class="row">
             <div class="col-md-12">
-              <h3>Datos del chofer Extranjero</h3>
+              <h3>Datos del chofer extranjero</h3>
               <hr class="red" />
             </div>
           </div>
@@ -18,7 +18,7 @@
           <div class="row">
             <div class="col-md-4">
               <div>
-                <label for="numero">Nombre(s):*</label>
+                <label for="numero">Nombre(s)*:</label>
               </div>
               <div>
                 <input type="text" class="form-control" formControlName="numero" size="30" id="numeroCHN"
@@ -39,13 +39,12 @@
 
             <div class="col-md-4">
               <div>
-                <label for="primerApellido">Primer apellido:</label>
-                <span class="require">*</span>
+                <label for="primerApellido">Primer apellido*:</label>
               </div>
               <div>
                 <input type="text" class="form-control" formControlName="primerApellido" maxlength="200" />
               </div>
-              @if(isInvalid('primerApellido')) {
+              @if(esInvalido('primerApellido')) {
               <div class="text-danger">
                 @if(getFormValues['primerApellido'].errors?.['required']) {
                 <small>Este campo es obligatorio.</small>
@@ -58,12 +57,12 @@
             </div>
             <div class="col-md-4">
               <div>
-                <label for="apellidoMaterno">Segundo apellido:</label>
+                <label for="apellidoMaterno">Segundo Apellido:</label>
               </div>
               <div>
                 <input type="text" class="form-control" formControlName="segundoApellido" maxlength="200" />
               </div>
-              @if(isInvalid('segundoApellido')) {
+              @if(esInvalido('segundoApellido')) {
               <div class="text-danger">
                 @if(getFormValues['segundoApellido'].errors?.['required']) {
                 <small>Este campo es obligatorio.</small>
@@ -81,7 +80,7 @@
               <div>
                 <app-catalogo-select class="nacionalidad" [catalogo]="paisList" [placeholder]="'Seleccione un valor'"
                   formControlName="nacionalidad" [isDisabled]="readonly" name="nacionalidad" [label]="'Nacionalidad'"
-                  [required]="true" (selectionChange)="onPaisChange($event)"></app-catalogo-select>
+                  [required]="false" (selectionChange)="alCambiarPais($event)"></app-catalogo-select>
               </div>
               @if(formChoferes.get('nacionalidad')?.invalid && (formChoferes.get('nacionalidad')?.dirty ||
               formChoferes.get('nacionalidad')?.touched)) {
@@ -100,7 +99,7 @@
               <div>
                 <input type="text" class="form-control" formControlName="numeroDeGafete" maxlength="24" />
               </div>
-              @if(isInvalid('numeroDeGafete')) {
+              @if(esInvalido('numeroDeGafete')) {
               <div class="text-danger">
                 @if(getFormValues['numeroDeGafete'].errors?.['required']) {
                 <small>Este campo es obligatorio.</small>
@@ -118,7 +117,7 @@
               <div>
                 <input type="text" class="form-control" formControlName="vigenciaGafete" maxlength="15" />
               </div>
-              @if(isInvalid('vigenciaGafete')) {
+              @if(esInvalido('vigenciaGafete')) {
               <div class="text-danger">
                 @if(getFormValues['vigenciaGafete'].errors?.['required']) {
                 <small>Este campo es obligatorio.</small>
@@ -134,22 +133,20 @@
           <div class="row mt-3">
             <div class="col-md-4">
               <div>
-                <label for="numberDelSocial">Número de segur social*:</label>
+                <label for="numberDelSocial">Número del seguro social*:</label>
               </div>
               <div>
                 <input type="text" class="form-control" formControlName="numeroDelSeguroSocial" maxlength="18"
-                  (input)="enInputDigitsOnly($event)" />
+                  (input)="enInputSoloDigitos($event)" />
               </div>
-              @if(isInvalid('numeroDelSeguroSocial') || showDigitsOnlyError) {
+              @if(esInvalido('numeroDelSeguroSocial') || showDigitsOnlyError) {
               <div class="text-danger">
                 @if(getFormValues['numeroDelSeguroSocial'].errors?.['required']) {
-                <small>Este campo es obligatorio.</small><br />
-                }
-                @if(getFormValues['numeroDelSeguroSocial'].errors?.['maxLength']) {
-                <small>El número de seguridad social no puede tener más de 18 caracteres.</small><br />
-                }
-                @if(getFormValues['numeroDelSeguroSocial'].errors?.['pattern'] || showDigitsOnlyError) {
+                <small>Este campo es obligatorio.</small>
+                } @else if(getFormValues['numeroDelSeguroSocial'].errors?.['pattern'] || showDigitsOnlyError) {
                 <small>Por favor, sólo escribe dígitos.</small>
+                } @else if(getFormValues['numeroDelSeguroSocial'].errors?.['maxLength']) {
+                <small>Por favor, no escribas más de 18 caracteres.</small>
                 }
               </div>
               }
@@ -164,7 +161,7 @@
               <div>
                 <input type="text" class="form-control" formControlName="numberDeIdeFiscal" maxlength="18" />
               </div>
-              @if(isInvalid('numberDeIdeFiscal')) {
+              @if(esInvalido('numberDeIdeFiscal')) {
               <div class="text-danger">
                 @if(getFormValues['numberDeIdeFiscal'].errors?.['required']) {
                 <small>Este campo es obligatorio.</small>
@@ -178,7 +175,7 @@
             <div class="col-md-4 mt-3">
               <div class="pull-right justify-content-end">
                 <button type="button" class="btn btn-primary mt-5" (click)="
-                      buscarChoferNacional(formChoferes.get('numeroDelSeguroSocial')?.value)
+                      buscarChoferExtranjero(formChoferes.get('numeroDelSeguroSocial')?.value)
                     ">
                   Buscar
                 </button>
@@ -195,8 +192,8 @@
             <div class="col-md-4">
               <div>
                 <app-catalogo-select class="paisChn" [catalogo]="paisList" placeholder="Seleccione un país"
-                  formControlName="pais" [required]="true" [isDisabled]="readonly" name="pais" label="País"
-                  (selectionChange)="onPaisChange($event)"></app-catalogo-select>
+                  formControlName="pais" [required]="false" [isDisabled]="readonly" name="pais" label="País"
+                  (selectionChange)="alCambiarPais($event)"></app-catalogo-select>
               </div>
               @if(formChoferes.get('pais')?.invalid && (formChoferes.get('pais')?.dirty ||
               formChoferes.get('pais')?.touched)) {
@@ -209,13 +206,12 @@
             </div>
             <div class="col-md-4 mb-3">
               <div>
-                <label for="codigoPostal">Código postal:</label>
-                <span class="require">*</span>
+                <label for="codigoPostal">Código postal*:</label>
               </div>
               <div>
                 <input type="text" class="form-control" formControlName="codigoPostal" maxlength="12" />
               </div>
-              @if(isInvalid('codigoPostal')) {
+              @if(esInvalido('codigoPostal')) {
               <div class="text-danger">
                 @if(getFormValues['codigoPostal'].errors?.['required']) {
                 <small>Este campo es obligatorio.</small>
@@ -229,22 +225,15 @@
 
             <div class="col-md-4">
               <div>
-                <label for="numberDelSocial">Estado:</label>
-                <span class="require">*</span>
+                <app-catalogo-select class="estado" [catalogo]="estadoList" placeholder="Seleccione un estado"
+                  formControlName="estado" [required]="false" [isDisabled]="readonly" name="estado" label="Estado"
+                  ></app-catalogo-select>
               </div>
-              <div>
-                <input type="text" class="form-control" formControlName="estado" maxlength="11" />
-              </div>
-              @if(isInvalid('estado')) {
+              @if(formChoferes.get('estado')?.invalid && (formChoferes.get('estado')?.dirty ||
+              formChoferes.get('estado')?.touched)) {
               <div class="text-danger">
-                @if(getFormValues['estado'].errors?.['required']) {
+                @if(formChoferes.get('estado')?.errors?.['required']) {
                 <small>Este campo es obligatorio.</small>
-                }
-                @if(getFormValues['estado'].errors?.['maxLength']) {
-                <small>El estado no puede tener más de 11 caracteres.</small>
-                }
-                @if(getFormValues['estado'].errors?.['pattern']) {
-                <small>El estado debe tener 11 dígitos.</small>
                 }
               </div>
               }
@@ -255,13 +244,12 @@
           <div class="row mb-3">
             <div class="col-md-4">
               <div>
-                <label for="calle">Calle:</label>
-                <span class="require">*</span>
+                <label for="calle">Calle*:</label>
               </div>
               <div>
                 <input type="text" class="form-control" formControlName="calle" maxlength="100" />
               </div>
-              @if(isInvalid('calle')) {
+              @if(esInvalido('calle')) {
               <div class="text-danger">
                 @if(getFormValues['calle'].errors?.['required']) {
                 <small>Este campo es obligatorio.</small>
@@ -274,13 +262,12 @@
             </div>
             <div class="col-md-4">
               <div>
-                <label for="Número exterior">Número exterior:</label>
-                <span class="require">*</span>
+                <label for="Número exterior">Número exterior*:</label>
               </div>
               <div>
                 <input type="text" class="form-control" formControlName="numeroExterior" maxlength="10" />
               </div>
-              @if(isInvalid('numeroExterior')) {
+              @if(esInvalido('numeroExterior')) {
               <div class="text-danger">
                 @if(getFormValues['numeroExterior'].errors?.['required']) {
                 <small>Este campo es obligatorio.</small>
@@ -293,7 +280,7 @@
             </div>
             <div class="col-md-4">
               <div>
-                <label for="Número Interior">Número interior:</label>
+                <label for="Número Interior">Número interio:</label>
               </div>
               <div>
                 <input type="text" class="form-control" formControlName="numeroInterior" />
@@ -306,7 +293,7 @@
             <div class="col-md-4 mb-3">
               <div>
                 <app-catalogo-select class="paisDeResidencia" [catalogo]="paisList" formControlName="paisDeResidencia"
-                  placeholder="Seleccione un valor" [required]="true" [isDisabled]="readonly" name="paisDeResidencia"
+                  placeholder="Seleccione un valor" [required]="false" [isDisabled]="readonly" name="paisDeResidencia"
                   label="País de residencia"></app-catalogo-select>
               </div>
               @if(formChoferes.get('paisDeResidencia')?.invalid && (formChoferes.get('paisDeResidencia')?.dirty ||
@@ -321,8 +308,7 @@
 
             <div class="col-md-4">
               <div>
-                <label for="ciudad">Ciudad:</label>
-                <span class="require">*</span>
+                <label for="ciudad">Ciudad*:</label>
               </div>
               <div>
                 <input type="text" class="form-control" formControlName="ciudad" maxlength="10" />
@@ -372,12 +358,12 @@
 
 
         </form>
-        <div class="row mt-3 mb-3">
+        <div class="row mt-3 mb-3" *ngIf="formChoferes">
           <div class="col-md-12">
             <div class="pull-right justify-content-end">
-              <button type="button" class="btn btn-default ms-2" (click)="restablecerFormulario()">Limpiar</button>
+              <button type="button" class="btn btn-default ms-2" (click)="restablecerFormulario()" [disabled]="readonly">Limpiar</button>
               <button type="button" class="btn btn-danger ms-2" (click)="cerrarModal()">Cancelar</button>
-              <button type="button" class="btn btn-primary ms-2" (click)="guardarFilaEditada()">Guardar</button>
+              <button type="button" class="btn btn-primary ms-2" (click)="guardarFilaEditada()" [disabled]="readonly" id="btnGuardar" title="Click para guardar">Guardar</button>
             </div>
           </div>
         </div>

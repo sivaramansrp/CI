@@ -65,9 +65,87 @@
         "buscarPorDenominacionEx": "valor ficticio",
         "folioCaatBusquedaEx": "valor ficticio",
 
-        "caatRegistradoEmpresaTabla": [],
-        "personaFisicaNacionalTabla": [],
-        "personaMoralNacionalTabla": [],
-        "personaFisicaExtranjeraTabla": [],
-        "personaMoralExtranjeraTabla": []
+        "caatRegistradoEmpresaTabla": [
+                {
+                        "rfc": "EMP850312ABC",
+                        "nombreDenominacionRazonSocial": "Transportes Logísticos del Norte S.A. de C.V.",
+                        "caat": "CAAT001",
+                        "perfilCaat": "Transportista Autorizado",
+                        "inicioVigencia": "2024-01-15",
+                        "finVigencia": "2025-12-31",
+                        "pais": "México"
+                }
+        ],
+        "personaFisicaNacionalTabla": [
+                {
+                        "nombrePFN": "Juan Carlos",
+                        "rfcPFN": "JUCP850312ABC",
+                        "apellidoPaternoPFN": "Rodríguez",
+                        "apellidoMaternoPFN": "García",
+                        "paisPFN": "México",
+                        "codigoPostalPFN": "01234",
+                        "estadoPFN": "Florida",
+                        "municipioPFN": "15",
+                        "localidadPFN": "Centro",
+                        "coloniaPFN": "12",
+                        "callePFN": "Av. Reforma",
+                        "numeroExteriorPFN": "123",
+                        "numeroInteriorPFN": "A",
+                        "domicilioPFN": "Av. Reforma 123-A, Centro, Ciudad de México, CDMX, México"
+
+                }
+        ],
+        "personaMoralNacionalTabla": [
+                {
+                        "rfcPMN": "TSA850312RP4",
+                        "denominacionPMN": "Transportes y Servicios Aduanales S.A. de C.V.",
+                        "correoPMN": "contacto@tsa.com.mx",
+                        "paisPMN": "México",
+                        "codigoPostalPMN": "11000",
+                        "estadoPMN": "Florida",
+                        "municipioPMN": "15",
+                        "localidadPMN": "Polanco",
+                        "coloniaPMN": "25",
+                        "callePMN": "Av. Presidente Masaryk",
+                        "numeroExteriorPMN": "525",
+                        "numeroInteriorPMN": "Piso 12",
+                        "nombreDirectorGeneral": "Carlos Alberto",
+                        "apellidoPaternoDirectorGeneral": "Mendoza",
+                        "apellidoMaternoDirectorGeneral": "Silva",
+                        "domicilioPMN": "Av. Presidente Masaryk 525, Piso 12, Polanco, Ciudad de México, CDMX, México"
+                }
+        ],
+        "personaFisicaExtranjeraTabla": [
+                {
+                        "nombrePFE": "valor ficticio",
+                        "apellidoPaternoPFE": "valor ficticio",
+                        "apellidoMaternoPFE": "valor ficticio",
+                        "seguroNumero": "valor ficticio",
+                        "domicilioPFE": "VICTORIA DE DURANGO CENTRO DURANGO DURANGO ESTADOS UNIDOS MEXICANOS",
+                        "paisPFE": "México",
+                        "estadoPFE": "DURANGO",
+                        "correoPFE": "valor ficticio",
+                        "codigoPostalPFE": "valor ficticio",
+                        "callePFE": "valor ficticio",
+                        "numeroExteriorPFE": "valor ficticio",
+                        "numeroInteriorPFE": "valor ficticio",
+                        "ciudadPFE": "valor ficticio"
+                }
+        ],
+        "personaMoralExtranjeraTabla": [
+                {
+                        "denominacionPME": "Global Shipping Solutions Inc.",
+                        "domicilioPME": "1250 Ocean Drive, Suite 400, Miami, Florida 33139, United States",
+                        "paisPME": "México",
+                        "estadoPME": "Florida",
+                        "codigoPostalPME": "33139",
+                        "nombreDG": "Michael",
+                        "correoPME": "info@globalshipping.com",
+                        "apellidoPaternoDG": "Johnson",
+                        "apellidoMaternoDG": "Smith",
+                        "callePME": "Ocean Drive",
+                        "numeroExteriorPME": "1250",
+                        "numeroInteriorPME": "Suite 400"
+                }
+        ]
 }

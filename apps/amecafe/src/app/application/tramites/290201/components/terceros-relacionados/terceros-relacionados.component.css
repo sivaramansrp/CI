@@ -1,5 +1,19 @@
-.is-invalid {
-    border: 1px solid red !important;
-    border-radius: 4px;
-  }
- 
+/* 
+ * @class .is-invalid
+ * @description Estilo aplicado a los elementos inválidos, mostrando un borde rojo para indicar error.
+ */
+
+ .is-invalid {
+  border: 1px solid red !important;
+  border-radius: 4px;
+}
+
+/* 
+* @class .custom-modal-size
+* @description Estilo personalizado para ajustar el tamaño del modal, aumentando el ancho máximo y configurando un ancho automático.
+*/
+
+.custom-modal-size {
+  max-width: 120% !important; 
+  width: auto !important; 
+}

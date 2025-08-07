@@ -2,7 +2,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CONFIGURACION_AGREGAR, CONFIGURACION_IDIQUESI, CONFIGURACION_MODIFICAR, CONFIGURACION_SOCIEDADES, MANDATARIOS_DEL_AGENT } from '../../constants/sociedades-tabla.enum';
 import { CONFIGURACION_INSTALACIONES, CONFIGURACION_INSTALACIONES_TABLA, DatosDeLasInstalaciones, ENLACE_TABLA, Instalaciones, MANDATARIOS_DE_AGENTE_ADUANAL, MandatariosDeAgenteAduanal, Sociedades } from '../../models/sociedades.model';
 import { Component, Inject, OnDestroy, OnInit, TemplateRef } from '@angular/core';
-import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ConfiguracionColumna, ModeloDeFormaDinamica, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitude32612State, Tramite32612Store } from '../../estados/solicitud32612.store';
 import { Subject,map, takeUntil } from 'rxjs';
@@ -78,6 +78,13 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
    * Se utiliza para almacenar y gestionar la lista de sociedades mostradas en la tabla.
    */
   public sociedadesDatos: Sociedades[] = [];
+
+  /**
+   * Un arreglo que contiene los datos de las sociedades seleccionadas.
+   * Se utiliza para almacenar temporalmente las sociedades que el usuario ha seleccionado
+   * para realizar acciones específicas, como eliminar o modificar sus datos.
+   */
+  public seleccionarlistaSociedades: Sociedades[] = [];
   /**
    * Configuración de las columnas para la tabla de sociedades, basada en la estructura de datos de las instalaciones.
    *
@@ -94,6 +101,13 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
    * @type {DatosDeLasInstalaciones[]}
    */
   public instalacionesDatos: DatosDeLasInstalaciones[] = [];
+
+  /**
+   * Un arreglo que contiene los datos de las instalaciones seleccionadas.
+   * Se utiliza para almacenar temporalmente las instalaciones que el usuario ha seleccionado
+   * para realizar acciones específicas, como eliminar o modificar sus datos.
+   */
+  public seleccionarlistaInstalaciones: DatosDeLasInstalaciones[] = [];
   /**
    * Un FormGroup anidado que representa la estructura del formulario para agregar sociedades.
    * 
@@ -180,13 +194,21 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
    * Esta propiedad se utiliza normalmente para mostrar o gestionar los mandatarios dentro del componente.
    */
   public mandatariosDatos: MandatariosDeAgenteAduanal[] = [];
+
+  /**
+   * Arreglo que contiene los mandatarios seleccionados para realizar operaciones de modificación o eliminación.
+   * 
+   * Este arreglo se utiliza para almacenar temporalmente los mandatarios que el usuario ha seleccionado
+   * para realizar acciones específicas, como eliminar o modificar sus datos.
+   */
+  public seleccionarlistaMandatarios: MandatariosDeAgenteAduanal[] = [];
   /**
    * Grupo de formulario que representa los mandatarios del agente.
    * 
    * Este grupo de formulario contiene un FormGroup anidado llamado `mandatariosDelAgenteFormGroup`,
    * que puede utilizarse para gestionar y validar los datos relacionados con los mandatarios del agente.
    */
-  public mandatariosDelAgenteFormGroup: FormGroup = new FormGroup({
+  public mandatariosDelAgenteForma: FormGroup = new FormGroup({
     mandatariosDelAgenteFormGroup: new FormGroup({})
   });
   /**
@@ -278,11 +300,68 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudeState = seccionState;
+            if (
+              this.solicitudeState &&
+              typeof this.solicitudeState === 'object' &&
+              this.solicitudeState !== null &&
+              'Sociedades' in this.solicitudeState
+            ) {
+              const DATOS = this.solicitudeState['Sociedades'] as Sociedades[];
+              DATOS.forEach((dato: Sociedades) => {
+                const IS_ALREADY_ADDED = this.sociedadesDatos.some(
+                  (item: Sociedades) => item.rfc === dato.rfc
+                );
+  
+                if (!IS_ALREADY_ADDED) {
+                  this.sociedadesDatos = [...this.sociedadesDatos, dato];
+                }
+              });
+            }
+            if( this.solicitudeState && 
+              typeof this.solicitudeState === 'object' && 
+              this.solicitudeState !== null && 
+              'MandatariosDeAgenteAduanal' in this.solicitudeState) {
+                const DATOS = this.solicitudeState['MandatariosDeAgenteAduanal'] as MandatariosDeAgenteAduanal[];
+                DATOS.forEach((dato: MandatariosDeAgenteAduanal) => {
+                  const IS_ALREADY_ADDED = this.mandatariosDatos.some(
+                    (item: MandatariosDeAgenteAduanal) => item.rfc === dato.rfc
+                  );
+  
+                  if (!IS_ALREADY_ADDED) {
+                    this.mandatariosDatos = [...this.mandatariosDatos, dato];
+                  }
+                });
+            }
+
+            if( this.solicitudeState && 
+              typeof this.solicitudeState === 'object' && 
+              this.solicitudeState !== null && 
+              'Instalaciones' in this.solicitudeState) {
+                const DATOS = this.solicitudeState['Instalaciones'] as DatosDeLasInstalaciones[];
+                DATOS.forEach((dato: DatosDeLasInstalaciones) => {
+                  const IS_ALREADY_ADDED = this.instalacionesDatos.some(
+                    (item: DatosDeLasInstalaciones) => item.rfc === dato.rfc
+                  );
+  
+                  if (!IS_ALREADY_ADDED) {
+                    this.instalacionesDatos = [...this.instalacionesDatos, dato];
+                  }
+                });
+            }
         })
       ).subscribe();
-    this.getSociedadesTabla();
-    this.getDatosDeLasInstalacionesDatos();
-    this.getMandatariosDeAgenteTablaDatos();
+      if(!this.solicitudeState['Sociedades']) {
+        this.getSociedadesTabla();
+      }
+      if(!this.solicitudeState['MandatariosDeAgenteAduanal']) {
+        this.getMandatariosDeAgenteTablaDatos();
+      }
+      if(!this.solicitudeState['Instalaciones']) {
+        this.getDatosDeLasInstalacionesDatos();
+      }
+    this.getAduanaActuaCatalogDatos();
+    this.getRfcDelAgenteCatalogDatos();
+    this.getEntidadFederativaCatalogDatos();
   }
 
   /**
@@ -301,8 +380,8 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
    *
    * @returns El `FormGroup` correspondiente a 'agregarFormGroup'.
    */
-  get agregarFormGroup(): FormGroup {
-    return this.agregarForma.get('agregarFormGroup') as FormGroup;
+  get mandatariosDelAgenteFormGroup(): FormGroup {
+    return this.mandatariosDelAgenteForma.get('mandatariosDelAgenteFormGroup') as FormGroup;
   }
 
   /**
@@ -320,6 +399,15 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
    */
   get modificarFormGroup(): FormGroup {
     return this.forma.get('modificarFormGroup') as FormGroup;
+  }
+
+  /**
+   * Obtiene el 'agregarFormGroup' como un FormGroup desde el formulario principal.
+   * 
+   * @returns La instancia de FormGroup asociada a 'agregarFormGroup'.
+   */
+  get agregarFormGroup(): FormGroup {
+    return this.agregarForma.get('agregarFormGroup') as FormGroup;
   }
 
   /**
@@ -390,8 +478,16 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
    * @remarks
    * El modal se muestra con tamaño grande (clase `modal-lg`).
    */
-  public abrirModal(template: TemplateRef<void>) {
+  public abrirModal(template: TemplateRef<void>,Valor?: string): void {
     this.modalRef = this.modalService.show(template,{ class: 'modal-lg',});
+    if(Valor === 'modificarSociedades') {
+      this.modificarSociedades();
+    } else if(Valor === 'modificarMandatarios') {
+      this.modificarMandatarios();
+    } else if(Valor === 'modificarInstalaciones') {
+      this.modificarInstalaciones();
+    }
+
   }
 
   /**
@@ -403,6 +499,397 @@ export class SociedadesTablaComponent implements OnInit,OnDestroy {
    */
   public emitirCambioDeValor(event: {campo: string, valor: string}): void {
     this.tramite32612Store.setDynamicFieldValue(event.campo, event.valor);
+  }
+
+  /**
+   * Acepta los cambios realizados en el formulario de agregar sociedades.
+   * 
+   * Este método verifica si hay sociedades seleccionadas para actualizar o si se debe agregar una nueva sociedad.
+   * Si no hay sociedades seleccionadas, crea un nuevo objeto `NUEVO_MIEMBRO` con los valores del formulario
+   * y lo agrega a `sociedadesDatos`. Si hay sociedades seleccionadas, actualiza la primera sociedad
+   * con los valores del formulario.
+   */
+  public aceptar(): void {
+    if(!this.seleccionarlistaSociedades.length) {
+      const NUEVO_MIEMBRO = {
+        rfc: this.agregarSociedadesFormGroup.get('rfc')?.value,
+        denominacion: this.agregarSociedadesFormGroup.get('denominacion')?.value,
+        aduanaEnLaQueActua: this.agregarSociedadesFormGroup.get('aduanaEnLaQueActua')?.value,
+        fiscales: this.agregarSociedadesFormGroup.get('fiscales')?.value,
+      };
+      this.sociedadesDatos = [...this.sociedadesDatos, NUEVO_MIEMBRO];
+      this.tramite32612Store.setDynamicFieldValue('Sociedades', this.sociedadesDatos);
+    } else {
+      const INDICE = this.sociedadesDatos.findIndex((el: Sociedades) => el.rfc === this.seleccionarlistaSociedades[0]?.rfc);
+      if (INDICE >= 0) {
+        this.sociedadesDatos = this.sociedadesDatos.map((item, index) => {
+        if (index === INDICE) {
+            return {
+              rfc: this.agregarSociedadesFormGroup.get('rfc')?.value,
+              denominacion: this.agregarSociedadesFormGroup.get('denominacion')?.value,
+              aduanaEnLaQueActua: this.agregarSociedadesFormGroup.get('aduanaEnLaQueActua')?.value,
+              fiscales: this.agregarSociedadesFormGroup.get('fiscales')?.value,
+            };
+          }
+          return item;
+        });
+        this.tramite32612Store.setDynamicFieldValue('Sociedades', this.sociedadesDatos);
+      }
+    }
+    this.modalRef?.hide();
+  }
+
+  /**
+   * Cierra el modal actual.
+   * 
+   * Este método se utiliza para ocultar el modal activo, permitiendo al usuario
+   * cerrar la ventana emergente sin realizar ninguna acción adicional.
+   */
+  public buscarEvento(): void {
+    if (this.agregarSociedadesFormGroup.get('resigtro')?.value) {
+      this.agregarSociedadesFormGroup.patchValue({
+        rfc: 'RFT453DF998',
+        denominacion: 'CDY YTRWQ SAHCH'
+      })
+    }
+  }
+
+  /**
+   * Selecciona una lista de sociedades y las asigna a `seleccionarlistaSociedades`.
+   * 
+   * Este método se utiliza para actualizar la lista de sociedades seleccionadas
+   * en el componente, permitiendo al usuario realizar acciones sobre estas sociedades.
+   *
+   * @param event - Un arreglo de objetos `Sociedades` que representa las sociedades seleccionadas.
+   */
+  public seleccionarlistaSeccionSociedades(event: Sociedades[]): void {
+    this.seleccionarlistaSociedades = event;
+  }
+
+  
+  /**   * Limpia el formulario `agregarSociedadesFormGroup` reseteando todos sus valores
+   * y restableciendo su estado a su valor inicial.
+   * * Este método se utiliza para reiniciar el formulario, permitiendo al usuario comenzar de nuevo
+   * con un formulario vacío o con los valores predeterminados.
+   */
+  public limpiarAgregarSociedadesFormulario(): void {
+    this.agregarSociedadesFormGroup.reset();
+  }
+
+
+  /**
+   * Elimina las sociedades seleccionadas de la lista `sociedadesDatos`.
+   * 
+   * Este método filtra el arreglo `sociedadesDatos` para eliminar aquellos elementos
+   * que coinciden con los RFC, denominación, aduana y fiscales de las sociedades
+   * presentes en `seleccionarlistaSociedades`. Luego, actualiza el store con los datos restantes.
+   */
+  public eliminarSociedades(): void {
+    if (this.seleccionarlistaSociedades.length > 0) {
+
+      this.sociedadesDatos = this.sociedadesDatos.filter(item => {
+
+        return !this.seleccionarlistaSociedades.some(selectedItem =>
+          selectedItem.rfc === item.rfc &&
+          (selectedItem.denominacion === item.denominacion && 
+          selectedItem.aduanaEnLaQueActua === item.aduanaEnLaQueActua &&
+            selectedItem.fiscales === item.fiscales)
+        );
+      });
+
+      this.seleccionarlistaSociedades = [];
+      this.tramite32612Store.setDynamicFieldValue('Sociedades', this.sociedadesDatos);
+    }
+  }
+
+  /**
+   * Modifica los datos de las sociedades seleccionadas y los asigna al formulario `agregarSociedadesFormGroup`.
+   * 
+   * Este método se utiliza para prellenar el formulario con los datos de la primera sociedad seleccionada
+   * en `seleccionarlistaSociedades`, permitiendo al usuario editar la información antes de guardarla.
+   */
+  public modificarSociedades(): void {
+    if (this.seleccionarlistaSociedades.length !== 0) {
+      
+      this.agregarSociedadesFormGroup.get('rfc')?.setValue(this.seleccionarlistaSociedades[0]?.rfc);
+      this.agregarSociedadesFormGroup.get('denominacion')?.setValue(this.seleccionarlistaSociedades[0]?.denominacion);
+      this.agregarSociedadesFormGroup.get('aduanaEnLaQueActua')?.setValue(this.seleccionarlistaSociedades[0]?.aduanaEnLaQueActua);
+      this.agregarSociedadesFormGroup.get('fiscales')?.setValue(this.seleccionarlistaSociedades[0]?.fiscales);
+    }
+  }
+
+  /**
+   * Obtiene los datos del catálogo de aduanas en las que actúa y los asigna al campo correspondiente en `agregarDatos`.
+   * 
+   * Este método se suscribe al servicio `getAduanaActuaCatalog` y actualiza las opciones del campo
+   * 'aduanaEnLaQueActua' con los datos obtenidos. Utiliza `takeUntil` para manejar la cancelación de la suscripción.
+   */
+  public getAduanaActuaCatalogDatos(): void {
+    this.esquemaDeCertificacionSvc.getAduanaActuaCatalog().pipe(takeUntil(this.destroyNotifier$)).subscribe({
+      next: (response) => {
+        const API_RESPONSE = JSON.parse(JSON.stringify(response));
+        const DATOS = API_RESPONSE.data;
+        const CLASIFICACION_FIELD = this.agregarSociedadesDatos.find(
+          (datos: ModeloDeFormaDinamica) => datos.id === 'aduanaEnLaQueActua'
+        ) as ModeloDeFormaDinamica;
+        if (CLASIFICACION_FIELD) {
+          if (!CLASIFICACION_FIELD.opciones) {
+            CLASIFICACION_FIELD.opciones = DATOS.map(
+              (item: { id: string; descripcion: string }) => ({
+                descripcion: item.descripcion,
+                id: item.id,
+              })
+            );
+          }
+        }
+      },
+      error: (error) => {
+        // Manejo de errores
+      }
+    });
+  }
+
+  /**
+   * Obtiene los datos del catálogo de RFC del agente y los asigna al campo correspondiente en `agregarDatos`.
+   * 
+   * Este método se suscribe al servicio `getRfcDelAgenteCatalog` y actualiza las opciones del campo
+   * 'rfcDelAgente' con los datos obtenidos. Utiliza `takeUntil` para manejar la cancelación de la suscripción.
+   */
+  public getRfcDelAgenteCatalogDatos(): void {
+    this.esquemaDeCertificacionSvc.getRfcDelAgenteCatalog().pipe(takeUntil(this.destroyNotifier$)).subscribe({
+      next: (response) => {
+        const API_RESPONSE = JSON.parse(JSON.stringify(response));
+        const DATOS = API_RESPONSE.data;
+        const CLASIFICACION_FIELD = this.agregarDatos.find(
+          (datos: ModeloDeFormaDinamica) => datos.id === 'rfcDelAgente'
+        ) as ModeloDeFormaDinamica;
+        if (CLASIFICACION_FIELD) {
+          if (!CLASIFICACION_FIELD.opciones) {
+            CLASIFICACION_FIELD.opciones = DATOS.map(
+              (item: { id: string; descripcion: string }) => ({
+                descripcion: item.descripcion,
+                id: item.id,
+              })
+            );
+          }
+        }
+      },
+      error: (error) => {
+        // Manejo de errores
+      }
+    });
+  }
+
+  /**
+   * Obtiene los datos del catálogo de entidades federativas y los asigna al campo correspondiente en `agregarDatos`.
+   * 
+   * Este método se suscribe al servicio `getEntidadFederativaCatalog` y actualiza las opciones del campo
+   * 'entidadFederativa' con los datos obtenidos. Utiliza `takeUntil` para manejar la cancelación de la suscripción.
+   */
+  public getEntidadFederativaCatalogDatos(): void {
+    this.esquemaDeCertificacionSvc.getEntidadFederativaCatalog().pipe(takeUntil(this.destroyNotifier$)).subscribe({
+      next: (response) => {
+        const API_RESPONSE = JSON.parse(JSON.stringify(response));
+        const DATOS = API_RESPONSE.data;
+        const CLASIFICACION_FIELD = this.agregarDatos.find(
+          (datos: ModeloDeFormaDinamica) => datos.id === 'entidadFederativa'
+        ) as ModeloDeFormaDinamica;
+        if (CLASIFICACION_FIELD) {
+          if (!CLASIFICACION_FIELD.opciones) {
+            CLASIFICACION_FIELD.opciones = DATOS.map(
+              (item: { id: string; descripcion: string }) => ({
+                descripcion: item.descripcion,
+                id: item.id,
+              })
+            );
+          }
+        }
+      },
+      error: (error) => {
+        // Manejo de errores
+      }
+    });
+  }
+
+  /**
+   * Maneja la aceptación de agregar una nueva instalación.
+   * 
+   * - Crea un objeto `AGREGAR_FORMA_DATOS` con los valores del formulario `agregarFormGroup`.
+   * - Agrega este objeto al arreglo `instalacionesDatos`.
+   * - Actualiza el store con los nuevos datos de instalaciones.
+   * - Cierra el modal actual.
+   */
+  public aceptarAgregar(): void {
+    const AGREGAR_FORMA_DATOS = {
+      rfc: this.agregarFormGroup.get('rfcDelAgente')?.value,
+      entidadFederativa: this.agregarFormGroup.get('entidadFederativa')?.value,
+      instalacionesPrincipales: 'vcvdscdvcd',
+      tipoDeInstalacion: 'ftyewyfu hefhw',
+      municipioDelegacion: 'cvdscvdytytcfdcdsc',
+      colonia: 'cvdscvdytytcfdcdsc',
+      codigoPostal: 'GH3456',
+      realizaLaValidacion: 'vcvdscdvcd',
+      actualizarPerfil: 'AC3453DF998',
+
+    };
+    this.instalacionesDatos = [...this.instalacionesDatos, AGREGAR_FORMA_DATOS];
+    this.tramite32612Store.setDynamicFieldValue('Instalaciones', this.instalacionesDatos);
+    this.modalRef?.hide();
+  }
+
+  /**
+   * Elimina las instalaciones seleccionadas de la lista `instalacionesDatos`.
+   * 
+   * Filtra el arreglo `instalacionesDatos` para eliminar aquellos elementos que coincidan
+   * con los RFC y entidades federativas de los elementos en `seleccionarlistaInstalaciones`.
+   * Luego, limpia la lista de instalaciones seleccionadas y actualiza el store con los datos restantes.
+   */
+  public eliminarInstalaciones(): void {
+    if (this.seleccionarlistaInstalaciones.length > 0) {
+      this.instalacionesDatos = this.instalacionesDatos.filter(item => {
+        return !this.seleccionarlistaInstalaciones.some(selectedItem =>
+          selectedItem.rfc === item.rfc &&
+          (selectedItem.entidadFederativa === item.entidadFederativa)
+        );
+      });
+      this.seleccionarlistaInstalaciones = [];
+      this.tramite32612Store.setDynamicFieldValue('Instalaciones', this.instalacionesDatos);
+    }
+  }
+
+  /**
+   * Actualiza los controles del formulario `agregarFormGroup` con los valores
+   * del primer elemento en el arreglo `seleccionarlistaInstalaciones`, si el arreglo no está vacío.
+   * Específicamente, establece los controles 'rfc' y 'entidadFederativa'.
+   */
+  public modificarInstalaciones(): void {
+    if (this.seleccionarlistaInstalaciones.length !== 0) {
+      this.agregarFormGroup.get('rfc')?.setValue(this.seleccionarlistaInstalaciones[0]?.rfc);
+      this.agregarFormGroup.get('entidadFederativa')?.setValue(this.seleccionarlistaInstalaciones[0]?.entidadFederativa);
+    }
+  }
+
+  /**
+   * Actualiza la lista de sociedades seleccionadas en el componente.
+   * 
+   * @param event - Un arreglo de objetos `Sociedades` que representa las sociedades seleccionadas.
+   * 
+   * Este método se utiliza para actualizar la propiedad `seleccionarlistaSociedades` con los datos
+   * proporcionados por el evento, permitiendo al componente gestionar y mostrar la lista de sociedades seleccionadas.
+   */
+  public seleccionarlistaSeccionInstalaciones(event: DatosDeLasInstalaciones[]): void {
+    this.seleccionarlistaInstalaciones = event;
+  }
+
+  /**
+   * Actualiza la lista de mandatarios seleccionados en el componente.
+   * 
+   * @param event - Un arreglo de objetos `MandatariosDeAgenteAduanal` que representa los mandatarios seleccionados.
+   * 
+   * Este método se utiliza para actualizar la propiedad `seleccionarlistaMandatarios` con los datos
+   * proporcionados por el evento, permitiendo al componente gestionar y mostrar la lista de mandatarios seleccionados.
+   */
+  public seleccionarlistaSeccionMandatarios(event: MandatariosDeAgenteAduanal[]): void {
+    this.seleccionarlistaMandatarios = event;
+  }
+
+  /**
+   * Busca y actualiza los datos de un mandatario del agente aduanal basado en el RFC ingresado.
+   * Si el campo 'rfcRegistro' tiene un valor, se actualizan los campos 'rfc' y 'razonSocial'
+   * con valores predeterminados.
+   */
+  public buscarMandatariosEvento(): void {
+    if (this.mandatariosDelAgenteFormGroup.get('rfcRegistro')?.value) {
+      this.mandatariosDelAgenteFormGroup.patchValue({
+        rfc: 'AC3453DF998',
+        razonSocial: 'AAD FDYUSADY HGDAYUDGYW'
+      });
+    }
+  }
+
+  /**
+   * Maneja la aceptación de "Mandatarios" (representantes) para un agente.
+   * 
+   * - Si no hay representantes seleccionados (`seleccionarlistaMandatarios` está vacío),
+   *   crea un nuevo objeto de representante a partir de los valores del formulario y lo agrega a la lista.
+   * - Si hay un representante seleccionado, actualiza la entrada correspondiente en la lista
+   *   con los nuevos valores del formulario.
+   * - Actualiza el store con la nueva lista de representantes.
+   * - Cierra el cuadro de diálogo modal después de procesar.
+   *
+   * @remarks
+   * Este método interactúa con un grupo de formulario (`mandatariosDelAgenteFormGroup`) y un store (`tramite32612Store`)
+   * para gestionar la lista de representantes (`mandatariosDatos`) de un agente.
+   */
+  public aceptarMandatarios(): void {
+    if(!this.seleccionarlistaMandatarios.length) {
+      const FORMA_DATOS = {
+        rfc: this.mandatariosDelAgenteFormGroup.get('rfc')?.value,
+        razonSocial: this.mandatariosDelAgenteFormGroup.get('razonSocial')?.value,
+        fiscales: this.mandatariosDelAgenteFormGroup.get('fiscales')?.value,
+      };
+      this.mandatariosDatos = [...this.mandatariosDatos, FORMA_DATOS];
+      this.tramite32612Store.setDynamicFieldValue('MandatariosDeAgenteAduanal', this.mandatariosDatos);
+    } else {
+      const INDICE = this.mandatariosDatos.findIndex((el: MandatariosDeAgenteAduanal) => el.rfc === this.seleccionarlistaMandatarios[0]?.rfc);
+      if (INDICE >= 0) {
+        this.mandatariosDatos = this.mandatariosDatos.map((item, index) => {
+          if (index === INDICE) {
+            return {
+              rfc: this.mandatariosDelAgenteFormGroup.get('rfcRegistro')?.value,
+              razonSocial: this.mandatariosDelAgenteFormGroup.get('razonSocial')?.value,
+              fiscales: this.mandatariosDelAgenteFormGroup.get('fiscales')?.value,
+            };
+          }
+          return item;
+        });
+        this.tramite32612Store.setDynamicFieldValue('MandatariosDeAgenteAduanal', this.mandatariosDatos);
+      }
+    }
+    this.modalRef?.hide();
+  }
+
+  /**
+   * Actualiza los controles del formulario `mandatariosDelAgenteFormGroup` con los valores
+   * del primer elemento en el arreglo `seleccionarlistaMandatarios`, si el arreglo no está vacío.
+   * Específicamente, establece los controles 'rfc', 'razonSocial' y 'fiscales'.
+   */
+  public modificarMandatarios(): void {
+    if (this.seleccionarlistaMandatarios.length !== 0) {
+      this.mandatariosDelAgenteFormGroup.get('rfc')?.setValue(this.seleccionarlistaMandatarios[0]?.rfc);
+      this.mandatariosDelAgenteFormGroup.get('razonSocial')?.setValue(this.seleccionarlistaMandatarios[0]?.razonSocial);
+      this.mandatariosDelAgenteFormGroup.get('fiscales')?.setValue(this.seleccionarlistaMandatarios[0]?.fiscales);
+    }
+  }
+
+  /**
+   * Restablece el grupo de formulario asociado a los mandatarios del agente.
+   * Este método limpia todos los campos del formulario y restaura su estado inicial.
+   */
+  public limpiarMandatariosFormulario(): void {
+    this.mandatariosDelAgenteFormGroup.reset();
+  }
+
+  /**
+   * Elimina los "mandatarios" seleccionados del arreglo `mandatariosDatos` según la coincidencia
+   * de las propiedades `rfc`, `razonSocial` y `fiscales` con los elementos en `seleccionarlistaMandatarios`.
+   * Después de eliminar, limpia la lista de selección y actualiza el valor dinámico
+   * 'MandatariosDeAgenteAduanal' en el `tramite32612Store`.
+   *
+   * No realiza ninguna acción si no hay elementos seleccionados.
+   */
+  public eliminarMandatarios(): void {
+    if (this.seleccionarlistaMandatarios.length > 0) {
+      this.mandatariosDatos = this.mandatariosDatos.filter(item => {
+        return !this.seleccionarlistaMandatarios.some(selectedItem =>
+          selectedItem.rfc === item.rfc &&
+          (selectedItem.razonSocial === item.razonSocial && 
+          selectedItem.fiscales === item.fiscales)
+        );
+      });
+      this.seleccionarlistaMandatarios = [];
+      this.tramite32612Store.setDynamicFieldValue('MandatariosDeAgenteAduanal', this.mandatariosDatos);
+    }
   }
 
   /**

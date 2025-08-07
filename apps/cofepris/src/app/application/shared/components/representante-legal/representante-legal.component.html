@@ -9,7 +9,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <button type="button" class="btn btn-primary btn-space" [disabled]="esFormularioSoloLectura">
+                <button type="button" class="btn btn-primary btn-space"(click)="obtenerValor()" [disabled]="esFormularioSoloLectura">
                     Buscar
                 </button>
             </div>
@@ -19,20 +19,20 @@
             <div class="form-group">
                 <label class="form-label" for="nombreRazonSocial">Nombre o Razón Social*:</label>
                 <input class="form-control" id="nombreRazonSocial" formControlName="nombreRazonSocial"
-                type="text"/>
+                type="text" (change)="setValoresStore(representanteLegalForm,'nombreRazonSocial', 'setNombreRazonSocial')"/>
             </div>
             </div>
             <div class="col-md-4">
             <div class="form-group">
                 <label class="form-label" for="apellidoPaterno">Apellido paterno*:</label>
-                <input class="form-control" id="apellidoPaterno" formControlName="apellidoPaterno" type="text"/>
+                <input class="form-control" id="apellidoPaterno" formControlName="apellidoPaterno" type="text" (change)="setValoresStore(representanteLegalForm,'apellidoPaterno', 'setApellidoPaterno')"/>
             </div>
 
             </div>
             <div class="col-md-4">
             <div class="form-group">
                 <label class="form-label" for="apellidoMaterno">Apellido materno:</label>
-                <input class="form-control" id="apellidoMaterno" formControlName="apellidoMaterno" type="text"/>
+                <input class="form-control" id="apellidoMaterno" formControlName="apellidoMaterno" type="text" (change)="setValoresStore(representanteLegalForm,'apellidoMaterno', 'setApellidoMaterno')"/>
             </div>
             </div>
         </div>

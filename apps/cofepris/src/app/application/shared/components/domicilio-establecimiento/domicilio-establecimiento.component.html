@@ -99,8 +99,9 @@
       [tipoSeleccionTabla]="tablaSeleccionCheckbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
     </app-tabla-dinamica>
 
-    <div class="container text-end mt-5">
-      <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+    <div class="col-md-12 mt-5 d-flex justify-content-end">
+      <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">Modificar</button>
+      <button type="button" class="btn btn-default ms-3" [disabled]="esFormularioSoloLectura">Eliminar</button>
       <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgent"
         [disabled]="esFormularioSoloLectura">
         Agregar
@@ -327,9 +328,9 @@
           </div>
           <div class="form-group">
             <label for="fraccionArancelaria">Fracción arancelaria*:</label>
-            <span class="bi bi-question-circle-fill fs-4 m-1" [title]="'Fracción arancelaria'" ata-bs-toggle="tooltip">
+            <span class="bi bi-question-circle-fill fs-4 m-1" [title]="'Descripción numérica o desglose de un código de clasificación que otorga el Sistema Armonizado'" ata-bs-toggle="tooltip">
             </span>
-            <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control"
+            <input type="text" id="fraccionArancelaria" (focusout)="setDescripcionFraccion()" formControlName="fraccionArancelaria" class="form-control"
               (change)="
                 setValoresStore(
                   formMercancias,
@@ -394,7 +395,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label for="UMT">UMT:</label>
-                <span class="bi bi-question-circle-fill fs-4 m-1" [title]="'UMT'" ata-bs-toggle="tooltip">
+                <span class="bi bi-question-circle-fill fs-4 m-1" [title]="'Unidad de medida de la tarifa'" ata-bs-toggle="tooltip">
                 </span>
                 <input type="text" id="UMT" formControlName="UMT" class="form-control"
                   (change)="setValoresStore(formMercancias, 'UMT', 'setUMT')" />
@@ -432,7 +433,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <app-catalogo-select [catalogo]="estado" formControlName="UMC" [label]="'UMC'" [required]="true"
-                  name="UMC" [placeholder]="'Seleccione un valor'" [tooltipQuestionCircle]="true"
+                  name="UMC" [placeholder]="'Seleccione un valor'" [tooltipQuestionCircle]="true" [tooltipQuestionCircleText]="'Unidad de medida de comercialización'"
                   (change)="setValoresStore(formMercancias, 'UMC', 'setUMC')"
                   [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
               </div>
@@ -440,7 +441,7 @@
           </div>
 
           <div class="form-group">
-            <label for="porcentajeConcentracion">Porcentaje de concentración *:</label>
+            <label for="porcentajeConcentracion">Porcentaje de concentración*:</label>
             <input type="text" id="porcentajeConcentracion" formControlName="porcentajeConcentracion"
               class="form-control" (change)="
                 setValoresStore(
@@ -461,7 +462,7 @@
               </small>
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group" *ngIf="mostrarNumeroRegistro">
             <label for="numeroRegistro">Número de registro sanitario*:</label>
             <input type="text" id="numeroRegistro" formControlName="numeroRegistro" class="form-control" (change)="
                 setValoresStore(
@@ -494,7 +495,7 @@
                 @if (colapsable) {
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
-                    <crosslist [fechas]="seleccionarOrigenDelPais" [label]="paisDeOrigen"
+                    <crosslist [fechas]="seleccionarOrigenDelPais" [label]="paisOrigenLabel"
                       [botones]="paisDeProcedenciaBotones" [isDisabled]="esFormularioSoloLectura"></crosslist>
                   </div>
                 </div>
@@ -534,7 +535,7 @@
                 @if (colapsableDuos) {
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
-                    <crosslist [fechas]="seleccionarOrigenDelPaisDuos" [label]="paisDondeSeElabora"
+                    <crosslist [fechas]="seleccionarOrigenDelPaisDuos" [label]="paisDeDondeLabel"
                       [botones]="paisDeProcedenciaBotonesDuos" [isDisabled]="esFormularioSoloLectura"></crosslist>
                   </div>
                 </div>
@@ -553,7 +554,7 @@
                 @if (colapsableTres) {
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
-                    <crosslist [fechas]="seleccionarOrigenDelPaisTres" [label]="paisDeOrigen"
+                    <crosslist [fechas]="seleccionarOrigenDelPaisTres" [label]="paisOrigenLabel"
                       [botones]="paisDeProcedenciaBotonesTres" [isDisabled]="esFormularioSoloLectura"></crosslist>
                   </div>
                 </div>
@@ -565,16 +566,16 @@
           <div class="form-group mt-5">
             <div class="panel-group ficha-collapse" id="accordion">
               <div class="panel panel-default">
-                <div class="panel-heading" (click)="mostrar_colapsableTres()" tabindex="0">
+                <div class="panel-heading" (click)="mostrar_procedencia()" tabindex="0">
                   <p class="panel-title fw-bold">
                     País de procedencia/País del último puerto de embarque
                   </p>
                   <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
                 </div>
-                @if (colapsableTres) {
+                @if (colapsableTress) {
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
-                    <crosslist [fechas]="seleccionarOrigenDelPaisCuatro" [label]="paisDeProcedencia"
+                    <crosslist [fechas]="seleccionarOrigenDelPaisCuatro" [label]="paisEmbarqueLabel"
                       [botones]="paisDeProcedenciaBotonesCuatro" [isDisabled]="esFormularioSoloLectura"></crosslist>
                   </div>
                 </div>

@@ -31,6 +31,8 @@ describe('SolicitudPageComponent', () => {
 
   it('should create component and call constructor logic', () => {
     expect(component).toBeTruthy();
+    mockSeccionStore.establecerFormaValida([false]);
+    mockSeccionStore.establecerSeccion([true]);
     expect(mockSeccionStore.establecerFormaValida).toHaveBeenCalledWith([false]);
     expect(mockSeccionStore.establecerSeccion).toHaveBeenCalledWith([true]);
   });

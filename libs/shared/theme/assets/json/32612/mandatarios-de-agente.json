@@ -1,7 +1,7 @@
 [
     {
         "rfc": "RFC123TH4119",
-        "nombre": "Agente Aduanal",
-        "aiCorriente": "Aduana de México"
+        "razonSocial": "Agente Aduanal",
+        "fiscales": "Si"
     }
 ]

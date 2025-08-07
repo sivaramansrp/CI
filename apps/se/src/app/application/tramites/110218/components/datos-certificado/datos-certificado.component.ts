@@ -1,10 +1,8 @@
 import { CommonModule } from '@angular/common';
 
-import { Component } from '@angular/core';
-import { EventEmitter } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
 
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -29,6 +27,8 @@ import { takeUntil } from 'rxjs';
 
 import { CERTIFICADO_TABLA } from '../../models/certificado-tecnico-japon.enum';
 import { CompliMentaria } from '../../models/certificado-tecnico-japon.enum';
+import { MercanciasSeleccionadasFormComponent } from '../mercancias-seleccionadas-form/mercancias-seleccionadas-form.component';
+import { Modal } from 'bootstrap';
 
 /**
  * Componente para mostrar y manejar los datos del certificado técnico de Japón.
@@ -40,7 +40,7 @@ import { CompliMentaria } from '../../models/certificado-tecnico-japon.enum';
 @Component({
   selector: 'app-datos-certificado',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule, TablaDinamicaComponent],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, TablaDinamicaComponent,MercanciasSeleccionadasFormComponent],
   templateUrl: './datos-certificado.component.html',
   styleUrl: './datos-certificado.component.scss',
 })
@@ -114,10 +114,13 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    */
   indice: number = 5;
 
+
   /**
-   * Evento de salida que emite un valor booleano cuando se modifica el certificado.
+   * Referencia al elemento del DOM identificado como 'mercanciasSeleccionadas'.
+   * Utilizado para acceder y manipular directamente el elemento desde el componente.
+   * 
    */
-  @Output() modificarEventCertificado: EventEmitter<boolean> = new EventEmitter<boolean>(false);
+  @ViewChild('mercanciasSeleccionadas') mercanciasSeleccionadasElemento!: ElementRef;
 
   /**
    * Constructor del componente.
@@ -214,10 +217,29 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    */
   enModificarFormulario(): void {
     if (this.filaSeleccionada){
-      this.modificarEventCertificado.emit(false);
+       if (this.mercanciasSeleccionadasElemento) {
+        const MODAL_INSTANCIA = new Modal(
+          this.mercanciasSeleccionadasElemento?.nativeElement,
+          { backdrop: false }
+        );
+        MODAL_INSTANCIA.show();
+    }
     }
     
   }
+    /**
+   * [ES] Cierra el modal asociado al elemento de registro de mercancía, si existe una instancia activa.
+   * Utiliza la instancia del modal obtenida a través del elemento nativo y llama al método `hide()` para ocultarlo.
+   */
+  modalCancelar(): void {
+  const ELEMENTO_MODAL = this.mercanciasSeleccionadasElemento;
+  if (ELEMENTO_MODAL) {
+    const MODAL_INSTANCIA = Modal.getInstance(ELEMENTO_MODAL.nativeElement);
+    if (MODAL_INSTANCIA) {
+      MODAL_INSTANCIA.hide();
+    }
+  }
+}
 
   /**
    * Método del ciclo de vida que se ejecuta al destruir el componente.

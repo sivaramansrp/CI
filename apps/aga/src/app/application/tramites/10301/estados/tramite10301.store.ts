@@ -131,6 +131,9 @@ export interface Solicitud10301State {
 
   /** Campo para especificar un valor adicional no contemplado (por ejemplo, "otro"). */
   otro: string;
+
+  /** Lista de datos de mercancía asociados a la solicitud. */
+  condicionMercancia: string;
 }
 
 
@@ -176,6 +179,7 @@ export function createInitialState(): Solicitud10301State {
     donacion: '',
     persona: '',
     otro: '',
+    condicionMercancia: '',
   };
 }
 
@@ -193,6 +197,11 @@ export class Tramite10301Store extends Store<Solicitud10301State> {
   }
 
   // Métodos para actualizar campos individuales del estado
+  
+  /** Actualiza el campo `manifesto` del estado. */
+  public setCondicionMercancia(condicionMercancia: string): void {
+    this.update((state) => ({ ...state, condicionMercancia }));
+  }
 
   /** Actualiza el campo `tableCheck` del estado. */
   public setTableCheck(tableCheck: string): void {

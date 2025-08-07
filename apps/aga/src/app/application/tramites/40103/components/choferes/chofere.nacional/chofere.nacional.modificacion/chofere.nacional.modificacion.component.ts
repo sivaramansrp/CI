@@ -170,7 +170,7 @@ export class ChofereNacionalModificacionComponent implements OnInit, OnDestroy {
    */
   addNewRow(template: TemplateRef<unknown>): void {
     this.datosChofere = {} as DatosDelChoferNacional;
-    this.openModal(template);
+    this.abrirModal(template);
   }
 
   /**
@@ -184,7 +184,7 @@ export class ChofereNacionalModificacionComponent implements OnInit, OnDestroy {
       return;
     }
     this.datosChofere = this.datosDelChoferNacionalSelected[0];
-    this.openModal(template);
+    this.abrirModal(template);
   }
 
   /**
@@ -206,7 +206,7 @@ export class ChofereNacionalModificacionComponent implements OnInit, OnDestroy {
    * Abre el modal de Bootstrap utilizando el template proporcionado.
    * @param template - Referencia al template del modal a mostrar.
    */
-  openModal(template: TemplateRef<unknown>): void {
+  abrirModal(template: TemplateRef<unknown>): void {
     this.modalRef = this.bsModalService.show(template, {
       class: 'modal-fullscreen',
     });

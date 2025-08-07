@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, Injectable, NO_ERRORS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { of as observableOf } from 'rxjs';
+import { of as observableOf, Subject } from 'rxjs';
 
 import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
 import {
@@ -38,15 +38,57 @@ class MockExportaccionAcuicolaService {
 class MockTramite220403Query {
   setDatosRealizar$ = observableOf({});
   setCombinacionRequerida$ = observableOf({});
+  selectSeccionState$ = observableOf(mockSeccionState);
+  selectConsultaioState$ = observableOf(mockConsultaState);
+  setPagoDerechos$ = observableOf({});
 }
 
 @Injectable()
 class MockTramite220403Store {
-  setDatosRealizar() {}
-  setCombinacionRequerida() {}
-  setDatosRealizarValidada() {}
-  setCombinacionRequeridaValidada() {}
+  setDatosRealizar = jest.fn();
+  setCombinacionRequerida = jest.fn();
+  setDatosRealizarValidada = jest.fn();
+  setCombinacionRequeridaValidada = jest.fn();
 }
+
+const mockSeccionState = {
+  formaValida: [],
+  seccion: []
+};
+const mockConsultaState = {
+  consultaioSolicitante: null,
+  create: true,
+  department: '',
+  estadoDeTramite: '',
+  folioTramite: '',
+  parameter: '',
+  procedureId: '',
+  readonly: false,
+  tipoDeTramite: '',
+  update: false,
+};
+
+const mockDatosRealizar = {
+  certificadoTipo: 'animal',
+  paisOrigen: '',
+  paisDestino: '',
+  aduanaEmbarque: '',
+  numeroContenedor: '',
+  entidadFederativaOrigen: '',
+  municipioOrigen: ''
+};
+const mockCombinacionRequerida = {
+  especie: '',
+  instalacionAcuicola: '',
+  paisDeDestino: ''
+};
+
+const mockFormulario = new FormBuilder().group({
+  datosRealizar: new FormBuilder().control(''),
+  combinacionRequerida: new FormBuilder().control(''),
+});
+
+const destroy$ = new Subject<void>();
 
 describe('DatosDeLaSolicitudComponent', () => {
   let fixture: ComponentFixture<DatosDeLaSolicitudComponent>;
@@ -120,4 +162,88 @@ describe('DatosDeLaSolicitudComponent', () => {
     ]);
     expect(validators.length).toBe(3);
   });
+
+  it('should set evento when fechaCambiado is called', () => {
+    const testFecha = '2025-07-29';
+    component.fechaCambiado(testFecha);
+    expect(component.evento).toBe(testFecha);
+  });
+
+  it('should set value for form control in seleccionCatalogo', () => {
+  const mockValue = { custom: 'testValue' };
+  const fb = TestBed.inject(FormBuilder);
+  component.formulario = fb.group({
+    tipo: ['']
+  });
+
+  component.seleccionCatalogo('tipo', mockValue as any);
+  expect(component.formulario.get('tipo')?.value).toEqual(mockValue);
+});
+
+  it('should toggle colapsable in mostrar_colapsable', () => {
+    component.colapsable = false;
+    component.mostrar_colapsable();
+    expect(component.colapsable).toBe(true);
+
+    component.mostrar_colapsable();
+    expect(component.colapsable).toBe(false);
+  });
+
+  it('should call inicializarFormGroup for each config item', () => {
+  component.inicializarFormGroup = jest.fn();
+  component.ngOnInit();
+  expect(component.inicializarFormGroup).toHaveBeenCalledWith(
+  component.configuracion[0].menu,
+  component.configuracion[0].formGroupName,
+  0
+);
+});
+
+it('should subscribe to seccionQuery and set seccionState', () => {
+  component.ngOnInit();
+  expect(component.seccionState).toEqual(mockSeccionState);
+});
+
+it('should subscribe to consultaQuery and set consultaDatos', () => {
+  component.ngOnInit();
+  expect(component.consultaDatos).toEqual(mockConsultaState);
+});
+
+it('should patch form values from tramite220403Query observables', () => {
+  component.ngOnInit();
+  expect(component.formulario.get('datosRealizar')?.value).toEqual(mockDatosRealizar);
+  expect(component.formulario.get('combinacionRequerida')?.value).toEqual(mockCombinacionRequerida);
+});
+
+it('should update store values on statusChanges', () => {
+  component.ngOnInit();
+  component.formulario.get('datosRealizar')?.patchValue({ certificadoTipo: 'animal' });
+  component.formulario.get('combinacionRequerida')?.patchValue({tipo: 'otherVal'});
+  component.formulario.get('datosRealizar')?.setErrors(null);
+  component.formulario.get('combinacionRequerida')?.setErrors(null);
+
+  const store = TestBed.inject(Tramite220403Store) as unknown as MockTramite220403Store;
+  const storeSpy1 = jest.spyOn(store, 'setDatosRealizar');
+  const storeSpy2 = jest.spyOn(store, 'setCombinacionRequerida');
+  const validSpy1 = jest.spyOn(store, 'setDatosRealizarValidada');
+  const validSpy2 = jest.spyOn(store, 'setCombinacionRequeridaValidada');
+
+  component.formulario.updateValueAndValidity();
+
+  expect(storeSpy1).toHaveBeenCalled();
+  expect(storeSpy2).toHaveBeenCalled();
+  expect(validSpy1).toHaveBeenCalledWith(true);
+  expect(validSpy2).toHaveBeenCalledWith(true);
+});
+
+it('should initialize readonly form when formularioDeshabilitado is true', () => {
+  component.formularioDeshabilitado = true;
+
+  const spy = jest.spyOn(component, 'inicializarEstadoFormulario');
+
+  component.ngOnInit();
+
+  expect(component.esFormularioSoloLectura).toBe(true);
+  expect(spy).toHaveBeenCalled();
+});
 });

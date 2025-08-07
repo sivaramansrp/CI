@@ -368,7 +368,7 @@
                   @if(paisDeOriginColapsable){
                   <div class="panel-collapse collapse in" id="panel-01">
                     <div class="panel-body">
-                        <crosslist [fechas]="seleccionarOrigenDelPais"
+                        <crosslist [fechas]="seleccionarOrigenDelPais" [botones]="paisDeProcedenciaBotonsUno"
                         [label]="paisDeOriginLabel" [fechasSeleccionadas]="seleccionadasPaisDeOriginDatos"
                         (fechasSeleccionadasChange)="paisDeOriginSeleccionadasChange($event)"></crosslist>                    </div>
                   </div>
@@ -393,7 +393,7 @@
                   @if(paisDeProcedenciaColapsable){
                   <div class="panel-collapse collapse in" id="panel-01">
                     <div class="panel-body">
-                        <crosslist [fechas]="paisDeProcedenciaDatos"
+                        <crosslist [fechas]="paisDeProcedenciaDatos" [botones]="paisDeProcedenciaBotonsDos"
                 [label]="paisDeProcedenciaLabel" [fechasSeleccionadas]="seleccionadasPaisDeProcedenciaDatos"
                 (fechasSeleccionadasChange)="paisDeProcedenciaSeleccionadasChange($event)"></crosslist>                    </div>
                   </div>
@@ -473,7 +473,7 @@
                   <div class="panel-collapse collapse in" id="panel-01">
                     <div class="panel-body">
                         <crosslist [fechas]="usoEspesificoDatos"
-                [label]="usoEspesificoLabel" [fechasSeleccionadas]="seleccionadasUsoEspesificoDatos"
+                [label]="usoEspesificoLabel" [botones]="paisDeProcedenciaBotonsTres" [fechasSeleccionadas]="seleccionadasUsoEspesificoDatos"
                 (fechasSeleccionadasChange)="usoEspesificoSeleccionadasChange($event)"></crosslist>                    </div>
                   </div>
                   }
@@ -500,11 +500,11 @@
       </div>
         <div class="col-md-6 mb-5">
             <div class="pull-right ml-2">
-                <button type="button" name="eliminarScian" class="btn btn-danger ms-2"
+                <button type="button" name="eliminarScian" class="btn btn-default ms-2"
                 (click)="limpiarMercancia()">
                     Limpiar  
                 </button>
-                <button type="button" name="eliminarScian" class="btn btn-danger ms-2"
+                <button type="button" name="eliminarScian" class="btn btn-default ms-2"
                 (click)="cancelar()">
                 Cancelar
                 </button>

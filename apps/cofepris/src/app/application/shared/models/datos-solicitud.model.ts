@@ -275,6 +275,7 @@ export interface DatosSolicitudFormState {
   fechaDeCaducidad?: string;
   regimenLaMercancia?:string
   aduana?:string
+  manifesto?: boolean
 }
 
 /**

@@ -12,7 +12,6 @@
         <input type="text" class="form-control" id="cantidadLibreMercancia" formControlName="cantidadLibreMercancia" />
       </div>
     </div>
-    <ng-titulo titulo="Datos del trámite a realizar" />
     <div class="row">
       <div class="col-md-12">
         <div>
@@ -29,6 +28,9 @@
             formControlName="descripcionModificacion"
             [ngClass]="isValid(mercanciaFormulario,'descripcionModificacion') ? 'required' : ''"
             (change)=" setValoresStore( mercanciaFormulario, 'descripcionModificacion', 'setDescripcionModificacion' ) "></textarea>
+            <div *ngIf="mercanciaFormulario.get('descripcionModificacion')?.invalid && mercanciaFormulario.get('descripcionModificacion')?.touched" class="text-danger">
+              Por favor, corrige la descripción/dirección.
+            </div>
         </div>
       </div>
 

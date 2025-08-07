@@ -3,7 +3,7 @@
   "cadenaDependencia": "DEP-98765",
   "banco": "BANAMEX",
   "llaveDePago": "LLAVE-2025",
-  "fechaPago": "2025-06-04",
+  "fechaPago": "02/05/2025",
   "importePago": "15000.50",
   "rfcDel": "ABCD9901011A2",
   "denominacion": "Empresa Ejemplo S.A. de C.V.",
@@ -38,13 +38,15 @@
   "UMC": "cajas",
   "presentacion": "Caja con 10 tabletas",
   "numeroRegistro": "REG-2025-001",
-  "fechaCaducidad": "2027-12-31",
+  "fechaCaducidad": "02/05/2025",
   "cumplimiento": "No",
+  "mensaje": true,
   "rfc": "XYZ123456T89",
   "nombre": "Juan",
   "apellidoPaterno": "Pérez",
   "apellidoMaterno": "García",
   "aduanasDeEntrada": ["Aduana de Veracruz", "Aduana de Lázaro Cárdenas"],
-  "garantiasOfrecidas": "Garantía de calidad por 2 años"
+  "garantiasOfrecidas": "Garantía de calidad por 2 años",
+  "mensaje": true
 }
 

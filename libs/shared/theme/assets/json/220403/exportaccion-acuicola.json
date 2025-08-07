@@ -3,9 +3,9 @@
         "certificadoTipo": "animal",
         "aduanaEmbarque": "1",
         "numeroContenedor": "illenar",
-        "parisOrigen": "1",
+        "paisOrigen": "1",
         "entidadFederativaOrigen": "2",
-        "municipoOrigen": "1",
+        "municipioOrigen": "1",
         "paisDestino": "illenar"
     },
     "combinacionRequerida": {

@@ -9,16 +9,19 @@ import {
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO,
+  PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES,
   PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA,
   PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO,
   PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO,
   PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA,
   PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL,
   REPRESENTANTE_LEGAL,
+  TEXTO_MANIFESTO_Y_DECLARACIONES,
 } from '../../constantes/datos-solicitud.enum';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   AlertComponent,
+  InputRadioComponent,
   Notificacion,
   NotificacionesComponent,
   Pedimento,
@@ -57,6 +60,7 @@ import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaScianConfig } from '../../models/datos-solicitud.model';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json';
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
@@ -70,6 +74,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     FormsModule,
     NotificacionesComponent,
     TooltipModule,
+    InputRadioComponent
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
@@ -196,6 +201,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Mensaje de alerta relacionado con el manifiesto y declaraciones.
    */
   public alertaDeManifestoContenido = ALERTA_DE_MANIFESTO_Y_DECLARACIONES;
+
+  /**
+   * @property {string} textoManifestoContenido
+   * Texto que se muestra en el manifiesto y declaraciones.
+   */
+  public textoManifestoContenido = TEXTO_MANIFESTO_Y_DECLARACIONES;
+
 
   /**
    * @property {string} alertaOpicion
@@ -377,6 +389,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   /** Nueva notificación relacionada con el RFC. */
   public seleccionarFilaNotificacion!: Notificacion;
+  /**
+   * Representa el estado de un grupo de botones de radio, inicializado con el valor `radio_si_no`.
+   * Esto se utiliza típicamente para manejar opciones binarias (por ejemplo, Sí/No).
+   */
+  public radioBtn = radio_si_no;
+  /**
+   * Representa el valor de selección predeterminado para un componente específico.
+   * Esto puede ser una cadena o un número, inicializado como una cadena vacía.
+   */
+  public predeterminadoSeleccionar: string | number = '';
+
+  /** Indica si el trámite es un manifiesto. */
+  esManifesto: boolean = false;
 
   /**
    * @constructor
@@ -436,6 +461,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
+    this.esManifesto = PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES.includes(this.idProcedimiento);
     this.mostrarNotificacion = MOSTRAR_NOTIFICACION.includes(
       this.idProcedimiento
     )
@@ -631,6 +657,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       ],
       regimenLaMercancia: ['101', [Validators.required]],
       aduana: [this.datosSolicitudFormState.aduana, [Validators.required]],
+      manifesto: [
+        this.datosSolicitudFormState.manifesto,
+        [Validators.required],
+      ]
     });
 
     if (this.mostrarNotificacion) {
@@ -1072,6 +1102,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
+  }
+
+  /**
+   * Actualiza el valor de `predeterminadoSeleccionar` basado en el valor proporcionado.
+   *
+   * @param value - El nuevo valor a establecer para `predeterminadoSeleccionar`.
+   *                Puede ser una cadena o un número.
+   */
+  public cambioDeValorIndique(value: string | number): void {
+    this.predeterminadoSeleccionar = value;
   }
 
   /**
