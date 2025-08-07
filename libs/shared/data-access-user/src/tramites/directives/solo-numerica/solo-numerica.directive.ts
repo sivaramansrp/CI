@@ -16,6 +16,14 @@ import { REGEX_NUMEROS } from '../../constantes/regex.constants';
 })
 export class SoloNumericaDirective {
   /**
+   * Determina si el campo debe permitir únicamente caracteres numéricos.
+   *
+   * Si se establece en `true`, se aplicará una validación que restringe
+   * la entrada del usuario a solo números. Este valor puede ser
+   * configurado desde el componente padre.
+   */
+  @Input() libSoloNumerica: boolean = true;
+  /**
    * Número máximo de dígitos permitidos en el input.
    * Si no se especifica, no se aplica ninguna limitación de longitud.
    */
@@ -29,6 +37,9 @@ export class SoloNumericaDirective {
    */
   @HostListener('input', ['$event'])
   onInput(event: Event): void {
+    if (!this.libSoloNumerica) {
+      return;
+    }
     const INPUT = event.target as HTMLInputElement;
 
     // Elimina cualquier carácter que no sea numérico

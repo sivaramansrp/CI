@@ -212,7 +212,7 @@
         </div>
         <div class="col-md-4">
           <div class="input-group">
-            <input-fecha [setFecha]="datosMercancia.get('fechaSalida')?.value" [datos]="fechaFinalInput"
+            <input-fecha [isDisabled]="ocultarForm" [setFecha]="datosMercancia.get('fechaSalida')?.value" [datos]="fechaFinalInput"
               [tooltipQuestionCircle]="true" [deshabilitarFuturas]="true"
               (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
           </div>
