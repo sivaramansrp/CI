@@ -182,6 +182,7 @@ export class ClaveScianComponent implements OnInit, OnDestroy {
   getMunicipios(): void {
     const SELECTED_CLAVE = this.claveForm.get('clave')?.value;
     this.tramite260212Store.setClave(SELECTED_CLAVE);
+    this.claveForm.get('descripcion')?.setValue(1);
   }
 
   /**

@@ -51,7 +51,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="correoElectronico">Correo electrónico*:
-                <span class="bi bi-question-circle-fill fs-4 m-1" title="Correo electrónico" data-bs-toggle="tooltip"></span>
+                <span class="p-2" tooltip="ejemplo@dominio.com" placement="top"><i class="bi bi-question-circle-fill"></i></span>
               </label>
               <input type="text" class="form-control" id="correoElectronico" formControlName="correoElectronico"(input)="updateCorreoElectronico()">
               @if (datosEstablecimientoForm.get('correoElectronico')?.hasError('required') && datosEstablecimientoForm.get('correoElectronico')?.touched) {
@@ -106,8 +106,7 @@
           </div>
           <div class="col-md-8">
             <div class="form-group">
-              <label class="form-label" for="Calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Calle" ata-bs-toggle="tooltip"></span>
+              <label class="form-label" for="Calle">Calle*:<span class="p-2" tooltip="Domicilio, calle, número interior, número exterior, lote" placement="top"><i class="bi bi-question-circle-fill"></i></span>
               </label>
               <input type="text" class="form-control" id="Calle" formControlName="calle" (input)="updateCalle()">
               @if (datosEstablecimientoForm.get('calle')?.hasError('required') && datosEstablecimientoForm.get('calle')?.touched) {
@@ -138,15 +137,15 @@
 
         <h5 class="fs-4">S.C.I.A.N.*:</h5>
         <div class="table-responsive">
-          <app-tabla-dinamica [configuracionTabla]="configuracionTablaScian" [datos]="claveScianDatas"
+          <app-tabla-dinamica [configuracionTabla]="configuracionTablaScian" [datos]="claveScianDatas" (listaDeFilaSeleccionada)="listaDeFilaSeleccionadaScian($event)"
             [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
           </app-tabla-dinamica>
         </div>
 
         @if (seleccionarEstablecimientoState) {
-           <div class="row">
+           <div class="row mt-3 mb-3">
             <div class="col-md-12 d-flex justify-content-end">
-              <button name="eliminarServicio" class="btn btn-danger" [disabled]="esFormularioSoloLectura">
+              <button name="eliminarServicio" class="btn btn-danger" [disabled]="esFormularioSoloLectura" (click)="eliminarScian()">
                 Eliminar
               </button>
               <button name="agregarServicio" class="btn btn-primary mx-2" (click)="toggleScianFormulario()" [disabled]="esFormularioSoloLectura">
@@ -158,17 +157,17 @@
 
         <app-formulario-operacion-comercial></app-formulario-operacion-comercial>
         <h5>Mercancias*:</h5>
-        <app-tabla-dinamica [configuracionTabla]="mercanciasTabla" [datos]="mercanicaData"
+        <app-tabla-dinamica [configuracionTabla]="mercanciasTabla" [datos]="mercanicaData" (listaDeFilaSeleccionada)="listaDeFilaSeleccionadaMercancias($event)"
           [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
         </app-tabla-dinamica>
         <app-table-pagination [showCurrentPage]="true"></app-table-pagination>
 
         <div class="d-flex justify-content-end">
           @if (mercanicaData.length) {
-            <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">
+            <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" (click)="modificarMercancias('modificar')">
             Modificar 
           </button>
-            <button class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura">
+            <button class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura" (click)="eliminarMercancias('eliminar')">
             Eliminar
           </button>
           }
@@ -201,8 +200,8 @@
 </div>
 
 <div id="modalSeleccionarEstablesmiento" aria-labelledby="modalSeleccionarEstablesmiento" class="modal fade" tabindex="-1" role="dialog" #modalSeleccionarEstablesmiento>
-  <div class="modal-dialog" role="document">
-    <div class="modal-content modalsm">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
       <div class="modal-header">
         <p></p>
       </div>
@@ -211,6 +210,39 @@
       </div>
       <div class="modal-footer" style="justify-content: center">
         <button type="button" class="btn btn-primary" (click)="aceptar()">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="mercanciasConfirmacionModal" aria-labelledby="mercanciasConfirmacionModal" class="modal fade" tabindex="-1" role="dialog" #mercanciasConfirmacionModal>
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <p></p>
+      </div>
+      <div class="modal-body">
+        <p>{{tipoButton === 'modificar' ? 'Selecciona sólo un registro para modificar.' : 'Selecciona un registro.'}} </p>
+      </div>
+      <div class="modal-footer" style="justify-content: center">
+        <button type="button" class="btn btn-primary" (click)="cerrarScianFormulario()">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="scianEliminarModal" aria-labelledby="scianEliminarModal" class="modal fade" tabindex="-1" role="dialog" #scianEliminarModal>
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <p></p>
+      </div>
+      <div class="modal-body">
+        <p>¿Está seguro que deseas eliminar los registros marcados?</p>
+      </div>
+      <div class="text-end mt-3 mb-3">
+        <button type="button" class="btn btn-primary me-3" (click)="cerrarScianFormulario()">Cancelar</button>
+        <button type="button" class="btn btn-primary me-3" (click)="confirmarEliminarScian()">Aceptar</button>
       </div>
     </div>
   </div>

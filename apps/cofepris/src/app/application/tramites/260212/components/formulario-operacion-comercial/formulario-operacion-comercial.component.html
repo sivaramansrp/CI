@@ -19,7 +19,7 @@ indicado en el documento emitido por la autoridad sanitaria competente" placemen
     <div class="row pb-5 mb-5">
         <div class="col-md-4">
             <div class="form-group">
-                <app-catalogo-select [catalogo]="clave" [label]="'Régimen'" [required]="true" name="régimen" [tooltipQuestionCircle]="true"
+                <app-catalogo-select [catalogo]="clave" [label]="'Régimen'" [required]="true" name="régimen" [tooltipQuestionCircle]="true" [tooltipQuestionCircleText]="'Régimen al que se destinará la mercancía'"
                     formControlName="regimen" (change)="updateRegimen()" [isDisabled]="esFormularioSoloLectura">
                 </app-catalogo-select>
             </div>

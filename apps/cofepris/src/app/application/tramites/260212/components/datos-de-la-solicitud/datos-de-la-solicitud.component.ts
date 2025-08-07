@@ -23,6 +23,7 @@ import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { Tramite260212Store } from '../../estados/tramite260212.store';
 
 import { Modal } from 'bootstrap';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite260212Query } from '../../estados/tramite260212.query';
 
 /**
@@ -49,7 +50,8 @@ import { Tramite260212Query } from '../../estados/tramite260212.query';
     MercanciasTableFormComponent,
     RepresentanteLegalComponent,
     CatalogoSelectComponent,
-    TablePaginationComponent
+    TablePaginationComponent,
+    TooltipModule
 
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
@@ -107,6 +109,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   mercanicaData: MercanciaModel[] = [];
 
   /**
+ * Arreglo que almacena los datos de las mercancías.
+ * Se utiliza para manejar la información de las mercancías asociadas en el componente.
+ */
+  public seleccionadaMercanciaDatos: MercanciaModel[] = [];
+
+  /**
+ * Arreglo que almacena los datos de las mercancías.
+ * Se utiliza para manejar la información de las mercancías asociadas en el componente.
+ */
+  public seleccionadaScianDatos: ClaveModel[] = [];
+
+  /**
  * Variable que controla el estado plegable de una sección en el componente.
  * Se utiliza para mostrar u ocultar contenido de manera dinámica.
  */
@@ -142,6 +156,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   @ViewChild('modalSeleccionarEstablesmiento') modalElement!: ElementRef;
 
   /**
+   * Referencia al elemento modal para agregar mercancías.
+   */
+  @ViewChild('mercanciasConfirmacionModal') mercanciasConfirmacionModalElement!: ElementRef;
+
+  /**
+   * Referencia al elemento modal para agregar mercancías.
+   */
+  @ViewChild('scianEliminarModal') scianEliminarModalElement!: ElementRef;
+
+  /**
    * Referencia al elemento del modal para agregar o editar claves S.C.I.A.N.
    * Se utiliza para controlar la visualización del modal desde el componente mediante código.
    *
@@ -160,10 +184,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @private
    * @memberof DatosDeLaSolicitudComponent
    * @example
-   * this.modalScianInstance?.show();
-   * this.modalScianInstance?.hide();
+   * this.modalInstance?.show();
+   * this.modalInstance?.hide();
    */
-  private modalScianInstance: Modal | null = null;
+  private modalInstance: Modal | null = null;
+
+  public tipoButton: string = '';
 
   /**
    * Referencia al elemento del modal para agregar o editar mercancías.
@@ -398,8 +424,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   toggleScianFormulario(): void {
     if (this.modalScianRef) {
-      this.modalScianInstance = new Modal(this.modalScianRef.nativeElement);
-      this.modalScianInstance.show();
+      this.modalInstance = new Modal(this.modalScianRef.nativeElement);
+      this.modalInstance.show();
     }
   }
   /**
@@ -408,8 +434,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   cerrarScianFormulario(): void {
-    if (this.modalScianInstance) {
-      this.modalScianInstance.hide();
+    if (this.modalInstance) {
+      this.modalInstance.hide();
     }
   }
 
@@ -659,6 +685,55 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     if (event) {
       this.mercanicaData = [...this.mercanicaData, event.form];
     }
+  }
+
+  listaDeFilaSeleccionadaMercancias(event: MercanciaModel[]): void {
+    this.seleccionadaMercanciaDatos = event;
+  }
+
+  listaDeFilaSeleccionadaScian(event: ClaveModel[]): void {
+    this.seleccionadaScianDatos = event; 
+  }
+
+  modificarMercancias(event: string): void {
+    if (this.seleccionadaMercanciaDatos.length) {
+      this.openMercanciasForm();
+    } else {
+      this.tipoButton = event;
+      if (this.mercanciasConfirmacionModalElement) {
+        this.modalInstance = new Modal(this.mercanciasConfirmacionModalElement.nativeElement);
+        this.modalInstance.show();
+      }
+    }
+  }
+
+  eliminarMercancias(event: string): void {
+    if (this.seleccionadaMercanciaDatos.length) {
+      this.openMercanciasForm();
+    } else {
+      this.tipoButton = event;
+      if (this.mercanciasConfirmacionModalElement) {
+        this.modalInstance = new Modal(this.mercanciasConfirmacionModalElement.nativeElement);
+        this.modalInstance.show();
+      }
+    }
+  }
+
+  eliminarScian(): void {
+    if (this.seleccionadaScianDatos.length) {
+      if (this.scianEliminarModalElement) {
+        this.modalInstance = new Modal(this.scianEliminarModalElement.nativeElement);
+        this.modalInstance.show();
+      }
+    }
+  }
+
+  confirmarEliminarScian(): void {
+    const IDS_TO_DELETE = this.seleccionadaScianDatos.map(item => item.clave);
+    this.claveScianDatas = this.claveScianDatas.filter(
+      (item) => !IDS_TO_DELETE.includes(item.clave)
+    );
+    this.modalInstance?.hide();
   }
 
   /*
