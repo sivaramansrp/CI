@@ -9,7 +9,7 @@
       </div>
     </div>
     
-    @if (tipoMovimientoSeleccionada) {
+    @if (tipoMovimientoSeleccionada || formSolicitud?.get('tipodeMovimiento')?.value) {
     <ng-titulo titulo="Régimen" />
     <div class="row">
       <div class="col-md-4">
@@ -20,16 +20,16 @@
     </div>
     <ng-titulo [titulo]="
         solicitud230902State.tipodeMovimiento === '2' ||
-        solicitud230902State.tipodeMovimiento === '3'
+        solicitud230902State.tipodeMovimiento === '4'
           ? 'Aduanas de salida'
-          : 'Adnuana'
+          : 'Aduana'
       "></ng-titulo>
     <div class="row mt-3">
       <div class="col-md-12 mt-3">
-        @if(solicitud230902State.tipodeMovimiento==="1"){
-        <h5>Aduana des entrades (Maximo 3 aduanas)</h5>
+        @if(solicitud230902State.tipodeMovimiento==="1" || solicitud230902State.tipodeMovimiento==="3"){
+        <h5>Aduanas de entradas (Máximo 3 aduanas)</h5>
         }
-        <crosslist [fechas]="listaOriginalAduanas" [isDisabled]="esFormularioSoloLectura" [fechasSeleccionadas]="listaSeleccionadaAduanas"
+        <crosslist #CrosslistComponentAduanas [fechas]="listaOriginalAduanas" [isDisabled]="esFormularioSoloLectura" [fechasSeleccionadas]="listaSeleccionadaAduanas"
           [botones]="aduanasBotons" [label]="aquandasLabel"></crosslist>
       </div>
     </div>
@@ -38,7 +38,7 @@
       <div class="col-md-6">
         <label for="mercancia">Mercancía*:</label>
       </div>
-      <div class="container table-container">
+      <div class="col-md-12">
         <app-tabla-dinamica
         [configuracionTabla]="configuracionTabla"
         [datos]="tablaDatos"
@@ -48,7 +48,7 @@
       ></app-tabla-dinamica>
       </div>
 
-      <nav aria-label="Page navigation example">
+      <nav aria-label="Page navigation example mt-3">
         <ul class="pagination justify-content-center">
           <li class="page-item"><a class="page-link" href="#">1</a></li>
         </ul>
@@ -71,7 +71,7 @@
     <lib-notificaciones 
     *ngIf="confirmEliminarPopupAbierto"
     [notificacionInput]="nuevaNotificacion" 
-    (confirmacionModal)="eliminarMercanciaItem()">
+    (confirmacionModal)="eliminarMercanciaItem($event)">
     </lib-notificaciones>
     <lib-notificaciones 
       *ngIf="multipleSeleccionPopupAbierto"
@@ -81,7 +81,7 @@
     <ng-titulo titulo="Finalidad del movimiento" />
     <div class="row mt-3">
       <div class="col-md-12 mt-3">
-        <crosslist [fechas]="listaOriginalMovimiento" [isDisabled]="esFormularioSoloLectura" [fechasSeleccionadas]="listSeleccionadaMovimiento"
+        <crosslist #CrosslistComponentFinalidad [fechas]="listaOriginalMovimiento" [isDisabled]="esFormularioSoloLectura" [fechasSeleccionadas]="listSeleccionadaMovimiento"
           [botones]="movimientoBotons" [label]="movimientoLabel"></crosslist>
       </div>
     </div>
@@ -297,7 +297,13 @@
           </div>
           <div class="row">
             <div class="col-md-12 d-flex justify-content-end gap-1">
-              <button type="button" class="btn btn-default">Limpiar</button>
+              <button 
+                type="button" 
+                class="btn btn-default"
+                (click)="limpiarFormularioMercancia()"
+              >
+                Limpiar
+              </button>
               <button
               type="button"
               class="btn btn-danger"
@@ -310,7 +316,7 @@
               class="btn btn-primary"
               (click)="enviarFormularioMercancia()"
             >
-              Guardar
+              Agregar
             </button>
             </div>
           </div>

@@ -236,7 +236,7 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
       calle: ['', [Validators.required, Validators.maxLength(100)]],
       numeroExterior: ['', [Validators.required, Validators.maxLength(10)]],
       numeroInterior: ['', [Validators.maxLength(10)]],
-      pais: [{ value: 'MEXICO (ESTADOS UNIDOS MEXICANOS)', disabled: true }, Validators.required],
+      pais: ['', Validators.required],
       entidadFederativa: ['', Validators.required],
       municipioDelegacion: ['', Validators.required],
       colonia: ['', Validators.required],
@@ -373,6 +373,8 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
       // Habilita los formularios si el estado permite edición
       this.fomentoExportacionForm.enable();
       this.formularioDireccion.enable();
+
+      this.formularioDireccion.get('pais')?.disable(); // Deshabilita el campo 'pais' del formulario de dirección.
     }
   }
 

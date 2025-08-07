@@ -25,8 +25,8 @@ import data from '@libs/shared/theme/assets/json/funcionario/cat-dependencias.js
 export class CapturarSolictudOpinionComponent implements OnInit, OnDestroy {
 
   /**
-     * Catálogo de tipo de requerimiento
-     */
+    * Catálogo de tipo de requerimiento
+    */
   catDependencia!: Catalogo[];
 
   /**
@@ -113,11 +113,11 @@ export class CapturarSolictudOpinionComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudOpinionesState = seccionState;
+          this.visualizaTabla = this.solicitudOpinionesState.parametroDesplegable;
+          this.listadoOpiniones = this.solicitudOpinionesState.listaOpciones;
         })
       )
       .subscribe();
-    this.visualizaTabla = this.solicitudOpinionesState.parametroDesplegable;
-    this.listadoOpiniones = this.solicitudOpinionesState.listaOpciones;
   }
 
   /**
@@ -158,10 +158,26 @@ export class CapturarSolictudOpinionComponent implements OnInit, OnDestroy {
    * Método para guardar la opinión
    */
   guardarOpinion(): void {
+    // Marcar todos los campos como touched para mostrar mensajes de validación
+    this.formCapturaOpinion.markAllAsTouched();
+    if (this.formCapturaOpinion.invalid) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Alerta',
+        mensaje: 'Por favor, compleplete o corrija todos los campos requeridos antes de guardar la opinión.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
     const DEPENDENCIA_ID = this.formCapturaOpinion.get('dependencia')?.value;
     const JUSTIFICACION = this.formCapturaOpinion.get('justificacion')?.value?.trim();
 
-    if (!DEPENDENCIA_ID || !JUSTIFICACION) {
+    if (this.formCapturaOpinion.invalid) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
@@ -173,24 +189,25 @@ export class CapturarSolictudOpinionComponent implements OnInit, OnDestroy {
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
+      return;
     }
     const DEPENDENCIA_OBJ = this.catDependencia.find(dep => dep.id === Number(DEPENDENCIA_ID));
-    const NUEVA_OPINION: ListaOpiniones = {
+    const NUEVA_TABLA_OPINIONES = [...this.listadoOpiniones];
+    NUEVA_TABLA_OPINIONES.push({
       idDependencia: String(DEPENDENCIA_ID),
       dependencia: DEPENDENCIA_OBJ?.descripcion || 'Desconocido',
       Justificación: JUSTIFICACION,
       estadoRequerimento: 'Capturada'
-    };
+    });
     if (this.indiceOpinionEditando !== null) {
-      this.listadoOpiniones[this.indiceOpinionEditando] = NUEVA_OPINION;
+      this.listadoOpiniones = NUEVA_TABLA_OPINIONES;
       this.indiceOpinionEditando = null;
     } else {
       if (this.listadoOpiniones.length === 0) {
         this.listadoOpiniones = [];
       }
-      this.listadoOpiniones.push(NUEVA_OPINION);
+      this.listadoOpiniones = NUEVA_TABLA_OPINIONES;
     }
-
     this.opinionesStates.setSolicitudOpiniones(this.listadoOpiniones);
     this.opinionesStates.setValorDesplegableOpinion(true);
     this.visualizaTabla = true;
@@ -214,17 +231,41 @@ export class CapturarSolictudOpinionComponent implements OnInit, OnDestroy {
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
+      return;
     }
+
+    if (this.opinionesSeleccionados.length > 1) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: 'Atención',
+        mensaje: 'Para editar una opinión, selecciona únicamente un registro de la tabla.',
+        cerrar: false,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
     const OPINION_SELECCIONADA = this.opinionesSeleccionados[0];
-    this.indiceOpinionEditando = this.listadoOpiniones.findIndex(
-      opinion =>
-        opinion.idDependencia === OPINION_SELECCIONADA.idDependencia &&
-        opinion.Justificación === OPINION_SELECCIONADA.Justificación
+
+    // Eliminar del listado la opinión seleccionada
+    this.listadoOpiniones = this.listadoOpiniones.filter(
+      opinion => opinion.idDependencia !== OPINION_SELECCIONADA.idDependencia
     );
+
+    // Actualizar el estado global
+    this.opinionesStates.setSolicitudOpiniones(this.listadoOpiniones);
+
+    // Cargar valores al formulario para editar
     this.formCapturaOpinion.patchValue({
       dependencia: OPINION_SELECCIONADA.idDependencia,
       justificacion: OPINION_SELECCIONADA.Justificación,
     });
+
+    // Limpiar selección
     this.opinionesSeleccionados = [];
   }
 
@@ -244,13 +285,10 @@ export class CapturarSolictudOpinionComponent implements OnInit, OnDestroy {
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
+      return;
     }
-    this.opinionesSeleccionados.forEach((opinion) => {
-      const INDEX = this.listadoOpiniones.indexOf(opinion);
-      if (INDEX > -1) {
-        this.listadoOpiniones.splice(INDEX, 1);
-      }
-    });
+    const IDS_TO_DELETE = this.opinionesSeleccionados.map(opinion => opinion.idDependencia);
+    this.listadoOpiniones = this.listadoOpiniones.filter(opinion => !IDS_TO_DELETE.includes(opinion.idDependencia));
     this.opinionesStates.setSolicitudOpiniones(this.listadoOpiniones);
     this.opinionesSeleccionados = [];
   }

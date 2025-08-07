@@ -5,7 +5,7 @@ import {
 } from '../../../../shared/models/datos-del-tramite.model';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { DatosMercanciaContenedoraComponent } from '../datos-mercancia-contenedora/datos-mercancia-contenedora.component';
 import { ID_PROCEDIMIENTO } from '../../constants/artefactos-pirotecnicos-ordinarios.enum';
@@ -43,6 +43,11 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    */
   public datosMercanciaTabla: MercanciaDetalle[] = [];
 
+  /**
+   * Indica si se deben usar botones personalizados en el componente.
+   * Cuando es `true`, el componente mostrará botones personalizados en lugar de los predeterminados.
+   */
+  usarBotonesPersonalizados: boolean = true;
   /**
    * Estado actual del formulario de datos del trámite.
    * @property {DatosDelTramiteFormState} datosDelTramiteFormState

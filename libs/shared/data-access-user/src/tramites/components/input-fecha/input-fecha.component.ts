@@ -82,7 +82,7 @@ export class InputFechaComponent implements OnInit, OnChanges {
   /**
    * Bandera para indicar si el control debe estar deshabilitado.
    */
-  @Input() isDisabled!: boolean;
+  @Input() isDisabled: boolean = false;
 
   constructor(private fb: FormBuilder) {
     moment.locale('es');
@@ -110,6 +110,14 @@ export class InputFechaComponent implements OnInit, OnChanges {
         this.Formulario.get('fechaString')?.reset();
       } else {
         this.setFechaEnInput();
+      }
+    }
+    if (changes['isDisabled']) {
+      const IS_DISABLED = changes['isDisabled'].currentValue;
+      if (IS_DISABLED) {
+        this.Formulario.disable();
+      } else {
+        this.Formulario.enable();
       }
     }
   }
@@ -337,18 +345,18 @@ export class InputFechaComponent implements OnInit, OnChanges {
   }
 
   isFutureDate(day: { value: number; indexWeek: number }): boolean {
-  if (!this.deshabilitarFuturas) {
-    return false;
+    if (!this.deshabilitarFuturas) {
+      return false;
+    }
+
+    const SELECTED_YEAR = this.Formulario.get('anio')?.value;
+    const SELECTMONTH = this.Formulario.get('mes')?.value;
+    const DAYVALUE = day.value;
+
+    const FECHADIA = moment(`${SELECTED_YEAR}-${SELECTMONTH}-${DAYVALUE}`, 'YYYY-M-D');
+    const HOY = moment().startOf('day');
+
+    return FECHADIA.isAfter(HOY);
   }
-
-  const SELECTED_YEAR = this.Formulario.get('anio')?.value;
-  const SELECTMONTH = this.Formulario.get('mes')?.value;
-  const DAYVALUE = day.value;
-
-  const FECHADIA = moment(`${SELECTED_YEAR}-${SELECTMONTH}-${DAYVALUE}`, 'YYYY-M-D');
-  const HOY = moment().startOf('day');
-
-  return FECHADIA.isAfter(HOY);
-}
 
 }

@@ -60,8 +60,8 @@ export const STR_NACIONAL = 'Nacional';
  * Cada opción incluye una etiqueta (`label`) y un valor (`value`).
  */
 export const TIPO_PERSONA_OPCIONES = [
-  { label: 'Física', value: 'Fisica' },
-  { label: 'Moral', value: 'Moral' },
+  { label: 'Física', value: 'Fisica', hint:'Fisica' },
+  { label: 'Moral', value: 'Moral', hint:'Moral' },
 ];
 
 /**

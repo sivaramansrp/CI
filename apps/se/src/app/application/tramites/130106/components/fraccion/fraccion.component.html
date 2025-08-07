@@ -52,8 +52,8 @@
             </div>
             <div class="col-md-4">
                 <div data-bs-toggle="tooltip" data-bs-placement="top" title="Selecciona la Unidad de Medida de Transacción (UMT)"></div>
-                <app-catalogo-select [catalogo]="umt" [label]="'UMT'"   [required]="true" name="umt"  [isDisabled]="esFormularioSoloLectura"
-                formControlName="umt" (change)="setValoresStore(fraccionForm,'umt', 'setUmt')" [tooltipQuestionCircle]="true">
+                <app-catalogo-select [tooltipQuestionCircle]="true" [catalogo]="umt" [label]="'UMT'"   [required]="true" name="umt"  [isDisabled]="esFormularioSoloLectura"
+                formControlName="umt" (change)="setValoresStore(fraccionForm,'umt', 'setUmt')">
             </app-catalogo-select>
 
             </div>
@@ -111,7 +111,7 @@
             </div>
 
         </div>
-        <div class="row mt-5" style="padding-bottom: 20px;text-align: right;">
+        <div class="row m-top-5 buttn">
             <div>
                 
                 <button type="button" class="btn btn-default me-2 btn-space" [disabled]="esFormularioSoloLectura">Cargar archivo</button>
@@ -151,10 +151,8 @@
     
                 </div>
             </div>
-            <div class="row mt-5" style="padding-top: 20px;text-align: right;">
-                <div>
-                    
-                   
+            <div class="row m-top-5 buttn">
+                <div> 
                     <button type="button" class="btn btn-danger me-2 btn-space" [disabled]="esFormularioSoloLectura">Eliminar partida</button>
                     <button type="button" class="btn btn-primary btn-space" [disabled]="esFormularioSoloLectura">Modificar partida</button>
                     
@@ -191,9 +189,9 @@
                         
                       </div>
                       <div
-                        class="col-md-4 d-flex justify-content-center align-items-center mt-5 mx-4"
+                        class="col-md-4 d-flex justify-content-center align-items-center mt-5"
                       >
-                        <button type="button" class="btn-primary btn" name="todos países" [disabled]="esFormularioSoloLectura">Todos los países</button>
+                        <button type="button" class="btn-primary btn w-70" name="todos países" [disabled]="esFormularioSoloLectura">Todos los países</button>
                       </div>
                       </div>
                       <div class="row mb-6" style="padding-bottom: 20px">

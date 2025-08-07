@@ -129,7 +129,7 @@
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="valorTotalUSD">Valor Total USD:</label>
+              <label class="form-label" for="valorTotalUSD">Valor total USD:</label>
               <input class="form-control" type="number" id="valorTotalUSD" formControlName="valorTotalUSD"
                 aria-labelledby="valorTotalUSD" />
             </div>
@@ -159,10 +159,10 @@
                 <form [formGroup]="partidasDelaMercanciaForm">
                   <div>
                     <ng-titulo titulo="Modificar partida"></ng-titulo>
-                    <div class="row">
+                    <div class="row mt-4">
                       <div class="col-md-8">
                         <div class="form-group">
-                          <label class="form-label" for="cantidad">Cantidad:</label>
+                          <label class="form-label" for="cantidad">Cantidad*:</label>
                           <input class="form-control" type="text" id="cantidad" formControlName="cantidadModificar"
                             appUppercase aria-labelledby="cantidad" />
                           <div *ngIf="esInvalido('cantidadModificar')" class="text-danger">
@@ -179,10 +179,10 @@
                         </div>
                       </div>
                     </div>
-                    <div class="row">
+                    <div class="row mt-4">
                       <div class="col-md-8">
                         <div class="form-group">
-                          <label class="form-label" for="descripcion">Descripción:</label>
+                          <label class="form-label" for="descripcion">Descripción*:</label>
                           <textarea class="form-control height" rows="3" id="descripcion"
                             formControlName="descripcionModificar" aria-labelledby="descripcion"></textarea>
                           <div *ngIf="esInvalido('descripcionModificar')" class="text-danger">
@@ -195,10 +195,10 @@
                         </div>
                       </div>
                     </div>
-                    <div class="row">
+                    <div class="row mt-4">
                       <div class="col-md-8">
                         <div class="form-group">
-                          <label class="form-label" for="valorPartidaUSD">Valor USD partida:</label>
+                          <label class="form-label" for="valorPartidaUSD">Valor USD partida*:</label>
                           <input class="form-control" type="number" id="valorPartidaUSD"
                             formControlName="valorPartidaUSDPartidasDeLaMercancia" aria-labelledby="valorPartidaUSD" />
                           <div *ngIf="esInvalido('valorPartidaUSDPartidasDeLaMercancia')" class="text-danger">
@@ -224,7 +224,7 @@
                       <div class="col-md-8 d-flex align-items-end">
                         <div class="btn-group buttons-container">
                           <button type="button" class="btn btn-primary" (click)="onModificarPartida()">Modificar</button>
-                          <button type="button" id="cancelarCHN" name="cancelar" class="btn btn-primary cancel me-2"
+                          <button type="button" id="cancelarCHN" name="cancelar" class="btn btn-danger cancel me-2"
                             data-bs-dismiss="modal">
                             Cancelar
                           </button>
