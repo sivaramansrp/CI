@@ -40,7 +40,7 @@
         </div>
         <div class="row">
           <div class="col-md-4 mb-3">
-            <label>Número de registro fiscal*:</label>
+            <label>Número de registro fiscal<span [ngClass]="grupoOperador.get('numeroFiscal')?.invalid && grupoOperador.get('numeroFiscal')?.touched ? 'text-danger' : ''">*</span>:</label>
             <input type="text" class="form-control" id="numeroFiscal" formControlName="numeroFiscal" maxlength="30"
               [ngClass]="grupoOperador.get('numeroFiscal')?.invalid && grupoOperador.get('numeroFiscal')?.touched ? 'required' : ''"
               (change)="setValoresStore(grupoOperador, 'numeroFiscal', 'setGrupoOperadorNumeroFiscal')" />
@@ -335,7 +335,7 @@
 
             <div class="row mt-5">
               <div class="col-md-4">
-                <label>Cantidad*:</label>
+                <label>Cantidad<span [ngClass]="formularioMercancia.get('cantidad')?.invalid && formularioMercancia.get('cantidad')?.touched ? 'text-danger' : ''">*</span>:</label>
                 <input type="text" class="form-control" formControlName="cantidad" maxlength="20"
                   [ngClass]="formularioMercancia.get('cantidad')?.invalid && formularioMercancia.get('cantidad')?.touched ? 'required' : ''"
                   (change)=" setValoresStore( formularioMercancia, 'cantidad', 'setCantidad' ) " />
@@ -360,7 +360,7 @@
             </div>
             <div class="row mt-5">
               <div class="col-md-4">
-                <label>Valor de la mercancía (dólares)*:</label>
+                <label>Valor de la mercancía (dólares)<span [ngClass]="formularioMercancia.get('valorDelaMercancia')?.invalid && formularioMercancia.get('valorDelaMercancia')?.touched ? 'text-danger' : ''">*</span>:</label>
                 <input type="text" required="true" class="form-control" formControlName="valorDelaMercancia" maxlength="20"
                   [ngClass]="formularioMercancia.get('valorDelaMercancia')?.invalid && formularioMercancia.get('valorDelaMercancia')?.touched ? 'required' : ''"
                   (change)=" setValoresStore( formularioMercancia, 'valorDelaMercancia', 'setValorDelaMercancia' ) " />
@@ -377,7 +377,7 @@
                 }
               </div>
               <div class="col-md-8">
-                <label>Complemento de la descripción*:</label>
+                <label>Complemento de la descripción<span [ngClass]="formularioMercancia.get('complementoDelaDescripcion')?.invalid && formularioMercancia.get('complementoDelaDescripcion')?.touched ? 'text-danger' : ''">*</span>:</label>
                 <textarea rows="3" class="w-100" formControlName="complementoDelaDescripcion" maxlength="200"
                   [ngClass]="isValid(formularioMercancia,'complementoDelaDescripcion') ? 'required' : ''"
                   (change)=" setValoresStore( formularioMercancia, 'complementoDelaDescripcion', 'setComplementoDelaDescripcion' ) "></textarea>
@@ -411,7 +411,7 @@
                 }
               </div>
               <div class="col-md-4">
-                <label>N° factura*:</label>
+                <label>N° factura<span [ngClass]="formularioMercancia.get('numeroFactura')?.invalid && formularioMercancia.get('numeroFactura')?.touched ? 'text-danger' : ''">*</span>:</label>
                 <input type="text" required="true" class="form-control" formControlName="numeroFactura" maxlength="36"
                   (change)=" setValoresStore( formularioMercancia, 'numeroFactura', 'setNumeroFactura' ) "
                   [ngClass]="formularioMercancia.get('numeroFactura')?.invalid && formularioMercancia.get('numeroFactura')?.touched ? 'required' : ''"
