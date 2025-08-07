@@ -48,7 +48,7 @@ export const FORMA_SOCIO_ACCIONISTAS: DatosCatalago[] = [
     class: 'col-md-6 col-sm-10 mt-3',
     tipo_input: 'text',
     required: true,
-    maxlength: 200,
+    maxlength: 254,
     orden: 2,
   },
   {
