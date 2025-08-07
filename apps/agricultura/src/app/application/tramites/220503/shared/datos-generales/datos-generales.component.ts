@@ -26,8 +26,8 @@ import { Solicitud220503Store } from '../../estados/tramites220503.store';
 import { Subject } from 'rxjs';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
-import { takeUntil,map,forkJoin } from 'rxjs';
 
+import {map,forkJoin,takeUntil} from 'rxjs';
 /**
  * Componente para gestionar los datos generales.
  */
