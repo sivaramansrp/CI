@@ -1,18 +1,15 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AgregarDestinatarioFinalContenedoraComponent } from '../../../240107/components/agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
 import { AgregarProveedorContenedoraComponent } from '../../../240107/components/agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 import { CommonModule } from '@angular/common';
-import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ID_PROCEDIMIENTO } from '../../constantes/sustancias-quimicas.enum';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240107Query } from '../../estados/tramite240107Query.query';
 import { Tramite240107Store } from '../../estados/tramite240107Store.store';
-import { takeUntil } from 'rxjs';
 
 /**
  * @title Terceros Relacionados Contenedora
@@ -58,6 +55,11 @@ export class TercerosRelacionadosContenedoraComponent
    * @property {Proveedor[]} proveedorTablaDatos
    */
   proveedorTablaDatos: Proveedor[] = [];
+  /**
+   * Indica si el formulario es de solo lectura.
+   * @property {boolean}
+   */
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -65,11 +67,13 @@ export class TercerosRelacionadosContenedoraComponent
    * @method constructor
    * @param {Tramite240107Store} tramiteStore - Store de Akita que maneja el estado del trámite.
    * @param {Tramite240107Query} tramiteQuery - Query de Akita para obtener datos del trámite.
+   * @param {ConsultaioQuery} consultaQuery - Query para obtener el estado de la consulta.
    * @returns {void}
    */
   constructor(
     private tramiteStore: Tramite240107Store,
-    private tramiteQuery: Tramite240107Query
+    private tramiteQuery: Tramite240107Query,
+    private consultaQuery: ConsultaioQuery
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
@@ -93,6 +97,14 @@ export class TercerosRelacionadosContenedoraComponent
       .subscribe((data: Proveedor[]) => {
         this.proveedorTablaDatos = data;
       });
+          this.consultaQuery.selectConsultaioState$
+            .pipe(
+              takeUntil(this.unsubscribe$),
+              map((seccionState) => {
+                this.esFormularioSoloLectura = seccionState.readonly;
+              })
+            )
+            .subscribe();
   }
   /**
    * Hook que se ejecuta al destruir el componente.

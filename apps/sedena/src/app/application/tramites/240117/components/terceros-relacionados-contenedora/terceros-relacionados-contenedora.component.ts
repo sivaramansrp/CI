@@ -1,19 +1,16 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AgregarDestinatarioFinalContenedoraComponent } from '../agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
 import { AgregarProveedorContenedoraComponent } from '../agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 import { CommonModule } from '@angular/common';
-import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240117Query } from '../../estados/tramite240117Query.query';
 import { Tramite240117Store } from '../../estados/tramite240117Store.store';
-import { takeUntil } from 'rxjs';
 /**
  * @component
  * @name TercerosRelacionadosContenedoraComponent
@@ -38,8 +35,15 @@ import { takeUntil } from 'rxjs';
   styleUrl: './terceros-relacionados-contenedora.component.scss',
 })
 export class TercerosRelacionadosContenedoraComponent
-  implements OnInit, OnDestroy
-{
+  implements OnInit, OnDestroy {
+  /**
+ * Indica si el formulario debe mostrarse en modo solo lectura.
+ *
+ * @type {boolean}
+ * @default false
+ */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Componente modal para mostrar información adicional o acciones relacionadas con los terceros.
    *
@@ -78,14 +82,18 @@ export class TercerosRelacionadosContenedoraComponent
    * @method constructor
    * @param {Tramite240117Store} tramiteStore - Store de Akita que maneja el estado del trámite.
    * @param {Tramite240117Query} tramiteQuery - Query de Akita para obtener datos del trámite.
+   * @param {ConsultaioQuery} consultaQuery - Query para obtener el estado de la consulta del usuario.
+   * @param {Router} router - Servicio de enrutamiento para navegar entre rutas.
+   * @param {ActivatedRoute} activatedRoute - Ruta activa para obtener información de la ruta
    * @returns {void}
    */
   constructor(
     private tramiteQuery: Tramite240117Query,
     private tramiteStore: Tramite240117Store,
     private router: Router,
-    private activatedRoute: ActivatedRoute // eslint-disable-next-line no-empty-function
-  ) {}
+    private activatedRoute: ActivatedRoute,
+    private consultaQuery: ConsultaioQuery
+  ) { }
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
@@ -107,6 +115,14 @@ export class TercerosRelacionadosContenedoraComponent
       .subscribe((data) => {
         this.proveedorTablaDatos = data;
       });
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**

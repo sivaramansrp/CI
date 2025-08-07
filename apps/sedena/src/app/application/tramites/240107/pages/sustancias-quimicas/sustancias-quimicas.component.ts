@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '../../modelos/sustancias-quimicas.model';
 import { PASOS } from '../../constantes/sustancias-quimicas.enum';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 interface AccionBoton {
   accion: string;
