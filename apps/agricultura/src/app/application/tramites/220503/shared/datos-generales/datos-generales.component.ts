@@ -8,7 +8,7 @@ import {
   ConsultaioQuery,
   TituloComponent,
   
-} from '@ng-mf/data-access-user';
+} from '@libs/shared/data-access-user/src';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
