@@ -81,10 +81,10 @@ describe('PasoUnoComponent', () => {
   });
 
   it('should run #seleccionaTab()', async () => {
-    component.tabChanged = component.tabChanged || {};
-    component.tabChanged.emit = jest.fn();
-    component.seleccionaTab({});
-    expect(component.tabChanged.emit).toHaveBeenCalled();
+    component.tramite240107Store = component.tramite240107Store || {};
+    component.tramite240107Store.updateTabSeleccionado = jest.fn();
+    component.seleccionaTab(1);
+    expect(component.tramite240107Store.updateTabSeleccionado).toHaveBeenCalledWith(1);
   });
 
 });

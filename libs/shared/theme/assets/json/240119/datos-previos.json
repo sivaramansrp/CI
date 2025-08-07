@@ -55,7 +55,7 @@
     "cadenaDependencia": "CAD456789",
     "banco": "2",
     "llavePago": "LLAVE123456",
-    "fechaPago": "2025-06-01",
+    "fechaPago": "01/07/2025",
     "importePago": "2500.00"
   },
   "merccancialTablaDatos": [
@@ -72,14 +72,16 @@
     }
   ],
   "datosDelTramite": {
-    "permisoGeneral": "PG-2025-002",
-    "usoFinal": "Importación para venta",
+    "permisoGeneral": "IM-2025-0457",
+    "paisDestino": "MEXICO (ESTADOS UNIDOS MEXICANOS)",
+    "fechaPago": "05/06/2025",
+    "usoFinal": "Fabricación de componentes electrónicos",
+    "unoSemestre": "true",
+    "anoEnCurso": "true",
+    "informacionConfidencial": "true",
     "aduanasSeleccionadas": [
       "Aduana de Veracruz",
       "Aduana de Manzanillo"
-    ],
-    "paisDestino": "Canadá",
-    "unoSemestre": "true",
-    "anoEnCurso": "true"
+    ]
   }
 }

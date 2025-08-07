@@ -1,30 +1,12 @@
+import { Catalogo, InputFecha, InputFechaComponent, REGEX_IMPORTE_PAGO, TituloComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent, ConsultaioQuery, REGEX_NUMEROS } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { FECHA_DE_PAGO, PagoDerechosFormState } from '../../models/pago-de-derechos.model';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CAMPO_OBLIGATORIO_DERECHOS } from '../../constants/datos-solicitud.enum';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-
-import { Component, OnChanges, SimpleChanges } from '@angular/core';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-import { EventEmitter } from '@angular/core';
-import { FECHA_DE_PAGO } from '../../models/pago-de-derechos.model';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { Input } from '@angular/core';
-import { InputFecha } from '@ng-mf/data-access-user';
-import { InputFechaComponent } from '@ng-mf/data-access-user';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
-import { PagoDerechosFormState } from '../../models/pago-de-derechos.model';
-import { REGEX_IMPORTE_PAGO } from '@ng-mf/data-access-user';
-import { REGEX_NUMEROS } from '@libs/shared/data-access-user/src';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs/operators';
-import { takeUntil } from 'rxjs';
 
 /**
  * @component PagoDeDerechosComponent
