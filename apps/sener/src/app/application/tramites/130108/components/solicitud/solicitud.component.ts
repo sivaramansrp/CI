@@ -232,6 +232,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   selectRangoDias: string[] = [];
 
   /**
+   * Fecha seleccionada por el usuario.
+   * @type {string[]}
+   */
+  fechaSeleccionada: string[] = [];
+
+  /**
    * Constantes de textos utilizados en la aplicación.
    * @type {any} Objeto que contiene los textos de la aplicación para su uso en diferentes partes de la interfaz.
    */
@@ -613,6 +619,16 @@ tituloParte = TITULO_ORIGEN;
       .pipe(takeUntil(this.destroyed$))
       .subscribe((state: Tramite130108State) => {
         this.seccionState = state;
+        
+        // Actualizar tableBodyData desde el store
+        if (state.tablaDatos) {
+          this.tableBodyData = [...state.tablaDatos];
+        }
+        
+        // Solo actualizar crosslist datos si es la primera vez o si hay cambios específicos en rangoDias/seleccionada
+        if (!this.selectRangoDias.length && !this.fechaSeleccionada.length) {
+          this.storeCrosslistaDatos();
+        }
       });
 
     this.tramite130108Query.mostrarTabla$
@@ -643,7 +659,7 @@ tituloParte = TITULO_ORIGEN;
        * @default ''
        * @disabled true
        */
-      cantidadTotal: [{ value: '', disabled: true }],
+      cantidadTotal: [{ value: this.seccionState?.tablaDatos?.[0]?.cantidad || '', disabled: true }],
 
       /**
        * @description
@@ -653,7 +669,7 @@ tituloParte = TITULO_ORIGEN;
        * @default ''
        * @disabled true
        */
-      valorTotalUSD: [{ value: '', disabled: true }],
+      valorTotalUSD: [{ value: this.seccionState?.tablaDatos?.[0]?.totalUSD || '', disabled: true }],
     });
   }
   /**
@@ -727,17 +743,18 @@ tituloParte = TITULO_ORIGEN;
  
   /**
 * Método para obtener los datos de la tabla dinámica.
-* Este método realiza una solicitud al servicio `ImportacionDeVehiculosService` para obtener los datos
-* de la tabla y actualiza las propiedades relacionadas con la tabla dinámica.
+* Este método realiza una solicitud al servicio `ExportacionMineralesDeHierroService` para obtener los datos
+* de la tabla, los almacena en el store y luego actualiza las propiedades relacionadas con la tabla dinámica.
 * 
-* - Actualiza `tableBodyData` con los datos obtenidos.
-* - Asigna valores a las propiedades `cantidad` y `descripcion` del primer elemento de la tabla.
-* - Actualiza el formulario `formForTotalCount` con los valores totales de cantidad y valor en USD.
+* - Obtiene los datos de la API y los almacena en el store usando el método específico setTablaDatos.
+* - Los datos de la tabla se actualizarán automáticamente a través de la suscripción al store.
+* - Los totales del formulario se actualizan cuando el estado cambia.
 * 
 */
   obtenerTablaDatos(): void {
     this.exportacionMineralesDeHierroService.getTablaDatos().pipe(takeUntil(this.destroyed$)).subscribe((data) => {
-      this.tableBodyData = data;
+      // Almacenar los datos en el store usando el método específico
+      this.tramite130108Store.setTablaDatos(data);
       this.formForTotalCount.patchValue({
         cantidadTotal: data[0].cantidad,
         valorTotalUSD: data[0].totalUSD
@@ -748,13 +765,14 @@ tituloParte = TITULO_ORIGEN;
   /**
  * Elimina todos los datos del cuerpo de la tabla dinámica.
  * Este método se ejecuta cuando el usuario hace clic en el botón de eliminar,
- * limpiando el arreglo `tableBodyData` y, por lo tanto, eliminando todas las filas mostradas en la tabla.
+ * limpiando los datos tanto del store como del componente.
  *
  * @example
  * this.alClicEnEliminar();
  */
   alClicEnEliminar(): void {
-  this.tableBodyData = [];
+    // Limpiar los datos de la tabla en el store
+    this.tramite130108Store.setTablaDatos([]);
   }
 
 /**
@@ -940,13 +958,15 @@ tituloParte = TITULO_ORIGEN;
       .obtenerListaDeCiudades()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
-        // Verifica que el componente paisDeOrigenComponent y su crosslistComponent existan
-        if (this.paisDeOrigenComponent && this.paisDeOrigenComponent.crosslistComponent) {
-          // Mapea los datos obtenidos y asigna las descripciones a fechasDatos
-          this.paisDeOrigenComponent.crosslistComponent.fechasDatos = data.map(
+        this.selectRangoDias = data.map(
             (item) => item.descripcion
           );
-        }
+        // Actualizar el store con los nuevos datos
+        this.tramite130108Store.establecerDatos({ 
+          rangoDias: this.selectRangoDias,
+          seleccionada: []
+        });
+        this.fechaSeleccionada = [];
       });
   }
 
@@ -972,6 +992,12 @@ tituloParte = TITULO_ORIGEN;
         this.selectRangoDias = this.paisesPorBloque.map(
           (pais: Catalogo) => pais.descripcion
         );
+        // Actualizar el store con los nuevos datos
+        this.tramite130108Store.establecerDatos({ 
+          rangoDias: this.selectRangoDias,
+          seleccionada: []
+        });
+        this.fechaSeleccionada = [];
       });
   }
 
@@ -1013,7 +1039,41 @@ tituloParte = TITULO_ORIGEN;
     return disabled;
   }
 
- /**
+
+  /**
+   * Actualiza los datos de las listas cruzadas basándose en el estado actual.
+   * 
+   * Sincroniza las listas seleccionadas y originales con el estado de la aplicación.
+   * Si las matrices del estado están vacías o indefinidas, utiliza valores predeterminados.
+   */
+  storeCrosslistaDatos(): void {
+    // Función auxiliar para verificar si una matriz es válida y no está vacía
+    const ES_MATRIZ_VALIDA = (array: string[] | undefined | null): boolean => 
+      Array.isArray(array) && array.length > 0;
+
+    // Solo actualizar selectRangoDias si hay datos en el estado y no hay datos locales
+    if (ES_MATRIZ_VALIDA(this.seccionState.rangoDias) && !this.selectRangoDias.length) {
+      this.selectRangoDias = this.seccionState.rangoDias as string[];
+    }
+
+    // Solo actualizar fechaSeleccionada si hay datos en el estado y no hay datos locales
+    if (ES_MATRIZ_VALIDA(this.seccionState.seleccionada) && !this.fechaSeleccionada.length) {
+      this.fechaSeleccionada = this.seccionState.seleccionada || [];
+    }
+  }
+
+  /**
+   * @metodo
+   * @nombre onFechasSeleccionadasChange
+   * @descripcion Maneja el cambio de fechas seleccionadas en el crosslist del componente pais-de-origen.
+   * Actualiza la propiedad local y almacena los cambios en el store.
+   * @param {string[]} fechasSeleccionadas - Array de fechas seleccionadas.
+   */
+  onFechasSeleccionadasChange(fechasSeleccionadas: string[]): void {
+    this.fechaSeleccionada = fechasSeleccionadas;
+    // Actualizar el store con las fechas seleccionadas
+    this.tramite130108Store.establecerDatos({ seleccionada: fechasSeleccionadas });
+  } /**
  * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
  * Se encarga de limpiar las suscripciones activas para evitar fugas de memoria.
  * Emite un valor en el Subject `destroyed$` y lo completa para notificar a todos

@@ -1,12 +1,11 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AgregarDestinatarioFinalContenedoraComponent } from '../agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
 import { AgregarProveedorContenedoraComponent } from '../agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
-import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240101Query } from '../../estados/tramite240101Query.query';
 

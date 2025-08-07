@@ -5,15 +5,14 @@ import {
   Proveedor,
 } from '../../../../shared/models/terceros-relacionados.model';
 import { Subject, map, takeUntil } from 'rxjs';
+import { AgregarDestinatarioFinalContenedoraComponent } from '../agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
+import { AgregarProveedorContenedoraComponent } from '../agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240119Query } from '../../estados/tramite240119Query.query';
 import { Tramite240119Store } from '../../estados/tramite240119Store.store';
-
-import { AgregarDestinatarioFinalContenedoraComponent } from '../agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
-import { AgregarProveedorContenedoraComponent } from '../agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 /**
  * @title Terceros Relacionados Contenedora
  * @description Componente contenedor encargado de suscribirse a los datos de destinatarios finales y proveedores del trámite.
