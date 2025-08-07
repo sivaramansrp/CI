@@ -262,7 +262,7 @@ describe('DatosDeLaSolicitudComponent', () => {
       mockData: true,
     });
     component.cdr.detectChanges(); // Asegurar que detectChanges se llame explícitamente
-    //expect(component.cdr.detectChanges).toHaveBeenCalled();
+    expect(component.cdr.detectChanges).toHaveBeenCalled();
   });
 
   it('should run #mostrarColapsable()', async () => {
