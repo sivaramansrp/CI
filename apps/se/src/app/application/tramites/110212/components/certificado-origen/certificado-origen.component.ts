@@ -746,6 +746,10 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
       if (!this.modalInstances) {
         this.modalInstances = new Modal(this.modalBuscar.nativeElement);
       }
+      
+      // Resetear el estado de validación del formulario antes de abrir
+      this.resetearEstadoValidacionFormulario();
+      
       this.formularioMercancia.patchValue({
         id: this.disponiblesSeleccionadasFila.id,
         fraccionMercanciaArancelaria: this.disponiblesSeleccionadasFila.fraccionArancelaria,
@@ -819,11 +823,33 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Resetea el estado de validación del formulario de mercancía.
+   * 
+   * Este método marca todos los controles como no tocados y pristinos,
+   * eliminando así las indicaciones visuales de validación.
+   */
+  private resetearEstadoValidacionFormulario(): void {
+    if (this.formularioMercancia) {
+      Object.keys(this.formularioMercancia.controls).forEach(key => {
+        const CONTROL = this.formularioMercancia.get(key);
+        if (CONTROL) {
+          CONTROL.markAsUntouched();
+          CONTROL.markAsPristine();
+        }
+      });
+    }
+  }
+
+  /**
    * Cierra el modal activo.
    *
-   * Este método utiliza la referencia al botón de cierre del modal para cerrarlo.
+   * Este método utiliza la referencia al botón de cierre del modal para cerrarlo
+   * y resetea el estado de validación del formulario de mercancía.
    */
   cerrarModal(): void {
+    // Resetear el estado de validación del formulario
+    this.resetearEstadoValidacionFormulario();
+    this.formularioMercancia.reset();
     if (this.closeModal) {
       this.closeModal.nativeElement.click();
     }
@@ -882,18 +908,32 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     this.setValoresStore(this.formularioMercancia, 'fecha', 'setFecha');
   }
 
-    /**
+  /**
    * Agrega una nueva mercancía a la tabla de mercancías seleccionadas.
    *
-   * Este método toma los datos del formulario de mercancías y los transforma en un
+   * Este método valida el formulario de mercancía antes de procesar los datos.
+   * Si el formulario es válido, toma los datos del formulario de mercancías y los transforma en un
    * objeto `SeleccionadasTabla` y actualiza el arreglo `mercanciaSeleccionadasTablaDatos`.
    * Si ya existe un elemento con el mismo ID, lo actualiza; de lo contrario, agrega el nuevo elemento.
    * El arreglo actualizado se almacena usando `store.setMercanciaTablaDatos`.
    * Finalmente, cierra el modal si está abierto.
+   * Si el formulario es inválido, marca todos los campos como tocados para mostrar los mensajes de error.
    *
    * @param formularioMercancia - El formulario reactivo que contiene los datos de la mercancía.
    */
   activarModal(formularioMercancia: FormGroup): void {
+    // Validar el formulario antes de procesar
+    if (formularioMercancia.invalid) {
+      // Marcar todos los campos como tocados para mostrar mensajes de error
+      Object.keys(formularioMercancia.controls).forEach(key => {
+        const CONTROL = formularioMercancia.get(key);
+        if (CONTROL) {
+          CONTROL.markAsTouched();
+        }
+      });
+      return; // Salir de la función si el formulario es inválido
+    }
+
     const FORM_VALUES = formularioMercancia.value;
 
     const NUEVA_MERCANCIA: SeleccionadasTabla = {
@@ -941,8 +981,12 @@ modificarMercanciaSeleccionada(mercanciaSeleccionadasTablaDatos: SeleccionadasTa
           this.modalInstances = new Modal(this.modalBuscar.nativeElement);
         }
       }
+      
+      // Resetear el estado de validación del formulario antes de abrir
+      this.resetearEstadoValidacionFormulario();
+      
       this.modalInstances?.show();
-    this.formularioMercancia.patchValue({
+      this.formularioMercancia.patchValue({
       id: FORM_VALUES.id,
       fraccionArancelaria: FORM_VALUES.fraccionArancelaria,
       cantidad: FORM_VALUES.cantidad,

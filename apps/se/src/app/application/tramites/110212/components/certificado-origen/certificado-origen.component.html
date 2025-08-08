@@ -352,7 +352,7 @@
               </div>
               <div class="col-md-4">
                 <app-catalogo-select [catalogo]="optionsPais" [label]="'UMC'" [required]="true" id="pais" [tooltipQuestionCircle]="true" [tooltipQuestionCircleText]="''"
-                  formControlName="pais" [ngClass]="isValid(formularioMercancia,'pais') ? 'required' : ''"
+                  formControlName="pais" [ngClass]="formularioMercancia.get('pais')?.invalid && formularioMercancia.get('pais')?.touched ? 'required' : ''"
                   (change)="setValoresStore(formularioMercancia, 'pais', 'setPais')"
                   [isDisabled]="soloLectura"></app-catalogo-select>
               </div>
@@ -438,7 +438,7 @@
       <div class="modal-footer custom-footer mt-4">
         <button type="button" class="btn btn-default" [disabled]="soloLectura" data-bs-dismiss="modal" #closeModal (click)="cerrarModal()">
           Cancelar </button>
-        <button type="submit" class="btn btn-primary" [disabled]="soloLectura" data-bs-dismiss="modal" #closeModal (click)="activarModal(formularioMercancia)"> 
+        <button type="submit" class="btn btn-primary" [disabled]="soloLectura" (click)="activarModal(formularioMercancia)"> 
           Agregar 
         </button>
       </div>
