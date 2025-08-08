@@ -4,9 +4,11 @@
     gap: 5px;
     padding-left: 15px;
     flex-direction: row;
-    align-items: baseline;
+    align-items: center;
   }
-   
-  .align-middle {
-    vertical-align: middle !important;
+
+  .checkbox-spacing{
+    display: flex;
+    align-items: center;
+    margin-right: 45px;
   }

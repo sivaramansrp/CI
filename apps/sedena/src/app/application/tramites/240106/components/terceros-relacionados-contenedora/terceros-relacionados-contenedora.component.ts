@@ -1,20 +1,16 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { Subject,map} from 'rxjs';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AgregarDestinatarioFinalContenedoraComponent } from '../../../240106/components/agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
 import { AgregarProveedorContenedoraComponent } from '../../../240106/components/agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-
-import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-sustancias-quimicas.enum';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
-import { OnInit } from '@angular/core';
-import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240106Query } from '../../estados/tramite240106Query.query';
 import { Tramite240106Store } from '../../estados/tramite240106Store.store';
-import { takeUntil } from 'rxjs';
 
 /**
  * @title Terceros Relacionados Contenedora
@@ -85,6 +81,8 @@ export class TercerosRelacionadosContenedoraComponent
    * @param {Tramite240106Store} tramiteStore - Store de Akita que maneja el estado del trámite.
    * @param {Tramite240106Query} tramiteQuery - Query de Akita para obtener datos del trámite.
    * @param {ConsultaioQuery} consultaQuery - Query para obtener el estado de la consulta.
+   * @param {Router} router - Router de Angular para navegar entre rutas.
+   * @param {ActivatedRoute} activatedRoute - Ruta activa para obtener información de la ruta actual.
    * @returns {void}
    */
   constructor(

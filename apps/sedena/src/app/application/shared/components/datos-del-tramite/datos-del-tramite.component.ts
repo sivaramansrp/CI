@@ -17,34 +17,9 @@ import {
   PERMISO_JUSTIFICACION,
 } from '../../constants/datos-del-tramilte.enum';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  QueryList,
-  SimpleChanges,
-  ViewChildren,
-} from '@angular/core';
-import {
-  ConfiguracionColumna,
-  CrossListLable,
-  CrosslistComponent,
-  InputFecha,
-  InputFechaComponent,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
-} from '@ng-mf/data-access-user';
-
-import {
-  InputCheckComponent,
-  InputRadioComponent,
-} from '@libs/shared/data-access-user/src';
-
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
+import { ConfiguracionColumna, CrossListLable, CrosslistComponent, InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, InputCheckComponent, InputRadioComponent, REGEX_NUMEROS, REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 import {
   DatosDelTramiteFormState,
   FECHA_DE_PAGO,
@@ -54,18 +29,9 @@ import {
   MERCANCIA_ENCABEZADO_DE_TABLA,
   MercanciaDetalle,
 } from '../../models/datos-del-tramite.model';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { REGEX_NUMEROS } from '@libs/shared/data-access-user/src';
-import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 /**
  * @title Datos del Trámite
  * @description Componente que gestiona el formulario de datos del trámite como permisos, uso final y selección de aduanas.

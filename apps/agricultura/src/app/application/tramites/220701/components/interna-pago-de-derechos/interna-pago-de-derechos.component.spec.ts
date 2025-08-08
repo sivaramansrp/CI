@@ -89,13 +89,6 @@ describe('InternaPagoDeDerechosComponent', () => {
     // expect(component).toBeTruthy();
   });
 
-  it('should run #inicializarEstadoFormulario()', async () => {
-    component.guardarDatosFormulario = jest.fn();
-    component.inicializarFormulario = jest.fn();
-    component.inicializarEstadoFormulario();
-      // expect(component.guardarDatosFormulario).toHaveBeenCalled();
-      // expect(component.inicializarFormulario).toHaveBeenCalled();
-  });
 
   it('should run #guardarDatosFormulario()', async () => {
     component.inicializarFormulario = jest.fn();
@@ -103,9 +96,8 @@ describe('InternaPagoDeDerechosComponent', () => {
     component.formularioPago.disable = jest.fn();
     component.formularioPago.enable = jest.fn();
     component.guardarDatosFormulario();
-      // expect(component.inicializarFormulario).toHaveBeenCalled();
-      // expect(component.formularioPago.disable).toHaveBeenCalled();
-      // expect(component.formularioPago.enable).toHaveBeenCalled();
+    expect(component.inicializarFormulario).toHaveBeenCalled();
+    expect(component.formularioPago.enable).toHaveBeenCalled();
   });
 
   it('should run #inicializarFormulario()', async () => {

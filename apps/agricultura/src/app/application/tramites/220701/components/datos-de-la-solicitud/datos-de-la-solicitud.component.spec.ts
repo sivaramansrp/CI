@@ -132,18 +132,54 @@ describe('DatosDeLaSolicitudComponent', () => {
     const enableSpy = jest.spyOn(component.datosDeLaSolicitudForm, 'enable');
 
     component.guardarDatosFormulario();
-    //expect(component.inicializarFormulario).toHaveBeenCalled();
-    //expect(component.datosDeLaSolicitudForm.disable).toHaveBeenCalled();
-    //expect(component.datosDeLaSolicitudForm.enable).toHaveBeenCalled();
+    expect(component.inicializarFormulario).toHaveBeenCalled();
+    expect(component.datosDeLaSolicitudForm.enable).toHaveBeenCalled();
   });
 
   it('should run #inicializarFormulario()', async () => {
+    // Inicializar solicitudState con estructura apropiada basada en la interfaz DatosDeLaSolicitudInt
+    component.solicitudState = {
+      justificacion: 'test justificacion',
+      certificadosAutorizados: 'test certificados',
+      fechaInicio: '2023-01-01',
+      horaDeInspeccion: 'test hora',
+      aduanaDeIngreso: 'test aduana',
+      sanidadAgropecuaria: 'test sanidad', // Esto mapea a oficinaDeInspeccion en el formulario
+      puntoDeInspeccion: 'test punto',
+      nombreInspector: 'test nombre',
+      primerApellido: 'test apellido',
+      segundoApellido: 'test segundo apellido',
+      cantidadContenedores: '1',
+      tipoContenedor: 'test tipo',
+      medioDeTransporte: 'test medio',
+      identificacionTransporte: 'test identificacion',
+      esSolicitudFerros: 'false'
+    };
+
     component.tramiteStoreQuery = component.tramiteStoreQuery || {};
-    component.tramiteStoreQuery.selectSolicitudTramite$ = observableOf({});
+    component.tramiteStoreQuery.selectSolicitudTramite$ = observableOf({
+      SolicitudState: component.solicitudState
+    });
+    
     component.fb = component.fb || {};
-    component.fb.group = jest.fn();
+    const mockJustificacionControl = {};
+    component.fb.group = jest.fn().mockReturnValue({
+      controls: {
+        justificacion: mockJustificacionControl,
+      },
+      patchValue: jest.fn(),
+      get: jest.fn().mockImplementation((controlName) => {
+        if (controlName === 'justificacion') {
+          return mockJustificacionControl;
+        }
+        return undefined;
+      }),
+      value: {},
+      statusChanges: observableOf({}),
+    });
+    
     component.inicializarFormulario();
-    //expect(component.fb.group).toHaveBeenCalled();
+    expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #ngOnInit()', async () => {
@@ -225,8 +261,8 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component.datosDeLaSolicitudForm.patchValue).toHaveBeenCalledWith({
       mockData: true,
     });
-    component.cdr.detectChanges(); // Ensure detectChanges is explicitly called
-    //expect(component.cdr.detectChanges).toHaveBeenCalled();
+    component.cdr.detectChanges(); // Asegurar que detectChanges se llame explícitamente
+    expect(component.cdr.detectChanges).toHaveBeenCalled();
   });
 
   it('should run #mostrarColapsable()', async () => {

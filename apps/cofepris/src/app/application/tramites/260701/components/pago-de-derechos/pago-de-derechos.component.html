@@ -46,6 +46,7 @@
               <div class="form-group">
                 <div class="form-group">
                   <app-catalogo-select
+                  [isDisabled]="esFormularioSoloLectura"
                     [catalogo]="bancoCatalogo"
                     formControlName="banco"
                     [label]="'Banco'"

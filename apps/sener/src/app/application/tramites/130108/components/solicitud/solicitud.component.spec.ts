@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 import { SolicitudComponent } from './solicitud.component';
 import { ExportacionMineralesDeHierroService } from '../../services/exportacion-minerales-de-hierro.service';
 import { Tramite130108Store } from '../../estados/tramites/tramites130108.store';
@@ -9,6 +9,7 @@ import { PaisDeOrigenComponent } from '../../../../shared/components/pais-de-ori
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 describe('SolicitudComponent', () => {
   let component: SolicitudComponent;
@@ -16,6 +17,7 @@ describe('SolicitudComponent', () => {
   let exportacionServiceMock: any;
   let tramiteStoreMock: any;
   let tramiteQueryMock: any;
+  let consultaioQueryMock: any;
 
   beforeEach(async () => {
     exportacionServiceMock = {
@@ -33,11 +35,20 @@ describe('SolicitudComponent', () => {
       establecerDatos: jest.fn(),
       storeTableValues: jest.fn(),
       setMostrarTabla: jest.fn(),
+      setTablaDatos: jest.fn(),
     };
 
     tramiteQueryMock = {
-      selectSolicitud$: of({}),
+      selectSolicitud$: of({
+        tablaDatos: [{ cantidad: '10', totalUSD: '100' }],
+        rangoDias: [],
+        seleccionada: []
+      }),
       mostrarTabla$: of(false),
+      selectConsultaioState$: of({ readonly: false })
+    };
+
+    consultaioQueryMock = {
       selectConsultaioState$: of({ readonly: false })
     };
 
@@ -52,6 +63,7 @@ describe('SolicitudComponent', () => {
         { provide: ExportacionMineralesDeHierroService, useValue: exportacionServiceMock },
         { provide: Tramite130108Store, useValue: tramiteStoreMock },
         { provide: Tramite130108Query, useValue: tramiteQueryMock },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA] 
     }).compileComponents();
@@ -80,13 +92,13 @@ describe('SolicitudComponent', () => {
   });
 
   it('should fetch table data and update formForTotalCount', () => {
+    const mockTableData = [{ cantidad: '10', totalUSD: '100' }];
+    exportacionServiceMock.getTablaDatos.mockReturnValue(of(mockTableData));
+    
     component.obtenerTablaDatos();
+    
     expect(exportacionServiceMock.getTablaDatos).toHaveBeenCalled();
-    expect(component.tableBodyData).toEqual([{ cantidad: 10, totalUSD: 100 }]);
-    expect(component.formForTotalCount.value).toEqual({
-      cantidadTotal: 10,
-      valorTotalUSD: 100,
-    });
+    expect(tramiteStoreMock.setTablaDatos).toHaveBeenCalledWith(mockTableData);
   });
 
   it('should handle store updates for setFraccion', () => {
@@ -133,6 +145,10 @@ describe('SolicitudComponent', () => {
     expect(exportacionServiceMock.getPaisesPorBloque).toHaveBeenCalledWith(1);
     expect(component.paisesPorBloque).toEqual(mockData);
     expect(component.selectRangoDias).toEqual(['Country 1', 'Country 2']);
+    expect(tramiteStoreMock.establecerDatos).toHaveBeenCalledWith({ 
+      rangoDias: ['Country 1', 'Country 2'], 
+      seleccionada: [] 
+    });
   });
 
   it('should set values in the store', () => {
@@ -149,6 +165,15 @@ describe('SolicitudComponent', () => {
 
     expect(spyNext).toHaveBeenCalled();
     expect(spyComplete).toHaveBeenCalled();
+  });
+
+  it('should handle crosslist fechas seleccionadas change', () => {
+    const fechasSeleccionadas = ['Country 1', 'Country 2'];
+    
+    component.onFechasSeleccionadasChange(fechasSeleccionadas);
+    
+    expect(component.fechaSeleccionada).toEqual(fechasSeleccionadas);
+    expect(tramiteStoreMock.establecerDatos).toHaveBeenCalledWith({ seleccionada: fechasSeleccionadas });
   });
   
 });

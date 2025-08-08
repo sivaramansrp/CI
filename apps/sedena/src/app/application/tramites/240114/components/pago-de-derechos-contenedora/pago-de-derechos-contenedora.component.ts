@@ -1,13 +1,12 @@
-import { Component, Input } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../shared/models/pago-de-derechos.model';
-import { Subject } from 'rxjs';
 import { Tramite240114Query } from '../../estados/tramite240114Query.query';
 import { Tramite240114Store } from '../../estados/tramite240114Store.store';
-import { takeUntil } from 'rxjs';
+
 /**
  * @title Pago de Derechos Contenedora
  * @description Componente contenedor que se encarga de enlazar el estado de pago de derechos con el formulario correspondiente.
@@ -26,7 +25,7 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    * @description Indica si el formulario es de solo lectura.
    * @type {boolean}
    */
-  @Input()
+
   esFormularioSoloLectura: boolean = false;
   /**
    * Estado actual del formulario de pago de derechos.
@@ -52,7 +51,8 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteQuery: Tramite240114Query,
-    private tramiteStore: Tramite240114Store
+    private tramiteStore: Tramite240114Store,
+     private consultaQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -68,6 +68,14 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.pagoDerechoFormState = data;
       });
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**
