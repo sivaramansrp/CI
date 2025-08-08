@@ -9,6 +9,7 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DatosDelSolicitudModificacionComponent } from '../../shared/components/datos-del-solicitud-modificacion/datos-del-solicitud-modificacion.component';
+import { ManifiestosComponent } from "../../shared/components/manifiestos-declaraciones/manifiestos-declaraciones.component";
 import { ModificacionPermisoLabComponent } from './pages/modificacion-permiso-lab/modificacion-permiso-lab.component';
 import { ModificacionPermisoLabRoutingModule } from './modificacion-permiso-lab-routing.module';
 import { NgModule } from '@angular/core';
@@ -41,7 +42,8 @@ import { TramitesAsociadosSeccionComponent } from '../../shared/components/trami
     AlertComponent,
     AnexarDocumentosComponent,
     FirmaElectronicaComponent,
-    RepresentanteLegalComponent
-  ],
+    RepresentanteLegalComponent,
+    ManifiestosComponent
+],
 })
 export class ModificacionPermisoLabModule {}
