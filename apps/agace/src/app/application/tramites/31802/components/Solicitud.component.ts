@@ -3,6 +3,8 @@ import {
   ConsultaioState,
   InputFecha,
   InputFechaComponent,
+  InputRadioComponent,
+  REGEX_SOLO_NUMEROS,
   TituloComponent,
   ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
@@ -35,11 +37,12 @@ import { Tramite31802Query } from '../state/Tramite31802.query';
     CommonModule,
     TituloComponent,
     InputFechaComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    InputRadioComponent
 ],
   providers: [RegistroSolicitudService],
   templateUrl: './Solicitud.component.html',
-  styleUrl: './Solicitud.component.css',
+  styleUrl: './Solicitud.component.scss',
 })
 export class SolicitudComponent implements OnInit, OnDestroy {
   /**
@@ -78,15 +81,34 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   registroForm!: FormGroup;
 
-
+  /**
+   * Flag para determinar si el formulario es de solo lectura.
+   */
   esFormularioSoloLectura: boolean = false;
 
-
-  private destroyNotifier$: Subject<void> = new Subject();
   /**
-    * Subject para destruir notificador.
-    */
+   * Subject para destruir notificador.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Consulta los datos del formulario.
+   */
   consultaDatos!: ConsultaioState;
+
+  /**
+   * Valor seleccionado del radio.
+   */
+  valorSeleccionado!: string;
+
+  /**
+   * Opciones de radio.
+   */
+  radioOpcions = [
+    { label: 'Sí', value: 'si' },
+    { label: 'No', value: 'no' },
+  ];
+
   /**
    * Notificador para cancelar suscripciones activas.
    * Se utiliza para evitar fugas de memoria al destruir el componente.
@@ -135,7 +157,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.donanteDomicilio()
+    this.donanteDomicilio();
   }
 
   inicializarEstadoFormulario(): void {
@@ -164,6 +186,15 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     if (this.registroForm.valid) {
       // Aquí se implementará la lógica para manejar el envío del formulario.
     } 
+  }
+
+  /**
+   * Cambia el valor seleccionado del radio.
+   * @param valor Valor seleccionado.
+   */
+  cambiarRadio(valor: string | number):void {
+    this.valorSeleccionado = valor as string;
+    this.store.setValorSeleccionado(this.valorSeleccionado);
   }
 
   /**
@@ -217,15 +248,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
       numeroOficio: [{value: this.solicitudState?.numeroOficio, disabled: this.esFormularioSoloLectura}, [Validators.required]],
-      llave: [{value: this.solicitudState?.llave, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      llave: [{value: this.solicitudState?.llave, disabled: this.esFormularioSoloLectura}, [Validators.required, Validators.maxLength(20)]],
       manifiesto1: [{value: this.solicitudState?.manifiesto1, disabled: this.esFormularioSoloLectura}, [Validators.required]],
       manifiesto2: [{value: this.solicitudState?.manifiesto2, disabled: this.esFormularioSoloLectura}, [Validators.required]],
       manifiesto3: [{value: this.solicitudState?.manifiesto3, disabled: this.esFormularioSoloLectura}, [Validators.required]],
-      numeroOperacion: [{value: this.solicitudState?.numeroOperacion, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      numeroOperacion: [{value: this.solicitudState?.numeroOperacion, disabled: this.esFormularioSoloLectura}, [Validators.required, Validators.maxLength(20), Validators.pattern(REGEX_SOLO_NUMEROS)]],
       fechaPago: [{value : this.solicitudState?.fechaPago,disabled :this.esFormularioSoloLectura}, [Validators.required]],
-      monedaNacional: [{value: this.solicitudState?.monedaNacional, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      monedaNacional: [{value: this.solicitudState?.monedaNacional, disabled: this.esFormularioSoloLectura}, [Validators.required, Validators.maxLength(12), Validators.pattern(REGEX_SOLO_NUMEROS)]],
       fechaInicio:[{value: this.solicitudState?.fechaInicio, disabled: this.esFormularioSoloLectura}, [Validators.required]],
       fechaFinal: [{value: this.solicitudState?.fechaFinal, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      manifiesto4: [{value: this.solicitudState?.manifiesto4, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      manifiesto5: [{value: this.solicitudState?.manifiesto5, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      opcion: [{ value: this.solicitudState?.opcion, disabled: this.esFormularioSoloLectura }, [Validators.required]]
     });
   }
   /**
