@@ -39,7 +39,7 @@ import { takeUntil } from 'rxjs';
  * Constante que define las propiedades de la fecha de pago en el modelo de trámites.
  */
 const FECHA_INCIO = {
-  labelNombre: 'Incio:',
+  labelNombre: 'Inicio:',
   required: false,
   habilitado: true,
 };
