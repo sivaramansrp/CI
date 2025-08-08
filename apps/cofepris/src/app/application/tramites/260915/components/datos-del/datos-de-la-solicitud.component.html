@@ -310,7 +310,11 @@
               </div>
               <div class="row mt-3">
                 <div class="col-md-6">
-                  <label class="form-label">Denominación o nombre científico*:</label>
+                  <label class="form-label">Denominación o nombre científico*:
+                     <span  tooltip="Denominación común internacional o genérica">
+                      <i class="bi bi-question-circle-fill"></i>
+                    </span>
+                  </label>
                   <input class="form-control" formControlName="denominacionNombre" placeholder="" type="text"
                   (change)="setValoresStore(datosDelTramiteRealizar,'denominacionNombre')"/>
                 </div>
@@ -343,7 +347,7 @@
               <div class="row mt-3">
                 <div class="col-md-6">
                   <label class="form-label">Fracción arancelaria*: 
-                     <span  tooltip="Fracción arancelaria">
+                     <span  tooltip="Descripción numérica o desglose de un código de clasificación que otorga el Sistema Armonizado">
                       <i class="bi bi-question-circle-fill"></i>
                     </span>
                   </label>
@@ -366,7 +370,7 @@
                 </div>
                 <div class="col-md-3">
                   <label class="form-label">UMT*: 
-                   <span  tooltip="UMT">
+                   <span  tooltip="Unidad de medida de la tarifa">
                       <i class="bi bi-question-circle-fill"></i>
                     </span>
                   </label>
@@ -382,7 +386,7 @@
                 </div>
                 <div class="col-md-3">
                   <label class="form-label">UMC*: 
-                  <span  tooltip="UMC">
+                  <span  tooltip="Unidad de medida de comercialización">
                     <i class="bi bi-question-circle-fill"></i>
                   </span>
                   </label>
