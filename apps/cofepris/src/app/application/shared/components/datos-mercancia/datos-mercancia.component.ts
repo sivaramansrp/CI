@@ -24,17 +24,30 @@ import {
 import {
   CatalogoSelectComponent,
   CrosslistComponent,
+  Notificacion,
+  NotificacionesComponent,
+  Pedimento,
   REGEX_NUMERO_12_ENTEROS_5_DECIMALES,
+  REGEX_SOLO_NUMEROS,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { CommonModule, Location } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { DetalleMercancia } from '../../models/detalle-mercancia.model';
 import { DetalleMercanciaComponent } from '../detalle-mercancia/detalle-mercancia.component';
 import { Observable } from 'rxjs';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 /**
  * @component DatosMercanciaComponent
  * @description Componente encargado de capturar y emitir los datos de una mercancía.
@@ -51,6 +64,8 @@ import { Observable } from 'rxjs';
     CrosslistComponent,
     DetalleMercanciaComponent,
     TablaDinamicaComponent,
+    TooltipModule,
+    NotificacionesComponent
   ],
   templateUrl: './datos-mercancia.component.html',
   styleUrl: './datos-mercancia.component.scss',
@@ -124,6 +139,13 @@ export class DatosMercanciaComponent implements OnInit {
     new EventEmitter<DetalleMercancia[]>(true);
 
   /**
+   * @description
+   * Variable que almacena el índice del elemento que se desea eliminar de la lista de pedimentos.
+   * Utilizada para realizar operaciones de eliminación en el arreglo `pedimentos`.
+   */
+  elementoParaEliminar!: number;
+
+  /**
    * @property {Catalogo[]} clasificacionProductoDatos
    * @description Catalog of product classifications used to populate the form.
    */
@@ -190,6 +212,20 @@ export class DatosMercanciaComponent implements OnInit {
   };
 
   /**
+   * @description
+   * Objeto que representa una nueva notificación.
+   * Se utiliza para mostrar mensajes de alerta o información al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
+   * @description
+   * Arreglo que almacena los pedimentos asociados al establecimiento.
+   * Cada pedimento contiene información relevante para el trámite.
+   */
+  pedimentos: Array<Pedimento> = [];
+
+  /**
    * @property {CrossListLable} paisDeProcedenciaLabel
    * Etiqueta personalizada para el componente de lista cruzada de país de procedencia.
    * Define los títulos mostrados en la parte izquierda y derecha del componente.
@@ -209,7 +245,7 @@ export class DatosMercanciaComponent implements OnInit {
     derecha: 'Uso específico',
   };
 
-        /**
+  /**
    * Botones de acción para gestionar listas de países en la tercera sección.
    */
   paisDeProcedenciaBotonsUno = [
@@ -235,7 +271,7 @@ export class DatosMercanciaComponent implements OnInit {
     },
   ];
 
-      /**
+  /**
    * Botones de acción para gestionar listas de países en la tercera sección.
    */
   paisDeProcedenciaBotonsDos = [
@@ -261,7 +297,7 @@ export class DatosMercanciaComponent implements OnInit {
     },
   ];
 
-    /**
+  /**
    * Botones de acción para gestionar listas de países en la tercera sección.
    */
   paisDeProcedenciaBotonsTres = [
@@ -451,9 +487,21 @@ export class DatosMercanciaComponent implements OnInit {
    * Esta función verifica si los elementos requeridos están presentes y actualiza las etiquetas
    */
   crossListRequirdos(): void {
-    this.paisDeOriginLabel.derecha = this.elementosRequirdos.includes('paisDeOrigen') ? 'País(es) seleccionado(s)*:' : 'País(es) seleccionado(s)*:';
-    this.paisDeProcedenciaLabel.derecha = this.elementosRequirdos.includes('paisDeProcedencia') ? 'País(es) seleccionado(s)*:' : 'País(es) seleccionado(s)*:';
-    this.usoEspesificoLabel.derecha = this.elementosRequirdos.includes('usoEspecífico') ? 'Uso específico seleccionado*:' : 'Uso específico seleccionado*:';
+    this.paisDeOriginLabel.derecha = this.elementosRequirdos.includes(
+      'paisDeOrigen'
+    )
+      ? 'País(es) seleccionado(s)*:'
+      : 'País(es) seleccionado(s)*:';
+    this.paisDeProcedenciaLabel.derecha = this.elementosRequirdos.includes(
+      'paisDeProcedencia'
+    )
+      ? 'País(es) seleccionado(s)*:'
+      : 'País(es) seleccionado(s)*:';
+    this.usoEspesificoLabel.derecha = this.elementosRequirdos.includes(
+      'usoEspecífico'
+    )
+      ? 'Uso específico seleccionado*:'
+      : 'Uso específico seleccionado*:';
   }
 
   /**
@@ -510,7 +558,18 @@ export class DatosMercanciaComponent implements OnInit {
         ];
         break;
       case 260213:
-        this.elementosNoValidos = ['formaFarmaceutica','numeroRegistroSanitario', 'fechaCaducidad'];
+        this.elementosNoValidos = [
+          'formaFarmaceutica',
+          'numeroRegistroSanitario',
+          'fechaCaducidad',
+        ];
+        break;
+      case 260214:
+        this.elementosNoValidos = [
+          'formaFarmaceutica',
+          'numeroRegistroSanitario',
+          'fechaCaducidad',
+        ];
         break;
       default:
         if (this.detalleMercancia) {
@@ -938,6 +997,53 @@ export class DatosMercanciaComponent implements OnInit {
         .get('descripcionFraccion')
         ?.setValue(DESCRIPCION_FRACCION_DESHABILITADO_VALOR);
       this.mercanciaForm.get('cantidadUmt')?.setValue(UMT_DESHABILITADO_VALOR);
+    } else if (this.mercanciaForm.get('fraccionArancelaria')?.value) {
+      if (
+        REGEX_SOLO_NUMEROS.test(
+          this.mercanciaForm.get('fraccionArancelaria')?.value
+        )
+      ) {
+        this.mercanciaForm
+          .get('descripcionFraccion')
+          ?.setValue(DESCRIPCION_FRACCION_DESHABILITADO_VALOR);
+        this.mercanciaForm
+          .get('cantidadUmt')
+          ?.setValue(UMT_DESHABILITADO_VALOR);
+      } else {
+        this.abrirModal();
+      }
     }
+  }
+
+  /**
+   * Método que se llama cuando se elimina un pedimento.
+   * @param {boolean} borrar - Indica si se debe eliminar el pedimento.
+   * Si es verdadero, se elimina el pedimento en la posición `elementoParaEliminar` del arreglo `pedimentos`.
+   */
+  eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+  }
+
+  /**
+   * Método que se llama cuando se envía el formulario.
+   * Se utiliza para establecer los valores en el store de DatosDomicilioLegal.
+   */
+  abrirModal(i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        'La fracción ingresada no se encuentra en el acuerdo de fracciones reguladas, favor de verificar.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+
+    this.elementoParaEliminar = i;
   }
 }

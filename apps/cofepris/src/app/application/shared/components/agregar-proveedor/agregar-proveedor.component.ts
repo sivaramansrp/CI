@@ -19,6 +19,7 @@ import { Proveedor } from '../../models/terceros-relacionados.model';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 
 import { Subject } from 'rxjs';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { takeUntil } from 'rxjs';
 
 /**
@@ -35,6 +36,7 @@ import { takeUntil } from 'rxjs';
     CatalogoSelectComponent,
     ReactiveFormsModule,
     TituloComponent,
+    TooltipModule
   ],
   templateUrl: './agregar-proveedor.component.html',
   styleUrl: './agregar-proveedor.component.css',

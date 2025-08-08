@@ -15,6 +15,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TipoPersona } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
 /**
@@ -29,6 +30,7 @@ import { takeUntil } from 'rxjs';
     CatalogoSelectComponent,
     ReactiveFormsModule,
     TituloComponent,
+    TooltipModule
   ],
   templateUrl: './agregar-facturador.component.html',
   styleUrl: './agregar-facturador.component.css',

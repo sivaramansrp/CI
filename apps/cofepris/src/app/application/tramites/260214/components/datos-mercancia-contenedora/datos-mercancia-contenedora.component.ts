@@ -41,6 +41,8 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
    */
   public tramiteState!: Tramite260214State;
 
+  idProcedimiento: number = 260214;
+
   /**
    * @constructor
    * Inyecta los servicios necesarios para consultar y modificar el estado del trámite.

@@ -523,7 +523,7 @@ export const REPRESENTANTE_LEGAL = [260208, 260213];
  * }
  */
 export const BANCO = [
-  260104,260208, 260209, 260207, 260201, 260219, 260302, 260304, 260103,
+  260104,260208, 260209, 260207, 260201, 260219, 260302, 260304, 260103,260214
 ];
 
 export const REQUIRED_BANCO = [260902];
@@ -702,8 +702,11 @@ export const DESCRIPCION_FRACCION_DESHABILITADO_VALOR =
 export const UMT_DESHABILITADO_VALOR = 'Kilogramo';
 
 /** Mensaje mostrado cuando no hay fila seleccionada. */
-export const MENSAJE_SIN_FILA_SELECCIONADA = 'Seleciona un registro';
+export const MENSAJE_SIN_FILA_SELECCIONADA = 'Selecciona un registro';
 
+export const MODIFICADOR_MENSAJE_NO_FILA_SELECCIONADA = 'Selecciona sólo un registro para modificar.';
+
+export const MENSAJE_EMERGENTE_DE_CONFIRMACION = '¿Estás seguro que deseas eliminar los registros marcados?';
 /**
  * @description
  *  Identificadores de notificación.

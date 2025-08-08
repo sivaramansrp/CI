@@ -3,7 +3,6 @@ import {
   REGEX_CORREO_ELECTRONICO,
   REGEX_NOMBRE,
   REGEX_TELEFONO_DIGITOS,
-  TELEFONO_DIGITOS,
   TipoPersona,
 } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
@@ -31,6 +30,7 @@ import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Destinatario } from '../../models/terceros-relacionados.model';
 import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE } from '../../constantes/datos-solicitud.enum';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 /**
  * Componente para agregar un destinatario final (Destinatario) al formulario y almacenarlo.
@@ -46,6 +46,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
     ReactiveFormsModule,
     CatalogoSelectComponent,
     TituloComponent,
+    TooltipModule
   ],
   templateUrl: './agregar-destinatario-final.component.html',
   styleUrl: './agregar-destinatario-final.component.css',

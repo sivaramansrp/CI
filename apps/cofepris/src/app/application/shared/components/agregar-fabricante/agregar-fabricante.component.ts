@@ -3,7 +3,6 @@ import {
   REGEX_CORREO_ELECTRONICO,
   REGEX_NOMBRE,
   REGEX_TELEFONO_DIGITOS,
-  TELEFONO_DIGITOS,
   TipoPersona,
 } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, Output } from '@angular/core';
@@ -24,6 +23,7 @@ import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
 
@@ -42,6 +42,7 @@ import { takeUntil } from 'rxjs';
     ReactiveFormsModule,
     CatalogoSelectComponent,
     TituloComponent,
+    TooltipModule
   ],
   templateUrl: './agregar-fabricante.component.html',
   styleUrl: './agregar-fabricante.component.css',
@@ -221,7 +222,7 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
       tipoPersona: ['', Validators.required],
       rfc: [
         this.obtenerValor('rfc'),
-        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
+        [Validators.required, Validators.pattern(REGEX_NOMBRE), Validators.maxLength(13)],
       ],
       curp: [
         this.obtenerValor('curp'),
