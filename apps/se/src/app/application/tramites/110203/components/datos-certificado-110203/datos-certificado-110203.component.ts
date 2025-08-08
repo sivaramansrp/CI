@@ -147,6 +147,19 @@ export class DatosCertificado110203Component implements OnInit, OnDestroy {
   */
   esFormularioSoloLectura: boolean = false;
 
+  /**
+   * Inicializa el componente inyectando los servicios requeridos y configurando las suscripciones de estado.
+   *
+   * @param fb - Servicio FormBuilder de Angular para crear y gestionar formularios.
+   * @param tramite110203Store - Servicio Store para gestionar el estado del "Trámite 110203".
+   * @param tramite110203Query - Servicio Query para acceder al estado del "Trámite 110203".
+   * @param consultaioQuery - Servicio Query para acceder al estado de "Consultaio".
+   *
+   * Se suscribe al estado de `Consultaio` para:
+   * - Actualizar la propiedad `esFormularioSoloLectura` según el estado actual de solo lectura.
+   * - Llamar a `inicializarEstadoFormulario()` para aplicar configuraciones según el estado recibido.
+   * - Cancelar automáticamente la suscripción cuando `destroyNotifier$` emite, evitando fugas de memoria.
+   */
   constructor(
     private fb: FormBuilder,
     private tramite110203Store: Tramite110203Store,

@@ -95,6 +95,20 @@ export class Transporte110203Component implements OnInit, OnDestroy {
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
   esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Inicializa el componente Transporte110203Component.
+   *
+   * @param fb - Servicio FormBuilder para crear formularios reactivos.
+   * @param tramite110203Store - Servicio Store para gestionar el estado de Tramite110203.
+   * @param tramite110203Query - Servicio Query para acceder al estado de Tramite110203.
+   * @param consultaioQuery - Servicio Query para acceder al estado de Consultaio.
+   *
+   * Se suscribe al estado de Consultaio para:
+   * - Actualizar la propiedad `esFormularioSoloLectura` según el estado `readonly`.
+   * - Llamar a `inicializarEstadoFormulario()` para aplicar configuraciones según el estado recibido.
+   * - Cancelar la suscripción automáticamente cuando `destroyNotifier$` emite, para evitar fugas de memoria.
+   */
   constructor(
     private fb: FormBuilder,
     private tramite110203Store: Tramite110203Store,
