@@ -44,6 +44,7 @@ import { CapturarColumns } from '../../models/elegibilidad-de-textiles.model';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
+import { UnidadMedidaService } from '../../../../core/services/120301/catalogos/unidad-medida.service';
 
 
 /**
@@ -190,7 +191,8 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
     private ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore,
     private ElegibilidadDeTextilesQuery: ElegibilidadDeTextilesQuery,
     private seccionStore: SeccionLibStore,
-    private seccionQuery: SeccionLibQuery
+    private seccionQuery: SeccionLibQuery,
+    private unidadMedidaService: UnidadMedidaService
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
@@ -297,7 +299,7 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    * Array que contiene las opciones disponibles para el campo de unidad de medida en el formulario.
    * Se carga dinámicamente desde el servicio al inicializar el componente.
    */
-  unidadDeMedida: Catalogo[] = [];
+  unidadDeMedida!: Catalogo[];
   
   /**
    * @property {InputFecha} fechaInicioInputs - Configuración para el input de fecha de expedición de la factura.
@@ -347,15 +349,19 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   obtenerIngresoSelectList(): void {
-    this.ElegibilidadTextilesService.obtenerMenuDesplegable(
-      'unidad-de-medida.json'
-    )
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.unidadDeMedida = data as Catalogo[];
-        },
-      });
+    this.unidadMedidaService.getUnidadMedida()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (data) => {
+        if (data.codigo === '00') {
+          this.unidadDeMedida = data.datos || [];
+        }
+      },
+      error: (error) => {
+        console.error('Error al obtener los datos:', error);
+        this.unidadDeMedida = [];
+      }
+    });
   }
 
   /**
