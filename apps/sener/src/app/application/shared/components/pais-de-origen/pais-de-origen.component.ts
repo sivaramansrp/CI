@@ -46,7 +46,7 @@ export class PaisDeOrigenComponent implements OnChanges {
    * @descripcion Referencia al componente CrosslistComponent.
    * @tipo {CrosslistComponent}
    */
-  @ViewChild(CrosslistComponent) crosslistComponent!: CrosslistComponent;
+  @ViewChild("crosslistComponent") crosslistComponent!: CrosslistComponent;
 
   /**
  * @evento
@@ -108,6 +108,14 @@ export class PaisDeOrigenComponent implements OnChanges {
   @Input() selectRangoDias: string[] = [];
 
   /**
+   * @propiedad
+   * @nombre fechaSeleccionada
+   * @descripcion Fecha seleccionada por el usuario.
+   * @tipo {string[]}
+   */
+  @Input()fechaSeleccionada: string[] = ['asdf', 'werwe'];
+
+  /**
  * @property
  * @name titulo
  * @description
@@ -137,6 +145,14 @@ export class PaisDeOrigenComponent implements OnChanges {
    * @tipo {EventEmitter<{ form: FormGroup; campo: string; metodoNombre: string }>}
    */
   @Output() setValoresStoreEvent = new EventEmitter<{ form: FormGroup; campo: string}>();
+
+  /**
+   * @evento
+   * @nombre fechasSeleccionadasChangeEvent
+   * @descripcion Evento que se emite cuando cambian las fechas seleccionadas en el crosslist.
+   * @tipo {EventEmitter<string[]>}
+   */
+  @Output() fechasSeleccionadasChangeEvent = new EventEmitter<string[]>();
  
   /**
    * @propiedad
@@ -186,7 +202,7 @@ export class PaisDeOrigenComponent implements OnChanges {
       class: 'btn-default',
       funcion: (): void => {
         if (this.crosslistComponent) {
-          this.crosslistComponent.agregar('');
+          this.crosslistComponent.quitar('');
         }
       },
     },
@@ -195,7 +211,7 @@ export class PaisDeOrigenComponent implements OnChanges {
       class: 'btn-danger',
       funcion: (): void => {
         if (this.crosslistComponent) {
-          this.crosslistComponent.quitar('');
+          this.crosslistComponent.quitar('t');
         }
       },
     },
@@ -208,14 +224,16 @@ export class PaisDeOrigenComponent implements OnChanges {
    * @param {SimpleChanges} changes - Objeto que contiene los cambios en las propiedades de entrada.
    */
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes) {
-      /**
-       * @descripcion Actualiza la propiedad selectRangoDias con las descripciones de los países agrupados por bloques.
-       */
-      this.selectRangoDias = this.paisesPorBloque.map(
-        (pais: Catalogo) => pais.descripcion
-      );
+    if (changes['selectRangoDias'] && changes['selectRangoDias'].currentValue) {
+      this.selectRangoDias = changes['selectRangoDias'].currentValue;
     }
+
+    if(changes['fechaSeleccionada'] && changes['fechaSeleccionada'].currentValue) {
+      /**
+       * @descripcion Actualiza la propiedad fechaSeleccionada con las fechas seleccionadas por el usuario.
+       */
+      this.fechaSeleccionada = changes['fechaSeleccionada'].currentValue;
+      }
   }
  
   /**
@@ -239,6 +257,17 @@ export class PaisDeOrigenComponent implements OnChanges {
    */
   setValoresStore(form: FormGroup, campo: string): void {
     this.setValoresStoreEvent.emit({ form, campo });
+  }
+
+  /**
+   * @metodo
+   * @nombre onFechasSeleccionadasChange
+   * @descripcion Maneja el cambio de fechas seleccionadas en el crosslist.
+   * @param {string[]} fechasSeleccionadas - Array de fechas seleccionadas.
+   */
+  onFechasSeleccionadasChange(fechasSeleccionadas: string[]): void {
+    this.fechaSeleccionada = fechasSeleccionadas;
+    this.fechasSeleccionadasChangeEvent.emit(fechasSeleccionadas);
   }
 }
  

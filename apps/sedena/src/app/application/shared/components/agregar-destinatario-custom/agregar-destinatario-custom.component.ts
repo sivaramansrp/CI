@@ -13,12 +13,10 @@ import {
   DESTINATARIO_TITULO_CUSTOM,
   NUMERO_TRAMITE,
   PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE,
-  STR_NACIONAL,
   TERCEROS_NACIONALIDAD_OPCIONES,
   TIPO_PERSONA_OPCIONES
 } from '../../constants/datos-solicitud.enum';
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
-import { CommonModule, Location } from '@angular/common';
 import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.model';
 import {
   FormBuilder,
@@ -27,6 +25,7 @@ import {
   Validators
 } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 
 
@@ -244,7 +243,7 @@ export class AgregarDestinatarioCustomComponent
       segundoApellido: this.agregarDestinatarioFinal.value.segundoApellido,
       estado: this.agregarDestinatarioFinal.value.estado,
     };
-    this.destinatarios.push(NUEVO_DESTINATARIO);
+    this.destinatarios = [...this.destinatarios, NUEVO_DESTINATARIO];
     if (this.formaDatos) {
       if ('tableindex' in this.formaDatos) {
         this.destinatarios[0].tableindex = (

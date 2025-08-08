@@ -1,13 +1,14 @@
-import { AnexarDocumentosComponent, CATALOGOS_ID, ConsultaioState, TituloComponent } from '@ng-mf/data-access-user';
-import { AlertComponent } from '@ng-mf/data-access-user';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogosService } from '@ng-mf/data-access-user';
-import { Component } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs';
-
+import {
+  AlertComponent,
+  AnexarDocumentosComponent,
+  CATALOGOS_ID,
+  Catalogo,
+  CatalogosService,
+  ConsultaioState,
+  TituloComponent
+} from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { TEXTOS_REQUISITOS } from '../../constants/importacion-armas-municiones.enum';
 
 /**

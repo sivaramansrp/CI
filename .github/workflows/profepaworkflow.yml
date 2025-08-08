@@ -8,6 +8,7 @@ on:
     paths:
       - 'apps/profepa/Dockerfile.dev**'
       - 'docker/**'
+      - 'k8s/profepa-microfront/**'
       - '.github/workflows/docker-k8s-deploy.yml'
 
 jobs:
@@ -15,8 +16,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      IMAGE_NAME: ghcr.io/vucem30-dev/dockerized-modulefederation-profepa-microfront
-      TAG: 1.0.1
+      IMAGE_NAME: ghcr.io/vucem30/dockerized-modulefederation-profepa-microfront:1.0.2
+      
 
     steps:
       - name: Checkout source
@@ -34,18 +35,17 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t $IMAGE_NAME:$TAG -f apps/profepa/Dockerfile.dev .
-          docker push $IMAGE_NAME:$TAG
-      
-      - name: Create .kube directory
-        run: mkdir -p $HOME/.kube
-
-      - name: Decode Kubeconfig and Set up kubectl
-        run: |
-          echo "${{ secrets.KUBECONFIG_B64 }}" | base64 -d > $HOME/.kube/config
-          chmod 600 $HOME/.kube/config
-
-      - name: Set image and deploy to Kubernetes
-        run: |
-          kubectl apply -f profepa-microfront-deployment-dev.yaml
-          kubectl rollout restart deployment modulefederation-profepa-microfront-deployment-dev -n default
+          docker compose -f docker/modulefederation-profepa-microfront.yml build
+          docker compose -f docker/modulefederation-profepa-microfront.yml push
+      - name: Execute remote command (last one)
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.REMOTE_SRV_IP }}
+          username: ${{ secrets.REMOTE_SRV_USER }}
+          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
+          port: 4220
+          script: |
+            cd /home/ubuntu/v30/deploy/deploy-microfront/profepa-microfront/
+            microk8s kubectl apply -f profepa-microfront-deployment-dev.yaml
+            microk8s kubectl rollout restart deployment modulefederation-profepa-microfront-deployment-dev -n default
+            microk8s kubectl get pods | grep profepa

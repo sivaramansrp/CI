@@ -20,7 +20,7 @@ export interface ConfiguracionColumna<T> {
 }
 
 /**
- * @description Interfaz que extiende la funcionalidad de configuración de columnas, 
+ * @description Interfaz que extiende la funcionalidad de configuración de columnas,
  * añadiendo propiedades adicionales como la llave y la opción de entrada.
  */
 export interface ConfiguracionAporteColumna<T> {
@@ -30,8 +30,8 @@ export interface ConfiguracionAporteColumna<T> {
   /** Llave que identifica la columna */
   llave: string;
 
-  /** 
-   * Función que devuelve el valor de la columna para cada fila. 
+  /**
+   * Función que devuelve el valor de la columna para cada fila.
    * Puede retornar un valor de tipo string, number, undefined o boolean.
    */
   clave: (ele: T) => string | number | undefined | boolean;
@@ -49,4 +49,12 @@ export interface ConfiguracionAporteColumna<T> {
    * la cantidad máxima de caracteres que se pueden ingresar en un input.
    */
   longitudMaxima?: number;
+
+  /**
+   * Tipo de valor que representa esta propiedad.
+   *
+   * Es una cadena de texto opcional que puede usarse para especificar
+   * el tipo de entidad o categoría que se está manejando.
+   */
+  tipo?: string; // 'text' | 'number' | 'select' | 'checkbox' | 'date' | 'textarea';
 }

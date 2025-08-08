@@ -612,38 +612,27 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Limpiar campos del formulario.
+   * Limpiar campos del formulario en la sección de contenedor únicamente.
    */
   limpiarCampos(): void {
-    this.solicitudForm.reset();
-    // Resetear banderas y estados adicionales
-    this.mostrarAdjuntarArchivo = false;
-    this.mostrarSeccionAduanaaFecha = false;
-    this.mostrarSeccionContenedor = false;
-    this.mostrarSeccionNoManifiesto = false;
-    this.mostrarSeccionExcel = false;
-    this.mostrarMensaje = false;
-    this.mostrarCargarArchivoTable = false;
-    this.mostrarArchivoSeleccionadoTable = false;
-    // Deshabilitar controles específicos si es necesario
-    this.solicitudForm.get('archivoSeleccionado')?.disable();
-    this.radioContenedor = false;
-    this.radioArchivoCsv = false;
-    this.radioManifesto = false;
-    // Restablecer la etiqueta del archivo
-    this.etiquetaDeArchivo = '';
-    
-    // Resetear datos de las tablas a estado inicial
-    this.datosTabla = [];
-    this.datosDelContenedor = [];
-    this.pedimentos = [];
-    
-    // Resetear archivo seleccionado
-    this.archivoMedicamentos = null;
-    this.archivoNoEsCSV = false;
-    
-    // Limpiar el estado de validación usando el método auxiliar
-    this.clearFormValidationState();
+    // Solo limpiar los campos específicos de la sección contenedor
+    const CAMPOS_CONTENEDOR = [
+      { campo: 'inicialesContenedor', metodo: 'setInicialesContenedor' },
+      { campo: 'numeroContenedor', metodo: 'setNumeroContenedor' },
+      { campo: 'digitoDeControl', metodo: 'setDigitoDeControl' },
+      { campo: 'contenedores', metodo: 'setContenedores' }
+    ];
+
+    CAMPOS_CONTENEDOR.forEach(({ campo, metodo }) => {
+      const CONTROL = this.solicitudForm.get(campo);
+      if (CONTROL) {
+        CONTROL.reset();
+        CONTROL.markAsUntouched();
+        CONTROL.markAsPristine();
+        // Actualizar el store con valores vacíos usando el método existente
+        (this.tramite11201Store[metodo as keyof typeof this.tramite11201Store] as (valor: unknown) => void)(null);
+      }
+    });
   }
 
   /**

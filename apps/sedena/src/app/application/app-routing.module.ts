@@ -53,8 +53,8 @@ const ROUTES: Routes = [
     path: 'sustancias-quimicas',
     loadChildren: () =>
       import(
-        './tramites/240107/aviso-importacion-sustancias-quimicas.module'
-      ).then((m) => m.AvisoImportacionSustanciasQuimicasModule),
+        './tramites/240107/sustancias-quimicas.module'
+      ).then((m) => m.SustanciasQuimicasModule),
   },
   {
     path: 'permiso-ordinario',
