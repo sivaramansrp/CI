@@ -29,6 +29,9 @@
       <div class="col-md-6">
         <label>Número de operación:</label>
         <input type="text" class="form-control" formControlName="numeroOperacion" (change)=" setValoresStore( registroForm, 'numeroOperacion', 'setNumeroOperacion' ) " />
+        @if (registroForm.get('numeroOperacion')?.touched && registroForm.get('numeroOperacion')?.hasError('required')) {
+          <span class="mensaje-error">Todos los campos de pago son requeridos</span>
+        }
       </div>
     </div>
     <div class="row mt-5">
@@ -44,6 +47,9 @@
       <div class="col-md-4">
         <label>Llave de pago:</label>
         <input type="text" class="form-control" formControlName="llave" (change)="setValoresStore(registroForm, 'llave', 'setLlave')" />
+        @if (registroForm.get('llave')?.touched && registroForm.get('llave')?.hasError('required')) {
+          <span class="mensaje-error">Todos los campos de pago son requeridos</span>
+        }
       </div>
       <div class="col-md-4">
         <input-fecha [setFecha]="registroForm.get('fechaPago')?.value" [datos]="fechaPagoInput" (valorCambiado)="cambioFechaPago($event)"></input-fecha>
@@ -55,7 +61,7 @@
     </div>
     <div class="row mt-5">
       <div class="col-md-12 mt-5 d-flex justify-content-end">
-        <button type="button" class="btn btn-danger"> Borrar datos del pago </button>
+        <button type="button" class="btn btn-danger" (click)="borrarDatosPago()"> Borrar datos del pago </button>
       </div>
     </div>
     <div class="row mt-5">
@@ -64,6 +70,9 @@
           <input type="checkbox" formControlName="manifiesto1" (change)=" setValoresStore(registroForm, 'manifiesto1', 'setManifiesto1') " />{{ solicitudEnum.MANIFIESTO_1 }}
         </label>
       </div>
+      @if (registroForm.get('manifiesto1')?.touched && registroForm.get('manifiesto1')?.hasError('required')) {
+        <div class="mensaje-error">Este campo es obligatorio</div>
+      }
     </div>
     <div class="row mt-5">
       <div class="alert alert-info">
@@ -71,6 +80,9 @@
           <input type="checkbox" formControlName="manifiesto2" (change)=" setValoresStore(registroForm, 'manifiesto2', 'setManifiesto2') " />{{ solicitudEnum.MANIFIESTO_2 }}
         </label>
       </div>
+      @if (registroForm.get('manifiesto2')?.touched && registroForm.get('manifiesto2')?.hasError('required')) {
+        <div class="mensaje-error">Este campo es obligatorio</div>
+      }
     </div>
   </ng-container>
 </form>

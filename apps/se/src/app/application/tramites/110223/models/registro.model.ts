@@ -342,6 +342,26 @@ export interface ConsultaDatos {
    * Fax adicional para el productor.
    */
   agregarDatosProductorFax: string;
+
+  /**
+   * Lugar de la operación o actividad.
+   */
+  lugar: string;
+
+  /**
+   * Nombre del representante legal del exportador.
+   */
+  nombreRepresentanteLegalExportador: string;
+
+  /**
+   * Nombre del representante legal del productor.
+   */
+  empresa: string;
+
+  /**
+   * Cargo del representante legal.
+   */
+  cargo: string;
 }
 
 /**

@@ -1,11 +1,11 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { DatosDelTramiteFormState, MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
-import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
 import { DatosMercanciaContenedoraComponent } from '../datos-mercancia-contenedora/datos-mercancia-contenedora.component';
-import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
+import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { Tramite240101Query } from '../../estados/tramite240101Query.query';
 import { Tramite240101Store } from '../../estados/tramite240101Store.store';
@@ -38,6 +38,13 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    */
   @Output() cerrar = new EventEmitter<void>();
   
+  /**
+   * @description Indica si se deben usar botones personalizados en el formulario.
+   * @type {boolean}
+   * @default false
+   * @memberof DatosDelTramiteContenedoraComponent
+   */
+  usarBotonesPersonalizados: boolean = true;
   /**
    * @description Referencia al componente ModalComponent dentro de la plantilla.
    * Utiliza el decorador ViewChild para acceder a la instancia del modal y manipularlo desde el código TypeScript.   * 
@@ -73,7 +80,11 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * @default false
    */
   esFormularioSoloLectura: boolean = false;
-
+  /**
+   * Identificador del procedimiento.
+   * @property {number} idProcedimiento
+   */
+  public idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * Constructor del componente.
    *

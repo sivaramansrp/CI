@@ -675,7 +675,9 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * @memberof DomicilioEstablecimientoComponent
    */
   limpiarScianForm(): void {
-    this.formAgente.reset();
+   Object.keys(this.formAgente.controls).forEach(key => {
+    this.formAgente.get(key)?.setValue(null);
+  });
   }
 
   /**
