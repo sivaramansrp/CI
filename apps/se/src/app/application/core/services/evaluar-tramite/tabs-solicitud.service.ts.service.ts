@@ -5,9 +5,11 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { API_GET_ACUSES_RESOLUCION, API_GET_SOLICITUD_DOCUMENTOS, API_GET_TAREAS_DOCUMENTOS, IDSOLICITUD, NUMFOLIOTRAMITE, TRAMITE } from '../../../constantes/130118/api-constants';
+import { API_GET_ACUSES_RESOLUCION, API_GET_DICTAMENES, API_GET_REQUERIMIENTOS, API_GET_SOLICITUD_DOCUMENTOS, API_GET_TAREAS_DOCUMENTOS, IDSOLICITUD, NUMFOLIOTRAMITE, TRAMITE } from '../../../constantes/130118/api-constants';
 import { AcusesResolucionResponse } from '@libs/shared/data-access-user/src/core/models/130118/consulta-acuses-response.model';
+import { DictamenesResponse } from '@libs/shared/data-access-user/src/core/models/130118/dictamenes-response.model';
 import { DocumentoSolicitud } from '@libs/shared/data-access-user/src/core/models/130118/consulta-documentos-response.model';
+import { RequerimientosResponse } from '@libs/shared/data-access-user/src/core/models/130118/requerimientos-response.model';
 import { TareasSolicitud } from '@libs/shared/data-access-user/src/core/models/130118/consulta-tareas-response.model';
 @Injectable({
   providedIn: 'root'
@@ -64,5 +66,29 @@ export class TabsSolicitudServiceTsService {
   getAcusesResolucion(tramite: number, numFolioTramite: string): Observable<BaseResponse<AcusesResolucionResponse>> {
     const ENDPOINT = `${this.host}${API_GET_ACUSES_RESOLUCION.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolioTramite)}`;
     return this.http.get<BaseResponse<AcusesResolucionResponse>>(ENDPOINT);
+  }
+
+  /**
+   * Consulta los requerimientos asociados al trámite 130118.
+   * 
+   * @param tramite Numero del tramite.
+   * @param numFolioTramite Número de folio del trámite.
+   * @returns Observable con la respuesta del servidor.
+   */
+  getRequerimientos(tramite: number, numFolioTramite: string): Observable<BaseResponse<RequerimientosResponse[]>> {
+     const ENDPOINT = `${this.host}${API_GET_REQUERIMIENTOS.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolioTramite)}`;
+    return this.http.get<BaseResponse<RequerimientosResponse[]>>(ENDPOINT);
+  }
+
+  /**
+   * Consulta los dictámenes asociados al trámite 130118.
+   *
+   * @param tramite Numero del tramite.
+   * @param numFolioTramite Número de folio del trámite.
+   * @returns Observable con la respuesta del servidor.
+   */
+  getDictamenes(tramite: number, numFolioTramite: string): Observable<BaseResponse<DictamenesResponse[]>> {
+     const ENDPOINT = `${this.host}${API_GET_DICTAMENES.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolioTramite)}`;
+    return this.http.get<BaseResponse<DictamenesResponse[]>>(ENDPOINT);
   }
 }
