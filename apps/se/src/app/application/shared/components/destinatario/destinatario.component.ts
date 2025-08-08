@@ -182,16 +182,26 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     * representación federal y precisión, aplicando las validaciones correspondientes.
     */
   createForm(): void {
-    this.formDestinatario = this.fb.group({
-      paisDestin: ['', [Validators.required, Validators.min(0)]],
-      ciudad: ['', [Validators.required]],
-      calle: ['', [Validators.required]],
-      numeroLetra: ['', [Validators.required]],
-      lada: ['',[Validators.pattern(/^\d+$/)]],
-      telefono: ['', [Validators.required,Validators.pattern(/^\d+$/)]],
-      fax: [''],
-      correoElectronico: ['', [Validators.required, Validators.email, Validators.pattern(/^[a-zA-Z0-9._%+-]+@gmail\.com$/)]],
-    });
+this.formDestinatario = this.fb.group({
+  paisDestin: ['', [Validators.required, Validators.min(0)]],
+  ciudad: ['', [Validators.required]],
+  calle: ['', [Validators.required]],
+  numeroLetra: ['', [Validators.required]],
+  lugar: ['', [Validators.required]],
+  nombreRepresentante: ['', [Validators.required, Validators.maxLength(100)]],
+  empresa: ['', [Validators.required, Validators.maxLength(100)]],
+  cargo: ['', [Validators.required, Validators.maxLength(50)]],
+  lada: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+  telefono: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+  fax: ['', [Validators.pattern(/^\d+$/)]],
+  correoElectronico: ['', [
+    Validators.required,
+    Validators.email,
+    Validators.maxLength(100),
+    Validators.pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/) 
+  ]]
+});
+
   }
 
   /**
