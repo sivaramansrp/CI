@@ -8,7 +8,7 @@ export const CHOFERES_NACIONALES_ALTA: ConfiguracionColumna<DatosDelChoferNacion
         orden: 1,
     },
     {
-        encabezado: 'Número',
+        encabezado: 'Nombre',
         clave: (item: DatosDelChoferNacional) => item.nombre,
         orden: 2,
     },
