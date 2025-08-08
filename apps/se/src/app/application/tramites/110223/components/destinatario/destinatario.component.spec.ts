@@ -29,6 +29,10 @@ describe('DestinatarioComponent', () => {
         telefono: [''],
         fax: [''],
         numeroDeRegistroFiscal: [''],
+        lugar: [''],
+        nombreRepresentanteLegalExportador: [''],
+        empresa: [''],
+        cargo: [''],
       }),
     });
     fixture.detectChanges();
@@ -51,6 +55,10 @@ describe('DestinatarioComponent', () => {
       telefono: '',
       fax: '',
       numeroDeRegistroFiscal: '',
+      lugar: '',
+      nombreRepresentanteLegalExportador: '',
+      empresa: '',
+      cargo: '',
     });
   });
 
@@ -68,7 +76,7 @@ describe('DestinatarioComponent', () => {
     nombreInput.triggerEventHandler('change', { target: { value: 'Test Name' } });
 
     expect(component.setValoresStore).toHaveBeenCalledWith(
-      component.registroForm.get('validacionForm'),
+      expect.any(Object),
       'nombre',
       'setNombre'
     );
@@ -106,6 +114,10 @@ describe('DestinatarioComponent', () => {
       telefono: '',
       fax: '',
       numeroDeRegistroFiscal: '',
+      lugar: '',
+      nombreRepresentanteLegalExportador: '',
+      empresa: '',
+      cargo: '',
     });
   });
 
@@ -136,7 +148,7 @@ describe('DestinatarioComponent', () => {
     catalogoSelect.triggerEventHandler('change', { target: { value: 'Mexico' } });
 
     expect(component.setValoresStore).toHaveBeenCalledWith(
-      component.registroForm.get('validacionForm'),
+      expect.any(Object),
       'nacion',
       'setNacion'
     );

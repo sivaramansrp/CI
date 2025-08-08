@@ -58,6 +58,15 @@ export class RevisionService {
   }
 
   /**
+   * Obtiene los datos del veterinario.
+   * 
+   * @returns {Observable<RespuestaCatalogos>} - Los datos del veterinario.
+   */
+  getVeterinario(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/220701/nombre.json');
+  }
+
+  /**
    * Obtiene los datos del régimen al que se destinarán las mercancías.
    * 
    * @returns {Observable<RespuestaCatalogos>} - Los datos del régimen.

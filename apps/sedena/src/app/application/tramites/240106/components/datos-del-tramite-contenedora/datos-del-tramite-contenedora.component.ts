@@ -1,17 +1,12 @@
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
-import { Subject,map,takeUntil } from 'rxjs';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { DatosDelTramiteFormState, MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
-import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
 import { DatosMercanciaContenedoraComponent } from '../datos-mercancia-contenedora/datos-mercancia-contenedora.component';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-sustancias-quimicas.enum';
-import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
-
-
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { Tramite240106Query } from '../../estados/tramite240106Query.query';
 import { Tramite240106Store } from '../../estados/tramite240106Store.store';
 
@@ -31,10 +26,35 @@ import { Tramite240106Store } from '../../estados/tramite240106Store.store';
 })
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
 
+  /**
+   * Indica si se deben usar botones personalizados en el componente.
+   * Cuando es `true`, el componente mostrará y gestionará la lógica de botones personalizados.
+   */
+  usarBotonesPersonalizados: boolean = true;
+  /**
+   * Referencia al componente ModalComponent asociado a la plantilla mediante el template variable 'modal'.
+   * Permite acceder y controlar el comportamiento del modal desde el componente padre.
+   * 
+   * @remarks
+   * La propiedad se inicializa después de que la vista ha sido renderizada.
+   */
    @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
 
+  /**
+   * Evento de salida que se emite cuando se solicita cerrar el componente.
+   * Los componentes padres pueden suscribirse a este evento para realizar acciones al cerrar.
+   */
   @Output() cerrar = new EventEmitter<void>();
 
+  /**
+   * Identificador único para el procedimiento actual.
+   * 
+   * Esta constante se inicializa con el valor de `ID_PROCEDIMIENTO` y se utiliza
+   * para referenciar el procedimiento específico que maneja este componente.
+   * 
+   * @readonly
+   * @type {number | string} El tipo depende de la definición de `ID_PROCEDIMIENTO`.
+   */
    public readonly idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * Observable para limpiar suscripciones activas al destruir el componente.
@@ -63,13 +83,13 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
     */
   esFormularioSoloLectura: boolean = false;
 
-
   /**
    * Constructor del componente.
    *
    * @method constructor
    * @param {Tramite240101Query} tramiteQuery - Query de Akita para obtener el estado actual del trámite.
    * @param {Tramite240101Store} tramiteStore - Store de Akita para actualizar el estado del trámite.
+   * @param {ConsultaioQuery} consultaQuery - Query para obtener el estado de la consulta.
    * @returns {void}
    */
   constructor(
