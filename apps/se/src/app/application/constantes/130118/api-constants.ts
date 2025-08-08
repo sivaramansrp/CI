@@ -131,3 +131,9 @@ export const API_GET_REQUERIMIENTOS = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitudes/consultar-dictamenes-by-numFolioTramite
  */
 export const API_GET_DICTAMENES = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/dictamenes`;
+
+/** 
+ * API para iniciar la confirmación de notificación del tramite 130118.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Confirmar-Notificacion/iniciar-confirmacion-notificacion
+ */
+export const API_GET_INICIAR_CONFIRMACION_NOTIFICACION = `sat-t130118/tramite/${NUMFOLIOTRAMITE}/confirmar-notificacion/iniciar`;

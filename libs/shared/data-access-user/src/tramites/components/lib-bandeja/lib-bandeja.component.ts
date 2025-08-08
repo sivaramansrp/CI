@@ -253,7 +253,9 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
       this.router.navigate([
         `/${this.tramiteData[0].department}/proceso-requerimiento`,
       ]);
-    } else if (ORIGIN === 'FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION') {
+    } else if(ORIGIN === 'FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION' && this.tramiteData[0].tramite === 130118) {
+      this.router.navigate([`/${this.tramiteData[0].department}/confirmar-notificacion`]);
+    }else if (ORIGIN === 'FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION') {
       this.router.navigate(['/confirmar-notificacion']);
     } else if (ORIGIN === 'FLUJO_FUNCIONARIO_CONFIRMAR-RESOLUCION') {
       this.router.navigate(['/confirmar-resolucion']);
