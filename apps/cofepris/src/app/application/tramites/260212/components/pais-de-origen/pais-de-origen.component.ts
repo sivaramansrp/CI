@@ -78,10 +78,13 @@ export class PaisDeOrigenComponent {
    */
   fechaSeleccionada: FormControl = new FormControl('');
 
+  /** Indica si la sección de país de origen está plegada o desplegada. */
   public paisDeOrigenPlegable: boolean = false;
 
+  /** Indica si la sección de país de procedencia está plegada o desplegada. */
   public paisDeProcedenciaPlegable: boolean = false;
 
+  /** Indica si la sección de uso específico está plegada o desplegada. */
   public usoEspecificoPlegable: boolean = false;
 
 
