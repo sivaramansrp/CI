@@ -76,18 +76,23 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * el componente se destruye.
    */
   destroyNotifier$: Subject<void> = new Subject();
+
   /**
    * @property {ConsultaioState} consultaDatos
    * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
    */
   consultaDatos!: ConsultaioState;
+
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
+
   /**
    * Constructor del componente.
    * 
    * @param {Tramite110212Store} store - Store para gestionar el estado del trámite.
    * @param {Tramite110212Query} tramiteQuery - Query para obtener el estado del trámite.
+   * @param {ConsultaioQuery} consultaioQuery - Query para obtener el estado de la consulta.
+   * @param {ValidacionPosterioriService} validacionPosterioriService - Servicio para la validación a posteriori.
    */
   constructor(
     public store: Tramite110212Store,
@@ -138,7 +143,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   seleccionaTab(i: number): void {
     this.indice = i;
     this.store.setPestanaActiva(this.indice);
-    // Hide error message when tab changes
+    // Ocultar mensaje de error al cambiar de pestaña
     this.tabChanged.emit();
   }
   /**
@@ -183,23 +188,23 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   public validarTodosLosFormularios(): boolean {
     let allFormsValid = true;
         
-    // Validate certificado-origen form if it exists and is visible
+    // Validar el formulario de certificado de origen si existe y es visible
     if (this.indice >= 2 && this.certificadoOrigenComp && this.certificadoOrigenComp.formularioCertificado) {
       this.certificadoOrigenComp.formularioCertificado.markAllAsTouched();
       if (!this.certificadoOrigenComp.formularioCertificado.valid) {
         allFormsValid = false;
       }
     }
-    
-    // Validate destinatario form if it exists and is visible
+
+    // Validar el formulario de destinatario si existe y es visible
     if (this.indice >= 3 && this.destinatarioComp && this.destinatarioComp.registroFormulario) {
       this.destinatarioComp.registroFormulario.markAllAsTouched();
       if (!this.destinatarioComp.registroFormulario.valid) {
         allFormsValid = false;
       }
     }
-    
-    // Validate datos-certificado form if it exists and is visible
+
+    // Validar el formulario de datos del certificado si existe y es visible
     if (this.indice >= 4 && this.datosCertificadoComp && this.datosCertificadoComp.formDatosCertificado) {
       this.datosCertificadoComp.formDatosCertificado.markAllAsTouched();
       if (!this.datosCertificadoComp.formDatosCertificado.valid) {
