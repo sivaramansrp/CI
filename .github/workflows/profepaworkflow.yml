@@ -16,8 +16,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      IMAGE_NAME: ghcr.io/vucem30/dockerized-modulefederation-profepa-microfront:1.0.2
-      
+      IMAGE_TAG: ${{ github.sha }}
+      IMAGE_NAME: ghcr.io/vucem30/dockerized-modulefederation-profepa-microfront:${{ github.sha }}
 
     steps:
       - name: Checkout source
@@ -37,15 +37,17 @@ jobs:
         run: |
           docker compose -f docker/modulefederation-profepa-microfront.yml build
           docker compose -f docker/modulefederation-profepa-microfront.yml push
-      - name: Execute remote command (last one)
+      - name: Deploy to MicroK8s via SSH
         uses: appleboy/ssh-action@v0.1.8
         with:
           host: ${{ secrets.REMOTE_SRV_IP }}
           username: ${{ secrets.REMOTE_SRV_USER }}
           key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
-          port: 4220
+          port: 22
           script: |
             cd /home/ubuntu/v30/deploy/deploy-microfront/profepa-microfront/
+            # Replace image tag in deployment YAML dynamically
+            sed -i "s|ghcr.io/vucem30/dockerized-modulefederation-profepa-microfront:.*|ghcr.io/vucem30/dockerized-modulefederation-profepa-microfront:${{ github.sha }}|g" profepa-microfront-deployment-dev.yaml
             microk8s kubectl apply -f profepa-microfront-deployment-dev.yaml
             microk8s kubectl rollout restart deployment modulefederation-profepa-microfront-deployment-dev -n default
-            microk8s kubectl get pods | grep profepa
+            microk8s kubectl get pods -n default | grep profepa
