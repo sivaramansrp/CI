@@ -21,21 +21,21 @@
     <ng-container>
       @switch (indice) {
       @case (1) {
-      <solicitante #Solicitante></solicitante>
+      <solicitante #solicitante></solicitante>
       }
       @case (2) {
       @if(esDatosRespuesta){
-      <app-certificado-origen></app-certificado-origen>
+      <app-certificado-origen #certificadoOrigenComp></app-certificado-origen>
       }
       }
       @case (3) {
       @if(esDatosRespuesta){
-      <app-destinatario></app-destinatario>
+      <app-destinatario #destinatarioComp></app-destinatario>
       }
       }
       @case (4) {
       @if(esDatosRespuesta){
-      <app-datos-certificado></app-datos-certificado>
+      <app-datos-certificado #datosCertificadoComp></app-datos-certificado>
       }
       }
       }

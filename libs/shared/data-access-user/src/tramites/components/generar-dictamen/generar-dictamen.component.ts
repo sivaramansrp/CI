@@ -102,8 +102,16 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.dictamenForm = this.fb.group({
       cumplimiento: ['1'],
-      mensajeDictamen: ['', [Validators.required, Validators.maxLength(2000)]],
-      antecedentesEditables: ['', [Validators.required]],
+      mensajeDictamen: ['', [
+        Validators.required,
+        GenerarDictamenComponent.noSoloEspacios,
+        Validators.maxLength(2000)
+      ]],
+      antecedentesEditables: ['', [
+        Validators.required,
+        GenerarDictamenComponent.noSoloEspacios,
+        Validators.maxLength(2000)
+      ]],
       antecedentesReadonly: [{
         value: 'Fracción I numeral 2 del Anexo 2.2.2 del Acuerdo por el que la Secretaría de Economía emite reglas y criterios de carácter general en materia de Comercio Exterior, publicado en el Diario Oficial de la Federación el 6 de julio de 2007 y sus modificaciones.',
         disabled: true
