@@ -195,7 +195,7 @@
       </div>
       <div class="row align-item-center">
         <div class="col-md-4 mt-5">
-          <lib-input-check [label]="'Aviso de funcionamiento'" [id]="'avisoCheckbox'" [required]="true"
+          <lib-input-check [label]="'Aviso de funcionamiento:'" [id]="'avisoCheckbox'" [required]="true"
             formControlName="avisoCheckbox" [isDisabled]="esFormularioSoloLectura"
             (change)="actualizarValoresStore(datosSolicitudform,'avisoCheckbox', 'setAvisoCheckbox')"></lib-input-check>
         </div>
@@ -242,9 +242,9 @@
           [datos]="mercanciasTablaDatos"
           [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
         <div class="container text-end mt-5">
-          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Modificar</button>
-          <button class="btn btn-default me-2"  [disabled]="esFormularioSoloLectura">Eliminar</button>
-          <button class="btn btn-default me-2" *ngIf="insumos"  [disabled]="esFormularioSoloLectura">Agregar</button>
+          <button class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+          <button class="btn btn-default me-2"  [disabled]="esFormularioSoloLectura">Modificar</button>
+          <button class="btn btn-primary" *ngIf="insumos"  [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
       </div>
     </div>
@@ -257,7 +257,7 @@
       <div class="alert alert-info content-with-checkbox py-6">
         <input formControlName="manifests" type="checkbox" id="manifiesto"
           (change)="actualizarValoresStore(manifiestosRepresentanteForm,'manifests', 'setManifests')" />
-        <span class="fw-bold align-middle"> *</span>
+        <span class="fw-bold ms-0">*</span>
         <div>{{ mensajeManifiestos }} </div>
       </div>
     </div>
@@ -309,14 +309,17 @@
           </div>
         </div>
         <div class="modal-footer mt-5">
-          <button type="button" class="btn btn-primary" (click)="limpiarScianForm()" [disabled]="esFormularioSoloLectura">
+            <div class="col-md-5 text-muted text-vertical-align-button">
+                <span>*Campos obligatorios</span>
+            </div>
+          <button type="button" class="btn btn-default" (click)="limpiarScianForm()" [disabled]="esFormularioSoloLectura">
             Limpiar
           </button>
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">
+          <button type="button" class="btn btn-default" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">
             Cancelar
           </button>
           <button type="button" class="btn btn-primary" (click)="guardarScian()" [disabled]="esFormularioSoloLectura">
-            Guardar
+            Agregar
           </button>
         </div>
       </form>
