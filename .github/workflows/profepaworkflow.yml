@@ -6,10 +6,10 @@ on:
     branches:
       - develop
     paths:
-      - 'apps/profepa/Dockerfile.dev**'
-      - 'docker/**'
+      - 'apps/profepa/**'
+      - 'docker/modulefederation-profepa-microfront.yml'
       - 'k8s/profepa-microfront/**'
-      - '.github/workflows/docker-k8s-deploy.yml'
+      - 'package.json'
 
 jobs:
   build-and-deploy:
