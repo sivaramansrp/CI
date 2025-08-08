@@ -26,12 +26,12 @@
       <div class="col-md-8 mb-4">
         <label for="pagina">Página web*:</label>
         <input type="text" id="pagina" name="pagina" class="form-control" formControlName="paginaWWeb" maxlength="120"
-          onkeyup="this.value = this.value.toUpperCase();" onkeypress="return soloLetras(event)" />
+          (input)="onPaginaInputChange($event)" (keypress)="onKeyPress($event)" />
       </div>
       <div class="col-md-8">
         <label for="localizacion">Localización*:</label>
         <input type="text" id="localizacion" name="localizacion" class="form-control" formControlName="localizacion"
-          maxlength="120" onkeyup="this.value = this.value.toUpperCase();" onkeypress="return soloLetras(event)" />
+          maxlength="120" (input)="onLocalizacionInputChange($event)" (keypress)="onKeyPress($event)" />
       </div>
     </div>
   </div>

@@ -1148,4 +1148,63 @@ this.formaComplimentos.disable();
     this.destroyNotifier$.complete();
     this.clearPreservedData();
   }
+
+  /**
+   * Handles input change for Página web field and converts to uppercase
+   * @param event Input event
+   */
+  onPaginaInputChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const uppercaseValue = input.value.toUpperCase();
+    
+    // Update the form control value
+    this.formaComplimentos.get('datosGeneralis')?.get('paginaWWeb')?.setValue(uppercaseValue, { emitEvent: false });
+    
+    // Update the input field display
+    input.value = uppercaseValue;
+  }
+
+  /**
+   * Handles input change for Localización field and converts to uppercase
+   * @param event Input event
+   */
+  onLocalizacionInputChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const uppercaseValue = input.value.toUpperCase();
+    
+    // Update the form control value
+    this.formaComplimentos.get('datosGeneralis')?.get('localizacion')?.setValue(uppercaseValue, { emitEvent: false });
+    
+    // Update the input field display
+    input.value = uppercaseValue;
+  }
+
+  /**
+   * Handles keypress events to allow only letters and common characters
+   * @param event Keyboard event
+   * @returns boolean indicating if the key should be allowed
+   */
+  onKeyPress(event: KeyboardEvent): boolean {
+    const CHAR = String.fromCharCode(event.which);
+    const ALLOWEDPATTERN = /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s\.\-\_\:\/\@]$/;
+    
+    // Allow backspace, delete, tab, escape, enter
+    if (event.which === 8 || event.which === 46 || event.which === 9 || 
+        event.which === 27 || event.which === 13) {
+      return true;
+    }
+    
+  if (event.ctrlKey && (event.which === 65 || event.which === 67 || 
+        event.which === 86 || event.which === 88 || event.which === 90)) {
+      return true;
+    }
+    
+    // Test the character against the pattern
+    if (!ALLOWEDPATTERN.test(CHAR)) {
+      event.preventDefault();
+      return false;
+    }
+    
+    return true;
+  }
 }
