@@ -105,6 +105,7 @@ export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((respuesta) => {
         if (respuesta.success) {
+          this.esDatosRespuesta = true;
           this.solicitud6102Store.setContenedores(respuesta?.datos?.tecnicaForm.contenedores);
           this.solicitud6102Store.setAduana(respuesta?.datos?.tecnicaForm.aduana);
          this.solicitud6102Store.setObservaciones(respuesta?.datos?.tecnicaForm.observaciones);

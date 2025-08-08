@@ -8,13 +8,13 @@ import { ExportacionService } from '../../shared/services/exportacion.service';
 import { ManifiestosComponent } from '../../shared/components/manifiestos-declaraciones/manifiestos-declaraciones.component';
 import { NgModule } from '@angular/core';
 import { PaginasComponent } from './pages/paginas/paginas.component';
-import { PagoDerechosComponent } from '../../shared/components/pago-Derechos/pago-Derechos.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PermisoDeImportacionRoutingModule } from './permiso-de-importacion-routing.module';
 import { RepresentanteLegalRfcComponent } from '../../shared/components/representante-legal-rfc/representante-legal-rfc.component';
 import { ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
+import { SharedPagoDerechosComponent } from '../../shared/components/shared-pago-derechos/shared-pago-derechos.component';
 
 @NgModule({
   declarations: [
@@ -33,12 +33,12 @@ import { provideHttpClient } from '@angular/common/http';
     DomicilioEstablecimientoAduanasComponent,
     ManifiestosComponent,
     RepresentanteLegalRfcComponent,
-    PagoDerechosComponent,
     AvisoTercerosRelacionadosComponent,
     TituloComponent,
     AnexarDocumentosComponent, 
     AlertComponent,
-    FirmaElectronicaComponent
+    FirmaElectronicaComponent,
+    SharedPagoDerechosComponent
   ],
   providers: [
     provideHttpClient(),

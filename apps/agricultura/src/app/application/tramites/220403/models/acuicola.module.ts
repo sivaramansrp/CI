@@ -166,11 +166,11 @@ export interface DatosRealizar {
     */
   numeroContenedor: string,
   /**
-   * @property {string} parisOrigen
+   * @property {string} paisOrigen
    * @description
-   * parisOrigen de la mercancía relacionada con el trámite.
+   * paisOrigen de la mercancía relacionada con el trámite.
    */
-  parisOrigen: string,
+  paisOrigen: string,
   /**
    * @property {string} entidadFederativaOrigen
    * @description
@@ -182,7 +182,7 @@ export interface DatosRealizar {
    * @description
    * municipioOrigen de la mercancía relacionada con el trámite.
    */
-  municipoOrigen: string,
+  municipioOrigen: string,
   /**
    * @property {string} paisDestino
    * @description

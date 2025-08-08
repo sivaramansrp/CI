@@ -1,17 +1,11 @@
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, PersonaTerceros } from '@ng-mf/data-access-user';
+import { Subject, map,takeUntil } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { Component } from '@angular/core';
 import { ConsultaDatosService } from '../../servicios/consulta-datos.servicio';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { ConsultaioState } from '@ng-mf/data-access-user';
-import { EventEmitter } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
-import { PersonaTerceros } from '@ng-mf/data-access-user';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
-import { Subject } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Tramite240107Query } from '../../estados/tramite240107Query.query';
+import { Tramite240107Store } from '../../estados/tramite240107Store.store';
 
 /**
  * Componente para el asistente de solicitud.
@@ -70,12 +64,16 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @param {SeccionLibStore} seccionStore - Store para actualizar el estado de las secciones.
    * @param {ConsultaDatosService} consultaDatosService - Servicio para consultar datos de la solicitud.
    * @param {ConsultaioQuery} consultaQuery - Query para acceder al estado de la consulta.
+   * @param {Tramite240107Store} tramite240107Store - Store para gestionar el estado del trámite 240107.
+   * @param {Tramite240107Query} tramite240107Query - Query para acceder a los datos del trámite 240107.
    */
   constructor(
     private route: ActivatedRoute,
     private seccionStore: SeccionLibStore,
     private consultaDatosService: ConsultaDatosService,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    private tramite240107Store: Tramite240107Store,
+    private tramite240107Query: Tramite240107Query
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
@@ -85,12 +83,16 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @method ngOnInit
    */
   ngOnInit(): void {
-    this.consultaQuery.selectConsultaioState$
+      this.tramite240107Query.getTabSeleccionado$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((tab) => {
+        this.indice = tab;
+      });
+     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.consultaState = seccionState;
-          this.esFormularioSoloLectura = seccionState.readonly;
           if (this.consultaState.update) {
             this.guardarDatosFormulario();
           } else {
@@ -100,11 +102,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.route.queryParams
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((tab) => {
-        this.indice = Number(tab['indice'] || 1);
-      });
   }
 
   /**
@@ -140,13 +137,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   @Output() tabChanged = new EventEmitter<number>();
 
   /**
-   * Cambia el índice de la pestaña seleccionada.
-   * @method seleccionaTab
-   * @param {number} i - El índice de la pestaña a seleccionar.
+   * Actualiza el índice de la pestaña seleccionada en el store.
+   *
+   * @param i Índice de la pestaña seleccionada.
+   * @returns {void}
    */
-  seleccionaTab(i: number): void {
-    this.indice = i;
-    this.tabChanged.emit(i);
+  public seleccionaTab(i: number): void {
+    this.tramite240107Store.updateTabSeleccionado(i);
   }
 
   /**

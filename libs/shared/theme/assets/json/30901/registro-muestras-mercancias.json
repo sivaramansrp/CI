@@ -2,7 +2,7 @@
     "importadorExportadorPrevio": {
         "labelNombre": "¿Se han realizado previamente importaciones o exportaciones del producto a registrar?",
         "required": true,
-        "primerOpcion": "Selecciona un valor",
+        "primerOpcion": "Selecciona un opción",
         "catalogos": [
             {
                 "descripcion": "Sí",
@@ -17,7 +17,7 @@
     "fraccionArancelariaAga": {
         "labelNombre": "fracción arancelaria",
         "required": true,
-        "primerOpcion": "Selecciona un valor",
+        "primerOpcion": "Selecciona un opción",
         "catalogos": [
             {
                 "descripcion": "01022901",
@@ -47,7 +47,7 @@
     "ideGenerica": {
         "labelNombre": "Estado físico",
         "required": true,
-        "primerOpcion": "Selecciona un valor",
+        "primerOpcion": "Selecciona un opción",
         "catalogos": [
             {
                 "descripcion": "Gaseoso",
@@ -58,7 +58,7 @@
     "tomaMuestraDespacho": {
         "labelNombre": "¿El producto al que hace referencia a esta solicitud ha sido previamente inscrito en el registro para la toma de muestras?",
         "required": true,
-        "primerOpcion": "Selecciona un valor",
+        "primerOpcion": "Selecciona un opción",
         "catalogos": [
             {
                 "descripcion": "Sí",

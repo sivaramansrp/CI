@@ -1,14 +1,6 @@
-import { Component } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-
-import { CATALOGOS_ID } from '@ng-mf/data-access-user';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogosService } from '@ng-mf/data-access-user';
-
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs';
-
+import { CATALOGOS_ID, Catalogo, CatalogosService } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { TEXTOS_REQUISITOS } from '../../constants/importacion-sustancias-quimicas.enum';
 
 /**

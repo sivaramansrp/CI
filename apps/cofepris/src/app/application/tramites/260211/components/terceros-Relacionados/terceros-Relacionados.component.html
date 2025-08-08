@@ -270,7 +270,7 @@
 
             <div class="col-md-4 mt-2">
               <div class="form-group">
-                <app-catalogo-select [catalogo]="localidadDropdownData" [label]="'Localidad'" [required]="false"
+                <app-catalogo-select [catalogo]="localidadDropdownData" [label]="'Localidad'" [required]="true"
                   for="localidad" id="localidad" formControlName="localidad"
                   [isDisabled]="esFormularioSoloLectura ? true : false" [placeholder]="'Seleccione una opción'"></app-catalogo-select>
               </div>
@@ -279,7 +279,7 @@
             <div class="col-md-4 mt-2">
               <div class="form-group">
                 <app-catalogo-select [catalogo]="codigoPostalDropdownData" [label]="'Código postal o equivalente'"
-                  [required]="true" for="codigoPostaloEquivalente" id="codigoPostaloEquivalente"
+                  [required]="false" for="codigoPostaloEquivalente" id="codigoPostaloEquivalente"
                   formControlName="codigoPostaloEquivalente"
                   [isDisabled]="esFormularioSoloLectura ? true : false" [placeholder]="'Seleccione una opción'"></app-catalogo-select>
               </div>
@@ -514,7 +514,7 @@
           <div class="col-md-4 mt-5">
             <div class="form-group">
               <app-catalogo-select [catalogo]="coloniaDropdownData" [label]="'Colonia'" for="colonia" id="colonia"
-                formControlName="colonia" [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
+                formControlName="colonia" [isDisabled]="esFormularioSoloLectura ? true : false" [placeholder]="'Seleccione una opción'"></app-catalogo-select>
             </div>
           </div>
 

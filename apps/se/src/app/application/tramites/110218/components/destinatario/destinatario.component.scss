@@ -1,13 +1,8 @@
 .form-control {
-    height: 35PX;
     background-color: #80808024;
-    font-size: 15px;
-    font-weight: 500;
 }
 
-.form-label {
-    font-size: 15px;
-}
+
 
 @media (min-width: 320px) and (max-width: 370px) {
     .form-label {
@@ -16,9 +11,7 @@
     }
 }
 .label-width {
-    width: 38px;
     text-align: center;
-    font-size: 15px;
 }
 
 .bg-white {

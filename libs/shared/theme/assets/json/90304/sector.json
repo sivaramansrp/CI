@@ -1,5 +1,7 @@
-{
-    "code": 200,
-    "data": [],
-    "message": "Consulta exitosa"
-}
+[
+    {
+        "listaDeSectores": "De la Industria Automotriz y de Autopartes a)", 
+        "claveDelSector": "XIXa",
+        "estatus" : "Autorizada "
+    }
+]

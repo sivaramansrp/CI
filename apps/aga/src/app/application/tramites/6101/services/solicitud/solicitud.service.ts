@@ -1,4 +1,4 @@
-import { GuardarDatosFormulario } from '../../models/solicitud.model';
+import { RespuestaConsulta, SolicitudForm } from '../../models/solicitud.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -47,8 +47,8 @@ export class SolicitudService {
  * Obtiene los datos del formulario desde un archivo JSON local.
  * Un `Observable` que emite los datos del formulario en el formato `GuardarDatosFormulario`.
  */
-  guardarDatosFormulario(): Observable<GuardarDatosFormulario> {
-    return this.http.get<GuardarDatosFormulario>(
+  guardarDatosFormulario(): Observable<RespuestaConsulta> {
+    return this.http.get<RespuestaConsulta>(
       'assets/json/6101/solicitud-datos.json'
     );
   }
@@ -57,7 +57,7 @@ export class SolicitudService {
  * Actualiza el estado del formulario en el store con los valores recibidos.
  * Objeto de tipo `GuardarDatosFormulario` que contiene la información a actualizar.
  */
-  actualizarEstadoFormulario(respuesta: GuardarDatosFormulario): void {
+  actualizarEstadoFormulario(respuesta: SolicitudForm): void {
     this.solicitud6101Store.actualizarAduanaAux(respuesta.aduanaAux);
     this.solicitud6101Store.actualizarCapitulo(respuesta.capitulo);
     this.solicitud6101Store.actualizarCapituloII(respuesta.capituloII);

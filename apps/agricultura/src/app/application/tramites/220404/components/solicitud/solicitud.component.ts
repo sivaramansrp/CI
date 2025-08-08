@@ -187,7 +187,11 @@ inicializarEstadoFormulario(): void {
       ],
       descripcion: [
         { value: this.desistimientoFormState?.descripcion, disabled: false },
-        [Validators.required],
+        [
+          Validators.required,
+          Validators.minLength(1),
+          Validators.maxLength(250)
+        ],
       ],
     });
    

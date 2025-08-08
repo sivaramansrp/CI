@@ -78,36 +78,36 @@ describe('CertificadoDeOrigenComponent', () => {
   });
 
   it('should call getTratado on initialization', () => {
-    const spy = jest.spyOn(registroServiceMock, 'getTratado');
+    const SPY = jest.spyOn(registroServiceMock, 'getTratado');
     component.ngOnInit();
-    expect(spy).toHaveBeenCalled();
+    expect(SPY).toHaveBeenCalled();
   });
 
   it('should validate the destinatario form', () => {
-    const spy = jest.spyOn(component.registroForm, 'markAllAsTouched');
+    const SPY = jest.spyOn(component.registroForm, 'markAllAsTouched');
     component.validarDestinatarioFormulario();
-    expect(spy).toHaveBeenCalled();
+    expect(SPY).toHaveBeenCalled();
   });
 
   it('should validate the mercancia form', () => {
-    const spy = jest.spyOn(component.mercanciaForm, 'markAllAsTouched');
+    const SPY = jest.spyOn(component.mercanciaForm, 'markAllAsTouched');
     component.validarMercanciaForm();
-    expect(spy).toHaveBeenCalled();
+    expect(SPY).toHaveBeenCalled();
   });
 
   it('should set values in the store', () => {
-    const spy = jest.spyOn(tramiteStoreMock, 'setTratado');
+    const SPY = jest.spyOn(tramiteStoreMock, 'setTratado');
     component.setValoresStore(component.registroForm, 'tratado', 'setTratado');
-    expect(spy).toHaveBeenCalled();
+    expect(SPY).toHaveBeenCalled();
   });
 
   it('should handle file selection', () => {
-    const event = {
+    const EVENT = {
       target: {
         files: [{ name: 'test-file.txt' }],
       },
     } as unknown as Event;
-    component.alSeleccionarArchivo(event);
+    component.alSeleccionarArchivo(EVENT);
     expect(component.nombreArchivo).toBe('test-file.txt');
   });
 
@@ -127,25 +127,30 @@ describe('CertificadoDeOrigenComponent', () => {
   });
 
   it('should destroy subscriptions on ngOnDestroy', () => {
-    const spy = jest.spyOn(component.destroyNotifier$, 'next');
+    const SPY = jest.spyOn(component.destroyNotifier$, 'next');
     component.ngOnDestroy();
-    expect(spy).toHaveBeenCalledWith();
+    expect(SPY).toHaveBeenCalledWith();
   });
 
   it('should handle agregar logic', () => {
-    component.mercanciaForm.patchValue({
-      validacionMercanciaForm: {
-        fraccionMercanArancelaria: '123',
-        cantidad: 10,
-        unidadMedida: 'kg',
-        valordelamercancia: 100,
-        tipoFactura: 'Factura',
-        numeroFactura: '12345',
-        complementoDelaDescripcion: 'Test',
-        fecha: '2025-04-28',
-      },
+    const VALIDACION_MERCANCIA_FORM_GROUP = component.fb.group({
+      fraccionMercanArancelaria: ['123'],
+      cantidad: [10],
+      unidadMedida: ['kg'],
+      valordelamercancia: [100],
+      tipoFactura: ['Factura'],
+      numeroFactura: ['12345'],
+      complementoDelaDescripcion: ['Test'],
+      fecha: ['2025-04-28'],
     });
+
+    component.mercanciaForm.setControl(
+      'validacionMercanciaForm',
+      VALIDACION_MERCANCIA_FORM_GROUP
+    );
+
     component.agregar();
+
     expect(component.esMercanciaEnEdicion).toBe(true);
     expect(component.mercanciaSeleccionadasTablaData.length).toBe(1);
   });
@@ -157,7 +162,7 @@ describe('CertificadoDeOrigenComponent', () => {
   });
 
   it('should validate form fields using isValid', () => {
-    const result = component.isValid(component.registroForm, 'tratado');
-    expect(result).toBe(true);
+    const RESULT = component.isValid(component.registroForm, 'tratado');
+    expect(RESULT).toBe(true);
   });
 });
