@@ -92,6 +92,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
         opcionDeEntrada: TablaCampoSeleccion.NONE,
         orden: 1,
         longitudMaxima: 0,
+        tipo: '',
       },
       {
         encabezado: 'sector ',
@@ -100,6 +101,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
         opcionDeEntrada: TablaCampoSeleccion.NONE,
         orden: 2,
         longitudMaxima: 0,
+        tipo: '',
       },
       {
         encabezado: 'Fracción arancelaria',
@@ -108,6 +110,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
         opcionDeEntrada: TablaCampoSeleccion.INPUT,
         orden: 3,
         longitudMaxima: 8,
+        tipo: 'number',
       },
       {
         encabezado: 'Bienes producidos',
@@ -116,6 +119,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
         opcionDeEntrada: TablaCampoSeleccion.INPUT,
         orden: 4,
         longitudMaxima: 250,
+        tipo: 'text',
       },
       {
         encabezado: 'Volumen del total de bienes producidos',
@@ -124,6 +128,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
         opcionDeEntrada: TablaCampoSeleccion.INPUT,
         orden: 5,
         longitudMaxima: 16,
+        tipo: 'number',
       },
       {
         encabezado: 'Volumen del mercado nacional',
@@ -132,6 +137,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
         opcionDeEntrada: TablaCampoSeleccion.INPUT,
         orden: 6,
         longitudMaxima: 16,
+        tipo: 'number',
       },
       {
         encabezado: 'Volumen de exportaciones',
@@ -140,6 +146,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
         opcionDeEntrada: TablaCampoSeleccion.INPUT,
         orden: 7,
         longitudMaxima: 16,
+        tipo: 'number',
       },
     ];
 

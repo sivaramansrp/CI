@@ -1,6 +1,7 @@
 import {
   ALERTA_DE_MANIFESTO_Y_DECLARACIONES,
   ALERTA_OPCIONS,
+  ES_PUNTO_Y_COMA,
   MENSAJE_SIN_FILA_SELECCIONADA,
   MOSTRAR_NOTIFICACION,
   NUMERO_TRAMITE,
@@ -401,6 +402,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   /** Indica si el trámite es un manifiesto. */
   esManifesto: boolean = false;
+
+  /**
+   * Indica si el campo utiliza punto y coma como separador.
+   */
+  esPuntoYComa: boolean = false;
 
   /**
    * @constructor

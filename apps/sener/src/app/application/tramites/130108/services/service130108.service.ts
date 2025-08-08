@@ -56,7 +56,7 @@ export class Solocitud130108Service {
    * @memberof Solocitud130108Service
    */
     getRegistroTomaMuestrasMercanciasData(): Observable<Tramite130108State> {
-        return this.http.get<Tramite130108State>('assets/json/130201/campos-formulario.json');
+        return this.http.get<Tramite130108State>('assets/json/130108/campos-formulario.json');
     }
 
 }

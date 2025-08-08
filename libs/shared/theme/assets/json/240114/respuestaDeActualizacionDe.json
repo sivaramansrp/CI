@@ -1,82 +1,87 @@
 {
-  "tabSeleccionado": 1,
-  "destinatarioFinalTablaDatos": [
-    {
-      "nombreRazonSocial": "Empresa Destinatario S.A. de C.V.",
-      "rfc": "DEST123456ABC",
-      "curp": "DEST890123HDFRRL09",
-      "telefono": "555-123-4567",
-      "correoElectronico": "destinatario@email.com",
-      "calle": "Calle Destino",
-      "numeroExterior": "100",
-      "numeroInterior": "2B",
-      "pais": "México",
-      "colonia": "Colonia Centro",
-      "municipioAlcaldia": "Benito Juárez",
-      "localidad": "Ciudad de México",
-      "entidadFederativa": "CDMX",
-      "estadoLocalidad": "CDMX",
-      "codigoPostal": "03100",
-      "tipoPersona": "Moral",
-      "denominacionRazon": "Empresa Destinatario",
-      "nombres": "",
-      "primerApellido": "",
-      "segundoApellido": "",
-      "estado": "Activo"
-    }
-  ],
-  "proveedorTablaDatos": [
-    {
-      "nombreRazonSocial": "Proveedor Ejemplo S.A.",
-      "rfc": "PROV123456XYZ",
-      "curp": "PROV890123HDFRRL09",
-      "telefono": "555-987-6543",
-      "correoElectronico": "proveedor@email.com",
-      "calle": "Calle Proveedor",
-      "numeroExterior": "200",
-      "numeroInterior": "1A",
-      "pais": "México",
-      "colonia": "Colonia Norte",
-      "municipioAlcaldia": "Miguel Hidalgo",
-      "localidad": "Ciudad de México",
-      "entidadFederativa": "CDMX",
-      "estadoLocalidad": "CDMX",
-      "codigoPostal": "11200",
-      "tipoPersona": "Moral",
-      "denominacionRazon": "Proveedor Ejemplo",
-      "nombres": "",
-      "primerApellido": "",
-      "segundoApellido": "",
-      "estado": "Activo"
-    }
-  ],
-  "pagoDerechos": {
-    "claveReferencia": "REF123456",
-    "cadenaDependencia": "CADENA123",
-    "banco": "1",
-    "llavePago": "LLAVE987654",
-    "fechaPago": "2024-06-05",
-    "importePago": "1500.00"
-  },
-  "mercancialTablaDatos": [
-    {
-      "descripcion": "Producto de ejemplo",
-      "cantidad": 10,
-      "unidadMedida": "Pieza",
-      "valorUnitario": 100.0,
-      "valorTotal": 1000.0,
-      "paisOrigen": "México",
-      "fraccionArancelaria": "1234.56.78",
-      "marca": "MarcaX",
-      "modelo": "ModeloY",
-      "serie": "SerieZ"
-    }
-  ],
-  "datosDelTramite": {
-    "permisoGeneral": "PG-2024-001",
-    "usoFinal": "Comercialización",
-    "aduanasSeleccionadas": ["Aduana 1", "Aduana 2"],
-    "paisDestino": "Estados Unidos",
-    "unoSemestre": "unoSemestre"
-  }
+    "datosDelTramite": {
+        "permisoGeneral": "IM-2025-0457",
+        "paisDestino": "MEXICO (ESTADOS UNIDOS MEXICANOS)",
+        "fechaPago": "05/06/2025",
+        "usoFinal": "Fabricación de componentes electrónicos",
+        "unoSemestre": "true",
+        "anoEnCurso": "true",
+        "informacionConfidencial": "true",
+        "aduanasSeleccionadas": [
+            "Aduana de Veracruz",
+            "Aduana de Manzanillo"
+        ]
+    },
+    "pagoDerechos": {
+        "claveReferencia": "REF654321",
+        "cadenaDependencia": "CAD456789",
+        "banco": "2",
+        "llavePago": "LLAVE123456",
+       "fechaPago": "05/06/2025",
+        "importePago": "2500.00"
+    },
+    "destinatarioFinalTablaDatos": [
+        {
+            "nombreRazonSocial": "Importadora Global S.A.",
+            "rfc": "IMP456789JKL",
+            "curp": "IMP900101HDFRLL01",
+            "telefono": "555-111-2222",
+            "correoElectronico": "contacto@importadora.com",
+            "calle": "Av. Reforma",
+            "numeroExterior": "350",
+            "numeroInterior": "4A",
+            "pais": "México",
+            "colonia": "Juárez",
+            "municipioAlcaldia": "Cuauhtémoc",
+            "localidad": "Ciudad de México",
+            "entidadFederativa": "CDMX",
+            "estadoLocalidad": "CDMX",
+            "codigoPostal": "06600",
+            "tipoPersona": "Moral",
+            "denominacionRazon": "Importadora Global",
+            "nombres": "",
+            "primerApellido": "",
+            "segundoApellido": "",
+            "estado": "Activo"
+        }
+    ],
+    "proveedorTablaDatos": [
+        {
+             "telefono": "555-111-2222",
+            "correoElectronico": "contacto@importadora.com",
+            "calle": "Av. Reforma",
+            "numeroExterior": "350",
+            "numeroInterior": "4A",
+            "pais": "México",
+            "colonia": "Juárez",
+            "municipioAlcaldia": "Cuauhtémoc",
+            "localidad": "Ciudad de México",
+            "entidadFederativa": "CDMX",
+            "estadoLocalidad": "CDMX",
+            "codigoPostal": "06600",
+            "tipoPersona": "Moral",
+            "denominacionRazon": "Importadora Global",
+            "nombres": "",
+            "primerApellido": "",
+            "segundoApellido": "",
+            "estado": "Activo"
+        }
+    ],
+    "merccancialTablaDatos": [
+        {
+            "descripcion": "Contenedor de solvente industrial",
+            "fraccionArancelaria": "1",
+            "descFraccion": "",
+            "cantidadUMT": "Litros",
+            "umt": "1",
+            "valorComercial": "1500.00",
+            "umc": "1",
+            "tipoMoneda": "1",
+            "cantidad": "100",
+            "unidadMedida": "Litros",
+            "valorUnitario": "15.00",
+            "valorTotal": "1500.00",
+            "paisOrigen": "1"
+        }
+    ]
 }

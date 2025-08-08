@@ -405,8 +405,6 @@ export class Anexo1Component implements OnInit, OnDestroy, AfterViewInit {
             this.immexRegistroform.valid || CONTROL === 'VALID';
           FORMAS_VALIDADAS[SECCION] =
             this.immexRegistroform.valid || CONTROL2 === 'VALID';
-
-          this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
         })
       )
       .subscribe();
@@ -451,65 +449,77 @@ export class Anexo1Component implements OnInit, OnDestroy, AfterViewInit {
    */
   creatFormSolicitud(): void {
     this.immexRegistroform = this.fb.group({
-      exportacionForm: this.fb.group({
-        permisoImmexDatos: [
-          this.immexRegitroAnexoState.permisoImmexDatos || [],
-          [],
-        ],
-        fraccionDatos: [this.immexRegitroAnexoState?.fraccionDatos || [], []],
-        nicoDatos: [this.immexRegitroAnexoState?.nicoDatos || [], []],
-        fraccionArancelariaExportacion: [
-          this.immexRegitroAnexoState?.fraccionArancelariaExportacion || '',
-          [],
-        ],
-        productoArancelariaExportacion: [
-          this.immexRegitroAnexoState?.productoArancelariaExportacion || '',
-          [],
-        ],
-        fraccionArancelariaDesc: [
-          this.immexRegitroAnexoState?.fraccionArancelariaDesc || '',
-          [],
-        ],
-        productoDescExportacion: [
-          this.immexRegitroAnexoState?.productoDescExportacion || '',
-          [],
-        ],
-        FraccionDescExportacion: [
-          this.immexRegitroAnexoState?.FraccionDescExportacion || '',
-          [],
-        ],
-        exportacionDescExportacion: [
-          this.immexRegitroAnexoState?.exportacionDescExportacion || '',
-          [],
-        ],
-        Nico: [this.immexRegitroAnexoState?.Nico || '', []],
-      }),
-      importacionForm: this.fb.group({
-        fraccionDatos: [this.immexRegitroAnexoState?.fraccionDatos || [], []],
-        nicoDatos: [this.immexRegitroAnexoState?.nicoDatos || [], []],
-        commodityImportacion: [
-          this.immexRegitroAnexoState?.commodityImportacion || '',
-          [],
-        ],
-        commodityDescImportacion: [
-          this.immexRegitroAnexoState?.commodityDescImportacion || '',
-          [],
-        ],
-        commodityNicoDescImportacion: [
-          this.immexRegitroAnexoState?.commodityNicoDescImportacion || '',
-          [],
-        ],
-        candiadAnual: [this.immexRegitroAnexoState?.candiadAnual || '', []],
-        capacidadPeriodo: [
-          this.immexRegitroAnexoState?.capacidadPeriodo || '',
-          [],
-        ],
-        candidadPorPeriodo: [
-          this.immexRegitroAnexoState?.candidadPorPeriodo || '',
-          [],
-        ],
-        Nico: [this.immexRegitroAnexoState?.Nico || '', []],
-      }),
+      exportacionForm: this.createExportacionFormGroup(),
+      importacionForm: this.createImportacionFormGroup(),
+    });
+  }
+
+  private createExportacionFormGroup(): FormGroup {
+    return this.fb.group({
+      permisoImmexDatos: [
+        this.immexRegitroAnexoState.permisoImmexDatos || [],
+        [],
+      ],
+      fraccionDatos: [this.immexRegitroAnexoState?.fraccionDatos || [], []],
+      nicoDatos: [this.immexRegitroAnexoState?.nicoDatos || [], []],
+      fraccionArancelariaExportacion: [
+        this.immexRegitroAnexoState?.fraccionArancelariaExportacion || '',
+        [],
+      ],
+      productoArancelariaExportacion: [
+        this.immexRegitroAnexoState?.productoArancelariaExportacion || '',
+        [],
+      ],
+      fraccionArancelariaDesc: [
+        this.immexRegitroAnexoState?.fraccionArancelariaDesc || '',
+        [],
+      ],
+      productoDescExportacion: [
+        this.immexRegitroAnexoState?.productoDescExportacion || '',
+        [],
+      ],
+      FraccionDescExportacion: [
+        this.immexRegitroAnexoState?.FraccionDescExportacion || '',
+        [],
+      ],
+      exportacionDescExportacion: [
+        this.immexRegitroAnexoState?.exportacionDescExportacion || '',
+        [],
+      ],
+      Nico: [this.immexRegitroAnexoState?.Nico || '', []],
+    });
+  }
+
+  private createImportacionFormGroup(): FormGroup {
+    return this.fb.group({
+      permisoImmexDatos: [
+        this.immexRegitroAnexoState.permisoImmexDatos || [],
+        [],
+      ],
+      fraccionDatos: [this.immexRegitroAnexoState?.fraccionDatos || [], []],
+      nicoDatos: [this.immexRegitroAnexoState?.nicoDatos || [], []],
+      commodityImportacion: [
+        this.immexRegitroAnexoState?.commodityImportacion || '',
+        [],
+      ],
+      commodityDescImportacion: [
+        this.immexRegitroAnexoState?.commodityDescImportacion || '',
+        [],
+      ],
+      commodityNicoDescImportacion: [
+        this.immexRegitroAnexoState?.commodityNicoDescImportacion || '',
+        [],
+      ],
+      candiadAnual: [this.immexRegitroAnexoState?.candiadAnual || '', []],
+      capacidadPeriodo: [
+        this.immexRegitroAnexoState?.capacidadPeriodo || '',
+        [],
+      ],
+      candidadPorPeriodo: [
+        this.immexRegitroAnexoState?.candidadPorPeriodo || '',
+        [],
+      ],
+      Nico: [this.immexRegitroAnexoState?.Nico || '', []],
     });
   }
 
@@ -527,9 +537,11 @@ export class Anexo1Component implements OnInit, OnDestroy, AfterViewInit {
       this.creatFormSolicitud();
     }
     if (this.esFormularioSoloLectura) {
-      this.immexRegistroform.disable();
+      this.immexRegistroform.get('exportacionForm')?.disable();
+      this.immexRegistroform.get('importacionForm')?.disable();
     } else {
-      this.immexRegistroform.enable();
+      this.immexRegistroform.get('exportacionForm')?.enable();
+      this.immexRegistroform.get('importacionForm')?.enable();
     }
   }
   /**

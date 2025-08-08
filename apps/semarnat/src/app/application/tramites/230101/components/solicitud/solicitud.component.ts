@@ -129,8 +129,8 @@ export class SolicitudComponent implements OnInit, OnDestroy, OnChanges {
    * Etiquetas para el componente CrossList que representan el país de procedencia.
    */
   public paisDeProcedenciaLabel = {
-    tituluDeLaIzquierda: 'País de origen',
-    derecha: 'País(es) seleccionadas',
+    tituluDeLaIzquierda: 'País de origen:',
+    derecha: 'Paises seleccionadas*:',
   };
 
   /**
@@ -162,8 +162,8 @@ export class SolicitudComponent implements OnInit, OnDestroy, OnChanges {
    * @property {string} aduanaLabel.derecha - Texto para la sección de aduanas seleccionadas.
    */
   public aduanaLabel = {
-    tituluDeLaIzquierda: 'Aduanas disponibles',
-    derecha: 'Aduanas seleccionadas*',
+    tituluDeLaIzquierda: 'Aduanas disponibles:',
+    derecha: 'Aduanas seleccionadas*:',
   };
 
   /**
@@ -172,8 +172,8 @@ export class SolicitudComponent implements OnInit, OnDestroy, OnChanges {
    * @property {string} paisLabel.derecha - Texto para la sección de países seleccionadas.
    */
   public paisLabel = {
-    tituluDeLaIzquierda: 'Países disponibles',
-    derecha: 'Países seleccionadas*',
+    tituluDeLaIzquierda: 'Países disponibles:',
+    derecha: 'Países seleccionadas*:',
   };
   /**
    * @description Etiquetas utilizadas para los encabezados de las listas de entidades en el componente.
@@ -181,8 +181,8 @@ export class SolicitudComponent implements OnInit, OnDestroy, OnChanges {
    * @property {string} derecha - Texto para el encabezado de la lista de entidades seleccionadas.
    */
   public destinoLabel = {
-    tituluDeLaIzquierda: 'Entidades disponibles',
-    derecha: 'Entidades seleccionadas*',
+    tituluDeLaIzquierda: 'Entidades disponibles:',
+    derecha: 'Entidades seleccionadas*:',
   };
   /**
    * Lista de botones de acción disponibles en el componente.

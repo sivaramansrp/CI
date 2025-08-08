@@ -1,17 +1,17 @@
-import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  SolicitanteComponent
+} from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DatosDelTramiteContenedoraComponent } from '../../components/datos-del-tramite-contenedora/datos-del-tramite-contenedora.component';
 import { ImportacionArmasMunicionesService } from '../../services/importacion-armas-municiones.service';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
-import { Subject } from 'rxjs';
 import { TercerosRelacionadosContenedoraComponent } from '../../components/terceros-relacionados-contenedora/terceros-relacionados-contenedora.component';
 import { Tramite240101Query } from '../../estados/tramite240101Query.query';
 import { Tramite240101Store } from '../../estados/tramite240101Store.store';
-import { map} from 'rxjs';
-import { takeUntil} from 'rxjs';
 
 /**
  * @title Paso Uno
@@ -66,15 +66,11 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
     private tramite240101Store: Tramite240101Store,
     private consultaQuery: ConsultaioQuery,
     private armasMunicionesService: ImportacionArmasMunicionesService
-  ) {
-     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
-      this.consultaState = seccionState;
-    })).subscribe();
-  }
+  ) { }
 
   /**
-   * Angular lifecycle method that runs on component initialization.
-   * Subscribes to the selected tab from state and updates `indice`.
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Se suscribe al tab seleccionado desde el estado y actualiza `indice`.
    *
    * @returns {void}
    */
@@ -84,11 +80,19 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
       .subscribe((tab) => {
         this.indice = tab;
       });
-    if (this.consultaState.update) {
-      this.guardarDatosFormulario();
-    } else {
-      this.esDatosRespuesta = true;
-    }
+     this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+          if (this.consultaState.update) {
+            this.guardarDatosFormulario();
+          } else {
+            this.esDatosRespuesta = true;
+          }
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -108,9 +112,9 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   }
 
   /**
-   * Updates the selected tab index in the store.
+   * Actualiza el índice de la pestaña seleccionada en el store.
    *
-   * @param i Index of the selected tab.
+   * @param i Índice de la pestaña seleccionada.
    * @returns {void}
    */
   public seleccionaTab(i: number): void {
@@ -118,8 +122,8 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   }
 
   /**
-   * Angular lifecycle method that runs just before the component is destroyed.
-   * Emits and completes the `destroyNotifier$` to unsubscribe observables.
+   * Método del ciclo de vida de Angular que se ejecuta justo antes de que el componente sea destruido.
+   * Emite y completa el `destroyNotifier$` para cancelar las suscripciones a los observables.
    *
    * @returns {void}
    */

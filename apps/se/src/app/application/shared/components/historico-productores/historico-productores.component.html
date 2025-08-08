@@ -153,7 +153,7 @@
 
                         <div class="row mt-5">
                             <div class="col-md-8">
-                                <label>Complemento de la descripción*:</label>
+                                <label>Complemento de la descripción:</label>
                                 <textarea rows="3" class="w-100" formControlName="complemento"
                                     (change)=" setValoresStore('formularioMercancia', 'complemento') "></textarea>
                             </div>
@@ -171,7 +171,7 @@
                                     (change)="setValoresStore('formularioMercancia','tipoFactura')"></app-catalogo-select>
                             </div>
                             <div class="col-md-8">
-                                <label>Número de registro fiscal:</label>
+                                <label>Número de registro fiscal*:</label>
                                 <input type="text" required="false" class="form-control"
                                     formControlName="numeroDeRegistroFiscal"
                                     (change)="setValoresStore('formularioMercancia','numeroDeRegistroFiscal') " />

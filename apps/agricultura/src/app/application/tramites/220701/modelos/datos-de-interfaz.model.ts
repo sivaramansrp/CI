@@ -282,6 +282,14 @@ export interface InternaDatosGeneralesInt {
    * Razón social de la empresa encargada del transporte.
    */
   empresaTransportista: string;
+  /**
+   * Tipo de mercancía involucrada en el trámite.
+   *
+   * @property {string} tipoMercancia
+   * Clasificación o categoría de la mercancía que se está movilizando.
+   */
+
+  tipoMercancia: string;
 }
 
 /**
@@ -456,6 +464,14 @@ export interface PagosDeDerechosFormInt {
    * Monto económico del pago de revisión documental.
    */
   importeDePagoRevision: string;
+  /**
+   * Indica si está exento del pago de revisión.
+   *
+   * @property {string} exentoPagoRevision
+   * Bandera que determina si el trámite está exento del pago de revisión.
+   */
+
+  exentoPagoRevision: string;
 
   /**
    * Indica si está exento de pago.

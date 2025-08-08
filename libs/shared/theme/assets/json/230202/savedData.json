@@ -2,9 +2,9 @@
   "numeroDeCertificado": "1",
   "aduana": "2",
   "fechasSeleccionadas": [],
-  "pais": "1",
-  "entidades": [{ "id": 1, "descripcion": "CDMX" }],
-  "descripcionProducto": [{ "id": 1, "descripcion": "Maguey" }],
+  "pais": [{ "id": 1, "descripcion": "AFGANISTAN" }],
+  "entidades": [{ "id": 1, "descripcion": "CHIAPAS" }],
+  "descripcionProducto": "2",
   "datosSolicitud": [
     {
       "id": 1,

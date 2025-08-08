@@ -1,42 +1,38 @@
+import { CUSTOM_ELEMENTS_SCHEMA, Injectable, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
+import { of as observableOf } from 'rxjs';
 
-import { Component } from '@angular/core';
-import { MercanciaComponent } from './mercancia.component';
 import { FormBuilder } from '@angular/forms';
-import { CamCertificadoService } from '../../services/cam-certificado.service';
-import { camCertificadoStore } from '../../estados/cam-certificado.store';
+import { SeccionLibQuery, SeccionLibStore } from '@ng-mf/data-access-user';
 import { camCertificadoQuery } from '../../estados/cam-certificado.query';
-import { SeccionLibStore, SeccionLibQuery } from '@ng-mf/data-access-user';
+import { camCertificadoStore } from '../../estados/cam-certificado.store';
+import { CamCertificadoService } from '../../services/cam-certificado.service';
+import { MercanciaComponent } from './mercancia.component';
 
 @Injectable()
-class MockCamCertificadoService {}
+class SERVICIO_MOCK_CAM_CERTIFICADO { }
 
 @Injectable()
-class MockcamCertificadoStore {}
+class STORE_MOCK_CAM_CERTIFICADO { }
 
 @Injectable()
-class MockcamCertificadoQuery {}
+class QUERY_MOCK_CAM_CERTIFICADO { }
 
 describe('MercanciaComponent', () => {
   let fixture: ComponentFixture<MercanciaComponent>;
-  let component: { ngOnDestroy: () => void; seccionQuery: { selectSeccionState$?: any; }; query: { selectCam$?: any; }; umcOpcion: jest.Mock<any, any, any> | (() => void); facturasOpcion: jest.Mock<any, any, any> | (() => void); initActionFormBuild: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; mercanciaForm: { disable?: any; enable?: any; value?: any; }; ngAfterViewInit: () => void; fb: { group?: any; }; mercanciaState: { fraccionArancelaria?: any; nombreComercialMercancia?: any; nombreTecnico?: any; nombreIngles?: any; criterioClasificacion?: any; cantidad?: any; umc?: any; valorMercancia?: any; complementoClasificacion?: any; numeroFactura?: any; tipoFactura?: any; }; cerrarClicado: { emit?: any; }; cerrarModal: jest.Mock<any, any, any> | (() => void); activarModal: () => void; camCertificadoService: { obtenerMenuDesplegable?: any; }; guardarClicado: { emit?: any; }; store: { setmercanciaTabla?: any; metodoNombre?: any; }; tablaSeleccionEvent: { emit?: any; }; aceptar: () => void; setValoresStore: (arg0: { get: () => { value: {}; }; }, arg1: {}, arg2: {}) => void; destroyNotifier$: { next?: any; complete?: any; }; };
+  let componente: any;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, MercanciaComponent ],
-      declarations: [
-      ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      imports: [FormsModule, ReactiveFormsModule, MercanciaComponent],
+      declarations: [],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
         FormBuilder,
-        { provide: CamCertificadoService, useClass: MockCamCertificadoService },
-        { provide: camCertificadoStore, useClass: MockcamCertificadoStore },
-        { provide: camCertificadoQuery, useClass: MockcamCertificadoQuery },
+        { provide: CamCertificadoService, useClass: SERVICIO_MOCK_CAM_CERTIFICADO },
+        { provide: camCertificadoStore, useClass: STORE_MOCK_CAM_CERTIFICADO },
+        { provide: camCertificadoQuery, useClass: QUERY_MOCK_CAM_CERTIFICADO },
         SeccionLibStore,
         SeccionLibQuery
       ]
@@ -44,112 +40,93 @@ describe('MercanciaComponent', () => {
 
     }).compileComponents();
     fixture = TestBed.createComponent(MercanciaComponent);
-    component = fixture.debugElement.componentInstance;
+    componente = fixture.debugElement.componentInstance;
   });
 
   afterEach(() => {
-    component.ngOnDestroy = function() {};
+    componente.ngOnDestroy = function () { };
     fixture.destroy();
   });
 
-  it('should run #constructor()', async () => {
-    expect(component).toBeTruthy();
+  it('debe ejecutar el constructor', async () => {
+    expect(componente).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.seccionQuery = component.seccionQuery || {};
-    component.seccionQuery.selectSeccionState$ = observableOf({});
-    component.query = component.query || {};
-    component.query.selectCam$ = observableOf({});
-    component.umcOpcion = jest.fn();
-    component.facturasOpcion = jest.fn();
-    component.initActionFormBuild = jest.fn();
-    component.ngOnInit();
-    // expect(component.umcOpcion).toHaveBeenCalled();
-    // expect(component.facturasOpcion).toHaveBeenCalled();
-    // expect(component.initActionFormBuild).toHaveBeenCalled();
+  it('debe ejecutar ngOnInit', async () => {
+    componente.seccionQuery = componente.seccionQuery || {};
+    componente.seccionQuery.selectSeccionState$ = observableOf({});
+    componente.query = componente.query || {};
+    componente.query.selectCam$ = observableOf({});
+    componente.umcOpcion = jest.fn();
+    componente.facturasOpcion = jest.fn();
+    componente.initActionFormBuild = jest.fn();
+    componente.ngOnInit();
   });
 
-  it('should run #ngAfterViewInit()', async () => {
-    component.mercanciaForm = component.mercanciaForm || {};
-    component.mercanciaForm.disable = jest.fn();
-    component.mercanciaForm.enable = jest.fn();
-    component.ngAfterViewInit();
-    // expect(component.mercanciaForm.disable).toHaveBeenCalled();
-    // expect(component.mercanciaForm.enable).toHaveBeenCalled();
+  it('debe ejecutar ngAfterViewInit', async () => {
+    componente.mercanciaForm = componente.mercanciaForm || {};
+    componente.mercanciaForm.disable = jest.fn();
+    componente.mercanciaForm.enable = jest.fn();
+    componente.ngAfterViewInit();
   });
 
-  it('should run #initActionFormBuild()', async () => {
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn();
-    component.mercanciaState = component.mercanciaState || {};
-    component.mercanciaState.fraccionArancelaria = 'fraccionArancelaria';
-    component.mercanciaState.nombreComercialMercancia = 'nombreComercialMercancia';
-    component.mercanciaState.nombreTecnico = 'nombreTecnico';
-    component.mercanciaState.nombreIngles = 'nombreIngles';
-    component.mercanciaState.criterioClasificacion = 'criterioClasificacion';
-    component.mercanciaState.cantidad = 'cantidad';
-    component.mercanciaState.umc = 'umc';
-    component.mercanciaState.valorMercancia = 'valorMercancia';
-    component.mercanciaState.complementoClasificacion = 'complementoClasificacion';
-    component.mercanciaState.numeroFactura = 'numeroFactura';
-    component.mercanciaState.tipoFactura = 'tipoFactura';
-    component.initActionFormBuild();
-    // expect(component.fb.group).toHaveBeenCalled();
+  it('debe ejecutar initActionFormBuild', async () => {
+    componente.fb = componente.fb || {};
+    componente.fb.group = jest.fn();
+    componente.mercanciaState = componente.mercanciaState || {};
+    componente.mercanciaState.fraccionArancelaria = 'fraccionArancelaria';
+    componente.mercanciaState.nombreComercialMercancia = 'nombreComercialMercancia';
+    componente.mercanciaState.nombreTecnico = 'nombreTecnico';
+    componente.mercanciaState.nombreIngles = 'nombreIngles';
+    componente.mercanciaState.criterioClasificacion = 'criterioClasificacion';
+    componente.mercanciaState.cantidad = 'cantidad';
+    componente.mercanciaState.umc = 'umc';
+    componente.mercanciaState.valorMercancia = 'valorMercancia';
+    componente.mercanciaState.complementoClasificacion = 'complementoClasificacion';
+    componente.mercanciaState.numeroFactura = 'numeroFactura';
+    componente.mercanciaState.tipoFactura = 'tipoFactura';
+    componente.initActionFormBuild();
   });
 
-  it('should run #cerrarModal()', async () => {
-    component.cerrarClicado = component.cerrarClicado || {};
-    component.cerrarClicado.emit = jest.fn();
-    component.cerrarModal();
-    // expect(component.cerrarClicado.emit).toHaveBeenCalled();
+  it('debe ejecutar cerrarModal', async () => {
+    componente.cerrarClicado = componente.cerrarClicado || {};
+    componente.cerrarClicado.emit = jest.fn();
+    componente.cerrarModal();
   });
 
-  it('should run #activarModal()', async () => {
-
-    component.activarModal();
-
+  it('debe ejecutar activarModal', async () => {
+    componente.activarModal();
   });
 
-  it('should run #umcOpcion()', async () => {
-    component.camCertificadoService = component.camCertificadoService || {};
-    component.camCertificadoService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
-    component.umcOpcion();
-    // expect(component.camCertificadoService.obtenerMenuDesplegable).toHaveBeenCalled();
+  it('debe ejecutar umcOpcion', async () => {
+    componente.camCertificadoService = componente.camCertificadoService || {};
+    componente.camCertificadoService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
+    componente.umcOpcion();
   });
 
-  it('should run #facturasOpcion()', async () => {
-    component.camCertificadoService = component.camCertificadoService || {};
-    component.camCertificadoService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
-    component.facturasOpcion();
-    // expect(component.camCertificadoService.obtenerMenuDesplegable).toHaveBeenCalled();
+  it('debe ejecutar facturasOpcion', async () => {
+    componente.camCertificadoService = componente.camCertificadoService || {};
+    componente.camCertificadoService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
+    componente.facturasOpcion();
   });
 
-  it('should run #aceptar()', async () => {
-    component.guardarClicado = component.guardarClicado || {};
-    component.guardarClicado.emit = jest.fn();
-    component.mercanciaForm = component.mercanciaForm || {};
-    component.mercanciaForm.value = 'value';
-    component.store = component.store || {};
-    component.store.setmercanciaTabla = jest.fn();
-    component.cerrarModal = jest.fn();
-    component.tablaSeleccionEvent = component.tablaSeleccionEvent || {};
-    component.tablaSeleccionEvent.emit = jest.fn();
-    component.aceptar();
-    // expect(component.guardarClicado.emit).toHaveBeenCalled();
-    // expect(component.store.setmercanciaTabla).toHaveBeenCalled();
-    // expect(component.cerrarModal).toHaveBeenCalled();
-    // expect(component.tablaSeleccionEvent.emit).toHaveBeenCalled();
+  it('debe ejecutar aceptar', async () => {
+    componente.guardarClicado = componente.guardarClicado || {};
+    componente.guardarClicado.emit = jest.fn();
+    componente.mercanciaForm = componente.mercanciaForm || {};
+    componente.mercanciaForm.value = 'valor';
+    componente.store = componente.store || {};
+    componente.store.setmercanciaTabla = jest.fn();
+    componente.cerrarModal = jest.fn();
+    componente.tablaSeleccionEvent = componente.tablaSeleccionEvent || {};
+    componente.tablaSeleccionEvent.emit = jest.fn();
+    componente.aceptar();
   });
 
-
-  it('should run #ngOnDestroy()', async () => {
-    component.destroyNotifier$ = component.destroyNotifier$ || {};
-    component.destroyNotifier$.next = jest.fn();
-    component.destroyNotifier$.complete = jest.fn();
-    component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+  it('debe ejecutar ngOnDestroy', async () => {
+    componente.destroyNotifier$ = componente.destroyNotifier$ || {};
+    componente.destroyNotifier$.next = jest.fn();
+    componente.destroyNotifier$.complete = jest.fn();
+    componente.ngOnDestroy();
   });
-
 });

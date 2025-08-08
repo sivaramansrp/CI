@@ -4,7 +4,7 @@
     <div class="col-md-4">
       <div class="form-group">
         <label class="form-label" for="coordenadas">Coordenadas geográficas:</label>
-        <input class="form-control" id="coordenadas" formControlName="coordenadas" type="text"
+        <input class="form-control" id="coordenadas" formControlName="coordenadas" type="text" maxlength="80"
           (change)="setValoresStore(MedioForm, 'coordenadas', 'setCoordenadas')" />
       </div>
       <div class="d-grid">

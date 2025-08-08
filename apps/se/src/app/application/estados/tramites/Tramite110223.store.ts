@@ -82,10 +82,10 @@ export interface Solicitud110223State {
  */
 export function createInitialState(): Solicitud110223State {
   return {
-    cargo: '',
-    empresa: '',
-    lugar: '',
-    nombreRepresentanteLegalExportador: '',
+    cargo: VALOR_POR_DEFECTO,
+    empresa: VALOR_POR_DEFECTO,
+    lugar: VALOR_POR_DEFECTO,
+    nombreRepresentanteLegalExportador: VALOR_POR_DEFECTO,
     tercerOperador: false,
     tratado: VALOR_NULO,
     pais: VALOR_NULO,
