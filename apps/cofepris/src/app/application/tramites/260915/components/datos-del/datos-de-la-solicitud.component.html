@@ -155,7 +155,7 @@
                 <h4 class="modal-title mt-0">Clave S.C.I.A.N</h4>
               </div>
               <div class="modal-body">
-                <form [formGroup]="clavaScianForm" (ngSubmit)="onSubmit()">
+                <form [formGroup]="clavaScianForm">
                 <ng-container formGroupName="claveScianG"> 
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -179,7 +179,7 @@
                                 formControlName="descripcionDelScian"
                                 [catalogo]="descripcionDelScianData.catalogos"
                                 [label]="'Descripción del S.C.I.A.N.'"
-                                [isDisabled]="esFormularioSoloLectura"
+                                [isDisabled]="true"
                               ></app-catalogo-select>
                             </div>
                         </div>
@@ -192,7 +192,7 @@
                     <button class="btn btn-default"
                     type="button" (click)="onCancelar()" [disabled]="esFormularioSoloLectura">Cancelar</button>
                     <button class="btn btn-primary"
-                    type="submit" [disabled]="esFormularioSoloLectura">Agregar</button>
+                    type="submit" (click)="onSubmit()"[disabled]="esFormularioSoloLectura">Agregar</button>
               </footer>
               </div>
           </div>
@@ -414,7 +414,15 @@
                     </div> 
                     @if(paisOrigen){ <div class="panel-collapse collapse in" [ngClass]="{ 'in': paisOrigen, 'collapse': !paisOrigen}" id="panel-01">
                       <div class="panel-body">
-                        <crosslist [label]="paisOrigenCrossList.label" [fechas]="paisOrigenCrossList.fechas"></crosslist>
+                           <crosslist
+                          [fechas]="selectRangoDias"
+                          [showSearchInput1]="true"
+                          [showSearchInput2]="true"
+                          [searchInput1Label]="'País de origen:'"
+                          [searchInput2Label]="'País(es) seleccionado(s)*:'"
+                          [botonField]="campoDeBotones"
+                          [isDisabled]="esFormularioSoloLectura"
+                          ></crosslist>
                       </div>
                     </div> }
                   </div>
@@ -430,8 +438,15 @@
                     @if(paisProcedencisColapsable){
                     <div class="panel-collapse collapse in" [ngClass]="{ 'in': paisProcedencisColapsable, 'collapse': !paisProcedencisColapsable}" id="panel-01" *ngIf="paisOrigenCrossList">
                       <div class="panel-body">
-                        <crosslist [label]="paisOrigenCrossList.label" [fechas]="paisOrigenCrossList.fechas"  [showSearchInput1]="true"
-    [showSearchInput2]="true"></crosslist>
+                          <crosslist
+                          [fechas]="selectRangoDias"
+                          [showSearchInput1]="true"
+                          [showSearchInput2]="true"
+                          [searchInput1Label]="'País de procedencia:'"
+                          [searchInput2Label]="'País(es) seleccionado(s)*:'"
+                          [botonField]="campoDeBotones"
+                          [isDisabled]="esFormularioSoloLectura"
+                          ></crosslist>
                       </div>
                     </div>
                     }
@@ -448,7 +463,15 @@
                     </div> 
                     @if(usoEspecifico){ <div class="panel-collapse collapse in" [ngClass]="{ 'in': usoEspecifico, 'collapse': !usoEspecifico}" id="panel-01">
                       <div class="panel-body">
-                        <crosslist [fechas]="usoEspecificoCrossList.fechas" [label]="usoEspecificoCrossList.label"></crosslist>
+                           <crosslist
+                          [fechas]="selectRangoDias"
+                          [showSearchInput1]="true"
+                          [showSearchInput2]="true"
+                          [searchInput1Label]="'Uso específico:'"
+                          [searchInput2Label]="'Uso específico seleccionado*:'"
+                          [botonField]="campoDeBotones"
+                          [isDisabled]="esFormularioSoloLectura"
+                          ></crosslist>
                       </div>
                     </div> }
                   </div>
@@ -473,8 +496,8 @@
    </div>
       
 <div class="col-md-12 d-flex justify-content-end">
-  <button type="button" class="btn btn-primary me-2" name="eliminar" id="btneliminar" [disabled]="esFormularioSoloLectura" (click)="onEliminarMercancias()">Eliminar</button>
-  <button type="button" class="btn btn-primary me-2" name="modificar" id="btnmodificar"  (click)="onModificarMercancias()" [disabled]="esFormularioSoloLectura" >Modificar</button>
+  <button type="button" class="btn btn-danger me-2" name="eliminar" id="btneliminar" [disabled]="esFormularioSoloLectura" (click)="onEliminarMercancias()">Eliminar</button>
+  <button type="button" class="btn btn-default me-2" name="modificar" id="btnmodificar"  (click)="onModificarMercancias()" [disabled]="esFormularioSoloLectura" >Modificar</button>
   <button type="button" class="btn btn-primary" name="agregarAduana" id="btnagregarAduana" [disabled]="esFormularioSoloLectura">Agregar</button>
 </div>
   <ng-titulo titulo="Manifiestos y declaraciones" />

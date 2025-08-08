@@ -50,6 +50,108 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
   styleUrls: ['./datos-de-la-solicitud.component.scss'],
 })
 export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
+ 
+/**
+ * Indica qué tabla se está utilizando para eliminar datos.
+ * Puede ser 'scian' para la tabla de SCIAN o 'mercancias' para la tabla de mercancías.
+ */
+eliminarTablaDatos: 'scian' | 'mercancias' = 'scian';
+
+  /**
+ * Referencia al componente CrosslistComponent.
+ * @type {CrosslistComponent}
+ */
+@ViewChild(CrosslistComponent) crosslistComponent!: CrosslistComponent;
+
+
+  /**
+   * Almacena el rango de días seleccionados.
+   * Utilizado para guardar los días seleccionados en el componente.
+   */
+  selectRangoDias: string[] = [];
+  /**
+   * Almacena el rango de días seleccionados para el campo de fecha de fabricación.
+   * Utilizado para guardar los días seleccionados en el componente.
+   */
+  campoDeBotones = [
+  {
+    /**
+     * Nombre del botón para agregar todos los elementos.
+     */
+    btnNombre: 'Agregar todos',
+    /**
+     * Clase CSS del botón.
+     */
+    class: 'btn-default',
+    /**
+     * Función para agregar todos los elementos.
+     *
+     */
+    funcion: (): void => {
+      if (this.crosslistComponent) {
+        this.crosslistComponent.agregar('t');
+      }
+    },
+  },
+  {
+    /**
+     * Nombre del botón para agregar la selección actual.
+     */
+    btnNombre: 'Agregar selección',
+    /**
+     * Clase CSS del botón.
+     */
+    class: 'btn-primary',
+    /**
+     * Función para agregar la selección actual.
+     * 
+     */
+    funcion: (): void => {
+      if (this.crosslistComponent) {
+        this.crosslistComponent.agregar('');
+      }
+    },
+  },
+  {
+    /**
+     * Nombre del botón para restar la selección actual.
+     */
+    btnNombre: 'Restar selección',
+    /**
+     * Clase CSS del botón.
+     */
+    class: 'btn-primary',
+    /**
+     * Función para restar la selección actual.
+     *
+     */
+
+    funcion: (): void => {
+      if (this.crosslistComponent) {
+        this.crosslistComponent.quitar('');
+      }
+    },
+  },
+  {
+    /**
+     * Nombre del botón para restar todos los elementos.
+     */
+    btnNombre: 'Restar todos',
+    /**
+     * Clase CSS del botón.
+     */
+    class: 'btn-default',
+    /**
+     * Función para restar todos los elementos.
+     * 
+     */
+    funcion: (): void => {
+      if (this.crosslistComponent) {
+        this.crosslistComponent.quitar('t');
+      }
+    },
+  },
+];
    /** Formulario principal para los datos de la solicitud */
    dataDeLaSolicitudForm!: FormGroup;
 
@@ -204,6 +306,7 @@ mercanciasData: MercanciasInfo[] = [];
  * Datos de configuración para el estado físico de la mercancía.
  */
 public estadoFisicoData = ESTADO_FISICO_DATA;
+
 /**
    * Mensaje que indica un requisito obligatorio para acceder a la nota.
    */
@@ -320,9 +423,10 @@ public estadoFisicoData = ESTADO_FISICO_DATA;
     this.clavaScianForm = this.fb.group({
       claveScianG: this.fb.group({
         claveScian: ['', Validators.required],
-        descripcionDelScian: ['', Validators.required]
+        descripcionDelScian: [{ value: '', disabled: true }, Validators.required]
       }),
     });
+   
   }
 
   /** Configuración del formulario con validaciones para los campos del trámite. */
@@ -423,7 +527,6 @@ createForm(): void{
    
   });
 
-  //this.tableData = [...this.dataDeLaSolicitudState.tableData];
    
 }
 
@@ -453,17 +556,37 @@ closeModal(): void {
  * @param borrar Indica si se debe proceder con la eliminación.
  */
 eliminarPedimento(borrar: boolean): void {
+  
   if (borrar && this.filasSeleccionadas && this.filasSeleccionadas.size > 0) {
-    // Filter out selected rows from mercanciasData
-    this.mercanciasData = this.mercanciasData.filter((row) => {
-      return !this.filasSeleccionadas.has(row.id || 0);
-    });
+    const IDS_SELECCIONADOS = Array.from(this.filasSeleccionadas);
+    
+    if (this.eliminarTablaDatos === 'scian') {
+      const ORIGINAL_TABLE_LENGTH = this.tableData.length;
+      this.tableData = this.tableData.filter((row) => {
+        const ROW_ID = row.id;
+        const SHOULD_KEEP = !IDS_SELECCIONADOS.includes(ROW_ID);
+        return SHOULD_KEEP;
+      });
+      
+      
+      this.solicitud260915Store.setTramite260915State({
+        tableData: this.tableData
+      });
+      
+    } else if (this.eliminarTablaDatos === 'mercancias') {
+      const ORIGINAL_MERCANCIAS_LENGTH = this.mercanciasData.length;
+      this.mercanciasData = this.mercanciasData.filter((row) => {
+        const SHOULD_KEEP = !IDS_SELECCIONADOS.includes(row.id || 0);
+        return SHOULD_KEEP;
+      });
+      
+    }
 
-    // Clear selection
     this.filasSeleccionadas.clear();
+    
+    this.cdr.detectChanges();
   }
   
-  // Always clear notification when modal is closed
   this.clearNotificacion();
 }
 /**
@@ -471,11 +594,11 @@ eliminarPedimento(borrar: boolean): void {
  * Verifica si hay filas seleccionadas antes de mostrar el modal de confirmación.
  */
 onEliminarMercancias(): void {
+  this.eliminarTablaDatos = 'mercancias';
+  
   if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
-    // Show warning: no rows selected
     this.abrirModal(0, true, false);
   } else {
-    // Show delete confirmation
     this.abrirModal(0, false, false);
   }
 }
@@ -490,7 +613,6 @@ onEliminarMercancias(): void {
  */
  abrirModal(i: number = 0, isNoRowsSelected: boolean = false, isModificarSinSeleccion: boolean = false): void {
 if (isNoRowsSelected) {
-    // No rows selected for deletion
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'warning',
@@ -504,7 +626,6 @@ if (isNoRowsSelected) {
       tamanioModal: 'modal-sm',
     };
   } else if (isModificarSinSeleccion) {
-    // No rows selected for modification
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'warning',
@@ -518,7 +639,6 @@ if (isNoRowsSelected) {
       tamanioModal: 'modal-sm',
     };
   }else if (this.filasSeleccionadas && this.filasSeleccionadas.size > 0) {
-    // Delete confirmation when rows are selected
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
@@ -720,13 +840,15 @@ onAgregar(): void{
  * Elimina las filas seleccionadas de la tabla.
  * Si no hay filas seleccionadas, muestra un mensaje de advertencia en la consola.
  */
-  onDelete(): void {
-    if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
-      console.warn('No rows selected for deletion.');
-      return;
-    }
-    this.abrirModal();
+onDelete(): void {
+  this.eliminarTablaDatos = 'scian';
+  
+  if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
+    this.abrirModal(0, true, false);
+  } else {
+    this.abrirModal(0, false, false);
   }
+}
   
     /** Cancela la acción de agregar clave SCIAN */
   onCancelar(): void {
@@ -750,35 +872,56 @@ onAgregar(): void{
   /** Maneja la selección de filas */
   onfilasSeleccionadas(filasSeleccionadas: FilaData[] | MercanciasInfo[]): void {
   
-  if (filasSeleccionadas.length > 0 && 'clasificaionProductos' in filasSeleccionadas[0]) {
-    const ID = (filasSeleccionadas as MercanciasInfo[]).map((row) => row.id);
-    this.filasSeleccionadas = new Set(ID);
-  }
-  else if (filasSeleccionadas.length > 0 && 'claveScianG' in filasSeleccionadas[0] && 'claveScian' in filasSeleccionadas[0].claveScianG) {
-    const SELECTED_IDS = (filasSeleccionadas as FilaData[]).map((row) => Number(row.claveScianG.claveScian));
-    this.filasSeleccionadas = new Set(SELECTED_IDS);
+  if (filasSeleccionadas.length > 0) {
+    if ('clasificaionProductos' in filasSeleccionadas[0]) {
+      const IDS = (filasSeleccionadas as MercanciasInfo[]).map((row) => row.id);
+      this.filasSeleccionadas = new Set(IDS);
+    }
+    else if ('claveScianG' in filasSeleccionadas[0]) {
+      const IDS = (filasSeleccionadas as FilaData[]).map((row) => row.id); 
+      this.filasSeleccionadas = new Set(IDS);
+    }
   } else {
     this.filasSeleccionadas.clear();
   }
-  
 }
    /** Maneja el envío del formulario de clave SCIAN. 
  * Busca las descripciones correspondientes en los catálogos y las asigna al formulario.
  * Luego, agrega los datos a la tabla y reinicia el formulario.
  */ 
-  onSubmit(): void {
-    const FORM_DATA = { ...this.clavaScianForm.value };
-    FORM_DATA.claveScianG.claveScian = this.claveScianData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(FORM_DATA.claveScianG.claveScian)
-    )?.descripcion || 'Not Found';
-  
-    FORM_DATA.claveScianG.descripcionDelScian = this.descripcionDelScianData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(FORM_DATA.claveScianG.descripcionDelScian)
-    )?.descripcion || 'Not Found';
-    this.tableData.push(FORM_DATA);
-    this.showClavaScianForm = false;
-      this.clavaScianForm.reset(); 
+onSubmit(): void {
+  if (this.clavaScianForm.invalid) {
+    this.clavaScianForm.markAllAsTouched();
+    return;
   }
+
+  const FORM_DATA = { ...this.clavaScianForm.value };
+  
+  const CLAVE_SCIAN_ITEM = this.claveScianData.catalogos.find(
+    (item: Catalogo) => String(item.id) === String(FORM_DATA.claveScianG.claveScian)
+  );
+
+  const NEW_ID = this.tableData.length > 0 ? 
+    Math.max(...this.tableData.map(item => item.id || 0)) + 1 : 1;
+
+  const NEW_SCIAN_DATA = {
+    id: NEW_ID, 
+    claveScianG: {
+      claveScian: CLAVE_SCIAN_ITEM?.descripcion || FORM_DATA.claveScianG.claveScian,
+      descripcionDelScian: FORM_DATA.claveScianG.descripcionDelScian || 'Not Found'
+    }
+  };
+
+
+  this.tableData = [...this.tableData, NEW_SCIAN_DATA];
+  
+  this.solicitud260915Store.setTramite260915State({
+    tableData: this.tableData
+  });
+
+  this.clavaScianForm.reset();
+  this.onCancelar(); 
+}
 
   /** Obtiene el formulario de datos del trámite a realizar */
 
@@ -853,10 +996,8 @@ onSave(): void {
  */
 onModificarMercancias(): void {
   if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
-    // Show warning: no rows selected
     this.abrirModal(0,false, true);
   } else if (this.filasSeleccionadas.size > 1) {
-    // Show warning: multiple rows selected
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'warning',
@@ -870,7 +1011,6 @@ onModificarMercancias(): void {
       tamanioModal: 'modal-sm',
     };
   } else {
-    // Proceed with modification (call existing onModificar method)
     this.onModificar();
   }
 }
@@ -1021,4 +1161,7 @@ getMercanciasDatosData(): void {
   cerrarModal(): void {
     this.esHabilitarElDialogo = false;
   }
+
+
+
 }
