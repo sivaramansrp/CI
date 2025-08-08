@@ -37,6 +37,7 @@ import {
 } from '../../estados/elegibilidad-de-textiles.store';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
+import { ImporteRecordService } from '../../../../core/services/120301/catalogos/importe-record.service';
 
 
 /**
@@ -112,7 +113,7 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    * al archivo 'tipo.json'. Cada elemento del catálogo contiene la información necesaria
    * para poblar el dropdown de tipos de importador disponibles en el sistema.
    */
-  tipoData: Catalogo[] = [];
+  tipoData!: Catalogo[];
 
   /**
    * @property {Subject<void>} destroyNotifier$ - Sujeto para manejar la destrucción de suscripciones.
@@ -166,7 +167,8 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
     private ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore,
     private ElegibilidadDeTextilesQuery: ElegibilidadDeTextilesQuery,
     private seccionStore: SeccionLibStore,
-    private seccionQuery: SeccionLibQuery
+    private seccionQuery: SeccionLibQuery,
+    private importeRecordService: ImporteRecordService
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
@@ -290,11 +292,19 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor
    */
   obtenerIngresoSelectList(): void {
-    this.ElegibilidadTextilesService.obtenerMenuDesplegable('tipo.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
-        this.tipoData = data as Catalogo[];
-      });
+    this.importeRecordService.getImporteRecord()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
+      next: (data) => {
+        if (data.codigo === '00') {
+          this.tipoData = data.datos || [];
+        }
+      },
+      error: (error) => {
+        console.error('Error al obtener los datos:', error);
+        this.tipoData = [];
+      }
+    });
   }
 
   /**

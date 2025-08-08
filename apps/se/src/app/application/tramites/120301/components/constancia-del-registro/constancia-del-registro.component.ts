@@ -39,6 +39,8 @@ import {
 import { AnioConstanciaService } from '../../../../core/services/120301/catalogos/anio-constancia.service';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
+import { GuardadoService } from '../../../../core/services/120301/guardado.service';
+import { ParcialRequest } from '../../../../core/models/120301/request/parcialRequest.model';
 import { TplDetalleRequest } from '../../../../core/models/120301/request/tpl-detalle-request.model';
 import { TplRequest } from '../../../../core/models/120301/request/tpl-request.model';
 import { TplService } from '../../../../core/services/120301/Tpl.service';
@@ -220,6 +222,21 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
    */
   anios!: Catalogo[];
 
+   /**
+   * @property {number | undefined} idAsignacion - Identificador único de la asignación.
+   * Almacena el ID de la asignación actual registro de solicitud parcial.
+   * Es undefined cuando se crea una nueva solicitud parcial.
+   * Se utiliza para el guardado parcial de la solicitud.
+   */
+  public idAsignacion!: number | undefined;
+
+  /**
+   * @property {string} cveUnidadAdministrativa - Clave de la unidad administrativa.
+   * Contiene el identificador único de la unidad administrativa asociada al catalogo de francion arancelaria.
+   * Su valor se obtiene del catalogo de francion arancelaria.
+   */
+  public cveUnidadAdministrativa!: string;
+
   /**
    * @property {EventEmitter<boolean>} mostrarTabs - Emite un valor booleano para mostrar las pestañas adicionales.
    * EventEmitter que comunica al componente padre cuándo debe mostrar las pestañas de navegación.
@@ -251,7 +268,8 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
     private ElegibilidadTextilesService: ElegibilidadTextilesService,
     private consultaioQuery: ConsultaioQuery,
     private anioConstanciaService: AnioConstanciaService,
-    private tplService: TplService
+    private tplService: TplService,
+    private guardadoService: GuardadoService
   ) {
     // Lógica del constructor si es necesario
   }
@@ -578,7 +596,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
       id_categoria_textil: fila.idCategoriaTextil ?? 0,
       id_fraccion_hts_usa: fila.idFraccionHtsUsa ?? 0
     };
-    
+    this.idAsignacion = fila.idAsignacion;
     forkJoin({
     representacion: this.tplService.getRepresentacionFederal(fila.idAsignacion ?? 0).pipe(
       catchError(err => {
@@ -597,6 +615,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
       const REPRESENTACIONFEDERAL = representacion.datos;
       fila.estado = REPRESENTACIONFEDERAL.nombre_entidad;
       fila.representacionFederal = REPRESENTACIONFEDERAL.nombre;
+      this.cveUnidadAdministrativa = REPRESENTACIONFEDERAL.clave;
     }
 
     if (detalle?.codigo === '00' && detalle?.datos) {
@@ -697,8 +716,35 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
    * @fires mostrarTabs Evento que indica al componente padre que debe mostrar las pestañas de navegación.
    */
   guardarEvaluate(): void {
-    this.mostrarTabs.emit(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+     const PAYLOAD: ParcialRequest = {
+       id_solicitud: null,
+       id_asignacion: this.idAsignacion ?? null,
+       boolean_generico: null,
+       ide_generica_1: null,
+       descripcion_generica_2: null,
+       ide_generica_2: null,
+       solicitante: {
+         rfc: 'AAL0409235E6',
+         certificado_serial_number: ''
+       },
+       cve_unidad_administrativa: this.cveUnidadAdministrativa,
+       id_expedicion: null
+     };
+    this.guardadoService.postGuardadoParcial(PAYLOAD).subscribe({
+      next: (response) => {
+        if (response?.codigo === '00' && response?.datos) {
+            const DATOS = response.datos;
+             this.mostrarTabs.emit(true);
+             window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          console.error('Error al obtener datos:', response?.mensaje);
+        }
+      },
+      error: (err) => {
+        console.error('Error en la guardado parcial:', err);
+      }
+    });
+ 
     
   }
 
