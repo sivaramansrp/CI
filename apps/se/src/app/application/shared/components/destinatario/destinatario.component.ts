@@ -1,10 +1,10 @@
-import { CommonModule } from '@angular/common';
+import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Subject } from 'rxjs';
 import { CAMPO_DE_DESTINATARIO } from '../../constantes/modificacion.enum';
+import { CommonModule } from '@angular/common';
 import { MenusDesplegables } from '../../models/modificacion.enum';
+import { Subject } from 'rxjs';
 
 
 
@@ -187,8 +187,8 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
       ciudad: ['', [Validators.required]],
       calle: ['', [Validators.required]],
       numeroLetra: ['', [Validators.required]],
-      lada: [''],
-      telefono: ['', [Validators.required]],
+      lada: ['',[Validators.pattern(/^\d+$/)]],
+      telefono: ['', [Validators.required,Validators.pattern(/^\d+$/)]],
       fax: [''],
       correoElectronico: ['', [Validators.required, Validators.email, Validators.pattern(/^[a-zA-Z0-9._%+-]+@gmail\.com$/)]],
     });
