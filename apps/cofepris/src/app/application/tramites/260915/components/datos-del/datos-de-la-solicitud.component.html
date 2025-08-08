@@ -167,6 +167,7 @@
                                 [label]="'Clave S.C.I.A.N.'"
                                 [required]="true"
                                 [isDisabled]="esFormularioSoloLectura"
+                                (change)="onClaveScianChange($event)"
                               ></app-catalogo-select>
                             </div>
                         </div>

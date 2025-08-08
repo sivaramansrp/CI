@@ -394,7 +394,6 @@ public estadoFisicoData = ESTADO_FISICO_DATA;
     this.inicializarEstadoFormulario();
     this.getEstadosData();
     this.getClaveScianData();
-    this.getClaveDescripcionDelData();
     this.getRegimenalqueData();
     this.getAduanaData();
     this.getEspificarData();
@@ -561,7 +560,6 @@ eliminarPedimento(borrar: boolean): void {
     const IDS_SELECCIONADOS = Array.from(this.filasSeleccionadas);
     
     if (this.eliminarTablaDatos === 'scian') {
-      const ORIGINAL_TABLE_LENGTH = this.tableData.length;
       this.tableData = this.tableData.filter((row) => {
         const ROW_ID = row.id;
         const SHOULD_KEEP = !IDS_SELECCIONADOS.includes(ROW_ID);
@@ -574,7 +572,6 @@ eliminarPedimento(borrar: boolean): void {
       });
       
     } else if (this.eliminarTablaDatos === 'mercancias') {
-      const ORIGINAL_MERCANCIAS_LENGTH = this.mercanciasData.length;
       this.mercanciasData = this.mercanciasData.filter((row) => {
         const SHOULD_KEEP = !IDS_SELECCIONADOS.includes(row.id || 0);
         return SHOULD_KEEP;
@@ -611,8 +608,8 @@ onEliminarMercancias(): void {
  * @param i Índice del elemento que se desea eliminar (por defecto 0).
  * @param isSeleccionarEstablecimiento Indica si se debe mostrar el mensaje para seleccionar un establecimiento.
  */
- abrirModal(i: number = 0, isNoRowsSelected: boolean = false, isModificarSinSeleccion: boolean = false): void {
-if (isNoRowsSelected) {
+abrirModal(i: number = 0, isNoRowsSelected: boolean = false, isModificarSinSeleccion: boolean = false): void {
+  if (isNoRowsSelected) {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'warning',
@@ -638,7 +635,7 @@ if (isNoRowsSelected) {
       txtBtnCancelar: '',
       tamanioModal: 'modal-sm',
     };
-  }else if (this.filasSeleccionadas && this.filasSeleccionadas.size > 0) {
+  } else if (this.filasSeleccionadas && this.filasSeleccionadas.size > 0) {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
@@ -728,13 +725,13 @@ usoEspecificoColapsable(): void {
   }
 
     /** Obtiene los datos de descripción del SCIAN */
-  getClaveDescripcionDelData(): void{
-    this.permisosanitariodisposivos.getClaveDescripcionDelData()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.descripcionDelScianData.catalogos = data as Catalogo[];
-      });
-  }
+  getClaveDescripcionDelData(claveScianId?: string): void{
+  this.permisosanitariodisposivos.getClaveDescripcionDelData(claveScianId)
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((data) => {
+      this.descripcionDelScianData.catalogos = data as Catalogo[];
+    });
+}
 
     /** Obtiene los datos del régimen */
   getRegimenalqueData(): void{
@@ -897,8 +894,14 @@ onSubmit(): void {
 
   const FORM_DATA = { ...this.clavaScianForm.value };
   
+  const DESCRIPCION_DEL_SCIAN = this.clavaScianForm.get('claveScianG.descripcionDelScian')?.value || '';
+  
   const CLAVE_SCIAN_ITEM = this.claveScianData.catalogos.find(
     (item: Catalogo) => String(item.id) === String(FORM_DATA.claveScianG.claveScian)
+  );
+
+  const DESCRIPCION_ITEM = this.descripcionDelScianData.catalogos.find(
+    (item) => String(item.id) === String(DESCRIPCION_DEL_SCIAN)
   );
 
   const NEW_ID = this.tableData.length > 0 ? 
@@ -908,10 +911,9 @@ onSubmit(): void {
     id: NEW_ID, 
     claveScianG: {
       claveScian: CLAVE_SCIAN_ITEM?.descripcion || FORM_DATA.claveScianG.claveScian,
-      descripcionDelScian: FORM_DATA.claveScianG.descripcionDelScian || 'Not Found'
+      descripcionDelScian: DESCRIPCION_ITEM?.descripcion || DESCRIPCION_DEL_SCIAN || 'Not Found'
     }
   };
-
 
   this.tableData = [...this.tableData, NEW_SCIAN_DATA];
   
@@ -1162,6 +1164,48 @@ getMercanciasDatosData(): void {
     this.esHabilitarElDialogo = false;
   }
 
-
+/**
+ * Handles the change event for claveScian dropdown.
+ * When a value is selected, it fetches the corresponding description data
+ * and patches the value to descripcionDelScian field.
+ * @param selectedValue - The selected claveScian value
+ */
+onClaveScianChange(event: Event | string): void {
+  let selectedValue: string;
+  
+  if (typeof event === 'string') {
+    selectedValue = event;
+  } else if (event && typeof event === 'object' && 'target' in event) {
+    selectedValue = (event.target as HTMLSelectElement)?.value || '';
+  } else {
+    selectedValue = String(event || '');
+  }
+  
+  if (selectedValue) {
+    this.getClaveDescripcionDelData(selectedValue);
+    
+    this.permisosanitariodisposivos.getClaveDescripcionDelData(selectedValue)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (data) => {
+          this.descripcionDelScianData.catalogos = data as Catalogo[];
+          
+          const DESCRIPTION_ITEM = this.descripcionDelScianData.catalogos.find(
+            (item: Catalogo) =>String(item.id) === String(selectedValue)
+          );
+          
+          if (DESCRIPTION_ITEM) {
+            this.clavaScianForm.get('claveScianG.descripcionDelScian')?.patchValue(DESCRIPTION_ITEM.id || DESCRIPTION_ITEM.descripcion);
+          }
+        },
+        error: (err) => {
+          console.error('Error al obtener los datos de descripción del SCIAN:', err);
+        }
+      });
+  } else {
+    this.clavaScianForm.get('claveScianG.descripcionDelScian')?.patchValue('');
+    this.descripcionDelScianData.catalogos = [];
+  }
+}
 
 }
