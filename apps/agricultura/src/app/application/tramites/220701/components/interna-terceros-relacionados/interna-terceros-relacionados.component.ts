@@ -17,10 +17,13 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
+
+
+
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {Subject, map, takeUntil } from 'rxjs';
+
 
 import {
   AlertComponent,
@@ -41,6 +44,8 @@ import {
   destinoInfo,
   exportadorInfo,
 } from '../../modelos/datos-de-interfaz.model';
+
+import { ConsultaioQuery} from "@ng-mf/data-access-user";
 
 import { ExportadorDatosService } from '../../servicios/exportador-datos.service';
 
@@ -68,6 +73,11 @@ import { ExportadorDatosService } from '../../servicios/exportador-datos.service
   styleUrl: './interna-terceros-relacionados.component.scss'
 })
 export class InternaTercerosRelacionadosComponent implements OnInit {
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Instrucción obligatoria para la acción de doble clic.
    * @type {string}
@@ -142,8 +152,17 @@ export class InternaTercerosRelacionadosComponent implements OnInit {
    */
     constructor(
       private exportadorDatosService: ExportadorDatosService,
-      private cdr: ChangeDetectorRef
+      private cdr: ChangeDetectorRef,
+      private consultaQuery: ConsultaioQuery
     ) {
+       this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
       // Se puede agregar aquí la lógica del constructor si es necesario
     }
 

@@ -8,6 +8,7 @@
         "IMMEX_Columna_5": "Kilogramo",
         "IMMEX_Columna_6": "10",
         "IMMEX_Columna_7": "28/12/203",
+        "IMMEX_Columna_8": "28/12/205",
         "estatus": true
       },
       {
@@ -18,6 +19,7 @@
         "IMMEX_Columna_5": "Tonelada",
         "IMMEX_Columna_6": "25",
         "IMMEX_Columna_7": "15/05/2025",
+        "IMMEX_Columna_8": "28/12/205",
         "estatus": false
       }
     ],
