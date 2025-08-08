@@ -21,6 +21,7 @@ import { ExpansionDeProductoresService } from '@libs/shared/data-access-user/src
 
 import { FRACCION_TABLA, SECTORES_TABLA } from '@libs/shared/data-access-user/src/core/enums/90201/productor-indirecto-tabla.enum';
 import { MercanciasTabla, SectoresTabla } from '@libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
+import { ChangeDetectorRef } from '@angular/core';
 import { SECTORESY } from '@libs/shared/data-access-user/src';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
@@ -28,7 +29,6 @@ import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/comp
 import { Tramite90201Query } from '../../../../estados/queries/tramite90201.query';
 import mercancia from '@libs/shared/theme/assets/json/90201/mercancia-tabla.json';
 import sectoresTabla from '@libs/shared/theme/assets/json/90201/sectores-tabla.json';
-
 /**
  * Componente SectoresYMercancias que se utiliza para mostrar y gestionar los SectoresYMercancias.
  *
@@ -58,11 +58,11 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * Este formulario se utiliza para gestionar y validar los datos de entrada relacionados con sectores y mercancías.
    */
   public sectoresForm!: FormGroup;
-    /**
-   * Representa una nueva notificación que será utilizada en el componente.
-   * 
-   * @type {Notificacion}
-   */
+  /**
+ * Representa una nueva notificación que será utilizada en el componente.
+ * 
+ * @type {Notificacion}
+ */
   public nuevaNotificacion!: Notificacion;
   /**
    * Objeto de notificación utilizado para manejar la eliminación de una mercancía.
@@ -126,18 +126,18 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * Esta propiedad almacena la configuración de columnas, estilos y opciones
    * específicas para la tabla de fracciones, utilizando la constante `FRACCION_TABLA`.
    */
- public configuracionFraccion = FRACCION_TABLA;
-  
+  public configuracionFraccion = FRACCION_TABLA;
+
 
   /**
    * Un array de objetos `SectoresTabla` que representa los sectores.
    */
   public sectores: SectoresTabla[] = sectoresTabla;
 
- /**
-  * Arreglo de sectores y mercancías que se utiliza para almacenar los datos de los sectores y mercancías.
-  * Este arreglo se inicializa con los datos de `sectoresTabla`, que es un arreglo
-  */
+  /**
+   * Arreglo de sectores y mercancías que se utiliza para almacenar los datos de los sectores y mercancías.
+   * Este arreglo se inicializa con los datos de `sectoresTabla`, que es un arreglo
+   */
   public mercancias: MercanciasTabla[] = mercancia;
 
   /**
@@ -152,16 +152,17 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @type {Subscription}
    */
   private subscription: Subscription = new Subscription();
-/** 
- * Arreglo que almacena los datos seleccionados de la tabla de sectores.
- * Este arreglo se utiliza para almacenar los sectores seleccionados por el usuario en la tabla.
-*/
-  public seleccionadoDatos: SectoresTabla[] = [];
-/**
- * Arreglo que almacena los datos seleccionados de la tabla de mercancías.
- * Este arreglo se utiliza para almacenar las mercancías seleccionadas por el usuario en la tabla.
- */
-  public seleccionadoMercancia: MercanciasTabla[] = [];
+  /** 
+   * Arreglo que almacena los datos seleccionados de la tabla de sectores.
+   * Este arreglo se utiliza para almacenar los sectores seleccionados por el usuario en la tabla.
+  */
+  public seleccionadoDatos!: SectoresTabla | null;
+
+  /**
+   * Arreglo que almacena los datos seleccionados de la tabla de mercancías.
+   * Este arreglo se utiliza para almacenar las mercancías seleccionadas por el usuario en la tabla.
+   */
+  public seleccionadoMercancia!: MercanciasTabla | null;
   /**
    * Constructor del componente SectoresYMercanciasComponent.
    * 
@@ -179,7 +180,8 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private tramite90201Store: Tramite90201Store,
     private tramite90201Query: Tramite90201Query,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef
   ) {
 
   }
@@ -318,7 +320,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * aceptar y cancelar, y está estilizada como una alerta de peligro.
    * @returns void
    */
-  public eliminarSector():void {
+  public eliminarSector(): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
@@ -337,15 +339,17 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @param event - Los datos de la fila seleccionada de tipo `SectoresTabla`.
    */
   public seleccionDeFilaDeTabla(event: SectoresTabla): void {
-    this.seleccionadoDatos.push(event);
+    this.seleccionadoDatos = event;
   }
+
   /**
    * Maneja la selección de una fila en la tabla de mercancías agregando los datos de la fila seleccionada al arreglo `seleccionadoMercancia`.
    * @param event - Los datos de la fila seleccionada de tipo `MercanciasTabla`.
    */
-  public seleccionDeFilaDeTablaMercancias(event: MercanciasTabla): void { 
-    this.seleccionadoMercancia.push(event);
+  public seleccionDeFilaDeTablaMercancias(event: MercanciasTabla): void {
+    this.seleccionadoMercancia = event;
   }
+
   /**
    * Elimina un "pedimento" (documento aduanal) seleccionado del arreglo `sectores` si la bandera `borrar` es verdadera.
    *
@@ -354,56 +358,76 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * El método busca el índice del elemento seleccionado en el arreglo `sectores` comparando las propiedades `claveDel` y `sectores`
    * con el primer elemento del arreglo `seleccionadoDatos`. Si lo encuentra, elimina el elemento del arreglo.
    */
-  public eliminarPedimento(borrar: boolean): void {
-    if (borrar) {
-      const INDEX = this.sectores.findIndex((sector: SectoresTabla) => sector.claveDel === this.seleccionadoDatos[0].claveDel && sector.sectores === this.seleccionadoDatos[0].sectores);
-      this.sectores.splice(INDEX, 1);
+  public eliminarPedimento(confirmar: boolean): void {
+    if (!confirmar || !this.seleccionadoDatos) {
+      return;
     }
-  }
- /**
-  * 
-  * @param borrar - Bandera booleana que indica si se debe eliminar la mercancía seleccionada.
-  * El método busca el índice del elemento seleccionado en el arreglo `mercancias` comparando las propiedades `claveDel` y `fraccion`
-  * con el primer elemento del arreglo `seleccionadoMercancia`. Si lo encuentra, elimina el elemento del arreglo.
-  */
-    public eliminarPedimentoMercancia(borrar: boolean): void {
-    if (borrar) { 
-      const INDEX = this.mercancias.findIndex((sector: MercanciasTabla) => sector.claveDel === this.seleccionadoMercancia[0].claveDel && sector.fraccion === this.seleccionadoMercancia[0].fraccion);
-      this.mercancias.splice(INDEX, 1);
+    if (this.seleccionadoDatos) {
+      this.sectores = this.sectores.filter(
+        (elementos) => this.seleccionadoDatos?.sectores !== elementos.sectores
+      );
+      this.seleccionadoDatos = null;
     }
+
   }
+
+  /**
+   * 
+   * @param borrar - Bandera booleana que indica si se debe eliminar la mercancía seleccionada.
+   * El método busca el índice del elemento seleccionado en el arreglo `mercancias` comparando las propiedades `claveDel` y `fraccion`
+   * con el primer elemento del arreglo `seleccionadoMercancia`. Si lo encuentra, elimina el elemento del arreglo.
+   */
+  public eliminarPedimentoMercancia(borrar: boolean): void {
+    if (!borrar || !this.seleccionadoMercancia) {
+      return;
+    }
+    if (this.seleccionadoMercancia) {
+      this.mercancias = this.mercancias.filter(
+        (elementos) => this.seleccionadoMercancia?.fraccion !== elementos.fraccion
+      );
+      this.seleccionadoMercancia = null;
+    }
+
+  }
+
   /**
    * Agrega un nuevo sector al arreglo `sectores` utilizando el valor del control 'sector' del formulario `sectoresForm`.
    * Si el control 'sector' tiene un valor, se crea un nuevo objeto con la clave 'IV' y el sector proporcionado,
    * y se agrega al arreglo `sectores`. Luego, se resetea el formulario
    */
-   agregarSector(): void {
+  agregarSector(): void {
     const SECTOR = this.sectoresForm.get('sector')?.value;
 
-      if (SECTOR) {
-      this.sectores.push({
+    if (SECTOR) {
+      const NUEVO_SECTOR: SectoresTabla = {
         sectores: SECTOR,
         claveDel: 'IV'
-      });
-      this.sectoresForm.reset();
-    } 
+      };
+
+      this.sectores = [...this.sectores, NUEVO_SECTOR];
+
+      this.sectoresForm.get('sector')?.setValue('');
     }
-/**
- * Agrega una nueva mercancía al arreglo `sectores` utilizando el valor del control 'fraccion' del formulario `sectoresForm`.
- * Si el control 'fraccion' tiene un valor, se crea un nuevo objeto con la
- * clave 'IV' y la fracción proporcionada, y se agrega al arreglo `sectores`.
- * Luego, se resetea el formulario.
- */
-    agregarMercancia(): void {
-      const FRACCION = this.sectoresForm.get('fraccion')?.value;
-      if (FRACCION) {
-        this.mercancias.push({
-          fraccion: FRACCION,
-          claveDel: 'IV'
-        });
-        this.sectoresForm.reset();
-      }
+  }
+  /**
+   * Agrega una nueva mercancía al arreglo `sectores` utilizando el valor del control 'fraccion' del formulario `sectoresForm`.
+   * Si el control 'fraccion' tiene un valor, se crea un nuevo objeto con la
+   * clave 'IV' y la fracción proporcionada, y se agrega al arreglo `sectores`.
+   * Luego, se resetea el formulario.
+   */
+  agregarMercancia(): void {
+    const FRACCION = this.sectoresForm.get('fraccion')?.value;
+    if (FRACCION) {
+      const NUEVA_MERCANCIA: MercanciasTabla = {
+        fraccion: FRACCION,
+        claveDel: 'IV'
+      };
+
+      this.mercancias = [...this.mercancias, NUEVA_MERCANCIA];
+
+      this.sectoresForm.get('fraccion')?.setValue('');
     }
+  }
   /**
    * Muestra una notificación solicitando al usuario que seleccione la fracción que desea eliminar.
    * Asigna a la propiedad `eliminarMercanciaNotificacion` una notificación de alerta de tipo 'danger',
@@ -422,5 +446,5 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
     };
-  } 
+  }
 }
