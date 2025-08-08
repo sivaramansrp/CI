@@ -849,7 +849,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
   cerrarModal(): void {
     // Resetear el estado de validación del formulario
     this.resetearEstadoValidacionFormulario();
-    this.formularioMercancia.reset();
     if (this.closeModal) {
       this.closeModal.nativeElement.click();
     }

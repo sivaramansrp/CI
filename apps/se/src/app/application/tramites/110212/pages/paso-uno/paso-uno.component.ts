@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
 import { CommonModule } from '@angular/common';
@@ -33,7 +33,27 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Esta propiedad utiliza `@ViewChild` para obtener una referencia al componente
    * de solicitante dentro de la plantilla.
    */
-  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+  @ViewChild('solicitante') solicitante!: SolicitanteComponent;
+
+  /**
+   * Referencia al componente `CertificadoOrigenComponent`.
+   */
+  @ViewChild('certificadoOrigenComp', { static: false }) certificadoOrigenComp: CertificadoOrigenComponent | undefined;
+
+  /**
+   * Referencia al componente `DestinatarioComponent`.
+   */
+  @ViewChild('destinatarioComp', { static: false }) destinatarioComp: DestinatarioComponent | undefined;
+
+  /**
+   * Referencia al componente `DatosCertificadoComponent`.
+   */
+  @ViewChild('datosCertificadoComp', { static: false }) datosCertificadoComp: DatosCertificadoComponent | undefined;
+
+  /**
+   * Emite evento cuando se cambia de tab para ocultar error message.
+   */
+  @Output() tabChanged = new EventEmitter<void>();
 
   /**
    * Índice de la pestaña activa.
@@ -118,6 +138,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   seleccionaTab(i: number): void {
     this.indice = i;
     this.store.setPestanaActiva(this.indice);
+    // Hide error message when tab changes
+    this.tabChanged.emit();
   }
   /**
    * @method fetchGetDatosConsulta
@@ -151,10 +173,45 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método que se ejecuta al destruir el componente.
+   * Valida todos los formularios del paso uno.
    * 
-   * Este método emite un valor al `destroyNotifier$` y lo completa para cancelar
-   * todas las suscripciones activas y evitar fugas de memoria.
+   * Este método valida principalmente el formulario de solicitante que es el único
+   * obligatorio. Los otros formularios solo se validan si están disponibles.
+   * 
+   * @returns {boolean} `true` si todos los formularios son válidos, `false` en caso contrario.
+   */
+  public validarTodosLosFormularios(): boolean {
+    let allFormsValid = true;
+        
+    // Validate certificado-origen form if it exists and is visible
+    if (this.indice >= 2 && this.certificadoOrigenComp && this.certificadoOrigenComp.formularioCertificado) {
+      this.certificadoOrigenComp.formularioCertificado.markAllAsTouched();
+      if (!this.certificadoOrigenComp.formularioCertificado.valid) {
+        allFormsValid = false;
+      }
+    }
+    
+    // Validate destinatario form if it exists and is visible
+    if (this.indice >= 3 && this.destinatarioComp && this.destinatarioComp.registroFormulario) {
+      this.destinatarioComp.registroFormulario.markAllAsTouched();
+      if (!this.destinatarioComp.registroFormulario.valid) {
+        allFormsValid = false;
+      }
+    }
+    
+    // Validate datos-certificado form if it exists and is visible
+    if (this.indice >= 4 && this.datosCertificadoComp && this.datosCertificadoComp.formDatosCertificado) {
+      this.datosCertificadoComp.formDatosCertificado.markAllAsTouched();
+      if (!this.datosCertificadoComp.formDatosCertificado.valid) {
+        allFormsValid = false;
+      }
+    }
+    
+    return allFormsValid;
+  }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
