@@ -390,8 +390,8 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    *
    * @returns {FormGroup} El grupo de formulario del operador.
    */
-  get grupoDeDirecciones(): FormGroup {
-    return this.formularioCertificado.get('grupoDeDirecciones') as FormGroup;
+  get grupoCertificadoOrigen(): FormGroup {
+    return this.formularioCertificado.get('grupoCertificadoOrigen') as FormGroup;
   }
 
   /**
@@ -448,31 +448,31 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
           [],
         ],
       }),
-     grupoDeDirecciones: this.fb.group({
+     grupoCertificadoOrigen: this.fb.group({
            pais: [
-             this.solicitudState?.grupoDeDirecciones?.pais,
+             this.solicitudState?.grupoCertificadoOrigen?.pais,
            ],
            ciudad: [
-             this.solicitudState?.grupoDeDirecciones?.ciudad,
+             this.solicitudState?.grupoCertificadoOrigen?.ciudad,
            ],
            calle: [
-             this.solicitudState?.grupoDeDirecciones?.calle,
+             this.solicitudState?.grupoCertificadoOrigen?.calle,
            ],
            numeroLetra: [
-             this.solicitudState?.grupoDeDirecciones?.numeroLetra,
+             this.solicitudState?.grupoCertificadoOrigen?.numeroLetra,
             
            ],
-           lada: [this.solicitudState?.grupoDeDirecciones?.lada, []],
+           lada: [this.solicitudState?.grupoCertificadoOrigen?.lada, []],
            telefono: [
-             this.solicitudState?.grupoDeDirecciones?.telefono,
+             this.solicitudState?.grupoCertificadoOrigen?.telefono,
              [Validators.pattern(REGEX_SOLO_DIGITOS)],
            ],
            fax: [
-             this.solicitudState?.grupoDeDirecciones?.fax,
+             this.solicitudState?.grupoCertificadoOrigen?.fax,
              [Validators.pattern(REGEX_SOLO_DIGITOS)],
            ],
            correoElectronico: [
-             this.solicitudState?.grupoDeDirecciones?.correoElectronico,
+             this.solicitudState?.grupoCertificadoOrigen?.correoElectronico,
              [Validators.pattern(REGEX_CORREO_ELECTRONICO)],
            ],
          }),
