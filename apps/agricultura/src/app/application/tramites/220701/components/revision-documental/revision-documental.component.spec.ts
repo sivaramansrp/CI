@@ -44,7 +44,7 @@ describe('RevisionDocumentalComponent', () => {
     component.tabChanged = component.tabChanged || {};
     component.tabChanged.emit = jest.fn();
     component.seleccionaTab({});
-    // expect(component.tabChanged.emit).toHaveBeenCalled();
+    expect(component.tabChanged.emit).toHaveBeenCalled();
   });
 
 });
