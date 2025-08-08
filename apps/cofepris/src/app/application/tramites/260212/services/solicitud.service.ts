@@ -16,6 +16,7 @@ import { ReprestantanteData } from '../../260605/models/aduaneras-informaciones.
 })
 export class SolicitudService {
 
+  /** Indica si se ha hecho clic en la selección de establecimiento. */
   public isSeleccionarEstablecimientoClicked: boolean = false;
   
   /**
@@ -97,10 +98,17 @@ export class SolicitudService {
         );
     }
 
+    /**
+   * Cambia el estado de selección de establecimiento, alternando su valor booleano.
+   */
     updateSeleccionarEstablecimientoState(): void {
       this.isSeleccionarEstablecimientoClicked = !this.isSeleccionarEstablecimientoClicked;
     }
 
+    /**
+   * Obtiene el estado actual de selección de establecimiento.
+   * @returns {boolean} True si está seleccionado, false en caso contrario.
+   */
     getSeleccionarEstablecimientoState(): boolean {
       return this.isSeleccionarEstablecimientoClicked;  
     }

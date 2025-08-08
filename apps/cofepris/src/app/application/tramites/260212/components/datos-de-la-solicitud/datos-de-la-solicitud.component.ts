@@ -189,6 +189,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   private modalInstance: Modal | null = null;
 
+  /** Almacena el tipo de acción del botón seleccionado (por ejemplo, modificar o eliminar mercancía). */
   public tipoButton: string = '';
 
   /**
@@ -664,6 +665,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.solicitudService.updateSeleccionarEstablecimientoState();
   }
 
+  /**
+ * Obtiene el estado actual para saber si se debe mostrar el modal de selección de establecimiento.
+ * @returns {boolean} True si se debe mostrar el modal, false en caso contrario.
+ */
   public get seleccionarEstablecimientoState(): boolean { 
     return this.solicitudService.getSeleccionarEstablecimientoState();
   }
@@ -687,14 +692,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Actualiza el arreglo de mercancías seleccionadas en la tabla con los elementos recibidos en el evento. */
   listaDeFilaSeleccionadaMercancias(event: MercanciaModel[]): void {
     this.seleccionadaMercanciaDatos = event;
   }
 
+  /** Actualiza el arreglo de scian seleccionadas en la tabla con los elementos recibidos en el evento. */
   listaDeFilaSeleccionadaScian(event: ClaveModel[]): void {
     this.seleccionadaScianDatos = event; 
   }
 
+  /**
+ * Muestra el formulario para modificar mercancías si hay alguna seleccionada; de lo contrario, muestra un modal de confirmación.
+ * @param event - Tipo de acción que se está realizando.
+ */
   modificarMercancias(event: string): void {
     if (this.seleccionadaMercanciaDatos.length) {
       this.openMercanciasForm();
@@ -707,6 +718,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+ * Muestra el formulario para eliminar mercancías si hay alguna seleccionada; de lo contrario, muestra un modal de confirmación.
+ * @param event - Tipo de acción que se está realizando.
+ */
   eliminarMercancias(event: string): void {
     if (this.seleccionadaMercanciaDatos.length) {
       this.openMercanciasForm();
@@ -719,6 +734,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Muestra el modal de confirmación para eliminar claves S.C.I.A.N. si hay alguna seleccionada. */
   eliminarScian(): void {
     if (this.seleccionadaScianDatos.length) {
       if (this.scianEliminarModalElement) {
@@ -728,6 +744,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Elimina las claves S.C.I.A.N. seleccionadas del arreglo y cierra el modal de confirmación. */
   confirmarEliminarScian(): void {
     const IDS_TO_DELETE = this.seleccionadaScianDatos.map(item => item.clave);
     this.claveScianDatas = this.claveScianDatas.filter(
