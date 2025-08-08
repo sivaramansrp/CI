@@ -1,12 +1,21 @@
 <div class="container">
   <ng-titulo titulo="Terceros relacionados"></ng-titulo>
-
+  @if (!isAdjuntar){
   <div class="row mt-5">
     <ng-alert
       [CONTENIDO]="MENSAJE_TABLA_OBLIGATORIA"
       [CUSTOMECLASS]="infoAlert"
     ></ng-alert>
   </div>
+}
+@if (isAdjuntar){
+  <div class="row mt-5">
+    <ng-alert
+      [CONTENIDO]="TEXTOS.ADJUNTAR"
+      [CUSTOMECLASS]="infoAlert"
+    ></ng-alert>
+  </div>
+}
   <div class="row mt-5">
     <div class="col-md-3">
         <h6>Fabricante

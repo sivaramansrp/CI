@@ -518,7 +518,7 @@ export const REPRESENTANTE_LEGAL = [260208];
  * }
  */
 export const BANCO = [
-  260104,260208, 260209, 260207, 260201, 260219, 260302, 260304, 260103,
+  260104,260208, 260209, 260207, 260201, 260219, 260302, 260304, 260103, 260217, 260218
 ];
 
 export const REQUIRED_BANCO = [260902];
@@ -730,7 +730,7 @@ export const TIPO_PRODUCTO_ESPECIAL = '3';
  * @remarks
  * Esta constante se utiliza para filtrar procedimientos que no deben ser considerados en el contexto de manifiestos y declaraciones.
  */
-export const PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES = [260217];
+export const PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES = [260217, 260218];
 
 /**
  * Constante que representa el texto del manifiesto y declaraciones.
@@ -744,3 +744,8 @@ export const TEXTO_MANIFESTO_Y_DECLARACIONES = `Cumplo con los requisitos y norm
       cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una
       autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio
       Exterior por los mecanismos de la misma.`;
+
+/**
+ * Constante que representa los procedimientos para los cuales se debe adjuntar un texto específico.
+ */
+export const PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR = [260217, 260218];

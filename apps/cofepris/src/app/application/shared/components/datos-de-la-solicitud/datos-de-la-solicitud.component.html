@@ -446,7 +446,7 @@
       <div class="col-md-3 my-3">
         <div class="form-group">
           <label class="form-label municipio-label" for="telefono"
-            >S. C. I. A. N
+            >S.C.I.A.N.
           </label>
           <span class="form-label" *ngIf="esCampoRequerido('scian')">*</span>
           <span class="form-label">:</span>
@@ -464,7 +464,6 @@
       <div class="col-md-12">
         <div class="pull-right ml-2">
           <button
-            *ngIf="scianConfig.datos.length > 0"
             type="button"
             name="eliminarScian"
             class="btn btn-danger ms-2"
@@ -501,14 +500,15 @@
           />
           <label class="form-check-label" for="aviso"
             >Aviso de funcionamiento
-            <span *ngIf="!datosSolicitudForm.value.aviso">*</span>
+            <span *ngIf="esCampoRequerido('aviso')">*</span>
           </label>
         </div>
       </div>
       <div class="col-md-4">
-        <label class="form-label mx-1" for="licenciaSanitaria"
+        <div class="form-check mt-4">
+          <label class="form-label mx-1" for="licenciaSanitaria"
           >No. de licencia sanitaria
-          <span *ngIf="!datosSolicitudForm.value.aviso">*</span>:</label
+          <span *ngIf="esCampoRequerido('licenciaSanitaria')">*</span>:</label
         >
 
         <span
@@ -537,6 +537,8 @@
         >
           Este campo es obligatorio.
         </small>
+        </div>
+        
       </div>
     </div>
 
