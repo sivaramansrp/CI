@@ -40,8 +40,8 @@
     <ng-titulo titulo="Obligaciones fiscales" />
     <div class="row">
       <div class="col-md-4">
-        <label for="Opinion">Opinión positiva del SAT*:</label>
-        <input type="text" id="Opinion" name="Opinion" class="form-control" formControlName="opinionPositiva" />
+       <app-catalogo-select [catalogo]="derechosList" formControlName="opinionPositiva" [label]="'Opinión positiva del SAT'" [required]="false"
+          [isDisabled]="esFormularioSoloLectura ? true : false" ></app-catalogo-select>
       </div>
       <div class="col-md-4">
         <input-fecha [datos]="INPUT_FECHA_CONFIG" [setFecha]="formaComplimentos.get('fechaExpedicion')?.value"

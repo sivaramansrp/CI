@@ -86,6 +86,11 @@ import { TramiteStore } from '../../../estados/tramite.store';
 export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
 
   /**
+   * property {Catalogo[]} derechosList - Lista de derechos obtenida del servicio.
+   */
+  public derechosList!: Catalogo[];
+
+  /**
    * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
    */
   @Input() formularioDeshabilitado: boolean = false;
@@ -377,7 +382,7 @@ this.formaComplimentos.disable();
         localizacion: ['', [Validators.required, Validators.maxLength(120)]],
       }),
       obligacionesFiscales: this.fb.group({
-        opinionPositiva: [{ value: '', disabled: true }],
+        opinionPositiva: [{ value: 'SI', disabled: true }],
         fechaExpedicion: ['', Validators.required],
         aceptarObligacionFiscal: [''],
       }),
@@ -407,7 +412,7 @@ this.formaComplimentos.disable();
       }),
     });
 
-    // Apply initial data if available
+ // Apply initial data if available
     if (this.datosFormaComplimentos) {
       // Use immediate execution for better user experience
       setTimeout(() => {
@@ -575,6 +580,7 @@ this.formaComplimentos.disable();
      this.inicializarCertificadoFormulario();
     this.getCatalogoPaises();
     this.getCatalogoEstado();
+    this.loadComboUnidadMedida();
 
     this.formaComplimentos.valueChanges
       .pipe(delay(100))
@@ -734,6 +740,18 @@ this.formaComplimentos.disable();
         );
         this.camposFormularioDefault[INDICE].opciones = datos;
         this.camposFormularioTipoPersona[INDICEALT].opciones = datos;
+      });
+  }
+
+   /**
+   * method loadComboUnidadMedida
+   * description Carga la lista de derechos desde el servicio.
+   */
+   loadComboUnidadMedida(): void {
+    this.complimentosService.getDatos() // Llama al servicio para obtener los datos.
+      .pipe(takeUntil(this.destroyNotifier$)) // Finaliza la suscripción al destruir el componente.
+      .subscribe((data): void => { // Maneja los datos recibidos.
+        this.derechosList = data as Catalogo[]; // Asigna los datos a la lista de derechos.
       });
   }
 
@@ -1154,14 +1172,14 @@ this.formaComplimentos.disable();
    * @param event Input event
    */
   onPaginaInputChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const uppercaseValue = input.value.toUpperCase();
-    
+    const INPUT = event.target as HTMLInputElement;
+    const UPPERCASEVALUE = INPUT.value.toUpperCase();
+
     // Update the form control value
-    this.formaComplimentos.get('datosGeneralis')?.get('paginaWWeb')?.setValue(uppercaseValue, { emitEvent: false });
+    this.formaComplimentos.get('datosGeneralis')?.get('paginaWWeb')?.setValue(UPPERCASEVALUE, { emitEvent: false });
     
     // Update the input field display
-    input.value = uppercaseValue;
+    INPUT.value = UPPERCASEVALUE;
   }
 
   /**
@@ -1169,14 +1187,14 @@ this.formaComplimentos.disable();
    * @param event Input event
    */
   onLocalizacionInputChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const uppercaseValue = input.value.toUpperCase();
-    
+    const INPUT = event.target as HTMLInputElement;
+    const UPPERCASEVALUE = INPUT.value.toUpperCase();
+
     // Update the form control value
-    this.formaComplimentos.get('datosGeneralis')?.get('localizacion')?.setValue(uppercaseValue, { emitEvent: false });
-    
+    this.formaComplimentos.get('datosGeneralis')?.get('localizacion')?.setValue(UPPERCASEVALUE, { emitEvent: false });
+
     // Update the input field display
-    input.value = uppercaseValue;
+    INPUT.value = UPPERCASEVALUE;
   }
 
   /**
@@ -1186,7 +1204,7 @@ this.formaComplimentos.disable();
    */
   onKeyPress(event: KeyboardEvent): boolean {
     const CHAR = String.fromCharCode(event.which);
-    const ALLOWEDPATTERN = /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s\.\-\_\:\/\@]$/;
+    const ALLOWEDPATTERN = /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s.\-_:/@]$/;
     
     // Allow backspace, delete, tab, escape, enter
     if (event.which === 8 || event.which === 46 || event.which === 9 || 
