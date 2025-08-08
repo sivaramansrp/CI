@@ -1,27 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
-
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FRACCION_TABLA, SECTORES_TABLA } from '@libs/shared/data-access-user/src/core/enums/90201/productor-indirecto-tabla.enum';
+import { FormBuilder,FormGroup,ReactiveFormsModule,Validators} from '@angular/forms';
+import { MercanciasTabla, SectoresTabla } from '@libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
+import {Solicitud90201State,Tramite90201Store } from '../../../../estados/tramites/tramite90201.store';
 import { Subject, Subscription, map, merge, takeUntil } from 'rxjs';
-
-import {
-  Solicitud90201State,
-  Tramite90201Store,
-} from '../../../../estados/tramites/tramite90201.store';
 import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { ExpansionDeProductoresService } from '@libs/shared/data-access-user/src/core/services/90201/expansion-de-productores.service';
-
-import { FRACCION_TABLA, SECTORES_TABLA } from '@libs/shared/data-access-user/src/core/enums/90201/productor-indirecto-tabla.enum';
-import { MercanciasTabla, SectoresTabla } from '@libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
 import { ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ExpansionDeProductoresService } from '@libs/shared/data-access-user/src/core/services/90201/expansion-de-productores.service';
 import { SECTORESY } from '@libs/shared/data-access-user/src';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';

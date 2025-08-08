@@ -1,25 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-import { Subject, map, takeUntil } from 'rxjs';
-
-import {
-  Solicitud90201State,
-  Tramite90201Store,
-} from '../../../../estados/tramites/tramite90201.store';
-
 import { ConsultaioQuery, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
-import { PRODUCTOR_INDIRECTO } from '@libs/shared/data-access-user/src/core/enums/90201/productor-indirecto-tabla.enum';
-
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Solicitud90201State,Tramite90201Store } from '../../../../estados/tramites/tramite90201.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { PRODUCTOR_INDIRECTO } from '@libs/shared/data-access-user/src/core/enums/90201/productor-indirecto-tabla.enum';
 import { ProductorIndirectoTabla } from '@libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
 import ProductorTabla from '@libs/shared/theme/assets/json/90201/productor-indirecto-tabla.json';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite90201Query } from '../../../../estados/queries/tramite90201.query';
+
 /**
  * Componente ProductorIndirecto que se utiliza para mostrar y gestionar los ProductorIndirecto.
  *
