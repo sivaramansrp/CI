@@ -1,10 +1,9 @@
+import { PASOS, TEXTOS_CANCELACIONS } from '../../constants/intropermiso.enum';
 import { Component } from '@angular/core';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-
-import { PASOS, TEXTOS_CANCELACIONS } from '../../constants/intropermiso.enum';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 import { Subject } from 'rxjs';
 import { ViewChild } from '@angular/core';
@@ -125,11 +124,11 @@ export class IntroPermisoComponent implements OnInit, OnDestroy{
       .subscribe((mensaje) => {
         this.mostrarDevolverFacturas = mensaje;
       });
-      this.servicioDeMensajesService.obtenerMostrarAlerta().subscribe(
-      (valor) => {
-        this.showAlert = valor;
-      }
-    );
+     this.servicioDeMensajesService.obtenerMostrarAlerta()
+  .pipe(takeUntil(this.destroy$))
+  .subscribe((valor) => {
+    this.showAlert = valor;
+  });
   }
   /**
    * @description Lifecycle method executed when the component is destroyed.
