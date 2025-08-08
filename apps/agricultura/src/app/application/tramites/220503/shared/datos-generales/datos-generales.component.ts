@@ -1,5 +1,6 @@
 import {
   CAPTURA_OPCIONES_DE_BOTON_DE_RADIO,
+  CONFIGURACION_COLUMNAS_TABLA,
   MERCANCIA,
 } from '../../enums/sagarpa.enum';
 import {
@@ -207,45 +208,11 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
   esFormularioSoloLectura: boolean = false;
-
-  configuracionColumnasTabla: ConfiguracionColumna<FilaSolicitudTabla>[] = [
-    {
-      encabezado: 'No. partida',
-      clave: (solicitud) => solicitud.Partida,
-      orden: 1
-    },
-    {
-      encabezado: 'Tipo de requisito',
-      clave: (solicitud) => solicitud.Tiporequisito,
-      orden: 2
-    },
-    {
-      encabezado: 'Requisito',
-      clave: (solicitud) => solicitud.Requisito,
-      orden: 3
-    },
-    {
-      encabezado: 'Número de certificado internacional',
-      clave: (solicitud) => solicitud.Certificado,
-      orden: 4
-    },
-    {
-      encabezado: 'Fracción arancelaria',
-      clave: (solicitud) => solicitud.Fraccion,
-      orden: 5
-    },
-    {
-      encabezado: 'Descripción de la fracción',
-      clave: (solicitud) => solicitud.Descripcion,
-      orden: 6
-    },
-    {
-      encabezado: 'Nico',
-      clave: (solicitud) => solicitud.Nico,
-      orden: 7
-    }
-  ];
-
+  /**
+   * Configuración de las columnas de la tabla.
+   * @type {ConfiguracionColumna[]}
+   */
+  configuracionColumnasTabla= CONFIGURACION_COLUMNAS_TABLA;
 
   constructor(
     private readonly fb: FormBuilder,

@@ -1,3 +1,7 @@
+import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
+import { FilaSolicitudTabla } from "../models/datos-generales.model";
+import { Solicitud } from "../models/solicitud-pantallas.model";
+
 /**
  * Matriz de opciones para botones de radio.
  *
@@ -63,4 +67,64 @@ export const OPCIONES_DE_BOTON_DE_RADIO = [
       Descripcion: 'Con registro nacional.',
       Nico: '02',
     },
+  ];
+export const CONFIGURACION_COLUMNAS_TABLA: ConfiguracionColumna<FilaSolicitudTabla>[] = [
+  {
+    encabezado: 'No. partida',
+    clave: (solicitud) => solicitud.Partida,
+    orden: 1
+  },
+  {
+    encabezado: 'Tipo de requisito',
+    clave: (solicitud) => solicitud.Tiporequisito,
+    orden: 2
+  },
+  {
+    encabezado: 'Requisito',
+    clave: (solicitud) => solicitud.Requisito,
+    orden: 3
+  },
+  {
+    encabezado: 'Número de certificado internacional',
+    clave: (solicitud) => solicitud.Certificado,
+    orden: 4
+  },
+  {
+    encabezado: 'Fracción arancelaria',
+    clave: (solicitud) => solicitud.Fraccion,
+    orden: 5
+  },
+  {
+    encabezado: 'Descripción de la fracción',
+    clave: (solicitud) => solicitud.Descripcion,
+    orden: 6
+  },
+  {
+    encabezado: 'Nico',
+    clave: (solicitud) => solicitud.Nico,
+    orden: 7
+  }
+  ];
+  
+  export const CONFIGURACION_COLUMNA_SOLICITUD: ConfiguracionColumna<Solicitud>[] = [
+    {
+      encabezado: 'Fecha de creación',
+      clave: (solicitud) => solicitud.fechaCreacion,
+      orden: 1
+    },
+    {
+      encabezado: 'Mercancía',
+      clave: (solicitud) => solicitud.mercancia,
+      orden: 2
+    },
+    {
+      encabezado: 'Cantidad',
+      clave: (solicitud) => solicitud.cantidad,
+      orden: 3
+    },
+    {
+      encabezado: 'Proveedor',
+      clave: (solicitud) => solicitud.proovedor,
+      orden: 4
+    }
   ];

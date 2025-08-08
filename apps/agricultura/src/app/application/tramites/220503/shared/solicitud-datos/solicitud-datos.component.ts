@@ -1,6 +1,7 @@
-import { AlertComponent, ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, ConsultaioQuery, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { Component, Input } from '@angular/core';
 import {Subject,map,takeUntil } from 'rxjs';
+import { CONFIGURACION_COLUMNA_SOLICITUD } from '../../enums/sagarpa.enum';
 import { Solicitud } from '../../models/solicitud-pantallas.model';
 import { TEXTOS } from '../../enums/texto-enum';
 
@@ -18,6 +19,11 @@ import { TEXTOS } from '../../enums/texto-enum';
  * Componente que representa los datos de la solicitud
  */
 export class SolicitudDatosTabComponent {
+  /**
+   * Indica si el formulario es de solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   * @type {boolean}
+   */
   esFormularioSoloLectura:boolean=false;
   /**
    * Obtiene los datos de enumeración y establece valores de TEXTOS
@@ -34,29 +40,7 @@ export class SolicitudDatosTabComponent {
   @Input() tablaFilaDatos: Solicitud[] = [];
 
 
-  configuracionColumnaSolicitud: ConfiguracionColumna<Solicitud>[] = [
-  {
-    encabezado: 'Fecha de creación',
-    clave: (solicitud) => solicitud.fechaCreacion,
-    orden: 1
-  },
-  {
-    encabezado: 'Mercancía',
-    clave: (solicitud) => solicitud.mercancia,
-    orden: 2
-  },
-  {
-    encabezado: 'Cantidad',
-    clave: (solicitud) => solicitud.cantidad,
-    orden: 3
-  },
-  {
-    encabezado: 'Proveedor',
-    clave: (solicitud) => solicitud.proovedor,
-    orden: 4
-  }
-];
-
+  configuracionColumnaSolicitud = CONFIGURACION_COLUMNA_SOLICITUD;
 constructor(private consultaioQuery: ConsultaioQuery){
      this.consultaioQuery.selectConsultaioState$
       .pipe(
