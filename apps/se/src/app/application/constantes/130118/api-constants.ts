@@ -119,3 +119,9 @@ export const API_GET_ACUSES_RESOLUCION = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAM
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitudes
  */
 export const API_GET_CONSULTA_SOLICITUD = `sat-t130118/tramite/${NUMFOLIOTRAMITE}/solicitud`;
+
+/**
+ * API para iniciar la confirmación de notificación del tramite 130118.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Confirmar-Notificacion/iniciar-confirmacion-notificacion
+ */
+export const API_GET_INICIAR_CONFIRMACION_NOTIFICACION = `sat-t130118/tramite/${NUMFOLIOTRAMITE}/confirmar-notificacion/iniciar`;
