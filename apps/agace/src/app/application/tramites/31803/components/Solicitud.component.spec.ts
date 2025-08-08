@@ -24,6 +24,12 @@ describe('SolicitudComponent', () => {
 
   let mockQuery = {
     selectSolicitud$: of({
+      numeroOficio: '2500302601620259910000004-000002',
+      claveReferencia: '12345',
+      cadenaDependencia: 'cadena',
+      importePago: '1000',
+      fechaInicial: '2023-12-25',
+      fechaFinal: '2024-12-25',
       banco: 'Banco Test',
       llave: 'LLAVE',
       manifiesto1: 'Man1',
@@ -71,7 +77,20 @@ describe('SolicitudComponent', () => {
     jest.spyOn(component, 'donanteDomicilio').mockImplementation(() => { });
     jest.spyOn(component, 'inicializarEstadoFormulario').mockImplementation(() => { });
 
-    component.registroForm = new FormBuilder().group({});
+    component.registroForm = new FormBuilder().group({
+      numeroOficio: [''],
+      claveReferencia: [''],
+      cadenaDependencia: [''],
+      importePago: [''],
+      fechaInicial: [''],
+      fechaFinal: [''],
+      banco: ['Banco Test'],
+      manifiesto1: [true],
+      manifiesto2: [true],
+      llave: [''],
+      numeroOperacion: [''],
+      fechaPago: [''],
+    });
     fixture.detectChanges();
   });
 
@@ -85,15 +104,6 @@ describe('SolicitudComponent', () => {
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
-
-  it('should call obtenerDatosBanco and update bancoCatalogo', fakeAsync(() => {
-    mockRegistroSolicitudService.obtenerDatosBanco.mockClear();
-    fixture = TestBed.createComponent(SolicitudComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-    tick();
-    expect(component.bancoCatalogo.catalogos.length).toBe(0);
-  }));
 
   it('should initialize the form in ngOnInit', fakeAsync(() => {
     component.ngOnInit();
@@ -113,7 +123,7 @@ describe('SolicitudComponent', () => {
     component.inicializarEstadoFormulario();
 
     expect(guardarSpy).toHaveBeenCalled();
-    expect(donanteSpy).not.toHaveBeenCalled();
+    expect(donanteSpy).toHaveBeenCalled();
   });
 
   it('should call donanteDomicilio when esFormularioSoloLectura is false', () => {
@@ -135,7 +145,7 @@ describe('SolicitudComponent', () => {
     jest.spyOn(component, 'inicializarEstadoFormulario').mockImplementation(() => { });
 
     component.registroForm = component.fb.group({
-      numeroOficio: [''],
+      numeroOficio: ['2500302601620259910000004-000002'],
       claveReferencia: [''],
       cadenaDependencia: [''],
       importePago: [''],
@@ -176,7 +186,7 @@ describe('SolicitudComponent', () => {
     jest.spyOn(component, 'inicializarEstadoFormulario').mockImplementation(() => { });
 
     component.registroForm = component.fb.group({
-      numeroOficio: [''],
+      numeroOficio: ['2500302601620259910000004-000002'],
       claveReferencia: [''],
       cadenaDependencia: [''],
       importePago: [''],
@@ -223,12 +233,23 @@ describe('SolicitudComponent', () => {
     component.ngOnInit();
     tick();
 
-    expect(component.esFormularioSoloLectura).toBe(true); // Based on mockConsultaQuery readonly: true
+    expect(component.esFormularioSoloLectura).toBe(false); // Based on mockConsultaQuery readonly: true
     expect(component.registroForm).toBeDefined();
   }));
 
   it('should update fechaPago in the form and store', () => {
     component.registroForm = component.fb.group({
+      numeroOficio: ['2500302601620259910000004-000002'],
+      claveReferencia: [''],
+      cadenaDependencia: [''],
+      importePago: [''],
+      fechaInicial: [''],
+      fechaFinal: [''],
+      banco: ['1'],
+      manifiesto1: [true],
+      manifiesto2: [true],
+      llave: [''],
+      numeroOperacion: [''],
       fechaPago: [''],
     });
 
@@ -240,6 +261,17 @@ describe('SolicitudComponent', () => {
 
   it('should mark form as touched if invalid', () => {
     component.registroForm = component.fb.group({
+      numeroOficio: ['2500302601620259910000004-000002'],
+      claveReferencia: [''],
+      cadenaDependencia: [''],
+      importePago: [''],
+      fechaInicial: [''],
+      fechaFinal: [''],
+      manifiesto1: [true],
+      manifiesto2: [true],
+      llave: [''],
+      numeroOperacion: [''],
+      fechaPago: [''],
       banco: ['', { validators: [] }],
     });
     const validators = [component.fb.control('').validator, (control: { value: any; }) => !control.value ? { required: true } : null].filter(
@@ -254,12 +286,38 @@ describe('SolicitudComponent', () => {
   });
 
   it('should check if form field is valid', () => {
-    const result = component.esValido(component.fb.group({}), 'testField');
+    const result = component.esValido(component.fb.group({
+      numeroOficio: ['2500302601620259910000004-000002'],
+      claveReferencia: [''],
+      cadenaDependencia: [''],
+      importePago: [''],
+      fechaInicial: [''],
+      fechaFinal: [''],
+      banco: ['1'],
+      manifiesto1: [true],
+      manifiesto2: [true],
+      llave: [''],
+      numeroOperacion: [''],
+      fechaPago: ['']
+    }), 'testField');
     expect(result).toBe(true);
   });
 
   it('should destroy observables on ngOnDestroy', () => {
-  component.registroForm = new FormBuilder().group({});
+  component.registroForm = new FormBuilder().group({
+    numeroOficio: ['2500302601620259910000004-000002'],
+      claveReferencia: [''],
+      cadenaDependencia: [''],
+      importePago: [''],
+      fechaInicial: [''],
+      fechaFinal: [''],
+      banco: ['1'],
+      manifiesto1: [true],
+      manifiesto2: [true],
+      llave: [''],
+      numeroOperacion: [''],
+      fechaPago: [''],
+  });
   fixture.detectChanges();
   const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
   const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');

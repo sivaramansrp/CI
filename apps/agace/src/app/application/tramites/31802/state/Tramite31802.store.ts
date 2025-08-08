@@ -18,7 +18,7 @@ export interface Solicitud31802State {
   /** Número de oficio asociado a la solicitud. */
   numeroOficio: string;
   /** Número de operación asociado a la solicitud. */
-  numeroOperacion: number;
+  numeroOperacion: string;
   /** Llave única asociada a la solicitud. */
   llave: string;
   /** Primer manifiesto asociado a la solicitud. */
@@ -39,6 +39,14 @@ export interface Solicitud31802State {
   fechaInicio: string;
   /** Fecha final del trámite. */
   fechaFinal: string;
+  /** Cuarto manifiesto asociado a la solicitud. */
+  manifiesto4?: boolean;
+  /** Quinto manifiesto asociado a la solicitud. */
+  manifiesto5?: boolean;
+  /** Valor actualmente seleccionado en algún campo dinámico. */
+  valorSeleccionado: string | null;
+  /** Opción seleccionada en el formulario. */
+  opcion: string;
 }
 
 /**
@@ -47,18 +55,22 @@ export interface Solicitud31802State {
  */
 export function createInitialState(): Solicitud31802State {
   return {
-    numeroOficio: '',
-    numeroOperacion: 0,
+    numeroOficio: '2500301800220259912000043-000040',
+    numeroOperacion: '',
     llave: '',
     manifiesto1: false,
     manifiesto2: false,
     manifiesto3: false,
     fechaPago: '',
     monedaNacional: '',
-    renovacion: true,
+    renovacion: false,
     homologacion: false,
-    fechaInicio: '',
-    fechaFinal: ''
+    fechaInicio: '09/06/2025',
+    fechaFinal: '15/06/2025',
+    manifiesto4: false,
+    manifiesto5: false,
+    valorSeleccionado: null,
+    opcion: ''
   };
 }
 
@@ -89,7 +101,7 @@ export class Tramite31802Store extends Store<Solicitud31802State> {
    * Actualiza el número de operación en el estado.
    * @param numeroOperacion Número de operación de tipo `string`.
    */
-  public setNumeroOperacion(numeroOperacion: number): void {
+  public setNumeroOperacion(numeroOperacion: string): void {
     this.update((state) => ({ ...state, numeroOperacion }));
   }
 
@@ -177,5 +189,34 @@ export class Tramite31802Store extends Store<Solicitud31802State> {
    */
   public limpiarSolicitud(): void {
     this.reset();
+  }
+
+  /**
+   * Actualiza el cuarto manifiesto en el estado.
+   * @param manifiesto4 Cuarto manifiesto de tipo `boolean`.
+   */
+  public setManifiesto4(manifiesto4: boolean): void {
+    this.update((state) => ({ ...state, manifiesto4 }));
+  }
+
+  /**
+   * Actualiza el quinto manifiesto en el estado.
+   * @param manifiesto5 Quinto manifiesto de tipo `boolean`.
+   */
+  public setManifiesto5(manifiesto5: boolean): void {
+    this.update((state) => ({ ...state, manifiesto5 }));
+  }
+
+  /** Actualiza el valor actualmente seleccionado. */
+  public setValorSeleccionado(valorSeleccionado: string): void {
+    this.update((state) => ({ ...state, valorSeleccionado }));
+  }
+
+  /**
+   * Actualiza la opción seleccionada en el formulario.
+   * @param opcion Opción seleccionada de tipo `string`.
+   */
+  public setOpcion(opcion: string): void {
+    this.update((state) => ({ ...state, opcion }));
   }
 }
