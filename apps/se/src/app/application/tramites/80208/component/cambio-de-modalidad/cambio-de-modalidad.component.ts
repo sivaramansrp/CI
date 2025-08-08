@@ -6,6 +6,7 @@ import { OnInit } from '@angular/core';
 
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import {
@@ -15,12 +16,12 @@ import {
   SeccionLibState,
   SeccionLibStore,
 } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 import {
-  CambioDeModalidadForm,
-  ConfiguracionColumna,
+  CONFIGURACION_DOMICILIOS,ConfiguracionColumna,
+  ServicioInmex
 } from '../../modelos/cambio-de-modalidad.model';
 
 import { TablaSeleccion } from '@ng-mf/data-access-user';
@@ -31,13 +32,12 @@ import { Subject } from 'rxjs';
 
 import { CONFIGURACION_SERVICIO } from '../../modelos/cambio-de-modalidad.model';
 
-import { delay, map, takeUntil, tap } from 'rxjs/operators';
-
-import { CambioModalidad } from '../../modelos/cambio-de-modalidad.model';
+import { map, takeUntil } from 'rxjs/operators';
 import { ServicioInfo } from '../../modelos/cambio-de-modalidad.model';
 
 import { CambioModalidadQuery } from '../../estados/tramite80208.query';
 import { CambioModalidadService } from '../../service/cambio-modalidad.service';
+import{CambioModalidadState} from '../../estados/tramite80208.store';
 import { CambioModalidadStore } from '../../estados/tramite80208.store';
 
 /**
@@ -65,8 +65,9 @@ import { CambioModalidadStore } from '../../estados/tramite80208.store';
     CommonModule,
     CatalogoSelectComponent,
     TituloComponent,
+    FormsModule,
   ],
-})
+}) 
 
 /**
  * @class CambioDeModalidadComponent
@@ -93,7 +94,13 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    * @type {ConfiguracionColumna<ServicioInfo>[]}
    */
   configuracionTabla: ConfiguracionColumna<ServicioInfo>[] = CONFIGURACION_SERVICIO;
-
+  
+  /**
+     * Configuración de columnas para la tabla de domicilios.
+     * @property {ConfiguracionColumna<ServicioInmex>[]} configuracionTabla
+     */
+    configuracionTablaImmex: ConfiguracionColumna<ServicioInmex>[] =
+      CONFIGURACION_DOMICILIOS;
   /**
    * @property ServiciosDatos - Datos de los servicios disponibles.
    * @description
@@ -103,11 +110,6 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    * @type {ServicioInfo[]}
    */
   ServiciosDatos: ServicioInfo[] = [
-    {
-      descripcionDelServicio: 'BLINDAJE, MODIFICACION ADAPTACION DE VEHICULO AUTOMOTOR',
-      tipoDeServicio: 'TANGIBLE',
-      estatus: true,
-    },
   ];
 
   /**
@@ -125,6 +127,11 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
       estatus: true,
     },
   ];
+  /**
+   * Valor predeterminado para la selección de aduanas.
+   * @property {number} predeterminado
+   */ 
+  predeterminado= -1;
 
   /**
    * @property unsubscribe$ - Subject para manejar la desuscripción de observables.
@@ -153,30 +160,36 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    */
   serviciosImmxForm!: FormGroup;
 
-  /**
-   * @property cambioModalidadState - Estado actual del cambio de modalidad.
-   * @description
-   * Una cadena que representa el estado actual del cambio de modalidad seleccionado.
-   * @type {string}
+   /**
+   * RFC de la empresa.
+   * @property {string} rfcEmpresa
    */
-  cambioModalidadState!: string;
+   rfcEmpresa: string = '';
+
+   /**
+   * Número del programa IMMEX.
+   * @property {string} numeroPrograma
+   */
+  numeroPrograma: string = '';
 
   /**
-   * @property cambioDeModalidadState - Estado del formulario de cambio de modalidad.
-   * @description
-   * Objeto que contiene el estado completo del formulario de cambio de modalidad, definido por
-   * la interfaz `CambioDeModalidadForm`.
-   * @type {CambioDeModalidadForm}
+   * Tiempo del programa IMMEX.
+   * @property {string} tiempoPrograma
    */
-  cambioDeModalidadState!: CambioDeModalidadForm;
+  tiempoPrograma: string = '';
 
-  /**
-   * @property serviciosImmxState - Estado actual de los servicios IMMX.
-   * @description
-   * Una cadena que representa el estado actual de los servicios IMMX.
-   * @type {string}
-   */
-  serviciosImmxState!: string;
+  
+   /**
+     * Datos de empresas nacionales.
+     * @property {ServicioInmex[]} datos
+     */
+    datos: ServicioInmex[] = [];
+
+    /**
+       * Empresas seleccionadas.
+       * @property {ServicioInmex[]} empresasSeleccionados
+       */
+      empresasSeleccionados: ServicioInmex[] = [];
 
   /**
    * @property serviciosImmx - Lista de servicios IMMX disponibles.
@@ -186,13 +199,15 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    */
   serviciosImmx!: Catalogo[];
 
+  domiciliosSeleccionados:ServicioInfo[] = [];
+
   /**
    * @property cambioDeModalidad - Lista de cambios de modalidad disponibles.
    * @description
    * Un arreglo de objetos tipo `CambioModalidad` que contiene la lista de opciones de cambio de modalidad.
    * @type {CambioModalidad[]}
    */
-  cambioDeModalidad!: CambioModalidad[];
+  cambioDeModalidad!: Catalogo[];
 
   /**
    * @property espectaculoServiciosImmx - Indica si se deben mostrar los servicios IMMX.
@@ -220,6 +235,8 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    * @type {SeccionLibState}
    */
   private seccion!: SeccionLibState;
+
+  tramiteState:CambioModalidadState= {} as CambioModalidadState;
 
   /**
    * @property esFormularioSoloLectura - Indica si el formulario está en modo solo lectura.
@@ -268,26 +285,34 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    * @method ngOnInit
    * @description Método de inicialización del componente.
    */
-  ngOnInit(): void {
+  ngOnInit(): void {      
+    this.inicializarForm();
+    this.getCargarDatos();
+    this.getCambioDeModalidad();
+    this.getServiciosImmx();      
     this.cambioModalidadQuery.selectCambioModalidad$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.cambioModalidadState = seccionState.cambioModalidad;
-          this.cambioDeModalidadState = seccionState.cambioDeModalidad;
-          this.serviciosImmxState = seccionState.serviciosImmx;
-        })
-      )
-      .subscribe();
-    this.inicializarForm();
-    this.getCargarDatos();
-    this.getCambioDeModalidad();
-    this.getServiciosImmx();
-    this.seccionQuery.selectSeccionState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.seccion = seccionState;
+          this.cambioDeModalidadForm.patchValue({
+            cambioDeModalidad: seccionState.cambioModalidad,
+
+          })
+          this.getCargarDatos();
+          
+          if (Number(seccionState.cambioModalidad) > 0) {
+            this.espectaculoServiciosImmx = true;
+          }
+
+          this.serviciosImmxForm.patchValue({
+            serviciosImmx: seccionState.serviciosImmx                       
+          });
+          this.rfcEmpresa = seccionState.rfcEmpresa;
+          this.numeroPrograma = seccionState.numeroPrograma;
+          this.tiempoPrograma = seccionState.tiempoPrograma;
+          this.datos = seccionState.datos;
+          this.ServiciosDatos = seccionState.ServiciosDatos;
+          
         })
       )
       .subscribe();
@@ -303,40 +328,7 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
      * el formulario completo es válido o si el control específico 'cambioDeModalidad'
      * tiene estado 'VALID'.
      */
-    this.cambioDeModalidadForm.statusChanges
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        delay(10),
-        tap((_value) => {
-          /**
-           * @constant SECCION - Identificador de la sección actual.
-           * @description
-           * Define una constante numérica que representa el índice de la sección actual en el contexto
-           * del componente, con un valor fijo de 1.
-           * @type {number}
-           */
-          const SECCION: number = 1;
-                /**
-           * @constant SECCION - Identificador de la sección actual.
-           * @description
-           * Define una constante numérica que representa el índice de la sección actual en el contexto
-           * del componente, con un valor fijo de 1.
-           * @type {number}
-           */
-          const FORMAS_VALIDADAS = this.seccion.formaValida;
-          
-          const CONTROL =
-            this.cambioDeModalidadForm.get('cambioDeModalidad')?.status;
-          if (this.cambioDeModalidadForm.valid || CONTROL === 'VALID') {
-            FORMAS_VALIDADAS[SECCION] = true;
-            this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
-          } else {
-            FORMAS_VALIDADAS[SECCION] = false;
-            this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
-          }
-        })
-      )
-      .subscribe();
+   
   }
 
   /**
@@ -355,23 +347,23 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
     this.cambioDeModalidadForm = this.fb.group({
       seleccionaLaModalidad: [
         {
-          value: this.cambioDeModalidadState?.seleccionaLaModalidad,
+          value: this.tramiteState?.seleccionaLaModalidad,
           disabled: true,
         },
       ],
-      folio: [{ value: this.cambioDeModalidadState?.folio, disabled: true }],
-      ano: [{ value: this.cambioDeModalidadState?.ano, disabled: true }],
+      folio: [{ value: this.tramiteState?.folio, disabled: true }],
+      ano: [{ value: this.tramiteState?.ano, disabled: true }],
       seleccionaModalidad: [
         {
-          value: this.cambioDeModalidadState?.seleccionaModalidad,
+          value: this.tramiteState?.seleccionaModalidad,
           disabled: true,
         },
       ],
-      cambioDeModalidad: [{ value: this.cambioModalidadState }],
+      cambioDeModalidad: [{ value: this.tramiteState?.cambioModalidad, disabled: false }],
     });
 
     this.serviciosImmxForm = this.fb.group({
-      serviciosImmx: [{ value: this.cambioModalidadState }],
+      serviciosImmx: [{ value: this.tramiteState?.serviciosImmx, disabled: false }],
     });
   }
 
@@ -392,7 +384,88 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
       this.inicializarForm();
     }
   }
+  
+  /**
+   * Maneja los cambios en los campos de entrada y actualiza el estado correspondiente
+   * en el store de ampliación de servicios.
+   *
+   * @param fieldName - El nombre del campo que ha cambiado.
+   * @param newValue - El nuevo valor asignado al campo.
+   */
+  enCambioDeCampo(fieldName: string, newValue: string): void {
+    switch (fieldName) {
+      case 'rfcEmpresa':
+        this.cambioModalidadStore.actualizarEstado({rfcEmpresa: newValue});
+        break;
+      case 'numeroPrograma':
+        this.cambioModalidadStore.actualizarEstado({numeroPrograma: newValue});
+        break;
+      case 'tiempoPrograma':
+        this.cambioModalidadStore.actualizarEstado({tiempoPrograma: newValue});
+        break;
+      default:
+        break;
+    }
+  }
 
+  /**
+   * Agrega servicios a la ampliación.
+   * @method agregarServiciosAmpliacion
+   */
+
+  agregarServiciosAmpliacion(): void {
+    const DESCRIPCION_VAL = this.serviciosImmxForm.get('serviciosImmx')?.value;
+  if( DESCRIPCION_VAL!=='-1') {
+
+  const SERVICIO_SELECCIONADO = this.serviciosImmx.find(servicio => servicio.id === Number(DESCRIPCION_VAL));
+   const DESCRIPCION= SERVICIO_SELECCIONADO?.descripcion || 'SERVICIO NO ENCONTRADO';
+
+    const TIPO="tangible";
+    const ESTATUS= true;
+  
+    const NUEVO: ServicioInfo = {
+      descripcionDelServicio: DESCRIPCION,
+      tipoDeServicio: TIPO,
+      estatus: ESTATUS,
+    };
+
+    this.ServiciosDatos = [...this.ServiciosDatos, NUEVO];
+    this.cambioModalidadStore.actualizarEstado({
+      ServiciosDatos: this.ServiciosDatos});
+    }
+
+  }
+  /**
+   * Elimina un servicio seleccionado del grid de servicios.
+   * 
+   * @method eliminarServiciosGrid
+   * 
+   * @description
+   * Este método busca el índice del primer servicio en `ServiciosDatos` que coincida con la descripción del servicio
+   * del primer domicilio seleccionado (`domiciliosSeleccionados[0]?.['descripcionDelServicio']`).
+   * Si se encuentra el servicio, lo elimina del arreglo `ServiciosDatos` y actualiza el estado en el store.
+   * Finalmente, limpia la selección de domicilios.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
+  eliminarServiciosGrid(): void {
+    const INDICE = this.ServiciosDatos.findIndex(
+      (item: ServicioInfo) =>
+        item.descripcionDelServicio === this.domiciliosSeleccionados[0]?.['descripcionDelServicio']
+    );
+  
+    if (INDICE !== -1) {
+      const DATOS_IMMEX_ACTUALIZADOS = [...this.ServiciosDatos];
+      DATOS_IMMEX_ACTUALIZADOS.splice(INDICE, 1);
+      this.ServiciosDatos = DATOS_IMMEX_ACTUALIZADOS;
+      this.domiciliosSeleccionados=[];
+  
+        this.cambioModalidadStore.actualizarEstado({
+        ServiciosDatos: this.ServiciosDatos
+      });
+    }
+  }
+  
   /**
    * @method guardarDatosFormulario - Configura el estado del formulario de cambio de modalidad.
    * 
@@ -445,10 +518,7 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    */
   getServiciosImmx(): void {
     this.modalidadService.getServiciosImmx().subscribe((data) => {
-      this.serviciosImmx = data.data;
-      this.cambioModalidadStore.setCambioModalidad(
-        JSON.stringify(this.serviciosImmx)
-      );
+      this.serviciosImmx = data.data;  
     });
   }
 
@@ -496,7 +566,7 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
     );
     this.espectaculoServiciosImmx =
       OPCIONSELECCIONADA?.descripcion?.toUpperCase() === 'SERVICIOS';
-    this.cambioModalidadStore.setCambioModalidad(SELECCIONADAID);
+    this.cambioModalidadStore.actualizarEstado({cambioModalidad:SELECCIONADAID});
   }
 
   /**
@@ -509,11 +579,102 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    * @param {any} event - Objeto del evento que contiene la información de la selección, incluyendo el `id` del elemento seleccionado.
    * @returns {void} No retorna ningún valor.
    */
-  seleccionarDesplegable(event: any): void {
-    if (event?.id) {
-      this.toggleServiciosImmx(event.id.toString());
-    }
+  seleccionarDesplegable(): void {
+   
+       this.toggleServiciosImmx(
+        this.cambioDeModalidadForm.value.cambioDeModalidad.toString());
+  this.cambioModalidadStore.actualizarEstado({
+        cambioModalidad: this.cambioDeModalidadForm.value.cambioDeModalidad.toString()
+      });
+
+       }
+  /**
+   * @method seleccionarDesplegableServicios - Maneja la selección de servicios en un desplegable.
+   * 
+   * @description
+   * Este método se ejecuta cuando se selecciona un servicio en el formulario `serviciosImmxForm`.
+   * Actualiza el estado del store `cambioModalidadStore` con el valor seleccionado de los servicios IMMX.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
+
+  seleccionarDesplegableServicios(): void {
+    this.cambioModalidadStore.actualizarEstado({
+      serviciosImmx: this.serviciosImmxForm.value.serviciosImmx.toString()
+    });
   }
+   /**
+     * Selecciona domicilios.
+     * @method seleccionarDomicilios
+     * @param {any} domicilios - Domicilios seleccionados.
+     */
+    seleccionarDomicilios(domicilios: ServicioInfo): void {
+      this.domiciliosSeleccionados = [{ ...domicilios }];
+    }
+   /**
+     * Elimina empresas nacionales.
+     * @method eliminarEmpresasNacionales
+     */
+    eliminarEmpresasNacionales(): void {
+      const INDICE = this.datos.findIndex(
+        (item: ServicioInmex) =>
+          item.registroContribuyentes ===
+          this.empresasSeleccionados[0]?.registroContribuyentes
+      );
+      if (INDICE !== -1) {
+        const DATOSACTUALIZADOS = [...this.datos];
+        DATOSACTUALIZADOS.splice(INDICE, 1);
+        this.cambioModalidadStore.actualizarEstado({datos:DATOSACTUALIZADOS});
+        this.empresasSeleccionados = [];
+        this.rfcEmpresa = '';
+        this.numeroPrograma = '';
+        this.tiempoPrograma = '';
+        this.cambioModalidadStore.actualizarEstado(
+          { rfcEmpresa: '', numeroPrograma: '', tiempoPrograma: '' }
+        )
+      }
+    }
+   
+     /**
+   * Actualiza el grid de empresas nacionales.
+   * @method actualizaGridEmpresasNacionales
+   */
+  actualizaGridEmpresasNacionales(): void {
+    if (
+      !this.rfcEmpresa?.trim() ||
+      !this.numeroPrograma?.trim() ||
+      !this.tiempoPrograma?.trim()
+    ) {
+      return; 
+    }
+  
+    const CUERPODATOS = {
+      servicio: 'Auditoría de sistemas de seguridad',
+      registroContribuyentes: this.rfcEmpresa,
+      denominacionSocial: 'AAL970927390',
+      numeroIMMEX: this.numeroPrograma,
+      anoIMMEX: this.tiempoPrograma,
+    };
+  
+    const DATOSACTUALIZADOS = [...this.datos, CUERPODATOS];
+    
+    this.cambioModalidadStore.actualizarEstado({rfcEmpresa: ''});
+    this.cambioModalidadStore.actualizarEstado({numeroPrograma: ''});
+    this.cambioModalidadStore.actualizarEstado({tiempoPrograma: ''});
+    this.datos= DATOSACTUALIZADOS;
+    this.cambioModalidadStore.actualizarEstado({datos:this.datos})
+    this.rfcEmpresa = '';
+    this.numeroPrograma = '';
+    this.tiempoPrograma = '';
+  }
+  /**
+     * Selecciona empresas.
+     * @method seleccionarEmpresas
+     * @param {any} empresas - Empresas seleccionadas.
+     */
+    seleccionarEmpresas(empresas: ServicioInmex): void {
+    this.empresasSeleccionados = [{ ...empresas }];
+    }
 
   /**
    * @method ngOnDestroy - Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.

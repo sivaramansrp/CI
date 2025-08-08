@@ -3,8 +3,8 @@
  * @description
  * Este servicio administra el estado de `CambioModalidadState` utilizando Akita.
  */
+import { ServicioInfo, ServicioInmex} from '../modelos/cambio-de-modalidad.model';
 import { Store, StoreConfig } from '@datorama/akita';
-import { CambioDeModalidadForm } from '../modelos/cambio-de-modalidad.model';
 import { Injectable } from '@angular/core';
 
 /**
@@ -17,9 +17,17 @@ import { Injectable } from '@angular/core';
  * @property {string} serviciosImmx - Servicios IMMEX asociados.
  */
 export interface CambioModalidadState {
-    cambioDeModalidad: CambioDeModalidadForm;
+    seleccionaLaModalidad: string;
+    folio: number;
+    ano: number;
+    seleccionaModalidad: string;
     cambioModalidad: string;
     serviciosImmx: string;
+    rfcEmpresa: string;
+    numeroPrograma: string;
+    tiempoPrograma: string;
+    datos:ServicioInmex[];
+    ServiciosDatos: ServicioInfo[]
 }
 
 /**
@@ -30,15 +38,21 @@ export interface CambioModalidadState {
  */
 export function createInitialState(): CambioModalidadState {
     return {
-        cambioDeModalidad: {
+       
             seleccionaLaModalidad: '',
-            folio: 0,
+            folio: 0, 
             ano: 0,
             seleccionaModalidad: '',
-            cambioModalidad: '',
-        },
-        cambioModalidad: '',
-        serviciosImmx: ''
+            cambioModalidad: '-1',
+        
+    
+        serviciosImmx: '-1',
+        rfcEmpresa: '',
+        numeroPrograma: '',
+        tiempoPrograma: '',
+        datos: [],
+        ServiciosDatos: []
+
     };
 }
 
@@ -59,42 +73,28 @@ export class CambioModalidadStore extends Store<CambioModalidadState> {
         super(createInitialState());
     }
 
-    /**
-     * @method setCambioDeModalidad
-     * @description
-     * Actualiza el estado de `cambioDeModalidad` con nuevos valores.
-     * @param {CambioDeModalidadForm} cambioDeModalidad - Datos del formulario de cambio de modalidad.
-     */
-    public setCambioDeModalidad(cambioDeModalidad: CambioDeModalidadForm): void {
-        this.update((state) => ({
-            ...state,
-            cambioDeModalidad,
-        }));
-    }
+    
+    
+     /**
+   * Actualiza el estado del store con los valores proporcionados.
+   * @param {Partial<CambioModalidadState>} valores - Valores parciales del estado a actualizar.
+   * @method actualizarEstado
+   * @description
+   * Actualiza el estado del store con los valores proporcionados.
+   * Utiliza el método `update` de Akita para fusionar los nuevos valores con el estado actual.
+   * @param {Partial<CambioModalidadState>} valores - Valores parciales del estado a actualizar.
+   * @returns {void}
+   * */
 
-    /**
-     * @method setCambioModalidad
-     * @description
-     * Actualiza el estado de `cambioModalidad`.
-     * @param {string} cambioModalidad - Nueva modalidad de cambio.
-     */
-    public setCambioModalidad(cambioModalidad: string): void {
-        this.update((state) => ({
+     public actualizarEstado(valores: Partial<CambioModalidadState>): void {
+        this.update((state) => {
+          const NEW_STATE= {
             ...state,
-            cambioModalidad,
-        }));
-    }
-
-    /**
-     * @method setServiciosImmx
-     * @description
-     * Actualiza el estado de `serviciosImmx`.
-     * @param {string} serviciosImmx - Nuevos servicios IMMEX.
-     */
-    public setServiciosImmx(serviciosImmx: string): void {
-        this.update((state) => ({
-            ...state,
-            serviciosImmx,
-        }));
-    }
+            ...valores,
+          };
+         
+          return NEW_STATE;
+        });
+      }
+    
 }
