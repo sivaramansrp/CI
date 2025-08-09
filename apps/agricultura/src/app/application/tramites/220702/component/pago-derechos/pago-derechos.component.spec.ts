@@ -107,6 +107,9 @@ describe('PagoDerechosComponent', () => {
     component.tramiteStoreQuery.selectSolicitudTramite$ = observableOf({});
     component.pagosDerechosForm = component.pagosDerechosForm || {};
     component.pagosDerechosForm.patchValue = jest.fn();
+    component.fitosanitarioService = component.fitosanitarioService || {};
+    component.fitosanitarioService.getPuntoDeInspeccion = jest.fn().mockReturnValue(observableOf({}));
+    component.fitosanitarioService.getPagoJustificacion = jest.fn().mockReturnValue(observableOf({}));
     component.ngOnInit();
     
   });

@@ -150,6 +150,13 @@ export class FitosanitarioService {
     );
   }
 
+  getPagoJustificacion(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`${this.apiUrl}pago-justificacion.json`).pipe(
+      map((response) => response)
+    );
+  } 
+
+
   /**
    * @description
    * Obtiene los datos del responsable de inspección.
