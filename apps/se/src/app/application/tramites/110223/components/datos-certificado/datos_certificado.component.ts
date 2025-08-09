@@ -1,7 +1,8 @@
-import { Catalogo, CatalogoSelectComponent, CatalogosSelect, ConsultaioQuery, ConsultaioState, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogosSelect, ConsultaioQuery, ConsultaioState, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component'; 
 import { CommonModule } from '@angular/common';
 import { RegistroService } from '../../services/registro.service';
 import { Solicitud110223State } from '../../../../estados/tramites/Tramite110223.store';
@@ -18,7 +19,7 @@ import { Tramite110223Store } from '../../../../estados/tramites/Tramite110223.s
     CatalogoSelectComponent,
     CommonModule,
     ReactiveFormsModule,
-    TituloComponent,
+    TituloComponent
   ],
   templateUrl: './datos_certificado.component.html',
   styleUrl: './datos_certificado.component.css',
@@ -213,7 +214,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) || false;
   }
-
+  
   /**
    * Establece valores en el estado de la tienda.
    * @param form Formulario reactivo.

@@ -6,9 +6,10 @@
   "fechaFinal": "29/06/2025",
   "fechaPago": "09/06/2025",
   "monedaNacional": "EUR",
-  "numeroOperacion": 123456,
+  "numeroOperacion": "123456",
   "llave": "ABC123XYZ",
   "manifiesto1": true,
   "manifiesto2": true,
-  "manifiesto3": true
+  "manifiesto3": true,
+  "opcion": "si"
 }
