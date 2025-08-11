@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { CatalogoResponse, CatalogoSelectComponent, ConsultaioQuery, TablaDinamicaComponent, TablePaginationComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { CatalogoResponse, ConsultaioQuery, TablaDinamicaComponent, TablePaginationComponent, TituloComponent } from '@ng-mf/data-access-user';
 
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
@@ -22,10 +22,10 @@ import { RepresentanteLegalComponent } from '../representante-legal/representant
 import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { Tramite260212Store } from '../../estados/tramite260212.store';
 
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { Modal } from 'bootstrap';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite260212Query } from '../../estados/tramite260212.query';
-
 /**
  * Componente DatosDeLaSolicitud
  * Este componente gestiona los datos y formularios de la solicitud en el flujo de trabajo.

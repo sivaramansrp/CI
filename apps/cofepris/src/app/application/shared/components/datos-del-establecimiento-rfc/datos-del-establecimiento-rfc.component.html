@@ -19,6 +19,24 @@
         </div>
       </div>
     </div>
+    <div class="col-md-8">
+        <div class="form-group">
+          <label class="form-label" for="denominacionRazonSocial">Denominación o razón social*:</label>
+          <input class="form-control" id="denominacionRazonSocial" placeholder="" type="text" maxlength="100" size="75"
+        formControlName="denominacionRazonSocial"
+        (change)="setValoresStore(datosDelForm,'denominacionRazonSocial', 'setDenominacionRazonSocial')">
+        </div>
+        <div class="d-grid">
+          <div *ngIf="datosDelForm.controls['denominacionRazonSocial'].invalid && datosDelForm.controls['denominacionRazonSocial'].touched">
+        <span *ngIf="datosDelForm.controls['denominacionRazonSocial'].errors?.['required']" class="mensaje-error">
+          Este campo es obligatorio.
+        </span>
+        <span *ngIf="datosDelForm.controls['denominacionRazonSocial'].errors?.['maxlength']" class="mensaje-error">
+          El texto excede el límite de caracteres permitido.
+        </span>
+          </div>
+        </div>
+      </div>
   </div>
   <div class="row">
     <div class="col-md-4">
