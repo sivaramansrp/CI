@@ -199,6 +199,14 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    */
   serviciosImmx!: Catalogo[];
 
+  /**
+   * @property domiciliosSeleccionados - Lista de domicilios seleccionados.
+   * @description
+   * Un arreglo de objetos tipo `ServicioInfo` que contiene los domicilios seleccionados por el usuario.
+   * Se utiliza para almacenar los servicios seleccionados en la interfaz.
+   * @type {ServicioInfo[]}
+   */
+
   domiciliosSeleccionados:ServicioInfo[] = [];
 
   /**
@@ -235,6 +243,14 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    * @type {SeccionLibState}
    */
   private seccion!: SeccionLibState;
+
+  /**
+   * @property tramiteState - Estado del trámite de cambio de modalidad.
+   * @description
+   * Objeto que contiene el estado del trámite de cambio de modalidad, definido por la interfaz `CambioModalidadState`.
+   * Se inicializa como un objeto vacío y se utilizará para almacenar el estado del formulario y otros datos relevantes.
+   * @type {CambioModalidadState}
+   */
 
   tramiteState:CambioModalidadState= {} as CambioModalidadState;
 
