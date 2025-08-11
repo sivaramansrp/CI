@@ -1,3 +1,4 @@
+import { Fabricante, Proveedor } from '../../shared/models/terceros-relacionados.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
@@ -347,6 +348,20 @@ export interface AvisoSanitarioState {
 
     /** Indica si el país del domicilio está inhabilitado. */
     inhabilitarPaisFabricante: boolean;
+
+        /**
+     * @property {Proveedor[]} proveedorTablaDatos
+     * @description
+     * Arreglo que contiene los datos de los proveedores relacionados con el trámite.
+     */
+    proveedorTablaDatos: Proveedor[];
+
+    /**
+     * @property {Fabricante[]} fabricanteTablaDatos
+     * @description
+     * Arreglo que contiene los datos de los fabricantes relacionados con el trámite.
+     */
+    fabricanteTablaDatos: Fabricante[];
 }
 
 /**
@@ -476,6 +491,8 @@ export function createInitialState(): AvisoSanitarioState {
         mostrarRfcFabricanteBuscarBoton: false,
         mostrarCurpFabricanteBuscarBoton: false,
         inhabilitarPaisFabricante: true,
+        proveedorTablaDatos: [],
+        fabricanteTablaDatos: [],
     }
 }
 
@@ -1860,6 +1877,36 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
         this.update((state) => ({
             ...state,
             inhabilitarPais,
+        }));
+    }
+
+        /**
+     * @method updateProveedorTablaDatos
+     * @description
+     * Agrega nuevos proveedores al arreglo `proveedorTablaDatos` en el estado.
+     * Los proveedores recibidos se concatenan al arreglo existente.
+     * @param {Proveedor[]} newProveedores - Arreglo de proveedores a agregar.
+     * @returns {void}
+     */
+    public updateProveedorTablaDatos(newProveedores: Proveedor[]): void {
+        this.update((state) => ({
+            ...state,
+            proveedorTablaDatos: [...state.proveedorTablaDatos, ...newProveedores],
+        }));
+    }
+
+    /**
+     * @method updateFabricanteTablaDatos
+     * @description
+     * Agrega nuevos fabricantes al arreglo `fabricanteTablaDatos` en el estado.
+     * Los fabricantes recibidos se concatenan al arreglo existente.
+     * @param {Fabricante[]} newFabricantes - Arreglo de fabricantes a agregar.
+     * @returns {void}
+     */
+    public updateFabricanteTablaDatos(newFabricantes: Fabricante[]): void {
+        this.update((state) => ({
+            ...state,
+            fabricanteTablaDatos: [...state.fabricanteTablaDatos, ...newFabricantes],
         }));
     }
 }
