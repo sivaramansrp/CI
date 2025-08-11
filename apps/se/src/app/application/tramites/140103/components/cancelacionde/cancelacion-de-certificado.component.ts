@@ -20,7 +20,6 @@ import { Cupo } from '@libs/shared/data-access-user/src/core/models/140103/cance
 import { OficioComponent } from '../oficio/oficio.component';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { Tramite140103Query } from '../../../../estados/queries/tramite140103.query';
-import cancelacions from '@libs/shared/theme/assets/json/140103/cancelacion.json';
 import cancelcatalog from '@libs/shared/theme/assets/json/140103/cancelcatalog.json';
 
 
