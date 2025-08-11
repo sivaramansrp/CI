@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 
-import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { Solicitud110203State, Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
 import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query';
@@ -89,12 +89,47 @@ export class Transporte110203Component implements OnInit, OnDestroy {
    * @param tramite110203Store - Store que gestiona los valores persistentes del trámite 110203.
    * @param tramite110203Query - Query que se utiliza para obtener el estado actual de la solicitud 110203.
    */
+
+   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Inicializa el componente Transporte110203Component.
+   *
+   * @param fb - Servicio FormBuilder para crear formularios reactivos.
+   * @param tramite110203Store - Servicio Store para gestionar el estado de Tramite110203.
+   * @param tramite110203Query - Servicio Query para acceder al estado de Tramite110203.
+   * @param consultaioQuery - Servicio Query para acceder al estado de Consultaio.
+   *
+   * Se suscribe al estado de Consultaio para:
+   * - Actualizar la propiedad `esFormularioSoloLectura` según el estado `readonly`.
+   * - Llamar a `inicializarEstadoFormulario()` para aplicar configuraciones según el estado recibido.
+   * - Cancelar la suscripción automáticamente cuando `destroyNotifier$` emite, para evitar fugas de memoria.
+   */
   constructor(
     private fb: FormBuilder,
     private tramite110203Store: Tramite110203Store,
-    private tramite110203Query: Tramite110203Query
+    private tramite110203Query: Tramite110203Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Método constructor, se usa para inicializar las dependencias
+     /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**
