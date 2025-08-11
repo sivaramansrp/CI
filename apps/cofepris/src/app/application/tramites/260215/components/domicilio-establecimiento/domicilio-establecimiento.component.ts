@@ -401,12 +401,12 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
   public seleccionarOrigenDelPaisTres: string[] = this.crosListaDePaises;
 
-/**
- * @description
- * Etiqueta de la lista de fechas para países de origen.
- * Define los textos de los lados izquierdo y derecho de la lista cruzada.
- * Utilizada para mostrar la selección de países de origen en el formulario.
- */
+  /**
+   * @description
+   * Etiqueta de la lista de fechas para países de origen.
+   * Define los textos de los lados izquierdo y derecho de la lista cruzada.
+   * Utilizada para mostrar la selección de países de origen en el formulario.
+   */
   public paisDeOrigenLabel: CrossListLable = {
     tituluDeLaIzquierda: 'País de origen:',
     derecha: 'País(es) seleccionado(s)*:',
@@ -417,16 +417,16 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Etiqueta de la lista de fechas para países de procedencia (segunda lista).
    * Define los textos de los lados izquierdo y derecho de la lista cruzada.
    */
-    public paisDeProcedenciaLabel: CrossListLable = {
+  public paisDeProcedenciaLabel: CrossListLable = {
     tituluDeLaIzquierda: 'País de procedencia:',
     derecha: 'País(es) seleccionado(s)*:',
   };
 
- /**
-  * @description Uso específico de la mercancía.
-  * Define los textos de los lados izquierdo y derecho de la lista cruzada.
-  */
-    public usoEspecifico: CrossListLable = {
+  /**
+   * @description Uso específico de la mercancía.
+   * Define los textos de los lados izquierdo y derecho de la lista cruzada.
+   */
+  public usoEspecifico: CrossListLable = {
     tituluDeLaIzquierda: 'Uso específico:',
     derecha: 'Uso específico seleccionado*:',
   };
@@ -590,36 +590,28 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Recorre la lista de seleccionados y elimina cada uno de ellos de la tabla de
    */
   eliminarFila(): void {
-     if (!this.seleccionados || this.seleccionados.length === 0) {
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'Selecciona un registro para eliminar.',
-      cerrar: true,
-      tiempoDeEspera: 3000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-    };
-    return;
-  }
+    if (!this.seleccionados || this.seleccionados.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Selecciona un registro.',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
     this.nicoTablaDatos = this.nicoTablaDatos.filter(item =>
       !this.seleccionados.some(selected =>
         selected.clave_Scian === item.clave_Scian
       )
     );
     this.seleccionados = [];
-
-  //   this.seleccionados.forEach(row => {
-  //     const INDEX = this.nicoTablaDatos.indexOf(row);
-  //     if (INDEX > -1) {
-  //       this.nicoTablaDatos.splice(INDEX, 1);
-  //     }
-  //   });
-  //  this.seleccionados = [];
   }
- 
+
   /**
    * Agrega una nueva fila a la tabla NICO con valores del formulario
    */
