@@ -102,9 +102,20 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.dictamenForm = this.fb.group({
       cumplimiento: ['1'],
-      mensajeDictamen: ['', [Validators.required, GenerarDictamenComponent.noSoloEspacios]],
-      antecedentesEditables: ['', [Validators.required]],
-      antecedentesReadonly: [{ value: '', disabled: true }],
+      mensajeDictamen: ['', [
+        Validators.required,
+        GenerarDictamenComponent.noSoloEspacios,
+        Validators.maxLength(2000)
+      ]],
+      antecedentesEditables: ['', [
+        Validators.required,
+        GenerarDictamenComponent.noSoloEspacios,
+        Validators.maxLength(2000)
+      ]],
+      antecedentesReadonly: [{
+        value: 'Fracción I numeral 2 del Anexo 2.2.2 del Acuerdo por el que la Secretaría de Economía emite reglas y criterios de carácter general en materia de Comercio Exterior, publicado en el Diario Oficial de la Federación el 6 de julio de 2007 y sus modificaciones.',
+        disabled: true
+      }],
       fechaInicioVigenciaAutorizada: [''],
       fechaFinVigenciaAutorizada: ['']
     });
@@ -152,28 +163,28 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
    * @returns {void}
    */
   private actualizarVisibilidadCamposFecha(valorCumplimiento: string): void {
-    const esDictamenAceptado = valorCumplimiento === 'SEDI.AC';
-    this.mostrarCamposFecha = esDictamenAceptado;
+    const ESDICTAMENACEPTADO = valorCumplimiento === '1';
+    this.mostrarCamposFecha = ESDICTAMENACEPTADO;
 
     // Actualizar validadores según la visibilidad
-    const fechaInicioControl = this.dictamenForm.get('fechaInicioVigenciaAutorizada');
-    const fechaFinControl = this.dictamenForm.get('fechaFinVigenciaAutorizada');
+    const FECHAINICIOCONTROL = this.dictamenForm.get('fechaInicioVigenciaAutorizada');
+    const FECHAFINCONTROL = this.dictamenForm.get('fechaFinVigenciaAutorizada');
 
-    if (esDictamenAceptado) {
+    if (ESDICTAMENACEPTADO) {
       // Si el dictamen es aceptado, los campos de fecha son obligatorios
-      fechaInicioControl?.setValidators([Validators.required]);
-      fechaFinControl?.setValidators([Validators.required]);
+      FECHAINICIOCONTROL?.setValidators([Validators.required]);
+      FECHAFINCONTROL?.setValidators([Validators.required]);
     } else {
       // Si el dictamen es rechazado, remover validadores y limpiar valores
-      fechaInicioControl?.clearValidators();
-      fechaFinControl?.clearValidators();
-      fechaInicioControl?.setValue('');
-      fechaFinControl?.setValue('');
+      FECHAINICIOCONTROL?.clearValidators();
+      FECHAFINCONTROL?.clearValidators();
+      FECHAINICIOCONTROL?.setValue('');
+      FECHAFINCONTROL?.setValue('');
     }
 
     // Actualizar el estado de validación
-    fechaInicioControl?.updateValueAndValidity();
-    fechaFinControl?.updateValueAndValidity();
+    FECHAINICIOCONTROL?.updateValueAndValidity();
+    FECHAFINCONTROL?.updateValueAndValidity();
   }
 
   /**
@@ -207,11 +218,11 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
   }
 
   /**
-   * @method guardar
-   * @description Marca todos los campos del formulario como tocados y, si el formulario es válido, emite el evento de guardado con los datos del dictamen.
-   * 
-   * @returns {void}
-   */
+  * @method guardar
+  * @description Marca todos los campos del formulario como tocados y, si el formulario es válido, emite el evento de guardado con los datos del dictamen.
+  * 
+  * @returns {void}
+  */
   guardar(): void {
     this.dictamenForm.markAllAsTouched();
     if (this.dictamenForm.valid) {
@@ -223,11 +234,11 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
   }
 
   /**
-   * @method firmar
-   * @description Marca todos los campos del formulario como tocados y, si el formulario es válido, emite el evento de firmado con los datos del dictamen.
-   * 
-   * @returns {void}
-   */
+  * @method firmar
+  * @description Marca todos los campos del formulario como tocados y, si el formulario es válido, emite el evento de firmado con los datos del dictamen.
+  * 
+  * @returns {void}
+  */
   firmar(): void {
     this.dictamenForm.markAllAsTouched();
     if (this.dictamenForm.valid) {

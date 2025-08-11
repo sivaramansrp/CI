@@ -70,6 +70,8 @@
                   id="rfcInput"
                   formControlName="rfcInput"
                   placeholder="Ingrese RFC"
+                  maxlength="13"
+                  soloLetrasNumeros
                 />
                 <button class="btn btn-secondary ms-2" type="button" (click)="onBuscarRfc()">
                   Buscar
@@ -124,6 +126,8 @@
                 type="text"
                 class="form-control mb-2"
                 formControlName="numeroDeEmpleados"
+                maxlength="5"
+                soloLetrasNumeros
               />
             </div>
           </div>
@@ -143,7 +147,7 @@
         </form>
         <footer class="footer d-flex py-5 gap-3 justify-content-end">
             <button type="button" class="btn btn-primary" (click)="modalCancelar()">Cancelar</button>
-            <button type="button" class="btn btn-primary" (click)="enviarDialogData()">Agregar</button>
+            <button type="button" class="btn btn-primary" (click)="enviarDialogData()">Aceptar</button>
           </footer>
       </div>
     </div>

@@ -1,19 +1,29 @@
 <div class="page">
   <div class="container">
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-12">
         <h3>Validar a posteriori el certificado de CAM</h3>
+      </div>
+      <div class="col-12">
+        @if (esFormaValido) {
+        <div
+          class="alert alert-info alert-danger"
+          [innerHTML]="formErrorAlert"
+        ></div>
+        }
       </div>
       <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
     <div class="row">
       @switch (indice) { @case (1) {
-      <app-paso-uno></app-paso-uno>
+      <app-paso-uno #pasoUnoRef (tabChanged)="onTabChanged()"></app-paso-uno>
       } @case (2) {
       <app-paso-tres></app-paso-tres>
-      }
-      }
-      <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+      } }
+      <btn-continuar
+        [datos]="datosPasos"
+        (continuarEvento)="getValorIndice($event)"
+      ></btn-continuar>
     </div>
   </div>
 </div>

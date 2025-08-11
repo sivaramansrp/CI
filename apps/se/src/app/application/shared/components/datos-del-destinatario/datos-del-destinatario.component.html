@@ -4,11 +4,11 @@
           <ng-titulo titulo="Datos del destinatario"></ng-titulo>
           <div *ngIf="campoDestinatario; else defaultTemplate">
             <div class="col-md-8 form-group">
-              <label class="form-label" for="nombres">Nombre(s):</label>
+              <label class="form-label" for="nombres">Nombre(s)*:</label>
               <input type="text" id="nombres" class="form-control" formControlName="nombres" (change)="setValoresStore('formDatosDelDestinatario','nombres','setFormDatosDelDestinatario')" />
             </div>
             <div class="col-md-4 form-group">
-              <label class="form-label" for="numeroDeRegistroFiscal">Número de registro fiscal:</label>
+              <label class="form-label" for="numeroDeRegistroFiscal">Número de registro fiscal*:</label>
               <input type="text" id="numeroDeRegistroFiscal" class="form-control" formControlName="numeroDeRegistroFiscal" (change)="setValoresStore('formDatosDelDestinatario','numeroDeRegistroFiscal','setFormDatosDelDestinatario')" />
             </div>
           </div>

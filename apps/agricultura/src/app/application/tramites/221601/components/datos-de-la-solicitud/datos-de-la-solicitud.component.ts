@@ -295,7 +295,7 @@ mercanciaForm = this.fb.group({
       aduana: [this.solicitudState.aduana],
       oficina: [this.solicitudState.oficina],
       punto: [this.solicitudState.punto],
-      guia: [this.solicitudState.guia,[Validators.maxLength(80)]],
+      guia: [this.solicitudState.guia,[Validators.maxLength(50)]],
       clave: [this.solicitudState.clave,[Validators.required, Validators.maxLength(15)]],
       establecimiento: [this.solicitudState.establecimiento, Validators.required],
       regimen: [this.solicitudState.regimen, Validators.required],

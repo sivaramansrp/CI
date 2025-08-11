@@ -74,7 +74,6 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
      * se llama al método `guardarDatosFormulario()`.
      * De lo contrario, se establece `esDatosRespuesta` como verdadero.
      */
-
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),

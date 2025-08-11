@@ -44,7 +44,7 @@ import { Tramite31803Query } from '../state/Tramite31803.query';
   ],
   providers: [RegistroSolicitudService],
   templateUrl: './Solicitud.component.html',
-  styleUrl: './Solicitud.component.css',
+  styleUrl: './Solicitud.component.scss',
 })
 export class SolicitudComponent implements OnInit, OnDestroy {
 
@@ -260,20 +260,36 @@ inicializarEstadoFormulario(): void {
  */
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
-      numeroOficio: [{value : this.solicitudState?.numeroOficio, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      numeroOficio: [{value : this.solicitudState?.numeroOficio, disabled: this.esFormularioSoloLectura}, [Validators.required, Validators.maxLength(30)]],
       claveReferencia: [{value: this.solicitudState?.claveReferencia, disabled: this.esFormularioSoloLectura}, [Validators.required]],
       cadenaDependencia: [{value: this.solicitudState?.cadenaDependencia, disabled: this.esFormularioSoloLectura}, [Validators.required]],
-      importePago: [{value: this.solicitudState?.importePago, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      importePago: [{value: this.solicitudState?.importePago, disabled: this.esFormularioSoloLectura}, [Validators.required, Validators.maxLength(16)]],
       fechaInicial: [{value: this.solicitudState?.fechaInicial, disabled: this.esFormularioSoloLectura}, [Validators.required]],
       fechaFinal: [{value: this.solicitudState?.fechaFinal, disabled: this.esFormularioSoloLectura}, [Validators.required]],
       banco: [{value: this.solicitudState?.banco, disabled: this.esFormularioSoloLectura}, [Validators.required]],
-      llave: [{value: this.solicitudState?.llave, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      llave: [{value: this.solicitudState?.llave, disabled: this.esFormularioSoloLectura}, [Validators.required, Validators.maxLength(20)]],
       manifiesto1: [{value: this.solicitudState?.manifiesto1, disabled: this.esFormularioSoloLectura}, [Validators.required]],
       manifiesto2: [{value: this.solicitudState?.manifiesto2, disabled: this.esFormularioSoloLectura}, [Validators.required]],
       numeroOperacion: [{value: this.solicitudState?.numeroOperacion, disabled: this.esFormularioSoloLectura}, [Validators.required]],
       fechaPago: [{value: this.solicitudState?.fechaPago, disabled: this.esFormularioSoloLectura}, [Validators.required]],
     });
     this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Borrar del formulario los datos de pago.
+   * @returns {void}
+   */
+  borrarDatosPago(): void {
+    this.registroForm.get('numeroOperacion')?.reset();
+    this.registroForm.get('banco')?.reset();
+    this.registroForm.get('llave')?.reset();
+    this.registroForm.get('fechaPago')?.reset();
+
+    this.setValoresStore(this.registroForm, 'numeroOperacion', 'setNumeroOperacion');
+    this.setValoresStore(this.registroForm, 'banco', 'setBanco');
+    this.setValoresStore(this.registroForm, 'llave', 'setLlave');
+    this.setValoresStore(this.registroForm, 'fechaPago', 'setFechaPago');
   }
 
   /**

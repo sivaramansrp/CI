@@ -1,17 +1,37 @@
-import { AvisoCatalogo, AvisoOpcionesDeRadio, OperacionDeImportacion } from '../../models/aviso-catalogo.model';
-import { CatalogoSelectComponent, CatalogosSelect, ConfiguracionColumna, InputFecha, InputFechaComponent, InputRadioComponent, REGEX_NUMEROS_USD, REGEX_REEMPLAZAR, REGEX_SOLO_NUMEROS, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {
+  AvisoCatalogo,
+  AvisoOpcionesDeRadio,
+  OperacionDeImportacion
+} from '../../models/aviso-catalogo.model';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { COLONIA, DELEGACION_MUNICIPIO, ENTIDAD_FEDERATIVA, FECHA_INGRESO } from '../../enums/solicitud32501.enum';
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  CatalogosSelect,
+  ConfiguracionColumna,
+  InputFecha,
+  InputFechaComponent,
+  InputRadioComponent,
+  REGEX_NUMEROS_USD,
+  REGEX_REEMPLAZAR,
+  REGEX_SOLO_NUMEROS,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent
+} from '@libs/shared/data-access-user/src';
+import { Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud32501State, Solicitud32501Store } from '../../estados/solicitud32501.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { FECHA_INGRESO } from '../../enums/solicitud32501.enum';
 import { HttpClientModule } from '@angular/common/http';
 import { MercanciasDesmontadasOSinMontarService } from '../../services/mercancias-desmontadas-o-sin-montar.service';
 import { Modal } from 'bootstrap';
 import { ModalOperacionComponent } from '../modal-operacion/modal-operacion.component';
 import { Solicitud32501Query } from '../../estados/solicitud32501.query';
+
 
 /**
  * Componente `DatosSolicitudComponent` que gestiona la lógica y la interfaz de usuario
@@ -31,9 +51,9 @@ import { Solicitud32501Query } from '../../estados/solicitud32501.query';
     TituloComponent,
     TablaDinamicaComponent,
     ModalOperacionComponent,
-    InputRadioComponent,
-  ],
-  providers: [MercanciasDesmontadasOSinMontarService],
+    InputRadioComponent
+],
+  providers: [MercanciasDesmontadasOSinMontarService, BsModalService],
   templateUrl: './datos-solicitud.component.html',
   styleUrl: './datos-solicitud.component.scss',
 })
@@ -70,17 +90,32 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Opción seleccionada para Entidad Federativa.
    */
-  opcionEntidadFederativa: CatalogosSelect = {} as CatalogosSelect;
+  opcionEntidadFederativa: CatalogosSelect = ENTIDAD_FEDERATIVA;
+
+  /**
+   * Catálogo de opciones para Entidad Federativa.
+   */
+  catalogosOpcionEntidadFederativa: Catalogo[] = [];
+
+  /**
+   * Catálogo de opciones para Delegación o Municipio.
+   */
+  catalogosOpcionDelegacionMunicipio: Catalogo[] = [];
+
+  /**
+   * Catálogo de opciones para Colonia.
+   */
+  catalogosOpcionColonia: Catalogo[] = [];
 
   /**
    * Opción seleccionada para Delegación o Municipio.
    */
-  opcionDelegacionMunicipio: CatalogosSelect = {} as CatalogosSelect;
+  opcionDelegacionMunicipio: CatalogosSelect = DELEGACION_MUNICIPIO;
 
   /**
    * Opción seleccionada para Colonia.
    */
-  opcionColonia: CatalogosSelect = {} as CatalogosSelect;
+  opcionColonia: CatalogosSelect = COLONIA;
 
   /**
    * Lista de entidades federativas.
@@ -111,6 +146,36 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Tipo de selección de la tabla.
    */
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
+
+  /**
+   * Mensaje que se muestra en los modales de selección.
+   * Contiene texto dinámico para diferentes estados de validación.
+   */
+  mensajeSeleccion: string = '';
+
+  /**
+   * Transportista actualmente seleccionado en la tabla.
+   * Se utiliza para operaciones de edición y eliminación.
+   */
+  selectedOperacionDeImportacion: OperacionDeImportacion | null = null;
+
+  /**
+   * Referencia al modal principal para abrir/cerrar transportistas.
+   * Se utiliza para gestionar el estado del modal de Bootstrap.
+   */
+  modalRefabir?: BsModalRef;
+
+  /**
+   * Referencia al template del modal de selección requerida.
+   * Se muestra cuando se requiere seleccionar un elemento de la tabla.
+   */
+  @ViewChild('templateSeleccionRequerida') templateSeleccionRequerida!: TemplateRef<void>;
+
+  /**
+   * Referencia al template del modal de confirmación de eliminación.
+   * Template para confirmar la eliminación de transportistas.
+   */
+  @ViewChild('templateConfirmacionEliminacion') templateConfirmacionEliminacion!: TemplateRef<void>;
 
   /**
    * Configuración de las columnas para la tabla de operaciones de importación.
@@ -167,7 +232,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     public mercanciasDesmontadasOSinMontarService: MercanciasDesmontadasOSinMontarService,
     public solicitud32501Query: Solicitud32501Query,
     public solicitud32501Store: Solicitud32501Store,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    private modalService: BsModalService,
   ) {}
 
   /**
@@ -512,6 +578,93 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   esValido(field: string): boolean {
     const CONTROL = this.formAviso.get(field);
     return CONTROL ? CONTROL.invalid && CONTROL.touched : false;
+  }
+
+  /**
+    * Maneja la selección de una fila en la tabla de transportistas.
+   */
+  onFilaSeleccionada(datos: OperacionDeImportacion): void {
+    this.selectedOperacionDeImportacion = datos;
+  }
+
+  /**
+   * Elimina una operación de importación.
+   */
+  eliminarOperacionImp(): void {
+    if (this.operacionDeImportacionLista.length === 0 || !this.selectedOperacionDeImportacion) {
+      this.mensajeSeleccion = 'Debe seleccionar un elemento';
+      this.mostrarModalSeleccionRequerida();
+      return;
+    }
+    this.mostrarModalConfirmacionEliminacion();
+  }
+
+  /**
+   * Muestra el modal cuando se requiere seleccionar un elemento.
+   * Se usa cuando el usuario intenta realizar una acción sin seleccionar un transportista.
+   */
+  mostrarModalSeleccionRequerida(): void {
+    const MODAL_CONFIG = {
+      animated: true,
+      keyboard: false,
+      backdrop: true,
+      ignoreBackdropClick: true,
+      class: 'modal-sm'
+    };
+
+    this.modalRefabir = this.modalService.show(this.templateSeleccionRequerida, MODAL_CONFIG);
+  }
+
+  /**
+   * Muestra el modal de confirmación para eliminar un transportista.
+   * Requiere confirmación del usuario antes de proceder con la eliminación.
+   */
+  mostrarModalConfirmacionEliminacion(): void {
+    const MODAL_CONFIG = {
+      animated: true,
+      keyboard: false,
+      backdrop: true,
+      ignoreBackdropClick: true,
+      class: 'modal-m'
+    };
+
+    this.modalRefabir = this.modalService.show(this.templateConfirmacionEliminacion, MODAL_CONFIG);
+  }
+
+  /**
+   * Cierra el modal de selección requerida.
+   * Se ejecuta después de mostrar el mensaje de selección obligatoria.
+   */
+  cerrarModalSeleccionRequerida(): void {
+    this.modalRefabir?.hide();
+  }
+
+  /**
+   * Confirma y ejecuta la eliminación del transportista seleccionado.
+   * Actualiza la lista y el store, resetea la selección y muestra confirmación.
+   */
+  confirmarEliminacionOperacionImportacion(): void {
+    if (!this.selectedOperacionDeImportacion) {
+      return;
+    }
+
+    this.operacionDeImportacionLista = this.operacionDeImportacionLista.filter(operacion =>
+      operacion.agenteAduanal !== this.selectedOperacionDeImportacion?.agenteAduanal
+    );
+
+    this.selectedOperacionDeImportacion = null;
+
+    this.modalRefabir?.hide();
+    this.mensajeSeleccion = 'Datos eliminados correctamente';
+    this.mostrarModalSeleccionRequerida();
+  }
+
+  /**
+   * Cierra el modal de confirmación de eliminación sin realizar cambios.
+   * Cancela el proceso de eliminación y mantiene el estado actual.
+   */
+  cerrarModalConfirmacionEliminacion(): void {
+    this.modalRefabir?.hide();
   }
 
   /**

@@ -288,6 +288,7 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
             };
 
             this.habilitarCamposFormulario();
+            this.personaForm.reset();
           }
         }),
         takeUntil(this.destroyNotifier$)

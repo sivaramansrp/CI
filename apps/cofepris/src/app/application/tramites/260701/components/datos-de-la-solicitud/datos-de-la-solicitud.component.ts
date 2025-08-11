@@ -2,7 +2,7 @@ import { AL_DAR, AlertComponent, InputRadioComponent, TituloComponent } from '@l
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud260701State, Tramite260701Store } from '../../estados/tramites/tramite260701.store';
-import { Subject,map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DomicilloDelComponent } from '../domicillo-del/domicillo-del.component';
@@ -32,56 +32,56 @@ import { Tramite260701Query } from '../../estados/queries/tramite260701.query';
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
-export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy {
-   
-    /**
-     * Grupo de formularios principal.
-     * @type {FormGroup}
-     */
-    public forma!: FormGroup;
-      /**
-    * Opciones de radio.
-    */
-   public radioOpcions = [
+export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+
+  /**
+   * Grupo de formularios principal.
+   * @type {FormGroup}
+   */
+  public forma!: FormGroup;
+  /**
+* Opciones de radio.
+*/
+  public radioOpcions = [
     { label: 'Prórroga', value: 'Prórroga' },
     { label: 'Modificación', value: 'Modificación' },
     { label: 'Modificación y prórroga', value: 'Modificación y prórroga' }
   ];
 
-    /**
-     * Valor seleccionado del radio.
-     */
-      public valorSeleccionado!: string;
-   
-    /**
-     * Indica si la sección es colapsable.
-     * @type {boolean}
-     * @default true
-     */
-    public colapsable: boolean = true;
-   
-    /**
-     * Constantes importadas desde el archivo de enumeración que contienen textos importantes y advertencias.
-     * @type {typeof AL_DAR}
-     */
-    public TEXTOS = AL_DAR;
+  /**
+   * Valor seleccionado del radio.
+   */
+  public valorSeleccionado!: string;
 
-    /**
-     * Subject para notificar la destrucción del componente.
-     */
-    private destroyNotifier$: Subject<void> = new Subject();
-    /**
-     * Representa el estado de la Solicitud 260701.
-     * Esta propiedad contiene los datos y la gestión del estado para la solicitud actual.
-     * Se espera que se inicialice con una instancia de `Solicitud260701State`.
-     */
-    public solicitudState!: Solicitud260701State;
+  /**
+   * Indica si la sección es colapsable.
+   * @type {boolean}
+   * @default true
+   */
+  public colapsable: boolean = true;
+
+  /**
+   * Constantes importadas desde el archivo de enumeración que contienen textos importantes y advertencias.
+   * @type {typeof AL_DAR}
+   */
+  public TEXTOS = AL_DAR;
+
+  /**
+   * Subject para notificar la destrucción del componente.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * Representa el estado de la Solicitud 260701.
+   * Esta propiedad contiene los datos y la gestión del estado para la solicitud actual.
+   * Se espera que se inicialice con una instancia de `Solicitud260701State`.
+   */
+  public solicitudState!: Solicitud260701State;
   /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
-    public esFormularioSoloLectura: boolean = false;
- 
+  public esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor del componente DatosDeLaSolicitudComponent.
    * 
@@ -95,13 +95,13 @@ export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy {
     private tramite260701Query: Tramite260701Query,
     private consultaioQuery: ConsultaioQuery
   ) {
-  /**
-    * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
-    *
-    * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
-    * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
-    * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
-    */
+    /**
+      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+      *
+      * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+      * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+      * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+      */
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -114,55 +114,55 @@ export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy {
   }
 
 
-  
-    /**
-     * Método del ciclo de vida de Angular que se llama al inicializar el componente.
-     * Obtiene datos del estado de la solicitud y configura el formulario.
-     * @returns {void}
-     */
-    ngOnInit(): void {
-      this.tramite260701Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
-          this.solicitudState = seccionState;
-      })).subscribe();
-      
-      this.inicializarFormulario();
 
-    }
-   
-    /**
-     * Alterna el estado colapsable de la sección del formulario.
-     * @returns {void}
-     */
-    public mostrar_colapsable(): void {
-      this.colapsable = !this.colapsable;
-    }
+  /**
+   * Método del ciclo de vida de Angular que se llama al inicializar el componente.
+   * Obtiene datos del estado de la solicitud y configura el formulario.
+   * @returns {void}
+   */
+  ngOnInit(): void {
+    this.tramite260701Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
+      this.solicitudState = seccionState;
+    })).subscribe();
 
-    /**
-     * Inicializa el formulario reactivo (`forma`) con los valores actuales del estado `solicitudState`.
-     * Cada control del formulario se establece con su valor correspondiente y está deshabilitado, haciendo el formulario de solo lectura.
-     */
-    public inicializarFormulario(): void {
-       this.forma = this.fb.group({
-      tipoOperacion: [this.solicitudState?.tipoOperacion],
+    this.inicializarFormulario();
+  }
+
+  /**
+   * Alterna el estado colapsable de la sección del formulario.
+   * @returns {void}
+   */
+  public mostrar_colapsable(): void {
+    this.colapsable = !this.colapsable;
+  }
+
+  /**
+   * Inicializa el formulario reactivo (`forma`) con los valores actuales del estado `solicitudState`.
+   * Cada control del formulario se establece con su valor correspondiente y está deshabilitado, haciendo el formulario de solo lectura.
+   */
+  public inicializarFormulario(): void {
+    const READONLY = this.esFormularioSoloLectura;
+    this.forma = this.fb.group({
+      tipoOperacion: [{ value: this.solicitudState?.tipoOperacion, disabled: READONLY }],
       justificacion: [this.solicitudState?.justificacion],
       denominacionORazonSocial: [{ value: this.solicitudState?.denominacionORazonSocial, disabled: true }],
       correoElectronico: [{ value: this.solicitudState?.correoElectronico, disabled: true }]
-      });
-    }
-   
-    /**
-     * Habilita todos los controles del formulario si están deshabilitados.
-     * @returns {void}
-     */
-    public toggleFormControls(): void {
-      Object.keys(this.forma.controls).forEach((controlName) => {
-        const CONTROL = this.forma.get(controlName);
-        if (CONTROL?.disabled) {
-          CONTROL.enable();
-        }
-      });
+    });
+  }
 
-    }
+  /**
+   * Habilita todos los controles del formulario si están deshabilitados.
+   * @returns {void}
+   */
+  public toggleFormControls(): void {
+    Object.keys(this.forma.controls).forEach((controlName) => {
+      const CONTROL = this.forma.get(controlName);
+      if (CONTROL?.disabled) {
+        CONTROL.enable();
+      }
+    });
+
+  }
 
   /**
    * Establece el valor de un campo en el store de Tramite31601.
@@ -179,9 +179,9 @@ export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy {
    * Cambia el valor seleccionado del radio.
    * @param value Valor seleccionado.
    */
-    public cambiarRadio(value: string | number) {
-      this.valorSeleccionado = value as string;
-    }
+  public cambiarRadio(value: string | number) {
+    this.valorSeleccionado = value as string;
+  }
 
   /**
    * Determina si se debe cargar un formulario nuevo o uno existente.  
@@ -195,10 +195,10 @@ export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy {
     }
   }
 
-    /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
-   */
+  /**
+ * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+ * Luego reinicializa el formulario con los valores actualizados desde el store.
+ */
   public guardarDatosFormulario(): void {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
@@ -207,7 +207,7 @@ export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy {
       this.forma.get('tipoOperacion')?.enable();
     }
   }
-  
+
   /**
    * Método para actualizar el banco seleccionado.
    * @param e {Catalogo} Banco seleccionado.

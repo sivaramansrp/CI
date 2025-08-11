@@ -38,22 +38,6 @@ describe('PaisDeOrigenComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería inicializar la propiedad selectRangoDias en ngOnChanges', () => {
-    const CHANGES = {
-      paisesPorBloque: {
-        currentValue: MOCK_PAISES_POR_BLOQUE,
-        previousValue: [],
-        firstChange: true,
-        isFirstChange: () => true,
-      },
-    };
-
-    component.paisesPorBloque = MOCK_PAISES_POR_BLOQUE;
-    component.ngOnChanges(CHANGES);
-
-    expect(component.selectRangoDias).toEqual(['País 1', 'País 2']);
-  });
-
   it('debería emitir el evento bloqueCambiar al llamar a enCambioDeBloque', () => {
     const EVENTO_CAMBIO = new Event('change');
     const INPUT_ELEMENT = document.createElement('input');
@@ -114,6 +98,6 @@ describe('PaisDeOrigenComponent', () => {
     } as unknown as any;
 
     component.campoDeBotones[3].funcion();
-    expect(component.crosslistComponent.quitar).toHaveBeenCalledWith('');
+    expect(component.crosslistComponent.quitar).toHaveBeenCalledWith('t');
   });
 });

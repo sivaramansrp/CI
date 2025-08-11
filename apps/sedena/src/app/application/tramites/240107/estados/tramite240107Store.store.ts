@@ -1,11 +1,9 @@
-import { DatosDelTramiteFormState } from '../../../shared/models/datos-del-tramite.model';
-import { DestinoFinal } from '../../../shared/models/terceros-relacionados.model';
+import { DatosDelTramiteFormState, MercanciaDetalle } from '../../../shared/models/datos-del-tramite.model';
+import { DestinoFinal, Proveedor } from '../../../shared/models/terceros-relacionados.model';
+import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { MercanciaDetalle } from '../../../shared/models/datos-del-tramite.model';
 import { PagoDerechosFormState } from '../../../shared/models/pago-de-derechos.model';
-import { Proveedor } from '../../../shared/models/terceros-relacionados.model';
-import { Store } from '@datorama/akita';
-import { StoreConfig } from '@datorama/akita';
+
 
 /**
  * Interfaz que representa el estado completo del trámite 240107.

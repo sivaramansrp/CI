@@ -65,6 +65,15 @@ export class CrosslistComponent implements OnInit, OnChanges {
    */
   @Input() showSearchInput2: boolean = false;
 
+  /** Etiqueta para el campo de búsqueda del lado izquierdo de la lista cruzada. */
+  @Input() searchInput1Label: string = 'País disponible';
+
+  /** Etiqueta para el campo de búsqueda del lado derecho de la lista cruzada. */
+  @Input() searchInput2Label: string = 'País seleccionado';
+
+  /** Indica si se debe mostrar el placeholder en los campos de búsqueda de la lista cruzada. */
+  @Input() showSearchPlaceholder: boolean = true;
+
   /**
    * @description Mensaje de alerta que se mostrará cuando no se seleccione un item de la lista.
    */
