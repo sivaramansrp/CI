@@ -6,7 +6,7 @@
  * @import { Component } from '@angular/core';
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject,map, takeUntil } from 'rxjs';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
@@ -64,6 +64,27 @@ export class PasoUnoComponent implements OnInit {
    */
    public esDatosRespuesta: boolean = false;
 
+
+    /**
+     * @property solicitante - Referencia al componente `SolicitanteComponent`.
+     */
+    @ViewChild('solicitanteRef') solicitante!: SolicitanteComponent;
+
+    /**
+     * @property certificadoOrigen - Referencia al componente `CertificadoOrigenComponent`.
+     */
+    @ViewChild('certificadoOrigenRef') certificadoOrigen!: CertificadoOrigenComponent;
+
+    /**
+     * @property camDestinatario - Referencia al componente `CamDestinatarioComponent`.
+     */
+    @ViewChild('camDestinatarioRef') camDestinatario!: CamDestinatarioComponent;
+
+    /**
+     * @property camDatosCertificado - Referencia al componente `CamDatosCertificadoComponent`.
+     */
+    @ViewChild('camDatosCertificadoRef') camDatosCertificado!: CamDatosCertificadoComponent;
+
   /**
    * Constructor de la clase.
    * 
@@ -116,4 +137,23 @@ ngOnInit():void {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
+
+   validarFormularios(): boolean {
+   let isValid = true;
+    if (this.solicitante?.form) {
+      if (this.solicitante.form.invalid) {
+        this.solicitante.form.markAllAsTouched();
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+if(this.camDatosCertificado) {
+     isValid = this.camDatosCertificado.validarFormularios();
+}
+else{
+  isValid = false;
+}
+    return isValid;
+}
 }

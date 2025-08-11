@@ -246,6 +246,12 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit {
     this.representacionFederalSeleccionEvent.emit(estado);
   }
 
+  validarFormularios():boolean{
+    if(this.formDatosCertificado.valid){
+      return true;
+    }
+    return false;
+  }
   /**
    * Método de ciclo de vida de Angular, se ejecuta al destruir el componente.
    * Cancela todas las suscripciones para evitar fugas de memoria.

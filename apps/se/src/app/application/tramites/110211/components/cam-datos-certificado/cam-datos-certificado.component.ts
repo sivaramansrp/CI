@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {Subject,map, takeUntil } from 'rxjs';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
 import { Catalogo } from '@libs/shared/data-access-user/src';
@@ -64,6 +64,13 @@ export class CamDatosCertificadoComponent implements OnInit, OnDestroy {
    * @see https://compodoc.app/
    */
   esFormularioSoloLectura: boolean = false;
+
+      /**
+   * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+   * const isValid = this.pasoUnoComponent.validateForms();
+   * const formsValidity = this.pasoUnoComponent.getAllFormsValidity();
+   */
+    @ViewChild('datosCertificadoDeRef') datosCertificadoDeComponent!: DatosCertificadoDeComponent;
 
   /**
    * @descripcion
@@ -216,6 +223,14 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
    */
   setFormValida(valida: boolean): void {
     this.store.setFormValida({ datos: valida });
+  }
+    /**
+   * @descripcion
+   * Actualiza el almacén con el estado de validación del formulario.
+   * @param validarFormularios - El estado de validación del formulario.
+   */
+  validarFormularios():boolean{
+    return this.datosCertificadoDeComponent.validarFormularios();
   }
 
   /**

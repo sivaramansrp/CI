@@ -7,8 +7,9 @@
  */
 import { AccionBoton, ListaPasoWizard } from '../../models/cam-certificado.module';
 import { Component, ViewChild } from '@angular/core';
+import { ERROR_FORMA_ALERT, PASOS } from '../../constantes/cam-certificado.module';
 import { DatosPasos } from '@ng-mf/data-access-user';
-import { PASOS } from '../../constantes/cam-certificado.module';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 @Component({
@@ -39,6 +40,13 @@ export class CamCertificadoComponent {
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
+    /**
+ * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+ * const isValid = this.pasoUnoComponent.validateForms();
+ * const formsValidity = this.pasoUnoComponent.getAllFormsValidity();
+ */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+
   /**
    * @property {number} indice
    * @description
@@ -59,6 +67,14 @@ export class CamCertificadoComponent {
     txtBtnSig: 'Continuar',
   };
 
+    /**
+   * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+   */
+    public formErrorAlert = ERROR_FORMA_ALERT;
+
+      /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esFormaValido: boolean = false;
+
   /**
    * @method getValorIndice
    * @description
@@ -73,13 +89,50 @@ export class CamCertificadoComponent {
    * ```
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
+   this.esFormaValido = false;
+
+    // Validar formularios antes de continuar desde el paso uno
+    if (this.indice === 1 && e.accion === 'cont') {
+      const ISVALID = this.validarTodosFormulariosPasoUno();
+      if (!ISVALID) {
+        this.esFormaValido = true;
+        return; // Detener ejecución si los formularios son inválidos
+      }
+    }
+    // Calcular el nuevo índice basado en la acción
+    let indiceActualizado = e.valor;
+    if (e.accion === 'cont') {
+      indiceActualizado = e.valor + 1;
+    } else if (e.accion === 'ant') {
+      indiceActualizado = e.valor - 1;
+    }
+
+    // Validar que el nuevo índice esté dentro de los límites permitidos
+    if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
+
+      // Actualizar el índice y datosPasos
+      this.indice = indiceActualizado;
+      this.datosPasos.indice = indiceActualizado;
+
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
-      } else {
+      } else if (e.accion === 'ant') {
         this.wizardComponent.atras();
       }
     }
   }
+    /**
+ * Valida todos los formularios del primer paso antes de permitir continuar al siguiente paso.
+ */
+  private validarTodosFormulariosPasoUno(): boolean {
+    if (!this.pasoUnoComponent) {
+      return true;
+    }
+    const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validarFormularios();
+    if (!ISFORM_VALID_TOUCHED) {
+      return false;
+    }
+    return true;
+  }
+
 }

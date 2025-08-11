@@ -5,7 +5,6 @@ import { Observable, Subject, delay, map, of, takeUntil } from 'rxjs';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CommonModule } from '@angular/common';
-import { DestinatarioComponent } from '../../../110201/components/destinatario/destinatario.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { MercanciaComponent } from '../mercancia/mercancia.component';
@@ -24,7 +23,6 @@ import { camCertificadoQuery } from '../../estados/cam-certificado.query';
   styleUrl: './certificado-origen.component.scss',
   standalone: true,
   imports: [CommonModule,ReactiveFormsModule,CertificadoDeOrigenComponent,
-      DestinatarioComponent,
     MercanciaComponent]
 })
 export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -105,6 +103,10 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * Referencia al elemento del modal de modificación.
    */
   @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
+
+  @ViewChild('certificadoDeOrigenRef') certificadoDeOrigenComponent!: CertificadoDeOrigenComponent;
+  @ViewChild('mercanciaRef') mercanciaComponent!: MercanciaComponent;
+
 
 
   /**
@@ -320,6 +322,16 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: string | n
     this.store.setFormValida({ certificado: valida });
   }
 
+  validarFormularios():boolean{
+    let isFormInvalid = true;
+ if(!this.mercanciaComponent.validarFormularios()){
+   isFormInvalid = false;
+  }
+  if(!this.certificadoDeOrigenComponent.validarFormularios()){
+    isFormInvalid = false;
+  }
+   return isFormInvalid;
+}
   /**
    * @descripcion
    * Hook del ciclo de vida que se llama cuando el componente se destruye.

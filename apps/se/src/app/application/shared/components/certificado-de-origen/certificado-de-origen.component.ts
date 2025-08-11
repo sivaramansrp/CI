@@ -97,7 +97,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
    * Indica si hay mercancías disponibles para su procesamiento o visualización.
    * @type {boolean}
    */
-  @Input() mercanciasDisponibles!: boolean;
+  @Input() mercanciasDisponibles!:boolean;
 
   /**
    * Propiedad de entrada que representa el estado del formulario histórico.
@@ -479,5 +479,13 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
     if (this.seleccionadaguardarClicado.length > 0) {
       this.guardarClicado = [];
     }
+  }
+
+  validarFormularios(): boolean {
+ if(this.formCertificado.invalid) {
+   this.formCertificado.markAllAsTouched();
+   return false;
+ }
+ return true;
   }
 }
