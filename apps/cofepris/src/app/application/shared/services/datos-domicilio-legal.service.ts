@@ -3,20 +3,32 @@ import {
   RespuestaCatalogos,
 } from '@libs/shared/data-access-user/src';
 import { DatosDomicilioLegalState, DatosDomicilioLegalStore } from '../estados/stores/datos-domicilio-legal.store';
+import { FraccionArancelaria, PermisoModel } from '../models/datos-domicilio-legal.model';
+
 import {
   MercanciasTabla,
   RespuestaTabla,
 } from '../components/domicilio-establecimiento/domicilio-establecimiento.component';
+import { Observable, Subject } from 'rxjs';
 import { DatosDomicilioLegalQuery } from '../estados/queries/datos-domicilio-legal.query';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { FraccionArancelaria, PermisoModel } from '../models/datos-domicilio-legal.model';
-
 @Injectable({
   providedIn: 'root',
 })
 export class DatosDomicilioLegalService {
+
+    /**
+     * Subject utilizado para emitir y escuchar eventos personalizados dentro del servicio.
+     * Puede ser suscrito para comunicación basada en eventos entre componentes o servicios.
+     * @private
+     */
+    private eventSubject = new Subject();
+    /**
+     * Flujo observable que emite eventos desde el subject interno de eventos.
+     * Suscríbete a este observable para escuchar notificaciones de eventos.
+     */
+    event$ = this.eventSubject.asObservable();
   /**
    * Servicio para obtener datos de terceros relacionados y permisos.
    *
@@ -188,4 +200,13 @@ export class DatosDomicilioLegalService {
     getFraccionArancelaria():Observable<FraccionArancelaria>{
       return this.http.get<FraccionArancelaria>('assets/json/cofepris/fraccion-arancelaria.json');
     }
+
+  /**
+   * Emite un evento booleano a los suscriptores a través de eventSubject.
+   *
+   * @param datos - El valor booleano que se emitirá a los observadores.
+   */
+  emitEvent(datos: boolean): void {
+    this.eventSubject.next(datos);
+  }
 }
