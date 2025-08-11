@@ -149,13 +149,25 @@ ngOnInit():void {
       isValid = false;
     }
 if(this.camDatosCertificado) {
-     isValid = this.camDatosCertificado.validarFormularios();
+  if(!this.camDatosCertificado.validarFormularios()){
+   isValid = false;
+  } 
 }
 else{
   isValid = false;
 }
 if(this.camDestinatario){
-  isValid = this.camDestinatario.validarFormularios();
+  if(!this.camDestinatario.validarFormularios()){
+    isValid = false;
+  }
+}
+else{
+  isValid = false;
+}
+if(this.certificadoOrigen){
+  if(!this.certificadoOrigen.validarFormularios()){
+    isValid = false;
+  }
 }
 else{
   isValid = false;

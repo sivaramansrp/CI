@@ -63,6 +63,13 @@
               formControlName="paisDestin" (selectionChange)="paisDestionSeleccion($event)"
               (change)="setValoresStore('formDestinatario','paisDestin','setFormDestinatario')"
               [isDisabled]="true"></app-catalogo-select>
+            @if(formDestinatario.get('paisDestin')?.invalid && (formDestinatario.get('paisDestin')?.touched || formDestinatario.get('paisDestin')?.dirty)) {
+            <div class="d-grid">
+              @if(formDestinatario.get('paisDestin')?.errors?.['required']) {
+              <span class="mensaje-error">Este campo es obligatorio</span>
+              }
+            </div>
+            }
           </div>
         </div>
         <div class="row">
@@ -258,6 +265,13 @@
             <app-catalogo-select [catalogo]="paisDestin || []" [label]="'País Destino'" [required]="true" name="estado"
               formControlName="paisDestin" (selectionChange)="paisDestionSeleccion($event)"
               (change)="setValoresStore('formDestinatario','paisDestin','setFormDestinatario')"></app-catalogo-select>
+            @if(formDestinatario.get('paisDestin')?.invalid && (formDestinatario.get('paisDestin')?.touched || formDestinatario.get('paisDestin')?.dirty)) {
+            <div class="d-grid">
+              @if(formDestinatario.get('paisDestin')?.errors?.['required']) {
+              <span class="mensaje-error">Este campo es obligatorio</span>
+              }
+            </div>
+            }
           </div>
           }
         </div>

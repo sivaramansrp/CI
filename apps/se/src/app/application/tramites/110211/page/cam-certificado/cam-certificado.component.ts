@@ -88,8 +88,8 @@ export class CamCertificadoComponent {
    * getValorIndice({ valor: 2, accion: 'cont' });
    * ```
    */
-  getValorIndice(e: AccionBoton): void {
-   this.esFormaValido = false;
+    getValorIndice(e: AccionBoton): void {
+    this.esFormaValido = false;
 
     // Validar formularios antes de continuar desde el paso uno
     if (this.indice === 1 && e.accion === 'cont') {
@@ -121,18 +121,19 @@ export class CamCertificadoComponent {
       }
     }
   }
+
     /**
  * Valida todos los formularios del primer paso antes de permitir continuar al siguiente paso.
  */
-  private validarTodosFormulariosPasoUno(): boolean {
-    if (!this.pasoUnoComponent) {
+  public validarTodosFormulariosPasoUno(): boolean {
+    if(this.pasoUnoComponent){
+    const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validarFormularios();
+    if (ISFORM_VALID_TOUCHED) {
       return true;
     }
-    const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validarFormularios();
-    if (!ISFORM_VALID_TOUCHED) {
       return false;
-    }
-    return true;
+  } 
+    return false;
   }
 
 }

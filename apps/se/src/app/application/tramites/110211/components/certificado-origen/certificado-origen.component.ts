@@ -324,9 +324,6 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: string | n
 
   validarFormularios():boolean{
     let isFormInvalid = true;
- if(!this.mercanciaComponent.validarFormularios()){
-   isFormInvalid = false;
-  }
   if(!this.certificadoDeOrigenComponent.validarFormularios()){
     isFormInvalid = false;
   }
