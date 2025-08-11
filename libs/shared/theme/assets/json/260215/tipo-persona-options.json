@@ -1,4 +1,4 @@
 [
-  { "label": "Física", "value": "fisica", "hint": "fisica hint" },
-  { "label": "Moral", "value": "moral", "hint": "moral hint" }
+  { "label": "Física", "value": "fisica", "hint": "Una persona física es entendida como toda persona con una actividad específica" },
+  { "label": "Moral", "value": "moral", "hint": "Una persona moral es entendida como una empresa con una actividad específica" }
 ]

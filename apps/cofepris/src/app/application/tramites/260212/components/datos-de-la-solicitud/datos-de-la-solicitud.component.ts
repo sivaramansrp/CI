@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { CatalogoResponse, CatalogoSelectComponent, ConsultaioQuery, TablaDinamicaComponent, TablePaginationComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { CatalogoResponse, ConsultaioQuery, TablaDinamicaComponent, TablePaginationComponent, TituloComponent } from '@ng-mf/data-access-user';
 
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
@@ -22,9 +22,10 @@ import { RepresentanteLegalComponent } from '../representante-legal/representant
 import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { Tramite260212Store } from '../../estados/tramite260212.store';
 
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { Modal } from 'bootstrap';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite260212Query } from '../../estados/tramite260212.query';
-
 /**
  * Componente DatosDeLaSolicitud
  * Este componente gestiona los datos y formularios de la solicitud en el flujo de trabajo.
@@ -49,7 +50,8 @@ import { Tramite260212Query } from '../../estados/tramite260212.query';
     MercanciasTableFormComponent,
     RepresentanteLegalComponent,
     CatalogoSelectComponent,
-    TablePaginationComponent
+    TablePaginationComponent,
+    TooltipModule
 
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
@@ -107,6 +109,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   mercanicaData: MercanciaModel[] = [];
 
   /**
+ * Arreglo que almacena los datos de las mercancías.
+ * Se utiliza para manejar la información de las mercancías asociadas en el componente.
+ */
+  public seleccionadaMercanciaDatos: MercanciaModel[] = [];
+
+  /**
+ * Arreglo que almacena los datos de las mercancías.
+ * Se utiliza para manejar la información de las mercancías asociadas en el componente.
+ */
+  public seleccionadaScianDatos: ClaveModel[] = [];
+
+  /**
  * Variable que controla el estado plegable de una sección en el componente.
  * Se utiliza para mostrar u ocultar contenido de manera dinámica.
  */
@@ -142,6 +156,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   @ViewChild('modalSeleccionarEstablesmiento') modalElement!: ElementRef;
 
   /**
+   * Referencia al elemento modal para agregar mercancías.
+   */
+  @ViewChild('mercanciasConfirmacionModal') mercanciasConfirmacionModalElement!: ElementRef;
+
+  /**
+   * Referencia al elemento modal para agregar mercancías.
+   */
+  @ViewChild('scianEliminarModal') scianEliminarModalElement!: ElementRef;
+
+  /**
    * Referencia al elemento del modal para agregar o editar claves S.C.I.A.N.
    * Se utiliza para controlar la visualización del modal desde el componente mediante código.
    *
@@ -160,10 +184,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @private
    * @memberof DatosDeLaSolicitudComponent
    * @example
-   * this.modalScianInstance?.show();
-   * this.modalScianInstance?.hide();
+   * this.modalInstance?.show();
+   * this.modalInstance?.hide();
    */
-  private modalScianInstance: Modal | null = null;
+  private modalInstance: Modal | null = null;
+
+  /** Almacena el tipo de acción del botón seleccionado (por ejemplo, modificar o eliminar mercancía). */
+  public tipoButton: string = '';
 
   /**
    * Referencia al elemento del modal para agregar o editar mercancías.
@@ -217,9 +244,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.fomInitialize();
     this.inicializarEstadoFormulario();
      this.solicitudService.getScianDatos().pipe(takeUntil(this.destroy$))
-          .subscribe((response: ClaveModel[]) => {
-            this.claveScianDatas = response;
-          });
+      .subscribe((response: ClaveModel[]) => {
+        this.claveScianDatas = [...this.claveScianDatas, ...response];
+      });
   }
 
   /**
@@ -341,8 +368,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  * - Define las columnas y los datos que se muestran en la tabla.
  */
   configuracionTablaScian: ConfiguracionColumna<ClaveModel>[] = [
-    { encabezado: 'Clave S.C.A.N.', clave: (item: ClaveModel) => item.clave, orden: 1 },
-    { encabezado: 'Descripcíon del S.C.I.A.N', clave: (item: ClaveModel) => item.descripcion, orden: 2 },
+    { encabezado: 'Clave S.C.I.A.N.', clave: (item: ClaveModel) => item.clave, orden: 1 },
+    { encabezado: 'Descripcíon del S.C.I.A.N.', clave: (item: ClaveModel) => item.descripcion, orden: 2 },
   ];
 
   /**
@@ -361,11 +388,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       municipio: [{value: '', disabled: true}, [Validators.required]],
       localidad: [{value: '', disabled: true}, [Validators.required]],
       colonia: [{value: '', disabled: true}, [Validators.required]],
-      calle: [{value: '', disabled: true}],
+      calle: [{value: '', disabled: true}, [Validators.required]],
       lada: [{value: '', disabled: true}, [Validators.required]],
       telefono: [{value: '', disabled: true}, [Validators.required]],
       datosManifiestos: [false, [Validators.required]],
     });
+
+    if (this.seleccionarEstablecimientoState) {
+      this.datosEstablecimientoForm.enable();
+    }
+
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroy$),
@@ -393,8 +425,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   toggleScianFormulario(): void {
     if (this.modalScianRef) {
-      this.modalScianInstance = new Modal(this.modalScianRef.nativeElement);
-      this.modalScianInstance.show();
+      this.modalInstance = new Modal(this.modalScianRef.nativeElement);
+      this.modalInstance.show();
     }
   }
   /**
@@ -403,8 +435,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   cerrarScianFormulario(): void {
-    if (this.modalScianInstance) {
-      this.modalScianInstance.hide();
+    if (this.modalInstance) {
+      this.modalInstance.hide();
     }
   }
 
@@ -423,7 +455,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   agregarScian(form: {clave: string, descripcion: string}): void {
     if (form) {
-      this.claveScianDatas.push(form);
+      this.claveScianDatas = [...this.claveScianDatas, {
+        clave: form.clave,
+        descripcion: form.descripcion
+      }];
     }
   }
 
@@ -462,19 +497,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     { encabezado: 'Forma farmacéutica', clave: (item: MercanciaModel) => item.formaFarmaceutica, orden: 6 },
     { encabezado: 'Estado físico', clave: (item: MercanciaModel) => item.estadoFsico, orden: 7 },
     { encabezado: 'Fracción arancelaria', clave: (item: MercanciaModel) => item.fraccionArancelaria, orden: 8 },
-    { encabezado: 'Descripción de la fracción arancelaria', clave: (item: MercanciaModel) => item.descripcionFraccion, orden: 9 },
-    { encabezado: 'Cantidad UMT', clave: (item: MercanciaModel) => item.cantidadUMT, orden: 10 },
-    { encabezado: 'UMT', clave: (item: MercanciaModel) => item.UMT, orden: 11 },
-    { encabezado: 'Cantidad UMC', clave: (item: MercanciaModel) => item.cantidadUMC, orden: 12 },
-    { encabezado: 'UMC', clave: (item: MercanciaModel) => item.UMC, orden: 13 },
-    { encabezado: 'Presentación farmacéutica o tipo de envase', clave: (item: MercanciaModel) => item.tipoDeEnvase, orden: 14 },
-    { encabezado: 'Presentación', clave: (item: MercanciaModel) => item.tipoDePresentacion, orden: 15 },
-    { encabezado: 'Número de registro sanitario', clave: (item: MercanciaModel) => item.numeroRegistroSanitario, orden: 16 },
-    { encabezado: 'País de origen', clave: (item: MercanciaModel) => item.paisDeOrigen, orden: 17 },
-    { encabezado: 'Pais de procedencia', clave: (item: MercanciaModel) => item.paisDeProcedencia, orden: 18 },
-    { encabezado: 'Tipo producto', clave: (item: MercanciaModel) => item.tipoProducto, orden: 19 },
-    { encabezado: 'Uso específico', clave: (item: MercanciaModel) => item.usoEspecifico, orden: 20 },
-    { encabezado: 'Fecha de caducidad', clave: (item: MercanciaModel) => item.fechaCaducidad, orden: 21 },
+    { encabezado: 'Descripción de la fracción', clave: (item: MercanciaModel) => item.descripcionFraccion, orden: 9 },
+    { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (item: MercanciaModel) => item.UMC, orden: 10 },
+    { encabezado: 'Cantidad UMC', clave: (item: MercanciaModel) => item.cantidadUMC, orden: 11 },
+    { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (item: MercanciaModel) => item.UMT, orden: 12 },
+    { encabezado: 'Cantidad UMT', clave: (item: MercanciaModel) => item.cantidadUMT, orden: 13 },
+    { encabezado: 'Presentación', clave: (item: MercanciaModel) => item.tipoDeEnvase, orden: 14 },
+    { encabezado: 'Número de registro sanitario', clave: (item: MercanciaModel) => item.numeroDeregistroSanitario, orden: 15 },
+    { encabezado: 'País de orígen', clave: (item: MercanciaModel) => item.paisDeorigen, orden: 16 },
+    { encabezado: 'País de procedencia', clave: (item: MercanciaModel) => item.paisDeprocedencia, orden: 17 },
+    { encabezado: 'Tipo producto', clave: (item: MercanciaModel) => item.tipoProducto, orden: 18 },
+    { encabezado: 'Uso específico', clave: (item: MercanciaModel) => item.usoEspecifico, orden: 19 },
+    { encabezado: 'Fecha de caducidad', clave: (item: MercanciaModel) => item.fechaDeCaducidad, orden: 20 },
 
   ];
 
@@ -628,6 +662,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     Object.keys(this.datosEstablecimientoForm.controls).forEach(controlName => {
           this.datosEstablecimientoForm.get(controlName)?.enable();
       });
+    this.solicitudService.updateSeleccionarEstablecimientoState();
+  }
+
+  /**
+ * Obtiene el estado actual para saber si se debe mostrar el modal de selección de establecimiento.
+ * @returns {boolean} True si se debe mostrar el modal, false en caso contrario.
+ */
+  public get seleccionarEstablecimientoState(): boolean { 
+    return this.solicitudService.getSeleccionarEstablecimientoState();
   }
 
   /**
@@ -645,8 +688,69 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   agregarMercanciasTabla(event: {form: MercanciaModel}): void {
     if (event) {
-      this.mercanicaData.push(event.form);
+      this.mercanicaData = [...this.mercanicaData, event.form];
     }
+  }
+
+  /** Actualiza el arreglo de mercancías seleccionadas en la tabla con los elementos recibidos en el evento. */
+  listaDeFilaSeleccionadaMercancias(event: MercanciaModel[]): void {
+    this.seleccionadaMercanciaDatos = event;
+  }
+
+  /** Actualiza el arreglo de scian seleccionadas en la tabla con los elementos recibidos en el evento. */
+  listaDeFilaSeleccionadaScian(event: ClaveModel[]): void {
+    this.seleccionadaScianDatos = event; 
+  }
+
+  /**
+ * Muestra el formulario para modificar mercancías si hay alguna seleccionada; de lo contrario, muestra un modal de confirmación.
+ * @param event - Tipo de acción que se está realizando.
+ */
+  modificarMercancias(event: string): void {
+    if (this.seleccionadaMercanciaDatos.length) {
+      this.openMercanciasForm();
+    } else {
+      this.tipoButton = event;
+      if (this.mercanciasConfirmacionModalElement) {
+        this.modalInstance = new Modal(this.mercanciasConfirmacionModalElement.nativeElement);
+        this.modalInstance.show();
+      }
+    }
+  }
+
+  /**
+ * Muestra el formulario para eliminar mercancías si hay alguna seleccionada; de lo contrario, muestra un modal de confirmación.
+ * @param event - Tipo de acción que se está realizando.
+ */
+  eliminarMercancias(event: string): void {
+    if (this.seleccionadaMercanciaDatos.length) {
+      this.openMercanciasForm();
+    } else {
+      this.tipoButton = event;
+      if (this.mercanciasConfirmacionModalElement) {
+        this.modalInstance = new Modal(this.mercanciasConfirmacionModalElement.nativeElement);
+        this.modalInstance.show();
+      }
+    }
+  }
+
+  /** Muestra el modal de confirmación para eliminar claves S.C.I.A.N. si hay alguna seleccionada. */
+  eliminarScian(): void {
+    if (this.seleccionadaScianDatos.length) {
+      if (this.scianEliminarModalElement) {
+        this.modalInstance = new Modal(this.scianEliminarModalElement.nativeElement);
+        this.modalInstance.show();
+      }
+    }
+  }
+
+  /** Elimina las claves S.C.I.A.N. seleccionadas del arreglo y cierra el modal de confirmación. */
+  confirmarEliminarScian(): void {
+    const IDS_TO_DELETE = this.seleccionadaScianDatos.map(item => item.clave);
+    this.claveScianDatas = this.claveScianDatas.filter(
+      (item) => !IDS_TO_DELETE.includes(item.clave)
+    );
+    this.modalInstance?.hide();
   }
 
   /*

@@ -410,6 +410,7 @@ describe('TercerosRelacionadosComponent', () => {
       Object.keys(component.agregarFabricanteFormGroup.controls).forEach(key => {
         formValue[key] = (mockFabricanteData as any)[key] ?? 'dummy';
       });
+
     formValue.pais = 99;
     formValue.localidad = 98;
     formValue.municipioAlcaldia = 97;
@@ -421,11 +422,36 @@ describe('TercerosRelacionadosComponent', () => {
     const spy = jest.spyOn(tramite260212Store, 'setFabricante');
     component.submitFabricanteForm();
 
+    expect(spy).toHaveBeenCalled();
+
     const rowData = spy.mock.calls[0][0] as { tbodyData: any[] }[] | { tbodyData: any[] };
     const tbodyData = Array.isArray(rowData) ? rowData[0]?.tbodyData : rowData?.tbodyData;
+
     expect(tbodyData).toBeDefined();
-    expect(tbodyData).toContain(undefined);
+
+    // Validate expected catalog values are undefined
+    const [
+      _denominacion,
+      _rfc,
+      _curp,
+      _telefono,
+      _correo,
+      _calle,
+      _numExt,
+      _numInt,
+      paisValue,
+      coloniaValue,
+      municipioValue,
+      _entidad,
+      _estado,
+      _coloniaEquivalente
+    ] = tbodyData;
+
+    expect(paisValue).toBe('México');
+    expect(coloniaValue).toBe('Centro');
+    expect(municipioValue).toBe('CDMX');
   });
+
 
   it('debería deshabilitar campos para Facturador', () => {
     component.agregarFacturadorFormGroup.get('nombre')?.disable();
@@ -477,16 +503,25 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.agregarFabricanteFormGroup.get('curp')?.enabled).toBe(true);
     expect(component.agregarFabricanteFormGroup.get('denominacionRazonSocial')?.enabled).toBe(true);
   });
-    it('debería limpiar el formulario de Fabricante', () => {
+
+  it('debería limpiar el formulario de Fabricante', () => {
     component.agregarFabricanteFormGroup.patchValue({ nombre: 'Fabricante Test' });
     component.limpiarFabricanteForm();
-    expect(component.agregarFabricanteFormGroup.get('nombre')?.value).toBeNull();
+
+    const rawValue = component.agregarFabricanteFormGroup.getRawValue();
+    expect(rawValue.nombre).toBeNull();
+    expect(component.agregarFabricanteFormGroup.get('nombre')?.disabled).toBe(true);
+    expect(component.agregarFabricanteFormGroup.get('tercerosNacionalidad')?.enabled).toBe(true);
   });
 
   it('debería limpiar el formulario de Destinatario', () => {
     component.agregarDestinatarioFormGroup.patchValue({ nombre: 'Destinatario Test' });
     component.limpiarDestinatarioForm();
-    expect(component.agregarDestinatarioFormGroup.get('nombre')?.value).toBeNull();
+
+    const rawValue = component.agregarDestinatarioFormGroup.getRawValue();
+    expect(rawValue.nombre).toBeNull();
+    expect(component.agregarDestinatarioFormGroup.get('nombre')?.disabled).toBe(true);
+    expect(component.agregarDestinatarioFormGroup.get('tipoPersona')?.enabled).toBe(true);
   });
 
   it('debería limpiar el formulario de Proveedor', () => {
@@ -499,6 +534,39 @@ describe('TercerosRelacionadosComponent', () => {
     component.agregarFacturadorFormGroup.patchValue({ nombre: 'Facturador Test' });
     component.limpiarFacturadorForm();
     expect(component.agregarFacturadorFormGroup.get('nombre')?.value).toBeNull();
+  });
+
+  it('debería limpiar y habilitar campos para tipoPersonaChecked: Destinatario', () => {
+    component.agregarDestinatarioFormGroup.get('nombre')?.disable();
+    component.agregarDestinatarioFormGroup.get('nombre')?.setValue('Test');
+    component.tipoPersonaChecked('1', 'Destinatario');
+    Object.keys(component.agregarDestinatarioFormGroup.controls).forEach(controlName => {
+      const control = component.agregarDestinatarioFormGroup.get(controlName);
+      expect(control?.enabled).toBe(true);
+    });
+    expect(component.desactivarCampos).toBe(false);
+  });
+
+  it('debería asignar país si Fabricante es nacional', () => {
+    component.paisDropdownData = [{ id: 1, descripcion: 'México' }];
+    component.agregarFabricanteFormGroup.get('tercerosNacionalidad')?.setValue('1');
+    component.tipoPersonaChecked('1', 'Fabricante');
+    expect(component.agregarFabricanteFormGroup.get('pais')?.value).toBe(1);
+  });
+
+  it('debería limpiar país si Fabricante es extranjero', () => {
+    component.paisDropdownData = [{ id: 1, descripcion: 'México' }];
+    component.agregarFabricanteFormGroup.get('tercerosNacionalidad')?.setValue('2');
+    component.tipoPersonaChecked('2', 'Fabricante');
+    expect(component.agregarFabricanteFormGroup.get('pais')?.value).toBe('');
+  });
+
+  it('should clean up on ngOnDestroy', () => {
+    const spy = jest.spyOn((component as any).destroy$, 'next');
+    const spy2 = jest.spyOn((component as any).destroy$, 'complete');
+    component.ngOnDestroy();
+    expect(spy).toHaveBeenCalled();
+    expect(spy2).toHaveBeenCalled();
   });
 
 });

@@ -16,6 +16,7 @@ import { PaisDeOrigenComponent } from '../pais-de-origen/pais-de-origen.componen
 
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { MercanciaModel } from '../../models/permiso-maquila.models';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 /**
  * Componente MercanciasTableFormComponent
@@ -29,7 +30,8 @@ import { MercanciaModel } from '../../models/permiso-maquila.models';
     CatalogoSelectComponent,
     TituloComponent,
     CrosslistComponent,
-    PaisDeOrigenComponent
+    PaisDeOrigenComponent,
+    TooltipModule 
   ],
   templateUrl: './mercancias-table-form.component.html',
   styleUrl: './mercancias-table-form.component.scss',

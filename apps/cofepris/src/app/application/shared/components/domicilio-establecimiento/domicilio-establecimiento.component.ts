@@ -131,6 +131,13 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   @Input() esPaginacionVisible: boolean = false;
 
   /**
+   * Indica si la sección de domicilio debe estar habilitada.
+   * Cuando se establece en `true`, los campos de domicilio estarán disponibles para ingresar datos.
+   * Este valor normalmente lo proporciona un componente padre para controlar el estado habilitado.
+   */
+  @Input() tieneDomicilioHabilitar: boolean = false;
+
+  /**
     * Número total de elementos en la tabla.
     */
   totalElementos: number = 0;
@@ -281,6 +288,13 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       garantiasOfrecidas: [this.solicitudState?.garantiasOfrecidas],
     });
 
+
+    /**
+     * Configura el grupo de formularios 'domicilio' con controles y validadores según el estado actual de la solicitud.
+     */
+    if(this.tieneDomicilioHabilitar) {
+      this.domicilio.disable();
+    }
     /**
  * Añade el control 'numeroRegistro' al formulario 'domicilio' si la propiedad
  * `mostrarNumeroRegistro` es verdadera.
@@ -494,24 +508,24 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Etiqueta de la lista de fechas.
    * */
   public paisDeDondeLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País donde se elabora el producto',
-    derecha: 'País(es) seleccionado(s)',
+    tituluDeLaIzquierda: 'País donde se elabora el producto:',
+    derecha: 'País(es) seleccionado(s)*:',
   };
 
   /**
    * Etiqueta de la lista de fechas.
    * */
   public paisOrigenLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de origen',
-    derecha: 'País(es) seleccionado(s)',
+    tituluDeLaIzquierda: 'País de origen:',
+    derecha: 'País(es) seleccionado(s)*:',
   };
 
   /**
    * Etiqueta de la lista de fechas.
    * */
   public paisEmbarqueLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de procedencia',
-    derecha: 'País(es) seleccionado(s)',
+    tituluDeLaIzquierda: 'País de procedencia:',
+    derecha: 'País(es) seleccionado(s)*:',
   };
 
   /**
@@ -583,6 +597,19 @@ export class DomicilioComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
+    
+    this.service.event$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((valor) => {
+          this.tieneDomicilioHabilitar = (valor as boolean);
+          if (!this.tieneDomicilioHabilitar) {
+            this.domicilio.enable();
+          }
+        })
+      )
+      .subscribe()
     this.obtenerEstadoList();
     this.obtenerMercanciasDatos();
     this.configurarFormularioDomicillio()
@@ -716,19 +743,19 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   readonly paisDeProcedenciaBotones = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-primary',
+      class: 'btn-default',
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       funcion: () => this.crossList.toArray()[0].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-default',
+      class: 'btn-primary',
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       funcion: () => this.crossList.toArray()[0].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-danger',
+      class: 'btn-primary',
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       funcion: () => this.crossList.toArray()[0].quitar(''),
     },
@@ -746,19 +773,19 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   readonly paisDeProcedenciaBotonesDuos = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-primary',
+      class: 'btn-default',
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       funcion: () => this.crossList.toArray()[1].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-default',
+      class: 'btn-primary',
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       funcion: () => this.crossList.toArray()[1].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-danger',
+      class: 'btn-primary',
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       funcion: () => this.crossList.toArray()[1].quitar(''),
     },
@@ -776,19 +803,19 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   readonly paisDeProcedenciaBotonesTres = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-primary',
+      class: 'btn-default',
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       funcion: () => this.crossList.toArray()[2].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-default',
+      class: 'btn-primary',
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       funcion: () => this.crossList.toArray()[2].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-danger',
+      class: 'btn-primary',
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       funcion: () => this.crossList.toArray()[2].quitar(''),
     },
@@ -805,19 +832,19 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   readonly paisDeProcedenciaBotonesCuatro = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-primary',
+      class: 'btn-default',
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       funcion: () => this.crossList.toArray()[3].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-default',
+      class: 'btn-primary',
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       funcion: () => this.crossList.toArray()[3].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-danger',
+      class: 'btn-primary',
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       funcion: () => this.crossList.toArray()[3].quitar(''),
     },

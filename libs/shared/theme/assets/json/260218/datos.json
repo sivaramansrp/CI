@@ -4,16 +4,16 @@
     "cadenaDependencia": "DEP123456",
     "estado": "2",
     "llavePago": "LLAVE987654",
-    "fechaPago": "2024-06-20",
+    "fechaPago": "30/05/2025",
     "importePago": "1500.00",
-    "banco": "Banco Ejemplo"
+    "banco": "1"
   },
   "datosSolicitudFormState": {
     "rfcSanitario": "SAN123456789",
     "denominacionRazon": "Empresa Ejemplo S.A. de C.V.",
     "correoElectronico": "contacto@empresa.com",
     "codigoPostal": "01234",
-    "estado": "1",
+    "estado": "102",
     "municipioAlcaldia": "Álvaro Obregón",
     "localidad": "Santa Fe",
     "colonia": "Colonia Ejemplo",
@@ -23,10 +23,10 @@
     "telefono": "12345678",
     "aviso": "Aviso de funcionamiento",
     "licenciaSanitaria": "LIC123456",
-    "regimen": "1",
-    "adunasDeEntradas": "1",
+    "regimen": "101",
+    "adunasDeEntradas": "102",
     "aeropuerto": true,
-    "publico": "no",
+    "publico": "No",
     "representanteRfc": "REP123456789",
     "representanteNombre": "Juan",
     "apellidoPaterno": "Pérez",
@@ -37,7 +37,8 @@
     "fechaDeFabricacio": "2024-01-01",
     "fechaDeCaducidad": "2025-01-01",
     "regimenLaMercancia": "Definitivo",
-    "aduana": "Aduana Norte"
+    "aduana": "Aduana Norte",
+    "manifesto": true
   },
   "scianConfigDatos": [
     {

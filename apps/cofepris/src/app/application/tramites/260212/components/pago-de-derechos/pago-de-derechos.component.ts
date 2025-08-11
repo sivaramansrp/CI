@@ -229,9 +229,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * Actualiza el valor de fechaDePago en el store.
    */
-  actualizarFechaDePago(): void {
-    const CORREO = this.pagoDerechos.get('fechaDePago')?.value;
-    this.tramite260212Store.setFechaDePago(CORREO);
+  actualizarFechaDePago(event: string): void {
+    if (event) {
+      this.tramite260212Store.setFechaDePago(event);
+    }
   }
 
   /**
