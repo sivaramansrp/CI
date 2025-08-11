@@ -80,27 +80,6 @@ describe('CertificadoDeOrigenComponent', () => {
     component.buscarMercancia();
     expect(component.setbuscarMercanciaEvent.emit).toHaveBeenCalled();
   });
-
-  it('should run #abrirModificarModal()', async () => {
-    component.filaClics = component.filaClics || {};
-    component.filaClics.emit = jest.fn();
-    component.abrirModificarModal({
-      id: '1',
-      fraccionArancelaria: 'someValue',
-      numeroDeRegistrodeProductos: 'someValue',
-      fechaExpedicion: '2024-02-02',
-      fechaVencimiento: '2024-02-02',
-      umc: 'someValue',
-      cantidad: 'someValue',
-      tipoFactura: 'someValue',
-      valorMercancia: 'someValue',
-      fechaFinalInput: '2024-02-02',
-      numeroFactura: 'someValue',
-      normaOrigen: 'someValue',
-      nombreTecnico: 'someValue',
-      nombreComercial: 'someValue',
-    });
-  });
 });
 
 

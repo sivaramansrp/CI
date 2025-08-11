@@ -322,7 +322,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
   fechaInicioInput: [''],
   fechaFinalInput: [''],
   nombres: ['', [Validators.maxLength(20)]],
-  primerApellido: ['', [Validators.required,Validators.maxLength(20)]],
+  primerApellido: [''],
   segundoApellido: ['', [Validators.maxLength(20)]],
   numeroDeRegistroFiscal: ['', [Validators.maxLength(30)]],
   razonSocial: [''],
@@ -381,6 +381,13 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
   }
+   validarFormularios(): boolean {
+if(this.formCertificado.valid){
+  return true;
+}
+this.formCertificado.markAllAsTouched();
+return false;
+  }
 
   /**
    * Método del ciclo de vida ngOnDestroy. Se utiliza para cancelar las suscripciones y evitar fugas de memoria.
@@ -402,6 +409,9 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
     * y su estado asociado en el store.
     */
   setValoresStore(formGroupName: string, campo: string, storeStateName: string): void {
+    if(this.formCertificado.get('si')?.value){
+     this.formCertificado.get('primerApellido')?.setValidators([Validators.required,Validators.maxLength(20)]);
+    }
     const VALOR = this.formCertificado.get(campo)?.value;
     this.formaValida.emit(this.formCertificado.valid);
     this.formCertificadoEvent.emit({ formGroupName, campo, valor: VALOR, storeStateName });
@@ -481,11 +491,5 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
     }
   }
 
-  validarFormularios(): boolean {
- if(this.formCertificado.invalid) {
-   this.formCertificado.markAllAsTouched();
-   return false;
- }
- return true;
-  }
+ 
 }
