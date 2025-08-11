@@ -1,18 +1,19 @@
 import { BusquedaPermisos140216State, Tramite140216Store } from '../../estados/tramites/tramite140216.store';
 import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { FECHA_SALIDA, PERMISOS_VIGENTES_ENCABEZADO_DE_TABLA } from '../../constantes/suspension-permiso.enum';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputFecha, InputFechaComponent, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { PermisosVigentes, PermisosVigentesRespuesta } from '../../models/suspension-permiso.model';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DetalleDelPermisoComponent } from '../detalle-del-permiso/detalle-del-permiso.component';
 import { DetalleTitularComponent } from '../detalle-titular/detalle-titular.component';
 import { Modal } from 'bootstrap';
 import { PersonasNotificarComponent } from '../personas-notificar/personas-notificar.component';
 import { SuspensionPermisoService } from '../../services/suspension-permiso/suspension-permiso.service';
 import { Tramite140216Query } from '../../estados/queries/tramite140216.query';
+import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src/core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
 /**
  * Componente para la búsqueda de permisos.

@@ -91,6 +91,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 esFormularioSoloLectura: boolean = false;
 
 /**
+ * Indica si se debe mostrar un mensaje de error al usuario.
+ */
+mostrarError: boolean = false;
+
+/**
  * Subject utilizado para notificar y limpiar suscripciones activas al destruir el componente.
  * Se emite un valor y se completa en el método `ngOnDestroy` para evitar fugas de memoria.
  */
@@ -215,10 +220,13 @@ inicializarEstadoFormulario(): void {
   /**
    * Marca todos los campos del formulario como tocados si es inválido.
    */
-  validarDestinatarioFormulario(): void {
+  validarDestinatarioFormulario(): boolean {
     if (this.registroForm.invalid) {
       this.registroForm.markAllAsTouched();
+      this.mostrarError = true;
+      return false;
     }
+    return true;
   }
 
   /**
@@ -260,12 +268,12 @@ inicializarEstadoFormulario(): void {
  */
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
-      numeroOficio: [{value : this.solicitudState?.numeroOficio, disabled: this.esFormularioSoloLectura}, [Validators.required, Validators.maxLength(30)]],
-      claveReferencia: [{value: this.solicitudState?.claveReferencia, disabled: this.esFormularioSoloLectura}, [Validators.required]],
-      cadenaDependencia: [{value: this.solicitudState?.cadenaDependencia, disabled: this.esFormularioSoloLectura}, [Validators.required]],
-      importePago: [{value: this.solicitudState?.importePago, disabled: this.esFormularioSoloLectura}, [Validators.required, Validators.maxLength(16)]],
-      fechaInicial: [{value: this.solicitudState?.fechaInicial, disabled: this.esFormularioSoloLectura}, [Validators.required]],
-      fechaFinal: [{value: this.solicitudState?.fechaFinal, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      numeroOficio: [{value : this.solicitudState?.numeroOficio, disabled: this.esFormularioSoloLectura}],
+      claveReferencia: [{value: this.solicitudState?.claveReferencia, disabled: this.esFormularioSoloLectura}],
+      cadenaDependencia: [{value: this.solicitudState?.cadenaDependencia, disabled: this.esFormularioSoloLectura}],
+      importePago: [{value: this.solicitudState?.importePago, disabled: this.esFormularioSoloLectura}],
+      fechaInicial: [{value: this.solicitudState?.fechaInicial, disabled: this.esFormularioSoloLectura}],
+      fechaFinal: [{value: this.solicitudState?.fechaFinal, disabled: this.esFormularioSoloLectura}],
       banco: [{value: this.solicitudState?.banco, disabled: this.esFormularioSoloLectura}, [Validators.required]],
       llave: [{value: this.solicitudState?.llave, disabled: this.esFormularioSoloLectura}, [Validators.required, Validators.maxLength(20)]],
       manifiesto1: [{value: this.solicitudState?.manifiesto1, disabled: this.esFormularioSoloLectura}, [Validators.required]],
@@ -273,7 +281,6 @@ inicializarEstadoFormulario(): void {
       numeroOperacion: [{value: this.solicitudState?.numeroOperacion, disabled: this.esFormularioSoloLectura}, [Validators.required]],
       fechaPago: [{value: this.solicitudState?.fechaPago, disabled: this.esFormularioSoloLectura}, [Validators.required]],
     });
-    this.inicializarEstadoFormulario();
   }
 
   /**

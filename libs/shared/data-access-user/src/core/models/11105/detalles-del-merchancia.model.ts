@@ -38,6 +38,18 @@ export interface DetallesDelMercancia {
      * Número de serie del producto.
      */
     numeroDeSerie: string;
+    /**
+     * Uso específico de la mercancía.
+     */
+    usoEspecifico: string;
+    /**
+     * Condición de la mercancía.
+     */
+    condicionMercancia: string;
+    /**
+     * Vehículo.
+     */
+    vehiculo: string;
 }
 
 
@@ -65,7 +77,7 @@ marca: string;
 ano: string;
 modelo: string;
 serie: string;
-manifesto: string;
+manifesto: boolean;
 calle: string;
 numeroExterior: string;
 numeroInterior: string;
@@ -75,7 +87,7 @@ pais: string;
 codigoPostal: string;
 estado: string;
 colonia: string;
-opcion: boolean;
+opcion: string;
 folioOriginal: string;
 justificacionDelDesistimiento: string;
   }
