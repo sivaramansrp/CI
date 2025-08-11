@@ -2,6 +2,7 @@ import {
   Catalogo,
   REGEX_CORREO_ELECTRONICO,
   REGEX_NOMBRE,
+  REGEX_TELEFONO,
   REGEX_TELEFONO_DIGITOS,
   TipoPersona,
 } from '@ng-mf/data-access-user';
@@ -46,7 +47,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     ReactiveFormsModule,
     CatalogoSelectComponent,
     TituloComponent,
-    TooltipModule
+    TooltipModule,
   ],
   templateUrl: './agregar-destinatario-final.component.html',
   styleUrl: './agregar-destinatario-final.component.css',
@@ -87,16 +88,34 @@ export class AgregarDestinatarioFinalComponent
   public municipiosDatos: Catalogo[] = [];
 
   /**
+   * Datos de catálogo de municipios.
+   * @property {Catalogo[]} municipiosTempDatos
+   */
+  public municipiosTempDatos: Catalogo[] = [];
+
+  /**
    * Datos de catálogo de localidades.
    * @property {Catalogo[]} localidadesDatos
    */
   public localidadesDatos: Catalogo[] = [];
 
   /**
+   * Datos de catálogo de localidades.
+   * @property {Catalogo[]} localidadesTempDatos
+   */
+  public localidadesTempDatos: Catalogo[] = [];
+
+  /**
    * Datos de catálogo de colonias.
    * @property {Catalogo[]} coloniasDatos
    */
   public coloniasDatos: Catalogo[] = [];
+
+  /**
+   * Datos de catálogo de colonias.
+   * @property {Catalogo[]} coloniasTempDatos
+   */
+  public coloniasTempDatos: Catalogo[] = [];
 
   /**
    * Datos de catálogo de códigos postales.
@@ -292,21 +311,21 @@ export class AgregarDestinatarioFinalComponent
       .obtenerListaMunicipios()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
-        this.municipiosDatos = data;
+        this.municipiosTempDatos = data;
       });
 
     this.datosSolicitudService
       .obtenerListaLocalidades()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
-        this.localidadesDatos = data;
+        this.localidadesTempDatos = data;
       });
 
     this.datosSolicitudService
       .obtenerListaColonias()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
-        this.coloniasDatos = data;
+        this.coloniasTempDatos = data;
       });
   }
 
@@ -395,7 +414,7 @@ export class AgregarDestinatarioFinalComponent
             : this.obtenerValor('telefono'),
           disabled: this.elementosDeshabilitados.includes('telefono'),
         },
-        [Validators.pattern(REGEX_TELEFONO_DIGITOS)],
+        [Validators.pattern(REGEX_TELEFONO)],
       ],
       correoElectronico: [
         {
@@ -444,7 +463,9 @@ export class AgregarDestinatarioFinalComponent
       case 260213:
         this.elementosRequeridos = ['calle', 'numeroExterior'];
         this.elementosDeshabilitados = ['pais'];
-        // this.elementosNoRequeridos = ['colonia'];
+        break;
+      case 260214:
+        this.elementosRequeridos = ['calle', 'numeroExterior'];
         break;
       default:
         this.elementosDeshabilitados = [];
@@ -503,12 +524,56 @@ export class AgregarDestinatarioFinalComponent
         }
       );
     } else {
+      if (this.agregarDestinatarioFinal?.get('tipoPersona')?.value) {
+        Object.keys(this.agregarDestinatarioFinal.controls).forEach(
+          (controlName) => {
+            if (
+              controlName !== 'nacionalidad' &&
+              controlName !== 'tipoPersona'
+            ) {
+              this.agregarDestinatarioFinal.get(controlName)?.reset();
+            }
+          }
+        );
+      }
       Object.keys(this.agregarDestinatarioFinal.controls).forEach(
         (controlName) => {
           this.agregarDestinatarioFinal.get(controlName)?.enable();
           this.estaDeshabilitadoDesplegable = false;
         }
       );
+    }
+  }
+
+  /**
+   * Carga la lista de estados cuando se selecciona un catálogo válido.
+   *
+   * @param evento Objeto de tipo `Catalogo` que contiene la información seleccionada.
+   *
+   * ### Descripción:
+   * - Si el `id` del evento es mayor que 0, asigna la lista temporal de municipios (`municipiosTempDatos`)
+   *   a la lista principal (`municipiosDatos`).
+   */
+  cargarEstados(evento: Catalogo): void {
+    if (evento.id > 0) {
+      this.municipiosDatos = this.municipiosTempDatos;
+    }
+  }
+
+  /**
+   * Carga la lista de municipios, localidades y colonias cuando se selecciona un catálogo válido.
+   *
+   * @param evento Objeto de tipo `Catalogo` que contiene la información seleccionada.
+   *
+   * ### Descripción:
+   * - Si el `id` del evento es mayor que 0:
+   *   - Asigna la lista temporal de localidades (`localidadesTempDatos`) a la lista principal (`localidadesDatos`).
+   *   - Asigna la lista temporal de colonias (`coloniasTempDatos`) a la lista principal (`coloniasDatos`).
+   */
+  cargarMunicipios(evento: Catalogo): void {
+    if (evento.id > 0) {
+      this.localidadesDatos = this.localidadesTempDatos;
+      this.coloniasDatos = this.coloniasTempDatos;
     }
   }
 

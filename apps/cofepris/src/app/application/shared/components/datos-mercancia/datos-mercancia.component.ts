@@ -941,6 +941,13 @@ export class DatosMercanciaComponent implements OnInit {
    * eliminando cualquier dato ingresado previamente.
    */
   limpiarMercancia(): void {
+    this.seleccionadasUsoEspesificoDatos = [];
+    this.usoEspesificoDatos = CROSLISTA_DE_PAISES;
+    this.seleccionadasPaisDeOriginDatos = [];
+    this.paisDeProcedenciaDatos = CROSLISTA_DE_PAISES;
+    this.seleccionadasPaisDeProcedenciaDatos = [];
+    this.seleccionarOrigenDelPais = CROSLISTA_DE_PAISES;
+
     this.mercanciaForm.reset();
   }
 

@@ -2,6 +2,7 @@ import {
   Catalogo,
   REGEX_CORREO_ELECTRONICO,
   REGEX_NOMBRE,
+  REGEX_TELEFONO,
   REGEX_TELEFONO_DIGITOS,
   TipoPersona,
 } from '@ng-mf/data-access-user';
@@ -42,7 +43,7 @@ import { takeUntil } from 'rxjs';
     ReactiveFormsModule,
     CatalogoSelectComponent,
     TituloComponent,
-    TooltipModule
+    TooltipModule,
   ],
   templateUrl: './agregar-fabricante.component.html',
   styleUrl: './agregar-fabricante.component.css',
@@ -222,7 +223,11 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
       tipoPersona: ['', Validators.required],
       rfc: [
         this.obtenerValor('rfc'),
-        [Validators.required, Validators.pattern(REGEX_NOMBRE), Validators.maxLength(13)],
+        [
+          Validators.required,
+          Validators.pattern(REGEX_NOMBRE),
+          Validators.maxLength(13),
+        ],
       ],
       curp: [
         this.obtenerValor('curp'),
@@ -301,7 +306,7 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
           value: this.obtenerValor('telefono') ? '3461235' : '',
           disabled: this.elementosDeshabilitados.includes('telefono'),
         },
-        [Validators.pattern(REGEX_TELEFONO_DIGITOS)],
+        [Validators.pattern(REGEX_TELEFONO)],
       ],
       correoElectronico: [
         {
@@ -333,6 +338,9 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
         this.elementosNoRequeridos = ['codigoPostal', 'colonia'];
         break;
       case 260201:
+        this.elementosDeshabilitados = ['pais'];
+        break;
+      case 260214:
         this.elementosDeshabilitados = ['pais'];
         break;
       default:
@@ -491,18 +499,45 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
       (this.agregarFabricanteForm?.get('tipoPersona')?.value === '' ||
         this.agregarFabricanteForm?.get('tipoPersona')?.value === undefined)
     ) {
-      Object.keys(this.agregarFabricanteForm.controls).forEach(controlName => {
-        this.agregarFabricanteForm.get(controlName)?.disable();
-        if (controlName === 'nacionalidad' || controlName === 'tipoPersona') {
-          this.agregarFabricanteForm.get(controlName)?.enable();
+      Object.keys(this.agregarFabricanteForm.controls).forEach(
+        (controlName) => {
+          this.agregarFabricanteForm.get(controlName)?.disable();
+          if (controlName === 'nacionalidad' || controlName === 'tipoPersona') {
+            this.agregarFabricanteForm.get(controlName)?.enable();
+          }
         }
-      });
-    }
-    else {
-      Object.keys(this.agregarFabricanteForm.controls).forEach(controlName => {
-        this.agregarFabricanteForm.get(controlName)?.enable();
-        this.estaDeshabilitadoDesplegable = false;
-      });
+      );
+    } else {
+      if (this.agregarFabricanteForm?.get('tipoPersona')?.value) {
+        Object.keys(this.agregarFabricanteForm.controls).forEach(
+          (controlName) => {
+            if (controlName !== 'nacionalidad' && controlName !== 'tipoPersona') {
+              this.agregarFabricanteForm.get(controlName)?.reset();
+            }
+          }
+        );
+      }
+      if (
+        this.agregarFabricanteForm?.get('nacionalidad')?.value &&
+        this.agregarFabricanteForm?.get('tipoPersona')?.value
+      ) {
+        Object.keys(this.agregarFabricanteForm.controls).forEach(
+          (controlName) => {
+            this.agregarFabricanteForm.get(controlName)?.enable();
+            this.estaDeshabilitadoDesplegable = false;
+          }
+        );
+      }
+
+       if (
+        this.agregarFabricanteForm?.get('nacionalidad')?.value === 'nacionalStr' &&
+        this.agregarFabricanteForm?.get('tipoPersona')?.value === this.tipoPersona.FISICA || this.agregarFabricanteForm?.get('tipoPersona')?.value === this.tipoPersona.MORAL
+      ) {
+        this.estaDeshabilitadoDesplegable = true;
+        this.agregarFabricanteForm.patchValue({
+          pais: 2
+        })
+      }
     }
   }
 

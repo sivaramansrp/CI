@@ -106,7 +106,7 @@
             id="denominacionRazon"
             type="text"
             formControlName="denominacionRazon"
-            maxlength="120"
+            maxlength="100"
             [ngClass]="
               isValid(datosSolicitudForm, 'denominacionRazon') ? 'required' : ''
             "
@@ -341,6 +341,7 @@
             class="form-control"
             id="correoElectronico"
             type="text"
+            maxlength="320"
             formControlName="correoElectronico"
             [ngClass]="
               isValid(datosSolicitudForm, 'correoElectronico') ? 'required' : ''
@@ -881,6 +882,7 @@
           class="form-control"
           id="correoElectronico"
           type="text"
+          maxlength="320"
           formControlName="correoElectronico"
           (change)="cambireCorreoElectronico()"
           [ngClass]="

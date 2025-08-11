@@ -13,13 +13,15 @@ import {
   Notificacion,
   NotificacionesComponent,
 } from '@ng-mf/data-access-user';
-import { Subject,map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 import {
+  CONFIRMA_ELIMINACION,
+  DATOS_ELIMINADOS_CORRECTAMENTE,
   MENSAJE_SIN_FILA_SELECCIONADA,
   OCULTAR_FACTURADOR,
 } from '../../constantes/datos-solicitud.enum';
@@ -238,7 +240,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @param tramiteStore - Store que administra los datos del trámite.
    * @param tramiteQuery - Servicio para consultar los datos del trámite.
    */
-  constructor(private router: Router, private activatedRoute: ActivatedRoute,private tercerosService: TercerosRelacionadosFebService,private consultaioQuery: ConsultaioQuery,) {
+  constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private tercerosService: TercerosRelacionadosFebService,
+    private consultaioQuery: ConsultaioQuery
+  ) {
     this.seleccionarFilaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
@@ -250,14 +257,14 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
     };
-     this.consultaioQuery.selectConsultaioState$
-        .pipe(
-          takeUntil(this.destroy$),
-          map((seccionState)=>{
-            this.formularioDeshabilitado = seccionState.readonly; 
-          })
-        )
-        .subscribe()
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.formularioDeshabilitado = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -317,10 +324,46 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   public mostrarAlerta: boolean = false;
 
-     /**
-    * Subject utilizado para destruir las suscripciones y evitar fugas de memoria.
-    */
-      private destroy$ = new Subject<void>();
+  /**
+   * Controla la visibilidad del modal de alerta.
+   * @property {boolean} eliminarAlerta
+   */
+  public eliminarAlerta: boolean = false;
+
+  /**
+   * Controla la visibilidad del modal de alerta.
+   * @property {boolean} eliminarAlertaConfirm
+   */
+  public eliminarAlertaConfirm: boolean = false;
+
+  /**
+   * Controla la visibilidad del modal de alerta.
+   * @property {boolean} eliminarFabricanteAlerta
+   */
+  public eliminarFabricanteAlerta: boolean = false;
+
+  /**
+   * Controla la visibilidad del modal de alerta.
+   * @property {boolean} eliminarDestinatarioAlerta
+   */
+  public eliminarDestinatarioAlerta: boolean = false;
+
+  /**
+   * Controla la visibilidad del modal de alerta.
+   * @property {boolean} eliminarProveedorAlerta
+   */
+  public eliminarProveedorAlerta: boolean = false;
+
+  /**
+   * Controla la visibilidad del modal de alerta.
+   * @property {boolean} eliminarFacturadorAlerta
+   */
+  public eliminarFacturadorAlerta: boolean = false;
+
+  /**
+   * Subject utilizado para destruir las suscripciones y evitar fugas de memoria.
+   */
+  private destroy$ = new Subject<void>();
 
   /**
    * @method irAAcciones
@@ -346,30 +389,33 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       ? false
       : true;
 
+    this.tercerosService
+      .getFabricanteTablaDatos()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((response: Destinatario[]) => {
+        this.fabricanteTablaDatos = response;
+      });
 
-     this.tercerosService.getFabricanteTablaDatos()
-        .pipe(takeUntil(this.destroy$))
-            .subscribe((response: Destinatario[]) => {
-          this.fabricanteTablaDatos= response;
-           });
+    this.tercerosService
+      .getFabricanteTablaDatos()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((response: Destinatario[]) => {
+        this.destinatarioFinalTablaDatos = response;
+      });
 
-     this.tercerosService.getFabricanteTablaDatos()
-       .pipe(takeUntil(this.destroy$))
-         .subscribe((response: Destinatario[]) => {
-           this.destinatarioFinalTablaDatos= response;
-         });
-
-    this.tercerosService.getFabricanteTablaDatos()
+    this.tercerosService
+      .getFabricanteTablaDatos()
       .pipe(takeUntil(this.destroy$))
       .subscribe((response: Proveedor[]) => {
-       this.proveedorTablaDatos= response;
- });
+        this.proveedorTablaDatos = response;
+      });
 
-    this.tercerosService.getFabricanteTablaDatos()
+    this.tercerosService
+      .getFabricanteTablaDatos()
       .pipe(takeUntil(this.destroy$))
-         .subscribe((response: Facturador[]) => {
-           this.facturadorTablaDatos= response;
-           });
+      .subscribe((response: Facturador[]) => {
+        this.facturadorTablaDatos = response;
+      });
   }
 
   /**
@@ -458,15 +504,83 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       this.mostrarAlerta = true;
       return;
     }
-    this.fabricanteTablaDatos = this.fabricanteTablaDatos.filter(
-      (fabricante: Fabricante) => {
-        return !this.fabricanteSeleccionadoDatos.some(
-          (idx2: Fabricante) => idx2.rfc === fabricante.rfc
-        );
-      }
-    );
+    this.seleccionarFilaNotificacion.mensaje = CONFIRMA_ELIMINACION;
+    this.seleccionarFilaNotificacion.txtBtnCancelar = 'Cancelar';
+    this.eliminarFabricanteAlerta = true;
+    this.eliminarAlerta = true;
+  }
 
-    this.fabricanteEliminar.emit(this.fabricanteTablaDatos);
+  eliminarAlertaConfirmation(evento: boolean): void {
+    this.eliminarAlerta = false;
+    if (evento) {
+      this.seleccionarFilaNotificacion.mensaje = DATOS_ELIMINADOS_CORRECTAMENTE;
+      this.seleccionarFilaNotificacion.txtBtnCancelar = '';
+      this.eliminarAlertaConfirm = true;
+    }
+  }
+
+  eliminarDotosAlerta(evento: boolean): void {
+    if (evento) {
+      if (this.eliminarFabricanteAlerta) {
+        this.fabricanteTablaDatos = this.fabricanteTablaDatos.filter(
+          (fabricante: Fabricante) => {
+            return !this.fabricanteSeleccionadoDatos.some(
+              (idx2: Fabricante) => idx2.rfc === fabricante.rfc
+            );
+          }
+        );
+        this.fabricanteEliminar.emit(this.fabricanteTablaDatos);
+        this.eliminarFabricanteAlerta = false;
+      } else if (this.eliminarDestinatarioAlerta) {
+        this.destinatarioFinalTablaDatos =
+          this.destinatarioFinalTablaDatos.filter(
+            (destinatario: Destinatario) => {
+              return !this.destinatarioSeleccionadoDatos.some(
+                (idx2: Destinatario) => idx2.rfc === destinatario.rfc
+              );
+            }
+          );
+        this.destinatarioEliminar.emit(this.destinatarioFinalTablaDatos);
+        this.eliminarDestinatarioAlerta = false;
+      } else if (this.eliminarProveedorAlerta) {
+        this.proveedorTablaDatos = this.proveedorTablaDatos.filter(
+          (proveedor: Proveedor) => {
+            return !this.proveedorSeleccionadoDatos.some((idx2: Proveedor) => {
+              if (idx2.nombreRazonSocial !== '') {
+                return idx2.nombreRazonSocial === proveedor.nombreRazonSocial;
+              }
+              return idx2.razonSocial === proveedor.razonSocial;
+            });
+          }
+        );
+
+        this.proveedorEliminar.emit(this.proveedorTablaDatos);
+        this.eliminarProveedorAlerta = false;
+      } else if (this.eliminarFacturadorAlerta) {
+        this.facturadorTablaDatos = this.facturadorTablaDatos.filter(
+          (facturador: Facturador) => {
+            return !this.facturadorSeleccionadoDatos.some(
+              (idx2: Facturador) => {
+                if (idx2.nombreRazonSocial !== '') {
+                  return (
+                    idx2.nombreRazonSocial === facturador.nombreRazonSocial
+                  );
+                }
+                return idx2.razonSocial === facturador.razonSocial;
+              }
+            );
+          }
+        );
+
+        this.facturadorEliminar.emit(this.facturadorTablaDatos);
+        this.eliminarFacturadorAlerta = false;
+      }
+    }
+    this.eliminarFabricanteAlerta = false;
+    this.eliminarFabricanteAlerta = false;
+    this.eliminarProveedorAlerta = false;
+    this.eliminarFacturadorAlerta = false;
+    this.eliminarAlertaConfirm = false;
   }
 
   /**
@@ -481,15 +595,10 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       this.mostrarAlerta = true;
       return;
     }
-    this.destinatarioFinalTablaDatos = this.destinatarioFinalTablaDatos.filter(
-      (destinatario: Destinatario) => {
-        return !this.destinatarioSeleccionadoDatos.some(
-          (idx2: Destinatario) => idx2.rfc === destinatario.rfc
-        );
-      }
-    );
-
-    this.destinatarioEliminar.emit(this.destinatarioFinalTablaDatos);
+    this.seleccionarFilaNotificacion.mensaje = CONFIRMA_ELIMINACION;
+    this.seleccionarFilaNotificacion.txtBtnCancelar = 'Cancelar';
+    this.eliminarDestinatarioAlerta = true;
+    this.eliminarAlerta = true;
   }
 
   /**
@@ -504,18 +613,10 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       this.mostrarAlerta = true;
       return;
     }
-    this.proveedorTablaDatos = this.proveedorTablaDatos.filter(
-      (proveedor: Proveedor) => {
-        return !this.proveedorSeleccionadoDatos.some((idx2: Proveedor) => {
-          if (idx2.nombreRazonSocial !== '') {
-            return idx2.nombreRazonSocial === proveedor.nombreRazonSocial;
-          }
-          return idx2.razonSocial === proveedor.razonSocial;
-        });
-      }
-    );
-
-    this.proveedorEliminar.emit(this.proveedorTablaDatos);
+    this.seleccionarFilaNotificacion.mensaje = CONFIRMA_ELIMINACION;
+    this.seleccionarFilaNotificacion.txtBtnCancelar = 'Cancelar';
+    this.eliminarProveedorAlerta = true;
+    this.eliminarAlerta = true;
   }
 
   /**
@@ -530,18 +631,10 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       this.mostrarAlerta = true;
       return;
     }
-    this.facturadorTablaDatos = this.facturadorTablaDatos.filter(
-      (facturador: Facturador) => {
-        return !this.facturadorSeleccionadoDatos.some((idx2: Facturador) => {
-          if (idx2.nombreRazonSocial !== '') {
-            return idx2.nombreRazonSocial === facturador.nombreRazonSocial;
-          }
-          return idx2.razonSocial === facturador.razonSocial;
-        });
-      }
-    );
-
-    this.facturadorEliminar.emit(this.facturadorTablaDatos);
+    this.seleccionarFilaNotificacion.mensaje = CONFIRMA_ELIMINACION;
+    this.seleccionarFilaNotificacion.txtBtnCancelar = 'Cancelar';
+    this.eliminarFacturadorAlerta = true;
+    this.eliminarAlerta = true;
   }
 
   /**

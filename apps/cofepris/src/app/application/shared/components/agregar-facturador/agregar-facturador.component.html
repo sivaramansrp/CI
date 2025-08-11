@@ -68,6 +68,11 @@
             >
               Este campo es obligatorio
             </small>
+            <small
+            *ngIf="agregarFacturadorForm.controls['denominacionRazon'].errors?.['pattern']"
+          >
+            Existen datos incorrectos que no cumplen con el formato esperado
+          </small>
           </div>
         </div>
       </div>
@@ -164,6 +169,7 @@
           type="text"
           class="form-control"
           formControlName="estado"
+          maxlength="255"
           [ngClass]="esInvalido('estado') ? 'required' : ''"
         />
         <div *ngIf="esInvalido('estado')" class="text-danger">
@@ -171,6 +177,11 @@
             *ngIf="agregarFacturadorForm.controls['estado'].errors?.['required']"
           >
             Este campo es obligatorio
+          </small>
+           <small
+            *ngIf="agregarFacturadorForm.controls['estado'].errors?.['pattern']"
+          >
+            Existen datos incorrectos que no cumplen con el formato esperado.
           </small>
         </div>
       </div>
@@ -180,8 +191,15 @@
           type="text"
           class="form-control"
           formControlName="codigoPostal"
-          maxlength="100"
+          maxlength="12"
         />
+        <div class="text-danger">
+           <small
+            *ngIf="agregarFacturadorForm.controls['codigoPostal'].errors?.['pattern']"
+          >
+            Existen datos incorrectos que no cumplen con el formato esperado.
+          </small>
+        </div>
       </div>
     </div>
 
@@ -279,6 +297,7 @@
         <input
           type="email"
           class="form-control"
+          maxlength="320"
           formControlName="correoElectronico"
         />
         <div *ngIf="esInvalido('correoElectronico')" class="text-danger">
@@ -300,7 +319,7 @@
           <button
             type="button"
             name="modificarMercancias"
-            class="btn btn-default"
+            class="btn btn-danger"
             (click)="cancelar()"
           >
             Cancelar
@@ -308,7 +327,7 @@
           <button
             type="button"
             name="eliminarMercancias"
-            class="btn btn-danger ms-2"
+            class="btn btn-default ms-2"
             (click)="limpiarFormulario()"
           >
             Limpiar

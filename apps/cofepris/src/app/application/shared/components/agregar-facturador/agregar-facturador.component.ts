@@ -1,4 +1,4 @@
-import { Catalogo, REGEX_CORREO_ELECTRONICO, REGEX_NOMBRE, TELEFONO_DIGITOS } from '@ng-mf/data-access-user';
+import { Catalogo, REGEX_CORREO_ELECTRONICO, REGEX_IMPORTE_PAGO, REGEX_NOMBRE, REGEX_NUMEROS, REGEX_TELEFONO, TELEFONO_DIGITOS } from '@ng-mf/data-access-user';
 import { Component, Input } from '@angular/core';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
@@ -141,8 +141,8 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
       ],
       segundoApellido: [this.obtenerValor('segundoApellido'), [Validators.pattern(REGEX_NOMBRE)]],
       pais: [this.obtenerValor('pais'), Validators.required],
-      estado: [this.obtenerValor('estadoLocalidad'), Validators.required],
-      codigoPostal: [this.obtenerValor('codigoPostal')],
+      estado: [this.obtenerValor('estadoLocalidad'), Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)],
+      codigoPostal: [this.obtenerValor('codigoPostal'),[Validators.pattern(REGEX_NUMEROS)]],
       colonia: [this.obtenerValor('colonia')],
       calle: [this.obtenerValor('calle'), Validators.required],
       numeroExterior: [
@@ -159,7 +159,7 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
             : this.obtenerValor('telefono'),
           disabled: this.elementosDeshabilitados.includes('telefono'),
         },
-        [Validators.pattern(TELEFONO_DIGITOS)],
+        [Validators.pattern(REGEX_TELEFONO)],
       ],
       correoElectronico: [
         {
@@ -291,6 +291,15 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
         }
       );
     } else {
+       if (this.agregarFacturadorForm?.get('tipoPersona')?.value) {
+        Object.keys(this.agregarFacturadorForm.controls).forEach(
+          (controlName) => {
+            if (controlName !== 'nacionalidad' && controlName !== 'tipoPersona') {
+              this.agregarFacturadorForm.get(controlName)?.reset();
+            }
+          }
+        );
+      }
       Object.keys(this.agregarFacturadorForm.controls).forEach(
         (controlName) => {
           this.agregarFacturadorForm.get(controlName)?.enable();

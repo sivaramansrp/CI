@@ -391,7 +391,7 @@ export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
  */
 export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE = [
   260206, 260214, 260216, 260205, 260217, 260218, 260102, 260301, 260208,
-  260207, 260209, 260201, 260219, 260302, 260304, 260103, 260213
+  260207, 260209, 260201, 260219, 260302, 260304, 260103, 260213,
 ];
 
 /**
@@ -417,7 +417,9 @@ export const OCULTAR_FACTURADOR = [260102];
  * @example
  * // Ejemplo de uso:
  */
-export const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE = [260216, 260208, 260209,260213];
+export const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE = [
+  260216, 260208, 260209, 260213,
+];
 
 /**
  * @const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC
@@ -446,7 +448,7 @@ export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC = [
  * }
  */
 export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO = [
-  260301, 260208, 260302, 260304, 260103, 260213
+  260301, 260208, 260302, 260304, 260103, 260213,
 ];
 
 /**
@@ -487,7 +489,9 @@ export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS = [
  *   deshabilitarCampoMunicipio();
  * }
  */
-export const PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA = [260301, 260214];
+export const PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA = [
+  260301, 260214,
+];
 
 /**
  * @const PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA
@@ -523,11 +527,11 @@ export const REPRESENTANTE_LEGAL = [260208, 260213];
  * }
  */
 export const BANCO = [
-  260104,260208, 260209, 260207, 260201, 260219, 260302, 260304, 260103,260214
+  260104, 260208, 260209, 260207, 260201, 260219, 260302, 260304, 260103,
+  260214,
 ];
 
 export const REQUIRED_BANCO = [260902];
-
 
 /**
  * @const DATOS_MERCANCIA_CAMPO
@@ -587,7 +591,7 @@ export const PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL = [
  * @type {number[]}
  */
 export const PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE = [
-  260207, 260208, 260209, 260219,
+  260207, 260208, 260209, 260219, 260214,
 ];
 
 /**
@@ -704,29 +708,47 @@ export const UMT_DESHABILITADO_VALOR = 'Kilogramo';
 /** Mensaje mostrado cuando no hay fila seleccionada. */
 export const MENSAJE_SIN_FILA_SELECCIONADA = 'Selecciona un registro';
 
-export const MODIFICADOR_MENSAJE_NO_FILA_SELECCIONADA = 'Selecciona sólo un registro para modificar.';
+/**
+ * Mensaje que se muestra cuando el usuario intenta modificar
+ * sin haber seleccionado una fila o ha seleccionado más de una.
+ */
+export const MODIFICADOR_MENSAJE_NO_FILA_SELECCIONADA =
+  'Selecciona sólo un registro para modificar.';
 
-export const MENSAJE_EMERGENTE_DE_CONFIRMACION = '¿Estás seguro que deseas eliminar los registros marcados?';
+/**
+ * Mensaje de confirmación que se muestra antes de eliminar un registro.
+ */
+export const CONFIRMA_ELIMINACION = '¿Confirma la eliminación?';
+
+/**
+ * Mensaje que se muestra cuando los datos han sido eliminados correctamente.
+ */
+export const DATOS_ELIMINADOS_CORRECTAMENTE = 'Datos eliminados correctamente';
+
+export const MENSAJE_EMERGENTE_DE_CONFIRMACION =
+  '¿Estás seguro que deseas eliminar los registros marcados?';
 /**
  * @description
  *  Identificadores de notificación.
  */
-export const MOSTRAR_NOTIFICACION = [260219,260302,260304, 260206, 260201,260103,260203,260214];
+export const MOSTRAR_NOTIFICACION = [
+  260219, 260302, 260304, 260206, 260201, 260103, 260203, 260214,
+];
 
 /**
  * Enumera los tipos de actualización que se pueden realizar.
- * 
+ *
  * - `AGREGAR`: Representa la acción de agregar un nuevo elemento.
  * - `ELIMINAR`: Representa la acción de eliminar un elemento existente.
  */
 export enum TIPO_ACTUALIZACION {
   AGREGAR = 'Agregar',
-  ELIMINAR ='Eliminar',
+  ELIMINAR = 'Eliminar',
 }
 
 /**
  * Constante que representa el identificador para productos especiales.
- * 
+ *
  * @remarks
  * Utilice esta constante para identificar solicitudes relacionadas con productos de tipo especial.
  */
@@ -734,7 +756,7 @@ export const TIPO_PRODUCTO_ESPECIAL = '3';
 
 /**
  * Constante que representa los procedimientos que no son aplicables para manifiestos y declaraciones.
- * 
+ *
  * @remarks
  * Esta constante se utiliza para filtrar procedimientos que no deben ser considerados en el contexto de manifiestos y declaraciones.
  */
@@ -742,7 +764,7 @@ export const PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES = [260217];
 
 /**
  * Constante que representa el texto del manifiesto y declaraciones.
- * 
+ *
  * @remarks
  * Este texto se utiliza para informar al usuario sobre los requisitos y normatividad aplicable,
  * así como las sanciones por falsedad de declaraciones.

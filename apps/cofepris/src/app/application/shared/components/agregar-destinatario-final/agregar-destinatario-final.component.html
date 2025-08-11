@@ -6,7 +6,7 @@
     <div class="row">
       <div class="col-md-6"></div>
       <div class="col-md-6 offset-md-6">
-        <label class="form-label">Tipo persona:</label>
+        <label class="form-label">Tipo persona*:</label>
         <div class="form-check">
           <input
             type="radio"
@@ -88,7 +88,7 @@
       <div class="col-md-8">
         <div class="form-group">
           <label
-            class="form-label row mt-3 mover-izquierda fs-2"
+            class="form-label mt-3 mover-izquierda fs-2"
             for="denominacionRazon"
             >Denominación/razón social
             @if(agregarDestinatarioFinal.controls['denominacionRazon'].errors?.['required']){
@@ -108,6 +108,11 @@
               *ngIf="agregarDestinatarioFinal.controls['denominacionRazon'].errors?.['required']"
             >
               Este campo es obligatorio
+            </small>
+            <small
+              *ngIf="agregarDestinatarioFinal.controls['denominacionRazon'].errors?.['pattern']"
+            >
+              Existen datos incorrectos que no cumplen con el formato esperado.
             </small>
           </div>
         </div>
@@ -232,6 +237,7 @@
           [label]="'Estado/localidad'"
           [required]="true"
           [placeholder]="'Selecciona un valor'"
+          (selectionChange)="cargarEstados($event)"
           [isDisabled]="estaDeshabilitadoDesplegable"
         ></app-catalogo-select>
       </div>
@@ -242,6 +248,7 @@
           [label]="'Municipio/alcaldía'"
           [required]="true"
           [placeholder]="'Selecciona un valor'"
+          (selectionChange)="cargarMunicipios($event)"
           [isDisabled]="estaDeshabilitadoDesplegable"
         ></app-catalogo-select>
       </div>
@@ -288,9 +295,9 @@
           class="form-label mx-2"
           *ngIf="elementosRequeridos.includes('calle')"
         >
-          @if(agregarDestinatarioFinal.controls['calle'].errors?.['required']){
-          <span class="text-danger">*</span>
-          }
+          <!-- @if(agregarDestinatarioFinal.controls['calle'].errors?.['required']){ -->
+          <span [ngClass]="agregarDestinatarioFinal.controls['calle'].errors?.['required'] ? 'text-danger':''">*</span>
+          <!-- } -->
         </span>
         <span class="form-label">:</span>
         <span tooltip="Domicilio, calle, número interior, número exterior, lote"
@@ -317,9 +324,12 @@
           class="form-label mx-2"
           *ngIf="elementosRequeridos.includes('numeroExterior')"
         >
-          @if(agregarDestinatarioFinal.controls['numeroExterior'].errors?.['required']){
-          <span class="text-danger">*</span>
-          }
+          <!-- @if(agregarDestinatarioFinal.controls['numeroExterior'].errors?.['required']){ -->
+          <span
+            [ngClass]="agregarDestinatarioFinal.controls['numeroExterior'].errors?.['required'] ?  'text-danger':''"
+            >*</span
+          >
+          <!-- } -->
         </span>
         <span class="form-label">:</span>
         <input
@@ -404,7 +414,7 @@
           <button
             type="button"
             name="modificarMercancias"
-            class="btn btn-default"
+            class="btn btn-danger"
             (click)="cancelar()"
           >
             Cancelar
@@ -412,7 +422,7 @@
           <button
             type="button"
             name="eliminarMercancias"
-            class="btn btn-danger ms-2"
+            class="btn btn-default ms-2"
             (click)="limpiarFormulario()"
           >
             Limpiar
