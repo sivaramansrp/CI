@@ -219,6 +219,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     )(VALOR);
   }
 
+/**
+ * Borra los datos del formulario de solicitud.
+ * Resetea todos los campos del formulario a sus valores iniciales.
+ */
   borrarDatosPago(): void {
     this.formSolicitud.reset();
   }
