@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import {
   AlertComponent,
   ConsultaioQuery,
+  MENSAJEDEALERTA,
   Notificacion,
   NotificacionesComponent,
 } from '@ng-mf/data-access-user';
@@ -22,6 +23,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import {
   MENSAJE_SIN_FILA_SELECCIONADA,
   OCULTAR_FACTURADOR,
+  PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR,
 } from '../../constantes/datos-solicitud.enum';
 import { OCULTAR_PROVEEDOR } from '../../constantes/datos-solicitud.enum';
 
@@ -121,6 +123,20 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Almacena la fila seleccionada en la tabla de fabricantes.
    */
   seleccionTable: Fabricante[] = [];
+
+  /**
+   * @property {boolean} isAdjuntar
+   * @description Indica si el componente está en modo de adjuntar documentos o archivos.
+   * Cuando es `true`, muestra un mensaje específico para adjuntar elementos.
+   * Cuando es `false`, muestra el mensaje de tabla obligatoria.
+   * 
+   * Este flag controla qué tipo de alerta se muestra al usuario:
+   * - `false`: Muestra MENSAJE_TABLA_OBLIGATORIA
+   * - `true`: Muestra TEXTO.ADJUNTAR (mensaje específico para adjuntar)
+   * 
+   * @default false
+   */
+  isAdjuntar: boolean = false;
 
   /**
    * Indica si el componente debe estar oculto o visible.
@@ -322,6 +338,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     */
       private destroy$ = new Subject<void>();
 
+    /**
+      * property TEXTOS
+      * description Textos de alerta utilizados en el componente.
+      */
+     public TEXTOS = MENSAJEDEALERTA;   
+
   /**
    * @method irAAcciones
    * @description Navega a la ruta relativa proporcionada desde el contexto actual.
@@ -339,6 +361,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
+    this.isAdjuntar = PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR.includes(this.idProcedimiento);
     this.habilitarFacturador = OCULTAR_FACTURADOR.includes(this.idProcedimiento)
       ? false
       : true;

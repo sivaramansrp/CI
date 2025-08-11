@@ -29,6 +29,32 @@ export interface CambioModalidad {
     id: number;
     descripcion: string;
 }
+export interface ServicioInmex {
+    /**
+     * Nombre del servicio asociado.
+     */
+    servicio?: string;
+  
+    /**
+     * Registro de contribuyentes relacionado.
+     */
+    registroContribuyentes?: string;
+  
+    /**
+     * Denominación social de la empresa.
+     */
+    denominacionSocial?: string;
+  
+    /**
+     * Número del programa IMMEX.
+     */
+    numeroIMMEX?: string;
+  
+    /**
+     * Año de inicio del programa IMMEX.
+     */
+    anoIMMEX?: string;
+  }
 
 /**
  * @interface CambioModalidadResponse
@@ -109,3 +135,31 @@ export interface ServiciosState {
     cambioModalidad: CambioModalidadResponse;
     serviciosImmx: string;
 }
+export const CONFIGURACION_DOMICILIOS = [
+  {
+    encabezado: 'Servicio',
+    clave: (ele: ServicioInmex): string | undefined => ele.servicio,
+    orden: 1,
+  },
+  {
+    encabezado: 'Registro federal de contribuyentes',
+    clave: (ele: ServicioInmex): string | undefined =>
+      ele.registroContribuyentes,
+    orden: 2,
+  },
+  {
+    encabezado: 'Denominación o razón social',
+    clave: (ele: ServicioInmex): string | undefined => ele.denominacionSocial,
+    orden: 3,
+  },
+  {
+    encabezado: 'Número del programa IMMEX',
+    clave: (ele: ServicioInmex): string | undefined => ele.numeroIMMEX,
+    orden: 4,
+  },
+  {
+    encabezado: 'Año del programa IMMEX',
+    clave: (ele: ServicioInmex): string | undefined => ele.anoIMMEX,
+    orden: 5,
+  },
+];

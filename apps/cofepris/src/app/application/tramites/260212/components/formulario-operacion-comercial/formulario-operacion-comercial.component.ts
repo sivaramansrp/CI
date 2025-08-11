@@ -11,6 +11,7 @@ import { Tramite260212Query } from '../../estados/tramite260212.query';
 
 import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 /**
  * Componente FormularioOperacionComercialComponent
  * Este componente gestiona el formulario relacionado con la operación comercial.
@@ -21,7 +22,8 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
   standalone: true,
   imports: [CommonModule,
     CatalogoSelectComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TooltipModule
   ],
   templateUrl: './formulario-operacion-comercial.component.html',
   styleUrl: './formulario-operacion-comercial.component.scss',
@@ -180,6 +182,11 @@ this. inicializarEstadoFormulario();
   alternarSoloLectura(event: Event): void {
     const CHECK_BOX = event.target as HTMLInputElement;
     this.esSoloLectura = !CHECK_BOX.checked;
+    if (CHECK_BOX.checked) {
+      this.formularioOperacionForm.get('noLicenciaSanitaria')?.disable();
+    } else {
+      this.formularioOperacionForm.get('noLicenciaSanitaria')?.enable();
+    }
   }
 
   /**

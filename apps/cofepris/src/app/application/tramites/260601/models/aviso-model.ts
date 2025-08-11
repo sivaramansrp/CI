@@ -14,6 +14,28 @@ export interface Solicitud {
   /** Proveedor de la mercancia */
   proovedor: string;
 }
+/**
+ * Interfaz que define la estructura de los datos de respuesta de un catálogo.
+ */
+export interface ProductoTable {
+  clasificacionDelProducto: string;
+  tipoDeProducto: string;
+  fraccionArancelaria: string;
+  descripcionDeLaFraccion: string;
+  modelo: string;
+  descripcionDelProducto: string;
+  paisDeOrigen: string;
+}
+
+/**
+ * @interface ScianTable
+ * @description
+ * Representa la estructura de los datos de la tabla S.C.I.A.N.
+ */
+export interface ScianTable {
+  claveScian: string;
+  descripcionScian: string;
+}
 
 /**
  * Interfaz que representa una declaración de manifiesto.

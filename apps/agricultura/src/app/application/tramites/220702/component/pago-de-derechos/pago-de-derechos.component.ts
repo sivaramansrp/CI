@@ -160,6 +160,7 @@ cambioFechaPagoDeDerechosRevision(nuevo_valor: string): void {
       llaveDePagoRevision: [{ value: this.tramiteState.llaveDePagoRevision, disabled: true }, Validators.required],
       fechaPagoDeDerechosRevision: [{ value: this.tramiteState.fechaPagoDeDerechosRevision, disabled: true }, Validators.required],
       importeDePagoRevision: [{ value: this.tramiteState.importeDePagoRevision, disabled: true }, Validators.required],
+      fechaDeInspeccion: [{ value: this.tramiteState.fechaDeInspeccion, disabled: true }, Validators.required]
     });
 
     this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
@@ -179,6 +180,7 @@ cambioFechaPagoDeDerechosRevision(nuevo_valor: string): void {
           llaveDePagoRevision: datos.llaveDePagoRevision,
           fechaPagoDeDerechosRevision: datos.fechaPagoDeDerechosRevision,
           importeDePagoRevision: datos.importeDePagoRevision,
+          fechaDeInspeccion: datos.fechaDeInspeccion,
         });
       })
     ).subscribe();

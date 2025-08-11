@@ -202,7 +202,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
           this.store.setJustificacionDelDesistimiento(
             respuesta.datos.justificacionDelDesistimiento
           );
-          this.store.setOpcion(respuesta.datos.opcion);
         }
       });
   }
