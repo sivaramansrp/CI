@@ -1,17 +1,15 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { DatosDelTramiteFormState, MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
+import { Subject ,map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
-import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
 import { DatosMercanciaContenedoraComponent } from '../datos-mercancia-contenedora/datos-mercancia-contenedora.component';
 import { ID_PROCEDIMIENTO } from '../../constantes/exportacion-quimicas-sustancias.enum';
-import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
 import { Tramite240117Query } from '../../estados/tramite240117Query.query';
 import { Tramite240117Store } from '../../estados/tramite240117Store.store';
-import { takeUntil } from 'rxjs';
+
 /**
  * @component
  * @name DatosDelTramiteContenedoraComponent
@@ -35,6 +33,12 @@ import { takeUntil } from 'rxjs';
   styleUrl: './datos-del-tramite-contenedora.component.scss',
 })
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
+
+  /**
+   * Indica si se deben usar botones personalizados en el componente.
+   * Cuando es `true`, el componente mostrará botones personalizados en lugar de los predeterminados.
+   */
+  usarBotonesPersonalizados: boolean = true;
   /**
    * @property modalComponent
    * @description Referencia al componente modal utilizado para mostrar información adicional.
@@ -79,12 +83,14 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * @method constructor
    * @param {Tramite240117Query} tramiteQuery - Query de Akita para obtener el estado actual del trámite.
    * @param {Tramite240117Store} tramiteStore - Store de Akita para actualizar el estado del trámite.
+   * @param {ConsultaioQuery} consultaQuery - Query para obtener el estado de la consulta del usuario.
    * @returns {void}
    */
   constructor(
     private tramiteQuery: Tramite240117Query,
-    private tramiteStore: Tramite240117Store // eslint-disable-next-line no-empty-function
-  ) {}
+    private tramiteStore: Tramite240117Store,
+    private consultaQuery: ConsultaioQuery
+  ) { }
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
@@ -140,6 +146,15 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.datosDelTramiteFormState = data;
       });
+
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**

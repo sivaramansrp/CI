@@ -5,10 +5,12 @@
  *
  * @module ModificacionUnidadComponent
  */
-import { UnidadTabla } from '../../../../models/registro-muestras-mercancias.model';
-import { Component } from '@angular/core';
+import { UnidadTabla, CatalogoLista } from '../../../../models/registro-muestras-mercancias.model';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { UNIDAD_TABLA_CONFIG } from '../../../../enum/transportista-terrestre.enum';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
+import { TablaSeleccion, ConsultaioQuery, ConsultaioState, Catalogo } from '@ng-mf/data-access-user';
+import { Subject, takeUntil, map } from 'rxjs';
+import { modificarTerrestreService } from '../../../services/modificacar-terrestre.service';
 
 @Component({
   selector: 'app-modificacion-unidad',
@@ -20,30 +22,30 @@ import { TablaSeleccion } from '@ng-mf/data-access-user';
  *
  * @class
  */
-export class ModificacionUnidadComponent {
+export class ModificacionUnidadComponent implements OnInit, OnDestroy {
   /**
    * Catálogo de tipos de unidad de arrastre.
-   * @type {any[]}
+   * @type {Catalogo[]}
    */
-  tipoDeUnidadCatalogo: any[] = [];
+  tipoDeUnidadCatalogo: Catalogo[] = [];
 
   /**
    * Catálogo de países emisores.
-   * @type {any[]}
+   * @type {Catalogo[]}
    */
-  paisEmisorCatalogo: any[] = [];
+  paisEmisorCatalogo: Catalogo[] = [];
 
   /**
    * Catálogo de años.
-   * @type {any[]}
+   * @type {Catalogo[]}
    */
-  anoCatalogo: any[] = [];
+  anoCatalogo: Catalogo[] = [];
 
   /**
    * Catálogo de tipos de arrastre.
-   * @type {any[]}
+   * @type {Catalogo[]}
    */
-  tipoArrastre: any[] = [];
+  tipoArrastre: Catalogo[] = [];
 
   /**
    * Indica si se muestra la alerta informativa.
@@ -61,7 +63,43 @@ export class ModificacionUnidadComponent {
    * Configuración de columnas para la tabla de unidades.
    * @type {*}
    */
-  columnasUnidad = UNIDAD_TABLA_CONFIG.encabezadas;
+  columnasUnidad = [
+    {
+      encabezado: 'ID',
+      clave: (item: UnidadTabla) => String(item.idDeVehiculo),
+      orden: 0,
+    },
+    {
+      encabezado: 'VIN/Número de identificación',
+      clave: (item: UnidadTabla) => item.vinVehiculo,
+      orden: 1,
+    },
+    {
+      encabezado: 'Tipo de unidad de arrastre',
+      clave: (item: UnidadTabla) => this.obtenerDescripcionDeCatalogo(item.tipoDeUnidadArrastre, this.tipoDeUnidadCatalogo),
+      orden: 2,
+    },
+    {
+      encabezado: 'Número económico',
+      clave: (item: UnidadTabla) => item.numeroEconomico,
+      orden: 3,
+    },
+    {
+      encabezado: 'Número de Placas',
+      clave: (item: UnidadTabla) => item.numeroPlaca,
+      orden: 4,
+    },
+    {
+      encabezado: 'País Emisor',
+      clave: (item: UnidadTabla) => this.obtenerDescripcionDeCatalogo(item.paisEmisor, this.paisEmisorCatalogo),
+      orden: 5,
+    },
+    {
+      encabezado: 'Estado o provincia',
+      clave: (item: UnidadTabla) => item.estado,
+      orden: 6,
+    }
+  ];
 
   /**
    * Tipo de selección de la tabla (radio, checkbox, etc).
@@ -79,19 +117,94 @@ export class ModificacionUnidadComponent {
    * Indica si se muestra el diálogo de unidad.
    * @type {boolean}
    */
-  showUnidadDialog = false;
+  mostrarDialogoUnidad = false;
 
   /**
    * Datos para el diálogo de unidad.
    * @type {UnidadTabla | {}}
    */
-  unidadDialogData: UnidadTabla | {} = {};
+  datosDialogoUnidad: UnidadTabla | {} = {};
 
   /**
    * Indica si la vista es de solo lectura.
    * @type {boolean}
    */
-  isReadonly = false;
+  esSoloLectura: boolean = false;
+
+  /**
+   * @property {Subject<void>}
+   * Sujeto para destruir las suscripciones.
+   */
+  public destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * @property {ConsultaioState}
+   * Almacena el estado de consulta actual.
+   */
+  datosConsulta!: ConsultaioState;
+
+  /**
+   * Constructor del componente `ModificacionUnidadComponent`.
+   *
+   * @constructor
+   * @param {ConsultaioQuery} consultaioQuery - Servicio para consultar el estado de consulta y determinar el modo de solo lectura.
+   * @param {modificarTerrestreService} modificarTerrestreService - Servicio para obtener catálogos.
+   */
+  constructor(
+    private consultaioQuery: ConsultaioQuery,
+    private modificarTerrestreService: modificarTerrestreService,
+    private cdr: ChangeDetectorRef
+  ) { }
+
+  /**
+   * Método de ciclo de vida de Angular que se llama cuando el componente se inicializa.
+   */
+  ngOnInit(): void {
+    // Cargar todos los catálogos
+    this.modificarTerrestreService.obtenerTipoArrastre()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos: CatalogoLista) => {
+        this.tipoDeUnidadCatalogo = datos.datos as Catalogo[];
+      });
+
+    this.modificarTerrestreService.obtenerPaisEmisor()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos: CatalogoLista) => {
+        this.paisEmisorCatalogo = datos.datos as Catalogo[];
+      });
+
+    this.modificarTerrestreService.obtenerAno()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos: CatalogoLista) => {
+        this.anoCatalogo = datos.datos as Catalogo[];
+      });
+
+    /**
+     * Suscribe al estado de consulta para determinar si el formulario debe estar en modo solo lectura.
+     * Si el estado indica `readonly`, actualiza las propiedades `datosConsulta` e `isReadonly` del componente.
+     *
+     * @observable selectConsultaioState$
+     * @effect Actualiza el modo de solo lectura del formulario según el estado de consulta.
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          if (seccionState.readonly) {
+            this.datosConsulta = seccionState;
+            this.esSoloLectura = this.datosConsulta.readonly;
+          }
+        })
+      ).subscribe();
+  }
+
+  /**
+   * Método de ciclo de vida de Angular que se llama cuando el componente se destruye.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 
   /**
    * Maneja la selección de filas en la tabla de unidades de arrastre.
@@ -99,7 +212,23 @@ export class ModificacionUnidadComponent {
    * @returns {void}
    */
   onUnidadRowSelected(event: any) {
-    this.selectedUnidadIndex = event && event.length > 0 ? this.unidadesArrastre.indexOf(event[0]) : null;
+    if (event && event.length > 0) {
+      const selectedUnidad = event[0];
+      // Buscar el índice usando múltiples identificadores únicos para mayor robustez
+      this.selectedUnidadIndex = this.unidadesArrastre.findIndex(u => 
+        (selectedUnidad.vinVehiculo && u.vinVehiculo === selectedUnidad.vinVehiculo) ||
+        (selectedUnidad.idDeVehiculo && u.idDeVehiculo === selectedUnidad.idDeVehiculo) ||
+        (selectedUnidad.numeroPlaca && u.numeroPlaca === selectedUnidad.numeroPlaca && 
+         selectedUnidad.numeroEconomico && u.numeroEconomico === selectedUnidad.numeroEconomico)
+      );
+      
+      // Si no se encuentra por los identificadores únicos, usar la referencia como fallback
+      if (this.selectedUnidadIndex === -1) {
+        this.selectedUnidadIndex = this.unidadesArrastre.indexOf(selectedUnidad);
+      }
+    } else {
+      this.selectedUnidadIndex = null;
+    }
   }
 
   /**
@@ -107,10 +236,15 @@ export class ModificacionUnidadComponent {
    * @param {UnidadTabla} updatedUnidad - Unidad actualizada.
    * @returns {void}
    */
-  onUnidadDialogSave(updatedUnidad: UnidadTabla) {
-    this.unidadesArrastre.push(updatedUnidad);
+  alGuardarDialogoUnidad(updatedUnidad: UnidadTabla) {
+    // Crear una copia mutable del array antes de agregar
+    const unidadesMutables = [...this.unidadesArrastre];
+    unidadesMutables.push(updatedUnidad);
+    this.unidadesArrastre = unidadesMutables;
     this.selectedUnidadIndex = this.unidadesArrastre.length - 1;
-    this.showUnidadDialog = false;
+    this.mostrarDialogoUnidad = false;
+    // Forzar detección de cambios para asegurar que el modal se cierre
+    this.cdr.detectChanges();
   }
 
   /**
@@ -118,9 +252,72 @@ export class ModificacionUnidadComponent {
    * @returns {void}
    */
   deleteUnidadRow() {
-    if (this.selectedUnidadIndex !== null) {
-      this.unidadesArrastre.splice(this.selectedUnidadIndex, 1);
+    if (this.selectedUnidadIndex !== null && this.selectedUnidadIndex >= 0) {
+      // Obtener la unidad a eliminar
+      const unidadAEliminar = this.unidadesArrastre[this.selectedUnidadIndex];
+      
+      if (unidadAEliminar) {
+        // Crear conjuntos de identificadores únicos para filtrado eficiente
+        const vinsAEliminar = new Set([unidadAEliminar.vinVehiculo].filter(Boolean));
+        const idsAEliminar = new Set([unidadAEliminar.idDeVehiculo].filter(Boolean));
+        const placasEconomicosAEliminar = new Set();
+        
+        // Crear identificador compuesto para placa+numeroEconomico si ambos existen
+        if (unidadAEliminar.numeroPlaca && unidadAEliminar.numeroEconomico) {
+          placasEconomicosAEliminar.add(`${unidadAEliminar.numeroPlaca}|${unidadAEliminar.numeroEconomico}`);
+        }
+        
+        // Filtrar usando múltiples capas de identificación
+        this.unidadesArrastre = this.unidadesArrastre.filter(unidad => {
+          // Primera capa: filtrar por VIN
+          if (unidad.vinVehiculo && vinsAEliminar.has(unidad.vinVehiculo)) {
+            return false;
+          }
+          
+          // Segunda capa: filtrar por ID
+          if (unidad.idDeVehiculo && idsAEliminar.has(unidad.idDeVehiculo)) {
+            return false;
+          }
+          
+          // Tercera capa: filtrar por combinación placa+numeroEconomico
+          if (unidad.numeroPlaca && unidad.numeroEconomico) {
+            const comboId = `${unidad.numeroPlaca}|${unidad.numeroEconomico}`;
+            if (placasEconomicosAEliminar.has(comboId)) {
+              return false;
+            }
+          }
+          
+          // Cuarta capa: comparación de referencia de objeto como fallback
+          return unidad !== unidadAEliminar;
+        });
+      }
+      
       this.selectedUnidadIndex = null;
     }
+  }
+
+  /**
+   * Abre el modal para agregar datos de unidades de arrastre mediante búsqueda.
+   * Inicializa el diálogo para permitir al usuario buscar y agregar unidades al listado.
+   * 
+   * @returns {void}
+   */
+  agregarModal(): void {
+    this.datosDialogoUnidad = {};
+    this.mostrarDialogoUnidad = true;
+  }
+
+  /**
+   * Busca la descripción en un catálogo por su clave.
+   * @param {string} clave - Clave a buscar en el catálogo.
+   * @param {Catalogo[]} catalogo - Array del catálogo donde buscar.
+   * @returns {string} La descripción encontrada o la clave original si no se encuentra.
+   */
+  private obtenerDescripcionDeCatalogo(clave: string, catalogo: Catalogo[]): string {
+    if (!clave || !catalogo || catalogo.length === 0) {
+      return clave || '';
+    }
+    const item = catalogo.find(c => c.id === Number(clave) || c.descripcion === clave);
+    return item ? item.descripcion : clave;
   }
 }

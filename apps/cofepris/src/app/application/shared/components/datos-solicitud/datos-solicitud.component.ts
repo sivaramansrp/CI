@@ -79,6 +79,9 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
    */
   @Input() esPaginacionVisible: boolean = false;
 
+  /** Controla la visibilidad y habilitación del campo `número de registro`.  
+  * Si es `true`, se agrega el control al formulario con validaciones. */
+  @Input() mostrarNumeroRegistro: boolean = true;
 
   /**
    * Método que se llama cuando se elimina un pedimento.

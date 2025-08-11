@@ -101,6 +101,11 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
   @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
 
+   /**
+   * Indica si se debe mostrar el número de registro en la interfaz.
+   */
+  @Input() mostrarNumeroRegistro: boolean = true;
+
   /**
    * Estado de la solicitud.
    */
@@ -283,8 +288,23 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       garantiasOfrecidas: [this.solicitudState?.garantiasOfrecidas],
     });
 
+
+    /**
+     * Configura el grupo de formularios 'domicilio' con controles y validadores según el estado actual de la solicitud.
+     */
     if(this.tieneDomicilioHabilitar) {
       this.domicilio.disable();
+    }
+    /**
+ * Añade el control 'numeroRegistro' al formulario 'domicilio' si la propiedad
+ * `mostrarNumeroRegistro` es verdadera.
+ * 
+ * El control incluye las siguientes validaciones:
+ * - Requerido (`Validators.required`)
+ * - Longitud máxima de 50 caracteres (`Validators.maxLength(50)`)
+ */
+    if (this.mostrarNumeroRegistro) {
+      this.domicilio.addControl('numeroRegistro', this.fb.control('', [Validators.required, Validators.maxLength(50)]));
     }
   }
 
@@ -638,16 +658,25 @@ export class DomicilioComponent implements OnInit, OnDestroy {
           Validators.maxLength(100),
         ],
       ],
-      numeroRegistro: [
-        '',
-        [
-          Validators.required,
-          Validators.maxLength(50),
-        ],
-      ],
       clasificacionToxicologica: ['', Validators.required],
       objetoImportacion: ['', Validators.required],
     });
+
+/**
+ * Si la propiedad `mostrarNumeroRegistro` es verdadera, agrega el control
+ * `numeroRegistro` al formulario `formMercancias`.
+ *
+ * Este control se inicializa con un valor vacío y contiene las siguientes validaciones:
+ * - `Validators.required`: el campo es obligatorio.
+ * - `Validators.maxLength(50)`: el valor no debe superar los 50 caracteres.
+ */
+    if (this.mostrarNumeroRegistro) {
+      this.formMercancias.addControl(
+        'numeroRegistro',
+        this.fb.control('', [Validators.required, Validators.maxLength(50)])
+      );
+    }
+
     this.seleccionadasAduanasEntradaDatos = this.solicitudState?.aduanasDeEntrada;
 
     this.inicializarEstadoFormulario();
@@ -673,7 +702,9 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * @memberof DomicilioEstablecimientoComponent
    */
   limpiarScianForm(): void {
-    this.formAgente.reset();
+   Object.keys(this.formAgente.controls).forEach(key => {
+    this.formAgente.get(key)?.setValue(null);
+  });
   }
 
   /**

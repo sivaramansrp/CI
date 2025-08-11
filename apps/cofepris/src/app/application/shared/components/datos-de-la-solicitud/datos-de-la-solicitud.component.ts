@@ -1,6 +1,7 @@
 import {
   ALERTA_DE_MANIFESTO_Y_DECLARACIONES,
   ALERTA_OPCIONS,
+  ES_PUNTO_Y_COMA,
   MENSAJE_SIN_FILA_SELECCIONADA,
   MOSTRAR_NOTIFICACION,
   NUMERO_TRAMITE,
@@ -403,6 +404,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   esManifesto: boolean = false;
 
   /**
+   * Indica si el campo utiliza punto y coma como separador.
+   */
+  esPuntoYComa: boolean = false;
+
+  /**
    * @constructor
    * Inyecta los servicios necesarios para el enrutamiento y construcción del formulario.
    *
@@ -461,6 +467,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.esManifesto = PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES.includes(this.idProcedimiento);
+    this.esPuntoYComa = ES_PUNTO_Y_COMA.includes(this.idProcedimiento);
     this.mostrarNotificacion = MOSTRAR_NOTIFICACION.includes(
       this.idProcedimiento
     )

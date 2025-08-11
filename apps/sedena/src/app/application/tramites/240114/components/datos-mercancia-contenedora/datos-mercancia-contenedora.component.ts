@@ -1,6 +1,5 @@
-import { CommonModule } from '@angular/common';
-
 import { Component, EventEmitter, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { Tramite240114Store } from '../../estados/tramite240114Store.store';

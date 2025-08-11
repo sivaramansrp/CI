@@ -21,7 +21,11 @@ const ROUTES: Routes = [
         (m) => m.EntidadLegalModule
       ),
   },
-
+  {
+    path: 'confirmar-notificacion',
+    loadComponent: () =>
+      import('./confirmar-notificacion/confirmar-notificacion.component').then((m) => m.ConfirmarNotificacionComponent),
+  },
   {
     path: 'exportador-autorizado',
     loadChildren: () =>

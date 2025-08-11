@@ -54,7 +54,7 @@
     <div class="row pb-20">
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="aduana">Aduana de ingreso:</label>
+          <label class="form-label" for="aduana">Aduana de ingreso*:</label>
           <input class="form-control" id="aduana" formControlName="aduana" type="text"
             (change)="setValoresStore(datosSolicitudForm, 'aduana', 'setAduana')" />
         </div>
@@ -65,7 +65,7 @@
     <div class="row">
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="oficina">Oficina de inspección de Sanidad Agropecuaria:</label>
+          <label class="form-label" for="oficina">Oficina de inspección de Sanidad Agropecuaria*:</label>
           <input class="form-control" id="oficina" formControlName="oficina" type="text"
             (change)="setValoresStore(datosSolicitudForm, 'oficina', 'setOficina')" />
         </div>
@@ -76,7 +76,7 @@
     <div class="row">
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="punto">Punto de inspección:</label>
+          <label class="form-label" for="punto">Punto de inspección*:</label>
           <input class="form-control" id="punto" formControlName="punto" type="text"
             (change)="setValoresStore(datosSolicitudForm, 'punto', 'setPunto')" />
         </div>
@@ -119,7 +119,7 @@
 
       <div class="col-md-8">
         <div class="form-group">
-          <app-catalogo-select [catalogo]="veterinario" [label]="'Nombre del médico veterinario'" [placeholder]="'Seleccione un valor'" [isDisabled]="esFormularioSoloLectura"
+          <app-catalogo-select [catalogo]="veterinario" [label]="'Nombre del médico veterinario'" [placeholder]="'Seleccione una opción'" [isDisabled]="esFormularioSoloLectura"
             name="veterinario" formControlName="veterinario" [isDisabled]="esFormularioSoloLectura"
             (change)="setValoresStore(datosSolicitudForm, 'veterinario', 'setVeterinario')">
           </app-catalogo-select>
@@ -131,7 +131,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="guia">Número de guía:</label>
-          <input class="form-control" id="guia" formControlName="guia" type="text" maxlength="80" size="29"
+          <input class="form-control" id="guia" formControlName="guia" type="text" maxlength="50" size="29"
             (change)="setValoresStore(datosSolicitudForm, 'guia', 'setGuia')" />
             <div class="d-grid">
             <div *ngIf="datosSolicitudForm.get('guia')?.touched">
