@@ -295,9 +295,7 @@
           class="form-label mx-2"
           *ngIf="elementosRequeridos.includes('calle')"
         >
-          <!-- @if(agregarDestinatarioFinal.controls['calle'].errors?.['required']){ -->
           <span [ngClass]="agregarDestinatarioFinal.controls['calle'].errors?.['required'] ? 'text-danger':''">*</span>
-          <!-- } -->
         </span>
         <span class="form-label">:</span>
         <span tooltip="Domicilio, calle, número interior, número exterior, lote"
@@ -324,12 +322,10 @@
           class="form-label mx-2"
           *ngIf="elementosRequeridos.includes('numeroExterior')"
         >
-          <!-- @if(agregarDestinatarioFinal.controls['numeroExterior'].errors?.['required']){ -->
           <span
             [ngClass]="agregarDestinatarioFinal.controls['numeroExterior'].errors?.['required'] ?  'text-danger':''"
             >*</span
           >
-          <!-- } -->
         </span>
         <span class="form-label">:</span>
         <input

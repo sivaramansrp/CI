@@ -354,9 +354,21 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   public mensajeDeAlerta: string = MENSAJE_SIN_FILA_SELECCIONADA;
 
+  /**
+   * Mensaje de alerta que se muestra cuando no se ha seleccionado
+   * una fila o se han seleccionado más de una al intentar modificar.
+   *
+   * Se inicializa con la constante `MODIFICADOR_MENSAJE_NO_FILA_SELECCIONADA`.
+   */
   public modificadorMensajeDeAlerta: string =
     MODIFICADOR_MENSAJE_NO_FILA_SELECCIONADA;
 
+  /**
+   * Mensaje emergente que solicita confirmación al usuario antes
+   * de ejecutar una acción importante (por ejemplo, eliminar un registro).
+   *
+   * Se inicializa con la constante `MENSAJE_EMERGENTE_DE_CONFIRMACION`.
+   */
   public mensajeEmergenteConfirmacion: string =
     MENSAJE_EMERGENTE_DE_CONFIRMACION;
 
@@ -824,6 +836,25 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Elimina un pedimento de la lista de mercancías tras la confirmación del usuario.
+   *
+   * @param borrar Indica si el usuario confirmó la eliminación (`true`) o la canceló (`false`).
+   *
+   * ### Descripción:
+   * - Si `borrar` es `true`:
+   *   - Filtra los datos de `tablaMercanciasConfig.datos` eliminando aquellos
+   *     que coincidan en `clasificacionProducto` con los elementos de `tablaMercanciasLista`.
+   *   - Si existe un emisor en `mercanciasSeleccionado`, emite la lista actualizada de datos.
+   *   - Elimina el elemento de la lista `pedimentos` en la posición `elementoParaEliminar`.
+   * - Independientemente de la acción, desactiva la alerta de confirmación (`confirmacionAlerta = false`).
+   *
+   * ### Ejemplo de uso:
+   * ```ts
+   * eliminarPedimentoConfirmacion(true); // Elimina el pedimento
+   * eliminarPedimentoConfirmacion(false); // Cancela la eliminación
+   * ```
+   */
   eliminarPedimentoConfirmacion(borrar: boolean): void {
     if (borrar) {
       this.tablaMercanciasConfig.datos =
@@ -838,7 +869,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       }
     }
     this.confirmacionAlerta = false;
-     if (borrar) {
+    if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
   }

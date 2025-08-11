@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Tramite260214State, Tramite260214Store } from '../../estados/tramite260214Store.store';
-import { map,takeUntil } from 'rxjs';
+import {
+  Tramite260214State,
+  Tramite260214Store,
+} from '../../estados/tramite260214Store.store';
+import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
+import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
 import { Subject } from 'rxjs';
 import { TablaMercanciasDatos } from '../../../../shared/models/datos-solicitud.model';
 import { Tramite260214Query } from '../../estados/tramite260214Query.query';
@@ -41,7 +45,14 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
    */
   public tramiteState!: Tramite260214State;
 
-  idProcedimiento: number = 260214;
+  /**
+   * Identificador del procedimiento actual.
+   *
+   * Se inicializa con la constante `ID_PROCEDIMIENTO` y se utiliza
+   * para controlar la lógica del componente en función del
+   * procedimiento en ejecución.
+   */
+  idProcedimiento: number = ID_PROCEDIMIENTO;
 
   /**
    * @constructor

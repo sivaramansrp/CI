@@ -7,6 +7,7 @@ import {
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
+import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
 import { Subject } from 'rxjs';
 import { TablaMercanciasDatos } from '../../../../shared/models/datos-solicitud.model';
 import { Tramite260213Query } from '../../estados/tramite260213Query.query';
@@ -30,6 +31,15 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
    * Contiene los datos de la mercancía actualmente seleccionada en la tabla.
    */
   public SeleccionadoDatos!: TablaMercanciasDatos;
+
+  /**
+   * Identificador del procedimiento actual.
+   *
+   * Se inicializa con la constante `ID_PROCEDIMIENTO` y se utiliza
+   * para controlar la lógica del componente en función del
+   * procedimiento en ejecución.
+   */
+  idProcedimiento: number = ID_PROCEDIMIENTO;
 
   /**
    * @property {Subject<void>} destroyNotifier$
