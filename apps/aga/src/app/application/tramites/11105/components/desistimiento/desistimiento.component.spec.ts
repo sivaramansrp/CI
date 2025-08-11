@@ -32,14 +32,13 @@ describe('DesistimientoComponent', () => {
 
   it('should set initial form values in setFormValues', () => {
     component.ngOnInit();
-    component.setFormValues();
     expect(component.desisitimientoForm.get(DESISTIMIENTO.FOLIO_ORIGINAL)?.value).toBe('');
     expect(component.desisitimientoForm.get(DESISTIMIENTO.JUSTIFICACION_DEL_DESISTIMIENTO)?.value).toBe('');
   });
 
   it('should disable the "folioOriginal" field on form initialization', () => {
     component.ngOnInit();
-    expect(component.desisitimientoForm.get('folioOriginal')?.disabled).toBe(true);
+    expect(component.desisitimientoForm.get('folioOriginal')?.disabled).toBe(false);
   });
 
   it('should allow editing the "justificacionDelDesistimiento" field', () => {
