@@ -1,25 +1,25 @@
 [
   {
+    "id": 1,
     "curp": "ABCD123456HJKLMN12",
-    "rfc": "RFC124",
+    "rfc": "JUAP123456ABC",
     "nombre": "Juan Pérez",
     "primerApellido": "Pérez",
     "segundoApellido": "Gómez",
     "numeroDeGafete": "GAFETE124",
     "vigenciaGafete": "2024-12-31",
     "calle": "Calle Falsa",
-    "numeroExterior": "124",
-    "numeroInterior": "A",
+    "numeroExterior": "123",
+    "numeroInterior": "ABC",
     "pais": "México",
     "estado": "Aprobado",
-    "municipioAlcaldia": "Alcaldía de Bogotá",
+    "municipioAlcaldia": "Alcaldía Benito Juárez",
     "colonia": "Dior Sauvage by Christian Dior",
-    "ciudad": "Ciudad 1",
-    "localidad": "Localidad 1",
-    "codigoPostal": "12445",
+    "ciudad": "Ciudad de México",
+    "localidad": "Centro",
+    "codigoPostal": "03100",
     "paisDeResidencia": "México",
-    "id": 1,
-    "telefono": "312443124",
-    "correoElectronico": "abc@xyz.com"
+    "telefono": "5512345678",
+    "correoElectronico": "juan.perez@example.com"
   }
 ]

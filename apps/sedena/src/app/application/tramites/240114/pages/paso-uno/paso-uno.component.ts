@@ -1,20 +1,17 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   ConsultaioQuery,
   ConsultaioState,
-  SolicitanteComponent,
+  SolicitanteComponent
 } from '@ng-mf/data-access-user';
-import { Subject, map } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DatosDelTramiteContenedoraComponent } from '../../components/datos-del-tramite-contenedora/datos-del-tramite-contenedora.component';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
 import { TercerosRelacionadosContenedoraComponent } from '../../components/terceros-relacionados-contenedora/terceros-relacionados-contenedora.component';
 import { Tramite240114Query } from '../../estados/tramite240114Query.query';
 import { Tramite240114Store } from '../../estados/tramite240114Store.store';
-import { takeUntil } from 'rxjs';
 
 /**
  * @title Paso Uno

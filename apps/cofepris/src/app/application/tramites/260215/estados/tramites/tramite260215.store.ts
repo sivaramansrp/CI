@@ -409,443 +409,521 @@ export class Tramite260215Store extends Store<Solicitud260215State> {
    * Guarda la clave de referencia en el estado.
    * @param claveDeReferencia
    */
-  public setClaveDeReferencia(claveDeReferencia: string) {
+  public setClaveDeReferencia(claveDeReferencia: string): void {
     this.update((state) => ({
       ...state,
       claveDeReferencia,
     }));
   }
 
-  /**
-   * Guarda la cadena de dependencia en el estado.
-   * @param cadenaDependencia
-   */
-  public setCadenaDependencia(cadenaDependencia: string) {
+/**
+ * Guarda la cadena de dependencia en el estado.
+ * @param cadenaDependencia
+ * @returns void
+ */
+public setCadenaDependencia(cadenaDependencia: string): void {
     this.update((state) => ({
-      ...state,
-      cadenaDependencia,
+        ...state,
+        cadenaDependencia,
     }));
-  }
+}
 
-  /**
-   * Guarda el banco en el estado.
-   * @param banco
-   */
-  public setBanco(banco: string) {
+/**
+ * Guarda el banco en el estado.
+ * @param banco
+ * @returns void
+ */
+public setBanco(banco: string): void {
     this.update((state) => ({
-      ...state,
-      banco,
+        ...state,
+        banco,
     }));
-  }
+}
 
-  /**
-   * Guarda la llave de pago en el estado.
-   * @param llaveDePago
-   */
-  public setllaveDePago(llaveDePago: string) {
+/**
+ * Guarda la llave de pago en el estado.
+ * @param llaveDePago
+ * @returns void
+ */
+public setllaveDePago(llaveDePago: string): void {
     this.update((state) => ({
-      ...state,
-      llaveDePago,
+        ...state,
+        llaveDePago,
     }));
-  }
+}
 
-  /**
-   * Guarda la fecha de pago en el estado.
-   * @param fechaPago
-   */
-  public setFechaPago(fechaPago: string) {
+/**
+ * Guarda la fecha de pago en el estado.
+ * @param fechaPago
+ * @returns void
+ */
+public setFechaPago(fechaPago: string): void {
     this.update((state) => ({
-      ...state,
-      fechaPago,
+        ...state,
+        fechaPago,
     }));
-  }
+}
 
-  /**
-   * Guarda el importe de pago en el estado.
-   * @param importePago
-   * */
-  public setImportePago(importePago: string) {
+/**
+ * Guarda el importe de pago en el estado.
+ * @param importePago
+ * @returns void
+ */
+public setImportePago(importePago: string): void {
     this.update((state) => ({
-      ...state,
-      importePago,
+        ...state,
+        importePago,
     }));
-  }
+}
 
-     /**
-     * Establece el estado de rfcDel.
-     * @param rfcDel - El valor de rfcDel.
-     */
-     public setRfcDel(rfcDel: string) {
-      this.update((state) => ({
-          ...state,
-          rfcDel,
-      }));
-  }
-  /**
-   * Establece el estado de denominacion.
-   * @param denominacion - El valor de denominacion.
-   */
-  public setDenominacion(denominacion: string) {
-      this.update((state) => ({
-          ...state,
-          denominacion,
-      }));
-  }
-  /**
-   * Establece el estado de correo.
-   * @param correo - El valor de correo.
-   */
-  public setCorreo(correo: string) {
-      this.update((state) => ({
-          ...state,
-          correo,
-      }));
-  }
-  /**
-   * Establece el estado de codigoPostal.
-   * @param codigoPostal - El valor de codigoPostal.
-   */
-  public setCodigoPostal(codigoPostal: string) {
-      this.update((state) => ({
-          ...state,
-          codigoPostal,
-      }));
-  }
-  /**
-   * Establece el estado de estado.
-   * @param estado - El valor de estado.
-   */
-  public setEstado(estado: string) {
-      this.update((state) => ({
-          ...state,
-          estado,
-      }));
-  }
-  /**
-   * Establece el muncipio de muncipio.
-   * @param muncipio - El valor de muncipio.
-   */
-  public setMuncipio(muncipio: string) {
-      this.update((state) => ({
-          ...state,
-          muncipio,
-      }));
-  }
-  /**
-   * Establece el localidad de localidad.
-   * @param localidad - El valor de localidad.
-   */
-  public setLocalidad(localidad: string) {
-      this.update((state) => ({
-          ...state,
-          localidad,
-      }));
-  }
-  /**
-   * Establece el estado de colonia.
-   * @param colonia - El valor de colonia.
-   */
-  public setColonia(colonia: string) {
-      this.update((state) => ({
-          ...state,
-          colonia,
-      }));
-  }
-  /**
-   * Establece el estado de calle.
-   * @param calle - El valor de calle.
-   */
-  public setCalle(calle: string) {
-      this.update((state) => ({
-          ...state,
-          calle,
-      }));
-  }
-  /**
-   * Establece el estado de lada.
-   * @param lada - El valor de lada.
-   */
-  public setLada(lada: string) {  
-      this.update((state) => ({
-          ...state,
-          lada,
-      }));
-  }
-  /**
-   * Establece el estado de telefono.
-   * @param telefono - El valor de telefono.
-   */
-  public setTelefono(telefono: string) {
-      this.update((state) => ({
-          ...state,
-          telefono,
-      }));
-  }
-  /**
-   * Establece el estado de claveScianModal.
-   * @param claveScianModal - El valor de claveScianModal.
-   */
-  public setClaveScianModal(claveScianModal: string) {
-      this.update((state) => ({
-          ...state,
-          claveScianModal,
-      }));
-  }
-  /**
-   * Establece el estado de claveDescripcionModal.
-   * @param claveDescripcionModal - El valor de claveDescripcionModal.
-   */
-  public setClaveDescripcionModal(claveDescripcionModal: string) {
-      this.update((state) => ({
-          ...state,
-          claveDescripcionModal,
-      }));
-  }
-  /**
-   * Establece el estado de avisoCheckbox.
-   * @param avisoCheckbox - El valor de avisoCheckbox.
-   */
-  public setAvisoCheckbox(avisoCheckbox: boolean) {
-      this.update((state) => ({
-          ...state,
-          avisoCheckbox,
-      }));
-  }
-  /**
-   * Establece el estado de licenciaSanitaria.
-   * @param licenciaSanitaria - El valor de licenciaSanitaria.
-   */
-  public setLicenciaSanitaria(licenciaSanitaria: string) {
-      this.update((state) => ({
-          ...state,
-          licenciaSanitaria,
-      }));
-  }
-  /**
-   * Establece el estado de regimen.
-   * @param regimen - El valor de regimen.
-   */
-  public setRegimen(regimen: string) {
-      this.update((state) => ({
-          ...state,
-          regimen,
-      }));
-  }
-  /**
-   * Establece el estado de aduanasEntradas.
-   * @param aduanasEntradas - El valor de aduanasEntradas.
-   */
-  public setAduanasEntradas(aduanasEntradas: string) {
-      this.update((state) => ({
-          ...state,
-          aduanasEntradas,
-      }));
-  }
-  /**
-   * Establece el estado de clasificacion.
-   * @param clasificacion - El valor de clasificacion.
-   */
-  public setClasificacion(clasificacion: string) {
-      this.update((state) => ({
-          ...state,
-          clasificacion,
-      }));
-  }
-  /**
-   * Establece el estado de especificar.
-   * @param especificar - El valor de especificar.
-   */
-  public setEspecificar(especificar: string) {
-      this.update((state) => ({
-          ...state,
-          especificar,
-      }));
-  }
-  /**
-   * Establece el estado de denominacionEspecifica.
-   * @param denominacionEspecifica - El valor de denominacionEspecifica.
-   */
-  public setDenominacionEspecifica(denominacionEspecifica: string) {
-      this.update((state) => ({
-          ...state,
-          denominacionEspecifica,
-      }));
-  }
-  /**
-   * Establece el estado de denominacionDistintiva.
-   * @param denominacionDistintiva - El valor de denominacionDistintiva.
-   */
-  public setDenominacionDistintiva(denominacionDistintiva: string) {
-      this.update((state) => ({
-          ...state,
-          denominacionDistintiva,
-      }));
-  }
-  /**
-   * Establece el estado de denominacionComun.
-   * @param denominacionComun - El valor de denominacionComun.
-   */
-  public setDenominacionComun(denominacionComun: string) {
-      this.update((state) => ({
-          ...state,
-          denominacionComun,
-      }));
-  }
-  /**
-   * Establece el estado de tipoDeProducto.
-   * @param tipoDeProducto - El valor de tipoDeProducto.
-   */
-  public setTipoDeProducto(tipoDeProducto: string) {
-      this.update((state) => ({
-          ...state,
-          tipoDeProducto,
-      }));
-  }
-  /**
-   * Establece el estado de estadoFisico.
-   * @param estadoFisico - El valor de estadoFisico.
-   */
-  public setEstadoFisico(estadoFisico: string) {
-      this.update((state) => ({
-          ...state,
-          estadoFisico,
-      }));
-  }
-  /**
-   * Establece el estado de fraccionArancelaria.
-   * @param fraccionArancelaria - El valor de fraccionArancelaria.
-   */
-  public setFraccionArancelaria(fraccionArancelaria: string) {
-      this.update((state) => ({
-          ...state,
-          fraccionArancelaria,
-      }));
-  }
-  /**
-   * Establece el estado de fraccionArancelaria.
-   * @param fraccionArancelaria - El valor de fraccionArancelaria.
-   */
-  public setDescripcionFraccion(descripcionFraccion: string) {
-      this.update((state) => ({
-          ...state,
-          descripcionFraccion,
-      }));
-  }
-  /**
-   * Establece el estado de cantidadUMT.
-   * @param cantidadUMT - El valor de cantidadUMT.
-   */
-  public setCantidadUMT(cantidadUMT: string) {
-      this.update((state) => ({
-          ...state,
-          cantidadUMT,
-      }));
-  }
-  /**
-   * Establece el estado de UMT.
-   * @param UMT - El valor de UMT.
-   */
-  public setUMT(UMT: string) {
-      this.update((state) => ({
-          ...state,
-          UMT,
-      }));
-  }
-  /**
-   * Establece el estado de cantidadUMC.
-   * @param cantidadUMC - El valor de cantidadUMC.
-   */
-  public setCantidadUMC(cantidadUMC: string) {
-      this.update((state) => ({
-          ...state,
-          cantidadUMC,
-      }));
-  }
-  /**
-   * Establece el estado de UMC.
-   * @param UMC - El valor de UMC.
-   */
-  public setUMC(UMC: string) {
-      this.update((state) => ({
-          ...state,
-          UMC,
-      }));
-  }
-  /**
-   * Establece el estado de presentacion.
-   * @param presentacion - El valor de presentacion.
-   */
-  public setPresentacion(presentacion: string) {
-      this.update((state) => ({
-          ...state,
-          presentacion,
-      }));
-  }
-  /**
-   * Establece el estado de numeroRegistro.
-   * @param numeroRegistro - El valor de numeroRegistro.
-   */
-  public setNumeroRegistro(numeroRegistro: string) {
-      this.update((state) => ({
-          ...state,
-          numeroRegistro,
-      }));
-  }
-  /**
-   * Establece el estado de fechaCaducidad.
-   * @param fechaCaducidad - El valor de fechaCaducidad.
-   */
-  public setFechaCaducidad(fechaCaducidad: string) {
-      this.update((state) => ({
-          ...state,
-          fechaCaducidad,
-      }));
-  }
-  /**
-   * Establece el estado de cumplimiento.
-   * @param cumplimiento - El valor de cumplimiento.
-   */
-  public setCumplimiento(cumplimiento: string) {
-      this.update((state) => ({
-          ...state,
-          cumplimiento,
-      }));
-  }
-  /**
-   * Establece el estado de rfc.
-   * @param rfc - El valor de rfc.
-   */
-  public setRfc(rfc: string) {
-      this.update((state) => ({
-          ...state,
-          rfc,
-      }));
-  }
-  /**
-   * Establece el estado de nombre.
-   * @param nombre - El valor de nombre.
-   */
-  public setNombre(nombre: string) {
-      this.update((state) => ({
-          ...state,
-          nombre,
-      }));
-  }
-  /**
-   * Establece el estado de apellidoPaterno.
-   * @param apellidoPaterno - El valor de apellidoPaterno.
-   */
-  public setApellidoPaterno(apellidoPaterno: string) {
-      this.update((state) => ({
-          ...state,
-          apellidoPaterno,
-      }));
-  }
+/**
+ * Establece el estado de rfcDel.
+ * @param rfcDel - El valor de rfcDel.
+ * @returns void
+ */
+public setRfcDel(rfcDel: string): void {
+    this.update((state) => ({
+        ...state,
+        rfcDel,
+    }));
+}
+
+/**
+ * Establece el estado de denominacion.
+ * @param denominacion - El valor de denominacion.
+ * @returns void
+ */
+public setDenominacion(denominacion: string): void {
+    this.update((state) => ({
+        ...state,
+        denominacion,
+    }));
+}
+
+/**
+ * Establece el estado de correo.
+ * @param correo - El valor de correo.
+ * @returns void
+ */
+public setCorreo(correo: string): void {
+    this.update((state) => ({
+        ...state,
+        correo,
+    }));
+}
+
+/**
+ * Establece el estado de codigoPostal.
+ * @param codigoPostal - El valor de codigoPostal.
+ * @returns void
+ */
+public setCodigoPostal(codigoPostal: string): void {
+    this.update((state) => ({
+        ...state,
+        codigoPostal,
+    }));
+}
+
+/**
+ * Establece el estado de estado.
+ * @param estado - El valor de estado.
+ * @returns void
+ */
+public setEstado(estado: string): void {
+    this.update((state) => ({
+        ...state,
+        estado,
+    }));
+}
+
+/**
+ * Establece el muncipio de muncipio.
+ * @param muncipio - El valor de muncipio.
+ * @returns void
+ */
+public setMuncipio(muncipio: string): void {
+    this.update((state) => ({
+        ...state,
+        muncipio,
+    }));
+}
+
+/**
+ * Establece el localidad de localidad.
+ * @param localidad - El valor de localidad.
+ * @returns void
+ */
+public setLocalidad(localidad: string): void {
+    this.update((state) => ({
+        ...state,
+        localidad,
+    }));
+}
+
+/**
+ * Establece el estado de colonia.
+ * @param colonia - El valor de colonia.
+ * @returns void
+ */
+public setColonia(colonia: string): void {
+    this.update((state) => ({
+        ...state,
+        colonia,
+    }));
+}
+
+/**
+ * Establece el estado de calle.
+ * @param calle - El valor de calle.
+ * @returns void
+ */
+public setCalle(calle: string): void {
+    this.update((state) => ({
+        ...state,
+        calle,
+    }));
+}
+
+/**
+ * Establece el estado de lada.
+ * @param lada - El valor de lada.
+ * @returns void
+ */
+public setLada(lada: string): void {
+    this.update((state) => ({
+        ...state,
+        lada,
+    }));
+}
+
+/**
+ * Establece el estado de telefono.
+ * @param telefono - El valor de telefono.
+ * @returns void
+ */
+public setTelefono(telefono: string): void {
+    this.update((state) => ({
+        ...state,
+        telefono,
+    }));
+}
+
+/**
+ * Establece el estado de claveScianModal.
+ * @param claveScianModal - El valor de claveScianModal.
+ * @returns void
+ */
+public setClaveScianModal(claveScianModal: string): void {
+    this.update((state) => ({
+        ...state,
+        claveScianModal,
+    }));
+}
+
+/**
+ * Establece el estado de claveDescripcionModal.
+ * @param claveDescripcionModal - El valor de claveDescripcionModal.
+ * @returns void
+ */
+public setClaveDescripcionModal(claveDescripcionModal: string): void {
+    this.update((state) => ({
+        ...state,
+        claveDescripcionModal,
+    }));
+}
+
+/**
+ * Establece el estado de avisoCheckbox.
+ * @param avisoCheckbox - El valor de avisoCheckbox.
+ * @returns void
+ */
+public setAvisoCheckbox(avisoCheckbox: boolean): void {
+    this.update((state) => ({
+        ...state,
+        avisoCheckbox,
+    }));
+}
+
+/**
+ * Establece el estado de licenciaSanitaria.
+ * @param licenciaSanitaria - El valor de licenciaSanitaria.
+ * @returns void
+ */
+public setLicenciaSanitaria(licenciaSanitaria: string): void {
+    this.update((state) => ({
+        ...state,
+        licenciaSanitaria,
+    }));
+}
+
+/**
+ * Establece el estado de regimen.
+ * @param regimen - El valor de regimen.
+ * @returns void
+ */
+public setRegimen(regimen: string): void {
+    this.update((state) => ({
+        ...state,
+        regimen,
+    }));
+}
+
+/**
+ * Establece el estado de aduanasEntradas.
+ * @param aduanasEntradas - El valor de aduanasEntradas.
+ * @returns void
+ */
+public setAduanasEntradas(aduanasEntradas: string): void {
+    this.update((state) => ({
+        ...state,
+        aduanasEntradas,
+    }));
+}
+
+/**
+ * Establece el estado de clasificacion.
+ * @param clasificacion - El valor de clasificacion.
+ * @returns void
+ */
+public setClasificacion(clasificacion: string): void {
+    this.update((state) => ({
+        ...state,
+        clasificacion,
+    }));
+}
+
+/**
+ * Establece el estado de especificar.
+ * @param especificar - El valor de especificar.
+ * @returns void
+ */
+public setEspecificar(especificar: string): void {
+    this.update((state) => ({
+        ...state,
+        especificar,
+    }));
+}
+
+/**
+ * Establece el estado de denominacionEspecifica.
+ * @param denominacionEspecifica - El valor de denominacionEspecifica.
+ * @returns void
+ */
+public setDenominacionEspecifica(denominacionEspecifica: string): void {
+    this.update((state) => ({
+        ...state,
+        denominacionEspecifica,
+    }));
+}
+
+/**
+ * Establece el estado de denominacionDistintiva.
+ * @param denominacionDistintiva - El valor de denominacionDistintiva.
+ * @returns void
+ */
+public setDenominacionDistintiva(denominacionDistintiva: string): void {
+    this.update((state) => ({
+        ...state,
+        denominacionDistintiva,
+    }));
+}
+
+/**
+ * Establece el estado de denominacionComun.
+ * @param denominacionComun - El valor de denominacionComun.
+ * @returns void
+ */
+public setDenominacionComun(denominacionComun: string): void {
+    this.update((state) => ({
+        ...state,
+        denominacionComun,
+    }));
+}
+
+/**
+ * Establece el estado de tipoDeProducto.
+ * @param tipoDeProducto - El valor de tipoDeProducto.
+ * @returns void
+ */
+public setTipoDeProducto(tipoDeProducto: string): void {
+    this.update((state) => ({
+        ...state,
+        tipoDeProducto,
+    }));
+}
+
+/**
+ * Establece el estado de estadoFisico.
+ * @param estadoFisico - El valor de estadoFisico.
+ * @returns void
+ */
+public setEstadoFisico(estadoFisico: string): void {
+    this.update((state) => ({
+        ...state,
+        estadoFisico,
+    }));
+}
+
+/**
+ * Establece el estado de fraccionArancelaria.
+ * @param fraccionArancelaria - El valor de fraccionArancelaria.
+ * @returns void
+ */
+public setFraccionArancelaria(fraccionArancelaria: string): void {
+    this.update((state) => ({
+        ...state,
+        fraccionArancelaria,
+    }));
+}
+
+/**
+ * Establece el estado de descripcionFraccion.
+ * @param descripcionFraccion - El valor de descripcionFraccion.
+ * @returns void
+ */
+public setDescripcionFraccion(descripcionFraccion: string): void {
+    this.update((state) => ({
+        ...state,
+        descripcionFraccion,
+    }));
+}
+
+/**
+ * Establece el estado de cantidadUMT.
+ * @param cantidadUMT - El valor de cantidadUMT.
+ * @returns void
+ */
+public setCantidadUMT(cantidadUMT: string): void {
+    this.update((state) => ({
+        ...state,
+        cantidadUMT,
+    }));
+}
+
+/**
+ * Establece el estado de UMT.
+ * @param UMT - El valor de UMT.
+ * @returns void
+ */
+public setUMT(UMT: string): void {
+    this.update((state) => ({
+        ...state,
+        UMT,
+    }));
+}
+
+/**
+ * Establece el estado de cantidadUMC.
+ * @param cantidadUMC - El valor de cantidadUMC.
+ * @returns void
+ */
+public setCantidadUMC(cantidadUMC: string): void {
+    this.update((state) => ({
+        ...state,
+        cantidadUMC,
+    }));
+}
+
+/**
+ * Establece el estado de UMC.
+ * @param UMC - El valor de UMC.
+ * @returns void
+ */
+public setUMC(UMC: string): void {
+    this.update((state) => ({
+        ...state,
+        UMC,
+    }));
+}
+
+/**
+ * Establece el estado de presentacion.
+ * @param presentacion - El valor de presentacion.
+ * @returns void
+ */
+public setPresentacion(presentacion: string): void {
+    this.update((state) => ({
+        ...state,
+        presentacion,
+    }));
+}
+
+/**
+ * Establece el estado de numeroRegistro.
+ * @param numeroRegistro - El valor de numeroRegistro.
+ * @returns void
+ */
+public setNumeroRegistro(numeroRegistro: string): void {
+    this.update((state) => ({
+        ...state,
+        numeroRegistro,
+    }));
+}
+
+/**
+ * Establece el estado de fechaCaducidad.
+ * @param fechaCaducidad - El valor de fechaCaducidad.
+ * @returns void
+ */
+public setFechaCaducidad(fechaCaducidad: string): void {
+    this.update((state) => ({
+        ...state,
+        fechaCaducidad,
+    }));
+}
+
+/**
+ * Establece el estado de cumplimiento.
+ * @param cumplimiento - El valor de cumplimiento.
+ * @returns void
+ */
+public setCumplimiento(cumplimiento: string): void {
+    this.update((state) => ({
+        ...state,
+        cumplimiento,
+    }));
+}
+
+/**
+ * Establece el estado de rfc.
+ * @param rfc - El valor de rfc.
+ * @returns void
+ */
+public setRfc(rfc: string): void {
+    this.update((state) => ({
+        ...state,
+        rfc,
+    }));
+}
+
+/**
+ * Establece el estado de nombre.
+ * @param nombre - El valor de nombre.
+ * @returns void
+ */
+public setNombre(nombre: string): void {
+    this.update((state) => ({
+        ...state,
+        nombre,
+    }));
+}
+
+/**
+ * Establece el estado de apellidoPaterno.
+ * @param apellidoPaterno - El valor de apellidoPaterno.
+ * @returns void
+ */
+public setApellidoPaterno(apellidoPaterno: string): void {
+    this.update((state) => ({
+        ...state,
+        apellidoPaterno,
+    }));
+}
   /**
    * Establece el estado de apellidoMaterno.
    * @param apellidoMaterno - El valor de apellidoMaterno.
    */
-  public setApellidoMaterno(apellidoMaterno: string) {
+  public setApellidoMaterno(apellidoMaterno: string) : void {
       this.update((state) => ({
           ...state,
           apellidoMaterno,

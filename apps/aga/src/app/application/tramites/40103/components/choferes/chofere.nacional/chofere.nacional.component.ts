@@ -149,7 +149,7 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
    */
   addNewRow(template: TemplateRef<unknown>): void {
     this.datosChofere = {} as DatosDelChoferNacional;
-    this.openModal(template);
+    this.abrirModal(template);
   }
 
   /**
@@ -166,7 +166,7 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
       return;
     }
     this.datosChofere = this.datosDelChoferNacionalSelected[0];
-    this.openModal(template);
+    this.abrirModal(template);
   }
 
   /**
@@ -191,7 +191,7 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
    * 
    * @param template Referencia al template que se mostrará dentro del modal.
    */
-  openModal(template: TemplateRef<unknown>): void {
+  abrirModal(template: TemplateRef<unknown>): void {
     this.modalRef = this.bsModalService.show(template, {
       class: 'modal-fullscreen',
     });
@@ -210,13 +210,24 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Agrega un nuevo objeto de tipo `DatosDelChoferNacional` al arreglo `datosDelChoferNacional`.
+   * Agrega un nuevo objeto de tipo `DatosDelChoferNacional` al arreglo `datosDelChoferNacional` 
+   * o actualiza uno existente si se está modificando.
    * Limpia la selección actual de choferes y cierra el modal.
    *
-   * @param data - Los datos del chofer nacional a agregar.
+   * @param data - Los datos del chofer nacional a agregar o actualizar.
    */
   agregarModal(data: DatosDelChoferNacional): void {
-    this.datosDelChoferNacional.push(data);
+    // Check if we're updating an existing record or adding a new one
+    const existingIndex = this.datosDelChoferNacional.findIndex(item => item.id === data.id);
+    
+    if (existingIndex >= 0) {
+      // Actualizar registro existente
+      this.datosDelChoferNacional[existingIndex] = data;
+    } else {
+      // Agregar nuevo registro
+      this.datosDelChoferNacional.push(data);
+    }
+    
     this.datosDelChoferNacionalSelected = [];
 
     this.chofer40103Service.updateDatosDelChoferNacional(this.datosDelChoferNacional);

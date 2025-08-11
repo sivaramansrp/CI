@@ -2079,6 +2079,13 @@ export interface VehiculoTablaDatos {
  * @since 1.0.0
  */
 export interface UnidadTabla {
+    /**
+   * ID del vehículo.
+   * 
+   * @property {string} idDeVehiculo
+   * Número de Identificación Vehicular de la unidad
+   */
+  idDeVehiculo: string;
   /**
    * VIN del vehículo.
    * 
@@ -2126,4 +2133,83 @@ export interface UnidadTabla {
    * Estado o entidad federativa emisora
    */
   estado: string;
+}
+/**
+ * Interfaz que define la configuración completa de la tabla de unidades.
+ *
+ * Esta interfaz establece la estructura para configurar tablas de unidades
+ * de arrastre, incluyendo tanto los encabezados de las columnas como los
+ * datos que se mostrarán. Proporciona una configuración flexible para
+ * la presentación tabular de información de unidades.
+ *
+ * @interface UnidadTablaConfig
+ * @since 1.0.0
+ *
+ * @example
+ * ```typescript
+ * const configTabla: UnidadTablaConfig = {
+ *   encabezadas: [
+ *     { encabezado: "VIN", clave: (item) => item.vinVehiculo, orden: 1 },
+ *     { encabezado: "Tipo", clave: (item) => item.tipoDeUnidadArrastre, orden: 2 }
+ *   ],
+ *   datos: [
+ *     { vinVehiculo: "ABC123", tipoDeUnidadArrastre: "Remolque", numeroEconomico: "REM001" }
+ *   ]
+ * };
+ * ```
+ */
+export interface UnidadTablaConfig {
+  /**
+   * @property {Array<Object>} encabezadas
+   * Lista de configuración de encabezados de la tabla.
+   * Define las columnas de la tabla con su texto de encabezado, función de extracción de datos y orden.
+   */
+  encabezadas: {
+    /**
+     * @property {string} encabezado
+     * Texto del encabezado de la columna.
+     * Título que se mostrará en la cabecera de cada columna de la tabla.
+     */
+    encabezado: string;
+
+    /**
+     * @property {Function} clave
+     * Función que extrae el valor de la columna desde el objeto de datos.
+     * Función que recibe un item de UnidadTabla y retorna el valor a mostrar en la columna.
+     */
+    clave: (item: UnidadTabla) => string;
+
+    /**
+     * @property {number} orden
+     * Orden de aparición de la columna en la tabla.
+     * Número que determina la secuencia de las columnas de izquierda a derecha.
+     */
+    orden: number;
+  }[];
+
+  /**
+   * @property {UnidadTabla[]} datos
+   * Lista de datos de las unidades para mostrar en la tabla.
+   * Array de objetos que contienen la información de cada unidad de arrastre.
+   */
+  datos: UnidadTabla[];
+}
+/**
+ * Interfaz que define la configuración de la tabla de vehículos.
+ * Contiene encabezados y datos para la visualización en una tabla.
+ */
+export interface VehiculoTablaConfig {
+  /**
+   * Lista de encabezados de la tabla.
+   */
+  encabezadas: {
+    encabezado: string;
+    clave: (item: VehiculoTabla) => string;
+    orden: number;
+  }[];
+
+  /**
+   * Lista de datos de vehículos que se mostrarán en la tabla.
+   */
+  datos: VehiculoTabla[];
 }

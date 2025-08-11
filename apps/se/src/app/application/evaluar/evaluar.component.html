@@ -50,7 +50,7 @@
                         <li [ngClass]="{'active': indiceDictamen === 2,'disabled': deshabilitarSolicitarDocumentos}">
                             <a data-toggle="tab" (click)="seleccionaTabRequerimiento(2)"
                                 (keydown.enter)="seleccionaTabRequerimiento(2)"
-                                (keydown.space)="seleccionaTabRequerimiento(2)" role="button" tabindex="2">Solicitar
+                                (keydown.space)="seleccionaTabRequerimiento(2)" role="button" tabindex="2">Seleccionar
                                 documentos</a>
                         </li>
                     </ul>
@@ -91,12 +91,11 @@
         </div>
 
         <div class="row mb-5 mt-5">
-            <app-reviewers-tabs [viewChild]="viewChild" [tramite]="tramite"
-            [documentos]="documentosSolicitud"
-            [tareasSolicitud]="tareasSolicitud"
-            [acusesResolucion]="acusesResolucion"
-            (viewChildcambioDePestana)="viewChildcambioDePestana($event)"
-            (tabSeleccionado)="onTabSeleccionado($event)">
+            <app-reviewers-tabs [viewChild]="viewChild" [tramite]="tramite" [documentos]="documentosSolicitud"
+                [tareasSolicitud]="tareasSolicitud" [dictamenes]="dictamenesSolicitud" 
+                [requerimientos]="requerimientosSolicitud" [acusesResolucion]="acusesResolucion"
+                (viewChildcambioDePestana)="viewChildcambioDePestana($event)"
+                (tabSeleccionado)="onTabSeleccionado($event)">
             </app-reviewers-tabs>
         </div>
     </div>

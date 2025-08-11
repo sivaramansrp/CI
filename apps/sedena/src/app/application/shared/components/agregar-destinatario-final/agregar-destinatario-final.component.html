@@ -42,7 +42,7 @@
     @if(agregarDestinatarioFinal.get('nacionalidad')?.value !== 'Extranjero') {
     <div class="row mt-5">
       <div class="col-md-6">
-        <label class="form-label">R.F.C.<span *ngIf="campoObligatorio"> *</span> :</label>
+        <label class="form-label">R.F.C.<span *ngIf="campoObligatorio">*</span>:</label>
         <input type="text" class="form-control" formControlName="rfc" maxlength="15" [disabled]="esFormularioSoloLectura"/>
         <div class="error-message">
           <small *ngIf="agregarDestinatarioFinal.get('rfc')?.touched && agregarDestinatarioFinal.get('rfc')?.hasError('required')" class="text-danger">
@@ -102,7 +102,7 @@
     <div class="row mt-3">
       <h4 class="mt-5">Datos personales</h4>
       <div class="col-md-4">
-        <label class="form-label">Nombre(s)<span *ngIf="campoObligatorio"> *</span> :</label>
+        <label class="form-label">Nombre(s)<span *ngIf="campoObligatorio">*</span>:</label>
         <input type="text" class="form-control" formControlName="nombres" maxlength="200" [disabled]="esFormularioSoloLectura"/>
         <div class="error-message">
           <small *ngIf="agregarDestinatarioFinal.get('nombres')?.touched && agregarDestinatarioFinal.get('nombres')?.hasError('required')" class="text-danger">
@@ -114,7 +114,7 @@
         </div>        
       </div>
       <div class="col-md-4">
-        <label class="form-label">Primer apellido<span *ngIf="campoObligatorio"> *</span> :</label>
+        <label class="form-label">Primer apellido<span *ngIf="campoObligatorio">*</span>:</label>
         <input
           type="text"
           class="form-control"
@@ -180,7 +180,7 @@
       </div>
 
       <div class="col-md-4 ">
-        <label class="form-label">Código postal o equivalente :</label>
+        <label class="form-label">Código postal o equivalente:</label>
         <input
           type="text"
           class="form-control"
@@ -309,11 +309,11 @@
 
     <div class="row mt-3">
       <div class="col-md-9">
-        <label class="form-label">Calle<span *ngIf="campoObligatorio"> *</span> :</label>
+        <label class="form-label">Calle<span *ngIf="campoObligatorio">*</span>:</label>
         <input type="text" class="form-control" formControlName="calle" maxlength="300" [disabled]="esFormularioSoloLectura"/>
       </div>
       <div class="col-md-3">
-        <label class="form-label">Número exterior<span *ngIf="campoObligatorio"> *</span> :</label>
+        <label class="form-label">Número exterior<span *ngIf="campoObligatorio">*</span>:</label>
         <input
           type="text"
           class="form-control"
@@ -349,7 +349,7 @@
         </div>
       </div>
       <div class="col-md-1">
-        <label class="form-label">Lada :</label>
+        <label class="form-label">Lada:</label>
         <input type="text" class="form-control" formControlName="lada" maxlength="5" [disabled]="esFormularioSoloLectura"/>
         <div class="error-message">
           <small *ngIf="agregarDestinatarioFinal.get('lada')?.touched && agregarDestinatarioFinal.get('lada')?.hasError('maxlength')" class="text-danger">

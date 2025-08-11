@@ -218,11 +218,11 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
       rfcDel: [{ value: this.solicitudState?.rfcDel, disabled: true }],
       denominacion: [
         { value: this.solicitudState?.denominacion, disabled: true },
-        Validators.required,
+        [Validators.required, Validators.maxLength(100)]
       ],
       correo: [
         { value: this.solicitudState?.correo, disabled: true },
-        Validators.required,
+        [Validators.required, Validators.maxLength(320)]
       ],
     });
   }

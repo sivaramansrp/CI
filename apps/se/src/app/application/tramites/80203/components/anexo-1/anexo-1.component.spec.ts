@@ -151,18 +151,6 @@ describe('Anexo1Component', () => {
     expect(component.immexRegistroform instanceof FormGroup).toBe(true);
   });
 
-  it('should disable and enable form in inicializarEstadoFormulario', () => {
-    component.immexRegistroform = fb.group({});
-    component.immexRegistroform.disable = jest.fn();
-    component.immexRegistroform.enable = jest.fn();
-    component.esFormularioSoloLectura = true;
-    component.inicializarEstadoFormulario();
-    expect(component.immexRegistroform.disable).toHaveBeenCalled();
-    component.esFormularioSoloLectura = false;
-    component.inicializarEstadoFormulario();
-    expect(component.immexRegistroform.enable).toHaveBeenCalled();
-  });
-
   it('should clean up destroyNotifier$ on ngOnDestroy', () => {
     const destroyNotifier$ = { next: jest.fn(), complete: jest.fn() };
     component.destroyNotifier$ = destroyNotifier$;

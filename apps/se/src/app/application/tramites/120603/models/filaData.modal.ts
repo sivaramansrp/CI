@@ -15,7 +15,7 @@ export interface SeleccionDeSucursalData {
     /** Colonia de la sucursal */
     colonia: string,
     /** Municipio o alcaldía de la sucursal */
-    municipiooAlcaldia: string,
+    municipioAlcaldia: string,
     /** Estado donde se encuentra la sucursal */
     estado: string,
     /** País donde se encuentra la sucursal */

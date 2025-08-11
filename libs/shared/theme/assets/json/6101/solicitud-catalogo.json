@@ -2,7 +2,7 @@
     "aduana": {
         "labelNombre": "Aduana",
         "required": true,
-        "primerOpcion": "Seleccione",
+        "primerOpcion": "Seleccione una opción",
         "catalogos": [
             {
                 "id": 1,
@@ -21,7 +21,7 @@
     "juntaTecnicaDerivada": {
         "labelNombre": "Junta técnica derivada de",
         "required": true,
-        "primerOpcion": "Seleccione",
+        "primerOpcion": "Seleccione una opción",
         "catalogos": [
             {
                 "id": 1,

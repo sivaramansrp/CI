@@ -22,7 +22,8 @@
   </div>
   @if (nuevaNotificacion) { 
   <section>
-    <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion" 
+        (confirmacionModal)="agregarProductorIndirecto($event)">
     </lib-notificaciones>
   </section> 
 }
