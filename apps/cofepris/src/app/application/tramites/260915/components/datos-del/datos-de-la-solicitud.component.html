@@ -131,6 +131,9 @@
         (listaDeFilaSeleccionada)="onfilasSeleccionadas($event)"
         [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
     </app-tabla-dinamica>
+    <div class="col-md-12">
+      <app-table-pagination [showCurrentPage]="true"></app-table-pagination>
+    </div>
     <div class="col-md-12 d-flex justify-content-end">
         <div class="btn-group">
           <button class="btn btn-danger me-2"
@@ -206,7 +209,7 @@
         <div class="col-md-4 mt-4">
           <lib-input-check
           [id]="'avisoDeFuncionamiento'"
-          [label]="'Aviso de funcionamiento'"
+          [label]="'Aviso de funcionamiento:'"
           [required]="true"
           formControlName="avisoDeFuncionamiento"
           (change)="toggleLicenciaSanitaria()"
@@ -259,6 +262,9 @@
         (listaDeFilaSeleccionada)="onfilasSeleccionadas($event)"
         [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
       </app-tabla-dinamica>
+      <div class="col-md-12">
+            <app-table-pagination [showCurrentPage]="true"></app-table-pagination>
+      </div>
       </div>
      
       <div class="modal fade" id="modalAgregarMercancia" tabindex="-1" aria-labelledby="modalAgregarMercanciaLabel" aria-hidden="true">

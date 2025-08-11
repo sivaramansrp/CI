@@ -35,6 +35,9 @@ export interface Destinatario {
   /** País del domicilio del destinatario. */
   pais: string;
 
+  /** Estado del domicilio del destinatario. */
+  estado: string;
+
   /** Colonia del domicilio del destinatario. */
   colonia: string;
 

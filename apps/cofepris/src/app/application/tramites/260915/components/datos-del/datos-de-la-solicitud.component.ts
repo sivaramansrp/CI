@@ -19,12 +19,12 @@ import { CrosslistComponent } from '@libs/shared/data-access-user/src/tramites/c
 
 import { DatosEmpresaComponent } from '../datos-empresa/datos-empresa.component';
 
+import { TablaDinamicaComponent, TablePaginationComponent } from '@libs/shared/data-access-user/src';
 import { InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
 import { PermisoSanitarioDispositivosMedicosService } from '../../services/permiso-sanitario-dispositivos-medicos.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Solicitud260915Query } from '../../estados/tramites260915.query';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
@@ -45,7 +45,9 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     InputCheckComponent,
     NotificacionesComponent,
     DatosEmpresaComponent,
-    TooltipModule],
+    TooltipModule,
+    TablePaginationComponent
+  ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrls: ['./datos-de-la-solicitud.component.scss'],
 })

@@ -1,7 +1,7 @@
-import { AlertComponent, Catalogo, CatalogosSelect, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogosSelect, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion,TablePaginationComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup,ReactiveFormsModule,Validators} from '@angular/forms';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TEXTOS, TIPO_PERSONA_RADIO_OPTIONS } from '../../constants/constantes.enum';
 
 import { Solicitud260915State, Solicitud260915Store } from '../../estados/tramites260915.store';
@@ -50,6 +50,7 @@ import { Solicitud260915Query } from '../../estados/tramites260915.query';
     CatalogoSelectComponent,
     NotificacionesComponent,
     InputRadioComponent,
+    TablePaginationComponent
   ],
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.scss',
@@ -137,6 +138,8 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
 
   /** Configuración de las columnas de la tabla */
   destinatarioConfiguracionTabla = DESTINATARIO_CONFIGURACION_TABLA;
+
+  @ViewChild('modalAgregarMercancias') modalAgregarMercanciasElemento!: ElementRef;
 
   /**
    * Constructor del componente.
@@ -347,18 +350,54 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
   /**
    * Guarda los datos del formulario en la tabla.
    */
-  onGuardar(): void {
-    const FORM_DATA = this.destinatarioForm.value;
-    if (FORM_DATA.agregarDestinatario) {
-        const DESTINATARIO = {
-            ...FORM_DATA.agregarDestinatario,
-            ...FORM_DATA.datosPersonales,
-            pais: this.getPaisName(FORM_DATA.datosPersonales.pais),
-        };
-      this.proveedorDatos.push(DESTINATARIO);
-    }
+onGuardar(): void {
+
+
+  const FORM_DATA = this.destinatarioForm.getRawValue();
+  
+  if (FORM_DATA.agregarDestinatario && FORM_DATA.datosPersonales) {
+    const NEW_ID = this.proveedorDatos.length > 0 ? 
+      Math.max(...this.proveedorDatos.map(item => item.id || 0)) + 1 : 1;
+
+    const DESTINATARIO: Destinatario = {
+      id: NEW_ID,
+      tipoPersona: FORM_DATA.agregarDestinatario.tipoPersona,
+      nombre: FORM_DATA.datosPersonales.nombre,
+      primerApellido: FORM_DATA.datosPersonales.primerApellido,
+      segundoApellido: FORM_DATA.datosPersonales.segundoApellido,
+      denominacion: FORM_DATA.datosPersonales.denominacion,
+      pais: this.getPaisName(FORM_DATA.datosPersonales.pais),
+      estado: FORM_DATA.datosPersonales.estado,
+      codigopostal: FORM_DATA.datosPersonales.codigopostal,
+      calle: FORM_DATA.datosPersonales.calle,
+      numeroExterior: FORM_DATA.datosPersonales.numeroExterior,
+      numeroInterior: FORM_DATA.datosPersonales.numeroInterior,
+      lada: FORM_DATA.datosPersonales.lada,
+      telefono: FORM_DATA.datosPersonales.telefono,
+      correoElectronico: FORM_DATA.datosPersonales.correoElectronico,
+      // Add other required properties based on your Destinatario model
+      domicilio: FORM_DATA.datosPersonales.calle + ' ' + FORM_DATA.datosPersonales.numeroExterior,
+      entidadFederativa: FORM_DATA.datosPersonales.estado,
+      estadoLocalidad: FORM_DATA.datosPersonales.estado,
+      coloniaEquivalente: FORM_DATA.datosPersonales.coloniaEquivalente,
+      rfc: FORM_DATA.datosPersonales.rfc,
+      curp: FORM_DATA.datosPersonales.curp,
+      colonia: FORM_DATA.datosPersonales.colonia,
+      municipio: FORM_DATA.datosPersonales.municipio,
+      localidad: FORM_DATA.datosPersonales.localidad
+    };
+
+    
+    this.proveedorDatos = [...this.proveedorDatos, DESTINATARIO];
+    
+    this.solicitud260915Store.setTramite260915State({
+      proveedorDatos: this.proveedorDatos
+    });
+    
     this.destinatarioForm.reset();
+    this.cancelarFormulario();
   }
+}
 
   /**
    * Obtiene el nombre del país a partir de su ID.
@@ -437,7 +476,13 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
    * Abre el formulario para agregar nuevas mercancías.
    */
   agregarMercancias(): void {
-    this.esFormularioVisible = true;
+    if (this.modalAgregarMercanciasElemento) {
+      const MODAL_INSTANCIA = new Modal(
+        this.modalAgregarMercanciasElemento.nativeElement,
+        { backdrop: false }
+      );
+      MODAL_INSTANCIA.show();
+    }
     this.destinatarioForm.reset();
   }
 
@@ -445,7 +490,13 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
    * Cancela la visualización del formulario.
    */
   cancelarFormulario(): void {
-    this.esFormularioVisible = false;
+    const MODAL_INSTANCIA = Modal.getInstance(
+      this.modalAgregarMercanciasElemento.nativeElement
+    );
+    if (MODAL_INSTANCIA) {
+      MODAL_INSTANCIA.hide();
+    }
+    this.destinatarioForm.reset();
   }
 
   /**
