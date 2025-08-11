@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AgregarFabricanteComponent } from './agregar-fabricante.component';
+import { AgregarFabricanteComponent } from './agregar-fabricante-sanitario.component';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';

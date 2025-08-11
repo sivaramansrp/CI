@@ -25,6 +25,14 @@ export class Tramite260601Query extends Query<AvisoSanitarioState> {
     return state;
   });
 
+  public getProveedorTablaDatos$ = this.select(
+    (state) => state.proveedorTablaDatos
+  );
+
+  public getFabricanteTablaDatos$ = this.select(
+    (state) => state.fabricanteTablaDatos
+  );
+
   /**Guarda el estado completo del formulario de la solicitud */
   constructor(
     protected override store: Tramite260601Store) {
