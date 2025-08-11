@@ -145,6 +145,32 @@ describe('AgregaPersonasComponent', () => {
       expect(component.nuevaNotificacion).toBeDefined();
       expect(spy).toHaveBeenCalled();
     });
+
+    it('should clear form fields when gafete is not found', () => {
+      // Setup: Fill form fields first
+      component.personaForm.get('nombreRespoDespacho')?.enable();
+      component.personaForm.get('paternoRespoDespacho')?.enable();
+      component.personaForm.get('maternoRespoDespacho')?.enable();
+      component.personaForm.get('nombreRespoDespacho')?.setValue('R');
+      component.personaForm.get('paternoRespoDespacho')?.setValue('A');
+      component.personaForm.get('maternoRespoDespacho')?.setValue('Z');
+      
+      // Mock service to return no data (gafete not found)
+      mockConsultaResponsableService.getGafeteResponsable = jest
+        .fn()
+        .mockReturnValue(of({ datos: null }));
+      
+      component.gafeteRespoDespacho.setValue('1');
+      component.buscarGafete();
+      
+      // Verify error notification is shown
+      expect(component.nuevaNotificacion).toBeDefined();
+      
+      // Verify form fields are cleared after reset
+      expect(component.personaForm.get('nombreRespoDespacho')?.value).toBeNull();
+      expect(component.personaForm.get('paternoRespoDespacho')?.value).toBeNull();
+      expect(component.personaForm.get('maternoRespoDespacho')?.value).toBeNull();
+    });
   });
 
   describe('habilitarCamposFormulario', () => {

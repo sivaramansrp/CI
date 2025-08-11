@@ -2,7 +2,7 @@
     "SolicitudState": {
         "justificacion": "justificacion",
         "certificadosAutorizados": "ABC123456T21",
-        "fechaInicio": "2025-05-31",
+        "fechaInicio": "30/05/2025",
         "horaDeInspeccion": "1",
         "aduanaDeIngreso": "1",
         "sanidadAgropecuaria": "2",
@@ -16,20 +16,20 @@
         "tipoContenedor": "1",
         "medioDeTransporte": "1",
         "identificacionTransporte": "CONT123456",
-        "esSolicitudFerros": "true"
-    },
+        "esSolicitudFerros": "0"
+    }, 
     "InternaDatosGeneralesState": {
         "folioControlUnico": "1502200200120240301000015",
-        "aduanaIngreso": "160",
-        "oficinaInspeccion": "161",
-        "puntoInspeccion": "160",
+        "aduanaIngreso": "1",
+        "oficinaInspeccion": "1",
+        "puntoInspeccion": "1",
         "claveControlUnico": "2026-001",
         "establecimientoTIFs": "1",
         "nombreVeterinario": "1",
         "numeroGuia": "20000",
-        "regimen": "101",
+        "regimen": "1",
         "animalesVivos": "true",
-        "tipoMercancia": "2",
+        "tipoMercancia": "animales",
         "coordenadas": "19.4326,-99.1332",
         "movilizacionNacional": "2",
         "identTransporte": "Transport@#",
@@ -43,7 +43,7 @@
         "cadenaDependencia": "CD-987654",
         "banco": "2",
         "llavePago": "LLAVE-1234",
-        "fechaFactura": "2025-05-31",
+        "fechaFactura": "30/05/2025",
         "importePago": "1500.00"
     },
     "PagosDeDerechosState": {
@@ -51,17 +51,17 @@
         "justificacion": "1",
         "claveDeReferencia": "REF-2025-002",
         "cadenaDependencia": "CD-987655",
-        "banco": "BANCOMER",
+        "banco": "1",
         "llaveDePago": "LLAVE-5678",
-        "fechaInicio": "2025-05-31",
+        "fechaInicio": "30/05/2025",
         "importeDePago": "2000.00",
         "exentoPagoRevision": "true",
         "justificacionRevision": "1",
         "claveDeReferenciaRevision": "REF-2025-003",
         "cadenaDependenciaRevision": "CD-987656",
-        "bancoRevision": "SANTANDER",
+        "bancoRevision": "1",
         "llaveDePagoRevision": "LLAVE-9101",
-        "fechaInicioRevision": "2025-06-01",
+        "fechaInicioRevision": "30/05/2025",
         "importeDePagoRevision": "500.00"
     }
 }

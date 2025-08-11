@@ -109,6 +109,13 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    */
   pagosDeDerechosState!: PagosDeDerechosFormInt;
 
+   /**
+   * Configuración para el input de fecha de salida.
+   * Proporciona un valor inicial para el campo de fecha.
+   * @type {InputFecha}
+   */
+  fechaFinalInput: InputFecha = EXPEDICION_FACTURA_FECHA;
+
   /**
    * @property {CatalogosSelect} banco
    * @description Información del banco seleccionado en el formulario.
@@ -258,50 +265,83 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
       )
       .subscribe();
 
+    // Establecer exentoPagoValor a 'Si' si no está ya establecido desde el estado
+    if (!this.pagosDeDerechosState?.exentoPago) {
+      this.exentoPagoValor = 'Si';
+    } else {
+      this.exentoPagoValor = this.pagosDeDerechosState.exentoPago;
+    }
+
+    // Establecer exentoPagoRevisionValor a 'Si' si no está ya establecido desde el estado
+    if (!this.pagosDeDerechosState?.exentoPagoRevision) {
+      this.exentoPagoRevisionValor = 'Si';
+    } else {
+      this.exentoPagoRevisionValor = this.pagosDeDerechosState.exentoPagoRevision;
+    }
+
     this.pagosDeDerechosForm = this.fb.group({
+      justificacion: [
+        {value: '', disabled: true},
+        Validators.required,
+      ],
       claveDeReferencia: [
-        this.pagosDeDerechosState?.claveDeReferencia || '',
+        {value: this.pagosDeDerechosState?.claveDeReferencia || '', disabled: true},
         Validators.required,
       ],
       cadenaDependencia: [
-        this.pagosDeDerechosState?.cadenaDependencia || '',
+        {value: this.pagosDeDerechosState?.cadenaDependencia || '', disabled: true},
         Validators.required,
       ],
-      banco: [this.pagosDeDerechosState?.banco || '', Validators.required],
+      banco: [
+        {value: this.pagosDeDerechosState?.banco || '', disabled: true}, 
+        Validators.required
+      ],
       exentoPago: [
-        this.pagosDeDerechosState?.exentoPago || '',
+        {value: this.pagosDeDerechosState?.exentoPago || 'Si', disabled: true},
         Validators.required,
       ],
       llaveDePago: [
-        this.pagosDeDerechosState?.llaveDePago || '',
+        {value: this.pagosDeDerechosState?.llaveDePago || '', disabled: true},
         Validators.required,
       ],
       fechaInicio: [
-        this.pagosDeDerechosState?.fechaInicio || '',
+        this.pagosDeDerechosState?.fechaInicio,
         Validators.required,
       ],
       importeDePago: [
-        this.pagosDeDerechosState?.importeDePago || '',
+        {value: this.pagosDeDerechosState?.importeDePago || '', disabled: true},
         Validators.required,
       ],
       claveDeReferenciaRevision: [
-        this.pagosDeDerechosState?.claveDeReferenciaRevision || '',
+        {value: this.pagosDeDerechosState?.claveDeReferenciaRevision || '', disabled: true},
+        Validators.required,
+      ],
+      cadenaDependenciaRevision: [
+        {value: '', disabled: true},
+        Validators.required,
+      ],
+      justificacionRevision: [
+        {value: '', disabled: true},
         Validators.required,
       ],
       bancoRevision: [
-        this.pagosDeDerechosState?.bancoRevision || '',
+        {value: this.pagosDeDerechosState?.bancoRevision || '', disabled: true},
         Validators.required,
       ],
       llaveDePagoRevision: [
-        this.pagosDeDerechosState?.llaveDePagoRevision || '',
+        {value: this.pagosDeDerechosState?.llaveDePagoRevision || '', disabled: true},
         Validators.required,
       ],
       fechaInicioRevision: [
-        this.pagosDeDerechosState?.fechaInicioRevision || '',
+        {value: this.pagosDeDerechosState?.fechaInicioRevision || '', disabled: true},
         Validators.required,
       ],
       importeDePagoRevision: [
-        this.pagosDeDerechosState?.importeDePagoRevision || '',
+        {value: this.pagosDeDerechosState?.importeDePagoRevision || '', disabled: true},
+        Validators.required,
+      ],
+      exentoPagoRevision: [
+        {value: this.pagosDeDerechosState?.exentoPagoRevision || 'Si', disabled: true},
         Validators.required,
       ],
     });
@@ -340,7 +380,35 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
           (seccionState: { PagosDeDerechosState: PagosDeDerechosFormInt }) => {
             if (seccionState) {
               this.pagosDeDerechosState = seccionState.PagosDeDerechosState;
-              this.pagosDeDerechosForm.patchValue(this.pagosDeDerechosState);
+              const PATCH_DATA = { ...this.pagosDeDerechosState };
+              // Asegurar que exentoPago permanezca 'Si' y deshabilitado
+              if (PATCH_DATA.exentoPago !== 'Si') {
+                PATCH_DATA.exentoPago = 'Si';
+                this.exentoPagoValor = 'Si';
+              }
+              // Asegurar que exentoPagoRevision permanezca 'Si' y deshabilitado
+              if (PATCH_DATA.exentoPagoRevision !== 'Si') {
+                PATCH_DATA.exentoPagoRevision = 'Si';
+                this.exentoPagoRevisionValor = 'Si';
+              }
+              this.pagosDeDerechosForm.patchValue(PATCH_DATA);
+              // Volver a deshabilitar todos los controles especificados después del parcheo
+              this.pagosDeDerechosForm.get('justificacion')?.disable();
+              this.pagosDeDerechosForm.get('claveDeReferencia')?.disable();
+              this.pagosDeDerechosForm.get('cadenaDependencia')?.disable();
+              this.pagosDeDerechosForm.get('banco')?.disable();
+              this.pagosDeDerechosForm.get('exentoPago')?.disable();
+              this.pagosDeDerechosForm.get('llaveDePago')?.disable();
+              this.pagosDeDerechosForm.get('fechaInicio')?.disable();
+              this.pagosDeDerechosForm.get('importeDePago')?.disable();
+              this.pagosDeDerechosForm.get('claveDeReferenciaRevision')?.disable();
+              this.pagosDeDerechosForm.get('cadenaDependenciaRevision')?.disable();
+              this.pagosDeDerechosForm.get('justificacionRevision')?.disable();
+              this.pagosDeDerechosForm.get('bancoRevision')?.disable();
+              this.pagosDeDerechosForm.get('llaveDePagoRevision')?.disable();
+              this.pagosDeDerechosForm.get('fechaInicioRevision')?.disable();
+              this.pagosDeDerechosForm.get('importeDePagoRevision')?.disable();
+              this.pagosDeDerechosForm.get('exentoPagoRevision')?.disable();
             }
           }
         )
@@ -399,7 +467,23 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
       .pagoDeCargarDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data: PagoDeDerechos) => {
-        this.pagosDeDerechosForm.patchValue(data);
+        // Crear datos de parcheo con exentoPago establecido a 'Si'
+        const PATCH_DATA = { 
+          ...data, 
+          exentoPago: 'Si' 
+        };
+        this.exentoPagoValor = 'Si';
+        this.pagosDeDerechosForm.patchValue(PATCH_DATA);
+        // Volver a deshabilitar todos los controles especificados después del parcheo
+        this.pagosDeDerechosForm.get('justificacion')?.disable();
+        this.pagosDeDerechosForm.get('claveDeReferencia')?.disable();
+        this.pagosDeDerechosForm.get('cadenaDependencia')?.disable();
+        this.pagosDeDerechosForm.get('banco')?.disable();
+        this.pagosDeDerechosForm.get('exentoPago')?.disable();
+        this.pagosDeDerechosForm.get('llaveDePago')?.disable();
+        this.pagosDeDerechosForm.get('fechaInicio')?.disable();
+        this.pagosDeDerechosForm.get('importeDePago')?.disable();
+        this.pagosDeDerechosForm.get('cadenaDependenciaRevision')?.disable();
       });
   }
 
@@ -466,6 +550,22 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data: PagoDeDerechosRevision) => {
         this.pagosDeDerechosForm.patchValue(data);
+        // Asegurar que todos los controles especificados permanezcan deshabilitados después de cualquier parcheo
+        this.pagosDeDerechosForm.get('justificacion')?.disable();
+        this.pagosDeDerechosForm.get('claveDeReferencia')?.disable();
+        this.pagosDeDerechosForm.get('cadenaDependencia')?.disable();
+        this.pagosDeDerechosForm.get('banco')?.disable();
+        this.pagosDeDerechosForm.get('exentoPago')?.disable();
+        this.pagosDeDerechosForm.get('llaveDePago')?.disable();
+        this.pagosDeDerechosForm.get('fechaInicio')?.disable();
+        this.pagosDeDerechosForm.get('importeDePago')?.disable();
+        this.pagosDeDerechosForm.get('claveDeReferenciaRevision')?.disable();
+        this.pagosDeDerechosForm.get('cadenaDependenciaRevision')?.disable();
+        this.pagosDeDerechosForm.get('justificacionRevision')?.disable();
+        this.pagosDeDerechosForm.get('bancoRevision')?.disable();
+        this.pagosDeDerechosForm.get('llaveDePagoRevision')?.disable();
+        this.pagosDeDerechosForm.get('fechaInicioRevision')?.disable();
+        this.pagosDeDerechosForm.get('importeDePagoRevision')?.disable();
       });
   }
 
@@ -512,11 +612,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
         if (typeof this.generarFormulario === 'function') {
           this.generarFormulario(OBJECT_DATE);
         }
+        // Mantener fechaInicio deshabilitado ya que está en la lista de campos a deshabilitar
         if (
           this.pagosDeDerechosForm &&
           this.pagosDeDerechosForm.controls['fechaInicio']
         ) {
-          this.pagosDeDerechosForm.controls['fechaInicio'].enable();
+          this.pagosDeDerechosForm.controls['fechaInicio'].disable();
         }
       }
     }
@@ -536,6 +637,19 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
       });
     }
   }
+  
+  /**
+   * Actualiza la fecha de pago en el formulario.
+   * @method cambioFechaFinal
+   * @param {string} nuevoValor - Nueva fecha de pago.
+   */
+  cambioFechaFinal(nuevoValor: string): void {
+    this.pagosDeDerechosForm.patchValue({
+      fechaPago: nuevoValor,
+    });
+    this.fechaPagoDate = nuevoValor;
+  }
+
 
   /**
    * @method ngOnDestroy
@@ -546,6 +660,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    *
    * @see {@link destroyNotifier$} Subject utilizado para cancelar suscripciones activas.
    */
+
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

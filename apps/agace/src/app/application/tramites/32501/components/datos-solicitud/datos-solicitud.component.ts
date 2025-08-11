@@ -1,25 +1,37 @@
+import {
+  AvisoCatalogo,
+  AvisoOpcionesDeRadio,
+  OperacionDeImportacion
+} from '../../models/aviso-catalogo.model';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Catalogo, CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
-import { Component, TemplateRef } from '@angular/core';
-import { ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { InputFecha, InputFechaComponent, InputRadioComponent, REGEX_NUMEROS_USD, REGEX_REEMPLAZAR, REGEX_SOLO_NUMEROS, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { AvisoCatalogo } from '../../models/aviso-catalogo.model';
-import { AvisoOpcionesDeRadio } from '../../models/aviso-catalogo.model';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src'; 
-import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { OperacionDeImportacion } from '../../models/aviso-catalogo.model';
-
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import { COLONIA, DELEGACION_MUNICIPIO, ENTIDAD_FEDERATIVA, FECHA_INGRESO } from '../../enums/solicitud32501.enum';
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  CatalogosSelect,
+  ConfiguracionColumna,
+  InputFecha,
+  InputFechaComponent,
+  InputRadioComponent,
+  REGEX_NUMEROS_USD,
+  REGEX_REEMPLAZAR,
+  REGEX_SOLO_NUMEROS,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent
+} from '@libs/shared/data-access-user/src';
+import { Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud32501State, Solicitud32501Store } from '../../estados/solicitud32501.store';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { FECHA_INGRESO } from '../../enums/solicitud32501.enum';
 import { HttpClientModule } from '@angular/common/http';
 import { MercanciasDesmontadasOSinMontarService } from '../../services/mercancias-desmontadas-o-sin-montar.service';
 import { Modal } from 'bootstrap';
 import { ModalOperacionComponent } from '../modal-operacion/modal-operacion.component';
 import { Solicitud32501Query } from '../../estados/solicitud32501.query';
+
 
 /**
  * Componente `DatosSolicitudComponent` que gestiona la lógica y la interfaz de usuario
@@ -78,7 +90,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Opción seleccionada para Entidad Federativa.
    */
-  opcionEntidadFederativa: CatalogosSelect = {} as CatalogosSelect;
+  opcionEntidadFederativa: CatalogosSelect = ENTIDAD_FEDERATIVA;
 
   /**
    * Catálogo de opciones para Entidad Federativa.
@@ -98,12 +110,12 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Opción seleccionada para Delegación o Municipio.
    */
-  opcionDelegacionMunicipio: CatalogosSelect = {} as CatalogosSelect;
+  opcionDelegacionMunicipio: CatalogosSelect = DELEGACION_MUNICIPIO;
 
   /**
    * Opción seleccionada para Colonia.
    */
-  opcionColonia: CatalogosSelect = {} as CatalogosSelect;
+  opcionColonia: CatalogosSelect = COLONIA;
 
   /**
    * Lista de entidades federativas.

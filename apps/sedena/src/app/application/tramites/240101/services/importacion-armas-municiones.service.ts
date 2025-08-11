@@ -14,6 +14,12 @@ export class ImportacionArmasMunicionesService {
    */
   private jsonUrl = 'assets/json/240101';
 
+  /**
+   * Constructor del servicio ImportacionArmasMunicionesService.
+   * Inyecta el HttpClient y el store del trámite 240101.
+   * @param httpClient - Cliente HTTP para realizar peticiones.
+   *  @param tramite240101Store - Store que gestiona el estado del trámite 240101.
+   */
   constructor(private httpClient: HttpClient,
     public tramite240101Store: Tramite240101Store) { }
 

@@ -120,7 +120,6 @@ export class PagoDeDerechosComponent implements OnInit,OnDestroy {
         takeUntil(this.DESTROY_NOTIFIER$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          this.esFormularioSoloLectura =true
           this.cdr.detectChanges();
         })
       )

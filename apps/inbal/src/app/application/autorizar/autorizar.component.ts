@@ -1,6 +1,6 @@
 import { AccuseComponentes, ListaComponentes, Tabulaciones } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
 import { Component, OnDestroy } from "@angular/core";
-import { ConsultaioQuery, FECHA_DE_INICIO } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, FECHA_DE_INICIO, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from "@angular/common";
 import { ConsultaioState } from '@ng-mf/data-access-user';
@@ -8,6 +8,7 @@ import { ConsultaioStore } from '@ng-mf/data-access-user';
 import { EncabezadoRequerimientoComponent } from '@libs/shared/data-access-user/src/tramites/components/encabezado-requerimiento/encabezado-requerimiento.component';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src/tramites/components/firma-electronica/firma-electronica.component';
 import { GenerarDictamenComponent } from '@libs/shared/data-access-user/src/tramites/components/generar-dictamen/generar-dictamen.component';
+import { GenerarObservacionComponent } from '@libs/shared/data-access-user/src/tramites/components/generar-observacion/generar-observacion.component';
 import { LISTA_TRIMITES } from '../shared/constantes/lista-trimites.enums';
 import { OnInit } from "@angular/core";
 import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramites/components/reviewers-tabs/reviewers-tabs.component';
@@ -46,7 +47,9 @@ import { takeUntil } from 'rxjs';
     EncabezadoRequerimientoComponent,
     FormsModule, ReactiveFormsModule,
     GenerarDictamenComponent,
-    FirmaElectronicaComponent
+    GenerarObservacionComponent,
+    FirmaElectronicaComponent,
+    NotificacionesComponent
   ],
   templateUrl: './autorizar.component.html',
   styleUrl: './autorizar.component.scss',
@@ -78,6 +81,11 @@ export class AutorizarComponent implements OnInit, OnDestroy {
    */
   firmar: boolean = false;
   /**
+   * @property {boolean} mostrarObservacion
+   * @description Indica si se debe mostrar la sección de observaciones.
+   */
+  mostrarObservacion: boolean = false;
+  /**
    * @property {Subject<void>} destroyNotifier$
    * @description Subject utilizado para cancelar las suscripciones y evitar fugas de memoria al destruir el componente.
    * @private
@@ -88,6 +96,10 @@ export class AutorizarComponent implements OnInit, OnDestroy {
    * @description Estado actual del trámite consultado.
    */
   guardarDatos!: ConsultaioState;
+  /** 
+     * Notificación para mostrar mensajes al usuario 
+     */
+  public nuevaNotificacion!: Notificacion;
   /**
    * @constructor
    * @description Constructor del componente. Inicializa los servicios y suscripciones necesarias para la autorización del trámite.
@@ -192,6 +204,38 @@ export class AutorizarComponent implements OnInit, OnDestroy {
         this.guardarFirmar();
         break;
       case 'cancelar':
+        this.mostrarObservacion = true;
+        break;
+      default:
+    }
+  }
+
+  /**
+   * @method enviarEventoObservacion
+   * @description Maneja los eventos de generar y regresar provenientes del componente de observación.
+   * @param {{ events: string, datos: unknown }} e - Objeto con el tipo de evento y los datos asociados.
+   * @returns {void}
+   */
+  enviarEventoObservacion(e: { events: string, datos: unknown }): void {
+    switch (e.events) {
+      case 'generar':
+        // Mostrar mensaje de éxito
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'success',
+          modo: 'simple',
+          titulo: 'Éxito',
+          mensaje: 'Se ha generado una Observación al Dictamen exitosamente.',
+          cerrar: false,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+        // Regresar a la vista principal
+        this.mostrarObservacion = false;
+        break;
+      case 'regresar':
+        this.mostrarObservacion = false;
         break;
       default:
     }
