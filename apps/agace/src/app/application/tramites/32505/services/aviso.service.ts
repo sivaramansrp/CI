@@ -1,9 +1,9 @@
 import { AvisoTablaDatos, CatalogoLista, DatosSolicitante } from '../models/avios-model';
-import { Solicitud32505State, Tramite32505Store } from '../state/Tramite32505.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RespuestaCatalogos } from '@ng-mf/data-access-user';
+import { Solicitud32505State, Tramite32505Store } from '../../../estados/tramites/trimite32505.store';
 
 @Injectable({
   providedIn: 'any'

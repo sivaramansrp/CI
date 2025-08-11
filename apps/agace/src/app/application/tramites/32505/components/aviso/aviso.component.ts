@@ -322,7 +322,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
     this.cargarCombustible();
     this.cargarPaisIssued();
     this.cargarAduana();
-    this.openModalCancelarTramite();
+    // this.openModalCancelarTramite();
 
   }
   /**
@@ -549,6 +549,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos: CatalogoLista) => {
         this.optionsPais = datos.datos;
+        console.log('Opciones de País:', this.optionsPais);
       });
   }
 
@@ -684,26 +685,21 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @param {string} campo - Nombre del campo.
    * @param {keyof Tramite32505Store} metodoNombre - Nombre del método en el store.
    */
-  setValoresStore(
-    form: FormGroup,
-    campo: string,
-    metodoNombre: keyof Tramite32505Store
-  ): void {
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite32505Store): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
-  /**
- * @method crearFormSolicitud
- * @description Crea el formulario principal de la solicitud.
- * 
- */
+  /** 
+   * @method crearFormSolicitud
+   * @description Crea el formulario principal de la solicitud.
+   **/
   donanteDomicilio(): void {
     this.aviosForm = this.fb.group({
       adaceForm: this.fb.group({
         adace: [{ value: this.solicitudState.adace, disabled: true }, [Validators.required]],
-        pais: [{ value: this.solicitudState.pais, disable: this.soloLectura }, [Validators.required]],
-        anio: [this.solicitudState.anio, [Validators.required]],
+        pais: [{ value: this.solicitudState.pais, disabled: this.soloLectura }, [Validators.required]],
+        anio: [{ value: this.solicitudState.anio, disabled: this.soloLectura }, [Validators.required]],
         tipoBusqueda: [this.solicitudState?.tipoBusqueda, [Validators.required]],
         tipoBusquedaAviso: [this.solicitudState?.tipoBusquedaAviso, Validators.required],
         folioTipo: [this.solicitudState?.folioTipo, [Validators.required]],
@@ -738,7 +734,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
         valorVenta: [this.solicitudState?.valorVenta, [Validators.required]],
       }),
     });
-
+    console.log(this.aviosForm);
     this.mostrarCampos();
     this.mostrarCamposAviso();
   }

@@ -219,6 +219,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
  */
   public esFormularioInicializado: boolean = false;
 
+
   /**
    * Constructor para ControlInventariosBimestreComponent.
    * Inicializa el formulario e inyecta los servicios necesarios.
@@ -229,19 +230,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
     private tramite32605Query: Solicitud32605Query,
     private consultaioQuery: ConsultaioQuery,
   ) {
-    this.crearFormulario();
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-          if (this.registroControlInventariosForm && this.esFormularioInicializado) {
-            this.actualizarEstadoCampos();
-            this.actualizarEstadoFormulario();
-          }
-        })
-      )
-      .subscribe();
+    
   }
 
   /**
@@ -260,6 +249,19 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
         this.seccionState = datos;
       });
 
+      this.crearFormulario();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          if (this.registroControlInventariosForm && this.esFormularioInicializado) {
+            this.actualizarEstadoCampos();
+            this.actualizarEstadoFormulario();
+          }
+        })
+      )
+      .subscribe();
     this.controlInventariosList = this.seccionState.controlInventarios;
 
     // Inicializar el valor anterior si ya hay un valor válido en el formulario
@@ -279,11 +281,12 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
     this.registroControlInventariosForm = this.fb.group({
       id: [null],
       sistemaControlInventariosArt59: ['', [Validators.required]],
-      nombreSistema: [{ value: '', disabled: true }, [Validators.required]],
-      lugarRadicacion: [{ value: '', disabled: true }, [Validators.required]],
-      cumpleAnexo24: [false],
+      nombreSistema: [{value: this.seccionState?.nombreSistema, disabled: true }, [Validators.required]],
+      lugarRadicacion: [{ value: this.seccionState?.lugarRadicacion, disabled: true }, [Validators.required]],
+      cumpleAnexo24: [{value: this.seccionState?.cumpleAnexo24 }],
     });
 
+    console.log(this.seccionState);
     this.modificarRegistroControlInventariosForm = this.fb.group({
       id: [null],
       modificarNombreSistema: ['', Validators.required],
