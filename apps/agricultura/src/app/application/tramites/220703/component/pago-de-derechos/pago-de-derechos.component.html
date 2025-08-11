@@ -55,6 +55,8 @@
         [datos]="fachaDePago"
         (valorCambiado)="cambioFechaPagoDeDerechos($event)"
         [setFecha]="this.tramiteState.fechaPagoDeDerechos"
+        [isDisabled]="esFormularioSoloLectura"
+        formControlName="fechaPagoDeDerechos"
       ></input-fecha>
       </div>
 
@@ -130,6 +132,8 @@
         [datos]="fachaDePagoRevision"
         (valorCambiado)="cambioFechaPagoDeDerechosRevision($event)"
         [setFecha]="this.tramiteState.fechaPagoDeDerechosRevision"
+        [isDisabled]="esFormularioSoloLectura"
+        formControlName="fechaPagoDeDerechosRevision"
       ></input-fecha>
       </div>
 
