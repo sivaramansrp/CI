@@ -250,6 +250,7 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit {
     if(this.formDatosCertificado.valid){
       return true;
     }
+    this.formDatosCertificado.markAllAsTouched();
     return false;
   }
   /**

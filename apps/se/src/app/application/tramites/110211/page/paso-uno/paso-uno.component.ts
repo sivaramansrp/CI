@@ -154,6 +154,12 @@ if(this.camDatosCertificado) {
 else{
   isValid = false;
 }
+if(this.camDestinatario){
+  isValid = this.camDestinatario.validarFormularios();
+}
+else{
+  isValid = false;
+}
     return isValid;
 }
 }

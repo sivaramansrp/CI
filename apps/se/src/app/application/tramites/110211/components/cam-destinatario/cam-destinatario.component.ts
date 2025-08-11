@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CamState, camCertificadoStore } from '../../estados/cam-certificado.store';
 import { ConsultaioQuery, SeccionLibQuery, SeccionLibState, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -123,6 +123,9 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy, AfterViewIni
    * @description Indica si el formulario se encuentra en modo solo lectura. Si es `true`, los campos del formulario no podrán ser editados por el usuario.
    */
   esFormularioSoloLectura: boolean = false;
+
+
+  @ViewChild('destinatarioRef')destinatarioComponent!: DestinatarioComponent;
 
   /**
    * @constructor
@@ -317,6 +320,22 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy, AfterViewIni
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: camCertificadoStore) => void)(VALOR);
   }
+    validarFormularios():boolean{
+    let isFormInvalid = true;
+ if(this.exportadorForm.invalid){
+  this.exportadorForm.markAllAsTouched();
+   isFormInvalid = false;
+  }
+if(this.destinatarioComponent){
+  if(!this.destinatarioComponent.validarFormularios()){
+    isFormInvalid =false;
+  }
+}
+else{
+  isFormInvalid = false;
+}
+   return isFormInvalid;
+}
 
   /**
    * @method ngOnDestroy

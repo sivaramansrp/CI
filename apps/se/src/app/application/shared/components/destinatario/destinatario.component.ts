@@ -211,6 +211,15 @@ this.formDestinatario = this.fb.group({
   paisDestionSeleccion(estado: Catalogo): void {
     this.paisDestionSeleccionEvent.emit(estado)
   }
+ validarFormularios():boolean{
+if(this.formDestinatario.invalid){
+  this.formDestinatario.markAllAsTouched();
+  return false;
+}
+return true;
+ }
+
+
 
   /**
   * Método del ciclo de vida ngOnDestroy. Se utiliza para cancelar las suscripciones y evitar fugas de memoria.
