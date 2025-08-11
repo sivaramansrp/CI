@@ -195,7 +195,7 @@
         <div [ngClass]="item.class">
           <label for="{{ item.campo }}">{{ item.labelNombre }} @if (item.required) {*}:</label>
           <input class="form-control" [type]="item.tipo_input" id="{{ item.campo }}" [formControlName]="item.campo"
-            [maxlength]="item.maxlength || (item.campo === 'rfc' ? 13 : null)"
+            [maxlength]="item.maxlength || (item.campo === 'rfc' ? 13 : (item.campo === 'taxId' ? 12 : null))"
             [class.is-invalid]="formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.invalid && formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.touched" />
           @if (formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.invalid &&
           formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.touched) {

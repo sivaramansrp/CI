@@ -624,7 +624,7 @@ this.formaComplimentos.disable();
     switch (tipoForma) {
       case TIPO_FORMA.DEFAULT:
         return this.fb.group({
-          taxId: ['', Validators.required],
+          taxId: ['', [Validators.required, Validators.maxLength(12)]],
           razonSocial: ['', Validators.required],
           pais: ['', Validators.required],
           codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
@@ -642,26 +642,26 @@ this.formaComplimentos.disable();
           correoElectronico: ['', [Validators.required, Validators.maxLength(200)]],
           apellidoPaterno: ['', [Validators.required, Validators.maxLength(200)]],
         });
-      case TIPO_FORMA.NATIONALIDAD_MEXICANA:
-        return this.fb.group({
-          rfc: ['', [
-            Validators.required, 
-            Validators.minLength(12),
-            Validators.maxLength(13),
-            Validators.pattern(REGEX_RFC)
-          ]],
-        });
+      
+    case TIPO_FORMA.NATIONALIDAD_MEXICANA:
+      return this.fb.group({
+        rfc: ['', [
+          Validators.required, 
+          Validators.minLength(12),
+          Validators.maxLength(13),
+          Validators.pattern(REGEX_RFC)
+        ]],
+      });
 
       default:
         return this.fb.group({
-          taxId: ['', Validators.required],
+          taxId: ['', [Validators.required, Validators.maxLength(12)]],
           razonSocial: ['', Validators.required],
           pais: ['', Validators.required],
           codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
           estado: ['', Validators.required],
           correoElectronico: ['', [Validators.required, Validators.maxLength(200)]],
         });
-        break;
     }
   }
 
@@ -682,13 +682,18 @@ this.formaComplimentos.disable();
     // Save current form data before removing the control
     const CURRENT_FORM_DATA = CONTROL.get('formaDatos')?.value || {};
     
-    // Store ALL current form data in persistent storage
+    // Store ALL current form data in persistent storage, including taxId
     Object.keys(CURRENT_FORM_DATA).forEach(key => {
       const VALUE = CURRENT_FORM_DATA[key];
       if (VALUE !== undefined && VALUE !== null && VALUE !== '') {
         this.PRESERVED_FORM_DATA[key] = VALUE;
       }
     });
+    
+    // Special handling for taxId to ensure it's always preserved
+    if (CURRENT_FORM_DATA.taxId) {
+      this.PRESERVED_FORM_DATA['taxId'] = CURRENT_FORM_DATA.taxId;
+    }
     
     // Update form structure synchronously
     CONTROL.removeControl('formaDatos', { emitEvent: false });
@@ -698,17 +703,25 @@ this.formaComplimentos.disable();
       emitEvent: false,
     });
     
-   const DATA_TO_RESTORE: { [key: string]: string | number | boolean } = {};
-  const NEW_FORM_CONTROLS = Object.keys(NEW_FORM_CONTROL.controls);
+    const DATA_TO_RESTORE: { [key: string]: string | number | boolean } = {};
+    const NEW_FORM_CONTROLS = Object.keys(NEW_FORM_CONTROL.controls);
     
-   NEW_FORM_CONTROLS.forEach(controlName => {
+    // Restore data for matching controls, with special attention to taxId
+    NEW_FORM_CONTROLS.forEach(controlName => {
       if (this.PRESERVED_FORM_DATA[controlName] !== undefined) {
         DATA_TO_RESTORE[controlName] = this.PRESERVED_FORM_DATA[controlName];
       }
     });
+    
+    // Ensure taxId is always restored if it exists in preserved data and new form has taxId
+    if (this.PRESERVED_FORM_DATA['taxId'] && NEW_FORM_CONTROL.controls['taxId']) {
+      DATA_TO_RESTORE['taxId'] = this.PRESERVED_FORM_DATA['taxId'];
+    }
+    
     if (Object.keys(DATA_TO_RESTORE).length > 0) {
       NEW_FORM_CONTROL.patchValue(DATA_TO_RESTORE, { emitEvent: false });
     }
+  
   this.tipoFormulario = tipoForma;
   }
 
@@ -936,7 +949,7 @@ this.formaComplimentos.disable();
    * @returns {void}
    */
   handleModificarForma(): void {
-    // First, save current form data immediately
+    // First, save current form data immediately, with special focus on taxId
     const CONTROL = this.formaComplimentos.get('formaSocioAccionistas') as FormGroup;
     const CURRENT_DATA = CONTROL.get('formaDatos')?.value || {};
     
@@ -950,13 +963,18 @@ this.formaComplimentos.disable();
       });
     }
     
-    // Preserve all current fields
+    // Preserve all current fields, with explicit handling for taxId
     Object.keys(CURRENT_DATA).forEach(key => {
       const VALUE = CURRENT_DATA[key];
       if (VALUE !== undefined && VALUE !== null && VALUE !== '') {
         this.PRESERVED_FORM_DATA[key] = VALUE;
       }
     });
+    
+    // Double-check taxId preservation
+    if (CURRENT_DATA.taxId && CURRENT_DATA.taxId.trim() !== '') {
+      this.PRESERVED_FORM_DATA['taxId'] = CURRENT_DATA.taxId;
+    }
     
     // Execute form modification immediately without timeout
     const VALUE = this.formaComplimentos.value;
