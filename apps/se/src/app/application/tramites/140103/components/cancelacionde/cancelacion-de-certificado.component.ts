@@ -2,7 +2,6 @@
 import {
   Catalogo,
   ConsultaioQuery,
-  TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
 import { Component, EventEmitter,OnDestroy, OnInit, Output } from '@angular/core';
@@ -250,7 +249,7 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
     },
   ];
 
-  submitted = false; // Add this flag
+  submitted = false; 
 
   /**
  * @constructor
@@ -404,38 +403,46 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
    * Si el formulario es inválido, se puede implementar lógica adicional para manejar los errores.
    */
   
-
-  buscarCupos(): void {
+ buscarCupos(): void {
   this.submitted = true;
   const FORM = this.cancelacionForm;
-
-  // Emit state for external usage (optional)
   this.buscarIntento.emit({
     submitted: this.submitted,
     invalid: FORM.invalid
   });
 
-  if (FORM.invalid) {
+if (FORM.invalid) {
     FORM.markAllAsTouched();
     return;
   }
 
-  // Create a new Cupo from form values
-  const NUEVO_CUPO: Cupos = {
-    cupo: Math.floor(Math.random() * 1000) + 1, // Generate random cupo or logic-based
+/**
+ * @desc Crea un nuevo objeto de tipo Cupos con información relevante para la cancelación de certificados.
+ * 
+ * @property {number} cupo - Número aleatorio generado para el cupo, entre 1 y 1000.
+ * @property {string} nombreProducto - Nombre del producto obtenido del catálogo según el valor seleccionado en el formulario.
+ * @property {string} nombreSubproducto - Nombre del subproducto obtenido del catálogo según el valor seleccionado en el formulario.
+ * @property {string} mecanismoAsignacion - Nombre del mecanismo de asignación obtenido del catálogo según el valor seleccionado en el formulario.
+ * @property {string} tipoCupo - Tipo de cupo, en este caso siempre 'General'.
+ * 
+ */
+const NUEVO_CUPO: Cupos = {
+    cupo: Math.floor(Math.random() * 1000) + 1, 
     nombreProducto: this.obtenerNombreDelCatalogo(this.producto, FORM.value.producto),
     nombreSubproducto: this.obtenerNombreDelCatalogo(this.subproducto, FORM.value.subproducto),
     mecanismoAsignacion: this.obtenerNombreDelCatalogo(this.mecanismo, FORM.value.mecanismo),
-    tipoCupo: 'General' // You can change this logic or fetch from form/catalog
+    tipoCupo: 'General' 
   };
-
-  // Push to table
-  this.Cancelacion.push(NUEVO_CUPO);
-  // Force table refresh (in some component designs)
-  this.Cancelacion = [...this.Cancelacion];
+this.Cancelacion.push(NUEVO_CUPO);
+ this.Cancelacion = [...this.Cancelacion];
 }
-
-// Helper function to get catalog name from ID
+/**
+ * Devuelve la descripción de un elemento de catálogo dado su ID.
+ *
+ * @param {Catalogo[]} catalogo - Lista de elementos de catálogo.
+ * @param {number | string} id - Identificador del elemento a buscar.
+ * @returns {string} Descripción del elemento encontrado, o cadena vacía si no existe.
+ */
 obtenerNombreDelCatalogo(catalogo: Catalogo[], id: number | string): string {
   const CATALOG_ITEM = catalogo.find(i => i.id === id);
   return CATALOG_ITEM ? CATALOG_ITEM.descripcion : '';
