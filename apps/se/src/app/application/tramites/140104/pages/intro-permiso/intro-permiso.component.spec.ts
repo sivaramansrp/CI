@@ -11,7 +11,11 @@ import { IntroPermisoComponent } from './intro-permiso.component';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 
 @Injectable()
-class MockServicioDeMensajesService {}
+class MockServicioDeMensajesService {
+   mensaje$ = observableOf({});
+  devolverFacturasMensaje$ = observableOf({});
+  obtenerMostrarAlerta = jest.fn(() => observableOf(false))
+}
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
