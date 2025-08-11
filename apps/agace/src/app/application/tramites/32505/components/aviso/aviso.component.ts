@@ -19,8 +19,6 @@ import {
   TablaSeleccion,
   ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-
 import {
   Component,
   ElementRef,
@@ -28,6 +26,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormGroup,
@@ -49,7 +48,7 @@ import { AvisoService } from '../../services/aviso.service';
 import { CargaMasivaComponent } from '../carga-masiva/carga-masiva.component';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
-import {ReplaySubject} from 'rxjs';
+import { ReplaySubject } from 'rxjs';
 import { Subject } from 'rxjs';
 import { Tramite32505Query } from '../../../../estados/queries/tramite32505.query';
 
@@ -97,7 +96,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
    *  @type {ReplaySubject<boolean>}
    */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
- 
+
 
   /**
    * @property {typeof RADIO_OPCIONS} radioOpcions
@@ -263,6 +262,11 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @description Lista de filas seleccionadas en la tabla de avisos.
    */
   filaSeleccionadaLista: ColumnasTabla[] = [];
+  /**
+    * @property {ElementRef} closeDomicilio
+    * @description Referencia al botón o elemento que cierra el modal de domicilio.
+    */
+  @ViewChild('closeDomicilio') public closeDomicilio!: ElementRef;
 
 
 
@@ -281,7 +285,18 @@ export class AvisoComponent implements OnInit, OnDestroy {
     private avisoService: AvisoService,
     private validacionesService: ValidacionesFormularioService,
     private consultaioQuery: ConsultaioQuery
-  ) {}
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
 
   /**
    * @method ngOnInit
@@ -293,11 +308,12 @@ export class AvisoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+          console.log('Solicitud State:', this.solicitudState);
         })
       )
       .subscribe();
-
-    this.crearFormSolicitud();
+    this.donanteDomicilio();
+    this.inicializarEstadoFormulario();
     this.cargarPais();
     this.cargarAnio();
     this.mostrarCampos();
@@ -308,28 +324,32 @@ export class AvisoComponent implements OnInit, OnDestroy {
     this.cargarAduana();
     this.openModalCancelarTramite();
 
-     this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.consultaDatos = seccionState;
-          this.soloLectura = this.consultaDatos.readonly;
-          this.inicializarFormulario();
-        })
-      )
-      .subscribe();
-
-   
+  }
+  /**
+    * Evalúa si se debe inicializar o cargar datos en el formulario.
+    * Además, obtiene la información del catálogo de mercancía.
+    */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.donanteDomicilio();
+    }
   }
 
   /**
-   * @method ngOnDestroy
-   * @description Método de limpieza al destruir el componente.
-   */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
+ * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+ * Luego reinicializa el formulario con los valores actualizados desde el store.
+ */
+  guardarDatosFormulario(): void {
+    this.donanteDomicilio();
+    if (this.soloLectura) {
+      this.aviosForm.disable();
+    } else {
+      this.aviosForm.enable();
+    }
   }
+
 
   /**
    * @method abrirPopup
@@ -453,125 +473,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
     return this.aviosForm.get('adaceForm.cilindros') as FormGroup;
   }
 
-  /**
-   * @method crearFormSolicitud
-   * @description Crea el formulario principal de la solicitud.
-   * 
-   */
-  crearFormSolicitud(): void {
-    this.aviosForm = this.fb.group({
-      adaceForm: this.fb.group({
-        adace: [
-          { value: this.solicitudState.adace, disabled: true },
-          [Validators.required],
-        ],
-        pais: [{value:this.solicitudState.pais, disable:this.soloLectura },[Validators.required]],
-        anio: [this.solicitudState.anio, [Validators.required]],
-        tipoBusqueda: [this.solicitudState?.tipoBusqueda, [Validators.required]],
-        tipoBusquedaAviso: [
-          this.solicitudState?.tipoBusquedaAviso,
-          Validators.required,
-        ],
-        folioTipo: [this.solicitudState?.folioTipo, [Validators.required]],
-        numeroSerie: [
-         {value:this.solicitudState?.numeroSerie,disable:this.soloLectura},
-          [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN)],
-        ],
-        numeroNIV: [
-          this.solicitudState?.numeroNIV,
-          [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN)],
-        ],
-        anoModelo: [this.solicitudState?.anoModelo, [Validators.required]],
-        marca: [this.solicitudState?.marca, [Validators.required]],
-        modelo: [this.solicitudState?.modelo, [Validators.required]],
-        tipoVariante: [
-          this.solicitudState?.tipoVariante,
-          [Validators.required],
-        ],
-        cilindros: [this.solicitudState?.cilindros, [Validators.required]],
-        puertas: [this.solicitudState?.puertas, [Validators.required]],
-        combustible: [this.solicitudState?.combustible, [Validators.required]],
-        propiedad: [
-          this.solicitudState?.propiedad,
-          [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN)],
-        ],
-        nombreTitulo: [
-          this.solicitudState?.nombreTitulo,
-          [Validators.required],
-        ],
-        paisEmitio: [this.solicitudState?.paisEmitio, [Validators.required]],
-        provinciaEmision: [
-          this.solicitudState?.provinciaEmision,
-          [Validators.required],
-        ],
-        procedencia: [this.solicitudState?.procedencia, [Validators.required]],
-        vehiculoImportado: [
-          this.solicitudState?.vehiculoImportado,
-          [Validators.required],
-        ],
-        exportacion: [this.solicitudState?.exportacion, [Validators.required]],
-        aduanaImportacion: [
-          this.solicitudState?.aduanaImportacion,
-          [Validators.required],
-        ],
-        patenteImportacion: [
-          this.solicitudState?.patenteImportacion,
-          [Validators.required],
-        ],
-        pedimentoImportacion: [
-          this.solicitudState?.pedimentoImportacion,
-          [Validators.required],
-        ],
-        valorAduana: [this.solicitudState?.valorAduana, [Validators.required]],
-        kilometraje: [this.solicitudState?.kilometraje, [Validators.required]],
-        montoIGI: [this.solicitudState?.montoIGI, [Validators.required]],
-        formaPagoIGI: [
-          this.solicitudState?.formaPagoIGI,
-          [Validators.required],
-        ],
-        montoDTA: [this.solicitudState?.montoDTA, [Validators.required]],
-        montoIVA: [this.solicitudState?.montoIVA, [Validators.required]],
-        valorDolares: [
-          this.solicitudState?.valorDolares,
-          [Validators.required],
-        ],
-        folioCFDI: [
-          this.solicitudState?.folioCFDI,
-          [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN)],
-        ],
-        folioVenta: [
-          this.solicitudState?.folioVenta,
-          [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN)],
-        ],
-        valorVenta: [this.solicitudState?.valorVenta, [Validators.required]],
-      }),
-    }); 
 
-    this.inicializarFormulario();
-    
-    this.mostrarCampos();
-    this.mostrarCamposAviso();
-    
-  }
-
-  
-
-  /**
-   * Destruye el componente y libera recursos.
-   *
-   * Este método se llama cuando el componente se destruye, asegurando que no queden suscripciones activas.
-   */
-  inicializarFormulario(): void {
-    
-    if (this.soloLectura) {
-      this.datosDelAvisoVisible = true;
-      this.aviosForm.disable();
-      this.cargarAvisoTabla();
-    } else {
-      this.aviosForm.enable();
-    }
-   
-  }
 
   /**
    * @method mostrarCamposAviso
@@ -635,21 +537,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * @method setValoresStore
-   * @description Actualiza un valor en el store del trámite.
-   * @param {FormGroup} form - Formulario que contiene el valor.
-   * @param {string} campo - Nombre del campo.
-   * @param {keyof Tramite32505Store} metodoNombre - Nombre del método en el store.
-   */
-  setValoresStore(
-    form: FormGroup,
-    campo: string,
-    metodoNombre: keyof Tramite32505Store
-  ): void {
-    const VALOR = form.get(campo)?.value;
-    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
-  }
+
 
   /**
    * @method cargarPais
@@ -742,11 +630,6 @@ export class AvisoComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * @property {ElementRef} closeDomicilio
-   * @description Referencia al botón o elemento que cierra el modal de domicilio.
-   */
-  @ViewChild('closeDomicilio') public closeDomicilio!: ElementRef;
 
   /**
    * @method agregarDomicilio
@@ -768,7 +651,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
       categoria: 'danger',
       modo: 'action',
       titulo: '',
-      mensaje: 'El registro fue agregado correctamente.',
+      mensaje: 'Se ha guardado correctamente.',
       cerrar: false,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
@@ -792,5 +675,80 @@ export class AvisoComponent implements OnInit, OnDestroy {
   openModalCancelarTramite(): void {
     this.adaceForm.reset();
     this.optionsPais = [];
+  }
+
+  /**
+   * @method setValoresStore
+   * @description Actualiza un valor en el store del trámite.
+   * @param {FormGroup} form - Formulario que contiene el valor.
+   * @param {string} campo - Nombre del campo.
+   * @param {keyof Tramite32505Store} metodoNombre - Nombre del método en el store.
+   */
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite32505Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  /**
+ * @method crearFormSolicitud
+ * @description Crea el formulario principal de la solicitud.
+ * 
+ */
+  donanteDomicilio(): void {
+    this.aviosForm = this.fb.group({
+      adaceForm: this.fb.group({
+        adace: [{ value: this.solicitudState.adace, disabled: true }, [Validators.required]],
+        pais: [{ value: this.solicitudState.pais, disable: this.soloLectura }, [Validators.required]],
+        anio: [this.solicitudState.anio, [Validators.required]],
+        tipoBusqueda: [this.solicitudState?.tipoBusqueda, [Validators.required]],
+        tipoBusquedaAviso: [this.solicitudState?.tipoBusquedaAviso, Validators.required],
+        folioTipo: [this.solicitudState?.folioTipo, [Validators.required]],
+        numeroSerie: [{ value: this.solicitudState?.numeroSerie, disable: this.soloLectura }, [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN)]],
+        numeroNIV: [this.solicitudState?.numeroNIV, [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN)]],
+        anoModelo: [this.solicitudState?.anoModelo, [Validators.required]],
+        marca: [this.solicitudState?.marca, [Validators.required]],
+        modelo: [this.solicitudState?.modelo, [Validators.required]],
+        tipoVariante: [this.solicitudState?.tipoVariante, [Validators.required]],
+        cilindros: [this.solicitudState?.cilindros, [Validators.required]],
+        puertas: [this.solicitudState?.puertas, [Validators.required]],
+        combustible: [this.solicitudState?.combustible, [Validators.required]],
+        propiedad: [this.solicitudState?.propiedad, [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN)]],
+        nombreTitulo: [this.solicitudState?.nombreTitulo, [Validators.required]],
+        paisEmitio: [this.solicitudState?.paisEmitio, [Validators.required]],
+        provinciaEmision: [this.solicitudState?.provinciaEmision, [Validators.required]],
+        procedencia: [this.solicitudState?.procedencia, [Validators.required]],
+        vehiculoImportado: [this.solicitudState?.vehiculoImportado, [Validators.required]],
+        exportacion: [this.solicitudState?.exportacion, [Validators.required]],
+        aduanaImportacion: [this.solicitudState?.aduanaImportacion, [Validators.required]],
+        patenteImportacion: [this.solicitudState?.patenteImportacion, [Validators.required]],
+        pedimentoImportacion: [this.solicitudState?.pedimentoImportacion, [Validators.required]],
+        valorAduana: [this.solicitudState?.valorAduana, [Validators.required]],
+        kilometraje: [this.solicitudState?.kilometraje, [Validators.required]],
+        montoIGI: [this.solicitudState?.montoIGI, [Validators.required]],
+        formaPagoIGI: [this.solicitudState?.formaPagoIGI, [Validators.required]],
+        montoDTA: [this.solicitudState?.montoDTA, [Validators.required]],
+        montoIVA: [this.solicitudState?.montoIVA, [Validators.required]],
+        valorDolares: [this.solicitudState?.valorDolares, [Validators.required]],
+        folioCFDI: [this.solicitudState?.folioCFDI, [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN)]],
+        folioVenta: [this.solicitudState?.folioVenta, [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN)]],
+        valorVenta: [this.solicitudState?.valorVenta, [Validators.required]],
+      }),
+    });
+
+    this.mostrarCampos();
+    this.mostrarCamposAviso();
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description Método de limpieza al destruir el componente.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

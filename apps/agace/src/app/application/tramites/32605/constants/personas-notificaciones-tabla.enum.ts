@@ -44,13 +44,13 @@ export const PERSONAS_NOTIFICACIONES_TABLA = [
     },
     {
         /** Columna para el apellido paterno */
-        encabezado: 'Apellido Paterno',
+        encabezado: 'Apellido paterno',
         clave: (ele: TablaPersonasNotificaciones): string => ele.apellidoPaterno,
         orden: 4,
     },
     {
         /** Columna para el apellido materno */
-        encabezado: 'Apellido Materno',
+        encabezado: 'Apellido materno',
         clave: (ele: TablaPersonasNotificaciones): string => ele.apellidoMaterno,
         orden: 5,
     }

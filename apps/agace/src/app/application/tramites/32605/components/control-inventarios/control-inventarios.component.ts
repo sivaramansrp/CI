@@ -13,7 +13,7 @@ import {
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud32605State, Solicitud32605Store } from '../../estados/solicitud32605.store';
-import { Subject, map, takeUntil} from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ControlInventariosTabla } from '../../models/oea-textil-registro.model';
@@ -57,10 +57,10 @@ import { Solicitud32605Query } from '../../estados/solicitud32605.query';
   styleUrl: './control-inventarios.component.scss',
 })
 export class ControlInventariosComponent implements OnInit, OnDestroy {
-    /**
-   * Indica si el formulario está en modo solo lectura.
-   * Cuando es `true`, los campos del formulario no se pueden editar.
-   */
+  /**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando es `true`, los campos del formulario no se pueden editar.
+ */
   esFormularioSoloLectura: boolean = false;
   /**
    * Define si el diálogo exitoso está habilitado.
@@ -106,7 +106,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
    */
   activeTab: string = 'parquevehicular';
 
-  
+
   /**
    * Referencia al elemento modal para el registro de inventarios.
    */
@@ -124,9 +124,9 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
 
   MENSAJE_DE_VALIDACION = MENSAJE_DE_VALIDACION;
 
- /**
-   * Configuración para las columnas de la tabla de inventarios.
-   */
+  /**
+    * Configuración para las columnas de la tabla de inventarios.
+    */
   ParqueVehicular = CONTROL_INVESTARIOS_TABLA_DATOS;
 
   /**
@@ -194,7 +194,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
   /**
    * Opciones de botón de radio.
    */
-  opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;  
+  opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
 
   cumpleAnexoNota = NOTA.CUMPLE_ANEXO24;
   /**
@@ -213,10 +213,10 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
    */
   radioSeleccionado: boolean = false;
 
-    /**
-   * Indica si el formulario ha sido inicializado.
-   * Se utiliza para evitar la recreación del formulario si ya está inicializado.
-   */
+  /**
+ * Indica si el formulario ha sido inicializado.
+ * Se utiliza para evitar la recreación del formulario si ya está inicializado.
+ */
   public esFormularioInicializado: boolean = false;
 
   /**
@@ -231,17 +231,17 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
   ) {
     this.crearFormulario();
     this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyed$),
-      map((seccionState) => {
-       this.esFormularioSoloLectura = seccionState.readonly;
-       if (this.registroControlInventariosForm && this.esFormularioInicializado) {
-           this.actualizarEstadoCampos();
-           this.actualizarEstadoFormulario();
-         }
-      })
-    )
-    .subscribe();
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          if (this.registroControlInventariosForm && this.esFormularioInicializado) {
+            this.actualizarEstadoCampos();
+            this.actualizarEstadoFormulario();
+          }
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -261,13 +261,13 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
       });
 
     this.controlInventariosList = this.seccionState.controlInventarios;
-    
+
     // Inicializar el valor anterior si ya hay un valor válido en el formulario
     const VALOR_INICIAL = this.registroControlInventariosForm.get('sistemaControlInventariosArt59')?.value;
     if (VALOR_INICIAL && VALOR_INICIAL === '1') {
       this.valorAnteriorRadioButton = '1';
     }
-    
+
     // Actualizar el estado del formulario al inicializar
     this.actualizarFormularioConDatosDelEstado();
   }
@@ -279,8 +279,8 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
     this.registroControlInventariosForm = this.fb.group({
       id: [null],
       sistemaControlInventariosArt59: ['', [Validators.required]],
-      nombreSistema: [{value: '', disabled: true},[Validators.required]],
-      lugarRadicacion: [{value: '', disabled: true},[Validators.required]],
+      nombreSistema: [{ value: '', disabled: true }, [Validators.required]],
+      lugarRadicacion: [{ value: '', disabled: true }, [Validators.required]],
       cumpleAnexo24: [false],
     });
 
@@ -294,15 +294,15 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
   }
 
   private actualizarFormularioConDatosDelEstado(): void {
-  if (this.registroControlInventariosForm && this.seccionState && this.esFormularioInicializado) {
-    this.actualizarEstadoFormulario();
-    const STATEVALOR = {
-      sistemaControlInventariosArt59: this.seccionState.sistemaControlInventariosArt59,
-    };
+    if (this.registroControlInventariosForm && this.seccionState && this.esFormularioInicializado) {
+      this.actualizarEstadoFormulario();
+      const STATEVALOR = {
+        sistemaControlInventariosArt59: this.seccionState.sistemaControlInventariosArt59,
+      };
 
-    this.registroControlInventariosForm.patchValue(STATEVALOR);
+      this.registroControlInventariosForm.patchValue(STATEVALOR);
+    }
   }
-}
 
   /**
    * Envía los datos del formulario y muestra el modal de confirmación.
@@ -311,7 +311,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
   enviarDialogData(): void {
     if (this.registroControlInventariosForm.valid) {
       this.enNuevaNotificacion(this.CONFIRMACION_NUMEROEMPLEADOS);
-       this.esHabilitarElDialogo = true;
+      this.esHabilitarElDialogo = true;
       this.ControlInventariosInfoDatos();
       // Limpiar el formulario después de enviar los datos
       this.limpiarFormulario();
@@ -325,17 +325,17 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
   /**
    * Envía los datos del formulario y muestra el modal de confirmación.
    */
-  enNuevaNotificacion(datos:string):void {
-     this.nuevaNotificacion = {
-        tipoNotificacion: TipoNotificacionEnum.ALERTA,
-        categoria: CategoriaMensaje.ALERTA,
-        modo: 'modal',
-        titulo: '',
-        mensaje: datos,
-        cerrar: false,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
+  enNuevaNotificacion(datos: string): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ALERTA,
+      modo: 'modal',
+      titulo: '',
+      mensaje: datos,
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
   }
 
 
@@ -372,15 +372,15 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
         ? this.controlInventariosList[this.controlInventariosList.length - 1]?.id + 1
         : 1;
 
-      const OBJETO = { 
-        id: ID, 
-        nombreSistema: nombreSistema, 
-        lugarRadicacion: lugarRadicacion, 
-        cumpleAnexo24: cumpleAnexo24 
+      const OBJETO = {
+        id: ID,
+        nombreSistema: nombreSistema,
+        lugarRadicacion: lugarRadicacion,
+        cumpleAnexo24: cumpleAnexo24
       } as ControlInventariosTabla;
 
       this.controlInventariosList = [...this.controlInventariosList, OBJETO];
-      this.tramite32605Store.actualizarEstado({controlInventarios:this.controlInventariosList});
+      this.tramite32605Store.actualizarEstado({ controlInventarios: this.controlInventariosList });
     } else {
       // Actualizar registro existente
       this.controlInventariosList = this.controlInventariosList.map((elemento) =>
@@ -389,7 +389,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
           : elemento
       );
 
-      this.tramite32605Store.actualizarEstado({controlInventarios:this.controlInventariosList});
+      this.tramite32605Store.actualizarEstado({ controlInventarios: this.controlInventariosList });
       this.filaSeleccionadaControlInventarios = {} as ControlInventariosTabla;
     }
   }
@@ -401,7 +401,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
   modificarEnviarDialogData(): void {
     if (this.modificarRegistroControlInventariosForm.valid) {
       this.enNuevaNotificacion(this.CONFIRMACION_NUMEROEMPLEADOS);
-       this.esHabilitarElDialogo = true;
+      this.esHabilitarElDialogo = true;
       this.ControlInventariosInfoDatos(true); // Usar el formulario del modal
       // Limpiar el formulario del modal después de enviar los datos
       this.limpiarFormularioModal();
@@ -425,7 +425,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
       const VALOR_A_RESTAURAR = this.valorAnteriorRadioButton || '1';
       this.registroControlInventariosForm.get('sistemaControlInventariosArt59')?.setValue(VALOR_A_RESTAURAR);
     }
-    
+
     // Actualizar el estado del formulario después de cerrar el modal
     this.actualizarEstadoFormulario();
   }
@@ -436,15 +436,15 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
    */
   manejarFilaSeleccionada(fila: ControlInventariosTabla[]): void {
     this.listaFilaSeleccionadaEmpleado = fila;
-      if (fila.length === 0) {
+    if (fila.length === 0) {
       this.filaSeleccionadaControlInventarios = {} as ControlInventariosTabla;
       this.enableModficarBoton = false;
       this.enableEliminarBoton = false;
       return;
     }
-  this.filaSeleccionadaControlInventarios = fila[fila.length - 1];
+    this.filaSeleccionadaControlInventarios = fila[fila.length - 1];
   }
-  
+
 
   /**
    * Actualiza la fila seleccionada con los datos más recientes de la tabla.
@@ -463,8 +463,8 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
    * Filtra y elimina los elementos seleccionados de la tabla de mercancías.
    * Actualiza el estado del almacén y cierra el popup de confirmación de eliminación.
    */
-  eliminarEmpleadoItem(evento:boolean): void {
-    if(evento === true) {
+  eliminarEmpleadoItem(evento: boolean): void {
+    if (evento === true) {
       const IDS_TO_DELETE = this.listaFilaSeleccionadaEmpleado.map(
         (item) => item.id
       );
@@ -475,7 +475,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
 
       this.listaFilaSeleccionadaEmpleado = [];
       this.filaSeleccionadaControlInventarios = {} as ControlInventariosTabla;
-      this.tramite32605Store.actualizarEstado({controlInventarios:this.controlInventariosList});
+      this.tramite32605Store.actualizarEstado({ controlInventarios: this.controlInventariosList });
       this.cerrarEliminarConfirmationPopup();
     }
   }
@@ -495,7 +495,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
    */
   modificarItemEmpleado(): void {
     const SELECCIONADAS = this.listaFilaSeleccionadaEmpleado;
-    if(this.controlInventariosList.length === 0) {
+    if (this.controlInventariosList.length === 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
         categoria: CategoriaMensaje.ALERTA,
@@ -523,7 +523,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
       this.multipleSeleccionPopupAbierto = true;
       return;
     }
- 
+
     if (SELECCIONADAS.length > 1) {
       this.nuevaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
@@ -542,13 +542,13 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
     this.agregarDialogoDatos();
     this.patchModifyiedData();
   }
- 
-  
 
 
-    /**
-   * Abre el cuadro de diálogo modal para el registro de inventarios.
-   */
+
+
+  /**
+ * Abre el cuadro de diálogo modal para el registro de inventarios.
+ */
   agregarDialogoDatos(): void {
     if (this.registroDeNumeroEmpleadosModalElemento) {
       const MODAL_INSTANCIA = new Modal(
@@ -572,13 +572,13 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
       modificarLugarRadicacion: this.filaSeleccionadaControlInventarios?.lugarRadicacion,
       modificarCumpleAnexo24: this.filaSeleccionadaControlInventarios?.cumpleAnexo24,
     });
-    
+
     // Almacenar el valor actual del radio button como valor anterior para poder revertir
     const VALOR_ACTUAL = this.registroControlInventariosForm.get('sistemaControlInventariosArt59')?.value;
     if (VALOR_ACTUAL && VALOR_ACTUAL !== '0') {
       this.valorAnteriorRadioButton = VALOR_ACTUAL;
     }
-    
+
     // Actualizar el estado del formulario después de hacer patch
     this.actualizarEstadoFormulario();
   }
@@ -608,7 +608,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
    * Si hay elementos seleccionados, abre el popup de confirmación de eliminación.
    */
   confirmEliminarEmpleadoItem(): void {
-    if(this.controlInventariosList.length === 0) {
+    if (this.controlInventariosList.length === 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
         categoria: CategoriaMensaje.ALERTA,
@@ -638,7 +638,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
     }
     this.abrirElimninarConfirmationopup();
   }
- 
+
   /**
    * @method abrirElimninarConfirmationopup
    * Abre un popup de confirmación para eliminar los registros seleccionados.
@@ -665,30 +665,30 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
     this.multipleSeleccionPopupAbierto = false;
     this.multipleSeleccionPopupCerrado = false;
   }
-  
+
   /**
    * Actualiza el estado de los campos del formulario según la selección del radio button.
    * Habilita o deshabilita los campos según la opción seleccionada.
    */
   actualizarEstadoFormulario(): void {
     const SISTEMA_CONTROL = this.registroControlInventariosForm.get('sistemaControlInventariosArt59')?.value;
-    
+
     // Campos del formulario principal
     const NOMBRE_SISTEMA = this.registroControlInventariosForm.get('nombreSistema');
     const LUGAR_RADICACION = this.registroControlInventariosForm.get('lugarRadicacion');
-    
+
     if ((SISTEMA_CONTROL === '1' || SISTEMA_CONTROL === 1) && this.esFormularioSoloLectura === false) {
       // Habilitar campos cuando se selecciona "Sí"
       this.radioSeleccionado = true;
-      
+
       // Habilitar campos del formulario principal
       NOMBRE_SISTEMA?.enable();
       LUGAR_RADICACION?.enable();
-      
+
     } else {
       // Deshabilitar campos cuando se selecciona "No" o no hay selección
       this.radioSeleccionado = false;
-      
+
       // Deshabilitar campos del formulario principal
       NOMBRE_SISTEMA?.disable();
       LUGAR_RADICACION?.disable();
@@ -696,7 +696,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
   }
 
 
-  
+
   /**
    * Habilita o deshabilita dinámicamente los campos 'motivoRenunciaDeDerechos' y 'mercacniaSolicitudControlar'
    * según el estado de solo lectura del formulario.
@@ -746,7 +746,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
     this.registroControlInventariosForm.get('cumpleAnexo24')?.reset();
     // También resetear el valor anterior almacenado
     this.valorAnteriorRadioButton = null;
-    
+
     // Actualizar el estado del formulario después de limpiar
     this.actualizarEstadoFormulario();
   }
@@ -756,17 +756,17 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
    */
   limpiarFormularioModal(): void {
     this.modificarRegistroControlInventariosForm.reset();
-    
+
     // Actualizar el estado del formulario después de limpiar
     this.actualizarEstadoFormulario();
   }
-  
+
   /**
    * Método que se ejecuta cuando se selecciona una opción del botón de radio.
    * Habilita o deshabilita el diálogo de confirmación según la opción seleccionada.
    * @param {string, number} evento - El evento del cambio de valor del botón de radio.
    */
-  onSeleccionfalsa(evento:string | number): void {
+  onSeleccionfalsa(evento: string | number): void {
     if (evento && (evento === '0' || evento === 0)) {
       this.nuevaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
@@ -787,7 +787,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
         this.valorAnteriorRadioButton = '1';
       }
     }
-    
+
     if (evento && (evento === '1' || evento === 1)) {
       this.radioSeleccionado = true;
       // Habilitar campos del formulario principal
@@ -801,11 +801,11 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
     }
   }
 
-/**
-   * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
-   * @param form - El formulario reactivo.
-   * @param campo - El nombre del campo en el formulario.
-   */
+  /**
+     * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
+     * @param form - El formulario reactivo.
+     * @param campo - El nombre del campo en el formulario.
+     */
   setValoresStore(form: FormGroup | null, campo: string): void {
     if (!form) {
       return;
@@ -816,31 +816,31 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
     }
   }
 
-   /**
-     * Cancela el cuadro de diálogo modal para el registro de inventarios.
-     * Este método oculta el modal y restablece el formulario.
-     */
-    modalCancelar(): void {
-      this.cambiarEstadoModal();
-    }
-  
-    /**
-     * Alterna la visibilidad del cuadro de diálogo modal para el registro de inventarios.
-     * Si el modal está visible actualmente, se ocultará.
-     */
-    cambiarEstadoModal(): void {
-      const MODAL_INSTANCIA = Modal.getInstance(
-        this.registroDeNumeroEmpleadosModalElemento.nativeElement
-      );
-      if (MODAL_INSTANCIA) {
-        MODAL_INSTANCIA.hide();
-      }
-    }
+  /**
+    * Cancela el cuadro de diálogo modal para el registro de inventarios.
+    * Este método oculta el modal y restablece el formulario.
+    */
+  modalCancelar(): void {
+    this.cambiarEstadoModal();
+  }
 
-   /**
-   * Método para mostrar u ocultar el formulario colapsable.
-   * Cambia el estado de la variable `colapsable`.
+  /**
+   * Alterna la visibilidad del cuadro de diálogo modal para el registro de inventarios.
+   * Si el modal está visible actualmente, se ocultará.
    */
+  cambiarEstadoModal(): void {
+    const MODAL_INSTANCIA = Modal.getInstance(
+      this.registroDeNumeroEmpleadosModalElemento.nativeElement
+    );
+    if (MODAL_INSTANCIA) {
+      MODAL_INSTANCIA.hide();
+    }
+  }
+
+  /**
+  * Método para mostrar u ocultar el formulario colapsable.
+  * Cambia el estado de la variable `colapsable`.
+  */
   mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
   }
@@ -861,7 +861,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
    * 
    * @returns {void}
    */
-public validarFormularios(): boolean {
+  public validarFormularios(): boolean {
     // Validar formulario principal de registro
     if (this.registroControlInventariosForm.get('sistemaControlInventariosArt59')) {
       this.registroControlInventariosForm.get('sistemaControlInventariosArt59')?.markAllAsTouched();
