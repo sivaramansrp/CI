@@ -60,7 +60,7 @@
         <button class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura" (click)="eliminarMercancia()">Eliminar</button>
         <button class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="agregarMercancia()">Agregar</button>
       </div>
-      <div class="row">
+      <div class="row mt-4">
       <app-tabla-dinamica
         [configuracionTabla]="configuracionFraccion"
         [datos]="mercancias"
