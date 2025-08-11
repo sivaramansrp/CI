@@ -8,6 +8,7 @@ export interface TramiteState {
   idTramite: string | null;
   firma: string | null;
   fechaExpedicion?: string;
+  fechaDeActa?: string;
 }
 
 /**
@@ -19,6 +20,7 @@ export function createInitialState(): TramiteState {
     idTramite: null,
     firma: null,
     fechaExpedicion: '',
+    fechaDeActa: '',
   };
 }
 
@@ -62,4 +64,12 @@ export class TramiteStore extends Store<TramiteState> {
       fechaExpedicion,
     }));
   }
+
+  public setfechaDeActa(fechaDeActa: string): void {
+    this.update((state) => ({
+      ...state,
+      fechaDeActa,
+    }));
+  }
+
 }

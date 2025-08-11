@@ -93,8 +93,11 @@
           </div>
 
           <div class="col-md-4">
-            <label for="emision"> Fecha de emisión del acta*:</label>
-            <input type="text" id="emision" name="emision" class="form-control" formControlName="fechaDeActa" />
+            <!-- <label for="emision"> Fecha de emisión del acta*:</label>
+            <input type="text" id="emision" name="emision" class="form-control" formControlName="fechaDeActa" /> -->
+             <input-fecha [datos]="INPUT_FECHA_CONFIGURACION" [setFecha]="formaComplimentos.get('fechaDeActa')?.value"
+          (valorCambiado)="cambioFecha($event)">
+        </input-fecha>
           </div>
         </div>
         <div class="row mb-4">

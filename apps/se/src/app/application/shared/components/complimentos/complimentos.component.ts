@@ -53,7 +53,7 @@ import { ComplimentosService } from '../../services/complimentos.service';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Notificacion } from '@ng-mf/data-access-user';
 
-import { DatosCatalago, INPUT_FECHA_CONFIG } from '../../../tramites/80102/models/autorizacion-programa-nuevo.model';
+import { DatosCatalago, INPUT_FECHA_CONFIG, INPUT_FECHA_CONFIGURACION } from '../../../tramites/80102/models/autorizacion-programa-nuevo.model';
 import { SelectPaisesComponent } from '@libs/shared/data-access-user/src/tramites/components/select-paises/select-paises.component';
 import { TramiteStore } from '../../../estados/tramite.store';
 
@@ -112,6 +112,12 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
    * Define las propiedades del campo de entrada de fecha.
    */
     INPUT_FECHA_CONFIG = INPUT_FECHA_CONFIG;
+
+    /**
+   * Constante para configurar el input de fecha.
+   * Define las propiedades del campo de entrada de fecha.
+   */
+    INPUT_FECHA_CONFIGURACION = INPUT_FECHA_CONFIGURACION;
 
   /**
    * @type {Catalogo[]}
@@ -1008,6 +1014,17 @@ this.formaComplimentos.disable();
       fechaExpedicion: nuevo_valor,
     });
     this.tramiteStore.setfechaExpedicion(nuevo_valor);
+  }
+
+    /**
+   * Maneja los cambios en el campo "Fecha de Pago".
+   * Actualiza el estado del almacén con la fecha de pago proporcionada.  
+   */
+   cambioFecha(nuevo_valor: string): void {
+    this.formaComplimentos.patchValue({
+      fechaDeActa: nuevo_valor,
+    });
+    this.tramiteStore.setfechaDeActa(nuevo_valor);
   }
 
   /**

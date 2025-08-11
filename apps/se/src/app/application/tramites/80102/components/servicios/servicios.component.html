@@ -196,7 +196,7 @@
             name="agregarServicio"
             (click)="agregarEmpresaExtranjera()"
             class="btn btn-primary mx-2"
-            [disabled]="!formularioEmpresaExtranjera.valid"
+           [disabled]="esFormularioSoloLectura"
           >
             Agregar
           </button>
