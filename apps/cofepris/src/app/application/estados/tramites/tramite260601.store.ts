@@ -362,6 +362,14 @@ export interface AvisoSanitarioState {
      * Arreglo que contiene los datos de los fabricantes relacionados con el trámite.
      */
     fabricanteTablaDatos: Fabricante[];
+
+    /**
+     * @property {number} tabSeleccionado
+     * @description
+     * Índice de la pestaña actualmente seleccionada en el formulario del trámite.
+     * Permite controlar la navegación y el estado de la interfaz de usuario.
+     */
+    tabSeleccionado?: number;
 }
 
 /**
@@ -493,6 +501,7 @@ export function createInitialState(): AvisoSanitarioState {
         inhabilitarPaisFabricante: true,
         proveedorTablaDatos: [],
         fabricanteTablaDatos: [],
+        tabSeleccionado: 1,
     }
 }
 
@@ -1907,6 +1916,21 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
         this.update((state) => ({
             ...state,
             fabricanteTablaDatos: [...state.fabricanteTablaDatos, ...newFabricantes],
+        }));
+    }
+
+    /**
+     * @method updateTabSeleccionado
+     * @description
+     * Actualiza el índice de la pestaña actualmente seleccionada en el estado.
+     * Permite controlar la navegación y el estado de la interfaz de usuario.
+     * @param {number} tabSeleccionado - Índice de la pestaña a seleccionar.
+     * @returns {void}
+     */
+    public updateTabSeleccionado(tabSeleccionado: number): void {
+        this.update((state) => ({
+            ...state,
+            tabSeleccionado: tabSeleccionado,
         }));
     }
 }
