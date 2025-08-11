@@ -1024,11 +1024,11 @@ this.formaComplimentos.disable();
     }
     
     if (RFC_CONTROL.errors['maxlength']) {
-      return 'El RFC no puede exceder los 13 caracteres';
+      return 'El RFC no se encontró, favor de verificar';
     }
     
     if (RFC_CONTROL.errors['pattern']) {
-      return 'Formato inválido. Debe ser: 3-4 letras, 6 dígitos, 3 caracteres alfanuméricos';
+      return 'El RFC no se encontró, favor de verificar';
     }
 
     return 'El RFC tiene errores de validación';
