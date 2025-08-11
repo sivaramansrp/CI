@@ -604,17 +604,22 @@ export class DomicilioComponent implements OnInit, OnDestroy {
     };
     return;
   }
+    this.nicoTablaDatos = this.nicoTablaDatos.filter(item =>
+      !this.seleccionados.some(selected =>
+        selected.clave_Scian === item.clave_Scian
+      )
+    );
+    this.seleccionados = [];
 
-    this.seleccionados.forEach(row => {
-      const INDEX = this.nicoTablaDatos.indexOf(row);
-      if (INDEX > -1) {
-        this.nicoTablaDatos.splice(INDEX, 1);
-      }
-    });
-   this.seleccionados = [];
+  //   this.seleccionados.forEach(row => {
+  //     const INDEX = this.nicoTablaDatos.indexOf(row);
+  //     if (INDEX > -1) {
+  //       this.nicoTablaDatos.splice(INDEX, 1);
+  //     }
+  //   });
+  //  this.seleccionados = [];
   }
  
-
   /**
    * Agrega una nueva fila a la tabla NICO con valores del formulario
    */
