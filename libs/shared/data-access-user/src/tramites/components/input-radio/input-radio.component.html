@@ -30,13 +30,12 @@
             >
           </ng-container>
         </ng-container>
-        <span
-          *ngIf="showTooltip && option.hint"
-          class="bi bi-question-circle-fill fs-4 m-1"
-          [title]="option.hint"
-          ata-bs-toggle="tooltip"
+        <span class="p-2" *ngIf="showTooltip && option.hint"
+          tooltip="{{
+           option.hint
+          }}"
         >
-        </span>
+          <i class="bi bi-question-circle-fill"></i></span>
       </div>
     </div>
 

@@ -18,6 +18,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 /**
  * InputRadioComponent es un componente reutilizable que renderiza un grupo de botones de radio.
@@ -26,7 +27,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-input-radio',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TooltipModule],
   templateUrl: './input-radio.component.html',
   styleUrl: './input-radio.component.scss',
   providers: [
