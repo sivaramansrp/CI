@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DatoTabla, Fila, FilaSolicitud, RealizarGroup } from '../../models/220203/importacion-de-acuicultura.module';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable, Subject, catchError, forkJoin, map, of, takeUntil } from 'rxjs';
@@ -572,7 +572,10 @@ public obtenerCatalogosUMC(): Observable<Catalogo[]> {
    * @returns {void}
    */
   public mostrar_colapsable(): void {
-    this.colapsable = !this.colapsable;
+    if(this.eliminarDatosTabla){
+  this.colapsable = !this.colapsable;
+    }
+   this.colapsable = false;
   }
 
   /**
