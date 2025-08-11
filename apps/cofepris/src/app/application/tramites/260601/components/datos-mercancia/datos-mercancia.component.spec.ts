@@ -156,6 +156,8 @@ fdescribe('DatosMercanciaComponent', () => {
         mostrarRfcFabricanteBuscarBoton: false,
         mostrarCurpFabricanteBuscarBoton: false,
         inhabilitarPaisFabricante: true,
+        proveedorTablaDatos: [],
+        fabricanteTablaDatos: [],
       }),
     };
 

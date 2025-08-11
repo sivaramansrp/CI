@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AgregarFabricanteComponent } from './agregar-fabricante-sanitario.component';
+import { AgregarFabricanteSanitarioComponent } from './agregar-fabricante-sanitario.component';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
@@ -111,9 +111,9 @@ const mockConsultaioQuery = {
   selectConsultaioState$: consultaioStateSubject.asObservable(),
 };
 
-describe('AgregarFabricanteComponent', () => {
-  let component: AgregarFabricanteComponent;
-  let fixture: ComponentFixture<AgregarFabricanteComponent>;
+describe('AgregarFabricanteSanitarioComponent', () => {
+  let component: AgregarFabricanteSanitarioComponent;
+  let fixture: ComponentFixture<AgregarFabricanteSanitarioComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -125,7 +125,7 @@ describe('AgregarFabricanteComponent', () => {
         TituloComponent,
         InputRadioComponent,
         CatalogoSelectComponent,
-        AgregarFabricanteComponent,
+        AgregarFabricanteSanitarioComponent,
         HttpClientTestingModule,
       ],
       declarations: [],
@@ -148,7 +148,7 @@ describe('AgregarFabricanteComponent', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AgregarFabricanteComponent);
+    fixture = TestBed.createComponent(AgregarFabricanteSanitarioComponent);
     component = fixture.componentInstance;
 
     consultaioStateSubject.next({ readonly: false });

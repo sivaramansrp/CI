@@ -53,17 +53,7 @@ export class TercerosRelacionadosComponent implements OnInit {
    * Indica si la opción para agregar fabricantes está habilitada en el formulario.
    */
   habilitarFabricante: boolean = true;
-
-  /**
-   * Cabeceras de la tabla de proveedores.
-   */
-  public proveedorHeaderData: string[] = [];
-
-  /**
-   * Cabeceras de la tabla de fabricantes.
-   */
-  public fabricanteHeaderData: string[] = [];
-
+  
   /**
    * Datos de la tabla de fabricantes desde un archivo JSON.
    */
@@ -106,8 +96,6 @@ export class TercerosRelacionadosComponent implements OnInit {
    * Carga datos de proveedores y fabricantes en tablas.
    */
   ngOnInit(): void {
-    this.obtenerProveedor();
-    this.obtenerFabricante();
 
     this.tramiteQuery.getProveedorTablaDatos$
       .pipe(takeUntil(this.destruirNotificador$))
@@ -129,34 +117,6 @@ export class TercerosRelacionadosComponent implements OnInit {
         })
       )
       .subscribe();
-  }
-
-  /**
-   * Obtiene los datos de la tabla de proveedores.
-   */
-  public obtenerProveedor(): void {
-    this.proveedorHeaderData = this.getProveedorTableData.tableHeader;
-  }
-
-  /**
-   * Obtiene los datos de la tabla de fabricantes.
-   */
-  public obtenerFabricante(): void {
-    this.fabricanteHeaderData = this.getFabricanteTableData.tableHeader;
-  }
-
-  /**
-   * Limpia los datos de los proveedores seleccionados. 
-   */
-  limpiarProveedor(): void {
-    // Implementar la lógica para limpiar proveedor.
-  }
-
-  /**
-   * Limpia los datos de los fabricantes seleccionados.
-   */
-  limpiarFabricante(): void {
-    // Implementar la lógica para limpiar fabricante.
   }
 
     /**

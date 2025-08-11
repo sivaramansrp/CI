@@ -7,6 +7,7 @@ import { Tramite260601Store } from '../../../../estados/tramites/tramite260601.s
 import { Tramite260601Query } from '../../../../estados/queries/tramite260601.query';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { CATALOGOS_ID, DATOS_CATEGORIAS_TERCEROS } from '../../constantes/aviso-enum';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('AgregarProveedorSanitarioComponent', () => {
   let component: AgregarProveedorSanitarioComponent;
@@ -102,7 +103,7 @@ describe('AgregarProveedorSanitarioComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, AgregarProveedorSanitarioComponent],
+      imports: [ReactiveFormsModule, AgregarProveedorSanitarioComponent, HttpClientTestingModule],
       providers: [
         FormBuilder,
         { provide: Tramite260601Store, useValue: mockTramite260601Store },
