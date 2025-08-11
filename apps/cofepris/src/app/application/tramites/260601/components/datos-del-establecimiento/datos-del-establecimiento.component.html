@@ -105,13 +105,20 @@
 
     <label class="form-label scian">S.C.I.A.N.*:</label>
 
-    <ng-table [commonTableHeader]="scianHeaderData" [commonTableBody]="scianBodyData"></ng-table>
+    <app-tabla-dinamica 
+    [tipoSeleccionTabla]="tablaSeleccion" 
+    [datos]="scianBodyData"
+    [configuracionTabla]="configuracionTablaSCIAN"
+    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+    (listaDeFilaSeleccionada)="seleccionarDomicilios($event)"
+    >
+</app-tabla-dinamica>
 
     <div class="row">
         <div class="col-md-8"></div>
         <div class="col-md-4 text-end">
             <div class="btn-group">
-                <button class="btn btn-default me-1" type="button" id="btnScianEliminar">Eliminar</button>
+                <button class="btn btn-default me-1" type="button" id="btnScianEliminar"[disabled]="esFormularioSoloLectura" (click)="eliminarScianGrid()">Eliminar</button>
                 <button type="button" class="btn btn-primary ms-2" id="btnScianAgregar" data-bs-toggle="modal" [disabled]="esFormularioSoloLectura"
                     data-bs-target="#modalAddSCIAN">
                     Agregar
@@ -189,7 +196,11 @@
 
     <label class="form-label scian">Datos del producto*:</label>
 
-    <ng-table [commonTableHeader]="productoHeaderData" [commonTableBody]="productoBodyData"></ng-table>
+    <app-tabla-dinamica  [datos]="productoBodyData"
+     [tipoSeleccionTabla]="tablaSeleccion" 
+     [configuracionTabla]="configuracionTabla"
+     [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+     ></app-tabla-dinamica>
 
     <div class="row">
         <div class="col-md-12 text-end">
