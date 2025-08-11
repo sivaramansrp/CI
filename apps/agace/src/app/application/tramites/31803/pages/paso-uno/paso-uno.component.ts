@@ -3,6 +3,7 @@ import {
   Component,
   OnDestroy,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 import {
   ConsultaioQuery,
@@ -64,6 +65,11 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * Índice del paso actual.
    */
   indice: number = 1;
+
+  /**
+   * Referencia al componente de solicitud.
+   */
+  @ViewChild(SolicitudComponent) solicitudComponent!: SolicitudComponent;
 
   /**
    * Constructor del componente PasoUnoComponent.
