@@ -1,17 +1,31 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
 import { CancelacionDeCertificadosComponent } from './cancelacion-de-certificados.component';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 import { of } from 'rxjs';
+import mecanismoAsignacionDatos from '@libs/shared/theme/assets/json/140104/mecanismo-asignacion.json';
+import regimenAduaneroListDatos from '@libs/shared/theme/assets/json/140104/regimen-aduanero-list.json';
+
+
+jest.mock('@libs/shared/theme/assets/json/140104/mecanismo-asignacion.json', () => ([
+  { id: '1', descripcion: 'Asignación 1' },
+  { id: '2', descripcion: 'Asignación 2' }
+]));
+
+jest.mock('@libs/shared/theme/assets/json/140104/regimen-aduanero-list.json', () => ([
+  { id: 'A', descripcion: 'Régimen A' },
+  { id: 'B', descripcion: 'Régimen B' }
+]));
 
 class MockServicioDeMensajesService {
   enviarMensaje = jest.fn();
   enviarDevolverFacturasMensaje = jest.fn();
   establecerDatosDePermiso = jest.fn();
+  establecerMostrarAlerta = jest.fn();
+  obtenerMostrarAlerta = jest.fn(() => of(false));  
 }
+
 
 describe('CancelacionDeCertificadosComponent', () => {
   let fixture: ComponentFixture<CancelacionDeCertificadosComponent>;
@@ -49,10 +63,11 @@ describe('CancelacionDeCertificadosComponent', () => {
     expect(component.cancelacionForm).toBeDefined();
   });
 
-  it('should populate regimenAduaneroList and mecanismoAsignacionList on ngOnInit', () => {
+ it('should initialize mecanismoAsignacionList and regimenAduaneroList on ngOnInit', () => {
     component.ngOnInit();
-    expect(component.regimenAduaneroList.length).toBeGreaterThan(0);
-    expect(component.mecanismoAsignacionList.length).toBeGreaterThan(0);
+
+    expect(component.mecanismoAsignacionList).toEqual(mecanismoAsignacionDatos);
+    expect(component.regimenAduaneroList).toEqual(regimenAduaneroListDatos);
   });
 
   it('should clean up subscriptions on ngOnDestroy', () => {

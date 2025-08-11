@@ -153,3 +153,19 @@ export const COLUMNAS_SELECCIONADAS =[
          orden: 6,
        },
      ];
+
+/**
+ * Mensaje de alerta que se muestra cuando hay errores de validación en los formularios.
+ * 
+ * Este mensaje se utiliza para informar al usuario que faltan campos por capturar
+ * antes de poder continuar al siguiente paso del trámite.
+ */
+export const ERROR_FORMA_ALERT = `
+<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+      <strong>¡Error de registro! </strong> Faltan campos por capturar
+    </div>
+  </div>
+</div>
+`;
