@@ -8,6 +8,7 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ID_PROCEDIMIENTO } from '../../constants/medicos-sin-registrar.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260217Query } from '../../estados/tramite260217Query.query';
 import { Tramite260217Store } from '../../estados/tramite260217Store.store';
@@ -95,6 +96,13 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * @readonly Utilizado internamente para gestión del ciclo de vida
    */
   private destroy$ = new Subject<void>();
+
+  /**
+   * @property {number} idProcedimiento
+   * @description
+   * Identificador del procedimiento actual.
+   */
+  idProcedimiento: number = ID_PROCEDIMIENTO;
 
   /**
    * @property {boolean} esFormularioSoloLectura
