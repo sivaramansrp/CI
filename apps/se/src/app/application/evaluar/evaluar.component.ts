@@ -21,12 +21,14 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { LISTA_TRIMITES } from '../shared/constantes/lista-trimites.enums';
 
 import { AcusesResolucionResponse } from '@libs/shared/data-access-user/src/core/models/130118/consulta-acuses-response.model';
+import { DictamenesResponse } from '@libs/shared/data-access-user/src/core/models/130118/dictamenes-response.model';
 import { DocumentoSolicitud } from "@libs/shared/data-access-user/src/core/models/130118/consulta-documentos-response.model";
 import { EvaluarSolicitudService } from '../core/services/evaluar-tramite/evaluar-solicitud.service';
 import { GuardarDictamenRequest } from '../core/models/evaluar/request/guardar-dictamen-request.model';
 import { GuardarDictamenService } from '../core/services/evaluar-tramite/guardar-dictamen.service';
 import { IniciarService } from '../core/services/evaluar-tramite/iniciar.service';
 import { OpcionesEvaluacionRequest } from '../core/models/evaluar/request/opciones-evaluacion.model';
+import { RequerimientosResponse } from '@libs/shared/data-access-user/src/core/models/130118/requerimientos-response.model';
 import { TabsSolicitudServiceTsService } from "../core/services/evaluar-tramite/tabs-solicitud.service.ts.service";
 import { TareasSolicitud } from "@libs/shared/data-access-user/src/core/models/130118/consulta-tareas-response.model";
 
@@ -157,6 +159,18 @@ export class EvaluarComponent implements OnInit, OnDestroy {
   acusesResolucion!: AcusesResolucionResponse;
 
   /**
+   * @property {RequerimientosResponse[]} requerimientosSolicitud
+   * @description Requerimientos de solicitud.
+   */
+  requerimientosSolicitud: RequerimientosResponse[] = [];
+
+  /**
+   * @property {DictamenesResponse[]} dictamenesSolicitud
+   * @description Dictamenes de solicitud.
+   */
+  dictamenesSolicitud: DictamenesResponse[] = [];
+
+  /**
    * @property {boolean} yaCargoDocumentos
    * @description Indica si los documentos de la solicitud ya han sido cargados.
    */
@@ -173,6 +187,18 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @description Indica si los acuses de resolución ya han sido cargados.
    */
   yaCargoAcuses = false;
+
+  /**
+   * @property {boolean} yaCargoDictamenes
+   * @description Indica si los dictamenes ya han sido cargados.
+   */
+  yaCargoDictamenes = false;
+
+  /**
+   * @property {boolean} yaCaegoRequerimientos
+   * @description Indica si los requerimientos ya han sido cargados.
+   */
+  yaCargoRequerimientos = false;
 
   /**
  * @constructor
@@ -270,6 +296,60 @@ export class EvaluarComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method getRequerimientos
+   * @description Método para obtener los requerimientos asociados a un trámite.
+   *
+   * Realiza una petición al servicio tabsSolicitudServiceTsService para recuperar los requerimientos
+   * vinculados al número de folio proporcionado. Asigna los requerimientos a la variable requerimientosSolicitud
+   * si la respuesta es exitosa (código '00'), o muestra un error en caso contrario.
+   *
+   * @returns {void}
+   */
+  getRequerimientos(): void {
+    const NUMFOLIOTRAMITE = '0402600400220214006000415'
+    this.tabsSolicitudServiceTsService.getRequerimientos(this.tramite,NUMFOLIOTRAMITE)
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === '00') {
+            this.requerimientosSolicitud = response.datos ?? [];
+          } else {
+            console.error('Error en respuesta:', response.mensaje);
+          }
+        },
+        error: (error) => {
+          console.error('Error al llamar el servicio:', error);
+        }
+      });
+  }
+
+  /**
+   * @method getDictamenes
+   * @description Método para obtener los dictámenes asociados a un trámite.
+   *
+   * Realiza una petición al servicio tabsSolicitudServiceTsService para recuperar los dictámenes
+   * vinculados al número de folio proporcionado. Procesa la respuesta si es exitosa (código '00'),
+   * o muestra un error en caso contrario.
+   *
+   * @returns {void}
+   */
+  getDictamenes(): void {
+    const NUMFOLIOTRAMITE = '0201300101820161931039462'
+    this.tabsSolicitudServiceTsService.getDictamenes(this.tramite,NUMFOLIOTRAMITE)
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === '00') {
+            this.dictamenesSolicitud = response.datos ?? [];
+          } else {
+            console.error('Error en respuesta:', response.mensaje);
+          }
+        },
+        error: (error) => {
+          console.error('Error al llamar el servicio:', error);
+        }
+      });
+  }
+
+  /**
    * @method TareasSolicitud
    * @description Método para obtener las tareas asociadas a una solicitud.
    * 
@@ -338,6 +418,16 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     if (indice === 6 && !this.yaCargoTareas) {
       this.yaCargoTareas = true;
       this.getTareasSolicitud();
+    }
+
+    if (indice === 2 && !this.yaCargoDictamenes) {
+      this.yaCargoDictamenes = true;
+      this.getDictamenes();
+    }
+
+    if (indice === 3 && !this.yaCargoRequerimientos) {
+      this.yaCargoRequerimientos = true;
+      this.getRequerimientos();
     }
 
     if (indice === 5 && !this.yaCargoAcuses) {

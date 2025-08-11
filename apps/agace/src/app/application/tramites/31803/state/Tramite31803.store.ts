@@ -41,9 +41,9 @@ export interface Solicitud31803State {
  */
 export function createInitialState(): Solicitud31803State {
   return {
-    numeroOficio: '23456754000000000-000004',
+    numeroOficio: '2500302601620259910000004-000002',
     claveReferencia: '284000255',
-    cadenaDependencia: '011152EC0456',
+    cadenaDependencia: '0111514EC40203',
     importePago: '30739',
     fechaInicial: '09/03/2025',
     fechaFinal: '12/03/2025',

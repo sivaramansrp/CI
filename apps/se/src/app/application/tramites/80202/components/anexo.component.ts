@@ -183,22 +183,6 @@ export class AnexoComponent implements OnInit, OnDestroy {
               this.solicitudState.descripciondelproducto,
             ],
           });
-
-          this.seccionStore.establecerFormaValida([false]);
-
-          this.fraccionForm.statusChanges
-            .pipe(
-              takeUntil(this.destroyNotifier$),
-              delay(10),
-              tap(() => {
-                const IS_VALID = this.fraccionForm.valid;
-                this.seccionStore.establecerFormaValida([IS_VALID]);
-                if (IS_VALID) {
-                  this.seccionStore.establecerSeccion([true]);
-                }
-              })
-            )
-            .subscribe();
         })
       )
       .subscribe();

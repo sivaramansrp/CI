@@ -1,4 +1,4 @@
-import { AgregarDatosProductorFormulario, DisponiblesTabla, FormularioMercancia, GrupoTratado, SeleccionadasTabla } from '../../tramites/110212/models/validacion-posteriori.model';
+import { AgregarDatosProductorFormulario, DisponiblesTabla, FormularioMercancia, GrupoCertificadoOrigen, GrupoTratado, SeleccionadasTabla } from '../../tramites/110212/models/validacion-posteriori.model';
 import { GrupoDeDirecciones } from '../../tramites/110212/models/validacion-posteriori.model';
 import { GrupoOperador } from '../../tramites/110212/models/validacion-posteriori.model';
 import { GrupoReceptor } from '../../tramites/110212/models/validacion-posteriori.model';
@@ -57,6 +57,11 @@ export interface Tramite110212State {
    * Información de las direcciones del receptor.
    */
   grupoDeDirecciones: GrupoDeDirecciones;
+
+  /**
+   * Información de contacto del certificado de origen.
+   */
+  grupoCertificadoOrigen: GrupoCertificadoOrigen;
 
   /**
    * Información representativa del trámite.
@@ -143,6 +148,16 @@ export function createInitialState(): Tramite110212State {
       fax: '',
       correoElectronico: '',
       pais: '',
+    },
+    grupoCertificadoOrigen: {
+      pais: '',
+      ciudad: '',
+      calle: '',
+      numeroLetra: '',
+      lada: '',
+      telefono: '',
+      fax: '',
+      correoElectronico: '',
     },
     grupoRepresentativo: {
       lugar: '',
@@ -525,6 +540,120 @@ export class Tramite110212Store extends Store<Tramite110212State> {
     this.update((state) => ({
       ...state,
       grupoDeDirecciones: { ...state.grupoDeDirecciones, correoElectronico },
+    }));
+  }
+
+  /**
+   * Actualiza el país en el grupo certificado de origen.
+   *
+   * Este método permite establecer el país en el grupo certificado de origen.
+   *
+   * @param {string} pais - El país a establecer.
+   */
+  public setGrupoCertificadoOrigenPais(pais: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoCertificadoOrigen: { ...state.grupoCertificadoOrigen, pais },
+    }));
+  }
+
+  /**
+   * Actualiza la ciudad en el grupo certificado de origen.
+   *
+   * Este método permite establecer la ciudad en el grupo certificado de origen.
+   *
+   * @param {string} ciudad - La ciudad a establecer.
+   */
+  public setGrupoCertificadoOrigenCiudad(ciudad: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoCertificadoOrigen: { ...state.grupoCertificadoOrigen, ciudad },
+    }));
+  }
+
+  /**
+   * Actualiza la calle en el grupo certificado de origen.
+   *
+   * Este método permite establecer la calle en el grupo certificado de origen.
+   *
+   * @param {string} calle - La calle a establecer.
+   */
+  public setGrupoCertificadoOrigenCalle(calle: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoCertificadoOrigen: { ...state.grupoCertificadoOrigen, calle },
+    }));
+  }
+
+  /**
+   * Actualiza el número y/o letra en el grupo certificado de origen.
+   *
+   * Este método permite establecer el número y/o letra en el grupo certificado de origen.
+   *
+   * @param {string} numeroLetra - El número y/o letra a establecer.
+   */
+  public setGrupoCertificadoOrigenNumeroLetra(numeroLetra: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoCertificadoOrigen: { ...state.grupoCertificadoOrigen, numeroLetra },
+    }));
+  }
+
+  /**
+   * Actualiza la lada en el grupo certificado de origen.
+   *
+   * Este método permite establecer la lada en el grupo certificado de origen.
+   *
+   * @param {string} lada - La lada a establecer.
+   */
+  public setGrupoCertificadoOrigenLada(lada: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoCertificadoOrigen: { ...state.grupoCertificadoOrigen, lada },
+    }));
+  }
+
+  /**
+   * Actualiza el teléfono en el grupo certificado de origen.
+   *
+   * Este método permite establecer el teléfono en el grupo certificado de origen.
+   *
+   * @param {string} telefono - El teléfono a establecer.
+   */
+  public setGrupoCertificadoOrigenTelefono(telefono: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoCertificadoOrigen: { ...state.grupoCertificadoOrigen, telefono },
+    }));
+  }
+
+  /**
+   * Actualiza el fax en el grupo certificado de origen.
+   *
+   * Este método permite establecer el fax en el grupo certificado de origen.
+   *
+   * @param {string} fax - El fax a establecer.
+   */
+  public setGrupoCertificadoOrigenFax(fax: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoCertificadoOrigen: { ...state.grupoCertificadoOrigen, fax },
+    }));
+  }
+
+  /**
+   * Actualiza el correo electrónico en el grupo certificado de origen.
+   *
+   * Este método permite establecer el correo electrónico en el grupo certificado de origen.
+   *
+   * @param {string} correoElectronico - El correo electrónico a establecer.
+   */
+  public setGrupoCertificadoOrigenCorreoElectronico(
+    correoElectronico: string
+  ): void {
+    this.update((state) => ({
+      ...state,
+      grupoCertificadoOrigen: { ...state.grupoCertificadoOrigen, correoElectronico },
     }));
   }
 
