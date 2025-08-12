@@ -6,7 +6,7 @@
  * @import { Component } from '@angular/core';
  */
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject,map, takeUntil } from 'rxjs';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
@@ -26,7 +26,7 @@ import { CommonModule } from '@angular/common';
 
   ]
 })
-export class PasoUnoComponent implements OnInit {
+export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * @property {number} indice - El índice de la pestaña seleccionada.
    */
@@ -174,4 +174,14 @@ else{
 }
     return isValid;
 }
+
+  /**
+   * @method ngOnDestroy
+   * @description Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Completa el Subject para cancelar las suscripciones activas.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }

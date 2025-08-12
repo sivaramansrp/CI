@@ -7,6 +7,7 @@ import { PasoDosComponent } from './page/paso-dos/paso-dos.component';
 import { PasoUnoComponent } from './page/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { ValidarCertificadoRoutingModule } from './validar-certificado-routing.module';
 
 
@@ -30,6 +31,9 @@ import { ValidarCertificadoRoutingModule } from './validar-certificado-routing.m
     TituloComponent,
     PasoUnoComponent,
     AlertComponent
+  ],
+    providers: [
+    ToastrService
   ]
 })
 export class ValidarCertificadoModule { }

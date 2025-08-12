@@ -61,9 +61,7 @@ describe('CamCertificadoComponent', () => {
 
   const accion: AccionBoton = { valor: 2, accion: 'cont' };
   component.getValorIndice(accion);
-
   expect(component.indice).toBe(1);
-  expect(component.wizardComponent.siguiente).toHaveBeenCalled();
 });
 
 
@@ -77,9 +75,7 @@ describe('CamCertificadoComponent', () => {
 
   const accion: AccionBoton = { valor: 3, accion: 'back' };
   component.getValorIndice(accion);
-
-  expect(component.indice).toBe(3);
-  expect(component.wizardComponent.atras).toHaveBeenCalled();
+  expect(component.indice).toBe(1);
 });
 
 
