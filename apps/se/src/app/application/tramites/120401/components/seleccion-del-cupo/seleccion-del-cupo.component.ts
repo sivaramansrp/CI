@@ -1,6 +1,6 @@
 import { Catalogo,ConsultaioQuery,TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder,FormGroup,ReactiveFormsModule,Validators } from '@angular/forms';
+import { FormBuilder,FormGroup,ReactiveFormsModule } from '@angular/forms';
 import { Observable,Subject,map} from 'rxjs';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { AsignacionDirectaCupoPersonasFisicasPrimeraVezService } from '../../services/asignacion-directa-cupo-personas-fisicas-primera-vez.service';
@@ -163,12 +163,7 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
     private tramite120401Query: Tramite120401Query,
     private consultaQuery: ConsultaioQuery,
   ) {
-    // this.service.obtenerRespuestaPorUrl('datos', '/120401/asignacion.json');
-    // this.tramite120401Query.tramiteState$
-    //   .pipe(takeUntil(this.destroyed$))
-    //   .subscribe((state) => {
-    //     this.datos = state.datos;
-    //   });
+    //constructor
   }
 
   /**
@@ -192,6 +187,7 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
             nombreProducto: state.nombreProducto,
             nombreSubproducto: state.nombreSubproducto,
           });
+          this.datos = state.datos;
         }
       });
 
@@ -350,8 +346,11 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
  * Los resultados se almacenan en la propiedad `datos` para ser mostrados en la tabla dinámica.
  */
 buscarCupos(): void {
-  if (this.seleccionForm.valid) {
-    const VALORES_FORMULARIO = this.seleccionForm.value;
+  const VALORES_FORMULARIO = this.seleccionForm.value;
+  
+  // Check if required fields have values
+  if (VALORES_FORMULARIO.regimen && VALORES_FORMULARIO.tratado && 
+      VALORES_FORMULARIO.nombreProducto && VALORES_FORMULARIO.nombreSubproducto) {
     
     // El formulario puede contener objetos Catalogo completos o solo IDs
     // Manejar ambos casos
@@ -376,19 +375,17 @@ buscarCupos(): void {
       SUBPRODUCTO_DESCRIPCION = SUBPRODUCTO_ENCONTRADO?.descripcion || '';
     }
     
-    // Crear datos dinámicos basados en la selección del usuario
-    const CUPOS_SIMULADOS: SeleccionDelCupoTabla[] = [
-      {
-        nombreProducto: PRODUCTO_DESCRIPCION,
-        nombreSubproducto: SUBPRODUCTO_DESCRIPCION,
-        mecanismoAsignacion: 'Primer llegado, primer servido',
-        fraccionesArancelarias: '0123.45.67',
-        tipoCupo: 'Cupo Abierto'
-      }
-    ];
+    // Crear nueva fila basada en la selección del usuario
+    const NUEVA_FILA: SeleccionDelCupoTabla = {
+      nombreProducto: PRODUCTO_DESCRIPCION,
+      nombreSubproducto: SUBPRODUCTO_DESCRIPCION,
+      mecanismoAsignacion: 'Primer llegado, primer servido',
+      fraccionesArancelarias: '0123.45.67',
+      tipoCupo: 'Cupo Abierto'
+    };
 
-    // Asignar los datos a la propiedad datos
-    this.datos = CUPOS_SIMULADOS;
+    // Agregar nueva fila al array existente (mantener filas anteriores)
+    this.datos = [...this.datos, NUEVA_FILA];
     
     // Actualizar el store con los nuevos datos
     this.tramite120401Store.setDatos(this.datos);
