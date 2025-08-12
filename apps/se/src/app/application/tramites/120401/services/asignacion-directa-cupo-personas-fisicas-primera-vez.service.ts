@@ -11,8 +11,8 @@ import {
   Catalogo,
   RespuestaCatalogos,
 } from '@libs/shared/data-access-user/src';
+import { DescripcionDelCupo, SeleccionDelCupoTabla } from '../models/asignacion-directa-cupo.model';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { DescripcionDelCupo } from '../models/asignacion-directa-cupo.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Tramite120401Store } from '../estados/tramites/tramite120401.store';
@@ -175,6 +175,16 @@ actualizarEstadoFormulario(DATOS: Partial<Catalogo[]>): void {
  */
 getRegistroTomaMuestrasMercanciasData(): Observable<Catalogo[]> {
   return this.httpServicios.get<Catalogo[]>(`assets/json/120401/datosPrecargados.json`);
+}
+
+/**
+ * Busca cupos disponibles basado en los criterios proporcionados.
+ * @param criterios - Objeto con los criterios de búsqueda del formulario
+ * @returns Observable con los cupos filtrados
+ */
+buscarCuposPorCriterios(criterios: SeleccionDelCupoTabla): Observable<SeleccionDelCupoTabla[]> {
+  // Replace with your actual API endpoint
+  return this.httpServicios.post<SeleccionDelCupoTabla[]>('/api/cupos/buscar', criterios);
 }
 
 }
