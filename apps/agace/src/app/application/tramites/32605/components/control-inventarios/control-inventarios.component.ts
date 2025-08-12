@@ -230,7 +230,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
     private tramite32605Query: Solicitud32605Query,
     private consultaioQuery: ConsultaioQuery,
   ) {
-    
+
   }
 
   /**
@@ -249,7 +249,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
         this.seccionState = datos;
       });
 
-      this.crearFormulario();
+    this.crearFormulario();
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyed$),
@@ -281,12 +281,11 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
     this.registroControlInventariosForm = this.fb.group({
       id: [null],
       sistemaControlInventariosArt59: ['', [Validators.required]],
-      nombreSistema: [{value: this.seccionState?.nombreSistema, disabled: true }, [Validators.required]],
+      nombreSistema: [{ value: this.seccionState?.nombreSistema, disabled: true }, [Validators.required]],
       lugarRadicacion: [{ value: this.seccionState?.lugarRadicacion, disabled: true }, [Validators.required]],
-      cumpleAnexo24: [{value: this.seccionState?.cumpleAnexo24 }],
+      cumpleAnexo24: [{ value: this.seccionState?.cumpleAnexo24 }],
     });
 
-    console.log(this.seccionState);
     this.modificarRegistroControlInventariosForm = this.fb.group({
       id: [null],
       modificarNombreSistema: ['', Validators.required],

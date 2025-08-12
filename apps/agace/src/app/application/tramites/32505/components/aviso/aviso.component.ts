@@ -308,7 +308,6 @@ export class AvisoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
-          console.log('Solicitud State:', this.solicitudState);
         })
       )
       .subscribe();
@@ -322,7 +321,6 @@ export class AvisoComponent implements OnInit, OnDestroy {
     this.cargarCombustible();
     this.cargarPaisIssued();
     this.cargarAduana();
-    // this.openModalCancelarTramite();
 
   }
   /**
@@ -549,7 +547,6 @@ export class AvisoComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos: CatalogoLista) => {
         this.optionsPais = datos.datos;
-        console.log('Opciones de País:', this.optionsPais);
       });
   }
 
@@ -734,7 +731,6 @@ export class AvisoComponent implements OnInit, OnDestroy {
         valorVenta: [this.solicitudState?.valorVenta, [Validators.required]],
       }),
     });
-    console.log(this.aviosForm);
     this.mostrarCampos();
     this.mostrarCamposAviso();
   }

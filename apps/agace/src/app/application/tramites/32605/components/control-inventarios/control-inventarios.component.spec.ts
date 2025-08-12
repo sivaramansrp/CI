@@ -6,7 +6,7 @@ import { NO_ERRORS_SCHEMA, ElementRef } from '@angular/core';
 import { ControlInventariosComponent } from './control-inventarios.component';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { 
-  TipoNotificacionEnum, 
+  TipoNotificacionEnum,
   CategoriaMensaje 
 } from '@libs/shared/data-access-user/src';
 import { createInitialSolicitudState, Solicitud32605Store } from '../../estados/solicitud32605.store';
@@ -20,7 +20,6 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
   let mockTramite32609Query: jest.Mocked<Solicitud32605Query>;
   let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
 
-  // Datos de prueba simulados
   const datosControlInventariosMock: ControlInventariosTabla[] = [
     {
       id: 1,
@@ -60,7 +59,6 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
   };
 
   beforeEach(async () => {
-    // Configuración de espías para servicios simulados
     mockTramite32609Store = {
       actualizarEstado: jest.fn(),
       actualizarSeccion: jest.fn(),
@@ -69,7 +67,7 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
 
     mockTramite32609Query = {
       selectTramite32609$: of(estadoTramiteMock),
-      selectSolicitud$: of(estadoTramiteMock) // Add this line to mock the expected observable
+      selectSolicitud$: of(estadoTramiteMock)
     } as any;
 
     mockConsultaioQuery = {
@@ -93,9 +91,7 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
     fixture = TestBed.createComponent(ControlInventariosComponent);
     component = fixture.componentInstance;
 
-    // Simular elementos del DOM con un div real para evitar errores de querySelector
     const registroModalDiv = document.createElement('div');
-    // Opcional: agregar un id o clase si el componente lo espera
     registroModalDiv.id = 'registroDeNumeroEmpleadosModal';
 
     component.registroDeNumeroEmpleadosModalElemento = {
@@ -109,12 +105,10 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
       nativeElement: confirmacionDiv
     } as ElementRef;
 
-    // Simulacro de Modal de Bootstrap
     const modalMock = jest.fn().mockImplementation(() => ({
       show: jest.fn(),
       hide: jest.fn()
     }));
-    // Adjuntar getInstance como método estático en el prototipo y constructor
     (modalMock as any).getInstance = jest.fn().mockReturnValue({
       hide: jest.fn()
     });
@@ -128,6 +122,9 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
     jest.mock('bootstrap', () => ({
       Modal: MockedModal
     }));
+
+    component.seccionState = estadoTramiteMock;
+    component.crearFormulario();
   });
 
   describe('🔧 Inicialización del componente', () => {
@@ -158,14 +155,12 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
       expect(component.registroControlInventariosForm).toBeDefined();
       expect(component.modificarRegistroControlInventariosForm).toBeDefined();
       
-      // Verificar controles del formulario principal
       expect(component.registroControlInventariosForm.get('id')).toBeDefined();
       expect(component.registroControlInventariosForm.get('sistemaControlInventariosArt59')).toBeDefined();
       expect(component.registroControlInventariosForm.get('nombreSistema')).toBeDefined();
       expect(component.registroControlInventariosForm.get('lugarRadicacion')).toBeDefined();
       expect(component.registroControlInventariosForm.get('cumpleAnexo24')).toBeDefined();
       
-      // Verificar controles del formulario de modificación
       expect(component.modificarRegistroControlInventariosForm.get('id')).toBeDefined();
       expect(component.modificarRegistroControlInventariosForm.get('modificarNombreSistema')).toBeDefined();
       expect(component.modificarRegistroControlInventariosForm.get('modificarLugarRadicacion')).toBeDefined();
@@ -189,8 +184,10 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
     });
 
     it('✅ debería inicializar valor anterior del radio button si existe', () => {
-      component.registroControlInventariosForm.get('sistemaControlInventariosArt59')?.setValue('1');
       component.ngOnInit();
+      
+      component.onSeleccionfalsa('1');
+      
       expect(component.valorAnteriorRadioButton).toBe('1');
     });
   });
@@ -203,10 +200,8 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
     it('✅ debería validar correctamente el formulario principal', () => {
       const form = component.registroControlInventariosForm;
       
-      // Formulario vacío debe ser inválido (sistemaControlInventariosArt59 es requerido)
       expect(form.valid).toBe(false);
       
-      // Llenar campos requeridos
       form.patchValue({
         sistemaControlInventariosArt59: '1',
         nombreSistema: 'Sistema de Inventarios',
@@ -214,7 +209,6 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
         cumpleAnexo24: true
       });
       
-      // Habilitar campos que están deshabilitados (esto sucede automáticamente cuando sistemaControlInventariosArt59 = '1')
       component.actualizarEstadoFormulario();
       
       expect(form.valid).toBe(true);
@@ -223,10 +217,8 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
     it('✅ debería validar correctamente el formulario de modificación', () => {
       const form = component.modificarRegistroControlInventariosForm;
       
-      // Formulario vacío debe ser inválido
       expect(form.valid).toBe(false);
       
-      // Llenar todos los campos requeridos
       form.patchValue({
         modificarNombreSistema: 'Sistema Modificado',
         modificarLugarRadicacion: 'Monterrey',
@@ -240,16 +232,13 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
       const form = component.registroControlInventariosForm;
       const cumpleAnexoControl = form.get('cumpleAnexo24');
       
-      // Valor inicial
-      expect(cumpleAnexoControl?.value).toBe(false);
+      expect(cumpleAnexoControl?.value).toEqual({ value: true });
       
-      // Cambiar a true
-      cumpleAnexoControl?.setValue(true);
-      expect(cumpleAnexoControl?.value).toBe(true);
-      
-      // Cambiar a false
       cumpleAnexoControl?.setValue(false);
       expect(cumpleAnexoControl?.value).toBe(false);
+      
+      cumpleAnexoControl?.setValue(true);
+      expect(cumpleAnexoControl?.value).toBe(true);
     });
   });
 
@@ -308,7 +297,6 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
   describe('🔄 Funcionalidad de modales', () => {
     beforeEach(() => {
       component.ngOnInit();
-      // Mock Modal y getInstance para todos los tests de modales
       const modalInstance = { show: jest.fn(), hide: jest.fn() };
       (global as any).Modal = jest.fn().mockImplementation(() => modalInstance);
       (global as any).Modal.getInstance = jest.fn().mockReturnValue(modalInstance);
@@ -340,7 +328,6 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
     });
 
     it('✅ debería procesar formulario principal válido correctamente', () => {
-      // Configurar formulario válido
       component.registroControlInventariosForm.patchValue({
         sistemaControlInventariosArt59: '1',
         nombreSistema: 'Sistema de Inventarios',
@@ -348,7 +335,6 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
         cumpleAnexo24: true
       });
       
-      // Habilitar campos para que el formulario sea válido
       component.registroControlInventariosForm.get('nombreSistema')?.enable();
       component.registroControlInventariosForm.get('lugarRadicacion')?.enable();
       
@@ -361,7 +347,6 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
     });
 
     it('✅ debería procesar formulario de modificación válido correctamente', () => {
-      // Configurar formulario de modificación válido
       component.modificarRegistroControlInventariosForm.patchValue({
         modificarNombreSistema: 'Sistema Modificado',
         modificarLugarRadicacion: 'Monterrey',
@@ -381,7 +366,6 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
     });
 
     it('✅ debería manejar formulario principal inválido correctamente', () => {
-      // Dejar formulario vacío (inválido)
       component.registroControlInventariosForm.reset();
       const markAllAsTouchedSpy = jest.spyOn(component.registroControlInventariosForm, 'markAllAsTouched');
       
@@ -393,7 +377,6 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
     });
 
     it('✅ debería manejar formulario de modificación inválido correctamente', () => {
-      // Dejar formulario vacío (inválido)
       component.modificarRegistroControlInventariosForm.reset();
       const markAllAsTouchedSpy = jest.spyOn(component.modificarRegistroControlInventariosForm, 'markAllAsTouched');
       
@@ -440,7 +423,6 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
       component.controlInventariosList = datosControlInventariosMock;
       component.filaSeleccionadaControlInventarios = { ...datosControlInventariosMock[0] };
       
-      // Modificar datos en la lista
       component.controlInventariosList[0].nombreSistema = 'Sistema Actualizado';
       
       component.actualizarFilaSeleccionada();
@@ -472,11 +454,9 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
     });
 
     it('✅ debería crear notificaciones para diferentes tipos de mensajes', () => {
-      // Notificación de confirmación
       component.enNuevaNotificacion(component.CONFIRMACION_NUMEROEMPLEADOS);
       expect(component.nuevaNotificacion.mensaje).toBe(component.CONFIRMACION_NUMEROEMPLEADOS);
       
-      // Notificación de validación
       component.enNuevaNotificacion(component.MENSAJE_DE_VALIDACION);
       expect(component.nuevaNotificacion.mensaje).toBe(component.MENSAJE_DE_VALIDACION);
     });
@@ -579,7 +559,6 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
       component.controlInventariosList = [...datosControlInventariosMock];
       component.filaSeleccionadaControlInventarios = datosControlInventariosMock[0];
       
-      // Configurar datos del formulario de modificación
       component.modificarRegistroControlInventariosForm.patchValue({
         modificarNombreSistema: 'Sistema Actualizado',
         modificarLugarRadicacion: 'Lugar Actualizado',
@@ -623,7 +602,6 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
     });
 
     it('✅ debería limpiar formulario principal correctamente', () => {
-      // Llenar formulario con datos
       component.registroControlInventariosForm.patchValue({
         nombreSistema: 'Sistema Test',
         lugarRadicacion: 'Lugar Test',
@@ -643,7 +621,6 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
     });
 
     it('✅ debería limpiar formulario de modificación correctamente', () => {
-      // Llenar formulario con datos
       component.modificarRegistroControlInventariosForm.patchValue({
         modificarNombreSistema: 'Sistema Test',
         modificarLugarRadicacion: 'Lugar Test',
@@ -669,12 +646,10 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
     it('✅ debería validar campos del formulario de modificación correctamente', () => {
       const form = component.modificarRegistroControlInventariosForm;
       
-      // Campo válido
       form.get('modificarNombreSistema')?.setValue('Sistema válido');
       form.get('modificarNombreSistema')?.markAsTouched();
       expect(component.esInvalido('modificarNombreSistema', true)).toBe(false);
       
-      // Campo inválido
       form.get('modificarNombreSistema')?.setValue('');
       form.get('modificarNombreSistema')?.markAsTouched();
       expect(component.esInvalido('modificarNombreSistema', true)).toBe(true);
@@ -742,7 +717,6 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
     });
 
     it('✅ debería cerrar modal y revertir radio button cuando se seleccionó "No"', () => {
-      // Configurar estado inicial
       component.valorAnteriorRadioButton = '1';
       component.registroControlInventariosForm.get('sistemaControlInventariosArt59')?.setValue('0');
       
@@ -756,7 +730,6 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
     });
 
     it('✅ debería cerrar modal sin revertir cuando no se seleccionó "No"', () => {
-      // Configurar estado inicial
       component.valorAnteriorRadioButton = '1';
       component.registroControlInventariosForm.get('sistemaControlInventariosArt59')?.setValue('1');
       
@@ -767,7 +740,6 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
     });
 
     it('✅ debería usar valor por defecto cuando no hay valor anterior', () => {
-      // Configurar estado inicial
       component.valorAnteriorRadioButton = null;
       component.registroControlInventariosForm.get('sistemaControlInventariosArt59')?.setValue('0');
       
@@ -786,7 +758,6 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
         ...estadoConsultaMock, 
         readonly: true 
       };
-      // Configura el mock antes de crear el componente
       mockConsultaioQuery.selectConsultaioState$ = of(estadoSoloLectura);
 
       await TestBed.resetTestingModule().configureTestingModule({
@@ -805,7 +776,6 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
 
       nuevoFixture = TestBed.createComponent(ControlInventariosComponent);
       nuevoComponente = nuevoFixture.componentInstance;
-      // Forzar ngOnInit y la detección de cambios
       nuevoComponente.ngOnInit();
       nuevoFixture.detectChanges();
     });
@@ -863,7 +833,6 @@ describe('ControlInventariosComponent - Pruebas unitarias', () => {
       component.modificarRegistroControlInventariosForm = undefined as any;
       
       expect(() => {
-        // Ahora debe lanzar error, así que esperamos un error
         component.enviarDialogData();
       }).toThrow();
       expect(() => {

@@ -1,18 +1,40 @@
 import { TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { of,  } from 'rxjs';
+import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { of } from 'rxjs';
 import { PerfilesComponent } from './perfiles.component';
 import { Solicitud32605Store } from '../../estados/solicitud32605.store';
 import { Solicitud32605Query } from '../../estados/solicitud32605.query';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 describe('PerfilesComponent', () => {
   let component: PerfilesComponent;
   let store: Solicitud32605Store;
   let query: Solicitud32605Query;
+  let consultaioQueryMock: any;
 
   beforeEach(() => {
+    consultaioQueryMock = {
+      selectConsultaioState$: of({
+        readonly: false,
+        procedureId: '',
+        parameter: '',
+        department: '',
+        folioTramite: '',
+        tramiteCompleto: false,
+        loading: false,
+        error: null,
+        success: false,
+        isConsultaio: false,
+        tipoDeTramite: '',
+        estadoDeTramite: '',
+        create: false,
+        update: false,
+        consultaioSolicitante: null
+      })
+    };
+
     TestBed.configureTestingModule({
-      imports: [PerfilesComponent,ReactiveFormsModule],
+      imports: [PerfilesComponent, ReactiveFormsModule],
       providers: [
         FormBuilder,
         {
@@ -25,19 +47,29 @@ describe('PerfilesComponent', () => {
           provide: Solicitud32605Query,
           useValue: {
             selectSolicitud$: of({
-              domicilio: 'Test Domicilio',
-              antiguedad: '5 años',
-              productos: 'Test Productos',
-              embarquesExp: '10',
-              embarquesImp: '15',
-              empleados: '50',
-              superficie: '1000 m2',
-              nombre: 'Test Nombre',
-              categoria: 'A',
-              vigencia: '2025',
+              perfiles: {
+                domicilio: 'Test Domicilio',
+                antiguedad: '5 años',
+                productos: 'Test Productos',
+                embarquesExp: '10',
+                embarquesImp: '15',
+                empleados: '50',
+                superficie: '1000 m2',
+                nombre: 'Test Nombre',
+                categoria: 'A',
+                vigencia: '2025',
+                blCtpat: '1',
+                blnPip: '1',
+                blnOea: '1',
+                blnOtrosProgramasSegu: '1'
+              }
             }),
           },
         },
+        {
+          provide: ConsultaioQuery,
+          useValue: consultaioQueryMock
+        }
       ],
     }).compileComponents();
 
@@ -45,7 +77,6 @@ describe('PerfilesComponent', () => {
     component = fixture.componentInstance;
     store = TestBed.inject(Solicitud32605Store);
     query = TestBed.inject(Solicitud32605Query);
-    // Asigna el mock del store a la propiedad utilizada en el componente si es necesario
     (component as any).tramite32605Store = store;
     fixture.detectChanges();
   });
@@ -129,5 +160,201 @@ describe('PerfilesComponent', () => {
     component.ngOnDestroy();
     expect(destroySpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+  describe('guardarDatosFormulario', () => {
+    it('debe crear formulario y habilitarlo cuando no está en modo solo lectura', () => {
+      component.esFormularioSoloLectura = false;
+      const crearFormularioSpy = jest.spyOn(component, 'crearFormularioProfileForm');
+      
+      component.guardarDatosFormulario();
+      
+      expect(crearFormularioSpy).toHaveBeenCalled();
+      expect(component.profileForm.enabled).toBe(true);
+    });
+
+    it('debe crear formulario y deshabilitarlo cuando está en modo solo lectura', () => {
+      component.esFormularioSoloLectura = true;
+      const crearFormularioSpy = jest.spyOn(component, 'crearFormularioProfileForm');
+      
+      component.guardarDatosFormulario();
+      
+      expect(crearFormularioSpy).toHaveBeenCalled();
+      expect(component.profileForm.disabled).toBe(true);
+    });
+  });
+
+  describe('Métodos de alternado de visibilidad', () => {
+    it('debe alternar el valor de mostrarAccesoFisico', () => {
+      expect(component.mostrarAccesoFisico).toBe(false);
+      component.alternarAccesoFisico();
+      expect(component.mostrarAccesoFisico).toBe(true);
+      component.alternarAccesoFisico();
+      expect(component.mostrarAccesoFisico).toBe(false);
+    });
+
+    it('debe alternar el valor de mostrarSociosComerciales', () => {
+      expect(component.mostrarSociosComeciales).toBe(false);
+      component.alternarSociosComerciales();
+      expect(component.mostrarSociosComeciales).toBe(true);
+      component.alternarSociosComerciales();
+      expect(component.mostrarSociosComeciales).toBe(false);
+    });
+
+    it('debe alternar el valor de mostrarSeguridadProcesos', () => {
+      expect(component.mostrarSeguridadProcesos).toBe(false);
+      component.alternarSeguridadProcesos();
+      expect(component.mostrarSeguridadProcesos).toBe(true);
+      component.alternarSeguridadProcesos();
+      expect(component.mostrarSeguridadProcesos).toBe(false);
+    });
+
+    it('debe alternar el valor de mostrarGestionAduanera', () => {
+      expect(component.mostrarGestionAduanera).toBe(false);
+      component.alternarGestionAduanera();
+      expect(component.mostrarGestionAduanera).toBe(true);
+      component.alternarGestionAduanera();
+      expect(component.mostrarGestionAduanera).toBe(false);
+    });
+
+    it('debe alternar el valor de mostrarSeguridadVehiculos', () => {
+      expect(component.mostrarSeguridadVehiculos).toBe(false);
+      component.alternarSeguridadVehiculos();
+      expect(component.mostrarSeguridadVehiculos).toBe(true);
+      component.alternarSeguridadVehiculos();
+      expect(component.mostrarSeguridadVehiculos).toBe(false);
+    });
+
+    it('debe alternar el valor de mostrarSeguridadPersonal', () => {
+      expect(component.mostrarSeguridadPersonal).toBe(false);
+      component.alternarSeguridadPersonal();
+      expect(component.mostrarSeguridadPersonal).toBe(true);
+      component.alternarSeguridadPersonal();
+      expect(component.mostrarSeguridadPersonal).toBe(false);
+    });
+
+    it('debe alternar el valor de mostrarSeguridadInformacion', () => {
+      expect(component.mostrarSeguridadInformacion).toBe(false);
+      component.alternarSeguridadInformacion();
+      expect(component.mostrarSeguridadInformacion).toBe(true);
+      component.alternarSeguridadInformacion();
+      expect(component.mostrarSeguridadInformacion).toBe(false);
+    });
+
+    it('debe alternar el valor de mostrarCapacitacionSeguridad', () => {
+      expect(component.mostrarCapacitacionSeguridad).toBe(false);
+      component.alternarCapacitacionSeguridad();
+      expect(component.mostrarCapacitacionSeguridad).toBe(true);
+      component.alternarCapacitacionSeguridad();
+      expect(component.mostrarCapacitacionSeguridad).toBe(false);
+    });
+
+    it('debe alternar el valor de mostrarManejoInvestigacion', () => {
+      expect(component.mostrarManejoInvestigacion).toBe(false);
+      component.alternarManejoInvestigacion();
+      expect(component.mostrarManejoInvestigacion).toBe(true);
+      component.alternarManejoInvestigacion();
+      expect(component.mostrarManejoInvestigacion).toBe(false);
+    });
+  });
+
+  describe('setValoresStore', () => {
+    let testForm: FormGroup;
+    let fb: FormBuilder;
+
+    beforeEach(() => {
+      fb = TestBed.inject(FormBuilder);
+      testForm = fb.group({
+        testField: ['test value'],
+        nullField: [null],
+        undefinedField: [undefined],
+        emptyStringField: ['']
+      });
+    });
+
+    it('debe retornar si el form es null', () => {
+      component.setValoresStore(null, 'testField');
+      expect(store.actualizarEstado).not.toHaveBeenCalled();
+    });
+
+    it('debe actualizar el store cuando el control tiene un valor válido', () => {
+      component.setValoresStore(testForm, 'testField');
+      expect(store.actualizarEstado).toHaveBeenCalledWith({
+        perfiles: { testField: 'test value' }
+      });
+    });
+
+    it('no debe actualizar el store cuando el control tiene valor null', () => {
+      jest.clearAllMocks();
+      component.setValoresStore(testForm, 'nullField');
+      expect(store.actualizarEstado).not.toHaveBeenCalled();
+    });
+
+    it('no debe actualizar el store cuando el control tiene valor undefined', () => {
+      jest.clearAllMocks();
+      component.setValoresStore(testForm, 'undefinedField');
+      expect(store.actualizarEstado).not.toHaveBeenCalled();
+    });
+
+    it('debe actualizar el store cuando el control tiene string vacío', () => {
+      component.setValoresStore(testForm, 'emptyStringField');
+      expect(store.actualizarEstado).toHaveBeenCalledWith({
+        perfiles: { emptyStringField: '' }
+      });
+    });
+
+    it('no debe actualizar el store si el control no existe', () => {
+      jest.clearAllMocks();
+      component.setValoresStore(testForm, 'nonExistentField');
+      expect(store.actualizarEstado).not.toHaveBeenCalled();
+    });
+
+    it('debe manejar valores numéricos correctamente', () => {
+      testForm.addControl('numberField', fb.control(123));
+      component.setValoresStore(testForm, 'numberField');
+      expect(store.actualizarEstado).toHaveBeenCalledWith({
+        perfiles: { numberField: 123 }
+      });
+    });
+
+    it('debe manejar valores booleanos correctamente', () => {
+      testForm.addControl('booleanField', fb.control(true));
+      component.setValoresStore(testForm, 'booleanField');
+      expect(store.actualizarEstado).toHaveBeenCalledWith({
+        perfiles: { booleanField: true }
+      });
+    });
+  });
+
+  describe('Métodos adicionales', () => {
+    it('debe actualizar fecha correctamente', () => {
+      const nuevoValor = '2024-12-25';
+      const campo = 'fecUltimaCtapt';
+      
+      component.actualizarFecha(nuevoValor, campo);
+      
+      expect(component.profileForm.get(campo)?.value).toBe(nuevoValor);
+      expect(component.profileForm.get(campo)?.untouched).toBe(true);
+    });
+
+    it('debe inicializar estado del formulario correctamente cuando no está en modo solo lectura', () => {
+      component.esFormularioSoloLectura = false;
+      const guardarDatosSpy = jest.spyOn(component, 'guardarDatosFormulario');
+      const crearFormularioSpy = jest.spyOn(component, 'crearFormularioProfileForm');
+      
+      component.inicializarEstadoFormulario();
+      
+      expect(crearFormularioSpy).toHaveBeenCalled();
+      expect(guardarDatosSpy).not.toHaveBeenCalled();
+    });
+
+    it('debe inicializar estado del formulario correctamente cuando está en modo solo lectura', () => {
+      component.esFormularioSoloLectura = true;
+      const guardarDatosSpy = jest.spyOn(component, 'guardarDatosFormulario');
+      
+      component.inicializarEstadoFormulario();
+      
+      expect(guardarDatosSpy).toHaveBeenCalled();
+    });
   });
 });
