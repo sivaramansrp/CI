@@ -7,6 +7,7 @@ import { DatosDeLaSolicitud } from '../../models/solicitud-pantallas.model';
 import { DatosDelTramiteARealizarComponent } from '../../shared/datos-del-tramite-a-realizar/datos-del-tramite-a-realizar.component';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { RevisionDocumentalComponent } from '../../components/revision-documental/revision-documental.component';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
 import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
@@ -23,7 +24,8 @@ import { takeUntil } from 'rxjs';
     CatalogoSelectComponent,
     CommonModule,
     SolicitanteComponent,
-    DatosDelTramiteARealizarComponent
+    DatosDelTramiteARealizarComponent,
+    RevisionDocumentalComponent
   ],
   standalone: true,
 })
