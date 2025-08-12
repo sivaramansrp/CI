@@ -1,7 +1,9 @@
 services:
 #---------------------------------------------------------------
   modulefederation-agace-microfront:
+
     image: ghcr.io/vucem30/dockerized-modulefederation-agace-microfront:1.0.26
+
     build: 
       context: ./../
       dockerfile: apps/agace/Dockerfile.dev
