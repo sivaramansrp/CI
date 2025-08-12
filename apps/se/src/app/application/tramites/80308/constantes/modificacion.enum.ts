@@ -94,6 +94,10 @@ export const CONFIGURACION_DOMICILIOS = [
  
 ];
 
+/**
+ * @description
+ * Configuración de los datos de los accionistas.
+ */
 export const CONFIGURACION_ACCIONISTAS = [
   {
     encabezado: 'Registro Federal de Contribuyente(RFC)',
