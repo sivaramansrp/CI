@@ -5,7 +5,6 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosCertificadoDeComponent } from '../../../../shared/components/datos-certificado-de/datos-certificado-de.component';
-import { FormBuilder } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { camCertificadoQuery } from '../../estados/cam-certificado.query';
 import { camCertificadoStore } from '../../estados/cam-certificado.store';
@@ -75,12 +74,10 @@ export class CamDatosCertificadoComponent implements OnInit, OnDestroy {
   /**
    * @descripcion
    * Inicializa el componente con los servicios y dependencias requeridos.
-   * @param fb - Instancia de FormBuilder para gestionar formularios.
    * @param camCertificadoService - Servicio para obtener datos relacionados con el certificado.
    * @param store - Almacén para gestionar el estado del formulario de certificado.
    */
   constructor(
-    private readonly fb: FormBuilder,
     private camCertificadoService: CamCertificadoService,
     private store: camCertificadoStore,
     private query: camCertificadoQuery,

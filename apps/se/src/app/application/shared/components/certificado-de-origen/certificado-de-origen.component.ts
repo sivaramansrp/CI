@@ -51,7 +51,7 @@ export const FECHA_FINAL = {
     CatalogoSelectComponent,
     InputCheckComponent,
     AlertComponent
-  ],
+  ],  
   templateUrl: './certificado-de-origen.component.html',
   styleUrl: './certificado-de-origen.component.scss'
 })
@@ -303,8 +303,8 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
    * @command
    * Utilice este método para inicializar el formulario antes de interactuar con los datos del certificado.
    */
-  createForm(): void {
-    this.formCertificado = this.fb.group({
+  async createForm(): Promise<void> {
+    this.formCertificado = await this.fb.group({
       si: [false],
       entidadFederativa: ['', [Validators.required, Validators.min(0)]],
   bloque: ['', [Validators.required, Validators.min(0)]],
@@ -337,7 +337,13 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
 
 ngOnChanges(changes: SimpleChanges):void {
   if (changes['datosForm']?.currentValue) {
-    this.formCertificado.patchValue(this.datosForm);
+    if(this.formCertificado){
+  this.formCertificado.patchValue(this.datosForm);
+    }
+    else{
+      this.createForm();
+    }
+  
   }
 }
   /**
