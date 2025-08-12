@@ -39,7 +39,6 @@
           formControlName="rfc"
         />
       </div>
-      @if(this.tipoPersonaValor !== 'Fisica' && this.tipoPersonaValor !== 'Moral') {
       <div class="form-group col-md-4">
         <label class="form-label mt-3 fs-2" for="curp">C.U.R.P.*:</label>
         <input
@@ -51,7 +50,7 @@
           formControlName="curp"
         />
       </div>
-      }
+      @if(this.tipoPersonaValor === 'Fisica' || this.tipoPersonaValor === 'Moral') {
       <div class="row">
         <div class="col-md-4 mt-2">
           <div class="pull-right">
@@ -67,6 +66,7 @@
           </div>
         </div>
       </div>
+      }
     </div>
     }
 

@@ -6,7 +6,7 @@
     "llavePago": "LLAVE987654",
     "fechaPago": "30/05/2025",
     "importePago": "1500.00",
-    "banco": "Banco Ejemplo"
+    "banco": "1"
   },
   "datosSolicitudFormState": {
     "rfcSanitario": "SAN123456789",

@@ -1,7 +1,6 @@
 import {
   ALERTA_DE_MANIFESTO_Y_DECLARACIONES,
   ALERTA_OPCIONS,
-  ES_PUNTO_Y_COMA,
   MENSAJE_SIN_FILA_SELECCIONADA,
   MOSTRAR_NOTIFICACION,
   NUMERO_TRAMITE,
@@ -466,8 +465,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
-    this.esManifesto = PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES.includes(this.idProcedimiento);
-    this.esPuntoYComa = ES_PUNTO_Y_COMA.includes(this.idProcedimiento);
+    this.esManifesto = PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES.includes(this.idProcedimiento) ? true : false;
     this.mostrarNotificacion = MOSTRAR_NOTIFICACION.includes(
       this.idProcedimiento
     )

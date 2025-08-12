@@ -38,3 +38,17 @@ export const ACUSE_CONFIRMAR_NOTIFICACION_REQUERIMIENTO_ENCABEZADO_DE_TABLA: Con
       orden: 2,
     }
   ];
+
+/**
+ * @constant CONFIRMAR_NOTIFICACION_ALERT
+ * @description
+ * Mensaje de alerta para la notificación de requerimiento.
+ */
+export const CONFIRMAR_NOTIFICACION_ALERT = "<div class='text-center'>La notificación de Requerimiento de Información para el trámite con número 0200800300820252540000011 ha sido confirmada.</div>";
+
+/**
+ * @constant CONFIRMAR_NOTIFICACION_RESOLUCION_ALERT
+ * @description
+ * Mensaje de alerta para la notificación de resolución.
+ */
+export const CONFIRMAR_NOTIFICACION_RESOLUCION_ALERT = "<div class='text-center'>La notificación de la resolución para el trámite con número 2500301600120259910000129 ha sido confirmada.</div>";

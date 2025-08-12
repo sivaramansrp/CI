@@ -83,6 +83,21 @@
                     )
                   "
                 ></app-catalogo-select>
+              @if(
+                 formSolicitud.get('datosImportadorExportador.banco')?.invalid &&
+                 formSolicitud.get('datosImportadorExportador.banco')?.touched
+               ) {
+                 <span
+                   class="mensaje-error"
+                   *ngIf="formSolicitud.get('datosImportadorExportador.banco')?.errors?.['required']">
+                   Todos los campos de pago son requeridos
+                 </span>
+                 <span
+                   class="mensaje-error"
+                   *ngIf="formSolicitud.get('datosImportadorExportador.banco')?.errors?.['maxlength']">
+                   Existen datos incorrectos que no cumplen con el formato esperado
+                 </span>
+               }
               </div>
             </div>
           </div>

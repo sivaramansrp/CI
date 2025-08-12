@@ -254,7 +254,11 @@ this.id=ID;
            this.agregarDatosForm.get('tipoPersona')?.setValidators([Validators.required])
       this.agregarDatosForm.get('nombreDescripcion')?.enable();
            this.agregarDatosForm.get('nombreDescripcion')?.setValidators([Validators.required])
-      this.agregarDatosForm.get('rfc')?.enable();
+      if (this.tipoPersonaValor !== '') {
+        this.agregarDatosForm.get('rfc')?.enable();
+      } else {
+        this.agregarDatosForm.get('rfc')?.disable();
+      }
             this.agregarDatosForm.get('rfc')?.setValidators([Validators.required])
       this.agregarDatosForm.get('curp')?.enable();
             this.agregarDatosForm.get('curp')?.setValidators([Validators.required])

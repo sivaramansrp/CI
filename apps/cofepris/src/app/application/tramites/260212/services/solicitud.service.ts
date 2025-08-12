@@ -15,6 +15,9 @@ import { ReprestantanteData } from '../../260605/models/aduaneras-informaciones.
   providedIn: 'root'
 })
 export class SolicitudService {
+
+  /** Indica si se ha hecho clic en la selección de establecimiento. */
+  public isSeleccionarEstablecimientoClicked: boolean = false;
   
   /**
    * Constructor del servicio SolicitudService.
@@ -72,7 +75,7 @@ export class SolicitudService {
    * @returns {Observable<ClaveModel[]>} Un observable con los datos de SCIAN.
   */
   getScianDatos(): Observable<ClaveModel[]> {
-    return this.http.get<ClaveModel[]>('assets/json/260402/scianDatos.json');
+    return this.http.get<ClaveModel[]>('assets/json/260212/clave-scian-tabla-datos.json');
    }
 
     /**
@@ -94,5 +97,19 @@ export class SolicitudService {
           })
         );
     }
- 
+
+    /**
+   * Cambia el estado de selección de establecimiento, alternando su valor booleano.
+   */
+    updateSeleccionarEstablecimientoState(): void {
+      this.isSeleccionarEstablecimientoClicked = !this.isSeleccionarEstablecimientoClicked;
+    }
+
+    /**
+   * Obtiene el estado actual de selección de establecimiento.
+   * @returns {boolean} True si está seleccionado, false en caso contrario.
+   */
+    getSeleccionarEstablecimientoState(): boolean {
+      return this.isSeleccionarEstablecimientoClicked;  
+    }
 }

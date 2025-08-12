@@ -1,6 +1,7 @@
+import { CatalogoSelectComponent, CatalogosSelect, InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
+
 import { Subject,map, takeUntil } from 'rxjs';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FitosanitarioService } from '../../service/fitosanitario.service';
@@ -20,6 +21,7 @@ import { TramiteStoreQuery } from '../../estados/tramite220702.query';
     ReactiveFormsModule,
     InputRadioComponent,
     InputFechaComponent,
+    CatalogoSelectComponent
   ],
   templateUrl: './pago-derechos.component.html',
  
@@ -37,9 +39,23 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
   valorSeleccionado!: string|null;
 
   radioOpcions = [
-    { label: 'Sí', value: 'sí' },
     { label: 'No', value: 'no' },
+    { label: 'Sí', value: 'sí' },
+  
   ];
+
+
+  /**
+     * Catálogo de puntos de inspección.
+     * @type {CatalogosSelect}
+     */
+    pagoJustificacion:CatalogosSelect={
+      labelNombre: '',
+      required: false,
+      primerOpcion: '',
+      catalogos: [],
+    };
+  
 
    /**
    * Cambia el valor seleccionado del radio.
@@ -59,7 +75,7 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
   configuracionFechaFinVigencia: InputFecha = {
     labelNombre: 'Fecha de pago',
     required: false,
-    habilitado: true,
+    habilitado: false,
   };
   /**
  * @method cambioFechaDePago
@@ -85,6 +101,12 @@ cambioFechaDePago(nuevo_valor: string): void {
     * @property {boolean} campoDeshabilitar
     */
    campoDeshabilitar:boolean= false;
+
+   /**
+    * Valor por defecto para exentoDePago en modo consulta.
+    * @property {string} defaultExentoDePago
+    */
+   defaultExentoDePago: string = 'sí';
  
   /**
    * Subject utilizado para gestionar la destrucción de suscripciones.
@@ -133,14 +155,22 @@ cambioFechaDePago(nuevo_valor: string): void {
    */
   ngOnInit(): void {
     this.iniciarFormulario();
+     this.getpagoJustificacion();
     this.pagoDeCargarDatos();
     this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
       takeUntil(this.destroyNotifier$),
       map((datos: TramiteState) => {
         this.tramiteState = datos;
+        this.valorSeleccionado = datos.valorSeleccionado;
         this.pagosDerechosForm.patchValue({
           exentoDePago: datos.exentoDePago,
-
+          pagoJustificacion: datos.pagoJustificacion,
+          claveDeReferenciaDerechos: datos.claveDeReferenciaDerechos,
+          cadenaDependenciaDerechos: datos.cadenaDependenciaDerechos,
+          bancoDerechos: datos.bancoDerechos,
+          llaveDePagoDerechos: datos.llaveDePagoDerechos,
+          fechaDePago: datos.fechaDePago,
+          importeDePagoDerechos: datos.importeDePagoDerechos
         });
       })
     )
@@ -160,6 +190,7 @@ cambioFechaDePago(nuevo_valor: string): void {
     if (this.esFormularioSoloLectura) {
       this.campoDeshabilitar=true;
       this.pagosDerechosForm.disable();
+      this.pagosDerechosForm.get('exentoDePago')?.disable();
     } else {
       this.campoDeshabilitar=false;
       this.pagosDerechosForm.enable();
@@ -171,6 +202,12 @@ cambioFechaDePago(nuevo_valor: string): void {
    * Inicializa el formulario reactivo con los controles necesarios.
    */
   iniciarFormulario(): void {
+    // Solo establecer valor por defecto 'sí' para exentoDePago en modo consulta (readonly) 
+    // y solo si el valor está vacío
+    const EXENTO_DE_PAGO_VALUE = this.esFormularioSoloLectura && !this.tramiteState.exentoDePago 
+      ? this.defaultExentoDePago 
+      : this.tramiteState.exentoDePago;
+
     this.pagosDerechosForm = this.fb.group({
       claveDeReferenciaDerechos: [{ value:this.tramiteState.claveDeReferenciaDerechos, disabled: true }, Validators.required],
       cadenaDependenciaDerechos: [{ value:this.tramiteState.cadenaDependenciaDerechos, disabled: true }, Validators.required],
@@ -178,8 +215,37 @@ cambioFechaDePago(nuevo_valor: string): void {
       llaveDePagoDerechos: [{ value:this.tramiteState.llaveDePagoDerechos, disabled: true }, Validators.required],
       fechaDePago: [{ value:this.tramiteState.fechaDePago, disabled: true }, Validators.required],
       importeDePagoDerechos: [{ value:this.tramiteState.importeDePagoDerechos, disabled: true }, Validators.required],
-      exentoDePago: [{ value:this.tramiteState.exentoDePago}, Validators.required],
+      exentoDePago: [{ value: EXENTO_DE_PAGO_VALUE, disabled: true }, Validators.required],
+      pagoJustificacion: [{value:this.tramiteState.pagoJustificacion}, Validators.required],
       
+    });
+
+    // Si estamos en modo consulta (readonly) y no hay valor previo, establecer 'sí' como valor por defecto
+    if (this.esFormularioSoloLectura && !this.tramiteState.exentoDePago) {
+      this.tramiteStore.setExentoDePago(this.defaultExentoDePago);
+      this.valorSeleccionado = this.defaultExentoDePago;
+    }
+  }
+
+
+    /**
+   * Obtiene los puntos de inspección desde el servicio.
+   * @method getpagoJustificacion
+   * @returns {void}
+   */
+  getpagoJustificacion(): void {
+    this.fitosanitarioService.getPagoJustificacion()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((resp) => {
+      if (resp.code === 200) {
+        const RESPONSE = resp.data;
+        this.pagoJustificacion = {
+          labelNombre: 'Justificación',
+          required: false,
+          primerOpcion: 'Donaciones de productos en abandono del fisco federal',
+          catalogos: RESPONSE,
+        };
+      }
     });
   }
 
@@ -198,7 +264,7 @@ cambioFechaDePago(nuevo_valor: string): void {
           llaveDePagoDerechos:data.data.llaveDePago,
           fechaInicioDerechos:data.data.fechaInicio,
           importeDePagoDerechos:data.data.importeDePago,
-
+          
         });
       })
   }
