@@ -2,8 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { ManifiestosRespuesta, MercanciaCrossList, RepresentanteLegalRespuesta } from '../models/aviso-model';
+import { ManifiestosRespuesta, MercanciaCrossList,ProductoTable, RepresentanteLegalRespuesta,ScianTable } from '../models/aviso-model';
 import { RespuestaCatalogos } from '@ng-mf/data-access-user';
+import { map } from 'rxjs/operators';
+
 
 /**
  * Servicio para gestionar datos del aviso sanitario desde archivos JSON.
@@ -174,4 +176,26 @@ export class AvisoSanitarioService {
   obtenerDocumentosSeleccionados(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/260601/documentos-seleccionados.json');
   }
+
+  /**
+   * Obtiene los datos del catálogo de países de origen.
+   * 
+   * @returns Observable con los datos del catálogo de países de origen.
+   */
+  obtenerScianTabla(): Observable<ScianTable[]> {
+    return this.http.get<ScianTable[]>('assets/json/260601/scian-tabla.json')
+    .pipe(map((res) => res));
+      
+  }
+  /**
+   * Obtiene los datos del catálogo de productos.
+   * 
+   * @returns Observable con los datos del catálogo de productos.
+   */
+
+  obtenerProducto(): Observable<ProductoTable[]> {
+    return this.http.get<ProductoTable[]>('assets/json/260601/producto-tabla.json')
+      .pipe(map((res) => res));
+  }
+
 }
