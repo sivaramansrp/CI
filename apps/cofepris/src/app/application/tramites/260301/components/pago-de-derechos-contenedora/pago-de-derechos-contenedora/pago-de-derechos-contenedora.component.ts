@@ -1,5 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
+import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ID_PROCEDIMIENTO } from '../../../constants/estupefacientes.enum';
 import { PagoDeDerechosComponent } from '../../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../../shared/models/terceros-relacionados.model';
 import { Tramite260301Store } from '../../../estados/tramite260301Store.store';
@@ -30,7 +34,14 @@ import { Tramite260301Store } from '../../../estados/tramite260301Store.store';
   templateUrl: './pago-de-derechos-contenedora.component.html',
   styleUrl: './pago-de-derechos-contenedora.component.scss',
 })
-export class PagoDeDerechosContenedoraComponent {
+export class PagoDeDerechosContenedoraComponent implements OnDestroy{
+
+  /**
+       * @property {number} idProcedimiento
+       * @description
+       * Identificador del procedimiento actual.
+       */
+        idProcedimiento: number = ID_PROCEDIMIENTO;
 
   /**
    * @property formularioDeshabilitado
@@ -77,6 +88,23 @@ export class PagoDeDerechosContenedoraComponent {
    */
 
   public pagoDerechos: PagoDerechosFormState;
+
+  /**
+   * @property {boolean} esFormularioSoloLectura
+   * @description
+   * Indica si el formulario está en modo solo lectura. Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
+   * @property {Subject<void>} destroyNotifier$
+   * @description
+   * Notificador utilizado para manejar la destrucción o desuscripción de observables.
+   * Se usa para limpiar suscripciones cuando el componente es destruido.
+   * @private
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
   /**
    * @constructor
    * @description Constructor del componente que realiza la inyección de dependencias del store
@@ -102,8 +130,22 @@ export class PagoDeDerechosContenedoraComponent {
    * const component = new PagoDeDerechosContenedoraComponent(tramiteStore);
    * ```
    */
-  constructor(public tramiteStore: Tramite260301Store) {
-    this.pagoDerechos = this.tramiteStore.getValue().pagoDerechos;
+  constructor(
+    public tramiteStore: Tramite260301Store,
+    private consultaQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef
+
+  ) {
+    this.consultaQuery.selectConsultaioState$
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            map((seccionState) => {
+              this.esFormularioSoloLectura = seccionState.readonly;
+              this.cdr.detectChanges();
+            })
+          )
+          .subscribe();
+        this.pagoDerechos = this.tramiteStore.getValue().pagoDerechos;
   }
 
   /**
@@ -150,5 +192,10 @@ export class PagoDeDerechosContenedoraComponent {
    */
   updatePagoDerechos(event: PagoDerechosFormState): void {
     this.tramiteStore.updatePagoDerechos(event);
+  }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

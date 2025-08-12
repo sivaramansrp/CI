@@ -2,6 +2,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   AlertComponent,
   ConfiguracionColumna,
+  MENSAJEDEALERTA,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -11,7 +12,6 @@ import {
   Destinatario,
   Fabricante,
   Facturador,
-  MENSAJE_TABLA_OBLIGATORIA,
   Proveedor,
 } from '../../../../shared/models/terceros-relacionados.model';
 import {
@@ -65,10 +65,10 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   public infoAlert = 'alert-info';
 
   /**
-   * @property {string} MENSAJE_TABLA_OBLIGATORIA
+   * @property {string} MENSAJEDEALERTA
    * Constante de mensaje para indicar que la tabla es obligatoria.
    */
-  MENSAJE_TABLA_OBLIGATORIA = MENSAJE_TABLA_OBLIGATORIA;
+  MENSAJEDEALERTA = MENSAJEDEALERTA;
 
   /**
    * @property {ConfiguracionColumna<Facturador>[]} configuracionTablaFacturador
