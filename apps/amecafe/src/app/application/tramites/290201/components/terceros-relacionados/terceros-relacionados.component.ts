@@ -228,7 +228,7 @@ public coloniaData: CatalogosSelect = {
       )
       .subscribe();
      
-      this.getDestinatarioData();
+      // this.getDestinatarioData();
   
       this.createForm();
     this.getEntidadFederativaData();
@@ -264,7 +264,7 @@ public coloniaData: CatalogosSelect = {
         pais: [this.destinatarioState?.pais, [Validators.required]],
         codigopostal: [
           this.destinatarioState?.codigopostal,
-          [Validators.required, Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)]],
+          [Validators.required, Validators.maxLength(12), Validators.pattern(REGEX_SOLO_DIGITOS)]],
         telefono: [this.destinatarioState?.telefono, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
         correoelectronico: [
           this.destinatarioState?.correoelectronico,
@@ -373,64 +373,64 @@ get selectedTipoPersona(): string | undefined {
           this.tableData = FORMATTED_DATA;
       });
   }
+/**
+ * Método para manejar el envío del formulario.
+ */
+enEnviar(): void {
+  const FORM_DATA = this.destinatarioForm.value;
 
-  /**
-   * Método para manejar el envío del formulario.
-   */
-  
-  enEnviar(): void {
-    const FORM_DATA = this.destinatarioForm.value;
+  if (!this.destinatarioForm.valid) {
+      this.destinatarioForm.markAllAsTouched();
+      return; 
+  }
 
-    if (!this.destinatarioForm.valid) {
-        this.destinatarioForm.markAllAsTouched();
-        return;
+  if (!FORM_DATA || Object.keys(FORM_DATA).length === 0) {
+      return; 
+  }
+
+  const PAIS_DATA_VALUE = this.paisData.catalogos.find(
+      (item: Catalogo) =>
+          String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.pais).trim()
+  )?.descripcion;
+
+  FORM_DATA.datosDelTramiteRealizar.pais = PAIS_DATA_VALUE;
+
+  if (this.filaSeleccionada) {
+    const INDEX = this.tableData.findIndex((row) => row.id === this.filaSeleccionada?.id);
+    if (INDEX !== -1) {
+      this.tableData[INDEX] = { ...this.tableData[INDEX], ...FORM_DATA, id: this.filaSeleccionada.id };
+      this.tableData = [...this.tableData];
     }
+  } else {
+      const NEW_ID = this.tableData.length > 0
+          ? Math.max(...this.tableData.map((row) => row.id || 0)) + 1
+          : 1;
 
-    if (!FORM_DATA || Object.keys(FORM_DATA).length === 0) {
-        return;
-    }
+      const NEW_ROW: FilaData2 = { ...FORM_DATA, id: NEW_ID };
+      this.tableData = [...this.tableData, NEW_ROW];
+  }
 
-    const PAIS_DATA_VALUE = this.paisData.catalogos.find(
-        (item: Catalogo) =>
-            String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.pais).trim()
-    )?.descripcion;
+  this.changeDetectorRef.detectChanges();
 
-    FORM_DATA.datosDelTramiteRealizar.pais = PAIS_DATA_VALUE;
-
-    if (this.filaSeleccionada) {
-      const INDEX = this.tableData.findIndex((row) => row.id === this.filaSeleccionada?.id);
-      if (INDEX !== -1) {
-        this.tableData[INDEX] = { ...this.tableData[INDEX], ...FORM_DATA, id: this.filaSeleccionada.id };
-        this.tableData = [...this.tableData];
-      }
+  this.destinatarioForm.reset();
+  this.esFormularioVisible = false;
+  this.filaSeleccionada = null;
+  this.tipoPersonaSeleccionada = '';
   
-    } else {
-        const NEW_ID = this.tableData.length > 0
-            ? Math.max(...this.tableData.map((row) => row.id || 0)) + 1
-            : 1;
+    const MODAL_ELEMENT = document.getElementById('tercerosRelacionadosModal');
 
-        const NEW_ROW: FilaData2 = { ...FORM_DATA, id: NEW_ID };
-       
-
-        this.tableData = [...this.tableData, NEW_ROW];
-       }
-
-       this.changeDetectorRef.detectChanges();
-
-   
-      this.destinatarioForm.reset();
-      this.esFormularioVisible = false;
-      this.filaSeleccionada = null;
+   if (MODAL_ELEMENT) {
+    const MODAL_INSTANCE = Modal.getInstance(MODAL_ELEMENT) || new Modal(MODAL_ELEMENT);
+    if (MODAL_INSTANCE) {
+      MODAL_INSTANCE.hide(); 
       
-  
-const MODAL_ELEMENT = document.getElementById('tercerosRelacionadosModal');
-if (MODAL_ELEMENT) {
-    const MODAL_INSTANCE = new Modal(MODAL_ELEMENT);
-    MODAL_INSTANCE.hide();
-}
+    }
 
+    const BACKDROP_ELEMENTS = document.querySelectorAll('.modal-backdrop');
+    BACKDROP_ELEMENTS.forEach((backdrop) => backdrop.remove());
+  }
+  
 }
- 
  /**
  * Método para limpiar el formulario.
  */
@@ -443,22 +443,23 @@ onLimpiar(): void {
   });
 
   /**
- * Recorre todos los controles del formulario `destinatarioForm` y marca cada uno como "tocado".
- * Si el control es un `FormGroup`, también recorre sus controles secundarios y los marca como "tocados".
- * Esto asegura que todos los campos del formulario muestren mensajes de validación si no son válidos.
- */
+   * Recorre todos los controles del formulario `destinatarioForm` y marca cada uno como "no tocado".
+   * Si el control es un `FormGroup`, también recorre sus controles secundarios y los marca como "no tocados".
+   * Esto asegura que todos los campos del formulario no muestren mensajes de validación después de limpiar.
+   */
   Object.keys(this.destinatarioForm.controls).forEach((key) => {
     const CONTROL = this.destinatarioForm.get(key);
     if (CONTROL instanceof FormGroup) {
       Object.keys(CONTROL.controls).forEach((subKey) => {
-        CONTROL.get(subKey)?.markAsTouched();
+        CONTROL.get(subKey)?.markAsUntouched();
       });
     } else {
-      CONTROL?.markAsTouched();
+      CONTROL?.markAsUntouched();
     }
   });
-  this.destinatarioForm.get('datosDelTramiteRealizar.pais')?.markAsTouched();
-
+  this.destinatarioForm.get('datosDelTramiteRealizar.pais')?.markAsUntouched();
+  this.tipoPersonaSeleccionada = '';
+    this.changeDetectorRef.detectChanges();
 }
   /**
    * Método para seleccionar una fila de la tabla.
@@ -652,11 +653,35 @@ onAgregar(): void {
         },
     });
 
-    // Clear the selected row to ensure it's a new entry
     this.filaSeleccionada = null;
-
-    // Trigger change detection to update the UI
+    
+    Object.keys(this.destinatarioForm.controls).forEach((key) => {
+        const CONTROL = this.destinatarioForm.get(key);
+        if (CONTROL instanceof FormGroup) {
+            Object.keys(CONTROL.controls).forEach((subKey) => {
+                CONTROL.get(subKey)?.markAsUntouched();
+            });
+        } else {
+            CONTROL?.markAsUntouched();
+        }
+    });
+    this.destinatarioForm.get('datosDelTramiteRealizar.pais')?.markAsUntouched();
+        this.tipoPersonaSeleccionada = '';
+    
     this.changeDetectorRef.detectChanges();
+     const MODAL_ELEMENT = document.getElementById('tercerosRelacionadosModal');
+
+   if (MODAL_ELEMENT) {
+    const MODAL_INSTANCE = Modal.getInstance(MODAL_ELEMENT) || new Modal(MODAL_ELEMENT);
+    if (MODAL_INSTANCE) {
+      MODAL_INSTANCE.hide(); 
+      
+    }
+
+    const BACKDROP_ELEMENTS = document.querySelectorAll('.modal-backdrop');
+    BACKDROP_ELEMENTS.forEach((backdrop) => backdrop.remove());
+  }
+  
 }
   /**
    * Método para establecer valores en el store.
