@@ -1,9 +1,6 @@
 {
-  "success": true,
-  "message": "",
-  "datos": {
-    "adace": "ADACE12345",
-    "pais": "ABRIL",
-    "anio": "2025"
-  }
+    "adace": "ficcion",
+    "pais": "1",
+    "anio": "1",
+    "tipoBusqueda": "Manual"
 }
