@@ -96,7 +96,7 @@
                                 <small *ngIf="solicitudForm.controls['numeroContenedor'].errors?.['required']">
                                     Este campo es obligatorio.
                                 </small>
-                                <small *ngIf="solicitudForm.get('numeroContenedor')?.touched && solicitudForm.get('numeroContenedor')?.errors?.['minlength']"
+                                <small *ngIf="solicitudForm.get('numeroContenedor')?.errors?.['minlength']"
                                     class="d-block">
                                     Por favor, no escribas menos de 6 caracteres
                                 </small>
