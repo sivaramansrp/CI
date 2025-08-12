@@ -18,11 +18,20 @@ import {
   PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA,
   PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL,
   REPRESENTANTE_LEGAL,
-  TEXTO_MANIFESTO_Y_DECLARACIONES,
+  TEXTO_MANIFESTO_Y_DECLARACIONES
 } from '../../constantes/datos-solicitud.enum';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   AlertComponent,
+  CatalogoSelectComponent,
   InputRadioComponent,
   Notificacion,
   NotificacionesComponent,
@@ -31,38 +40,35 @@ import {
   REGEX_RFC,
   REGEX_SOLO_DIGITOS,
   REGEX_SOLO_NUMEROS,
+  TablaDinamicaComponent,
+  TituloComponent
 } from '@libs/shared/data-access-user/src';
 import {
   Catalogo,
   DatosDeTablaSeleccionados,
   DatosSolicitudFormState,
   OpcionConfig,
+  ScianConfig,
   TablaMercanciasConfig,
   TablaMercanciasDatos,
   TablaOpcionConfig,
+  TablaScianConfig
 } from '../../models/datos-solicitud.model';
-import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { delay, takeUntil } from 'rxjs';
-import { AbstractControl } from '@angular/forms';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output
+} from '@angular/core';
+import { delay, takeUntil } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-import { Input } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ScianConfig } from '../../models/datos-solicitud.model';
 import { Subject } from 'rxjs';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TablaScianConfig } from '../../models/datos-solicitud.model';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json';
+
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,

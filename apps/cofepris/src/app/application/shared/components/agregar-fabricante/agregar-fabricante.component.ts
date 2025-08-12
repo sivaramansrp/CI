@@ -1,32 +1,22 @@
 import {
   Catalogo,
+  CatalogoSelectComponent,
   REGEX_CORREO_ELECTRONICO,
   REGEX_NOMBRE,
   REGEX_TELEFONO,
-  REGEX_TELEFONO_DIGITOS,
   TipoPersona,
+  TituloComponent
 } from '@ng-mf/data-access-user';
-import { Component, EventEmitter, Output } from '@angular/core';
-import {
-  PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE,
-  STR_NACIONAL,
-} from '../../constantes/datos-solicitud.enum';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
+import { Component, EventEmitter, Input, OnDestroy,OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE, STR_NACIONAL } from '../../constantes/datos-solicitud.enum';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Fabricante } from '../../models/terceros-relacionados.model';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { Input } from '@angular/core';
-import { Location } from '@angular/common';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { TituloComponent } from '@ng-mf/data-access-user';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { Validators } from '@angular/forms';
-import { takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 
 /**
  * Componente para agregar datos de un fabricante.

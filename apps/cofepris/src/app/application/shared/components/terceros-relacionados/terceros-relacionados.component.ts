@@ -1,41 +1,42 @@
-import { CommonModule } from '@angular/common';
-
-import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
-import { Input } from '@angular/core';
-import { OnInit } from '@angular/core';
-
-import { ActivatedRoute } from '@angular/router';
-import { Router } from '@angular/router';
-
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   AlertComponent,
+  ConfiguracionColumna,
   ConsultaioQuery,
   Notificacion,
   NotificacionesComponent,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
 } from '@ng-mf/data-access-user';
-import { Subject, map, takeUntil } from 'rxjs';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-
 import {
   CONFIRMA_ELIMINACION,
   DATOS_ELIMINADOS_CORRECTAMENTE,
   MENSAJE_SIN_FILA_SELECCIONADA,
   OCULTAR_FACTURADOR,
+  OCULTAR_PROVEEDOR,
 } from '../../constantes/datos-solicitud.enum';
-import { OCULTAR_PROVEEDOR } from '../../constantes/datos-solicitud.enum';
-
-import { DESTINATARIO_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacionados.model';
-import { Destinatario } from '../../models/terceros-relacionados.model';
-import { FABRICANTE_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacionados.model';
-import { FACTURADOR_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacionados.model';
-import { Fabricante } from '../../models/terceros-relacionados.model';
-import { Facturador } from '../../models/terceros-relacionados.model';
-import { MENSAJE_TABLA_OBLIGATORIA } from '../../models/terceros-relacionados.model';
-import { PROVEEDOR_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacionados.model';
-import { Proveedor } from '../../models/terceros-relacionados.model';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
+import {
+  DESTINATARIO_ENCABEZADO_DE_TABLA,
+  Destinatario,
+  FABRICANTE_ENCABEZADO_DE_TABLA,
+  FACTURADOR_ENCABEZADO_DE_TABLA,
+  Fabricante,
+  Facturador,
+  MENSAJE_TABLA_OBLIGATORIA,
+  PROVEEDOR_ENCABEZADO_DE_TABLA,
+  Proveedor,
+} from '../../models/terceros-relacionados.model';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { TercerosRelacionadosFebService } from '../../services/tereceros-relacionados-feb.service';
 
 /**
@@ -232,13 +233,15 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   >();
 
   /**
-   * @constructor
-   * Inyecta los servicios de router, rutas activas y store del trámite.
+   * Constructor del componente.
    *
-   * @param router - Servicio de enrutamiento de Angular.
-   * @param activatedRoute - Ruta activa actual.
-   * @param tramiteStore - Store que administra los datos del trámite.
-   * @param tramiteQuery - Servicio para consultar los datos del trámite.
+   * Inyecta los servicios necesarios para la navegación, el manejo de rutas activas,
+   * la consulta de datos del trámite y la consulta de información adicional.
+   *
+   * @param router Servicio de enrutamiento de Angular.
+   * @param activatedRoute Servicio para acceder a la ruta activa actual.
+   * @param tercerosService Servicio para consultar y gestionar los datos del trámite de terceros relacionados.
+   * @param consultaioQuery Servicio para obtener datos de consulta de información adicional.
    */
   constructor(
     private router: Router,

@@ -1,26 +1,35 @@
-import { CommonModule } from '@angular/common';
-import { Location } from '@angular/common';
-
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Validators } from '@angular/forms';
-
-import { Catalogo, REGEX_CORREO_ELECTRONICO, REGEX_IMPORTE_PAGO, REGEX_NOMBRE, REGEX_NUMEROS, REGEX_TELEFONO, TELEFONO_DIGITOS, TipoPersona } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-
-import { Proveedor } from '../../models/terceros-relacionados.model';
-
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  REGEX_CORREO_ELECTRONICO,
+  REGEX_IMPORTE_PAGO,
+  REGEX_NOMBRE,
+  REGEX_NUMEROS,
+  REGEX_TELEFONO,
+  TipoPersona,
+  TituloComponent
+} from '@ng-mf/data-access-user';
+import { CommonModule, Location } from '@angular/common';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-
+import { Proveedor } from '../../models/terceros-relacionados.model';
 import { Subject } from 'rxjs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 
 /**
  * @component AgregarProveedorComponent

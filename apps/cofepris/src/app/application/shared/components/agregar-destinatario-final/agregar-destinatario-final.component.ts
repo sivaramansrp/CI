@@ -1,15 +1,13 @@
 import {
   Catalogo,
+  CatalogoSelectComponent,
   REGEX_CORREO_ELECTRONICO,
   REGEX_NOMBRE,
   REGEX_TELEFONO,
-  REGEX_TELEFONO_DIGITOS,
   TipoPersona,
+  TituloComponent
 } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
-import { Location } from '@angular/common';
-
+import { CommonModule, Location } from '@angular/common';
 import {
   Component,
   EventEmitter,
@@ -17,21 +15,21 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
-  Output,
+  Output
 } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
-  Validators,
+  Validators
 } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
-
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Destinatario } from '../../models/terceros-relacionados.model';
 import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE } from '../../constantes/datos-solicitud.enum';
-import { TituloComponent } from '@ng-mf/data-access-user';
+import { Subject } from 'rxjs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { takeUntil } from 'rxjs/operators';
+
 
 /**
  * Componente para agregar un destinatario final (Destinatario) al formulario y almacenarlo.

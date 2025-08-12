@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-
+import { Subject, map, takeUntil } from 'rxjs';
 import {
   Tramite260213State,
   Tramite260213Store,
 } from '../../estados/tramite260213Store.store';
-import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
 import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
-import { Subject } from 'rxjs';
 import { TablaMercanciasDatos } from '../../../../shared/models/datos-solicitud.model';
 import { Tramite260213Query } from '../../estados/tramite260213Query.query';
 
