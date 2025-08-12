@@ -39,13 +39,13 @@
         </div>
 
         <div class="row mb-3">
-            <div class="col-md-4 form-field">
-                <input-fecha formControlName="fechaInicio" [datos]="fechaInicioInput" [setFecha]="formCertificado.get('fechaInicio')?.value"
+            <div class="col-md-4 form-field" *ngIf="formCertificado.get('fechaInicio')">
+                <input-fecha [datos]="fechaInicioInput" [setFecha]="formCertificado.get('fechaInicio')?.value"
                 (valorCambiado)="cambioFechaInicio($event,formCertificado,'fechaInicio', 'setFechaInicio')" [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
             </div>
 
-            <div class="col-md-4 form-field">
-                <input-fecha formControlName="fechaFinal" [datos]="fechaFinalInput" [setFecha]="formCertificado.get('fechaFinal')?.value" (valorCambiado)="cambioFechaFinal($event,formCertificado,'fechaFinal', 'setFechaFinal')" [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
+            <div class="col-md-4 form-field" *ngIf="formCertificado.get('fechaFinal')">
+                <input-fecha [datos]="fechaFinalInput" [setFecha]="formCertificado.get('fechaFinal')?.value" (valorCambiado)="cambioFechaFinal($event,formCertificado,'fechaFinal', 'setFechaFinal')" [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
             </div>
         </div>
 
