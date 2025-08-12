@@ -71,8 +71,8 @@ export class Service260212Service {
    this.tramite260212Store.setCadenaDeLaDependencia(DATOS.CadenaDeLaDependencia);
    this.tramite260212Store.setLlaveDePago(DATOS.llaveDePago);
    this.tramite260212Store.setFechaDePago(DATOS.setFechaDePago);
-    this.tramite260212Store.setImporteDePago(DATOS.importeDePago);
-    
+   this.tramite260212Store.setImporteDePago(DATOS.importeDePago);
+   this.tramite260212Store.setFechaDePago(DATOS.setFechaDePago);
   this.tramite260212Store.setLosDatos(DATOS.losDatos);
   this.tramite260212Store.setRfc(DATOS.rfc);
   this.tramite260212Store.setNombre(DATOS.nombre);

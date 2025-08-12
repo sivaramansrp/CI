@@ -1,31 +1,23 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
+import { ADUANAS_DATA, DATOS_ALERT, MANIFIESTOS_ALERT, MERCANCIA_POR_DEFECTO } from '../../constantes/permiso-maquila.enum';
 import { CatalogoResponse, ConsultaioQuery, TablaDinamicaComponent, TablePaginationComponent, TituloComponent } from '@ng-mf/data-access-user';
-
-import { AlertComponent } from '@ng-mf/data-access-user';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-
 import { ClaveModel, MercanciaModel, SolicitudModel } from '../../models/permiso-maquila.models';
-import { SolicitudService } from '../../services/solicitud.service';
-
-import { ADUANAS_DATA, DATOS_ALERT, MANIFIESTOS_ALERT } from '../../constantes/permiso-maquila.enum';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { ClaveScianComponent } from '../clave-scian/clave-scian.component';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
-
+import { CommonModule } from '@angular/common';
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { FormularioOperacionComercialComponent } from '../formulario-operacion-comercial/formulario-operacion-comercial.component';
 import { MercanciasTableFormComponent } from '../mercancias-tabla-form/mercancias-table-form.component';
-
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RepresentanteLegalComponent } from '../representante-legal/representante-legal.component';
-
-import { Observable, Subject, map, takeUntil } from 'rxjs';
-import { Tramite260212Store } from '../../estados/tramite260212.store';
-
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { Modal } from 'bootstrap';
+import { RepresentanteLegalComponent } from '../representante-legal/representante-legal.component';
+import { SolicitudService } from '../../services/solicitud.service';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite260212Query } from '../../estados/tramite260212.query';
+import { Tramite260212Store } from '../../estados/tramite260212.store';
 /**
  * Componente DatosDeLaSolicitud
  * Este componente gestiona los datos y formularios de la solicitud en el flujo de trabajo.
@@ -106,7 +98,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  * Arreglo que almacena los datos de las mercancías.
  * Se utiliza para manejar la información de las mercancías asociadas en el componente.
  */
-  mercanicaData: MercanciaModel[] = [];
+  mercanicaData: MercanciaModel[] = MERCANCIA_POR_DEFECTO;
 
   /**
  * Arreglo que almacena los datos de las mercancías.

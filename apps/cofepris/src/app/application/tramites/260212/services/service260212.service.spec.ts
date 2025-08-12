@@ -235,5 +235,5 @@ describe('Service260212Service', () => {
     expect(req.request.method).toBe('GET');
     req.flush(mockData);
   });
-
+  
 });
