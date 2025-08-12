@@ -217,35 +217,35 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy, AfterViewIni
   initActionFormBuild(): void {
     this.exportadorForm = this.fb.group({
       lugar: [
-        this.exportadoState.lugar,
-        [Validators.required] 
+      this.exportadoState.lugar,
+      [Validators.required] 
       ],
       exportador: [
-        this.exportadoState.exportador,
-        [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\s'.-]+$/)]
+      this.exportadoState.exportador,
+      [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\s'.-]+$/)]
       ],
       empresa: [
-        this.exportadoState.empresa,
-        [Validators.required, Validators.pattern(/^[a-zA-Z0-9\s&.,'-]+$/)]
+      this.exportadoState.empresa,
+      [Validators.required, Validators.pattern(/^[a-zA-Z0-9\s&.,'-]+$/)]
       ],
       cargo: [
-        this.exportadoState.cargo,
-        [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\s'.-]+$/)]
+      this.exportadoState.cargo,
+      [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\s'.-]+$/)]
       ],
       lada: [
-        this.exportadoState.lada, [Validators.pattern(/^\d+$/)]
+      this.exportadoState.lada, [Validators.pattern(/^[a-zA-Z0-9]+$/)]
       ],
       telfono: [
-        this.exportadoState.telfono,
-        [Validators.required, Validators.pattern(/^\d+$/)]
+      this.exportadoState.telfono,
+      [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/)]
       ],
       fax: [
-        this.exportadoState.fax,
-        [Validators.required, Validators.pattern(/^\d+$/)]
+      this.exportadoState.fax,
+      [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/)]
       ],
       correo: [
-        this.exportadoState.correo,
-        [Validators.required, Validators.email, Validators.maxLength(100)]
+      this.exportadoState.correo,
+      [Validators.required, Validators.email, Validators.maxLength(100)]
       ]
     });
 
