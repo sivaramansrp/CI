@@ -1,8 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HistoricoProductoresComponent } from './historico-productores.component';
 import { ReactiveFormsModule, FormsModule, FormBuilder, Validators } from '@angular/forms';
-import { of, Subject } from 'rxjs';
-import { Tramite110223Store } from '../../../../estados/tramites/tramite110223.store';
+import { of } from 'rxjs';
 import { Tramite110223Query } from '../../../../estados/queries/tramite110223.query';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
@@ -10,6 +9,7 @@ import { TituloComponent, TablaDinamicaComponent } from '@libs/shared/data-acces
 import { Modal } from 'bootstrap';
 import { HistoricoColumnas } from '../../../110223/models/certificado-origen.model';
 import { CertificadosOrigenService } from '../../../110223/services/certificado-origen.service';
+import { Tramite110223Store } from '../../../../estados/tramites/Tramite110223.store';
 
 describe('HistoricoProductoresComponent', () => {
   let component: HistoricoProductoresComponent;

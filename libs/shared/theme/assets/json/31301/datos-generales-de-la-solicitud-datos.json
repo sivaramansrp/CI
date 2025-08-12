@@ -1,13 +1,13 @@
 {
-    "tipoDeEndoso": "",
+    "tipoDeEndoso": 1,
     "tipoDeGarantia": 1,
     "modalidadDeLaGarantia": 2,
-    "tipoSector": "1",
+    "tipoSector": 1,
     "concepto": 1,
     "3500": 1,
     "3501": 2,
     "3502": 1,
-    "datosGeneralesRFC": "",
+    "datosGeneralesRFC": "LEQI810131GA8",
     "3503": 2,
     "3504": 1,
     "3505": 2,
@@ -29,8 +29,8 @@
     "3519": 1,
     "3520": 1,
     "tipoInversion": 1,
-    "cantidadInversion": "",
-    "descInversion": "",
+    "cantidadInversion": "SFDFKD",
+    "descInversion": "LDKMLDKD",
     "3521": 1,
     "3522": 1,
     "claveEnumeracionD0": "Importación temporal para elaboración, transformación o reparación en programas de maquila o de exportación (IMMEX)",
@@ -63,6 +63,6 @@
     "textoGenerico22": 40,
     "textoGenerico23": 40,
     "textoGenerico24": 40,
-    "alerta1": false,
-    "alerta2": false
+    "alerta1": true,
+    "alerta2": true
 }

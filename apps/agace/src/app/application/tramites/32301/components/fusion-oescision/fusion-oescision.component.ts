@@ -321,15 +321,17 @@ export class FusionOescisionComponent
     if (ev === 1 || ev === '1') {
       this.isSelectFusionEscision = true;
       this.fusionOescisionTitulo = 'Datos de las empresas fusionadas';
+      this.subFusionOescisionTitulo = 'Datos de las empresas fusionadas';
       this.fechaInicioInput.labelNombre = 'Fecha en que surte efecto la fusión';
     }
     else {
       this.isSelectFusionEscision = false;
-      this.fusionOescisionTitulo = 'Datos de las empresas escindidas';
+      this.fusionOescisionTitulo = 'Datos de las empresas escindente';
+      this.subFusionOescisionTitulo = 'Datos de las empresas escindidas';
       this.fechaInicioInput.labelNombre = 'Fecha en que surte efecto la escisión';
     }
     this.divCompletoVisible = ev === '1' || ev === '0';
-    this.subFusionOescisionTitulo = this.fusionOescisionTitulo;
+   
   }
 
   /** Muestra u oculta los bloques de certificación según la opción elegida */

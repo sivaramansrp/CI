@@ -12,6 +12,7 @@
               type="button"
               class="collpase-button"
               [class.collapsed]="!opcionesColapsable"
+              [disabled]="formularioDeshabilitado"
             ></button>
           </div>
           @if(opcionesColapsable){
@@ -446,7 +447,7 @@
       <div class="col-md-3 my-3">
         <div class="form-group">
           <label class="form-label municipio-label" for="telefono"
-            >S. C. I. A. N
+            >S.C.I.A.N.
           </label>
           <span class="form-label" *ngIf="esCampoRequerido('scian')">*</span>
           <span class="form-label">:</span>
@@ -464,7 +465,6 @@
       <div class="col-md-12">
         <div class="pull-right ml-2">
           <button
-            *ngIf="scianConfig.datos.length > 0"
             type="button"
             name="eliminarScian"
             class="btn btn-danger ms-2"
@@ -500,17 +500,14 @@
             formControlName="aviso"
           />
           <label class="form-check-label" for="aviso"
-            >Aviso de funcionamiento
-            <span *ngIf="!datosSolicitudForm.value.aviso">*</span>
+            >Aviso de funcionamiento<span *ngIf="esCampoRequerido('aviso')">*</span>:
           </label>
         </div>
       </div>
       <div class="col-md-4">
-        <label class="form-label mx-1" for="licenciaSanitaria"
-          >No. de licencia sanitaria
-          <span *ngIf="!datosSolicitudForm.value.aviso">*</span>:</label
-        >
-
+        <div class="form-check mt-4">
+          <label class="form-label mx-1" for="licenciaSanitaria"
+          >No. de licencia sanitaria<span *ngIf="esCampoRequerido('licenciaSanitaria')">*</span>:</label>
         <span
           tooltip="Número de la autorización indicado en el  documento emitido por la autoridad sanitaria competente"
         >
@@ -537,6 +534,8 @@
         >
           Este campo es obligatorio.
         </small>
+        </div>
+        
       </div>
     </div>
 

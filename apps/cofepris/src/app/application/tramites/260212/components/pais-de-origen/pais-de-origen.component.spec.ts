@@ -22,10 +22,10 @@ describe('PaisDeOrigenComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería alternar plegable cuando se llama mostrar_plegable', () => {
-    const estadoInicial = component.plegable;
-    component.mostrar_plegable();
-    expect(component.plegable).toBe(!estadoInicial);
+  it('debería alternar plegable cuando se llama mostrarPaisDeOrigen', () => {
+    const estadoInicial = component.paisDeOrigenPlegable;
+    component.mostrarPaisDeOrigen();
+    expect(component.paisDeOrigenPlegable).toBe(!estadoInicial);
   });
 
   it('debería agregar todos los elementos a fechasSeleccionadas cuando se llama agregar con "t"', () => {
@@ -43,17 +43,17 @@ describe('PaisDeOrigenComponent', () => {
   });
 
   it('debería tener los valores iniciales correctamente establecidos', () => {
-    expect(component.plegable).toBe(false);
+    expect(component.paisDeOrigenPlegable).toBe(false);
     expect(component.selectRangoDias ?? []).toEqual([]);
     expect(component.fechasSeleccionadas ?? []).toEqual([]);
     expect(component.fechasDatos ?? []).toEqual([]);
   });
 
   it('debería alternar plegable varias veces', () => {
-    component.mostrar_plegable();
-    expect(component.plegable).toBe(true);
-    component.mostrar_plegable();
-    expect(component.plegable).toBe(false);
+    component.mostrarPaisDeOrigen();
+    expect(component.paisDeOrigenPlegable).toBe(true);
+    component.mostrarPaisDeOrigen();
+    expect(component.paisDeOrigenPlegable).toBe(false);
   });
 
   it('no debería hacer nada si se llama agregar con un valor distinto de "t"', () => {
@@ -83,11 +83,11 @@ describe('PaisDeOrigenComponent', () => {
     expect(component.fechasDatos).toEqual([]);
   });
 
-  // Cobertura para mostrar_plegable cuando ya está en true
+  // Cobertura para mostrarPaisDeOrigen cuando ya está en true
   it('debería alternar plegable de true a false', () => {
-    component.plegable = true;
-    component.mostrar_plegable();
-    expect(component.plegable).toBe(false);
+    component.paisDeOrigenPlegable = true;
+    component.mostrarPaisDeOrigen();
+    expect(component.paisDeOrigenPlegable).toBe(false);
   });
 
   // Cobertura para agregar con valor vacío ('')
@@ -157,6 +157,34 @@ describe('PaisDeOrigenComponent', () => {
     // Dependiendo de la implementación, puede que no quite nada
     expect(Array.isArray(component.fechasDatos)).toBe(true);
   });
+
+  it('debería alternar paisDeProcedenciaPlegable cuando se llama mostrarPaisDeProcedencia', () => {
+    const estadoInicial = component.paisDeProcedenciaPlegable;
+    component.mostrarPaisDeProcedencia();
+    expect(component.paisDeProcedenciaPlegable).toBe(!estadoInicial);
+  });
+
+  it('debería alternar usoEspecificoPlegable cuando se llama mostrarUsoEpecifico', () => {
+    const estadoInicial = component.usoEspecificoPlegable;
+    component.mostrarUsoEpecifico();
+    expect(component.usoEspecificoPlegable).toBe(!estadoInicial);
+  });
+
+  it('no debería lanzar error si fecha.value no es un array', () => {
+    component.fechasDatos = ['2023-01-01'];
+    component.fechasSeleccionadas = [];
+    (component as any).fecha = { value: ['0'] };
+    expect(() => component.agregar('')).not.toThrow();
+  });
+
+  it('no debería lanzar error si fechaSeleccionada.value no es un array', () => {
+    component.fechasSeleccionadas = ['2023-01-01'];
+    component.fechasDatos = [];
+    (component as any).fechaSeleccionada = { value: ['0'] };
+    expect(() => component.quitar('')).not.toThrow();
+  });
+
+
 
 });
 

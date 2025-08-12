@@ -1,4 +1,4 @@
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { DetallesDelMercancia } from '@libs/shared/data-access-user/src/core/models/11105/detalles-del-merchancia.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -45,6 +45,16 @@ export class RetiradaDeLaAutorizacionDeDonacionesService {
   getDatosConsulta(): Observable<RespuestaConsulta> {
     return this.http.get<RespuestaConsulta>(
       'assets/json/11105/consulta_11105.json'
+    );
+  }
+
+  /**
+   * Obtiene el catálogo de países.
+   * @returns Un observable que emite un objeto del tipo `RespuestaCatalogos` con el catálogo de países.
+   */
+  getPaisCatalogo(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(
+      'assets/json/11105/pais.json'
     );
   }
 }

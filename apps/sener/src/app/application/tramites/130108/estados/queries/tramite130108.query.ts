@@ -1,6 +1,7 @@
 import { Tramite130108State, Tramite130108Store } from '../tramites/tramites130108.store';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 import { Query } from '@datorama/akita';
 
 /**
@@ -24,6 +25,14 @@ export class Tramite130108Query extends Query<Tramite130108State> {
    */
   get mostrarTabla$(): Observable<boolean> {
     return this.select((state) => state.mostrarTabla);
+  }
+
+  /**
+   * Selecciona los datos de la tabla dinámica.
+   * @returns Observable con los datos de la tabla de partidas de la mercancía.
+   */
+  get tablaDatos$(): Observable<PartidasDeLaMercanciaModelo[]> {
+    return this.select((state) => state.tablaDatos);
   }
 
   /**

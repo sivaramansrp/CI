@@ -16,7 +16,12 @@ import { takeUntil } from 'rxjs';
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
   standalone: true,
-  imports: [SolicitanteComponent, CommonModule, ContenedorComponent, NotificacionesComponent]
+  imports: [
+    SolicitanteComponent,
+    CommonModule,
+    ContenedorComponent,
+    NotificacionesComponent
+  ]
 })
 export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
   /**
@@ -192,14 +197,14 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
         }
       }
       
-      // Reiniciar el formulario de ContenedorComponent
+      // Limpiar el store del trámite primero
+      this.tramite11201Store.limpiarSolicitud();
+      
+      // Reiniciar el formulario de ContenedorComponent y limpiar sus campos
       if (this.contenedorComponent) {
         this.contenedorComponent.solicitudForm.reset();
         this.contenedorComponent.limpiarCampos();
       }
-      
-      // Limpiar el store del trámite
-      this.tramite11201Store.limpiarSolicitud();
       
       this.indice = 2;
       this.cancelarEvento.emit();

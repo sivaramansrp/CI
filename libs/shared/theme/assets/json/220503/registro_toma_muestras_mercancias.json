@@ -13,7 +13,7 @@
     "tipocontenedor": 1,
     "transporteIdMedio": 1,
     "identificacionTransporte": "020202",
-    "esSolicitudFerros": "0",
+    "esSolicitudFerros": "no",
     "totalDeGuiasAmparadas": 1,
     "foliodel": 1,
     "aduanaIngreso": 1,
@@ -65,7 +65,7 @@
     "banco": "1",
     "llavePago": "KEY-PAGO-9999",
     "importePago": "2500.00",
-    "fechaPago": "2025-07-24"
+    "fechaPago": "16/05/2025"
   },
   "selectedmercanciaGroupDatos": {
     "noPartida": "001",

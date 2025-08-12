@@ -53,6 +53,11 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
    */
   @Output() emitButtonAction = new EventEmitter<boolean>();
 
+  /** 
+ * Evento que se emite cuando se ha agregado un nuevo registro correctamente.
+ */
+  @Output() registroAgregado = new EventEmitter<void>();
+
   /**
    * Notificador para destruir suscripciones activas y evitar fugas de memoria.
    * @type {Subject<void>}
@@ -582,6 +587,24 @@ validarNewAgregarFila():void{
   GROUPO_DOMICILIO_LUGAR.reset();
 
   this.accionesBotones(this.actionTypes.TABLE_ACTION, this.botonAccionesTipos.AGREGAR);
+}
+
+/**
+ * Valida los formularios `datosQuienRecibe` y `datosDomicilioLugar`.
+ * Si son válidos, ejecuta la acción de agregar y emite el evento `registroAgregado`.
+ */
+onAgregarClick(): void {
+  const GROUPO_QUIEN_RECIBE = this.formulario.get('datosQuienRecibe') as FormGroup;
+  const GROUPO_DOMICILIO_LUGAR = this.formulario.get('datosDomicilioLugar') as FormGroup;
+
+  if (GROUPO_QUIEN_RECIBE.get("rfc")?.invalid || (GROUPO_DOMICILIO_LUGAR.get("nombreComercial")?.invalid && GROUPO_DOMICILIO_LUGAR.get("entidadFederativa")?.invalid && GROUPO_DOMICILIO_LUGAR.get("alcalida_municipio")?.invalid && GROUPO_DOMICILIO_LUGAR.get("colonias")?.invalid)) {
+    Object.values(GROUPO_QUIEN_RECIBE.controls).forEach(control => control.markAsTouched());
+    Object.values(GROUPO_DOMICILIO_LUGAR.controls).forEach(control => control.markAsTouched());
+    return;
+  }
+  this.accionesBotones(this.actionTypes.FORM_ACTION, this.botonAccionesTipos.AGREGAR);
+
+  this.registroAgregado.emit();
 }
 
   /**

@@ -70,16 +70,18 @@ export interface MercanciaModel {
   
   tipoDeEnvase: string;
 
-  tipoDePresentacion: string;
+  numeroDeregistroSanitario?: string;
 
-  numeroRegistroSanitario: string;
-  paisDeOrigen: string;
+  paisDeorigen?: string;
 
-  paisDeProcedencia: string;
-  tipoProducto: string;
+  paisDeprocedencia?: string;
 
-  usoEspecifico: string;
-  fechaCaducidad: string;
+  tipoProducto?: string;
+
+  usoEspecifico?: string;
+
+  fechaDeCaducidad?: string;
+  
 }
 
 /**

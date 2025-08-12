@@ -5,7 +5,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <label for="entidadExterna" class="required-label">Nombre de la entidad externa.</label>
-                    <input type="text" id="entidadExterna" class="form-control" placeholder="PRUEBAS"
+                    <input type="text" id="entidadExterna" class="form-control"
                         formControlName="entidadExterna" maxlength="255" (input)="updateEntidadExterna()">
                     <div class="mensaje-error"
                         *ngIf="entidadForm.get('entidadExterna')?.touched && entidadForm.get('entidadExterna')?.invalid">
@@ -19,7 +19,7 @@
                 </div>
                 <div class="col-md-6">
                     <label for="nombreSolicitanteIPC" class="required-label">Nombre de quien solicita IPC</label>
-                    <input type="text" id="nombreSolicitanteIPC" class="form-control" placeholder="PAGB"
+                    <input type="text" id="nombreSolicitanteIPC" class="form-control"
                         formControlName="nombreSolicitanteIPC" maxlength="255" (input)="updateNombreSolicitanteIPC()">
                     <div class="mensaje-error"
                         *ngIf="entidadForm.get('nombreSolicitanteIPC')?.touched && entidadForm.get('nombreSolicitanteIPC')?.invalid">
@@ -33,7 +33,7 @@
                 </div>
                 <div class="col-md-6">
                     <label for="cargoSolicitanteIPC" class="form-label">Cargo de quien solicita IPC</label>
-                    <input type="text" id="cargoSolicitanteIPC" class="form-control" placeholder="PAGB"
+                    <input type="text" id="cargoSolicitanteIPC" class="form-control" 
                         formControlName="cargoSolicitanteIPC" maxlength="255" (input)="updateCargoSolicitanteIPC()">
                     <div class="mensaje-error"
                         *ngIf="entidadForm.get('cargoSolicitanteIPC')?.touched && entidadForm.get('cargoSolicitanteIPC')?.invalid">
@@ -45,7 +45,7 @@
                 <div class="col-md-6">
                     <label for="folioOficioSolicitudIPC" class="required-label">Folio del oficio de la solicitud
                         IPC</label>
-                    <input type="text" id="folioOficioSolicitudIPC" class="form-control" placeholder="1234567890"
+                    <input type="text" id="folioOficioSolicitudIPC" class="form-control" 
                         formControlName="folioOficioSolicitudIPC" maxlength="30"
                         (input)="updateFolioOficioSolicitudIPC()">
                     <div class="mensaje-error"

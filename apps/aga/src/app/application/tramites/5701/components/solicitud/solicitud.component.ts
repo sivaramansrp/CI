@@ -84,10 +84,12 @@ import {
   
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
+  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -163,7 +165,6 @@ import {
   MSJ_ERROR_ID_SOCIO_COMERCIAL,
   MSJ_ERROR_LINEA_CAPTURA,
   MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA,
-  MSJ_ERROR_RFC_AUTORIZACION_LDA,
   MSJ_FECHA_DENTRO_DE_HORARIO_ADUANA,
   MSJ_LINEA_CAPTURA_DUPLICADA,
   MSJ_LINEA_CAPTURA_NO_PAGADA,
@@ -550,6 +551,8 @@ export class SolicitudComponent
 
   tabla1 = 'tablaPagos'; 
 
+  @Output() validForm = new EventEmitter<boolean>();
+
   constructor(
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
@@ -619,6 +622,12 @@ export class SolicitudComponent
 
     this.crearFormSolicitud();
 
+    // Escuchar cambios en el estado de validación del formulario
+    this.FormSolicitud.statusChanges.subscribe(_ => {
+      this.validForm.emit(this.FormSolicitud.valid);
+    });
+    
+
     this.initializeTipoEmpresaCertificadaStates();
 
     this.FormSolicitud.statusChanges
@@ -640,7 +649,11 @@ export class SolicitudComponent
       this.domSanitizer.bypassSecurityTrustUrl(URL_GENERAR_LINEA_CAPTURA);
   }
 
-  
+  // Método para forzar validación
+  validarFormulario(): boolean {
+    this.FormSolicitud.markAllAsTouched();
+    return this.FormSolicitud.valid;
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['folioSolicitud'] && changes['folioSolicitud'].currentValue) {
@@ -1170,7 +1183,10 @@ export class SolicitudComponent
         nombreRecinto: [this.solicitudState?.nombreRecinto],
         tipoDespacho: [this.solicitudState?.tipoDespacho],
         descripcionTipoDespacho: [this.solicitudState?.descripcionTipoDespacho],
-        tipoOperacion: [this.solicitudState?.tipoOperacion],
+        tipoOperacion: [
+          this.solicitudState?.tipoOperacion,
+          [ValidacionesFormularioService.noMenosUnoValor],
+        ],
         patente: [{ value: this.solicitudState?.patente, disabled: true }],
         relacionSociedad: [
           { value: this.solicitudState?.relacionSociedad, disabled: true },
@@ -1183,10 +1199,12 @@ export class SolicitudComponent
       }),
 
       mercancia: this.fb.group({
-        paisOrigen: [this.solicitudState?.paisOrigen, Validators.required],
+        paisOrigen: [this.solicitudState?.paisOrigen, 
+          [Validators.required, ValidacionesFormularioService.noMenosUnoValor]
+        ],
         paisProcedencia: [
           this.solicitudState?.paisProcedencia,
-          Validators.required,
+          [Validators.required, ValidacionesFormularioService.noMenosUnoValor],
         ],
         descripcionGenerica: [
           this.solicitudState?.descripcionGenerica,

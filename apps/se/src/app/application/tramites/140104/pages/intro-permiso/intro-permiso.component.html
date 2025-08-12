@@ -2,9 +2,11 @@
   <div class="container">
     <div class="row" [class.hide]="mostrarBusqueda">
       <div class="col-md-12">
-        <h1>Permiso Automático de importación</h1>
+        <h1>Cancelación de Certificados a Petición del Interesado</h1>
       </div>
-
+      <div class="col-md-12 mt-2" *ngIf="showAlert">
+<ng-alert [CONTENIDO]="TEXTOS.TEXTOS_CANCELACION" [CUSTOMECLASS]="infoAlert"></ng-alert>
+      </div>
       <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
 

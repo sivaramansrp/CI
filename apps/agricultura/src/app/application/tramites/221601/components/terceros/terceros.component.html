@@ -7,8 +7,8 @@
   <!-- Exportador table -->
   <div class="row">
     <h6>Exportador*</h6>
-    <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="exportador"
-      [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+    <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="exportador" [tipoSeleccionTabla]="checkbox"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
       (listaDeFilaSeleccionada)="onExportadorSeleccionado($event)">
     </app-tabla-dinamica>
     <nav aria-label="Page navigation example">
@@ -57,6 +57,13 @@
         </div>
         <div class="row mb-3">
           <div class="col-md-6">
+            <app-input-radio [radioOptions]="tipoPersonaOptions" [isRequired]="true" formControlName="tipoPersona"
+              [layout]="'horizontal'" (valueChange)="cambiarRadioFisica($event)"
+              (change)="setValoresStore(tipoPersonaForm,'tipoPersona','setTipoPersona')"></app-input-radio>
+          </div>
+        </div>
+        <!-- <div class="row mb-3">
+          <div class="col-md-6">
             <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona"
               value="fisica" id="fisica"
               (change)="setValoresStore(tipoPersonaForm,'tipoPersona', 'setTipoPersona')" />
@@ -76,7 +83,7 @@
               (change)="setValoresStore(tipoPersonaForm,'tipoPersona', 'setTipoPersona')" />
             <label for="moral">Moral</label>
           </div>
-        </div>
+        </div> -->
       </form>
 
       <!-- Planta TIF Search Block -->
@@ -96,10 +103,10 @@
         </div>
         <div class="d-flex justify-content-end">
           <button type="button" class="btn btn-default me-2" (click)="limpiarBusquedaTif()">Limpiar</button>
-          <button type="button" class="btn btn-primary" >Buscar</button>
+          <button type="button" class="btn btn-primary">Buscar</button>
         </div>
       </div>
-<!-- Datos personales form -->
+      <!-- Datos personales form -->
       <ng-titulo titulo="Datos personales" />
       <form [formGroup]="datosPersonales">
         @if (showFisicaRow) {
@@ -107,7 +114,7 @@
           <div class="col-md-4 mb-3">
             <div class="form-group">
               <label class="form-label" for="nombre">Nombre(s)*:</label>
-              <input class="form-control" id="nombre" type="number" formControlName="nombre" maxlength="200"
+              <input class="form-control" id="nombre" type="text" formControlName="nombre" maxlength="200"
                 (change)="setValoresStore(datosPersonales,'nombre', 'setNombre')" />
               <div class="d-grid">
                 <div *ngIf="datosPersonales.get('nombre')?.touched">
@@ -121,7 +128,7 @@
           <div class="col-md-4 mb-3">
             <div class="form-group">
               <label class="form-label" for="primerApellido">Primer apellido*:</label>
-              <input class="form-control" id="primerApellido" type="text" formControlName="primerApellido"
+              <input class="form-control" id="primerApellido" type="text" formControlName="primerApellido" maxlength="200"
                 (change)="setValoresStore(datosPersonales,'primerApellido', 'setPrimerApellido')" />
               <div class="d-grid">
                 <div *ngIf="datosPersonales.get('primerApellido')?.touched">
@@ -136,7 +143,7 @@
           <div class="col-md-4 mb-3">
             <div class="form-group">
               <label class="form-label" for="segundoApellido">Segundo apellido:</label>
-              <input class="form-control" id="segundoApellido" type="text" formControlName="segundoApellido"
+              <input class="form-control" id="segundoApellido" type="text" formControlName="segundoApellido" maxlength="200"
                 (change)="setValoresStore(datosPersonales,'segundoApellido', 'setSegundoApellido')" />
               <div class="d-grid">
                 <div *ngIf="datosPersonales.get('segundoApellido')?.touched">
@@ -189,7 +196,7 @@
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="codigo">Código postal</label>
+              <label class="form-label" for="codigo">Código postal:</label>
               <input class="form-control" id="codigo" type="text" formControlName="codigo" maxlength="5" size="5"
                 (change)="setValoresStore(datosPersonales,'codigo', 'setCodigo')" />
             </div>
@@ -215,7 +222,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <app-catalogo-select [catalogo]="municipioCatalogo" formControlName="municipio"
-                [label]="'Municipio o Alcaldía'" [isDisabled]="showPlantaRow" [isDisabled]="esFormularioSoloLectura"
+                [label]="'Municipio o Alcaldía:'" [isDisabled]="showPlantaRow" [isDisabled]="esFormularioSoloLectura"
                 [required]="true" name="municipio"
                 (change)="setValoresStore(datosPersonales, 'municipio', 'setMunicipio')">
               </app-catalogo-select>
@@ -223,7 +230,7 @@
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <app-catalogo-select [catalogo]="coloniaCatalogo" formControlName="colonia" [label]="'Colonia'"
+              <app-catalogo-select [catalogo]="coloniaCatalogo" formControlName="colonia" [label]="'Colonia:'"
                 [isDisabled]="showPlantaRow" [isDisabled]="esFormularioSoloLectura" [required]="true" name="colonia"
                 (change)="setValoresStore(datosPersonales, 'colonia', 'setColonia')">
               </app-catalogo-select>
@@ -248,7 +255,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="exterior">Número exterior*:</label>
-              <input class="form-control" id="exterior" type="number" formControlName="exterior" maxlength="55"
+              <input class="form-control" id="exterior" type="text" formControlName="exterior" maxlength="55"
                 (change)="setValoresStore(datosPersonales,'exterior', 'setExterior')" />
 
               <div class="d-grid">
@@ -267,7 +274,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="interior">Número interior:</label>
-              <input class="form-control" id="interior" type="number" formControlName="interior" maxlength="55"
+              <input class="form-control" id="interior" type="text" formControlName="interior" maxlength="55"
                 (change)="setValoresStore(datosPersonales,'interior', 'setInterior')" />
               <div class="d-grid">
                 <div *ngIf="datosPersonales.get('interior')?.touched">
@@ -284,7 +291,7 @@
           <div class="col-md-1 mb-3">
             <div class="form-group">
               <label class="form-label" for="lada">Lada:</label>
-              <input class="form-control" id="lada" type="number" formControlName="lada" maxlength="5" size="5"
+              <input class="form-control" id="lada" type="text" formControlName="lada" maxlength="5" size="5"
                 (change)="setValoresStore(datosPersonales,'lada', 'setLada')" />
               <div class="d-grid">
                 <div *ngIf="datosPersonales.get('lada')?.touched">
@@ -299,7 +306,7 @@
           <div class="col-md-3 mb-3">
             <div class="form-group">
               <label class="form-label" for="telefono">Teléfono:</label>
-              <input class="form-control" id="telefono" type="number" formControlName="telefono" maxlength="30"
+              <input class="form-control" id="telefono" type="text" formControlName="telefono" maxlength="30"
                 size="29" (change)="setValoresStore(datosPersonales,'telefono', 'setTelefono')" />
               <div class="d-grid">
                 <div *ngIf="datosPersonales.get('telefono')?.touched">
@@ -346,17 +353,17 @@
   <app-modal [active]="showBuscarTercerosModal">
     <div>
       <ng-titulo titulo="Terceros relacionados" />
-      
+
       <form [formGroup]="buscarTercerosForm" class="form">
         <!-- Radio buttons for Física and Moral -->
         <div class="row mb-3">
           <div class="col-md-6">
-            <input class="form-check-input me-2" type="radio" name="tipoPersonaBuscar" 
+            <input class="form-check-input me-2" type="radio" name="tipoPersonaBuscar"
               formControlName="tipoPersonaBuscar" value="fisica" id="fisicaBuscar" />
             <label for="fisicaBuscar">Física</label>
           </div>
           <div class="col-md-6">
-            <input class="form-check-input me-2" type="radio" name="tipoPersonaBuscar" 
+            <input class="form-check-input me-2" type="radio" name="tipoPersonaBuscar"
               formControlName="tipoPersonaBuscar" value="moral" id="moralBuscar" />
             <label for="moralBuscar">Moral</label>
           </div>
@@ -397,27 +404,29 @@
         <div class="row mb-3">
           <div class="col-md-6">
             <app-catalogo-select [catalogo]="paisCatalogo" formControlName="pais" [label]="'País'" [isDisabled]="true"
-                [isDisabled]="esFormularioSoloLectura" [required]="true" name="pais"></app-catalogo-select>
+              [isDisabled]="esFormularioSoloLectura" [required]="true" name="pais"></app-catalogo-select>
           </div>
-        
+
           <div class="col-md-6">
-            <app-catalogo-select [catalogo]="estadoCatalogo" formControlName="entidadFederativa" [label]="'Entidad Federativa'" [isDisabled]="true"
-                [isDisabled]="esFormularioSoloLectura" [required]="true" name="entidadFederativa" [placeholder]="'Selecciona una valor'"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="estadoCatalogo" formControlName="entidadFederativa"
+              [label]="'Entidad Federativa'" [isDisabled]="true" [isDisabled]="esFormularioSoloLectura"
+              [required]="true" name="entidadFederativa" [placeholder]="'Selecciona una valor'"></app-catalogo-select>
           </div>
-</div>
-<!-- Action buttons -->
+        </div>
+        <!-- Action buttons -->
         <div class="d-flex justify-content-end">
           <button type="button" class="btn btn-primary me-2" (click)="cerrarBuscarTercerosModal()">Cerrar</button>
-          <button type="button" class="btn btn-outline-secondary me-2" (click)="limpiarBuscarTerceros()">Limpiar</button>
-          <button type="button" class="btn btn-primary" >Buscar</button>
+          <button type="button" class="btn btn-outline-secondary me-2"
+            (click)="limpiarBuscarTerceros()">Limpiar</button>
+          <button type="button" class="btn btn-primary">Buscar</button>
         </div>
       </form>
     </div>
-     <div class="row">
-    <h6>Terceros</h6>
-    <app-tabla-dinamica [configuracionTabla]="configuracionTablaDatos" [datos]="destinatario"
-      [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
-    </app-tabla-dinamica>
+    <div class="row">
+      <h6>Terceros</h6>
+      <app-tabla-dinamica [configuracionTabla]="configuracionTablaDatos" [datos]="destinatario"
+        [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
+      </app-tabla-dinamica>
     </div>
   </app-modal>
 </div>

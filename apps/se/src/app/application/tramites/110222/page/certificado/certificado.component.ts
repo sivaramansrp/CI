@@ -12,12 +12,11 @@
  */
 import { AccionBoton, ListaPasoWizard } from '../../models/peru-certificado.module';
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, PAGO_DE_DERECHOS, SeccionLibStore } from '@ng-mf/data-access-user';
+import { DatosPasos, WizardComponent } from '@libs/shared/data-access-user/src'
+import { PAGO_DE_DERECHOS, SeccionLibStore } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { PASOS } from '../../constantes/peru-certificado.module';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
-import { WizardComponent } from '@ng-mf/data-access-user';
-
 /**
  * @component CertificadoComponent
  * @description

@@ -85,14 +85,14 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.tramiteStore = component.tramiteStore || {};
     component.tramiteStore.setEsSolicitudFerros = jest.fn();
     component.cambiarRadio({}, {});
-    // expect(component.tramiteStore.setEsSolicitudFerros).toHaveBeenCalled();
+    expect(component.tramiteStore.setEsSolicitudFerros).toHaveBeenCalled();
   });
 
   it('should run #cambioFechaInicio()', async () => {
     component.tramiteStore = component.tramiteStore || {};
     component.tramiteStore.setFechaDeInspeccion = jest.fn();
     component.cambioFechaInicio({});
-    // expect(component.tramiteStore.setFechaDeInspeccion).toHaveBeenCalled();
+    expect(component.tramiteStore.setFechaDeInspeccion).toHaveBeenCalled();
   });
 
   it('should run #inicializarEstadoFormulario()', async () => {

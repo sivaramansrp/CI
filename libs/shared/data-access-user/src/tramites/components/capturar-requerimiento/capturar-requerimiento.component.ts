@@ -36,7 +36,7 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
    * Límite máximo de caracteres para el campo de justificación
    */
   readonly MAX_CHARS = 10000;
-  
+
   /**
    * Flag para mostrar mensaje de límite de caracteres alcanzado
    */
@@ -76,9 +76,9 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
    */
   crearFormRequerimiento(): void {
     this.formRequerimiento = this.fb.group({
-      tipoRequerimiento: [this.solicitudRequerimientosState.idTipoRequerimiento, [Validators.required]],
-      areaSolicitante: [this.solicitudRequerimientosState?.areaSolicitante, [Validators.required, Validators.maxLength(10000)]],
-      justificacionRequerimiento: [this.solicitudRequerimientosState?.justificacionRequerimiento, [Validators.required, Validators.maxLength(10000)]]
+      tipoRequerimiento: [this.solicitudRequerimientosState?.idTipoRequerimiento, [Validators.required]],
+      areaSolicitante: [this.solicitudRequerimientosState?.areaSolicitante, [Validators.required, Validators.maxLength(this.MAX_CHARS)]],
+      justificacionRequerimiento: [this.solicitudRequerimientosState?.justificacionRequerimiento, [Validators.required, Validators.maxLength(this.MAX_CHARS)]]
     });
   }
   /**
@@ -118,16 +118,16 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
   onKeydown(event: KeyboardEvent): void {
     const CURRENT_VALUE = this.formRequerimiento.get('justificacionRequerimiento')?.value || '';
     const IS_AT_LIMIT = CURRENT_VALUE.length >= this.MAX_CHARS;
-    
+
     // Permitir teclas de navegación y edición (backspace, delete, arrow keys, etc.)
     const ALLOWED_KEYS = [
       'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
       'Home', 'End', 'PageUp', 'PageDown', 'Tab', 'Escape'
     ];
-    
+
     // Permitir Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X, Ctrl+Z
     const IS_CTRL_KEY = event.ctrlKey && ['a', 'c', 'v', 'x', 'z'].includes(event.key.toLowerCase());
-    
+
     // Si se alcanzó el límite y la tecla no está permitida, prevenir la entrada
     if (IS_AT_LIMIT && !ALLOWED_KEYS.includes(event.key) && !IS_CTRL_KEY) {
       event.preventDefault();
@@ -153,20 +153,20 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
     const CLIPBOARD_DATA = event.clipboardData?.getData('text') || '';
     const CURRENT_VALUE = this.formRequerimiento.get('justificacionRequerimiento')?.value || '';
     const REMAINING_CHARS = this.MAX_CHARS - CURRENT_VALUE.length;
-    
+
     if (CLIPBOARD_DATA.length > REMAINING_CHARS) {
       event.preventDefault();
       const TRUNCATED_TEXT = CLIPBOARD_DATA.substring(0, REMAINING_CHARS);
       const NEW_VALUE = CURRENT_VALUE + TRUNCATED_TEXT;
-      
+
       this.formRequerimiento.get('justificacionRequerimiento')?.setValue(NEW_VALUE);
       this.setValoresStore(this.formRequerimiento, 'justificacionRequerimiento', 'setjustificacionRequerimientoValue');
-      
+
       // Mostrar mensaje si se truncó el contenido
       if (REMAINING_CHARS <= 0 || CLIPBOARD_DATA.length > REMAINING_CHARS) {
         this.showCharLimitMessage = true;
       }
-      
+
       // Marcar como tocado para mostrar validaciones
       this.formRequerimiento.get('justificacionRequerimiento')?.markAsTouched();
     }

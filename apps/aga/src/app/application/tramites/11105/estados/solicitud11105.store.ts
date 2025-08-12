@@ -10,6 +10,12 @@ export interface Solicitud11105State {
    * Código de la aduana relacionada con la solicitud.
    */
   aduana: string;
+
+  /**
+   * Indica si la solicitud es de un organismo público.
+   */
+  organismoPublico: boolean;
+
   /**
    * Nombre del solicitante.
    */
@@ -45,7 +51,7 @@ export interface Solicitud11105State {
   /**
    * Manifiesto relacionado con la mercancía.
    */
-  manifesto?: string;
+  manifesto?: boolean;
   /**
    * Dirección del solicitante.
    */
@@ -85,7 +91,7 @@ export interface Solicitud11105State {
   /**
    * Indica si la opción parcial está seleccionada.
    */
-  opcion:boolean;
+  opcion:string;
   /**
    * Folio original de la solicitud, si aplica.
    */
@@ -108,7 +114,8 @@ export interface Solicitud11105State {
 export function createInitialState(): Solicitud11105State {
   return {
     aduana: '',
-    nombre: '',
+    organismoPublico: false,
+    nombre: 'PRUEBA QA',
     tipoMercancia: '',
     usoEspecifico: '',
     condicion: '',
@@ -116,17 +123,17 @@ export function createInitialState(): Solicitud11105State {
     ano: '',
     modelo: '',
     serie: '',
-    manifesto: '',
-    calle: '',
-    numeroExterior: '',
+    manifesto: true,
+    calle: 'av revolución',
+    numeroExterior: '1181',
     numeroInterior: '',
-    telefono: '',
-    correoElectronico: '',
-    pais: '',
-    codigoPostal: '',
-    estado: '',
-    colonia: '',
-    opcion: false,
+    telefono: '1123456776543',
+    correoElectronico: 'paulinosistemas24@gmail.com',
+    pais: '1',
+    codigoPostal: '03930',
+    estado: 'Distrito Federal',
+    colonia: 'CENTRO',
+    opcion: 'si',
     folioOriginal: '',
     justificacionDelDesistimiento: '',
   };
@@ -177,6 +184,15 @@ export class Solicitud11105Store extends Store<Solicitud11105State> {
    */
   public setAduana(aduana: string): void {
     this.update((state) => ({ ...state, aduana }));
+  }
+
+  /**
+   * Establece el valor de la propiedad "organismoPublico" en el estado.
+   * 
+   * @param organismoPublico - El valor booleano que indica si la solicitud es de un organismo público.
+   */
+  public setOrganismoPublico(organismoPublico: boolean): void {
+    this.update((state) => ({ ...state, organismoPublico }));
   }
 
  /**
@@ -254,7 +270,7 @@ export class Solicitud11105Store extends Store<Solicitud11105State> {
    *
    * @param manifesto - El valor del manifiesto que se desea establecer.
    */
-  public setManifesto(manifesto: string): void {
+  public setManifesto(manifesto: boolean): void {
     this.update((state) => ({ ...state, manifesto }));
   }
   /**
@@ -348,9 +364,9 @@ export class Solicitud11105Store extends Store<Solicitud11105State> {
   /**
    * Establece el valor de la propiedad "opcion" en el estado.
    *
-   * @param opcion - El valor booleano que indica si la opción está seleccionada.
+   * @param opcion - El valor string que indica si la opción está seleccionada.
    */
-  public setOpcion(opcion: boolean): void {
+  public setOpcion(opcion: string): void {
     this.update((state) => ({ ...state, opcion }));
   }
 
