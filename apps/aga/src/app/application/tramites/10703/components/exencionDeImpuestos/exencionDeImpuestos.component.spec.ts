@@ -129,26 +129,35 @@ describe('ExencionDeImpuestosComponent', () => {
     expect(component.enableModficarBoton).toBe(fila);
   });
 
-  it('should disable forms if esFormularioSoloLectura is true in guardarDatosFormulario', () => {
-    component.tramiteForm = new FormBuilder().group({});
-    component.agregarMercanciasForm = new FormBuilder().group({});
+  it('should disable forms if esFormularioSoloLectura is true in guardarDatosFormulario', () => {    
     component.esFormularioSoloLectura = true;
-    jest.spyOn(component.tramiteForm, 'disable');
-    jest.spyOn(component.agregarMercanciasForm, 'disable');
+    component.inicializarFormulario();
+
+    const tramiteFormMock = { disable: jest.fn(), enable: jest.fn() };
+    const agregarMercanciasFormMock = { disable: jest.fn(), enable: jest.fn() };
+
+    component.tramiteForm = tramiteFormMock as any;
+    component.agregarMercanciasForm = agregarMercanciasFormMock as any;
+
     component.guardarDatosFormulario();
-    expect(component.tramiteForm.disable).toHaveBeenCalled();
-    expect(component.agregarMercanciasForm.disable).toHaveBeenCalled();
+    expect(tramiteFormMock.disable).toHaveBeenCalled();
+    expect(agregarMercanciasFormMock.disable).toHaveBeenCalled();
   });
 
-  it('should enable forms if esFormularioSoloLectura is false in guardarDatosFormulario', () => {
-    component.tramiteForm = new FormBuilder().group({});
-    component.agregarMercanciasForm = new FormBuilder().group({});
+  it('should enable forms if esFormularioSoloLectura is false in guardarDatosFormulario', () => {    
     component.esFormularioSoloLectura = false;
-    jest.spyOn(component.tramiteForm, 'enable');
-    jest.spyOn(component.agregarMercanciasForm, 'enable');
+    component.inicializarFormulario();
+
+    const tramiteFormMock = { disable: jest.fn(), enable: jest.fn() };
+    const agregarMercanciasFormMock = { disable: jest.fn(), enable: jest.fn() };
+
+    component.tramiteForm = tramiteFormMock as any;
+    component.agregarMercanciasForm = agregarMercanciasFormMock as any;
+
     component.guardarDatosFormulario();
-    expect(component.tramiteForm.enable).toHaveBeenCalled();
-    expect(component.agregarMercanciasForm.enable).toHaveBeenCalled();
+
+    expect(tramiteFormMock.enable).toHaveBeenCalled();
+    expect(agregarMercanciasFormMock.enable).toHaveBeenCalled();
   });
 
   it('should set nuevaNotificacion if enableModficarBoton is empty in abrirDialogoMercancias', () => {
