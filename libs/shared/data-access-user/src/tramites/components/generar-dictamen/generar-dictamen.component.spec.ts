@@ -1,40 +1,35 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { GenerarDictamenComponent } from './generar-dictamen.component';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { By } from '@angular/platform-browser';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
+import { By } from '@angular/platform-browser';
+import { ANTECEDENTES_DICTAMEN } from '../../../core/constants/constantes-generales';
 
 describe('GenerarDictamenComponent', () => {
     let component: GenerarDictamenComponent;
     let fixture: ComponentFixture<GenerarDictamenComponent>;
-    let validacionesServiceMock: any;
+    let validacionesService: ValidacionesFormularioService;
 
     beforeEach(async () => {
-        validacionesServiceMock = {
-            isValid: jest.fn().mockReturnValue(true)
-        };
-
         await TestBed.configureTestingModule({
-            imports: [CommonModule, FormsModule, ReactiveFormsModule, GenerarDictamenComponent],
-            declarations: [],
+            imports: [GenerarDictamenComponent, ReactiveFormsModule],
             providers: [
-                { provide: ValidacionesFormularioService, useValue: validacionesServiceMock }
-            ]
-        })
-            .overrideComponent(GenerarDictamenComponent, {
-                set: {
-                    providers: [
-                        { provide: ValidacionesFormularioService, useValue: validacionesServiceMock }
-                    ]
+                FormBuilder,
+                {
+                    provide: ValidacionesFormularioService,
+                    useValue: {
+                        isValid: jasmine.createSpy('isValid').and.callFake((form, field) => {
+                            const control = form.get(field);
+                            return control && control.invalid && (control.dirty || control.touched);
+                        })
+                    }
                 }
-            })
-            .compileComponents();
+            ]
+        }).compileComponents();
 
         fixture = TestBed.createComponent(GenerarDictamenComponent);
         component = fixture.componentInstance;
-        component.botonDeCancelar = 'Cancelar';
-        component.botonGuardar = 'Guardar';
+        validacionesService = TestBed.inject(ValidacionesFormularioService);
         fixture.detectChanges();
     });
 
@@ -42,104 +37,127 @@ describe('GenerarDictamenComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('debe inicializar el formulario correctamente en ngOnInit', () => {
-        component.ngOnInit();
+    it('debe inicializar el formulario con valores por defecto', () => {
         expect(component.dictamenForm).toBeDefined();
         expect(component.dictamenForm.get('cumplimiento')?.value).toBe('1');
         expect(component.dictamenForm.get('mensajeDictamen')?.value).toBe('');
-        expect(component.dictamenForm.get('fechaInicioVigenciaAutorizada')).toBeDefined();
-        expect(component.dictamenForm.get('fechaFinVigenciaAutorizada')).toBeDefined();
+        expect(component.dictamenForm.get('antecedentesReadonly')?.value).toBe(component.conformidad);
     });
 
-    it('debe mostrar campos de fecha cuando el dictamen es aceptado', () => {
-        component.ngOnInit();
+    it('debe mostrar campos de fecha si cumplimiento es "1" (Aceptado)', () => {
+        component.dictamenForm.get('cumplimiento')?.setValue('1');
+        fixture.detectChanges();
         expect(component.mostrarCamposFecha).toBe(true);
-        
-        const fechaInicioControl = component.dictamenForm.get('fechaInicioVigenciaAutorizada');
-        const fechaFinControl = component.dictamenForm.get('fechaFinVigenciaAutorizada');
-        expect(fechaInicioControl?.hasError('required')).toBe(true);
-        expect(fechaFinControl?.hasError('required')).toBe(true);
+        expect(component.dictamenForm.get('fechaInicioVigenciaAutorizada')?.validator).toBeTruthy();
+        expect(component.dictamenForm.get('fechaFinVigenciaAutorizada')?.validator).toBeTruthy();
     });
 
-    it('debe ocultar campos de fecha cuando el dictamen es rechazado', () => {
-        component.ngOnInit();
-        
-        // Cambiar a rechazado
+    it('debe ocultar campos de fecha si cumplimiento es "2" (Rechazado)', () => {
         component.dictamenForm.get('cumplimiento')?.setValue('2');
         fixture.detectChanges();
-        
-        expect(component.mostrarCamposFecha).toBe(false);
-        
-        const fechaInicioControl = component.dictamenForm.get('fechaInicioVigenciaAutorizada');
-        const fechaFinControl = component.dictamenForm.get('fechaFinVigenciaAutorizada');
-        expect(fechaInicioControl?.hasError('required')).toBe(false);
-        expect(fechaFinControl?.hasError('required')).toBe(false);
-        expect(fechaInicioControl?.value).toBe('');
-        expect(fechaFinControl?.value).toBe('');
+        expect(component.mostrarCamposFecha).toBeFalsy();
+        expect(component.dictamenForm.get('fechaInicioVigenciaAutorizada')?.validator).toBeNull();
+        expect(component.dictamenForm.get('fechaFinVigenciaAutorizada')?.validator).toBeNull();
     });
 
-    it('debe cambiar la visibilidad de los campos al cambiar el sentido del dictamen', () => {
-        component.ngOnInit();
-        
-        // Inicialmente debe mostrar los campos (valor por defecto es '1')
-        expect(component.mostrarCamposFecha).toBe(true);
-        
-        // Cambiar a rechazado
+    it('debe validar que mensajeDictamen no acepte solo espacios', () => {
+        const control = component.dictamenForm.get('mensajeDictamen');
+        control?.setValue('    ');
+        expect(GenerarDictamenComponent.noSoloEspacios(control!)).toEqual({ soloEspacios: true });
+        control?.setValue('Texto válido');
+        expect(GenerarDictamenComponent.noSoloEspacios(control!)).toBeNull();
+    });
+
+    it('debe emitir evento "guardar" con datos válidos al llamar guardar()', () => {
+        spyOn(component.enviarEvento, 'emit');
         component.dictamenForm.get('cumplimiento')?.setValue('2');
-        expect(component.mostrarCamposFecha).toBe(false);
-        
-        // Cambiar de vuelta a aceptado
-        component.dictamenForm.get('cumplimiento')?.setValue('1');
-        expect(component.mostrarCamposFecha).toBe(true);
-    });
-
-    it('debe emitir el evento de guardar cuando el formulario es válido', () => {
-        const spy = jest.spyOn(component.enviarEvento, 'emit');
-        component.ngOnInit();
         component.dictamenForm.get('mensajeDictamen')?.setValue('Justificación válida');
-        component.dictamenForm.get('cumplimiento')?.setValue('2');
-        component.guardarFirmar();
-        expect(spy).toHaveBeenCalledWith({
+        // Asegura que el campo antecedentesEditables tenga un valor válido si existe
+        if (component.dictamenForm.get('antecedentesEditables')) {
+            component.dictamenForm.get('antecedentesEditables')?.setValue('Antecedente válido');
+        }
+        // Cuando cumplimiento es '2', los campos de fecha pueden no ser requeridos, pero por si acaso, setéalos
+        if (component.dictamenForm.get('fechaInicioVigenciaAutorizada')) {
+            component.dictamenForm.get('fechaInicioVigenciaAutorizada')?.setValue('2024-01-01');
+        }
+        if (component.dictamenForm.get('fechaFinVigenciaAutorizada')) {
+            component.dictamenForm.get('fechaFinVigenciaAutorizada')?.setValue('2024-12-31');
+        }
+        // Marca todos los controles como tocados para activar validaciones
+        Object.values(component.dictamenForm.controls).forEach(control => {
+            control.setErrors(null); // Limpia errores previos
+            control.markAsTouched();
+            control.updateValueAndValidity();
+        });
+        fixture.detectChanges();
+        expect(component.dictamenForm.valid).toBe(true); // Asegura que el formulario es válido antes de guardar
+        component.guardar();
+        expect(component.enviarEvento.emit).toHaveBeenCalledWith({
+            events: 'guardar',
             datos: {
                 cumplimiento: '2',
                 mensajeDictamen: 'Justificación válida'
-            },
-            events: 'guardar'
+            }
         });
     });
 
-    it('no debe emitir el evento de guardar si el formulario es inválido', () => {
-        const spy = jest.spyOn(component.enviarEvento, 'emit');
-        component.ngOnInit();
+    it('no debe emitir evento "guardar" si el formulario es inválido', () => {
+        spyOn(component.enviarEvento, 'emit');
         component.dictamenForm.get('mensajeDictamen')?.setValue('');
-        component.guardarFirmar();
-        expect(spy).not.toHaveBeenCalled();
+        component.guardar();
+        expect(component.enviarEvento.emit).not.toHaveBeenCalled();
     });
 
-    it('debe emitir el evento de cancelar al hacer click en cancelar', () => {
-        const spy = jest.spyOn(component.enviarEvento, 'emit');
+    it('debe emitir evento "firmar" con datos válidos al llamar firmar()', () => {
+        spyOn(component.enviarEvento, 'emit');
+        component.dictamenForm.get('mensajeDictamen')?.setValue('Mensaje válido');
+        component.dictamenForm.get('antecedentesEditables')?.setValue('Antecedente válido');
+        component.dictamenForm.get('fechaInicioVigenciaAutorizada')?.setValue('2024-01-01');
+        component.dictamenForm.get('fechaFinVigenciaAutorizada')?.setValue('2024-12-31');
+        component.firmar();
+        expect(component.enviarEvento.emit).toHaveBeenCalledWith(jasmine.objectContaining({ events: 'firmar' }));
+    });
+
+    it('debe emitir evento "guardar" al llamar guardarFirmar() si el formulario es válido', () => {
+        spyOn(component.enviarEvento, 'emit');
+        component.dictamenForm.get('mensajeDictamen')?.setValue('Mensaje válido');
+        component.dictamenForm.get('antecedentesEditables')?.setValue('Antecedente válido');
+        component.dictamenForm.get('fechaInicioVigenciaAutorizada')?.setValue('2024-01-01');
+        component.dictamenForm.get('fechaFinVigenciaAutorizada')?.setValue('2024-12-31');
+        component.guardarFirmar();
+        expect(component.enviarEvento.emit).toHaveBeenCalledWith(jasmine.objectContaining({ events: 'guardar' }));
+    });
+
+    it('debe emitir evento "cancelar" al llamar cancelar()', () => {
+        spyOn(component.enviarEvento, 'emit');
         component.cancelar();
-        expect(spy).toHaveBeenCalledWith({ events: 'cancelar', datos: null });
+        expect(component.enviarEvento.emit).toHaveBeenCalledWith({ events: 'cancelar', datos: null });
     });
 
-    it('debe mostrar los botones con el texto correcto', () => {
-        fixture.detectChanges();
-        const btnCancelar = fixture.debugElement.query(By.css('.btn-default')).nativeElement;
-        const btnGuardar = fixture.debugElement.query(By.css('.btn-primary')).nativeElement;
-        expect(btnCancelar.textContent).toContain('Cancelar');
-        expect(btnGuardar.textContent).toContain('Guardar');
+    it('debe actualizar el campo antecedentesReadonly si cambia la conformidad', () => {
+        component.dictamenForm.get('antecedentesReadonly')?.setValue('Valor anterior');
+        component.conformidad = 'Nuevo valor de conformidad';
+        component.ngOnChanges({
+            conformidad: {
+                currentValue: 'Nuevo valor de conformidad',
+                previousValue: 'Valor anterior',
+                firstChange: false,
+                isFirstChange: () => false
+            }
+        });
+        expect(component.dictamenForm.get('antecedentesReadonly')?.value).toBe('Nuevo valor de conformidad');
     });
 
-    it('debe marcar todos los campos como tocados al guardarFirmar', () => {
+    it('debe eliminar el control antecedentesEditables si isAntecedentes es false', () => {
+        component.isAntecedentes = false;
         component.ngOnInit();
-        const spy = jest.spyOn(component.dictamenForm, 'markAllAsTouched');
-        component.guardarFirmar();
-        expect(spy).toHaveBeenCalled();
+        expect(component.dictamenForm.get('antecedentesEditables')).toBeNull();
     });
 
-    it('isValid debe delegar en el servicio de validaciones', () => {
-        component.ngOnInit();
-        component.isValid('mensajeDictamen');
-        expect(validacionesServiceMock.isValid).toHaveBeenCalledWith(component.dictamenForm, 'mensajeDictamen');
+    it('debe retornar true/false correctamente en isValid()', () => {
+        component.dictamenForm.get('mensajeDictamen')?.setValue('');
+        expect(component.isValid('mensajeDictamen')).toBe(true);
+        component.dictamenForm.get('mensajeDictamen')?.setValue('Texto válido');
+        expect(component.isValid('mensajeDictamen')).toBe(false);
     });
 });

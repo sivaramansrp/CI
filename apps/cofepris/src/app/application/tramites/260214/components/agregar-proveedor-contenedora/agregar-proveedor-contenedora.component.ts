@@ -2,7 +2,7 @@
  * @fileoverview
  * El `AgregarProveedorContenedoraComponent` es un componente de Angular diseñado para gestionar la funcionalidad relacionada con los proveedores.
  * Este componente utiliza el componente `AgregarProveedorComponent` y se comunica con el estado del trámite 260214 a través del store `Tramite260214Store`.
- * 
+ *
  * @module AgregarProveedorContenedoraComponent
  * @description
  * Este componente actúa como un contenedor para gestionar y actualizar los datos de la tabla de proveedores en el store del trámite.
@@ -11,6 +11,7 @@
 import { AgregarProveedorComponent } from '../../../../shared/components/agregar-proveedor/agregar-proveedor.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite260214Store } from '../../estados/tramite260214Store.store';
 
@@ -18,8 +19,8 @@ import { Tramite260214Store } from '../../estados/tramite260214Store.store';
  * @component
  * @name AgregarProveedorContenedoraComponent
  * @description
- * Componente contenedor que utiliza el componente `AgregarProveedorComponent` 
- * para gestionar la funcionalidad relacionada con los proveedores. 
+ * Componente contenedor que utiliza el componente `AgregarProveedorComponent`
+ * para gestionar la funcionalidad relacionada con los proveedores.
  * Este componente interactúa con el estado del trámite a través del store `Tramite260214Store`.
  *
  * @selector app-agregar-proveedor-contenedora
@@ -47,10 +48,18 @@ import { Tramite260214Store } from '../../estados/tramite260214Store.store';
 })
 export class AgregarProveedorContenedoraComponent {
   /**
+   * Identificador del procedimiento en curso.
+   *
+   * Se inicializa con la constante `ID_PROCEDIMIENTO` y se utiliza
+   * para determinar la lógica o el flujo que debe seguir el componente
+   * según el procedimiento activo.
+   */
+  idProcedimiento: number = ID_PROCEDIMIENTO;
+  /**
    * @constructor
    * @description
    * Constructor que inyecta el store `Tramite260214Store` para gestionar el estado del trámite.
-   * 
+   *
    * @param {Tramite260214Store} tramite260214Store - Store que administra el estado del trámite 260214.
    */
   constructor(public tramite260214Store: Tramite260214Store) {}
@@ -59,7 +68,7 @@ export class AgregarProveedorContenedoraComponent {
    * @method updateProveedorTablaDatos
    * @description
    * Actualiza los datos de la tabla de proveedores en el store del trámite.
-   * 
+   *
    * @param {Proveedor[]} event - Lista de proveedores que se actualizarán en el store.
    * @returns {void} Este método no retorna ningún valor.
    *

@@ -12,7 +12,9 @@
  */
 
 import {
+  AVISO_CONTRNIDO,
   AccionBoton,
+  AlertComponent,
   DatosPasos,
   ListaPasosWizard,
 } from '@ng-mf/data-access-user';
@@ -61,6 +63,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     PasoDosComponent,
     PasoTresComponent,
     BtnContinuarComponent,
+    AlertComponent,
   ],
   templateUrl: './contenedor-de-pasos.component.html',
   styleUrl: './contenedor-de-paso.component.scss',
@@ -90,6 +93,8 @@ export class ContenedorDePasosComponent {
    */
   @ViewChild(WizardComponent)
   public wizardComponent!: WizardComponent;
+
+  avisoContrnido = AVISO_CONTRNIDO.aviso;
 
   /**
    * @property {DatosPasos} datosPasos

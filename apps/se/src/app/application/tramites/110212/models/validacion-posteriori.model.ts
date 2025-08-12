@@ -59,6 +59,20 @@ export interface GrupoDeDirecciones {
   correoElectronico: string;
   pais: string;
 }
+
+/**
+ * Representa los datos de contacto del certificado de origen.
+ */
+export interface GrupoCertificadoOrigen {
+  pais: string;
+  ciudad: string;
+  calle: string;
+  numeroLetra: string;
+  lada: string;
+  telefono: string;
+  fax: string;
+  correoElectronico: string;
+}
 /**
  * Representa los datos del grupo representativo.
  */
@@ -177,6 +191,7 @@ export interface RespuestaConsulta {
  * @property {string} representacionFederal - Representación federal asociada a la consulta.
  * @property {GrupoReceptor} grupoReceptor - Información del grupo receptor.
  * @property {GrupoDeDirecciones} grupoDeDirecciones - Información del grupo de direcciones.
+ * @property {GrupoCertificadoOrigen} grupoCertificadoOrigen - Información de contacto del certificado de origen.
  * @property {GrupoRepresentativo} grupoRepresentativo - Información del grupo representativo.
  */
 export interface ConsultaDatos {
@@ -191,5 +206,6 @@ export interface ConsultaDatos {
   representacionFederal: string;
   grupoReceptor: GrupoReceptor;
   grupoDeDirecciones: GrupoDeDirecciones;
+  grupoCertificadoOrigen: GrupoCertificadoOrigen;
   grupoRepresentativo: GrupoRepresentativo;
 }

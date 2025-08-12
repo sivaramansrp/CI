@@ -157,8 +157,18 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
     this.inicializarFormularioTratados(); // Inicializa el formulario de tratados.
     this.inicializarFormulario(); // Inicializa el formulario principal.
     this.destinatarioTableData.encabezadoDeTabla = destinatarioTableData?.encabezadoDeTabla; // Asigna los encabezados de la tabla de destinatarios.
+    /**
+     * Inicializa los datos de tablas según si la vista es de solo lectura o editable.
+     * Asigna datos de destinatarios o limpia y prepara la tabla de establecimientos.
+    */
+    if (this.consultaState?.readonly) {
     this.destinatarioTableData.cuerpoTabla = destinatarioTableData?.cuerpoTabla; // Asigna los datos del cuerpo de la tabla de destinatarios.
     this.getEstableCimiento(); // Obtiene la información de los establecimientos.
+    } else {
+      this.establecimientoHeaderData = this.destinatarioTableData?.encabezadoDeTabla; 
+      this.establecimientoBodyData = []; 
+    }
+
     this.fomentoExportacionForm.get('tipoPrograma')?.valueChanges.subscribe(value => { // Se suscribe a los cambios en 'tipoPrograma' del formulario.
       if (value === '1') {
         this.mostrarAlerta = true; // Muestra la alerta si el valor es '1'.
@@ -236,7 +246,7 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
       calle: ['', [Validators.required, Validators.maxLength(100)]],
       numeroExterior: ['', [Validators.required, Validators.maxLength(10)]],
       numeroInterior: ['', [Validators.maxLength(10)]],
-      pais: [{ value: 'MEXICO (ESTADOS UNIDOS MEXICANOS)', disabled: true }, Validators.required],
+      pais: ['', Validators.required],
       entidadFederativa: ['', Validators.required],
       municipioDelegacion: ['', Validators.required],
       colonia: ['', Validators.required],
@@ -373,6 +383,8 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
       // Habilita los formularios si el estado permite edición
       this.fomentoExportacionForm.enable();
       this.formularioDireccion.enable();
+
+      this.formularioDireccion.get('pais')?.disable(); // Deshabilita el campo 'pais' del formulario de dirección.
     }
   }
 

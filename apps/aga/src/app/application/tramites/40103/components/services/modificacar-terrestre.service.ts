@@ -32,6 +32,14 @@ export class modificarTerrestreService {
   }
 
   /**
+   * Obtiene el catálogo de colores de vehículos.
+   * @returns Observable con la lista de catálogos de colores de vehículos.
+   */
+  obtenerColorVehiculo(): Observable<CatalogoLista> {
+    return this.http.get<CatalogoLista>('assets/json/40103/vehiculo-color.json');
+  }
+
+  /**
     * Obtiene el catálogo de tipos de vehículo de arrastre.
     * @returns Observable con la lista de catálogos de vehículo de arrastre.
     */

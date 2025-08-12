@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { Solicitud31802State, Tramite31802Store } from '../../state/Tramite31802.store';
 import { RegistroSolicitudService } from '../../services/registro-solicitud-service.service';
-import { Tramite31802Query } from '../../state/Tramite31802.query';
 
 /**
  * Componente que representa el primer paso del trámite.
@@ -142,20 +141,25 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   }
 
   /**
-* Establece el valor de renovación en el estado global.
-* @param evento Evento del tipo `Event` que contiene el valor del checkbox.
-*/
+   * Establece el valor de renovación en el estado global.
+   * @param evento Evento del tipo `Event` que contiene el valor del checkbox.
+   */
   establecerRenovacion(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).checked;
+    this.registroForm.get('homologacion')?.setValue(false);
     this.store.setRenovacion(VALOR);
+    this.store.setHomologacion(false);
   }
+   
   /**
- * Establece el valor de homologación en el estado global.
- * @param evento Evento del tipo `Event` que contiene el valor del checkbox.
- */
+   * Establece el valor de homologación en el estado global.
+   * @param evento Evento del tipo `Event` que contiene el valor del checkbox.
+   */
   establecerHomologacion(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).checked;
+    this.registroForm.get('renovacion')?.setValue(false);
     this.store.setHomologacion(VALOR);
+    this.store.setRenovacion(false);
   }
   /**
    * Selecciona una pestaña del asistente.
@@ -170,9 +174,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   guardarDatosDelFormulario(): void {
     if (this.esFormularioSoloLectura) {
-      this.registroForm.disable();
+      this.registroForm?.disable();
     } else {
-      this.registroForm.enable();
+      this.registroForm?.enable();
     }
   }
   /**

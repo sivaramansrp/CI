@@ -18,7 +18,7 @@
           </div>
           <div class="col-md-12 mt-5">
             <div class="table-container">
-                <app-tabla-dinamica *ngIf="exportadorTableDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="exportadorTabla" [datos]="exportadorTableDatos"></app-tabla-dinamica>
+                <app-tabla-dinamica *ngIf="exportadorTableDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="exportadorTabla" [datos]="exportadorTableDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
             </div>
           </div>
     </div>
@@ -28,7 +28,7 @@
           </div>
           <div class="col-md-12 mt-5">
             <div class="table-container">
-                <app-tabla-dinamica *ngIf="destinoTablaDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="destinoTabla" [datos]="destinoTablaDatos"></app-tabla-dinamica>
+                <app-tabla-dinamica *ngIf="destinoTablaDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="destinoTabla" [datos]="destinoTablaDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
             </div>
           </div>
     </div>

@@ -6,12 +6,12 @@
       <form [formGroup]="formularioPago">
         <div class="row">
           <div class="col-md-8 form-group">
-            <label class="form-label" for="coordenadas">Exento de pago*:</label>
+            <label class="form-label" for="coordenadas">Exento de pago:</label>
             <app-input-radio
               [radioOptions]="exentoPagoRadio"
               [selectedValue]="exentoPagoValor"
-              [isRequired]="true"
-              [layout]="'horizontal'"
+              [isRequired]="false"
+              [layout]="'vertical'"
               formControlName="exentoPago"
               [required]="true"
               (valueChange)="cambioValorRadio('exentoPago', $event.toString())"
@@ -25,8 +25,8 @@
                 [catalogo]="justificacionCatalogo"
                 formControlName="justificacion"
                 [label]="'Justificación'"
-                [required]="true"
-                [isDisabled]="esFormularioSoloLectura"
+                [required]="false"
+                [isDisabled]="true"
                 (change)="
                 setValoresStore(
                   formularioPago,
@@ -40,8 +40,8 @@
                 [catalogo]="justificacionCatalogo"
                 formControlName="justificacion"
                 [label]="'Justificación'"
-                [required]="true"
-                [isDisabled]="esFormularioSoloLectura"
+                [required]="false"
+                [isDisabled]="true"
                 name="justificacion"
                 (change)="
                 setValoresStore(
@@ -63,7 +63,6 @@
               name="claveReferencia"
               placeholder=""
               type="text"
-              [disabled]="esFormularioSoloLectura"
               appUppercase
               (change)="
               setValoresStore(
@@ -84,7 +83,6 @@
               name="cadenaDependencia"
               placeholder=""
               type="text"
-              [disabled]="esFormularioSoloLectura"
               appUppercase
               (change)="
               setValoresStore(
@@ -99,9 +97,9 @@
               <app-catalogo-select
                 [catalogo]="bancoCatalogo"
                 formControlName="banco"
-                [label]="'Banco'"
-                [required]="true"
-                [isDisabled]="esFormularioSoloLectura"
+                [label]="'Banco'" 
+                [required]="false"
+                [isDisabled]="true"
                 name="banco"
                 (change)="
               setValoresStore(
@@ -116,8 +114,8 @@
                 [catalogo]="bancoCatalogo"
                 formControlName="banco"
                 [label]="'Banco'"
-                [required]="true"
-                [isDisabled]="esFormularioSoloLectura"
+                [required]="false"
+                [isDisabled]="true"
                 name="banco"
                 (change)="
                 setValoresStore(
@@ -139,7 +137,6 @@
               name="llavePago"
               placeholder=""
               type="text"
-              [disabled]="esFormularioSoloLectura"
               appUppercase
               (change)="
               setValoresStore(
@@ -150,15 +147,13 @@
             />
           </div>
           <div class="col-md-4 form-group">
-            <input-fecha
-              [datos]="fechaFinalInput"
-              (valorCambiado)="cambioFechaFinal($event)"
-              name="fechaPago"
-              [setFecha]="fechaPagoDate" 
-              formControlName="fechaFactura"
-              [isDisabled]="esFormularioSoloLectura"
-            ></input-fecha>
+            <input-fecha [datos]="fechaFinalInput" 
+            formControlName="fechaFactura" 
+            [setFecha]="formularioPago.get('fechaFactura')?.value" 
+            [isDisabled]="esFormularioSoloLectura" 
+            (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
           </div>
+      
           <div class="col-md-4 form-group">
             <label class="form-label" for="claveUCON">Importe de pago:</label>
             <input
@@ -168,7 +163,6 @@
               name="importePago"
               placeholder=""
               type="text"
-              [disabled]="esFormularioSoloLectura"
               appUppercase
               (change)="
               setValoresStore(

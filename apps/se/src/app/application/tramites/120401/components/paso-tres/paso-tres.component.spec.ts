@@ -5,13 +5,13 @@ import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
-import { ToastrService } from 'ngx-toastr';
+import { ToastrService, ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
   let fixture: ComponentFixture<PasoTresComponent>;
   let router: Router;
-
 
   const toastrServiceMock = {
     success: jest.fn(),
@@ -28,6 +28,8 @@ describe('PasoTresComponent', () => {
         FirmaElectronicaComponent,
         PasoTresComponent,
         HttpClientModule,
+        BrowserAnimationsModule, // Required for toastr animations
+        ToastrModule.forRoot(), // Add this to provide ToastConfig
       ],
       providers: [
         { provide: ToastrService, useValue: toastrServiceMock }, 

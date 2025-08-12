@@ -259,6 +259,8 @@ export class Service260601Service {
       DATOS.mostrarCurpBuscarBoton
     );
     this.tramite260601Store.setInhabilitarPais(DATOS.inhabilitarPais);
+    this.tramite260601Store.setProductoTabla(DATOS.productoBodyData);
+    this.tramite260601Store.setScianTabla(DATOS.scianBodyData);
   }
 
   /**

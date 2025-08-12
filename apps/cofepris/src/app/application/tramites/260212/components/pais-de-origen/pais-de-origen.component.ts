@@ -1,11 +1,7 @@
-import { Component } from '@angular/core';
-
-import { CommonModule } from '@angular/common';
-
+import { Component, QueryList, ViewChildren } from '@angular/core';
 import { CrossListLable,CrosslistComponent } from '@libs/shared/data-access-user/src';
-
+import { CommonModule } from '@angular/common';
 import { FormControl } from '@angular/forms';
-
 import Procedencia from '@libs/shared/theme/assets/json/260212/pis-de-procedencia.json'
 
 export const TIPO_T: string = 't';
@@ -20,6 +16,11 @@ export const TIPO_T: string = 't';
   styleUrl: './pais-de-origen.component.scss',
 })
 export class PaisDeOrigenComponent {
+  /**
+   * Referencia a los componentes de la lista de fechas.
+   */
+  @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
+
   /**
  * Arreglo para almacenar el rango de días seleccionables.
  */
@@ -40,11 +41,27 @@ export class PaisDeOrigenComponent {
   constructor(){}
 
   /**
+   * Etiquetas para el componente CrossList que representan el país de origen.
+   */
+  public paisDeOrigenLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'País de origen:',
+    derecha: 'País(es) seleccionado(s)*:',
+  };
+
+  /**
    * Etiquetas para el componente CrossList que representan el país de procedencia.
    */
   public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de origen',
-    derecha: 'País(es) seleccionado(s)*',
+    tituluDeLaIzquierda: 'País de procedencia:',
+    derecha: 'País(es) seleccionado(s)*:',
+  };
+
+  /**
+   * Etiquetas para el componente CrossList que representan el Uso específico.
+   */
+  public usoEspecificoLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'Uso específico:',
+    derecha: 'Uso específico seleccionado*:',
   };
 
   /**
@@ -57,17 +74,36 @@ export class PaisDeOrigenComponent {
    */
   fechaSeleccionada: FormControl = new FormControl('');
 
-  /**
- * Variable que controla la visibilidad de una sección plegable.
- */
-  plegable = false;
+  /** Indica si la sección de país de origen está plegada o desplegada. */
+  public paisDeOrigenPlegable: boolean = false;
+
+  /** Indica si la sección de país de procedencia está plegada o desplegada. */
+  public paisDeProcedenciaPlegable: boolean = false;
+
+  /** Indica si la sección de uso específico está plegada o desplegada. */
+  public usoEspecificoPlegable: boolean = false;
 
 
   /**
    * Alterna la visibilidad de la sección plegable.
    */
-  mostrar_plegable():void {
-    this.plegable = !this.plegable;
+  mostrarPaisDeOrigen():void {
+    this.paisDeOrigenPlegable = !this.paisDeOrigenPlegable;
+  }
+
+  /**
+   * Alterna la visibilidad de la sección plegable.
+   */
+  mostrarPaisDeProcedencia():void {
+    this.paisDeProcedenciaPlegable = !this.paisDeProcedenciaPlegable;
+  }
+
+
+  /**
+   * Alterna la visibilidad de la sección plegable.
+   */
+  mostrarUsoEpecifico():void {
+    this.usoEspecificoPlegable = !this.usoEspecificoPlegable;
   }
 
 
@@ -77,23 +113,23 @@ export class PaisDeOrigenComponent {
   botones = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-primary',
-      funcion: (): void => this.agregar(''),
+      class: 'btn-default',
+      funcion: (): void => this.crossList.forEach(cmp => cmp.agregar('t')),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-default',
-      funcion: (): void => this.agregar(TIPO_T),
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.forEach(cmp => cmp.agregar('')),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-danger',
-      funcion: (): void => this.quitar(''),
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.forEach(cmp => cmp.quitar('')),
     },
     {
       btnNombre: 'Restar todos',
       class: 'btn-default',
-      funcion: (): void => this.quitar(TIPO_T),
+      funcion: (): void => this.crossList.forEach(cmp => cmp.quitar('t')),
     },
   ];
 

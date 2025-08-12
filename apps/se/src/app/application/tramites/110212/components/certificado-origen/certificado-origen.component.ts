@@ -150,6 +150,20 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
   TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
 
   /**
+   * Indica si el formulario tiene errores de validación.
+   *
+   * Se utiliza para mostrar/ocultar el alert de errores en el modal.
+   */
+  esFormaValido: boolean = false;
+
+  /**
+   * Mensaje de error del formulario para mostrar en el alert.
+   *
+   * Contiene el HTML del mensaje de error a mostrar cuando hay validaciones fallidas.
+   */
+  formErrorAlert: string = '<strong>¡Error de registro! </strong> Faltan campos por capturar';
+
+  /**
    * Referencia al elemento del modal para gestionar archivos.
    *
    * Se utiliza para abrir o cerrar el modal de archivos.
@@ -390,8 +404,8 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    *
    * @returns {FormGroup} El grupo de formulario del operador.
    */
-  get grupoDeDirecciones(): FormGroup {
-    return this.formularioCertificado.get('grupoDeDirecciones') as FormGroup;
+  get grupoCertificadoOrigen(): FormGroup {
+    return this.formularioCertificado.get('grupoCertificadoOrigen') as FormGroup;
   }
 
   /**
@@ -448,31 +462,31 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
           [],
         ],
       }),
-     grupoDeDirecciones: this.fb.group({
+     grupoCertificadoOrigen: this.fb.group({
            pais: [
-             this.solicitudState?.grupoDeDirecciones?.pais,
+             this.solicitudState?.grupoCertificadoOrigen?.pais,
            ],
            ciudad: [
-             this.solicitudState?.grupoDeDirecciones?.ciudad,
+             this.solicitudState?.grupoCertificadoOrigen?.ciudad,
            ],
            calle: [
-             this.solicitudState?.grupoDeDirecciones?.calle,
+             this.solicitudState?.grupoCertificadoOrigen?.calle,
            ],
            numeroLetra: [
-             this.solicitudState?.grupoDeDirecciones?.numeroLetra,
+             this.solicitudState?.grupoCertificadoOrigen?.numeroLetra,
             
            ],
-           lada: [this.solicitudState?.grupoDeDirecciones?.lada, []],
+           lada: [this.solicitudState?.grupoCertificadoOrigen?.lada, []],
            telefono: [
-             this.solicitudState?.grupoDeDirecciones?.telefono,
+             this.solicitudState?.grupoCertificadoOrigen?.telefono,
              [Validators.pattern(REGEX_SOLO_DIGITOS)],
            ],
            fax: [
-             this.solicitudState?.grupoDeDirecciones?.fax,
+             this.solicitudState?.grupoCertificadoOrigen?.fax,
              [Validators.pattern(REGEX_SOLO_DIGITOS)],
            ],
            correoElectronico: [
-             this.solicitudState?.grupoDeDirecciones?.correoElectronico,
+             this.solicitudState?.grupoCertificadoOrigen?.correoElectronico,
              [Validators.pattern(REGEX_CORREO_ELECTRONICO)],
            ],
          }),
@@ -746,7 +760,10 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
       if (!this.modalInstances) {
         this.modalInstances = new Modal(this.modalBuscar.nativeElement);
       }
-      this.formularioMercancia.reset();
+      
+      // Resetear el estado de validación del formulario antes de abrir
+      this.resetearEstadoValidacionFormulario();
+      
       this.formularioMercancia.patchValue({
         id: this.disponiblesSeleccionadasFila.id,
         fraccionMercanciaArancelaria: this.disponiblesSeleccionadasFila.fraccionArancelaria,
@@ -820,11 +837,35 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Resetea el estado de validación del formulario de mercancía.
+   * 
+   * Este método marca todos los controles como no tocados y pristinos,
+   * eliminando así las indicaciones visuales de validación y el alert de error.
+   */
+  private resetearEstadoValidacionFormulario(): void {
+    if (this.formularioMercancia) {
+      Object.keys(this.formularioMercancia.controls).forEach(key => {
+        const CONTROL = this.formularioMercancia.get(key);
+        if (CONTROL) {
+          CONTROL.markAsUntouched();
+          CONTROL.markAsPristine();
+        }
+      });
+    }
+    
+    // Ocultar el alert de error
+    this.esFormaValido = false;
+  }
+
+  /**
    * Cierra el modal activo.
    *
-   * Este método utiliza la referencia al botón de cierre del modal para cerrarlo.
+   * Este método utiliza la referencia al botón de cierre del modal para cerrarlo
+   * y resetea el estado de validación del formulario de mercancía.
    */
   cerrarModal(): void {
+    // Resetear el estado de validación del formulario
+    this.resetearEstadoValidacionFormulario();
     if (this.closeModal) {
       this.closeModal.nativeElement.click();
     }
@@ -883,18 +924,39 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     this.setValoresStore(this.formularioMercancia, 'fecha', 'setFecha');
   }
 
-    /**
+  /**
    * Agrega una nueva mercancía a la tabla de mercancías seleccionadas.
    *
-   * Este método toma los datos del formulario de mercancías y los transforma en un
+   * Este método valida el formulario de mercancía antes de procesar los datos.
+   * Si el formulario es válido, toma los datos del formulario de mercancías y los transforma en un
    * objeto `SeleccionadasTabla` y actualiza el arreglo `mercanciaSeleccionadasTablaDatos`.
    * Si ya existe un elemento con el mismo ID, lo actualiza; de lo contrario, agrega el nuevo elemento.
    * El arreglo actualizado se almacena usando `store.setMercanciaTablaDatos`.
    * Finalmente, cierra el modal si está abierto.
+   * Si el formulario es inválido, marca todos los campos como tocados para mostrar los mensajes de error.
    *
    * @param formularioMercancia - El formulario reactivo que contiene los datos de la mercancía.
    */
   activarModal(formularioMercancia: FormGroup): void {
+    // Validar el formulario antes de procesar
+    if (formularioMercancia.invalid) {
+      // Marcar todos los campos como tocados para mostrar mensajes de error
+      Object.keys(formularioMercancia.controls).forEach(key => {
+        const CONTROL = formularioMercancia.get(key);
+        if (CONTROL) {
+          CONTROL.markAsTouched();
+        }
+      });
+      
+      // Activar la bandera para mostrar el alert de error
+      this.esFormaValido = true;
+      
+      return; // Salir de la función si el formulario es inválido
+    }
+
+    // Si el formulario es válido, ocultar el alert de error
+    this.esFormaValido = false;
+
     const FORM_VALUES = formularioMercancia.value;
 
     const NUEVA_MERCANCIA: SeleccionadasTabla = {
@@ -942,8 +1004,12 @@ modificarMercanciaSeleccionada(mercanciaSeleccionadasTablaDatos: SeleccionadasTa
           this.modalInstances = new Modal(this.modalBuscar.nativeElement);
         }
       }
+      
+      // Resetear el estado de validación del formulario antes de abrir
+      this.resetearEstadoValidacionFormulario();
+      
       this.modalInstances?.show();
-    this.formularioMercancia.patchValue({
+      this.formularioMercancia.patchValue({
       id: FORM_VALUES.id,
       fraccionArancelaria: FORM_VALUES.fraccionArancelaria,
       cantidad: FORM_VALUES.cantidad,

@@ -1,7 +1,6 @@
 import {
   AlertComponent,
   Catalogo,
-  CatalogoSelectComponent,
   ConsultaioQuery,
   ConsultaioState,
   PAGO_DE_DERECHOS,
@@ -17,6 +16,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component'; 
 import { CommonModule } from '@angular/common';
 import { RegistroService } from '../../services/registro.service';
 import { Solicitud110223State } from '../../../../estados/tramites/Tramite110223.store';
@@ -34,7 +34,7 @@ import { Tramite110223Store } from '../../../../estados/tramites/Tramite110223.s
     CommonModule,
     TituloComponent,
     CatalogoSelectComponent,
-    ReactiveFormsModule,
+    ReactiveFormsModule
   ],
   templateUrl: './destinatario.component.html',
   styleUrl: './destinatario.component.css',
@@ -137,11 +137,11 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+          this.donanteDomicilio();
         })
       )
       .subscribe();
 
-    this.donanteDomicilio();
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),

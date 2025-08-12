@@ -311,7 +311,7 @@
     "id": 45,
     "tramite": 110211,
     "linkDashboard": "/se/validar-certificado/cam",
-    "linkDepartment": "/se/validar-certificado/cam",
+    "linkDepartment": "/pago/validar-certificado/cam",
     "department": "se"
   },
   {
@@ -458,7 +458,7 @@
     "id": 66,
     "tramite": 140105,
     "linkDashboard": "/se/desistimiento-de-permiso/solicitante",
-    "linkDepartment": "/se/desistimiento-de-permiso/solicitante",
+    "linkDepartment": "/pago/desistimiento-de-permiso/solicitante",
     "department": "se"
   },
   {

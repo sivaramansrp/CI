@@ -191,7 +191,7 @@ export interface TablaMercanciasDatos {
   marcaComercialDenominacion?:string;
   especifique?: string;
   especifiqueObligatorio?:string;
-
+  fechaCaducidad?: string;
 }
 
 /**
@@ -275,6 +275,7 @@ export interface DatosSolicitudFormState {
   fechaDeCaducidad?: string;
   regimenLaMercancia?:string
   aduana?:string
+  manifesto?: boolean
 }
 
 /**

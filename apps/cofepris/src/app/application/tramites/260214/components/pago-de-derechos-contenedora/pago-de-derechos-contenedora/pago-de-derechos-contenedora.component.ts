@@ -8,6 +8,7 @@
 
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ID_PROCEDIMIENTO } from '../../../constants/medicos-uso.enum';
 import { PagoDeDerechosComponent } from '../../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../../shared/models/terceros-relacionados.model';
 import { Tramite260214Store } from '../../../estados/tramite260214Store.store';
@@ -49,6 +50,12 @@ export class PagoDeDerechosContenedoraComponent {
    * Indica si el formulario está deshabilitado.
    */
   @Input() formularioDeshabilitado: boolean = false;
+
+  /**
+   * Identificador numérico del procedimiento actual.
+   * Se inicializa con el valor constante `ID_PROCEDIMIENTO`.
+   */
+  idProcedimiento: number = ID_PROCEDIMIENTO;
 
   /**
    * @property {PagoDerechosFormState} pagoDerechos

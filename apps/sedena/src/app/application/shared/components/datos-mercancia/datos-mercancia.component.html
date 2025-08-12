@@ -38,7 +38,7 @@
             [label]="'Fracción arancelaria'"
             [required]="true"
             [isDisabled]="esFormularioSoloLectura"
-            (selectionChange)="settextValue($event?.id)"
+            (selectionChange)="settextValue($event.id)"
           ></app-catalogo-select>
           <div class="error-message">
             <small class="text-danger" *ngIf="datosMercancia.get('fraccionArancelaria')?.touched && datosMercancia.get('fraccionArancelaria')?.hasError('required')">
@@ -168,7 +168,7 @@
             [required]="true"
             [tooltipQuestionCircle]="true"
             [isDisabled]="esFormularioSoloLectura"
-            (selectionChange)="datosMercancia.get('umc')?.setValue($event?.id)"
+            (selectionChange)="datosMercancia.get('umc')?.setValue($event.id)"
           ></app-catalogo-select>
           <div class="error-message">
             <small
@@ -191,7 +191,7 @@
             [label]="'Tipo moneda'"
             [required]="true"
             [isDisabled]="esFormularioSoloLectura"
-            (selectionChange)="datosMercancia.get('tipoMoneda')?.setValue($event?.id)"
+            (selectionChange)="datosMercancia.get('tipoMoneda')?.setValue($event.id)"
           ></app-catalogo-select>
           <div class="error-message">
             <small

@@ -308,22 +308,22 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.transporteList = {
       catalogos: [],
       labelNombre: 'Tipo de transporte',
-      primerOpcion: 'Seleccione un valor',
+      primerOpcion: 'Seleccione una opción',
     };
     this.aduana = {
       catalogos: [],
       labelNombre: 'Aduana/sección aduanera',
-      primerOpcion: 'Seleccione un valor',
+      primerOpcion: 'Seleccione una opción',
     };
     this.aduanaList = {
       catalogos: [],
       labelNombre: 'Aduana/sección aduanera',
-      primerOpcion: 'Seleccione un valor',
+      primerOpcion: 'Seleccione una opción',
     };
     this.contenedores = {
       catalogos: [],
       labelNombre: 'Tipo de equipo',
-      primerOpcion: 'Seleccione un valor',
+      primerOpcion: 'Seleccione una opción',
     };
   }
 
@@ -612,27 +612,27 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Limpiar campos del formulario.
+   * Limpiar campos del formulario en la sección de contenedor únicamente.
    */
   limpiarCampos(): void {
-    this.solicitudForm.reset();
-    // Resetear banderas y estados adicionales
-    this.mostrarAdjuntarArchivo = false;
-    this.mostrarSeccionAduanaaFecha = false;
-    this.mostrarSeccionContenedor = false;
-    this.mostrarSeccionNoManifiesto = false;
-    this.mostrarSeccionExcel = false;
-    this.mostrarMensaje = false;
-    // Deshabilitar controles específicos si es necesario
-    this.solicitudForm.get('archivoSeleccionado')?.disable();
-    this.radioContenedor = false;
-    this.radioArchivoCsv = false;
-    this.radioManifesto = false;
-    // Restablecer la etiqueta del archivo
-    this.etiquetaDeArchivo = '';
-    
-    // Limpiar el estado de validación usando el método auxiliar
-    this.clearFormValidationState();
+    // Solo limpiar los campos específicos de la sección contenedor
+    const CAMPOS_CONTENEDOR = [
+      { campo: 'inicialesContenedor', metodo: 'setInicialesContenedor' },
+      { campo: 'numeroContenedor', metodo: 'setNumeroContenedor' },
+      { campo: 'digitoDeControl', metodo: 'setDigitoDeControl' },
+      { campo: 'contenedores', metodo: 'setContenedores' }
+    ];
+
+    CAMPOS_CONTENEDOR.forEach(({ campo, metodo }) => {
+      const CONTROL = this.solicitudForm.get(campo);
+      if (CONTROL) {
+        CONTROL.reset();
+        CONTROL.markAsUntouched();
+        CONTROL.markAsPristine();
+        // Actualizar el store con valores vacíos usando el método existente
+        (this.tramite11201Store[metodo as keyof typeof this.tramite11201Store] as (valor: unknown) => void)(null);
+      }
+    });
   }
 
   /**
@@ -666,9 +666,34 @@ export class ContenedorComponent implements OnInit, OnDestroy {
 
   /**
    * Adjuntar archivo CSV y parsear su contenido.
+   * Valida los campos obligatorios antes de abrir el modal.
    */
   adjuntarArchivo(): void {
+    // Validar los campos obligatorios antes de abrir el modal
+    const ADUANA_VALIDA = this.solicitudForm.get('aduanaMenuDesplegable')?.valid;
+    const FECHA_VALIDA = this.solicitudForm.get('fechaDeIngreso')?.valid;
+
+    // Marcar los campos como tocados para mostrar los errores de validación
+    this.solicitudForm.get('aduanaMenuDesplegable')?.markAsTouched();
+    this.solicitudForm.get('fechaDeIngreso')?.markAsTouched();
+
+    // Solo abrir el modal si ambos campos son válidos
+    if (ADUANA_VALIDA && FECHA_VALIDA) {
+      this.abrirModalArchivo();
+    }
+  }
+
+  /**
+   * Abre el modal de carga de archivo utilizando Bootstrap.
+   * Este método se llama solo después de validar los campos obligatorios.
+   */
+  abrirModalArchivo(): void {
     this.mostrarArchivoSeleccionadoTable = true;
+    const MODAL_ELEMENT = document.getElementById('modalArchivoCsv');
+    if (MODAL_ELEMENT) {
+      const BOOTSTRAP_MODAL = new (window as any).bootstrap.Modal(MODAL_ELEMENT);
+      BOOTSTRAP_MODAL.show();
+    }
   }
 
   /**

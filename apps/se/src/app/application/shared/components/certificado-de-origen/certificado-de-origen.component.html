@@ -317,12 +317,12 @@
                 @if (mercanciasDisponibles) {
                     <div class="row">
                         <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion"  [configuracionTabla]="cargaMercanciaConfiguracionTabla"
-                        [datos]="guardarClicado || []" (filaSeleccionada)="obtenerSeleccionadoMercancia($event)"  ></app-tabla-dinamica>
+                        [datos]="guardarClicado || []" (filaSeleccionada)="obtenerSeleccionadoMercancia($event)"  [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
                     </div>
                 } @else {
                     <div class="row">
                         <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion"  [configuracionTabla]="configuracionTablaMercancia"
-                        [datos]="guardarClicado || []"  ></app-tabla-dinamica>
+                        [datos]="guardarClicado || []"  [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
                     </div>
                 }
            

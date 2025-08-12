@@ -1,5 +1,5 @@
 .datos-table {
-  ::ng-deep ng-table {
+  ng-table {
     th:not(:first-child),
     td:not(:first-child) {
       min-width: 190px;
@@ -13,16 +13,7 @@
   height: 100px;
 }
 
-::ng-deep .aceptar-modal {
-  .popup {
-    width: 30% !important; 
-    height:50% !important;
-    position: relative; 
-    z-index: 1050; 
-    background-color: white; 
-    border-radius: 8px; 
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-  }
+.aceptar-modal {
 
   .black-top-header {
     background-color: black; 
@@ -48,6 +39,16 @@
     margin: 20% 40%;
   }
 }
+
+.popup {
+    width: 90% !important; 
+    height:80% !important;
+    position: relative; 
+    z-index: 1050; 
+    background-color: white; 
+    border-radius: 8px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  }
 
 
 

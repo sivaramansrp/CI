@@ -17,6 +17,10 @@ textarea {
   box-sizing: border-box; /* Incluye el padding y el borde en el tamaño total */
 }
 
+.resize-disable{
+  resize: none; /* Deshabilita el redimensionamiento */
+}
+
 /* Ajustes para pantallas más pequeñas */
 @media (max-width: 768px) {
   textarea {

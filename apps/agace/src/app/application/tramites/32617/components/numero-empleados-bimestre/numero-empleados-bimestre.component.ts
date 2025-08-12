@@ -6,6 +6,7 @@ import {
   NotificacionesComponent,
   REGEX_RFC,
   REG_X,
+  SoloLetrasNumerosDirective,
   TablaDinamicaComponent,
   TablaSeleccion,
   TipoNotificacionEnum,
@@ -53,6 +54,7 @@ import { Tramite32617Query } from '../../estados/tramites32617.query';
     CatalogoSelectComponent,
     ReactiveFormsModule,
     NotificacionesComponent,
+    SoloLetrasNumerosDirective
   ],
   templateUrl: './numero-empleados-bimestre.component.html',
   styleUrl: './numero-empleados-bimestre.component.scss',
@@ -756,9 +758,17 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
         }
       });
     } else {
-      this.enNuevaNotificacion(this.MENSAJE_DE_VALIDACION);
+      const RFC_VALUE = this.rfcForm.get('rfcInput')?.value;
+      const RFC_CONTROL = this.rfcForm.get('rfcInput');
       this.esHabilitarElDialogo = true;
       this.rfcForm.markAllAsTouched();
+      if(!RFC_VALUE){
+        this.enNuevaNotificacion(this.MENSAJE_DE_VALIDACION);
+        return;
+      } 
+      if(RFC_CONTROL?.errors?.['pattern']){
+        this.enNuevaNotificacion('Ha proporcionado información con un formato incorrecto');
+      }
     }
 
   }
