@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDomicilioService } from '../../../tramites/260514/services/permiso-importacion.service';
 import { Notificacion } from '@ng-mf/data-access-user';
+import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 /**
  * @description
  * Componente que gestiona los datos del establecimiento.
@@ -104,7 +105,8 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
     private avisocalidadStore: AvisocalidadStore,
     private avisocalidadQuery: AvisocalidadQuery,
     private consultaioQuery: ConsultaioQuery,
-    private datosDomicilioSvc: DatosDomicilioService
+    private datosDomicilioSvc: DatosDomicilioService,
+    private servicioDeFormularioService: ServicioDeFormularioService,
   ) {
     // Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
@@ -207,6 +209,8 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
       correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required, Validators.email, Validators.maxLength(320)]]
     });
 
+    this.servicioDeFormularioService.registerForm('datosDelEstablecimientoRFCForm', this.datosDelForm);
+
     /*
      * Si el formulario está en modo solo lectura, deshabilita todos los campos.
      * En caso contrario, habilita los campos para permitir la edición.
@@ -214,8 +218,6 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
      */
     if ((this.esFormularioSoloLectura && this.datosDelForm) || !this.tieneElBotonSeleccionClicado) {
       this.datosDelForm?.disable();
-    } else {
-      this.datosDelForm?.enable();
     }
   }
   /**
@@ -228,6 +230,9 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof AvisocalidadStore): void {
     const VALOR = form.get(campo)?.value;
     (this.avisocalidadStore[metodoNombre] as (value: string | number) => void)(VALOR);
+    this.servicioDeFormularioService.setFormValue('datosDelEstablecimientoRFCForm', {
+        [campo]: VALOR,
+      });
   }
 
   /**

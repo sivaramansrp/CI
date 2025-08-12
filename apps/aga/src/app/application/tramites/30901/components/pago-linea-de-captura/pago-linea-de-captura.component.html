@@ -52,7 +52,7 @@
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="lineaCaptura">Monto *:</label>
+          <label class="form-label" for="lineaCaptura">Monto*:</label>
           <input
             type="text"
             id="monto"
@@ -66,10 +66,10 @@
     <div class="row mt-5">
       <div class="col-md-12">
         <div class="form-group d-flex justify-content-end">
-          <button class="btn btn-default me-5" (click)="limpiarCampos()">
+          <button class="btn btn-default me-5" [disabled]="esFormularioSoloLectura" (click)="limpiarCampos()">
             Limpiar
           </button>
-          <button class="btn btn-primary me-5" (click)="anadirTarifasDePago()">
+          <button class="btn btn-primary me-5" [disabled]="esFormularioSoloLectura" (click)="anadirTarifasDePago()">
             Agregar
           </button>
         </div>
@@ -95,7 +95,7 @@
     <div class="row mt-5">
       <div class="col-md-12">
         <div class="form-group pull-right">
-          <button class="btn btn-danger" (click)="eliminarSeleccion()">
+          <button class="btn btn-danger" [disabled]="esFormularioSoloLectura" (click)="eliminarSeleccion()">
             Eliminar
           </button>
         </div>

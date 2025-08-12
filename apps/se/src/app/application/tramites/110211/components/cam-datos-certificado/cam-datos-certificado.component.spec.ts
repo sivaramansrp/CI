@@ -1,142 +1,124 @@
+import { CUSTOM_ELEMENTS_SCHEMA, Injectable, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
+import { of as observableOf } from 'rxjs';
 
-import { Component } from '@angular/core';
-import { CamDatosCertificadoComponent } from './cam-datos-certificado.component';
 import { FormBuilder } from '@angular/forms';
-import { CamCertificadoService } from '../../services/cam-certificado.service';
-import { camCertificadoStore } from '../../estados/cam-certificado.store';
-import { camCertificadoQuery } from '../../estados/cam-certificado.query';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { camCertificadoQuery } from '../../estados/cam-certificado.query';
+import { camCertificadoStore } from '../../estados/cam-certificado.store';
+import { CamCertificadoService } from '../../services/cam-certificado.service';
+import { CamDatosCertificadoComponent } from './cam-datos-certificado.component';
 
 @Injectable()
-class MockCamCertificadoService {}
+class SERVICIO_MOCK_CAM_CERTIFICADO { }
 
 @Injectable()
-class MockcamCertificadoStore {}
+class STORE_MOCK_CAM_CERTIFICADO { }
 
 @Injectable()
-class MockcamCertificadoQuery {
+class QUERY_MOCK_CAM_CERTIFICADO {
   formDatosCertificado$ = observableOf({});
 }
 
 describe('CamDatosCertificadoComponent', () => {
   let fixture: ComponentFixture<CamDatosCertificadoComponent>;
-  let component: { ngOnDestroy: () => void; idiomOpcion: jest.Mock<any, any, any> | (() => void); entidadFederativasOpcion: jest.Mock<any, any, any> | (() => void); representacionFederalOpcion: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; store: { setFormCertificadoGenric?: any; setFormDatosCertificado?: any; setIdiomaSeleccion?: any; setEntidadFederativaSeleccion?: any; setRepresentacionFederalDatosSeleccion?: any; setFormValida?: any; }; setValoresStore: (arg0: {}) => void; camCertificadoService: { obtenerMenuDesplegable?: any; }; obtenerDatosFormulario: (arg0: {}) => void; idiomaSeleccion: (arg0: {}) => void; entidadFederativaSeleccion: (arg0: {}) => void; representacionFederalSeleccion: (arg0: {}) => void; setFormValida: (arg0: {}) => void; destroyNotifier$: { next?: any; complete?: any; }; };
+  let componente: any;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, CamDatosCertificadoComponent ],
+      imports: [FormsModule, ReactiveFormsModule, CamDatosCertificadoComponent],
       declarations: [
       ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
         FormBuilder,
-        { provide: CamCertificadoService, useClass: MockCamCertificadoService },
-        { provide: camCertificadoStore, useClass: MockcamCertificadoStore },
-        { provide: camCertificadoQuery, useClass: MockcamCertificadoQuery },
+        { provide: CamCertificadoService, useClass: SERVICIO_MOCK_CAM_CERTIFICADO },
+        { provide: camCertificadoStore, useClass: STORE_MOCK_CAM_CERTIFICADO },
+        { provide: camCertificadoQuery, useClass: QUERY_MOCK_CAM_CERTIFICADO },
         ConsultaioQuery
       ]
     }).overrideComponent(CamDatosCertificadoComponent, {
 
     }).compileComponents();
     fixture = TestBed.createComponent(CamDatosCertificadoComponent);
-    component = fixture.debugElement.componentInstance;
+    componente = fixture.debugElement.componentInstance;
   });
 
   afterEach(() => {
-    component.ngOnDestroy = function() {};
+    componente.ngOnDestroy = function () { };
     fixture.destroy();
   });
 
-  it('should run #constructor()', async () => {
-    expect(component).toBeTruthy();
+  it('debe ejecutar el constructor', async () => {
+    expect(componente).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.idiomOpcion = jest.fn();
-    component.entidadFederativasOpcion = jest.fn();
-    component.representacionFederalOpcion = jest.fn();
-    component.ngOnInit();
-    // expect(component.idiomOpcion).toHaveBeenCalled();
-    // expect(component.entidadFederativasOpcion).toHaveBeenCalled();
-    // expect(component.representacionFederalOpcion).toHaveBeenCalled();
+  it('debe ejecutar ngOnInit', async () => {
+    componente.idiomOpcion = jest.fn();
+    componente.entidadFederativasOpcion = jest.fn();
+    componente.representacionFederalOpcion = jest.fn();
+    componente.ngOnInit();
   });
 
-  it('should run #setValoresStore()', async () => {
-    component.store = component.store || {};
-    component.store.setFormCertificadoGenric = jest.fn();
-    component.setValoresStore({});
-    // expect(component.store.setFormCertificadoGenric).toHaveBeenCalled();
+  it('debe ejecutar setValoresStore', async () => {
+    componente.store = componente.store || {};
+    componente.store.setFormCertificadoGenric = jest.fn();
+    componente.setValoresStore({});
   });
 
-  it('should run #idiomOpcion()', async () => {
-    component.camCertificadoService = component.camCertificadoService || {};
-    component.camCertificadoService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
-    component.idiomOpcion();
-    // expect(component.camCertificadoService.obtenerMenuDesplegable).toHaveBeenCalled();
+  it('debe ejecutar idiomOpcion', async () => {
+    componente.camCertificadoService = componente.camCertificadoService || {};
+    componente.camCertificadoService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
+    componente.idiomOpcion();
   });
 
-  it('should run #entidadFederativasOpcion()', async () => {
-    component.camCertificadoService = component.camCertificadoService || {};
-    component.camCertificadoService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
-    component.entidadFederativasOpcion();
-    // expect(component.camCertificadoService.obtenerMenuDesplegable).toHaveBeenCalled();
+  it('debe ejecutar entidadFederativasOpcion', async () => {
+    componente.camCertificadoService = componente.camCertificadoService || {};
+    componente.camCertificadoService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
+    componente.entidadFederativasOpcion();
   });
 
-  it('should run #representacionFederalOpcion()', async () => {
-    component.camCertificadoService = component.camCertificadoService || {};
-    component.camCertificadoService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
-    component.representacionFederalOpcion();
-    // expect(component.camCertificadoService.obtenerMenuDesplegable).toHaveBeenCalled();
+  it('debe ejecutar representacionFederalOpcion', async () => {
+    componente.camCertificadoService = componente.camCertificadoService || {};
+    componente.camCertificadoService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
+    componente.representacionFederalOpcion();
   });
 
-  it('should run #obtenerDatosFormulario()', async () => {
-    component.store = component.store || {};
-    component.store.setFormDatosCertificado = jest.fn();
-    component.obtenerDatosFormulario({});
-    // expect(component.store.setFormDatosCertificado).toHaveBeenCalled();
+  it('debe ejecutar obtenerDatosFormulario', async () => {
+    componente.store = componente.store || {};
+    componente.store.setFormDatosCertificado = jest.fn();
+    componente.obtenerDatosFormulario({});
   });
 
-  it('should run #idiomaSeleccion()', async () => {
-    component.store = component.store || {};
-    component.store.setIdiomaSeleccion = jest.fn();
-    component.idiomaSeleccion({});
-    // expect(component.store.setIdiomaSeleccion).toHaveBeenCalled();
+  it('debe ejecutar idiomaSeleccion', async () => {
+    componente.store = componente.store || {};
+    componente.store.setIdiomaSeleccion = jest.fn();
+    componente.idiomaSeleccion({});
   });
 
-  it('should run #entidadFederativaSeleccion()', async () => {
-    component.store = component.store || {};
-    component.store.setEntidadFederativaSeleccion = jest.fn();
-    component.entidadFederativaSeleccion({});
-    // expect(component.store.setEntidadFederativaSeleccion).toHaveBeenCalled();
+  it('debe ejecutar entidadFederativaSeleccion', async () => {
+    componente.store = componente.store || {};
+    componente.store.setEntidadFederativaSeleccion = jest.fn();
+    componente.entidadFederativaSeleccion({});
   });
 
-  it('should run #representacionFederalSeleccion()', async () => {
-    component.store = component.store || {};
-    component.store.setRepresentacionFederalDatosSeleccion = jest.fn();
-    component.representacionFederalSeleccion({});
-    // expect(component.store.setRepresentacionFederalDatosSeleccion).toHaveBeenCalled();
+  it('debe ejecutar representacionFederalSeleccion', async () => {
+    componente.store = componente.store || {};
+    componente.store.setRepresentacionFederalDatosSeleccion = jest.fn();
+    componente.representacionFederalSeleccion({});
   });
 
-  it('should run #setFormValida()', async () => {
-    component.store = component.store || {};
-    component.store.setFormValida = jest.fn();
-    component.setFormValida({});
-    // expect(component.store.setFormValida).toHaveBeenCalled();
+  it('debe ejecutar setFormValida', async () => {
+    componente.store = componente.store || {};
+    componente.store.setFormValida = jest.fn();
+    componente.setFormValida({});
   });
 
-  it('should run #ngOnDestroy()', async () => {
-    component.destroyNotifier$ = component.destroyNotifier$ || {};
-    component.destroyNotifier$.next = jest.fn();
-    component.destroyNotifier$.complete = jest.fn();
-    component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+  it('debe ejecutar ngOnDestroy', async () => {
+    componente.destroyNotifier$ = componente.destroyNotifier$ || {};
+    componente.destroyNotifier$.next = jest.fn();
+    componente.destroyNotifier$.complete = jest.fn();
+    componente.ngOnDestroy();
   });
-
 });

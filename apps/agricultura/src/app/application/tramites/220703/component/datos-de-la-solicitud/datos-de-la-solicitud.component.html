@@ -68,9 +68,10 @@
           <input-fecha
             [datos]="fechaInspeccionInput"
             (valorCambiado)="cambiarFechaInicio($event)"
-            name="fechaInspeccionInput"
-            [setFecha]="datosDeLaSolicitudForm.get('fechaInspeccionInput')?.value"
-            [isDisabled]="esFormularioSoloLectura"
+            name="fechaDeInspeccion"
+            [setFecha]="this.tramiteState.fechaDeInspeccion"
+            [isDisabled]="campoDeshabilitar"
+            formControlName="fechaDeInspeccion"
           ></input-fecha>
         </div>
 
@@ -159,7 +160,7 @@
         </div>
         <div class="col-md-4 form-group">
           <label for="mercancia" class="form-label" id="mercancia">
-            Cantidad de contenedores en que arriba la mercancía*:
+            Cantidad de contenedores en que arriba la mercancía <br>*:
             <span
               class="bi bi-question-circle-fill"
               title="Número de tolvas, furgones o contenedores en que arriba la mercancía"
@@ -229,6 +230,7 @@
               value="1"
               formControlName="esSolicitudFerros"
               (change)="cambioEsSolicitudFerros($event)"
+              [disabled]="true"
             />
             <label class="form-check-label" for="SiSolicitudFerros">Sí</label>
           </div>
@@ -243,6 +245,7 @@
               id="NoSolicitudFerros"
               value="0"
               formControlName="esSolicitudFerros"
+              [disabled]="true"
             />
             <label class="form-check-label" for="NoSolicitudFerros">No</label>
           </div>
@@ -256,7 +259,7 @@
           [tipoSeleccionTabla]="tablaSeleccionCheckbox"
           [configuracionTabla]="exportadorTabla"
           [datos]="mercanciaDatos"
-          [disableSeleccionTablaCheckBox]="campoDeshabilitar"
+          [disableSeleccionTablaCheckBox]="deshabilitarSeleccionTabla"
         ></app-tabla-dinamica>
       </div>
     </div>

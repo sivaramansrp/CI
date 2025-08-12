@@ -1,30 +1,29 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
-import { Subject } from 'rxjs';
-import { delay } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
-import { tap } from 'rxjs';
-
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { SeccionLibQuery } from '@ng-mf/data-access-user';
-import { SeccionLibState } from '@ng-mf/data-access-user';
-import { SeccionLibStore } from '@ng-mf/data-access-user';
-
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
-
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ConsultaioQuery,
+  SeccionLibQuery,
+  SeccionLibState,
+  SeccionLibStore,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+  ValidacionesFormularioService,
+} from '@ng-mf/data-access-user';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import {
   ImmexAmpliacionSensiblesState,
   ImmexAmpliacionSensiblesStore,
 } from '../estados/immex-ampliacion-sensibles.store';
+import { delay, map, takeUntil, tap } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { ImmexAmpliacionSensiblesQuery } from '../estados/immex-ampliacion-sensibles.query';
-import { ReactiveFormsModule } from '@angular/forms';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
+import { Subject } from 'rxjs';
+
 /**
  * @title Anexo
  * @description Componente que permite visualizar el anexo de la solicitud
@@ -37,14 +36,13 @@ import { TituloComponent } from '@ng-mf/data-access-user';
   styleUrl: './anexo.component.scss',
   standalone: true,
   imports: [
-    CatalogoSelectComponent,
     CommonModule,
     ReactiveFormsModule,
     TablaDinamicaComponent,
-    TituloComponent,
+    TituloComponent
   ],
 })
-export class AnexoComponent implements OnInit, OnDestroy, AfterViewInit {
+export class AnexoComponent implements OnInit, OnDestroy {
   /**
    * Representa la selección de entrada para el componente.
    * Este valor se utiliza para determinar el tipo de selección en la tabla dinámica.
@@ -116,54 +114,24 @@ export class AnexoComponent implements OnInit, OnDestroy, AfterViewInit {
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery,
     private readonly consultaQuery: ConsultaioQuery
-  ) {}
-  ngOnInit(): void {
-    this.seccionQuery.selectSeccionState$
+  ) {
+    this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.seccionState = seccionState;
+          this.esFormularioSoloLectura = seccionState.readonly;
         })
       )
       .subscribe();
-    this.immexAmplicationSensiblesQuery.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((state) => {
-          this.solicitudState = state as ImmexAmpliacionSensiblesState;
-        })
-      )
-      .subscribe();
-    this.initActionFormBuild();
-
-    this.seccionStore.establecerFormaValida([false]);
-
-    this.fraccionForm.statusChanges
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        delay(10),
-        tap((_value) => {
-          if (this.fraccionForm.valid) {
-            this.seccionStore.establecerSeccion([true]);
-            this.seccionStore.establecerFormaValida([true]);
-          } else {
-            this.seccionStore.establecerFormaValida([false]);
-          }
-        })
-      )
-      .subscribe();
+    this.inicializarEstadoFormulario();
   }
-  setValoresStore(
-    form: FormGroup,
-    campo: string,
-    metodoNombre: keyof ImmexAmpliacionSensiblesStore
-  ): void {
-    const VALOR = form.get(campo)?.value;
-    (
-      this.immexAmpliacionSensiblesStore[metodoNombre] as (
-        value: string | number | boolean
-      ) => void
-    )(VALOR);
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente se inicializa.
+   * Inicializa el estado del formulario dependiendo si está en modo solo lectura.
+   */
+  ngOnInit(): void {
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -184,19 +152,99 @@ export class AnexoComponent implements OnInit, OnDestroy, AfterViewInit {
    * @returns {void}
    */
   initActionFormBuild(): void {
-    this.fraccionForm = this.fb.group({
-      fraccionArancelariaSensibles: [
-        this.solicitudState.fraccionArancelariaSensibles,
-        Validators.required,
-      ],
-    });
-    this.fraccionArancelaria = this.fb.group({
-      fraccionArancelaria: [
-        this.solicitudState.fraccionArancelaria,
-        Validators.required,
-      ],
-      descripciondelproducto: [this.solicitudState.descripciondelproducto],
-    });
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccionState = seccionState;
+        })
+      )
+      .subscribe();
+
+    this.immexAmplicationSensiblesQuery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((state) => {
+          this.solicitudState = state as ImmexAmpliacionSensiblesState;
+
+          this.fraccionForm = this.fb.group({
+            fraccionArancelariaSensibles: [
+              this.solicitudState.fraccionArancelariaSensibles,
+              Validators.required,
+            ],
+          });
+
+          this.fraccionArancelaria = this.fb.group({
+            fraccionArancelaria: [
+              this.solicitudState.fraccionArancelaria,
+              Validators.required,
+            ],
+            descripciondelproducto: [
+              this.solicitudState.descripciondelproducto,
+            ],
+          });
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * Habilita o deshabilita el formulario dependiendo del modo de solo lectura.
+   *
+   * @returns {void}
+   */
+  guardarDatosFormulario(): void {
+    this.initActionFormBuild();
+    if (this.esFormularioSoloLectura) {
+      this.fraccionForm.disable();
+      this.fraccionArancelaria.disable();
+    } else {
+      this.fraccionForm.enable();
+      this.fraccionArancelaria.enable();
+    }
+  }
+
+  /**
+   * @method inicializarEstadoFormulario
+   * @description
+   * Inicializa el estado del formulario dependiendo si está en modo solo lectura.
+   * Si el formulario no existe, lo crea. Si el formulario debe ser solo de lectura,
+   * lo deshabilita; de lo contrario, lo habilita.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.initActionFormBuild();
+    }
+  }
+
+  /**
+   * Actualiza el estado del store con el valor de un campo específico del formulario.
+   *
+   * @param form - El formulario reactivo (FormGroup) que contiene el campo.
+   * @param campo - El nombre del campo dentro del formulario cuyo valor se actualizará en el store.
+   */
+  setValoresStore(form: FormGroup | null, campo: string): void {
+    if (!form) {
+      return;
+    }
+    const CONTROL = form.get(campo);
+    if (CONTROL && CONTROL.value !== null && CONTROL.value !== undefined) {
+      this.immexAmpliacionSensiblesStore.actualizarEstado({
+        [campo]: CONTROL.value,
+      });
+    }
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
+   * Este método emite un valor en el observable `destroyNotifier$` para notificar a los suscriptores
+   * que deben limpiar recursos o cancelar suscripciones, y luego completa el observable.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
   /**
@@ -312,54 +360,4 @@ export class AnexoComponent implements OnInit, OnDestroy, AfterViewInit {
       descripcion: 'Con un contenido de carbono superior al 4% en peso.',
     },
   ];
-
-  /**
-   * Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
-   * Este método emite un valor en el observable `destroyNotifier$` para notificar a los suscriptores
-   * que deben limpiar recursos o cancelar suscripciones, y luego completa el observable.
-   */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
-  }
-
-  /**
-   * @inheritdoc
-   * @description
-   * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
-   *
-   * Suscribe al observable `selectConsultaioState$` para escuchar cambios en el estado de la consulta.
-   * Si el estado indica que no se está creando y el `procedureId` es '80202', actualiza la propiedad `esFormularioSoloLectura`
-   * según el valor de `readonly` en el estado. Luego, inicializa el estado del formulario llamando a `inicializarEstadoFormulario()`.
-   * La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$` para evitar fugas de memoria.
-   *
-   */
-  ngAfterViewInit(): void {
-    this.consultaQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          if (!seccionState.create && seccionState.procedureId === '80202') {
-            this.esFormularioSoloLectura = seccionState.readonly;
-          }
-          this.inicializarEstadoFormulario();
-        })
-      )
-      .subscribe();
-  }
-
-  /**
-   * @method inicializarEstadoFormulario
-   * @description
-   * Inicializa el estado del formulario dependiendo si está en modo solo lectura.
-   * Si el formulario no existe, lo crea. Si el formulario debe ser solo de lectura,
-   * lo deshabilita; de lo contrario, lo habilita.
-   */
-  inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.fraccionForm.disable();
-    } else {
-      this.fraccionForm.enable();
-    }
-  }
 }

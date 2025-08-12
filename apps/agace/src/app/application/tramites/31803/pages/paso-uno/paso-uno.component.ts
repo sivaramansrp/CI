@@ -3,6 +3,7 @@ import {
   Component,
   OnDestroy,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 import {
   ConsultaioQuery,
@@ -13,11 +14,11 @@ import {
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
   PERSONA_MORAL_NACIONAL,
 } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { SharedModule, SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
+import { SharedModule, SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { SolicitudComponent } from '../../components/Solicitud.component';
 import { RegistroSolicitudService } from '../../services/registro-solicitud-service.service';
+import { SolicitudComponent } from '../../components/Solicitud.component';
 
 /**
  * Componente que representa el primer paso del trámite.
@@ -64,6 +65,11 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * Índice del paso actual.
    */
   indice: number = 1;
+
+  /**
+   * Referencia al componente de solicitud.
+   */
+  @ViewChild(SolicitudComponent) solicitudComponent!: SolicitudComponent;
 
   /**
    * Constructor del componente PasoUnoComponent.

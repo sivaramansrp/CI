@@ -10,7 +10,7 @@
         "disabled": false
     },
     {
-        "titulo": "Dictámen",
+        "titulo": "Generar un dictamen",
         "id": "dictamen",
         "disabled": false
     },

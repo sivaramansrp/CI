@@ -46,22 +46,22 @@ export interface MercanciasInfo {
     id: number;
 
     /** Clasificación de la mercancía. */
-    clasificacion: string;
+    clasificaionProductos: string;
 
     /** Especificación adicional de la mercancía. */
-    especificar: string;
+    especificarProducto: string;
 
     /** Denominación específica de la mercancía. */
-    denominacionEspecifica: string;
+    nombreProductoEspecifico: string;
 
     /** Denominación distintiva de la mercancía. */
     denominacionDistintiva: string;
 
     /** Denominación común de la mercancía. */
-    denominacionComun: string;
+    denominacionNombre: string;
 
-    /** Forma farmacéutica de la mercancía. */
-    formaFarmaceutica: string;
+    /** Tipo de producto de la mercancía. */
+    tipoProducto: string;
 
     /** Estado físico de la mercancía. */
     estadoFisico: string;
@@ -70,31 +70,28 @@ export interface MercanciasInfo {
     fraccionArancelaria: string;
 
     /** Descripción de la fracción arancelaria. */
-    descripcionFraccion: string;
-
-    /** Unidad de medida de la mercancía. */
-    unidad: string;
-
-    /** Cantidad en la unidad de medida comercial (UMC). */
-    cantidadUMC: string;
-
-    /** Unidad de medida de transporte (UMT). */
-    unidadUMT: string;
+    descripcionFraccionArancelaria: string;
 
     /** Cantidad en la unidad de medida de transporte (UMT). */
     cantidadUMT: string;
 
-    /** Presentación de la mercancía. */
-    presentacion: string;
+    /** Unidad de medida de transporte (UMT). */
+    umt: string;
+
+    /** Cantidad en la unidad de medida comercial (UMC). */
+    cantidadUMC: string;
+
+    /** Unidad de medida de la mercancía (UMC). */
+    umc: string;
+
+    /** Presentación farmacéutica de la mercancía. */
+    presentacionFarmaceutica: string;
 
     /** País de origen de la mercancía. */
     paisDeOrigen: string;
 
     /** País de procedencia de la mercancía. */
     paisDeProcedencia: string;
-
-    /** Tipo de producto de la mercancía. */
-    tipoProducto: string;
 
     /** Uso específico de la mercancía. */
     usoEspecifico: string;

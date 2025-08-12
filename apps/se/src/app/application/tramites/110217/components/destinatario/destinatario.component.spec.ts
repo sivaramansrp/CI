@@ -1,238 +1,159 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
-import { of, Subject } from 'rxjs';
+import { TestBed } from '@angular/core/testing';
 import { DestinatarioComponent } from './destinatario.component';
-import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
-import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { Tramite110217Store } from '../../../../estados/tramites/tramite110217.store';
+import { Tramite110217Query } from '../../../../estados/queries/tramite110217.query';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { of, Subject } from 'rxjs';
 
 describe('DestinatarioComponent', () => {
   let component: DestinatarioComponent;
-  let fixture: ComponentFixture<DestinatarioComponent>;
-  let tramiteStoreMock: any;
-  let tramiteQueryMock: any;
-  let validacionesServiceMock: any;
+  let store: Tramite110217Store;
+  let query: Tramite110217Query;
+  let validacionesService: ValidacionesFormularioService;
+  let consultaioQuery: ConsultaioQuery;
 
-  beforeEach(async () => {
-    tramiteStoreMock = {
-      setGrupoReceptorNombre: jest.fn(),
-      setGrupoReceptorApellidoPrimer: jest.fn(),
-      setGrupoReceptorApellidoSegundo: jest.fn(),
-      setGrupoReceptorNumeroFiscal: jest.fn(),
-      setGrupoReceptorRazonSocial: jest.fn(),
-      setGrupoDeDireccionesCiudad: jest.fn(),
-      setGrupoDeDireccionesCalle: jest.fn(),
-      setGrupoDeDireccionesNumeroLetra: jest.fn(),
-      setGrupoDeDireccionesTelefono: jest.fn(),
-      setGrupoDeDireccionesCorreoElectronico: jest.fn(),
-      setGrupoRepresentativoLugar: jest.fn(),
-      setGrupoRepresentativoNombreExportador: jest.fn(),
-      setGrupoRepresentativoEmpresa: jest.fn(),
-      setGrupoRepresentativoCargo: jest.fn(),
-      setgrupoDeTransportePuertoEmbarque: jest.fn(),
-      setgrupoDeTransportePuertoDesembarque: jest.fn(),
-    };
+  beforeEach(() => {
+    store = { actualizarEstado: jest.fn() } as any;
+    query = { selectSolicitud$: of({}) } as any;
+    validacionesService = { isValid: jest.fn().mockReturnValue(true) } as any;
+    consultaioQuery = { selectConsultaioState$: of({ readonly: false }) } as any;
 
-    tramiteQueryMock = {
-      selectSolicitud$: of({
-        grupoReceptor: {
-          nombre: 'John',
-          apellidoPrimer: 'Doe',
-          apellidoSegundo: 'Smith',
-          numeroFiscal: '12345',
-          razonSocial: 'Empresa Ejemplo',
-        },
-        grupoDeDirecciones: {
-          ciudad: 'Ciudad Ejemplo',
-          calle: 'Calle Ejemplo',
-          numeroLetra: '123A',
-          telefono: '1234567890',
-          correoElectronico: 'correo@ejemplo.com',
-        },
-        grupoRepresentativo: {
-          lugar: 'Lugar Ejemplo',
-          nombreExportador: 'Exportador Ejemplo',
-          empresa: 'Empresa Ejemplo',
-          cargo: 'Cargo Ejemplo',
-        },
-        grupoDeTransporte: {
-          puertoEmbarque: 'Puerto Embarque',
-          puertoDesembarque: 'Puerto Desembarque',
-        },
-      }),
-    };
-
-    validacionesServiceMock = {
-      isValid: jest.fn().mockReturnValue(true),
-    };
-
-    await TestBed.configureTestingModule({
-      imports: [
-        ReactiveFormsModule,
-        FormsModule,
-        CommonModule,
-        TituloComponent,
-        DestinatarioComponent
-      ],
+    TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule],
       providers: [
+        { provide: Tramite110217Store, useValue: store },
+        { provide: Tramite110217Query, useValue: query },
+        { provide: ValidacionesFormularioService, useValue: validacionesService },
+        { provide: ConsultaioQuery, useValue: consultaioQuery },
         FormBuilder,
-        { provide: Tramite110216Store, useValue: tramiteStoreMock },
-        { provide: Tramite110216Query, useValue: tramiteQueryMock },
-        { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
       ],
-    }).compileComponents();
+    });
 
-    fixture = TestBed.createComponent(DestinatarioComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    const fb = TestBed.inject(FormBuilder);
+    component = new DestinatarioComponent(
+      fb,
+      store,
+      query,
+      validacionesService,
+      consultaioQuery
+    );
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
-    component.ngOnInit();
-    expect(component.registroFormulario).toBeDefined();
-    expect(component.grupoReceptor.get('nombre')?.value).toBe('John');
-    expect(component.grupoDeDirecciones.get('ciudad')?.value).toBe('Ciudad Ejemplo');
-    expect(component.grupoRepresentativo.get('lugar')?.value).toBe('Lugar Ejemplo');
-    expect(component.grupoDeTransporte.get('puertoEmbarque')?.value).toBe('Puerto Embarque');
+  it('should initialize form on donanteDomicilio', () => {
+    component.solicitudState = {
+      grupoReceptor: {},
+      grupoDeDirecciones: {},
+      grupoRepresentativo: {},
+      grupoDeTransporte: {},
+    } as any;
+    component.donanteDomicilio();
+    expect(component.registroFormulario).toBeTruthy();
+    expect(component.registroFormulario.get('grupoReceptor')).toBeTruthy();
   });
 
-  it('should call setValoresStore when a field changes', () => {
-    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
-    const input = fixture.debugElement.nativeElement.querySelector('#nombre');
-    input.value = 'Nuevo Nombre';
-    input.dispatchEvent(new Event('change'));
-    fixture.detectChanges();
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.grupoReceptor, 'nombre', 'setGrupoReceptorNombre');
+  it('should disable form if soloLectura is true', () => {
+    component.solicitudState = {
+      grupoReceptor: {},
+      grupoDeDirecciones: {},
+      grupoRepresentativo: {},
+      grupoDeTransporte: {},
+    } as any;
+    component.donanteDomicilio();
+    component.soloLectura = true;
+    component.destinatarioFormulario();
+    expect(component.registroFormulario.disabled).toBe(true);
   });
 
-  it('should validate the form on validarDestinatarioFormulario', () => {
-    component.registroFormulario.get('grupoReceptor.nombre')?.setValue('');
+  it('should enable form if soloLectura is false', () => {
+    component.solicitudState = {
+      grupoReceptor: {},
+      grupoDeDirecciones: {},
+      grupoRepresentativo: {},
+      grupoDeTransporte: {},
+    } as any;
+    component.donanteDomicilio();
+    component.soloLectura = false;
+    component.destinatarioFormulario();
+    expect(component.registroFormulario.enabled).toBe(true);
+  });
+
+  it('should mark all as touched on validarDestinatarioFormulario', () => {
+    component.solicitudState = {
+      grupoReceptor: {},
+      grupoDeDirecciones: {},
+      grupoRepresentativo: {},
+      grupoDeTransporte: {},
+    } as any;
+    component.donanteDomicilio();
+    const spy = jest.spyOn(component.registroFormulario, 'markAllAsTouched');
     component.validarDestinatarioFormulario();
-    expect(component.registroFormulario.get('grupoReceptor.nombre')?.touched).toBe(true);
-    expect(component.registroFormulario.valid).toBe(false);
+    expect(spy).toHaveBeenCalled();
   });
 
-  it('should mark all fields as touched if form is invalid on onSubmit', () => {
-    component.registroFormulario.get('grupoReceptor.nombre')?.setValue('');
-    component.validarDestinatarioFormulario();
-    expect(component.registroFormulario.get('grupoReceptor.nombre')?.touched).toBe(true);
-    expect(component.registroFormulario.valid).toBe(false);
-  });
-
-  it('should not mark fields as touched if form is valid on onSubmit', () => {
-    component.onSubmit();
-    expect(component.registroFormulario.valid).toBe(false);
-  });
-
-  it('should call isValid from ValidacionesFormularioService', () => {
-    const isValidSpy = jest.spyOn(validacionesServiceMock, 'isValid');
-    component.isValid(component.grupoReceptor, 'nombre');
-    expect(isValidSpy).toHaveBeenCalledWith(component.grupoReceptor, 'nombre');
-  });
-
-  it('should complete destroyNotifier$ on ngOnDestroy', () => {
-    const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
-    const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
-    component.ngOnDestroy();
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
-  });
-
-  it('should initialize grupoReceptor with default values', () => {
-    expect(component.grupoReceptor.get('nombre')?.value).toBe('John');
-    expect(component.grupoReceptor.get('apellidoPrimer')?.value).toBe('Doe');
-    expect(component.grupoReceptor.get('apellidoSegundo')?.value).toBe('Smith');
-  });
-
-  it('should initialize grupoDeDirecciones with default values', () => {
-    expect(component.grupoDeDirecciones.get('ciudad')?.value).toBe('Ciudad Ejemplo');
-    expect(component.grupoDeDirecciones.get('calle')?.value).toBe('Calle Ejemplo');
-    expect(component.grupoDeDirecciones.get('numeroLetra')?.value).toBe('123A');
-  });
-
-  it('should initialize grupoRepresentativo with default values', () => {
-    expect(component.grupoRepresentativo.get('lugar')?.value).toBe('Lugar Ejemplo');
-    expect(component.grupoRepresentativo.get('nombreExportador')?.value).toBe('Exportador Ejemplo');
-    expect(component.grupoRepresentativo.get('empresa')?.value).toBe('Empresa Ejemplo');
-  });
-
-  it('should initialize grupoDeTransporte with default values', () => {
-    expect(component.grupoDeTransporte.get('puertoEmbarque')?.value).toBe('Puerto Embarque');
-    expect(component.grupoDeTransporte.get('puertoDesembarque')?.value).toBe('Puerto Desembarque');
-  });
-
-  it('should mark grupoReceptor.nombre as invalid if empty', () => {
-    component.grupoReceptor.get('nombre')?.setValue('');
-    expect(component.grupoReceptor.get('nombre')?.valid).toBe(false);
-  });
-
-  it('should mark grupoDeDirecciones.ciudad as invalid if empty', () => {
-    component.grupoDeDirecciones.get('ciudad')?.setValue('');
-    expect(component.grupoDeDirecciones.get('ciudad')?.valid).toBe(false);
-  });
-
-  it('should mark grupoRepresentativo.lugar as invalid if empty', () => {
-    component.grupoRepresentativo.get('lugar')?.setValue('');
-    expect(component.grupoRepresentativo.get('lugar')?.valid).toBe(false);
-  });
-
-  it('should mark grupoDeTransporte.puertoEmbarque as valid if not empty', () => {
-    component.grupoDeTransporte.get('puertoEmbarque')?.setValue('Puerto Embarque');
-    expect(component.grupoDeTransporte.get('puertoEmbarque')?.valid).toBe(true);
-  });
-
-  it('should call setValoresStore for grupoReceptor.nombre on change', () => {
-    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
-    component.grupoReceptor.get('nombre')?.setValue('Nuevo Nombre');
-    const inputElement = fixture.debugElement.nativeElement.querySelector('#nombre');
-    inputElement.dispatchEvent(new Event('change'));
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.grupoReceptor, 'nombre', 'setGrupoReceptorNombre');
-  });
-
-  it('should call setValoresStore for grupoDeDirecciones.ciudad on change', () => {
-    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
-    component.grupoDeDirecciones.get('ciudad')?.setValue('Nueva Ciudad');
-    const inputElement = fixture.debugElement.nativeElement.querySelector('#ciudad');
-    inputElement.dispatchEvent(new Event('change'));
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.grupoDeDirecciones, 'ciudad', 'setGrupoDeDireccionesCiudad');
-  });
-
-  it('should call setValoresStore for grupoRepresentativo.lugar on change', () => {
-    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
-    component.grupoRepresentativo.get('lugar')?.setValue('Nuevo Lugar');
-    const inputElement = fixture.debugElement.nativeElement.querySelector('#lugar');
-    inputElement.dispatchEvent(new Event('change'));
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.grupoRepresentativo, 'lugar', 'setGrupoRepresentativoLugar');
-  });
-
-  it('should call setValoresStore for grupoDeTransporte.puertoEmbarque on change', () => {
-    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
-    component.grupoDeTransporte.get('puertoEmbarque')?.setValue('Nuevo Puerto');
-    const inputElement = fixture.debugElement.nativeElement.querySelector('#puertoEmbarque');
-    inputElement.dispatchEvent(new Event('change'));
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.grupoDeTransporte, 'puertoEmbarque', 'setgrupoDeTransportePuertoEmbarque');
-  });
-
-  it('should disable form elements on onClick', () => {
+  it('should set estaDeshabilitado to true on onClick', () => {
+    component.estaDeshabilitado = false;
     component.onClick();
     expect(component.estaDeshabilitado).toBe(true);
   });
 
-  it('should mark all fields as touched on validarDestinatarioFormulario', () => {
-    component.validarDestinatarioFormulario();
-    expect(component.registroFormulario.touched).toBe(true);
+  it('should validate field using isValid', () => {
+    component.solicitudState = {
+      grupoReceptor: { nombre: 'Test' },
+      grupoDeDirecciones: {},
+      grupoRepresentativo: {},
+      grupoDeTransporte: {},
+    } as any;
+    component.donanteDomicilio();
+    expect(component.isValid(component.grupoReceptor, 'nombre')).toBe(true);
   });
 
-  it('should not call setValoresStore if form is invalid', () => {
-    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
-    component.grupoReceptor.get('nombre')?.setValue('');
-    component.onSubmit();
-    expect(setValoresStoreSpy).not.toHaveBeenCalled();
+  it('should get grupoDeTransporte', () => {
+    component.solicitudState = {
+      grupoReceptor: {},
+      grupoDeDirecciones: {},
+      grupoRepresentativo: {},
+      grupoDeTransporte: {},
+    } as any;
+    component.donanteDomicilio();
+    expect(component.grupoDeTransporte).toBeTruthy();
+  });
+
+  it('should get grupoReceptor', () => {
+    component.solicitudState = {
+      grupoReceptor: {},
+      grupoDeDirecciones: {},
+      grupoRepresentativo: {},
+      grupoDeTransporte: {},
+    } as any;
+    component.donanteDomicilio();
+    expect(component.grupoReceptor).toBeTruthy();
+  });
+
+  it('should get grupoDeDirecciones', () => {
+    component.solicitudState = {
+      grupoReceptor: {},
+      grupoDeDirecciones: {},
+      grupoRepresentativo: {},
+      grupoDeTransporte: {},
+    } as any;
+    component.donanteDomicilio();
+    expect(component.grupoDeDirecciones).toBeTruthy();
+  });
+
+  it('should get grupoRepresentativo', () => {
+    component.solicitudState = {
+      grupoReceptor: {},
+      grupoDeDirecciones: {},
+      grupoRepresentativo: {},
+      grupoDeTransporte: {},
+    } as any;
+    component.donanteDomicilio();
+    expect(component.grupoRepresentativo).toBeTruthy();
   });
 });

@@ -1,12 +1,12 @@
-import { Catalogo, RespuestaDocuemntosRequeridos } from '../../../core/models/shared/catalogos.model';
+import { Catalogo, CatalogoTipoDocumento, RespuestaDocuemntosRequeridos } from '../../../core/models/shared/catalogos.model';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Notificacion, NotificacionesComponent } from '../notificaciones/notificaciones.component';
 import { SolicitudDocumentosState, SolicitudDocumentosStore } from '../../../core/estados/solicitud-documentos.store';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CONFIGURACION_ENCABEZADO_DOCUMENTOS } from '../../../core/enums/solicitud-documentos.enum';
 import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-columna.model';
 import { SolicitudDocumentosQuery } from '../../../core/queries/solicitud-documentos.query';
 import { TablaDinamicaComponent } from '../tabla-dinamica/tabla-dinamica.component';
 import { TablaSeleccion } from '../../../core/enums/tabla-seleccion.enum';
@@ -36,15 +36,11 @@ export class SolicitarDocumentosEvaluacionComponent implements OnInit {
   /**
    * Lista de documentos
    */
-  listadoDocumentos: string[] = [];
+  public listadoDocumentos: CatalogoTipoDocumento[] = [];
   /**
    * Lista de documentos agregados a la tabla
    */
-  documentosSeleccionados: string[] = [];
-  /**
-   * Documento seleccionado para agregar a requerimiento
-   */
-  documentoSeleccionado: string = '';
+  public documentosSeleccionados: CatalogoTipoDocumento[] = [];
   /**
  * Variable para identificar el Id del tipo de documento
  */
@@ -79,13 +75,7 @@ export class SolicitarDocumentosEvaluacionComponent implements OnInit {
   /**
    * Encabezado de tabla para agregar documentos
    */
-  encabezadoDeTablaCapturistas: ConfiguracionColumna<string>[] = [
-    {
-      encabezado: 'Nombre del documento',
-      clave: (row) => row,
-      orden: 1
-    }
-  ];
+  encabezadoDeTablaDocumentos = CONFIGURACION_ENCABEZADO_DOCUMENTOS;
 
   constructor(private fb: FormBuilder,
     private documentosStates: SolicitudDocumentosStore,
@@ -104,6 +94,7 @@ export class SolicitarDocumentosEvaluacionComponent implements OnInit {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudDocumentosState = seccionState;
+          this.listadoDocumentos = this.solicitudDocumentosState.listaDocumentos;
         })
       )
       .subscribe();
@@ -116,20 +107,20 @@ export class SolicitarDocumentosEvaluacionComponent implements OnInit {
     this.formSolicitudDocumentos = this.fb.group({
       tipoDocumento: ['', [Validators.required]],
     });
-    this.documentosSeleccionados = this.solicitudDocumentosState.documentosSeleccionados;
+    this.documentosSeleccionados = this.solicitudDocumentosState.listaDocumentos;
   }
   /**
    * Metodo para agregar documento seleccionado a la tabla 
    */
   agregarDocumento(): void {
     if (this.formSolicitudDocumentos.invalid) {
-      this.formSolicitudDocumentos.markAllAsTouched(); // Marca todos los campos como tocados para mostrar errores
+      this.formSolicitudDocumentos.markAllAsTouched();
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'error',
         modo: 'action',
         titulo: 'Error',
-        mensaje: 'Aun no ha seleccionado una opción.',
+        mensaje: 'Debe seleccionar al menos una opción.',
         cerrar: true,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
@@ -137,8 +128,6 @@ export class SolicitarDocumentosEvaluacionComponent implements OnInit {
       return;
     }
     this.tipoDocumentoId = this.formSolicitudDocumentos.get('tipoDocumento')?.value;
-
-    // Validación: asegurarse que tipoDocumentoId tenga un valor numérico válido
     if (!this.tipoDocumentoId || isNaN(this.tipoDocumentoId)) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -152,29 +141,47 @@ export class SolicitarDocumentosEvaluacionComponent implements OnInit {
       };
       return;
     }
-    if (this.documentosSeleccionados.length === 0) {
-      this.documentosSeleccionados = [];
+    const TIPO_DOCUMENTO_OBJ = this.catTipoDocumento.find(dep => dep.id === Number(this.tipoDocumentoId));
+    const NUEVA_TABLA_LISTA_DOCUMENTOS = [...this.listadoDocumentos]
+
+    NUEVA_TABLA_LISTA_DOCUMENTOS.push({
+      id: this.tipoDocumentoId,
+      description: TIPO_DOCUMENTO_OBJ?.descripcion || '',
+    })
+    if (this.listadoDocumentos.length === 0) {
+      this.listadoDocumentos = [];
     }
-    this.tipoDocumentoId = this.formSolicitudDocumentos.get('tipoDocumento')?.value;
-    this.selectedOption = this.catTipoDocumento?.find(option => option.id === Number(this.tipoDocumentoId));
-    this.description = this.selectedOption ? this.selectedOption.descripcion : 'No description found';
-    if (this.description && !this.documentosSeleccionados.includes(this.description)) {
-      this.documentosSeleccionados.push(this.description.toString());
-    }
-    this.documentosStates.setSolicitudDocumentos(this.documentosSeleccionados);
+    this.listadoDocumentos = NUEVA_TABLA_LISTA_DOCUMENTOS;
+    this.documentosStates.setSolicitudDocumentos(this.listadoDocumentos);
+    this.limpiarFormulario();
+  }
+
+  limpiarFormulario() {
+    this.formSolicitudDocumentos.reset({
+      tipoDocumento: ''
+    });
   }
   /**
    * Método para eliminar el documento de la tabla 
    */
-  eliminarDocumento(): void {
-    this.listadoDocumentos.forEach((documento) => {
-      const INDEX = this.documentosSeleccionados.indexOf(documento);
-      if (INDEX > -1) {
-        this.documentosSeleccionados.splice(INDEX, 1);
-      }
-    });
-    this.documentosStates.setSolicitudDocumentos(this.documentosSeleccionados);
-    this.listadoDocumentos = [];
+  eliminarDocumento() {
+    if (this.documentosSeleccionados.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: 'Advertencia',
+        mensaje: 'No hay documentos para eliminar.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+    const IDS_TO_DELETE = this.documentosSeleccionados.map(documento => documento.id);
+    this.listadoDocumentos = this.listadoDocumentos.filter(documento => !IDS_TO_DELETE.includes(documento.id));
+    this.documentosStates.setSolicitudDocumentos(this.listadoDocumentos);
+    this.documentosSeleccionados = [];
   }
   /**
    * Establece los valores en el store de tramite5701.

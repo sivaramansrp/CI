@@ -121,6 +121,7 @@
     <app-manual-aviso
       (agregarFila)="agregarFilaTabla($event)"
       (emitButtonAction)="esManualAsivoAgregarClicked = $event"
+      (registroAgregado)="mostrarPopupRegistroAgregado = true"
     ></app-manual-aviso>
     } @if (configuracion[1] && configuracion[1].menu[0] && configuracion[1].menu[0].props && configuracion[1].menu[0].props.radioSelectedValue && configuracion[1].menu[0].props.radioSelectedValue === cargaTipo.CARGA_MASIVA) {
     <app-carga-masiva></app-carga-masiva>
@@ -142,6 +143,27 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" (click)="mostrarPopupSeleccionRegistro = false">
+          Aceptar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="modal fade show popup"
+  tabindex="-1"
+  role="dialog"
+  *ngIf="mostrarPopupRegistroAgregado"
+  style="display: block; background: rgba(0,0,0,0.3);"
+>
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header"></div>
+      <div class="modal-body">
+        <p>El registro fue agregado correctamente.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="mostrarPopupRegistroAgregado = false">
           Aceptar
         </button>
       </div>

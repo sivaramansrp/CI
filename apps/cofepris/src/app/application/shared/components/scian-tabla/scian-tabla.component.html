@@ -30,17 +30,16 @@
             <p>* Campos obligatorios</p>
           </div>
         <div class="col-md-8">
-            <div class="pull-right ml-2">
-                <button type="button" name="eliminarScian" class="btn btn-danger ms-2"
+            <div class="pull-right ml-2 mb-4">
+                <button type="button" name="eliminarScian" class="btn btn-default"
                 (click)="limpiarScian()">
                     Limpiar  
                 </button>
-                <button type="button" name="eliminarScian" class="btn btn-danger ms-2"
+                <button type="button" name="eliminarScian" class="btn btn-default ms-2"
                 (click)="cancelar()">
                 Cancelar
                 </button>
-                <button type="button" name="agregarScian" class="btn btn-primary ms-2" (click)="agregarScian()"
-                [disabled]="scianForm.invalid || scianForm.pristine">
+                <button type="button" name="agregarScian" class="btn btn-primary ms-2" (click)="agregarScian()">
                     Agregar
                 </button>
             </div>

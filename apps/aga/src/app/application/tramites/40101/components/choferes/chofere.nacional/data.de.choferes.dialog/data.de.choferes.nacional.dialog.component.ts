@@ -39,6 +39,15 @@ import { DatosDelChoferNacional } from "../../../../models/registro-muestras-mer
   ],
 })
 export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy {
+  /**
+   * Indica si el formulario está en modo edición.
+   */
+  isEditando: boolean = false;
+
+  /**
+   * Índice del registro que se está editando.
+   */
+  indiceEditando: number | null = null;
 
   /**
    * Indica si el formulario está en modo solo lectura.
@@ -116,7 +125,7 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
    * Evento emitido al agregar o editar un chofer nacional.
    * @type {EventEmitter<DatosDelChoferNacional>}
    */
-  @Output() addModalEvent = new EventEmitter<DatosDelChoferNacional>();
+  @Output() addModalEvent = new EventEmitter<{ datos: DatosDelChoferNacional, indice?: number }>();
 
   /**
    * Alerta de notificación para mostrar mensajes al usuario.
@@ -308,7 +317,7 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
    * Abre el modal de choferes.
    * @returns {void}
    */
-  openModal(): void {
+  abiertoModal(): void {
     this.modalRef = this.modalService.show(this.datosDeChoferesModal, { class: 'modal-xl' });
   }
 
@@ -316,18 +325,18 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
    * Cierra el modal de choferes y emite el evento de cancelación.
    * @returns {void}
    */
-  closeModal(): void {
+  cerrarModal(): void {
     this.modalRef?.hide();
     this.cancelEvent.emit();
   }
 
   /**
-   * Restablece el formulario de choferes a sus valores predeterminados.
+   * Limpia el formulario de choferes a sus valores predeterminados.
    * 
    * Este método reinicia todos los campos del formulario `formChoferes` con valores vacíos o por defecto,
    * permitiendo limpiar el formulario para una nueva entrada de datos.
    */
-  resetForm(): void {
+  limpiarFormulario(): void {
     this.formChoferes.reset({
       curp: '',
       rfc: '',
@@ -414,33 +423,41 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
    * @returns {Promise<void>}
    */
   private async updateListsData(data: DatosDelChoferNacional): Promise<void> {
-    const ESTADOS = await this.fetchEstadosByPais(this.paisList[0]);
-    data.pais = this.paisList[0].id.toString();
 
-    const ESTADOS_SELECCIONADO = ESTADOS?.find(Item => Item.descripcion === data.estado);
-    if (ESTADOS_SELECCIONADO) {
-      data.estado = ESTADOS_SELECCIONADO.id.toString();
-      const MUNICIPIOS = await this.fetchMunicipiosByEstado(ESTADOS_SELECCIONADO);
-
-      const MUNICIPIO_SELECCIONADO = MUNICIPIOS?.find(item => item.descripcion === data.municipioAlcaldia);
-      if (MUNICIPIO_SELECCIONADO) {
-        data.municipioAlcaldia = MUNICIPIO_SELECCIONADO.id.toString();
-        await this.fetchColoniasByMunicipio(MUNICIPIO_SELECCIONADO);
-        const COLONIA_SELECCIONADA = this.coloniaList.find(c => c.descripcion === data.colonia);
-        if (COLONIA_SELECCIONADA) {
-          data.colonia = COLONIA_SELECCIONADA.id.toString();
-        }
+    const paisObj = this.paisList.find(p => p.descripcion === data.pais);
+    const paisId = paisObj ? paisObj.id : '';
+    // ESTADO
+    const estados = await this.fetchEstadosByPais(paisObj || this.paisList[0]);
+    const estadoObj = estados.find(e => e.descripcion === data.estado);
+    const estadoId = estadoObj ? estadoObj.id : '';
+    // MUNICIPIO
+    let municipioId = '';
+    let coloniaId = '';
+    if (estadoObj) {
+      const municipios = await this.fetchMunicipiosByEstado(estadoObj);
+      const municipioObj = municipios.find(m => m.descripcion === data.municipioAlcaldia);
+      municipioId = municipioObj ? String(municipioObj.id) : '';
+      // COLONIA
+      if (municipioObj) {
+        await this.fetchColoniasByMunicipio(municipioObj);
+        const coloniaObj = this.coloniaList.find(c => c.descripcion === data.colonia);
+        coloniaId = coloniaObj ? String(coloniaObj.id) : '';
       }
     }
+    // PAIS DE RESIDENCIA
+    const paisResidenciaObj = this.paisList.find(p => p.descripcion === data.paisDeResidencia);
+    const paisResidenciaId = paisResidenciaObj ? paisResidenciaObj.id : '';
+
+    this.formChoferes.patchValue({
+      pais: paisId,
+      estado: estadoId,
+      municipioAlcaldia: municipioId,
+      colonia: coloniaId,
+      paisDeResidencia: paisResidenciaId
+    });
   }
 
-  /**
-   * Limpia todos los campos del formulario de choferes.
-   * @returns {void}
-   */
-  limpiarFormulario(): void {
-    this.formChoferes.reset();
-  }
+  // ...existing code...
   
   /**
    * Guarda los datos editados del chofer nacional si el formulario es válido, emite el evento y cierra el modal.
@@ -457,16 +474,24 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
     });
 
     if (this.formChoferes.valid) {
-      const DATA = this.formChoferes.getRawValue() as DatosDelChoferNacional;
-      DATA.pais = this.paisList.find(p => p.id === Number(DATA.pais))?.descripcion || '';
-      DATA.estado = this.estadoList.find(e => e.id === Number(DATA.estado))?.descripcion || '';
-      DATA.municipioAlcaldia = this.municipioList.find(m => m.id === Number(this.formChoferes.get('municipioAlcaldia')?.value))?.descripcion || '';
-      DATA.colonia = this.coloniaList.find(c => c.id === Number(DATA.colonia))?.descripcion || '';
-      DATA.paisDeResidencia = this.paisList.find(p => p.id === Number(DATA.paisDeResidencia))?.descripcion || '';
+      const datos = this.formChoferes.getRawValue() as DatosDelChoferNacional;
+      // Convertir ID en descripciones para todos los campos seleccionados
+      datos.pais = this.paisList.find(p => String(p.id) === String(datos.pais))?.descripcion || '';
+      datos.estado = this.estadoList.find(e => String(e.id) === String(datos.estado))?.descripcion || '';
+      datos.municipioAlcaldia = this.municipioList.find(m => String(m.id) === String(datos.municipioAlcaldia))?.descripcion || '';
+      datos.colonia = this.coloniaList.find(c => String(c.id) === String(datos.colonia))?.descripcion || '';
+      datos.paisDeResidencia = this.paisList.find(p => String(p.id) === String(datos.paisDeResidencia))?.descripcion || '';
 
-      // Aquí puedes realizar la lógica para guardar los datos del chofer
-      this.addModalEvent.emit(DATA);
-      this.closeModal();
+      if (this.isEditando && this.indiceEditando !== null) {
+        // Emitir datos y el índice para actualizar
+        this.addModalEvent.emit({ datos, indice: this.indiceEditando });
+      } else {
+        // Emitir datos para agregar nuevo
+        this.addModalEvent.emit({ datos });
+      }
+      this.isEditando = false;
+      this.indiceEditando = null;
+      this.cerrarModal();
     } else {
       this.alertaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
@@ -479,6 +504,17 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
         txtBtnCancelar: '',
       };
     }
+  }
+
+  /**
+   * Método para iniciar la edición de un registro.
+   * @param datos Datos del chofer a editar
+   * @param indice Índice del registro en la tabla
+   */
+  editarRegistro(datos: DatosDelChoferNacional, indice: number): void {
+    this.isEditando = true;
+    this.indiceEditando = indice;
+    this.formChoferes.patchValue(datos);
   }
 
   /**

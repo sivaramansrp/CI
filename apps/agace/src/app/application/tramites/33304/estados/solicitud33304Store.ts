@@ -21,51 +21,51 @@ export interface Solicitud33304State {
   transportistasLista: TablaEmpresaTransportista[]; //Lista de empresas transportistas
 
 
-  colonia: string;
-  codigoPostal: string;
-  direccion: string;
-  rfcPartesC: string;
-  rfcPartesCons: string;
-  nombrePartesCons: string;
-  caracterDeCons: string;
-  fechaInicioAnterior: string;
-  fechaFinAnterior: string;
-  cveEntidad: string;
-  cveMunicipio: string;
-  cveTipoDoc: string;
-  observaciones: string;
-  ideGenerica2: string;
-  direccionNuevo?: string; 
-  codigoPostalNuevo?: string;
-  cveEntidadNuevo?: string;
-  cveMunicipioNuevo?: string;
-  cveTipoDocNuevo?: string;
-  fechaInicioAnteriorNuevo?: string;
-  fechaFinAnteriorNuevo?: string; 
-  rfcPartesCNuevo: string;
-  rfcPartesConsNuevo: string;
-nombrePartesConsNuevo: string;
-caracterDeConsNuevo: string;
-observacionesNuevo: string;
-  modificacionVigencias:string | number;
-  modificacionPartes: string | number;
-  fechaInicioVigenciaAnterior: string;
-  fechaFinVigenciaAnterior: string;
-  fechaInicioVigenciaActual: string;
-  fechaFinVigenciaActual: string;
-  cveTipoDoc2: string;
-  direccion2: string;
-  codigoPostal2: string; 
-  cveEntidad2: string;
-  cveMunicipio2: string;
-  cveTipo2: string;
-  fechaInicioAnterior2: string;
-  fechaFinAnterior2: string;
-  rfcPartesC2: string;
-  rfcPartesCons2: string;
-  nombrePartesCons2: string;
-  caracterDeCons2: string;
-  observaciones2: string;
+  colonia: string; // Colonia
+  codigoPostal: string; // Código Postal
+  direccion: string; // Dirección
+  rfcPartesC: string; // RFC Partes Contratantes
+  rfcPartesCons: string; // RFC Partes Consultadas
+  nombrePartesCons: string; // Nombre Partes Consultadas
+  caracterDeCons: string; // Carácter de Consultadas
+  fechaInicioAnterior: string; // Fecha Inicio Anterior
+  fechaFinAnterior: string; // Fecha Fin Anterior
+  cveEntidad: string; // Clave de Entidad
+  cveMunicipio: string; // Clave de Municipio
+  cveTipoDoc: string; // Clave de Tipo de Documento
+  observaciones: string; // Observaciones
+  ideGenerica2: string; // Identificador Genérico 2
+  direccionNuevo?: string; // Dirección Nueva
+  codigoPostalNuevo?: string; // Código Postal Nuevo
+  cveEntidadNuevo?: string; // Clave de Entidad Nueva
+  cveMunicipioNuevo?: string; // Clave de Municipio Nueva
+  cveTipoDocNuevo?: string; // Clave de Tipo de Documento Nueva
+  fechaInicioAnteriorNuevo?: string; // Fecha Inicio Anterior Nueva
+  fechaFinAnteriorNuevo?: string; // Fecha Fin Anterior Nueva
+  rfcPartesCNuevo: string; // RFC Partes Contratantes Nueva
+  rfcPartesConsNuevo: string; // RFC Partes Consultadas Nueva
+  nombrePartesConsNuevo: string; // Nombre Partes Consultadas Nueva
+  caracterDeConsNuevo: string; // Carácter de Consultadas Nueva
+  observacionesNuevo: string; // Observaciones Nueva
+  modificacionVigencias:string | number; // Modificación de vigencias
+  modificacionPartes: string | number; // Modificación de partes
+  fechaInicioVigenciaAnterior: string; // Fecha Inicio Vigencia Anterior
+  fechaFinVigenciaAnterior: string; // Fecha Fin Vigencia Anterior
+  fechaInicioVigenciaActual: string; // Fecha Inicio Vigencia Actual
+  fechaFinVigenciaActual: string; // Fecha Fin Vigencia Actual
+  cveTipoDoc2: string; // Clave de Tipo de Documento 2
+  direccion2: string; // Dirección 2
+  codigoPostal2: string; // Código Postal 2
+  cveEntidad2: string; // Clave de Entidad 2
+  cveMunicipio2: string; // Clave de Municipio 2
+  cveTipo2: string; // Clave de Tipo 2
+  fechaInicioAnterior2: string; // Fecha Inicio Anterior 2
+  fechaFinAnterior2: string; // Fecha Fin Anterior 2
+  rfcPartesC2: string; // RFC Partes Contratantes 2
+  rfcPartesCons2: string; // RFC Partes Consultadas 2
+  nombrePartesCons2: string; // Nombre Partes Consultadas 2
+  caracterDeCons2: string; // Carácter de Consultadas 2
+  observaciones2: string; // Observaciones 2
 
 }
 
@@ -88,51 +88,51 @@ export function createInitialState(): Solicitud33304State {
     empresaFusionadasLista: [], //Lista de empresas fusionadas
     transportistasLista: [], //Lista de empresas transportistas
 
-    colonia: '',
-    codigoPostal: '',
-    direccion: '',
-    rfcPartesC: '',
-    rfcPartesCons: '',
-    nombrePartesCons: '',
-    caracterDeCons: '',
-    fechaInicioAnterior: '',
-    fechaFinAnterior: '',
-    cveEntidad: '',
-    cveMunicipio: '',
-    cveTipoDoc: '',
-    observaciones: '',
-    ideGenerica2: '2',
-    direccionNuevo: '',
-    codigoPostalNuevo: '',
-    cveEntidadNuevo: '',
-    cveMunicipioNuevo: '',
-    cveTipoDocNuevo: '',
-    fechaInicioAnteriorNuevo: '',
-    fechaFinAnteriorNuevo: '',
-    rfcPartesCNuevo: '',
-    rfcPartesConsNuevo: '',
-    nombrePartesConsNuevo: '',
-    caracterDeConsNuevo: '',
-    observacionesNuevo: '',
-    modificacionVigencias: '',
-    modificacionPartes: '',
-    fechaInicioVigenciaAnterior: '',
-    fechaFinVigenciaAnterior: '',
-    fechaInicioVigenciaActual: '',
-    fechaFinVigenciaActual: '',
-    cveTipoDoc2: '',
-    direccion2: '',
-    codigoPostal2: '',
-    cveEntidad2: '',
-    cveMunicipio2: '',
-    cveTipo2: '',
-    fechaInicioAnterior2: '',
-    fechaFinAnterior2: '',
-    rfcPartesC2: '',
-    rfcPartesCons2: '',
-    nombrePartesCons2: '',
-    caracterDeCons2: '',
-    observaciones2: '',
+    colonia: '', // Colonia
+    codigoPostal: '', // Código Postal
+    direccion: '', // Dirección
+    rfcPartesC: '', // RFC Partes Contratantes
+    rfcPartesCons: '', // RFC Partes Consultadas
+    nombrePartesCons: '', // Nombre Partes Consultadas
+    caracterDeCons: '', // Carácter de Consultadas
+    fechaInicioAnterior: '', // Fecha Inicio Anterior
+    fechaFinAnterior: '', // Fecha Fin Anterior
+    cveEntidad: '', // Clave de Entidad
+    cveMunicipio: '', // Clave de Municipio
+    cveTipoDoc: '', // Clave de Tipo de Documento
+    observaciones: '', // Observaciones
+    ideGenerica2: '2', // Identificador Genérico 2
+    direccionNuevo: '', // Dirección Nueva
+    codigoPostalNuevo: '', // Código Postal Nuevo
+    cveEntidadNuevo: '', // Clave de Entidad Nueva
+    cveMunicipioNuevo: '', // Clave de Municipio Nueva
+    cveTipoDocNuevo: '', // Clave de Tipo de Documento Nueva
+    fechaInicioAnteriorNuevo: '', // Fecha Inicio Anterior Nueva
+    fechaFinAnteriorNuevo: '', // Fecha Fin Anterior Nueva
+    rfcPartesCNuevo: '', // RFC Partes Contratantes Nueva
+    rfcPartesConsNuevo: '', // RFC Partes Consultadas Nueva
+    nombrePartesConsNuevo: '', // Nombre Partes Consultadas Nueva
+    caracterDeConsNuevo: '', // Carácter de Consultadas Nueva
+    observacionesNuevo: '', // Observaciones Nueva
+    modificacionVigencias: '1', // Modificación de vigencias
+    modificacionPartes: '1', // Modificación de partes
+    fechaInicioVigenciaAnterior: '', // Fecha Inicio Vigencia Anterior
+    fechaFinVigenciaAnterior: '', // Fecha Fin Vigencia Anterior
+    fechaInicioVigenciaActual: '', // Fecha Inicio Vigencia Actual
+    fechaFinVigenciaActual: '', // Fecha Fin Vigencia Actual
+    cveTipoDoc2: '', // Clave de Tipo de Documento 2
+    direccion2: '', // Dirección 2
+    codigoPostal2: '', // Código Postal 2
+    cveEntidad2: '', // Clave de Entidad 2
+    cveMunicipio2: '', // Clave de Municipio 2
+    cveTipo2: '', // Clave de Tipo 2
+    fechaInicioAnterior2: '', // Fecha Inicio Anterior 2
+    fechaFinAnterior2: '', // Fecha Fin Anterior 2
+    rfcPartesC2: '', // RFC Partes Contratantes 2
+    rfcPartesCons2: '', // RFC Partes Consultadas 2
+    nombrePartesCons2: '', // Nombre Partes Consultadas 2
+    caracterDeCons2: '', // Carácter de Consultadas 2
+    observaciones2: '', // Observaciones 2
   };
 }
 

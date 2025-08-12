@@ -14,8 +14,8 @@ import { Tramite120401Store } from '../tramites/tramite120401.store';
  * @property {Observable<any>} representacion$ - Observable que emite el valor de la propiedad `representacion` del estado.
  * @property {Observable<any>} regimen$ - Observable que emite el valor de la propiedad `regimen` del estado.
  * @property {Observable<any>} tratado$ - Observable que emite el valor de la propiedad `tratado` del estado.
- * @property {Observable<any>} producto$ - Observable que emite el valor de la propiedad `producto` del estado.
- * @property {Observable<any>} subproducto$ - Observable que emite el valor de la propiedad `subproducto` del estado.
+ * @property {Observable<any>} nombreProducto$ - Observable que emite el valor de la propiedad `nombreProducto` del estado.
+ * @property {Observable<any>} nombreSubproducto$ - Observable que emite el valor de la propiedad `nombreSubproducto` del estado.
  * @property {Observable<any>} cantidadSolicitada$ - Observable que emite el valor de la propiedad `cantidadSolicitada` del estado.
  * @property {Observable<any>} tramiteState$ - Observable que emite el estado completo de Tramite120401.
  * 
@@ -48,12 +48,12 @@ export class Tramite120401Query extends Query<Tramite120401State> {
   /**
    * Observable que emite el valor de la propiedad `producto` del estado.
    */
-  producto$ = this.select((state) => state.producto);
+  nombreProducto$ = this.select((state) => state.nombreProducto);
 
   /**
    * Observable que emite el valor de la propiedad `subproducto` del estado.
    */
-  subproducto$ = this.select((state) => state.subproducto);
+  nombreSubproducto$ = this.select((state) => state.nombreSubproducto);
 
   /**
    * Observable que emite el valor de la propiedad `cantidadSolicitada` del estado.

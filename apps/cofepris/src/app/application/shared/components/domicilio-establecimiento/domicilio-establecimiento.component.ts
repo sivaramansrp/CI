@@ -101,6 +101,11 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
   @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
 
+   /**
+   * Indica si se debe mostrar el número de registro en la interfaz.
+   */
+  @Input() mostrarNumeroRegistro: boolean = true;
+
   /**
    * Estado de la solicitud.
    */
@@ -124,6 +129,13 @@ export class DomicilioComponent implements OnInit, OnDestroy {
      * Indica si el campo esPaginacionVisible es visible.
      */
   @Input() esPaginacionVisible: boolean = false;
+
+  /**
+   * Indica si la sección de domicilio debe estar habilitada.
+   * Cuando se establece en `true`, los campos de domicilio estarán disponibles para ingresar datos.
+   * Este valor normalmente lo proporciona un componente padre para controlar el estado habilitado.
+   */
+  @Input() tieneDomicilioHabilitar: boolean = false;
 
   /**
     * Número total de elementos en la tabla.
@@ -275,6 +287,25 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       paisDeOriginDatos: [this.solicitudState?.aduanasDeEntrada || []],
       garantiasOfrecidas: [this.solicitudState?.garantiasOfrecidas],
     });
+
+
+    /**
+     * Configura el grupo de formularios 'domicilio' con controles y validadores según el estado actual de la solicitud.
+     */
+    if(this.tieneDomicilioHabilitar) {
+      this.domicilio.disable();
+    }
+    /**
+ * Añade el control 'numeroRegistro' al formulario 'domicilio' si la propiedad
+ * `mostrarNumeroRegistro` es verdadera.
+ * 
+ * El control incluye las siguientes validaciones:
+ * - Requerido (`Validators.required`)
+ * - Longitud máxima de 50 caracteres (`Validators.maxLength(50)`)
+ */
+    if (this.mostrarNumeroRegistro) {
+      this.domicilio.addControl('numeroRegistro', this.fb.control('', [Validators.required, Validators.maxLength(50)]));
+    }
   }
 
 
@@ -432,7 +463,11 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * @property {boolean} colapsableTres
    */
   colapsableTres: boolean = false;
-
+ /**
+   * Indica si la sección es colapsableTres.
+   * @property {boolean} colapsableTress
+   */
+  colapsableTress: boolean = false;
   /**
    * Lista de rangos de días seleccionarOrigenDelPais.
    */
@@ -466,6 +501,30 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * */
   public paisDeProcedenciaLabel: CrossListLable = {
     tituluDeLaIzquierda: 'País productor del ingrediente activo:',
+    derecha: 'País(es) seleccionado(s)*:',
+  };
+
+ /**
+   * Etiqueta de la lista de fechas.
+   * */
+  public paisDeDondeLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'País donde se elabora el producto:',
+    derecha: 'País(es) seleccionado(s)*:',
+  };
+
+  /**
+   * Etiqueta de la lista de fechas.
+   * */
+  public paisOrigenLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'País de origen:',
+    derecha: 'País(es) seleccionado(s)*:',
+  };
+
+  /**
+   * Etiqueta de la lista de fechas.
+   * */
+  public paisEmbarqueLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'País de procedencia:',
     derecha: 'País(es) seleccionado(s)*:',
   };
 
@@ -538,6 +597,19 @@ export class DomicilioComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
+    
+    this.service.event$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((valor) => {
+          this.tieneDomicilioHabilitar = (valor as boolean);
+          if (!this.tieneDomicilioHabilitar) {
+            this.domicilio.enable();
+          }
+        })
+      )
+      .subscribe()
     this.obtenerEstadoList();
     this.obtenerMercanciasDatos();
     this.configurarFormularioDomicillio()
@@ -586,16 +658,25 @@ export class DomicilioComponent implements OnInit, OnDestroy {
           Validators.maxLength(100),
         ],
       ],
-      numeroRegistro: [
-        '',
-        [
-          Validators.required,
-          Validators.maxLength(50),
-        ],
-      ],
       clasificacionToxicologica: ['', Validators.required],
       objetoImportacion: ['', Validators.required],
     });
+
+/**
+ * Si la propiedad `mostrarNumeroRegistro` es verdadera, agrega el control
+ * `numeroRegistro` al formulario `formMercancias`.
+ *
+ * Este control se inicializa con un valor vacío y contiene las siguientes validaciones:
+ * - `Validators.required`: el campo es obligatorio.
+ * - `Validators.maxLength(50)`: el valor no debe superar los 50 caracteres.
+ */
+    if (this.mostrarNumeroRegistro) {
+      this.formMercancias.addControl(
+        'numeroRegistro',
+        this.fb.control('', [Validators.required, Validators.maxLength(50)])
+      );
+    }
+
     this.seleccionadasAduanasEntradaDatos = this.solicitudState?.aduanasDeEntrada;
 
     this.inicializarEstadoFormulario();
@@ -621,7 +702,9 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * @memberof DomicilioEstablecimientoComponent
    */
   limpiarScianForm(): void {
-    this.formAgente.reset();
+   Object.keys(this.formAgente.controls).forEach(key => {
+    this.formAgente.get(key)?.setValue(null);
+  });
   }
 
   /**
@@ -660,19 +743,19 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   readonly paisDeProcedenciaBotones = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-primary',
+      class: 'btn-default',
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       funcion: () => this.crossList.toArray()[0].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-default',
+      class: 'btn-primary',
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       funcion: () => this.crossList.toArray()[0].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-danger',
+      class: 'btn-primary',
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       funcion: () => this.crossList.toArray()[0].quitar(''),
     },
@@ -690,19 +773,19 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   readonly paisDeProcedenciaBotonesDuos = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-primary',
+      class: 'btn-default',
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       funcion: () => this.crossList.toArray()[1].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-default',
+      class: 'btn-primary',
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       funcion: () => this.crossList.toArray()[1].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-danger',
+      class: 'btn-primary',
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       funcion: () => this.crossList.toArray()[1].quitar(''),
     },
@@ -720,19 +803,19 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   readonly paisDeProcedenciaBotonesTres = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-primary',
+      class: 'btn-default',
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       funcion: () => this.crossList.toArray()[2].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-default',
+      class: 'btn-primary',
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       funcion: () => this.crossList.toArray()[2].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-danger',
+      class: 'btn-primary',
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       funcion: () => this.crossList.toArray()[2].quitar(''),
     },
@@ -749,19 +832,19 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   readonly paisDeProcedenciaBotonesCuatro = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-primary',
+      class: 'btn-default',
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       funcion: () => this.crossList.toArray()[3].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-default',
+      class: 'btn-primary',
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       funcion: () => this.crossList.toArray()[3].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-danger',
+      class: 'btn-primary',
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       funcion: () => this.crossList.toArray()[3].quitar(''),
     },
@@ -782,7 +865,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       .getObtenerEstadoList()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data): void => {
-        this.estado = data?.data;
+        this.estado = data;
       });
   }
   /**
@@ -847,6 +930,23 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   mostrar_colapsableTres(): void {
     this.colapsableTres = !this.colapsableTres;
   }
+
+   /**
+   * Alterna el estado colapsable de la sección del formulario.
+   * @method mostrar_colapsableTress
+   */
+  mostrar_procedencia(): void {
+    this.colapsableTress = !this.colapsableTress;
+  }
+
+  /**
+   * Sets the value of the 'descripcionFraccion' field in the 'formMercancias' form group to the string 'descripcionFraccion'.
+   * If the control does not exist, no action is taken.
+   */
+  setDescripcionFraccion():void{
+    this.formMercancias.get('descripcionFraccion')?.setValue('descripcionFraccion');
+    this.formMercancias.get('UMT')?.setValue('UMT32131');
+  }
   /**
    * Establece el valor de un campo en el store de Tramite31601.
    * @param form - El grupo de formularios que contiene el campo.
@@ -898,6 +998,24 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       INDICE_INICIAL,
       INDICE_INICIAL + this.elementosPorPagina
     );
+  }
+/**   * Autocompleta el campo de fracción arancelaria con la descripción correspondiente.
+   *   * Si el campo de fracción arancelaria tiene un valor, realiza una solicitud al servicio para obtener
+   *   * la descripción asociada y actualiza el formulario con esa información.
+   */
+  autoCompleteFraccionArancelaria(): void {
+    const FRACCION = this.formMercancias.get('fraccionArancelaria')?.value;
+    if (FRACCION) {
+      this.service
+        .getFraccionArancelaria()
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((data): void => {
+          this.formMercancias.patchValue({
+            descripcionFraccion: data?.descripcion,
+            UMT: data?.umt
+          });
+        });
+    }
   }
 
   /**

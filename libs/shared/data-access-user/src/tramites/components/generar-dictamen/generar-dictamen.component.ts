@@ -1,5 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from "@angular/core";
+
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from "@angular/forms";
+import { ANTECEDENTES_DICTAMEN } from "../../../core/constants/constantes-generales";
 import { CommonModule } from "@angular/common";
 import { ValidacionesFormularioService } from "../../../core/services/shared/validaciones-formulario/validaciones-formulario.service";
 
@@ -29,7 +31,7 @@ import { ValidacionesFormularioService } from "../../../core/services/shared/val
   templateUrl: './generar-dictamen.component.html',
   styleUrl: './generar-dictamen.component.scss',
 })
-export class GenerarDictamenComponent implements OnInit {
+export class GenerarDictamenComponent implements OnInit, OnChanges {
   /**
    * @property {FormGroup} dictamenForm
    * @description Formulario reactivo para la captura de los datos del dictamen.
@@ -52,6 +54,21 @@ export class GenerarDictamenComponent implements OnInit {
    * @description Texto personalizado para el botón de cancelar.
    */
   @Input() public botonDeCancelar = '';
+
+  /**
+   * @property {boolean} isAntecedentes
+   * @description Bandera que indica si los antecedentes son editables o no.
+   * Si es true, los antecedentes son editables; si es false, son de solo lectura.
+   */
+  @Input() public isAntecedentes = true;
+
+  /**
+   * @property {string} conformidad
+   * @description Texto que representa los antecedentes del dictamen, utilizado para mostrar información relevante.
+   * Por defecto, se establece en una constante definida en las constantes generales.
+   */
+  @Input() public conformidad: string = ANTECEDENTES_DICTAMEN;
+
   /**
    * @property {string} botonGuardar
    * @description Texto personalizado para el botón de guardar.
@@ -85,10 +102,33 @@ export class GenerarDictamenComponent implements OnInit {
   ngOnInit(): void {
     this.dictamenForm = this.fb.group({
       cumplimiento: ['1'],
-      mensajeDictamen: ['', [Validators.required]],
+      mensajeDictamen: ['', [
+        Validators.required,
+        GenerarDictamenComponent.noSoloEspacios,
+        Validators.maxLength(2000)
+      ]],
+      antecedentesEditables: ['', [
+        Validators.required,
+        GenerarDictamenComponent.noSoloEspacios,
+        Validators.maxLength(2000)
+      ]],
+      antecedentesReadonly: [{
+        value: 'Fracción I numeral 2 del Anexo 2.2.2 del Acuerdo por el que la Secretaría de Economía emite reglas y criterios de carácter general en materia de Comercio Exterior, publicado en el Diario Oficial de la Federación el 6 de julio de 2007 y sus modificaciones.',
+        disabled: true
+      }],
       fechaInicioVigenciaAutorizada: [''],
       fechaFinVigenciaAutorizada: ['']
     });
+
+    // Si hay antecedentes de conformidad, se establece en el campo de solo lectura
+    if (this.conformidad) {
+      this.dictamenForm.get('antecedentesReadonly')?.setValue(this.conformidad);
+    }
+
+    // Si los antecedentes no son editables, se elimina el control de antecedentesEditables
+    if (!this.isAntecedentes) {
+      this.dictamenForm.removeControl('antecedentesEditables');
+    }
 
     // Suscribirse a los cambios del campo cumplimiento para controlar la visibilidad de los campos de fecha
     this.dictamenForm.get('cumplimiento')?.valueChanges.subscribe(value => {
@@ -98,6 +138,22 @@ export class GenerarDictamenComponent implements OnInit {
     // Establecer el estado inicial
     this.actualizarVisibilidadCamposFecha(this.dictamenForm.get('cumplimiento')?.value);
   }
+
+  /**
+   * @method noSoloEspacios
+   * @description Validador personalizado que verifica que el campo no contenga solo espacios en blanco.
+   * 
+   * @param {AbstractControl} control - Control del formulario a validar.
+   * @returns {ValidationErrors | null} Retorna un objeto de error si el valor es solo espacios, de lo contrario retorna null.
+   */
+  static noSoloEspacios(control: AbstractControl): ValidationErrors | null {
+    if (control.value && typeof control.value === 'string' && control.value.trim() === '') {
+      return { soloEspacios: true };
+    }
+    return null;
+  }
+
+
   /**
    * @method actualizarVisibilidadCamposFecha
    * @description Actualiza la visibilidad de los campos de fecha de vigencia autorizada
@@ -107,28 +163,28 @@ export class GenerarDictamenComponent implements OnInit {
    * @returns {void}
    */
   private actualizarVisibilidadCamposFecha(valorCumplimiento: string): void {
-    const esDictamenAceptado = valorCumplimiento === '1';
-    this.mostrarCamposFecha = esDictamenAceptado;
+    const ESDICTAMENACEPTADO = valorCumplimiento === '1';
+    this.mostrarCamposFecha = ESDICTAMENACEPTADO;
 
     // Actualizar validadores según la visibilidad
-    const fechaInicioControl = this.dictamenForm.get('fechaInicioVigenciaAutorizada');
-    const fechaFinControl = this.dictamenForm.get('fechaFinVigenciaAutorizada');
+    const FECHAINICIOCONTROL = this.dictamenForm.get('fechaInicioVigenciaAutorizada');
+    const FECHAFINCONTROL = this.dictamenForm.get('fechaFinVigenciaAutorizada');
 
-    if (esDictamenAceptado) {
+    if (ESDICTAMENACEPTADO) {
       // Si el dictamen es aceptado, los campos de fecha son obligatorios
-      fechaInicioControl?.setValidators([Validators.required]);
-      fechaFinControl?.setValidators([Validators.required]);
+      FECHAINICIOCONTROL?.setValidators([Validators.required]);
+      FECHAFINCONTROL?.setValidators([Validators.required]);
     } else {
       // Si el dictamen es rechazado, remover validadores y limpiar valores
-      fechaInicioControl?.clearValidators();
-      fechaFinControl?.clearValidators();
-      fechaInicioControl?.setValue('');
-      fechaFinControl?.setValue('');
+      FECHAINICIOCONTROL?.clearValidators();
+      FECHAFINCONTROL?.clearValidators();
+      FECHAINICIOCONTROL?.setValue('');
+      FECHAFINCONTROL?.setValue('');
     }
 
     // Actualizar el estado de validación
-    fechaInicioControl?.updateValueAndValidity();
-    fechaFinControl?.updateValueAndValidity();
+    FECHAINICIOCONTROL?.updateValueAndValidity();
+    FECHAFINCONTROL?.updateValueAndValidity();
   }
 
   /**
@@ -144,6 +200,53 @@ export class GenerarDictamenComponent implements OnInit {
       field
     );
     return VALIDATIONRESULT === null ? false : VALIDATIONRESULT;
+  }
+
+  /**
+   * @method ngOnChanges
+   * @description Método del ciclo de vida que se ejecuta cuando cambian las propiedades de entrada del componente.
+   * 
+   * Si la propiedad `conformidad` cambia, actualiza el valor del campo `antecedentesReadonly` en el formulario.
+   * 
+   * @param {SimpleChanges} changes - Objeto que contiene los cambios en las propiedades de entrada.
+   * @returns {void}
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['conformidad'] && this.dictamenForm) {
+      this.dictamenForm.get('antecedentesReadonly')?.setValue(this.conformidad);
+    }
+  }
+
+  /**
+  * @method guardar
+  * @description Marca todos los campos del formulario como tocados y, si el formulario es válido, emite el evento de guardado con los datos del dictamen.
+  * 
+  * @returns {void}
+  */
+  guardar(): void {
+    this.dictamenForm.markAllAsTouched();
+    if (this.dictamenForm.valid) {
+      this.enviarEvento.emit({
+        datos: this.dictamenForm.value,
+        events: "guardar"
+      });
+    }
+  }
+
+  /**
+  * @method firmar
+  * @description Marca todos los campos del formulario como tocados y, si el formulario es válido, emite el evento de firmado con los datos del dictamen.
+  * 
+  * @returns {void}
+  */
+  firmar(): void {
+    this.dictamenForm.markAllAsTouched();
+    if (this.dictamenForm.valid) {
+      this.enviarEvento.emit({
+        datos: this.dictamenForm.value,
+        events: "firmar"
+      });
+    }
   }
   /**
    * @method guardarFirmar

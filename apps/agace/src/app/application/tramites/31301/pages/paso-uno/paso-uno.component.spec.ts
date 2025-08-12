@@ -50,17 +50,17 @@ describe('PasoUnoComponent', () => {
 
   it('should enable isEnableModificacionTab when tipoDeEndosoChanges is called with 3', () => {
     component.tipoDeEndosoChanges(3);
-    expect(component.isEnableModificacionTab).toBe(true);
+    expect(component.isEnableModificacionTab).toBe(3);
   });
 
   it('should disable isEnableModificacionTab when tipoDeEndosoChanges is called with a value other than 3', () => {
     component.tipoDeEndosoChanges(2);
-    expect(component.isEnableModificacionTab).toBe(false);
+    expect(component.isEnableModificacionTab).toBe(2);
 
     component.tipoDeEndosoChanges(0);
-    expect(component.isEnableModificacionTab).toBe(false);
+    expect(component.isEnableModificacionTab).toBe(0);
 
     component.tipoDeEndosoChanges('test');
-    expect(component.isEnableModificacionTab).toBe(false);
+    expect(component.isEnableModificacionTab).toBe('test');
   });
 });

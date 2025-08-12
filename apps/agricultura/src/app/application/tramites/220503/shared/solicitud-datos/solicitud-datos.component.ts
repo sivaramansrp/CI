@@ -1,7 +1,8 @@
+import { AlertComponent, ConsultaioQuery, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { Component, Input } from '@angular/core';
-import { AlertComponent } from '@ng-mf/data-access-user';
+import {Subject,map,takeUntil } from 'rxjs';
+import { CONFIGURACION_COLUMNA_SOLICITUD } from '../../enums/sagarpa.enum';
 import { Solicitud } from '../../models/solicitud-pantallas.model';
-import { Subject } from 'rxjs';
 import { TEXTOS } from '../../enums/texto-enum';
 
 /**
@@ -10,7 +11,7 @@ import { TEXTOS } from '../../enums/texto-enum';
 @Component({
   selector: 'app-tab-solicitud-datos',
   standalone: true,
-  imports: [ AlertComponent],
+  imports: [ AlertComponent,TablaDinamicaComponent],
   templateUrl: './solicitud-datos.component.html',
   styleUrl: './solicitud-datos.component.scss',
 })
@@ -18,6 +19,12 @@ import { TEXTOS } from '../../enums/texto-enum';
  * Componente que representa los datos de la solicitud
  */
 export class SolicitudDatosTabComponent {
+  /**
+   * Indica si el formulario es de solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   * @type {boolean}
+   */
+  esFormularioSoloLectura:boolean=false;
   /**
    * Obtiene los datos de enumeración y establece valores de TEXTOS
    */
@@ -28,13 +35,22 @@ export class SolicitudDatosTabComponent {
    */
   colapsable: boolean = true;
   /**
-   * Recibe datos del encabezado de la tabla como propiedad de entrada
-   */
-  @Input() tablaHeadData: string[] = [];
-  /**
    * Recibe la lista de solicitudes como datos de fila de la tabla.
    */
   @Input() tablaFilaDatos: Solicitud[] = [];
+
+
+  configuracionColumnaSolicitud = CONFIGURACION_COLUMNA_SOLICITUD;
+constructor(private consultaioQuery: ConsultaioQuery){
+     this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState)=>{
+          this.esFormularioSoloLectura = seccionState.readonly; 
+        })
+      )
+      .subscribe()
+}
 
   /**
    * Alterna el panel plegable (expandir/contraer)

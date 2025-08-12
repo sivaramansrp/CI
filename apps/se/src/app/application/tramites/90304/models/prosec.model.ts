@@ -104,6 +104,47 @@ export interface EmpresasLista {
      * @type {string}
      */
     codigoPostal: string;
+    /**
+     * Localidad de la empresa.
+     * @type {string}
+     */
+    localidad: string;
+
+    /**
+     * Municipio o alcaldía de la empresa.
+     * @type {string}
+     */
+    municipioAlcadia: string;
+    /**
+     * Entidad federativa de la empresa.
+     * @type {string}
+     */
+    entidadFederativa: string;
+
+    /**
+     * País de la empresa.
+     * @type {string}
+     */
+    pais: string;
+
+    /**
+     * Teléfono de la empresa.
+     * @type {string}
+     */
+    telefono: string;
+
+    /**
+     * Fax de la empresa.
+     * @type {string}
+     */
+    fax: string;
+
+    /**
+     * Correo electrónico de la empresa.
+     * @type {string}
+     */
+    correoElectronico: string;
+
 }
 
 /**

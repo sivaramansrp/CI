@@ -1,7 +1,8 @@
 services:
 #---------------------------------------------------------------
   modulefederation-agricultura-microfront:
-    image: ghcr.io/vucem30/dockerized-modulefederation-agricultura-microfront:1.0.15
+    image: ghcr.io/vucem30/dockerized-modulefederation-agricultura-microfront:1.0.22
+
     build: 
       context: ./../
       dockerfile: apps/agricultura/Dockerfile.dev

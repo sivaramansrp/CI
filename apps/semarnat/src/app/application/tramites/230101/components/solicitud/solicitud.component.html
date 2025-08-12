@@ -67,7 +67,7 @@
           <crosslist  
           [fechasSeleccionadas]="seleccionarsRangoDiasPaisOrigen"
           [fechas]="seleccionarOrigenDelPaisDos" 
-          [label]="destinoLabel"
+          [label]="paisLabel"
          [botones]="paisDeProcedenciaBotonsDos"
          [isDisabled]="esFormularioSoloLectura ? true : false"></crosslist>
 
@@ -89,7 +89,7 @@
           <crosslist 
           [fechasSeleccionadas]="seleccionarsRangoDiasDestino" 
            [fechas]="seleccionarOrigenDelPaisTres" 
-           [label]="paisDeProcedenciaLabel" 
+           [label]="destinoLabel" 
            [botones]="paisDeProcedenciaBotonsTres"
            [isDisabled]="esFormularioSoloLectura ? true : false"></crosslist>
 
@@ -171,7 +171,7 @@
     <ng-container formGroupName="detalle">
       <div class="row">
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="options" formControlName="genero" [label]="'Gen&eacute;ro'" [required]="true"
+          <app-catalogo-select [catalogo]="options" formControlName="genero" [label]="'Género'" [required]="true"
             (change)="setValoresStore(detalle,'genero', 'setGenero')"
             [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
         </div>

@@ -77,7 +77,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   seccionesDeLaSolicitud = [
     { index: 1, title: 'Solicitante', component: 'solicitante' },
     { index: 2, title: 'Datos Comunes', component: 'datos-comunes' },
-    { index: 3, title: 'Terceros relacionados', component: 'terceros-relacionados' },
+    { index: 3, title: 'Terceros Relacionados', component: 'terceros-relacionados' },
     { index: 4, title: 'Tercerización Logística', component: 'importador-exportador' },
     { index: 5, title: 'CTPAT', component: 'c-tpat' },
     { index: 6, title: 'Perfiles', component: 'perfiles' }

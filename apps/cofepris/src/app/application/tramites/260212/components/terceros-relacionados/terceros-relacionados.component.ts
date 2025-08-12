@@ -40,6 +40,7 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { Terceros260211Query } from '../../../../estados/queries/terceros260211.query';
 import { Terceros260211State } from '../../../../estados/tramites/terceros260211.store';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite260212Store } from '../../../../estados/tramites/tramite260212.store';
 
 /**
@@ -72,6 +73,7 @@ const TERCEROS_TEXTO_DE_ALERTA =
     ModalComponent,
     CatalogoSelectComponent,
     InputRadioComponent,
+    TooltipModule
   ],
 })
 
@@ -406,7 +408,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       /**
        * Tipo de persona (física o moral).
        */
-      tipoPersona: new FormControl(this.solicitudStates.tipoPersona, [Validators.required]),
+      tipoPersona: new FormControl({value: this.solicitudStates.tipoPersona, disabled: true}, [Validators.required]),
       /**
        * RFC del tercero.
        * Requiere validación adicional mediante `rfcValidator`.
@@ -441,6 +443,10 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         Validators.required,
         this.requiredPaisValidator,
       ]),
+
+      extranjeroColonia: new FormControl({value:  this.solicitudStates.extranjeroColonia, disabled: true}, [Validators.required]),
+
+      extranjeroCodigo: new FormControl({value:  this.solicitudStates.extranjeroCodigo, disabled: true}, [Validators.required]),
 
       extranjeroEstado: new FormControl({value:  this.solicitudStates.extranjeroEstado, disabled: true}, [Validators.required]),
       /**
@@ -520,7 +526,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       /**
        * CURP del destinatario.
        */
-      curp: new FormControl( this.solicitudStates.curp, [Validators.required]),
+      curp: new FormControl({value: this.solicitudStates.curp, disabled: true}, [Validators.required]),
       /**
        * Denominación o razón social del destinatario.
        */
@@ -778,7 +784,29 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de fabricantes.
    */
-  fabricanteRowData: TablaDatos[] = [];
+  fabricanteRowData: TablaDatos[] = [
+     {
+    tbodyData: [
+      'Laboratorios S.A.',
+      'LAB123456789',
+      'CURP123456HDFRRL01',
+      '55-12345678',
+      'contacto@laboratorios.com',
+      'Calle 1',
+      '100',
+      '2',
+      'México',
+      'Centro',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      '06000'
+    ]
+  }
+  
+  ];
 
   /**
    * Datos de las filas para la tabla de destinatarios.
@@ -786,7 +814,26 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de destinatarios.
    */
-  destinatarioRowData: TablaDatos[] = [];
+  destinatarioRowData: TablaDatos[] = [{
+    tbodyData: [
+      'Empresa Destino S.A.',
+      'DES123456789',
+      'CURPDESTINO01',
+      '55-98765432',
+      'contacto@destino.com',
+      'Calle Destino',
+      '500',
+      '10',
+      'México',
+      'Colonia Centro',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      '07000'
+      ]
+  }];
 
   /**
    * Datos de las filas para la tabla de proveedores.
@@ -794,7 +841,28 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de proveedores.
    */
-  proveedorRowData: TablaDatos[] = [];
+  proveedorRowData: TablaDatos[] = [
+    {
+    tbodyData: [
+      'Proveedor Global S.A.',
+      'PRO123456789',
+      'CURPPROV001',
+      '55-11223344',
+      'contacto@proveedor.com',
+      'Av. Comercio',
+      '150',
+      '10',
+      'México',
+      'Colonia Industrial',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      '06500'
+      ]
+  }
+  ];
 
   /**
    * Datos de las filas para la tabla de facturadores.
@@ -802,7 +870,28 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de facturadores.
    */
-  facturadorRowData: TablaDatos[] = [];
+  facturadorRowData: TablaDatos[] = [
+    {
+    tbodyData: [
+      'Facturador Uno S.A.',
+      'FAC123456789',
+      'CURPFACT001',
+      '55-99887766',
+      'facturas@uno.com',
+      'Calle Factura',
+      '400',
+      '12',
+      'México',
+      'Colonia Centro',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      '08000'
+      ]
+  },
+  ];
 
   /**
    * Maneja el cambio en los checkboxes para seleccionar el tipo de persona.
@@ -838,17 +927,26 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     } else if (formGroupName === 'Destinatario') {
       Object.keys(this.agregarDestinatarioFormGroup.controls).forEach(controlName => {
           this.agregarDestinatarioFormGroup.get(controlName)?.enable();
+          this.agregarDestinatarioFormGroup.get(controlName)?.setValue('');
       });
       this.desactivarCampos = false;
+      this.agregarDestinatarioFormGroup.get('tipoPersona')?.setValue(checkBoxValue);
     } else if (formGroupName === 'Fabricante') {
       if (this.agregarFabricanteFormGroup.get('tercerosNacionalidad')?.value && this.agregarFabricanteFormGroup.get('tipoPersona')?.value) {
         Object.keys(this.agregarFabricanteFormGroup.controls).forEach(controlName => {
           this.agregarFabricanteFormGroup.get(controlName)?.enable();
         });
       }
+
+      if (this.agregarFabricanteFormGroup.get('tercerosNacionalidad')?.value === '1' && this.agregarFabricanteFormGroup.get('tipoPersona')?.value) {
+        this.agregarFabricanteFormGroup.get('pais')?.setValue(this.paisDropdownData?.[0]?.id);
+      } else {
+        this.agregarFabricanteFormGroup.get('pais')?.setValue('');
+      }
     }
   }
 
+  /** Maneja el cambio de selección de nacionalidad en el formulario de fabricante y ajusta los campos habilitados. */
   public tercerosInputChecked(checkBoxValue: string | number): void {
     if (checkBoxValue === '1') {
       this.nacional = true;
@@ -857,7 +955,14 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       this.nacional = false;
       this.extranjero = true;
     }
+    Object.keys(this.agregarFabricanteFormGroup.controls).forEach(controlName => {
+      this.agregarFabricanteFormGroup.get(controlName)?.setValue('');
+      this.agregarFabricanteFormGroup.get(controlName)?.disable();
+    });
     this.agregarFabricanteFormGroup.get('tercerosNacionalidad')?.setValue(checkBoxValue);
+    this.agregarFabricanteFormGroup.get('tercerosNacionalidad')?.enable();
+    this.agregarFabricanteFormGroup.get('tipoPersona')?.enable();
+    this.agregarFabricanteFormGroup.get('tipoPersona')?.setValue('');
   }
 
   /**
@@ -870,18 +975,35 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     this.showTableDiv = !this.showTableDiv;
     this.showFabricante = !this.showFabricante;
   }
-    limpiarFabricanteForm(): void { 
-      this.agregarFabricanteFormGroup.reset();  
-   }
-      limpiarDestinatarioForm(): void {   
-        this.agregarDestinatarioFormGroup.reset();
-   }
-      limpiarProveedorForm(): void {   
-        this.agregarProveedorFormGroup.reset();
-   }
-      limpiarFacturadorForm(): void {   
-        this.agregarFacturadorFormGroup.reset();
-   } 
+
+  /** Limpia y deshabilita todos los campos del formulario de fabricante, excepto el de nacionalidad. */
+  limpiarFabricanteForm(): void { 
+    this.agregarFabricanteFormGroup.reset();  
+    Object.keys(this.agregarFabricanteFormGroup.controls).forEach(controlName => {
+      this.agregarFabricanteFormGroup.get(controlName)?.disable();
+    });
+    this.agregarFabricanteFormGroup.get('tercerosNacionalidad')?.enable();
+  }
+
+  /** Limpia y deshabilita todos los campos del formulario de destinatario, excepto el de tipoPersona. */
+  limpiarDestinatarioForm(): void {   
+    this.agregarDestinatarioFormGroup.reset();
+    Object.keys(this.agregarDestinatarioFormGroup.controls).forEach(controlName => {
+      this.agregarDestinatarioFormGroup.get(controlName)?.disable();
+    });
+    this.agregarDestinatarioFormGroup.get('tipoPersona')?.enable();
+    this.desactivarCampos = true;
+  }
+
+  /** Limpia y deshabilita todos los campos del formulario de fabricante, excepto el de nacionalidad. */
+  limpiarProveedorForm(): void {   
+    this.agregarProveedorFormGroup.reset();
+  }
+
+  /** Limpia y deshabilita todos los campos del formulario de fabricante, excepto el de nacionalidad. */
+  limpiarFacturadorForm(): void {   
+    this.agregarFacturadorFormGroup.reset();
+  } 
   /**
    * Cambia la visibilidad del formulario de Destinatario.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
@@ -968,6 +1090,10 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @description Este método es llamado al enviar el formulario de agregar un fabricante.
    */
   submitFabricanteForm(): void {
+    if (this.agregarFabricanteFormGroup.invalid) {
+      this.agregarFabricanteFormGroup.markAllAsTouched();
+      return;
+    }
     /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
@@ -1130,6 +1256,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @description Este método es llamado al enviar el formulario de agregar un destinatario.
    */
   submitDestinatarioForm(): void {
+    if (this.agregarDestinatarioFormGroup.valid) {
     /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
@@ -1284,6 +1411,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
      */
     this.showTableDiv = !this.showTableDiv;
     this.showDestinatario = !this.showDestinatario;
+  } else {
+    this.agregarDestinatarioFormGroup.markAllAsTouched();
+  }
   }
 
   /**
@@ -1293,6 +1423,10 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @description Este método es llamado al enviar el formulario de agregar un proveedor.
    */
   submitProveedorForm(): void {
+    if (this.agregarProveedorFormGroup.invalid) {
+      this.agregarProveedorFormGroup.markAllAsTouched();
+      return;
+    }
     /**
      * Obtiene el valor de la pais seleccionada en el formulario.
      */
@@ -1351,6 +1485,10 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @description Este método es llamado al enviar el formulario de agregar un facturador.
    */
   submitFacturadorForm(): void {
+    if (this.agregarFacturadorFormGroup.invalid) {
+      this.agregarFacturadorFormGroup.markAllAsTouched();
+      return;
+    }
     /**
      * Obtiene el valor de la pais seleccionada en el formulario.
      */

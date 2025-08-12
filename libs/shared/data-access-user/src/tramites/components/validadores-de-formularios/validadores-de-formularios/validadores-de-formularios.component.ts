@@ -9,7 +9,7 @@ import { Validadores } from '../../../../core/models/shared/forms-model';
  * reactivos de Angular para manejar y validar los datos de manera eficiente.
  * Además, soporta la integración con validadores personalizados para proporcionar
  * mensajes de error dinámicos y configurables.
- * 
+ *
  * @component
  * @selector validadores-de-formularios
  * @standalone true
@@ -24,9 +24,7 @@ import { Validadores } from '../../../../core/models/shared/forms-model';
   templateUrl: './validadores-de-formularios.component.html',
   styleUrl: './validadores-de-formularios.component.scss',
 })
-
 export class ValidadoresDeFormulariosComponent {
-
   /**
    * compo doc
    * @input forma
@@ -36,7 +34,7 @@ export class ValidadoresDeFormulariosComponent {
    * Este es un formulario reactivo de Angular representado por un FormGroup.
    * Se utiliza para manejar y validar los datos del formulario en el componente.
    */
-  @Input () forma!: FormGroup;
+  @Input() forma!: FormGroup;
 
   /**
    * compo doc
@@ -54,18 +52,70 @@ export class ValidadoresDeFormulariosComponent {
    * @type {Validadores[]}
    * @memberof ValidadoresDeFormulariosComponent
    * @description
-   * entrada de matriz de validadores de tipo Validadaores que 
+   * entrada de matriz de validadores de tipo Validadaores que
    * consta de una colección de objetos de tipo tipo, valor y mensaje
    */
   @Input() validadores!: Validadores[];
 
   /**
-  * @input setMinHeight
-  * @type {boolean}
-  * @memberof ValidadoresDeFormulariosComponent
-  * @description
-  * Esta propiedad de entrada permite establecer si el componente debe aplicar 
-  * una altura mínima. Por defecto, está configurada como `true`.
-  */
-@Input() setMinHeight: boolean = false;
+   * @input setMinHeight
+   * @type {boolean}
+   * @memberof ValidadoresDeFormulariosComponent
+   * @description
+   * Esta propiedad de entrada permite establecer si el componente debe aplicar
+   * una altura mínima. Por defecto, está configurada como `true`.
+   */
+  @Input() setMinHeight: boolean = false;
+
+  /**
+   * Devuelve el mensaje de error correspondiente para un control de formulario según los validadores configurados.
+   * @param controlName - Nombre del control dentro del FormGroup.
+   * @param validadores - Arreglo de validadores asociados al control.
+   * @returns El mensaje de error si existe, o null si no hay errores o el control no ha sido tocado.
+   */
+  obtenerErrorDeValidacion(controlName: string, validadores: Validadores[]): string | null {
+    const CONTROL = this.forma.get(controlName);
+    if (!CONTROL || !CONTROL.touched || !CONTROL.invalid) {
+      return null;
+    }
+
+    if (CONTROL.hasError('required')) {
+      return 'Este campo es obligatorio.';
+    }
+
+    if (CONTROL.hasError('minlength')) {
+      const VALIDADOR = validadores.find((v) => v.tipo === 'minlength');
+      if (VALIDADOR && VALIDADOR.valor !== undefined) {
+        return `Debe tener al menos ${VALIDADOR.valor} caracteres.`;
+      }
+    }
+
+    if (CONTROL.hasError('maxlength')) {
+      return null;
+    }
+
+    for (const VALIDADOR of validadores) {
+      if (VALIDADOR.tipo === 'pattern' && VALIDADOR.valor !== undefined) {
+        const ERROR_KEY =
+          'pattern_' + VALIDADOR.valor.toString().replace(/\W/g, '');
+        const ERRORS = CONTROL.errors || {};
+        const MATCHING_KEY = Object.keys(ERRORS).find((k) =>
+          k.startsWith('pattern_')
+        );
+        if (MATCHING_KEY && MATCHING_KEY === ERROR_KEY) {
+          return ERRORS[MATCHING_KEY];
+        }
+      }
+    }
+
+    if (CONTROL.hasError('backend')) {
+      return CONTROL.getError('backend').mensaje;
+    }
+
+    if (CONTROL.hasError('custom')) {
+      return CONTROL.getError('custom').mensaje;
+    }
+
+    return null;
+  }
 }

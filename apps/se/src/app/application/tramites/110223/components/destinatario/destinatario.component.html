@@ -210,7 +210,7 @@
           class="form-control"
           id="denominacion"
           formControlName="lugar"
-          (change)="setValoresStore(validacionForm, 'lugar', 'setCiudad')"
+          (change)="setValoresStore(validacionForm, 'lugar', 'setLugar')"
         />
         <div
           class="mensaje-error"
@@ -238,7 +238,7 @@
             setValoresStore(
               validacionForm,
               'nombreRepresentanteLegalExportador',
-              'setCiudad'
+              'setNombreRepresentanteLegalExportador'
             )
           "
         />
@@ -292,7 +292,7 @@
           class="form-control"
           id="primerApellido"
           formControlName="cargo"
-          (change)="setValoresStore(validacionForm, 'numeroLetra', 'setCargo')"
+          (change)="setValoresStore(validacionForm, 'cargo', 'setCargo')"
         />
         <div
           class="mensaje-error"

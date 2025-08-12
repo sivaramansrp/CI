@@ -5,7 +5,6 @@
 import { HttpClient } from '@angular/common/http';
 import { ImmexAmpliacionSensiblesState } from '../estados/immex-ampliacion-sensibles.store';
 import { ImmexAmpliacionSensiblesStore } from '../estados/immex-ampliacion-sensibles.store';
-import { ImmexAmplicationSensibleDatosDelFormulario } from '../models/immex-ampliacion-sensibles.model';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -47,20 +46,13 @@ export class PermisoImmexDatosService {
   getRegistroTomaMuestrasMercanciasData(): Observable<ImmexAmpliacionSensiblesState> {
     return this.httpClient.get<ImmexAmpliacionSensiblesState>('assets/json/80202/immexRegistro.json');
   }
+
   /**
-   * @method actualizarEstadoFormulario
-   * @description
-   * Actualiza el estado del formulario IMMEX en el store con los datos proporcionados.
-   *
-   * @param {immexRegistroform} DATOS - Los datos del formulario IMMEX a registrar en el estado.
-   *
-   * @returns {void}
+   * Actualiza el estado del formulario de la solicitud en el store con la información proporcionada.
+   * Cada propiedad del objeto recibido es asignada al store correspondiente.
    */
-   actualizarEstadoFormulario(DATOS:ImmexAmplicationSensibleDatosDelFormulario): void {
-    this.tramite80202Store.setFraccionArancelariaSensibles(DATOS.fraccionArancelariaSensibles);
-    this.tramite80202Store.setFraccionArancelaria(DATOS.fraccionArancelaria);
-    this.tramite80202Store.setDescripcionDelProducto(DATOS.descripciondelproducto);
-    this.tramite80202Store.setTablaFraccionArancelaria(DATOS.tablaFraccionArancelaria);
-    this.tramite80202Store.setTablaFraccionDeImportacion(DATOS.tablaFraccionDeImportacion);
-   }
+  actualizarEstadoFormulario(DATOS: ImmexAmpliacionSensiblesState): void {
+    this.tramite80202Store.actualizarEstado(DATOS);
+  }
+
 }

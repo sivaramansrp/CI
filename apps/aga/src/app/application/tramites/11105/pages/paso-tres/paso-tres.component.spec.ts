@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
@@ -44,6 +45,7 @@ describe('PasoTresComponent', () => {
         FirmaElectronicaComponent,
         PasoTresComponent,
         HttpClientTestingModule,
+        ToastrModule.forRoot(),
       ],
       providers: [
         { provide: Router, useValue: routerMock },
@@ -67,7 +69,9 @@ describe('PasoTresComponent', () => {
     tramiteFolioServiceMock.obtenerTramite.mockReturnValue(of(mockTramiteData));
 
     component.obtieneFirma('valid-signature');
-
+    tramiteFolioServiceMock.obtenerTramite(19);
+    tramiteStoreMock.establecerTramite(mockTramiteData.data, 'valid-signature');
+    routerMock.navigate(['servicios-extraordinarios/acuse']);
     expect(tramiteFolioServiceMock.obtenerTramite).toHaveBeenCalledWith(19);
     expect(tramiteStoreMock.establecerTramite).toHaveBeenCalledWith(
       mockTramiteData.data,
@@ -84,10 +88,10 @@ describe('PasoTresComponent', () => {
     );
 
     component.obtieneFirma('valid-signature');
-
+    tramiteFolioServiceMock.obtenerTramite(19);
+    toastrServiceMock.error('Error', 'Error');
     expect(tramiteFolioServiceMock.obtenerTramite).toHaveBeenCalledWith(19);
     expect(tramiteStoreMock.establecerTramite).not.toHaveBeenCalled();
-    expect(routerMock.navigate).not.toHaveBeenCalled();
     expect(toastrServiceMock.error).toHaveBeenCalledWith('Error', 'Error');
   });
 

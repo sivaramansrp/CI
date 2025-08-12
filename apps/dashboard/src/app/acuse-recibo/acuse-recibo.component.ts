@@ -1,5 +1,5 @@
-import { ACUSE_CONFIRMAR_NOTIFICACION_REQUERIMIENTO_ENCABEZADO_DE_TABLA, AcuseNotificacionRequerimiento } from '../constants/confirmar-notificacion.enum';
-import { CategoriaMensaje, Notificacion, NotificacionesComponent, TablaAcciones } from '@ng-mf/data-access-user';
+import { ACUSE_CONFIRMAR_NOTIFICACION_REQUERIMIENTO_ENCABEZADO_DE_TABLA, AcuseNotificacionRequerimiento, CONFIRMAR_NOTIFICACION_ALERT, CONFIRMAR_NOTIFICACION_RESOLUCION_ALERT } from '../constants/confirmar-notificacion.enum';
+import { AlertComponent, NotificacionesComponent, TablaAcciones } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfirmarNotificacionService } from '../services/confirmar-notificacion.service';
@@ -24,7 +24,7 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-acuse-recibo',
   standalone: true,
-  imports: [CommonModule, TituloComponent, TablaDinamicaComponent, NotificacionesComponent],
+  imports: [CommonModule, TituloComponent, TablaDinamicaComponent, NotificacionesComponent, AlertComponent],
   templateUrl: './acuse-recibo.component.html',
   styleUrl: './acuse-recibo.component.scss',
 })
@@ -61,7 +61,8 @@ export class AcuseReciboComponent implements OnInit, OnDestroy {
    * @type {TablaAcciones[]}
    */
   public acuseAcciones: TablaAcciones[] = [
-    TablaAcciones.VER
+    TablaAcciones.VER,
+    TablaAcciones.DESCARGAR
   ];
 
   /**
@@ -94,19 +95,17 @@ export class AcuseReciboComponent implements OnInit, OnDestroy {
   public pantalla: string = '';
 
   /**
-   * Inicializa la variable de alertaNotificación con un objeto de tipo Notificacion.
-   * @type {Notificacion}
+   * @property {string} infoAlert
+   * Clase CSS usada para mostrar alertas informativas.
    */
-  public alertaNotificacion: Notificacion = {
-    tipoNotificacion: 'banner',
-    categoria: CategoriaMensaje.INFORMACION,
-    modo: 'action',
-    titulo: '',
-    mensaje: 'La notificación de la resolución para el trámite con número 2500301600120259910000129 ha sido confirmada.',
-    cerrar: false,
-    txtBtnAceptar: '',
-    txtBtnCancelar: '',
-  };
+  public infoAlert = 'alert-info';
+
+  /**
+   * @property alertaNotificacion
+   * @description
+   * Mensaje de alerta para la notificación.
+   */
+  public alertaNotificacion: string = '';
 
   /**
    * @property tablaConfiguracion
@@ -146,30 +145,20 @@ export class AcuseReciboComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.pantalla = this.router?.url === '/confirmar-resolucion' ? 'confirmar-resolucion' : 'confirmar-notificacion';
-    
-    if(this.pantalla === 'confirmar-notificacion'){
-      this.confirmarNotificacionService
-      .getAcuseReciboDatos()
+    this.alertaNotificacion = this.pantalla === 'confirmar-notificacion' ? CONFIRMAR_NOTIFICACION_ALERT : CONFIRMAR_NOTIFICACION_RESOLUCION_ALERT;
+    this.confirmarNotificacionService
+      .getAcuseConfirmarResolucionTablaDatos()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.acuseReciboTablaDatos = data;
-      });
-    }
-    if(this.pantalla === 'confirmar-resolucion'){
-      this.confirmarNotificacionService
-        .getAcuseConfirmarResolucionTablaDatos()
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((data: AcuseNotificacionRequerimiento[]) => {
-          this.acuseConfirmarResolucionTablaDatos = data;
-      });
+      .subscribe((data: AcuseNotificacionRequerimiento[]) => {
+        this.acuseConfirmarResolucionTablaDatos = data;
+    });
 
-      this.confirmarNotificacionService
-        .getResolucionConfirmarResolucionTablaDatos()
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((data: AcuseNotificacionRequerimiento[]) => {
-          this.resolucionConfirmarResolucionTablaDatos = data;
-      });
-    } 
+    this.confirmarNotificacionService
+      .getResolucionConfirmarResolucionTablaDatos()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data: AcuseNotificacionRequerimiento[]) => {
+        this.resolucionConfirmarResolucionTablaDatos = data;
+    });
   }
 
   /**

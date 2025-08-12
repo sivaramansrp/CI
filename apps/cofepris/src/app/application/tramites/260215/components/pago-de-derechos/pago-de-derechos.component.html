@@ -137,6 +137,8 @@
               <button
                 type="button"
                 class="btn btn-danger"
+                [disabled]="esFormularioSoloLectura"
+                (click)="borrarDatosPago()"
               >
                 Borrar datos del pago
               </button>

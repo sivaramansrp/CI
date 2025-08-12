@@ -1,7 +1,9 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
+import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ID_PROCEDIMIENTO } from '../../../constants/medicos-sin-registrar.enum';
 import { PagoDeDerechosComponent } from '../../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../../shared/models/terceros-relacionados.model';
 import { Tramite260217Store } from '../../../estados/tramite260217Store.store';
@@ -31,6 +33,14 @@ import { Tramite260217Store } from '../../../estados/tramite260217Store.store';
   styleUrl: './pago-de-derechos-contenedora.component.scss',
 })
 export class PagoDeDerechosContenedoraComponent implements OnDestroy {
+
+  /**
+   * @property {number} idProcedimiento
+   * @description
+   * Identificador del procedimiento actual.
+   */
+    idProcedimiento: number = ID_PROCEDIMIENTO;
+
   /**
    * @property {PagoDerechosFormState} pagoDerechos
    * @description Estado actual del formulario de pago de derechos que contiene toda la
@@ -116,13 +126,16 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    */
   constructor(
     public tramiteStore: Tramite260217Store,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef
+
   ) {
       this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
+          this.cdr.detectChanges();
         })
       )
       .subscribe();

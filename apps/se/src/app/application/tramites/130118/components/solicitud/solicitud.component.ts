@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, merge, takeUntil } from 'rxjs';
@@ -11,6 +11,9 @@ import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
 import { GuardarService } from '../../../../core/services/130118/guardar.service';
 
 import { CatMolinoService } from '../../../../core/services/130118/catalogos/cat-molino.service';
+import { ConsultaSolicitudResponse } from '../../../../core/models/130118/response/consultar-solicitud-response.model';
+import { ConsultaSolicitudService } from '../../../../core/services/130118/consulta-solicitud.service';
+import moment from 'moment';
 
 /**
  * Componente para la vista de la solicitud de la sección de "130118".
@@ -136,7 +139,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   certificadoAntiguedadMaximoMeses: number = 0;
 
-
+  @Input() ocultarForm: boolean = false;
   /**
    * Constructor del componente.
    * @param peximService Servicio para obtener datos de PEXIM.
@@ -164,7 +167,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private fraccionArancelariaService: FraccionArancelariaService,
     private guardarService: GuardarService,
     private cdr: ChangeDetectorRef,
-    private catMolinoService: CatMolinoService
+    private catMolinoService: CatMolinoService,
+    private consultaSolicitudService: ConsultaSolicitudService
   ) { }
 
   /**
@@ -172,59 +176,152 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Inicializa catálogos, suscripciones y muestra los campos correspondientes a la persona seleccionada.
    */
   ngOnInit(): void {
-    this.inicializaCatalogos();
 
-    this.tramite130118Query.selectSeccionState$
-      .pipe(
-        takeUntil(this.destruirNotificador$),
-        map((seccionState) => {
-          this.solicitudState = seccionState;
-        })
-      ).subscribe();
+    if (this.ocultarForm === true) {
+      this.esFormularioSoloLectura = true;
+      this.inicializaCatalogos();
+      this.obtenerDataSolicitud();
+      this.inicializarEstadoFormulario();
+    } else {
+      this.inicializaCatalogos();
 
-    this.crearFormSolicitud();
+      this.tramite130118Query.selectSeccionState$
+        .pipe(
+          takeUntil(this.destruirNotificador$),
+          map((seccionState) => {
+            this.solicitudState = seccionState;
+          })
+        ).subscribe();
 
-    const REGIMEN_VALUE = this.datosRegimen.get('regimenMercancia')?.value;
-    if (REGIMEN_VALUE && REGIMEN_VALUE !== '-1') {
-      this.changeRegimen();
-    }
+      this.inicializarEstadoFormulario();
 
-    const FRACCION_GUARDADA = this.solicitudState?.fraccionArancelaria;
-    if (FRACCION_GUARDADA && FRACCION_GUARDADA !== '-1') {
-      this.datosMercancia.get('fraccionArancelaria')?.setValue(FRACCION_GUARDADA);
-      this.fraccionArancelariaChange();
-    }
 
-    const ESTADO_GUARDADO = this.solicitudState?.estado;
-    if (ESTADO_GUARDADO && ESTADO_GUARDADO !== '-1') {
-      this.registroFederal.get('estado')?.setValue(ESTADO_GUARDADO);
-      this.changeEntidad();
-    }
+      const REGIMEN_VALUE = this.datosRegimen.get('regimenMercancia')?.value;
+      if (REGIMEN_VALUE && REGIMEN_VALUE !== '-1') {
+        this.changeRegimen();
+      }
 
-    this.regimenMercanciaSeleccion();
-    this.clasifiRegimenSeleccion();
-    this.obtenerAntiguedadMaxima();
-    this.fraccionArancelariaSeleccion();
-    this.nicoSeleccion();
-    this.paisOrigenSeleccion();
-    this.paisDestinoSeleccion();
-    this.estadoSeleccion();
-    this.unidadMedidaTarifariaSeleccion();
-    this.representacionFederalSeleccion();
-    if (this.solicitudState?.nombre || this.solicitudState?.razonSocial) {
-      this.muestraCamposPersona();
+      const FRACCION_GUARDADA = this.solicitudState?.fraccionArancelaria;
+      if (FRACCION_GUARDADA && FRACCION_GUARDADA !== '-1') {
+        this.datosMercancia.get('fraccionArancelaria')?.setValue(FRACCION_GUARDADA);
+        this.fraccionArancelariaChange();
+      }
+
+      const ESTADO_GUARDADO = this.solicitudState?.estado;
+      if (ESTADO_GUARDADO && ESTADO_GUARDADO !== '-1') {
+        this.registroFederal.get('estado')?.setValue(ESTADO_GUARDADO);
+        this.changeEntidad();
+      }
+
+      this.regimenMercanciaSeleccion();
+      this.clasifiRegimenSeleccion();
+      this.obtenerAntiguedadMaxima();
+      this.fraccionArancelariaSeleccion();
+      this.nicoSeleccion();
+      this.paisOrigenSeleccion();
+      this.paisDestinoSeleccion();
+      this.estadoSeleccion();
+      this.unidadMedidaTarifariaSeleccion();
+      this.representacionFederalSeleccion();
+      if (this.solicitudState?.nombre || this.solicitudState?.razonSocial) {
+        this.muestraCamposPersona();
+      }
     }
   }
 
   /**
-   * Método que se ejecuta al destruir el componente.
-   * Limpia las suscripciones y el estado del store.
+   * Obtiene los datos de una solicitud mediante un folio específico y procesa la respuesta
+   * para llenar un formulario y realizar diversas acciones basadas en los datos recibidos.
+  */
+  obtenerDataSolicitud(): void {
+    const FOLIO = '0201300101820251119000004';
+    this.consultaSolicitudService.getCriterios(FOLIO).subscribe({
+      next: (response) => {
+        if (response?.codigo === '00' && response?.datos) {
+          this.llenarFormularioDesdeRespuesta(response.datos);
+          this.changeRegimen(response.datos.cve_clasificacion_regimen)
+
+          this.fraccionArancelariaChange(response.datos.mercancia.cve_unidad_medida_tarifaria,
+            response.datos.mercancia.cve_subdivision, response.datos.productor.razon_social);
+          this.changeEntidad(response.datos.representacion_federal.cve_unidad_administrativa);
+          const NOMBRE = response.datos.productor?.nombre;
+          const RAZON_SOCIAL = response.datos?.productor?.razon_social;
+          if (NOMBRE || RAZON_SOCIAL) {
+            this.muestraCamposPersona(response.datos.productor.nombre);
+          }
+        } else {
+          console.error('Error en getCriterios:', response?.mensaje);
+        }
+      },
+      error: (err) => {
+        console.error('Error al obtener criterios:', err);
+      }
+    });
+  }
+
+  /**
+   * Llena el formulario con los datos obtenidos de la respuesta de la consulta de solicitud.
+   * @param datos Datos de la respuesta de la consulta de solicitud.
+   */
+  llenarFormularioDesdeRespuesta(datos: ConsultaSolicitudResponse): void {
+    this.FormSolicitud?.patchValue({
+      datosRegimen: {
+        regimenMercancia: datos.cve_regimen,
+        clasifiRegimen: datos.cve_clasificacion_regimen
+      },
+      datosMercancia: {
+        valueTA: datos.mercancia.descripcion,
+        fraccionArancelaria: datos.mercancia.cve_fraccion_arancelaria,
+        nico: datos.mercancia.cve_subdivision,
+        unidadMedidaTarifaria: datos.mercancia.cve_unidad_medida_tarifaria,
+        cantidadTarifaria: datos.mercancia.cantidad_tarifaria,
+        valorFacturaUSD: datos.mercancia.valor_factura_usd,
+        precioUnitarioUSD: datos.mercancia.precio_unitario,
+        paisOrigen: datos.mercancia.cve_pais_origen,
+        paisDestino: datos.mercancia.cve_pais_destino,
+        lote: datos.mercancia.lote,
+        fechaSalida: SolicitudComponent.formatearFechaBackendAInput(datos.mercancia.fecha_salida),
+        observaciones: datos.mercancia.observaciones,
+        observacionMerc: datos.mercancia.observaciones
+      },
+      datosProducto: {
+        tipoPersona: datos.productor.tipo_persona,
+        nombre: datos.productor.nombre,
+        apellidoPaterno: datos.productor.apellido_paterno,
+        apellidoMaterno: datos.productor.apellido_materno,
+        razonSocial: datos.productor.razon_social,
+        domicilio: datos.productor.descripcion_ubicacion
+      },
+      registroFederal: {
+        estado: datos.representacion_federal.cve_entidad_federativa,
+        representacionFederal: datos.representacion_federal.cve_unidad_administrativa
+      }
+    });
+  }
+
+  /**
+   * Formatea una fecha del backend al formato de entrada del formulario.
+   * @param fecha Fecha en formato 'YYYY-MM-DD'.
+   * @returns Fecha formateada al formato 'DD/MM/YYYY' o null si la fecha es inválida.
+   */
+  static formatearFechaBackendAInput(fecha?: string): string | null {
+    if (!fecha) { return null; }
+
+    const NUEVOFORMATO = moment(fecha, 'YYYY-MM-DD');
+    if (!NUEVOFORMATO.isValid()) { return null; }
+
+    return NUEVOFORMATO.format('DD/MM/YYYY');
+  }
+
+  /**
+   * Obtiene el máximo número de meses de antigüedad permitido para el certificado.
+   * Realiza una petición al servicio de guardar para obtener el valor.
    */
   obtenerAntiguedadMaxima(): void {
     this.guardarService.getCertificadoAntiguedad().subscribe({
       next: (response) => {
         if (response.codigo === '00') {
-          this.certificadoAntiguedadMaximoMeses = Number(response.datos); // ← convierte el string a número
+          this.certificadoAntiguedadMaximoMeses = Number(response.datos);
         } else {
           // Manejo si viene código distinto a "00"
           console.error('Error al obtener antigüedad:', response.mensaje);
@@ -543,7 +640,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Método para mostrar los campos correspondientes a la persona seleccionada.
    * Determina si se debe mostrar la sección de persona física o moral.
    */
-  muestraCamposPersona(): void {
+  muestraCamposPersona(nombre?: string): void {
     const RAZONSOCIAL = this.FormSolicitud.get('datosProducto.razonSocial')?.value;
     const NOMBRE = this.FormSolicitud.get('datosProducto.nombre')?.value;
 
@@ -551,7 +648,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.personaMoral();
       this.FormSolicitud.get('datosProducto.tipoPersona')?.setValue('pmoral');
     } else if (NOMBRE) {
-      this.personaFisica();
+      this.personaFisica(nombre);
       this.FormSolicitud.get('datosProducto.tipoPersona')?.setValue('pfisica');
     }
   }
@@ -589,7 +686,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Método para mostrar los campos correspondientes a una persona física.
    * Habilita los campos de persona física y deshabilita los de persona moral.
    */
-  personaFisica(): void {
+  personaFisica(nombre?: string): void {
     this.isVisibleFisica = true;
     this.isVisibleMoral = false;
 
@@ -601,9 +698,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.tramite130118Store.setRazonSocial('');
 
     // Habilitar campos de persona física
-    this.FormSolicitud.get('datosProducto.nombre')?.enable();
-    this.FormSolicitud.get('datosProducto.apellidoPaterno')?.enable();
-    this.FormSolicitud.get('datosProducto.apellidoMaterno')?.enable();
+    if (!nombre) {
+      this.FormSolicitud.get('datosProducto.nombre')?.enable();
+      this.FormSolicitud.get('datosProducto.apellidoPaterno')?.enable();
+      this.FormSolicitud.get('datosProducto.apellidoMaterno')?.enable();
+    }
+
   }
 
   /**
@@ -732,7 +832,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  changeRegimen(): void {
+  changeRegimen(cveRegimen?: string): void {
     const SELECTED_REGIMEN = this.datosRegimen.get('regimenMercancia')?.value;
     this.tramite130118Store.setRegimenMercancia(SELECTED_REGIMEN);
 
@@ -743,13 +843,15 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         next: (response) => {
           this.clasifiRegimen = response.datos || [];
 
-          if (this.clasifiRegimen.length > 0) {
-            CLASIFI_CONTROL?.enable();
-          } else {
-            CLASIFI_CONTROL?.disable();
+          if (!cveRegimen) {
+            if (this.clasifiRegimen.length > 0) {
+              CLASIFI_CONTROL?.enable();
+            } else {
+              CLASIFI_CONTROL?.disable();
+            }
           }
 
-          const CLASIFI_GUARDADO = this.solicitudState?.clasifiRegimen || null;
+          const CLASIFI_GUARDADO = cveRegimen || this.solicitudState?.clasifiRegimen || null;
           CLASIFI_CONTROL?.setValue(CLASIFI_GUARDADO);
         },
         error: (error) => {
@@ -770,7 +872,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
 
   // eslint-disable-next-line class-methods-use-this
-  changeEntidad(): void {
+  changeEntidad(cveEntidad?: string): void {
     const SELECTED_ESTADO = this.registroFederal.get('estado')?.value;
 
     // Guarda el estado seleccionado en el store
@@ -783,14 +885,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         next: (response) => {
           this.representacionFederal = response.datos || [];
 
-          if (this.representacionFederal.length > 0) {
-            FEDERAL_CONTROL?.enable();
-          } else {
-            FEDERAL_CONTROL?.disable();
+          if (!cveEntidad) {
+            if (this.representacionFederal.length > 0) {
+              FEDERAL_CONTROL?.enable();
+            } else {
+              FEDERAL_CONTROL?.disable();
+            }
           }
 
           // Obtener valor guardado (si existe)
-          const REPRESENTACION_GUARDADA = this.solicitudState?.representacionFederal;
+          const REPRESENTACION_GUARDADA = cveEntidad || this.solicitudState?.representacionFederal;
 
           // Si hay una representación federal guardada, la establece; de lo contrario, la deshabilita
           if (REPRESENTACION_GUARDADA && REPRESENTACION_GUARDADA !== null) {
@@ -815,7 +919,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
 
   // eslint-disable-next-line class-methods-use-this
-  fraccionArancelariaChange(): void {
+  fraccionArancelariaChange(cveUmt?: string, cveNico?: string, razonSocial?: string): void {
     const SELECTED_FRACCION = this.datosMercancia.get('fraccionArancelaria')?.value;
 
     // Guardar en el store
@@ -850,7 +954,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
             this.tramite130118Store.setApellidoMaterno('');
 
             // Activar razón social
-            this.FormSolicitud.get('datosProducto.razonSocial')?.enable();
+            if (!razonSocial) {
+              this.FormSolicitud.get('datosProducto.razonSocial')?.enable();
+            }
 
             this.isVisibleFisica = false;
             this.isVisibleMoral = false;
@@ -868,13 +974,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
             this.mostrarComboMolinos = false;
 
-
-            this.FormSolicitud.get('datosProducto.nombre')?.enable();
-            this.FormSolicitud.get('datosProducto.apellidoPaterno')?.enable();
-            this.FormSolicitud.get('datosProducto.apellidoMaterno')?.enable();
-
-
-
+            if (this.ocultarForm === false) {
+              this.FormSolicitud.get('datosProducto.nombre')?.enable();
+              this.FormSolicitud.get('datosProducto.apellidoPaterno')?.enable();
+              this.FormSolicitud.get('datosProducto.apellidoMaterno')?.enable();
+            }
           }
         },
         error: (err) => {
@@ -887,7 +991,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.fraccionArancelariaService.getNico(SELECTED_FRACCION).subscribe({
         next: (response) => {
           this.nico = response.datos || [];
-          this.toggleControl(NICO_CONTROL, this.nico.length > 0, this.solicitudState?.nico || null);
+          const VALOR = cveNico ?? this.solicitudState?.nico ?? null;
+          const FORCE_DISABLE = Boolean(cveNico);
+          this.toggleControl(NICO_CONTROL, this.nico.length > 0, VALOR, FORCE_DISABLE);
         },
         error: (error) => {
           console.error('Error al obtener Nico:', error);
@@ -899,7 +1005,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.fraccionArancelariaService.getFraccionesCve(SELECTED_FRACCION).subscribe({
         next: (response) => {
           this.unidadMedidaTarifaria = response.datos || [];
-          this.toggleControl(UMT_CONTROL, this.unidadMedidaTarifaria.length > 0, this.solicitudState?.unidadMedidaTarifaria || null);
+          const VALOR = cveUmt ?? this.solicitudState?.unidadMedidaTarifaria ?? null;
+          const FORCE_DISABLE = Boolean(cveUmt);
+          this.toggleControl(UMT_CONTROL, this.unidadMedidaTarifaria.length > 0, VALOR, FORCE_DISABLE);
         },
         error: (error) => {
           console.error('Error al obtener unidad medida:', error);
@@ -918,14 +1026,20 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
-  toggleControl(control: AbstractControl | null, enable: boolean, value: any): void {
+  toggleControl(control: AbstractControl | null, enable: boolean, value: any, forceDisable = false): void {
     if (!control) { return; }
-    if (enable) {
-      control.enable();
-      control.setValue(value);
-    } else {
+
+    control.setValue(value);
+
+    if (forceDisable) {
       control.disable();
-      control.setValue(null);
+    } else {
+      if (enable) {
+        control.enable();
+      } else {
+        control.disable();
+        control.setValue(null);
+      }
     }
   }
 

@@ -24,8 +24,8 @@ Contenedores, cajas de trailer:</label>
         </div>
         <div class="row">
             <div class="col-12 container text-end mt-5">
-              <button class="btn btn-primary me-2 custom-btn-Eliminar" (click)="eliminarAnexoDos()">Eliminar</button>
-              <button class="btn btn-primary" (click)="agregarAnexoDos()">Agregar</button>
+              <button class="btn btn-primary me-2 custom-btn-Eliminar" (click)="eliminarAnexoDos()" [disabled]="formularioDeshabilitado">Eliminar</button>
+              <button class="btn btn-primary" (click)="agregarAnexoDos()" [disabled]="formularioDeshabilitado">Agregar</button>
             </div>
           </div>
         <div class="row">
@@ -67,8 +67,8 @@ Contenedores, cajas de trailer:</label>
         </div>
         <div class="row">
             <div class="col-12 container text-end mt-5">
-              <button class="btn btn-primary me-2 custom-btn-Eliminar" (click)="eliminarAnexoTres()">Eliminar</button>
-              <button class="btn btn-primary" (click)="agregarAnexoTres()">Agregar</button>
+              <button class="btn btn-primary me-2 custom-btn-Eliminar" (click)="eliminarAnexoTres()" [disabled]="formularioDeshabilitado">Eliminar</button>
+              <button class="btn btn-primary" (click)="agregarAnexoTres()" [disabled]="formularioDeshabilitado">Agregar</button>
             </div>
           </div>
         <div class="row">

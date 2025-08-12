@@ -1,17 +1,27 @@
 import { RouterModule, Routes } from '@angular/router';
+import { CertificadoComponent } from './page/certificado/certificado.component';
 import { NgModule } from '@angular/core';
-import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 
+/**
+ * Define la configuración de enrutamiento para el módulo.
+ * 
+ * @constant
+ * @type {Routes}
+ * @description
+ * - El array `ROUTES` especifica las rutas de navegación y sus componentes correspondientes.
+ * - La ruta `path: 'certificado'` se asigna al componente `CertificadoComponent`.
+ * - La ruta predeterminada (`path: ''`) redirige a la ruta `certificado` con una coincidencia completa de la ruta.
+ */
 const ROUTES: Routes = [
   {
-    path: '',
-    component: SolicitudPageComponent,
-  },
+      path: '',
+      component: CertificadoComponent,
+    },
     {
-    path: '',
-    pathMatch: 'full',
-    redirectTo: 'solicitud',
-  },
+      path: '',
+      redirectTo: 'solicitud',
+      pathMatch: 'full'
+    }
 ];
 
 @NgModule({

@@ -1,5 +1,6 @@
 import {
   Mercancia,
+  Mercancias,
 } from '../models/configuracion-columna.model';
 
 /**
@@ -114,4 +115,88 @@ export const CONFIGURACION_MERCANCIA = [
     orden: 6, // ✔️ Corregido para evitar conflicto con la columna anterior.
   }
 ];
+ /**
+ * Mensaje informativo sobre las tablas obligatorias.
+ */
 
+ /**
+ * Configuración de las columnas para la tabla de mercancías.
+ * Define el encabezado, la clave a mostrar por fila y el orden.
+ * Utiliza funciones para mapear datos del modelo Mercancias.
+ */
+export const CONFIGURATION_TABLA_MERCANCIAS = [
+  {
+    encabezado: 'Fracción arancelaria',
+    clave: (item: Mercancias): string => item.fraccionArancelaria,
+    orden: 1
+  },
+  {
+    encabezado: 'Cantidad',
+    clave: (item: Mercancias): string => item.cantidad,
+    orden: 2
+  },
+    {
+    encabezado: 'Unidad de medida',
+    clave: (item: Mercancias): string => item.unidadDeMedida,
+    orden: 3
+  },
+  {
+    encabezado: 'Valor mercancía',
+    clave: (item: Mercancias): string => item.valorMercancia,
+    orden: 4
+  },
+  {
+    encabezado: 'Tipo de factura',
+    clave: (item: Mercancias): string => item.tipoDeFactura,
+    orden: 5
+  }
+];
+
+/**
+ * Datos de ejemplo utilizados para poblar la tabla de mercancías.
+ * Representa una lista de objetos del modelo Mercancias.
+ * Se utiliza como valor inicial o para pruebas locales.
+ */
+export const MERCANCIAS_DATOS: Mercancias[] = [
+  {
+    unidadDeMedida: 'Kilogramos',
+    cantidad: '100',
+    fraccionArancelaria: '15800202',
+    valorMercancia: '50000',
+    tipoDeFactura: 'Comercial'
+  },]
+
+   /**
+ * Mensaje informativo sobre las tablas obligatorias.
+ */
+export const CAPTURA_MERCANCIAS = `
+  <p style="text-align: center;">
+    Para continuar con el trámite, debes agregar por lo menos una mercancía.
+  </p>
+`;
+/**
+ * Configuración del campo de fecha final en el formulario.
+ * Define la etiqueta, si es requerido y si está habilitado.
+ * Se utiliza para parametrizar la vista del componente.
+ */
+export const FECHA_FINALS = {
+  labelNombre: 'Fecha fin',
+  required: true,
+  habilitado: true,
+};
+/**
+ * Lista de catálogos de bancos disponibles.
+ * Cada banco tiene un identificador único (id) y una descripción.
+ * Esta lista se utiliza para poblar selectores de bancos en formularios.
+ */
+export const CATALOGOS_DATOS = [
+        {
+            "id": 1,
+            "descripcion": "Banco Central"
+        },
+        {
+            "id": 2,
+            "descripcion": "Banco del Pueblo"
+        }
+
+    ];

@@ -1,18 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-import { Subject, map, takeUntil } from 'rxjs';
-
-import {
-  Solicitud90201State,
-  Tramite90201Store,
-} from '../../../../estados/tramites/tramite90201.store';
-
 import { ConsultaioQuery, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Solicitud90201State,Tramite90201Store } from '../../../../estados/tramites/tramite90201.store';
+import { Subject, map, takeUntil } from 'rxjs';
+import { ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { PRODUCTOR_INDIRECTO } from '@libs/shared/data-access-user/src/core/enums/90201/productor-indirecto-tabla.enum';
-
 import { ProductorIndirectoTabla } from '@libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
 import ProductorTabla from '@libs/shared/theme/assets/json/90201/productor-indirecto-tabla.json';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
@@ -125,7 +118,8 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
     private tramite90201Store: Tramite90201Store,
     private tramite90201Query: Tramite90201Query,
     private consultaioQuery: ConsultaioQuery,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private cdr: ChangeDetectorRef
   ) {
 
   }
@@ -173,22 +167,34 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
     };
-    if (this.seleccionados.length >= 1) {
-      this.seleccionados.forEach(row => {
-        const INDEX = this.tablaDatos.indexOf(row);
-        if (INDEX > -1) {
-          this.tablaDatos.splice(INDEX, 1);
-        }
-      });
-      this.seleccionados = [];
-    }
+
   }
-/**
- * Agrega un nuevo productor indirecto al arreglo `tablaDatos`.
- * El método toma el valor del campo `rfc` del formulario `formProductorIndirecto`,
- * verifica si el formulario es válido y si el campo `rfc` tiene un valor.
- * Si ambas condiciones se cumplen, crea un nuevo objeto `ProductorIndirectoTabla`
- */
+
+  /** 
+   * Agrega un nuevo productor indirecto a la tabla de datos.
+   * Este método se activa al confirmar la acción de agregar un productor indirecto.
+   * @param confirmar - Indica si se confirma la acción de agregar un productor indirecto.
+   * @returns 
+   */
+  public agregarProductorIndirecto(confirmar: boolean): void {
+    if (!this.seleccionados || this.seleccionados.length === 0 || !confirmar) {
+      return;
+    }
+    this.tablaDatos = this.tablaDatos.filter(item =>
+      !this.seleccionados.some(selected =>
+        selected.registro === item.registro
+      )
+    );
+    this.seleccionados = [];
+
+  }
+
+  /**
+   * Agrega un nuevo productor indirecto al arreglo `tablaDatos`.
+   * El método toma el valor del campo `rfc` del formulario `formProductorIndirecto`,
+   * verifica si el formulario es válido y si el campo `rfc` tiene un valor.
+   * Si ambas condiciones se cumplen, crea un nuevo objeto `ProductorIndirectoTabla`
+   */
   agregarProductor(): void {
     const RFC_VALUE = this.formProductorIndirecto.get('rfc')?.value;
     if (this.formProductorIndirecto.valid && RFC_VALUE) {
@@ -199,6 +205,7 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
       };
 
       this.tablaDatos = [...this.tablaDatos, NUEVO_PRODUCTOR];
+      this.cdr.detectChanges();
       this.formProductorIndirecto.reset();
     }
   }

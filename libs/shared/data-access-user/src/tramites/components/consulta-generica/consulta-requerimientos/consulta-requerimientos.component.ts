@@ -2,11 +2,12 @@ import {
   BodyTablaRequerimiento,
   HeaderTablaRequerimientos,
 } from '../../../../core/models/shared/consulta-generica.model';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CONSULTA_REQUERIMIENTOS } from '../../../../core/enums/consulta-generica.enum';
 import { CommonModule } from '@angular/common';
 import { FolioQuery } from '../../../../core/queries/folio.query';
+import { RequerimientosResponse } from "../../../../core/models/130118/requerimientos-response.model";
 import { RequerimientosService } from '../../../../core/services/consultagenerica/requerimiento-service';
 import { Router } from '@angular/router';
 
@@ -17,7 +18,7 @@ import { Router } from '@angular/router';
   templateUrl: './consulta-requerimientos.component.html',
   styleUrl: './consulta-requerimientos.component.scss',
 })
-export class ConsultarequerimientosComponent implements OnInit, OnDestroy {
+export class ConsultarequerimientosComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Variable para almacenar el folio recuperado desde el store.
    * @type {string}
@@ -50,6 +51,12 @@ export class ConsultarequerimientosComponent implements OnInit, OnDestroy {
   public verDetalleRequerimiento = ConsultarequerimientosComponent.verDetalleRequerimiento;
 
   /**
+    * @property {RequerimientosResponse[]} requerimientos
+    * @description Requerimientos de solicitud.
+  */
+  @Input() requerimientos: RequerimientosResponse[] = [];
+
+  /**
    * Constructor de la clase ConsultarequerimientosComponent.
    * @param router Router para navegar a la vista de detalle de requerimiento.
    * @param folioQuery Consulta del folio desde el store.
@@ -72,12 +79,25 @@ export class ConsultarequerimientosComponent implements OnInit, OnDestroy {
     this.folioQuery.getFolio().subscribe((folio) => {
       this.folio = folio || '';
     });
-
-    /** 
-     * Llamar al método para obtener los requerimientos al inicializar el componente.
-     */
-    this.getRequerimientos();
   }
+
+  /**
+    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+    * Se suscribe al observable del servicio para obtener los datos.
+    * @returns {void}
+  */
+   ngOnChanges(changes: SimpleChanges): void {
+     if (changes['requerimientos'] && changes['requerimientos'].currentValue?.length > 0) {
+       this.getRequerimientos();
+     }else{
+      this.requerimientoService
+      .getRequerimientos()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.datosTablaRequerimientos = data;
+      });
+     }
+   }
 
   /**
    * Abre una nueva pestaña con los detalles del requerimiento.
@@ -96,12 +116,14 @@ export class ConsultarequerimientosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getRequerimientos(): void {
-    this.requerimientoService
-      .getRequerimientos()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.datosTablaRequerimientos = data;
-      });
+    this.datosTablaRequerimientos = this.requerimientos.map((req) => ({
+      id: req.id_requeriminento,
+      fechaCreacion: req.fecha_creacion,
+      fechaGeneracion: req.fecha_emision,
+      fechaAtencion: req.fecha_atencion,
+      estatus: req.estadoRequerimiento ?? '', 
+      urlPdf: '' 
+    }));
   }
 
   /**

@@ -1,21 +1,15 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
 import { Catalogo, CatalogoSelectComponent, CrosslistComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-
-
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
-import { SolicitudService } from '../../services/solicitud.service';
-import { Tramite260212Store } from '../../estados/tramite260212.store';
-
-import { Tramite260212Query } from '../../estados/tramite260212.query';
-
 import { Observable, Subject, map, takeUntil } from 'rxjs';
-import { PaisDeOrigenComponent } from '../pais-de-origen/pais-de-origen.component';
-
+import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { MercanciaModel } from '../../models/permiso-maquila.models';
+import { PaisDeOrigenComponent } from '../pais-de-origen/pais-de-origen.component';
+import { SolicitudService } from '../../services/solicitud.service';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { Tramite260212Query } from '../../estados/tramite260212.query';
+import { Tramite260212Store } from '../../estados/tramite260212.store';
 
 /**
  * Componente MercanciasTableFormComponent
@@ -29,7 +23,8 @@ import { MercanciaModel } from '../../models/permiso-maquila.models';
     CatalogoSelectComponent,
     TituloComponent,
     CrosslistComponent,
-    PaisDeOrigenComponent
+    PaisDeOrigenComponent,
+    TooltipModule 
   ],
   templateUrl: './mercancias-table-form.component.html',
   styleUrl: './mercancias-table-form.component.scss',
@@ -234,7 +229,7 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
    * this.agregar();
    * // Si el formulario es válido, emite los datos y cierra el formulario.
    */
-  agregar(): void {
+  agregar(): void {    
     if (this.datosMercanciaForm.valid) {
       const DATOS = {form: this.datosMercanciaForm.value};
       this.agregarDatos.emit(DATOS);

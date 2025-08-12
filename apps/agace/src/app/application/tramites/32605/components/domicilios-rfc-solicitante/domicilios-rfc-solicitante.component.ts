@@ -583,7 +583,8 @@ export class DomiciliosRfcSolicitanteComponent implements OnInit, OnDestroy, Aft
       codigoPostal: FORM_DATA.codigoPostal,
       acreditaUsoGoceInmueble: FORM_DATA.acreditaUsoGoceInmueble ? DomiciliosRfcSolicitanteComponent.convertirValorRadioATexto(FORM_DATA.acreditaUsoGoceInmueble) : '',
       perfilEmpresa: FORM_DATA.perfilEmpresa ? DomiciliosRfcSolicitanteComponent.convertirValorRadioATexto(FORM_DATA.perfilEmpresa) : '',
-      reconocimientoMutuoCTPAT: FORM_DATA.reconocimientoMutuoCTPAT ? DomiciliosRfcSolicitanteComponent.convertirValorRadioATexto(FORM_DATA.reconocimientoMutuoCTPAT) : ''
+      reconocimientoMutuoCTPAT: FORM_DATA.reconocimientoMutuoCTPAT ? DomiciliosRfcSolicitanteComponent.convertirValorRadioATexto(FORM_DATA.reconocimientoMutuoCTPAT) : '',
+      perfilAlmacenGeneral: FORM_DATA.perfilAlmacenGeneral ? DomiciliosRfcSolicitanteComponent.convertirValorRadioATexto(FORM_DATA.perfilAlmacenGeneral) : ''
     };
 
     // Buscar el índice del objeto a modificar

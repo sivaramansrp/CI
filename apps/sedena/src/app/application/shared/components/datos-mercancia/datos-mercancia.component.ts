@@ -1,29 +1,13 @@
-import { AfterViewInit, Component, Input } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Catalogo, CatalogoSelectComponent, CrossListLable, CrosslistComponent, REGEX_NUMEROS, REGEX_SOLO_DIGITOS, TituloComponent } from '@ng-mf/data-access-user';
+import { CommonModule, Location } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NO_VISIBILIDAD_UMC, PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA } from '../../constants/datos-del-tramilte.enum';
+import { Subject,takeUntil } from 'rxjs';
 import { CROSLISTA_DE_PAISES } from '../../constants/datos-solicitud.enum';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
-import { CrossListLable } from '@ng-mf/data-access-user';
-import { CrosslistComponent } from '@ng-mf/data-access-user';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-import { EventEmitter } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { Location } from '@angular/common';
 import { MercanciaDetalle } from '../../models/datos-del-tramite.model';
-import { NO_VISIBILIDAD_UMC } from '../../constants/datos-del-tramilte.enum';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
-import { PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA } from '../../constants/datos-del-tramilte.enum';
-import { REGEX_NUMEROS } from '@ng-mf/data-access-user';
-import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { Validators } from '@angular/forms';
-import { takeUntil } from 'rxjs';
 /**
  * @title Datos de la Mercancía
  * @description Componente que permite capturar y emitir la información relacionada con una mercancía específica.
@@ -260,7 +244,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
       paisOrigen: this.seleccionadasPaisDeOriginDatos.join(','),
     };
 
-    this.datosMercancias.push(DATOS_MERCANCIA);
+    this.datosMercancias = [...this.datosMercancias, DATOS_MERCANCIA];
     if (this.formaDatos) {
       if ('tableIndex' in this.formaDatos) {
         this.datosMercancias[0].tableIndex = (
@@ -296,7 +280,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
     }
   }
 
-  settextValue(value: number | undefined): void {
+  settextValue(value: number | undefined): void {    
     this.datosMercancia.get('fraccionArancelaria')?.setValue(value);
     if (value === 1) {
       this.datosMercancia

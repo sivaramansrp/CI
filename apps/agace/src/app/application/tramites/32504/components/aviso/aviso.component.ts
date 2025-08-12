@@ -189,6 +189,10 @@ export class AvisoComponent implements OnInit {
   */
   public mensajePopupSeleccionRegistro = 'Debe seleccionar un registro para modificar sus datos';
 
+  /**
+ * Indica si se debe mostrar el popup de confirmación de registro agregado.
+ */
+  public mostrarPopupRegistroAgregado = false;
 
 /**
    * @constructor
@@ -287,10 +291,12 @@ export class AvisoComponent implements OnInit {
         });
       }
     });
+    let firstLoad = true;
     this.query.selectformulario$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
-      if (datos) {
+      if (datos && firstLoad) {
         this.formulario.patchValue(datos);
         this.formulario.get('cargaTipo')?.disable();
+        firstLoad = false;
       }
     });
   }

@@ -27,7 +27,7 @@
     <ng-template #datosDeChoferesModal>
       <div id="datosDeChoferesModal">
         <app-choferes-datos-extranjeros-dialog [datosDeChofere]="datosChofere" #datosDeChoferesModal [readonly]="isReadonly"
-          (addModalEvent)="addModal($event)" (cancelEvent)="cancelModal()"></app-choferes-datos-extranjeros-dialog>
+          (eventoAgregarModal)="agregarModal($event)" (cancelEvent)="cancelModal()"></app-choferes-datos-extranjeros-dialog>
 
       </div>
     </ng-template>

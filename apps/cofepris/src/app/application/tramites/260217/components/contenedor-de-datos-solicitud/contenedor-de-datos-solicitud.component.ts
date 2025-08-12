@@ -17,6 +17,7 @@ import {
   Tramite260217Store,
 } from '../../estados/tramite260217Store.store';
 import { map, takeUntil } from 'rxjs';
+import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
@@ -45,6 +46,20 @@ import { Tramite260217Query } from '../../estados/tramite260217Query.query';
   styleUrl: './contenedor-de-datos-solicitud.component.scss',
 })
 export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
+
+   /**
+   * @property elementosRequeridos
+   * @description Arreglo de campos requeridos para el formulario de datos de la solicitud,
+   * utilizado para propósitos de validación.
+   * @type {string[]}
+   */
+  elementosRequeridos = [
+    'denominacionRazon',
+    'scian',
+    'correoElectronico',
+    'manifesto',
+  ];
+  
   /**
    * @property {Subject<void>} destroyNotifier$
    * @description
@@ -152,13 +167,15 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   constructor(
     private tramite260217Query: Tramite260217Query,
     private tramite260217Store: Tramite260217Store,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef
   ) {
       this.consultaQuery.selectConsultaioState$
         .pipe(
           takeUntil(this.destroyNotifier$),
           map((seccionState) => {
             this.esFormularioSoloLectura = seccionState.readonly;
+            this.cdr.detectChanges();
           })
         )
         .subscribe();
