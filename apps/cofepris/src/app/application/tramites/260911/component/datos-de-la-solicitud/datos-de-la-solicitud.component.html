@@ -77,7 +77,7 @@
           <button
             type="button"
             class="btn btn-primary"
-            (click)="toggleFormControls()"
+            (click)="mostrarModalEstablecimiento()"
             [disabled]="esFormularioSoloLectura || !isRadioButtonSelected"
           >
             Seleccionar establecimiento
@@ -98,6 +98,11 @@
               formControlName="rfcDel"
               (change)="setValorStore(datosDelEstablecimiento,'rfcDel')"
             />
+             <div
+            *ngIf="datosDelEstablecimiento.get('rfcDel')?.invalid && datosDelEstablecimiento.get('rfcDel')?.touched"
+            class="text-danger">
+              El RFC no tiene un formato valido.
+          </div>
           </div>
         </div>
         <div class="col-md-8">
@@ -154,4 +159,20 @@
     </form>
   </div>
 </div>
+</div>
+
+<!-- Modal para Seleccionar establecimiento -->
+<div class="modal" tabindex="-1" [ngClass]="{'show': mostrarModal}" [ngStyle]="{'display': mostrarModal ? 'block' : 'none', 'background': mostrarModal ? 'rgba(0,0,0,0.5)' : 'none'}">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
+    <div class="modal-content">
+      <div class="modal-header">
+      </div>
+      <div class="modal-body text-center">
+        <p>Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.</p>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary" (click)="cerrarModal()">Aceptar</button>
+      </div>
+    </div>
+  </div>
 </div>

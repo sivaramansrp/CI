@@ -90,6 +90,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   isRadioButtonSelected: boolean = false;
 
   /**
+   * Controla la visibilidad del modal de establecimiento.
+   */
+  mostrarModal: boolean = false;
+
+  /**
    * Observable utilizado para gestionar la destrucción de suscripciones y evitar fugas de memoria.
    * Se emite un valor y se completa cuando el componente se destruye.
    * @private
@@ -283,5 +288,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       // Habilitar todos los campos del formulario de datos del establecimiento
       this.datosDelEstablecimiento.enable();
     }
+  }
+
+  /**
+   * Muestra el modal de selección de establecimiento.
+   */
+  mostrarModalEstablecimiento(): void {
+    this.mostrarModal = true;
+  }
+
+  /**
+   * Cierra el modal de selección de establecimiento.
+   */
+  cerrarModal(): void {
+    this.mostrarModal = false;
   }
 }
