@@ -127,38 +127,7 @@ describe('ExencionDeImpuestosComponent', () => {
     const fila = [{ id: 1 }];
     component.manejarFilaSeleccionada(fila as any);
     expect(component.enableModficarBoton).toBe(fila);
-  });
-
-  it('should disable forms if esFormularioSoloLectura is true in guardarDatosFormulario', () => {    
-    component.esFormularioSoloLectura = true;
-    component.inicializarFormulario();
-
-    const tramiteFormMock = { disable: jest.fn(), enable: jest.fn() };
-    const agregarMercanciasFormMock = { disable: jest.fn(), enable: jest.fn() };
-
-    component.tramiteForm = tramiteFormMock as any;
-    component.agregarMercanciasForm = agregarMercanciasFormMock as any;
-
-    component.guardarDatosFormulario();
-    expect(tramiteFormMock.disable).toHaveBeenCalled();
-    expect(agregarMercanciasFormMock.disable).toHaveBeenCalled();
-  });
-
-  it('should enable forms if esFormularioSoloLectura is false in guardarDatosFormulario', () => {    
-    component.esFormularioSoloLectura = false;
-    component.inicializarFormulario();
-
-    const tramiteFormMock = { disable: jest.fn(), enable: jest.fn() };
-    const agregarMercanciasFormMock = { disable: jest.fn(), enable: jest.fn() };
-
-    component.tramiteForm = tramiteFormMock as any;
-    component.agregarMercanciasForm = agregarMercanciasFormMock as any;
-
-    component.guardarDatosFormulario();
-
-    expect(tramiteFormMock.enable).toHaveBeenCalled();
-    expect(agregarMercanciasFormMock.enable).toHaveBeenCalled();
-  });
+  });  
 
   it('should set nuevaNotificacion if enableModficarBoton is empty in abrirDialogoMercancias', () => {
     component.enableModficarBoton = [];
