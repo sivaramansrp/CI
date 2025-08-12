@@ -1,10 +1,15 @@
 import {
   CONFIGURACION_ACCIONISTAS,
+  CONFIGURACION_ANEXOS_IMMEX,
   CONFIGURACION_FEDERETARIOS,
   CONFIGURACION_OPERACIONES,
+  CONFIGURACION_SERVICIOS,
 } from '../../constantes/modificacion.enum';
 import {
   Complimentaria,
+  DatosDelModificacion,
+  DatosDelModificaciondos,
+  DatosImmex,
   Federetarios,
   Operacions,
 } from '../../models/plantas-consulta.model';
@@ -52,13 +57,12 @@ export class DatosComplimentariaComponent implements OnDestroy {
   configuracionFederetios: ConfiguracionColumna<Federetarios>[] =
     CONFIGURACION_FEDERETARIOS;
 
-  /**
-   * Configuración de las columnas de la tabla para las operaciones.
-   * @type {ConfiguracionColumna<Operacions>[]}
-   */
-  configuracionOperacion: ConfiguracionColumna<Operacions>[] =
-    CONFIGURACION_OPERACIONES;
-
+/**
+       * Configuración de las columnas de la tabla para los anexos de importación.
+       * @type {ConfiguracionColumna<DatosImmex>[]}
+       */
+      configuracionTablaImmex: ConfiguracionColumna<DatosImmex>[] =
+        CONFIGURACION_ANEXOS_IMMEX;
   /**
    * Datos de los federetarios obtenidos desde el servicio.
    * @type {Federetarios[]}
@@ -77,6 +81,44 @@ export class DatosComplimentariaComponent implements OnDestroy {
    */
   datosComplimentaria: Complimentaria[] = [];
 
+   /**
+   * Datos de los anexos de fracción obtenidos desde el servicio.
+   * @type {FracciónArancelaria[]}
+   */
+  datosImmex: DatosImmex[] = [];
+
+
+  
+      /**
+     * Datos de las operaciones obtenidos desde el servicio.
+     * @type {Operacions[]}
+     */
+    datosPlanta: Operacions[] = [];
+
+     /**
+       * Arreglo que contiene los datos de modificación relacionados con los servicios.
+       * 
+       * @type {DatosDelModificacion[]}
+       */
+      datosServicios: DatosDelModificacion[] = [];
+
+        /**
+         * Configuración de las columnas de la tabla para las operaciones.
+         * @type {ConfiguracionColumna<Operacions>[]}
+         */
+        configuracionOperacion: ConfiguracionColumna<Operacions>[] =
+          CONFIGURACION_OPERACIONES;
+
+           /**
+             * Configuración de las columnas para los datos de modificación.
+             * 
+             * Esta propiedad utiliza una configuración predefinida (`CONFIGURACION_SERVICIOS`)
+             * para definir las columnas que se mostrarán en el componente. 
+             * Cada columna está configurada utilizando el tipo `ConfiguracionColumna<DatosDelModificacion>`.
+             */
+            configuracionServicios: ConfiguracionColumna<DatosDelModificacion>[] =
+              CONFIGURACION_SERVICIOS;
+
   constructor(
     public modificionService: ModificacionSolicitudeService,
     private toastr: ToastrService
@@ -84,6 +126,8 @@ export class DatosComplimentariaComponent implements OnDestroy {
     this.obtenerFederetarios(); // Carga los federetarios.
     this.obtenerOperacions(); // Carga las operaciones.
     this.obtenerComplimentaria(); // Carga los datos de complimentaria.
+    this.obtenerImmexdata(); // Carga los datos de anexos.
+    this.obtenerServicios(); // Carga los datos de servicios.
   }
 
 
@@ -141,6 +185,46 @@ export class DatosComplimentariaComponent implements OnDestroy {
       );
   }
 
+   /**
+   * Método que obtiene los anexos complementarios desde el servicio.
+   * Asigna los datos a las variables `datosAnexo` y `datosImportacion`.
+   */
+  obtenerImmexdata(): void {
+    this.modificionService
+      .obtenerImmex() // Llama al servicio para obtener los anexos.
+      .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando el componente se destruye.
+      .subscribe(
+        (data: DatosImmex[]) => {
+          this.datosImmex = [...data]; // Almacena los datos de anexos complementarios.
+        },
+        () => {
+          this.toastr.error('Error al cargar los anexos'); // Manejo de errores.
+        }
+      );
+  }
+
+  /**
+     * Obtiene los servicios relacionados con la solicitud actual.
+     * 
+     * Este método realiza una llamada al servicio `solicitudService` para obtener
+     * los datos de las operaciones y los almacena en la propiedad `datosServicios`.
+     * Además, gestiona la suscripción para que se cancele automáticamente cuando
+     * el componente se destruya, evitando posibles fugas de memoria.
+     * 
+     * En caso de error durante la obtención de los datos, se muestra un mensaje
+     * de error al usuario utilizando el servicio `toastr`.
+     * 
+     * @returns {void} Este método no devuelve ningún valor.
+     */
+    obtenerServicios(): void {
+      this.modificionService.obtenerServicios().pipe(takeUntil(this.destroyNotifier$)).subscribe((data: DatosDelModificaciondos[]) => {
+            this.datosServicios = [...data]; // Almacena los datos de operaciones.
+          },
+          () => {
+            this.toastr.error('Error al cargar las operaciones'); // Manejo de errores.
+          }
+        );
+    }
   /**
    * Método que se ejecuta cuando el componente es destruido.
    * Notifica a todos los observables que deben completarse y limpia las suscripciones.
