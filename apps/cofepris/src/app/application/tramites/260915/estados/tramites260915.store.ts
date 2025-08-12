@@ -1,7 +1,7 @@
 import { FilaData, FilaData2, ListaClave } from '../models/fila-modal';
 import { Store, StoreConfig } from '@datorama/akita';
+import { Destinatario } from '../models/destinatario.model';
 import { Injectable } from '@angular/core';
-
 /**
  * Interfaz que define el estado de la solicitud 260915.
  * Contiene todas las propiedades necesarias para gestionar los datos del trámite.
@@ -27,6 +27,8 @@ export interface Solicitud260915State {
   primerApellido: string;
   /** Segundo apellido de la persona */
   segundoApellido: string;
+  /** RFC del responsable sanitario */
+  rfcdelResponsableSanitario: string;
   /** Denominación o razón social */
   denominacion: string;
   /** País de residencia */
@@ -119,7 +121,18 @@ export interface Solicitud260915State {
   LosDatosNotifier: string;
   /** Indica si existen manifiestos */
   maniFestos: boolean;
-}
+
+  tableData: FilaData[];
+
+  proveedorDatos: Destinatario[];
+  
+  fabricanteDatos: Destinatario[];
+  
+  destinatarioDatos: Destinatario[];
+  
+  facturadorDatos: Destinatario[];
+
+  }
 
 /**
  * Función para crear el estado inicial de la solicitud 260915.
@@ -149,6 +162,8 @@ export function createInitialSolicitudState(): Solicitud260915State {
     primerApellido: '',
     /** Segundo apellido de la persona */
     segundoApellido: '',
+    /** RFC del responsable sanitario */
+    rfcdelResponsableSanitario: '',
     /** Denominación o razón social */
     denominacion: '',
     /** País de residencia */
@@ -241,6 +256,16 @@ export function createInitialSolicitudState(): Solicitud260915State {
     LosDatosNotifier: '',
     /** Indica si existen manifiestos */
     maniFestos: false,
+    
+    tableData: [],
+    
+    proveedorDatos: [],
+    
+    fabricanteDatos: [],
+    
+    destinatarioDatos: [],
+    
+    facturadorDatos: [],
   };
 }
 

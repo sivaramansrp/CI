@@ -2,9 +2,9 @@
     "pagoDerechos":{
         "claveReferencia": "1234567890",
         "cadenaDependencia": "DEP123456",
-        "estado": "2",
+        "estado": 1,
         "llavePago": "LLAVE987654",
-        "fechaPago": "2024-06-20",
+        "fechaPago": "20/06/2024",
         "importePago": "1500.00",
         "banco": "Banco Ejemplo"
     },
@@ -26,7 +26,7 @@
         "regimen": "102",
         "adunasDeEntradas": "102",
         "aeropuerto": true,
-        "publico": "no",
+        "publico": "No",
         "representanteRfc": "REP123456789",
         "representanteNombre": "Juan",
         "apellidoPaterno": "Pérez",

@@ -41,7 +41,7 @@ export class PermisoSanitarioDispositivosMedicosService {
    * Obtiene los datos de las descripciones de claves desde un archivo JSON.
    * @returns Observable con la lista de descripciones de claves.
    */
-  getClaveDescripcionDelData(): Observable<Catalogo[]> {
+  getClaveDescripcionDelData(_claveScianId: string | undefined): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('./assets/json/260915/clavedescripciondel.json');
   }
 

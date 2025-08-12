@@ -22,7 +22,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-acuicola',
   templateUrl: './acuicola.component.html',
-  styleUrl: './acuicola.component.css',
+  styleUrl: './acuicola.component.scss',
 })
 export class AcuicolaComponent implements OnDestroy{
   /**

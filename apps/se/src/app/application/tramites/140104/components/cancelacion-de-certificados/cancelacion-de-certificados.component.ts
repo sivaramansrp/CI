@@ -227,12 +227,12 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
  if (!this.formularioGrupo.valid) {
       this.servicioDeMensajesService.establecerMostrarAlerta(true);
     } else {
-      this.servicioDeMensajesService.establecerMostrarAlerta(false);
-    }
+      this.servicioDeMensajesService.establecerMostrarAlerta(false);    
     this.mostrarDetalleDelCupo = true;
     this.cuposDisponiblesTabla = [cuposDisponiblesDatos as CuposDisponibles];
     this.CertificadosDisponiblesTabla = [certificadosDisponiblesDatos as CertificadosDisponibles];
     this.CertificadosACancelarTabla = [certificadosACancelarDatos as CertificadosDisponibles];
+    }
   }
 
   /**

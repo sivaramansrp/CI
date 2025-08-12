@@ -15,7 +15,7 @@
                 [catalogo]="item.props.catalogos"
                 [label]="item.props.labelNombre"
                 [required]="true"
-                formControlName=item.props.campo
+                [formControlName]="item.props.campo"
                 name="item.props.campo"
                 (change)="seleccionCatalogo(fieldGroup.formGroupName, item.props.campo, $event)"
               ></app-catalogo-select>

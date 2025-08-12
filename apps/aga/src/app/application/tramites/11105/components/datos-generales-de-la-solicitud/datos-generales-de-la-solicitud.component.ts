@@ -394,6 +394,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
         aduana: [{ value: this.solicitudState?.aduana, disabled: true }],
         organismoPublico: [{ value: this.solicitudState?.organismoPublico, disabled: true }],
         nombre: [{ value:this.solicitudState?.nombre, disabled: true }],
+        personaFisica: [{ value: this.solicitudState?.personaFisica, disabled: true }],
         tipoMercancia: [
           { value: this.solicitudState?.tipoMercancia, disabled: true },
           [Validators.required, Validators.maxLength(100)],

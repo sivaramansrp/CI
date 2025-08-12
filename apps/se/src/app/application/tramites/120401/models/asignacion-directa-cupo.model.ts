@@ -22,7 +22,7 @@ export interface SeleccionDelCupoTabla {
   nombreProducto: string;
 
   /**
-   * El nombre del subproducto relacionado con el producto principal.
+   * El nombre del nombreSubproducto relacionado con el producto principal.
    * @type {string}
    */
   nombreSubproducto: string;

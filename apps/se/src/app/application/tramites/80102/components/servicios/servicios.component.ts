@@ -5,6 +5,8 @@ import {
   CatalogosService,
   ConsultaioQuery,
   FormularioDinamico,
+  Notificacion,
+  NotificacionesComponent,
   SelectPaisesComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
@@ -55,6 +57,7 @@ const ENTIDADFEDERATIVA = 'entidadFederativaEmpresaExt';
     TablaDinamicaComponent,
     TituloComponent,
     SelectPaisesComponent,
+    NotificacionesComponent
   ],
   templateUrl: './servicios.component.html',
   styleUrl: './servicios.component.scss',
@@ -67,6 +70,31 @@ const ENTIDADFEDERATIVA = 'entidadFederativaEmpresaExt';
  * @export ServiciosComponent
  */
 export class ServiciosComponent implements OnInit, OnDestroy {
+  /**
+       * @description
+       * Objeto que representa una nueva notificación para RFC.
+       * Se utiliza para mostrar mensajes de alerta o información al usuario.
+       */
+      public nuevaNotificacionRfc: Notificacion | null = null;
+
+  /**
+   * @description
+   * Objeto que representa una notificación de confirmación para agregar servicios.
+   * Se utiliza para mostrar modal de confirmación al usuario.
+   */
+  public notificacionAgregarServicio!: Notificacion;
+
+  /**
+   * @description
+   * Bandera que indica si se debe mostrar la notificación de agregar servicio.
+   */
+  public mostrarNotificacionAgregar: boolean = false;
+
+  /**
+   * Tipo de acción del modal de confirmación ('agregar' | 'eliminar')
+   */
+  public tipoAccionModal: 'agregar' | 'eliminar' = 'agregar';
+
   /**
    * Índice de la pestaña.
    * @property {number} tabindex
@@ -425,10 +453,94 @@ export class ServiciosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Elimina servicios del grid.
+   * Elimina servicios del grid con confirmación.
    * @method eliminarServiciosGrid
    */
   eliminarServiciosGrid(): void {
+    // Validar si hay un servicio seleccionado
+    if (!this.domiciliosSeleccionados || this.domiciliosSeleccionados.length === 0) {
+      this.mostrarNotificacionError('Introduzca un RFC válido.');
+      return;
+    }
+
+    // Configurar modal para eliminación
+    this.tipoAccionModal = 'eliminar';
+    this.notificacionAgregarServicio = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Debe seleccionar un servicio.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.mostrarNotificacionAgregar = true;
+  }
+
+  /**
+   * Agrega servicios a la ampliación con confirmación modal.
+   * @method agregarServiciosAmpliacion
+   */
+  agregarServiciosAmpliacion(): void {
+    // Verificar si hay datos seleccionados
+    if (!this.recibioDatos || this.recibioDatos.length === 0) {
+      this.mostrarNotificacionError('Estás seguro de que quieres agregar el(los) servicio(s) seleccionado(s)?');
+      return;
+    }
+
+    // Configurar modal para agregar
+    this.tipoAccionModal = 'agregar';
+    this.notificacionAgregarServicio = {
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'action',
+      titulo: 'Confirmar adición',
+      mensaje: '¿Está seguro de agregar el(los) servicio(s) seleccionado(s)?',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+    this.mostrarNotificacionAgregar = true;
+  }
+
+  /**
+   * Maneja la confirmación del modal según el tipo de acción.
+   * @param {boolean} confirmado - Indica si el usuario confirmó la acción.
+   * @returns {void}
+   */
+  manejarConfirmacion(confirmado: boolean): void {
+    this.mostrarNotificacionAgregar = false;
+    
+    if (confirmado) {
+      if (this.tipoAccionModal === 'agregar') {
+        this.ejecutarAgregarServicio();
+      } else if (this.tipoAccionModal === 'eliminar') {
+        this.ejecutarEliminarServicio();
+      }
+    }
+  }
+
+  /**
+   * Ejecuta la acción de agregar servicio.
+   * @returns {void}
+   */
+  private ejecutarAgregarServicio(): void {
+    const CUERPODATOS = {
+      descripionDelServicio: this.recibioDatos[0].descripcion,
+      tipode: this.recibioDatos[0].tipode,
+    };
+    this.Tramite80102Store.setDatosImmex([...this.datosImmex, CUERPODATOS]);
+    this.mostrarNotificacionExito('¿Está seguro de agregar el(los) servicio(s) seleccionado(s)?');
+  }
+
+  /**
+   * Ejecuta la acción de eliminar servicio.
+   * @returns {void}
+   */
+  private ejecutarEliminarServicio(): void {
     const INDICE = this.datosImmex.findIndex(
       (item: Servicio) =>
         item.descripionDelServicio ===
@@ -438,21 +550,61 @@ export class ServiciosComponent implements OnInit, OnDestroy {
       const DATOS_IMMEX_ACTUALIZADOS = [...this.datosImmex];
       DATOS_IMMEX_ACTUALIZADOS.splice(INDICE, 1);
       this.Tramite80102Store.setDatosImmex(DATOS_IMMEX_ACTUALIZADOS);
+      
+      // Limpiar selección
+      this.domiciliosSeleccionados = [];
+
+      this.mostrarNotificacionExito('¿Está seguro de eliminar el servicio seleccionado?');
     }
   }
 
   /**
-   * Agrega servicios a la ampliación.
-   * @method agregarServiciosAmpliacion
+   * Muestra una notificación de éxito.
+   * @param {string} mensaje - Mensaje a mostrar.
+   * @returns {void}
    */
-  agregarServiciosAmpliacion(): void {
-    const CUERPODATOS = {
-      descripionDelServicio: this.recibioDatos[0].descripcion,
-      tipode: this.recibioDatos[0].tipode,
+  private mostrarNotificacionExito(mensaje: string): void {
+    this.nuevaNotificacionRfc = {
+      tipoNotificacion: 'alert',
+      categoria: 'success',
+      modo: 'info',
+      titulo: 'Operación exitosa',
+      mensaje: mensaje,
+      ttl: '',
+      cerrar: true,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar'
     };
-    this.Tramite80102Store.setDatosImmex([...this.datosImmex, CUERPODATOS]);
   }
 
+  /**
+   * Muestra una notificación de error.
+   * @param {string} mensaje - Mensaje a mostrar.
+   * @returns {void}
+   */
+  private mostrarNotificacionError(mensaje: string): void {
+    this.nuevaNotificacionRfc = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'error',
+      titulo: '',
+      mensaje: mensaje,
+      ttl: '',
+      cerrar: true,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: ''
+    };
+  }
+
+  /**
+   * Maneja la confirmación de la notificación RFC.
+   * @param {boolean} _confirmado - Indica si el usuario confirmó.
+   * @returns {void}
+   */
+  confirmarNotificacionRfc(_confirmado: boolean): void {
+    // Limpiar la notificación
+    this.nuevaNotificacionRfc = null;
+  }
   /**
    * Elimina empresas nacionales.
    * @method eliminarEmpresasNacionales
@@ -545,6 +697,23 @@ export class ServiciosComponent implements OnInit, OnDestroy {
     this.Tramite80102Store.agregarDdatosEmpresaExtranjera(
       this.formularioEmpresaExtranjera.value
     );
+  }
+
+  /**
+   * Converts input to uppercase for specific fields
+   * @param {string} fieldName - The name of the field
+   * @param {Event} event - The input event
+   */
+  onInputChange(fieldName: string, event: Event): void {
+    const TARGET = event.target as HTMLInputElement;
+    const VALUE = TARGET.value;
+
+    if (fieldName === 'nombreEmpresaExt' || fieldName === 'direccionEmpresaExtranjera') {
+      const UPPER_CASE_VALUE = VALUE.toUpperCase();
+      this.formularioEmpresaExtranjera.patchValue({
+        [fieldName]: UPPER_CASE_VALUE
+      });
+    }
   }
 
    /**

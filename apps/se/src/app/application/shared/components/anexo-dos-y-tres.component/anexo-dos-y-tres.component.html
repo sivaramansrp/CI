@@ -32,7 +32,6 @@ Contenedores, cajas de trailer:</label>
             <label>Descripción anexo II:</label>
         </div>
         <div class="row mt-5">
-            <h2>Descripción anexo II:</h2>
             <app-tabla-dinamica [tipoSeleccionTabla]="anexo1y3Configuartion.anexoDosTablaSeleccionCheckbox" 
              [configuracionTabla]="anexo1y3Configuartion.anexoDosEncabezadoDeTabla"
              [datos]="anexoDosTablaLista"
@@ -76,7 +75,6 @@ Contenedores, cajas de trailer:</label>
             <label>Descripción anexo III:</label>
         </div>
         <div class="row mt-5">
-            <h2>Descripción anexo III:</h2>
             <app-tabla-dinamica [tipoSeleccionTabla]="anexo1y3Configuartion.anexoTresTablaSeleccionCheckbox" 
              [configuracionTabla]="anexo1y3Configuartion.anexoTresEncabezadoDeTabla"
              [datos]="anexoTresTablaLista"
@@ -84,6 +82,7 @@ Contenedores, cajas de trailer:</label>
              [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
              ></app-tabla-dinamica>
         </div>
+        <button class="btn btn-primary mt-5 pull-right" >Guardar</button>
     </form>
 </div>
 @if (nuevaDosNotificacion && nuevaDosNotificacion.cerrar) {

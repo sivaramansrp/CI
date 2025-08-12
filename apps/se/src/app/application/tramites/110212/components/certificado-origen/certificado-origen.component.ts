@@ -150,6 +150,20 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
   TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
 
   /**
+   * Indica si el formulario tiene errores de validación.
+   *
+   * Se utiliza para mostrar/ocultar el alert de errores en el modal.
+   */
+  esFormaValido: boolean = false;
+
+  /**
+   * Mensaje de error del formulario para mostrar en el alert.
+   *
+   * Contiene el HTML del mensaje de error a mostrar cuando hay validaciones fallidas.
+   */
+  formErrorAlert: string = '<strong>¡Error de registro! </strong> Faltan campos por capturar';
+
+  /**
    * Referencia al elemento del modal para gestionar archivos.
    *
    * Se utiliza para abrir o cerrar el modal de archivos.
@@ -826,7 +840,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * Resetea el estado de validación del formulario de mercancía.
    * 
    * Este método marca todos los controles como no tocados y pristinos,
-   * eliminando así las indicaciones visuales de validación.
+   * eliminando así las indicaciones visuales de validación y el alert de error.
    */
   private resetearEstadoValidacionFormulario(): void {
     if (this.formularioMercancia) {
@@ -838,6 +852,9 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
         }
       });
     }
+    
+    // Ocultar el alert de error
+    this.esFormaValido = false;
   }
 
   /**
@@ -930,8 +947,15 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
           CONTROL.markAsTouched();
         }
       });
+      
+      // Activar la bandera para mostrar el alert de error
+      this.esFormaValido = true;
+      
       return; // Salir de la función si el formulario es inválido
     }
+
+    // Si el formulario es válido, ocultar el alert de error
+    this.esFormaValido = false;
 
     const FORM_VALUES = formularioMercancia.value;
 
