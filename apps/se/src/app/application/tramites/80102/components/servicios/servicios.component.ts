@@ -547,6 +547,23 @@ export class ServiciosComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Converts input to uppercase for specific fields
+   * @param {string} fieldName - The name of the field
+   * @param {Event} event - The input event
+   */
+  onInputChange(fieldName: string, event: Event): void {
+    const TARGET = event.target as HTMLInputElement;
+    const VALUE = TARGET.value;
+
+    if (fieldName === 'nombreEmpresaExt' || fieldName === 'direccionEmpresaExtranjera') {
+      const UPPER_CASE_VALUE = VALUE.toUpperCase();
+      this.formularioEmpresaExtranjera.patchValue({
+        [fieldName]: UPPER_CASE_VALUE
+      });
+    }
+  }
+
    /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.

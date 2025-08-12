@@ -157,6 +157,9 @@
           type="text"
           id="{{ item.campo }}"
           [formControlName]="item.campo"
+          [maxlength]="item.maxlength || null"
+          (input)="item.campo === 'nombreEmpresaExt' ? onInputChange(item.campo, $event) : null"
+          [disabled]="esFormularioSoloLectura"
         />
       </div>
       } @else if (item.tipo_input === 'select') {
@@ -175,9 +178,12 @@
         <label for="{{ item.campo }}">{{ item.labelNombre }}:</label>
         <textarea
           class="form-control"
-          id="{{ item.labelNombre }}"
+          id="{{ item.campo }}"
           rows="15"
           [formControlName]="item.campo"
+          [maxlength]="item.maxlength || null"
+          (input)="item.campo === 'direccionEmpresaExtranjera' ? onInputChange(item.campo, $event) : null"
+          [disabled]="esFormularioSoloLectura"
         ></textarea>
       </div>
       } }

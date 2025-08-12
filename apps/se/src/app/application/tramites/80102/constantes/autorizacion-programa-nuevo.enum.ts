@@ -180,6 +180,7 @@ export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
     tipo_input: 'text',
     required: true,
     orden: 1,
+    maxlength: 50
   },
   {
     labelNombre: 'Nombre del empresa',
@@ -188,6 +189,7 @@ export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
     tipo_input: 'text',
     required: true,
     orden: 2,
+    maxlength: 100
   },
   {
     labelNombre: 'País',
@@ -205,6 +207,7 @@ export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
     tipo_input: 'textarea',
     required: true,
     orden: 4,
+    maxlength: 300
   },
 ];
 
