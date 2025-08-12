@@ -1,15 +1,13 @@
 import { BtnContinuarComponent, DatosPasos, FirmaElectronicaComponent,ListaPasosWizard,WizardComponent} from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { map,takeUntil, } from 'rxjs';
+import { Subject,map,takeUntil, } from 'rxjs';
+
+import { PASOS,TEXTOS } from '../../constants/cancelaciones.enum';
+import { Tramite140205State,Tramite140205Store } from '../../../../estados/tramites/tramite140205.store';
 import { AccionBoton } from '../../model/cancelaciones-certificado.model';
 import { CommonModule } from '@angular/common';
-import { PASOS } from '../../constants/cancelaciones.enum';
 import { PasoUnoComponent } from '../../../140205/pages/paso-uno/paso-uno.component';
-import { Subject } from 'rxjs';
-import { TEXTOS } from '../../constants/cancelaciones.enum';
 import { Tramite140205Query } from '../../../../estados/queries/tramite140205.query';
-import { Tramite140205State } from '../../../../estados/tramites/tramite140205.store';
-import { Tramite140205Store } from '../../../../estados/tramites/tramite140205.store';
 
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 
