@@ -29,9 +29,10 @@ import {
 } from '@angular/forms';
 import { Subject, Subscription, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { DatosMercancia } from '../../models/importador-exportador.model';
+import { DatosMercancia, RespuestaCatalog } from '../../models/importador-exportador.model';
 import { ImportadorExportadorService } from '../../services/importador-exportador.service';
 import { Tramite10301Query } from '../../estados/tramite10301.query';
+import { Solicitud10301Service } from '../../services/solicitud10301.service';
 
 /**
  * Texto de adjuntar para terceros.
@@ -341,7 +342,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     private store: Tramite10301Store,
     private query: Tramite10301Query,
     private fb: FormBuilder,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private solicitud10301Service: Solicitud10301Service
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -428,6 +430,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         };
       })
     );
+    this.loadDatosTablaData();
   }
 
   /**
@@ -450,6 +453,19 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     { label: 'Sí', value: 'sí' },
     { label: 'No', value: 'no' },
   ];
+
+  /**
+   * Cargar datos de la tabla.
+   */
+  loadDatosTablaData(): void {
+    this.solicitud10301Service
+      .getDatosTableData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data: RespuestaCatalog[]) => {
+        this.mercanciaDatos = data as unknown as DatosMercancia[];
+      });
+  }
+
   /**
    * Cambia el valor seleccionado del radio.
    * @param value Valor seleccionado.

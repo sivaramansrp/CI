@@ -3,7 +3,7 @@ import { ENVIRONMENT } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RespuestaConsulta } from '../models/importador-exportador.model';
+import { RespuestaCatalog, RespuestaConsulta } from '../models/importador-exportador.model';
 
 /**
  * Servicio encargado de gestionar los datos del trámite 10301.
@@ -65,4 +65,13 @@ export class Solicitud10301Service {
       'assets/json/10301/datos-del-tramite.json'
     );
   }
+
+  /**
+   * Obtiene los datos para mostrar en la tabla.
+   * @returns Un observable con la respuesta de los catálogos de datos de la tabla.
+   */
+  getDatosTableData(): Observable<RespuestaCatalog[]> {
+    return this.http.get<RespuestaCatalog[]>(`assets/json/11204/datosTabla.json`);
+  }
+  
 }
