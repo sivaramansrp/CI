@@ -80,3 +80,9 @@ export const TEXTOS_REQUISITOS =
  * @constant {number}
  */
 export const ID_PROCEDIMIENTO = 260214;
+
+/**
+ * Mensaje de validación que solicita confirmación al usuario
+ * sobre la ausencia de datos relacionados con el pago de derechos.
+ */
+export const MENSAJE_DE_VALIDACION = '¿Está seguro que su solicitud no requiere los datos del Pago de derechos?';

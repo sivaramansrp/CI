@@ -2,7 +2,7 @@
  * @fileoverview
  * El `ContenedorDeDatosSolicitudComponent` es un componente de Angular diseñado para gestionar la configuración y los datos relacionados con la solicitud del trámite 260214.
  * Este componente interactúa con el estado del trámite a través del store `Tramite260214Store` y la consulta `Tramite260214Query`.
- * 
+ *
  * @module ContenedorDeDatosSolicitudComponent
  * @description
  * Este componente actúa como un contenedor para gestionar las tablas de opciones, SCIAN y mercancías, y permite la actualización de datos seleccionados en dichas tablas.
@@ -27,7 +27,7 @@ import {
   Tramite260214State,
   Tramite260214Store,
 } from '../../estados/tramite260214Store.store';
-import { map,takeUntil} from 'rxjs';
+import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
@@ -149,6 +149,13 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * Identificador único del procedimiento.
    */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
+
+  /**
+   * Lista de elementos que son obligatorios para completar el formulario.
+   * Actualmente incluye solo el campo 'correoElectronico', pero se puede expandir
+   * según los requisitos del sistema.
+   */
+  elementosRequeridos: string[] = ['correoElectronico','denominacionRazon','scian'];
 
   /**
    * @constructor
