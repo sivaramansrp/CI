@@ -12,6 +12,7 @@
             formControlName="entidadFederativa"
             [isDisabled]="esFormularioSoloLectura"
             (selectionChange)="procesarDatosDelHijo($event)"
+            [placeholder]="'Seleccione una opción'"
           ></app-catalogo-select>
         </form>
       </div>
@@ -68,6 +69,7 @@
           [(ngModel)]="rfcEmpresa"
           name="rfdecontri"
           class="form-control"
+          maxlength="13"
           [disabled]="esFormularioSoloLectura"
           (ngModelChange)="enCambioDeCampo('rfcEmpresa', $event)"
         />
@@ -221,3 +223,22 @@
     </div>
   </div>
 </div>
+<!-- Confirmation Modal for Adding Service -->
+@if (mostrarNotificacionAgregar && notificacionAgregarServicio) {
+<section>
+  <lib-notificaciones 
+    [notificacionInput]="notificacionAgregarServicio" 
+    (confirmacionModal)="confirmarAgregarServicio($event)">
+  </lib-notificaciones>
+</section>
+}
+
+<!-- RFC Validation Notification -->
+@if (nuevaNotificacionRfc) {
+<section>
+  <lib-notificaciones 
+    [notificacionInput]="nuevaNotificacionRfc" 
+    (confirmacionModal)="confirmarNotificacionRfc($event)">
+  </lib-notificaciones>
+</section>
+}

@@ -19,6 +19,7 @@ export interface ServicioInmex {
  */
 
 export interface Servicio {
+  clave?: string;
   descripionDelServicio?: string;
   descripcion?: string;
   tipode?: string;

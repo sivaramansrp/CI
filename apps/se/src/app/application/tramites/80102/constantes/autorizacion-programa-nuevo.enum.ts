@@ -88,7 +88,7 @@ export const CONFIGURACION_DOMICILIOS = [
     orden: 4,
   },
   {
-    encabezado: 'Año del programa IMMEXad',
+    encabezado: 'Año del programa IMMEX',
     clave: (ele: ServicioInmex): string | undefined => ele.anoIMMEX,
     orden: 5,
   },
@@ -107,6 +107,12 @@ export const CONFIGURACION_DOMICILIOS = [
  * 
  * **/
 export const CONFIGURACION_SERVICIO_IMMEX = [
+
+    {
+    encabezado: 'Clave',
+    clave: (ele: Servicio): string | undefined => ele.clave,
+    orden: 1,
+  },
   {
     encabezado: 'Descripión del servicio',
     clave: (ele: Servicio): string | undefined => ele.descripionDelServicio,
@@ -197,7 +203,7 @@ export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
     class: 'col-md-10 col-10',
     tipo_input: 'select',
     required: true,
-    opciones: [],
+    opcionesCatalogo: [], // Use this instead of opciones
     orden: 3,
   },
   {

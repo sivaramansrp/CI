@@ -5,6 +5,8 @@ import {
   CatalogosService,
   ConsultaioQuery,
   FormularioDinamico,
+  Notificacion,
+  NotificacionesComponent,
   SelectPaisesComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
@@ -55,6 +57,7 @@ const ENTIDADFEDERATIVA = 'entidadFederativaEmpresaExt';
     TablaDinamicaComponent,
     TituloComponent,
     SelectPaisesComponent,
+    NotificacionesComponent
   ],
   templateUrl: './servicios.component.html',
   styleUrl: './servicios.component.scss',
@@ -67,6 +70,26 @@ const ENTIDADFEDERATIVA = 'entidadFederativaEmpresaExt';
  * @export ServiciosComponent
  */
 export class ServiciosComponent implements OnInit, OnDestroy {
+  /**
+     * @description
+     * Objeto que representa una nueva notificación para RFC.
+     * Se utiliza para mostrar mensajes de alerta o información al usuario.
+     */
+    public nuevaNotificacionRfc!: Notificacion;
+
+  /**
+   * @description
+   * Objeto que representa una notificación de confirmación para agregar servicios.
+   * Se utiliza para mostrar modal de confirmación al usuario.
+   */
+  public notificacionAgregarServicio!: Notificacion;
+
+  /**
+   * @description
+   * Bandera que indica si se debe mostrar la notificación de agregar servicio.
+   */
+  public mostrarNotificacionAgregar: boolean = false;
+
   /**
    * Índice de la pestaña.
    * @property {number} tabindex
@@ -442,15 +465,97 @@ export class ServiciosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Agrega servicios a la ampliación.
+   * Agrega servicios a la ampliación con confirmación modal.
    * @method agregarServiciosAmpliacion
    */
   agregarServiciosAmpliacion(): void {
-    const CUERPODATOS = {
-      descripionDelServicio: this.recibioDatos[0].descripcion,
-      tipode: this.recibioDatos[0].tipode,
+    // Verificar si hay datos seleccionados
+    if (!this.recibioDatos || this.recibioDatos.length === 0) {
+      this.mostrarNotificacionError('¿Está seguro de agregar el(los) servicio(s) seleccionado(s)?');
+      return;
+    }
+
+    // Mostrar modal de confirmación
+    this.notificacionAgregarServicio = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: '¿Estás seguro de que quieres eliminar?',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
     };
-    this.Tramite80102Store.setDatosImmex([...this.datosImmex, CUERPODATOS]);
+    this.mostrarNotificacionAgregar = true;
+  }
+
+  /**
+   * Maneja la confirmación del modal para agregar servicios.
+   * @param {boolean} confirmado - Indica si el usuario confirmó la acción.
+   * @returns {void}
+   */
+  confirmarAgregarServicio(confirmado: boolean): void {
+    this.mostrarNotificacionAgregar = false;
+    
+    if (confirmado) {
+      const CUERPODATOS = {
+        descripionDelServicio: this.recibioDatos[0].descripcion,
+        tipode: this.recibioDatos[0].tipode,
+      };
+      this.Tramite80102Store.setDatosImmex([...this.datosImmex, CUERPODATOS]);
+      
+      // Mostrar notificación de éxito
+      this.mostrarNotificacionExito('Servicio agregado exitosamente.');
+    }
+  }
+
+  /**
+   * Muestra una notificación de éxito.
+   * @param {string} mensaje - Mensaje a mostrar.
+   * @returns {void}
+   */
+  private mostrarNotificacionExito(mensaje: string): void {
+    this.nuevaNotificacionRfc = {
+      tipoNotificacion: 'alert',
+      categoria: 'success',
+      modo: 'info',
+      titulo: 'Operación exitosa',
+      mensaje: mensaje,
+      ttl: '',
+      cerrar: true,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: ''
+    };
+  }
+
+  /**
+   * Muestra una notificación de error.
+   * @param {string} mensaje - Mensaje a mostrar.
+   * @returns {void}
+   */
+  private mostrarNotificacionError(mensaje: string): void {
+    this.nuevaNotificacionRfc = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'error',
+      titulo: '',
+      mensaje: mensaje,
+      ttl: '',
+      cerrar: true,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar'
+    };
+  }
+
+  /**
+   * Maneja la confirmación de la notificación RFC.
+   * @param {boolean} confirmado - Indica si el usuario confirmó.
+   * @returns {void}
+   */
+  confirmarNotificacionRfc(confirmado: boolean): void {
+    // Limpiar la notificación
+    this.nuevaNotificacionRfc = null as any;
   }
 
   /**
