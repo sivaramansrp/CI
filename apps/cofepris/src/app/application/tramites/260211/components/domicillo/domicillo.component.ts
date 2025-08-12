@@ -183,6 +183,7 @@ eliminarMercanciaSeleccionados() :void{
   this.mercanciasTablaDatos = this.mercanciasTablaDatos.filter(
     (row) => !this.selectedRowsEvent.includes(row)
   );
+  // Reinicia el arreglo de eventos de filas seleccionadas, dejándolo vacío.
   this.selectedRowsEvent = [];
   // Indica que ningún elemento ha sido seleccionado
   this.noSeleccionado = true;
