@@ -184,6 +184,7 @@ eliminarMercanciaSeleccionados() :void{
     (row) => !this.selectedRowsEvent.includes(row)
   );
   this.selectedRowsEvent = [];
+  // Indica que ningún elemento ha sido seleccionado
   this.noSeleccionado = true;
 }
   /**
@@ -361,11 +362,9 @@ modificarMercancia():void {
       r => r.numeroRegistro === ROW.numeroRegistro // Use a unique property
     );
     this.formMercancias.patchValue(ROW);
+    // Indica que ningún elemento ha sido seleccionado
      this.noSeleccionado = true;
 
-
-    // Optionally, open the modal programmatically if not using data-bs-toggle
-    // document.getElementById('modalAddAgentMercancias')?.click();
   }
 }
 /**
@@ -417,6 +416,7 @@ agregarFilaMercancia():void {
       UPDATED[this.editMercanciaIndex] = MERCANCIA_DATA;
       this.mercanciasTablaDatos = UPDATED;
       this.editMercanciaIndex = null;
+      // Reinicia la lista de filas seleccionadas, dejándola vacía.
       this.selectedRowsEvent = [];
     } else {
       this.mercanciasTablaDatos = [...this.mercanciasTablaDatos, MERCANCIA_DATA];
