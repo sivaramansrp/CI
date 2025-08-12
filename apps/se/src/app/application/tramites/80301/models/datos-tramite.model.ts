@@ -150,4 +150,25 @@ export interface DatosDelModificacion {
   razonSocial?: string;
   /** Estatus descriptivo (ej. 'Activo', 'Inactivo') */
   desEstatus?: string;
+  /** Descripción del domicilio o del trámite */
+   descripcion?: string;
+  /** Tipo de servicio relacionado con el trámite */
+  tipoDeServicio?: string;
+}
+
+/**
+ * Estructura que representa los datos de un servicio específico
+ * dentro del trámite de modificación del programa IMMEX.
+ */
+export interface DatosDelServicios {
+  /** ID del servicio */
+  id?: number;
+  /** Estatus descriptivo del servicio */
+  desEstatus?: string;
+  /** Descripción del servicio */
+  descripcion?: string;
+  /** Tipo de servicio relacionado con el trámite */
+  tipoDeServicio?: string;
+  /** Estado del servicio */
+  estado?: string;
 }
