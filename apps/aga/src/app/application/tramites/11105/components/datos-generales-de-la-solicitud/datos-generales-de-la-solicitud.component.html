@@ -11,7 +11,7 @@
         <div class="row mt-5">
           <div class="col-md-8">
             <app-catalogo-select [catalogo]="aduana.catalogos" [label]="aduana.labelNombre"
-              [placeholder]="aduana.primerOpcion" id="aduana" formControlName="aduana"
+              id="aduana" formControlName="aduana"
               [isDisabled]="true" (change)="setValoresStore(tramiteForm, 'aduana', 'setAduana')">
             </app-catalogo-select>
           </div>
@@ -31,7 +31,7 @@
         <div class="row mt-5">
           <div class="col-md-8">
             <app-catalogo-select [catalogo]="propositoDeLaMercancia.catalogos"
-              [label]="propositoDeLaMercancia.labelNombre" [placeholder]="propositoDeLaMercancia.primerOpcion" id="tipoMercancia" formControlName="tipoMercancia" [isDisabled]="true" (change)="setValoresStore(tramiteForm, 'tipoMercancia', 'setTipoMercancia')">
+              [label]="propositoDeLaMercancia.labelNombre" id="tipoMercancia" formControlName="tipoMercancia" [isDisabled]="true" (change)="setValoresStore(tramiteForm, 'tipoMercancia', 'setTipoMercancia')">
             </app-catalogo-select>
           </div>
         </div>
@@ -53,6 +53,17 @@
           <div class="col-md-8">
             <label>Nombre(s):</label>
             <input type="text" class="form-control" id="nombre" formControlName="nombre"/>
+          </div>
+          <div class="col-md-1"></div>
+          <div class="col-md-3 input-check">
+            <lib-input-check
+              [id]="'personaFisica'"
+              [label]="'Persona física'"
+              [required]="false"
+              [isDisabled]="true"
+              formControlName="personaFisica"
+              (change)="setValoresStore(tramiteForm, 'personaFisica', 'setPersonaFisica')"
+            ></lib-input-check>
           </div>
         </div>
         <div class="row mt-3">
