@@ -575,7 +575,9 @@ public obtenerCatalogosUMC(): Observable<Catalogo[]> {
     if(!this.eliminarDatosTabla){
   this.colapsable = !this.colapsable;
     }
+    else{
    this.colapsable = false;
+    }
   }
 
   /**
