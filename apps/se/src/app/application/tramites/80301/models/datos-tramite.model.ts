@@ -170,5 +170,5 @@ export interface DatosDelServicios {
   /** Tipo de servicio relacionado con el trámite */
   tipoDeServicio?: string;
   /** Estado del servicio */
-  estado?: string;
+  testado?: string;
 }
