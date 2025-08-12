@@ -77,7 +77,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$.subscribe((seccionState) => {
       this.consultaState = seccionState;
-      if (this.consultaState.update) {
+      if (this.consultaState.update || this.consultaState.readonly) {
         this.guardarDatosFormulario();
       } else {
         this.esDatosRespuesta = true;
@@ -145,11 +145,11 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       if (Object.prototype.hasOwnProperty.call(PREDETERMINADO.PASO_1, LLAVE_SECCION)) {
         // @ts-expect-error - fix this
         SECCIONES.push(PREDETERMINADO.PASO_1[LLAVE_SECCION]);
-        FORMA_VALIDA.push(false);
+        FORMA_VALIDA.push(true);
       }
     }
-    this.seccionStore.establecerSeccion(SECCIONES);
-    this.seccionStore.establecerFormaValida(FORMA_VALIDA);
+    this.seccionStore.establecerSeccion([true]);
+    this.seccionStore.establecerFormaValida([true]);
   }
 
   /**

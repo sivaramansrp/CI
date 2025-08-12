@@ -34,6 +34,8 @@ export class RegistroSolicitudService {
     this.tramite31802Store.setManifiesto1(DATOS.manifiesto1);
     this.tramite31802Store.setManifiesto2(DATOS.manifiesto2);
     this.tramite31802Store.setManifiesto3(DATOS.manifiesto3);
+    this.tramite31802Store.setManifiesto4(DATOS.manifiesto4);
+    this.tramite31802Store.setManifiesto5(DATOS.manifiesto5);
     this.tramite31802Store.setFechaPago(DATOS.fechaPago);
     this.tramite31802Store.setRenovacion(DATOS.renovacion);
     this.tramite31802Store.setHomologacion(DATOS.homologacion);

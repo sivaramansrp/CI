@@ -265,6 +265,8 @@ export class Service260601Service {
     this.tramite260601Store.updateFabricanteTablaDatos(
       DATOS.fabricanteTablaDatos
     );
+    this.tramite260601Store.setProductoTabla(DATOS.productoBodyData);
+    this.tramite260601Store.setScianTabla(DATOS.scianBodyData);
   }
 
   /**

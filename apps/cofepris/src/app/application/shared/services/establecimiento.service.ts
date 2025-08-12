@@ -287,14 +287,44 @@ export class EstablecimientoService {
     return this.http.get<DatosDeLaProductoModel[]>('assets/json/260402/datosDelProducto.json');
   }
 
-    /**
-     * Recupera los datos de SCIAN desde un archivo JSON local.
-     * @returns {Observable<ScianModel[]>} Un observable con los datos de SCIAN.
-     */
-    getScianDatos(): Observable<ScianModel[]> {
-      return this.http.get<ScianModel[]>('assets/json/260402/scianDatos.json');
-    }
-  
+  /**
+   * Recupera los datos de SCIAN desde un archivo JSON local.
+   * @returns {Observable<ScianModel[]>} Un observable con los datos de SCIAN.
+   */
+  getScianDatos(): Observable<ScianModel[]> {
+    return this.http.get<ScianModel[]>('assets/json/260402/scianDatos.json');
+  }
+
+  /**
+   * Obtiene la clasificación del producto desde un archivo JSON local.
+   * @returns {Observable<JSONResponse>} Un observable con los datos de clasificación del producto.
+   */
+  getClasificacionProducto(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('assets/json/260914/clasificacion-del-producto.json');
+  }
+
+  /**
+   * Obtiene la lista de especificaciones del producto desde un archivo JSON local.
+   * @returns {Observable<JSONResponse>} Un observable con los datos de especificaciones del producto.
+   */
+  getEspecificarProducto(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('assets/json/260914/especificar.json');
+  }
+
+  /**
+   * Obtiene el catálogo de tipos de producto desde un archivo JSON local.
+   * @returns {Observable<JSONResponse>} Un observable con los datos del catálogo de tipos de producto.
+   */
+  getTipoDeProducto(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('assets/json/260914/tipo-de-producto.json');
+  }
+
+  /**
+   * Obtiene el catálogo de unidades de medida de carga desde un archivo JSON local.
+   * @returns {Observable<JSONResponse>} Un observable con los datos del catálogo de unidades de medida de carga.
+   */
+  getUMCCatalogo(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('assets/json/260914/umc.json');
+  }
+
 }
-
-

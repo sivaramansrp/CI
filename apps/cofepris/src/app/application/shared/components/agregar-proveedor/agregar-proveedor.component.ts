@@ -1,27 +1,37 @@
-import { CommonModule } from '@angular/common';
-import { Location } from '@angular/common';
-
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Validators } from '@angular/forms';
-
-import { Catalogo, REGEX_CORREO_ELECTRONICO, REGEX_NOMBRE, TELEFONO_DIGITOS, TipoPersona } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-
-import { Proveedor } from '../../models/terceros-relacionados.model';
-
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  REGEX_CORREO_ELECTRONICO,
+  REGEX_IMPORTE_PAGO,
+  REGEX_NOMBRE,
+  REGEX_NUMEROS,
+  REGEX_TELEFONO,
+  TipoPersona,
+  TituloComponent
+} from '@ng-mf/data-access-user';
+import { CommonModule, Location } from '@angular/common';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-
+import { Proveedor } from '../../models/terceros-relacionados.model';
 import { STR_NACIONAL } from '../../constantes/datos-solicitud.enum';
 import { Subject } from 'rxjs';
 import { TERCEROS_RELACIONADOS_DATOS_INICIALES } from '../../constantes/terceros-fabricante.enum';
-import { takeUntil } from 'rxjs';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { takeUntil } from 'rxjs/operators';
+
 
 /**
  * @component AgregarProveedorComponent
@@ -37,6 +47,7 @@ import { takeUntil } from 'rxjs';
     CatalogoSelectComponent,
     ReactiveFormsModule,
     TituloComponent,
+    TooltipModule
   ],
   templateUrl: './agregar-proveedor.component.html',
   styleUrl: './agregar-proveedor.component.css',
@@ -221,10 +232,10 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
       estado: [
         this.obtenerValor('estadoLocalidad'),
         this.elementosRequeridos.includes('estado')
-          ? [Validators.required]
+          ? [Validators.required,Validators.pattern(REGEX_IMPORTE_PAGO)]
           : [],
       ],
-      codigoPostal: [this.obtenerValor('codigoPostal')],
+      codigoPostal: [this.obtenerValor('codigoPostal'),[Validators.pattern(REGEX_NUMEROS)]],
       colonia: [this.obtenerValor('colonia')],
       calle: [this.obtenerValor('calle'), Validators.required],
       numeroExterior: [this.obtenerValor('numeroExterior'), Validators.required],
@@ -237,7 +248,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
             : this.obtenerValor('telefono'),
           disabled: this.elementosDeshabilitados.includes('telefono'),
         },
-        [Validators.pattern(TELEFONO_DIGITOS)],
+        [Validators.pattern(REGEX_TELEFONO)],
       ],
       correoElectronico: [
         {
@@ -285,6 +296,9 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
       switch (this.idProcedimiento) {
           case 260201:
           case 260219:
+            this.elementosRequeridos = ['estado'];
+          break;
+          case 260214:
             this.elementosRequeridos = ['estado'];
           break;
         default:
@@ -417,6 +431,15 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
       });
     }
     else {
+       if (this.agregarProveedorForm?.get('tipoPersona')?.value) {
+        Object.keys(this.agregarProveedorForm.controls).forEach(
+          (controlName) => {
+            if (controlName !== 'nacionalidad' && controlName !== 'tipoPersona') {
+              this.agregarProveedorForm.get(controlName)?.reset();
+            }
+          }
+        );
+      }
       Object.keys(this.agregarProveedorForm.controls).forEach(controlName => {
         this.agregarProveedorForm.get(controlName)?.enable();
         this.estaDeshabilitadoDesplegable = false;

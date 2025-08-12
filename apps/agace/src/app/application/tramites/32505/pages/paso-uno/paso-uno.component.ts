@@ -2,12 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   ConsultaioQuery,
   ConsultaioState,
-} from '@libs/shared/data-access-user/src';
+} from '@ng-mf/data-access-user';
 import {
   Solicitud32505State,
   Tramite32505Store,
 } from '../../../../estados/tramites/trimite32505.store';
-import {Subject, map,takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AvisoComponent } from '../../components/aviso/aviso.component';
 import { AvisoService } from '../../services/aviso.service';
 import { CommonModule } from '@angular/common';
@@ -33,13 +33,13 @@ import { Tramite32505Query } from '../../../../estados/queries/tramite32505.quer
   standalone: true,
 })
 export class PasoUnoComponent implements OnDestroy, OnInit {
-  /**
-   * @property {ConsultaioState} consultaDatos
-   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+/**
+   * Estado de la consulta, que se obtiene a través del ConsultaioQuery.
+   * Este estado contiene información sobre la consulta actual.
    */
-  consultaDatos!: ConsultaioState;
+  public consultaState!: ConsultaioState; 
 
- 
+
   /**
    * @property {Subject<void>} destroyNotifier$
    * @description Subject utilizado para notificar y completar las suscripciones activas al destruir el componente, evitando fugas de memoria.
@@ -58,9 +58,6 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * @param i - Nuevo índice seleccionado.
    */
   indice: number = 1;
-
- 
-
   /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
@@ -88,7 +85,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
     public tramiteQuery: Tramite32505Query,
     private avisoService: AvisoService,
     private consultaioQuery: ConsultaioQuery
-  ) {}
+  ) { }
 
   /**
    * @method ngOnInit
@@ -104,46 +101,24 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    *   * @returns {void}
    */
   ngOnInit(): void {
-    this.tramiteQuery.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState;
-        })
-      )
-      .subscribe();
-
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.consultaDatos = seccionState;
+          this.consultaState = seccionState;
         })
       )
       .subscribe();
 
-    if (this.consultaDatos.update) {
-      this.fetchGetDatosConsulta();
+    if (this.consultaState.update) {
+      this.guardarDatosFormularios();
     } else {
       this.esDatosRespuesta = true;
     }
   }
 
   /**
-   * @method ngOnDestroy
-   * @description Método del ciclo de vida que se ejecuta al destruir el componente.
-   *
-   * Este método emite un valor en el `destroyNotifier$` para notificar la destrucción del componente y completa el `Subject` para liberar recursos y evitar fugas de memoria.
-   *
-   * @returns {void}
-   */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
-  }
-
-  /**
-   * @method fetchGetDatosConsulta
+   * @method guardarDatosFormularios
    * @description Método para obtener los datos de consulta desde el servicio `DatosTramiteService` y actualizar el estado del store `Tramite11201Store`.
    *
    * Este método realiza una solicitud HTTP para obtener los datos de consulta y, si la respuesta es exitosa, actualiza múltiples propiedades del store con los datos recibidos.
@@ -151,19 +126,29 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    *
    * @returns {void}
    */
-  public fetchGetDatosConsulta(): void {
+  public guardarDatosFormularios(): void {
     this.avisoService
       .getDatosConsulta()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((respuesta) => {
-        if (respuesta.success) {
+      .subscribe((resp) => {
+        if (resp) {
           this.esDatosRespuesta = true;
-          this.store.setAdace(respuesta.datos.adace);
-          this.store.setPais(respuesta.datos.pais);
-          this.store.setAnio(respuesta.datos.anio);
+          this.avisoService.actualizarEstadoFormulario(resp);
         }
-
-       
       });
+
+  }
+
+  /**
+ * @method ngOnDestroy
+ * @description Método del ciclo de vida que se ejecuta al destruir el componente.
+ *
+ * Este método emite un valor en el `destroyNotifier$` para notificar la destrucción del componente y completa el `Subject` para liberar recursos y evitar fugas de memoria.
+ *
+ * @returns {void}
+ */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

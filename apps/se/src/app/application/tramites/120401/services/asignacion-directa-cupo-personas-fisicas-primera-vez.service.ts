@@ -11,8 +11,8 @@ import {
   Catalogo,
   RespuestaCatalogos,
 } from '@libs/shared/data-access-user/src';
-import { Observable, Subject, takeUntil } from 'rxjs';
-import { DescripcionDelCupo } from '../models/asignacion-directa-cupo.model';
+import { DescripcionDelCupo, SeleccionDelCupoTabla } from '../models/asignacion-directa-cupo.model';
+import { Observable, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Tramite120401Store } from '../estados/tramites/tramite120401.store';
@@ -74,23 +74,10 @@ export class AsignacionDirectaCupoPersonasFisicasPrimeraVezService {
    * @param {DescripcionDelCupo} datos - Objeto que será actualizado con los datos obtenidos.
    * @returns {void}
    */
-  getDescripcionDelCupo(datos: DescripcionDelCupo): void {
-    this.httpServicios
-      .get<DescripcionDelCupo>('assets/json/120401/descripcion-del-cupo.json')
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data: DescripcionDelCupo) => {
-        datos.claveDelCupo = data.claveDelCupo;
-        datos.mecanismoDeAsignacion = data.mecanismoDeAsignacion;
-        datos.descripcionDelProducto = data.descripcionDelProducto;
-        datos.unidadDeMedida = data.unidadDeMedida;
-        datos.regimenAduanero = data.regimenAduanero;
-        datos.fechaDeInicioDeVigenciaDelCupo =
-          data.fechaDeInicioDeVigenciaDelCupo;
-        datos.fechaDeFinDeVigenciaDelCupo = data.fechaDeFinDeVigenciaDelCupo;
-        datos.fraccionesArancelarias = data.fraccionesArancelarias;
-        datos.tratadoAcuerdo = data.tratadoAcuerdo;
-        datos.paises = data.paises;
-      });
+  getDescripcionDelCupo(_datos: DescripcionDelCupo): Observable<DescripcionDelCupo> {
+    return this.httpServicios.get<DescripcionDelCupo>(
+      'assets/json/120401/descripcion-del-cupo.json'
+    );
   }
 
   /**
@@ -175,6 +162,16 @@ actualizarEstadoFormulario(DATOS: Partial<Catalogo[]>): void {
  */
 getRegistroTomaMuestrasMercanciasData(): Observable<Catalogo[]> {
   return this.httpServicios.get<Catalogo[]>(`assets/json/120401/datosPrecargados.json`);
+}
+
+/**
+ * Busca cupos disponibles basado en los criterios proporcionados.
+ * @param criterios - Objeto con los criterios de búsqueda del formulario
+ * @returns Observable con los cupos filtrados
+ */
+buscarCuposPorCriterios(criterios: SeleccionDelCupoTabla): Observable<SeleccionDelCupoTabla[]> {
+  // Replace with your actual API endpoint
+  return this.httpServicios.post<SeleccionDelCupoTabla[]>('/api/cupos/buscar', criterios);
 }
 
 }

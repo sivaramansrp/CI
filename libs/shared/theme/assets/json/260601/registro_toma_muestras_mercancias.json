@@ -168,5 +168,27 @@
       "segundoApellido": "illenar",
       "telefono": "1"
     }
-  ]
+  ],
+  "scianBodyData":[
+    {
+      "claveScian": "1",
+      "descripcionScian": "Cultivo de cereales (excepto arroz)"
+    },{
+      "claveScian": "2",
+      "descripcionScian": "Cultivo de arroz"
+    }, {
+      "claveScian": "3",
+      "descripcionScian": "Cultivo de hortalizas, legumbres y nueces"
+    }],
+    "productoBodyData":[
+      {
+        "clasificacionDelProducto": "Medicamento",
+        "tipoDeProducto": "Genérico",
+        "fraccionArancelaria": "3004.90.99",
+        "descripcionDeLaFraccion": "Medicamentos para uso humano",
+        "modelo": "XYZ-123",
+        "descripcionDelProducto": "Tabletas de 500mg",
+        "paisDeOrigen": "México"
+      }]
+
 }

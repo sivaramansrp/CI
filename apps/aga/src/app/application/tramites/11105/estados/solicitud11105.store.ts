@@ -20,6 +20,12 @@ export interface Solicitud11105State {
    * Nombre del solicitante.
    */
   nombre: string;
+
+  /**
+   * Indica si el solicitante es una persona física.
+   */
+  personaFisica: boolean;
+
   /**
    * Tipo de mercancía involucrada en la solicitud.
    */
@@ -116,6 +122,7 @@ export function createInitialState(): Solicitud11105State {
     aduana: '',
     organismoPublico: false,
     nombre: 'PRUEBA QA',
+    personaFisica: false,
     tipoMercancia: '',
     usoEspecifico: '',
     condicion: '',
@@ -202,6 +209,15 @@ export class Solicitud11105Store extends Store<Solicitud11105State> {
  */
   public setNombre(nombre: string): void {
     this.update((state) => ({ ...state, nombre }));
+  }
+
+  /**
+   * Establece el valor de la propiedad "personaFisica" en el estado.
+   * 
+   * @param personaFisica - El valor booleano que indica si el solicitante es una persona física.
+   */
+  public setPersonaFisica(personaFisica: boolean): void {
+    this.update((state) => ({ ...state, personaFisica }));
   }
 
   /**

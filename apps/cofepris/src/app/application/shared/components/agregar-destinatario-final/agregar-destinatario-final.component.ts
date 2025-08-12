@@ -1,8 +1,13 @@
-import { Catalogo, REGEX_CORREO_ELECTRONICO, REGEX_NOMBRE, TELEFONO_DIGITOS, TipoPersona } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
-import { Location } from '@angular/common';
-
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  REGEX_CORREO_ELECTRONICO,
+  REGEX_NOMBRE,
+  REGEX_TELEFONO,
+  TipoPersona,
+  TituloComponent
+} from '@ng-mf/data-access-user';
+import { CommonModule, Location } from '@angular/common';
 import {
   Component,
   EventEmitter,
@@ -10,20 +15,21 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
-  Output,
+  Output
 } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
-  Validators,
+  Validators
 } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
-
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Destinatario } from '../../models/terceros-relacionados.model';
 import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE } from '../../constantes/datos-solicitud.enum';
-import { TituloComponent } from '@ng-mf/data-access-user';
+import { Subject } from 'rxjs';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { takeUntil } from 'rxjs/operators';
+
 
 /**
  * Componente para agregar un destinatario final (Destinatario) al formulario y almacenarlo.
@@ -39,6 +45,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
     ReactiveFormsModule,
     CatalogoSelectComponent,
     TituloComponent,
+    TooltipModule,
   ],
   templateUrl: './agregar-destinatario-final.component.html',
   styleUrl: './agregar-destinatario-final.component.css',
@@ -79,16 +86,34 @@ export class AgregarDestinatarioFinalComponent
   public municipiosDatos: Catalogo[] = [];
 
   /**
+   * Datos de catálogo de municipios.
+   * @property {Catalogo[]} municipiosTempDatos
+   */
+  public municipiosTempDatos: Catalogo[] = [];
+
+  /**
    * Datos de catálogo de localidades.
    * @property {Catalogo[]} localidadesDatos
    */
   public localidadesDatos: Catalogo[] = [];
 
   /**
+   * Datos de catálogo de localidades.
+   * @property {Catalogo[]} localidadesTempDatos
+   */
+  public localidadesTempDatos: Catalogo[] = [];
+
+  /**
    * Datos de catálogo de colonias.
    * @property {Catalogo[]} coloniasDatos
    */
   public coloniasDatos: Catalogo[] = [];
+
+  /**
+   * Datos de catálogo de colonias.
+   * @property {Catalogo[]} coloniasTempDatos
+   */
+  public coloniasTempDatos: Catalogo[] = [];
 
   /**
    * Datos de catálogo de códigos postales.
@@ -122,7 +147,7 @@ export class AgregarDestinatarioFinalComponent
    * @type {boolean}
    * @default false
    */
-  public mostrarCamposNoContribuyente: boolean = false;
+  public mostrarCamposNoContribuyente: boolean = true;
 
   /**
    * Emite la lista de destinatarios actualizada para ser consumida por otros componentes.
@@ -145,7 +170,7 @@ export class AgregarDestinatarioFinalComponent
    * Esta propiedad almacena un arreglo de cadenas que representan
    * los elementos que deben ser obligatorios en el formulario.
    */
-  public elementosNoRequeridos:string[]=[]
+  public elementosNoRequeridos: string[] = [];
 
   /**
    * Arreglo que almacena los elementos requeridos.
@@ -159,8 +184,7 @@ export class AgregarDestinatarioFinalComponent
    */
   public estaDeshabilitadoDesplegable: boolean = true;
 
-
-    /**
+  /**
    * @property {Destinatario | undefined} datoSeleccionado
    * Dato seleccionado que se pasará al componente hijo `AgregarDestinatarioComponent`.
    */
@@ -212,11 +236,10 @@ export class AgregarDestinatarioFinalComponent
       nombreRazonSocial = ''; // Valor por defecto si tipoPersona es otro
     }
     const NUEVO_DESTINATARIO: Destinatario = {
-      nombreRazonSocial:nombreRazonSocial,
+      nombreRazonSocial: nombreRazonSocial,
       rfc: VALOR_FORMULARIO.rfc,
       curp: '',
-      telefono:
-        `${VALOR_FORMULARIO.lada} ${VALOR_FORMULARIO.telefono}`.trim(),
+      telefono: `${VALOR_FORMULARIO.lada} ${VALOR_FORMULARIO.telefono}`.trim(),
       correoElectronico: VALOR_FORMULARIO.correoElectronico,
       calle: VALOR_FORMULARIO.calle,
       numeroExterior: VALOR_FORMULARIO.numeroExterior,
@@ -286,30 +309,29 @@ export class AgregarDestinatarioFinalComponent
       .obtenerListaMunicipios()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
-        this.municipiosDatos = data;
+        this.municipiosTempDatos = data;
       });
 
     this.datosSolicitudService
       .obtenerListaLocalidades()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
-        this.localidadesDatos = data;
+        this.localidadesTempDatos = data;
       });
 
     this.datosSolicitudService
       .obtenerListaColonias()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
-        this.coloniasDatos = data;
+        this.coloniasTempDatos = data;
       });
   }
-
 
   /**
    * @method crearAgregarFormularioAgregarDestinatarioFinal
    * @description
-   * This method initializes the `FormGroup` for the "Agregar Destinatario Final" component. 
-   * It sets up the form controls with their default values, validation rules, and disabled states 
+   * This method initializes the `FormGroup` for the "Agregar Destinatario Final" component.
+   * It sets up the form controls with their default values, validation rules, and disabled states
    * based on the `elementosDeshabilitados` and `elementosNoRequeridos` arrays.
    * @returns {void} This method does not return any value.
    */
@@ -317,12 +339,9 @@ export class AgregarDestinatarioFinalComponent
     this.agregarDestinatarioFinal = this.fb.group({
       tipoPersona: ['', Validators.required],
       rfc: [
-         this.obtenerValor('rfc'),
-        [
-          Validators.required,
-          Validators.pattern(REGEX_NOMBRE)
-        ],
-      ],      
+        this.obtenerValor('rfc'),
+        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
+      ],
       nombres: [
         {
           value: this.elementosDeshabilitados.includes('nombres')
@@ -330,9 +349,13 @@ export class AgregarDestinatarioFinalComponent
             : this.obtenerValor('nombres'),
           disabled: this.elementosDeshabilitados.includes('nombres'),
         },
-        [Validators.required, Validators.pattern(REGEX_NOMBRE)]
+        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
       ],
-      denominacionRazon: [this.obtenerValor('razonSocial'), Validators.required, Validators.pattern(REGEX_NOMBRE)],
+      denominacionRazon: [
+        this.obtenerValor('razonSocial'),
+        Validators.required,
+        Validators.pattern(REGEX_NOMBRE),
+      ],
       primerApellido: [
         {
           value: this.elementosDeshabilitados.includes('pais')
@@ -353,7 +376,9 @@ export class AgregarDestinatarioFinalComponent
       ],
       pais: [
         {
-          value: this.elementosDeshabilitados.includes('pais') ? '1' : this.obtenerValor('pais'),
+          value: this.elementosDeshabilitados.includes('pais')
+            ? '1'
+            : this.obtenerValor('pais'),
           disabled: this.elementosDeshabilitados.includes('pais'),
         },
         Validators.required,
@@ -369,13 +394,11 @@ export class AgregarDestinatarioFinalComponent
           : [],
       ],
       calle: [
-         this.obtenerValor('calle'),
-        this.elementosRequeridos.includes('calle')
-          ? [Validators.required]
-          : [],
+        this.obtenerValor('calle'),
+        this.elementosRequeridos.includes('calle') ? [Validators.required] : [],
       ],
       numeroExterior: [
-         this.obtenerValor('numeroExterior'),
+        this.obtenerValor('numeroExterior'),
         this.elementosRequeridos.includes('numeroExterior')
           ? [Validators.required]
           : [],
@@ -389,7 +412,7 @@ export class AgregarDestinatarioFinalComponent
             : this.obtenerValor('telefono'),
           disabled: this.elementosDeshabilitados.includes('telefono'),
         },
-        [Validators.pattern(TELEFONO_DIGITOS)],
+        [Validators.pattern(REGEX_TELEFONO)],
       ],
       correoElectronico: [
         {
@@ -403,15 +426,14 @@ export class AgregarDestinatarioFinalComponent
     });
   }
 
-  
-       /**
-       * Obtiene el valor de un campo específico del formulario o de los datos seleccionados.
-       * @param {keyof Destinatario } field - Nombre del campo a obtener.
-       * @returns {string | number | undefined | string[]} - Valor del campo especificado.
-       */
-      public obtenerValor(field: keyof Destinatario): string | number | undefined {
-        return this.datoSeleccionado?.[0]?.[field as keyof Destinatario] ?? '';
-      }
+  /**
+   * Obtiene el valor de un campo específico del formulario o de los datos seleccionados.
+   * @param {keyof Destinatario } field - Nombre del campo a obtener.
+   * @returns {string | number | undefined | string[]} - Valor del campo especificado.
+   */
+  public obtenerValor(field: keyof Destinatario): string | number | undefined {
+    return this.datoSeleccionado?.[0]?.[field as keyof Destinatario] ?? '';
+  }
 
   /**
    * Valida elementos según el `idProcedimiento` y establece
@@ -431,10 +453,17 @@ export class AgregarDestinatarioFinalComponent
         this.elementosNoRequeridos = ['localidad', 'colonia'];
         this.elementosRequeridos = ['calle', 'numeroExterior'];
         break;
-        case 260219:
-          this.elementosRequeridos = ['calle', 'numeroExterior'];
-          this.elementosDeshabilitados = ['pais'];
-          this.elementosNoRequeridos = ['colonia'];
+      case 260219:
+        this.elementosRequeridos = ['calle', 'numeroExterior'];
+        this.elementosDeshabilitados = ['pais'];
+        this.elementosNoRequeridos = ['colonia'];
+        break;
+      case 260213:
+        this.elementosRequeridos = ['calle', 'numeroExterior'];
+        this.elementosDeshabilitados = ['pais'];
+        break;
+      case 260214:
+        this.elementosRequeridos = ['calle', 'numeroExterior'];
         break;
       default:
         this.elementosDeshabilitados = [];
@@ -476,25 +505,73 @@ export class AgregarDestinatarioFinalComponent
 
   /**
    * Habilita o deshabilita los controles del formulario según el valor de 'tipoPersona'.
-   * 
+   *
    * Si 'tipoPersona' está vacío, deshabilita todos los controles excepto 'tipoPersona'.
    * Si 'tipoPersona' tiene un valor, habilita todos los controles y activa el desplegable.
-   * 
+   *
    * @returns {void} No retorna ningún valor.
    */
   changeNacionalidad(): void {
     if (this.agregarDestinatarioFinal?.value?.tipoPersona === '') {
-      Object.keys(this.agregarDestinatarioFinal.controls).forEach(controlName => {
-        this.agregarDestinatarioFinal.get(controlName)?.disable();
-        if (controlName === 'tipoPersona') {
-          this.agregarDestinatarioFinal.get(controlName)?.enable();
+      Object.keys(this.agregarDestinatarioFinal.controls).forEach(
+        (controlName) => {
+          this.agregarDestinatarioFinal.get(controlName)?.disable();
+          if (controlName === 'tipoPersona') {
+            this.agregarDestinatarioFinal.get(controlName)?.enable();
+          }
         }
-      });
+      );
     } else {
-      Object.keys(this.agregarDestinatarioFinal.controls).forEach(controlName => {
-        this.agregarDestinatarioFinal.get(controlName)?.enable();
-        this.estaDeshabilitadoDesplegable = false;
-      });
+      if (this.agregarDestinatarioFinal?.get('tipoPersona')?.value) {
+        Object.keys(this.agregarDestinatarioFinal.controls).forEach(
+          (controlName) => {
+            if (
+              controlName !== 'nacionalidad' &&
+              controlName !== 'tipoPersona'
+            ) {
+              this.agregarDestinatarioFinal.get(controlName)?.reset();
+            }
+          }
+        );
+      }
+      Object.keys(this.agregarDestinatarioFinal.controls).forEach(
+        (controlName) => {
+          this.agregarDestinatarioFinal.get(controlName)?.enable();
+          this.estaDeshabilitadoDesplegable = false;
+        }
+      );
+    }
+  }
+
+  /**
+   * Carga la lista de estados cuando se selecciona un catálogo válido.
+   *
+   * @param evento Objeto de tipo `Catalogo` que contiene la información seleccionada.
+   *
+   * ### Descripción:
+   * - Si el `id` del evento es mayor que 0, asigna la lista temporal de municipios (`municipiosTempDatos`)
+   *   a la lista principal (`municipiosDatos`).
+   */
+  cargarEstados(evento: Catalogo): void {
+    if (evento.id > 0) {
+      this.municipiosDatos = this.municipiosTempDatos;
+    }
+  }
+
+  /**
+   * Carga la lista de municipios, localidades y colonias cuando se selecciona un catálogo válido.
+   *
+   * @param evento Objeto de tipo `Catalogo` que contiene la información seleccionada.
+   *
+   * ### Descripción:
+   * - Si el `id` del evento es mayor que 0:
+   *   - Asigna la lista temporal de localidades (`localidadesTempDatos`) a la lista principal (`localidadesDatos`).
+   *   - Asigna la lista temporal de colonias (`coloniasTempDatos`) a la lista principal (`coloniasDatos`).
+   */
+  cargarMunicipios(evento: Catalogo): void {
+    if (evento.id > 0) {
+      this.localidadesDatos = this.localidadesTempDatos;
+      this.coloniasDatos = this.coloniasTempDatos;
     }
   }
 
