@@ -71,11 +71,11 @@ const ENTIDADFEDERATIVA = 'entidadFederativaEmpresaExt';
  */
 export class ServiciosComponent implements OnInit, OnDestroy {
   /**
-     * @description
-     * Objeto que representa una nueva notificación para RFC.
-     * Se utiliza para mostrar mensajes de alerta o información al usuario.
-     */
-    public nuevaNotificacionRfc!: Notificacion;
+       * @description
+       * Objeto que representa una nueva notificación para RFC.
+       * Se utiliza para mostrar mensajes de alerta o información al usuario.
+       */
+      public nuevaNotificacionRfc: Notificacion | null = null;
 
   /**
    * @description
@@ -89,6 +89,11 @@ export class ServiciosComponent implements OnInit, OnDestroy {
    * Bandera que indica si se debe mostrar la notificación de agregar servicio.
    */
   public mostrarNotificacionAgregar: boolean = false;
+
+  /**
+   * Tipo de acción del modal de confirmación ('agregar' | 'eliminar')
+   */
+  public tipoAccionModal: 'agregar' | 'eliminar' = 'agregar';
 
   /**
    * Índice de la pestaña.
@@ -448,40 +453,24 @@ export class ServiciosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Elimina servicios del grid.
+   * Elimina servicios del grid con confirmación.
    * @method eliminarServiciosGrid
    */
   eliminarServiciosGrid(): void {
-    const INDICE = this.datosImmex.findIndex(
-      (item: Servicio) =>
-        item.descripionDelServicio ===
-        this.domiciliosSeleccionados[0]?.descripionDelServicio
-    );
-    if (INDICE !== -1) {
-      const DATOS_IMMEX_ACTUALIZADOS = [...this.datosImmex];
-      DATOS_IMMEX_ACTUALIZADOS.splice(INDICE, 1);
-      this.Tramite80102Store.setDatosImmex(DATOS_IMMEX_ACTUALIZADOS);
-    }
-  }
-
-  /**
-   * Agrega servicios a la ampliación con confirmación modal.
-   * @method agregarServiciosAmpliacion
-   */
-  agregarServiciosAmpliacion(): void {
-    // Verificar si hay datos seleccionados
-    if (!this.recibioDatos || this.recibioDatos.length === 0) {
-      this.mostrarNotificacionError('¿Está seguro de agregar el(los) servicio(s) seleccionado(s)?');
+    // Validar si hay un servicio seleccionado
+    if (!this.domiciliosSeleccionados || this.domiciliosSeleccionados.length === 0) {
+      this.mostrarNotificacionError('Introduzca un RFC válido.');
       return;
     }
 
-    // Mostrar modal de confirmación
+    // Configurar modal para eliminación
+    this.tipoAccionModal = 'eliminar';
     this.notificacionAgregarServicio = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
       modo: 'action',
       titulo: '',
-      mensaje: '¿Estás seguro de que quieres eliminar?',
+      mensaje: 'Debe seleccionar un servicio.',
       cerrar: true,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
@@ -491,22 +480,81 @@ export class ServiciosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Maneja la confirmación del modal para agregar servicios.
+   * Agrega servicios a la ampliación con confirmación modal.
+   * @method agregarServiciosAmpliacion
+   */
+  agregarServiciosAmpliacion(): void {
+    // Verificar si hay datos seleccionados
+    if (!this.recibioDatos || this.recibioDatos.length === 0) {
+      this.mostrarNotificacionError('Estás seguro de que quieres agregar el(los) servicio(s) seleccionado(s)?');
+      return;
+    }
+
+    // Configurar modal para agregar
+    this.tipoAccionModal = 'agregar';
+    this.notificacionAgregarServicio = {
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'action',
+      titulo: 'Confirmar adición',
+      mensaje: '¿Está seguro de agregar el(los) servicio(s) seleccionado(s)?',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+    this.mostrarNotificacionAgregar = true;
+  }
+
+  /**
+   * Maneja la confirmación del modal según el tipo de acción.
    * @param {boolean} confirmado - Indica si el usuario confirmó la acción.
    * @returns {void}
    */
-  confirmarAgregarServicio(confirmado: boolean): void {
+  manejarConfirmacion(confirmado: boolean): void {
     this.mostrarNotificacionAgregar = false;
     
     if (confirmado) {
-      const CUERPODATOS = {
-        descripionDelServicio: this.recibioDatos[0].descripcion,
-        tipode: this.recibioDatos[0].tipode,
-      };
-      this.Tramite80102Store.setDatosImmex([...this.datosImmex, CUERPODATOS]);
+      if (this.tipoAccionModal === 'agregar') {
+        this.ejecutarAgregarServicio();
+      } else if (this.tipoAccionModal === 'eliminar') {
+        this.ejecutarEliminarServicio();
+      }
+    }
+  }
+
+  /**
+   * Ejecuta la acción de agregar servicio.
+   * @returns {void}
+   */
+  private ejecutarAgregarServicio(): void {
+    const CUERPODATOS = {
+      descripionDelServicio: this.recibioDatos[0].descripcion,
+      tipode: this.recibioDatos[0].tipode,
+    };
+    this.Tramite80102Store.setDatosImmex([...this.datosImmex, CUERPODATOS]);
+    this.mostrarNotificacionExito('¿Está seguro de agregar el(los) servicio(s) seleccionado(s)?');
+  }
+
+  /**
+   * Ejecuta la acción de eliminar servicio.
+   * @returns {void}
+   */
+  private ejecutarEliminarServicio(): void {
+    const INDICE = this.datosImmex.findIndex(
+      (item: Servicio) =>
+        item.descripionDelServicio ===
+        this.domiciliosSeleccionados[0]?.descripionDelServicio
+    );
+    if (INDICE !== -1) {
+      const DATOS_IMMEX_ACTUALIZADOS = [...this.datosImmex];
+      DATOS_IMMEX_ACTUALIZADOS.splice(INDICE, 1);
+      this.Tramite80102Store.setDatosImmex(DATOS_IMMEX_ACTUALIZADOS);
       
-      // Mostrar notificación de éxito
-      this.mostrarNotificacionExito('Servicio agregado exitosamente.');
+      // Limpiar selección
+      this.domiciliosSeleccionados = [];
+
+      this.mostrarNotificacionExito('¿Está seguro de eliminar el servicio seleccionado?');
     }
   }
 
@@ -525,7 +573,7 @@ export class ServiciosComponent implements OnInit, OnDestroy {
       ttl: '',
       cerrar: true,
       txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: ''
+      txtBtnCancelar: 'Cancelar'
     };
   }
 
@@ -544,20 +592,19 @@ export class ServiciosComponent implements OnInit, OnDestroy {
       ttl: '',
       cerrar: true,
       txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: 'Cancelar'
+      txtBtnCancelar: ''
     };
   }
 
   /**
    * Maneja la confirmación de la notificación RFC.
-   * @param {boolean} confirmado - Indica si el usuario confirmó.
+   * @param {boolean} _confirmado - Indica si el usuario confirmó.
    * @returns {void}
    */
-  confirmarNotificacionRfc(confirmado: boolean): void {
+  confirmarNotificacionRfc(_confirmado: boolean): void {
     // Limpiar la notificación
-    this.nuevaNotificacionRfc = null as any;
+    this.nuevaNotificacionRfc = null;
   }
-
   /**
    * Elimina empresas nacionales.
    * @method eliminarEmpresasNacionales

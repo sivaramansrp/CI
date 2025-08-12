@@ -223,12 +223,12 @@
     </div>
   </div>
 </div>
-<!-- Confirmation Modal for Adding Service -->
+<!-- Confirmation Modal for Adding/Deleting Service -->
 @if (mostrarNotificacionAgregar && notificacionAgregarServicio) {
 <section>
   <lib-notificaciones 
     [notificacionInput]="notificacionAgregarServicio" 
-    (confirmacionModal)="confirmarAgregarServicio($event)">
+    (confirmacionModal)="manejarConfirmacion($event)">
   </lib-notificaciones>
 </section>
 }
