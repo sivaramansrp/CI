@@ -41,7 +41,8 @@
     "idiomaDates": 1,
     "precisaDates": "Sí",
     "EntidadFederativaDates": 1,
-    "representacionFederalDates": 1
+    "representacionFederalDates": 1,
+    "presenta": "Juan Pérez"
   },
   "idiomaDatosSeleccion": { "id": 1, "descripcion": "Español" },
   "entidadFederativaSeleccion": { "id": 9, "descripcion": "CDMX" },

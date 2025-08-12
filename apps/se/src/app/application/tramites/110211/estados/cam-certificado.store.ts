@@ -132,6 +132,7 @@ export function createInitialState(): CamState {
       precisaDates: '',
       EntidadFederativaDates: '',
       representacionFederalDates: '',
+      presenta: '',
     },
     idiomaDatosSeleccion: { id: -1, descripcion: '' },
     entidadFederativaSeleccion: { id: -1, descripcion: '' },
