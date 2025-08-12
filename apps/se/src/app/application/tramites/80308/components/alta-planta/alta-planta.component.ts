@@ -2,6 +2,8 @@ import {
   Catalogo,
   CatalogoSelectComponent,
   ConsultaioQuery,
+  Notificacion,
+  NotificacionesComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -36,11 +38,14 @@ import { Tramite80308Store } from '../../estados/tramite80308.store';
     TablaDinamicaComponent,
     ComplementariaImmexComponent,
     ReactiveFormsModule,
-    CommonModule
+    CommonModule,
+    NotificacionesComponent
   ],
   providers: [ModificacionSolicitudeService, ToastrService],
 })
 export class AltaPlantaComponent implements OnInit, OnDestroy {
+
+  nuevaNotificacion!: Notificacion | null;
   /**
    * Formulario que contiene el grupo de controles para la entidad federativa.
    */
@@ -249,8 +254,50 @@ export class AltaPlantaComponent implements OnInit, OnDestroy {
    */
   aplicarAccion(): void {
     if(this.domiciliosSeleccionados.length) {
-      this.store.aggregarDomicilios(this.domiciliosSeleccionados[0]);
+      // Create notification object with correct field names
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert', // Using TipoNotificacionEnum.ALERTA
+        categoria: 'info', // Using CategoriaMensaje.INFORMACION
+        modo: 'confirmacion', // Mode for confirmation
+        titulo: 'Confirmar Acción',
+        mensaje: 'Selecciona al menos una planta donde se realizarán las operaciones IMMEX.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+        tamanioModal: 'md', // Optional: small, medium, large
+        alineacionTexto: 'center' // Optional: text alignment
+      };
+    } else {
+      // Create notification for error case without toaster
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'confirmacion',
+        titulo: '',
+        mensaje: 'Selecciona al menos una planta donde se realizarán las operaciones IMMEX..',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+        tamanioModal: 'md',
+        alineacionTexto: 'center'
+      };
     }
+  }
+
+  /**
+   * Handles the confirmation modal response
+   * @param confirmacion - Boolean indicating user's choice
+   */
+  confirmacionModal(confirmacion: boolean): void {
+    if (confirmacion) {
+      // User confirmed - proceed with adding the plant
+      if(this.domiciliosSeleccionados.length) {
+        this.store.aggregarDomicilios(this.domiciliosSeleccionados[0]);
+        this.toastr.success('Planta agregada exitosamente');
+      }
+    }
+    // Hide the notification modal
+    this.nuevaNotificacion = null;
   }
 
   /**
