@@ -29,7 +29,7 @@ class MockTramite120401Query {
   regimen$ = observableOf(null);
   tratado$ = observableOf(null);
   producto$ = observableOf(null);
-  subproducto$ = observableOf(null);;
+  nombreSubproducto$ = observableOf(null);;
 }
 
 
@@ -84,8 +84,8 @@ describe('SeleccionDelCupoComponent', () => {
     component.producto$.subscribe = jest.fn().mockReturnValue([
       null
     ]);
-    component.subproducto$ = component.subproducto$ || {};
-    component.subproducto$.subscribe = jest.fn().mockReturnValue([
+    component.nombreSubproducto$ = component.nombreSubproducto$ || {};
+    component.nombreSubproducto$.subscribe = jest.fn().mockReturnValue([
       null
     ]);
     component.ngOnInit();
@@ -98,7 +98,7 @@ describe('SeleccionDelCupoComponent', () => {
     // expect(component.seleccionForm.get).toHaveBeenCalled();
     // expect(component.tratado$.subscribe).toHaveBeenCalled();
     // expect(component.producto$.subscribe).toHaveBeenCalled();
-    // expect(component.subproducto$.subscribe).toHaveBeenCalled();
+    // expect(component.nombreSubproducto$.subscribe).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
