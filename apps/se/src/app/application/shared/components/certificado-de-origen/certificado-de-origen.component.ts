@@ -1,6 +1,6 @@
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, MERCANCIA_SELECCIONADAS, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -56,7 +56,7 @@ export const FECHA_FINAL = {
   styleUrl: './certificado-de-origen.component.scss'
 })
 
-export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
+export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges {
   /**
  * Título mostrado en el componente.  
  * Puede ser personalizado desde el componente padre mediante [title].  
@@ -290,14 +290,6 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
    */
   constructor(private fb: FormBuilder) {
 
-    // Si hay datos del formulario, se los asigna al formulario después de un pequeño retraso.
-
-    setTimeout(() => {
-      if (this.datosForm) {
-        this.formCertificado.patchValue(this.datosForm);
-      }
-    }, 100);
-
     this.actualizarDatosFormularioSolicitud();
   }
 
@@ -335,12 +327,19 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
 */
   inicializarEstadoFormulario(): void {
     if (!this.formCertificado) {
-      this.createForm();
+      this.createForm();   
     }
+   
     if (this.esFormularioSoloLectura) {
       this.formCertificado.disable();
     }
   }
+
+ngOnChanges(changes: SimpleChanges):void {
+  if (changes['datosForm']?.currentValue) {
+    this.formCertificado.patchValue(this.datosForm);
+  }
+}
   /**
    * Actualiza los validadores requeridos en los campos del formulario especificados
    * en la lista `elementosRequeridos`.

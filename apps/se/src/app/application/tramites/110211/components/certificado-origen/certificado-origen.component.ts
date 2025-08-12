@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CamState, camCertificadoStore } from '../../estados/cam-certificado.store';
 import { Catalogo, ConsultaioQuery, SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
-import { Observable, Subject, delay, map, of, takeUntil } from 'rxjs';
+import { Observable, Subject, map, of, takeUntil } from 'rxjs';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CommonModule } from '@angular/common';
@@ -136,7 +136,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
     private consultaioQuery: ConsultaioQuery
   ) {
     this.query.formCertificado$
-      .pipe(takeUntil(this.destroyNotifier$), delay(100))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((estado) => {
         this.formCertificadoValues = estado;
       });
@@ -148,6 +148,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
       })
     )
     .subscribe()
+    
   }
 
   /**
