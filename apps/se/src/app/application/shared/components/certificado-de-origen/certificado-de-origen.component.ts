@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, MERCANCIA_SELECCIONADAS, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
