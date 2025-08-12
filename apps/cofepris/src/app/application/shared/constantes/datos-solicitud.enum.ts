@@ -703,7 +703,7 @@ export const MENSAJE_SIN_FILA_SELECCIONADA = 'Seleciona un registro';
  * @description
  *  Identificadores de notificación.
  */
-export const MOSTRAR_NOTIFICACION = [260219,260302,260304, 260206, 260201,260103,260203];
+export const MOSTRAR_NOTIFICACION = [260219,260302,260304, 260206, 260201,260103,260203, 260301];
 
 /**
  * Enumera los tipos de actualización que se pueden realizar.
