@@ -40,8 +40,20 @@
             </div>
             <div class="col-md-6">
                 <label for="numeroOperacion">Número de operación:</label>
-                <input id="numeroOperacion" type="text" class="form-control" formControlName="numeroOperacion"
+                <input id="numeroOperacion" type="text" class="form-control" formControlName="numeroOperacion" id="numeroOperacion"
+                    maxlength="30" minlength="10" [ngClass]="{'is-invalid': esInvalido('numeroOperacion')}"
+                    (blur)="onFieldBlur('numeroOperacion')"
                     (change)="setValoresStore(avisoForm,'numeroOperacion', 'setnumeroOperacion')" />
+                <div *ngIf="esInvalido('numeroOperacion')" class="text-danger">
+                    <small *ngIf="avisoForm.controls['numeroOperacion'].errors?.['required']">
+                        Este campo es obligatorio.
+                    </small>
+                    <small
+                        *ngIf="avisoForm.get('numeroOperacion')?.errors?.['minlength'] || avisoForm.get('numeroOperacion')?.errors?.['maxlength']"
+                        class="d-block">
+                        Por favor, no escriba menos de 10 caracteres ni más de 30 caracteres.
+                    </small>
+                </div>
             </div>
         </div>
         <div class="row mt-5">
@@ -58,8 +70,19 @@
         <div class="row mt-5">
             <div class="col-md-4">
                 <label for="llavePago">Llave de pago:</label>
-                <input id="llavePago" type="text" class="form-control" formControlName="llavePago"
+                <input id="llavePago" type="text" class="form-control" formControlName="llavePago" maxlength="30" minlength="10"
+                    [ngClass]="{'is-invalid': esInvalido('llavePago')}" (blur)="onFieldBlur('llavePago')"
                     (change)="setValoresStore(avisoForm,'llavePago', 'setllavePago')" />
+                <div *ngIf="esInvalido('llavePago')" class="text-danger">
+                    <small *ngIf="avisoForm.controls['llavePago'].errors?.['required']">
+                        Este campo es obligatorio.
+                    </small>
+                    <small
+                        *ngIf="avisoForm.get('llavePago')?.errors?.['minlength'] || avisoForm.get('llavePago')?.errors?.['maxlength']"
+                        class="d-block">
+                        Debe capturar exactamente 10 caracteres alfanuméricos en mayúsculas.
+                    </small>
+                </div>
             </div>
             <div class="col-md-4 custom-fetchapago">
                 <input-fecha [datos]="fechaInicioInput" formControlName="fechaPago"

@@ -1,3 +1,5 @@
+import { MercanciaModel } from "../models/permiso-maquila.models";
+
 /**
  * Constante que define los permisos para el proceso de maquila.
  * Cada objeto representa una etapa del proceso.
@@ -88,4 +90,33 @@ export const ADUANAS_DATA = [
   { id: 1, descripcion: "SINALOA" },
   { id: 2, descripcion: "Aduana 2" },
   { id: 3, descripcion: "Aduana 3" }
+];
+/* 
+ * Lista de mercancías predeterminadas utilizadas como valor inicial en formularios.
+ * Cada objeto sigue el modelo MercanciaModel con valores por defecto.
+ * Se puede modificar según las necesidades del sistema.
+ */
+export const MERCANCIA_POR_DEFECTO: MercanciaModel[] = [
+  {
+    clasificacionProducto: "1",
+    especificarClasificacion: '2',
+    denominacionEspecifica: 'valor',
+    denominacionDistintiva: 'Denominación',
+    denominacionComun: 'denominacionComun',
+    formaFarmaceutica: 'denominacionComun',
+    estadoFsico: 'Estado físico',
+    fraccionArancelaria: 'Fracción ',
+    descripcionFraccion: '',
+    cantidadUMT: 'Cantidad ',
+    UMT: 'UMT',
+    cantidadUMC: 'Cantidad ',
+    UMC: 'UMC',
+    tipoDeEnvase: "Tipo de envase",
+    numeroDeregistroSanitario: '',
+    paisDeorigen: 'paisDeorigen',
+    paisDeprocedencia: 'paisDeprocedencia',
+    tipoProducto: 'producto',
+    usoEspecifico: 'usoEspecifico',
+    fechaDeCaducidad: 'fechaDeCaducidad'
+  }
 ];

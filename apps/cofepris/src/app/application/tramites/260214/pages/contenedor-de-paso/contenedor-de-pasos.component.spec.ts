@@ -57,26 +57,77 @@ describe('ContenedorDePasosComponent', () => {
     expect(component.datosPasos.indice).toBe(component.indice);
   });
 
-  it('should call wizardComponent.siguiente when accion is "cont" and valor is valid', () => {
+
+  it('should set seleccionarFilaNotificacion and mostrarAlerta if both forms are invalid', () => {
+    const MENSAJE_DE_VALIDACION = '¿Está seguro que su solicitud no requiere los datos del Pago de derechos?';
+    component.datosDeLaSolicitudComponent = {
+      datosSolicitudForm: { invalid: true }
+    };
+    component.pagoDeDerechosComponent = {
+      formularioPagoDerechos: { invalid: true }
+    };
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn()
+    };
+    const accion = { valor: 2, accion: 'cont' };
+    component.getValorIndice(accion);
+    expect(component.seleccionarFilaNotificacion).toBeDefined();
+    expect(component.seleccionarFilaNotificacion.mensaje).toBe(MENSAJE_DE_VALIDACION);
+    expect(component.mostrarAlerta).toBe(true);
+    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+  });
+
+  it('should update tituloMensaje according to the step', () => {
+    component.datosDeLaSolicitudComponent = {
+      datosSolicitudForm: { invalid: false }
+    };
+    component.pagoDeDerechosComponent = {
+      formularioPagoDerechos: { invalid: false }
+    };
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn()
+    };
+    component.getValorIndice({ valor: 3, accion: 'cont' });
+    expect(component.tituloMensaje).toBe('Firmar');
+    component.getValorIndice({ valor: 2, accion: 'back' });
+    expect(component.tituloMensaje).toBe('Cargar archivos');
+  });
+
+  it('should call wizardComponent.atras when accion is not "cont" and valor is valid', () => {
+    component.datosDeLaSolicitudComponent = {
+      datosSolicitudForm: { invalid: false }
+    };
+    component.pagoDeDerechosComponent = {
+      formularioPagoDerechos: { invalid: false }
+    };
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn()
+    };
+    component.getValorIndice({ valor: 2, accion: 'back' });
+    expect(component.indice).toBe(2);
+    expect(component.wizardComponent.atras).toHaveBeenCalled();
+    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+  });
+
+  it('should not set seleccionarFilaNotificacion or mostrarAlerta if only one form is invalid', () => {
+    component.datosDeLaSolicitudComponent = {
+      datosSolicitudForm: { invalid: false }
+    };
+    component.pagoDeDerechosComponent = {
+      formularioPagoDerechos: { invalid: true }
+    };
     component.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn()
     };
     component.getValorIndice({ valor: 2, accion: 'cont' });
-    expect(component.indice).toBe(2);
+    expect(component.seleccionarFilaNotificacion).toBeUndefined();
+    expect(component.mostrarAlerta).toBe(false);
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
-  });
-
-  it('should call wizardComponent.atras when accion is not "cont" and valor is valid', () => {
-    component.wizardComponent = {
-      siguiente: jest.fn(),
-      atras: jest.fn()
-    };
-    component.getValorIndice({ valor: 3, accion: 'back' });
-    expect(component.indice).toBe(3);
-    expect(component.wizardComponent.atras).toHaveBeenCalled();
-    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
   });
 
   it('should not change indice or call wizardComponent methods if valor is out of range', () => {

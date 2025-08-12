@@ -40,6 +40,10 @@
                 [isDisabled]="esFormularioSoloLectura"
                 (valorCambiado)="seleccionarFechaInicio($event)"
               ></input-fecha>
+               <div *ngIf="pagoDeDerechos.get('fechadepago')?.touched && pagoDeDerechos.get('fechadepago')?.hasError('futureDate')" 
+                  class="text-danger mt-1 small">
+                La fecha de pago debe ser menor o igual a la fecha actual.
+              </div>
               </div>
               <div class="col-md-4 mb-3">
                 <label class="form-label" for="importedepago">Importe de pago:</label>
@@ -48,7 +52,7 @@
               </div>
             </div>
               <div class="col-md-12 d-flex justify-content-end">
-                <button type="button" name="borarrdatosdelpago" class="btn btn-primary ms-2" (click)="clearForm()"> Borrar datos del pago </button>
+                <button type="button" name="borarrdatosdelpago" class="btn btn-primary ms-2" (click)="clearForm()" [disabled]="esFormularioSoloLectura"> Borrar datos del pago </button>
               </div>
         </ng-container>
     </form>

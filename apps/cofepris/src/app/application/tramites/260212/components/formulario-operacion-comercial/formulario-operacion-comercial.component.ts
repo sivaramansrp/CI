@@ -1,17 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
 import { CatalogoResponse, CatalogoSelectComponent, } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { SolicitudService } from '../../services/solicitud.service';
-
-import { Tramite260212State, Tramite260212Store } from '../../estados/tramite260212.store';
-
-import { Tramite260212Query } from '../../estados/tramite260212.query';
-
 import { Observable, Subject, map, takeUntil } from 'rxjs';
+import { Tramite260212State, Tramite260212Store } from '../../estados/tramite260212.store';
+import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { SolicitudService } from '../../services/solicitud.service';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { Tramite260212Query } from '../../estados/tramite260212.query';
 /**
  * Componente FormularioOperacionComercialComponent
  * Este componente gestiona el formulario relacionado con la operación comercial.
