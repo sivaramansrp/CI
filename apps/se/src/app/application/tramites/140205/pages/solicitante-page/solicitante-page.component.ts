@@ -1,10 +1,9 @@
-import { BtnContinuarComponent, DatosPasos } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent, DatosPasos, FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AccionBoton } from '../../model/cancelaciones-certificado.model';
 import { CommonModule } from '@angular/common';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constants/cancelaciones.enum';
-
 import { PasoUnoComponent } from '../../../140205/pages/paso-uno/paso-uno.component';
 import { Subject } from 'rxjs';
 import { TEXTOS } from '../../constants/cancelaciones.enum';
@@ -14,6 +13,8 @@ import { Tramite140205Store } from '../../../../estados/tramites/tramite140205.s
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
+
+import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 
 
 /**
@@ -27,7 +28,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './solicitante-page.component.html',
   styleUrl: './solicitante-page.component.scss',
   standalone: true,
-  imports: [CommonModule, WizardComponent,PasoUnoComponent,BtnContinuarComponent],
+  imports: [CommonModule, WizardComponent,PasoUnoComponent,BtnContinuarComponent,FirmaElectronicaComponent,PasoTresComponent],
 })
 export class SolicitantePageComponent implements OnInit, OnDestroy {
   /**

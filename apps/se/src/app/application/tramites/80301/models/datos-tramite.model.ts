@@ -150,4 +150,15 @@ export interface DatosDelModificacion {
   razonSocial?: string;
   /** Estatus descriptivo (ej. 'Activo', 'Inactivo') */
   desEstatus?: string;
+
+   descripcion?: string;
+  tipoDeServicio?: string;
+}
+
+export interface DatosDelServicios {
+  id?: number;
+  desEstatus?: string;
+  descripcion?: string;
+  tipoDeServicio?: string;
+  testado?: string;
 }

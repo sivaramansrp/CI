@@ -4,6 +4,7 @@ import {
   CuposTabla,
   CuposTablaDatos,
   DisponsiblesTabla,
+  DisponsiblesTablaDatos,
 } from '../../model/cancelaciones-certificado.model';
 import {
   CatalogoSelectComponent,
@@ -193,6 +194,8 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
     this.cargarNombreProducto();
     this.cargarNombreSubproducto();
     this.cargarFederal();
+    this.cargarCuposTabla2();
+    this.cargarCuposTabla();
 
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -448,6 +451,19 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos: CuposTablaDatos) => {
         this.tablaDeDatos.datos = datos.datos;
+      });
+  }
+  /**
+   * @method cargarCuposTabla2
+   * @description Carga los datos de la tabla de cupos 2.
+   * Utiliza el servicio de cancelación de certificados para obtener los datos.
+   */
+  public cargarCuposTabla2(): void {
+    this.cancelacionCertificadosService
+      .obtenerAvisoTabla2()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos: DisponsiblesTablaDatos) => {
+        this.tablaDatos.datos = datos.datos;
       });
   }
 
