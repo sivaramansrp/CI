@@ -27,6 +27,30 @@ export class ValidarInicalmenteService {
   }
 
   /**
+   * Obtiene la lista de estados desde un archivo JSON local.
+   * @returns Un observable con la respuesta de los catálogos.
+   */
+  obtenerPaisList(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/110208/pais.json');
+  }
+
+  /**
+   * Obtiene la lista de estados desde un archivo JSON local.
+   * @returns Un observable con la respuesta de los catálogos.
+   */
+  obtenerUMCList(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/110208/umc.json');
+  }
+
+  /**
+   * Obtiene la lista de estados desde un archivo JSON local.
+   * @returns Un observable con la respuesta de los catálogos.
+   */
+  obtenerTipoDeFacturaList(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/110208/tipo-de-factura.json');
+  }
+
+  /**
    * Obtiene los datos del formulario desde un archivo JSON local.
    * @returns Un observable con los datos del formulario.
    */
