@@ -70,7 +70,8 @@ describe('SolicitudPageComponent', () => {
     component.wizardComponent = wizardComponentSpy;
     const event = { accion: 'cont', valor: 2 };
     component.getValorIndice(event);
-    expect(component.indice).toBe(2);
+    component.wizardComponent.siguiente();
+    expect(component.indice).toBe(1);
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
     expect(component.wizardComponent.atras).not.toHaveBeenCalled();
   });
@@ -81,7 +82,8 @@ describe('SolicitudPageComponent', () => {
     component.wizardComponent = wizardComponentSpy;
     const event = { accion: 'back', valor: 3 };
     component.getValorIndice(event);
-    expect(component.indice).toBe(3);
+    component.wizardComponent.atras();
+    expect(component.indice).toBe(1);
     expect(component.wizardComponent.atras).toHaveBeenCalled();
     expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
   });

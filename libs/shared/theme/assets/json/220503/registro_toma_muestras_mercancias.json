@@ -13,7 +13,7 @@
     "tipocontenedor": 1,
     "transporteIdMedio": 1,
     "identificacionTransporte": "020202",
-    "esSolicitudFerros": "0",
+    "esSolicitudFerros": "no",
     "totalDeGuiasAmparadas": 1,
     "foliodel": 1,
     "aduanaIngreso": 1,

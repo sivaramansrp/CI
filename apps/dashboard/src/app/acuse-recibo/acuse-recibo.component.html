@@ -2,8 +2,10 @@
   <div class="row mt-5">
     <ng-titulo [titulo]="'Acuses y resoluciones'"></ng-titulo>
   </div>
-  <lib-notificaciones [notificacionInput]="alertaNotificacion">
-  </lib-notificaciones>
+  <ng-alert
+    [CONTENIDO]="alertaNotificacion"
+    [CUSTOMECLASS]="infoAlert"
+  ></ng-alert>
   <div>
     <div class="row mt-5">
       <ng-titulo [titulo]="'Acuse(s)'"></ng-titulo>

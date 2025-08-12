@@ -1,9 +1,8 @@
 <div class="container">
   <ng-titulo titulo="Terceros relacionados"></ng-titulo>
-
   <div class="row mt-5">
     <ng-alert
-      [CONTENIDO]="MENSAJE_TABLA_OBLIGATORIA"
+      [CONTENIDO]="isAdjuntar ? TEXTOS.ADJUNTAR : MENSAJE_TABLA_OBLIGATORIA"
       [CUSTOMECLASS]="infoAlert"
     ></ng-alert>
   </div>

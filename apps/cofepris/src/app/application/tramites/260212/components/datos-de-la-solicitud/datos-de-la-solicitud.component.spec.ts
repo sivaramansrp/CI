@@ -1,10 +1,27 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { of } from 'rxjs';
 import { SolicitudService } from '../../services/solicitud.service';
 import { ElementRef, NO_ERRORS_SCHEMA } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { Modal } from 'bootstrap';
+import * as bootstrap from 'bootstrap';
+
+jest.mock('bootstrap', () => {
+  return {
+    Modal: Object.assign(
+      jest.fn().mockImplementation(() => ({
+        show: jest.fn(),
+        hide: jest.fn(),
+      })),
+      {
+        getInstance: jest.fn(),
+      }
+    ),
+  };
+});
+
 
 // Mock dependencies
 const mockSolicitudService = {
@@ -13,7 +30,9 @@ const mockSolicitudService = {
   getOpcionesPublicacion: jest.fn().mockReturnValue(of([])),
   getClasificacionProducto: jest.fn().mockReturnValue(of([])),
   getTestadoFisico: jest.fn().mockReturnValue(of([])),
-  getScianDatos: jest.fn().mockReturnValue(of([]))
+  getScianDatos: jest.fn().mockReturnValue(of([])),
+  updateSeleccionarEstablecimientoState: jest.fn(),
+  getSeleccionarEstablecimientoState: jest.fn(),
 };
 const mockTramite260212Store = {
   setSelectedEstado: jest.fn(),
@@ -205,7 +224,7 @@ describe('DatosDeLaSolicitudComponent', () => {
 
   it('debe ocultar el modal Scian cuando se llama cerrarScianFormulario', () => {
     const hideSpy = jest.fn();
-    component['modalScianInstance'] = { hide: hideSpy } as any;
+    component['modalInstance'] = { hide: hideSpy } as any;
     component.cerrarScianFormulario();
     expect(hideSpy).toHaveBeenCalled();
   });
@@ -223,6 +242,174 @@ describe('DatosDeLaSolicitudComponent', () => {
 
     component.obtenerOpcionesSolicitud();
     expect(component.losDatos).toEqual(mockOpciones);
+  });
+
+  it('should not delete anything if seleccionadaScianDatos is empty', () => {
+  component.seleccionadaScianDatos = [];
+  component.claveScianDatas = [
+    { clave: '001', descripcion: 'Item 1' },
+    { clave: '002', descripcion: 'Item 2' }
+  ];
+  const mockHide = jest.fn();
+  (component as any).modalInstance = { hide: mockHide } as any;
+  component.confirmarEliminarScian();
+  expect(component.claveScianDatas.length).toBe(2);
+  expect(mockHide).toHaveBeenCalled();
+});
+
+
+  it('should delete selected scian entries and hide modal', () => {
+  const mockHide = jest.fn();
+  component.seleccionadaScianDatos = [
+    { clave: '001', descripcion: 'Item 1' },
+    { clave: '002', descripcion: 'Item 2' }
+  ];
+  component.claveScianDatas = [
+    { clave: '001', descripcion: 'Item 1' },
+    { clave: '002', descripcion: 'Item 2' },
+    { clave: '003', descripcion: 'Item 3' }
+  ];
+  (component as any).modalInstance = { hide: mockHide } as any;
+  component.confirmarEliminarScian();
+  expect(component.claveScianDatas).toEqual([{ clave: '003', descripcion: 'Item 3' }]);
+  expect(mockHide).toHaveBeenCalled();
+});
+
+
+  it('should not throw if modalInstance is undefined when closing Scian form', () => {
+    component['modalInstance'] = undefined as any;
+    expect(() => component.cerrarScianFormulario()).not.toThrow();
+  });
+
+  it('should not throw if modalMercanciasInstance is undefined when closing Mercancias form', () => {
+    component['modalMercanciasInstance'] = undefined as any;
+    expect(() => component.closeMercanciasForm()).not.toThrow();
+  });
+
+  it('should mark form as invalid if required fields are empty', () => {
+    component.fomInitialize();
+    component.datosEstablecimientoForm.get('denominacionRazonSocial')?.setValue('');
+    component.datosEstablecimientoForm.get('correoElectronico')?.setValue('');
+    expect(component.datosEstablecimientoForm.valid).toBe(false);
+  });
+
+  it('should call getOpcionesPublicacion on init', () => {
+    const spy = jest.spyOn(mockSolicitudService, 'getOpcionesPublicacion');
+    component.ngOnInit();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should patch form with values from selected observables in actualizarEstado', () => {
+    component.fomInitialize();
+    component.actualizarEstado();
+    expect(component.datosEstablecimientoForm.get('estado')?.value).toBe('');
+    expect(component.datosEstablecimientoForm.get('rfcDelResponsableSanitario')?.value).toBe('');
+    expect(component.datosEstablecimientoForm.get('denominacionRazonSocial')?.value).toBe('');
+  });
+
+  it('should reset form when fomInitialize is called multiple times', () => {
+    component.fomInitialize();
+    component.datosEstablecimientoForm.get('correoElectronico')?.setValue('test@test.com');
+    component.fomInitialize();
+    expect(component.datosEstablecimientoForm.get('correoElectronico')?.value).toBe('');
+  });
+
+  it('should hide modal and enable form controls, then call service method', () => {
+    const mockHide = jest.fn();
+    const mockElement = { nativeElement: {} };
+    component.modalElement = mockElement as ElementRef;
+    (Modal.getInstance as jest.Mock).mockReturnValue({ hide: mockHide });
+    component.datosEstablecimientoForm = new FormGroup({
+      nombre: new FormControl({ value: '', disabled: true }),
+      direccion: new FormControl({ value: '', disabled: true }),
+    });
+    const mockService = {
+      updateSeleccionarEstablecimientoState: jest.fn(),
+    };
+    (component as any).solicitudService = mockService;
+    component.aceptar();
+    expect(mockHide).toHaveBeenCalled();
+    expect(component.datosEstablecimientoForm.get('nombre')?.enabled).toBe(true);
+    expect(component.datosEstablecimientoForm.get('direccion')?.enabled).toBe(true);
+    expect(mockService.updateSeleccionarEstablecimientoState).toHaveBeenCalled();
+  });
+
+  it('should return seleccionarEstablecimientoState from service', () => {
+    jest.spyOn((component as any).solicitudService, 'getSeleccionarEstablecimientoState').mockReturnValue(true);
+    expect(component.seleccionarEstablecimientoState).toBe(true);
+  });
+
+  it('should add a MercanciaModel to mercanicaData', () => {
+    component.mercanicaData = [];
+    const testForm = { nombre: 'Merc 1' } as any;
+    component.agregarMercanciasTabla({ form: testForm });
+    expect(component.mercanicaData.length).toBe(1);
+    expect(component.mercanicaData[0]).toEqual(testForm);
+  });
+
+  it('should show Establecimiento modal if modalElement is defined', () => {
+    const mockElement = { nativeElement: document.createElement('div') };
+    component.modalElement = mockElement as ElementRef;
+    component.seleccionarEstablecimiento();
+    expect(Modal).toHaveBeenCalledWith(mockElement.nativeElement);
+  });
+
+  it('should initialize and show Mercancias modal if modalMercanciasRef is defined', () => {
+    const mockShow = jest.fn();
+    const mockNativeElement = {};
+    component.modalMercanciasRef = {
+      nativeElement: mockNativeElement,
+    } as ElementRef;
+
+    const modalInstance = { show: mockShow };
+    const mockModalConstructor = jest
+      .spyOn(bootstrap, 'Modal')
+      .mockImplementation(() => modalInstance as unknown as bootstrap.Modal);
+      
+    component.openMercanciasForm();
+    expect(mockShow).toHaveBeenCalled();
+    mockModalConstructor.mockRestore();
+  });
+
+  it('should initialize and show SCIAN modal if modalScianRef is defined', () => {
+    const mockShow = jest.fn();
+    (Modal as unknown as jest.Mock).mockImplementation(() => ({
+      show: mockShow,
+    }));
+    component.modalScianRef = {
+      nativeElement: {},
+    } as ElementRef;
+    component.toggleScianFormulario();
+    expect(mockShow).toHaveBeenCalled();
+  });
+
+  it('should update seleccionadaMercanciaDatos', () => {
+    const testData = [{ nombre: 'Mercancia A' }] as any;
+    component.listaDeFilaSeleccionadaMercancias(testData);
+    expect(component.seleccionadaMercanciaDatos).toEqual(testData);
+  });
+
+  it('should update seleccionadaScianDatos', () => {
+    const testData = [{ clave: '001' }] as any;
+    component.listaDeFilaSeleccionadaScian(testData);
+    expect(component.seleccionadaScianDatos).toEqual(testData);
+  });
+
+  it('should call openMercanciasForm if seleccionadaMercanciaDatos has items', () => {
+    const openSpy = jest.spyOn(component, 'openMercanciasForm');
+    component.seleccionadaMercanciaDatos = [{ nombre: 'Mercancia 1' } as any];
+    component.eliminarMercancias('delete');
+    expect(openSpy).toHaveBeenCalled();
+  });
+
+  it('should set tipoButton and open modal if seleccionadaMercanciaDatos is empty', () => {
+    component.seleccionadaMercanciaDatos = [];
+    component.mercanciasConfirmacionModalElement = {
+      nativeElement: document.createElement('div'),
+    } as ElementRef;
+    component.eliminarMercancias('delete');
+    expect(component.tipoButton).toBe('delete');
+    expect((component as any)['modalInstance']?.show).toHaveBeenCalled();
   });
 
 

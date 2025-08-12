@@ -435,6 +435,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   esManifesto: boolean = false;
 
   /**
+   * Indica si el campo utiliza punto y coma como separador.
+   */
+  esPuntoYComa: boolean = false;
+
+  /**
    * @constructor
    * Inyecta los servicios necesarios para el enrutamiento y construcción del formulario.
    *

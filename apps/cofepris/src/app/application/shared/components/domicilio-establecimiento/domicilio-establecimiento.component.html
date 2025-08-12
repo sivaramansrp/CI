@@ -58,7 +58,7 @@
   <div class="row">
     <div class="col-md-8">
       <div class="form-group">
-        <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Title"
+        <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Domicilio, calle, número interior, numero exterior, lote"
             ata-bs-toggle="tooltip"></span></label>
         <input class="form-control" id="calle" placeholder="" type="text" maxlength="100" formControlName="calle"
           (change)="setValoresStore(domicilio, 'calle', 'setCalle')" />
@@ -116,13 +116,15 @@
             setValoresStore(domicilio, 'avisoCheckbox', 'setAvisoCheckbox')
           " />
         <label class="form-check-label" for="avisoCheckbox">
-          <span>Aviso de funcionamiento*:</span>
+          <span>Aviso de funcionamiento*</span>
         </label>
       </div>
     </div>
     <div class="col-md-4">
       <div class="form-group">
         <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria*:</label>
+         <span class="bi bi-question-circle-fill fs-4 m-1" [title]="'Número de la autorización indicado en el documento emitido por la autoridad sanitaria competente'" data-bs-toggle="tooltip">
+         </span>
         <input class="form-control" id="licenciaSanitaria" placeholder="" type="text"
           formControlName="licenciaSanitaria" (change)="
                     setValoresStore(
@@ -218,7 +220,7 @@
         </form>
       </div>
       <div class="modal-footer custom-footer">
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal" (click)="limpiarScianForm()"
+        <button type="button" class="btn btn-default" (click)="limpiarScianForm()"
           [disabled]="esFormularioSoloLectura">
           Limpiar
         </button>
@@ -328,7 +330,7 @@
           </div>
           <div class="form-group">
             <label for="fraccionArancelaria">Fracción arancelaria*:</label>
-            <span class="bi bi-question-circle-fill fs-4 m-1" [title]="'Descripción numérica o desglose de un código de clasificación que otorga el Sistema Armonizado'" ata-bs-toggle="tooltip">
+            <span class="bi bi-question-circle-fill fs-4 m-1"  [title]="'Descripción numérica o desglose de un código de clasificación que otorga el sistema armonizado'" ata-bs-toggle="tooltip">
             </span>
             <input type="text" id="fraccionArancelaria" (focusout)="setDescripcionFraccion()" formControlName="fraccionArancelaria" class="form-control"
               (change)="

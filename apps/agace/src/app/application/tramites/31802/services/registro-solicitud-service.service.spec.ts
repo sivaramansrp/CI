@@ -51,17 +51,21 @@ describe('RegistroSolicitudService', () => {
       manifiesto1: true,
       manifiesto2: true,
       manifiesto3: true,
-      numeroOperacion: 123,
+      numeroOperacion: '123',
       fechaPago: '2024-01-01',
       monedaNacional: 'MXN',
       renovacion: false,
       homologacion: false,
       fechaInicio: '25/12/2023',
       fechaFinal: '25/12/2024',
+      manifiesto4: true,
+      manifiesto5: true,
+      opcion: 'no',
+      valorSeleccionado: null
     };
     service.actualizarEstadoFormulario(datos);
     expect(storeMock.setNumeroOficio).toHaveBeenCalledWith('12345');
-    expect(storeMock.setNumeroOperacion).toHaveBeenCalledWith(123);
+    expect(storeMock.setNumeroOperacion).toHaveBeenCalledWith('123');
     expect(storeMock.setLlave).toHaveBeenCalledWith('llave');
     expect(storeMock.setManifiesto1).toHaveBeenCalledWith(true);
     expect(storeMock.setManifiesto2).toHaveBeenCalledWith(true);
@@ -81,13 +85,17 @@ describe('RegistroSolicitudService', () => {
       manifiesto1: true,
       manifiesto2: true,
       manifiesto3: true,
-      numeroOperacion: 123,
+      numeroOperacion: '123',
       fechaPago: '2024-01-01',
       monedaNacional: 'MXN',
       renovacion: false,
       homologacion: false,
       fechaInicio: '25/12/2023',
       fechaFinal: '25/12/2024',
+      manifiesto4: true,
+      manifiesto5: true,
+      opcion: 'no',
+      valorSeleccionado: null
     };
     service.getDatosDeAvisoRenovacionDoc().subscribe(res => {
       expect(res).toEqual(mockResponse);

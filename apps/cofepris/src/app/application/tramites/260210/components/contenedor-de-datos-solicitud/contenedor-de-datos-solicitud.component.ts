@@ -17,6 +17,7 @@ import {
   Tramite260214Store,
 } from '../../estados/tramite260210Store.store';
 import { map, takeUntil } from 'rxjs';
+import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
@@ -50,6 +51,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
     'scian',
     'correoElectronico',
     'rfcSanitario',
+    'manifesto'
   ];
   /**
    * @property destroyNotifier$
@@ -165,13 +167,15 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   constructor(
     private Tramite260210Query: Tramite260210Query,
     private tramite260214Store: Tramite260214Store,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef
   ) {
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
+          this.cdr.detectChanges();
         })
       )
       .subscribe();

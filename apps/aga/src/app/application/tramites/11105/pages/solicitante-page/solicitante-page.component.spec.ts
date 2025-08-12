@@ -84,7 +84,8 @@ describe('SolicitantePageComponent', () => {
 
   it('should call getValorIndice with the correct parameters when continuar is called', () => {
     const spy = jest.spyOn(component, 'getValorIndice');
+    const prevIndice = component.indice;
     component.continuar();
-    expect(spy).toHaveBeenCalledWith({ accion: 'cont', valor: component.indice + 1 });
+    expect(spy).toHaveBeenCalledWith({ accion: 'cont', valor: prevIndice + 1 });
   });
 });

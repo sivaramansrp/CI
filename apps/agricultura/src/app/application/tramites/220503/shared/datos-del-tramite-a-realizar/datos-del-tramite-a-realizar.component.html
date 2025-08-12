@@ -24,6 +24,7 @@
     <div class="col-md-4">
       <div class="form-field">
         <input-fecha
+          [isDisabled]="esFormularioSoloLectura"
           [datos]="configuracionFechaFinVigencia"
           (valorCambiado)="cambioFechaInicio($event)"
           [setFecha]="grupoFormularioPadre.get(claveDeControl)?.get('fechaDeInspeccion')?.value"

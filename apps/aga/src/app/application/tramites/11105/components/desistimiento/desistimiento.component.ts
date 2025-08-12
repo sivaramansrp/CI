@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormGroup,
@@ -8,10 +9,8 @@ import {
 import {ReplaySubject, Subject, map,takeUntil } from 'rxjs';
 import { Solicitud11105State, Solicitud11105Store } from '../../estados/solicitud11105.store';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { ConsultaioState } from '@ng-mf/data-access-user';
 import { Solicitud11105Query } from '../../estados/solicitud11105.query';
-import {TituloComponent } from '@libs/shared/data-access-user/src';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 
 /**
@@ -66,12 +65,14 @@ export class DesistimientoComponent implements OnInit {
   /**
    * Constructor de la clase.
    * @param formBuilder Servicio FormBuilder para construir formularios reactivos.
+   * @param validacionesService Servicio para validar formularios.
    */
   constructor(
     public formBuilder: FormBuilder,
     private consultaioQuery: ConsultaioQuery,
     private store: Solicitud11105Store,
-    private query: Solicitud11105Query
+    private query: Solicitud11105Query,
+    private validacionesService: ValidacionesFormularioService
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -107,7 +108,10 @@ export class DesistimientoComponent implements OnInit {
       folioOriginal: [this.solicitudState?.folioOriginal,
       ],
       justificacionDelDesistimiento: [ this.solicitudState?.justificacionDelDesistimiento,
-        Validators.maxLength(200),
+        [
+          Validators.required,
+          Validators.maxLength(1000)
+        ],
       ],
     });
     this.destinarioFormulario();
@@ -158,5 +162,15 @@ export class DesistimientoComponent implements OnInit {
    */
   continuar(): void {
     this.continuarEvento.emit('');
+  }
+
+  /**
+   * Método para validar el formulario.
+   * @param form Formulario a validar.
+   * @param field Campo a validar.
+   * @returns {boolean} Regresa un booleano si el campo es válido o no.
+   */
+  esValido(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) === true;
   }
 }

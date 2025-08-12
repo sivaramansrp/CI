@@ -13,6 +13,7 @@
             </div>
             <div class="col-md-4">
                 <app-catalogo-select 
+                
                     [catalogo]="estado" 
                     formControlName="estado" 
                     [label]="'Estado'" 
@@ -102,6 +103,7 @@
         </div>
         <div class="row">
             <app-tabla-dinamica 
+            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
                 [tipoSeleccionTabla]="tablaSeleccionCheckbox" 
                 [configuracionTabla]="nicoTabla"
                 [datos]="nicoTablaDatos">
@@ -165,6 +167,7 @@
             </div>
             <div class="col-md-4">
                 <app-catalogo-select 
+                [isDisabled]="esFormularioSoloLectura"
                     [catalogo]="estado" 
                     formControlName="aduanasEntradas"
                     [label]="'Aduanas'" 
@@ -208,6 +211,7 @@
                     <form [formGroup]="formAgente">
                         <div class="form-group">
                             <app-catalogo-select 
+                            [isDisabled]="esFormularioSoloLectura"
                                 [catalogo]="estado" 
                                 formControlName="claveScianModal"
                                 [label]="'Clave S.C.I.A.N.'" 
@@ -217,6 +221,7 @@
                         </div>
                         <div class="form-group">
                             <app-catalogo-select 
+                            [isDisabled]="esFormularioSoloLectura"
                                 [catalogo]="estado" 
                                 formControlName="claveDescripcionModal"
                                 [label]="'Descripción del S.C.I.A.N.'" 
@@ -249,6 +254,7 @@
                     <form [formGroup]="formMercancias">
                         <div class="form-group">
                             <app-catalogo-select 
+                            [isDisabled]="esFormularioSoloLectura"
                                 [catalogo]="estado" 
                                 formControlName="clasificacion"
                                 [label]="'Clasificación del producto'" 
@@ -259,6 +265,7 @@
                         </div>
                         <div class="form-group">
                             <app-catalogo-select 
+                            [isDisabled]="esFormularioSoloLectura"
                                 [catalogo]="estado" 
                                 formControlName="especificarClasificacionProducto"
                                 [label]="'Especificar clasificación del producto'" 
@@ -292,6 +299,7 @@
                         </div>
                         <div class="form-group">
                             <app-catalogo-select 
+                            [isDisabled]="esFormularioSoloLectura"
                                 [catalogo]="estado" 
                                 formControlName="tipoDeProducto"
                                 [label]="'Tipo de producto'" 
@@ -301,6 +309,7 @@
                         </div>
                         <div class="form-group">
                             <app-catalogo-select 
+                            [isDisabled]="esFormularioSoloLectura"
                                 [catalogo]="estado" 
                                 formControlName="estadoFisico"
                                 [label]="'Estado físico'" 
@@ -346,6 +355,7 @@
                         </div>
                         <div class="form-group">
                             <app-catalogo-select 
+                            [isDisabled]="esFormularioSoloLectura"
                                 [catalogo]="estado" 
                                 formControlName="UMC" 
                                 [label]="'UMC'"
@@ -468,6 +478,7 @@
                             <h6>Lista Claves de los lotes*:</h6>
                             <div class="d-flex justify-content-center">
                                 <app-tabla-dinamica
+                                [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
                                     [tipoSeleccionTabla]="tablaSeleccionCheckbox" 
                                     [configuracionTabla]="listaClavesDeLosLotes"
                                     [datos]="listaClavesDeLosLotesDatos">

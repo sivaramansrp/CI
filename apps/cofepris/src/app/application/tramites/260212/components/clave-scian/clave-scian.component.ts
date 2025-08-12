@@ -1,10 +1,10 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { CatalogoResponse, CatalogoSelectComponent, ConsultaioQuery, TablaDinamicaComponent, TituloComponent, } from '@ng-mf/data-access-user';
+import { CatalogoResponse, ConsultaioQuery, TablaDinamicaComponent, TituloComponent, } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SolicitudService } from '../../services/solicitud.service';
-
 import { map, takeUntil } from 'rxjs';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs';
@@ -182,6 +182,7 @@ export class ClaveScianComponent implements OnInit, OnDestroy {
   getMunicipios(): void {
     const SELECTED_CLAVE = this.claveForm.get('clave')?.value;
     this.tramite260212Store.setClave(SELECTED_CLAVE);
+    this.claveForm.get('descripcion')?.setValue(1);
   }
 
   /**

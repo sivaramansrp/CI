@@ -139,6 +139,8 @@ export class BtnContinuarComponent implements OnInit {
    */
   public moduloEmergente: boolean = false;
 
+  @Input() ocultabotonAnterior: boolean = false;
+
   /**
    * @constructor
    * @description Inicializa el componente e inyecta las dependencias necesarias.

@@ -11,9 +11,13 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { RouterModule } from '@angular/router';
 import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-page.component';
 import { ToastrService } from 'ngx-toastr';
+
+import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
+
+import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 @NgModule({
   declarations: [
-    
+     
   ],
   imports: [
     CommonModule,
@@ -26,7 +30,10 @@ import { ToastrService } from 'ngx-toastr';
     SolicitantePageComponent,
     PasoUnoComponent,
     CommonModule,
-    DatosEmpresaComponent
+    DatosEmpresaComponent,
+    FirmaElectronicaComponent,
+    PasoTresComponent
+   
   ],
   exports: [],
   providers: [ToastrService]

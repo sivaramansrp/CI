@@ -18,6 +18,7 @@ import { ToastrModule, provideToastr } from 'ngx-toastr';
 import { Router, RouterModule } from '@angular/router';
 import { Component } from '@angular/core';
 import { PasoTresComponent } from './paso-tres.component';
+import { HttpClientModule } from '@angular/common/http';
 
 class MockRouter {
   navigate(): void {}
@@ -29,7 +30,7 @@ describe('PasoTresComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, PasoTresComponent, ToastrModule, RouterModule],
+      imports: [FormsModule, ReactiveFormsModule, PasoTresComponent, ToastrModule, RouterModule, HttpClientModule],
       declarations: [],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
@@ -37,6 +38,7 @@ describe('PasoTresComponent', () => {
         provideToastr({
           positionClass: 'toast-top-right',
         }),
+        
       ],
     })
       .overrideComponent(PasoTresComponent, {})

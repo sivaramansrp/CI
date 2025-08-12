@@ -51,6 +51,8 @@ export interface Tramite130108State {
   representacion: string;
   /** Bandera para mostrar u ocultar la tabla */
   mostrarTabla: boolean;
+  /** Datos del cuerpo de la tabla dinámica */
+  tablaDatos: PartidasDeLaMercanciaModelo[];
 /** Descripción   acotacion */
   acotacion: string;
   /** Descripción del NICO */
@@ -62,6 +64,8 @@ export interface Tramite130108State {
    * @type {boolean}
    */
   manifesto: boolean;
+  rangoDias: string[];
+  seleccionada: string[];
 }
 
 /**
@@ -72,6 +76,7 @@ export function createInitialState(): Tramite130108State {
   return {
     filaSeleccionada: [],
     mostrarTabla: false,
+    tablaDatos: [],
     solicitud: 'Inicial',
     fraccion: '',
     nico: '',
@@ -94,7 +99,9 @@ export function createInitialState(): Tramite130108State {
     representacion: '1',
     acotacion: '',
     descripcionNico: '',
-    manifesto: false
+    manifesto: false,
+    rangoDias: [],
+    seleccionada: []
 
   };
 }
@@ -130,6 +137,14 @@ export class Tramite130108Store extends Store<Tramite130108State> {
     this.update({
       filaSeleccionada: fila,
     });
+  }
+
+  /**
+   * Actualiza los datos de la tabla en el estado.
+   * @param {PartidasDeLaMercanciaModelo[]} tablaDatos - Datos de la tabla a almacenar.
+   */
+  public setTablaDatos(tablaDatos: PartidasDeLaMercanciaModelo[]): void {
+    this.update({ tablaDatos });
   }
 
 /**

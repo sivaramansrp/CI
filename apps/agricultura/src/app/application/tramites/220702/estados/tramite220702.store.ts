@@ -241,6 +241,12 @@ export interface TramiteState {
    * @property {string} fechaPagoDeDerechos
    */
   fechaPagoDeDerechos: string;
+
+  /**
+   * Justificación del pago.
+   * @property {string} pagoJustificacion
+   */
+  pagoJustificacion: string;
 }
 
 /**
@@ -484,6 +490,11 @@ export function createInitialState(): TramiteState {
          * @property {string} fechaPagoDeDerechos
          */
         fechaPagoDeDerechos: '',
+        /**
+         * Justificación del pago.
+         * @property {string} pagoJustificacion
+         */
+        pagoJustificacion: '',
     };
 }
 

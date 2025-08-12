@@ -12,6 +12,7 @@
               type="button"
               class="collpase-button"
               [class.collapsed]="!opcionesColapsable"
+              [disabled]="formularioDeshabilitado"
             ></button>
           </div>
           @if(opcionesColapsable){
@@ -508,16 +509,14 @@
             formControlName="aviso"
           />
           <label class="form-check-label" for="aviso"
-            >Aviso de funcionamiento
-            <span *ngIf="!datosSolicitudForm.value.aviso">*</span>
+            >Aviso de funcionamiento<span *ngIf="esCampoRequerido('aviso')">*</span>:
           </label>
         </div>
       </div>
       <div class="col-md-4">
-        <label class="form-label mx-1" for="licenciaSanitaria"
-          >No. de licencia sanitaria :</label
-        >
-
+        <div class="form-check mt-4">
+          <label class="form-label mx-1" for="licenciaSanitaria"
+          >No. de licencia sanitaria<span *ngIf="esCampoRequerido('licenciaSanitaria')">*</span>:</label>
         <span
           tooltip="Número de la autorización indicado en el  documento emitido por la autoridad sanitaria competente"
         >
@@ -544,6 +543,8 @@
         >
           Este campo es obligatorio.
         </small>
+        </div>
+        
       </div>
     </div>
 
