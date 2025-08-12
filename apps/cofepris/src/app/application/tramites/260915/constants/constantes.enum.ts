@@ -44,3 +44,9 @@ export const HACERLOS_RADIO_OPTIONS = [
   { label: 'No', value: '0' },
   { label: 'Sí', value: '1' },
 ];
+
+export const NOTA = {
+  REQUISITO_OBLIGATORIO_PARA_ACCEDER_NOTA: 'Selecciona sólo un registro para modificar',
+  DEBE_CAPTURAR: 'Selecciona un registro.',
+
+};

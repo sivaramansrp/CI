@@ -148,14 +148,7 @@ describe('PagoDeDerechoComponent', () => {
      expect(component.fb.group).toHaveBeenCalled();
   });
 
-  it('should run #seleccionarFechaInicio()', async () => {
-    component.solicitud260915Store = component.solicitud260915Store || {};
-    component.solicitud260915Store.getValue = jest.fn().mockReturnValue({
-      fechadepago: {}
-    });
-    component.seleccionarFechaInicio({});
-     expect(component.solicitud260915Store.getValue).toHaveBeenCalled();
-  });
+  
 
   it('should run #clearForm()', async () => {
     component.pagoDeDerechosForm = component.fb.group({

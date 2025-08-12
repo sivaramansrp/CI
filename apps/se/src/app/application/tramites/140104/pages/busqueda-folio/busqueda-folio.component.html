@@ -7,10 +7,16 @@
                 <div class="col-md-8">
                     <label class="form-label" for="monto"> *Monto a cancelar <span class="text-secondary fw-normal">(en unidades primarias)</span></label>
                     <input type="text" class="form-control" id="monto" formControlName="monto">
-                    <div *ngIf="montoACancelarForm.controls['monto'].invalid && montoACancelarForm.controls['monto'].touched">
-                        <small *ngIf="montoACancelarForm.controls['monto'].errors?.['required']">*El campo no puede estar vacío.</small>
-                        <small *ngIf="montoACancelarForm.controls['monto'].errors?.['pattern']">*Solo se permiten números.</small>
-                      </div>
+               @if(montoACancelarForm.controls['monto'].invalid && montoACancelarForm.controls['monto'].touched) {
+              <div class="d-grid">
+                @if(montoACancelarForm.controls['monto'].errors?.['required']) {
+                  <span class="mensaje-error">*El campo no puede estar vacío.</span>
+                }
+                @if(montoACancelarForm.controls['monto'].errors?.['pattern']) {
+                  <span class="mensaje-error">*Solo se permiten números.</span>
+                }
+              </div>
+            }
                 </div>
             </div>
         </form>
@@ -66,7 +72,7 @@
                         <form [formGroup]="cantidadADevolver">
                             <div class="row">
                                 <div class="col-md-4 form-group">
-                                    <label class="form-label" for="cantidad">Cantidad a devolver <span class="text-secondary fw-normal">(en unidades primarias)</span>:</label><br/>
+                                    <label class="form-label text-start" for="cantidad">Cantidad a devolver <span class="text-secondary fw-normal">(en unidades primarias)</span>:</label><br/>
                                     <input
                                       class="form-control"
                                       id="cantidad"

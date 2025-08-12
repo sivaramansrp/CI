@@ -40,9 +40,9 @@ export interface Solicitud31802State {
   /** Fecha final del trámite. */
   fechaFinal: string;
   /** Cuarto manifiesto asociado a la solicitud. */
-  manifiesto4?: boolean;
+  manifiesto4: boolean;
   /** Quinto manifiesto asociado a la solicitud. */
-  manifiesto5?: boolean;
+  manifiesto5: boolean;
   /** Valor actualmente seleccionado en algún campo dinámico. */
   valorSeleccionado: string | null;
   /** Opción seleccionada en el formulario. */
