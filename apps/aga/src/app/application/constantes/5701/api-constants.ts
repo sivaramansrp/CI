@@ -143,3 +143,83 @@ export const API_GET_VALIDA_LINEA_CAPTURA_PAGADA = `pago/valida/${LINEA_CAPTURA_
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/catalogo/swagger-ui/index.html#/LDA/valida-lda
  */
 export const API_POST_VALIDA_LDA = `catalogo/solicitud/valida-lda`;
+
+/**
+ * Constante para el número de folio del tramite.
+ * Debe ser reemplazada por el número de folio real del tramite.
+ */
+export const NUMFOLIOTRAMITE = '{numFolioTramite}';
+
+/**
+ * ID de la solicitud del dictamen que se utilizará en las consultas.
+ * Este valor debe ser reemplazado por el ID real de la solicitud del dictamen.
+ */
+export const IDSOLICITUDDICTAMEN = '{idSolicitudDictamen}';
+
+/**
+ * Tramite que se utilizará en las consultas.
+ * Este valor debe ser reemplazado por el tramite correspondiente.
+ */
+export const TRAMITE= '{tramite}';
+
+/**
+ * ID de la solicitud que se utilizará en las consultas.
+ * Este valor debe ser reemplazado por el ID real de la solicitud.
+ */
+export const IDSOLICITUD = '{idSolicitud}';
+
+/**
+ * API para obtener las opciones de evaluación del tramite 130118.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Evaluar-Solicitud/opciones-evaluacion
+ */
+export const API_POST_OPCIONES_EVALUACION = `sat-t130118/tramite/${NUMFOLIOTRAMITE}/opciones-evaluacion`;
+
+/**
+ * API para generar el dictamen del tramite 130118.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Dictamen/dictamen-criterios-by-idSolicitud
+ */
+export const API_GET_DICTAMEN = `sat-t130118/solicitud/${IDSOLICITUDDICTAMEN}/dictamen/generar/criterios`;
+
+/**
+ * API para guardar el dictamen del tramite 130118.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Dictamen/generar-dictamen-by-numFolioTramite
+ */
+export const API_POST_GUARDAR_DICTAMEN = `sat-t130118/tramite/${NUMFOLIOTRAMITE}/dictamen/generar/guardar`;
+
+/**
+ * API para iniciar el dictamen del tramite 130118.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Dictamen/generar-dictamen-by-numFolioTramite
+ */
+export const API_GET_INICAR_DICTAMEN = `sat-t130118/tramite/${NUMFOLIOTRAMITE}/dictamen/generar/iniciar`;
+
+/**
+ * API para Consultar acuses de resolución del tramite 130118.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Acuse/consulta-acuse-resoluciones-funcionario
+ */
+export const API_GET_ACUSES_RESOLUCION = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/funcionario/acuses-resoluciones`;
+
+/**
+ * API para Consultar dictamenes del tramite 130118.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitudes/consultar-dictamenes-by-numFolioTramite
+ */
+export const API_GET_DICTAMENES = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/dictamenes`;
+
+/**
+ * API para Consultar requerimientos del tramite 130118.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitudes/get-requerimientos-by-numFolioTramite
+ */
+export const API_GET_REQUERIMIENTOS = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/requerimientos`;
+
+/**
+ * API para Consultar documentos de solicitud del tramite 130118.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitudes/consulta-documentos-solicitud
+ */
+export const API_GET_SOLICITUD_DOCUMENTOS = `sat-t${TRAMITE}/solicitud/${IDSOLICITUD}/documentos`;
+
+/**
+ * API para Consultar tareas de solicitud del tramite 130118.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitudes/get-tareas-tramite 
+ */
+export const API_GET_TAREAS_DOCUMENTOS = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/bitacora`;
+
+

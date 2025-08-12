@@ -14281,5 +14281,15 @@
     "departamento": "agace",
     "numeroDeProcedimiento": "32618",
     "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
+  },
+  {
+    "folioTramite": "0215523965732296454156773",
+    "tipoDeTramite": "Solicitud de Proceso Interno",
+    "nombreDeLaTarea": "Evaluar solicitud",
+    "fechaDeAsignacion": "2024-10-01",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "aga",
+    "numeroDeProcedimiento": "5701",
+    "origin": "FLUJO_FUNCIONARIO_EVALUAR"
   }
 ]
