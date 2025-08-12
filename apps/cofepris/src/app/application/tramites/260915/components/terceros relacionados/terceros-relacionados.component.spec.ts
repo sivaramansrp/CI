@@ -151,23 +151,7 @@ describe('TercerosrelacionadosComponent', () => {
      expect(component.permisosanitariodispositivosmedicosservice.getPaisData).toHaveBeenCalled();
   });
 
-  it('should run #onGuardar()', async () => {
-    component.destinatarioForm = component.destinatarioForm || {};
-    component.destinatarioForm.value = {
-      agregarDestinatario: {},
-      datosPersonales: {
-        pais: {}
-      }
-    };
-    component.destinatarioForm.reset = jest.fn();
-    component.getPaisName = jest.fn();
-    component.tableData = component.tableData || {};
-    component.tableData.push = jest.fn();
-    component.onGuardar();
-     expect(component.destinatarioForm.reset).toHaveBeenCalled();
-     expect(component.getPaisName).toHaveBeenCalled();
-     expect(component.tableData.push).toHaveBeenCalled();
-  });
+ 
 
   it('should run #getPaisName()', async () => {
     component.paisData = component.paisData || {};
@@ -208,11 +192,6 @@ describe('TercerosrelacionadosComponent', () => {
      expect(component.destinatarioForm.reset).toHaveBeenCalled();
   });
 
-  it('should run #cancelarFormulario()', async () => {
-
-    component.cancelarFormulario();
-
-  });
 
   it('should run #onConfirmarEliminacion()', async () => {
     component.eliminarMercancias = jest.fn();

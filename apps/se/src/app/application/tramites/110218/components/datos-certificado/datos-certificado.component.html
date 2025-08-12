@@ -41,6 +41,9 @@
     >
     </app-tabla-dinamica>
     <div class="col-md-12">
+            <app-table-pagination [showCurrentPage]="true"></app-table-pagination>
+    </div>
+    <div class="col-md-12">
         <button type="button" class="btn btn-primary col-auto pull-right float-end mt-3" (click)="enModificarFormulario()"
         [disabled]="esSoloLectura">
             Modificar
