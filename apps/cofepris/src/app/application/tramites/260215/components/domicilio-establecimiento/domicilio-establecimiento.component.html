@@ -280,6 +280,11 @@
                   'setDenominacionEspecifica'
                 )
               " />
+            <div class="mensaje-error" *ngIf="formMercancias.get('denominacionEspecifica')?.invalid && formMercancias.get('denominacionEspecifica')?.touched">
+              <span *ngIf="formMercancias.get('denominacionEspecifica')?.errors?.['required']">
+                Este campo es obligatorio
+              </span>
+            </div>
           </div>
           <div class="form-group">
             <label for="denominacionDistintiva">Denominación distintiva*:</label>
@@ -291,6 +296,11 @@
                   'setDenominacionDistintiva'
                 )
               " />
+              <div class="mensaje-error" *ngIf="formMercancias.get('denominacionDistintiva')?.invalid && formMercancias.get('denominacionDistintiva')?.touched">
+                <span *ngIf="formMercancias.get('denominacionDistintiva')?.errors?.['required']">
+                  Este campo es obligatorio
+                </span>
+              </div>
           </div>
           <div class="form-group">
             <label for="denominacionComun">Denominación o nombre científico*: <span
@@ -302,6 +312,11 @@
                   'setDenominacionComun'
                 )
               " />
+            <div class="mensaje-error" *ngIf="formMercancias.get('denominacionComun')?.invalid && formMercancias.get('denominacionComun')?.touched">  
+              <span *ngIf="formMercancias.get('denominacionComun')?.errors?.['required']">
+                Este campo es obligatorio
+              </span>
+            </div>
           </div>
           <div class="form-group">
             <app-catalogo-select [catalogo]="estado" formControlName="tipoDeProducto" [label]="'Tipo de producto'"
