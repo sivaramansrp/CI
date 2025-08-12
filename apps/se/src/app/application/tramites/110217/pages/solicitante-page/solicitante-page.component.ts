@@ -2,6 +2,7 @@ import { AlertComponent, BtnContinuarComponent, DatosPasos } from '@ng-mf/data-a
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
 import { AccionBoton } from '../../models/certificado-origen.model';
+import { ERROR_FORMA_ALERT } from '../../constants/certificado-origen.enum';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constants/certificado-origen.enum';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
@@ -31,6 +32,16 @@ import { takeUntil } from 'rxjs';
   ]
 })
 export class SolicitantePageComponent implements OnInit, OnDestroy {
+  /**
+   * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+   */
+  public formErrorAlert = ERROR_FORMA_ALERT;
+
+  /**
+   * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+   */
+  esFormaValido: boolean = false;
+
   /**
     * Lista de pasos del wizard.
     * 
@@ -78,6 +89,11 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
+   * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+   */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+
+  /**
    * Datos relacionados con los pasos del wizard.
    * 
    * Esta propiedad contiene información como el número total de pasos, el índice
@@ -121,28 +137,51 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
      * Método para manejar las acciones de los botones del wizard.
      * 
      * Este método actualiza el índice del paso activo y avanza o retrocede en el wizard
-     * dependiendo de la acción recibida.
+     * dependiendo de la acción recibida. También valida los formularios antes de permitir
+     * continuar al siguiente paso.
      * 
      * @param {AccionBoton} e - Objeto que contiene la acción (`cont` o `atras`) y el valor del índice.
      */
   getValorIndice(e: AccionBoton): void {
-    // Verifica si el valor de la acción está en el rango adecuado
-    if (e.valor > 0 && e.valor < 5) {
-      // Actualiza el índice del paso basado en el valor de la acción
-      this.indice = e.valor;
-
-      // Dependiendo de la acción, avanza o retrocede en el wizard
-      if (e.accion === 'cont') {
-        // Si la acción es 'cont', avanza al siguiente paso
-        this.wizardComponent.siguiente();
-      } else {
-        // Si la acción es 'atras', retrocede al paso anterior
-        this.wizardComponent.atras();
+    // Si la acción es continuar, validar formularios del paso actual
+    if (e.accion === 'cont') {
+      let isValid = true;
+      
+      // Validar formularios del paso 1 antes de continuar
+      if (this.indice === 1 && this.pasoUnoComponent) {
+        isValid = this.pasoUnoComponent.validarTodosLosFormularios();
       }
-
-      // Actualiza el paso activo en el store
+      
+      // Si los formularios no son válidos, mostrar error y no continuar
+      if (!isValid) {
+        this.esFormaValido = true;
+        this.datosPasos.indice = this.indice;
+        return;
+      }
+      
+      this.esFormaValido = false;
+      this.indice = e.valor;
+      this.datosPasos.indice = this.indice;
+      
+      // Avanzar al siguiente paso
+      this.wizardComponent.siguiente();
       this.store.setPasoActivo(this.indice);
+      return;
     }
+
+    // Para botón "Anterior" - actualizar índice sin validación
+    this.indice = e.valor;
+    this.datosPasos.indice = this.indice;
+    this.wizardComponent.atras();
+    this.store.setPasoActivo(this.indice);
+  }
+
+  /**
+   * Método que se ejecuta cuando cambia de tab en paso-uno.
+   * Oculta el mensaje de error de validación.
+   */
+  onTabChanged(): void {
+    this.esFormaValido = false;
   }
 
   /**

@@ -4,11 +4,19 @@
       <div class="col-md-8">
         <h3>Validar a posteriori el certificado de Japón</h3>
       </div>
+      <div class="col-12">
+        @if (esFormaValido) {
+        <div
+          class="alert alert-info alert-danger"
+          [innerHTML]="formErrorAlert"
+        ></div>
+        }
+      </div>
       <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
     <div class="row">
       @switch (indice) { @case (1) {
-      <app-paso-uno></app-paso-uno>
+      <app-paso-uno #pasoUnoRef (tabChanged)="onTabChanged()"></app-paso-uno>
       } @case (2) {
       <app-paso-tres></app-paso-tres>
       }

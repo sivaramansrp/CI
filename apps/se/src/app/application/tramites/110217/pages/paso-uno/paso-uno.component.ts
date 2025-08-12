@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite110217State, Tramite110217Store } from '../../../../estados/tramites/tramite110217.store';
@@ -53,11 +53,42 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
   /**
+   * Referencia al componente `CertificadoOrigenComponent`.
+   */
+  @ViewChild('certificadoOrigenRef') certificadoOrigenComp!: CertificadoOrigenComponent;
+
+  /**
+   * Referencia al componente `DestinatarioComponent`.
+   */
+  @ViewChild('destinatarioRef') destinatarioComp!: DestinatarioComponent;
+
+  /**
+   * Referencia al componente `DatosCertificadoComponent`.
+   */
+  @ViewChild('datosCertificadoRef') datosCertificadoComp!: DatosCertificadoComponent;
+
+  /**
+   * Referencia al componente `HistoricoProductoresComponent`.
+   */
+  @ViewChild('historicoProductoresRef') historicoProductoresComp!: HistoricoProductoresComponent;
+
+  /**
+   * Evento que se emite cuando cambia de tab.
+   */
+  @Output() tabChanged = new EventEmitter<void>();
+
+  /**
    * Índice de la pestaña activa.
    *
    * Esta propiedad indica cuál pestaña está activa actualmente.
    */
   indice: number = 1;
+
+  /**
+   * Tracking de tabs completadas
+   * Almacena qué tabs han sido visitadas y completadas por el usuario
+   */
+  tabsCompletadas: Set<number> = new Set();
 
   /**
    * Estado actual del trámite.
@@ -158,13 +189,88 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Método para seleccionar una pestaña específica.
    *
    * Este método actualiza el índice de la pestaña activa y almacena el valor
-   * en el store.
+   * en el store. También marca la tab anterior como completada si tenía form válido.
    *
    * @param {number} i - El índice de la pestaña a seleccionar.
    */
   seleccionaTab(i: number): void {
+    // Marcar la tab actual como completada si tiene form válido
+    this.marcarTabComoCompletada(this.indice);
+    
     this.indice = i;
     this.store.setPestanaActiva(this.indice);
+    this.tabChanged.emit(); // Emite evento cuando cambia de tab
+  }
+
+  /**
+   * Marca una tab como completada si su formulario es válido
+   * @param tabIndex - Índice de la tab a verificar
+   */
+  private marcarTabComoCompletada(tabIndex: number): void {
+    let isValid = false;
+    
+    // Tab 2: Certificado de origen
+    if (tabIndex === 2 && this.certificadoOrigenComp?.formularioCertificado) {
+      isValid = this.certificadoOrigenComp.formularioCertificado.valid;
+    }
+    
+    // Tab 4: Destinatario  
+    if (tabIndex === 4 && this.destinatarioComp?.registroFormulario) {
+      isValid = this.destinatarioComp.registroFormulario.valid;
+    }
+    
+    // Tab 5: Datos certificado
+    if (tabIndex === 5 && this.datosCertificadoComp?.formDatosCertificado) {
+      isValid = this.datosCertificadoComp.formDatosCertificado.valid;
+    }
+    
+    // Si es válida, marcarla como completada
+    if (isValid) {
+      this.tabsCompletadas.add(tabIndex);
+    } else if ([2, 4, 5].includes(tabIndex)) {
+      // Si es una tab requerida pero inválida, removerla de completadas
+      this.tabsCompletadas.delete(tabIndex);
+    }
+  }
+
+  /**
+   * Valida todos los formularios del paso uno.
+   * 
+   * Requiere que TODAS las tabs necesarias estén completadas:
+   * - Tab 2: Certificado de origen
+   * - Tab 4: Destinatario  
+   * - Tab 5: Datos certificado
+   * 
+   * @returns {boolean} `true` si TODAS las tabs requeridas están completadas
+   */
+  public validarTodosLosFormularios(): boolean {
+    // Marcar la tab actual como completada antes de validar
+    this.marcarTabComoCompletada(this.indice);
+    
+    // Tabs requeridas que deben estar completadas
+    const REQUIRED_TABS = [2, 4, 5];
+    
+    // Verificar si todas las tabs requeridas están completadas
+    const ALL_TABS_COMPLETED = REQUIRED_TABS.every(tab => this.tabsCompletadas.has(tab));
+    
+    // Si no todas están completadas, mostrar errores en la tab actual
+    if (!ALL_TABS_COMPLETED) {
+      // Validar y mostrar errores en la tab actual
+      if (this.indice === 2 && this.certificadoOrigenComp?.formularioCertificado) {
+        this.certificadoOrigenComp.formularioCertificado.markAllAsTouched();
+      }
+      
+      if (this.indice === 4 && this.destinatarioComp?.registroFormulario) {
+        this.destinatarioComp.registroFormulario.markAllAsTouched();
+      }
+      
+      if (this.indice === 5 && this.datosCertificadoComp?.formDatosCertificado) {
+        this.datosCertificadoComp.formDatosCertificado.markAllAsTouched();
+      }
+    }
+    
+    // Verificar que todas las tabs requeridas estén completadas
+    return ALL_TABS_COMPLETED;
   }
 
   /**
