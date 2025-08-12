@@ -16,6 +16,7 @@ import {
 import {
   CATALOGOS_ID,
   DATOS_CATEGORIAS_TERCEROS,
+  IDPROCEDIMIENTO,
   TERCEROS_NACIONALIDAD_OPCIONES,
   TIPO_PERSONA_OPCIONES,
 } from '../../constantes/aviso-enum';
@@ -118,6 +119,14 @@ export class AgregarProveedorSanitarioComponent implements OnInit, OnDestroy {
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   esFormularioSoloLectura: boolean = false;
+
+  /**
+   * @property {number} idProcedimiento
+   * @description
+   * Identificador del procedimiento actual utilizado en el formulario de fabricante.
+   * Se inicializa con el valor constante `IDPROCEDIMIENTO`.
+   */
+  idProcedimiento: number = IDPROCEDIMIENTO;
 
   /**
    * Constructor del componente.

@@ -144,3 +144,11 @@ export const BOTONS = [
  * Indica al usuario que debe capturar su establecimiento manualmente.
  */
 export const ALERTA_TEXTO = 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar suestablecimiento.';
+
+/**
+ * @const IDPROCEDIMIENTO
+ * @description
+ * Identificador numérico del procedimiento utilizado en el trámite 260601.
+ * Se emplea para asociar lógica y configuración específica en los formularios y componentes relacionados.
+ */
+export const IDPROCEDIMIENTO = 260601;

@@ -18,7 +18,9 @@ import { Proveedor } from '../../models/terceros-relacionados.model';
 
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 
+import { STR_NACIONAL } from '../../constantes/datos-solicitud.enum';
 import { Subject } from 'rxjs';
+import { TERCEROS_RELACIONADOS_DATOS_INICIALES } from '../../constantes/terceros-fabricante.enum';
 import { takeUntil } from 'rxjs';
 
 /**
@@ -123,7 +125,28 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    */
   public estaDeshabilitadoDesplegable: boolean = true;
 
+    /**
+   * @property {boolean} habilitarNacionalidad
+   * @description
+   * Indica si el campo de nacionalidad debe estar habilitado en el formulario de proveedor.
+   * Se activa dependiendo del procedimiento seleccionado.
+   */
+  public habilitarNacionalidad: boolean = false;
 
+  /**
+   * @property {string} nacionalStr
+   * @description
+   * Cadena constante que representa el valor nacional para el campo de nacionalidad.
+   */
+  public nacionalStr = STR_NACIONAL;
+
+  /**
+   * @property {boolean} estaOculto
+   * @description
+   * Indica si el componente debe estar oculto en la vista.
+   * Se recibe como propiedad de entrada desde el componente padre.
+   */
+  @Input() estaOculto!: boolean;
 
   /**
    * Constructor del componente AgregarProveedorComponent.
@@ -145,10 +168,26 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    * @description Hook de inicialización del componente. Llama a `cargarDatos()` para obtener catálogos.
    */
   ngOnInit(): void {
+    this.cambiarHabilitacionNacionalidad();
     this.cargarDatos();
     this.validarElementos();
     this.crearAgregarFormularioProveedor();
+    this.actualizarValidaciones();
     this.changeNacionalidad();
+  }
+
+    /**
+   * @method cambiarHabilitacionNacionalidad
+   * @description
+   * Habilita el campo de nacionalidad en el formulario si el procedimiento actual está incluido en la lista `TERCEROS_RELACIONADOS_DATOS_INICIALES`.
+   * Cambia el valor de la propiedad `habilitarNacionalidad` a `true` si la condición se cumple.
+   * 
+   * @returns {void}
+   */
+  public cambiarHabilitacionNacionalidad(): void {
+    if( TERCEROS_RELACIONADOS_DATOS_INICIALES.includes(this.idProcedimiento)){
+      this.habilitarNacionalidad = true;
+    }
   }
 
    /**
@@ -167,7 +206,10 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    */
   crearAgregarFormularioProveedor():void{
     this.agregarProveedorForm = this.fb.group({
+      nacionalidad: [''],
       tipoPersona: ['', Validators.required],
+      rfc: [this.obtenerValor('rfc')],
+      curp: [this.obtenerValor('curp')],
       denominacionRazon: [
         this.obtenerValor('razonSocial'),
         [Validators.required, Validators.pattern(REGEX_NOMBRE)],
@@ -209,6 +251,31 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
     });
   }
 
+    /**
+   * @method actualizarValidaciones
+   * @description
+   * Actualiza las validaciones de los campos 'nacionalidad', 'rfc' y 'curp' en el formulario de proveedor.
+   * Si `habilitarNacionalidad` es verdadero, establece los validadores requeridos en dichos campos.
+   * Si es falso, elimina los validadores de los mismos campos.
+   * Finalmente, actualiza el estado y la validez de los controles afectados.
+   * 
+   * @returns {void}
+   */
+  actualizarValidaciones(): void {
+    if(this.habilitarNacionalidad) {
+      this.agregarProveedorForm.get('nacionalidad')?.setValidators([Validators.required]);
+      this.agregarProveedorForm.get('rfc')?.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
+      this.agregarProveedorForm.get('curp')?.setValidators([Validators.required]);
+    }
+    else {
+      this.agregarProveedorForm.get('nacionalidad')?.clearValidators();
+      this.agregarProveedorForm.get('rfc')?.clearValidators();
+      this.agregarProveedorForm.get('curp')?.clearValidators();
+    }
+    this.agregarProveedorForm.get('nacionalidad')?.updateValueAndValidity();
+    this.agregarProveedorForm.get('rfc')?.updateValueAndValidity();
+    this.agregarProveedorForm.get('curp')?.updateValueAndValidity();
+  }
     /**
    * Valida elementos según el `idProcedimiento` y establece
    * las listas de elementos no válidos y añadidos.
@@ -325,14 +392,31 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    * En caso contrario, habilita todos los campos y marca el desplegable como habilitado.
    */
   changeNacionalidad(): void {
-    if (this.agregarProveedorForm?.value?.tipoPersona === '') {
+    if ( this.agregarProveedorForm?.value?.tipoPersona === '') {
       Object.keys(this.agregarProveedorForm.controls).forEach(controlName => {
         this.agregarProveedorForm.get(controlName)?.disable();
-        if (controlName === 'tipoPersona') {
+        if (controlName==='nacionalidad' || controlName === 'tipoPersona') {
           this.agregarProveedorForm.get(controlName)?.enable();
         }
       });
-    } else {
+    } 
+    else if(this.agregarProveedorForm?.value?.nacionalidad === this.nacionalStr && (this.agregarProveedorForm?.value?.tipoPersona === this.tipoPersona.FISICA || this.agregarProveedorForm?.value?.tipoPersona === this.tipoPersona.MORAL)) {
+      Object.keys(this.agregarProveedorForm.controls).forEach(controlName => {
+        this.agregarProveedorForm.get(controlName)?.disable();
+        if (controlName==='nacionalidad' || controlName === 'rfc' || controlName === 'tipoPersona') {
+          this.agregarProveedorForm.get(controlName)?.enable();
+        }
+      });
+    }
+    else if (this.agregarProveedorForm?.value?.nacionalidad === this.nacionalStr && this.agregarProveedorForm?.value?.tipoPersona === this.tipoPersona.NO_CONTRIBUYENTE) {
+      Object.keys(this.agregarProveedorForm.controls).forEach(controlName => {
+        this.agregarProveedorForm.get(controlName)?.disable();
+        if (controlName==='nacionalidad' || controlName === 'tipoPersona' || controlName === 'curp') {
+          this.agregarProveedorForm.get(controlName)?.enable();
+        }
+      });
+    }
+    else {
       Object.keys(this.agregarProveedorForm.controls).forEach(controlName => {
         this.agregarProveedorForm.get(controlName)?.enable();
         this.estaDeshabilitadoDesplegable = false;
