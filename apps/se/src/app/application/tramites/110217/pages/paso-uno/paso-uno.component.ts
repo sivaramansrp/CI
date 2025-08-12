@@ -75,7 +75,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * Evento que se emite cuando cambia de tab.
    */
-  @Output() tabChanged = new EventEmitter<void>();
+  @Output() cambioDePestana = new EventEmitter<void>();
 
   /**
    * Índice de la pestaña activa.
@@ -199,7 +199,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     
     this.indice = i;
     this.store.setPestanaActiva(this.indice);
-    this.tabChanged.emit(); // Emite evento cuando cambia de tab
+    this.cambioDePestana.emit(); // Emite evento cuando cambia de tab
   }
 
   /**
