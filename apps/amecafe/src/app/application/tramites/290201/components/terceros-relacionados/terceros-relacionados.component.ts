@@ -227,9 +227,7 @@ public coloniaData: CatalogosSelect = {
         })
       )
       .subscribe();
-     
-      // this.getDestinatarioData();
-  
+      
       this.createForm();
     this.getEntidadFederativaData();
     this.getAlcaldiaMunicipo();
