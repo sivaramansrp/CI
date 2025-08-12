@@ -2,7 +2,7 @@ import { AvisoValor, FECHA_DE_PAGO } from '../../models/aviso.model';
 import { Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { map, takeUntil } from 'rxjs';
 import { AvisoUnicoService } from '../../services/aviso-unico.service';
 import { CommonModule } from '@angular/common';
@@ -140,10 +140,16 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
       envioAviso: [this.solicitudState?.envioAviso],
       numeroAviso: [this.solicitudState?.numeroAviso],
       claveReferencia: [{ value: '', disabled: true }],
-      numeroOperacion: [this.solicitudState?.numeroOperacion],
+      numeroOperacion: [
+        this.solicitudState?.numeroOperacion,
+        [Validators.required, Validators.minLength(10), Validators.maxLength(30)],
+      ],
       cadenaDependencia: [{ value: '', disabled: true }],
       banco: [this.solicitudState?.banco],
-      llavePago: [this.solicitudState?.llavePago],
+      llavePago: [
+        this.solicitudState?.llavePago,
+        [Validators.required, Validators.minLength(10), Validators.maxLength(30)],
+      ],
       fechaPago: [this.solicitudState?.fechaPago],
       importePago: [{ value: '', disabled: true }],
     });
@@ -238,6 +244,32 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
       this.avisoForm?.disable();
     } else {
       this.avisoForm?.enable();
+    }
+  }
+
+  /**
+  * Verifica si un control del formulario es inválido, tocado o modificado.
+  * @param nombreControl - Nombre del control a verificar.
+  * @returns True si el control es inválido, de lo contrario false.
+  */
+  public esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.avisoForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
+  }
+
+  /**
+ * Maneja el evento blur (pérdida de foco) en los campos del formulario
+ * para activar la validación visual.
+ *
+ * @param fieldName - Nombre del campo que perdió el foco.
+ */
+  public onFieldBlur(fieldName: string): void {
+    const CONTROL = this.avisoForm.get(fieldName);
+    if (CONTROL) {
+      CONTROL.markAsTouched();
+      CONTROL.markAsDirty();
     }
   }
 }
