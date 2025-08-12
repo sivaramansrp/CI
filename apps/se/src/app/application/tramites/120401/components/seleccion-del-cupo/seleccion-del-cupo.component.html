@@ -63,8 +63,8 @@
       [datos]="datos"></app-tabla-dinamica>
     </div>
   </div>
-<app-descripcion-del-cupo *ngIf="mostrarDescripcionDelCupo">
+<app-descripcion-del-cupo *ngIf="mostrarDescripcionDelCupo || esFormularioSoloLectura">
 </app-descripcion-del-cupo>
-<app-cantidad-solicitada *ngIf="mostrarDescripcionDelCupo"></app-cantidad-solicitada>
- 
+<app-cantidad-solicitada *ngIf="mostrarDescripcionDelCupo || esFormularioSoloLectura"></app-cantidad-solicitada>
+
 </div>
