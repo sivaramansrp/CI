@@ -96,6 +96,7 @@ export class CargaDeMercanciasComponent implements OnInit, OnDestroy {
   /** Almacena la fila seleccionada de la tabla de mercancías. */
   public seleccionadoRow: MercanciasInfo | null = null;
 
+  /** Instancia del modal utilizada para mostrar y ocultar el diálogo de mercancías. */
   private modalInstance!: Modal;
 
   /**
