@@ -106,7 +106,7 @@
             id="denominacionRazon"
             type="text"
             formControlName="denominacionRazon"
-            maxlength="120"
+            maxlength="100"
             [ngClass]="
               isValid(datosSolicitudForm, 'denominacionRazon') ? 'required' : ''
             "
@@ -229,6 +229,13 @@
           >
             Este campo es obligatorio.
           </div>
+          <div
+            class="mensaje-error"
+            *ngIf="datosSolicitudForm.get('localidad')?.errors?.['pattern'] 
+              && datosSolicitudForm.get('localidad')?.touched"
+          >
+            El valor capturado no es válido
+          </div>
         </div>
       </div>
       <div class="col-md-4">
@@ -260,7 +267,7 @@
       >
         <div class="form-group">
           <label class="form-label" for="calleYNumero"
-            >Calle y número * :
+            >Calle y número*:
             <span
               class="bi bi-question-circle-fill"
               title="Calle y número"
@@ -302,6 +309,7 @@
             class="form-control"
             id="calle"
             type="text"
+            maxlength="100"
             formControlName="calle"
             [ngClass]="isValid(datosSolicitudForm, 'calle') ? 'required' : ''"
           />
@@ -333,6 +341,7 @@
             class="form-control"
             id="correoElectronico"
             type="text"
+            maxlength="320"
             formControlName="correoElectronico"
             [ngClass]="
               isValid(datosSolicitudForm, 'correoElectronico') ? 'required' : ''
@@ -446,7 +455,7 @@
       <div class="col-md-3 my-3">
         <div class="form-group">
           <label class="form-label municipio-label" for="telefono"
-            >S. C. I. A. N
+            >S.C.I.A.N
           </label>
           <span class="form-label" *ngIf="esCampoRequerido('scian')">*</span>
           <span class="form-label">:</span>
@@ -464,7 +473,6 @@
       <div class="col-md-12">
         <div class="pull-right ml-2">
           <button
-            *ngIf="scianConfig.datos.length > 0"
             type="button"
             name="eliminarScian"
             class="btn btn-danger ms-2"
@@ -507,8 +515,7 @@
       </div>
       <div class="col-md-4">
         <label class="form-label mx-1" for="licenciaSanitaria"
-          >No. de licencia sanitaria
-          <span *ngIf="!datosSolicitudForm.value.aviso">*</span>:</label
+          >No. de licencia sanitaria :</label
         >
 
         <span
@@ -632,14 +639,18 @@
     </div>
     } @if (tablaMercanciasConfig) {
     <div class="row mt-5">
-      <h5 class="mt-3">Mercancías * :</h5>
+      <h5 class="mt-3">Mercancías*:</h5>
       <app-tabla-dinamica
+        formControlName="mercancias"
         [tipoSeleccionTabla]="tablaMercanciasConfig.tipoSeleccionTabla"
         [configuracionTabla]="tablaMercanciasConfig.configuracionTabla"
         [datos]="tablaMercanciasConfig.datos"
         (listaDeFilaSeleccionada)="tablaMercanciasLista = $event"
         [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
       ></app-tabla-dinamica>
+      <div class="mensaje-error" *ngIf="datosSolicitudForm.get('mercancias')?.errors?.['required']">
+        Este campo es obligatorio.
+      </div>
     </div>
 
     <div class="row mt-5">
@@ -698,7 +709,7 @@
       </div>
     </div>
 
-     @if(!esManifesto){
+    @if(!esManifesto){
     <div class="row-mt-2">
       <ng-titulo
         titulo="Manifiestos y declaraciones"
@@ -712,34 +723,45 @@
         [CUSTOMECLASS]="infoAlert"
       ></ng-alert>
     </div>
-  }
-  @if(esManifesto) {
+    } @if(esManifesto) {
     <ng-titulo titulo="Manifiestos y declaraciones"></ng-titulo>
     <div class="row">
       <div class="alert alert-info">
         <label style="font-weight: normal">
-          <input type="checkbox" id="manifesto" formControlName="manifesto"/>
-          <span class="form-label" *ngIf="esCampoRequerido('manifesto')"> *</span>
-           {{textoManifestoContenido}}
+          <input type="checkbox" id="manifesto" formControlName="manifesto" />
+          <span class="form-label" *ngIf="esCampoRequerido('manifesto')">
+            @if(datosSolicitudForm.get('manifesto')?.errors?.['required'] &&
+            datosSolicitudForm.get('manifesto')?.touched){
+            <span class="mensaje-error"> *</span>
+            }
+          </span>
+          {{ textoManifestoContenido }}
         </label>
+        <div
+          class="mensaje-error"
+          *ngIf="datosSolicitudForm.get('manifesto')?.errors?.['required'] && datosSolicitudForm.get('manifesto')?.touched"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
     </div>
-  }
+    }
     <div class="row mt-3">
       <div class="col-md-12">
         <label class="form-label"
           >Los datos o anexos pueden contener información confidencial ¿Está de
-          acuerdo en hacerlos públicos? * :</label>
-          <app-input-radio
-            [radioOptions]="radioBtn"
-            [selectedValue]="predeterminadoSeleccionar"
-            (valueChange)="cambioDeValorIndique($event)"
-            [isRequired]="true"
-            [layout]="'horizontal'"
-            [gap]="'50px'"
-            formControlName="publico"
-            >
-          </app-input-radio>
+          acuerdo en hacerlos públicos?*:</label
+        >
+        <app-input-radio
+          [radioOptions]="radioBtn"
+          [selectedValue]="predeterminadoSeleccionar"
+          (valueChange)="cambioDeValorIndique($event)"
+          [isRequired]="true"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="publico"
+        >
+        </app-input-radio>
       </div>
     </div>
 
@@ -749,7 +771,7 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="representanteRfc">RFC * :</label>
+          <label class="form-label" for="representanteRfc">RFC*:</label>
           <input
             class="form-control"
             id="representanteRfc"
@@ -784,7 +806,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="representanteNombre"
-            >Nombre o Razón Social * :</label
+            >Nombre o Razón Social*:</label
           >
           <input
             class="form-control"
@@ -808,7 +830,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="apellidoPaterno"
-            >Apellido paterno * :</label
+            >Apellido paterno*:</label
           >
           <input
             class="form-control"
@@ -860,6 +882,7 @@
           class="form-control"
           id="correoElectronico"
           type="text"
+          maxlength="320"
           formControlName="correoElectronico"
           (change)="cambireCorreoElectronico()"
           [ngClass]="
@@ -889,7 +912,15 @@
     </ng-template>
   </form>
 </div>
-
+@if(confirmacionAlerta){
+<section>
+  <lib-notificaciones
+    [notificacionInput]="seleccionarFilaNotificacion"
+    (confirmacionModal)="eliminarPedimentoConfirmacion($event)"
+  >
+  </lib-notificaciones>
+</section>
+}
 @if(mostrarAlerta){
 <section>
   <lib-notificaciones
