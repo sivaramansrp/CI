@@ -254,21 +254,21 @@ export class AltaPlantaComponent implements OnInit, OnDestroy {
    */
   aplicarAccion(): void {
     if(this.domiciliosSeleccionados.length) {
-      // Create notification object with correct field names
+      
       this.nuevaNotificacion = {
-        tipoNotificacion: 'alert', // Using TipoNotificacionEnum.ALERTA
-        categoria: 'info', // Using CategoriaMensaje.INFORMACION
-        modo: 'confirmacion', // Mode for confirmation
+        tipoNotificacion: 'alert', 
+        categoria: 'info', 
+        modo: 'confirmacion', 
         titulo: 'Confirmar Acción',
         mensaje: 'Selecciona al menos una planta donde se realizarán las operaciones IMMEX.',
         cerrar: true,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: 'Cancelar',
-        tamanioModal: 'md', // Optional: small, medium, large
-        alineacionTexto: 'center' // Optional: text alignment
+        tamanioModal: 'md', 
+        alineacionTexto: 'center' 
       };
     } else {
-      // Create notification for error case without toaster
+      
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'warning',
@@ -284,21 +284,6 @@ export class AltaPlantaComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Handles the confirmation modal response
-   * @param confirmacion - Boolean indicating user's choice
-   */
-  confirmacionModal(confirmacion: boolean): void {
-    if (confirmacion) {
-      // User confirmed - proceed with adding the plant
-      if(this.domiciliosSeleccionados.length) {
-        this.store.aggregarDomicilios(this.domiciliosSeleccionados[0]);
-        this.toastr.success('Planta agregada exitosamente');
-      }
-    }
-    // Hide the notification modal
-    this.nuevaNotificacion = null;
-  }
 
   /**
    * Método para eliminar una planta de los domicilios seleccionados.
@@ -306,8 +291,57 @@ export class AltaPlantaComponent implements OnInit, OnDestroy {
    */
   eliminarPlantas(): void {
     if(this.domiciliosSeleccionados.length) {
-      this.store.eliminarDomicilios(this.domiciliosSeleccionados[0]);
+     
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'confirmacion',
+        titulo: 'Confirmar Eliminación',
+        mensaje: '¿Está seguro que desea eliminar la planta seleccionada?',
+        cerrar: true,
+        txtBtnAceptar: 'Eliminar',
+        txtBtnCancelar: 'Cancelar',
+        tamanioModal: 'md',
+        alineacionTexto: 'center'
+      };
+    } else {
+      
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'confirmacion',
+        titulo: '',
+        mensaje: 'Selecciona la planta que desea eliminar.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+        tamanioModal: 'md',
+        alineacionTexto: 'center'
+      };
     }
+  }
+
+  /**
+   * Handles the confirmation modal response
+   * @param confirmacion - Boolean indicating user's choice
+   */
+  confirmacionModal(confirmacion: boolean): void {
+    if (confirmacion) {
+      
+      if (this.nuevaNotificacion?.txtBtnAceptar === 'Eliminar') {
+       
+        if(this.domiciliosSeleccionados.length) {
+          this.store.eliminarDomicilios(this.domiciliosSeleccionados[0]);
+          this.toastr.success('Planta eliminada exitosamente');
+        }
+      } else if (this.nuevaNotificacion?.txtBtnAceptar === 'Aceptar' && this.domiciliosSeleccionados.length) {
+        
+        this.store.aggregarDomicilios(this.domiciliosSeleccionados[0]);
+        this.toastr.success('Planta agregada exitosamente');
+      }
+    }
+    
+    this.nuevaNotificacion = null;
   }
 
   /**
