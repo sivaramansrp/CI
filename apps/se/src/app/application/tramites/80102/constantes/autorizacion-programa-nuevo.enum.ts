@@ -254,7 +254,7 @@ export const FORMA_SOCIO_ACCIONISTAS: DatosCatalago[] = [
     labelNombre: 'País',
     campo: 'pais',
     class: 'col-md-6 col-10 mt-1',
-    tipo_input: 'select-paise',
+    tipo_input: 'select',
     required: true,
     opciones: [],
     orden: 3,
