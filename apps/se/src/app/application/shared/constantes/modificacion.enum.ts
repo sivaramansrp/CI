@@ -198,7 +198,7 @@ export const REPRESENTACION_FEDERALDATES = 'representacionFederalDates';
  * @descripcion
  * Identificador único del procedimiento.
  */
-export const CAMPO_DE_DESTINATARIO = [110222]
+export const CAMPO_DE_DESTINATARIO = [110222, 110221]
 
 /**
  * Texto que describe los requisitos y proporciona información sobre el número temporal de solicitud.

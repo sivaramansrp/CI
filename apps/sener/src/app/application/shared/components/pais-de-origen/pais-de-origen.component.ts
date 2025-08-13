@@ -113,7 +113,7 @@ export class PaisDeOrigenComponent implements OnChanges {
    * @descripcion Fecha seleccionada por el usuario.
    * @tipo {string[]}
    */
-  @Input()fechaSeleccionada: string[] = ['asdf', 'werwe'];
+  @Input() fechaSeleccionada: string[] = [];
 
   /**
  * @property

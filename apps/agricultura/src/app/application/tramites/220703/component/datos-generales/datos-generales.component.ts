@@ -1,4 +1,4 @@
-import { Catalogo, CatalogoSelectComponent, CatalogosSelect, ConfiguracionColumna, InputFecha, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, CatalogosSelect, ConfiguracionColumna, InputFecha, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MERCANCIA_SERVICIO, MercanciaInfo } from '../../constantes/acuicola.enum';
@@ -121,6 +121,12 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * @type {MercanciaInfo[]}
    */
   mercanciaTablaDatos: MercanciaInfo[] = [];
+
+  /**
+   * Tipo de selección en la tabla (checkbox).
+   * @type {TablaSeleccion}
+   */
+  tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /**
    * Controlador de entrada para la fecha de inicio/pago.

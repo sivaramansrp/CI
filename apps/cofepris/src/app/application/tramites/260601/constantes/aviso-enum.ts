@@ -1,3 +1,4 @@
+import {ProductoTable,ScianTable} from '../models/aviso-model';
 /**
  * Contiene el aviso de privacidad simplificado con su correspondiente enlace al aviso integral.
  */
@@ -144,3 +145,51 @@ export const BOTONS = [
  * Indica al usuario que debe capturar su establecimiento manualmente.
  */
 export const ALERTA_TEXTO = 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar suestablecimiento.';
+/**
+ *  @const PRODUCTO_TABLA_CONFIGURACION
+ * @description
+ * Configuración de la tabla de productos, incluyendo encabezados, claves y orden.
+ * Cada objeto en el array representa una columna de la tabla.
+ * @type {Array<{encabezado: string, clave: (ele: ProductoTable) => string | undefined, orden: number}>}
+ * */
+export const PRODUCTO_TABLA_CONFIGURACION =[{
+  encabezado: 'Clasificación del producto',
+  clave: (ele: ProductoTable): string | undefined => ele.clasificacionDelProducto,
+  orden: 1
+}, {
+  encabezado: 'Tipo de product',
+  clave: (ele: ProductoTable): string | undefined => ele.tipoDeProducto,
+  orden: 2
+}, {
+  encabezado: 'Fracción arancelaria',
+  clave: (ele: ProductoTable): string | undefined => ele.fraccionArancelaria,
+  orden: 3
+}, {
+  encabezado: 'Descripción de la fracción',
+  clave: (ele: ProductoTable): string | undefined => ele.descripcionDeLaFraccion,
+  orden: 4
+}, {
+  encabezado: 'Modelo',
+  clave: (ele: ProductoTable): string | undefined => ele.modelo,
+  orden: 5
+}, {
+  encabezado: 'Descripción del producto',
+  clave: (ele: ProductoTable): string | undefined => ele.descripcionDelProducto,
+  orden: 6
+}, {
+  encabezado: '	País de orígen',
+  clave: (ele: ProductoTable): string | undefined => ele.paisDeOrigen,
+  orden: 7
+
+
+}]
+
+export const SCIAN_TABLA_CONFIGURACION = [{
+  encabezado: 'Clave S.C.I.A.N.',
+  clave: (ele: ScianTable): string | undefined => ele.claveScian,
+  orden: 1
+}, {
+  encabezado: 'Descripción S.C.I.A.N.',
+  clave: (ele: ScianTable): string | undefined => ele.descripcionScian,
+  orden: 2
+}]; 

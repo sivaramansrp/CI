@@ -4,7 +4,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <app-catalogo-select [catalogo]="sectorProductivoList" [label]="'Sector Productivo'"
-                    [placeholder]="'Seleccione un valor'" [required]="false" id="sector-productivo"
+                    [required]="false" id="sector-productivo"
                     formControlName="sectorProductivo" (change)="
             setValoresStore(forma,'sectorProductivo'); manejarCamposMutuamenteExcluyentes('sectorProductivo', 'sectorServicio', $event); actualizarValidacionSector()"
             [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
@@ -14,7 +14,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <app-catalogo-select [catalogo]="sectorServicio" [label]="'Servicio'"
-                    [placeholder]="'Seleccione un valor'" [required]="false" id="sector-servicio"
+                     [required]="false" id="sector-servicio"
                     formControlName="sectorServicio"
                     (change)="setValoresStore(forma, 'sectorServicio'); manejarCamposMutuamenteExcluyentes('sectorServicio', 'sectorProductivo', $event); actualizarValidacionSector()"
                     [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
@@ -59,7 +59,7 @@
 
     <div class="row">
         <div class="col-md-12 pt-5">
-            <label class="form-label text-left">Señale si cuenta con empleados propios para realizar el proceso productivo o la prestación de servicios, registrado ante el IMSS*:</label>
+            <label class="form-label text-left">Señale si cuenta con empleados propios para realizar el proceso productivo o la prestación de servicios, registrado ante el I M S S*:</label>
             <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                 formControlName="cuentaConEmpleadosPropios" (valueChange)="enCambioDeValor($event); onSeleccionfalsa($event, EMPLEADO_REQUISITO)"
                 (change)="setValoresStore(forma,'cuentaConEmpleadosPropios')"></app-input-radio>
@@ -75,7 +75,7 @@
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                <label class="form-label text-left">Número de empleados*:</label>
+                <label class="form-label text-left">Número de empleados:</label>
                 <input class="form-control" 
                        id="numero-de-empleadas" 
                        type="text" 
@@ -95,9 +95,7 @@
             <div class="form-group">
                 <app-catalogo-select 
                     [catalogo]="bimestreList" 
-                    [label]="'Bimestre'"
-                    [placeholder]="'Seleccione un valor'" 
-                    [required]="true" 
+                    [label]="'Bimestre'" 
                     id="bimestre"
                     formControlName="bimestreUltimo"
                     [isDisabled]="!this.radioSeleccionado || esFormularioSoloLectura"
@@ -291,7 +289,8 @@
                     type="text" 
                     name="registros"
                     formControlName="registros"
-                    class="form-control w-auto" 
+                    class="form-control w-auto"
+                    [disabled]="true"
                 />
             </div>
 

@@ -119,7 +119,13 @@ export class OficioComponent implements OnInit, OnDestroy{
    * Lista de certificados cargados desde un archivo JSON.
    * Esta lista contiene la información de los oficios y su estado.
    */
-  Certificados: [] = [];
+  Certificados: ConfiguracionItem[] = [];
+  /** 
+ * Certificado actualmente seleccionado en la configuración.
+ * Puede ser nulo si no se ha seleccionado ningún certificado.
+ * Utilizado para mostrar o procesar la información del certificado.
+ */
+  selectedCertificados: ConfiguracionItem | null = null;
 
   /**
    * Lista de datos de oficios, cada uno representando un certificado que será mostrado en la tabla.
@@ -234,7 +240,35 @@ export class OficioComponent implements OnInit, OnDestroy{
     this.inicializarEstadoFormulario();
 
   }
+/**
+   * Método que se invoca al seleccionar una fila en la tabla de certificados.
+   * Actualiza la variable `selectedCertificado` con el certificado seleccionado.
+   * 
+   * @param cancelar - El certificado seleccionado de la tabla.
+   */
+  onSeleccionarFila(cancelar: ConfiguracionItem): void {
+    this.selectedCertificados = cancelar;
+  }
+/**
+   * Método que se ejecuta al destruir el componente.
+   * Limpia el Subject `destroyNotifier$` para evitar fugas de memoria.
+   */
 
+onClickSeleccionar(): void {
+    if (!this.selectedCertificados) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Seleccione un registro.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    } 
+  }
  /**
    * Determina si se debe cargar un formulario nuevo o uno existente.
    * Ejecuta la lógica correspondiente según el estado del componente.

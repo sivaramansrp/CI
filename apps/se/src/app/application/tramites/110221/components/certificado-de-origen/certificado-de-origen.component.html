@@ -23,13 +23,7 @@
             value=""
             id="tercerOperador"
             formControlName="tercerOperador"
-            (change)="
-              setValoresStore(
-                validacionForm,
-                'tercerOperador',
-                'setTercerOperador'
-              )
-            "
+            (change)="setValoresStore(validacionForm, 'tercerOperador')"
           />
           <label class="form-check-label" for="tercerOperador">Si</label>
         </div>
@@ -58,13 +52,7 @@
               id="nombres"
               class="form-control"
               formControlName="nombres"
-              (change)="
-                setValoresStore(
-                  validacionForm,
-                  'nombres',
-                  'setFormCertificadoGenric'
-                )
-              "
+              (change)="setValoresStore(validacionForm, 'nombres')"
             />
           </div>
 
@@ -80,9 +68,7 @@
               (change)="
                 setValoresStore(
                   validacionForm,
-                  'primerApellido',
-                  'setFormCertificadoGenric'
-                )
+                  'primerApellido' )
               "
             />
           </div>
@@ -99,8 +85,7 @@
               (change)="
                 setValoresStore(
                   validacionForm,
-                  'segundoApellido',
-                  'setFormCertificadoGenric'
+                  'segundoApellido'
                 )
               "
             />
@@ -118,8 +103,7 @@
               (change)="
                 setValoresStore(
                   validacionForm,
-                  'numeroDeRegistroFiscal',
-                  'setFormCertificadoGenric'
+                  'numeroDeRegistroFiscal'
                 )
               "
             />
@@ -135,8 +119,7 @@
               (change)="
                 setValoresStore(
                   validacionForm,
-                  'razonSocial',
-                  'setFormCertificadoGenric'
+                  'razonSocial'
                 )
               "
             />
@@ -155,7 +138,7 @@
               id="tratado"
               formControlName="tratado"
               (change)="
-                setValoresStore(validacionForm, 'tratado', 'setTratado')
+                setValoresStore(validacionForm, 'tratado')
               "
               [isDisabled]="soloLectura"
             ></app-catalogo-select>
@@ -168,7 +151,7 @@
               placeholder="Selecciona un valor"
               id="pais"
               formControlName="pais"
-              (change)="setValoresStore(validacionForm, 'pais', 'setPais')"
+              (change)="setValoresStore(validacionForm, 'pais')"
               [isDisabled]="soloLectura"
             ></app-catalogo-select>
           </div>
@@ -186,8 +169,7 @@
               (change)="
                 setValoresStore(
                   validacionForm,
-                  'fraccionArancelaria',
-                  'setFraccionArancelaria'
+                  'fraccionArancelaria'
                 )
               "
             />
@@ -204,8 +186,7 @@
               (change)="
                 setValoresStore(
                   validacionForm,
-                  'numeroRegistro',
-                  'setNumRegistro'
+                  'numeroRegistro'
                 )
               "
             />
@@ -222,8 +203,7 @@
               (change)="
                 setValoresStore(
                   validacionForm,
-                  'nombreComercial',
-                  'setNomComercial'
+                  'nombreComercial'
                 )
               "
             />
@@ -319,7 +299,7 @@
                 size="60"
                 (change)="alSeleccionarArchivo($event)"
                 (change)="
-                  setValoresStore(validacionForm, 'archivo', 'setArchivo')
+                  setValoresStore(validacionForm, 'archivo')
                 "
               />
               <label
@@ -464,8 +444,7 @@
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
-                'fraccionMercanciaArancelaria',
-                'setfraccionMercanArancelaria'
+                'fraccionMercanciaArancelaria'
               )
             "
           />
@@ -483,8 +462,7 @@
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
-                'nombreComercialDelaMercancia',
-                'setnombrecomercialdelamercancia'
+                'nombreComercialDelaMercancia'
               )
             "
           />
@@ -502,8 +480,7 @@
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
-                'nombreTecnico',
-                'setnombretecnico'
+                'nombreTecnico'
               )
             "
           />
@@ -521,8 +498,7 @@
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
-                'nombreEnIngles',
-                'setnomreeningles'
+                'nombreEnIngles'
               )
             "
           />
@@ -538,8 +514,7 @@
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
-                'criterioParaConferir',
-                'setcriterioparaconferir'
+                'criterioParaConferir'
               )
             "
           />
@@ -556,8 +531,7 @@
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
-                'cantidad',
-                'setcantidad'
+                'cantidad'
               )
             "
           />
@@ -583,7 +557,7 @@
             [tooltipQuestionCircle]="true"
             id="umc"
             formControlName="umc"
-            (change)="setValoresStore(validacionMercanciaForm, 'umc', 'setUMC')"
+            (change)="setValoresStore(validacionMercanciaForm, 'umc')"
             [isDisabled]="soloLectura"
           ></app-catalogo-select>
         </div>
@@ -599,8 +573,7 @@
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
-                'valorDelaMercancia',
-                'setvalordelamercancia'
+                'valorDelaMercancia'
               )
             "
           />
@@ -614,8 +587,7 @@
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
-                'complementoDelaDescripcion',
-                'setcomplementodeladescripcion'
+                'complementoDelaDescripcion'
               )
             "
           ></textarea>
@@ -640,8 +612,7 @@
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
-                'numeroFactura',
-                'setNFactura'
+                'numeroFactura'
               )
             "
           />
@@ -656,8 +627,7 @@
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
-                'tipoFactura',
-                'setTipoFactura'
+                'tipoFactura'
               )
             "
             [isDisabled]="soloLectura"

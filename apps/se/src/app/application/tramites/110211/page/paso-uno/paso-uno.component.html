@@ -15,20 +15,10 @@
             </li>
         </ul>
         <ng-container>
-            @switch (indice) {
-            @case (1) {
-            <solicitante></solicitante>
-            }
-            @case (2){
-                <app-certificado-origen></app-certificado-origen>
-            }
-            @case (3){
-                <app-cam-destinatario></app-cam-destinatario>
-            }
-            @case (4){
-                <app-cam-datos-certificado></app-cam-datos-certificado>
-            }
-            }
+        <solicitante [hidden]="indice !== 1" #solicitanteRef></solicitante>
+        <app-certificado-origen [hidden]="indice !== 2" #certificadoOrigenRef></app-certificado-origen>
+        <app-cam-destinatario [hidden]="indice !== 3" #camDestinatarioRef></app-cam-destinatario>
+        <app-cam-datos-certificado [hidden]="indice !== 4" #camDatosCertificadoRef></app-cam-datos-certificado>
         </ng-container>
     </div>
 </div>

@@ -70,6 +70,7 @@ export interface DomiciliosRfcSolicitanteTabla {
   realizaActividadComercioExterior: string;
   reconocimientoMutuoCTPAT: string;
   perfilEmpresa: string;
+  perfilAlmacenGeneral: string;
 }
 
 

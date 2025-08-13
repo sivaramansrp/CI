@@ -16,7 +16,7 @@ export const NOTA = {
     'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificación de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
   CONFIRMACION_NUMEROEMPLEADOS: 'Datos guardados correctamente',
   DOMICILIO_REGISTRADOS:
-    '<strong>Nota:</strong> Be contar con un programa IMMEX activo y vigente al momento de ingresar la solicitud, se mostrarán lus domicilios registradus ante la Secretaria de Ecoonmia. Así mismo, podrá incluir utres domicilios que se encuentren relacionados con el RFC del solicitante, dando click en el botón "Agregar y seleccionado la Entidad Federativa.',
+    '<strong>Nota:</strong> De contar con un programa IMMEX activo y vigente al momento de ingresar la solicitud, se mostrarán los domicilios registrados ante la Secretaria de Economía. Así mismo, podrá incluir otros domicilios que se encuentren relacionados con el RFC del solicitante, dando click en el botón "Agregar" y seleccionado la Entidad Federativa.',
   EMPLEADO_REQUISITO_RGCE:
     'Es un requisito obligatorio el contar con algún tipo de empleado, ya sea propio o subcontratado para acceder al Registro en el Esquema de Certificación de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
   DEBE_CAPTURAR: 'Debe capturar todos los datos marcados como obligatorios.',

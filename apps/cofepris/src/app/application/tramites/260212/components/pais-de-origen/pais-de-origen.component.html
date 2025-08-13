@@ -2,16 +2,16 @@
   <div class="col-md-12">
     <div class="panel-group ficha-collapse" id="accordion">
       <div class="panel panel-default">
-        <div class="panel-heading" (click)="mostrar_plegable()" tabindex="0">
+        <div class="panel-heading" (click)="mostrarPaisDeOrigen()" tabindex="0">
           <h4 class="panel-title">
             País de origen
           </h4>
-          <button type="button" class="collpase-button collapsed"></button>
+          <button type="button" class="collpase-button" [ngClass]="paisDeOrigenPlegable ? '' : 'collapsed'"></button>
         </div>
-        @if(plegable){
+        @if(paisDeOrigenPlegable){
         <div class="panel-collapse collapse in" id="panel-01">
           <div class="panel-body">
-            <crosslist [fechas]="selectRangoDias" [botones]="botones" [label]="paisDeProcedenciaLabel">
+            <crosslist [fechas]="selectRangoDias" [botones]="botones" [label]="paisDeOrigenLabel">
             </crosslist>
           </div>
         </div>
@@ -23,13 +23,13 @@
   <div class="col-md-12">
     <div class="panel-group ficha-collapse" id="accordion">
       <div class="panel panel-default">
-        <div class="panel-heading" (click)="mostrar_plegable()" tabindex="0">
+        <div class="panel-heading" (click)="mostrarPaisDeProcedencia()" tabindex="0">
           <h4 class="panel-title">
             País de procedencia
           </h4>
-          <button type="button" class="collpase-button collapsed"></button>
+          <button type="button" class="collpase-button" [ngClass]="paisDeProcedenciaPlegable ? '' : 'collapsed'"></button>
         </div>
-        @if(plegable){
+        @if(paisDeProcedenciaPlegable){
         <div class="panel-collapse collapse in" id="panel-01">
           <div class="panel-body">
             <crosslist [fechas]="selectRangoDias" [botones]="botones" [label]="paisDeProcedenciaLabel">
@@ -44,16 +44,16 @@
   <div class="col-md-12">
     <div class="panel-group ficha-collapse" id="accordion">
       <div class="panel panel-default">
-        <div class="panel-heading" (click)="mostrar_plegable()" tabindex="0">
+        <div class="panel-heading" (click)="mostrarUsoEpecifico()" tabindex="0">
           <h4 class="panel-title">
             Uso específico
           </h4>
-          <button type="button" class="collpase-button collapsed"></button>
+          <button type="button" class="collpase-button" [ngClass]="usoEspecificoPlegable ? '' : 'collapsed'"></button>
         </div>
-        @if(plegable){
+        @if(usoEspecificoPlegable){
         <div class="panel-collapse collapse in" id="panel-01">
           <div class="panel-body">
-            <crosslist [fechas]="selectRangoDias" [botones]="botones" [label]="paisDeProcedenciaLabel">
+            <crosslist [fechas]="selectRangoDias" [botones]="botones" [label]="usoEspecificoLabel">
             </crosslist>
           </div>
         </div>

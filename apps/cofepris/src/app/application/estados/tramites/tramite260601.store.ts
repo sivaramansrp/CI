@@ -1,5 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import {ProductoTable, ScianTable } from '../../tramites/260601/models/aviso-model';
 
 /**
  * Creacion del estado inicial para la interfaz de tramite 260601
@@ -347,6 +348,10 @@ export interface AvisoSanitarioState {
 
     /** Indica si el país del domicilio está inhabilitado. */
     inhabilitarPaisFabricante: boolean;
+    /** Datos de SCIAN para la tabla. */
+    scianBodyData : ScianTable[];
+    /** Datos de productos para la tabla. */
+    productoBodyData:ProductoTable[];
 }
 
 /**
@@ -476,6 +481,8 @@ export function createInitialState(): AvisoSanitarioState {
         mostrarRfcFabricanteBuscarBoton: false,
         mostrarCurpFabricanteBuscarBoton: false,
         inhabilitarPaisFabricante: true,
+        scianBodyData: [],
+        productoBodyData: [],
     }
 }
 
@@ -1860,6 +1867,32 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
         this.update((state) => ({
             ...state,
             inhabilitarPais,
+        }));
+    }
+    /**
+     * Actualiza la tabla de datos de SCIAN.
+     * @param scianBodyData Nuevo valor de la tabla de datos de SCIAN.
+     * @returns void
+     * @memberof ProductoStore
+     * */
+     
+    public setScianTabla(scianBodyData: ScianTable[]): void {
+        this.update((state) => ({
+            ...state,
+            scianBodyData,
+        }));
+    }
+
+    /**
+     * Actualiza la tabla de datos de productos.
+     * @param productoBodyData Nuevo valor de la tabla de datos de productos.
+     * @returns void
+     * @memberof ProductoStore
+     * */
+    public setProductoTabla(productoBodyData: ProductoTable[]): void {
+        this.update((state) => ({
+            ...state,
+             productoBodyData,
         }));
     }
 }

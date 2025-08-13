@@ -1,6 +1,6 @@
 <div>
     <form [formGroup]="formCertificado">
-        <ng-titulo titulo="Validación inicial del certificado de circulación de mercancías" />
+        <ng-titulo titulo="Validación a posteriori del certificado de circulación de mercancías" />
         <ng-titulo titulo="Tratado y país o bloque" />
         <div class="row mb-3">
             <div class="col-md-4">
@@ -10,7 +10,7 @@
             </div>
 
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="estado" [label]="'País / Bloque'" [required]="true"
+                <app-catalogo-select [catalogo]="pais" [label]="'País / Bloque'" [required]="true"
                     name="estado" formControlName="bloque" [isDisabled]="esFormularioSoloLectura ? true : false" (change)="tercerOperador(formCertificado,'bloque', 'setBloque')"
                     ></app-catalogo-select>
             </div>
@@ -33,39 +33,70 @@
         </div>
 
         <div class="row mb-3">
-            <div class="col-md-6 text-center">
+            <div class="col-md-8 text-center">
                 <label for="fracciónArancelaria" class="form-label">Periodo</label>
             </div>
         </div>
 
-        <div class="col-md-4 form-field">
-            <input-fecha [datos]="fechaInicioInput" [setFecha]="formCertificado.get('fechaInicio')?.value"
-            (valorCambiado)="cambioFechaInicio($event,formCertificado,'fechaInicio', 'setFechaInicio')" [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
+        <div class="row mb-3">
+            <div class="col-md-4 form-field" *ngIf="formCertificado.get('fechaInicio')">
+                <input-fecha [datos]="fechaInicioInput" [setFecha]="formCertificado.get('fechaInicio')?.value"
+                (valorCambiado)="cambioFechaInicio($event,formCertificado,'fechaInicio', 'setFechaInicio')" [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
+            </div>
+
+            <div class="col-md-4 form-field" *ngIf="formCertificado.get('fechaFinal')">
+                <input-fecha [datos]="fechaFinalInput" [setFecha]="formCertificado.get('fechaFinal')?.value" (valorCambiado)="cambioFechaFinal($event,formCertificado,'fechaFinal', 'setFechaFinal')" [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
+            </div>
         </div>
 
-        <div class="col-md-4 form-field">
-            <input-fecha [datos]="fechaFinalInput" [setFecha]="formCertificado.get('fechaFinal')?.value" (valorCambiado)="cambioFechaFinal($event,formCertificado,'fechaFinal', 'setFechaFinal')" [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
-        </div>
-
-        <div class="row w-100">
-            <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-                <button class="btn btn-primary" [disabled]="esFormularioSoloLectura ? true : false">Buscar mercancías</button>
+        <div class="row mt-3 mb-4">
+            <div class="text-end">
+                <button class="btn btn-primary" [disabled]="esFormularioSoloLectura ? true : false" (click)="buscarMercancias()">Buscar mercancías</button>
             </div>
         </div>
         @if(mostrarTercerOperador){
             <ng-titulo titulo="¿Necesita el anexo de japón?" />
-            <div class="col-md-12">
+            <div class="col-md-12 mb-5">
                 <input class="form-check-input" type="checkbox" id="tercerOperador"
                     formControlName="tercerOperador" (change)="setValoresStore(formCertificado,'tercerOperador', 'setTercerOperador')"/> &nbsp;si
             </div>
         }
-        <h6 class="mt-5">Mercancías disponibles</h6>
-        <app-tabla-dinamica [configuracionTabla]="nicoTabla"
-        [datos]="nicoTablaDatos"></app-tabla-dinamica>
-        <ul class="pagination d-flex justify-content-center">
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-        </ul>
+        <div class="mt-5">
+            <h6>Mercancías disponibles</h6>
+            <app-tabla-dinamica 
+            [configuracionTabla]="nicoTabla"
+            [datos]="nicoTablaDatos"
+            (filaClic)="emitirFilaClic($event)"
+            ></app-tabla-dinamica>
+            <ul class="pagination d-flex justify-content-center">
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+            </ul>
+        </div>
 
     </form>
     <app-carga-de-mercancias></app-carga-de-mercancias>
+</div>
+
+<div class="modal fade" #modal tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="col-md-12">
+            <formas-dinamicas
+                formularioTitulo="Datos de la mercancía"
+                [forma]="modalForma"
+                [formularioDatos]="modalFormData"
+            ></formas-dinamicas>
+
+            </div>
+        <div class="col-md-12 mt-5 mb-5">
+            <div class="pull-left text-muted text-vertical-align-button" id="lblCamposObligatorios">* Campos obligatorios</div>
+            <div class="text-end">
+                <button type="button" class="btn btn-default me-3" data-bs-toggle="modal" data-bs-target="#modalCancelar">Cancelar</button>
+                <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCancelar">Agregar</button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

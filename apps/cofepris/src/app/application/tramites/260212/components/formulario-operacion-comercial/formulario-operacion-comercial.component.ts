@@ -1,16 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
 import { CatalogoResponse, CatalogoSelectComponent, } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { SolicitudService } from '../../services/solicitud.service';
-
-import { Tramite260212State, Tramite260212Store } from '../../estados/tramite260212.store';
-
-import { Tramite260212Query } from '../../estados/tramite260212.query';
-
 import { Observable, Subject, map, takeUntil } from 'rxjs';
+import { Tramite260212State, Tramite260212Store } from '../../estados/tramite260212.store';
+import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { SolicitudService } from '../../services/solicitud.service';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { Tramite260212Query } from '../../estados/tramite260212.query';
 /**
  * Componente FormularioOperacionComercialComponent
  * Este componente gestiona el formulario relacionado con la operación comercial.
@@ -21,7 +18,8 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
   standalone: true,
   imports: [CommonModule,
     CatalogoSelectComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TooltipModule
   ],
   templateUrl: './formulario-operacion-comercial.component.html',
   styleUrl: './formulario-operacion-comercial.component.scss',
@@ -180,6 +178,11 @@ this. inicializarEstadoFormulario();
   alternarSoloLectura(event: Event): void {
     const CHECK_BOX = event.target as HTMLInputElement;
     this.esSoloLectura = !CHECK_BOX.checked;
+    if (CHECK_BOX.checked) {
+      this.formularioOperacionForm.get('noLicenciaSanitaria')?.disable();
+    } else {
+      this.formularioOperacionForm.get('noLicenciaSanitaria')?.enable();
+    }
   }
 
   /**

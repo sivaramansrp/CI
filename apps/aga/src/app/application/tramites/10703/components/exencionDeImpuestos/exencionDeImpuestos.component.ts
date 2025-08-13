@@ -230,8 +230,6 @@ export class ExencionDeImpuestosComponent implements OnInit, OnDestroy {
     } else if (!this.esFormularioSoloLectura) {
       this.agregarMercanciasForm.enable();
       this.tramiteForm.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
     }
   }
 

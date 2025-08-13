@@ -1,7 +1,7 @@
-import { CatalogoSelectComponent,CatalogosSelect,ConfiguracionColumna,ConsultaioQuery,ConsultaioState,InputRadioComponent,TablaDinamicaComponent,TablaSeleccion,TituloComponent,ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent,CatalogosSelect,ConfiguracionColumna,ConsultaioQuery,ConsultaioState,InputCheckComponent,InputRadioComponent,TablaDinamicaComponent,TablaSeleccion,TituloComponent,ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Component,EventEmitter,OnDestroy,OnInit,Output } from '@angular/core';
 import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
-import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
+import { ReplaySubject, Subject, map, merge, takeUntil } from 'rxjs';
 import { Solicitud11105State, Solicitud11105Store } from '../../estados/solicitud11105.store';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/40102/transportista-terrestre.model';
 import { CommonModule } from '@angular/common';
@@ -32,6 +32,7 @@ const TERCEROS_TEXTO_DE_ADJUNTAR =
     FormsModule,
     ReactiveFormsModule,
     TablaDinamicaComponent,
+    InputCheckComponent
   ],
 })
 export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
@@ -119,7 +120,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   configuracionTabla: ConfiguracionColumna<DetallesDelMercancia>[] = [
     {
-      encabezado: DATOS_GENERERALES_DE_LA_SOLICICTUD.ADUANA_LABEL_NOMBRE,
+      encabezado: DATOS_GENERERALES_DE_LA_SOLICICTUD.TIO_DE_MERCANCIA,
       clave: (item: DetallesDelMercancia) => item.tipoDeMercancia,
       orden: 1,
     },
@@ -155,6 +156,21 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
       clave: (item: DetallesDelMercancia) => item.numeroDeSerie,
       orden: 7,
     },
+    {
+      encabezado: DATOS_GENERERALES_DE_LA_SOLICICTUD.USO_ESPECIFICO_DE_LA_MERCANCIA,
+      clave: (item: DetallesDelMercancia) => item.usoEspecifico,
+      orden: 8,
+    },
+    {
+      encabezado: DATOS_GENERERALES_DE_LA_SOLICICTUD.CONDICION_DE_LA_MERCANCIA,
+      clave: (item: DetallesDelMercancia) => item.condicionMercancia,
+      orden: 9,
+    },
+    {
+      encabezado: DATOS_GENERERALES_DE_LA_SOLICICTUD.VEHICULO,
+      clave: (item: DetallesDelMercancia) => item.vehiculo,
+      orden: 10,
+    },
   ];
 
   /**
@@ -176,7 +192,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Opciones para el radio button.
    */
   radioOpcions = [
-    { label: 'Sí', value: 'sí' },
+    { label: 'Sí', value: 'si' },
     { label: 'No', value: 'no' },
   ];
 
@@ -191,6 +207,11 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Estado actual de la solicitud.
    */
   public solicitudState!: Solicitud11105State;
+
+  /**
+   * Lista de países.
+   */
+  pais!: Catalogo[];
 
   /**
    * Constructor de la clase.
@@ -213,6 +234,8 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
+    this.inicializaCatalogos();
+
     this.query.seleccionarSolicitud$
           .pipe(
             takeUntil(this.destroyNotifier$),
@@ -225,6 +248,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.buscarAduanaDatos();
     this.buscarpropositoDeLaMercanciaDatos();
     this.buscarDetallesDelMercanciaDatos();
+    this.paisSeleccion();
 
     
      this.consultaioQuery.selectConsultaioState$
@@ -239,6 +263,26 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+  /**
+     * Inicializa los catálogos de países y documentos de residencia.
+     * @returns {void}
+     */
+    private inicializaCatalogos(): void {
+      const PAIS$ = this.retiradaDeLaAutorizacionDeDonacionesService
+        .getPaisCatalogo()
+        .pipe(
+          map((resp) => {
+            this.pais = resp.data;
+          })
+        );
+  
+      merge(
+        PAIS$
+      )
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe();
+    }
+
     /**
    * Configura el formulario del destinatario según el estado de la solicitud.
    *  Si el formulario está en modo solo lectura, deshabilita los campos del formulario.
@@ -247,8 +291,6 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     domecilioFormulario(): void {
     if (this.soloLectura) {
       this.tramiteForm.disable();
-    } else {
-      this.tramiteForm.enable();
     }
   }
 
@@ -286,6 +328,15 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
       .subscribe((datos: DetallesDelMercancia) => {
         this.configuracionTablaDatos = [datos];
       });
+  }
+
+  /**
+   * Selecciona el país del formulario y lo guarda en el estado global.
+   * @returns {void}
+   */
+  paisSeleccion(): void {
+    const PAIS = this.tramiteForm.get('pais')?.value;
+    this.store.setPais(PAIS);
   }
 
   /**
@@ -340,10 +391,10 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   donanteDomicilio(): void {
     this.tramiteForm = this.formBuilder.group({
-        aduana: [{ value: this.solicitudState?.aduana, disabled: true }, [Validators.required]],
-        nombre: [ this.solicitudState?.nombre,
-          [Validators.required, Validators.maxLength(50)],
-        ],
+        aduana: [{ value: this.solicitudState?.aduana, disabled: true }],
+        organismoPublico: [{ value: this.solicitudState?.organismoPublico, disabled: true }],
+        nombre: [{ value:this.solicitudState?.nombre, disabled: true }],
+        personaFisica: [{ value: this.solicitudState?.personaFisica, disabled: true }],
         tipoMercancia: [
           { value: this.solicitudState?.tipoMercancia, disabled: true },
           [Validators.required, Validators.maxLength(100)],
@@ -366,18 +417,15 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
           { value: this.solicitudState?.serie, disabled: true },
           [Validators.required, Validators.maxLength(50)],
         ],
-        manifesto: [{ value: this.solicitudState?.manifesto }, Validators.required],
+        manifesto: [{ value: this.solicitudState?.manifesto, disabled: true }],
         calle: [
-          { value: this.solicitudState?.calle, disabled: true },
-          [Validators.required, Validators.maxLength(100)],
+          { value: this.solicitudState?.calle, disabled: true }
         ],
         numeroExterior: [
-          { value: this.solicitudState?.numeroExterior, disabled: true },
-          [Validators.required, Validators.maxLength(10)],
+          { value: this.solicitudState?.numeroExterior, disabled: true }
         ],
         numeroInterior: [
-          { value: this.solicitudState?.numeroInterior, disabled: true },
-          [Validators.maxLength(10)],
+          { value: this.solicitudState?.numeroInterior, disabled: true }
         ],
         telefono: [
           { value: this.solicitudState?.telefono, disabled: true },
@@ -387,7 +435,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
           { value: this.solicitudState?.correoElectronico, disabled: true },
           [Validators.required, Validators.email],
         ],
-        pais: [{ value: this.solicitudState?.pais, disabled: true }, Validators.required],
+        pais: [{ value: this.solicitudState?.pais, disabled: true }],
         codigoPostal: [
           { value: this.solicitudState?.codigoPostal, disabled: true },
           [Validators.required, Validators.pattern(/^\d{5}$/)],
@@ -400,7 +448,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
           { value: this.solicitudState?.colonia, disabled: true },
           [Validators.required, Validators.maxLength(50)],
         ],
-        opcion: [{ value: this.solicitudState?.opcion }, Validators.maxLength(50)],
+        opcion: [{ value: this.solicitudState?.opcion, disabled: true }],
     });
      this.domecilioFormulario();
   }

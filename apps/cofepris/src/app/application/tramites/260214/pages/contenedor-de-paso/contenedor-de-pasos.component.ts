@@ -7,14 +7,24 @@
  */
 
 import {
+  AVISO_CONTRNIDO,
   AccionBoton,
+  AlertComponent,
   DatosPasos,
   ListaPasosWizard,
+  Notificacion,
+  NotificacionesComponent,
 } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
-import { PASOS, TITULOMENSAJE } from '../../constants/medicos-uso.enum';
+import {
+  MENSAJE_DE_VALIDACION,
+  PASOS,
+  TITULOMENSAJE,
+} from '../../constants/medicos-uso.enum';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos-new/pago-de-derechos.component';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
@@ -57,11 +67,49 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     PasoDosComponent,
     PasoTresComponent,
     BtnContinuarComponent,
+    NotificacionesComponent,
+    DatosDeLaSolicitudComponent,
+    PagoDeDerechosComponent,
+    AlertComponent,
   ],
   templateUrl: './contenedor-de-pasos.component.html',
   styleUrl: './contenedor-de-paso.component.scss',
 })
 export class ContenedorDePasosComponent {
+  /**
+   * Referencia al componente hijo `DatosDeLaSolicitudComponent`.
+   *
+   * Se obtiene mediante `@ViewChild` para acceder a sus métodos y propiedades
+   * desde el componente padre.
+   */
+  @ViewChild(DatosDeLaSolicitudComponent, { static: false })
+  datosDeLaSolicitudComponent!: DatosDeLaSolicitudComponent;
+
+  /**
+   * Referencia al componente hijo `PagoDeDerechosComponent`.
+   *
+   * Se obtiene mediante `@ViewChild` para poder interactuar con él de forma
+   * programática desde el componente padre.
+   */
+  @ViewChild(PagoDeDerechosComponent, { static: false })
+  pagoDeDerechosComponent!: PagoDeDerechosComponent;
+
+  /**
+   * Contenido del aviso que se mostrará en la interfaz.
+   *
+   * Se inicializa con el valor de la propiedad `aviso` del objeto constante `AVISO_CONTRNIDO`.
+   */
+  avisoContrnido = AVISO_CONTRNIDO.aviso;
+
+  /**
+   * Controla la visibilidad del modal de alerta.
+   * @property {boolean} mostrarAlerta
+   */
+  public mostrarAlerta: boolean = false;
+
+  /** Nueva notificación relacionada con el RFC. */
+  public seleccionarFilaNotificacion!: Notificacion;
+
   /**
    * @property {string | null} tituloMensaje
    * Título del paso actual en el wizard.
@@ -119,7 +167,24 @@ export class ContenedorDePasosComponent {
       this.tituloMensaje = ContenedorDePasosComponent.obtenerNombreDelTítulo(
         e.valor
       );
-
+      if (
+        this.datosDeLaSolicitudComponent.datosSolicitudForm.invalid &&
+        this.pagoDeDerechosComponent.formularioPagoDerechos.invalid
+      ) {
+        this.seleccionarFilaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: '',
+          mensaje: MENSAJE_DE_VALIDACION,
+          cerrar: true,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+        this.mostrarAlerta = true;
+        return;
+      }
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
       } else {

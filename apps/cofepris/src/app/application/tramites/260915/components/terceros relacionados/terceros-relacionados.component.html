@@ -9,16 +9,21 @@
             [tipoSeleccionTabla]="destinatarioSeleccionTabla"
             [configuracionTabla]="destinatarioConfiguracionTabla"
             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+            [datos]="fabricanteDatos"
+            
           >
           </app-tabla-dinamica>
+          <div class="col-md-12">
+            <app-table-pagination [showCurrentPage]="true"></app-table-pagination>
+          </div>
+
+          
         </div>
         <div class="col-md-12 d-flex justify-content-end">
           <div class="btn-group">
             <button
             type="button"
             class="btn btn-primary ms-3"
-            data-bs-toggle="modal"
-            data-bs-target="#modalAgregarMercancias"
             [disabled]="esFormularioSoloLectura"
           >
             Agregar
@@ -31,16 +36,18 @@
             [tipoSeleccionTabla]="destinatarioSeleccionTabla"
             [configuracionTabla]="destinatarioConfiguracionTabla"
             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+            [datos]="destinatarioDatos"
           >
           </app-tabla-dinamica>
+            <div class="col-md-12">
+            <app-table-pagination [showCurrentPage]="true"></app-table-pagination>
+          </div>
         </div>
         <div class="col-md-12 d-flex justify-content-end">
           <div class="btn-group">
             <button
             type="button"
             class="btn btn-primary ms-3"
-            data-bs-toggle="modal"
-            data-bs-target="#modalAgregarMercancias"
             [disabled]="esFormularioSoloLectura"
           >
             Agregar
@@ -48,15 +55,18 @@
           </div>
         </div>
         <div class="col-md-12">
-          <label class="form-label" for="">Proveedor*:</label>
+          <label class="form-label" for="">Proveedor:</label>
           <app-tabla-dinamica
             [tipoSeleccionTabla]="destinatarioSeleccionTabla"
             [configuracionTabla]="destinatarioConfiguracionTabla"
-             [datos]="tableData"
+             [datos]="proveedorDatos"
              (listaDeFilaSeleccionada)="onSelectedRowsChange($event)"
              [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
              >
           </app-tabla-dinamica>
+            <div class="col-md-12">
+            <app-table-pagination [showCurrentPage]="true"></app-table-pagination>
+          </div>
         </div>
         <div class="col-md-12 d-flex justify-content-end">
           <div class="btn-group">
@@ -75,8 +85,6 @@
             <button
             *ngIf="selectedRows.size === 1"
               type="button"
-              data-bs-toggle="modal"
-              data-bs-target="#modalAgregarMercancias"
               class="btn btn-default btn-space ms-3"
               (click)="openModificarMercancias()" 
               [disabled]="esFormularioSoloLectura"   
@@ -87,8 +95,6 @@
             <button
               type="button"
               class="btn btn-primary ms-3"
-              data-bs-toggle="modal"
-              data-bs-target="#modalAgregarMercancias"
               (click)="agregarMercancias()"
               [disabled]="esFormularioSoloLectura"
             >
@@ -97,21 +103,23 @@
           </div>  
       </div>
         <div class="col-md-12 mt-5">
-          <label class="form-label" for="">Facturador*:</label>
+          <label class="form-label" for="">Facturador:</label>
           <app-tabla-dinamica
             [tipoSeleccionTabla]="destinatarioSeleccionTabla"
             [configuracionTabla]="destinatarioConfiguracionTabla"
             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+            [datos]="facturadorDatos"
           >
           </app-tabla-dinamica>
+            <div class="col-md-12">
+            <app-table-pagination [showCurrentPage]="true"></app-table-pagination>
+          </div>
         </div>
         <div class="col-md-12 d-flex justify-content-end">
           <div class="btn-group">
             <button
             type="button"
             class="btn btn-primary ms-3"
-            data-bs-toggle="modal"
-            data-bs-target="#modalAgregarMercancias"
             [disabled]="esFormularioSoloLectura"
           >
             Agregar
@@ -129,133 +137,139 @@
     </lib-notificaciones>
     </section>
     }
-  <div class="container" *ngIf="esFormularioVisible">
-      <form [formGroup]="destinatarioForm" (ngSubmit)="onGuardar()">
-        <ng-titulo titulo="Agregar destinatario (destino final)" />
-        <ng-container formGroupName="agregarDestinatario">
-          <div class="row mb-3">
-            <div class="col-md-12">
-              <label class="form-label" for="tipoPersona">Tipo persona*:</label>
-            </div>
-            <app-input-radio 
-            [radioOptions]="tipoPersonaRadioOptions" 
-            [selectedValue]="agregarDestinatario.get('tipoPersona')?.value" 
-           
-            (valueChange)="setTipoPersona($event)" 
-            formControlName="tipoPersona" 
-            (change)="setValoresStore(agregarDestinatario,'tipoPersona')">
-          </app-input-radio>
-          </div>
-        </ng-container>
-        <ng-titulo titulo="Datos personales" />
-        <ng-container formGroupName="datosPersonales">
-          @if (selectedTipoPersona === 'fisica') {
-          <div class="row">
-            <div class="col-md-4 mb-3">
-              <label class="form-label" for="nombre">Nombre(s)*:</label>
+  
 
-              <input class="form-control" id="nombre" type="number" formControlName="nombre"
-              (change)="setValoresStore(agregarDestinatario,'nombre')"
-                 />
-            </div>
-            <div class="col-md-4 mb-3">
-              <label class="form-label" for="primerApellido">Primer apellido*:</label>
-              <input class="form-control" id="primerApellido" type="text" formControlName="primerApellido"
-              (change)="setValoresStore(agregarDestinatario,'primerApellido')"
-                 />
-            </div>
-            <div class="col-md-4 mb-3">
-              <label class="form-label" for="segundoApellido">Segundo apellido:</label>
-              <input class="form-control" id="segundoApellido" type="text" formControlName="segundoApellido"
-              (change)="setValoresStore(agregarDestinatario,'segundoApellido')"
-                 />
+    <div class="modal fade custom-backdrop"
+    id="modalAgregarMercancias"
+    tabindex="-1"
+    aria-labelledby="modalAgregarMercanciasLabel"
+    aria-hidden="true"
+    data-bs-focus="false"
+    data-backdrop="false" 
+    #modalAgregarMercancias
+    >
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title mt-0">Agregar proveedor</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="destinatarioForm">
+            <ng-container formGroupName="agregarDestinatario">
+              <h3>Datos generales</h3>
+              <div class="row mb-3">
+                <div class="col-md-12">
+                  <label class="form-label" for="tipoPersona">Tipo persona*:</label>
+                </div>
+                <app-input-radio 
+                [radioOptions]="tipoPersonaRadioOptions" 
+                [selectedValue]="agregarDestinatario.get('tipoPersona')?.value" 
+                (valueChange)="setTipoPersona($event)" 
+                formControlName="tipoPersona" 
+                (change)="setValoresStore(agregarDestinatario,'tipoPersona')">
+              </app-input-radio>
+              </div>
+            </ng-container>
+            
+            <ng-titulo titulo="Datos personales" />
+            <ng-container formGroupName="datosPersonales">
+              @if (selectedTipoPersona === 'fisica') {
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label class="form-label" for="nombre">Nombre(s)*:</label>
+                  <input class="form-control" id="nombre" type="text" formControlName="nombre"
+                  (change)="setValoresStore(agregarDestinatario,'nombre')" />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label" for="primerApellido">Primer apellido*:</label>
+                  <input class="form-control" id="primerApellido" type="text" formControlName="primerApellido"
+                  (change)="setValoresStore(agregarDestinatario,'primerApellido')" />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label" for="segundoApellido">Segundo apellido:</label>
+                  <input class="form-control" id="segundoApellido" type="text" formControlName="segundoApellido"
+                  (change)="setValoresStore(agregarDestinatario,'segundoApellido')" />
+                </div>
+              </div>
+              } @if (selectedTipoPersona === 'moral') {
+              <div class="row">
+                <div class="col-md-8 mb-3">
+                  <label class="form-label" for="nombre">Denominación/razón social*:</label>
+                  <input class="form-control" id="nombre" type="text" formControlName="nombre"
+                  (change)="setValoresStore(agregarDestinatario,'nombre')" />
+                </div>
+              </div>
+              }
+              
+              <ng-titulo titulo="Domicilio" />    
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <app-catalogo-select 
+                  id="paisData"
+                  formControlName="pais"
+                  [catalogo]="paisData.catalogos" 
+                  [label]="'País'"
+                  [required]="true"
+                  (change)="setValoresStore(agregarDestinatario,'pais')"
+                  [isDisabled]="esFormularioSoloLectura"
+                  ></app-catalogo-select>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label" for="estado">Estado*:</label>
+                  <input class="form-control" id="estado" type="text" formControlName="estado"
+                  (change)="setValoresStore(agregarDestinatario,'estado')" />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label" for="codigopostal">Código postal o equivalente:</label>
+                  <input class="form-control" id="codigopostal" type="text" formControlName="codigopostal"
+                  (change)="setValoresStore(agregarDestinatario,'codigopostal')" />
+                </div>
+              </div>
+              <div class="row">
+                  <div class="col-md-8 mb-3">
+                      <label class="form-label" for="calle">Calle*:</label>
+                      <input class="form-control" id="calle" type="text" formControlName="calle"
+                      (change)="setValoresStore(agregarDestinatario,'calle')" />
+                  </div>
+                  <div class="col-md-4 mb-3">
+                      <label class="form-label" for="numeroexterior">Número exterior*:</label>
+                      <input class="form-control" id="numeroexterior" type="text" formControlName="numeroExterior"
+                      (change)="setValoresStore(agregarDestinatario,'numeroExterior')" />
+                  </div>
+              </div>    
+              <div class="row">
+                  <div class="col-md-4 mb-3">
+                      <label class="form-label" for="numerointerior">Número interior*:</label>
+                      <input class="form-control" id="numerointerior" type="text" formControlName="numeroInterior"
+                      (change)="setValoresStore(agregarDestinatario,'numeroInterior')" />
+                  </div>
+                <div class="col-md-2 mb-3">
+                  <label class="form-label" for="lada">Lada:</label>
+                  <input class="form-control" id="lada" type="number" formControlName="lada"
+                  (change)="setValoresStore(agregarDestinatario,'lada')" />
+                </div>
+                <div class="col-md-3 mb-3">
+                  <label class="form-label" for="telefono">Teléfono:</label>
+                  <input class="form-control" id="telefono" type="number" formControlName="telefono"
+                  (change)="setValoresStore(agregarDestinatario,'telefono')" />
+                </div>
+                <div class="col-md-3 mb-3">
+                  <label class="form-label" for="correoElectronico">Correo electrónico:</label>
+                  <input class="form-control" id="correoElectronico" type="email" formControlName="correoElectronico"
+                  (change)="setValoresStore(agregarDestinatario,'correoElectronico')" />
+                </div>
+              </div>
+            </ng-container>
+            </form>
+          </div>
+          <div class="modal-footer d-flex justify-content-end mb-5">
+            <div class="btn-group">
+              <button class="btn btn-danger" type="button" (click)="cancelarFormulario()" [disabled]="esFormularioSoloLectura">Cancelar</button>
+              <button class="btn btn-default" type="button" (click)="limpiarFormulario()" [disabled]="esFormularioSoloLectura">Limpiar</button>
+              <button class="btn btn-primary me-5" type="button" (click)="onGuardar()" [disabled]="esFormularioSoloLectura">Guardar</button>
             </div>
           </div>
-          } @if (selectedTipoPersona === 'moral') {
-          <div class="row">
-            <div class="col-md-8 mb-3">
-              <label class="form-label" for="nombre">Denominación/razón social*:</label>
-              <input class="form-control" id="nombre" type="text" formControlName="nombre"
-              (change)="setValoresStore(agregarDestinatario,'nombre')" 
-                 />
-            </div>
-          </div>
-          }
-          <ng-titulo titulo="Domicilio" />    
-          <div class="row">
-            <div class="col-md-4 mb-3">
-              <app-catalogo-select 
-              id=paisData
-              formControlName="pais"
-              [catalogo]="paisData.catalogos" 
-               [label]="'Pais'"
-                [required]="true"
-                (change)="setValoresStore(agregarDestinatario,'pais')"
-                [isDisabled]="esFormularioSoloLectura"
-                ></app-catalogo-select>
-            </div>
-            <div class="col-md-4 mb-3">
-              <label class="form-label" for="estado">Estado*:</label>
-              <input class="form-control" id="estado" type="text" formControlName="estado"
-              (change)="setValoresStore(agregarDestinatario,'estado')"
-                 />
-            </div>
-            <div class="col-md-4 mb-3">
-              <label class="form-label" for="codigopostal">Codigo postal o equivalente:</label>
-              <input class="form-control" id="codigopostal" type="text" formControlName="codigopostal"
-              (change)="setValoresStore(agregarDestinatario,'codigopostal')" 
-                 />
-            </div>
-          </div>
-          <div class="row">
-              <div class="col-md-8">
-                  <label class="form-label" for="calle">Calle*:</label>
-                  <input class="form-control" id="calle" type="text" formControlName="calle"
-                  (change)="setValoresStore(agregarDestinatario,'calle')" 
-                     />
-              </div>
-              <div class="col-md-4">
-                  <label class="form-label" for="numeroexterior">Numero exterior*:</label>
-                  <input class="form-control" id="numeroexterior" type="text" formControlName="numeroExterior"
-                  (change)="setValoresStore(agregarDestinatario,'numeroExterior')"  
-                     />
-              </div>
-          </div>    
-          <div class="row">
-              <div class="col-md-4">
-                  <label class="form-label" for="numerointerior">Numero interior*:</label>
-                  <input class="form-control" id="numerointerior" type="text" formControlName="numeroInterior"
-                  (change)="setValoresStore(agregarDestinatario,'numeroInterior')"
-                     />
-              </div>
-            <div class="col-md-1 mb-3">
-              <label class="form-label" for="lada">Lada:</label>
-              <input class="form-control" id="lada" type="number" formControlName="lada"
-              (change)="setValoresStore(agregarDestinatario,'lada')" 
-                 />
-            </div>
-            <div class="col-md-3 mb-3">
-              <label class="form-label" for="telefono">Teléfono:</label>
-              <input class="form-control" id="telefono" type="number" formControlName="telefono"
-              (change)="setValoresStore(agregarDestinatario,'telefono')"
-               />
-            </div>
-            <div class="col-md-4 mb-3">
-              <label class="form-label" for="correoElectronico">Correo electrónico:</label>
-              <div class="input-group">
-               <input class="form-control" id="correoElectronico" type="email" formControlName="correoElectronico"
-               (change)="setValoresStore(agregarDestinatario,'correoElectronico')" 
-                 />
-              </div>
-            </div>
-          </div>
-        </ng-container>
-        <div class="col-md-12 d-flex justify-content-end">
-        <div class="btn-group">
-          <button class="btn btn-danger" type="button" (click)="cancelarFormulario()" [disabled]="esFormularioSoloLectura">Cancelar</button>
-          <button class="btn btn-danger" type="button" (click)="limpiarFormulario()" [disabled]="esFormularioSoloLectura">Limpiar</button>
-          <button class="btn btn-primary me-2" type="button" (click)="onGuardar()" [disabled]="esFormularioSoloLectura">Guardar</button>
-        </div>
       </div>
-        </form>
-  </div> 
+    </div>
+</div>

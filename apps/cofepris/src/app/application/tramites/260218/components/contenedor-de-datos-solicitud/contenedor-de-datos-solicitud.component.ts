@@ -53,6 +53,20 @@ import { Tramite260218Query } from '../../estados/tramite260218Query.query';
   styleUrl: './contenedor-de-datos-solicitud.component.scss',
 })
 export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
+
+   /**
+   * @property elementosRequeridos
+   * @description Arreglo de campos requeridos para el formulario de datos de la solicitud,
+   * utilizado para propósitos de validación.
+   * @type {string[]}
+   */
+  elementosRequeridos = [
+    'denominacionRazon',
+    'scian',
+    'correoElectronico',
+    'manifesto',
+  ];
+  
   /**
    * @property {Subject<void>} destroyNotifier$
    * @description

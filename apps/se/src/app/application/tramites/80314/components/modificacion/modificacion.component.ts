@@ -127,7 +127,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
     this.inicializarEstadoFormulario();
 
     this.actividadProductiva = {
-      labelNombre: '* Activided productiva',
+      labelNombre: 'Activided productiva*',
       required: false,
       primerOpcion: 'Selecciona un valor',
       catalogos: ACTIVIDAD_PRODUCTIVA

@@ -3,7 +3,7 @@
 <div class="container">
     <form [formGroup]="dataDeLaSolicitudForm">
     <ng-container formGroupName="datosDelTramiteRealizar"> 
-        <h5>seleccione el tipo operacion que desea realizer</h5>
+        <h5>Seleccione el tipo de operación que desea realizar*:</h5>
        <app-input-radio
             [radioOptions]="opcionDeBotonDeRadio"
             [isRequired]="true"
@@ -14,41 +14,54 @@
      <div class="row">
         <div class="col-md-8">
           <div class="form-group">
-            <label class="form-label" for="justification">justification</label>
-            <textarea class="form-control" id="justification" rows="2" height="50"
-            placeholder="" style="height: 100px" formControlName="justification" 
+            <label class="form-label" for="justification">Justificación*:</label>
+            <textarea class="form-control justification" id="justification" rows="2" height="50"
+            placeholder="" formControlName="justification" 
             (change)="setValoresStore(datosDelTramiteRealizar,'justification')"></textarea>
           </div>
         </div>
         </div>   
     <ng-titulo titulo="Datos del establecimiento" />
-        <div class="text-end">
+        <div class="text-end mb-5">
           <button type="button" class="btn btn-primary" name="seleccionarEstablecimiento" id="btnEstablecimiento" title="Selecciona para habilitar los campos del establecimiento" (click)="seleccionarEstablecimiento()" [disabled]="esFormularioSoloLectura">Seleccionar establecimiento</button>
         </div>
-        @if (nuevaNotificacion) {
-          <section>
-          <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
-          </lib-notificaciones>
-          </section>
-          }
+       
         <div class="row">
+          <div class="col-md-4">
+                <label class="form-label" for="rfcdelResponsableSanitario">RFC del responsable sanitario:</label>
+                <input class="form-control" id="rfcdelResponsableSanitario" type="text" formControlName="rfcdelResponsableSanitario"
+                (change)="setValoresStore(datosDelTramiteRealizar,'rfcdelResponsableSanitario')"
+                />
+            </div>
             <div class="col-md-8">
-                <label class="form-label" for="denominación">Denominación/razón social*:</label>
+                <label class="form-label" for="denominación">Denominación o razón social*:</label>
                 <input class="form-control" id="denominacion" type="text" formControlName="denominacion"
                 (change)="setValoresStore(datosDelTramiteRealizar,'denominacion')"
                 />
             </div>
-            <div class="col-md-4">
-                <label class="form-label" for="correoelectronico">Correo electronico*:</label>
+            <div class="col-md-4 mt-3">
+                <label class="form-label" for="correoelectronico">Correo electronico*: 
+                <span tooltip="ejemplo@dominio.com">
+                  <i class="bi bi-question-circle-fill"></i>
+                </span>
+                </label>
                 <input class="form-control" id="correoelectronico" type="text" formControlName="correoElectronico"
                 (change)="setValoresStore(datosDelTramiteRealizar,'correoElectronico')"
+                [ngClass]="{
+                    'is-invalid': isCorreoElectronicoInvalid
+                  }"
                 />
+                  @if(isCorreoElectronicoInvalid){
+                    <small class="text-danger">
+                    El valor Ingresado no es una dirección válida de correo electrónico
+                  </small>
+                  }
             </div>
         </div>
         <ng-titulo titulo="Domicilio del establecimiento" />
         <div class="row">
             <div class="col-md-4 mb-3">
-                <label class="form-label" for="codigopostal">Codigo postal:</label>
+                <label class="form-label" for="codigopostal">Código postal*:</label>
                 <input class="form-control" id="codigopostal" type="text" formControlName="codigopostal"
                 (change)="setValoresStore(datosDelTramiteRealizar,'codigopostal')"
                 />
@@ -88,7 +101,11 @@
         </div>
         <div class="row">
             <div class="col-md-8">
-                <label class="form-label" for="calle">Calle*:</label>
+                <label class="form-label" for="calle">Calle*:
+                <span tooltip="Calle">
+                  <i class="bi bi-question-circle-fill"></i>
+                </span>
+                </label>
                 <input class="form-control" id="calle" type="text" formControlName="calle"
                 (change)="setValoresStore(datosDelTramiteRealizar,'calle')"/>
             </div>
@@ -106,81 +123,93 @@
             </div>
         </div>
       </ng-container>
-        <ng-titulo titulo="S.C.I.A.N.*" />
+        <ng-titulo titulo="S.C.I.A.N.:" />
         <app-tabla-dinamica
-      [configuracionTabla]="configuracionColumnasoli"
-       [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
+        [configuracionTabla]="configuracionColumnasoli"
+        [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
         [datos]="tableData"
         (listaDeFilaSeleccionada)="onfilasSeleccionadas($event)"
         [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
     </app-tabla-dinamica>
+    <div class="col-md-12">
+      <app-table-pagination [showCurrentPage]="true"></app-table-pagination>
+    </div>
     <div class="col-md-12 d-flex justify-content-end">
         <div class="btn-group">
-          <button class="btn btn-danger"
+          <button class="btn btn-danger me-2"
             type="button" (click)="onDelete()" [disabled]="esFormularioSoloLectura">Eliminar</button>
             <button class="btn btn-primary me-2"
-            type="submit" (click)="onAgregar()" [disabled]="esFormularioSoloLectura">Agregar</button>
+            type="submit" (click)="agregarClaveScian()" [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
     </div>
-    @if (nuevaNotificacion) {
-      <section>
-      <lib-notificaciones 
-      [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
-      </lib-notificaciones>
-      </section>
-      }
-    <div *ngIf="showClavaScianForm">
-      <ng-titulo titulo="Clave S.C.I.A.N" />
-  <form [formGroup]="clavaScianForm" (ngSubmit)="onSubmit()">
-      <ng-container formGroupName="claveScianG"> 
-          <div class="row">
-              <div class="col-md-4 mb-3">
-                  <div class="form-group">
-                      <app-catalogo-select
-                      id="claveScianData"
-                      formControlName="claveScian"
-                      [catalogo]="claveScianData.catalogos"
-                      [label]="'Clave S.C.I.A.N'"
-                      [required]="true"
-                      [isDisabled]="esFormularioSoloLectura"
-                    ></app-catalogo-select>
-                  </div>
-               </div>
+   
+    <div class="modal fade custom-backdrop"
+        id="agreagarClaveScian"
+        tabindex="-1"
+        aria-labelledby="agreagarClaveScianLabel"
+        aria-hidden="true"
+        data-bs-focus="false"
+        data-backdrop="false" 
+        #agreagarClaveScian
+        >
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title mt-0">Clave S.C.I.A.N</h4>
+              </div>
+              <div class="modal-body">
+                <form [formGroup]="clavaScianForm">
+                <ng-container formGroupName="claveScianG"> 
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <app-catalogo-select
+                                id="claveScianData"
+                                formControlName="claveScian"
+                                [catalogo]="claveScianData.catalogos"
+                                [label]="'Clave S.C.I.A.N.'"
+                                [required]="true"
+                                [isDisabled]="esFormularioSoloLectura"
+                                (change)="onClaveScianChange($event)"
+                              ></app-catalogo-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <app-catalogo-select
+                                id="descripcionDelScianData"
+                                formControlName="descripcionDelScian"
+                                [catalogo]="descripcionDelScianData.catalogos"
+                                [label]="'Descripción del S.C.I.A.N.'"
+                                [isDisabled]="true"
+                              ></app-catalogo-select>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+                </form>
+               <footer class="footer d-flex py-5 gap-2 justify-content-end">
+                    <button class="btn btn-default"
+                    type="button" (click)="onLimpiar()" [disabled]="esFormularioSoloLectura">Limpiar</button>
+                    <button class="btn btn-default"
+                    type="button" (click)="onCancelar()" [disabled]="esFormularioSoloLectura">Cancelar</button>
+                    <button class="btn btn-primary"
+                    type="submit" (click)="onSubmit()"[disabled]="esFormularioSoloLectura">Agregar</button>
+              </footer>
+              </div>
           </div>
-          <div class="row">
-              <div class="col-md-4 mb-3">
-                  <div class="form-group">
-                      <app-catalogo-select
-                      id="descripcionDelScianData"
-                      formControlName="descripcionDelScian"
-                      [catalogo]="descripcionDelScianData.catalogos"
-                      [label]="'Descripcion del S.C.I.A.N'"
-                      [required]="true"
-                      [isDisabled]="esFormularioSoloLectura"
-                    ></app-catalogo-select>
-                  </div>
-               </div>
-          </div>
-      </ng-container>
-      <div class="col-md-12 d-flex justify-content-end">
-          <div class="btn-group">
-            <button class="btn btn-danger"
-              type="button" (click)="onCancelar()" [disabled]="esFormularioSoloLectura">Cancelar</button>
-              <button class="btn btn-primary me-2"
-              type="button" (click)="onLimpiar()" [disabled]="esFormularioSoloLectura">Limpiar</button>
-              <button class="btn btn-primary me-2"
-              type="submit" [disabled]="esFormularioSoloLectura">Agregar</button>
-          </div>
-        
-      </div>
-      </form>
-  </div>
+        </div>
+    </div>
+
+
 <ng-container formGroupName="datosDelTramiteRealizar"> 
       <div class="row mt-5">
         <div class="col-md-4 mt-4">
           <lib-input-check
           [id]="'avisoDeFuncionamiento'"
-          [label]="'Aviso de funcionamiento'"
+          [label]="'Aviso de funcionamiento:'"
           [required]="true"
           formControlName="avisoDeFuncionamiento"
           (change)="toggleLicenciaSanitaria()"
@@ -189,7 +218,10 @@
           ></lib-input-check>
         </div>
         <div class="col-md-4 mt-4">
-          <label class="form-label" for="licenciaSanitaria" >No. de licencia sanitaria: <span class="bi bi-question-circle-fill" title="Ni¿1⁄2mero de la autorizaciï¿1⁄2n indicado en el documento emitido por la autoridad sanitaria competente" data-bs-toggle="tooltip"></span>
+          <label class="form-label" for="licenciaSanitaria" >No. de licencia sanitaria: 
+             <span  tooltip="Número de la autorización indicado en el documento emitido por la autoridad sanitaria competente">
+                <i class="bi bi-question-circle-fill"></i>
+              </span>
           </label>
           <input class="form-control" id="licenciaSanitaria" placeholder="" type="text" formControlName="licenciaSanitaria"  
           (change)="setValoresStore(datosDelTramiteRealizar,'licenciaSanitaria')"/>
@@ -202,6 +234,8 @@
             formControlName="regimenalque"
             [catalogo]="regimenalqueData.catalogos" 
             [label]="'Régimen'" 
+            [tooltipQuestionCircle]="true"
+            [tooltipQuestionCircleText]="'Régimen al que se destinará la mercancía'"
             [required]="true"
             [isDisabled]="esFormularioSoloLectura"
             (change)="setValoresStore(datosDelTramiteRealizar,'regimenalque')"></app-catalogo-select>
@@ -211,23 +245,26 @@
             id="aduanaData"
             formControlName="aduana"
             [catalogo]="aduanaData.catalogos" 
-            [label]="'Aduana de entradas'" 
-            [required]="false"
+            [label]="'Aduanas de entradas'" 
+            [required]="true"
             (change)="setValoresStore(datosDelTramiteRealizar,'aduana')"
             [isDisabled]="esFormularioSoloLectura">
         </app-catalogo-select>
         </div>
       </div>
-    </ng-container>
+</ng-container>
       <div class="col-md-12 mt-4">
         <label class="form-label mb-5" for="">mercancías*:</label>
         <app-tabla-dinamica 
-  [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
-  [configuracionTabla]="mercanciasDatos"
-  [datos]="mercanciasData"
-  (listaDeFilaSeleccionada)="onfilasSeleccionadas($event)"
-  [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
-</app-tabla-dinamica>
+        [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
+        [configuracionTabla]="mercanciasDatos"
+        [datos]="mercanciasData"
+        (listaDeFilaSeleccionada)="onfilasSeleccionadas($event)"
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
+      </app-tabla-dinamica>
+      <div class="col-md-12">
+            <app-table-pagination [showCurrentPage]="true"></app-table-pagination>
+      </div>
       </div>
      
       <div class="modal fade" id="modalAgregarMercancia" tabindex="-1" aria-labelledby="modalAgregarMercanciaLabel" aria-hidden="true">
@@ -237,7 +274,9 @@
               <h4 class="modal-title">Datos mercancía</h4>
             </div>
             <div class="modal-body">
-              <div class="row mt-5">
+              <form [formGroup]="dataDeLaSolicitudForm">
+               <ng-container formGroupName="datosMercanciaForm">
+                <div class="row mt-3">
                 <div class="col-md-6">
                   <app-catalogo-select 
                   id="delProductoData"
@@ -250,7 +289,7 @@
                   ></app-catalogo-select>
                 </div>
               </div>
-              <div class="row mt-5">
+              <div class="row mt-3">
                 <div class="col-md-6">
                   <app-catalogo-select 
                   id="especificarData"
@@ -262,28 +301,32 @@
                   [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
                 </div>
               </div>
-              <div class="row mt-5">
+              <div class="row mt-3">
                 <div class="col-md-6">
                   <label class="form-label" for="denominacionProducto">Denominación especifica del producto*:</label>
                   <input class="form-control" formControlName="nombreProductoEspecifico" placeholder="" type="text"
                   (change)="setValoresStore(datosDelTramiteRealizar,'nombreProductoEspecifico')" />
                 </div>
               </div>
-              <div class="row mt-5">
+              <div class="row mt-3">
                 <div class="col-md-6">
                   <label class="form-label">Denominación distintiva*:</label>
                   <input class="form-control" formControlName="denominacionDistintiva" placeholder="" type="text"
                   (change)="setValoresStore(datosDelTramiteRealizar,'denominacionDistintiva')"/>
                 </div>
               </div>
-              <div class="row mt-5">
+              <div class="row mt-3">
                 <div class="col-md-6">
-                  <label class="form-label">Denominación o nombre cientifico*:</label>
+                  <label class="form-label">Denominación o nombre científico*:
+                     <span  tooltip="Denominación común internacional o genérica">
+                      <i class="bi bi-question-circle-fill"></i>
+                    </span>
+                  </label>
                   <input class="form-control" formControlName="denominacionNombre" placeholder="" type="text"
                   (change)="setValoresStore(datosDelTramiteRealizar,'denominacionNombre')"/>
                 </div>
               </div>
-              <div class="row mt-5">
+              <div class="row mt-3">
                 <div class="col-md-6">
                   <app-catalogo-select 
                   id="tipoProductoData"
@@ -295,96 +338,122 @@
                   [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
                 </div>
               </div>
-              <div class="row mt-5">
+              <div class="row mt-3">
                 <div class="col-md-6">
                   <app-catalogo-select 
                   id="estadoFisicoData"
                   formControlName="estadoFisico"
                   [catalogo]="estadoFisicoData.catalogos"
-                  [label]="'Estado fisico'" 
+                  [label]="'Estado físico'" 
                   [required]="true"
                   (change)="setValoresStore(datosDelTramiteRealizar,'estadoFisico')"
                   [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
                 </div>
               </div>
               
-              <div class="row mt-5">
+              <div class="row mt-3">
                 <div class="col-md-6">
-                  <label class="form-label">Fracción arancelaria*: <span class="bi bi-question-circle-fill" title="Fracción arancelaria" data-bs-toggle="tooltip"></span>
+                  <label class="form-label">Fracción arancelaria*: 
+                     <span  tooltip="Descripción numérica o desglose de un código de clasificación que otorga el Sistema Armonizado">
+                      <i class="bi bi-question-circle-fill"></i>
+                    </span>
                   </label>
                   <input class="form-control" placeholder="" formControlName="fraccionArancelaria" type="text" 
                   (change)="setValoresStore(datosDelTramiteRealizar,'fraccionArancelaria')"/>
                 </div>
               </div>
-              <div class="row mt-5">
+              <div class="row mt-3">
                 <div class="col-md-6">
                   <label class="form-label">Descripción de la fracción arancelaria*:</label>
                   <input class="form-control" placeholder="" type="text" formControlName="descripcionFraccionArancelaria" 
                   (change)="setValoresStore(datosDelTramiteRealizar,'descripcionFraccionArancelaria')"/>
                 </div>
               </div>
-              <div class="row mt-5">
+              <div class="row mt-3">
                 <div class="col-md-3">
                   <label class="form-label">Cantidad UMT*:</label>
                   <input class="form-control" placeholder="" formControlName="cantidadUMT" type="text" 
                   (change)="setValoresStore(datosDelTramiteRealizar,'cantidadUMT')"/>
                 </div>
                 <div class="col-md-3">
-                  <label class="form-label">UMT*: <span class="bi bi-question-circle-fill" title="UMT" data-bs-toggle="tooltip"></span>
+                  <label class="form-label">UMT*: 
+                   <span  tooltip="Unidad de medida de la tarifa">
+                      <i class="bi bi-question-circle-fill"></i>
+                    </span>
                   </label>
                   <input class="form-control" placeholder="" formControlName="umt" type="text"
-                  (change)="setValoresStore(datosDelTramiteRealizar,'umt')" />
+                  (change)="setValoresStore(datosDelTramiteRealizar,'umt')"/>
                 </div>
               </div>
-              <div class="row mt-5">
+              <div class="row mt-3">
                 <div class="col-md-3">
                   <label class="form-label">Cantidad UMC*:</label>
                   <input class="form-control" placeholder="" formControlName="cantidadUMC" type="text" 
                   (change)="setValoresStore(datosDelTramiteRealizar,'cantidadUMC')"/>
                 </div>
                 <div class="col-md-3">
-                  <label class="form-label">UMC*: <span class="bi bi-question-circle-fill" title="UMC" data-bs-toggle="tooltip"></span>
+                  <label class="form-label">UMC*: 
+                  <span  tooltip="Unidad de medida de comercialización">
+                    <i class="bi bi-question-circle-fill"></i>
+                  </span>
                   </label>
                   <input class="form-control" placeholder="" formControlName="umc" type="text" 
                   (change)="setValoresStore(datosDelTramiteRealizar,'umc')"/>
                 </div>
               </div>
-              <div class="row">
+              <div class="row mt-3">
                 <div class="col-md-6">
                  <div class="form-group">
                    <label class="form-label" for="presentacionFarmaceutica">Presentación farmacéutica o tipo de envase*:</label>
                    <textarea class="form-control" id="presentacionFarmaceutica" rows="2" height="50"
-                   placeholder="" style="height: 100px" formControlName="presentacionFarmaceutica"
+                   placeholder="" style="height: 100px; overflow: hidden;" formControlName="presentacionFarmaceutica"
                    (change)="setValoresStore(datosDelTramiteRealizar,'presentacionFarmaceutica')"></textarea>
                  </div>
                </div>
            </div>
               <!-- collapsed crosslist -->
-              <div class="col-md-12 mt-4">
+              <div class="mt-5">
                 <div class="panel-group ficha-collapse" id="accordion">
                   <div class="panel panel-default">
                     <div class="panel-heading" (click)="paisOrigenColapsable()" tabindex="0">
                       <h4 class="panel-title">País de origen</h4>
-                      <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
-                    </div> @if(paisOrigen){ <div class="panel-collapse collapse in" id="panel-01">
+                      <button type="button" class="collpase-button collapsed" [ngClass]="{ 'expanded': paisOrigen,'collapsed': !paisOrigen}" [disabled]="esFormularioSoloLectura"></button>
+                    </div> 
+                    @if(paisOrigen){ <div class="panel-collapse collapse in" [ngClass]="{ 'in': paisOrigen, 'collapse': !paisOrigen}" id="panel-01">
                       <div class="panel-body">
-                        <crosslist [label]="paisOrigenCrossList.label" [fechas]="paisOrigenCrossList.fechas"></crosslist>
+                           <crosslist
+                          [fechas]="selectRangoDias"
+                          [showSearchInput1]="true"
+                          [showSearchInput2]="true"
+                          [searchInput1Label]="'País de origen:'"
+                          [searchInput2Label]="'País(es) seleccionado(s)*:'"
+                          [botonField]="campoDeBotones"
+                          [isDisabled]="esFormularioSoloLectura"
+                          ></crosslist>
                       </div>
                     </div> }
                   </div>
                 </div>
               </div>
-              <div class="col-md-12 mt-4">
+              <div class="mt-3">
                 <div class="panel-group ficha-collapse" id="accordion">
                   <div class="panel panel-default">
-                    <div class="panel-heading" (click)="paisOrigenColapsable()" tabindex="0">
+                    <div class="panel-heading" (click)="paisDeColapsable()" tabindex="0">
                       <h4 class="panel-title">País de procedencia</h4>
-                      <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
+                      <button type="button" class="collpase-button collapsed" [ngClass]="{ 'expanded': paisProcedencisColapsable,'collapsed': !paisProcedencisColapsable}" [disabled]="esFormularioSoloLectura"></button>
                     </div>
                     @if(paisProcedencisColapsable){
-                    <div class="panel-collapse collapse in" id="panel-01" *ngIf="paisOrigenCrossList">
+                    <div class="panel-collapse collapse in" [ngClass]="{ 'in': paisProcedencisColapsable, 'collapse': !paisProcedencisColapsable}" id="panel-01" *ngIf="paisOrigenCrossList">
                       <div class="panel-body">
-                        <crosslist [label]="paisOrigenCrossList.label" [fechas]="paisOrigenCrossList.fechas"></crosslist>
+                          <crosslist
+                          [fechas]="selectRangoDias"
+                          [showSearchInput1]="true"
+                          [showSearchInput2]="true"
+                          [searchInput1Label]="'País de procedencia:'"
+                          [searchInput2Label]="'País(es) seleccionado(s)*:'"
+                          [botonField]="campoDeBotones"
+                          [isDisabled]="esFormularioSoloLectura"
+                          ></crosslist>
                       </div>
                     </div>
                     }
@@ -392,45 +461,61 @@
                 </div>
               </div>
               <!-- udospecifico crosslist -->
-              <div class="col-md-12 mt-4">
+              <div class="mt-3">
                 <div class="panel-group ficha-collapse" id="accordion">
                   <div class="panel panel-default">
                     <div class="panel-heading" (click)="usoEspecificoColapsable()" tabindex="0">
-                      <h4 class="panel-title">Uso especifico</h4>
-                      <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
-                    </div> @if(usoEspecifico){ <div class="panel-collapse collapse in" id="panel-01">
+                      <h4 class="panel-title">Uso específico</h4>
+                      <button type="button" class="collpase-button collapsed" [ngClass]="{ 'expanded': usoEspecifico,'collapsed': !usoEspecifico}" [disabled]="esFormularioSoloLectura"></button>
+                    </div> 
+                    @if(usoEspecifico){ <div class="panel-collapse collapse in" [ngClass]="{ 'in': usoEspecifico, 'collapse': !usoEspecifico}" id="panel-01">
                       <div class="panel-body">
-                        <crosslist [fechas]="usoEspecificoCrossList.fechas" [label]="usoEspecificoCrossList.label"></crosslist>
+                           <crosslist
+                          [fechas]="selectRangoDias"
+                          [showSearchInput1]="true"
+                          [showSearchInput2]="true"
+                          [searchInput1Label]="'Uso específico:'"
+                          [searchInput2Label]="'Uso específico seleccionado*:'"
+                          [botonField]="campoDeBotones"
+                          [isDisabled]="esFormularioSoloLectura"
+                          ></crosslist>
                       </div>
                     </div> }
                   </div>
                 </div>
               </div>
-              <div class="col-md-12 d-flex justify-content-end align-items-end">
-                <div class="btn-group">
-                  <button class="btn btn-default ms-3" type="button" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">Cancelar</button>
-                  <button class="btn btn-primary ms-3" type="button" data-bs-dismiss="modal" (click)="onSave()"[disabled]="esFormularioSoloLectura">Agregar</button>
+              </ng-container>  
+            </form>
+              
+                <div class="col-md-12 mb-5 mt-3">
+                    <div class="col-md-5 text-muted pull-left">
+                        <p>* Campos obligatorios</p>
+                    </div>
+                    <div class="col-md-5 pull-right">
+                    <button class="btn btn-default" type="button" (click)="onLimpiarDatosMercancia()" [disabled]="esFormularioSoloLectura">Limpiar</button>
+                    <button class="btn btn-default ms-2" type="button" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">Cancelar</button>
+                    <button class="btn btn-primary ms-2" type="button" data-bs-dismiss="modal" (click)="onSave()"[disabled]="esFormularioSoloLectura">Agregar</button>
+                    </div>
                 </div>
-              </div>
             </div>
           </div>
         </div>
    </div>
       
 <div class="col-md-12 d-flex justify-content-end">
-  <button type="button" class="btn btn-primary" name="eliminar" id="btneliminar" [disabled]="esFormularioSoloLectura">Eliminar</button>
-  <button type="button" class="btn btn-primary" name="modificar" id="btnmodificar"  (click)="onModificar()" [disabled]="esFormularioSoloLectura" >Modificar</button>
+  <button type="button" class="btn btn-danger me-2" name="eliminar" id="btneliminar" [disabled]="esFormularioSoloLectura" (click)="onEliminarMercancias()">Eliminar</button>
+  <button type="button" class="btn btn-default me-2" name="modificar" id="btnmodificar"  (click)="onModificarMercancias()" [disabled]="esFormularioSoloLectura" >Modificar</button>
   <button type="button" class="btn btn-primary" name="agregarAduana" id="btnagregarAduana" [disabled]="esFormularioSoloLectura">Agregar</button>
 </div>
   <ng-titulo titulo="Manifiestos y declaraciones" />
   <div formGroupName="datosDelTramiteRealizar">
   <div class="alert alert-info">
-    <label style="font-weight: normal">
-      <div class="col-md-1 mt-5">
-        <input type="checkbox" class="mt-5" formControlName="maniFestos"/>
-        <b> *</b>
-      </div>
-      <div class="col-md-11 mt-4">{{ TEXTOS.TEXTOS_MANIFIESTOS}} </div>
+    <label>
+        <label class="checkbox-row">
+          <input type="checkbox" [disabled]="esFormularioSoloLectura"/>
+          <span class="asterisk"><b>*</b></span>
+          <div class="col-md-11 mt-4 fontweight">{{ TEXTOS.TEXTOS_MANIFIESTOS}} </div>
+        </label>
     </label>
   </div>
   <div class="col-md-12 mt-4">
@@ -441,14 +526,20 @@
   <ng-container formGroupName="datosDelTramiteRealizar"> 
 
 <ng-titulo titulo="Representante legal" />
-<div class="row mt-5">
-  <div class="col-md-4 mt-2">
+<div class="row">
+  <div class="col-md-4">
     <label class="form-label" for="rfc">RFC*:</label>
     <input class="form-control" type="text" formControlName="rfc"
     (change)="setValoresStore(datosDelTramiteRealizar,'rfc')"
+    [ngClass]="{
+      'is-invalid': datosDelTramiteRealizar.get('rfc')?.touched && datosDelTramiteRealizar.get('rfc')?.hasError('required')
+    }"
     />
+    <div *ngIf="datosDelTramiteRealizar.get('rfc')?.touched && datosDelTramiteRealizar.get('rfc')?.hasError('required')" class="text-danger mt-1 small">
+      Este campo es obligatorio
+    </div>
   </div>
-  <div class="col-md-2 mt-4">
+  <div class="col-md-2 mt-5">
     <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Buscar</button>
   </div>
 </div>
@@ -475,3 +566,10 @@
 </ng-container>
 </form>
 </div>
+@if (nuevaNotificacion) {
+  <lib-notificaciones
+    [notificacionInput]="nuevaNotificacion"
+    (confirmacionModal)="eliminarPedimento($event)"
+    (cerrarModal)="clearNotificacion()">
+  </lib-notificaciones>
+}

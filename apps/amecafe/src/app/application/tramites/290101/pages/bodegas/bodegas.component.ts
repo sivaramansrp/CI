@@ -7,13 +7,13 @@ import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Input } from '@angular/core';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SeccionLibQuery} from '@libs/shared/data-access-user/src';
 import { SeccionLibState} from '@libs/shared/data-access-user/src';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { Subject } from 'rxjs';
-import { TramiteState } from '../../estados/tramite290101.store';
 import { TramiteStore } from '../../estados/tramite290101.store';
 import { TramiteStoreQuery } from '../../estados/tramite290101.query';
 import { Validators } from '@angular/forms';
@@ -27,7 +27,7 @@ import { tap } from 'rxjs/operators';
   selector: 'app-bodegas',
   templateUrl: './bodegas.component.html',
 })
-export class BodegasComponent implements OnInit {
+export class BodegasComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo para los datos de bodegas.
    * @type {FormGroup}
@@ -145,15 +145,7 @@ export class BodegasComponent implements OnInit {
   }
 
     inicializarFormulario(): void {
-    this.tramiteStoreQuery.selectSolicitudTramite$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.bodegasFormaState = seccionState.BodegasFormaState;
-        })
-      )
-      .subscribe()
-
+    // Inicializar el formulario primero
     this.bodegaForm = this.fb.group({
       razonSocial: ['', [Validators.required, Validators.maxLength(200)]],
       propAlquil: ['', Validators.required],
@@ -166,6 +158,22 @@ export class BodegasComponent implements OnInit {
       codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
       capacidadAlmacenaje: ['', [Validators.required, Validators.maxLength(20)]],
     });
+
+    // Solo una suscripción para el estado del trámite
+    this.tramiteStoreQuery.selectSolicitudTramite$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          if (seccionState && seccionState.BodegasFormaState) {
+            this.bodegasFormaState = seccionState.BodegasFormaState;
+            // Solo hacer patch si hay datos válidos
+            if (BodegasComponent.hasValidStateData(this.bodegasFormaState)) {
+              this.bodegaForm.patchValue(this.bodegasFormaState, { emitEvent: false });
+            }
+          }
+        })
+      )
+      .subscribe();
   }
 
 
@@ -174,23 +182,28 @@ export class BodegasComponent implements OnInit {
    * @param {number} index - Índice de la pestaña a seleccionar.
    */
   seleccionaTab(index: number): void {
-     const BODEGAS_DATOS = {
-      TABLA_Columna_1: this.bodegaForm.value.razonSocial,
-      TABLA_Columna_2: this.bodegaForm.value.propAlquil,
-      TABLA_Columna_3: this.bodegaForm.value.calle,
-      TABLA_Columna_4: this.bodegaForm.value.numeroExterior,
-      TABLA_Columna_5: this.bodegaForm.value.numeroInterior,
-      TABLA_Columna_6: this.bodegaForm.value.colonia,
-      TABLA_Columna_7: this.bodegaForm.value.estado,
-      TABLA_Columna_8: this.bodegaForm.value.codigoPostal,
-      TABLA_Columna_9: this.bodegaForm.value.capacidadAlmacenaje,
-      estatus: true,
-    }
-    this.tramiteStore.setBodegasTabla([BODEGAS_DATOS]);
-
-
-    this.router.navigate(['../cafe-exportadores'], { queryParams: { tab: index },
+    // Solo agregar datos a la tabla si el formulario es válido y tiene datos
+    if (this.bodegaForm.valid) {
+      const BODEGAS_DATOS = {
+        TABLA_Columna_1: this.bodegaForm.value.razonSocial,
+        TABLA_Columna_2: this.bodegaForm.value.propAlquil,
+        TABLA_Columna_3: this.bodegaForm.value.calle,
+        TABLA_Columna_4: this.bodegaForm.value.numeroExterior,
+        TABLA_Columna_5: this.bodegaForm.value.numeroInterior,
+        TABLA_Columna_6: this.bodegaForm.value.colonia,
+        TABLA_Columna_7: this.bodegaForm.value.estado,
+        TABLA_Columna_8: this.bodegaForm.value.codigoPostal,
+        TABLA_Columna_9: this.bodegaForm.value.capacidadAlmacenaje,
+        estatus: true,
+      };
+      this.tramiteStore.setBodegasTabla([BODEGAS_DATOS]);
+      this.router.navigate(['../cafe-exportadores'], { queryParams: { tab: index },
       relativeTo: this.activateRoute,});
+    }else {
+      this.bodegaForm.markAllAsTouched();
+    }
+
+    
   }
 
   /**
@@ -199,41 +212,19 @@ export class BodegasComponent implements OnInit {
    */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
-    this.tramiteStoreQuery.selectSolicitudTramite$
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(seccionState => {
-        this.bodegasFormaState = seccionState.BodegasFormaState;
-      });
     this.cargarEstadoCatalog();
     this.cargarBodegaPropiaAlquilad();
 
-    /**
-     * Se suscribe a los cambios en el estado de la solicitud de trámite.
-     * Actualiza el formulario con los datos obtenidos del estado.
-     */
-    this.tramiteStoreQuery.selectSolicitudTramite$
+    // Suscripción para cambios en el formulario con debounce
+    this.bodegaForm.valueChanges
       .pipe(
         takeUntil(this.destroyNotifier$),
-        map((seccionState: TramiteState) => {
-          if (seccionState) {
-            this.bodegasFormaState = seccionState?.BodegasFormaState;
-            this.bodegaForm.patchValue(this.bodegasFormaState);
-          }
-        })
-      )
-      .subscribe();
-
-    /**
-     * Se suscribe a los cambios en el estado del formulario.
-     * Después de un breve retraso, actualiza el estado de la solicitud en el store.
-     */
-    this.bodegaForm.statusChanges
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        delay(10),
+        delay(300), // Aumentar el delay para evitar actualizaciones excesivas
         tap(() => {
-          const ACTIVE_STATE = { ...this.bodegaForm.value };
-          this.tramiteStore.setBodegasTramite(ACTIVE_STATE);
+          if (this.bodegaForm.valid) {
+            const ACTIVE_STATE = { ...this.bodegaForm.value };
+            this.tramiteStore.setBodegasTramite(ACTIVE_STATE);
+          }
         })
       )
       .subscribe();
@@ -294,7 +285,41 @@ export class BodegasComponent implements OnInit {
   /**
    * Resetea el formulario de bodegas.
    */
-  cancelarBodega(): void {
+
+    cancelarBodega(): void {
     this.bodegaForm.reset();
+    // Navegar directamente sin llamar seleccionaTab para evitar agregar filas vacías
+    this.router.navigate(['../cafe-exportadores'], { queryParams: { tab: 2 },
+      relativeTo: this.activateRoute });
+  }
+
+  /**
+   * Método genérico para obtener la descripción de un catálogo basado en su ID.
+   * @param {CatalogosSelect} catalogo - El catálogo donde buscar.
+   * @param {string | number} id - El ID del elemento a buscar.
+   * @returns {string | undefined} La descripción del elemento encontrado o undefined si no existe.
+   */
+  private static obtenerDescripcionPorId(catalogo: CatalogosSelect, id: string | number): string | undefined {
+    return catalogo.catalogos.find((item) => item.id === Number(id))?.descripcion;
+  }
+
+  /**
+   * Verifica si el estado tiene datos válidos para hacer patch al formulario
+   */
+  private static hasValidStateData(state: BodegasFormaInt): boolean {
+    return state && Object.values(state).some(value => 
+      value !== null && value !== undefined && value !== ''
+    );
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description Hook del ciclo de vida que se llama cuando el componente es destruido.
+   * Garantiza la limpieza adecuada emitiendo un valor al subject `destroyNotifier$` 
+   * y completándolo para liberar recursos y prevenir fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

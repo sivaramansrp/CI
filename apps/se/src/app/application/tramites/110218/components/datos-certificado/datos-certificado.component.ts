@@ -9,8 +9,8 @@ import { FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
 
+import { TablaDinamicaComponent, TablePaginationComponent } from '@libs/shared/data-access-user/src';
 import { Catalogo } from '@libs/shared/data-access-user/src';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 import {ConsultaioQuery } from "@ng-mf/data-access-user";
@@ -40,7 +40,10 @@ import { Modal } from 'bootstrap';
 @Component({
   selector: 'app-datos-certificado',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule, TablaDinamicaComponent,MercanciasSeleccionadasFormComponent],
+  imports: [CommonModule, TituloComponent, 
+    ReactiveFormsModule, TablaDinamicaComponent,
+    MercanciasSeleccionadasFormComponent,
+    TablePaginationComponent],
   templateUrl: './datos-certificado.component.html',
   styleUrl: './datos-certificado.component.scss',
 })

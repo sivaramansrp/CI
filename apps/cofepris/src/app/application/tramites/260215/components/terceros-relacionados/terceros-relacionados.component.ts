@@ -283,7 +283,14 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
  * Cuando es `true`, los selectores estarán deshabilitados.
  */
 public desactivarCatalogoSelectEnPopup: boolean = true;
-
+/**
+ * Valor por defecto para el campo de país.
+ */
+public defaultPaisValue = 1;
+/**
+ * Valor por defecto para el campo de tipo de persona.
+ */
+public tipoPersonaValue = "fisica";
 /**
  * Constructor del componente.
  * Inyecta el FormBuilder, el store del trámite, el servicio de terceros y la consulta de estado.
@@ -376,7 +383,7 @@ fetchTableDummyJson(): void {
       /**
        * Tipo de persona (física o moral).
        */
-      tipoPersona: new FormControl('', [Validators.required]),
+      tipoPersona: new FormControl(this.tipoPersonaValue, [Validators.required]),
       /**
        * RFC del tercero.
        * Requiere validación adicional mediante `rfcValidator`.
@@ -416,7 +423,7 @@ fetchTableDummyJson(): void {
        * País del tercero.
        * Requiere validación adicional mediante `requiredPaisValidator`.
        */
-      pais: new FormControl('', [
+      pais: new FormControl(this.defaultPaisValue, [
         Validators.required,
         TercerosRelacionadosComponent.requiredPaisValidator,
       ]),
