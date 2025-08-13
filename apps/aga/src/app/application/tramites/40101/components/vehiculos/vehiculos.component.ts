@@ -1013,7 +1013,7 @@ export class VehiculosComponent implements OnInit {
    */
   agregarVahiculodata(): void {
     this.enviada = true;
-    // Trigger validation manually for all form controls
+    // Activar la validación manualmente para todos los controles de formulario.
     Object.values(this.vehiculoFormulario.controls).forEach(control => {
       control.markAsTouched({ onlySelf: true });
       control.updateValueAndValidity();
@@ -1125,7 +1125,7 @@ export class VehiculosComponent implements OnInit {
    */
   agregarUnidadData(): void {
     this.enviada = true;
-    // Trigger validation manually for all form controls
+    // Activar la validación manualmente para todos los controles de formulario.
     Object.values(this.unidadFormulario.controls).forEach(control => {
       control.markAsTouched({ onlySelf: true });
       control.updateValueAndValidity();

@@ -18,7 +18,6 @@ import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user
 import { DatosVehiculo } from '../../../../models/registro-muestras-mercancias.model';
 import { modificarTerrestreService } from '../../../services/modificacar-terrestre.service';
 
-// Use imported interfaces for type consistency
 type CatalogoItem = Catalogo;
 type VehiculoData = DatosVehiculo;
 @Component({

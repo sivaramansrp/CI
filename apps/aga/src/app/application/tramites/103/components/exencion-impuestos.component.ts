@@ -782,7 +782,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
     if (VEHICULO) {
       this.abrirModalVehiculoSeguro();
     } else {
-      // Clear validators when unchecked
+      // Borrar validadores cuando no están marcados
       marcaCtrl?.clearValidators();
       modeloCtrl?.clearValidators();
       serieCtrl?.clearValidators();
