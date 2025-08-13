@@ -102,7 +102,7 @@
           </div>
         </div>
         <div class="d-flex justify-content-end">
-          <button type="button" class="btn btn-default me-2" (click)="limpiarBusquedaTif()">Limpiar</button>
+          <button type="button" class="btn btn-danger ms-3 me-1" (click)="limpiarBusquedaTif()">Limpiar</button>
           <button type="button" class="btn btn-primary">Buscar</button>
         </div>
       </div>
@@ -222,8 +222,8 @@
           <div class="col-md-4">
             <div class="form-group">
               <app-catalogo-select [catalogo]="municipioCatalogo" formControlName="municipio"
-                [label]="'Municipio o Alcaldía:'" [isDisabled]="showPlantaRow" [isDisabled]="esFormularioSoloLectura"
-                [required]="true" name="municipio"
+                [label]="'Municipio o Alcaldía'" [isDisabled]="showPlantaRow" [isDisabled]="esFormularioSoloLectura"
+                [required]="false" name="municipio"
                 (change)="setValoresStore(datosPersonales, 'municipio', 'setMunicipio')">
               </app-catalogo-select>
             </div>
@@ -404,13 +404,13 @@
         <div class="row mb-3">
           <div class="col-md-6">
             <app-catalogo-select [catalogo]="paisCatalogo" formControlName="pais" [label]="'País'" [isDisabled]="true"
-              [isDisabled]="esFormularioSoloLectura" [required]="true" name="pais"></app-catalogo-select>
+              [isDisabled]="esFormularioSoloLectura" [required]="false" name="pais"></app-catalogo-select>
           </div>
 
           <div class="col-md-6">
             <app-catalogo-select [catalogo]="estadoCatalogo" formControlName="entidadFederativa"
               [label]="'Entidad Federativa'" [isDisabled]="true" [isDisabled]="esFormularioSoloLectura"
-              [required]="true" name="entidadFederativa" [placeholder]="'Selecciona una valor'"></app-catalogo-select>
+              [required]="false" name="entidadFederativa" [placeholder]="'Selecciona una opción'"></app-catalogo-select>
           </div>
         </div>
         <!-- Action buttons -->

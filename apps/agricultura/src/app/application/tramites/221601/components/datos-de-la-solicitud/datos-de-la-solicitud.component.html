@@ -90,22 +90,9 @@
                     title="Sólo para usuarios que cuenten con la contraseña UCON e importen productos cárnicos" ata-bs-toggle="tooltip"></span></label>
           <input class="form-control" id="clave" formControlName="clave" type="text" maxlength="15" size="29"
             (change)="setValoresStore(datosSolicitudForm, 'clave', 'setClave')" />
-          <div class="d-grid">
-            <div *ngIf="datosSolicitudForm.get('clave')?.touched">
-              <small class="mensaje-error" *ngIf="datosSolicitudForm.get('clave')?.hasError('required')">
-                Este campo es obligatorio.
-              </small>
-              <small class="mensaje-error" *ngIf="datosSolicitudForm.get('clave')?.hasError('maxlength')">
-                La clave UCON no puede exceder los 15 caracteres.
-              </small>
+         </div>
         </div>
-       
-      </div>
-        </div>
-        </div>
-
-
-      <div class="col-md-4">
+<div class="col-md-4">
         <div class="form-group">
           <app-catalogo-select [catalogo]="establecimiento" [label]="'Establecimiento TIF'" [placeholder]="'Seleccione un opción'" [required]="false" 
             name="establecimiento" formControlName="establecimiento" [isDisabled]="esFormularioSoloLectura"

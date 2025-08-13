@@ -100,7 +100,7 @@ export const CONFIGURATION_TABLA_DESTINATARIO = [
     { encabezado: 'Número interior', clave: (item: Destinatario): string => item.numeroInterior, orden: 6 },
     { encabezado: 'País', clave: (item: Destinatario): string | undefined => item.pais, orden: 7 },
     { encabezado: 'Colonia', clave: (item: Destinatario): string | undefined => item.colonia, orden: 8 },
-    { encabezado: 'Municipio o Alcaldía', clave: (item: Destinatario): string | undefined => item.municipioOAlcaldia, orden: 9 },
+    { encabezado: 'Delegación', clave: (item: Destinatario): string | undefined => item.municipioOAlcaldia, orden: 9 },
     { encabezado: 'Entidad Federativa', clave: (item: Destinatario): string | undefined => item.entidadFederativa, orden: 10 },
     { encabezado: 'Código Postal', clave: (item: Destinatario): string => item.codigoPostal, orden: 11 }
   ];
