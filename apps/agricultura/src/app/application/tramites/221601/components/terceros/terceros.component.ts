@@ -309,6 +309,30 @@ export class TercerosComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Validador personalizado para números telefónicos
+   * @param control - Control del formulario
+   * @returns Error de validación o null si es válido
+   */
+  private static phoneValidator(control: any): any {
+    if (!control.value) {
+      return null; // Campo vacío es válido
+    }
+    
+    const VALUE = control.value.toString();
+    const ISVALIDNUMBER = /^\d+$/.test(VALUE);
+
+    if (!ISVALIDNUMBER) {
+      return { pattern: true };
+    }
+
+    if (VALUE.length > 30) {
+      return { maxlength: true };
+    }
+    
+    return null;
+  }
+
+  /**
    * Inicializa todos los formularios reactivos del componente.
    * Configura el formulario de tipo de persona, búsqueda de terceros y datos personales.
    * Establece validaciones y suscripciones a cambios de valores.
@@ -320,7 +344,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.solicitudState = seccionState as Solicitud221601State;
+          this.solicitudState = seccionState;
         })
       )
       .subscribe();
@@ -346,15 +370,15 @@ export class TercerosComponent implements OnInit, OnDestroy {
       segundoApellido: [this.solicitudState.segundoApellido, Validators.maxLength(200)],
       social: [this.solicitudState.social, [Validators.required, Validators.maxLength(250)]],
       pais: [this.solicitudState.pais, Validators.required],
-      codigo: [this.solicitudState.codigo, Validators.maxLength(5)],
+      codigo: [this.solicitudState.codigo, [Validators.minLength(5), Validators.maxLength(5)]],
       estado: [this.solicitudState.estado, Validators.required],
       municipio: [this.solicitudState.municipio, Validators.required],
       colonia: [this.solicitudState.colonia],
       calle: [this.solicitudState.calle, [Validators.required, Validators.maxLength(100)]],
       exterior: [this.solicitudState.exterior, [Validators.required, Validators.maxLength(55)]],
       interior: [this.solicitudState.interior, Validators.maxLength(55)],
-      lada: [this.solicitudState.lada, Validators.maxLength(5)],
-      telefono: [this.solicitudState.telefono,[Validators.maxLength(30)]],
+      lada: [this.solicitudState.lada, [TercerosComponent.phoneValidator, Validators.maxLength(5)]],
+      telefono: [this.solicitudState.telefono, [TercerosComponent.phoneValidator, Validators.maxLength(30)]],
       correoElectronico: [this.solicitudState.correoElectronico, Validators.required],
       tif: [this.solicitudState.tif],
     });
@@ -630,6 +654,29 @@ export class TercerosComponent implements OnInit, OnDestroy {
   }
 
   
+  /**
+   * Maneja la entrada numérica en campos específicos, permitiendo solo dígitos.
+   * Previene la entrada de caracteres no numéricos en tiempo real.
+   * 
+   * @param event - Evento de input del elemento HTML
+   * @memberof TercerosComponent
+   */
+  onNumericInput(event: any): void {
+    const input = event.target;
+    const value = input.value;
+    const numericValue = value.replace(/[^0-9]/g, '');
+    
+    if (value !== numericValue) {
+      input.value = numericValue;
+      const controlName = input.getAttribute('formControlName');
+      if (controlName) {
+        this.datosPersonales.get(controlName)?.setValue(numericValue);
+        this.datosPersonales.get(controlName)?.markAsTouched();
+        this.datosPersonales.get(controlName)?.updateValueAndValidity();
+      }
+    }
+  }
+
   /**
    * method ngOnDestroy
    * description Método para limpiar suscripciones al destruir el componente.
