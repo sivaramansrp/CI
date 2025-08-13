@@ -119,6 +119,7 @@ export class DatosGeneralesComponent implements OnDestroy {
    * @property {Catalogo[]} estadosDatos
    */
   public estadosDatos: Catalogo[] = [];
+  public tipoPersonaValor: string | number = '';
 
   /**
    * Constructor del componente `DatosGeneralesComponent`.
@@ -163,6 +164,7 @@ export class DatosGeneralesComponent implements OnDestroy {
       Validators.maxLength(15),
     ],
   ],
+  curp: [''],
   nombreRazonSocial: [
     '',
     [
@@ -231,6 +233,8 @@ export class DatosGeneralesComponent implements OnDestroy {
   tipoPersona: ['', Validators.required ]
 });
 
+    this.agregarDatosForm.disable();
+    this.agregarDatosForm.get('tipoPersona')?.enable();
   }
 
   /**
@@ -347,6 +351,11 @@ export class DatosGeneralesComponent implements OnDestroy {
    */
   addFabricante(datos: Fabricante[]): void {
     this.tramiteStore.updateFabricanteTablaDatos(datos);
+  }
+
+  public cambioDeValorIndique(value: string | number): void {
+    this.tipoPersonaValor = value;
+    this.agregarDatosForm.enable();
   }
 
   /**

@@ -5,10 +5,10 @@
  *
  * @module VehiculoDialogComponent
  */
-import { Component, Input, Output, EventEmitter, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { CatalogoSelectComponent, NotificacionesComponent, Notificacion, TipoNotificacionEnum, CategoriaMensaje } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { modificarTerrestreService } from '../../../services/modificacar-terrestre.service';
 import { takeUntil, Subject } from 'rxjs';
 
@@ -17,7 +17,7 @@ import { takeUntil, Subject } from 'rxjs';
   templateUrl: './vehiculo-dialog.component.html',
   styleUrls: ['./vehiculo-dialog.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, CatalogoSelectComponent, NotificacionesComponent],
+  imports: [CommonModule, ReactiveFormsModule, CatalogoSelectComponent],
 })
 /**
  * Componente de diálogo para agregar o editar información de vehículos.
@@ -25,7 +25,7 @@ import { takeUntil, Subject } from 'rxjs';
  * @class
  * @implements {OnInit}
  */
-export class VehiculoDialogComponent implements OnInit {
+export class VehiculoDialogComponent implements OnInit, OnDestroy {
   /**
    * Vehículo a editar (si aplica).
    * @type {*}
@@ -70,6 +70,12 @@ export class VehiculoDialogComponent implements OnInit {
   @Input() tipoArrastre: any[] = [];
 
   /**
+   * Catálogo de colores de vehículos.
+   * @type {any[]}
+   */
+  @Input() colorVehiculoCatalogo: any[] = [];
+
+  /**
    * Evento emitido al guardar el vehículo.
    * @type {EventEmitter<any>}
    */
@@ -86,18 +92,6 @@ export class VehiculoDialogComponent implements OnInit {
    * @type {FormGroup}
    */
   vehiculoForm!: FormGroup;
-
-  /**
-   * Indica si se debe mostrar la notificación.
-   * @type {boolean}
-   */
-  showNotification: boolean = false;
-
-  /**
-   * Objeto de notificación para alertas.
-   * @type {Notificacion}
-   */
-  alertaNotificacion!: Notificacion;
 
   /**
    * Referencia a la plantilla del modal.
@@ -182,31 +176,67 @@ export class VehiculoDialogComponent implements OnInit {
       paisEmisor2daPlaca: [this.vehiculo?.paisEmisor2daPlaca || ''],
       descripcion: [this.vehiculo?.descripcion || '', Validators.maxLength(120)]
     });
+    
+    // Setup form value subscriptions
+    this.setupFormValueSubscriptions();
+  }
+
+  /**
+   * Configura las suscripciones de cambio de valor del formulario con temporización mejorada y manejo de errores
+   */
+  private setupFormValueSubscriptions(): void {
+    // Initially disable description field
     this.vehiculoForm.get('descripcion')?.disable();
-    this.vehiculoForm.get('tipoDeVehiculo')?.valueChanges.subscribe((selectedValue) => {
-      const id = Number(selectedValue);
-      if (id === 1) {
-        this.vehiculoForm.get('descripcion')?.enable();
-      } else {
-        this.vehiculoForm.get('descripcion')?.disable();
+    
+    // Set up subscription with takeUntil for proper cleanup
+    this.vehiculoForm.get('tipoDeVehiculo')?.valueChanges
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((selectedValue) => {
+        console.log('VehiculoDialog - tipoDeVehiculo changed:', selectedValue);
+        const id = Number(selectedValue);
+        const descripcionControl = this.vehiculoForm.get('descripcion');
+        
+        if (id === 1) { // OTROS
+          console.log('VehiculoDialog - Enabling description field for OTROS');
+          descripcionControl?.enable();
+        } else {
+          console.log('VehiculoDialog - Disabling description field for non-OTROS');
+          descripcionControl?.disable();
+          descripcionControl?.setValue(''); // Clear value when disabled
+        }
+      });
+    
+    // Also check initial value in case form is pre-populated
+    setTimeout(() => {
+      const currentValue = this.vehiculoForm.get('tipoDeVehiculo')?.value;
+      if (currentValue) {
+        const id = Number(currentValue);
+        const descripcionControl = this.vehiculoForm.get('descripcion');
+        
+        if (id === 1) {
+          descripcionControl?.enable();
+        } else {
+          descripcionControl?.disable();
+        }
       }
-    });
+    }, 100);
   }
 
   /**
    * Abre el modal de diálogo (si se implementa con un servicio de modal).
    * @returns {void}
    */
-  openModal(): void {
+  abiertoModal(): void {
     // Este método debería abrir el diálogo modal.
-}
+  }
 
   /**
    * Cierra el modal de diálogo y emite el evento de cancelación.
    * @returns {void}
    */
-  closeModal(): void {
+  cerrarModal(): void {
     this.cancel.emit();
+    this.vehiculoForm.reset();
   }
 
   /**
@@ -230,24 +260,17 @@ export class VehiculoDialogComponent implements OnInit {
   guardarVehiculoData(): void {
     this.vehiculoForm.markAllAsTouched();
     this.vehiculoForm.updateValueAndValidity();
+    
     if (this.vehiculoForm.valid) {
       const vehiculoData = {
         ...this.vehiculoForm.getRawValue()
       };
       this.save.emit(vehiculoData);
-      this.closeModal();
+      // Cerrar modal después de guardar exitosament
+      this.cancel.emit();
     } else {
-      this.alertaNotificacion = {
-        tipoNotificacion: TipoNotificacionEnum.ALERTA,
-        categoria: CategoriaMensaje.INFORMACION,
-        modo: 'action',
-        titulo: 'Alert',
-        mensaje: 'Formulario inválido, por favor verifica los campos.',
-        cerrar: true,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
-      this.showNotification = true;
+      // El formulario es inválido, los errores de validación se mostrarán en la plantilla
+      // due to markAllAsTouched() call above
     }
   }
 
@@ -268,5 +291,14 @@ export class VehiculoDialogComponent implements OnInit {
    */
   get getFormValues(): { [key: string]: AbstractControl } {
     return this.vehiculoForm.controls;
+  }
+
+  /**
+   * Gancho del ciclo de vida que se llama cuando se destruye el componente.
+   * Se utiliza para limpiar suscripciones y evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

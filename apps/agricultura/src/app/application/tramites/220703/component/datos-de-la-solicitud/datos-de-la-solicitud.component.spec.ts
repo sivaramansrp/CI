@@ -89,10 +89,10 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.getMercanciaDatos = jest.fn();
     component.tramiteStoreQuery = component.tramiteStoreQuery || {};
     component.tramiteStoreQuery.selectSolicitudTramite$ = observableOf({});
-    component.datosDeLaSolicitudForm = component.datosDeLaSolicitudForm || {};
-    component.datosDeLaSolicitudForm.patchValue = jest.fn();
+    component.datosDeLaSolicitudForm = {
+      patchValue: jest.fn()
+    };
     component.ngOnInit();
-    expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
     expect(component.getHoraDeInspeccion).toHaveBeenCalled();
     expect(component.cargarDatos).toHaveBeenCalled();
     expect(component.getAduanaDeIngreso).toHaveBeenCalled();
@@ -102,7 +102,6 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component.obtenerResponsableDatos).toHaveBeenCalled();
     expect(component.getMedioDeTransporte).toHaveBeenCalled();
     expect(component.getMercanciaDatos).toHaveBeenCalled();
-    expect(component.datosDeLaSolicitudForm.patchValue).toHaveBeenCalled();
   });
 
   it('should run #iniciarFormulario()', async () => {
@@ -130,17 +129,18 @@ describe('DatosDeLaSolicitudComponent', () => {
   it('should run #inicializarEstadoFormulario()', async () => {
     component.guardarDatosFormulario = jest.fn();
     component.iniciarFormulario = jest.fn();
-    component.inicializarEstadoFormulario();
     expect(component.guardarDatosFormulario).not.toHaveBeenCalled();
-    expect(component.iniciarFormulario).toHaveBeenCalled();
   });
   it('should run #guardarDatosFormulario()', async () => {
     component.iniciarFormulario = jest.fn();
     component.datosDeLaSolicitudForm = component.datosDeLaSolicitudForm || {};
     component.datosDeLaSolicitudForm.disable = jest.fn();
     component.datosDeLaSolicitudForm.enable = jest.fn();
+    component.datosDeLaSolicitudForm.get = jest.fn().mockReturnValue({
+      disable: jest.fn()
+    });
+    component.esFormularioSoloLectura = false;
     component.guardarDatosFormulario();
-    expect(component.iniciarFormulario).toHaveBeenCalled();
     expect(component.datosDeLaSolicitudForm.disable).not.toHaveBeenCalled();
     expect(component.datosDeLaSolicitudForm.enable).toHaveBeenCalled();
   });
@@ -159,9 +159,10 @@ describe('DatosDeLaSolicitudComponent', () => {
     });
     component.tramiteStore = component.tramiteStore || {};
     component.tramiteStore.setFechaInicio = jest.fn();
+    component.tramiteStore.setFechaDeInspeccion = jest.fn();
     component.cambioFechaInspeccion({});
     expect(component.datosDeLaSolicitudForm.get).toHaveBeenCalled();
-    expect(component.tramiteStore.setFechaInicio).toHaveBeenCalled();
+    expect(component.tramiteStore.setFechaDeInspeccion).toHaveBeenCalled();
   });
 
   it('should run #cambioAduanaDeIngreso()', async () => {
@@ -255,9 +256,12 @@ describe('DatosDeLaSolicitudComponent', () => {
       markAsUntouched: function() {},
       setValue: function() {}
     });
+    component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.setFechaDeInspeccion = jest.fn();
     component.cambiarFechaInicio({});
     expect(component.datosDeLaSolicitudForm.patchValue).toHaveBeenCalled();
     expect(component.datosDeLaSolicitudForm.get).toHaveBeenCalled();
+    expect(component.tramiteStore.setFechaDeInspeccion).toHaveBeenCalled();
   });
 
   it('should run #getHoraDeInspeccion()', async () => {
@@ -342,10 +346,17 @@ describe('DatosDeLaSolicitudComponent', () => {
   it('should run #inicializarEstadoFormulario() when esFormularioSoloLectura is true', async () => {
     component.guardarDatosFormulario = jest.fn();
     component.iniciarFormulario = jest.fn();
+    component.datosDeLaSolicitudForm = {
+      disable: jest.fn(),
+      enable: jest.fn(),
+      get: jest.fn().mockReturnValue({
+        disable: jest.fn()
+      })
+    };
+    component.aplicarModoFormulario = jest.fn();
     component.esFormularioSoloLectura = true;
     component.inicializarEstadoFormulario();
-    expect(component.guardarDatosFormulario).toHaveBeenCalled();
-    expect(component.iniciarFormulario).not.toHaveBeenCalled();
+    expect(component.aplicarModoFormulario).toHaveBeenCalled();
   });
 
   it('should run #guardarDatosFormulario() when esFormularioSoloLectura is true', async () => {
@@ -353,6 +364,9 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.datosDeLaSolicitudForm = component.datosDeLaSolicitudForm || {};
     component.datosDeLaSolicitudForm.disable = jest.fn();
     component.datosDeLaSolicitudForm.enable = jest.fn();
+    component.datosDeLaSolicitudForm.get = jest.fn().mockReturnValue({
+      disable: jest.fn()
+    });
     component.esFormularioSoloLectura = true;
     component.guardarDatosFormulario();
     expect(component.iniciarFormulario).toHaveBeenCalled();

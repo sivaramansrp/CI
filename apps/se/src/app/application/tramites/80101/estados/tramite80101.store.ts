@@ -207,7 +207,7 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
     direccionEmpresaExtranjera: '',
   },
   datosComplimentos: {
-    modalidad: 'Servicios',
+    modalidad: 'Industrial',
     programaPreOperativo: '',
     datosGeneralis: {
       paginaWWeb: '',

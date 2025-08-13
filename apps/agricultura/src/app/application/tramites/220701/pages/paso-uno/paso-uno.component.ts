@@ -103,15 +103,16 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.consultaState = seccionState;
-          this.esFormularioSoloLectura = seccionState.readonly;
+            })
+      )
+      .subscribe();
+          //this.esFormularioSoloLectura = seccionState.readonly;
           if (this.consultaState.update) {
             this.guardarDatosFormulario();
           } else {
             this.esDatosRespuesta = true;
           }
-        })
-      )
-      .subscribe();
+      
   }
   guardarDatosFormulario(): void {
     this.importacionDeAcuiculturaService

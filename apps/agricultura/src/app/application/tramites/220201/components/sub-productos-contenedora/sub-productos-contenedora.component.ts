@@ -4,15 +4,15 @@
  * Proporciona la lógica para cargar catálogos, manejar el formulario y actualizar el estado.
  */
 
-import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
-import { map, Subject, takeUntil } from 'rxjs';
-import { SubProductosComponent } from '../../../../shared/components/sub-productos/sub-productos.component';
 import { ProductoDetallaEventos, ProductosCatalogosDatos } from '../../../../shared/models/datos-de-la-solicitue.model';
-import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
-import { FilaSolicitud } from '../../models/220201/capturar-solicitud.model';
-import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
+import { Subject,map, takeUntil, } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220201/agricultura-api.service';
+import { CommonModule } from '@angular/common';
+import { FilaSolicitud } from '../../models/220201/capturar-solicitud.model';
+import { SubProductosComponent } from '../../../../shared/components/sub-productos/sub-productos.component';
+import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
+import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
 
 /**
  * Componente contenedor para sub-productos.

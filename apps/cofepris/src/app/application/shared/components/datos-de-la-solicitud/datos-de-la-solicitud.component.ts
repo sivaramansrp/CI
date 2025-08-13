@@ -1,7 +1,9 @@
 import {
   ALERTA_DE_MANIFESTO_Y_DECLARACIONES,
   ALERTA_OPCIONS,
+  MENSAJE_EMERGENTE_DE_CONFIRMACION,
   MENSAJE_SIN_FILA_SELECCIONADA,
+  MODIFICADOR_MENSAJE_NO_FILA_SELECCIONADA,
   MOSTRAR_NOTIFICACION,
   NUMERO_TRAMITE,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE,
@@ -9,53 +11,64 @@ import {
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO,
+  PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES,
   PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA,
   PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO,
   PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO,
   PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA,
   PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL,
   REPRESENTANTE_LEGAL,
+  TEXTO_MANIFESTO_Y_DECLARACIONES
 } from '../../constantes/datos-solicitud.enum';
-import { ActivatedRoute, Router } from '@angular/router';
 import {
-  AlertComponent,
-  Notificacion,
-  NotificacionesComponent,
-  Pedimento,
-  REGEX_RFC,
-  REGEX_SOLO_DIGITOS,
-  REGEX_SOLO_NUMEROS,
-} from '@libs/shared/data-access-user/src';
-import {
-  Catalogo,
-  DatosDeTablaSeleccionados,
-  DatosSolicitudFormState,
-  OpcionConfig,
-  TablaMercanciasConfig,
-  TablaMercanciasDatos,
-  TablaOpcionConfig,
-} from '../../models/datos-solicitud.model';
-import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
-import {
+  AbstractControl,
   FormBuilder,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { delay, takeUntil } from 'rxjs';
-import { AbstractControl } from '@angular/forms';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  AlertComponent,
+  CatalogoSelectComponent,
+  InputRadioComponent,
+  Notificacion,
+  NotificacionesComponent,
+  Pedimento,
+  REGEX_IMPORTE_PAGO,
+  REGEX_RFC,
+  REGEX_SOLO_DIGITOS,
+  REGEX_SOLO_NUMEROS,
+  TablaDinamicaComponent,
+  TituloComponent
+} from '@libs/shared/data-access-user/src';
+import {
+  Catalogo,
+  DatosDeTablaSeleccionados,
+  DatosSolicitudFormState,
+  OpcionConfig,
+  ScianConfig,
+  TablaMercanciasConfig,
+  TablaMercanciasDatos,
+  TablaOpcionConfig,
+  TablaScianConfig
+} from '../../models/datos-solicitud.model';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output
+} from '@angular/core';
+import { delay, takeUntil } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-import { Input } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ScianConfig } from '../../models/datos-solicitud.model';
 import { Subject } from 'rxjs';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TablaScianConfig } from '../../models/datos-solicitud.model';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json';
+
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
@@ -69,6 +82,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     FormsModule,
     NotificacionesComponent,
     TooltipModule,
+    InputRadioComponent,
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
@@ -195,6 +209,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Mensaje de alerta relacionado con el manifiesto y declaraciones.
    */
   public alertaDeManifestoContenido = ALERTA_DE_MANIFESTO_Y_DECLARACIONES;
+
+  /**
+   * @property {string} textoManifestoContenido
+   * Texto que se muestra en el manifiesto y declaraciones.
+   */
+  public textoManifestoContenido = TEXTO_MANIFESTO_Y_DECLARACIONES;
 
   /**
    * @property {string} alertaOpicion
@@ -329,10 +349,34 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   public mostrarAlerta: boolean = false;
 
   /**
+   * Controla la visibilidad del modal de alerta.
+   * @property {boolean} mostrarAlerta
+   */
+  public confirmacionAlerta: boolean = false;
+
+  /**
    * Mensaje de alerta que se muestra al usuario.
    * @property {string} mensajeDeAlerta
    */
   public mensajeDeAlerta: string = MENSAJE_SIN_FILA_SELECCIONADA;
+
+  /**
+   * Mensaje de alerta que se muestra cuando no se ha seleccionado
+   * una fila o se han seleccionado más de una al intentar modificar.
+   *
+   * Se inicializa con la constante `MODIFICADOR_MENSAJE_NO_FILA_SELECCIONADA`.
+   */
+  public modificadorMensajeDeAlerta: string =
+    MODIFICADOR_MENSAJE_NO_FILA_SELECCIONADA;
+
+  /**
+   * Mensaje emergente que solicita confirmación al usuario antes
+   * de ejecutar una acción importante (por ejemplo, eliminar un registro).
+   *
+   * Se inicializa con la constante `MENSAJE_EMERGENTE_DE_CONFIRMACION`.
+   */
+  public mensajeEmergenteConfirmacion: string =
+    MENSAJE_EMERGENTE_DE_CONFIRMACION;
 
   /**
    * @description
@@ -376,6 +420,24 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   /** Nueva notificación relacionada con el RFC. */
   public seleccionarFilaNotificacion!: Notificacion;
+  /**
+   * Representa el estado de un grupo de botones de radio, inicializado con el valor `radio_si_no`.
+   * Esto se utiliza típicamente para manejar opciones binarias (por ejemplo, Sí/No).
+   */
+  public radioBtn = radio_si_no;
+  /**
+   * Representa el valor de selección predeterminado para un componente específico.
+   * Esto puede ser una cadena o un número, inicializado como una cadena vacía.
+   */
+  public predeterminadoSeleccionar: string | number = '';
+
+  /** Indica si el trámite es un manifiesto. */
+  esManifesto: boolean = false;
+
+  /**
+   * Indica si el campo utiliza punto y coma como separador.
+   */
+  esPuntoYComa: boolean = false;
 
   /**
    * @constructor
@@ -435,6 +497,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
+    this.esManifesto =
+      PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES.includes(
+        this.idProcedimiento
+      );
     this.mostrarNotificacion = MOSTRAR_NOTIFICACION.includes(
       this.idProcedimiento
     )
@@ -518,6 +584,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       rfcSanitario: [
         this.datosSolicitudFormState.rfcSanitario,
         [
+          Validators.required,
           Validators.minLength(2),
           Validators.maxLength(120),
           Validators.pattern(REGEX_RFC),
@@ -525,11 +592,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       ],
       denominacionRazon: [
         this.datosSolicitudFormState.denominacionRazon,
-        [Validators.minLength(2), Validators.maxLength(120)],
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(120),
+        ],
       ],
       correoElectronico: [
         this.datosSolicitudFormState.correoElectronico,
-        [Validators.minLength(2), Validators.maxLength(120), Validators.email],
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(120),
+          Validators.email,
+        ],
       ],
       codigoPostal: [
         this.datosSolicitudFormState.codigoPostal,
@@ -558,7 +634,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           Validators.maxLength(120),
         ],
       ],
-      localidad: [this.datosSolicitudFormState.localidad],
+      localidad: [
+        this.datosSolicitudFormState.localidad,
+        [Validators.pattern(REGEX_IMPORTE_PAGO)],
+      ],
       colonia: [this.datosSolicitudFormState.colonia],
       calleYNumero: [
         this.datosSolicitudFormState.calleYNumero,
@@ -586,7 +665,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       adunasDeEntradas: [
         this.datosSolicitudFormState.adunasDeEntradas
           ? this.datosSolicitudFormState.adunasDeEntradas
-          : '103',
+          : '',
         [Validators.required],
       ],
       aeropuerto: [
@@ -627,6 +706,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       ],
       regimenLaMercancia: ['101', [Validators.required]],
       aduana: [this.datosSolicitudFormState.aduana, [Validators.required]],
+      mercancias: [[], Validators.required],
+      manifesto: [
+        this.datosSolicitudFormState.manifesto,
+        [Validators.required],
+      ],
     });
 
     if (this.mostrarNotificacion) {
@@ -744,19 +828,60 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   eliminarMercancias(): void {
     if (!this.tablaMercanciasLista.length) {
-      this.mostrarAlerta = true;
+      this.confirmacionAlerta = true;
       return;
     }
-    this.tablaMercanciasConfig.datos = this.tablaMercanciasConfig.datos.filter(
-      (idx: TablaMercanciasDatos) => {
-        return !this.tablaMercanciasLista.some(
-          (idx2: TablaMercanciasDatos) =>
-            idx2.clasificacionProducto === idx.clasificacionProducto
-        );
+    if (this.tablaMercanciasLista.length > 0) {
+      this.seleccionarFilaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: this.mensajeEmergenteConfirmacion,
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+      };
+      this.confirmacionAlerta = true;
+    }
+  }
+
+  /**
+   * Elimina un pedimento de la lista de mercancías tras la confirmación del usuario.
+   *
+   * @param borrar Indica si el usuario confirmó la eliminación (`true`) o la canceló (`false`).
+   *
+   * ### Descripción:
+   * - Si `borrar` es `true`:
+   *   - Filtra los datos de `tablaMercanciasConfig.datos` eliminando aquellos
+   *     que coincidan en `clasificacionProducto` con los elementos de `tablaMercanciasLista`.
+   *   - Si existe un emisor en `mercanciasSeleccionado`, emite la lista actualizada de datos.
+   *   - Elimina el elemento de la lista `pedimentos` en la posición `elementoParaEliminar`.
+   * - Independientemente de la acción, desactiva la alerta de confirmación (`confirmacionAlerta = false`).
+   *
+   * ### Ejemplo de uso:
+   * ```ts
+   * eliminarPedimentoConfirmacion(true); // Elimina el pedimento
+   * eliminarPedimentoConfirmacion(false); // Cancela la eliminación
+   * ```
+   */
+  eliminarPedimentoConfirmacion(borrar: boolean): void {
+    if (borrar) {
+      this.tablaMercanciasConfig.datos =
+        this.tablaMercanciasConfig.datos.filter((idx: TablaMercanciasDatos) => {
+          return !this.tablaMercanciasLista.some(
+            (idx2: TablaMercanciasDatos) =>
+              idx2.clasificacionProducto === idx.clasificacionProducto
+          );
+        });
+      if (this.mercanciasSeleccionado) {
+        this.mercanciasSeleccionado.emit(this.tablaMercanciasConfig.datos);
       }
-    );
-    if (this.mercanciasSeleccionado) {
-      this.mercanciasSeleccionado.emit(this.tablaMercanciasConfig.datos);
+    }
+    this.confirmacionAlerta = false;
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
   }
 
@@ -820,6 +945,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   modificarDatos(): void {
     if (!this.tablaMercanciasLista.length) {
+      this.seleccionarFilaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: this.modificadorMensajeDeAlerta,
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
       this.mostrarAlerta = true;
       return;
     }
@@ -1068,6 +1204,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
+  }
+
+  /**
+   * Actualiza el valor de `predeterminadoSeleccionar` basado en el valor proporcionado.
+   *
+   * @param value - El nuevo valor a establecer para `predeterminadoSeleccionar`.
+   *                Puede ser una cadena o un número.
+   */
+  public cambioDeValorIndique(value: string | number): void {
+    this.predeterminadoSeleccionar = value;
   }
 
   /**

@@ -145,6 +145,32 @@ describe('AgregaPersonasComponent', () => {
       expect(component.nuevaNotificacion).toBeDefined();
       expect(spy).toHaveBeenCalled();
     });
+
+    it('should clear form fields when gafete is not found', () => {
+      // Setup: Fill form fields first
+      component.personaForm.get('nombreRespoDespacho')?.enable();
+      component.personaForm.get('paternoRespoDespacho')?.enable();
+      component.personaForm.get('maternoRespoDespacho')?.enable();
+      component.personaForm.get('nombreRespoDespacho')?.setValue('R');
+      component.personaForm.get('paternoRespoDespacho')?.setValue('A');
+      component.personaForm.get('maternoRespoDespacho')?.setValue('Z');
+      
+      // Mock service to return no data (gafete not found)
+      mockConsultaResponsableService.getGafeteResponsable = jest
+        .fn()
+        .mockReturnValue(of({ datos: null }));
+      
+      component.gafeteRespoDespacho.setValue('1');
+      component.buscarGafete();
+      
+      // Verify error notification is shown
+      expect(component.nuevaNotificacion).toBeDefined();
+      
+      // Verify form fields are cleared after reset
+      expect(component.personaForm.get('nombreRespoDespacho')?.value).toBeNull();
+      expect(component.personaForm.get('paternoRespoDespacho')?.value).toBeNull();
+      expect(component.personaForm.get('maternoRespoDespacho')?.value).toBeNull();
+    });
   });
 
   describe('habilitarCamposFormulario', () => {
@@ -193,12 +219,65 @@ describe('AgregaPersonasComponent', () => {
       expect(component.nuevaNotificacion).toBeDefined();
     });
 
+    it('should preserve form values when responsable already exists (duplicate badge)', () => {
+      // Setup: existing person with same badge
+      component.personas = [
+        { gafeteRespoDespacho: '123' } as ResponsablesDespacho,
+      ];
+      
+      // Form should preserve these values after duplicate error
+      const expectedGafete = '123';
+      const expectedNombre = 'Juan';
+      const expectedPaterno = 'Pérez';
+      const expectedMaterno = 'López';
+      
+      component.gafeteRespoDespacho.setValue(expectedGafete);
+      component.personaForm.get('nombreRespoDespacho')?.setValue(expectedNombre);
+      component.personaForm.get('paternoRespoDespacho')?.setValue(expectedPaterno);
+      component.personaForm.get('maternoRespoDespacho')?.setValue(expectedMaterno);
+      
+      // Attempt to add duplicate
+      component.agregarPersona();
+      
+      // Verify error is shown
+      expect(component.nuevaNotificacion).toBeDefined();
+      
+      // Verify form values are preserved (not reset)
+      expect(component.gafeteRespoDespacho.value).toBe(expectedGafete);
+      expect(component.personaForm.get('nombreRespoDespacho')?.value).toBe(expectedNombre);
+      expect(component.personaForm.get('paternoRespoDespacho')?.value).toBe(expectedPaterno);
+      expect(component.personaForm.get('maternoRespoDespacho')?.value).toBe(expectedMaterno);
+    });
+
     it('should add persona if valid and not duplicate', () => {
       const emitSpy = jest.spyOn(component.responsablesDespachoChange, 'emit');
       component.personas = [];
       component.agregarPersona();
       expect(component.personas.length).toBe(1);
       expect(emitSpy).toHaveBeenCalled();
+    });
+
+    it('should reset form fields when persona is successfully added', () => {
+      const emitSpy = jest.spyOn(component.responsablesDespachoChange, 'emit');
+      component.personas = [];
+      
+      // Set form values
+      component.gafeteRespoDespacho.setValue('123');
+      component.personaForm.get('nombreRespoDespacho')?.setValue('Juan');
+      component.personaForm.get('paternoRespoDespacho')?.setValue('Pérez');
+      component.personaForm.get('maternoRespoDespacho')?.setValue('López');
+      
+      component.agregarPersona();
+      
+      // Verify person was added
+      expect(component.personas.length).toBe(1);
+      expect(emitSpy).toHaveBeenCalled();
+      
+      // Verify form fields are reset
+      expect(component.gafeteRespoDespacho.value).toBe('');
+      expect(component.personaForm.get('nombreRespoDespacho')?.value).toBe('');
+      expect(component.personaForm.get('paternoRespoDespacho')?.value).toBe('');
+      expect(component.personaForm.get('maternoRespoDespacho')?.value).toBe('');
     });
   });
 

@@ -1,35 +1,35 @@
 import {
   CAPTURA_OPCIONES_DE_BOTON_DE_RADIO,
+  CONFIGURACION_COLUMNAS_TABLA,
   MERCANCIA,
 } from '../../enums/sagarpa.enum';
 import {
   CatalogoSelectComponent,
   CatalogosSelect,
+  ConfiguracionColumna,
   ConsultaioQuery,
-  InputRadioComponent,
+  TablaDinamicaComponent,
   TituloComponent,
   
-} from '@ng-mf/data-access-user';
+} from '@libs/shared/data-access-user/src';
+import {forkJoin,map,takeUntil} from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FOLIODELLBL } from '../../constantes/importador-exportador.enum';
+import { FilaSolicitudTabla } from '../../models/datos-generales.model';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RevisionService } from '../../services/revision.service';
-import { Row } from '../../models/datos-generales.model';
 import { Solicitud220503Query } from '../../estados/tramites220503.query';
 import { Solicitud220503State } from '../../estados/tramites220503.store';
 import { Solicitud220503Store } from '../../estados/tramites220503.store';
 import { Subject } from 'rxjs';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
-
 /**
  * Componente para gestionar los datos generales.
  */
@@ -43,6 +43,7 @@ import { takeUntil } from 'rxjs';
     ReactiveFormsModule,
     TituloComponent,
     CatalogoSelectComponent,
+    TablaDinamicaComponent
     
   ],
 })
@@ -207,6 +208,11 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
   esFormularioSoloLectura: boolean = false;
+  /**
+   * Configuración de las columnas de la tabla.
+   * @type {ConfiguracionColumna[]}
+   */
+  configuracionColumnasTabla= CONFIGURACION_COLUMNAS_TABLA;
 
   constructor(
     private readonly fb: FormBuilder,
@@ -235,7 +241,19 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-   this.inicializarEstadoFormulario();
+      forkJoin([
+    this.getAduanaIngreso(),
+    this.getOficianaInspeccion(),
+    this.getPuntoInspeccion(),
+    this.getEstablecimiento(),
+    this.getRegimenDestinaran(),
+    this.getMovilizacionNacional(),
+    this.getPuntoVerificacion(),
+    this.getEmpresaTransportista()
+  ]).subscribe(() => {
+    this.inicializarEstadoFormulario(); 
+  });
+
   }
 
   /**
@@ -248,44 +266,44 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
   inicializarFormulario(): void {
  this.forma = this.fb.group({
       foliodel: [
-        { value: this.Solicitud220503State.fetchapago, disabled: true },
+        { value: this.Solicitud220503State.fetchapago || '', disabled: true },
       ],
       aduanaIngreso: [
-        this.Solicitud220503State.aduanaIngreso,
+        this.Solicitud220503State.aduanaIngreso || '',
         Validators.required, 
       ],
       oficinaInspeccion: [
-        this.Solicitud220503State.oficinaInspeccion,
+        this.Solicitud220503State.oficinaInspeccion || '',
         Validators.required,
       ],
       puntoInspeccion: [
-        this.Solicitud220503State.puntoInspeccion,
+        this.Solicitud220503State.puntoInspeccion || '',
         Validators.required,
       ],
       claveUCON: [
-        { value: this.Solicitud220503State.claveUCON, disabled: true },
+        { value: this.Solicitud220503State.claveUCON || '', disabled: true },
       ],
       establecimientoTIF: [
-        this.Solicitud220503State.establecimientoTIF,
+        this.Solicitud220503State.establecimientoTIF || '',
         Validators.required,
       ],
-      nombre: [this.Solicitud220503State.nombre, Validators.required],
+      nombre: [this.Solicitud220503State.nombre || '', Validators.required],
       numeroguia: [
-        { value: this.Solicitud220503State.numeroguia, disabled: true },
+        { value: this.Solicitud220503State.numeroguia || '', disabled: true },
         Validators.required,
       ],
-      regimen: [this.Solicitud220503State.regimen, Validators.required],
+      regimen: [this.Solicitud220503State.regimen || '', Validators.required],
 
       movilizacion: [
-        this.Solicitud220503State.movilizacion,
+        this.Solicitud220503State.movilizacion || '',
         Validators.required,
       ],
       transporte: [
-        { value: this.Solicitud220503State.transporte, disabled: true },
+        { value: this.Solicitud220503State.transporte || '', disabled: true },
       ],
-      punto: [this.Solicitud220503State.punto, [Validators.required]],
+      punto: [this.Solicitud220503State.punto || '', [Validators.required]],
       nombreEmpresa: [
-        this.Solicitud220503State.nombreEmpresa,
+        this.Solicitud220503State.nombreEmpresa || '',
         Validators.required,
       ],
     });
@@ -296,33 +314,25 @@ this.forma.disable();
         map((data: Solicitud220503State) => {
           this.Solicitud220503State = data;
           this.forma.patchValue({
-            foliodel: this.Solicitud220503State.foliodel,
-            aduanaIngreso: this.Solicitud220503State.aduanaIngreso,
-            oficinaInspeccion: this.Solicitud220503State.oficinaInspeccion,
-            puntoInspeccion: this.Solicitud220503State.puntoInspeccion,
-            claveUCON: this.Solicitud220503State.claveUCON,
-            establecimientoTIF: this.Solicitud220503State.establecimientoTIF,
-            nombre: this.Solicitud220503State.nombre,
-            numeroguia: this.Solicitud220503State.numeroguia,
-            regimen: this.Solicitud220503State.regimen,
-            movilizacion: this.Solicitud220503State.movilizacion,
-            transporte: this.Solicitud220503State.transporte,
-            punto: this.Solicitud220503State.punto,
-            nombreEmpresa: this.Solicitud220503State.nombreEmpresa,
+            foliodel: this.Solicitud220503State.foliodel || '',
+            aduanaIngreso: this.Solicitud220503State.aduanaIngreso || '',
+            oficinaInspeccion: this.Solicitud220503State.oficinaInspeccion || '',
+            puntoInspeccion: this.Solicitud220503State.puntoInspeccion || '',
+            claveUCON: this.Solicitud220503State.claveUCON || '',
+            establecimientoTIF: this.Solicitud220503State.establecimientoTIF || '',
+            nombre: this.Solicitud220503State.nombre || '',
+            numeroguia: this.Solicitud220503State.numeroguia || '',
+            regimen: this.Solicitud220503State.regimen || '',
+            movilizacion: this.Solicitud220503State.movilizacion || '',
+            transporte: this.Solicitud220503State.transporte || '',
+            punto: this.Solicitud220503State.punto || '',
+            nombreEmpresa: this.Solicitud220503State.nombreEmpresa || '',
           });
         })
       )
       .subscribe();
 
-    this.getAduanaIngreso();
-    this.getOficianaInspeccion();
-    this.getPuntoInspeccion();
-    this.getEstablecimiento();
-    this.getRegimenDestinaran();
-    this.getMovilizacionNacional();
-    this.getPuntoVerificacion();
-    this.getEmpresaTransportista();
-    this.actualizarDatosDelaSolicitud();
+
   }
 
    /**
@@ -345,11 +355,7 @@ this.forma.disable();
       this.inicializarFormulario();
       if (this.esFormularioSoloLectura) {
         this.forma.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.forma.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
-      }
+      } 
   }
 
   /**
@@ -380,7 +386,7 @@ this.forma.disable();
    * Filas de datos.
    * @type {Row[]}
    */
-  rows: Row[] = MERCANCIA;
+  tablaFilaDatos: FilaSolicitudTabla[] = MERCANCIA;
 
   /**
    * Muestra u oculta el contenido colapsable.
@@ -395,16 +401,6 @@ this.forma.disable();
    */
   currentIndex = 0;
 
-  /**
-   * Rota la fila en la dirección especificada.
-   * @param {number} direction - La dirección de rotación.
-   * @returns {void}
-   */
-  rotateRow(direction: number): void {
-    const TOTALROWS = this.rows.length;
-    this.currentDirection = direction;
-    this.currentIndex = (this.currentIndex + direction + TOTALROWS) % TOTALROWS;
-  }
 
   /**
    * Verifica si un campo del formulario es válido.

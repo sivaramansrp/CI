@@ -78,7 +78,7 @@ describe('SolicitudService (Jest)', () => {
 
     service.getScianDatos().subscribe(data => {
       expect(data).toEqual(mockData);
-      expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/260402/scianDatos.json');
+      expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/260212/clave-scian-tabla-datos.json');
       done();
     });
   });

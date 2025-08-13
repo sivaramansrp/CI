@@ -218,4 +218,32 @@ export interface FormaRequerimiento {
    * Tipo específico del requerimiento (por ejemplo, técnico, documental, etc.).
    */
   tipoDeRequerimiento: string;
+
+  /**
+   * Identificador numérico del tipo de documento seleccionado.
+   *
+   * Este valor se utiliza para asociar un documento con su tipo correspondiente
+   * dentro del catálogo de tipos de documentos.
+   */
+  tipoDeDocumento: number;
+
+  /**
+   * Lista de documentos adicionales asociados.
+   */
+  documentoAdicional: DocumentoAdicional[];
+}
+
+/**
+ * Representa un documento adicional relacionado con una solicitud o trámite.
+ */
+export interface DocumentoAdicional {
+  /**
+   * Identificador único del documento.
+   */
+  id?: number;
+
+  /**
+   * Tipo de documento asociado (por ejemplo, PDF, JPG, etc.).
+   */
+  tipoDeDocumento: string;
 }

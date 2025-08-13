@@ -150,6 +150,9 @@ export interface SeccionSociosIC {
   /** Carácter o rol dentro de la empresa */
   caracterDe: string;
 
+  /** Almacena la nacionalidad del usuario o solicitante */
+  nacionalidad: string;
+
   /** Nombre del país de origen */
   paisNombre: string;
 
@@ -471,3 +474,152 @@ export interface DatosGeneralesDeLaSolicitudDatos {
   /** Alerta relacionada con la solicitud (2) */
   alerta2: boolean;
 }
+
+/**
+ * Representa el conjunto de mensajes informativos que se muestran
+ * en el sistema relacionados con los requisitos legales o fiscales
+ * según el tipo de garantía presentada.
+ * 
+ * Cada propiedad corresponde a un bloque de texto utilizado en la
+ * interfaz para orientar al usuario sobre las obligaciones normativas.
+ */
+export interface NotaMensaja {
+  /** Mensaje informativo correspondiente al primer nodo (ej. póliza de fianza en oficinas AGACE). */
+  node_uno: string;
+
+  /** Mensaje complementario relacionado con requisitos del Código Fiscal (artículos 18 y 18-A). */
+  node_dos: string;
+
+  /** Mensaje relacionado con la presentación de carta de crédito en oficinas AGACE. */
+  node_tres: string;
+
+  /** Mensaje complementario para la carta de crédito, incluyendo requisitos legales. */
+  node_cuatro: string;
+}
+
+/**
+ * Representa las etiquetas de texto que se muestran en los distintos
+ * formularios y secciones de la solicitud, incluyendo campos fiscales,
+ * declaraciones legales, archivos requeridos y mensajes informativos.
+ *
+ * Las claves numéricas (ej. 3500, 3511, 3530, etc.) corresponden a
+ * identificadores únicos definidos por el sistema para cada pregunta
+ * o campo del formulario.
+ */
+export interface LabelModels {
+  /** Etiqueta relacionada con el cumplimiento de obligaciones fiscales y aduaneras. */
+  3500: string;
+
+  /** Autorización para hacer pública la opinión positiva del SAT. */
+  3501: string;
+
+  /** Denominación o razón social de subcontratistas. */
+  RFC: string;
+
+  /** Información sobre registro de personal ante el IMSS y cumplimiento de obligaciones fiscales. */
+  3502: string;
+
+  /** Presencia en listados del SAT conforme al artículo 69 del CFF. */
+  3503: string;
+
+  /** Presencia en listados conforme al artículo 69-B del CFF. */
+  3504: string;
+
+  /** Presencia en listados conforme al artículo 69-B Bis del CFF. */
+  3505: string;
+
+  /** Vigencia de certificados de sello digital. */
+  3506: string;
+
+  /** Medios de contacto actualizados en el buzón tributario. */
+  3507: string;
+
+  /** Situación en los padrones de importadores/exportadores. */
+  3508: string;
+
+  /** Archivo con clientes y proveedores extranjeros. */
+  file: string;
+
+  /** Archivo con RFC de proveedores nacionales. */
+  filedos: string;
+
+  /** Sistema de control de inventarios según la Ley. */
+  3511: string;
+
+  /** Querellas o denuncias en contra de representantes o socios. */
+  3512: string;
+
+  /** Sistema de control de inventarios conforme al Anexo 24. */
+  3513: string;
+
+  /** Contabilidad en medios electrónicos conforme al CFF. */
+  3514: string;
+
+  /** Advertencia: archivo con reporte de saldos según Anexo 24. */
+  alertTres: string;
+
+  /** Información contable ingresada mensualmente al SAT. */
+  3515: string;
+
+  /** Cumplimiento fiscal de socios y representantes. */
+  3516: string;
+
+  /** Opinión positiva vigente de obligaciones fiscales. */
+  textoGenerico3: string;
+
+  /** Relación con empresas a las que se haya cancelado su certificación. */
+  3517: string;
+
+  /** Proveedores en listados del SAT conforme a artículos del CFF. */
+  3518: string;
+
+  /** Créditos fiscales firmes en los últimos 12 meses. */
+  3519: string;
+
+  /** Inversión en territorio nacional y su legal posesión. */
+  3520: string;
+
+  /** Antecedente de certificación previa IVA e IEPS. */
+  3521: string;
+
+  /** Cumplimiento del Anexo 30 en certificaciones anteriores. */
+  3522: string;
+
+  /** Lista de domicilios registrados y activos relacionados con el proceso productivo. */
+  domiciliosLabel: string;
+
+  /** Declaración de operaciones bajo el programa IMMEX. */
+  3523: string;
+
+  /** Infraestructura adecuada para la operación solicitada. */
+  3528: string;
+
+  /** Resoluciones de improcedencia del IVA y montos negados. */
+  3529: string;
+
+  /** Porcentaje y monto de devoluciones improcedentes. */
+  porcentajeLabel: string;
+
+  /** Capacidad financiera para llevar a cabo el proyecto. */
+  3530: string;
+
+  /** Archivo con monto anual de importaciones temporales. */
+  fileUno: string;
+
+  /** Transformación o retorno de al menos el 50% de importaciones. */
+  3531: string;
+
+  /** Valor total de importaciones temporales. */
+  textoGenerico9: string;
+
+  /** Archivo con empresas receptoras de transferencias de mercancía (CTM). */
+  alertInfoUno: string;
+
+  /** Declaración de cumplimiento conforme a reglas 7.4.1 a 7.4.7. */
+  alertInfoDos: string;
+
+  /** Declaración bajo protesta sobre veracidad y representación legal. */
+  alertInfoTres: string;
+}
+
+

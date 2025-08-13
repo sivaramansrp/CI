@@ -56,7 +56,7 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
   fachaDePago: InputFecha = {
     labelNombre: 'Fecha de pago',
     required: false,
-    habilitado: true,
+    habilitado: false,
   };
 
   /**
@@ -92,7 +92,7 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
           cadenaDependencia: datos.cadenaDependencia,
           banco: datos.banco,
           llaveDePago:datos.llaveDePago,
-          importeDePago: datos.importeDePago,
+          importeDePago: datos.importeDePago
         });
       })
     )
@@ -112,7 +112,6 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
       importeDePago: [{ value: this.tramiteState.importeDePago, disabled: true }, Validators.required],
     });
   }
-
   /**
    * Cambia la fecha de pago de derechos en el almacén de trámite.
    * @param {string} nuevo_valor - El nuevo valor de la fecha de pago de derechos.

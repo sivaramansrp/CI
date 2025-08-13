@@ -13,14 +13,21 @@
           formControlName="certificadosAutorizados"
           (selectionChange)="setCertificadosAutorizados($event)"
         ></app-catalogo-select>
+             <div *ngIf="grupoFormularioPadre.get(claveDeControl)?.get('certificadosAutorizados')?.hasError('required') 
+          && grupoFormularioPadre.get(claveDeControl)?.get('certificadosAutorizados')?.touched"
+     class="text-danger">
+  <small>Este campo es obligatorio.</small>
+</div>
+
       </div>
     </div>
     <div class="col-md-4">
       <div class="form-field">
         <input-fecha
+          [isDisabled]="esFormularioSoloLectura"
           [datos]="configuracionFechaFinVigencia"
           (valorCambiado)="cambioFechaInicio($event)"
-    
+          [setFecha]="grupoFormularioPadre.get(claveDeControl)?.get('fechaDeInspeccion')?.value"
         ></input-fecha>
       </div>
     </div>
@@ -36,6 +43,11 @@
           [isDisabled]="esFormularioSoloLectura"
           (selectionChange)="setHoraDeInspeccion($event)"
         ></app-catalogo-select>
+        <div *ngIf="grupoFormularioPadre.get(claveDeControl)?.get('horaDeInspeccion')?.hasError('required') 
+          && grupoFormularioPadre.get(claveDeControl)?.get('horaDeInspeccion')?.touched"
+          class="text-danger">
+          <small>Este campo es obligatorio.</small>
+        </div>
       </div>
     </div>
     <div class="col-md-4">

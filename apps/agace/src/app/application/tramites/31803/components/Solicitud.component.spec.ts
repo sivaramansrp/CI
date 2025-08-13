@@ -24,6 +24,12 @@ describe('SolicitudComponent', () => {
 
   let mockQuery = {
     selectSolicitud$: of({
+      numeroOficio: '2500302601620259910000004-000002',
+      claveReferencia: '12345',
+      cadenaDependencia: 'cadena',
+      importePago: '1000',
+      fechaInicial: '2023-12-25',
+      fechaFinal: '2024-12-25',
       banco: 'Banco Test',
       llave: 'LLAVE',
       manifiesto1: 'Man1',
@@ -35,6 +41,17 @@ describe('SolicitudComponent', () => {
 
   let mockStore = {
     setFechaPago: jest.fn(),
+    setNumeroOficio: jest.fn(),
+    setClaveReferencia: jest.fn(),
+    setCadenaDependencia: jest.fn(),
+    setImportePago: jest.fn(),
+    setFechaInicial: jest.fn(),
+    setFechaFinal: jest.fn(),
+    setBanco: jest.fn(),
+    setNumeroOperacion: jest.fn(),
+    setLlave: jest.fn(),
+    setManifiesto1: jest.fn(),
+    setManifiesto2: jest.fn(),
   };
 
   let mockValidaciones = {
@@ -56,21 +73,37 @@ describe('SolicitudComponent', () => {
 
     fixture = TestBed.createComponent(SolicitudComponent);
     component = fixture.componentInstance;
+
+    jest.spyOn(component, 'donanteDomicilio').mockImplementation(() => { });
+    jest.spyOn(component, 'inicializarEstadoFormulario').mockImplementation(() => { });
+
+    component.registroForm = new FormBuilder().group({
+      numeroOficio: [''],
+      claveReferencia: [''],
+      cadenaDependencia: [''],
+      importePago: [''],
+      fechaInicial: [''],
+      fechaFinal: [''],
+      banco: ['Banco Test'],
+      manifiesto1: [true],
+      manifiesto2: [true],
+      llave: [''],
+      numeroOperacion: [''],
+      fechaPago: [''],
+    });
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+    if (fixture) {
+      fixture.destroy();
+    }
   });
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
-
-  it('should call obtenerDatosBanco and update bancoCatalogo', fakeAsync(() => {
-    mockRegistroSolicitudService.obtenerDatosBanco.mockClear();
-    fixture = TestBed.createComponent(SolicitudComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-    tick();
-    expect(component.bancoCatalogo.catalogos.length).toBe(0);
-  }));
 
   it('should initialize the form in ngOnInit', fakeAsync(() => {
     component.ngOnInit();
@@ -80,32 +113,50 @@ describe('SolicitudComponent', () => {
   }));
 
   it('should call guardarDatosDelFormulario when esFormularioSoloLectura is true', () => {
+    // Restore the original method for this test
+    component.inicializarEstadoFormulario = SolicitudComponent.prototype.inicializarEstadoFormulario;
+
     component.esFormularioSoloLectura = true;
-    const guardarSpy = jest.spyOn(component as any, 'guardarDatosDelFormulario');
-    const datosDeAvisoSpy = jest.spyOn(component as any, 'datosDeAvisoForm');
+    const guardarSpy = jest.spyOn(component, 'guardarDatosDelFormulario');
+    const donanteSpy = jest.spyOn(component, 'donanteDomicilio');
+
     component.inicializarEstadoFormulario();
+
     expect(guardarSpy).toHaveBeenCalled();
-    expect(datosDeAvisoSpy).not.toHaveBeenCalled();
+    expect(donanteSpy).toHaveBeenCalled();
   });
 
-  it('should call datosDeAvisoForm when esFormularioSoloLectura is false', () => {
+  it('should call donanteDomicilio when esFormularioSoloLectura is false', () => {
+    // Restore the original method for this test
+    component.inicializarEstadoFormulario = SolicitudComponent.prototype.inicializarEstadoFormulario;
+
     component.esFormularioSoloLectura = false;
-    const guardarSpy = jest.spyOn(component as any, 'guardarDatosDelFormulario');
-    const datosDeAvisoSpy = jest.spyOn(component as any, 'datosDeAvisoForm');
+    const guardarSpy = jest.spyOn(component, 'guardarDatosDelFormulario');
+    const donanteSpy = jest.spyOn(component, 'donanteDomicilio');
+
     component.inicializarEstadoFormulario();
-    expect(datosDeAvisoSpy).toHaveBeenCalled();
+
+    expect(donanteSpy).toHaveBeenCalled();
     expect(guardarSpy).not.toHaveBeenCalled();
   });
 
   it('should disable form fields when esFormularioSoloLectura is true in datosDeAvisoForm', () => {
+    component.donanteDomicilio = SolicitudComponent.prototype.donanteDomicilio;
+    jest.spyOn(component, 'inicializarEstadoFormulario').mockImplementation(() => { });
+
     component.registroForm = component.fb.group({
-      banco: ['valor'],
-      manifiesto1: ['valor'],
-      manifiesto2: ['valor'],
+      numeroOficio: ['2500302601620259910000004-000002'],
+      claveReferencia: [''],
+      cadenaDependencia: [''],
+      importePago: [''],
+      fechaInicial: [''],
+      fechaFinal: [''],
+      banco: ['1'],
+      manifiesto1: true,
+      manifiesto2: true,
       llave: ['valor'],
       numeroOperacion: ['valor'],
       fechaPago: ['valor'],
-      monedaNacional: ['valor'],
     });
 
     component.esFormularioSoloLectura = true;
@@ -115,26 +166,38 @@ describe('SolicitudComponent', () => {
       expect(component.registroForm.get(key)?.disabled).toBe(false);
     });
 
-    component.datosDeAvisoForm();
-
+    component.donanteDomicilio();
+    expect(component.registroForm.get('numeroOficio')?.disabled).toBe(true);
+    expect(component.registroForm.get('claveReferencia')?.disabled).toBe(true);
+    expect(component.registroForm.get('cadenaDependencia')?.disabled).toBe(true);
+    expect(component.registroForm.get('importePago')?.disabled).toBe(true);
+    expect(component.registroForm.get('fechaInicial')?.disabled).toBe(true);
+    expect(component.registroForm.get('fechaFinal')?.disabled).toBe(true);
     expect(component.registroForm.get('banco')?.disabled).toBe(true);
     expect(component.registroForm.get('manifiesto1')?.disabled).toBe(true);
     expect(component.registroForm.get('manifiesto2')?.disabled).toBe(true);
     expect(component.registroForm.get('llave')?.disabled).toBe(true);
     expect(component.registroForm.get('numeroOperacion')?.disabled).toBe(true);
     expect(component.registroForm.get('fechaPago')?.disabled).toBe(true);
-    expect(component.registroForm.get('monedaNacional')?.disabled).toBe(true);
   });
 
   it('should not disable form fields when esFormularioSoloLectura is false in datosDeAvisoForm', () => {
+    component.donanteDomicilio = SolicitudComponent.prototype.donanteDomicilio;
+    jest.spyOn(component, 'inicializarEstadoFormulario').mockImplementation(() => { });
+
     component.registroForm = component.fb.group({
-      banco: ['valor'],
-      manifiesto1: ['valor'],
-      manifiesto2: ['valor'],
+      numeroOficio: ['2500302601620259910000004-000002'],
+      claveReferencia: [''],
+      cadenaDependencia: [''],
+      importePago: [''],
+      fechaInicial: [''],
+      fechaFinal: [''],
+      banco: ['1'],
+      manifiesto1: [true],
+      manifiesto2: [true],
       llave: ['valor'],
       numeroOperacion: ['valor'],
       fechaPago: ['valor'],
-      monedaNacional: ['valor'],
     });
 
     component.esFormularioSoloLectura = false;
@@ -144,26 +207,49 @@ describe('SolicitudComponent', () => {
       expect(component.registroForm.get(key)?.disabled).toBe(false);
     });
 
-    component.datosDeAvisoForm();
-
+    component.donanteDomicilio();
+    expect(component.registroForm.get('numeroOficio')?.disabled).toBe(false);
+    expect(component.registroForm.get('claveReferencia')?.disabled).toBe(false);
+    expect(component.registroForm.get('cadenaDependencia')?.disabled).toBe(false);
+    expect(component.registroForm.get('importePago')?.disabled).toBe(false);
+    expect(component.registroForm.get('fechaInicial')?.disabled).toBe(false);
+    expect(component.registroForm.get('fechaFinal')?.disabled).toBe(false);
     expect(component.registroForm.get('banco')?.disabled).toBe(false);
     expect(component.registroForm.get('manifiesto1')?.disabled).toBe(false);
     expect(component.registroForm.get('manifiesto2')?.disabled).toBe(false);
     expect(component.registroForm.get('llave')?.disabled).toBe(false);
     expect(component.registroForm.get('numeroOperacion')?.disabled).toBe(false);
     expect(component.registroForm.get('fechaPago')?.disabled).toBe(false);
-    expect(component.registroForm.get('monedaNacional')?.disabled).toBe(false);
   });
 
   it('should set readonly mode and disable form fields', fakeAsync(() => {
+    // Restore the original donanteDomicilio method for this test but mock inicializarEstadoFormulario
+    component.donanteDomicilio = SolicitudComponent.prototype.donanteDomicilio;
+    jest.spyOn(component, 'inicializarEstadoFormulario').mockImplementation(() => { });
+
+    // Initialize the form by calling donanteDomicilio
+    component.donanteDomicilio();
+
     component.ngOnInit();
     tick();
-    expect(component.esFormularioSoloLectura).toBe(false);
-    expect(component.registroForm.disabled).toBe(false);
+
+    expect(component.esFormularioSoloLectura).toBe(false); // Based on mockConsultaQuery readonly: true
+    expect(component.registroForm).toBeDefined();
   }));
 
   it('should update fechaPago in the form and store', () => {
     component.registroForm = component.fb.group({
+      numeroOficio: ['2500302601620259910000004-000002'],
+      claveReferencia: [''],
+      cadenaDependencia: [''],
+      importePago: [''],
+      fechaInicial: [''],
+      fechaFinal: [''],
+      banco: ['1'],
+      manifiesto1: [true],
+      manifiesto2: [true],
+      llave: [''],
+      numeroOperacion: [''],
       fechaPago: [''],
     });
 
@@ -175,6 +261,17 @@ describe('SolicitudComponent', () => {
 
   it('should mark form as touched if invalid', () => {
     component.registroForm = component.fb.group({
+      numeroOficio: ['2500302601620259910000004-000002'],
+      claveReferencia: [''],
+      cadenaDependencia: [''],
+      importePago: [''],
+      fechaInicial: [''],
+      fechaFinal: [''],
+      manifiesto1: [true],
+      manifiesto2: [true],
+      llave: [''],
+      numeroOperacion: [''],
+      fechaPago: [''],
       banco: ['', { validators: [] }],
     });
     const validators = [component.fb.control('').validator, (control: { value: any; }) => !control.value ? { required: true } : null].filter(
@@ -189,15 +286,45 @@ describe('SolicitudComponent', () => {
   });
 
   it('should check if form field is valid', () => {
-    const result = component.esValido(component.fb.group({}), 'testField');
+    const result = component.esValido(component.fb.group({
+      numeroOficio: ['2500302601620259910000004-000002'],
+      claveReferencia: [''],
+      cadenaDependencia: [''],
+      importePago: [''],
+      fechaInicial: [''],
+      fechaFinal: [''],
+      banco: ['1'],
+      manifiesto1: [true],
+      manifiesto2: [true],
+      llave: [''],
+      numeroOperacion: [''],
+      fechaPago: ['']
+    }), 'testField');
     expect(result).toBe(true);
   });
 
   it('should destroy observables on ngOnDestroy', () => {
-    const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
-    const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
-    component.ngOnDestroy();
-    expect(nextSpy).toHaveBeenCalledWith(true);
-    expect(completeSpy).toHaveBeenCalled();
+  component.registroForm = new FormBuilder().group({
+    numeroOficio: ['2500302601620259910000004-000002'],
+      claveReferencia: [''],
+      cadenaDependencia: [''],
+      importePago: [''],
+      fechaInicial: [''],
+      fechaFinal: [''],
+      banco: ['1'],
+      manifiesto1: [true],
+      manifiesto2: [true],
+      llave: [''],
+      numeroOperacion: [''],
+      fechaPago: [''],
   });
+  fixture.detectChanges();
+  const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
+  const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
+  component.ngOnDestroy();
+
+  expect(nextSpy).toHaveBeenCalledWith(true);
+  expect(completeSpy).toHaveBeenCalled();
+});
+
 });

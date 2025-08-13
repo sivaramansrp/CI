@@ -9,6 +9,12 @@ import { Tramite240108Store } from '../estados/tramite240108Store.store';
   providedIn: 'root',
 })
 export class ConsultaDatosService {
+  /**
+   * @description Constructor del servicio de consulta de datos.
+   * @param http HttpClient para realizar peticiones HTTP.
+   * @param tramiteStore Store que maneja el estado del trámite 240108.
+   * @param seccionStore Store que maneja el estado de las secciones.
+   */
   constructor(
     private http: HttpClient,
     private readonly tramiteStore: Tramite240108Store,
@@ -63,11 +69,10 @@ export class ConsultaDatosService {
    * @param {Tramite240108State} DATOS - Objeto con todos los datos del formulario.
    */
   actualizarEstadoFormulario(DATOS: Tramite240108State): void {
-    this.tramiteStore.updateDatosDelTramiteFormState(DATOS.datosDelTramite);
-    this.tramiteStore.updatePagoDerechosFormState(DATOS.pagoDerechos);
-    this.tramiteStore.updateDestinatarioFinalTablaDatos(DATOS.destinatarioFinalTablaDatos);
-    this.tramiteStore.updateProveedorTablaDatos(DATOS.proveedorTablaDatos);
-    this.tramiteStore.updateMercanciaTablaDatos(DATOS.merccancialTablaDatos);
+       this.tramiteStore.update((state) => ({
+      ...state,
+      ...DATOS
+    }))
   }
   
   /**

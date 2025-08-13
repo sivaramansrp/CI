@@ -1,4 +1,16 @@
 import {
+  ALERTA_TEXTO,
+  CATALOGOS_ID,
+  OPCIONES_DE_BOTON_DE_RADIO,
+  PRODUCTO_TABLA_CONFIGURACION,
+  SCIAN_TABLA_CONFIGURACION,
+} from '../../constantes/aviso-enum';
+import {
+  AvisoSanitarioState,
+  Tramite260601Store,
+} from '../../../../estados/tramites/tramite260601.store';
+import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
+import {
   Component,
   ElementRef,
   OnDestroy,
@@ -17,25 +29,20 @@ import { Observable, Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 import {
-  AvisoSanitarioState,
-  Tramite260601Store,
-} from '../../../../estados/tramites/tramite260601.store';
-import {
-  CATALOGOS_ID,
-  OPCIONES_DE_BOTON_DE_RADIO,
-} from '../../constantes/aviso-enum';
-import {
   CatalogoSelectComponent,
-  ConsultaioQuery,
+  ConfiguracionColumna,
   InputCheckComponent,
   InputRadioComponent,
+  Notificacion,
+  NotificacionesComponent,
+  TablaDinamicaComponent,
+  TablaSeleccion,
   TableBodyData,
   TableComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Manifiestos, ManifiestosRespuesta } from '../../models/aviso-model';
+import { Manifiestos, ManifiestosRespuesta,ProductoTable,ScianTable} from '../../models/aviso-model';
 import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
-import { Catalogo } from '@ng-mf/data-access-user';
 import { DatosMercanciaComponent } from '../datos-mercancia/datos-mercancia.component';
 import { Modal } from 'bootstrap';
 import { RepresentanteLegalComponent } from '../representante-legal/representante-legal.component';
@@ -60,6 +67,8 @@ import scianTable from '@libs/shared/theme/assets/json/260601/scian-table.json';
     DatosMercanciaComponent,
     InputRadioComponent,
     RepresentanteLegalComponent,
+    NotificacionesComponent,
+    TablaDinamicaComponent,
   ],
   providers: [AvisoSanitarioService],
   templateUrl: './datos-del-establecimiento.component.html',
@@ -106,6 +115,24 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
    */
   descripcionScian!: Catalogo[];
 
+    /**
+   * Tipo de selección de la tabla.
+   * @property {TablaSeleccion} tablaSeleccion
+   */
+    tablaSeleccion: TablaSeleccion = TablaSeleccion.CHECKBOX;
+
+     /**
+   * Configuración de las columnas de la tabla de subfabricantes.
+   * @property {ConfiguracionColumna<SubfabricanteDireccionModelo>[]} configuracionTabla
+   */
+  configuracionTabla: ConfiguracionColumna<ProductoTable>[] =
+  PRODUCTO_TABLA_CONFIGURACION;
+  
+  /**
+   * Configuración de las columnas de la tabla SCIAN.
+   */
+  configuracionTablaSCIAN: ConfiguracionColumna<ScianTable>[] =
+  SCIAN_TABLA_CONFIGURACION;
   /**
    * Catálogo de regímenes fiscales disponibles.
    */
@@ -129,7 +156,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
   /**
    * Cuerpo de datos de la tabla SCIAN.
    */
-  public scianBodyData: TableBodyData[] = [];
+  public scianBodyData: ScianTable[] = [];
 
   /**
    * Cabeceras de la tabla de productos.
@@ -139,7 +166,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
   /**
    * Cuerpo de datos de la tabla de productos.
    */
-  public productoBodyData: TableBodyData[] = [];
+  public productoBodyData: ProductoTable[] = [];
 
   /**
    * Datos de la tabla SCIAN desde un archivo JSON.
@@ -155,6 +182,16 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
    * Estado del modal.
    */
   modal: string = 'modal';
+
+  /**
+   * Lista de productos seleccionados.
+   */
+
+  productoSeleccionados:ProductoTable[] = [];
+  /**
+   * Lista de SCIAN seleccionados.
+   */
+  scianSeleccionados:ScianTable[] = [];
 
   /**
    * Referencia al elemento del modal.
@@ -186,6 +223,18 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura: boolean = false;
 
+    /**
+   * @property {boolean} modalAlerta
+   * @description Indica si el modal de alerta está visible. Se utiliza para mostrar mensajes de advertencia al usuario.
+   */
+  modalAlerta: boolean = false;
+
+  /**
+   * @property {Notificacion} nuevaNotificacion
+   * @description Objeto que contiene la información de la notificación a mostrar en el componente de notificaciones.
+   */
+  public nuevaNotificacion!: Notificacion;
+
   /**
    * Constructor del componente. Utilizado para inyectar servicios necesarios.
    *
@@ -213,11 +262,12 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destruirNotificador$),
         map((seccionState) => {
-          this.esFormularioSoloLectura = !seccionState.readonly;
+          this.esFormularioSoloLectura = seccionState.readonly;
           this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
+      
   }
 
   /**
@@ -225,6 +275,17 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
+
+    this.nuevaNotificacion = {} as Notificacion;
+    this.tramite260601Query.selectSeccionState$
+    .pipe(
+      takeUntil(this.destruirNotificador$),
+      map((seccionState) => {
+        this.productoBodyData = seccionState.productoBodyData;
+        this.scianBodyData = seccionState.scianBodyData;
+      })
+    )
+      
   }
 
   /**
@@ -256,14 +317,18 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
         takeUntil(this.destruirNotificador$),
         map((seccionState) => {
           this.avisoSanitarioState = seccionState;
+          this.productoBodyData = seccionState.productoBodyData;
+       this.scianBodyData = seccionState.scianBodyData;
         })
       )
       .subscribe();
 
     // Inicializar el formulario principal
     this.crearFormulario();
+ if(this.scianBodyData?.length== 0){
+   this.obtenerSCIAN();
+ }
 
-    this.obtenerSCIAN();
     this.obtenerProducto();
 
     this.estadoSeleccion();
@@ -487,27 +552,50 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
   /**
    * Obtiene los datos para la tabla SCIAN.
    */
-  public obtenerSCIAN(): void {
-    this.scianHeaderData = this.getSCIANTableData?.tableHeader;
-    this.scianBodyData = this.getSCIANTableData?.tableBody;
+   obtenerSCIAN(): void {
+     this.avisoSanitarioService.obtenerScianTabla()
+   .pipe(takeUntil(this.destruirNotificador$))
+   .subscribe((result: ScianTable[]) => {
+    this.tramite260601Store.setScianTabla(result);
+    this.scianBodyData = result;
+   });
+
+
+  }
+
+  seleccionarDomicilios(scian:ScianTable[]): void {
+    this.scianSeleccionados = scian;
   }
 
   /**
    * Obtiene los datos para la tabla de productos.
    */
-  public obtenerProducto(): void {
-    this.productoHeaderData = this.getProductoTableData?.tableHeader;
-    this.productoBodyData = this.getProductoTableData?.tableBody;
+   obtenerProducto(): void {
+    this.avisoSanitarioService.obtenerProducto()
+      .pipe(takeUntil(this.destruirNotificador$))
+      .subscribe((result: ProductoTable[]) => {
+        this.tramite260601Store.setProductoTabla(result);
+        this.productoBodyData = result;
+      });
+    
   }
 
   /**
    * Muestra el modal para la selección del establecimiento.
    */
   seleccionarEstablecimiento(): void {
-    if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_INSTANCE.show();
-    }
+    this.modalAlerta = true;
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'action',
+      titulo: '',
+      mensaje: ALERTA_TEXTO,
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
   }
 
   /**
@@ -531,7 +619,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destruirNotificador$))
       .subscribe({
         next: (result: ManifiestosRespuesta) => {
-          this.manifiestos = result?.data;
+          this.manifiestos = result?.data; 
         },
       });
   }
@@ -593,6 +681,34 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.tramite260601Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+  /**
+   * Elimina los productos seleccionados de la tabla de productos.
+   * Si no hay productos seleccionados, no realiza ninguna acción.
+   * Actualiza el cuerpo de datos de la tabla y el store con los datos restantes.
+   * @param {ProductoTable[]} productoSeleccionados - Lista de productos seleccionados para eliminar.
+   * @return {void}
+   * @memberof DatosDelEstablecimientoComponent
+   * @description
+   * Este método filtra los productos seleccionados y actualiza el estado del store
+   * con los productos restantes. Si no hay productos seleccionados, no realiza ninguna acción.
+   * */
+  eliminarScianGrid(): void {
+    if (!this.scianSeleccionados?.length) return;
+  
+    const CLAVES_A_ELIMINAR = this.scianSeleccionados.map(
+      (SCIAN) => SCIAN.claveScian
+    );
+  
+    const DATOS_ACTUALIZADOS = this.scianBodyData.filter(
+      (SCIAN) => !CLAVES_A_ELIMINAR.includes(SCIAN.claveScian)
+    );
+  
+    this.scianBodyData = DATOS_ACTUALIZADOS;
+    this.scianSeleccionados = [];
+  
+    this.tramite260601Store?.setScianTabla?.(DATOS_ACTUALIZADOS);
+  }
+  
 
   /**
    * Se ejecuta al destruir el componente.

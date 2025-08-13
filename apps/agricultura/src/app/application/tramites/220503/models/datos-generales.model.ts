@@ -43,15 +43,15 @@ export interface Movilizacion {
   /** Punto específico donde se realiza la movilización. */
   punto: string;
 }
-
 /**
- * Interfaz para definir la estructura de las filas.
+ * Interfaz que representa una fila de la tabla de requisitos.
  */
-export interface Row {
-  Partida: string;
+
+export interface FilaSolicitudTabla {
+  Partida?: number;
   Tiporequisito: string;
   Requisito: string;
-  Certificado: number;
+  Certificado: string;
   Fraccion: string;
   Descripcion: string;
   Nico: string;

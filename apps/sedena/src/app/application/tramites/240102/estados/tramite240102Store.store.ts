@@ -1,11 +1,11 @@
-import { DatosDelTramiteFormState } from '../../../shared/models/datos-del-tramite.model';
-import { DestinoFinal } from '../../../shared/models/terceros-relacionados.model';
+import {
+  DatosDelTramiteFormState,
+  MercanciaDetalle
+} from '../../../shared/models/datos-del-tramite.model';
+import { DestinoFinal, Proveedor } from '../../../shared/models/terceros-relacionados.model';
+import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { MercanciaDetalle } from '../../../shared/models/datos-del-tramite.model';
 import { PagoDerechosFormState } from '../../../shared/models/pago-de-derechos.model';
-import { Proveedor } from '../../../shared/models/terceros-relacionados.model';
-import { Store } from '@datorama/akita';
-import { StoreConfig } from '@datorama/akita';
 
 /**
  * Interfaz que representa el estado completo del trámite 240102.
@@ -16,6 +16,8 @@ import { StoreConfig } from '@datorama/akita';
  * @property {PagoDerechosFormState} pagoDerechos - Información del formulario de pago de derechos.
  * @property {MercanciaDetalle[]} merccancialTablaDatos - Lista de mercancías registradas.
  * @property {DatosDelTramiteFormState} datosDelTramite - Información general del formulario de datos del trámite.
+ * @property {DestinoFinal | null} [modificarDestinarioDatos] - Datos del destinatario a modificar, si aplica.
+ * @property {Proveedor | null} [modificarProveedorDatos] - Datos del proveedor a modificar, si aplica.
  */
 export interface Tramite240102State {
   tabSeleccionado?: number;

@@ -102,20 +102,20 @@ export class AgregarMercanciaComponent implements OnDestroy{
             this.formularioSolicitud = {
               tipoRequisito: VALOR.tipoRequisito || '',
               requisito: VALOR.requisito || '',
-              numeroCertificado: '',
+              numeroCertificado: VALOR.numeroCertificadoInternacional || '',
               fraccionArancelaria: VALOR.fraccionArancelaria || '',
               descripcionFraccion: VALOR.descripcionFraccion || '',
               nico: VALOR.nico || '',
               descripcionNico: VALOR.descripcionNico || '',
               descripcion: VALOR.descripcion || '',
               cantidadUMT: String(VALOR.cantidadUMT || ''),
-              umt: VALOR.umt || '',
+              umt: VALOR.umt || '1',
               cantidadUMC: String(VALOR.cantidadUMC || ''),
               umc: VALOR.umc || '',
               especie: '',
               uso: VALOR.uso || '',
               paisOrigen: '',
-              paisDeProcedencia: VALOR.paisDeProcedencia || ''
+              paisDeProcedencia: VALOR.paisDeProcedencia || '',
             };
           }
         })
@@ -139,7 +139,7 @@ export class AgregarMercanciaComponent implements OnDestroy{
       nico: valor.formulario.nico || '',
       descripcionNico: valor.formulario.descripcionNico || '',
       descripcion: valor.formulario.descripcion || '',
-      umt: '',
+      umt: '1',
       cantidadUMT: valor.formulario.cantidadUMT || '',
       umc: valor.formulario.umc || '',
       cantidadUMC: valor.formulario.cantidadUMC || '',

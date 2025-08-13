@@ -365,6 +365,7 @@ export class AgregarDestinatarioFinalComponent
         [Validators.required, Validators.maxLength(200)],
       ],
       denominacionRazon: ['', Validators.required],
+      curp: ['', Validators.required],
       primerApellido: ['',
         Validators.required],
       segundoApellido: [''],

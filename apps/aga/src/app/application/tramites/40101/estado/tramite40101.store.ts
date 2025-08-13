@@ -41,7 +41,7 @@ export function createInitialState(): Tramite40101State {
     datosUnidad: {
       vinVehiculo: '',
       tipoDeUnidadArrastre: '',
-      idDeVehiculo: '',
+      idDeVehiculoUnidad: '',
       numeroEconomico: '',
       numeroPlaca: '',
       paisEmisor: '',
@@ -407,7 +407,19 @@ export class Tramite40101Store extends Store<Tramite40101State> {
       },
     }));
   }
-
+  /**
+   * Actualiza el identificador de la unidad de arrastre.
+   * @param idDeVehiculo Nuevo identificador.
+   */
+  public setDatosUnidadIdDeUnidad(idDeVehiculoUnidad: string): void {
+    this.update((state) => ({
+      ...state,
+      datosUnidad: {
+        ...state.datosUnidad,
+        idDeVehiculoUnidad,
+      },
+    }));
+  }
   /**
    * Actualiza el color de la unidad de arrastre.
    * @param colorVehiculo Nuevo color.

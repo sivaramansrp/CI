@@ -3,109 +3,242 @@
     <ng-titulo titulo="Datos del destinatario" />
     <div class="row">
       <div class="col-md-4 mb-3">
-        <label>Nombre(s):</label>
-        <input type="text" class="form-control" formControlName="nombre" (change)="setValoresStore(validacionForm, 'nombre', 'setNombre')" />
+        <label>Nombre(s)*:</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="nombre"
+          maxlength="250"
+        />
+        <div
+          class="mensaje-error"
+          *ngIf="validacionForm.get('nombre')?.errors?.['required'] && validacionForm.get('nombre')?.touched"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
-      <div class="col-md-4 mb-3">
-        <label>Primer apellido:</label>
-        <input type="text" class="form-control" id="primerApellido" formControlName="apellidoPrimer" (click)="onClick()" (change)=" setValoresStore( validacionForm, 'apellidoPrimer', 'setApellidoPrimer' ) " />
-      </div>
-      <div class="col-md-4 mb-3">
-        <label>Segundo apellido:</label>
-        <input type="text" class="form-control" id="segundoApellido" formControlName="apellidoSegundo" (change)=" setValoresStore( validacionForm, 'apellidoSegundo', 'setApellidoSegundo' ) " />
-      </div>
-    </div>
-    <div class="row">
       <div class="col-md-4 mb-3">
         <label>Número de registro fiscal*:</label>
-        <input type="text" class="form-control" id="denominacion" formControlName="numeroFiscal" (change)=" setValoresStore(validacionForm, 'numeroFiscal', 'setNumeroFiscal') " />
-      </div>
-      <div class="col-md-8 mb-3">
-        <label>Razón social:</label>
-        <input type="text" class="form-control" [ngClass]="{ 'gray-class': registroForm.get('validacionForm.apellidoPrimer')?.value !== '' }" id="denominacion" [readonly]=" registroForm.get('validacionForm.apellidoPrimer')?.value !== '' " formControlName="razonSocial" (change)=" setValoresStore(validacionForm, 'razonSocial', 'setRazonSocial') " />
+        <input
+          type="text"
+          class="form-control"
+          id="denominacion"
+          formControlName="numeroFiscal"
+          maxlength="30"
+        />
+        <div
+          class="mensaje-error"
+          *ngIf="validacionForm.get('numeroFiscal')?.errors?.['required'] && validacionForm.get('numeroFiscal')?.touched"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
     </div>
+
     <ng-titulo titulo="Domicilio del destinatario" />
-    <div class="row">
-      <div class="col-md-8 mb-3">
-        <label>Ciudad (población, estado o provincia)*:</label>
-        <input type="text" class="form-control" id="denominacion" formControlName="ciudad" (change)="setValoresStore(validacionForm, 'ciudad', 'setCiudad')" />
-      </div>
-    </div>
+
     <div class="row">
       <div class="col-md-4 mb-3">
         <label>Calle*:</label>
-        <input type="text" class="form-control" id="nombre" formControlName="calle" (change)="setValoresStore(validacionForm, 'calle', 'setCalle')" />
+        <input
+          type="text"
+          class="form-control"
+          id="nombre"
+          maxlength="90"
+          formControlName="calle"
+        />
+        <div
+          class="mensaje-error"
+          *ngIf="validacionForm.get('calle')?.errors?.['required'] && validacionForm.get('calle')?.touched"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
       <div class="col-md-4 mb-3">
         <label>Número y/o letra*:</label>
-        <input type="text" class="form-control" id="primerApellido" formControlName="numeroLetra" (change)=" setValoresStore(validacionForm, 'numeroLetra', 'setNumeroLetra') " />
+        <input
+          type="text"
+          class="form-control"
+          id="primerApellido"
+          maxlength="30"
+          formControlName="numeroLetra"
+        />
+        <div
+          class="mensaje-error"
+          *ngIf="validacionForm.get('numeroLetra')?.errors?.['required'] && validacionForm.get('numeroLetra')?.touched"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
-      <div class="col-md-1 mb-3">
-        <label>Lada:</label>
-        <input type="text" class="form-control" id="segundoApellido" formControlName="lada" (change)="setValoresStore(validacionForm, 'lada', 'setLada')" />
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+        <app-catalogo-select [catalogo]="optionsPaisDestino" [label]="'País Destino'" [required]="true"
+          placeholder="Selecciona un valor" id="paisDestino" formControlName="paisDestino"
+          (change)="setValoresStore(validacionForm, 'paisDestino')" [isDisabled]="soloLectura"></app-catalogo-select>
+        </div>
       </div>
-      <div class="col-md-3 mb-3">
-        <label>Teléfono:</label>
-        <input type="text" class="form-control" id="segundoApellido" formControlName="telefono" (change)="setValoresStore(validacionForm, 'telefono', 'setTelefono')" />
+      <div class="col-md-4 mb-3">
+        <label>Ciudad (población, estado o provincia)*:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="denominacion"
+          formControlName="ciudad"
+          maxlength="50"
+        />
+        <div
+          class="mensaje-error"
+          *ngIf="validacionForm.get('ciudad')?.errors?.['required'] && validacionForm.get('ciudad')?.touched"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-4 mb-3">
-        <label>Fax:</label>
-        <input type="text" class="form-control" id="nombre" formControlName="fax" (change)="setValoresStore(validacionForm, 'fax', 'setFax')" />
-      </div>
-      <div class="col-md-4 mb-3">
         <label>Correo electrónico*:</label>
-        <span class="bi bi-question-circle-fill" title="ejemplo@dominio.com" data-bs-toggle="tooltip"></span>
-        <input type="text" class="form-control" id="primerApellido" formControlName="correoElectronico" (change)=" setValoresStore( validacionForm, 'correoElectronico', 'setCorreoElectronico' ) " />
+        <span
+          class="bi bi-question-circle-fill"
+          title="ejemplo@dominio.com"
+          data-bs-toggle="tooltip"
+        ></span>
+        <input
+          type="text"
+          class="form-control"
+          id="primerApellido"
+          maxlength="70"
+          formControlName="correoElectronico"
+        />
+        <div
+          class="mensaje-error"
+          *ngIf="validacionForm.get('correoElectronico')?.errors?.['required'] && validacionForm.get('correoElectronico')?.touched"
+        >
+          Este campo es obligatorio.
+        </div>
+      </div>
+      <div class="col-md-1 mb-3">
+        <label>Lada:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="segundoApellido"
+          formControlName="lada"
+          maxlength="5"
+        />
+      </div>
+      <div class="col-md-3 mb-3">
+        <label>Teléfono:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="segundoApellido"
+          maxlength="20"
+          formControlName="telefono"
+        />
       </div>
     </div>
     <ng-titulo titulo="Datos del representante legal del exportador" />
     <div class="row">
       <div class="col-md-8 mb-3">
         <label>Lugar*:</label>
-        <input type="text" class="form-control" id="denominacion" formControlName="ciudad" (change)="setValoresStore(validacionForm, 'ciudad', 'setCiudad')" />
+        <input
+          type="text"
+          class="form-control"
+          id="denominacion"
+          maxlength="70"
+          formControlName="ciudad"
+        />
       </div>
     </div>
     <div class="row">
       <div class="col-md-8 mb-3">
         <label>Nombre del representante legal del exportador*:</label>
-        <input type="text" class="form-control" id="denominacion" formControlName="ciudad" (change)="setValoresStore(validacionForm, 'ciudad', 'setCiudad')" />
+        <input
+          type="text"
+          class="form-control"
+          id="denominacion"
+          maxlength="70"
+          formControlName="ciudad"
+        />
       </div>
     </div>
     <div class="row">
       <div class="col-md-4 mb-3">
         <label>Empresa*:</label>
-        <input type="text" class="form-control" id="nombre" formControlName="calle" (change)="setValoresStore(validacionForm, 'calle', 'setCalle')" />
+        <input
+          type="text"
+          class="form-control"
+          id="nombre"
+          maxlength="90"
+          formControlName="calle"
+        />
       </div>
       <div class="col-md-4 mb-3">
         <label>Cargo*:</label>
-        <input type="text" class="form-control" id="primerApellido" formControlName="numeroLetra" (change)=" setValoresStore(validacionForm, 'numeroLetra', 'setNumeroLetra') " />
+        <input
+          type="text"
+          class="form-control"
+          maxlength="70"
+          id="primerApellido"
+          formControlName="numeroLetra"
+        />
       </div>
       <div class="col-md-1 mb-3">
         <label>Lada:</label>
-        <input type="text" class="form-control" id="segundoApellido" formControlName="lada" (change)="setValoresStore(validacionForm, 'lada', 'setLada')" />
+        <input
+          type="text"
+          class="form-control"
+          id="segundoApellido"
+          maxlength="5"
+          formControlName="lada"
+        />
       </div>
       <div class="col-md-3 mb-3">
         <label>Teléfono*:</label>
-        <input type="text" class="form-control" id="segundoApellido" formControlName="telefono" (change)="setValoresStore(validacionForm, 'telefono', 'setTelefono')" />
+        <input
+          type="text"
+          maxlength="20"
+          class="form-control"
+          id="segundoApellido"
+          formControlName="telefono"
+        />
       </div>
     </div>
     <div class="row">
       <div class="col-md-4 mb-3">
         <label>Fax*:</label>
-        <input type="text" class="form-control" id="nombre" formControlName="fax" (change)="setValoresStore(validacionForm, 'fax', 'setFax')" />
+        <input
+          type="text"
+          class="form-control"
+          id="nombre"
+          maxlength="20"
+          formControlName="fax"
+        />
       </div>
       <div class="col-md-4 mb-3">
         <label>Correo electrónico*:</label>
-        <span class="bi bi-question-circle-fill" title="ejemplo@dominio.com" data-bs-toggle="tooltip"></span>
-        <input type="text" class="form-control" id="primerApellido" formControlName="correoElectronico" (change)=" setValoresStore( validacionForm, 'correoElectronico', 'setCorreoElectronico' ) " />
+        <span
+          class="bi bi-question-circle-fill"
+          title="ejemplo@dominio.com"
+          data-bs-toggle="tooltip"
+        ></span>
+        <input
+          type="text"
+          class="form-control"
+          id="primerApellido"
+          maxlength="70"
+          formControlName="correoElectronico"
+        />
       </div>
     </div>
     <div class="mt-5">
       <div class="mt-5">
-        <ng-alert [CONTENIDO]="TEXTOS.ADJUNTAR" [CUSTOMECLASS]="infoAlert"></ng-alert>
+        <ng-alert
+          [CONTENIDO]="TEXTOS.ADJUNTAR"
+          [CUSTOMECLASS]="infoAlert"
+        ></ng-alert>
       </div>
     </div>
   </ng-container>

@@ -26,6 +26,37 @@ export const SUBFABRICANTE_DISPONIBLES_PLANTAS_TABLA_CONFIGURACION = [
     clave: (ele: PlantasSubfabricante): string => ele.colonia, // Función que devuelve el valor de la columna para cada fila
     orden: 5, // Orden de la columna en la tabla
   },
+  {
+    encabezado: 'Delegación / Municipio',
+    clave: (ele: PlantasSubfabricante): string => ele.municipio,
+    orden: 6,
+  },
+  {
+    encabezado: 'Entidad Federativa',
+    clave: (ele: PlantasSubfabricante): string => ele.entidadFederativa,
+    orden: 7,
+  },
+  {
+    encabezado: 'País',
+    clave: (ele: PlantasSubfabricante): string => ele.pais, // Placeholder, no action defined
+    orden: 8,
+  },
+  {
+    encabezado: 'Registro federal de contribuyentes',
+    clave: (ele: PlantasSubfabricante): string => ele.rfc,
+    orden: 9,
+  },
+
+  {
+    encabezado: 'Domicilio fiscal del solicitante',
+    clave: (ele: PlantasSubfabricante): string => ele.domicilioFiscal,
+    orden: 10,
+  },
+  {
+    encabezado: 'Razón social',
+    clave: (ele: PlantasSubfabricante): string => ele.razonSocial,
+    orden: 11,
+  },
 ];
 
 export const SUBFABRICANTE_SELECCIONADAS_PLANTAS_TABLA_CONFIGURACION = [
@@ -53,5 +84,36 @@ export const SUBFABRICANTE_SELECCIONADAS_PLANTAS_TABLA_CONFIGURACION = [
     encabezado: 'Localidad', // Título de la columna
     clave: (ele: PlantasSubfabricante): string => ele.colonia, // Función que devuelve el valor de la columna para cada fila
     orden: 5, // Orden de la columna en la tabla
+  },
+  {
+    encabezado: 'Delegación / Municipio',
+    clave: (ele: PlantasSubfabricante): string => ele.municipio,
+    orden: 6,
+  },
+  {
+    encabezado: 'Entidad Federativa',
+    clave: (ele: PlantasSubfabricante): string => ele.entidadFederativa,
+    orden: 7,
+  },
+  {
+    encabezado: 'País',
+    clave: (ele: PlantasSubfabricante): string => ele.pais, // Placeholder, no action defined
+    orden: 8,
+  },
+  {
+    encabezado: 'Registro federal de contribuyentes',
+    clave: (ele: PlantasSubfabricante): string => ele.rfc,
+    orden: 9,
+  },
+
+  {
+    encabezado: 'Domicilio fiscal del solicitante',
+    clave: (ele: PlantasSubfabricante): string => ele.domicilioFiscal,
+    orden: 10,
+  },
+  {
+    encabezado: 'Razón social',
+    clave: (ele: PlantasSubfabricante): string => ele.razonSocial,
+    orden: 11,
   },
 ];

@@ -61,8 +61,8 @@ export const FECHA_FINAL = {
  * Define las propiedades de la fecha de factura, como el nombre de la etiqueta, si es requerida y si está habilitada.
  */
 export const FECHA_FACTURA = {
-  labelNombre: 'Fecha de factura',
-  required: true,
+  labelNombre: 'Fecha de factura*:',
+  required: false,
   habilitado: true,
 };
 
@@ -201,3 +201,19 @@ export const SLECCIONADAS_ENCABEZADOS:ConfiguracionColumna<SeleccionadasTabla>[]
           orden: 6,
         },
       ];
+
+/**
+ * Constante que define el mensaje de error para validación de formularios.
+ * 
+ * Este mensaje se utiliza para informar al usuario que faltan campos por capturar
+ * antes de poder continuar al siguiente paso del trámite.
+ */
+export const ERROR_FORMA_ALERT = `
+<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+      <strong>¡Error de registro! </strong> Faltan campos por capturar
+    </div>
+  </div>
+</div>
+`;

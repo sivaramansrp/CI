@@ -26,6 +26,8 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
  * @command Este decorador `@ViewChild` permite acceder al componente hijo para interactuar con sus métodos y propiedades.
  */
   @ViewChild('solicitanteRef') solicitante!: SolicitanteComponent;
+  @ViewChild('solicitudDatosRef') solicitudDatos!: SolicitudDatosComponent;
+  @ViewChild('revisionDocumentalRef') revisionDocumental!: RevisionDocumentalComponent;
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
 
@@ -64,7 +66,6 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    */
 
   ngOnInit(): void {
-      this.guardarDatosFormulario();
     /**
      * Se suscribe al estado de la consulta utilizando un observable.
      * Al recibir un nuevo estado, lo asigna a la propiedad `consultaState`.
@@ -73,7 +74,6 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
      * se llama al método `guardarDatosFormulario()`.
      * De lo contrario, se establece `esDatosRespuesta` como verdadero.
      */
-
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -125,6 +125,22 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
     } else {
       isValid = false;
     }
+    if(this.solicitudDatos){
+      if(!this.solicitudDatos.validarFormularios()){
+        isValid = false;
+      }
+    }
+else{
+  isValid=false;
+}
+if(this.revisionDocumental){
+  if(!this.revisionDocumental.validarFormularios()){
+    isValid = false;
+  }
+}
+else{
+  isValid = false;
+}
 
     return isValid;
   }

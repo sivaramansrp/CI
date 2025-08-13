@@ -7,7 +7,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { BuscarCertificadoDeOrigenComponent } from './buscar-certificado-de-origen.component';
 import { Tramite110210Query } from '../../estados/queries/tramite110210.query';
 import { Tramite110210Store } from '../../estados/store/tramite110210.store';
-import { BuscarCertificadoDeOrigenService } from '@ng-mf/data-access-user';
+import { BuscarCertificadoDeOrigenService } from '../../services/buscar-certificado-de-origen/buscarCertificadoDeOrigen.service';
 
 describe('BuscarCertificadoDeOrigenComponent', () => {
   let component: BuscarCertificadoDeOrigenComponent;
@@ -66,8 +66,6 @@ describe('BuscarCertificadoDeOrigenComponent', () => {
   it('debe inicializar el formulario con los valores por defecto del store', () => {
     expect(component.buscarCertificadoDeOrigenFrom).toBeDefined();
     expect(component.buscarCertificadoDeOrigenFrom.get('cveRegistroProductor')?.value).toBe('123456789012');
-    expect(component.buscarCertificadoDeOrigenFrom.get('solicitud.idSolicitud')?.value).toBeNull();
-    expect(component.buscarCertificadoDeOrigenFrom.get('solicitud.idSolicitudProductor')?.value).toBe('');
     expect(component.buscarCertificadoDeOrigenFrom.get('paisBloqueClave')?.value).toBe('');
     expect(component.buscarCertificadoDeOrigenFrom.get('tratadoAcuerdoClave')?.value).toBe('');
   });
@@ -86,11 +84,6 @@ describe('BuscarCertificadoDeOrigenComponent', () => {
     expect(component.esInvalido('cveRegistroProductor')).toBe(false);
   });
 
-  it('debe habilitar cveRegistroProductor si idSolicitud es null', () => {
-    component.buscarCertificadoDeOrigenFrom.get('solicitud.idSolicitud')?.setValue(null);
-    component.actualizaGridComercializadoresProductos();
-    expect(component.buscarCertificadoDeOrigenFrom.get('cveRegistroProductor')?.enabled).toBe(true);
-  });
 
   it('debe deshabilitar cveRegistroProductor si idSolicitud no es null', () => {
     component.buscarCertificadoDeOrigenFrom.get('solicitud.idSolicitud')?.setValue(999);

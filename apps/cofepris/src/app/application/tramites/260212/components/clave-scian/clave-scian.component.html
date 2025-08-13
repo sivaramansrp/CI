@@ -14,7 +14,7 @@
                     <div class="row">
                         <div class="col-md-8">
                             <app-catalogo-select [catalogo]="clave" [label]="'Descripción del S.C.I.A.N'"
-                                [required]="true" name="descripcion" formControlName="descripcion">
+                                [required]="true" name="descripcion" formControlName="descripcion" [isDisabled]="claveForm.get('descripcion')?.value ? true : false">
                             </app-catalogo-select>
                         </div>
                     </div>

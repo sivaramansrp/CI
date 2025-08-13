@@ -183,7 +183,10 @@ eliminarMercanciaSeleccionados() :void{
   this.mercanciasTablaDatos = this.mercanciasTablaDatos.filter(
     (row) => !this.selectedRowsEvent.includes(row)
   );
+  // Reinicia el arreglo de eventos de filas seleccionadas, dejándolo vacío.
   this.selectedRowsEvent = [];
+  // Indica que ningún elemento ha sido seleccionado
+  this.noSeleccionado = true;
 }
   /**
    * Constructor del componente.
@@ -360,9 +363,9 @@ modificarMercancia():void {
       r => r.numeroRegistro === ROW.numeroRegistro // Use a unique property
     );
     this.formMercancias.patchValue(ROW);
+    // Indica que ningún elemento ha sido seleccionado
+     this.noSeleccionado = true;
 
-    // Optionally, open the modal programmatically if not using data-bs-toggle
-    // document.getElementById('modalAddAgentMercancias')?.click();
   }
 }
 /**
@@ -377,7 +380,7 @@ modificarMercancia():void {
       descripcion_Scian: this.estado.find(item => item.id === Number(this.formAgente.value.claveDescripcionModal))?.descripcion ?? '',
     };
 
- this.nicoTablaDatos.push(NEWVA_FILA);
+this.nicoTablaDatos = [...this.nicoTablaDatos, NEWVA_FILA];
     this.formAgente.reset();
   } 
 }
@@ -414,6 +417,7 @@ agregarFilaMercancia():void {
       UPDATED[this.editMercanciaIndex] = MERCANCIA_DATA;
       this.mercanciasTablaDatos = UPDATED;
       this.editMercanciaIndex = null;
+      // Reinicia la lista de filas seleccionadas, dejándola vacía.
       this.selectedRowsEvent = [];
     } else {
       this.mercanciasTablaDatos = [...this.mercanciasTablaDatos, MERCANCIA_DATA];

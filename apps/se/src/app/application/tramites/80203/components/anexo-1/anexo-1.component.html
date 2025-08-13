@@ -9,8 +9,8 @@
           <input type="text" class="form-control" id="permiso-immex" formControlName="permisoImmexDatos" placeholder="" />
         </div>
         <div class="col-12 container text-end mt-5">
-          <button class="btn btn-default me-2">Eliminar</button>
-          <button class="btn btn-primary" (click)="showTableExportacion()">Agregar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+          <button class="btn btn-primary" (click)="showTableExportacion()" [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
       </div>
       <div class="row  mt-5" *ngIf="showTableExport">
@@ -112,8 +112,8 @@
           <input type="text" class="form-control" id="permisoImmexDatos" name="permisoImmexDatosx" formControlName="permisoImmexDatos" />
         </div>
         <div class="col-12 container text-end mt-5">
-          <button class="btn btn-default me-2">Eliminar</button>
-          <button class="btn btn-primary" (click)="showTableImportacion()">Agregar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+          <button class="btn btn-primary" (click)="showTableImportacion()" [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
       </div>
       <div class="row  mt-5" *ngIf="showTableImport">

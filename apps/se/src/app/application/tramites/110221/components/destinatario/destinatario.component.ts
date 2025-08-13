@@ -1,12 +1,26 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, ConsultaioState, PAGO_DE_DERECHOS, REGEX_SOLO_DIGITOS, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import {
+  AlertComponent,
+  Catalogo,
+  ConsultaioQuery,
+  ConsultaioState,
+  PAGO_DE_DERECHOS,
+  REGEX_SOLO_DIGITOS,
+  TituloComponent,
+  ValidacionesFormularioService,
+} from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { Tramite110221State, Tramite110221Store } from '../../estados/tramite110221.store';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
-import { RegistroService } from '../../services/registro.service';
-import { Solicitud110221State } from '../../../../estados/tramites/Tramite110221.store';
-import { Tramite110221Query } from '../../../../estados/queries/Tramite110221.query';
-import { Tramite110221Store } from '../../../../estados/tramites/Tramite110221.store';
+import { Tramite110221Query } from '../../estados/tramite110221.query';
+import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
 
 /**
  * Componente que representa el formulario de destinatario en el trámite.
@@ -19,7 +33,7 @@ import { Tramite110221Store } from '../../../../estados/tramites/Tramite110221.s
     CommonModule,
     TituloComponent,
     CatalogoSelectComponent,
-    ReactiveFormsModule,
+    ReactiveFormsModule
   ],
   templateUrl: './destinatario.component.html',
   styleUrl: './destinatario.component.css',
@@ -44,7 +58,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   /**
    * Estado actual de la solicitud.
    */
-  public solicitudState!: Solicitud110221State;
+  public solicitudState!: Tramite110221State;
 
   /**
    * Notificador para destruir observables al destruir el componente.
@@ -66,7 +80,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * Contiene una lista de objetos del catálogo obtenidos desde el servicio.
    * Estas opciones se utilizan para poblar los selectores en el formulario.
    */
-  options!: Catalogo[];
+  optionsPaisDestino!: Catalogo[];
 
   /**
    * Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
@@ -78,7 +92,11 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * @default false
    */
   soloLectura: boolean = false;
-
+  /**
+   * Catálogo de países de destino.
+   * @type {Catalogo[]}
+   */
+  
   /**
    * Constructor del componente.
    * @param registroService Servicio para obtener datos de catálogos.
@@ -89,7 +107,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * @param consultaioQuery Consulta para obtener datos del estado de consulta.
    */
   constructor(
-    private registroService: RegistroService,
+    private ValidarInicialmenteCertificadoService: ValidarInicialmenteCertificadoService,
     public fb: FormBuilder,
     private store: Tramite110221Store,
     private query: Tramite110221Query,
@@ -120,8 +138,6 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.getPaisDestino();
-    this.getTransporte();
-
     this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -147,24 +163,12 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * Obtiene el catálogo de países de destino desde el servicio.
    */
   getPaisDestino(): void {
-    this.registroService
-      .getPaisDestino().pipe(takeUntil(this.destroyNotifier$))
+    this.ValidarInicialmenteCertificadoService
+      .getPaisDestino()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
-          this.options = resp.data as Catalogo[];
-        }
-      });
-  }
-
-  /**
-   * Obtiene el catálogo de medios de transporte desde el servicio.
-   */
-  getTransporte(): void {
-    this.registroService
-      .getTransporte().pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((resp) => {
-        if (resp.code === 200) {
-          this.options = resp.data as Catalogo[];
+          this.optionsPaisDestino = resp.data as Catalogo[];
         }
       });
   }
@@ -189,25 +193,21 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Establece valores en el estado de la tienda.
-   * @param form Formulario reactivo.
-   * @param campo Nombre del campo del formulario.
-   * @param metodoNombre Método de la tienda para actualizar el estado.
-   */
-  setValoresStore(
-    form: FormGroup,
-    campo: string,
-    metodoNombre: keyof Tramite110221Store
-  ): void {
-    const VALOR = form.get(campo)?.value;
-    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
-  }
-
-  /**
    * Obtiene el formulario de validación.
    */
   get validacionForm(): FormGroup {
     return this.registroForm.get('validacionForm') as FormGroup;
+  }
+
+  /**
+   * Maneja el cambio de país de destino en el formulario.
+   * @param {Catalogo} event - El catálogo seleccionado.
+   * @returns {void}
+   */
+  cambioPaisDestino(event: Catalogo): void {
+    this.registroForm.patchValue({
+      paisDestino: event.id,
+    });
   }
 
   /**
@@ -233,6 +233,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
         ciudad: [this.solicitudState?.ciudad, [Validators.required]],
         calle: [this.solicitudState?.calle, [Validators.required]],
         numeroLetra: [this.solicitudState?.numeroLetra, [Validators.required]],
+        paisDestino: [this.solicitudState?.paisDestino, Validators.required],
         lada: [this.solicitudState?.lada, [Validators.required]],
         telefono: [
           this.solicitudState?.telefono,
@@ -245,7 +246,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
         correoElectronico: [
           this.solicitudState?.correoElectronico,
           [Validators.required, Validators.email],
-        ],
+        ]
       }),
     });
     this.inicializarEstadoFormulario();
@@ -259,6 +260,23 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
       this.registroForm?.disable();
     } else {
       this.registroForm?.enable();
+    }
+  }
+
+  /**
+   * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
+   * @param form - El formulario reactivo.
+   * @param campo - El nombre del campo en el formulario.
+   */
+  setValoresStore(form: FormGroup | null, campo: string): void {
+    if (!form) {
+      return;
+    }
+    const CONTROL = form.get(campo);
+    if (CONTROL && CONTROL.value !== null && CONTROL.value !== undefined) {
+      this.store.actualizarEstado({
+        [campo]: CONTROL.value,
+      });
     }
   }
 

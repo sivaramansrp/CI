@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { InputFecha } from '@ng-mf/data-access-user';
 import { ProgramasReporte } from '../../models/programas-reporte.model';
 import { ReporteFechas } from '../../models/programas-reporte.model';
 import { Solicitud150101Query } from '../../estados/solicitud150101.query';
@@ -19,18 +20,35 @@ import { takeUntil } from 'rxjs';
  * @component
  * @name ProgramasReporteAnnualComponent
  * @description
- * Este componente se utiliza para gestionar el reporte anual de programas. 
+ * Este componente se utiliza para gestionar el reporte anual de programas.
  * Proporciona una interfaz para visualizar y seleccionar programas, así como para administrar las fechas del reporte anual.
- * 
+ *
  * @selector app-programas-reporte-annual
  * @templateUrl ./programas-reporte-annual.component.html
  * @styleUrl ./programas-reporte-annual.component.scss
- * 
+ *
  * @example
  * <app-programas-reporte-annual></app-programas-reporte-annual>
- * 
+ *
  * @implements OnInit, OnDestroy
  */
+
+/**
+ * @constant FECHA_INDICO
+ * @description
+ * Constante que define las propiedades de la fecha de pago en el modelo de trámites.
+ */
+const FECHA_INCIO = {
+  labelNombre: 'Inicio:',
+  required: false,
+  habilitado: true,
+};
+const FECHA_FIN = {
+  labelNombre: 'Fin:',
+  required: false,
+  habilitado: true,
+};
+
 @Component({
   selector: 'app-programas-reporte-anual',
   templateUrl: './programas-reporte-anual.component.html',
@@ -51,11 +69,28 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
     minMode: 'month', // Solo permite seleccionar mes y año
   };
 
+  /** 
+   * 
+   *  @property {InputFecha} fechaIncio
+   *  @description
+   *  Esta propiedad define la configuración de la fecha de inicio del reporte anual.
+   */
+  public fechaIncio: InputFecha = FECHA_INCIO;
+
+  /** 
+   * @property {InputFecha} fechaFin
+   * @description 
+   * Esta propiedad define la configuración de la fecha de fin del reporte anual.
+   * Incluye el nombre de la etiqueta, si es requerida y si está habilitada.
+   */
+
+  public fechaFin: InputFecha = FECHA_FIN;
+
   /**
-     * @description Evento que se emite al seleccionar una fila de la tabla.
-     * Emite un valor booleano para indicar si la fila ha sido seleccionada.
-     * @type {EventEmitter<boolean>}
-     */
+   * @description Evento que se emite al seleccionar una fila de la tabla.
+   * Emite un valor booleano para indicar si la fila ha sido seleccionada.
+   * @type {EventEmitter<boolean>}
+   */
   @Output() filaDeInformeSeleccionada = new EventEmitter<boolean>();
 
   /**
@@ -141,7 +176,7 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
         })
       )
       .subscribe();
-      
+
     this.solicitud150101Query.seleccionarSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -155,8 +190,18 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
     this.obtenerProgramasReporte();
 
     this.periodoReporteAnual = this.fb.group({
-      reporteAnualFechaInicio: [{ value: this.solicitud150101State?.reporteAnualFechaInicio, disabled: true }],
-      reporteAnualFechaFin: [{ value: this.solicitud150101State?.reporteAnualFechaFin, disabled: true }],
+      reporteAnualFechaInicio: [
+        {
+          value: this.solicitud150101State?.reporteAnualFechaInicio,
+          disabled: true,
+        },
+      ],
+      reporteAnualFechaFin: [
+        {
+          value: this.solicitud150101State?.reporteAnualFechaFin,
+          disabled: true,
+        },
+      ],
       folioPrograma: [
         { value: this.solicitud150101State?.folioPrograma, disabled: true },
       ],
@@ -197,10 +242,26 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
       .pipe(takeUntil(this.destroyed$))
       .subscribe({
         next: (respuesta: ReporteFechas) => {
-          this.solicitud150101Store.setReporteAnualFechaInicio(respuesta.reporteAnualFechaInicio);
-          this.solicitud150101Store.setReporteAnualFechaFin(respuesta.reporteAnualFechaFin);
+          this.solicitud150101Store.setReporteAnualFechaInicio(
+            respuesta.reporteAnualFechaInicio
+          );
+          this.solicitud150101Store.setReporteAnualFechaFin(
+            respuesta.reporteAnualFechaFin
+          );
         },
       });
+  }
+  onFechaInicio(fecha: string): void {
+    if (fecha) {
+      this.periodoReporteAnual.patchValue({ reporteAnualFechaInicio: fecha });
+      this.solicitud150101Store.setReporteAnualFechaInicio(fecha);
+    }
+  }
+  onFechaFin(fecha: string): void {
+    if (fecha) {
+      this.periodoReporteAnual.patchValue({ reporteAnualFechaFin: fecha });
+      this.solicitud150101Store.setReporteAnualFechaFin(fecha);
+    }
   }
 
   /**
@@ -212,11 +273,14 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
    * @returns {void}
    */
   obtenerProgramasReporte(): void {
-    this.solicitudService.obtenerProgramasReporte().pipe(takeUntil(this.destroyed$)).subscribe({
-      next: (respuesta: ProgramasReporte[]) => {
-        this.solicitudDatos = respuesta;
-      },
-    });
+    this.solicitudService
+      .obtenerProgramasReporte()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (respuesta: ProgramasReporte[]) => {
+          this.solicitudDatos = respuesta;
+        },
+      });
   }
 
   /**
@@ -253,16 +317,22 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
   }
 
   /**
-    * Establece los valores en el store de tramite5701.
-    *
-    * @param {FormGroup} form - El formulario del cual se obtiene el valor.
-    * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
-    * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
-    * @returns {void}
-    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Solicitud150101Store): void {
+   * Establece los valores en el store de tramite5701.
+   *
+   * @param {FormGroup} form - El formulario del cual se obtiene el valor.
+   * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
+   * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
+   * @returns {void}
+   */
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Solicitud150101Store
+  ): void {
     const VALOR = form.get(campo)?.value;
-    (this.solicitud150101Store[metodoNombre] as (value: unknown) => void)(VALOR);
+    (this.solicitud150101Store[metodoNombre] as (value: unknown) => void)(
+      VALOR
+    );
   }
 
   /**

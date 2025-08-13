@@ -7,7 +7,7 @@
       </li>
       <li [ngClass]="indice === 2 ? 'active' : ''">
         <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)"
-          (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">Solicitud</a>
+          (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">{{ consultaState.parameter === "READ_PROCEDURE" ? 'Renovación' : 'Solicitud' }}</a>
       </li>
     </ul>
     <ng-container> @switch (indice) { @case (1) { <solicitante [tabindex]="1"></solicitante> } @case (2) {

@@ -1,5 +1,5 @@
 <div class="container">
-    <ng-titulo titulo="Histórico fabricantes" />
+    <ng-titulo titulo="Histórico productores" />
     <form [formGroup]="formulario">
         <div class="row">
             <div class="col-md-12">
@@ -94,7 +94,10 @@
                 <button type="button" class="btn btn-default ms-3" data-bs-dismiss="modal" #closeModal>Cancelar</button>
                 <button type="button" class="btn btn-primary" (click)="agregarExportador()">Agregar</button>
             </div>
-        </div>
+            <div>
+                <p class="text-start ms-5">* Campos obligatorios</p>
+            </div>       
+          </div>
     </div>
 </div>
 @if (nuevaNotificacion) {

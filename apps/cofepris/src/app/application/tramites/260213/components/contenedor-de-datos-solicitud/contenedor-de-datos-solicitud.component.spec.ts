@@ -94,6 +94,76 @@ describe('ContenedorDeDatosSolicitudComponent', () => {
     );
   });
 
+  it('datasolicituActualizar should call updateDatosSolicitudFormState on the store', () => {
+    const mockEvent: DatosSolicitudFormState = {
+      rfcSanitario: 'RFC123',
+      denominacionRazon: 'Empresa S.A.',
+      correoElectronico: 'test@correo.com',
+      codigoPostal: '12345',
+      estado: 'Estado',
+      municipioAlcaldia: 'Municipio',
+      localidad: 'Localidad',
+      colonia: 'Colonia',
+      calle: 'Calle 123',
+      lada: '55',
+      telefono: '1234567890',
+      aviso: 'Aviso',
+      licenciaSanitaria: 'Lic123',
+      regimen: 'Regimen',
+      adunasDeEntradas: 'Aduana',
+      aeropuerto: true,
+      publico: 'Público',
+      representanteRfc: 'RFCREP',
+      representanteNombre: 'Juan',
+      apellidoPaterno: 'Pérez',
+      apellidoMaterno: 'Gómez',
+    };
+    component.datasolicituActualizar(mockEvent);
+    expect(mockTramite260213Store.updateDatosSolicitudFormState).toHaveBeenCalledWith(mockEvent);
+  });
+
+  it('datosDeTablaSeleccionados should update store with correct data', () => {
+    const mockEvent: DatosDeTablaSeleccionados = {
+      opcionSeleccionados: [{ fechaCreacion: '2024-01-01', mercancia: 'Mercancia', cantidad: '10', proveedor: 'Proveedor' }],
+      scianSeleccionados: [{ descripcion: 'Desc', clave: 'Clave' }],
+      mercanciasSeleccionados: [{
+        clasificacionProducto: 'Clasificacion',
+        especificarClasificacionProducto: 'Especificar',
+        denominacionEspecificaProducto: 'Denominacion',
+        denominacionDistintiva: 'Distintiva',
+        denominacionComun: 'Comun',
+        formaFarmaceutica: 'Forma',
+        estadoFisico: 'Fisico',
+        fraccionArancelaria: 'Fraccion',
+        descripcionFraccion: 'Descripcion',
+        unidadMedidaComercializacion: 'UMC',
+        cantidadUMC: '5',
+        unidadMedidaTarifa: 'UMT',
+        cantidadUMT: '3',
+        presentacion: 'Presentacion',
+        numeroRegistroSanitario: 'Reg123',
+        paisOrigen: 'Origen',
+        paisProcedencia: 'Procedencia',
+        tipoProducto: 'Tipo',
+        usoEspecifico: 'Uso',
+      }],
+      opcionesColapsableState: false
+    };
+    component.datosDeTablaSeleccionados(mockEvent);
+    expect(mockTramite260213Store.update).toHaveBeenCalledWith(expect.any(Function));
+  });
+
+  it('should set formularioDeshabilitado input value', () => {
+    component.formularioDeshabilitado = true;
+    expect(component.formularioDeshabilitado).toBe(true);
+    component.formularioDeshabilitado = false;
+    expect(component.formularioDeshabilitado).toBe(false);
+  });
+
+  it('should have idProcedimiento defined', () => {
+    expect(component.idProcedimiento).toBeDefined();
+  });
+
   it('mercanciasSeleccionado should call updateTablaMercanciasConfigDatos on the store', () => {
     const mockEvent: TablaMercanciasDatos[] = [
       {

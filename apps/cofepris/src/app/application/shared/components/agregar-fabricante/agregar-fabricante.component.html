@@ -5,7 +5,7 @@
     <h4>Datos generales</h4>
     <div class="row">
       <div class="col-md-6">
-        <label class="form-label">Terceros nacionalidad * :</label>
+        <label class="form-label">Terceros nacionalidad*:</label>
         <div class="form-check">
           <input
             type="radio"
@@ -28,7 +28,7 @@
         </div>
       </div>
       <div class="col-md-6">
-        <label class="form-label">Tipo persona * :</label>
+        <label class="form-label">Tipo persona*:</label>
         <div class="form-check">
           <input
             type="radio"
@@ -39,10 +39,9 @@
           />
           Física
           <span
-          class="bi bi-question-circle-fill"
-          title="Una persona física es entendida como toda persona con una actividad específica"
-          data-bs-toggle="tooltip"
-        ></span>
+            tooltip="Una persona física es entendida como toda persona con una actividad específica"
+            ><i class="bi bi-question-circle-fill"></i
+          ></span>
         </div>
         <div class="form-check">
           <input
@@ -54,10 +53,9 @@
           />
           Moral
           <span
-          class="bi bi-question-circle-fill"
-          title="Una persona moral es entendida como una empresa con una actividad específica"
-          data-bs-toggle="tooltip"
-        ></span>
+            tooltip="Una persona moral es entendida como una empresa con una actividad específica"
+            ><i class="bi bi-question-circle-fill"></i
+          ></span>
         </div>
       </div>
     </div>
@@ -65,28 +63,43 @@
     @if(agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr){
     <div class="row mt-3">
       <div class="col-md-4">
-        <label class="form-label">R.F.C. * : </label>
-        <span
-        class="bi bi-question-circle-fill mx-1"
-        title="Registro Federal de Contribuyente"
-        data-bs-toggle="tooltip"
-      ></span>
-        <input type="text" class="form-control" [maxlength]="15" formControlName="rfc" [ngClass]="esInvalido('rfc') ? 'required' : ''"/>
+        <label class="form-label">R.F.C.*: </label>
+        <span tooltip="Registro Federal de Contribuyente"
+          ><i class="bi bi-question-circle-fill"></i
+        ></span>
+        <input
+          type="text"
+          class="form-control"
+          [maxlength]="13"
+          formControlName="rfc"
+          [ngClass]="esInvalido('rfc') ? 'required' : ''"
+        />
         <div *ngIf="esInvalido('rfc')" class="text-danger">
-          <small *ngIf="agregarFabricanteForm.controls['rfc'].errors?.['required']">
+          <small
+            *ngIf="agregarFabricanteForm.controls['rfc'].errors?.['required'] && agregarFabricanteForm.controls['rfc']?.touched"
+          >
             Este campo es obligatorio
           </small>
-          <small *ngIf="agregarFabricanteForm.controls['rfc'].errors?.['pattern']">
+          <small
+            *ngIf="agregarFabricanteForm.controls['rfc'].errors?.['pattern'] && agregarFabricanteForm.controls['rfc']?.touched"
+          >
             Existen datos incorrectos que no cumplen con el formato esperado
           </small>
         </div>
       </div>
       @if (!estaOculto) {
       <div class="col-md-4">
-        <label class="form-label">C.U.R.P. * :</label>
-        <input type="text" class="form-control" formControlName="curp" [ngClass]="esInvalido('curp') ? 'required' : ''" />
+        <label class="form-label">C.U.R.P.*:</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="curp"
+          [ngClass]="esInvalido('curp') ? 'required' : ''"
+        />
         <div *ngIf="esInvalido('curp')" class="text-danger">
-          <small *ngIf="agregarFabricanteForm.controls['curp'].errors?.['required']">
+          <small
+            *ngIf="agregarFabricanteForm.controls['curp'].errors?.['required']"
+          >
             Este campo es obligatorio
           </small>
         </div>
@@ -100,19 +113,29 @@
     <div class="row mt-3">
       <h4 class="mt-5">Datos personales</h4>
       <div class="col-md-4">
-        <label class="form-label">Nombre(s) * :</label>
-        <input type="text" [maxlength]="200" class="form-control" formControlName="nombres" [ngClass]="esInvalido('nombres') ? 'required' : ''" />
+        <label class="form-label">Nombre(s)*:</label>
+        <input
+          type="text"
+          [maxlength]="200"
+          class="form-control"
+          formControlName="nombres"
+          [ngClass]="esInvalido('nombres') ? 'required' : ''"
+        />
         <div *ngIf="esInvalido('nombres')" class="text-danger">
-          <small *ngIf="agregarFabricanteForm.controls['nombres'].errors?.['required']">
+          <small
+            *ngIf="agregarFabricanteForm.controls['nombres'].errors?.['required']"
+          >
             Este campo es obligatorio
           </small>
-          <small *ngIf="agregarFabricanteForm.controls['nombres'].errors?.['pattern']">
+          <small
+            *ngIf="agregarFabricanteForm.controls['nombres'].errors?.['pattern']"
+          >
             Existen datos incorrectos que no cumplen con el formato esperado
           </small>
         </div>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Primer apellido * :</label>
+        <label class="form-label">Primer apellido*:</label>
         <input
           type="text"
           class="form-control"
@@ -121,10 +144,14 @@
           [ngClass]="esInvalido('primerApellido') ? 'required' : ''"
         />
         <div *ngIf="esInvalido('primerApellido')" class="text-danger">
-          <small *ngIf="agregarFabricanteForm.controls['primerApellido'].errors?.['required']">
+          <small
+            *ngIf="agregarFabricanteForm.controls['primerApellido'].errors?.['required']"
+          >
             Este campo es obligatorio
           </small>
-          <small *ngIf="agregarFabricanteForm.controls['primerApellido'].errors?.['pattern']">
+          <small
+            *ngIf="agregarFabricanteForm.controls['primerApellido'].errors?.['pattern']"
+          >
             Existen datos incorrectos que no cumplen con el formato esperado
           </small>
         </div>
@@ -138,31 +165,51 @@
           [maxlength]="200"
         />
         <div *ngIf="esInvalido('segundoApellido')" class="text-danger">
-          <small *ngIf="agregarFabricanteForm.controls['segundoApellido'].errors?.['pattern']">
+          <small
+            *ngIf="agregarFabricanteForm.controls['segundoApellido'].errors?.['pattern']"
+          >
             Existen datos incorrectos que no cumplen con el formato esperado
           </small>
         </div>
       </div>
     </div>
-    } @if(agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL) {
+    } @if(agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL)
+    {
     <div class="row mt-3">
       <div class="col-md-8">
-        <label class="form-label">Denominación/razón social * :</label>
-        <input type="text" class="form-control" [maxlength]="250" formControlName="razonSocial" [ngClass]="esInvalido('razonSocial') ? 'required' : ''" />
+        <label class="form-label"
+          >Denominación/razón social
+          @if(agregarFabricanteForm.controls['razonSocial'].errors?.['required']){
+          <span class="text-danger">*</span>
+          }:</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          [maxlength]="254"
+          formControlName="razonSocial"
+          [ngClass]="esInvalido('razonSocial') ? 'required' : ''"
+        />
         <div *ngIf="esInvalido('razonSocial')" class="text-danger">
-          <small *ngIf="agregarFabricanteForm.controls['razonSocial'].errors?.['required']">
+          <small
+            *ngIf="agregarFabricanteForm.controls['razonSocial'].errors?.['required']"
+          >
             Este campo es obligatorio
           </small>
-          <small *ngIf="agregarFabricanteForm.controls['razonSocial'].errors?.['pattern']">
+          <small
+            *ngIf="agregarFabricanteForm.controls['razonSocial'].errors?.['pattern']"
+          >
             Existen datos incorrectos que no cumplen con el formato esperado
           </small>
         </div>
       </div>
     </div>
-    } @if (idProcedimiento === 260102) {
+    } @if (idProcedimiento === 260102 || (idProcedimiento === 260214 &&
+    agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero' &&
+    agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.FISICA)) {
     <h4 class="mt-5">Domicilio</h4>
     <div class="row mt-5">
-      <div class="col-md-4 px-5">
+      <div class="col-md-4">
         <app-catalogo-select
           [catalogo]="paisesDatos"
           formControlName="pais"
@@ -170,12 +217,12 @@
           [required]="true"
         ></app-catalogo-select>
       </div>
-      <div class="col-md-4 px-5">
+      <div class="col-md-4">
         <label class="form-label">Estado:</label>
         <input type="text" class="form-control" formControlName="estado" />
       </div>
 
-      <div class="col-md-4 px-5">
+      <div class="col-md-4">
         <label class="form-label">Código postal o equivalente:</label>
         <input
           type="text"
@@ -197,7 +244,10 @@
           [label]="'País'"
           [required]="true"
           [placeholder]="'Selecciona un valor'"
-          [isDisabled]="estaDeshabilitadoDesplegable || elementosDeshabilitados.includes('pais')"
+          [isDisabled]="
+            estaDeshabilitadoDesplegable ||
+            elementosDeshabilitados.includes('pais')
+          "
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -254,34 +304,52 @@
         ></app-catalogo-select>
       </div>
     </div>
-    }
-    
-    @if(mostarColoniaOEquivalente){
-    <div class="row mt-3">
-      <div class="col-md-4 mx-auto">
-        <label class="form-label">Colonia o equivalente:</label>
-        <input type="text" class="form-control" [maxlength]="100" formControlName="coloniaOEquivalente" />
-      </div>
-      </div>
+    } @if(mostarColoniaOEquivalente &&
+    agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero'){
+    <div class="col-md-4 mx-auto pl-0">
+      <label class="form-label">Colonia o equivalente:</label>
+      <input
+        type="text"
+        class="form-control"
+        [maxlength]="100"
+        formControlName="coloniaOEquivalente"
+      />
+    </div>
     }
 
     <div class="row mt-3">
       <div class="col-md-8">
-        <label class="form-label">Calle * :</label>
-        <span
-        class="bi bi-question-circle-fill mx-1"
-        title="Domicilio, calle, número interior, número exterior, lote"
-        data-bs-toggle="tooltip"
-      ></span>
-        <input type="text" [maxlength]="100" class="form-control" formControlName="calle" [ngClass]="esInvalido('calle') ? 'required' : ''" />
+        <label class="form-label"
+          >Calle
+          @if(agregarFabricanteForm.controls['calle'].errors?.['required']){
+          <span class="text-danger">*</span>
+          }:</label
+        >
+        <span tooltip="Domicilio, calle, número interior, número exterior, lote"
+          ><i class="bi bi-question-circle-fill"></i
+        ></span>
+        <input
+          type="text"
+          [maxlength]="100"
+          class="form-control"
+          formControlName="calle"
+          [ngClass]="esInvalido('calle') ? 'required' : ''"
+        />
         <div *ngIf="esInvalido('calle')" class="text-danger">
-          <small *ngIf="agregarFabricanteForm.controls['calle'].errors?.['required']">
+          <small
+            *ngIf="agregarFabricanteForm.controls['calle'].errors?.['required']"
+          >
             Este campo es obligatorio
           </small>
         </div>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Número exterior * :</label>
+        <label class="form-label"
+          >Número exterior
+          @if(agregarFabricanteForm.controls['numeroExterior'].errors?.['required']){
+          <span class="text-danger">*</span>
+          } :</label
+        >
         <input
           type="text"
           class="form-control"
@@ -290,7 +358,9 @@
           [ngClass]="esInvalido('numeroExterior') ? 'required' : ''"
         />
         <div *ngIf="esInvalido('numeroExterior')" class="text-danger">
-          <small *ngIf="agregarFabricanteForm.controls['numeroExterior'].errors?.['required']">
+          <small
+            *ngIf="agregarFabricanteForm.controls['numeroExterior'].errors?.['required']"
+          >
             Este campo es obligatorio
           </small>
         </div>
@@ -309,23 +379,33 @@
       </div>
       <div class="col-md-1">
         <label class="form-label">Lada:</label>
-        <input type="text" class="form-control" [maxlength]="5" formControlName="lada" />
+        <input
+          type="text"
+          class="form-control"
+          [maxlength]="5"
+          formControlName="lada"
+        />
       </div>
       <div class="col-md-3">
         <label class="form-label">Teléfono:</label>
-        <input type="text" class="form-control" [maxlength]="24" formControlName="telefono" />
+        <input
+          type="text"
+          class="form-control"
+          [maxlength]="24"
+          formControlName="telefono"
+        />
         <div *ngIf="esInvalido('telefono')" class="text-danger">
-          <small *ngIf="agregarFabricanteForm.controls['telefono'].errors?.['pattern']">
+          <small
+            *ngIf="agregarFabricanteForm.controls['telefono'].errors?.['pattern']"
+          >
             Existen datos incorrectos que no cumplen con el formato esperado
           </small>
         </div>
       </div>
       <div class="col-md-4">
         <label class="form-label mx-1">Correo electrónico:</label>
-        <span
-          class="bi bi-question-circle-fill mx-1"
-          title="ejemplo@dominio.com"
-          data-bs-toggle="tooltip"
+        <span tooltip="ejemplo@dominio.com"
+          ><i class="bi bi-question-circle-fill"></i
         ></span>
         <input
           type="email"
@@ -334,8 +414,10 @@
           [maxlength]="320"
         />
         <div *ngIf="esInvalido('correoElectronico')" class="text-danger">
-          <small *ngIf="agregarFabricanteForm.controls['correoElectronico'].errors?.['pattern']">
-           Por favor, escribe una dirección de correo válida
+          <small
+            *ngIf="agregarFabricanteForm.controls['correoElectronico'].errors?.['pattern']"
+          >
+            Por favor, escribe una dirección de correo válida
           </small>
         </div>
       </div>
@@ -343,14 +425,14 @@
 
     <div class="row my-5">
       <div class="col-md-6">
-          <p>* Campos obligatorios</p>
+        <p>* Campos obligatorios</p>
       </div>
       <div class="col-md-6">
         <div class="pull-right mb-5">
           <button
             type="button"
             name="modificarMercancias"
-            class="btn btn-default"
+            class="btn btn-danger"
             (click)="cancelar()"
           >
             Cancelar
@@ -358,10 +440,10 @@
           <button
             type="button"
             name="eliminarMercancias"
-            class="btn btn-danger ms-2"
+            class="btn btn-default ms-2"
             (click)="limpiarFormulario()"
           >
-            Limpar
+            Limpiar
           </button>
           <button
             type="button"

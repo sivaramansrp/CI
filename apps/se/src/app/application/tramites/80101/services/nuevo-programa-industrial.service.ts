@@ -11,6 +11,7 @@ import {
   Tramite80101State,
   Tramite80101Store,
 } from '../estados/tramite80101.store';
+import { CatalogoDatosIdx } from '../../../shared/models/federatarios-y-plantas.model';
 import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -85,8 +86,8 @@ export class NuevoProgramaIndustrialService {
         .get<PlantasSubfabricante[]>(
           'assets/json/80207/submanufactureras-disponibles-datos.json'
         )
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .pipe(map((response: any) => response.data))
+      
+        .pipe(map((response: PlantasSubfabricante[]) => response))
     );
   }
 
@@ -128,4 +129,34 @@ export class NuevoProgramaIndustrialService {
       'assets/json/80101/respuestaDeActualizacionDe.json'
     );
   }
+
+
+  /**
+   * Obtiene los datos del catálogo de federatarios y plantas desde un archivo JSON local.
+   *
+   * Este método realiza una solicitud HTTP GET para recuperar los datos del catálogo
+   * almacenados en el archivo `federatarios-y-plantas-catalogos.json` ubicado en la
+   * carpeta de activos (`assets/json/80101/`). Los datos recuperados se devuelven como
+   * un observable de tipo `CatalogoDatosIdx`.
+   *
+   * @returns {Observable<CatalogoDatosIdx>} Un observable que emite los datos del catálogo
+   * de federatarios y plantas.
+   *
+   * @example
+   * this.nuevoProgramaIndustrialService.getFederataiosyPlantaCatalogosData()
+   *   .subscribe((datos: CatalogoDatosIdx) => {
+   *     console.log('Datos del catálogo:', datos);
+   *   });
+   *
+   * @remarks
+   * Este método es útil para cargar información estática de catálogos que se utiliza
+   * en la aplicación, como listas de federatarios y plantas. Asegúrese de que el archivo
+   * JSON exista en la ubicación especificada para evitar errores de carga.
+   */
+  getFederataiosyPlantaCatalogosData(): Observable<CatalogoDatosIdx> {
+    return this.http.get<CatalogoDatosIdx>(
+      'assets/json/80101/federatarios-y-plantas-catalogos.json'
+    );
+  }
+  
 }

@@ -23,7 +23,7 @@ export class TramiteStoreQuery extends Query<TramiteState> {
     }
 
     /**
-     * @propiedad selectCambioModalidad$
+     * @propiedad selectSolicitudTramite$
      * @tipo Observable<TramiteState>
      * @descripción Selector que permite obtener el estado completo de `TramiteState`.
      */

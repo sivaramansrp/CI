@@ -116,7 +116,7 @@
               <div class="col-md-4">
                 <label for="nombre">{{ metaInfo.nombre }}</label>
                 <span class="require">*</span>
-                <label for="puntos"></label>
+                <label for="puntos">:</label>
                 <input type="text" formControlName="nombre" id="nombre" maxlength="200" class="form-control" />
 
                 <div *ngIf="isInvalid('nombre')" class="mensaje-error">
@@ -126,7 +126,7 @@
               <div class="col-md-4">
                 <label for="apellidoPaterno">{{ metaInfo.apellidoPaterno }}</label>
                 <span class="require">*</span>
-                <label for="puntos"></label>
+                <label for="puntos">:</label>
                 <input type="text" formControlName="apellidoPaterno" id="apellidoPaterno" maxlength="200"
                   class="form-control" />
                 <div *ngIf="isInvalid('apellidoPaterno')" class="mensaje-error">
@@ -135,7 +135,7 @@
               </div>
               <div class="col-md-4">
                 <label for="apellidoMaterno">{{ metaInfo.apellidoMaterno }}</label>
-                <label for="puntos"></label>
+                <label for="puntos">:</label>
                 <input type="text" formControlName="apellidoMaterno" id="apellidoMaterno" maxlength="200"
                   class="form-control" />
               </div>
@@ -147,7 +147,7 @@
             <div class="col-md-4">
               <label for="codigoPostal">{{ metaInfo.codigoPostal }}</label>
               <span class="require">*</span>
-              <label for="puntos"></label>
+              <label for="puntos">:</label>
               <input type="text" formControlName="codigoPostal" id="codigoPostal" maxlength="15"
                 class="form-control" />
               <div *ngIf="isInvalid('codigoPostal')" class="mensaje-error">
@@ -170,7 +170,7 @@
               <div class="ciudadExp">
                 <label for="ciudad">{{ metaInfo.ciudad }}</label>
                 <span class="require">*</span>
-                <label for="puntos"></label>
+                <label for="puntos">:</label>
                 <input type="text" formControlName="ciudad" id="ciudad" class="form-control" />
                 <div *ngIf="isInvalid('ciudad')" class="mensaje-error">
                   Este campo es obligatorio.
@@ -182,9 +182,9 @@
             <div class="col-md-12">
               <label for="domicilio">{{ metaInfo.domicilio }}</label>
               <span class="require">*</span>
-              <label for="puntos"></label>
+              <label for="puntos">:</label>
               <br>
-              <textarea formControlName="domicilio" id="domicilio" class="form-control"></textarea>
+              <textarea formControlName="domicilio" id="domicilio" class="form-control" rows="2"></textarea>
             </div>
             <div *ngIf="isInvalid('domicilio')" class="mensaje-error">
               Este campo es obligatorio.

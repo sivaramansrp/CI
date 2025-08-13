@@ -1,14 +1,20 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, Type, ViewChild, ViewContainerRef } from "@angular/core";
+import { AcusesResolucionResponse } from "../../../core/models/130118/consulta-acuses-response.model";
 import { AcusesResolucionesComponent } from "../consulta-generica/bandeja-acuses-resoluciones/acuses-resoluciones.component";
 import { CommonModule } from "@angular/common";
 import { ConsultarequerimientosComponent } from "../consulta-generica/consulta-requerimientos/consulta-requerimientos.component";
 import { DictamenesComponent } from "../consulta-generica/bandeja-dictamenes/dictamenes.component";
+import { DictamenesResponse } from "../../../core/models/130118/dictamenes-response.model";
+import { DocumentoSolicitud } from "../../../core/models/130118/consulta-documentos-response.model";
 import { DocumentosComponent } from "../consulta-generica/bandeja-documentos/documentos.component";
 import { EnvioDigitalComponent } from "../consulta-generica/consulta-envio-digital/envio-digital.component";
 import { OpinionComponent } from "../consulta-generica/consulta-opinion/opiniones.component";
+import { RequerimientosResponse } from "../../../core/models/130118/requerimientos-response.model";
 import { Tabulaciones } from "../../../core/models/lista-trimites.model";
+import { TareasSolicitud } from "../../../core/models/130118/consulta-tareas-response.model";
 import { TareasTramiteComponent } from "../consulta-generica/bandeja-tareas-tramite/tareas-tramite.component";
 import tramiteDetailsData from '@libs/shared/theme/assets/json/shared/lista-trimites-tabs.json';
+
 
 /**
  * @component
@@ -52,6 +58,43 @@ export class ReviewersTabsComponent implements OnChanges, OnInit {
    * @description Referencia al componente hijo que se debe mostrar en la pestaña activa.
    */
   @Input() viewChild!: Type<unknown>;
+
+  /**
+   * @property {DocumentoSolicitud[]} documentos
+   * @description Documentos de solicitud.
+   */
+  @Input() documentos: DocumentoSolicitud[] = [];
+
+  /**
+   * @property {TareasSolicitud[]} tareasSolicitud
+   * @description Tareas de solicitud.
+   */
+  @Input() tareasSolicitud: TareasSolicitud[] = [];
+
+  /**
+   * @property {RequerimientosResponse[]} requerimientos
+   * @description Requerimientos de solicitud.
+   */
+  @Input() requerimientos: RequerimientosResponse[] = [];
+
+  /**
+   * @property {DictamenesResponse[]} dictamenes
+   * @description Dictamenes de solicitud.
+   */
+  @Input() dictamenes: DictamenesResponse[] = [];
+
+  /**
+   * @property {AcusesResolucionResponse[]} acusesResolucion
+   * @description Acuses de resolución asociados al trámite.
+   */
+  @Input() acusesResolucion!: AcusesResolucionResponse;
+
+  /**
+   * @property {EventEmitter<number>} onTabSeleccionado
+   * @description Evento emitido cuando se selecciona una pestaña, enviando el índice de la pestaña seleccionada.
+   */
+  @Output() tabSeleccionado = new EventEmitter<number>();
+
   /**
    * @property {EventEmitter<Tabulaciones>} viewChildcambioDePestana
    * @description Evento emitido cuando se cambia de pestaña, enviando el objeto de tabulación seleccionado.
@@ -102,6 +145,7 @@ export class ReviewersTabsComponent implements OnChanges, OnInit {
     if (j?.disabled) { return }
     this.indice = i;
     this.viewChildcambioDePestana.emit(j);
+    this.tabSeleccionado.emit(i);
     setTimeout(() => {
       this.updateTabs();
     }, 100);

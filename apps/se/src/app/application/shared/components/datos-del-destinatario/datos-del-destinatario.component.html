@@ -4,33 +4,73 @@
           <ng-titulo titulo="Datos del destinatario"></ng-titulo>
           <div *ngIf="campoDestinatario; else defaultTemplate">
             <div class="col-md-8 form-group">
-              <label class="form-label" for="nombres">Nombre(s):</label>
+              <label class="form-label" for="nombres">Nombre(s)*:</label>
               <input type="text" id="nombres" class="form-control" formControlName="nombres" (change)="setValoresStore('formDatosDelDestinatario','nombres','setFormDatosDelDestinatario')" />
             </div>
             <div class="col-md-4 form-group">
-              <label class="form-label" for="numeroDeRegistroFiscal">Número de registro fiscal:</label>
+              <label class="form-label" for="numeroDeRegistroFiscal">Número de registro fiscal*:</label>
               <input type="text" id="numeroDeRegistroFiscal" class="form-control" formControlName="numeroDeRegistroFiscal" (change)="setValoresStore('formDatosDelDestinatario','numeroDeRegistroFiscal','setFormDatosDelDestinatario')" />
             </div>
           </div>
           <ng-template #defaultTemplate>
             <div class="col-md-4 form-group">
-              <label class="form-label" for="nombres">Nombre(s):</label>
+              <label class="form-label" for="nombres">Nombre(s): </label>
               <input type="text" id="nombres" class="form-control" formControlName="nombres" (change)="setValoresStore('formDatosDelDestinatario','nombres','setFormDatosDelDestinatario')" />
+            @if(formDatosDelDestinatario.controls['nombres'].invalid && formDatosDelDestinatario.controls['nombres'].touched) {
+      <div class="d-grid">
+        @if(formDatosDelDestinatario.controls['nombres'].errors?.['required']) {
+          <span class="mensaje-error">Este campo es obligatorio</span>
+        }
+        @if(formDatosDelDestinatario.controls['nombres'].errors?.['maxlength']) {
+          <span class="mensaje-error">Por favor, no escribas más de 20 caracteres</span>
+        }
+      </div>
+    }
             </div>
       
             <div class="col-md-4 form-group">
               <label class="form-label" for="primerApellido">Primer apellido:</label>
               <input type="text" id="primerApellido" class="form-control" formControlName="primerApellido" (change)="setValoresStore('formDatosDelDestinatario','primerApellido','setFormDatosDelDestinatario')" />
+             @if(formDatosDelDestinatario.controls['primerApellido'].invalid && formDatosDelDestinatario.controls['primerApellido'].touched) {
+      <div class="d-grid">
+        @if(formDatosDelDestinatario.controls['primerApellido'].errors?.['required']) {
+          <span class="mensaje-error">Este campo es obligatorio</span>
+        }
+        @if(formDatosDelDestinatario.controls['primerApellido'].errors?.['maxlength']) {
+          <span class="mensaje-error">Por favor, no escribas más de 20 caracteres</span>
+        }
+      </div>
+    }
             </div>
       
             <div class="col-md-4 form-group">
               <label class="form-label" for="segundoApellido">Segundo apellido:</label>
               <input type="text" id="segundoApellido" class="form-control" formControlName="segundoApellido" (change)="setValoresStore('formDatosDelDestinatario','segundoApellido','setFormDatosDelDestinatario')" />
+            @if(formDatosDelDestinatario.controls['segundoApellido'].invalid && formDatosDelDestinatario.controls['segundoApellido'].touched) {
+      <div class="d-grid">
+        @if(formDatosDelDestinatario.controls['segundoApellido'].errors?.['required']) {
+          <span class="mensaje-error">Este campo es obligatorio</span>
+        }
+        @if(formDatosDelDestinatario.controls['segundoApellido'].errors?.['maxlength']) {
+          <span class="mensaje-error">Por favor, no escribas más de 20 caracteres</span>
+        }
+      </div>
+    }
             </div>
       
             <div class="col-md-4 form-group">
               <label class="form-label" for="numeroDeRegistroFiscal">Número de registro fiscal:</label>
               <input type="text" id="numeroDeRegistroFiscal" class="form-control" formControlName="numeroDeRegistroFiscal" (change)="setValoresStore('formDatosDelDestinatario','numeroDeRegistroFiscal','setFormDatosDelDestinatario')" />
+              @if(formDatosDelDestinatario.controls['numeroDeRegistroFiscal'].invalid && formDatosDelDestinatario.controls['numeroDeRegistroFiscal'].touched) {
+      <div class="d-grid">
+        @if(formDatosDelDestinatario.controls['numeroDeRegistroFiscal'].errors?.['required']) {
+          <span class="mensaje-error">Este campo es obligatorio</span>
+        }
+        @if(formDatosDelDestinatario.controls['numeroDeRegistroFiscal'].errors?.['maxlength']) {
+          <span class="mensaje-error">Por favor, no escribas más de 30 caracteres</span>
+        }
+      </div>
+    }
             </div>
       
             <div class="col-md-8 form-group">

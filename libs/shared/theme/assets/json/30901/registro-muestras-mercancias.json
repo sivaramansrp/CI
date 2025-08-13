@@ -2,7 +2,7 @@
     "importadorExportadorPrevio": {
         "labelNombre": "¿Se han realizado previamente importaciones o exportaciones del producto a registrar?",
         "required": true,
-        "primerOpcion": "Selecciona un valor",
+        "primerOpcion": "Selecciona un opción",
         "catalogos": [
             {
                 "descripcion": "Sí",
@@ -17,7 +17,7 @@
     "fraccionArancelariaAga": {
         "labelNombre": "fracción arancelaria",
         "required": true,
-        "primerOpcion": "Selecciona un valor",
+        "primerOpcion": "Selecciona un opción",
         "catalogos": [
             {
                 "descripcion": "01022901",
@@ -32,7 +32,7 @@
     "nico": {
         "labelNombre": "Nico",
         "required": true,
-        "primerOpcion": "Selecciona un valor",
+        "primerOpcion": "00",
         "catalogos": [
             {
                 "descripcion": "01",
@@ -47,7 +47,7 @@
     "ideGenerica": {
         "labelNombre": "Estado físico",
         "required": true,
-        "primerOpcion": "Selecciona un valor",
+        "primerOpcion": "Selecciona un opción",
         "catalogos": [
             {
                 "descripcion": "Gaseoso",
@@ -58,15 +58,15 @@
     "tomaMuestraDespacho": {
         "labelNombre": "¿El producto al que hace referencia a esta solicitud ha sido previamente inscrito en el registro para la toma de muestras?",
         "required": true,
-        "primerOpcion": "Selecciona un valor",
+        "primerOpcion": "Selecciona un opción",
         "catalogos": [
             {
                 "descripcion": "Sí",
-                "id": 1
+                "id": 2
             },
             {
                 "descripcion": "No",
-                "id": 0
+                "id": 1
             }
         ]
     },
@@ -118,10 +118,10 @@
         "opcionDeImportador": "no",
         "tomaMuestraDespacho": "",
         "descMotivoFaltaMuestra": "no",
-        "comboFraccionConcatenada": 1,
+        "comboFraccionConcatenada": "",
         "fraccionConcatenada": "",
         "fracciondescripcion": "Vacas lecheras.",
-        "comboNicos": 1,
+        "comboNicos": "",
         "nicoDescripcion": "1 - Para abasto, cuando la importación la realicen empacadoras Tipo Inspección Federal.",
         "nombreQuimico": "Nombre Quimico",
         "nombreComercial": "Nombre Comercial",

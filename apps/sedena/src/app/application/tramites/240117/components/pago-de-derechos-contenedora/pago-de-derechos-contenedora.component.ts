@@ -1,12 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../shared/models/pago-de-derechos.model';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs';
-
 import { Tramite240117Query } from '../../estados/tramite240117Query.query';
 import { Tramite240117Store } from '../../estados/tramite240117Store.store';
 
@@ -60,12 +57,14 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    * @method constructor
    * @param {Tramite240117Query} tramiteQuery - Query para obtener el estado actual del pago de derechos.
    * @param {Tramite240117Store} tramiteStore - Store que administra el estado del pago de derechos.
+   * @param {ConsultaioQuery} consultaQuery - Query para obtener el estado de la consulta del usuario.
    * @returns {void}
    */
   constructor(
     private tramiteQuery: Tramite240117Query,
-    private tramiteStore: Tramite240117Store
-  ) {}
+    private tramiteStore: Tramite240117Store,
+    private consultaQuery: ConsultaioQuery
+  ) { }
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
@@ -80,6 +79,14 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.pagoDerechoFormState = data;
       });
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**

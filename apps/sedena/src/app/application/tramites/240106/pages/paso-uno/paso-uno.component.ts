@@ -1,11 +1,10 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AvisoImportacionSustanciasQuimicasService } from '../../services/aviso-importacion-sustancias-quimicas.service';
-import { Component } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { Tramite240106Query } from '../../estados/tramite240106Query.query';
 import { Tramite240106Store } from '../../estados/tramite240106Store.store';
+
 /**
  * @title Paso Uno
  * @description Componente que representa el primer paso del flujo de solicitud. Contiene los datos del solicitante, datos del trámite, terceros relacionados y pago de derechos.
@@ -19,31 +18,33 @@ import { Tramite240106Store } from '../../estados/tramite240106Store.store';
 export class PasoUnoComponent implements OnDestroy, OnInit {
   /**
    * @property indice
-   * @description Indicates the index of the selected tab within the form step.
+   * @description Indica el índice de la pestaña seleccionada dentro del paso del formulario.
    * @type {number | undefined}
    */
   public indice: number | undefined = 1;
 
   /**
-  * Esta variable se utiliza para almacenar el índice del subtítulo.
-  */
+   * Variable utilizada para almacenar el estado de la consulta del usuario.
+   */
   public consultaState!: ConsultaioState;
-  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
-  public esDatosRespuesta: boolean = false;
 
+  /** Indica si los datos de respuesta del servidor se han utilizado para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+ 
   /**
-   * @property destroyNotifier$
-   * @description Observable notifier to unsubscribe active subscriptions when the component is destroyed.
-   * Helps prevent memory leaks.
-   * @type {Subject<void>}
+   * Emite una notificación para señalar la destrucción del componente.
+   * Se utiliza para cancelar la suscripción a los observables y prevenir fugas de memoria.
+   * Debe activarse en el ciclo de vida `ngOnDestroy` del componente.
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Initializes the component with required query and store for state management.
+   * Inicializa el componente con las dependencias necesarias para la gestión de estado.
    *
-   * @param Tramite260210Query Query to access procedure state.
-   * @param tramite260214Store Store to update procedure state.
+   * @param tramite240106Query Consulta el estado del trámite.
+   * @param tramite240106Store Permite actualizar el estado del trámite.
+   * @param consultaQuery Consulta el estado de usuario.
+   * @param AvisoImportacionSustanciasQuimicasService Servicio para obtener y actualizar datos.
    */
   constructor(
     private tramite240106Query: Tramite240106Query,
@@ -51,11 +52,11 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
     public consultaQuery: ConsultaioQuery,
     public AvisoImportacionSustanciasQuimicasService: AvisoImportacionSustanciasQuimicasService
 
-  ) {}
+  ) { }
 
   /**
-   * Angular lifecycle method that runs on component initialization.
-   * Subscribes to the selected tab from state and updates `indice`.
+   * Método del ciclo de vida de Angular que se ejecuta en la inicialización del componente.
+   * Se suscribe al estado de la pestaña seleccionada y actualiza `indice`.
    *
    * @returns {void}
    */
@@ -65,18 +66,22 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
       .subscribe((tab) => {
         this.indice = tab;
       });
-      this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
-      this.consultaState = seccionState;
-    })).subscribe();
-    if (this.consultaState && this.consultaState.procedureId === '240106' &&
-      this.consultaState.update) {
-      this.guardarDatosFormulario();
-    } else {
-      this.esDatosRespuesta = true;
-    }
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+          if (this.consultaState.update) {
+            this.guardarDatosFormulario();
+          } else {
+            this.esDatosRespuesta = true;
+          }
+        })
+      )
+      .subscribe();
   }
 
-   /**
+  /**
 * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
 * Luego reinicializa el formulario con los valores actualizados desde el store.
 */
@@ -92,11 +97,11 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
         }
       });
   }
-  
+
   /**
-   * Updates the selected tab index in the store.
+   * Actualiza el índice de la pestaña seleccionada en el store.
    *
-   * @param i Index of the selected tab.
+   * @param i Índice de la pestaña seleccionada.
    * @returns {void}
    */
   public seleccionaTab(i: number): void {
@@ -104,8 +109,8 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   }
 
   /**
-   * Angular lifecycle method that runs just before the component is destroyed.
-   * Emits and completes the `destroyNotifier$` to unsubscribe observables.
+   * Método del ciclo de vida de Angular que se ejecuta justo antes de que el componente sea destruido.
+   * Emite y completa el `destroyNotifier$` para cancelar las suscripciones a los observables.
    *
    * @returns {void}
    */

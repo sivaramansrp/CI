@@ -1,68 +1,52 @@
-// @ts-nocheck
-import { async } from '@angular/core/testing';
-import { Injectable } from '@angular/core';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
+import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { CambioModalidadService } from './cambio-modalidad.service';
-import { HttpClient } from '@angular/common/http';
 import { CambioModalidadStore } from '../estados/tramite80208.store';
-
-@Injectable()
-class MockHttpClient {
-  post() {};
-}
-
-@Injectable()
-class MockCambioModalidadStore {}
+import { CambioDeModalidadForm, CambioModalidadResponse, ServiciosState } from '../modelos/cambio-de-modalidad.model';
+import { RespuestaCatalogos } from '@ng-mf/data-access-user';
 
 describe('CambioModalidadService', () => {
-  let service;
+  let service: CambioModalidadService;
+  let httpMock: HttpTestingController;
 
   beforeEach(() => {
-    service = new CambioModalidadService({}, {});
-  });
-
-  it('should run #getDatosSimulados()', async () => {
-    service.http = service.http || {};
-    service.http.get = jest.fn();
-    service.getDatosSimulados();
-    expect(service.http.get).toHaveBeenCalled();
-  });
-
-  it('should run #getServiciosImmx()', async () => {
-    service.http = service.http || {};
-    service.http.get = jest.fn();
-    service.getServiciosImmx();
-    expect(service.http.get).toHaveBeenCalled();
-  });
-
-  it('should run #getCambioDeModalidad()', async () => {
-    service.http = service.http || {};
-    service.http.get = jest.fn();
-    service.getCambioDeModalidad();
-    expect(service.http.get).toHaveBeenCalled();
-  });
-
-  it('should run #actualizarEstadoFormulario()', async () => {
-    service.cambioModalidadStore = service.cambioModalidadStore || {};
-    service.cambioModalidadStore.setCambioDeModalidad = jest.fn();
-    service.cambioModalidadStore.setCambioModalidad = jest.fn();
-    service.cambioModalidadStore.setServiciosImmx = jest.fn();
-    service.actualizarEstadoFormulario({
-      combioDeModalidaDatos: {},
-      cambioModalidad: {},
-      serviciosImmx: {}
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [CambioModalidadService],
     });
-    expect(service.cambioModalidadStore.setCambioDeModalidad).toHaveBeenCalled();
-    expect(service.cambioModalidadStore.setCambioModalidad).toHaveBeenCalled();
-    expect(service.cambioModalidadStore.setServiciosImmx).toHaveBeenCalled();
+
+    service = TestBed.inject(CambioModalidadService);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
-  it('should run #getDatosDeLaSolicitudData()', async () => {
-    service.http = service.http || {};
-    service.http.get = jest.fn();
-    service.getDatosDeLaSolicitudData();
-    expect(service.http.get).toHaveBeenCalled();
+  afterEach(() => {
+    httpMock.verify();
   });
 
+  it('should fetch simulated data for cambio-de-modalidad', () => {
+    const mockData = {
+      seleccionaLaModalidad: 'Modalidad A',
+      folio: 123,
+      ano: 2023,
+      seleccionaModalidad: 'Modalidad B',
+      cambioModalidad: 'Cambio A',
+      serviciosImmx: 'Servicio X',
+      rfcEmpresa: 'RFC123',
+      numeroPrograma: '12345',
+      tiempoPrograma: '12 meses',
+      datos: [],
+      ServiciosDatos: [],
+    };
+
+    service.getDatosSimulados().subscribe((data) => {
+      expect(data).toEqual(mockData);
+      expect(data.seleccionaLaModalidad).toBe('Modalidad A');
+      expect(data.folio).toBe(123);
+      expect(data.ano).toBe(2023);
+    });
+
+    const req = httpMock.expectOne('/assets/json/80208/cambio-de-modalidad.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockData);
+  });
 });

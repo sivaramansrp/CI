@@ -44,7 +44,7 @@ import { Tramite31803Query } from '../state/Tramite31803.query';
   ],
   providers: [RegistroSolicitudService],
   templateUrl: './Solicitud.component.html',
-  styleUrl: './Solicitud.component.css',
+  styleUrl: './Solicitud.component.scss',
 })
 export class SolicitudComponent implements OnInit, OnDestroy {
 
@@ -89,6 +89,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
  * Si es `true`, los controles del formulario estarán deshabilitados para evitar modificaciones.
  */
 esFormularioSoloLectura: boolean = false;
+
+/**
+ * Indica si se debe mostrar un mensaje de error al usuario.
+ */
+mostrarError: boolean = false;
 
 /**
  * Subject utilizado para notificar y limpiar suscripciones activas al destruir el componente.
@@ -162,7 +167,7 @@ inicializarEstadoFormulario(): void {
   if (this.esFormularioSoloLectura) {
     this.guardarDatosDelFormulario();
   } else {
-    this.datosDeAvisoForm();
+    this.donanteDomicilio();
   }
 }
 
@@ -215,10 +220,13 @@ inicializarEstadoFormulario(): void {
   /**
    * Marca todos los campos del formulario como tocados si es inválido.
    */
-  validarDestinatarioFormulario(): void {
+  validarDestinatarioFormulario(): boolean {
     if (this.registroForm.invalid) {
       this.registroForm.markAllAsTouched();
+      this.mostrarError = true;
+      return false;
     }
+    return true;
   }
 
   /**
@@ -260,36 +268,36 @@ inicializarEstadoFormulario(): void {
  */
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
-      banco: [this.solicitudState?.banco, [Validators.required]],
-      llave: [this.solicitudState?.llave, [Validators.required]],
-      manifiesto1: [this.solicitudState?.manifiesto1, [Validators.required]],
-      manifiesto2: [this.solicitudState?.manifiesto2, [Validators.required]],
-      numeroOperacion: [
-        this.solicitudState?.numeroOperacion,
-        [Validators.required],
-      ],
-      fechaPago: [this.solicitudState?.fechaPago, [Validators.required]],
+      numeroOficio: [{value : this.solicitudState?.numeroOficio, disabled: this.esFormularioSoloLectura}],
+      claveReferencia: [{value: this.solicitudState?.claveReferencia, disabled: this.esFormularioSoloLectura}],
+      cadenaDependencia: [{value: this.solicitudState?.cadenaDependencia, disabled: this.esFormularioSoloLectura}],
+      importePago: [{value: this.solicitudState?.importePago, disabled: this.esFormularioSoloLectura}],
+      fechaInicial: [{value: this.solicitudState?.fechaInicial, disabled: this.esFormularioSoloLectura}],
+      fechaFinal: [{value: this.solicitudState?.fechaFinal, disabled: this.esFormularioSoloLectura}],
+      banco: [{value: this.solicitudState?.banco, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      llave: [{value: this.solicitudState?.llave, disabled: this.esFormularioSoloLectura}, [Validators.required, Validators.maxLength(20)]],
+      manifiesto1: [{value: this.solicitudState?.manifiesto1, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      manifiesto2: [{value: this.solicitudState?.manifiesto2, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      numeroOperacion: [{value: this.solicitudState?.numeroOperacion, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      fechaPago: [{value: this.solicitudState?.fechaPago, disabled: this.esFormularioSoloLectura}, [Validators.required]],
     });
-    this.inicializarEstadoFormulario();
   }
 
   /**
-   * datosDeltrimiteForm los campos del formulario si es de solo lectura.
-   * Si el formulario es de solo lectura, deshabilita los campos del formulario de importador/exportador.
+   * Borrar del formulario los datos de pago.
+   * @returns {void}
    */
+  borrarDatosPago(): void {
+    this.registroForm.get('numeroOperacion')?.reset();
+    this.registroForm.get('banco')?.reset();
+    this.registroForm.get('llave')?.reset();
+    this.registroForm.get('fechaPago')?.reset();
 
-  datosDeAvisoForm(): void {
-    if (this.esFormularioSoloLectura) {
-      this.registroForm.get('banco')?.disable();
-      this.registroForm.get('manifiesto1')?.disable();
-      this.registroForm.get('manifiesto2')?.disable();
-      this.registroForm.get('llave')?.disable();
-      this.registroForm.get('numeroOperacion')?.disable();
-      this.registroForm.get('fechaPago')?.disable();
-      this.registroForm.get('monedaNacional')?.disable();
-    }
+    this.setValoresStore(this.registroForm, 'numeroOperacion', 'setNumeroOperacion');
+    this.setValoresStore(this.registroForm, 'banco', 'setBanco');
+    this.setValoresStore(this.registroForm, 'llave', 'setLlave');
+    this.setValoresStore(this.registroForm, 'fechaPago', 'setFechaPago');
   }
-
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.

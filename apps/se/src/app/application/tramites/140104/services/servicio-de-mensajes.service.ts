@@ -72,7 +72,12 @@ export class ServicioDeMensajesService {
    * Indica si los datos del formulario han sido establecidos o no.
    */
   datos$ = this.datosDePermiso.asObservable();
-
+  /**
+ * Controla la visualización de una alerta en el frontend.
+ * Esta variable booleana determina si se debe mostrar un mensaje de advertencia al usuario.
+ * Se activa cuando ocurre una condición específica, como un error o una validación fallida.
+ */
+  private mostrarAlerta = new BehaviorSubject<boolean>(false);
   /**
    * Constructor del servicio.
    * Inyecta el store de desistimiento, encargado de mantener el estado del formulario.
@@ -149,4 +154,18 @@ actualizarEstadoFormulario(DATOS: Partial<CuposDisponiblesDatos>): void {
     ...DATOS
   }));
 }
+ /**
+   * Establece el valor de la alerta.
+   * @param valor - true para mostrar la alerta, false para ocultarla.
+   */
+  establecerMostrarAlerta(valor: boolean): void {
+    this.mostrarAlerta.next(valor);
+  }
+/**
+   * Retorna el estado actual de la alerta.
+   * @returns true si la alerta debe mostrarse, false en caso contrario.
+   */
+  obtenerMostrarAlerta(): Observable<boolean> {
+     return this.mostrarAlerta.asObservable();
+  }
 }

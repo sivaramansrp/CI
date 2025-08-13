@@ -1,22 +1,23 @@
-import { Catalogo, REGEX_CORREO_ELECTRONICO, REGEX_NOMBRE, TELEFONO_DIGITOS } from '@ng-mf/data-access-user';
-import { Component, Input } from '@angular/core';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  REGEX_CORREO_ELECTRONICO,
+  REGEX_IMPORTE_PAGO,
+  REGEX_NOMBRE,
+  REGEX_NUMEROS,
+  REGEX_TELEFONO,
+  TipoPersona,
+  TituloComponent
+} from '@ng-mf/data-access-user';
+import { CommonModule, Location } from '@angular/common';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-import { EventEmitter } from '@angular/core';
 import { Facturador } from '../../models/terceros-relacionados.model';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { Location } from '@angular/common';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { TipoPersona } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { Validators } from '@angular/forms';
-import { takeUntil } from 'rxjs';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { takeUntil } from 'rxjs/operators';
+
 /**
  * Componente para agregar un facturador (persona física o moral) al trámite actual.
  * Permite capturar datos generales y de contacto, y actualiza el store con el nuevo registro.
@@ -29,6 +30,7 @@ import { takeUntil } from 'rxjs';
     CatalogoSelectComponent,
     ReactiveFormsModule,
     TituloComponent,
+    TooltipModule
   ],
   templateUrl: './agregar-facturador.component.html',
   styleUrl: './agregar-facturador.component.css',
@@ -139,8 +141,8 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
       ],
       segundoApellido: [this.obtenerValor('segundoApellido'), [Validators.pattern(REGEX_NOMBRE)]],
       pais: [this.obtenerValor('pais'), Validators.required],
-      estado: [this.obtenerValor('estadoLocalidad'), Validators.required],
-      codigoPostal: [this.obtenerValor('codigoPostal')],
+      estado: [this.obtenerValor('estadoLocalidad'), Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)],
+      codigoPostal: [this.obtenerValor('codigoPostal'),[Validators.pattern(REGEX_NUMEROS)]],
       colonia: [this.obtenerValor('colonia')],
       calle: [this.obtenerValor('calle'), Validators.required],
       numeroExterior: [
@@ -157,7 +159,7 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
             : this.obtenerValor('telefono'),
           disabled: this.elementosDeshabilitados.includes('telefono'),
         },
-        [Validators.pattern(TELEFONO_DIGITOS)],
+        [Validators.pattern(REGEX_TELEFONO)],
       ],
       correoElectronico: [
         {
@@ -289,6 +291,15 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
         }
       );
     } else {
+       if (this.agregarFacturadorForm?.get('tipoPersona')?.value) {
+        Object.keys(this.agregarFacturadorForm.controls).forEach(
+          (controlName) => {
+            if (controlName !== 'nacionalidad' && controlName !== 'tipoPersona') {
+              this.agregarFacturadorForm.get(controlName)?.reset();
+            }
+          }
+        );
+      }
       Object.keys(this.agregarFacturadorForm.controls).forEach(
         (controlName) => {
           this.agregarFacturadorForm.get(controlName)?.enable();

@@ -66,69 +66,13 @@ export class ImmexAmpliacionSensiblesStore extends Store<ImmexAmpliacionSensible
   }
 
   /**
-   * Establece el valor de las fracciones arancelarias sensibles en el estado.
-   *
-   * @param fraccionArancelariaSensibles - Cadena que representa las fracciones arancelarias sensibles a actualizar.
-   * 
-   * Este método actualiza el estado con el nuevo valor proporcionado para las fracciones arancelarias sensibles.
+   * Actualiza el estado del store con los valores proporcionados.
+   * Valores a actualizar en el estado.
    */
-  setFraccionArancelariaSensibles(fraccionArancelariaSensibles: string): void {
+  public actualizarEstado(valores: Partial<ImmexAmpliacionSensiblesState>): void {
     this.update((state) => ({
       ...state,
-      fraccionArancelariaSensibles,
-    }));
-  }
-  /**
-   * Establece el valor de la fracción arancelaria en el estado de la tienda.
-   *
-   * @param fraccionArancelaria - La fracción arancelaria que se desea establecer.
-   */
-  setFraccionArancelaria(fraccionArancelaria: string): void {
-    this.update((state) => ({
-      ...state,
-      fraccionArancelaria,
-    }));
-  }
-  /**
-   * Establece la descripción del producto en el estado de la tienda.
-   *
-   * @param descripciondelproducto - La nueva descripción del producto que se debe actualizar en el estado.
-   */
-  setDescripcionDelProducto(descripciondelproducto: string): void {
-    this.update((state) => ({
-      ...state,
-      descripciondelproducto,
-    }));
-  }
-  /**
-   * Establece la tabla de fracciones arancelarias en el estado de la tienda.
-   *
-   * @param tablaFraccionArancelaria - Un arreglo de objetos de tipo `TablaFraccionArancelaria`
-   * que representa las fracciones arancelarias a ser actualizadas en el estado.
-   */
-  setTablaFraccionArancelaria(
-    tablaFraccionArancelaria: TablaFraccionArancelaria[]
-  ): void {
-    this.update((state) => ({
-      ...state,
-      tablaFraccionArancelaria,
-    }));
-  }
-  /**
-   * Establece la tabla de fracciones de importación en el estado de la tienda.
-   *
-   * @param tablaFraccionDeImportacion - Un arreglo de objetos de tipo `TablaFraccionDeImportacion`
-   * que representa las fracciones de importación a ser actualizadas en el estado.
-   * 
-   * Este método actualiza el estado de la tienda con las nuevas fracciones de importación
-   * proporcionadas.
-   */
-  setTablaFraccionDeImportacion(
-    tablaFraccionDeImportacion: TablaFraccionDeImportacion[]
-  ): void {
-    this.update((state) => ({
-      ...state,
-      tablaFraccionDeImportacion,
+      ...valores,
     }));
   }
 }

@@ -1,21 +1,15 @@
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { DatosDelTramiteFormState, MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
-import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
 import { DatosMercanciaContenedoraComponent } from '../../../240107/components/datos-mercancia-contenedora/datos-mercancia-contenedora.component';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
 import { ID_PROCEDIMIENTO } from '../../constantes/sustancias-quimicas.enum';
-import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
 import { Tramite240107Query } from '../../estados/tramite240107Query.query';
 import { Tramite240107Store } from '../../estados/tramite240107Store.store';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { takeUntil } from 'rxjs';
 
 /**
  * @title Datos del Trámite Contenedora
@@ -26,7 +20,7 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-datos-del-tramite-contenedora',
   standalone: true,
-  imports: [CommonModule, DatosDelTramiteComponent, ReactiveFormsModule,ModalComponent],
+  imports: [CommonModule, DatosDelTramiteComponent, ReactiveFormsModule, ModalComponent],
   templateUrl: './datos-del-tramite-contenedora.component.html',
   styleUrl: './datos-del-tramite-contenedora.component.scss',
 })
@@ -43,7 +37,7 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * @implements {OnDestroy}
    */
   @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
-  
+
   /**
    * Evento que se emite para notificar el cierre del componente.
    * Los componentes padres pueden suscribirse a este evento para ejecutar acciones al cerrar.
@@ -76,18 +70,31 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    */
   public datosDelTramiteFormState!: DatosDelTramiteFormState;
 
-    /**
-   * Identificador único del procedimiento.
-   * @property {number} idProcedimiento
-   */
+  /**
+ * Identificador único del procedimiento.
+ * @property {number} idProcedimiento
+ */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
- 
+  /**
+   * Indica si el formulario es de solo lectura.
+   * @property {boolean}
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Indica si se deben usar botones personalizados en el componente.
+   * Cuando es `true`, el componente mostrará y gestionará la lógica de botones personalizados.
+   */
+  usarBotonesPersonalizados: boolean = true;
+
   /**
    * Constructor del componente.
    *
    * @method constructor
    * @param {Tramite240107Query} tramiteQuery - Query de Akita para obtener el estado actual del trámite.
    * @param {Tramite240107Store} tramiteStore - Store de Akita para actualizar el estado del trámite.
+   * @param {ValidacionesFormularioService} validacionesService - Servicio para validar formularios.
+   * @param {FormBuilder} fb - Servicio de Angular para construir formularios reactivos
    * @returns {void}
    */
   constructor(
@@ -95,6 +102,7 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
     private tramiteQuery: Tramite240107Query,
     private tramiteStore: Tramite240107Store,
     private validacionesService: ValidacionesFormularioService,
+    private consultaQuery: ConsultaioQuery
   ) {
     this.crearFormCombinacion();
   }
@@ -119,6 +127,14 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.datosDelTramiteFormState = data;
       });
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
   /**
    * Valida si un campo del formulario es válido.
@@ -131,12 +147,12 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
     return this.validacionesService.isValid(this.formCombinacion, field) ?? false;
   }
 
-    /**
-   * Crea el formulario reactivo para la combinación de datos.
-   *
-   * @method crearFormCombinacion
-   * @returns {void}
-   */
+  /**
+ * Crea el formulario reactivo para la combinación de datos.
+ *
+ * @method crearFormCombinacion
+ * @returns {void}
+ */
   public crearFormCombinacion(): void {
     this.formCombinacion = this.fb.group({
     });
@@ -153,7 +169,7 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
     this.tramiteStore.updateDatosDelTramiteFormState(event);
   }
 
-  
+
   /**
    * Hook del ciclo de vida que se ejecuta al destruir el componente.
    * Libera las suscripciones activas para evitar fugas de memoria.
@@ -166,33 +182,33 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  
-     /**
-     * Abre el modal correspondiente según el nombre del evento recibido.
-     *
-     * Si el evento es `'Datosmercancia'`, se carga el componente `DatosMercanciaContenedoraComponent`
-     * dentro del modal y se le pasa una función de cierre como input.
-     *
-     * @method openModal
-     * @param {string} event - Nombre del evento que indica qué componente se debe mostrar en el modal.
-     * @returns {void}
-     */
-    openModal(event: string): void {
-      if (event === 'Datosmercancia') {
-        this.modalComponent.abrir(DatosMercanciaContenedoraComponent, {
-          cerrarModal: this.cerrarModal.bind(this),
-        });
-      }
+
+  /**
+  * Abre el modal correspondiente según el nombre del evento recibido.
+  *
+  * Si el evento es `'Datosmercancia'`, se carga el componente `DatosMercanciaContenedoraComponent`
+  * dentro del modal y se le pasa una función de cierre como input.
+  *
+  * @method openModal
+  * @param {string} event - Nombre del evento que indica qué componente se debe mostrar en el modal.
+  * @returns {void}
+  */
+  openModal(event: string): void {
+    if (event === 'Datosmercancia') {
+      this.modalComponent.abrir(DatosMercanciaContenedoraComponent, {
+        cerrarModal: this.cerrarModal.bind(this),
+      });
     }
-  
-    /**
-     * Cierra el modal dinámico actualmente abierto utilizando el método del componente modal.
-     *
-     * @method cerrarModal
-     * @returns {void}
-     */
-    cerrarModal(): void {
-      this.modalComponent.cerrar();
-    }
-  
+  }
+
+  /**
+   * Cierra el modal dinámico actualmente abierto utilizando el método del componente modal.
+   *
+   * @method cerrarModal
+   * @returns {void}
+   */
+  cerrarModal(): void {
+    this.modalComponent.cerrar();
+  }
+
 }

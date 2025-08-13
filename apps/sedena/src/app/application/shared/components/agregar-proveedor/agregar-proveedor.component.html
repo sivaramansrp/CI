@@ -51,7 +51,7 @@
     <h4 class="mt-4">Datos personales</h4>
     <div class="row">
       <div class="col-md-4">
-        <label class="form-label">Nombre(s)<span *ngIf="campoObligatorio"> *</span> :</label>
+        <label class="form-label">Nombre(s)<span *ngIf="campoObligatorio">*</span>:</label>
         <input type="text" class="form-control" formControlName="nombres" maxlength="200" [disabled]="esFormularioSoloLectura"/>
         <div class="error-message">
           <small *ngIf="agregarProveedorForm.get('nombres')?.touched && agregarProveedorForm.get('nombres')?.hasError('required')" class="text-danger">
@@ -63,7 +63,7 @@
         </div>        
       </div>
       <div class="col-md-4">
-        <label class="form-label">Primer apellido<span *ngIf="campoObligatorio"> *</span> :</label>
+        <label class="form-label">Primer apellido<span *ngIf="campoObligatorio">*</span>:</label>
         <input
           type="text"
           class="form-control"
@@ -247,7 +247,7 @@
         <input type="text" class="form-control" formControlName="telefono" />
       </div>
       <div class="col-md-4">
-        <label class="form-label">Correo electrónico :</label>
+        <label class="form-label">Correo electrónico:</label>
         <input
           type="email"
           class="form-control"

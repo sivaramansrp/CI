@@ -21,7 +21,7 @@
         </div>
       </div>
       <div class=" text-end mt-5">
-        <button type="button" class="btn btn-primary">Buscar programas</button>
+        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Buscar programas</button>
       </div>
       <div class="table-container">
         <div class="table-header pb-2">
@@ -52,8 +52,14 @@
           <div *ngIf="cancelacionForm.get('motivoCancelacion')?.errors?.['maxlength']">
             Máximo 255 caracteres permitidos.
           </div>
+        
         </div>
-      </div>
+        <div *ngIf="cancelacionForm.get('motivoCancelacion')?.touched" class="text-danger mt-1">
+          <div *ngIf="cancelacionForm.get('motivoCancelacion')?.value?.length >= 255">
+            No puede escribir más de 255 caracteres!
+          </div>  
+        </div>
+        </div>
     </form>
   </div>
 </div>

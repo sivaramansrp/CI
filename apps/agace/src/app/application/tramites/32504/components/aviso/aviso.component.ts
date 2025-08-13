@@ -4,7 +4,7 @@ import { AvisoDatosService } from '../../services/aviso-datos.service';
 import { BotonAccionesTipos } from '@ng-mf/data-access-user';
 import { CARGO_TIPO} from '../../constants/aviso.enum';
 import { CargaMasivaComponent } from '../carga-masiva/carga-masiva.component';
-import { CatalogoSelectComponent } from "@ng-mf/data-access-user";
+import { CatalogoSelectComponent } from "@libs/shared/data-access-user/src";
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { ColumnasTabla } from '../../models/aviso.model';
 import { CommonModule } from '@angular/common';
@@ -189,6 +189,10 @@ export class AvisoComponent implements OnInit {
   */
   public mensajePopupSeleccionRegistro = 'Debe seleccionar un registro para modificar sus datos';
 
+  /**
+ * Indica si se debe mostrar el popup de confirmación de registro agregado.
+ */
+  public mostrarPopupRegistroAgregado = false;
 
 /**
    * @constructor
@@ -287,10 +291,12 @@ export class AvisoComponent implements OnInit {
         });
       }
     });
+    let firstLoad = true;
     this.query.selectformulario$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
-      if (datos) {
+      if (datos && firstLoad) {
         this.formulario.patchValue(datos);
         this.formulario.get('cargaTipo')?.disable();
+        firstLoad = false;
       }
     });
   }

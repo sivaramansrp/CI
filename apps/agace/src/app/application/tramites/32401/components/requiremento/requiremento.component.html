@@ -22,9 +22,16 @@
           >
             Cancelar
           </button>
-          <button type="submit" class="btn btn-primary" (click)="continuar()" [disabled]="consultaState.readonly">
+          @if(containerbtn){
+          <button
+            type="submit"
+            class="btn btn-primary"
+            (click)="continuar()"
+            [disabled]="consultaState.create"
+          >
             Continuar
           </button>
+          }
         </div>
       </div>
     </div>
@@ -51,7 +58,7 @@
           (keydown.space)="seleccionaTab(2)"
           role="button"
           tabindex="2"
-          >Seleccionar Documentos</a
+          >Seleccionar documentos</a
         >
       </li>
     </ul>

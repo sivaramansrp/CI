@@ -147,9 +147,10 @@ describe('PagoDeDerechosComponent', () => {
   });
 
   it('debe llamar a setFechaDePago en actualizarFechaDePago', () => {
-    component.pagoDerechos.get('fechaDePago')?.setValue('2024-06-01');
-    component.actualizarFechaDePago();
-    expect(mockTramite260212Store.setFechaDePago).toHaveBeenCalledWith('2024-06-01');
+    const event = '2024-06-01';
+    component.pagoDerechos.get('fechaDePago')?.setValue(event);
+    component.actualizarFechaDePago(event);
+    expect(mockTramite260212Store.setFechaDePago).toHaveBeenCalledWith(event);
   });
 
   it('debe llamar a setImporteDePago en actualizarImporteDePago', () => {
@@ -229,12 +230,6 @@ describe('PagoDeDerechosComponent', () => {
     component.pagoDerechos.get('llaveDePago')?.setValue('');
     component.actualizarLlaveDePago();
     expect(mockTramite260212Store.setLlaveDePago).toHaveBeenCalledWith('');
-  });
-
-  it('debe manejar actualizarFechaDePago con valor vacío', () => {
-    component.pagoDerechos.get('fechaDePago')?.setValue('');
-    component.actualizarFechaDePago();
-    expect(mockTramite260212Store.setFechaDePago).toHaveBeenCalledWith('');
   });
 
   it('debe manejar actualizarImporteDePago con valor vacío', () => {

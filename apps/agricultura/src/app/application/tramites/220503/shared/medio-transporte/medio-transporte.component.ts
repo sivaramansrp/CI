@@ -1,5 +1,5 @@
 import { AlertComponent, Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent,InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -9,7 +9,6 @@ import { ES_SOLICITUD_FERROS_VALOR } from '../../enums/texto-enum';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Input } from '@angular/core';
-import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/solicitud-pantallas.enum';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -153,20 +152,18 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
         this.claveDeControl,
         new FormGroup({
           transporteIdMedio: new FormControl(
-            this.solicitud220502State.transporteIdMedio,
+            this.solicitud220502State.transporteIdMedio || '',
             [Validators.required]
           ),
           identificacionTransporte: new FormControl(
-            this.solicitud220502State.identificacionTransporte,
-            [Validators.maxLength(30)]
+            this.solicitud220502State.identificacionTransporte || ''
           ),
           esSolicitudFerros: new FormControl(
-            this.solicitud220502State.esSolicitudFerros,
+            this.solicitud220502State.esSolicitudFerros || 'no',
             [Validators.required]
           ),
           totalDeGuiasAmparadas: new FormControl(
-            this.solicitud220502State.totalDeGuiasAmparadas,
-            [Validators.maxLength(50)]
+            this.solicitud220502State.totalDeGuiasAmparadas || ''
           ),
         })
       );
@@ -182,12 +179,12 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
           ) as FormGroup;
           if (FORM_GROUP) {
             FORM_GROUP.patchValue({
-              transporteIdMedio: this.solicitud220502State.transporteIdMedio,
+              transporteIdMedio: this.solicitud220502State.transporteIdMedio|| '',
               identificacionTransporte:
-                this.solicitud220502State.identificacionTransporte,
-              esSolicitudFerros: this.solicitud220502State.esSolicitudFerros,
+                this.solicitud220502State.identificacionTransporte || '',
+              esSolicitudFerros: this.solicitud220502State.esSolicitudFerros || 'no',
               totalDeGuiasAmparadas:
-                this.solicitud220502State.totalDeGuiasAmparadas,
+                this.solicitud220502State.totalDeGuiasAmparadas || '',
             });
           }
         })
@@ -293,6 +290,14 @@ if(this.esFormularioSoloLectura){
   setTotalDeGuiasAmparadas(event: Event): void {
     const VALUE = (event.target as HTMLInputElement).value;
     this.solicitud220503Store.setTotalDeGuiasAmparadas(VALUE);
+  }
+    validarFormularios(): boolean {
+    const FORM_GROUP = this.grupoFormularioPadre.get(this.claveDeControl) as FormGroup;
+    if(FORM_GROUP.invalid){
+      FORM_GROUP.markAllAsTouched();
+      return false;
+    }
+    return FORM_GROUP ? FORM_GROUP.valid : false;
   }
 
  /**

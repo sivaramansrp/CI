@@ -1,18 +1,16 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AgregarDestinatarioFinalContenedoraComponent } from '../agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
 import { AgregarProveedorContenedoraComponent } from '../agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 import { CommonModule } from '@angular/common';
-import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-explosivo.enum';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
-import { OnInit } from '@angular/core';
-import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240108Query } from '../../estados/tramite240108Query.query';
 import { Tramite240108Store } from '../../estados/tramite240108Store.store';
-import { takeUntil } from 'rxjs';
 
 /**
  * @title Terceros Relacionados Contenedora
@@ -23,22 +21,27 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-terceros-relacionados-contenedora',
   standalone: true,
-  imports: [CommonModule, TercerosRelacionadosComponent,ModalComponent],
+  imports: [CommonModule, TercerosRelacionadosComponent, ModalComponent],
   templateUrl: './terceros-relacionados-contenedora.component.html',
   styleUrl: './terceros-relacionados-contenedora.component.scss',
 })
 export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestroy {
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no son editables por el usuario.
+   */
+  esFormularioSoloLectura: boolean = false;
+  /**
    * Referencia al componente modal para abrir y cerrar diálogos.
    * @type {ModalComponent}
    */
-  @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;   
-     /**
-      * Identificador del procedimiento.
-      * @property {number} idProcedimiento
-      */
-     public readonly idProcedimiento = ID_PROCEDIMIENTO;
+  @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
+  /**
+   * Identificador del procedimiento.
+   * @property {number} idProcedimiento
+   */
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * Observable para limpiar las suscripciones activas al destruir el componente.
    * @property {Subject<void>} destroy$
@@ -69,9 +72,9 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
     private tramiteQuery: Tramite240108Query,
     private tramiteStore: Tramite240108Store,
     private router: Router,
-    private activatedRoute: ActivatedRoute
-  ) 
-  {}
+    private activatedRoute: ActivatedRoute,
+    private consultaQuery: ConsultaioQuery
+  ) { }
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
@@ -92,6 +95,14 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
       .subscribe((data) => {
         this.proveedorTablaDatos = data;
       });
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -128,7 +139,7 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
    * @returns {void}
    */
   irAAcciones(accionesPath: string): void {
-    this.router.navigate([ accionesPath ], {
+    this.router.navigate([accionesPath], {
       relativeTo: this.activatedRoute,
     });
   }
@@ -145,16 +156,16 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
     this.destroy$.next();
     this.destroy$.complete();
   }
-    /**
-   * Abre el modal correspondiente según el nombre del evento recibido.
-   *
-   * Si el evento es `'Datosmercancia'`, se carga el componente `DatosMercanciaContenedoraComponent`
-   * dentro del modal y se le pasa una función de cierre como input.
-   *
-   * @method openModal
-   * @param {string} event - Nombre del evento que indica qué componente se debe mostrar en el modal.
-   * @returns {void}
-   */
+  /**
+ * Abre el modal correspondiente según el nombre del evento recibido.
+ *
+ * Si el evento es `'Datosmercancia'`, se carga el componente `DatosMercanciaContenedoraComponent`
+ * dentro del modal y se le pasa una función de cierre como input.
+ *
+ * @method openModal
+ * @param {string} event - Nombre del evento que indica qué componente se debe mostrar en el modal.
+ * @returns {void}
+ */
   openModal(event: string): void {
     if (event === 'agregar-destino-final') {
       this.modalComponent.abrir(AgregarDestinatarioFinalContenedoraComponent, {

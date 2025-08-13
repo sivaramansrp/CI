@@ -29,6 +29,7 @@
            <div class="row">
             <h6>Mercancías seleccionadas</h6>
             <app-tabla-dinamica
+              [disableSeleccionTablaRadio]="esFormularioSoloLectura"
               [configuracionTabla]="configuracionTabla"
               [datos]="mercancias"
               [tipoSeleccionTabla]="radio"
@@ -48,6 +49,7 @@
                 data-bs-toggle="modal"
                 data-bs-target="#modalAgregar"
                 (click)="abrirModal()"
+                [disabled]="esFormularioSoloLectura"
               >
               Modificar
               </button>

@@ -1,18 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-import { Subject, map, takeUntil } from 'rxjs';
-
-import {
-  Solicitud90201State,
-  Tramite90201Store,
-} from '../../../../estados/tramites/tramite90201.store';
-
 import { ConsultaioQuery, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Solicitud90201State,Tramite90201Store } from '../../../../estados/tramites/tramite90201.store';
+import { Subject, map, takeUntil } from 'rxjs';
+import { ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { PRODUCTOR_INDIRECTO } from '@libs/shared/data-access-user/src/core/enums/90201/productor-indirecto-tabla.enum';
-
 import { ProductorIndirectoTabla } from '@libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
 import ProductorTabla from '@libs/shared/theme/assets/json/90201/productor-indirecto-tabla.json';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
@@ -31,7 +24,7 @@ import { Tramite90201Query } from '../../../../estados/queries/tramite90201.quer
 @Component({
   selector: 'app-productor-indirecto',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TituloComponent, TablaDinamicaComponent,NotificacionesComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TituloComponent, TablaDinamicaComponent, NotificacionesComponent],
   templateUrl: './productor-indirecto.component.html',
   styleUrl: './productor-indirecto.component.scss',
 })
@@ -103,7 +96,11 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
   public esFormularioSoloLectura: boolean = false;
-
+  /**
+   * Arreglo que almacena los productores indirectos seleccionados por el usuario.
+   * Este arreglo se utiliza para realizar operaciones como eliminar o procesar los productores seleccionados.
+   */
+  public seleccionados: ProductorIndirectoTabla[] = [];
 
   /**
    * Constructor de la clase ProductorIndirectoComponent.
@@ -121,11 +118,12 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
     private tramite90201Store: Tramite90201Store,
     private tramite90201Query: Tramite90201Query,
     private consultaioQuery: ConsultaioQuery,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private cdr: ChangeDetectorRef
   ) {
 
   }
-  
+
   /**
    * Inicializa el componente ProductorIndirecto.
    * Se suscribe al estado de la solicitud y actualiza el RFC con el valor del estado.
@@ -142,7 +140,75 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
       .subscribe()
     this.inicializarFormulario();
   }
+  /**
+   * Maneja la destrucción del componente.
+   * Limpia las suscripciones activas para evitar fugas de memoria.
+   */
+  onSeleccionChange(event: ProductorIndirectoTabla[]): void {
+    this.seleccionados = event;
+  }
+  /**
+   *  Elimina los productores indirectos seleccionados del arreglo `tablaDatos`.
+   * Si hay productores seleccionados, muestra una notificación de confirmación
+   * antes de proceder con la eliminación.
+   * Si se confirma la eliminación, los productores seleccionados se eliminan del arreglo `tablaDatos`.
+   */
+  eliminarSeleccionados(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: this.seleccionados.length >= 1 ?
+        '¿Está seguro que desea eliminar el productor seleccionado?' :
+        'Seleccione el productor indirecto que desea eliminar.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
 
+  }
+
+  /** 
+   * Agrega un nuevo productor indirecto a la tabla de datos.
+   * Este método se activa al confirmar la acción de agregar un productor indirecto.
+   * @param confirmar - Indica si se confirma la acción de agregar un productor indirecto.
+   * @returns 
+   */
+  public agregarProductorIndirecto(confirmar: boolean): void {
+    if (!this.seleccionados || this.seleccionados.length === 0 || !confirmar) {
+      return;
+    }
+    this.tablaDatos = this.tablaDatos.filter(item =>
+      !this.seleccionados.some(selected =>
+        selected.registro === item.registro
+      )
+    );
+    this.seleccionados = [];
+
+  }
+
+  /**
+   * Agrega un nuevo productor indirecto al arreglo `tablaDatos`.
+   * El método toma el valor del campo `rfc` del formulario `formProductorIndirecto`,
+   * verifica si el formulario es válido y si el campo `rfc` tiene un valor.
+   * Si ambas condiciones se cumplen, crea un nuevo objeto `ProductorIndirectoTabla`
+   */
+  agregarProductor(): void {
+    const RFC_VALUE = this.formProductorIndirecto.get('rfc')?.value;
+    if (this.formProductorIndirecto.valid && RFC_VALUE) {
+      const NUEVO_PRODUCTOR: ProductorIndirectoTabla = {
+        registro: RFC_VALUE,
+        denominacion: 'Denominación',
+        correo: 'correo@dummy.com'
+      };
+
+      this.tablaDatos = [...this.tablaDatos, NUEVO_PRODUCTOR];
+      this.cdr.detectChanges();
+      this.formProductorIndirecto.reset();
+    }
+  }
   /**
    * Inicializa el formulario del componente.
    * 
@@ -205,13 +271,13 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
    * @param agregar - Si es `true`, muestra un mensaje indicando que solo se pueden agregar personas morales.
    *                  Si es `false`, solicita al usuario seleccionar el productor indirecto que desea eliminar.
    */
-  public productor(agregar: boolean): void {
+  public productor(): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
       modo: 'action',
       titulo: '',
-      mensaje: agregar ? 'Sólo puede ingresar personas morales' : 'Seleccione el productor indirecto que desea eliminar.',
+      mensaje: 'Sólo puede ingresar personas morales',
       cerrar: false,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',

@@ -28,18 +28,19 @@ import {
 import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 
 import {
+  Catalogo,
+  CatalogoSelectComponent,
   ConsultaioQuery,
+  InputFecha,
+  InputFechaComponent,
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-
 import {
-  Catalogo,
-  CatalogoSelectComponent,
-  InputFecha,
-  InputFechaComponent,
+ 
+
   InputRadioComponent,
 } from '@ng-mf/data-access-user';
 
@@ -153,7 +154,7 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
-  esFormularioSoloLectura: boolean = false;
+  esFormularioSoloLectura: boolean = true;
 
   /**
    * Subject para manejar la desuscripción de observables.
@@ -229,13 +230,12 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
-    if (this.esFormularioSoloLectura) {
-      this.formularioPago.disable();
-    } else if (!this.esFormularioSoloLectura) {
+    // El formulario se crea deshabilitado por defecto
+    // Solo habilitarlo si esFormularioSoloLectura es false
+    if (!this.esFormularioSoloLectura) {
       this.formularioPago.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
     }
+    // Si esFormularioSoloLectura es true, mantener el formulario deshabilitado (estado por defecto)
   }
   /**
    * Inicializa el formulario reactivo con los campos requeridos.
@@ -251,16 +251,22 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
       )
       .subscribe()
 
-    const ES_EXENTO = this.formularioPagoStore.exentoPago === 'Si';
+    // Asegurar que exentoPagoValor sea siempre 'Si' por defecto
+    this.exentoPagoValor = 'Si';
+
     this.formularioPago = this.fb.group({
-      exentoPago: [this.formularioPagoStore.exentoPago || 'Si', Validators.required],
-      justificacion: [this.formularioPagoStore.justificacion, Validators.required],
-      claveReferencia: [{ value: this.formularioPagoStore.claveReferencia }, Validators.required],
-      cadenaDependencia: [{ value: this.formularioPagoStore.cadenaDependencia }, Validators.required],
-      banco: [this.formularioPagoStore.banco, Validators.required],
-      llavePago: [{ value: this.formularioPagoStore.llavePago, disabled: ES_EXENTO }, Validators.required],
-      fechaPago: [{ value: this.formularioPagoStore.fechaPago }, Validators.required],
-      importePago: [{ value: this.formularioPagoStore.importePago }, Validators.required],
+      exentoPago: [
+        {value: 'Si', disabled: true}, // Siempre por defecto a 'Si'
+        Validators.required,
+      ],
+      justificacion: [{ value: this.formularioPagoStore?.justificacion, disabled: true }, Validators.required],
+      claveReferencia: [{ value: this.formularioPagoStore?.claveReferencia, disabled: true }, Validators.required],
+      cadenaDependencia: [{ value: this.formularioPagoStore?.cadenaDependencia, disabled: true }, Validators.required],
+      banco: [{ value: this.formularioPagoStore.banco, disabled: true }, Validators.required],
+      llavePago: [{ value: this.formularioPagoStore.llavePago, disabled: true }, Validators.required],
+      fechaPago: [{ value: this.formularioPagoStore.fechaPago, disabled: true }, Validators.required],
+      importePago: [{ value: this.formularioPagoStore.importePago, disabled: true }, Validators.required],
+      fechaFactura: [this.formularioPagoStore?.fechaFactura, Validators.required],
     });
   }
   /**
@@ -282,13 +288,16 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
    * @method ngOnInit
    */
   ngOnInit(): void {
+    // Asegurar que los valores por defecto se establezcan inmediatamente
+    this.exentoPagoValor = 'Si';
          
-         this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.formularioPagoState = seccionState.FormularioPagoState;
-          })
-        ).subscribe();
+    this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.formularioPagoState = seccionState.FormularioPagoState;
+      })
+    ).subscribe();
+    
     this.formularioPago.statusChanges
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
@@ -307,6 +316,10 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
             if (seccionState) {
               this.formularioPagoState = seccionState.FormularioPagoState;
               this.formularioPago.patchValue(this.formularioPagoState);
+              
+              // Siempre asegurar que 'Si' esté seleccionado para exentoPago después de parchear valores
+              this.formularioPago.patchValue({ exentoPago: 'Si' });
+              this.exentoPagoValor = 'Si';
             }
           })
         ).subscribe();
@@ -331,6 +344,14 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
           })
         )
         .subscribe();
+  
+    // Aplicación final: asegurar que exentoPago sea siempre 'Si' después de todas las inicializaciones
+    setTimeout(() => {
+      if (this.formularioPago) {
+        this.formularioPago.patchValue({ exentoPago: 'Si' });
+        this.exentoPagoValor = 'Si';
+      }
+    }, 100);
   
     /**
      * Observa los cambios en el estado del formulario y actualiza la validación de la sección correspondiente.

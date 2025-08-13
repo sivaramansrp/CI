@@ -1,17 +1,19 @@
 <div class="container">
   <form [formGroup]="form">
     <!--Solicitud Tabla-->
-    <app-tab-solicitud-datos
-      [tablaHeadData]="hSolicitud"
+    <app-tab-solicitud-datos  
       [tablaFilaDatos]="dSolicitud"
+      #solicitudDatosTabRef
     ></app-tab-solicitud-datos>
     <!-- Datose del tramite a realizar -->
     <app-datos-del-tramite-a-realizar
       claveDeControl="datoseDelTramiteRealizar"
+      #datosDelTramiteARealizarRef
     ></app-datos-del-tramite-a-realizar>
     <!-- Responsable inspeccion en punto -->
     <app-responsable-inspeccion-en-punto
       claveDeControl="responsableInspeccionEnPunto"
+      #responsableInspeccionEnPuntoRef
     ></app-responsable-inspeccion-en-punto>
     <!-- app-medio-transporte -->
     <app-medio-transporte
@@ -19,6 +21,7 @@
       [hMercanciaTabla]="hMercanciaTabla"
       [dMercanciaBody]="dMercanciaBody"
       [mediodetransporte]="mediodetransporte"
+      #medioTransporteRef
     ></app-medio-transporte>
   </form>
 </div>

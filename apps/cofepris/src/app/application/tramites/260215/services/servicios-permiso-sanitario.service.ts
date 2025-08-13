@@ -118,7 +118,7 @@ export class ServiciosPermisoSanitarioService {
    *
    * @returns Observable que emite la respuesta del catálogo de estados.
    */
-  getObtenerEstadoList() {
+  getObtenerEstadoList(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(
       'assets/json/260215/seleccion.json'
     );
@@ -132,7 +132,7 @@ export class ServiciosPermisoSanitarioService {
    *
    * @returns Un observable que emite los datos de la tabla en formato `RespuestaTabla`.
    */
-  getObtenerTablaDatos() {
+  getObtenerTablaDatos(): Observable<RespuestaTabla> {
     return this.http.get<RespuestaTabla>('assets/json/260215/tablaDatos.json');
   }
 
@@ -141,7 +141,7 @@ export class ServiciosPermisoSanitarioService {
    *
    * @returns Un observable que emite los datos de tipo `MercanciasTabla` obtenidos del archivo `mercanciasDatos.json`.
    */
-  getObtenerMercanciasDatos() {
+  getObtenerMercanciasDatos(): Observable<MercanciasTabla> {
     return this.http.get<MercanciasTabla>(
       'assets/json/260215/mercanciasDatos.json'
     );

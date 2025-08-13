@@ -72,7 +72,15 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
    * @property {TemplateRef} agregarModal
    */
   @ViewChild('datosDeChoferesModal', { static: false })
-  agregarModalDialog!: TemplateRef<Element>;  
+  agregarModalDialog!: TemplateRef<Element>;
+
+  /**
+   * Referencia al componente de diálogo de datos de choferes nacionales.
+   * Permite acceder a los métodos públicos del componente de diálogo, como editar registros desde el componente padre.
+   * @type {DatosDeChoferesNacionalDialogComponent}
+   */
+  @ViewChild(DatosDeChoferesNacionalDialogComponent)
+  datosDeChoferesDialogComponent!: DatosDeChoferesNacionalDialogComponent;
 
 
   /**
@@ -85,7 +93,7 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
    * Indica si el formulario o componente está en modo solo lectura.
    * Cuando es `true`, los campos no pueden ser editados por el usuario.
    */
-  isReadonly: boolean = false;
+  esSoloLectura: boolean = false;
 
   /**
    * Constructor del componente ChofereNacional.
@@ -128,7 +136,7 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           if (seccionState.readonly) {
             this.datosConsulta = seccionState;
-            this.isReadonly = this.datosConsulta.readonly;
+          this.esSoloLectura = this.datosConsulta.readonly;
           }
         })
       ).subscribe();
@@ -139,7 +147,12 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
    * 
    * @param $event - Arreglo de objetos de tipo DatosDelChoferNacional que representa los choferes seleccionados.
    */
-  onChofereNationalSelected($event: DatosDelChoferNacional[]): void {
+  /**
+   * Maneja el evento cuando se seleccionan uno o más choferes nacionales.
+   *
+   * @param $event - Arreglo de objetos de tipo DatosDelChoferNacional que representa los choferes seleccionados.
+   */
+  alSeleccionarChoferNacional($event: DatosDelChoferNacional[]): void {
     this.datosDelChoferNacionalSelected = $event;
   }
 
@@ -149,26 +162,38 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
    * @param template - The template reference used to display the modal dialog.
    * @returns void
    */
-  addNewRow(template: TemplateRef<unknown>): void {
+  /**
+   * Agrega una nueva fila reiniciando el objeto `datosChofere` y abre un diálogo modal con la plantilla proporcionada.
+   *
+   * @param template - Referencia de la plantilla utilizada para mostrar el diálogo modal.
+   * @returns void
+   */
+  agregarNuevaFila(template: TemplateRef<unknown>): void {
     this.datosChofere = {} as DatosDelChoferNacional;
-    this.openModal(template);
+    this.abrirModal(template);
   }
 
   /**
-   * Abre un modal para editar la fila seleccionada de chofer nacional.
-   * 
-   * @param template - Referencia a la plantilla del modal que se debe abrir.
-   * 
-   * Si no hay filas seleccionadas en `datosDelChoferNacionalSelected`, muestra una advertencia en la consola y no realiza ninguna acción.
-   * Si hay al menos una fila seleccionada, asigna la primera fila seleccionada a `datosChofere` y abre el modal correspondiente.
+   * Abre un diálogo modal para editar la fila seleccionada de chofer nacional.
+   *
+   * @param template Referencia a la plantilla del modal que se debe abrir.
+   *
+   * - Si no hay filas seleccionadas en `datosDelChoferNacionalSelected`, muestra una advertencia en la consola y no realiza ninguna acción.
+   * - Si hay al menos una fila seleccionada, asigna la primera fila seleccionada a `datosChofere` y abre el modal correspondiente.
    */
-  editSelectedRow(template: TemplateRef<unknown>): void {
+  editarFilaSeleccionada(template: TemplateRef<unknown>): void {
     if (this.datosDelChoferNacionalSelected.length === 0) {
-      console.warn('No rows selected for editing.');
       return;
     }
-    this.datosChofere = this.datosDelChoferNacionalSelected[0];
-    this.openModal(template);
+    const seleccionado = this.datosDelChoferNacionalSelected[0];
+    const indice = this.datosDelChoferNacional.findIndex(item => item === seleccionado);
+    this.datosChofere = seleccionado;
+    setTimeout(() => {
+      if (this.datosDeChoferesDialogComponent && indice !== -1) {
+        this.datosDeChoferesDialogComponent.editarRegistro(seleccionado, indice);
+      }
+    });
+    this.abrirModal(template);
   }
 
   /**
@@ -177,14 +202,45 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
    * Si hay elementos seleccionados en `datosDelChoferNacionalSelected`, estos se eliminan de la lista principal `datosDelChoferNacional`
    * y se limpia la selección. Si no hay elementos seleccionados, muestra una advertencia en la consola.
    */
-  deleteSelectedRow(): void {
+  @ViewChild(TablaDinamicaComponent)
+  tablaDinamicaComponent!: TablaDinamicaComponent<DatosDelChoferNacional>;
+
+  /**
+   * Deletes the selected rows from the list of national drivers.
+   *
+   * - If there are selected items in `datosDelChoferNacionalSelected`, removes them from the main list `datosDelChoferNacional`.
+   * - Clears the selection and emits an empty selection to the table for button visibility.
+   * - Forces table re-render for OnPush change detection.
+   * - If no items are selected, does nothing.
+   *
+   * @remarks
+   * This method is typically triggered by a UI action (e.g., clicking the "Eliminar" button).
+   * It ensures that only the selected rows are deleted and the table state is synchronized.
+   */
+  /**
+   * Elimina las filas seleccionadas de la lista de choferes nacionales.
+   *
+   * - Si hay elementos seleccionados en `datosDelChoferNacionalSelected`, estos se eliminan de la lista principal `datosDelChoferNacional`.
+   * - Limpia la selección y emite una selección vacía a la tabla para la visibilidad de los botones.
+   * - Fuerza el re-renderizado de la tabla para la detección de cambios OnPush.
+   * - Si no hay elementos seleccionados, no realiza ninguna acción.
+   *
+   * @remarks
+   * Este método suele ser activado por una acción de la interfaz de usuario (por ejemplo, al hacer clic en el botón "Eliminar").
+   * Asegura que solo se eliminen las filas seleccionadas y que el estado de la tabla se sincronice.
+   */
+  eliminarFilaSeleccionada(): void {
     if (this.datosDelChoferNacionalSelected.length > 0) {
       this.datosDelChoferNacional = this.datosDelChoferNacional.filter(
         (item) => !this.datosDelChoferNacionalSelected.includes(item)
       );
+      // Fuerza el re-renderizado de la tabla para la detección de cambios OnPush
+      this.datosDelChoferNacional = [...this.datosDelChoferNacional];
       this.datosDelChoferNacionalSelected = [];
-    } else {
-      console.warn('No rows selected for deletion.');
+      // Emite selección vacía a la tabla para la visibilidad de los botones
+      if (this.tablaDinamicaComponent) {
+        this.tablaDinamicaComponent.listaDeFilaSeleccionada.emit([]);
+      }
     }
   }
 
@@ -193,7 +249,12 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
    * 
    * @param template Referencia al template que se mostrará dentro del modal.
    */
-  openModal(template: TemplateRef<unknown>): void {
+  /**
+   * Abre un modal utilizando el servicio `bsModalService` y muestra el contenido proporcionado por la plantilla.
+   *
+   * @param template Referencia a la plantilla que se mostrará dentro del modal.
+   */
+  abrirModal(template: TemplateRef<unknown>): void {
     this.modalRef = this.bsModalService.show(template, {
       class: 'modal-fullscreen',
     });
@@ -206,23 +267,43 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
    * Esta función verifica si existe una referencia al modal (`modalRef`), 
    * y en caso afirmativo, lo oculta y establece la referencia a `null`.
    */
-  cancelModal(): void {
+  /**
+   * Cierra el modal actual si está abierto y limpia la referencia al modal.
+   *
+   * @remarks
+   * Esta función verifica si existe una referencia al modal (`modalRef`),
+   * y en caso afirmativo, lo oculta y establece la referencia a `null`.
+   */
+  cancelarModal(): void {
     this.modalRef?.hide();
     this.modalRef = null;
   }
 
   /**
-   * Agrega un nuevo objeto de tipo `DatosDelChoferNacional` al arreglo `datosDelChoferNacional`.
-   * Limpia la selección actual de choferes y cierra el modal.
-   *
-   * @param data - Los datos del chofer nacional a agregar.
+   * Handles add or edit from the dialog event.
+   * If indice is present, updates the row; otherwise, adds a new one.
    */
-  addModal(data: DatosDelChoferNacional): void {
-    this.datosDelChoferNacional.push(data);
+  /**
+   * Maneja el evento de agregar o editar desde el diálogo.
+   * Si el índice está presente, actualiza la fila; de lo contrario, agrega una nueva.
+   */
+  agregarModal(evento: { datos: DatosDelChoferNacional, indice?: number }): void {
+    if (evento.indice !== undefined) {
+      // Editar: actualiza el registro en el índice dado
+      this.datosDelChoferNacional[evento.indice] = evento.datos;
+    } else {
+      // Agregar: inserta un nuevo registro
+      this.datosDelChoferNacional.push(evento.datos);
+    }
+    // Fuerza el re-renderizado de la tabla para la detección de cambios OnPush
+    this.datosDelChoferNacional = [...this.datosDelChoferNacional];
     this.datosDelChoferNacionalSelected = [];
-
+    // Emite selección vacía a la tabla para la visibilidad de los botones
+    if (this.tablaDinamicaComponent) {
+      this.tablaDinamicaComponent.listaDeFilaSeleccionada.emit([]);
+    }
     this.chofer40101Service.updateDatosDelChoferNacional(this.datosDelChoferNacional);
-    this.cancelModal();
+    this.cancelarModal();
   }
 
   

@@ -19,7 +19,7 @@ import { Subject } from 'rxjs';
  * @property {boolean} habilitado - Indica si el campo de fecha de inicio está habilitado.
  */
 export const FECHA_INICIO = {
-  labelNombre: 'Fecha inicio',
+  labelNombre: 'Fecha inicio:',
   required: false,
   habilitado: true,
 };
@@ -34,7 +34,7 @@ export const FECHA_INICIO = {
  * @property {boolean} habilitado - Indica si el campo de fecha final está habilitado.
  */
 export const FECHA_FINAL = {
-  labelNombre: 'Fecha final',
+  labelNombre: 'Fecha final:',
   required: false,
   habilitado: true,
 };
@@ -57,6 +57,13 @@ export const FECHA_FINAL = {
 })
 
 export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
+  /**
+ * Título mostrado en el componente.  
+ * Puede ser personalizado desde el componente padre mediante [title].  
+ * Si no se proporciona, se mostrará el valor por defecto: "Validación inicial del certificado de circulación de mercancías".
+ */
+    @Input() title: string = 'Validación inicial del certificado de circulación de mercancías';
+    
   /**
    * Propiedad de entrada que recibe un arreglo de menús desplegables.
    * @type {MenusDesplegables[]}
@@ -187,6 +194,12 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
    * @type {InputFecha}
    */
   public fechaFinalInput: InputFecha = FECHA_FINAL;
+  
+  /**
+   * Indicates whether the domicile information should be displayed.
+   * Set to `true` to show domicile details; otherwise, set to `false`.
+   */
+  @Input() public domicilio: boolean = true
 
   /**
   * Texto que contiene los requisitos y mensajes informativos.
@@ -302,19 +315,19 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
     this.formCertificado = this.fb.group({
       si: [false],
       entidadFederativa: ['', [Validators.required, Validators.min(0)]],
-      bloque: ['', [Validators.required, Validators.min(0)]],
-      fraccionArancelariaForm: [''],
-      registroProductoForm: [''],
-      nombreComercialForm: [''],
-      fechaInicioInput: [''],
-      fechaFinalInput: [''],
-      nombres: ['' ],
-      primerApellido: [''],
-      segundoApellido: [''],
-      numeroDeRegistroFiscal: [''],
-      razonSocial: [''],
-      calle: [''],
-      numeroLetra: [''],
+  bloque: ['', [Validators.required, Validators.min(0)]],
+  fraccionArancelariaForm: ['', [Validators.maxLength(8)]],
+  registroProductoForm: ['', [Validators.maxLength(12)]],
+  nombreComercialForm: ['', [Validators.maxLength(200)]],
+  fechaInicioInput: [''],
+  fechaFinalInput: [''],
+  nombres: ['', [Validators.maxLength(20)]],
+  primerApellido: ['', [Validators.required,Validators.maxLength(20)]],
+  segundoApellido: ['', [Validators.maxLength(20)]],
+  numeroDeRegistroFiscal: ['', [Validators.maxLength(30)]],
+  razonSocial: [''],
+  calle: ['', [Validators.maxLength(90)]],
+  numeroLetra: ['', [Validators.maxLength(30)]],
     });
   }
   /**

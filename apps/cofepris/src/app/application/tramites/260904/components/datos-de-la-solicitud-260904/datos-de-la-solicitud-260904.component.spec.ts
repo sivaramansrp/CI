@@ -142,7 +142,10 @@ it('should update estadoSeleccionado when getValorStore is called', () => {
   } as any;
 
   const query = TestBed.inject(Tramite260904Query);
-  jest.spyOn(query, 'selectTramite260904$', 'get').mockReturnValue(of(testState));
+  Object.defineProperty(query, 'selectTramite260904$', {
+    value: of(testState),
+    writable: true
+  });
 
   component['tramite260904Query'] = query;
   component.getValorStore();

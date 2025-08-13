@@ -81,7 +81,7 @@ export class Sanitario260215Store extends Store<Sanitario260215State> {
    *
    * @param fabricante Arreglo de datos del fabricante.
    */
-  public setFabricante(fabricante: TablaDatos[]) {
+  public setFabricante(fabricante: TablaDatos[]) : void{
     this.update((state) => ({
       ...state,
       Fabricante: fabricante,
@@ -93,7 +93,7 @@ export class Sanitario260215Store extends Store<Sanitario260215State> {
    *
    * @param destinatario Arreglo de datos del destinatario.
    */
-  public setDestinatario(destinatario: TablaDatos[]) {
+  public setDestinatario(destinatario: TablaDatos[]) : void{
     this.update((state) => ({
       ...state,
       Destinatario: destinatario,
@@ -105,7 +105,7 @@ export class Sanitario260215Store extends Store<Sanitario260215State> {
    *
    * @param proveedor Arreglo de datos del proveedor.
    */
-  public setProveedor(proveedor: TablaDatos[]) {
+  public setProveedor(proveedor: TablaDatos[]) : void{
     this.update((state) => ({
       ...state,
       Proveedor: proveedor,
@@ -117,7 +117,7 @@ export class Sanitario260215Store extends Store<Sanitario260215State> {
    *
    * @param facturador Arreglo de datos del facturador.
    */
-  public setFacturador(facturador: TablaDatos[]) {
+  public setFacturador(facturador: TablaDatos[]): void {
     this.update((state) => ({
       ...state,
       Facturador: facturador,

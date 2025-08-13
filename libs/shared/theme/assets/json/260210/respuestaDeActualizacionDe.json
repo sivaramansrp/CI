@@ -2,11 +2,11 @@
   "pagoDerechos": {
     "claveReferencia": "1234567890",
     "cadenaDependencia": "DEP123456",
-    "estado": "2",
+    "estado": "1",
     "llavePago": "LLAVE987654",
-    "fechaPago": "2024-06-20",
+    "fechaPago": "20/06/2024",
     "importePago": "1500.00",
-    "banco": "Banco Ejemplo"
+    "banco": "1"
   },
   "datosSolicitudFormState": {
     "rfcSanitario": "SAN123456789",
@@ -26,7 +26,7 @@
     "regimen": "101",
     "adunasDeEntradas": "101",
     "aeropuerto": true,
-    "publico": "no",
+    "publico": "No",
     "representanteRfc": "REP123456789",
     "representanteNombre": "Juan",
     "apellidoPaterno": "Pérez",
@@ -37,7 +37,8 @@
     "fechaDeFabricacio": "2024-01-01",
     "fechaDeCaducidad": "2025-01-01",
     "regimenLaMercancia": "Definitivo",
-    "aduana": "Aduana Norte"
+    "aduana": "Aduana Norte",
+    "manifesto": true
   },
   "scianConfigDatos": [
     {

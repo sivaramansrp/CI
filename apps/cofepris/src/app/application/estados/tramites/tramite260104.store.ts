@@ -146,7 +146,20 @@ export interface Solicitud260104State {
      * El valor de rfc.
      */
     rfc: string;
+    /**
+       * El valor de nombres.
+       */
+    nombres: string;
+    /**
+       * El valor de apellidoPaterno.
+       */
+    apellidoPaterno: string;
+    /**
+       * El valor de apellidoMaterno.
+       */
+    apellidoMaterno: string;
 }
+
 /**
  * Función para crear el estado inicial de Solicitud260104State.
  * @returns {Solicitud260104State} El estado inicial de Solicitud260104State.
@@ -293,12 +306,24 @@ export function createInitialState(): Solicitud260104State {
          * El valor de rfc.
          */
         rfc: '',
+        /**
+     * El valor de nombres.
+     */
+        nombres: "",
+        /**
+           * El valor de apellidoPaterno.
+           */
+        apellidoPaterno: "",
+        /**
+           * El valor de apellidoMaterno.
+           */
+        apellidoMaterno: ""
     };
 }
 
- /**
- * Decorador Injectable para hacer que la tienda esté disponible a nivel raíz.
- */
+/**
+* Decorador Injectable para hacer que la tienda esté disponible a nivel raíz.
+*/
 @Injectable({
     providedIn: 'root',
 })
@@ -310,7 +335,7 @@ export function createInitialState(): Solicitud260104State {
  */
 @StoreConfig({ name: 'tramite260104', resettable: true })
 
-export class Tramite260104StoreDos extends Store<Solicitud260104State>{
+export class Tramite260104StoreDos extends Store<Solicitud260104State> {
     /**
      * Crea una instancia de Tramite31601Store.
      * Inicializa la tienda con el estado inicial.
@@ -669,6 +694,34 @@ export class Tramite260104StoreDos extends Store<Solicitud260104State>{
             rfc,
         }));
     }
-    
-} 
-  
+    /**
+       * Establece el estado de rfc.
+       * @param nombre - El valor de rfc.
+       */
+    public setNumero(nombres: string) {
+        this.update((state) => ({
+            ...state,
+            nombres,
+        }));
+    }
+    /**
+     * Establece el estado de rfc.
+     * @param apellidoPaterno - El valor de rfc.
+     */
+    public setApellidoPaterno(apellidoPaterno: string) {
+        this.update((state) => ({
+            ...state,
+            apellidoPaterno,
+        }));
+    }
+    /**
+   * Establece el estado de rfc.
+   * @param apellidoMaterno - El valor de rfc.
+   */
+    public setApellidoMaterno(apellidoMaterno: string) {
+        this.update((state) => ({
+            ...state,
+            apellidoMaterno,
+        }));
+    }
+}

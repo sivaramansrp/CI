@@ -53,8 +53,8 @@ const ROUTES: Routes = [
     path: 'sustancias-quimicas',
     loadChildren: () =>
       import(
-        './tramites/240107/aviso-importacion-sustancias-quimicas.module'
-      ).then((m) => m.AvisoImportacionSustanciasQuimicasModule),
+        './tramites/240107/sustancias-quimicas.module'
+      ).then((m) => m.SustanciasQuimicasModule),
   },
   {
     path: 'permiso-ordinario',
@@ -218,7 +218,7 @@ const ROUTES: Routes = [
       import('./detalle-v-dictamen/detalle-v-dictamen.component').then((m) => m.DetalleVDictamenComponent),
   },
   {
-    path: 'permiso-ordinario-importacion-material-explosivo',
+    path: 'permiso-ordinario-importacion-material',
     loadChildren: () =>
       import(
         './tramites/240108/permiso-ordinario-importacion-exlposivo.module'

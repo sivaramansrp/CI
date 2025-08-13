@@ -5,7 +5,7 @@ import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/cor
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ActionType } from '../../enum/aviso.enum';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from "@libs/shared/data-access-user/src";
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
@@ -16,6 +16,7 @@ import { MenuConfig } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { Tramite32504Query } from '../../estados/tramite32504.query';
 import { Tramite32504Store } from '../../estados/tramite32504.store';
 
 /**
@@ -52,6 +53,11 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
    * @type {EventEmitter<boolean>}
    */
   @Output() emitButtonAction = new EventEmitter<boolean>();
+
+  /** 
+ * Evento que se emite cuando se ha agregado un nuevo registro correctamente.
+ */
+  @Output() registroAgregado = new EventEmitter<void>();
 
   /**
    * Notificador para destruir suscripciones activas y evitar fugas de memoria.
@@ -306,6 +312,7 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
     private catalogosServicios: CatalogosService,
     private store: Tramite32504Store,
     private consultaQuery: ConsultaioQuery,
+    private query: Tramite32504Query,
   ) {
     this.crearFormulario();
   }
@@ -377,6 +384,19 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
       if (campo.inputType === InputTypes.SELECT &&
           campo.props.campo !== 'colonias') {
           this.obtenerValoresCatalogo(indiceGrupo, menuIndex, CONTROL_NAME);
+      }
+    });
+/**
+ * Se suscribe a los datos del formulario y los carga solo la primera vez.
+ * Actualiza el formulario con los valores recibidos desde el observable.
+ */
+    let firstLoad = true;
+    this.query.selectformulario$ 
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((datos) => {
+      if (datos && firstLoad) {
+      this.formulario.patchValue(datos);
+      firstLoad = false;
       }
     });
   }
@@ -582,6 +602,24 @@ validarNewAgregarFila():void{
   GROUPO_DOMICILIO_LUGAR.reset();
 
   this.accionesBotones(this.actionTypes.TABLE_ACTION, this.botonAccionesTipos.AGREGAR);
+}
+
+/**
+ * Valida los formularios `datosQuienRecibe` y `datosDomicilioLugar`.
+ * Si son válidos, ejecuta la acción de agregar y emite el evento `registroAgregado`.
+ */
+onAgregarClick(): void {
+  const GROUPO_QUIEN_RECIBE = this.formulario.get('datosQuienRecibe') as FormGroup;
+  const GROUPO_DOMICILIO_LUGAR = this.formulario.get('datosDomicilioLugar') as FormGroup;
+
+  if (GROUPO_QUIEN_RECIBE.get("rfc")?.invalid || (GROUPO_DOMICILIO_LUGAR.get("nombreComercial")?.invalid && GROUPO_DOMICILIO_LUGAR.get("entidadFederativa")?.invalid && GROUPO_DOMICILIO_LUGAR.get("alcalida_municipio")?.invalid && GROUPO_DOMICILIO_LUGAR.get("colonias")?.invalid)) {
+    Object.values(GROUPO_QUIEN_RECIBE.controls).forEach(control => control.markAsTouched());
+    Object.values(GROUPO_DOMICILIO_LUGAR.controls).forEach(control => control.markAsTouched());
+    return;
+  }
+  this.accionesBotones(this.actionTypes.FORM_ACTION, this.botonAccionesTipos.AGREGAR);
+
+  this.registroAgregado.emit();
 }
 
   /**

@@ -65,6 +65,10 @@ export interface Tramite260904State {
   fecPago: string;
   /** Importe del pago */
   impPago: string;
+  /** Número de programa IMMEX si aplica */
+  immexProgramNumber?: string;
+  /** Año del programa IMMEX si aplica */
+  ano?: string;
 
 }
 
@@ -101,6 +105,8 @@ export function createInitialState(): Tramite260904State {
     llaveDePago: '',
     fecPago: '',
     impPago: '',
+    immexProgramNumber: undefined,
+    ano: undefined,
   };
 }
 
