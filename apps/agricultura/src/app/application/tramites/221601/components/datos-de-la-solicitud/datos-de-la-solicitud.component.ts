@@ -237,7 +237,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 mercanciaForm = this.fb.group({
   paisOrigen: ['', Validators.required],
   regulacion: ['', Validators.required],
-  nombreProducto: ['', Validators.required],
+  nombreProducto: ['', Validators.required, Validators.maxLength(50)],
   fracciónArancelaria: ['', Validators.required],
   unidad2: ['', Validators.required, { disabled: true }],
   nico: ['', Validators.required],
@@ -299,7 +299,7 @@ mercanciaForm = this.fb.group({
       clave: [this.solicitudState.clave,[Validators.required, Validators.maxLength(15)]],
       establecimiento: [this.solicitudState.establecimiento, Validators.required],
       regimen: [this.solicitudState.regimen, Validators.required],
-      veterinario: [this.solicitudState.veterinario, Validators.required],
+      veterinario: [this.solicitudState.veterinario, Validators.required, Validators.maxLength(50)],
       capturaMercancia: [this.solicitudState.capturaMercancia, Validators.required]
     });
 

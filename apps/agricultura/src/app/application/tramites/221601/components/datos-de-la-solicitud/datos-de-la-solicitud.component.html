@@ -107,7 +107,7 @@
 
       <div class="col-md-4">
         <div class="form-group">
-          <app-catalogo-select [catalogo]="establecimiento" [label]="'Establecimiento TIF'" [placeholder]="'Seleccione un valor'" [required]="false" 
+          <app-catalogo-select [catalogo]="establecimiento" [label]="'Establecimiento TIF'" [placeholder]="'Seleccione un opción'" [required]="false" 
             name="establecimiento" formControlName="establecimiento" [isDisabled]="esFormularioSoloLectura"
             (change)="setValoresStore(datosSolicitudForm, 'establecimiento', 'setEstablecimiento')"
             data-bs-toggle="modal"
@@ -146,15 +146,11 @@
       <div class="col-md-4">
         <div class="form-group">
           <app-catalogo-select [catalogo]="regimen" [label]="'Régimen'" [required]="true" name="regimen" [isDisabled]="esFormularioSoloLectura" [tooltipQuestionCircleText]="'Régimen al que se destinará la mercancía'" [tooltipQuestionCircle]="true"
-            formControlName="regimen" (change)="setValoresStore(datosSolicitudForm, 'regimen', 'setRegimen')" [placeholder]="'Seleccione un valor'">
+            formControlName="regimen" (change)="setValoresStore(datosSolicitudForm, 'regimen', 'setRegimen')" [placeholder]="'Seleccione un opción'">
           </app-catalogo-select>
-           <div class="d-grid">
-            @if(datosSolicitudForm.controls['regimen'].errors?.['required']) {
-              <span class="mensaje-error">Este campo es obligatorio</span>
-            }
-          </div>
+           
         </div>
-      </div>
+         </div>
     </div>
    
     <div class="row m-0">
@@ -204,6 +200,8 @@
           formControlName="paisOrigen"
           [catalogo]="veterinario"
           [label]="'Tipo requisito*'">
+          [placeholder]="'Seleccione un opción'"
+          maxlength="50"
         </app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -211,8 +209,10 @@
         <input class="form-control" formControlName="regulacion" />
       </div>
       <div class="col-md-4">
-        <label class="form-label custum-numero">Número de certificado internacional*:</label>
-        <input class="form-control" formControlName="nombreProducto" />
+        <label class="form-label custum-numero">Número de certificado internacional*:<span
+                class="bi bi-question-circle-fill fs-4 m-1" title="Title"
+                ata-bs-toggle="tooltip"></span></label>
+        <input class="form-control" formControlName="nombreProducto" maxlength="50" />
       </div>
     </div>
 
@@ -221,12 +221,13 @@
         <app-catalogo-select
           formControlName="fracciónArancelaria"
           [catalogo]="veterinario"
-          [label]="'Fracción arancelaria*:'">
+          [label]="'Fracción arancelaria*'">
+          [placeholder]="'Seleccione un opción'"
         </app-catalogo-select>
       </div>
       <div class="col-md-8">
         <label class="form-label">Descripción de la fracción arancelaria*:<span
-                class="bi bi-question-circle-fill fs-4 m-1" title="Title"
+                class="bi bi-question-circle-fill fs-4 m-1" title="Ingrese una fracción"
                 ata-bs-toggle="tooltip"></span></label>
         <input class="form-control" formControlName="unidad2" />
       </div>
@@ -236,20 +237,28 @@
         <app-catalogo-select
           formControlName="nico"
           [catalogo]="veterinario"
-          [label]="'Nico*:'">
+          [label]="'Nico*'">
+          [placeholder]="'Seleccione un opción'"
         </app-catalogo-select>
       </div>
       <div class="col-md-8">
         <label class="form-label">Descripción Nico:<span
-                class="bi bi-question-circle-fill fs-4 m-1" title="Title"
+                class="bi bi-question-circle-fill fs-4 m-1" title="Ingrese una fracción Nico"
                 ata-bs-toggle="tooltip"></span></label>
-        <input class="form-control" formControlName="unidad1" />
+        <input class="form-control" formControlName="unidad1"  [disabled] ="true" />
       </div>
     </div>
  
     <div class="row mb-3">
       <label class="form-label d-flex" >Descripción*:</label>
-      <textarea class="form-control custom-textarea" formControlName="observaciones" rows="3"></textarea>
+      <textarea class="form-control custom-textarea" formControlName="observaciones" rows="3" maxlength="1000"></textarea>
+      <div class="d-grid">
+        <div *ngIf="mercanciaForm.get('observaciones')?.touched">
+          <small class="mensaje-error" *ngIf="mercanciaForm.get('observaciones')?.hasError('maxlength')">
+            Por favor, no escribas más de 1000 caracteres.
+          </small>
+        </div>
+    </div>
     </div>
 
     <div class="row mb-3">
@@ -259,7 +268,7 @@
       </div>
       <div class="col-md-4">
         <label class="form-label">UMT*:<span
-                class="bi bi-question-circle-fill fs-4 m-1" title="Title"
+                class="bi bi-question-circle-fill fs-4 m-1" title="Unidad de medida de la tarifa"
                 ata-bs-toggle="tooltip"></span></label>
         <input class="form-control" formControlName="umt" />
       </div>
@@ -271,7 +280,7 @@
       </div>
       <div class="col-md-4">
         <label class="form-label">UMC*:<span
-                class="bi bi-question-circle-fill fs-4 m-1" title="Title"
+                class="bi bi-question-circle-fill fs-4 m-1" title="Unidad de medida de comercialización"
                 ata-bs-toggle="tooltip"></span></label>
         <input class="form-control" formControlName="umc" />
       </div>
@@ -281,21 +290,24 @@
       <app-catalogo-select
           formControlName="especie"
           [catalogo]="veterinario"
-          [label]="'Especie*'">
+          [label]="'Especie*'"
+          [placeholder]="'Seleccione una opción'">
         </app-catalogo-select>
       </div>
       <div class="col-md-4">
         <app-catalogo-select
           formControlName="edadAnimal"
           [catalogo]="veterinario"
-          [label]="'Uso*'">
+          [label]="'Uso*'"
+          [placeholder]="'Seleccione una opción'">
         </app-catalogo-select>
       </div>
       <div class="col-md-4">
         <app-catalogo-select
           formControlName="paisOrigen1"
           [catalogo]="veterinario"
-          [label]="'País de origen*'">
+          [label]="'País de origen*'"
+          [placeholder]="'Seleccione una opción'">
         </app-catalogo-select>
       </div>
     </div>
@@ -304,7 +316,8 @@
         <app-catalogo-select
           formControlName="paisdeprocedencia"
           [catalogo]="veterinario"
-          [label]="'País de procedencia*:'">
+          [label]="'País de procedencia*'"
+          [placeholder]="'Seleccione una opción'">
         </app-catalogo-select>
       </div>
   </div>
@@ -356,7 +369,8 @@
         <app-catalogo-select
           formControlName="sexo"
           [catalogo]="veterinario"
-          [label]="'Sexo'">
+          [label]="'Sexo'" 
+          [placeholder]="'Seleccione una opción'">
         </app-catalogo-select>
         </div>
         </div>
