@@ -1,44 +1,36 @@
-import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
+import { Input } from '@angular/core';
+
+import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
+
 import {
   AlertComponent,
-  ConfiguracionColumna,
   ConsultaioQuery,
-  MENSAJEDEALERTA,
   Notificacion,
   NotificacionesComponent,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
 } from '@ng-mf/data-access-user';
+import { Subject,map, takeUntil } from 'rxjs';
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
+
 import {
-  CONFIRMA_ELIMINACION,
-  DATOS_ELIMINADOS_CORRECTAMENTE,
   MENSAJE_SIN_FILA_SELECCIONADA,
-  OCULTAR_FACTURADOR,
-  PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR,
-  OCULTAR_PROVEEDOR,
 } from '../../constantes/datos-solicitud.enum';
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
-import {
-  DESTINATARIO_ENCABEZADO_DE_TABLA,
-  Destinatario,
-  FABRICANTE_ENCABEZADO_DE_TABLA,
-  FACTURADOR_ENCABEZADO_DE_TABLA,
-  Fabricante,
-  Facturador,
-  MENSAJE_TABLA_OBLIGATORIA,
-  PROVEEDOR_ENCABEZADO_DE_TABLA,
-  Proveedor,
-} from '../../models/terceros-relacionados.model';
-import { Subject, map, takeUntil } from 'rxjs';
-import { CommonModule } from '@angular/common';
+
+import { DESTINATARIO_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacionados.model';
+import { Destinatario } from '../../models/terceros-relacionados.model';
+import { FABRICANTE_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacionados.model';
+import { FACTURADOR_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacionados.model';
+import { Fabricante } from '../../models/terceros-relacionados.model';
+import { Facturador } from '../../models/terceros-relacionados.model';
+import { MENSAJE_TABLA_OBLIGATORIA } from '../../models/terceros-relacionados.model';
+import { PROVEEDOR_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacionados.model';
+import { Proveedor } from '../../models/terceros-relacionados.model';
 import { TercerosRelacionadosFebService } from '../../services/tereceros-relacionados-feb.service';
 
 /**
@@ -48,7 +40,7 @@ import { TercerosRelacionadosFebService } from '../../services/tereceros-relacio
  * en el store y navegar a las secciones correspondientes para su edición o creación.
  */
 @Component({
-  selector: 'app-terceros-relacionados',
+  selector: 'app-terceros-relacionados-proveeder',
   standalone: true,
   imports: [
     CommonModule,
@@ -57,10 +49,10 @@ import { TercerosRelacionadosFebService } from '../../services/tereceros-relacio
     AlertComponent,
     NotificacionesComponent,
   ],
-  templateUrl: './terceros-relacionados.component.html',
-  styleUrl: './terceros-relacionados.component.css',
+  templateUrl: './terceros-relacionados-proveeder.component.html',
+  styleUrl: './terceros-relacionados-proveeder.component.css',
 })
-export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
+export class TercerosRelacionadosProveederComponent implements OnDestroy {
   /**
    * @property {number} idProcedimiento
    * Identificador único del procedimiento asociado a la solicitud.
@@ -128,20 +120,6 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   seleccionTable: Fabricante[] = [];
 
   /**
-   * @property {boolean} isAdjuntar
-   * @description Indica si el componente está en modo de adjuntar documentos o archivos.
-   * Cuando es `true`, muestra un mensaje específico para adjuntar elementos.
-   * Cuando es `false`, muestra el mensaje de tabla obligatoria.
-   * 
-   * Este flag controla qué tipo de alerta se muestra al usuario:
-   * - `false`: Muestra MENSAJE_TABLA_OBLIGATORIA
-   * - `true`: Muestra TEXTO.ADJUNTAR (mensaje específico para adjuntar)
-   * 
-   * @default false
-   */
-  isAdjuntar: boolean = false;
-
-  /**
    * Indica si el componente debe estar oculto o visible.
    * @input estaOculto - Valor booleano que determina la visibilidad del componente.
    */
@@ -151,13 +129,21 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Indica si el formulario del proveedor debe estar habilitado.
    * @input habilitarProveedor - Valor booleano que habilita o deshabilita la sección del proveedor.
    */
-  public habilitarProveedor = true;
+  @Input() habilitarProveedor!: boolean;
 
   /**
    * Indica si el formulario del facturador debe estar habilitado.
    * @input habilitarFacturador - Valor booleano que habilita o deshabilita la sección del facturador.
    */
-  public habilitarFacturador = true;
+  @Input() habilitarFacturador!: boolean;
+
+  /**
+   * Indica si el formulario del fabricante debe estar habilitado.
+   * @input habilitarFabricante - Valor booleano que habilita o deshabilita la sección del fabricante.
+   */
+  @Input() habilitarFabricante!: boolean;
+
+  @Input() destinatarioFinal!: boolean;
 
   /**
    * @property {string[]} elementosRequeridos
@@ -249,22 +235,15 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   >();
 
   /**
-   * Constructor del componente.
+   * @constructor
+   * Inyecta los servicios de router, rutas activas y store del trámite.
    *
-   * Inyecta los servicios necesarios para la navegación, el manejo de rutas activas,
-   * la consulta de datos del trámite y la consulta de información adicional.
-   *
-   * @param router Servicio de enrutamiento de Angular.
-   * @param activatedRoute Servicio para acceder a la ruta activa actual.
-   * @param tercerosService Servicio para consultar y gestionar los datos del trámite de terceros relacionados.
-   * @param consultaioQuery Servicio para obtener datos de consulta de información adicional.
+   * @param router - Servicio de enrutamiento de Angular.
+   * @param activatedRoute - Ruta activa actual.
+   * @param tramiteStore - Store que administra los datos del trámite.
+   * @param tramiteQuery - Servicio para consultar los datos del trámite.
    */
-  constructor(
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private tercerosService: TercerosRelacionadosFebService,
-    private consultaioQuery: ConsultaioQuery
-  ) {
+  constructor(private router: Router, private activatedRoute: ActivatedRoute,private tercerosService: TercerosRelacionadosFebService,private consultaioQuery: ConsultaioQuery,) {
     this.seleccionarFilaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
@@ -276,14 +255,14 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
     };
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroy$),
-        map((seccionState) => {
-          this.formularioDeshabilitado = seccionState.readonly;
-        })
-      )
-      .subscribe();
+     this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroy$),
+          map((seccionState)=>{
+            this.formularioDeshabilitado = seccionState.readonly; 
+          })
+        )
+        .subscribe()
   }
 
   /**
@@ -343,52 +322,10 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   public mostrarAlerta: boolean = false;
 
-  /**
-   * Controla la visibilidad del modal de alerta.
-   * @property {boolean} eliminarAlerta
-   */
-  public eliminarAlerta: boolean = false;
-
-  /**
-   * Controla la visibilidad del modal de alerta.
-   * @property {boolean} eliminarAlertaConfirm
-   */
-  public eliminarAlertaConfirm: boolean = false;
-
-  /**
-   * Controla la visibilidad del modal de alerta.
-   * @property {boolean} eliminarFabricanteAlerta
-   */
-  public eliminarFabricanteAlerta: boolean = false;
-
-  /**
-   * Controla la visibilidad del modal de alerta.
-   * @property {boolean} eliminarDestinatarioAlerta
-   */
-  public eliminarDestinatarioAlerta: boolean = false;
-
-  /**
-   * Controla la visibilidad del modal de alerta.
-   * @property {boolean} eliminarProveedorAlerta
-   */
-  public eliminarProveedorAlerta: boolean = false;
-
-  /**
-   * Controla la visibilidad del modal de alerta.
-   * @property {boolean} eliminarFacturadorAlerta
-   */
-  public eliminarFacturadorAlerta: boolean = false;
-
-  /**
-   * Subject utilizado para destruir las suscripciones y evitar fugas de memoria.
-   */
-  private destroy$ = new Subject<void>();
-
-    /**
-      * property TEXTOS
-      * description Textos de alerta utilizados en el componente.
-      */
-     public TEXTOS = MENSAJEDEALERTA;   
+     /**
+    * Subject utilizado para destruir las suscripciones y evitar fugas de memoria.
+    */
+      private destroy$ = new Subject<void>();
 
   /**
    * @method irAAcciones
@@ -401,48 +338,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       relativeTo: this.activatedRoute,
     });
   }
-  /**
-   * @method ngOnInit
-   * @description Hook que se ejecuta al inicializar el componente.
-   * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
-   */
-  ngOnInit(): void {
-    this.isAdjuntar = PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR.includes(this.idProcedimiento);
-    this.habilitarFacturador = OCULTAR_FACTURADOR.includes(this.idProcedimiento)
-      ? false
-      : true;
-    this.habilitarProveedor = OCULTAR_PROVEEDOR.includes(this.idProcedimiento)
-      ? false
-      : true;
-
-    this.tercerosService
-      .getFabricanteTablaDatos()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((response: Destinatario[]) => {
-        this.fabricanteTablaDatos = response;
-      });
-
-    this.tercerosService
-      .getFabricanteTablaDatos()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((response: Destinatario[]) => {
-        this.destinatarioFinalTablaDatos = response;
-      });
-
-    this.tercerosService
-      .getFabricanteTablaDatos()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((response: Proveedor[]) => {
-        this.proveedorTablaDatos = response;
-      });
-
-    this.tercerosService
-      .getFabricanteTablaDatos()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((response: Facturador[]) => {
-        this.facturadorTablaDatos = response;
-      });
-  }
+  
 
   /**
    * Verifica si un campo es requerido según la configuración de campos requeridos.
@@ -530,83 +426,15 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       this.mostrarAlerta = true;
       return;
     }
-    this.seleccionarFilaNotificacion.mensaje = CONFIRMA_ELIMINACION;
-    this.seleccionarFilaNotificacion.txtBtnCancelar = 'Cancelar';
-    this.eliminarFabricanteAlerta = true;
-    this.eliminarAlerta = true;
-  }
-
-  eliminarAlertaConfirmation(evento: boolean): void {
-    this.eliminarAlerta = false;
-    if (evento) {
-      this.seleccionarFilaNotificacion.mensaje = DATOS_ELIMINADOS_CORRECTAMENTE;
-      this.seleccionarFilaNotificacion.txtBtnCancelar = '';
-      this.eliminarAlertaConfirm = true;
-    }
-  }
-
-  eliminarDotosAlerta(evento: boolean): void {
-    if (evento) {
-      if (this.eliminarFabricanteAlerta) {
-        this.fabricanteTablaDatos = this.fabricanteTablaDatos.filter(
-          (fabricante: Fabricante) => {
-            return !this.fabricanteSeleccionadoDatos.some(
-              (idx2: Fabricante) => idx2.rfc === fabricante.rfc
-            );
-          }
+    this.fabricanteTablaDatos = this.fabricanteTablaDatos.filter(
+      (fabricante: Fabricante) => {
+        return !this.fabricanteSeleccionadoDatos.some(
+          (idx2: Fabricante) => idx2.rfc === fabricante.rfc
         );
-        this.fabricanteEliminar.emit(this.fabricanteTablaDatos);
-        this.eliminarFabricanteAlerta = false;
-      } else if (this.eliminarDestinatarioAlerta) {
-        this.destinatarioFinalTablaDatos =
-          this.destinatarioFinalTablaDatos.filter(
-            (destinatario: Destinatario) => {
-              return !this.destinatarioSeleccionadoDatos.some(
-                (idx2: Destinatario) => idx2.rfc === destinatario.rfc
-              );
-            }
-          );
-        this.destinatarioEliminar.emit(this.destinatarioFinalTablaDatos);
-        this.eliminarDestinatarioAlerta = false;
-      } else if (this.eliminarProveedorAlerta) {
-        this.proveedorTablaDatos = this.proveedorTablaDatos.filter(
-          (proveedor: Proveedor) => {
-            return !this.proveedorSeleccionadoDatos.some((idx2: Proveedor) => {
-              if (idx2.nombreRazonSocial !== '') {
-                return idx2.nombreRazonSocial === proveedor.nombreRazonSocial;
-              }
-              return idx2.razonSocial === proveedor.razonSocial;
-            });
-          }
-        );
-
-        this.proveedorEliminar.emit(this.proveedorTablaDatos);
-        this.eliminarProveedorAlerta = false;
-      } else if (this.eliminarFacturadorAlerta) {
-        this.facturadorTablaDatos = this.facturadorTablaDatos.filter(
-          (facturador: Facturador) => {
-            return !this.facturadorSeleccionadoDatos.some(
-              (idx2: Facturador) => {
-                if (idx2.nombreRazonSocial !== '') {
-                  return (
-                    idx2.nombreRazonSocial === facturador.nombreRazonSocial
-                  );
-                }
-                return idx2.razonSocial === facturador.razonSocial;
-              }
-            );
-          }
-        );
-
-        this.facturadorEliminar.emit(this.facturadorTablaDatos);
-        this.eliminarFacturadorAlerta = false;
       }
-    }
-    this.eliminarFabricanteAlerta = false;
-    this.eliminarFabricanteAlerta = false;
-    this.eliminarProveedorAlerta = false;
-    this.eliminarFacturadorAlerta = false;
-    this.eliminarAlertaConfirm = false;
+    );
+
+    this.fabricanteEliminar.emit(this.fabricanteTablaDatos);
   }
 
   /**
@@ -621,10 +449,15 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       this.mostrarAlerta = true;
       return;
     }
-    this.seleccionarFilaNotificacion.mensaje = CONFIRMA_ELIMINACION;
-    this.seleccionarFilaNotificacion.txtBtnCancelar = 'Cancelar';
-    this.eliminarDestinatarioAlerta = true;
-    this.eliminarAlerta = true;
+    this.destinatarioFinalTablaDatos = this.destinatarioFinalTablaDatos.filter(
+      (destinatario: Destinatario) => {
+        return !this.destinatarioSeleccionadoDatos.some(
+          (idx2: Destinatario) => idx2.rfc === destinatario.rfc
+        );
+      }
+    );
+
+    this.destinatarioEliminar.emit(this.destinatarioFinalTablaDatos);
   }
 
   /**
@@ -639,10 +472,18 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       this.mostrarAlerta = true;
       return;
     }
-    this.seleccionarFilaNotificacion.mensaje = CONFIRMA_ELIMINACION;
-    this.seleccionarFilaNotificacion.txtBtnCancelar = 'Cancelar';
-    this.eliminarProveedorAlerta = true;
-    this.eliminarAlerta = true;
+    this.proveedorTablaDatos = this.proveedorTablaDatos.filter(
+      (proveedor: Proveedor) => {
+        return !this.proveedorSeleccionadoDatos.some((idx2: Proveedor) => {
+          if (idx2.nombreRazonSocial !== '') {
+            return idx2.nombreRazonSocial === proveedor.nombreRazonSocial;
+          }
+          return idx2.razonSocial === proveedor.razonSocial;
+        });
+      }
+    );
+
+    this.proveedorEliminar.emit(this.proveedorTablaDatos);
   }
 
   /**
@@ -657,10 +498,18 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       this.mostrarAlerta = true;
       return;
     }
-    this.seleccionarFilaNotificacion.mensaje = CONFIRMA_ELIMINACION;
-    this.seleccionarFilaNotificacion.txtBtnCancelar = 'Cancelar';
-    this.eliminarFacturadorAlerta = true;
-    this.eliminarAlerta = true;
+    this.facturadorTablaDatos = this.facturadorTablaDatos.filter(
+      (facturador: Facturador) => {
+        return !this.facturadorSeleccionadoDatos.some((idx2: Facturador) => {
+          if (idx2.nombreRazonSocial !== '') {
+            return idx2.nombreRazonSocial === facturador.nombreRazonSocial;
+          }
+          return idx2.razonSocial === facturador.razonSocial;
+        });
+      }
+    );
+
+    this.facturadorEliminar.emit(this.facturadorTablaDatos);
   }
 
   /**

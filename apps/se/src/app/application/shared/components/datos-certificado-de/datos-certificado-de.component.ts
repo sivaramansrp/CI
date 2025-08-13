@@ -1,5 +1,5 @@
 import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MenusDesplegables } from '../../models/modificacion.enum';
@@ -12,7 +12,7 @@ import { Subject } from 'rxjs';
   templateUrl: './datos-certificado-de.component.html',
   styleUrl: './datos-certificado-de.component.scss'
 })
-export class DatosCertificadoDeComponent implements OnDestroy, OnInit {
+export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges {
   /**
    * Datos de los menús desplegables.
    * @type {MenusDesplegables[]}
@@ -145,12 +145,6 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit {
   constructor(
     private fb: FormBuilder,
   ) {
-    // La función se ejecutará después de un segundo.
-    setTimeout(() => {
-      if (this.datosFormCertificado) {
-        this.formDatosCertificado.patchValue(this.datosFormCertificado);
-      }
-    }, 100);
   }
   /**
  * @inheritdoc
@@ -194,7 +188,25 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit {
 
     });
   }
-
+ /**
+   * @method ngOnChanges
+   * @description
+   * Método del ciclo de vida que se llama cuando cambia alguna propiedad enlazada por datos.
+   * Específicamente, verifica si el input `datosForm` ha cambiado. Si es así, actualiza el
+   * formulario `formDatosDelDestinatario` con los nuevos valores de `datosForm`. Si el formulario
+   * no existe, lo crea.
+   * 
+   * @param changes - Objeto con pares clave/valor de las propiedades que han cambiado.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['datosFormCertificado'] && this.datosFormCertificado) {
+      if (this.formDatosCertificado) {
+        this.formDatosCertificado.patchValue(this.datosFormCertificado);
+      } else {
+        this.createForm();
+      }
+    }
+  }
   /**
    * Getter para acceder al control del formulario, utilizado para la validación.
    * @returns FormControl del formulario.
@@ -246,6 +258,13 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit {
     this.representacionFederalSeleccionEvent.emit(estado);
   }
 
+  validarFormularios():boolean{
+    if(this.formDatosCertificado.valid){
+      return true;
+    }
+    this.formDatosCertificado.markAllAsTouched();
+    return false;
+  }
   /**
    * Método de ciclo de vida de Angular, se ejecuta al destruir el componente.
    * Cancela todas las suscripciones para evitar fugas de memoria.

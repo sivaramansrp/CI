@@ -14,6 +14,7 @@ import { PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE, STR_NACIONAL } from '../../c
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Fabricante } from '../../models/terceros-relacionados.model';
 import { Subject } from 'rxjs';
+import { TERCEROS_RELACIONADOS_DATOS_INICIALES } from '../../constantes/terceros-fabricante.enum';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { takeUntil } from 'rxjs/operators';
 
@@ -170,6 +171,14 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
   public estaDeshabilitadoDesplegable: boolean = true;
 
   /**
+   * @property {boolean} habilitarContribuyente
+   * @description
+   * Indica si el campo de contribuyente debe estar habilitado en el formulario de fabricante.
+   * Se activa dependiendo del procedimiento seleccionado.
+   */
+  public habilitarContribuyente: boolean = false;
+
+  /**
    * Constructor que inyecta los servicios y crea el formulario de fabricante.
    *
    * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
@@ -191,6 +200,7 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
    * Llama a la función para cargar los datos de los catálogos.
    */
   ngOnInit(): void {
+    this.cambiarHabilitacionContribuyente();
     this.cargarDatos();
     this.validarElementos();
     this.crearAgregarFormularioFabricante();
@@ -199,6 +209,20 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
       PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE.includes(this.idProcedimiento)
         ? true
         : false;
+  }
+
+    /**
+   * @method cambiarHabilitacionContribuyente
+   * @description
+   * Habilita el campo de contribuyente en el formulario si el procedimiento actual está incluido en la lista `TERCEROS_RELACIONADOS_DATOS_INICIALES`.
+   * Cambia el valor de la propiedad `habilitarContribuyente` a `true` si la condición se cumple.
+   * 
+   * @returns {void}
+   */
+  public cambiarHabilitacionContribuyente(): void {
+    if(TERCEROS_RELACIONADOS_DATOS_INICIALES.includes(this.idProcedimiento)) {
+      this.habilitarContribuyente = true;
+    }
   }
 
   /**
@@ -483,11 +507,8 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
    * @returns {void} Este método no retorna ningún valor.
    */
   changeNacionalidad(): void {
-    if (
-      (this.agregarFabricanteForm?.get('nacionalidad')?.value === '' ||
-        this.agregarFabricanteForm?.get('nacionalidad')?.value === undefined) &&
-      (this.agregarFabricanteForm?.get('tipoPersona')?.value === '' ||
-        this.agregarFabricanteForm?.get('tipoPersona')?.value === undefined)
+    if (this.agregarFabricanteForm?.get('tipoPersona')?.value === '' ||
+        this.agregarFabricanteForm?.get('tipoPersona')?.value === undefined
     ) {
       Object.keys(this.agregarFabricanteForm.controls).forEach(
         (controlName) => {
@@ -495,9 +516,28 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
           if (controlName === 'nacionalidad' || controlName === 'tipoPersona') {
             this.agregarFabricanteForm.get(controlName)?.enable();
           }
+        });
+    }
+    else if (this.habilitarContribuyente === true && this.agregarFabricanteForm?.get('nacionalidad')?.value === this.nacionalStr &&
+             (this.agregarFabricanteForm?.get('tipoPersona')?.value === this.tipoPersona.FISICA ||
+              this.agregarFabricanteForm?.get('tipoPersona')?.value === this.tipoPersona.MORAL)) {
+      Object.keys(this.agregarFabricanteForm.controls).forEach(controlName => {
+        this.agregarFabricanteForm.get(controlName)?.disable();
+        if (controlName === 'nacionalidad' || controlName === 'tipoPersona' || controlName === 'rfc') {
+          this.agregarFabricanteForm.get(controlName)?.enable();
         }
-      );
-    } else {
+      });
+    }
+    else if( this.habilitarContribuyente === true && this.agregarFabricanteForm?.get('nacionalidad')?.value === this.nacionalStr &&
+    (this.agregarFabricanteForm?.get('tipoPersona')?.value === this.tipoPersona.NO_CONTRIBUYENTE)) {
+      Object.keys(this.agregarFabricanteForm.controls).forEach(controlName => {
+        this.agregarFabricanteForm.get(controlName)?.disable();
+        if (controlName === 'nacionalidad' || controlName === 'tipoPersona' || controlName === 'curp') {
+          this.agregarFabricanteForm.get(controlName)?.enable();
+        }
+      });
+    }
+    else {
       if (this.agregarFabricanteForm?.get('tipoPersona')?.value) {
         Object.keys(this.agregarFabricanteForm.controls).forEach(
           (controlName) => {

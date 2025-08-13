@@ -454,7 +454,7 @@
       <div class="col-md-3 my-3">
         <div class="form-group">
           <label class="form-label municipio-label" for="telefono"
-            >S.C.I.A.N
+            >S.C.I.A.N.
           </label>
           <span class="form-label" *ngIf="esCampoRequerido('scian')">*</span>
           <span class="form-label">:</span>
@@ -709,7 +709,7 @@
       <div class="col-md-4"></div>
     </div>
 
-     @if(!esManifesto){
+    @if(!esManifesto){
     <div class="row mt-2">
       <ng-titulo
         titulo="Manifiestos y declaraciones"
@@ -721,10 +721,8 @@
         [CUSTOMECLASS]="infoAlert"
       ></ng-alert>
     </div>
-    </div>    
-  }
-  @if(esManifesto) {
-    <div class="row mt-2">
+    } @if(esManifesto) {
+       <div class="row mt-2">
     <ng-titulo titulo="Manifiestos y declaraciones"></ng-titulo>
     <div class="mt-5">
       <div class="alert alert-info">
@@ -744,26 +742,26 @@
         >
           Este campo es obligatorio.
         </div>
+        </div>
       </div>
     </div>
-    </div>
-    
-  }
+    }
     <div class="row mt-3">
       <div class="col-md-12">
         <label class="form-label"
           >Los datos o anexos pueden contener información confidencial ¿Está de
-          acuerdo en hacerlos públicos?*:</label>
-          <app-input-radio
-            [radioOptions]="radioBtn"
-            [selectedValue]="predeterminadoSeleccionar"
-            (valueChange)="cambioDeValorIndique($event)"
-            [isRequired]="true"
-            [layout]="'horizontal'"
-            [gap]="'50px'"
-            formControlName="publico"
-            >
-          </app-input-radio>
+          acuerdo en hacerlos públicos?*:</label
+        >
+        <app-input-radio
+          [radioOptions]="radioBtn"
+          [selectedValue]="predeterminadoSeleccionar"
+          (valueChange)="cambioDeValorIndique($event)"
+          [isRequired]="true"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="publico"
+        >
+        </app-input-radio>
       </div>
     </div>
 
@@ -807,7 +805,9 @@
     <div class="row mt-2">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="representanteNombre">Nombre o Razón Social*:</label>
+          <label class="form-label" for="representanteNombre"
+            >Nombre o Razón Social*:</label
+          >
           <input
             class="form-control"
             id="representanteNombre"
@@ -829,7 +829,9 @@
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="apellidoPaterno">Apellido paterno*:</label>
+          <label class="form-label" for="apellidoPaterno"
+            >Apellido paterno*:</label
+          >
           <input
             class="form-control"
             id="apellidoPaterno"
