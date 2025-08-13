@@ -7,10 +7,10 @@
             <p class="panel-title espacio-extra">
               Opciones de pre-llenado de Solicitud
             </p>
-            <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
+            <button type="button" class="collpase-button collapsed" [ngClass]="{ 'expanded': colapsable,'collapsed': !colapsable}" [disabled]="esFormularioSoloLectura"></button>
           </div>
           @if(colapsable){
-          <div class="panel-collapse collapse in" id="panel-01">
+          <div class="panel-collapse collapse in" id="panel-01" [ngClass]="{ 'in': colapsable, 'collapse': !colapsable}">
             <div class="panel-body">
               <ng-alert [CONTENIDO]="TEXTOS.ALERTA"></ng-alert>
               <div class="row mt-5 mb-5">

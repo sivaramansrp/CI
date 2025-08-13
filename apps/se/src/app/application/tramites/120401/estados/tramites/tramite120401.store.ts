@@ -54,16 +54,16 @@ export interface Tramite120401State {
   tratado: Catalogo | null;
 
   /**
-   * Producto asociado al trámite. Puede ser nulo si no se ha seleccionado ningún producto.
+   * Producto asociado al trámite. Puede ser nulo si no se ha seleccionado ningún nombreProducto.
    * @type {Catalogo | null}
    */
-  producto: Catalogo | null;
+  nombreProducto: Catalogo | null;
 
   /**
-   * Subproducto asociado al trámite. Puede ser nulo si no se ha seleccionado ningún subproducto.
+   * Subproducto asociado al trámite. Puede ser nulo si no se ha seleccionado ningún nombreSubproducto.
    * @type {Catalogo | null}
    */
-  subproducto: Catalogo | null;
+  nombreSubproducto: Catalogo | null;
 
   /**
    * Cantidad solicitada en el trámite.
@@ -82,8 +82,8 @@ export interface Tramite120401State {
  * - `representacion`: Valor inicial nulo para la representación.
  * - `regimen`: Valor inicial nulo para el régimen.
  * - `tratado`: Valor inicial nulo para el tratado.
- * - `producto`: Valor inicial nulo para el producto.
- * - `subproducto`: Valor inicial nulo para el subproducto.
+ * - `nombreProducto`: Valor inicial nulo para el nombreProducto.
+ * - `nombreSubproducto`: Valor inicial nulo para el nombreSubproducto.
  * - `cantidadSolicitada`: Cadena vacía como valor inicial para la cantidad solicitada.
  */
 export function createInitialState(): Tramite120401State {
@@ -93,8 +93,8 @@ export function createInitialState(): Tramite120401State {
     representacion: null,
     regimen: null,
     tratado: null,
-    producto: null,
-    subproducto: null,
+    nombreProducto: null,
+    nombreSubproducto: null,
     cantidadSolicitada: '',
   };
 }
@@ -161,24 +161,24 @@ export class Tramite120401Store extends Store<Tramite120401State> {
   }
 
    /**
-   * Establece el valor del catálogo de producto en el estado.
-   * @param producto Catálogo seleccionado para el producto.
+   * Establece el valor del catálogo de nombreProducto en el estado.
+   * @param nombreProducto Catálogo seleccionado para el nombreProducto.
    */
-  public setProducto(producto: Catalogo): void {
+  public setProducto(descripcion: Catalogo): void {
     this.update((state) => ({
       ...state,
-      producto,
+      nombreProducto: descripcion,
     }));
   }
 
    /**
-   * Establece el valor del catálogo de subproducto en el estado.
-   * @param subproducto Catálogo seleccionado para el subproducto.
+   * Establece el valor del catálogo de nombreSubproducto en el estado.
+   * @param nombreSubproducto Catálogo seleccionado para el nombreSubproducto.
    */
-  public setSubproducto(subproducto: Catalogo) : void {
+  public setSubproducto(descripcion: Catalogo) : void {
     this.update((state) => ({
       ...state,
-      subproducto,
+      nombreSubproducto: descripcion,
     }));
   }
 
@@ -193,4 +193,12 @@ export class Tramite120401Store extends Store<Tramite120401State> {
       cantidadSolicitada,
     }));
   }
+
+  /**
+ * Establece los datos de cupos en el store.
+ * @param datos - Array de cupos disponibles
+ */
+setDatos(datos: SeleccionDelCupoTabla[]): void {
+  this.update({ datos });
+}
 }

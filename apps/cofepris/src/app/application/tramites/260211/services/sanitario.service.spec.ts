@@ -7,11 +7,13 @@ import { MercanciasTabla, RespuestaTabla } from '../components/domicillo/domicil
 import { Solicitud260211State } from '../../../estados/tramites/tramite260211.store';
 import { ProductoResponse } from '../models/permiso-sanitario.enum';
 import { of, throwError } from 'rxjs';
+import { Terceros260211State, Terceros260211Store } from '../../../estados/tramites/terceros260211.store';
 
 describe('SanitarioService', () => {
   let service: SanitarioService;
   let httpMock: HttpTestingController;
   let tramite260211StoreMock: jest.Mocked<Tramite260211Store>;
+  let terceros260211StoreMock: jest.Mocked<Terceros260211Store>;
 
   beforeEach(() => {
     const tramiteStoreSpy = {
@@ -61,19 +63,57 @@ describe('SanitarioService', () => {
       settipoFetch: jest.fn(),
       setimporte: jest.fn(),
       setMensaje: jest.fn(),
+      
     };
+    const mockStore = {
+    setTercerosNacionalidad: jest.fn(),
+    setTipoPersona: jest.fn(),
+    setRfc: jest.fn(),
+    setNombre: jest.fn(),
+    setPrimerApellido: jest.fn(),
+    setSegundoApellido: jest.fn(),
+    setCurp: jest.fn(),
+    setDenominacionRazonSocial: jest.fn(),
+    setPais: jest.fn(),
+    setEstadoLocalidad: jest.fn(),
+    setMunicipioAlcaldia: jest.fn(),
+    setLocalidad: jest.fn(),
+    setCodigoPostaloEquivalente: jest.fn(),
+    setColonia: jest.fn(),
+    setExtranjeroEstado: jest.fn(),
+    setExtranjeroCodigo: jest.fn(),
+    setExtranjeroColonia: jest.fn(),
+    setCalle: jest.fn(),
+    setNumeroExterior: jest.fn(),
+    setNumeroInterior: jest.fn(),
+    setLada: jest.fn(),
+    setTelefono: jest.fn(),
+    setCorreoElectronico: jest.fn(),
+    setColoniaoEquivalente: jest.fn(),
+    setColoniaoEquivalenteLabel: jest.fn(),
+    setCodigoPostaloEquivalentes: jest.fn(),
+    setEstado: jest.fn(),
+    setEntidadFederativa: jest.fn(),
+    
+    }
 
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       providers: [
         SanitarioService,
-        { provide: Tramite260211Store, useValue: tramiteStoreSpy }
+        { provide: Tramite260211Store, useValue: tramiteStoreSpy 
+        },
+        { provide: Terceros260211Store, useValue: mockStore }
+        
       ]
     });
 
     service = TestBed.inject(SanitarioService);
     httpMock = TestBed.inject(HttpTestingController);
     tramite260211StoreMock = TestBed.inject(Tramite260211Store) as jest.Mocked<Tramite260211Store>;
+    terceros260211StoreMock = TestBed.inject(Terceros260211Store) as jest.Mocked<Terceros260211Store>;
+
+
   });
 
   afterEach(() => {
@@ -353,8 +393,9 @@ describe('SanitarioService', () => {
       req.flush(mockMercanciasTabla);
     });
   });
-
+ 
   describe('actualizarEstadoFormulario', () => {
+    
     it('debería actualizar el estado del formulario con los datos proporcionados', () => {
       const mockDatos: Solicitud260211State = {
         rfcResponsableSanitario: 'RFC123456789',
@@ -468,6 +509,70 @@ describe('SanitarioService', () => {
       expect(tramite260211StoreMock.setCorreo).toHaveBeenCalledWith(mockPartialDatos.correo);
     });
   });
+   describe('actualizarEstadoTercerosFormulario', () => {
+     it('debería actualizar el estado del formulario con los datos proporcionados', () => {
+    const TERECEROS :Terceros260211State= {
+      tercerosNacionalidad: 'MX',
+      tipoPersona: 'Física',
+      rfc: 'RFC123456789',
+      nombre: 'Juan',
+      primerApellido: 'Pérez',
+      segundoApellido: 'López',
+      curp: 'CURP123456HDFRRN09',
+      denominacionRazonSocial: 'Empresa SA',
+      pais: 'México',
+      estadoLocalidad: 'CDMX',
+      municipioAlcaldia: 'Benito Juárez',
+      localidad: 'Del Valle',
+      codigoPostaloEquivalente: '03100',
+      colonia: 'Centro',
+      extranjeroEstado: 'California',
+      extranjeroCodigo: '90001',
+      extranjeroColonia: 'Downtown',
+      calle: 'Av. Reforma',
+      numeroExterior: '123',
+      numeroInterior: '4B',
+      lada: '55',
+      telefono: '12345678',
+      correoElectronico: 'test@example.com',
+      coloniaoEquivalente: 'Col Equiv',
+      coloniaoEquivalenteLabel: 'Col Equiv Label',
+      codigoPostaloEquivalentes: '03101',
+      estado: 'Activo',
+      entidadFederativa: 'CDMX',
+    };
+    service.actualizarEstadoTercerosFormulario(TERECEROS);
+   expect(terceros260211StoreMock.setTercerosNacionalidad).toHaveBeenCalledWith(TERECEROS.tercerosNacionalidad);
+    expect(terceros260211StoreMock.setTipoPersona).toHaveBeenCalledWith(TERECEROS.tipoPersona);
+    expect(terceros260211StoreMock.setRfc).toHaveBeenCalledWith(TERECEROS.rfc);
+    expect(terceros260211StoreMock.setNombre).toHaveBeenCalledWith(TERECEROS.nombre);
+    expect(terceros260211StoreMock.setPrimerApellido).toHaveBeenCalledWith(TERECEROS.primerApellido);
+    expect(terceros260211StoreMock.setSegundoApellido).toHaveBeenCalledWith(TERECEROS.segundoApellido);
+    expect(terceros260211StoreMock.setCurp).toHaveBeenCalledWith(TERECEROS.curp);
+    expect(terceros260211StoreMock.setDenominacionRazonSocial).toHaveBeenCalledWith(TERECEROS.denominacionRazonSocial);
+    expect(terceros260211StoreMock.setPais).toHaveBeenCalledWith(TERECEROS.pais);
+    expect(terceros260211StoreMock.setEstadoLocalidad).toHaveBeenCalledWith(TERECEROS.estadoLocalidad);
+    expect(terceros260211StoreMock.setMunicipioAlcaldia).toHaveBeenCalledWith(TERECEROS.municipioAlcaldia);
+    expect(terceros260211StoreMock.setLocalidad).toHaveBeenCalledWith(TERECEROS.localidad);
+    expect(terceros260211StoreMock.setCodigoPostaloEquivalente).toHaveBeenCalledWith(TERECEROS.codigoPostaloEquivalente);
+    expect(terceros260211StoreMock.setColonia).toHaveBeenCalledWith(TERECEROS.colonia);
+    expect(terceros260211StoreMock.setExtranjeroEstado).toHaveBeenCalledWith(TERECEROS.extranjeroEstado);
+    expect(terceros260211StoreMock.setExtranjeroCodigo).toHaveBeenCalledWith(TERECEROS.extranjeroCodigo);
+    expect(terceros260211StoreMock.setExtranjeroColonia).toHaveBeenCalledWith(TERECEROS.extranjeroColonia);
+    expect(terceros260211StoreMock.setCalle).toHaveBeenCalledWith(TERECEROS.calle);
+    expect(terceros260211StoreMock.setNumeroExterior).toHaveBeenCalledWith(TERECEROS.numeroExterior);
+    expect(terceros260211StoreMock.setNumeroInterior).toHaveBeenCalledWith(TERECEROS.numeroInterior);
+    expect(terceros260211StoreMock.setLada).toHaveBeenCalledWith(TERECEROS.lada);
+    expect(terceros260211StoreMock.setTelefono).toHaveBeenCalledWith(TERECEROS.telefono);
+    expect(terceros260211StoreMock.setCorreoElectronico).toHaveBeenCalledWith(TERECEROS.correoElectronico);
+    expect(terceros260211StoreMock.setColoniaoEquivalente).toHaveBeenCalledWith(TERECEROS.coloniaoEquivalente);
+    expect(terceros260211StoreMock.setColoniaoEquivalenteLabel).toHaveBeenCalledWith(TERECEROS.coloniaoEquivalenteLabel);
+    expect(terceros260211StoreMock.setCodigoPostaloEquivalentes).toHaveBeenCalledWith(TERECEROS.codigoPostaloEquivalentes);
+    expect(terceros260211StoreMock.setEstado).toHaveBeenCalledWith(TERECEROS.estado);
+    expect(terceros260211StoreMock.setEntidadFederativa).toHaveBeenCalledWith(TERECEROS.entidadFederativa);
+
+  });
+});
 
   describe('Manejo de Errores', () => {
     it('debería manejar errores HTTP de manera elegante para todos los métodos GET', () => {
@@ -497,5 +602,5 @@ describe('SanitarioService', () => {
         req.flush('Not Found', { status: 404, statusText: 'Not Found' });
       });
     });
-  });
+  });  
 });

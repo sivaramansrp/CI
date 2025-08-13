@@ -33,7 +33,7 @@
                 <h6>Productores por exportador</h6>
                 <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns"
                     [datos]="productoresExportador"
-                    (listaDeFilaSeleccionada)="obtenerSeleccionadoProductores($event)"></app-tabla-dinamica>
+                    (listaDeFilaSeleccionada)="obtenerSeleccionadoProductores($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
                 <div class="container text-end mt-5">
                     <button type="button" name="actualizarProductoresSeleccionados" class="btn btn-default me-2"
                         (click)="productoresSeleccionados()" [disabled]="esFormularioSoloLectura">
@@ -47,7 +47,7 @@
                 <h6>Productores por exportador</h6>
                 <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns"
                     [datos]="agregarProductoresExportador"
-                    (listaDeFilaSeleccionada)="obtenerAnadirProductosSeleccionados($event)"></app-tabla-dinamica>
+                    (listaDeFilaSeleccionada)="obtenerAnadirProductosSeleccionados($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
                 <div class="container text-end mt-5">
                     <button type="button" name="actualizarProductoresSeleccionados" class="btn btn-danger"
                         (click)="eliminarProductoresSeleccionados()" [disabled]="esFormularioSoloLectura">
@@ -63,11 +63,11 @@
             @if(esTipoDeSeleccionado){
             <app-tabla-dinamica [configuracionTabla]="mercanciaTablaConfiguracion"
                 [tipoSeleccionTabla]="TablaSeleccion.RADIO" [datos]="mercanciaDatos"
-                (filaSeleccionada)="obtenerSeleccionadoMercancia($event)"></app-tabla-dinamica>
+                (filaSeleccionada)="obtenerSeleccionadoMercancia($event)" [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
             }
             @else{
             <app-tabla-dinamica [configuracionTabla]="mercanciaTablaConfiguracion"
-                [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [datos]="mercanciaDatos"></app-tabla-dinamica>
+                [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [datos]="mercanciaDatos" [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
             }
             <div class="container text-end mt-5">
                 <button type="button" name="agregarMercancia" class="btn btn-primary" (click)="agregarMercancia()" [disabled]="esFormularioSoloLectura">

@@ -14,7 +14,6 @@ import { SeccionLibQuery} from '@libs/shared/data-access-user/src';
 import { SeccionLibState} from '@libs/shared/data-access-user/src';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { Subject } from 'rxjs';
-import { TramiteState } from '../../estados/tramite290101.store';
 import { TramiteStore } from '../../estados/tramite290101.store';
 import { TramiteStoreQuery } from '../../estados/tramite290101.query';
 import { Validators } from '@angular/forms';
@@ -147,15 +146,7 @@ export class BeneficiosComponent implements OnInit, OnDestroy {
   }
 
     inicializarFormulario(): void {
-    this.tramiteStoreQuery.selectSolicitudTramite$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.beneficiosFormaState = seccionState.BeneficiosFormaState;
-        })
-      )
-      .subscribe()
-
+    // Inicializar el formulario primero
     this.beneficiosForm = this.fb.group({
       razonSocial: ['', [Validators.required, Validators.maxLength(200)]],
       propAlquil: ['', [Validators.required]],
@@ -168,6 +159,22 @@ export class BeneficiosComponent implements OnInit, OnDestroy {
       capacidadAlmacenaje: ['', [Validators.required, Validators.maxLength(20)]],
       volumenAlmacenaje: ['', [Validators.required]],
     });
+
+    // Solo una suscripción para el estado del trámite
+    this.tramiteStoreQuery.selectSolicitudTramite$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          if (seccionState && seccionState.BeneficiosFormaState) {
+            this.beneficiosFormaState = seccionState.BeneficiosFormaState;
+            // Solo hacer patch si hay datos válidos
+            if (BeneficiosComponent.hasValidStateData(this.beneficiosFormaState)) {
+              this.beneficiosForm.patchValue(this.beneficiosFormaState, { emitEvent: false });
+            }
+          }
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -175,24 +182,30 @@ export class BeneficiosComponent implements OnInit, OnDestroy {
    * @param {number} index - Índice de la pestaña a seleccionar.
    */
   seleccionaTab(index: number): void {
-    const BENEFICIOS_DATOS = {
-      TABLA_Columna_1:this.beneficiosForm.value.razonSocial,
-      TABLA_Columna_2:this.beneficiosForm.value.propAlquil,
-      TABLA_Columna_3:this.beneficiosForm.value.calle,
-      TABLA_Columna_4:this.beneficiosForm.value.numeroExterior,
-      TABLA_Columna_5:this.beneficiosForm.value.numeroInterior,
-      TABLA_Columna_6:this.beneficiosForm.value.colonia,
-      TABLA_Columna_7:this.beneficiosForm.value.estado,
-      TABLA_Columna_8:this.beneficiosForm.value.codigoPostal,
-      TABLA_Columna_9:this.beneficiosForm.value.capacidadAlmacenaje,
-      TABLA_Columna_10:this.beneficiosForm.value.volumenAlmacenaje,
-      estatus: true,
-    };
-    this.tramiteStore.setBeneficiosTabla([BENEFICIOS_DATOS]);
+    // Solo agregar datos a la tabla si el formulario es válido y tiene datos
+    if (this.beneficiosForm.valid) {
+      const BENEFICIOS_DATOS = {
+        TABLA_Columna_1:this.beneficiosForm.value.razonSocial,
+        TABLA_Columna_2:BeneficiosComponent.obtenerDescripcionPorId(this.propAlquil,this.beneficiosForm.value.propAlquil) || this.beneficiosForm.value.propAlquil,
+        TABLA_Columna_3:this.beneficiosForm.value.calle,
+        TABLA_Columna_4:this.beneficiosForm.value.numeroExterior,
+        TABLA_Columna_5:this.beneficiosForm.value.numeroInterior,
+        TABLA_Columna_6:this.beneficiosForm.value.colonia,
+        TABLA_Columna_7:BeneficiosComponent.obtenerDescripcionPorId(this.estado,this.beneficiosForm.value.estado) || this.beneficiosForm.value.estado,
+        TABLA_Columna_8:this.beneficiosForm.value.codigoPostal,
+        TABLA_Columna_9:this.beneficiosForm.value.capacidadAlmacenaje,
+        TABLA_Columna_10:this.beneficiosForm.value.volumenAlmacenaje,
+        estatus: true,
+      };
+        this.tramiteStore.setBeneficiosTabla([BENEFICIOS_DATOS]);
+        this.router.navigate(['../cafe-exportadores'], { queryParams: { tab: index },
+        relativeTo: this.activateRoute });
+    } else {
+      this.beneficiosForm.markAllAsTouched();
+    }
 
-    this.router.navigate(['../cafe-exportadores'], { queryParams: { tab: index },
-    relativeTo: this.activateRoute });
   }
+
 
   /**
    * Método de inicialización del componente.
@@ -200,44 +213,22 @@ export class BeneficiosComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
-    this.tramiteStoreQuery.selectSolicitudTramite$
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(seccionState => {
-        this.beneficiosFormaState = seccionState.BeneficiosFormaState;
-      });
-
     this.cargarEstadoCatalog();
     this.cargarBodegaPropiaAlquilad();
 
-    /**
-     * Se suscribe a los cambios en el estado de la solicitud de trámite.
-     * Actualiza el formulario con los datos obtenidos del estado.
-     */
-    this.tramiteStoreQuery.selectSolicitudTramite$
+    // Suscripción para cambios en el formulario con debounce
+    this.beneficiosForm.valueChanges
       .pipe(
         takeUntil(this.destroyNotifier$),
-        map((seccionState: TramiteState) => {
-          if (seccionState) {
-            this.beneficiosFormaState = seccionState?.BeneficiosFormaState;
-            this.beneficiosForm.patchValue(this.beneficiosFormaState);
+        delay(300), // Aumentar el delay para evitar actualizaciones excesivas
+        tap(() => {
+          if (this.beneficiosForm.valid) {
+            const ACTIVE_STATE = { ...this.beneficiosForm.value };
+            this.tramiteStore.setBeneficiosTramite(ACTIVE_STATE);
           }
         })
       )
       .subscribe();
-        /**
-     * Se suscribe a los cambios en el estado del formulario.
-     * Después de un breve retraso, actualiza el estado de la solicitud en el store.
-     */
-        this.beneficiosForm.statusChanges
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          delay(10),
-          tap(() => {
-            const ACTIVE_STATE = { ...this.beneficiosForm.value };
-            this.tramiteStore.setBeneficiosTramite(ACTIVE_STATE);
-          })
-        )
-        .subscribe();
 
     /**
      * Se suscribe a los cambios en el estado de la sección.
@@ -297,6 +288,28 @@ export class BeneficiosComponent implements OnInit, OnDestroy {
    */
   cancelarBodega(): void {
     this.beneficiosForm.reset();
+    // Navegar directamente sin llamar seleccionaTab para evitar agregar filas vacías
+    this.router.navigate(['../cafe-exportadores'], { queryParams: { tab: 2 },
+      relativeTo: this.activateRoute });
+  }
+
+  /**
+   * Método genérico para obtener la descripción de un catálogo basado en su ID.
+   * @param {CatalogosSelect} catalogo - El catálogo donde buscar.
+   * @param {string | number} id - El ID del elemento a buscar.
+   * @returns {string | undefined} La descripción del elemento encontrado o undefined si no existe.
+   */
+  private static obtenerDescripcionPorId(catalogo: CatalogosSelect, id: string | number): string | undefined {
+    return catalogo.catalogos.find((item) => item.id === Number(id))?.descripcion;
+  }
+
+  /**
+   * Verifica si el estado tiene datos válidos para hacer patch al formulario
+   */
+  private static hasValidStateData(state: BeneficiosFormaInt): boolean {
+    return state && Object.values(state).some(value => 
+      value !== null && value !== undefined && value !== ''
+    );
   }
 
  /**

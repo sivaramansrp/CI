@@ -22,20 +22,32 @@
             </li>
         </ul>
 
-        <div [ngStyle]="{ display: indice === 1 ? 'block' : 'none' }">
-            <solicitante [tabindex]="1"></solicitante>
-        </div>
-        <div [ngStyle]="{ display: indice === 2 ? 'block' : 'none' }">
-            <app-datos-de-la-solicitud-modificacion [insumos]="true"></app-datos-de-la-solicitud-modificacion>
-        </div>
-        <div [ngStyle]="{ display: indice === 3 ? 'block' : 'none' }">
-            <app-terceros-relacionados-fabricante [programTitle]="true"></app-terceros-relacionados-fabricante>
-        </div>
-        <div [ngStyle]="{ display: indice === 4 ? 'block' : 'none' }">
-            <app-pago-de-derechos-entrada></app-pago-de-derechos-entrada>
-        </div>
-        <div [ngStyle]="{ display: indice === 5? 'block' : 'none' }">
-            <app-tramites-asociados-seccion></app-tramites-asociados-seccion>
-        </div>
+    <ng-container>
+            @switch (indice) {
+                @case(1) {
+                    <solicitante [tabindex]="1"></solicitante>
+                }              
+                @case (2) {
+                    <app-datos-de-la-solicitud-modificacion [insumos]="true"></app-datos-de-la-solicitud-modificacion>
+                }
+                @case(3) {
+                    <app-terceros-relacionados-fabricante 
+                        [programTitle]="true"
+                        [nuevaTablaColumn]="nuevaColumna"
+                        [tieneTablaNuevaColumna]="true"
+                    >
+                    </app-terceros-relacionados-fabricante>
+                }
+                @case (4) {
+                    <app-pago-de-derechos-entrada></app-pago-de-derechos-entrada>  
+
+                }
+                @case(5) {
+
+                    <app-tramites-asociados-seccion></app-tramites-asociados-seccion>
+                }
+    
+            }
+        </ng-container>
     </div>
 </div>

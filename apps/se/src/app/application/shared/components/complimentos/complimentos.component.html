@@ -26,12 +26,12 @@
       <div class="col-md-8 mb-4">
         <label for="pagina">Página web*:</label>
         <input type="text" id="pagina" name="pagina" class="form-control" formControlName="paginaWWeb" maxlength="120"
-          onkeyup="this.value = this.value.toUpperCase();" onkeypress="return soloLetras(event)" />
+          (input)="onPaginaInputChange($event)" (keypress)="onKeyPress($event)" />
       </div>
       <div class="col-md-8">
         <label for="localizacion">Localización*:</label>
         <input type="text" id="localizacion" name="localizacion" class="form-control" formControlName="localizacion"
-          maxlength="120" onkeyup="this.value = this.value.toUpperCase();" onkeypress="return soloLetras(event)" />
+          maxlength="120" (input)="onLocalizacionInputChange($event)" (keypress)="onKeyPress($event)" />
       </div>
     </div>
   </div>
@@ -40,8 +40,8 @@
     <ng-titulo titulo="Obligaciones fiscales" />
     <div class="row">
       <div class="col-md-4">
-        <label for="Opinion">Opinión positiva del SAT*:</label>
-        <input type="text" id="Opinion" name="Opinion" class="form-control" formControlName="opinionPositiva" />
+       <app-catalogo-select [catalogo]="derechosList" formControlName="opinionPositiva" [label]="'Opinión positiva del SAT'" [required]="false"
+          [isDisabled]="true"  name="opinionPositiva"></app-catalogo-select>
       </div>
       <div class="col-md-4">
         <input-fecha [datos]="INPUT_FECHA_CONFIG" [setFecha]="formaComplimentos.get('fechaExpedicion')?.value"
@@ -92,16 +92,16 @@
 
         <div class="row mb-4">
           <div class="col-md-4">
-            <label for="acta"> Número de acta*</label>
+            <label for="acta"> Número de acta*:</label>
             <input type="text" id="acta" name="acta" class="form-control" formControlName="nombreDeActa" maxlength="10"
               [class.is-invalid]="formaComplimentos.get('formaModificaciones')?.get('nombreDeActa')?.invalid && formaComplimentos.get('formaModificaciones')?.get('nombreDeActa')?.touched" />
            <div *ngIf="formaComplimentos.get('formaModificaciones.nombreDeActa')?.hasError('required') && formaComplimentos.get('formaModificaciones.nombreDeActa')?.touched" class="text-danger">Este campo es obligatorio.</div>
             </div>
 
           <div class="col-md-4">
-            <label for="emision"> Fecha de emisión del acta*</label>
-            <input type="text" id="emision" name="emision" class="form-control" formControlName="fechaDeActa" />
-            <div *ngIf="formaComplimentos.get('formaModificaciones.fechaDeActa')?.hasError('required') && formaComplimentos.get('formaModificaciones.fechaDeActa')?.touched" class="text-danger">Este campo es obligatorio.</div>
+            <input-fecha [datos]="INPUT_FECHA_CONFIGURACION" [setFecha]="formaComplimentos.get('fechaDeActa')?.value"
+          (valorCambiado)="cambioFecha($event)">
+        </input-fecha>
           </div>
         </div>
         <div class="row mb-4">
@@ -204,7 +204,7 @@
         <div [ngClass]="item.class">
           <label for="{{ item.campo }}">{{ item.labelNombre }} @if (item.required) {*}:</label>
           <input class="form-control" [type]="item.tipo_input" id="{{ item.campo }}" [formControlName]="item.campo"
-            [maxlength]="item.maxlength || (item.campo === 'rfc' ? 13 : null)"
+            [maxlength]="item.maxlength || (item.campo === 'rfc' ? 13 : (item.campo === 'taxId' ? 12 : null))"
             [class.is-invalid]="formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.invalid && formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.touched" />
           @if (formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.invalid &&
           formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.touched) {
@@ -306,7 +306,7 @@
 
     <div class="row" formGroupName="formaCertificacion">
       <div class="col-md-4">
-        <label class="form-label text-start" for="certificion">Certificada (Si/NO)</label>
+        <label class="form-label text-start" for="certificion">Certificada(SI/NO):</label>
         <input class="form-control" type="text" id="certificion" formControlName="certificada" />
       </div>
 

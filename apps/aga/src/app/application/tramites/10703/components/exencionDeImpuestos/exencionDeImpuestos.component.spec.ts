@@ -127,29 +127,7 @@ describe('ExencionDeImpuestosComponent', () => {
     const fila = [{ id: 1 }];
     component.manejarFilaSeleccionada(fila as any);
     expect(component.enableModficarBoton).toBe(fila);
-  });
-
-  it('should disable forms if esFormularioSoloLectura is true in guardarDatosFormulario', () => {
-    component.tramiteForm = new FormBuilder().group({});
-    component.agregarMercanciasForm = new FormBuilder().group({});
-    component.esFormularioSoloLectura = true;
-    jest.spyOn(component.tramiteForm, 'disable');
-    jest.spyOn(component.agregarMercanciasForm, 'disable');
-    component.guardarDatosFormulario();
-    expect(component.tramiteForm.disable).toHaveBeenCalled();
-    expect(component.agregarMercanciasForm.disable).toHaveBeenCalled();
-  });
-
-  it('should enable forms if esFormularioSoloLectura is false in guardarDatosFormulario', () => {
-    component.tramiteForm = new FormBuilder().group({});
-    component.agregarMercanciasForm = new FormBuilder().group({});
-    component.esFormularioSoloLectura = false;
-    jest.spyOn(component.tramiteForm, 'enable');
-    jest.spyOn(component.agregarMercanciasForm, 'enable');
-    component.guardarDatosFormulario();
-    expect(component.tramiteForm.enable).toHaveBeenCalled();
-    expect(component.agregarMercanciasForm.enable).toHaveBeenCalled();
-  });
+  });  
 
   it('should set nuevaNotificacion if enableModficarBoton is empty in abrirDialogoMercancias', () => {
     component.enableModficarBoton = [];

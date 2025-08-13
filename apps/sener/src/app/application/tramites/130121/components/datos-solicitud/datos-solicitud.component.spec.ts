@@ -82,9 +82,16 @@ describe('DatosSolicitudComponent', () => {
   });
 
   it('debería obtener datos de la tabla y actualizar formForTotalCount', () => {
+    // Arrange - Preparar los datos simulados
+    const serviceMockData = [{ cantidad: 10, totalUSD: 100 }];
+    permisodehidrocarburosServiceMock.getTablaDatos.mockReturnValue(of(serviceMockData));
+
+    // Act - Ejecutar el método bajo prueba
     component.obtenerTablaDatos();
+    
+    // Assert - Verificar los resultados esperados
     expect(permisodehidrocarburosServiceMock.getTablaDatos).toHaveBeenCalled();
-    expect(component.tableBodyData).toEqual([{ cantidad: 10, totalUSD: 100 }]);
+    expect(tramiteStoreMock.establecerDatos).toHaveBeenCalledWith({ tablaDatos: serviceMockData });
     expect(component.formForTotalCount.value).toEqual({
       cantidadTotal: 10,
       valorTotalUSD: 100,
@@ -151,12 +158,21 @@ describe('DatosSolicitudComponent', () => {
     expect(spyComplete).toHaveBeenCalled();
   });
 
-  it('debería obtener lista de ciudades y actualizar fechasDatos', () => {
-    const paisComponentMock: any = { crosslistComponent: { fechasDatos: [] } };
-    component.paisDeOrigenComponent = paisComponentMock;
+  it('debería obtener lista de ciudades y actualizar selectRangoDias', () => {
+    // Arrange - Preparar los datos simulados
+    const mockCiudades = [{ descripcion: 'Ciudad 1' }];
+    permisodehidrocarburosServiceMock.obtenerListaDeCiudades.mockReturnValue(of(mockCiudades));
 
+    // Act - Ejecutar el método bajo prueba
     component.obtenerListaDeCiudades();
 
-    expect(paisComponentMock.crosslistComponent.fechasDatos).toEqual(['Ciudad 1']);
+    // Assert - Verificar los resultados esperados
+    expect(permisodehidrocarburosServiceMock.obtenerListaDeCiudades).toHaveBeenCalled();
+    expect(component.selectRangoDias).toEqual(['Ciudad 1']);
+    expect(tramiteStoreMock.establecerDatos).toHaveBeenCalledWith({
+      rangoDias: ['Ciudad 1'],
+      seleccionada: []
+    });
+    expect(component.fechaSeleccionada).toEqual([]);
   });
 });

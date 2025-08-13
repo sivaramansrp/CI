@@ -1,9 +1,9 @@
-import { 
-  BtnContinuarComponent, 
-  DatosPasos, 
-  ListaPasosWizard, 
-  PASOS, 
-  WizardComponent 
+import {
+  BtnContinuarComponent,
+  DatosPasos,
+  ListaPasosWizard,
+  PASOS,
+  WizardComponent,
 } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -70,6 +70,16 @@ export class SolicitudPageComponent {
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
+   * Referencia al componente de paso uno.
+   */
+  @ViewChild(PasoUnoComponent) pasoUno!: PasoUnoComponent;
+
+  /**
+   * Estado de validación del formulario.
+   */
+  esValido: boolean = true;
+
+  /**
    * Datos de los pasos del asistente.
    */
   datosPasos: DatosPasos = {
@@ -91,8 +101,18 @@ export class SolicitudPageComponent {
    * Obtiene el valor del índice de la acción del botón.
    * @param e Acción del botón.
    */
-  getValorIndice(e: AccionBoton):void {
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
+      if (this.indice === 1) {
+        const SOLICITUD = this.pasoUno?.solicitudComponent;
+        this.esValido = SOLICITUD?.validarDestinatarioFormulario() ?? false;
+      }
+
+      if (!this.esValido) {
+        this.datosPasos.indice = 1;
+        return;
+      }
+
       this.indice = e.valor;
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();

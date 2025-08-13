@@ -251,6 +251,7 @@ describe('AcuicolaService', () => {
     service.tramiteStore.setLlaveDePagoRevision = jest.fn();
     service.tramiteStore.setFechaPagoDeDerechosRevision = jest.fn();
     service.tramiteStore.setImporteDePagoRevision = jest.fn();
+    service.tramiteStore.setFechaDeInspeccion = jest.fn();
     service.tramiteStore.setFechaDePago = jest.fn();
     service.tramiteStore.setIdentificacionDelTransporte = jest.fn();
     service.tramiteStore.setNombreDeLaEmpresaTransportista = jest.fn();

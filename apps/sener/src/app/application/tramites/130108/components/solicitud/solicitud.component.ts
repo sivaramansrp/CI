@@ -625,10 +625,8 @@ tituloParte = TITULO_ORIGEN;
           this.tableBodyData = [...state.tablaDatos];
         }
         
-        // Solo actualizar crosslist datos si es la primera vez o si hay cambios específicos en rangoDias/seleccionada
-        if (!this.selectRangoDias.length && !this.fechaSeleccionada.length) {
-          this.storeCrosslistaDatos();
-        }
+        // Actualizar crosslist datos cuando haya datos en el store
+        this.storeCrosslistaDatos();
       });
 
     this.tramite130108Query.mostrarTabla$
@@ -1044,21 +1042,34 @@ tituloParte = TITULO_ORIGEN;
    * Actualiza los datos de las listas cruzadas basándose en el estado actual.
    * 
    * Sincroniza las listas seleccionadas y originales con el estado de la aplicación.
-   * Si las matrices del estado están vacías o indefinidas, utiliza valores predeterminados.
+   * Restaura los datos del store cuando sea necesario, pero respeta las selecciones actuales del usuario.
    */
   storeCrosslistaDatos(): void {
     // Función auxiliar para verificar si una matriz es válida y no está vacía
     const ES_MATRIZ_VALIDA = (array: string[] | undefined | null): boolean => 
       Array.isArray(array) && array.length > 0;
 
-    // Solo actualizar selectRangoDias si hay datos en el estado y no hay datos locales
-    if (ES_MATRIZ_VALIDA(this.seccionState.rangoDias) && !this.selectRangoDias.length) {
-      this.selectRangoDias = this.seccionState.rangoDias as string[];
+    // Función auxiliar para comparar arrays
+    const SON_ARRAYS_DIFERENTES = (array1: string[], array2: string[] | undefined): boolean => {
+      if (!Array.isArray(array2)) {
+        return true;
+      }
+      if (array1.length !== array2.length) {
+        return true;
+      }
+      return array1.some((item, index) => item !== array2[index]);
+    };
+
+    // Solo actualizar selectRangoDias si hay datos válidos en el estado y son diferentes a los locales
+    if (ES_MATRIZ_VALIDA(this.seccionState.rangoDias) && 
+        SON_ARRAYS_DIFERENTES(this.selectRangoDias, this.seccionState.rangoDias)) {
+      this.selectRangoDias = [...(this.seccionState.rangoDias as string[])];
     }
 
-    // Solo actualizar fechaSeleccionada si hay datos en el estado y no hay datos locales
-    if (ES_MATRIZ_VALIDA(this.seccionState.seleccionada) && !this.fechaSeleccionada.length) {
-      this.fechaSeleccionada = this.seccionState.seleccionada || [];
+    // Solo actualizar fechaSeleccionada si hay datos válidos en el estado y son diferentes a los locales
+    if (ES_MATRIZ_VALIDA(this.seccionState.seleccionada) && 
+        SON_ARRAYS_DIFERENTES(this.fechaSeleccionada, this.seccionState.seleccionada)) {
+      this.fechaSeleccionada = [...(this.seccionState.seleccionada as string[])];
     }
   }
 

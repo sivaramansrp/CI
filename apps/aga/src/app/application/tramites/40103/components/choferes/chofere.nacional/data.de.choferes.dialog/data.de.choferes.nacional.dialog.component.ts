@@ -4,6 +4,8 @@ import { Catalogo, CategoriaMensaje, Notificacion, NotificacionesComponent, REGE
 import { CatalogoSelectComponent, SharedModule, TituloComponent } from "@libs/shared/data-access-user/src";
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from "@angular/core";
 import { Subject, firstValueFrom, takeUntil } from "rxjs";
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+
 import { Chofer40103Service } from "../../../../estados/chofer40103.service";
 import { CommonModule } from "@angular/common";
 import { DatosDelChoferNacional } from "../../../../models/registro-muestras-mercancias.model";
@@ -21,7 +23,8 @@ import { DatosDelChoferNacional } from "../../../../models/registro-muestras-mer
     FormsModule,
     CatalogoSelectComponent,
     TituloComponent,
-    NotificacionesComponent
+    NotificacionesComponent,
+    TooltipModule
   ],
 })
 export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy {
@@ -31,6 +34,12 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
    * @type {boolean}
    */
   @Input() readonly: boolean = false;
+
+  /**
+   * Indica si el formulario ha sido enviado.
+   * @type {boolean}
+   */
+  enviado: boolean = false;
 
   /**
    * Datos del chofer nacional que se mostrarán o editarán en el formulario.
@@ -133,13 +142,30 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
    * @returns {Promise<void>}
    */
   async ngOnInit(): Promise<void> {
-
     /**
      * Carga la lista de países antes de inicializar el formulario.
      * Esto es necesario para tener los datos de catálogos disponibles.
      */
     await this.paisListData();
+    
+    this.initializeForm();
 
+    if (this.datosDeChofere && Object.keys(this.datosDeChofere).length > 0) {
+      await this.updateListsData(this.datosDeChofere);
+    } else {
+      if (this.paisList.length > 0) {
+        const PAIS_MEXICO = this.paisList.find(p => p.id === 1) || this.paisList[0];
+        this.formChoferes.get('pais')?.setValue(PAIS_MEXICO.id);
+        this.onPaisChange(PAIS_MEXICO);
+      }
+    }
+  }
+
+  /**
+   * Inicializa el formulario reactivo con los valores y validaciones correspondientes.
+   * @returns {void}
+   */
+  private initializeForm(): void {
     this.formChoferes = this.fb.group({
 
       /**
@@ -181,11 +207,6 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
       correoElectronico: [{ value: this.datosDeChofere?.correoElectronico, disabled: this.readonly }, this.readonly ? [] : [Validators.email]],
       telefono: [{ value: this.datosDeChofere?.telefono, disabled: this.readonly }, this.readonly ? [] : [Validators.pattern(REGEX_SOLO_DIGITOS)]],
     });
-
-    if (this.datosDeChofere && Object.keys(this.datosDeChofere).length > 0) {
-      await this.updateListsData(this.datosDeChofere);
-    }
-
   }
 
 
@@ -196,18 +217,12 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
    */
   async paisListData(): Promise<void> {
     try {
-      const DATA = await firstValueFrom(
+      const DATOS = await firstValueFrom(
         this.chofer40103Service
           .getPaisEmisor()
           .pipe(takeUntil(this.destroyed$))
       );
-      this.paisList = DATA || [];
-      
-      if (this.paisList.length > 0 && this.formChoferes) {
-        const paisMexico = this.paisList.find(p => p.id === 1) || this.paisList[0];
-        this.formChoferes.get('pais')?.setValue(paisMexico.id);
-        this.onPaisChange(paisMexico);
-      }
+      this.paisList = DATOS || [];
     } catch (error) {
       // Manejo de errores
     }
@@ -234,12 +249,12 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
    */
   private async fetchEstadosByPais(value: Catalogo): Promise<Catalogo[]> {
     try {
-      const DATA = await firstValueFrom(
+      const DATOS = await firstValueFrom(
         this.chofer40103Service
           .getEstadosPorPais(value.id)
           .pipe(takeUntil(this.destroyed$))
       );
-      this.estadoList = DATA || [];
+      this.estadoList = DATOS || [];
     } catch (error) {
       // Manejo de errores
     }
@@ -268,12 +283,12 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
    */
   private async fetchMunicipiosByEstado(value: Catalogo): Promise<Catalogo[]> {
     try {
-      const DATA = await firstValueFrom(
+      const DATOS = await firstValueFrom(
         this.chofer40103Service
           .getMunicipiosPorEstado(value.id)
           .pipe(takeUntil(this.destroyed$))
       );
-      this.municipioList = DATA || [];
+      this.municipioList = DATOS || [];
     } catch (error) {
       // Manejo de errores
     }
@@ -301,12 +316,12 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
    */
   private async fetchColoniasByMunicipio(value: Catalogo): Promise<Catalogo[]> {
     try {
-      const DATA = await firstValueFrom(
+      const DATOS = await firstValueFrom(
         this.chofer40103Service
           .getColoniasPorMunicipio(value.id)
           .pipe(takeUntil(this.destroyed$))
       );
-      this.coloniaList = DATA || [];
+      this.coloniaList = DATOS || [];
     } catch (error) {
       // Manejo de errores
     }
@@ -416,13 +431,13 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
     }
 
     try {
-      const response = await firstValueFrom(
+      const RESPUESTA = await firstValueFrom(
         this.chofer40103Service
           .obtenerTablaDatos<DatosDelChoferNacional>('mock-data-choferes-nacionales.json')
           .pipe(takeUntil(this.destroyed$))
       );
 
-      if (!response || response.length === 0) {
+      if (!RESPUESTA || RESPUESTA.length === 0) {
         this.alertaNotificacion = {
           tipoNotificacion: TipoNotificacionEnum.ALERTA,
           categoria: CategoriaMensaje.INFORMACION,
@@ -437,12 +452,12 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
         return;
       }
       
-      const choferData = response[0];
+      const DATOS_CHOFER = RESPUESTA[0];
       
-      await this.updateListsData(choferData);
+      await this.updateListsData(DATOS_CHOFER);
       
       this.formChoferes.patchValue({
-        ...choferData,
+        ...DATOS_CHOFER,
         pais: this.paisList.length > 0 ? (this.paisList.find(p => p.id === 1) || this.paisList[0]).id : 1
       });
     } catch (error) {
@@ -526,48 +541,49 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
    * @returns {void}
    */
   guardarFilaEditada(): void {
+    this.enviado = true;
     this.formChoferes.markAllAsTouched();
     this.formChoferes.updateValueAndValidity();
 
-    const formData = this.formChoferes.getRawValue() as DatosDelChoferNacional;
+    const DATOS_FORMULARIO = this.formChoferes.getRawValue() as DatosDelChoferNacional;
     
-    const invalidFields: string[] = [];
+    const CAMPOS_INVALIDOS: string[] = [];
     
     Object.keys(this.formChoferes.controls).forEach(key => {
-      const control = this.formChoferes.get(key);
+      const CONTROL_FORMULARIO = this.formChoferes.get(key);
       
-      if (control?.disabled) {
+      if (CONTROL_FORMULARIO?.disabled) {
         return;
       }
       
-      if (control?.invalid) {
-        if (control.hasError('required')) {
-          invalidFields.push(key);
+      if (CONTROL_FORMULARIO?.invalid) {
+        if (CONTROL_FORMULARIO.hasError('required')) {
+          CAMPOS_INVALIDOS.push(key);
         }
-        else if (control.hasError('pattern') || control.hasError('email')) {
-          invalidFields.push(key);
+        else if (CONTROL_FORMULARIO.hasError('pattern') || CONTROL_FORMULARIO.hasError('email')) {
+          CAMPOS_INVALIDOS.push(key);
         }
       }
     });
 
-    const isFormValid = invalidFields.length === 0;
+    const ES_FORMULARIO_VALIDO = CAMPOS_INVALIDOS.length === 0;
 
-    if (isFormValid) {
-      const DATA = { ...formData };
+    if (ES_FORMULARIO_VALIDO) {
+      const DATOS = { ...DATOS_FORMULARIO };
     
       if (this.datosDeChofere && this.datosDeChofere.id && this.datosDeChofere.id !== null && this.datosDeChofere.id !== undefined) {
-        DATA.id = this.datosDeChofere.id;
+        DATOS.id = this.datosDeChofere.id;
       } else {
-        DATA.id = Date.now();
+        DATOS.id = Date.now();
       }
       
-      DATA.pais = this.paisList.find(p => p.id === Number(formData.pais))?.descripcion || '';
-      DATA.estado = this.estadoList.find(e => e.id === Number(formData.estado))?.descripcion || '';
-      DATA.municipioAlcaldia = this.municipioList.find(m => m.id === Number(formData.municipioAlcaldia))?.descripcion || '';
-      DATA.colonia = this.coloniaList.find(c => c.id === Number(formData.colonia))?.descripcion || '';
-      DATA.paisDeResidencia = this.paisList.find(p => p.id === Number(formData.paisDeResidencia))?.descripcion || '';
+      DATOS.pais = this.paisList.find(p => p.id === Number(DATOS_FORMULARIO.pais))?.descripcion || '';
+      DATOS.estado = this.estadoList.find(e => e.id === Number(DATOS_FORMULARIO.estado))?.descripcion || '';
+      DATOS.municipioAlcaldia = this.municipioList.find(m => m.id === Number(DATOS_FORMULARIO.municipioAlcaldia))?.descripcion || '';
+      DATOS.colonia = this.coloniaList.find(c => c.id === Number(DATOS_FORMULARIO.colonia))?.descripcion || '';
+      DATOS.paisDeResidencia = this.paisList.find(p => p.id === Number(DATOS_FORMULARIO.paisDeResidencia))?.descripcion || '';
       
-      this.agregarEventoModal.emit(DATA);
+      this.agregarEventoModal.emit(DATOS);
       this.cerrarModal();
     } else {
       this.alertaNotificacion = {
@@ -590,8 +606,8 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
    * @returns {boolean | null} `true` si el control es inválido y tocado, `null` si no existe el control.
    */
   isInvalid(controlName: string): boolean | null {
-    const CONTROL = this.formChoferes.get(controlName);
-    return CONTROL ? CONTROL.invalid && CONTROL.touched : null;
+    const CONTROL_FORMULARIO = this.formChoferes.get(controlName);
+    return CONTROL_FORMULARIO ? CONTROL_FORMULARIO.invalid && CONTROL_FORMULARIO.touched : null;
   }
 
   /**

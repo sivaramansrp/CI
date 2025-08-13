@@ -1,6 +1,5 @@
 import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { CatalogosSelect } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent,CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';

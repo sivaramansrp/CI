@@ -293,6 +293,14 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body">
+        <div class="col-12">
+          @if (esFormaValido) {
+          <div
+            class="alert alert-info alert-danger text-center"
+            [innerHTML]="formErrorAlert"
+          ></div>
+          }
+        </div>
         <ng-titulo titulo="Datos de la mercancía" />
         <form [formGroup]="formularioMercancia">
           <ng-container>
@@ -338,6 +346,7 @@
                 <label>Cantidad<span [ngClass]="formularioMercancia.get('cantidad')?.invalid && formularioMercancia.get('cantidad')?.touched ? 'text-danger' : ''">*</span>:</label>
                 <input type="text" class="form-control" formControlName="cantidad" maxlength="20"
                   [ngClass]="formularioMercancia.get('cantidad')?.invalid && formularioMercancia.get('cantidad')?.touched ? 'required' : ''"
+         
                   (change)=" setValoresStore( formularioMercancia, 'cantidad', 'setCantidad' ) " />
                 @if (formularioMercancia.get('cantidad')?.invalid && formularioMercancia.get('cantidad')?.touched) {
                 <div class="text-danger">
@@ -363,6 +372,7 @@
                 <label>Valor de la mercancía (dólares)<span [ngClass]="formularioMercancia.get('valorDelaMercancia')?.invalid && formularioMercancia.get('valorDelaMercancia')?.touched ? 'text-danger' : ''">*</span>:</label>
                 <input type="text" required="true" class="form-control" formControlName="valorDelaMercancia" maxlength="20"
                   [ngClass]="formularioMercancia.get('valorDelaMercancia')?.invalid && formularioMercancia.get('valorDelaMercancia')?.touched ? 'required' : ''"
+         
                   (change)=" setValoresStore( formularioMercancia, 'valorDelaMercancia', 'setValorDelaMercancia' ) " />
                 @if (formularioMercancia.get('valorDelaMercancia')?.invalid &&
                 formularioMercancia.get('valorDelaMercancia')?.touched) {
@@ -380,6 +390,7 @@
                 <label>Complemento de la descripción<span [ngClass]="formularioMercancia.get('complementoDelaDescripcion')?.invalid && formularioMercancia.get('complementoDelaDescripcion')?.touched ? 'text-danger' : ''">*</span>:</label>
                 <textarea rows="3" class="w-100" formControlName="complementoDelaDescripcion" maxlength="200"
                   [ngClass]="isValid(formularioMercancia,'complementoDelaDescripcion') ? 'required' : ''"
+         
                   (change)=" setValoresStore( formularioMercancia, 'complementoDelaDescripcion', 'setComplementoDelaDescripcion' ) "></textarea>
                 @if (formularioMercancia.get('complementoDelaDescripcion')?.invalid &&
                 formularioMercancia.get('complementoDelaDescripcion')?.touched) {
@@ -413,6 +424,7 @@
               <div class="col-md-4">
                 <label>N° factura<span [ngClass]="formularioMercancia.get('numeroFactura')?.invalid && formularioMercancia.get('numeroFactura')?.touched ? 'text-danger' : ''">*</span>:</label>
                 <input type="text" required="true" class="form-control" formControlName="numeroFactura" maxlength="36"
+         
                   (change)=" setValoresStore( formularioMercancia, 'numeroFactura', 'setNumeroFactura' ) "
                   [ngClass]="formularioMercancia.get('numeroFactura')?.invalid && formularioMercancia.get('numeroFactura')?.touched ? 'required' : ''"
                    />
