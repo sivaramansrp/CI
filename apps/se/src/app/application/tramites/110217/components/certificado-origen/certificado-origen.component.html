@@ -272,6 +272,14 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body">
+        <div class="col-12">
+          @if (esFormaValido) {
+          <div
+            class="alert alert-info alert-danger text-center"
+            [innerHTML]="formErrorAlert"
+          ></div>
+          }
+        </div>
         <ng-titulo titulo="Datos de la mercancía" />
         <form [formGroup]="formularioMercancia">
           <ng-container>
@@ -377,7 +385,17 @@
             <div class="row mt-5">
               <div class="col-md-4">
                 <input-fecha [setFecha]="formularioMercancia.get('fecha')?.value" [datos]="fechaFacturaInput"
-                  (valorCambiado)="cambioFechaFactura($event)" [isDisabled]="soloLectura"></input-fecha>
+                  (valorCambiado)="cambioFechaFactura($event)" [isDisabled]="soloLectura" [deshabilitarFuturas]="true"></input-fecha>
+                @if (formularioMercancia.get('fecha')?.invalid && formularioMercancia.get('fecha')?.touched) {
+                <div class="text-danger">
+                  @if (formularioMercancia.get('fecha')?.errors?.['required']) {
+                  <small>Este campo es obligatorio.</small>
+                  }
+                  @if (formularioMercancia.get('fecha')?.errors?.['futureDate']) {
+                  <small>No se pueden seleccionar fechas futuras.</small>
+                  }
+                </div>
+                }
               </div>
               <div class="col-md-4">
                 <label>N° factura<span [ngClass]="formularioMercancia.get('numeroFactura')?.invalid && formularioMercancia.get('numeroFactura')?.touched ? 'text-danger' : ''">*</span>:</label>
@@ -409,7 +427,7 @@
       <div class="modal-footer custom-footer mt-4">
         <button type="button" class="btn btn-default" [disabled]="soloLectura" data-bs-dismiss="modal" #closeModal (click)="cerrarModal()">
           Cancelar </button>
-        <button type="submit" class="btn btn-primary" [disabled]="soloLectura" data-bs-dismiss="modal" #closeModal (click)="activarModal(formularioMercancia)"> 
+        <button type="submit" class="btn btn-primary" [disabled]="soloLectura" (click)="activarModal(formularioMercancia)"> 
           Agregar 
         </button>
       </div>

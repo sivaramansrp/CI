@@ -9,7 +9,6 @@
         <app-catalogo-select
           [catalogo]="elementosDeBloque"
           [label]="'Bloque'"
-          [placeholder]="'Seleccione un valor'"
           [isDisabled]="esFormularioSoloLectura"
           formControlName="bloque"
           (change)="enCambioDeBloque($event); setValoresStore(paisForm,'bloque')"
