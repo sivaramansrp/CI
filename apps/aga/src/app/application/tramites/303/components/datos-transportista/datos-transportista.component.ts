@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { TablaSeleccion, Transportista } from '@libs/shared/data-access-user/src';
+import { Tramite303Store, Tramite303StoreService } from '../../../../core/estados/tramites/tramite303.store';
 import { CONFIGURACION_ENCABEZADO_TRASPORTISTA } from '../../../../core/enums/303/trasportistas.enum';
 import { Router } from '@angular/router';
 import { Tramite303Query } from '../../../../core/queries/tramite303.query';
-import { Tramite303Store } from '../../../../core/estados/tramites/tramite303.store';
 
 @Component({
   selector: 'datos-transportista',
@@ -25,7 +25,8 @@ export class DatosTransportistaComponent implements OnDestroy, OnInit {
   /** Estado del trámite 303 consultado */
   public tramiteConsultado?: Tramite303Store;
   constructor(private tramite303Query: Tramite303Query,
-    private router: Router
+    private router: Router,
+    private tramite303State: Tramite303StoreService,
   ) { }
 
   ngOnInit(): void {
@@ -56,4 +57,22 @@ export class DatosTransportistaComponent implements OnDestroy, OnInit {
     this.destroyNotifier$.complete();
   }
 
+  /**
+   * Método para eliminar un transportista.
+   * Elimina un transportista de la lista de transportistas.
+   */
+  eliminarTransportista(): void {
+    const IDS_TO_DELETE = this.trasportistasSeleccionados.map(trasportista => trasportista.idPersonaTransportista);
+    this.personasTrasportistas = this.personasTrasportistas.filter(trasportista => !IDS_TO_DELETE.includes(trasportista.idPersonaTransportista));
+    this.trasportistasSeleccionados = [];
+    this.tramite303State.setListaTransportistas(this.personasTrasportistas);
+  }
+
+  /**
+   * Método para modificar un transportista.
+   * Redirige al usuario a la página de registro de transportista.
+   */
+  modificarTransportista(): void {
+    this.router.navigate(['aga/despacho-mercancias/registro-trasportista']);
+  }
 }

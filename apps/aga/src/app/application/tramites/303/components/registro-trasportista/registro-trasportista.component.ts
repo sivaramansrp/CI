@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Notificacion, NotificacionesComponent, Transportista } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -15,7 +15,7 @@ import { TransportistaService } from '../../../../core/services/303/trasportista
   templateUrl: './registro-trasportista.component.html',
   styleUrl: './registro-trasportista.component.scss',
 })
-export class RegistroTrasportistaComponent implements OnInit {
+export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
   /**
    * Formulario para el registro de transportistas
    */
@@ -411,5 +411,13 @@ export class RegistroTrasportistaComponent implements OnInit {
    */
   get ESEXTRANJEROMORAL(): boolean {
     return this.nacionalidad === 'extranjero' && this.tipoPersona === 'moral';
+  }
+
+  /**
+   * Maneja la limpieza de recursos al destruir el componente.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
