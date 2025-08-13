@@ -1,9 +1,9 @@
+import { ENVIRONMENT, TRAMITE } from '@libs/shared/data-access-user/src';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
-import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { API_GET_INICAR_DICTAMEN, NUMFOLIOTRAMITE } from '../../../constantes/5701/api-constants';
+import { API_GET_INICAR_DICTAMEN, NUMFOLIOTRAMITE } from '@libs/shared/data-access-user/src/core/constants/api-constants';
 import { Observable } from 'rxjs';
 
 
@@ -32,8 +32,8 @@ export class IniciarService {
     * @param numFolio Número de folio del trámite.
     * @returns Observable con la respuesta del servidor.
     */
-    getIniciarDictamen(numFolio: string): Observable<BaseResponse<null>> {
-        const ENDPOINT = `${this.host}${API_GET_INICAR_DICTAMEN.replace(NUMFOLIOTRAMITE, numFolio)}`;
+    getIniciarDictamen(tramite: number, numFolio: string): Observable<BaseResponse<null>> {
+        const ENDPOINT = `${this.host}${API_GET_INICAR_DICTAMEN.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolio)}`;
         return this.http.get<BaseResponse<null>>(ENDPOINT);
     }
 

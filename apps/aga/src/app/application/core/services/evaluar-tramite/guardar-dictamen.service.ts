@@ -1,13 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
+import { ENVIRONMENT, TRAMITE } from '@libs/shared/data-access-user/src';
 import { Observable } from 'rxjs';
 
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { GuardarDictamenRequest } from '../../models/evaluar/guardar-dictamen-request.model';
 
-import { API_GET_DICTAMEN, API_POST_GUARDAR_DICTAMEN, IDSOLICITUDDICTAMEN, NUMFOLIOTRAMITE } from '../../../constantes/5701/api-constants';
+import { API_GET_DICTAMEN, API_POST_GUARDAR_DICTAMEN, IDSOLICITUDDICTAMEN, NUMFOLIOTRAMITE } from '@libs/shared/data-access-user/src/core/constants/api-constants';
 
 @Injectable({
     providedIn: 'root'
@@ -35,10 +35,10 @@ export class GuardarDictamenService {
     * @param PAYLOAD Datos del dictamen a guardar.
     * @returns Observable con la respuesta del servidor.
     */
-    postGuadarDictamen(numFolio: string, PAYLOAD: GuardarDictamenRequest):
+    postGuadarDictamen(tramite: number,numFolio: string, PAYLOAD: GuardarDictamenRequest):
         Observable<BaseResponse<string>> {
         const ENDPOINT = `${this.host}` +
-            API_POST_GUARDAR_DICTAMEN.replace(NUMFOLIOTRAMITE, numFolio);
+            API_POST_GUARDAR_DICTAMEN.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolio);
 
         return this.http.post<BaseResponse<string>>(ENDPOINT, PAYLOAD);
     }
@@ -48,8 +48,8 @@ export class GuardarDictamenService {
     * @param numFolio Número de folio del trámite.
     * @returns Observable con la respuesta del servidor.
     */
-    getCriterios(idSolicitud: string): Observable<BaseResponse<string>> {
-        const ENDPOINT = `${this.host}${API_GET_DICTAMEN.replace(IDSOLICITUDDICTAMEN, idSolicitud)}`;
+    getCriterios(tramite: number,idSolicitud: string): Observable<BaseResponse<string>> {
+        const ENDPOINT = `${this.host}${API_GET_DICTAMEN.replace(TRAMITE, tramite.toString()).replace(IDSOLICITUDDICTAMEN, idSolicitud)}`;
         return this.http.get<BaseResponse<string>>(ENDPOINT);
     }
 }

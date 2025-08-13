@@ -239,6 +239,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+      
     this.tramite = Number(this.guardarDatos?.procedureId);
     this.consultaioStore.solicitanteConsultaio({
       folioDelTramite: this.guardarDatos?.folioTramite,
@@ -284,7 +285,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       datos?: DocumentoSolicitud[];
     }
 
-    this.tabsSolicitudServiceTsService.getDocumentosSolicitud(this.tramite, IDSOLICITUD)
+    this.tabsSolicitudServiceTsService.getDocumentosSolicitud(130118, IDSOLICITUD)
       .subscribe({
         next: (response: DocumentosSolicitudResponse) => {
           if (response.codigo === '00') {
@@ -317,7 +318,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       datos?: RequerimientosResponse[];
     }
 
-    this.tabsSolicitudServiceTsService.getRequerimientos(this.tramite, NUMFOLIOTRAMITE)
+    this.tabsSolicitudServiceTsService.getRequerimientos(130118, NUMFOLIOTRAMITE)
       .subscribe({
       next: (response: RequerimientosSolicitudResponse) => {
         if (response.codigo === '00') {
@@ -350,7 +351,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       datos?: DictamenesResponse[];
     }
 
-    this.tabsSolicitudServiceTsService.getDictamenes(this.tramite, NUMFOLIOTRAMITE)
+    this.tabsSolicitudServiceTsService.getDictamenes(130118, NUMFOLIOTRAMITE)
       .subscribe({
       next: (response: DictamenesSolicitudResponse) => {
         if (response.codigo === '00') {
@@ -383,7 +384,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       datos?: TareasSolicitud[];
     }
 
-    this.tabsSolicitudServiceTsService.getTareasSolicitud(this.tramite, NUMFOLIOTRAMITE)
+    this.tabsSolicitudServiceTsService.getTareasSolicitud(130118, NUMFOLIOTRAMITE)
       .subscribe({
       next: (response: TareasSolicitudResponse) => {
         if (response.codigo === '00') {
@@ -414,7 +415,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       datos?: AcusesResolucionResponse;
     }
 
-    this.tabsSolicitudServiceTsService.getAcusesResolucion(this.tramite, NUMFOLIOTRAMITE)
+    this.tabsSolicitudServiceTsService.getAcusesResolucion(130118, NUMFOLIOTRAMITE)
       .subscribe({
       next: (response: AcusesResolucionResponseApi) => {
         if (response.codigo === '00') {
@@ -488,7 +489,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       datos?: string[];
     }
 
-    this.evaluarSolicitudService.postOpcionesEvaluacion(FOLIOTRAMITE, PAYLOAD)
+    this.evaluarSolicitudService.postOpcionesEvaluacion(130118,FOLIOTRAMITE, PAYLOAD)
       .subscribe({
         next: (response: OpcionesEvaluacionResponse) => {
           if (response.codigo === '00') {
@@ -586,7 +587,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       datos?: unknown;
     }
 
-    this.iniciarService.getIniciarDictamen(FOLIOTRAMITE).subscribe({
+    this.iniciarService.getIniciarDictamen(130118,FOLIOTRAMITE).subscribe({
       next: (_resp: IniciarDictamenResponse) => {
       this.obtenerCriterios();
       },
@@ -606,7 +607,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       datos?: string;
     }
 
-    this.guardarService.getCriterios(IDSOLICITUD).subscribe({
+    this.guardarService.getCriterios(130118,IDSOLICITUD).subscribe({
       next: (resp: GetCriteriosResponse) => {
       this.conformidadDictamen = resp.datos ?? '';
       },
@@ -651,7 +652,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       datos?: unknown;
     }
 
-    this.guardarService.postGuadarDictamen(FOLIOTRAMITE, PAYLOAD)
+    this.guardarService.postGuadarDictamen(130118,FOLIOTRAMITE, PAYLOAD)
       .subscribe({
       next: (_resp: GuardarDictamenResponse) => {
         this.firmar = true;

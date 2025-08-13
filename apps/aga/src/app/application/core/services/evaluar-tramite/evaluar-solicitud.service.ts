@@ -1,10 +1,10 @@
+import { ENVIRONMENT, TRAMITE } from '@libs/shared/data-access-user/src';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
-import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { API_POST_OPCIONES_EVALUACION, NUMFOLIOTRAMITE } from '../../../constantes/5701/api-constants';
+import { API_POST_OPCIONES_EVALUACION, NUMFOLIOTRAMITE } from '@libs/shared/data-access-user/src/core/constants/api-constants';
 import { OpcionesEvaluacionRequest } from '../../models/evaluar/opciones-evaluacion.model';
 
 @Injectable({
@@ -31,10 +31,10 @@ export class EvaluarSolicitudService {
    * @param PAYLOAD Datos de las opciones de evaluación.
    * @returns Observable con la respuesta del servidor.
    */
-    postOpcionesEvaluacion(folioTramite: string, PAYLOAD: OpcionesEvaluacionRequest):
+    postOpcionesEvaluacion(tramite: number,folioTramite: string, PAYLOAD: OpcionesEvaluacionRequest):
     Observable<BaseResponse<string[]>> {
     const ENDPOINT = `${this.host}` +
-        API_POST_OPCIONES_EVALUACION.replace(NUMFOLIOTRAMITE, folioTramite);
+        API_POST_OPCIONES_EVALUACION.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, folioTramite);
 
         return this.http.post<BaseResponse<string[]>>(ENDPOINT, PAYLOAD);
     }
