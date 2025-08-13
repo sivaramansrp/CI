@@ -29,6 +29,7 @@ import {
   REGEX_RFC,
   REGEX_SOLO_DIGITOS,
   REGEX_SOLO_NUMEROS,
+  TablePaginationComponent,
 } from '@libs/shared/data-access-user/src';
 import {
   Catalogo,
@@ -74,7 +75,8 @@ import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json'
     FormsModule,
     NotificacionesComponent,
     TooltipModule,
-    InputRadioComponent
+    InputRadioComponent,
+    TablePaginationComponent
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',

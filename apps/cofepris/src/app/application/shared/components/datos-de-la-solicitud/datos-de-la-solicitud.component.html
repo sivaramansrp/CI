@@ -447,7 +447,7 @@
       <div class="col-md-3 my-3">
         <div class="form-group">
           <label class="form-label municipio-label" for="telefono"
-            >S. C. I. A. N
+            >S.C.I.A.N.
           </label>
           <span class="form-label" *ngIf="esCampoRequerido('scian')">*</span>
           <span class="form-label">:</span>
@@ -465,7 +465,6 @@
       <div class="col-md-12">
         <div class="pull-right ml-2">
           <button
-            *ngIf="scianConfig.datos.length > 0"
             type="button"
             name="eliminarScian"
             class="btn btn-danger ms-2"
@@ -633,7 +632,7 @@
     </div>
     } @if (tablaMercanciasConfig) {
     <div class="row mt-5">
-      <h5 class="mt-3">Mercancías * :</h5>
+      <h5 class="mt-3">Mercancías* :</h5>
       <app-tabla-dinamica
         [tipoSeleccionTabla]="tablaMercanciasConfig.tipoSeleccionTabla"
         [configuracionTabla]="tablaMercanciasConfig.configuracionTabla"
@@ -641,6 +640,12 @@
         (listaDeFilaSeleccionada)="tablaMercanciasLista = $event"
         [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
       ></app-tabla-dinamica>
+      <div class="d-flex justify-content-center mt-3" [class.disabled]="formularioDeshabilitado"
+        [style.pointerEvents]="formularioDeshabilitado ? 'none' : 'auto'"
+        [style.opacity]="formularioDeshabilitado ? '0.5' : '1'">
+        <app-table-pagination [showCurrentPage]="true">
+        </app-table-pagination>
+      </div>
     </div>
 
     <div class="row mt-5">
@@ -733,7 +738,6 @@
           acuerdo en hacerlos públicos? * :</label>
           <app-input-radio
             [radioOptions]="radioBtn"
-            [selectedValue]="predeterminadoSeleccionar"
             (valueChange)="cambioDeValorIndique($event)"
             [isRequired]="true"
             [layout]="'horizontal'"
