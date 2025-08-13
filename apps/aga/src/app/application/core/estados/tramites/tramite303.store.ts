@@ -1,8 +1,12 @@
 import { Store, StoreConfig } from "@datorama/akita";
 import { AgenteAduanal } from "../../models/303/agente-aduanal.model";
 import { Injectable } from "@angular/core";
+import { Transportista } from "@libs/shared/data-access-user/src";
 
 export interface Tramite303Store {
+    /**
+     * Indica el índice del trámite 303.
+     */
     indice: number;
     /**
      * Indica si el trámite 303 está en cumplimiento.
@@ -56,6 +60,10 @@ export interface Tramite303Store {
      * Indica si se debe mostrar un select para la selección de números IMMEX.
      */
     mostrarSelectImmex?: boolean;
+    /**
+     * Lista de transportistas asociados al trámite 303.
+     */
+    listaTransportistas?: Transportista[];
 }
 export function createInitialState(): Tramite303Store {
     return {
@@ -73,6 +81,7 @@ export function createInitialState(): Tramite303Store {
         listaFiguras: [],
         mostrarCheckboxesImmex: false,
         mostrarSelectImmex: true,
+        listaTransportistas: [],
     };
 }
 
@@ -245,13 +254,25 @@ export class Tramite303StoreService extends Store<Tramite303Store> {
             mostrarCheckboxesImmex,
         }));
     }
-
+    /**
+     * Establece si se debe mostrar el select de IMMEX.
+     * @param mostrarSelectImmex Valor booleano que indica si se debe mostrar el select de IMMEX.
+     */
     setSelectImmex(mostrarSelectImmex: boolean): void {
         this.update((state) => ({
             ...state,
             mostrarSelectImmex,
         }));
     }
-
+    /**
+     * Establece la lista de transportistas en el estado del trámite 303.
+     * @param listaTransportistas Lista de transportistas a establecer.
+     */
+    public setListaTransportistas(listaTransportistas: Transportista[]): void {
+        this.update((state) => ({
+            ...state,
+            listaTransportistas,
+        }));
+    }
 
 }
