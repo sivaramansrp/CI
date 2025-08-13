@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -43,32 +43,12 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy{
        */
         idProcedimiento: number = ID_PROCEDIMIENTO;
 
-  /**
-   * @property formularioDeshabilitado
-   * @description Propiedad de entrada que controla el estado de habilitación del formulario 
-   * de pago de derechos. Cuando su valor es `true`, todos los controles del formulario se 
-   * encuentran en modo de solo lectura, impidiendo cualquier modificación por parte del usuario.
-   * Esta funcionalidad es útil en escenarios donde el formulario debe ser mostrado para 
-   * consulta sin permitir edición, como en estados de revisión o cuando el usuario no tiene
-   * permisos de modificación.
-   * 
-   * @type {boolean}
-   * @default false
-   * @memberof PagoDeDerechosContenedoraComponent
-   * 
-   * @example
-   * ```typescript
-   * // En el componente padre
-   * isFormDisabled = true;
-   * ```
-   * 
-   * ```html
-   * <app-pago-de-derechos-contenedora 
-   *   [formularioDeshabilitado]="isFormDisabled">
-   * </app-pago-de-derechos-contenedora>
-   * ```
+        /**
+   * @property {boolean} esFormularioSoloLectura
+   * @description
+   * Indica si el formulario está en modo solo lectura. Cuando es `true`, los campos del formulario no se pueden editar.
    */
-   @Input() formularioDeshabilitado: boolean = false;
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * @property pagoDerechos
@@ -89,12 +69,6 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy{
 
   public pagoDerechos: PagoDerechosFormState;
 
-  /**
-   * @property {boolean} esFormularioSoloLectura
-   * @description
-   * Indica si el formulario está en modo solo lectura. Cuando es `true`, los campos del formulario no se pueden editar.
-   */
-  public esFormularioSoloLectura: boolean = false;
 
   /**
    * @property {Subject<void>} destroyNotifier$

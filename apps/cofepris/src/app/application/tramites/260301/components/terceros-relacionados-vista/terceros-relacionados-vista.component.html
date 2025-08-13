@@ -15,6 +15,7 @@
       [configuracionTabla]="configuracionTablaFacturador"
       [datos]="(fabricanteTablaDatos$ | async) || []"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     ></app-tabla-dinamica>
   </div>
 
@@ -25,7 +26,7 @@
           type="button"
           name="modificarMercancias"
           class="btn btn-default"
-          disabled="formularioDeshabilitado"
+          [disabled]="esFormularioSoloLectura"
         >
           Modificar
         </button>
@@ -33,7 +34,7 @@
           type="button"
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
-          disabled="formularioDeshabilitado"
+          [disabled]="esFormularioSoloLectura"
         >
           Eliminar
         </button>
@@ -43,7 +44,7 @@
           name="agregarMercancias"
           class="btn btn-primary ms-2"
           (click)="navigate(tipoTablaDatos.FABRICANTE)"
-           disabled="formularioDeshabilitado"
+          [disabled]="esFormularioSoloLectura"
         >
           Agregar
         </button>
@@ -57,6 +58,7 @@
       [configuracionTabla]="configuracionTablaFacturador"
       [datos]="(facturadorTablaDatos$ | async) || []"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     ></app-tabla-dinamica>
   </div>
 
@@ -67,7 +69,7 @@
           type="button"
           name="modificarMercancias"
           class="btn btn-default"
-          disabled="formularioDeshabilitado"
+          [disabled]="esFormularioSoloLectura"
         >
           Modificar
         </button>
@@ -75,7 +77,7 @@
           type="button"
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
-          disabled="formularioDeshabilitado"
+          [disabled]="esFormularioSoloLectura"
         >
           Eliminar
         </button>
@@ -85,7 +87,7 @@
           name="agregarMercancias"
           class="btn btn-primary ms-2"
           (click)="navigate(tipoTablaDatos.FACTURADOR)"
-           disabled="formularioDeshabilitado"
+           [disabled]="esFormularioSoloLectura"
         >
           Agregar
         </button>
@@ -99,6 +101,7 @@
       [configuracionTabla]="configuracionTablaFacturador"
       [datos]="(proveedorTablaDatos$ | async) || []"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     ></app-tabla-dinamica>
   </div>
 
@@ -110,7 +113,7 @@
           type="button"
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
-          disabled="formularioDeshabilitado"
+          [disabled]="esFormularioSoloLectura"
         >
           Eliminar
         </button>
@@ -120,7 +123,7 @@
           name="agregarMercancias"
           class="btn btn-primary ms-2"
           (click)="navigate(tipoTablaDatos.PROVEEDOR)"
-           disabled="formularioDeshabilitado"
+           [disabled]="esFormularioSoloLectura"
         >
           Agregar
         </button>
@@ -134,6 +137,7 @@
       [configuracionTabla]="configuracionTablaFacturador"
       [datos]="(certificadoTablaDatos$ | async) || []"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     ></app-tabla-dinamica>
   </div>
 
@@ -144,7 +148,7 @@
           type="button"
           name="modificarMercancias"
           class="btn btn-default"
-          disabled="formularioDeshabilitado"
+          [disabled]="esFormularioSoloLectura"
         >
           Modificar
         </button>
@@ -152,7 +156,7 @@
           type="button"
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
-          disabled="formularioDeshabilitado"
+          [disabled]="esFormularioSoloLectura"
         >
           Eliminar
         </button>
@@ -162,7 +166,7 @@
           name="agregarMercancias"
           class="btn btn-primary ms-2"
           (click)="navigate(tipoTablaDatos.CERTIFICADO)"
-           disabled="formularioDeshabilitado"
+           [disabled]="esFormularioSoloLectura"
         >
           Agregar
         </button>
@@ -176,6 +180,7 @@
       [configuracionTabla]="configuracionTablaFacturador"
       [datos]="(otrasTablaDatos$ | async) || []"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     ></app-tabla-dinamica>
   </div>
 
@@ -186,7 +191,7 @@
           type="button"
           name="modificarMercancias"
           class="btn btn-default"
-          disabled="formularioDeshabilitado"
+          [disabled]="esFormularioSoloLectura"
         >
           Modificar
         </button>
@@ -194,7 +199,7 @@
           type="button"
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
-          disabled="formularioDeshabilitado"
+          [disabled]="esFormularioSoloLectura"
         >
           Eliminar
         </button>
@@ -204,7 +209,7 @@
           name="agregarMercancias"
           class="btn btn-primary ms-2"
           (click)="navigateOtros()"
-           disabled="formularioDeshabilitado"
+          [disabled]="esFormularioSoloLectura"
         >
           Agregar
         </button>

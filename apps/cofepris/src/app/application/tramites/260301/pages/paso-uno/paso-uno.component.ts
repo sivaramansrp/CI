@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user'
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user'
 import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
 import { ImportacionMateriasPrimasService } from '../../service/importacion-materias-primas.service';
 import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
@@ -36,13 +36,14 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
-   /**
-   * @descripcion
-   * Indica si el formulario debe estar deshabilitado (solo lectura).
-   * Cuando es verdadero, los controles del formulario estarán deshabilitados y no se podrán editar.
-   * @type {boolean}
-   */
-  formularioDeshabilitado: boolean = false;
+    /**
+     * Esta variable se utiliza para almacenar el índice del subtítulo.
+     */
+    public consultaState!: ConsultaioState;
+  
+
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
 
   /**
    * @constructor
@@ -60,7 +61,10 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
     private consultaQuery: ConsultaioQuery,
     private importacionMateriasPrimasService: ImportacionMateriasPrimasService
   ) {
-    // Constructor necesario para inyectar el store del trámite
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.consultaState = seccionState;
+          })).subscribe();
   }
 
   /**
@@ -71,23 +75,29 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * @returns {void}
    */
   ngOnInit(): void {
+    if (this.consultaState && this.consultaState.procedureId === '260301' &&
+      this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
       this.tramite260301Query.getTabSeleccionado$
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe((tab) => {
           this.indice = tab;
         });
 
-      this.consultaQuery.selectConsultaioState$
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((seccionState) => {
-        if(seccionState.update){
-          this.formularioDeshabilitado = false;
-            this.guardarDatosFormulario();
-        }
-        if (seccionState.readonly) {
-          this.formularioDeshabilitado = true;
-        }
-      });
+      // this.consultaQuery.selectConsultaioState$
+      // .pipe(takeUntil(this.destroyNotifier$))
+      // .subscribe((seccionState) => {
+      //   if(seccionState.update){
+      //     this.formularioDeshabilitado = false;
+      //       this.guardarDatosFormulario();
+      //   }
+      //   if (seccionState.readonly) {
+      //     this.formularioDeshabilitado = true;
+      //   }
+      // });
   }
 
   /**
@@ -106,6 +116,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
       )
       .subscribe((resp) => {
         if (resp) {
+          this.esDatosRespuesta = true;
           this.importacionMateriasPrimasService.actualizarEstadoFormulario(resp);
         }
       });

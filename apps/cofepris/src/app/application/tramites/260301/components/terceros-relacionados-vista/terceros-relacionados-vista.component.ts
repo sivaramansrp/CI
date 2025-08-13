@@ -2,12 +2,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   AlertComponent,
   ConfiguracionColumna,
+  ConsultaioQuery,
   MENSAJEDEALERTA,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   Destinatario,
   Fabricante,
@@ -18,7 +19,7 @@ import {
   FACTURADOR_ENCABEZADO_DE_TABLA,
   TIPO_TABLA_DATOS,
 } from '../../constants/estupefacientes.enum';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Tramite260301Query } from '../../estados/tramite260301Query.query';
 import { Tramite260301Store } from '../../estados/tramite260301Store.store';
@@ -43,14 +44,23 @@ import { Tramite260301Store } from '../../estados/tramite260301Store.store';
 })
 export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
 
-  /**
-   * @input
-   * @description
-   * Indica si el formulario debe estar deshabilitado. Cuando es `true`, los controles del formulario estarán inactivos y no permitirán la edición por parte del usuario.
-   * @type {boolean}
+/**
+   * @property {boolean} esFormularioSoloLectura
+   * @description Bandera que indica si el componente está en modo de solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar y solo se muestran
+   * para consulta. Esta propiedad se actualiza automáticamente basándose en el estado
+   * de consulta obtenido del `ConsultaioQuery`.
+   * 
+   * @public
+   * @default false
+   * @since 1.0.0
+   * 
+   * @example
+   * ```html
+   * <input [readonly]="esFormularioSoloLectura" />
+   * ```
    */
-   @Input() formularioDeshabilitado: boolean = false;
-
+  public esFormularioSoloLectura: boolean = false;
   /**
    * @property {number} idProcedimiento
    * Identificador único del procedimiento asociado a la solicitud.
@@ -148,9 +158,18 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     private tramiteStore: Tramite260301Store,
     private tramiteQuery: Tramite260301Query,
     private router: Router,
-    private activatedROute: ActivatedRoute
+    private activatedROute: ActivatedRoute,
+    private consultaQuery: ConsultaioQuery    
+
   ) {
-    //
+     this.consultaQuery.selectConsultaioState$
+          .pipe(
+            takeUntil(this.destroy$),
+            map((seccionState) => {
+              this.esFormularioSoloLectura = seccionState.readonly;
+            })
+          )
+          .subscribe();
   }
 
   /**
