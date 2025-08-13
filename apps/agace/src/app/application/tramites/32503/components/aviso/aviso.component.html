@@ -4,9 +4,7 @@
       <div class="row mb-3">
         <div class="col-md-4">
           <label for="adace" class="form-label">ADACE:</label>
-          <input class="form-control" [ngClass]="isValid(adaceFormulario, 'adace') ? 'required' : ''" type="text"
-            formControlName="adace" name="adace" id="adace"
-            (change)="setValoresStore(avisoFormulario, 'adace', 'setAvisoFormularioAdace')" />
+          <input class="form-control" [ngClass]="isValid(adaceFormulario, 'adace') ? 'required' : ''" type="text" formControlName="adace" name="adace" id="adace" (change)="setValoresStore(avisoFormulario, 'adace', 'setAvisoFormularioAdace')" />
         </div>
       </div>
     </ng-container>
@@ -14,27 +12,17 @@
     <ng-container formGroupName="datosEmpresa">
       <div class="row">
         <div class="col-md-8">
-          <label for="valorProgramaImmex">
-            Número de programa IMMEX
-          </label>
+          <label for="valorProgramaImmex"> Número de programa IMMEX </label>
           <span class="require">*</span>
           <label for="puntos">:</label>
-          <input id="valorProgramaImmex" name="valorProgramaImmex" class="form-control"
-            [ngClass]="isValid(datosEmpresa, 'valorProgramaImmex') ? 'required' : ''" type="text" maxlength="9"
-            formControlName="valorProgramaImmex"
-            (keyup)="sanitizeAlphanumeric(datosEmpresa,'valorProgramaImmex',$event)"
-            (change)="setValoresStore(datosEmpresa, 'valorProgramaImmex', 'setAvisoFormularioValorProgramaImmex')" />
+          <input id="valorProgramaImmex" name="valorProgramaImmex" class="form-control" [ngClass]="isValid(datosEmpresa, 'valorProgramaImmex') ? 'required' : ''" type="text" maxlength="9" formControlName="valorProgramaImmex" (keyup)="sanitizeAlphanumeric(datosEmpresa,'valorProgramaImmex',$event)" (change)="setValoresStore(datosEmpresa, 'valorProgramaImmex', 'setAvisoFormularioValorProgramaImmex')" />
         </div>
         <div class="col-md-4">
           <div class="form-group">
             <label for="valorAnioProgramaImmex">Año de programa IMMEX</label>
             <span class="require">*</span>
             <label for="puntos">:</label>
-            <input id="valorAnioProgramaImmex" name="valorAnioProgramaImmex" class="form-control" type="text"
-              maxlength="4" formControlName="valorAnioProgramaImmex"
-              [ngClass]="isValid(datosEmpresa, 'valorAnioProgramaImmex') ? 'required' : ''"
-              (keyup)="sanitizeAlphanumeric(datosEmpresa,'valorAnioProgramaImmex',$event)"
-              (change)="setValoresStore(datosEmpresa, 'valorAnioProgramaImmex', 'setAvisoFormularioValorAnioProgramaImmex')" />
+            <input id="valorAnioProgramaImmex" name="valorAnioProgramaImmex" class="form-control" type="text" maxlength="4" formControlName="valorAnioProgramaImmex" [ngClass]="isValid(datosEmpresa, 'valorAnioProgramaImmex') ? 'required' : ''" (keyup)="sanitizeAlphanumeric(datosEmpresa,'valorAnioProgramaImmex',$event)" (change)="setValoresStore(datosEmpresa, 'valorAnioProgramaImmex', 'setAvisoFormularioValorAnioProgramaImmex')" />
           </div>
         </div>
       </div>
@@ -50,9 +38,7 @@
           </div>
           <div class="radio">
             <div class="col-md-4">
-              <app-input-radio [radioOptions]="TIPAVI" id="tipoAviso" formControlName="tipoAviso"
-                (change)="verificaTipoAviso()">
-              </app-input-radio>
+              <app-input-radio [radioOptions]="TIPAVI" id="tipoAviso" formControlName="tipoAviso" (change)="verificaTipoAviso()"></app-input-radio>
             </div>
           </div>
         </div>
@@ -64,16 +50,12 @@
             <label for="puntos">:</label>
           </div>
           <div>
-            <input id="idTransacccion" name="idTransaccion" type="text" maxlength="25" class="form-control"
-              formControlName="idTransaccion" [ngClass]="isValid(datosAviso, 'idTransaccion') ? 'required' : ''"
-              (keyup)="sanitizeAlphanumeric(datosAviso,'idTransaccion',$event)"
-              (change)="setValoresStore(datosAviso, 'idTransaccion', 'setAvisoFormularioTransaccion')" />
+            <input id="idTransacccion" name="idTransaccion" type="text" maxlength="25" class="form-control" formControlName="idTransaccion" [ngClass]="isValid(datosAviso, 'idTransaccion') ? 'required' : ''" (keyup)="sanitizeAlphanumeric(datosAviso,'idTransaccion',$event)" (change)="setValoresStore(datosAviso, 'idTransaccion', 'setAvisoFormularioTransaccion')" />
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group datepicker-group">
-            <input-fecha [datos]="fechaInicioInput" [setFecha]="avisoFormulario.get('datosAviso.fechaTranslado')?.value"
-              (valorCambiado)="cambioFechaIngreso($event)" [isDisabled]="soloLectura"></input-fecha>
+            <input-fecha [datos]="fechaInicioInput" [setFecha]="avisoFormulario.get('datosAviso.fechaTranslado')?.value" (valorCambiado)="cambioFechaIngreso($event)" [isDisabled]="soloLectura"></input-fecha>
           </div>
         </div>
       </div>
@@ -85,10 +67,7 @@
             <label for="puntos">:</label>
           </div>
           <div>
-            <textarea id="motivoProrroga" name="motivoProrroga" rows="5" class="form-control textarea"
-              [ngClass]="isValid(datosAviso, 'motivoProrroga') ? 'required' : ''" formControlName="motivoProrroga"
-              [maxlength]="250"
-              (change)="setValoresStore(datosAviso, 'motivoProrroga', 'setAvisoFormularioMotivoProrroga')"></textarea>
+            <textarea id="motivoProrroga" name="motivoProrroga" rows="5" class="form-control textarea" [ngClass]="isValid(datosAviso, 'motivoProrroga') ? 'required' : ''" formControlName="motivoProrroga" [maxlength]="250" (change)="setValoresStore(datosAviso, 'motivoProrroga', 'setAvisoFormularioMotivoProrroga')"></textarea>
           </div>
         </div>
       </div>
@@ -102,30 +81,17 @@
             <label for="puntos">:</label>
           </div>
           <div>
-            <input id="nombrePlanta" name="nombreComercial" type="text" class="form-control" maxlength="250"
-              formControlName="nombreComercial"
-              (change)="setValoresStore(direccionOrigen, 'nombreComercial', 'setAvisoFormularioNombreComercial')" />
+            <input id="nombrePlanta" name="nombreComercial" type="text" class="form-control" maxlength="250" formControlName="nombreComercial" (change)="setValoresStore(direccionOrigen, 'nombreComercial', 'setAvisoFormularioNombreComercial')" />
           </div>
         </div>
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="entidadFederativa" [label]="'Entidad federativa'" [required]="true"
-            id="claveEntidadFederativa" formControlName="claveEntidadFederativa" [placeholder]="'Seleccione un valor'"
-            [ngClass]="isValid(direccionOrigen,'claveEntidadFederativa') ? 'required' : ''"
-            (change)="setValoresStore(direccionOrigen, 'claveEntidadFederativa', 'setAvisoFormularioEntidadFederativa')"
-            [isDisabled]="soloLectura"></app-catalogo-select>
+          <app-catalogo-select [catalogo]="entidadFederativa" [label]="'Entidad federativa'" [required]="true" id="claveEntidadFederativa" formControlName="claveEntidadFederativa" [ngClass]="isValid(direccionOrigen,'claveEntidadFederativa') ? 'required' : ''" (change)="setValoresStore(direccionOrigen, 'claveEntidadFederativa', 'setAvisoFormularioEntidadFederativa')" [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="delegacionMunicipio" [label]="'Alcaldía o Municipio'" [required]="true"
-            id="claveDelegacionMunicipio" formControlName="claveDelegacionMunicipio" [placeholder]="'Seleccione un valor'"
-            [ngClass]="isValid(direccionOrigen,'claveDelegacionMunicipio') ? 'required' : ''"
-            (change)="setValoresStore(direccionOrigen, 'claveDelegacionMunicipio', 'setAvisoFormularioDelegacionMunicipio')"
-            [isDisabled]="soloLectura"></app-catalogo-select>
+          <app-catalogo-select [catalogo]="delegacionMunicipio" [label]="'Alcaldía o Municipio'" [required]="true" id="claveDelegacionMunicipio" formControlName="claveDelegacionMunicipio" [ngClass]="isValid(direccionOrigen,'claveDelegacionMunicipio') ? 'required' : ''" (change)="setValoresStore(direccionOrigen, 'claveDelegacionMunicipio', 'setAvisoFormularioDelegacionMunicipio')" [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="colonia" [label]="'Colonia'" [required]="true" id="claveColonia" [placeholder]="'Seleccione un valor'"
-            formControlName="claveColonia" [ngClass]="isValid(direccionOrigen,'claveColonia') ? 'required' : ''"
-            (change)="setValoresStore(direccionOrigen, 'claveColonia', 'setAvisoFormularioColonia')"
-            [isDisabled]="soloLectura"></app-catalogo-select>
+          <app-catalogo-select [catalogo]="colonia" [label]="'Colonia'" [required]="true" id="claveColonia" formControlName="claveColonia" [ngClass]="isValid(direccionOrigen,'claveColonia') ? 'required' : ''" (change)="setValoresStore(direccionOrigen, 'claveColonia', 'setAvisoFormularioColonia')" [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
         <div class="col-md-4">
           <div>
@@ -134,22 +100,17 @@
             <label for="puntos">:</label>
           </div>
           <div>
-            <input id="calle" name="calle" type="text" class="form-control" maxlength="250" formControlName="calle"
-              [ngClass]="isValid(direccionOrigen,'calle') ? 'required' : ''"
-              (change)="setValoresStore(direccionOrigen, 'calle', 'setAvisoFormularioCalle')" />
+            <input id="calle" name="calle" type="text" class="form-control" maxlength="250" formControlName="calle" [ngClass]="isValid(direccionOrigen,'calle') ? 'required' : ''" (change)="setValoresStore(direccionOrigen, 'calle', 'setAvisoFormularioCalle')" />
           </div>
         </div>
         <div class="col-md-4">
           <div>
-            <label for="solicitud.envioAvisos.exteriorPlanta">No. exterior</label>
+            <label for="solicitud.envioAvisos.exteriorPlanta">No. Exterior</label>
             <span class="require" id="domicilio">*</span>
             <label for="puntos">:</label>
           </div>
           <div>
-            <input id="numeroExterior" name="numeroExterior" type="text" class="form-control" maxlength="15"
-              formControlName="numeroExterior" [ngClass]="isValid(direccionOrigen,'numeroExterior') ? 'required' : ''"
-              (keyup)="sanitizeAlphanumericWithSpace(direccionOrigen,'numeroExterior',$event)"
-              (change)="setValoresStore(direccionOrigen, 'numeroExterior', 'setAvisoFormularioNumeroExterior')" />
+            <input id="numeroExterior" name="numeroExterior" type="text" class="form-control" maxlength="15" formControlName="numeroExterior" [ngClass]="isValid(direccionOrigen,'numeroExterior') ? 'required' : ''" (keyup)="sanitizeAlphanumericWithSpace(direccionOrigen,'numeroExterior',$event)" (change)="setValoresStore(direccionOrigen, 'numeroExterior', 'setAvisoFormularioNumeroExterior')" />
           </div>
         </div>
         <div class="col-md-4">
@@ -158,10 +119,7 @@
             <label for="puntos">:</label>
           </div>
           <div>
-            <input id="numeroInterior" name="numeroInterior" type="text" class="form-control" maxlength="15"
-              formControlName="numeroInterior" [ngClass]="isValid(direccionOrigen,'numeroInterior') ? 'required' : ''"
-              (keyup)="sanitizeAlphanumericWithSpace(direccionOrigen,'numeroInterior',$event)"
-              (change)="setValoresStore(direccionOrigen, 'numeroInterior', 'setAvisoFormularioNumeroInterior')" />
+            <input id="numeroInterior" name="numeroInterior" type="text" class="form-control" maxlength="15" formControlName="numeroInterior" [ngClass]="isValid(direccionOrigen,'numeroInterior') ? 'required' : ''" (keyup)="sanitizeAlphanumericWithSpace(direccionOrigen,'numeroInterior',$event)" (change)="setValoresStore(direccionOrigen, 'numeroInterior', 'setAvisoFormularioNumeroInterior')" />
           </div>
         </div>
         <div class="col-md-4">
@@ -171,10 +129,7 @@
             <label for="puntos">:</label>
           </div>
           <div>
-            <input id="codigoPostal" name="codigoPostal" type="text" class="form-control validanumericos" maxlength="5"
-              formControlName="codigoPostal" (keyup)="sanitizeNumeric(direccionOrigen,'codigoPostal',$event)"
-              [ngClass]="isValid(direccionOrigen,'codigoPostal') ? 'required' : ''"
-              (change)="setValoresStore(direccionOrigen, 'codigoPostal', 'setAvisoFormularioCodigoPostal')" />
+            <input id="codigoPostal" name="codigoPostal" type="text" class="form-control validanumericos" maxlength="5" formControlName="codigoPostal" (keyup)="sanitizeNumeric(direccionOrigen,'codigoPostal',$event)" [ngClass]="isValid(direccionOrigen,'codigoPostal') ? 'required' : ''" (change)="setValoresStore(direccionOrigen, 'codigoPostal', 'setAvisoFormularioCodigoPostal')" />
           </div>
         </div>
       </div>
@@ -189,15 +144,11 @@
         </div>
         <div class="radio">
           <div class="col-md-4">
-            <app-input-radio [radioOptions]="TIPACA" id="tipoCarga" formControlName="tipoCarga"
-              (change)="setValoresStore(avisoFormulario, 'tipoCarga', 'setAvisoFormularioTipoCarga')">
-            </app-input-radio>
+            <app-input-radio [radioOptions]="TIPACA" id="tipoCarga" formControlName="tipoCarga" (change)="setValoresStore(avisoFormulario, 'tipoCarga', 'setAvisoFormularioTipoCarga')"></app-input-radio>
           </div>
         </div>
       </div>
-    </div>
-    @if(avisoFormulario.get('tipoCarga')?.value===TIPACA[1].value){
-    <div id="divCargaMasiva">
+    </div> @if(avisoFormulario.get('tipoCarga')?.value===TIPACA[1].value){ <div id="divCargaMasiva">
       <div class="row">
         <ng-titulo titulo="Plantilla de Carga Masiva" />
       </div>
@@ -208,52 +159,36 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-8">
-          <input type="file" name="archivoMasivo" id="archivoMasivo" class="form-control" title="Examinar" form
-            #fileInput (change)="onArchivoMasivoSeleccionado($event)" [disabled]="soloLectura" />
-        </div>
         <div class="col-md-4">
-          <div class="pull-right">
-            <button id="botonCargar" name="botonCargar" class="btn btn-primary ms-2" [disabled]="soloLectura">
-              Cargar archivo
-            </button>
-            <button id="botonLimpiar" name="botonLimpiar" class="btn btn-default ms-2" (click)="limpiar(fileInput)"
-              [disabled]="soloLectura">
-              Limpiar
-            </button>
+          <input type="file" name="archivoMasivo" id="archivoMasivo" class="form-control" title="Examinar" form #fileInput (change)="onArchivoMasivoSeleccionado($event)" [disabled]="soloLectura" />
+        </div>
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+          <div class="d-flex justify-content-end">
+            <button id="botonCargar" name="botonCargar" class="btn btn-primary ms-2" [disabled]="soloLectura"> Cargar archivo </button>
+            <button id="botonLimpiar" name="botonLimpiar" class="btn btn-default ms-2" (click)="limpiar(fileInput)" [disabled]="soloLectura"> Limpiar </button>
           </div>
         </div>
       </div>
-    </div>
-    }@else{
+    </div> }@else{
     <ng-titulo titulo="Datos del aviso" />
     <div class="row">
-      <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [configuracionTabla]="tablaDeDatos.encabezadas"
-        [datos]="tablaDeDatos.datos" (listaDeFilaSeleccionada)="filaSeleccionada($event)"
-        [disableSeleccionTablaCheckBox]="soloLectura"></app-tabla-dinamica>
+      <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [configuracionTabla]="tablaDeDatos.encabezadas" [datos]="tablaDeDatos.datos" (listaDeFilaSeleccionada)="filaSeleccionada($event)" [disableSeleccionTablaCheckBox]="soloLectura"></app-tabla-dinamica>
       <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-danger ms-3" [disabled]="soloLectura" (click)="eliminarDomicilio()">
-          Eliminar
-        </button>
-        <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura">
-          Modificar
-        </button>
-        <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura" (click)="abiertoDomicilio()">
-          Agregar
-        </button>
+        <button type="button" class="btn btn-danger ms-3" [disabled]="soloLectura" (click)="eliminarDomicilio()"> Eliminar </button>
+        <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura"> Modificar </button>
+        <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura" (click)="abiertoDomicilio()"> Agregar </button>
       </div>
-    </div>
-    }
+    </div> }
   </form>
 </div>
-<div class="modal fade" id="modalDomicilio" tabindex="-1" #modalDomicilio aria-labelledby="modalDomicilio"
-  aria-hidden="true">
+<!-- Datos del aviso modal -->
+<div class="modal fade" id="modalDomicilio" tabindex="-1" #modalDomicilio aria-labelledby="modalDomicilio" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body">
         <form [formGroup]="domicilioFormulario">
-          <ng-titulo titulo="Datos de quien recibe las mercancías para llevar a cabo procesos de reparación o
-          mantenimiento, análisis y pruebas, calibración o diseño" />
+          <ng-titulo titulo="Datos de quien recibe las mercancías para llevar a cabo procesos de reparación o mantenimiento, análisis y pruebas, calibración o diseño" />
           <ng-container>
             <div class="row">
               <div class="col-md-6">
@@ -263,15 +198,12 @@
                   <label for="puntos">:</label>
                 </div>
                 <div>
-                  <input id="rfc" name="rfc" class="form-control" maxlength="13" formControlName="rfc"
-                    [ngClass]="isValid(domicilioFormulario, 'rfc') ? 'required' : ''"
-                    (change)="setValoresStore(domicilioFormulario, 'rfc', 'setDomicilioFormularioRfc')" />
+                  <input id="rfc" name="rfc" class="form-control" maxlength="13" formControlName="rfc" [ngClass]="isValid(domicilioFormulario, 'rfc') ? 'required' : ''" (change)="setValoresStore(domicilioFormulario, 'rfc', 'setDomicilioFormularioRfc')" />
                 </div>
               </div>
             </div>
           </ng-container>
-          <ng-titulo
-            titulo="Datos del domicilio de la planta o bodega de destino de las mercancías (donde se llevarán a cabo los procesos de reparación o mantenimiento, análisis y pruebas, calibración o diseño)" />
+          <ng-titulo titulo="Datos del domicilio de la planta o bodega de destino de las mercancías (donde se llevarán a cabo los procesos de reparación o mantenimiento, análisis y pruebas, calibración o diseño)" />
           <ng-container>
             <div class="row">
               <div class="col-md-8">
@@ -280,32 +212,17 @@
                   <label for="puntos">:</label>
                 </div>
                 <div>
-                  <input id="nombrePlanta" name="nombreComercial" type="text" class="form-control" maxlength="250"
-                    formControlName="nombreComercial"
-                    [ngClass]="isValid(domicilioFormulario,'nombreComercial') ? 'required' : ''"
-                    (change)="setValoresStore(domicilioFormulario, 'nombreComercial', 'setDomicilioFormularioNombreComercial')" />
+                  <input id="nombrePlanta" name="nombreComercial" type="text" class="form-control" maxlength="250" formControlName="nombreComercial" [ngClass]="isValid(domicilioFormulario,'nombreComercial') ? 'required' : ''" (change)="setValoresStore(domicilioFormulario, 'nombreComercial', 'setDomicilioFormularioNombreComercial')" />
                 </div>
               </div>
               <div class="col-md-4">
-                <app-catalogo-select [catalogo]="entidadFederativa" [label]="'Entidad federativa'" [required]="true"
-                  id="claveEntidadFederativa" formControlName="claveEntidadFederativa" [placeholder]="'Seleccione un valor'"
-                  [ngClass]="isValid(domicilioFormulario,'claveEntidadFederativa') ? 'required' : ''"
-                  (change)="setValoresStore(domicilioFormulario, 'claveEntidadFederativa', 'setDomicilioFormularioEntidadFederativa')"
-                  [isDisabled]="soloLectura"></app-catalogo-select>
+                <app-catalogo-select [catalogo]="entidadFederativa" [label]="'Entidad federativa'" [required]="true" id="claveEntidadFederativa" formControlName="claveEntidadFederativa" [ngClass]="isValid(domicilioFormulario,'claveEntidadFederativa') ? 'required' : ''" (change)="setValoresStore(domicilioFormulario, 'claveEntidadFederativa', 'setDomicilioFormularioEntidadFederativa')" [isDisabled]="soloLectura"></app-catalogo-select>
               </div>
               <div class="col-md-4">
-                <app-catalogo-select [catalogo]="delegacionMunicipio" [label]="'Alcaldía o Municipio'" [required]="true"
-                  id="claveDelegacionMunicipio" formControlName="claveDelegacionMunicipio" [placeholder]="'Seleccione un valor'"
-                  [ngClass]="isValid(domicilioFormulario,'claveDelegacionMunicipio') ? 'required' : ''"
-                  (change)="setValoresStore(domicilioFormulario, 'claveDelegacionMunicipio', 'setDomicilioFormularioDelegacionMunicipio')"
-                  [isDisabled]="soloLectura"></app-catalogo-select>
+                <app-catalogo-select [catalogo]="delegacionMunicipio" [label]="'Alcaldía o Municipio'" [required]="true" id="claveDelegacionMunicipio" formControlName="claveDelegacionMunicipio" [ngClass]="isValid(domicilioFormulario,'claveDelegacionMunicipio') ? 'required' : ''" (change)="setValoresStore(domicilioFormulario, 'claveDelegacionMunicipio', 'setDomicilioFormularioDelegacionMunicipio')" [isDisabled]="soloLectura"></app-catalogo-select>
               </div>
               <div class="col-md-4">
-                <app-catalogo-select [catalogo]="colonia" [label]="'Colonia'" [required]="true" id="claveColonia"
-                  formControlName="claveColonia" [placeholder]="'Seleccione un valor'"
-                  [ngClass]="isValid(domicilioFormulario,'claveColonia') ? 'required' : ''"
-                  (change)="setValoresStore(domicilioFormulario, 'claveColonia', 'setDomicilioFormularioColonia')"
-                  [isDisabled]="soloLectura"></app-catalogo-select>
+                <app-catalogo-select [catalogo]="colonia" [label]="'Colonia'" [required]="true" id="claveColonia" formControlName="claveColonia" [ngClass]="isValid(domicilioFormulario,'claveColonia') ? 'required' : ''" (change)="setValoresStore(domicilioFormulario, 'claveColonia', 'setDomicilioFormularioColonia')" [isDisabled]="soloLectura"></app-catalogo-select>
               </div>
               <div class="col-md-4">
                 <div>
@@ -314,9 +231,7 @@
                   <label for="puntos">:</label>
                 </div>
                 <div>
-                  <input id="calle" name="calle" type="text" class="form-control" maxlength="250"
-                    formControlName="calle" [ngClass]="isValid(domicilioFormulario,'calle') ? 'required' : ''"
-                    (change)="setValoresStore(domicilioFormulario, 'calle', 'setDomicilioFormularioCalle')" />
+                  <input id="calle" name="calle" type="text" class="form-control" maxlength="250" formControlName="calle" [ngClass]="isValid(domicilioFormulario,'calle') ? 'required' : ''" (change)="setValoresStore(domicilioFormulario, 'calle', 'setDomicilioFormularioCalle')" />
                 </div>
               </div>
               <div class="col-md-4">
@@ -326,11 +241,7 @@
                   <label for="puntos">:</label>
                 </div>
                 <div>
-                  <input id="numeroExterior" name="numeroExterior" type="text" class="form-control" maxlength="15"
-                    formControlName="numeroExterior"
-                    [ngClass]="isValid(domicilioFormulario,'numeroExterior') ? 'required' : ''"
-                    (keyup)="sanitizeAlphanumericWithSpace(domicilioFormulario,'numeroExterior',$event)"
-                    (change)="setValoresStore(domicilioFormulario, 'numeroExterior', 'setDomicilioFormularioNumeroExterior')" />
+                  <input id="numeroExterior" name="numeroExterior" type="text" class="form-control" maxlength="15" formControlName="numeroExterior" [ngClass]="isValid(domicilioFormulario,'numeroExterior') ? 'required' : ''" (keyup)="sanitizeAlphanumericWithSpace(domicilioFormulario,'numeroExterior',$event)" (change)="setValoresStore(domicilioFormulario, 'numeroExterior', 'setDomicilioFormularioNumeroExterior')" />
                 </div>
               </div>
               <div class="col-md-4">
@@ -339,11 +250,7 @@
                   <label for="puntos">:</label>
                 </div>
                 <div>
-                  <input id="numeroInterior" name="numeroInterior" type="text" class="form-control" maxlength="15"
-                    formControlName="numeroInterior"
-                    [ngClass]="isValid(domicilioFormulario,'numeroInterior') ? 'required' : ''"
-                    (keyup)="sanitizeAlphanumericWithSpace(domicilioFormulario,'numeroInterior',$event)"
-                    (change)="setValoresStore(domicilioFormulario, 'numeroInterior', 'setDomicilioFormularioNumeroInterior')" />
+                  <input id="numeroInterior" name="numeroInterior" type="text" class="form-control" maxlength="15" formControlName="numeroInterior" [ngClass]="isValid(domicilioFormulario,'numeroInterior') ? 'required' : ''" (keyup)="sanitizeAlphanumericWithSpace(domicilioFormulario,'numeroInterior',$event)" (change)="setValoresStore(domicilioFormulario, 'numeroInterior', 'setDomicilioFormularioNumeroInterior')" />
                 </div>
               </div>
               <div class="col-md-4">
@@ -353,47 +260,34 @@
                   <label for="puntos">:</label>
                 </div>
                 <div>
-                  <input id="codigoPostal" name="codigoPostal" type="text" class="form-control validanumericos"
-                    maxlength="5" formControlName="codigoPostal"
-                    (keyup)="sanitizeNumeric(domicilioFormulario,'codigoPostal',$event)"
-                    [ngClass]="isValid(domicilioFormulario,'codigoPostal') ? 'required' : ''"
-                    (change)="setValoresStore(domicilioFormulario, 'codigoPostal', 'setDomicilioFormularioCodigoPostal')" />
+                  <input id="codigoPostal" name="codigoPostal" type="text" class="form-control validanumericos" maxlength="5" formControlName="codigoPostal" (keyup)="sanitizeNumeric(domicilioFormulario,'codigoPostal',$event)" [ngClass]="isValid(domicilioFormulario,'codigoPostal') ? 'required' : ''" (change)="setValoresStore(domicilioFormulario, 'codigoPostal', 'setDomicilioFormularioCodigoPostal')" />
                 </div>
               </div>
             </div>
           </ng-container>
           <ng-titulo titulo="Datos de la mercancía que se trasladará" />
           <ng-container>
-            <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
-              [configuracionTabla]="tablaDeMercancia.encabezadas" [datos]="tablaDeMercancia.datos"
-              (listaDeFilaSeleccionada)="filaSeleccionadaMercancia($event)"
-              [disableSeleccionTablaCheckBox]="soloLectura"></app-tabla-dinamica>
+            <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [configuracionTabla]="tablaDeMercancia.encabezadas" [datos]="tablaDeMercancia.datos" (listaDeFilaSeleccionada)="filaSeleccionadaMercancia($event)" [disableSeleccionTablaCheckBox]="soloLectura"></app-tabla-dinamica>
             <div class="d-flex justify-content-end">
-              <button type="button" class="btn btn-danger ms-3" [disabled]="soloLectura" (click)="eliminarMercancia()">
-                Eliminar
-              </button>
-              <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura">
-                Modificar
-              </button>
-              <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura" (click)="abiertoMercancia()">
-                Agregar
-              </button>
+              <button type="button" class="btn btn-danger ms-3" [disabled]="soloLectura" (click)="eliminarMercancia()"> Eliminar </button>
+              <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura"> Modificar </button>
+              <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura" (click)="abiertoMercancia()"> Agregar </button>
             </div>
           </ng-container>
         </form>
-
       </div>
       <div class="modal-footer custom-footer mt-4 justify-content-end">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #closeDomicilio [disabled]="soloLectura">
-          Cancelar </button>
-        <button type="submit" class="btn btn-primary" (click)="agregarDomicilio()" [disabled]="soloLectura"> Agregar
-        </button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #closeDomicilio [disabled]="soloLectura"> Cancelar </button>
+        <button type="submit" class="btn btn-primary" (click)="agregarDomicilio()" [disabled]="soloLectura"> Agregar </button>
       </div>
     </div>
   </div>
 </div>
-<div class="modal fade" id="modalMercancia" tabindex="-1" #modalMercancia aria-labelledby="modalMercancia"
-  aria-hidden="true">
+@if (nuevaNotificacion1) { <section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion1" (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
+</section> }
+<!-- Datos del mercancia modal -->
+<div class="modal fade" id="modalMercancia" tabindex="-1" #modalMercancia aria-labelledby="modalMercancia" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body">
@@ -402,20 +296,14 @@
           <ng-container>
             <div class="row">
               <div class="col-md-4 mb-2">
-                <app-catalogo-select [catalogo]="fraccionArancelaria" [label]="'Fracción arancelaria'" [required]="true"
-                  id="claveFraccionArancelaria" formControlName="claveFraccionArancelaria" [placeholder]="'Seleccione un valor'"
-                  [ngClass]="isValid(mercanciaFormulario,'claveFraccionArancelaria') ? 'required' : ''"
-                  (change)="setValoresStore(mercanciaFormulario, 'claveFraccionArancelaria', 'setFraccionArancelaria')"
-                  [isDisabled]="soloLectura"></app-catalogo-select>
+                <app-catalogo-select [catalogo]="fraccionArancelaria" [label]="'Fracción arancelaria'" [required]="true" id="claveFraccionArancelaria" formControlName="claveFraccionArancelaria" [ngClass]="isValid(mercanciaFormulario,'claveFraccionArancelaria') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario, 'claveFraccionArancelaria', 'setFraccionArancelaria')" [isDisabled]="soloLectura"></app-catalogo-select>
               </div>
               <div class="col-md-4 mb-2">
                 <label for="nico">NICO</label>
                 <span class="require">*</span>
                 <label for="nico">:</label>
                 <div>
-                  <input type="text" id="nico" formControlName="nico" class="form-control" maxlength="2"
-                    [ngClass]="isValid(mercanciaFormulario,'nico') ? 'required' : ''"
-                    (change)="setValoresStore(mercanciaFormulario,'nico', 'setMercanciaFormularioNico')" />
+                  <input type="text" id="nico" formControlName="nico" class="form-control" maxlength="2" [ngClass]="isValid(mercanciaFormulario,'nico') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario,'nico', 'setMercanciaFormularioNico')" />
                 </div>
               </div>
             </div>
@@ -425,26 +313,18 @@
                 <span class="require">*</span>
                 <label for="cantidad">:</label>
                 <div>
-                  <input type="text" formControlName="cantidad" id="cantidad" class="form-control"
-                    [ngClass]="isValid(mercanciaFormulario,'cantidad') ? 'required' : ''"
-                    (change)="setValoresStore(mercanciaFormulario,'cantidad', 'setMercanciaFormularioCantidad')" />
+                  <input type="text" formControlName="cantidad" id="cantidad" class="form-control" [ngClass]="isValid(mercanciaFormulario,'cantidad') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario,'cantidad', 'setMercanciaFormularioCantidad')" />
                 </div>
               </div>
               <div class="col-md-4">
-                <app-catalogo-select [catalogo]="unidadMedida" [label]="'Unidad de medida'" [required]="true"
-                  id="claveUnidadMedida" formControlName="claveUnidadMedida" [placeholder]="'Seleccione un valor'"
-                  [ngClass]="isValid(mercanciaFormulario,'claveUnidadMedida') ? 'required' : ''"
-                  (change)="setValoresStore(mercanciaFormulario, 'claveUnidadMedida', 'setMercanciaFormularioUnidadMedida')"
-                  [isDisabled]="soloLectura"></app-catalogo-select>
+                <app-catalogo-select [catalogo]="unidadMedida" [label]="'Unidad de medida'" [required]="true" id="claveUnidadMedida" formControlName="claveUnidadMedida" [ngClass]="isValid(mercanciaFormulario,'claveUnidadMedida') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario, 'claveUnidadMedida', 'setMercanciaFormularioUnidadMedida')" [isDisabled]="soloLectura"></app-catalogo-select>
               </div>
               <div class="col-md-4 mb-2">
                 <label for="valorUSD">Valor USD</label>
                 <span class="require">*</span>
                 <label for="valorUSD">:</label>
                 <div>
-                  <input type="text" formControlName="valorUSD" id="valorUSD" class="form-control"
-                    [ngClass]="isValid(mercanciaFormulario,'valorUSD') ? 'required' : ''"
-                    (change)="setValoresStore(mercanciaFormulario,'valorUSD', 'setMercanciaFormularioValor')" />
+                  <input type="text" formControlName="valorUSD" id="valorUSD" class="form-control" [ngClass]="isValid(mercanciaFormulario,'valorUSD') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario,'valorUSD', 'setMercanciaFormularioValor')" />
                 </div>
               </div>
             </div>
@@ -456,10 +336,7 @@
                   <label for="descripcionMercancia">:</label>
                 </div>
                 <div>
-                  <input type="text" class="form-control" formControlName="descripcionMercancia"
-                    id="descripcionMercancia" maxlength="250"
-                    [ngClass]="isValid(mercanciaFormulario,'descripcionMercancia') ? 'required' : ''"
-                    (change)="setValoresStore(mercanciaFormulario,'descripcionMercancia', 'setMercanciaFormularioDescripcionMercancia')">
+                  <input type="text" class="form-control" formControlName="descripcionMercancia" id="descripcionMercancia" maxlength="250" [ngClass]="isValid(mercanciaFormulario,'descripcionMercancia') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario,'descripcionMercancia', 'setMercanciaFormularioDescripcionMercancia')">
                 </div>
               </div>
             </div>
@@ -471,41 +348,31 @@
                   <label for="descripcionProceso">:</label>
                 </div>
                 <div>
-                  <input type="text" class="form-control" formControlName="descripcionProceso" id="descripcionProceso"
-                    maxlength="250" [ngClass]="isValid(mercanciaFormulario,'descripcionProceso') ? 'required' : ''"
-                    (change)="setValoresStore(mercanciaFormulario,'descripcionProceso', 'setMercanciaFormularioDescripcionProceso')">
+                  <input type="text" class="form-control" formControlName="descripcionProceso" id="descripcionProceso" maxlength="250" [ngClass]="isValid(mercanciaFormulario,'descripcionProceso') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario,'descripcionProceso', 'setMercanciaFormularioDescripcionProceso')">
                 </div>
               </div>
             </div>
             <div class="row">
               <div class="col-md-12 mb-2">
                 <div>
-                  <label for="numPedimentoExportacion">Número de pedimento de exportación por parte de quien transfiere
-                    la mercancía.</label>
+                  <label for="numPedimentoExportacion">Número de pedimento de exportación por parte de quien transfiere la mercancía.</label>
                   <span class="require">*</span>
                   <label for="numPedimentoExportacion">:</label>
                 </div>
                 <div>
-                  <input type="text" class="form-control" formControlName="numPedimentoExportacion"
-                    id="numPedimentoExportacion" maxlength="15"
-                    [ngClass]="isValid(mercanciaFormulario,'numPedimentoExportacion') ? 'required' : ''"
-                    (change)="setValoresStore(mercanciaFormulario,'numPedimentoExportacion', 'setMercanciaFormularioPedimentoExportacion')" />
+                  <input type="text" class="form-control" formControlName="numPedimentoExportacion" id="numPedimentoExportacion" maxlength="15" [ngClass]="isValid(mercanciaFormulario,'numPedimentoExportacion') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario,'numPedimentoExportacion', 'setMercanciaFormularioPedimentoExportacion')" />
                 </div>
               </div>
             </div>
             <div class="row">
               <div class="col-md-12 mb-2">
                 <div>
-                  <label for="numPedimentoImportacion">Número de pedimento de importación temporal por parte de quien
-                    recibe la mercancía.</label>
+                  <label for="numPedimentoImportacion">Número de pedimento de importación temporal por parte de quien recibe la mercancía.</label>
                   <span class="require">*</span>
                   <label for="numPedimentoImportacion">:</label>
                 </div>
                 <div>
-                  <input type="text" class="form-control" formControlName="numPedimentoImportacion"
-                    id="numPedimentoImportacion" maxlength="15"
-                    [ngClass]="isValid(mercanciaFormulario,'numPedimentoImportacion') ? 'required' : ''"
-                    (change)="setValoresStore(mercanciaFormulario,'numPedimentoImportacion', 'setMercanciaFormularioPedimentoImportacion')" />
+                  <input type="text" class="form-control" formControlName="numPedimentoImportacion" id="numPedimentoImportacion" maxlength="15" [ngClass]="isValid(mercanciaFormulario,'numPedimentoImportacion') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario,'numPedimentoImportacion', 'setMercanciaFormularioPedimentoImportacion')" />
                 </div>
               </div>
             </div>
@@ -513,17 +380,11 @@
         </form>
       </div>
       <div class="modal-footer custom-footer mt-4 justify-content-end">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #closeMercancia [disabled]="soloLectura">
-          Cancelar </button>
-        <button type="submit" class="btn btn-primary" (click)="agregarMercancia()" [disabled]="soloLectura"> Agregar
-        </button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #closeMercancia [disabled]="soloLectura"> Cancelar </button>
+        <button type="submit" class="btn btn-primary" (click)="agregarMercancia()" [disabled]="soloLectura"> Agregar </button>
       </div>
     </div>
   </div>
-</div>
-@if (nuevaNotificacion) {
-<section>
-  <lib-notificaciones [notificacionInput]="nuevaNotificacion">
-  </lib-notificaciones>
-</section>
-}
+</div> @if (nuevaNotificacion) { <section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion"></lib-notificaciones>
+</section> }
