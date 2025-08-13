@@ -23,7 +23,7 @@ export const FECHA_INICIAL = {
  * Contiene las propiedades necesarias para mostrar y validar el campo en el formulario.
  */
  export const FECHA_PAGO = {
-    labelNombre: 'Fecha de pago', 
+    labelNombre: 'Fecha de pago:', 
     required: false,
     habilitado: true, 
  };

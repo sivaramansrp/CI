@@ -24,6 +24,12 @@ export class CuposService {
     this.tramite120403Store.setAsignacionRadio(DATOS.asignacionRadio);
     this.tramite120403Store.setAsignacionsolitud(DATOS.asignacionsolitud);
     this.tramite120403Store.setNumTramite(DATOS.numTramite);
+    this.tramite120403Store.setFechaInicio(DATOS.fechaInicio);
+    this.tramite120403Store.setFechadeFin(DATOS.fechadeFin);
+    this.tramite120403Store.setMontoAutorizado(DATOS.montoAutorizado);
+    this.tramite120403Store.setMontoExpedido(DATOS.montoExpedido);
+    this.tramite120403Store.setMontoDisponible(DATOS.montoDisponible);
+    this.tramite120403Store.setFechaFin(DATOS.fechaFin);
   }
   /**
      * Obtiene los datos del registro de toma de muestras de mercancías desde un archivo JSON.

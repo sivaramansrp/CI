@@ -24,6 +24,8 @@
      }
       <btn-continuar
         [datos]="datosPasos"
+        [showButton]="true"
+        [btnGuardar]="indice === 1"
         (continuarEvento)="getValorIndice($event)"
       ></btn-continuar>
     </div>

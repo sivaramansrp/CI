@@ -1,21 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
 import { InputRadioComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { OpcionesPublicacion } from '../../models/permiso-maquila.models';
 import { SolicitudService } from '../../services/solicitud.service';
-
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-
-import { map, takeUntil } from 'rxjs';
 import { Subject } from 'rxjs';
 import { Tramite260212Query } from '../../estados/tramite260212.query';
 import { Tramite260212State } from '../../estados/tramite260212.store';
-
-
 
 /**
  * Componente RepresentanteLegalComponent

@@ -1,11 +1,7 @@
 import { Component, QueryList, ViewChildren } from '@angular/core';
-
-import { CommonModule } from '@angular/common';
-
 import { CrossListLable,CrosslistComponent } from '@libs/shared/data-access-user/src';
-
+import { CommonModule } from '@angular/common';
 import { FormControl } from '@angular/forms';
-
 import Procedencia from '@libs/shared/theme/assets/json/260212/pis-de-procedencia.json'
 
 export const TIPO_T: string = 't';

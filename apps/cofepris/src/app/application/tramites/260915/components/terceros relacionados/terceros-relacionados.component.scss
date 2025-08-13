@@ -17,3 +17,7 @@
 .btn {
   white-space: nowrap;  /* Evita que los botones se envuelvan a la siguiente línea */
 }
+.custom-backdrop{
+    z-index: 1045 !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+}
