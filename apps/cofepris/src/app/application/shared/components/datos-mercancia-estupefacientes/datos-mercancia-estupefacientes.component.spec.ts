@@ -6,10 +6,8 @@ import { Location } from '@angular/common';
 import { DatosMercanciaEstupefacientesComponent } from './datos-mercancia-estupefacientes.component';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 
-// ---- Mocks ----
 class MockDatosSolicitudService {
   obtenerRespuestaPorUrl(ctx: any, propName: string, _url: string) {
-    // Proveer datos simples para inicializar propiedades sin peticiones HTTP
     (ctx as any)[propName] = [
       { id: '1', nombre: 'A' },
       { id: '2', nombre: 'B' },
@@ -39,7 +37,6 @@ describe('DatosMercanciaEstupefacientesComponent (Jest, español)', () => {
     fixture = TestBed.createComponent(DatosMercanciaEstupefacientesComponent);
     component = fixture.componentInstance;
 
-    // Estado inicial del formulario (coincide con tu ejemplo)
     component.mercanciaFormState = {
       clasificacionProducto: '',
       especificarClasificacionProducto: '',
@@ -69,7 +66,6 @@ describe('DatosMercanciaEstupefacientesComponent (Jest, español)', () => {
     };
   });
 
-  // Helper
   const initForm = () => component.crearMercanciaForm();
 
   it('debe crearse el componente', () => {
@@ -89,7 +85,6 @@ describe('DatosMercanciaEstupefacientesComponent (Jest, español)', () => {
       clasificacionProducto: '',
       especificarClasificacionProducto: '',
       denominacionCumonInternacional: '',
-      // OJO: la llave en el form es con acento (como en tu prueba)
       marcaComercialDenominación: '',
       tipoProducto: '',
       formaFarmaceutica: '',
@@ -140,7 +135,6 @@ describe('DatosMercanciaEstupefacientesComponent (Jest, español)', () => {
     expect(component.seleccionadasPaisDeOriginDatos).toEqual(['MX', 'US']);
     expect(component.mercanciaForm.get('paisOrigen')?.value).toBe('MX');
 
-    // Caso vacío no debe modificar
     component.paisDeOriginSeleccionadasChange([]);
     expect(component.seleccionadasPaisDeOriginDatos).toEqual(['MX', 'US']);
   });
@@ -179,7 +173,6 @@ describe('DatosMercanciaEstupefacientesComponent (Jest, español)', () => {
     component.mostrarColapsable(3);
     expect(component.usoEspesificoColapsable).toBe(true);
 
-    // Alternar otra vez para cubrir ambas ramas
     component.mostrarColapsable(1);
     expect(component.formFormaceuticaColapsable).toBe(false);
   });
@@ -319,34 +312,29 @@ describe('DatosMercanciaEstupefacientesComponent (Jest, español)', () => {
     component.modificarClave();
     expect(component.claveConfig.datos.find(d => d.clave === 'CLV-NEW')).toBeTruthy();
 
-    // eliminarClave debe eliminar las filas en claveLista
     component.claveLista = [{ clave: 'CLV-2' } as any, { clave: 'CLV-NEW' } as any];
     component.eliminarClave();
     expect(component.claveConfig.datos.length).toBe(0);
   });
 
   it('botones de CrossList deben invocar agregar/quitar con parámetros correctos', () => {
-    // Simular 3 CrossList hijos
     const fake0 = { agregar: jest.fn(), quitar: jest.fn() };
     const fake1 = { agregar: jest.fn(), quitar: jest.fn() };
     const fake2 = { agregar: jest.fn(), quitar: jest.fn() };
-    // Sobrescribir crossList con un objeto que expone toArray()
     (component as any).crossList = { toArray: () => [fake0, fake1, fake2] };
 
-    // Sección 1 (paisDeProcedenciaBotons)
-    component.paisDeProcedenciaBotons[0].funcion(); // Agregar todos -> 't'
+    component.paisDeProcedenciaBotons[0].funcion(); 
     expect(fake0.agregar).toHaveBeenCalledWith('t');
 
-    component.paisDeProcedenciaBotons[1].funcion(); // Agregar selección -> ''
+    component.paisDeProcedenciaBotons[1].funcion(); 
     expect(fake0.agregar).toHaveBeenCalledWith('');
 
-    component.paisDeProcedenciaBotons[2].funcion(); // Restar selección -> ''
+    component.paisDeProcedenciaBotons[2].funcion(); 
     expect(fake0.quitar).toHaveBeenCalledWith('');
 
-    component.paisDeProcedenciaBotons[3].funcion(); // Restar todos -> 't'
+    component.paisDeProcedenciaBotons[3].funcion();
     expect(fake0.quitar).toHaveBeenCalledWith('t');
 
-    // Sección 2 (paisDeProcedenciaBotonsDos)
     component.paisDeProcedenciaBotonsDos[0].funcion();
     expect(fake1.agregar).toHaveBeenCalledWith('t');
     component.paisDeProcedenciaBotonsDos[1].funcion();
@@ -356,7 +344,6 @@ describe('DatosMercanciaEstupefacientesComponent (Jest, español)', () => {
     component.paisDeProcedenciaBotonsDos[3].funcion();
     expect(fake1.quitar).toHaveBeenCalledWith('t');
 
-    // Sección 3 (paisDeProcedenciaBotonsTres)
     component.paisDeProcedenciaBotonsTres[0].funcion();
     expect(fake2.agregar).toHaveBeenCalledWith('t');
     component.paisDeProcedenciaBotonsTres[1].funcion();
