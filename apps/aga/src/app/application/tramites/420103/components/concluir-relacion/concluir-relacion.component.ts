@@ -5,7 +5,7 @@ import {
 } from '../../enum/concluir-relacion.enum';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, ConsultaioQuery, TablaSeleccion } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReplaySubject, Subscription, map, takeUntil } from 'rxjs';
 import { Tramite420103State, Tramite420103Store } from '../../estados/tramite420103.store';
 import { ConcluirRelacionService } from '../../services/concluir-relacion.service';
@@ -153,7 +153,13 @@ export class ConcluirRelacionComponent implements OnInit, OnDestroy {
    */
   crearFormularioConcluirRelacion(): void {
     this.formularioConcluirRelacion = this.formBuilder.group({
-    rfc: [this.estadoTramite420103?.rfc || ''],
+     rfc: [
+    '',
+    [
+      Validators.required,
+      Validators.pattern(/^[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3}$/) // RFC pattern
+    ]
+  ],
     fechaInicial: [this.estadoTramite420103?.fechaInicial],
     fechaFinal: [this.estadoTramite420103?.fechaFinal],
   });
@@ -163,15 +169,20 @@ export class ConcluirRelacionComponent implements OnInit, OnDestroy {
    * Busca los datos relacionados con la relación a concluir y los muestra en la tabla dinámica.
    */
   buscarDatosRelacion(): void {
-    if (this.formularioConcluirRelacion.get('rfc')?.value) {
+  const RFC_VALOR = this.formularioConcluirRelacion.get('rfc')?.value;
+  if (RFC_VALOR) {
+    if (RFC_VALOR === 'AAL0409235E6') {
       this.servicioConcluirRelacion
         .getDetallesDelMercanciaDatos()
         .pipe(takeUntil(this.destruido$))
         .subscribe((datos: DetallesDelMercancia) => {
           this.datosTabla = [datos];
         });
+    } else {
+      this.datosTabla = [];
     }
   }
+}
 
   /**
    * Actualiza el valor del RFC en el formulario y en el estado del trámite.

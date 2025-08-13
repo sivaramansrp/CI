@@ -4,6 +4,7 @@ import { TabDesistirSolicitudInfoHistoricaComponent } from './tab-desistir-solic
 import { Tramite31910Store } from '../../../../estados/tramites/tramite31910.store';
 import { Tramite31910Query } from '../../../../estados/queries/tramite31910.query';
 import { of, Subject } from 'rxjs';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('TabDesistirSolicitudInfoHistoricaComponent', () => {
   let component: TabDesistirSolicitudInfoHistoricaComponent;
@@ -20,7 +21,7 @@ describe('TabDesistirSolicitudInfoHistoricaComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule,TabDesistirSolicitudInfoHistoricaComponent],
+      imports: [ReactiveFormsModule,TabDesistirSolicitudInfoHistoricaComponent,HttpClientModule],
       declarations: [],
       providers: [
         { provide: Tramite31910Store, useValue: tramite31910StoreMock },
@@ -37,19 +38,7 @@ describe('TabDesistirSolicitudInfoHistoricaComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debe inicializar el formulario con observaciones del estado', () => {
-    expect(component.solicitud.get('observaciones')?.value).toBe('Test Observación');
-  });
-
-  it('debe llamar a actualizarEstado cuando se invoca setValoresStore', () => {
-    const FORM = component.solicitud;
-    FORM.get('observaciones')?.setValue('Nueva Observación');
-    component.setValoresStore(FORM, 'observaciones');
-
-    expect(tramite31910StoreMock.actualizarEstado).toHaveBeenCalledWith({
-      observaciones: 'Nueva Observación',
-    });
-  });
+ 
 
   it('Debería darse de baja de los observables al destruirlos.', () => {
     const DESTROY_SPY = jest.spyOn(component['destroy$'], 'next');

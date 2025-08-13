@@ -30,7 +30,7 @@
           <div class="row mb-3">
             <div class="col-md-4">
               <div class="form-group">
-                <label for="horaInicio" class="form-label">Hora incio:</label>
+                <label for="horaInicio" class="form-label">Hora inicio:</label>
                 <input class="form-control" type="text" formControlName="horaInicio" name="horaInicio" id="horaInicio" />
               </div>
             </div>
@@ -42,7 +42,7 @@
             </div>
           </div>
           <div class="row mb-3">
-            <label>Especifique los días que se cancelaron dentro del periodo:</label>
+            <label>Especifique los días que se cancelarán dentro del periodo*:</label>
             <crosslist [fechas]="selectRangoDias" formControlName="selectedFechas" [fechasSeleccionadas]="fechasSeleccionadas"
             [label]="fechasCancelaranLabel" 
             (fechasSeleccionadasChange)="onFechasSeleccionadasChange($event)"></crosslist>
@@ -52,9 +52,13 @@
           <div class="col-md-8">
             <div class="form-group">
               <label for="descripcion" class="form-label">Motivo de cancelación*:</label>
-              <textarea class="form-control" rows="3" id="descripcion" formControlName="descripcion" 
-              [ngClass]="isValid(formCancelorSolicitud,'descripcion') ? 'required' : ''" 
-              (change)="onDescripcionChange()"></textarea>
+              <textarea class="form-control" rows="6" id="descripcion" formControlName="descripcion"
+                maxlength="450"
+                [ngClass]="isValid(formCancelorSolicitud,'descripcion') ? 'required' : ''"
+                (change)="onDescripcionChange()"></textarea>
+              <div *ngIf="formCancelorSolicitud.get('descripcion')?.invalid && formCancelorSolicitud.get('descripcion')?.touched" class="text-danger">
+                Este campo es obligatorio
+              </div>
             </div>
           </div>
         </div>

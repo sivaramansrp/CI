@@ -420,7 +420,6 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
         })
       )
       .subscribe();
-
     this.mensajeManifiestos = MANIFIESTOS_DECLARACION.MANIFIESTOS;
     this.cargarEstado();
     this.cargarClassificacionDelProductoCatalogo();

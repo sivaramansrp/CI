@@ -1,4 +1,5 @@
-<app-datos-de-la-solicitud [datosSolicitudFormState]="tramiteState.datosSolicitudFormState"
+<app-datos-de-la-solicitud 
+[datosSolicitudFormState]="tramiteState.datosSolicitudFormState"
 [scianConfig]="scianConfig" [opcionesColapsableState]="tramiteState.opcionesColapsableState"
 [tablaMercanciasConfig]="tablaMercanciasConfig" [opcionConfig]="opcionConfig"
 [idProcedimiento]="idProcedimiento"
@@ -9,4 +10,4 @@
 (scianSeleccionado)="scianSeleccionado($event)"
 (mercanciasSeleccionado)="mercanciasSeleccionado($event)"
 (datosDeTablaSeleccionados)="datosDeTablaSeleccionados($event)"
-[formularioDeshabilitado]="formularioDeshabilitado"></app-datos-de-la-solicitud>
+[formularioDeshabilitado]="esFormularioSoloLectura"></app-datos-de-la-solicitud>

@@ -5,12 +5,15 @@
  *
  * @module ModificacionVehiculoComponent
  */
-import { VehiculoTabla, CatalogoLista } from '../../../../models/registro-muestras-mercancias.model';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { VEHICULOS_TABLA_CONFIG } from '../../../../enum/transportista-terrestre.enum';
-import { TablaSeleccion, ConsultaioQuery, ConsultaioState, Catalogo } from '@ng-mf/data-access-user';
-import { Subject, takeUntil, map } from 'rxjs';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
+
+import { Catalogo, ConsultaioQuery, ConsultaioState, TablaSeleccion } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+
+import { CatalogoLista, DatosVehiculo, VehiculoTabla } from '../../../../models/registro-muestras-mercancias.model';
 import { modificarTerrestreService } from '../../../services/modificacar-terrestre.service';
+import { obtenerColumnasVehiculo } from '../../../../enum/parque-vehicular.enum';
 
 @Component({
   selector: 'app-modificacion-vehiculo',
@@ -25,27 +28,27 @@ import { modificarTerrestreService } from '../../../services/modificacar-terrest
 export class ModificacionVehiculoComponent implements OnInit, OnDestroy {
   /**
    * Catálogo de tipos de vehículo.
-   * @type {any[]}
+   * @type {Catalogo[]}
    */
-  tipoDeVehiculoCatalogo: any[] = [];
+  tipoDeVehiculoCatalogo: Catalogo[] = [];
 
   /**
    * Catálogo de países emisores.
-   * @type {any[]}
+   * @type {Catalogo[]}
    */
-  paisEmisorCatalogo: any[] = [];
+  paisEmisorCatalogo: Catalogo[] = [];
 
   /**
    * Catálogo de años.
-   * @type {any[]}
+   * @type {Catalogo[]}
    */
-  anoCatalogo: any[] = [];
+  anoCatalogo: Catalogo[] = [];
 
   /**
    * Catálogo de tipos de arrastre.
-   * @type {any[]}
+   * @type {Catalogo[]}
    */
-  tipoArrastre: any[] = [];
+  tipoArrastre: Catalogo[] = [];
 
   /**
    * Catálogo de colores de vehículos.
@@ -67,65 +70,10 @@ export class ModificacionVehiculoComponent implements OnInit, OnDestroy {
 
   /**
    * Configuración de columnas para la tabla de vehículos.
-   * @type {*}
+   * Utiliza la configuración centralizada del enum.
+   * @type {ConfiguracionColumna<VehiculoTabla>[]}
    */
-  columnasVehiculo = [
-    {
-      encabezado: 'ID',
-      clave: (item: VehiculoTabla) => String(item.idDeVehiculo),
-      orden: 0,
-    },
-    {
-      encabezado: 'Número de identificación vehicular',
-      clave: (item: VehiculoTabla) => item.numero,
-      orden: 1,
-    },
-    {
-      encabezado: 'Tipo de vehículo',
-      clave: (item: VehiculoTabla) => this.obtenerDescripcionDeCatalogo(item.tipoDeVehiculo, this.tipoDeVehiculoCatalogo),
-      orden: 2,
-    },
-    {
-      encabezado: 'Número económico',
-      clave: (item: VehiculoTabla) => item.numuroEconomico,
-      orden: 3,
-    },
-    {
-      encabezado: 'Transponder',
-      clave: (item: VehiculoTabla) => item.transponder,
-      orden: 4,
-    },
-    {
-      encabezado: 'Número de Placas',
-      clave: (item: VehiculoTabla) => item.numeroPlaca,
-      orden: 5,
-    },
-    {
-      encabezado: 'País Emisor',
-      clave: (item: VehiculoTabla) => this.obtenerDescripcionDeCatalogo(item.paisEmisor, this.paisEmisorCatalogo),
-      orden: 6,
-    },
-    {
-      encabezado: 'Estado o provincia',
-      clave: (item: VehiculoTabla) => item.estado,
-      orden: 7,
-    },
-    {
-      encabezado: 'Marca',
-      clave: (item: VehiculoTabla) => item.marca,
-      orden: 8,
-    },
-    {
-      encabezado: 'Modelo',
-      clave: (item: VehiculoTabla) => item.modelo,
-      orden: 9,
-    },
-    {
-      encabezado: 'Año',
-      clave: (item: VehiculoTabla) => this.obtenerDescripcionDeCatalogo(item.ano, this.anoCatalogo),
-      orden: 10,
-    }
-  ];
+  columnasVehiculo: ConfiguracionColumna<VehiculoTabla>[] = [];
 
   /**
    * Tipo de selección de la tabla (radio, checkbox, etc).
@@ -147,9 +95,9 @@ export class ModificacionVehiculoComponent implements OnInit, OnDestroy {
 
   /**
    * Datos para el diálogo de vehículo.
-   * @type {VehiculoTabla | {}}
+   * @type {DatosVehiculo | null}
    */
-  vehiculoDialogData: VehiculoTabla | {} = {};
+  vehiculoDialogData: DatosVehiculo | null = null;
 
   /**
    * Indica si la vista es de solo lectura.
@@ -175,33 +123,38 @@ export class ModificacionVehiculoComponent implements OnInit, OnDestroy {
    * @constructor
    * @param {ConsultaioQuery} consultaioQuery - Servicio para consultar el estado de consulta y determinar el modo de solo lectura.
    * @param {modificarTerrestreService} modificarTerrestreService - Servicio para obtener catálogos.
+   * @param {ChangeDetectorRef} cdr - Servicio para detectar cambios en la vista.
    */
   constructor(
     private consultaioQuery: ConsultaioQuery,
-    private modificarTerrestreService: modificarTerrestreService
+    private modificarTerrestreService: modificarTerrestreService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   /**
    * Método de ciclo de vida de Angular que se llama cuando el componente se inicializa.
    */
   ngOnInit(): void {
-    // Load all catalogs
+    // Cargar todos los catálogos
     this.modificarTerrestreService.obtenerTipoDeVehiculo()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos: CatalogoLista) => {
         this.tipoDeVehiculoCatalogo = datos.datos;
+        this.actualizarColumnasVehiculo();
       });
 
     this.modificarTerrestreService.obtenerPaisEmisor()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos: CatalogoLista) => {
         this.paisEmisorCatalogo = datos.datos;
+        this.actualizarColumnasVehiculo();
       });
 
     this.modificarTerrestreService.obtenerAno()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos: CatalogoLista) => {
         this.anoCatalogo = datos.datos;
+        this.actualizarColumnasVehiculo();
       });
 
     this.modificarTerrestreService.obtenerColorVehiculo()
@@ -212,7 +165,7 @@ export class ModificacionVehiculoComponent implements OnInit, OnDestroy {
 
     /**
      * Suscribe al estado de consulta para determinar si el formulario debe estar en modo solo lectura.
-     * Si el estado indica `readonly`, actualiza las propiedades `datosConsulta` e `isReadonly` del componente.
+     * Si el estado indica `readonly`, actualiza las propiedades `datosConsulta` e `esSoloLectura` del componente.
      *
      * @observable selectConsultaioState$
      * @effect Actualiza el modo de solo lectura del formulario según el estado de consulta.
@@ -238,24 +191,36 @@ export class ModificacionVehiculoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Maneja la selección de filas en la tabla de vehículos.
-   * @param {any} event - Evento de selección de la tabla.
+   * Actualiza la configuración de columnas para la tabla de vehículos.
+   * Se ejecuta cuando se cargan los catálogos necesarios.
    * @returns {void}
    */
-  onVehiculoRowSelected(event: any) {
+  private actualizarColumnasVehiculo(): void {
+    if (this.tipoDeVehiculoCatalogo.length > 0 && this.paisEmisorCatalogo.length > 0 && this.anoCatalogo.length > 0) {
+      this.columnasVehiculo = obtenerColumnasVehiculo(this.tipoDeVehiculoCatalogo, this.paisEmisorCatalogo, this.anoCatalogo);
+      this.cdr.detectChanges();
+    }
+  }
+
+  /**
+   * Maneja la selección de filas en la tabla de vehículos.
+   * @param {VehiculoTabla[]} event - Evento de selección de la tabla.
+   * @returns {void}
+   */
+  onVehiculoRowSelected(event: VehiculoTabla[]): void {
     if (event && event.length > 0) {
-      const selectedVehiculo = event[0];
+      const VEHICULO_SELECCIONADO = event[0];
       // Buscar el índice usando múltiples identificadores únicos para mayor robustez
       this.selectedVehiculoIndex = this.vehiculosParque.findIndex(v => 
-        (selectedVehiculo.numero && v.numero === selectedVehiculo.numero) ||
-        (selectedVehiculo.idDeVehiculo && v.idDeVehiculo === selectedVehiculo.idDeVehiculo) ||
-        (selectedVehiculo.numeroPlaca && v.numeroPlaca === selectedVehiculo.numeroPlaca && 
-         selectedVehiculo.marca && v.marca === selectedVehiculo.marca)
+        (VEHICULO_SELECCIONADO.numero && v.numero === VEHICULO_SELECCIONADO.numero) ||
+        (VEHICULO_SELECCIONADO.idDeVehiculo && v.idDeVehiculo === VEHICULO_SELECCIONADO.idDeVehiculo) ||
+        (VEHICULO_SELECCIONADO.numeroPlaca && v.numeroPlaca === VEHICULO_SELECCIONADO.numeroPlaca && 
+         VEHICULO_SELECCIONADO.marca && v.marca === VEHICULO_SELECCIONADO.marca)
       );
       
       // Si no se encuentra por los identificadores únicos, usar la referencia como fallback
       if (this.selectedVehiculoIndex === -1) {
-        this.selectedVehiculoIndex = this.vehiculosParque.indexOf(selectedVehiculo);
+        this.selectedVehiculoIndex = this.vehiculosParque.indexOf(VEHICULO_SELECCIONADO);
       }
     } else {
       this.selectedVehiculoIndex = null;
@@ -264,60 +229,78 @@ export class ModificacionVehiculoComponent implements OnInit, OnDestroy {
 
   /**
    * Agrega un vehículo actualizado desde el diálogo y lo selecciona.
-   * @param {VehiculoTabla} updatedVehiculo - Vehículo actualizado.
+   * @param {DatosVehiculo} updatedVehiculo - Vehículo actualizado.
    * @returns {void}
    */
-  onVehiculoDialogSave(updatedVehiculo: VehiculoTabla) {
+  onVehiculoDialogSave(updatedVehiculo: DatosVehiculo): void {
+    // Generar ID temporal secuencial basado en el largo actual del array
+    const SIGUIENTE_ID = this.vehiculosParque.length > 0 
+      ? Math.max(...this.vehiculosParque.map(v => Number(v.idDeVehiculo) || 0)) + 1 
+      : 1;
+    
+    // Convertir DatosVehiculo a VehiculoTabla para agregar a la lista
+    // Mapear numeroEconomico del formulario a numuroEconomico de la tabla
+    const DATOS_FORMULARIO = updatedVehiculo as DatosVehiculo & { numeroEconomico?: string };
+    const VEHICULO_TABLA: VehiculoTabla = {
+      ...updatedVehiculo,
+      idDeVehiculo: String(SIGUIENTE_ID), // Forzar asignación del nuevo ID
+      numuroEconomico: DATOS_FORMULARIO.numeroEconomico || updatedVehiculo.numuroEconomico || '', // Mapear correctamente el campo
+      datos: [] // Propiedad requerida por VehiculoTabla
+    };
+    
     // Crear una copia mutable del array antes de agregar
-    const vehiculosMutables = [...this.vehiculosParque];
-    vehiculosMutables.push(updatedVehiculo);
-    this.vehiculosParque = vehiculosMutables;
+    const VEHICULOS_MUTABLES = [...this.vehiculosParque];
+    VEHICULOS_MUTABLES.push(VEHICULO_TABLA);
+    this.vehiculosParque = VEHICULOS_MUTABLES;
     this.selectedVehiculoIndex = this.vehiculosParque.length - 1;
     this.showVehiculoDialog = false;
+    
+    // Forzar detección de cambios para actualizar la vista
+    this.cdr.detectChanges();
   }
 
   /**
    * Elimina la fila de vehículo seleccionada.
    * @returns {void}
    */
-  deleteVehiculoRow() {
+  deleteVehiculoRow(): void {
     if (this.selectedVehiculoIndex !== null && this.selectedVehiculoIndex >= 0) {
       // Obtener el vehículo a eliminar
-      const vehiculoAEliminar = this.vehiculosParque[this.selectedVehiculoIndex];
+      const VEHICULO_A_ELIMINAR = this.vehiculosParque[this.selectedVehiculoIndex];
       
-      if (vehiculoAEliminar) {
+      if (VEHICULO_A_ELIMINAR) {
         // Crear conjuntos de identificadores únicos para filtrado eficiente
-        const numerosAEliminar = new Set([vehiculoAEliminar.numero].filter(Boolean));
-        const idsAEliminar = new Set([vehiculoAEliminar.idDeVehiculo].filter(Boolean));
-        const placasMarcasAEliminar = new Set();
+        const NUMEROS_A_ELIMINAR = new Set([VEHICULO_A_ELIMINAR.numero].filter(Boolean));
+        const IDS_A_ELIMINAR = new Set([VEHICULO_A_ELIMINAR.idDeVehiculo].filter(Boolean));
+        const PLACAS_MARCAS_A_ELIMINAR = new Set();
         
         // Crear identificador compuesto para placa+marca si ambos existen
-        if (vehiculoAEliminar.numeroPlaca && vehiculoAEliminar.marca) {
-          placasMarcasAEliminar.add(`${vehiculoAEliminar.numeroPlaca}|${vehiculoAEliminar.marca}`);
+        if (VEHICULO_A_ELIMINAR.numeroPlaca && VEHICULO_A_ELIMINAR.marca) {
+          PLACAS_MARCAS_A_ELIMINAR.add(`${VEHICULO_A_ELIMINAR.numeroPlaca}|${VEHICULO_A_ELIMINAR.marca}`);
         }
         
         // Filtrar usando múltiples capas de identificación
         this.vehiculosParque = this.vehiculosParque.filter(vehiculo => {
           // Primera capa: filtrar por número (VIN)
-          if (vehiculo.numero && numerosAEliminar.has(vehiculo.numero)) {
+          if (vehiculo.numero && NUMEROS_A_ELIMINAR.has(vehiculo.numero)) {
             return false;
           }
           
           // Segunda capa: filtrar por ID
-          if (vehiculo.idDeVehiculo && idsAEliminar.has(vehiculo.idDeVehiculo)) {
+          if (vehiculo.idDeVehiculo && IDS_A_ELIMINAR.has(vehiculo.idDeVehiculo)) {
             return false;
           }
           
           // Tercera capa: filtrar por combinación placa+marca
           if (vehiculo.numeroPlaca && vehiculo.marca) {
-            const comboId = `${vehiculo.numeroPlaca}|${vehiculo.marca}`;
-            if (placasMarcasAEliminar.has(comboId)) {
+            const ID_COMBINACION = `${vehiculo.numeroPlaca}|${vehiculo.marca}`;
+            if (PLACAS_MARCAS_A_ELIMINAR.has(ID_COMBINACION)) {
               return false;
             }
           }
           
           // Cuarta capa: comparación de referencia de objeto como fallback
-          return vehiculo !== vehiculoAEliminar;
+          return vehiculo !== VEHICULO_A_ELIMINAR;
         });
       }
       
@@ -332,21 +315,7 @@ export class ModificacionVehiculoComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   agregarModal(): void {
-    this.vehiculoDialogData = {};
+    this.vehiculoDialogData = null;
     this.showVehiculoDialog = true;
-  }
-
-  /**
-   * Busca la descripción en un catálogo por su clave.
-   * @param {string} clave - Clave a buscar en el catálogo.
-   * @param {any[]} catalogo - Array del catálogo donde buscar.
-   * @returns {string} La descripción encontrada o la clave original si no se encuentra.
-   */
-  private obtenerDescripcionDeCatalogo(clave: string, catalogo: any[]): string {
-    if (!clave || !catalogo || catalogo.length === 0) {
-      return clave || '';
-    }
-    const item = catalogo.find(c => c.clave === clave || c.descripcion === clave);
-    return item ? item.descripcion : clave;
   }
 }

@@ -18,6 +18,7 @@ import {
   SeleccionadasTabla
 } from '../../models/certificado-origen.model.js';
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   OnDestroy,
@@ -125,6 +126,20 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * @type {boolean}
    */
   estaDeshabilitado: boolean = false;
+
+    /**
+   * Indica si el formulario tiene errores de validación.
+   *
+   * Se utiliza para mostrar/ocultar el alert de errores en el modal.
+   */
+  esFormaValido: boolean = false;
+
+  /**
+   * Mensaje de error del formulario para mostrar en el alert.
+   *
+   * Contiene el HTML del mensaje de error a mostrar cuando hay validaciones fallidas.
+   */
+  formErrorAlert: string = '<strong>¡Error de registro! </strong> Faltan campos por capturar';
 
   /**
    * Configuración de las columnas para la tabla de mercancías disponibles.
@@ -306,7 +321,8 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     public store: Tramite110217Store,
     public tramiteQuery: Tramite110217Query,
     private validacionesService: ValidacionesFormularioService,
-    private consultaioQuery: ConsultaioQuery // eslint-disable-next-line no-empty-function
+    private consultaioQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef 
   ) {}
 
   /**
@@ -490,6 +506,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    */
   inicializarFormularioMercancia(): void {
     this.formularioMercancia = this.fb.group({
+      id: [null], // Campo ID agregado para rastrear elementos de mercancía
       fraccionMercanciaArancelaria: [
         this.solicitudState?.formularioMercancia?.fraccionMercanciaArancelaria,
         [],
@@ -645,12 +662,32 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
   disponiblesSeleccionDeFilas(evento: DisponiblesTabla): void {
     if (!this.soloLectura) {      
       this.disponiblesSeleccionadasFila = evento;
+      this.modoEdicion = false;
+      this.mercanciaEditandoId = null;
+      // Restablecer bandera de error al abrir modal
+      this.esFormaValido = false;
+      
       if (this.modalBuscar) {
         if (!this.modalInstances) {
           this.modalInstances = new Modal(this.modalBuscar.nativeElement);
         }
+        // Restablecer formulario y limpiar errores de validación
+        this.formularioMercancia.reset();
+        this.formularioMercancia.markAsUntouched();
+        this.formularioMercancia.markAsPristine();
+        
+        // Limpiar estado de validación para todos los controles del formulario
+        Object.keys(this.formularioMercancia.controls).forEach(key => {
+          const CONTROL = this.formularioMercancia.get(key);
+          if (CONTROL) {
+            CONTROL.markAsUntouched();
+            CONTROL.markAsPristine();
+            CONTROL.setErrors(null);
+          }
+        });
+        
         this.formularioMercancia.patchValue({
-          id: this.disponiblesSeleccionadasFila.id,
+          id: null, // Limpiar ID para nueva mercancía
           fraccionMercanciaArancelaria: this.disponiblesSeleccionadasFila.fraccionArancelaria,
           nombreComercialDelaMercancia: this.disponiblesSeleccionadasFila.nombreComercial,
           nombreTecnico: this.disponiblesSeleccionadasFila.nombreTecnico,
@@ -733,10 +770,53 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * @param formularioMercancia - El formulario reactivo que contiene los datos de la mercancía.
    */
   activarModal(formularioMercancia: FormGroup): void {
-    const FORM_VALUES = formularioMercancia.value;
+    // Verificar específicamente cada campo requerido
+    const REQUIRED_FIELDS = ['cantidad', 'pais', 'valorDelaMercancia', 'complementoDelaDescripcion', 'fecha', 'numeroFactura', 'tipoFactura'];
+    let hasEmptyRequiredFields = false;
+    
+    REQUIRED_FIELDS.forEach(fieldName => {
+      const CONTROL = formularioMercancia.get(fieldName);
+      const VALUE = CONTROL?.value;
+      
+      if (!VALUE || VALUE === '' || VALUE === null || VALUE === undefined) {
+        hasEmptyRequiredFields = true;
+        // Establecer manualmente el error requerido si Angular no lo detectó
+        if (CONTROL && CONTROL.valid) {
+          CONTROL.setErrors({ required: true });
+        }
+      }
+    });
 
+    if (formularioMercancia.invalid || hasEmptyRequiredFields) {
+      // Marcar todos los campos como tocados para mostrar mensajes de error
+      Object.keys(formularioMercancia.controls).forEach(key => {
+        const CONTROL = formularioMercancia.get(key);
+        if (CONTROL) {
+          CONTROL.markAsTouched();
+          CONTROL.markAsDirty();
+        }
+      });
+      // Forzar detección de cambios para mostrar errores de validación
+      this.cdr.detectChanges();
+      // Mostrar mensaje de error cuando el formulario es inválido
+      this.esFormaValido = true;
+      return; // Salir de la función si el formulario es inválido
+    }
+
+    // Ocultar mensaje de error cuando el formulario es válido
+    this.esFormaValido = false;
+
+    const FORM_VALUES = formularioMercancia.value;
+    // Determinar el ID basado en el modo de edición
+    let merchandiseId: number;
+    if (this.modoEdicion && this.mercanciaEditandoId) {
+      merchandiseId = this.mercanciaEditandoId;
+    } else {
+      merchandiseId = this.mercanciaSeleccionadasTablaDatos.length + 1;
+    }
+    
     const NUEVA_MERCANCIA: SeleccionadasTabla = {
-      id: FORM_VALUES.id || this.mercanciaSeleccionadasTablaDatos.length + 1,
+      id: merchandiseId,
       fraccionArancelaria: FORM_VALUES.fraccionMercanciaArancelaria,
       cantidad: FORM_VALUES.cantidad,
       unidadMedida: FORM_VALUES.pais,
@@ -747,20 +827,39 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
       fechaFactura: FORM_VALUES.fecha,
     };
 
-    const INDEX = this.mercanciaSeleccionadasTablaDatos.findIndex(
-      item => item.id === NUEVA_MERCANCIA.id
-    );
-
-    if (INDEX !== -1) {
-      this.mercanciaSeleccionadasTablaDatos[INDEX] = NUEVA_MERCANCIA;
+    if (this.modoEdicion && this.mercanciaEditandoId) {
+      // Actualizar mercancía existente
+      const INDEX = this.mercanciaSeleccionadasTablaDatos.findIndex(
+        item => item.id === this.mercanciaEditandoId
+      );
+      if (INDEX !== -1) {
+        // Crear nueva referencia de array para detección de cambios adecuada
+        const UPDATED_ARRAY = [...this.mercanciaSeleccionadasTablaDatos];
+        UPDATED_ARRAY[INDEX] = NUEVA_MERCANCIA;
+        this.mercanciaSeleccionadasTablaDatos = UPDATED_ARRAY;
+        // Forzar detección de cambios para actualización de tabla
+        this.cdr.detectChanges();
+      }
     } else {
+      // Agregar nueva mercancía
       this.mercanciaSeleccionadasTablaDatos = [
         ...this.mercanciaSeleccionadasTablaDatos,
         NUEVA_MERCANCIA
       ];
     }
     this.store.setMercanciaTablaDatos(this.mercanciaSeleccionadasTablaDatos);
-
+    // Actualizar la referencia de la fila seleccionada si era la que se estaba editando
+    if (this.modoEdicion && this.mercanciaEditandoId && this.mercanciaSeleccionadasFila) {
+      const UPDATED_ROW = this.mercanciaSeleccionadasTablaDatos.find(
+        item => item.id === this.mercanciaEditandoId
+      );
+      if (UPDATED_ROW) {
+        this.mercanciaSeleccionadasFila = UPDATED_ROW;
+      }
+    }
+    // Restablecer modo de edición
+    this.modoEdicion = false;
+    this.mercanciaEditandoId = null;
     if (this.modalInstances) {
       this.modalInstances.hide();
     }
@@ -773,7 +872,13 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * y también incluye datos de las mercancías disponibles si hay una fila seleccionada.
    */
 modificarMercanciaSeleccionada(mercanciaSeleccionadasTablaDatos: SeleccionadasTabla): void {
+  
   this.mercanciaSeleccionadasFila = mercanciaSeleccionadasTablaDatos;
+  this.modoEdicion = true;
+  this.mercanciaEditandoId = mercanciaSeleccionadasTablaDatos.id;
+  // Restablecer bandera de error al abrir modal
+  this.esFormaValido = false;
+  
   const FORM_VALUES = mercanciaSeleccionadasTablaDatos;
      if (this.modalBuscar) {
         if (!this.modalInstances) {
@@ -781,17 +886,38 @@ modificarMercanciaSeleccionada(mercanciaSeleccionadasTablaDatos: SeleccionadasTa
         }
       }
       this.modalInstances?.show();
+      
+    // Restablecer formulario y limpiar errores de validación
+    this.formularioMercancia.reset();
+    this.formularioMercancia.markAsUntouched();
+    this.formularioMercancia.markAsPristine();
+    
+    // Limpiar estado de validación para todos los controles del formulario
+    Object.keys(this.formularioMercancia.controls).forEach(key => {
+      const CONTROL = this.formularioMercancia.get(key);
+      if (CONTROL) {
+        CONTROL.markAsUntouched();
+        CONTROL.markAsPristine();
+        CONTROL.setErrors(null);
+      }
+    });
+    
     this.formularioMercancia.patchValue({
       id: FORM_VALUES.id,
-      fraccionArancelaria: FORM_VALUES.fraccionArancelaria,
+      fraccionMercanciaArancelaria: FORM_VALUES.fraccionArancelaria,
       cantidad: FORM_VALUES.cantidad,
-      unidadMedida: FORM_VALUES.unidadMedida,
-      valorMercancia: FORM_VALUES.valorMercancia,
+      pais: FORM_VALUES.unidadMedida,
+      valorDelaMercancia: FORM_VALUES.valorMercancia,
       tipoFactura: FORM_VALUES.tipoFactura,
-      numFactura: FORM_VALUES.numFactura,
-      complementoDescripcion: FORM_VALUES.complementoDescripcion,
-      fechaFactura: FORM_VALUES.fechaFactura,
+      numeroFactura: FORM_VALUES.numFactura,
+      complementoDelaDescripcion: FORM_VALUES.complementoDescripcion,
+      fecha: FORM_VALUES.fechaFactura,
     });
+    
+    // Forzar detección de cambios para asegurar que la UI se actualice
+    setTimeout(() => {
+      this.cdr.detectChanges();
+    }, 100);
 }
 
   /**
@@ -804,11 +930,6 @@ modificarMercanciaSeleccionada(mercanciaSeleccionadasTablaDatos: SeleccionadasTa
     // Resetear modo edición
     this.modoEdicion = false;
     this.mercanciaEditandoId = null;
-    
-    // Limpiar el formulario
-    // this.formularioMercancia.reset();
-    // this.inicializarFormularioMercancia();
-    
     if (this.closeModal) {
       this.closeModal.nativeElement.click();
     }

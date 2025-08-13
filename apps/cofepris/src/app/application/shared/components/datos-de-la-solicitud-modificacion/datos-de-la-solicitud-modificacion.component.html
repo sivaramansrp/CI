@@ -15,7 +15,7 @@
         <div class="col-md-12">
           <div>
             <label for="observaciones"> Justificación</label>
-            <span class="require">*</span>
+            <span class="require">*:</span>
           </div>
           <div>
             <textarea cols="70" rows="5" id="observacionesId" class="form-control" formControlName="observaciones"
@@ -133,7 +133,7 @@
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="establishomentoColonias">Colonias:</label>
+            <label class="form-label" for="establishomentoColonias">Colonia:</label>
             <input class="form-control" type="text" id="establishomentoColoniasId"
               formControlName="establishomentoColonias"
               (change)="actualizarValoresStore(datosSolicitudform,'establishomentoColonias', 'setEstablishomentoColonias')" />
@@ -180,7 +180,7 @@
         <div class="form-group">
           <label class="form-label" for="scian">S.C.I.A.N.*:</label>
           <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="datosData"
-            [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX" formControlName="scian"
+            [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX"
             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
           </app-tabla-dinamica>
         </div>
@@ -257,7 +257,7 @@
       <div class="alert alert-info content-with-checkbox py-6">
         <input formControlName="manifests" type="checkbox" id="manifiesto"
           (change)="actualizarValoresStore(manifiestosRepresentanteForm,'manifests', 'setManifests')" />
-        <span class="fw-bold ms-0">*</span>
+        <span class="fw-bold mt-3">*</span>
         <div>{{ mensajeManifiestos }} </div>
       </div>
     </div>
