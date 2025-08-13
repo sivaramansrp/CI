@@ -174,7 +174,7 @@ describe('RegistroVehiculosComponent', () => {
       { id: 2 } as any,
     ];
     component.listaFilaSeleccionadaVehiculos = [{ id: 1 } as any];
-    component.eliminarVehiculosItem();
+    component.eliminarVehiculosItem(true);
     expect(component.registroVehiculosInfoList.length).toBe(1);
     expect(component.registroVehiculosInfoList[0].id).toBe(2);
   });

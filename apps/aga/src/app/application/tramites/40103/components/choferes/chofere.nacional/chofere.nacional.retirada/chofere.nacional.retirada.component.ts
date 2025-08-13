@@ -12,7 +12,6 @@ import { Chofer40103Service } from '../../../../estados/chofer40103.service';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { DatosDeChoferesNacionalDialogComponent } from '../data.de.choferes.dialog/data.de.choferes.nacional.dialog.component';
 import { DatosDelChoferNacional } from '../../../../models/registro-muestras-mercancias.model';
-import { TituloComponent } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-chofere-nacional-retirada',
@@ -20,10 +19,9 @@ import { TituloComponent } from '@ng-mf/data-access-user';
   styleUrls: ['./chofere.nacional.retirada.component.scss'],
   standalone: true,
   imports: [
-    TablaDinamicaComponent, 
-    TituloComponent, 
+    TablaDinamicaComponent,
     DatosDeChoferesNacionalDialogComponent
-  ],
+],
   providers: [BsModalService],
 })
 export class ChofereNacionalRetiradaComponent implements OnInit, OnDestroy {
@@ -174,12 +172,11 @@ export class ChofereNacionalRetiradaComponent implements OnInit, OnDestroy {
 
   /**
    * Abre el modal para editar el registro seleccionado en la tabla.
-   * Si no hay ningún registro seleccionado, muestra una advertencia en consola.
+   * Si no hay ningún registro seleccionado, no realiza ninguna acción.
    * @param template - Referencia al template del modal a mostrar.
    */
   editSelectedRow(template: TemplateRef<unknown>): void {
     if (this.datosDelChoferNacionalSelected.length === 0) {
-      console.warn('No rows selected for editing.');
       return;
     }
     this.datosChofere = this.datosDelChoferNacionalSelected[0];
@@ -188,7 +185,7 @@ export class ChofereNacionalRetiradaComponent implements OnInit, OnDestroy {
 
   /**
    * Elimina los registros seleccionados de la lista de choferes nacionales.
-   * Si no hay ningún registro seleccionado, muestra una advertencia en consola.
+   * Si no hay ningún registro seleccionado, no realiza ninguna acción.
    */
   eliminarFilaSeleccionada(): void {
     if (this.datosDelChoferNacionalSelected.length > 0) {
@@ -196,8 +193,6 @@ export class ChofereNacionalRetiradaComponent implements OnInit, OnDestroy {
         (item) => !this.datosDelChoferNacionalSelected.includes(item)
       );
       this.datosDelChoferNacionalSelected = [];
-    } else {
-      console.warn('No rows selected for deletion.');
     }
   }
 

@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AgregarProveedorComponent } from './agregar-proveedor.component';
+import { AgregarProveedorSanitarioComponent } from './agregar-proveedor-sanitario.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
@@ -7,10 +7,11 @@ import { Tramite260601Store } from '../../../../estados/tramites/tramite260601.s
 import { Tramite260601Query } from '../../../../estados/queries/tramite260601.query';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { CATALOGOS_ID, DATOS_CATEGORIAS_TERCEROS } from '../../constantes/aviso-enum';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-describe('AgregarProveedorComponent', () => {
-  let component: AgregarProveedorComponent;
-  let fixture: ComponentFixture<AgregarProveedorComponent>;
+describe('AgregarProveedorSanitarioComponent', () => {
+  let component: AgregarProveedorSanitarioComponent;
+  let fixture: ComponentFixture<AgregarProveedorSanitarioComponent>;
 
   let mockTramite260601Store: Partial<Tramite260601Store>;
   let mockTramite260601Query: Partial<Tramite260601Query>;
@@ -102,7 +103,7 @@ describe('AgregarProveedorComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, AgregarProveedorComponent],
+      imports: [ReactiveFormsModule, AgregarProveedorSanitarioComponent, HttpClientTestingModule],
       providers: [
         FormBuilder,
         { provide: Tramite260601Store, useValue: mockTramite260601Store },
@@ -112,7 +113,7 @@ describe('AgregarProveedorComponent', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AgregarProveedorComponent);
+    fixture = TestBed.createComponent(AgregarProveedorSanitarioComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

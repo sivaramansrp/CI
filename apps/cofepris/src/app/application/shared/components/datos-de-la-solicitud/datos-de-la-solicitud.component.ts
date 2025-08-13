@@ -496,6 +496,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
+     this.crearDatosSolicitudForm();
+    this.actualizarDatosFormularioSolicitud();
     this.esManifesto =
       PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES.includes(
         this.idProcedimiento
@@ -505,8 +507,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     )
       ? true
       : false;
-    this.crearDatosSolicitudForm();
-    this.actualizarDatosFormularioSolicitud();
+   
     this.mostrarCorreoElectronico =
       PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC.includes(
         this.idProcedimiento
