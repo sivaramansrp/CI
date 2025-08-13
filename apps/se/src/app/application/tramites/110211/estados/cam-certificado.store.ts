@@ -89,16 +89,24 @@ export interface CamState {
 export function createInitialState(): CamState {
   return {
     calle:'',
-    formCertificado: {
-      si: false,
-      entidadFederativa: '',
-      bloque: '',
-      nombreComercialForm: '',
-      registroProductoForm: '',
-      fraccionArancelariaForm: '',
-      fechaInicioInput: '',
-      fechaFinalInput: '',
-    },
+   formCertificado: {
+  si: false,
+  entidadFederativa: '',
+  bloque: '',
+  fraccionArancelariaForm: '',
+  registroProductoForm: '',
+  nombreComercialForm: '',
+  fechaInicioInput: '',
+  fechaFinalInput: '',
+  nombres: '',
+  primerApellido: '',
+  segundoApellido: '',
+  numeroDeRegistroFiscal: '',
+  razonSocial: '',
+  calle: '',
+  numeroLetra: ''
+},
+
     estado: {
       id: -1,
       descripcion: '',
@@ -132,6 +140,7 @@ export function createInitialState(): CamState {
       precisaDates: '',
       EntidadFederativaDates: '',
       representacionFederalDates: '',
+      presenta: '',
     },
     idiomaDatosSeleccion: { id: -1, descripcion: '' },
     entidadFederativaSeleccion: { id: -1, descripcion: '' },
