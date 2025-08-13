@@ -1908,7 +1908,7 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
     public updateProveedorTablaDatos(newProveedores: Proveedor[]): void {
         this.update((state) => ({
             ...state,
-            proveedorTablaDatos: [...state.proveedorTablaDatos, ...newProveedores],
+            proveedorTablaDatos: newProveedores,
         }));
     }
 
@@ -1937,7 +1937,7 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
     public updateFabricanteTablaDatos(newFabricantes: Fabricante[]): void {
         this.update((state) => ({
             ...state,
-            fabricanteTablaDatos: [...state.fabricanteTablaDatos, ...newFabricantes],
+            fabricanteTablaDatos: newFabricantes,
         }));
     }
 
