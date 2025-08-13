@@ -9,9 +9,7 @@
   <div class="row mt-5">
     <div class="col-md-3">
       <h6>
-        Fabricante
-        <span class="form-label" *ngIf="esCampoRequerido('fabricante')">*</span>
-        <span class="form-label">:</span>
+        Fabricante<span class="form-label" *ngIf="esCampoRequerido('fabricante')">*</span><span class="form-label">:</span>
       </h6>
     </div>
   </div>
@@ -117,7 +115,7 @@
   </div>
 
   @if(habilitarProveedor===true ){
-  <div class="row mt-5"><h6>Proveedor :</h6></div>
+  <div class="row mt-5"><h6>Proveedor:</h6></div>
   <div class="row mt-5">
     <app-tabla-dinamica
       [configuracionTabla]="configuracionTablaProveedor"
@@ -166,7 +164,7 @@
     </div>
   </div>
   } @if(habilitarFacturador === true){
-  <div class="row mt-5"><h6>Facturador :</h6></div>
+  <div class="row mt-5"><h6>Facturador:</h6></div>
   <div class="row mt-5">
     <app-tabla-dinamica
       [configuracionTabla]="configuracionTablaFacturador"
