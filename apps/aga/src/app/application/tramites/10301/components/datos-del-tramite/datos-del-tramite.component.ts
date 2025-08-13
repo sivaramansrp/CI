@@ -314,7 +314,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     },
     {
       encabezado: 'Condición de la mercancía',
-      clave: (articulo) => articulo.condicionMercancia,
+      clave: (articulo) => articulo.condicion,
       orden: 9,
     }
   ];
@@ -440,7 +440,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosDelFormulario();
-      this.agregarMercancia();
     } else {
       this.donanteDomicilio();
     }
@@ -720,7 +719,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       (respuesta) => {
         if (respuesta?.success) {
           respuesta.datos.id = this.mercanciaDatos.length + 1;
-          this.mercanciaDatos.push(respuesta.datos);
+          this.mercanciaDatos = [...this.mercanciaDatos, respuesta.datos];
           (this.store.setDatosMercancia as (valor: DatosMercancia[]) => void)(this.mercanciaDatos);
           this.agregarMercanciasForm.reset();
           this.agregarMercanciasForm.markAsUntouched();
