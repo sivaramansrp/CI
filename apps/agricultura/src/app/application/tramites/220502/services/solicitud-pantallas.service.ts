@@ -1,5 +1,13 @@
-import { Destinatario, Exportador } from '../models/pago-de-derechos.model';
+import {
+  Destinatario,
+  Exportador,
+  PagoDeDerechos,
+} from '../models/pago-de-derechos.model';
 import { Observable, catchError, throwError } from 'rxjs';
+import {
+  Solicitud220502State,
+  Solicitud220502Store,
+} from '../estados/tramites220502.store';
 import { CargarDatosIniciales } from '../models/solicitud-pantallas.model';
 import { DatosDeLaSolicitud } from '../models/solicitud-pantallas.model';
 import { DatosDelTramiteRealizar } from '../models/solicitud-pantallas.model';
@@ -7,7 +15,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RegistroTomaMuestrasMercanciasDatos } from '../models/datos-generales.model';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { Solicitud220502Store } from '../estados/tramites220502.store';
 import { TipoContenedor } from '../models/solicitud-pantallas.model';
 
 /** Servicio para obtener los datos de la solicitud */
@@ -17,8 +24,7 @@ import { TipoContenedor } from '../models/solicitud-pantallas.model';
 /** Servicio para obtener los datos de la solicitud */
 export class SolicitudPantallasService {
   /** URL para obtener los datos de la solicitud */
-  private dataUrl =
-    '../../../assets/json/220502/solicitud-pantallas-mock-data.json';
+  private dataUrl = 'assets/json/220502/solicitud-pantallas-mock-data.json';
 
   /** Constructor para inyectar el servicio HttpClient */
   constructor(
@@ -88,6 +94,29 @@ export class SolicitudPantallasService {
       datos.totalDeGuiasAmparadas
     );
     this.solicitud220502Store.setEsSolicitudFerros(datos.esSolicitudFerros);
+    this.solicitud220502Store.setFoliodel(datos.foliodel);
+    this.solicitud220502Store.setAduanaDeIngreso(datos.aduanaDeIngreso);
+    this.solicitud220502Store.setSanidadAgropecuaria(datos.sanidadAgropecuaria);
+    this.solicitud220502Store.setPuntoInspeccion(datos.puntoInspeccion);
+    this.solicitud220502Store.setNumeroguia(datos.numeroguia);
+    this.solicitud220502Store.setRegimen(datos.regimen);
+    this.solicitud220502Store.setFerrocarril(datos.ferrocarril);
+    this.solicitud220502Store.setMovilizacion(datos.movilizacion);
+    this.solicitud220502Store.setIdentificacionTransporte(
+      datos.identificacionTransporte
+    );
+    this.solicitud220502Store.setPunto(datos.punto);
+    this.solicitud220502Store.setNombreEmpresa(datos.nombreEmpresa);
+    this.solicitud220502Store.setExentoPagoNo(datos.exentoPagoNo);
+    this.solicitud220502Store.setJustificacion(datos.justificacion);
+    this.solicitud220502Store.setClaveReferencia(datos.claveReferencia);
+    this.solicitud220502Store.setCadenaDependencia(datos.cadenaDependencia);
+    this.solicitud220502Store.setBanco(datos.banco);
+    this.solicitud220502Store.setIlavePago(datos.llavePago);
+    this.solicitud220502Store.setFetchaPago(datos.fetchapago);
+    this.solicitud220502Store.setImportePago(datos.importePago);
+    this.solicitud220502Store.setAduanaIngreso(datos.aduanaIngreso);
+    this.solicitud220502Store.setOficinaInspeccion(datos.oficinaInspeccion);
   }
 
   /**
@@ -96,7 +125,7 @@ export class SolicitudPantallasService {
    */
   getRegistroTomaMuestrasMercanciasData(): Observable<RegistroTomaMuestrasMercanciasDatos> {
     return this.http.get<RegistroTomaMuestrasMercanciasDatos>(
-      'assets/json/220501/registro_toma_muestras_mercancias.json'
+      'assets/json/220502/registro_toma_muestras_mercancias.json'
     );
   }
 
@@ -107,7 +136,7 @@ export class SolicitudPantallasService {
    */
   obtenerTablaExportador(): Observable<Exportador[]> {
     return this.http
-      .get<Exportador[]>('assets/json/220501/exportador-tabla.json')
+      .get<Exportador[]>('assets/json/220502/exportador-tabla.json')
       .pipe(
         catchError((error) => {
           return throwError(() => error);
@@ -122,7 +151,7 @@ export class SolicitudPantallasService {
    */
   obtenerTablaDestinatario(): Observable<Destinatario[]> {
     return this.http
-      .get<Destinatario[]>('assets/json/220501/destinatario-tabla.json')
+      .get<Destinatario[]>('assets/json/220502/destinatario-tabla.json')
       .pipe(
         catchError((error) => {
           return throwError(() => error);
@@ -137,7 +166,7 @@ export class SolicitudPantallasService {
    */
   getAduanaIngreso(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(
-      'assets/json/220501/aduana-ingreso.json'
+      'assets/json/220502/aduana-ingreso.json'
     );
   }
 
@@ -148,7 +177,7 @@ export class SolicitudPantallasService {
    */
   getOficianaInspeccion(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(
-      'assets/json/220501/oficiana-de-inspeccion.json'
+      'assets/json/220502/oficiana-de-inspeccion.json'
     );
   }
 
@@ -159,7 +188,7 @@ export class SolicitudPantallasService {
    */
   getPuntoInspeccion(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(
-      'assets/json/220501/punto-de-inspeccion.json'
+      'assets/json/220502/punto-de-inspeccion.json'
     );
   }
 
@@ -170,7 +199,7 @@ export class SolicitudPantallasService {
    */
   getEstablecimiento(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(
-      'assets/json/220501/establecimiento.json'
+      'assets/json/220502/establecimiento.json'
     );
   }
 
@@ -181,7 +210,7 @@ export class SolicitudPantallasService {
    */
   getRegimenDestinaran(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(
-      'assets/json/220501/regimen-destinaran.json'
+      'assets/json/220502/regimen-destinaran.json'
     );
   }
 
@@ -192,7 +221,7 @@ export class SolicitudPantallasService {
    */
   getMovilizacionNacional(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(
-      'assets/json/220501/movilizacion-nacional.json'
+      'assets/json/220502/movilizacion-nacional.json'
     );
   }
 
@@ -203,7 +232,7 @@ export class SolicitudPantallasService {
    */
   getPuntoVerificacion(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(
-      'assets/json/220501/punto-verificacion.json'
+      'assets/json/220502/punto-verificacion.json'
     );
   }
 
@@ -214,7 +243,7 @@ export class SolicitudPantallasService {
    */
   getEmpresaTransportista(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(
-      'assets/json/220501/empresa-transportista.json'
+      'assets/json/220502/empresa-transportista.json'
     );
   }
 
@@ -225,7 +254,35 @@ export class SolicitudPantallasService {
    */
   getJustificacion(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(
-      'assets/json/220501/justificacion.json'
+      'assets/json/220502/justificacion.json'
+    );
+  }
+  /**
+   * Obtiene los datos del banco.
+   *
+   * @returns {Observable<RespuestaCatalogos>} - Los datos del banco.
+   */
+  getBanco(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/220502/banco.json');
+  }
+
+  /**
+   * Servicio para obtener datos relacionados con la solicitud.
+   */
+  getPagoDeDerechos(): Observable<PagoDeDerechos> {
+    /** Obtiene la información del pago de derechos desde un archivo JSON. */
+    return this.http.get<PagoDeDerechos>(
+      'assets/json/220502/pago-de-derechos.json'
+    );
+  }
+
+  /**
+   * Servicio para obtener los datos generales de la solicitud.
+   */
+  getDatosDelaSolicitud(): Observable<Solicitud220502State> {
+    /** Obtiene los datos de la solicitud desde un archivo JSON. */
+    return this.http.get<Solicitud220502State>(
+      'assets/json/220502/datos-dela-solicitud.json'
     );
   }
 }

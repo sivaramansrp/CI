@@ -2,16 +2,16 @@ import { TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { DatosGeneralesComponent } from './datos-generales.component';
-import { RevisionService } from '../../services/revision.service';
-import { Solicitud220501Store } from '../../estados/tramites220501.store';
-import { Solicitud220501Query } from '../../estados/tramites220501.query';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { Solicitud220502Store } from '../../estados/tramites220502.store';
+import { Solicitud220502Query } from '../../estados/tramites220502.query';
+import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
 
 describe('DatosGeneralesComponent', () => {
   let component: DatosGeneralesComponent;
-  let revisionService: RevisionService;
-  let solicitudStore: Solicitud220501Store;
-  let solicitudQuery: Solicitud220501Query;
+  let solicitudPantallasService: SolicitudPantallasService;
+  let solicitudStore: Solicitud220502Store;
+  let solicitudQuery: Solicitud220502Query;
   let validacionesService: ValidacionesFormularioService;
 
   beforeEach(() => {
@@ -20,7 +20,7 @@ describe('DatosGeneralesComponent', () => {
       providers: [
         FormBuilder,
         {
-          provide: RevisionService,
+          provide: SolicitudPantallasService,
           useValue: {
             getAduanaIngreso: jest.fn().mockReturnValue(of({ code: 200, data: [] })),
             getOficianaInspeccion: jest.fn().mockReturnValue(of({ code: 200, data: [] })),
@@ -34,7 +34,7 @@ describe('DatosGeneralesComponent', () => {
           },
         },
         {
-          provide: Solicitud220501Store,
+          provide: Solicitud220502Store,
           useValue: {
             setFoliodel: jest.fn(),
             setClaveUCON: jest.fn(),
@@ -54,7 +54,7 @@ describe('DatosGeneralesComponent', () => {
           },
         },
         {
-          provide: Solicitud220501Query,
+          provide: Solicitud220502Query,
           useValue: {
             selectSolicitud$: of({}),
           },
@@ -70,9 +70,9 @@ describe('DatosGeneralesComponent', () => {
 
     const fixture = TestBed.createComponent(DatosGeneralesComponent);
     component = fixture.componentInstance;
-    revisionService = TestBed.inject(RevisionService);
-    solicitudStore = TestBed.inject(Solicitud220501Store);
-    solicitudQuery = TestBed.inject(Solicitud220501Query);
+    solicitudPantallasService = TestBed.inject(SolicitudPantallasService);
+    solicitudStore = TestBed.inject(Solicitud220502Store);
+    solicitudQuery = TestBed.inject(Solicitud220502Query);
     validacionesService = TestBed.inject(ValidacionesFormularioService);
   });
 
@@ -111,7 +111,7 @@ describe('DatosGeneralesComponent', () => {
   });
 
   it('should rotate rows correctly', () => {
-    component.rows = [{ Partida: '1' }, { Partida: '2' }, { Partida: '3' }] as any;
+    component.mercanciasLista = [{ Partida: '1' }, { Partida: '2' }, { Partida: '3' }] as any;
     component.currentIndex = 0;
 
     component.rotateRow(1);
@@ -134,30 +134,30 @@ describe('DatosGeneralesComponent', () => {
     expect(validacionesService.isValid).toHaveBeenCalledWith(form, field);
   });
 
-  it('should call revisionService methods for data fetching', () => {
+  it('should call solicitudPantallasService methods for data fetching', () => {
     component.getAduanaIngreso();
-    expect(revisionService.getAduanaIngreso).toHaveBeenCalled();
+    expect(solicitudPantallasService.getAduanaIngreso).toHaveBeenCalled();
 
     component.getOficianaInspeccion();
-    expect(revisionService.getOficianaInspeccion).toHaveBeenCalled();
+    expect(solicitudPantallasService.getOficianaInspeccion).toHaveBeenCalled();
 
     component.getPuntoInspeccion();
-    expect(revisionService.getPuntoInspeccion).toHaveBeenCalled();
+    expect(solicitudPantallasService.getPuntoInspeccion).toHaveBeenCalled();
 
     component.getEstablecimiento();
-    expect(revisionService.getEstablecimiento).toHaveBeenCalled();
+    expect(solicitudPantallasService.getEstablecimiento).toHaveBeenCalled();
 
     component.getRegimenDestinaran();
-    expect(revisionService.getRegimenDestinaran).toHaveBeenCalled();
+    expect(solicitudPantallasService.getRegimenDestinaran).toHaveBeenCalled();
 
     component.getMovilizacionNacional();
-    expect(revisionService.getMovilizacionNacional).toHaveBeenCalled();
+    expect(solicitudPantallasService.getMovilizacionNacional).toHaveBeenCalled();
 
     component.getPuntoVerificacion();
-    expect(revisionService.getPuntoVerificacion).toHaveBeenCalled();
+    expect(solicitudPantallasService.getPuntoVerificacion).toHaveBeenCalled();
 
     component.getEmpresaTransportista();
-    expect(revisionService.getEmpresaTransportista).toHaveBeenCalled();
+    expect(solicitudPantallasService.getEmpresaTransportista).toHaveBeenCalled();
   });
 
   it('should update solicitud store on seleccionar methods', () => {
@@ -180,11 +180,6 @@ describe('DatosGeneralesComponent', () => {
 
     component.seleccionarPuntoVerificacion(mockCatalogo);
     expect(solicitudStore.setPunto).toHaveBeenCalledWith(1);
-  });
-
-  it('should update capturaDatosMercancia in store', () => {
-    component.setCapturaDatosMercancia('test');
-    expect(solicitudStore.setCapturaDatosMercancia).toHaveBeenCalledWith('test');
   });
 
   it('should unsubscribe on ngOnDestroy', () => {

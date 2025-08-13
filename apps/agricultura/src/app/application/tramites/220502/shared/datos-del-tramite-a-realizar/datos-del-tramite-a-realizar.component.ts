@@ -1,29 +1,46 @@
-import { Catalogo } from '@ng-mf/data-access-user';
+import {
+  ADUANA_DE_INGRESO,
+  CERTIFICADOS_AUTORIZADOS,
+  HORA_DE_INSPECCION,
+  PUNTO_DE_INSPECCION,
+  SANIDAD_AGROPECUARIA,
+} from '../../constantes/constantes';
+import {
+  Catalogo,
+  CatalogosSelect,
+  InputFecha,
+  InputFechaComponent,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  inject,
+} from '@angular/core';
+import {
+  ControlContainer,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  Solicitud220502State,
+  Solicitud220502Store,
+} from '../../estados/tramites220502.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { CatalogosSelect } from '@ng-mf/data-access-user';
-import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ControlContainer } from '@angular/forms';
 import { DatosDelTramiteRealizar } from '../../models/solicitud-pantallas.model';
-import { FormControl } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { Input } from '@angular/core';
-import { InputFecha } from '@ng-mf/data-access-user';
-import { InputFechaComponent } from '@ng-mf/data-access-user';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { Solicitud220502Query } from '../../estados/tramites220502.query';
-import { Solicitud220502State } from '../../estados/tramites220502.store';
-import { Solicitud220502Store } from '../../estados/tramites220502.store';
 import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
-import { Subject } from 'rxjs';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { Validators } from '@angular/forms';
-import { inject } from '@angular/core';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
+
 /**
  * Componente para gestionar los datos del trámite a realizar.
  */
@@ -85,24 +102,24 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
     labelNombre: 'Fecha de inspección',
     required: true,
     habilitado: true,
-  }
+  };
 
   /**
    * Opciones de selección de formulario para diferentes datos del catálogo.
    */
-  certificadosAutorizados: CatalogosSelect = {} as CatalogosSelect;
+  certificadosAutorizados: CatalogosSelect = CERTIFICADOS_AUTORIZADOS;
 
   /** Opciones de selección de formulario para diferentes datos del catálogo. */
-  horaDeInspeccion: CatalogosSelect = {} as CatalogosSelect;
+  horaDeInspeccion: CatalogosSelect = HORA_DE_INSPECCION;
 
   /** Opciones de selección de formulario para diferentes datos del catálogo. */
-  aduanaDeIngreso: CatalogosSelect = {} as CatalogosSelect;
+  aduanaDeIngreso: CatalogosSelect = ADUANA_DE_INGRESO;
 
   /** Opciones de selección de formulario para diferentes datos del catálogo. */
-  sanidadAgropecuaria: CatalogosSelect = {} as CatalogosSelect;
+  sanidadAgropecuaria: CatalogosSelect = SANIDAD_AGROPECUARIA;
 
   /** Opciones de selección de formulario para diferentes datos del catálogo. */
-  puntoDeInspeccion: CatalogosSelect = {} as CatalogosSelect;
+  puntoDeInspeccion: CatalogosSelect = PUNTO_DE_INSPECCION;
 
   /**
    * Campo de entrada de fecha inicializado con la constante FECHA_INSPECCION.
@@ -135,7 +152,24 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
    */
   @Input() procedimiento!: number;
 
-  /** Constructor para inyectar el servicio de solicitud de pantallas. */
+  /**
+   * Evento que emite un valor booleano indicando si los certificados han sido autorizados.
+   *
+   * @event certificadosAutorizEmitido
+   * @type {boolean}
+   * @default false
+   */
+  @Output() certificadosAutorizEmitido = new EventEmitter<boolean>(false);
+
+  /**
+   * @constructor
+   * Constructor para inyectar los servicios y dependencias necesarias para el componente.
+   *
+   * @param solicitudService - Servicio para obtener y gestionar datos relacionados con las pantallas de solicitud.
+   * @param solicitud220502Store - Store que gestiona y actualiza el estado de la solicitud 220502.
+   * @param solicitud220502Query - Query para consultar el estado de la solicitud 220502.
+   * @param cdRef - Referencia para detectar y aplicar cambios manualmente en el ciclo de detección de Angular.
+   */
   constructor(
     private solicitudService: SolicitudPantallasService,
     private solicitud220502Store: Solicitud220502Store,
@@ -192,7 +226,11 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
             const FORM_GROUP = this.grupoFormularioPadre.get(
               this.claveDeControl
             ) as FormGroup;
-
+            if (this.solicitud220502State.certificadosAutorizados > 0) {
+              this.certificadosAutorizEmitido.emit(true);
+            } else {
+              this.certificadosAutorizEmitido.emit(false);
+            }
             if (FORM_GROUP) {
               FORM_GROUP.patchValue({
                 certificadosAutorizados:
@@ -203,7 +241,7 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
                   this.solicitud220502State.sanidadAgropecuaria,
                 puntoDeInspeccion: this.solicitud220502State.puntoDeInspeccion,
                 fechaDeInspeccion: this.solicitud220502State.fechaDeInspeccion,
-                fechaInspeccion: this.solicitud220502State.fechaInspeccion
+                fechaInspeccion: this.solicitud220502State.fechaInspeccion,
               });
             }
           })

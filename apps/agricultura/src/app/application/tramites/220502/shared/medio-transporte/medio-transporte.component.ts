@@ -1,30 +1,40 @@
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { CatalogosSelect } from '@ng-mf/data-access-user';
+import {
+  Catalogo,
+  CatalogosSelect,
+  TableComponent,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
+import {
+  CatalogoSelectComponent,
+  InputRadioComponent,
+} from '@libs/shared/data-access-user/src';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+  inject,
+} from '@angular/core';
+import {
+  ControlContainer,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  Solicitud220502State,
+  Solicitud220502Store,
+} from '../../estados/tramites220502.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ControlContainer } from '@angular/forms';
 import { DatosDeMercancias } from '../../models/solicitud-pantallas.model';
-import { FormControl } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { Input } from '@angular/core';
-import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/solicitud-pantallas.enum';
-import { OnChanges } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { SimpleChanges } from '@angular/core';
 import { Solicitud220502Query } from '../../estados/tramites220502.query';
-import { Solicitud220502State } from '../../estados/tramites220502.store';
-import { Solicitud220502Store } from '../../estados/tramites220502.store';
-import { Subject } from 'rxjs';
-import { TableComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { Validators } from '@angular/forms';
-import { inject } from '@angular/core';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+
 /**
  * Componente para gestionar los datos del medio de transporte.
  */
@@ -38,6 +48,7 @@ import { takeUntil } from 'rxjs';
     CatalogoSelectComponent,
     TableComponent,
     InputRadioComponent,
+    TooltipModule,
   ],
   viewProviders: [
     {
@@ -112,6 +123,13 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
    */
   @Input() formularioDeshabilitado!: boolean;
 
+  /**
+   * @constructor
+   * Inyecta las dependencias necesarias para gestionar y consultar el estado de la solicitud 220502.
+   *
+   * @param solicitud220502Query - Servicio Query para consultar el estado de la solicitud 220502.
+   * @param solicitud220502Store - Store que gestiona y actualiza el estado de la solicitud 220502.
+   */
   constructor(
     public solicitud220502Query: Solicitud220502Query,
     public solicitud220502Store: Solicitud220502Store
@@ -191,7 +209,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
   /**
    * Maneja los cambios en las propiedades de entrada y actualiza los datos de la tabla en consecuencia.
    * @param {SimpleChanges} changes - Objeto que contiene las propiedades modificadas.
-   *  
+   *
    */
   ngOnChanges(changes: SimpleChanges): void {
     const TBODYKEY = 'hMercanciaTabla';
@@ -221,7 +239,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
   }
   /**
    * Actualiza el medio de transporte en el estado de la solicitud.
-   * 
+   *
    * @param event - Objeto de tipo Catalogo que contiene el identificador del medio de transporte.
    */
   setTransporteIdMedio(event: Catalogo): void {
@@ -230,7 +248,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
 
   /**
    * Actualiza la identificación del transporte en el estado de la solicitud.
-   * 
+   *
    * @param event - Evento del input que contiene la identificación del transporte.
    */
   setIdentificacionTransporte(event: Event): void {
@@ -240,7 +258,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
 
   /**
    * Actualiza el total de guías amparadas en el estado de la solicitud.
-   * 
+   *
    * @param event - Evento del input que contiene el número total de guías amparadas.
    */
   setTotalDeGuiasAmparadas(event: Event): void {

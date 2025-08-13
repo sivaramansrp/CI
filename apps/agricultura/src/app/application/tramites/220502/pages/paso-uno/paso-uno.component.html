@@ -21,6 +21,7 @@
           >Datos de la solicitud</a
         >
       </li>
+      @if(isRevisionDocumental){
       <li [ngClass]="indice === 3 ? 'active' : ''">
         <a
           (click)="seleccionaTab(3)"
@@ -31,16 +32,19 @@
           >Revisión documental</a
         >
       </li>
+      }
     </ul>
 
-    @if (indice === 1) {
+    <ng-container>
+      @switch (indice) { @case (1) {
       <solicitante></solicitante>
-    }
-    @if (indice === 2 && esDatosRespuesta) {
-      <app-solicitud></app-solicitud>
-    }
-    @if (indice === 3) {
+      } @case (2) {
+      <app-solicitud
+        (certificadosAutorizValor)="certificadosAutorizValor($event)"
+      ></app-solicitud>
+      } @case (3) { @if(isRevisionDocumental){
       <app-revision-documental></app-revision-documental>
-    }
+      } } }
+    </ng-container>
   </div>
 </div>

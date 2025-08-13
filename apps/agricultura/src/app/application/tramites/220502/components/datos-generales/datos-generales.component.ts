@@ -1,21 +1,36 @@
-import { Catalogo, ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
+import {
+  ADUANA_INGRESO,
+  CONFIGURACION_MERCANCIAS_COLUMNAS,
+  EMPRESA_TRANSPORTISTA,
+  ESTABLECIMIENTO,
+  MERCANCIAS_LISTA,
+  MOVILIZACION_NACIONAL,
+  OFICIANA_INSPECCION,
+  PUNTO_INSPECCION,
+  PUNTO_VERIFICACION,
+  REGIMEN_DESTINARAN,
+} from '../../constantes/constantes';
+import {
+  Catalogo,
+  CatalogosSelect,
+  ConfiguracionColumna,
+  ConsultaioQuery,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+  ValidacionesFormularioService,
+} from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent, InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { CAPTURA_OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/sagarpa.enum';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { CatalogosSelect } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { OnDestroy } from '@angular/core';
-import { ROWS } from '../../constantes/constantes';
+import { Component, OnDestroy } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud220502State, Solicitud220502Store } from '../../estados/tramites220502.store';
-import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CAPTURA_OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/sagarpa.enum';
+import { CommonModule } from '@angular/common';
+import { MercanciasLista } from '../../models/datos-generales.model';
 import { Solicitud220502Query } from '../../estados/tramites220502.query';
-import { Subject } from 'rxjs';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
+
 
 /**
  * Componente para gestionar los datos generales.
@@ -25,7 +40,14 @@ import { takeUntil } from 'rxjs';
   templateUrl: './datos-generales.component.html',
   styleUrls: ['./datos-generales.component.scss'],
   standalone: true,
-  imports: [TituloComponent, ReactiveFormsModule, CatalogoSelectComponent, InputRadioComponent, CommonModule],
+  imports: [
+    TituloComponent,
+    ReactiveFormsModule,
+    CatalogoSelectComponent,
+    InputRadioComponent,
+    CommonModule,
+    TablaDinamicaComponent,
+  ],
 })
 export class DatosGeneralesComponent implements OnDestroy {
   /**
@@ -68,49 +90,49 @@ export class DatosGeneralesComponent implements OnDestroy {
    * Selección de aduana de ingreso.
    * @type {CatalogosSelect}
    */
-  aduanaIngreso: CatalogosSelect = {} as CatalogosSelect;
+  aduanaIngreso: CatalogosSelect = ADUANA_INGRESO;
 
   /**
    * Selección de oficina de inspección.
    * @type {CatalogosSelect}
    */
-  oficianaInspeccion: CatalogosSelect = {} as CatalogosSelect;
+  oficianaInspeccion: CatalogosSelect = OFICIANA_INSPECCION;
 
   /**
    * Selección de punto de inspección.
    * @type {CatalogosSelect}
    */
-  puntoInspeccion: CatalogosSelect = {} as CatalogosSelect;
+  puntoInspeccion: CatalogosSelect = PUNTO_INSPECCION;
 
   /**
    * Selección de establecimiento.
    * @type {CatalogosSelect}
    */
-  establecimiento: CatalogosSelect = {} as CatalogosSelect;
+  establecimiento: CatalogosSelect = ESTABLECIMIENTO;
 
   /**
    * Selección de régimen al que se destinarán.
    * @type {CatalogosSelect}
    */
-  regimenDestinaran: CatalogosSelect = {} as CatalogosSelect;
+  regimenDestinaran: CatalogosSelect = REGIMEN_DESTINARAN;
 
   /**
    * Selección de movilización nacional.
    * @type {CatalogosSelect}
    */
-  movilizacionNacional: CatalogosSelect = {} as CatalogosSelect;
+  movilizacionNacional: CatalogosSelect = MOVILIZACION_NACIONAL;
 
   /**
    * Selección de punto de verificación.
    * @type {CatalogosSelect}
    */
-  puntoVerificacion: CatalogosSelect = {} as CatalogosSelect;
+  puntoVerificacion: CatalogosSelect = PUNTO_VERIFICACION;
 
   /**
    * Selección de empresa transportista.
    * @type {CatalogosSelect}
    */
-  empresaTransportista: CatalogosSelect = {} as CatalogosSelect;
+  empresaTransportista: CatalogosSelect = EMPRESA_TRANSPORTISTA;
   /**
    * Aduana de ingreso seleccionada.
    * @type {Catalogo}
@@ -160,7 +182,7 @@ export class DatosGeneralesComponent implements OnDestroy {
   empresadeTransportista!: Catalogo;
 
   /**
-   * Estado de la solicitud 220501.
+   * Estado de la solicitud 220502.
    * @type {Solicitud220502State}
    */
   solicitud220502State: Solicitud220502State = {} as Solicitud220502State;
@@ -171,13 +193,13 @@ export class DatosGeneralesComponent implements OnDestroy {
    */
   private destroyed$ = new Subject<void>();
 
-  /** 
-   * Variable para almacenar el valor de la opción seleccionada en el botón de radio. 
+  /**
+   * Variable para almacenar el opción de la opción seleccionada en el botón de radio.
    */
-  esSolicitudFerrosValor!: string;
+  esSolicitudFerrosopción!: string;
 
-  /** 
-   * Variable que almacena las opciones disponibles para el botón de radio. 
+  /**
+   * Variable que almacena las opciones disponibles para el botón de radio.
    */
   opcionDeBotonDeRadio = CAPTURA_OPCIONES_DE_BOTON_DE_RADIO;
 
@@ -191,18 +213,45 @@ export class DatosGeneralesComponent implements OnDestroy {
    * @type {number}
    */
   currentIndex = 0;
+
   /**
-     * Filas de datos.
-     * @type {Row[]}
-     */
-  rows = ROWS;
+   * Indica si la solicitud está relacionada con ferrocarril.
+   *
+   * - `0`: No es una solicitud ferroviaria.
+   * - `1`: Es una solicitud ferroviaria.
+   */
+  esSolicitudFerrosValor: number = 0;
+
   /**
-   * Constructor del componente.
-   * @param fb FormBuilder para crear formularios.
-   * @param solicitudPantallasService Servicio para gestionar las solicitudes de pantallas.
-   * @param validacionesService Servicio de validaciones de formularios.
-   * @param solicitud220502Store Store para gestionar el estado de la solicitud 220502.
-   * @param solicitud220502Query Query para acceder al estado de la solicitud 220502.
+   * Tipo de selección de la tabla.
+   * En este caso, se utiliza un checkbox para la selección de elementos.
+   */
+  tipoSeleccionTabla = TablaSeleccion.UNDEFINED;
+
+  /**
+   * Configuración de las columnas de la tabla.
+   * Define el encabezado, la clave de acceso a los datos y el orden de las columnas.
+   */
+  configuracionColumnas: ConfiguracionColumna<MercanciasLista>[] =
+    CONFIGURACION_MERCANCIAS_COLUMNAS;
+
+  /**
+   * Lista de pagos de derechos asociados a la solicitud.
+   * Se inicializa como un array vacío con la estructura de `PagoDerechosLista`.
+   */
+  mercanciasLista: MercanciasLista[] = MERCANCIAS_LISTA;
+
+  /**
+   * @constructor
+   * Inyecta los servicios necesarios para la creación y validación de formularios,
+   * así como para la gestión y consulta del estado de la solicitud 220502.
+   *
+   * @param fb - Servicio `FormBuilder` para crear y manejar formularios reactivos.
+   * @param solicitudPantallasService - Servicio para gestionar la información de las solicitudes en las pantallas.
+   * @param validacionesService - Servicio para aplicar validaciones personalizadas a los formularios.
+   * @param solicitud220502Store - Store que administra el estado de la solicitud 220502.
+   * @param solicitud220502Query - Query para consultar el estado de la solicitud 220502.
+   * @param consultaioQuery - Servicio Query para obtener datos adicionales de la solicitud.
    */
   constructor(
     private readonly fb: FormBuilder,
@@ -217,8 +266,8 @@ export class DatosGeneralesComponent implements OnDestroy {
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.formularioDeshabilitado = seccionState.readonly;
-          if(seccionState.readonly || seccionState.update){
-             this.inicializarEstadoFormulario();
+          if (seccionState.readonly || seccionState.update) {
+            this.inicializarEstadoFormulario();
           }
         })
       )
@@ -236,30 +285,51 @@ export class DatosGeneralesComponent implements OnDestroy {
       this.forma?.disable();
     } else if (!this.formularioDeshabilitado) {
       this.forma?.enable();
-    } 
+    }
   }
 
   /**
-   * Inicializa el formulario con los valores del estado de la solicitud 220501.
+   * Inicializa el formulario con los opciónes del estado de la solicitud 220502.
    * @returns {void}
    */
   inicializarFormulario(): void {
     this.forma = this.fb.group({
-      foliodel: [{ value: this.solicitud220502State.fetchapago, disabled: true }],
-      aduanaIngreso: [this.solicitud220502State.aduanaIngreso, Validators.required],
-      oficinaInspeccion: [this.solicitud220502State.oficinaInspeccion, Validators.required],
-      puntoInspeccion: [this.solicitud220502State.puntoInspeccion, Validators.required],
-      claveUCON: [{ value: this.solicitud220502State.claveUCON, disabled: true }],
-      establecimientoTIF: [this.solicitud220502State.establecimientoTIF, Validators.required],
-      nombre: [this.solicitud220502State.nombre, Validators.required],
-      numeroguia: [{ value: this.solicitud220502State.numeroguia, disabled: true }, Validators.required],
+      foliodel: [
+        { value: this.solicitud220502State.fetchapago, disabled: true },
+      ],
+      aduanaIngreso: [
+        this.solicitud220502State.aduanaIngreso,
+        Validators.required,
+      ],
+      oficinaInspeccion: [
+        this.solicitud220502State.oficinaInspeccion,
+        Validators.required,
+      ],
+      puntoInspeccion: [
+        this.solicitud220502State.puntoInspeccion,
+        Validators.required,
+      ],
+      ferrocarril: [this.solicitud220502State.ferrocarril],
+      numeroguia: [
+        { value: this.solicitud220502State.numeroguia, disabled: true },
+        Validators.required,
+      ],
       regimen: [this.solicitud220502State.regimen, Validators.required],
-      capturaDatosMercancia: [this.solicitud220502State.capturaDatosMercancia],
-      coordenadas: [{ value: this.solicitud220502State.coordenadas, disabled: true }],
-      movilizacion: [this.solicitud220502State.movilizacion, Validators.required],
-      transporte: [{ value: this.solicitud220502State.transporte, disabled: true }],
+      coordenadas: [
+        { value: this.solicitud220502State.coordenadas, disabled: true },
+      ],
+      movilizacion: [
+        this.solicitud220502State.movilizacion,
+        Validators.required,
+      ],
+      transporte: [
+        { value: this.solicitud220502State.transporte, disabled: true },
+      ],
       punto: [this.solicitud220502State.punto, [Validators.required]],
-      nombreEmpresa: [this.solicitud220502State.nombreEmpresa, Validators.required],
+      nombreEmpresa: [
+        this.solicitud220502State.nombreEmpresa,
+        Validators.required,
+      ],
     });
 
     this.solicitud220502Query.selectSolicitud$
@@ -272,12 +342,9 @@ export class DatosGeneralesComponent implements OnDestroy {
             aduanaIngreso: this.solicitud220502State.aduanaIngreso,
             oficinaInspeccion: this.solicitud220502State.oficinaInspeccion,
             puntoInspeccion: this.solicitud220502State.puntoInspeccion,
-            claveUCON: this.solicitud220502State.claveUCON,
-            establecimientoTIF: this.solicitud220502State.establecimientoTIF,
-            nombre: this.solicitud220502State.nombre,
+            ferrocarril: this.solicitud220502State.ferrocarril,
             numeroguia: this.solicitud220502State.numeroguia,
             regimen: this.solicitud220502State.regimen,
-            capturaDatosMercancia: this.solicitud220502State.capturaDatosMercancia,
             coordenadas: this.solicitud220502State.coordenadas,
             movilizacion: this.solicitud220502State.movilizacion,
             transporte: this.solicitud220502State.transporte,
@@ -296,8 +363,8 @@ export class DatosGeneralesComponent implements OnDestroy {
     this.getMovilizacionNacional();
     this.getPuntoVerificacion();
     this.getEmpresaTransportista();
-    this.actualizarDatosDelaSolicitud();  
-    
+    this.actualizarDatosDelaSolicitud();
+
     this.inicializarEstadoFormulario();
   }
 
@@ -307,18 +374,19 @@ export class DatosGeneralesComponent implements OnDestroy {
    * y luego actualiza el store con la respuesta recibida.
    */
   actualizarDatosDelaSolicitud(): void {
-    this.solicitudPantallasService.getDatosDelaSolicitud().pipe(takeUntil(this.destroyed$)).subscribe({
-      next: (resp: solicitud220502State) => {
-        this.solicitud220502Store.setFoliodel(resp.foliodel);
-        this.solicitud220502Store.setClaveUCON(resp.claveUCON);
-        this.solicitud220502Store.setEstablecimientoTIF(resp.establecimientoTIF);
-        this.solicitud220502Store.setNombre(resp.nombre);
-        this.solicitud220502Store.setNumeroguia(resp.numeroguia);
-        this.solicitud220502Store.setCoordenadas(resp.coordenadas);
-        this.solicitud220502Store.setTransporte(resp.transporte);
-        this.solicitud220502Store.setNombreEmpresa(resp.nombreEmpresa);
-      }
-    });
+    this.solicitudPantallasService
+      .getDatosDelaSolicitud()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (resp: Solicitud220502State) => {
+          this.solicitud220502Store.setFoliodel(resp.foliodel);
+          this.solicitud220502Store.setFerrocarril(resp.ferrocarril);
+          this.solicitud220502Store.setNumeroguia(resp.numeroguia);
+          this.solicitud220502Store.setCoordenadas(resp.coordenadas);
+          this.solicitud220502Store.setTransporte(resp.transporte);
+          this.solicitud220502Store.setNombreEmpresa(resp.nombreEmpresa);
+        },
+      });
   }
 
   /**
@@ -335,7 +403,7 @@ export class DatosGeneralesComponent implements OnDestroy {
    * @returns {void}
    */
   rotateRow(direction: number): void {
-    const TOTALROWS = this.rows.length;
+    const TOTALROWS = this.mercanciasLista.length;
     this.currentDirection = direction;
     this.currentIndex = (this.currentIndex + direction + TOTALROWS) % TOTALROWS;
   }
@@ -356,18 +424,14 @@ export class DatosGeneralesComponent implements OnDestroy {
    * @returns {void}
    */
   getAduanaIngreso(): void {
-    this.solicitudPantallasService.getAduanaIngreso().pipe(takeUntil(this.destroyed$)).subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-
-        this.aduanaIngreso = {
-          labelNombre: 'Aduana de ingreso',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.solicitudPantallasService
+      .getAduanaIngreso()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          this.aduanaIngreso.catalogos = resp.data;
+        }
+      });
   }
 
   /**
@@ -376,18 +440,14 @@ export class DatosGeneralesComponent implements OnDestroy {
    * @returns {void}
    */
   getOficianaInspeccion(): void {
-    this.solicitudPantallasService.getOficianaInspeccion().pipe(takeUntil(this.destroyed$)).subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-
-        this.oficianaInspeccion = {
-          labelNombre: 'Oficina de Inspección de Sanidad Agropecuaria',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.solicitudPantallasService
+      .getOficianaInspeccion()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          this.oficianaInspeccion.catalogos = resp.data;
+        }
+      });
   }
 
   /**
@@ -396,18 +456,14 @@ export class DatosGeneralesComponent implements OnDestroy {
    * @returns {void}
    */
   getPuntoInspeccion(): void {
-    this.solicitudPantallasService.getPuntoInspeccion().pipe(takeUntil(this.destroyed$)).subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-
-        this.puntoInspeccion = {
-          labelNombre: 'Punto de inspección',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.solicitudPantallasService
+      .getPuntoInspeccion()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          this.puntoInspeccion.catalogos = resp.data;
+        }
+      });
   }
 
   /**
@@ -416,18 +472,14 @@ export class DatosGeneralesComponent implements OnDestroy {
    * @returns {void}
    */
   getEstablecimiento(): void {
-    this.solicitudPantallasService.getEstablecimiento().pipe(takeUntil(this.destroyed$)).subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-
-        this.establecimiento = {
-          labelNombre: 'Establecimiento TIF',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.solicitudPantallasService
+      .getEstablecimiento()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          this.establecimiento.catalogos = resp.data;
+        }
+      });
   }
 
   /**
@@ -436,18 +488,14 @@ export class DatosGeneralesComponent implements OnDestroy {
    * @returns {void}
    */
   getRegimenDestinaran(): void {
-    this.solicitudPantallasService.getRegimenDestinaran().pipe(takeUntil(this.destroyed$)).subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-
-        this.regimenDestinaran = {
-          labelNombre: 'Régimen al que se destinará la mercancía',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.solicitudPantallasService
+      .getRegimenDestinaran()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          this.regimenDestinaran.catalogos = resp.data;
+        }
+      });
   }
 
   /**
@@ -456,18 +504,14 @@ export class DatosGeneralesComponent implements OnDestroy {
    * @returns {void}
    */
   getMovilizacionNacional(): void {
-    this.solicitudPantallasService.getMovilizacionNacional().pipe(takeUntil(this.destroyed$)).subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-
-        this.movilizacionNacional = {
-          labelNombre: 'Datos para movilización nacional',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.solicitudPantallasService
+      .getMovilizacionNacional()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          this.movilizacionNacional.catalogos = resp.data;
+        }
+      });
   }
 
   /**
@@ -476,18 +520,14 @@ export class DatosGeneralesComponent implements OnDestroy {
    * @returns {void}
    */
   getPuntoVerificacion(): void {
-    this.solicitudPantallasService.getPuntoVerificacion().pipe(takeUntil(this.destroyed$)).subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-
-        this.puntoVerificacion = {
-          labelNombre: 'Punto de verificación federal',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.solicitudPantallasService
+      .getPuntoVerificacion()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          this.puntoVerificacion.catalogos = resp.data;
+        }
+      });
   }
 
   /**
@@ -496,18 +536,14 @@ export class DatosGeneralesComponent implements OnDestroy {
    * @returns {void}
    */
   getEmpresaTransportista(): void {
-    this.solicitudPantallasService.getEmpresaTransportista().pipe(takeUntil(this.destroyed$)).subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-
-        this.empresaTransportista = {
-          labelNombre: 'Nombre de la empresa transportista',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.solicitudPantallasService
+      .getEmpresaTransportista()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          this.empresaTransportista.catalogos = resp.data;
+        }
+      });
   }
 
   /**
@@ -534,10 +570,10 @@ export class DatosGeneralesComponent implements OnDestroy {
     this.solicitud220502Store.setPuntoInspeccion(event.id);
   }
 
-  /** 
-   * Método para seleccionar el régimen de la solicitud. 
+  /**
+   * Método para seleccionar el régimen de la solicitud.
    * Actualiza el estado con el ID del régimen seleccionado.
-   * 
+   *
    * @param event - Objeto de tipo Catalogo que contiene la información del régimen seleccionado.
    */
   seleccionarRegimen(event: Catalogo): void {
@@ -552,20 +588,10 @@ export class DatosGeneralesComponent implements OnDestroy {
     this.solicitud220502Store.setMovilizacion(event.id);
   }
 
-  /** 
-   * Método para establecer el valor de captura de datos de mercancía. 
-   * Actualiza el estado con el valor proporcionado.
-   * 
-   * @param value - Valor de tipo string o number que representa la captura de datos de la mercancía.
-   */
-  setCapturaDatosMercancia(value: string | number): void {
-    this.solicitud220502Store.setCapturaDatosMercancia(value);
-  }
-
-  /** 
-   * Método para seleccionar el punto de verificación. 
+  /**
+   * Método para seleccionar el punto de verificación.
    * Actualiza el estado con el ID del punto seleccionado.
-   * 
+   *
    * @param event - Objeto de tipo Catalogo que contiene la información del punto de verificación seleccionado.
    */
   seleccionarPuntoVerificacion(event: Catalogo): void {

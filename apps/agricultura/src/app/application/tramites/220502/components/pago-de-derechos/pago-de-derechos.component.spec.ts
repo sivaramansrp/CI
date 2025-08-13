@@ -2,19 +2,19 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { PagoDeDerechosComponent } from './pago-de-derechos.component';
-import { RevisionService } from '../../services/revision.service';
-import { Solicitud220501Store } from '../../estados/tramites220501.store';
-import { Solicitud220501Query } from '../../estados/tramites220501.query';
+import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
+import { Solicitud220502Store } from '../../estados/tramites220502.store';
+import { Solicitud220502Query } from '../../estados/tramites220502.query';
 
 describe('PagoDeDerechosComponent', () => {
   let component: PagoDeDerechosComponent;
   let fixture: ComponentFixture<PagoDeDerechosComponent>;
-  let mockRevisionService: jest.Mocked<RevisionService>;
-  let mockSolicitudStore: jest.Mocked<Solicitud220501Store>;
-  let mockSolicitudQuery: jest.Mocked<Solicitud220501Query>;
+  let solicitudPantallasService: jest.Mocked<SolicitudPantallasService>;
+  let mockSolicitudStore: jest.Mocked<Solicitud220502Store>;
+  let mockSolicitudQuery: jest.Mocked<Solicitud220502Query>;
 
   beforeEach(async () => {
-    mockRevisionService = {
+    solicitudPantallasService = {
       getJustificacion: jest.fn().mockReturnValue(of({ code: 200, data: [{ id: 1, descripcion: 'Justificación 1' }] })),
       getBanco: jest.fn().mockReturnValue(of({ code: 200, data: [{ id: 1, descripcion: 'Banco 1' }] })),
       getPagoDeDerechos: jest.fn().mockReturnValue(of({
@@ -26,7 +26,7 @@ describe('PagoDeDerechosComponent', () => {
         importePago: '1000',
         fetchapago: '2025-04-22',
       })),
-    } as unknown as jest.Mocked<RevisionService>;
+    } as unknown as jest.Mocked<SolicitudPantallasService>;
 
     mockSolicitudStore = {
       setJustificacion: jest.fn(),
@@ -37,7 +37,7 @@ describe('PagoDeDerechosComponent', () => {
       setImportePago: jest.fn(),
       setFetchaPago: jest.fn(),
       setExentoPagoNo: jest.fn(),
-    } as unknown as jest.Mocked<Solicitud220501Store>;
+    } as unknown as jest.Mocked<Solicitud220502Store>;
 
     mockSolicitudQuery = {
       selectSolicitud$: of({
@@ -49,16 +49,16 @@ describe('PagoDeDerechosComponent', () => {
         importePago: '1000',
         fetchapago: '2025-04-22',
       }),
-    } as jest.Mocked<Solicitud220501Query>;
+    } as jest.Mocked<Solicitud220502Query>;
 
     await TestBed.configureTestingModule({
       declarations: [],
       imports: [ReactiveFormsModule,PagoDeDerechosComponent],
       providers: [
         FormBuilder,
-        { provide: RevisionService, useValue: mockRevisionService },
-        { provide: Solicitud220501Store, useValue: mockSolicitudStore },
-        { provide: Solicitud220501Query, useValue: mockSolicitudQuery },
+        { provide: SolicitudPantallasService, useValue: solicitudPantallasService },
+        { provide: Solicitud220502Store, useValue: mockSolicitudStore },
+        { provide: Solicitud220502Query, useValue: mockSolicitudQuery },
       ],
     }).compileComponents();
 
@@ -75,26 +75,26 @@ describe('PagoDeDerechosComponent', () => {
     component.inicializarFormulario();
     expect(component.pagoForm.get('banco')).toBeTruthy();
     expect(component.pagoForm.get('justificacion')).toBeTruthy();
-    expect(mockRevisionService.getJustificacion).toHaveBeenCalled();
-    expect(mockRevisionService.getBanco).toHaveBeenCalled();
-    expect(mockRevisionService.getPagoDeDerechos).toHaveBeenCalled();
+    expect(solicitudPantallasService.getJustificacion).toHaveBeenCalled();
+    expect(solicitudPantallasService.getBanco).toHaveBeenCalled();
+    expect(solicitudPantallasService.getPagoDeDerechos).toHaveBeenCalled();
   });
 
   it('should get justificación and update the catalog', () => {
     component.getJustificacion();
-    expect(mockRevisionService.getJustificacion).toHaveBeenCalled();
+    expect(solicitudPantallasService.getJustificacion).toHaveBeenCalled();
     expect(component.justificacion.catalogos).toEqual([{ id: 1, descripcion: 'Justificación 1' }]);
   });
 
   it('should get banco and update the catalog', () => {
     component.getBanco();
-    expect(mockRevisionService.getBanco).toHaveBeenCalled();
+    expect(solicitudPantallasService.getBanco).toHaveBeenCalled();
     expect(component.banco.catalogos).toEqual([{ id: 1, descripcion: 'Banco 1' }]);
   });
 
   it('should get pago de derechos and update the store', () => {
     component.getPagoDeDerechos();
-    expect(mockRevisionService.getPagoDeDerechos).toHaveBeenCalled();
+    expect(solicitudPantallasService.getPagoDeDerechos).toHaveBeenCalled();
     expect(mockSolicitudStore.setJustificacion).toHaveBeenCalledWith('Justificación 1');
     expect(mockSolicitudStore.setClaveReferencia).toHaveBeenCalledWith('12345');
     expect(mockSolicitudStore.setCadenaDependencia).toHaveBeenCalledWith('Dependencia 1');

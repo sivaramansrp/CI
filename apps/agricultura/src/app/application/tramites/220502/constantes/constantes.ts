@@ -1,4 +1,6 @@
-import { Row, Rows, Tabla } from "../models/pago-de-derechos.model";
+import { Row, Rows } from '../models/pago-de-derechos.model';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { MercanciasLista } from '../models/datos-generales.model';
 
 /**
  * Constantes para el catálogo de tipos de solicitud
@@ -23,7 +25,7 @@ export const CATALOGOS_ID = {
   CAT_ESTADO: 'estado',
   CAT_REPRESENTACION_FEDERAL: 'representacion-federal',
   DATOS_PERSONA_FISICA: 21,
-}
+};
 
 /**
  * Lista de elementos de tipo Row.
@@ -62,89 +64,345 @@ export const TERCEROS_TEXTO_DE_ALERTA =
 /**
  * Filas de datos predefinidas.
  */
-export const ROWS: Tabla[] = [
+export const MERCANCIAS_LISTA: MercanciasLista[] = [
   {
-    Partida: '1',
-    Tiporequisito: 'Inspección ocular',
-    Requisito: 'Requisito',
-    Certificado: 123456,
-    Fraccion: '01039201',
-    FraccionDescripcion: 'Con pedigree o certificado de alto registro.',
-    Nico: '00',
-    NicoDescripcion: 'Descripción del NICO',
-    Descripcion: 'Descripción de la mercancía',
-    Umt: 'Kilogramo',
-    CantidadUMT: 100,
-    Umc: 'Unidad de medida comercialización',
-    CantidadUMC: 50,
-    Especie: 'Especie de la mercancía',
-    Uso: 'Uso de la mercancía',
-    PaisOrigen: 'País de origen',
-    PaisProcedencia: 'País de procedencia',
-    Presentacion: 'Presentación',
-    CantidadPresentacion: 10,
-    TipoPresentacion: 'Tipo de presentación',
-    TipoPlanta: 'Tipo planta',
-    PlantaAutorizadaOrigen: 'Planta autorizada de origen',
-    CertificadoInternacionalElectronico: 'Certificado Internacional Electrónico'
-  },
-  {
-    Partida: '2',
-    Tiporequisito: 'inspección de oído',
-    Requisito: 'Requisito',
-    Certificado: 123456,
-    Fraccion: '01039201',
-    FraccionDescripcion: 'Con pedigree o certificado de alto registro.',
-    Nico: '00',
-    NicoDescripcion: 'Descripción del NICO',
-    Descripcion: 'Descripción de la mercancía',
-    Umt: 'Kilogramo',
-    CantidadUMT: 100,
-    Umc: 'Unidad de medida comercialización',
-    CantidadUMC: 50,
-    Especie: 'Especie de la mercancía',
-    Uso: 'Uso de la mercancía',
-    PaisOrigen: 'País de origen',
-    PaisProcedencia: 'País de procedencia',
-    Presentacion: 'Presentación',
-    CantidadPresentacion: 10,
-    TipoPresentacion: 'Tipo de presentación',
-    TipoPlanta: 'Tipo planta',
-    PlantaAutorizadaOrigen: 'Planta autorizada de origen',
-    CertificadoInternacionalElectronico: 'Certificado Internacional Electrónico'
-  },
-  {
-    Partida: '3',
-    Tiporequisito: 'inspección de nariz',
-    Requisito: 'Requisito',
-    Certificado: 123456,
-    Fraccion: '01039201',
-    FraccionDescripcion: 'Con pedigree o certificado de alto registro.',
-    Nico: '00',
-    NicoDescripcion: 'Descripción del NICO',
-    Descripcion: 'Descripción de la mercancía',
-    Umt: 'Kilogramo',
-    CantidadUMT: 100,
-    Umc: 'Unidad de medida comercialización',
-    CantidadUMC: 50,
-    Especie: 'Especie de la mercancía',
-    Uso: 'Uso de la mercancía',
-    PaisOrigen: 'País de origen',
-    PaisProcedencia: 'País de procedencia',
-    Presentacion: 'Presentación',
-    CantidadPresentacion: 10,
-    TipoPresentacion: 'Tipo de presentación',
-    TipoPlanta: 'Tipo planta',
-    PlantaAutorizadaOrigen: 'Planta autorizada de origen',
-    CertificadoInternacionalElectronico: 'Certificado Internacional Electrónico'
-  },
+    partida: '1',
+    tiporequisito: 'Inspección ocular',
+    requisito: 'Requisito',
+    certificado: 123456,
+    fraccion: '01039201',
+    fracciondescripcion: 'Con pedigree o certificado de alto registro.',
+    nicod: '00',
+    nicodescripcion: 'Descripción del NICO',
+    descripcion: 'Descripción de la mercancía',
+    umt: 'Kilogramo',
+    cantidadumt: 100,
+    umc: 'Unidad de medida comercialización',
+    cantidadumc: 50,
+    tipodeproducto: 'Especie de la mercancía',
+    uso: 'Uso de la mercancía',
+    paisorigen: 'País de origen',
+    paisprocedencia: 'País de procedencia',
+    certificadoInternacionalElectronico:
+      'Certificado Internacional Electrónico',
+  }
 ];
 
 /**
  * Constante que define el parámetro utilizado para determinar el tipo de datos a mostrar.
  */
 export const PARAMETERO = {
- EVALUAR: 'FLUJO_FUNCIONARIO_EVALUAR',
- READ_PROCEDEMENTO: 'READ_PROCEDURE',
- SUBSECUENTES: 'SUBSECUENTES'
-}
+  EVALUAR: 'FLUJO_FUNCIONARIO_EVALUAR',
+  READ_PROCEDEMENTO: 'READ_PROCEDURE',
+  SUBSECUENTES: 'SUBSECUENTES',
+};
+
+/**
+ * Configuración de campos y catálogos utilizados en el formulario de ingreso y control de mercancías.
+ * Cada constante define las propiedades visuales y funcionales de un campo del formulario.
+ *
+ * @property {string} labelNombre - Texto que se muestra como etiqueta del campo.
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {string} primerOpcion - Texto que se muestra como primera opción en un selector.
+ * @property {any[]} catalogos - Lista de elementos para llenar el selector correspondiente.
+ */
+export const ADUANA_INGRESO = {
+  labelNombre: 'Aduana de ingreso',
+  required: false,
+  primerOpcion: 'Selecciona un opción',
+  catalogos: [],
+};
+
+/**
+ * Configuración para el campo "Oficina de Inspección de Sanidad Agropecuaria".
+ *
+ * @property {string} labelNombre - Etiqueta que se muestra en el formulario.
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {string} primerOpcion - Texto que se muestra como primera opción en un selector.
+ * @property {any[]} catalogos - Lista de opciones disponibles para seleccionar.
+ */
+export const OFICIANA_INSPECCION = {
+  labelNombre: 'Oficina de Inspección de Sanidad Agropecuaria',
+  required: false,
+  primerOpcion: 'Selecciona un opción',
+  catalogos: [],
+};
+
+/**
+ * Configuración para el campo "Punto de inspección".
+ *
+ * @property {string} labelNombre - Etiqueta que se muestra en el formulario.
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {string} primerOpcion - Texto que se muestra como primera opción en un selector.
+ * @property {any[]} catalogos - Lista de opciones disponibles para seleccionar.
+ */
+export const PUNTO_INSPECCION = {
+  labelNombre: 'Punto de inspección',
+  required: false,
+  primerOpcion: 'Selecciona un opción',
+  catalogos: [],
+};
+
+/**
+ * Configuración para el campo "Establecimiento TIF".
+ *
+ * @property {string} labelNombre - Etiqueta que se muestra en el formulario.
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {string} primerOpcion - Texto que se muestra como primera opción en un selector.
+ * @property {any[]} catalogos - Lista de opciones disponibles para seleccionar.
+ */
+export const ESTABLECIMIENTO = {
+  labelNombre: 'Establecimiento TIF',
+  required: false,
+  primerOpcion: 'Selecciona un opción',
+  catalogos: [],
+};
+
+/**
+ * Configuración para el campo "Régimen al que se destinará la mercancía".
+ *
+ * @property {string} labelNombre - Etiqueta que se muestra en el formulario.
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {string} primerOpcion - Texto que se muestra como primera opción en un selector.
+ * @property {any[]} catalogos - Lista de opciones disponibles para seleccionar.
+ */
+export const REGIMEN_DESTINARAN = {
+  labelNombre: 'Régimen al que se destinará la mercancía',
+  required: false,
+  primerOpcion: 'Selecciona un opción',
+  catalogos: [],
+};
+
+/**
+ * Configuración para el campo "Datos para movilización nacional".
+ *
+ * @property {string} labelNombre - Etiqueta que se muestra en el formulario.
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {string} primerOpcion - Texto que se muestra como primera opción en un selector.
+ * @property {any[]} catalogos - Lista de opciones disponibles para seleccionar.
+ */
+export const MOVILIZACION_NACIONAL = {
+  labelNombre: 'Datos para movilización nacional',
+  required: false,
+  primerOpcion: 'Selecciona un opción',
+  catalogos: [],
+};
+
+/**
+ * Configuración para el campo "Punto de verificación federal".
+ *
+ * @property {string} labelNombre - Etiqueta que se muestra en el formulario.
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {string} primerOpcion - Texto que se muestra como primera opción en un selector.
+ * @property {any[]} catalogos - Lista de opciones disponibles para seleccionar.
+ */
+export const PUNTO_VERIFICACION = {
+  labelNombre: 'Punto de verificación federal',
+  required: false,
+  primerOpcion: 'Selecciona un opción',
+  catalogos: [],
+};
+
+/**
+ * Configuración para el campo "Nombre de la empresa transportista".
+ *
+ * @property {string} labelNombre - Etiqueta que se muestra en el formulario.
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {string} primerOpcion - Texto que se muestra como primera opción en un selector.
+ * @property {any[]} catalogos - Lista de opciones disponibles para seleccionar.
+ */
+export const EMPRESA_TRANSPORTISTA = {
+  labelNombre: 'Nombre de la empresa transportista',
+  required: false,
+  primerOpcion: 'Selecciona un opción',
+  catalogos: [],
+};
+
+/**
+ * Configuración de las columnas que se mostrarán en la tabla de mercancías.
+ * Cada objeto define el encabezado, la clave a mostrar y el orden de la columna.
+ */
+export const CONFIGURACION_MERCANCIAS_COLUMNAS: ConfiguracionColumna<MercanciasLista>[] =
+  [
+    {
+      encabezado: 'No. partida',
+      clave: (item: MercanciasLista) => item.partida,
+      orden: 1,
+    },
+    {
+      encabezado: 'Tipo de requisito',
+      clave: (item: MercanciasLista) => item.tiporequisito,
+      orden: 2,
+    },
+    {
+      encabezado: 'Requisito',
+      clave: (item: MercanciasLista) => item.requisito,
+      orden: 3,
+    },
+    {
+      encabezado: 'Número de certificado internacional',
+      clave: (item: MercanciasLista) => item.certificado,
+      orden: 4,
+    },
+    {
+      encabezado: 'Fracción arancelaria',
+      clave: (item: MercanciasLista) => item.fraccion,
+      orden: 5,
+    },
+    {
+      encabezado: 'Descripción de la fracción',
+      clave: (item: MercanciasLista) => item.fracciondescripcion,
+      orden: 6,
+    },
+    {
+      encabezado: 'Nico',
+      clave: (item: MercanciasLista) => item.nicod,
+      orden: 7,
+    },
+    {
+      encabezado: 'Descripción Nico',
+      clave: (item: MercanciasLista) => item.nicodescripcion,
+      orden: 8,
+    },
+    {
+      encabezado: 'Descripción',
+      clave: (item: MercanciasLista) => item.descripcion,
+      orden: 9,
+    },
+    {
+      encabezado: 'Unidad de medida de tarifa (UMT)',
+      clave: (item: MercanciasLista) => item.umt,
+      orden: 10,
+    },
+    {
+      encabezado: 'Cantidad UMT',
+      clave: (item: MercanciasLista) => item.cantidadumt,
+      orden: 11,
+    },
+    {
+      encabezado: 'Unidad de medida de comercializacion (UMC)',
+      clave: (item: MercanciasLista) => item.umc,
+      orden: 12,
+    },
+    {
+      encabezado: 'Cantidad UMC',
+      clave: (item: MercanciasLista) => item.cantidadumc,
+      orden: 13,
+    },
+    {
+      encabezado: 'Uso',
+      clave: (item: MercanciasLista) => item.uso,
+      orden: 14,
+    },
+    {
+      encabezado: 'Tipo de producto',
+      clave: (item: MercanciasLista) => item.tipodeproducto,
+      orden: 15,
+    },
+    {
+      encabezado: 'País de orígen',
+      clave: (item: MercanciasLista) => item.paisorigen,
+      orden: 16,
+    },
+    {
+      encabezado: 'Pais de procedencia',
+      clave: (item: MercanciasLista) => item.paisprocedencia,
+      orden: 17,
+    },
+    {
+      encabezado: 'Certificado Internacional Electrónico',
+      clave: (item: MercanciasLista) =>
+        item.certificadoInternacionalElectronico,
+      orden: 18,
+    },
+  ];
+
+/**
+ * Configuración para el campo "Certificados autorizados pendientes".
+ *
+ * @property {string} labelNombre - Etiqueta que se muestra en el formulario.
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {string} primerOpcion - Texto que se muestra como primera opción en un selector.
+ * @property {any[]} catalogos - Lista de opciones disponibles para seleccionar.
+ */
+export const CERTIFICADOS_AUTORIZADOS = {
+  labelNombre: 'Certificados autorizados pendientes',
+  required: true,
+  primerOpcion: 'Selecciona un opción',
+  catalogos: [],
+};
+
+/**
+ * Configuración para el campo "Hora de inspección".
+ *
+ * @property {string} labelNombre - Etiqueta que se muestra en el formulario.
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {string} primerOpcion - Texto que se muestra como primera opción en un selector.
+ * @property {any[]} catalogos - Lista de opciones disponibles para seleccionar.
+ */
+export const HORA_DE_INSPECCION = {
+  labelNombre: 'Hora de inspección',
+  required: true,
+  primerOpcion: 'Selecciona un opción',
+  catalogos: [],
+};
+
+/**
+ * Configuración para el campo "Aduana de ingreso".
+ *
+ * @property {string} labelNombre - Etiqueta que se muestra en el formulario.
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {string} primerOpcion - Texto que se muestra como primera opción en un selector.
+ * @property {any[]} catalogos - Lista de opciones disponibles para seleccionar.
+ */
+export const ADUANA_DE_INGRESO = {
+  labelNombre: 'Aduana de ingreso',
+  required: false,
+  primerOpcion: 'Selecciona un opción',
+  catalogos: [],
+};
+
+/**
+ * Configuración para el campo "Oficina de inspección de Sanidad Agropecuaria".
+ *
+ * @property {string} labelNombre - Etiqueta que se muestra en el formulario.
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {string} primerOpcion - Texto que se muestra como primera opción en un selector.
+ * @property {any[]} catalogos - Lista de opciones disponibles para seleccionar.
+ */
+export const SANIDAD_AGROPECUARIA = {
+  labelNombre: 'Oficina de inspección de Sanidad Agropecuaria',
+  required: false,
+  primerOpcion: 'Selecciona un opción',
+  catalogos: [],
+};
+
+/**
+ * Configuración para el campo "Punto de inspección".
+ *
+ * @property {string} labelNombre - Etiqueta que se muestra en el formulario.
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {string} primerOpcion - Texto que se muestra como primera opción en un selector.
+ * @property {any[]} catalogos - Lista de opciones disponibles para seleccionar.
+ */
+export const PUNTO_DE_INSPECCION = {
+  labelNombre: 'Punto de inspección',
+  required: false,
+  primerOpcion: 'Selecciona un opción',
+  catalogos: [],
+};
+
+/**
+ * Configuración para el campo "Tipo contenedor".
+ *
+ * @property {string} labelNombre - Etiqueta que se muestra en el formulario.
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {string} primerOpcion - Texto que se muestra como primera opción en un selector.
+ * @property {any[]} catalogos - Lista de opciones disponibles para seleccionar.
+ */
+export const TIPO_CONTENEDOR = {
+  labelNombre: 'Tipo contenedor',
+  required: false,
+  primerOpcion: 'Selecciona un opción',
+  catalogos: [],
+};

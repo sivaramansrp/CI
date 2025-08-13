@@ -15,34 +15,38 @@ import { TercerosRelacionadosComponent } from '../terceros-relacionados/terceros
   templateUrl: './revision-documental.component.html',
   styleUrl: './revision-documental.component.scss',
   standalone: true,
-  imports: [DatosGeneralesComponent, TercerosRelacionadosComponent, PagoDeDerechosComponent, CommonModule],
+  imports: [
+    DatosGeneralesComponent,
+    TercerosRelacionadosComponent,
+    PagoDeDerechosComponent,
+    CommonModule,
+  ],
 })
 export class RevisionDocumentalComponent implements OnInit, OnDestroy {
-
   /**
-  * Índice del tab seleccionado.
-  * @type {number}
-  */
+   * Índice del tab seleccionado.
+   * @type {number}
+   */
   indice: number = 1;
   /**
- * Indica si el contenido es colapsable.
- * @type {boolean}
- */
+   * Indica si el contenido es colapsable.
+   * @type {boolean}
+   */
   colapsable: boolean = true;
   /**
-  * Índice actual de la fila.
-  * @type {number}
-  */
+   * Índice actual de la fila.
+   * @type {number}
+   */
   currentIndex: number = 1;
   /**
-  * Filas de datos.
-  * @type {any[]}
-  */
+   * Filas de datos.
+   * @type {any[]}
+   */
   rows: { [key: string]: string }[] = [];
   /**
-  * Formulario principal.
-  * @type {any}
-  */
+   * Formulario principal.
+   * @type {any}
+   */
   forma: string = '';
 
   /**
@@ -50,7 +54,7 @@ export class RevisionDocumentalComponent implements OnInit, OnDestroy {
    */
   public consultaState!: ConsultaioState;
 
-  /** 
+  /**
    * Datos de respuesta del servidor utilizados para actualizar el formulario.
    */
   public esDatosRespuesta: boolean = false;
@@ -62,26 +66,28 @@ export class RevisionDocumentalComponent implements OnInit, OnDestroy {
 
   /**
    * Constructor del componente.
-   * Se utiliza para la inyección de dependencias.
-   * 
-   * @param cdr Servicio para detectar cambios manualmente.
+   * Se utiliza para la inyección de dependencias necesarias para la funcionalidad del componente.
+   *
+   * @param consultaQuery Servicio para consultar información.
+   * @param solicitudPantallasService Servicio para gestionar las solicitudes de pantallas.
    */
   constructor(
     private consultaQuery: ConsultaioQuery,
-    private solicitudPantallasService: SolicitudPantallasService,
+    private solicitudPantallasService: SolicitudPantallasService
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
 
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
-      .pipe(takeUntil(this.destroyNotifier$),
+      .pipe(
+        takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.consultaState = seccionState;
         })
       )
       .subscribe();
-      
+
     if (this.consultaState.update) {
       this.guardarDatosFormulario();
     } else {
@@ -95,9 +101,8 @@ export class RevisionDocumentalComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.solicitudPantallasService
-      .getRegistroTomaMuestrasMercanciasData().pipe(
-        takeUntil(this.destroyNotifier$)
-      )
+      .getRegistroTomaMuestrasMercanciasData()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp) {
           this.esDatosRespuesta = true;
