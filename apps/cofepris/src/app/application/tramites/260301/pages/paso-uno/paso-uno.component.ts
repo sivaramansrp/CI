@@ -87,17 +87,6 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
           this.indice = tab;
         });
 
-      // this.consultaQuery.selectConsultaioState$
-      // .pipe(takeUntil(this.destroyNotifier$))
-      // .subscribe((seccionState) => {
-      //   if(seccionState.update){
-      //     this.formularioDeshabilitado = false;
-      //       this.guardarDatosFormulario();
-      //   }
-      //   if (seccionState.readonly) {
-      //     this.formularioDeshabilitado = true;
-      //   }
-      // });
   }
 
   /**
