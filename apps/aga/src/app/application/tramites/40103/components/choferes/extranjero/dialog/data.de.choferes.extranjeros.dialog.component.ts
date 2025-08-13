@@ -1,12 +1,16 @@
-import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
-import { Catalogo, CategoriaMensaje, Notificacion, NotificacionesComponent, TipoNotificacionEnum } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent, SharedModule, TituloComponent } from "@libs/shared/data-access-user/src";
+import { CommonModule } from "@angular/common";
+
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
-import { Subject, firstValueFrom, takeUntil } from "rxjs";
-import { REGEX_SOLO_DIGITOS, REGEX_SIN_DIGITOS } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { CatalogoSelectComponent, SharedModule, TituloComponent } from "@libs/shared/data-access-user/src";
+import { REGEX_POSTAL, REGEX_SIN_DIGITOS, REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 import { Chofer40103Service } from "../../../../estados/chofer40103.service";
 import { ChoferesExtranjeros } from '../../../../models/registro-muestras-mercancias.model';
-import { CommonModule } from "@angular/common";
+
+import { Catalogo, CategoriaMensaje, Notificacion, NotificacionesComponent, TipoNotificacionEnum } from '@ng-mf/data-access-user';
+import { Subject, firstValueFrom, takeUntil } from "rxjs";
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 /**
  * Componente para la gestión del diálogo de datos de choferes extranjeros en el trámite 40103.
@@ -42,7 +46,8 @@ import { CommonModule } from "@angular/common";
     FormsModule,
     CatalogoSelectComponent,
     TituloComponent,
-    NotificacionesComponent
+    NotificacionesComponent,
+    TooltipModule
   ],
 })
 export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDestroy {
@@ -50,6 +55,12 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    * Marcar para mostrar un error de solo dígitos cuando el usuario escribe caracteres que no son dígitos.
    */
   showDigitsOnlyError: boolean = false;
+
+  /**
+   * Indica si el formulario ha sido enviado.
+   * @type {boolean}
+   */
+  enviado: boolean = false;
 
   /**
    * Indica si el formulario está en modo solo lectura.
@@ -73,12 +84,12 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    * Permite solo dígitos en el campo numeroDelSeguroSocial.
    */
   enInputSoloDigitos(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const valorOriginal = input.value;
-    const soloDigitos = valorOriginal.replace(REGEX_SIN_DIGITOS, '');
-    this.showDigitsOnlyError = valorOriginal !== soloDigitos;
-    input.value = soloDigitos;
-    this.formChoferes.get('numeroDelSeguroSocial')?.setValue(soloDigitos, { emitEvent: false });
+    const ENTRADA = event.target as HTMLInputElement;
+    const VALOR_ORIGINAL = ENTRADA.value;
+    const SOLO_DIGITOS = VALOR_ORIGINAL.replace(REGEX_SIN_DIGITOS, '');
+    this.showDigitsOnlyError = VALOR_ORIGINAL !== SOLO_DIGITOS;
+    ENTRADA.value = SOLO_DIGITOS;
+    this.formChoferes.get('numeroDelSeguroSocial')?.setValue(SOLO_DIGITOS, { emitEvent: false });
     if (!this.showDigitsOnlyError) {
       setTimeout(() => { this.showDigitsOnlyError = false; }, 1000);
     }
@@ -134,9 +145,9 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
 
   /**
    * Alerta de notificación para mostrar mensajes al usuario.
-   * @type {Notificacion}
+   * @type {Notificacion | undefined}
    */
-  public alertaNotificacion!: Notificacion;
+  public alertaNotificacion!: Notificacion | undefined;
 
   // ======================= MÉTODOS =======================
 
@@ -162,17 +173,17 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
       primerApellido: [{ value: this.datosDeChofere?.primerApellido, disabled: this.readonly }, this.readonly ? [] : [Validators.required, Validators.maxLength(50)]],
       segundoApellido: [{ value: this.datosDeChofere?.segundoApellido, disabled: this.readonly }],
 
-      // Sin validadores para campos siempre deshabilitados
-      nacionalidad: [{ value: this.datosDeChofere?.nacionalidad, disabled: true }], 
+      // Campos con validadores según readonly
+      nacionalidad: [{ value: this.datosDeChofere?.nacionalidad, disabled: this.readonly }, this.readonly ? [] : [Validators.required]], 
       numeroDeGafete: [{ value: this.datosDeChofere?.numeroDeGafete, disabled: true }],
       vigenciaGafete: [{ value: this.datosDeChofere?.vigenciaGafete, disabled: true }],
 
       numeroDelSeguroSocial: [{ value: this.datosDeChofere?.numeroDelSeguroSocial, disabled: this.readonly }, this.readonly ? [] : [Validators.required, Validators.maxLength(11), Validators.pattern(REGEX_SOLO_DIGITOS)]],
       numberDeIdeFiscal: [{ value: this.datosDeChofere?.numberDeIdeFiscal, disabled: this.readonly }, this.readonly ? [] : [Validators.required, Validators.maxLength(13)]],
 
-      // Sin validadores para campos siempre deshabilitados
-      pais: [{ value: this.datosDeChofere?.pais, disabled: true }],
-      codigoPostal: [{ value: this.datosDeChofere?.codigoPostal, disabled: this.readonly }, this.readonly ? [] : [Validators.required, Validators.maxLength(5), Validators.pattern(/^\d{5}$/)]],
+      // Campos con validadores según readonly
+      pais: [{ value: this.datosDeChofere?.pais, disabled: this.readonly }, this.readonly ? [] : [Validators.required]],
+      codigoPostal: [{ value: this.datosDeChofere?.codigoPostal, disabled: this.readonly }, this.readonly ? [] : [Validators.required, Validators.maxLength(5), Validators.pattern(REGEX_POSTAL)]],
       estado: [{ value: this.datosDeChofere?.estado, disabled: this.readonly }, this.readonly ? [] : [Validators.required]],
 
       calle: [{ value: this.datosDeChofere?.calle, disabled: this.readonly }, this.readonly ? [] : [Validators.required, Validators.maxLength(100)]],
@@ -252,7 +263,7 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    */
   onEstadoChange(value: Catalogo): void {
     this.fetchMunicipiosByEstado(value);
-    // Note: municipioAlcaldia and colonia controls don't exist in current form
+    // Nota: los controles municipioAlcaldia y colonia no existen en el formulario actual
     // Restablecer solo si se agregan al formulario en el futuro
   }
 
@@ -263,12 +274,12 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    */
   private async fetchMunicipiosByEstado(value: Catalogo): Promise<Catalogo[]> {
     try {
-      const DATA = await firstValueFrom(
+      const DATOS = await firstValueFrom(
         this.chofer40103Service
           .getMunicipiosPorEstado(value.id)
           .pipe(takeUntil(this.destroyed$))
       );
-      this.municipioList = DATA || [];
+      this.municipioList = DATOS || [];
     } catch (error) {
       // Manejo de errores si es necesario
     }
@@ -294,12 +305,12 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    */
   private async fetchColoniasByMunicipio(value: Catalogo): Promise<Catalogo[]> {
     try {
-      const DATA = await firstValueFrom(
+      const DATOS = await firstValueFrom(
         this.chofer40103Service
           .getColoniasPorMunicipio(value.id)
           .pipe(takeUntil(this.destroyed$))
       );
-      this.coloniaList = DATA || [];
+      this.coloniaList = DATOS || [];
     } catch (error) {
       // Manejo de errores si es necesario
     }
@@ -318,7 +329,7 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    * @returns {void}
    */
   cerrarModal(): void {
-    this.alertaNotificacion = undefined as any;
+    this.alertaNotificacion = undefined;
     this.showDigitsOnlyError = false;
     this.showNotification = false;
     
@@ -397,13 +408,13 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
     }
 
     try {
-      const response = await firstValueFrom(
+      const RESPUESTA = await firstValueFrom(
         this.chofer40103Service
           .obtenerTablaDatos<ChoferesExtranjeros>('mock-data-choferes-extranjero.json')
           .pipe(takeUntil(this.destroyed$))
       );
 
-      if (!response || response.length === 0) {
+      if (!RESPUESTA || RESPUESTA.length === 0) {
         this.alertaNotificacion = {
           tipoNotificacion: TipoNotificacionEnum.ALERTA,
           categoria: CategoriaMensaje.INFORMACION,
@@ -418,11 +429,11 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
         return;
       }
       
-      const choferData = response[0];
+      const DATOS_CHOFER = RESPUESTA[0];
       
-      await this.actualizarListasDatos(choferData);
+      await this.actualizarListasDatos(DATOS_CHOFER);
       
-      this.formChoferes.patchValue(choferData);
+      this.formChoferes.patchValue(DATOS_CHOFER);
     } catch (error) {
       this.alertaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
@@ -448,31 +459,31 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
       return;
     }
 
-    const paisFound = this.paisList.find((p: Catalogo) => p.descripcion === data.pais);
-    if (paisFound) {
-      data.pais = paisFound.id.toString();
+    const PAISES_ENCONTRADOS = this.paisList.find((p: Catalogo) => p.descripcion === data.pais);
+    if (PAISES_ENCONTRADOS) {
+      data.pais = PAISES_ENCONTRADOS.id.toString();
       
-      await this.obtenerEstadosPorPais(paisFound);
+      await this.obtenerEstadosPorPais(PAISES_ENCONTRADOS);
     }
 
     if (data.estado && this.estadoList.length > 0) {
-      const estadoFound = this.estadoList.find((e: Catalogo) => e.descripcion === data.estado);
-      if (estadoFound) {
-        data.estado = estadoFound.id.toString();
+      const ESTADO_ENCONTRADO = this.estadoList.find((e: Catalogo) => e.descripcion === data.estado);
+      if (ESTADO_ENCONTRADO) {
+        data.estado = ESTADO_ENCONTRADO.id.toString();
       }
     }
 
     if (data.paisDeResidencia) {
-      const paisResidenciaFound = this.paisList.find((p: Catalogo) => p.descripcion === data.paisDeResidencia);
-      if (paisResidenciaFound) {
-        data.paisDeResidencia = paisResidenciaFound.id.toString();
+      const PAIS_RESIDENCIA_ENCONTRADO = this.paisList.find((p: Catalogo) => p.descripcion === data.paisDeResidencia);
+      if (PAIS_RESIDENCIA_ENCONTRADO) {
+        data.paisDeResidencia = PAIS_RESIDENCIA_ENCONTRADO.id.toString();
       }
     }
 
     if (data.nacionalidad) {
-      const nacionalidadFound = this.paisList.find((p: Catalogo) => p.descripcion === data.nacionalidad);
-      if (nacionalidadFound) {
-        data.nacionalidad = nacionalidadFound.id.toString();
+      const NACIONALIDAD_ENCONTRADA = this.paisList.find((p: Catalogo) => p.descripcion === data.nacionalidad);
+      if (NACIONALIDAD_ENCONTRADA) {
+        data.nacionalidad = NACIONALIDAD_ENCONTRADA.id.toString();
       }
     }
 
@@ -502,41 +513,42 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
       return;
     }
     
+    this.enviado = true;
     this.formChoferes.markAllAsTouched();
     this.formChoferes.updateValueAndValidity();
 
     // Obtener todos los valores del formulario incluyendo controles deshabilitados
-    const datosFormulario = this.formChoferes.getRawValue() as ChoferesExtranjeros;
+    const DATOS_FORMULARIO = this.formChoferes.getRawValue() as ChoferesExtranjeros;
     
     // Validar solo campos habilitados
-    const camposInvalidos: string[] = [];
+    const CAMPOS_INVALIDOS: string[] = [];
     
     Object.keys(this.formChoferes.controls).forEach(clave => {
-      const control = this.formChoferes.get(clave);
+      const CONTROL = this.formChoferes.get(clave);
       
       // Omitir validación para controles deshabilitados
-      if (control?.disabled) {
+      if (CONTROL?.disabled) {
         return;
       }
       
       // Verificar si el control habilitado es inválido
-      if (control?.invalid) {
+      if (CONTROL?.invalid) {
         // Para campos requeridos, verificar si tienen valor
-        if (control.hasError('required')) {
-          camposInvalidos.push(clave);
+        if (CONTROL.hasError('required')) {
+          CAMPOS_INVALIDOS.push(clave);
         }
         // Para errores de patrón/formato
-        else if (control.hasError('pattern') || control.hasError('email')) {
-          camposInvalidos.push(clave);
+        else if (CONTROL.hasError('pattern') || CONTROL.hasError('email')) {
+          CAMPOS_INVALIDOS.push(clave);
         }
       }
     });
 
     // Verificar si el formulario es válido (sin campos habilitados inválidos)
-    const esFormularioValido = camposInvalidos.length === 0;
+    const ES_FORMULARIO_VALIDO = CAMPOS_INVALIDOS.length === 0;
 
-    if (esFormularioValido) {
-      const DATOS = { ...datosFormulario };
+    if (ES_FORMULARIO_VALIDO) {
+      const DATOS = { ...DATOS_FORMULARIO };
       
       // Conservar datos existentes para modificaciones, o usar datos del formulario para registros nuevos
       if (this.datosDeChofere && this.datosDeChofere.numero && this.datosDeChofere.numero.trim() !== '') {
@@ -545,24 +557,24 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
       }
       
       // Convertir IDs de vuelta a descripciones para mostrar
-      DATOS.pais = this.paisList.find((p: Catalogo) => p.id === Number(datosFormulario.pais))?.descripcion || '';
-      DATOS.estado = this.estadoList.find((e: Catalogo) => e.id === Number(datosFormulario.estado))?.descripcion || '';
-      DATOS.paisDeResidencia = this.paisList.find((p: Catalogo) => p.id === Number(datosFormulario.paisDeResidencia))?.descripcion || '';
-      DATOS.nacionalidad = this.paisList.find((p: Catalogo) => p.id === Number(datosFormulario.nacionalidad))?.descripcion || '';
+      DATOS.pais = this.paisList.find((p: Catalogo) => p.id === Number(DATOS_FORMULARIO.pais))?.descripcion || '';
+      DATOS.estado = this.estadoList.find((e: Catalogo) => e.id === Number(DATOS_FORMULARIO.estado))?.descripcion || '';
+      DATOS.paisDeResidencia = this.paisList.find((p: Catalogo) => p.id === Number(DATOS_FORMULARIO.paisDeResidencia))?.descripcion || '';
+      DATOS.nacionalidad = this.paisList.find((p: Catalogo) => p.id === Number(DATOS_FORMULARIO.nacionalidad))?.descripcion || '';
 
       // Emitir el evento con los datos guardados
       this.eventoAgregarModal.emit(DATOS);
     } else {
-      this.mostrarNotificacionErrorValidacion(camposInvalidos);
+      this.mostrarNotificacionErrorValidacion(CAMPOS_INVALIDOS);
     }
   }
 
   /**
    * Muestra una notificación de error de validación con los campos inválidos.
-   * @param camposInvalidos Lista de campos que tienen errores de validación.
+   * @param _CAMPOS_INVALIDOS Lista de campos que tienen errores de validación.
    * @returns {void}
    */
-  private mostrarNotificacionErrorValidacion(camposInvalidos: string[]): void {
+  private mostrarNotificacionErrorValidacion(_CAMPOS_INVALIDOS: string[]): void {
     this.alertaNotificacion = {
       tipoNotificacion: TipoNotificacionEnum.ALERTA,
       categoria: CategoriaMensaje.INFORMACION,

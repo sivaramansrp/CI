@@ -99,3 +99,11 @@ export const TERCEROS_RELACIONADOS_TABLA_BODY_DATOS = {
     "FEREZ", "RFC2113", "DUMYD", "12-42322445", "5234", "Avenida Insurgentes", "DUMYD", "23", "1", "DUMYD", "DUMYD", "DUMYD", "DUMYD", "BAJA CALIFORNIA", "DUMYD", "DUMYD"
   ]
 };
+
+/**
+ * @const TERCEROS_RELACIONADOS_DATOS_INICIALES
+ * @description
+ * Arreglo que contiene los identificadores de procedimientos para los que se habilitan campos adicionales en los formularios de terceros relacionados.
+ * Utilizado para determinar si ciertos campos deben estar habilitados según el trámite seleccionado.
+ */
+export const TERCEROS_RELACIONADOS_DATOS_INICIALES = [ 260601 ]

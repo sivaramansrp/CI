@@ -6,16 +6,14 @@ import {
 import {
   CatalogoSelectComponent,
   CatalogosSelect,
-  ConfiguracionColumna,
-  ConsultaioQuery,
   TablaDinamicaComponent,
   TituloComponent,
-  
 } from '@libs/shared/data-access-user/src';
 import {forkJoin,map,takeUntil} from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import{ ConsultaioQuery} from '@ng-mf/data-access-user'
 import { FOLIODELLBL } from '../../constantes/importador-exportador.enum';
 import { FilaSolicitudTabla } from '../../models/datos-generales.model';
 import { FormBuilder } from '@angular/forms';

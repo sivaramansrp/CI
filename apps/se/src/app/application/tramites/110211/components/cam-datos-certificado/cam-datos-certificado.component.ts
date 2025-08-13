@@ -1,11 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {Subject,map, takeUntil } from 'rxjs';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosCertificadoDeComponent } from '../../../../shared/components/datos-certificado-de/datos-certificado-de.component';
-import { FormBuilder } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { camCertificadoQuery } from '../../estados/cam-certificado.query';
 import { camCertificadoStore } from '../../estados/cam-certificado.store';
@@ -65,15 +64,20 @@ export class CamDatosCertificadoComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura: boolean = false;
 
+      /**
+   * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+   * const isValid = this.pasoUnoComponent.validateForms();
+   * const formsValidity = this.pasoUnoComponent.getAllFormsValidity();
+   */
+    @ViewChild('datosCertificadoDeRef') datosCertificadoDeComponent!: DatosCertificadoDeComponent;
+
   /**
    * @descripcion
    * Inicializa el componente con los servicios y dependencias requeridos.
-   * @param fb - Instancia de FormBuilder para gestionar formularios.
    * @param camCertificadoService - Servicio para obtener datos relacionados con el certificado.
    * @param store - Almacén para gestionar el estado del formulario de certificado.
    */
   constructor(
-    private readonly fb: FormBuilder,
     private camCertificadoService: CamCertificadoService,
     private store: camCertificadoStore,
     private query: camCertificadoQuery,
@@ -216,6 +220,14 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
    */
   setFormValida(valida: boolean): void {
     this.store.setFormValida({ datos: valida });
+  }
+    /**
+   * @descripcion
+   * Actualiza el almacén con el estado de validación del formulario.
+   * @param validarFormularios - El estado de validación del formulario.
+   */
+  validarFormularios():boolean{
+    return this.datosCertificadoDeComponent.validarFormularios();
   }
 
   /**

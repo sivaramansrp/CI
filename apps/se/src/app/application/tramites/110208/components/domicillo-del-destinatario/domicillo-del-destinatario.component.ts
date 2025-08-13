@@ -1,4 +1,4 @@
-import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud110208State, Tramite110208Store } from '../../../../estados/tramites/tramite110208.store';
@@ -65,7 +65,8 @@ export class DomicilloDelDestinatarioComponent implements OnInit, OnDestroy {
     private service: ValidarInicalmenteService,
     private tramite110208Store: Tramite110208Store,
     private tramite110208Query: Tramite110208Query,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private validacionesService: ValidacionesFormularioService
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -116,11 +117,19 @@ export class DomicilloDelDestinatarioComponent implements OnInit, OnDestroy {
       Object.keys(this.domicilioDestinatario.controls).forEach((key) => {
         this.domicilioDestinatario.get(key)?.disable();
       });
-    } else {
-      Object.keys(this.domicilioDestinatario.controls).forEach((key) => {
-        this.domicilioDestinatario.get(key)?.enable();
-      });
     }
+  }
+
+  /**
+  * compo doc
+  * @method esValido
+  * @description 
+  * Verifica si un campo específico del formulario es válido.
+  * @param campo El nombre del campo que se desea validar.
+  * @returns {boolean | null} Un valor booleano que indica si el campo es válido.
+  */
+  public esValido(campo: string): boolean | null {
+    return this.validacionesService.isValid(this.domicilioDestinatario, campo);
   }
 
   /**

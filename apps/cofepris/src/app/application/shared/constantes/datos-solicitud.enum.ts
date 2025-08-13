@@ -490,7 +490,7 @@ export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS = [
  * }
  */
 export const PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA = [
-  260301, 260214,
+   260214
 ];
 
 /**
@@ -528,7 +528,7 @@ export const REPRESENTANTE_LEGAL = [260208, 260213];
  */
 export const BANCO = [
   260104, 260208, 260209, 260207, 260201, 260219, 260302, 260304, 260103, 260217, 260218,
-  260214,
+  260214, 260301
 ];
 
 export const REQUIRED_BANCO = [260902];
@@ -732,7 +732,7 @@ export const MENSAJE_EMERGENTE_DE_CONFIRMACION =
  *  Identificadores de notificación.
  */
 export const MOSTRAR_NOTIFICACION = [
-  260219, 260302, 260304, 260206, 260201, 260103, 260203, 260214,
+  260219, 260302, 260304, 260206, 260201, 260103, 260203, 260214, 260301
 ];
 
 /**
@@ -760,7 +760,7 @@ export const TIPO_PRODUCTO_ESPECIAL = '3';
  * @remarks
  * Esta constante se utiliza para filtrar procedimientos que no deben ser considerados en el contexto de manifiestos y declaraciones.
  */
-export const PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES = [260217, 260210, 260218];
+export const PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES = [260217, 260210, 260218, 260301];
 
 /**
  * Constante que representa el texto del manifiesto y declaraciones.
@@ -778,4 +778,4 @@ export const TEXTO_MANIFESTO_Y_DECLARACIONES = `Cumplo con los requisitos y norm
 /**
  * Constante que representa los procedimientos para los cuales se debe adjuntar un texto específico.
  */
-export const PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR = [260217, 260218];
+export const PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR = [260217, 260218, 260301];

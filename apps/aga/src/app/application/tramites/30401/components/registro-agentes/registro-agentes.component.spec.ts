@@ -135,7 +135,7 @@ describe('RegistroAgentesComponent', () => {
       { id: 2 } as any,
     ];
     component.listaFilaSeleccionadaAgentes = [{ id: 1 } as any];
-    component.eliminarAgentesItem();
+    component.eliminarAgentesItem(true);
     expect(component.agentesInfoList.length).toBe(1);
     expect(component.agentesInfoList[0].id).toBe(2);
   });
