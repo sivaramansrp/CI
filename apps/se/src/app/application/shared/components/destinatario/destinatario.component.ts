@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input,OnChanges, OnDestroy,OnInit, Output,SimpleChanges } from '@angular/core';
 import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CAMPO_DE_DESTINATARIO } from '../../constantes/modificacion.enum';
@@ -20,7 +20,7 @@ import { Subject } from 'rxjs';
   templateUrl: './destinatario.component.html',
   styleUrl: './destinatario.component.scss'
 })
-export class DestinatarioComponent implements OnInit, OnDestroy,AfterViewInit {
+export class DestinatarioComponent implements OnInit, OnDestroy,AfterViewInit,OnChanges {
 
   /**
    * Identificador del procedimiento asociado al componente.
@@ -174,6 +174,25 @@ export class DestinatarioComponent implements OnInit, OnDestroy,AfterViewInit {
     if (this.esFormularioSoloLectura) {
       this.formDestinatario.disable();
 
+    }
+  }
+   /**
+   * @method ngOnChanges
+   * @description
+   * Método del ciclo de vida que se llama cuando cambia alguna propiedad enlazada por datos.
+   * Específicamente, verifica si el input `datosForm` ha cambiado. Si es así, actualiza el
+   * formulario `formDatosDelDestinatario` con los nuevos valores de `datosForm`. Si el formulario
+   * no existe, lo crea.
+   * 
+   * @param changes - Objeto con pares clave/valor de las propiedades que han cambiado.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['datosForm'] && this.datosForm) {
+      if (this.formDestinatario) {
+        this.formDestinatario.patchValue(this.datosForm);
+      } else {
+        this.createForm();
+      }
     }
   }
 

@@ -42,7 +42,27 @@
     "fechaFinalInput": "2025-12-31",
     "nalad": "ALADI-001"
   },
-  "mercanciaTabla": [],
+  "mercanciaTabla": [{
+    "fraccionArancelaria": "0101.21.00",
+    "nombreComercialMercancia": "Maíz Amarillo",
+    "nombreTecnico": "Zea mays",
+    "nombreIngles": "Yellow Corn",
+    "criterioClasificacion": "Norma ISO",
+    "marca": "AgriCorp",
+    "cantidad": "1000",
+    "umc": "kg",
+    "valorMercancia": "500000",
+    "complementoClasificacion": "Clase A",
+    "masaBruta": "1100",
+    "unidadMedidaMasaBruta": "kg",
+    "numeroFactura": "FAC-2025-001",
+    "tipoFactura": "Exportación",
+    "fechaFinal": "2025-12-31",
+    "normaOrigen": "NOM-XYZ",
+    "id": "MER-001",
+    "fechaFinalInput": "2025-12-31",
+    "nalad": "ALADI-001"
+  }],
   "formDatosCertificado": {
     "observacionesDates": "Producto conforme",
     "idiomaDates": 1,

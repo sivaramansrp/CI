@@ -179,7 +179,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
     this.paisOpcion();
     this.datosTabla$ = this.query.selectmercanciaTabla$
   }
-
+  
   /**
  * @descripcion
  * Actualiza el almacén con los datos del formulario de certificado.
@@ -311,6 +311,9 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: string | n
   ngAfterViewInit(): void {
     if (this.modifyModal) {
       this.modalInstance = new Modal(this.modifyModal.nativeElement);
+    }
+    if(this.esFormularioSoloLectura){
+      this.conseguirDisponiblesDatos();
     }
   }
 
