@@ -35,6 +35,12 @@ import { TercerosRelacionadosFebService } from '../../services/tereceros-relacio
   styleUrl: './terceros-relacionados-fabricante.component.scss',
 })
 export class TercerosRelacionadosFabricanteComponent implements OnInit, OnDestroy{
+
+  @Input() public tieneTablaNuevaColumna: boolean = false;
+  @Input() public nuevaTablaColumn = {
+    encabezado: '',
+    clave: ''
+  };
   @Input() programTitle: boolean = false;
   /**
    * Un arreglo que contiene los datos de los fabricantes (Fabricante).
@@ -89,6 +95,56 @@ export class TercerosRelacionadosFabricanteComponent implements OnInit, OnDestro
    * Indica si el formulario está en modo solo lectura.
    */
   esFormularioSoloLectura: boolean = false;
+  /**
+   * Configuración de las columnas para la tabla de fabricantes relacionados.
+   * 
+   * Cada elemento del arreglo define la configuración de una columna específica,
+   * utilizando el tipo `ConfiguracionColumna` parametrizado con `Fabricante`.
+   * 
+   * Esta propiedad se utiliza para personalizar la visualización y el comportamiento
+   * de la tabla en el componente.
+   */
+  public configuracionTabla: ConfiguracionColumna<Fabricante>[] = [];
+  /**
+   * Configuración de las columnas para la tabla de facturadores relacionados.
+   * 
+   * Cada elemento del arreglo define la configuración de una columna específica,
+   * utilizando el tipo `ConfiguracionColumna` parametrizado con `Fabricante`.
+   * 
+   * Esta propiedad se utiliza para personalizar la visualización y el comportamiento
+   * de la tabla en el componente.
+   */
+  public configuracionFacturadorTabla: ConfiguracionColumna<Fabricante>[] = [];
+  /**
+   * Configuración de las columnas para la tabla de proveedores relacionados.
+   * 
+   * Cada elemento del arreglo define la configuración de una columna específica,
+   * utilizando el tipo `ConfiguracionColumna` parametrizado con `Fabricante`.
+   * 
+   * Esta propiedad se utiliza para personalizar la visualización y el comportamiento
+   * de la tabla en el componente.
+   */
+  public configuracionProveedorTabla: ConfiguracionColumna<Fabricante>[] = [];
+  /**
+   * Configuración de las columnas para la tabla de certificados analíticos relacionados.
+   * 
+   * Cada elemento del arreglo define la configuración de una columna específica,
+   * utilizando el tipo `ConfiguracionColumna` parametrizado con `Fabricante`.
+   * 
+   * Esta propiedad se utiliza para personalizar la visualización y el comportamiento
+   * de la tabla en el componente.
+   */
+  public configuracionCertificadoAnaliticoTabla: ConfiguracionColumna<Fabricante>[] = [];
+  /**
+   * Configuración de las columnas para la tabla de otros relacionados.
+   * 
+   * Cada elemento del arreglo define la configuración de una columna específica,
+   * utilizando el tipo `ConfiguracionColumna` parametrizado con `Otros`.
+   * 
+   * Esta propiedad se utiliza para personalizar la visualización y el comportamiento
+   * de la tabla en el componente.
+   */
+  public configuracionOtrosTabla: ConfiguracionColumna<Otros>[] = [];
 
   /**
    * Constructor del componente.
@@ -118,6 +174,13 @@ export class TercerosRelacionadosFabricanteComponent implements OnInit, OnDestro
    * cuando el componente se destruye.
    */
   ngOnInit(): void {
+
+    this.configuracionTabla = this.generateConfiguracionTabla(this.configuracionFabricante);
+    this.configuracionFacturadorTabla = this.generateConfiguracionTabla(this.configuracionFabricante);
+    this.configuracionProveedorTabla = this.generateConfiguracionTabla(this.configuracionFabricante);
+    this.configuracionCertificadoAnaliticoTabla = this.generateConfiguracionTabla(this.configuracionFabricante);
+    this.configuracionOtrosTabla = this.generateConfiguracionTabla(this.configuracionOtros);
+
     this.tercerosService.getFabricanteTabla()
       .pipe(takeUntil(this.destroy$))
       .subscribe((response: Fabricante[]) => {
@@ -131,49 +194,6 @@ export class TercerosRelacionadosFabricanteComponent implements OnInit, OnDestro
      });
   }
 
-  /**
-   * Configuración de la tabla para los fabricantes relacionados.
-   *
-   * @type {ConfiguracionColumna<Fabricante>[]} Configuración de las columnas de la tabla.
-   */
-  public configuracionTabla: ConfiguracionColumna<Fabricante>[] =
-    this.generateConfiguracionTabla(this.configuracionFabricante);
-  /**
-   * @public
-   * @property {ConfiguracionColumna<Fabricante>[]} configuracionFacturadorTabla
-   *
-   * Configuración de la tabla para los fabricantes relacionados.
-   * Este arreglo se genera dinámicamente utilizando la configuración proporcionada
-   * por `configuracionFabricante` a través del método `generateConfiguracionTabla`.
-   */
-  public configuracionFacturadorTabla: ConfiguracionColumna<Fabricante>[] =
-    this.generateConfiguracionTabla(this.configuracionFabricante);
-  /**
-   * Configuración de la tabla para "Proveedor".
-   *
-   * Esta configuración se genera dinámicamente utilizando la configuración `configuracionFabricante`
-   * a través del método `generateConfiguracionTabla`.
-   */
-  public configuracionProveedorTabla: ConfiguracionColumna<Fabricante>[] =
-    this.generateConfiguracionTabla(this.configuracionFabricante);
-  /**
-   * Configuración de la tabla para el certificado analítico relacionado con los fabricantes.
-   *
-   * Esta propiedad utiliza la configuración proporcionada por `configuracionFabricante`
-   * para generar las columnas necesarias en la tabla.
-   *
-   * @type {ConfiguracionColumna<Fabricante>[]} - Arreglo de configuraciones de columnas para la tabla.
-   */
-  public configuracionCertificadoAnaliticoTabla: ConfiguracionColumna<Fabricante>[] =
-    this.generateConfiguracionTabla(this.configuracionFabricante);
-  /**
-   * Configuración de la tabla para los datos de "Otros".
-   *
-   * @type {ConfiguracionColumna<Otros>[]} Configuración de las columnas de la tabla.
-   */
-  public configuracionOtrosTabla: ConfiguracionColumna<Otros>[] =
-    this.generateConfiguracionTabla(this.configuracionOtros);
-    
   /**
    * Genera un arreglo de configuración para una tabla basado en el arreglo de datos proporcionado.
    *
@@ -189,8 +209,13 @@ export class TercerosRelacionadosFabricanteComponent implements OnInit, OnDestro
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, class-methods-use-this
   generateConfiguracionTabla(datosArray: any): ConfiguracionColumna<any>[] {
+    let fieldsArray = datosArray;
+    if(this.tieneTablaNuevaColumna) {
+      const NUEVO_COLUMN = this.nuevaTablaColumn;
+      fieldsArray = [...fieldsArray, NUEVO_COLUMN];
+    }
     const FIELDS: Array<{ encabezado: string; clave: keyof Fabricante }> =
-      datosArray;
+      fieldsArray;
     return FIELDS.map((field, index) => ({
       encabezado: field.encabezado,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

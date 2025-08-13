@@ -80,6 +80,7 @@ export class DatosComponent implements OnInit, OnDestroy {
    * Indica si se han recibido datos de respuesta del servidor para actualizar el formulario.
    */
   public esDatosRespuesta: boolean = false;
+  public nuevaColumna = { encabezado: 'Colonia o equivalente', clave: 'coloniaEquivalente' };
 
   /**
    * @description
