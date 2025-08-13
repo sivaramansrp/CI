@@ -158,6 +158,8 @@ fdescribe('DatosMercanciaComponent', () => {
         inhabilitarPaisFabricante: true,
         proveedorTablaDatos: [],
         fabricanteTablaDatos: [],
+        scianBodyData: [],
+        productoBodyData: [],
       }),
     };
 
