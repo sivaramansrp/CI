@@ -29,7 +29,10 @@ class MockCatalogosService {}
 class MockTramiteStoreQuery {}
 
 @Injectable()
-class MockTramiteStore {}
+class MockTramiteStore {
+  setRegionesTabla() {}
+  setRegionTramite() {}
+}
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
@@ -100,25 +103,72 @@ describe('RegionesComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #seleccionaTab()', async () => {
-    component.regionForm = component.regionForm || {};
-    component.regionForm.value = {
-      estado: {},
-      productoCafe: {},
-      descRegionCompra: {},
-      descripTipoCafe: {},
-      volumen: {}
+  it('should run #seleccionaTab() with valid form', async () => {
+    component.regionForm = {
+      valid: true,
+      value: {
+        estado: 'test_estado',
+        productoCafe: 'test_producto',
+        descRegionCompra: 'test_region',
+        descripTipoCafe: 'test_tipo',
+        volumen: 'test_volumen'
+      },
+      markAllAsTouched: jest.fn()
     };
+    component.estado = { catalogos: [] };
+    component.productoCafe = { catalogos: [] };
+    component.descripTipoCafe = { catalogos: [] };
     component.tramiteStore = component.tramiteStore || {};
     component.tramiteStore.setRegionesTabla = jest.fn();
     component.router = component.router || {};
     component.router.navigate = jest.fn();
-    component.seleccionaTab({});
-    // expect(component.tramiteStore.setRegionesTabla).toHaveBeenCalled();
-    // expect(component.router.navigate).toHaveBeenCalled();
+    component.activateRoute = {};
+    
+    component.seleccionaTab(2);
+    
+    // When form is valid, markAllAsTouched should NOT be called
+    expect(component.regionForm.markAllAsTouched).not.toHaveBeenCalled();
+    expect(component.tramiteStore.setRegionesTabla).toHaveBeenCalled();
+    expect(component.router.navigate).toHaveBeenCalled();
+  });
+
+  it('should run #seleccionaTab() with invalid form', async () => {
+    component.regionForm = {
+      valid: false,
+      value: {
+        estado: '',
+        productoCafe: '',
+        descRegionCompra: '',
+        descripTipoCafe: '',
+        volumen: ''
+      },
+      markAllAsTouched: jest.fn()
+    };
+    component.estado = { catalogos: [] };
+    component.productoCafe = { catalogos: [] };
+    component.descripTipoCafe = { catalogos: [] };
+    component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.setRegionesTabla = jest.fn();
+    component.router = component.router || {};
+    component.router.navigate = jest.fn();
+    component.activateRoute = {};
+    
+    component.seleccionaTab(2);
+    
+    // When form is invalid, markAllAsTouched should be called
+    expect(component.regionForm.markAllAsTouched).toHaveBeenCalled();
+    expect(component.tramiteStore.setRegionesTabla).not.toHaveBeenCalled();
+    expect(component.router.navigate).not.toHaveBeenCalled();
   });
 
   it('should run #ngOnInit()', async () => {
+    // Mock destroyNotifier$ properly as a Subject
+    component.destroyNotifier$ = {
+      next: jest.fn(),
+      complete: jest.fn(),
+      pipe: jest.fn().mockReturnValue(observableOf({}))
+    };
+    
     component.tramiteStoreQuery = component.tramiteStoreQuery || {};
     component.tramiteStoreQuery.selectSolicitudTramite$ = observableOf({
       RegionFormatState: {}
@@ -127,21 +177,23 @@ describe('RegionesComponent', () => {
     component.cargarEstadoCatalog = jest.fn();
     component.cargarProductoCafe = jest.fn();
     component.cargarTipoDeCafe = jest.fn();
-    component.regionForm = component.regionForm || {};
-    component.regionForm.patchValue = jest.fn();
-    component.regionForm.statusChanges = observableOf({});
-    component.regionForm.value = 'value';
+    component.regionForm = {
+      patchValue: jest.fn(),
+      valueChanges: observableOf({}),
+      valid: true,
+      value: 'test_value'
+    };
     component.tramiteStore = component.tramiteStore || {};
     component.tramiteStore.setRegionTramite = jest.fn();
     component.seccionQuery = component.seccionQuery || {};
     component.seccionQuery.selectSeccionState$ = observableOf({});
+    
     component.ngOnInit();
-    // expect(component.iniciarFormulario).toHaveBeenCalled();
-    // expect(component.cargarEstadoCatalog).toHaveBeenCalled();
-    // expect(component.cargarProductoCafe).toHaveBeenCalled();
-    // expect(component.cargarTipoDeCafe).toHaveBeenCalled();
-    // expect(component.regionForm.patchValue).toHaveBeenCalled();
-    // expect(component.tramiteStore.setRegionTramite).toHaveBeenCalled();
+    
+    expect(component.iniciarFormulario).toHaveBeenCalled();
+    expect(component.cargarEstadoCatalog).toHaveBeenCalled();
+    expect(component.cargarProductoCafe).toHaveBeenCalled();
+    expect(component.cargarTipoDeCafe).toHaveBeenCalled();
   });
 
   it('should run #iniciarFormulario()', async () => {
@@ -182,19 +234,30 @@ describe('RegionesComponent', () => {
   });
 
   it('should run #cancelarBodega()', async () => {
-    component.regionForm = component.regionForm || {};
-    component.regionForm.reset = jest.fn();
+    component.regionForm = {
+      reset: jest.fn()
+    };
+    component.router = {
+      navigate: jest.fn()
+    };
+    component.activateRoute = {};
+    
     component.cancelarBodega();
-    // expect(component.regionForm.reset).toHaveBeenCalled();
+    
+    expect(component.regionForm.reset).toHaveBeenCalled();
+    expect(component.router.navigate).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
-    component.destroyNotifier$ = component.destroyNotifier$ || {};
-    component.destroyNotifier$.next = jest.fn();
-    component.destroyNotifier$.complete = jest.fn();
+    component.destroyNotifier$ = {
+      next: jest.fn(),
+      complete: jest.fn()
+    };
+    
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+    
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 
 });
