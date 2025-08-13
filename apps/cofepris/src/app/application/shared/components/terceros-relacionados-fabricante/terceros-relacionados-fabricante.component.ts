@@ -36,12 +36,24 @@ import { TercerosRelacionadosFebService } from '../../services/tereceros-relacio
 })
 export class TercerosRelacionadosFabricanteComponent implements OnInit, OnDestroy{
 
+  /**
+   * Indica si se debe mostrar una nueva columna en la tabla.
+   */
   @Input() public tieneTablaNuevaColumna: boolean = false;
+  /**
+   * @property nuevaTablaColumn
+   * @description
+   * Define una nueva columna que se puede agregar a la tabla de fabricantes relacionados.
+   * Esta columna se utiliza para mostrar información adicional en la tabla.
+   */
   @Input() public nuevaTablaColumn = {
     encabezado: '',
     clave: ''
   };
-  @Input() programTitle: boolean = false;
+  /**
+   * Indica si el título del programa debe mostrarse.
+   */
+  @Input() public programTitle: boolean = false;
   /**
    * Un arreglo que contiene los datos de los fabricantes (Fabricante).
    * Esto se utiliza para gestionar y mostrar información relacionada con los fabricantes
