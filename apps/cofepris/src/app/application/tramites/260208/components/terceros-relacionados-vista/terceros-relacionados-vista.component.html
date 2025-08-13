@@ -4,4 +4,6 @@
 [proveedorTablaDatos]="(tercerosDatos$ | async)?.proveedorTablaDatos || []"
 [facturadorTablaDatos]="(tercerosDatos$ | async)?.facturadorTablaDatos || []"
 [formularioDeshabilitado]="esFormularioSoloLectura"
+[elementosRequeridos]="elementosRequeridos"
+(fabricanteEliminar)="eliminarFabricante($event)"
 ></app-terceros-relacionados>

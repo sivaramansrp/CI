@@ -647,6 +647,12 @@
         (listaDeFilaSeleccionada)="tablaMercanciasLista = $event"
         [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
       ></app-tabla-dinamica>
+      <div class="d-flex justify-content-center mt-3" [class.disabled]="formularioDeshabilitado"
+        [style.pointerEvents]="formularioDeshabilitado ? 'none' : 'auto'"
+        [style.opacity]="formularioDeshabilitado ? '0.5' : '1'">
+        <app-table-pagination [showCurrentPage]="true">
+        </app-table-pagination>
+      </div>
       <div class="mensaje-error" *ngIf="datosSolicitudForm.get('mercancias')?.errors?.['required']">
         Este campo es obligatorio.
       </div>
