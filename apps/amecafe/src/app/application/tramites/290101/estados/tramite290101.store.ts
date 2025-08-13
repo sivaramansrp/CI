@@ -485,6 +485,37 @@ export class TramiteStore extends Store<TramiteState> {
     }
 
     /**
+     * Limpia el estado del formulario de regiones, restaurándolo a sus valores iniciales.
+     *
+     * Este método reestablece todos los campos del formulario de regiones a sus valores
+     * por defecto, útil cuando se desea limpiar el formulario antes de agregar una nueva entrada.
+     *
+     * @method clearRegionTramite
+     * @returns {void}
+     * @memberof TramiteStore
+     * @since 1.0.0
+     * @example
+     * // Limpia el formulario de regiones
+     * this.tramiteStore.clearRegionTramite();
+     */
+    public clearRegionTramite(): void {
+        const INITIAL_STATE = createInitialState();
+        this.update((state) => ({
+            ...state,
+            RegionFormatState: INITIAL_STATE.RegionFormatState,
+        }));
+    }
+
+
+    public clearBeneficiosTramite(): void {
+        const INITIAL_STATE = createInitialState();
+        this.update((state) => ({
+            ...state,
+            BeneficiosFormaState: INITIAL_STATE.BeneficiosFormaState,
+        }));
+    }
+
+    /**
      * Actualiza el estado del formulario de beneficios.
      *
      * Reemplaza el estado actual de BeneficiosFormaState con los nuevos datos,
@@ -542,6 +573,28 @@ export class TramiteStore extends Store<TramiteState> {
     }
 
     /**
+     * Limpia el estado del formulario de bodegas, restaurándolo a sus valores iniciales.
+     *
+     * Este método reestablece todos los campos del formulario de bodegas a sus valores
+     * por defecto, útil cuando se desea limpiar el formulario antes de agregar una nueva entrada.
+     *
+     * @method clearBodegasTramite
+     * @returns {void}
+     * @memberof TramiteStore
+     * @since 1.0.0
+     * @example
+     * // Limpia el formulario de bodegas
+     * this.tramiteStore.clearBodegasTramite();
+     */
+    public clearBodegasTramite(): void {
+        const INITIAL_STATE = createInitialState();
+        this.update((state) => ({
+            ...state,
+            BodegasFormaState: INITIAL_STATE.BodegasFormaState,
+        }));
+    }
+
+    /**
      * Actualiza el estado del formulario de café de exportación.
      *
      * Reemplaza el estado actual de CafeExportFormState con los nuevos datos,
@@ -565,6 +618,28 @@ export class TramiteStore extends Store<TramiteState> {
         this.update((state) => ({
             ...state,
             CafeExportFormState,
+        }));
+    }
+
+    /**
+     * Limpia el estado del formulario de café de exportación, restaurándolo a sus valores iniciales.
+     *
+     * Este método reestablece todos los campos del formulario de café de exportación a sus valores
+     * por defecto, útil cuando se desea limpiar el formulario antes de agregar una nueva entrada.
+     *
+     * @method clearCafExportTramite
+     * @returns {void}
+     * @memberof TramiteStore
+     * @since 1.0.0
+     * @example
+     * // Limpia el formulario de café de exportación
+     * this.tramiteStore.clearCafExportTramite();
+     */
+    public clearCafExportTramite(): void {
+        const INITIAL_STATE = createInitialState();
+        this.update((state) => ({
+            ...state,
+            CafeExportFormState: INITIAL_STATE.CafeExportFormState,
         }));
     }
     /**

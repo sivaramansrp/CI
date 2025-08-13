@@ -4,7 +4,14 @@
       <ng-container formGroupName="importadorExportador">
         <div class="alert alert-info">
           <label style="font-weight: normal">
-            <input type="checkbox" formControlName="manifesto" id="manifesto" />
+            <input
+              type="checkbox"
+              formControlName="manifesto"
+              [ngClass]="{
+                'bi bi-ban': tramiteForm.get('importadorExportador')?.disabled
+              }"
+              id="manifesto"
+            />
             *Manifesto bajo protesta de decir verdad que el donante de la
             mercancía es extranjero
           </label>
@@ -51,6 +58,7 @@
                 [tipoSeleccionTabla]="tipoSeleccionTabla"
                 [configuracionTabla]="ParqueAgentes"
                 [datos]="mercanciaDatos"
+                [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
                 (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"
               >
               </app-tabla-dinamica>
@@ -60,13 +68,14 @@
             <button
               type="button"
               class="btn btn-primary ms-3"
+              [disabled]="esFormularioSoloLectura"
               (click)="abrirDialogoMercancias()"
             >
               Consultar
             </button>
           </div>
         </div>
-        <ng-titulo titulo="Datos del donante extrajero" />
+        <ng-titulo titulo="Datos del donante extranjero" />
         <div class="row">
           <div class="col-md-8">
             <label>Nombre(s):</label>
@@ -82,7 +91,7 @@
             <lib-input-check
               [id]="'personaFisica'"
               [label]="'Persona física'"
-              [required]="true"
+              [required]="false"
               formControlName="personaFisica"
               [isDisabled]="true"
             ></lib-input-check>
@@ -90,7 +99,7 @@
         </div>
         <div class="row mt-3">
           <div class="col-md-8">
-            <label>Calle*:</label>
+            <label>Calle:</label>
             <input
               type="text"
               required="true"
@@ -101,7 +110,7 @@
             />
           </div>
           <div class="col-md-4">
-            <label>Número exterior*:</label>
+            <label>Número exterior:</label>
             <input
               type="number"
               required="true"
@@ -124,7 +133,7 @@
             />
           </div>
           <div class="col-md-4">
-            <label>Estado*:</label>
+            <label>Estado:</label>
             <input
               type="number"
               required="true"
@@ -134,7 +143,7 @@
             />
           </div>
           <div class="col-md-4">
-            <label>Colonia*:</label>
+            <label>Colonia:</label>
             <input
               type="number"
               required="true"
@@ -146,7 +155,7 @@
         </div>
         <div class="row mt-3">
           <div class="col-md-4">
-            <label>Código postal*:</label>
+            <label>Código postal:</label>
             <input
               type="number"
               required="true"
@@ -158,9 +167,8 @@
           <div class="col-md-4">
             <app-catalogo-select
               [catalogo]="pais"
-              [label]="'país'"
+              [label]="'País'"
               [placeholder]="'país'"
-              [required]="true"
               id="pais"
               [isDisabled]="true"
               formControlName="pais"
@@ -223,8 +231,9 @@
           <ng-container formGroupName="datosMercancia">
             <div class="row">
               <div class="col-md-8">
-                <label for="tipoDeMercancia">Tipo de mercancía</label>
-                <span class="require">*</span>
+                <label for="tipoDeMercancia"
+                  >Tipo de mercancía<span class="require">*</span>:</label
+                >
                 <input
                   type="text"
                   class="form-control"
@@ -236,7 +245,7 @@
             <div class="row">
               <div class="col-md-8">
                 <label for="especificoMercancia"
-                  >Uso específico de la mercancía *:</label
+                  >Uso específico de la mercancía*:</label
                 >
                 <input
                   type="text"
@@ -258,8 +267,9 @@
             </div>
             <div class="row">
               <div class="col-md-8">
-                <label for="cantidadComercial">Cantidad</label>
-                <span class="require">*</span>
+                <label for="cantidadComercial"
+                  >Cantidad<span class="require">*</span>:</label
+                >
                 <input
                   type="text"
                   class="form-control"
@@ -310,7 +320,6 @@
                   [label]="'Año'"
                   name="ano"
                   formControlName="ano"
-                  [required]="true"
                   [isDisabled]="true"
                 ></app-catalogo-select>
               </div>
@@ -330,7 +339,7 @@
             <div class="row">
               <div class="col-md-8">
                 <div class="form-group">
-                  <label for="serie">Número de Serie:</label>
+                  <label for="serie">Número de serie:</label>
                   <input
                     type="text"
                     class="form-control"

@@ -2,7 +2,9 @@
 /**
  * Importa la definición de columna para tablas dinámicas.
  */
+import { Catalogo } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { VehiculoTabla } from '../models/registro-muestras-mercancias.model';
 
 
 /**
@@ -83,3 +85,90 @@ export const PARQUE_VEHICULAR_COLUMNAS: ConfiguracionColumna<VehiculoParque>[] =
 export const TEXTOS_PARQUE_VEHICULAR = {
   MENSAJE_MODIFICACION: `<p>Para modificar o dar de baja un vehículo existente, primero debe seleccionarlo de la tabla.</p>`,
 };
+
+/**
+ * Función auxiliar para buscar la descripción en un catálogo por su clave.
+ * @param {string} clave - Clave a buscar en el catálogo.
+ * @param {Catalogo[]} catalogo - Array del catálogo donde buscar.
+ * @returns {string} La descripción encontrada o la clave original si no se encuentra.
+ */
+export function obtenerDescripcionDeCatalogoVehiculo(clave: string, catalogo: Catalogo[]): string {
+  if (!clave || !catalogo || catalogo.length === 0) {
+    return clave || '';
+  }
+  const ELEMENTO = catalogo.find(c => c.clave === clave || c.descripcion === clave);
+  return ELEMENTO ? ELEMENTO.descripcion : clave;
+}
+
+/**
+ * Función que genera la configuración de columnas para la tabla de vehículos del parque vehicular.
+ * Requiere los catálogos como parámetros para realizar las traducciones de códigos a descripciones.
+ * 
+ * @param {Catalogo[]} tipoDeVehiculoCatalogo - Catálogo de tipos de vehículo.
+ * @param {Catalogo[]} paisEmisorCatalogo - Catálogo de países emisores.
+ * @param {Catalogo[]} anoCatalogo - Catálogo de años.
+ * @returns {ConfiguracionColumna<VehiculoTabla>[]} Configuración de columnas para la tabla.
+ */
+export function obtenerColumnasVehiculo(
+  tipoDeVehiculoCatalogo: Catalogo[],
+  paisEmisorCatalogo: Catalogo[],
+  anoCatalogo: Catalogo[]
+): ConfiguracionColumna<VehiculoTabla>[] {
+  return [
+    {
+      encabezado: 'ID',
+      clave: (item: VehiculoTabla): string => item.idDeVehiculo ? String(item.idDeVehiculo) : '',
+      orden: 0,
+    },
+    {
+      encabezado: 'Número de identificación vehícular',
+      clave: (item: VehiculoTabla): string => item.numero || '',
+      orden: 1,
+    },
+    {
+      encabezado: 'Tipo de vehículo',
+      clave: (item: VehiculoTabla): string => obtenerDescripcionDeCatalogoVehiculo(item.tipoDeVehiculo, tipoDeVehiculoCatalogo),
+      orden: 2,
+    },
+    {
+      encabezado: 'Número económico',
+      clave: (item: VehiculoTabla): string => item.numuroEconomico || '',
+      orden: 3,
+    },
+    {
+      encabezado: 'Transponder',
+      clave: (item: VehiculoTabla): string => item.transponder || '',
+      orden: 4,
+    },
+    {
+      encabezado: 'Número de placas',
+      clave: (item: VehiculoTabla): string => item.numeroPlaca || '',
+      orden: 5,
+    },
+    {
+      encabezado: 'País emisor',
+      clave: (item: VehiculoTabla): string => obtenerDescripcionDeCatalogoVehiculo(item.paisEmisor, paisEmisorCatalogo),
+      orden: 6,
+    },
+    {
+      encabezado: 'Estado o provincia',
+      clave: (item: VehiculoTabla): string => item.estado || '',
+      orden: 7,
+    },
+    {
+      encabezado: 'Marca',
+      clave: (item: VehiculoTabla): string => item.marca || '',
+      orden: 8,
+    },
+    {
+      encabezado: 'Modelo',
+      clave: (item: VehiculoTabla): string => item.modelo || '',
+      orden: 9,
+    },
+    {
+      encabezado: 'Año',
+      clave: (item: VehiculoTabla): string => obtenerDescripcionDeCatalogoVehiculo(item.ano, anoCatalogo),
+      orden: 10,
+    }
+  ];
+}

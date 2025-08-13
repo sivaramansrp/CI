@@ -8,6 +8,7 @@
 
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
 import { ScianTablaComponent } from '../../../../shared/components/scian-tabla/scian-tabla.component';
 import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.model';
 import { Tramite260214Store } from '../../estados/tramite260214Store.store';
@@ -43,6 +44,15 @@ import { Tramite260214Store } from '../../estados/tramite260214Store.store';
   styleUrl: './scian-tabla-contenedora.component.scss',
 })
 export class ScianTablaContenedoraComponent {
+  /**
+   * Identificador del procedimiento actual.
+   *
+   * Se inicializa con la constante `ID_PROCEDIMIENTO` y se utiliza
+   * para controlar la lógica del componente en función del
+   * procedimiento en ejecución.
+   */
+  idProcedimiento: number = ID_PROCEDIMIENTO;
+
   /**
    * @property {TablaScianConfig} scianSeleccionado
    * Objeto que contiene los datos seleccionados de la tabla SCIAN.

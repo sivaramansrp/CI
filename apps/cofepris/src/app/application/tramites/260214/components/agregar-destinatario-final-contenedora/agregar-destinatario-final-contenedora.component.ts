@@ -2,7 +2,7 @@
  * @fileoverview
  * El `AgregarDestinatarioFinalContenedoraComponent` es un componente de Angular diseñado para gestionar la funcionalidad relacionada con los destinatarios finales.
  * Este componente utiliza el componente `AgregarDestinatarioFinalComponent` y se comunica con el estado del trámite 260214 a través del store `Tramite260214Store`.
- * 
+ *
  * @module AgregarDestinatarioFinalContenedoraComponent
  * @description
  * Este componente actúa como un contenedor para gestionar y actualizar los datos de la tabla de destinatarios finales en el store del trámite.
@@ -12,14 +12,15 @@ import { AgregarDestinatarioFinalComponent } from '../../../../shared/components
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Destinatario } from '../../../../shared/models/terceros-relacionados.model';
+import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
 import { Tramite260214Store } from '../../estados/tramite260214Store.store';
 
 /**
  * @component
  * @name AgregarDestinatarioFinalContenedoraComponent
  * @description
- * Componente contenedor que utiliza el componente `AgregarDestinatarioFinalComponent` 
- * para gestionar la funcionalidad relacionada con los destinatarios finales. 
+ * Componente contenedor que utiliza el componente `AgregarDestinatarioFinalComponent`
+ * para gestionar la funcionalidad relacionada con los destinatarios finales.
  * Este componente interactúa con el estado del trámite a través del store `Tramite260214Store`.
  *
  * @selector app-agregar-destinatario-final-contenedora
@@ -47,10 +48,21 @@ import { Tramite260214Store } from '../../estados/tramite260214Store.store';
 })
 export class AgregarDestinatarioFinalContenedoraComponent {
   /**
+   * Identificador numérico del procedimiento actual.
+   *
+   * @type {number}
+   * @default ID_PROCEDIMIENTO
+   *
+   * ### Descripción:
+   * - Almacena el valor del procedimiento que se está ejecutando.
+   * - Se inicializa con la constante `ID_PROCEDIMIENTO`.
+   */
+  idProcedimiento: number = ID_PROCEDIMIENTO;
+  /**
    * @constructor
    * @description
    * Constructor que inyecta el store `Tramite260214Store` para gestionar el estado del trámite.
-   * 
+   *
    * @param {Tramite260214Store} tramiteStore - Store que administra el estado del trámite 260214.
    */
   constructor(public tramiteStore: Tramite260214Store) {}
@@ -59,7 +71,7 @@ export class AgregarDestinatarioFinalContenedoraComponent {
    * @method updateDestinatarioFinalTablaDatos
    * @description
    * Actualiza los datos de la tabla de destinatarios finales en el store del trámite.
-   * 
+   *
    * @param {Destinatario[]} event - Lista de destinatarios finales que se actualizarán en el store.
    * @returns {void} Este método no retorna ningún valor.
    *

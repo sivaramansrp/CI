@@ -76,7 +76,7 @@
                     </div>
                     <div class="col-md-8">
                         <div class="form-group">
-                            <label class="form-label" for="descripcionFraccion">Descripción de la fracción arancelaria*:</label>
+                            <label class="form-label" for="descripcionFraccion">Descripción de la fracción*:</label>
                             <input class="form-control" type="text" id="descripcionFraccion" formControlName="descripcionFraccion" [ngClass]="esValido('descripcionFraccion') ? 'required' : ''">
                             @if (datosMercanciaForm.get('descripcionFraccion')?.hasError('required') && datosMercanciaForm.get('descripcionFraccion')?.touched) {
                                 <div class="mensaje-error">Este campo es obligatorio.</div>

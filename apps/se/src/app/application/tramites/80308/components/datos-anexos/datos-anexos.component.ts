@@ -1,10 +1,13 @@
 import {
+  CONFIGURACION_ANEXOS_FRACCION,
+  CONFIGURACION_ANEXOS_IMMEX,
   CONFIGURACION_ANEXOS_IMPORTACION,
   CONFIGURACION_ANEXOS_TABLA,
 } from '../../constantes/modificacion.enum';
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { Anexo } from '../../models/plantas-consulta.model';
+
+import { Anexo, DatosImmex, FracciónArancelaria } from '../../models/plantas-consulta.model';
 import { ConfiguracionColumna } from '../../models/configuracio-columna.model';
 import { ModificacionSolicitudeService } from '../../services/modificacion-solicitude.service';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
@@ -42,7 +45,15 @@ export class DatosAnexosComponent implements OnDestroy {
   configuracionTablaImportacion: ConfiguracionColumna<Anexo>[] =
     CONFIGURACION_ANEXOS_IMPORTACION;
 
-  /**
+    /**
+   * Configuración de las columnas de la tabla para los anexos de importación.
+   * @type {ConfiguracionColumna<FracciónArancelaria>[]}
+   */
+  configuracionTablaFraccion: ConfiguracionColumna<FracciónArancelaria>[] =
+    CONFIGURACION_ANEXOS_FRACCION;
+
+   
+/**
    * Datos de los anexos obtenidos desde el servicio.
    * @type {Anexo[]}
    */
@@ -53,6 +64,14 @@ export class DatosAnexosComponent implements OnDestroy {
    * @type {Anexo[]}
    */
   datosImportacion: Anexo[] = [];
+
+  /**
+   * Datos de los anexos de fracción obtenidos desde el servicio.
+   * @type {FracciónArancelaria[]}
+   */
+  datosFraccion: FracciónArancelaria[] = [];
+
+ 
 
   constructor(
     public modificionService: ModificacionSolicitudeService,
@@ -79,6 +98,27 @@ export class DatosAnexosComponent implements OnDestroy {
         }
       );
   }
+
+   /**
+   * Método que obtiene los anexos complementarios desde el servicio.
+   * Asigna los datos a las variables `datosAnexo` y `datosImportacion`.
+   */
+  obteneComplementaria(): void {
+    this.modificionService
+      .obtenerFraccion() // Llama al servicio para obtener los anexos.
+      .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando el componente se destruye.
+      .subscribe(
+        (data: FracciónArancelaria[]) => {
+          this.datosFraccion = [...data]; // Almacena los datos de anexos complementarios.
+        },
+        () => {
+          this.toastr.error('Error al cargar los anexos'); // Manejo de errores.
+        }
+      );
+  }
+
+  
+
 
   /**
    * Método que se ejecuta cuando el componente es destruido.

@@ -28,7 +28,21 @@ class MockRouter {
 class MockTramiteStoreQuery {}
 
 @Injectable()
-class MockTramiteStore {}
+class MockTramiteStore {
+  clearBodegasTramite() {}
+  clearCafExportTramite() {}
+  clearBeneficiosTramite() {}
+  clearRegionTramite() {}
+  setSolicitudTramite() {}
+  setRegionesTabla() {}
+  setBeneficiosTabla() {}
+  setBodegasTabla() {}
+  setCafeExportacionTabla() {}
+  updateRegionesTabla() {}
+  updateBeneficiosTabla() {}
+  updateBodegasTabla() {}
+  updateCafeExportacionTabla() {}
+}
 
 @Injectable()
 class MockCatalogosService {}
@@ -115,25 +129,41 @@ describe('DatosDeLaSolicitudComponent', () => {
   it('should run #redirigirBodegas()', async () => {
     component.router = component.router || {};
     component.router.navigate = jest.fn();
+    component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.clearBodegasTramite = jest.fn();
     component.redirigirBodegas();
+    expect(component.tramiteStore.clearBodegasTramite).toHaveBeenCalled();
+    expect(component.router.navigate).toHaveBeenCalled();
   });
 
   it('should run #redirigirCafeExportadores()', async () => {
     component.router = component.router || {};
     component.router.navigate = jest.fn();
+    component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.clearCafExportTramite = jest.fn();
     component.redirigirCafeExportadores();
+    expect(component.tramiteStore.clearCafExportTramite).toHaveBeenCalled();
+    expect(component.router.navigate).toHaveBeenCalled();
   });
 
   it('should run #redirigirBeneficios()', async () => {
     component.router = component.router || {};
     component.router.navigate = jest.fn();
+    component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.clearBeneficiosTramite = jest.fn();
     component.redirigirBeneficios();
+    expect(component.tramiteStore.clearBeneficiosTramite).toHaveBeenCalled();
+    expect(component.router.navigate).toHaveBeenCalled();
   });
 
   it('should run #redirigirRegiones()', async () => {
     component.router = component.router || {};
     component.router.navigate = jest.fn();
+    component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.clearRegionTramite = jest.fn();
     component.redirigirRegiones();
+    expect(component.tramiteStore.clearRegionTramite).toHaveBeenCalled();
+    expect(component.router.navigate).toHaveBeenCalled();
   });
 
   it('should run #ngOnInit()', async () => {

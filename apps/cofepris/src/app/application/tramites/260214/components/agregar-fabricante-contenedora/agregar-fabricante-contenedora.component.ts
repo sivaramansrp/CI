@@ -12,6 +12,7 @@ import { AgregarFabricanteComponent } from '../../../../shared/components/agrega
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Fabricante } from '../../../../shared/models/terceros-relacionados.model';
+import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
 import { Tramite260214Store } from '../../estados/tramite260214Store.store';
 
 /**
@@ -53,6 +54,8 @@ export class AgregarFabricanteContenedoraComponent {
    * 
    * @param {Tramite260214Store} tramite260214Store - Store que administra el estado del trámite 260214.
    */
+
+  idProcedimiento:number = ID_PROCEDIMIENTO;
   constructor(public tramite260214Store: Tramite260214Store) {}
 
   /**
