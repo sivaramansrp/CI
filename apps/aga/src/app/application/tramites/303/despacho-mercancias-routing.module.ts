@@ -2,8 +2,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { RegistroFiguraComponent } from './components/registro-figura/registro-figura.component';
 import { RegistroPageComponent } from './pages/registro-page/registro-page.component';
-import { TestPageComponent } from './pages/test-page/test-page.component';
 import { RegistroTrasportistaComponent } from './components/registro-trasportista/registro-trasportista.component';
+import { TestPageComponent } from './pages/test-page/test-page.component';
 
 export const ROUTES: Routes = [
   {
