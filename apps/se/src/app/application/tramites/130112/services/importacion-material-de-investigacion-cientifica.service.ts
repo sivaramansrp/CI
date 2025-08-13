@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 import { PartidasDeLaMercanciaModelo } from '../../../shared/models/partidas-de-la-mercancia.model';
 import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
 
-
 /**
  * @descripcion
  * Servicio que proporciona métodos para obtener datos relacionados con el trámite de importación
@@ -87,7 +86,7 @@ export class ImportacionMaterialDeInvestigacionCientificaService {
    */
   getProductoOptions(): Observable<ProductoResponse> {
     return this.http.get<ProductoResponse>(
-      'assets/json/130112/producto-otions.json'
+      'assets/json/130112/producto-options.json'
     );
   }
 

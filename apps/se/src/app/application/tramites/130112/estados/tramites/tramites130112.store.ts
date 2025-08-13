@@ -31,7 +31,7 @@ export interface Tramite130112State {
   /**
    * Valor en USD de la partida ingresada en el formulario.
    */
-  valorPartidaUSD: number;
+  valorPartidaUSD: string;
 
   /**
    * Unidad de medida seleccionada en el formulario.
@@ -149,7 +149,7 @@ export function createInitialState(): Tramite130112State {
     producto: '',
     descripcion: '',
     cantidad: '',
-    valorPartidaUSD: 0,
+    valorPartidaUSD: '',
     unidadMedida: '',
     defaultProducto: 'Nuevo',
     regimen: '',
