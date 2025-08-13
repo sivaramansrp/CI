@@ -1,5 +1,5 @@
-import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
-import { HistoricoColumnas } from "./certificado-origen.model";
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { HistoricoColumnas } from './certificado-origen.model';
 
 /**
  * Interfaz que define la estructura de las columnas de la tabla.
@@ -362,6 +362,16 @@ export interface ConsultaDatos {
    * Cargo del representante legal.
    */
   cargo: string;
+
+  /**
+   * Datos de las mercancías seleccionadas en la tabla.
+   */
+  mercanciaSeleccionadasTablaData: SeleccionadasTabla[];
+
+  /**
+   * Datos de las mercancías disponibles en la tabla.
+   */
+  mercanciaDisponsiblesTablaDatos: ColumnasTabla[];
 }
 
 /**
