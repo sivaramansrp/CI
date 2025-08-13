@@ -5,12 +5,15 @@
  *
  * @module ModificacionUnidadComponent
  */
-import { UnidadTabla, CatalogoLista } from '../../../../models/registro-muestras-mercancias.model';
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { UNIDAD_TABLA_CONFIG } from '../../../../enum/transportista-terrestre.enum';
-import { TablaSeleccion, ConsultaioQuery, ConsultaioState, Catalogo } from '@ng-mf/data-access-user';
-import { Subject, takeUntil, map } from 'rxjs';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
+
+import { Catalogo, ConsultaioQuery, ConsultaioState, TablaSeleccion } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+
+import { CatalogoLista, DatosUnidad, UnidadTabla } from '../../../../models/registro-muestras-mercancias.model';
 import { modificarTerrestreService } from '../../../services/modificacar-terrestre.service';
+import { obtenerColumnasUnidad } from '../../../../enum/unidad-de-arrastre.enum';
 
 @Component({
   selector: 'app-modificacion-unidad',
@@ -60,46 +63,28 @@ export class ModificacionUnidadComponent implements OnInit, OnDestroy {
   unidadesArrastre: UnidadTabla[] = [];
 
   /**
-   * Configuración de columnas para la tabla de unidades.
-   * @type {*}
+   * Getter que convierte UnidadTabla[] a DatosUnidad[] para el componente de diálogo.
+   * @returns {DatosUnidad[]}
    */
-  columnasUnidad = [
-    {
-      encabezado: 'ID',
-      clave: (item: UnidadTabla) => String(item.idDeVehiculo),
-      orden: 0,
-    },
-    {
-      encabezado: 'VIN/Número de identificación',
-      clave: (item: UnidadTabla) => item.vinVehiculo,
-      orden: 1,
-    },
-    {
-      encabezado: 'Tipo de unidad de arrastre',
-      clave: (item: UnidadTabla) => this.obtenerDescripcionDeCatalogo(item.tipoDeUnidadArrastre, this.tipoDeUnidadCatalogo),
-      orden: 2,
-    },
-    {
-      encabezado: 'Número económico',
-      clave: (item: UnidadTabla) => item.numeroEconomico,
-      orden: 3,
-    },
-    {
-      encabezado: 'Número de Placas',
-      clave: (item: UnidadTabla) => item.numeroPlaca,
-      orden: 4,
-    },
-    {
-      encabezado: 'País Emisor',
-      clave: (item: UnidadTabla) => this.obtenerDescripcionDeCatalogo(item.paisEmisor, this.paisEmisorCatalogo),
-      orden: 5,
-    },
-    {
-      encabezado: 'Estado o provincia',
-      clave: (item: UnidadTabla) => item.estado,
-      orden: 6,
-    }
-  ];
+  get unidadesArrastreDatos(): DatosUnidad[] {
+    return this.unidadesArrastre.map(unidad => ({ 
+      ...unidad,
+      colorVehiculo: '',
+      numero2daPlaca: '',
+      estado2daPlaca: '',
+      paisEmisor2daPlaca: '',
+      descripcion: ''
+    }));
+  }
+
+  /**
+   * Configuración de columnas para la tabla de unidades.
+   * Se genera dinámicamente usando los catálogos cargados.
+   * @returns {ConfiguracionColumna<UnidadTabla>[]}
+   */
+  get columnasUnidad(): ConfiguracionColumna<UnidadTabla>[] {
+    return obtenerColumnasUnidad(this.tipoDeUnidadCatalogo, this.paisEmisorCatalogo);
+  }
 
   /**
    * Tipo de selección de la tabla (radio, checkbox, etc).
@@ -121,9 +106,9 @@ export class ModificacionUnidadComponent implements OnInit, OnDestroy {
 
   /**
    * Datos para el diálogo de unidad.
-   * @type {UnidadTabla | {}}
+   * @type {DatosUnidad | null}
    */
-  datosDialogoUnidad: UnidadTabla | {} = {};
+  datosDialogoUnidad: DatosUnidad | null = null;
 
   /**
    * Indica si la vista es de solo lectura.
@@ -181,7 +166,7 @@ export class ModificacionUnidadComponent implements OnInit, OnDestroy {
 
     /**
      * Suscribe al estado de consulta para determinar si el formulario debe estar en modo solo lectura.
-     * Si el estado indica `readonly`, actualiza las propiedades `datosConsulta` e `isReadonly` del componente.
+     * Si el estado indica `readonly`, actualiza las propiedades `datosConsulta` e `esSoloLectura` del componente.
      *
      * @observable selectConsultaioState$
      * @effect Actualiza el modo de solo lectura del formulario según el estado de consulta.
@@ -208,23 +193,23 @@ export class ModificacionUnidadComponent implements OnInit, OnDestroy {
 
   /**
    * Maneja la selección de filas en la tabla de unidades de arrastre.
-   * @param {any} event - Evento de selección de la tabla.
+   * @param {UnidadTabla[]} event - Evento de selección de la tabla.
    * @returns {void}
    */
-  onUnidadRowSelected(event: any) {
+  onUnidadRowSelected(event: UnidadTabla[]): void {
     if (event && event.length > 0) {
-      const selectedUnidad = event[0];
+      const UNIDAD_SELECCIONADA = event[0];
       // Buscar el índice usando múltiples identificadores únicos para mayor robustez
       this.selectedUnidadIndex = this.unidadesArrastre.findIndex(u => 
-        (selectedUnidad.vinVehiculo && u.vinVehiculo === selectedUnidad.vinVehiculo) ||
-        (selectedUnidad.idDeVehiculo && u.idDeVehiculo === selectedUnidad.idDeVehiculo) ||
-        (selectedUnidad.numeroPlaca && u.numeroPlaca === selectedUnidad.numeroPlaca && 
-         selectedUnidad.numeroEconomico && u.numeroEconomico === selectedUnidad.numeroEconomico)
+        (UNIDAD_SELECCIONADA.vinVehiculo && u.vinVehiculo === UNIDAD_SELECCIONADA.vinVehiculo) ||
+        (UNIDAD_SELECCIONADA.idDeVehiculo && u.idDeVehiculo === UNIDAD_SELECCIONADA.idDeVehiculo) ||
+        (UNIDAD_SELECCIONADA.numeroPlaca && u.numeroPlaca === UNIDAD_SELECCIONADA.numeroPlaca && 
+         UNIDAD_SELECCIONADA.numeroEconomico && u.numeroEconomico === UNIDAD_SELECCIONADA.numeroEconomico)
       );
       
       // Si no se encuentra por los identificadores únicos, usar la referencia como fallback
       if (this.selectedUnidadIndex === -1) {
-        this.selectedUnidadIndex = this.unidadesArrastre.indexOf(selectedUnidad);
+        this.selectedUnidadIndex = this.unidadesArrastre.indexOf(UNIDAD_SELECCIONADA);
       }
     } else {
       this.selectedUnidadIndex = null;
@@ -233,14 +218,25 @@ export class ModificacionUnidadComponent implements OnInit, OnDestroy {
 
   /**
    * Agrega una unidad actualizada desde el diálogo y la selecciona.
-   * @param {UnidadTabla} updatedUnidad - Unidad actualizada.
+   * @param {DatosUnidad} updatedUnidad - Unidad actualizada.
    * @returns {void}
    */
-  alGuardarDialogoUnidad(updatedUnidad: UnidadTabla) {
+  alGuardarDialogoUnidad(updatedUnidad: DatosUnidad): void {
+    // Generar ID temporal si no existe
+    const NEXT_ID = this.unidadesArrastre.length > 0 
+      ? Math.max(...this.unidadesArrastre.map(u => Number(u.idDeVehiculo) || 0)) + 1 
+      : 1;
+    
+    // Convertir DatosUnidad a UnidadTabla para agregar a la lista
+    const UNIDAD_TABLA: UnidadTabla = { 
+      ...updatedUnidad,
+      idDeVehiculo: updatedUnidad.idDeVehiculo || String(NEXT_ID)
+    };
+    
     // Crear una copia mutable del array antes de agregar
-    const unidadesMutables = [...this.unidadesArrastre];
-    unidadesMutables.push(updatedUnidad);
-    this.unidadesArrastre = unidadesMutables;
+    const UNIDADES_MUTABLES = [...this.unidadesArrastre];
+    UNIDADES_MUTABLES.push(UNIDAD_TABLA);
+    this.unidadesArrastre = UNIDADES_MUTABLES;
     this.selectedUnidadIndex = this.unidadesArrastre.length - 1;
     this.mostrarDialogoUnidad = false;
     // Forzar detección de cambios para asegurar que el modal se cierre
@@ -251,44 +247,44 @@ export class ModificacionUnidadComponent implements OnInit, OnDestroy {
    * Elimina la fila de unidad seleccionada.
    * @returns {void}
    */
-  deleteUnidadRow() {
+  deleteUnidadRow(): void {
     if (this.selectedUnidadIndex !== null && this.selectedUnidadIndex >= 0) {
       // Obtener la unidad a eliminar
-      const unidadAEliminar = this.unidadesArrastre[this.selectedUnidadIndex];
+      const UNIDAD_A_ELIMINAR = this.unidadesArrastre[this.selectedUnidadIndex];
       
-      if (unidadAEliminar) {
+      if (UNIDAD_A_ELIMINAR) {
         // Crear conjuntos de identificadores únicos para filtrado eficiente
-        const vinsAEliminar = new Set([unidadAEliminar.vinVehiculo].filter(Boolean));
-        const idsAEliminar = new Set([unidadAEliminar.idDeVehiculo].filter(Boolean));
-        const placasEconomicosAEliminar = new Set();
+        const VINS_A_ELIMINAR = new Set([UNIDAD_A_ELIMINAR.vinVehiculo].filter(Boolean));
+        const IDS_A_ELIMINAR = new Set([UNIDAD_A_ELIMINAR.idDeVehiculo].filter(Boolean));
+        const PLACAS_ECONOMICOS_A_ELIMINAR = new Set();
         
         // Crear identificador compuesto para placa+numeroEconomico si ambos existen
-        if (unidadAEliminar.numeroPlaca && unidadAEliminar.numeroEconomico) {
-          placasEconomicosAEliminar.add(`${unidadAEliminar.numeroPlaca}|${unidadAEliminar.numeroEconomico}`);
+        if (UNIDAD_A_ELIMINAR.numeroPlaca && UNIDAD_A_ELIMINAR.numeroEconomico) {
+          PLACAS_ECONOMICOS_A_ELIMINAR.add(`${UNIDAD_A_ELIMINAR.numeroPlaca}|${UNIDAD_A_ELIMINAR.numeroEconomico}`);
         }
         
         // Filtrar usando múltiples capas de identificación
         this.unidadesArrastre = this.unidadesArrastre.filter(unidad => {
           // Primera capa: filtrar por VIN
-          if (unidad.vinVehiculo && vinsAEliminar.has(unidad.vinVehiculo)) {
+          if (unidad.vinVehiculo && VINS_A_ELIMINAR.has(unidad.vinVehiculo)) {
             return false;
           }
           
           // Segunda capa: filtrar por ID
-          if (unidad.idDeVehiculo && idsAEliminar.has(unidad.idDeVehiculo)) {
+          if (unidad.idDeVehiculo && IDS_A_ELIMINAR.has(unidad.idDeVehiculo)) {
             return false;
           }
           
           // Tercera capa: filtrar por combinación placa+numeroEconomico
           if (unidad.numeroPlaca && unidad.numeroEconomico) {
-            const comboId = `${unidad.numeroPlaca}|${unidad.numeroEconomico}`;
-            if (placasEconomicosAEliminar.has(comboId)) {
+            const ID_COMBINACION = `${unidad.numeroPlaca}|${unidad.numeroEconomico}`;
+            if (PLACAS_ECONOMICOS_A_ELIMINAR.has(ID_COMBINACION)) {
               return false;
             }
           }
           
           // Cuarta capa: comparación de referencia de objeto como fallback
-          return unidad !== unidadAEliminar;
+          return unidad !== UNIDAD_A_ELIMINAR;
         });
       }
       
@@ -303,21 +299,7 @@ export class ModificacionUnidadComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   agregarModal(): void {
-    this.datosDialogoUnidad = {};
+    this.datosDialogoUnidad = null;
     this.mostrarDialogoUnidad = true;
-  }
-
-  /**
-   * Busca la descripción en un catálogo por su clave.
-   * @param {string} clave - Clave a buscar en el catálogo.
-   * @param {Catalogo[]} catalogo - Array del catálogo donde buscar.
-   * @returns {string} La descripción encontrada o la clave original si no se encuentra.
-   */
-  private obtenerDescripcionDeCatalogo(clave: string, catalogo: Catalogo[]): string {
-    if (!clave || !catalogo || catalogo.length === 0) {
-      return clave || '';
-    }
-    const item = catalogo.find(c => c.id === Number(clave) || c.descripcion === clave);
-    return item ? item.descripcion : clave;
   }
 }

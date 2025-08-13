@@ -4,8 +4,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite40301State, Tramite40301Store } from '../../estados/tramite40301.store';
-import { CapturarService } from '../../services/capturar.service';
-// import { Catalogo } from '@libs/shared/data-access-user/src';
+import { CapturarService } from '../../services/capturar.service'; 
 import { Tramite40301Query } from '../../estados/tramite40301.query';
 
 @Component({

@@ -27,7 +27,7 @@ import {
 } from '../estados/tramite103.store';
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { takeUntil, map, merge } from 'rxjs';
+import { takeUntil, map, merge, distinctUntilChanged } from 'rxjs';
 import { Tramite103Query } from '../estados/tramite103.query';
 
 /**
@@ -335,6 +335,11 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   @ViewChild('confirmarModal') confirmarModalElement!: ElementRef;
 
   /**
+   * Referencia al elemento modal de confirmación de vehículo.
+   */
+  @ViewChild('confirmarModalVehiculo') confirmarModalVehiculoElement!: ElementRef;
+
+  /**
    * Referencia al botón para cerrar el modal.
    */
   @ViewChild('closeModal') closeModal!: ElementRef;
@@ -373,6 +378,16 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
    * Indica si el formulario está en modo de solo lectura.
    */
   soloLectura: boolean = false;
+
+  /**
+   * Flag para evitar bucles infinitos en el método aduanaSeleccion
+   */
+  private isProcessingAduanaSelection = false;
+
+  /**
+   * Flag para evitar bucles infinitos en el método destinoMercanciaSeleccion
+   */
+  private isProcessingDestinoSelection = false;
 
   /**
    * Constructor del componente ExencionImpuestosComponent.
@@ -417,7 +432,6 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
     });
 
     this.consultaioQuery.selectConsultaioState$
-    this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState: ConsultaDatos) => {
@@ -444,7 +458,6 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
    * @private
    */
   private obtenerEstadoSolicitud(): void {
-    this.query.selectSolicitud$
     this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -548,7 +561,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
         usoEspecifico: [this.solicitudState?.usoEspecifico, [Validators.required]],
         condicionMercancia: [this.solicitudState?.condicionMercancia, [Validators.required]],
         unidadMedida: [this.solicitudState?.unidadMedida, [Validators.required]],
-        vehiculo: [this.solicitudState?.vehiculo, [Validators.required]],
+        vehiculo: [this.solicitudState?.vehiculo ?? false],
         ano: [this.solicitudState?.ano ?? ''],
         cantidad: [this.solicitudState?.cantidad, [Validators.required]],
         marca: [this.solicitudState?.marca],
@@ -567,8 +580,15 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
 
     // Suscribirse a los cambios de aduana para habilitar/deshabilitar los botones de radio
     this.tramiteForm?.get('exencionImpuestos.aduana')?.valueChanges
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(() => this.aduanaSeleccion());
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        distinctUntilChanged()
+      )
+      .subscribe((value) => {
+        if (!this.isProcessingAduanaSelection) {
+          this.aduanaSeleccion();
+        }
+      });
 
     // Asegura el estado correcto de habilitación/deshabilitación del radio después de la inicialización del formulario
     this.aduanaSeleccion();
@@ -608,32 +628,43 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   aduanaSeleccion(): void {
-    const ADUANA = this.tramiteForm.get('exencionImpuestos.aduana')?.value;
-    this.store.setAduana(ADUANA);
-    // ADUANA puede ser id (número) o descripción (cadena), así que buscar por id si es posible
-    let aduanaObj: Catalogo | undefined = undefined;
-    // Intentar coincidir por id (número) primero
-    if (!isNaN(Number(ADUANA))) {
-      aduanaObj = this.aduana.find(a => a.id === Number(ADUANA));
+    if (this.isProcessingAduanaSelection) {
+      return;
     }
-    // Alternativa: intentar coincidir por descripción (cadena)
-    if (!aduanaObj && typeof ADUANA === 'string') {
-      aduanaObj = this.aduana.find(a => a.descripcion === ADUANA);
-    }
-    // Registro de depuración
-    const opcionControl = this.tramiteForm.get('importadorExportador.opcion');
-    if (aduanaObj && aduanaObj.descripcion && aduanaObj.descripcion.toLowerCase().includes('salud')) {
-      this.opcionDeshabilitado = false;
-      opcionControl?.enable({ emitEvent: false });
-      // Solución temporal: forzar la reinicialización del valor para activar el componente personalizado
-      const currentValue = opcionControl?.value;
-      opcionControl?.setValue('', { emitEvent: false });
-      setTimeout(() => opcionControl?.setValue(currentValue, { emitEvent: false }), 0);
-    } else {
-      this.opcionDeshabilitado = true;
-      this.valorSeleccionado = '';
-      opcionControl?.setValue('', { emitEvent: false });
-      opcionControl?.disable({ emitEvent: false });
+    
+    this.isProcessingAduanaSelection = true;
+    
+    try {
+      const ADUANA = this.tramiteForm.get('exencionImpuestos.aduana')?.value;
+      this.store.setAduana(ADUANA);
+      // ADUANA puede ser id (número) o descripción (cadena), así que buscar por id si es posible
+      let aduanaObj: Catalogo | undefined = undefined;
+      // Intentar coincidir por id (número) primero
+      if (!isNaN(Number(ADUANA))) {
+        aduanaObj = this.aduana.find(a => a.id === Number(ADUANA));
+      }
+      // Alternativa: intentar coincidir por descripción (cadena)
+      if (!aduanaObj && typeof ADUANA === 'string') {
+        aduanaObj = this.aduana.find(a => a.descripcion === ADUANA);
+      }
+      // Registro de depuración
+      const opcionControl = this.tramiteForm.get('importadorExportador.opcion');
+      if (aduanaObj && aduanaObj.descripcion && aduanaObj.descripcion.toLowerCase().includes('salud')) {
+        this.opcionDeshabilitado = false;
+        opcionControl?.enable({ emitEvent: false });
+        // Simplemente establezca el valor actual sin la manipulación del tiempo.
+        if (opcionControl?.value) {
+          opcionControl.updateValueAndValidity({ emitEvent: false });
+        }
+      } else {
+        this.opcionDeshabilitado = true;
+        this.valorSeleccionado = '';
+        opcionControl?.setValue('', { emitEvent: false });
+        opcionControl?.disable({ emitEvent: false });
+      }
+    } finally {
+      // Restablecer siempre la bandera
+      this.isProcessingAduanaSelection = false;
     }
   }
 
@@ -647,23 +678,35 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   destinoMercanciaSeleccion(): void {
-    const DESTINO_MERCANCIA = this.tramiteForm.get('exencionImpuestos.destinoMercancia')?.value;
-    this.store.setDestinoMercancia(DESTINO_MERCANCIA);
-    // Buscar el objeto destinoMercancia seleccionado
-    const destinoObj = this.destinoMercancia.find(d => d.id === DESTINO_MERCANCIA);
-    const opcionControl = this.tramiteForm.get('importadorExportador.opcion');
-    if (destinoObj && destinoObj.descripcion && destinoObj.descripcion.toLowerCase().includes('salud')) {
-      this.opcionDeshabilitado = false;
-      opcionControl?.enable({ emitEvent: false });
-      // Solución temporal: forzar la reinicialización del valor para activar el componente personalizado
-      const currentValue = opcionControl?.value;
-      opcionControl?.setValue('', { emitEvent: false });
-      setTimeout(() => opcionControl?.setValue(currentValue, { emitEvent: false }), 0);
-    } else {
-      this.opcionDeshabilitado = true;
-      this.valorSeleccionado = '';
-      opcionControl?.setValue('', { emitEvent: false });
-      opcionControl?.disable({ emitEvent: false });
+    // Evite bucles infinitos con protección de reentrada
+    if (this.isProcessingDestinoSelection) {
+      return;
+    }
+    
+    this.isProcessingDestinoSelection = true;
+    
+    try {
+      const DESTINO_MERCANCIA = this.tramiteForm.get('exencionImpuestos.destinoMercancia')?.value;
+      this.store.setDestinoMercancia(DESTINO_MERCANCIA);
+      // Buscar el objeto destinoMercancia seleccionado
+      const destinoObj = this.destinoMercancia.find(d => d.id === DESTINO_MERCANCIA);
+      const opcionControl = this.tramiteForm.get('importadorExportador.opcion');
+      if (destinoObj && destinoObj.descripcion && destinoObj.descripcion.toLowerCase().includes('salud')) {
+        this.opcionDeshabilitado = false;
+        opcionControl?.enable({ emitEvent: false });
+        // Simplemente establezca el valor actual sin la manipulación del tiempo.
+        if (opcionControl?.value) {
+          opcionControl.updateValueAndValidity({ emitEvent: false });
+        }
+      } else {
+        this.opcionDeshabilitado = true;
+        this.valorSeleccionado = '';
+        opcionControl?.setValue('', { emitEvent: false });
+        opcionControl?.disable({ emitEvent: false });
+      }
+    } finally {
+      // Restablecer siempre la bandera
+      this.isProcessingDestinoSelection = false;
     }
   }
 
@@ -719,8 +762,8 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
    */
   /**
    * Maneja la selección del checkbox de vehículo en el formulario de mercancías.
-   * Si el checkbox está seleccionado, establece los validadores requeridos para los campos relacionados (marca, modelo, serie, año)
-   * y abre el modal de confirmación. Si no está seleccionado, elimina los validadores de esos campos.
+   * Si el checkbox está seleccionado, abre el modal de confirmación de forma segura.
+   * Si no está seleccionado, elimina los validadores de esos campos.
    * Finalmente, actualiza la validez de los controles.
    *
    * @returns {void}
@@ -732,44 +775,118 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
     const serieCtrl = this.agregarMercanciasForm.get('datosMercancia.serie');
     const modeloCtrl = this.agregarMercanciasForm.get('datosMercancia.modelo');
     const VEHICULO = vehiculoCtrl?.value;
+    
+    // Actualizar tienda
     this.store.setVehiculo(VEHICULO);
+    
     if (VEHICULO) {
-      marcaCtrl?.setValidators([Validators.required]);
-      modeloCtrl?.setValidators([Validators.required]);
-      serieCtrl?.setValidators([Validators.required]);
-      anoCtrl?.setValidators([Validators.required]);
-      this.abrirConfirmarModal();
+      this.abrirModalVehiculoSeguro();
     } else {
+      // Borrar validadores cuando no están marcados
       marcaCtrl?.clearValidators();
       modeloCtrl?.clearValidators();
       serieCtrl?.clearValidators();
       anoCtrl?.clearValidators();
+      
+      marcaCtrl?.updateValueAndValidity({ emitEvent: false });
+      modeloCtrl?.updateValueAndValidity({ emitEvent: false });
+      serieCtrl?.updateValueAndValidity({ emitEvent: false });
+      anoCtrl?.updateValueAndValidity({ emitEvent: false });
     }
-    marcaCtrl?.updateValueAndValidity();
-    modeloCtrl?.updateValueAndValidity();
-    serieCtrl?.updateValueAndValidity();
-    anoCtrl?.updateValueAndValidity();
   }
 
   /**
-   * Abre el modal de confirmación (confirmarModal) al seleccionar el checkbox de vehículo.
+   * Abre el modal de confirmación de vehículo de manera segura.
+   * Utiliza un enfoque que evita conflictos con Bootstrap y problemas de colgado.
+   *
+   * @returns {void}
    */
-  abrirConfirmarModal(): void {
-    // Extiende la interfaz Window para incluir bootstrap
-    interface BootstrapWindow extends Window {
-      bootstrap?: any;
-    }
-    const win = window as BootstrapWindow;
-    if (this.confirmarModalElement && this.confirmarModalElement.nativeElement) {
-      // Usar el modal de Bootstrap si está disponible
-      if (win.bootstrap) {
-        const modal = new win.bootstrap.Modal(this.confirmarModalElement.nativeElement);
-        modal.show();
-      } else {
-        // Alternativa: disparar el click en el botón para abrir el modal
-        this.confirmarModalElement.nativeElement.style.display = 'block';
+  abrirModalVehiculoSeguro(): void {
+    setTimeout(() => {
+      const modalVehiculo = document.getElementById('confirmarModalVehiculo');
+      if (modalVehiculo) {
+        try {
+          const win = window as any;
+          if (win.bootstrap && win.bootstrap.Modal) {
+            const modalInstance = new win.bootstrap.Modal(modalVehiculo, {
+              backdrop: 'static',
+              keyboard: false,
+              focus: false 
+            });
+            modalInstance.show();
+          } else {
+            modalVehiculo.style.display = 'block';
+            modalVehiculo.style.zIndex = '1070';
+            modalVehiculo.classList.add('show');
+            modalVehiculo.setAttribute('aria-hidden', 'false');
+            
+            // Agregar fondo manualmente
+            const backdrop = document.createElement('div');
+            backdrop.className = 'modal-backdrop fade show';
+            backdrop.style.zIndex = '1069';
+            document.body.appendChild(backdrop);
+          }
+        } catch (error) {
+          // Retroceder para confirmar el diálogo si falla el modal
+          const confirmacion = confirm('¿Confirma que la mercancía es un vehículo?');
+          if (confirmacion) {
+            this.confirmarVehiculo();
+          } else {
+            this.cancelarVehiculo();
+          }
+        }
       }
-    }
+    }, 50);
+  }
+
+  /**
+   * Confirma la selección de vehículo y establece los validadores requeridos.
+   *
+   * @returns {void}
+   */
+  confirmarVehiculo(): void {
+    const marcaCtrl = this.agregarMercanciasForm.get('datosMercancia.marca');
+    const anoCtrl = this.agregarMercanciasForm.get('datosMercancia.ano');
+    const serieCtrl = this.agregarMercanciasForm.get('datosMercancia.serie');
+    const modeloCtrl = this.agregarMercanciasForm.get('datosMercancia.modelo');
+    
+    // Establecer validadores para campos de vehículos
+    marcaCtrl?.setValidators([Validators.required]);
+    modeloCtrl?.setValidators([Validators.required]);
+    serieCtrl?.setValidators([Validators.required]);
+    anoCtrl?.setValidators([Validators.required]);
+    
+    // Actualizar validez sin emitir eventos
+    marcaCtrl?.updateValueAndValidity({ emitEvent: false });
+    modeloCtrl?.updateValueAndValidity({ emitEvent: false });
+    serieCtrl?.updateValueAndValidity({ emitEvent: false });
+    anoCtrl?.updateValueAndValidity({ emitEvent: false });
+  }
+
+  /**
+   * Cancela la selección de vehículo y desmarca el checkbox.
+   *
+   * @returns {void}
+   */
+  cancelarVehiculo(): void {
+    const vehiculoCtrl = this.agregarMercanciasForm.get('datosMercancia.vehiculo');
+    const marcaCtrl = this.agregarMercanciasForm.get('datosMercancia.marca');
+    const anoCtrl = this.agregarMercanciasForm.get('datosMercancia.ano');
+    const serieCtrl = this.agregarMercanciasForm.get('datosMercancia.serie');
+    const modeloCtrl = this.agregarMercanciasForm.get('datosMercancia.modelo');
+    
+    // Desmarque la casilla de verificación del vehículo y borre los validadores.
+    vehiculoCtrl?.setValue(false, { emitEvent: false });
+    marcaCtrl?.clearValidators();
+    modeloCtrl?.clearValidators();
+    serieCtrl?.clearValidators();
+    anoCtrl?.clearValidators();
+
+    // Actualizar validez sin emitir eventos
+    marcaCtrl?.updateValueAndValidity({ emitEvent: false });
+    modeloCtrl?.updateValueAndValidity({ emitEvent: false });
+    serieCtrl?.updateValueAndValidity({ emitEvent: false });
+    anoCtrl?.updateValueAndValidity({ emitEvent: false });
   }
 
   /**
@@ -814,12 +931,10 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
     if (this.closeModal) {
       this.closeModal.nativeElement.click();
     }
-    // Eliminar cualquier elemento modal-backdrop restante (Bootstrap a veces los deja)
-    setTimeout(() => {
-      const backdrops = document.querySelectorAll('.modal-backdrop');
-      backdrops.forEach(bd => bd.parentNode?.removeChild(bd));
-      document.body.classList.remove('modal-open');
-    }, 300); // Esperar a que termine la animación del modal
+    // Limpie los fondos modales inmediatamente para evitar que se cuelguen.
+    const backdrops = document.querySelectorAll('.modal-backdrop');
+    backdrops.forEach(bd => bd.parentNode?.removeChild(bd));
+    document.body.classList.remove('modal-open');
   }
 
   /**
@@ -848,16 +963,16 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
       const vehiculoValue = valores.vehiculo === true ? 'Sí' : 'No';
       const DATOS = {
         tbodyData: [
-          valores.tipoDeMercancia ?? '', // 0: Tipo de mercancía
-          valores.cantidad ?? '',        // 1: Cantidad
-          valores.unidadMedida ?? '',    // 2: Unidad de medida de Comercialización
-          valores.ano ?? '',             // 3: Año
-          valores.modelo ?? '',          // 4: Modelo
-          valores.marca ?? '',           // 5: Marca
-          valores.serie ?? '',           // 6: Numero de serie
-          valores.usoEspecifico ?? '',   // 7: Uso específico (NEW)
-          valores.condicionMercancia ?? '', // 8: Condición de la mercancía
-          vehiculoValue                  // 9: Vehículo
+          valores.tipoDeMercancia ?? '',
+          valores.cantidad ?? '',
+          valores.unidadMedida ?? '',
+          valores.ano ?? '',
+          valores.modelo ?? '',
+          valores.marca ?? '',
+          valores.serie ?? '',
+          valores.usoEspecifico ?? '',
+          valores.condicionMercancia ?? '',
+          vehiculoValue
         ]
       };
       if (this.filaEditando !== null) {
@@ -880,7 +995,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
       this.agregarMercanciasForm.markAsUntouched();
       this.agregarMercanciasForm.markAsPristine();
       this.envioIntentado = false;
-      setTimeout(() => this.cerrarModal(), 0);
+      this.cerrarModal();
       return;
     }
     // Sí es vehículo, requiere el formulario completo válido
@@ -889,16 +1004,16 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
       const vehiculoValue = valores.vehiculo === true ? 'Sí' : 'No';
       const DATOS = {
         tbodyData: [
-          valores.tipoDeMercancia ?? '', // 0: Tipo de mercancía
-          valores.cantidad ?? '',        // 1: Cantidad
-          valores.unidadMedida ?? '',    // 2: Unidad de medida de Comercialización
-          valores.ano ?? '',             // 3: Año
-          valores.modelo ?? '',          // 4: Modelo
-          valores.marca ?? '',           // 5: Marca
-          valores.serie ?? '',           // 6: Numero de serie
-          valores.usoEspecifico ?? '',   // 7: Uso específico (NEW)
-          valores.condicionMercancia ?? '', // 8: Condición de la mercancía
-          vehiculoValue                  // 9: Vehículo
+          valores.tipoDeMercancia ?? '',
+          valores.cantidad ?? '',
+          valores.unidadMedida ?? '',
+          valores.ano ?? '',
+          valores.modelo ?? '',
+          valores.marca ?? '',
+          valores.serie ?? '',
+          valores.usoEspecifico ?? '',
+          valores.condicionMercancia ?? '',
+          vehiculoValue
         ]
       };
       if (this.filaEditando !== null) {
@@ -921,7 +1036,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
       this.agregarMercanciasForm.markAsUntouched();
       this.agregarMercanciasForm.markAsPristine();
       this.envioIntentado = false;
-      setTimeout(() => this.cerrarModal(), 0);
+      this.cerrarModal();
       return;
     }
     // Si no cumple, marcar como tocado para mostrar errores
