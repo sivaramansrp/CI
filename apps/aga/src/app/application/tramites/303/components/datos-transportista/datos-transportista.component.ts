@@ -24,11 +24,19 @@ export class DatosTransportistaComponent implements OnDestroy, OnInit {
   private destroyNotifier$: Subject<void> = new Subject();
   /** Estado del trámite 303 consultado */
   public tramiteConsultado?: Tramite303Store;
+  /**
+   * Constructor para el componente de datos del transportista.
+   * @param tramite303Query - Consulta para el trámite 303.
+   * @param router - Router para la navegación.
+   * @param tramite303State - Estado del trámite 303.
+   */
   constructor(private tramite303Query: Tramite303Query,
     private router: Router,
     private tramite303State: Tramite303StoreService,
   ) { }
-
+  /**
+   * Método para inicializar el componente.
+   */
   ngOnInit(): void {
     this.tramite303Query.selectSolicitud$
       .pipe(

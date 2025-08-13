@@ -67,6 +67,9 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
     this.suscribirACambios();
   }
 
+  /**
+   * Inicializa el formulario de registro de transportistas con los valores por defecto
+   */
   inicializarFormulario(): void {
     this.FormTrasportista = this.fb.group({
       nacionalidad: ['nacional'],
