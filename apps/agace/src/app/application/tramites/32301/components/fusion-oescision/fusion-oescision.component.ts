@@ -8,26 +8,31 @@ import {
 } from '@angular/core';
 import {
   AlertComponent,
+  ConfiguracionColumna,
   ConsultaioQuery,
   InputFecha,
   NotificacionesComponent,
-  TableComponent,
+  TablaSeleccion,
   TablePaginationComponent,
   TituloComponent,
 } from '@ng-mf/data-access-user';
 import {
   CANTIDAD_BIENES_OPTION,
+  CONFIGURATION_TABLA_GRID_FUSION_ESCISION,
+  EscisionHeaderItem,
   FECHA_INGRESO,
   FUSIONRADIO_OPTIONS,
   FUSIONRADIO_OPTIONS_ONLY,
+  FUSION_O_ESCISION_OPTIONS,
 } from '../../enums/fusion-oescision.enum';
 import {
   FormBuilder,
+  FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { InputFechaComponent, InputRadioComponent, Notificacion } from '@libs/shared/data-access-user/src';
+import { InputFechaComponent, InputRadioComponent, Notificacion, TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { CommonModule } from '@angular/common';
@@ -36,10 +41,7 @@ import { PersonaFusionEscisionDTO } from '../../models/avisomodify.model';
 import { TableDataNgTable } from '../../models/avisomodify.model';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
 import { Tramite32301Store } from '../../estados/tramite32301.store';
-interface RatioOption {
-  label: string;
-  value: string | number;
-}
+
 /**
  * Componente responsable de la gestión de datos relacionados con la fusión o escisión de empresas.
  * Maneja formularios reactivos, carga de datos desde servicios y visualización condicional.
@@ -53,10 +55,10 @@ interface RatioOption {
     AlertComponent,
     TituloComponent,
     InputRadioComponent,
-    TableComponent,
     TablePaginationComponent,
     NotificacionesComponent,
-    InputFechaComponent
+    InputFechaComponent,
+    TablaDinamicaComponent
   ],
   templateUrl: './fusion-oescision.component.html',
 })
@@ -78,7 +80,7 @@ export class FusionOescisionComponent
   labelFechaFusionOscision!: string;
 
   /** Opciones para el input radio de capacidad de almacenamiento */
-  radioOptions!: RatioOption[];
+  radioOptions = FUSION_O_ESCISION_OPTIONS;
 
   /** Visibilidad del bloque con certificación (en formulario principal) */
   conCertificacionPrincipalVisible: boolean = true;
@@ -100,6 +102,23 @@ export class FusionOescisionComponent
 
   /** Encabezado de tabla que muestra los datos de empresas fusionadas/escindidas */
   gridFusionEscisionHeader: string[] = [];
+
+  /**
+    * Estado de la selección de la tabla.
+    * @type {TablaSeleccion}
+    */
+  seleccionTabla = TablaSeleccion.CHECKBOX;
+  /**
+   * Encabezados de la tabla de fracciones arancelarias.
+   */
+  fusionEscisionHeader: EscisionHeaderItem[] = [];
+
+  /**
+ * Configuración de las columnas de la tabla de fusión y escisión.
+ * @type {ConfiguracionColumna<EscisionHeaderItem>[]}
+ */
+  configuracionfusionEscisionHeader: ConfiguracionColumna<EscisionHeaderItem>[] = CONFIGURATION_TABLA_GRID_FUSION_ESCISION;
+
 
   /** Datos a mostrar en la tabla */
   gridFusionEscisionData: { tbodyData: string[] }[] = [{ tbodyData: [] }];
@@ -149,7 +168,12 @@ export class FusionOescisionComponent
  * @default FECHA_INGRESO
  */
   public fechaInicioInput: InputFecha = FECHA_INGRESO;
-
+  /**
+ * Fila seleccionada en la tabla de mercancías seleccionadas.
+ * 
+ * Representa la mercancía seleccionada actualmente en la tabla de mercancías seleccionadas.
+ */
+  seleccionadasFila!: EscisionHeaderItem | null;
   /**
    * Indica si se ha seleccionado una opción de fusión o escisión.
    * Se utiliza para mostrar u ocultar secciones del formulario.
@@ -193,9 +217,27 @@ export class FusionOescisionComponent
       .subscribe();
   }
 
+  get fechaControl(): FormControl {
+  return this.formulario.get('personaFusionEscisionDTO.fecha') as FormControl;
+}
+
   /** Inicializa formularios y obtiene opciones del servicio */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
+
+    this.Tramite32301Query.selectState$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((formState) => {
+        this.fusionEscisionHeader = formState.fusionEscisionHeader || [];
+        if (formState?.formulario) {
+          const NUMERO = Number(formState?.formulario?.['numeroTotalCarros']);
+          this.divCompletoVisible = NUMERO === 1 || NUMERO === 0;
+          this.mostrarFusionOEscision(NUMERO)
+          this.formulario.patchValue(formState.formulario);
+
+        }
+      });
+
   }
   /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.
@@ -255,17 +297,7 @@ export class FusionOescisionComponent
 
   async inicializarFormulario(): Promise<void> {
     await this.initializeForm();
-    this.getCapacidadAlmacenamiento();
     this.getGridsubFusionOescision();
-  }
-
-  /** Llama al servicio para obtener opciones de capacidad de almacenamiento */
-  getCapacidadAlmacenamiento(): void {
-    this.AvisoModifyService.getCapacidadAlmacenamiento()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((resp) => {
-        this.radioOptions = Object.assign([], resp);
-      });
   }
 
   /** Inicializa las instancias de los modales al cargar la vista */
@@ -285,23 +317,40 @@ export class FusionOescisionComponent
       cantidadBienes: [null, Validators.required],
       fechaInspeccion: [{ value: '' }],
       personaFusionEscisionDTO: this.fb.group({
-        rfc: ['', Validators.required],
-        razonSocial: [{ value: '', disabled: true }],
-        numFolioTramite: [{ value: '', disabled: true }],
-        fechaInicioVigencia: [{ value: '', disabled: true }],
-        fechaFinVigencia: [{ value: '', disabled: true }],
-        descripcionClobGenerica2: ['', Validators.required]
+        registroFederalDeContribuyentes: ['', Validators.required],
+        denominacionORazonSocial: [{ value: '', disabled: true }],
+        folioVucemUltimaCertificacion: [{ value: '', disabled: true }],
+        fechaInicioVigenciaUltimaCertificacion: [{ value: '', disabled: true }],
+        fechaFinVigenciaUltimaCertificacion: [{ value: '', disabled: true }],
+        descripcionClobGenerica2: ['', Validators.required],
+        fecha: [{ value: '' }],
+      }),
+      personaFusionEscisionModal: this.fb.group({
+        registroFederalDeContribuyentes: ['', Validators.required],
+        denominacionORazonSocial: [{ value: '', disabled: true }],
+        folioVucemUltimaCertificacion: [{ value: '', disabled: true }],
+        fechaInicioVigenciaUltimaCertificacion: [{ value: '', disabled: true }],
+        fechaFinVigenciaUltimaCertificacion: [{ value: '', disabled: true }],
       }),
     });
 
     this.modelFormulario = this.fb.group({
       mCantidadBienes: [null, Validators.required],
       personaFusionEscisionDTO: this.fb.group({
-        rfc: ['', Validators.required],
-        razonSocial: [{ value: '', disabled: true }],
-        numFolioTramite: [{ value: '', disabled: true }],
-        fechaInicioVigencia: [{ value: '', disabled: true }],
-        fechaFinVigencia: [{ value: '', disabled: true }],
+        registroFederalDeContribuyentes: ['', Validators.required],
+        denominacionORazonSocial: [{ value: '', disabled: true }],
+        folioVucemUltimaCertificacion: [{ value: '', disabled: true }],
+        fechaInicioVigenciaUltimaCertificacion: [{ value: '', disabled: true }],
+        fechaFinVigenciaUltimaCertificacion: [{ value: '', disabled: true }],
+        fecha: [{ value: '' }],
+        descripcionClobGenerica2: ['', Validators.required],
+      }),
+      personaFusionEscisionModal: this.fb.group({
+        registroFederalDeContribuyentes: ['', Validators.required],
+        denominacionORazonSocial: [{ value: '', disabled: true }],
+        folioVucemUltimaCertificacion: [{ value: '', disabled: true }],
+        fechaInicioVigenciaUltimaCertificacion: [{ value: '', disabled: true }],
+        fechaFinVigenciaUltimaCertificacion: [{ value: '', disabled: true }],
       }),
     });
   }
@@ -317,7 +366,7 @@ export class FusionOescisionComponent
   }
 
   /** Cambia dinámicamente los títulos y etiquetas según la opción seleccionada */
-  mostrarFusionOEscision(ev: string | number): void {
+  mostrarFusionOEscision(ev: string | number): void {    
     if (ev === 1 || ev === '1') {
       this.isSelectFusionEscision = true;
       this.fusionOescisionTitulo = 'Datos de las empresas fusionadas';
@@ -330,8 +379,10 @@ export class FusionOescisionComponent
       this.subFusionOescisionTitulo = 'Datos de las empresas escindidas';
       this.fechaInicioInput.labelNombre = 'Fecha en que surte efecto la escisión';
     }
-    this.divCompletoVisible = ev === '1' || ev === '0';
-   
+    const VALOR = Number(ev);
+    this.divCompletoVisible = VALOR === 1 || VALOR === 0;
+
+
   }
 
   /** Muestra u oculta los bloques de certificación según la opción elegida */
@@ -343,13 +394,69 @@ export class FusionOescisionComponent
     }
   }
 
+  /**
+    * Maneja la selección de filas en la tabla de seleccionadas.
+    * 
+    * Este método asigna la fila seleccionada a `seleccionadasFila`.
+    * 
+    * @param {EscisionHeaderItem} evento - La fila seleccionada en la tabla de mercancías seleccionadas.
+    */
+  seleccionDeFilas(evento: EscisionHeaderItem): void {
+    this.seleccionadasFila = evento;
+  }
+  /**
+   * Modifica la fila seleccionada en la tabla de mercancías seleccionadas.
+   * 
+   * Este método actualiza el formulario con los valores de la fila seleccionada y muestra el modal de fracciones.
+   * 
+   * @param {FraccionGridItem} seleccionadasTablaDatos - La fila seleccionada en la tabla de mercancías seleccionadas.
+   */
+  modificarSeleccionada(seleccionadasTablaDatos?: EscisionHeaderItem): void {
+    const FORM_VALUES = seleccionadasTablaDatos;
+    if (this.ModificarFusionEscisionInstance && this.seleccionadasFila) {
+      this.ModificarFusionEscisionInstance?.show();
+    }
+    if (FORM_VALUES) {
+      this.personaFusionEscisionModal.patchValue({
+        id: FORM_VALUES.id || this.fusionEscisionHeader.length + 1,
+        registroFederalDeContribuyentes: FORM_VALUES.registroFederalDeContribuyentes,
+        denominacionORazonSocial: FORM_VALUES.denominacionORazonSocial,
+        folioVucemUltimaCertificacion: FORM_VALUES.folioVucemUltimaCertificacion,
+        fechaInicioVigenciaUltimaCertificacion: FORM_VALUES.fechaInicioVigenciaUltimaCertificacion,
+        fechaFinVigenciaUltimaCertificacion: FORM_VALUES.fechaFinVigenciaUltimaCertificacion,
+      });
+    }
+  }
+  /**
+   * Elimina la fracción seleccionada de la lista de fracciones.
+   * 
+   * Este método busca la fracción por su ID y la elimina de la lista `gridFraccionesHeader`.
+   * Si la fracción no se encuentra, actualiza el store con la lista actualizada.
+   * 
+   * @param {number} id - El ID de la fracción a eliminar.
+   */
+  eliminarSeleccionada(id: number): void {
+    const INDEX = this.fusionEscisionHeader.findIndex(item => Number(item.id) === id);
+    if (INDEX !== -1) {
+      this.fusionEscisionHeader = this.fusionEscisionHeader.filter(item => Number(item.id) !== id);
+      this.seleccionadasFila = null;
+      this.store.setFusionEscisionHeader(this.fusionEscisionHeader);
+    }
+  }
+
   /** Carga los datos de persona fusionada desde el servicio y los guarda en el store */
   cargarDatosPersonaFusion(): void {
     this.AvisoModifyService.cargarDatosPersonaFusion()
       .pipe(
         takeUntil(this.destroy$),
         map((resp) => {
-          this.personaFusionEscisionDTO.patchValue(resp);
+          this.personaFusionEscisionDTO.patchValue({
+            registroFederalDeContribuyentes: resp.registroFederalDeContribuyentes,
+            denominacionORazonSocial: resp.denominacionORazonSocial,
+            folioVucemUltimaCertificacion: resp.folioVucemUltimaCertificacion,
+            fechaInicioVigenciaUltimaCertificacion: this.formatFechaToInputDate(resp.fechaInicioVigenciaUltimaCertificacion),
+            fechaFinVigenciaUltimaCertificacion: this.formatFechaToInputDate(resp.fechaFinVigenciaUltimaCertificacion),
+          });
           this.store.SetpersonaFusionEscisionDTO(resp);
         })
       )
@@ -362,19 +469,17 @@ export class FusionOescisionComponent
       .pipe(
         takeUntil(this.destroy$),
         map((resp) => {
-          this.personaFusionEscisionDTO.patchValue(resp);
+          this.personaFusionEscisionModal.patchValue({
+            registroFederalDeContribuyentes: resp.registroFederalDeContribuyentes,
+            denominacionORazonSocial: resp.denominacionORazonSocial,
+            folioVucemUltimaCertificacion: resp.folioVucemUltimaCertificacion,
+            fechaInicioVigenciaUltimaCertificacion: this.formatFechaToInputDate(resp.fechaInicioVigenciaUltimaCertificacion),
+            fechaFinVigenciaUltimaCertificacion: this.formatFechaToInputDate(resp.fechaFinVigenciaUltimaCertificacion)
+          });
         })
       )
       .subscribe();
-    this.Tramite32301Query.selectpersonaFusionEscisionDTO$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((state) => {
-        this.PersonaFusionEscisionDTO =
-          state as unknown as PersonaFusionEscisionDTO;
-        this.mpersonaFusionEscisionDTO.patchValue(
-          this.PersonaFusionEscisionDTO
-        );
-      });
+
   }
 
   getGridsubFusionOescision(): void {
@@ -393,6 +498,11 @@ export class FusionOescisionComponent
   /** Getter del grupo de persona fusionada en el formulario del modal */
   get mpersonaFusionEscisionDTO(): FormGroup {
     return this.modelFormulario.get('personaFusionEscisionDTO') as FormGroup;
+  }
+
+  /** Getter del grupo de persona fusionada en el formulario del modal */
+  get personaFusionEscisionModal(): FormGroup {
+    return this.modelFormulario.get('personaFusionEscisionModal') as FormGroup;
   }
 
   /** Cambia la cantidad de elementos por página y actualiza la tabla */
@@ -416,6 +526,19 @@ export class FusionOescisionComponent
       START_INDEX + this.itemsPerPage
     );
   }
+  /**
+   * Formatea una fecha de entrada en formato 'YYYY/MM/DD' a 'YYYY-MM-DD'.
+   * @param fecha - Fecha en formato 'YYYY/MM/DD'.
+   * @returns Fecha formateada en 'YYYY-MM-DD'.
+   */
+  // eslint-disable-next-line class-methods-use-this
+  formatFechaToInputDate(fecha: string): string {
+    // Convierte '2025/03/08' → '2025-03-08'
+    if (fecha) {
+      return fecha.replace(/\//g, '-');
+    }
+    return '';
+  }
 
   /** Abre el modal de modificación de fusión o escisión */
   abrirModalFusionEscision(): void {
@@ -425,19 +548,46 @@ export class FusionOescisionComponent
   }
 
   /** Cierra el modal y actualiza los datos mostrados en la tabla */
+  nuevaFusionEscisionModal(form: FormGroup): void {
+
+    const FORM_VALUES = form.getRawValue();
+
+    const NUEVA_FUSION_ESCISION_ITEM: EscisionHeaderItem = {
+      id: this.seleccionadasFila?.id ?? FORM_VALUES.id ?? this.fusionEscisionHeader.length + 1,
+      registroFederalDeContribuyentes: FORM_VALUES.registroFederalDeContribuyentes,
+      denominacionORazonSocial: FORM_VALUES.denominacionORazonSocial,
+      folioVucemUltimaCertificacion: FORM_VALUES.folioVucemUltimaCertificacion,
+      fechaInicioVigenciaUltimaCertificacion: FORM_VALUES.fechaInicioVigenciaUltimaCertificacion,
+      fechaFinVigenciaUltimaCertificacion: FORM_VALUES.fechaFinVigenciaUltimaCertificacion,
+    };
+
+    const INDEX = this.fusionEscisionHeader.findIndex(
+      item => item.id === NUEVA_FUSION_ESCISION_ITEM.id
+    );
+
+    if (INDEX !== -1) {
+      this.fusionEscisionHeader = this.fusionEscisionHeader.map((item, i) =>
+        i === INDEX ? NUEVA_FUSION_ESCISION_ITEM : item
+      );
+    } else {
+      this.fusionEscisionHeader = [
+        ...this.fusionEscisionHeader,
+        NUEVA_FUSION_ESCISION_ITEM
+      ];
+    }
+    this.store.setFusionEscisionHeader(this.fusionEscisionHeader);
+    this.seleccionadasFila = null;
+
+    if (this.ModificarFusionEscisionInstance) {
+      this.ModificarFusionEscisionInstance.hide();
+    }
+    this.personaFusionEscisionModal.reset();
+  }
+
+  /** Cierra el modal de fusión o escisión */
   closeFusionEscisionModal(): void {
     if (this.ModificarFusionEscisionInstance) {
       this.ModificarFusionEscisionInstance.hide();
-      this.Tramite32301Query.selectpersonaFusionEscisionDTO$
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((state) => {
-          this.PersonaFusionEscisionDTO =
-            state as unknown as PersonaFusionEscisionDTO;
-          const NEW_DATU = Object.values(state);
-          const TBODY_DATA = { tbodyData: NEW_DATU.map(String) };
-          this.gridFusionEscisionData.pop();
-          this.gridFusionEscisionData.push(TBODY_DATA);
-        });
     }
   }
 

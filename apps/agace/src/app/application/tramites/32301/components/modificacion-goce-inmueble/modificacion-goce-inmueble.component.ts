@@ -9,30 +9,29 @@ import {
 import {
   AlertComponent,
   Catalogo,
+  ConfiguracionColumna,
   ConsultaioQuery,
   NotificacionesComponent,
+  TablaSeleccion,
   TableComponent,
   TituloComponent,
 } from '@ng-mf/data-access-user';
 import {
+  CONFIGURATION_TABLA_MOSTRAR_GRID_NUEVO_HEADER,
   CVE_TIPO_DOC_DATA,
   FRACCION_ARANCELARIA_DATA,
   MESSAGE_NAC,
   MODIFICACION_PARTES_HEADER,
-  MOSTRAR_GRID_NUEVO_HEADER,
+  MostrarGridNuevoHeader,
   RADIO_OPTIONS,
 } from '../../enums/modificacion-goceInmueble.enum';
-import { CatalogoSelectComponent,InputRadioComponent,Notificacion } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent, InputRadioComponent, Notificacion, TablaDinamicaComponent, TablePaginationComponent } from '@libs/shared/data-access-user/src';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {
-  ModificacionGoceInmueble,
-  TableDataNgTable,
-} from '../../models/avisomodify.model';
 import {
   REGEX_POSTAL,
   REGEX_RFC,
@@ -41,15 +40,12 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
+import {
+  ModificacionGoceInmueble,
+} from '../../models/avisomodify.model';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
 import { Tramite32301Store } from '../../estados/tramite32301.store';
-interface TableData {
-  tableHeader: string[];
-  tableBody: TableBodyItem[];
-}
-interface TableBodyItem {
-  tbodyData: string[];
-}
+
 @Component({
   selector: 'app-modificacion-goce-inmueble',
   standalone: true,
@@ -62,12 +58,21 @@ interface TableBodyItem {
     TableComponent,
     CatalogoSelectComponent,
     NotificacionesComponent,
+    TablaDinamicaComponent,
+    TablePaginationComponent
   ],
   templateUrl: './modificacion-goce-inmueble.component.html',
 })
 export class ModificacionGoceInmuebleComponent
-  implements OnInit, AfterViewInit, OnDestroy
-{
+  implements OnInit, AfterViewInit, OnDestroy {
+
+  /**
+ * Configuración de las columnas de la tabla de bitácora.
+ * @type {ConfiguracionColumna<MostrarGridNuevoHeader>[]}
+ */
+  configuracionTablas: ConfiguracionColumna<MostrarGridNuevoHeader>[] = CONFIGURATION_TABLA_MOSTRAR_GRID_NUEVO_HEADER;
+
+
   /** Formulario reactivo para la modificación del goce de inmueble */
   modificacionGoceForm!: FormGroup;
 
@@ -86,25 +91,20 @@ export class ModificacionGoceInmuebleComponent
   /** Instancia del modal para el domicilio nuevo */
   modalDomiciliosInmuebleNuevoInstance!: Modal;
 
-  /** Datos de la tabla de domicilios modificados */
-  public gridDomiciliosModificados!: TableData;
 
   /** Encabezados y cuerpo de la tabla a mostrar en el grid modificado */
   public gridMostrarGridModificado:
     | { tableHeader: string[]; tableBody: string[] }
     | undefined;
 
-  /** Encabezado de la tabla */
-  tableHeader: string[] = [];
 
   /** Cuerpo de la tabla */
-  tableBody: TableBodyItem[] = [];
 
   /** Encabezado para los domicilios modificados */
   gridDomiciliosModificadosHeader: string[] = [];
 
   /** Encabezado de la tabla de domicilios nuevos */
-  mostrarGridNuevoHeader = MOSTRAR_GRID_NUEVO_HEADER;
+  mostrarGridNuevoHeader = CONFIGURATION_TABLA_MOSTRAR_GRID_NUEVO_HEADER;
 
   /** Encabezado de la tabla de partes modificadas */
   modificacionPartesHeader = MODIFICACION_PARTES_HEADER;
@@ -113,12 +113,16 @@ export class ModificacionGoceInmuebleComponent
   modificacionPartesData: { tbodyData: string[] }[] = [{ tbodyData: [] }];
 
   /** Datos de la tabla de domicilios modificados */
-  gridDomiciliosModificadosData: { tbodyData: string[] }[] = [
-    { tbodyData: [] },
-  ];
+  gridDomiciliosModificadosData: MostrarGridNuevoHeader[] = [];
+
+  /**
+ * Configuración de las columnas de la tabla de exportadores.
+ * Define el encabezado, clave y el orden de las columnas para la tabla de exportadores.
+ */
+  public checkbox = TablaSeleccion.CHECKBOX;
 
   /** Datos para mostrar en la tabla de domicilios nuevos */
-  mostrarGridNuevoHeaderData: { tbodyData: string[] }[] = [{ tbodyData: [] }];
+  mostrarGridNuevoHeaderData: MostrarGridNuevoHeader[] = [];
 
   /** Catálogo de entidades federativas */
   entidadFederativa!: Catalogo[];
@@ -157,11 +161,22 @@ export class ModificacionGoceInmuebleComponent
    * Se usa para manejar notificaciones generales sobre modificaciones dentro del sistema.
    */
   public modificarNotificacion!: Notificacion;
-   /**
-  * Indica si el formulario está en modo solo lectura.
-  * Cuando es `true`, los campos del formulario no se pueden editar.
-  */
-  esFormularioSoloLectura: boolean = false; 
+  /**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando es `true`, los campos del formulario no se pueden editar.
+ */
+  esFormularioSoloLectura: boolean = false;
+  /**
+ * Fila seleccionada en la tabla de mercancías seleccionadas.
+ * 
+ * Representa la mercancía seleccionada actualmente en la tabla de mercancías seleccionadas.
+ */
+  seleccionadasFila!: MostrarGridNuevoHeader | null;
+  /**
+ * Estado de la selección de la tabla.
+ * @type {TablaSeleccion}
+ */
+  seleccionTabla = TablaSeleccion.CHECKBOX;
   constructor(
     private fb: FormBuilder,
     private AvisoModifyService: AvisoModifyService,
@@ -169,35 +184,49 @@ export class ModificacionGoceInmuebleComponent
     private Tramite32301Query: Tramite32301Query,
     private consultaioQuery: ConsultaioQuery,
   ) {
-     /**
-     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
-     *
-     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
-     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
-     * - La suscripción se cancela automáticamente cuando `destroy$` emite un valor (para evitar fugas de memoria).
-     */
+    /**
+    * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+    *
+    * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+    * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+    * - La suscripción se cancela automáticamente cuando `destroy$` emite un valor (para evitar fugas de memoria).
+    */
     this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroy$),
-      map((seccionState)=>{
-        this.esFormularioSoloLectura = seccionState.readonly; 
-        this.inicializarEstadoFormulario();
-      })
-    )
-    .subscribe()
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
     // Inicializa el formulario si es necesario
-    this.getGridDomiciliosModificados(); // Obtiene los domicilios modificados al iniciar el componente
   }
 
- /**
- * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
- * 
- * Llama al método `inicializarEstadoFormulario()` para configurar el estado inicial
- * del formulario al momento de cargar el componente.
- */
-ngOnInit(): void {
-  this.inicializarEstadoFormulario();
-}
+  /**
+  * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+  * 
+  * Llama al método `inicializarEstadoFormulario()` para configurar el estado inicial
+  * del formulario al momento de cargar el componente.
+  */
+  ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+    this.Tramite32301Query
+      .selectState$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((formState) => {
+        this.mostrarGridNuevoHeaderData = formState.mostrarGridNuevoHeaderData || [];
+
+        if (formState?.modificacionGoceForm) {
+          this.modificacionGoceForm.patchValue(formState.modificacionGoceForm);
+          // eslint-disable-next-line dot-notation
+          const NUMERO = Number(formState?.modificacionGoceForm?.['ideGenerica2']);
+          this.verificaRadioTipoSem(NUMERO);
+
+        }
+      });
+
+  }
 
 
   /**
@@ -209,22 +238,22 @@ ngOnInit(): void {
       this.guardarDatosFormulario();
     } else {
       this.inicializarFormulario();
-    }  
+    }
   }
 
-   /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
-   */
+  /**
+  * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+  * Luego reinicializa el formulario con los valores actualizados desde el store.
+  */
   guardarDatosFormulario(): void {
-      this.inicializarFormulario();
-      if (this.esFormularioSoloLectura) {
-        this.direccionGrid.disable();
-        this.modificacionGoceForm.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.direccionGrid.enable();
-        this.modificacionGoceForm.enable();
-      }
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.direccionGrid.disable();
+      this.modificacionGoceForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.direccionGrid.enable();
+      this.modificacionGoceForm.enable();
+    }
   }
   /**
    * Inicializa el formulario reactivo para capturar el valor de 'registro'.
@@ -234,14 +263,13 @@ ngOnInit(): void {
    */
 
   inicializarFormulario(): void {
- // Inicializa el formulario reactivo
+    // Inicializa el formulario reactivo
     this.modificacionGoceForm = this.fb.group({
       ideGenerica2: ['', Validators.required], // Campo obligatorio para la selección de tipo de modificación
     });
 
     this.initializeForm(); // Inicializa el formulario para la dirección
     this.getEntidadFederativa(); // Obtiene el catálogo de entidades federativas
-    this.getGridMostrarGridModificado(); // Obtiene los datos de la tabla de domicilios modificados
   }
 
 
@@ -255,25 +283,6 @@ ngOnInit(): void {
       });
   }
 
-  /** Método para obtener los domicilios modificados del servicio */
-  getGridDomiciliosModificados(): void {
-    this.AvisoModifyService.getGridDomiciliosModificados()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: TableDataNgTable) => {
-        this.gridDomiciliosModificadosHeader = res.tableHeader; // Asigna los encabezados de la tabla
-        this.gridDomiciliosModificadosData = res.tableBody; // Asigna los datos de la tabla
-      });
-  }
-
-  /** Método para obtener los datos de la tabla que se muestra para la modificación */
-  getGridMostrarGridModificado(): void {
-    this.AvisoModifyService.getGridMostrarGridModificado()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((resp: TableDataNgTable) => {
-        this.mostrarGridNuevoHeader = resp.tableHeader; // Asigna los encabezados para los domicilios nuevos
-        this.mostrarGridNuevoHeaderData = resp.tableBody; // Asigna los datos de la tabla para domicilios nuevos
-      });
-  }
 
   /** Inicializa las instancias de los modales después de que la vista está completamente cargada */
   ngAfterViewInit(): void {
@@ -287,8 +296,8 @@ ngOnInit(): void {
   /** Método para inicializar el formulario de dirección */
   private initializeForm(): void {
     this.direccionGrid = this.fb.group({
-      idAviInmueble: [''],
-      direccion: ['', [Validators.required, Validators.maxLength(250)]],
+      idInmueble: [''],
+      domicilio: ['', [Validators.required, Validators.maxLength(250)]],
       codigoPostal: [
         '',
         [
@@ -297,13 +306,14 @@ ngOnInit(): void {
           Validators.pattern(REGEX_POSTAL),
         ],
       ],
+      entidadFederativa: [''],
       cveEntidad: ['', Validators.required],
+      alcaldiaOMunicipio: [''],
       cveMunicipio: ['', Validators.required],
+      tipoDeDocumentoConElQueSeAcreditaElUsoYGoce: [''],
       cveTipoDoc: ['', Validators.required],
-      fechaInicioAnterior: ['', Validators.required],
-      fechaFinAnterior: ['', Validators.required],
-      fechaInicioActual: ['', Validators.required],
-      fechaFinActual: ['', Validators.required],
+      fechaInicioDeVigencia: ['', Validators.required],
+      fechaFinVigencia: ['', Validators.required],
       rfcPartesC: [
         '',
         [
@@ -317,18 +327,19 @@ ngOnInit(): void {
       caracterDeCons: ['', [Validators.required, Validators.maxLength(30)]],
       observaciones: ['', [Validators.maxLength(500)]],
     });
+
   }
 
   /** Verifica el tipo de modificación seleccionada en el radio y muestra el modal correspondiente */
   verificaRadioTipoSem(ev: string | number): void {
-    this.openModificarModel();
-    if (ev === 'ModificarDomicilio') {
+    const VALOR = Number(ev);
+    if (VALOR === 0) {
 
       this.openModificarModel();
       this.mostrarGridNuevo = false;
       this.mostrarGridModificado = true;
-    } else if (ev === 'DomicilioNuevo') {
-      
+    } else if (VALOR === 1) {
+
       this.mostrarGridNuevo = true;
       this.mostrarGridModificado = false;
     } else {
@@ -403,20 +414,52 @@ ngOnInit(): void {
       .subscribe((state) => {
         this.modificacionGoceInmueble =
           state as unknown as ModificacionGoceInmueble;
-        const NEW_DATU = Object.values(this.modificacionGoceInmueble);
-        const TBODY_DATA = { tbodyData: NEW_DATU.map(String) };
-        this.mostrarGridNuevoHeaderData.push(TBODY_DATA);
       });
   }
 
   /** Guarda los datos del domicilio nuevo en el store */
-  guardarDomInmuebleNvo(): void {
-    this.store.setModificacionGoceInmueble(this.direccionGrid.value); // Guarda los datos en el store
-    this.Tramite32301Query.select().pipe(takeUntil(this.destroy$)).subscribe();
-    if (!this.direccionGrid.valid) {
-      this.direccionGrid.markAllAsTouched(); // Marca todos los campos como tocados si no son válidos
+  guardarDomInmuebleNvo(direccionGrid: FormGroup): void {
+    const FORM_VALUES = direccionGrid.getRawValue();
+
+    const NUEVA_ITEM: MostrarGridNuevoHeader = {
+      id: this.seleccionadasFila?.id ?? FORM_VALUES.id ?? this.mostrarGridNuevoHeaderData.length + 1,
+      idInmueble: FORM_VALUES.idAviInmueble || '',
+      domicilio: FORM_VALUES.domicilio || '',
+      codigoPostal: FORM_VALUES.codigoPostal || '',
+      entidadFederativa: FORM_VALUES.cveEntidad || '',
+      cveEntidad: FORM_VALUES.cveEntidad || '',
+      alcaldiaOMunicipio: FORM_VALUES.alcaldiaOMunicipio || '',
+      cveMunicipio: FORM_VALUES.cveMunicipio || '',
+      tipoDeDocumentoConElQueSeAcreditaElUsoYGoce: FORM_VALUES.tipoDeDocumentoConElQueSeAcreditaElUsoYGoce || '',
+      cveTipoDoc: FORM_VALUES.cveTipoDoc || '',
+      fechaInicioDeVigencia: FORM_VALUES.fechaInicioDeVigencia || '',
+      fechaFinVigencia: FORM_VALUES.fechaFinVigencia || '',
+      observaciones: FORM_VALUES.observaciones || '',
+    };
+
+    const INDEX = this.mostrarGridNuevoHeaderData.findIndex(
+      item => item.id === NUEVA_ITEM.id
+    );
+
+    if (INDEX !== -1) {
+      this.mostrarGridNuevoHeaderData = this.mostrarGridNuevoHeaderData.map((item, i) =>
+        i === INDEX ? NUEVA_ITEM : item
+      );
+    } else {
+      this.mostrarGridNuevoHeaderData = [
+        ...this.mostrarGridNuevoHeaderData,
+        NUEVA_ITEM
+      ];
     }
-    this.closeModalDomiciliosInmuebleNuevoModel(); // Cierra el modal después de guardar
+
+    this.store.setMostrarGridNuevoHeaderData(this.mostrarGridNuevoHeaderData);
+    this.seleccionadasFila = null;
+
+    if (this.modalDomiciliosInmuebleNuevoInstance) {
+      this.modalDomiciliosInmuebleNuevoInstance.hide();
+    }
+    this.direccionGrid.reset();
+
   }
 
   /** Cierra el modal del domicilio nuevo */
@@ -486,7 +529,6 @@ ngOnInit(): void {
   closeModalDomiciliosInmuebleNuevoModel(): void {
     if (this.modalDomiciliosInmuebleNuevoInstance) {
       this.modalDomiciliosInmuebleNuevoInstance.hide(); // Oculta el modal
-      this.getValorStore(); // Actualiza la vista con los valores del store
     }
   }
 
@@ -547,5 +589,61 @@ ngOnInit(): void {
 
     /** Completa el Subject para evitar memory leaks */
     this.destroy$.complete();
+  }
+  /**
+   * Maneja la selección de filas en la tabla de seleccionadas.
+   * 
+   * Este método asigna la fila seleccionada a `seleccionadasFila`.
+   * 
+   * @param {FraccionGridItem} evento - La fila seleccionada en la tabla de mercancías seleccionadas.
+   */
+  seleccionDeFilas(evento: MostrarGridNuevoHeader): void {
+    this.seleccionadasFila = evento;
+  }
+  /**
+   * Modifica la fila seleccionada en la tabla de mercancías seleccionadas.
+   * 
+   * Este método actualiza el formulario con los valores de la fila seleccionada y muestra el modal de fracciones.
+   * 
+   * @param {FraccionGridItem} seleccionadasTablaDatos - La fila seleccionada en la tabla de mercancías seleccionadas.
+   */
+  modificarDomicilioSeleccionado(seleccionadasTablaDatos?: MostrarGridNuevoHeader): void {
+    const FORM_VALUES = seleccionadasTablaDatos;
+    if (this.modalDomiciliosInmuebleNuevoInstance && this.seleccionadasFila) {
+      this.modalDomiciliosInmuebleNuevoInstance?.show();
+    }
+    if (FORM_VALUES) {
+      this.direccionGrid.patchValue({
+        id: this.seleccionadasFila?.id ?? FORM_VALUES.id ?? this.mostrarGridNuevoHeaderData.length + 1,
+        idInmueble: FORM_VALUES.idInmueble || '',
+        domicilio: FORM_VALUES.domicilio || '',
+        codigoPostal: FORM_VALUES.codigoPostal || '',
+        entidadFederativa: FORM_VALUES.cveEntidad || '',
+        cveEntidad: FORM_VALUES.cveEntidad || '',
+        alcaldiaOMunicipio: FORM_VALUES.alcaldiaOMunicipio || '',
+        cveMunicipio: FORM_VALUES.cveMunicipio || '',
+        tipoDeDocumentoConElQueSeAcreditaElUsoYGoce: FORM_VALUES.tipoDeDocumentoConElQueSeAcreditaElUsoYGoce || '',
+        cveTipoDoc: FORM_VALUES.cveTipoDoc || '',
+        fechaInicioDeVigencia: FORM_VALUES.fechaInicioDeVigencia || '',
+        fechaFinVigencia: FORM_VALUES.fechaFinVigencia || '',
+        observaciones: FORM_VALUES.observaciones || '',
+      });
+    }
+  }
+  /**
+   * Elimina la fracción seleccionada de la lista de fracciones.
+   * 
+   * Este método busca la fracción por su ID y la elimina de la lista `gridFraccionesHeader`.
+   * Si la fracción no se encuentra, actualiza el store con la lista actualizada.
+   * 
+   * @param {number} id - El ID de la fracción a eliminar.
+   */
+  eliminaDomicilioSeleccionado(id: number): void {
+    const INDEX = this.gridDomiciliosModificadosData.findIndex(item => item.id === id);
+    if (INDEX !== -1) {
+      this.gridDomiciliosModificadosData = this.gridDomiciliosModificadosData.filter(item => item.id !== id);
+      this.seleccionadasFila = null;
+      this.store.setMostrarGridNuevoHeaderData(this.mostrarGridNuevoHeaderData);
+    }
   }
 }
