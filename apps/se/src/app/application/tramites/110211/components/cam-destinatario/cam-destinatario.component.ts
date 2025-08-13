@@ -173,8 +173,8 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy, AfterViewIni
    * Hook del ciclo de vida que se llama después de inicializar el componente.
    * Obtiene los datos iniciales para el formulario y el estado de la sección.
    */
-  ngOnInit(): void {
-    this.seccionQuery.selectSeccionState$
+async ngOnInit(): Promise<void> {
+   await this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -182,16 +182,17 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy, AfterViewIni
         })
       )
       .subscribe();
-    this.query.selectCam$
+    await this.query.selectCam$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((state) => {
           this.exportadoState = state as CamState;
+            this.initActionFormBuild();
         })
       )
       .subscribe();
 
-    this.initActionFormBuild();
+  
   }
 
   /**
