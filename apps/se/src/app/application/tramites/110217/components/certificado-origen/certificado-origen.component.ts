@@ -322,7 +322,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     public tramiteQuery: Tramite110217Query,
     private validacionesService: ValidacionesFormularioService,
     private consultaioQuery: ConsultaioQuery,
-    private cdr: ChangeDetectorRef // eslint-disable-next-line no-empty-function
+    private cdr: ChangeDetectorRef 
   ) {}
 
   /**
