@@ -80,16 +80,11 @@
               <div>
                 <app-catalogo-select class="nacionalidad" [catalogo]="paisList" [placeholder]="'Seleccione un valor'"
                   formControlName="nacionalidad" [isDisabled]="readonly" name="nacionalidad" [label]="'Nacionalidad'"
-                  [required]="false" (selectionChange)="alCambiarPais($event)"></app-catalogo-select>
-              </div>
-              @if(formChoferes.get('nacionalidad')?.invalid && (formChoferes.get('nacionalidad')?.dirty ||
-              formChoferes.get('nacionalidad')?.touched)) {
-              <div class="text-danger">
-                @if(formChoferes.get('nacionalidad')?.errors?.['required']) {
-                <small>Este campo es obligatorio.</small>
+                  [required]="true" (selectionChange)="alCambiarPais($event)"></app-catalogo-select>
+                @if(formChoferes.get('nacionalidad')?.errors?.['required'] && (formChoferes.get('nacionalidad')?.touched || enviado)) {
+                  <small class="text-danger">Este campo es obligatorio.</small>
                 }
               </div>
-              }
             </div>
 
             <div class="col-md-4">
@@ -154,9 +149,7 @@
             <div class="col-md-4">
               <div>
                 <label for="numberDeIdeFiscal">Número de identificación fiscal*:</label>
-                <span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Número de identificación fiscal en el de país residencia" ata-bs-toggle="tooltip">
-                </span>
+                <span class="bi bi-question-circle-fill mx-2" tooltip="Número de identificación fiscal en el país de residencia" placement="top"></span>
               </div>
               <div>
                 <input type="text" class="form-control" formControlName="numberDeIdeFiscal" maxlength="18" />
@@ -192,17 +185,12 @@
             <div class="col-md-4">
               <div>
                 <app-catalogo-select class="paisChn" [catalogo]="paisList" placeholder="Seleccione un país"
-                  formControlName="pais" [required]="false" [isDisabled]="readonly" name="pais" label="País"
+                  formControlName="pais" [required]="true" [isDisabled]="readonly" name="pais" label="País"
                   (selectionChange)="alCambiarPais($event)"></app-catalogo-select>
-              </div>
-              @if(formChoferes.get('pais')?.invalid && (formChoferes.get('pais')?.dirty ||
-              formChoferes.get('pais')?.touched)) {
-              <div class="text-danger">
-                @if(formChoferes.get('pais')?.errors?.['required']) {
-                <small>Este campo es obligatorio.</small>
+                @if(formChoferes.get('pais')?.errors?.['required'] && (formChoferes.get('pais')?.touched || enviado)) {
+                  <small class="text-danger">Este campo es obligatorio.</small>
                 }
               </div>
-              }
             </div>
             <div class="col-md-4 mb-3">
               <div>
@@ -226,17 +214,12 @@
             <div class="col-md-4">
               <div>
                 <app-catalogo-select class="estado" [catalogo]="estadoList" placeholder="Seleccione un estado"
-                  formControlName="estado" [required]="false" [isDisabled]="readonly" name="estado" label="Estado"
+                  formControlName="estado" [required]="true" [isDisabled]="readonly" name="estado" label="Estado"
                   ></app-catalogo-select>
-              </div>
-              @if(formChoferes.get('estado')?.invalid && (formChoferes.get('estado')?.dirty ||
-              formChoferes.get('estado')?.touched)) {
-              <div class="text-danger">
-                @if(formChoferes.get('estado')?.errors?.['required']) {
-                <small>Este campo es obligatorio.</small>
+                @if(formChoferes.get('estado')?.errors?.['required'] && (formChoferes.get('estado')?.touched || enviado)) {
+                  <small class="text-danger">Este campo es obligatorio.</small>
                 }
               </div>
-              }
             </div>
           </div>
 
@@ -293,17 +276,12 @@
             <div class="col-md-4 mb-3">
               <div>
                 <app-catalogo-select class="paisDeResidencia" [catalogo]="paisList" formControlName="paisDeResidencia"
-                  placeholder="Seleccione un valor" [required]="false" [isDisabled]="readonly" name="paisDeResidencia"
+                  placeholder="Seleccione un valor" [required]="true" [isDisabled]="readonly" name="paisDeResidencia"
                   label="País de residencia"></app-catalogo-select>
-              </div>
-              @if(formChoferes.get('paisDeResidencia')?.invalid && (formChoferes.get('paisDeResidencia')?.dirty ||
-              formChoferes.get('paisDeResidencia')?.touched)) {
-              <div class="text-danger">
-                @if(formChoferes.get('paisDeResidencia')?.errors?.['required']) {
-                <small>Este campo es obligatorio.</small>
+                @if(formChoferes.get('paisDeResidencia')?.errors?.['required'] && (formChoferes.get('paisDeResidencia')?.touched || enviado)) {
+                  <small class="text-danger">Este campo es obligatorio.</small>
                 }
               </div>
-              }
             </div>
 
             <div class="col-md-4">
@@ -330,7 +308,7 @@
           <div class="row">
             <div class="col-md-8">
               <div>
-                <label for="solicitud.correo">Correo electrónico:</label>
+                <label for="solicitud.correo">Correo electrónico:</label><span class="bi bi-question-circle-fill mx-2" tooltip="ejemplo@dominio.com" placement="top"></span>
               </div>
               <div>
                 <input type="email" class="form-control" formControlName="correoElectronico" maxlength="100" />
@@ -343,7 +321,7 @@
             </div>
             <div class="col-md-4">
               <div>
-                <label for="solicitud.telefono">Teléfono</label>
+                <label for="solicitud.telefono">Teléfono:</label><span class="bi bi-question-circle-fill mx-2" tooltip="Ejemplo: 5512345678" placement="top"></span>
               </div>
               <div>
                 <input type="tel" class="form-control" formControlName="telefono" maxlength="14" />
