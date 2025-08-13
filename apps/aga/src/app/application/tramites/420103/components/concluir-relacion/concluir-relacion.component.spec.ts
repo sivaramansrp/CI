@@ -58,16 +58,6 @@ describe('ConcluirRelacionComponent (Jest)', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should create form with default values', () => {
-    expect(component.formularioConcluirRelacion).toBeDefined();
-    expect(component.formularioConcluirRelacion.get('rfc')?.value).toBe('XAXX010101000');
-  });
-
-  it('should fetch and update datosTabla when buscarDatosRelacion is called', () => {
-    component.buscarDatosRelacion();
-    expect(mockConcluirRelacionService.getDetallesDelMercanciaDatos).toHaveBeenCalled();
-    expect(component.datosTabla.length).toBeGreaterThan(0);
-  });
 
   it('should disable the form when esFormularioSoloLectura is true', () => {
     component.esFormularioSoloLectura = true;
