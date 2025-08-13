@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite250101State, Tramite250101Store } from '../../estados/tramite250101.store';
 import { Catalogo } from '@libs/shared/data-access-user/src';
@@ -62,6 +62,7 @@ import datosDestinatarioDummy from '@libs/shared/theme/assets/json/250101/datos-
   ],
   templateUrl: './destinatario-agente-aduanal.component.html',
   styleUrl: './destinatario-agente-aduanal.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 /**
  * Componente encargado de gestionar la visualización y manipulación de los datos relacionados con el destinatario 

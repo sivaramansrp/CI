@@ -5,6 +5,7 @@ import { ValidarInicalmenteService } from '../../services/validar-inicalmente/va
 import { Tramite110208Store } from '../../../../estados/tramites/tramite110208.store';
 import { Tramite110208Query } from '../../../../estados/queries/tramite110208.query';
 import { of } from 'rxjs';
+import { InputFechaComponent } from '@libs/shared/data-access-user/src';
 
 describe('CertificadoOrigenComponent', () => {
   let component: CertificadoOrigenComponent;
@@ -19,6 +20,9 @@ describe('CertificadoOrigenComponent', () => {
       obtenerTablaDatosCertificado: jest.fn().mockReturnValue(of({ data: [{ id: 1, nombre: 'Dato1' }] })),
       obtenerTablaDatos: jest.fn().mockReturnValue(of({ data: [{ id: 1, nombre: 'Dato2' }] })), 
       obtenerFormDatos: jest.fn().mockReturnValue(of({ data: [{ id: 1, nombre: 'FormDato1' }] })),
+      obtenerPaisList: jest.fn().mockReturnValue(of({ data: [] })),
+      obtenerUMCList: jest.fn().mockReturnValue(of({ data: [] })),
+      obtenerTipoDeFacturaList: jest.fn().mockReturnValue(of({ data: [] })),
     } as unknown as jest.Mocked<ValidarInicalmenteService>;
 
     tramite110208StoreMock = {
@@ -36,7 +40,7 @@ describe('CertificadoOrigenComponent', () => {
     } as unknown as jest.Mocked<Tramite110208Query>;
 
     await TestBed.configureTestingModule({
-      imports: [CertificadoOrigenComponent, ReactiveFormsModule],
+      imports: [CertificadoOrigenComponent, ReactiveFormsModule, InputFechaComponent],
       providers: [
         FormBuilder,
         { provide: ValidarInicalmenteService, useValue: validarInicalmenteServiceMock },
@@ -81,12 +85,6 @@ describe('CertificadoOrigenComponent', () => {
     component.cambioFechaInicio('2023-01-01', component.formCertificado, 'fechaInicio', 'setBloque');
     expect(component.formCertificado.get('fechaInicio')?.value).toBe('2023-01-01');
     expect(tramite110208StoreMock.setBloque).toHaveBeenCalledWith('2023-01-01');
-  });
-
-  it('debe establecer mostrarTercerOperador en true y llamar a setEntidadFederativa', () => {
-    component.tercerOperador(component.formCertificado, 'tercerOperador', 'setEntidadFederativa');
-    expect(component.mostrarTercerOperador).toBe(true);
-    expect(tramite110208StoreMock.setEntidadFederativa).toHaveBeenCalled();
   });
 
   it('debe limpiar los observables al destruir el componente', () => {

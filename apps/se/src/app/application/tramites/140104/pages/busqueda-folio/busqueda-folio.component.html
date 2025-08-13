@@ -5,20 +5,26 @@
         <form [formGroup]="montoACancelarForm">
             <div class="row">
                 <div class="col-md-8">
-                    <label class="form-label" for="monto">*Monto a cancelar (en unidades primarias)</label>
+                    <label class="form-label" for="monto"> *Monto a cancelar <span class="text-secondary fw-normal">(en unidades primarias)</span></label>
                     <input type="text" class="form-control" id="monto" formControlName="monto">
-                    <div *ngIf="montoACancelarForm.controls['monto'].invalid && montoACancelarForm.controls['monto'].touched">
-                        <small *ngIf="montoACancelarForm.controls['monto'].errors?.['required']">*El campo no puede estar vacío.</small>
-                        <small *ngIf="montoACancelarForm.controls['monto'].errors?.['pattern']">*Solo se permiten números.</small>
-                      </div>
+               @if(montoACancelarForm.controls['monto'].invalid && montoACancelarForm.controls['monto'].touched) {
+              <div class="d-grid">
+                @if(montoACancelarForm.controls['monto'].errors?.['required']) {
+                  <span class="mensaje-error">*El campo no puede estar vacío.</span>
+                }
+                @if(montoACancelarForm.controls['monto'].errors?.['pattern']) {
+                  <span class="mensaje-error">*Solo se permiten números.</span>
+                }
+              </div>
+            }
                 </div>
             </div>
         </form>
         
         <div class="row mt-2">
-            <div class="col-md-8 d-flex justify-content-end">
+            <div class="col-md-12 d-flex justify-content-end">
                 
-                <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas"
+                <button type="button" class="btn btn-primary me-3" data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
                     (click)="agregar($event)">Agregar</button>
                     <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas"
@@ -38,7 +44,7 @@
                     <input type="text" class="form-control" id="folioDelOficioDeCertificado" formControlName="folioDelOficioDeCertificado">
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label" for="montoDisponible">Monto disponible:
+                    <label class="form-label" for="montoDisponible">Monto disponible <span class="text-secondary fw-normal">(en unidades primarias)</span>:
                     </label>
                     <input type="text" class="form-control" id="montoDisponible" formControlName="montoDisponible">
                 </div> 
@@ -54,7 +60,11 @@
               <h5>Facturas disponibles para develover</h5>
               <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionSolicitud" [configuracionTabla]="configuracionColumnasFacturasDisponiblesParaDevolver"
                 [datos]="FacturasDisponiblesParaDevolverTabla"></app-tabla-dinamica>
-                
+                <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <li class="page-item"><a class="page-link">1</a></li>
+        </ul>
+      </nav>
                 <div class="row mt-2">
                     <div class="col-md-6 d-flex justify-content-end">
                         </div>
@@ -62,7 +72,7 @@
                         <form [formGroup]="cantidadADevolver">
                             <div class="row">
                                 <div class="col-md-4 form-group">
-                                    <label class="form-label" for="cantidad">Cantidad a devolver (en unidades primarias):</label><br/>
+                                    <label class="form-label text-start" for="cantidad">Cantidad a devolver <span class="text-secondary fw-normal">(en unidades primarias)</span>:</label><br/>
                                     <input
                                       class="form-control"
                                       id="cantidad"
@@ -80,7 +90,7 @@
                 <div class="row mt-2">
                   <div class="col-md-12 d-flex justify-content-end">
                     <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                      aria-controls="offcanvasRight">Devlover monto</button>
+                      aria-controls="offcanvasRight">Devolver monto</button>
                   </div>
                 </div> 
             </div>
@@ -89,7 +99,11 @@
                 <h5>Facturas seleccionadas para develover</h5>
                 <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionSolicitud" [configuracionTabla]="configuracionColumnasFacturasSeleccionadasParaDevolver"
                   [datos]="FacturasSeleccionadasParaDevolverTabla"></app-tabla-dinamica>
-                  
+                  <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <li class="page-item"><a class="page-link">1</a></li>
+        </ul>
+      </nav>
                   <div class="row mt-2">
                       <div class="col-md-6 d-flex justify-content-end">
                           </div>

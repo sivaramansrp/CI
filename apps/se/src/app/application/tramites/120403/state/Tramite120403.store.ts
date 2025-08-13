@@ -49,6 +49,13 @@ export interface Solicitud120403State {
    * Valor seleccionado en el estado.
    */
   valorSeleccionado: string | null;
+
+  fechaInicio: string;
+  
+fechadeFin: string;
+  montoAutorizado: string;
+  montoExpedido: string;
+  montoDisponible: string;
 }
 
 /**
@@ -63,6 +70,11 @@ export function createInitialState(): Solicitud120403State {
     fechaFin: '',
     ampliar: '',
     valorSeleccionado: null,
+    fechaInicio: '',
+    fechadeFin: '',
+    montoAutorizado: '',
+    montoExpedido: '',
+    montoDisponible: '',
   };
 }
 
@@ -146,6 +158,57 @@ export class Tramite120403Store extends Store<Solicitud120403State> {
     this.update((state) => ({
       ...state,
       ampliar,
+    }));
+  }
+  /**
+   * Actualiza la fecha de inicio en el estado.
+   * @param fechaInicio Nueva fecha de inicio.
+   */
+  public setFechaInicio(fechaInicio: string): void {
+    this.update((state) => ({
+      ...state,
+      fechaInicio,
+    }));
+  }
+  /**
+   * Actualiza la fecha de fin en el estado.
+   * @param fechadeFin Nueva fecha de fin.
+   */
+  public setFechadeFin(fechadeFin: string): void {
+    this.update((state) => ({
+      ...state,
+      fechadeFin,
+    }));
+  }
+  /**
+   * Actualiza el monto autorizado en el estado.
+   * @param montoAutorizado Nuevo monto autorizado.
+   */
+  public setMontoAutorizado(montoAutorizado: string): void {
+    this.update((state) => ({
+      ...state,
+      montoAutorizado,
+    }));
+  }
+
+  /**
+   * Actualiza el monto expedido en el estado.
+   * @param montoExpedido Nuevo monto expedido.
+   */
+  public setMontoExpedido(montoExpedido: string): void {
+    this.update((state) => ({
+      ...state,
+      montoExpedido,
+    }));
+  }
+  /**
+   * Actualiza el monto disponible en el estado.
+   * @param montoDisponible Nuevo monto disponible.
+   */
+  public setMontoDisponible(montoDisponible: string): void {
+    this.update((state) => ({
+      ...state,
+      montoDisponible,
     }));
   }
 

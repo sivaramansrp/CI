@@ -1,0 +1,48 @@
+<div class="container">
+  @if(indiceDePaso === 1) {
+  <div class="row">
+    <ng-titulo [titulo]="'Confirmar notificación 130118'"></ng-titulo>
+  </div>
+  <app-detalles-folio *ngIf="notificacionData"
+    [folioTramite]="notificacionData.num_folio_tramite"
+    [tipoSolicitud]="notificacionData.tipo_notificacion">
+  </app-detalles-folio>
+  } @if(indiceDePaso === 3){
+
+  }@else if(indiceDePaso ===1) {
+  <app-notificacion-acto-administrativo [datosNotificacion]="notificacionData"></app-notificacion-acto-administrativo>
+  } @if(indiceDePaso === 2) {
+  <div class="row mt-5 mb-5">
+    <ng-titulo [titulo]="'Firmar'"></ng-titulo>
+    <firma-electronica [tipo]="''" (firma)="obtieneFirma($event)"></firma-electronica>
+  </div>
+
+  } @if(indiceDePaso === 1) {
+  <div class="row mt-5 mb-5">
+    <div class="col-md-12">
+      <div class="pull-right">
+        <button type="button" name="eliminarMercancias" class="btn btn-primary ms-2" (click)="alContinuar()">
+          Continuar
+        </button>
+      </div>
+    </div>
+  </div>
+  } @else if(indiceDePaso === 3) {
+  <div class="row mt-5 mb-5">
+    <div class="col-md-12">
+      <div class="pull-right">
+        <button type="button" name="eliminarMercancias" class="btn btn-primary" (click)="cerrar()">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+  }
+</div>
+
+@if(nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+  </lib-notificaciones>
+</section>
+}

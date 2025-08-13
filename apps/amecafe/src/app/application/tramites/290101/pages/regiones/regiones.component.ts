@@ -117,20 +117,25 @@ export class RegionesComponent implements OnInit, OnDestroy {
    * @param {number} index - Índice de la pestaña a seleccionar.
    */
   seleccionaTab(index: number): void {
-     const REGIONES_DATOS= {
-      TABLA_Columna_1: this.regionForm.value.estado,
-      TABLA_Columna_2: this.regionForm.value.productoCafe,
-      TABLA_Columna_3: this.regionForm.value.descRegionCompra,
-      TABLA_Columna_4: this.regionForm.value.descripTipoCafe,
-      TABLA_Columna_5: this.regionForm.value.volumen,
-      estatus: true, 
-       
-    };
-    this.tramiteStore.setRegionesTabla([REGIONES_DATOS]);
+    // Solo agregar datos a la tabla si el formulario es válido
+    if (this.regionForm.valid) {
+      const REGIONES_DATOS= {
+        TABLA_Columna_1: RegionesComponent.obtenerDescripcionPorId(this.estado, this.regionForm.value.estado) || this.regionForm.value.estado,
+        TABLA_Columna_2: RegionesComponent.obtenerDescripcionPorId(this.productoCafe, this.regionForm.value.productoCafe) || this.regionForm.value.productoCafe,
+        TABLA_Columna_3: this.regionForm.value.descRegionCompra,
+        TABLA_Columna_4: RegionesComponent.obtenerDescripcionPorId(this.descripTipoCafe, this.regionForm.value.descripTipoCafe) || this.regionForm.value.descripTipoCafe,
+        TABLA_Columna_5: this.regionForm.value.volumen,
+        estatus: true, 
+         
+      };
+      this.tramiteStore.setRegionesTabla([REGIONES_DATOS]);
 
-
-    this.router.navigate(['../cafe-exportadores'], { queryParams: { tab: index } ,
+      this.router.navigate(['../cafe-exportadores'], { queryParams: { tab: index } ,
       relativeTo: this.activateRoute });
+
+    } else {
+      this.regionForm.markAllAsTouched();
+    }
 
   }
   
@@ -140,46 +145,44 @@ export class RegionesComponent implements OnInit, OnDestroy {
    * Configura el formulario y carga los catálogos necesarios.
    */
   ngOnInit(): void {
-    this.tramiteStoreQuery.selectSolicitudTramite$
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(seccionState => {
-        this.regionFormaState = seccionState.RegionFormatState;
-      });
-
+    // Inicializar formulario primero
     this.iniciarFormulario();
+    
+    // Cargar catálogos
     this.cargarEstadoCatalog();
     this.cargarProductoCafe();
     this.cargarTipoDeCafe();
 
-      /**
-      * Se suscribe a los cambios en el estado de la solicitud de trámite.
-      * Actualiza el formulario con los datos obtenidos del estado.
-      */
-      this.tramiteStoreQuery.selectSolicitudTramite$
+    // Solo una suscripción para el estado del trámite
+    this.tramiteStoreQuery.selectSolicitudTramite$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState: TramiteState) => {
-          if (seccionState) {
-            this.regionFormaState = seccionState?.RegionFormatState;
-            this.regionForm.patchValue(this.regionFormaState);
+          if (seccionState && seccionState.RegionFormatState) {
+            this.regionFormaState = seccionState.RegionFormatState;
+            // Solo hacer patch si hay datos válidos
+            if (RegionesComponent.hasValidStateData(this.regionFormaState)) {
+              this.regionForm.patchValue(this.regionFormaState, { emitEvent: false });
+            }
           }
         })
       ).subscribe();
-      /**
-       * Se suscribe a los cambios en el estado del formulario.
-       * Después de un breve retraso, actualiza el estado de la solicitud en el store.
-       */
-      this.regionForm.statusChanges
+
+    // Suscripción para cambios en el formulario con debounce
+    this.regionForm.valueChanges
       .pipe(
         takeUntil(this.destroyNotifier$),
-        delay(10),
+        delay(300), // Aumentar el delay para evitar actualizaciones excesivas
         tap(() => {
-          const ACTIVE_STATE = { ...this.regionForm.value };
-          this.tramiteStore.setRegionTramite(ACTIVE_STATE);
+          if (this.regionForm.valid) {
+            const ACTIVE_STATE = { ...this.regionForm.value };
+            this.tramiteStore.setRegionTramite(ACTIVE_STATE);
+          }
         })
       )
       .subscribe();
 
+    // Suscripción para el estado de la sección
     this.seccionQuery.selectSeccionState$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(seccionState => {
@@ -188,7 +191,16 @@ export class RegionesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Inicializa el formulario reactivo.
+   * Verifica si el estado tiene datos válidos para hacer patch al formulario
+   */
+  private static hasValidStateData(state: RegionFormaInt): boolean {
+    return state && Object.values(state).some(value => 
+      value !== null && value !== undefined && value !== ''
+    );
+  }
+
+  /**
+   * Inicializa el formulario reactivo con valores por defecto.
    */
   iniciarFormulario(): void {
     this.regionForm = this.fb.group({
@@ -258,10 +270,23 @@ export class RegionesComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Método genérico para obtener la descripción de un catálogo basado en su ID.
+   * @param {CatalogosSelect} catalogo - El catálogo donde buscar.
+   * @param {string | number} id - El ID del elemento a buscar.
+   * @returns {string | undefined} La descripción del elemento encontrado o undefined si no existe.
+   */
+  private static obtenerDescripcionPorId(catalogo: CatalogosSelect, id: string | number): string | undefined {
+    return catalogo.catalogos.find((item) => item.id === Number(id))?.descripcion;
+  }
+
+  /**
    * Resetea el formulario de regiones.
    */
   cancelarBodega(): void {
     this.regionForm.reset();
+    // Navegar directamente sin llamar seleccionaTab para evitar agregar filas vacías
+    this.router.navigate(['../cafe-exportadores'], { queryParams: { tab: 2 },
+      relativeTo: this.activateRoute });
   }
 
   /**

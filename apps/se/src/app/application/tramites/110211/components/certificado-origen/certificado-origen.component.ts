@@ -1,11 +1,10 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CamState, camCertificadoStore } from '../../estados/cam-certificado.store';
 import { Catalogo, ConsultaioQuery, SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
-import { Observable, Subject, delay, map, of, takeUntil } from 'rxjs';
+import { Observable, Subject, map, of, takeUntil } from 'rxjs';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CommonModule } from '@angular/common';
-import { DestinatarioComponent } from '../../../110201/components/destinatario/destinatario.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { MercanciaComponent } from '../mercancia/mercancia.component';
@@ -24,7 +23,6 @@ import { camCertificadoQuery } from '../../estados/cam-certificado.query';
   styleUrl: './certificado-origen.component.scss',
   standalone: true,
   imports: [CommonModule,ReactiveFormsModule,CertificadoDeOrigenComponent,
-      DestinatarioComponent,
     MercanciaComponent]
 })
 export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -106,6 +104,10 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    */
   @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
 
+  @ViewChild('certificadoDeOrigenRef') certificadoDeOrigenComponent!: CertificadoDeOrigenComponent;
+  @ViewChild('mercanciaRef') mercanciaComponent!: MercanciaComponent;
+
+
 
   /**
    * Indica si el formulario debe mostrarse solo en modo de lectura.
@@ -134,7 +136,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
     private consultaioQuery: ConsultaioQuery
   ) {
     this.query.formCertificado$
-      .pipe(takeUntil(this.destroyNotifier$), delay(100))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((estado) => {
         this.formCertificadoValues = estado;
       });
@@ -146,6 +148,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
       })
     )
     .subscribe()
+    
   }
 
   /**
@@ -176,7 +179,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
     this.paisOpcion();
     this.datosTabla$ = this.query.selectmercanciaTabla$
   }
-
+  
   /**
  * @descripcion
  * Actualiza el almacén con los datos del formulario de certificado.
@@ -309,6 +312,9 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: string | n
     if (this.modifyModal) {
       this.modalInstance = new Modal(this.modifyModal.nativeElement);
     }
+    if(this.esFormularioSoloLectura){
+      this.conseguirDisponiblesDatos();
+    }
   }
 
   /**
@@ -320,6 +326,13 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: string | n
     this.store.setFormValida({ certificado: valida });
   }
 
+  validarFormularios():boolean{
+    let isFormInvalid = true;
+  if(!this.certificadoDeOrigenComponent.validarFormularios()){
+    isFormInvalid = false;
+  }
+   return isFormInvalid;
+}
   /**
    * @descripcion
    * Hook del ciclo de vida que se llama cuando el componente se destruye.

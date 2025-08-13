@@ -76,7 +76,7 @@ export class ContenedorDePasosComponent {
    * Título principal mostrado en la parte superior según el paso actual.
    */
   tituloMensaje: string | null =
-    'Permiso sanitario de importación de dispositivos médicos destinados a pruebas de laboratorio.';
+    'Permiso sanitario de importación de dispositivos médicos destinados a pruebas de laboratorio';
 
   /**
    * @property {string} TEXTOS

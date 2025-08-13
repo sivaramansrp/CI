@@ -9,7 +9,7 @@ describe('PasoDosComponent', () => {
 
   beforeEach(() => {
     catalogosServiceMock = {
-      getCatalogo: jest.fn()
+      getCatalogo: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Descripción de Doc1' }])),
     } as any;
 
     component = new PasoDosComponent(catalogosServiceMock);
@@ -32,7 +32,7 @@ describe('PasoDosComponent', () => {
   });
 
   it('should set catalogoDocumentos when getTiposDocumentos receives data', () => {
-    const mockDocs: Catalogo[] = [{ id: 1, nombre: 'Doc1', descripcion: 'Descripción de Doc1' } as Catalogo];
+    const mockDocs: Catalogo[] = [{ id: 1, descripcion: 'Descripción de Doc1' } as Catalogo];
     catalogosServiceMock.getCatalogo.mockReturnValue(of(mockDocs));
     component.getTiposDocumentos();
     expect(component.catalogoDocumentos).toEqual(mockDocs);
@@ -41,9 +41,9 @@ describe('PasoDosComponent', () => {
 
   it('should not set catalogoDocumentos if response is empty', () => {
     catalogosServiceMock.getCatalogo.mockReturnValue(of([]));
-    component.catalogoDocumentos = [{ id: 1, nombre: 'Doc1', descripcion: 'Descripción de Doc1' } as Catalogo];
+    component.catalogoDocumentos = [{ id: 1, descripcion: 'Descripción de Doc1' } as Catalogo];
     component.getTiposDocumentos();
-    expect(component.catalogoDocumentos).toEqual([{ id: 1, nombre: 'Doc1' }]);
+    expect(component.catalogoDocumentos).toEqual([{ id: 1, descripcion: 'Descripción de Doc1' }]);
   });
 
   it('should complete destroy$ on ngOnDestroy', () => {

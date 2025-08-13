@@ -20,11 +20,8 @@
       } @case (3) {
       <app-paso-tres></app-paso-tres>
       } }
-
-      <btn-continuar
-        [datos]="datosPasos"
-        (continuarEvento)="getValorIndice($event)"
-      ></btn-continuar>
+       <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)" [btnGuardar]="true"
+        [dePadre]="true"></btn-continuar>
     <ng-alert [CONTENIDO]="PRIVACY_NOTICE_CONTENT"></ng-alert>
     </div>
   </div>

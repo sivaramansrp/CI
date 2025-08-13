@@ -1,5 +1,5 @@
 import { AlertComponent, Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent,InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -9,7 +9,6 @@ import { ES_SOLICITUD_FERROS_VALOR } from '../../enums/texto-enum';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Input } from '@angular/core';
-import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/solicitud-pantallas.enum';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -160,7 +159,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
             this.solicitud220502State.identificacionTransporte || ''
           ),
           esSolicitudFerros: new FormControl(
-            this.solicitud220502State.esSolicitudFerros || '',
+            this.solicitud220502State.esSolicitudFerros || 'no',
             [Validators.required]
           ),
           totalDeGuiasAmparadas: new FormControl(
@@ -183,7 +182,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
               transporteIdMedio: this.solicitud220502State.transporteIdMedio|| '',
               identificacionTransporte:
                 this.solicitud220502State.identificacionTransporte || '',
-              esSolicitudFerros: this.solicitud220502State.esSolicitudFerros || '',
+              esSolicitudFerros: this.solicitud220502State.esSolicitudFerros || 'no',
               totalDeGuiasAmparadas:
                 this.solicitud220502State.totalDeGuiasAmparadas || '',
             });

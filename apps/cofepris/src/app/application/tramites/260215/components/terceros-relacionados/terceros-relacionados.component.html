@@ -186,9 +186,7 @@
             </div>
           </div>
         </div>
-        <br />
-        <br />
-        <h5>Datos personales</h5>
+        <h5 class="mt-3">Datos personales</h5>
         <div class="row d-flex datos-personales-form-container">
           <div class="col-md-4">
             <div class="form-group">
@@ -458,10 +456,10 @@
             </div>
 
             <div class="col-md-4">
-              <div class="form-group">
-                <label class="form-label" for="extranjeroCodigo"
-                  >Código postal o equivalente:</label
-                >
+                <div class="form-group">
+                <label class="form-label" for="extranjeroCodigo">
+                  Código postal o equivalente*:
+                </label>
                 <input
                   type="text"
                   id="extranjeroCodigo"
@@ -469,7 +467,7 @@
                   name="extranjeroCodigo"
                   class="form-control"
                 />
-              </div>
+                </div>
             </div>
           </div>
           <div class="pl-0">
@@ -813,7 +811,7 @@
             <div class="form-group">
               <app-catalogo-select
                 [catalogo]="coloniaDropdownData"
-                [label]="'Colonia '"
+                [label]="'Colonia'"
                 for="colonia"
                 id="colonia"
                 formControlName="colonia"
@@ -1011,7 +1009,7 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="segundoApellido"
-              >Segundo apellid:</label
+              >Segundo apellido:</label
             >
             <input
               type="text"
@@ -1041,11 +1039,7 @@
         </div>
       </div>
       }
-
-      <br />
-      <br />
-
-      <h5>Domicilio</h5>
+      <h5 class="mt-5">Domicilio</h5>
       <div class="row">
         <div class="col-md-4 mt-5">
           <div class="form-group">
@@ -1077,7 +1071,7 @@
         <div class="col-md-4 mt-5">
           <div class="form-group">
             <label class="form-label" for="codigoPostaloEquivalente"
-              >Código postal o equivalente:</label
+              >Código postal o equivalente*:</label
             >
             <input
               class="form-control"
@@ -1088,11 +1082,14 @@
             />
           </div>
         </div>
-
+      </div>
+      <div class="row">
         <div class="col-md-4 mt-5">
           <div class="form-group">
             <label class="form-label" for="coloniaoEquivalente"
-              >Colonia o equivalente:</label
+              >Colonia o equivalente
+              <span *ngIf="agregarFabricanteFormGroup.get('tipoPersona')?.value">*</span>
+              :</label
             >
             <input
               class="form-control"
@@ -1103,10 +1100,8 @@
             />
           </div>
         </div>
-
-        <br />
-        <br />
-
+        </div>
+        <div class="row">
         <div class="col-md-8">
           <div class="form-group">
             <label class="form-label" for="calle"
@@ -1140,7 +1135,8 @@
             />
           </div>
         </div>
-
+      </div>
+      <div class="row">
         <div class="col-md-4 mt-5">
           <div class="form-group">
             <label class="form-label" for="numeroInterior"
@@ -1200,7 +1196,7 @@
             />
           </div>
         </div>
-        <br />
+      </div>
 
         <div class="col-md-3 text-muted text-vertical-align-button">
           <span>*Campos obligatorios</span>
@@ -1225,7 +1221,6 @@
             </button>
           </div>
         </div>
-      </div>
     </form>
   </div>
 </app-modal>
@@ -1329,7 +1324,7 @@
         <div class="row">
           <div class="col-md-4 mt-5">
             <div class="form-group">
-              <app-catalogo-select
+                <app-catalogo-select
                 [catalogo]="paisDropdownData"
                 [label]="'Pais'"
                 [required]="true"
@@ -1337,7 +1332,7 @@
                 id="pais"
                 formControlName="pais"
                 [isDisabled]="desactivarCatalogoSelectEnPopup"
-              ></app-catalogo-select>
+                ></app-catalogo-select>
             </div>
           </div>
 
@@ -1383,10 +1378,7 @@
               />
             </div>
           </div>
-
-          <br />
-          <br />
-
+        <div class="row">
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label" for="calle"
@@ -1406,7 +1398,7 @@
             </div>
           </div>
 
-          <div class="col-md-4">
+            <div class="col-md-4">
             <div class="form-group">
               <label for="numeroExterior" class="form-label"
                 >Número exterior*:
@@ -1420,7 +1412,9 @@
               />
             </div>
           </div>
-
+        </div>
+        
+        <div class = "row">
           <div class="col-md-4 mt-5">
             <div class="form-group">
               <label class="form-label" for="numeroInterior"
@@ -1480,6 +1474,7 @@
               />
             </div>
           </div>
+        </div>
           <br />
 
           <div class="col-md-3 text-muted text-vertical-align-button">

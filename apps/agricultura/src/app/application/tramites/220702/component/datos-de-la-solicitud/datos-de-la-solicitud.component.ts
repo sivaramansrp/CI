@@ -61,7 +61,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   instruccionDobleClic: string = INSTRUCCION_DOBLE_CLIC;
 
   /**
-   * Tipo de selección en la tabla (checkbox).
+   * Tipo de selección en la tabla (casilla de verificación).
    * @type {TablaSeleccion}
    */
   tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
@@ -78,7 +78,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   horaDeInspeccion: CatalogosSelect={
     labelNombre: '',
-    required: false,
+    required: true,
     primerOpcion: '',
     catalogos: [],
   };
@@ -185,7 +185,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   configuracionFechaFinVigencia: InputFecha = {
     labelNombre: 'Fecha de inspección ',
-    required: false,
+    required: true,
     habilitado: true,
   };
 
@@ -223,6 +223,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     * @property {boolean} campoDeshabilitar
     */
    campoDeshabilitar:boolean= false;
+
+   /**
+    * Valor por defecto para esSolicitudFerros en modo consulta.
+    * @property {string} defaultEsSolicitudFerros
+    */
+   defaultEsSolicitudFerros: string = 'no';
  
   
 
@@ -309,8 +315,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           tipoContenedor: datos.tipoContenedor,
           medioDeTransporte: datos.medioDeTransporte,
           identificacionTransporte: datos.identificacionTransporte,
-          esSolicitudFerros: datos.esSolicitudFerros
-          
+          esSolicitudFerros: datos.esSolicitudFerros,
+          fechaDeInspeccion: datos.fechaDeInspeccion
         });
       })
     )
@@ -331,6 +337,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     if (this.esFormularioSoloLectura) {
       this.campoDeshabilitar=true;
       this.datosDeLaSolicitudForm.disable();
+      this.datosDeLaSolicitudForm.get('esSolicitudFerros')?.disable();
     } else {
       this.campoDeshabilitar=false;
       this.datosDeLaSolicitudForm.enable();
@@ -344,6 +351,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   iniciarFormulario(): void {
+    // Solo establecer valor por defecto 'no' para esSolicitudFerros en modo consulta (solo lectura) 
+    // y solo si el valor está vacío
+    const ES_SOLICITUD_FERROS_VALUE = this.esFormularioSoloLectura && !this.tramiteState.esSolicitudFerros 
+      ? this.defaultEsSolicitudFerros 
+      : this.tramiteState.esSolicitudFerros;
+
     this.datosDeLaSolicitudForm = this.fb.group({
       justificacion: [{value:this.tramiteState.justificacion}, Validators.required],
       certificadosAutorizados: [{ value:this.tramiteState.certificadosAutorizados, disabled: true }, Validators.required],
@@ -358,8 +371,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       tipoContenedor: [{value:this.tramiteState.tipoContenedor}, Validators.required],
       medioDeTransporte: [{value:this.tramiteState.medioDeTransporte}, Validators.required],
       identificacionTransporte: [{value:this.tramiteState.identificacionTransporte}, Validators.required],
-      esSolicitudFerros: [{value:this.tramiteState.esSolicitudFerros}, Validators.required]
+      esSolicitudFerros: [{value: ES_SOLICITUD_FERROS_VALUE}, Validators.required],
+      fechaDeInspeccion: [{value:this.tramiteState.fechaDeInspeccion}, Validators.required]
     });
+
+    // Si estamos en modo consulta (solo lectura) y no hay valor previo, establecer 'no' como valor por defecto
+    if (this.esFormularioSoloLectura && !this.tramiteState.esSolicitudFerros) {
+      this.tramiteStore.setEsSolicitudFerros(this.defaultEsSolicitudFerros);
+      this.valorSeleccionado = this.defaultEsSolicitudFerros;
+    }
   }
 
   /**
@@ -397,8 +417,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
         this.horaDeInspeccion = {
-          labelNombre: 'Hora de inspección',
-          required: false,
+          labelNombre: 'Hora de inspección*',
+          required: true,
           primerOpcion: 'Selecciona un valor',
           catalogos: RESPONSE,
         };

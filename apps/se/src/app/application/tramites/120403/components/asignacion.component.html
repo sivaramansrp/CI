@@ -9,7 +9,7 @@
   <ng-titulo titulo="Número de oficio de asignación" />
   <div class="row mt-5">
     <div class="col-md-6">
-      <app-catalogo-select [catalogo]="anoCatalogo.catalogos" [label]="'Año del oficio de asignación'" [required]="true" formControlName="asignacionsolitud" (change)="setValoresStore(asignacionForm,'asignacionsolitud','setAsignacionsolitud')">></app-catalogo-select>
+      <app-catalogo-select [catalogo]="anoCatalogo.catalogos" [label]="'Año del oficio de asignación'" [required]="true" formControlName="asignacionsolitud" (change)="setValoresStore(asignacionForm,'asignacionsolitud','setAsignacionsolitud')"   [disabled]="soloLectura"></app-catalogo-select>
     </div>
     <div class="col-md-6">
       <label class="form-label">Número de oficio de asignación*:</label>
@@ -18,7 +18,7 @@
   </div>
   <div class="row mt-5">
     <div class="col-md-12 mt-5 d-flex justify-content-end">
-      <button [disabled]="!(asignacionForm.get('asignacionsolitud')?.value && asignacionForm.get('numTramite')?.value)" type="button" class="btn btn-primary ms-2 mb-5" (click)="buscar()"> Buscar </button>
+      <button [disabled]="!(asignacionForm.get('asignacionsolitud')?.value && asignacionForm.get('numTramite')?.value)" type="button" class="btn btn-primary ms-2 mb-5" (click)="buscar()" [disabled]="soloLectura"> Buscar </button>
     </div>
   </div>
   <div *ngIf="mostrarMonto || mostrarVigencia">
@@ -27,27 +27,27 @@
     <div class="row mt-5 mb-5">
       <div class="col-md-4">
         <label for="especie">Fecha de inicio de vigencia de la asignación</label>
-        <input type="text" class="form-control gris-color">
+        <input type="text" formControlName="fechaInicio" class="form-control gris-color">
       </div>
       <div class="col-md-4">
         <label for="funcionZootecnica">Fecha de fin vigencia de la asignación</label>
-        <input type="text" class="form-control gris-color">
+        <input type="text" formControlName="fechadeFin" class="form-control gris-color">
       </div>
     </div>
     <div class="row mt-5 mb-5">
       <div class="col-md-4">
         <label for="authorizado">Monto autorizado</label>
-        <input type="text" class="form-control gris-color" readonly>
+        <input type="text"  formControlName="montoAutorizado" class="form-control gris-color" readonly>
         <span class="unit">(METROS CUADRADOS EQUIVALENTES)</span>
       </div>
       <div class="col-md-4">
         <label for="Expendido">Monto Expedido</label>
-        <input type="text" class="form-control gris-color" readonly>
+        <input type="text" formControlName="montoExpedido" class="form-control gris-color" readonly>
         <span class="unit">(METROS CUADRADOS EQUIVALENTES)</span>
       </div>
       <div class="col-md-4">
         <label for="disponible">Monto disponible</label>
-        <input type="text" class="form-control gris-color" readonly>
+        <input type="text"  formControlName="montoDisponible" class="form-control gris-color" readonly>
         <span class="unit">(METROS CUADRADOS EQUIVALENTES)</span>
       </div>
     </div>

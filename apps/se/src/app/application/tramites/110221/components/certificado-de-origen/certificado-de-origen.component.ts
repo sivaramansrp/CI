@@ -1,7 +1,6 @@
 import {
   AlertComponent,
   Catalogo,
-  CatalogoSelectComponent,
   CatalogosSelect,
   InputFecha,
   REGEX_PATRON_DECIMAL_2,
@@ -14,15 +13,14 @@ import {
   TituloComponent,
   ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
-import {
+import { 
   ColumnasTabla,
   FECHA_FACTURA,
   FECHA_FINAL,
   FECHA_INICIAL,
   HEADERS,
   HEADERS_DATA,
-  SeleccionadasTabla,
-} from '../../models/registro.model';
+  SeleccionadasTabla, } from '../../models/registro.model';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   ConsultaioQuery,
@@ -37,15 +35,16 @@ import {
   Validators,
 } from '@angular/forms';
 import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
+import { Tramite110221State, Tramite110221Store } from '../../estados/tramite110221.store';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
-import { RegistroService } from '../../services/registro.service';
-import { Solicitud110221State } from '../../../../estados/tramites/Tramite110221.store';
-import { Tramite110221Query } from '../../../../estados/queries/Tramite110221.query';
-import { Tramite110221Store } from '../../../../estados/tramites/Tramite110221.store';
+import { Tramite110221Query } from '../../estados/tramite110221.query';
+import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
 import mercanciaDisponsibleTable from '@libs/shared/theme/assets/json/110221/mercancia-disponsible.json';
 import mercanciaSeleccionadasTable from '@libs/shared/theme/assets/json/110221/mercancias-seleccionadas.json';
 import mercanciaTable from '@libs/shared/theme/assets/json/110221/mercancia.json';
+
 
 const TERCEROS_TEXTO_DE_ALERTA =
   'Para continuar con el trámite, debes agregar por lo menos una mercancía.';
@@ -75,7 +74,7 @@ interface RadioOpcion {
     AlertComponent,
     TablaDinamicaComponent,
     InputFechaComponent,
-    InputRadioComponent,
+    InputRadioComponent
   ],
   templateUrl: './certificado-de-origen.component.html',
   styleUrl: './certificado-de-origen.component.css',
@@ -174,7 +173,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   /**
    * Estado actual de la solicitud.
    */
-  public solicitudState!: Solicitud110221State;
+  public solicitudState!: Tramite110221State;
 
   /**
    * Notificador para destruir observables al destruir el componente.
@@ -299,7 +298,6 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   ];
   /**
    * Constructor del componente.
-   * @param registroService Servicio para obtener datos de catálogos
    * @param fb Constructor de formularios reactivos
    * @param store Tienda para gestionar el estado del trámite
    * @param query Consultas para obtener datos del estado del trámite
@@ -307,7 +305,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * @param consultaioQuery Consulta del estado de la solicitud
    */
   constructor(
-    private registroService: RegistroService,
+    private validarInicialmenteCertificadoService: ValidarInicialmenteCertificadoService,
     public fb: FormBuilder,
     private store: Tramite110221Store,
     private query: Tramite110221Query,
@@ -324,10 +322,17 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+          // Set table data from solicitudState if available
+          if (this.solicitudState) {
+            this.mercanciaSeleccionadasTablaData = this.solicitudState.mercanciaSeleccionadasTablaData ?? [];
+            this.mercanciaDisponsiblesTablaDatos = this.solicitudState.mercanciaDisponsiblesTablaDatos ?? [];
+          }
         })
       )
       .subscribe();
+
     this.donanteDomicilio();
+
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -335,9 +340,20 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
           this.consultaDatos = seccionState;
           this.soloLectura = this.consultaDatos.readonly;
           this.inicializarEstadoFormulario();
+          // Set table data again after readonly state changes
+          if (this.solicitudState) {
+            this.mercanciaSeleccionadasTablaData = this.solicitudState.mercanciaSeleccionadasTablaData ?? [];
+            this.mercanciaDisponsiblesTablaDatos = this.solicitudState.mercanciaDisponsiblesTablaDatos ?? [];
+          }
         })
       )
       .subscribe();
+
+    // Set table data if solicitudState is already available
+    if (this.solicitudState) {
+      this.mercanciaSeleccionadasTablaData = this.solicitudState.mercanciaSeleccionadasTablaData ?? [];
+      this.mercanciaDisponsiblesTablaDatos = this.solicitudState.mercanciaDisponsiblesTablaDatos ?? [];
+    }
 
     this.mercanciatable();
     this.getTratado();
@@ -345,7 +361,6 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.getUMC();
     this.getUnidadMedida();
     this.getTipoFactura();
-    this.getSolicitudesTabla();
   }
 
   /**
@@ -396,7 +411,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         fechaInicial: nuevo_fechaIncial,
       },
     });
-    this.setValoresStore(this.validacionForm, 'fechaInicial', 'setFechInicioB');
+    this.setValoresStore(this.validacionForm, 'fechaInicial');
   }
 
   /**
@@ -411,6 +426,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       },
     });
   }
+
   /**
    * Actualiza la fecha final en el formulario.
    * @param nuevo_fechaFinal Nueva fecha final
@@ -421,7 +437,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         fechaFinal: nuevo_fechaFinal,
       },
     });
-    this.setValoresStore(this.validacionForm, 'fechaFinal', 'setFechFinB');
+    this.setValoresStore(this.validacionForm, 'fechaFinal');
   }
 
   /**
@@ -434,7 +450,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         fecha: nuevo_fechaFin,
       },
     });
-    this.setValoresStore(this.validacionMercanciaForm, 'fecha', 'setFecha');
+    this.setValoresStore(this.validacionMercanciaForm, 'fecha');
   }
 
   /**
@@ -535,7 +551,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Obtiene el catálogo de tratados.
    */
   getTratado(): void {
-    this.registroService
+    this.validarInicialmenteCertificadoService
       .getTratado()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
@@ -549,8 +565,8 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Obtiene el catálogo de países.
    */
   getPais(): void {
-    this.registroService
-      .getPais()
+    this.validarInicialmenteCertificadoService
+      .getPaisDestino()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
         if (resp.code === 200) {
@@ -563,7 +579,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Obtiene el catálogo de unidades de medida comercial.
    */
   getUMC(): void {
-    this.registroService
+    this.validarInicialmenteCertificadoService
       .getUMC()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
@@ -577,7 +593,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Obtiene el catálogo de unidades de medida.
    */
   getUnidadMedida(): void {
-    this.registroService
+    this.validarInicialmenteCertificadoService
       .getUnidadMedida()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
@@ -591,7 +607,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Obtiene el catálogo de tipos de factura.
    */
   getTipoFactura(): void {
-    this.registroService
+    this.validarInicialmenteCertificadoService
       .getTipoFactura()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
@@ -627,6 +643,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     }
   }
 
+
   /**
    * Verifica si un campo del formulario es válido.
    * @param form Formulario a validar
@@ -638,18 +655,20 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Establece valores en el store.
-   * @param form Formulario origen
-   * @param campo Campo a actualizar
-   * @param metodoNombre Método del store a llamar
+   * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
+   * @param form - El formulario reactivo.
+   * @param campo - El nombre del campo en el formulario.
    */
-  setValoresStore(
-    form: FormGroup,
-    campo: string,
-    metodoNombre: keyof Tramite110221Store
-  ): void {
-    const VALOR = form.get(campo)?.value;
-    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+  setValoresStore(form: FormGroup | null, campo: string): void {
+    if (!form) {
+      return;
+    }
+    const CONTROL = form.get(campo);
+    if (CONTROL && CONTROL.value !== null && CONTROL.value !== undefined) {
+      this.store.actualizarEstado({
+        [campo]: CONTROL.value,
+      });
+    }
   }
 
   /**
@@ -675,6 +694,11 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.registroForm = this.fb.group({
       validacionForm: this.fb.group({
         tercerOperador: [this.solicitudState?.tercerOperador],
+        nombres: [this.solicitudState?.nombres, [Validators.required]],
+        primerApellido: [this.solicitudState?.primerApellido, [Validators.required]],
+        segundoApellido: [this.solicitudState?.segundoApellido],
+        numeroDeRegistroFiscal: [this.solicitudState?.numeroDeRegistroFiscal, [Validators.required]],
+        razonSocial: [this.solicitudState?.razonSocial, [Validators.required]],
         tratado: [this.solicitudState?.tratado, [Validators.required]],
         rangoDeFecha: [''],
         pais: [this.solicitudState?.pais, [Validators.required]],
@@ -701,6 +725,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         archivo: [this.solicitudState?.archivo, [Validators.required]],
       }),
     });
+
     this.mercanciaForm = this.fb.group({
       validacionMercanciaForm: this.fb.group({
         fraccionMercanciaArancelaria: [
@@ -744,25 +769,8 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         ],
       }),
     });
+
     this.inicializarEstadoFormulario();
-  }
-
-  /**
-   * Obtiene datos para la tabla de solicitudes.
-   */
-  public getSolicitudesTabla(): void {
-    this.registroService.getSolicitudesTabla().subscribe((data) => {
-      this.mercanciaDisponsiblesTablaDatos = data;
-    });
-  }
-
-  /**
-   * Obtiene datos para la tabla de mercancías seleccionadas.
-   */
-  public getSolicitudesDataTabla(): void {
-    this.registroService.getSolicitudesDataTabla().subscribe((data) => {
-      this.mercanciaSeleccionadasTablaData = data;
-    });
   }
 
   /**
@@ -774,7 +782,6 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       this.mercanciaForm?.disable();
       this.hayMercanciasDisponibles = true;
       this.esMercanciaEnEdicion = true;
-      this.getSolicitudesDataTabla();
     } else {
       this.registroForm?.enable();
       this.mercanciaForm?.enable();

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
 import { CommonModule } from '@angular/common';
@@ -33,7 +33,27 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Esta propiedad utiliza `@ViewChild` para obtener una referencia al componente
    * de solicitante dentro de la plantilla.
    */
-  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+  @ViewChild('solicitante') solicitante!: SolicitanteComponent;
+
+  /**
+   * Referencia al componente `CertificadoOrigenComponent`.
+   */
+  @ViewChild('certificadoOrigenComp', { static: false }) certificadoOrigenComp: CertificadoOrigenComponent | undefined;
+
+  /**
+   * Referencia al componente `DestinatarioComponent`.
+   */
+  @ViewChild('destinatarioComp', { static: false }) destinatarioComp: DestinatarioComponent | undefined;
+
+  /**
+   * Referencia al componente `DatosCertificadoComponent`.
+   */
+  @ViewChild('datosCertificadoComp', { static: false }) datosCertificadoComp: DatosCertificadoComponent | undefined;
+
+  /**
+   * Emite evento cuando se cambia de tab para ocultar error message.
+   */
+  @Output() cambioDePestana = new EventEmitter<void>();
 
   /**
    * Índice de la pestaña activa.
@@ -56,18 +76,23 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * el componente se destruye.
    */
   destroyNotifier$: Subject<void> = new Subject();
+
   /**
    * @property {ConsultaioState} consultaDatos
    * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
    */
   consultaDatos!: ConsultaioState;
+
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
+
   /**
    * Constructor del componente.
    * 
    * @param {Tramite110212Store} store - Store para gestionar el estado del trámite.
    * @param {Tramite110212Query} tramiteQuery - Query para obtener el estado del trámite.
+   * @param {ConsultaioQuery} consultaioQuery - Query para obtener el estado de la consulta.
+   * @param {ValidacionPosterioriService} validacionPosterioriService - Servicio para la validación a posteriori.
    */
   constructor(
     public store: Tramite110212Store,
@@ -118,6 +143,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   seleccionaTab(i: number): void {
     this.indice = i;
     this.store.setPestanaActiva(this.indice);
+    // Ocultar mensaje de error al cambiar de pestaña
+    this.cambioDePestana.emit();
   }
   /**
    * @method fetchGetDatosConsulta
@@ -151,10 +178,45 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método que se ejecuta al destruir el componente.
+   * Valida todos los formularios del paso uno.
    * 
-   * Este método emite un valor al `destroyNotifier$` y lo completa para cancelar
-   * todas las suscripciones activas y evitar fugas de memoria.
+   * Este método valida principalmente el formulario de solicitante que es el único
+   * obligatorio. Los otros formularios solo se validan si están disponibles.
+   * 
+   * @returns {boolean} `true` si todos los formularios son válidos, `false` en caso contrario.
+   */
+  public validarTodosLosFormularios(): boolean {
+    let allFormsValid = true;
+        
+    // Validar el formulario de certificado de origen si existe y es visible
+    if (this.indice >= 2 && this.certificadoOrigenComp && this.certificadoOrigenComp.formularioCertificado) {
+      this.certificadoOrigenComp.formularioCertificado.markAllAsTouched();
+      if (!this.certificadoOrigenComp.formularioCertificado.valid) {
+        allFormsValid = false;
+      }
+    }
+
+    // Validar el formulario de destinatario si existe y es visible
+    if (this.indice >= 3 && this.destinatarioComp && this.destinatarioComp.registroFormulario) {
+      this.destinatarioComp.registroFormulario.markAllAsTouched();
+      if (!this.destinatarioComp.registroFormulario.valid) {
+        allFormsValid = false;
+      }
+    }
+
+    // Validar el formulario de datos del certificado si existe y es visible
+    if (this.indice >= 4 && this.datosCertificadoComp && this.datosCertificadoComp.formDatosCertificado) {
+      this.datosCertificadoComp.formDatosCertificado.markAllAsTouched();
+      if (!this.datosCertificadoComp.formDatosCertificado.valid) {
+        allFormsValid = false;
+      }
+    }
+    
+    return allFormsValid;
+  }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

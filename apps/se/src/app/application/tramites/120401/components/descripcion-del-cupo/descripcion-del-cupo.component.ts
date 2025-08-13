@@ -11,6 +11,7 @@ import { FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente que representa la descripción detallada de un cupo.
@@ -32,59 +33,7 @@ export class DescripcionDelCupoComponent implements OnInit, OnDestroy {
    * Subject utilizado para manejar la destrucción del componente y evitar fugas de memoria.
    */
   private destroyed$ = new Subject<void>();
-
-
-  /**
-   * Constructor del componente.
-   * @param fb FormBuilder para la creación del formulario.
-   * @param service Servicio para obtener la información de la descripción del cupo.
-   */
-  constructor(
-    private fb: FormBuilder,
-    private service: AsignacionDirectaCupoPersonasFisicasPrimeraVezService,
-  ) {
-    this.service
-      .getDescripcionDelCupo(this.data);
-  }
-
-  /**
-   * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   */
-  ngOnInit(): void {
-    this.crearFormulario();
-    setTimeout(() => {
-      this.loadDescripcionDelCupo();
-    }, 800);
-  }
-
-  /**
-   * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
-   */
-  ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
-  }
-
-
-  /**
-   * Crea e inicializa el formulario con campos deshabilitados por defecto.
-   */
-  crearFormulario(): void {
-    this.form = this.fb.group({
-      claveDelCupo: [{ value: '', disabled: true }],
-      mecanismoDeAsignacion: [{ value: '', disabled: true }],
-      descripcionDelProducto: [{ value: '', disabled: true }],
-      unidadDeMedida: [{ value: '', disabled: true }],
-      regimenAduanero: [{ value: '', disabled: true }],
-      fechaDeInicioDeVigenciaDelCupo: [{ value: '', disabled: true }],
-      fechaDeFinDeVigenciaDelCupo: [{ value: '', disabled: true }],
-      fraccionesArancelarias: [{ value: '', disabled: true }],
-      tratadoAcuerdo: [{ value: '', disabled: true }],
-      paises: [{ value: '', disabled: true }],
-    });
-  }
-
-  /**
+   /**
    * Carga la información de la descripción del cupo desde el servicio y la asigna al formulario.
    */
   
@@ -100,22 +49,70 @@ export class DescripcionDelCupoComponent implements OnInit, OnDestroy {
     tratadoAcuerdo: '',
     paises: '',
   };
+
+
   /**
-   * Carga la información de la descripción del cupo desde el objeto `data` y la asigna al formulario.
+   * Constructor del componente.
+   * @param fb FormBuilder para la creación del formulario.
+   * @param service Servicio para obtener la información de la descripción del cupo.
    */
-  loadDescripcionDelCupo(): void {    
-    this.form.patchValue({
-      claveDelCupo: this.data.claveDelCupo,
-      mecanismoDeAsignacion: this.data.mecanismoDeAsignacion,
-      descripcionDelProducto: this.data.descripcionDelProducto,
-      unidadDeMedida: this.data.unidadDeMedida,
-      regimenAduanero: this.data.regimenAduanero,
-      fechaDeInicioDeVigenciaDelCupo: this.data.fechaDeInicioDeVigenciaDelCupo,
-      fechaDeFinDeVigenciaDelCupo: this.data.fechaDeFinDeVigenciaDelCupo,
-      fraccionesArancelarias: this.data.fraccionesArancelarias,
-      tratadoAcuerdo: this.data.tratadoAcuerdo,
-      paises: this.data.paises,
+  constructor(
+    private fb: FormBuilder,
+    private service: AsignacionDirectaCupoPersonasFisicasPrimeraVezService,
+  ) {
+    this.crearFormulario();
+  }
+
+  /**
+   * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   */
+  ngOnInit(): void {
+    this.loadDescripcionDelCupo();
+    
+  }
+
+  /**
+   * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
+
+
+  /**
+   * Crea e inicializa el formulario con campos deshabilitados por defecto.
+   */
+crearFormulario(): void {
+ this.form = this.fb.group({
+      claveDelCupo: [{ value: this.data.claveDelCupo || '', disabled: true }],
+      mecanismoDeAsignacion: [{ value: this.data.mecanismoDeAsignacion || '', disabled: true }],
+      descripcionDelProducto: [{ value: this.data.descripcionDelProducto || '', disabled: true }],
+      unidadDeMedida: [{ value: this.data.unidadDeMedida || '', disabled: true }],
+      regimenAduanero: [{ value: this.data.regimenAduanero || '', disabled: true }],
+      fechaDeInicioDeVigenciaDelCupo: [{ value: this.data.fechaDeInicioDeVigenciaDelCupo || '', disabled: true }],
+      fechaDeFinDeVigenciaDelCupo: [{ value: this.data.fechaDeFinDeVigenciaDelCupo || '', disabled: true }],
+      fraccionesArancelarias: [{ value: this.data.fraccionesArancelarias || '', disabled: true }],
+      tratadoAcuerdo: [{ value: this.data.tratadoAcuerdo || '', disabled: true }],
+      paises: [{ value: this.data.paises || '', disabled: true }]
     });
+}
+
+     
+
+ 
+  /**
+   * Carga la información de la descripción del cupo desde el servicio y crea el formulario.
+   */
+  loadDescripcionDelCupo(): void {
+    this.service.getDescripcionDelCupo(this.data)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data: DescripcionDelCupo) => {
+        this.data = data;
+        this.crearFormulario();
+      });
+
+
   }
   
 }

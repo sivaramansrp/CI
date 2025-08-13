@@ -5,7 +5,7 @@
           "establecimientoRazonSocial": "RazonSocial",
           "establecimientoCorreoElectronico": "CorreoElectronico",
           "establecimientoDomicilioCodigoPostal": "DomicilioCodigoPostal",
-          "establecimientoEstados": 1,
+          "establecimientoEstados": "987453",
           "descripcionMunicipio": "municipio",
           "localidad": "localidad",
           "establishomentoColonias": "colonia",
@@ -18,7 +18,7 @@
           "aduanasEntradas": 1,
           "aifaCheckbox": true,
           "manifests": true,
-          "informacionConfidencialRadio": "No",
+          "informacionConfidencialRadio": "Si",
           "scian": "scian",
           "descripcionScian": "descripcion_scian"
      },
@@ -27,7 +27,7 @@
           "setCadenaDeLaDependencia": "cadena_dependencia",
           "setBanco": "1",
           "setLlaveDePago": "1234567890",
-          "setFechaDePago": "2025-06-01",
+          "setFechaDePago": "11/11/2023",
           "setImporteDePago": "1000.00"
      },
      "datosDomicilioLegalState": {

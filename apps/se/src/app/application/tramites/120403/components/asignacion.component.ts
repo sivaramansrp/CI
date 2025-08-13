@@ -217,6 +217,12 @@ export class AsignacionComponent implements OnInit, OnDestroy {
     numTramite: [{ value: this.solicitudState?.numTramite, disabled: this.soloLectura }, [Validators.required]],
     fechaFin: [{ value: this.solicitudState?.fechaFin, disabled: this.soloLectura }, [Validators.required]],
     ampliar: [{ value: this.solicitudState?.ampliar, disabled: this.soloLectura }, [Validators.required]],
+    fechaInicio: [{ value: this.solicitudState?.fechaInicio, disabled: this.soloLectura }],
+    fechadeFin: [{ value: this.solicitudState?.fechadeFin, disabled: this.soloLectura }],
+    montoAutorizado: [{ value: this.solicitudState?.montoAutorizado, disabled: this.soloLectura }],
+    montoExpedido: [{ value: this.solicitudState?.montoExpedido, disabled: this.soloLectura }],
+    montoDisponible: [{ value: this.solicitudState?.montoDisponible, disabled: this.soloLectura }],
+
   });
 }
   /**

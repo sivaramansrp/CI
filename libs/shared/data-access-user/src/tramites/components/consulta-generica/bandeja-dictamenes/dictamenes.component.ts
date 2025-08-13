@@ -1,8 +1,9 @@
 import { BodyTablaDictamenes, HeaderTablaDictamenes } from '../../../../core/models/shared/consulta-generica.model';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CONSULTA_DICTAMENES } from '../../../../core/enums/consulta-generica.enum';
 import { CommonModule } from '@angular/common';
+import { DictamenesResponse } from "../../../../core/models/130118/dictamenes-response.model";
 import { DictamenesService } from '../../../../core/services/consultagenerica/dictamenes-service';
 import { FolioQuery } from '../../../../core/queries/folio.query';
 
@@ -13,7 +14,7 @@ import { FolioQuery } from '../../../../core/queries/folio.query';
   templateUrl: './dictamenes.component.html',
   styleUrl: './dictamenes.component.scss',
 })
-export class DictamenesComponent implements OnInit, OnDestroy {
+export class DictamenesComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Variable para almacenar el folio recuperado desde el store.
    * @type {string}
@@ -46,11 +47,35 @@ export class DictamenesComponent implements OnInit, OnDestroy {
   public verDetalle = DictamenesComponent.verDetalle;
 
   /**
+    * @property {DictamenesResponse[]} dictamenes
+    * @description Dictamenes de solicitud.
+  */
+  @Input() dictamenes: DictamenesResponse[] = [];
+
+  /**
    * Constructor de la clase DictamenesComponent.
    * @param folioQuery Consulta del folio desde el store.
    * @param dictamenService Servicio para obtener los dictámenes.
    */
   constructor(private folioQuery: FolioQuery, private dictamenService: DictamenesService) {}
+
+  /**
+    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+    * Se suscribe al observable del servicio para obtener los datos.
+    * @returns {void}
+  */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['dictamenes'] && changes['dictamenes'].currentValue?.length > 0) {
+      this.getDictamenes();
+    } else {
+      this.dictamenService
+      .getDictamenes()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.datosTablaDictamen = data;
+      });
+    }
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -75,12 +100,16 @@ export class DictamenesComponent implements OnInit, OnDestroy {
    * Se suscribe al observable del servicio para obtener los datos.
    */
   getDictamenes(): void {
-    this.dictamenService
-      .getDictamenes()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.datosTablaDictamen = data;
-      });
+    this.datosTablaDictamen = this.dictamenes.map((dictamen) => ({
+      id: dictamen.id_dictamen,
+      fechaCreacion: dictamen.fecha_creacion,
+      fechaGeneracion: dictamen.fecha_emision ?? '', 
+      fechaAutorizacion: dictamen.fecha_autorizacion ?? '',
+      tipo: dictamen.tipo,
+      estatus: dictamen.estado_dictamen,
+      sentido: dictamen.sentido_dictamen,
+      urlPdf: ''
+    }));
   }
 
   /**

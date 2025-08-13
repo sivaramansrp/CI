@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud110208State, Tramite110208Store } from '../../../../estados/tramites/tramite110208.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite110208Query } from '../../../../estados/queries/tramite110208.query';
 
@@ -56,6 +56,7 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
     private tramite110208Store: Tramite110208Store,
     private tramite110208Query: Tramite110208Query,
     private consultaioQuery: ConsultaioQuery,
+    private validacionesService: ValidacionesFormularioService
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -152,6 +153,18 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
       this.datosDestinatario.get('primerApellido')?.enable();
       this.datosDestinatario.get('segundoApellido')?.enable();
     }
+  }
+
+  /**
+  * compo doc
+  * @method esValido
+  * @description 
+  * Verifica si un campo específico del formulario es válido.
+  * @param campo El nombre del campo que se desea validar.
+  * @returns {boolean | null} Un valor booleano que indica si el campo es válido.
+  */
+  public esValido(campo: string): boolean | null {
+    return this.validacionesService.isValid(this.datosDestinatario, campo);
   }
 
   /**
