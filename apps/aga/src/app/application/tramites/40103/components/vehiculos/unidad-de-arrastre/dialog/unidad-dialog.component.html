@@ -9,7 +9,7 @@
                 <form [formGroup]="unidadForm">
                     <div class="row">
                         <div class="col-md-4">
-                            <label>Número de identificación de unidad*:</label>
+                            <label>Número de identificación de unidad*:</label><span class="bi bi-question-circle-fill mx-2" tooltip="Número de identificación vehícular (NIV) o serie de la unidad de arrastre" placement="top"></span>
                             <input type="text" class="form-control" formControlName="numero" [required]="true"
                                 minlength="17" maxlength="17"/>
                             @if (unidadForm.get('numero')?.invalid && (unidadForm.get('numero')?.dirty || unidadForm.get('numero')?.touched)) {
@@ -35,7 +35,7 @@
                             }
                         </div>
                         <div class="col-md-4">
-                            <label>ID de unidad*:</label>
+                            <label>ID de unidad*:</label><span class="bi bi-question-circle-fill mx-2" tooltip="Identificador único de la unidad de arrastre en el sistema" placement="top"></span>
                             <input type="text" class="form-control" formControlName="idDeUnidad" />
                             @if (unidadForm.get('idDeUnidad')?.invalid && (unidadForm.get('idDeUnidad')?.dirty || unidadForm.get('idDeUnidad')?.touched)) {
                                 <div class="text-danger">
