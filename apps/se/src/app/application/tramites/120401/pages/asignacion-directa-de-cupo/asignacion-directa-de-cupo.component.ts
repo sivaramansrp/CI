@@ -10,7 +10,7 @@ import { ASIGNACION } from '@ng-mf/data-access-user';
 
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 
-import { DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
+import { DatosPasos, WizardComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * Interface representing the action of a button.

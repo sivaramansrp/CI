@@ -174,9 +174,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   guardarDatosDelFormulario(): void {
     if (this.esFormularioSoloLectura) {
-      this.registroForm.disable();
+      this.registroForm?.disable();
     } else {
-      this.registroForm.enable();
+      this.registroForm?.enable();
     }
   }
   /**

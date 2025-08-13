@@ -10,7 +10,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CATALOGO_SI_NO } from '../../constantes/detalles-plantas.enum';
+
+import { CATALOGO_SI_NO, CATALOGO_SI_NOID, CATALOGO_SI_NOVALUE } from '../../constantes/detalles-plantas.enum';
 import { CommonModule } from '@angular/common';
 import { PlantasSubfabricante } from '../../models/empresas-subfabricanta.model';
 
@@ -54,6 +55,17 @@ export class DetallesPlantasComponent {
    * @property {any} catalogoSiNo
    */
   catalogoSiNo = CATALOGO_SI_NO;
+  /**
+   * Catálogo de opciones de sí/no (ID).
+   * @property {any} catalogoSiNoId
+   */
+  catalogoSiNoId = CATALOGO_SI_NOID;
+
+  /**
+   * Catálogo de opciones de sí/no (valor).
+   * @property {any} catalogoSiNoValue
+   */
+  catalogoSiNoValue = CATALOGO_SI_NOVALUE;
 
   /**
    * Constructor para inicializar el formulario de datos del subcontratista.
@@ -69,8 +81,8 @@ export class DetallesPlantasComponent {
    */
   inicializarFormularioDatosPlantas(): void {
     this.formularioDatosPlantas = this.fb.group({
-      permaneceMercancia: [0, Validators.required],
-      tipoContribuyente: [0, Validators.required],
+      permaneceMercancia: [1, Validators.required],
+      tipoContribuyente: [1, Validators.required],
       opinionSAT: [{ value: 1, disabled: true }, Validators.required],
       fechaOpinion: ['12/03/2025', Validators.required],
     });

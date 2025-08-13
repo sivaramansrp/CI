@@ -1,10 +1,11 @@
 import { Catalogo,ConsultaioQuery,TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder,FormGroup,ReactiveFormsModule,Validators } from '@angular/forms';
+import { FormBuilder,FormGroup,ReactiveFormsModule } from '@angular/forms';
 import { Observable,Subject,map} from 'rxjs';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { AsignacionDirectaCupoPersonasFisicasPrimeraVezService } from '../../services/asignacion-directa-cupo-personas-fisicas-primera-vez.service';
 import { CONFIGURACION_CUPOS_DISPONIBLES_TABLA } from '../../constants/asignacion-directa-cupo.enums';
+import { CantidadSolicitadaComponent } from '../cantidad-solicitada/cantidad-solicitada.component';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '../../models/configuracio-columna.model';
@@ -18,7 +19,7 @@ import { takeUntil } from 'rxjs';
 
 /**
  * Componente para la selección del cupo en el sistema.
- * Permite seleccionar régimen aduanero, tratado comercial, producto y subproducto.
+ * Permite seleccionar régimen aduanero, tratado comercial, nombreProducto y nombreSubproducto.
  */
 @Component({
   selector: 'app-seleccion-del-cupo',
@@ -32,6 +33,7 @@ import { takeUntil } from 'rxjs';
     TablaDinamicaComponent,
     AlertComponent,
     DescripcionDelCupoComponent,
+    CantidadSolicitadaComponent
   ],
   templateUrl: './seleccion-del-cupo.component.html',
   styleUrls: ['./seleccion-del-cupo.component.scss'],
@@ -39,7 +41,7 @@ import { takeUntil } from 'rxjs';
 
 /**
  * Componente para la selección del cupo en el sistema.
- * Permite seleccionar régimen aduanero, tratado comercial, producto y subproducto.
+ * Permite seleccionar régimen aduanero, tratado comercial, nombreProducto y nombreSubproducto.
  */
 export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
   /**
@@ -94,14 +96,14 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
   tratado: Catalogo[] = [];
 
   /**
-   * Lista de opciones para el campo de nombre de producto.
+   * Lista de opciones para el campo de nombre de nombreProducto.
    */
-  producto: Catalogo[] = [];
+  nombreProducto: Catalogo[] = [];
 
   /**
-   * Lista de opciones para el campo de nombre de subproducto.
+   * Lista de opciones para el campo de nombre de nombreSubproducto.
    */
-  subproducto: Catalogo[] = [];
+  nombreSubproducto: Catalogo[] = [];
 
   /**
    * Datos de la selección del cupo obtenidos desde el servicio.
@@ -132,17 +134,17 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
   tratado$: Observable<Catalogo | null> = this.tramite120401Query.tratado$;
 
   /**
-   * @property {Observable<Catalogo | null>} producto$
-   * Observable que emite el valor actual del producto seleccionado en el estado.
+   * @property {Observable<Catalogo | null>} nombreProducto$
+   * Observable que emite el valor actual del nombreProducto seleccionado en el estado.
    */
-  producto$: Observable<Catalogo | null> = this.tramite120401Query.producto$;
+  nombreProducto$: Observable<Catalogo | null> = this.tramite120401Query.nombreProducto$;
 
   /**
-   * @property {Observable<Catalogo | null>} subproducto$
-   * Observable que emite el valor actual del subproducto seleccionado en el estado.
+   * @property {Observable<Catalogo | null>} nombreSubproducto$
+   * Observable que emite el valor actual del nombreSubproducto seleccionado en el estado.
    */
-  subproducto$: Observable<Catalogo | null> =
-    this.tramite120401Query.subproducto$;
+  nombreSubproducto$: Observable<Catalogo | null> =
+    this.tramite120401Query.nombreSubproducto$;
 
 /**
  * Constructor del componente SeleccionDelCupoComponent.
@@ -161,12 +163,7 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
     private tramite120401Query: Tramite120401Query,
     private consultaQuery: ConsultaioQuery,
   ) {
-    this.service.obtenerRespuestaPorUrl('datos', '/120401/asignacion.json');
-    this.tramite120401Query.tramiteState$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((state) => {
-        this.datos = state.datos;
-      });
+    //constructor
   }
 
   /**
@@ -187,9 +184,10 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
           this.seleccionForm.patchValue({
             regimen: state.regimen,
             tratado: state.tratado,
-            producto: state.producto,
-            subproducto: state.subproducto,
+            nombreProducto: state.nombreProducto,
+            nombreSubproducto: state.nombreSubproducto,
           });
+          this.datos = state.datos;
         }
       });
 
@@ -232,10 +230,10 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
    */
   private initializeForm(): void {
     this.seleccionForm = this.fb.group({
-      regimen: ['', Validators.required],
-      tratado: ['', Validators.required],
-      producto: ['', Validators.required],
-      subproducto: ['', Validators.required],
+      regimen: [''],
+      tratado: [''],
+      nombreProducto: [''],
+      nombreSubproducto: [''],
     });
   }
 
@@ -266,7 +264,7 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Maneja el cambio en el campo de nombre del producto.
+   * Maneja el cambio en el campo de nombre del nombreProducto.
    * @param event - Evento de cambio.
    */
   loadProducto(): void {
@@ -274,13 +272,13 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
       .getProducto()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data: Catalogo[]) => {
-        this.producto = data;
-        this.subproducto = data;
+        this.nombreProducto = data;
+        this.nombreSubproducto = data;
       });
   }
 
   /**
-   * Maneja el cambio en el campo de nombre del subproducto.
+   * Maneja el cambio en el campo de nombre del nombreSubproducto.
    * @param event - Evento de cambio.
    */
 
@@ -314,18 +312,18 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtiene el valor seleccionado del campo de producto y lo establece en el store.
+   * Obtiene el valor seleccionado del campo de nombreProducto y lo establece en el store.
    */
   obtenerValorProducto(): void {
-    const SELECTED_PRODUCTO = this.seleccionForm.get('producto')?.value;
+   const SELECTED_PRODUCTO = this.seleccionForm.get('nombreProducto')?.value;
     this.tramite120401Store.setProducto(SELECTED_PRODUCTO);
   }
 
   /**
-   * Obtiene el valor seleccionado del campo de subproducto y lo establece en el store.
+   * Obtiene el valor seleccionado del campo de nombreSubproducto y lo establece en el store.
    */
   getSubproducto(): void {
-    const SELECTED_SUBPRODUCTO = this.seleccionForm.get('subproducto')?.value;
+    const SELECTED_SUBPRODUCTO = this.seleccionForm.get('nombreSubproducto')?.value;
     this.tramite120401Store.setSubproducto(SELECTED_SUBPRODUCTO);
   }
 
@@ -342,4 +340,58 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
     this.filaSeleccionada = fila;
     this.mostrarDescripcionDelCupo = !this.mostrarDescripcionDelCupo;
   }
+
+/**
+ * Busca cupos disponibles basado en los valores seleccionados en el formulario.
+ * Los resultados se almacenan en la propiedad `datos` para ser mostrados en la tabla dinámica.
+ */
+buscarCupos(): void {
+  const VALORES_FORMULARIO = this.seleccionForm.value;
+  
+  // Check if required fields have values
+  if (VALORES_FORMULARIO.regimen && VALORES_FORMULARIO.tratado && 
+      VALORES_FORMULARIO.nombreProducto && VALORES_FORMULARIO.nombreSubproducto) {
+    
+    // El formulario puede contener objetos Catalogo completos o solo IDs
+    // Manejar ambos casos
+    let PRODUCTO_DESCRIPCION = '';
+    let SUBPRODUCTO_DESCRIPCION = '';
+    
+    // Para nombreProducto
+    if (typeof VALORES_FORMULARIO.nombreProducto === 'object' && VALORES_FORMULARIO.nombreProducto?.descripcion) {
+      PRODUCTO_DESCRIPCION = VALORES_FORMULARIO.nombreProducto.descripcion;
+    } else if (VALORES_FORMULARIO.nombreProducto) {
+      const ID_PRODUCTO_SELECCIONADO = Number(VALORES_FORMULARIO.nombreProducto) || 0;
+      const PRODUCTO_ENCONTRADO = this.nombreProducto.find(p => p.id === ID_PRODUCTO_SELECCIONADO);
+      PRODUCTO_DESCRIPCION = PRODUCTO_ENCONTRADO?.descripcion || '';
+    }
+    
+    // Para nombreSubproducto
+    if (typeof VALORES_FORMULARIO.nombreSubproducto === 'object' && VALORES_FORMULARIO.nombreSubproducto?.descripcion) {
+      SUBPRODUCTO_DESCRIPCION = VALORES_FORMULARIO.nombreSubproducto.descripcion;
+    } else if (VALORES_FORMULARIO.nombreSubproducto) {
+      const ID_SUBPRODUCTO_SELECCIONADO = Number(VALORES_FORMULARIO.nombreSubproducto) || 0;
+      const SUBPRODUCTO_ENCONTRADO = this.nombreSubproducto.find(s => s.id === ID_SUBPRODUCTO_SELECCIONADO);
+      SUBPRODUCTO_DESCRIPCION = SUBPRODUCTO_ENCONTRADO?.descripcion || '';
+    }
+    
+    // Crear nueva fila basada en la selección del usuario
+    const NUEVA_FILA: SeleccionDelCupoTabla = {
+      nombreProducto: PRODUCTO_DESCRIPCION,
+      nombreSubproducto: SUBPRODUCTO_DESCRIPCION,
+      mecanismoAsignacion: 'Primer llegado, primer servido',
+      fraccionesArancelarias: '0123.45.67',
+      tipoCupo: 'Cupo Abierto'
+    };
+
+    // Agregar nueva fila al array existente (mantener filas anteriores)
+    this.datos = [...this.datos, NUEVA_FILA];
+    
+    // Actualizar el store con los nuevos datos
+    this.tramite120401Store.setDatos(this.datos);
+  } else {
+    // Marcar todos los campos como tocados para mostrar errores de validación
+    this.seleccionForm.markAllAsTouched();
+  }
+}
 }

@@ -176,6 +176,17 @@ export interface MercanciasFormInfo {
      * Número de factura asociado a la mercancía.
      */
     nFactura: string;
+
+    /**
+     * Tipo de factura de la mercancía.
+     */
+    tipoDeFactura?: string;
+
+    /**
+     * Fecha de la factura de la mercancía.
+     */
+    fechaDeFactura?: string;
+    
 }
 
 /**
