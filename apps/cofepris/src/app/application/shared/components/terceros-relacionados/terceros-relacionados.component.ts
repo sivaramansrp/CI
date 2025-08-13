@@ -16,7 +16,7 @@ import {
   MENSAJE_SIN_FILA_SELECCIONADA,
   OCULTAR_FACTURADOR,
   OCULTAR_PROVEEDOR,
-  PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR  
+  PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR
 } from '../../constantes/datos-solicitud.enum';
 import {
   Component,
