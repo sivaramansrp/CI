@@ -78,7 +78,7 @@ export class DatosGeneralesComponent implements OnDestroy {
    * Dirección actual de rotación.
    * @type {number | null}
    */
-  currentDirection: number | null = 1;
+  direccionActual: number | null = 1;
 
   /**
    * Datos del dropdown.
@@ -212,7 +212,7 @@ export class DatosGeneralesComponent implements OnDestroy {
    * Índice actual de la fila.
    * @type {number}
    */
-  currentIndex = 0;
+  indiceActual = 0;
 
   /**
    * Indica si la solicitud está relacionada con ferrocarril.
@@ -402,10 +402,10 @@ export class DatosGeneralesComponent implements OnDestroy {
    * @param {number} direction - La dirección de rotación.
    * @returns {void}
    */
-  rotateRow(direction: number): void {
+  rotarFila(direction: number): void {
     const TOTALROWS = this.mercanciasLista.length;
-    this.currentDirection = direction;
-    this.currentIndex = (this.currentIndex + direction + TOTALROWS) % TOTALROWS;
+    this.direccionActual = direction;
+    this.indiceActual = (this.indiceActual + direction + TOTALROWS) % TOTALROWS;
   }
 
   /**

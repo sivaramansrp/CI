@@ -141,7 +141,7 @@ describe('PagoDeDerechosComponent', () => {
 
   it('should select justificación catalogo', () => {
     const catalogo = { id: 1 } as any;
-    component.selectJustificacionCatalogo(catalogo);
+    component.seleccionarJustificacionCatalogo(catalogo);
     expect(mockSolicitudStore.setJustificacion).toHaveBeenCalledWith(1);
   });
 

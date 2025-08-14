@@ -112,19 +112,19 @@ describe('DatosGeneralesComponent', () => {
 
   it('should rotate rows correctly', () => {
     component.mercanciasLista = [{ Partida: '1' }, { Partida: '2' }, { Partida: '3' }] as any;
-    component.currentIndex = 0;
+    component.indiceActual = 0;
 
-    component.rotateRow(1);
-    expect(component.currentIndex).toBe(1);
+    component.rotarFila(1);
+    expect(component.indiceActual).toBe(1);
 
-    component.rotateRow(1);
-    expect(component.currentIndex).toBe(2);
+    component.rotarFila(1);
+    expect(component.indiceActual).toBe(2);
 
-    component.rotateRow(1);
-    expect(component.currentIndex).toBe(0);
+    component.rotarFila(1);
+    expect(component.indiceActual).toBe(0);
 
-    component.rotateRow(-1);
-    expect(component.currentIndex).toBe(2);
+    component.rotarFila(-1);
+    expect(component.indiceActual).toBe(2);
   });
 
   it('should validate form fields correctly', () => {

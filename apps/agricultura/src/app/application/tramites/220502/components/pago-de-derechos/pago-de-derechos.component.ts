@@ -39,7 +39,7 @@ export class PagoDeDerechosComponent implements OnDestroy {
    * Indica si el formulario está deshabilitado.
    * @type {boolean}
    */
-  isDisabled: boolean = true;
+  estaDeshabilitado: boolean = true;
 
   /**
    * Formulario de pago.
@@ -249,7 +249,7 @@ export class PagoDeDerechosComponent implements OnDestroy {
    * Selecciona una justificación desde el catálogo y actualiza el store con la información correspondiente.
    * @param event Objeto de tipo Catalogo que contiene la información de la justificación seleccionada.
    */
-  selectJustificacionCatalogo(event: Catalogo): void {
+  seleccionarJustificacionCatalogo(event: Catalogo): void {
     this.solicitud220502Store.setJustificacion(event.id);
   }
 

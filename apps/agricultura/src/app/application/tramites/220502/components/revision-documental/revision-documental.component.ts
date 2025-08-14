@@ -37,12 +37,8 @@ export class RevisionDocumentalComponent implements OnInit, OnDestroy {
    * Índice actual de la fila.
    * @type {number}
    */
-  currentIndex: number = 1;
-  /**
-   * Filas de datos.
-   * @type {any[]}
-   */
-  rows: { [key: string]: string }[] = [];
+  indiceActual: number = 1;
+
   /**
    * Formulario principal.
    * @type {any}

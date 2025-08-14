@@ -24,8 +24,7 @@ describe('RevisionDocumentalComponent', () => {
   it('should initialize default values', () => {
     expect(component.indice).toBe(1);
     expect(component.colapsable).toBe(true);
-    expect(component.currentIndex).toBe(1);
-    expect(component.rows).toEqual([]);
+    expect(component.indiceActual).toBe(1);
     expect(component.forma).toBe('');
   });
 
@@ -47,23 +46,12 @@ describe('RevisionDocumentalComponent', () => {
     expect(component.colapsable).toBe(true);
   });
 
-  it('should update currentIndex correctly', () => {
-    component.currentIndex = 3;
-    expect(component.currentIndex).toBe(3);
+  it('should update indiceActual correctly', () => {
+    component.indiceActual = 3;
+    expect(component.indiceActual).toBe(3);
 
-    component.currentIndex = 0;
-    expect(component.currentIndex).toBe(0);
-  });
-
-  it('should handle rows correctly', () => {
-    component.rows = [
-      { key: 'value1' },
-      { key: 'value2' },
-    ];
-    expect(component.rows.length).toBe(2);
-
-    component.rows.push({ key: 'value3' });
-    expect(component.rows.length).toBe(3);
+    component.indiceActual = 0;
+    expect(component.indiceActual).toBe(0);
   });
 
   it('should update forma correctly', () => {
