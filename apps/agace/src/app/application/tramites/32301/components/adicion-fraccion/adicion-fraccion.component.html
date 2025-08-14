@@ -35,8 +35,10 @@
 
       <div class="col-12">
         <div class="table-responsive">
-          <ng-table [commonTableHeader]="gridFraccionesHeader"
-            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></ng-table>
+          <app-tabla-dinamica [datos]="gridFraccionesHeader" [tipoSeleccionTabla]="seleccionTabla"
+            [configuracionTabla]="configuraciongridFraccionesHeader"
+            (filaSeleccionada)="seleccionDeFilas($event)"
+            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
         </div>
         <div class="d-flex justify-content-end mt-5">
           <button type="button" class="btn btn-primary me-md-3" id="agregaFracciones"
@@ -44,15 +46,15 @@
             Agregar
           </button>
           <button type="button" class="btn btn-primary me-md-3" id="modificarFracciones"
-            [disabled]="esFormularioSoloLectura">
+            [disabled]="esFormularioSoloLectura" (click)="modificarSeleccionada(seleccionadasFila!)">
             Modificar
           </button>
           <button type="button" class="btn btn-primary me-md-3" id="eliminarFracciones"
-            [disabled]="esFormularioSoloLectura">
+            [disabled]="esFormularioSoloLectura" (click)="eliminarFraccionSeleccionada(seleccionadasFila?.id!)">
             Eliminar
           </button>
           <button type="button" class="btn btn-primary me-md-3" id="descargarReporteFracciones"
-         [disabled]="esFormularioSoloLectura || !declaracionForm.get('idCarga')?.value">
+            [disabled]="esFormularioSoloLectura || !declaracionForm.get('idCarga')?.value">
             Vista Previa
           </button>
         </div>
@@ -66,9 +68,8 @@
       <div class="col-md-12">
         <div class="alert alert-info">
           <div class="form-check">
-             <lib-input-check [id]="'manifiestos'" [required]="true" [label]="alotoFracciones"[fontWeight]="true"
-        formControlName="manifiestos" [isDisabled]="esFormularioSoloLectura"
-       ></lib-input-check>
+            <lib-input-check [id]="'manifiestos'" [required]="true" [label]="alotoFracciones" [fontWeight]="true"
+              formControlName="manifiestos" [isDisabled]="esFormularioSoloLectura"></lib-input-check>
           </div>
         </div>
       </div>
@@ -139,27 +140,27 @@
             <div class="col-6">
               <div class="form-group">
                 <label for="rfc" class="form-label">Fracción declarada en la certificación *</label>
-                <input type="text" id="txtfraccionDeclCertMod" formControlName="txtfraccionDeclCert"
+                <input type="text" id="fraccionDeclarada" formControlName="fraccionDeclarada"
                   class="form-control" />
               </div>
             </div>
             <div class="col-6">
               <div class="form-group">
-                <app-catalogo-select formControlName="activRelProc" [label]="'Actividad relacionada con el proceso'"
+                <app-catalogo-select formControlName="actividadRelacionada" [label]="'Actividad relacionada con el proceso'"
                   [required]="true" [catalogo]="activRelProcMod"
                   [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
               </div>
             </div>
             <div class="col-md-12">
               <div class="form-group">
-                <label for="txtDescripcionMercanciaMod" class="form-label">Descripción de la mercancía*:</label>
-                <textarea class="form-control" rows="3" id="txtDescripcionMercanciaMod"
-                  formControlName="txtDescripcionMercancia" style="height: 80px"></textarea>
+                <label for="descripcionFraccionActual" class="form-label">Descripción de la mercancía*:</label>
+                <textarea class="form-control" rows="3" id="descripcionFraccionActual"
+                  formControlName="descripcionFraccionActual" style="height: 80px"></textarea>
               </div>
             </div>
             <div class="col-6">
               <div class="form-group">
-                <app-catalogo-select formControlName="cveFraccionCorrelacion" [label]="'Correlación fracción actual'"
+                <app-catalogo-select formControlName="correlacionFraccionActual" [label]="'Correlación fracción actual'"
                   [required]="true" [catalogo]="cveFraccionCorrelacionMod"
                   [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
               </div>
@@ -167,7 +168,7 @@
 
             <div class="col-6">
               <div class="form-group">
-                <app-catalogo-select formControlName="unidadMedida" [label]="'Unidad de medida de la tarifa (UMT)'"
+                <app-catalogo-select formControlName="umt" [label]="'Unidad de medida de la tarifa (UMT)'"
                   [required]="true" [catalogo]="unidadMedidaMod"
                   [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
               </div>
@@ -180,8 +181,8 @@
             </div>
             <div class="col-12">
               <div class="form-group">
-                <label for="txtDescripcionNicoMod" class="form-label">Descripción NICO:</label>
-                <textarea class="form-control" rows="3" id="txtDescripcionNicoMod" formControlName="txtDescripcionNico"
+                <label for="descripcionNico" class="form-label">Descripción NICO:</label>
+                <textarea class="form-control" rows="3" id="descripcionNico" formControlName="descripcionNico"
                   style="height: 80px"></textarea>
               </div>
             </div>
@@ -191,16 +192,17 @@
               <ng-titulo [titulo]="'País(es) de origen'"></ng-titulo>
             </div>
             <crosslist [fechas]="selectRangoDias" [showSearchInput1]="false" [showSearchInput2]="false"
-              [botones]="botonField" [fechasSeleccionadas]="fechasDatos"></crosslist>
+              (fechasSeleccionadasChange)="aduanaSeleccionadasChange($event)"
+              [botones]=" botonField" [fechasSeleccionadas]="fechasDatos"></crosslist>
           </div>
 
           <div class="button-group d-flex justify-content-end mt-5 me-md-3">
             <button type="button" class="btn btn-primary m-2" [disabled]="esFormularioSoloLectura"
-              (click)="closefraccionesModelModel()">
+              (click)="closefraccionesModelModel(cargaManualForm)">
               Aceptar
             </button>
-             <button type="button" class="btn btn-primary m-2" [disabled]="esFormularioSoloLectura"
-              (click)="closefraccionesModelModel()">
+            <button type="button" class="btn btn-primary m-2" [disabled]="esFormularioSoloLectura"
+              (click)="closefraccionesModelModels()">
               Cancelar
             </button>
           </div>

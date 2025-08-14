@@ -13,11 +13,11 @@ import { MESES, SEMANA } from '../../../core/enums/constantes-alertas.enum';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { CommonModule } from '@angular/common';
 import { InputFecha } from '../../../core/models/shared/components.model';
-
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 @Component({
   selector: 'input-fecha',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, BsDatepickerModule],
+  imports: [CommonModule, ReactiveFormsModule, BsDatepickerModule, TooltipModule],
   templateUrl: './input-fecha.component.html',
   styleUrl: './input-fecha.component.scss',
 })
@@ -41,6 +41,11 @@ export class InputFechaComponent implements OnInit, OnChanges {
    * Indica si se debe mostrar el ícono de ayuda (círculo con signo de interrogación).
    */
   @Input() tooltipQuestionCircle: boolean = false;
+
+  /**
+   * Texto que se mostrará en el tooltip del ícono de ayuda.
+   */
+  @Input() tooltipQuestionCircleText!: string;
 
   @Input() deshabilitarFuturas: boolean = false;
 

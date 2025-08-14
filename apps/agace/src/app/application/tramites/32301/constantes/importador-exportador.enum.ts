@@ -18,20 +18,69 @@ export const SELECCION = {
 export const MESSAGE_FRACCION = 'Deberás adjuntar el listado de fracciones arancelarias señaladas en la descripción de las actividades relacionadas con los procesos productivos o presentación de servicios, exhibido en tu solicitud de inscripción.';
 
 /**
- * Encabezados de la tabla que muestra la información de las fracciones declaradas.
- * Incluye detalles sobre la actividad relacionada, correlación, descripción, NICO, 
- * unidad de medida y país de origen.
+ * Mensaje que indica que se debe incluir un escrito libre en el apartado correspondiente si se modifican
+ * las partes contratantes en la documentación con la que se acreditó el legal uso y goce del domicilio.
+ * Este mensaje se utiliza para informar al usuario sobre la necesidad de adjuntar un documento adicional.
  */
-export const GRID_FRACCIONES_HEADER = [
-    'Fracción declarada',
-    'Actividad relacionada',
-    'Correlación fracción actual',
-    'Descripción fracción actual',
-    'NICO',
-    'Descripción del NICO',
-    'UMT',
-    'País de origen'
+export interface FraccionGridItem {
+  fraccionDeclarada: string;
+  actividadRelacionada: string;
+  correlacionFraccionActual: string;
+  descripcionFraccionActual: string;
+  nico: string;
+  descripcionNico: string;
+  umt: string;
+  paisDeOrigen: string;
+  id?: number;
+}
+
+/**
+ * Configuración de las columnas para la tabla de fracciones arancelarias.
+ * Cada objeto en el array representa una columna con su encabezado, clave para acceder a los datos y orden de visualización.
+ */
+export const CONFIGURATION_TABLA_GRID_FRACCIONES_HEADER = [
+  {
+    encabezado: 'Fracción declarada',
+    clave: (item: FraccionGridItem): string => item.fraccionDeclarada,
+    orden: 1
+  },
+  {
+    encabezado: 'Actividad relacionada',
+    clave: (item: FraccionGridItem): string => item.actividadRelacionada,
+    orden: 2
+  },
+  {
+    encabezado: 'Correlación fracción actual',
+    clave: (item: FraccionGridItem): string => item.correlacionFraccionActual,
+    orden: 3
+  },
+  {
+    encabezado: 'Descripción fracción actual',
+    clave: (item: FraccionGridItem): string => item.descripcionFraccionActual,
+    orden: 4
+  },
+  {
+    encabezado: 'NICO',
+    clave: (item: FraccionGridItem): string => item.nico,
+    orden: 5
+  },
+  {
+    encabezado: 'Descripción del NICO',
+    clave: (item: FraccionGridItem): string => item.descripcionNico,
+    orden: 6
+  },
+  {
+    encabezado: 'UMT',
+    clave: (item: FraccionGridItem): string => item.umt,
+    orden: 7
+  },
+  {
+    encabezado: 'País de origen',
+    clave: (item: FraccionGridItem): string => item.paisDeOrigen,
+    orden: 8
+  }
 ];
+
 
 /**
  * Lista de pasos para el proceso, con información sobre su estado actual.

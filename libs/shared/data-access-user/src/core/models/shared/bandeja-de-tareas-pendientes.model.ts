@@ -7,6 +7,8 @@ export interface BandejaDeTareasPendientes {
     departamento: string;
     numeroDeProcedimiento: string;
     origin: string;
+    fechaInicioTramite: string;
+    diasHabilesTranscurridos: string;
 }
 
 export interface SeleccionadoDepartamento {
