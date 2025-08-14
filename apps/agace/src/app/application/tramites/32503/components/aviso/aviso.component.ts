@@ -636,29 +636,35 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @method eliminarMercancia
    * @description Método para eliminar las filas seleccionadas de la tabla de mercancías.
    * 
-   * - Filtra los datos de la tabla para excluir las filas seleccionadas.
-   * - Limpia la lista de filas seleccionadas.
+   * - Muestra un modal de confirmación antes de eliminar.
+   * - Solo elimina si hay filas seleccionadas.
    *
    * @returns {void}
    */
   eliminarMercancia(): void {
+    if (this.filaSeleccionadaMercanciaLista.length === 0) {
+      return;
+    }
+    
+    this.elementoParaEliminar = 1;
     this.eliminarModal();
-
-    this.tablaDeMercancia.datos = this.tablaDeMercancia.datos.filter((ele) => !this.filaSeleccionadaMercanciaLista.includes(ele));
-    this.filaSeleccionadaMercanciaLista = [];
   }
   /**
    * @method eliminarDomicilio
    * @description Método para eliminar las filas seleccionadas de la tabla de domicilios.
    * 
-   * - Filtra los datos de la tabla para excluir las filas seleccionadas.
-   * - Limpia la lista de filas seleccionadas.
+   * - Muestra un modal de confirmación antes de eliminar.
+   * - Solo elimina si hay filas seleccionadas.
    *
    * @returns {void}
- */
+   */
   eliminarDomicilio(): void {
-    this.tablaDeDatos.datos = this.tablaDeDatos.datos.filter((ele) => !this.filaSeleccionadaLista.includes(ele));
-    this.filaSeleccionadaLista = [];
+    if (this.filaSeleccionadaLista.length === 0) {
+      return;
+    }
+    
+    this.elementoParaEliminar = 2;
+    this.eliminarModal();
   }
   /**
    * @method verificaTipoAviso
@@ -920,7 +926,13 @@ export class AvisoComponent implements OnInit, OnDestroy {
   */
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
-      this.pedimentos.splice(this.elementoParaEliminar, 1);
+      if (this.elementoParaEliminar === 1) {
+        this.tablaDeMercancia.datos = this.tablaDeMercancia.datos.filter((ele) => !this.filaSeleccionadaMercanciaLista.includes(ele));
+        this.filaSeleccionadaMercanciaLista = [];
+      } else if (this.elementoParaEliminar === 2) {
+        this.tablaDeDatos.datos = this.tablaDeDatos.datos.filter((ele) => !this.filaSeleccionadaLista.includes(ele));
+        this.filaSeleccionadaLista = [];
+      }
     }
   }
 
