@@ -474,13 +474,13 @@
           </div>
           <div class="col-md-8">
             <div class="col-md-6">
-              <input-fecha [datos]="INPUT_FECHA_CONFIGURACION" [setFecha]="mercanciaForm.get('fechaDesde')?.value || ''"
-                (valorCambiado)="cambioFechaDesde($event)">
+              <input-fecha [datos]="INPUT_FECHA_CONFIGURACION" [setFecha]="mercanciaForm.get('FechadeSacrificio')?.value || ''"
+                (valorCambiado)="cambioFechadeSacrificio($event)">
               </input-fecha>
             </div>
             <div class="col-md-6">
-              <input-fecha [datos]="INPUT_FECHA_CONFIGURACION" [setFecha]="mercanciaForm.get('fechaHasta')?.value || ''"
-                (valorCambiado)="cambioFechaHasta($event)">
+              <input-fecha [datos]="INPUT_FECHA_CONFIGURACION" [setFecha]="mercanciaForm.get('FechadelSacrificio')?.value || ''"
+                (valorCambiado)="cambioFechadelSacrificio($event)">
               </input-fecha>
             </div>
           </div>
@@ -491,14 +491,14 @@
           </div>
           <div class="col-md-8">
             <div class="col-md-6">
-              <input-fecha [datos]="INPUT_FECHA_CONFIGURACION" [setFecha]="mercanciaForm.get('fechaDesde')?.value || ''"
-                (valorCambiado)="cambioFechaDesde($event)">
+              <input-fecha [datos]="INPUT_FECHA_CONFIGURACION" [setFecha]="mercanciaForm.get('FechadeCaducidad')?.value || ''"
+                (valorCambiado)="cambioFechadeCaducidad($event)">
               </input-fecha>
             </div>
 
             <div class="col-md-6">
-              <input-fecha [datos]="INPUT_FECHA_CONFIGURACION" [setFecha]="mercanciaForm.get('fechaHasta')?.value || ''"
-                (valorCambiado)="cambioFechaHasta($event)">
+              <input-fecha [datos]="INPUT_FECHA_CONFIGURACION" [setFecha]="mercanciaForm.get('FechadelCaducidad')?.value || ''"
+                (valorCambiado)="cambioFechadelCaducidad($event)">
               </input-fecha>
             </div>
           </div>

@@ -284,6 +284,10 @@ mercanciaForm = this.fb.group({
   rangoFecha: ['No'], // Default to "No"
   fechaDesde: [''],
   fechaHasta: [''],
+  FechadeCaducidad: [''],
+  FechadelCaducidad: [''],
+  FechadeSacrificio: [''],
+  FechadelSacrificio: ['']
 });
 
 
@@ -599,6 +603,16 @@ cerrarModal(): void {
     });
     this.tramite221601Store.setFechaDesde(nuevoValor);
   }
+  /**
+   * Handles date change for "Caducidad" field
+   * @param nuevoValor - New date value
+   */
+  cambioFechadeCaducidad(nuevoValor: string): void {
+      this.mercanciaForm.patchValue({
+      FechadeCaducidad: nuevoValor
+    });
+    this.tramite221601Store.setFechadeCaducidad(nuevoValor);
+  }
 
   /**
    * Handles date change for "Hasta" field
@@ -631,6 +645,39 @@ cerrarModal(): void {
       fechaProduccion: nuevoValor
     });
     this.tramite221601Store.setFechaProduccion(nuevoValor);
+  }
+
+  /**
+   * Handles date change for "Fecha de caducidad" field
+   * @param nuevoValor - New date value
+   */
+  cambioFechadelCaducidad(nuevoValor: string): void {
+    this.mercanciaForm.patchValue({
+      FechadelCaducidad: nuevoValor
+    });
+    this.tramite221601Store.setFechadelCaducidad(nuevoValor);
+  }
+
+  /**
+   * Handles date change for "Fecha de sacrificio" field
+   * @param nuevoValor - New date value
+   */
+  cambioFechadeSacrificio(nuevoValor: string): void {
+    this.mercanciaForm.patchValue({
+      FechadeSacrificio: nuevoValor
+    });
+    this.tramite221601Store.setFechadeSacrificio(nuevoValor);
+  }
+
+  /**
+   * Handles date change for "Fecha de sacrificio" field
+   * @param nuevoValor - New date value
+   */
+  cambioFechadelSacrificio(nuevoValor: string): void {
+    this.mercanciaForm.patchValue({
+      FechadelSacrificio: nuevoValor
+    });
+    this.tramite221601Store.setFechadelSacrificio(nuevoValor);
   }
 
 }

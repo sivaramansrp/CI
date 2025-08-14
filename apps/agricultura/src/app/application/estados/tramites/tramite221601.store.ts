@@ -719,21 +719,31 @@ public setCoordenadas(coordenadas: string): void {
       tif,// Actualiza la propiedad 'tif' con el valor proporcionado.
     }));
   }
-
+/**
+   * Sets the "Fecha de elaboración" date in the state.
+   * @param {string} fecha - The new date value.
+   */
   setFechaDesde(fecha: string): void {
     this.update((state) => ({
       ...state,
       fechaDesde: fecha,
     }));
   }
-
+/**
+   * Sets the "Fecha de elaboración" date in the state.
+   * @param {string} fecha - The new date value.
+   */
   setFechaProduccion(fecha: string): void {
     this.update((state) => ({
       ...state,
       fechaProduccion: fecha,
     }));
   }
-
+ 
+/**
+   * Sets the "Fecha de elaboración" date in the state.
+   * @param {string} fecha - The new date value.
+   */
   setFechaElaboracion(fecha: string): void {
     this.update((state) => ({
       ...state,
@@ -741,10 +751,69 @@ public setCoordenadas(coordenadas: string): void {
     }));
   }
 
+  /**
+   * Sets the "Fecha hasta" date in the state.
+   * @param {string} fecha - The new date value.
+   */
   setFechaHasta(fecha: string): void {
     this.update((state) => ({
       ...state,
       fechaHasta: fecha,
+    }));
+  }
+
+  /**
+   * Sets the "Fecha de caducidad" date in the state.
+   * @param {string} fecha - The new date value.
+   */
+  setFechaCaducidad(fecha: string): void {
+    this.update((state) => ({
+      ...state,
+      fechaCaducidad: fecha,
+    }));
+  }
+
+  /**
+   * Sets the "Fecha de caducidad" date in the state.
+   * @param {string} fecha - The new date value.
+   */
+  setFechadeCaducidad(fecha: string): void {
+    this.update((state) => ({
+      ...state,
+      fechadeCaducidad: fecha,
+    }));
+  }
+
+/**
+   * Sets the "Fecha de caducidad" date in the state.
+   * @param {string} fecha - The new date value.
+   */
+  setFechadelCaducidad(fecha: string): void {
+    this.update((state) => ({
+      ...state,
+      fechadelCaducidad: fecha,
+    }));
+  }
+
+  /**
+   * Sets the "Fecha de sacrificio" date in the state.
+   * @param {string} fecha - The new date value.
+   */
+  setFechadeSacrificio(fecha: string): void {
+    this.update((state) => ({
+      ...state,
+      FechadeSacrificio: fecha,
+    }));
+  }
+
+  /**
+   * Sets the "Fecha de sacrificio" date in the state.
+   * @param {string} fecha - The new date value.
+   */
+  setFechadelSacrificio(fecha: string): void {
+    this.update((state) => ({
+      ...state,
+      fechadelSacrificio: fecha,
     }));
   }
 
