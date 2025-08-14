@@ -1,34 +1,34 @@
-import { ExencionImpuestosService } from '../services/exencion-impuestos.service';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ConsultaioQuery, InputRadioComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { Subject } from 'rxjs';
-import { MercanciaTableService } from '../services/mercancia-table.service';
+
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+
+import { Modal } from 'bootstrap';
+
+import { Subject, distinctUntilChanged, map, merge, takeUntil } from 'rxjs';
+
+import {
+  CatalogoSelectComponent,
+  ConfiguracionColumna,
+  ConsultaioQuery,
+  REGEX_POSTAL,
+  REGEX_TELEFONO_DIGITOS,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TableBodyData,
+  TituloComponent,
+  ValidacionesFormularioService,
+  
+} from '@libs/shared/data-access-user/src';
 
 import { DatosDelMercancia } from '../constants/exencion-impuestos.enum';
 
-import { Modal } from 'bootstrap';
-import {
-  AlertComponent,
-  CatalogoSelectComponent,
-  InputCheckComponent, REGEX_POSTAL,
-  REGEX_TELEFONO_DIGITOS,
-  TableBodyData, TableComponent,
-  TituloComponent,
-  ValidacionesFormularioService,
-  TablaDinamicaComponent,
-  ConfiguracionColumna
-} from '@libs/shared/data-access-user/src';
-
-import {
-  Catalogo,
-  Solicitud103State,
-  Tramite103Store
-} from '../estados/tramite103.store';
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { takeUntil, map, merge, distinctUntilChanged } from 'rxjs';
+import { Catalogo, Solicitud103State, Tramite103Store } from '../estados/tramite103.store';
 import { Tramite103Query } from '../estados/tramite103.query';
+
+import { ExencionImpuestosService } from '../services/exencion-impuestos.service';
+import { MercanciaTableService } from '../services/mercancia-table.service';
+
 
 /**
  * Maneja formularios, catálogos, tablas de mercancías y modales relacionados con el trámite.
@@ -37,14 +37,10 @@ import { Tramite103Query } from '../estados/tramite103.query';
   selector: 'app-exencion-impuestos',
   standalone: true,
   imports: [
-    AlertComponent,
     CatalogoSelectComponent,
     CommonModule,
     FormsModule,
-    InputCheckComponent,
-    InputRadioComponent,
     ReactiveFormsModule,
-    TableComponent,
     TituloComponent,
     TablaDinamicaComponent
   ],
@@ -55,10 +51,10 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   /**
    * Helper to get description from catalog by id or description value.
    */
-  obtenerDescripcion(catalog: Catalogo[] | undefined, value: any): string {
-    if (!catalog) return value;
-    let found = catalog.find(item => item.id === value || item.id === Number(value) || item.descripcion === value);
-    return found ? found.descripcion : value;
+  obtenerDescripcion(catalog: Catalogo[] | undefined, value: string | number): string {
+    if (!catalog) { return value as string; }
+    const found = catalog.find(item => item.id === value || item.id === Number(value) || item.descripcion === value);
+    return found ? found.descripcion : value as string;
   }
 
   /**
@@ -149,12 +145,12 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
     this.agregarMercanciasForm.markAllAsTouched();
   }
   /**
-   * Index of the selected row in the table, or null if none selected.
+   * Índice de la fila seleccionada en la tabla, o nulo si no hay ninguno seleccionado.
    */
   filaSeleccionada: number | null = null;
 
   /**
-   * Index of the row being edited, or null if adding new.
+   * Índice de la fila que se está editando, o nulo si se está agregando una nueva.
    */
   filaEditando: number | null = null;
 
@@ -362,7 +358,10 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   /**
    * Opciones disponibles para el grupo de radio.
    */
-  radioOpcions: RadioOpcion[] = [];
+  radioOpcions: RadioOpcion[] = [
+    { label: 'Sí', value: 'si' },
+    { label: 'No', value: 'no' }
+  ];
 
   /**
    * Estado actual de la consulta relacionada con el trámite.
@@ -517,6 +516,10 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
    * @private
    */
   private donanteDomicilio(): void {
+    // Establezca siempre 'si' después de la inicialización del formulario
+    setTimeout(() => {
+      this.tramiteForm.get('importadorExportador.opcion')?.setValue('si', { emitEvent: false });
+    });
     this.tramiteForm = this.fb.group({
       exencionImpuestos: this.fb.group({
         manifesto: [this.solicitudState?.manifesto, [Validators.required]],
@@ -537,9 +540,11 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
         estado: [this.solicitudState?.estado, [Validators.required, Validators.maxLength(50)]],
         colonia: [this.solicitudState?.colonia, [Validators.required, Validators.maxLength(50)]],
         personaMoral: [this.solicitudState?.personaMoral],
-        opcion: [{ value: this.solicitudState?.opcion }, [Validators.required]]
+        opcion: ['si', [Validators.required]]
       })
     });
+    // Forzar la selección visual de 'si' después de cualquier lógica de habilitación/desactivación
+    this.tramiteForm.get('importadorExportador.opcion')?.setValue('si', { emitEvent: false });
 
     /**
      * Formulario reactivo para agregar mercancías al trámite.
@@ -628,6 +633,12 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   aduanaSeleccion(): void {
+      // Establezca siempre 'si' después de habilitar/deshabilitar la lógica
+      setTimeout(() => {
+        this.tramiteForm.get('importadorExportador.opcion')?.setValue('si', { emitEvent: false });
+      });
+  // Fuerce siempre la selección visual de 'si' después de habilitar/deshabilitar
+  this.tramiteForm.get('importadorExportador.opcion')?.setValue('si', { emitEvent: false });
     if (this.isProcessingAduanaSelection) {
       return;
     }
@@ -638,29 +649,29 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
       const ADUANA = this.tramiteForm.get('exencionImpuestos.aduana')?.value;
       this.store.setAduana(ADUANA);
       // ADUANA puede ser id (número) o descripción (cadena), así que buscar por id si es posible
-      let aduanaObj: Catalogo | undefined = undefined;
+      let ADUANA_OBJ: Catalogo | undefined = undefined;
       // Intentar coincidir por id (número) primero
       if (!isNaN(Number(ADUANA))) {
-        aduanaObj = this.aduana.find(a => a.id === Number(ADUANA));
+        ADUANA_OBJ = this.aduana.find(a => a.id === Number(ADUANA));
       }
       // Alternativa: intentar coincidir por descripción (cadena)
-      if (!aduanaObj && typeof ADUANA === 'string') {
-        aduanaObj = this.aduana.find(a => a.descripcion === ADUANA);
+      if (!ADUANA_OBJ && typeof ADUANA === 'string') {
+        ADUANA_OBJ = this.aduana.find(a => a.descripcion === ADUANA);
       }
       // Registro de depuración
-      const opcionControl = this.tramiteForm.get('importadorExportador.opcion');
-      if (aduanaObj && aduanaObj.descripcion && aduanaObj.descripcion.toLowerCase().includes('salud')) {
+      const OPCION_CONTROL = this.tramiteForm.get('importadorExportador.opcion');
+      if (ADUANA_OBJ && ADUANA_OBJ.descripcion && ADUANA_OBJ.descripcion.toLowerCase().includes('salud')) {
         this.opcionDeshabilitado = false;
-        opcionControl?.enable({ emitEvent: false });
+        OPCION_CONTROL?.enable({ emitEvent: false });
         // Simplemente establezca el valor actual sin la manipulación del tiempo.
-        if (opcionControl?.value) {
-          opcionControl.updateValueAndValidity({ emitEvent: false });
+        if (OPCION_CONTROL?.value) {
+          OPCION_CONTROL.updateValueAndValidity({ emitEvent: false });
         }
       } else {
         this.opcionDeshabilitado = true;
         this.valorSeleccionado = '';
-        opcionControl?.setValue('', { emitEvent: false });
-        opcionControl?.disable({ emitEvent: false });
+        OPCION_CONTROL?.setValue('', { emitEvent: false });
+        OPCION_CONTROL?.disable({ emitEvent: false });
       }
     } finally {
       // Restablecer siempre la bandera
@@ -678,6 +689,10 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   destinoMercanciaSeleccion(): void {
+      setTimeout(() => {
+        this.tramiteForm.get('importadorExportador.opcion')?.setValue('si', { emitEvent: false });
+      });
+  this.tramiteForm.get('importadorExportador.opcion')?.setValue('si', { emitEvent: false });
     // Evite bucles infinitos con protección de reentrada
     if (this.isProcessingDestinoSelection) {
       return;
@@ -942,105 +957,99 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
    * Actualiza la tabla y cierra el modal.
    */
   agregarMercancias(): void {
-    const datos = this.agregarMercanciasForm.get('datosMercancia');
-    if (!datos) return;
-    const vehiculoSeleccionado = datos.get('vehiculo')?.value;
-    // Campos principales requeridos
-    const camposPrincipales = [
+    const DATOS_MERCANCIA = this.agregarMercanciasForm.get('datosMercancia');
+    if (!DATOS_MERCANCIA) { return; }
+    const VEHICULO_SELECCIONADO = DATOS_MERCANCIA.get('vehiculo')?.value;
+    const CAMPOS_PRINCIPALES = [
       'tipoDeMercancia',
       'usoEspecifico',
       'cantidad',
       'condicionMercancia',
       'unidadMedida'
     ];
-    let camposValidos = camposPrincipales.every(campo => {
-      const ctrl = datos.get(campo);
-      return ctrl && ctrl.value !== null && ctrl.value !== '';
+    const CAMPOS_VALIDOS = CAMPOS_PRINCIPALES.every(CAMPO => {
+      const CTRL = DATOS_MERCANCIA.get(CAMPO);
+      return CTRL && CTRL.value !== null && CTRL.value !== '';
     });
-    // Si no es vehículo, solo los campos principales son obligatorios
-    if (!vehiculoSeleccionado && camposValidos) {
-      const valores = this.agregarMercanciasForm.value.datosMercancia;
-      const vehiculoValue = valores.vehiculo === true ? 'Sí' : 'No';
-      const DATOS = {
-        tbodyData: [
-          valores.tipoDeMercancia ?? '',
-          valores.cantidad ?? '',
-          valores.unidadMedida ?? '',
-          valores.ano ?? '',
-          valores.modelo ?? '',
-          valores.marca ?? '',
-          valores.serie ?? '',
-          valores.usoEspecifico ?? '',
-          valores.condicionMercancia ?? '',
-          vehiculoValue
-        ]
-      };
-      if (this.filaEditando !== null) {
-        this.mercanciaBodyData[this.filaEditando] = DATOS;
-        if (this.getMercanciaTableData && this.getMercanciaTableData.mercanciaTable && Array.isArray(this.getMercanciaTableData.mercanciaTable.tableBody)) {
-          this.getMercanciaTableData.mercanciaTable.tableBody[this.filaEditando] = DATOS;
-        }
-        this.filaEditando = null;
-      } else {
-        this.mercanciaBodyData.push(DATOS);
-        if (this.getMercanciaTableData && this.getMercanciaTableData.mercanciaTable) {
-          if (!Array.isArray(this.getMercanciaTableData.mercanciaTable.tableBody)) {
-            this.getMercanciaTableData.mercanciaTable.tableBody = [];
-          }
-          this.getMercanciaTableData.mercanciaTable.tableBody.push(DATOS);
-        }
-      }
-      this.mercanciaBodyData = [...this.mercanciaBodyData];
-      this.agregarMercanciasForm.reset();
-      this.agregarMercanciasForm.markAsUntouched();
-      this.agregarMercanciasForm.markAsPristine();
-      this.envioIntentado = false;
-      this.cerrarModal();
+
+    if (!VEHICULO_SELECCIONADO && CAMPOS_VALIDOS) {
+      this.procesarMercanciaSinVehiculo();
       return;
     }
-    // Sí es vehículo, requiere el formulario completo válido
-    if (vehiculoSeleccionado && this.agregarMercanciasForm.valid) {
-      const valores = this.agregarMercanciasForm.value.datosMercancia;
-      const vehiculoValue = valores.vehiculo === true ? 'Sí' : 'No';
-      const DATOS = {
-        tbodyData: [
-          valores.tipoDeMercancia ?? '',
-          valores.cantidad ?? '',
-          valores.unidadMedida ?? '',
-          valores.ano ?? '',
-          valores.modelo ?? '',
-          valores.marca ?? '',
-          valores.serie ?? '',
-          valores.usoEspecifico ?? '',
-          valores.condicionMercancia ?? '',
-          vehiculoValue
-        ]
-      };
-      if (this.filaEditando !== null) {
-        this.mercanciaBodyData[this.filaEditando] = DATOS;
-        if (this.getMercanciaTableData && this.getMercanciaTableData.mercanciaTable && Array.isArray(this.getMercanciaTableData.mercanciaTable.tableBody)) {
-          this.getMercanciaTableData.mercanciaTable.tableBody[this.filaEditando] = DATOS;
-        }
-        this.filaEditando = null;
-      } else {
-        this.mercanciaBodyData.push(DATOS);
-        if (this.getMercanciaTableData && this.getMercanciaTableData.mercanciaTable) {
-          if (!Array.isArray(this.getMercanciaTableData.mercanciaTable.tableBody)) {
-            this.getMercanciaTableData.mercanciaTable.tableBody = [];
-          }
-          this.getMercanciaTableData.mercanciaTable.tableBody.push(DATOS);
-        }
-      }
-      this.mercanciaBodyData = [...this.mercanciaBodyData];
-      this.agregarMercanciasForm.reset();
-      this.agregarMercanciasForm.markAsUntouched();
-      this.agregarMercanciasForm.markAsPristine();
-      this.envioIntentado = false;
-      this.cerrarModal();
+    if (VEHICULO_SELECCIONADO && this.agregarMercanciasForm.valid) {
+      this.procesarMercanciaConVehiculo();
       return;
     }
-    // Si no cumple, marcar como tocado para mostrar errores
     this.agregarMercanciasForm.markAllAsTouched();
+  }
+
+  private procesarMercanciaSinVehiculo(): void {
+    const VALORES = this.agregarMercanciasForm.value.datosMercancia;
+    const VEHICULO_VALUE = VALORES.vehiculo === true ? 'Sí' : 'No';
+    const DATOS = {
+      tbodyData: [
+        VALORES.tipoDeMercancia ?? '',
+        VALORES.cantidad ?? '',
+        VALORES.unidadMedida ?? '',
+        VALORES.ano ?? '',
+        VALORES.modelo ?? '',
+        VALORES.marca ?? '',
+        VALORES.serie ?? '',
+        VALORES.usoEspecifico ?? '',
+        VALORES.condicionMercancia ?? '',
+        VEHICULO_VALUE
+      ]
+    };
+    this.actualizarMercanciaBodyData(DATOS);
+    this.limpiarFormularioMercancia();
+  }
+
+  private procesarMercanciaConVehiculo(): void {
+    const VALORES = this.agregarMercanciasForm.value.datosMercancia;
+    const VEHICULO_VALUE = VALORES.vehiculo === true ? 'Sí' : 'No';
+    const DATOS = {
+      tbodyData: [
+        VALORES.tipoDeMercancia ?? '',
+        VALORES.cantidad ?? '',
+        VALORES.unidadMedida ?? '',
+        VALORES.ano ?? '',
+        VALORES.modelo ?? '',
+        VALORES.marca ?? '',
+        VALORES.serie ?? '',
+        VALORES.usoEspecifico ?? '',
+        VALORES.condicionMercancia ?? '',
+        VEHICULO_VALUE
+      ]
+    };
+    this.actualizarMercanciaBodyData(DATOS);
+    this.limpiarFormularioMercancia();
+  }
+
+  private actualizarMercanciaBodyData(DATOS: any): void {
+    if (this.filaEditando !== null) {
+      this.mercanciaBodyData[this.filaEditando] = DATOS;
+      if (this.getMercanciaTableData && this.getMercanciaTableData.mercanciaTable && Array.isArray(this.getMercanciaTableData.mercanciaTable.tableBody)) {
+        this.getMercanciaTableData.mercanciaTable.tableBody[this.filaEditando] = DATOS;
+      }
+      this.filaEditando = null;
+    } else {
+      this.mercanciaBodyData.push(DATOS);
+      if (this.getMercanciaTableData && this.getMercanciaTableData.mercanciaTable) {
+        if (!Array.isArray(this.getMercanciaTableData.mercanciaTable.tableBody)) {
+          this.getMercanciaTableData.mercanciaTable.tableBody = [];
+        }
+        this.getMercanciaTableData.mercanciaTable.tableBody.push(DATOS);
+      }
+    }
+    this.mercanciaBodyData = [...this.mercanciaBodyData];
+  }
+
+  private limpiarFormularioMercancia(): void {
+    this.agregarMercanciasForm.reset();
+    this.agregarMercanciasForm.markAsUntouched();
+    this.agregarMercanciasForm.markAsPristine();
+    this.envioIntentado = false;
+    this.cerrarModal();
   }
 
   /**
