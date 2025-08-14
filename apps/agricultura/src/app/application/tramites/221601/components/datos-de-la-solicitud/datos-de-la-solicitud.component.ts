@@ -1,5 +1,3 @@
-
-
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -91,9 +89,7 @@ import { INPUT_FECHA_CONFIGURACION } from '@libs/shared/data-access-user/src/cor
  */
 
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
-
-
-   /**
+  /**
    * property tipoPersonaOptions
    * description Opciones para el tipo de persona (física o moral).
    */
@@ -284,6 +280,10 @@ mercanciaForm = this.fb.group({
   fechaCaducidad: [''],
   tipoEspecie: [''],
   fecha: [''], // <-- Add this line to define the 'fecha' control
+  numeroLote: [''],
+  rangoFecha: ['No'], // Default to "No"
+  fechaDesde: [''],
+  fechaHasta: [''],
 });
 
 
@@ -541,4 +541,96 @@ cerrarModal(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+  /**
+   * Opciones para el radio button de rango de fechas
+   */
+  opcionesRangoFecha = [
+    { value: 'No', label: 'No' },
+    { value: 'Si', label: 'Sí' }
+  ];
+
+  /**
+   * Indicates if date range fields should be shown (when "No" is selected)
+   */
+  mostrarRangoFechas = false;
+
+  /**
+   * Indicates if "Sí" option is selected
+   */
+  opcionSiSeleccionada = false;
+
+  /**
+   * Handles radio button change for date range option
+   * @param valor - Selected value ('Si' or 'No')
+   */
+  cambiarOpcionRangoFecha(valor: string): void {
+    this.mercanciaForm.patchValue({
+      rangoFecha: valor
+    });
+    
+    if (valor === 'No') {
+      this.mostrarRangoFechas = true;
+      this.opcionSiSeleccionada = false;
+      // Clear single date fields when "No" is selected
+      this.mercanciaForm.patchValue({
+        fechaElaboracion: '',
+        fechaProduccion: '',
+        fechaCaducidad: ''
+      });
+    } else if (valor === 'Si') {
+      this.mostrarRangoFechas = false;
+      this.opcionSiSeleccionada = true;
+      // Clear date range fields when "Sí" is selected
+      this.mercanciaForm.patchValue({
+        fechaDesde: '',
+        fechaHasta: ''
+      });
+    }
+  }
+
+  /**
+   * Handles date change for "Desde" field
+   * @param nuevoValor - New date value
+   */
+  cambioFechaDesde(nuevoValor: string): void {
+    this.mercanciaForm.patchValue({
+      fechaDesde: nuevoValor
+    });
+    this.tramite221601Store.setFechaDesde(nuevoValor);
+  }
+
+  /**
+   * Handles date change for "Hasta" field
+   * @param nuevoValor - New date value
+   */
+  cambioFechaHasta(nuevoValor: string): void {
+    this.mercanciaForm.patchValue({
+      fechaHasta: nuevoValor
+    });
+    this.tramite221601Store.setFechaHasta(nuevoValor);
+  }
+
+  /**
+   * Handles date change for "Fecha de elaboración" field
+   * @param nuevoValor - New date value
+   */
+  cambioFechaElaboracion(nuevoValor: string): void {
+    this.mercanciaForm.patchValue({
+      fechaElaboracion: nuevoValor
+    });
+    this.tramite221601Store.setFechaElaboracion(nuevoValor);
+  }
+
+  /**
+   * Handles date change for "Fecha de producción" field
+   * @param nuevoValor - New date value
+   */
+  cambioFechaProduccion(nuevoValor: string): void {
+    this.mercanciaForm.patchValue({
+      fechaProduccion: nuevoValor
+    });
+    this.tramite221601Store.setFechaProduccion(nuevoValor);
+  }
+
 }

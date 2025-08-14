@@ -473,60 +473,89 @@
 
 <ng-titulo titulo="Detalle" />
 <div class="row mb-3">
-      <div class="col-md-3">
-        <label class="form-label">Número de lote:</label>
-        <input class="form-control" formControlName="nombreLote" />
-      </div>
-      <div class="col-md-3">
-        <h6 class="fw-bold">Rango de fecha:</h6>
-         <app-input-radio
-          [radioOptions]="tipoPersonaOptions"
-                                [isRequired]="true"
-                                formControlName="tipoPersona"
-                                [layout]="'vertical'"
-                                (valueChange)="cambiarRadioFisica($event)"
-                                ></app-input-radio>
-      </div>
+  <div class="col-md-3">
+    <label class="form-label">Número de lote:</label>
+    <input class="form-control" formControlName="numeroLote" />
+  </div>
+  <div class="col-md-3">
+    <h6 class="fw-bold">Rango de fechas:</h6>
+    <app-input-radio
+      id="rangoFecha"
+      formControlName="rangoFecha"
+      [radioOptions]="opcionesRangoFecha"
+      [selectedValue]="mercanciaForm.get('rangoFecha')?.value || ''"
+      [layout]="'vertical'"
+      (valueChange)="cambiarOpcionRangoFecha($event.toString())">
+    </app-input-radio>
+  </div>
+</div>
+
+<!-- Date range fields - shown when "No" is selected -->
+<div class="row mb-3" *ngIf="opcionSiSeleccionada">
+  <label class="form-label">Desde</label>
+  <div class="col-md-6">
+   <label class="form-label">Fecha de elaboración o empaque o proceso</label>
     </div>
+    <div class="col-md-6">
+    <input-fecha
+      [datos]="INPUT_FECHA_CONFIGURACION"
+      [setFecha]="mercanciaForm.get('fechaDesde')?.value || ''"
+      (valorCambiado)="cambioFechaDesde($event)">
+    </input-fecha>
+  <!-- </div> -->
+  <div class="col-md-6">
+    <label class="form-label">Hasta</label>
+    <input-fecha
+      [datos]="INPUT_FECHA_CONFIGURACION"
+      [setFecha]="mercanciaForm.get('fechaHasta')?.value || ''"
+      (valorCambiado)="cambioFechaHasta($event)">
+    </input-fecha>
+  </div>
+</div>
+ </div>
+<!-- Individual date fields - shown when "Sí" is selected -->
+<div *ngIf="mostrarRangoFechas">
   <div class="row mb-3">
-  <div class="col-md-6">
-    <label class="form-label">Fecha de elaboración o empaque o proceso</label></div>
     <div class="col-md-6">
-      
+      <label class="form-label">Fecha de elaboración o empaque o proceso</label>
+    </div>
+    <div class="col-md-6">
       <input-fecha
-                [datos]="INPUT_FECHA_CONFIGURACION "
-                [setFecha]="mercanciaForm.get('fecha')?.value || ''"
-                (valorCambiado)="cambioFechaFinal($event)" >
-              </input-fecha>
+        [datos]="INPUT_FECHA_CONFIGURACION"
+        [setFecha]="mercanciaForm.get('fechaElaboracion')?.value || ''"
+        (valorCambiado)="cambioFechaElaboracion($event)">
+      </input-fecha>
     </div>
   </div>
 
-<div class="row mb-3">
-  <div class="col-md-6">
-    <label class="form-label">Fecha de producción o sacrificio</label></div>
+  <div class="row mb-3">
     <div class="col-md-6">
-      
+      <label class="form-label">Fecha de producción o sacrificio</label>
+    </div>
+    <div class="col-md-6">
       <input-fecha
-                [datos]="INPUT_FECHA_CONFIGURACION "
-                [setFecha]="mercanciaForm.get('fecha')?.value || ''"
-                (valorCambiado)="cambioFechaFinal($event)" >
-              </input-fecha>
+        [datos]="INPUT_FECHA_CONFIGURACION"
+        [setFecha]="mercanciaForm.get('fechaProduccion')?.value || ''"
+        (valorCambiado)="cambioFechaProduccion($event)">
+      </input-fecha>
     </div>
   </div>
 
-<div class="row mb-3">
-  <div class="col-md-6">
-    <label class="form-label">Fecha de caducidad del producto o consumo preferente</label></div>
+  <div class="row mb-3">
     <div class="col-md-6">
-      
+      <label class="form-label">Fecha de caducidad del producto o consumo preferente</label>
+    </div>
+    <div class="col-md-6">
       <input-fecha
-                [datos]="INPUT_FECHA_CONFIGURACION "
-                [setFecha]="mercanciaForm.get('fecha')?.value || ''"
-                (valorCambiado)="cambioFechaFinal($event)" >
-              </input-fecha>
+        [datos]="INPUT_FECHA_CONFIGURACION"
+        [setFecha]="mercanciaForm.get('fechaCaducidad')?.value || ''"
+        (valorCambiado)="cambioFechaFinal($event)">
+      </input-fecha>
     </div>
   </div>
-<div class="col-md-12 mt-4 d-flex justify-content-end">
+</div>
+
+    <div class="col-md-12 mt-4 d-flex justify-content-end">
       <button class="btn btn-primary" type="button" (click)="cerrarModal()">Eliminar detalle</button>
       <button class="btn btn-primary ms-3" type="submit" (click)="guardarMercancia()">Agregar detalle</button>
       <button class="btn btn-primary ms-3" type="submit">Carga por archivo</button>

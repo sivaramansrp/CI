@@ -719,6 +719,33 @@ public setCoordenadas(coordenadas: string): void {
       tif,// Actualiza la propiedad 'tif' con el valor proporcionado.
     }));
   }
-  
+
+  setFechaDesde(fecha: string): void {
+    this.update((state) => ({
+      ...state,
+      fechaDesde: fecha,
+    }));
+  }
+
+  setFechaProduccion(fecha: string): void {
+    this.update((state) => ({
+      ...state,
+      fechaProduccion: fecha,
+    }));
+  }
+
+  setFechaElaboracion(fecha: string): void {
+    this.update((state) => ({
+      ...state,
+      fechaElaboracion: fecha,
+    }));
+  }
+
+  setFechaHasta(fecha: string): void {
+    this.update((state) => ({
+      ...state,
+      fechaHasta: fecha,
+    }));
+  }
+
 }
-  
