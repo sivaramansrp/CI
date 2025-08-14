@@ -237,13 +237,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.contenedores = this.contenedorState.contenedores;
     this.cargarCatalogAduanas();
     this.crearFormSolicitud();
-    this.solicitudForm.get('tipoBusqueda')?.valueChanges
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe(value => {
-      if (value) {
-        this.solicitudForm.get('tipoBusqueda')?.disable();
-      }
-    });
     this.cargarCatalogContenedores();
     this.loadDatosTablaData();
   }
@@ -470,13 +463,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       }),
     });
     this.mostrarCampos();
-    this.solicitudForm.get('tipoBusqueda')?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe(() => {
-      this.setValoresStore(
-        this.solicitudForm,
-        'tipoBusqueda',
-        'setTipoBusqueda'
-      );
+    this.solicitudForm.get('tipoBusqueda')?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe(value => {
+      this.setValoresStore(this.solicitudForm, 'tipoBusqueda', 'setTipoBusqueda');
       this.mostrarCampos();
+      if (value) {
+        this.solicitudForm.get('tipoBusqueda')?.disable();
+      }
     });
     this.inicializarEstadoFormulario();
   }
