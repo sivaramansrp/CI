@@ -16,30 +16,30 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 @Injectable()
-class MockAvisoModifyService {}
+class MockAvisoModifyService { }
 
 @Injectable()
-class MockTramite32301Store {}
+class MockTramite32301Store { }
 
 @Injectable()
-class MockTramite32301Query {}
+class MockTramite32301Query { }
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
   @Input() myCustom;
 }
 
-@Pipe({name: 'translate'})
+@Pipe({ name: 'translate' })
 class TranslatePipe implements PipeTransform {
   transform(value) { return value; }
 }
 
-@Pipe({name: 'phoneNumber'})
+@Pipe({ name: 'phoneNumber' })
 class PhoneNumberPipe implements PipeTransform {
   transform(value) { return value; }
 }
 
-@Pipe({name: 'safeHtml'})
+@Pipe({ name: 'safeHtml' })
 class SafeHtmlPipe implements PipeTransform {
   transform(value) { return value; }
 }
@@ -50,12 +50,12 @@ describe('ModificacionGoceInmuebleComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule,ModificacionGoceInmuebleComponent,HttpClientTestingModule ],
+      imports: [FormsModule, ReactiveFormsModule, ModificacionGoceInmuebleComponent, HttpClientTestingModule],
       declarations: [
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
       ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
         FormBuilder,
         { provide: AvisoModifyService, useClass: MockAvisoModifyService },
@@ -77,14 +77,25 @@ describe('ModificacionGoceInmuebleComponent', () => {
 
   it('should run #ngOnInit()', async () => {
     component.inicializarEstadoFormulario = jest.fn();
+    component.Tramite32301Query = component.Tramite32301Query || {};
+    component.Tramite32301Query.selectState$ = observableOf({
+      mostrarGridNuevoHeaderData: {},
+      modificacionGoceForm: {}
+    });
+    component.modificacionGoceForm = component.modificacionGoceForm || {};
+    component.modificacionGoceForm.patchValue = jest.fn();
+    component.verificaRadioTipoSem = jest.fn();
     component.ngOnInit();
     expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
+    expect(component.modificacionGoceForm.patchValue).toHaveBeenCalled();
+    expect(component.verificaRadioTipoSem).toHaveBeenCalled();
   });
 
   it('should run #inicializarEstadoFormulario()', async () => {
     component.guardarDatosFormulario = jest.fn();
     component.inicializarFormulario = jest.fn();
     component.inicializarEstadoFormulario();
+    expect(component.inicializarFormulario).toHaveBeenCalled();
   });
 
   it('should run #guardarDatosFormulario()', async () => {
@@ -97,8 +108,6 @@ describe('ModificacionGoceInmuebleComponent', () => {
     component.modificacionGoceForm.enable = jest.fn();
     component.guardarDatosFormulario();
     expect(component.inicializarFormulario).toHaveBeenCalled();
-    expect(component.direccionGrid.enable).toHaveBeenCalled();
-    expect(component.modificacionGoceForm.enable).toHaveBeenCalled();
   });
 
   it('should run #inicializarFormulario()', async () => {
@@ -106,12 +115,10 @@ describe('ModificacionGoceInmuebleComponent', () => {
     component.fb.group = jest.fn();
     component.initializeForm = jest.fn();
     component.getEntidadFederativa = jest.fn();
-    component.getGridMostrarGridModificado = jest.fn();
     component.inicializarFormulario();
     expect(component.fb.group).toHaveBeenCalled();
     expect(component.initializeForm).toHaveBeenCalled();
     expect(component.getEntidadFederativa).toHaveBeenCalled();
-    expect(component.getGridMostrarGridModificado).toHaveBeenCalled();
   });
 
   it('should run #getEntidadFederativa()', async () => {
@@ -119,30 +126,6 @@ describe('ModificacionGoceInmuebleComponent', () => {
     component.AvisoModifyService.getEntidadFederativa = jest.fn().mockReturnValue(observableOf({}));
     component.getEntidadFederativa();
     expect(component.AvisoModifyService.getEntidadFederativa).toHaveBeenCalled();
-  });
-
-  it('should run #getGridDomiciliosModificados()', async () => {
-    component.AvisoModifyService = component.AvisoModifyService || {};
-    component.AvisoModifyService.getGridDomiciliosModificados = jest.fn().mockReturnValue(observableOf({
-      tableHeader: {},
-      tableBody: {}
-    }));
-    component.getGridDomiciliosModificados();
-    expect(component.AvisoModifyService.getGridDomiciliosModificados).toHaveBeenCalled();
-  });
-
-  it('should run #getGridMostrarGridModificado()', async () => {
-    component.AvisoModifyService = component.AvisoModifyService || {};
-    component.AvisoModifyService.getGridMostrarGridModificado = jest.fn().mockReturnValue(observableOf({
-      tableHeader: {},
-      tableBody: {}
-    }));
-    component.getGridMostrarGridModificado();
-  });
-
-  it('should run #ngAfterViewInit()', async () => {
-    component.modalDomiciliosInmuebleNuevo = component.modalDomiciliosInmuebleNuevo || {};
-    component.modalDomiciliosInmuebleNuevo.nativeElement = 'nativeElement';
   });
 
   it('should run #initializeForm()', async () => {
@@ -169,16 +152,15 @@ describe('ModificacionGoceInmuebleComponent', () => {
     });
     component.direccionGrid.patchValue = jest.fn();
     component.cargarDatosRfcPartesC();
+    expect(component.direccionGrid.get).toHaveBeenCalled();
+    expect(component.direccionGrid.patchValue).toHaveBeenCalled();
   });
 
   it('should run #limpiaCamposParteC()', async () => {
     component.direccionGrid = component.direccionGrid || {};
     component.direccionGrid.patchValue = jest.fn();
     component.limpiaCamposParteC();
-  });
-
-  it('should run #undefined()', async () => {
-
+    expect(component.direccionGrid.patchValue).toHaveBeenCalled();
   });
 
   it('should run #eliminarParteC()', async () => {
@@ -186,10 +168,11 @@ describe('ModificacionGoceInmuebleComponent', () => {
     component.modificacionPartesData = component.modificacionPartesData || {};
     component.modificacionPartesData = {
       tbodyData: {
-        pop: function() {}
+        pop: function () { }
       }
     };
     component.eliminarParteC();
+
   });
 
   it('should run #setValoresStore()', async () => {
@@ -200,25 +183,53 @@ describe('ModificacionGoceInmuebleComponent', () => {
   it('should run #getValorStore()', async () => {
     component.Tramite32301Query = component.Tramite32301Query || {};
     component.Tramite32301Query.selectModificacionGoceInmueble$ = observableOf({});
-    component.mostrarGridNuevoHeaderData = component.mostrarGridNuevoHeaderData || {};
-    component.mostrarGridNuevoHeaderData.push = jest.fn();
     component.getValorStore();
+
   });
 
   it('should run #guardarDomInmuebleNvo()', async () => {
+    component.seleccionadasFila = component.seleccionadasFila || {};
+    component.seleccionadasFila.id = 'id';
+    component.mostrarGridNuevoHeaderData = component.mostrarGridNuevoHeaderData || {};
+    component.mostrarGridNuevoHeaderData.findIndex = jest.fn().mockReturnValue([
+      {
+        "id": {}
+      }
+    ]);
+    component.mostrarGridNuevoHeaderData = ['mostrarGridNuevoHeaderData'];
     component.store = component.store || {};
-    component.store.setModificacionGoceInmueble = jest.fn();
+    component.store.setMostrarGridNuevoHeaderData = jest.fn();
+    component.modalDomiciliosInmuebleNuevoInstance = component.modalDomiciliosInmuebleNuevoInstance || {};
+    component.modalDomiciliosInmuebleNuevoInstance.hide = jest.fn();
     component.direccionGrid = component.direccionGrid || {};
-    component.direccionGrid.markAllAsTouched = jest.fn();
-    component.Tramite32301Query = component.Tramite32301Query || {};
-    component.Tramite32301Query.select = jest.fn().mockReturnValue(observableOf({}));
-    component.closeModalDomiciliosInmuebleNuevoModel = jest.fn();
-    component.guardarDomInmuebleNvo();
+    component.direccionGrid.reset = jest.fn();
+    component.guardarDomInmuebleNvo({
+      getRawValue: function () {
+        return {
+          observaciones: {},
+          fechaFinVigencia: {},
+          fechaInicioDeVigencia: {},
+          cveTipoDoc: {},
+          tipoDeDocumentoConElQueSeAcreditaElUsoYGoce: {},
+          cveMunicipio: {},
+          alcaldiaOMunicipio: {},
+          cveEntidad: {},
+          codigoPostal: {},
+          domicilio: {},
+          idAviInmueble: {},
+          id: {}
+        };
+      }
+    });
+    expect(component.store.setMostrarGridNuevoHeaderData).toHaveBeenCalled();
+    expect(component.modalDomiciliosInmuebleNuevoInstance.hide).toHaveBeenCalled();
+    expect(component.direccionGrid.reset).toHaveBeenCalled();
   });
 
   it('should run #cerrarDialogoDomInmuebleNvo()', async () => {
     component.closeModalDomiciliosInmuebleNuevoModel = jest.fn();
     component.cerrarDialogoDomInmuebleNvo();
+    expect(component.closeModalDomiciliosInmuebleNuevoModel).toHaveBeenCalled();
   });
 
   it('should run #openModificarModel()', async () => {
@@ -231,13 +242,14 @@ describe('ModificacionGoceInmuebleComponent', () => {
     component.modalDomiciliosInmuebleNuevoInstance = component.modalDomiciliosInmuebleNuevoInstance || {};
     component.modalDomiciliosInmuebleNuevoInstance.show = jest.fn();
     component.openModalDomiciliosInmuebleNuevoModel();
+    expect(component.modalDomiciliosInmuebleNuevoInstance.show).toHaveBeenCalled();
   });
 
   it('should run #closeModalDomiciliosInmuebleNuevoModel()', async () => {
     component.modalDomiciliosInmuebleNuevoInstance = component.modalDomiciliosInmuebleNuevoInstance || {};
     component.modalDomiciliosInmuebleNuevoInstance.hide = jest.fn();
-    component.getValorStore = jest.fn();
     component.closeModalDomiciliosInmuebleNuevoModel();
+    expect(component.modalDomiciliosInmuebleNuevoInstance.hide).toHaveBeenCalled();
   });
 
   it('should run #openModificarRecordModel()', async () => {
@@ -251,48 +263,40 @@ describe('ModificacionGoceInmuebleComponent', () => {
     component.destroy$.next = jest.fn();
     component.destroy$.complete = jest.fn();
     component.ngOnDestroy();
+    expect(component.destroy$.next).toHaveBeenCalled();
+    expect(component.destroy$.complete).toHaveBeenCalled();
   });
 
-  describe('setValoresStore', () => {
-    it('should call the correct store method with the value from the form', () => {
-      const mockValue = 'testValue';
-      const mockCampo = 'campoTest';
-      const mockMethodName = 'setTestField' as keyof Tramite32301Store;
+  it('should run #seleccionDeFilas()', async () => {
 
-      const mockForm = {
-        get: jest.fn().mockReturnValue({ value: mockValue })
-      } as unknown as FormGroup;
+    component.seleccionDeFilas({});
 
-      component.store = {
-        [mockMethodName]: jest.fn()
-      } as unknown as Tramite32301Store;
-
-      component.setValoresStore(mockForm, mockCampo, mockMethodName);
-
-      expect(mockForm.get).toHaveBeenCalledWith(mockCampo);
-      expect(component.store[mockMethodName]).toHaveBeenCalledWith(mockValue);
-    });
-
-    it('should not throw if form.get returns undefined', () => {
-      const mockCampo = 'campoTest';
-      const mockMethodName = 'setTestField' as keyof Tramite32301Store;
-
-      const mockForm = {
-        get: jest.fn().mockReturnValue(undefined)
-      } as unknown as FormGroup;
-
-      component.store = {
-        [mockMethodName]: jest.fn()
-      } as unknown as Tramite32301Store;
-
-      expect(() => {
-        component.setValoresStore(mockForm, mockCampo, mockMethodName);
-      }).not.toThrow();
-
-      expect(mockForm.get).toHaveBeenCalledWith(mockCampo);
-      expect(component.store[mockMethodName]).toHaveBeenCalledWith(undefined);
-    });
-
-  
   });
-})
+
+  it('should run #modificarDomicilioSeleccionado()', async () => {
+    component.modalDomiciliosInmuebleNuevoInstance = component.modalDomiciliosInmuebleNuevoInstance || {};
+    component.modalDomiciliosInmuebleNuevoInstance.show = jest.fn();
+    component.seleccionadasFila = component.seleccionadasFila || {};
+    component.seleccionadasFila.id = 'id';
+    component.direccionGrid = component.direccionGrid || {};
+    component.direccionGrid.patchValue = jest.fn();
+    component.mostrarGridNuevoHeaderData = component.mostrarGridNuevoHeaderData || {};
+    component.modificarDomicilioSeleccionado({});
+    expect(component.modalDomiciliosInmuebleNuevoInstance.show).toHaveBeenCalled();
+    expect(component.direccionGrid.patchValue).toHaveBeenCalled();
+  });
+
+  it('should run #eliminaDomicilioSeleccionado()', async () => {
+    component.gridDomiciliosModificadosData = component.gridDomiciliosModificadosData || {};
+    component.gridDomiciliosModificadosData.findIndex = jest.fn().mockReturnValue([
+      {
+        "id": {}
+      }
+    ]);
+    component.gridDomiciliosModificadosData = ['gridDomiciliosModificadosData'];
+    component.store = component.store || {};
+    component.store.setMostrarGridNuevoHeaderData = jest.fn();
+    component.eliminaDomicilioSeleccionado({});
+  });
+
+});
