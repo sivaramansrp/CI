@@ -74,7 +74,7 @@ export function createInitialState(): TramiteState {
             banco: '',
             llavePago: '',
             fechaFactura: '',
-            importePago: ''
+            importePago: '',
         },
         PagosDeDerechosState: {
             claveDeReferencia: '',

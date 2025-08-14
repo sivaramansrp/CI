@@ -1,10 +1,7 @@
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { CarrosDeFerrocarril } from '../../models/solicitud-pantallas.model';
-import { Component } from '@angular/core';
-import { Input } from '@angular/core';
-import { OnChanges } from '@angular/core';
-import { SimpleChanges } from '@angular/core';
-import { TableComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
+
 
 /** Componente para gestionar los datos de los carros de ferrocarril */
 @Component({
