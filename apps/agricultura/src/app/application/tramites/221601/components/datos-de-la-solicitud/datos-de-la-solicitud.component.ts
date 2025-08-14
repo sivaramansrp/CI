@@ -531,13 +531,13 @@ fechaFuturaSeleccionada = false;
  *
  * @memberof DatosDeLaSolicitudComponent
  */
-guardarMercancia(): void {
-  // Check if form is valid or if we want to save anyway for testing
-  console.log('Form validity:', this.mercanciaForm.valid);
-  console.log('Form values:', this.mercanciaForm.value);
+guardarMercancia(event?: Event): void {
+ 
+  if (event) {
+    event.preventDefault();
+  }
 
-  // Create new MercanciaDellate object from form data
-  const nuevaMercancia: MercanciaDellate = {
+const NUEVAMERCANCIA : MercanciaDellate = {
     noPartida: this.mercanciaForm.get('numeroLote')?.value || 'N/A',
     fechaDesde: this.mercanciaForm.get('fechaDesde')?.value || this.mercanciaForm.get('fechaElaboracion')?.value || '',
     FechadeSacrificio: this.mercanciaForm.get('FechadeSacrificio')?.value || this.mercanciaForm.get('fechaProduccion')?.value || '',
@@ -547,21 +547,8 @@ guardarMercancia(): void {
     FechafindeCaducidad: this.mercanciaForm.get('FechadelCaducidad')?.value || ''
   };
 
-  console.log('New merchandise object:', nuevaMercancia);
-
-  // Add the new merchandise to the array
-  this.mercanciasdellate = [...this.mercanciasdellate, nuevaMercancia];
-  
-  console.log('Updated mercanciasdellate array:', this.mercanciasdellate);
-
-  // Reset the form after successful submission
-  this.resetMercanciaForm();
-
-  // Close the modal
-  this.cerrarModal();
-
-  // Show success message
-  console.log('Mercancía agregada exitosamente', nuevaMercancia);
+this.mercanciasdellate = [...this.mercanciasdellate, NUEVAMERCANCIA];
+this.resetMercanciaForm();
 }
 
 /**
