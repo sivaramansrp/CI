@@ -1,8 +1,20 @@
-import { AlertComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import {
+  AlertComponent,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { DESTINATARIO_CONFIGURACION_TABLA, EXPORTADOR_CONFIGURACION_TABLA } from '../../enums/sagarpa.enum';
+import {
+  DESTINATARIO_CONFIGURACION_TABLA,
+  EXPORTADOR_CONFIGURACION_TABLA,
+} from '../../enums/sagarpa.enum';
 import { Destinatario, Exportador } from '../../models/pago-de-derechos.model';
-import { ITEMS, PERSONA, TERCEROS_TEXTO_DE_ALERTA } from '../../constantes/constantes';
+import {
+  ITEMS,
+  PERSONA,
+  TERCEROS_TEXTO_DE_ALERTA,
+} from '../../constantes/constantes';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
@@ -17,7 +29,13 @@ import { SolicitudPantallasService } from '../../services/solicitud-pantallas.se
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.scss',
   standalone: true,
-  imports: [TituloComponent, CommonModule, ReactiveFormsModule, AlertComponent, TablaDinamicaComponent],
+  imports: [
+    TituloComponent,
+    CommonModule,
+    ReactiveFormsModule,
+    AlertComponent,
+    TablaDinamicaComponent,
+  ],
 })
 export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   /**
@@ -87,21 +105,24 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   formularioDeshabilitado: boolean = false;
 
   /**
-   * Constructor del componente.
-   * @param solicitudPantallasService Servicio para obtener los datos de exportadores y destinatarios.
+   * @constructor
+   * Inyecta los servicios necesarios para el funcionamiento del componente.
+   *
+   * @param solicitudPantallasService - Servicio encargado de gestionar la lógica y operaciones relacionadas con las pantallas de solicitud.
+   * @param consultaioQuery - Servicio para consultar y obtener el estado actual de la consulta.
    */
   constructor(
     private solicitudPantallasService: SolicitudPantallasService,
     private consultaioQuery: ConsultaioQuery
-  ) { 
+  ) {
     this.consultaioQuery.selectConsultaioState$
-          .pipe(
-            takeUntil(this.destroyed$),
-            map((seccionState) => {
-              this.formularioDeshabilitado = seccionState.readonly;
-            })
-          )
-          .subscribe();
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.formularioDeshabilitado = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**

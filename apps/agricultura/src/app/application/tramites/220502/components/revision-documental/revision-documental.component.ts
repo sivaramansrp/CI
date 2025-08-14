@@ -78,6 +78,17 @@ export class RevisionDocumentalComponent implements OnInit, OnDestroy {
     // El constructor se utiliza para la inyección de dependencias.
   }
 
+  /**
+   * @method ngOnInit
+   * Inicializa el componente al cargarse.
+   *
+   * - Se suscribe al estado de consulta usando `consultaQuery.selectConsultaioState$`
+   *   y almacena el resultado en `consultaState`.
+   * - Si `consultaState.update` es verdadero, llama al método `guardarDatosFormulario()`.
+   * - Si no, establece `esDatosRespuesta` en `true`.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
       .pipe(
