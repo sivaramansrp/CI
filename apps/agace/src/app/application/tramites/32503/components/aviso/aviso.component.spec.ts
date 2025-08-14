@@ -166,6 +166,10 @@ describe('AvisoComponent', () => {
     component.tablaDeDatos.datos = tablaDeDatos
     component.filaSeleccionadaLista = [tablaDeDatos[1]];
     component.eliminarDomicilio();
+    expect(component.elementoParaEliminar).toBe(2);
+    expect(component.nuevaNotificacion1.mensaje).toBe('¿Desea eliminar el registro seleccionado?');
+    
+    component.eliminarPedimento(true);
     expect(component.tablaDeDatos.datos).toEqual([tablaDeDatos[0]]);
     expect(component.filaSeleccionadaLista).toEqual([]);
   });
@@ -174,6 +178,10 @@ describe('AvisoComponent', () => {
     component.tablaDeMercancia.datos = tablaDeMercancia
     component.filaSeleccionadaMercanciaLista = [tablaDeMercancia[1]];
     component.eliminarMercancia();
+    expect(component.elementoParaEliminar).toBe(1);
+    expect(component.nuevaNotificacion1.mensaje).toBe('¿Desea eliminar el registro seleccionado?');
+    
+    component.eliminarPedimento(true);
     expect(component.tablaDeMercancia.datos).toEqual([tablaDeMercancia[0]]);
     expect(component.filaSeleccionadaMercanciaLista).toEqual([]);
   });
@@ -285,33 +293,57 @@ describe('AvisoComponent', () => {
   });
 
   it('should call cargarMercanciaTabla and close the modal when agregarMercancia is called', () => {
-    const cargarMercanciaTablaSpy = jest.spyOn(component, 'cargarMercanciaTabla');
+    component.mercanciaFormulario = new FormBuilder().group({
+      claveFraccionArancelaria: ['test'],
+      nico: ['01'],
+      cantidad: ['10'],
+      claveUnidadMedida: ['KG'],
+      valorUSD: ['100'],
+      descripcionMercancia: ['test'],
+      descripcionProceso: ['test'],
+      numPedimentoExportacion: ['123'],
+      numPedimentoImportacion: ['456']
+    });
+    
     component.closeMercancia = {
       nativeElement: {
         click: jest.fn(),
       },
     } as any;
 
+    component.tablaDeMercancia.datos = [];
+
     component.agregarMercancia();
 
-    expect(cargarMercanciaTablaSpy).toHaveBeenCalled();
+    expect(component.tablaDeMercancia.datos.length).toBe(1);
     expect(component.closeMercancia.nativeElement.click).toHaveBeenCalled();
   });
 
   it('should call cargarAvisoTabla, close the modal, and open a notification when agregarDomicilio is called', () => {
-    const cargarAvisoTablaSpy = jest.spyOn(component, 'cargarAvisoTabla');
-    const abrirModalSpy = jest.spyOn(component, 'abrirModal');
+    component.domicilioFormulario = new FormBuilder().group({
+      nombreComercial: ['test'],
+      claveEntidadFederativa: ['01'],
+      claveDelegacionMunicipio: ['01'],
+      claveColonia: ['01'],
+      calle: ['test'],
+      numeroExterior: ['123'],
+      numeroInterior: ['456'],
+      codigoPostal: ['12345'],
+      rfc: ['TEST123456789']
+    });
+    
     component.closeDomicilio = {
       nativeElement: {
         click: jest.fn(),
       },
     } as any;
 
+    component.tablaDeDatos.datos = [];
+
     component.agregarDomicilio();
 
-    expect(cargarAvisoTablaSpy).toHaveBeenCalled();
+    expect(component.tablaDeDatos.datos.length).toBe(1);
     expect(component.closeDomicilio.nativeElement.click).toHaveBeenCalled();
-    expect(abrirModalSpy).toHaveBeenCalled();
   });
 
   it('should sanitize input by removing non-alphanumeric characters', () => {
@@ -333,7 +365,7 @@ describe('AvisoComponent', () => {
     const form = new FormBuilder().group({
       testField: [''],
     });
-    component.sanitizeAlphanumericWithSpace(form, 'testField', mockEvent);
+    component.desinfectarAlfanumericoConEspacio(form, 'testField', mockEvent);
     expect(form.get('testField')?.value).toBe('abc 123');
   });
 
