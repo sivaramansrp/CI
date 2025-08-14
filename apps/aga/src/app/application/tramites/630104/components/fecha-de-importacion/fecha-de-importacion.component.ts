@@ -1,14 +1,15 @@
 
-import {CatalogoSelectComponent, ConsultaioQuery, InputFecha, ModeloDeFormaDinamica } from "@ng-mf/data-access-user";
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, InputFecha, ModeloDeFormaDinamica } from "@ng-mf/data-access-user";
 import { ESTIMADA_RETORNO, FECHA_ESTIMADA_DE_INGRESO, FORMULARIO_FECHA_IMPORTACION } from '../../enums/retorno-importacion-temporal.enum';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from "rxjs";
 import { Tramite630104State, Tramite630104Store } from '../../estados/tramites/tramite630104.store';
 import { CommonModule } from '@angular/common';
+import { EquipoEInstrumentosMusicalesService } from '../../services/equipo-e-instrumentos-musicales.service';
 import { FormasDinamicasComponent } from "@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component";
-import { InputFechaComponent } from "@ng-mf/data-access-user";
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite630104Query } from '../../estados/queries/tramite630104.query';
 
 /**
@@ -20,7 +21,7 @@ import { Tramite630104Query } from '../../estados/queries/tramite630104.query';
 @Component({
   selector: 'app-fecha-de-importacion',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormasDinamicasComponent, TituloComponent, InputFechaComponent, CatalogoSelectComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormasDinamicasComponent, TituloComponent, TooltipModule],
   templateUrl: './fecha-de-importacion.component.html',
   styleUrl: './fecha-de-importacion.component.scss',
 })
@@ -34,7 +35,11 @@ export class FechaDeImportacionComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo para gestionar los datos de la fecha de importación temporal.
    */
-  FechaDeImportacionTemporalFormulario!: FormGroup;
+  public forma: FormGroup = new FormGroup({
+    FechaDeImportacionTemporalFormulario: new FormGroup({
+     
+    }),
+  });
 
   /**
    * Datos de la fecha estimada de retorno.
@@ -61,6 +66,11 @@ export class FechaDeImportacionComponent implements OnInit, OnDestroy {
    */
   esSoloLectura!: boolean;
 
+    /**
+   * Estado actual de la consulta IO.
+   */
+  public consultaState!: ConsultaioState;
+
   /**
    * Constructor del componente.
    * @param fb - Servicio para construir formularios reactivos.
@@ -70,16 +80,16 @@ export class FechaDeImportacionComponent implements OnInit, OnDestroy {
     
   */
   constructor(
-    private fb: FormBuilder,
     private tramite630104Store: Tramite630104Store,
     private tramite630104Query: Tramite630104Query,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private service: EquipoEInstrumentosMusicalesService
   ) {
-    this.consultaioQuery.selectConsultaioState$
+   this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
-          this.esSoloLectura = seccionState.readonly;
+          this.consultaState = seccionState;
         })
       )
       .subscribe();
@@ -90,60 +100,49 @@ export class FechaDeImportacionComponent implements OnInit, OnDestroy {
    * Se ejecuta al inicializar el componente. Obtiene el valor del estado del store
    * y configura el formulario reactivo.
    */
-  ngOnInit(): void {
-    this.tramite630104Query.selectSeccionState$
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe((estado: Tramite630104State) => {
-      this.estadoSeleccionado = estado;
-      this.inizializarFormulario(); 
-      this.inicializarEstadoFormulario(); 
-    });
-    this.getValorStore();
-    this.inizializarFormulario();
-  }
+ngOnInit(): void {
+  this.inicializarFormularioFechaImportacion();
+}
 
-  /**
-   * Inicializa el formulario reactivo con valores predeterminados o del estado seleccionado.
-   */
-  inizializarFormulario(): void {
-    this.FechaDeImportacionTemporalFormulario = this.fb.group({
-      fechaLimiteRetorno: [this.estadoSeleccionado?.['fechaLimiteRetorno'] || '', Validators.required],
-      fechaIngreso: [this.estadoSeleccionado?.['fechaIngreso'] || '', Validators.required],
-    });
-  }
+inicializarFormularioFechaImportacion(): void {
+  // Get current values from the store
+  const storeState = this.tramite630104Store.getValue();
 
-  /**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.
-   * Además, obtiene la información del catálogo de mercancía.
-   */
-  inicializarEstadoFormulario(): void {
-    if (this.esSoloLectura) {
-      this.guardarDatosFormulario();
-    } else {
-      this.inizializarFormulario();
-    }
-  }
+  const FECHA_INGRESO_PREDETERMINADA =
+    (storeState['fechaIngreso'] as string) ||
+    FORMULARIO_FECHA_IMPORTACION.find(f => f.campo === 'fechaIngreso')?.valorPredeterminado ||
+    '';
 
-  /**
-   * @method
-   * @name guardarDatosFormulario
-   * @description
-   * Inicializa los formularios y obtiene los datos de la tabla.
-   * Dependiendo del modo de solo lectura (`esFormularioSoloLectura`),
-   * deshabilita o habilita todos los formularios del componente.
-   * Si el formulario está en modo solo lectura, todos los formularios se deshabilitan para evitar modificaciones.
-   * Si no está en modo solo lectura, todos los formularios se habilitan para permitir la edición.
-   *
-   * @returns {void}
-   */
-  guardarDatosFormulario(): void {
-    this.inizializarFormulario();
-    if (this.esSoloLectura) {
-      this.FechaDeImportacionTemporalFormulario.disable();
-    } else {
-      this.FechaDeImportacionTemporalFormulario.enable();
-    }
+  const FECHA_LIMITE_RETORNO_PREDETERMINADA =
+    (storeState['fechaLimiteRetorno'] as string) ||
+    FORMULARIO_FECHA_IMPORTACION.find(f => f.campo === 'fechaLimiteRetorno')?.valorPredeterminado ||
+    '';
+
+  this.forma = new FormGroup({
+    FechaDeImportacionTemporalFormulario: new FormGroup({
+      fechaIngreso: new FormControl(FECHA_INGRESO_PREDETERMINADA, Validators.required),
+      fechaLimiteRetorno: new FormControl(
+        { value: FECHA_LIMITE_RETORNO_PREDETERMINADA, disabled: true },
+        Validators.required
+      ),
+    }),
+  });
+
+  // Set initial values in the store if not already set
+  if (!storeState['fechaIngreso']) {
+    this.establecerCambioDeValor({ campo: 'fechaIngreso', valor: FECHA_INGRESO_PREDETERMINADA });
   }
+  if (!storeState['fechaLimiteRetorno']) {
+    this.establecerCambioDeValor({ campo: 'fechaLimiteRetorno', valor: FECHA_LIMITE_RETORNO_PREDETERMINADA });
+  }
+}
+
+  get FechaDeImportacionTemporalFormulario(): FormGroup {
+  return this.forma.get('FechaDeImportacionTemporalFormulario') as FormGroup;
+}
+
+  
+
   
   /**
    * Obtiene el valor del estado del store y lo asigna a `estadoSeleccionado`.
@@ -160,13 +159,58 @@ export class FechaDeImportacionComponent implements OnInit, OnDestroy {
    * Establece un cambio de valor en el estado del trámite.
    * @param $event - Evento que contiene el campo y el valor a actualizar.
    */
-  establecerCambioDeValor($event: { campo: string; valor: unknown }): void {
-    if (typeof $event.valor === 'object' && $event.valor !== null && 'id' in $event.valor) {
-      this.tramite630104Store.setTramite630104State($event.campo, String(($event.valor as { id: unknown }).id));
-    } else {
-      this.tramite630104Store.setTramite630104State($event.campo, $event.valor);
+establecerCambioDeValor(event: { campo: string; valor: object | string }): void {
+  if (!event) { return; }
+
+  let valorParaStore = event.valor;
+
+  // Si el campo es fechaIngreso, normaliza el formato a DD/MM/YYYY
+  if (event.campo === 'fechaIngreso') {
+    let fechaLimite = '';
+    let fechaIngresoFormateada = '';
+
+    // Si es un objeto Date
+    if (event.valor instanceof Date) {
+      const dd = String(event.valor.getDate()).padStart(2, '0');
+      const mm = String(event.valor.getMonth() + 1).padStart(2, '0');
+      const yyyy = event.valor.getFullYear();
+      fechaIngresoFormateada = `${dd}/${mm}/${yyyy}`;
     }
+    // Si es string tipo YYYY-MM-DD
+    else if (typeof event.valor === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(event.valor)) {
+      const [yyyy, mm, dd] = event.valor.split('-');
+      fechaIngresoFormateada = `${dd}/${mm}/${yyyy}`;
+    }
+    // Si es string tipo DD/MM/YYYY
+    else if (typeof event.valor === 'string' && /^\d{2}\/\d{2}\/\d{4}$/.test(event.valor)) {
+      fechaIngresoFormateada = event.valor;
+    }
+
+    // Calcula fechaLimiteRetorno solo si hay fechaIngreso válida
+    if (fechaIngresoFormateada) {
+      const [day, month, year] = fechaIngresoFormateada.split('/');
+      const fecha = new Date(Number(year), Number(month) - 1, Number(day));
+      if (!isNaN(fecha.getTime())) {
+        fecha.setMonth(fecha.getMonth() + 1);
+        const dd = String(fecha.getDate()).padStart(2, '0');
+        const mm = String(fecha.getMonth() + 1).padStart(2, '0');
+        const yyyy = fecha.getFullYear();
+        fechaLimite = `${dd}/${mm}/${yyyy}`;
+      }
+      // Actualiza el control y el store
+      this.FechaDeImportacionTemporalFormulario.get('fechaLimiteRetorno')?.setValue(fechaLimite, { emitEvent: false });
+      this.tramite630104Store.setTramite630104State('fechaLimiteRetorno', fechaLimite);
+    }
+
+    // Actualiza el valor para el store con el formato correcto
+    valorParaStore = fechaIngresoFormateada;
   }
+
+  // Siempre actualiza el store con el valor normalizado
+  this.tramite630104Store.setTramite630104State(event.campo, valorParaStore);
+
+  this.service.setForm('pagoDeDerechos', this.FechaDeImportacionTemporalFormulario);
+}
 
   /**
    * Método del ciclo de vida `OnDestroy`.
