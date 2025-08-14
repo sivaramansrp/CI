@@ -753,20 +753,20 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   agregarMercancia(): void {
     if (this.mercanciaFormulario.valid) {
-      const FORM_VALUES = this.mercanciaFormulario.value;
-      const NEXT_ID = this.tablaDeMercancia.datos.length + 1;
+      const VALORES_DE_FORMULARIO = this.mercanciaFormulario.value;
+      const SIGUIENTE_ID = this.tablaDeMercancia.datos.length + 1;
 
       const NUEVA_MERCANCIA: MercanciaTabla = {
-        id: NEXT_ID,
-        claveFraccionArancelaria: FORM_VALUES.claveFraccionArancelaria,
-        nico: FORM_VALUES.nico,
-        cantidad: FORM_VALUES.cantidad,
-        claveUnidadMedida: FORM_VALUES.claveUnidadMedida,
-        valorUSD: FORM_VALUES.valorUSD,
-        descripcionMercancia: FORM_VALUES.descripcionMercancia,
-        descripcionProceso: FORM_VALUES.descripcionProceso,
-        numPedimentoExportacion: FORM_VALUES.numPedimentoExportacion,
-        numPedimentoImportacion: FORM_VALUES.numPedimentoImportacion
+        id: SIGUIENTE_ID,
+        claveFraccionArancelaria: VALORES_DE_FORMULARIO.claveFraccionArancelaria,
+        nico: VALORES_DE_FORMULARIO.nico,
+        cantidad: VALORES_DE_FORMULARIO.cantidad,
+        claveUnidadMedida: VALORES_DE_FORMULARIO.claveUnidadMedida,
+        valorUSD: VALORES_DE_FORMULARIO.valorUSD,
+        descripcionMercancia: VALORES_DE_FORMULARIO.descripcionMercancia,
+        descripcionProceso: VALORES_DE_FORMULARIO.descripcionProceso,
+        numPedimentoExportacion: VALORES_DE_FORMULARIO.numPedimentoExportacion,
+        numPedimentoImportacion: VALORES_DE_FORMULARIO.numPedimentoImportacion
       };
 
       this.tablaDeMercancia.datos = [...this.tablaDeMercancia.datos, NUEVA_MERCANCIA];
@@ -789,15 +789,15 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   agregarDomicilio(): void {
     if (this.domicilioFormulario.valid) {
-      const FORM_VALUES = this.domicilioFormulario.value;
+      const VALORES_DE_FORMULARIO = this.domicilioFormulario.value;
 
       const NUEVO_DOMICILIO = {
         id: Date.now(),
-        rfc: FORM_VALUES.rfc,
-        nombreComercial: FORM_VALUES.nombreComercial,
-        entidadFederativa: FORM_VALUES.claveEntidadFederativa,
-        alcaldioOMuncipio: FORM_VALUES.claveDelegacionMunicipio,
-        colonia: FORM_VALUES.claveColonia
+        rfc: VALORES_DE_FORMULARIO.rfc,
+        nombreComercial: VALORES_DE_FORMULARIO.nombreComercial,
+        entidadFederativa: VALORES_DE_FORMULARIO.claveEntidadFederativa,
+        alcaldioOMuncipio: VALORES_DE_FORMULARIO.claveDelegacionMunicipio,
+        colonia: VALORES_DE_FORMULARIO.claveColonia
       };
 
       this.tablaDeDatos.datos = [...this.tablaDeDatos.datos, NUEVO_DOMICILIO];
@@ -827,7 +827,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
     form.get(control)?.setValue(REEMPLAZAR, { emitEvent: false });
   }
   /**
-   * @method sanitizeAlphanumericWithSpace
+   * @method desinfectarAlfanumericoConEspacio
    * @description Método para limpiar un campo de formulario, eliminando caracteres no alfanuméricos excepto espacios.
    * 
    * - Reemplaza caracteres no permitidos en el valor del campo y actualiza el formulario.
@@ -837,7 +837,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @param {Event} event - Evento que contiene el valor ingresado por el usuario.
    * @returns {void}
    */
-  sanitizeAlphanumericWithSpace(form: FormGroup, control: string, event: Event): void {
+  desinfectarAlfanumericoConEspacio(form: FormGroup, control: string, event: Event): void {
     const INPUT = event?.target as HTMLInputElement;
     const REEMPLAZAR = INPUT?.value.replace(this.REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR, '');
     form.get(control)?.setValue(REEMPLAZAR, { emitEvent: false });

@@ -365,7 +365,7 @@ describe('AvisoComponent', () => {
     const form = new FormBuilder().group({
       testField: [''],
     });
-    component.sanitizeAlphanumericWithSpace(form, 'testField', mockEvent);
+    component.desinfectarAlfanumericoConEspacio(form, 'testField', mockEvent);
     expect(form.get('testField')?.value).toBe('abc 123');
   });
 

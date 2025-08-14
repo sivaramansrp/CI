@@ -110,7 +110,7 @@
             <label for="puntos">:</label>
           </div>
           <div>
-            <input id="numeroExterior" name="numeroExterior" type="text" class="form-control" maxlength="15" formControlName="numeroExterior" [ngClass]="isValid(direccionOrigen,'numeroExterior') ? 'required' : ''" (keyup)="sanitizeAlphanumericWithSpace(direccionOrigen,'numeroExterior',$event)" (change)="setValoresStore(direccionOrigen, 'numeroExterior', 'setAvisoFormularioNumeroExterior')" />
+            <input id="numeroExterior" name="numeroExterior" type="text" class="form-control" maxlength="15" formControlName="numeroExterior" [ngClass]="isValid(direccionOrigen,'numeroExterior') ? 'required' : ''" (keyup)="desinfectarAlfanumericoConEspacio(direccionOrigen,'numeroExterior',$event)" (change)="setValoresStore(direccionOrigen, 'numeroExterior', 'setAvisoFormularioNumeroExterior')" />
           </div>
         </div>
         <div class="col-md-4">
@@ -119,7 +119,7 @@
             <label for="puntos">:</label>
           </div>
           <div>
-            <input id="numeroInterior" name="numeroInterior" type="text" class="form-control" maxlength="15" formControlName="numeroInterior" [ngClass]="isValid(direccionOrigen,'numeroInterior') ? 'required' : ''" (keyup)="sanitizeAlphanumericWithSpace(direccionOrigen,'numeroInterior',$event)" (change)="setValoresStore(direccionOrigen, 'numeroInterior', 'setAvisoFormularioNumeroInterior')" />
+            <input id="numeroInterior" name="numeroInterior" type="text" class="form-control" maxlength="15" formControlName="numeroInterior" [ngClass]="isValid(direccionOrigen,'numeroInterior') ? 'required' : ''" (keyup)="desinfectarAlfanumericoConEspacio(direccionOrigen,'numeroInterior',$event)" (change)="setValoresStore(direccionOrigen, 'numeroInterior', 'setAvisoFormularioNumeroInterior')" />
           </div>
         </div>
         <div class="col-md-4">
@@ -241,7 +241,7 @@
                   <label for="puntos">:</label>
                 </div>
                 <div>
-                  <input id="numeroExterior" name="numeroExterior" type="text" class="form-control" maxlength="15" formControlName="numeroExterior" [ngClass]="isValid(domicilioFormulario,'numeroExterior') ? 'required' : ''" (keyup)="sanitizeAlphanumericWithSpace(domicilioFormulario,'numeroExterior',$event)" (change)="setValoresStore(domicilioFormulario, 'numeroExterior', 'setDomicilioFormularioNumeroExterior')" />
+                  <input id="numeroExterior" name="numeroExterior" type="text" class="form-control" maxlength="15" formControlName="numeroExterior" [ngClass]="isValid(domicilioFormulario,'numeroExterior') ? 'required' : ''" (keyup)="desinfectarAlfanumericoConEspacio(domicilioFormulario,'numeroExterior',$event)" (change)="setValoresStore(domicilioFormulario, 'numeroExterior', 'setDomicilioFormularioNumeroExterior')" />
                 </div>
               </div>
               <div class="col-md-4">
@@ -250,7 +250,7 @@
                   <label for="puntos">:</label>
                 </div>
                 <div>
-                  <input id="numeroInterior" name="numeroInterior" type="text" class="form-control" maxlength="15" formControlName="numeroInterior" [ngClass]="isValid(domicilioFormulario,'numeroInterior') ? 'required' : ''" (keyup)="sanitizeAlphanumericWithSpace(domicilioFormulario,'numeroInterior',$event)" (change)="setValoresStore(domicilioFormulario, 'numeroInterior', 'setDomicilioFormularioNumeroInterior')" />
+                  <input id="numeroInterior" name="numeroInterior" type="text" class="form-control" maxlength="15" formControlName="numeroInterior" [ngClass]="isValid(domicilioFormulario,'numeroInterior') ? 'required' : ''" (keyup)="desinfectarAlfanumericoConEspacio(domicilioFormulario,'numeroInterior',$event)" (change)="setValoresStore(domicilioFormulario, 'numeroInterior', 'setDomicilioFormularioNumeroInterior')" />
                 </div>
               </div>
               <div class="col-md-4">
