@@ -230,9 +230,9 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
   seleccionMedioDeTransporte(e: Catalogo): void {
     if (
       this.claveDeControl &&
-      this.grupoFormularioPadre.contains(this.claveDeControl)
+      this.grupoFormularioPadre?.contains(this.claveDeControl)
     ) {
-      this.grupoFormularioPadre.controls[this.claveDeControl].patchValue({
+      this.grupoFormularioPadre?.controls[this.claveDeControl].patchValue({
         transporteIdMedio: e.descripcion,
       });
     }
@@ -273,9 +273,9 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
   ngOnDestroy(): void {
     if (
       this.claveDeControl &&
-      this.grupoFormularioPadre.contains(this.claveDeControl)
+      this.grupoFormularioPadre?.contains(this.claveDeControl)
     ) {
-      this.grupoFormularioPadre.removeControl(this.claveDeControl);
+      this.grupoFormularioPadre?.removeControl(this.claveDeControl);
     }
   }
 }

@@ -304,9 +304,9 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
   private actualizarFormValue(nombreDeControl: string, value: string): void {
     if (
       this.claveDeControl &&
-      this.grupoFormularioPadre.contains(this.claveDeControl)
+      this.grupoFormularioPadre?.contains(this.claveDeControl)
     ) {
-      this.grupoFormularioPadre.controls[this.claveDeControl].patchValue({
+      this.grupoFormularioPadre?.controls[this.claveDeControl].patchValue({
         [nombreDeControl]: value,
       });
     }
@@ -439,9 +439,9 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (
       this.claveDeControl &&
-      this.grupoFormularioPadre.contains(this.claveDeControl)
+      this.grupoFormularioPadre?.contains(this.claveDeControl)
     ) {
-      this.grupoFormularioPadre.removeControl(this.claveDeControl);
+      this.grupoFormularioPadre?.removeControl(this.claveDeControl);
     }
     this.destroyed$.next();
     this.destroyed$.complete();

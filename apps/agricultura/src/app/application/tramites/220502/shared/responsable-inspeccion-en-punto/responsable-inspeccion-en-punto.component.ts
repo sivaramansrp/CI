@@ -179,9 +179,9 @@ export class ResponsableInspeccionEnPuntoComponent
   tipoContenedorSeleccion(e: Catalogo): void {
     if (
       this.claveDeControl &&
-      this.grupoFormularioPadre.contains(this.claveDeControl)
+      this.grupoFormularioPadre?.contains(this.claveDeControl)
     ) {
-      this.grupoFormularioPadre.controls[this.claveDeControl].patchValue({
+      this.grupoFormularioPadre?.controls[this.claveDeControl].patchValue({
         tipocontenedor: e.descripcion,
       });
     }
@@ -252,9 +252,9 @@ export class ResponsableInspeccionEnPuntoComponent
   ngOnDestroy(): void {
     if (
       this.claveDeControl &&
-      this.grupoFormularioPadre.contains(this.claveDeControl)
+      this.grupoFormularioPadre?.contains(this.claveDeControl)
     ) {
-      this.grupoFormularioPadre.removeControl(this.claveDeControl);
+      this.grupoFormularioPadre?.removeControl(this.claveDeControl);
     }
     this.destroyed$.next();
     this.destroyed$.complete();

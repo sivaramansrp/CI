@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TercerosRelacionadosComponent } from './terceros-relacionados.component';
-import { RevisionService } from '../../services/revision.service';
 import { of, Subject } from 'rxjs';
 import { Exportador, Destinatario } from '../../models/pago-de-derechos.model';
+import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
 
 describe('TercerosRelacionadosComponent', () => {
   let component: TercerosRelacionadosComponent;
@@ -68,7 +68,7 @@ const mockDestinatarios: Destinatario[] = [
     await TestBed.configureTestingModule({
       imports: [TercerosRelacionadosComponent],
       providers: [
-        { provide: RevisionService, useValue: revisionServiceMock }
+        { provide: SolicitudPantallasService, useValue: revisionServiceMock }
       ]
     }).compileComponents();
 
