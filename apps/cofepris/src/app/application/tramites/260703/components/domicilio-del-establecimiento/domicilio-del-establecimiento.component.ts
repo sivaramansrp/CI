@@ -183,7 +183,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
    * );
    * ```
    */
-  estado: Catalogo[] = [];
+  estado: Catalogo[] = [{ id: 1, descripcion: 'VERACRUZ' }];
 
   /**
    * Tipo de selección de la tabla (por ejemplo, selección por checkbox).
@@ -292,6 +292,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       takeUntil(this.destruirNotificacion$),
       map((seccionState) => {
        this.esFormularioSoloLectura = seccionState.readonly;
+       this.guardarDatosFormulario();
       })
     )
     .subscribe()
@@ -317,6 +318,9 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
    * ```
    */
   guardarDatosFormulario(): void {
+    if(!this.domicilloDelEstablecimientoForm){
+      return;
+    }
     if (this.esFormularioSoloLectura) {
       this.domicilloDelEstablecimientoForm.disable()
     } else{

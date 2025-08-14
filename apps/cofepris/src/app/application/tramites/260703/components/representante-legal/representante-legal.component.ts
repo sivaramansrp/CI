@@ -62,7 +62,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy{
       takeUntil(this.destruirNotificador$),
       map((seccionState) => {
        this.esFormularioSoloLectura = seccionState.readonly;
-       
+       this.guardarDatosFormulario();
       })
     )
     .subscribe()
@@ -74,6 +74,9 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy{
    */
 
   guardarDatosFormulario(): void {
+    if(!this.representanteLegalForm){
+      return;
+    }
     if (this.esFormularioSoloLectura) {
     this.representanteLegalForm.disable();
   }else{
