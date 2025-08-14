@@ -106,15 +106,15 @@ ngOnInit(): void {
 
 inicializarFormularioFechaImportacion(): void {
   // Get current values from the store
-  const storeState = this.tramite630104Store.getValue();
+  const STORE_STATE = this.tramite630104Store.getValue();
 
   const FECHA_INGRESO_PREDETERMINADA =
-    (storeState['fechaIngreso'] as string) ||
+    (STORE_STATE['fechaIngreso'] as string) ||
     FORMULARIO_FECHA_IMPORTACION.find(f => f.campo === 'fechaIngreso')?.valorPredeterminado ||
     '';
 
   const FECHA_LIMITE_RETORNO_PREDETERMINADA =
-    (storeState['fechaLimiteRetorno'] as string) ||
+    (STORE_STATE['fechaLimiteRetorno'] as string) ||
     FORMULARIO_FECHA_IMPORTACION.find(f => f.campo === 'fechaLimiteRetorno')?.valorPredeterminado ||
     '';
 
@@ -129,10 +129,10 @@ inicializarFormularioFechaImportacion(): void {
   });
 
   // Set initial values in the store if not already set
-  if (!storeState['fechaIngreso']) {
+  if (!STORE_STATE['fechaIngreso']) {
     this.establecerCambioDeValor({ campo: 'fechaIngreso', valor: FECHA_INGRESO_PREDETERMINADA });
   }
-  if (!storeState['fechaLimiteRetorno']) {
+  if (!STORE_STATE['fechaLimiteRetorno']) {
     this.establecerCambioDeValor({ campo: 'fechaLimiteRetorno', valor: FECHA_LIMITE_RETORNO_PREDETERMINADA });
   }
 }
@@ -171,15 +171,15 @@ establecerCambioDeValor(event: { campo: string; valor: object | string }): void 
 
     // Si es un objeto Date
     if (event.valor instanceof Date) {
-      const dd = String(event.valor.getDate()).padStart(2, '0');
-      const mm = String(event.valor.getMonth() + 1).padStart(2, '0');
-      const yyyy = event.valor.getFullYear();
-      fechaIngresoFormateada = `${dd}/${mm}/${yyyy}`;
+      const DD = String(event.valor.getDate()).padStart(2, '0');
+      const MM = String(event.valor.getMonth() + 1).padStart(2, '0');
+      const YYYY = event.valor.getFullYear();
+      fechaIngresoFormateada = `${DD}/${MM}/${YYYY}`;
     }
     // Si es string tipo YYYY-MM-DD
     else if (typeof event.valor === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(event.valor)) {
-      const [yyyy, mm, dd] = event.valor.split('-');
-      fechaIngresoFormateada = `${dd}/${mm}/${yyyy}`;
+      const [YYYY, MM, DD] = event.valor.split('-');
+      fechaIngresoFormateada = `${DD}/${MM}/${YYYY}`;
     }
     // Si es string tipo DD/MM/YYYY
     else if (typeof event.valor === 'string' && /^\d{2}\/\d{2}\/\d{4}$/.test(event.valor)) {
@@ -188,14 +188,14 @@ establecerCambioDeValor(event: { campo: string; valor: object | string }): void 
 
     // Calcula fechaLimiteRetorno solo si hay fechaIngreso válida
     if (fechaIngresoFormateada) {
-      const [day, month, year] = fechaIngresoFormateada.split('/');
-      const fecha = new Date(Number(year), Number(month) - 1, Number(day));
-      if (!isNaN(fecha.getTime())) {
-        fecha.setMonth(fecha.getMonth() + 1);
-        const dd = String(fecha.getDate()).padStart(2, '0');
-        const mm = String(fecha.getMonth() + 1).padStart(2, '0');
-        const yyyy = fecha.getFullYear();
-        fechaLimite = `${dd}/${mm}/${yyyy}`;
+      const [DAY, MONTH, YEAR] = fechaIngresoFormateada.split('/');
+      const FECHA = new Date(Number(YEAR), Number(MONTH) - 1, Number(DAY));
+      if (!isNaN(FECHA.getTime())) {
+        FECHA.setMonth(FECHA.getMonth() + 1);
+        const DD = String(FECHA.getDate()).padStart(2, '0');
+        const MM = String(FECHA.getMonth() + 1).padStart(2, '0');
+        const YYYY = FECHA.getFullYear();
+        fechaLimite = `${DD}/${MM}/${YYYY}`;
       }
       // Actualiza el control y el store
       this.FechaDeImportacionTemporalFormulario.get('fechaLimiteRetorno')?.setValue(fechaLimite, { emitEvent: false });
