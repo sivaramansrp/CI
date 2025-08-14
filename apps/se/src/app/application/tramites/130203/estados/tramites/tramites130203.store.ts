@@ -139,7 +139,7 @@ export interface Tramite130203State {
 export function createInitialState(): Tramite130203State {
   return {
     filaSeleccionada: [],
-    mostrarTabla: false,
+    mostrarTabla: true,
     solicitud: '',
     fraccion: '',
     defaultSelect: 'Inicial',

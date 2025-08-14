@@ -6,10 +6,12 @@ import {
   REG_X,
 } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Tramite130203State, Tramite130203Store } from '../../estados/tramites/tramites130203.store';
+import {
+  Tramite130203State,
+  Tramite130203Store,
+} from '../../estados/tramites/tramites130203.store';
 import { Component } from '@angular/core';
 import { ExportacionDeDiamantesEnBrutoService } from '../../services/exportacion-de-diamantes-en-bruto.service';
-import { HttpClient } from '@angular/common/http';
 import { ID_PROCEDIMIENTO } from '../../constants/exportacion-de-diamantes-en-bruto.enum';
 import { map } from 'rxjs';
 
@@ -183,14 +185,20 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
-    esFormularioSoloLectura: boolean = false;
+  esFormularioSoloLectura: boolean = false;
 
-   /**
-    * Estado interno de la sección actual del trámite 130110.
-    * Utilizado para gestionar y almacenar la información relacionada con esta sección.
-    * Propiedad privada.
+  /**
+   * Indica si el estado del trámite ha sido creado.
+   * Cuando es `true`, el estado inicial del trámite está listo para usarse.
    */
-    private seccionState!: Tramite130203State;
+  esEstadoCreado: boolean = false;
+
+  /**
+   * Estado interno de la sección actual del trámite 130110.
+   * Utilizado para gestionar y almacenar la información relacionada con esta sección.
+   * Propiedad privada.
+   */
+  private seccionState!: Tramite130203State;
 
   /**
    * @description
@@ -204,22 +212,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient,
     private exportacionDeDiamantesEnBrutoService: ExportacionDeDiamantesEnBrutoService,
     private tramite130203Store: Tramite130203Store,
     private tramite130203Query: Tramite130203Query,
     private consultaioQuery: ConsultaioQuery
   ) {
     this.inicializarFormularios();
-    this.mostrarTabla = true;
-      this.consultaioQuery.selectConsultaioState$
+    this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly; 
-          if (seccionState) {
-            this.obtenerTablaDatos();
-          }
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.esEstadoCreado = seccionState.create;
         })
       )
       .subscribe();
@@ -230,20 +234,20 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
+    this.obtenerTablaDatos();
     this.opcionesDeBusqueda();
     this.configuracionFormularioSuscripciones();
     this.formularioTotalCount();
     this.fetchEntidadFederativa();
     this.fetchRepresentacionFederal();
     this.listaDePaisesDisponibles();
-
+    this.mostrarTabla = true;
     this.tramite130203Query.mostrarTabla$
       .pipe(takeUntil(this.destroyed$))
-      .subscribe((mostrarTabla) => {
-        this.mostrarTabla = !mostrarTabla;
+      .subscribe(() => {
+        this.mostrarTabla = true;
       });
   }
-
   /**
    * @description
    * Inicializa los formularios del componente.
@@ -369,8 +373,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   setValoresStore($event: { form: FormGroup; campo: string }): void {
     const VALOR = $event.form.get($event.campo)?.value;
     this.tramite130203Store.actualizarEstado({ [$event.campo]: VALOR });
-    if($event.campo === 'fraccion'){
-      this.tramite130203Store.actualizarEstado({'unidadMedida': '1'});
+    if ($event.campo === 'fraccion') {
+      this.tramite130203Store.actualizarEstado({ unidadMedida: '1' });
     }
   }
 
@@ -434,7 +438,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.partidasDelaMercanciaForm.markAllAsTouched();
     } else {
       this.mostrarTabla = true;
-       this.tramite130203Store.actualizarEstado({mostrarTabla:true});
+      this.tramite130203Store.actualizarEstado({ mostrarTabla: true });
     }
   }
 
@@ -455,8 +459,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   navegarParaModificarPartida(): void {
     if (this.filaSeleccionada) {
-      this.tramite130203Store.actualizarEstado({mostrarTabla:true});
-      this.tramite130203Store.actualizarEstado({filaSeleccionada:this.filaSeleccionada});
+      this.tramite130203Store.actualizarEstado({ mostrarTabla: true });
+      this.tramite130203Store.actualizarEstado({
+        filaSeleccionada: this.filaSeleccionada,
+      });
     }
   }
 
@@ -470,7 +476,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   ): void {
     this.filaSeleccionada = filasSeleccionadas.length ? filasSeleccionadas : [];
     if (this.filaSeleccionada) {
-      this.tramite130203Store.actualizarEstado({filaSeleccionada:this.filaSeleccionada});
+      this.tramite130203Store.actualizarEstado({
+        filaSeleccionada: this.filaSeleccionada,
+      });
     }
   }
   /**
@@ -553,7 +561,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .getTablaDatos()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
-        this.tableBodyData = data;
+        this.tableBodyData = this.esEstadoCreado ? [] : data;
         this.formForTotalCount.patchValue({
           cantidadTotal: data[0].cantidad,
           valorTotalUSD: data[0].totalUSD,

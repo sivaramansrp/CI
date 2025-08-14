@@ -94,13 +94,12 @@
         <label for="numeroPermisoImportacion" class="form-label"
           >Número de permiso de importación:</label
         >
-        <textarea
+        <input type="text"
           class="form-control"
-          rows="1"
           id="numeroPermisoImportacion"
           formControlName="numeroPermisoImportacion"
           (change)="setValoresStore(paisForm,'numeroPermisoImportacion')"
-        ></textarea>
+        >
         <div
         *ngIf="
           paisForm.controls['numeroPermisoImportacion'].invalid &&
