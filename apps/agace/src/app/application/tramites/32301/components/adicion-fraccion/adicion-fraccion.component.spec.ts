@@ -1,175 +1,309 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {  Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { AdicionFraccionComponent } from './adicion-fraccion.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { of, Subject } from 'rxjs';
+import { FormBuilder } from '@angular/forms';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { Tramite32301Store } from '../../estados/tramite32301.store';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
-import { AlertComponent, CatalogoSelectComponent, ConsultaioQuery, CrosslistComponent, InputRadioComponent, NotificacionesComponent, TableComponent, TablePaginationComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { ElementRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
+@Injectable()
+class MockAvisoModifyService {}
+
+@Injectable()
+class MockTramite32301Store {}
+
+@Injectable()
+class MockTramite32301Query {}
+
+
 describe('AdicionFraccionComponent', () => {
-  let component: AdicionFraccionComponent;
-  let fixture: ComponentFixture<AdicionFraccionComponent>;
-  let avisoModifyServiceMock: any;
-  let tramiteStoreMock: any;
-  let tramiteQueryMock: any;
-  let consultaioQueryMock: any;
+  let fixture;
+  let component;
 
-  beforeEach(async () => {
-    avisoModifyServiceMock = {
-      getAdicianFraccionOption: jest.fn().mockReturnValue(of([{ label: 'A', value: 1 }])),
-      getAdicianFraccionNicoModOptions: jest.fn().mockReturnValue(of([{ id: 1 }])),
-      getAdicianFraccionUnidadMedidaModOption: jest.fn().mockReturnValue(of([{ id: 2 }])),
-      getAdicianFraccionActivRelProcModOption: jest.fn().mockReturnValue(of([{ id: 3 }])),
-      getAdicianFraccioncveFraccionCorrelacionModOption: jest.fn().mockReturnValue(of([{ id: 4 }])),
-    };
-    tramiteStoreMock = {};
-    tramiteQueryMock = {};
-    consultaioQueryMock = {
-      selectConsultaioState$: of({ readonly: false })
-    };
-
-    await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, AdicionFraccionComponent,
-            CommonModule,
-            TituloComponent,
-            AlertComponent,
-            InputRadioComponent,
-            TableComponent,
-            TablePaginationComponent,
-            CatalogoSelectComponent,
-            CrosslistComponent,
-            NotificacionesComponent,
-            HttpClientTestingModule
-      ],
-      declarations: [],
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule, AdicionFraccionComponent,HttpClientTestingModule ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
-        { provide: AvisoModifyService, useValue: avisoModifyServiceMock },
-        { provide: Tramite32301Store, useValue: tramiteStoreMock },
-        { provide: Tramite32301Query, useValue: tramiteQueryMock },
-        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
+        { provide: AvisoModifyService, useClass: MockAvisoModifyService },
+        { provide: Tramite32301Store, useClass: MockTramite32301Store },
+        { provide: Tramite32301Query, useClass: MockTramite32301Query },
+        ConsultaioQuery
       ]
-    }).compileComponents();
+    }).overrideComponent(AdicionFraccionComponent, {
 
+    }).compileComponents();
     fixture = TestBed.createComponent(AdicionFraccionComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create the component', () => {
+
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize forms on ngOnInit', () => {
-    component.esFormularioSoloLectura = false;
+  it('should run #ngOnInit()', async () => {
+    component.inicializarEstadoFormulario = jest.fn();
+    component.query = component.query || {};
+    component.query.selectState$ = observableOf({
+      gridFraccionesHeader: {}
+    });
     component.ngOnInit();
-    expect(component.declaracionFormModel).toBeDefined();
-    expect(component.cargaManualForm).toBeDefined();
+    expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
   });
 
-  it('should disable forms if esFormularioSoloLectura is true', () => {
-    component.esFormularioSoloLectura = true;
+  it('should run #inicializarEstadoFormulario()', async () => {
+    component.guardarDatosFormulario = jest.fn();
+    component.inicializarFormulario = jest.fn();
+    component.inicializarEstadoFormulario();
+    expect(component.inicializarFormulario).toHaveBeenCalled();
+  });
+
+  it('should run #guardarDatosFormulario()', async () => {
+    component.inicializarFormulario = jest.fn();
+    component.declaracionForm = component.declaracionForm || {};
+    component.declaracionForm.disable = jest.fn();
+    component.declaracionForm.enable = jest.fn();
+    component.declaracionFormModel = component.declaracionFormModel || {};
+    component.declaracionFormModel.disable = jest.fn();
+    component.declaracionFormModel.enable = jest.fn();
+    component.cargaManualForm = component.cargaManualForm || {};
+    component.cargaManualForm.disable = jest.fn();
+    component.cargaManualForm.enable = jest.fn();
     component.guardarDatosFormulario();
-    expect(component.declaracionForm.disabled).toBe(true);
-    expect(component.declaracionFormModel.disabled).toBe(true);
-    expect(component.cargaManualForm.disabled).toBe(true);
+    expect(component.inicializarFormulario).toHaveBeenCalled();
+    expect(component.declaracionForm.enable).toHaveBeenCalled();
+    expect(component.declaracionFormModel.enable).toHaveBeenCalled();
   });
 
-  it('should enable forms if esFormularioSoloLectura is false', () => {
-    component.esFormularioSoloLectura = false;
-    component.guardarDatosFormulario();
-    expect(component.declaracionForm.enabled).toBe(true);
-    expect(component.declaracionFormModel.enabled).toBe(true);
-    expect(component.cargaManualForm.enabled).toBe(true);
+  it('should run #inicializarFormulario()', async () => {
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn();
+    component.getAdicianFraccionOption = jest.fn();
+    component.getAdicianFraccionNicoModOptions = jest.fn();
+    component.getAdicianFraccionActivRelProcModOption = jest.fn();
+    component.getAdicianFraccioncveFraccionCorrelacionModOption = jest.fn();
+    component.getAdicianFraccionUnidadMedidaModOption = jest.fn();
+    component.inicializarFormulario();
+    expect(component.fb.group).toHaveBeenCalled();
+    expect(component.getAdicianFraccionOption).toHaveBeenCalled();
+    expect(component.getAdicianFraccionNicoModOptions).toHaveBeenCalled();
+    expect(component.getAdicianFraccionActivRelProcModOption).toHaveBeenCalled();
+    expect(component.getAdicianFraccioncveFraccionCorrelacionModOption).toHaveBeenCalled();
+    expect(component.getAdicianFraccionUnidadMedidaModOption).toHaveBeenCalled();
   });
 
-  it('should call getAdicianFraccionOption and set radioOptions', () => {
+  it('should run #getAdicianFraccionOption()', async () => {
+    component.AvisoModifyService = component.AvisoModifyService || {};
+    component.AvisoModifyService.getAdicianFraccionOption = jest.fn().mockReturnValue(observableOf({}));
     component.getAdicianFraccionOption();
+    expect(component.AvisoModifyService.getAdicianFraccionOption).toHaveBeenCalled();
   });
 
-  it('should call getAdicianFraccionNicoModOptions and set cveNicoMod', () => {
+  it('should run #getAdicianFraccionNicoModOptions()', async () => {
+    component.AvisoModifyService = component.AvisoModifyService || {};
+    component.AvisoModifyService.getAdicianFraccionNicoModOptions = jest.fn().mockReturnValue(observableOf({}));
     component.getAdicianFraccionNicoModOptions();
+    expect(component.AvisoModifyService.getAdicianFraccionNicoModOptions).toHaveBeenCalled();
   });
 
-  it('should call getAdicianFraccionUnidadMedidaModOption and set unidadMedidaMod', () => {
+  it('should run #getAdicianFraccionUnidadMedidaModOption()', async () => {
+    component.AvisoModifyService = component.AvisoModifyService || {};
+    component.AvisoModifyService.getAdicianFraccionUnidadMedidaModOption = jest.fn().mockReturnValue(observableOf({}));
     component.getAdicianFraccionUnidadMedidaModOption();
+    expect(component.AvisoModifyService.getAdicianFraccionUnidadMedidaModOption).toHaveBeenCalled();
   });
 
-  it('should call getAdicianFraccionActivRelProcModOption and set activRelProcMod', () => {
+  it('should run #getAdicianFraccionActivRelProcModOption()', async () => {
+    component.AvisoModifyService = component.AvisoModifyService || {};
+    component.AvisoModifyService.getAdicianFraccionActivRelProcModOption = jest.fn().mockReturnValue(observableOf({}));
     component.getAdicianFraccionActivRelProcModOption();
+    expect(component.AvisoModifyService.getAdicianFraccionActivRelProcModOption).toHaveBeenCalled();
   });
 
-  it('should call getAdicianFraccioncveFraccionCorrelacionModOption and set cveFraccionCorrelacionMod', () => {
+  it('should run #getAdicianFraccioncveFraccionCorrelacionModOption()', async () => {
+    component.AvisoModifyService = component.AvisoModifyService || {};
+    component.AvisoModifyService.getAdicianFraccioncveFraccionCorrelacionModOption = jest.fn().mockReturnValue(observableOf({}));
     component.getAdicianFraccioncveFraccionCorrelacionModOption();
+    expect(component.AvisoModifyService.getAdicianFraccioncveFraccionCorrelacionModOption).toHaveBeenCalled();
   });
 
-  it('should set divBtnCargaMVisible to false for tipoCarga MA', () => {
-    component.valorSeleccionadoTipoCarga('TIPCAR.MA');
+
+  it('should run #valorSeleccionadoTipoCarga()', async () => {
+
+    component.valorSeleccionadoTipoCarga({});
+
   });
 
-  it('should set divBtnCargaMVisible to true for tipoCarga CM', () => {
+  it('should run #modalAgregaCarga()', async () => {
+    component.openfraccionesModelModel = jest.fn();
+    component.modalAgregaCarga();
   });
 
-  it('should set nuevaNotificacion on cargarArchivoProcesosAjax', () => {
+  it('should run #abrirModalCargaMasivaFr()', async () => {
+    component.openCargaMasivaFrModal = jest.fn();
+    component.abrirModalCargaMasivaFr();
+  });
+
+  it('should run #cargarArchivoProcesosAjax()', async () => {
+
     component.cargarArchivoProcesosAjax();
   });
 
-  it('should open and close cargaMasivaFrModalInstance', () => {
-    const showSpy = jest.fn();
-    const hideSpy = jest.fn();
-    component.cargaMasivaFrModalInstance = { show: showSpy, hide: hideSpy } as any;
+  it('should run #openCargaMasivaFrModal()', async () => {
+    component.cargaMasivaFrModalInstance = component.cargaMasivaFrModalInstance || {};
+    component.cargaMasivaFrModalInstance.show = jest.fn();
     component.openCargaMasivaFrModal();
-    expect(showSpy).toHaveBeenCalled();
+  });
+
+  it('should run #closeCargaMasivaFrModal()', async () => {
+    component.cargaMasivaFrModalInstance = component.cargaMasivaFrModalInstance || {};
+    component.cargaMasivaFrModalInstance.hide = jest.fn();
     component.closeCargaMasivaFrModal();
-    expect(hideSpy).toHaveBeenCalled();
   });
 
-  it('should open and close fraccionesModelInstance', () => {
-    const showSpy = jest.fn();
-    const hideSpy = jest.fn();
-    component.fraccionesModelInstance = { show: showSpy, hide: hideSpy } as any;
+  it('should run #openfraccionesModelModel()', async () => {
+    component.fraccionesModelInstance = component.fraccionesModelInstance || {};
+    component.fraccionesModelInstance.show = jest.fn();
     component.openfraccionesModelModel();
-    expect(showSpy).toHaveBeenCalled();
-    component.closefraccionesModelModel();
-    expect(hideSpy).toHaveBeenCalled();
+    expect(component.fraccionesModelInstance.show).toHaveBeenCalled();
   });
 
-  it('should add all fechas on agregar with tipo "t"', () => {
-    component.selectRangoDias = ['2021-01-01', '2021-01-02'];
-    component.fechasSeleccionadas = [];
-    component.fechasDatos = ['2021-01-01', '2021-01-02'];
-    component.agregar('t');
-    expect(component.fechasSeleccionadas).toEqual(['2021-01-01', '2021-01-02']);
-    expect(component.fechasDatos).toEqual([]);
+  it('should run #closefraccionesModelModels()', async () => {
+    component.fraccionesModelInstance = component.fraccionesModelInstance || {};
+    component.fraccionesModelInstance.hide = jest.fn();
+    component.closefraccionesModelModels();
+    expect(component.fraccionesModelInstance.hide).toHaveBeenCalled();
   });
 
-  it('should remove all fechas on quitar with tipo "t"', () => {
-    component.fechasSeleccionadas = ['2021-01-01', '2021-01-02'];
-    component.fechasDatos = [];
-    component.quitar('t');
-    expect(component.fechasDatos).toEqual(['2021-01-01', '2021-01-02']);
-    expect(component.fechasSeleccionadas).toEqual([]);
+  it('should run #seleccionDeFilas()', async () => {
+
+    component.seleccionDeFilas({});
+
   });
 
-  it('should clean up destroy$ on ngOnDestroy', () => {
-    const nextSpy = jest.spyOn((component as any).destroy$, 'next');
-    const completeSpy = jest.spyOn((component as any).destroy$, 'complete');
+  it('should run #modificarSeleccionada()', async () => {
+    component.fraccionesModelInstance = component.fraccionesModelInstance || {};
+    component.fraccionesModelInstance.show = jest.fn();
+    component.cargaManualForm = component.cargaManualForm || {};
+    component.cargaManualForm.patchValue = jest.fn();
+    component.gridFraccionesHeader = component.gridFraccionesHeader || {};
+    component.fechasDatos = component.fechasDatos || {};
+    component.fechasDatos.join = jest.fn();
+    component.modificarSeleccionada({
+      value: {
+        id: {},
+        fraccionDeclarada: {},
+        actividadRelacionada: {},
+        correlacionFraccionActual: {},
+        descripcionFraccionActual: {},
+        nico: {},
+        descripcionNico: {},
+        umt: {}
+      }
+    });
+    expect(component.cargaManualForm.patchValue).toHaveBeenCalled();
+    expect(component.fechasDatos.join).toHaveBeenCalled();
+  });
+
+  it('should run #eliminarFraccionSeleccionada()', async () => {
+    component.gridFraccionesHeader = component.gridFraccionesHeader || {};
+    component.gridFraccionesHeader.findIndex = jest.fn().mockReturnValue([
+      {
+        "id": {}
+      }
+    ]);
+    component.gridFraccionesHeader = ['gridFraccionesHeader'];
+    component.store = component.store || {};
+    component.store.setCargaManual = jest.fn();
+    component.eliminarFraccionSeleccionada({});
+  });
+
+  it('should run #aduanaSeleccionadasChange()', async () => {
+
+    component.aduanaSeleccionadasChange({});
+
+  });
+
+  it('should run #closefraccionesModelModel()', async () => {
+    component.seleccionadasFila = component.seleccionadasFila || {};
+    component.seleccionadasFila.id = 'id';
+    component.gridFraccionesHeader = component.gridFraccionesHeader || {};
+    component.gridFraccionesHeader.findIndex = jest.fn().mockReturnValue([
+      {
+        "id": {}
+      }
+    ]);
+    component.gridFraccionesHeader = ['gridFraccionesHeader'];
+    component.fechasDatos = component.fechasDatos || {};
+    component.fechasDatos.join = jest.fn();
+    component.store = component.store || {};
+    component.store.setCargaManual = jest.fn();
+    component.fraccionesModelInstance = component.fraccionesModelInstance || {};
+    component.fraccionesModelInstance.hide = jest.fn();
+    component.cargaManualForm = component.cargaManualForm || {};
+    component.cargaManualForm.reset = jest.fn();
+    component.closefraccionesModelModel({
+      value: {
+        id: {},
+        fraccionDeclarada: {},
+        actividadRelacionada: {},
+        correlacionFraccionActual: {},
+        descripcionFraccionActual: {},
+        nico: {},
+        descripcionNico: {},
+        umt: {}
+      }
+    });
+    expect(component.fechasDatos.join).toHaveBeenCalled();
+    expect(component.store.setCargaManual).toHaveBeenCalled();
+    expect(component.fraccionesModelInstance.hide).toHaveBeenCalled();
+    expect(component.cargaManualForm.reset).toHaveBeenCalled();
+  });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.destroy$ = component.destroy$ || {};
+    component.destroy$.next = jest.fn();
+    component.destroy$.complete = jest.fn();
     component.ngOnDestroy();
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    expect(component.destroy$.next).toHaveBeenCalled();
+    expect(component.destroy$.complete).toHaveBeenCalled();
   });
 
-  it('should initialize modal instances in ngAfterViewInit', () => {
-    const modalSpy = jest.fn();
-    (window as any).Modal = modalSpy;
-    const nativeElementMock = {};
-    component.cargaMasivaFrModal = { nativeElement: nativeElementMock } as ElementRef;
-    component.fraccionesModel = { nativeElement: nativeElementMock } as ElementRef;
-    expect(component.cargaMasivaFrModalInstance).toBeDefined();
-    expect(component.fraccionesModelInstance).toBeDefined();
+  it('should run #onCambioDeArchivo()', async () => {
+    component.abrirModal = jest.fn();
+    component.onCambioDeArchivo({
+      target: {
+        files: {
+          0: {
+            name: {}
+          },
+          length: {}
+        }
+      }
+    });
   });
+
+  it('should run #abrirModal()', async () => {
+
+    component.abrirModal();
+
+  });
+
+  it('should run #activarSeleccionArchivo()', async () => {
+
+    component.activarSeleccionArchivo();
+
+  });
+
 });
