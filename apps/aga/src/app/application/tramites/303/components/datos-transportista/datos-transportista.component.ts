@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Notificacion, TablaSeleccion, Transportista } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
-import { TablaSeleccion, Transportista } from '@libs/shared/data-access-user/src';
 import { Tramite303Store, Tramite303StoreService } from '../../../../core/estados/tramites/tramite303.store';
 import { CONFIGURACION_ENCABEZADO_TRASPORTISTA } from '../../../../core/enums/303/trasportistas.enum';
 import { Router } from '@angular/router';
@@ -24,6 +24,8 @@ export class DatosTransportistaComponent implements OnDestroy, OnInit {
   private destroyNotifier$: Subject<void> = new Subject();
   /** Estado del trámite 303 consultado */
   public tramiteConsultado?: Tramite303Store;
+  /** Notificación a mostrar al usuario */
+  public nuevaNotificacion!: Notificacion;
   /**
    * Constructor para el componente de datos del transportista.
    * @param tramite303Query - Consulta para el trámite 303.
@@ -81,6 +83,34 @@ export class DatosTransportistaComponent implements OnDestroy, OnInit {
    * Redirige al usuario a la página de registro de transportista.
    */
   modificarTransportista(): void {
+    if (this.trasportistasSeleccionados.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: 'Aviso',
+        mensaje: 'Debe seleccionar un transportista para modificar.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+    if (this.trasportistasSeleccionados.length > 1) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: 'Aviso',
+        mensaje: 'Solo puede modificar un transportista a la vez.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+    const TRANSPORTISTA_SELECCIONADO = this.trasportistasSeleccionados[0];
+    this.tramite303State.trasportistaModificar(TRANSPORTISTA_SELECCIONADO);
     this.router.navigate(['aga/despacho-mercancias/registro-trasportista']);
   }
 }

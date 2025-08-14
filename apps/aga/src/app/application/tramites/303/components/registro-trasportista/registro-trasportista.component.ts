@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Notificacion, NotificacionesComponent, Transportista } from '@libs/shared/data-access-user/src';
+import { Notificacion, NotificacionesComponent, REGEX_RFC_FISICA, REGEX_RFC_MORAL, Transportista } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite303Store, Tramite303StoreService } from '../../../../core/estados/tramites/tramite303.store';
 import { CommonModule } from '@angular/common';
@@ -38,6 +38,14 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
   /** Estado del trámite 303 consultado */
   public tramiteConsultado?: Tramite303Store;
   /**
+   * Transportista a modificar
+   */
+  public transportistaModificar?: Transportista;
+  /**
+   * Indica si el formulario está en modo de edición
+   */
+  public modoEdicion = false;
+  /**
    * Constructor del componente
    * @param fb FormBuilder para crear formularios reactivos
    */
@@ -60,11 +68,37 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.tramiteConsultado = seccionState;
           this.listaTransportistas = seccionState?.listaTransportistas || [];
+          if (seccionState?.transportistaModificar) {
+            this.transportistaModificar = seccionState.transportistaModificar;
+            this.modoEdicion = true;
+            this.cargarFormularioParaEdicion(this.transportistaModificar);
+          }
         }),
         takeUntil(this.destroyNotifier$)
       )
       .subscribe();
     this.suscribirACambios();
+  }
+
+  /**
+   * Carga los datos del transportista en el formulario para su edición
+   * @param transportista Transportista a modificar
+   */
+  private cargarFormularioParaEdicion(transportista: Transportista): void {
+    this.FormTrasportista.patchValue({
+      nacionalidad: transportista.nacionalidad,
+      tipoPersona: transportista.tipoPersona,
+      rfc: transportista.rfc || '',
+      nombre: transportista.nombre || '',
+      apellidoPaterno: transportista.apellidoPaterno || '',
+      apellidoMaterno: transportista.apellidoMaterno || '',
+      taxID: transportista.taxId || transportista.rfcExtranjero || '',
+      razonSocial: transportista.denominacionRazonSocial || ''
+    });
+
+    // Deshabilitar campos clave
+    this.FormTrasportista.get('nacionalidad')?.disable({ emitEvent: false });
+    this.FormTrasportista.get('tipoPersona')?.disable({ emitEvent: false });
   }
 
   /**
@@ -75,9 +109,9 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
       nacionalidad: ['nacional'],
       tipoPersona: ['fisica'],
       rfc: [''],
-      nombre: [''],
-      apellidoPaterno: [''],
-      apellidoMaterno: [''],
+      nombre: [{ value: '', disabled: true }],
+      apellidoPaterno: [{ value: '', disabled: true }],
+      apellidoMaterno: [{ value: '', disabled: true }],
       taxID: [''],
       razonSocial: ['']
     });
@@ -112,7 +146,7 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
       apellidoMaterno: '',
       taxID: '',
       razonSocial: ''
-    }, { emitEvent: false }); // Evita disparar valueChanges de nuevo
+    }, { emitEvent: false });
   }
 
   /**
@@ -124,7 +158,6 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
   private actualizarValidaciones(): void {
     const NACIONALIDAD = this.FormTrasportista.get('nacionalidad')?.value;
     const TIPOPERSONA = this.FormTrasportista.get('tipoPersona')?.value;
-
     const ESNACIONALFISICA = NACIONALIDAD === 'nacional' && TIPOPERSONA === 'fisica';
     const ESEXTRANJEROFISICA = NACIONALIDAD === 'extranjero' && TIPOPERSONA === 'fisica';
     const ESNACIONALMORAL = NACIONALIDAD === 'nacional' && TIPOPERSONA === 'moral';
@@ -145,6 +178,9 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
     RAZONSOCIAL?.clearValidators();
 
     if (ESNACIONALFISICA) {
+      this.FormTrasportista.get('nombre')?.disable({ emitEvent: false });
+      this.FormTrasportista.get('apellidoPaterno')?.disable({ emitEvent: false });
+      this.FormTrasportista.get('apellidoMaterno')?.disable({ emitEvent: false });
       RFC?.setValidators([Validators.required]);
       NOMBRE?.setValidators([Validators.required]);
       APELLIDOPATERNO?.setValidators([Validators.required]);
@@ -157,6 +193,7 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
     }
 
     if (ESNACIONALMORAL) {
+      this.FormTrasportista.get('razonSocial')?.disable({ emitEvent: false });
       RFC?.setValidators([Validators.required]);
       RAZONSOCIAL?.setValidators([Validators.required]);
     }
@@ -180,6 +217,8 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
    */
   limpiarFormulario(): void {
     this.FormTrasportista.reset();
+    this.FormTrasportista.get('nacionalidad')?.enable({ emitEvent: false });
+    this.FormTrasportista.get('tipoPersona')?.enable({ emitEvent: false });
     this.actualizarValidaciones();
   }
 
@@ -208,6 +247,35 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
       };
       return;
     }
+    if (NACIONALIDAD === 'NACIONAL') {
+      if (TIPOPERSONA === 'FISICA' && !REGEX_RFC_FISICA.test(RFC)) {
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'warning',
+          modo: 'action',
+          titulo: 'Aviso',
+          mensaje: 'El RFC no es válido para persona física.',
+          cerrar: true,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+        return;
+      }
+      if (TIPOPERSONA === 'MORAL' && !REGEX_RFC_MORAL.test(RFC)) {
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'warning',
+          modo: 'action',
+          titulo: 'Aviso',
+          mensaje: 'El RFC no es válido para persona moral.',
+          cerrar: true,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+        return;
+      }
+    }
+
     const BUSQUEDA$ =
       TIPOPERSONA === 'fisica'
         ? this.transportistaService.buscarFisicaPorRFC(RFCVALUE)
@@ -294,32 +362,33 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Maneja la acción de agregar un transportista.
-   * Valida el formulario y muestra una alerta de éxito o error según corresponda.
-   * Si el formulario es válido, se imprime en consola los datos del transportista.
+   * Guarda los datos del transportista.
+   * @returns void
    */
-  agregar(): void {
+  guardar(): void {
     if (!this.FormTrasportista.valid) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'warning',
         modo: 'action',
         titulo: 'Aviso',
-        mensaje: 'Antes de agregar un transportista debe llenar el formulario correctamente.',
+        mensaje: 'Antes de continuar debe llenar el formulario correctamente.',
         cerrar: true,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
       this.alerta = 'error';
       this.FormTrasportista.markAllAsTouched();
-      setTimeout(() => {
-        this.alerta = null;
-      }, 4000);
+      setTimeout(() => { this.alerta = null; }, 4000);
       return;
     }
+
     const FORM_VALUE = this.FormTrasportista.value;
-    const NUEVO_TRASPORTISTA: Transportista = {
-      idPersonaTransportista: crypto.randomUUID(),
+
+    const TRANSPORTISTA: Transportista = {
+      idPersonaTransportista: this.modoEdicion
+        ? this.transportistaModificar!.idPersonaTransportista
+        : crypto.randomUUID(),
       tipoPersona: FORM_VALUE.tipoPersona,
       nacionalidad: FORM_VALUE.nacionalidad,
       esExtranjero: FORM_VALUE.nacionalidad === 'extranjero',
@@ -333,38 +402,66 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
       apellidoPaterno: FORM_VALUE.apellidoPaterno || '',
       apellidoMaterno: FORM_VALUE.apellidoMaterno || ''
     };
-    const YA_EXISTE = this.listaTransportistas.some(t => {
-      if (NUEVO_TRASPORTISTA.esNacional) {
-        return t.rfc?.toLowerCase() === NUEVO_TRASPORTISTA.rfc?.toLowerCase();
-      }
-      return t.rfcExtranjero?.toLowerCase() === NUEVO_TRASPORTISTA.rfcExtranjero?.toLowerCase();
-    });
-    if (YA_EXISTE) {
+
+    if (this.modoEdicion) {
+      this.listaTransportistas = this.listaTransportistas.map(t =>
+        t.idPersonaTransportista === TRANSPORTISTA.idPersonaTransportista ? TRANSPORTISTA : t
+      );
+
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
-        categoria: 'warning',
+        categoria: 'success',
         modo: 'action',
-        titulo: 'Aviso',
-        mensaje: 'Ya existe un transportista con el mismo identificador.',
+        titulo: 'Éxito',
+        mensaje: 'Transportista modificado correctamente.',
         cerrar: true,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
-      return;
+    } else {
+      const YA_EXISTE = this.listaTransportistas.some(t => {
+        if (TRANSPORTISTA.esNacional) {
+          return t.rfc?.toLowerCase() === TRANSPORTISTA.rfc?.toLowerCase();
+        }
+        return t.rfcExtranjero?.toLowerCase() === TRANSPORTISTA.rfcExtranjero?.toLowerCase();
+      });
+      if (YA_EXISTE) {
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'warning',
+          modo: 'action',
+          titulo: 'Aviso',
+          mensaje: 'Ya existe un transportista con el mismo identificador.',
+          cerrar: true,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+        return;
+      }
+      this.listaTransportistas = [...this.listaTransportistas, TRANSPORTISTA];
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'success',
+        modo: 'action',
+        titulo: 'Éxito',
+        mensaje: 'Transportista agregado correctamente.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
     }
-    this.listaTransportistas = [...this.listaTransportistas, NUEVO_TRASPORTISTA];
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'success',
-      modo: 'action',
-      titulo: 'Éxito',
-      mensaje: 'Transportista agregado correctamente.',
-      cerrar: true,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-    };
-    this.limpiarFormulario();
+
     this.tramite303State.setListaTransportistas(this.listaTransportistas);
+    this.tramite303State.trasportistaModificar(null as unknown as Transportista);
+    this.limpiarFormulario();
+    this.router.navigate(['aga/despacho-mercancias/registro']);
+  }
+
+  /**
+   * Cancela la operación y regresa a la página de registro.
+   */
+  cancelar(): void {
+    this.FormTrasportista.reset();
     this.router.navigate(['aga/despacho-mercancias/registro']);
   }
 

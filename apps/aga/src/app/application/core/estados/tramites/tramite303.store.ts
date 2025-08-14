@@ -64,6 +64,10 @@ export interface Tramite303Store {
      * Lista de transportistas asociados al trámite 303.
      */
     listaTransportistas?: Transportista[];
+    /**
+     * Transportista a modificar en el trámite 303.
+     */
+    transportistaModificar?: Transportista;
 }
 export function createInitialState(): Tramite303Store {
     return {
@@ -82,6 +86,7 @@ export function createInitialState(): Tramite303Store {
         mostrarCheckboxesImmex: false,
         mostrarSelectImmex: true,
         listaTransportistas: [],
+        transportistaModificar: undefined,
     };
 }
 
@@ -275,4 +280,14 @@ export class Tramite303StoreService extends Store<Tramite303Store> {
         }));
     }
 
+    /**
+     * Establece el transportista a modificar en el estado del trámite 303.
+     * @param transportista Transportista a modificar.
+     */
+    public trasportistaModificar(transportistaModificar: Transportista): void {
+        this.update((state) => ({
+            ...state,
+            transportistaModificar: transportistaModificar,
+        }));
+    }
 }

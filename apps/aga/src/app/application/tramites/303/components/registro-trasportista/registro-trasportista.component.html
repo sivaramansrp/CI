@@ -118,8 +118,10 @@
         <div class="row mt-4">
             <div class="d-flex justify-content-lg-end h1">
                 <button class="btn btn-primary ms-2" type="button" (click)="FormTrasportista.reset()">Limpiar</button>
-                <button type="button" class="btn btn-default ms-2">Cancelar</button>
-                <button class="btn btn-primary ms-2" type="button" (click)="agregar()">Agregar</button>
+                <button type="button" class="btn btn-default ms-2" (click)="cancelar()">Cancelar</button>
+                <button class="btn btn-primary ms-2" type="button" (click)="guardar()">
+                    {{ modoEdicion ? 'Modificar' : 'Agregar' }}
+                </button>
                 <div *ngIf="alerta === 'error'" class="alert alert-danger" role="alert">
                     Por favor, completa los campos obligatorios antes de continuar.
                 </div>
