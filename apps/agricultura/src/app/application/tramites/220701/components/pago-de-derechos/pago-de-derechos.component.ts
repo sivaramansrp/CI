@@ -14,6 +14,7 @@
 import { CommonModule } from '@angular/common';
 
 import {
+  ChangeDetectorRef,
   Component,
   Input,
   OnChanges,
@@ -42,7 +43,9 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 
-import { InputRadioComponent } from '@ng-mf/data-access-user';
+import { ConsultaioState } from '@ng-mf/data-access-user';
+
+import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 
 import {
   EXPEDICION_FACTURA_FECHA,
@@ -123,6 +126,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
   banco!: CatalogosSelect;
 
   /**
+   * @property {CatalogosSelect} bancoRevision
+   * @description Información del banco seleccionado en el formulario de revisión.
+   */
+  bancoRevision!: CatalogosSelect;
+
+  /**
    * @property {OpcionDeRadio[]} exentoPagoRadio
    * @description Opciones de radio para la exención de pago.
    */
@@ -171,7 +180,13 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    * @property {boolean} esFormularioSoloLectura
    * @description Indica si el formulario debe mostrarse solo en modo de lectura.
    */
-  @Input() esFormularioSoloLectura!: boolean;
+  @Input() esFormularioSoloLectura: boolean = false;
+
+  /**
+   * @property {ConsultaioState} consultaState
+   * @description Estado actual de la consulta gestionado por el store ConsultaioQuery.
+   */
+  @Input() consultaState?: ConsultaioState;
 
   /**
    * @property {string} setFecha
@@ -200,6 +215,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    * @param {SeccionLibQuery} seccionQuery Consulta de estado de la tienda Akita para secciones.
    * @param {SeccionLibStore} seccionStore Tienda Akita para manejar el estado de la sección.
    * @param {ConsultaioQuery} consultaioQuery Consulta Akita para manejar y actualizar el estado de una sección.
+   * @param {ChangeDetectorRef} cdr Servicio para controlar la detección de cambios.
    */
   constructor(
     private readonly fb: FormBuilder,
@@ -208,17 +224,28 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
     private tramiteStore: TramiteStore,
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
+          this.cdr.detectChanges();
           this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
+  }
+
+  /**
+   * @getter isBorrarButtonDisabled
+   * @description Determina si el botón "Borrar datos del pago" debe estar deshabilitado.
+   * @returns {boolean} True si está en modo consulta (solo lectura), false en caso contrario.
+   */
+  get isBorrarButtonDisabled(): boolean {
+    return this.consultaState?.readonly ?? this.esFormularioSoloLectura;
   }
 
   /**
@@ -305,7 +332,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
         Validators.required,
       ],
       fechaInicio: [
-        this.pagosDeDerechosState?.fechaInicio,
+        {value: this.pagosDeDerechosState?.fechaInicio || '', disabled: true},
         Validators.required,
       ],
       importeDePago: [
@@ -506,7 +533,13 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
           this.banco = {
-            labelNombre: 'Banco*',
+            labelNombre: 'Banco',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+          this.bancoRevision = {
+            labelNombre: 'Banco',
             required: false,
             primerOpcion: 'Selecciona un valor',
             catalogos: RESPONSE,
@@ -639,6 +672,28 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
   }
   
   /**
+   * Actualiza la fecha de inicio en el formulario.
+   * @method cambioFechaInicio
+   * @param {string} nuevoValor - Nueva fecha de inicio.
+   */
+  cambioFechaInicio(nuevoValor: string): void {
+    this.pagosDeDerechosForm.patchValue({
+      fechaInicio: nuevoValor,
+    });
+  }
+
+  /**
+   * Actualiza la fecha de inicio de revisión en el formulario.
+   * @method cambioFechaInicioRevision
+   * @param {string} nuevoValor - Nueva fecha de inicio de revisión.
+   */
+  cambioFechaInicioRevision(nuevoValor: string): void {
+    this.pagosDeDerechosForm.patchValue({
+      fechaInicioRevision: nuevoValor,
+    });
+  }
+
+  /**
    * Actualiza la fecha de pago en el formulario.
    * @method cambioFechaFinal
    * @param {string} nuevoValor - Nueva fecha de pago.
@@ -650,6 +705,91 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
     this.fechaPagoDate = nuevoValor;
   }
 
+
+  /**
+   * Borra todos los datos del formulario de pago de derechos.
+   * Resetea los valores del formulario y actualiza el store.
+   * @method borrarDatosPago
+   */
+  borrarDatosPago(): void {
+    // Reset the form to initial values
+    this.pagosDeDerechosForm.patchValue({
+      justificacion: '',
+      claveDeReferencia: '',
+      cadenaDependencia: '',
+      banco: '',
+      llaveDePago: '',
+      fechaInicio: '',
+      importeDePago: '',
+      justificacionRevision: '',
+      claveDeReferenciaRevision: '',
+      cadenaDependenciaRevision: '',
+      bancoRevision: '',
+      llaveDePagoRevision: '',
+      fechaInicioRevision: '',
+      importeDePagoRevision: '',
+    });
+
+    // Reset date value
+    this.fechaPagoDate = '';
+
+    // Update the store with empty values
+    const VALOR = this.pagosDeDerechosForm.value;
+    this.tramiteStore.setPagoDeDerechosTramite(VALOR);
+  }
+
+  /**
+   * Actualiza el valor de un campo en el formulario y lo guarda en el store.
+   * Aplica lógica especial para patchear valores en consulta flow cuando se seleccionan banco o bancoRevision.
+   * @method setValoresStore
+   * @param {FormGroup} formulario - El formulario con el campo que se está actualizando.
+   * @param {string} campo - El nombre del campo que se actualizará.
+   */
+  setValoresStore(
+    _formulario: FormGroup,
+    _campo: string,
+  ): void {
+    this.actualizarValoresConsulta();
+    const VALOR = this.pagosDeDerechosForm.value;
+    this.tramiteStore.setPagoDeDerechosTramite(VALOR);
+  }
+
+  /**
+   * Actualiza ciertos valores en el formulario basados en condiciones específicas para el flujo de consulta.
+   * Si se selecciona un banco y estamos en modo consulta, se patchean valores de ejemplo.
+   * @method actualizarValoresConsulta
+   */
+  actualizarValoresConsulta(): void {
+    // Solo aplicar la lógica de patcheo en modo de solo lectura (consulta flow)
+    if (!this.esFormularioSoloLectura) {
+      return;
+    }
+
+    const HOY = moment().format('YYYY-MM-DD');
+    const FORM_VALUES = this.pagosDeDerechosForm.value;
+
+    // Si se selecciona un banco en la sección principal y justificación tiene valor
+    if (FORM_VALUES.banco && FORM_VALUES.justificacion) {
+      this.pagosDeDerechosForm.patchValue({
+        claveDeReferencia: 'valor',
+        cadenaDependencia: 'valor',
+        llaveDePago: 'valor',
+        fechaInicio: HOY,
+        importeDePago: 'valor',
+      });
+    }
+
+    // Si se selecciona un banco en la sección de revisión y justificación revisión tiene valor
+    if (FORM_VALUES.bancoRevision && FORM_VALUES.justificacionRevision) {
+      this.pagosDeDerechosForm.patchValue({
+        claveDeReferenciaRevision: 'valor',
+        cadenaDependenciaRevision: 'valor',
+        llaveDePagoRevision: 'valor',
+        fechaInicioRevision: HOY,
+        importeDePagoRevision: 'valor',
+      });
+    }
+  }
 
   /**
    * @method ngOnDestroy
