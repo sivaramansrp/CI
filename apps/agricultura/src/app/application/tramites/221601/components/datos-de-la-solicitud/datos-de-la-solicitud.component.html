@@ -440,7 +440,7 @@
           <label class="form-label">Número de lote:</label>
           <input class="form-control" formControlName="numeroLote" />
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 custom-ms">
           <h6 class="fw-bold">Rango de fechas:</h6>
           <app-input-radio id="rangoFecha" formControlName="rangoFecha" [radioOptions]="opcionesRangoFecha"
             [selectedValue]="mercanciaForm.get('rangoFecha')?.value || ''" [layout]="'vertical'"
@@ -470,7 +470,7 @@
         </div>
         <div class="row">
           <div class="col-md-4">
-            <label class="form-label">Fecha de elaboración o empaque o proceso</label>
+            <label class="form-label">Fecha de producción o sacrificio</label>
           </div>
           <div class="col-md-8">
             <div class="col-md-6">
@@ -487,7 +487,7 @@
         </div>
         <div class="row">
           <div class="col-md-4">
-            <label class="form-label">Fecha de elaboración o empaque o proceso</label>
+            <label class="form-label">Fecha de caducidad del producto o consumo preferente</label>
           </div>
           <div class="col-md-8">
             <div class="col-md-6">
