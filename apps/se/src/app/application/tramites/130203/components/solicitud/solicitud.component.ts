@@ -10,6 +10,7 @@ import { Tramite130203State, Tramite130203Store } from '../../estados/tramites/t
 import { Component } from '@angular/core';
 import { ExportacionDeDiamantesEnBrutoService } from '../../services/exportacion-de-diamantes-en-bruto.service';
 import { HttpClient } from '@angular/common/http';
+import { ID_PROCEDIMIENTO } from '../../constants/exportacion-de-diamantes-en-bruto.enum';
 import { map } from 'rxjs';
 
 import { OnDestroy } from '@angular/core';
@@ -173,6 +174,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   TEXTOS = TEXTOS;
 
   /**
+   * Identificador del procedimiento.
+   * @property {number} idProcedimiento
+   */
+  public idProcedimiento = ID_PROCEDIMIENTO;
+
+  /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
@@ -201,17 +208,21 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private exportacionDeDiamantesEnBrutoService: ExportacionDeDiamantesEnBrutoService,
     private tramite130203Store: Tramite130203Store,
     private tramite130203Query: Tramite130203Query,
-    private consultaioQuery: ConsultaioQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
     this.inicializarFormularios();
+    this.mostrarTabla = true;
       this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyed$),
-        map((seccionState)=>{
+        map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly; 
+          if (seccionState) {
+            this.obtenerTablaDatos();
+          }
         })
       )
-      .subscribe()
+      .subscribe();
   }
 
   /**
@@ -222,7 +233,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.opcionesDeBusqueda();
     this.configuracionFormularioSuscripciones();
     this.formularioTotalCount();
-    this.obtenerTablaDatos();
     this.fetchEntidadFederativa();
     this.fetchRepresentacionFederal();
     this.listaDePaisesDisponibles();
@@ -230,7 +240,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.tramite130203Query.mostrarTabla$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((mostrarTabla) => {
-        this.mostrarTabla = mostrarTabla;
+        this.mostrarTabla = !mostrarTabla;
       });
   }
 
@@ -304,8 +314,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.paisForm = this.fb.group({
       bloque: [this.seccionState?.bloque],
       usoEspecifico: [this.seccionState?.usoEspecifico, Validators.required],
-      justificacionImportacionExportacion: [this.seccionState?.justificacionImportacionExportacion, [Validators.required]],
+      justificacionImportacionExportacion: [
+        this.seccionState?.justificacionImportacionExportacion,
+        [Validators.required],
+      ],
       observaciones: [this.seccionState?.observaciones],
+      numeroPermisoImportacion: [this.seccionState?.numeroPermisoImportacion],
     });
 
     this.frmRepresentacionForm = this.fb.group({
@@ -399,6 +413,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
             justificacionImportacionExportacion:
               seccionState.justificacionImportacionExportacion,
             observaciones: seccionState.observaciones,
+            numeroPermisoImportacion: seccionState.numeroPermisoImportacion,
           });
 
           this.frmRepresentacionForm.patchValue({

@@ -67,6 +67,9 @@ export interface Tramite130203State {
   /** Observaciones adicionales. */
   observaciones: string;
 
+  /** Número de permiso de importación. */
+  numeroPermisoImportacion: string;
+
   /** Entidad relacionada con el trámite. */
   entidad: string;
 
@@ -156,6 +159,7 @@ export function createInitialState(): Tramite130203State {
     usoEspecifico: '',
     justificacionImportacionExportacion: '',
     observaciones: '',
+    numeroPermisoImportacion: '',
     entidad: '',
     representacion: '',
     nombreExportador: '',
