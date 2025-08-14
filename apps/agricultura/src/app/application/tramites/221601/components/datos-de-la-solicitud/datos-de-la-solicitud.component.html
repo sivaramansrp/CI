@@ -478,54 +478,55 @@
         <input class="form-control" formControlName="nombreLote" />
       </div>
       <div class="col-md-3">
-        <label class="form-label">Color/Pelaje:</label>
-        <input class="form-control" formControlName="codigoArancelario" />
-      </div>
-      <div class="col-md-3">
-        <label class="form-label">Edad del animal:</label>
-        <input class="form-control" formControlName="edadAnimal1" />
+        <h6 class="fw-bold">Rango de fecha:</h6>
+         <app-input-radio
+          [radioOptions]="tipoPersonaOptions"
+                                [isRequired]="true"
+                                formControlName="tipoPersona"
+                                [layout]="'vertical'"
+                                (valueChange)="cambiarRadioFisica($event)"
+                                ></app-input-radio>
       </div>
     </div>
-   <div class="row mb-3">
-      <div class="col-md-3">
-        <label class="form-label">Fase de desarrollo:</label>
-        <input class="form-control" formControlName="fasedeDesarrollo" />
-      </div>
-      <div class="col-md-3">
-        <label class="form-label">Función zootécnica:</label>
-        <input class="form-control" formControlName="funciónZootecnica" />
-      </div>
-      <div class="col-md-3">
-        <label class="form-label">Nombre de la mercancía:</label>
-        <input class="form-control" formControlName="nombredela" />
-      </div>
-   </div>
-    <div class="row mb-3">
-      <div class="col-md-3">
-        <label class="form-label custom-identificacion">Número de identificación:</label>
-        <input class="form-control" formControlName="numerodeIdentificacion" />
-      </div>
-      <div class="col-md-3">
-        <label class="form-label">Raza:</label>
-        <input class="form-control" formControlName="raza" />
-      </div>
-      <div class="col-md-3">
-        <label class="form-label">Nombre científico:</label>
-        <input class="form-control" formControlName="nombreCientifico" />
-      </div>
-   </div>
-   <div class="row mb-3">
-      <div class="col-md-3">
-        <app-catalogo-select
-          formControlName="sexo"
-          [catalogo]="veterinario"
-          [label]="'Sexo'" 
-          [placeholder]="'Seleccione una opción'">
-        </app-catalogo-select>
-        </div>
-        </div>
- 
-    <div class="col-md-12 mt-4 d-flex justify-content-end">
+  <div class="row mb-3">
+  <div class="col-md-6">
+    <label class="form-label">Fecha de elaboración o empaque o proceso</label></div>
+    <div class="col-md-6">
+      
+      <input-fecha
+                [datos]="INPUT_FECHA_CONFIGURACION "
+                [setFecha]="mercanciaForm.get('fecha')?.value || ''"
+                (valorCambiado)="cambioFechaFinal($event)" >
+              </input-fecha>
+    </div>
+  </div>
+
+<div class="row mb-3">
+  <div class="col-md-6">
+    <label class="form-label">Fecha de producción o sacrificio</label></div>
+    <div class="col-md-6">
+      
+      <input-fecha
+                [datos]="INPUT_FECHA_CONFIGURACION "
+                [setFecha]="mercanciaForm.get('fecha')?.value || ''"
+                (valorCambiado)="cambioFechaFinal($event)" >
+              </input-fecha>
+    </div>
+  </div>
+
+<div class="row mb-3">
+  <div class="col-md-6">
+    <label class="form-label">Fecha de caducidad del producto o consumo preferente</label></div>
+    <div class="col-md-6">
+      
+      <input-fecha
+                [datos]="INPUT_FECHA_CONFIGURACION "
+                [setFecha]="mercanciaForm.get('fecha')?.value || ''"
+                (valorCambiado)="cambioFechaFinal($event)" >
+              </input-fecha>
+    </div>
+  </div>
+<div class="col-md-12 mt-4 d-flex justify-content-end">
       <button class="btn btn-primary" type="button" (click)="cerrarModal()">Eliminar detalle</button>
       <button class="btn btn-primary ms-3" type="submit" (click)="guardarMercancia()">Agregar detalle</button>
       <button class="btn btn-primary ms-3" type="submit">Carga por archivo</button>

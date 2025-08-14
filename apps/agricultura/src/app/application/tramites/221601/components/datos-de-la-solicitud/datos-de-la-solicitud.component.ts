@@ -4,8 +4,8 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { CAPTURA_MERCANCIA, DATOS_SOLICITUD, Mercancias, OPCIONES_DE_BOTON_DE_RADIO } from '@libs/shared/data-access-user/src/core/models/221601/zoosanitario.model';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFechaComponent, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { CAPTURA_MERCANCIA, DATOS_SOLICITUD, Mercancias, OPCIONES_DE_BOTON_DE_RADIO, PreOperativo } from '@libs/shared/data-access-user/src/core/models/221601/zoosanitario.model';
 import { Solicitud221601State, Tramite221601Store } from '../../../../estados/tramites/tramite221601.store';
 import { CONFIGURATION_TABLAS_MERCANCIAS } from '@libs/shared/data-access-user/src/core/models/221601/zoosanitario.model';
 import { CommonModule } from '@angular/common';
@@ -15,6 +15,9 @@ import { Tramite221601Query } from '../../../../estados/queries/tramite221601.qu
 import realizar from '@libs/shared/theme/assets/json/221601/zoosanitario.json';
 
 import { ModalComponent } from '../modal/modal.component';
+import { ZoosanitarioService } from '../../service/zoosanitario.service';
+
+import { INPUT_FECHA_CONFIGURACION } from '@libs/shared/data-access-user/src/core/enums/221601/fecha.enum';
 
 
 /**
@@ -51,7 +54,8 @@ import { ModalComponent } from '../modal/modal.component';
     AlertComponent,
     CommonModule,
     InputRadioComponent,
-    ModalComponent
+    ModalComponent,
+    InputFechaComponent
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrls: ['./datos-de-la-solicitud.component.scss']
@@ -87,9 +91,22 @@ import { ModalComponent } from '../modal/modal.component';
  */
 
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+
+
+   /**
+   * property tipoPersonaOptions
+   * description Opciones para el tipo de persona (física o moral).
+   */
+  tipoPersonaOptions: PreOperativo[] = [];
   /** Modal para mostrar la información de terceros */
   
    showtercerosModal = false;
+
+    /**
+      * Constante para configurar el input de fecha.
+      * Define las propiedades del campo de entrada de fecha.
+      */
+       INPUT_FECHA_CONFIGURACION = INPUT_FECHA_CONFIGURACION;
 
 /** Indica si el formulario debe mostrarse en modo solo lectura.  
  *  Controla la habilitación o deshabilitación de los campos. */
@@ -192,7 +209,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private tramite221601Store: Tramite221601Store,
     private tramite221601Query: Tramite221601Query,
       private consultaioQuery: ConsultaioQuery,
-        private validacionesService: ValidacionesFormularioService,  
+        private validacionesService: ValidacionesFormularioService, 
+        private service: ZoosanitarioService 
   ) {
     // Constructor que inyecta las dependencias necesarias
     this.consultaioQuery.selectConsultaioState$
@@ -230,6 +248,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
    this.inicializarCombinacionFormulario();
+     this.cargarRadio();
   }
 
   showMercanciaModal = false;
@@ -258,16 +277,13 @@ mercanciaForm = this.fb.group({
   tipoPlanta: [''],
   plantaAutorizadaOrigen: [''],
   nombreLote: [''],
-  codigoArancelario: [''],
-  edadAnimal1: [''],
-  fasedeDesarrollo: [''],
-  funciónZootecnica: [''],
-  nombredela: [''],
-  numerodeIdentificacion: [''],
-  raza: [''],
-  nombreCientifico: [''],
-  sexo: [''],
-  tipoEspecie: [''], 
+  //  tipoPersona: [this.solicitudState?.tipoPersona || 'fisica', Validators.required],
+  tipoPersona: ['fisica', Validators.required],
+  fechaElaboracion: [''],
+  fechaProduccion: [''],
+  fechaCaducidad: [''],
+  tipoEspecie: [''],
+  fecha: [''], // <-- Add this line to define the 'fecha' control
 });
 
 
@@ -337,6 +353,14 @@ mercanciaForm = this.fb.group({
         // No se requiere ninguna acción en el formulario
       }
   }
+
+    cargarRadio(): void {
+    this.service.obtenerRadiooption()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
+        this.tipoPersonaOptions = resp;
+      });
+  }
   /**
  * Actualiza el estado del store `tramite221601Store` con los datos del formulario `MedioForm`.
  *
@@ -358,6 +382,41 @@ mercanciaForm = this.fb.group({
     this.tramite221601Store.update(UPDATED_FORM_DATA);
   }
   /**
+   * property fisica
+   * description Indica si el tipo de persona es física.
+   */
+  public fisica = false;
+
+  /**
+   * property moral
+   * description Indica si el tipo de persona es moral.
+   */
+  public moral = false;
+
+  /**
+   * method inputChecked
+   * description Cambia el estado de los checkboxes según el tipo de persona.
+   * param checkBoxName Nombre del checkbox seleccionado.
+   */
+  public inputChecked(checkBoxName: string): void {
+    if (checkBoxName === 'fisica') {
+      this.fisica = true;
+      this.moral = false;
+    } else {
+      this.fisica = false;
+      this.moral = true;
+    }
+  }
+  /**
+   * method cambiarRadioFisica
+   * description Cambia el estado del radio button según el valor seleccionado.
+   * param value Valor seleccionado.
+   */
+  cambiarRadioFisica(value: string | number): void {
+    const VALOR_SELECCIONADO = value as string;
+    this.inputChecked(VALOR_SELECCIONADO);
+  }
+  /**
    * Método que actualiza los valores del store con los datos del formulario.
    * 
    * @param form - Formulario reactivo con los datos actuales.
@@ -368,6 +427,42 @@ mercanciaForm = this.fb.group({
     const VALOR = form.get(campo)?.value;
     (this.tramite221601Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+
+   /**
+
+ * Método para cambiar la fecha final.
+
+ * @param nuevo_valor Nuevo valor de la fecha final.
+
+ */
+fechaFuturaSeleccionada = false;
+  cambioFechaFinal(nuevo_valor: string): void {
+    this.mercanciaForm.patchValue({
+      fecha: nuevo_valor,
+    });
+   this.tramite221601Store.setFecha(nuevo_valor);
+  this.mercanciaForm.get('fecha')?.setValue(nuevo_valor);
+
+  let seleccionada: Date | null = null;
+  if (nuevo_valor && nuevo_valor.includes('/')) {
+    const [DAY, MONTH, YEAR] = nuevo_valor.split('/').map(Number);
+    seleccionada = new Date(YEAR, MONTH - 1, DAY);
+  } else {
+    seleccionada = new Date(nuevo_valor); 
+  }
+
+  const HOY = new Date();
+  HOY.setHours(0, 0, 0, 0);
+
+  if (seleccionada && seleccionada > HOY) {
+    this.fechaFuturaSeleccionada = true;
+    this.mercanciaForm.get('fecha')?.setErrors({ futureDate: true });
+  } else {
+    this.fechaFuturaSeleccionada = false;
+    this.mercanciaForm.get('fecha')?.setErrors(null);
+  }
+  }
+
 /**
  * Método para abrir dialogo mercancías.
  * 
