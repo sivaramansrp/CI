@@ -712,7 +712,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    * @method borrarDatosPago
    */
   borrarDatosPago(): void {
-    // Reset the form to initial values
     this.pagosDeDerechosForm.patchValue({
       justificacion: '',
       claveDeReferencia: '',
@@ -729,11 +728,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
       fechaInicioRevision: '',
       importeDePagoRevision: '',
     });
-
-    // Reset date value
     this.fechaPagoDate = '';
-
-    // Update the store with empty values
     const VALOR = this.pagosDeDerechosForm.value;
     this.tramiteStore.setPagoDeDerechosTramite(VALOR);
   }

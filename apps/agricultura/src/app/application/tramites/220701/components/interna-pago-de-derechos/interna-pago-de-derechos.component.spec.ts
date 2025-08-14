@@ -173,14 +173,14 @@ describe('InternaPagoDeDerechosComponent', () => {
     component.formularioPago = component.formularioPago || {};
     component.formularioPago.patchValue = jest.fn();
     component.cambioFechaFinal({});
-      // expect(component.formularioPago.patchValue).toHaveBeenCalled();
+    expect(component.formularioPago.patchValue).toHaveBeenCalled();
   });
 
   it('should run #obtenerListaBanco()', async () => {
     component.importacionAcuiculturaServicio = component.importacionAcuiculturaServicio || {};
     component.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo = jest.fn().mockReturnValue(observableOf({}));
     component.obtenerListaBanco();
-      // expect(component.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo).toHaveBeenCalled();
+    expect(component.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo).toHaveBeenCalled();
   });
 
   it('should run #verificarEstadoDelBoton()', async () => {
@@ -189,14 +189,14 @@ describe('InternaPagoDeDerechosComponent', () => {
     component.importacionAcuiculturaServicio = component.importacionAcuiculturaServicio || {};
     component.importacionAcuiculturaServicio.actualizarFormaValida = jest.fn();
     component.verificarEstadoDelBoton();
-      // expect(component.importacionAcuiculturaServicio.actualizarFormaValida).toHaveBeenCalled();
+    expect(component.importacionAcuiculturaServicio.actualizarFormaValida).toHaveBeenCalled();
   });
 
   it('should run #obtenerListaJustificacion()', async () => {
     component.importacionAcuiculturaServicio = component.importacionAcuiculturaServicio || {};
     component.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo = jest.fn().mockReturnValue(observableOf({}));
     component.obtenerListaJustificacion();
-      // expect(component.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo).toHaveBeenCalled();
+    expect(component.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo).toHaveBeenCalled();
   });
 
   it('should run #setValoresStore()', async () => {
@@ -213,14 +213,14 @@ describe('InternaPagoDeDerechosComponent', () => {
   it('should run #actualizarValorAleatorio()', async () => {
     component.formularioPago = component.formularioPago || {};
     component.formularioPago.value = {
-      justificacion: {},
-      banco: {}
+      justificacion: 'some value',
+      banco: ''
     };
     component.formularioPago.patchValue = jest.fn();
     component.formularioPagoStore = component.formularioPagoStore || {};
-    component.formularioPagoStore.exentoPago = 'exentoPago';
+    component.formularioPagoStore.exentoPago = 'Si';
     component.actualizarValorAleatorio();
-      // expect(component.formularioPago.patchValue).toHaveBeenCalled();
+    expect(component.formularioPago.patchValue).toHaveBeenCalled();
   });
 
   it('should run #formatearFecha()', async () => {
