@@ -143,6 +143,11 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
     this.obtenerReglaSelectList();
     this.inicializarFormularioDesdeAlmacen();
     this.obtenerSectorSelectList();
+    if (this.esFormularioSoloLectura) {
+    this.formularioInfoRegistro.get('seleccionaLaModalidad')?.disable();
+  } else {
+    this.formularioInfoRegistro.get('seleccionaLaModalidad')?.enable();
+  }
   }
 
   /**
@@ -161,7 +166,7 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
 
           this.formularioInfoRegistro.patchValue({
             seleccionaLaModalidad: this.tramiteState.seleccionaLaModalidad || '',
-            seleccionarRegla: this.tramiteState.aduanaDeIngresoSelecion || '',
+            seleccionarRegla: this.tramiteState.seleccionarRegla || '',
             sector: this.tramiteState.sectorSelecion || '',
           });
         })

@@ -41,10 +41,10 @@
     <div class="row" *ngIf="isSelectedRegla">
         <div class="col-md-12">
             <div class="pull-right">
-                <button name="agregarServicio" (click)="agregarServiciosAmpliacion()" class="btn btn-primary mx-2">
+                <button name="agregarServicio" (click)="agregarServiciosAmpliacion()" class="btn btn-primary mx-2" [disabled]="esFormularioSoloLectura">
                     Agregar
                 </button>
-                <button name="eliminarServicio" (click)="eliminarServiciosGrid()" class="btn btn-danger">
+                <button name="eliminarServicio" (click)="eliminarServiciosGrid()" class="btn btn-danger" [disabled]="esFormularioSoloLectura">
                     Eliminar
                 </button>
 
