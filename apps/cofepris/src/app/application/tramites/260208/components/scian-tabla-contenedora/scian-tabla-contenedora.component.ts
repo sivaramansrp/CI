@@ -45,7 +45,7 @@ export class ScianTablaContenedoraComponent {
   obtenerSeleccionado(event: TablaScianConfig): void {
      this.tramite260208Store.update((state) => ({
       ...state,
-      scianConfigDatos: [event]
+      scianConfigDatos: [...state.scianConfigDatos, event]
     }))
   }
 }
