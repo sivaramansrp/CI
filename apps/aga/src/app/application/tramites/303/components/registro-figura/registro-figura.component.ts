@@ -6,6 +6,7 @@ import { Tramite303Store, Tramite303StoreService } from '../../../../core/estado
 import { AgenteAduanal } from '../../../../core/models/303/agente-aduanal.model';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { TipoFiguraSeleccionada } from '../../../../core/enums/303/figuras.enum';
 import { TipoFiguraService } from '../../../../core/services/303/tipo-figura.service';
 import { Tramite303Query } from '../../../../core/queries/tramite303.query';
 
@@ -99,7 +100,7 @@ export class RegistroFiguraComponent implements OnInit, OnDestroy {
       };
     }
     else {
-      if (this.tipoFiguraSeleccionada === '1') {
+      if (this.tipoFiguraSeleccionada === TipoFiguraSeleccionada.AgenteAduanal) {
         this.figuraService.consultaAgenteAduanal(NUMERO_PATENTE, NUMERO_RFC)
           .pipe(takeUntil(this.destroyNotifier$))
           .subscribe((figura) => {
@@ -126,7 +127,7 @@ export class RegistroFiguraComponent implements OnInit, OnDestroy {
             }
           });
       }
-      if (this.tipoFiguraSeleccionada === '2') {
+      if (this.tipoFiguraSeleccionada === TipoFiguraSeleccionada.ApoderadoAduanal) {
         this.figuraService.consultaApoderadoAduanal(NUMERO_PATENTE, NUMERO_RFC)
           .pipe(takeUntil(this.destroyNotifier$))
           .subscribe((figura) => {
@@ -180,18 +181,17 @@ export class RegistroFiguraComponent implements OnInit, OnDestroy {
    * Si los campos son válidos, agrega la figura a la lista de figuras y navega a la página de registro.
    */
   agregarFigura(): void {
-    if (this.tipoFiguraSeleccionada === '1' || this.tipoFiguraSeleccionada === '2') {
+    if (this.tipoFiguraSeleccionada === TipoFiguraSeleccionada.AgenteAduanal || this.tipoFiguraSeleccionada === TipoFiguraSeleccionada.ApoderadoAduanal) {
       const NOMBRE = this.FormFigura.get('nombreAgente')?.value?.trim();
       const APELLIDO_PATERNO = this.FormFigura.get('apellidoPaternoAgente')?.value?.trim();
       const APELLIDO_MATERNO = this.FormFigura.get('apellidoMaternoAgente')?.value?.trim();
       const PATENTE = this.FormFigura.get('patente')?.value?.trim();
-
       if (!NOMBRE || !APELLIDO_PATERNO || !APELLIDO_MATERNO || !PATENTE) {
         this.notificacionAlert();
         return;
       }
     }
-    if (this.tipoFiguraSeleccionada === '3') {
+    if (this.tipoFiguraSeleccionada === TipoFiguraSeleccionada.AgenciaAduanal) {
       const RAZON_SOCIAL = this.FormFigura.get('razonSocial')?.value?.trim();
       const PATENTE = this.FormFigura.get('idNumPatenteModal')?.value?.trim();
 

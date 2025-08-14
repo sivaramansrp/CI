@@ -42,7 +42,7 @@
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="claveControlUnico">Clave UCON*:
+              <label class="form-label" for="claveControlUnico">Clave UCON:
                 <i class="bi bi-question-circle-fill" style="margin-bottom: '5px'"></i></label>
               <input formControlName="claveControlUnico" value="" class="form-control" id="claveControlUnico"
                 placeholder="" type="text" appUppercase />
@@ -86,7 +86,7 @@
             <input class="form-check-input me-3" type="radio" name="tipoMercancia" formControlName="tipoMercancia"
              value="animales" id="certficacion_a" [disabled]="forma.get('datosDelaSolicitud')?.get('tipoMercancia')?.disabled ?? false" />
             <label class="form-label" for="certficacion_a">Animales Vivos</label>
-          </div>
+          </div> 
           <div class="col-md-12">
             <input class="form-check-input me-3" type="radio" name="tipoMercancia" formControlName="tipoMercancia"
               value="subproductos" id="certficacion_aa" [disabled]="forma.get('datosDelaSolicitud')?.get('tipoMercancia')?.disabled ?? false" />
