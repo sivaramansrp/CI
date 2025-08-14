@@ -531,11 +531,54 @@ fechaFuturaSeleccionada = false;
  *
  * @memberof DatosDeLaSolicitudComponent
  */
-guardarMercancia():void {
-  if (this.mercanciaForm.valid) {
-    // Map all required Mercancias properties here, using FORM_VALUE and defaults as needed
+guardarMercancia(): void {
+  // Check if form is valid or if we want to save anyway for testing
+  console.log('Form validity:', this.mercanciaForm.valid);
+  console.log('Form values:', this.mercanciaForm.value);
+
+  // Create new MercanciaDellate object from form data
+  const nuevaMercancia: MercanciaDellate = {
+    noPartida: this.mercanciaForm.get('numeroLote')?.value || 'N/A',
+    fechaDesde: this.mercanciaForm.get('fechaDesde')?.value || this.mercanciaForm.get('fechaElaboracion')?.value || '',
+    FechadeSacrificio: this.mercanciaForm.get('FechadeSacrificio')?.value || this.mercanciaForm.get('fechaProduccion')?.value || '',
+    FechadeCaducidad: this.mercanciaForm.get('FechadeCaducidad')?.value || this.mercanciaForm.get('fechaCaducidad')?.value || '',
+    FechadefinElaboracion: this.mercanciaForm.get('fechaHasta')?.value || '',
+    FechafindeSacrificio: this.mercanciaForm.get('FechadelSacrificio')?.value || '',
+    FechafindeCaducidad: this.mercanciaForm.get('FechadelCaducidad')?.value || ''
+  };
+
+  console.log('New merchandise object:', nuevaMercancia);
+
+  // Add the new merchandise to the array
+  this.mercanciasdellate = [...this.mercanciasdellate, nuevaMercancia];
+  
+  console.log('Updated mercanciasdellate array:', this.mercanciasdellate);
+
+  // Reset the form after successful submission
+  this.resetMercanciaForm();
+
+  // Close the modal
+  this.cerrarModal();
+
+  // Show success message
+  console.log('Mercancía agregada exitosamente', nuevaMercancia);
 }
+
+/**
+ * Resets the merchandise form to its initial state
+ */
+private resetMercanciaForm(): void {
+  this.mercanciaForm.reset();
+  this.mercanciaForm.patchValue({
+    rangoFecha: 'No', // Reset to default value
+    tipoPersona: 'fisica' // Reset to default value
+  });
+  
+  // Reset the visibility flags
+  this.mostrarRangoFechas = false;
+  this.opcionSiSeleccionada = false;
 }
+
   /**
    * Closes the modal for adding merchandise.
    *

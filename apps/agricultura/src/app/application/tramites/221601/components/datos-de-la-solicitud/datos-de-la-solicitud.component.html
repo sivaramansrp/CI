@@ -551,10 +551,12 @@
     <form>
       <div class="row">
         <h6 class="fw-bold">Detalle</h6>
-        <app-tabla-dinamica [configuracionTabla]="configuracionTablaDelLate" [datos]="mercanciasdellate"
-          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
-          [tipoSeleccionTabla]="checkbox"></app-tabla-dinamica>
-
+        <app-tabla-dinamica 
+          [configuracionTabla]="configuracionTablaDelLate" 
+          [datos]="mercanciasdellate"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
+          [tipoSeleccionTabla]="checkbox">
+        </app-tabla-dinamica>
         <nav aria-label="Page navigation example">
           <ul class="pagination justify-content-center">
             <li class="page-item"><a class="page-link">1</a></li>

@@ -324,7 +324,7 @@ export interface PreOperativo {
 export interface MercanciaDellate {
   noPartida: string;
   fechaDesde: string;
-  FechadeSacrificio: number;
+  FechadeSacrificio: string;
   FechadeCaducidad: string;
   FechadefinElaboracion: string;
   FechafindeSacrificio: string;
@@ -335,13 +335,12 @@ export interface MercanciaDellate {
  * Configuración de las columnas para la tabla de mercancías detalladas.
  */
 export const CONFIGURATION_TABLAS_MERCANCIASDELLATE: ConfiguracionColumna<MercanciaDellate>[] = [
-  { encabezado: 'Número de lote', clave:(item: MercanciaDellate) => item.noPartida, orden: 1 },
-   { encabezado: 'Fecha de elaboración o empaque o proceso', clave:(item: MercanciaDellate) => item.fechaDesde, orden: 1 },
-    { encabezado: 'Fecha de producción o sacrificio', clave:(item: MercanciaDellate) => item.FechadeSacrificio, orden: 1 },
-     { encabezado: 'Fecha de caducidad del producto o consumo preferente', clave:(item: MercanciaDellate) => item.FechadeCaducidad, orden: 1 },
-     { encabezado: 'Fecha fin de elaboración o empaque o proceso', clave:(item: MercanciaDellate) => item.FechadefinElaboracion, orden: 1 },
-     { encabezado: 'Fecha fin de producción o sacrificio', clave:(item: MercanciaDellate) => item.FechafindeSacrificio, orden: 1 },
-     { encabezado: 'Fecha fin de caducidad del producto o consumo preferente', clave:(item: MercanciaDellate) => item.FechafindeCaducidad, orden: 1 },
-]
+  { encabezado: 'Número de lote', clave: (item: MercanciaDellate) => item.noPartida, orden: 1 },
+  { encabezado: 'Fecha de elaboración o empaque o proceso', clave: (item: MercanciaDellate) => item.fechaDesde, orden: 2 },
+  { encabezado: 'Fecha de producción o sacrificio', clave: (item: MercanciaDellate) => item.FechadeSacrificio, orden: 3 },
+  { encabezado: 'Fecha de caducidad del producto o consumo preferente', clave: (item: MercanciaDellate) => item.FechadeCaducidad, orden: 4 },
+  { encabezado: 'Fecha fin de elaboración o empaque o proceso', clave: (item: MercanciaDellate) => item.FechadefinElaboracion, orden: 5 },
+  { encabezado: 'Fecha fin de producción o sacrificio', clave: (item: MercanciaDellate) => item.FechafindeSacrificio, orden: 6 },
+  { encabezado: 'Fecha fin de caducidad del producto o consumo preferente', clave: (item: MercanciaDellate) => item.FechafindeCaducidad, orden: 7 },
+];
 
-  
