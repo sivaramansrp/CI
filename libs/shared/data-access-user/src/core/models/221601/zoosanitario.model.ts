@@ -318,4 +318,30 @@ export interface PreOperativo {
   value: string;
 }
 
+/**
+ * Interfaz que representa los detalles de una mercancía.
+ */
+export interface MercanciaDellate {
+  noPartida: string;
+  fechaDesde: string;
+  FechadeSacrificio: number;
+  FechadeCaducidad: string;
+  FechadefinElaboracion: string;
+  FechafindeSacrificio: string;
+  FechafindeCaducidad: string;
+}
+
+/**
+ * Configuración de las columnas para la tabla de mercancías detalladas.
+ */
+export const CONFIGURATION_TABLAS_MERCANCIASDELLATE: ConfiguracionColumna<MercanciaDellate>[] = [
+  { encabezado: 'Número de lote', clave:(item: MercanciaDellate) => item.noPartida, orden: 1 },
+   { encabezado: 'Fecha de elaboración o empaque o proceso', clave:(item: MercanciaDellate) => item.fechaDesde, orden: 1 },
+    { encabezado: 'Fecha de producción o sacrificio', clave:(item: MercanciaDellate) => item.FechadeSacrificio, orden: 1 },
+     { encabezado: 'Fecha de caducidad del producto o consumo preferente', clave:(item: MercanciaDellate) => item.FechadeCaducidad, orden: 1 },
+     { encabezado: 'Fecha fin de elaboración o empaque o proceso', clave:(item: MercanciaDellate) => item.FechadefinElaboracion, orden: 1 },
+     { encabezado: 'Fecha fin de producción o sacrificio', clave:(item: MercanciaDellate) => item.FechafindeSacrificio, orden: 1 },
+     { encabezado: 'Fecha fin de caducidad del producto o consumo preferente', clave:(item: MercanciaDellate) => item.FechafindeCaducidad, orden: 1 },
+]
+
   

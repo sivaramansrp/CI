@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Subject, map, takeUntil } from 'rxjs';
 
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFechaComponent, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { CAPTURA_MERCANCIA, DATOS_SOLICITUD, Mercancias, OPCIONES_DE_BOTON_DE_RADIO, PreOperativo } from '@libs/shared/data-access-user/src/core/models/221601/zoosanitario.model';
+import { CAPTURA_MERCANCIA, CONFIGURATION_TABLAS_MERCANCIASDELLATE, DATOS_SOLICITUD, MercanciaDellate, Mercancias, OPCIONES_DE_BOTON_DE_RADIO, PreOperativo } from '@libs/shared/data-access-user/src/core/models/221601/zoosanitario.model';
 import { Solicitud221601State, Tramite221601Store } from '../../../../estados/tramites/tramite221601.store';
 import { CONFIGURATION_TABLAS_MERCANCIAS } from '@libs/shared/data-access-user/src/core/models/221601/zoosanitario.model';
 import { CommonModule } from '@angular/common';
@@ -161,10 +161,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   mercancias: Mercancias[] = realizar.mercancias;
 
+   /**
+   * Lista de mercancías detalladas (rellenar con datos válidos o dejar como array vacío si no existen datos).
+   */
+  mercanciasdellate: MercanciaDellate[] = [];
+
   /**
    * Configuración de las columnas para la tabla dinámica que muestra las mercancías.
    */
   configuracionTabla: ConfiguracionColumna<Mercancias>[] = CONFIGURATION_TABLAS_MERCANCIAS;
+
+ /**
+   * Configuración de las columnas para la tabla dinámica que muestra las mercancías.
+   */
+  configuracionTablaDelLate: ConfiguracionColumna<MercanciaDellate>[] = CONFIGURATION_TABLAS_MERCANCIASDELLATE;
 
   /**
 * Indica si se deben mostrar las opciones de prellenado en la interfaz de usuario.
