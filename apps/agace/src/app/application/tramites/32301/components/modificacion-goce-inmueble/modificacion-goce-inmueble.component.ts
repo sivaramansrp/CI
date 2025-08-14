@@ -177,6 +177,18 @@ export class ModificacionGoceInmuebleComponent
  * @type {TablaSeleccion}
  */
   seleccionTabla = TablaSeleccion.CHECKBOX;
+
+  /**
+   * Constructor del componente ModificacionGoceInmuebleComponent.
+   * 
+   * Inicializa los servicios necesarios y configura la suscripción al estado de Consultaio.
+   * 
+   * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
+   * @param {AvisoModifyService} AvisoModifyService - Servicio para manejar la modificación de avisos.
+   * @param {Tramite32301Store} store - Store para manejar el estado del trámite 32301.
+   * @param {Tramite32301Query} Tramite32301Query - Query para consultar el estado del trámite 32301.
+   * @param {ConsultaioQuery} consultaioQuery - Query para consultar el estado de Consultaio.
+   */
   constructor(
     private fb: FormBuilder,
     private AvisoModifyService: AvisoModifyService,

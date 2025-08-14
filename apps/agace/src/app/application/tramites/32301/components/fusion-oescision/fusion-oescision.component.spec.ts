@@ -231,7 +231,6 @@ describe('FusionOescisionComponent', () => {
     component.cargarDatosPersonaFusion();
     expect(component.AvisoModifyService.cargarDatosPersonaFusion).toHaveBeenCalled();
     expect(component.personaFusionEscisionDTO.patchValue).toHaveBeenCalled();
-    expect(component.formatFechaToInputDate).toHaveBeenCalled();
     expect(component.store.SetpersonaFusionEscisionDTO).toHaveBeenCalled();
   });
 
@@ -243,7 +242,6 @@ describe('FusionOescisionComponent', () => {
     component.ModelcargarDatosPersonaFusion();
     expect(component.AvisoModifyService.cargarDatosPersonaFusion).toHaveBeenCalled();
     expect(component.personaFusionEscisionModal.patchValue).toHaveBeenCalled();
-    expect(component.formatFechaToInputDate).toHaveBeenCalled();
   });
 
   it('should run #getGridsubFusionOescision()', async () => {
@@ -271,12 +269,6 @@ describe('FusionOescisionComponent', () => {
     component.miembroDeLaEmpresaBodyData = component.miembroDeLaEmpresaBodyData || {};
     component.miembroDeLaEmpresaBodyData = ['miembroDeLaEmpresaBodyData'];
     component.updatePagination();
-
-  });
-
-  it('should run #formatFechaToInputDate()', async () => {
-
-    component.formatFechaToInputDate('fecha');
 
   });
 

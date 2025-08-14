@@ -217,6 +217,12 @@ export class FusionOescisionComponent
       .subscribe();
   }
 
+  /**
+   * Getter para acceder al control de fecha del formulario.
+   * Utiliza el método `get` del formulario para obtener el control específico.
+   *
+   * @returns {FormControl} El control de fecha del formulario.
+   */
   get fechaControl(): FormControl {
   return this.formulario.get('personaFusionEscisionDTO.fecha') as FormControl;
 }
@@ -454,8 +460,8 @@ export class FusionOescisionComponent
             registroFederalDeContribuyentes: resp.registroFederalDeContribuyentes,
             denominacionORazonSocial: resp.denominacionORazonSocial,
             folioVucemUltimaCertificacion: resp.folioVucemUltimaCertificacion,
-            fechaInicioVigenciaUltimaCertificacion: this.formatFechaToInputDate(resp.fechaInicioVigenciaUltimaCertificacion),
-            fechaFinVigenciaUltimaCertificacion: this.formatFechaToInputDate(resp.fechaFinVigenciaUltimaCertificacion),
+            fechaInicioVigenciaUltimaCertificacion: FusionOescisionComponent.formatFechaToInputDate(resp.fechaInicioVigenciaUltimaCertificacion),
+            fechaFinVigenciaUltimaCertificacion: FusionOescisionComponent.formatFechaToInputDate(resp.fechaFinVigenciaUltimaCertificacion),
           });
           this.store.SetpersonaFusionEscisionDTO(resp);
         })
@@ -473,8 +479,8 @@ export class FusionOescisionComponent
             registroFederalDeContribuyentes: resp.registroFederalDeContribuyentes,
             denominacionORazonSocial: resp.denominacionORazonSocial,
             folioVucemUltimaCertificacion: resp.folioVucemUltimaCertificacion,
-            fechaInicioVigenciaUltimaCertificacion: this.formatFechaToInputDate(resp.fechaInicioVigenciaUltimaCertificacion),
-            fechaFinVigenciaUltimaCertificacion: this.formatFechaToInputDate(resp.fechaFinVigenciaUltimaCertificacion)
+            fechaInicioVigenciaUltimaCertificacion: FusionOescisionComponent.formatFechaToInputDate(resp.fechaInicioVigenciaUltimaCertificacion),
+            fechaFinVigenciaUltimaCertificacion: FusionOescisionComponent.formatFechaToInputDate(resp.fechaFinVigenciaUltimaCertificacion)
           });
         })
       )
@@ -531,8 +537,7 @@ export class FusionOescisionComponent
    * @param fecha - Fecha en formato 'YYYY/MM/DD'.
    * @returns Fecha formateada en 'YYYY-MM-DD'.
    */
-  // eslint-disable-next-line class-methods-use-this
-  formatFechaToInputDate(fecha: string): string {
+  static formatFechaToInputDate(fecha: string): string {
     // Convierte '2025/03/08' → '2025-03-08'
     if (fecha) {
       return fecha.replace(/\//g, '-');
