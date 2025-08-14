@@ -313,7 +313,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * @param control - Control del formulario
    * @returns Error de validación o null si es válido
    */
-  private static phoneValidator(control: any): any {
+  private static phoneValidator(control: import('@angular/forms').AbstractControl): { [key: string]: boolean } | null {
     if (!control.value) {
       return null; // Campo vacío es válido
     }
@@ -661,18 +661,18 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * @param event - Evento de input del elemento HTML
    * @memberof TercerosComponent
    */
-  onNumericInput(event: any): void {
-    const input = event.target;
-    const value = input.value;
-    const numericValue = value.replace(/[^0-9]/g, '');
-    
-    if (value !== numericValue) {
-      input.value = numericValue;
-      const controlName = input.getAttribute('formControlName');
-      if (controlName) {
-        this.datosPersonales.get(controlName)?.setValue(numericValue);
-        this.datosPersonales.get(controlName)?.markAsTouched();
-        this.datosPersonales.get(controlName)?.updateValueAndValidity();
+  onNumericInput(event: Event): void {
+    const INPUT = event.target as HTMLInputElement;
+    const VALUE = INPUT.value;
+    const NUMERICVALUE = VALUE.replace(/[^0-9]/g, '');
+
+    if (VALUE !== NUMERICVALUE) {
+      INPUT.value = NUMERICVALUE;
+      const CONTROLNAME = INPUT.getAttribute('formControlName');
+      if (CONTROLNAME) {
+        this.datosPersonales.get(CONTROLNAME)?.setValue(NUMERICVALUE);
+        this.datosPersonales.get(CONTROLNAME)?.markAsTouched();
+        this.datosPersonales.get(CONTROLNAME)?.updateValueAndValidity();
       }
     }
   }
