@@ -58,4 +58,66 @@ describe('HistorialInspeccionFisicaComponent', () => {
     fixture.detectChanges();
     expect(component.tablaFilaDatos).toEqual(TESTFILADATOS);
   });
+
+  it('should update tableData.tableHeader when tablaHeadData changes', () => {
+    const TESTHEADDATA = ['Col1', 'Col2', 'Col3'];
+    const changes = {
+      tablaHeadData: {
+        currentValue: TESTHEADDATA,
+        previousValue: [],
+        firstChange: false,
+        isFirstChange: () => false,
+      }
+    };
+    component.ngOnChanges(changes);
+    expect(component.tableData.tableHeader).toEqual(TESTHEADDATA);
+  });
+
+  it('should update tableData.tableBody when tablaFilaDatos changes', () => {
+    const TESTFILADATOS: HistorialInspeccionFisica[] = [
+      {
+        numeroPartidaMercancia: '111',
+        fraccionArancelaria: '0000.00.00',
+        nico: 'A',
+        cantidadUmt: '10',
+        cantidadInspeccion: '5',
+        saldoPendiente: '5',
+        fechaInspeccionString: '2024-01-01',
+      }
+    ];
+    const changes = {
+      tablaFilaDatos: {
+        currentValue: TESTFILADATOS,
+        previousValue: [],
+        firstChange: false,
+        isFirstChange: () => false,
+      }
+    };
+    component.ngOnChanges(changes);
+    expect(component.tableData.tableBody).toEqual(TESTFILADATOS);
+  });
+
+  it('should not update tableData if changes do not contain relevant keys', () => {
+    component.tableData.tableHeader = [];
+    component.tableData.tableBody = [];
+    const changes = {
+      unrelatedKey: {
+        currentValue: 'test',
+        previousValue: '',
+        firstChange: false,
+        isFirstChange: () => false,
+      }
+    };
+    component.ngOnChanges(changes);
+    expect(component.tableData.tableHeader).toEqual([]);
+    expect(component.tableData.tableBody).toEqual([]);
+  });
+
+  it('should handle empty changes object in ngOnChanges', () => {
+    component.tableData.tableHeader = [];
+    component.tableData.tableBody = [];
+    component.ngOnChanges({});
+    expect(component.tableData.tableHeader).toEqual([]);
+    expect(component.tableData.tableBody).toEqual([]);
+  });
 });
