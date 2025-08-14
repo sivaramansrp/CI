@@ -19,6 +19,7 @@ export interface ServicioInmex {
  */
 
 export interface Servicio {
+  clave?: string;
   descripionDelServicio?: string;
   descripcion?: string;
   tipode?: string;
@@ -112,6 +113,30 @@ export interface AnnexoUno{
          * Descripción: Etiqueta que se muestra como nombre del campo.
          */
         labelNombre: 'Fecha de expedición',
+      
+        /**
+         * Propiedad required
+         * Descripción: Indica si el campo es obligatorio.
+         */
+        required: true,
+      
+        /**
+         * Propiedad habilitado
+         * Descripción: Indica si el campo está habilitado para su edición.
+         */
+        habilitado: true,
+      }
+
+       /**
+   * Constante para configurar el input de fecha.
+   * Define las propiedades del campo de entrada de fecha.
+   */
+   export const INPUT_FECHA_CONFIGURACION = {
+        /**
+         * Propiedad labelNombre
+         * Descripción: Etiqueta que se muestra como nombre del campo.
+         */
+        labelNombre: 'Fecha de emisión del acta',
       
         /**
          * Propiedad required

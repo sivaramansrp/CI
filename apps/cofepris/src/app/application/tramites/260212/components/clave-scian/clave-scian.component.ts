@@ -1,17 +1,14 @@
+import { CatalogoResponse, ConsultaioQuery, TablaDinamicaComponent, TituloComponent, } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
-import { CatalogoResponse, CatalogoSelectComponent, ConsultaioQuery, TablaDinamicaComponent, TituloComponent, } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { SolicitudService } from '../../services/solicitud.service';
-
 import { map, takeUntil } from 'rxjs';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
+import { SolicitudService } from '../../services/solicitud.service';
 import { Subject } from 'rxjs';
-import { Tramite260212Store } from '../../estados/tramite260212.store';
-
 import { Tramite260212Query } from '../../estados/tramite260212.query';
-
+import { Tramite260212Store } from '../../estados/tramite260212.store';
 /**
  * Componente ClaveScian
  * Este componente es responsable de gestionar el formulario ClaveScian.
@@ -182,6 +179,7 @@ export class ClaveScianComponent implements OnInit, OnDestroy {
   getMunicipios(): void {
     const SELECTED_CLAVE = this.claveForm.get('clave')?.value;
     this.tramite260212Store.setClave(SELECTED_CLAVE);
+    this.claveForm.get('descripcion')?.setValue(1);
   }
 
   /**

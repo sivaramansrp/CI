@@ -96,6 +96,10 @@ export interface Tramite130121State {
    * Indica si se muestra la tabla.
    */
   mostrarTabla: boolean;
+
+  /** Datos del cuerpo de la tabla dinámica */
+  tablaDatos: PartidasDeLaMercanciaModelo[];
+  
   /** Descripción   acotacion */
   acotacion: string;
   /** Descripción del NICO */
@@ -107,6 +111,14 @@ export interface Tramite130121State {
    * @type {boolean}
    */
   manifesto: boolean;
+  /**
+   * Rango de días seleccionables.
+   */
+  rangoDias: string[];
+  /**
+   * Lista de fechas seleccionadas por el usuario.
+   */
+  seleccionada: string[];
 }
 
 /**
@@ -118,6 +130,7 @@ export function createInitialState(): Tramite130121State {
   return {
     filaSeleccionada: [],
     mostrarTabla: false,
+    tablaDatos: [],
     solicitud: 'Inicial',
     fraccion: '',
     umt: '',
@@ -140,7 +153,9 @@ export function createInitialState(): Tramite130121State {
     representacion: '1',
     acotacion: '',
     descripcionNico: '',
-    manifesto: false
+    manifesto: false,
+    rangoDias: [],
+    seleccionada: []
   };
 }
 /**

@@ -10,12 +10,12 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ElementRef, NO_ERRORS_SCHEMA } from '@angular/core';
 import { Modal } from 'bootstrap';
 
-describe('VehiculosComponent', () => {
-  let component: VehiculosComponent;
+describe('ComponenteVehiculos', () => {
+  let componente: VehiculosComponent;
   let fixture: ComponentFixture<VehiculosComponent>;
   let mockStore: any;
   let mockQuery: any;
-  let mockService: any;
+  let mockServicio: any;
   let mockValidaciones: any;
 
   beforeEach(async () => {
@@ -27,7 +27,7 @@ describe('VehiculosComponent', () => {
         datosUnidad: {},
       }),
     };
-    mockService = {
+    mockServicio = {
       obtenerPedimentoTabla: jest.fn().mockReturnValue(of({ datos: [] })),
       obtenerTipoDeVehiculo: jest.fn().mockReturnValue(of({ datos: [] })),
     };
@@ -51,50 +51,50 @@ describe('VehiculosComponent', () => {
         FormBuilder,
         { provide: Tramite40101Store, useValue: mockStore },
         { provide: Tramite40101Query, useValue: mockQuery },
-        { provide: modificarTerrestreService, useValue: mockService },
+        { provide: modificarTerrestreService, useValue: mockServicio },
         { provide: ValidacionesFormularioService, useValue: mockValidaciones },
         provideHttpClientTesting()
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(VehiculosComponent);
-    component = fixture.componentInstance;
-    component.tramiteState = {
+    componente = fixture.componentInstance;
+    componente.tramiteState = {
       datosVehiculo: {},
       datosUnidad: {},
     } as any;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('debería crear el componente', () => {
+    expect(componente).toBeTruthy();
   });
 
-  it('should select tab', () => {
-    const result = component.selectTab('unidadarrastre');
-    expect(component.selectedTab).toBe('Unidad de arrastre');
-    expect(result).toBe('unidadarrastre');
+  it('debería seleccionar pestaña', () => {
+    const resultado = componente.seleccionarPestana('unidadarrastre');
+    expect(componente.pestanaSeleccionada).toBe('Unidad de arrastre');
+    expect(resultado).toBe('unidadarrastre');
   });
 
-  it('should initialize forms', () => {
-    component.tramiteState = {
+  it('debería inicializar formularios', () => {
+    componente.tramiteState = {
       datosVehiculo: {},
       datosUnidad: {},
     } as any;
-    component.inicializarFormulario();
-    expect(component.vehiculoFormulario).toBeDefined();
-    expect(component.unidadFormulario).toBeDefined();
+    componente.inicializarFormulario();
+    expect(componente.vehiculoFormulario).toBeDefined();
+    expect(componente.unidadFormulario).toBeDefined();
   });
 
-  it('should validate form field', () => {
-    const form = component.vehiculoFormulario;
-    const result = component.isValid(form, 'numero');
+  it('debería validar campo del formulario', () => {
+    const formulario = componente.vehiculoFormulario;
+    const resultado = componente.isValid(formulario, 'numero');
     expect(mockValidaciones.isValid).toHaveBeenCalled();
-    expect(result).toBe(true);
+    expect(resultado).toBe(true);
   });
 
-  it('should add vehicle data', () => {
-    component.vehiculoFormulario = component.fb.group({
+  it('debería agregar datos del vehículo', () => {
+    componente.vehiculoFormulario = componente.fb.group({
       numero: ['123'],
       tipoDeVehiculo: ['tipo'],
       idDeVehiculo: ['id'],
@@ -112,14 +112,14 @@ describe('VehiculosComponent', () => {
       paisEmisor2daPlaca: ['pais2'],
       descripcion: ['desc'],
     });
-    component.closeModal = { nativeElement: { click: jest.fn() } } as any;
-    component.vehiculosTablaConfig.datos = [];
-    component.agregarVahiculodata();
-    expect(component.vehiculosTablaConfig.datos.length).toBe(1);
+    componente.cerrarModal = { nativeElement: { click: jest.fn() } } as any;
+    componente.vehiculosTablaConfig.datos = [];
+    componente.agregarVahiculodata();
+    expect(componente.vehiculosTablaConfig.datos.length).toBe(1);
   });
 
-    it('should update vehicle data', () => {
-    component.vehiculoFormulario = component.fb.group({
+    it('debería actualizar datos del vehículo', () => {
+    componente.vehiculoFormulario = componente.fb.group({
       numero: ['123'],
       tipoDeVehiculo: ['tipo'],
       idDeVehiculo: ['id'],
@@ -137,17 +137,17 @@ describe('VehiculosComponent', () => {
       paisEmisor2daPlaca: ['pais2'],
       descripcion: ['desc'],
     });
-    component.closeModal = { nativeElement: { click: jest.fn() } } as any;
-    component.vehiculosTablaConfig.datos = [{}as any];
-    component.editIndex = 0; 
-    component.agregarVahiculodata();
-    expect(component.vehiculosTablaConfig.datos.length).toBe(1);
-    expect(component.vehiculosTablaConfig.datos[0].numero).toBe('123');
+    componente.cerrarModal = { nativeElement: { click: jest.fn() } } as any;
+    componente.vehiculosTablaConfig.datos = [{}as any];
+    componente.indiceEdicion = 0; 
+    componente.agregarVahiculodata();
+    expect(componente.vehiculosTablaConfig.datos.length).toBe(1);
+    expect(componente.vehiculosTablaConfig.datos[0].numero).toBe('123');
    
   });
 
-  it('should add unidad data', () => {
-    component.unidadFormulario = component.fb.group({
+  it('debería agregar datos de unidad', () => {
+    componente.unidadFormulario = componente.fb.group({
       vinVehiculo: ['vin'],
       tipoDeUnidadArrastre: ['tipo'],
       idDeVehiculo: ['id'],
@@ -161,14 +161,14 @@ describe('VehiculosComponent', () => {
       paisEmisor2daPlaca: ['pais2'],
       descripcion: ['desc'],
     });
-    component.closeUnidadModal = { nativeElement: { click: jest.fn() } } as any;
-    component.unidadesTablaConfig.datos = [];
-    component.agregarUnidadData();
-    expect(component.unidadesTablaConfig.datos.length).toBe(1);
+    componente.cerrarUnidadModal = { nativeElement: { click: jest.fn() } } as any;
+    componente.unidadesTablaConfig.datos = [];
+    componente.agregarUnidadData();
+    expect(componente.unidadesTablaConfig.datos.length).toBe(1);
   });
 
-  it('should edit unidad data', () => {
-    component.unidadFormulario = component.fb.group({
+  it('debería editar datos de unidad', () => {
+    componente.unidadFormulario = componente.fb.group({
       vinVehiculo: ['vin'],
       tipoDeUnidadArrastre: ['tipo'],
       idDeVehiculo: ['id'],
@@ -182,42 +182,42 @@ describe('VehiculosComponent', () => {
       paisEmisor2daPlaca: ['pais2'],
       descripcion: ['desc'],
     });
-    component.closeUnidadModal = { nativeElement: { click: jest.fn() } } as any;
-    component.unidadesTablaConfig.datos = [{} as any];
-    const initialLength = component.unidadesTablaConfig.datos.length;
-    component.editUnidadIndex = 0;
-    component.agregarUnidadData();
-    expect(component.unidadesTablaConfig.datos.length).toBe(initialLength);
-    expect(component.unidadesTablaConfig.datos[0].vinVehiculo).toBe('vin');
+    componente.cerrarUnidadModal = { nativeElement: { click: jest.fn() } } as any;
+    componente.unidadesTablaConfig.datos = [{} as any];
+    const longitudInicial = componente.unidadesTablaConfig.datos.length;
+    componente.editarIndiceUnitario = 0;
+    componente.agregarUnidadData();
+    expect(componente.unidadesTablaConfig.datos.length).toBe(longitudInicial);
+    expect(componente.unidadesTablaConfig.datos[0].vinVehiculo).toBe('vin');
   });
 
 
-  it('should clear vehiculo form', () => {
-    component.vehiculoFormulario = component.fb.group({ test: ['value'] });
-    component.limpiarVahiculodata();
-    expect(component.vehiculoFormulario.value).toEqual({ test: null });
+  it('debería limpiar formulario de vehículo', () => {
+    componente.vehiculoFormulario = componente.fb.group({ test: ['valor'] });
+    componente.limpiarVahiculodata();
+    expect(componente.vehiculoFormulario.value).toEqual({ test: null });
   });
 
-  it('should clear unidad form', () => {
-    component.unidadFormulario = component.fb.group({ test: ['value'] });
-    component.limpiarUnidaddata();
-    expect(component.unidadFormulario.value).toEqual({ test: null });
+  it('debería limpiar formulario de unidad', () => {
+    componente.unidadFormulario = componente.fb.group({ test: ['valor'] });
+    componente.limpiarUnidaddata();
+    expect(componente.unidadFormulario.value).toEqual({ test: null });
   });
 
-  it('should open notification modal', () => {
-    component.abrirModal();
-    expect(component.nuevaNotificacion).toBeDefined();
-    expect(component.nuevaNotificacion.mensaje).toContain('agregado');
+  it('debería abrir modal de notificación', () => {
+    componente.abrirModal();
+    expect(componente.nuevaNotificacion).toBeDefined();
+    expect(componente.nuevaNotificacion.mensaje).toContain('agregado');
   });
 
-  it('should call cargarTipoDeVehiculo', () => {
-    component.cargarTipoDeVehiculo();
-    expect(mockService.obtenerTipoDeVehiculo).toHaveBeenCalled();
+  it('debería llamar cargarTipoDeVehiculo', () => {
+    componente.cargarTipoDeVehiculo();
+    expect(mockServicio.obtenerTipoDeVehiculo).toHaveBeenCalled();
   });
 
-  it('should call cargarPedimentoTabla', () => {
-    component.cargarPedimentoTabla();
-    expect(mockService.obtenerPedimentoTabla).toHaveBeenCalled();
+  it('debería llamar cargarPedimentoTabla', () => {
+    componente.cargarPedimentoTabla();
+    expect(mockServicio.obtenerPedimentoTabla).toHaveBeenCalled();
   });
 });
 
@@ -230,16 +230,16 @@ jest.mock('bootstrap', () => ({
   })),
 }));
 
-describe('VehiculosComponent - Selected Functions', () => {
-  let component: VehiculosComponent;
+describe('ComponenteVehiculos - Funciones Seleccionadas', () => {
+  let componente: VehiculosComponent;
   let fixture: ComponentFixture<VehiculosComponent>;
   let mockStore: jest.Mocked<Tramite40101Store>;
   let mockQuery: jest.Mocked<Tramite40101Query>;
-  let mockModificarService: jest.Mocked<modificarTerrestreService>;
-  let mockValidacionesService: jest.Mocked<ValidacionesFormularioService>;
+  let mockServicioModificar: jest.Mocked<modificarTerrestreService>;
+  let mockServicioValidaciones: jest.Mocked<ValidacionesFormularioService>;
   let mockModal: jest.Mocked<Modal>;
 
-  const mockTramiteState = {
+  const mockEstadoTramite = {
     datosVehiculo: {
       numero: '',
       tipoDeVehiculo: '',
@@ -261,7 +261,7 @@ describe('VehiculosComponent - Selected Functions', () => {
     datosUnidad: {
       vinVehiculo: '',
       tipoDeUnidadArrastre: '',
-      idDeVehiculo: '',
+      idDeVehiculoUnidad: '',
       numeroEconomico: '',
       numeroPlaca: '',
       paisEmisor: '',
@@ -285,15 +285,15 @@ describe('VehiculosComponent - Selected Functions', () => {
     } as unknown as jest.Mocked<Tramite40101Store>;
 
     mockQuery = {
-      selectSolicitud$: of(mockTramiteState),
+      selectSolicitud$: of(mockEstadoTramite),
     } as unknown as jest.Mocked<Tramite40101Query>;
 
-    mockModificarService = {
+    mockServicioModificar = {
       obtenerPedimentoTabla: jest.fn().mockReturnValue(of({ datos: [] })),
       obtenerTipoDeVehiculo: jest.fn().mockReturnValue(of({ datos: [] })),
     } as unknown as jest.Mocked<modificarTerrestreService>;
 
-    mockValidacionesService = {
+    mockServicioValidaciones = {
       isValid: jest.fn(),
     } as unknown as jest.Mocked<ValidacionesFormularioService>;
 
@@ -304,296 +304,296 @@ describe('VehiculosComponent - Selected Functions', () => {
         FormBuilder,
         { provide: Tramite40101Store, useValue: mockStore },
         { provide: Tramite40101Query, useValue: mockQuery },
-        { provide: modificarTerrestreService, useValue: mockModificarService },
-        { provide: ValidacionesFormularioService, useValue: mockValidacionesService },
+        { provide: modificarTerrestreService, useValue: mockServicioModificar },
+        { provide: ValidacionesFormularioService, useValue: mockServicioValidaciones },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(VehiculosComponent);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
 
-    component.tramiteState = mockTramiteState;
-    component.ngOnInit();
+    componente.tramiteState = mockEstadoTramite;
+    componente.ngOnInit();
   });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('eliminarPedimento', () => {
-    it('should clear vehiculos table data and reset edit index and form', () => {
-      component.vehiculosTablaConfig.datos = [{ numero: '1', tipoDeVehiculo: 'Camión', marca: 'Ford' } as any];
-      component.editIndex = 5;
-      const resetSpy = jest.spyOn(component.vehiculoFormulario, 'reset');
+  describe('eliminarFilaVehiculo', () => {
+    it('debería limpiar datos de tabla de vehículos y restablecer índice de edición y formulario', () => {
+      componente.vehiculosTablaConfig.datos = [{ numero: '1', tipoDeVehiculo: 'Camión', marca: 'Ford' } as any];
+      componente.indiceEdicion = 5;
+      const espiadeReinicio = jest.spyOn(componente.vehiculoFormulario, 'reset');
 
-      component.eliminarPedimento();
+      componente.eliminarFilaVehiculo();
 
-      expect(component.vehiculosTablaConfig.datos).toEqual([]);
-      expect(component.editIndex).toBeNull();
-      expect(resetSpy).toHaveBeenCalled();
+      expect(componente.vehiculosTablaConfig.datos).toEqual([]);
+      expect(componente.indiceEdicion).toBeNull();
+      expect(espiadeReinicio).toHaveBeenCalled();
     });
 
-    it('should handle empty table data without errors', () => {
-      component.vehiculosTablaConfig.datos = [];
-      component.editIndex = null;
-      const resetSpy = jest.spyOn(component.vehiculoFormulario, 'reset');
+    it('debería manejar datos de tabla vacía sin errores', () => {
+      componente.vehiculosTablaConfig.datos = [];
+      componente.indiceEdicion = null;
+      const espiadeReinicio = jest.spyOn(componente.vehiculoFormulario, 'reset');
 
-      expect(() => component.eliminarPedimento()).not.toThrow();
+      expect(() => componente.eliminarFilaVehiculo()).not.toThrow();
 
-      expect(component.vehiculosTablaConfig.datos).toEqual([]);
-      expect(component.editIndex).toBeNull();
-      expect(resetSpy).toHaveBeenCalled();
+      expect(componente.vehiculosTablaConfig.datos).toEqual([]);
+      expect(componente.indiceEdicion).toBeNull();
+      expect(espiadeReinicio).toHaveBeenCalled();
     });
 
-    it('should reset form even when form is already pristine', () => {
-      const resetSpy = jest.spyOn(component.vehiculoFormulario, 'reset');
-      component.vehiculoFormulario.reset();
+    it('debería restablecer formulario incluso cuando el formulario ya está limpio', () => {
+      const espiadeReinicio = jest.spyOn(componente.vehiculoFormulario, 'reset');
+      componente.vehiculoFormulario.reset();
 
-      component.eliminarPedimento();
+      componente.eliminarFilaVehiculo();
 
-      expect(resetSpy).toHaveBeenCalledTimes(2);
+      expect(espiadeReinicio).toHaveBeenCalledTimes(2);
     });
 
-    it('should handle multiple consecutive calls', () => {
-      component.vehiculosTablaConfig.datos = [{ numero: '1' } as any, { numero: '2' } as any];
-      component.editIndex = 1;
+    it('debería manejar múltiples llamadas consecutivas', () => {
+      componente.vehiculosTablaConfig.datos = [{ numero: '1' } as any, { numero: '2' } as any];
+      componente.indiceEdicion = 1;
 
-      component.eliminarPedimento();
-      component.eliminarPedimento();
-      component.eliminarPedimento();
+      componente.eliminarFilaVehiculo();
+      componente.eliminarFilaVehiculo();
+      componente.eliminarFilaVehiculo();
 
-      expect(component.vehiculosTablaConfig.datos).toEqual([]);
-      expect(component.editIndex).toBeNull();
+      expect(componente.vehiculosTablaConfig.datos).toEqual([]);
+      expect(componente.indiceEdicion).toBeNull();
     });
   });
 
-  describe('eliminarUnidadPedimento', () => {
-    it('should clear unidades table data and reset edit index and form', () => {
-      component.unidadesTablaConfig.datos = [{ vinVehiculo: 'VIN123', tipoDeUnidadArrastre: 'Remolque' } as any];
-      component.editUnidadIndex = 3;
-      const resetSpy = jest.spyOn(component.unidadFormulario, 'reset');
+  describe('eliminarFilaUnidad', () => {
+    it('debería limpiar datos de tabla de unidades y restablecer índice de edición y formulario', () => {
+      componente.unidadesTablaConfig.datos = [{ vinVehiculo: 'VIN123', tipoDeUnidadArrastre: 'Remolque' } as any];
+      componente.editarIndiceUnitario = 3;
+      const espiadeReinicio = jest.spyOn(componente.unidadFormulario, 'reset');
 
-      component.eliminarUnidadPedimento();
+      componente.eliminarFilaUnidad();
 
-      expect(component.unidadesTablaConfig.datos).toEqual([]);
-      expect(component.editUnidadIndex).toBeNull();
-      expect(resetSpy).toHaveBeenCalled();
+      expect(componente.unidadesTablaConfig.datos).toEqual([]);
+      expect(componente.editarIndiceUnitario).toBeNull();
+      expect(espiadeReinicio).toHaveBeenCalled();
     });
 
-    it('should handle empty unidades table data without errors', () => {
-      component.unidadesTablaConfig.datos = [];
-      component.editUnidadIndex = null;
-      const resetSpy = jest.spyOn(component.unidadFormulario, 'reset');
+    it('debería manejar datos de tabla de unidades vacía sin errores', () => {
+      componente.unidadesTablaConfig.datos = [];
+      componente.editarIndiceUnitario = null;
+      const espiadeReinicio = jest.spyOn(componente.unidadFormulario, 'reset');
 
-      expect(() => component.eliminarUnidadPedimento()).not.toThrow();
+      expect(() => componente.eliminarFilaUnidad()).not.toThrow();
 
-      expect(component.unidadesTablaConfig.datos).toEqual([]);
-      expect(component.editUnidadIndex).toBeNull();
-      expect(resetSpy).toHaveBeenCalled();
+      expect(componente.unidadesTablaConfig.datos).toEqual([]);
+      expect(componente.editarIndiceUnitario).toBeNull();
+      expect(espiadeReinicio).toHaveBeenCalled();
     });
 
-    it('should reset form when form has validation errors', () => {
-      component.unidadFormulario.get('vinVehiculo')?.setErrors({ required: true });
-      const resetSpy = jest.spyOn(component.unidadFormulario, 'reset');
+    it('debería restablecer formulario cuando el formulario tiene errores de validación', () => {
+      componente.unidadFormulario.get('vinVehiculo')?.setErrors({ required: true });
+      const espiadeReinicio = jest.spyOn(componente.unidadFormulario, 'reset');
 
-      component.eliminarUnidadPedimento();
+      componente.eliminarFilaUnidad();
 
-      expect(resetSpy).toHaveBeenCalled();
-      expect(component.editUnidadIndex).toBeNull();
+      expect(espiadeReinicio).toHaveBeenCalled();
+      expect(componente.editarIndiceUnitario).toBeNull();
     });
 
-    it('should handle large datasets efficiently', () => {
-      const largeDataset = Array.from({ length: 1000 }, (_, i) => ({
+    it('debería manejar grandes conjuntos de datos de manera eficiente', () => {
+      const conjuntoDatosGrande = Array.from({ length: 1000 }, (_, i) => ({
         vinVehiculo: `VIN${i}`,
-        tipoDeUnidadArrastre: `Type${i}`,
+        tipoDeUnidadArrastre: `Tipo${i}`,
       }));
-      component.unidadesTablaConfig.datos = largeDataset as any[];
-      component.editUnidadIndex = 999;
+      componente.unidadesTablaConfig.datos = conjuntoDatosGrande as any[];
+      componente.editarIndiceUnitario = 999;
 
-      const startTime = performance.now();
-      component.eliminarUnidadPedimento();
-      const endTime = performance.now();
+      const tiempoInicio = performance.now();
+      componente.eliminarFilaUnidad();
+      const tiempoFin = performance.now();
 
-      expect(endTime - startTime).toBeLessThan(10);
-      expect(component.unidadesTablaConfig.datos).toEqual([]);
-      expect(component.editUnidadIndex).toBeNull();
+      expect(tiempoFin - tiempoInicio).toBeLessThan(10);
+      expect(componente.unidadesTablaConfig.datos).toEqual([]);
+      expect(componente.editarIndiceUnitario).toBeNull();
     });
   });
 
-  describe('abiertoPedimento', () => {
-    it('should show modal when vehiculoModal is available', () => {
+  describe('abrirPedimento', () => {
+    it('debería mostrar modal cuando vehiculoModal está disponible', () => {
       const mockElementRef = {
         nativeElement: document.createElement('div'),
       } as ElementRef;
-      component.vehiculoModal = mockElementRef;
+      componente.vehiculoModal = mockElementRef;
 
-      component.abiertoPedimento();
+      componente.abrirPedimento();
 
       expect(Modal).toHaveBeenCalledWith(mockElementRef.nativeElement);
     });
 
-    it('should not throw error when vehiculoModal is undefined', () => {
-      component.vehiculoModal = undefined as any;
+    it('no debería lanzar error cuando vehiculoModal es undefined', () => {
+      componente.vehiculoModal = undefined as any;
 
-      expect(() => component.abiertoPedimento()).not.toThrow();
+      expect(() => componente.abrirPedimento()).not.toThrow();
       expect(Modal).not.toHaveBeenCalled();
     });
 
-    it('should not throw error when vehiculoModal is null', () => {
-      component.vehiculoModal = null as any;
+    it('no debería lanzar error cuando vehiculoModal es null', () => {
+      componente.vehiculoModal = null as any;
 
-      expect(() => component.abiertoPedimento()).not.toThrow();
+      expect(() => componente.abrirPedimento()).not.toThrow();
       expect(Modal).not.toHaveBeenCalled();
     });
 
-    it('should create new Modal instance each time', () => {
+    it('debería crear nueva instancia de Modal cada vez', () => {
       const mockElementRef = {
         nativeElement: document.createElement('div'),
       } as ElementRef;
-      component.vehiculoModal = mockElementRef;
+      componente.vehiculoModal = mockElementRef;
 
-      component.abiertoPedimento();
-      component.abiertoPedimento();
-      component.abiertoPedimento();
+      componente.abrirPedimento();
+      componente.abrirPedimento();
+      componente.abrirPedimento();
 
       expect(Modal).toHaveBeenCalledTimes(3);
     });
 
-    it('should create new unidadModal instance each time', () => {
+    it('debería crear nueva instancia de unidadModal cada vez', () => {
       const mockElementRef = {
         nativeElement: document.createElement('div'),
       } as ElementRef;
-      component.unidadModal = mockElementRef;
+      componente.unidadModal = mockElementRef;
 
-      component.abiertoPedimentoUnidad();
-      component.abiertoPedimentoUnidad();
-      component.abiertoPedimentoUnidad();
+      componente.abrirPedimentoUnidad();
+      componente.abrirPedimentoUnidad();
+      componente.abrirPedimentoUnidad();
 
       expect(Modal).toHaveBeenCalledTimes(3);
     });
 
-    it('should work with different DOM elements', () => {
-      const divElement = document.createElement('div');
-      const modalElement = document.createElement('modal');
+    it('debería funcionar con diferentes elementos DOM', () => {
+      const elementoDiv = document.createElement('div');
+      const elementoModal = document.createElement('modal');
 
-      const mockElementRef1 = { nativeElement: divElement } as ElementRef;
-      const mockElementRef2 = { nativeElement: modalElement } as ElementRef;
+      const mockElementRef1 = { nativeElement: elementoDiv } as ElementRef;
+      const mockElementRef2 = { nativeElement: elementoModal } as ElementRef;
 
-      component.vehiculoModal = mockElementRef1;
-      component.abiertoPedimento();
+      componente.vehiculoModal = mockElementRef1;
+      componente.abrirPedimento();
 
-      component.vehiculoModal = mockElementRef2;
-      component.abiertoPedimento();
+      componente.vehiculoModal = mockElementRef2;
+      componente.abrirPedimento();
 
-      expect(Modal).toHaveBeenCalledWith(divElement);
-      expect(Modal).toHaveBeenCalledWith(modalElement);
+      expect(Modal).toHaveBeenCalledWith(elementoDiv);
+      expect(Modal).toHaveBeenCalledWith(elementoModal);
     });
 
-    it('should handle truthy but invalid vehiculoModal values', () => {
-      const invalidValues = [
+    it('debería manejar valores truthy pero inválidos de vehiculoModal', () => {
+      const valoresInvalidos = [
         { nativeElement: null },
         { nativeElement: undefined },
-        { someOtherProperty: 'value' },
-        { nativeElement: 'string' },
+        { otraPropiedad: 'valor' },
+        { nativeElement: 'cadena' },
         { nativeElement: 123 },
       ];
 
-      invalidValues.forEach((invalidValue, index) => {
-        component.vehiculoModal = invalidValue as any;
+      valoresInvalidos.forEach((valorInvalido, indice) => {
+        componente.vehiculoModal = valorInvalido as any;
 
-        if (invalidValue.nativeElement) {
-          expect(() => component.abiertoPedimento()).not.toThrow();
+        if (valorInvalido.nativeElement) {
+          expect(() => componente.abrirPedimento()).not.toThrow();
         } else {
-          expect(() => component.abiertoPedimento()).not.toThrow();
+          expect(() => componente.abrirPedimento()).not.toThrow();
         }
       });
     });
   });
 
-  describe('Integration Tests', () => {
-    it('should work correctly when eliminarPedimento is called before abiertoPedimento', () => {
-      component.vehiculosTablaConfig.datos = [{ numero: '1' } as any];
-      component.editIndex = 1;
+  describe('Pruebas de Integración', () => {
+    it('debería funcionar correctamente cuando se llama eliminarFilaVehiculo antes de abrirPedimento', () => {
+      componente.vehiculosTablaConfig.datos = [{ numero: '1' } as any];
+      componente.indiceEdicion = 1;
       const mockElementRef = {
         nativeElement: document.createElement('div'),
       } as ElementRef;
-      component.vehiculoModal = mockElementRef;
+      componente.vehiculoModal = mockElementRef;
 
-      component.eliminarPedimento();
-      component.abiertoPedimento();
+      componente.eliminarFilaVehiculo();
+      componente.abrirPedimento();
 
-      expect(component.vehiculosTablaConfig.datos).toEqual([]);
-      expect(component.editIndex).toBeNull();
+      expect(componente.vehiculosTablaConfig.datos).toEqual([]);
+      expect(componente.indiceEdicion).toBeNull();
       expect(Modal).toHaveBeenCalled();
     });
 
-    it('should handle rapid consecutive calls to all three methods', () => {
+    it('debería manejar llamadas consecutivas rápidas a los tres métodos', () => {
       const mockElementRef = {
         nativeElement: document.createElement('div'),
       } as ElementRef;
-      component.vehiculoModal = mockElementRef;
-      component.vehiculosTablaConfig.datos = [{ numero: '1' } as any];
-      component.unidadesTablaConfig.datos = [{ vinVehiculo: 'VIN1' } as any];
+      componente.vehiculoModal = mockElementRef;
+      componente.vehiculosTablaConfig.datos = [{ numero: '1' } as any];
+      componente.unidadesTablaConfig.datos = [{ vinVehiculo: 'VIN1' } as any];
 
-      component.eliminarPedimento();
-      component.eliminarUnidadPedimento();
-      component.abiertoPedimento();
-      component.eliminarPedimento();
-      component.abiertoPedimento();
+      componente.eliminarFilaVehiculo();
+      componente.eliminarFilaUnidad();
+      componente.abrirPedimento();
+      componente.eliminarFilaVehiculo();
+      componente.abrirPedimento();
 
-      expect(component.vehiculosTablaConfig.datos).toEqual([]);
-      expect(component.unidadesTablaConfig.datos).toEqual([]);
-      expect(component.editIndex).toBeNull();
-      expect(component.editUnidadIndex).toBeNull();
+      expect(componente.vehiculosTablaConfig.datos).toEqual([]);
+      expect(componente.unidadesTablaConfig.datos).toEqual([]);
+      expect(componente.indiceEdicion).toBeNull();
+      expect(componente.editarIndiceUnitario).toBeNull();
       expect(Modal).toHaveBeenCalledTimes(2);
     });
   });
 
-  describe('Edge Cases and Error Handling', () => {
-    it('should handle component destruction during method execution', () => {
-      component.destroyNotifier$ = new Subject<void>();
-      const destroySpy = jest.spyOn(component.destroyNotifier$, 'next');
+  describe('Casos Límite y Manejo de Errores', () => {
+    it('debería manejar la destrucción del componente durante la ejecución del método', () => {
+      componente.destroyNotifier$ = new Subject<void>();
+      const destroySpy = jest.spyOn(componente.destroyNotifier$, 'next');
 
-      component.eliminarPedimento();
-      component.eliminarUnidadPedimento();
+      componente.eliminarFilaVehiculo();
+      componente.eliminarFilaUnidad();
 
-      component.destroyNotifier$.next();
-      component.destroyNotifier$.complete();
+      componente.destroyNotifier$.next();
+      componente.destroyNotifier$.complete();
 
       expect(() => {
-        component.eliminarPedimento();
-        component.eliminarUnidadPedimento();
+        componente.eliminarFilaVehiculo();
+        componente.eliminarFilaUnidad();
       }).not.toThrow();
     });
 
-    it('should maintain data integrity when forms are undefined', () => {
-      component.vehiculoFormulario = undefined as any;
-      component.unidadFormulario = undefined as any;
+    it('debería mantener la integridad de datos cuando los formularios son undefined', () => {
+      componente.vehiculoFormulario = undefined as any;
+      componente.unidadFormulario = undefined as any;
 
-      expect(() => component.eliminarPedimento()).toThrow();
-      expect(() => component.eliminarUnidadPedimento()).toThrow();
+      expect(() => componente.eliminarFilaVehiculo()).toThrow();
+      expect(() => componente.eliminarFilaUnidad()).toThrow();
     });
 
-    it('should handle memory constraints with large datasets', () => {
-      const hugeVehiculoDataset = Array.from({ length: 10000 }, (_, i) => ({ numero: `${i}` }));
-      const hugeUnidadDataset = Array.from({ length: 10000 }, (_, i) => ({ vinVehiculo: `VIN${i}` }));
+    it('debería manejar restricciones de memoria con grandes conjuntos de datos', () => {
+      const conjuntoHugeVehiculo = Array.from({ length: 10000 }, (_, i) => ({ numero: `${i}` }));
+      const conjuntoHugeUnidad = Array.from({ length: 10000 }, (_, i) => ({ vinVehiculo: `VIN${i}` }));
 
-      component.vehiculosTablaConfig.datos = hugeVehiculoDataset as any;
-      component.unidadesTablaConfig.datos = hugeUnidadDataset as any;
+      componente.vehiculosTablaConfig.datos = conjuntoHugeVehiculo as any;
+      componente.unidadesTablaConfig.datos = conjuntoHugeUnidad as any;
 
-      const vehiculoStartTime = performance.now();
-      component.eliminarPedimento();
-      const vehiculoEndTime = performance.now();
+      const tiempoInicioVehiculo = performance.now();
+      componente.eliminarFilaVehiculo();
+      const tiempoFinVehiculo = performance.now();
 
-      const unidadStartTime = performance.now();
-      component.eliminarUnidadPedimento();
-      const unidadEndTime = performance.now();
+      const tiempoInicioUnidad = performance.now();
+      componente.eliminarFilaUnidad();
+      const tiempoFinUnidad = performance.now();
 
-      expect(vehiculoEndTime - vehiculoStartTime).toBeLessThan(50);
-      expect(unidadEndTime - unidadStartTime).toBeLessThan(50);
-      expect(component.vehiculosTablaConfig.datos).toEqual([]);
-      expect(component.unidadesTablaConfig.datos).toEqual([]);
+      expect(tiempoFinVehiculo - tiempoInicioVehiculo).toBeLessThan(50);
+      expect(tiempoFinUnidad - tiempoInicioUnidad).toBeLessThan(50);
+      expect(componente.vehiculosTablaConfig.datos).toEqual([]);
+      expect(componente.unidadesTablaConfig.datos).toEqual([]);
     });
   });
 });

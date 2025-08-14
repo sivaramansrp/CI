@@ -16,6 +16,7 @@ describe('DatosGeneralesDeLaSolicitudComponent', () => {
     retiradaServiceMock = {
       getAduanaIngresara: jest.fn().mockReturnValue(of([])),
       getDetallesDelMercanciaDatos: jest.fn().mockReturnValue(of({})),
+      getPaisCatalogo: jest.fn().mockReturnValue(of({})),
     };
 
     validacionesServiceMock = {

@@ -1,9 +1,3 @@
-/**
- * Importa módulos y utilidades de Angular necesarios para formularios reactivos, validación y observables
- * @packageDocumentation
- * @module PagoDeDerechosComponent
- */
-
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { AlertComponent, Catalogo, REGEX_NUMERO_DECIMAL_2_DIGITOS, REGEX_PATRON_ALFANUMERICO, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -11,7 +5,7 @@ import { InputCheckComponent } from '@libs/shared/data-access-user/src/tramites/
 
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 
-import { Subject, map, takeUntil, } from 'rxjs';
+import { Subject,combineLatest, takeUntil } from 'rxjs';
 import { Tramite30401Store, Tramites30401State } from '../../estados/tramites30401.store';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery} from '@ng-mf/data-access-user';
@@ -99,25 +93,38 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private tramite30401Query: Tramite30401Query,
     private Servicio: RegistroEmpresasTransporteService,
     private consultaioQuery: ConsultaioQuery
-  ) {
-     this.consultaioQuery.selectConsultaioState$
-        .pipe(
-          takeUntil(this.destroyed$),
-          map((seccionState) => {
-           this.esFormularioSoloLectura = seccionState.readonly;
-           this.crearForm();
-          })
-        )
-        .subscribe();
-  }
+  ) {}
 
   /**
    * Hook de ciclo de vida para inicializar la lógica del componente y cargar datos.
    */
   ngOnInit(): void {
-    this.enPatchStoredFormData();
     this.obtenerBancoList();
-    this.inicializarEstadoFormulario();
+    this.inicializarComponenteConDatos();
+  }
+
+  /**
+   * Inicializa el componente esperando a que ambos observables tengan datos
+   */
+  private inicializarComponenteConDatos(): void {
+    combineLatest([
+      this.consultaioQuery.selectConsultaioState$,
+      this.tramite30401Query.selectTramite30401$
+    ]).pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe(([consultaState, tramiteState]) => {
+      const PREV_READONLY = this.esFormularioSoloLectura;
+      this.esFormularioSoloLectura = consultaState.readonly;
+      this.seccionState = tramiteState;
+
+      if (!this.pagoDeDerechosForm || PREV_READONLY !== this.esFormularioSoloLectura) {
+        this.crearForm();
+      } else if (this.pagoDeDerechosForm) {
+        this.actualizarValoresFormulario();
+      }
+
+      this.aplicarEstadoFormulario();
+    });
   }
 
   /**
@@ -156,7 +163,23 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         [Validators.requiredTrue],
       ],
 });
+  }
 
+  /**
+   * Actualiza los valores del formulario existente con los datos del estado
+   */
+  private actualizarValoresFormulario(): void {
+    if (this.pagoDeDerechosForm && this.seccionState) {
+      this.pagoDeDerechosForm.patchValue({
+        claveDeReferencia: this.seccionState.claveDeReferencia || '',
+        cadenaPagoDependencia: this.seccionState.cadenaPagoDependencia || '',
+        clave: this.seccionState.clave || '',
+        llaveDePago: this.seccionState.llaveDePago || '',
+        fecPago: this.seccionState.fecPago || '',
+        impPago: this.seccionState.impPago || '',
+        manifiestoDeclaracion: this.seccionState.manifiestoDeclaracion || ''
+      }, { emitEvent: false });
+    }
   }
 
   /**
@@ -165,11 +188,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * inicializa el formulario o guarda los datos del formulario.
    */
 inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario();
-    } else {
+       if (!this.pagoDeDerechosForm) {
       this.crearForm();
     }
+    this.aplicarEstadoFormulario();
   }
     /**
    * @method
@@ -184,11 +206,21 @@ inicializarEstadoFormulario(): void {
    * @returns {void}
    */
   guardarDatosFormulario(): void {
-    this.crearForm();
-    if (this.esFormularioSoloLectura) {
-      this.pagoDeDerechosForm.disable();
-    } else {
-      this.pagoDeDerechosForm.enable();
+   if (!this.pagoDeDerechosForm) {
+      this.crearForm();
+    }
+    this.aplicarEstadoFormulario();
+  }
+    /**
+   * Aplica el estado de solo lectura al formulario sin recrearlo
+   */
+  private aplicarEstadoFormulario(): void {
+    if (this.pagoDeDerechosForm) {
+      if (this.esFormularioSoloLectura) {
+        this.pagoDeDerechosForm.disable();
+      } else {
+        this.pagoDeDerechosForm.enable();
+      }
     }
   }
   /**

@@ -1,5 +1,8 @@
+import { Fabricante, Proveedor } from '../../shared/models/terceros-relacionados.model';
+import {ProductoTable, ScianTable } from '../../tramites/260601/models/aviso-model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+
 
 /**
  * Creacion del estado inicial para la interfaz de tramite 260601
@@ -347,6 +350,32 @@ export interface AvisoSanitarioState {
 
     /** Indica si el país del domicilio está inhabilitado. */
     inhabilitarPaisFabricante: boolean;
+
+        /**
+     * @property {Proveedor[]} proveedorTablaDatos
+     * @description
+     * Arreglo que contiene los datos de los proveedores relacionados con el trámite.
+     */
+    proveedorTablaDatos: Proveedor[];
+
+    /**
+     * @property {Fabricante[]} fabricanteTablaDatos
+     * @description
+     * Arreglo que contiene los datos de los fabricantes relacionados con el trámite.
+     */
+    fabricanteTablaDatos: Fabricante[];
+
+    /**
+     * @property {number} tabSeleccionado
+     * @description
+     * Índice de la pestaña actualmente seleccionada en el formulario del trámite.
+     * Permite controlar la navegación y el estado de la interfaz de usuario.
+     */
+    tabSeleccionado?: number;
+    /** Datos de SCIAN para la tabla. */
+    scianBodyData : ScianTable[];
+    /** Datos de productos para la tabla. */
+    productoBodyData:ProductoTable[];
 }
 
 /**
@@ -476,6 +505,11 @@ export function createInitialState(): AvisoSanitarioState {
         mostrarRfcFabricanteBuscarBoton: false,
         mostrarCurpFabricanteBuscarBoton: false,
         inhabilitarPaisFabricante: true,
+        proveedorTablaDatos: [],
+        fabricanteTablaDatos: [],
+        tabSeleccionado: 1,
+        scianBodyData: [],
+        productoBodyData: [],
     }
 }
 
@@ -1860,6 +1894,78 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
         this.update((state) => ({
             ...state,
             inhabilitarPais,
+        }));
+    }
+
+        /**
+     * @method updateProveedorTablaDatos
+     * @description
+     * Agrega nuevos proveedores al arreglo `proveedorTablaDatos` en el estado.
+     * Los proveedores recibidos se concatenan al arreglo existente.
+     * @param {Proveedor[]} newProveedores - Arreglo de proveedores a agregar.
+     * @returns {void}
+     */
+    public updateProveedorTablaDatos(newProveedores: Proveedor[]): void {
+        this.update((state) => ({
+            ...state,
+            proveedorTablaDatos: newProveedores,
+        }));
+    }
+
+    /**
+     * Actualiza la tabla de datos de SCIAN.
+     * @param scianBodyData Nuevo valor de la tabla de datos de SCIAN.
+     * @returns void
+     * @memberof ProductoStore
+     * */
+     
+    public setScianTabla(scianBodyData: ScianTable[]): void {
+        this.update((state) => ({
+            ...state,
+            scianBodyData,
+        }));
+    }
+
+    /**
+     * @method updateFabricanteTablaDatos
+     * @description
+     * Agrega nuevos fabricantes al arreglo `fabricanteTablaDatos` en el estado.
+     * Los fabricantes recibidos se concatenan al arreglo existente.
+     * @param {Fabricante[]} newFabricantes - Arreglo de fabricantes a agregar.
+     * @returns {void}
+     */
+    public updateFabricanteTablaDatos(newFabricantes: Fabricante[]): void {
+        this.update((state) => ({
+            ...state,
+            fabricanteTablaDatos: newFabricantes,
+        }));
+    }
+
+    /**
+     * @method updateTabSeleccionado
+     * @description
+     * Actualiza el índice de la pestaña actualmente seleccionada en el estado.
+     * Permite controlar la navegación y el estado de la interfaz de usuario.
+     * @param {number} tabSeleccionado - Índice de la pestaña a seleccionar.
+     * @returns {void}
+     */
+    public updateTabSeleccionado(tabSeleccionado: number): void {
+        this.update((state) => ({
+            ...state,
+            tabSeleccionado: tabSeleccionado,
+        }));
+    }
+
+    /**
+     * Actualiza la tabla de datos de productos.
+     * @param productoBodyData Nuevo valor de la tabla de datos de productos.
+     * @returns void
+     * @memberof ProductoStore
+     * */
+    public setProductoTabla(productoBodyData: ProductoTable[]): void {
+        this.update((state) => ({
+            ...state,
+             productoBodyData,
         }));
     }
 }

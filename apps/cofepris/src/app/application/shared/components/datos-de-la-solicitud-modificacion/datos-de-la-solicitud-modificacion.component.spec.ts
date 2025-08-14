@@ -212,4 +212,62 @@ describe('DatosDeLaSolicitudModificacionComponent', () => {
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
+
+  it('debería alternar colapsable en mostrar_colapsable', () => {
+    component.colapsable = false;
+    component.mostrar_colapsable();
+    expect(component.colapsable).toBe(true);
+    component.mostrar_colapsable();
+    expect(component.colapsable).toBe(false);
+  });
+
+  it('debería alternar colapsableDos en mostrar_colapsableDos', () => {
+    component.colapsableDos = false;
+    component.mostrar_colapsableDos();
+    expect(component.colapsableDos).toBe(true);
+    component.mostrar_colapsableDos();
+    expect(component.colapsableDos).toBe(false);
+  });
+
+  it('debería alternar colapsableTres en mostrar_colapsableTres', () => {
+    component.colapsableTres = false;
+    component.mostrar_colapsableTres();
+    expect(component.colapsableTres).toBe(true);
+    component.mostrar_colapsableTres();
+    expect(component.colapsableTres).toBe(false);
+  });
+
+  it('debería limpiar el formulario de mercancías en limpiarFormulario', () => {
+    component.formMercancias = new FormBuilder().group({
+      clasificacion: ['test'],
+      especificarClasificacionProducto: ['test'],
+      denominacionEspecifica: ['test'],
+      denominacionDistintiva: ['test'],
+      denominacionComun: ['test'],
+      tipoDeProducto: ['test'],
+      estadoFisico: ['test'],
+      fraccionArancelaria: ['test'],
+      descripcionFraccion: ['test'],
+      cantidadUMT: ['test'],
+      UMT: ['test'],
+      cantidadUMC: ['test'],
+      UMC: ['test'],
+      presentacion: ['test'],
+      numeroRegistro: ['test'],
+    });
+    const resetSpy = jest.spyOn(component.formMercancias, 'reset');
+    const pristineSpy = jest.spyOn(component.formMercancias, 'markAsPristine');
+    const untouchedSpy = jest.spyOn(component.formMercancias, 'markAsUntouched');
+    component.limpiarFormulario();
+    expect(resetSpy).toHaveBeenCalled();
+    expect(pristineSpy).toHaveBeenCalled();
+    expect(untouchedSpy).toHaveBeenCalled();
+  });
+
+  it('debería abrir el modal de agregar mercancía en agregarMercancia', () => {
+    const templateRefMock = {} as any;
+    (component as any)['modalService'] = { show: jest.fn() } as any;
+    component.agregarMercancia(templateRefMock);
+    expect((component as any)['modalService'].show).toHaveBeenCalledWith(templateRefMock, { class: 'modal-xl', });
+  });
 });

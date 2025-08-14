@@ -275,6 +275,7 @@ export class AcuicolaService {
     this.tramiteStore.setPuntoDeInspeccion(DATOS.puntoDeInspeccion);
     this.tramiteStore.setNombreInspector(DATOS.nombreInspector);
     this.tramiteStore.setHoraDeInspeccion(DATOS.horaDeInspeccion);
+    this.tramiteStore.setFechaDeInspeccion(DATOS.fechaDeInspeccion);
     this.tramiteStore.setPrimerApellido(DATOS.primerApellido);
     this.tramiteStore.setSegundoApellido(DATOS.segundoApellido);
     this.tramiteStore.setCantidadContenedores(DATOS.cantidadContenedores);

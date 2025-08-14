@@ -1,5 +1,5 @@
 {
-  "renovacion": true,
+  "renovacion": false,
   "homologacion": false,
   "numeroOficio": "OFICIO-123",
   "fechaInicio": "29/05/2025",
@@ -11,5 +11,7 @@
   "manifiesto1": true,
   "manifiesto2": true,
   "manifiesto3": true,
+  "manifiesto4": true,
+  "manifiesto5": true,
   "opcion": "si"
 }

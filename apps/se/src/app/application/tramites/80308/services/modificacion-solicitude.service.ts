@@ -3,9 +3,11 @@ import {
   Anexo,
   Bitacora,
   Complimentaria,
+  DatosImmex,
   DatosModificacion,
   DomicilioInfo,
   Federetarios,
+  FracciónArancelaria,
   Operacions,
 } from '../models/plantas-consulta.model';
 import { Observable, map } from 'rxjs';
@@ -114,4 +116,45 @@ export class ModificacionSolicitudeService {
       .pipe(map((res: any) => res.data));
   }
 
-}
+
+ /**
+   * Obtiene los datos del anexo desde un archivo JSON local.
+   * @returns Observable con arreglo de Anexo.
+   */
+  obtenerFraccion(): Observable<FracciónArancelaria[]> {
+    return this.http
+      .get<FracciónArancelaria[]>('assets/json/80308/fraccion.json')
+      .pipe(map((res: any) => res.data));
+  }
+
+  /**
+   * Obtiene los datos del anexo desde un archivo JSON local.
+   * @returns Observable con arreglo de Anexo.
+   */
+  obtenerImmex(): Observable<DatosImmex[]> {
+    return this.http
+      .get<DatosImmex[]>('assets/json/80308/immex.json')
+      .pipe(map((res: any) => res.data));
+  }
+
+
+/**
+     * Obtiene la lista de plantas desde un archivo JSON localizado en los activos.
+     * 
+     * @returns {Observable<Operacions[]>} Un observable que emite un arreglo de objetos `Operacions`.
+     */
+    obtenerPlanta(): Observable<Operacions[]> {
+      return this.http
+        .get<{data: Operacions[]}>('assets/json/80308/planta.json').pipe(map((res: {data: Operacions[]}) => res.data));
+    }
+
+     /**
+         * Obtiene una lista de servicios desde un archivo JSON local.
+         *
+         * @returns {Observable<Operacions[]>} Un observable que emite un arreglo de operaciones.
+         */
+        obtenerServicios(): Observable<Operacions[]> {
+          return this.http
+            .get<{data: Operacions[]}>('assets/json/80308/servicios.json').pipe(map((res: {data: Operacions[]}) => res.data));
+        }
+    }

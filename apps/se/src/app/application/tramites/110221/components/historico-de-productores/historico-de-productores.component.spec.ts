@@ -10,18 +10,18 @@ import { Component } from '@angular/core';
 import { HistoricoDeProductoresComponent } from './historico-de-productores.component';
 import { FormBuilder } from '@angular/forms';
 import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
-import { Tramite110222Store } from '../../estados/tramite110222.store';
-import { Tramite110222Query } from '../../estados/tramite110222.query';
+import { Tramite110221Store } from '../../estados/tramite110221.store';
+import { Tramite110221Query } from '../../estados/tramite110221.query';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 @Injectable()
 class MockValidarInicialmenteCertificadoService {}
 
 @Injectable()
-class MockTramite110222Store {}
+class MockTramite110221Store {}
 
 @Injectable()
-class MockTramite110222Query {}
+class MockTramite110221Query {}
 
 
 describe('HistoricoDeProductoresComponent', () => {
@@ -35,8 +35,8 @@ describe('HistoricoDeProductoresComponent', () => {
       providers: [
         FormBuilder,
         { provide: ValidarInicialmenteCertificadoService, useClass: MockValidarInicialmenteCertificadoService },
-        { provide: Tramite110222Store, useClass: MockTramite110222Store },
-        { provide: Tramite110222Query, useClass: MockTramite110222Query }
+        { provide: Tramite110221Store, useClass: MockTramite110221Store },
+        { provide: Tramite110221Query, useClass: MockTramite110221Query }
       ]
     }).overrideComponent(HistoricoDeProductoresComponent, {
 

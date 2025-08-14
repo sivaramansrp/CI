@@ -79,7 +79,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * @method ngOnInit
    */
   ngOnInit(): void {
-    if (this.consultaState && this.consultaState.procedureId === '260209' &&
+    if (this.consultaState && this.consultaState.procedureId === '260208' &&
       this.consultaState.update) {
       this.guardarDatosFormulario();
     } else {
