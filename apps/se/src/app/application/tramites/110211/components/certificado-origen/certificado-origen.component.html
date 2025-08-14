@@ -1,4 +1,4 @@
-<app-certificado-de-origen 
+<app-certificado-de-origen #certificadoDeOrigenRef
     [operador]="operador"
     [tratadoAcuerdo]="estado || []"
     [paisBloqu]="pais || []"
@@ -13,10 +13,12 @@
     (formaValida)="setFormValida($event)"
     [datosForm]="formCertificadoValues"
     (formCertificadoEvent)="setValoresStore($event)"
-    [esFormularioSoloLectura]="esFormularioSoloLectura">
+    [esFormularioSoloLectura]="esFormularioSoloLectura"
+    [mercanciasDisponibles]="true"
+    [cargoDeMercancias]="true">
 </app-certificado-de-origen>
 
 <div class="modal fade" #modifyModal tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
-    <app-mercancia [datosSeleccionados]="datosSeleccionados" (guardarClicado)="abrirModificarModal($event)"
+    <app-mercancia #mercanciaRef [datosSeleccionados]="datosSeleccionados" (guardarClicado)="abrirModificarModal($event)"
         (cerrarClicado)="cerrarModificarModal()" [esFormularioSoloLectura]="esFormularioSoloLectura"></app-mercancia>
 </div>

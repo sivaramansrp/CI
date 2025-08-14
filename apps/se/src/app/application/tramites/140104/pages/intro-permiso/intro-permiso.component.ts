@@ -34,7 +34,7 @@ export class IntroPermisoComponent implements OnInit, OnDestroy{
    /**
    * Clase CSS para la alerta de información.
    */
-  infoAlert = 'alert-info';
+  infoAlert = 'alert-danger';
   /**
  * @description Array de objetos que definen los pasos del formulario.
  * Cada objeto contiene información sobre un paso específico,

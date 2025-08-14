@@ -19,7 +19,7 @@
             <div class="col-md-8 d-flex justify-content-end"></div>
         </div>
         <div class="row mt-5">
-            <div class="col-md-8 d-flex justify-content-end">
+            <div class="col-md-12 d-flex justify-content-end">
                 <button type="button" class="btn btn-primary me-3" data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
                     (click)="cancelar($event)">Cancelar</button>
@@ -33,7 +33,7 @@
         <form [formGroup]="detalleDelPermisoForm">
             <div class="row">
                 <div class="col-md-4">
-                    <label class="form-label" for="folioTramite">Folio Trámite:
+                    <label class="form-label" for="folioTramite">Folio trámite:
                     </label>
                     <input type="text" class="form-control" id="folioTramite" formControlName="folioTramite">
                 </div>

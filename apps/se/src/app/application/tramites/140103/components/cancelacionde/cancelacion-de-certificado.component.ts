@@ -432,8 +432,8 @@ const NUEVO_CUPO: Cupos = {
     mecanismoAsignacion: this.obtenerNombreDelCatalogo(this.mecanismo, FORM.value.mecanismo),
     tipoCupo: 'General' 
   };
-this.Cancelacion.push(NUEVO_CUPO);
- this.Cancelacion = [...this.Cancelacion];
+  
+this.Cancelacion = [...this.Cancelacion, NUEVO_CUPO];
 }
 /**
  * Devuelve la descripción de un elemento de catálogo dado su ID.
@@ -443,7 +443,8 @@ this.Cancelacion.push(NUEVO_CUPO);
  * @returns {string} Descripción del elemento encontrado, o cadena vacía si no existe.
  */
 obtenerNombreDelCatalogo(catalogo: Catalogo[], id: number | string): string {
-  const CATALOG_ITEM = catalogo.find(i => i.id === id);
-  return CATALOG_ITEM ? CATALOG_ITEM.descripcion : '';
+  const IDCADENA = String(id);
+  const CATALOG_ITEM = catalogo.find(i => String(i.id) === IDCADENA);
+  return CATALOG_ITEM?.descripcion ?? '';
 }
 }

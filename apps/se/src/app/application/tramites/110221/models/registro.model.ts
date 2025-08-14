@@ -72,63 +72,11 @@ export interface RespuestaConsulta {
    * Indica si la consulta fue exitosa.
    */
   success: boolean;
-  
-  /**
-   * Contiene los datos obtenidos de la consulta.
-   */
-  datos: ConsultaDatos;
-  
+
   /**
    * Mensaje asociado a la respuesta de la consulta.
    */
   message: string;
-}
-
-/**
- * Contiene los datos obtenidos de una consulta.
- */
-export interface ConsultaDatos {
-  tercerOperador: boolean;
-  tratado: string;
-  pais: string;
-  fraccionArancelaria: string;
-  numeroRegistro: string;
-  nombreComercial: string;
-  fechaInicial: string;
-  fechaFinal: string;
-  archivo: string;
-  fraccionMercanciaArancelaria: string;
-  nombreTecnico: string;
-  nombreComercialDelaMercancia: string;
-  criterioParaConferir: string;
-  nombreEnIngles: string;
-  cantidad: string;
-  umc: string;
-  valorDelaMercancia: string;
-  complementoDelaDescripcion: string;
-  tipoFactura: string;
-  fecha: string;
-  numeroFactura: string;
-  observaciones: string;
-  idioma: string;
-  entidad: string;
-  representacion: string;
-  casillaVerificacion: string;
-  justificacion: string;
-  nombre: string;
-  apellidoPrimer: string;
-  apellidoSegundo: string;
-  numeroFiscal: string;
-  razonSocial: string;
-  ciudad: string;
-  calle: string;
-  numeroLetra: string;
-  lada: string;
-  telefono: string;
-  fax: string;
-  correoElectronico: string;
-  nacion: string;
-  transporte: string;
 }
 
 /**

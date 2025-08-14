@@ -9,7 +9,6 @@ import { Solicitud32605Query } from '../../estados/solicitud32605.query';
 import { SolicitudService } from '../../services/solicitud.service';
 import { DomiciliosRfcSolicitanteTabla, InstalacionesInterface } from '../../models/oea-textil-registro.model';
 
-// Mock del módulo Bootstrap Modal
 jest.mock('bootstrap', () => {
   const mockModalInstance = {
     show: jest.fn(),
@@ -54,6 +53,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
   };
 
   const mockDomicilioData: DomiciliosRfcSolicitanteTabla = {
+    id: 1,
     InstalacionesPrincipales: 'Principal 1',
     tipoInstalacion: 'Tipo 1',
     coloniaCalleNumero: 'Calle 123',
@@ -65,7 +65,8 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     codigoPostal: '03100',
     acreditaUsoGoceInmueble: 'Si',
     perfilEmpresa: 'Grande',
-    reconocimientoMutuoCTPAT: 'Si'
+    reconocimientoMutuoCTPAT: 'Si',
+    perfilAlmacenGeneral: 'General'
   };
 
   beforeEach(async () => {
@@ -115,7 +116,6 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     component = fixture.componentInstance;
     formBuilder = TestBed.inject(FormBuilder);
 
-    // Simular elementos ViewChild
     component.registroDeDomiciliosRfcSolicitanteElemento = {
       nativeElement: document.createElement('div')
     } as ElementRef;
@@ -150,9 +150,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     });
 
     it('debería configurar el estado de solo lectura desde consultaioQuery', () => {
-      // Esta prueba verifica el comportamiento del constructor, no ngOnInit
-      // El estado readonly se establece en la suscripción del constructor
-      expect(component.esFormularioSoloLectura).toBe(false); // Inicialmente false del mock
+      expect(component.esFormularioSoloLectura).toBe(false);
     });
 
     it('debería inicializar activeTab como "parquevehicular"', () => {
@@ -226,7 +224,6 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
       const error = new Error('Error de red');
       
-      // Simular que el servicio devuelve un error
       mockOeaTextilRegistroService.getDomiciliosRegistrados.mockReturnValue(throwError(() => error));
       
       component.getDomiciliosRegistradosList();
@@ -253,7 +250,6 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
         { backdrop: false }
       );
       
-      // El limpiarFormulario se llama en un timeout, así que solo podemos verificar que el spy fue configurado
       expect(limpiarFormularioSpy).toBeDefined();
       
       limpiarFormularioSpy.mockRestore();
@@ -467,7 +463,6 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
       component.resetChildTableSelection = true;
       expect(component.resetChildTableSelection).toBe(true);
       
-      // Simular el reseteo automático
       setTimeout(() => {
         component.resetChildTableSelection = false;
         expect(component.resetChildTableSelection).toBe(false);
@@ -512,7 +507,6 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
       expect(formValue.coloniaCalleNumero).toBe('');
       expect(component.datosTablaModalSeleccionados).toEqual([]);
       
-      // Wait for the timeout to complete
       await new Promise(resolve => setTimeout(resolve, 100));
       expect(component.resetChildTableSelection).toBe(false);
     });
@@ -558,7 +552,6 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     it('debería manejar datosTablaModalSeleccionados undefined', () => {
       component.datosTablaModalSeleccionados = [];
       
-      // This should show the selection message
       component.enviarDialogData();
       
       expect(component.esHabilitarElDialogo).toBe(true);
@@ -586,7 +579,6 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     });
 
     it('debería manejar instalaciones undefined o null', () => {
-      // Test with empty array instead of undefined/null
       expect(() => {
         component.instalacionesSeleccionadas([]);
       }).not.toThrow();
@@ -633,13 +625,11 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     });
 
     it('debería actualizar registro existente correctamente', () => {
-      // Setup existing data
       component.DomiciliosRfcSolicitanteList = [
         { ...mockDomicilioData, id: 1 },
         { ...mockDomicilioData, id: 2 }
       ];
       
-      // Set form data for modification
       component.registroDomiciliosRfcSolicitanteForm.patchValue({
         id: 1,
         InstalacionesPrincipales: '1',
@@ -785,9 +775,9 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
       
       const formValues = component.registroDomiciliosRfcSolicitanteForm.value;
       expect(formValues.id).toBe(1);
-      expect(formValues.InstalacionesPrincipales).toBe('1'); // Converted from 'Sí'
+      expect(formValues.InstalacionesPrincipales).toBe('1');
       expect(formValues.coloniaCalleNumero).toBe(datosPrueba.coloniaCalleNumero);
-      expect(formValues.procesoProductivo).toBe('0'); // Converted from 'No'
+      expect(formValues.procesoProductivo).toBe('0');
     });
   });
 
@@ -845,7 +835,7 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
       const mockInstance = { hide: jest.fn() };
       (Modal.getInstance as jest.Mock).mockReturnValue(mockInstance);
       
-      component.ngAfterViewInit(); // Initialize modalElementsMap
+      component.ngAfterViewInit();
       component.cambiarEstadoModalPorKey('add');
       
       expect(Modal.getInstance).toHaveBeenCalled();
@@ -919,7 +909,6 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
       
       component.setValoresStore(form, 'domiciliosRegistrados');
       
-      // Should not call actualizarEstado for null values
       expect(mockTramite32609Store.actualizarEstado).not.toHaveBeenCalled();
     });
 
@@ -928,8 +917,8 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
       const control = form.get('domiciliosRegistrados');
       control?.setValue('valid-value');
       control?.markAsTouched();
-      control?.setErrors({ required: true }); // Simulate initial error
-      control?.setErrors(null); // Clear errors to make it valid
+      control?.setErrors({ required: true });
+      control?.setErrors(null);
       
       const markAsPristineSpy = jest.spyOn(control!, 'markAsPristine');
       
@@ -941,7 +930,6 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
 
   describe('🔄 Métodos de utilidad estáticos', () => {
     it('debería convertir valor de radio a texto correctamente', () => {
-      // Access private static method for testing
       const convertir = (DomiciliosRfcSolicitanteComponent as any).convertirValorRadioATexto;
       
       expect(convertir('1')).toBe('Sí');
@@ -952,7 +940,6 @@ describe('DomiciliosRfcSolicitanteComponent', () => {
     });
 
     it('debería convertir texto a valor de radio correctamente', () => {
-      // Access private static method for testing
       const convertir = (DomiciliosRfcSolicitanteComponent as any).convertirTextoAValorRadio;
       
       expect(convertir('Sí')).toBe('1');

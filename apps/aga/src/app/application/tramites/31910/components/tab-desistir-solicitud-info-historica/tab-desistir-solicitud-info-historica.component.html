@@ -8,10 +8,13 @@
               <textarea
                 rows="5"
                 cols="70"
+                class="justificacionTextArea"
                 formControlName="justificacion"
                 id="justificacion"
                 (change)="setValoresStore(solicitud,'justificacion')"
+                [ngClass]="{'border-danger': solicitud.get('justificacion')?.touched && solicitud.get('justificacion')?.invalid}"
               ></textarea>
+                  
                 <div *ngIf="solicitud.get('justificacion')?.touched && solicitud.get('justificacion')?.invalid" class="text-danger">
                   <div *ngIf="solicitud.get('justificacion')?.errors?.['required']">
                     El campo Justificación es obligatorio.

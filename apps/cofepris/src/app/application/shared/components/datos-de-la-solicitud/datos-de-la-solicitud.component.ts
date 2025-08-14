@@ -31,37 +31,35 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   AlertComponent,
-  CatalogoSelectComponent,
   InputRadioComponent,
   Notificacion,
   NotificacionesComponent,
   Pedimento,
-  REGEX_IMPORTE_PAGO,
   REGEX_RFC,
   REGEX_SOLO_DIGITOS,
   REGEX_SOLO_NUMEROS,
-  TablaDinamicaComponent,
-  TituloComponent
+  TablePaginationComponent,
 } from '@libs/shared/data-access-user/src';
 import {
   Catalogo,
   DatosDeTablaSeleccionados,
   DatosSolicitudFormState,
   OpcionConfig,
-  ScianConfig,
   TablaMercanciasConfig,
   TablaMercanciasDatos,
   TablaOpcionConfig,
-  TablaScianConfig
 } from '../../models/datos-solicitud.model';
 import {
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output
-} from '@angular/core';
+  CatalogoSelectComponent,
+  REGEX_IMPORTE_PAGO,
+  TablaDinamicaComponent,
+  TituloComponent
+} from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  ScianConfig,
+  TablaScianConfig
+} from '../../models/datos-solicitud.model';
 import { delay, takeUntil } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
@@ -83,6 +81,7 @@ import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json'
     NotificacionesComponent,
     TooltipModule,
     InputRadioComponent,
+    TablePaginationComponent
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
@@ -497,6 +496,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
+     this.crearDatosSolicitudForm();
+    this.actualizarDatosFormularioSolicitud();
     this.esManifesto =
       PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES.includes(
         this.idProcedimiento
@@ -506,8 +507,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     )
       ? true
       : false;
-    this.crearDatosSolicitudForm();
-    this.actualizarDatosFormularioSolicitud();
+   
     this.mostrarCorreoElectronico =
       PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC.includes(
         this.idProcedimiento

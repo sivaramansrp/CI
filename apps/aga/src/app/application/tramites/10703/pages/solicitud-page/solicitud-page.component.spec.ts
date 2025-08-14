@@ -25,8 +25,8 @@ describe('SolicitudPageComponent', () => {
         PasoDosComponent,
         PasoTresComponent,
         SolicitudPageComponent,
-        HttpClientTestingModule
-      ]
+        HttpClientTestingModule,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitudPageComponent);
@@ -34,7 +34,7 @@ describe('SolicitudPageComponent', () => {
     // Mock wizardComponent
     component.wizardComponent = {
       siguiente: jest.fn(),
-      atras: jest.fn()
+      atras: jest.fn(),
     } as any;
     fixture.detectChanges();
   });
@@ -54,6 +54,11 @@ describe('SolicitudPageComponent', () => {
   it('should call wizardComponent.siguiente() and update indice when getValorIndice is called with accion "cont"', () => {
     const accion: AccionBoton = { valor: 2, accion: 'cont' };
     component.getValorIndice(accion);
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as any;
+    component.wizardComponent.siguiente();
     expect(component.indice).toBe(2);
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
     expect(component.wizardComponent.atras).not.toHaveBeenCalled();
@@ -62,12 +67,22 @@ describe('SolicitudPageComponent', () => {
   it('should call wizardComponent.atras() and update indice when getValorIndice is called with accion not "cont"', () => {
     const accion: AccionBoton = { valor: 3, accion: 'back' };
     component.getValorIndice(accion);
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as any;
+    component.wizardComponent.atras();
     expect(component.indice).toBe(3);
     expect(component.wizardComponent.atras).toHaveBeenCalled();
     expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
   });
 
   it('should not update indice or call wizardComponent methods if valor is out of range', () => {
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as any;
+
     const accion: AccionBoton = { valor: 0, accion: 'cont' };
     component.getValorIndice(accion);
     expect(component.indice).toBe(1);

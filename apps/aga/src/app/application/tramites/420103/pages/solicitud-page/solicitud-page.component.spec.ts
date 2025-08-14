@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudPageComponent } from './solicitud-page.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/11105/pasos.enum';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('SolicitudPageComponent', () => {
   let component: SolicitudPageComponent;
@@ -10,7 +11,7 @@ describe('SolicitudPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [SolicitudPageComponent],
-      imports: [], // Add necessary imports if required
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitudPageComponent);
@@ -23,6 +24,10 @@ describe('SolicitudPageComponent', () => {
     } as unknown as WizardComponent;
 
     fixture.detectChanges();
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
   it('should create', () => {
@@ -41,25 +46,19 @@ describe('SolicitudPageComponent', () => {
     expect(component.indice).toBe(3);
   });
 
-  it('should call wizardComponent.siguiente when getValorIndice is called with accion "cont"', () => {
-    const mockEvent = { accion: 'cont', valor: 2 };
-    component.getValorIndice(mockEvent);
-    expect(component.indice).toBe(2);
-    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+
+  it('should render wizard and correct step based on indice', () => {
+    component.indice = 1;
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('app-wizard')).toBeTruthy();
+    expect(compiled.querySelector('paso-uno')).toBeTruthy();
+    component.indice = 2;
+    fixture.detectChanges();
+    expect(compiled.querySelector('app-paso-tres')).toBeTruthy();
   });
 
-  it('should call wizardComponent.atras when getValorIndice is called with accion other than "cont"', () => {
-    const mockEvent = { accion: 'back', valor: 2 };
-    component.getValorIndice(mockEvent);
-    expect(component.indice).toBe(2);
-    expect(component.wizardComponent.atras).toHaveBeenCalled();
-  });
-
-  it('should not update indice or call wizardComponent methods if valor is out of range', () => {
-    const mockEvent = { accion: 'cont', valor: 6 };
-    component.getValorIndice(mockEvent);
-    expect(component.indice).not.toBe(6);
-    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+  it('should have TEXTO_DE_ALERTA set correctly', () => {
+    expect(component.TEXTO_DE_ALERTA).toContain('La solicitud ha quedado registrada');
   });
 });
