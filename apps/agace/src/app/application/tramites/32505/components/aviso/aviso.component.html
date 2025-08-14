@@ -14,7 +14,7 @@
         </div>
         <div class="col-md-6">
           <div>
-            <app-catalogo-select class="optionsPais" [catalogo]="optionsPais" [placeholder]="'Selecciona un valor'" [required]="true" id="pais" formControlName="pais" [isDisabled]="soloLectura" [ngClass]="isValid(adaceForm,'pais') ? 'required' : ''" (change)="setValoresStore(adaceForm, 'pais', 'setPais')"></app-catalogo-select>
+            <app-catalogo-select class="optionsPais" [catalogo]="optionsPais" [required]="true" id="pais" formControlName="pais" [isDisabled]="soloLectura" [ngClass]="isValid(adaceForm,'pais') ? 'required' : ''" (change)="setValoresStore(adaceForm, 'pais', 'setPais')"></app-catalogo-select>
           </div>
         </div>
       </div>
@@ -24,7 +24,7 @@
         </div>
         <div class="col-md-6 ">
           <div>
-            <app-catalogo-select class="optionsAnio" [catalogo]="optionsAnio" [placeholder]="'Selecciona un valor'" [required]="true" id="anio" formControlName="anio" [isDisabled]="soloLectura" [ngClass]="isValid(adaceForm,'anio') ? 'required' : ''" (change)="setValoresStore(adaceForm, 'anio', 'setAnio')"></app-catalogo-select>
+            <app-catalogo-select class="optionsAnio" [catalogo]="optionsAnio" [required]="true" id="anio" formControlName="anio" [isDisabled]="soloLectura" [ngClass]="isValid(adaceForm,'anio') ? 'required' : ''" (change)="setValoresStore(adaceForm, 'anio', 'setAnio')"></app-catalogo-select>
           </div>
         </div>
       </div>
@@ -121,17 +121,17 @@
                       <input type="text" class="form-control" id="tipoVariante" formControlName="tipoVariante" [disabled]="soloLectura" [ngClass]="isValid(adaceForm,'tipoVariante') ? 'required' : ''" (change)="setValoresStore(adaceForm, 'anoModelo','setTipoVariante')" />
                     </div>
                     <div class="col-md-4 ">
-                      <app-catalogo-select class="optionCilindros" [label]="'No. de cilindros'" [placeholder]="'Selecciona un valor'" [catalogo]="optionCilindros" [required]="true" id="cilindros" formControlName="cilindros" [isDisabled]="soloLectura" [ngClass]="isValid(adaceForm,'cilindros') ? 'required' : ''" (change)="setValoresStore(adaceForm, 'cilindros', 'setCilindros')"></app-catalogo-select>
+                      <app-catalogo-select class="optionCilindros" [label]="'No. de cilindros'" [catalogo]="optionCilindros" [required]="true" id="cilindros" formControlName="cilindros" [isDisabled]="soloLectura" [ngClass]="isValid(adaceForm,'cilindros') ? 'required' : ''" (change)="setValoresStore(adaceForm, 'cilindros', 'setCilindros')"></app-catalogo-select>
                     </div>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-md-12">
                     <div class="col-md-4 mb-3">
-                      <app-catalogo-select class="optionCilindros" [label]="'No. de puertas'" [placeholder]="'Selecciona un valor'" [catalogo]="optionCilindros" [required]="true" id="cilindros" formControlName="puertas" [isDisabled]="soloLectura" [ngClass]="isValid(adaceForm,'puertas') ? 'required' : ''" (change)="setValoresStore(adaceForm, 'puertas', 'setPuertas')"></app-catalogo-select>
+                      <app-catalogo-select class="optionCilindros" [label]="'No. de puertas'" [catalogo]="optionCilindros" [required]="true" id="cilindros" formControlName="puertas" [isDisabled]="soloLectura" [ngClass]="isValid(adaceForm,'puertas') ? 'required' : ''" (change)="setValoresStore(adaceForm, 'puertas', 'setPuertas')"></app-catalogo-select>
                     </div>
                     <div class="col-md-4 mb-3">
-                      <app-catalogo-select class="optionCombustible" [label]="'Tipo de combustible'" [placeholder]="'Selecciona un valor'" [catalogo]="optionCombustible" [required]="true" id="combustible" formControlName="combustible" [isDisabled]="soloLectura" [ngClass]="isValid(adaceForm,'combustible') ? 'required' : ''" (change)="setValoresStore(adaceForm, 'combustible', 'setCombustible')"></app-catalogo-select>
+                      <app-catalogo-select class="optionCombustible" [label]="'Tipo de combustible'" [catalogo]="optionCombustible" [required]="true" id="combustible" formControlName="combustible" [isDisabled]="soloLectura" [ngClass]="isValid(adaceForm,'combustible') ? 'required' : ''" (change)="setValoresStore(adaceForm, 'combustible', 'setCombustible')"></app-catalogo-select>
                     </div>
                     <div class="col-md-4 mb-3">
                       <label>No. del título de propiedad*:</label>
@@ -150,7 +150,7 @@
                 <div class="row">
                   <div class="col-md-12">
                     <div class="col-md-6 mb-3">
-                      <app-catalogo-select class="paisIssued" [label]="'País que emitió el título de propiedad'" [placeholder]="'Selecciona un valor'" [catalogo]="paisIssued" [required]="true" id="paisEmitio" formControlName="paisEmitio" [isDisabled]="soloLectura" [ngClass]="isValid(adaceForm,'paisEmitio') ? 'required' : ''" (change)="setValoresStore(adaceForm, 'paisEmitio', 'setPaisEmitio')"></app-catalogo-select>
+                      <app-catalogo-select class="paisIssued" [label]="'País que emitió el título de propiedad'" [catalogo]="paisIssued" [required]="true" id="paisEmitio" formControlName="paisEmitio" [isDisabled]="soloLectura" [ngClass]="isValid(adaceForm,'paisEmitio') ? 'required' : ''" (change)="setValoresStore(adaceForm, 'paisEmitio', 'setPaisEmitio')"></app-catalogo-select>
                     </div>
                     <div class="col-md-6 mb-3">
                       <label>Estado o provincia de emisión del título de propiedad</label>
@@ -165,7 +165,7 @@
                       <input type="text" class="form-control" formControlName="procedencia" [disabled]="soloLectura" (change)="setValoresStore(adaceForm, 'procedencia', 'setProcedencia')" />
                     </div>
                     <div class="col-md-6 mb-3">
-                      <app-catalogo-select class="paisIssued" [label]="'Forma de adquisición del vehículo importado'" [placeholder]="'Selecciona un valor'" [catalogo]="paisIssued" [required]="true" id="vehiculoImportado" formControlName="paisEmitio" [isDisabled]="soloLectura" [ngClass]="isValid(adaceForm,'vehiculoImportado') ? 'required' : ''" (change)="setValoresStore(adaceForm, 'vehiculoImportado', 'setVehiculoImportado')"></app-catalogo-select>
+                      <app-catalogo-select class="paisIssued" [label]="'Forma de adquisición del vehículo importado'" [catalogo]="paisIssued" [required]="true" id="vehiculoImportado" formControlName="paisEmitio" [isDisabled]="soloLectura" [ngClass]="isValid(adaceForm,'vehiculoImportado') ? 'required' : ''" (change)="setValoresStore(adaceForm, 'vehiculoImportado', 'setVehiculoImportado')"></app-catalogo-select>
                     </div>
                   </div>
                 </div>
@@ -183,7 +183,7 @@
                 <div class="row">
                   <div class="col-md-12">
                     <div class="col-md-4">
-                      <app-catalogo-select class="paisIssued" [label]="'Aduana de importación'" [placeholder]="'Selecciona un valor'" [catalogo]="optionAduana" [required]="true" id="aduanaImportacion" formControlName="aduanaImportacion" [isDisabled]="soloLectura" [ngClass]="isValid(adaceForm,'aduanaImportacion') ? 'required' : ''" (change)="setValoresStore(adaceForm, 'aduanaImportacion', 'setAduanaImportacion')"></app-catalogo-select>
+                      <app-catalogo-select class="paisIssued" [label]="'Aduana de importación'" [catalogo]="optionAduana" [required]="true" id="aduanaImportacion" formControlName="aduanaImportacion" [isDisabled]="soloLectura" [ngClass]="isValid(adaceForm,'aduanaImportacion') ? 'required' : ''" (change)="setValoresStore(adaceForm, 'aduanaImportacion', 'setAduanaImportacion')"></app-catalogo-select>
                     </div>
                     <div class="col-md-4 ">
                       <label>Patente de importación*:</label>
@@ -214,7 +214,7 @@
                       <input type="text" class="form-control" formControlName="montoIGI" [disabled]="soloLectura" [ngClass]="isValid(adaceForm,'montoIGI') ? 'required' : ''" (change)="setValoresStore(adaceForm, 'montoIGI', 'setMontoIGI')" />
                     </div>
                     <div class="col-md-4">
-                      <app-catalogo-select class="paisIssued" [label]="'Forma de pago del IGI*:'" [placeholder]="'Selecciona un valor'" [catalogo]="optionAduana" [required]="true" id="formaPagoIGI" formControlName="formaPagoIGI" [isDisabled]="soloLectura" [ngClass]="isValid(adaceForm,'formaPagoIGI') ? 'required' : ''" (change)="setValoresStore(adaceForm, 'formaPagoIGI', 'setFormaPagoIGI')"></app-catalogo-select>
+                      <app-catalogo-select class="paisIssued" [label]="'Forma de pago del IGI*:'" [catalogo]="optionAduana" [required]="true" id="formaPagoIGI" formControlName="formaPagoIGI" [isDisabled]="soloLectura" [ngClass]="isValid(adaceForm,'formaPagoIGI') ? 'required' : ''" (change)="setValoresStore(adaceForm, 'formaPagoIGI', 'setFormaPagoIGI')"></app-catalogo-select>
                     </div>
                     <div class="col-md-4 ">
                       <label>Monto de DTA pagado*:</label>

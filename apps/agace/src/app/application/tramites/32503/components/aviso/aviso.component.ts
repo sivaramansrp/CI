@@ -4,6 +4,7 @@ import {
   InputFecha,
   InputFechaComponent,
   InputRadioComponent,
+  Pedimento,
   REGEX_ALFANUMERICO_CON_ESPACIOS,
   REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR,
   REGEX_IMPORTE_PAGO,
@@ -210,6 +211,11 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   public nuevaNotificacion!: Notificacion;
   /**
+   * Representa una nueva instancia de notificación asociada con el componente.
+   * Esta propiedad se utiliza para gestionar y almacenar datos de notificaciones.
+   */
+  public nuevaNotificacion1!: Notificacion;
+  /**
    * @property {ConsultaioState} consultaDatos
    * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
    */
@@ -232,11 +238,20 @@ export class AvisoComponent implements OnInit, OnDestroy {
   REGEX_NUMEROS = REGEX_NUMEROS;
   consultaDatos!: ConsultaioState;
   /**
+   * Lista de pedimentos asociados al aviso.
+   */
+  public pedimentos: Array<Pedimento> = [];
+  /**
    * @property {boolean} soloLectura
    * @description Indica si el formulario o los campos están en modo de solo lectura.
    * @default false
    */
   soloLectura: boolean = false;
+
+  /**
+   * Índice del elemento a eliminar.
+   */
+  public elementoParaEliminar!: number;
   /**
    * Constructor del componente.
    * 
@@ -267,6 +282,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.tramiteState = seccionState;
+          this.tablaDeDatos.datos = this.tramiteState.tablaDeDatos ?? [];
         })
       )
       .subscribe();
@@ -280,7 +296,10 @@ export class AvisoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.tablaDeDatos.datos = this.tramiteState.tablaDeDatos ?? [];
+
+    this.tablaDeDatos.datos = [];
+    this.tablaDeMercancia.datos = [];
+
     this.inicializarDomicilioFormulario();
     this.cargarFederativa();
     this.cargarMunicipio();
@@ -528,15 +547,15 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   inicializarDomicilioFormulario(): void {
     this.domicilioFormulario = this.fb.group({
-      nombreComercial: [this.tramiteState?.domicilioFormulario?.nombreComercial, [Validators.maxLength(250)]],
-      claveEntidadFederativa: [this.tramiteState?.domicilioFormulario?.claveEntidadFederativa, [Validators.required]],
-      claveDelegacionMunicipio: [this.tramiteState?.domicilioFormulario?.claveDelegacionMunicipio, [Validators.required]],
-      claveColonia: [this.tramiteState?.domicilioFormulario?.claveColonia, [Validators.required]],
-      calle: [this.tramiteState?.domicilioFormulario?.calle, [Validators.required, Validators.maxLength(250)]],
-      numeroExterior: [this.tramiteState?.domicilioFormulario?.numeroExterior, [Validators.required, Validators.maxLength(15), Validators.pattern(REGEX_IMPORTE_PAGO)]],
-      numeroInterior: [this.tramiteState?.domicilioFormulario?.numeroInterior, [Validators.maxLength(15), Validators.pattern(REGEX_IMPORTE_PAGO)]],
-      codigoPostal: [this.tramiteState?.domicilioFormulario?.codigoPostal, [Validators.required, Validators.maxLength(5), Validators.pattern(REGEX_SOLO_NUMEROS)]],
-      rfc: [this.tramiteState?.domicilioFormulario?.rfc, [Validators.required]],
+      nombreComercial: [this.tramiteState?.domicilioFormulario?.nombreComercial ?? '', [Validators.maxLength(250)]],
+      claveEntidadFederativa: [this.tramiteState?.domicilioFormulario?.claveEntidadFederativa ?? '', [Validators.required]],
+      claveDelegacionMunicipio: [this.tramiteState?.domicilioFormulario?.claveDelegacionMunicipio ?? '', [Validators.required]],
+      claveColonia: [this.tramiteState?.domicilioFormulario?.claveColonia ?? '', [Validators.required]],
+      calle: [this.tramiteState?.domicilioFormulario?.calle ?? '', [Validators.required, Validators.maxLength(250)]],
+      numeroExterior: [this.tramiteState?.domicilioFormulario?.numeroExterior ?? '', [Validators.required, Validators.maxLength(15), Validators.pattern(REGEX_IMPORTE_PAGO)]],
+      numeroInterior: [this.tramiteState?.domicilioFormulario?.numeroInterior ?? '', [Validators.maxLength(15), Validators.pattern(REGEX_IMPORTE_PAGO)]],
+      codigoPostal: [this.tramiteState?.domicilioFormulario?.codigoPostal ?? '', [Validators.required, Validators.maxLength(5), Validators.pattern(REGEX_SOLO_NUMEROS)]],
+      rfc: [this.tramiteState?.domicilioFormulario?.rfc ?? '', [Validators.required]],
     });
   }
   /**
@@ -550,15 +569,15 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   inicializarMercanciaFormulario(): void {
     this.mercanciaFormulario = this.fb.group({
-      claveFraccionArancelaria: [this.tramiteState?.mercanciaFormulario?.claveFraccionArancelaria, Validators.required],
-      nico: [this.tramiteState?.mercanciaFormulario?.nico, [Validators.required, Validators.maxLength(2), Validators.pattern(REGEX_SOLO_NUMEROS)]],
-      cantidad: [this.tramiteState?.mercanciaFormulario?.cantidad, [Validators.required, Validators.pattern(REGEX_NUMEROS_USD)]],
-      claveUnidadMedida: [this.tramiteState?.mercanciaFormulario?.claveUnidadMedida, Validators.required],
-      valorUSD: [this.tramiteState?.mercanciaFormulario?.valorUSD, [Validators.required, Validators.pattern(REGEX_NUMEROS_USD)]],
-      descripcionMercancia: [this.tramiteState?.mercanciaFormulario?.descripcionMercancia, [Validators.required, Validators.maxLength(250)]],
-      descripcionProceso: [this.tramiteState?.mercanciaFormulario?.descripcionProceso, [Validators.required, Validators.maxLength(250)]],
-      numPedimentoExportacion: [this.tramiteState?.mercanciaFormulario?.numPedimentoExportacion, [Validators.required, Validators.maxLength(15)]],
-      numPedimentoImportacion: [this.tramiteState?.mercanciaFormulario?.numPedimentoImportacion, [Validators.required, Validators.maxLength(15)]],
+      claveFraccionArancelaria: [this.tramiteState?.mercanciaFormulario?.claveFraccionArancelaria || '', Validators.required],
+      nico: [this.tramiteState?.mercanciaFormulario?.nico || '', [Validators.required, Validators.maxLength(2), Validators.pattern(REGEX_SOLO_NUMEROS)]],
+      cantidad: [this.tramiteState?.mercanciaFormulario?.cantidad || '', [Validators.required, Validators.pattern(REGEX_NUMEROS_USD)]],
+      claveUnidadMedida: [this.tramiteState?.mercanciaFormulario?.claveUnidadMedida || '', Validators.required],
+      valorUSD: [this.tramiteState?.mercanciaFormulario?.valorUSD || '', [Validators.required, Validators.pattern(REGEX_NUMEROS_USD)]],
+      descripcionMercancia: [this.tramiteState?.mercanciaFormulario?.descripcionMercancia || '', [Validators.required, Validators.maxLength(250)]],
+      descripcionProceso: [this.tramiteState?.mercanciaFormulario?.descripcionProceso || '', [Validators.required, Validators.maxLength(250)]],
+      numPedimentoExportacion: [this.tramiteState?.mercanciaFormulario?.numPedimentoExportacion || '', [Validators.required, Validators.maxLength(15)]],
+      numPedimentoImportacion: [this.tramiteState?.mercanciaFormulario?.numPedimentoImportacion || '', [Validators.required, Validators.maxLength(15)]],
     });
   }
   /**
@@ -617,27 +636,35 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @method eliminarMercancia
    * @description Método para eliminar las filas seleccionadas de la tabla de mercancías.
    * 
-   * - Filtra los datos de la tabla para excluir las filas seleccionadas.
-   * - Limpia la lista de filas seleccionadas.
+   * - Muestra un modal de confirmación antes de eliminar.
+   * - Solo elimina si hay filas seleccionadas.
    *
    * @returns {void}
    */
   eliminarMercancia(): void {
-    this.tablaDeMercancia.datos = this.tablaDeMercancia.datos.filter((ele) => !this.filaSeleccionadaMercanciaLista.includes(ele));
-    this.filaSeleccionadaMercanciaLista = [];
+    if (this.filaSeleccionadaMercanciaLista.length === 0) {
+      return;
+    }
+    
+    this.elementoParaEliminar = 1;
+    this.eliminarModal();
   }
   /**
    * @method eliminarDomicilio
    * @description Método para eliminar las filas seleccionadas de la tabla de domicilios.
    * 
-   * - Filtra los datos de la tabla para excluir las filas seleccionadas.
-   * - Limpia la lista de filas seleccionadas.
+   * - Muestra un modal de confirmación antes de eliminar.
+   * - Solo elimina si hay filas seleccionadas.
    *
    * @returns {void}
- */
+   */
   eliminarDomicilio(): void {
-    this.tablaDeDatos.datos = this.tablaDeDatos.datos.filter((ele) => !this.filaSeleccionadaLista.includes(ele));
-    this.filaSeleccionadaLista = [];
+    if (this.filaSeleccionadaLista.length === 0) {
+      return;
+    }
+    
+    this.elementoParaEliminar = 2;
+    this.eliminarModal();
   }
   /**
    * @method verificaTipoAviso
@@ -667,6 +694,8 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   abiertoDomicilio(): void {
+    this.domicilioFormulario.reset();
+
     if (this.modalDomicilio) {
       const MODAL_INSTANCE = new Modal(this.modalDomicilio.nativeElement);
       MODAL_INSTANCE.show();
@@ -677,26 +706,78 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @description Método para abrir el modal de mercancía.
    * 
    * - Utiliza la referencia al modal de mercancía para mostrarlo en la interfaz.
+   * - Resetea el formulario para asegurar que esté limpio al abrir el modal.
    *
    * @returns {void}
    */
   abiertoMercancia(): void {
+    if (this.mercanciaFormulario) {
+      this.mercanciaFormulario.reset();
+    }
+
     if (this.modalMercancia) {
       const MODAL_INSTANCE = new Modal(this.modalMercancia.nativeElement);
       MODAL_INSTANCE.show();
     }
   }
   /**
+   * @method testAgregarMercancia
+   * @description Método temporal para probar la funcionalidad de agregar mercancía.
+   * @returns {void}
+   */
+  testAgregarMercancia(): void {
+    const TEST_MERCANCIA: MercanciaTabla = {
+      id: this.tablaDeMercancia.datos.length + 1,
+      claveFraccionArancelaria: 'TEST123',
+      nico: '01',
+      cantidad: '10',
+      claveUnidadMedida: 'KG',
+      valorUSD: '100',
+      descripcionMercancia: 'Mercancía de prueba',
+      descripcionProceso: 'Proceso de prueba',
+      numPedimentoExportacion: '123456789012345',
+      numPedimentoImportacion: '543210987654321'
+    };
+
+    this.tablaDeMercancia.datos = [...this.tablaDeMercancia.datos, TEST_MERCANCIA];
+  }
+  /**
    * @method agregarMercancia
    * @description Método para agregar mercancías a la tabla de mercancías.
    * 
-   * - Carga los datos de la tabla de mercancías y cierra el modal de mercancía.
+   * - Toma los valores del formulario de mercancía y los agrega a la tabla existente.
+   * - Valida que el formulario sea válido antes de agregar.
+   * - Cierra el modal después de agregar exitosamente.
    *
    * @returns {void}
    */
   agregarMercancia(): void {
-    this.cargarMercanciaTabla();
-    this.closeMercancia.nativeElement.click();
+    if (this.mercanciaFormulario.valid) {
+      const VALORES_DE_FORMULARIO = this.mercanciaFormulario.value;
+      const SIGUIENTE_ID = this.tablaDeMercancia.datos.length + 1;
+
+      const NUEVA_MERCANCIA: MercanciaTabla = {
+        id: SIGUIENTE_ID,
+        claveFraccionArancelaria: VALORES_DE_FORMULARIO.claveFraccionArancelaria,
+        nico: VALORES_DE_FORMULARIO.nico,
+        cantidad: VALORES_DE_FORMULARIO.cantidad,
+        claveUnidadMedida: VALORES_DE_FORMULARIO.claveUnidadMedida,
+        valorUSD: VALORES_DE_FORMULARIO.valorUSD,
+        descripcionMercancia: VALORES_DE_FORMULARIO.descripcionMercancia,
+        descripcionProceso: VALORES_DE_FORMULARIO.descripcionProceso,
+        numPedimentoExportacion: VALORES_DE_FORMULARIO.numPedimentoExportacion,
+        numPedimentoImportacion: VALORES_DE_FORMULARIO.numPedimentoImportacion
+      };
+
+      this.tablaDeMercancia.datos = [...this.tablaDeMercancia.datos, NUEVA_MERCANCIA];
+
+      this.mercanciaFormulario.reset();
+      this.closeMercancia?.nativeElement?.click();
+    } else {
+      Object.keys(this.mercanciaFormulario.controls).forEach(key => {
+        this.mercanciaFormulario.get(key)?.markAsTouched();
+      });
+    }
   }
   /**
    * @method agregarDomicilio
@@ -707,9 +788,27 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   agregarDomicilio(): void {
-    this.cargarAvisoTabla();
-    this.closeDomicilio.nativeElement.click();
-    this.abrirModal()
+    if (this.domicilioFormulario.valid) {
+      const VALORES_DE_FORMULARIO = this.domicilioFormulario.value;
+
+      const NUEVO_DOMICILIO = {
+        id: Date.now(),
+        rfc: VALORES_DE_FORMULARIO.rfc,
+        nombreComercial: VALORES_DE_FORMULARIO.nombreComercial,
+        entidadFederativa: VALORES_DE_FORMULARIO.claveEntidadFederativa,
+        alcaldioOMuncipio: VALORES_DE_FORMULARIO.claveDelegacionMunicipio,
+        colonia: VALORES_DE_FORMULARIO.claveColonia
+      };
+
+      this.tablaDeDatos.datos = [...this.tablaDeDatos.datos, NUEVO_DOMICILIO];
+
+      this.domicilioFormulario.reset();
+      this.closeDomicilio.nativeElement.click();
+    } else {
+      Object.keys(this.domicilioFormulario.controls).forEach(key => {
+        this.domicilioFormulario.get(key)?.markAsTouched();
+      });
+    }
   }
   /**
    * @method sanitizeAlphanumeric
@@ -728,7 +827,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
     form.get(control)?.setValue(REEMPLAZAR, { emitEvent: false });
   }
   /**
-   * @method sanitizeAlphanumericWithSpace
+   * @method desinfectarAlfanumericoConEspacio
    * @description Método para limpiar un campo de formulario, eliminando caracteres no alfanuméricos excepto espacios.
    * 
    * - Reemplaza caracteres no permitidos en el valor del campo y actualiza el formulario.
@@ -738,7 +837,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @param {Event} event - Evento que contiene el valor ingresado por el usuario.
    * @returns {void}
    */
-  sanitizeAlphanumericWithSpace(form: FormGroup, control: string, event: Event): void {
+  desinfectarAlfanumericoConEspacio(form: FormGroup, control: string, event: Event): void {
     const INPUT = event?.target as HTMLInputElement;
     const REEMPLAZAR = INPUT?.value.replace(this.REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR, '');
     form.get(control)?.setValue(REEMPLAZAR, { emitEvent: false });
@@ -820,6 +919,54 @@ export class AvisoComponent implements OnInit, OnDestroy {
       txtBtnCancelar: '',
     }
   }
+
+  /**
+  * Elimina un pedimento de la lista.
+  * @param borrar Indica si se debe eliminar el pedimento.
+  */
+  eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      if (this.elementoParaEliminar === 1) {
+        this.tablaDeMercancia.datos = this.tablaDeMercancia.datos.filter((ele) => !this.filaSeleccionadaMercanciaLista.includes(ele));
+        this.filaSeleccionadaMercanciaLista = [];
+      } else if (this.elementoParaEliminar === 2) {
+        this.tablaDeDatos.datos = this.tablaDeDatos.datos.filter((ele) => !this.filaSeleccionadaLista.includes(ele));
+        this.filaSeleccionadaLista = [];
+      }
+    }
+  }
+
+  /**
+   * @method eliminarModal
+   * @description Método para configurar una notificación de confirmación de eliminación.
+   * 
+   * Este método configura una nueva notificación con los siguientes parámetros:
+   * - `tipoNotificacion`: Tipo de notificación (en este caso, "alerta").
+   * - `categoria`: Categoría de la notificación (en este caso, "peligro").
+   * - `modo`: Modo de la notificación (en este caso, "acción").
+   * - `titulo`: Título de la notificación (en este caso, vacío).
+   * - `mensaje`: Mensaje de la notificación (en este caso, "¿Desea eliminar el registro seleccionado?").
+   * - `cerrar`: Indica si la notificación se puede cerrar manualmente (en este caso, `false`).
+   * - `tiempoDeEspera`: Tiempo en milisegundos antes de que la notificación desaparezca automáticamente (en este caso, 2000 ms).
+   * - `txtBtnAceptar`: Texto del botón de aceptación (en este caso, "Aceptar").
+   * - `txtBtnCancelar`: Texto del botón de cancelación (en este caso, "Cancelar").
+   *
+   * @returns {void}
+   */
+  public eliminarModal(): void {
+    this.nuevaNotificacion1 = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: '¿Desea eliminar el registro seleccionado?',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    }
+  }
+
   /**
    * @method ngOnDestroy
    * @description Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
