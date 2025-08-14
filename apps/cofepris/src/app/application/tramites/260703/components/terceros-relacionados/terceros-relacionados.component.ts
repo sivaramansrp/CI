@@ -224,7 +224,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * filaSeleccionada Lista de destinatarios seleccionados.
    */
   manejarFilaSeleccionadaDestinatario(filaSeleccionada: Destinatario[]): void {
-    this.destinatarioTablaSeleccion = filaSeleccionada.length > 0;
+    this.destinatarioTablaSeleccion = Boolean(filaSeleccionada && filaSeleccionada.length > 0);
   }
 
   /**
@@ -232,7 +232,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * filaSeleccionada Lista de fabricantes seleccionados.
    */
   manejarFilaSeleccionadaFabricante(filaSeleccionada: Fabricante[]): void {
-    this.fabricanteTablaSeleccion = filaSeleccionada.length > 0;
+    this.fabricanteTablaSeleccion = Boolean(filaSeleccionada && filaSeleccionada.length > 0);
   }
 
   /**

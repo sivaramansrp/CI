@@ -541,6 +541,9 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
    * ```
    */
   setValoresStore(campo: string): void {
+    if (!this.domicilloDelEstablecimientoForm) {
+      return;
+    }
     const VALOR = this.domicilloDelEstablecimientoForm.get(campo)?.value;
     this.tramite260703Store.actualizarEstadoFormularioDomicilioDelEstablecimiento({
       [campo]: VALOR,

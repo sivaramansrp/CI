@@ -132,6 +132,9 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy{
     * {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
     */
     setValoresStore(campo: string): void {
+      if (!this.representanteLegalForm) {
+        return;
+      }
       const VALOR = this.representanteLegalForm.get(campo)?.value;
       this.tramite260703Store.actualizarEstadoFormularioRepresentanteLegal({
         [campo]: VALOR
