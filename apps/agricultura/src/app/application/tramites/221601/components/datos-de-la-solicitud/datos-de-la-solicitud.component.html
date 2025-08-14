@@ -492,19 +492,22 @@
 
 <!-- Date range fields - shown when "No" is selected -->
 <div class="row mb-3" *ngIf="opcionSiSeleccionada">
-  <label class="form-label">Desde</label>
-  <div class="col-md-6">
+  <!-- <label class="form-label">Desde</label> -->
+   <div class="row">
+  <div class="col-md-4">
    <label class="form-label">Fecha de elaboración o empaque o proceso</label>
     </div>
+    <div class="col-md-8">
     <div class="col-md-6">
     <input-fecha
       [datos]="INPUT_FECHA_CONFIGURACION"
       [setFecha]="mercanciaForm.get('fechaDesde')?.value || ''"
       (valorCambiado)="cambioFechaDesde($event)">
     </input-fecha>
+  </div>
   <!-- </div> -->
   <div class="col-md-6">
-    <label class="form-label">Hasta</label>
+    <!-- <label class="form-label">Hasta</label> -->
     <input-fecha
       [datos]="INPUT_FECHA_CONFIGURACION"
       [setFecha]="mercanciaForm.get('fechaHasta')?.value || ''"
@@ -512,14 +515,15 @@
     </input-fecha>
   </div>
 </div>
- </div>
+</div>
+</div>
 <!-- Individual date fields - shown when "Sí" is selected -->
 <div *ngIf="mostrarRangoFechas">
   <div class="row mb-3">
-    <div class="col-md-6">
+    <div class="col-md-8">
       <label class="form-label">Fecha de elaboración o empaque o proceso</label>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
       <input-fecha
         [datos]="INPUT_FECHA_CONFIGURACION"
         [setFecha]="mercanciaForm.get('fechaElaboracion')?.value || ''"
@@ -529,10 +533,10 @@
   </div>
 
   <div class="row mb-3">
-    <div class="col-md-6">
+    <div class="col-md-8">
       <label class="form-label">Fecha de producción o sacrificio</label>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
       <input-fecha
         [datos]="INPUT_FECHA_CONFIGURACION"
         [setFecha]="mercanciaForm.get('fechaProduccion')?.value || ''"
@@ -542,10 +546,10 @@
   </div>
 
   <div class="row mb-3">
-    <div class="col-md-6">
+    <div class="col-md-8">
       <label class="form-label">Fecha de caducidad del producto o consumo preferente</label>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
       <input-fecha
         [datos]="INPUT_FECHA_CONFIGURACION"
         [setFecha]="mercanciaForm.get('fechaCaducidad')?.value || ''"
