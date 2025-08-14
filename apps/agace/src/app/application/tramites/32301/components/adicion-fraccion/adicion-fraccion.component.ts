@@ -11,14 +11,21 @@ import {
 import {
   AlertComponent,
   Catalogo,
+  ConfiguracionColumna,
   ConsultaioQuery,
   Notificacion,
   NotificacionesComponent,
+  TablaSeleccion,
   TableComponent,
   TablePaginationComponent,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent, CrosslistComponent, InputCheckComponent, InputRadioComponent } from '@libs/shared/data-access-user/src';
+import {
+  CONFIGURATION_TABLA_GRID_FRACCIONES_HEADER,
+  FraccionGridItem,
+  MESSAGE_FRACCION,
+} from '../../constantes/importador-exportador.enum';
+import { CatalogoSelectComponent, CrosslistComponent, InputCheckComponent, InputRadioComponent, TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import {
   FormBuilder,
   FormControl,
@@ -26,10 +33,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {
-  GRID_FRACCIONES_HEADER,
-  MESSAGE_FRACCION,
-} from '../../constantes/importador-exportador.enum';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ALOTO_FRACCIONES } from '../../enums/adicion-fraccion.enum';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
@@ -60,7 +63,8 @@ interface RatioOption {
     CatalogoSelectComponent,
     CrosslistComponent,
     NotificacionesComponent,
-    InputCheckComponent
+    InputCheckComponent,
+    TablaDinamicaComponent
   ],
   templateUrl: './adicion-fraccion.component.html',
   styleUrls: ['./adicion-fraccion.component.scss'],
@@ -101,11 +105,22 @@ export class AdicionFraccionComponent
    * Opciones para los botones de radio.
    */
   radioOptions!: RatioOption[];
-
+  /**
+   * Estado de la selección de la tabla.
+   * @type {TablaSeleccion}
+   */
+  seleccionTabla = TablaSeleccion.CHECKBOX;
   /**
    * Encabezados de la tabla de fracciones arancelarias.
    */
-  gridFraccionesHeader = GRID_FRACCIONES_HEADER;
+  gridFraccionesHeader: FraccionGridItem[] = [];
+
+  /**
+ * Configuración de las columnas de la tabla de mercancía disponible.
+ * @type {ConfiguracionColumna<FraccionGridItem>[]}
+ */
+  configuraciongridFraccionesHeader: ConfiguracionColumna<FraccionGridItem>[] = CONFIGURATION_TABLA_GRID_FRACCIONES_HEADER;
+
 
   /**
    * Fechas seleccionadas por el usuario.
@@ -230,6 +245,12 @@ export class AdicionFraccionComponent
    */
   esFormularioSoloLectura: boolean = false;
   /**
+ * Fila seleccionada en la tabla de mercancías seleccionadas.
+ * 
+ * Representa la mercancía seleccionada actualmente en la tabla de mercancías seleccionadas.
+ */
+  seleccionadasFila!: FraccionGridItem | null;
+  /**
    * Constructor donde se inyectan servicios y se inicializa el formulario principal.
    */
   constructor(
@@ -272,6 +293,11 @@ export class AdicionFraccionComponent
    */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
+    this.query.selectState$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((formState) => {        
+        this.gridFraccionesHeader = formState.gridFraccionesHeader || [];
+      });
   }
   /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.
@@ -316,15 +342,15 @@ export class AdicionFraccionComponent
     });
 
     this.cargaManualForm = this.fb.group({
-      txtfraccionDeclCert: ['', Validators.required, Validators.maxLength(8)],
-      activRelProc: ['-1', Validators.required],
-      txtDescripcionMercancia: ['', Validators.required],
-      cveFraccionCorrelacion: ['-1', Validators.required],
-      unidadMedida: ['-1', Validators.required],
+      fraccionDeclarada: ['', [Validators.required, Validators.maxLength(8)]],
+      actividadRelacionada: ['', Validators.required],
+      descripcionFraccionActual: ['', Validators.required],
+      correlacionFraccionActual: ['', Validators.required],
+      umt: ['', Validators.required],
       nico: ['', Validators.required],
-      txtDescripcionNico: [''],
-      sPaisBloqueOrigen: [[], Validators.required],
-      sPaisBloqueDestino: [[], Validators.required],
+      descripcionNico: [''],
+      paisDeOrigen: [[], Validators.required],
+      id: [null]
     });
     this.getAdicianFraccionOption();
     this.getAdicianFraccionNicoModOptions();
@@ -541,10 +567,120 @@ export class AdicionFraccionComponent
   /**
    * Cierra el modal para agregar fracciones de forma manual.
    */
-  closefraccionesModelModel(): void {
+  closefraccionesModelModels(): void {
     if (this.fraccionesModelInstance) {
       this.fraccionesModelInstance.hide();
     }
+  }
+  /**
+   * Maneja la selección de filas en la tabla de seleccionadas.
+   * 
+   * Este método asigna la fila seleccionada a `seleccionadasFila`.
+   * 
+   * @param {FraccionGridItem} evento - La fila seleccionada en la tabla de mercancías seleccionadas.
+   */
+  seleccionDeFilas(evento: FraccionGridItem): void {
+    this.seleccionadasFila = evento;
+  }
+  /**
+   * Modifica la fila seleccionada en la tabla de mercancías seleccionadas.
+   * 
+   * Este método actualiza el formulario con los valores de la fila seleccionada y muestra el modal de fracciones.
+   * 
+   * @param {FraccionGridItem} seleccionadasTablaDatos - La fila seleccionada en la tabla de mercancías seleccionadas.
+   */
+  modificarSeleccionada(seleccionadasTablaDatos?: FraccionGridItem): void {
+    const FORM_VALUES = seleccionadasTablaDatos;
+    if (this.fraccionesModelInstance && this.seleccionadasFila) {
+      this.fraccionesModelInstance?.show();
+    }
+    if (FORM_VALUES) {
+      this.cargaManualForm.patchValue({
+        id: FORM_VALUES.id || this.gridFraccionesHeader.length + 1,
+        fraccionDeclarada: FORM_VALUES.fraccionDeclarada,
+        actividadRelacionada: FORM_VALUES.actividadRelacionada,
+        correlacionFraccionActual: FORM_VALUES.correlacionFraccionActual,
+        descripcionFraccionActual: FORM_VALUES.descripcionFraccionActual,
+        nico: FORM_VALUES.nico,
+        descripcionNico: FORM_VALUES.descripcionNico,
+        umt: FORM_VALUES.umt,
+        paisDeOrigen: this.fechasDatos.join(', '),
+      });
+    }
+  }
+  /**
+   * Elimina la fracción seleccionada de la lista de fracciones.
+   * 
+   * Este método busca la fracción por su ID y la elimina de la lista `gridFraccionesHeader`.
+   * Si la fracción no se encuentra, actualiza el store con la lista actualizada.
+   * 
+   * @param {number} id - El ID de la fracción a eliminar.
+   */
+  eliminarFraccionSeleccionada(id: number): void {
+    const INDEX = this.gridFraccionesHeader.findIndex(item => item.id === id);
+    if (INDEX !== -1) {
+      this.gridFraccionesHeader = this.gridFraccionesHeader.filter(item => item.id !== id);
+      this.seleccionadasFila = null;
+      this.store.setCargaManual(this.gridFraccionesHeader);
+    } 
+
+  }
+
+  /**
+   * Maneja el cambio de selección de aduanas.
+   * 
+   * Este método actualiza las fechas seleccionadas en el formulario cuando se cambian las aduanas.
+   * 
+   * @param {string[]} events - Lista de eventos de aduanas seleccionadas.
+   */
+  aduanaSeleccionadasChange(events: string[]): void {
+    this.fechasDatos = events;
+  }
+
+  /**
+   * Cierra el modal de fracciones y actualiza la lista de fracciones con los datos del formulario.
+   * 
+   * Este método crea un nuevo objeto `FraccionGridItem` con los valores del formulario y lo agrega a la lista de fracciones.
+   * Si la fracción ya existe, la actualiza; si no, la agrega como una nueva entrada.
+   * 
+   * @param {FormGroup} formularioFracciones - El formulario que contiene los datos de la fracción a agregar o modificar.
+   */
+  closefraccionesModelModel(formularioFracciones: FormGroup): void {
+    const FORM_VALUES = formularioFracciones.value;
+
+    const NUEVA_MERCANCIA: FraccionGridItem = {
+      id: this.seleccionadasFila?.id ?? FORM_VALUES.id ?? this.gridFraccionesHeader.length + 1,
+      fraccionDeclarada: FORM_VALUES.fraccionDeclarada,
+      actividadRelacionada: FORM_VALUES.actividadRelacionada,
+      correlacionFraccionActual: FORM_VALUES.correlacionFraccionActual,
+      descripcionFraccionActual: FORM_VALUES.descripcionFraccionActual,
+      nico: FORM_VALUES.nico,
+      descripcionNico: FORM_VALUES.descripcionNico,
+      umt: FORM_VALUES.umt,
+      paisDeOrigen: this.fechasDatos.join(', '),
+    };
+
+    const INDEX = this.gridFraccionesHeader.findIndex(
+      item => item.id === NUEVA_MERCANCIA.id
+    );
+
+    if (INDEX !== -1) {
+      this.gridFraccionesHeader = this.gridFraccionesHeader.map((item, i) =>
+        i === INDEX ? NUEVA_MERCANCIA : item
+      );
+    } else {
+      this.gridFraccionesHeader = [
+        ...this.gridFraccionesHeader,
+        NUEVA_MERCANCIA
+      ];
+    }
+    this.store.setCargaManual(this.gridFraccionesHeader);
+    this.seleccionadasFila = null;
+    
+    if (this.fraccionesModelInstance) {
+      this.fraccionesModelInstance.hide();
+    }
+    this.cargaManualForm.reset();
   }
 
   /**
