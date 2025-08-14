@@ -1314,15 +1314,6 @@
     "numeroDeProcedimiento": "5601"
   },
   {
-    "id": 80306,
-    "tipoDeTramite": "Solicitud de Permiso",
-    "fecha": "2023-10-01",
-    "fechaActualizacion": "2023-10-05",
-    "diasTranscurridos": "4",
-    "departamento": "SE",
-    "numeroDeProcedimiento": "80306"
-  },
-  {
     "id": 260401,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
@@ -3093,5 +3084,14 @@
     "diasTranscurridos": "4",
     "departamento": "AGACE",
     "numeroDeProcedimiento": "32508"
+  },
+  {
+    "id": 260208,
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2024-10-01",
+    "fechaActualizacion": "2024-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260208"
   }
 ]

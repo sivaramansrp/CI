@@ -45,9 +45,9 @@ export class BandejaDeSolicitudeService {
                     nombreDeLaTarea: dato.action_name,
                     fechaDeAsignacion: dato.fecha_inicio_tarea,
                     estadoDeTramite: dato.estado_tramite,
-                    departamento: dato.nombre_grupo,
-                    numeroDeProcedimiento: "301",
-                    origin: dato.bpi_id
+                    departamento: dato.bp_name,
+                    numeroDeProcedimiento: dato.tipo_tramite,
+                    origin: dato.action_name
                 } as BandejaDeTareasPendientes))
             }),
             catchError(() => {

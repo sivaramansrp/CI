@@ -1,23 +1,23 @@
  [
       {
-        "clasificacion":"REMEDIOS HERBOLARIOS",
-        "especificar":"No aplica",
-        "denominacionEspecifica":"qa",
-        "denominacionDistintiva":"qa",
-        "denominacionComun": "qseq",
-        "formaFarmaceutica":"",
-        "estadoFisico":"Liquido",
-        "fraccionArancelaria":"30039013",
-        "descripcionFraccion":"Preparacion de hidroxialuminato de sodio o de magnesio y sorbitol",
-        "unidad":"Botellas",
-        "cantidadUMC":"100",
-        "unidadUMT":"Kilogramo",
-        "cantidadUMT":"100",
-        "presentacion":"Botellas pruebas",
-        "paisDeOrigen":"NUEVA ZELANDIA",
-        "paisDeProcedencia":"ARGENTINA (REPUBLICA...",
-        "tipoProducto":"Producto a granel",
-        "usoEspecifico":"Muestra"
+        "id": 1,
+        "clasificaionProductos": "REMEDIOS HERBOLARIOS",
+        "especificarProducto": "No aplica",
+        "nombreProductoEspecifico": "qa",
+        "denominacionDistintiva": "qa",
+        "denominacionNombre": "qseq",
+        "tipoProducto": "Producto a granel",
+        "estadoFisico": "Liquido",
+        "fraccionArancelaria": "30039013",
+        "descripcionFraccionArancelaria": "Preparacion de hidroxialuminato de sodio o de magnesio y sorbitol",
+        "cantidadUMT": "100",
+        "umt": "Kilogramo",
+        "cantidadUMC": "100",
+        "umc": "Botellas",
+        "presentacionFarmaceutica": "Botellas pruebas",
+        "paisDeOrigen": "NUEVA ZELANDIA",
+        "paisDeProcedencia": "ARGENTINA (REPUBLICA...)",
+        "usoEspecifico": "Muestra"
       }
     ]
    

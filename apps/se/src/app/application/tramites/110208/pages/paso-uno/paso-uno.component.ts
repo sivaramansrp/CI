@@ -97,7 +97,11 @@ export class PasoUnoComponent implements AfterViewInit,OnInit,OnDestroy {
   ngAfterViewInit(): void {
     // Llama al método para obtener el tipo de persona (en este caso, una persona moral nacional)
    if (this.solicitante) {
-    this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
+    setTimeout(() => {
+      if (this.solicitante) {
+        this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
+      }
+    }, 50);
    }
   }
 

@@ -1,3 +1,8 @@
+import { EscisionHeaderItem } from "../enums/fusion-oescision.enum";
+import { FraccionGridItem } from "../constantes/importador-exportador.enum";
+import { ModificacionSociosItem } from "../enums/modificacion-socios.enum";
+import { MostrarGridNuevoHeader } from "../enums/modificacion-goceInmueble.enum";
+
 /**
  * Representa el grupo principal de datos para el formulario de trámite.
  *
@@ -30,6 +35,22 @@ export interface FormularioGrupo {
   datosDomicilioLugar: DatosDomicilioLugar,
   /** Datos de la mercancía y submanufactura */
   datosMercanciaSubmanufactura: DatosMercanciaSubmanufactura,
+  /**
+   * Representa las columnas de la tabla de fracciones arancelarias.
+   * Incluye información como el RFC, nombre comercial, entidad federativa,
+   * municipio, colonia, calle, número exterior, número interior y código postal.
+   */
+    gridFraccionesHeader: FraccionGridItem[],
+  /** Encabezados de la tabla de fusión o escisión */
+  fusionEscisionHeader: EscisionHeaderItem[],
+  /** Encabezados de la tabla de modificación de socios */
+  modificacionSociosHeader: ModificacionSociosItem[],
+/** Encabezados de la tabla de modificación de goce de inmueble */
+  mostrarGridNuevoHeaderData: MostrarGridNuevoHeader[],
+  /** Indica si el componente de modificación de socios está activo */
+  formulario: { [key: string]: object }
+  /** Indica si el componente de modificación de goce de inmueble está activo */
+  modificacionGoceForm: { [key: string]: object }
 }
 
 /**
@@ -161,6 +182,8 @@ export interface ModificacionGoceInmueble {
   observaciones: string,
   /** Indica si el componente de modificación de socios está activo */
   isActive?: boolean,
+  /** Se asume que puede haber un ID para identificar el registro */
+  id?: number,
 }
 
 
@@ -175,16 +198,30 @@ export interface ModificacionGoceInmueble {
  * @property isActive - Indica si el componente de modificación de socios está activo.
  */
 export interface PersonaFusionEscisionDTO {
-  /** RFC de la persona o entidad */
-  rfc: string,
-  /** Razón social de la persona o entidad */
-  razonSocial: string,
-  /** Número de folio del trámite */
-  numFolioTramite: string,
-  /** Fecha de inicio de la vigencia */
-  fechaInicioVigencia: string,
-  /** Fecha de fin de la vigencia */
-  fechaFinVigencia: string,
+  /**
+   * Registro Federal de Contribuyentes (RFC) de la empresa.
+   */
+  registroFederalDeContribuyentes: string;
+
+  /**
+   * Denominación o Razón Social de la empresa.
+   */
+  denominacionORazonSocial: string;
+
+  /**
+   * Folio VUCEM de la última certificación o renovación.
+   */
+  folioVucemUltimaCertificacion: string;
+
+  /**
+   * Fecha de inicio de vigencia de la última certificación o renovación.
+   */
+  fechaInicioVigenciaUltimaCertificacion: string;
+
+  /**
+   * Fecha de fin de vigencia de la última certificación o renovación.
+   */
+  fechaFinVigenciaUltimaCertificacion: string;
   /** Indica si el componente de modificación de socios está activo */
   isActive?: boolean,
 }
@@ -347,3 +384,4 @@ export interface TBodyData {
   /** Datos de las filas del cuerpo de la tabla */
   tbodyData: string[]
 }
+

@@ -1,7 +1,9 @@
 import {
   ALERTA_DE_MANIFESTO_Y_DECLARACIONES,
   ALERTA_OPCIONS,
+  MENSAJE_EMERGENTE_DE_CONFIRMACION,
   MENSAJE_SIN_FILA_SELECCIONADA,
+  MODIFICADOR_MENSAJE_NO_FILA_SELECCIONADA,
   MOSTRAR_NOTIFICACION,
   NUMERO_TRAMITE,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE,
@@ -16,8 +18,16 @@ import {
   PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA,
   PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL,
   REPRESENTANTE_LEGAL,
-  TEXTO_MANIFESTO_Y_DECLARACIONES,
+  TEXTO_MANIFESTO_Y_DECLARACIONES
 } from '../../constantes/datos-solicitud.enum';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   AlertComponent,
@@ -28,6 +38,7 @@ import {
   REGEX_RFC,
   REGEX_SOLO_DIGITOS,
   REGEX_SOLO_NUMEROS,
+  TablePaginationComponent,
 } from '@libs/shared/data-access-user/src';
 import {
   Catalogo,
@@ -38,28 +49,24 @@ import {
   TablaMercanciasDatos,
   TablaOpcionConfig,
 } from '../../models/datos-solicitud.model';
-import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { delay, takeUntil } from 'rxjs';
-import { AbstractControl } from '@angular/forms';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+  CatalogoSelectComponent,
+  REGEX_IMPORTE_PAGO,
+  TablaDinamicaComponent,
+  TituloComponent
+} from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  ScianConfig,
+  TablaScianConfig
+} from '../../models/datos-solicitud.model';
+import { delay, takeUntil } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-import { Input } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ScianConfig } from '../../models/datos-solicitud.model';
 import { Subject } from 'rxjs';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TablaScianConfig } from '../../models/datos-solicitud.model';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json';
+
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
@@ -73,7 +80,8 @@ import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json'
     FormsModule,
     NotificacionesComponent,
     TooltipModule,
-    InputRadioComponent
+    InputRadioComponent,
+    TablePaginationComponent
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
@@ -206,7 +214,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Texto que se muestra en el manifiesto y declaraciones.
    */
   public textoManifestoContenido = TEXTO_MANIFESTO_Y_DECLARACIONES;
-
 
   /**
    * @property {string} alertaOpicion
@@ -341,10 +348,34 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   public mostrarAlerta: boolean = false;
 
   /**
+   * Controla la visibilidad del modal de alerta.
+   * @property {boolean} mostrarAlerta
+   */
+  public confirmacionAlerta: boolean = false;
+
+  /**
    * Mensaje de alerta que se muestra al usuario.
    * @property {string} mensajeDeAlerta
    */
   public mensajeDeAlerta: string = MENSAJE_SIN_FILA_SELECCIONADA;
+
+  /**
+   * Mensaje de alerta que se muestra cuando no se ha seleccionado
+   * una fila o se han seleccionado más de una al intentar modificar.
+   *
+   * Se inicializa con la constante `MODIFICADOR_MENSAJE_NO_FILA_SELECCIONADA`.
+   */
+  public modificadorMensajeDeAlerta: string =
+    MODIFICADOR_MENSAJE_NO_FILA_SELECCIONADA;
+
+  /**
+   * Mensaje emergente que solicita confirmación al usuario antes
+   * de ejecutar una acción importante (por ejemplo, eliminar un registro).
+   *
+   * Se inicializa con la constante `MENSAJE_EMERGENTE_DE_CONFIRMACION`.
+   */
+  public mensajeEmergenteConfirmacion: string =
+    MENSAJE_EMERGENTE_DE_CONFIRMACION;
 
   /**
    * @description
@@ -465,14 +496,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
-    this.esManifesto = PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES.includes(this.idProcedimiento) ? true : false;
+     this.crearDatosSolicitudForm();
+    this.actualizarDatosFormularioSolicitud();
+    this.esManifesto =
+      PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES.includes(
+        this.idProcedimiento
+      );
     this.mostrarNotificacion = MOSTRAR_NOTIFICACION.includes(
       this.idProcedimiento
     )
       ? true
       : false;
-    this.crearDatosSolicitudForm();
-    this.actualizarDatosFormularioSolicitud();
+   
     this.mostrarCorreoElectronico =
       PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC.includes(
         this.idProcedimiento
@@ -557,11 +592,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       ],
       denominacionRazon: [
         this.datosSolicitudFormState.denominacionRazon,
-        [Validators.required, Validators.minLength(2), Validators.maxLength(120)],
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(120),
+        ],
       ],
       correoElectronico: [
         this.datosSolicitudFormState.correoElectronico,
-        [Validators.required,Validators.minLength(2), Validators.maxLength(120), Validators.email],
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(120),
+          Validators.email,
+        ],
       ],
       codigoPostal: [
         this.datosSolicitudFormState.codigoPostal,
@@ -590,7 +634,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           Validators.maxLength(120),
         ],
       ],
-      localidad: [this.datosSolicitudFormState.localidad],
+      localidad: [
+        this.datosSolicitudFormState.localidad,
+        [Validators.pattern(REGEX_IMPORTE_PAGO)],
+      ],
       colonia: [this.datosSolicitudFormState.colonia],
       calleYNumero: [
         this.datosSolicitudFormState.calleYNumero,
@@ -659,10 +706,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       ],
       regimenLaMercancia: ['101', [Validators.required]],
       aduana: [this.datosSolicitudFormState.aduana, [Validators.required]],
+      mercancias: [[], Validators.required],
       manifesto: [
         this.datosSolicitudFormState.manifesto,
         [Validators.required],
-      ]
+      ],
     });
 
     if (this.mostrarNotificacion) {
@@ -780,19 +828,60 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   eliminarMercancias(): void {
     if (!this.tablaMercanciasLista.length) {
-      this.mostrarAlerta = true;
+      this.confirmacionAlerta = true;
       return;
     }
-    this.tablaMercanciasConfig.datos = this.tablaMercanciasConfig.datos.filter(
-      (idx: TablaMercanciasDatos) => {
-        return !this.tablaMercanciasLista.some(
-          (idx2: TablaMercanciasDatos) =>
-            idx2.clasificacionProducto === idx.clasificacionProducto
-        );
+    if (this.tablaMercanciasLista.length > 0) {
+      this.seleccionarFilaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: this.mensajeEmergenteConfirmacion,
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+      };
+      this.confirmacionAlerta = true;
+    }
+  }
+
+  /**
+   * Elimina un pedimento de la lista de mercancías tras la confirmación del usuario.
+   *
+   * @param borrar Indica si el usuario confirmó la eliminación (`true`) o la canceló (`false`).
+   *
+   * ### Descripción:
+   * - Si `borrar` es `true`:
+   *   - Filtra los datos de `tablaMercanciasConfig.datos` eliminando aquellos
+   *     que coincidan en `clasificacionProducto` con los elementos de `tablaMercanciasLista`.
+   *   - Si existe un emisor en `mercanciasSeleccionado`, emite la lista actualizada de datos.
+   *   - Elimina el elemento de la lista `pedimentos` en la posición `elementoParaEliminar`.
+   * - Independientemente de la acción, desactiva la alerta de confirmación (`confirmacionAlerta = false`).
+   *
+   * ### Ejemplo de uso:
+   * ```ts
+   * eliminarPedimentoConfirmacion(true); // Elimina el pedimento
+   * eliminarPedimentoConfirmacion(false); // Cancela la eliminación
+   * ```
+   */
+  eliminarPedimentoConfirmacion(borrar: boolean): void {
+    if (borrar) {
+      this.tablaMercanciasConfig.datos =
+        this.tablaMercanciasConfig.datos.filter((idx: TablaMercanciasDatos) => {
+          return !this.tablaMercanciasLista.some(
+            (idx2: TablaMercanciasDatos) =>
+              idx2.clasificacionProducto === idx.clasificacionProducto
+          );
+        });
+      if (this.mercanciasSeleccionado) {
+        this.mercanciasSeleccionado.emit(this.tablaMercanciasConfig.datos);
       }
-    );
-    if (this.mercanciasSeleccionado) {
-      this.mercanciasSeleccionado.emit(this.tablaMercanciasConfig.datos);
+    }
+    this.confirmacionAlerta = false;
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
   }
 
@@ -856,6 +945,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   modificarDatos(): void {
     if (!this.tablaMercanciasLista.length) {
+      this.seleccionarFilaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: this.modificadorMensajeDeAlerta,
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
       this.mostrarAlerta = true;
       return;
     }

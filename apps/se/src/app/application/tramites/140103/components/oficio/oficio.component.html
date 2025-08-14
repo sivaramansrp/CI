@@ -32,7 +32,7 @@
         </div>
       </div>
       <h6>Certificados a cancelar</h6>
-      <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="Certificados"
+      <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="Certificados" (filaSeleccionada)="onSeleccionarFila($event)"
         [tipoSeleccionTabla]="TablaSeleccion" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
       </app-tabla-dinamica>
       <nav aria-label="Page navigation example">
@@ -42,7 +42,7 @@
       </nav>
       <div class="row row-spacing text-right">
         <div>
-          <button type="button" class="btn btn-danger btn-space" [disabled]="esFormularioSoloLectura">Eliminar
+          <button type="button" class="btn btn-danger btn-space" [disabled]="esFormularioSoloLectura" (click)="onClickSeleccionar()">Eliminar
             seleccionado</button>
           <button type="button" class="btn btn-primary btn-space" [disabled]="esFormularioSoloLectura"
             (click)="abrirDevolverFacturas()">Devolver facturas</button>

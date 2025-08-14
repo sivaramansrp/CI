@@ -6,7 +6,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import {
+import { AvisoSanitarioState, Tramite260601Store } from '../../../../estados/tramites/tramite260601.store';import {
   ConsultaioQuery,
   ConsultaioState,
   FormularioDinamico,
@@ -18,12 +18,12 @@ import {
   PERSONA_MORAL_NACIONAL,
 } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { Subject, map, takeUntil } from 'rxjs';
-import { AvisoSanitarioState } from '../../../../estados/tramites/tramite260601.store';
 import { CommonModule } from '@angular/common';
 import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Service260601Service } from '../../services/service260601.service';
 import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component';
+import { Tramite260601Query } from '../../../../estados/queries/tramite260601.query';
 
 /**
  * Componente para gestionar el paso uno del trámite.
@@ -77,7 +77,9 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
   constructor(
     private cdr: ChangeDetectorRef,
     private consultaQuery: ConsultaioQuery,
-    private service260601Service: Service260601Service
+    private service260601Service: Service260601Service,
+    public tramite260601Query: Tramite260601Query,
+    private tramite260601Store: Tramite260601Store
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -97,6 +99,13 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
         })
       )
       .subscribe();
+
+    this.tramite260601Query.getTabSeleccionado$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((tab) => {
+        this.indice = tab;
+      });
+
     if (this.consultaState.update) {
       this.guardarDatosFormulario();
     } else {
@@ -137,7 +146,7 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
   /**
    * Índice de la pestaña seleccionada.
    */
-  indice: number = 1;
+   public indice: number | undefined = 1;
 
   /**
    * Selecciona la pestaña especificada.
@@ -145,7 +154,7 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
    * @param i - El índice de la pestaña a seleccionar.
    */
   seleccionaTab(i: number): void {
-    this.indice = i;
+    this.tramite260601Store.updateTabSeleccionado(i);
   }
   /**
    * Método del ciclo de vida `ngOnDestroy`.
