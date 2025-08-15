@@ -187,7 +187,7 @@ export interface BodyTablaOpiniones {
   areaSolicitante: string;
   areaResponsable: string;
   estatus: string;
-  urlPdf: string;
+  urlPdf?: string;
 }
 
 /**
