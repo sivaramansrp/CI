@@ -44,6 +44,7 @@ import { ParcialRequest } from '../../../../core/models/120301/request/parcialRe
 import { TplDetalleRequest } from '../../../../core/models/120301/request/tpl-detalle-request.model';
 import { TplRequest } from '../../../../core/models/120301/request/tpl-request.model';
 import { TplService } from '../../../../core/services/120301/Tpl.service';
+import { Tramite120301Store } from '../../estados/tramites/tramite120301.store';
 
 /**
  * @component ConstanciaDelRegistroComponent
@@ -269,7 +270,8 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
     private consultaioQuery: ConsultaioQuery,
     private anioConstanciaService: AnioConstanciaService,
     private tplService: TplService,
-    private guardadoService: GuardadoService
+    private guardadoService: GuardadoService,
+    private tramite120301: Tramite120301Store
   ) {
     // Lógica del constructor si es necesario
   }
@@ -632,6 +634,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
       fila.factorConversionCategoriaTextil = DATOS.factor_conversion.toString();
       fila.fechaInicioVigencia = DATOS.fecha_inicio_vigencia;
       fila.fechaFinVigencia= DATOS.fecha_fin_vigencia;
+      this.tramite120301.setIdentificadorRegimen(DATOS.identificador_regimen);
     }
 
      
@@ -734,6 +737,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
       next: (response) => {
         if (response?.codigo === '00' && response?.datos) {
             const DATOS = response.datos;
+            this.tramite120301.setIdExpedicion(DATOS.id_expedicion);
              this.mostrarTabs.emit(true);
              window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
