@@ -14,7 +14,11 @@
   } @if(indiceDePaso === 2) {
   <div class="row mt-5 mb-5">
     <ng-titulo [titulo]="'Firmar'"></ng-titulo>
-    <firma-electronica [tipo]="''" (firma)="obtieneFirma($event)"></firma-electronica>
+    <firma-electronica 
+        [tipo]="''" 
+        [cadenaOriginal]="cadenaOriginal"
+        (datosFirma)="datosFirma($event)"
+      ></firma-electronica>
   </div>
 
   } @if(indiceDePaso === 1) {
