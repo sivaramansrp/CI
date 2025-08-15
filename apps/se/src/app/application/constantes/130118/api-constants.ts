@@ -137,3 +137,7 @@ export const API_GET_DICTAMENES = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/di
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Confirmar-Notificacion/iniciar-confirmacion-notificacion
  */
 export const API_GET_INICIAR_CONFIRMACION_NOTIFICACION = `sat-t130118/tramite/${NUMFOLIOTRAMITE}/confirmar-notificacion/iniciar`;
+
+export const API_GET_ENVIO_DIGITAL = `tramite/${NUMFOLIOTRAMITE}/envio-digital/detalle?esFuncionario=true`;
+
+export const API_GET_OPINION = `tramite/${NUMFOLIOTRAMITE}/opiniones`
