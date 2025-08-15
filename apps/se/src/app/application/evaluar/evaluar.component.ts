@@ -23,11 +23,13 @@ import { LISTA_TRIMITES } from '../shared/constantes/lista-trimites.enums';
 import { AcusesResolucionResponse } from '@libs/shared/data-access-user/src/core/models/130118/consulta-acuses-response.model';
 import { DictamenesResponse } from '@libs/shared/data-access-user/src/core/models/130118/dictamenes-response.model';
 import { DocumentoSolicitud } from "@libs/shared/data-access-user/src/core/models/130118/consulta-documentos-response.model";
+import { EnvioDigitalResponse } from '@libs/shared/data-access-user/src/core/models/130118/envio-digital-response.model';
 import { EvaluarSolicitudService } from '../core/services/evaluar-tramite/evaluar-solicitud.service';
 import { GuardarDictamenRequest } from '../core/models/evaluar/request/guardar-dictamen-request.model';
 import { GuardarDictamenService } from '../core/services/evaluar-tramite/guardar-dictamen.service';
 import { IniciarService } from '../core/services/evaluar-tramite/iniciar.service';
 import { OpcionesEvaluacionRequest } from '../core/models/evaluar/request/opciones-evaluacion.model';
+import { OpinionResponse } from '@libs/shared/data-access-user/src/core/models/130118/opinion-response.model';
 import { RequerimientosResponse } from '@libs/shared/data-access-user/src/core/models/130118/requerimientos-response.model';
 import { TabsSolicitudServiceTsService } from "../core/services/evaluar-tramite/tabs-solicitud.service.ts.service";
 import { TareasSolicitud } from "@libs/shared/data-access-user/src/core/models/130118/consulta-tareas-response.model";
@@ -152,11 +154,20 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    */
   tareasSolicitud: TareasSolicitud[] = [];
 
+  /** Listado de opiniones registradas para el trámite. */
+  opinion: OpinionResponse[] = [];
+
   /**
    * @property {AcusesResolucionResponse[]} acusesResolucion
    * @description Acuses de resolución asociados al trámite.
    */
   acusesResolucion!: AcusesResolucionResponse;
+
+  /**
+   * @property {EnvioDigitalResponse} envioDigital
+   * @description Respuesta del envío digital asociado al trámite.
+   */
+  envioDigital!: EnvioDigitalResponse;
 
   /**
    * @property {RequerimientosResponse[]} requerimientosSolicitud
@@ -199,6 +210,15 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @description Indica si los requerimientos ya han sido cargados.
    */
   yaCargoRequerimientos = false;
+
+  /**
+   * @property {boolean} yaCargoEnvioDigital
+   * @description Indica si el envío digital ya ha sido cargado.
+   */
+  yaCargoEnvioDigital = false;
+
+  /** Indica si la opinión ya ha sido cargada. */
+  yaCargoOpinion = false;
 
   /**
  * @constructor
@@ -280,7 +300,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
  */
   getDocumentosSolicitud(): void {
     const IDSOLICITUD = '202757440'
-    this.tabsSolicitudServiceTsService.getDocumentosSolicitud(this.tramite,IDSOLICITUD)
+    this.tabsSolicitudServiceTsService.getDocumentosSolicitud(this.tramite, IDSOLICITUD)
       .subscribe({
         next: (response) => {
           if (response.codigo === '00') {
@@ -307,7 +327,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    */
   getRequerimientos(): void {
     const NUMFOLIOTRAMITE = '0402600400220214006000415'
-    this.tabsSolicitudServiceTsService.getRequerimientos(this.tramite,NUMFOLIOTRAMITE)
+    this.tabsSolicitudServiceTsService.getRequerimientos(this.tramite, NUMFOLIOTRAMITE)
       .subscribe({
         next: (response) => {
           if (response.codigo === '00') {
@@ -334,7 +354,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    */
   getDictamenes(): void {
     const NUMFOLIOTRAMITE = '0201300101820161931039462'
-    this.tabsSolicitudServiceTsService.getDictamenes(this.tramite,NUMFOLIOTRAMITE)
+    this.tabsSolicitudServiceTsService.getDictamenes(this.tramite, NUMFOLIOTRAMITE)
       .subscribe({
         next: (response) => {
           if (response.codigo === '00') {
@@ -361,11 +381,35 @@ export class EvaluarComponent implements OnInit, OnDestroy {
  */
   getTareasSolicitud(): void {
     const NUMFOLIOTRAMITE = '0201100100120242540000372'
-    this.tabsSolicitudServiceTsService.getTareasSolicitud(this.tramite,NUMFOLIOTRAMITE)
+    this.tabsSolicitudServiceTsService.getTareasSolicitud(this.tramite, NUMFOLIOTRAMITE)
       .subscribe({
         next: (response) => {
           if (response.codigo === '00') {
             this.tareasSolicitud = response.datos ?? [];
+          } else {
+            console.error('Error en respuesta:', response.mensaje);
+          }
+        },
+        error: (error) => {
+          console.error('Error al llamar el servicio:', error);
+        }
+      });
+  }
+
+  /**
+   * Obtiene las opiniones asociadas al trámite actual usando un folio predefinido.
+   * Maneja la respuesta del servicio y actualiza la propiedad 'opinion' del componente.
+   * En caso de error, lo registra en la consola.
+   * 
+   * @returns {void}
+   */
+  getOpiniones(): void {
+    const NUMFOLIOTRAMITE = '0201200600320232336000029'
+    this.tabsSolicitudServiceTsService.getOpiniones(this.tramite, NUMFOLIOTRAMITE)
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === '00') {
+            this.opinion = response.datos ?? [];
           } else {
             console.error('Error en respuesta:', response.mensaje);
           }
@@ -391,6 +435,28 @@ export class EvaluarComponent implements OnInit, OnDestroy {
         next: (response) => {
           if (response.codigo === '00') {
             this.acusesResolucion = response.datos ?? {} as AcusesResolucionResponse;
+          } else {
+            console.error('Error en respuesta:', response.mensaje);
+          }
+        },
+        error: (error) => {
+          console.error('Error al llamar el servicio:', error);
+        }
+      });
+  }
+
+
+  /**
+   * @method getEnvioDigital
+   * @description Método para obtener el envío digital asociado a un trámite.
+   */
+  getEnvioDigital(): void {
+    const NUMFOLIOTRAMITE = '0201100202220222540000013'
+    this.tabsSolicitudServiceTsService.getEnvioDigital(this.tramite, NUMFOLIOTRAMITE)
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === '00') {
+            this.envioDigital = response.datos ?? {} as EnvioDigitalResponse;
           } else {
             console.error('Error en respuesta:', response.mensaje);
           }
@@ -428,6 +494,16 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     if (indice === 3 && !this.yaCargoRequerimientos) {
       this.yaCargoRequerimientos = true;
       this.getRequerimientos();
+    }
+
+    if (indice === 4 && !this.yaCargoOpinion) {
+      this.yaCargoOpinion = true;
+      this.getOpiniones();
+    }
+
+    if (indice === 7 && !this.yaCargoEnvioDigital) {
+      this.yaCargoEnvioDigital = true;
+      this.getEnvioDigital();
     }
 
     if (indice === 5 && !this.yaCargoAcuses) {
