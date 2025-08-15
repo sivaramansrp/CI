@@ -13,10 +13,20 @@
               formControlName="codigoPostal"
               appUppercase
               aria-labelledby="codigoPostal"
+              maxlength="12"
+              (input)="onCodigoPostalInput($event)"
               (change)="setValorStore(form, 'codigoPostal')"
             />
-            <div *ngIf="form.get('codigoPostal')?.touched && form.get('codigoPostal')?.hasError('required')" class="text-danger">
-              Por favor, corrija la codigoPostal.
+            <div *ngIf="form.get('codigoPostal')?.touched && form.get('codigoPostal')?.invalid" class="text-danger">
+              <div *ngIf="form.get('codigoPostal')?.errors?.['required']">
+                Este campo es obligatorio
+              </div>
+              <div *ngIf="form.get('codigoPostal')?.errors?.['pattern'] || form.get('codigoPostal')?.errors?.['min'] || form.get('codigoPostal')?.errors?.['max']">
+                Por favor, escribe un número entero válido
+              </div>
+              <div *ngIf="form.get('codigoPostal')?.errors?.['maxlength']">
+                El código postal no puede tener más de 12 dígitos
+              </div>
             </div>
           </div>
         </div>
@@ -51,10 +61,17 @@
               formControlName="municipioOAlcaldia"
               appUppercase
               aria-labelledby="municipioOAlcaldia"
-              (change)="setValorStore(form, 'municipioOAlcaldia')"
+                  maxlength="120"
+                  (input)="onMunicipioOAlcaldiaInput($event)"
+                  (change)="setValorStore(form, 'municipioOAlcaldia')"
             />
-            <div *ngIf="form.get('municipioOAlcaldia')?.touched && form.get('municipioOAlcaldia')?.hasError('required')" class="text-danger">
-              Por favor, corrija el municipio.
+            <div *ngIf="form.get('municipioOAlcaldia')?.touched && form.get('municipioOAlcaldia')?.invalid" class="text-danger">
+              <div *ngIf="form.get('municipioOAlcaldia')?.hasError('required')">
+                Este campo es obligatorio
+              </div>
+              <div *ngIf="form.get('municipioOAlcaldia')?.hasError('maxlength')">
+                El municipio o alcaldía no puede tener más de 120 caracteres
+              </div>
             </div>
           </div>
         </div>
@@ -78,10 +95,21 @@
               formControlName="localidad"
               appUppercase
               aria-labelledby="localidad"
+              maxlength="120"
+              pattern="^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]{1,30}$"
+              (input)="onLocalidadInput($event)"
               (change)="setValorStore(form, 'localidad')"
             />
-            <div *ngIf="form.get('localidad')?.touched && form.get('localidad')?.hasError('required')" class="text-danger">
-              Por favor, corrija el localidad.
+            <div *ngIf="form.get('localidad')?.touched && form.get('localidad')?.invalid" class="text-danger">
+              <div *ngIf="form.get('localidad')?.hasError('required')">
+                Por favor, corrija el localidad.
+              </div>
+              <div *ngIf="form.get('localidad')?.hasError('maxlength')">
+                La localidad no puede tener más de 120 caracteres
+              </div>
+               <div *ngIf="form.get('localidad')?.hasError('pattern')">
+                El valor capturado no es válido.
+              </div>
             </div>
           </div>
         </div>
@@ -96,10 +124,17 @@
               formControlName="colonias"
               appUppercase
               aria-labelledby="colonias"
-              (change)="setValorStore(form, 'colonias')"
+                maxlength="120"
+                (input)="onColoniasInput($event)"
+                (change)="setValorStore(form, 'colonias')"
             />
-            <div *ngIf="form.get('colonias')?.touched && form.get('colonias')?.hasError('required')" class="text-danger">
-              Por favor, corrija la colonias.
+            <div *ngIf="form.get('colonias')?.touched && form.get('colonias')?.invalid" class="text-danger">
+              <div *ngIf="form.get('colonias')?.hasError('required')">
+                Por favor, corrija la colonias.
+              </div>
+              <div *ngIf="form.get('colonias')?.hasError('maxlength')">
+                La colonia no puede tener más de 120 caracteres
+              </div>
             </div>
           </div>
         </div>
@@ -122,10 +157,17 @@
               formControlName="calle"
               appUppercase
               aria-labelledby="calle"
+              (input)="onCalleInput($event)"
+              maxlength="100"
               (change)="setValorStore(form, 'calle')"
             />
-            <div *ngIf="form.get('calle')?.touched && form.get('calle')?.hasError('required')" class="text-danger">
-              Por favor, corrija la calle.
+            <div *ngIf="form.get('calle')?.touched && form.get('calle')?.invalid" class="text-danger">
+              <div *ngIf="form.get('calle')?.hasError('required')">
+                Este campo es obligatorio
+              </div>
+              <div *ngIf="form.get('calle')?.hasError('maxlength')">
+                La calle no puede tener más de 100 caracteres
+              </div>
             </div>
           </div>
         </div>
@@ -142,10 +184,20 @@
               formControlName="lada"
               appUppercase
               aria-labelledby="lada"
+              maxlength="5"
+              (input)="onLadaInput($event)"
               (change)="setValorStore(form, 'lada')"
             />
-            <div *ngIf="form.get('lada')?.touched && form.get('lada')?.hasError('required')" class="text-danger">
-              Por favor, corrija la lada.
+            <div *ngIf="form.get('lada')?.touched && form.get('lada')?.invalid" class="text-danger">
+              <div *ngIf="form.get('lada')?.hasError('required')">
+                Por favor, corrija la lada.
+              </div>
+              <div *ngIf="form.get('lada')?.hasError('pattern')">
+                Por favor, escribe un número entero válido
+              </div>
+              <div *ngIf="form.get('lada')?.hasError('maxlength')">
+                La lada no puede tener más de 5 dígitos
+              </div>
             </div>
           </div>
         </div>
@@ -159,15 +211,20 @@
               formControlName="telefono"
               appUppercase
               aria-labelledby="telefono"
+              maxlength="30"
+              (input)="onTelefonoInput($event)"
               (change)="setValorStore(form, 'telefono')"
             />
 
             <div *ngIf="form.get('telefono')?.touched && form.get('telefono')?.invalid" class="text-danger">
               <div *ngIf="form.get('telefono')?.errors?.['required']">
-                El teléfono es obligatorio.
+               Este campo es obligatorio
               </div>
               <div *ngIf="form.get('telefono')?.errors?.['pattern']">
-                El teléfono debe contener exactamente 10 dígitos numéricos.
+                Por favor, escribe un número entero válido
+              </div>
+              <div *ngIf="form.get('telefono')?.errors?.['maxlength']">
+                El teléfono no puede tener más de 30 dígitos
               </div>
             </div>
           </div>
@@ -217,16 +274,20 @@
           >No. de licencia sanitaria:
             <span 
               class="bi bi-question-circle-fill" 
-              title="No. de licencia sanitaria"
+              title="Número de la autorización
+                    indicado en el documento
+                    emitido por la autoridad
+                    sanitaria competente"
               data-bs-toggle="tooltip"
               ></span
             ></label>
-          <input 
-            class="form-control" 
-            id="licenciaSanitaria" 
-            placeholder="" 
-            type="text"
-            formControlName="licenciaSanitaria" />
+            <input 
+              class="form-control" 
+              id="licenciaSanitaria" 
+              placeholder="" 
+              type="text"
+              formControlName="licenciaSanitaria"
+            />
         </div>
       </div>
     </div>
@@ -241,6 +302,7 @@
           [isDisabled]="esFormularioSoloLectura" 
           name="regimen" 
           [tooltipQuestionCircle]="true"
+          [tooltipQuestionCircleText]="'Régimen al que se destinará la mercancía'"
           (change)="setValorStore(domicilio, 'regimen')"
         ></app-catalogo-select>
         <div *ngIf="domicilio.get('regimen')?.touched && domicilio.get('regimen')?.hasError('required')" class="text-danger">
@@ -335,11 +397,14 @@
               [required]="true"
               formControlName="manifests"
               [isDisabled]="esFormularioSoloLectura"
-              (change)="setValorStore(domicilio, 'manifests')"
+              (change)="onManifestsChange()"
             ></lib-input-check>
             <span class="fw-bold align-middle"> *</span>
             <div>{{ manifests }}</div>
           </div>
+        </div>
+        <div *ngIf="!domicilio.get('manifests')?.value && domicilio.get('manifests')?.touched" class="text-danger">
+          Este campo es obligatorio
         </div>
       </div>
     </div>
@@ -368,10 +433,17 @@
               type="text" id="rfc" 
               formControlName="rfc" 
               appUppercase aria-labelledby="rfc"
+              maxlength="13"
+              (input)="onRfcInput($event)"
               (change)="setValorStore(representanteLegal, 'rfc')" 
             />
             <div *ngIf="representanteLegal.get('rfc')?.invalid && representanteLegal.get('rfc')?.touched" class="text-danger">
-              El RFC es obligatorio.
+              <div *ngIf="representanteLegal.get('rfc')?.hasError('required')">
+                Este campo es obligatorio
+              </div>
+              <div *ngIf="representanteLegal.get('rfc')?.hasError('maxlength')">
+                El RFC no puede tener más de 13 caracteres
+              </div>
             </div>
           </div>
         </div>

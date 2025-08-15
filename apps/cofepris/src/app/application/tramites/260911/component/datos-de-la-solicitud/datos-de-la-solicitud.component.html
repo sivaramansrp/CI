@@ -33,7 +33,7 @@
       </div>
     </div>
   </div>
-
+ 
   <div class="row mt-5">
     <form [formGroup]="form">
       <h6>Seleccione el tipo de operación que desea realizar*:</h6>
@@ -45,7 +45,7 @@
           (change)="setValorStore(form,'btonDeRadio')"
         ></app-input-radio>
         <div *ngIf="form.get('btonDeRadio')?.invalid && form.get('btonDeRadio')?.touched" class="text-danger">
-          Por favor seleccione una opción.
+            Este campo es obligatorio
         </div>
       </div>
 
@@ -54,14 +54,16 @@
           <div class="form-group" [ngClass]="{'disabled-section': !isRadioButtonSelected}">
             <label class="form-label">Justificación*:</label>
             <textarea
-              class="form-control"
-              rows="3"
-              required = "true"
+              class="form-control justificacionBox"
+              rows="10"
+              required="true"
               formControlName="justificacion"
               (change)="setValorStore(form,'justificacion')"
+              maxlength="2000"
+              (input)="validarLongitudMaxima('justificacion', 2000)"
             ></textarea>
             <div *ngIf="form.get('justificacion')?.invalid && form.get('justificacion')?.touched" class="text-danger">
-              Por favor, corrija el motivo o justificación de la importación temporal.
+              Este campo es obligatorio
             </div>
           </div>
         </div>
@@ -116,12 +118,19 @@
               placeholder=""
               type="text"
               formControlName="denominacion"
+              maxlength="101"
               (change)="setValorStore(datosDelEstablecimiento,'denominacion')"
+              (input)="validarLongitudMaxima('denominacion', 101)"
             />
             <div
             *ngIf="datosDelEstablecimiento.get('denominacion')?.invalid && datosDelEstablecimiento.get('denominacion')?.touched"
             class="text-danger">
-            La denominación es obligatoria.
+            <span *ngIf="datosDelEstablecimiento.get('denominacion')?.errors?.['required']">
+              Este campo es obligatorio
+            </span>
+            <span *ngIf="datosDelEstablecimiento.get('denominacion')?.errors?.['maxlength']">
+              Máximo 100 caracteres permitidos.
+            </span>
           </div>
           </div>
         </div>
@@ -133,8 +142,9 @@
               >Correo electrónico*:
               <span
                 class="bi bi-question-circle-fill"
-                title="Correo electrónico"
+                data-bs-title="ejemplo@dominio.com"
                 data-bs-toggle="tooltip"
+                data-bs-placement="top"
               ></span
             ></label>
             <input
@@ -143,14 +153,19 @@
               placeholder=""
               type="text"
               formControlName="correo"
+              maxlength="320"
               (change)="setValorStore(datosDelEstablecimiento,'correo')"
+              (input)="validarLongitudMaxima('correo', 320)"
             />
             <div *ngIf="datosDelEstablecimiento.get('correo')?.invalid && datosDelEstablecimiento.get('correo')?.touched" class="text-danger">
               <span *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['required']">
-                El correo electrónico es obligatorio.
+                Este campo es obligatorio
               </span>
               <span *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['email']">
-                El formato del correo electrónico no es válido.
+                El valor Ingresado no es una dirección válida de correo electrónico
+              </span>
+              <span *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['maxlength']">
+                Máximo 320 caracteres permitidos.
               </span>
             </div>
           </div>

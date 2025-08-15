@@ -1,4 +1,4 @@
-import { AlertComponent, InputCheckComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, InputCheckComponent, REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite260911State, Tramite260911Store } from '../../estados/tramite260911.store';
@@ -213,10 +213,23 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
    * Inicializa el formulario y carga los datos necesarios para las tablas y catálogos.
    */
   ngOnInit(): void {
+
     this.inicializarEstadoFormulario();
     this.obtenerTablaDatos();
     this.obtenerEstadoList();
     this.obtenerMercanciasDatos();
+
+    // Enable/disable licenciaSanitaria based on avisoCheckbox value
+    this.domicilio?.get('avisoCheckbox')?.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((checked: boolean) => {
+        const LICENCIA_SANITARIA_CONTROL = this.domicilio.get('licenciaSanitaria');
+        if (checked) {
+          LICENCIA_SANITARIA_CONTROL?.disable();
+        } else {
+          LICENCIA_SANITARIA_CONTROL?.enable();
+        }
+      });
   }
 
   /**
@@ -242,21 +255,21 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.form = this.fb.group({
-      codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required]],
+      codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS), Validators.maxLength(12)]],
       estado: [this.solicitudState?.estado],
-      municipioOAlcaldia: [this.solicitudState?.municipioOAlcaldia, [Validators.required]],
-      localidad: [this.solicitudState?.localidad],
-      colonias: [this.solicitudState?.colonias],
-      calle: [this.solicitudState?.calle, [Validators.required]],
-      lada: [this.solicitudState?.lada],
-      telefono: [this.solicitudState.telefono, [Validators.required]],
+      municipioOAlcaldia: [this.solicitudState?.municipioOAlcaldia, [Validators.required, Validators.maxLength(120)]],
+      localidad: [this.solicitudState?.localidad, [Validators.maxLength(120)]],
+      colonias: [this.solicitudState?.colonias, [Validators.maxLength(120)]],
+      calle: [this.solicitudState?.calle, [Validators.required, Validators.maxLength(100)]],
+      lada: [this.solicitudState?.lada, [Validators.pattern(REGEX_SOLO_DIGITOS), Validators.maxLength(5)]],
+      telefono: [this.solicitudState.telefono, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS), Validators.maxLength(30)]],
     });
 
     this.domicilio = this.fb.group({
       avisoCheckbox: [true],
       licenciaSanitaria: [{ value: this.solicitudState?.licenciaSanitaria, disabled: true }],
-      regimen: [this.solicitudState?.regimen],
-      aduanasEntradas: [this.solicitudState?.aduanasEntradas],
+      regimen: [this.solicitudState?.regimen, [Validators.required]],
+      aduanasEntradas: [this.solicitudState?.aduanasEntradas, [Validators.required]],
       importPermitNumberCNSNS: [{ value: this.solicitudState?.importPermitNumberCNSNS, disabled: false }],
       aifaCheckbox: [true],
       manifests: [true],
@@ -264,7 +277,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
 
     this.representanteLegal = this.fb.group({
       acuerdoPublico: [this.solicitudState?.acuerdoPublico],
-      rfc: [this.solicitudState?.rfc, [Validators.required]],
+      rfc: [this.solicitudState?.rfc, [Validators.required, Validators.maxLength(13)]],
       nombre: [{ value: this.solicitudState?.nombre, disabled: true }, [Validators.required]],
       apellidoPaterno: [{ value: this.solicitudState?.apellidoPaterno, disabled: true }, [Validators.required]],
       apellidoMaterno: [{ value: this.solicitudState?.apellidoMaterno, disabled: true }, [Validators.required]],
@@ -319,4 +332,211 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       [control]: VALOR
     });
   }
+
+  /**
+   * Maneja el cambio del checkbox de manifests y lo marca como touched
+   */
+  onManifestsChange(): void {
+    this.domicilio.get('manifests')?.markAsTouched();
+    this.setValorStore(this.domicilio, 'manifests');
+  }
+
+  /**
+   * Maneja el evento de input del campo codigoPostal para validar en tiempo real
+   * @param event Evento de input del campo
+   */
+  onCodigoPostalInput(event: Event): void {
+    const INPUT_ELEMENT = event.target as HTMLInputElement;
+    const VALUE = INPUT_ELEMENT.value;
+    const CONTROL = this.form.get('codigoPostal');
+    
+    if (CONTROL) {
+      // Marcar como touched para mostrar errores
+      CONTROL.markAsTouched();
+      
+      // Si el valor tiene exactamente 12 caracteres, forzar el error de maxlength
+      if (VALUE && VALUE.length === 12) {
+        CONTROL.setErrors({ ...CONTROL.errors, maxlength: { requiredLength: 12, actualLength: VALUE.length } });
+      } else if (VALUE && VALUE.length < 12) {
+        // Si tiene menos de 12 caracteres, remover el error de maxlength pero mantener otros errores
+        const ERRORS = CONTROL.errors;
+        if (ERRORS) {
+          delete ERRORS['maxlength'];
+          const HAS_OTHER_ERRORS = Object.keys(ERRORS).length > 0;
+          CONTROL.setErrors(HAS_OTHER_ERRORS ? ERRORS : null);
+        }
+      }
+    }
+  }
+
+    /**
+     * Maneja el evento de input del campo colonias para validar en tiempo real
+     * @param event Evento de input del campo
+     */
+
+    /**
+     * Maneja el evento de input del campo municipioOAlcaldia para validar en tiempo real
+     * @param event Evento de input del campo
+     */
+    onMunicipioOAlcaldiaInput(event: Event): void {
+      const INPUT_ELEMENT = event.target as HTMLInputElement;
+      const VALUE = INPUT_ELEMENT.value;
+      const CONTROL = this.form.get('municipioOAlcaldia');
+    
+      if (CONTROL) {
+        CONTROL.markAsTouched();
+        if (VALUE && VALUE.length === 120) {
+          CONTROL.setErrors({ ...CONTROL.errors, maxlength: { requiredLength: 120, actualLength: VALUE.length } });
+        } else if (VALUE && VALUE.length < 120) {
+          const ERRORS = CONTROL.errors;
+          if (ERRORS) {
+            delete ERRORS['maxlength'];
+            const HAS_OTHER_ERRORS = Object.keys(ERRORS).length > 0;
+            CONTROL.setErrors(HAS_OTHER_ERRORS ? ERRORS : null);
+          }
+        }
+      }
+    }
+  /**
+   * Maneja el evento de input del campo localidad para validar en tiempo real
+   * @param event Evento de input del campo
+   */
+  onLocalidadInput(event: Event): void {
+    const INPUT_ELEMENT = event.target as HTMLInputElement;
+    const VALUE = INPUT_ELEMENT.value;
+    const CONTROL = this.form.get('localidad');
+
+      if (CONTROL) {
+        CONTROL.markAsTouched();
+        if (VALUE && VALUE.length === 120) {
+          CONTROL.setErrors({ ...CONTROL.errors, maxlength: { requiredLength: 120, actualLength: VALUE.length } });
+        } else if (VALUE && VALUE.length < 120) {
+          const ERRORS = CONTROL.errors;
+          if (ERRORS) {
+            delete ERRORS['maxlength'];
+            const HAS_OTHER_ERRORS = Object.keys(ERRORS).length > 0;
+            CONTROL.setErrors(HAS_OTHER_ERRORS ? ERRORS : null);
+          }
+        }
+      }
+    }
+    /**
+     * Maneja el evento de input del campo colonias para validar en tiempo real
+     * @param event Evento de input del campo
+     */
+    onColoniasInput(event: Event): void {
+      const INPUT_ELEMENT = event.target as HTMLInputElement;
+      const VALUE = INPUT_ELEMENT.value;
+      const CONTROL = this.form.get('colonias');
+
+      if (CONTROL) {
+        CONTROL.markAsTouched();
+        if (VALUE && VALUE.length === 120) {
+          CONTROL.setErrors({ ...CONTROL.errors, maxlength: { requiredLength: 120, actualLength: VALUE.length } });
+        } else if (VALUE && VALUE.length < 120) {
+          const ERRORS = CONTROL.errors;
+          if (ERRORS) {
+            delete ERRORS['maxlength'];
+            const HAS_OTHER_ERRORS = Object.keys(ERRORS).length > 0;
+            CONTROL.setErrors(HAS_OTHER_ERRORS ? ERRORS : null);
+          }
+        }
+      }
+    }
+
+    /**
+     * Maneja el evento de input del campo calle para validar en tiempo real
+     * @param event Evento de input del campo
+     */
+    onCalleInput(event: Event): void {
+      const INPUT_ELEMENT = event.target as HTMLInputElement;
+      const VALUE = INPUT_ELEMENT.value;
+      const CONTROL = this.form.get('calle');
+
+      if (CONTROL) {
+        CONTROL.markAsTouched();
+        if (VALUE && VALUE.length === 100) {
+          CONTROL.setErrors({ ...CONTROL.errors, maxlength: { requiredLength: 100, actualLength: VALUE.length } });
+        } else if (VALUE && VALUE.length < 100) {
+          const ERRORS = CONTROL.errors;
+          if (ERRORS) {
+            delete ERRORS['maxlength'];
+            const HAS_OTHER_ERRORS = Object.keys(ERRORS).length > 0;
+            CONTROL.setErrors(HAS_OTHER_ERRORS ? ERRORS : null);
+          }
+        }
+      }
+    }
+    /**
+     * Maneja el evento de input del campo lada para validar en tiempo real
+     * @param event Evento de input del campo
+     */
+    onLadaInput(event: Event): void {
+      const INPUT_ELEMENT = event.target as HTMLInputElement;
+      const VALUE = INPUT_ELEMENT.value;
+      const CONTROL = this.form.get('lada');
+
+      if (CONTROL) {
+        CONTROL.markAsTouched();
+        if (VALUE && VALUE.length === 5) {
+          CONTROL.setErrors({ ...CONTROL.errors, maxlength: { requiredLength: 5, actualLength: VALUE.length } });
+        } else if (VALUE && VALUE.length < 5) {
+          const ERRORS = CONTROL.errors;
+          if (ERRORS) {
+            delete ERRORS['maxlength'];
+            const HAS_OTHER_ERRORS = Object.keys(ERRORS).length > 0;
+            CONTROL.setErrors(HAS_OTHER_ERRORS ? ERRORS : null);
+          }
+        }
+      }
+    }
+
+    /**
+     * Maneja el evento de input del campo telefono para validar en tiempo real
+     * @param event Evento de input del campo
+     */
+    onTelefonoInput(event: Event): void {
+      const INPUT_ELEMENT = event.target as HTMLInputElement;
+      const VALUE = INPUT_ELEMENT.value;
+      const CONTROL = this.form.get('telefono');
+
+      if (CONTROL) {
+        CONTROL.markAsTouched();
+        if (VALUE && VALUE.length === 30) {
+          CONTROL.setErrors({ ...CONTROL.errors, maxlength: { requiredLength: 30, actualLength: VALUE.length } });
+        } else if (VALUE && VALUE.length < 30) {
+          const ERRORS = CONTROL.errors;
+          if (ERRORS) {
+            delete ERRORS['maxlength'];
+            const HAS_OTHER_ERRORS = Object.keys(ERRORS).length > 0;
+            CONTROL.setErrors(HAS_OTHER_ERRORS ? ERRORS : null);
+          }
+        }
+      }
+    }
+
+    /**
+     * Maneja el evento de input del campo RFC para validar en tiempo real
+     * @param event Evento de input del campo
+     */
+    onRfcInput(event: Event): void {
+      const INPUT_ELEMENT = event.target as HTMLInputElement;
+      const VALUE = INPUT_ELEMENT.value;
+      const CONTROL = this.representanteLegal.get('rfc');
+
+      if (CONTROL) {
+        CONTROL.markAsTouched();
+        if (VALUE && VALUE.length === 13) {
+          CONTROL.setErrors({ ...CONTROL.errors, maxlength: { requiredLength: 13, actualLength: VALUE.length } });
+        } else if (VALUE && VALUE.length < 13) {
+          const ERRORS = CONTROL.errors;
+          if (ERRORS) {
+            delete ERRORS['maxlength'];
+            const HAS_OTHER_ERRORS = Object.keys(ERRORS).length > 0;
+            CONTROL.setErrors(HAS_OTHER_ERRORS ? ERRORS : null);
+          }
+        }
+      }
+    }
+
 }
