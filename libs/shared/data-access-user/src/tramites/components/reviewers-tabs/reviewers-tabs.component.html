@@ -26,7 +26,7 @@
             <lib-consultarequerimientos [requerimientos]="requerimientos"></lib-consultarequerimientos>
             }
             @case(4) {
-            <lib-opinion></lib-opinion>
+            <lib-opinion [opinion] = "opinion"></lib-opinion>
             }
             @case (5) {
             <lib-acuses-resoluciones [acusesResolucion]="acusesResolucion"></lib-acuses-resoluciones>
@@ -35,7 +35,7 @@
             <lib-tareas-tramite [tareasSolicitud]="tareasSolicitud"></lib-tareas-tramite>
             }
             @case (7) {
-            <lib-envio-digital></lib-envio-digital>
+            <lib-envio-digital [envioDigital] = "envioDigital"></lib-envio-digital>
             }
             @default {
             <p>tab</p>

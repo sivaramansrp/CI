@@ -8,7 +8,9 @@ import { DictamenesResponse } from "../../../core/models/130118/dictamenes-respo
 import { DocumentoSolicitud } from "../../../core/models/130118/consulta-documentos-response.model";
 import { DocumentosComponent } from "../consulta-generica/bandeja-documentos/documentos.component";
 import { EnvioDigitalComponent } from "../consulta-generica/consulta-envio-digital/envio-digital.component";
+import { EnvioDigitalResponse } from "../../../core/models/130118/envio-digital-response.model";
 import { OpinionComponent } from "../consulta-generica/consulta-opinion/opiniones.component";
+import { OpinionResponse } from "../../../core/models/130118/opinion-response.model";
 import { RequerimientosResponse } from "../../../core/models/130118/requerimientos-response.model";
 import { Tabulaciones } from "../../../core/models/lista-trimites.model";
 import { TareasSolicitud } from "../../../core/models/130118/consulta-tareas-response.model";
@@ -71,6 +73,9 @@ export class ReviewersTabsComponent implements OnChanges, OnInit {
    */
   @Input() tareasSolicitud: TareasSolicitud[] = [];
 
+  /** Opiniones recibidas desde el componente padre */
+  @Input() opinion : OpinionResponse[] = [];
+
   /**
    * @property {RequerimientosResponse[]} requerimientos
    * @description Requerimientos de solicitud.
@@ -88,6 +93,12 @@ export class ReviewersTabsComponent implements OnChanges, OnInit {
    * @description Acuses de resolución asociados al trámite.
    */
   @Input() acusesResolucion!: AcusesResolucionResponse;
+
+  /**
+   * @property {EnvioDigitalResponse} envioDigital
+   * @description Respuesta del envío digital asociado al trámite.
+   */
+  @Input() envioDigital!: EnvioDigitalResponse;
 
   /**
    * @property {EventEmitter<number>} onTabSeleccionado
