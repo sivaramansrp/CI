@@ -24,7 +24,8 @@
 <ng-alert [CONTENIDO]="TEXTOS.alerta"></ng-alert>
 <div class="row mt-5">
     <div class="col-md-12">
-        <app-tabla-dinamica 
+        <app-tabla-dinamica
+         [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
             [configuracionTabla]="instalacionesPrincipalesTabla"
             [datos]="instalacionesPrincipalesTablaDatos" 
             [tipoSeleccionTabla]="tablaSeleccionCheckbox">
@@ -113,6 +114,7 @@
               type="file"
               id="archivoNacionales"
               class="form-control w-auto"
+              formControlName="registrosQue3"
             />
           </div>
           <div>
@@ -384,6 +386,7 @@
   <div class="row mt-3">
     <div class="col-md-12">
         <lib-input-check 
+        [isDisabled]="esFormularioSoloLectura" 
             [id]="'indiqueCheck'" 
             formControlName="indiqueCheck"
             [label]="'Indique, si cuenta con un sistema de control de inventarios de conformidad con las disposiciones previstas por el Anexo 24.'" 
@@ -400,6 +403,7 @@
     <h5 class="mb-3">Control Inventarios</h5>
     <div class="col-md-12">
         <app-tabla-dinamica 
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
             [configuracionTabla]="controlInentariosTabla"
             [datos]="controlInentariosTablaDatos" 
             [tipoSeleccionTabla]="tablaSeleccionCheckbox">
