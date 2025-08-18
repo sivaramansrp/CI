@@ -22,6 +22,8 @@ export interface immexRegistroform {
    */
   candidadPorPeriodo: string;
 
+  productoImportacion: string;
+
   /**
    * @description Capacidad máxima de producción disponible durante un periodo determinado.
    * Representa el límite superior de producción que puede alcanzar la empresa en el periodo especificado.

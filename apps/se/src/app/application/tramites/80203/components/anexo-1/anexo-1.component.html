@@ -105,12 +105,20 @@
   <!-- Pasos para la sección de importación -->
  
     <div formGroupName="importacionForm">
-      <ng-titulo titulo="Permiso Immex"></ng-titulo>
+      <ng-titulo titulo="Fracción Arancelaria de exportación"></ng-titulo>
       <div class="row">
         <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
-          <label for="permisoImmexDatos">Permiso IMMEX:</label>
+          <label for="permisoImmexDatos">Fracción arancelaria:</label>
           <input type="text" class="form-control" id="permisoImmexDatos" name="permisoImmexDatosx" formControlName="permisoImmexDatos" />
         </div>
+ <div class="8">
+
+ </div>
+         <div class="col-12 col-xxl-4 col-xl-4 col-lg-6 col-md-6 col-sm-6">
+          <label for="permisoImmexDatos">Descripción del producto:</label>
+          <textarea class="form-control" id="permisoImmexDatos" name="permisoImmexDatosx" formControlName="permisoImmexDatos" rows="5" placeholder=""></textarea>
+        </div>
+     
         <div class="col-12 container text-end mt-5">
           <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
           <button class="btn btn-primary" (click)="showTableImportacion()" [disabled]="esFormularioSoloLectura">Agregar</button>
