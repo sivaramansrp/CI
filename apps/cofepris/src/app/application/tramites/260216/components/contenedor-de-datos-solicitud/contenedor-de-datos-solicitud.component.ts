@@ -138,7 +138,13 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
-  elementosRequeridos: string[] = ['correoElectronico','manifesto'];
+  /**
+   * Lista de elementos obligatorios dentro del formulario.
+   *
+   * Contiene los nombres de los campos que deben estar presentes y validados,
+   * tales como `correoElectronico` y `manifesto`.
+   */
+  elementosRequeridos: string[] = ['correoElectronico', 'manifesto'];
 
   /**
    * @constructor

@@ -92,6 +92,20 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
       })).subscribe();
   }
 
+  /**
+ * @inheritdoc
+ *
+ * Inicializa el componente verificando el estado de la consulta.
+ *
+ * - Si `consultaState` existe, el `procedureId` coincide con el `idProcedimiento`
+ *   y la bandera `update` está activa, se ejecuta el método `guardarDatosFormulario()`
+ *   para almacenar la información del formulario.
+ * - En caso contrario, se marca la variable `esDatosRespuesta` en `true`.
+ *
+ * Además, se suscribe al observable `getTabSeleccionado$` del query `tramite260216Query`
+ * para actualizar el índice (`indice`) del tab seleccionado, gestionando la
+ * desuscripción con `destroyNotifier$` al destruirse el componente.
+ */
   ngOnInit(): void {
     if ( this.consultaState && this.consultaState.procedureId === this.idProcedimiento.toString() &&
       this.consultaState.update) {
