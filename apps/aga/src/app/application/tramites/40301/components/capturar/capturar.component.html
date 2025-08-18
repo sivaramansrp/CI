@@ -9,11 +9,9 @@
     <div class="row">
       <div class="col-md-8">
         <div class="form-group">
-          <label class="control-label" for="tipoAgente">{{ tipoAgenteLabel }}</label>
-          <span class="require">*</span>
-          <label class="control-label">:</label>
+          <label class="control-label" for="tipoAgente">{{ tipoAgenteLabel }} *:</label>
           <app-catalogo-select [catalogo]="agentCatalog" formControlName="tipoAgente" [required]="true"
-            name="tipoAgente" [isDisabled]="soloLectura" (change)="conTipoAgenteData('tipoAgente')"></app-catalogo-select>
+            name="tipoAgente" [isDisabled]="soloLectura" (change)="conTipoAgenteData('tipoAgente')" [placeholder]="'Selecciona tipo de agente'"></app-catalogo-select>
         </div>
 
         <div class="text-end mt-3">
@@ -34,9 +32,7 @@
     <div class="row">
       <div class="col col-md-4 form-group">
         <div>
-          <label class="control-label" for="nombreDirectorGeneral">Nombre(s)</label>
-          <span class="require">*</span>
-          <label class="control-label">:</label>
+          <label class="control-label" for="nombreDirectorGeneral">Nombre(s)*:</label>
         </div>
         <div>
           <input type="text" formControlName="directorGeneralNombre" size="30" id="nombreDirectorGeneral"
@@ -49,9 +45,7 @@
       </div>
       <div class="col col-md-4 form-group">
         <div>
-          <label class="control-label" for="apellidoPaternoDirectorGeneral">Primer apellido</label>
-          <span class="require">*</span>
-          <label class="control-label">:</label>
+          <label class="control-label" for="apellidoPaternoDirectorGeneral">Primer apellido*:</label>
         </div>
         <div>
           <input type="text" formControlName="primerApellido" size="30" id="apellidoPaternoDirectorGeneral"
@@ -63,8 +57,7 @@
       </div>
       <div class="col col-md-4 form-group">
         <div>
-          <label class="control-label" for="apellidoMaternoDirectorGeneral">Segundo apellido</label>
-          <label class="control-label">:</label>
+          <label class="control-label" for="apellidoMaternoDirectorGeneral">Segundo apellido:</label>
         </div>
         <div>
           <input type="text" formControlName="segundoApellido" size="30" id="apellidoMaternoDirectorGeneral"

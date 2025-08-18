@@ -1,10 +1,10 @@
 import { Catalogo, Notificacion } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, catchError, map, of, takeUntil } from 'rxjs';
 import { Tramite303Store, Tramite303StoreService } from '../../../../core/estados/tramites/tramite303.store';
 import { Tramite303Query } from '../../../../core/queries/tramite303.query';
-import data from '@libs/shared/theme/assets/json/303/cat-numero-immex.json';
+import { TransportistaService } from '../../../../core/services/303/trasportista.service';
 
 @Component({
   selector: 'despacho-mercancias-solicitud',
@@ -28,11 +28,14 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
   /** Estado del trámite 303 consultado */
   public tramiteConsultado?: Tramite303Store;
+  /** Subject para destruir las suscripciones. */
+  private destruirSuscripcion$: Subject<void> = new Subject();
 
   constructor(
     private fb: FormBuilder,
     private tramite303State: Tramite303StoreService,
-    private tramite303Query: Tramite303Query
+    private tramite303Query: Tramite303Query,
+    private transportistaService: TransportistaService
   ) { }
 
   /**
@@ -40,7 +43,6 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
    * Carga el catálogo de números IMMEX y asigna el valor a la variable `catNumeroIMMEX`.
    */
   ngOnInit(): void {
-    this.catNumeroIMMEX = data;
     this.tramite303Query.selectSolicitud$
       .pipe(
         map((seccionState) => {
@@ -52,8 +54,29 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.createFormulario();
+    this.ObtenerDatosCatalogoImmex();
   }
 
+  ObtenerDatosCatalogoImmex(): void {
+    this.transportistaService.obtenerDatosImmex()
+      .pipe(
+        map((data) => {
+          if (data) {
+            this.catNumeroIMMEX = data;
+          }
+        }),
+        catchError((_error) => {
+          console.error('Error al consultar catálogo IMMEX', _error);
+          return of([]);
+        }),
+        takeUntil(this.destruirSuscripcion$)
+      )
+      .subscribe();
+  }
+
+  /**
+   * Crea el formulario para la solicitud de despacho de mercancías.
+   */
   createFormulario(): void {
     this.formDespacho = this.fb.group({
       cumplimiento: [this.tramiteConsultado?.cumplimiento, Validators.required],

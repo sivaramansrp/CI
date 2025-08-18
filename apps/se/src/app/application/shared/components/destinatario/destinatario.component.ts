@@ -1,5 +1,5 @@
+import { AfterViewInit, Component, EventEmitter, Input,OnChanges, OnDestroy,OnInit, Output,SimpleChanges } from '@angular/core';
 import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CAMPO_DE_DESTINATARIO } from '../../constantes/modificacion.enum';
 import { CommonModule } from '@angular/common';
@@ -20,7 +20,7 @@ import { Subject } from 'rxjs';
   templateUrl: './destinatario.component.html',
   styleUrl: './destinatario.component.scss'
 })
-export class DestinatarioComponent implements OnInit, OnDestroy {
+export class DestinatarioComponent implements OnInit, OnDestroy,AfterViewInit,OnChanges {
 
   /**
    * Identificador del procedimiento asociado al componente.
@@ -157,6 +157,12 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     this.inicializarEstadoFormulario();
     this.formDestinatario.patchValue(this.datosForm);
   }
+
+  ngAfterViewInit(): void {
+    if(this.paisDestino){
+      this.formDestinatario.get('paisDestin')?.setValidators([Validators.required,Validators.minLength(0)]);
+    }
+  }
   /**
 * Evalúa si se debe inicializar o cargar datos en el formulario.
 */
@@ -168,6 +174,25 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     if (this.esFormularioSoloLectura) {
       this.formDestinatario.disable();
 
+    }
+  }
+   /**
+   * @method ngOnChanges
+   * @description
+   * Método del ciclo de vida que se llama cuando cambia alguna propiedad enlazada por datos.
+   * Específicamente, verifica si el input `datosForm` ha cambiado. Si es así, actualiza el
+   * formulario `formDatosDelDestinatario` con los nuevos valores de `datosForm`. Si el formulario
+   * no existe, lo crea.
+   * 
+   * @param changes - Objeto con pares clave/valor de las propiedades que han cambiado.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['datosForm'] && this.datosForm) {
+      if (this.formDestinatario) {
+        this.formDestinatario.patchValue(this.datosForm);
+      } else {
+        this.createForm();
+      }
     }
   }
 
@@ -183,16 +208,12 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     */
   createForm(): void {
 this.formDestinatario = this.fb.group({
-  paisDestin: ['', [Validators.required, Validators.min(0)]],
+  paisDestin: [''],
   ciudad: ['', [Validators.required]],
   calle: ['', [Validators.required]],
   numeroLetra: ['', [Validators.required]],
-  lugar: ['', [Validators.required]],
-  nombreRepresentante: ['', [Validators.required, Validators.maxLength(100)]],
-  empresa: ['', [Validators.required, Validators.maxLength(100)]],
-  cargo: ['', [Validators.required, Validators.maxLength(50)]],
-  lada: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
-  telefono: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+  lada: ['', [Validators.pattern(/^\d+$/)]],
+  telefono: ['', [Validators.pattern(/^\d+$/)]],
   fax: ['', [Validators.pattern(/^\d+$/)]],
   correoElectronico: ['', [
     Validators.required,
@@ -211,6 +232,15 @@ this.formDestinatario = this.fb.group({
   paisDestionSeleccion(estado: Catalogo): void {
     this.paisDestionSeleccionEvent.emit(estado)
   }
+ validarFormularios():boolean{
+if(this.formDestinatario.invalid){
+  this.formDestinatario.markAllAsTouched();
+  return false;
+}
+return true;
+ }
+
+
 
   /**
   * Método del ciclo de vida ngOnDestroy. Se utiliza para cancelar las suscripciones y evitar fugas de memoria.

@@ -16,6 +16,7 @@ import {
 import {
   CATALOGOS_ID,
   DATOS_CATEGORIAS_TERCEROS,
+  IDPROCEDIMIENTO,
   TERCEROS_NACIONALIDAD_OPCIONES,
   TIPO_PERSONA_OPCIONES,
 } from '../../constantes/aviso-enum';
@@ -27,14 +28,18 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { Observable, Subject, map, merge, takeUntil } from 'rxjs';
+import { AgregarFabricanteComponent } from '../../../../shared/components/agregar-fabricante/agregar-fabricante.component';
 import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
+import { Fabricante } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite260601Query } from '../../../../estados/queries/tramite260601.query';
 
+
+
 /**
- * Componente para gestionar el agregar proveedor.
+ * Componente para gestionar el agregar fabricante.
  */
 @Component({
-  selector: 'app-agregar-proveedor',
+  selector: 'app-agregar-fabricante-sanitario',
   standalone: true,
   imports: [
     CommonModule,
@@ -43,16 +48,17 @@ import { Tramite260601Query } from '../../../../estados/queries/tramite260601.qu
     TituloComponent,
     InputRadioComponent,
     CatalogoSelectComponent,
+    AgregarFabricanteComponent
   ],
-  templateUrl: './agregar-proveedor.component.html',
-  styleUrl: './agregar-proveedor.component.css',
+  templateUrl: './agregar-fabricante-sanitario.component.html',
+  styleUrl: './agregar-fabricante-sanitario.component.css',
 })
-export class AgregarProveedorComponent implements OnInit, OnDestroy {
+export class AgregarFabricanteSanitarioComponent implements OnInit, OnDestroy {
   /**
    * Formulario principal que contiene tres subformularios:
    * datosGeneralesForm, datosPersonalesForm y domicilioForm.
    */
-  agregarProveedorForm!: FormGroup;
+  agregarFabricanteForm!: FormGroup;
 
   /**
    * Opciones de selección para la nacionalidad de terceros.
@@ -72,7 +78,7 @@ export class AgregarProveedorComponent implements OnInit, OnDestroy {
   /**
    * Subject para destruir las suscripciones.
    */
-  public destruirNotificador$: Subject<void> = new Subject();
+  private destruirNotificador$: Subject<void> = new Subject();
 
   /**
    * Estado actual del aviso sanitario.
@@ -82,22 +88,22 @@ export class AgregarProveedorComponent implements OnInit, OnDestroy {
   /**
    * Catálogo de países.
    */
-  pais!: Catalogo[];
+  paisFabricante!: Catalogo[];
 
   /**
    * Indica si el campo "País" debe estar deshabilitado.
    */
-  inhabilitarPais: boolean = true;
+  inhabilitarPaisFabricante: boolean = true;
 
   /**
    * Indica si se debe mostrar el botón de búsqueda del RFC.
    */
-  mostrarRfcBuscarBoton: boolean = false;
+  mostrarRfcFabricanteBuscarBoton: boolean = false;
 
   /**
    * Indica si se debe mostrar el botón de búsqueda del CURP.
    */
-  mostrarCurpBuscarBoton: boolean = false;
+  mostrarCurpFabricanteBuscarBoton: boolean = false;
 
   /**
    * Indica si los campos de datos personales deben mostrarse.
@@ -113,6 +119,14 @@ export class AgregarProveedorComponent implements OnInit, OnDestroy {
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   esFormularioSoloLectura: boolean = false;
+
+  /**
+   * @property {number} idProcedimiento
+   * @description
+   * Identificador del procedimiento actual utilizado en el formulario de fabricante.
+   * Se inicializa con el valor constante `IDPROCEDIMIENTO`.
+   */
+  idProcedimiento: number = IDPROCEDIMIENTO;
 
   /**
    * Constructor del componente.
@@ -136,7 +150,7 @@ export class AgregarProveedorComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destruirNotificador$),
         map((seccionState) => {
-          this.esFormularioSoloLectura = !seccionState.readonly;
+          this.esFormularioSoloLectura = seccionState.readonly;
           this.inicializarEstadoFormulario();
         })
       )
@@ -150,7 +164,6 @@ export class AgregarProveedorComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
   }
-
   /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.
    * Además, obtiene la información del catálogo de mercancía.
@@ -180,7 +193,7 @@ export class AgregarProveedorComponent implements OnInit, OnDestroy {
           this.avisoSanitarioState = seccionState;
 
           if (
-            this.avisoSanitarioState.tercerosNacionalidad ===
+            this.avisoSanitarioState.tercerosNacionalidadFabricante ===
             DATOS_CATEGORIAS_TERCEROS.EXTRANJERO
           ) {
             // Eliminar la opción "No Contribuyente" si se selecciona Extranjero
@@ -208,11 +221,11 @@ export class AgregarProveedorComponent implements OnInit, OnDestroy {
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
-      this.agregarProveedorForm.disable();
+      this.agregarFabricanteForm.disable();
       this.datosGeneralesForm.disable();
       this.datosPersonalesForm.disable();
     } else if (!this.esFormularioSoloLectura) {
-      this.agregarProveedorForm.enable();
+      this.agregarFabricanteForm.enable();
       this.datosGeneralesForm.enable();
       this.datosPersonalesForm.enable();
     } else {
@@ -224,29 +237,29 @@ export class AgregarProveedorComponent implements OnInit, OnDestroy {
    * Obtiene el subformulario "datosGeneralesForm".
    */
   get datosGeneralesForm(): FormGroup {
-    return this.agregarProveedorForm.get('datosGeneralesForm') as FormGroup;
+    return this.agregarFabricanteForm.get('datosGeneralesForm') as FormGroup;
   }
 
   /**
    * Obtiene el subformulario "datosPersonalesForm".
    */
   get datosPersonalesForm(): FormGroup {
-    return this.agregarProveedorForm.get('datosPersonalesForm') as FormGroup;
+    return this.agregarFabricanteForm.get('datosPersonalesForm') as FormGroup;
   }
 
   /**
    * Obtiene el subformulario "domicilioForm".
    */
   get domicilioForm(): FormGroup {
-    return this.agregarProveedorForm.get('domicilioForm') as FormGroup;
+    return this.agregarFabricanteForm.get('domicilioForm') as FormGroup;
   }
 
   /**
-   * Obtiene el campo "rfcProveedor" del subformulario "datosGeneralesForm".
+   * Obtiene el campo "rfcFabricante" del subformulario "datosGeneralesForm".
    */
-  get rfcProveedor(): FormControl {
-    return this.agregarProveedorForm.get(
-      'datosGeneralesForm.rfcProveedor'
+  get rfcFabricante(): FormControl {
+    return this.agregarFabricanteForm.get(
+      'datosGeneralesForm.rfcFabricante'
     ) as FormControl;
   }
 
@@ -254,146 +267,149 @@ export class AgregarProveedorComponent implements OnInit, OnDestroy {
    * Crea el formulario principal y define sus subformularios y validaciones.
    */
   crearFormulario(): void {
-    this.agregarProveedorForm = this.fb.group({
+    this.agregarFabricanteForm = this.fb.group({
       datosGeneralesForm: this.fb.group({
-        tercerosNacionalidad: [
-          this.avisoSanitarioState?.tercerosNacionalidad,
+        tercerosNacionalidadFabricante: [
+          this.avisoSanitarioState?.tercerosNacionalidadFabricante,
           [Validators.required],
         ],
-        tipoPersona: [
-          this.avisoSanitarioState?.tipoPersona,
+        tipoPersonaFabricante: [
+          this.avisoSanitarioState?.tipoPersonaFabricante,
           [Validators.required],
         ],
-        rfcProveedor: [
+        rfcFabricante: [
           {
-            value: this.avisoSanitarioState?.rfcProveedor,
-            disabled: this.avisoSanitarioState?.rfcProveedorInhabilitar,
+            value: this.avisoSanitarioState?.rfcFabricante,
+            disabled: this.avisoSanitarioState?.rfcFabricanteInhabilitar,
           },
           [Validators.required],
         ],
-        curp: [
+        curpFabricante: [
           {
-            value: this.avisoSanitarioState?.curp,
-            disabled: this.avisoSanitarioState?.curpInhabilitar,
+            value: this.avisoSanitarioState?.curpFabricante,
+            disabled: this.avisoSanitarioState?.curpFabricanteInhabilitar,
           },
           [Validators.required],
         ],
       }),
       datosPersonalesForm: this.fb.group({
-        proveedorNombre: [
+        fabricanteNombre: [
           {
-            value: this.avisoSanitarioState?.proveedorNombre,
-            disabled: this.avisoSanitarioState?.proveedorNombreInhabilitar,
+            value: this.avisoSanitarioState?.fabricanteNombre,
+            disabled: this.avisoSanitarioState?.fabricanteNombreInhabilitar,
           },
           [Validators.required],
         ],
-        proveedorPrimerApellido: [
+        fabricantePrimerApellido: [
           {
-            value: this.avisoSanitarioState?.proveedorPrimerApellido,
+            value: this.avisoSanitarioState?.fabricantePrimerApellido,
             disabled:
-              this.avisoSanitarioState?.proveedorPrimerApellidoInhabilitar,
+              this.avisoSanitarioState?.fabricantePrimerApellidoInhabilitar,
           },
           [Validators.required],
         ],
-        proveedorSegundoApellido: [
+        fabricanteSegundoApellido: [
           {
-            value: this.avisoSanitarioState?.proveedorSegundoApellido,
+            value: this.avisoSanitarioState?.fabricanteSegundoApellido,
             disabled:
-              this.avisoSanitarioState?.proveedorSegundoApellidoInhabilitar,
+              this.avisoSanitarioState?.fabricanteSegundoApellidoInhabilitar,
           },
         ],
-        proveedorRazonSocial: [
+        fabricanteRazonSocial: [
           {
-            value: this.avisoSanitarioState?.proveedorRazonSocial,
-            disabled: this.avisoSanitarioState?.proveedorRazonSocialInhabilitar,
+            value: this.avisoSanitarioState?.fabricanteRazonSocial,
+            disabled:
+              this.avisoSanitarioState?.fabricanteRazonSocialInhabilitar,
           },
           [Validators.required],
         ],
       }),
       domicilioForm: this.fb.group({
-        cvePais: [
+        cvePaisFabricante: [
           {
-            value: this.avisoSanitarioState?.cvePais,
-            disabled: this.avisoSanitarioState?.cvePaisInhabilitar,
+            value: this.avisoSanitarioState?.cvePaisFabricante,
+            disabled: this.avisoSanitarioState?.cvePaisFabricanteInhabilitar,
           },
           [Validators.required],
         ],
-        domicilioEstado: [
+        estadoFabricante: [
           {
-            value: this.avisoSanitarioState?.domicilioEstado,
-            disabled: this.avisoSanitarioState?.domicilioEstadoInhabilitar,
+            value: this.avisoSanitarioState?.estadoFabricante,
+            disabled: this.avisoSanitarioState?.estadoFabricanteInhabilitar,
           },
           [Validators.required],
         ],
-        alcaldia: [
+        alcaldiaFabricante: [
           {
-            value: this.avisoSanitarioState?.alcaldia,
-            disabled: this.avisoSanitarioState?.alcaldiaInhabilitar,
+            value: this.avisoSanitarioState?.alcaldiaFabricante,
+            disabled: this.avisoSanitarioState?.alcaldiaFabricanteInhabilitar,
           },
           [Validators.required],
         ],
-        localidad: [
+        localidadFabricante: [
           {
-            value: this.avisoSanitarioState?.localidad,
-            disabled: this.avisoSanitarioState?.localidadInhabilitar,
+            value: this.avisoSanitarioState?.localidadFabricante,
+            disabled: this.avisoSanitarioState?.localidadFabricanteInhabilitar,
           },
           [Validators.required],
         ],
-        domicilioCodigoPostal: [
+        codigoPostalFabricante: [
           {
-            value: this.avisoSanitarioState?.domicilioCodigoPostal,
+            value: this.avisoSanitarioState?.codigoPostalFabricante,
             disabled:
-              this.avisoSanitarioState?.domicilioCodigoPostalInhabilitar,
+              this.avisoSanitarioState?.codigoPostalFabricanteInhabilitar,
           },
           [Validators.required],
         ],
-        colonia: [
+        coloniaFabricante: [
           {
-            value: this.avisoSanitarioState?.colonia,
-            disabled: this.avisoSanitarioState?.coloniaInhabilitar,
+            value: this.avisoSanitarioState?.coloniaFabricante,
+            disabled: this.avisoSanitarioState?.coloniaFabricanteInhabilitar,
           },
           [Validators.required],
         ],
-        domicilioCalle: [
+        calleFabricante: [
           {
-            value: this.avisoSanitarioState?.domicilioCalle,
-            disabled: this.avisoSanitarioState?.domicilioCalleInhabilitar,
+            value: this.avisoSanitarioState?.calleFabricante,
+            disabled: this.avisoSanitarioState?.calleFabricanteInhabilitar,
           },
           [Validators.required],
         ],
-        numeroExterior: [
+        numeroExteriorFabricante: [
           {
-            value: this.avisoSanitarioState?.numeroExterior,
-            disabled: this.avisoSanitarioState?.numeroExteriorInhabilitar,
-          },
-          [Validators.required],
-        ],
-        numeroInterior: [
-          {
-            value: this.avisoSanitarioState?.numeroInterior,
-            disabled: this.avisoSanitarioState?.numeroInteriorInhabilitar,
-          },
-          [Validators.required],
-        ],
-        domicilioLada: [
-          {
-            value: this.avisoSanitarioState?.domicilioLada,
-            disabled: this.avisoSanitarioState?.domicilioLadaInhabilitar,
-          },
-          [Validators.required],
-        ],
-        domicilioTelefono: [
-          {
-            value: this.avisoSanitarioState?.domicilioTelefono,
-            disabled: this.avisoSanitarioState?.domicilioTelefonoInhabilitar,
-          },
-          [Validators.required],
-        ],
-        domicilioCorreoElectronico: [
-          {
-            value: this.avisoSanitarioState?.domicilioCorreoElectronico,
+            value: this.avisoSanitarioState?.numeroExteriorFabricante,
             disabled:
-              this.avisoSanitarioState?.domicilioCorreoElectronicoInhabilitar,
+              this.avisoSanitarioState?.numeroExteriorFabricanteInhabilitar,
+          },
+          [Validators.required],
+        ],
+        numeroInteriorFabricante: [
+          {
+            value: this.avisoSanitarioState?.numeroInteriorFabricante,
+            disabled:
+              this.avisoSanitarioState?.numeroInteriorFabricanteInhabilitar,
+          },
+          [Validators.required],
+        ],
+        ladaFabricante: [
+          {
+            value: this.avisoSanitarioState?.ladaFabricante,
+            disabled: this.avisoSanitarioState?.ladaFabricanteInhabilitar,
+          },
+          [Validators.required],
+        ],
+        telefonoFabricante: [
+          {
+            value: this.avisoSanitarioState?.telefonoFabricante,
+            disabled: this.avisoSanitarioState?.telefonoFabricanteInhabilitar,
+          },
+          [Validators.required],
+        ],
+        correoElectronicoFabricante: [
+          {
+            value: this.avisoSanitarioState?.correoElectronicoFabricante,
+            disabled:
+              this.avisoSanitarioState?.correoElectronicoFabricanteInhabilitar,
           },
           [Validators.required],
         ],
@@ -404,12 +420,12 @@ export class AgregarProveedorComponent implements OnInit, OnDestroy {
   /**
    * Inicializa los catálogos necesarios para el formulario.
    */
-  public inicializaCatalogos(): void {
+  private inicializaCatalogos(): void {
     const PAIS$: Observable<void> = this.avisoSanitarioService
       .getProductoClasificacion(CATALOGOS_ID.CAT_PAIS)
       .pipe(
         map((resp) => {
-          this.pais = resp.data;
+          this.paisFabricante = resp.data;
         })
       );
 
@@ -420,7 +436,7 @@ export class AgregarProveedorComponent implements OnInit, OnDestroy {
    * Selección del país para actualizar el store.
    */
   paisSeleccion(): void {
-    const PAIS = this.domicilioForm.get('cvePais')?.value;
+    const PAIS = this.domicilioForm.get('cvePaisFabricante')?.value;
     this.tramite260601Store.setTipoProducto(PAIS);
   }
 
@@ -431,12 +447,12 @@ export class AgregarProveedorComponent implements OnInit, OnDestroy {
   onNacionalidadCambio(valor: string | number): void {
     this.resetDatosPersonalesForm();
     this.resetDomicilioForm();
-    this.tramite260601Store.setTercerosNacionalidad(valor);
-    this.tramite260601Store.setTipoPersona('');
-    this.datosGeneralesForm.get('tipoPersona')?.setValue('');
-    this.tramite260601Store.setMostrarRfcBuscarBoton(false);
-    this.tramite260601Store.setMostrarCurpBuscarBoton(false);
-    this.tramite260601Store.setInhabilitarPais(true);
+    this.tramite260601Store.setTercerosNacionalidadFabricante(valor);
+    this.tramite260601Store.setTipoPersonaFabricante('');
+    this.datosGeneralesForm.get('tipoPersonaFabricante')?.setValue('');
+    this.tramite260601Store.setMostrarRfcFabricanteBuscarBoton(false);
+    this.tramite260601Store.setMostrarCurpFabricanteBuscarBoton(false);
+    this.tramite260601Store.setInhabilitarPaisFabricante(true);
 
     if (valor === DATOS_CATEGORIAS_TERCEROS.EXTRANJERO) {
       // Eliminar la opción "No Contribuyente" si se selecciona Extranjero
@@ -456,46 +472,48 @@ export class AgregarProveedorComponent implements OnInit, OnDestroy {
    * @param valor Valor seleccionado en "Tipo de persona".
    */
   onTipoPersonaCambio(valor: string | number): void {
-    this.tramite260601Store.setTipoPersona(valor);
+    this.tramite260601Store.setTipoPersonaFabricante(valor);
     this.resetDatosPersonalesForm();
     this.resetDomicilioForm();
 
     if (
-      this.avisoSanitarioState.tercerosNacionalidad ===
+      this.avisoSanitarioState.tercerosNacionalidadFabricante ===
       DATOS_CATEGORIAS_TERCEROS.NACIONAL
     ) {
       if (
-        this.avisoSanitarioState.tipoPersona ===
+        this.avisoSanitarioState.tipoPersonaFabricante ===
           DATOS_CATEGORIAS_TERCEROS.FISICA ||
-        this.avisoSanitarioState.tipoPersona === DATOS_CATEGORIAS_TERCEROS.MORAL
+        this.avisoSanitarioState.tipoPersonaFabricante ===
+          DATOS_CATEGORIAS_TERCEROS.MORAL
       ) {
-        this.datosGeneralesForm.get('rfcProveedor')?.enable();
-        this.tramite260601Store.setRfcProveedorInhabilitar(false);
-        this.tramite260601Store.setMostrarRfcBuscarBoton(true);
-        this.tramite260601Store.setMostrarCurpBuscarBoton(false);
+        this.datosGeneralesForm.get('rfcFabricante')?.enable();
+        this.tramite260601Store.setRfcFabricanteInhabilitar(false);
+        this.tramite260601Store.setMostrarRfcFabricanteBuscarBoton(true);
+        this.tramite260601Store.setMostrarCurpFabricanteBuscarBoton(false);
       } else if (
-        this.avisoSanitarioState.tipoPersona ===
+        this.avisoSanitarioState.tipoPersonaFabricante ===
         DATOS_CATEGORIAS_TERCEROS.NO_CONTRIBUYENTE
       ) {
-        this.datosGeneralesForm.get('curp')?.enable();
-        this.tramite260601Store.setCurpInhabilitar(false);
-        this.tramite260601Store.setMostrarRfcBuscarBoton(false);
-        this.tramite260601Store.setMostrarCurpBuscarBoton(true);
+        this.datosGeneralesForm.get('curpFabricante')?.enable();
+        this.tramite260601Store.setCurpFabricanteInhabilitar(false);
+        this.tramite260601Store.setMostrarRfcFabricanteBuscarBoton(false);
+        this.tramite260601Store.setMostrarCurpFabricanteBuscarBoton(true);
       }
     } else if (
-      this.avisoSanitarioState.tercerosNacionalidad ===
+      this.avisoSanitarioState.tercerosNacionalidadFabricante ===
       DATOS_CATEGORIAS_TERCEROS.EXTRANJERO
     ) {
       if (
-        this.avisoSanitarioState.tipoPersona ===
+        this.avisoSanitarioState.tipoPersonaFabricante ===
           DATOS_CATEGORIAS_TERCEROS.FISICA ||
-        this.avisoSanitarioState.tipoPersona === DATOS_CATEGORIAS_TERCEROS.MORAL
+        this.avisoSanitarioState.tipoPersonaFabricante ===
+          DATOS_CATEGORIAS_TERCEROS.MORAL
       ) {
         this.datosPersonalesForm.enable();
         this.inhabilitarDatosPersonalesForm(false);
         this.domicilioForm.enable();
         this.inhabilitarDomicilioForm(false);
-        this.tramite260601Store.setInhabilitarPais(false);
+        this.tramite260601Store.setInhabilitarPaisFabricante(false);
       }
     }
   }
@@ -504,10 +522,10 @@ export class AgregarProveedorComponent implements OnInit, OnDestroy {
    * Método para restablecer el Formulario de Datos Personales
    */
   resetDatosPersonalesForm(): void {
-    this.datosGeneralesForm.get('rfcProveedor')?.disable();
-    this.datosGeneralesForm.get('curp')?.disable();
-    this.tramite260601Store.setRfcProveedorInhabilitar(true);
-    this.tramite260601Store.setCurpInhabilitar(true);
+    this.datosGeneralesForm.get('rfcFabricante')?.disable();
+    this.datosGeneralesForm.get('curpFabricante')?.disable();
+    this.tramite260601Store.setRfcFabricanteInhabilitar(true);
+    this.tramite260601Store.setCurpFabricanteInhabilitar(true);
     this.datosPersonalesForm.reset();
     this.resetDatosPersonalesFormState();
     Object.keys(this.datosPersonalesForm.controls).forEach((key) => {
@@ -520,10 +538,10 @@ export class AgregarProveedorComponent implements OnInit, OnDestroy {
    * Método para restablecer el estado del Formulario de Datos Personales
    */
   resetDatosPersonalesFormState(): void {
-    this.tramite260601Store.setProveedorNombre('');
-    this.tramite260601Store.setProveedorPrimerApellido('');
-    this.tramite260601Store.setProveedorSegundoApellido('');
-    this.tramite260601Store.setProveedorRazonSocial('');
+    this.tramite260601Store.setFabricanteNombre('');
+    this.tramite260601Store.setFabricantePrimerApellido('');
+    this.tramite260601Store.setFabricanteSegundoApellido('');
+    this.tramite260601Store.setFabricanteRazonSocial('');
   }
 
   /**
@@ -531,10 +549,10 @@ export class AgregarProveedorComponent implements OnInit, OnDestroy {
    * @param valor El valor indica habilitar/deshabilitar
    */
   inhabilitarDatosPersonalesForm(valor: boolean): void {
-    this.tramite260601Store.setProveedorNombreInhabilitar(valor);
-    this.tramite260601Store.setProveedorPrimerApellidoInhabilitar(valor);
-    this.tramite260601Store.setProveedorSegundoApellidoInhabilitar(valor);
-    this.tramite260601Store.setProveedorRazonSocialInhabilitar(valor);
+    this.tramite260601Store.setFabricanteNombreInhabilitar(valor);
+    this.tramite260601Store.setFabricantePrimerApellidoInhabilitar(valor);
+    this.tramite260601Store.setFabricanteSegundoApellidoInhabilitar(valor);
+    this.tramite260601Store.setFabricanteRazonSocialInhabilitar(valor);
   }
 
   /**
@@ -553,18 +571,18 @@ export class AgregarProveedorComponent implements OnInit, OnDestroy {
    * Método para restablecer el estado del formulario de dirección.
    */
   resetDomicilioFormState(): void {
-    this.tramite260601Store.setPais('');
-    this.tramite260601Store.setDomicilioEstado('');
-    this.tramite260601Store.setAlcaldia('');
-    this.tramite260601Store.setLocalidad('');
-    this.tramite260601Store.setDomicilioCodigoPostal('');
-    this.tramite260601Store.setColonia('');
-    this.tramite260601Store.setDomicilioCalle('');
-    this.tramite260601Store.setNumeroExterior('');
-    this.tramite260601Store.setNumeroInterior('');
-    this.tramite260601Store.setDomicilioLada('');
-    this.tramite260601Store.setDomicilioTelefono('');
-    this.tramite260601Store.setDomicilioCorreoElectronico('');
+    this.tramite260601Store.setPaisFabricante('');
+    this.tramite260601Store.setEstadoFabricante('');
+    this.tramite260601Store.setAlcaldiaFabricante('');
+    this.tramite260601Store.setLocalidadFabricante('');
+    this.tramite260601Store.setCodigoPostalFabricante('');
+    this.tramite260601Store.setColoniaFabricante('');
+    this.tramite260601Store.setCalleFabricante('');
+    this.tramite260601Store.setNumeroExteriorFabricante('');
+    this.tramite260601Store.setNumeroInteriorFabricante('');
+    this.tramite260601Store.setLadaFabricante('');
+    this.tramite260601Store.setTelefonoFabricante('');
+    this.tramite260601Store.setCorreoElectronicoFabricante('');
   }
 
   /**
@@ -572,18 +590,18 @@ export class AgregarProveedorComponent implements OnInit, OnDestroy {
    * @param valor El valor indica habilitar/deshabilitar
    */
   inhabilitarDomicilioForm(valor: boolean): void {
-    this.tramite260601Store.setPaisInhabilitar(valor);
-    this.tramite260601Store.setDomicilioEstadoInhabilitar(valor);
-    this.tramite260601Store.setAlcaldiaInhabilitar(valor);
-    this.tramite260601Store.setLocalidadInhabilitar(valor);
-    this.tramite260601Store.setDomicilioCodigoPostalInhabilitar(valor);
-    this.tramite260601Store.setColoniaInhabilitar(valor);
-    this.tramite260601Store.setDomicilioCalleInhabilitar(valor);
-    this.tramite260601Store.setNumeroExteriorInhabilitar(valor);
-    this.tramite260601Store.setNumeroInteriorInhabilitar(valor);
-    this.tramite260601Store.setDomicilioLadaInhabilitar(valor);
-    this.tramite260601Store.setDomicilioTelefonoInhabilitar(valor);
-    this.tramite260601Store.setDomicilioCorreoElectronicoInhabilitar(valor);
+    this.tramite260601Store.setPaisFabricanteInhabilitar(valor);
+    this.tramite260601Store.setEstadoFabricanteInhabilitar(valor);
+    this.tramite260601Store.setAlcaldiaFabricanteInhabilitar(valor);
+    this.tramite260601Store.setLocalidadFabricanteInhabilitar(valor);
+    this.tramite260601Store.setCodigoPostalInhabilitar(valor);
+    this.tramite260601Store.setColoniaFabricanteInhabilitar(valor);
+    this.tramite260601Store.setCalleFabricanteInhabilitar(valor);
+    this.tramite260601Store.setNumeroExteriorFabricanteInhabilitar(valor);
+    this.tramite260601Store.setNumeroInteriorFabricanteInhabilitar(valor);
+    this.tramite260601Store.setLadaFabricanteInhabilitar(valor);
+    this.tramite260601Store.setTelefonoFabricanteInhabilitar(valor);
+    this.tramite260601Store.setCorreoElectronicoFabricanteInhabilitar(valor);
   }
 
   /**
@@ -601,6 +619,10 @@ export class AgregarProveedorComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite260601Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  updateFabricanteTablaDatos(event: Fabricante[]): void {
+    this.tramite260601Store.updateFabricanteTablaDatos(event);
   }
 
   /**

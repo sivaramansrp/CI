@@ -236,40 +236,40 @@ export const BENEFICIOS_SERVICIO = [
   },
   {
     encabezado: 'Calle',
-    clave: (ele: BeneficiosInfo): string => ele.TABLA_Columna_2,
+    clave: (ele: BeneficiosInfo): string => ele.TABLA_Columna_3,
     orden: 2
   },
   {
     encabezado: 'Número Exterior',
-    clave: (ele: BeneficiosInfo): string => ele.TABLA_Columna_3,
+    clave: (ele: BeneficiosInfo): string => ele.TABLA_Columna_4,
     orden: 3
   },
   {
     encabezado: 'Número Interior',
-    clave: (ele: BeneficiosInfo): string => ele.TABLA_Columna_4,
+    clave: (ele: BeneficiosInfo): string => ele.TABLA_Columna_5,
     orden: 4
   },
   {
     encabezado: 'Colonia',
-    clave: (ele: BeneficiosInfo): string => ele.TABLA_Columna_5,
+    clave: (ele: BeneficiosInfo): string => ele.TABLA_Columna_6,
     orden: 5
   }
   ,
   {
     encabezado: 'Estado',
-    clave: (ele: BeneficiosInfo): string => ele.TABLA_Columna_6,
+    clave: (ele: BeneficiosInfo): string => ele.TABLA_Columna_7,
     orden: 6
   }
   ,
   {
     encabezado: 'Código Postal',
-    clave: (ele: BeneficiosInfo): string => ele.TABLA_Columna_7,
+    clave: (ele: BeneficiosInfo): string => ele.TABLA_Columna_8,
     orden: 7
   }
   ,
   {
     encabezado: 'Propia o Aliquilada',
-    clave: (ele: BeneficiosInfo): string => ele.TABLA_Columna_8,
+    clave: (ele: BeneficiosInfo): string => ele.TABLA_Columna_2,
     orden: 8
   }
   ,

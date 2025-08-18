@@ -28,3 +28,28 @@ export interface TablaDatosModal {
   fechaVencimiento: string,
   nombreComercial: string
 }
+
+
+/**
+ * @description
+ * Representa la información de una mercancía en el trámite de certificado.
+ * @property {string} fraccion - Fracción arancelaria de la mercancía.
+ * @property {string} descripcionFraccion - Descripción de la fracción arancelaria.
+ * @property {string} nico - Número de Identificación Comercial (NICO).
+ * @property {string} descripcionNico - Descripción del NICO.
+ * @property {number} cantidadSolicitadaUMT - Cantidad solicitada en la unidad de medida de tarifa.
+ * @property {string} unidadMedidaTarifa - Unidad de medida utilizada en la tarifa.
+ * @property {number} cantidadTotalUMT - Cantidad total en la unidad de medida de tarifa.
+ * @property {number} saldoPendiente - Saldo pendiente de la mercancía.
+ * @author Compodoc
+ */
+export interface Merchandise {
+  fraccion: string;
+  descripcionFraccion: string;
+  nico: string;
+  descripcionNico: string;
+  cantidadSolicitadaUMT: number;
+  unidadMedidaTarifa: string;
+  cantidadTotalUMT: number;
+  saldoPendiente: number;
+}

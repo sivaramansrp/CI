@@ -269,11 +269,9 @@
         <div class="form-group">
           <label class="form-label" for="calleYNumero"
             >Calle y número*:
-            <span
-              class="bi bi-question-circle-fill"
-              title="Calle y número"
-              data-bs-toggle="tooltip"
-            ></span>
+            <span tooltip="Domicilio, calle, numero interior, numero exterior, lote">
+            <i class="bi bi-question-circle-fill"></i>
+          </span>
           </label>
           <input
             class="form-control"
@@ -456,7 +454,7 @@
       <div class="col-md-3 my-3">
         <div class="form-group">
           <label class="form-label municipio-label" for="telefono"
-            >S.C.I.A.N
+            >S.C.I.A.N.
           </label>
           <span class="form-label" *ngIf="esCampoRequerido('scian')">*</span>
           <span class="form-label">:</span>
@@ -649,6 +647,12 @@
         (listaDeFilaSeleccionada)="tablaMercanciasLista = $event"
         [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
       ></app-tabla-dinamica>
+      <div class="d-flex justify-content-center mt-3" [class.disabled]="formularioDeshabilitado"
+        [style.pointerEvents]="formularioDeshabilitado ? 'none' : 'auto'"
+        [style.opacity]="formularioDeshabilitado ? '0.5' : '1'">
+        <app-table-pagination [showCurrentPage]="true">
+        </app-table-pagination>
+      </div>
       <div class="mensaje-error" *ngIf="datosSolicitudForm.get('mercancias')?.errors?.['required']">
         Este campo es obligatorio.
       </div>
@@ -694,7 +698,7 @@
     </div>
     }
 
-    <div class="row-mt-2">
+    <div class="row mt-2">
       <div class="col-md-8" *ngIf="mostrarCamposDelProcedimiento('aduana')">
         <div class="form-group">
           <app-catalogo-select
@@ -708,25 +712,27 @@
           ></app-catalogo-select>
         </div>
       </div>
+      <div class="col-md-4"></div>
     </div>
 
     @if(!esManifesto){
-    <div class="row-mt-2">
+    <div class="row mt-2">
       <ng-titulo
         titulo="Manifiestos y declaraciones"
         class="mt-4 col-md-12"
       ></ng-titulo>
-    </div>
-
-    <div class="mt-5">
+      <div class="mt-5">
       <ng-alert
         [CONTENIDO]="alertaDeManifestoContenido"
         [CUSTOMECLASS]="infoAlert"
       ></ng-alert>
     </div>
-    } @if(esManifesto) {
+    </div>
+    } 
+    @if(esManifesto) {
+       <div class="row mt-2">
     <ng-titulo titulo="Manifiestos y declaraciones"></ng-titulo>
-    <div class="row">
+    <div class="mt-5">
       <div class="alert alert-info">
         <label style="font-weight: normal">
           <input type="checkbox" id="manifesto" formControlName="manifesto" />
@@ -743,6 +749,7 @@
           *ngIf="datosSolicitudForm.get('manifesto')?.errors?.['required'] && datosSolicitudForm.get('manifesto')?.touched"
         >
           Este campo es obligatorio.
+        </div>
         </div>
       </div>
     </div>
@@ -806,9 +813,7 @@
     <div class="row mt-2">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="representanteNombre"
-            >Nombre o Razón Social*:</label
-          >
+          <label class="form-label" for="representanteNombre">Nombre o Razón Social*:</label>
           <input
             class="form-control"
             id="representanteNombre"
@@ -830,9 +835,8 @@
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="apellidoPaterno"
-            >Apellido paterno*:</label
-          >
+          <label class="form-label" for="apellidoPaterno">Apellido paterno*:</label>
+
           <input
             class="form-control"
             id="apellidoPaterno"
