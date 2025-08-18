@@ -129,3 +129,54 @@ export function dateLessThanOrEqualToday(control: AbstractControl): ValidationEr
         }
     }
 
+    export function doDeepCopy(obj: unknown = {}) {
+        return JSON.parse(JSON.stringify(obj));
+    }
+
+    export function esObject(value: unknown): boolean {
+        return value !== null && typeof value === 'object';
+    }
+
+    export function esValidArray(value: unknown): boolean {
+        return Array.isArray(value) && value.length > 0;
+    }
+
+    export function esDefined(value: any): boolean {
+        return value && 'undefined' !== typeof value;
+    }
+
+    export function esValidString(str: unknown): boolean {
+        return 'string' === typeof str && 0 < str.length;
+    }
+
+    export function getFormattedJson(json: any) {
+        return esValidString(json) ? JSON.parse(json) : json;
+    }
+
+    export function getParsedJson(str: any) {
+        try {
+            return JSON.parse(str);
+        } catch (error) {
+            return str;
+        }
+    }
+
+    export function esValidObject(obj:any): boolean {
+        return esObject(obj) && Object.keys(obj).length > 0;
+    }
+
+    export function esObjectEmpty(obj: any): boolean {
+        return Object.keys(obj).length === 0;
+    }
+
+    export function esUndefined(value: any): boolean {
+        return typeof value === 'undefined' || !value;
+    }
+
+    export function getValidDatos(datos: any) {
+        return !(esUndefined(datos) || datos === null || datos === '');
+    }
+
+    export function getInvalidDatos(datos: any) {
+        return esUndefined(datos) || datos === null || datos === '';
+    }
