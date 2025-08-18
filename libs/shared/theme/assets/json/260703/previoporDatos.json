@@ -1,12 +1,12 @@
 {
   "claveDeReferencia": "REF123456",
   "cadenaPagoDependencia": "CADENA-DEP-001",
-  "bancoClave": "BANAMEX",
+  "bancoClave": "2",
   "llaveDePago": "LLAVE-987654",
   "fecPago": "2025-06-01",
   "impPago": "1500.00",
   "preOperativFormState": {
-    "ideGenerica1": "0",
+    "ideGenerica1": "Modificación",
     "observaciones": "Observaciones de prueba para el formulario de pre-operatividad"
   },
   "datosDelEstablecimientoFormState": {
@@ -15,7 +15,7 @@
   },
   "manifiestosFormState": {
     "seleccionadaManifiesto": [true, false, true],
-    "informacionConfidencial": "0"
+    "informacionConfidencial": "Prórroga"
   },
   "representanteLegalFormState": {
     "rfc": "XAXX010101000",
@@ -25,7 +25,7 @@
   },
   "domicilloDelEstablecimientoFormState": {
     "codigoPostal": "01234",
-    "estado":"Veracruz",
+    "estado":"1",
     "descripcionMunicipio": "Álvaro Obregón",
     "informacionExtra": "Entre calles A y B",
     "descripcionColonia": "Colonia Centro",
@@ -34,7 +34,7 @@
     "telefono": "12345678",
     "funcionamiento": "Operando",
     "licencia": "LIC-2025-001",
-    "regimen": "General",
-    "aduana": "Aduana Central"
+    "regimen": "3",
+    "aduana": "1"
   }
 }
