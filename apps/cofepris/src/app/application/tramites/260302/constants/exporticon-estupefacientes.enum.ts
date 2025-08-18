@@ -311,8 +311,8 @@ export const TERCEROS_NACIONALIDAD_RADIO_OPCIONS = [
  * permitiendo al usuario seleccionar entre una persona física o moral.
  */
 export const TERCEROS_PERSONA_RADIO_OPCIONS : TipoPersonaModel[]= [
-  { label: 'Física', value: TipoPersona.FISICA ,hint:'Física'},
-  { label: 'Moral', value: TipoPersona.MORAL,hint:'Moral' }
+  { label: 'Física', value: TipoPersona.FISICA ,hint:'Una persona física es entendida como toda persona con una actividad específica'},
+  { label: 'Moral', value: TipoPersona.MORAL,hint:'Una persona moral es entendida como una empresa con una actividad específica' }
 ];
 
 /**

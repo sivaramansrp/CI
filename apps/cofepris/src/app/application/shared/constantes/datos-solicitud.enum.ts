@@ -584,6 +584,8 @@ export const PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL = [
   260301, 260207, 260201, 260302, 260304, 260103,
 ];
 
+export const DESHABILITADA_EN_INIT = [260302];
+
 /**
  * @const PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE
  * @description Lista de identificadores numéricos que representan procedimientos específicos

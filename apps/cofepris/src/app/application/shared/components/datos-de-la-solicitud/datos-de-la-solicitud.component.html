@@ -642,7 +642,6 @@
     <div class="row mt-5">
       <h5 class="mt-3">Mercancías*:</h5>
       <app-tabla-dinamica
-        formControlName="mercancias"
         [tipoSeleccionTabla]="tablaMercanciasConfig.tipoSeleccionTabla"
         [configuracionTabla]="tablaMercanciasConfig.configuracionTabla"
         [datos]="tablaMercanciasConfig.datos"
@@ -736,18 +735,22 @@
     <ng-titulo titulo="Manifiestos y declaraciones"></ng-titulo>
     <div class="mt-5">
       <div class="alert alert-info">
-        <label style="font-weight: normal">
-          <input type="checkbox" id="manifesto" formControlName="manifesto" />
-          <span class="form-label" *ngIf="esCampoRequerido('manifesto')">
-            @if(datosSolicitudForm.get('manifesto')?.errors?.['required'] &&
-            datosSolicitudForm.get('manifesto')?.touched){
-            <span class="mensaje-error"> *</span>
-            } @else {
-              <span> *</span>
-            }
-          </span>
-          {{ textoManifestoContenido }}
-        </label>
+        <div class="row align-items-center justify-content-start py-2" >
+          <div class="col-auto d-flex align-items-start pt-1">
+            <input class="form-check-input me-3" type="checkbox" id="manifesto" formControlName="manifesto" />
+            <label class="form-check-label ms-2" for="manifesto" *ngIf="esCampoRequerido('manifesto')">
+              @if(datosSolicitudForm.get('manifesto')?.errors?.['required'] &&
+              datosSolicitudForm.get('manifesto')?.touched){
+              <span class="mensaje-error"> *</span>
+              } @else {
+                <span> *</span>
+              }
+            </label>
+          </div>
+          <div class="col align-items-center" style="margin-left: 48px;">
+            <label for="manifesto">{{ textoManifestoContenido }}</label>
+          </div>
+        </div>
         <div
           class="mensaje-error"
           *ngIf="datosSolicitudForm.get('manifesto')?.errors?.['required'] && datosSolicitudForm.get('manifesto')?.touched"
