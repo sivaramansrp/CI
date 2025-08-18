@@ -115,5 +115,6 @@ export const ID_PROCEDIMIENTO = 260209;
 export const ELEMENTOS_REQUERIDOS = [
   'denominacionRazon',
   'correoElectronico',
-  'scian'
+  'scian',
+  'manifesto'
 ];
