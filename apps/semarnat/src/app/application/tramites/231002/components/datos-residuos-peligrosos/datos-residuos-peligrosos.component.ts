@@ -1,6 +1,6 @@
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RadioOpcion, SolicitudJson } from '@libs/shared/data-access-user/src/core/models/231002/solicitud.model';
 import { CommonModule } from '@angular/common';
 import { EstadoFormularioResiduo } from '../../models/datos-residuos.model';
@@ -92,7 +92,12 @@ export class DatosResiduosPeligrososComponent implements OnInit {
       nico: ['', Validators.required],
       acotacion: [{ value: '', disabled: true }, Validators.required],
       residuoPeligroso: ['', Validators.required],
-      cantidad: ['', Validators.required],
+      cantidad: ['', [
+        Validators.required,
+        Validators.pattern(/^\d+(\.\d+)?$/),
+        DatosResiduosPeligrososComponent.noCommaValidator,
+        DatosResiduosPeligrososComponent.maxDigitsValidator
+      ]],
       cantidadLetra: [{ value: '', disabled: true }],
       unidadMedida: ['', Validators.required],
       clasificacion: ['', Validators.required],
@@ -114,6 +119,31 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     const ESTADO = this.formularioQuery.getValue();
     this.formularioDatos.patchValue(ESTADO.formularioDatos, { emitEvent: false });
     this.formularioResiduo.patchValue(ESTADO.formularioResiduo, { emitEvent: false });
+  }
+
+  /**
+   * Validator personalizado para verificar que no se ingrese coma.
+   */
+  private static noCommaValidator(control: AbstractControl): ValidationErrors | null {
+    const VALUE = control.value;
+    if (VALUE && VALUE.includes(',')) {
+      return { noComma: true };
+    }
+    return null;
+  }
+
+  /**
+   * Validator personalizado para verificar el máximo de 6 dígitos significativos.
+   */
+  private static maxDigitsValidator(control: AbstractControl): ValidationErrors | null {
+    const VALUE = control.value;
+    if (VALUE) {
+      const REGEX = /^(\d{1,6})(\.\d{1,6})?$/;
+      if (!REGEX.test(VALUE)) {
+        return { maxDigits: true };
+      }
+    }
+    return null;
   }
 
   /**

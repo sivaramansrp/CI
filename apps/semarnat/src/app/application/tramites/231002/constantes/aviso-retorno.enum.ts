@@ -33,5 +33,5 @@ export const PAGO_DE_DERECHOS = {
  * Texto legal sobre validación de documentos INMEX y comprobantes.
  */
 export const TEXTOS = {
-  NOTA: `Los requisitos consistentes en presentar originales para cotejo de comprobante de domicilio y comprobante del Programa INMEX, establecido en el Art. 124 el Reglamento de la Ley General para la Prevención y Gestión Integral de los Residuos, se cumple a través de la validación automática de los trámites del programa INMEX de la Secretaría de Economía, que se encuentran en la Ventanilla única.`
+  NOTA: `Los requisitos consistentes en presentar originales para cotejo de comprobante de domicilio y comprobante del Programa IMMEX, establecido en el Art. 124 del Reglamento de la Ley General para la Prevención y Gestión Integral de los Residuos, se cumple a través de la validación automática de los trámites del programa IMMEX de la Secretaría de Economía, que se encuentran en la Ventanilla Única`
 };
