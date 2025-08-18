@@ -27,7 +27,6 @@ import {ConsultaioState} from '@ng-mf/data-access-user';
 import { DescripcionCupoComponent } from '../descripcion-cupo/descripcion-cupo.component';
 import { ExpedicionCertificadosFronteraService } from '../../services/expedicion-certificados-frontera.service';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite120702Query } from '../../estados/tramite120702.query';
 /**
  * Componente responsable de la sección de asignación de expedición de certificados.
@@ -46,7 +45,6 @@ import { Tramite120702Query } from '../../estados/tramite120702.query';
     ReactiveFormsModule,
     FormasDinamicasComponent,
     TableComponent,
-    TooltipModule
   ],
   templateUrl: './expedicion-asignacion.component.html',
   styleUrl: './expedicion-asignacion.component.scss',
