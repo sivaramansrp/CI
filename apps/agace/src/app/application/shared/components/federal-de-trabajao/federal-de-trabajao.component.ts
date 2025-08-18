@@ -63,6 +63,9 @@ export class FederalDeTrabajaoComponent implements OnInit, OnDestroy {
    */
   public esFormularioSoloLectura: boolean = false;
 
+  /** Almacena la fila seleccionada de la tabla de empleados para su edición o consulta. */
+  private seleccionadaDatos: Mencione | null = null;
+
 /**
  * Validador personalizado que verifica si el valor del control es un número entero.
  *
@@ -122,10 +125,9 @@ static integerValidator(control: AbstractControl): ValidationErrors | null {
   public cerearFormulario(): void {
     this.numeroDeEmpleadosForm = this.fb.group({
       rfc: ['', [Validators.required, Validators.pattern(REGEX_RFC)]],
-      razonSocial: ['', [Validators.required, Validators.minLength(3)]],
+      razonSocial: [{value: '', disabled: true}, [Validators.required, Validators.minLength(3)]],
       numeroEmpleados: ['', [Validators.required, FederalDeTrabajaoComponent.integerValidator]],
-      empleadosPropios: ['', [Validators.required, Validators.maxLength(8)]],
-      archivoNacionales: ['', [Validators.required]],
+      registro: [{value: '', disabled: true}, [Validators.required]],
       comboBimestresTres: [''],
     });
   }
@@ -214,9 +216,42 @@ onCancelar(): void {
   this.modalRef?.hide();
 }
 
-  /**
-   * Hook del ciclo de vida que se llama cuando el componente es destruido.
-   * Limpia las suscripciones para prevenir fugas de memoria.
+/** Busca el RFC ingresado y asigna datos simulados de registro y razón social al formulario si el RFC es válido. */
+  buscar(): void {
+    if (this.numeroDeEmpleadosForm.get('rfc')?.valid) {
+      this.numeroDeEmpleadosForm.patchValue({
+        registro: this.numeroDeEmpleadosForm.get('rfc')?.value,
+        razonSocial: 'INTEGRADORA DE URBANIZACIONES SIGNUM, S DE RL CV'
+      })
+    } else {
+      this.numeroDeEmpleadosForm.get('rfc')?.markAsTouched();
+    }
+  }
+
+  /** Almacena la fila seleccionada de la tabla de empleados para su edición o consulta. */
+  onFilaSeleccionada(event: Mencione): void {
+    if (event) {
+      this.seleccionadaDatos = event;
+    }
+  }
+
+  /** Abre el modal para modificar el registro de empleados y carga los datos seleccionados en el formulario. */
+  modificar(template: TemplateRef<unknown>): void {
+    if (this.seleccionadaDatos) {
+      this.abrirModal(template);
+      this.numeroDeEmpleadosForm.patchValue({
+        rfc: this.seleccionadaDatos?.rfc,
+        razonSocial: 'INTEGRADORA DE URBANIZACIONES SIGNUM, S DE RL CV',
+        numeroEmpleados: this.seleccionadaDatos?.numeroDeEmpleados,
+        registro: this.seleccionadaDatos?.rfc,
+        comboBimestresTres: this.seleccionadaDatos?.bimestre,
+      })
+    }
+  }
+
+/**
+ * Hook del ciclo de vida que se llama cuando el componente es destruido.
+ * Limpia las suscripciones para prevenir fugas de memoria.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

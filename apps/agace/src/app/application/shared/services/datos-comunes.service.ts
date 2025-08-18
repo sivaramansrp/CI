@@ -1,8 +1,9 @@
+import { Catalogo, JSONResponse } from '@libs/shared/data-access-user/src';
 import { DatosComunesState, DatosComunesStore } from '../estados/stores/datos-comunes.store';
 import { Observable,catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { JSONResponse } from '@libs/shared/data-access-user/src';
+import { PrincipalesInstalaciones } from '../models/datos-comunes-tres.model';
 
 @Injectable({
   providedIn: 'root'
@@ -61,6 +62,46 @@ export class DatosComunesService {
         return throwError(() => error);
       })
     );
+  }
+
+  /**
+   * Obtiene los catálogos selectivos de la solicitud desde un archivo JSON local.
+   * @returns Observable con un objeto de tipo getEntidadDatos.
+   */
+  getEntidadDatos(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/32613/entidad-federativa.json');
+  }
+
+  /**
+   * Obtiene los catálogos selectivos de la solicitud desde un archivo JSON local.
+   * @returns Observable con un objeto de tipo getInstalacionesTablaDatos.
+   */
+  getInstalacionesTablaDatos(): Observable<PrincipalesInstalaciones[]> {
+    return this.http.get<PrincipalesInstalaciones[]>('assets/json/32613/instalaciones-tabla.json');
+  }
+
+  /**
+   * Obtiene los catálogos selectivos de la solicitud desde un archivo JSON local.
+   * @returns Observable con un objeto de tipo getEnSuCaracterDeDatos.
+   */
+  getEnSuCaracterDeDatos(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/32613/en-su-caracter-de.json');
+  }
+
+  /**
+   * Obtiene los catálogos selectivos de la solicitud desde un archivo JSON local.
+   * @returns Observable con un objeto de tipo getTipoDePersonaDatos.
+   */
+  getTipoDePersonaDatos(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/31603/tipo-de-persona.json');
+  }
+
+  /**
+   * Obtiene los catálogos selectivos de la solicitud desde un archivo JSON local.
+   * @returns Observable con un objeto de tipo getNacionalidadDatos.
+   */
+  getNacionalidadDatos(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/32613/nacionalidad.json');
   }
 
   /**
