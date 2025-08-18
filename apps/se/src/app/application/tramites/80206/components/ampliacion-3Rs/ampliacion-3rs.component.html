@@ -62,7 +62,7 @@
         <div *ngIf="isSelectedRegla">
             <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion"
                 (listaDeFilaSeleccionada)="seleccionarDomicilios($event)"
-                [configuracionTabla]="configuracionTablaSector" [datos]="datosSector"></app-tabla-dinamica>
+                [configuracionTabla]="configuracionTablaSector" [datos]="datosSector" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
         </div>
 
 
