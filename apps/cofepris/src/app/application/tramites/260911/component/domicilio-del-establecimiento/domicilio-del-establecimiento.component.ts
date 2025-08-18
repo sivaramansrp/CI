@@ -109,9 +109,9 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
   }
 
   static mapMercanciasInfoToForm(info: MercanciasInfo): MercanciaForm {
-    return {
-  clasificacionProducto: '',
-  especificarClasificacionProducto: '',
+    const MAPBASIC = (info: MercanciasInfo) => ({
+      clasificacionProducto: info.clasificacion || '',
+      especificarClasificacionProducto: info.especificar || '',
       denominacionEspecificaProducto: info.denominacionEspecifica || '',
       denominacionDistintiva: info.denominacionDistintiva || '',
       denominacionComun: info.denominacionComun || '',
@@ -120,22 +120,34 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
       estadoFisico: info.estadoFisico || '',
       fraccionArancelaria: info.fraccionArancelaria || '',
       descripcionFraccion: info.descripcionFraccion || '',
-      cantidadUmtValor: '',
+    });
+    const MAPCANTIDAD = (info: MercanciasInfo) => ({
+      cantidadUmtValor: info.unidadUMT || '',
       cantidadUmt: info.cantidadUMT || '',
-      cantidadUmcValor: '',
+      cantidadUmcValor: info.unidad || '',
       cantidadUmc: info.cantidadUMC || '',
+    });
+    const MAPEXTRA = (info: MercanciasInfo) => ({
       presentacion: info.presentacion || '',
-      numeroRegistroSanitario: '',
+      numeroRegistroSanitario: info.numeroRegistro || '',
       fechaCaducidad: info.fechaCaducidad || '',
-      paisDeOriginDatos: [],
-      paisDeProcedenciaDatos: [],
-      usoEspecifico: [],
+      paisDeOriginDatos: info.paisDeOrigen ? [info.paisDeOrigen] : [],
+      paisDeProcedenciaDatos: info.paisDeProcedencia ? [info.paisDeProcedencia] : [],
+      usoEspecifico: info.usoEspecifico ? [info.usoEspecifico] : [],
+    });
+    const MAPOTHER = () => ({
       marca: '',
       especifique: '',
       claveDeLos: '',
       fechaDeFabricacio: '',
       fechaDeCaducidad: '',
       especifiqueObligatorio: ''
+    });
+    return {
+      ...MAPBASIC(info),
+      ...MAPCANTIDAD(info),
+      ...MAPEXTRA(info),
+      ...MAPOTHER()
     };
   }
 
@@ -151,7 +163,16 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
 
   // Handle Agregar Mercancia event
   onAgregarMercancia(event: MercanciasInfo): void {
-  this.mercanciasTablaDatos = [...this.mercanciasTablaDatos, event];
+  if (this.selectedMercanciaIndex !== null && this.selectedMercanciaIndex >= 0) {
+    // Update existing row
+    this.mercanciasTablaDatos = this.mercanciasTablaDatos.map((row, idx) =>
+      idx === this.selectedMercanciaIndex ? event : row
+    );
+    this.selectedMercanciaIndex = null;
+  } else {
+    // Add new row
+    this.mercanciasTablaDatos = [...this.mercanciasTablaDatos, event];
+  }
   this.cerrarMercanciaModal();
   }
 
@@ -237,8 +258,8 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
     document.querySelectorAll('.modal-backdrop').forEach(bd => bd.remove());
     document.body.classList.remove('modal-open');
     document.body.style.removeProperty('padding-right');
-    // Reset Mercancías form in child component so modal opens blank
-    if (this.datosMercanciaContenedoraComp) {
+    // Only reset Mercancías form if adding a new item
+    if (this.datosMercanciaContenedoraComp && this.selectedMercanciaIndex === null) {
       this.datosMercanciaContenedoraComp.resetForm();
     }
     if (this.modalAddMercanciasRef) {
@@ -489,33 +510,8 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
    * Formulario reactivo para los datos del representante legal.
    */
   representanteLegal!: FormGroup;
-
   /**
-   * Subject para controlar la destrucción de suscripciones y evitar fugas de memoria.
-    openMercanciaModal(): void {
-      // Clean up any lingering backdrops and body classes before opening
-      document.querySelectorAll('.modal-backdrop').forEach(bd => bd.remove());
-      document.body.classList.remove('modal-open');
-      document.body.style.removeProperty('padding-right');
-      // Re-create Bootstrap modal instance
-      if (this.modalAddMercanciasRef) {
-        const WIN = window as any;
-        this.bootstrapModalMercanciasInstance = new WIN.bootstrap.Modal(this.modalAddMercanciasRef.nativeElement);
-        this.bootstrapModalMercanciasInstance.show();
-      }
-    }
-
-    openScianModal(): void {
-      document.querySelectorAll('.modal-backdrop').forEach(bd => bd.remove());
-      document.body.classList.remove('modal-open');
-      document.body.style.removeProperty('padding-right');
-      if (this.modalAddNicoTablaRef) {
-        const WIN = window as any;
-        this.bootstrapModalNicoTablaInstance = new WIN.bootstrap.Modal(this.modalAddNicoTablaRef.nativeElement);
-        this.bootstrapModalNicoTablaInstance.show();
-      }
-    }
-   * @private
+   * Subject para manejar la destrucción del componente.
    */
   private destroy$ = new Subject<void>();
 
