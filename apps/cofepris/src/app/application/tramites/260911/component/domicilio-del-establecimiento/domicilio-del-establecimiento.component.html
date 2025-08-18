@@ -215,7 +215,6 @@
         </div>
       </div>
     </div>
-  </form>
 
   <div class="row mt-5">
     <label class="form-label mt-4 text-start">S.C.I.A.N.*:</label>
@@ -464,10 +463,11 @@
           [configuracionTabla]="mercanciasTabla"
           [datos]="mercanciasTablaDatos" 
           [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
-        ></app-tabla-dinamica>
+          (listaDeFilaSeleccionada)="onMercanciaRowSelected($event)">
+        </app-tabla-dinamica>
         <div class="container text-end mt-5">
-          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Modificar</button>
-          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" (click)="selectedMercanciaIndex !== null ? onModificarMercancia(selectedMercanciaIndex) : mostrarSeleccionaRegistroMercancia()">Modificar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" (click)="selectedMercanciaIndex !== null ? onEliminarMercancia(selectedMercanciaIndex) : mostrarSeleccionaRegistroMercancia()">Eliminar</button>
           <button 
             class="btn btn-primary me-2" 
             [disabled]="esFormularioSoloLectura"
@@ -475,16 +475,55 @@
           >
             Agregar
           </button>
-  <!-- Modal para agregar Mercancías -->
-  <div class="modal fade" id="modalAddMercancias" tabindex="-1" aria-labelledby="modalAddMercanciasLabel" aria-hidden="true">
-    <div class="modal-dialog modal-fullscreen">
-      <div class="modal-content">
-        <div class="modal-body text-start">
-          <app-datos-mercancia-contenedora (agregarMercancia)="onAgregarMercancia($event)" (cancelarMercanciaModal)="cerrarMercanciaModal()"></app-datos-mercancia-contenedora>
         </div>
-      </div>
-    </div>
-  </div>
+          <!-- Modal para agregar/modificar Mercancía -->
+          <div class="modal fade" id="modalAddMercancias" #modalAddMercancias tabindex="-1" aria-labelledby="modalAddMercanciasLabel" aria-hidden="true">
+            <div class="modal-dialog modal-fullscreen">
+              <div class="modal-content">
+                <div class="modal-header">
+                </div>
+                <div class="modal-body">
+                  <app-datos-mercancia-contenedora
+                    #datosMercanciaContenedoraComp
+                    (agregarMercancia)="onAgregarMercancia($event)"
+                    (cancelarMercanciaModal)="cerrarMercanciaModal()"
+                    [mercanciaFormState]="mercanciaFormState"
+                  ></app-datos-mercancia-contenedora>
+                </div>
+              </div>
+            </div>
+          </div>
+        <!-- Modal para confirmar eliminación de Mercancías -->
+        <div class="modal fade" id="modalConfirmarEliminarMercancia" tabindex="-1" aria-labelledby="modalConfirmarEliminarMercanciaLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalConfirmarEliminarMercanciaLabel">Eliminar Mercancía</h5>
+              </div>
+              <div class="modal-body">
+                ¿Estás seguro que deseas eliminar la mercancía seleccionada?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" (click)="cancelarEliminarMercancia()">Cancelar</button>
+                <button type="button" class="btn btn-primary" (click)="aceptarEliminarMercancia()">Aceptar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal para seleccionar registro Mercancía -->
+        <div class="modal fade" id="modalSeleccionaRegistroMercancia" tabindex="-1" aria-labelledby="modalSeleccionaRegistroMercanciaLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header"></div>
+              <div class="modal-body text-start">
+                Selecciona un registro de mercancía
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" (click)="cerrarSeleccionaRegistroMercanciaModal()">Aceptar</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -511,7 +550,6 @@
         </div>
       </div>
     </div>
-  </form>
   <div>
     <form [formGroup]="representanteLegal">
       <h6>
@@ -607,4 +645,3 @@
       </div>
     </form>
   </div>
-</div>

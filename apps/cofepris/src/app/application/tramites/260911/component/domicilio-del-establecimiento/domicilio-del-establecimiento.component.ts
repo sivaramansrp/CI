@@ -1,3 +1,6 @@
+
+
+
 // ...existing imports and code...
 import { ALERT, OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/domicilio-del-establecimiento.enum';
 import { AfterViewInit, Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
@@ -16,6 +19,8 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Modal } from 'bootstrap';
 
 import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.model';
+
+import { MercanciaForm } from '../../../../shared/models/datos-solicitud.model';
 
 import { DomicilioDelEstablecimientoService } from '../../services/domicilio-del-establecimiento/domicilio-del-establecimiento.service';
 import { Tramite260911Query } from '../../estados/tramite260911.query';
@@ -62,6 +67,159 @@ import { Tramite260911Query } from '../../estados/tramite260911.query';
   styleUrl: './domicilio-del-establecimiento.component.scss',
 })
 export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, AfterViewInit {
+  // Mercancías modal logic
+  selectedMercanciaIndex: number | null = null;
+
+  get mercanciaFormState(): MercanciaForm {
+    if (this.selectedMercanciaIndex !== null && this.mercanciasTablaDatos[this.selectedMercanciaIndex]) {
+      return DomicilioDelEstablecimientoComponent.mapMercanciasInfoToForm(this.mercanciasTablaDatos[this.selectedMercanciaIndex]);
+    }
+    return DomicilioDelEstablecimientoComponent.getEmptyMercanciaForm();
+  }
+
+  static getEmptyMercanciaForm(): MercanciaForm {
+    return {
+      clasificacionProducto: '',
+      especificarClasificacionProducto: '',
+      denominacionEspecificaProducto: '',
+      denominacionDistintiva: '',
+      denominacionComun: '',
+      tipoProducto: '',
+      formaFarmaceutica: '',
+      estadoFisico: '',
+      fraccionArancelaria: '',
+      descripcionFraccion: '',
+      cantidadUmtValor: '',
+      cantidadUmt: '',
+      cantidadUmcValor: '',
+      cantidadUmc: '',
+      presentacion: '',
+      numeroRegistroSanitario: '',
+      fechaCaducidad: '',
+      paisDeOriginDatos: [],
+      paisDeProcedenciaDatos: [],
+      usoEspecifico: [],
+      marca: '',
+      especifique: '',
+      claveDeLos: '',
+      fechaDeFabricacio: '',
+      fechaDeCaducidad: '',
+      especifiqueObligatorio: ''
+    };
+  }
+
+  static mapMercanciasInfoToForm(info: MercanciasInfo): MercanciaForm {
+    return {
+  clasificacionProducto: '',
+  especificarClasificacionProducto: '',
+      denominacionEspecificaProducto: info.denominacionEspecifica || '',
+      denominacionDistintiva: info.denominacionDistintiva || '',
+      denominacionComun: info.denominacionComun || '',
+      tipoProducto: info.tipoProducto || '',
+      formaFarmaceutica: info.formaFarmaceutica || '',
+      estadoFisico: info.estadoFisico || '',
+      fraccionArancelaria: info.fraccionArancelaria || '',
+      descripcionFraccion: info.descripcionFraccion || '',
+      cantidadUmtValor: '',
+      cantidadUmt: info.cantidadUMT || '',
+      cantidadUmcValor: '',
+      cantidadUmc: info.cantidadUMC || '',
+      presentacion: info.presentacion || '',
+      numeroRegistroSanitario: '',
+      fechaCaducidad: info.fechaCaducidad || '',
+      paisDeOriginDatos: [],
+      paisDeProcedenciaDatos: [],
+      usoEspecifico: [],
+      marca: '',
+      especifique: '',
+      claveDeLos: '',
+      fechaDeFabricacio: '',
+      fechaDeCaducidad: '',
+      especifiqueObligatorio: ''
+    };
+  }
+
+  // Handle row selection from Mercancias table
+  onMercanciaRowSelected(event: MercanciasInfo[]): void {
+    if (event && event.length > 0) {
+      const SELECTED_ROW = event[0];
+      this.selectedMercanciaIndex = this.mercanciasTablaDatos.findIndex(row => row === SELECTED_ROW);
+    } else {
+      this.selectedMercanciaIndex = null;
+    }
+  }
+
+  // Handle Agregar Mercancia event
+  onAgregarMercancia(event: MercanciasInfo): void {
+  this.mercanciasTablaDatos = [...this.mercanciasTablaDatos, event];
+  this.cerrarMercanciaModal();
+  }
+
+  // Close Mercancia selection modal
+  cerrarSeleccionaRegistroMercanciaModal(): void {
+    if (this.modalSeleccionaRegistroMercanciaInstance) {
+      this.modalSeleccionaRegistroMercanciaInstance.hide();
+    }
+  }
+  private modalSeleccionaRegistroMercanciaInstance: Modal | undefined;
+
+  mostrarSeleccionaRegistroMercancia(): void {
+    const MODAL = document.getElementById('modalSeleccionaRegistroMercancia');
+    if (MODAL) {
+      const WIN = window as Window & { bootstrap?: { Modal?: typeof Modal } };
+      this.modalSeleccionaRegistroMercanciaInstance = WIN.bootstrap?.Modal
+        ? new WIN.bootstrap.Modal(MODAL)
+        : undefined;
+      this.modalSeleccionaRegistroMercanciaInstance?.show();
+    }
+  }
+  // Open Mercancías modal for editing
+  onModificarMercancia(index: number): void {
+    this.selectedMercanciaIndex = index;
+    if (this.datosMercanciaContenedoraComp) {
+      // Patch form in child with mapped data
+      const MAPPED = DomicilioDelEstablecimientoComponent.mapMercanciasInfoToForm(this.mercanciasTablaDatos[index]);
+      this.datosMercanciaContenedoraComp.mercanciaForm.patchValue(MAPPED);
+    }
+    this.openMercanciaModal();
+  }
+
+
+  // Eliminar logic for Mercancías
+  mercanciaEliminarIndex: number | null = null;
+  private modalConfirmarEliminarMercanciaInstance: Modal | undefined;
+
+  onEliminarMercancia(index: number | null): void {
+    if (index === null || index === undefined) {
+      // No row selected, show alert (optional)
+      return;
+    }
+    this.mercanciaEliminarIndex = index;
+    // Show Mercancías confirmation modal
+    const MODAL_CONFIRMAR_ELIMINAR_MERCANCIA_EL = document.getElementById('modalConfirmarEliminarMercancia');
+    if (MODAL_CONFIRMAR_ELIMINAR_MERCANCIA_EL) {
+      const WIN = window as Window & { bootstrap?: { Modal?: typeof Modal } };
+      this.modalConfirmarEliminarMercanciaInstance = WIN.bootstrap?.Modal
+        ? new WIN.bootstrap.Modal(MODAL_CONFIRMAR_ELIMINAR_MERCANCIA_EL)
+        : undefined;
+      this.modalConfirmarEliminarMercanciaInstance?.show();
+    }
+  }
+
+  cancelarEliminarMercancia(): void {
+    if (this.modalConfirmarEliminarMercanciaInstance) {
+      this.modalConfirmarEliminarMercanciaInstance.hide();
+    }
+    this.mercanciaEliminarIndex = null;
+  }
+
+  aceptarEliminarMercancia(): void {
+    if (this.mercanciaEliminarIndex !== null) {
+      this.mercanciasTablaDatos = this.mercanciasTablaDatos.filter((_, i) => i !== this.mercanciaEliminarIndex);
+    }
+    this.cancelarEliminarMercancia();
+  }
+  @ViewChild(DatosMercanciaContenedoraComponent) datosMercanciaContenedoraComp!: DatosMercanciaContenedoraComponent;
   openScianModal(): void {
     document.querySelectorAll('.modal-backdrop').forEach(bd => bd.remove());
     document.body.classList.remove('modal-open');
@@ -79,6 +237,10 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
     document.querySelectorAll('.modal-backdrop').forEach(bd => bd.remove());
     document.body.classList.remove('modal-open');
     document.body.style.removeProperty('padding-right');
+    // Reset Mercancías form in child component so modal opens blank
+    if (this.datosMercanciaContenedoraComp) {
+      this.datosMercanciaContenedoraComp.resetForm();
+    }
     if (this.modalAddMercanciasRef) {
       const WIN = window as Window & { bootstrap?: { Modal?: typeof Modal } };
       this.bootstrapModalMercanciasInstance = WIN.bootstrap?.Modal
@@ -99,39 +261,6 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
     // Optionally reset Mercancias form if needed
     // this.mercanciaForm?.reset();
     this.agregarModalBox = false;
-  }
-  // ...existing code...
-  /**
-   * Handler for agregarMercancia event from DatosMercanciaContenedoraComponent
-   * Adds the new item to mercanciasTablaDatos and closes the modal
-   */
-  onAgregarMercancia(mercancia: MercanciasInfo): void {
-    // Map child data to expected table structure
-    const MAPPED = {
-      clasificacion: mercancia.clasificacion,
-      especificar: mercancia.especificar,
-      denominacionEspecifica: mercancia.denominacionEspecifica,
-      denominacionDistintiva: mercancia.denominacionDistintiva,
-      denominacionComun: mercancia.denominacionComun,
-      tipoProducto: mercancia.tipoProducto,
-      formaFarmaceutica: mercancia.formaFarmaceutica,
-      estadoFisico: mercancia.estadoFisico,
-      fraccionArancelaria: mercancia.fraccionArancelaria,
-      descripcionFraccion: mercancia.descripcionFraccion,
-      cantidadUMC: mercancia.cantidadUMC,
-      cantidadUMT: mercancia.cantidadUMT,
-      unidad: mercancia.unidad, // Replace with the correct property name from MercanciasInfo
-      unidadUMT: mercancia.unidadUMT,
-      presentacion: mercancia.presentacion,
-      numeroRegistro: mercancia.numeroRegistro,
-      fechaCaducidad: mercancia.fechaCaducidad,
-      paisDeOrigen: mercancia.paisDeOrigen,
-      paisDeProcedencia: mercancia.paisDeProcedencia,
-      usoEspecifico: mercancia.usoEspecifico
-    };
-    this.mercanciasTablaDatos = [...(this.mercanciasTablaDatos || []), MAPPED];
-  // ...existing code...
-  this.agregarModalBox = false;
   }
   // Track selected SCIAN row index
   selectedScianIndex: number | null = null;

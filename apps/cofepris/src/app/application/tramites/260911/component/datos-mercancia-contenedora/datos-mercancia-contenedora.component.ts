@@ -70,6 +70,23 @@ import { MercanciasInfo } from '@libs/shared/data-access-user/src/core/models/26
   providers: [DatosSolicitudService],
 })
 export class DatosMercanciaContenedoraComponent implements OnInit {
+  /**
+   * Event emitted when Agregar button is clicked in Mercancías modal
+   */
+  @Output() agregarMercancia = new EventEmitter<MercanciasInfo>();
+    /**
+     * Event emitted when Cancelar button is clicked in Mercancías modal
+     */
+    @Output() cancelarMercanciaModal = new EventEmitter<void>();
+
+    cerrarMercanciaModal(): void {
+      this.cancelarMercanciaModal.emit();
+    }
+  public resetForm(): void {
+    if (this.mercanciaForm) {
+      this.mercanciaForm.reset();
+    }
+  }
   onAgregarMercancia(): void {
     if (this.mercanciaForm.valid) {
       const MERCANCIA: MercanciasInfo = {
@@ -144,10 +161,6 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
   @Output() mercanciaSeleccionado: EventEmitter<TablaMercanciasDatos> =
     new EventEmitter<TablaMercanciasDatos>();
 
-  /**
-   * Event emitted when the Agregar button is clicked to add a new item to the parent table.
-   */
-  @Output() agregarMercancia: EventEmitter<MercanciasInfo> = new EventEmitter<MercanciasInfo>();
 
   /**
    * Referencias a los componentes de listas cruzadas.
@@ -801,16 +814,13 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
       ],
       fechaCaducidad: [this.obtenerValor('fechaCaducidad')],
       paisDeOriginDatos: [
-        this.obtenerValor('paisDeOriginDatos') || [],
-        Validators.required,
+        this.obtenerValor('paisDeOriginDatos') || []
       ],
       paisDeProcedenciaDatos: [
-        this.obtenerValor('paisDeProcedenciaDatos') || [],
-        Validators.required,
+        this.obtenerValor('paisDeProcedenciaDatos') || []
       ],
       usoEspecifico: [
-        this.obtenerValor('usoEspecifico') || [],
-        Validators.required,
+        this.obtenerValor('usoEspecifico') || []
       ],
     });
 
@@ -985,7 +995,6 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
         .get('descripcionFraccion')
         ?.setValue(DESCRIPCION_FRACCION_DESHABILITADO_VALOR);
       this.mercanciaForm.get('cantidadUmt')?.setValue(UMT_DESHABILITADO_VALOR);
-    } else if (this.mercanciaForm.get('fraccionArancelaria')?.value) {
       if (
         REGEX_SOLO_NUMEROS.test(
           this.mercanciaForm.get('fraccionArancelaria')?.value
@@ -1023,6 +1032,7 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
       txtBtnCancelar: '',
     };
     this.elementoParaEliminar = i;
-  }
+
 }
 
+}
