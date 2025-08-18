@@ -95,134 +95,134 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * description Opciones para el tipo de persona (física o moral).
    */
   tipoPersonaOptions: PreOperativo[] = [];
-  
+
   /** 
    * Formulario reactivo para datos personales del tercero.
    * Contiene todos los campos necesarios para registrar información personal.
    * @type {FormGroup}
    */
   datosPersonales!: FormGroup;
-  
+
   /** 
    * Formulario para seleccionar el tipo de persona (física, moral, planta).
    * @type {FormGroup}
    */
   tipoPersonaForm!: FormGroup;
-  
+
   /** 
    * Formulario para búsqueda de terceros existentes en el sistema.
    * @type {FormGroup}
    */
   buscarTercerosForm!: FormGroup;
-  
+
   /** 
    * Control de visibilidad del modal de terceros.
    * @type {boolean}
    * @default false
    */
   showtercerosModal = false;
-  
+
   /** 
    * Control de visibilidad del modal de búsqueda de terceros.
    * @type {boolean}
    * @default false
    */
   showBuscarTercerosModal = false;
-  
+
   /** 
    * Catálogo de países disponibles para selección.
    * @type {Catalogo[]}
    */
   public paisCatalogo: Catalogo[] = realizar.pais;
-  
+
   /** 
    * Catálogo de estados/entidades federativas disponibles.
    * @type {Catalogo[]}
    */
   public estadoCatalogo: Catalogo[] = realizar.estado;
-  
+
   /** 
    * Catálogo de municipios disponibles para selección.
    * @type {Catalogo[]}
    */
   public municipioCatalogo: Catalogo[] = realizar.municipio;
-  
+
   /** 
    * Catálogo de colonias disponibles para selección.
    * @type {Catalogo[]}
    */
   public coloniaCatalogo: Catalogo[] = realizar.colonia;
-  
+
   /** 
    * Mensaje de texto para tabla obligatoria.
    * @type {string}
    */
   TEXTOS: string = MENSAJE_TABLA_OBLIGATORIA;
-  
+
   /** 
    * Lista de exportadores disponibles en el sistema.
    * @type {Exportador[]}
    */
   exportador: Exportador[] = realizar.exportador;
-  
+
   /** 
    * Configuración para checkbox en tabla de selección.
    * @type {TablaSeleccion}
    */
   public checkbox = TablaSeleccion.CHECKBOX;
-  
+
   /** 
    * Configuración de columnas para la tabla de datos de exportadores.
    * @type {ConfiguracionColumna<Exportador>[]}
    */
   configuracionTabla: ConfiguracionColumna<Exportador>[] = CONFIGURATION_TABLA_DATOS;
-  
+
   /** 
    * Lista de destinatarios registrados.
    * @type {Destinatario[]}
    */
   destinatario: Destinatario[] = [];
-  
+
   /** 
    * Configuración de columnas para la tabla de destinatarios.
    * @type {ConfiguracionColumna<Destinatario>[]}
    */
   configuracionTablaDatos: ConfiguracionColumna<Destinatario>[] = CONFIGURATION_TABLA_DESTINATARIO;
-  
+
   /** 
    * Estado actual de la solicitud del trámite 221601.
    * @type {Solicitud221601State}
    */
   public solicitudState!: Solicitud221601State;
-  
+
   /** 
    * Subject para manejar la destrucción de suscripciones.
    * @type {Subject<void>}
    * @private
    */
   private destroyNotifier$: Subject<void> = new Subject();
-  
+
   /** 
    * Control de visibilidad para campos de persona física.
    * @type {boolean}
    * @default true
    */
   showFisicaRow: boolean = true;
-  
+
   /** 
    * Control de visibilidad para campos de persona moral.
    * @type {boolean}
    * @default true
    */
   showMoralRow: boolean = true;
-  
+
   /** 
    * Control de visibilidad para campos de planta TIF.
    * @type {boolean}
    * @default false
    */
   showPlantaRow: boolean = false;
-  
+
   /** 
    * Indica si el formulario debe ser de solo lectura.
    * @type {boolean}
@@ -236,7 +236,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * @default ''
    */
   nombreEstablecimientoTif: string = '';
-  
+
   /** 
    * Número del establecimiento TIF seleccionado.
    * @type {string}
@@ -317,7 +317,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
     if (!control.value) {
       return null; // Campo vacío es válido
     }
-    
+
     const VALUE = control.value.toString();
     const ISVALIDNUMBER = /^\d+$/.test(VALUE);
 
@@ -328,7 +328,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
     if (VALUE.length > 30) {
       return { maxlength: true };
     }
-    
+
     return null;
   }
 
@@ -461,7 +461,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
     (this.tramite221601Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
-/**
+  /**
    * Guarda un nuevo destinatario basado en los datos del formulario.
    * Crea un objeto destinatario y lo agrega a la lista.
    * Cierra el modal después de guardar.
@@ -469,22 +469,35 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * @memberof TercerosComponent
    */
   guardarDestinatario(): void {
+    // Validate form before saving
+    if (this.datosPersonales.invalid) {
+      this.datosPersonales.markAllAsTouched();
+      return;
+    }
     const FORM_VALUE = this.datosPersonales.value;
-    const NUEVO_DESTINATARIO = {
-      nombreDenominacionORazonSocial: FORM_VALUE.nombre || FORM_VALUE.social,
-      telefono: FORM_VALUE.telefono,
-      correoElectronico: FORM_VALUE.correoElectronico,
-      calle: FORM_VALUE.calle,
-      numeroExterior: FORM_VALUE.exterior,
-      numeroInterior: FORM_VALUE.interior,
-      pais: this.paisCatalogo.find(item => item.id === Number(this.datosPersonales.value.pais))?.descripcion,
-      colonia: FORM_VALUE.colonia,
-      municipioOAlcaldia: FORM_VALUE.municipio,
-      entidadFederativa: FORM_VALUE.estado,
-      codigoPostal: FORM_VALUE.codigo,
+    const PAIS_SELECCIONADO = this.paisCatalogo.find(item => item.id === Number(FORM_VALUE.pais));
+    const ESTADO_SELECCIONADO = this.estadoCatalogo.find(item => item.id === Number(FORM_VALUE.estado));
+    const MUNICIPIO_SELECCIONADO = this.municipioCatalogo.find(item => item.id === Number(FORM_VALUE.municipio));
+    const COLONIA_SELECCIONADA = this.coloniaCatalogo.find(item => item.id === Number(FORM_VALUE.colonia));
+
+    const NUEVO_DESTINATARIO: Destinatario = {
+      nombreDenominacionORazonSocial: FORM_VALUE.nombre || FORM_VALUE.social || '',
+      telefono: FORM_VALUE.telefono || '',
+      correoElectronico: FORM_VALUE.correoElectronico || '',
+      calle: FORM_VALUE.calle || '',
+      numeroExterior: FORM_VALUE.exterior || '',
+      numeroInterior: FORM_VALUE.interior || '',
+      pais: PAIS_SELECCIONADO?.descripcion || '',
+      colonia: COLONIA_SELECCIONADA?.descripcion || '',
+      municipioOAlcaldia: MUNICIPIO_SELECCIONADO?.descripcion || '',
+      entidadFederativa: ESTADO_SELECCIONADO?.descripcion || '',
+      codigoPostal: FORM_VALUE.codigo || ''
     };
-    this.destinatario.push(NUEVO_DESTINATARIO);
-    this.showtercerosModal = !this.showtercerosModal;
+
+    this.destinatario = [...this.destinatario, NUEVO_DESTINATARIO];
+    this.limpiarDatosFormulario();
+    this.showtercerosModal = false;
+    this.cdr.detectChanges();
   }
 
   /**
@@ -596,7 +609,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * 
    * @memberof TercerosComponent
    */
-   cargarRadio(): void {
+  cargarRadio(): void {
     this.service.obtenerRadio()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
@@ -609,7 +622,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
    */
 
   public planta = false;
-  
+
   /**
    * property fisica
    * description Indica si el tipo de persona es física.
@@ -622,11 +635,11 @@ export class TercerosComponent implements OnInit, OnDestroy {
    */
   public moral = false;
 
-/**
-   * method inputChecked
-   * description Cambia el estado de los checkboxes según el tipo de persona.
-   * param checkBoxName Nombre del checkbox seleccionado.
-   */
+  /**
+     * method inputChecked
+     * description Cambia el estado de los checkboxes según el tipo de persona.
+     * param checkBoxName Nombre del checkbox seleccionado.
+     */
   public inputChecked(checkBoxName: string): void {
     if (checkBoxName === 'fisica') {
       this.fisica = true;
@@ -643,17 +656,17 @@ export class TercerosComponent implements OnInit, OnDestroy {
     }
   }
 
-   /**
-   * method cambiarRadioFisica
-   * description Cambia el estado del radio button según el valor seleccionado.
-   * param value Valor seleccionado.
-   */
+  /**
+  * method cambiarRadioFisica
+  * description Cambia el estado del radio button según el valor seleccionado.
+  * param value Valor seleccionado.
+  */
   cambiarRadioFisica(value: string | number): void {
     const VALOR_SELECCIONADO = value as string;
     this.inputChecked(VALOR_SELECCIONADO);
   }
 
-  
+
   /**
    * Maneja la entrada numérica en campos específicos, permitiendo solo dígitos.
    * Previene la entrada de caracteres no numéricos en tiempo real.
