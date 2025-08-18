@@ -25,11 +25,12 @@
 
 import {
   AccionBoton,
+  AlertComponent,
   DatosPasos,
   ListaPasosWizard,
 } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
-import { PASOS, TITULOMENSAJE } from '../../constants/medicos-uso.enum';
+import { FALTAN_CAMPOS_POR_CAPTURAR, PASOS, TITULOMENSAJE } from '../../constants/medicos-uso.enum';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
@@ -47,6 +48,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     PasoDosComponent,
     PasoTresComponent,
     BtnContinuarComponent,
+    AlertComponent,
   ],
   templateUrl: './contenedor-de-pasos.component.html',
   styleUrl: './contenedor-de-paso.component.scss',
@@ -108,6 +110,31 @@ export class ContenedorDePasosComponent {
   }
 
   /**
+ * @property {string} MENSAJE_DE_ERROR
+ * @description
+ * Propiedad usada para almacenar el mensaje de error actual.
+ * Se inicializa como cadena vacía y se actualiza en función
+ * de las validaciones o errores capturados en el flujo.
+ */
+  MENSAJE_DE_ERROR: string = '';
+
+  /**
+   * @property {string} infoAlert
+   * Clase CSS usada para mostrar alertas informativas.
+   */
+  public infoAlert = 'alert-danger text-center';
+
+  /**
+ * @property {PasoUnoComponent} pasoUnoComponent
+ * @description
+ * Referencia al componente hijo `PasoUnoComponent` mediante
+ * `@ViewChild`. Permite acceder a sus métodos y propiedades
+ * desde este componente padre.
+ */
+  @ViewChild(PasoUnoComponent)
+  pasoUnoComponent!: PasoUnoComponent;
+
+  /**
    * @method getValorIndice
    * @description Actualiza el índice y el título del mensaje según la acción del botón.
    * Navega hacia adelante o hacia atrás en el wizard.
@@ -121,16 +148,21 @@ export class ContenedorDePasosComponent {
    * ```
    */
   getValorIndice(e: AccionBoton): void {
+    this.MENSAJE_DE_ERROR = '';
     if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
       this.tituloMensaje = ContenedorDePasosComponent.obtenerNombreDelTítulo(
         e.valor
       );
-
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
+      const VALIDO = this.pasoUnoComponent?.validarPasoUno();
+      if (VALIDO) {
+         this.indice = e.valor;
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else {
+          this.wizardComponent.atras();
+        }
       } else {
-        this.wizardComponent.atras();
+        this.MENSAJE_DE_ERROR = FALTAN_CAMPOS_POR_CAPTURAR;
       }
     }
   }

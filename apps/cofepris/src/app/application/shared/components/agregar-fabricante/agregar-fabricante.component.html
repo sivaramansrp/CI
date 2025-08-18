@@ -225,7 +225,7 @@
         </div>
       </div>
     </div>
-    } @if (idProcedimiento === 260102 || (idProcedimiento === 260214 &&
+    } @if (idProcedimiento === 260102 || ((idProcedimiento === 260214 || idProcedimiento === 260219) &&
     agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero' &&
     agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.FISICA)) {
     <h4 class="mt-5">Domicilio</h4>
@@ -327,7 +327,7 @@
     </div>
     } @if(mostarColoniaOEquivalente &&
     agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero'){
-    <div class="col-md-4 mx-auto pl-0">
+    <div class="col-md-4 mx-auto pl-0 mt-3">
       <label class="form-label">Colonia o equivalente:</label>
       <input
         type="text"
