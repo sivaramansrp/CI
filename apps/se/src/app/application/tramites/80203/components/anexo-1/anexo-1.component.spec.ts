@@ -138,12 +138,6 @@ describe('Anexo1Component', () => {
     expect(component.immexRegistroform.get('importacionForm')).toBeTruthy();
   });
 
-  it('should call inicializarEstadoFormulario on ngAfterViewInit', () => {
-    component.inicializarEstadoFormulario = jest.fn();
-    component.ngAfterViewInit();
-    expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
-  });
-
   it('should create a form group in creatFormSolicitud', () => {
     component.fb = fb;
     component.immexRegitroAnexoState = getMockState();

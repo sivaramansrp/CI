@@ -69,9 +69,9 @@ jobs:
     - name: Deploy on MicroK8s host via SSH
       uses: appleboy/ssh-action@v1
       with:
-        host: ${{ secrets.REMOTE_SERVER_IP }}
-        username: ${{ secrets.REMOTE_SERVER_USER }}
-        key: ${{ secrets.REMOTE_SERVER_KEY }}
+        host: ${{ secrets.REMOTE_SRV_IP }}
+        username: ${{ secrets.REMOTE_SRV_USER }}
+        key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
         envs: IMAGE_NAME,IMAGE_TAG
         script: |
           echo "Logging in to GHCR..."

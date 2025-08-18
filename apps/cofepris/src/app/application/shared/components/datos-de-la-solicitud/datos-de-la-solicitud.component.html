@@ -600,6 +600,8 @@
             [placeholder]="'Selecciona un valor'"
             [required]="true"
             name="regimenLaMercancia"
+            [tooltipQuestionCircle]="true"
+            [tooltipQuestionCircleText]="'Régimen al que se destinará la mercancía'"
             [isDisabled]="formularioDeshabilitado"
           ></app-catalogo-select>
         </div>
@@ -678,7 +680,7 @@
           <button
             type="button"
             name="modificarMercancias"
-            class="btn btn-default"
+            class="btn btn-primary"
             (click)="modificarDatos()"
             [disabled]="formularioDeshabilitado"
           >

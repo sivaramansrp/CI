@@ -712,7 +712,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           ),
         },
       ],
-      regimenLaMercancia: ['101', [Validators.required]],
+      regimenLaMercancia: ['', [Validators.required]],
       aduana: [this.datosSolicitudFormState.aduana, [Validators.required]],
       mercancias: [this.tablaMercanciasConfig.datos, matrizRequerida],
       manifesto: [

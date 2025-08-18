@@ -54,14 +54,14 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
      private consultaioQuery: ConsultaioQuery
   ) {
     this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destruirNotificacion$),
-      map((seccionState) => {
-       this.esFormularioSoloLectura = seccionState.readonly;
-       
-      })
-    )
-    .subscribe()
+      .pipe(
+        takeUntil(this.destruirNotificacion$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.guardarDatosFormulario();
+        })
+      )
+      .subscribe();
   }
 
 
@@ -71,14 +71,19 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
    */
 
   guardarDatosFormulario(): void {
+    // Verificar si el formulario está inicializado antes de acceder a él
+    if (!this.datosDelEstablecimientoForm) {
+      return;
+    }
+    
     if (this.esFormularioSoloLectura) {
-    this.datosDelEstablecimientoForm.get('correoElectronico')?.disable();
-    this.datosDelEstablecimientoForm.get('razonSocial')?.disable();
-  }else{
-    this.datosDelEstablecimientoForm.get('correoElectronico')?.enable();
-    this.datosDelEstablecimientoForm.get('razonSocial')?.enable();
+      this.datosDelEstablecimientoForm.get('correoElectronico')?.disable();
+      this.datosDelEstablecimientoForm.get('razonSocial')?.disable();
+    } else {
+      this.datosDelEstablecimientoForm.get('correoElectronico')?.enable();
+      this.datosDelEstablecimientoForm.get('razonSocial')?.enable();
+    }
   }
-}
 
   /**
    * Método del ciclo de vida que se ejecuta al inicializar el componente.
