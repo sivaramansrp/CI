@@ -62,8 +62,13 @@
         <div class="row mb-3">
           <div class="col-md-6">
             <app-input-radio [radioOptions]="tipoPersonaOptions" [isRequired]="true" formControlName="tipoPersona"
-              [layout]="'horizontal'" (valueChange)="cambiarRadioFisica($event)"
+              [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event)"
               (change)="setValoresStore(tipoPersonaForm,'tipoPersona','setTipoPersona')"></app-input-radio>
+          </div>
+          <div class="col-md-6">
+            <app-input-radio [radioOptions]="Plantatif" [isRequired]="true" formControlName="tipoPersona"
+              [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event)"
+             ></app-input-radio>
           </div>
         </div>
       </form>

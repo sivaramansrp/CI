@@ -48,6 +48,8 @@ import realizar from '@libs/shared/theme/assets/json/221601/zoosanitario.json';
 import { CommonModule } from '@angular/common';
 import { ZoosanitarioService } from '../../service/zoosanitario.service';
 
+import Plantatif from '@libs/shared/theme/assets/json/221601/plantatif.json';
+
 /**
  * Componente para la gestión de terceros en el trámite 221601 de zoosanitario.
  * Permite registrar, buscar y administrar datos de personas físicas, morales y plantas TIF.
@@ -95,6 +97,14 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * description Opciones para el tipo de persona (física o moral).
    */
   tipoPersonaOptions: PreOperativo[] = [];
+
+   /**
+   * Opciones para el radio de tipo de persona.
+   * Utiliza los datos predefinidos en `Plantatif`.
+   *
+   * @description Este arreglo almacena las opciones para el selector de tipo de persona.
+   */
+  Plantatif = [Plantatif];
 
   /** 
    * Formulario reactivo para datos personales del tercero.
