@@ -57,27 +57,103 @@ describe('ContenedorDePasosComponent', () => {
     expect(component.datosPasos.indice).toBe(component.indice);
   });
 
-  it('should call wizardComponent.siguiente when accion is "cont" and valor is valid', () => {
+  it('should update indice, tituloMensaje and call wizardComponent.siguiente when accion is "cont" and pasoUnoComponent.validarPasoUno returns true', () => {
+    component.indice = 1;
+    component.tituloMensaje = 'Old Title';
     component.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn()
     };
-    component.getValorIndice({ valor: 2, accion: 'cont' });
+    component.pasoUnoComponent = {
+      validarPasoUno: jest.fn().mockReturnValue(true)
+    };
+    const accion = { valor: 2, accion: 'cont' };
+    component.getValorIndice(accion);
     expect(component.indice).toBe(2);
+    expect(component.tituloMensaje).toBe('Cargar archivos');
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
     expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+    expect(component.MENSAJE_DE_ERROR).toBe('');
   });
 
-  it('should call wizardComponent.atras when accion is not "cont" and valor is valid', () => {
+  it('should update indice, tituloMensaje and call wizardComponent.atras when accion is not "cont" and pasoUnoComponent.validarPasoUno returns true', () => {
+    component.indice = 1;
+    component.tituloMensaje = 'Old Title';
     component.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn()
     };
-    component.getValorIndice({ valor: 3, accion: 'back' });
+    component.pasoUnoComponent = {
+      validarPasoUno: jest.fn().mockReturnValue(true)
+    };
+    const accion = { valor: 3, accion: 'back' };
+    component.getValorIndice(accion);
     expect(component.indice).toBe(3);
+    expect(component.tituloMensaje).toBe('Firmar');
     expect(component.wizardComponent.atras).toHaveBeenCalled();
     expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+    expect(component.MENSAJE_DE_ERROR).toBe('');
   });
+
+  it('should set MENSAJE_DE_ERROR when pasoUnoComponent.validarPasoUno returns false', () => {
+    component.indice = 1;
+    component.tituloMensaje = 'Old Title';
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn()
+    };
+    component.pasoUnoComponent = {
+      validarPasoUno: jest.fn().mockReturnValue(false)
+    };
+    const accion = { valor: 2, accion: 'cont' };
+    component.getValorIndice(accion);
+    expect(component.indice).toBe(1); // indice should not change
+    expect(component.tituloMensaje).toBe('Cargar archivos');
+    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+    expect(component.MENSAJE_DE_ERROR).toBeDefined();
+    expect(typeof component.MENSAJE_DE_ERROR).toBe('string');
+    expect(component.MENSAJE_DE_ERROR.length).toBeGreaterThan(0);
+  });
+
+  it('should not throw if pasoUnoComponent is undefined', () => {
+    component.indice = 1;
+    component.tituloMensaje = 'Old Title';
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn()
+    };
+    component.pasoUnoComponent = undefined;
+    const accion = { valor: 2, accion: 'cont' };
+    expect(() => component.getValorIndice(accion)).not.toThrow();
+    expect(component.indice).toBe(1); // indice should not change
+    expect(component.tituloMensaje).toBe('Cargar archivos');
+    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+    expect(component.MENSAJE_DE_ERROR).toBeDefined();
+  });
+
+  // it('should call wizardComponent.siguiente when accion is "cont" and valor is valid', () => {
+  //   component.wizardComponent = {
+  //     siguiente: jest.fn(),
+  //     atras: jest.fn()
+  //   };
+  //   component.getValorIndice({ valor: 2, accion: 'cont' });
+  //   expect(component.indice).toBe(1);
+  //   expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+  //   expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+  // });
+
+  // it('should call wizardComponent.atras when accion is not "cont" and valor is valid', () => {
+  //   component.wizardComponent = {
+  //     siguiente: jest.fn(),
+  //     atras: jest.fn()
+  //   };
+  //   component.getValorIndice({ valor: 3, accion: 'back' });
+  //   expect(component.indice).toBe(1);
+  //   expect(component.wizardComponent.atras).toHaveBeenCalled();
+  //   expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+  // });
 
   it('should not change indice or call wizardComponent methods if valor is out of range', () => {
     component.indice = 1;
