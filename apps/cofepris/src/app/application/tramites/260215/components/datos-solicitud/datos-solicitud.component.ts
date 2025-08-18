@@ -222,7 +222,7 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
       ],
       correo: [
         { value: this.solicitudState?.correo, disabled: true },
-        [Validators.required, Validators.maxLength(320)]
+        [Validators.required, Validators.email, Validators.maxLength(320)]
       ],
     });
   }
