@@ -4,9 +4,9 @@
     "cadenaDependencia": "DEP123456",
     "estado": "2",
     "llavePago": "LLAVE987654",
-    "fechaPago": "2024-06-20",
+    "fechaPago": "02/06/2024",
     "importePago": "1500.00",
-    "banco": "Banco Ejemplo"
+    "banco": "1"
   },
   "datosSolicitudFormState": {
     "rfcSanitario": "SAN123456789",
