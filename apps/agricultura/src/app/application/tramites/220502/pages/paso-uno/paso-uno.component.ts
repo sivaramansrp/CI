@@ -7,6 +7,7 @@ import { DatosDeLaSolicitud } from '../../models/solicitud-pantallas.model';
 import { DatosDelTramiteARealizarComponent } from '../../shared/datos-del-tramite-a-realizar/datos-del-tramite-a-realizar.component';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { RevisionDocumentalComponent } from '../../components/revision-documental/revision-documental.component';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
 import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
@@ -23,12 +24,14 @@ import { takeUntil } from 'rxjs';
     CatalogoSelectComponent,
     CommonModule,
     SolicitanteComponent,
-    DatosDelTramiteARealizarComponent
+    DatosDelTramiteARealizarComponent,
+    RevisionDocumentalComponent,
   ],
   standalone: true,
 })
 /** Componente para gestionar el primer paso del trámite */
 export class PasoUnoComponent implements OnInit, OnDestroy {
+  
   /** Realiza un seguimiento del índice de la pestaña seleccionada actualmente */
   indice: number = 1;
 
@@ -48,7 +51,17 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   public consultaState!: ConsultaioState;
 
   /**
-   * Constructor del componente PasoUnoComponent.
+   * Indica si el trámite se encuentra en estado de revisión documental.
+   * @default false
+   */
+  isRevisionDocumental: boolean = false;
+
+  /**
+   * @constructor
+   * Inyecta los servicios necesarios para consultar datos y gestionar las pantallas de solicitud.
+   *
+   * @param consultaQuery - Servicio Query para obtener la información de consulta.
+   * @param solicitudPantallasService - Servicio para gestionar y obtener datos de las pantallas de solicitud.
    */
   constructor(
     private consultaQuery: ConsultaioQuery,
@@ -98,6 +111,15 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
           this.solicitudPantallasService.actualizarEstadoFormulario(resp);
         }
       });
+  }
+
+  /**
+   * Actualiza el estado de revisión documental según el valor recibido.
+   *
+   * @param evento - Valor booleano que indica si el trámite está en revisión documental.
+   */
+  certificadosAutorizValor(evento: boolean): void {
+    this.isRevisionDocumental = evento;
   }
 
   /**

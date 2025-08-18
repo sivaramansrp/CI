@@ -1,27 +1,33 @@
-import { Component, OnDestroy } from '@angular/core';
-import { CargarDatosIniciales } from '../../models/solicitud-pantallas.model';
-import { CarrosDeFerrocarril } from '../../models/solicitud-pantallas.model';
+import {
+  CargarDatosIniciales,
+  CarrosDeFerrocarril,
+  DatosDeMercancias,
+  HistorialInspeccionFisica,
+  Solicitud,
+} from '../../models/solicitud-pantallas.model';
+import { CatalogosSelect, ConsultaioQuery } from '@ng-mf/data-access-user';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CarrosDeFerrocarrilComponent } from '../../shared/carros-de-ferrocarril/carros-de-ferrocarril.component';
-import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { DatosDeMercancias } from '../../models/solicitud-pantallas.model';
 import { DatosDelTramiteARealizarComponent } from '../../shared/datos-del-tramite-a-realizar/datos-del-tramite-a-realizar.component';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
-import { HistorialInspeccionFisica } from '../../models/solicitud-pantallas.model';
 import { HistorialInspeccionFisicaComponent } from '../../shared/historial-inspeccion-fisica/historial-inspeccion-fisica.component';
 import { MedioTransporteComponent } from '../../shared/medio-transporte/medio-transporte.component';
-import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { ResponsableInspeccionEnPuntoComponent } from '../../shared/responsable-inspeccion-en-punto/responsable-inspeccion-en-punto.component';
-import { Solicitud } from '../../models/solicitud-pantallas.model';
 import { SolicitudDatosComponent } from '../../shared/solicitud-datos/solicitud-datos.component';
 import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
-import { Subject } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * Componente para gestionar la solicitud de trámite.
@@ -97,7 +103,25 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   isSolicitud: boolean = false;
 
-  /** Constructor para inyectar dependencias */
+  /**
+   * Evento que emite el valor booleano para indicar si los certificados están autorizados.
+   *
+   * > **Nota:** El valor `false` pasado al constructor de `EventEmitter` indica que
+   * la emisión será sincrónica (no establece un valor por defecto).
+   *
+   * @type {EventEmitter<boolean>}
+   */
+  @Output() certificadosAutorizValor = new EventEmitter<boolean>(false);
+
+  /**
+   * @constructor
+   * Inyecta los servicios necesarios para la creación y gestión del formulario,
+   * así como para la obtención y consulta de datos de la solicitud.
+   *
+   * @param fb - Servicio `FormBuilder` para crear y manejar formularios reactivos.
+   * @param solicitudService - Servicio para obtener datos de la solicitud.
+   * @param consultaioQuery - Servicio Query para consultar la información relacionada con la solicitud.
+   */
   constructor(
     private fb: FormBuilder,
     private solicitudService: SolicitudPantallasService /**Servicio para obtener datos de solicitud */,
@@ -151,7 +175,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Método para crear el formulario de la solicitud.
    */
   crearFormulario(): void {
-    this.form = this.fb.group({});/** Inicializar un grupo de formulario vacío y obtener datos de formulario utilizando formGroupName de un componente secundario. */
+    this.form = this.fb.group(
+      {}
+    ); /** Inicializar un grupo de formulario vacío y obtener datos de formulario utilizando formGroupName de un componente secundario. */
   }
 
   /**
@@ -171,6 +197,15 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         this.mediodetransporte = data.medioDeTransporte;
       },
     });
+  }
+
+  /**
+   * Emite un evento indicando si los certificados han sido autorizados.
+   *
+   * @param evento - Valor booleano que indica el estado de autorización de los certificados.
+   */
+  certificadosAutorizEmitido(evento: boolean): void {
+    this.certificadosAutorizValor.emit(evento);
   }
 
   /**

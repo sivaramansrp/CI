@@ -1,10 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { HistorialInspeccionFisica } from '../../models/solicitud-pantallas.model';
-import { Input } from '@angular/core';
-import { OnChanges } from '@angular/core';
-import { SimpleChanges } from '@angular/core';
-import { TableComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
+
 
 /** Componente para gestionar el historial de inspección física */
 @Component({

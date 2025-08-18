@@ -3,7 +3,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
-import { map } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 
 import { Agricultura } from '../modelos/importacion-de-acuicultura.module';
 import { DatosMercancia220701 } from '../modelos/importacion-de-acuicultura.module';
@@ -90,13 +91,21 @@ export class ImportacionDeAcuiculturaService {
   public actualizarFormaValida(updatedFormaValida: { [key: string]: boolean }): void {
     this.agriculturaStore.actualizarformaValida(updatedFormaValida);
     this.obtenerTodosLosStatus().subscribe((result: boolean) => {
-      if (result) {
-        this.seccionStore.establecerSeccion([true]);
-        this.seccionStore.establecerFormaValida([true]);
-      } else {
-        this.seccionStore.establecerSeccion([true]);
-        this.seccionStore.establecerFormaValida([false]);
-      }
+      // Get current validation state to build proper section arrays
+      this.agriculturaStore._select((state: { formaValida: EnviarDatos }) => state.formaValida)
+        .pipe(take(1))
+        .subscribe((formaValida: EnviarDatos) => {
+          // For tramite 220701, we need to maintain a 3-step section array structure
+          // Each position represents a step in the wizard
+          const SECCION_ARRAY = [
+            formaValida.pagoDeformaValida || formaValida.dataDeLaSolicitud, // paso-uno (either payment or data form valid)
+            formaValida.dataParaMovilizacion, // paso-dos (mobilization data)
+            result // paso-tres (overall result)
+          ];
+          
+          this.seccionStore.establecerSeccion(SECCION_ARRAY);
+          this.seccionStore.establecerFormaValida(SECCION_ARRAY);
+        });
     });
   }
   /**
@@ -158,6 +167,17 @@ export class ImportacionDeAcuiculturaService {
     this.tramiteStore.setInternaDatosGeneralesTramite(DATOS.InternaDatosGeneralesState);
     this.tramiteStore.setInternaPagoDeDerechosTramite(DATOS.FormularioPagoState);
     this.tramiteStore.setPagoDeDerechosTramite(DATOS.PagosDeDerechosState);
+  }
+
+  /**
+   * Initializes the section state with proper structure for 220701 tramite
+   * @description Sets up the initial section arrays for the 3-step wizard
+   */
+  public inicializarEstadoSeccion(): void {
+    // Initialize with 3-step structure: [paso-uno, paso-dos, paso-tres]
+    const SECCION_INICIAL = [false, false, false];
+    this.seccionStore.establecerSeccion(SECCION_INICIAL);
+    this.seccionStore.establecerFormaValida(SECCION_INICIAL);
   }
 
   /**

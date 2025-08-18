@@ -9,7 +9,7 @@
     </div>
     <div class="row" *ngIf="mostrarVista" #nextField>
         <div class="col-md-12">
-            <p style="color: red; ">Debes seleccionar un tipo de persona para realizar una búsqueda</p>
+            <p style="color: red;">Debes seleccionar un tipo de persona para realizar una búsqueda</p>
         </div>
     </div>
     <div class="row" *ngIf="mostrarVista">
@@ -56,7 +56,7 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <h5>Exportador <span *ngIf="exportadorRequired" >*</span></h5>
+            <h5>Exportador<span *ngIf="exportadorRequired" [ngClass]="{'mensaje-error':tableErrorMeassageDispalyExportador && cuerpoTablaExportador.length === 0}">*</span></h5>
         </div>
         <div class="col-md-12">
             <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionsoli"
@@ -83,7 +83,7 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <h5>Destinatario (destino final) <span *ngIf="destinatarioRequired" >*</span></h5>
+                <h5>Destinatario (destino final)<span *ngIf="destinatarioRequired" [ngClass]="{'mensaje-error':tableErrorMeassageDispalyDestinatario && cuerpoTablaDestino.length === 0}">*</span></h5>
             </div>
             <div class="col-md-12">
                 <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionsoli"
