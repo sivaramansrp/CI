@@ -260,8 +260,8 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="cantidad">Cantidad *:</label>
-          <input class="form-control" id="cantidad" type="number"
+          <label class="form-label" for="cantidad">Cantidad*:</label>
+          <input class="form-control" id="cantidad" type="text"
             formControlName="cantidad" [ngClass]="isValid(FormSolicitud, 'cantidad') ? 'required' : ''"
             (change)="setValoresStore(FormSolicitud,'cantidad')">
             <div class="mensaje-error" *ngIf="FormSolicitud.get('cantidad')?.errors?.['maxDigits']">
@@ -270,7 +270,7 @@
       </div>
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="cantidadLetra">Cantidad (letra) *:</label>
+          <label class="form-label" for="cantidadLetra">Cantidad(letra)*:</label>
           <input class="form-control" id="cantidadLetra" formControlName="cantidadLetra" type="text">
         </div>
       </div>
