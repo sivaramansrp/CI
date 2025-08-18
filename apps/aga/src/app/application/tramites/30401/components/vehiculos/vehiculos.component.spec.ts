@@ -213,7 +213,7 @@ describe('VehiculosComponent', () => {
       { id: 1, marca: 'Toyota', modelo: 'Corolla', vin: '123456789ABCDEFG' },
     ];
     const cerrarSpy = jest.spyOn(component, 'cerrarEliminarConfirmationPopup');
-    component.eliminarVehiculosItem();
+    component.eliminarVehiculosItem(true);
     expect(component.vehiculosInfoList).toEqual([
       { id: 2, marca: 'Honda', modelo: 'Civic', vin: '987654321ZYXWVUT' },
     ]);

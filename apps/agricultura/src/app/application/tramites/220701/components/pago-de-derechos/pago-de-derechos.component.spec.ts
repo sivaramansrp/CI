@@ -68,14 +68,7 @@ describe('PagoDeDerechosComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // Eliminado: should patch form on pagoDeCargarDatos
-
-  // Eliminado: should set banco property on getBancoDatos
-
-  // Eliminado: should set justificacionCatalogo on obtenerListaJustificacion
-
-  // Eliminado: should patch form on pagoDerechosRevision
-
+ 
   it('should patch value and update exentoPagoValor on cambioValorRadio', () => {
     component.cambioValorRadio('exentoPago', 'Si');
     expect(component.pagosDeDerechosForm.value.exentoPago).toBe('Si');

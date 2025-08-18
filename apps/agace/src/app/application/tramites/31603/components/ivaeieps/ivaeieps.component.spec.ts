@@ -87,4 +87,41 @@ describe('IvaeiepsComponent', () => {
     component.ngOnDestroy();
     expect(destroySpy).toHaveBeenCalled();
   });
+
+  it('should mark rfc as touched if empty', () => {
+    component.ivaForm.get('rfc')?.setValue('');
+    const markSpy = jest.spyOn(component.ivaForm.get('rfc')!, 'markAsTouched');
+    component.buscarRFC();
+    expect(markSpy).toHaveBeenCalled();
+  });
+
+  it('should not patch denominacion and domicilio if rfc invalid', () => {
+    component.ivaForm.get('rfc')?.setValue('INVALID');
+    component.buscarRFC();
+    expect(component.ivaForm.get('denominacion')?.value).toBe('');
+  });
+
+  it('should patch denominacion and domicilio if rfc is valid', () => {
+    component.ivaForm.get('rfc')?.setValue('ABC1234561Z1');
+    component.buscarRFC();
+    expect(component.ivaForm.get('denominacion')?.value).toContain('INTEGRADORA');
+    expect(component.ivaForm.get('domicilio')?.value).toContain('CAMINO VIEJO');
+  });
+
+  it('should not add empresa if form is invalid', () => {
+      component.ivaForm.get('rfc')?.setValue('');
+      component.aceptar();
+      expect(component.empresasDelGrupoDatos.length).toBe(0);
+    });
+
+    it('should add empresa if form is valid', () => {
+      component.ivaForm.get('rfc')?.setValue('ABC1234561Z1');
+      component.ivaForm.patchValue({
+        denominacion: 'Empresa X',
+        domicilio: 'Direccion Y'
+      });
+      component.aceptar();
+      expect(component.empresasDelGrupoDatos.length).toBe(1);
+      expect(component.empresasDelGrupoDatos[0].rfc).toBe('ABC1234561Z1');
+    });
 });

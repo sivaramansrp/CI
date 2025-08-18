@@ -5,12 +5,15 @@
  *
  * @module BajaUnidadComponent
  */
-import { UnidadTabla, CatalogoLista } from '../../../../models/registro-muestras-mercancias.model';
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { UNIDAD_TABLA_CONFIG } from '../../../../enum/transportista-terrestre.enum';
-import { TablaSeleccion, ConsultaioQuery, ConsultaioState, Catalogo } from '@ng-mf/data-access-user';
-import { Subject, takeUntil, map } from 'rxjs';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
+
+import { Catalogo, ConsultaioQuery, ConsultaioState, TablaSeleccion } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+
+import { CatalogoLista, DatosUnidad, UnidadTabla } from '../../../../models/registro-muestras-mercancias.model';
 import { modificarTerrestreService } from '../../../services/modificacar-terrestre.service';
+import { obtenerColumnasUnidad } from '../../../../enum/unidad-de-arrastre.enum';
 
 @Component({
   selector: 'app-baja-unidad',
@@ -54,46 +57,28 @@ export class BajaUnidadComponent implements OnInit, OnDestroy {
   unidadesArrastre: UnidadTabla[] = [];
 
   /**
-   * Configuración de columnas para la tabla de unidades.
-   * @type {*}
+   * Getter que convierte UnidadTabla[] a DatosUnidad[] para el componente de diálogo.
+   * @returns {DatosUnidad[]}
    */
-  columnasUnidad = [
-    {
-      encabezado: 'ID',
-      clave: (item: UnidadTabla) => String(item.idDeVehiculo),
-      orden: 0,
-    },
-    {
-      encabezado: 'VIN/Número de identificación',
-      clave: (item: UnidadTabla) => item.vinVehiculo,
-      orden: 1,
-    },
-    {
-      encabezado: 'Tipo de unidad de arrastre',
-      clave: (item: UnidadTabla) => this.obtenerDescripcionDeCatalogo(item.tipoDeUnidadArrastre, this.tipoDeUnidadCatalogo),
-      orden: 2,
-    },
-    {
-      encabezado: 'Número económico',
-      clave: (item: UnidadTabla) => item.numeroEconomico,
-      orden: 3,
-    },
-    {
-      encabezado: 'Número de Placas',
-      clave: (item: UnidadTabla) => item.numeroPlaca,
-      orden: 4,
-    },
-    {
-      encabezado: 'País Emisor',
-      clave: (item: UnidadTabla) => this.obtenerDescripcionDeCatalogo(item.paisEmisor, this.paisEmisorCatalogo),
-      orden: 5,
-    },
-    {
-      encabezado: 'Estado o provincia',
-      clave: (item: UnidadTabla) => item.estado,
-      orden: 6,
-    }
-  ];
+  get unidadesArrastreDatos(): DatosUnidad[] {
+    return this.unidadesArrastre.map(unidad => ({ 
+      ...unidad,
+      colorVehiculo: '',
+      numero2daPlaca: '',
+      estado2daPlaca: '',
+      paisEmisor2daPlaca: '',
+      descripcion: ''
+    }));
+  }
+
+  /**
+   * Configuración de columnas para la tabla de unidades.
+   * Utiliza la configuración centralizada del enum.
+   * @type {ConfiguracionColumna<UnidadTabla>[]}
+   */
+  get columnasUnidad(): ConfiguracionColumna<UnidadTabla>[] {
+    return obtenerColumnasUnidad(this.tipoDeUnidadCatalogo, this.paisEmisorCatalogo);
+  }
 
   /**
    * Tipo de selección de la tabla (radio, checkbox, etc).
@@ -133,9 +118,9 @@ export class BajaUnidadComponent implements OnInit, OnDestroy {
 
   /**
    * Datos para el diálogo de unidad.
-   * @type {UnidadTabla | {}}
+   * @type {DatosUnidad | null}
    */
-  datosDialogoUnidad: UnidadTabla | {} = {};
+  datosDialogoUnidad: DatosUnidad | null = null;
 
   /**
    * Constructor del componente `BajaUnidadComponent`.
@@ -205,7 +190,7 @@ export class BajaUnidadComponent implements OnInit, OnDestroy {
    * @param {UnidadTabla[]} event - Unidades seleccionadas.
    * @returns {void}
    */
-  onUnidadRowSelected(event: UnidadTabla[]) {
+  onUnidadRowSelected(event: UnidadTabla[]): void {
     this.unidadesArrastreSelected = event || [];
   }
 
@@ -213,21 +198,25 @@ export class BajaUnidadComponent implements OnInit, OnDestroy {
    * Elimina las unidades seleccionadas del listado.
    * @returns {void}
    */
-  eliminarUnidad() {
+  eliminarUnidad(): void {
     if (this.unidadesArrastreSelected.length === 0) {
       return;
     }
     
     // Crear Sets con los identificadores únicos de las unidades seleccionadas
-    const selectedVins = new Set(this.unidadesArrastreSelected.map(u => u.vinVehiculo).filter(vin => vin));
-    const selectedIds = new Set(this.unidadesArrastreSelected.map(u => u.idDeVehiculo).filter(id => id));
+    const VINS_SELECCIONADOS = new Set(this.unidadesArrastreSelected.map(u => u.vinVehiculo).filter(vin => vin));
+    const IDS_SELECCIONADOS = new Set(this.unidadesArrastreSelected.map(u => u.idDeVehiculo).filter(id => id));
     
     // Filtrar las unidades usando múltiples identificadores únicos
     this.unidadesArrastre = this.unidadesArrastre.filter(u => {
       // Primero intentar con VIN
-      if (u.vinVehiculo && selectedVins.has(u.vinVehiculo)) return false;
+      if (u.vinVehiculo && VINS_SELECCIONADOS.has(u.vinVehiculo)) {
+        return false;
+      }
       // Luego con ID de vehículo
-      if (u.idDeVehiculo && selectedIds.has(u.idDeVehiculo)) return false;
+      if (u.idDeVehiculo && IDS_SELECCIONADOS.has(u.idDeVehiculo)) {
+        return false;
+      }
       // Como último recurso, usar referencia de objeto
       return !this.unidadesArrastreSelected.includes(u);
     });
@@ -237,17 +226,26 @@ export class BajaUnidadComponent implements OnInit, OnDestroy {
 
   /**
    * Agrega una unidad actualizada desde el diálogo y la selecciona.
-   * @param {UnidadTabla} updatedUnidad - Unidad actualizada.
+   * @param {DatosUnidad} updatedUnidad - Unidad actualizada.
    * @returns {void}
    */
-  alGuardarDialogoUnidad(updatedUnidad: UnidadTabla) {
-    console.log('BajaUnidad - Recibido evento guardar:', updatedUnidad);
+  alGuardarDialogoUnidad(updatedUnidad: DatosUnidad): void {
+    // Generar ID temporal si no existe
+    const NEXT_ID = this.unidadesArrastre.length > 0 
+      ? Math.max(...this.unidadesArrastre.map(u => Number(u.idDeVehiculo) || 0)) + 1 
+      : 1;
+    
+    // Convertir DatosUnidad a UnidadTabla para agregar a la lista
+    const UNIDAD_TABLA: UnidadTabla = { 
+      ...updatedUnidad,
+      idDeVehiculo: updatedUnidad.idDeVehiculo || String(NEXT_ID)
+    };
+    
     // Crear una copia mutable del array antes de agregar
-    const unidadesMutables = [...this.unidadesArrastre];
-    unidadesMutables.push(updatedUnidad);
-    this.unidadesArrastre = unidadesMutables;
+    const UNIDADES_MUTABLES = [...this.unidadesArrastre];
+    UNIDADES_MUTABLES.push(UNIDAD_TABLA);
+    this.unidadesArrastre = UNIDADES_MUTABLES;
     this.unidadesArrastreSelected = [this.unidadesArrastre[this.unidadesArrastre.length - 1]];
-    console.log('BajaUnidad - Cerrando modal: mostrarDialogoUnidad = false');
     this.mostrarDialogoUnidad = false;
     // Forzar detección de cambios para asegurar que el modal se cierre
     this.cdr.detectChanges();
@@ -257,7 +255,7 @@ export class BajaUnidadComponent implements OnInit, OnDestroy {
    * Elimina la fila de unidad seleccionada.
    * @returns {void}
    */
-  eliminarUnidadRow() {
+  eliminarUnidadRow(): void {
     this.eliminarUnidad();
   }
 
@@ -268,21 +266,7 @@ export class BajaUnidadComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   agregarModal(): void {
-    this.datosDialogoUnidad = {};
+    this.datosDialogoUnidad = null;
     this.mostrarDialogoUnidad = true;
-  }
-
-  /**
-   * Busca la descripción en un catálogo por su clave.
-   * @param {string} clave - Clave a buscar en el catálogo.
-   * @param {Catalogo[]} catalogo - Array del catálogo donde buscar.
-   * @returns {string} La descripción encontrada o la clave original si no se encuentra.
-   */
-  private obtenerDescripcionDeCatalogo(clave: string, catalogo: Catalogo[]): string {
-    if (!clave || !catalogo || catalogo.length === 0) {
-      return clave || '';
-    }
-    const item = catalogo.find(c => c.id === Number(clave) || c.descripcion === clave);
-    return item ? item.descripcion : clave;
   }
 }

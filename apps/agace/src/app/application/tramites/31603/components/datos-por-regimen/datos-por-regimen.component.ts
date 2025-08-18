@@ -1,8 +1,8 @@
+import { ConsultaioState, ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
 import { CONFIGURACION_DATOS } from '../../constantes/datos-por-regimen.enum';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConceptosComponent } from '../conceptos/conceptos.component';
-import { ConsultaioState } from '@ng-mf/data-access-user';
 import { DEPOSITO_FISCAL } from '../../constantes/datos-por-regimen.enum';
 import { ELABORACION } from '../../constantes/datos-por-regimen.enum';
 import { FormBuilder } from '@angular/forms';
@@ -111,7 +111,7 @@ export class DatosPorRegimenComponent implements OnInit, OnDestroy {
    * Se utiliza para gestionar y mostrar información específica de la importación temporal
    * dentro del contexto del componente.
    */
-  public importacionTemporalDatos = IMPORTACION_TEMPORAL;
+  public importacionTemporalDatos: ModeloDeFormaDinamica[] = IMPORTACION_TEMPORAL;
   /**
    * Contiene los datos relacionados con el régimen de "Depósito Fiscal".
    * Esta propiedad se inicializa con la constante `DEPOSITO_FISCAL`.
@@ -254,6 +254,12 @@ export class DatosPorRegimenComponent implements OnInit, OnDestroy {
    */
   public onImportacionesCambio(value: string | number): void {
     this.valorSeleccionado = value;
+    if (value === 'No') {
+        const INDEX = this.importacionTemporalDatos.findIndex(item => item.campo === 'captureElValorTotal');
+        if (INDEX !== -1) {
+          this.importacionTemporalDatos[INDEX] = { ...this.importacionTemporalDatos[INDEX], mostrar: false };
+        }
+      }
   }
 
   /**

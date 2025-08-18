@@ -121,12 +121,12 @@
 
 <ng-template #template>
     <div class="modal-header">
-      <h4 class="modal-title pull-left">Agregar</h4>
+      <h4 class="modal-title pull-left">Instalaciones</h4>
     </div>
     <div class="modal-body">
         <form [formGroup]="ivaForm">
             <div class="form-group">
-              <span class="text-danger">*</span><label for="rfc"> RFC </label>
+              <label for="rfc"> RFC*:</label>
               <div class="d-flex align-items-center">
                 <input
                   type="text"
@@ -134,7 +134,7 @@
                   class="form-control me-2 w-50"
                   formControlName="rfc"
                 />
-                <button class="btn btn-primary">Buscar</button>
+                <button class="btn btn-primary" (click)="buscarRFC()">Buscar</button>
               </div>
               @if (ivaForm.get('rfc')?.invalid && ivaForm.get('rfc')?.touched) {
               <div class="text-danger">
@@ -148,7 +148,7 @@
             </div>
   
             <div class="form-group">
-              <label for="denominacion">Denominación o razón social</label>
+              <label for="denominacion">Denominación o razón social:</label>
               <input
                 type="text"
                 id="denominacion"
@@ -159,22 +159,23 @@
             </div>
   
             <div class="form-group">
-              <label for="domicilio">Domicilio</label>
-              <textarea
+              <label for="domicilio">Domicilio:</label>
+              <input
+                type="text"
                 id="domicilio"
                 class="form-control"
                 formControlName="domicilio"
                 readonly
-              ></textarea>
+              />
             </div>
           </form>
     </div>
     <div class="modal-footer d-flex justify-content-end">
-      <button class="btn btn-primary me-2" (click)="modalRef?.hide()">
+      <button class="btn btn-primary me-2" (click)="aceptar()">
         Aceptar
       </button>
       <button class="btn btn-default">Limpiar</button>
-        <button class="btn btn-danger">
+        <button class="btn btn-danger" (click)="modalRef?.hide()">
             Cancelar
         </button>
     </div>

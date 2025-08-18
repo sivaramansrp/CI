@@ -61,6 +61,7 @@
                           <h5>Empresas del grupo certificadas en materia de IVA e IEPS</h5>
                         </div>
                         <app-tabla-dinamica
+                            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
                             [tipoSeleccionTabla]="tablaSeleccionCheckbox" 
                             [configuracionTabla]="configuracionTabla"
                             [datos]="empresasDelGrupoDatos">

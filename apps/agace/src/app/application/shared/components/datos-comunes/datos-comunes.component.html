@@ -9,9 +9,7 @@
               [radioOptions]="radioOptions"
               [isRequired]="true"
               [layout]="'horizontal'"
-              [gap]="'493px'"
-              [isBold]="true"
-              [labelMargin]="'0px'"
+              [gridLayout]="true"
               formControlName="autorizacionIVAIEPS"
               [showDescription]="true"
               (change)="setValoresStore(comunesForm,'autorizacionIVAIEPS', 'setAutorizacionIVAIEPS')"
@@ -86,7 +84,6 @@
         <div class="col-md-6">
           <app-catalogo-select
             [label]="'Sector Productivo'"
-            [placeholder]="'Seleccione un valor'"
             [catalogo]="sectorProductivoAgace"
             formControlName="sectorProductivo"
             [isDisabled]="esFormularioSoloLectura"
@@ -97,7 +94,6 @@
         <div class="col-md-6">
           <app-catalogo-select
             [label]="'Servicio'"
-            [placeholder]="'Seleccione un valor'"
             [catalogo]="serviciosAgace"
             formControlName="servicio"
             [isDisabled]="esFormularioSoloLectura"
@@ -116,9 +112,7 @@
                   [radioOptions]="radioOptions"
                   [isRequired]="true"
                   [layout]="'horizontal'"
-                  [gap]="'493px'"
-                  [isBold]="true"
-                  [labelMargin]="'0px'"
+                  [gridLayout]="true"
                   formControlName="preOperativo"
                   [showDescription]="true"
                   (change)="setValoresStore(comunesForm,'preOperativo', 'setPreOperativo')"
@@ -137,9 +131,7 @@
                   [radioOptions]="radioOptions"
                   [isRequired]="true"
                   [layout]="'horizontal'"
-                  [gap]="'493px'"
-                  [isBold]="true"
-                  [labelMargin]="'0px'"
+                  [gridLayout]="true"
                   formControlName="indiqueSi"
                   [showDescription]="true"
                   (change)="setValoresStore(comunesForm,'indiqueSi', 'setIndiqueSi')"
@@ -159,9 +151,7 @@
                   [isRequired]="true"
                   [layout]="'horizontal'"
                   (valueChange)="onRadioCambio($event,'empleadosPropios')"
-                  [gap]="'493px'"
-                  [isBold]="true"
-                  [labelMargin]="'0px'"
+                  [gridLayout]="true"
                   formControlName="senale"
                   [showDescription]="true"
                   (change)="setValoresStore(comunesForm,'senale', 'setSenale')"
@@ -179,9 +169,10 @@
           bimestre anterior a su solicitud
       </p>
       <div class="row mb-5">
-          <div class="col-md-6">
+        <div class="d-flex justify-content-center">
+          <div class="col-md-4">
             <div class="form-group">
-              <label for="empPropios" class="form-label"
+              <label for="empPropios" class="form-label mb-5"
                 >Número de empleados</label
               >
               <input
@@ -197,10 +188,11 @@
               <div class="mensaje-error">Este campo es obligatorio.</div>
             }
           </div>
-          <div class="col-md-6">
+          <div class="col-md-4">
             <app-catalogo-select
               [label]="'Bimestre'"
-              [placeholder]="'Seleccione un valor'"
+              [showSemiColon]="false"
+              [isLabelBottomSpace]="true"
               formControlName="bimestre"
               [isDisabled]="esFormularioSoloLectura"
               [catalogo]="comboBimestresIDC"
@@ -209,6 +201,12 @@
             </app-catalogo-select>
           </div>
         </div>
+        @if (mostrarEmpPropiosError) {
+          <div class="text-center mt-3">
+            <p class="mensaje-error">Se debe agregar los datos del número de empleados propios del último bimestre</p>
+          </div>
+        }
+      </div>
     }
         @if(datosComunesObj.tieneProcedure.activo) {
     <div class="row mb-3">
@@ -219,9 +217,7 @@
                   [radioOptions]="radioOptions"
                   [isRequired]="true"
                   [layout]="'horizontal'"
-                  [gap]="'493px'"
-                  [isBold]="true"
-                  [labelMargin]="'0px'"
+                  [gridLayout]="true"
                   formControlName="cumpleCon"
                   [showDescription]="true"
                   (change)="setValoresStore(comunesForm,'cumpleCon', 'setCumpleCon')"
@@ -240,9 +236,7 @@
                   [radioOptions]="radioOptions"
                   [isRequired]="true"
                   [layout]="'horizontal'"
-                  [gap]="'493px'"
-                  [isBold]="true"
-                  [labelMargin]="'0px'"
+                  [gridLayout]="true"
                   formControlName="acreditaRealizar"
                   [showDescription]="true"
                   (change)="setValoresStore(comunesForm,'acreditaRealizar', 'setAcreditaRealizar')"
@@ -263,9 +257,7 @@
                   [isRequired]="true"
                   [layout]="'horizontal'"
                   (valueChange)="onRadioCambio($event,'deTrabajao')"
-                  [gap]="'493px'"
-                  [isBold]="true"
-                  [labelMargin]="'0px'"
+                  [gridLayout]="true"
                   formControlName="senaleSi"
                   [showDescription]="true"
                   (change)="setValoresStore(comunesForm,'senaleSi', 'setSenaleSi')"
@@ -280,6 +272,25 @@
       <app-federal-de-trabajao></app-federal-de-trabajao>
     }
     @if(!datosComunesObj.tieneProcedure.activo) {
+      <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="form-group">
+              <label for="cumpleConDos"><span class="text-danger">*</span> {{dinamicaRadio.radio7.descripcion}}</label>
+                <app-input-radio
+                  [radioOptions]="radioOptions"
+                  [isRequired]="true"
+                  [layout]="'horizontal'"
+                  [gridLayout]="true"
+                  formControlName="cumpleConDos"
+                  [showDescription]="true"
+                  (change)="setValoresStore(comunesForm,'cumpleConDos', 'setCumpleConDos')"
+                ></app-input-radio>
+            </div>
+            @if(comunesForm.controls['cumpleConDos'].invalid && comunesForm.controls['cumpleConDos'].touched) {
+              <div class="mensaje-error">Este campo es obligatorio.</div>
+            }
+        </div>
+      </div>
           <div class="row mb-3">
       <div class="col-md-12">
           <div class="form-group">
@@ -288,10 +299,8 @@
                   [radioOptions]="radioOptions"
                   [isRequired]="true"
                   [layout]="'horizontal'"
-                  [gap]="'493px'"
-                  [isBold]="true"
+                  [gridLayout]="true"
                   formControlName="encuentra"
-                  [labelMargin]="'0px'"
                   [showDescription]="true"
                   (change)="setValoresStore(comunesForm,'encuentra', 'setEncuentra')"
                 ></app-input-radio>
@@ -309,9 +318,7 @@
                   [radioOptions]="radioOptions"
                   [isRequired]="true"
                   [layout]="'horizontal'"
-                  [gap]="'493px'"
-                  [isBold]="true"
-                  [labelMargin]="'0px'"
+                  [gridLayout]="true"
                   formControlName="delMismo"
                   [showDescription]="true"
                   (change)="setValoresStore(comunesForm,'delMismo', 'setDelMismo')"
@@ -330,9 +337,7 @@
                   [radioOptions]="radioOptions"
                   [isRequired]="true"
                   [layout]="'horizontal'"
-                  [gap]="'493px'"
-                  [isBold]="true"
-                  [labelMargin]="'0px'"
+                  [gridLayout]="true"
                   formControlName="senaleMomento"
                   [showDescription]="true"
                   (change)="setValoresStore(comunesForm,'senaleMomento', 'setSenaleMomento')"
@@ -351,10 +356,8 @@
                   [radioOptions]="radioOptions"
                   [isRequired]="true"
                   [layout]="'horizontal'"
-                  [gap]="'493px'"
-                  [isBold]="true"
+                  [gridLayout]="true"
                   formControlName="enCaso"
-                  [labelMargin]="'0px'"
                   [showDescription]="true"
                   (change)="setValoresStore(comunesForm,'enCaso', 'setEnCaso')"
                 ></app-input-radio>
@@ -383,6 +386,8 @@
         accionistas, representante legal, administrador único o miembros del consejo
         de administración, según sea el caso.
       </p>
+      </div>
+      <div class="col-md-12 mt-3">
       <h5 class="mb-3">Miembro de la empresa</h5>
       <app-tabla-dinamica 
         [configuracionTabla]="agregarMiembroTabla"
@@ -391,7 +396,7 @@
       </app-tabla-dinamica>
     </div>
     <div class="d-flex justify-content-end mb-4">
-      <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="abrirModal(agregar)">
+      <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="abrirModal(agregar, 'agregar')">
         Agregar
       </button>
       <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura">
@@ -435,7 +440,7 @@
     <div class="modal-body">
       <form class="form-group" [formGroup]="agregarMiembroDeLaEmpresaFrom">
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-4">
             <div class="form-group">
               <app-catalogo-select
                 [label]="'En su carácter de'"
@@ -460,15 +465,15 @@
                 <div class="mensaje-error">Este campo es obligatorio.</div>
               }
             </div>
-            <div class="col-2 d-flex align-items-end">
+            <div class="col-2 mt-5">
               <div class="form-group">
-                <button type="button" class="btn btn-primary">Buscar</button>
+                <button type="button" class="btn btn-primary" (click)="buscarRFC()">Buscar</button>
               </div>
             </div>
           }
         </div>
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-4">
             <div class="form-group">
               <label for="obligadoaTributarenMéxico" class="form-label"
                 >Obligado a tributar en México *:</label
@@ -504,23 +509,25 @@
               }
             </div>
           } @else if(cambioObj.obligadoaTributaren === 'No') {
-            <div class="col-md-6">
-              <app-catalogo-select 
-                  [catalogo]="tipoDePersona" 
-                  [label]="'Tipo de persona'"
-                  [required]="true"
-                  name="persona">
-              </app-catalogo-select>
+            <div class="col-md-8">
+              <div class="col-md-6">
+                <app-catalogo-select
+                    formControlName="tipoDePersona"
+                    [catalogo]="tipoDePersona" 
+                    [label]="'Tipo de persona'"
+                    [required]="true"
+                    name="tipoDePersona">
+                </app-catalogo-select>
+              </div>
             </div>
           }
         </div>
 
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-4">
             <div class="form-group">
               <app-catalogo-select
                 [label]="'Nacionalidad'"
-                [placeholder]="'Seleccione un valor'"
                 [required]="true"
                 [catalogo]="nacionalidadOptions"
                 formControlName="nacionalidad"
@@ -545,11 +552,65 @@
               }
             </div>
           }
+
+          @if (agregarMiembroDeLaEmpresaFrom.get('tipoDePersona')?.value === '2') {
+            <div class="col-md-8">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="nombreDeLaEmpresa" class="form-label">Nombre de la empresa*:</label>
+                  <input
+                    type="text"
+                    id="nombreDeLaEmpresa"
+                    class="form-control"
+                    formControlName="nombreDeLaEmpresa"
+                  />
+                </div>
+              </div>
+            </div>
+          } @else if (agregarMiembroDeLaEmpresaFrom.get('tipoDePersona')?.value === '1'){
+            <div class="col-md-8">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="nombre" class="form-label">Nombre (s)*:</label>
+                  <input
+                    type="text"
+                    id="nombre"
+                    class="form-control"
+                    formControlName="nombre"
+                  />
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="apellidoPaterno" class="form-label">Apellido paterno*:</label>
+                  <input
+                    type="text"
+                    id="apellidoPaterno"
+                    class="form-control"
+                    formControlName="apellidoPaterno"
+                  />
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="apellidoMaterno" class="form-label">Apellido materno*:</label>
+                  <input
+                    type="text"
+                    id="apellidoMaterno"
+                    class="form-control"
+                    formControlName="apellidoMaterno"
+                  />
+                </div>
+              </div>
+            </div>
+          }
         </div>
       </form>
     </div>
-    <div class="modal-footer d-flex justify-content-end">
-      <button type="submit" class="btn btn-primary me-2" (click)="modalRef?.hide()">
+    <div class="modal-footer d-flex justify-content-end mt-3 mb-3">
+      <button type="submit" class="btn btn-primary me-2" (click)="miembroModalAceptar()">
         Aceptar
       </button>
       <button
