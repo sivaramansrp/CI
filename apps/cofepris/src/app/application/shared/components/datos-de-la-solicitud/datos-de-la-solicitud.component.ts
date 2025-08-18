@@ -18,7 +18,7 @@ import {
   PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA,
   PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL,
   REPRESENTANTE_LEGAL,
-  TEXTO_MANIFESTO_Y_DECLARACIONES
+  TEXTO_MANIFESTO_Y_DECLARACIONES,
 } from '../../constantes/datos-solicitud.enum';
 import {
   AbstractControl,
@@ -26,6 +26,7 @@ import {
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
+  ValidationErrors,
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -53,12 +54,19 @@ import {
   CatalogoSelectComponent,
   REGEX_IMPORTE_PAGO,
   TablaDinamicaComponent,
-  TituloComponent
+  TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import {
   ScianConfig,
-  TablaScianConfig
+  TablaScianConfig,
 } from '../../models/datos-solicitud.model';
 import { delay, takeUntil } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
@@ -81,7 +89,7 @@ import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json'
     NotificacionesComponent,
     TooltipModule,
     InputRadioComponent,
-    TablePaginationComponent
+    TablePaginationComponent,
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
@@ -496,7 +504,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
-     this.crearDatosSolicitudForm();
+    this.crearDatosSolicitudForm();
     this.actualizarDatosFormularioSolicitud();
     this.esManifesto =
       PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES.includes(
@@ -507,7 +515,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     )
       ? true
       : false;
-   
+
     this.mostrarCorreoElectronico =
       PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC.includes(
         this.idProcedimiento
@@ -704,9 +712,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           ),
         },
       ],
-      regimenLaMercancia: ['101', [Validators.required]],
+      regimenLaMercancia: ['', [Validators.required]],
       aduana: [this.datosSolicitudFormState.aduana, [Validators.required]],
-      mercancias: [[], Validators.required],
+      mercancias: [this.tablaMercanciasConfig.datos, matrizRequerida],
       manifesto: [
         this.datosSolicitudFormState.manifesto,
         [Validators.required],
@@ -1217,6 +1225,21 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method formularioSolicitudValidacion
+   * Valida el formulario de solicitud verificando si todos los campos cumplen con las reglas de validación.
+   * Si el formulario es inválido, marca todos los controles como tocados para mostrar los mensajes de error.
+   *
+   * @returns {boolean} - Retorna `true` si el formulario es válido, de lo contrario `false`.
+   */
+  formularioSolicitudValidacion(): boolean {
+    if (this.datosSolicitudForm.valid) {
+      return true;
+    }
+    this.datosSolicitudForm.markAllAsTouched();
+    return false;
+  }
+
+  /**
    * Emite un evento con los datos seleccionados de la tabla.
    *
    * Este método recopila las listas seleccionadas de SCIAN, mercancías y opciones,
@@ -1229,4 +1252,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+}
+export function matrizRequerida(
+  control: AbstractControl
+): ValidationErrors | null {
+  const VALUE = control.value;
+  return Array.isArray(VALUE) && VALUE.length === 0 ? { required: true } : null;
 }

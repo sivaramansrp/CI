@@ -610,8 +610,26 @@ onEliminarMercancias(): void {
  * @param i Índice del elemento que se desea eliminar (por defecto 0).
  * @param isSeleccionarEstablecimiento Indica si se debe mostrar el mensaje para seleccionar un establecimiento.
  */
-abrirModal(i: number = 0, isNoRowsSelected: boolean = false, isModificarSinSeleccion: boolean = false): void {
-  if (isNoRowsSelected) {
+abrirModal(
+  i: number,
+  isNoRowsSelected: boolean,
+  isModificarSinSeleccion: boolean,
+  customMessage: string = ''
+): void {
+  if (customMessage) {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'info',
+      titulo: '',
+      mensaje: customMessage,
+      cerrar: false,
+      tiempoDeEspera: 0,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+      tamanioModal: 'modal-sm',
+    };
+  } else if (isNoRowsSelected) {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'warning',
@@ -800,7 +818,7 @@ usoEspecificoColapsable(): void {
 
   /** Muestra el modal de selección de establecimiento */
   seleccionarEstablecimiento(): void {
-    this.abrirModal(0,true);
+    this.abrirModal(0, false, false, "Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento");
   }
 
     /** Limpia el formulario de clave SCIAN */
