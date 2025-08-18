@@ -1,5 +1,5 @@
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud31603IvaeiepsState, Tramite31603IvaeiepsStore } from '../../estados/stores/tramite31603ivaeieps.store';
 import { Subject,map,takeUntil } from 'rxjs';
@@ -32,6 +32,8 @@ import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
   styleUrl: './conceptos.component.scss',
 })
 export class ConceptosComponent implements OnInit, OnDestroy {
+
+  @Input() siONo!: string | number;
 
    /**
    * Un grupo de formulario reactivo utilizado para gestionar y validar
@@ -155,6 +157,7 @@ export class ConceptosComponent implements OnInit, OnDestroy {
     */
    public crearConceptosForm(): void {
      this.conceptosForm = this.fb.group({
+       captureElValorTotal: [this.solicitudState?.transferencias],
        transferencias: [this.solicitudState?.transferencias],
        transferenciasVir:[this.solicitudState?.transferenciasVir],
        retornos:[this.solicitudState?.retornos],

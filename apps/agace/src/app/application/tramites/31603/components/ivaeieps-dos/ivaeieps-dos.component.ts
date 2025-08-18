@@ -1,14 +1,14 @@
-import { AbstractControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { ConfiguracionColumna, INVERSION_TABLA, InversionGrupo, ModeloDeFormaDinamica, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { AfterViewInit, OnInit } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { ConfiguracionColumna, INVERSION_TABLA, InversionGrupo, ModeloDeFormaDinamica, TablaDinamicaComponent, TablaSeleccion, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import {CONFIGURACION_IVAEIEPS_DOS} from '../../constantes/ivaeieps.enum';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { INVERSION_MONTO } from '../../constantes/ivaeieps.enum';
 import { Input } from '@angular/core';
 import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import {PAGO_DE_DERECHOS} from '../../constantes/ivaeieps.enum';
 import {PERMISO_A_DESISTIR_DOS} from '../../constantes/ivaeieps.enum';
 import { PERMISO_A_DESISTIR_TRES } from '../../constantes/ivaeieps.enum';
@@ -42,7 +42,19 @@ import { takeUntil } from 'rxjs';
   templateUrl: './ivaeieps-dos.component.html',
   styleUrl: './ivaeieps-dos.component.scss',
 })
-export class IvaeiepsDosComponent implements OnInit,OnDestroy {
+export class IvaeiepsDosComponent implements OnInit,OnDestroy, AfterViewInit {
+
+  /** Referencia a la plantilla personalizada customTemplate1 utilizada en el componente. */
+    @ViewChild('customTemplate1') customTemplate1!: TemplateRef<unknown>;
+
+    /** Referencia a la plantilla personalizada customTemplate2 utilizada en el componente. */
+    @ViewChild('customTemplate2') customTemplate2!: TemplateRef<unknown>;
+
+    /** Referencia a la plantilla personalizada customTemplate3 utilizada en el componente. */
+    @ViewChild('customTemplate3') customTemplate3!: TemplateRef<unknown>;
+
+    /** Referencia a la plantilla personalizada customTemplate4 utilizada en el componente. */
+    @ViewChild('customTemplate4') customTemplate4!: TemplateRef<unknown>;
 
     /**
      * Indica si el formulario debe mostrarse en modo solo lectura.
@@ -80,7 +92,10 @@ export class IvaeiepsDosComponent implements OnInit,OnDestroy {
      * @property {FormGroup} checkboxDosFormGroup - Un grupo de formulario anidado dentro de `contadoGrupo`.
      */
     public contadoGrupo: FormGroup = new FormGroup({
-      checkboxDosFormGroup: new FormGroup({})
+      checkboxDosFormGroup: new FormGroup({}),
+      fechaDeOperaciones: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      numeroDeEmpleados: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      total: new FormControl({ value: '', disabled: true }, [Validators.required]),
     });
     /**
      * Representa un grupo de formularios reactivos para gestionar la sección "deLasSiguientes".
@@ -188,6 +203,12 @@ export class IvaeiepsDosComponent implements OnInit,OnDestroy {
       return VALUE <= 5000000 ? null : { maxFiveMillion: true };
     }
 
+    /** Mapa que asocia claves de sección con sus respectivas plantillas personalizadas. */
+    public templateMap: Record<string, TemplateRef<unknown>> = {}; 
+
+    /** Bandera para mostrar u ocultar la alerta relacionada con la opción "indique si cuenta carga". */
+    public mostrarCustomSection1: boolean = false;
+
 
     /**
      * Constructor del componente IvaEiepsDosComponent.
@@ -201,7 +222,8 @@ export class IvaeiepsDosComponent implements OnInit,OnDestroy {
         private fb: FormBuilder,
         private comercioExteriorSvc: RegistrosDeComercioExteriorService,
         private tramite31603Store: Tramite31603Store,
-        private tramite31603Query: Tramite31603Query
+        private tramite31603Query: Tramite31603Query,
+        private validacionesService: ValidacionesFormularioService
       ) {
       //
     }
@@ -402,13 +424,76 @@ public getTipoInversionCatalogDatos(): void {
      * De lo contrario, se utiliza el `valor` directamente para actualizar el campo.
      */
     public establecerCambioDeValor(event: { campo: string; valor: unknown }): void {
-      if (event && typeof event.valor === 'object' && event.valor !== null && 'id' in event.valor) {
-        const VALOR = event.valor.id;
-        this.tramite31603Store.setDynamicFieldValue(event.campo, VALOR as string | number | boolean);
-      } else if (event) {
+      switch (event.campo) {
+        case 'manifiesteSiAlgun':
+          this.mostrarCustomSection1 = event.valor === 'Si';
+          break;
+
+        case 'durante':
+          this.toggleControl('fechaDeOperaciones', Boolean(event.valor));
+          break;
+
+        case 'anteElImss':
+          this.toggleControl('numeroDeEmpleados', Boolean(event.valor));
+          break;
+
+        case 'dePesos':
+          this.toggleControl('total', Boolean(event.valor));
+          break;
+
+        default:
+          // No action needed for other fields
+          break;
+      }
+
+      if (event?.valor && typeof event.valor === 'object' && 'id' in event.valor) {
+        this.tramite31603Store.setDynamicFieldValue(event.campo, (event.valor as { id: string | number | boolean }).id);
+      } else {
         this.tramite31603Store.setDynamicFieldValue(event.campo, event.valor as string | number | boolean);
       }
     }
+
+    private toggleControl(controlName: string, enable: boolean): void {
+      const CONTROL = this.contadoGrupo.get(controlName);
+      if (CONTROL) {
+        if (enable) {
+          CONTROL.enable();
+        } else {
+          CONTROL.disable();
+        }
+      }
+    }
+
+
+    /** Asigna las referencias de las plantillas personalizadas al mapa después de la inicialización de la vista. */
+  ngAfterViewInit(): void {
+    Promise.resolve().then(() => {
+      this.templateMap = {
+        customSection1: this.customTemplate1,
+        customSection2: this.customTemplate2,
+        customSection3: this.customTemplate3,
+        customSection4: this.customTemplate4
+      };
+    });
+  }
+
+  /** Actualiza el valor dinámico de un campo de texto en el store cuando ocurre un cambio en el formulario. */
+  valorCambio(event: Event, campo: string): void {
+    const INPUT_ELEMENT = event.target as HTMLInputElement;
+      this.tramite31603Store.setDynamicFieldValue(campo, INPUT_ELEMENT.value);
+  }
+
+  /**
+  * compo doc
+  * @method isValid
+  * @description 
+  * Verifica si un campo específico del formulario es válido.
+  * @param field El nombre del campo que se desea validar.
+  * @returns {boolean | null} Un valor booleano que indica si el campo es válido.
+  */
+  public esValido(campo: string): boolean | null {
+    return this.validacionesService.isValid(this.contadoGrupo, campo);
+  }
   
   
     /**

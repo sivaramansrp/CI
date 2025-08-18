@@ -236,6 +236,7 @@ export interface Solicitud31603IvaeiepsState {
      * El valor de indiqueSiLosSocios.
      */
   indiqueSiLosSocios: string;
+  captureElValorTotal: number;
 
 }
 
@@ -471,7 +472,8 @@ export function createInitialState(): Solicitud31603IvaeiepsState {
         /**
          * El valor de indiqueSiLosSocios.
          */
-        indiqueSiLosSocios: ''
+        indiqueSiLosSocios: '',
+        captureElValorTotal: 0
 
   };
 }
@@ -1000,6 +1002,17 @@ this.update((state) => ({
         this.update((state) => ({
         ...state,
         indiqueSiLosSocios,
+        }));
+    }
+
+    /**
+     * Establece el estado de captureElValorTotal.
+     * @param captureElValorTotal - El valor de captureElValorTotal.
+     */
+    public setCaptureElValorTotal(captureElValorTotal: number): void {
+        this.update((state) => ({
+        ...state,
+        captureElValorTotal,
         }));
     }
   

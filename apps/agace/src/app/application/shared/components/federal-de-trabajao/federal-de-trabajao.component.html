@@ -10,13 +10,14 @@
         <app-tabla-dinamica
             [tipoSeleccionTabla]="tablaSeleccionCheckbox" 
             [configuracionTabla]="configuracionTabla"
-            [datos]="mencioneTablaDatos">
+            [datos]="mencioneTablaDatos"
+            (filaSeleccionada)="onFilaSeleccionada($event)">
         </app-tabla-dinamica>
         <div class="d-flex justify-content-end mb-4">
             <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="abrirModal(template)">
                 Agregar
             </button>
-            <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura">
+            <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura" (click)="modificar(template)">
                 Modificar
             </button>
             <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura">Eliminar</button>
@@ -34,13 +35,12 @@
         <div class="row mb-3">
           <div class="col-md-4">
               <div class="form-group">
-                  <label for="rfcInput" class="form-label"><span class="text-danger">*</span>RFC</label>
+                  <label for="rfcInput" class="form-label">RFC*:</label>
                   <input
                       type="text"
                       class="form-control"
                       id="rfcInput"
-                      formControlName="rfc"
-                      placeholder="Ingrese RFC"/>
+                      formControlName="rfc"/>
               </div>
               @if(numeroDeEmpleadosForm.controls['rfc'].invalid && numeroDeEmpleadosForm.controls['rfc'].touched) {
                 <div class="mensaje-error">Este campo es obligatorio.</div>
@@ -48,31 +48,34 @@
           </div>
           <div class="col-md-8">
               <div class="btn-group mt-5">
-                <button class="btn btn-default" type="button">Buscar</button>
+                <button class="btn btn-default" type="button" (click)="buscar()">Buscar</button>
               </div>
           </div>
         </div>
         <div class="row mb-3">
           <div class="col-md-6">
-              <label for="resigtro" class="form-label"><span class="text-danger">*</span>Registro Federal de Contribuyentes</label>
+              <label for="resigtro" class="form-label">Registro Federal de Contribuyentes*:</label>
           <div class="form-group">
               <input
                 class="form-control"
-                id="resigtro"
+                id="registro"
                 type="text"
+                formControlName="registro"
               />
             </div>
+            @if(numeroDeEmpleadosForm.controls['resigtro'].invalid && numeroDeEmpleadosForm.controls['resigtro'].touched) {
+                <div class="mensaje-error">Este campo es obligatorio.</div>
+              }
           </div>
         </div>
         <div class="row mb-3">
           <div class="col-md-8">
-              <label for="razonSocial" class="form-label"><span class="text-danger">*</span>Razón Social</label>
+              <label for="razonSocial" class="form-label">Razón Social*:</label>
               <input
                   type="text"
                   class="form-control"
                   id="razonSocial"
-                  formControlName="razonSocial"
-                  placeholder="Ingrese razonSocial"/>
+                  formControlName="razonSocial"/>
                   @if(numeroDeEmpleadosForm.controls['razonSocial'].invalid && numeroDeEmpleadosForm.controls['razonSocial'].touched) {
                     <div class="mensaje-error">Este campo es obligatorio.</div>
                   }
@@ -80,7 +83,7 @@
         </div>
         <div class="row mb-3">
           <div class="col-md-6">
-              <label for="numeroEmpleados" class="form-label"><span class="text-danger">*</span>Numero de empleados</label>
+              <label for="numeroEmpleados" class="form-label">Numero de empleados*:</label>
               <div class="form-group">
                   <input
                       type="text"

@@ -19,6 +19,8 @@
  * @property {number} marginTop - El margen superior aplicado al campo.
  */
 
+import { REGEX_RFC } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
+
 export const REPRESENTANTE_LEGAL = [
     {
       id: 'resigtro',
@@ -31,11 +33,17 @@ export const REPRESENTANTE_LEGAL = [
       validadores: [
         {
           tipo: 'required'
+        },
+        {
+          tipo: 'pattern',
+          valor: REGEX_RFC,
+          mensaje: 'El RFC debe tener un formato válido.'
         }
       ],
       marcadorDePosicion: '',
       valorPredeterminado: '',
-      marginTop: 0
+      marginTop: 0,
+      row: 1
     },
     {
       id: 'consultarIDC',
@@ -45,6 +53,7 @@ export const REPRESENTANTE_LEGAL = [
       tipoInput: 'button',
       desactivado: false,
       marginTop: 5,
+      row: 1
     },
     {
       id: 'rfc',
@@ -54,13 +63,10 @@ export const REPRESENTANTE_LEGAL = [
       tipoInput: 'text',
       desactivado: true,
       soloLectura: false,
-      validadores:[
-        {
-          tipo: 'required'
-        }
-      ],
+      validadores:[],
       marcadorDePosicion: '',
-      marginTop: 3
+      marginTop: 3,
+      row: 2
     },
     {
       id: 'nombre',
@@ -70,11 +76,10 @@ export const REPRESENTANTE_LEGAL = [
       tipoInput: 'text',
       desactivado: true,
       soloLectura: false,
-      validadores: [
-        { tipo: 'required' }
-      ],
+      validadores: [],
       marcadorDePosicion: '',
-      marginTop: 3
+      marginTop: 3,
+      row: 3
     },
     {
       id: 'apellidoPaterno',
@@ -84,11 +89,10 @@ export const REPRESENTANTE_LEGAL = [
       tipoInput: 'text',
       desactivado: true,
       soloLectura: false,
-      validadores: [
-        { tipo: '' }
-      ],
+      validadores: [],
       marcadorDePosicion: '',
-      marginTop: 3
+      marginTop: 3,
+      row: 3
     },
     {
         id: 'apellidoMaterno',
@@ -98,11 +102,10 @@ export const REPRESENTANTE_LEGAL = [
         tipoInput: 'text',
         desactivado: true,
         soloLectura: false,
-        validadores: [
-            { tipo: '' }
-        ],
+        validadores: [],
         marcadorDePosicion: '',
-        marginTop: 3
+        marginTop: 3,
+        row: 3
     },
     {
         id: 'telefono',
@@ -112,11 +115,10 @@ export const REPRESENTANTE_LEGAL = [
         tipoInput: 'text',
         desactivado: false,
         soloLectura: false,
-        validadores: [
-            { tipo: '' }
-        ],
+        validadores: [],
         marcadorDePosicion: '',
-        marginTop: 3
+        marginTop: 3,
+        row: 4
     },
     {
         id: 'correoElectronico',
@@ -126,12 +128,9 @@ export const REPRESENTANTE_LEGAL = [
         tipoInput: 'text',
         desactivado: false,
         soloLectura: false,
-        validadores:[
-            {
-            tipo: ''
-            }
-        ],
+        validadores: [],
         marcadorDePosicion: '',
-        marginTop: 3
+        marginTop: 3,
+        row: 4
     }
   ];

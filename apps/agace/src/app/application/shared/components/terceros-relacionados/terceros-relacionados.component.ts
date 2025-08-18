@@ -509,12 +509,37 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   public buscarEvento(): void {
     if (this.represtantanteLegalFormGroup.get('resigtro')?.value) {
-      this.represtantanteLegalFormGroup.patchValue({
-        rfc: 'AL5453DF998',
-        nombre: '78665439902',
-        apellidoPaterno: 'HCBDVYU GURGFRE',
-        apellidoMaterno: 'CTTYYTR HBVYUCUD'
-      })
+      if (this.represtantanteLegalFormGroup.get('resigtro')?.valid) {
+        this.represtantanteLegalFormGroup.patchValue({
+          rfc: this.represtantanteLegalFormGroup.get('resigtro')?.value ,
+          nombre: 'EURO FOODS DE MEXICO',
+          apellidoPaterno: 'GONZALEZ',
+          apellidoMaterno: 'PINAL',
+          telefono: '618-256-2532',
+          correoElectronico: 'test@test.com'
+        });
+      }
+    } else {
+      this.represtantanteLegalFormGroup.get('resigtro')?.markAsTouched();
+    }
+  }
+
+  buscarRFC(): void {
+    if (this.enlaceOperativoForm.get('resigtro')?.value) {
+      if (this.enlaceOperativoForm.get('resigtro')?.valid) {
+        this.enlaceOperativoForm.patchValue({
+          irfc: this.enlaceOperativoForm.get('resigtro')?.value,
+          inombre: 'EURO FOODS DE MEXICO',
+          apellidoPaterno: 'GONZALEZ',
+          apellidoMaterno: 'PINAL',
+          telefono: '618-256-2532',
+          correo: 'test@test.com',
+          cuidad: 'DURANGO',
+          cargo: '',
+        });
+      }
+    } else {
+      this.enlaceOperativoForm.get('resigtro')?.markAsTouched();
     }
   }
 

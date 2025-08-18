@@ -271,6 +271,30 @@ export class IvaeiepsComponent implements OnInit,OnDestroy {
      (this.tramite31603Store[metodoNombre] as (value: unknown) => void)(VALOR);
    }
 
+   buscarRFC(): void {
+    if (this.ivaForm.get('rfc')?.value) {
+      if (this.ivaForm.get('rfc')?.valid) {
+        this.ivaForm.patchValue({
+          denominacion: 'INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV',
+          domicilio: 'CAMINO VIEJO 1353 81210 LOS MOCHIS MIGUEL HIDALGO AHOME SINALOA ESTADOS UNIDOS'
+        })
+      }
+    } else {
+      this.ivaForm.get('rfc')?.markAsTouched();
+    }
+   }
+
+   aceptar(): void {
+     if (this.ivaForm.valid) {
+       const DATOS = {
+        rfc: this.ivaForm.get('rfc')?.value,
+        denominctionORazonSocial: this.ivaForm.get('denominacion')?.value,
+        domicillo: this.ivaForm.get('domicilio')?.value
+       }
+       this.empresasDelGrupoDatos = [...this.empresasDelGrupoDatos, DATOS];
+     }
+   }
+
      /**
    * Inicializa el formulario y alterna su estado habilitado o deshabilitado según la bandera de solo lectura.
    *
