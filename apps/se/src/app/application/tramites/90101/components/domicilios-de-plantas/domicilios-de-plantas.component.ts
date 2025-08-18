@@ -11,7 +11,7 @@
  * @import { PLANTACOLUMNS } from '../../../../shared/constantes/prosec/prosec.module';
  */
 
-import { AlertComponent, Catalogo, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -40,7 +40,7 @@ import { TablaSeleccion } from '@ng-mf/data-access-user';
   templateUrl: './domicilios-de-plantas.component.html',
   styleUrls: ['./domicilios-de-plantas.component.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule, TituloComponent, CatalogoSelectComponent, CommonModule, TablaDinamicaComponent, AlertComponent]
+  imports: [ReactiveFormsModule, TituloComponent, CatalogoSelectComponent, CommonModule, TablaDinamicaComponent, AlertComponent, NotificacionesComponent]
 })
 export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
 
@@ -121,6 +121,41 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * Cuando es verdadero, los controles del formulario estarán deshabilitados.
    */
   esFormularioSoloLectura: boolean = false;
+
+    /**
+   * @property {FilaPlantas[]} listSelectedView
+   * @description
+   * Arreglo que contiene las plantas seleccionadas en la tabla dinámica para realizar acciones como eliminar.
+   */
+  listSelectedView: FilaPlantas[] = [];
+
+  /**
+   * @property {boolean} eliminarPlantasConfirmacion
+   * @description
+   * Indica si se debe mostrar el modal de confirmación para eliminar plantas seleccionadas.
+   */
+  eliminarPlantasConfirmacion: boolean = false;
+
+  /**
+   * @property {boolean} eliminarPlantasAlerta
+   * @description
+   * Indica si se debe mostrar una alerta cuando no se ha seleccionado ninguna planta para eliminar.
+   */
+  eliminarPlantasAlerta: boolean = false;
+
+  /**
+   * @property {Notificacion} nuevaNotificacion
+   * @description
+   * Objeto que contiene la información de la notificación a mostrar en el componente de notificaciones.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
+   * @property {boolean} espectaculoAlerta
+   * @description
+   * Indica si se debe mostrar una alerta relacionada con la selección de entidad federativa o plantas.
+   */
+  espectaculoAlerta: boolean = false;
 
   /**
    * @descripcion
@@ -204,6 +239,8 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((state) => {
           this.domiciliosState = state as ProsecState;
+          this.plantasDatos = state.plantasDatos;
+          this.prosecDatos = state.prosecDatos;
         })
       )
       .subscribe();
@@ -228,6 +265,8 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
       this.esFormularioSoloLectura = true;
       this.inicializarEstadoFormulario();
     }
+    this.prosecDatos = Array.isArray(this.domiciliosState.plantasDatos) ? this.domiciliosState.plantasDatos : [this.domiciliosState.plantasDatos] as FilaPlantas[];
+    this.nuevaNotificacion = {} as Notificacion;
   }
 
   /**
@@ -265,7 +304,6 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.forma.disable();
-      this.prosecDatos = Array.isArray(this.domiciliosState.plantasDatos) ? this.domiciliosState.plantasDatos : [this.domiciliosState.plantasDatos] as FilaPlantas[];
       this.seccionStore.establecerFormaValida([true]);
     }
     else {
@@ -436,6 +474,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
       (response) => {
         if (response && Array.isArray(response)) {
           this.plantasDatos = response as FilaPlantas[];
+          this.AutorizacionProsecStore.setPlantasDatos(this.plantasDatos);
         } 
       }
     );
@@ -452,7 +491,24 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * @memberof DomiciliosDePlantasComponent
    */
   mostrarDomicilios(): void {
-    this.recuperarDatos();
+    if( this.forma.get('Estado')?.value.length === 0){
+      this.espectaculoAlerta = true;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Selecciona la Entidad Federativa.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
+    else {
+      this.espectaculoAlerta = false;
+      this.recuperarDatos();
+    }
   }
 
     /**
@@ -464,8 +520,25 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   agregarPlantas(): void {
+    if ( this.plantasDatos.length > 0) {
     this.plantasDatos = [];
+    this.AutorizacionProsecStore.setPlantasDatos([]);
     this.recuperarProsecDatos();
+    }
+    else {
+      this.espectaculoAlerta = true;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Selecciona al menos una planta donde se realizarán las operaciones PROSEC.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
   }
 
   /**
@@ -481,9 +554,104 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
       (response) => {
         if (response && Array.isArray(response)) {
           this.prosecDatos = response as FilaPlantas[];
+          this.AutorizacionProsecStore.setProsecDatos(this.prosecDatos);
         }
       }
     );
+  }
+
+  /**
+   * @method seleccionTabla
+   * @description
+   * Actualiza la lista de plantas seleccionadas en la tabla dinámica y sincroniza el estado en el store.
+   * @param {FilaPlantas[]} event - Arreglo de plantas seleccionadas.
+   */
+  seleccionTabla(event: FilaPlantas[]): void {
+    this.listSelectedView = event;
+    this.AutorizacionProsecStore.update(
+      (state) => ({
+        ...state,
+        selectedDatos: event
+      })
+    )
+  }
+
+  /**
+   * @method eliminarPlantas
+   * @description
+   * Muestra una alerta si no hay plantas seleccionadas para eliminar.
+   * Si hay plantas seleccionadas, muestra una confirmación antes de eliminarlas.
+   */
+  eliminarPlantas(): void {
+    if (this.listSelectedView.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Selecciona la planta que desea eliminar.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.eliminarPlantasAlerta = true;
+    }
+    else if (this.listSelectedView.length > 0) {
+      this.eliminarPlantasConfirmacion = true;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: '¿Estás seguro de eliminar la(s) planta(s)?',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+      };
+    }
+  }
+
+  /**
+   * @method eliminarPedimento
+   * @description
+   * Oculta la alerta de eliminación si el evento es verdadero.
+   * @param {boolean} event - Indica si se debe ocultar la alerta.
+   */
+  eliminarPedimento(event: boolean): void {
+    if (event === true) {
+      this.eliminarPlantasAlerta = !event;
+    }
+  }
+
+  /**
+   * @method eliminarPedimentoDatos
+   * @description
+   * Elimina las plantas seleccionadas del estado y actualiza la lista en el store.
+   * @param {boolean} event - Indica si se debe proceder con la eliminación.
+   */
+  eliminarPedimentoDatos(event: boolean): void {
+    if (event === true) {
+      this.eliminarPlantasConfirmacion = false;
+      const VALOR = this.AutorizacionProsecStore.getValue().prosecDatos;
+      if (VALOR.length === 0) {
+        return;
+      }
+      const FILTERED_VALOR = VALOR.filter(
+        (item) => !this.AutorizacionProsecStore.getValue().selectedDatos?.includes(item)
+      );
+      this.AutorizacionProsecStore.update(
+        (state) => ({
+          ...state,
+          prosecDatos: FILTERED_VALOR,
+          selectedDatos: [],
+        })
+      );
+    }
+    else {
+      this.eliminarPlantasConfirmacion = false;
+    }
   }
 
   /**

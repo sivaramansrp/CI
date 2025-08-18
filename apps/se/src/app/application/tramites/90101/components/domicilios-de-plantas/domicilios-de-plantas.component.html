@@ -49,13 +49,13 @@
         </div>
         <div class="row mb-5">
             <div class="col-md-12 text-end mt-5">
-                <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar plantas</button>
+                <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" (click)="eliminarPlantas()">Eliminar plantas</button>
                 <button class="btn btn-primary" (click)="agregarPlantas()" [disabled]="esFormularioSoloLectura">Agregar plantas</button>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-                <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="plantaColumnsConfiguracion" [datos]="prosecDatos" ></app-tabla-dinamica>
+                <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="plantaColumnsConfiguracion" [datos]="prosecDatos" (listaDeFilaSeleccionada)="seleccionTabla($event)"></app-tabla-dinamica>
             </div>
         </div>
         <div class="row mb-5">
@@ -81,4 +81,18 @@
             </div>
         </div>
     </form>
+    <div>
+        @if(eliminarPlantasAlerta) {
+            <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+            (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
+        }
+        @if(eliminarPlantasConfirmacion) {
+            <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+            (confirmacionModal)="eliminarPedimentoDatos($event)"></lib-notificaciones>
+        }
+        @if(espectaculoAlerta) {
+            <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+            (confirmacionModal)="mostrarDomicilios()"></lib-notificaciones>
+        }
+    </div>
 </div>
