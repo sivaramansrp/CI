@@ -1,9 +1,9 @@
+import { CONTROL_INVENTARIOS_TABLA, DATOS_COMUNES_TEXTOS_CUATRO } from '../../models/datos-comunes.model';
 import { Component, Input } from '@angular/core';
 import { EventEmitter, Output } from '@angular/core';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { CONTROL_INVENTARIOS_TABLA } from '../../models/datos-comunes.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
@@ -24,6 +24,8 @@ import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { InstalacionesPrincipalesTablaInfo } from '../../models/datos-comunes.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { PRINCIPALES_INSTALACIONES_COLUMNA } from '../../constants/datos-comunes-tres.enum';
+import { PrincipalesInstalaciones } from '../../models/datos-comunes-tres.model';
 import { REGEX_RFC } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
@@ -87,6 +89,16 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
    * Este grupo de formulario probablemente se inicializa y configura con controles de formulario en otra parte del componente.
    */
   public modificarForm!: FormGroup;
+
+  /** Lista completa de número de empleados */
+  public instalacionesTablaDatos: PrincipalesInstalaciones[] = [] as PrincipalesInstalaciones[];
+
+  /** Lista de socios IC seleccionados por el usuario */
+  public seleccionarListaInstalaciones: PrincipalesInstalaciones[] = [] as PrincipalesInstalaciones[];
+
+  /** Configuración de columnas para la sección de socios IC */
+  public instalacionesConfiguracionColumnas: ConfiguracionColumna<PrincipalesInstalaciones>[] = PRINCIPALES_INSTALACIONES_COLUMNA;
+    
   /**
    * Una referencia a la instancia del modal creada por el `BsModalService`.
    * Esto se puede usar para interactuar con el modal, como cerrarlo programáticamente.
@@ -104,11 +116,23 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
    */
   public comboBimestresIDC: Catalogo[] = [];
   /**
+   * Un arreglo de objetos `Catalogo` que representa las opciones disponibles para los bimestres en el contexto de IDC.
+   * Esta propiedad se utiliza para poblar un componente de selección o desplegable con los bimestres.
+   */
+  public entidadFederativa: Catalogo[] = [];
+  /**
    * Una constante que contiene los datos de texto para el componente "Datos Comunes Dos".
    * Estos datos provienen de `DATOS_COMUNES_TEXTOS_TRES` y se utilizan para mostrar
    * o gestionar información textual común dentro del componente.
    */
   public TEXTOS = DATOS_COMUNES_TEXTOS_TRES;
+
+  /**
+   * Una constante que contiene los datos de texto para el componente "Datos Comunes Dos".
+   * Estos datos provienen de `DATOS_COMUNES_TEXTOS_CUATRO` y se utilizan para mostrar
+   * o gestionar información textual común dentro del componente.
+   */
+  public TEXTOS_CUATRO = DATOS_COMUNES_TEXTOS_CUATRO;
   /**
    * Representa el modo de selección para un componente de tabla.
    * Esta propiedad está configurada para usar un mecanismo de selección basado en casillas de verificación.
@@ -127,6 +151,12 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
    * Cada elemento en el arreglo es de tipo `InstalacionesPrincipalesTablaInfo`.
    */
   public instalacionesPrincipalesTablaDatos: InstalacionesPrincipalesTablaInfo[] = [];
+
+  /** Almacena la fila seleccionada de la tabla de instalaciones principales. */
+  private seleccionadaInstalacionesDatos: InstalacionesPrincipalesTablaInfo | null = null;
+
+  /** Almacena la fila seleccionada de la tabla de Control Inventarios. */
+  private seleccionadaControlInventarios: ControlInventarios | null = null;
   /**
    * Representa la opción seleccionada para un grupo de botones de radio.
    * Se espera que el valor sea de tipo `radio_si_no`, que probablemente define
@@ -175,6 +205,9 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
  * Este evento permite a los componentes padres reaccionar ante cambios en los botones de radio del formulario.
  */
   @Output() radioChanged = new EventEmitter<{ controlName: string, value: unknown }>();
+
+  /** Indica si se debe mostrar el mensaje de error en el formulario. */
+  public mostrarMensajeError: boolean = true;
 
   /**
    * Constructor de la clase DatosComunesDosComponent.
@@ -228,6 +261,7 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
     this.crearInstalacionesPrincipalesFormulario();
     this.crearModificarForm();
     this.inicializarEstadoFormulario();
+    this.obtenerEntidadFederativaOpciones();
   }
 
     /**
@@ -361,9 +395,9 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
    */
   public crearModificarForm(): void {
     this.modificarForm = this.fb.group({
-      nombreDelSistema: [''],
+      nombreDelSistema: ['', Validators.required],
       indiqueCheckSi: [''],
-      lugar: ['']
+      lugar: ['', Validators.required]
     });
   }
 
@@ -400,6 +434,17 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
       this.comboBimestresIDC = DATOS;
     });
   }
+
+  /** Obtiene las opciones de sector productivo desde el servicio y las asigna al campo correspondiente en el formulario dinámico. */
+    obtenerEntidadFederativaOpciones(): void {
+      this.datosComunesSvc
+        .getEntidadDatos()
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((data) => {
+          const DATOS = JSON.parse(JSON.stringify(data));
+          this.entidadFederativa = DATOS;
+        });
+    }
 
   /**
    * Obtiene los datos principales de las instalaciones desde el servicio y actualiza los datos de la tabla.
@@ -483,6 +528,49 @@ if (RADIO_CONTROLS.includes(campo)) {
   }
 
   /**
+   * Abre un cuadro de diálogo modal utilizando la plantilla proporcionada.
+   *
+   * @param template - Un `TemplateRef` que define el contenido del modal.
+   *                   Esto es típicamente una referencia de plantilla de Angular.
+
+   */
+  public modificarRegistro(template: TemplateRef<void>): void {
+    if (this.seleccionadaInstalacionesDatos) {
+      this.abrirModal(template);
+      this.instalacionesPrincipalesForm.patchValue({
+        instalacionesPrincipales: this.seleccionadaInstalacionesDatos.instalacionesPrincipales,
+        municipioAlcaldia: this.seleccionadaInstalacionesDatos.municipioODelegacion,
+        tipoDeInstalacion: this.seleccionadaInstalacionesDatos.tipoDeInstalacion,
+        entidadFederative: this.seleccionadaInstalacionesDatos.entidadFederativa,
+        registroAnte: '',
+        colonia: this.seleccionadaInstalacionesDatos.colonia,
+        codigoPostal: '',
+        procesoProductivo: '',
+        acreditacionDelUso: ''
+      })
+    }
+  }
+
+  /** Almacena la fila seleccionada de la tabla de control de inventarios. */
+  seleccionarControlInventarios(event: ControlInventarios): void {
+    this.seleccionadaControlInventarios = event;
+  }
+
+  /** Almacena la fila seleccionada de la tabla de Principales. */
+  onFilaSeleccionada(event: InstalacionesPrincipalesTablaInfo): void {
+    this.seleccionadaInstalacionesDatos = event;
+  }
+
+  /** Valida el formulario de instalaciones principales y cierra el modal si es válido; de lo contrario, marca todos los campos como tocados. */
+  instalacionesAceptar(): void {
+    if (this.instalacionesPrincipalesForm.valid) {
+      this.modalRef?.hide();
+    } else {
+      this.instalacionesPrincipalesForm.markAllAsTouched();
+    } 
+  }
+
+  /**
    * Inicializa el estado del formulario según el modo de solo lectura.
    * 
    * - Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es true), guarda el estado actual del formulario llamando a `guardarFormulario()`.
@@ -512,6 +600,67 @@ if (RADIO_CONTROLS.includes(campo)) {
       this.comunesDosForm.enable();
       this.instalacionesPrincipalesForm.enable();
       this.modificarForm.enable();
+    }
+  }
+
+  /**
+ * Actualiza la lista de instalaciones principales al cambiar la entidad federativa seleccionada.
+ * @param event - Entidad federativa seleccionada.
+ */
+  onEntidadFederativaChange(event: Catalogo): void {
+    if (event) {
+      this.datosComunesSvc
+        .getInstalacionesTablaDatos()
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((data) => {
+          this.instalacionesTablaDatos = data;
+        });
+    }
+  }
+
+  /**  Guarda la selección de socios hecha por el usuario.*/
+  seleccionarlistaInstalaciones(evento: PrincipalesInstalaciones[]): void {
+    this.seleccionarListaInstalaciones = evento;
+  }
+
+  /** Valida el formulario de instalaciones principales, cierra el modal si es válido y oculta el mensaje de error; de lo contrario, marca todos los campos como tocados. */
+  instalacionesConfirm(): void {
+    if (this.instalacionesPrincipalesForm.valid) {
+      this.modalRef?.hide();
+      this.mostrarMensajeError = false; 
+    } else {
+      this.instalacionesPrincipalesForm.markAllAsTouched();
+    }
+  }
+  
+  /** Valida el formulario de instalaciones principales, cierra el modal si es válido y oculta el mensaje de error; de lo contrario, marca todos los campos como tocados. */
+  controlInventariosAgregar(): void {
+    if (this.comunesDosForm.get('nombreDel')?.value && this.comunesDosForm.get('lugarDeRadicacion')?.value) {
+      const DATOS = {
+        nombreSistema: this.comunesDosForm.get('nombreDel')?.value,
+        lugarRadicacion: this.comunesDosForm.get('lugarDeRadicacion')?.value,
+        sistemaControlInventarios: this.comunesDosForm.get('indiqueCheck')?.value
+      }
+      this.controlInentariosTablaDatos = [...this.controlInentariosTablaDatos, DATOS];
+      this.comunesDosForm.get('nombreDel')?.reset();
+      this.comunesDosForm.get('lugarDeRadicacion')?.reset();
+      this.comunesDosForm.get('indiqueCheck')?.reset();
+    } else {
+      this.comunesDosForm.get('nombreDel')?.markAsTouched();
+      this.comunesDosForm.get('lugarDeRadicacion')?.markAsTouched();
+      this.comunesDosForm.get('indiqueCheck')?.markAsTouched();
+    }
+  }
+
+  /** Abre el modal para modificar el registro de control de inventarios y carga los datos seleccionados en el formulario. */
+  modificarControlInventarios(template: TemplateRef<void>): void {
+    if (this.seleccionadaControlInventarios) {
+      this.modalRef = this.modalService.show(template, { class: 'modal-lg modal-dialog-centered' });
+      this.modificarForm.patchValue({
+        nombreDelSistema: this.seleccionadaControlInventarios.nombreSistema,
+        lugar: this.seleccionadaControlInventarios.lugarRadicacion,
+        indiqueCheckSi: this.seleccionadaControlInventarios.sistemaControlInventarios
+      });
     }
   }
 
