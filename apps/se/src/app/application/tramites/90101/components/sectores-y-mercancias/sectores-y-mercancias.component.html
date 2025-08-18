@@ -58,6 +58,10 @@
                 maxlength="8"
                 libSoloNumeros
                 >
+                <div
+                *ngIf="sectoresYMercancias.get('Fraccion_arancelaria')?.invalid && sectoresYMercancias.get('Fraccion_arancelaria')?.touched">
+                <small class="mensaje-error">Este campo es obligatorio.</small>
+                </div>
             </div>
         </div>
         <div class="row mb-5">

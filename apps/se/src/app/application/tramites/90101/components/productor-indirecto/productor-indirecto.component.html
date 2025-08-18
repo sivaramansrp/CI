@@ -8,7 +8,7 @@
         <div class="row">
         <div class="col-md-4">
             <div class="form-group">
-            <label class="form-label" for="contribuyentes">Registro federal de contribuyentes:</label>
+            <label class="form-label" for="contribuyentes">Registro federal de contribuyentes*:</label>
             <input type="text" 
             value=""
             class="form-control" 
@@ -24,6 +24,10 @@
             maxlength="13"
             soloLetrasNumeros
                 >
+                <div
+                *ngIf="productorIndirecto.get('contribuyentes')?.invalid && productorIndirecto.get('contribuyentes')?.touched">
+                <small class="mensaje-error">Este campo es obligatorio.</small>
+                </div>
             </div>
         </div>
         </div>

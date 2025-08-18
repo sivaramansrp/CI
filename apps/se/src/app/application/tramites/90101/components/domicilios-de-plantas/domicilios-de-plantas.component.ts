@@ -247,8 +247,6 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     this.initActionFormBuild();
     this.obtenerLista();
 
-    this.seccionStore.establecerFormaValida([false]);
-
     this.forma.statusChanges
           .pipe(
             takeUntil(this.destroyNotifier$),
@@ -304,11 +302,9 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.forma.disable();
-      this.seccionStore.establecerFormaValida([true]);
     }
     else {
       this.forma.enable();
-      this.seccionStore.establecerFormaValida([false]);
     } 
   }
 
@@ -652,6 +648,22 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     else {
       this.eliminarPlantasConfirmacion = false;
     }
+  }
+
+    /**
+   * @method validarFormulario
+   * @description
+   * Valida el formulario de domicilios de plantas. Si el formulario es válido, retorna `true`.
+   * Si no es válido, marca todos los controles como tocados para mostrar los errores y retorna `false`.
+   * 
+   * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
+   */
+  validarFormulario(): boolean {
+    if (this.forma.valid) {
+      return true;
+    }
+    this.forma.markAllAsTouched();
+    return false
   }
 
   /**

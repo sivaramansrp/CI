@@ -245,9 +245,6 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
       .subscribe();
     this.initActionFormBuild();
     this.obtenserListaEstado();
-    
-
-    this.seccionStore.establecerFormaValida([false]);
 
     this.sectoresYMercancias.statusChanges
       .pipe(
@@ -291,7 +288,6 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
     }
     else {
       this.sectoresYMercancias.enable();
-      this.seccionStore.establecerFormaValida([false]);
     } 
   }
   
@@ -572,6 +568,22 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
         })
       );
     }
+  }
+
+    /**
+   * @method validarFormulario
+   * @description
+   * [ES] Valida el formulario de sectores y mercancías. Si el formulario es válido, retorna `true`.
+   * Si no es válido, marca todos los controles como tocados para mostrar los errores y retorna `false`.
+   * 
+   * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
+   */
+  validarFormulario(): boolean {
+    if (this.sectoresYMercancias.valid) {
+      return true;
+    }
+    this.sectoresYMercancias.markAllAsTouched();
+    return false
   }
 
   /**

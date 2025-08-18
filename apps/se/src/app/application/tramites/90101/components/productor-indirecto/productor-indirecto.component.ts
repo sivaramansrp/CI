@@ -177,8 +177,6 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
       .subscribe();
     this.initActionFormBuild();
 
-    this.seccionStore.establecerFormaValida([false]);
-
     this.productorIndirecto.statusChanges
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -218,7 +216,6 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
     }
     else {
       this.productorIndirecto.enable();
-      this.seccionStore.establecerFormaValida([false]);
     } 
   }
 
@@ -394,6 +391,23 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
       );
     }
   }
+
+    /**
+   * @method validarFormulario
+   * @description
+   * Valida el formulario de productor indirecto. Si el formulario es válido, retorna `true`.
+   * Si no es válido, marca todos los controles como tocados para mostrar los errores y retorna `false`.
+   * 
+   * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
+   */
+  validarFormulario(): boolean {
+    if (this.productorIndirecto.valid) {
+      return true;
+    }
+    this.productorIndirecto.markAllAsTouched();
+    return false
+  }
+
   /**
    * @method ngOnDestroy
    * @description
