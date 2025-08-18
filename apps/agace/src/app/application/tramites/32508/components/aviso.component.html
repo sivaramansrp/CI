@@ -44,12 +44,12 @@
   <ng-titulo titulo="Datos del dictamen que se presenta" />
   <div class="row mt-5">
     <div class="col-md-4">
-      <app-catalogo-select [catalogo]="anoCatalogo.catalogos" [placeholder]="'Selecciona un valor'"
+      <app-catalogo-select [catalogo]="anoCatalogo.catalogos" [placeholder]="'Seleccione una opcion'"
         [label]="'Año del periodo reportado*'" formControlName="ano"
         (change)=" setValoresStore( avisoForm, 'ano', 'setAno' ) " [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
     </div>
     <div class="col-md-4">
-      <app-catalogo-select [catalogo]="mesCatalogo.catalogos" [placeholder]="'Selecciona un valor'"
+      <app-catalogo-select [catalogo]="mesCatalogo.catalogos" [placeholder]="'Seleccione una opcion'"
         [label]="'Mes del periodo reportado*'" formControlName="mes"
         (change)=" setValoresStore( avisoForm, 'mes', 'setMes' ) " [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
     </div>
