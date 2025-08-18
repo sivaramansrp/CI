@@ -78,7 +78,7 @@
 
       <div class="d-flex justify-content-end mt-5">
         <div class="btn-group">
-          <button class="btn btn-danger mx-3" type="button">
+          <button class="btn btn-danger mx-3" [disabled]="formularioDeshabilitado" type="button">
             Borrar datos del pago
           </button>
         </div>
@@ -138,10 +138,10 @@
 
       <div class="form-field">
         <input-fecha
-          [datos]="configuracionFechaFinVigencia"
+          [datos]="configuracionFechaRevision"
           (valorCambiado)="cambioFechaPagoDeDerechosRevision($event)"
           [setFecha]="this.tramiteState.fechaPagoDeDerechosRevision"
-        
+          formControlName="fechaPagoDeDerechosRevision"
         ></input-fecha>
       </div>
       </div>

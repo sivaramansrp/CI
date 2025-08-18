@@ -5,6 +5,7 @@
         anteriores a su solicitud
       </p>
       <app-tabla-dinamica
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
             [configuracionTabla]="configuracionTabla"
             [datos]="numeroDeEmpleadosDatos">
         </app-tabla-dinamica>

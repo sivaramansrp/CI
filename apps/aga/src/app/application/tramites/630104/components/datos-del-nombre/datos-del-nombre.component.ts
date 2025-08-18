@@ -6,7 +6,7 @@
 
 import { Catalogo, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, SolicitanteComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
 import { FORMULARIO_TIPO_REPRESENTANTE_DIRECCION, FORMULARIO_TIPO_REPRESENTANTE_NOMBRE} from '../../enums/retorno-importacion-temporal.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -24,7 +24,7 @@ import { Tramite630104Query } from '../../estados/queries/tramite630104.query';
 @Component({
   selector: 'app-datos-del-nombre',
   standalone: true,
-  imports: [CommonModule, FormasDinamicasComponent, CatalogoSelectComponent, DatosGeneralesComponent, DomicilioFiscalComponent, SolicitanteComponent, TituloComponent, ReactiveFormsModule, SolicitanteComponent],
+  imports: [CommonModule, FormasDinamicasComponent, CatalogoSelectComponent, DatosGeneralesComponent, DomicilioFiscalComponent, TituloComponent, ReactiveFormsModule],
   templateUrl: './datos-del-nombre.component.html',
   styleUrl: './datos-del-nombre.component.scss',
 })
@@ -188,22 +188,23 @@ export class DatosDelNombreComponent implements OnInit, OnDestroy {
   /**
    * Cambia la visibilidad de los campos según el tipo de propietario seleccionado.
    */
-  cambiarTipoPropietario(): void {
+    cambiarTipoPropietario(): void {
     const TIPO_REPRESENTANTE_VALOR = this.datisDelNombre.get('datosRepresentante')?.value;
     const CURP_CAMPO = this.formularioDatosPropietarioNombre.find((campo) => campo.id === 'td_curp_representantev');
     const NOMBRE_CAMPO = this.formularioDatosPropietarioNombre.find((campo) => campo.id === 'nombre');
     const APELLIDO_PATERNO_CAMPO = this.formularioDatosPropietarioNombre.find((campo) => campo.id === 'apellidoPaterno');
     const APELLIDO_MATERNO_CAMPO = this.formularioDatosPropietarioNombre.find((campo) => campo.id === 'apellidoMaterno');
-    
 
+    // Only show for Persona Fisica Nacional (id === '1' or 1)
+    const IS_FISICA_NACIONAL = TIPO_REPRESENTANTE_VALOR === '1' || TIPO_REPRESENTANTE_VALOR === 1;
 
-    if ( CURP_CAMPO && NOMBRE_CAMPO && APELLIDO_PATERNO_CAMPO && APELLIDO_MATERNO_CAMPO) {
-        CURP_CAMPO.mostrar = TIPO_REPRESENTANTE_VALOR === '1';
-      NOMBRE_CAMPO.mostrar = TIPO_REPRESENTANTE_VALOR === '1';
-      APELLIDO_PATERNO_CAMPO.mostrar = TIPO_REPRESENTANTE_VALOR === '1';
-      APELLIDO_MATERNO_CAMPO.mostrar = TIPO_REPRESENTANTE_VALOR === '1';
-      }
-    this.mostrarFormularioPersonaExtranjera = TIPO_REPRESENTANTE_VALOR;
+    if (CURP_CAMPO && NOMBRE_CAMPO && APELLIDO_PATERNO_CAMPO && APELLIDO_MATERNO_CAMPO) {
+      CURP_CAMPO.mostrar = IS_FISICA_NACIONAL;
+      NOMBRE_CAMPO.mostrar = IS_FISICA_NACIONAL;
+      APELLIDO_PATERNO_CAMPO.mostrar = IS_FISICA_NACIONAL;
+      APELLIDO_MATERNO_CAMPO.mostrar = IS_FISICA_NACIONAL;
+    }
+    this.mostrarFormularioPersonaExtranjera = IS_FISICA_NACIONAL;
   }
 
   /**

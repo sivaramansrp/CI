@@ -17,6 +17,7 @@
         <ng-titulo titulo="Enlace Operativo" />
         <h5 class="mb-3">Enlace Operativo</h5>
         <app-tabla-dinamica
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
             [configuracionTabla]="configuracionTabla"
             [datos]="enlaceOperativoDatos"
             [tipoSeleccionTabla]="checkbox"
@@ -38,6 +39,7 @@
         <ng-titulo titulo="Personas para oir y recibir notificaciones" />
         <h5 class="mb-3">Personas para oir y recibir notificaciones</h5>
         <app-tabla-dinamica
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
             [configuracionTabla]="personasConfiguracionTabla"
             [datos]="personaParas">
         </app-tabla-dinamica>
