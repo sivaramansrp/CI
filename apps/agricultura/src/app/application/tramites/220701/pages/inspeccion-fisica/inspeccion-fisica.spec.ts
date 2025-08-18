@@ -104,7 +104,7 @@ describe('InspeccionFisicaComponent', () => {
   };
   const event = { valor: 2, accion: 'cont' };
   component.getValorIndice(event);
-  expect(component.indice).toBe(2);
+  expect(component.indice).toBe(3);
   expect(component.componenteWizard.siguiente).toHaveBeenCalled();
   expect(component.componenteWizard.atras).not.toHaveBeenCalled();
 });

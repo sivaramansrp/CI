@@ -760,7 +760,13 @@ export const TIPO_PRODUCTO_ESPECIAL = '3';
  * @remarks
  * Esta constante se utiliza para filtrar procedimientos que no deben ser considerados en el contexto de manifiestos y declaraciones.
  */
-export const PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES = [260217, 260210, 260218, 260301];
+export const PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES = [260217, 260210, 260218, 260208, 260301];
+
+/**
+ * @const ES_PUNTO_Y_COMA
+ * @description Lista de identificadores de procedimientos para los cuales se utiliza punto y coma.
+ */
+export const ES_PUNTO_Y_COMA = [260210];
 
 /**
  * Constante que representa el texto del manifiesto y declaraciones.
