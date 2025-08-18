@@ -1,33 +1,28 @@
-import { AlertComponent, InputCheckComponent, REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy } from '@angular/core';
+// ...existing imports and code...
+import { ALERT, OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/domicilio-del-establecimiento.enum';
+import { AfterViewInit, Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputCheckComponent, InputRadioComponent, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule,Location } from '@angular/common';
+
+import { DatosMercanciaContenedoraComponent } from '../datos-mercancia-contenedora/datos-mercancia-contenedora.component';
+import { HttpClient } from '@angular/common/http';
+
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MERCANCIAS_DATA, MercanciasInfo, NICO_TABLA, NicoInfo } from '../../models/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite260911State, Tramite260911Store } from '../../estados/tramite260911.store';
-import { ALERT } from '../../enums/domicilio-del-establecimiento.enum';
-import { Catalogo } from '@libs/shared/data-access-user/src';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Modal } from 'bootstrap';
+
+import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.model';
+
 import { DomicilioDelEstablecimientoService } from '../../services/domicilio-del-establecimiento/domicilio-del-establecimiento.service';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { MERCANCIAS_DATA } from '../../models/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
-import { MercanciasInfo } from '../../models/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
-
-import { NICO_TABLA } from '../../models/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
-import { NicoInfo } from '../../models/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
-import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/domicilio-del-establecimiento.enum';
-
-import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite260911Query } from '../../estados/tramite260911.query';
 
-import { Validators } from '@angular/forms';
+
+
+
 
 /**
  * Componente para gestionar el domicilio del establecimiento.
@@ -60,18 +55,192 @@ import { Validators } from '@angular/forms';
     AlertComponent,
     TablaDinamicaComponent,
     InputRadioComponent,
-    InputCheckComponent
+    InputCheckComponent,
+    DatosMercanciaContenedoraComponent
   ],
   templateUrl: './domicilio-del-establecimiento.component.html',
   styleUrl: './domicilio-del-establecimiento.component.scss',
 })
-export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
+export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, AfterViewInit {
+  openScianModal(): void {
+    document.querySelectorAll('.modal-backdrop').forEach(bd => bd.remove());
+    document.body.classList.remove('modal-open');
+    document.body.style.removeProperty('padding-right');
+    if (this.modalAddNicoTablaRef) {
+      const WIN = window as Window & { bootstrap?: { Modal?: typeof Modal } };
+      if (WIN.bootstrap && WIN.bootstrap.Modal) {
+        this.bootstrapModalNicoTablaInstance = new WIN.bootstrap.Modal(this.modalAddNicoTablaRef.nativeElement);
+        this.bootstrapModalNicoTablaInstance?.show();
+      }
+    }
+  }
+
+  openMercanciaModal(): void {
+    document.querySelectorAll('.modal-backdrop').forEach(bd => bd.remove());
+    document.body.classList.remove('modal-open');
+    document.body.style.removeProperty('padding-right');
+    if (this.modalAddMercanciasRef) {
+      const WIN = window as Window & { bootstrap?: { Modal?: typeof Modal } };
+      this.bootstrapModalMercanciasInstance = WIN.bootstrap?.Modal
+        ? new WIN.bootstrap.Modal(this.modalAddMercanciasRef.nativeElement)
+        : undefined;
+      this.bootstrapModalMercanciasInstance?.show();
+    }
+  }
+  cerrarMercanciaModal(): void {
+    if (this.bootstrapModalMercanciasInstance && typeof this.bootstrapModalMercanciasInstance.hide === 'function') {
+      this.bootstrapModalMercanciasInstance.hide();
+    }
+    // Remove lingering Bootstrap modal backdrop manually
+    const BACKDROPS = document.querySelectorAll('.modal-backdrop');
+    BACKDROPS.forEach(bd => bd.parentNode?.removeChild(bd));
+    document.body.classList.remove('modal-open');
+    document.body.style.removeProperty('padding-right');
+    // Optionally reset Mercancias form if needed
+    // this.mercanciaForm?.reset();
+    this.agregarModalBox = false;
+  }
+  // ...existing code...
+  /**
+   * Handler for agregarMercancia event from DatosMercanciaContenedoraComponent
+   * Adds the new item to mercanciasTablaDatos and closes the modal
+   */
+  onAgregarMercancia(mercancia: MercanciasInfo): void {
+    // Map child data to expected table structure
+    const MAPPED = {
+      clasificacion: mercancia.clasificacion,
+      especificar: mercancia.especificar,
+      denominacionEspecifica: mercancia.denominacionEspecifica,
+      denominacionDistintiva: mercancia.denominacionDistintiva,
+      denominacionComun: mercancia.denominacionComun,
+      tipoProducto: mercancia.tipoProducto,
+      formaFarmaceutica: mercancia.formaFarmaceutica,
+      estadoFisico: mercancia.estadoFisico,
+      fraccionArancelaria: mercancia.fraccionArancelaria,
+      descripcionFraccion: mercancia.descripcionFraccion,
+      cantidadUMC: mercancia.cantidadUMC,
+      cantidadUMT: mercancia.cantidadUMT,
+      unidad: mercancia.unidad, // Replace with the correct property name from MercanciasInfo
+      unidadUMT: mercancia.unidadUMT,
+      presentacion: mercancia.presentacion,
+      numeroRegistro: mercancia.numeroRegistro,
+      fechaCaducidad: mercancia.fechaCaducidad,
+      paisDeOrigen: mercancia.paisDeOrigen,
+      paisDeProcedencia: mercancia.paisDeProcedencia,
+      usoEspecifico: mercancia.usoEspecifico
+    };
+    this.mercanciasTablaDatos = [...(this.mercanciasTablaDatos || []), MAPPED];
+  // ...existing code...
+  this.agregarModalBox = false;
+  }
+  // Track selected SCIAN row index
+  selectedScianIndex: number | null = null;
+
+  // Bootstrap modal instances for Eliminar logic
+  private modalSeleccionaRegistroInstance: Modal | undefined;
+  private modalConfirmarEliminarScianInstance: Modal | undefined;
+  @ViewChild('modalAddMercancias', { static: false }) modalAddMercanciasRef?: ElementRef<HTMLDivElement>;
+  @ViewChild('modalAddNicoTabla', { static: false }) modalAddNicoTablaRef?: ElementRef<HTMLDivElement>;
+  private bootstrapModalMercanciasInstance: Modal | undefined;
+  private bootstrapModalNicoTablaInstance: Modal | undefined;
+  ngAfterViewInit(): void {
+    const WIN = window as unknown as { bootstrap?: { Modal?: typeof Modal } };
+    if (WIN.bootstrap && WIN.bootstrap.Modal) {
+      if (this.modalAddMercanciasRef) {
+        this.bootstrapModalMercanciasInstance = new WIN.bootstrap.Modal(this.modalAddMercanciasRef.nativeElement);
+      }
+      if (this.modalAddNicoTablaRef) {
+        this.bootstrapModalNicoTablaInstance = new WIN.bootstrap.Modal(this.modalAddNicoTablaRef.nativeElement);
+      }
+      // Setup Eliminar modals
+      const MODAL_SELECCIONA_REGISTRO_EL = document.getElementById('modalSeleccionaRegistro');
+      if (MODAL_SELECCIONA_REGISTRO_EL) {
+        this.modalSeleccionaRegistroInstance = new WIN.bootstrap.Modal(MODAL_SELECCIONA_REGISTRO_EL);
+      }
+      const MODAL_CONFIRMAR_ELIMINAR_SCIAN_EL = document.getElementById('modalConfirmarEliminarScian');
+      if (MODAL_CONFIRMAR_ELIMINAR_SCIAN_EL) {
+        this.modalConfirmarEliminarScianInstance = new WIN.bootstrap.Modal(MODAL_CONFIRMAR_ELIMINAR_SCIAN_EL);
+      }
+    }
+  }
+  /**
+   * Subcatalogo for Representación federal filtered by Entidad Federativa
+   */
+  public subRepresentacion: Catalogo[] = [];
+  /** Formulario para el modal de agregar SCIAN (nicoTablaDatos) */
+  nicoTablaForm!: FormGroup;
+ 
+ /**
+   * @property {Catalogo[]} entidad
+   * @description
+   * Lista de entidades federativas cargadas desde un archivo JSON.
+   * Se usa para poblar el select de entidades en el formulario.
+   *
+   * @access public
+   */
+  public entidad: Catalogo[] = [];
+
+     /**
+   * @property {Catalogo[]} allRepresentaciones
+   * @description
+   * Almacena todas las opciones de representaciones federales disponibles.
+   * Se utiliza para filtrar y mostrar las representaciones según la entidad seleccionada.
+   */
+  public allRepresentaciones: Catalogo[] = [];
+
+
+    /**
+   * @property {Catalogo[]} representacion
+   * @description
+   * Lista de representaciones federales cargadas desde un archivo JSON.
+   * Se usa para poblar el select de representaciones en el formulario.
+   *
+   * @access public
+   */
+  public representacion: Catalogo[] = [];
+
+
+   /**
+   * Evento que emite el objeto seleccionado de tipo `TablaScianConfig`.
+   * Se utiliza para notificar al componente padre cuando un SCiAN ha sido seleccionado.
+   */
+  @Output() scianSeleccionado: EventEmitter<TablaScianConfig> = new EventEmitter<TablaScianConfig>();
+
+
+ 
 
   /** Estado actual de la solicitud proveniente del store */
   public solicitudState!: Tramite260911State;
 
+  /**
+   * Controla si los campos de nombre, apellidoPaterno y apellidoMaterno están habilitados
+   */
+  enableLegalFields: boolean = false;
+
   /** Indica si el formulario está en modo solo lectura */
   esFormularioSoloLectura: boolean = false;
+  /** Indica si el modal de agregar está abierto */
+
+  agregarModalBox: boolean = false;
+
+  /**
+   * Método para manejar el click en el botón Buscar del RFC
+   * Si el RFC es inválido, habilita los campos de nombre, apellidoPaterno y apellidoMaterno
+   */
+  onBuscarRepresentanteLegal(): void {
+    const RFC_CONTROL = this.representanteLegal.get('rfc');
+    if (RFC_CONTROL && RFC_CONTROL.invalid) {
+      this.enableLegalFields = true;
+      this.representanteLegal.get('nombre')?.enable();
+      this.representanteLegal.get('apellidoPaterno')?.enable();
+      this.representanteLegal.get('apellidoMaterno')?.enable();
+    } else {
+      this.enableLegalFields = false;
+      this.representanteLegal.get('nombre')?.disable();
+      this.representanteLegal.get('apellidoPaterno')?.disable();
+      this.representanteLegal.get('apellidoMaterno')?.disable();
+    }
+  }
 
   /**
    * Formulario principal reactivo para los datos del domicilio.
@@ -108,6 +277,60 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
    */
   nicoTablaDatos: NicoInfo[] = [];
 
+  // Handle row selection from shared table
+  onScianRowSelected(event: NicoInfo[]): void {
+    // If at least one row is selected, set selectedScianIndex to its index in nicoTablaDatos
+    if (event && event.length > 0) {
+      const SELECTED_ROW = event[0];
+      this.selectedScianIndex = this.nicoTablaDatos.findIndex(row => row === SELECTED_ROW);
+    } else {
+      this.selectedScianIndex = null;
+    }
+  }
+
+  // Called when Eliminar button is clicked
+  onEliminarScian(event: number | null | undefined): void {
+    // If event is null, treat as no selection
+    if (event === null || event === undefined) {
+      this.selectedScianIndex = null;
+      // No row selected, show 'Selecciona un registro' modal
+      if (this.modalSeleccionaRegistroInstance) {
+        this.modalSeleccionaRegistroInstance.show();
+      }
+    } else {
+      this.selectedScianIndex = event as number;
+      // Row selected, show confirmation modal
+      if (this.modalConfirmarEliminarScianInstance) {
+        this.modalConfirmarEliminarScianInstance.show();
+      }
+    }
+  }
+
+  // Close 'Selecciona un registro' modal
+  cerrarSeleccionaRegistroModal(): void {
+    if (this.modalSeleccionaRegistroInstance) {
+      this.modalSeleccionaRegistroInstance.hide();
+    }
+  }
+
+  // Cancel deletion, close confirmation modal
+  cancelarEliminarScian(): void {
+    if (this.modalConfirmarEliminarScianInstance) {
+      this.modalConfirmarEliminarScianInstance.hide();
+    }
+  }
+
+  // Accept deletion, remove selected row
+  aceptarEliminarScian(): void {
+    if (this.selectedScianIndex !== null) {
+      this.nicoTablaDatos = this.nicoTablaDatos.filter((_, i) => i !== this.selectedScianIndex);
+      this.selectedScianIndex = null;
+    }
+    if (this.modalConfirmarEliminarScianInstance) {
+      this.modalConfirmarEliminarScianInstance.hide();
+    }
+  }
+
   /**
    * Formulario reactivo para los datos del domicilio.
    */
@@ -140,6 +363,29 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
 
   /**
    * Subject para controlar la destrucción de suscripciones y evitar fugas de memoria.
+    openMercanciaModal(): void {
+      // Clean up any lingering backdrops and body classes before opening
+      document.querySelectorAll('.modal-backdrop').forEach(bd => bd.remove());
+      document.body.classList.remove('modal-open');
+      document.body.style.removeProperty('padding-right');
+      // Re-create Bootstrap modal instance
+      if (this.modalAddMercanciasRef) {
+        const WIN = window as any;
+        this.bootstrapModalMercanciasInstance = new WIN.bootstrap.Modal(this.modalAddMercanciasRef.nativeElement);
+        this.bootstrapModalMercanciasInstance.show();
+      }
+    }
+
+    openScianModal(): void {
+      document.querySelectorAll('.modal-backdrop').forEach(bd => bd.remove());
+      document.body.classList.remove('modal-open');
+      document.body.style.removeProperty('padding-right');
+      if (this.modalAddNicoTablaRef) {
+        const WIN = window as any;
+        this.bootstrapModalNicoTablaInstance = new WIN.bootstrap.Modal(this.modalAddNicoTablaRef.nativeElement);
+        this.bootstrapModalNicoTablaInstance.show();
+      }
+    }
    * @private
    */
   private destroy$ = new Subject<void>();
@@ -166,6 +412,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
     private tramite260911Store: Tramite260911Store,
     private domicilioDelEstablecimientoService: DomicilioDelEstablecimientoService,
     public consultaioQuery: ConsultaioQuery,
+    private ubicaccion: Location,
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -213,23 +460,29 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
    * Inicializa el formulario y carga los datos necesarios para las tablas y catálogos.
    */
   ngOnInit(): void {
-
+    this.loadEntidad();
+    this.loadRepresentacion();
     this.inicializarEstadoFormulario();
     this.obtenerTablaDatos();
     this.obtenerEstadoList();
     this.obtenerMercanciasDatos();
+    // Patch representacion when entidad changes
+    this.nicoTablaForm.get('entidad')?.valueChanges.pipe(takeUntil(this.destroy$)).subscribe((entidad) => {
+      this.updateRepresentacionOptions(entidad);
+      // Patch the value of the second dropdown to the first available option
+      const FIRST_OPTION = this.subRepresentacion && this.subRepresentacion.length > 0 ? this.subRepresentacion[0].id : '';
+      this.nicoTablaForm.get('representacion')?.setValue(FIRST_OPTION);
+    });
+  }
+ 
 
-    // Enable/disable licenciaSanitaria based on avisoCheckbox value
-    this.domicilio?.get('avisoCheckbox')?.valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((checked: boolean) => {
-        const LICENCIA_SANITARIA_CONTROL = this.domicilio.get('licenciaSanitaria');
-        if (checked) {
-          LICENCIA_SANITARIA_CONTROL?.disable();
-        } else {
-          LICENCIA_SANITARIA_CONTROL?.enable();
-        }
-      });
+
+
+  /** Guarda los datos seleccionados en el modal SCIAN */
+  guardarNicoTabla(): void {
+    if (this.nicoTablaForm.valid) {
+      // Aquí puedes agregar la lógica para guardar los datos seleccionados
+    }
   }
 
   /**
@@ -263,6 +516,24 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       calle: [this.solicitudState?.calle, [Validators.required, Validators.maxLength(100)]],
       lada: [this.solicitudState?.lada, [Validators.pattern(REGEX_SOLO_DIGITOS), Validators.maxLength(5)]],
       telefono: [this.solicitudState.telefono, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS), Validators.maxLength(30)]],
+    });
+
+    this.nicoTablaForm = this.fb.group({
+      /**
+       * @property {string} entidad
+       * @description
+       * Campo del formulario para la selección de la entidad federativa.
+       * Se inicializa como una cadena vacía.
+       */
+      entidad: [this.solicitudState?.entidad, [Validators.required]],
+
+      /**
+       * @property {string} representacion
+       * @description
+       * Campo del formulario para la selección de la representación federal.
+       * Se inicializa como una cadena vacía.
+       */
+      representacion: [this.solicitudState?.representacion, [Validators.required]],
     });
 
     this.domicilio = this.fb.group({
@@ -538,5 +809,161 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
         }
       }
     }
+
+    // This method is now removed as it was a duplicate and invalid.
+
+
+
+ /**
+   * @method loadEntidad
+   * @description
+   * Carga la información de las entidades federativas desde el servicio correspondiente
+   * y la asigna a la propiedad local `entidad` para poblar el select en el formulario.
+   * Utiliza un observable para manejar la suscripción y evitar fugas de memoria.
+   *
+   * @returns {void}
+   */
+  loadEntidad(): void {
+    this.domicilioDelEstablecimientoService
+      .getEntidad()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data: Catalogo[]) => {
+        this.entidad = data;
+       
+       });
+  }
+
+
+  /**
+   * @method loadRepresentacion
+   * @description
+   * Carga la información de las representaciones federales desde el servicio correspondiente
+   * y la asigna a la propiedad local `allRepresentaciones` para mantener todas las opciones disponibles.
+   * Posteriormente, actualiza las opciones de representación mostradas según la entidad seleccionada en el formulario.
+   * Utiliza un observable para manejar la suscripción y evitar fugas de memoria.
+   *
+   * @returns {void}
+   */
+  loadRepresentacion(): void {
+    this.domicilioDelEstablecimientoService
+      .getRepresentacion()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data: Catalogo[]) => {
+        this.allRepresentaciones = data; // Store all options
+      this.updateRepresentacionOptions(this.nicoTablaForm.get('entidad')?.value);
+      });
+  }
+
+ /**
+   * @method updateRepresentacionOptions
+   * @description
+   * Filtra y actualiza la lista de representaciones federales disponibles según la entidad seleccionada.
+   * Si hay una entidad seleccionada, se muestran solo las representaciones relacionadas con dicha entidad.
+   * Si no hay entidad seleccionada, la lista de representaciones se vacía.
+   *
+   * @param {Catalogo | null} selectedEntidad - Entidad federativa seleccionada en el formulario.
+   * @returns {void}
+   */
+  public updateRepresentacionOptions(selectedEntidad: Catalogo | null): void {
+    if (selectedEntidad) {
+      this.representacion = this.allRepresentaciones.filter(
+        (e => e.relacionadaUmtId === Number(selectedEntidad))
+      );
+      this.subRepresentacion = [...this.representacion];
+    } else {
+      this.representacion = [];
+      this.subRepresentacion = [];
+    }
+  }
+   /**
+   * Verifica si un control del formulario es inválido, tocado o modificado.
+   * @param nombreControl - Nombre del control a verificar.
+   * @returns True si el control es inválido, de lo contrario false.
+   */
+  public esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.nicoTablaForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
+  }
+
+  /**
+   * Agrega un nuevo elemento SCIAN a la lista seleccionada y emite el evento correspondiente.
+   * 
+   * Este método crea un objeto de configuración `TablaScianConfig` utilizando los valores
+   * proporcionados en el formulario y la lista `scianNinoLista`. Luego, emite el objeto
+   * creado a través del evento `scianSeleccionado` y navega hacia atrás en la ubicación actual.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
+  agregarScian(): void {
+    if (this.nicoTablaForm.invalid) {
+      this.nicoTablaForm.markAllAsTouched();
+      return;
+    }
+    // Build new SCIAN entry from form
+    const ENTIDAD_VALUE = this.nicoTablaForm.get('entidad')?.value;
+    const REPRESENTACION_VALUE = this.nicoTablaForm.get('representacion')?.value;
+    // Find display values if needed
+    const ENTIDAD_OBJ = this.entidad.find(e => e.id === ENTIDAD_VALUE);
+    const REPRESENTACION_OBJ = this.subRepresentacion.find(r => r.id === REPRESENTACION_VALUE);
+    const NEW_SCIAN: NicoInfo = {
+      clave_Scian: ENTIDAD_OBJ ? ENTIDAD_OBJ.descripcion : String(ENTIDAD_VALUE),
+      descripcion_Scian: REPRESENTACION_OBJ ? REPRESENTACION_OBJ.descripcion : String(REPRESENTACION_VALUE)
+    };
+    // Add to nicoTablaDatos
+    this.nicoTablaDatos = [...this.nicoTablaDatos, NEW_SCIAN];
+    // Save selected entidad before reset
+    const LAST_ENTIDAD = ENTIDAD_VALUE;
+    // Reset form
+    this.nicoTablaForm.reset();
+    // Restore entidad value and repopulate subRepresentacion
+    if (LAST_ENTIDAD) {
+      this.nicoTablaForm.get('entidad')?.setValue(LAST_ENTIDAD);
+      this.updateRepresentacionOptions(LAST_ENTIDAD);
+    }
+    // Close modal after adding
+    if (this.bootstrapModalNicoTablaInstance && typeof this.bootstrapModalNicoTablaInstance.hide === 'function') {
+      this.bootstrapModalNicoTablaInstance.hide();
+    }
+    document.querySelectorAll('.modal-backdrop').forEach(bd => bd.remove());
+    document.body.classList.remove('modal-open');
+    document.body.style.removeProperty('padding-right');
+    this.agregarModalBox = false;
+  }
+
+/**
+   * Restablece el formulario SCIAN a su estado inicial.
+   * Este método reinicia todos los campos del formulario SCIAN,
+   * eliminando cualquier dato ingresado previamente.
+   */
+  limpiarScian(): void {
+    this.nicoTablaForm.reset();
+  }
+    /**
+   * Navega a la ubicación anterior en el historial de navegación.
+   * Utiliza el servicio de ubicación para retroceder una página.
+   */
+  cancelar(scian: boolean = false): void {
+    // If scian=true, close SCIAN modal, else Mercancias modal
+    if (scian) {
+      if (this.bootstrapModalNicoTablaInstance && typeof this.bootstrapModalNicoTablaInstance.hide === 'function') {
+        this.bootstrapModalNicoTablaInstance.hide();
+      }
+      this.nicoTablaForm.reset();
+      // Remove lingering Bootstrap modal backdrop manually
+      const BACKDROPS = document.querySelectorAll('.modal-backdrop');
+      BACKDROPS.forEach(bd => bd.parentNode?.removeChild(bd));
+      document.body.classList.remove('modal-open');
+      document.body.style.removeProperty('padding-right');
+    } else {
+      if (this.bootstrapModalMercanciasInstance && typeof this.bootstrapModalMercanciasInstance.hide === 'function') {
+        this.bootstrapModalMercanciasInstance.hide();
+      }
+      // If you have a Mercancias form, reset it here
+      // this.mercanciaForm?.reset();
+    }
+    this.agregarModalBox = false;
+  }
 
 }

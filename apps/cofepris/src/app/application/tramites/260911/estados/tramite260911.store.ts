@@ -1,6 +1,7 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
+import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
 
 
 /**
@@ -69,6 +70,17 @@ export interface Tramite260911State {
   apellidoMaterno: string;
   /** Número de permiso de importación CNSNS */
   importPermitNumberCNSNS?: string;
+  /** Clave del modal SCian */
+  claveScianModal?: string;
+  /** Descripción del modal SCian */
+  claveDescripcionModal?: string;
+  /** Configuración de la tabla SCian */
+  scianConfigDatos?: TablaScianConfig[];
+  /** Entidad federativa seleccionada */
+  entidad: Catalogo | null;
+  /** Representación federal seleccionada */
+  representacion: Catalogo | null;
+  
 }
 
 /**
@@ -108,6 +120,11 @@ export function createInitialState(): Tramite260911State {
     apellidoPaterno: '',
     apellidoMaterno: '',
     importPermitNumberCNSNS: undefined,
+    claveScianModal: undefined,
+    claveDescripcionModal: undefined,
+    scianConfigDatos: [],
+    entidad: null,
+    representacion: null
   };
 }
 
