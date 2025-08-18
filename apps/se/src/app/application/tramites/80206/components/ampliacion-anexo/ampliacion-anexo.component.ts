@@ -395,6 +395,12 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
    * @method actualizaGridEmpresasNacionales
    */
   actualizaGridEmpresasNacionales(): void {
+    const EXISTS = this.datosImmex.some(item => item.fraccionArancelaria === this.fraccionArancelaria);
+    if (EXISTS) {
+      this.mensajeDeAlerta = 'La fracción arancelaria que desea agregar a la lista ya existe.';
+      this.activarModal();
+    }
+    else{
     const CUERPODATOS = {
       fraccion: "1",
       fraccionArancelaria: this.fraccionArancelaria,
@@ -408,9 +414,9 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
       volumenrMensual: "",
       volumenAnual: "",
     };
-
     this.tramite80206Store.setDatosImmex([...this.datosImmex, CUERPODATOS]);
-
+  }
+    this.fraccionArancelaria = '';
   }
   
   /**
@@ -427,6 +433,7 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
    */
   agregarImportacion(): void {
     if(this.domiciliosSeleccionados.length === 0) {
+      this.mensajeDeAlerta = 'Debe seleccionar una fracción de importación';
       this.activarModal();
     }
     else{

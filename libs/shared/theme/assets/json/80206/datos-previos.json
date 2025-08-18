@@ -67,7 +67,7 @@
     "valor": "15000",
     "seleccionaLaModalidad": "Ampliación 3RS",
     "seleccionarRegla": "170",
-    "sector": "Automotriz",
+    "sector": "170",
     "sectorDesplegable": [
       {
         "id": 1,
@@ -84,6 +84,6 @@
         "descripcion": "Regla Octava"
       }
     ],
-    "isSelectedRegla": false
+    "isSelectedRegla": true
   }
   
