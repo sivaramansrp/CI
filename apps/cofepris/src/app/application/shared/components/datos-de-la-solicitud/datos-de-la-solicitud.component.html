@@ -740,6 +740,8 @@
             @if(datosSolicitudForm.get('manifesto')?.errors?.['required'] &&
             datosSolicitudForm.get('manifesto')?.touched){
             <span class="mensaje-error"> *</span>
+            } @else {
+              <span> *</span>
             }
           </span>
           {{ textoManifestoContenido }}
