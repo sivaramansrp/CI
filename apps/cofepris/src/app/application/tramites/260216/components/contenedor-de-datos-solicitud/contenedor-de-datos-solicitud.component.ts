@@ -44,7 +44,6 @@ import { Tramite260216Query } from '../../estados/tramite260216Query.query';
   styleUrl: './contenedor-de-datos-solicitud.component.scss',
 })
 export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
-
   /**
    * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
    */
@@ -138,6 +137,8 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * Identificador del procedimiento.
    */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
+
+  elementosRequeridos: string[] = ['correoElectronico','manifesto'];
 
   /**
    * @constructor

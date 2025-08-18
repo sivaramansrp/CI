@@ -4,6 +4,7 @@ import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { Tramite260216State, Tramite260216Store } from '../../estados/tramite260216Store.store';
 import { CommonModule } from '@angular/common';
 import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
+import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
 import { ImportacionDispositivosMedicosDonacionService } from '../../services/importacion-dispositivos-medicos-donacion.service';
 import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
 import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
@@ -60,6 +61,15 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   public formularioDeshabilitado: boolean = false;
 
   /**
+ * Identificador del procedimiento actual.
+ *
+ * Se inicializa con la constante global `ID_PROCEDIMIENTO`.
+ * Esta propiedad se utiliza para determinar el flujo o tipo de trámite
+ * que se debe ejecutar en el sistema.
+ */
+  idProcedimiento : number = ID_PROCEDIMIENTO;
+
+  /**
    * Initializes the PasoUnoComponent with required services and sets up a subscription
    * to the consultaQuery's state observable. Updates the local consultaState and
    * formularioDeshabilitado properties based on the emitted state.
@@ -83,7 +93,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit(): void {
-    if ( this.consultaState && this.consultaState.procedureId === '260216' &&
+    if ( this.consultaState && this.consultaState.procedureId === this.idProcedimiento.toString() &&
       this.consultaState.update) {
       this.guardarDatosFormulario();
     } else {
