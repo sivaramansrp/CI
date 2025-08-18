@@ -271,6 +271,7 @@ export class IvaeiepsComponent implements OnInit,OnDestroy {
      (this.tramite31603Store[metodoNombre] as (value: unknown) => void)(VALOR);
    }
 
+   /** Busca el RFC ingresado y, si es válido, asigna datos simulados de denominación y domicilio al formulario. */
    buscarRFC(): void {
     if (this.ivaForm.get('rfc')?.value) {
       if (this.ivaForm.get('rfc')?.valid) {
@@ -284,6 +285,9 @@ export class IvaeiepsComponent implements OnInit,OnDestroy {
     }
    }
 
+   /**
+   * Agrega una nueva empresa al arreglo de empresas del grupo con los datos capturados en el formulario si es válido.
+   */
    aceptar(): void {
      if (this.ivaForm.valid) {
        const DATOS = {

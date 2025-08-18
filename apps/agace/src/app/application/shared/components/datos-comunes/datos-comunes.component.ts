@@ -228,6 +228,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   */
   @Output() mostrarRecintoChange = new EventEmitter<boolean>();
 
+  /** Indica si se debe mostrar el mensaje de error para el campo de empleados propios. */
   public mostrarEmpPropiosError: boolean = false;
 
   /**
@@ -661,6 +662,7 @@ onRadioChanged(event: { controlName: string, value: unknown }):void {
     }
   }
 
+  /** Agrega un nuevo miembro a la tabla con los datos capturados en el formulario y cierra el modal. */
   public miembroModalAceptar(): void {
     const DATOS = {
       tipoDePersona: DatosComunesComponent.obtenerDescripcion(this.tipoDePersona, this.agregarMiembroDeLaEmpresaFrom.get('tipoDePersona')?.value),
@@ -686,6 +688,7 @@ onRadioChanged(event: { controlName: string, value: unknown }):void {
     return DESCRIPCION ?? '';
   }
 
+  /** Busca el RFC ingresado y asigna los datos simulados de registro y nombre completo al formulario si existe un valor. */
   buscarRFC(): void {
     if (this.agregarMiembroDeLaEmpresaFrom.get('rfc')?.value) {
       this.agregarMiembroDeLaEmpresaFrom.patchValue({

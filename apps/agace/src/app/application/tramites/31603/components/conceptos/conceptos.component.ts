@@ -33,6 +33,9 @@ import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
 })
 export class ConceptosComponent implements OnInit, OnDestroy {
 
+  /**
+ * Recibe el valor seleccionado para la opción "Sí" o "No" desde el componente padre.
+ */
   @Input() siONo!: string | number;
 
    /**

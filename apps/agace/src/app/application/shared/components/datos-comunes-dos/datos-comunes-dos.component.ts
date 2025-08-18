@@ -152,8 +152,10 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
    */
   public instalacionesPrincipalesTablaDatos: InstalacionesPrincipalesTablaInfo[] = [];
 
+  /** Almacena la fila seleccionada de la tabla de instalaciones principales. */
   private seleccionadaInstalacionesDatos: InstalacionesPrincipalesTablaInfo | null = null;
 
+  /** Almacena la fila seleccionada de la tabla de Control Inventarios. */
   private seleccionadaControlInventarios: ControlInventarios | null = null;
   /**
    * Representa la opción seleccionada para un grupo de botones de radio.
@@ -204,6 +206,7 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
  */
   @Output() radioChanged = new EventEmitter<{ controlName: string, value: unknown }>();
 
+  /** Indica si se debe mostrar el mensaje de error en el formulario. */
   public mostrarMensajeError: boolean = true;
 
   /**
@@ -547,14 +550,17 @@ if (RADIO_CONTROLS.includes(campo)) {
     }
   }
 
+  /** Almacena la fila seleccionada de la tabla de control de inventarios. */
   seleccionarControlInventarios(event: ControlInventarios): void {
     this.seleccionadaControlInventarios = event;
   }
 
+  /** Almacena la fila seleccionada de la tabla de Principales. */
   onFilaSeleccionada(event: InstalacionesPrincipalesTablaInfo): void {
     this.seleccionadaInstalacionesDatos = event;
   }
 
+  /** Valida el formulario de instalaciones principales y cierra el modal si es válido; de lo contrario, marca todos los campos como tocados. */
   instalacionesAceptar(): void {
     if (this.instalacionesPrincipalesForm.valid) {
       this.modalRef?.hide();
@@ -596,6 +602,10 @@ if (RADIO_CONTROLS.includes(campo)) {
     }
   }
 
+  /**
+ * Actualiza la lista de instalaciones principales al cambiar la entidad federativa seleccionada.
+ * @param event - Entidad federativa seleccionada.
+ */
   onEntidadFederativaChange(event: Catalogo): void {
     if (event) {
       this.datosComunesSvc
@@ -612,6 +622,7 @@ if (RADIO_CONTROLS.includes(campo)) {
     this.seleccionarListaInstalaciones = evento;
   }
 
+  /** Valida el formulario de instalaciones principales, cierra el modal si es válido y oculta el mensaje de error; de lo contrario, marca todos los campos como tocados. */
   instalacionesConfirm(): void {
     if (this.instalacionesPrincipalesForm.valid) {
       this.modalRef?.hide();
@@ -621,6 +632,7 @@ if (RADIO_CONTROLS.includes(campo)) {
     }
   }
   
+  /** Valida el formulario de instalaciones principales, cierra el modal si es válido y oculta el mensaje de error; de lo contrario, marca todos los campos como tocados. */
   controlInventariosAgregar(): void {
     if (this.comunesDosForm.get('nombreDel')?.value && this.comunesDosForm.get('lugarDeRadicacion')?.value) {
       const DATOS = {
@@ -639,6 +651,7 @@ if (RADIO_CONTROLS.includes(campo)) {
     }
   }
 
+  /** Abre el modal para modificar el registro de control de inventarios y carga los datos seleccionados en el formulario. */
   modificarControlInventarios(template: TemplateRef<void>): void {
     if (this.seleccionadaControlInventarios) {
       this.modalRef = this.modalService.show(template, { class: 'modal-lg modal-dialog-centered' });

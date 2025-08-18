@@ -63,6 +63,7 @@ export class FederalDeTrabajaoComponent implements OnInit, OnDestroy {
    */
   public esFormularioSoloLectura: boolean = false;
 
+  /** Almacena la fila seleccionada de la tabla de empleados para su edición o consulta. */
   private seleccionadaDatos: Mencione | null = null;
 
 /**
@@ -215,21 +216,26 @@ onCancelar(): void {
   this.modalRef?.hide();
 }
 
+/** Busca el RFC ingresado y asigna datos simulados de registro y razón social al formulario si el RFC es válido. */
   buscar(): void {
     if (this.numeroDeEmpleadosForm.get('rfc')?.valid) {
       this.numeroDeEmpleadosForm.patchValue({
         registro: this.numeroDeEmpleadosForm.get('rfc')?.value,
         razonSocial: 'INTEGRADORA DE URBANIZACIONES SIGNUM, S DE RL CV'
       })
+    } else {
+      this.numeroDeEmpleadosForm.get('rfc')?.markAsTouched();
     }
   }
 
+  /** Almacena la fila seleccionada de la tabla de empleados para su edición o consulta. */
   onFilaSeleccionada(event: Mencione): void {
     if (event) {
       this.seleccionadaDatos = event;
     }
   }
 
+  /** Abre el modal para modificar el registro de empleados y carga los datos seleccionados en el formulario. */
   modificar(template: TemplateRef<unknown>): void {
     if (this.seleccionadaDatos) {
       this.abrirModal(template);

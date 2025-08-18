@@ -524,6 +524,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Busca el RFC ingresado y, si es válido, asigna datos simulados al formulario de enlace operativo. */
   buscarRFC(): void {
     if (this.enlaceOperativoForm.get('resigtro')?.value) {
       if (this.enlaceOperativoForm.get('resigtro')?.valid) {

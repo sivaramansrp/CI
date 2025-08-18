@@ -453,6 +453,11 @@ public getTipoInversionCatalogDatos(): void {
       }
     }
 
+    /**
+   * Habilita o deshabilita un control específico dentro del FormGroup `contadoGrupo`.
+   * @param controlName - Nombre del control a modificar.
+   * @param enable - Si es true, habilita el control; si es false, lo deshabilita.
+   */
     private toggleControl(controlName: string, enable: boolean): void {
       const CONTROL = this.contadoGrupo.get(controlName);
       if (CONTROL) {
