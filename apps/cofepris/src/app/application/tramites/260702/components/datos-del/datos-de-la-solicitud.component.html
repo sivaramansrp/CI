@@ -226,6 +226,7 @@
          [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
           [configuracionTabla]="mercanciasDatos"
           [datos]="mercanciasConfiguracionTabla"
+          (listaDeFilaSeleccionada)="onfilasSeleccionadas($event)"
           >
           </app-tabla-dinamica>
       </div>
@@ -237,8 +238,9 @@
               <h4 class="modal-title">Datos mercancía</h4>
             </div>
             <div class="modal-body">
-              <div class="row mt-5">
-                <div class="col-md-6">
+              
+                  <div class="row mt-5">
+                    <div class="col-md-6">
                   <app-catalogo-select 
                   id="delProductoData"
                   formControlName="clasificaionProductos"
@@ -436,18 +438,15 @@
               <div class="col-md-12 d-flex justify-content-end align-items-end">
                 <div class="btn-group">
                   <button class="btn btn-default ms-3" type="button" data-bs-dismiss="modal" (click)="clearNotificacion()">Cancelar</button>
-                  <button type="button" class="btn btn-primary ms-3" >Modificar </button>
+                  <button class="btn btn-primary ms-3" type="button" data-bs-dismiss="modal" (click)="onSave()"[disabled]="esFormularioSoloLectura">Agregar</button>
                 </div>
               </div>
             </div>
           </div>
         </div>
    </div>
-      
-
-
 <div class="col-md-12 d-flex justify-content-end">
-  <button type="button" class="btn btn-primary" name="agregarAduana" id="btnagregarAduana" data-bs-toggle="modal" data-bs-target="#modalAgregarMercancia" (click)="agregarMercanciaGrid()"> Modificar </button>
+  <button type="button" class="btn btn-primary" name="modificar" id="btnmodificar"  (click)="onModificarMercancias()" [disabled]="esFormularioSoloLectura" >Modificar</button>
 </div>
   <ng-titulo titulo="Manifiestos y declaraciones" />
   <div class="alert alert-info">

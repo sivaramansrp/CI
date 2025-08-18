@@ -309,7 +309,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
         modo: 'action',
         titulo: '',
         mensaje: 'Datos eliminados correctamente',
-        cerrar: false,
+        cerrar: true,
         tiempoDeEspera: 0,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
@@ -359,19 +359,30 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
   /**
    * Guarda los datos del formulario en la tabla.
    */
-  onGuardar(): void {
-    const FORM_DATA = this.destinatarioForm.value;
-    if (FORM_DATA.agregarDestinatario) {
-      const DESTINATARIO = {
-        id: this.tableData.length + 1, 
-        ...FORM_DATA.agregarDestinatario,
-        ...FORM_DATA.datosPersonales, 
-        pais: this.getPaisName(FORM_DATA.datosPersonales.pais),
-      };
-      this.tableData.push(DESTINATARIO);
+ onGuardar(): void {
+  const FORM_DATA = this.destinatarioForm.value;
+  if (FORM_DATA.agregarDestinatario && FORM_DATA.datosPersonales) {
+    const DESTINATARIO = {
+      id: this.editingRowId ?? this.tableData.length + 1,
+      ...FORM_DATA.agregarDestinatario,
+      ...FORM_DATA.datosPersonales,
+      pais: this.getPaisName(FORM_DATA.datosPersonales.pais),
+    };
+
+    if (this.editingRowId) {
+      this.tableData = this.tableData.map(row =>
+        row.id === this.editingRowId ? DESTINATARIO : row
+      );
+      this.editingRowId = null;
+    } else {
+      this.tableData = [...this.tableData, DESTINATARIO];
     }
     this.destinatarioForm.reset();
+    this.esFormularioVisible = false;
+  } else {
+    this.destinatarioForm.markAllAsTouched();
   }
+}
 
   /**
    * Obtiene el nombre del país a partir de su ID.
@@ -406,7 +417,7 @@ eliminarMercancias(): void {
     console.warn('Debe seleccionar exactamente una fila para eliminar.');
   }
 }
-
+editingRowId: number | null = null;
   /**
    * Abre el formulario para modificar las mercancías seleccionadas.
    */
@@ -439,7 +450,7 @@ eliminarMercancias(): void {
             correoElectronico: SELECTED_ROW_DATA.correoElectronico,
           },
         });
-
+         this.editingRowId = SELECTED_ID;
         this.esFormularioVisible = true;
       } else {
         console.error('Selected row data not found.');
