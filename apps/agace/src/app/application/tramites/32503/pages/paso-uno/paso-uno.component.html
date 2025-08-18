@@ -7,13 +7,19 @@
       </li>
       <li [ngClass]="indice === 2 ? 'active' : ''">
         <a (click)="seleccionaTab(2)" (keyup.enter)="seleccionaTab(2)" (keydown.space)="seleccionaTab(2)" tabindex="1"
-          data-toggle="tab">Aviso</a>
+          data-toggle="tab">{{ consultaDatos.parameter === "READ_PROCEDURE" ? 'Datos del Trámite' : 'Aviso' }}</a>
       </li>
     </ul>
     <ng-container>
       @switch (indice) {
       @case (1) {
       <solicitante #Solicitante></solicitante>
+      @if (consultaDatos.parameter === "READ_PROCEDURE"){
+        <div class="row col-md-4">
+          <label>ADACE:</label>
+          <input type="text" class="form-control" value="Occidente" readonly/>
+        </div>
+      }
       }@case (2) {
       @if (esDatosRespuesta) {
       <app-aviso></app-aviso>

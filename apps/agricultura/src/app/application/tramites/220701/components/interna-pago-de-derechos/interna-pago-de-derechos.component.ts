@@ -42,7 +42,7 @@ import {
  
 
   InputRadioComponent,
-} from '@ng-mf/data-access-user';
+} from '@libs/shared/data-access-user/src';
 
 import {
   EXPEDICION_FACTURA_FECHA,
@@ -119,7 +119,6 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
    * @default 'Si'
    */
   exentoPagoValor: string = 'Si';
-
   /**
    * Catálogo de justificaciones para la exención de pago.
    * Contiene las opciones disponibles para justificar la exención de pago.
@@ -169,6 +168,12 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
    * @type {SeccionLibState}
    */
   private seccion!: SeccionLibState;
+
+
+    /**
+   * Valor seleccionado del radio.
+   */
+  valorSeleccionado!: string|null;
 
   /**
    * Estado del formulario de pago almacenado en el store.
@@ -230,12 +235,24 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
-    // El formulario se crea deshabilitado por defecto
-    // Solo habilitarlo si esFormularioSoloLectura es false
-    if (!this.esFormularioSoloLectura) {
-      this.formularioPago.enable();
+    
+    // En modo consulta (readonly), asegurar que exentoPago esté en 'Si' y actualizar el store
+    if (this.esFormularioSoloLectura) {
+      this.formularioPago.disable();
+      this.formularioPago.get('exentoPago')?.disable();
+      
+      // Asegurar que el store tenga el valor por defecto en modo consulta
+      const CURRENT_STORE_VALUE = this.tramiteStoreQuery.getValue().FormularioPagoState;
+      if (!CURRENT_STORE_VALUE.exentoPago || CURRENT_STORE_VALUE.exentoPago !== 'Si') {
+        this.tramiteStore.setInternaPagoDeDerechosTramite({
+          ...CURRENT_STORE_VALUE,
+          exentoPago: 'Si'
+        });
+      }
+    } else {
+      // En modo edición, habilitar solo el campo exentoPago, los demás siguen deshabilitados
+      this.formularioPago.get('exentoPago')?.enable();
     }
-    // Si esFormularioSoloLectura es true, mantener el formulario deshabilitado (estado por defecto)
   }
   /**
    * Inicializa el formulario reactivo con los campos requeridos.
@@ -251,12 +268,16 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
       )
       .subscribe()
 
-    // Asegurar que exentoPagoValor sea siempre 'Si' por defecto
-    this.exentoPagoValor = 'Si';
+    // Establecer exentoPagoValor a 'Si' si no está ya establecido desde el estado
+    if (!this.formularioPagoState?.exentoPago) {
+      this.exentoPagoValor = 'Si';
+    } else {
+      this.exentoPagoValor = this.formularioPagoState.exentoPago;
+    }
 
     this.formularioPago = this.fb.group({
       exentoPago: [
-        {value: 'Si', disabled: true}, // Siempre por defecto a 'Si'
+        {value: this.formularioPagoState?.exentoPago || 'Si', disabled: true}, 
         Validators.required,
       ],
       justificacion: [{ value: this.formularioPagoStore?.justificacion, disabled: true }, Validators.required],
@@ -268,6 +289,14 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
       importePago: [{ value: this.formularioPagoStore.importePago, disabled: true }, Validators.required],
       fechaFactura: [this.formularioPagoStore?.fechaFactura, Validators.required],
     });
+    
+    // Configurar la suscripción a los cambios de estado del formulario
+    this.formularioPago.statusChanges
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: () => this.verificarEstadoDelBoton(),
+        error: (e) => console.error('Error durante los cambios de estado del formulario:', e),
+      });
   }
   /**
    * Actualiza el estado de la sección en la tienda Akita.
@@ -288,7 +317,7 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
    * @method ngOnInit
    */
   ngOnInit(): void {
-    // Asegurar que los valores por defecto se establezcan inmediatamente
+    // Asegurar que exentoPago se inicialice con 'Si' por defecto
     this.exentoPagoValor = 'Si';
          
     this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
@@ -297,13 +326,6 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
         this.formularioPagoState = seccionState.FormularioPagoState;
       })
     ).subscribe();
-    
-    this.formularioPago.statusChanges
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        error: (e) => console.error('Error durante los cambios de estado del formulario:', e),
-        complete: () => this.verificarEstadoDelBoton(),
-      });
 
     this.obtenerListaJustificacion();
     this.obtenerListaBanco();
@@ -315,11 +337,30 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
         map((seccionState: TramiteState) => {
             if (seccionState) {
               this.formularioPagoState = seccionState.FormularioPagoState;
-              this.formularioPago.patchValue(this.formularioPagoState);
               
-              // Siempre asegurar que 'Si' esté seleccionado para exentoPago después de parchear valores
-              this.formularioPago.patchValue({ exentoPago: 'Si' });
-              this.exentoPagoValor = 'Si';
+              // Crear una copia de los datos para patchear
+              const PATCH_DATA = { ...this.formularioPagoState };
+              
+              // Asegurar que exentoPago permanezca 'Si' y mantener la variable de control
+              if (!PATCH_DATA.exentoPago || PATCH_DATA.exentoPago !== 'Si') {
+                PATCH_DATA.exentoPago = 'Si';
+                this.exentoPagoValor = 'Si';
+                
+                // Actualizar el store con el valor por defecto
+                this.tramiteStore.setInternaPagoDeDerechosTramite({
+                  ...PATCH_DATA,
+                  exentoPago: 'Si'
+                });
+              } else {
+                this.exentoPagoValor = PATCH_DATA.exentoPago;
+              }
+              
+              this.formularioPago.patchValue(PATCH_DATA);
+              
+              // Volver a deshabilitar el control después del parcheo en modo consulta
+              if (this.esFormularioSoloLectura) {
+                this.formularioPago.get('exentoPago')?.disable();
+              }
             }
           })
         ).subscribe();
@@ -344,14 +385,6 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
           })
         )
         .subscribe();
-  
-    // Aplicación final: asegurar que exentoPago sea siempre 'Si' después de todas las inicializaciones
-    setTimeout(() => {
-      if (this.formularioPago) {
-        this.formularioPago.patchValue({ exentoPago: 'Si' });
-        this.exentoPagoValor = 'Si';
-      }
-    }, 100);
   
     /**
      * Observa los cambios en el estado del formulario y actualiza la validación de la sección correspondiente.
@@ -393,9 +426,16 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
    * @param {string} nombreControl - Nombre del campo del formulario.
    * @param {string} valor - Nuevo valor a asignar.
    */
-  cambioValorRadio(nombreControl: string, valor: string): void {
+  cambioValorRadio(value: string | number, valor: string): void {
+
+    this.valorSeleccionado = value as string;
+    // Actualiza el valor de exentoPago en el store de trámite
+    this.tramiteStore.setInternaPagoDeDerechosTramite({
+      ...this.tramiteStoreQuery.getValue().FormularioPagoState,
+      exentoPago: this.valorSeleccionado
+    });
     this.formularioPago.patchValue({
-      [nombreControl]: valor,
+      [value]: valor,
     });
     this.exentoPagoValor = valor;
   }

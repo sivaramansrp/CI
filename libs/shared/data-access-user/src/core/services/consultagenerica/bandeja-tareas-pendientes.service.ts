@@ -41,13 +41,15 @@ export class BandejaDeSolicitudeService {
             map((datos: RespuestaDatos[]) => {
                 return datos.map((dato: RespuestaDatos) => ({  
                     folioTramite: dato.folio_tramite,
-                    tipoDeTramite: dato.tipo_tramite,
+                    tipoDeTramite: dato.descripcion_tipo_tramite,
                     nombreDeLaTarea: dato.action_name,
                     fechaDeAsignacion: dato.fecha_inicio_tarea,
                     estadoDeTramite: dato.estado_tramite,
                     departamento: dato.bp_name,
                     numeroDeProcedimiento: dato.tipo_tramite,
-                    origin: dato.action_name
+                    origin: dato.action_name,
+                    fechaInicioTramite: dato.fecha_inicio_tramite,
+                    diasHabilesTranscurridos: dato.dias_trascurridos
                 } as BandejaDeTareasPendientes))
             }),
             catchError(() => {

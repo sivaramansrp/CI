@@ -1,28 +1,37 @@
-import { Catalogo } from '@ng-mf/data-access-user';
+import {
+  Catalogo,
+  CatalogosSelect,
+  REG_X,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
+import {
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  inject,
+} from '@angular/core';
+import {
+  ControlContainer,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  Solicitud220502State,
+  Solicitud220502Store,
+} from '../../estados/tramites220502.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ControlContainer } from '@angular/forms';
-import { FormControl } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { Input } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { REG_X } from '@ng-mf/data-access-user';
-import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Solicitud220502Query } from '../../estados/tramites220502.query';
-import { Solicitud220502State } from '../../estados/tramites220502.store';
-import { Solicitud220502Store } from '../../estados/tramites220502.store';
 import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
-import { Subject } from 'rxjs';
+import { TIPO_CONTENEDOR } from '../../constantes/constantes';
 import { TipoContenedor } from '../../models/solicitud-pantallas.model';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { Validators } from '@angular/forms';
-import { inject } from '@angular/core';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+
 /**
  * Componente que representa al responsable de la inspección en un punto.
  * Este componente agrega y administra dinámicamente controles de formulario para los detalles de responsabilidad de inspección.
@@ -36,6 +45,7 @@ import { takeUntil } from 'rxjs';
     ReactiveFormsModule,
     TituloComponent,
     CatalogoSelectComponent,
+    TooltipModule,
   ],
   viewProviders: [
     {
@@ -62,7 +72,7 @@ export class ResponsableInspeccionEnPuntoComponent
     return this.contenedorPrincipal.control as FormGroup;
   }
   /** Almacena datos del catálogo para el tipo de contenedor. */
-  tipoContenedor: CatalogosSelect = {} as CatalogosSelect;
+  tipoContenedor: CatalogosSelect = TIPO_CONTENEDOR;
 
   /**
    * Subject para desuscribirse de los observables.
@@ -70,17 +80,25 @@ export class ResponsableInspeccionEnPuntoComponent
    */
   private destroyed$ = new Subject<void>();
 
-/**
- * Variable que almacena el estado actual de la solicitud.
- * Se inicializa como un objeto vacío de tipo `Solicitud220502State`.
- */
-solicitud220502State: Solicitud220502State = {} as Solicitud220502State;
+  /**
+   * Variable que almacena el estado actual de la solicitud.
+   * Se inicializa como un objeto vacío de tipo `Solicitud220502State`.
+   */
+  solicitud220502State: Solicitud220502State = {} as Solicitud220502State;
 
   /**
    * Indica si el formulario está deshabilitado.
    */
   @Input() formularioDeshabilitado!: boolean;
 
+  /**
+   * @constructor
+   * Inyecta los servicios y dependencias necesarias para el componente.
+   *
+   * @param solicitud220502Store - Store que gestiona el estado de la solicitud 220502.
+   * @param solicitud220502Query - Query para consultar el estado de la solicitud 220502.
+   * @param solicitudService - Servicio para obtener datos relacionados con la solicitud.
+   */
   constructor(
     private solicitud220502Store: Solicitud220502Store,
     private solicitud220502Query: Solicitud220502Query,
@@ -88,6 +106,7 @@ solicitud220502State: Solicitud220502State = {} as Solicitud220502State;
   ) {
     /** Inyectar el ControlContainer principal para administrar los controles de formulario */
   }
+
   /**
    * Ciclo de vida que inicializa el componente.
    * Agrega un control de formulario dinámico y carga datos iniciales.
@@ -102,10 +121,23 @@ solicitud220502State: Solicitud220502State = {} as Solicitud220502State;
             Validators.required,
             Validators.maxLength(150),
           ]),
-          primerapellido: new FormControl(this.solicitud220502State.primerapellido, [Validators.maxLength(80)]),
-          segundoapellido: new FormControl(this.solicitud220502State.segundoapellido, [Validators.maxLength(80)]),
-          mercancia: new FormControl(this.solicitud220502State.mercancia, [Validators.required, Validators.maxLength(3), Validators.pattern(REG_X.SOLO_NUMEROS)]),
-          tipocontenedor: new FormControl(this.solicitud220502State.tipocontenedor, []),
+          primerapellido: new FormControl(
+            this.solicitud220502State.primerapellido,
+            [Validators.maxLength(80)]
+          ),
+          segundoapellido: new FormControl(
+            this.solicitud220502State.segundoapellido,
+            [Validators.maxLength(80)]
+          ),
+          mercancia: new FormControl(this.solicitud220502State.mercancia, [
+            Validators.required,
+            Validators.maxLength(3),
+            Validators.pattern(REG_X.SOLO_NUMEROS),
+          ]),
+          tipocontenedor: new FormControl(
+            this.solicitud220502State.tipocontenedor,
+            []
+          ),
         })
       );
     }
@@ -147,9 +179,9 @@ solicitud220502State: Solicitud220502State = {} as Solicitud220502State;
   tipoContenedorSeleccion(e: Catalogo): void {
     if (
       this.claveDeControl &&
-      this.grupoFormularioPadre.contains(this.claveDeControl)
+      this.grupoFormularioPadre?.contains(this.claveDeControl)
     ) {
-      this.grupoFormularioPadre.controls[this.claveDeControl].patchValue({
+      this.grupoFormularioPadre?.controls[this.claveDeControl].patchValue({
         tipocontenedor: e.descripcion,
       });
     }
@@ -164,55 +196,54 @@ solicitud220502State: Solicitud220502State = {} as Solicitud220502State;
       },
     });
   }
-/**
- * Actualiza el nombre en el estado de la solicitud.
- * 
- * @param event - Evento del input que contiene el nuevo valor del nombre.
- */
-setNombre(event: Event): void {
-  const VALUE = (event.target as HTMLInputElement).value;
-  this.solicitud220502Store.setNombre(VALUE);
-}
+  /**
+   * Actualiza el nombre en el estado de la solicitud.
+   *
+   * @param event - Evento del input que contiene el nuevo valor del nombre.
+   */
+  setNombre(event: Event): void {
+    const VALUE = (event.target as HTMLInputElement).value;
+    this.solicitud220502Store.setNombre(VALUE);
+  }
 
-/**
- * Actualiza el primer apellido en el estado de la solicitud.
- * 
- * @param event - Evento del input que contiene el nuevo valor del primer apellido.
- */
-setPrimerapellido(event: Event): void {
-  const VALUE = (event.target as HTMLInputElement).value;
-  this.solicitud220502Store.setPrimerapellido(VALUE);
-}
+  /**
+   * Actualiza el primer apellido en el estado de la solicitud.
+   *
+   * @param event - Evento del input que contiene el nuevo valor del primer apellido.
+   */
+  setPrimerapellido(event: Event): void {
+    const VALUE = (event.target as HTMLInputElement).value;
+    this.solicitud220502Store.setPrimerapellido(VALUE);
+  }
 
-/**
- * Actualiza el segundo apellido en el estado de la solicitud.
- * 
- * @param event - Evento del input que contiene el nuevo valor del segundo apellido.
- */
-setSegundoapellido(event: Event): void {
-  const VALUE = (event.target as HTMLInputElement).value;
-  this.solicitud220502Store.setSegundoapellido(VALUE);
-}
+  /**
+   * Actualiza el segundo apellido en el estado de la solicitud.
+   *
+   * @param event - Evento del input que contiene el nuevo valor del segundo apellido.
+   */
+  setSegundoapellido(event: Event): void {
+    const VALUE = (event.target as HTMLInputElement).value;
+    this.solicitud220502Store.setSegundoapellido(VALUE);
+  }
 
-/**
- * Actualiza la mercancía en el estado de la solicitud.
- * 
- * @param event - Evento del input que contiene la descripción de la mercancía.
- */
-setMercancia(event: Event): void {
-  const VALUE = (event.target as HTMLInputElement).value;
-  this.solicitud220502Store.setMercancia(VALUE);
-}
+  /**
+   * Actualiza la mercancía en el estado de la solicitud.
+   *
+   * @param event - Evento del input que contiene la descripción de la mercancía.
+   */
+  setMercancia(event: Event): void {
+    const VALUE = (event.target as HTMLInputElement).value;
+    this.solicitud220502Store.setMercancia(VALUE);
+  }
 
-/**
- * Actualiza el tipo de contenedor en el estado de la solicitud.
- * 
- * @param event - Objeto de tipo Catalogo que contiene el identificador del tipo de contenedor.
- */
-setTipoContenedor(event: Catalogo): void {
-  this.solicitud220502Store.setTipocontenedor(event.id);
-}
-
+  /**
+   * Actualiza el tipo de contenedor en el estado de la solicitud.
+   *
+   * @param event - Objeto de tipo Catalogo que contiene el identificador del tipo de contenedor.
+   */
+  setTipoContenedor(event: Catalogo): void {
+    this.solicitud220502Store.setTipocontenedor(event.id);
+  }
 
   /**
    * Gancho de ciclo de vida que limpia el componente.
@@ -221,9 +252,9 @@ setTipoContenedor(event: Catalogo): void {
   ngOnDestroy(): void {
     if (
       this.claveDeControl &&
-      this.grupoFormularioPadre.contains(this.claveDeControl)
+      this.grupoFormularioPadre?.contains(this.claveDeControl)
     ) {
-      this.grupoFormularioPadre.removeControl(this.claveDeControl);
+      this.grupoFormularioPadre?.removeControl(this.claveDeControl);
     }
     this.destroyed$.next();
     this.destroyed$.complete();

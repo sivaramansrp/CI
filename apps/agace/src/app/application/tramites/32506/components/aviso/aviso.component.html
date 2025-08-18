@@ -105,7 +105,7 @@
           </div>
         </div>
         <div class="col-md-4 mt-19">
-          <app-catalogo-select [catalogo]="entidadFederativa" [label]="'Entidad federativa'" [required]="true" [placeholder]="'Seleccione un valor'"
+          <app-catalogo-select [catalogo]="entidadFederativa" [label]="'Entidad federativa'" [required]="true"
             [isDisabled]="esFormularioSoloLectura" id="claveEntidadFederativa" formControlName="claveEntidadFederativa"
             [ngClass]=" isValid(direccionOrigen, 'claveEntidadFederativa') ? 'required' : '' "
             (change)=" setValoresStore( direccionOrigen, 'claveEntidadFederativa', 'setAvisoFormularioEntidadFederativa' ) "></app-catalogo-select>
@@ -115,13 +115,13 @@
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="delegacionMunicipio" [label]="'Alcaldía o Municipio'" [required]="true"
             [isDisabled]="esFormularioSoloLectura" id="claveDelegacionMunicipio"
-            formControlName="claveDelegacionMunicipio" [placeholder]="'Seleccione un valor'"
+            formControlName="claveDelegacionMunicipio"
             [ngClass]=" isValid(direccionOrigen, 'claveDelegacionMunicipio') ? 'required' : '' "
             (change)=" setValoresStore( direccionOrigen, 'claveDelegacionMunicipio', 'setAvisoFormularioDelegacionMunicipio' ) "></app-catalogo-select>
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="colonia" [label]="'Colonia'" [required]="true" id="claveColonia"
-            [isDisabled]="esFormularioSoloLectura" formControlName="claveColonia" [placeholder]="'Seleccione un valor'"
+            [isDisabled]="esFormularioSoloLectura" formControlName="claveColonia"
             [ngClass]=" isValid(direccionOrigen, 'claveColonia') ? 'required' : '' "
             (change)=" setValoresStore( direccionOrigen, 'claveColonia', 'setAvisoFormularioColonia' ) "></app-catalogo-select>
         </div>
