@@ -133,28 +133,6 @@ describe('ContenedorDePasosComponent', () => {
     expect(component.MENSAJE_DE_ERROR).toBeDefined();
   });
 
-  // it('should call wizardComponent.siguiente when accion is "cont" and valor is valid', () => {
-  //   component.wizardComponent = {
-  //     siguiente: jest.fn(),
-  //     atras: jest.fn()
-  //   };
-  //   component.getValorIndice({ valor: 2, accion: 'cont' });
-  //   expect(component.indice).toBe(1);
-  //   expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-  //   expect(component.wizardComponent.atras).not.toHaveBeenCalled();
-  // });
-
-  // it('should call wizardComponent.atras when accion is not "cont" and valor is valid', () => {
-  //   component.wizardComponent = {
-  //     siguiente: jest.fn(),
-  //     atras: jest.fn()
-  //   };
-  //   component.getValorIndice({ valor: 3, accion: 'back' });
-  //   expect(component.indice).toBe(1);
-  //   expect(component.wizardComponent.atras).toHaveBeenCalled();
-  //   expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-  // });
-
   it('should not change indice or call wizardComponent methods if valor is out of range', () => {
     component.indice = 1;
     component.wizardComponent = {
