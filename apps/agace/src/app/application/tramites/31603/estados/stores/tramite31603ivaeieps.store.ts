@@ -236,6 +236,9 @@ export interface Solicitud31603IvaeiepsState {
      * El valor de indiqueSiLosSocios.
      */
   indiqueSiLosSocios: string;
+  /**
+     * El valor de captureElValorTotal.
+     */
   captureElValorTotal: number;
 
 }
@@ -473,6 +476,9 @@ export function createInitialState(): Solicitud31603IvaeiepsState {
          * El valor de indiqueSiLosSocios.
          */
         indiqueSiLosSocios: '',
+        /**
+         * El valor de captureElValorTotal.
+         */
         captureElValorTotal: 0
 
   };

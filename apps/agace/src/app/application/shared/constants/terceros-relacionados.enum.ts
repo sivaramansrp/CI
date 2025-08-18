@@ -1,3 +1,7 @@
+
+
+import { REGEX_RFC } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
+
 /**
  * Representa un arreglo constante de objetos que define la configuración para un formulario de "Representante Legal".
  * Cada objeto en el arreglo especifica las propiedades y reglas de validación para un campo del formulario.
@@ -18,9 +22,6 @@
  * @property {string} valorPredeterminado - Valor predeterminado para el campo de entrada.
  * @property {number} marginTop - El margen superior aplicado al campo.
  */
-
-import { REGEX_RFC } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
-
 export const REPRESENTANTE_LEGAL = [
     {
       id: 'resigtro',
