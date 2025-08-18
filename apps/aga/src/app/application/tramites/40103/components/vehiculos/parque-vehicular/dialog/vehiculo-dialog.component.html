@@ -9,7 +9,7 @@
                 <form [formGroup]="vehiculoForm">
                     <div class="row">
                         <div class="col-md-4">
-                            <label>Número de identificación vehicular*:</label>
+                            <label>Número de identificación vehicular*:</label><span class="bi bi-question-circle-fill mx-2" tooltip="Número de identificación vehícular (NIV) o serie del vehículo" placement="top"></span>
                             <input type="text" class="form-control" formControlName="numero" [required]="true"
                                 maxlength="20" />
                             @if (vehiculoForm.get('numero')?.invalid && (vehiculoForm.get('numero')?.dirty || vehiculoForm.get('numero')?.touched)) {
@@ -33,7 +33,7 @@
                             }
                         </div>
                         <div class="col-md-4">
-                            <label>ID de vehículo*:</label>
+                            <label>ID de vehículo*:</label><span class="bi bi-question-circle-fill mx-2" tooltip="Identificador único del vehículo en el sistema" placement="top"></span>
                             <input type="text" class="form-control" formControlName="idDeVehiculo" />
                             @if (vehiculoForm.get('idDeVehiculo')?.invalid && (vehiculoForm.get('idDeVehiculo')?.dirty || vehiculoForm.get('idDeVehiculo')?.touched)) {
                                 <div class="text-danger">

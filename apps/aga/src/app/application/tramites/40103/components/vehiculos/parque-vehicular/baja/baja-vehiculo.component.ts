@@ -5,12 +5,15 @@
  *
  * @module BajaVehiculoComponent
  */
-import { VehiculoTabla, CatalogoLista } from '../../../../models/registro-muestras-mercancias.model';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { VEHICULOS_TABLA_CONFIG } from '../../../../enum/transportista-terrestre.enum';
-import { TablaSeleccion, ConsultaioQuery, ConsultaioState, Catalogo } from '@ng-mf/data-access-user';
-import { Subject, takeUntil, map } from 'rxjs';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
+
+import { Catalogo, ConsultaioQuery, ConsultaioState, TablaSeleccion } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+
+import { CatalogoLista, DatosVehiculo, VehiculoTabla } from '../../../../models/registro-muestras-mercancias.model';
 import { modificarTerrestreService } from '../../../services/modificacar-terrestre.service';
+import { obtenerColumnasVehiculo } from '../../../../enum/parque-vehicular.enum';
 
 @Component({
   selector: 'app-baja-vehiculo',
@@ -25,27 +28,27 @@ import { modificarTerrestreService } from '../../../services/modificacar-terrest
 export class BajaVehiculoComponent implements OnInit, OnDestroy {
   /**
    * Catálogo de tipos de vehículo.
-   * @type {any[]}
+   * @type {Catalogo[]}
    */
-  tipoDeVehiculoCatalogo: any[] = [];
+  tipoDeVehiculoCatalogo: Catalogo[] = [];
 
   /**
    * Catálogo de países emisores.
-   * @type {any[]}
+   * @type {Catalogo[]}
    */
-  paisEmisorCatalogo: any[] = [];
+  paisEmisorCatalogo: Catalogo[] = [];
 
   /**
    * Catálogo de años.
-   * @type {any[]}
+   * @type {Catalogo[]}
    */
-  anoCatalogo: any[] = [];
+  anoCatalogo: Catalogo[] = [];
 
   /**
    * Catálogo de tipos de arrastre.
-   * @type {any[]}
+   * @type {Catalogo[]}
    */
-  tipoArrastre: any[] = [];
+  tipoArrastre: Catalogo[] = [];
 
   /**
    * Catálogo de colores de vehículos.
@@ -61,65 +64,10 @@ export class BajaVehiculoComponent implements OnInit, OnDestroy {
 
   /**
    * Configuración de columnas para la tabla de vehículos.
-   * @type {*}
+   * Utiliza la configuración centralizada del enum.
+   * @type {ConfiguracionColumna<VehiculoTabla>[]}
    */
-  columnasVehiculo = [
-    {
-      encabezado: 'ID',
-      clave: (item: VehiculoTabla) => String(item.idDeVehiculo),
-      orden: 0,
-    },
-    {
-      encabezado: 'Número de identificación vehicular',
-      clave: (item: VehiculoTabla) => item.numero,
-      orden: 1,
-    },
-    {
-      encabezado: 'Tipo de vehículo',
-      clave: (item: VehiculoTabla) => this.obtenerDescripcionDeCatalogo(item.tipoDeVehiculo, this.tipoDeVehiculoCatalogo),
-      orden: 2,
-    },
-    {
-      encabezado: 'Número económico',
-      clave: (item: VehiculoTabla) => item.numuroEconomico,
-      orden: 3,
-    },
-    {
-      encabezado: 'Transponder',
-      clave: (item: VehiculoTabla) => item.transponder,
-      orden: 4,
-    },
-    {
-      encabezado: 'Número de Placas',
-      clave: (item: VehiculoTabla) => item.numeroPlaca,
-      orden: 5,
-    },
-    {
-      encabezado: 'País Emisor',
-      clave: (item: VehiculoTabla) => this.obtenerDescripcionDeCatalogo(item.paisEmisor, this.paisEmisorCatalogo),
-      orden: 6,
-    },
-    {
-      encabezado: 'Estado o provincia',
-      clave: (item: VehiculoTabla) => item.estado,
-      orden: 7,
-    },
-    {
-      encabezado: 'Marca',
-      clave: (item: VehiculoTabla) => item.marca,
-      orden: 8,
-    },
-    {
-      encabezado: 'Modelo',
-      clave: (item: VehiculoTabla) => item.modelo,
-      orden: 9,
-    },
-    {
-      encabezado: 'Año',
-      clave: (item: VehiculoTabla) => this.obtenerDescripcionDeCatalogo(item.ano, this.anoCatalogo),
-      orden: 10,
-    }
-  ];
+  columnasVehiculo: ConfiguracionColumna<VehiculoTabla>[] = [];
 
   /**
    * Tipo de selección de la tabla (radio, checkbox, etc).
@@ -159,9 +107,9 @@ export class BajaVehiculoComponent implements OnInit, OnDestroy {
 
   /**
    * Datos para el diálogo de vehículo.
-   * @type {VehiculoTabla | {}}
+   * @type {DatosVehiculo | null}
    */
-  vehiculoDialogData: VehiculoTabla | {} = {};
+  vehiculoDialogData: DatosVehiculo | null = null;
 
   /**
    * Constructor del componente `BajaVehiculoComponent`.
@@ -169,33 +117,38 @@ export class BajaVehiculoComponent implements OnInit, OnDestroy {
    * @constructor
    * @param {ConsultaioQuery} consultaioQuery - Servicio para consultar el estado de consulta y determinar el modo de solo lectura.
    * @param {modificarTerrestreService} modificarTerrestreService - Servicio para obtener catálogos.
+   * @param {ChangeDetectorRef} cdr - Servicio para detectar cambios en la vista.
    */
   constructor(
     private consultaioQuery: ConsultaioQuery,
-    private modificarTerrestreService: modificarTerrestreService
+    private modificarTerrestreService: modificarTerrestreService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   /**
    * Método de ciclo de vida de Angular que se llama cuando el componente se inicializa.
    */
   ngOnInit(): void {
-    // Load all catalogs
+    // Cargar todos los catálogos
     this.modificarTerrestreService.obtenerTipoDeVehiculo()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos: CatalogoLista) => {
         this.tipoDeVehiculoCatalogo = datos.datos;
+        this.actualizarColumnasVehiculo();
       });
 
     this.modificarTerrestreService.obtenerPaisEmisor()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos: CatalogoLista) => {
         this.paisEmisorCatalogo = datos.datos;
+        this.actualizarColumnasVehiculo();
       });
 
     this.modificarTerrestreService.obtenerAno()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos: CatalogoLista) => {
         this.anoCatalogo = datos.datos;
+        this.actualizarColumnasVehiculo();
       });
 
     this.modificarTerrestreService.obtenerColorVehiculo()
@@ -232,11 +185,23 @@ export class BajaVehiculoComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Actualiza la configuración de columnas para la tabla de vehículos.
+   * Se ejecuta cuando se cargan los catálogos necesarios.
+   * @returns {void}
+   */
+  private actualizarColumnasVehiculo(): void {
+    if (this.tipoDeVehiculoCatalogo.length > 0 && this.paisEmisorCatalogo.length > 0 && this.anoCatalogo.length > 0) {
+      this.columnasVehiculo = obtenerColumnasVehiculo(this.tipoDeVehiculoCatalogo, this.paisEmisorCatalogo, this.anoCatalogo);
+      this.cdr.detectChanges();
+    }
+  }
+
+  /**
    * Maneja la selección de filas en la tabla de vehículos.
    * @param {VehiculoTabla[]} event - Vehículos seleccionados.
    * @returns {void}
    */
-  onVehiculoRowSelected(event: VehiculoTabla[]) {
+  onVehiculoRowSelected(event: VehiculoTabla[]): void {
     this.vehiculosParqueSelected = event || [];
   }
 
@@ -244,21 +209,25 @@ export class BajaVehiculoComponent implements OnInit, OnDestroy {
    * Elimina los vehículos seleccionados del parque vehicular.
    * @returns {void}
    */
-  eliminarVehiculo() {
+  eliminarVehiculo(): void {
     if (this.vehiculosParqueSelected.length === 0) {
       return;
     }
     
     // Crear un Set con los IDs de los vehículos seleccionados para comparación eficiente
-    const selectedNumbers = new Set(this.vehiculosParqueSelected.map(v => v.numero).filter(n => n));
-    const selectedIds = new Set(this.vehiculosParqueSelected.map(v => v.idDeVehiculo).filter(id => id));
+    const NUMEROS_SELECCIONADOS = new Set(this.vehiculosParqueSelected.map(v => v.numero).filter(n => n));
+    const IDS_SELECCIONADOS = new Set(this.vehiculosParqueSelected.map(v => v.idDeVehiculo).filter(id => id));
     
     // Filtrar los vehículos usando múltiples identificadores únicos
     this.vehiculosParque = this.vehiculosParque.filter(v => {
       // Primero intentar con número
-      if (v.numero && selectedNumbers.has(v.numero)) return false;
+      if (v.numero && NUMEROS_SELECCIONADOS.has(v.numero)) {
+        return false;
+      }
       // Luego con ID de vehículo
-      if (v.idDeVehiculo && selectedIds.has(v.idDeVehiculo)) return false;
+      if (v.idDeVehiculo && IDS_SELECCIONADOS.has(v.idDeVehiculo)) {
+        return false;
+      }
       // Como último recurso, usar referencia de objeto
       return !this.vehiculosParqueSelected.includes(v);
     });
@@ -268,23 +237,41 @@ export class BajaVehiculoComponent implements OnInit, OnDestroy {
 
   /**
    * Agrega un vehículo actualizado desde el diálogo y lo selecciona.
-   * @param {VehiculoTabla} updatedVehiculo - Vehículo actualizado.
+   * @param {DatosVehiculo} updatedVehiculo - Vehículo actualizado.
    * @returns {void}
    */
-  onVehiculoDialogSave(updatedVehiculo: VehiculoTabla) {
+  onVehiculoDialogSave(updatedVehiculo: DatosVehiculo): void {
+    // Generar ID temporal secuencial basado en el largo actual del array
+    const SIGUIENTE_ID = this.vehiculosParque.length > 0 
+      ? Math.max(...this.vehiculosParque.map(v => Number(v.idDeVehiculo) || 0)) + 1 
+      : 1;
+    
+    // Convertir DatosVehiculo a VehiculoTabla para agregar a la lista
+    // Mapear numeroEconomico del formulario a numuroEconomico de la tabla
+    const DATOS_FORMULARIO = updatedVehiculo as DatosVehiculo & { numeroEconomico?: string };
+    const VEHICULO_TABLA: VehiculoTabla = {
+      ...updatedVehiculo,
+      idDeVehiculo: String(SIGUIENTE_ID), // Forzar asignación del nuevo ID
+      numuroEconomico: DATOS_FORMULARIO.numeroEconomico || updatedVehiculo.numuroEconomico || '', // Mapear correctamente el campo
+      datos: [] // Propiedad requerida por VehiculoTabla
+    };
+    
     // Crear una copia mutable del array antes de agregar
-    const vehiculosMutables = [...this.vehiculosParque];
-    vehiculosMutables.push(updatedVehiculo);
-    this.vehiculosParque = vehiculosMutables;
+    const VEHICULOS_MUTABLES = [...this.vehiculosParque];
+    VEHICULOS_MUTABLES.push(VEHICULO_TABLA);
+    this.vehiculosParque = VEHICULOS_MUTABLES;
     this.vehiculosParqueSelected = [this.vehiculosParque[this.vehiculosParque.length - 1]];
     this.showVehiculoDialog = false;
+    
+    // Forzar detección de cambios para asegurar que la tabla se actualice
+    this.cdr.detectChanges();
   }
 
   /**
    * Elimina la fila de vehículo seleccionada.
    * @returns {void}
    */
-  deleteVehiculoRow() {
+  deleteVehiculoRow(): void {
     this.eliminarVehiculo();
   }
 
@@ -295,21 +282,7 @@ export class BajaVehiculoComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   agregarModal(): void {
-    this.vehiculoDialogData = {};
+    this.vehiculoDialogData = null;
     this.showVehiculoDialog = true;
-  }
-
-  /**
-   * Busca la descripción en un catálogo por su clave.
-   * @param {string} clave - Clave a buscar en el catálogo.
-   * @param {any[]} catalogo - Array del catálogo donde buscar.
-   * @returns {string} La descripción encontrada o la clave original si no se encuentra.
-   */
-  private obtenerDescripcionDeCatalogo(clave: string, catalogo: any[]): string {
-    if (!clave || !catalogo || catalogo.length === 0) {
-      return clave || '';
-    }
-    const item = catalogo.find(c => c.clave === clave || c.descripcion === clave);
-    return item ? item.descripcion : clave;
   }
 }

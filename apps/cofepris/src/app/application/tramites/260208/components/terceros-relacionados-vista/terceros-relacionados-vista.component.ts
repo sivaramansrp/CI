@@ -9,6 +9,7 @@ import {
 import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ELEMENTOS_REQUERIDOS_TR } from '../../constants/medicamentos-destinados-uso.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260208Query } from '../../estados/tramite260208Query.query';
 import { Tramite260208Store } from '../../estados/tramite260208Store.store';
@@ -51,6 +52,13 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * Datos de la tabla de facturadores.
    */
   facturadorTablaDatos: Facturador[] = [];
+
+  /**
+   * @property {string[]} elementosRequeridos
+   * @description
+   * Lista de elementos requeridos para el trámite.
+   */
+  public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS_TR;
 
     /**
      * @property {Subject<void>} destroy$
@@ -111,6 +119,22 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   addFabricantes(newFabricantes: Fabricante[]): void {
     this.tramiteStore.updateFabricanteTablaDatos(newFabricantes);
   }
+
+  /**
+     * @method eliminarFabricante
+     * @description Método público que elimina fabricantes específicos de la tabla de datos.
+     * Recibe la lista actualizada después de la eliminación y actualiza el store
+     * utilizando el tipo de actualización ELIMINAR para mantener la integridad de los datos.
+     * 
+     * @param {Fabricante[]} fabricante - Arreglo actualizado de fabricantes después
+     *   de realizar la operación de eliminación
+     * @returns {void}
+     * @access public
+     * @since 1.0.0
+     */
+    eliminarFabricante(fabricante: Fabricante[]): void {
+      this.tramiteStore.updateFabricanteTablaDatos(fabricante);
+    }
 
   /**
    * @method addDestinatarios

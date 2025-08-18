@@ -65,9 +65,7 @@
           <div class="row">
             <div class="col-md-12">
               <div class="col-md-4">
-                <label>Número de identificación vehicular*: <span class="bi bi-question-circle-fill fs-4 m-1" title="Número de identificación vehícular (NIV) o serie del vehículo"
-                    ata-bs-toggle="tooltip">
-                  </span></label>
+                <label>Número de identificación vehicular*: <span class="bi bi-question-circle-fill mx-2" tooltip="Número de identificación vehícular (NIV) o serie del vehículo" placement="top"></span></label>
                 <input type="text" class="form-control" formControlName="numero" [required]="true"
                   [ngClass]="isValid(vehiculoFormulario,'numero') ? 'required' : ''"
                   (change)="setValoresStore(vehiculoFormulario, 'numero', 'setDatosVehiculoNumero')" minlength="17" maxlength="17"/>
@@ -340,9 +338,7 @@
           <div class="row">
             <div class="col-md-12">
               <div class="col-md-4">
-                <label>Número de identificación vehícular*: <span class="bi bi-question-circle-fill fs-4 m-1" title="Número de identificación vehícular (NIV) o serie del vehículo"
-                    ata-bs-toggle="tooltip">
-                  </span></label>
+                <label>Número de identificación vehícular*: <span class="bi bi-question-circle-fill mx-2" tooltip="Número de identificación vehícular (NIV) o serie del vehículo" placement="top"></span></label>
                 <input type="text" class="form-control" formControlName="vinVehiculo" [required]="true"
                   [ngClass]="isValid(unidadFormulario,'vinVehiculo') ? 'required' : ''"
                   (change)="setValoresStore(unidadFormulario, 'vinVehiculo', 'setDatosUnidadVinVehiculo')" minlength="17" maxlength="17" />

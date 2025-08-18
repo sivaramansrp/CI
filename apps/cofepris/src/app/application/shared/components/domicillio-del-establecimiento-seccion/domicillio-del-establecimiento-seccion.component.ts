@@ -24,7 +24,10 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { DatosDelSolicituteSeccionState,DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-del-solicitute-seccion.store';
+import {
+  DatosDelSolicituteSeccionState,
+  DatosDelSolicituteSeccionStateStore,
+} from '../../estados/stores/datos-del-solicitute-seccion.store';
 import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-solicitute-seccion.query';
 
 import {
@@ -36,17 +39,17 @@ import {
 } from '@angular/forms';
 import { EstablecimientoService } from '../../services/establecimiento.service';
 
-import { Subject,map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { ScianModel } from '../../models/datos-de-la-solicitud.model';
 
 import { Modal } from 'bootstrap';
 import { SCIAN_TABLE_CONFIG } from '../../constantes/aviso-de-funcionamiento.enum';
 
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-/* 
-* @description
-* Componente que gestiona el domicilio del establecimiento.
-*/
+/*
+ * @description
+ * Componente que gestiona el domicilio del establecimiento.
+ */
 @Component({
   selector: 'app-domicillio-del-establecimiento-seccion',
   standalone: true,
@@ -64,9 +67,6 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 export class DomicillioDelEstablecimientoSeccionComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
-  /**
-   * Referencia al modal del establecimiento.
-   */
   /**
    * Referencia al elemento del modal del establecimiento.
    */
@@ -89,32 +89,33 @@ export class DomicillioDelEstablecimientoSeccionComponent
   formularioDeshabilitado: boolean = false;
 
   /**
-  * Estado de la solicitud de la sección .
-  */
-    public solicitudState!: DatosDelSolicituteSeccionState;
+   * Estado de la solicitud de la sección.
+   */
+  public solicitudState!: DatosDelSolicituteSeccionState;
   /**
    * Constructor del componente.
    * @param fb FormBuilder para inicializar formularios reactivos.
    * @param establecimientoService Servicio para obtener datos relacionados con el establecimiento.
    * @param domicilioEstablecimientoStore Store para gestionar el estado del domicilio del establecimiento.
    * @param domicilioEstablecimientoQuery Query para obtener el estado inicial del domicilio del establecimiento.
+   * @param consultaioQuery Query para obtener el estado de consulta.
    */
   constructor(
     private fb: FormBuilder,
     private establecimientoService: EstablecimientoService,
     private domicilioEstablecimientoStore: DatosDelSolicituteSeccionStateStore,
     private domicilioEstablecimientoQuery: DatosDelSolicituteSeccionQuery,
-    private consultaioQuery: ConsultaioQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
-       this.consultaioQuery.selectConsultaioState$
-        .pipe(
-          takeUntil(this.destroy$),
-          map((seccionState)=>{
-            this.formularioDeshabilitado = seccionState.readonly; 
-            this.inicializarEstadoFormulario();
-          })
-        )
-        .subscribe()
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.formularioDeshabilitado = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -189,10 +190,11 @@ export class DomicillioDelEstablecimientoSeccionComponent
     this.loadScian();
     this.loadScianDescription();
     this.inicializarEstadoFormulario();
-        // Cargar el estado inicial en el formulario
+    // Carga el estado inicial en el formulario
 
-
-    this.establecimientoService.getScianDatos().pipe(takeUntil(this.destroy$))
+    this.establecimientoService
+      .getScianDatos()
+      .pipe(takeUntil(this.destroy$))
       .subscribe((response: ScianModel[]) => {
         this.personaparas = response;
       });
@@ -203,16 +205,27 @@ export class DomicillioDelEstablecimientoSeccionComponent
    */
   onControlChange(controlName: string): void {
     let DATOS = [];
-    if(controlName === 'scian') {
+    if (controlName === 'scian') {
       DATOS = this.descripcionScianJson.filter((item) => {
         return item.id === Number(this.scianForm.get(controlName)?.value);
-      })
-      this.descripcionScianJson = DATOS.length > 0 ? DATOS : this.descripcionScianJson;
-      this.scianForm.get('descripcionScian')?.setValue(this.descripcionScianJson[0]?.descripcion);
+      });
+      this.descripcionScianJson =
+        DATOS.length > 0 ? DATOS : this.descripcionScianJson;
+      this.scianForm
+        .get('descripcionScian')
+        ?.setValue(this.descripcionScianJson[0]?.descripcion);
       this.scianForm.updateValueAndValidity();
+      const UPDATED_VALUE = {
+        [controlName]: this.scianForm.get(controlName)?.value,
+      };
+      this.domicilioEstablecimientoStore.update(UPDATED_VALUE);
+    } else {
+      // Maneja los controles del formulario de domicilio incluyendo checkbox
+      const UPDATED_VALUE = {
+        [controlName]: this.domicilioEstablecimiento.get(controlName)?.value,
+      };
+      this.domicilioEstablecimientoStore.update(UPDATED_VALUE);
     }
-    const UPDATED_VALUE = { [controlName]: this.scianForm.get(controlName)?.value };
-    this.domicilioEstablecimientoStore.update(UPDATED_VALUE);
   }
 
   /**
@@ -274,7 +287,9 @@ export class DomicillioDelEstablecimientoSeccionComponent
    * @returns void
    */
   loadScianDescription(): void {
-    this.establecimientoService.getDescripcionScianData().pipe(takeUntil(this.destroy$))
+    this.establecimientoService
+      .getDescripcionScianData()
+      .pipe(takeUntil(this.destroy$))
       .subscribe((resp: Catalogo[]) => {
         this.descripcionScianJson = resp;
       });
@@ -305,19 +320,27 @@ export class DomicillioDelEstablecimientoSeccionComponent
    * Guarda un nuevo dato SCIAN y lo agrega a la tabla.
    */
   guardarScian(): void {
-      const SCIAN_DATA: ScianModel = {
-        claveScian: this.scianJson.find(item => item.id === Number(this.scianForm.get('scian')?.value))?.descripcion ?? '',
-        descripcionScian: this.descripcionScianJson.find(item => item.descripcion === String(this.scianForm.get('descripcionScian')?.value))?.descripcion ?? ''
-      };
-      // Agregar el nuevo dato a la tabla
-      this.personaparas.push(SCIAN_DATA);
+    const SCIAN_DATA: ScianModel = {
+      claveScian:
+        this.scianJson.find(
+          (item) => item.id === Number(this.scianForm.get('scian')?.value)
+        )?.descripcion ?? '',
+      descripcionScian:
+        this.descripcionScianJson.find(
+          (item) =>
+            item.descripcion ===
+            String(this.scianForm.get('descripcionScian')?.value)
+        )?.descripcion ?? '',
+    };
+    // Agregar el nuevo dato a la tabla
+    this.personaparas.push(SCIAN_DATA);
 
-      // Limpiar el formulario
-      this.scianForm.reset();
+    // Limpiar el formulario
+    this.scianForm.reset();
 
-      // Cerrar el modal
-      this.closeScianModal();
-      this.loadScianDescription();
+    // Cerrar el modal
+    this.closeScianModal();
+    this.loadScianDescription();
   }
 
   /**
@@ -328,8 +351,8 @@ export class DomicillioDelEstablecimientoSeccionComponent
     return this.domicilioEstablecimiento.get('avisoDeFuncionamiento')?.value;
   }
 
-   /**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
    * Además, obtiene la información del catálogo de mercancía.
    */
   inicializarEstadoFormulario(): void {
@@ -337,24 +360,23 @@ export class DomicillioDelEstablecimientoSeccionComponent
       this.guardarDatosFormulario();
     } else {
       this.inicializarFormulario();
-    }  
+    }
   }
 
-  
   /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
   guardarDatosFormulario(): void {
-      this.inicializarFormulario();
-      if (this.formularioDeshabilitado) {
-        this.domicilioEstablecimiento.disable();
-      } else{
-        this.domicilioEstablecimiento.enable();
-      } 
+    this.inicializarFormulario();
+    if (this.formularioDeshabilitado) {
+      this.domicilioEstablecimiento.disable();
+    } else {
+      this.domicilioEstablecimiento.enable();
+    }
   }
 
-    /**
+  /**
    * Inicializa el formulario reactivo para el domicilio del establecimiento y el formulario SCIAN.
    * También carga el estado inicial del formulario desde el store.
    */
@@ -382,22 +404,46 @@ export class DomicillioDelEstablecimientoSeccionComponent
       descripcionScian: ['', Validators.required],
     });
 
-        this.domicilioEstablecimientoQuery
+    this.domicilioEstablecimientoQuery
       .select()
       .pipe(takeUntil(this.destroy$))
       .subscribe((state) => {
         this.domicilioEstablecimiento.patchValue(state, { emitEvent: false });
       });
-
   }
 
   /**
    * Maneja el evento de cambio en el campo de RFC del representante.
    * Llama a la función para buscar el representante por RFC.
    */
-  hasError(controlName: string, errorName: string) {
-    return this.domicilioEstablecimiento.get(controlName)?.touched &&
-           this.domicilioEstablecimiento.get(controlName)?.hasError(errorName);
+  hasError(controlName: string, errorName: string): boolean {
+    return Boolean(
+      this.domicilioEstablecimiento.get(controlName)?.touched &&
+        this.domicilioEstablecimiento.get(controlName)?.hasError(errorName)
+    );
+  }
+
+  /**
+   * Elimina los datos de la licencia sanitaria (limpia los campos).
+   */
+  eliminarLicenciaSanitaria(): void {
+    // Limpia el campo del número de licencia
+    this.domicilioEstablecimiento.get('noDeLicenciaSanitaria')?.setValue('');
+
+    // Limpia el área de texto de observaciones
+    this.domicilioEstablecimiento
+      .get('noDeLicenciaSanitariaObservaciones')
+      ?.setValue('');
+
+    // Actualiza el store con los valores limpiados
+    this.domicilioEstablecimientoStore.update({
+      noDeLicenciaSanitaria: '',
+      noDeLicenciaSanitariaObservaciones: '',
+    });
+
+    // Dispara los eventos de cambio
+    this.onControlChange('noDeLicenciaSanitaria');
+    this.onControlChange('noDeLicenciaSanitariaObservaciones');
   }
 
   /**

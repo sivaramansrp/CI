@@ -6,7 +6,7 @@
  * @import { Component } from '@angular/core';
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject,map, takeUntil } from 'rxjs';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
@@ -26,7 +26,7 @@ import { CommonModule } from '@angular/common';
 
   ]
 })
-export class PasoUnoComponent implements OnInit {
+export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * @property {number} indice - El índice de la pestaña seleccionada.
    */
@@ -63,6 +63,27 @@ export class PasoUnoComponent implements OnInit {
    * [español] Bandera booleana que determina si se muestran o procesan los datos de respuesta en el componente.
    */
    public esDatosRespuesta: boolean = false;
+
+
+    /**
+     * @property solicitante - Referencia al componente `SolicitanteComponent`.
+     */
+    @ViewChild('solicitanteRef') solicitante!: SolicitanteComponent;
+
+    /**
+     * @property certificadoOrigen - Referencia al componente `CertificadoOrigenComponent`.
+     */
+    @ViewChild('certificadoOrigenRef') certificadoOrigen!: CertificadoOrigenComponent;
+
+    /**
+     * @property camDestinatario - Referencia al componente `CamDestinatarioComponent`.
+     */
+    @ViewChild('camDestinatarioRef') camDestinatario!: CamDestinatarioComponent;
+
+    /**
+     * @property camDatosCertificado - Referencia al componente `CamDatosCertificadoComponent`.
+     */
+    @ViewChild('camDatosCertificadoRef') camDatosCertificado!: CamDatosCertificadoComponent;
 
   /**
    * Constructor de la clase.
@@ -115,5 +136,52 @@ ngOnInit():void {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+
+   validarFormularios(): boolean {
+   let isValid = true;
+    if (this.solicitante?.form) {
+      if (this.solicitante.form.invalid) {
+        this.solicitante.form.markAllAsTouched();
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+if(this.camDatosCertificado) {
+  if(!this.camDatosCertificado.validarFormularios()){
+   isValid = false;
+  } 
+}
+else{
+  isValid = false;
+}
+if(this.camDestinatario){
+  if(!this.camDestinatario.validarFormularios()){
+    isValid = false;
+  }
+}
+else{
+  isValid = false;
+}
+if(this.certificadoOrigen){
+  if(!this.certificadoOrigen.validarFormularios()){
+    isValid = false;
+  }
+}
+else{
+  isValid = false;
+}
+    return isValid;
+}
+
+  /**
+   * @method ngOnDestroy
+   * @description Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Completa el Subject para cancelar las suscripciones activas.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

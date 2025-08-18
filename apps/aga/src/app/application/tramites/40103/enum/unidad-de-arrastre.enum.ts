@@ -2,7 +2,9 @@
 /**
  * Importa la definición de columna para tablas dinámicas.
  */
+import { Catalogo } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { UnidadTabla } from '../models/registro-muestras-mercancias.model';
 
 
 /**
@@ -72,6 +74,71 @@ export const UNIDADES_ARRASTRE_COLUMNAS: ConfiguracionColumna<UnidadArrastre>[] 
     orden: 7,
   },
 ];
+
+/**
+ * Función auxiliar para buscar la descripción en un catálogo por su clave.
+ * @param {string} clave - Clave a buscar en el catálogo.
+ * @param {Catalogo[]} catalogo - Array del catálogo donde buscar.
+ * @returns {string} La descripción encontrada o la clave original si no se encuentra.
+ */
+export function obtenerDescripcionDeCatalogo(clave: string, catalogo: Catalogo[]): string {
+  if (!clave || !catalogo || catalogo.length === 0) {
+    return clave || '';
+  }
+  const ELEMENTO = catalogo.find(c => c.id === Number(clave) || c.descripcion === clave);
+  return ELEMENTO ? ELEMENTO.descripcion : clave;
+}
+
+/**
+ * Función que genera la configuración de columnas para la tabla de unidades de arrastre.
+ * Requiere los catálogos como parámetros para realizar las traducciones de códigos a descripciones.
+ * 
+ * @param {Catalogo[]} tipoDeUnidadCatalogo - Catálogo de tipos de unidad de arrastre.
+ * @param {Catalogo[]} paisEmisorCatalogo - Catálogo de países emisores.
+ * @returns {ConfiguracionColumna<UnidadTabla>[]} Configuración de columnas para la tabla.
+ */
+export function obtenerColumnasUnidad(
+  tipoDeUnidadCatalogo: Catalogo[],
+  paisEmisorCatalogo: Catalogo[]
+): ConfiguracionColumna<UnidadTabla>[] {
+  return [
+    {
+      encabezado: 'ID',
+      clave: (item: UnidadTabla): string => item.idDeVehiculo ? String(item.idDeVehiculo) : '',
+      orden: 0,
+    },
+    {
+      encabezado: 'VIN del vehículo',
+      clave: (item: UnidadTabla): string => item.vinVehiculo || '',
+      orden: 1,
+    },
+    {
+      encabezado: 'Tipo de unidad de arrastre',
+      clave: (item: UnidadTabla): string => obtenerDescripcionDeCatalogo(item.tipoDeUnidadArrastre, tipoDeUnidadCatalogo),
+      orden: 2,
+    },
+    {
+      encabezado: 'Número económico',
+      clave: (item: UnidadTabla): string => item.numeroEconomico || '',
+      orden: 3,
+    },
+    {
+      encabezado: 'Número de placas',
+      clave: (item: UnidadTabla): string => item.numeroPlaca || '',
+      orden: 4,
+    },
+    {
+      encabezado: 'País emisor',
+      clave: (item: UnidadTabla): string => obtenerDescripcionDeCatalogo(item.paisEmisor, paisEmisorCatalogo),
+      orden: 5,
+    },
+    {
+      encabezado: 'Estado o provincia',
+      clave: (item: UnidadTabla): string => item.estado || '',
+      orden: 6,
+    }
+  ];
+}
 
 
 /**

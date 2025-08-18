@@ -724,6 +724,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
         descripcion_Scian: this.formAgente.get('claveDescripcionModal')?.value,
       };
       this.nicoTablaDatos.push(NUEVO_DATO);
+      this.nicoTablaDatos = [...this.nicoTablaDatos]; 
       this.formAgente.reset();
       this.cerrarModalScian();
     }
@@ -978,8 +979,17 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
   agregarMercancia(): void {
     if (this.formMercancias.valid) {
-      const NUEVA_MERCANCIA = { ...this.formMercancias.getRawValue() };
+      const RAW = this.formMercancias.getRawValue();
+    
+      const NUEVA_MERCANCIA: MercanciasInfo = {
+      ...RAW,
+      cantidadUmt: RAW.cantidadUMT,
+      cantidadUmc: RAW.cantidadUMC,
+      umc: RAW.UMC,
+      unidadMedidaTarifa: RAW.UMT,
+    };
       this.listaMercancias.push(NUEVA_MERCANCIA);
+      this.mercanciasTablaDatos = [...this.listaMercancias];
       this.formMercancias.reset();
     }
   }

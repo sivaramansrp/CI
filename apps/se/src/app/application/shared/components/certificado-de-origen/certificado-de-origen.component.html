@@ -25,12 +25,22 @@
             }
         </div>
 
-        <div class="row" *ngIf="tramiteState?.si && mercanciasDisponibles">
+        <div class="row" *ngIf="formCertificado.get('si')?.value  && mercanciasDisponibles">
             <div class="row my-4">
                 <div class="col-md-4 form-group">
                     <label class="form-label" for="nombres">Nombre(s)*:</label>
                     <input type="text" id="nombres" class="form-control" formControlName="nombres"
                         (change)="setValoresStore('formCertificado','nombres','setFormCertificadoGenric')" />
+                    @if(formCertificado.controls['nombres'].invalid && (formCertificado.controls['nombres'].touched || formCertificado.controls['nombres'].dirty)) {
+                    <div class="d-grid">
+                      @if(formCertificado.controls['nombres'].errors?.['required']) {
+                        <span class="mensaje-error">Este campo es obligatorio</span>
+                      }
+                      @if(formCertificado.controls['nombres'].errors?.['maxlength']) {
+                        <span class="mensaje-error">Por favor, no escribas más de 50 caracteres</span>
+                      }
+                    </div>
+                    }
                 </div>
             
                 <div class="col-md-4">
@@ -39,7 +49,7 @@
                     <input type="text" id="primerApellido" class="form-control" formControlName="primerApellido"
                         (change)="setValoresStore('formCertificado','primerApellido','setFormCertificadoGenric')" />
                 </div>
-                  @if(formCertificado.controls['primerApellido'].invalid && formCertificado.controls['primerApellido'].touched) {
+                  @if(formCertificado.controls['primerApellido'].invalid && (formCertificado.controls['primerApellido'].touched || formCertificado.controls['primerApellido'].dirty)) {
       <div class="d-grid">
         @if(formCertificado.controls['primerApellido'].errors?.['required']) {
           <span class="mensaje-error">Este campo es obligatorio</span>
@@ -57,7 +67,7 @@
                     <input type="text" id="segundoApellido" class="form-control" formControlName="segundoApellido"
                         (change)="setValoresStore('formCertificado','segundoApellido','setFormCertificadoGenric')" />
                 </div>
-                 @if(formCertificado.controls['segundoApellido'].invalid && formCertificado.controls['segundoApellido'].touched) {
+                 @if(formCertificado.controls['segundoApellido'].invalid && (formCertificado.controls['segundoApellido'].touched || formCertificado.controls['segundoApellido'].dirty)) {
       <div class="d-grid">
         @if(formCertificado.controls['segundoApellido'].errors?.['maxlength']) {
           <span class="mensaje-error">Por favor, no escribas más de 20 caracteres</span>
@@ -72,8 +82,11 @@
                     <input type="text" id="numeroDeRegistroFiscal" class="form-control" formControlName="numeroDeRegistroFiscal"
                         (change)="setValoresStore('formCertificado','numeroDeRegistroFiscal','setFormCertificadoGenric')" />
                 </div>
-                 @if(formCertificado.controls['numeroDeRegistroFiscal'].invalid && formCertificado.controls['numeroDeRegistroFiscal'].touched) {
+                 @if(formCertificado.controls['numeroDeRegistroFiscal'].invalid && (formCertificado.controls['numeroDeRegistroFiscal'].touched || formCertificado.controls['numeroDeRegistroFiscal'].dirty)) {
       <div class="d-grid">
+        @if(formCertificado.controls['numeroDeRegistroFiscal'].errors?.['required']) {
+          <span class="mensaje-error">Este campo es obligatorio</span>
+        }
         @if(formCertificado.controls['numeroDeRegistroFiscal'].errors?.['maxlength']) {
           <span class="mensaje-error">Por favor, no escribas más de 30 caracteres</span>
         }
@@ -87,7 +100,7 @@
                     <input type="text" id="razonSocial" class="form-control" formControlName="razonSocial"
                         (change)="setValoresStore('formCertificado','razonSocial','setFormCertificadoGenric')" />
                 </div>
-                 @if(formCertificado.controls['razonSocial'].invalid && formCertificado.controls['razonSocial'].touched) {
+                 @if(formCertificado.controls['razonSocial'].invalid && (formCertificado.controls['razonSocial'].touched || formCertificado.controls['razonSocial'].dirty)) {
       <div class="d-grid">
         @if(formCertificado.controls['razonSocial'].errors?.['required']) {
           <span class="mensaje-error">Este campo es obligatorio</span>
@@ -109,7 +122,7 @@
                         <input type="text" id="calle" class="form-control" formControlName="calle"
                             (change)="setValoresStore('formCertificado','calle','setFormCertificadoGenric')" />
                     </div>
-                    @if(formCertificado.controls['calle'].invalid && formCertificado.controls['calle'].touched) {
+                    @if(formCertificado.controls['calle'].invalid && (formCertificado.controls['calle'].touched || formCertificado.controls['calle'].dirty)) {
     <div class="d-grid">
       @if(formCertificado.controls['calle'].errors?.['required']) {
         <span class="mensaje-error">Este campo es obligatorio</span>
@@ -127,7 +140,7 @@
                         <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra"
                             (change)="setValoresStore('formCertificado','numeroLetra','setFormCertificadoGenric')" />
                     </div>
-                    @if(formCertificado.controls['numeroLetra'].invalid && formCertificado.controls['numeroLetra'].touched) {
+                    @if(formCertificado.controls['numeroLetra'].invalid && (formCertificado.controls['numeroLetra'].touched || formCertificado.controls['numeroLetra'].dirty)) {
     <div class="d-grid">
       @if(formCertificado.controls['numeroLetra'].errors?.['required']) {
         <span class="mensaje-error">Este campo es obligatorio</span>
@@ -156,6 +169,13 @@
                       'setFormCertificadoGenric')"
                       [isDisabled]="esFormularioSoloLectura"
                     ></app-catalogo-select>
+                @if(formCertificado.get('entidadFederativa')?.invalid && (formCertificado.get('entidadFederativa')?.touched || formCertificado.get('entidadFederativa')?.dirty)) {
+                <div class="d-grid">
+                  @if(formCertificado.get('entidadFederativa')?.errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+                }
             </div>
 
             <div class="col-md-4">
@@ -168,6 +188,13 @@
                   'bloque',
                   'setFormCertificadoGenric')"
                    [isDisabled]="esFormularioSoloLectura" ></app-catalogo-select>
+                @if(formCertificado.get('bloque')?.invalid && (formCertificado.get('bloque')?.touched || formCertificado.get('bloque')?.dirty)) {
+                <div class="d-grid">
+                  @if(formCertificado.get('bloque')?.errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+                }
             </div>
         </div>
         <div class="row mb-3">
@@ -181,7 +208,7 @@
                   'setFormCertificadoGenric')"
                     id="fracciónArancelaria">
             </div>
-              @if(formCertificado.controls['fraccionArancelariaForm'].invalid && formCertificado.controls['fraccionArancelariaForm'].touched) {
+              @if(formCertificado.controls['fraccionArancelariaForm'].invalid && (formCertificado.controls['fraccionArancelariaForm'].touched || formCertificado.controls['fraccionArancelariaForm'].dirty)) {
     <div class="d-grid">
       @if(formCertificado.controls['fraccionArancelariaForm'].errors?.['required']) {
         <span class="mensaje-error">Este campo es obligatorio</span>
@@ -202,7 +229,7 @@
                   'registroProductoForm',
                   'setFormCertificadoGenric')" id="registroProducto">
             </div>
-              @if(formCertificado.controls['registroProductoForm'].invalid && formCertificado.controls['registroProductoForm'].touched) {
+              @if(formCertificado.controls['registroProductoForm'].invalid && (formCertificado.controls['registroProductoForm'].touched || formCertificado.controls['registroProductoForm'].dirty)) {
     <div class="d-grid">
       @if(formCertificado.controls['registroProductoForm'].errors?.['required']) {
         <span class="mensaje-error">Este campo es obligatorio</span>
@@ -221,7 +248,7 @@
                   'nombreComercialForm',
                   'setFormCertificadoGenric')" id="nombreComercial">
             </div>
-             @if(formCertificado.controls['nombreComercialForm'].invalid && formCertificado.controls['nombreComercialForm'].touched) {
+             @if(formCertificado.controls['nombreComercialForm'].invalid && (formCertificado.controls['nombreComercialForm'].touched || formCertificado.controls['nombreComercialForm'].dirty)) {
     <div class="d-grid">
       @if(formCertificado.controls['nombreComercialForm'].errors?.['required']) {
         <span class="mensaje-error">Este campo es obligatorio</span>
@@ -317,12 +344,12 @@
                 @if (mercanciasDisponibles) {
                     <div class="row">
                         <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion"  [configuracionTabla]="cargaMercanciaConfiguracionTabla"
-                        [datos]="guardarClicado || []" (filaSeleccionada)="obtenerSeleccionadoMercancia($event)"  ></app-tabla-dinamica>
+                        [datos]="guardarClicado || []" (filaSeleccionada)="obtenerSeleccionadoMercancia($event)"  [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
                     </div>
                 } @else {
                     <div class="row">
                         <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion"  [configuracionTabla]="configuracionTablaMercancia"
-                        [datos]="guardarClicado || []"  ></app-tabla-dinamica>
+                        [datos]="guardarClicado || []"  [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
                     </div>
                 }
            

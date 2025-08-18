@@ -1,8 +1,8 @@
+import { AlertComponent, CatalogoSelectComponent, NotificacionesComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { NgModule, forwardRef } from '@angular/core';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { AgentesAgenciasAduanalesComponent } from './components/agentes-agencias-aduanales/agentes-agencias-aduanales.component';
 import { AgregarMiembrosEmpresaComponent } from './components/agregar-miembros-empresa/agregar-miembros-empresa.component';
-import { AlertComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { ClientesProveedoresExtrajeroComponent } from './components/clientes-proveedores-extrajero/clientes-proveedores-extrajero.component';
@@ -72,6 +72,9 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     RepresentanteFiscalComponent,
     forwardRef(() => AnexarDocumentosComponent),
     ToastrModule.forRoot(),
+    NotificacionesComponent,
+    CatalogoSelectComponent,
+    TablaDinamicaComponent
   ],
   exports: [
   ],
