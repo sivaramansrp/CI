@@ -240,7 +240,7 @@
         aria-labelledby="modalArchivoCsv" aria-hidden="true" #modalArchivoCsv>
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div>
+                <div *ngIf="archivoDescripcion">
                   <ng-alert [CONTENIDO]="archivo_descripcion"></ng-alert>
                 </div>
                 <div class="modal-header">

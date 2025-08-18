@@ -171,6 +171,11 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Bandera para mostrar la sección de adjuntar archivo.
    */
+  archivoDescripcion: boolean = false;
+
+  /**
+   * Bandera para mostrar la sección de adjuntar archivo.
+   */
   mostrarSeccionArchivoCsv: boolean = false;
 
   /**
@@ -388,6 +393,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
           }
         }
       );
+    } else {
+      this.archivoDescripcion = true;
     }
   }
 
