@@ -283,6 +283,7 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
         encuentraSus: [this.solicitudState?.encuentraSus, Validators.required],
         registrosQue:[this.solicitudState?.registrosQue],
         registrosQue2:[this.solicitudState?.registrosQue2],
+        registrosQue3:[this.solicitudState?.registrosQue3],
         momentoIngresar: [this.solicitudState?.momentoIngresar, Validators.required],
         indiqueCuenta: [this.solicitudState?.indiqueCuenta, Validators.required],
         indiqueCheck:[this.solicitudState?.indiqueCheck],
