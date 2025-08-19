@@ -1,10 +1,20 @@
-import { Anexo, Bitacora, Complimentaria, DomicilioInfo, Federetarios, Operacions } from '../models/plantas-consulta.model';
+import {
+  Anexo,
+  Bitacora,
+  Complimentaria,
+  DomicilioInfo,
+  Federetarios,
+  Operacions,
+} from '../models/plantas-consulta.model';
 
-import { DatosDelModificacion, DatosDelServicios } from "../models/datos-tramite.model";
+import {
+  DatosDelModificacion,
+  DatosDelServicios,
+} from '../models/datos-tramite.model';
 
 /**
  * Representa los pasos de un proceso en una solicitud.
- * 
+ *
  * Cada paso contiene la siguiente información:
  * - `indice`: Número que indica el orden del paso.
  * - `titulo`: Descripción del paso.
@@ -34,49 +44,78 @@ export const PASOS = [
 
 /**
  * Configuración para la modificación de datos en la aplicación.
- * 
+ *
  * Esta constante define una lista de objetos que especifican las propiedades
  * y el orden de los encabezados que se mostrarán en la interfaz de usuario
  * para la sección de modificación.
- * 
+ *
  * Cada objeto en la lista contiene:
  * - `encabezado`: El título que se mostrará en la columna.
  * - `clave`: Una función que toma un objeto de tipo `DatosDelModificacion` y
  *   devuelve el valor correspondiente a mostrar en la columna.
  * - `orden`: El orden en el que se mostrará la columna.
- * 
+ *
  * @constant
  * @type {Array<{ encabezado: string; clave: (ele: DatosDelModificacion) => any; orden: number }>}
  */
 export const CONFIGURACION_MODIFICACION = [
-    {
-      encabezado: 'Estatus',
-      clave: (ele: DatosDelModificacion):string | undefined => ele.desEstatus,
-      orden: 1,
-    },
-    {
-      encabezado: 'Descripción del servicio',
-      clave: (ele: DatosDelModificacion):string | undefined => ele.descripcion,
-      orden: 1,
-    },
-    {
-      encabezado: 'Tipo de servicio',
-      clave: (ele: DatosDelModificacion):string | undefined => ele.tipoDeServicio,
-      orden: 1,
-    }
+  {
+    encabezado: 'Fracción - Relación',
+    clave: (ele: DatosDelServicios): string | undefined => ele.testado,
+    orden: 1,
+  },
+  {
+    encabezado: 'Fracción',
+    clave: (ele: DatosDelServicios): string | undefined => ele.tipoDeServicio,
+    orden: 2,
+  },
+  {
+    encabezado: 'Descripción',
+    clave: (ele: DatosDelServicios): string | undefined => ele.descripcion,
+    orden: 3,
+  },
+
+  {
+    encabezado: 'Estatus',
+    clave: (ele: DatosDelServicios): string | undefined => ele.desEstatus,
+    orden: 4,
+  },
+];
+
+export const CONFIGURACION_IMPORTACION = [
+  {
+    encabezado: 'Fracción',
+    clave: (ele: DatosDelServicios): string | undefined => ele.tipoDeServicio,
+    orden: 1,
+  },
+  {
+    encabezado: 'Descripción',
+    clave: (ele: DatosDelServicios): string | undefined => ele.descripcion,
+    orden: 2,
+  },
+  {
+    encabezado: 'Fracción - Relación',
+    clave: (ele: DatosDelServicios): string | undefined => ele.testado,
+    orden: 3,
+  },
+  {
+    encabezado: 'Estatus',
+    clave: (ele: DatosDelServicios): string | undefined => ele.desEstatus,
+    orden: 4,
+  },
 ];
 
 /**
  * Configuración de domicilios utilizada para definir las propiedades
  * y el orden de los datos relacionados con la información de domicilios.
- * 
+ *
  * Cada objeto en el arreglo representa una columna con las siguientes propiedades:
- * 
+ *
  * - `encabezado`: El nombre de la columna que se mostrará en la interfaz de usuario.
  * - `clave`: Una función que toma un objeto de tipo `DomicilioInfo` y devuelve el valor correspondiente
  *   a la propiedad especificada en la columna.
  * - `orden`: El orden en el que se debe mostrar la columna.
- * 
+ *
  * Propiedades incluidas:
  * - Calle
  * - Número Exterior
@@ -98,7 +137,7 @@ export const CONFIGURACION_DOMICILIOS = [
   },
   {
     encabezado: 'Número Exterior',
-    clave: (ele: DomicilioInfo) : string | undefined => ele.numeroExterior,
+    clave: (ele: DomicilioInfo): string | undefined => ele.numeroExterior,
     orden: 2,
   },
   {
@@ -143,19 +182,18 @@ export const CONFIGURACION_DOMICILIOS = [
     clave: (ele: DomicilioInfo): string | undefined => ele.rfc,
     orden: 10,
   },
-  
+
   {
     encabezado: 'Razón Social',
     clave: (ele: DomicilioInfo): string | undefined => ele.razonSocial,
     orden: 13,
   },
- 
 ];
 
 /**
  * Configuración de los accionistas utilizada para definir las propiedades
  * y el orden de las columnas en una tabla o lista.
- * 
+ *
  * Cada objeto en la configuración representa una columna con las siguientes propiedades:
  * - `encabezado`: El título o encabezado de la columna.
  * - `clave`: Una función que toma un objeto de tipo `Complimentaria` y devuelve el valor correspondiente
@@ -187,17 +225,17 @@ export const CONFIGURACION_ACCIONISTAS = [
 
 /**
  * Configuración de los campos para la entidad "Federetarios".
- * 
+ *
  * Este arreglo define las columnas que se utilizarán para mostrar información
  * de los federatarios, incluyendo encabezados, claves de acceso a los datos
  * y el orden en que se deben mostrar.
- * 
+ *
  * Cada objeto en el arreglo contiene:
  * - `encabezado`: El nombre del encabezado de la columna.
  * - `clave`: Una función que toma un objeto de tipo `Federetarios` y devuelve
  *   el valor correspondiente al campo especificado.
  * - `orden`: El orden en que se debe mostrar la columna.
- * 
+ *
  * @constant
  * @type {Array<{encabezado: string, clave: (ele: Federetarios) => string | undefined, orden: number}>}
  */
@@ -224,22 +262,22 @@ export const CONFIGURACION_FEDERETARIOS = [
   },
   {
     encabezado: 'Fecha acta',
-    clave: (ele: Federetarios) : string | undefined => ele.fetchActa,
+    clave: (ele: Federetarios): string | undefined => ele.fetchActa,
     orden: 5,
   },
   {
     encabezado: 'Número notaría',
-    clave: (ele: Federetarios) : string | undefined => ele.numeroNotaria,
+    clave: (ele: Federetarios): string | undefined => ele.numeroNotaria,
     orden: 6,
   },
   {
     encabezado: 'Delegación Municipio',
-    clave: (ele: Federetarios) : string | undefined => ele.municipioDelegacion,
+    clave: (ele: Federetarios): string | undefined => ele.municipioDelegacion,
     orden: 7,
   },
   {
     encabezado: 'Entidad Federativa',
-    clave: (ele: Federetarios) : string | undefined => ele.estado,
+    clave: (ele: Federetarios): string | undefined => ele.estado,
     orden: 8,
   },
 ];
@@ -247,16 +285,16 @@ export const CONFIGURACION_FEDERETARIOS = [
 /**
  * Configuración de operaciones utilizada para definir las propiedades
  * y el orden de las columnas en una tabla de datos.
- * 
+ *
  * Cada objeto en el arreglo `CONFIGURACION_OPERACIONES` representa una columna
  * con las siguientes propiedades:
- * 
+ *
  * - `encabezado`: El nombre que se mostrará como encabezado de la columna.
  * - `clave`: Una función que toma un objeto de tipo `Operacions` y devuelve
  *   el valor correspondiente a mostrar en la columna. Puede devolver un `string`
  *   o `undefined`.
  * - `orden`: Un número que indica el orden en el que se mostrará la columna.
- * 
+ *
  * Propiedades específicas:
  * - `Calle`: Dirección de la calle.
  * - `Número Exterior`: Número exterior del domicilio.
@@ -275,68 +313,69 @@ export const CONFIGURACION_FEDERETARIOS = [
 export const CONFIGURACION_OPERACIONES = [
   {
     encabezado: 'Calle',
-    clave: (ele: Operacions) : string | undefined => ele.calle,
+    clave: (ele: Operacions): string | undefined => ele.calle,
     orden: 1,
   },
   {
     encabezado: 'Número Exterior',
-    clave: (ele: Operacions) : string | undefined => ele.numeroExterior,
+    clave: (ele: Operacions): string | undefined => ele.numeroExterior,
     orden: 2,
   },
   {
     encabezado: 'Número Interior',
-    clave: (ele: Operacions) : string | undefined => ele.numeroInterior,
+    clave: (ele: Operacions): string | undefined => ele.numeroInterior,
     orden: 3,
   },
   {
     encabezado: 'Código Postal',
-    clave: (ele: Operacions) : string | undefined => ele.codigoPostal,
+    clave: (ele: Operacions): string | undefined => ele.codigoPostal,
     orden: 4,
   },
   {
     encabezado: 'Colonia',
-    clave: (ele: Operacions) : string | undefined => ele.colonia,
+    clave: (ele: Operacions): string | undefined => ele.colonia,
     orden: 5,
   },
   {
     encabezado: 'Localidad',
-    clave: (ele: Operacions) : string | undefined => ele.localidad,
+    clave: (ele: Operacions): string | undefined => ele.localidad,
     orden: 6,
   },
   {
     encabezado: 'Municipio o Delegación',
-    clave: (ele: Operacions) : string | undefined => ele.municipioDelegacion,
+    clave: (ele: Operacions): string | undefined => ele.municipioDelegacion,
     orden: 7,
   },
   {
     encabezado: 'Entidad Federativa',
-    clave: (ele: Operacions) : string | undefined => ele.estado,
+    clave: (ele: Operacions): string | undefined => ele.estado,
     orden: 8,
   },
   {
     encabezado: 'País',
-    clave: (ele: Operacions) : string | undefined => ele.pais,
+    clave: (ele: Operacions): string | undefined => ele.pais,
     orden: 9,
   },
   {
     encabezado: 'Registro Federal de Contribuyente(RFC)',
-    clave: (ele: Operacions) : string | undefined => ele.rfc,
+    clave: (ele: Operacions): string | undefined => ele.rfc,
     orden: 10,
   },
   {
     encabezado: 'Domicilio fiscal del solicitante',
-    clave: (ele: Operacions) : string | undefined => ele.fiscalSolicitante,
+    clave: (ele: Operacions): string | undefined => ele.fiscalSolicitante,
     orden: 11,
   },
   {
     encabezado: 'Denominación o razón social',
-    clave: (ele: Operacions) : string | undefined => ele.razonSocial,
+    clave: (ele: Operacions): string | undefined => ele.razonSocial,
     orden: 12,
   },
 
   {
     encabezado: 'Estatus',
-    clave: (ele: Operacions) : string | undefined => (ele.estatus ? 'Activada' : 'Baja'),
+    clave: (ele: Operacions): string | undefined =>
+      ele.estatus ? 'Activada' : 'Baja',
     orden: 13,
   },
 ];
@@ -344,14 +383,14 @@ export const CONFIGURACION_OPERACIONES = [
 /**
  * Configuración de los servicios que define las columnas y su orden
  * para la visualización de datos en una tabla.
- * 
+ *
  * Cada objeto en la configuración representa una columna con las siguientes propiedades:
- * 
+ *
  * - `encabezado`: El título de la columna que se mostrará en la tabla.
  * - `clave`: Una función que toma un objeto de tipo `DatosDelServicios` y devuelve el valor
  *   correspondiente para esa columna.
  * - `orden`: Un número que indica el orden en el que se deben mostrar las columnas.
- * 
+ *
  * Propiedades:
  * - `Estatus`: Representa el estado del servicio.
  * - `Testado`: Representa el estado de prueba del servicio.
@@ -359,33 +398,33 @@ export const CONFIGURACION_OPERACIONES = [
  * - `Tipo de servicio`: Indica el tipo de servicio.
  */
 export const CONFIGURACION_SERVICIOS = [
-    {
-      encabezado: 'Estatus',
-      clave: (ele: DatosDelServicios):string | undefined => ele.desEstatus,
-      orden: 4,
-    },
-    {
-      encabezado: 'Testado',
-      clave: (ele: DatosDelServicios):string | undefined => ele.testado,
-      orden: 3,
-    },
-    {
-      encabezado: 'Descripción del servicio',
-      clave: (ele: DatosDelServicios):string | undefined => ele.descripcion,
-      orden: 1,
-    },
-    {
-      encabezado: 'Tipo de servicio',
-      clave: (ele: DatosDelServicios):string | undefined => ele.tipoDeServicio,
-      orden: 2,
-    }
+  {
+    encabezado: 'Estatus',
+    clave: (ele: DatosDelServicios): string | undefined => ele.desEstatus,
+    orden: 4,
+  },
+  {
+    encabezado: 'Testado',
+    clave: (ele: DatosDelServicios): string | undefined => ele.testado,
+    orden: 3,
+  },
+  {
+    encabezado: 'Descripción del servicio',
+    clave: (ele: DatosDelServicios): string | undefined => ele.descripcion,
+    orden: 1,
+  },
+  {
+    encabezado: 'Tipo de servicio',
+    clave: (ele: DatosDelServicios): string | undefined => ele.tipoDeServicio,
+    orden: 2,
+  },
 ];
 
 /**
  * Configuración de la planta que define las propiedades y su orden para la visualización de datos.
  * Cada objeto en la configuración representa una columna con un encabezado, una clave para obtener
  * el valor correspondiente de un objeto `Operacions`, y un orden para determinar su posición.
- * 
+ *
  * Propiedades:
  * - `encabezado`: Nombre de la columna que se mostrará en la interfaz de usuario.
  * - `clave`: Función que toma un objeto `Operacions` y devuelve el valor correspondiente para la columna.
@@ -395,68 +434,69 @@ export const CONFIGURACION_SERVICIOS = [
 export const CONFIGURACION_PLANTA = [
   {
     encabezado: 'Calle',
-    clave: (ele: Operacions) : string | undefined => ele.calle,
+    clave: (ele: Operacions): string | undefined => ele.calle,
     orden: 1,
   },
   {
     encabezado: 'Número Exterior',
-    clave: (ele: Operacions) : string | undefined => ele.numeroExterior,
+    clave: (ele: Operacions): string | undefined => ele.numeroExterior,
     orden: 2,
   },
   {
     encabezado: 'Número Interior',
-    clave: (ele: Operacions) : string | undefined => ele.numeroInterior,
+    clave: (ele: Operacions): string | undefined => ele.numeroInterior,
     orden: 3,
   },
   {
     encabezado: 'Código Postal',
-    clave: (ele: Operacions) : string | undefined => ele.codigoPostal,
+    clave: (ele: Operacions): string | undefined => ele.codigoPostal,
     orden: 4,
   },
   {
     encabezado: 'Colonia',
-    clave: (ele: Operacions) : string | undefined => ele.colonia,
+    clave: (ele: Operacions): string | undefined => ele.colonia,
     orden: 5,
   },
   {
     encabezado: 'Localidad',
-    clave: (ele: Operacions) : string | undefined => ele.localidad,
+    clave: (ele: Operacions): string | undefined => ele.localidad,
     orden: 6,
   },
   {
     encabezado: 'Municipio o Delegación',
-    clave: (ele: Operacions) : string | undefined => ele.municipioDelegacion,
+    clave: (ele: Operacions): string | undefined => ele.municipioDelegacion,
     orden: 7,
   },
   {
     encabezado: 'Estado o Distrito Federal',
-    clave: (ele: Operacions) : string | undefined => ele.estado,
+    clave: (ele: Operacions): string | undefined => ele.estado,
     orden: 8,
   },
   {
     encabezado: 'País',
-    clave: (ele: Operacions) : string | undefined => ele.pais,
+    clave: (ele: Operacions): string | undefined => ele.pais,
     orden: 9,
   },
   {
     encabezado: 'Registro Federal de Contribuyente(RFC)',
-    clave: (ele: Operacions) : string | undefined => ele.rfc,
+    clave: (ele: Operacions): string | undefined => ele.rfc,
     orden: 10,
   },
   {
     encabezado: 'Domicilio fiscal del solicitante',
-    clave: (ele: Operacions) : string | undefined => ele.fiscalSolicitante,
+    clave: (ele: Operacions): string | undefined => ele.fiscalSolicitante,
     orden: 11,
   },
   {
     encabezado: 'Denominación o razón social',
-    clave: (ele: Operacions) : string | undefined => ele.razonSocial,
+    clave: (ele: Operacions): string | undefined => ele.razonSocial,
     orden: 12,
   },
 
   {
     encabezado: 'Estatus',
-    clave: (ele: Operacions) : string | undefined => (ele.estatus ? 'Activada' : 'Baja'),
+    clave: (ele: Operacions): string | undefined =>
+      ele.estatus ? 'Activada' : 'Baja',
     orden: 13,
   },
 ];
@@ -464,64 +504,65 @@ export const CONFIGURACION_PLANTA = [
 /**
  * Configuración de empresas utilizada para definir las columnas de una tabla.
  * Cada objeto en el arreglo representa una columna con su encabezado, clave de acceso y orden.
- * 
+ *
  * @constant
  * @type {Array<{ encabezado: string, clave: (ele: Operacions) => string | undefined, orden: number }>}
- * 
+ *
  * @property {string} encabezado - El nombre de la columna que se mostrará en la tabla.
  * @property {(ele: Operacions) => string | undefined} clave - Una función que toma un objeto de tipo `Operacions` y devuelve el valor correspondiente para la columna.
  * @property {number} orden - El orden en el que se mostrará la columna en la tabla.
- * 
+ *
  */
 export const CONFIGURACION_EMPRESAS = [
   {
     encabezado: 'Registro Federal de Contribuyente',
-    clave: (ele: Operacions) : string | undefined => ele.rfc,
+    clave: (ele: Operacions): string | undefined => ele.rfc,
     orden: 1,
   },
   {
     encabezado: 'Razón social',
-    clave: (ele: Operacions) : string | undefined => ele.razonSocial,
+    clave: (ele: Operacions): string | undefined => ele.razonSocial,
     orden: 2,
   },
   {
     encabezado: 'Calle',
-    clave: (ele: Operacions) : string | undefined => ele.calle,
+    clave: (ele: Operacions): string | undefined => ele.calle,
     orden: 3,
   },
   {
     encabezado: 'Número Interior',
-    clave: (ele: Operacions) : string | undefined => ele.numeroInterior,
+    clave: (ele: Operacions): string | undefined => ele.numeroInterior,
     orden: 4,
   },
   {
     encabezado: 'Número Exterior',
-    clave: (ele: Operacions) : string | undefined => ele.numeroExterior,
+    clave: (ele: Operacions): string | undefined => ele.numeroExterior,
     orden: 5,
   },
   {
     encabezado: 'Código Postal',
-    clave: (ele: Operacions) : string | undefined => ele.codigoPostal,
+    clave: (ele: Operacions): string | undefined => ele.codigoPostal,
     orden: 6,
   },
   {
     encabezado: 'Municipio o Delegación',
-    clave: (ele: Operacions) : string | undefined => ele.municipioDelegacion,
+    clave: (ele: Operacions): string | undefined => ele.municipioDelegacion,
     orden: 7,
   },
   {
     encabezado: 'Estado o Distrito Federal',
-    clave: (ele: Operacions) : string | undefined => ele.estado,
+    clave: (ele: Operacions): string | undefined => ele.estado,
     orden: 8,
   },
   {
     encabezado: 'País',
-    clave: (ele: Operacions) : string | undefined => ele.pais,
+    clave: (ele: Operacions): string | undefined => ele.pais,
     orden: 9,
   },
   {
     encabezado: 'Estatus',
-    clave: (ele: Operacions) : string | undefined => (ele.estatus ? 'Activada' : 'Baja'),
+    clave: (ele: Operacions): string | undefined =>
+      ele.estatus ? 'Activada' : 'Baja',
     orden: 13,
   },
 ];
@@ -529,18 +570,18 @@ export const CONFIGURACION_EMPRESAS = [
 /**
  * Configuración de la tabla de bitácora utilizada para mostrar información
  * relacionada con las modificaciones realizadas en el sistema.
- * 
+ *
  * Cada objeto en la configuración representa una columna de la tabla con
  * las siguientes propiedades:
- * 
+ *
  * - `encabezado`: El título de la columna que se mostrará en la tabla.
  * - `clave`: Una función que toma un objeto de tipo `Bitacora` y devuelve
  *   el valor correspondiente para esa columna. Puede devolver un string
  *   o `undefined`.
  * - `orden`: El orden en el que se mostrará la columna en la tabla.
- * 
+ *
  * Propiedades de las columnas:
- * 
+ *
  * 1. **Tipo modificación**: Muestra el tipo de modificación realizada.
  * 2. **Fecha modificación**: Muestra la fecha en la que se realizó la modificación.
  * 3. **Valores anteriores**: Muestra los valores anteriores antes de la modificación.
@@ -549,17 +590,17 @@ export const CONFIGURACION_EMPRESAS = [
 export const CONFIGURACION_BITACORA_TABLA = [
   {
     encabezado: 'Tipo modificación',
-    clave: (ele: Bitacora) : string | undefined => ele.tipoModificion,
+    clave: (ele: Bitacora): string | undefined => ele.tipoModificion,
     orden: 1,
   },
   {
     encabezado: 'Fecha modificación',
-    clave: (ele: Bitacora) : string | undefined => ele.fetchModificion,
+    clave: (ele: Bitacora): string | undefined => ele.fetchModificion,
     orden: 2,
   },
   {
     encabezado: 'Valores anteriores',
-    clave: (ele: Bitacora) : string | undefined => ele.valoresAnteriores,
+    clave: (ele: Bitacora): string | undefined => ele.valoresAnteriores,
     orden: 3,
   },
   {
@@ -571,19 +612,20 @@ export const CONFIGURACION_BITACORA_TABLA = [
 
 /**
  * Configuración de la tabla de anexos utilizada en la aplicación.
- * 
+ *
  * Cada objeto en la configuración representa una columna de la tabla con las siguientes propiedades:
  * - `encabezado`: El título de la columna que se mostrará en la tabla.
  * - `clave`: Una función que toma un objeto de tipo `Anexo` y devuelve el valor correspondiente para esa columna.
  * - `orden`: El orden en el que se mostrará la columna en la tabla.
- * 
+ *
  * @constant
  * @type {Array<{ encabezado: string; clave: (ele: Anexo) => string | undefined; orden: number }>}
  */
 export const CONFIGURACION_ANEXOS_TABLA = [
   {
     encabezado: 'Fracción arancelaria del producto de exportación',
-    clave: (ele: Anexo) : string | undefined => ele.fraccionArancelariaExportacion,
+    clave: (ele: Anexo): string | undefined =>
+      ele.fraccionArancelariaExportacion,
     orden: 1,
   },
   {
@@ -593,18 +635,18 @@ export const CONFIGURACION_ANEXOS_TABLA = [
   },
   {
     encabezado: 'Tipo Fracción',
-    clave: (ele: Anexo) : string | undefined => ele.tipoFraccion,
+    clave: (ele: Anexo): string | undefined => ele.tipoFraccion,
     orden: 3,
   },
 ];
 
 /**
  * Configuración de los anexos para importación.
- * 
+ *
  * Este arreglo contiene objetos que definen la configuración de los anexos
  * utilizados en el proceso de importación. Cada objeto incluye información
  * sobre el encabezado, la clave asociada y el orden de los campos.
- * 
+ *
  * Propiedades de cada objeto:
  * - `encabezado`: Título del campo que se mostrará en la interfaz de usuario.
  * - `clave`: Función que toma un objeto de tipo `Anexo` y devuelve el valor
@@ -614,40 +656,41 @@ export const CONFIGURACION_ANEXOS_TABLA = [
 export const CONFIGURACION_ANEXOS_IMPORTACION = [
   {
     encabezado: 'Fracción arancelaria del producto de exportación',
-    clave: (ele: Anexo): string | undefined => ele.fraccionArancelariaExportacion,
+    clave: (ele: Anexo): string | undefined =>
+      ele.fraccionArancelariaExportacion,
     orden: 1,
   },
   {
     encabezado: 'Fracción arancelaria de la mercancía de importación',
-    clave: (ele: Anexo): string | undefined => ele.fraccionArancelariaImportacion,
+    clave: (ele: Anexo): string | undefined =>
+      ele.fraccionArancelariaImportacion,
     orden: 1,
   },
   {
     encabezado: 'Descripción',
-    clave: (ele: Anexo) : string | undefined => ele.descripcion,
+    clave: (ele: Anexo): string | undefined => ele.descripcion,
     orden: 2,
   },
   {
     encabezado: 'Tipo Fracción',
-    clave: (ele: Anexo) : string | undefined => ele.tipoFraccion,
+    clave: (ele: Anexo): string | undefined => ele.tipoFraccion,
     orden: 3,
   },
 ];
 
 /**
  * Constante que define el título del mensaje para el registro de una solicitud
- * de modificación del programa IMMEX. Específicamente, se refiere a la 
+ * de modificación del programa IMMEX. Específicamente, se refiere a la
  * modificación para dar de alta un domicilio de una planta, bodega o almacén.
  */
 export const TITULOMENSAJE =
   'Registro de solicitud de modificación programa IMMEX (Modificación Alta a domicilio de una planta, bodega o almacén)';
 
-
 /**
  * Texto constante que describe el mensaje mostrado al registrar una solicitud.
- * 
+ *
  * Este mensaje informa al usuario que la solicitud ha sido registrada con un número temporal,
- * el cual no tiene validez legal y sirve únicamente para identificar la solicitud. 
+ * el cual no tiene validez legal y sirve únicamente para identificar la solicitud.
  * También indica que un folio oficial será asignado cuando la solicitud sea firmada.
  */
 export const TEXTOS_REQUISITOS =
