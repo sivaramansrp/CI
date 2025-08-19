@@ -33,6 +33,8 @@ import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
 
+import { MontosDeInversionComponent } from '../montos-de-inversion/montos-de-inversion.component';
+
 /**
  * Componente para los federatarios y plantas
  * @export FederatariosYPlantasComponent
@@ -49,7 +51,8 @@ import { Validators } from '@angular/forms';
     InputFechaComponent,
     CatalogoSelectComponent,
     FormsModule,
-    NotificacionesComponent
+    NotificacionesComponent,
+    MontosDeInversionComponent
   ],
   templateUrl: './federatarios-y-plantas.component.html',
   styleUrl: './federatarios-y-plantas.component.scss',
@@ -145,6 +148,8 @@ export class FederatariosYPlantasComponent implements OnInit {
    * @property {FormGroup} federatariosFormGroup
    */
   public federatariosFormGroup!: FormGroup;
+
+  public mostrarMontosInversionPopup = false;
 
   /**
    * Emisor de eventos para los datos del formulario de federatarios.
@@ -279,10 +284,10 @@ export class FederatariosYPlantasComponent implements OnInit {
    * @param accionesPath
    */
   irAAcciones(accionesPath: string): void {
-    if (!this.plantasImmexSeleccionadoDatos.length){
-      this.abrirPlantasModal();
-      return;
-    }
+    // if (!this.plantasImmexSeleccionadoDatos.length){
+    //   this.abrirPlantasModal();
+    //   return;
+    // }
     this.router.navigate([accionesPath], {
       relativeTo: this.activatedRoute,
     });
@@ -432,5 +437,13 @@ export class FederatariosYPlantasComponent implements OnInit {
       txtBtnCancelar: '',
     };
   }
+
+abrirMontosInversion():void {
+  this.mostrarMontosInversionPopup = true;
+}
+
+cerrarMontosInversion():void {
+  this.mostrarMontosInversionPopup = false;
+}
 
 }

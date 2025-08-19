@@ -261,7 +261,8 @@ export class AnexoUnoComponent implements OnInit {
     };
     
     // Reinicia el formulario después de agregar el objeto
-    this.anexoUnoTablaLista.push(OBJECTO_IDX);
+    // this.anexoUnoTablaLista.push(OBJECTO_IDX);
+    this.anexoUnoTablaLista = [...this.anexoUnoTablaLista, OBJECTO_IDX];
     this.obtenerAnexoUnoDevolverLaLlamada.emit(this.anexoUnoTablaLista);
   }
 
@@ -285,7 +286,8 @@ export class AnexoUnoComponent implements OnInit {
     };
     this.anexoDosFormGroup.reset();
     // Reinicia el formulario después de agregar el objeto
-    this.anexoDosTablaLista.push(OBJECTO_IDX);
+    // this.anexoDosTablaLista.push(OBJECTO_IDX);
+    this.anexoDosTablaLista = [...this.anexoDosTablaLista, OBJECTO_IDX];
     this.obtenerAnexoDosDevolverLaLlamada.emit(this.anexoDosTablaLista);
   }
 

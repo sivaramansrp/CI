@@ -194,7 +194,8 @@ export class AnexoDosYTresComponent implements OnInit {
     if(OBJECTO_IDX.encabezadoFraccion.trim() === '' || OBJECTO_IDX.encabezadoDescripcion.trim() === '') {
       return; // No agregar si los campos están vacíos
     }
-    this.anexoDosTablaLista.push(OBJECTO_IDX);
+    // this.anexoDosTablaLista.push(OBJECTO_IDX);
+    this.anexoDosTablaLista = [...this.anexoDosTablaLista, OBJECTO_IDX];
     this.obtenerAnexoDosDevolverLaLlamada.emit(this.anexoDosTablaLista);
     this.anexoDosFormGroup.reset();
   }
@@ -254,7 +255,7 @@ export class AnexoDosYTresComponent implements OnInit {
     if(OBJECTO_IDX.encabezadoFraccion.trim() === '' || OBJECTO_IDX.encabezadoDescripcion.trim() === '') {
       return; // No agregar si los campos están vacíos
     }
-    this.anexoTresTablaLista.push(OBJECTO_IDX);
+    this.anexoTresTablaLista = [...this.anexoTresTablaLista, OBJECTO_IDX];
     this.obtenerAnexoTresDevolverLaLlamada.emit(this.anexoTresTablaLista);
     this.anexoTresFormGroup.reset();
   }

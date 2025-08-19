@@ -125,7 +125,7 @@
             <button class="btn btn-danger me-2"
             [disabled]="formularioDeshabilitado" (click)="eliminarDatos()">Eliminar</button>
             <button class="btn btn-primary" (click)="aggregarDatos()"
-            [disabled]="formularioDeshabilitado || federatariosFormGroup.invalid">
+            [disabled]="formularioDeshabilitado">
               Agregar
             </button>
           </div>
@@ -250,12 +250,20 @@
               <div class="p-2">
                 <button
                   class="btn btn-danger"
-                  (click)="irAAcciones('../montos-inversion-acciones')"
+                  (click)="abrirMontosInversion()"
                   [disabled]="formularioDeshabilitado "
                 >
                   Montos de inversión
                 </button>
               </div>
+              <ng-container *ngIf="mostrarMontosInversionPopup">
+                <div class="modal-overlay">
+                  <div class="modal-content">
+                    <app-montos-de-inversion></app-montos-de-inversion>
+                    <button class="btn btn-secondary mt-3" (click)="cerrarMontosInversion()">Cerrar</button>
+                  </div>
+                </div>
+              </ng-container>
               <div class="p-2">
                 <button
                   class="btn btn-danger"
