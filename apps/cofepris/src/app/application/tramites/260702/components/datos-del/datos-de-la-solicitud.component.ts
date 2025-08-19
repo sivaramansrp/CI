@@ -935,19 +935,16 @@ agregarMercanciaGrid(): void {
     paisDeOrigen: SELECTED_ROW.paisDeOrigen || '',
     paisDeProcedencia: SELECTED_ROW.paisDeProcedencia || '',
     usoEspecifico: SELECTED_ROW.usoEspecifico || '',
-
-    // Add other fields as needed
   });
 
-  // Open the modal
+  // abrir el modal
   if (this.modalElement) {
     const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
     MODAL_INSTANCE.show();
   }
 }
+  /** Maneja el evento de modificación de mercancias */
 onModificarMercancias(): void {
-
-
   if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
     this.abrirModal(0,false);
   } else if (this.filasSeleccionadas.size > 1) {

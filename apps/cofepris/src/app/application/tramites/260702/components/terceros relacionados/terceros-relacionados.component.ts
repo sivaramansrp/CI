@@ -261,9 +261,6 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
     this.solicitud260702Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
-        // map((seccionState: Solicitud260702State) => {
-        //   this.agregarDestinatarioState = seccionState;
-        // })
          map((seccionState) => {
           this.agregarDestinatarioState = seccionState;
           if (this.esFormularioSoloLectura && seccionState.tableData2) {
