@@ -338,20 +338,31 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Configura los formularios y obtiene los catálogos necesarios.
    */
   ngOnInit(): void {
+    this.getSolicitudesDataTabla();
+    this.getSolicitudesTabla();
     this.mercanciatable();
     this.getTratado();
     this.getPais();
     this.getUMC();
     this.getUnidadMedida();
     this.getTipoFactura();
-    this.getSolicitudesTabla();
-    this.getSolicitudesDataTabla();
 
     this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+          if (this.solicitudState) {
+            this.esMercanciaEnEdicion = true;
+            this.hayMercanciasDisponibles = true;
+            this.mercanciaDisponsiblesTablaDatos =
+              this.solicitudState.mercanciaDisponsiblesTablaDatos;
+            this.mercanciaSeleccionadasTablaData =
+              this.solicitudState.mercanciaSeleccionadasTablaData;
+          } else {
+            this.esMercanciaEnEdicion = false;
+            this.hayMercanciasDisponibles = false;
+          }
         })
       )
       .subscribe();

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   DatosDeTablaSeleccionados,
   DatosSolicitudFormState,
@@ -44,7 +44,6 @@ import { Tramite260216Query } from '../../estados/tramite260216Query.query';
   styleUrl: './contenedor-de-datos-solicitud.component.scss',
 })
 export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
-
   /**
    * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
    */
@@ -140,6 +139,29 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
   /**
+   * Lista de elementos obligatorios dentro del formulario.
+   *
+   * Contiene los nombres de los campos que deben estar presentes y validados,
+   * tales como `correoElectronico` y `manifesto`.
+   */
+  elementosRequeridos: string[] = ['correoElectronico', 'manifesto'];
+
+  /**
+   * @property {DatosDeLaSolicitudComponent} datosDeLaSolicitudComponent
+   * @description
+   * Referencia al componente hijo `DatosDeLaSolicitudComponent` obtenida
+   * mediante el decorador `@ViewChild`.
+   *
+   * Esta propiedad permite acceder a los métodos públicos y propiedades
+   * del componente hijo, por ejemplo para validar formularios o recuperar datos.
+   *
+   * > Nota: Angular inicializa esta referencia después de que la vista
+   * ha sido renderizada, normalmente en el ciclo de vida `ngAfterViewInit`.
+   */
+  @ViewChild(DatosDeLaSolicitudComponent)
+  datosDeLaSolicitudComponent!: DatosDeLaSolicitudComponent;
+
+  /**
    * @constructor
    * @description
    * Inicializa el componente con las dependencias necesarias.
@@ -171,6 +193,26 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+  }
+
+  /**
+   * @description
+   * Método que se encarga de validar el formulario contenido en
+   * el componente `DatosDeLaSolicitudComponent`.
+   *
+   * Utiliza el método `formularioSolicitudValidacion()` del componente hijo
+   * para comprobar si el formulario es válido.
+   * En caso de que el hijo no esté inicializado o devuelva `null/undefined`,
+   * se retorna `false` por defecto.
+   *
+   * @returns {boolean}
+   * - `true`: si el formulario es válido.
+   * - `false`: si el formulario no es válido o el componente hijo aún no está disponible.
+   */
+  validarContenedor(): boolean {
+    return (
+      this.datosDeLaSolicitudComponent?.formularioSolicitudValidacion() ?? false
+    );
   }
 
   /**

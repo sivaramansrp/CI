@@ -130,6 +130,10 @@ export interface DatosComunesState {
    * El valor de registrosQue2.
    */
   registrosQue2: string;
+   /**
+   * El valor de registrosQue3.
+   */
+  registrosQue3: string;
   
   /**
    * El valor de momentoIngresar.
@@ -347,6 +351,11 @@ export function createInitialState(): DatosComunesState {
       * El valor de registrosQue2.
       */
      registrosQue2: '',
+
+      /**
+      * El valor de registrosQue3.
+      */
+     registrosQue3: '',
      
      /**
       * El valor de momentoIngresar.
@@ -734,6 +743,17 @@ public setRegistrosQue2(registrosQue2: string): void {
     this.update((state) => ({
         ...state,
         registrosQue2,
+    }));
+}
+
+/**
+ * Establece el estado de registrosQue2.
+ * @param registrosQue3 - El valor de registrosQue2.
+ */
+public setRegistrosQue3(registrosQue3: string): void {
+    this.update((state) => ({
+        ...state,
+        registrosQue3,
     }));
 }
 

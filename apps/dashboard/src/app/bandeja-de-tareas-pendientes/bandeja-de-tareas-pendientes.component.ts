@@ -77,7 +77,7 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
         orden: 2,
       },
       {
-        encabezado: 'Nombre de la tarea',
+        encabezado: 'Nombre tarea',
         clave: (artículo:BandejaDeTareasPendientes) => artículo.nombreDeLaTarea,
         orden: 3,
       },
@@ -105,6 +105,16 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
         encabezado: 'Origin',
         clave: (artículo:BandejaDeTareasPendientes) => artículo.origin,
         orden: 8,
+      },
+      {
+        encabezado: 'Fecha inicio trámite',
+        clave: (artículo:BandejaDeTareasPendientes) => artículo.fechaInicioTramite,
+        orden: 9,
+      },
+      {
+        encabezado: 'Días hábiles transcurridos',
+        clave: (artículo:BandejaDeTareasPendientes) => artículo.diasHabilesTranscurridos,
+        orden: 10,
       }
     ];
   /**

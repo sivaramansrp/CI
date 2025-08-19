@@ -16,16 +16,18 @@
             </div>
             <div class="row margin-top">
                 <ul class="nav nav-tabs justify-content-center">
-                    <li [ngClass]="indice === 1 ? 'active' : ''">
+                    <li *ngIf="tieneOpcion('GENERAR_DICTAMEN')" [ngClass]="indice === 1 ? 'active' : ''">
                         <a data-toggle="tab" (click)="seleccionaTab(1)" (keydown.enter)="seleccionaTab(1)"
                             (keydown.space)="seleccionaTab(1)" role="button" tabindex="0">Dictamen</a>
                     </li>
-                    <li [ngClass]="indice === 2 ? 'active' : ''">
+
+                    <li *ngIf="tieneOpcion('GENERAR_REQUERIMIENTO')" [ngClass]="indice === 2 ? 'active' : ''">
                         <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)"
                             (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">Requerimiento de
                             información</a>
                     </li>
-                    <li [ngClass]="indice === 3 ? 'active' : ''">
+
+                    <li *ngIf="tieneOpcion('SOLICITAR_OPINION')" [ngClass]="indice === 3 ? 'active' : ''">
                         <a data-toggle="tab" (click)="seleccionaTab(3)" (keydown.enter)="seleccionaTab(3)"
                             (keydown.space)="seleccionaTab(3)" role="button" tabindex="3">Solicitar opinión</a>
                     </li>
@@ -33,7 +35,7 @@
                 <ng-container>
                     @switch (indice) {
                     @case (1) {
-                    <app-generar-dictamen botonDeCancelar="Cancelar" botonGuardar="Guardar y Firmar"
+                    <app-generar-dictamen [isAntecedentes]="false" [conformidad]="conformidadDictamen"
                         (enviarEvento)="enviarEvento($event)"></app-generar-dictamen>
                     }
                     @case (2) {
@@ -45,7 +47,7 @@
                                 (keydown.space)="seleccionaTabRequerimiento(1)" role="button" tabindex="0">Capturar
                                 requerimiento</a>
                         </li>
-                        <li [ngClass]="indiceDictamen === 2 ? 'active' : ''">
+                        <li [ngClass]="{'active': indiceDictamen === 2,'disabled': deshabilitarSolicitarDocumentos}">
                             <a data-toggle="tab" (click)="seleccionaTabRequerimiento(2)"
                                 (keydown.enter)="seleccionaTabRequerimiento(2)"
                                 (keydown.space)="seleccionaTabRequerimiento(2)" role="button" tabindex="2">Seleccionar
@@ -62,7 +64,7 @@
                         }
                         }
                     </ng-container>
-                    <div class="d-flex justify-content-lg-end mt-3">
+                    <div class="d-flex justify-content-lg-end h3">
                         <button type="button" class="btn btn-default ms-2" (click)="cancelar()">Cancelar</button>
                         <button class="btn  btn-primary ms-2" type="button" (click)="continuar()">Continuar</button>
                     </div>
@@ -89,8 +91,12 @@
         </div>
 
         <div class="row mb-5 mt-5">
-            <app-reviewers-tabs [viewChild]="viewChild" [tramite]="tramite"
-                (viewChildcambioDePestana)="viewChildcambioDePestana($event)"></app-reviewers-tabs>
+            <app-reviewers-tabs [viewChild]="viewChild" [tramite]="tramite" [documentos]="documentosSolicitud"
+                [tareasSolicitud]="tareasSolicitud" [dictamenes]="dictamenesSolicitud" 
+                [requerimientos]="requerimientosSolicitud" [acusesResolucion]="acusesResolucion"
+                (viewChildcambioDePestana)="viewChildcambioDePestana($event)"
+                (tabSeleccionado)="onTabSeleccionado($event)">
+            </app-reviewers-tabs>
         </div>
     </div>
 </div>

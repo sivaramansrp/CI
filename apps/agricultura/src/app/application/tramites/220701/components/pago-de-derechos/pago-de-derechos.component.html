@@ -7,7 +7,7 @@
         <div class="col-md-8 form-group">
           <label class="form-label" for="coordenadas">Exento de pago:</label>
           <app-input-radio [radioOptions]="exentoPagoRadio" [selectedValue]="exentoPagoValor" [isRequired]="true"
-            [layout]="'vertical'" formControlName="exentoPago" [required]="true"
+            [layout]="'vertical'" formControlName="exentoPago" [required]="true" [disabled]="esFormularioSoloLectura"
             (valueChange)="cambioValorRadio('exentoPago', $event.toString())"></app-input-radio>
         </div>
       </div>
@@ -32,7 +32,7 @@
         </div>
 
         <div class="col-md-4 form-group">
-          <label class="form-label" for="cadenaDependencia">Cadena de la dependencia*:</label>
+          <label class="form-label" for="cadenaDependencia">Cadena de la dependencia:</label>
           <input type="text" id="cadenaDependencia" class="form-control" formControlName="cadenaDependencia"
             [required]="true" [disabled]="true || esFormularioSoloLectura"/>
         </div>
@@ -40,7 +40,8 @@
         <div class="col-md-4">
           <div class="form-group">
             <app-catalogo-select [catalogo]="banco.catalogos" [label]="banco.labelNombre"
-              [placeholder]="banco.primerOpcion" [isDisabled]="true || esFormularioSoloLectura" formControlName="banco"></app-catalogo-select>
+              [placeholder]="banco.primerOpcion" [isDisabled]="true || esFormularioSoloLectura" formControlName="banco"
+              (change)="setValoresStore(pagosDeDerechosForm, 'banco')"></app-catalogo-select>
           </div>
         </div>
       </div>
@@ -53,11 +54,11 @@
 
         <div class="col-md-4">
           <input-fecha 
-            [datos]="fechaInicioInput" 
+            [datos]="fechaFinalInput" 
             formControlName="fechaInicio" 
             [setFecha]="pagosDeDerechosForm.get('fechaInicio')?.value" 
             [isDisabled]="esFormularioSoloLectura" 
-            (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
+            (valorCambiado)="cambioFechaInicio($event)"></input-fecha>
         </div>
 
         <div class="col-md-4 form-group">
@@ -70,7 +71,7 @@
 
       <div class="d-flex justify-content-end mt-5">
         <div class="btn-group">
-          <button class="btn btn-danger mx-3" [disabled]="esFormularioSoloLectura" type="button">
+          <button class="btn btn-danger mx-3" [disabled]="consultaState?.readonly || esFormularioSoloLectura" type="button" (click)="borrarDatosPago()">
             Borrar datos del pago
           </button>
         </div>
@@ -84,11 +85,11 @@
           <label class="form-label" for="coordenadas">Exento de pago:</label>
           <app-input-radio [radioOptions]="exentoPagoRevisionRadio" [selectedValue]="exentoPagoRevisionValor"
             [isRequired]="true" [layout]="'vertical'" formControlName="exentoPagoRevision" [required]="true"
-            [disabled]="true"
+            [disabled]="esFormularioSoloLectura"
             (valueChange)="cambioValorRadioRevision('exentoPagoRevision', $event.toString())"></app-input-radio>
         </div>
       </div>
-      <div class="row">
+      <div class="row p-2">
         <div class="col-md-4">
           <ng-container *ngIf="exentoPagoRevisionValor  === 'Si'; else noTrack">
             <app-catalogo-select [catalogo]="justificacionCatalogo" formControlName="justificacionRevision"
@@ -113,9 +114,12 @@
           formControlName="cadenaDependenciaRevision" [disabled]="true || esFormularioSoloLectura"/>
       </div>
 
-      <div class="col-md-4 form-group">
-        <label class="form-label" for="bancoRevision"> Banco:</label>
-        <input type="text" id="bancoRevision" class="form-control" formControlName="bancoRevision" [disabled]="esFormularioSoloLectura"/>
+      <div class="col-md-4">
+        <div class="form-group">
+          <app-catalogo-select [catalogo]="bancoRevision.catalogos" [label]="bancoRevision.labelNombre"
+            [placeholder]="bancoRevision.primerOpcion" [isDisabled]="true || esFormularioSoloLectura" formControlName="bancoRevision"
+            (change)="setValoresStore(pagosDeDerechosForm, 'bancoRevision')"></app-catalogo-select>
+        </div>
       </div>
 
       <div class="col-md-4 form-group">
@@ -124,8 +128,11 @@
       </div>
 
       <div class="col-md-4 form-group">
-        <label class="form-label" for="fechaInicioRevision">Fecha de pago:</label>
-        <input type="text" id="fechaInicioRevision" class="form-control" formControlName="fechaInicioRevision" [disabled]="esFormularioSoloLectura"/>
+          <input-fecha [datos]="fechaFinalInput" 
+            formControlName="fechaInicioRevision" 
+            [setFecha]="pagosDeDerechosForm.get('fechaInicioRevision')?.value" 
+            [isDisabled]="esFormularioSoloLectura" 
+            (valorCambiado)="cambioFechaInicioRevision($event)"></input-fecha>
       </div>
 
       <div class="col-md-4 form-group">

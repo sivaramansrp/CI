@@ -24,7 +24,7 @@ export class CancelarSolicitudComponent implements OnInit, OnDestroy {
 
   // Etiquetas que se muestran en la interfaz de usuario
   public fechasCancelaranLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'Fechas dentro de periodo',
+    tituluDeLaIzquierda: 'Fechas dentro del periodo',
     derecha: 'Fechas seleccionadas para cancelacion del servicio',
   };
 
@@ -210,7 +210,7 @@ Finalmente, actualiza el estado global llamando a establecerFormaValida en el st
       ],
       descripcion: [
         { value: this.cancelarSolicitudFormState?.descripcion, disabled: false },
-        [Validators.required]
+        [Validators.required, Validators.maxLength(450)]
       ],
       fechasSeleccionadas: this.fb.group({
         selectedFechas: [

@@ -583,7 +583,7 @@ export const UNIDAD_TABLA_CONFIG: UnidadTablaConfig = {
      * Configuración para la columna de número de placas.
      */
     {
-      encabezado: 'Número de Placas',
+      encabezado: 'Número de placas',
       clave: (item: UnidadTabla) => item.numeroPlaca,
       orden: 5,
     },
@@ -591,7 +591,7 @@ export const UNIDAD_TABLA_CONFIG: UnidadTablaConfig = {
      * Configuración para la columna de país emisor.
      */
     {
-      encabezado: 'País Emisor',
+      encabezado: 'País emisor',
       clave: (item: UnidadTabla) => item.paisEmisor,
       orden: 5,
     },

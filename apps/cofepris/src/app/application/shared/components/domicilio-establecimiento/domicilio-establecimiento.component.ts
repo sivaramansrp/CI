@@ -487,6 +487,11 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Lista de rangos de días seleccionarOrigenDelPaisCuatro.
    */
   seleccionarOrigenDelPaisCuatro: string[] = this.crosListaDePaises;
+
+  /**
+   * Lista de rangos de días seleccionarOrigenDelPaisCinco.
+   */
+  seleccionarOrigenDelPaisCinco: string[] = this.crosListaDePaises;
   /**
    * Instancia del Modal de Bootstrap utilizada para controlar la visualización y el comportamiento del cuadro de diálogo modal
    * dentro del componente DomicilioEstablecimientoComponent.
@@ -724,6 +729,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
         descripcion_Scian: this.formAgente.get('claveDescripcionModal')?.value,
       };
       this.nicoTablaDatos.push(NUEVO_DATO);
+      this.nicoTablaDatos = [...this.nicoTablaDatos]; 
       this.formAgente.reset();
       this.cerrarModalScian();
     }
@@ -743,27 +749,23 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   readonly paisDeProcedenciaBotones = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[0].agregar('t'),
+      class: 'btn-default uno',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('uno')})].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-primary',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[0].agregar(''),
+      class: 'btn-primary uno',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('uno')})].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-primary',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[0].quitar(''),
+      class: 'btn-primary uno',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('uno')})].quitar(''),
     },
     {
       btnNombre: 'Restar todos',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[0].quitar('t'),
+      class: 'btn-default uno',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('uno')})].quitar('t'),
     },
   ];
 
@@ -773,27 +775,23 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   readonly paisDeProcedenciaBotonesDuos = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[1].agregar('t'),
+      class: 'btn-default duos',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('duos')})].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-primary',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[1].agregar(''),
+      class: 'btn-primary duos',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('duos')})].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-primary',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[1].quitar(''),
+      class: 'btn-primary duos',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('duos')})].quitar(''),
     },
     {
       btnNombre: 'Restar todos',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[1].quitar('t'),
+      class: 'btn-default duos',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('duos')})].quitar('t'),
     },
   ];
 
@@ -803,27 +801,23 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   readonly paisDeProcedenciaBotonesTres = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[2].agregar('t'),
+      class: 'btn-default tres',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('tres')})].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-primary',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[2].agregar(''),
+      class: 'btn-primary tres',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('tres')})].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-primary',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[2].quitar(''),
+      class: 'btn-primary tres',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('tres')})].quitar(''),
     },
     {
       btnNombre: 'Restar todos',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[2].quitar('t'),
+      class: 'btn-default tres',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('tres')})].quitar('t'),
     },
   ];
   /**
@@ -832,27 +826,49 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   readonly paisDeProcedenciaBotonesCuatro = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[3].agregar('t'),
+      class: 'btn-default cuatro',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cuatro')})].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-primary',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[3].agregar(''),
+      class: 'btn-primary cuatro',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cuatro')})].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-primary',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[3].quitar(''),
+      class: 'btn-primary cuatro',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cuatro')})].quitar(''),
     },
     {
       btnNombre: 'Restar todos',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[3].quitar('t'),
+      class: 'btn-default cuatro',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cuatro')})].quitar('t'),
+    },
+  ];
+
+  /**
+   * Botones de acción disponibles para gestionar las listas de fechas.
+   */
+  readonly paisDeProcedenciaBotonesCinco = [
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-default cinco',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cinco')})].agregar('t'),
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-primary cinco',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cinco')})].agregar(''),
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-primary cinco',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cinco')})].quitar(''),
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default cinco',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cinco')})].quitar('t'),
     },
   ];
 
@@ -978,8 +994,17 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
   agregarMercancia(): void {
     if (this.formMercancias.valid) {
-      const NUEVA_MERCANCIA = { ...this.formMercancias.getRawValue() };
+      const RAW = this.formMercancias.getRawValue();
+    
+      const NUEVA_MERCANCIA: MercanciasInfo = {
+      ...RAW,
+      cantidadUmt: RAW.cantidadUMT,
+      cantidadUmc: RAW.cantidadUMC,
+      umc: RAW.UMC,
+      unidadMedidaTarifa: RAW.UMT,
+    };
       this.listaMercancias.push(NUEVA_MERCANCIA);
+      this.mercanciasTablaDatos = [...this.listaMercancias];
       this.formMercancias.reset();
     }
   }

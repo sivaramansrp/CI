@@ -19,7 +19,7 @@ export interface Tramite130202State {
   clasificacion: string;
   filaSeleccionada: PartidasDeLaMercanciaModelo[];
   cantidadPartidasDeLaMercancia: string;
-  valorPartidaUSDPartidasDeLaMercancia: number;
+  valorPartidaUSDPartidasDeLaMercancia: string;
   descripcionPartidasDeLaMercancia: string;
   valorFacturaUSD: string;
   bloque: string;
@@ -50,7 +50,7 @@ export function createInitialState(): Tramite130202State {
     regimen: '',
     clasificacion: '',
     cantidadPartidasDeLaMercancia: '',
-    valorPartidaUSDPartidasDeLaMercancia: 0,
+    valorPartidaUSDPartidasDeLaMercancia: '',
     descripcionPartidasDeLaMercancia: '',
     valorFacturaUSD: '',
     bloque: '',

@@ -1,3 +1,7 @@
+import {
+  ColumnasTabla,
+  SeleccionadasTabla,
+} from '../../tramites/110221/models/registro.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { AgregarDatosProductorFormulario } from '../../tramites/110223/models/certificado-origen.model';
 import { Injectable } from '@angular/core';
@@ -74,6 +78,8 @@ export interface Solicitud110223State {
   nombreRepresentanteLegalExportador: string;
   empresa: string;
   cargo: string;
+  mercanciaSeleccionadasTablaData: SeleccionadasTabla[];
+  mercanciaDisponsiblesTablaDatos: ColumnasTabla[];
 }
 
 /**
@@ -141,6 +147,8 @@ export function createInitialState(): Solicitud110223State {
       numeroRegistroFiscal: '',
       fax: '',
     },
+    mercanciaSeleccionadasTablaData: [],
+    mercanciaDisponsiblesTablaDatos: [],
   };
 }
 
@@ -807,6 +815,14 @@ export class Tramite110223Store extends Store<Solicitud110223State> {
         fax,
       },
     }));
+  }
+
+  setMercanciaSeleccionadasTablaData(data: SeleccionadasTabla[]): void {
+    this.update({ mercanciaSeleccionadasTablaData: data });
+  }
+
+  setMercanciaDisponsiblesTablaDatos(data: ColumnasTabla[]): void {
+    this.update({ mercanciaDisponsiblesTablaDatos: data });
   }
 
   /**

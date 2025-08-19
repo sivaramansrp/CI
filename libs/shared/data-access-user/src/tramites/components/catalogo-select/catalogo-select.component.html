@@ -2,9 +2,9 @@
   <label
     for="{id}"
     class="form-label text-left"
-    [ngClass]="{ 'col-sm-3': isInline }"
+    [ngClass]="{ 'col-sm-3': isInline, 'mb-5': isLabelBottomSpace }"
     *ngIf="label"
-    >{{ label }}@if(required){<span class="require">*</span>}: @if(tooltipQuestionCircle){
+    >{{ label }}@if(required){<span class="require">*</span>}@if (showSemiColon) {<span>:</span>}@if(tooltipQuestionCircle){
     <span
       tooltip="{{
         tooltipQuestionCircleText ? tooltipQuestionCircleText : label

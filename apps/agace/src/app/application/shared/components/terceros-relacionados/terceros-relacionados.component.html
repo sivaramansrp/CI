@@ -17,6 +17,7 @@
         <ng-titulo titulo="Enlace Operativo" />
         <h5 class="mb-3">Enlace Operativo</h5>
         <app-tabla-dinamica
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
             [configuracionTabla]="configuracionTabla"
             [datos]="enlaceOperativoDatos"
             [tipoSeleccionTabla]="checkbox"
@@ -38,6 +39,7 @@
         <ng-titulo titulo="Personas para oir y recibir notificaciones" />
         <h5 class="mb-3">Personas para oir y recibir notificaciones</h5>
         <app-tabla-dinamica
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
             [configuracionTabla]="personasConfiguracionTabla"
             [datos]="personaParas">
         </app-tabla-dinamica>
@@ -70,7 +72,7 @@
             </div>
             <div class="col-md-8">
                 <div class="btn-group">
-                  <button class="btn btn-default" type="button">Buscar</button>
+                  <button class="btn btn-default" type="button" (click)="buscarRFC()">Buscar</button>
                 </div>
               </div>
           </div>
@@ -150,7 +152,7 @@
             <div class="col-md-8">
               <div class="form-group">
                 <label class="form-label" for="cuidad"
-                  >Ciudad o Estado de Residencia</label
+                  >Ciudad o Estado de Residencia:</label
                 >
                 <input
                   class="form-control"
@@ -167,7 +169,7 @@
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label class="form-label" for="cargo">Cargo o Puesto</label>
+                <label class="form-label" for="cargo">Cargo o Puesto:</label>
                 <input
                   class="form-control"
                   id="cargo"
@@ -235,7 +237,7 @@
           </div>
         </form>
       </div>
-      <div class="modal-footer d-flex justify-content-end">
+      <div class="modal-footer d-flex justify-content-end mt-3 mb-3">
         <button type="button" class="btn btn-primary" (click)="guardarDatosFormulario()">
           Aceptar
         </button>
