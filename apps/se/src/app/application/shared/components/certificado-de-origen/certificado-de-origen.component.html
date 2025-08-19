@@ -332,7 +332,7 @@
             (valorCambiado)="cambioFechaInicio($event)" (change)="setValoresStore('formCertificado','fechaInicioInput','setFormCertificadoGenric')"></input-fecha>
         </div>
         <div class="col-md-4 form-field">
-            <input-fecha [datos]="fechaFinalInput" [setFecha]="formCertificado.get('fechaFinalInput')?.value" (valorCambiado)="cambioFechaFinal($event)" [isDisabled]="esFormularioSoloLectura"
+            <input-fecha [datos]="fechaFin ? fechaFinInput : fechaFinalInput" [setFecha]="formCertificado.get('fechaFinalInput')?.value" (valorCambiado)="cambioFechaFinal($event)" [isDisabled]="esFormularioSoloLectura"
              (change)="setValoresStore('formCertificado','fechaFinalInput','setFormCertificadoGenric')"></input-fecha>
         </div>
 
