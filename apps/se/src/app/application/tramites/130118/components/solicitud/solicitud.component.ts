@@ -235,7 +235,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   */
   obtenerDataSolicitud(): void {
     const FOLIO = '0201300101820251119000004';
-    this.consultaSolicitudService.getCriterios(FOLIO).subscribe({
+    this.consultaSolicitudService.getDetalleSolicitud(FOLIO).subscribe({
       next: (response) => {
         if (response?.codigo === '00' && response?.datos) {
           this.llenarFormularioDesdeRespuesta(response.datos);
