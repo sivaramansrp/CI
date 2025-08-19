@@ -100,16 +100,16 @@
       <form [formGroup]="formularioResiduo">
         <div class="row mb-3">
           <div class="col-md-4">
-            <app-catalogo-select [catalogo]="etiquetasForm.arancelaria" [label]="'Fracción arancelaria'" [required]="true" formControlName="fraccionArancelaria" (change)="actualizarCampoFormularioResiduo('fraccionArancelaria')"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="etiquetasForm.arancelaria" [label]="'Fracción arancelaria'" [required]="true" formControlName="fraccionArancelaria" (change)="actualizarCampoFormularioResiduo('fraccionArancelaria'); onFraccionArancelariaChange()"></app-catalogo-select>
           </div>
           <div class="col-md-4">
-            <app-catalogo-select [catalogo]="etiquetasForm.nico" [label]="'N I C O'" [required]="true" formControlName="nico" (change)="actualizarCampoFormularioResiduo('nico')"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="etiquetasForm.nico" [label]="'N I C O'" [required]="true" formControlName="nico" (change)="actualizarCampoFormularioResiduo('nico'); onNicoChange()"></app-catalogo-select>
           </div>
         </div>
         <div class="row mb-3">
           <div class="col-md-8">
             <label class="form-label">Acotación*:</label>
-            <textarea class="form-control textarea-auto-height" cols="50" rows="5" formControlName="acotacion" (change)="actualizarCampoFormularioResiduo('acotacion')"></textarea>
+            <textarea class="form-control textarea-auto-height" cols="50" rows="8" formControlName="acotacion" (change)="actualizarCampoFormularioResiduo('acotacion')"></textarea>
           </div>
         </div>
         <div class="row mb-3">

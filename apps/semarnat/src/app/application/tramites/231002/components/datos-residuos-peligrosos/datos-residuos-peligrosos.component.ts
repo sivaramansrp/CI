@@ -130,6 +130,58 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     }
   ];
 
+  /** Datos de fracción arancelaria con sus NICOs relacionados */
+  private readonly fraccionArancelariaData = [
+    {
+      fraccionId: 1, // Corresponde al ID en el JSON de arancelaria
+      fraccionDescripcion: 'Polietileno con densidad superior o igual a 0,94',
+      nicos: [
+        {
+          nicoId: 'NICO001',
+          nicoDescripcion: 'Polietileno alta densidad granulado',
+          acotacion: 'Material plástico granulado de alta densidad utilizado para fabricación de envases y productos moldeados'
+        },
+        {
+          nicoId: 'NICO002',
+          nicoDescripcion: 'Polietileno alta densidad en polvo',
+          acotacion: 'Material plástico en polvo de alta densidad para procesos de extrusión y moldeo'
+        }
+      ]
+    },
+    {
+      fraccionId: 2,
+      fraccionDescripcion: 'Policarbonatos en formas primarias',
+      nicos: [
+        {
+          nicoId: 'NICO003',
+          nicoDescripcion: 'Policarbonato transparente',
+          acotacion: 'Resina de policarbonato transparente de alta resistencia para aplicaciones ópticas y estructurales'
+        },
+        {
+          nicoId: 'NICO004',
+          nicoDescripcion: 'Policarbonato reforzado',
+          acotacion: 'Policarbonato con fibra de vidrio para aplicaciones de alta resistencia mecánica'
+        }
+      ]
+    },
+    {
+      fraccionId: 3,
+      fraccionDescripcion: 'Los demás copolímeros de acrilonitrilo-butadieno-estireno',
+      nicos: [
+        {
+          nicoId: 'NICO005',
+          nicoDescripcion: 'ABS natural',
+          acotacion: 'Copolímero ABS en estado natural para moldeo por inyección y extrusión'
+        },
+        {
+          nicoId: 'NICO006',
+          nicoDescripcion: 'ABS ignífugo',
+          acotacion: 'Copolímero ABS con propiedades retardantes al fuego para aplicaciones eléctricas'
+        }
+      ]
+    }
+  ];
+
   /** Datos para la tabla dinámica */
   materiasPrimasTabla: MateriaPrima[] = [];
 
@@ -182,8 +234,9 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     this.crearFormularioResiduo();
     this.recuperarValoresDesdeStore();
     
-    // Inicialmente dropdown vacío hasta que se haga búsqueda
+    // Inicialmente dropdowns vacíos hasta que se haga búsqueda/selección
     this.etiquetasForm.nombre = [];
+    this.etiquetasForm.nico = [];
   }
 
   /**
@@ -364,6 +417,71 @@ export class DatosResiduosPeligrososComponent implements OnInit {
       
       // Actualizar el store
       this.formularioStore.actualizarFormularioDatos(this.formularioDatos.getRawValue());
+    }
+  }
+
+  /**
+   * Maneja el cambio en el dropdown de Fracción Arancelaria
+   */
+  onFraccionArancelariaChange(): void {
+    const FRACCION_SELECCIONADA = this.formularioResiduo.get('fraccionArancelaria')?.value;
+    
+    if (FRACCION_SELECCIONADA) {
+      // Convertir a número si viene como string para asegurar la comparación
+      const FRACCION_ID = typeof FRACCION_SELECCIONADA === 'string' ? parseInt(FRACCION_SELECCIONADA, 10) : FRACCION_SELECCIONADA;
+      
+      // Buscar la fracción seleccionada y cargar sus NICOs
+      const FRACCION_DATA = this.fraccionArancelariaData.find(f => f.fraccionId === FRACCION_ID);
+      
+      if (FRACCION_DATA) {
+        // Actualizar las opciones del dropdown NICO
+        this.etiquetasForm.nico = FRACCION_DATA.nicos.map((nico, index) => ({
+          id: index + 1,
+          descripcion: `${nico.nicoId} - ${nico.nicoDescripcion}`
+        }));
+      } else {
+        // Limpiar NICO si no se encuentra la fracción
+        this.etiquetasForm.nico = [];
+      }
+      
+      // Limpiar los campos dependientes
+      this.formularioResiduo.get('nico')?.setValue('');
+      this.formularioResiduo.get('acotacion')?.setValue('');
+    } else {
+      // Limpiar todo si no hay fracción seleccionada
+      this.etiquetasForm.nico = [];
+      this.formularioResiduo.get('nico')?.setValue('');
+      this.formularioResiduo.get('acotacion')?.setValue('');
+    }
+  }
+
+  /**
+   * Maneja el cambio en el dropdown de NICO
+   */
+  onNicoChange(): void {
+    const FRACCION_SELECCIONADA = this.formularioResiduo.get('fraccionArancelaria')?.value;
+    const NICO_SELECCIONADO = this.formularioResiduo.get('nico')?.value;
+    
+    if (FRACCION_SELECCIONADA && NICO_SELECCIONADO) {
+      // Convertir a número si viene como string
+      const FRACCION_ID = typeof FRACCION_SELECCIONADA === 'string' ? parseInt(FRACCION_SELECCIONADA, 10) : FRACCION_SELECCIONADA;
+      
+      // Buscar la fracción y el NICO seleccionados
+      const FRACCION_DATA = this.fraccionArancelariaData.find(f => f.fraccionId === FRACCION_ID);
+      
+      if (FRACCION_DATA) {
+        // El NICO_SELECCIONADO viene como índice del dropdown, así que restamos 1
+        const NICO_INDEX = NICO_SELECCIONADO - 1;
+        const NICO_DATA = FRACCION_DATA.nicos[NICO_INDEX];
+        
+        if (NICO_DATA) {
+          // Auto-llenar el campo de acotación
+          this.formularioResiduo.get('acotacion')?.setValue(NICO_DATA.acotacion);
+        }
+      }
+    } else {
+      // Limpiar acotación si no hay selección completa
+      this.formularioResiduo.get('acotacion')?.setValue('');
     }
   }
 
