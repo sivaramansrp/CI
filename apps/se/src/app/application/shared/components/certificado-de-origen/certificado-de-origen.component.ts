@@ -339,8 +339,8 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
    * @command
    * Utilice este método para inicializar el formulario antes de interactuar con los datos del certificado.
    */
-  async createForm(): Promise<void> {
-    this.formCertificado = await this.fb.group({
+ createForm(): void {
+    this.formCertificado =this.fb.group({
       si: [false],
       entidadFederativa: ['', [Validators.required, Validators.min(0)]],
   bloque: ['', [Validators.required, Validators.min(0)]],
