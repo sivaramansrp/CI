@@ -17,7 +17,7 @@ import { ReplaySubject } from 'rxjs';
 import {
   AlertComponent,
   CatalogoSelectComponent,
-  ConsultaioQuery,
+  
   Notificacion,
   NotificacionesComponent,
   Pedimento,
@@ -25,7 +25,7 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-
+import{ConsultaioQuery} from '@ng-mf/data-access-user';
 // Shared/Internal Libraries - @ng-mf
 import { Catalogo, CatalogosSelect } from '@ng-mf/data-access-user';
 
@@ -137,7 +137,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
    */
   pedimentos: Array<Pedimento> = [];
   /** Datos de la tabla de destinatarios */
-  tableData: Destinatario[] = [];
+  tableData2: Destinatario[] = [];
 
   /** Configuración de las columnas de la tabla */
   destinatarioConfiguracionTabla = DESTINATARIO_CONFIGURACION_TABLA;
@@ -261,8 +261,16 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
     this.solicitud260702Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
-        map((seccionState: Solicitud260702State) => {
+        // map((seccionState: Solicitud260702State) => {
+        //   this.agregarDestinatarioState = seccionState;
+        // })
+         map((seccionState) => {
           this.agregarDestinatarioState = seccionState;
+          if (this.esFormularioSoloLectura && seccionState.tableData2) {
+            this.tableData2 = [...seccionState.tableData2];
+          } else if (seccionState.tableData2) {
+            this.tableData2 = [...seccionState.tableData2];
+          }
         })
       )
       .subscribe();
@@ -363,19 +371,19 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
   const FORM_DATA = this.destinatarioForm.value;
   if (FORM_DATA.agregarDestinatario && FORM_DATA.datosPersonales) {
     const DESTINATARIO = {
-      id: this.editingRowId ?? this.tableData.length + 1,
+      id: this.editingRowId ?? this.tableData2.length + 1,
       ...FORM_DATA.agregarDestinatario,
       ...FORM_DATA.datosPersonales,
       pais: this.getPaisName(FORM_DATA.datosPersonales.pais),
     };
 
     if (this.editingRowId) {
-      this.tableData = this.tableData.map(row =>
+      this.tableData2 = this.tableData2.map(row =>
         row.id === this.editingRowId ? DESTINATARIO : row
       );
       this.editingRowId = null;
     } else {
-      this.tableData = [...this.tableData, DESTINATARIO];
+      this.tableData2 = [...this.tableData2, DESTINATARIO];
     }
     this.destinatarioForm.reset();
     this.esFormularioVisible = false;
@@ -411,7 +419,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
 eliminarMercancias(): void {
   if (this.selectedRows.size === 1) {
     const SELECTED_ID = Array.from(this.selectedRows)[0];
-    this.tableData = this.tableData.filter((row) => row.id !== SELECTED_ID);
+    this.tableData2 = this.tableData2.filter((row) => row.id !== SELECTED_ID);
     this.selectedRows.clear();
   } else {
     console.warn('Debe seleccionar exactamente una fila para eliminar.');
@@ -424,7 +432,7 @@ editingRowId: number | null = null;
   openModificarMercancias(): void {
     if (this.selectedRows.size === 1) {
       const SELECTED_ID = Array.from(this.selectedRows)[0];
-      const SELECTED_ROW_DATA = this.tableData.find(
+      const SELECTED_ROW_DATA = this.tableData2.find(
         (row) => row.id === SELECTED_ID
       );
 

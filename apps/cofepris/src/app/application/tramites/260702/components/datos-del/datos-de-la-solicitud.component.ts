@@ -16,7 +16,6 @@ import {
 } from '../../constants/column-config.enum';
 import {
   Catalogo,
-  ConsultaioQuery,
   InputFecha,
   InputRadioComponent,
   Notificacion,
@@ -26,6 +25,8 @@ import {
   REGEX_SOLO_DIGITOS,
   TablaSeleccion,
 } from '@libs/shared/data-access-user/src';
+import{ConsultaioQuery} from '@ng-mf/data-access-user';
+
 import {
   ChangeDetectorRef,
   Component,
@@ -271,9 +272,11 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
+
           this.inicializarEstadoFormulario();
         })
       )
+      
       .subscribe();
   }
 
@@ -314,8 +317,17 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
     this.solicitud260702Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
+        // map((seccionState) => {
+        //   this.dataDeLaSolicitudState = seccionState;
+
+        // })
         map((seccionState) => {
           this.dataDeLaSolicitudState = seccionState;
+          if (this.esFormularioSoloLectura && seccionState.tableData) {
+            this.tableData = [...seccionState.tableData];
+          } else if (seccionState.tableData) {
+            this.tableData = [...seccionState.tableData];
+          }
         })
       )
       .subscribe();
@@ -409,6 +421,10 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
         Validators.required,
       ],
       datosDelTramiteRealizar: this.fb.group({
+         tipoOperacion: [
+        { value: this.dataDeLaSolicitudState?.tipoOperacion, disabled: false },
+        Validators.required,
+      ],
         justification: [
           this.dataDeLaSolicitudState?.justification,
           [Validators.maxLength(2000)],
@@ -481,6 +497,8 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
           Validators.required,
         ],
       }),
+      hacerlosPublicos: [{value: this.dataDeLaSolicitudState?.hacerlosPublicos, disabled: this.esFormularioSoloLectura}, Validators.required],
+
     });
   }
 

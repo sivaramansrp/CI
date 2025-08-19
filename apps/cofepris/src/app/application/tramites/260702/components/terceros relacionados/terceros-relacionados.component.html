@@ -8,9 +8,9 @@
           <app-tabla-dinamica
             [tipoSeleccionTabla]="destinatarioSeleccionTabla"
             [configuracionTabla]="destinatarioConfiguracionTabla"
-             [datos]="tableData"
+             [datos]="tableData2"
              (listaDeFilaSeleccionada)="onSelectedRowsChange($event)"
-             >
+            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
           </app-tabla-dinamica>
         </div>
         <div class="col-md-12 d-flex justify-content-end">
@@ -43,6 +43,7 @@
               data-bs-toggle="modal"
               data-bs-target="#modalAgregarMercancias"
               (click)="agregarMercancias()"
+             [disabled]="esFormularioSoloLectura"
             >
               Agregar
             </button>
@@ -53,6 +54,8 @@
           <app-tabla-dinamica
             [tipoSeleccionTabla]="destinatarioSeleccionTabla"
             [configuracionTabla]="destinatarioConfiguracionTabla"
+             [datos]="tableData2"
+            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           >
           </app-tabla-dinamica>
         </div>
@@ -63,7 +66,8 @@
           type="button"
           class="btn btn-primary ms-3"
           data-bs-toggle="modal"
-          data-bs-target="#modalAgregarMercancias">
+          data-bs-target="#modalAgregarMercancias"
+            [disabled]="esFormularioSoloLectura">
           Agregar
         </button>
         </div>
