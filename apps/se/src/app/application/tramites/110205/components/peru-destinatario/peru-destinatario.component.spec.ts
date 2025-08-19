@@ -95,42 +95,36 @@ describe('PeruDestinatarioComponent', () => {
     component.store = component.store || {};
     component.store.setFormDatosDelDestinatario = jest.fn();
     component.setValoresStoreDatos({});
-    // expect(component.store.setFormDatosDelDestinatario).toHaveBeenCalled();
   });
 
   it('should run #setValoresStoreExportador()', async () => {
     component.store = component.store || {};
     component.store.setFormExportador = jest.fn();
-    component.setValoresStoreExportador({});
-    // expect(component.store.setFormExportador).toHaveBeenCalled();
+    component.setValoresStoreExportador({});  
   });
 
   it('should run #setValoresStoreDe()', async () => {
     component.store = component.store || {};
     component.store.setFormDestinatario = jest.fn();
     component.setValoresStoreDe({});
-    // expect(component.store.setFormDestinatario).toHaveBeenCalled();
   });
 
   it('should run #setFormValida()', async () => {
     component.store = component.store || {};
     component.store.setFormValida = jest.fn();
     component.setFormValida({});
-    // expect(component.store.setFormValida).toHaveBeenCalled();
   });
 
   it('should run #setFormValidaExportador()', async () => {
     component.store = component.store || {};
     component.store.setFormValida = jest.fn();
     component.setFormValidaExportador({});
-    // expect(component.store.setFormValida).toHaveBeenCalled();
   });
 
   it('should run #setFormValidaDestinatario()', async () => {
     component.store = component.store || {};
     component.store.setFormValida = jest.fn();
     component.setFormValidaDestinatario({});
-    // expect(component.store.setFormValida).toHaveBeenCalled();
   });
 
  
@@ -140,8 +134,7 @@ describe('PeruDestinatarioComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+    
   });
 
 });
