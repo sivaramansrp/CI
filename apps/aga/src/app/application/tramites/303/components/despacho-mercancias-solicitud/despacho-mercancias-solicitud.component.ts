@@ -205,6 +205,7 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
   /**
    * Método para agregar un nuevo inventario.
    * @returns void
