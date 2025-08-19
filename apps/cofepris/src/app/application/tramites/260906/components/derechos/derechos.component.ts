@@ -1,6 +1,6 @@
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputFecha, InputFechaComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
@@ -106,12 +106,22 @@ export class DerechosComponent implements OnInit, OnDestroy {
    */
   private inicializarFormulario(): void {
     this.derechosForm = this.fb.group({
-      referencia: [this.solicitudState?.referencia],
-      cadenaDependencia: [this.solicitudState?.cadenaDependencia],
+      referencia: [
+        this.solicitudState?.referencia,
+        [ Validators.minLength(10), Validators.maxLength(30) ],
+      ],
+      cadenaDependencia: [this.solicitudState?.cadenaDependencia,
+        [ Validators.minLength(10), Validators.maxLength(50) ]
+      ],
       llave: [this.solicitudState?.llave],
       banco: [this.solicitudState?.banco],
-      tipoFetch: [this.solicitudState?.tipoFetch],
-      importe: [this.solicitudState?.importe],
+      tipoFetch: [this.solicitudState?.tipoFetch,
+        [DerechosComponent.validateFechaMenorIgualHoy.bind(this)],
+      ],
+      importe: [this.solicitudState?.importe, [
+        Validators.pattern(/^\d{1,16}$/),
+        Validators.maxLength(16)
+      ]],
     });
   }
 
@@ -169,5 +179,96 @@ export class DerechosComponent implements OnInit, OnDestroy {
     } else {
       this.derechosForm?.enable();
     }
+  }
+
+  /**
+  * Validador personalizado para verificar si la fecha es menor o igual a la fecha actual 
+  */
+  static validateFechaMenorIgualHoy(
+    control: AbstractControl
+  ): ValidationErrors | null {
+    if (!control.value) {
+      return null;
+    }
+    let SELECTED_DATE: Date;
+    if (typeof control.value === 'string' && control.value.includes('/')) {
+      const PARTS = control.value.split('/');
+      if (PARTS.length === 3) {
+        const DAY = parseInt(PARTS[0], 10);
+        const MONTH = parseInt(PARTS[1], 10);
+        const YEAR = parseInt(PARTS[2], 10);
+        SELECTED_DATE = new Date(YEAR, MONTH - 1, DAY);
+      } else {
+        SELECTED_DATE = new Date(control.value);
+      }
+    } else {
+      SELECTED_DATE = new Date(control.value);
+    }
+    
+    // Verificar si la fecha es válida
+    if (isNaN(SELECTED_DATE.getTime())) {
+      return { fechaInvalida: true }; // Retorna error para fechas inválidas
+    }
+    
+    const CURRENT_DATE = new Date();
+    
+    // Restablecer la hora para comparar solo las fechas
+    SELECTED_DATE.setHours(0, 0, 0, 0);
+    CURRENT_DATE.setHours(0, 0, 0, 0);
+    
+    if (SELECTED_DATE > CURRENT_DATE) {
+      return { fechaInvalida: true }; // Retorna un objeto de error para fechas futuras
+    }
+    
+    return null; // Retorna null si la fecha es válida (hoy o pasada)
+  }
+
+    /**
+  * Verifica si un control del formulario es inválido, tocado o modificado.
+  * @param nombreControl - Nombre del control a verificar.
+  * @returns True si el control es inválido, de lo contrario false.
+  */
+  public esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.derechosForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
+  }
+
+    /**
+   * Cambia la fecha de ingreso en el formulario.
+   *
+   * @param nuevo_valor - El nuevo valor de la fecha en formato de cadena.
+   *
+   * Este método actualiza el campo 'fechaInicialInput' del formulario con el nuevo valor proporcionado
+   * y marca el campo como no modificado (untouched).
+   */
+  public cambioFechaIngreso(nuevo_valor: string): void {
+    this.derechosForm.get('tipoFetch')?.setValue(nuevo_valor);
+    this.derechosForm.get('tipoFetch')?.markAsUntouched();
+    this.sanitario260906Store.settipoFetch(nuevo_valor);
+  }
+
+  /**
+   * Borra todos los datos del formulario de pago
+   * Limpia todos los campos del formulario y actualiza el store con valores vacíos
+   */
+  public borrarDatosPago(): void {
+    // Resetear todos los campos del formulario
+    this.derechosForm.reset();
+    
+    // Actualizar el store con valores vacíos
+    this.sanitario260906Store.setreferencia('');
+    this.sanitario260906Store.setcadenaDependencia('');
+    this.sanitario260906Store.setLlave('');
+    this.sanitario260906Store.setbanco('');
+    this.sanitario260906Store.settipoFetch('');
+    this.sanitario260906Store.setimporte('');
+    
+    // Marcar todos los campos como no tocados para limpiar los mensajes de error
+    Object.keys(this.derechosForm.controls).forEach(key => {
+      this.derechosForm.get(key)?.markAsUntouched();
+      this.derechosForm.get(key)?.markAsPristine();
+    });
   }
 }
