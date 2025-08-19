@@ -53,7 +53,7 @@ import { ComplimentosService } from '../../services/complimentos.service';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Notificacion } from '@ng-mf/data-access-user';
 
-import { DatosCatalago, INPUT_FECHA_CONFIG } from '../../../tramites/80102/models/autorizacion-programa-nuevo.model';
+import { DatosCatalago, INPUT_FECHA_CONFIG, INPUT_FECHA_CONFIGURACION } from '../../../tramites/80102/models/autorizacion-programa-nuevo.model';
 import { SelectPaisesComponent } from '@libs/shared/data-access-user/src/tramites/components/select-paises/select-paises.component';
 import { TramiteStore } from '../../../estados/tramite.store';
 
@@ -86,6 +86,11 @@ import { TramiteStore } from '../../../estados/tramite.store';
 export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
 
   /**
+   * property {Catalogo[]} derechosList - Lista de derechos obtenida del servicio.
+   */
+  public derechosList!: Catalogo[];
+
+  /**
    * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
    */
   @Input() formularioDeshabilitado: boolean = false;
@@ -107,6 +112,12 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
    * Define las propiedades del campo de entrada de fecha.
    */
     INPUT_FECHA_CONFIG = INPUT_FECHA_CONFIG;
+
+    /**
+   * Constante para configurar el input de fecha.
+   * Define las propiedades del campo de entrada de fecha.
+   */
+    INPUT_FECHA_CONFIGURACION = INPUT_FECHA_CONFIGURACION;
 
   /**
    * @type {Catalogo[]}
@@ -377,7 +388,7 @@ this.formaComplimentos.disable();
         localizacion: ['', [Validators.required, Validators.maxLength(120)]],
       }),
       obligacionesFiscales: this.fb.group({
-        opinionPositiva: [{ value: '', disabled: true }],
+        opinionPositiva: [{ value: 'SI', disabled: true }],
         fechaExpedicion: ['', Validators.required],
         aceptarObligacionFiscal: [''],
       }),
@@ -407,7 +418,7 @@ this.formaComplimentos.disable();
       }),
     });
 
-    // Apply initial data if available
+ // Apply initial data if available
     if (this.datosFormaComplimentos) {
       // Use immediate execution for better user experience
       setTimeout(() => {
@@ -575,6 +586,7 @@ this.formaComplimentos.disable();
      this.inicializarCertificadoFormulario();
     this.getCatalogoPaises();
     this.getCatalogoEstado();
+    this.loadComboUnidadMedida();
 
     this.formaComplimentos.valueChanges
       .pipe(delay(100))
@@ -618,7 +630,7 @@ this.formaComplimentos.disable();
     switch (tipoForma) {
       case TIPO_FORMA.DEFAULT:
         return this.fb.group({
-          taxId: ['', Validators.required],
+          taxId: ['', [Validators.required, Validators.maxLength(12)]],
           razonSocial: ['', Validators.required],
           pais: ['', Validators.required],
           codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
@@ -636,26 +648,26 @@ this.formaComplimentos.disable();
           correoElectronico: ['', [Validators.required, Validators.maxLength(200)]],
           apellidoPaterno: ['', [Validators.required, Validators.maxLength(200)]],
         });
-      case TIPO_FORMA.NATIONALIDAD_MEXICANA:
-        return this.fb.group({
-          rfc: ['', [
-            Validators.required, 
-            Validators.minLength(12),
-            Validators.maxLength(13),
-            Validators.pattern(REGEX_RFC)
-          ]],
-        });
+      
+    case TIPO_FORMA.NATIONALIDAD_MEXICANA:
+      return this.fb.group({
+        rfc: ['', [
+          Validators.required, 
+          Validators.minLength(12),
+          Validators.maxLength(13),
+          Validators.pattern(REGEX_RFC)
+        ]],
+      });
 
       default:
         return this.fb.group({
-          taxId: ['', Validators.required],
+          taxId: ['', [Validators.required, Validators.maxLength(12)]],
           razonSocial: ['', Validators.required],
           pais: ['', Validators.required],
           codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
           estado: ['', Validators.required],
           correoElectronico: ['', [Validators.required, Validators.maxLength(200)]],
         });
-        break;
     }
   }
 
@@ -676,13 +688,18 @@ this.formaComplimentos.disable();
     // Save current form data before removing the control
     const CURRENT_FORM_DATA = CONTROL.get('formaDatos')?.value || {};
     
-    // Store ALL current form data in persistent storage
+    // Store ALL current form data in persistent storage, including taxId
     Object.keys(CURRENT_FORM_DATA).forEach(key => {
       const VALUE = CURRENT_FORM_DATA[key];
       if (VALUE !== undefined && VALUE !== null && VALUE !== '') {
         this.PRESERVED_FORM_DATA[key] = VALUE;
       }
     });
+    
+    // Special handling for taxId to ensure it's always preserved
+    if (CURRENT_FORM_DATA.taxId) {
+      this.PRESERVED_FORM_DATA['taxId'] = CURRENT_FORM_DATA.taxId;
+    }
     
     // Update form structure synchronously
     CONTROL.removeControl('formaDatos', { emitEvent: false });
@@ -692,17 +709,25 @@ this.formaComplimentos.disable();
       emitEvent: false,
     });
     
-   const DATA_TO_RESTORE: { [key: string]: string | number | boolean } = {};
-  const NEW_FORM_CONTROLS = Object.keys(NEW_FORM_CONTROL.controls);
+    const DATA_TO_RESTORE: { [key: string]: string | number | boolean } = {};
+    const NEW_FORM_CONTROLS = Object.keys(NEW_FORM_CONTROL.controls);
     
-   NEW_FORM_CONTROLS.forEach(controlName => {
+    // Restore data for matching controls, with special attention to taxId
+    NEW_FORM_CONTROLS.forEach(controlName => {
       if (this.PRESERVED_FORM_DATA[controlName] !== undefined) {
         DATA_TO_RESTORE[controlName] = this.PRESERVED_FORM_DATA[controlName];
       }
     });
+    
+    // Ensure taxId is always restored if it exists in preserved data and new form has taxId
+    if (this.PRESERVED_FORM_DATA['taxId'] && NEW_FORM_CONTROL.controls['taxId']) {
+      DATA_TO_RESTORE['taxId'] = this.PRESERVED_FORM_DATA['taxId'];
+    }
+    
     if (Object.keys(DATA_TO_RESTORE).length > 0) {
       NEW_FORM_CONTROL.patchValue(DATA_TO_RESTORE, { emitEvent: false });
     }
+  
   this.tipoFormulario = tipoForma;
   }
 
@@ -734,6 +759,18 @@ this.formaComplimentos.disable();
         );
         this.camposFormularioDefault[INDICE].opciones = datos;
         this.camposFormularioTipoPersona[INDICEALT].opciones = datos;
+      });
+  }
+
+   /**
+   * method loadComboUnidadMedida
+   * description Carga la lista de derechos desde el servicio.
+   */
+   loadComboUnidadMedida(): void {
+    this.complimentosService.getDatos() // Llama al servicio para obtener los datos.
+      .pipe(takeUntil(this.destroyNotifier$)) // Finaliza la suscripción al destruir el componente.
+      .subscribe((data): void => { // Maneja los datos recibidos.
+        this.derechosList = data as Catalogo[]; // Asigna los datos a la lista de derechos.
       });
   }
 
@@ -918,7 +955,7 @@ this.formaComplimentos.disable();
    * @returns {void}
    */
   handleModificarForma(): void {
-    // First, save current form data immediately
+    // First, save current form data immediately, with special focus on taxId
     const CONTROL = this.formaComplimentos.get('formaSocioAccionistas') as FormGroup;
     const CURRENT_DATA = CONTROL.get('formaDatos')?.value || {};
     
@@ -932,13 +969,18 @@ this.formaComplimentos.disable();
       });
     }
     
-    // Preserve all current fields
+    // Preserve all current fields, with explicit handling for taxId
     Object.keys(CURRENT_DATA).forEach(key => {
       const VALUE = CURRENT_DATA[key];
       if (VALUE !== undefined && VALUE !== null && VALUE !== '') {
         this.PRESERVED_FORM_DATA[key] = VALUE;
       }
     });
+    
+    // Double-check taxId preservation
+    if (CURRENT_DATA.taxId && CURRENT_DATA.taxId.trim() !== '') {
+      this.PRESERVED_FORM_DATA['taxId'] = CURRENT_DATA.taxId;
+    }
     
     // Execute form modification immediately without timeout
     const VALUE = this.formaComplimentos.value;
@@ -974,6 +1016,17 @@ this.formaComplimentos.disable();
     this.tramiteStore.setfechaExpedicion(nuevo_valor);
   }
 
+    /**
+   * Maneja los cambios en el campo "Fecha de Pago".
+   * Actualiza el estado del almacén con la fecha de pago proporcionada.  
+   */
+   cambioFecha(nuevo_valor: string): void {
+    this.formaComplimentos.patchValue({
+      fechaDeActa: nuevo_valor,
+    });
+    this.tramiteStore.setfechaDeActa(nuevo_valor);
+  }
+
   /**
    * Clears all preserved form data
    */
@@ -1006,11 +1059,11 @@ this.formaComplimentos.disable();
     }
     
     if (RFC_CONTROL.errors['maxlength']) {
-      return 'El RFC no puede exceder los 13 caracteres';
+      return 'El RFC no se encontró, favor de verificar';
     }
     
     if (RFC_CONTROL.errors['pattern']) {
-      return 'Formato inválido. Debe ser: 3-4 letras, 6 dígitos, 3 caracteres alfanuméricos';
+      return 'El RFC no se encontró, favor de verificar';
     }
 
     return 'El RFC tiene errores de validación';
@@ -1147,5 +1200,64 @@ this.formaComplimentos.disable();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
     this.clearPreservedData();
+  }
+
+  /**
+   * Handles input change for Página web field and converts to uppercase
+   * @param event Input event
+   */
+  onPaginaInputChange(event: Event): void {
+    const INPUT = event.target as HTMLInputElement;
+    const UPPERCASEVALUE = INPUT.value.toUpperCase();
+
+    // Update the form control value
+    this.formaComplimentos.get('datosGeneralis')?.get('paginaWWeb')?.setValue(UPPERCASEVALUE, { emitEvent: false });
+    
+    // Update the input field display
+    INPUT.value = UPPERCASEVALUE;
+  }
+
+  /**
+   * Handles input change for Localización field and converts to uppercase
+   * @param event Input event
+   */
+  onLocalizacionInputChange(event: Event): void {
+    const INPUT = event.target as HTMLInputElement;
+    const UPPERCASEVALUE = INPUT.value.toUpperCase();
+
+    // Update the form control value
+    this.formaComplimentos.get('datosGeneralis')?.get('localizacion')?.setValue(UPPERCASEVALUE, { emitEvent: false });
+
+    // Update the input field display
+    INPUT.value = UPPERCASEVALUE;
+  }
+
+  /**
+   * Handles keypress events to allow only letters and common characters
+   * @param event Keyboard event
+   * @returns boolean indicating if the key should be allowed
+   */
+  onKeyPress(event: KeyboardEvent): boolean {
+    const CHAR = String.fromCharCode(event.which);
+    const ALLOWEDPATTERN = /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s.\-_:/@]$/;
+    
+    // Allow backspace, delete, tab, escape, enter
+    if (event.which === 8 || event.which === 46 || event.which === 9 || 
+        event.which === 27 || event.which === 13) {
+      return true;
+    }
+    
+  if (event.ctrlKey && (event.which === 65 || event.which === 67 || 
+        event.which === 86 || event.which === 88 || event.which === 90)) {
+      return true;
+    }
+    
+    // Test the character against the pattern
+    if (!ALLOWEDPATTERN.test(CHAR)) {
+      event.preventDefault();
+      return false;
+    }
+    
+    return true;
   }
 }

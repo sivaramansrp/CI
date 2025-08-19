@@ -18,6 +18,21 @@ export const CVE_FRACCION_CORRELACION_MOD_OPTION = [
 ];
 
 /**
+ * Enum que define las opciones de fusión o escisión disponibles.
+ * Cada opción tiene una etiqueta descriptiva y un valor asociado.
+ */
+export const FUSION_O_ESCISION_OPTIONS = [
+    {
+      "label": "Aviso de fusión o escisión de empresas que cuenten con el Registro en el Esquema de Certificación de Empresas, cuando resulte una nueva sociedad o extinguiéndose una o más empresas con Registro.",
+      "value": "fusion1"
+    },
+    {
+      "label": "Aviso de fusión de una empresa que se encuentre registrada en el Esquema de Certificación de Empresas con una o más empresas que no cuenten con el Registro en el Esquema de Certificación de Empresas y subsista la que cuenta con dicho Registro. ",
+      "value": "fusion2"
+    }
+   
+  ]
+/**
 * Opciones de radio para indicar si la operación es una fusión o una escisión.
 */
 export const FUSIONRADIO_OPTIONS = [
@@ -89,3 +104,74 @@ export const ALOTO_FRACCIONES: string =
   required: true,
   habilitado: true,
 };
+
+/**
+ * Interfaz que define la estructura de un encabezado de escisión.
+ * Utilizada para representar los datos de una empresa en un registro de escisión.
+ */
+export interface EscisionHeaderItem {
+  /**
+   * Identificador único del registro.
+   */
+  id?: number;
+
+  /**
+   * Registro Federal de Contribuyentes (RFC) de la empresa.
+   */
+  registroFederalDeContribuyentes: string;
+
+  /**
+   * Denominación o Razón Social de la empresa.
+   */
+  denominacionORazonSocial: string;
+
+  /**
+   * Folio VUCEM de la última certificación o renovación.
+   */
+  folioVucemUltimaCertificacion: string;
+
+  /**
+   * Fecha de inicio de vigencia de la última certificación o renovación.
+   */
+  fechaInicioVigenciaUltimaCertificacion: string;
+
+  /**
+   * Fecha de fin de vigencia de la última certificación o renovación.
+   */
+  fechaFinVigenciaUltimaCertificacion: string;
+  /**
+   * Descripción adicional o Clob genérica.
+   */
+  descripcionClobGenerica2?: string;
+}
+/**
+ * Configuración de la tabla para mostrar los encabezados de escisión.
+ * Cada objeto en el array representa una columna con su encabezado, clave para acceder a los datos y orden de visualización.
+ */
+export const CONFIGURATION_TABLA_GRID_FUSION_ESCISION = [
+  {
+    encabezado: 'Registro Federal de Contribuyentes',
+    clave: (item: EscisionHeaderItem): string => item.registroFederalDeContribuyentes,
+    orden: 1
+  },
+  {
+    encabezado: 'Denominación o Razón Social',
+    clave: (item: EscisionHeaderItem): string => item.denominacionORazonSocial,
+    orden: 2
+  },
+  {
+    encabezado: 'Folio VUCEM de la última certificación/renovación',
+    clave: (item: EscisionHeaderItem): string => item.folioVucemUltimaCertificacion,
+    orden: 3
+  },
+  {
+    encabezado: 'Fecha de inicio de vigencia de la última certificación/renovación',
+    clave: (item: EscisionHeaderItem): string => item.fechaInicioVigenciaUltimaCertificacion,
+    orden: 4
+  },
+  {
+    encabezado: 'Fecha de fin de vigencia de la última certificación/renovación',
+    clave: (item: EscisionHeaderItem): string => item.fechaFinVigenciaUltimaCertificacion,
+    orden: 5
+  }
+]

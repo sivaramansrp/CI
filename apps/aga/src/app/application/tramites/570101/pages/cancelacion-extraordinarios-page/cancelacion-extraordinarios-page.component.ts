@@ -1,137 +1,134 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, SECCIONES_TRAMITE_570101, SeccionLibQuery, SeccionLibState, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AccionBoton } from '@ng-mf/data-access-user';
 import { CANCELACION_PASOS } from '../../enum/cancelacion-servicios-extraordinarios.enum';
 import { Modal } from 'bootstrap';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
-interface AccionBoton {
-  accion: string;
-  valor: number;
-}
-
+/**
+ * Componente para manejar la cancelación de servicios extraordinarios.
+ * Controla la navegación entre pasos con validación de formularios y confirmación modal.
+ */
 @Component({
+  selector: 'app-cancelacion-extraordinarios-page',
   templateUrl: './cancelacion-extraordinarios-page.component.html',
-  styles: ``,
 })
+export class CancelacionExtraordinariosPageComponent {
+  
+  /**
+   * Referencia al modal principal de confirmación de cancelación.
+   * Se muestra cuando el formulario es válido y el usuario quiere proceder.
+   */
+  @ViewChild('modalConfirmarCancelarSolicitud', { static: false }) modalConfirmarCancelarSolicitud!: ElementRef;
+  
+  /**
+   * Referencia al modal de advertencia para formularios inválidos.
+   * Se muestra cuando faltan campos obligatorios por completar.
+   */
+  @ViewChild('modalConfirmar', { static: false }) modalConfirmar!: ElementRef;
 
-export class CancelacionExtraordinariosPageComponent implements AfterViewInit,OnInit {
-  pasos: ListaPasosWizard[] = CANCELACION_PASOS;
+  /**
+   * Instancia de Bootstrap Modal para controlar la visualización.
+   * Se utiliza para mostrar/ocultar los diferentes modales del componente.
+   */
+  modalInstance!: Modal;
+
+  /**
+   * Referencia al componente wizard para navegación entre pasos.
+   * Controla los métodos siguiente() y atras() del asistente.
+   */
+  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  
+  /**
+   * Referencia al primer paso del wizard para validación de formulario.
+   * Se utiliza para verificar si el formulario está completo antes de continuar.
+   */
+  @ViewChild(PasoUnoComponent) pasoUnoComponent!: PasoUnoComponent;
+  
+  /**
+   * Lista de configuración de pasos del wizard de cancelación.
+   * Define la estructura y contenido de cada paso del proceso.
+   */
+  pantallasPasos: ListaPasosWizard[] = CANCELACION_PASOS;
+
+  /**
+   * Índice del paso actual en el wizard.
+   * Se actualiza conforme el usuario navega entre pasos.
+   */
   indice: number = 1;
-  mostrarBotonParaModal:boolean = false;
-  modal: string = 'modal';
+  
+  /**
+   * Configuración para el componente de navegación de pasos.
+   * Incluye número de pasos, índice actual y textos de botones.
+   */
   datosPasos: DatosPasos = {
-    nroPasos: this.pasos.length,
+    nroPasos: this.pantallasPasos.length,
     indice: this.indice,
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Guardar y firmar',
   };
-  accionBoton!: AccionBoton;
-  public seccion!: SeccionLibState;
-  private destroyNotifier$: Subject<void> = new Subject();
-
-  @ViewChild('modalAddAgent') modalElement!: ElementRef;
-  @ViewChild('closeModal') closeModal!: ElementRef;
-  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
-  @ViewChild(PasoUnoComponent) pasoUnoComponent!: PasoUnoComponent
-  @ViewChild('modalConfirmarCancelarSolicitud', { static: false }) cancelarModal!: ElementRef;
+  
+  /**
+   * Almacena temporalmente la acción del usuario mientras se valida.
+   * Se utiliza para ejecutar la navegación después de la confirmación modal.
+   */
+  valorIndicePendiente: AccionBoton | null = null;
 
   /**
-   * @property {Modal} cancelarModalInstance
-   *  Instancia del modal de Bootstrap.
+   * Maneja las acciones de navegación con validación previa.
+   * Valida el formulario y muestra el modal correspondiente según el resultado.
    */
-  cancelarModelInstance!: Modal;
-
-  constructor(
-    private seccionQuery: SeccionLibQuery,
-    private seccionStore: SeccionLibStore
-  ) {
-    // El constructor está intencionalmente vacío para la inyección de dependencias 
-   }
-
-  ngOnInit():void {
-    this.seccionQuery.selectSeccionState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.seccion = seccionState;
-        })
-      )
-      .subscribe();
-
-    this.asignarSecciones();
-  }
-
-   /**
-     * Método para asignar las secciones existentes al stored
-     */
-   private asignarSecciones(): void {
-    const SECCIONES: boolean[] = Object.values(SECCIONES_TRAMITE_570101.PASO_1);
-    const FORM_VALIDA: boolean[] = [];
-    for (const LLAVE_SECCIONE in SECCIONES_TRAMITE_570101.PASO_1) {
-      if(LLAVE_SECCIONE) {
-        FORM_VALIDA.push(false);
-      }
+  getValorIndice(e: AccionBoton): void {
+    this.valorIndicePendiente = e;
+    if (this.pasoUnoComponent.isFormValid()) {
+      this.abrirModal();
     }
-    this.seccionStore.establecerSeccion(SECCIONES);
-    this.seccionStore.establecerFormaValida(FORM_VALIDA);
-  }
-
-  // Cambia la pestaña activa al índice proporcionado
-  seleccionaTab(i: number): void {
-    this.indice = i;
-  }
-
-  // Actualiza el índice en base al valor y ejecuta acciones de navegación
-  getValorIndice(e: AccionBoton):void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
+    else {
+      if (this.modalConfirmar) {
+        this.modalInstance = new Modal(this.modalConfirmar.nativeElement);
+        this.modalInstance.show();
       }
     }
   }
 
-  // Cambia el estado del modal a "mostrar"
-  abrirModal():void{
-    if (this.isCancelarFormValid()) {
-      this.cancelarModelInstance.show();
-    }
-  }
-
-  public isCancelarFormValid():boolean {
-    return this.cancelarModelInstance && this.pasoUnoComponent.isFormValid();
-  }
-
-  // Cierra el modal haciendo clic en el botón de cierre
-  crearerModal():void{
-    if (this.cancelarModelInstance) {
-      this.cancelarModelInstance.hide();
-    }
-  }
-
-  // Realiza las acciones necesarias cuando se selecciona "Sí" en el modal
-  encendidoSi():void{
-    this.indice = 2;
-    this.wizardComponent.siguiente();
-    this.crearerModal();
-    this.mostrarBotonParaModal = false;
-  }
-
-  // Cambia la visibilidad del botón del modal dependiendo del paso actual
-  pestanaCambiado(event: number):void{
-    this.mostrarBotonParaModal = event === 2 ? true : false;
-  }
-
-   /**
-   * @method ngAfterViewInit
-   *  Método del ciclo de vida de Angular. Inicializa el modal de Bootstrap.
+  /**
+   * Muestra el modal de confirmación principal.
+   * Se ejecuta cuando el formulario es válido y el usuario quiere continuar.
    */
-   ngAfterViewInit(): void {
-    if (this.cancelarModal?.nativeElement) {
-      this.cancelarModelInstance = new Modal(this.cancelarModal.nativeElement);
+  abrirModal(): void {
+    if (this.modalConfirmarCancelarSolicitud) {
+      this.modalInstance = new Modal(this.modalConfirmarCancelarSolicitud.nativeElement);
+      this.modalInstance.show();
+    }
+  }
+  
+  /**
+   * Ejecuta la navegación confirmada por el usuario.
+   * Oculta el modal y navega al paso correspondiente en el wizard.
+   */
+  abrirModalSi(): void {
+    if (this.modalInstance) {
+      this.modalInstance.hide();
+    }
+    if (this.valorIndicePendiente && this.valorIndicePendiente.valor > 0 && this.valorIndicePendiente.valor < 3) {
+      this.indice = this.valorIndicePendiente.valor;
+      if (this.wizardComponent) {
+        if (this.valorIndicePendiente.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else {
+          this.wizardComponent.atras();
+        }
+      }
+    }
+  }
+  /**
+   * Cierra el modal de advertencia.
+   * Se ejecuta cuando el usuario confirma que desea continuar.
+   */
+  abrirModalAceptar(): void {
+    if (this.modalInstance) {
+      this.modalInstance.hide();
     }
   }
 }
+

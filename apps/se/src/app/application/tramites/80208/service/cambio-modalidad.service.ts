@@ -1,5 +1,5 @@
 import { CambioDeModalidadForm, CambioModalidadResponse, ServiciosState } from '../modelos/cambio-de-modalidad.model';
-import { CambioModalidadStore } from '../estados/tramite80208.store';
+import { CambioModalidadState, CambioModalidadStore,} from '../estados/tramite80208.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -68,10 +68,21 @@ export class CambioModalidadService {
    * Actualiza el estado del formulario en el store de cambio de modalidad.
    * @returns {void}
    */
-  actualizarEstadoFormulario(DATOS:ServiciosState): void {
-    this.cambioModalidadStore.setCambioDeModalidad(DATOS.combioDeModalidaDatos);
-    this.cambioModalidadStore.setCambioModalidad(JSON.stringify(DATOS.cambioModalidad));
-    this.cambioModalidadStore.setServiciosImmx(DATOS.serviciosImmx);
+  actualizarEstadoFormulario(DATOS:CambioModalidadState): void {
+   this.cambioModalidadStore.actualizarEstado({
+      seleccionaLaModalidad: DATOS.seleccionaLaModalidad,
+      folio: DATOS.folio,
+      ano: DATOS.ano,
+      seleccionaModalidad: DATOS.seleccionaModalidad,
+      cambioModalidad: DATOS.cambioModalidad,
+      serviciosImmx: DATOS.serviciosImmx,
+      rfcEmpresa: DATOS.rfcEmpresa,
+      numeroPrograma: DATOS.numeroPrograma,
+      tiempoPrograma: DATOS.tiempoPrograma,
+      datos: DATOS.datos,
+      ServiciosDatos: DATOS.ServiciosDatos
+      
+      })
   }
 
   /**
@@ -80,8 +91,8 @@ export class CambioModalidadService {
    * Obtiene los datos de la solicitud de cambio de modalidad desde un archivo JSON simulado.
    * @returns {Observable<ServiciosState>} Observable que emite los datos de la solicitud.
    */
-  getDatosDeLaSolicitudData(): Observable<ServiciosState> {
-    return this.http.get<ServiciosState>('assets/json/80208/cambio-de-modalidad-datos.json');
+  getDatosDeLaSolicitudData(): Observable<CambioModalidadState> {
+    return this.http.get<CambioModalidadState>('assets/json/80208/cambio-de-modalidad-datos.json');
   }
 
-}
+} 

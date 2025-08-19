@@ -62,4 +62,35 @@ describe('ValidarInicalmenteService', () => {
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
+
+  it('debe obtener la lista de países', () => {
+  const mockResponse = { data: [{ id: 1, nombre: 'País1' }] };
+  service.obtenerPaisList().subscribe(res => {
+    expect(res).toEqual(mockResponse);
+  });
+  const req = httpMock.expectOne('assets/json/110208/pais.json');
+  expect(req.request.method).toBe('GET');
+  req.flush(mockResponse);
+});
+
+it('debe obtener la lista de UMC', () => {
+  const mockResponse = { data: [{ id: 1, nombre: 'UMC1' }] };
+  service.obtenerUMCList().subscribe(res => {
+    expect(res).toEqual(mockResponse);
+  });
+  const req = httpMock.expectOne('assets/json/110208/umc.json');
+  expect(req.request.method).toBe('GET');
+  req.flush(mockResponse);
+});
+
+it('debe obtener la lista de tipos de factura', () => {
+  const mockResponse = { data: [{ id: 1, nombre: 'TipoFactura1' }] };
+  service.obtenerTipoDeFacturaList().subscribe(res => {
+    expect(res).toEqual(mockResponse);
+  });
+  const req = httpMock.expectOne('assets/json/110208/tipo-de-factura.json');
+  expect(req.request.method).toBe('GET');
+  req.flush(mockResponse);
+});
+
 });

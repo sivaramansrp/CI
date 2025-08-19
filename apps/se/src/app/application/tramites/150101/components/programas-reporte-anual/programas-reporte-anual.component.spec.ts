@@ -1,95 +1,171 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ProgramasReporteAnnualComponent } from './programas-reporte-anual.component';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { of } from 'rxjs';
 import { Solicitud150101Store } from '../../estados/solicitud150101.store';
 import { Solicitud150101Query } from '../../estados/solicitud150101.query';
 import { SolicitudService } from '../../services/registro-solicitud-anual.service';
-import { TablaDinamicaComponent, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { of } from 'rxjs';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('ProgramasReporteAnnualComponent', () => {
   let component: ProgramasReporteAnnualComponent;
   let fixture: ComponentFixture<ProgramasReporteAnnualComponent>;
-  let solicitudServiceMock: any;
-  let solicitudStoreMock: any;
-  let solicitudQueryMock: any;
-  let validacionesServiceMock: any;
+
+  const mockSolicitudStore = {
+    actualizarFolioPrograma: jest.fn(),
+    actualizarModalidad: jest.fn(),
+    actualizarTipoPrograma: jest.fn(),
+    actualizarEstatus: jest.fn(),
+    setReporteAnualFechaInicio: jest.fn(),
+    setReporteAnualFechaFin: jest.fn(),
+  };
+
+  const mockSolicitudQuery = {
+    seleccionarSolicitud$: of({
+      folioPrograma: '123',
+      modalidad: 'Presencial',
+      tipoPrograma: 'Anual',
+      estatus: 'Activo',
+      reporteAnualFechaInicio: '2025-01-01',
+      reporteAnualFechaFin: '2025-12-31',
+    }),
+  };
+
+  const mockConsultaioQuery = {
+    selectConsultaioState$: of({ readonly: false }),
+  };
+
+  const mockSolicitudService = {
+    obtenerProgramasReporte: jest.fn(() => of([])),
+    obtenerReporteFechas: jest.fn(() =>
+      of({
+        reporteAnualFechaInicio: '2025-01-01',
+        reporteAnualFechaFin: '2025-12-31',
+      })
+    ),
+  };
 
   beforeEach(async () => {
-    solicitudServiceMock = {
-      obtenerReporteFechas: jest.fn().mockReturnValue(of({ reporteAnualFechaInicio: '2023-01', reporteAnualFechaFin: '2023-12' })),
-      obtenerProgramasReporte: jest.fn().mockReturnValue(of([])),
-    };
-
-    solicitudStoreMock = {
-      setReporteAnualFechaInicio: jest.fn(),
-      setReporteAnualFechaFin: jest.fn(),
-      actualizarFolioPrograma: jest.fn(),
-      actualizarModalidad: jest.fn(),
-      actualizarTipoPrograma: jest.fn(),
-      actualizarEstatus: jest.fn(),
-    };
-
-    solicitudQueryMock = {
-      seleccionarSolicitud$: of({ reporteAnualFechaInicio: '2023-01', reporteAnualFechaFin: '2023-12' })
-    };
-
-    validacionesServiceMock = {
-      isValid: jest.fn().mockReturnValue(true),
-    };
-
     await TestBed.configureTestingModule({
       declarations: [ProgramasReporteAnnualComponent],
-      imports: [
-        TituloComponent, 
-        TablaDinamicaComponent, 
-        ReactiveFormsModule, 
-        FormsModule,
-        BsDatepickerModule.forRoot()
-      ],
+      imports: [ReactiveFormsModule],
       providers: [
-        FormBuilder,
-        { provide: Solicitud150101Store, useValue: solicitudStoreMock },
-        { provide: Solicitud150101Query, useValue: solicitudQueryMock },
-        { provide: SolicitudService, useValue: solicitudServiceMock },
-        { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
+        { provide: Solicitud150101Store, useValue: mockSolicitudStore },
+        { provide: Solicitud150101Query, useValue: mockSolicitudQuery },
+        { provide: SolicitudService, useValue: mockSolicitudService },
+        {
+          provide: ValidacionesFormularioService,
+          useValue: { isValid: () => true },
+        },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
       ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ProgramasReporteAnnualComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form with default values', () => {
-    expect(component.periodoReporteAnual.value).toEqual({
-      reporteAnualFechaInicio: '2023-01',
-      reporteAnualFechaFin: '2023-12',
-      folioPrograma: undefined,
-      modalidad: undefined,
-      tipoPrograma: undefined,
-      estatus: undefined,
-    });
+  it('should initialize the form with state values', () => {
+    const formValue = component.periodoReporteAnual.value;
+    expect(formValue.folioPrograma).toBe('123');
+    expect(formValue.modalidad).toBe('Presencial');
+    expect(formValue.tipoPrograma).toBe('Anual');
+    expect(formValue.estatus).toBe('Activo');
   });
 
-  it('should call obtenerReporteFechas on init', () => {
-    expect(solicitudServiceMock.obtenerReporteFechas).toHaveBeenCalled();
+  it('should call obtenerProgramasReporte and populate solicitudDatos', () => {
+    const spy = jest.spyOn(mockSolicitudService, 'obtenerProgramasReporte');
+    component.obtenerProgramasReporte();
+    expect(spy).toHaveBeenCalled();
   });
 
-  it('should update store values when actualizarProgramasReporte is called', () => {
-    const mockData = { folioPrograma: '123', modalidad: 'Online', tipoPrograma: 'Master', estatus: 'Active' };
-    component.actualizarProgramasReporte(mockData);
+  it('should call obtenerReporteFechas and update store', () => {
+    const spy = jest.spyOn(mockSolicitudService, 'obtenerReporteFechas');
+    component.obtenerReporteFechas();
+    expect(spy).toHaveBeenCalled();
+    expect(mockSolicitudStore.setReporteAnualFechaInicio).toHaveBeenCalledWith(
+      '2025-01-01'
+    );
+    expect(mockSolicitudStore.setReporteAnualFechaFin).toHaveBeenCalledWith(
+      '2025-12-31'
+    );
+  });
 
-    expect(solicitudStoreMock.actualizarFolioPrograma).toHaveBeenCalledWith('123');
-    expect(solicitudStoreMock.actualizarModalidad).toHaveBeenCalledWith('Online');
-    expect(solicitudStoreMock.actualizarTipoPrograma).toHaveBeenCalledWith('Master');
-    expect(solicitudStoreMock.actualizarEstatus).toHaveBeenCalledWith('Active');
+  it('should patch form and update store when actualizarProgramasReporte is called', () => {
+    const mockEvento = {
+      folioPrograma: 'ABC123',
+      modalidad: 'Virtual',
+      tipoPrograma: 'Semestral',
+      estatus: 'Inactivo',
+    };
+
+    const emitSpy = jest.spyOn(component.filaDeInformeSeleccionada, 'emit');
+
+    component.actualizarProgramasReporte(mockEvento);
+
+    expect(component.periodoReporteAnual.value.folioPrograma).toBe('ABC123');
+    expect(mockSolicitudStore.actualizarFolioPrograma).toHaveBeenCalledWith(
+      'ABC123'
+    );
+    expect(mockSolicitudStore.actualizarModalidad).toHaveBeenCalledWith(
+      'Virtual'
+    );
+    expect(mockSolicitudStore.actualizarTipoPrograma).toHaveBeenCalledWith(
+      'Semestral'
+    );
+    expect(mockSolicitudStore.actualizarEstatus).toHaveBeenCalledWith(
+      'Inactivo'
+    );
+    expect(emitSpy).toHaveBeenCalledWith(true);
+  });
+
+  it('should update store and patch fechaInicio when onFechaInicio is called', () => {
+    component.onFechaInicio('2025-01-01');
+    expect(
+      component.periodoReporteAnual.get('reporteAnualFechaInicio')?.value
+    ).toBe('2025-01-01');
+    expect(mockSolicitudStore.setReporteAnualFechaInicio).toHaveBeenCalledWith(
+      '2025-01-01'
+    );
+  });
+
+  it('should update store and patch fechaFin when onFechaFin is called', () => {
+    component.onFechaFin('2025-12-31');
+    expect(
+      component.periodoReporteAnual.get('reporteAnualFechaFin')?.value
+    ).toBe('2025-12-31');
+    expect(mockSolicitudStore.setReporteAnualFechaFin).toHaveBeenCalledWith(
+      '2025-12-31'
+    );
+  });
+
+  it('should disable or enable form based on formularioDeshabilitado', () => {
+    component.formularioDeshabilitado = true;
+    component.inicializarEstadoFormulario();
+    expect(component.periodoReporteAnual.disabled).toBe(true);
+
+    component.formularioDeshabilitado = false;
+    component.inicializarEstadoFormulario();
+    expect(component.periodoReporteAnual.enabled).toBe(true);
+  });
+
+  it('should clean up subscriptions on destroy', () => {
+    const nextSpy = jest.spyOn(component['destroyed$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

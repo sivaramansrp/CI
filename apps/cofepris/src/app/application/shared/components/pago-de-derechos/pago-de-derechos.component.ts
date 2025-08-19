@@ -276,6 +276,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   onFechaCambiada(fecha: string): void {
     this.pagoDerechosForm.patchValue({ fechaPago: fecha });
+    this.pagoDerechosForm.get('fechaPago')?.markAsTouched();
+    this.pagoDerechosForm.get('fechaPago')?.markAsDirty();
     this.setValoresStore(this.pagoDerechosForm, 'fechaPago', 'setFechaPago');
   }
 

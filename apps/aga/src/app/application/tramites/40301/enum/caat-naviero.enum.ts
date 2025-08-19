@@ -257,7 +257,7 @@ export const META_INFO_40301 = {
    * @property {string} tipoAgenteLabel
    * Etiqueta descriptiva para el campo de selección de tipo de agente.
    */
-  tipoAgenteLabel: 'Tipo de Agente',
+  tipoAgenteLabel: 'Tipo de agente',
 
   /**
    * @property {string[]} roles

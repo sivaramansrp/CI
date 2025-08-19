@@ -1,12 +1,12 @@
-import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { CamState, camCertificadoStore } from '../../estados/cam-certificado.store';
 import { ConsultaioQuery, SeccionLibQuery, SeccionLibState, TituloComponent } from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { DatosDelDestinatarioComponent } from '../../../../shared/components/datos-del-destinatario/datos-del-destinatario.component';
 import { DestinatarioComponent } from '../../../../shared/components/destinatario/destinatario.component';
 import { camCertificadoQuery } from '../../estados/cam-certificado.query';
-import { CamState, camCertificadoStore } from '../../estados/cam-certificado.store';
 
 /**
  * @interface FormValues
@@ -124,6 +124,9 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy, AfterViewIni
    */
   esFormularioSoloLectura: boolean = false;
 
+
+  @ViewChild('destinatarioRef')destinatarioComponent!: DestinatarioComponent;
+
   /**
    * @constructor
    * @description
@@ -170,8 +173,8 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy, AfterViewIni
    * Hook del ciclo de vida que se llama después de inicializar el componente.
    * Obtiene los datos iniciales para el formulario y el estado de la sección.
    */
-  ngOnInit(): void {
-    this.seccionQuery.selectSeccionState$
+async ngOnInit(): Promise<void> {
+   await this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -179,16 +182,17 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy, AfterViewIni
         })
       )
       .subscribe();
-    this.query.selectCam$
+    await this.query.selectCam$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((state) => {
           this.exportadoState = state as CamState;
+            this.initActionFormBuild();
         })
       )
       .subscribe();
 
-    this.initActionFormBuild();
+  
   }
 
   /**
@@ -214,36 +218,35 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy, AfterViewIni
   initActionFormBuild(): void {
     this.exportadorForm = this.fb.group({
       lugar: [
-        this.exportadoState.lugar,
-        [Validators.required, Validators.maxLength(100)] // Optional maxLength
+      this.exportadoState.lugar,
+      [Validators.required] 
       ],
       exportador: [
-        this.exportadoState.exportador,
-        [Validators.required, Validators.maxLength(100), Validators.pattern(/^[a-zA-ZÀ-ÿ\s'.-]+$/)]
+      this.exportadoState.exportador,
+      [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\s'.-]+$/)]
       ],
       empresa: [
-        this.exportadoState.empresa,
-        [Validators.required, Validators.maxLength(100), Validators.pattern(/^[a-zA-Z0-9\s&.,'-]+$/)]
+      this.exportadoState.empresa,
+      [Validators.required, Validators.pattern(/^[a-zA-Z0-9\s&.,'-]+$/)]
       ],
       cargo: [
-        this.exportadoState.cargo,
-        [Validators.required, Validators.maxLength(50), Validators.pattern(/^[a-zA-ZÀ-ÿ\s'.-]+$/)]
+      this.exportadoState.cargo,
+      [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\s'.-]+$/)]
       ],
       lada: [
-        this.exportadoState.lada,
-        [Validators.maxLength(5), Validators.pattern(/^\d+$/)]
+      this.exportadoState.lada, [Validators.pattern(/^[a-zA-Z0-9]+$/)]
       ],
       telfono: [
-        this.exportadoState.telfono,
-        [Validators.required, Validators.maxLength(15), Validators.pattern(/^\d+$/)]
+      this.exportadoState.telfono,
+      [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/)]
       ],
       fax: [
-        this.exportadoState.fax,
-        [Validators.required, Validators.maxLength(15), Validators.pattern(/^\d+$/)]
+      this.exportadoState.fax,
+      [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/)]
       ],
       correo: [
-        this.exportadoState.correo,
-        [Validators.required, Validators.email, Validators.maxLength(100)]
+      this.exportadoState.correo,
+      [Validators.required, Validators.email, Validators.maxLength(100)]
       ]
     });
 
@@ -317,6 +320,22 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy, AfterViewIni
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: camCertificadoStore) => void)(VALOR);
   }
+    validarFormularios():boolean{
+    let isFormInvalid = true;
+ if(this.exportadorForm.invalid){
+  this.exportadorForm.markAllAsTouched();
+   isFormInvalid = false;
+  }
+if(this.destinatarioComponent){
+  if(!this.destinatarioComponent.validarFormularios()){
+    isFormInvalid =false;
+  }
+}
+else{
+  isFormInvalid = false;
+}
+   return isFormInvalid;
+}
 
   /**
    * @method ngOnDestroy

@@ -21,7 +21,10 @@
         <div class="col-md-4">
             <label for="numeroFiscal" class="form-label">Número de registro fiscal*:</label>
             <input type="text" class="form-control" formControlName="numeroFiscal"
-                id="numeroFiscal" (change)="setValoresStore(datosDestinatario,'numeroFiscal', 'setNumeroFiscal')">
+                id="numeroFiscal" [ngClass]="esValido('numeroFiscal') ? 'required' : ''" (change)="setValoresStore(datosDestinatario,'numeroFiscal', 'setNumeroFiscal')">
+            <div *ngIf="datosDestinatario.get('numeroFiscal')?.touched && datosDestinatario.get('numeroFiscal')?.hasError('required')" class="mensaje-error">
+                Este campo es obligatorio
+            </div>
         </div>
     
         <div class="col-md-8">

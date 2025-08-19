@@ -219,6 +219,14 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     )(VALOR);
   }
 
+/**
+ * Borra los datos del formulario de solicitud.
+ * Resetea todos los campos del formulario a sus valores iniciales.
+ */
+  borrarDatosPago(): void {
+    this.formSolicitud.reset();
+  }
+
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Libera recursos y cancela suscripciones para evitar fugas de memoria.

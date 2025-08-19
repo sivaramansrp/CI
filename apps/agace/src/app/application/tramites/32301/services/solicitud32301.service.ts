@@ -34,23 +34,13 @@ constructor(
  * @param DATOS Objeto basado en `INITIAL_STATE` que contiene toda la información del formulario.
  */
 actualizarEstadoFormulario(DATOS: typeof INITIAL_STATE): void {
-  this.tramite301Store.setModalidadCertificacion(DATOS.tipoDevAviso.modalidadCertificacion);
-  this.tramite301Store.setClientesProveedoresExtranjeros(DATOS.tipoDevAviso.foreignClientsSuppliers);
-  this.tramite301Store.setProveedoresNacionales(DATOS.tipoDevAviso.nationalSuppliers);
-  this.tramite301Store.setModificacionesMiembros(DATOS.tipoDevAviso.modificationsMembers);
-  this.tramite301Store.setCambiosDocumentosLegales(DATOS.tipoDevAviso.changesToLegalDocuments);
-  this.tramite301Store.setNotifiFusionOescision(DATOS.tipoDevAviso.mergerOrSplitNotice);
-  this.tramite301Store.setAdicionalesFractions(DATOS.tipoDevAviso.additionFractions);
-  this.tramite301Store.setAceptacion253(DATOS.tipoDevAviso.acepto253);
-  this.tramite301Store.setArchivoExtranjero(DATOS.proveedorExtranjero);
-  this.tramite301Store.setRegistrosProveedoresExtranjeros(DATOS.proveedorExtranjero);
-  this.tramite301Store.setSnsucarácterde(DATOS.modificacionSocios.ensucarácterde);
-  this.tramite301Store.setRfc(DATOS.modificacionSocios.rfc);
-  this.tramite301Store.setObligadoaTributarenMéxico(DATOS.modificacionSocios.obligadoaTributarenMéxico);
-  this.tramite301Store.setNacionalidad(DATOS.modificacionSocios.nacionalidad);
-  this.tramite301Store.setModificacionGoceInmueble(DATOS.modificacionGoceInmueble);
-  this.tramite301Store.SetpersonaFusionEscisionDTO(DATOS.personaFusionEscisionDTO);
-  this.tramite301Store.setNombreCompleto(DATOS.modificacionSocios.nombreCompleto);
+  this.tramite301Store.update((state) => {
+   const NEW_STATE = {
+    ...state,
+    ...DATOS,
+   };
+   return NEW_STATE;
+  });
 }
 
 /**

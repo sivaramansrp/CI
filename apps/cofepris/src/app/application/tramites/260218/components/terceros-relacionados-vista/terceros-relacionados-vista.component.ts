@@ -19,6 +19,7 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ID_PROCEDIMIENTO } from '../../constants/pasos.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260218Query } from '../../estados/tramite260218Query.query';
 import { Tramite260218Store } from '../../estados/tramite260218Store.store';
@@ -55,6 +56,24 @@ import { Tramite260218Store } from '../../estados/tramite260218Store.store';
   styleUrl: './terceros-relacionados-vista.component.scss',
 })
 export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
+
+    /**
+   * @property elementosRequeridos
+   * @description Arreglo de campos requeridos para el formulario de datos de la solicitud,
+   * utilizado para propósitos de validación.
+   * @type {string[]}
+   */
+  elementosRequeridos = [
+    'destinoFinal'
+  ];
+
+  /**
+   * @property {number} idProcedimiento
+   * @description
+   * Identificador del procedimiento actual.
+   */
+    idProcedimiento: number = ID_PROCEDIMIENTO;
+
   /**
    * @property {Fabricante[]} fabricanteTablaDatos
    * @description

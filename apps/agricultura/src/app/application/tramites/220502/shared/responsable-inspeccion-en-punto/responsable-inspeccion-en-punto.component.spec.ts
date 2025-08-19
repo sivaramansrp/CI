@@ -60,9 +60,6 @@ describe('ResponsableInspeccionEnPuntoComponent', () => {
         },
       ],
     }).compileComponents();
-  });
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(TestHostComponent);
     fixture.detectChanges();
     component = fixture.debugElement.children[0].componentInstance;
@@ -120,4 +117,66 @@ describe('ResponsableInspeccionEnPuntoComponent', () => {
     expect(spy).toHaveBeenCalled();
     spy.mockRestore();
   });
- });
+
+  it('should set tipoContenedor when cargarDatosIniciales is called', () => {
+    const mockTipoContenedor = {
+      tipoContenedor: {
+        catalogos: [],
+        labelNombre: 'Tipo contenedor',
+        primerOpcion: 'Selecciona un opción',
+        required: false,
+      },
+    };
+    const solicitudService = component['solicitudService'];
+    jest.spyOn(solicitudService, 'getDataResponsableInspeccion');
+    component.cargarDatosIniciales();
+    expect(component.tipoContenedor).toEqual(mockTipoContenedor.tipoContenedor);
+  });
+
+  it('should call setNombre on store when setNombre is triggered', () => {
+    component['solicitud220502Store'] = { setNombre: jest.fn() } as any;
+    const event = { target: { value: 'Juan' } } as unknown as Event;
+    component.setNombre(event);
+    expect(component['solicitud220502Store'].setNombre).toHaveBeenCalledWith(
+      'Juan'
+    );
+  });
+
+  it('should call setPrimerapellido on store when setPrimerapellido is triggered', () => {
+    component['solicitud220502Store'] = { setPrimerapellido: jest.fn() } as any;
+    const event = { target: { value: 'Perez' } } as unknown as Event;
+    component.setPrimerapellido(event);
+    expect(
+      component['solicitud220502Store'].setPrimerapellido
+    ).toHaveBeenCalledWith('Perez');
+  });
+
+  it('should call setSegundoapellido on store when setSegundoapellido is triggered', () => {
+    component['solicitud220502Store'] = {
+      setSegundoapellido: jest.fn(),
+    } as any;
+    const event = { target: { value: 'Gomez' } } as unknown as Event;
+    component.setSegundoapellido(event);
+    expect(
+      component['solicitud220502Store'].setSegundoapellido
+    ).toHaveBeenCalledWith('Gomez');
+  });
+
+  it('should call setMercancia on store when setMercancia is triggered', () => {
+    component['solicitud220502Store'] = { setMercancia: jest.fn() } as any;
+    const event = { target: { value: 'Maíz' } } as unknown as Event;
+    component.setMercancia(event);
+    expect(component['solicitud220502Store'].setMercancia).toHaveBeenCalledWith(
+      'Maíz'
+    );
+  });
+
+  it('should call setTipocontenedor on store when setTipoContenedor is triggered', () => {
+    component['solicitud220502Store'] = { setTipocontenedor: jest.fn() } as any;
+    const catalogo: Catalogo = { id: 5, descripcion: 'Caja' };
+    component.setTipoContenedor(catalogo);
+    expect(
+      component['solicitud220502Store'].setTipocontenedor
+    ).toHaveBeenCalledWith(5);
+  });
+});

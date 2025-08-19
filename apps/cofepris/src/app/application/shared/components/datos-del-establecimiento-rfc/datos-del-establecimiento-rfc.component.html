@@ -19,27 +19,24 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-4">
+    <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="correoElectronico">Correo electrónico*: <i
-          class="bi bi-question-circle-fill"></i></label>
-          <input class="form-control" id="correoElectronico" maxlength="320" size="29"
-        formControlName="correoElectronico" placeholder="" type="text"
-        (change)="setValoresStore(datosDelForm,'correoElectronico', 'setCorreoElectronico')">
+          <label class="form-label" for="denominacionRazonSocial">Denominación o razón social*:</label>
+          <input class="form-control" id="denominacionRazonSocial" placeholder="" type="text" maxlength="100" size="75"
+        formControlName="denominacionRazonSocial"
+        (change)="setValoresStore(datosDelForm,'denominacionRazonSocial', 'setDenominacionRazonSocial')">
         </div>
         <div class="d-grid">
-          <div *ngIf="datosDelForm.controls['correoElectronico'].invalid && datosDelForm.controls['correoElectronico'].touched">
-        <span *ngIf="datosDelForm.controls['correoElectronico'].errors?.['required']" class="mensaje-error">
+          <div *ngIf="datosDelForm.controls['denominacionRazonSocial'].invalid && datosDelForm.controls['denominacionRazonSocial'].touched">
+        <span *ngIf="datosDelForm.controls['denominacionRazonSocial'].errors?.['required']" class="mensaje-error">
           Este campo es obligatorio.
         </span>
-        <span *ngIf="datosDelForm.controls['correoElectronico'].errors?.['maxlength']" class="mensaje-error">
-         Por favor, escribe una dirección de correo válida
+        <span *ngIf="datosDelForm.controls['denominacionRazonSocial'].errors?.['maxlength']" class="mensaje-error">
+          El texto excede el límite de caracteres permitido.
         </span>
           </div>
         </div>
       </div>
-    </div>
   </div>
   <div class="row">
     <div class="col-md-4">

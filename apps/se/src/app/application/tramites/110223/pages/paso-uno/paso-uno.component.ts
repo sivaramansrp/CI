@@ -252,11 +252,13 @@ export class PasoUnoComponent implements OnDestroy, OnInit, AfterViewInit {
           this.tramite110223Store.setNombreRepresentanteLegalExportador(
             respuesta?.datos?.nombreRepresentanteLegalExportador
           );
-          this.tramite110223Store.setEmpresaNombre(
-            respuesta?.datos?.empresa
+          this.tramite110223Store.setEmpresaNombre(respuesta?.datos?.empresa);
+          this.tramite110223Store.setCargo(respuesta?.datos?.cargo);
+          this.tramite110223Store.setMercanciaSeleccionadasTablaData(
+            respuesta?.datos?.mercanciaSeleccionadasTablaData || []
           );
-          this.tramite110223Store.setCargo(
-            respuesta?.datos?.cargo
+          this.tramite110223Store.setMercanciaDisponsiblesTablaDatos(
+            respuesta?.datos?.mercanciaDisponsiblesTablaDatos || []
           );
         }
       });

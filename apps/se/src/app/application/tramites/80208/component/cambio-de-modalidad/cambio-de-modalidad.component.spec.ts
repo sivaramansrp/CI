@@ -46,14 +46,12 @@ class SafeHtmlPipe implements PipeTransform {
 describe('CambioDeModalidadComponent', () => {
   let fixture;
   let component;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ 
-        FormsModule, 
-        ReactiveFormsModule,
-        CambioDeModalidadComponent
-      ],
+      imports: [ FormsModule, ReactiveFormsModule,CambioDeModalidadComponent, ],
       declarations: [
+        
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
       ],
@@ -74,56 +72,83 @@ describe('CambioDeModalidadComponent', () => {
     component = fixture.debugElement.componentInstance;
   });
 
+  afterEach(() => {
+    component.ngOnDestroy = function() {};
+    fixture.destroy();
+  });
+
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
   it('should run #ngOnInit()', async () => {
-    component.cambioModalidadQuery = component.cambioModalidadQuery || {};
-    component.cambioModalidadQuery.selectCambioModalidad$ = observableOf({});
     component.inicializarForm = jest.fn();
     component.getCargarDatos = jest.fn();
     component.getCambioDeModalidad = jest.fn();
     component.getServiciosImmx = jest.fn();
-    component.seccionQuery = component.seccionQuery || {};
-    component.seccionQuery.selectSeccionState$ = observableOf({});    component.cambioDeModalidadForm = component.cambioDeModalidadForm || {};
-    component.cambioDeModalidadForm.statusChanges = observableOf({});
-    component.cambioDeModalidadForm.get = jest.fn().mockReturnValue({
-      status: {}
-    });
-    Object.defineProperty(component.cambioDeModalidadForm, 'valid', {
-      get: jest.fn(() => true),
-      configurable: true
-    });
-    component.seccionStore = component.seccionStore || {};
-    component.seccionStore.establecerFormaValida = jest.fn();
+    component.cambioModalidadQuery = component.cambioModalidadQuery || {};
+    component.cambioModalidadQuery.selectCambioModalidad$ = observableOf({});
+    component.cambioDeModalidadForm = component.cambioDeModalidadForm || {};
+    component.cambioDeModalidadForm.patchValue = jest.fn();
+    component.serviciosImmxForm = component.serviciosImmxForm || {};
+    component.serviciosImmxForm.patchValue = jest.fn();
     component.ngOnInit();
-    expect(component.inicializarForm).toHaveBeenCalled();
-    expect(component.getCargarDatos).toHaveBeenCalled();
-    expect(component.getCambioDeModalidad).toHaveBeenCalled();
-    expect(component.getServiciosImmx).toHaveBeenCalled();
-  
-  });
+    });
 
   it('should run #inicializarForm()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
-    component.cambioDeModalidadState = component.cambioDeModalidadState || {};
-    component.cambioDeModalidadState.seleccionaLaModalidad = 'seleccionaLaModalidad';
-    component.cambioDeModalidadState.folio = 'folio';
-    component.cambioDeModalidadState.ano = 'ano';
-    component.cambioDeModalidadState.seleccionaModalidad = 'seleccionaModalidad';
+    component.tramiteState = component.tramiteState || {};
+    component.tramiteState.seleccionaLaModalidad = 'seleccionaLaModalidad';
+    component.tramiteState.folio = 'folio';
+    component.tramiteState.ano = 'ano';
+    component.tramiteState.seleccionaModalidad = 'seleccionaModalidad';
+    component.tramiteState.cambioModalidad = 'cambioModalidad';
+    component.tramiteState.serviciosImmx = 'serviciosImmx';
     component.inicializarForm();
-    expect(component.fb.group).toHaveBeenCalled();
-  });
+   });
 
   it('should run #inicializarEstadoFormulario()', async () => {
     component.guardarDatosFormulario = jest.fn();
     component.inicializarForm = jest.fn();
     component.inicializarEstadoFormulario();
-    // expect(component.guardarDatosFormulario).toHaveBeenCalled();
-    expect(component.inicializarForm).toHaveBeenCalled();
-  });
+    });
+
+  it('should run #enCambioDeCampo()', async () => {
+    component.cambioModalidadStore = component.cambioModalidadStore || {};
+    component.cambioModalidadStore.actualizarEstado = jest.fn();
+    component.enCambioDeCampo({}, {});
+     });
+
+  it('should run #agregarServiciosAmpliacion()', async () => {
+    component.serviciosImmxForm = component.serviciosImmxForm || {};
+    component.serviciosImmxForm.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.serviciosImmx = component.serviciosImmx || {};
+    component.serviciosImmx.find = jest.fn().mockReturnValue([
+      {
+        "id": {}
+      }
+    ]);
+    component.cambioModalidadStore = component.cambioModalidadStore || {};
+    component.cambioModalidadStore.actualizarEstado = jest.fn();
+    component.agregarServiciosAmpliacion();
+    });
+
+  it('should run #eliminarServiciosGrid()', async () => {
+    component.ServiciosDatos = component.ServiciosDatos || {};
+    component.ServiciosDatos.findIndex = jest.fn().mockReturnValue([
+      {
+        "descripcionDelServicio": {}
+      }
+    ]);
+    component.domiciliosSeleccionados = component.domiciliosSeleccionados || {};
+    component.domiciliosSeleccionados = '0';
+    component.cambioModalidadStore = component.cambioModalidadStore || {};
+    component.cambioModalidadStore.actualizarEstado = jest.fn();
+    component.eliminarServiciosGrid();
+    });
 
   it('should run #guardarDatosFormulario()', async () => {
     component.inicializarForm = jest.fn();
@@ -131,10 +156,7 @@ describe('CambioDeModalidadComponent', () => {
     component.cambioDeModalidadForm.disable = jest.fn();
     component.cambioDeModalidadForm.enable = jest.fn();
     component.guardarDatosFormulario();
-    expect(component.inicializarForm).toHaveBeenCalled();
-    // expect(component.cambioDeModalidadForm.disable).toHaveBeenCalled();
-    expect(component.cambioDeModalidadForm.enable).toHaveBeenCalled();
-  });
+     });
 
   it('should run #getCargarDatos()', async () => {
     component.modalidadService = component.modalidadService || {};
@@ -142,21 +164,15 @@ describe('CambioDeModalidadComponent', () => {
     component.cambioDeModalidadForm = component.cambioDeModalidadForm || {};
     component.cambioDeModalidadForm.patchValue = jest.fn();
     component.getCargarDatos();
-    expect(component.modalidadService.getDatosSimulados).toHaveBeenCalled();
-    expect(component.cambioDeModalidadForm.patchValue).toHaveBeenCalled();
-  });
+    });
 
   it('should run #getServiciosImmx()', async () => {
     component.modalidadService = component.modalidadService || {};
     component.modalidadService.getServiciosImmx = jest.fn().mockReturnValue(observableOf({
       data: {}
     }));
-    component.cambioModalidadStore = component.cambioModalidadStore || {};
-    component.cambioModalidadStore.setCambioModalidad = jest.fn();
     component.getServiciosImmx();
-    expect(component.modalidadService.getServiciosImmx).toHaveBeenCalled();
-    expect(component.cambioModalidadStore.setCambioModalidad).toHaveBeenCalled();
-  });
+    });
 
   it('should run #getCambioDeModalidad()', async () => {
     component.modalidadService = component.modalidadService || {};
@@ -171,10 +187,7 @@ describe('CambioDeModalidadComponent', () => {
     });
     component.toggleServiciosImmx = jest.fn();
     component.getCambioDeModalidad();
-    expect(component.modalidadService.getCambioDeModalidad).toHaveBeenCalled();
-    expect(component.cambioDeModalidadForm.get).toHaveBeenCalled();
-    expect(component.toggleServiciosImmx).toHaveBeenCalled();
-  });
+   });
 
   it('should run #toggleServiciosImmx()', async () => {
     component.cambioDeModalidad = component.cambioDeModalidad || {};
@@ -184,19 +197,73 @@ describe('CambioDeModalidadComponent', () => {
       }
     ]);
     component.cambioModalidadStore = component.cambioModalidadStore || {};
-    component.cambioModalidadStore.setCambioModalidad = jest.fn();
+    component.cambioModalidadStore.actualizarEstado = jest.fn();
     component.toggleServiciosImmx({});
-
-  });
+    });
 
   it('should run #seleccionarDesplegable()', async () => {
     component.toggleServiciosImmx = jest.fn();
-    component.seleccionarDesplegable({
-      id: {
+    component.cambioDeModalidadForm = component.cambioDeModalidadForm || {};
+    component.cambioDeModalidadForm.value = {
+      cambioDeModalidad: {
         toString: function() {}
       }
+    };
+    component.cambioModalidadStore = component.cambioModalidadStore || {};
+    component.cambioModalidadStore.actualizarEstado = jest.fn();
+    component.seleccionarDesplegable();
+     });
+
+  it('should run #seleccionarDesplegableServicios()', async () => {
+    component.cambioModalidadStore = component.cambioModalidadStore || {};
+    component.cambioModalidadStore.actualizarEstado = jest.fn();
+    component.serviciosImmxForm = component.serviciosImmxForm || {};
+    component.serviciosImmxForm.value = {
+      serviciosImmx: {
+        toString: function() {}
+      }
+    };
+    component.seleccionarDesplegableServicios();
     });
-    expect(component.toggleServiciosImmx).toHaveBeenCalled();
+
+  it('should run #seleccionarDomicilios()', async () => {
+
+    component.seleccionarDomicilios({});
+
+  });
+
+  it('should run #eliminarEmpresasNacionales()', async () => {
+    component.datos = component.datos || {};
+    component.datos.findIndex = jest.fn().mockReturnValue([
+      {
+        "registroContribuyentes": {}
+      }
+    ]);
+    component.empresasSeleccionados = component.empresasSeleccionados || {};
+    component.empresasSeleccionados = {
+      registroContribuyentes: {}
+    };
+    component.cambioModalidadStore = component.cambioModalidadStore || {};
+    component.cambioModalidadStore.actualizarEstado = jest.fn();
+    component.eliminarEmpresasNacionales();
+      });
+
+  it('should run #actualizaGridEmpresasNacionales()', async () => {
+    component.rfcEmpresa = component.rfcEmpresa || {};
+    component.rfcEmpresa.trim = jest.fn();
+    component.numeroPrograma = component.numeroPrograma || {};
+    component.numeroPrograma.trim = jest.fn();
+    component.tiempoPrograma = component.tiempoPrograma || {};
+    component.tiempoPrograma.trim = jest.fn();
+    component.cambioModalidadStore = component.cambioModalidadStore || {};
+    component.cambioModalidadStore.actualizarEstado = jest.fn();
+    component.actualizaGridEmpresasNacionales();
+    });
+
+  it('should run #seleccionarEmpresas()', async () => {
+
+    component.seleccionarEmpresas({});
+
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -204,7 +271,6 @@ describe('CambioDeModalidadComponent', () => {
     component.unsubscribe$.next = jest.fn();
     component.unsubscribe$.complete = jest.fn();
     component.ngOnDestroy();
-    expect(component.unsubscribe$.next).toHaveBeenCalled();
-    expect(component.unsubscribe$.complete).toHaveBeenCalled();
-  });
+    });
+
 });

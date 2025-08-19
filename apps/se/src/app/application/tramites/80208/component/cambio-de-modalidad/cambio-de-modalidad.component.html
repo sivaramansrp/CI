@@ -4,22 +4,20 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="seleccionaLaModalidad">Selecciona la modalidad:</label>
-                    <input class="form-control" id="seleccionaLaModalidad"
-                        type="text" formControlName="seleccionaLaModalidad">
+                    <input class="form-control" id="seleccionaLaModalidad" type="text"
+                        formControlName="seleccionaLaModalidad">
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="folio">Folio:</label>
-                    <input class="form-control" id="folio" type="text"
-                        formControlName="folio">
+                    <input class="form-control" id="folio" type="text" formControlName="folio">
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="año">Año:</label>
-                    <input class="form-control" id="año" type="text"
-                        formControlName="ano">
+                    <input class="form-control" id="año" type="text" formControlName="ano">
                 </div>
             </div>
         </div>
@@ -27,17 +25,18 @@
             <div class="col-md-8">
                 <div class="form-group">
                     <label class="form-label" for="seleccionaModalidad">Selecciona la modalidad:</label>
-                    <input class="form-control" id="seleccionaModalidad"
-                        type="text" formControlName="seleccionaModalidad">
+                    <input class="form-control" id="seleccionaModalidad" type="text"
+                        formControlName="seleccionaModalidad">
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <app-catalogo-select formControlName="cambioDeModalidad" [label]="'Cambio de Modalidad'"
-                        [required]="true" name="cambioDeModalidad" [catalogo]="cambioDeModalidad"
-                        (selectionChange)="seleccionarDesplegable($event)"
-                        [isDisabled]="esFormularioSoloLectura"
-                        >
+                        id="clave"
+                        [required]="false"  [catalogo]="cambioDeModalidad"
+                        (change)="seleccionarDesplegable()"
+                        [primerOptionValue]="predeterminado" [hiddenPrimerOption]="false" [disabledPrimerOption]="false"
+                        [isDisabled]="esFormularioSoloLectura">
                     </app-catalogo-select>
                 </div>
             </div>
@@ -51,10 +50,12 @@
         <div class="col-md-8">
             <form [formGroup]="serviciosImmxForm">
                 <div class="form-group">
-                    <app-catalogo-select formControlName="serviciosImmx" [label]="'Servicios IMMEX'" [required]="true"
-                        name="serviciosImmx" [catalogo]="serviciosImmx" [placeholder]="'selecciona un valor'"
-                        [isDisabled]="esFormularioSoloLectura"
-                        ></app-catalogo-select>
+                    <app-catalogo-select formControlName="serviciosImmx" [label]="'Servicios IMMEX'" [required]="false"
+                        name="serviciosImmx" [catalogo]="serviciosImmx" [primerOptionValue]="predeterminado" [hiddenPrimerOption]="false" [disabledPrimerOption]="false"
+                       
+                        id="immex"
+                        (change)="seleccionarDesplegableServicios()"
+                        [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
                 </div>
             </form>
         </div>
@@ -63,8 +64,8 @@
     <div class="row">
         <div class="d-flex justify-content-end">
             <div class="btn-group">
-                <button class="btn btn-primary me-2" type="button">Eliminar</button>
-                <button class="btn btn-danger" type="button">Agregar</button>
+                <button class="btn btn-primary me-2" type="button" (click)="eliminarServiciosGrid()" [disabled]="esFormularioSoloLectura">Eliminar</button>
+                <button class="btn btn-danger" type="button" (click)="agregarServiciosAmpliacion()" [disabled]="esFormularioSoloLectura">Agregar</button>
             </div>
         </div>
     </div>
@@ -73,7 +74,7 @@
         <div class="col-md-12">
             <label class="form-label mb-4" for="serviciosImmx">Servicios IMMEX:</label>
             <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" [configuracionTabla]="configuracionTabla"
-            [datos]="ServiciosDatos"></app-tabla-dinamica>
+            [disableSeleccionTablaRadio]="esFormularioSoloLectura"   (filaSeleccionada)="seleccionarDomicilios($event)" [datos]="ServiciosDatos"></app-tabla-dinamica>
         </div>
     </div>
 
@@ -81,7 +82,71 @@
         <div class="col-md-12">
             <label class="form-label mb-4" for="serviciosImmx">Servicios autorizados:</label>
             <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" [configuracionTabla]="configuracionTabla"
-            [datos]="autorizadosDatos"></app-tabla-dinamica>
+                [datos]="autorizadosDatos" [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h3>
+                <label for="solicitud.immex.empresasNacionales">Empresas (Nacionales) a las que se les otorgaran
+                    servicios</label>
+            </h3>
+            <hr class="red" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="rfdecontri">Registro federal de contribuyentes:</label>
+                <input type="text" id="rfcEmpresa" [(ngModel)]="rfcEmpresa" [disabled]="esFormularioSoloLectura"
+                    name="rfdecontri" class="form-control" (ngModelChange)="enCambioDeCampo('rfcEmpresa', $event)" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="numeroProgramaImmex">Número del Programa IMMEX:</label>
+                <input type="text" id="numeroPrograma" [(ngModel)]="numeroPrograma" [disabled]="esFormularioSoloLectura"
+                    name="numeroProgramaImmex" class="form-control"
+                    (ngModelChange)="enCambioDeCampo('numeroPrograma', $event)" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="tiempoPrograma">Año del Programa IMMEX:</label>
+                <input type="text" id="tiempoPrograma" [(ngModel)]="tiempoPrograma" name="tiempoPrograma"
+                    [disabled]="esFormularioSoloLectura" class="form-control"
+                    (ngModelChange)="enCambioDeCampo('tiempoPrograma', $event)" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row my-4">
+        <div class="col-md-12">
+            <div class="pull-right">
+                <button name="eliminar" (click)="eliminarEmpresasNacionales()" class="btn btn-danger"
+                    [disabled]="esFormularioSoloLectura">
+                    Eliminar
+                </button>
+                <button name="agregar" (click)="actualizaGridEmpresasNacionales()" class="btn btn-primary mx-2"
+                    [disabled]="esFormularioSoloLectura">
+                    Agregar
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label for="serviciosAutorizados">Empresas (Nacionales) a las que se les otorgaran servicios:</label>
+            </div>
+        </div>
+    </div>
+
+    <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" (filaSeleccionada)="seleccionarEmpresas($event)"
+        [configuracionTabla]="configuracionTablaImmex" [disableSeleccionTablaRadio]="esFormularioSoloLectura"
+        [datos]="datos"></app-tabla-dinamica>
+
 </div>

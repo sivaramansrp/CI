@@ -308,6 +308,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Inicializa el formulario reactivo con los campos requeridos.
+   * Configura validaciones y deshabilita ciertos campos según sea necesario.
+   *
+   * @method inicializarFormulario
+   * @returns {void}
+   */
   inicializarFormulario(): void {
     this.tramiteStoreQuery.selectSolicitudTramite$
       .pipe(
