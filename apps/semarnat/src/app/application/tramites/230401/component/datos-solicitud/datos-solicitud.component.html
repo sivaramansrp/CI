@@ -130,7 +130,7 @@
           <label class="form-label" for="unNumero">Número UN:</label>
           <input class="form-control" id="unNumero" type="text" formControlName="unNumero"
             [ngClass]="isValid(FormSolicitud, 'unNumero') ? 'required' : ''" 
-            (change)="setValoresStore(FormSolicitud,'unNumero')">
+            (change)="setValoresStore(FormSolicitud,'unNumero')" maxlength="50" pattern="^[A-Za-z0-9]+$">
             <div class="mensaje-error" *ngIf="FormSolicitud.get('unNumero')?.errors?.['pattern'] || FormSolicitud.get('unNumero')?.errors?.['maxlength']">
               Longitud máxima 50 dígitos</div>
           <div class="mensaje-error" *ngIf="FormSolicitud.get('unNumero')?.errors?.['required'] && FormSolicitud.get('unNumero')?.touched">
@@ -166,7 +166,7 @@
             <label class="form-label" for="datosPorcentaje">Porcentaje de concentración *:</label>
             <input class="form-control" id="datosPorcentaje" type="number"
               formControlName="datosPorcentaje" [ngClass]="isValid(FormSolicitud, 'datosPorcentaje') ? 'required' : ''"
-              (change)="setValoresStore(FormSolicitud,'datosPorcentaje')">
+              (change)="setValoresStore(FormSolicitud,'datosPorcentaje')" maxlength="100">
               <div class="mensaje-error" *ngIf="FormSolicitud.get('datosPorcentaje')?.errors?.['maxlength']">
                 Longitud máxima 100 caracteres</div>
             <div class="mensaje-error" *ngIf="FormSolicitud.get('datosPorcentaje')?.errors?.['required'] && FormSolicitud.get('datosPorcentaje')?.touched">
@@ -210,7 +210,7 @@
             <div class="form-group">
               <label class="form-label" for="especifique:">Especifique *:</label>
               <input class="form-control" id="especifique" formControlName="especifique"
-                type="text">
+                type="text" maxlength="200">
                 <div class="mensaje-error" *ngIf="FormSolicitud.get('especifique')?.errors?.['maxlength']">
                   Longitud máxima 200 caracteres</div>
               <div class="mensaje-error" *ngIf="FormSolicitud.get('especifique')?.errors?.['required'] && FormSolicitud.get('especifique')?.touched">
@@ -225,7 +225,7 @@
             <div class="form-group">
               <label class="form-label" for="especifiqueDos">Especifique *:</label>
               <input class="form-control" id="especifiqueDos" formControlName="especifiqueDos"
-                type="text">
+                type="text" maxlength="250">
                 <div class="mensaje-error" *ngIf="FormSolicitud.get('especifiqueDos')?.errors?.['maxlength']">
                   Longitud máxima 250 caracteres</div>
               <div class="mensaje-error" *ngIf="FormSolicitud.get('especifiqueDos')?.errors?.['required'] && FormSolicitud.get('especifiqueDos')?.touched">
