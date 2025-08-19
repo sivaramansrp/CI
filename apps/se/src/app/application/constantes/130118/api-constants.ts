@@ -118,7 +118,7 @@ export const API_GET_ACUSES_RESOLUCION = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAM
  * API para Consultar solicitud del tramite 130118.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitudes
  */
-export const API_GET_CONSULTA_SOLICITUD = `sat-t130118/tramite/${NUMFOLIOTRAMITE}/solicitud`;
+export const API_GET_CONSULTA_SOLICITUD = `sat-t130118/tramite/${NUMFOLIOTRAMITE}/solicitud/detalle`;
 
 /**
  * API para Consultar requerimientos del tramite 130118.
@@ -140,4 +140,8 @@ export const API_GET_INICIAR_CONFIRMACION_NOTIFICACION = `sat-t130118/tramite/${
 
 export const API_GET_ENVIO_DIGITAL = `tramite/${NUMFOLIOTRAMITE}/envio-digital/detalle?esFuncionario=true`;
 
-export const API_GET_OPINION = `tramite/${NUMFOLIOTRAMITE}/opiniones`
+/** 
+ * API para detalle de la opinion tramite 130118.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/consulta-detalle%20opninion
+ */
+export const API_GET_OPINION = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/opiniones`
