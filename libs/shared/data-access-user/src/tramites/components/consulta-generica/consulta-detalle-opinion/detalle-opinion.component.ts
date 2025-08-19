@@ -18,7 +18,7 @@ import { OpinionDetalleResponse } from '../../../../core/models/130118/opinion-d
 })
 export class DetalleOpinionComponent implements OnInit, OnChanges, OnDestroy {
 
-   /** Recibe los datos de la opinión desde el componente padre */
+  /** Recibe los datos de la opinión desde el componente padre */
   @Input() solicitud!: OpinionDetalleResponse;
 
   /**
@@ -44,12 +44,6 @@ export class DetalleOpinionComponent implements OnInit, OnChanges, OnDestroy {
    * @type {FormGroup}
    */
   public opinionForm!: FormGroup;
-
-  /**
-   * Variable para almacenar los datos de la solicitud.
-   * @type {SolicitudDetalleOpinion | null}
-   */
-  //public solicitud!: SolicitudDetalleOpinion | null;
 
   /**
    * Variable para almacenar los datos de la opinión.

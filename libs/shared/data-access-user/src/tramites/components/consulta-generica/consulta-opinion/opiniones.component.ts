@@ -1,5 +1,5 @@
 import { BodyTablaOpiniones, HeaderTablaOpiniones } from '../../../../core/models/shared/consulta-generica.model';
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CONSULTA_OPINIONES } from '../../../../core/enums/consulta-generica.enum';
 import { CommonModule } from '@angular/common';
@@ -44,6 +44,12 @@ export class OpinionComponent implements OnInit, OnDestroy, OnChanges {
 
   /** Listado de opiniones (input desde componente padre) */
   @Input() opinion: OpinionResponse[] = [];
+  
+  /** 
+   * Evento que emite el ID de la opinión seleccionada
+   * @output {number} idOpinionSeleccionada - ID de la opinión seleccionada
+  */
+  @Output() idOpinionSeleccionada = new EventEmitter<number>();
 
   /**
    * Constructor de la clase OpinionComponent.
@@ -89,7 +95,7 @@ export class OpinionComponent implements OnInit, OnDestroy, OnChanges {
    * @returns {void}
    */
   verDetalleOpinion(id: number): void {
-    this.router.navigate(['/lib-detalle-opinion', id]);
+   this.idOpinionSeleccionada.emit(id);
   }
 
   /**

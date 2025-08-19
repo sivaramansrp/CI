@@ -12,10 +12,12 @@ import { EnvioDigitalResponse } from "../../../core/models/130118/envio-digital-
 import { OpinionComponent } from "../consulta-generica/consulta-opinion/opiniones.component";
 import { OpinionResponse } from "../../../core/models/130118/opinion-response.model";
 import { RequerimientosResponse } from "../../../core/models/130118/requerimientos-response.model";
+import { TabOpinionComponent } from "../consulta-generica/tab-opinion/tab-opinion.component";
 import { Tabulaciones } from "../../../core/models/lista-trimites.model";
 import { TareasSolicitud } from "../../../core/models/130118/consulta-tareas-response.model";
 import { TareasTramiteComponent } from "../consulta-generica/bandeja-tareas-tramite/tareas-tramite.component";
 import tramiteDetailsData from '@libs/shared/theme/assets/json/shared/lista-trimites-tabs.json';
+
 
 
 /**
@@ -34,7 +36,7 @@ import tramiteDetailsData from '@libs/shared/theme/assets/json/shared/lista-trim
  */@Component({
   selector: 'app-reviewers-tabs',
   standalone: true,
-  imports: [CommonModule,DocumentosComponent,DictamenesComponent, ConsultarequerimientosComponent, OpinionComponent, AcusesResolucionesComponent, TareasTramiteComponent, EnvioDigitalComponent],
+  imports: [CommonModule,DocumentosComponent,DictamenesComponent, ConsultarequerimientosComponent, TabOpinionComponent, AcusesResolucionesComponent, TareasTramiteComponent, EnvioDigitalComponent],
   templateUrl: './reviewers-tabs.component.html',
   styleUrl: './reviewers-tabs.component.scss',
 })
