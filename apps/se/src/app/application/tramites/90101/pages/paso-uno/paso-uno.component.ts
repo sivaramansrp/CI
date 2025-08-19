@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
@@ -51,6 +51,42 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$ = new Subject<void>();
 
+
+  /**
+   * @property {Array<{index: number, title: string, component: string}>} seccionesDeLaSolicitud
+   * @description
+   * Arreglo que define las secciones del formulario en el paso uno, incluyendo el índice, título y nombre del componente asociado.
+   */
+  seccionesDeLaSolicitud = [
+    { index: 1, title: 'Solicitante', component: 'solicitante' },
+    { index: 2, title: 'Domicilios de plantas', component: 'domicilios-de-plantas' },
+    { index: 3, title: 'Sectores y mercancías', component: 'sectores-y-mercancias' },
+    { index: 4, title: 'Productor indirecto', component: 'productor-indirecto' },
+  ];
+
+  /**
+   * @property {SolicitanteComponent} solicitante
+   * @description Referencia al componente de la sección "Solicitante" del formulario.
+   */
+  @ViewChild('solicitanteRef') solicitante!: SolicitanteComponent;
+
+  /**
+   * @property {DomiciliosDePlantasComponent} domiciliosDePlantas
+   * @description Referencia al componente de la sección "Domicilios de plantas" del formulario.
+   */
+  @ViewChild('domiciliosRef') domiciliosDePlantas!: DomiciliosDePlantasComponent;
+
+  /**
+   * @property {SectoresYMercanciasComponent} sectoresYMercancias
+   * @description Referencia al componente de la sección "Sectores y mercancías" del formulario.
+   */
+  @ViewChild('sectoresRef') sectoresYMercancias!: SectoresYMercanciasComponent;
+
+  /**
+   * @property {ProductorIndirectoComponent} productorIndirecto
+   * @description Referencia al componente de la sección "Productor indirecto" del formulario.
+   */
+  @ViewChild('productorIndirectoRef') productorIndirecto!: ProductorIndirectoComponent;
   /**
    * @constructor
    * @description Constructor del componente PasoUnoComponent.
@@ -108,6 +144,54 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
           this.prosecService.actualizarEstadoFormulario(resp);
         }
       });
+  }
+
+  /**
+   * @method validarFormularios
+   * @description
+   * Valida todos los formularios de las secciones del paso uno.
+   * Marca los controles como tocados si son inválidos para mostrar los errores.
+   * Retorna `true` si todos los formularios son válidos, `false` en caso contrario.
+   *
+   * @returns {boolean} `true` si todos los formularios son válidos, `false` si alguno es inválido.
+   */
+  public validarFormularios(): boolean {
+    let isValid = true;
+
+    if (this.solicitante?.form) {
+      if (this.solicitante.form.invalid) {
+        this.solicitante.form.markAllAsTouched();
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.domiciliosDePlantas) {
+      if (!this.domiciliosDePlantas.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.sectoresYMercancias) {
+      if (!this.sectoresYMercancias.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.productorIndirecto) {
+      if (!this.productorIndirecto.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    return isValid;
   }
 
   /**

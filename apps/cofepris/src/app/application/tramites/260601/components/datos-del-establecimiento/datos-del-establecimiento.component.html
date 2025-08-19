@@ -268,7 +268,8 @@
             <label class="form-label" for="informacionConfidencial">Los datos o anexos pueden contener información
                 confidencial ¿Está de acuerdo en hacerlos públicos?*:</label>
             <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
-                formControlName="informacionConfidencial"
+                formControlName="informacionConfidencial" 
+                [disabled]="esFormularioSoloLectura"
                 (change)="setValoresStore(manifiestosForm,'informacionConfidencial', 'setInformacionConfidencial')"
                 ></app-input-radio>
         </div>
