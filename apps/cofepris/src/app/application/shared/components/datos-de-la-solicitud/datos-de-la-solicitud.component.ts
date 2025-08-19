@@ -19,6 +19,7 @@ import {
   PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA,
   PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL,
   REPRESENTANTE_LEGAL,
+  SIN_ACCION_AL_INICIAR,
   TEXTO_MANIFESTO_Y_DECLARACIONES,
 } from '../../constantes/datos-solicitud.enum';
 import {
@@ -448,6 +449,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   esPuntoYComa: boolean = false;
 
   /**
+   * @const SIN_ACCION_AL_INICIAR
+   * @description Lista de identificadores de procedimientos que no requieren acción al iniciar.
+   * @type {number[]}
+   */
+  sinAccionAlIniciar = SIN_ACCION_AL_INICIAR;
+
+  /**
+   * Indica si el trámite no requiere acción al iniciar.
+   */
+  esSinAccionAlIniciar: boolean = false;
+
+  /**
    * @constructor
    * Inyecta los servicios necesarios para el enrutamiento y construcción del formulario.
    *
@@ -516,6 +529,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     )
       ? true
       : false;
+
+    this.esSinAccionAlIniciar = SIN_ACCION_AL_INICIAR.includes(this.idProcedimiento);
 
     this.mostrarCorreoElectronico =
       PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC.includes(
@@ -1130,6 +1145,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       txtBtnCancelar: '',
     };
     this.alternarControlesDeFormulario(true);
+    this.esSinAccionAlIniciar = false;
 
     this.elementoParaEliminar = i;
   }
