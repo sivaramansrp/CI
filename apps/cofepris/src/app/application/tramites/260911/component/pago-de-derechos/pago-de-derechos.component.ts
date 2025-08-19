@@ -33,6 +33,28 @@ import { Tramite260911Query } from '../../estados/tramite260911.query';
   styleUrl: './pago-de-derechos.component.scss',
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+  /**
+   * Resetea todos los campos del formulario de pago de derechos y actualiza el store.
+   * Marca los controles como tocados para mostrar errores de campos requeridos si están vacíos.
+   * Se invoca al hacer clic en el botón "Borrar datos del pago".
+   */
+  resetPagoDeDerechos(): void {
+    if (this.pagoDeDerechosForm) {
+      this.pagoDeDerechosForm.reset();
+      Object.values(this.pagoDeDerechosForm.controls).forEach(control => {
+        control.markAsTouched();
+        control.updateValueAndValidity();
+      });
+      this.tramite260911Store.setTramite260911State({
+        claveDeReferencia: '',
+        cadenaPagoDependencia: '',
+        clave: '',
+        llaveDePago: '',
+        fecPago: '',
+        impPago: ''
+      });
+    }
+  }
 
   /**
    * Estado actual de la solicitud del trámite 260911.
@@ -173,8 +195,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.pagoDeDerechosForm = this.fb.group({
-      claveDeReferencia: [this.solicitudState?.claveDeReferencia, [Validators.maxLength(9)]],
-      cadenaPagoDependencia: [this.solicitudState?.cadenaPagoDependencia, [Validators.maxLength(14)]],
+      claveDeReferencia: [this.solicitudState?.claveDeReferencia, [Validators.required, Validators.maxLength(9)]],
+      cadenaPagoDependencia: [this.solicitudState?.cadenaPagoDependencia, [Validators.required, Validators.maxLength(14)]],
       clave: [this.solicitudState?.clave, Validators.required],
       llaveDePago: [this.solicitudState?.llaveDePago, [Validators.required, Validators.maxLength(30)]],
       fecPago: [this.solicitudState?.fecPago, [Validators.required, PagoDeDerechosComponent.fechaLimValidator()]],

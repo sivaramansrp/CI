@@ -1,14 +1,10 @@
-
-
-
-// ...existing imports and code...
 import { ALERT, OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/domicilio-del-establecimiento.enum';
 import { AfterViewInit, Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputCheckComponent, InputRadioComponent, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { CommonModule,Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 import { DatosMercanciaContenedoraComponent } from '../datos-mercancia-contenedora/datos-mercancia-contenedora.component';
-import { HttpClient } from '@angular/common/http';
+
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MERCANCIAS_DATA, MercanciasInfo, NICO_TABLA, NicoInfo } from '../../models/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
@@ -67,9 +63,15 @@ import { Tramite260911Query } from '../../estados/tramite260911.query';
   styleUrl: './domicilio-del-establecimiento.component.scss',
 })
 export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, AfterViewInit {
-  // Mercancías modal logic
+  /**
+   * Índice del elemento de mercancía seleccionado en la tabla.
+   */
   selectedMercanciaIndex: number | null = null;
-
+  /**
+   * Obtiene el estado del formulario de mercancía basado en el elemento seleccionado.
+   *
+   * @returns {MercanciaForm} El estado del formulario de mercancía.
+   */
   get mercanciaFormState(): MercanciaForm {
     if (this.selectedMercanciaIndex !== null && this.mercanciasTablaDatos[this.selectedMercanciaIndex]) {
       return DomicilioDelEstablecimientoComponent.mapMercanciasInfoToForm(this.mercanciasTablaDatos[this.selectedMercanciaIndex]);
@@ -77,6 +79,11 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
     return DomicilioDelEstablecimientoComponent.getEmptyMercanciaForm();
   }
 
+  /**
+   * Obtiene un formulario de mercancía vacío.
+   *
+   * @returns {MercanciaForm} Un formulario de mercancía vacío.
+   */
   static getEmptyMercanciaForm(): MercanciaForm {
     return {
       clasificacionProducto: '',
@@ -108,8 +115,25 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
     };
   }
 
+  /**
+   * Mapea la información de mercancías a un formulario de mercancía.
+   *
+   * @param {MercanciasInfo} info - La información de mercancías a mapear.
+   * @returns {MercanciaForm} El formulario de mercancía resultante.
+   */
   static mapMercanciasInfoToForm(info: MercanciasInfo): MercanciaForm {
-    const MAPBASIC = (info: MercanciasInfo) => ({
+    const MAPBASIC = (info: MercanciasInfo): {
+      clasificacionProducto: string;
+      especificarClasificacionProducto: string;
+      denominacionEspecificaProducto: string;
+      denominacionDistintiva: string;
+      denominacionComun: string;
+      tipoProducto: string;
+      formaFarmaceutica: string;
+      estadoFisico: string;
+      fraccionArancelaria: string;
+      descripcionFraccion: string;
+    } => ({
       clasificacionProducto: info.clasificacion || '',
       especificarClasificacionProducto: info.especificar || '',
       denominacionEspecificaProducto: info.denominacionEspecifica || '',
@@ -121,13 +145,32 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
       fraccionArancelaria: info.fraccionArancelaria || '',
       descripcionFraccion: info.descripcionFraccion || '',
     });
-    const MAPCANTIDAD = (info: MercanciasInfo) => ({
+    /**
+     * Mapea la información de mercancías a un formulario de mercancía.
+     *
+     * @param info La información de mercancías a mapear.
+     * @returns El formulario de mercancía resultante.
+     */
+    const MAPCANTIDAD = (info: MercanciasInfo): {
+      cantidadUmtValor: string;
+      cantidadUmt: string;
+      cantidadUmcValor: string;
+      cantidadUmc: string;
+    } => ({
       cantidadUmtValor: info.unidadUMT || '',
       cantidadUmt: info.cantidadUMT || '',
       cantidadUmcValor: info.unidad || '',
       cantidadUmc: info.cantidadUMC || '',
     });
-    const MAPEXTRA = (info: MercanciasInfo) => ({
+    
+    const MAPEXTRA = (info: MercanciasInfo): {
+      presentacion: string;
+      numeroRegistroSanitario: string;
+      fechaCaducidad: string;
+      paisDeOriginDatos: string[];
+      paisDeProcedenciaDatos: string[];
+      usoEspecifico: string[];
+    } => ({
       presentacion: info.presentacion || '',
       numeroRegistroSanitario: info.numeroRegistro || '',
       fechaCaducidad: info.fechaCaducidad || '',
@@ -135,7 +178,14 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
       paisDeProcedenciaDatos: info.paisDeProcedencia ? [info.paisDeProcedencia] : [],
       usoEspecifico: info.usoEspecifico ? [info.usoEspecifico] : [],
     });
-    const MAPOTHER = () => ({
+    const MAPOTHER = (): {
+      marca: string;
+      especifique: string;
+      claveDeLos: string;
+      fechaDeFabricacio: string;
+      fechaDeCaducidad: string;
+      especifiqueObligatorio: string;
+    } => ({
       marca: '',
       especifique: '',
       claveDeLos: '',
@@ -151,7 +201,15 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
     };
   }
 
-  // Handle row selection from Mercancias table
+  /**
+   * Maneja el evento de selección de una fila en la tabla de mercancías.
+   * 
+   * Si se selecciona al menos una mercancía, actualiza el índice de la mercancía seleccionada
+   * buscando la fila correspondiente en los datos de la tabla. Si no hay selección, 
+   * establece el índice seleccionado como `null`.
+   * 
+   * @param event - Arreglo de objetos `MercanciasInfo` que representa las filas seleccionadas.
+   */
   onMercanciaRowSelected(event: MercanciasInfo[]): void {
     if (event && event.length > 0) {
       const SELECTED_ROW = event[0];
@@ -161,7 +219,11 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
     }
   }
 
-  // Handle Agregar Mercancia event
+  /**
+   * Maneja el evento de agregar una nueva mercancía.
+   *
+   * @param event - Objeto `MercanciasInfo` que representa la mercancía a agregar.
+   */
   onAgregarMercancia(event: MercanciasInfo): void {
   if (this.selectedMercanciaIndex !== null && this.selectedMercanciaIndex >= 0) {
     // Update existing row
@@ -176,7 +238,9 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
   this.cerrarMercanciaModal();
   }
 
-  // Close Mercancia selection modal
+  /**
+   * Cierra el modal de selección de registro de mercancía.
+   */
   cerrarSeleccionaRegistroMercanciaModal(): void {
     if (this.modalSeleccionaRegistroMercanciaInstance) {
       this.modalSeleccionaRegistroMercanciaInstance.hide();
@@ -184,6 +248,9 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
   }
   private modalSeleccionaRegistroMercanciaInstance: Modal | undefined;
 
+  /**
+   * Muestra el modal de selección de registro de mercancía.
+   */
   mostrarSeleccionaRegistroMercancia(): void {
     const MODAL = document.getElementById('modalSeleccionaRegistroMercancia');
     if (MODAL) {
@@ -194,7 +261,12 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
       this.modalSeleccionaRegistroMercanciaInstance?.show();
     }
   }
-  // Open Mercancías modal for editing
+
+  /**
+   * Maneja el evento de modificación de una mercancía.
+   *
+   * @param index - Índice de la mercancía a modificar.
+   */
   onModificarMercancia(index: number): void {
     this.selectedMercanciaIndex = index;
     if (this.datosMercanciaContenedoraComp) {
@@ -206,17 +278,30 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
   }
 
 
-  // Eliminar logic for Mercancías
-  mercanciaEliminarIndex: number | null = null;
+    /**
+     * Índice de la mercancía que se desea eliminar.
+     * Si es `null`, no hay mercancía seleccionada para eliminar.
+     * Utilizado para identificar el elemento en la lista de mercancías que será eliminado.
+     */
+    mercanciaEliminarIndex: number | null = null;
+  /**
+   * Abre un modal para confirmar la eliminación de una mercancía.
+   *
+   * @param index - Índice de la mercancía a eliminar.
+   */
   private modalConfirmarEliminarMercanciaInstance: Modal | undefined;
 
+  /**
+   * Maneja el evento de eliminación de una mercancía.
+   *
+   * @param index - Índice de la mercancía a eliminar.
+   */
   onEliminarMercancia(index: number | null): void {
     if (index === null || index === undefined) {
-      // No row selected, show alert (optional)
+      
       return;
     }
     this.mercanciaEliminarIndex = index;
-    // Show Mercancías confirmation modal
     const MODAL_CONFIRMAR_ELIMINAR_MERCANCIA_EL = document.getElementById('modalConfirmarEliminarMercancia');
     if (MODAL_CONFIRMAR_ELIMINAR_MERCANCIA_EL) {
       const WIN = window as Window & { bootstrap?: { Modal?: typeof Modal } };
@@ -227,6 +312,12 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
     }
   }
 
+  /**
+   * Cancela el proceso de eliminación de una mercancía.
+   * 
+   * Si el modal de confirmación de eliminación de mercancía está abierto, lo oculta.
+   * Además, restablece el índice de la mercancía a eliminar a `null`.
+   */
   cancelarEliminarMercancia(): void {
     if (this.modalConfirmarEliminarMercanciaInstance) {
       this.modalConfirmarEliminarMercanciaInstance.hide();
@@ -234,13 +325,29 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
     this.mercanciaEliminarIndex = null;
   }
 
+  /**
+   * Elimina una mercancía de la lista `mercanciasTablaDatos` según el índice almacenado en `mercanciaEliminarIndex`.
+   * Si el índice es válido (no es `null`), filtra la lista para excluir la mercancía correspondiente.
+   * Después de eliminar, llama al método `cancelarEliminarMercancia` para restablecer el estado relacionado con la eliminación.
+   *
+   * @remarks
+   * Este método se utiliza para confirmar la eliminación de una mercancía seleccionada en la tabla de datos.
+   */
   aceptarEliminarMercancia(): void {
     if (this.mercanciaEliminarIndex !== null) {
       this.mercanciasTablaDatos = this.mercanciasTablaDatos.filter((_, i) => i !== this.mercanciaEliminarIndex);
     }
     this.cancelarEliminarMercancia();
   }
+
+  /**
+   * Referencia al componente de datos de la mercancía contenedora.
+   */
   @ViewChild(DatosMercanciaContenedoraComponent) datosMercanciaContenedoraComp!: DatosMercanciaContenedoraComponent;
+
+  /**
+   * Abre el modal para seleccionar un registro de SCIAN.
+   */
   openScianModal(): void {
     document.querySelectorAll('.modal-backdrop').forEach(bd => bd.remove());
     document.body.classList.remove('modal-open');
@@ -253,12 +360,14 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
       }
     }
   }
+  /**
+   * Cierra el modal de selección de registro de SCIAN.
+   */
 
   openMercanciaModal(): void {
     document.querySelectorAll('.modal-backdrop').forEach(bd => bd.remove());
     document.body.classList.remove('modal-open');
     document.body.style.removeProperty('padding-right');
-    // Only reset Mercancías form if adding a new item
     if (this.datosMercanciaContenedoraComp && this.selectedMercanciaIndex === null) {
       this.datosMercanciaContenedoraComp.resetForm();
     }
@@ -270,29 +379,32 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
       this.bootstrapModalMercanciasInstance?.show();
     }
   }
+
+  /**
+   * Cierra el modal de selección de registro de SCIAN.
+   */
   cerrarMercanciaModal(): void {
     if (this.bootstrapModalMercanciasInstance && typeof this.bootstrapModalMercanciasInstance.hide === 'function') {
       this.bootstrapModalMercanciasInstance.hide();
     }
-    // Remove lingering Bootstrap modal backdrop manually
     const BACKDROPS = document.querySelectorAll('.modal-backdrop');
     BACKDROPS.forEach(bd => bd.parentNode?.removeChild(bd));
     document.body.classList.remove('modal-open');
     document.body.style.removeProperty('padding-right');
-    // Optionally reset Mercancias form if needed
-    // this.mercanciaForm?.reset();
     this.agregarModalBox = false;
   }
-  // Track selected SCIAN row index
   selectedScianIndex: number | null = null;
 
-  // Bootstrap modal instances for Eliminar logic
   private modalSeleccionaRegistroInstance: Modal | undefined;
   private modalConfirmarEliminarScianInstance: Modal | undefined;
   @ViewChild('modalAddMercancias', { static: false }) modalAddMercanciasRef?: ElementRef<HTMLDivElement>;
   @ViewChild('modalAddNicoTabla', { static: false }) modalAddNicoTablaRef?: ElementRef<HTMLDivElement>;
   private bootstrapModalMercanciasInstance: Modal | undefined;
   private bootstrapModalNicoTablaInstance: Modal | undefined;
+
+  /**
+   * Inicializa las instancias de los modales después de que la vista ha sido inicializada.
+   */
   ngAfterViewInit(): void {
     const WIN = window as unknown as { bootstrap?: { Modal?: typeof Modal } };
     if (WIN.bootstrap && WIN.bootstrap.Modal) {
@@ -302,7 +414,6 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
       if (this.modalAddNicoTablaRef) {
         this.bootstrapModalNicoTablaInstance = new WIN.bootstrap.Modal(this.modalAddNicoTablaRef.nativeElement);
       }
-      // Setup Eliminar modals
       const MODAL_SELECCIONA_REGISTRO_EL = document.getElementById('modalSeleccionaRegistro');
       if (MODAL_SELECCIONA_REGISTRO_EL) {
         this.modalSeleccionaRegistroInstance = new WIN.bootstrap.Modal(MODAL_SELECCIONA_REGISTRO_EL);
@@ -314,7 +425,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
     }
   }
   /**
-   * Subcatalogo for Representación federal filtered by Entidad Federativa
+   * Subcatálogo de Representación federal filtrado por Entidad Federativa
    */
   public subRepresentacion: Catalogo[] = [];
   /** Formulario para el modal de agregar SCIAN (nicoTablaDatos) */
@@ -427,9 +538,10 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
    */
   nicoTablaDatos: NicoInfo[] = [];
 
-  // Handle row selection from shared table
+  /**
+   * Referencia al componente de tabla dinámica para SCIAN.
+   */
   onScianRowSelected(event: NicoInfo[]): void {
-    // If at least one row is selected, set selectedScianIndex to its index in nicoTablaDatos
     if (event && event.length > 0) {
       const SELECTED_ROW = event[0];
       this.selectedScianIndex = this.nicoTablaDatos.findIndex(row => row === SELECTED_ROW);
@@ -438,39 +550,45 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
     }
   }
 
-  // Called when Eliminar button is clicked
+  /**
+   * Se llama cuando se hace clic en el botón Eliminar.
+   */
   onEliminarScian(event: number | null | undefined): void {
-    // If event is null, treat as no selection
     if (event === null || event === undefined) {
       this.selectedScianIndex = null;
-      // No row selected, show 'Selecciona un registro' modal
       if (this.modalSeleccionaRegistroInstance) {
         this.modalSeleccionaRegistroInstance.show();
       }
     } else {
       this.selectedScianIndex = event as number;
-      // Row selected, show confirmation modal
       if (this.modalConfirmarEliminarScianInstance) {
         this.modalConfirmarEliminarScianInstance.show();
       }
     }
   }
 
-  // Close 'Selecciona un registro' modal
+  /**
+   * Cierra el modal 'Selecciona un registro'.
+   */
   cerrarSeleccionaRegistroModal(): void {
     if (this.modalSeleccionaRegistroInstance) {
       this.modalSeleccionaRegistroInstance.hide();
     }
   }
 
-  // Cancel deletion, close confirmation modal
+  /**
+   * Cancela la eliminación y cierra el modal de confirmación.
+   */
   cancelarEliminarScian(): void {
     if (this.modalConfirmarEliminarScianInstance) {
       this.modalConfirmarEliminarScianInstance.hide();
     }
   }
 
-  // Accept deletion, remove selected row
+  /**
+   * Acepta la eliminación de un registro SCIAN.
+   * Elimina el registro seleccionado de la lista `nicoTablaDatos` y cierra el modal de confirmación.
+   */
   aceptarEliminarScian(): void {
     if (this.selectedScianIndex !== null) {
       this.nicoTablaDatos = this.nicoTablaDatos.filter((_, i) => i !== this.selectedScianIndex);
@@ -532,12 +650,10 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
    */
   constructor(
     private fb: FormBuilder,
-    private httpServicios: HttpClient,
     private tramite260911Query: Tramite260911Query,
     private tramite260911Store: Tramite260911Store,
     private domicilioDelEstablecimientoService: DomicilioDelEstablecimientoService,
     public consultaioQuery: ConsultaioQuery,
-    private ubicaccion: Location,
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -591,10 +707,8 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
     this.obtenerTablaDatos();
     this.obtenerEstadoList();
     this.obtenerMercanciasDatos();
-    // Patch representacion when entidad changes
     this.nicoTablaForm.get('entidad')?.valueChanges.pipe(takeUntil(this.destroy$)).subscribe((entidad) => {
       this.updateRepresentacionOptions(entidad);
-      // Patch the value of the second dropdown to the first available option
       const FIRST_OPTION = this.subRepresentacion && this.subRepresentacion.length > 0 ? this.subRepresentacion[0].id : '';
       this.nicoTablaForm.get('representacion')?.setValue(FIRST_OPTION);
     });
@@ -935,10 +1049,6 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
       }
     }
 
-    // This method is now removed as it was a duplicate and invalid.
-
-
-
  /**
    * @method loadEntidad
    * @description
@@ -1026,28 +1136,28 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
       this.nicoTablaForm.markAllAsTouched();
       return;
     }
-    // Build new SCIAN entry from form
+    
     const ENTIDAD_VALUE = this.nicoTablaForm.get('entidad')?.value;
     const REPRESENTACION_VALUE = this.nicoTablaForm.get('representacion')?.value;
-    // Find display values if needed
+    
     const ENTIDAD_OBJ = this.entidad.find(e => e.id === ENTIDAD_VALUE);
     const REPRESENTACION_OBJ = this.subRepresentacion.find(r => r.id === REPRESENTACION_VALUE);
     const NEW_SCIAN: NicoInfo = {
       clave_Scian: ENTIDAD_OBJ ? ENTIDAD_OBJ.descripcion : String(ENTIDAD_VALUE),
       descripcion_Scian: REPRESENTACION_OBJ ? REPRESENTACION_OBJ.descripcion : String(REPRESENTACION_VALUE)
     };
-    // Add to nicoTablaDatos
+    
     this.nicoTablaDatos = [...this.nicoTablaDatos, NEW_SCIAN];
-    // Save selected entidad before reset
+    
     const LAST_ENTIDAD = ENTIDAD_VALUE;
-    // Reset form
+    
     this.nicoTablaForm.reset();
-    // Restore entidad value and repopulate subRepresentacion
+    
     if (LAST_ENTIDAD) {
       this.nicoTablaForm.get('entidad')?.setValue(LAST_ENTIDAD);
       this.updateRepresentacionOptions(LAST_ENTIDAD);
     }
-    // Close modal after adding
+    
     if (this.bootstrapModalNicoTablaInstance && typeof this.bootstrapModalNicoTablaInstance.hide === 'function') {
       this.bootstrapModalNicoTablaInstance.hide();
     }
@@ -1070,13 +1180,12 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
    * Utiliza el servicio de ubicación para retroceder una página.
    */
   cancelar(scian: boolean = false): void {
-    // If scian=true, close SCIAN modal, else Mercancias modal
+    
     if (scian) {
       if (this.bootstrapModalNicoTablaInstance && typeof this.bootstrapModalNicoTablaInstance.hide === 'function') {
         this.bootstrapModalNicoTablaInstance.hide();
       }
       this.nicoTablaForm.reset();
-      // Remove lingering Bootstrap modal backdrop manually
       const BACKDROPS = document.querySelectorAll('.modal-backdrop');
       BACKDROPS.forEach(bd => bd.parentNode?.removeChild(bd));
       document.body.classList.remove('modal-open');
@@ -1085,8 +1194,6 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
       if (this.bootstrapModalMercanciasInstance && typeof this.bootstrapModalMercanciasInstance.hide === 'function') {
         this.bootstrapModalMercanciasInstance.hide();
       }
-      // If you have a Mercancias form, reset it here
-      // this.mercanciaForm?.reset();
     }
     this.agregarModalBox = false;
   }

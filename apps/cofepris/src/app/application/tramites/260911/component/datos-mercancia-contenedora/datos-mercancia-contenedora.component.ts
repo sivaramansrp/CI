@@ -71,11 +71,11 @@ import { MercanciasInfo } from '@libs/shared/data-access-user/src/core/models/26
 })
 export class DatosMercanciaContenedoraComponent implements OnInit {
   /**
-   * Event emitted when Agregar button is clicked in Mercancías modal
+   * Evento emitido cuando se hace clic en el botón Agregar en el modal de Mercancías
    */
   @Output() agregarMercancia = new EventEmitter<MercanciasInfo>();
     /**
-     * Event emitted when Cancelar button is clicked in Mercancías modal
+     * Evento emitido cuando se hace clic en el botón Cancelar en el modal de Mercancías
      */
     @Output() cancelarMercanciaModal = new EventEmitter<void>();
 
@@ -169,8 +169,8 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
 
   /**
    * @event eliminarMercanciaDatos
-   * @description EventEmitter that emits an array of merchandise items to be deleted.
-   * This is used to notify the parent component about the deletion of selected merchandise items.
+   * @description EventEmitter que emite un arreglo de elementos de mercancía a eliminar.
+   * Se utiliza para notificar al componente padre sobre la eliminación de los elementos de mercancía seleccionados.
    */
   @Output() eliminarMercanciaDatos: EventEmitter<DetalleMercancia[]> =
     new EventEmitter<DetalleMercancia[]>(true);
@@ -184,37 +184,37 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
 
   /**
    * @property {Catalogo[]} clasificacionProductoDatos
-   * @description Catalog of product classifications used to populate the form.
+   * @description Catálogo de clasificaciones de producto utilizado para llenar el formulario.
    */
   public clasificacionProductoDatos!: Catalogo[];
 
   /**
    * @property {Catalogo[]} especificarClasificacionProductoDatos
-   * @description Catalog of specific product classifications used to populate the form.
+   * @description Catálogo de clasificaciones específicas de producto utilizado para llenar el formulario.
    */
   public especificarClasificacionProductoDatos!: Catalogo[];
 
   /**
    * @property {Catalogo[]} tipoProductoDatos
-   * @description Catalog of product types used to populate the form.
+   * @description Catálogo de tipos de producto utilizado para llenar el formulario.
    */
   public tipoProductoDatos!: Catalogo[];
 
   /**
    * @property {Catalogo[]} formaFarmaceuticaDatos
-   * @description Catalog of pharmaceutical forms used to populate the form.
+   * @description Catálogo de formas farmacéuticas utilizado para llenar el formulario.
    */
   public formaFarmaceuticaDatos!: Catalogo[];
 
   /**
    * @property {Catalogo[]} estadoFisicoDatos
-   * @description Catalog of physical states used to populate the form.
+   * @description Catálogo de estados físicos utilizado para llenar el formulario.
    */
   public estadoFisicoDatos!: Catalogo[];
 
   /**
    * @property {Catalogo[]} cantidadUmcDatos
-   * @description Catalog of commercial unit quantities used to populate the form.
+   * @description Catálogo de cantidades de unidad comercial utilizado para llenar el formulario.
    */
   public cantidadUmcDatos!: Catalogo[];
 
@@ -972,7 +972,6 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
   }
 
   cancelar(): void {
-    // Example usage of 'this' to satisfy the rule
     this.nuevaNotificacion = {
       tipoNotificacion: 'info',
       categoria: 'info',
@@ -986,6 +985,12 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
     };
   }
 
+  /**
+   * Cambia la fracción arancelaria en el formulario de mercancía.
+   *
+   * Este método se utiliza para actualizar la fracción arancelaria y la cantidad de UMT
+   * en el formulario de mercancía, deshabilitando los campos correspondientes si es necesario.
+   */
   cambiarFraccionArancelaria(): void {
     if (
       this.mercanciaForm.get('fraccionArancelaria') &&
@@ -1012,12 +1017,24 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
     }
   }
 
+  /**
+   * Elimina un pedimento de la lista de pedimentos.
+   *
+   * @param borrar - Indica si se debe eliminar el pedimento.
+   * @returns {void} Este método no devuelve ningún valor.
+   */
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
   }
 
+  /**
+   * Abre un modal para mostrar un mensaje de alerta.
+   *
+   * @param i - El índice del elemento que se va a eliminar (opcional).
+   * @returns {void} Este método no devuelve ningún valor.
+   */
   abrirModal(i: number = 0): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
