@@ -87,6 +87,10 @@
     fraccionArancelariaImportacion?: string;
     descripcion?: string;
     valoresAnteriores?: string;
+    fraccionArancelariaDeLaMercanciaDeImportacion?: number;
+    cantidad?: number;
+    valor?: number;
+    unidadMedida?: string;
   }
 
   export interface DatosModificacion {

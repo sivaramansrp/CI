@@ -9,6 +9,7 @@ import { Component } from '@angular/core';
 import { PasoUnoComponent } from './paso-uno.component';
 import { ProsecService } from '../../services/prosec.service';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 @Injectable()
 class MockProsecService {}
@@ -19,7 +20,7 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, PasoUnoComponent ],
+      imports: [ FormsModule, ReactiveFormsModule, PasoUnoComponent, HttpClientTestingModule ],
       declarations: [
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
@@ -57,7 +58,6 @@ describe('PasoUnoComponent', () => {
     });
     component.guardarDatosFormulario = jest.fn();
     component.ngOnInit();
-    // expect(component.guardarDatosFormulario).toHaveBeenCalled();
   });
 
   it('should run #guardarDatosFormulario()', async () => {
@@ -65,8 +65,6 @@ describe('PasoUnoComponent', () => {
     component.prosecService.getAcuiculturaData = jest.fn().mockReturnValue(observableOf({}));
     component.prosecService.actualizarEstadoFormulario = jest.fn();
     component.guardarDatosFormulario();
-    // expect(component.prosecService.getAcuiculturaData).toHaveBeenCalled();
-    // expect(component.prosecService.actualizarEstadoFormulario).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -74,8 +72,6 @@ describe('PasoUnoComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 
 });

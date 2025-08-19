@@ -1,5 +1,5 @@
 import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, MERCANCIA_SELECCIONADAS, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
+import { CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -38,6 +38,21 @@ export const FECHA_FINAL = {
   required: false,
   habilitado: true,
 };
+
+/**
+ * Constante que representa la configuración de la fecha fin en el componente de certificado de origen.
+ *
+ * @constant
+ * @type {Object}
+ * @property {string} labelNombre - El nombre de la etiqueta para la fecha fin.
+ * @property {boolean} required - Indica si el campo de fecha fin es obligatorio.
+ * @property {boolean} habilitado - Indica si el campo de fecha fin está habilitado.
+ */
+export const FECHA_FIN = {
+  labelNombre: 'Fecha fin:',
+  required: false,
+  habilitado: true,
+}
 
 @Component({
   selector: 'app-certificado-de-origen',
@@ -136,6 +151,13 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
   @Input() mercanciasDisponiblesTabla!: boolean;
 
   /**
+   * @property {number} idProcedimiento
+   * @description
+   * Identificador del procedimiento actual. Se utiliza para configurar el formulario y la lógica del componente según el tipo de trámite.
+   */
+  @Input() idProcedimiento!: number;
+
+  /**
    * Propiedad de salida que emite el valor del formulario cuando se actualiza.
    * @type {EventEmitter<undefined>}
    */
@@ -194,6 +216,20 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
    * @type {InputFecha}
    */
   public fechaFinalInput: InputFecha = FECHA_FINAL;
+
+  /**
+   * @property {InputFecha} fechaFinInput
+   * @description
+   * Configuración de la fecha fin en el formulario de certificado de origen.
+   */
+  public fechaFinInput: InputFecha = FECHA_FIN;
+
+  /**
+   * @property {boolean} fechaFin
+   * @description
+   * Indica si el campo de fecha fin debe mostrarse en el formulario, dependiendo del procedimiento.
+   */
+  fechaFin: boolean = false;
   
   /**
    * Indicates whether the domicile information should be displayed.
@@ -303,8 +339,8 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
    * @command
    * Utilice este método para inicializar el formulario antes de interactuar con los datos del certificado.
    */
-  async createForm(): Promise<void> {
-    this.formCertificado = await this.fb.group({
+ createForm(): void {
+    this.formCertificado =this.fb.group({
       si: [false],
       entidadFederativa: ['', [Validators.required, Validators.min(0)]],
   bloque: ['', [Validators.required, Validators.min(0)]],
@@ -384,6 +420,7 @@ ngOnChanges(changes: SimpleChanges):void {
    * Inicializa el estado del formulario llamando a `inicializarEstadoFormulario()`.
    */
   ngOnInit(): void {
+    this.fechaFin = FECHA_ID.includes(this.idProcedimiento);
     this.inicializarEstadoFormulario();
   }
    validarFormularios(): boolean {

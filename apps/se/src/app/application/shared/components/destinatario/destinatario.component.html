@@ -193,6 +193,9 @@
                 @if(formDestinatario.controls['lada'].errors?.['pattern']) {
                   <span class="mensaje-error">Por favor, ingresa solo números</span>
                 }
+                 @if(formDestinatario.controls['lada'].errors?.['maxlength']) {
+                <span class="mensaje-error">Por favor, no escribas más de 5 caracteres</span>
+    }
               </div>
             }
             </div>
@@ -256,6 +259,9 @@
               @if (formDestinatario.get('correoElectronico')?.errors?.['email']) {
               <span class="mensaje-error">Por favor, escribe una dirección de correo válida.</span>
               }
+              @if(formDestinatario.controls['correoElectronico'].errors?.['maxlength']) {
+                <span class="mensaje-error">Por favor, no escribas más de 70 caracteres</span>
+      }
             </div>
             }
           </div>

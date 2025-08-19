@@ -520,7 +520,6 @@ export const CONFIGURACION_ANEXOS_IMMEX = [
     orden: 11,
   }
 ];
-
 /**
  * CONFIGURACION_SERVICIOS - Configuración de columnas para la tabla de servicios
  * Muestra información sobre los servicios relacionados con el trámite,
