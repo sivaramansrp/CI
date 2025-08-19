@@ -40,7 +40,7 @@ export const INSTRUCCION_DOBLE_CLIC =
   'Al dar clic en el botón "Cargar" se creará una nueva solicitud con los mismos datos de la solcitud 202766288 ';
 
 export const INSTRUCCION_OBLIGATORIA =
-  'Se requieren las constantes que definen las tablas de instrucciones marcadas con un asterisco.';
+  'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
 
 export const TEXTOS_220703 = {
   TEXTOS_SOLICITUD:

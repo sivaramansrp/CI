@@ -21,8 +21,7 @@
         <div class="col-md-6">
           <app-catalogo-select
             [label]="'Medio de transporte'"
-            [catalogo]="(medioDeTransporte$ | async) || []"
-            [required]="true"
+            [catalogo]="(medioDeTransporte$ | async) || []"            
             name="estado"
             formControlName="medioDeTransporte"
             (selectionChange)="medioDeTransporteSeleccion($event)"

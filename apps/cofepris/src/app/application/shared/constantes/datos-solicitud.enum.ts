@@ -584,6 +584,8 @@ export const PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL = [
   260301, 260207, 260201, 260302, 260304, 260103,
 ];
 
+export const DESHABILITADA_EN_INIT = [260302];
+
 /**
  * @const PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE
  * @description Lista de identificadores numéricos que representan procedimientos específicos
@@ -732,7 +734,7 @@ export const MENSAJE_EMERGENTE_DE_CONFIRMACION =
  *  Identificadores de notificación.
  */
 export const MOSTRAR_NOTIFICACION = [
-  260219, 260302, 260304, 260206, 260201, 260103, 260203, 260214, 260301
+  260219, 260302, 260304, 260206, 260201, 260103, 260203, 260214, 260301, 260209
 ];
 
 /**
@@ -760,7 +762,7 @@ export const TIPO_PRODUCTO_ESPECIAL = '3';
  * @remarks
  * Esta constante se utiliza para filtrar procedimientos que no deben ser considerados en el contexto de manifiestos y declaraciones.
  */
-export const PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES = [260217, 260210, 260218, 260208, 260301];
+export const PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES = [260217, 260210, 260218, 260208, 260209, 260301, 260219, 260216, 260302];
 
 /**
  * @const ES_PUNTO_Y_COMA

@@ -298,45 +298,34 @@ export const CONFIGURACION_OPERACIONES = [
     orden: 5,
   },
   {
-    encabezado: 'Localidad',
-    clave: (ele: Operacions) : string | undefined => ele.localidad,
-    orden: 6,
-  },
-  {
     encabezado: 'Municipio o Delegación',
     clave: (ele: Operacions) : string | undefined => ele.municipioDelegacion,
-    orden: 7,
+    orden: 6,
   },
   {
     encabezado: 'Estado o Distrito Federal',
     clave: (ele: Operacions) : string | undefined => ele.estado,
-    orden: 8,
+    orden: 7,
   },
   {
     encabezado: 'País',
     clave: (ele: Operacions) : string | undefined => ele.pais,
-    orden: 9,
+    orden: 8,
   },
   {
     encabezado: 'Registro Federal de Contribuyente(RFC)',
     clave: (ele: Operacions) : string | undefined => ele.rfc,
-    orden: 10,
+    orden: 9,
   },
   {
     encabezado: 'Domicilio fiscal del solicitante',
     clave: (ele: Operacions) : string | undefined => ele.fiscalSolicitante,
-    orden: 11,
+    orden: 10,
   },
-  {
-    encabezado: 'Denominación o razón social',
-    clave: (ele: Operacions) : string | undefined => ele.razonSocial,
-    orden: 12,
-  },
-
   {
     encabezado: 'Estatus',
     clave: (ele: Operacions) : string | undefined => (ele.estatus ? 'Activada' : 'Baja'),
-    orden: 13,
+    orden: 11,
   },
 ];
 
@@ -521,8 +510,18 @@ export const CONFIGURACION_EMPRESAS = [
   {
     encabezado: 'Estatus',
     clave: (ele: Operacions) : string | undefined => (ele.estatus ? 'Activada' : 'Baja'),
-    orden: 13,
+    orden: 10,
   },
+  {
+    encabezado: 'Colonia',
+    clave: (ele: Operacions) : string | undefined => ele.colonia,
+    orden: 11,
+  },
+  {
+    encabezado: 'Teléfono',
+    clave: (ele: Operacions) : string | undefined => ele.telefono,
+    orden: 12,
+  }
 ];
 
 /**
@@ -629,6 +628,34 @@ export const CONFIGURACION_ANEXOS_IMPORTACION = [
   {
     encabezado: 'Tipo Fracción',
     clave: (ele: Anexo) : string | undefined => ele.tipoFraccion,
+    orden: 3,
+  },
+];
+
+/**
+ * CONFIGURACION_ANEXOS_SENSIBLES - Configuración para anexos de mercancías sensibles
+ * Maneja información específica de importación incluyendo cantidades,
+ * valores y unidades de medida tarifaria
+ */
+export const CONFIGURACION_ANEXOS_SENSIBLES = [
+  {
+    encabezado: 'Fracción arancelaria de la mercancía de importación',
+    clave: (ele: Anexo): number | undefined => ele.fraccionArancelariaDeLaMercanciaDeImportacion,
+    orden: 1,
+  },
+  {
+    encabezado: 'Cantidad',
+    clave: (ele: Anexo): number | undefined => ele.cantidad,
+    orden: 1,
+  },
+  {
+    encabezado: 'Valor',
+    clave: (ele: Anexo): number | undefined => ele.valor,
+    orden: 2,
+  },
+  {
+    encabezado: 'Unidad de medida tarifaria',
+    clave: (ele: Anexo) : string | undefined => ele.unidadMedida,
     orden: 3,
   },
 ];

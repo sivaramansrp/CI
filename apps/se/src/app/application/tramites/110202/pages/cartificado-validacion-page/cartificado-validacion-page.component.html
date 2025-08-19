@@ -13,7 +13,7 @@
 
     <div class="row">
       @switch (indice) { @case (1) {
-      <app-paso-uno></app-paso-uno>
+     <app-paso-uno (alertaEvento)="mostrarAlerta = $event"></app-paso-uno>
       } @case (2) {
       <app-paso-dos></app-paso-dos>
       } }
@@ -22,6 +22,12 @@
         [datos]="datosPasos"
         (continuarEvento)="getValorIndice($event)"
       ></btn-continuar>
+         @if (mostrarAlerta) {
+   <ng-alert
+          [CONTENIDO]="TEXTOS.ADJUNTAR"
+          [CUSTOMECLASS]="infoAlert"
+        ></ng-alert>
+}
     </div>
   </div>
 </div>

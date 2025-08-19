@@ -1,6 +1,10 @@
+import { Destinatario, Fabricante, Facturador, Proveedor } from '../../../shared/models/terceros-relacionados.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@libs/shared/data-access-user/src';
+
 import { Injectable } from '@angular/core';
+import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
+
 
 
 /**
@@ -69,6 +73,33 @@ export interface Tramite260911State {
   apellidoMaterno: string;
   /** Número de permiso de importación CNSNS */
   importPermitNumberCNSNS?: string;
+  /** Clave del modal SCian */
+  claveScianModal?: string;
+  /** Descripción del modal SCian */
+  claveDescripcionModal?: string;
+  /** Configuración de la tabla SCian */
+  scianConfigDatos?: TablaScianConfig[];
+  /** Entidad federativa seleccionada */
+  entidad: Catalogo | null;
+  /** Representación federal seleccionada */
+  representacion: Catalogo | null;
+  /**
+   * Lista de fabricantes en la tabla de datos.
+   */
+  fabricanteTablaDatos: Fabricante[];
+  /**
+   * Lista de proveedores en la tabla de datos.
+   */
+  proveedorTablaDatos: Proveedor[];
+   /**
+   * Lista de destinatarios finales en la tabla de datos.
+   */
+  destinatarioFinalTablaDatos: Destinatario[];
+ /**
+   * Lista de facturadores en la tabla de datos.
+   */
+  facturadorTablaDatos: Facturador[];
+  
 }
 
 /**
@@ -108,6 +139,15 @@ export function createInitialState(): Tramite260911State {
     apellidoPaterno: '',
     apellidoMaterno: '',
     importPermitNumberCNSNS: undefined,
+    claveScianModal: undefined,
+    claveDescripcionModal: undefined,
+    scianConfigDatos: [],
+    entidad: null,
+    representacion: null,
+    fabricanteTablaDatos: [],
+    proveedorTablaDatos: [],
+    destinatarioFinalTablaDatos: [],
+    facturadorTablaDatos: [],
   };
 }
 
@@ -126,6 +166,55 @@ export class Tramite260911Store extends Store<Tramite260911State> {
   constructor() {
     super(createInitialState());
   }
+
+   /**
+   * Actualiza la tabla de fabricantes.
+   * @param {Fabricante[]} newFabricantes - Nuevos fabricantes a agregar
+   */
+  public updateFabricanteTablaDatos(newFabricantes: Fabricante[]): void {
+    this.update((state) => ({
+      ...state,
+      fabricanteTablaDatos: [...state.fabricanteTablaDatos, ...newFabricantes],
+    }));
+  }
+
+    /**
+   * Actualiza la tabla de proveedores.
+   * @param {Proveedor[]} newProveedores - Nuevos proveedores a agregar
+   */
+  public updateProveedorTablaDatos(newProveedores: Proveedor[]): void {
+    this.update((state) => ({
+      ...state,
+      proveedorTablaDatos: [...state.proveedorTablaDatos, ...newProveedores],
+    }));
+  }
+  /**
+   * Actualiza la tabla de destinatarios finales.
+   * @param {Destinatario[]} newDestinatarios - Nuevos destinatarios a agregar
+   */
+  public updateDestinatarioFinalTablaDatos(
+    newDestinatarios: Destinatario[]
+  ): void {
+    this.update((state) => ({
+      ...state,
+      destinatarioFinalTablaDatos: [
+        ...state.destinatarioFinalTablaDatos,
+        ...newDestinatarios,
+      ],
+    }));
+  }
+
+   /**
+   * Actualiza la tabla de facturadores.
+   * @param {Facturador[]} newFacturadores - Nuevos facturadores a agregar
+   */
+  public updateFacturadorTablaDatos(newFacturadores: Facturador[]): void {
+    this.update((state) => ({
+      ...state,
+      facturadorTablaDatos: [...state.facturadorTablaDatos, ...newFacturadores],
+    }));
+  }
+
 
   /**
    * Actualiza el estado del trámite 630303 con los valores proporcionados.
