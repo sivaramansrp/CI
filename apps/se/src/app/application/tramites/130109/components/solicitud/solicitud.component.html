@@ -4,6 +4,7 @@
   [catalogosArray]="catalogosArray"
   [solicitudOpciones]="opcionesSolicitud"
   [esFormularioSoloLectura] ="esFormularioSoloLectura"
+  [mostrarErrorClasificacion]="mostrarErrorClasificacion"
   (setValoresStoreEvent)="setValoresStore($event)"
 ></app-datos-del-tramite>
 
@@ -26,7 +27,7 @@
   [esFormularioSoloLectura] ="esFormularioSoloLectura"
   (filaSeleccionadaChange)="manejarlaFilaSeleccionada($event)"
   (validarYEnviarFormularioEvent)="validarYEnviarFormulario()"
-  (navegarParaModificarPartidaEvent)="navegarParaModificarPartida()"
+  
   [disabled]="disabledModificar()"
   (setValoresStoreEvent)="setValoresStore($event)"
 ></app-partidas-de-la-mercancia>

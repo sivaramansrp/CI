@@ -1,13 +1,15 @@
 
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ConfiguracionColumna, Notificacion, NotificacionesComponent, TipoNotificacionEnum } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { Modal } from 'bootstrap';
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../constantes/partidas-de-la-mercancia.enum';
 import { PartidasDeLaMercanciaModelo } from '../../models/partidas-de-la-mercancia.model';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 
 /**
@@ -23,12 +25,19 @@ import { TituloComponent } from '@ng-mf/data-access-user';
     CommonModule,
     ReactiveFormsModule,
     TituloComponent,
-    TablaDinamicaComponent
+    TablaDinamicaComponent,
+    TooltipModule,
+    NotificacionesComponent
   ],
   templateUrl: './partidas-de-la-mercancia.component.html',
   styleUrl: './partidas-de-la-mercancia.component.scss',
 })
 export class PartidasDeLaMercanciaComponent implements OnChanges{
+
+  /**
+   * @description Referencia al elemento de la partida que se va a modificar.
+   */
+  @ViewChild('modificarPartidaModal') modificarPartidaElemento!: ElementRef;
   /**
   * @description Indica si el formulario debe mostrarse en modo solo lectura.
   */
@@ -50,6 +59,11 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    * Bandera para mostrar u ocultar la tabla dinámica.
    */
   @Input() mostrarTabla = false;
+
+  /**
+   * @descripcion Notificación para mostrar mensajes al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
 
   /**
    * filaSeleccionadaChange
@@ -102,6 +116,11 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    * Si está configurada como `true`, la tabla estará deshabilitada.
    */
   @Input() disabled: boolean = false;
+  /**
+   * Indica si el popup de serie agregada está abierto.
+   */
+  notificacionInput: boolean = false;
+  
   /**
    * Constructor para inicializar el componente e inyectar dependencias.
    * FormBuilder para crear formularios reactivos.
@@ -159,13 +178,136 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    * Navega para modificar una partida específica, emitiendo un evento.
    */
   navegarParaModificarPartida(): void {
-    this.navegarParaModificarPartidaEvent.emit();
+       if (this.modificarPartidaElemento) {
+      const MODAL_INSTANCIA = new Modal(
+        this.modificarPartidaElemento?.nativeElement,
+        { backdrop: false }
+      );
+      MODAL_INSTANCIA.show();
+    }
   }
 
   /**
-   * Emite un evento para almacenar valores en el store.
+   * Cancela la modificación de una partida específica, cerrando el modal.
    */
-  setValoresStore(form: FormGroup, campo: string): void {
-    this.setValoresStoreEvent.emit({ form, campo });
+  modalCancelar(): void {
+  if (this.modificarPartidaElemento && this.modificarPartidaElemento.nativeElement) {
+    const MODAL_INSTANCIA = Modal.getInstance(
+      this.modificarPartidaElemento.nativeElement
+    );
+    if (MODAL_INSTANCIA) {
+      MODAL_INSTANCIA.hide();
+    }
   }
+}
+/**
+ * Emite un evento para almacenar valores en el store.
+ */
+setValoresStore(form: FormGroup, campo: string): void {
+  this.setValoresStoreEvent.emit({ form, campo });
+}
+
+/**
+ * Valida los campos del formulario antes de modificar una partida.
+ */
+validarModificarPartida(): void {
+  const CANTIDAD = this.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.value;
+  const VALOR_USD = this.partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.value;
+  const DESCRIPCION = this.partidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.value;
+
+  if (CANTIDAD && /[a-zA-Z]/.test(CANTIDAD)) {
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: 'warning',
+      modo: '', 
+      titulo: '',
+      mensaje: 'La cantidad debe ser un dato numérico',
+      cerrar: true,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+      tamanioModal:'modal-sm'
+    };
+    this.notificacionInput = true;
+    return;
+  }
+
+  if (!CANTIDAD || CANTIDAD === '0' || CANTIDAD === 0) {
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: 'warning',
+      modo: '',
+      titulo: '',
+      mensaje: 'La cantidad debe ser mayor a cero',
+      cerrar: true,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+      tamanioModal: 'modal-sm'
+    };
+    this.notificacionInput = true;
+    return;
+  }
+
+  if (VALOR_USD && /[a-zA-Z]/.test(VALOR_USD)) {
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: 'warning',
+      modo: '',
+      titulo: '',
+      mensaje: 'Debe agregar el valor en dolares de la partida.',
+      cerrar: true,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+      tamanioModal: 'modal-sm'
+    };
+    this.notificacionInput = true;
+    return;
+  }
+
+  if (!VALOR_USD || VALOR_USD.toString().trim() === '' || VALOR_USD === '0' || VALOR_USD === 0) {
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: 'warning',
+      modo: '',
+      titulo: '',
+      mensaje: 'Debe agregar el valor en dolares de la partida.',
+      cerrar: true,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+      tamanioModal: 'modal-sm'
+    };
+    this.notificacionInput = true;
+    return;
+  }
+
+  if (!DESCRIPCION || DESCRIPCION.trim() === '') {
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: 'warning',
+      modo: '',
+      titulo: '',
+      mensaje: 'Debe agregar una descripción',
+      cerrar: true,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+      tamanioModal: 'modal-sm'
+    };
+    this.notificacionInput = true;
+    return;
+  }
+
+  if (this.modificarPartidaElemento && this.modificarPartidaElemento.nativeElement) {
+    const MODAL_INSTANCIA = Modal.getInstance(this.modificarPartidaElemento.nativeElement);
+    if (MODAL_INSTANCIA) {
+      MODAL_INSTANCIA.hide();
+    }
+  }
+}
+
+  /**
+   * Cierra el modal de notificación.
+   */
+  cerrarModal(): void {
+    this.notificacionInput = false;
+  }
+
 }
