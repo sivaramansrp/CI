@@ -64,6 +64,18 @@ configuracionFechaFinVigencia: InputFecha = {
   required: false,
   habilitado: true,
 };
+
+/**
+ * @property {InputFecha} configuracionFechaRevision
+ * @description
+ * Configuración del campo de fecha de revisión para el formulario de pago de derechos.
+ * @type {InputFecha}
+ */
+configuracionFechaRevision: InputFecha = {
+  labelNombre: 'Fecha de pago revisión',
+  required: false,
+  habilitado: true,
+};
  /**
  * @method cambioFechaPagoDeDerechos
  * @description
@@ -132,6 +144,10 @@ cambioFechaPagoDeDerechosRevision(nuevo_valor: string): void {
    * @returns {void}
    */
   ngOnInit(): void {
+    // Configure date fields availability based on form state
+    this.configuracionFechaFinVigencia.habilitado = !this.formularioDeshabilitado;
+    this.configuracionFechaRevision.habilitado = !this.formularioDeshabilitado;
+    
     this.iniciarFormulario();
     if (this.formularioDeshabilitado) {
       this.pagosDeDerechosForm.disable();
@@ -160,7 +176,8 @@ cambioFechaPagoDeDerechosRevision(nuevo_valor: string): void {
       llaveDePagoRevision: [{ value: this.tramiteState.llaveDePagoRevision, disabled: true }, Validators.required],
       fechaPagoDeDerechosRevision: [{ value: this.tramiteState.fechaPagoDeDerechosRevision, disabled: true }, Validators.required],
       importeDePagoRevision: [{ value: this.tramiteState.importeDePagoRevision, disabled: true }, Validators.required],
-      fechaDeInspeccion: [{ value: this.tramiteState.fechaDeInspeccion, disabled: true }, Validators.required]
+      fechaDeInspeccion: [{ value: this.tramiteState.fechaDeInspeccion, disabled: true }, Validators.required],
+      fechaPagoDerechos: [{ value: this.tramiteState.fechaPagoDerechos, disabled: true }, Validators.required]
     });
 
     this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
@@ -181,7 +198,9 @@ cambioFechaPagoDeDerechosRevision(nuevo_valor: string): void {
           fechaPagoDeDerechosRevision: datos.fechaPagoDeDerechosRevision,
           importeDePagoRevision: datos.importeDePagoRevision,
           fechaDeInspeccion: datos.fechaDeInspeccion,
+          fechaPagoDerechos: datos.fechaPagoDerechos
         });
+        
       })
     ).subscribe();
   }

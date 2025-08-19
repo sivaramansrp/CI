@@ -228,6 +228,9 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   */
   @Output() mostrarRecintoChange = new EventEmitter<boolean>();
 
+  /** Indica si se debe mostrar el mensaje de error para el campo de empleados propios. */
+  public mostrarEmpPropiosError: boolean = false;
+
   /**
    * Constructor de la clase DatosComunesComponent.
    * 
@@ -277,6 +280,39 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     this.obtenerAgregarMiembroDatos();
     this.crearManifestadoForm();
     this.inicializarEstadoFormulario();
+    this.obtenerEnSuCaracterDeOpciones();
+    this.obtenerTipoDePersonaOpciones();
+    this.obtenerNacionalidadOpciones();
+  }
+
+  /** Obtiene las opciones de sector productivo desde el servicio y las asigna al campo correspondiente en el formulario dinámico. */
+  obtenerEnSuCaracterDeOpciones(): void {
+    this.datosComunesSvc
+      .getEnSuCaracterDeDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.enSuCaracterDeOptions = data;
+      });
+  }
+
+  /** Obtiene las opciones de sector productivo desde el servicio y las asigna al campo correspondiente en el formulario dinámico. */
+  obtenerTipoDePersonaOpciones(): void {
+    this.datosComunesSvc
+      .getTipoDePersonaDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.tipoDePersona = data;
+      });
+  }
+
+  /** Obtiene las opciones de nacionalidad desde el servicio y las asigna al campo correspondiente en el formulario dinámico. */
+  obtenerNacionalidadOpciones(): void {
+    this.datosComunesSvc
+      .getNacionalidadDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.nacionalidadOptions = data;
+      });
   }
 
 
@@ -383,6 +419,11 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
         { value: '', disabled: true },
         Validators.required,
       ],
+      tipoDePersona: ['', Validators.required],
+      nombre: ['', Validators.required],
+      apellidoPaterno: ['', Validators.required],
+      apellidoMaterno: ['', Validators.required],
+      nombreDeLaEmpresa: ['', Validators.required]
     });
   }
 
@@ -498,8 +539,12 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * El modal se muestra con una clase CSS de 'modal-lg' para aplicar un estilo específico.
    * Este método utiliza el `modalService` para crear y gestionar la instancia del modal.
    */
-  public abrirModal(template: TemplateRef<void>): void {
-    this.modalRef = this.modalService.show(template, { class: 'modal-lg modal-dialog-centered',});
+  public abrirModal(template: TemplateRef<void>, type?: string): void {
+    if (type === 'agregar') {
+      this.modalRef = this.modalService.show(template, { class: 'modal-xl modal-dialog-centered', });
+    } else {
+      this.modalRef = this.modalService.show(template, { class: 'modal-lg modal-dialog-centered', });
+    }
   }
 
   /**
@@ -513,6 +558,14 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof DatosComunesStore): void {
     const VALOR = form.get(campo)?.value;
     (this.datosComunesStore[metodoNombre] as (value: unknown) => void)(VALOR);
+
+    if (campo === 'empPropios' && VALOR) {
+      this.mostrarEmpPropiosError = true;
+    }
+
+    if (campo === 'bimestre' && VALOR) {
+      this.mostrarEmpPropiosError = false;
+    }
 
   /**
   * Emite un evento para actualizar la visualización de importaciones
@@ -606,6 +659,42 @@ onRadioChanged(event: { controlName: string, value: unknown }):void {
     } else {
       this.comunesForm.enable();
       this.agregarMiembroDeLaEmpresaFrom.enable();
+    }
+  }
+
+  /** Agrega un nuevo miembro a la tabla con los datos capturados en el formulario y cierra el modal. */
+  public miembroModalAceptar(): void {
+    const DATOS = {
+      tipoDePersona: DatosComunesComponent.obtenerDescripcion(this.tipoDePersona, this.agregarMiembroDeLaEmpresaFrom.get('tipoDePersona')?.value),
+      nombre: this.agregarMiembroDeLaEmpresaFrom.get('nombre')?.value,
+      rfc: this.agregarMiembroDeLaEmpresaFrom.get('rfc')?.value,
+      caracter: DatosComunesComponent.obtenerDescripcion(this.enSuCaracterDeOptions, this.agregarMiembroDeLaEmpresaFrom.get('enSuCaracterDe')?.value),
+      nacionalidad: DatosComunesComponent.obtenerDescripcion(this.nacionalidadOptions, this.agregarMiembroDeLaEmpresaFrom.get('nacionalidad')?.value),
+      obligadoTributar: this.agregarMiembroDeLaEmpresaFrom.get('obligadoaTributarenMexico')?.value,
+      nombreEmpresa: this.agregarMiembroDeLaEmpresaFrom.get('nombreCompleto')?.value
+    };
+    this.agregarMiembroTablaDatos = [...this.agregarMiembroTablaDatos, DATOS];
+    this.modalRef?.hide();
+  }
+
+  /**
+ * @method obtenerDescripcion
+ * @description
+ * Obtiene la descripción de la fracción arancelaria seleccionada en el formulario dinámico.
+ * @returns {string} Descripción de la fracción arancelaria seleccionada o una cadena vacía si no existe.
+ */
+  public static obtenerDescripcion(array: Catalogo[], id: string): string {
+    const DESCRIPCION = array.find((ele: Catalogo) => Number(ele.id) === Number(id))?.descripcion;
+    return DESCRIPCION ?? '';
+  }
+
+  /** Busca el RFC ingresado y asigna los datos simulados de registro y nombre completo al formulario si existe un valor. */
+  buscarRFC(): void {
+    if (this.agregarMiembroDeLaEmpresaFrom.get('rfc')?.value) {
+      this.agregarMiembroDeLaEmpresaFrom.patchValue({
+        registroFederaldeContribuyentes: this.agregarMiembroDeLaEmpresaFrom.get('rfc')?.value,
+        nombreCompleto: 'QAS'
+      });
     }
   }
 

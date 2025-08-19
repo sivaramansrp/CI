@@ -77,7 +77,7 @@ export class ManifiestosYDeclaracionesComponent implements OnInit, OnDestroy {
       takeUntil(this.destruirNotificador$),
       map((seccionState) => {
        this.esFormularioSoloLectura = seccionState.readonly;
-       
+       this.guardarDatosFormulario();
       })
     )
     .subscribe()
@@ -89,6 +89,9 @@ export class ManifiestosYDeclaracionesComponent implements OnInit, OnDestroy {
    */
 
   guardarDatosFormulario(): void {
+    if(!this.manifiestosForm){
+      return;
+    }
     if (this.esFormularioSoloLectura) {
     this.manifiestosForm.disable();
     this.manifiestosForm.get('informacionConfidencial')?.disable();

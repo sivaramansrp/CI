@@ -249,7 +249,7 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
     if (!this.tieneBandeja) {
       this.router.navigate([this.procedureUrl]);
     }
-    if (ORIGIN === 'FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO') {
+    if (ORIGIN === 'FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO' || ORIGIN === 'AtenderRequerimiento') {
       this.router.navigate([
         `/${this.tramiteData[0].department}/proceso-requerimiento`,
       ]);
