@@ -5,10 +5,13 @@ import {
   ConsultaioQuery,
   CrossListLable,
   MaxDigitsValidator,
+  Notificacion,
+  Pedimento,
   REGEX_SOLO_DIGITOS,
   SeccionLibQuery,
   TablaSeleccion,
-  ValidacionesFormularioService
+  ValidacionesFormularioService,
+  NotificacionesComponent
 } from '@ng-mf/data-access-user';
 import {
   CONFIGURACION_SUSTANCIAS_SENSIBLES,
@@ -16,7 +19,7 @@ import {
   CROSLISTA_DE_PAISES,
   LISTA_DE_ENTRADA_PERSONALIZADA,
 } from '../../enum/pantallas-constante.enum';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, EventEmitter } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -39,12 +42,61 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/
 import { Solicitud230401Query } from '../../estados/queries/solicitud230401.query';
 import { Subject } from 'rxjs';
 import { SustanciaSensible } from '../../models/tramies230401.model';
+
 @Component({
   selector: 'app-datos-solicitud',
   templateUrl: './datos-solicitud.component.html',
   styleUrl: './datos-solicitud.component.scss',
 })
 export class DatosSolicitudComponent implements OnInit, OnDestroy {
+
+    /**
+   * @description
+   * Objeto que representa una nueva notificación.
+   * Se utiliza para mostrar mensajes de alerta o información al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
+   * Controla la visibilidad del modal de alerta.
+   * @property {boolean} mostrarAlerta
+   */
+  public mostrarAlerta: boolean = false;
+
+  /**
+   * Controla la visibilidad del modal de confirmación para eliminar.
+   * @property {boolean} confirmacionAlerta
+   */
+  public confirmacionAlerta: boolean = false;
+
+  /**
+   * @property {any[]} scianLista
+   * Lista de registros SCIAN seleccionados.
+   */
+  public scianLista: any[] = [];
+
+  /**
+   * @description
+   * Objeto que representa una nueva notificación de eliminación.
+   * Se utiliza para mostrar mensajes de alerta o información al usuario.
+   */
+  public nuevaNotificacionEliminar!: Notificacion;
+
+  /**
+   * @description
+   * Objeto que representa una notificación para confirmación de eliminación.
+   */
+  public seleccionarFilaNotificacion: Notificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: '',
+    mensaje: '¿Estás seguro que deseas eliminar los registros seleccionados?',
+    cerrar: true,
+    tiempoDeEspera: 2000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: 'Cancelar',
+  };
 
   /**
    * Representa el formulario reactivo utilizado para capturar y validar los datos de la solicitud.
@@ -927,6 +979,72 @@ creatFormSolicitud(): void {
 }
 
   /**
+   * Modifica una sustancia sensible seleccionada en la lista de datos.
+   * 
+   * Este método permite al usuario modificar los datos de una sustancia sensible
+   * que ya existe en la tabla. Primero verifica que haya exactamente una sustancia
+   * seleccionada, luego carga sus datos en el formulario para su edición.
+   * 
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  modificarListaDeNumeros(): void {
+    if (this.sustanciasSensiblesSeleccionadas.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'info',
+        titulo: 'Advertencia',
+        mensaje: 'Debe seleccionar una sustancia para modificar.',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+      };
+      this.mostrarAlerta = true;
+      return;
+    }
+
+    if (this.sustanciasSensiblesSeleccionadas.length > 1) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'info',
+        titulo: 'Advertencia',
+        mensaje: 'Solo puede modificar una sustancia a la vez. Seleccione únicamente un registro.',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+      };
+      this.mostrarAlerta = true;
+      return;
+    }
+
+    // Cargar los datos de la sustancia seleccionada en el formulario
+    const sustanciaSeleccionada = this.sustanciasSensiblesSeleccionadas[0];
+    this.FormSolicitud.patchValue({
+      numeroCas: sustanciaSeleccionada.numeroCAS,
+      descripcionNoArancelaria: sustanciaSeleccionada.descripcionNoArancelaria,
+      nombreQuimico: sustanciaSeleccionada.nombreQuimico
+    });
+
+    // Opcional: Marcar que se está modificando un registro existente
+    // Esto puede ser útil para cambiar el comportamiento del botón "Agregar"
+    this.modoModificacion = true;
+    this.sustanciaEnModificacion = sustanciaSeleccionada;
+  }
+
+  /**
+   * Indica si el componente está en modo modificación de una sustancia existente.
+   */
+  private modoModificacion: boolean = false;
+
+  /**
+   * Sustancia que está siendo modificada actualmente.
+   */
+  private sustanciaEnModificacion: SustanciaSensible | null = null;
+
+  /**
    * Agrega una sustancia sensible a la lista de datos en la tabla.
    * 
    * Este método crea un objeto `SustanciaSensible` con los valores del formulario
@@ -940,19 +1058,50 @@ creatFormSolicitud(): void {
     const SUSTANCIA_SENSIBLE: SustanciaSensible = {
       numeroCAS: this.FormSolicitud.get('numeroCas')?.value,
       cas: '',
-      descripcionNoArancelaria: `Descripción no arancelaria ${this.FormSolicitud.get('numeroCas')?.value}`,
-      nombreQuimico: `Nombre químico ${this.FormSolicitud.get('numeroCas')?.value}`,
+      descripcionNoArancelaria: this.FormSolicitud.get('descripcionNoArancelaria')?.value || `Descripción no arancelaria ${this.FormSolicitud.get('numeroCas')?.value}`,
+      nombreQuimico: this.FormSolicitud.get('nombreQuimico')?.value || `Nombre químico ${this.FormSolicitud.get('numeroCas')?.value}`,
     };
-    const EXISTING_INDEX = this.sustanciasSensiblesTablaDatos.findIndex(
-      (item) => item.numeroCAS === SUSTANCIA_SENSIBLE.numeroCAS
-    );
-    const UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS = [...this.sustanciasSensiblesTablaDatos];
-    if (EXISTING_INDEX !== -1) {
-      UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS.splice(EXISTING_INDEX, 1, SUSTANCIA_SENSIBLE);
+
+    let UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS = [...this.sustanciasSensiblesTablaDatos];
+
+    if (this.modoModificacion && this.sustanciaEnModificacion) {
+      // Actualizar la sustancia existente
+      const EXISTING_INDEX = UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS.findIndex(
+        (item) => item.numeroCAS === this.sustanciaEnModificacion?.numeroCAS
+      );
+      
+      if (EXISTING_INDEX !== -1) {
+        UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS[EXISTING_INDEX] = SUSTANCIA_SENSIBLE;
+      }
+      
+      // Resetear modo modificación
+      this.modoModificacion = false;
+      this.sustanciaEnModificacion = null;
     } else {
-      UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS.push(SUSTANCIA_SENSIBLE);
+      // Agregar nueva sustancia o actualizar si ya existe
+      const EXISTING_INDEX = UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS.findIndex(
+        (item) => item.numeroCAS === SUSTANCIA_SENSIBLE.numeroCAS
+      );
+
+      if (EXISTING_INDEX !== -1) {
+        UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS[EXISTING_INDEX] = SUSTANCIA_SENSIBLE;
+      } else {
+        UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS.push(SUSTANCIA_SENSIBLE);
+      }
     }
+
+    // Actualizar el store con la nueva lista
     this.tramite230401Store.setSustanciasSensiblesTablaDatos(UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS);
+
+    // Limpiar el formulario
+    this.FormSolicitud.patchValue({
+      numeroCas: '',
+      descripcionNoArancelaria: '',
+      nombreQuimico: ''
+    });
+
+    // Limpiar selecciones
+    this.sustanciasSensiblesSeleccionadas = [];
   }
 
   /**
@@ -981,30 +1130,83 @@ creatFormSolicitud(): void {
     }
   }
 
-  /**
-   * Modifica los valores del formulario "FormSolicitud" con los datos
-   * seleccionados de la lista "sustanciasSensiblesSeleccionadas".
-   * 
-   * Si la lista "sustanciasSensiblesSeleccionadas" está vacía, no realiza
-   * ninguna acción y retorna inmediatamente.
-   * 
-   * Los campos actualizados en el formulario incluyen:
-   * - `numeroCas`: Número CAS de la sustancia seleccionada.
-   * - `cas`: Código CAS de la sustancia seleccionada.
-   * - `descripcionNoArancelaria`: Descripción no arancelaria de la sustancia seleccionada.
-   * - `nombreQuimico`: Nombre químico de la sustancia seleccionada.
+    eliminarPedimentoConfirmacion(borrar: boolean): void {
+    if (borrar) {
+      // Remove the problematic code that was causing errors
+      // Just handle the elimination logic for pedimentos if needed
+    }
+    this.confirmacionAlerta = false;
+    if (borrar && this.pedimentos.length > 0) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+  }
+/**
+   * @description
+   * Arreglo que almacena los pedimentos asociados al establecimiento.
+   * Cada pedimento contiene información relevante para el trámite.
    */
-  modificarListaDeNumeros(): void {
-    if (this.sustanciasSensiblesSeleccionadas.length === 0) {
+  pedimentos: Array<Pedimento> = [];
+
+   /**
+   * @description
+   * Variable que almacena el índice del elemento que se desea eliminar de la lista de pedimentos.
+   * Utilizada para realizar operaciones de eliminación en el arreglo `pedimentos`.
+   */
+  elementoParaEliminar!: number;
+  
+
+   /**
+   * Método que maneja la lógica para mostrar un modal de confirmación
+   * antes de eliminar registros marcados. Si no hay elementos en la lista
+   * `scianLista`, muestra una alerta y detiene la ejecución.
+   *
+   * @remarks
+   * Este método configura una notificación de tipo alerta con un mensaje
+   * de confirmación para la eliminación de registros. La notificación incluye
+   * opciones para aceptar o cancelar la acción.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  eliminarModal(): void {
+    if (!this.sustanciasSensiblesSeleccionadas.length) {
+      this.mostrarAlerta = true;
       return;
     }
-    const DATOS_SELECCIONADOS = this.sustanciasSensiblesSeleccionadas[0];
-    this.FormSolicitud.patchValue({
-      numeroCas: DATOS_SELECCIONADOS.numeroCAS,
-      cas: DATOS_SELECCIONADOS.cas,
-      descripcionNoArancelaria: DATOS_SELECCIONADOS.descripcionNoArancelaria,
-      nombreQuimico: DATOS_SELECCIONADOS.nombreQuimico,
-    })
+    this.seleccionarFilaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: '¿Estás seguro que deseas eliminar los registros seleccionados?',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+    this.confirmacionAlerta = true;
+  }
+
+  /**
+   * Maneja la confirmación de eliminación de sustancias sensibles.
+   *
+   * @param borrar Indica si el usuario confirmó la eliminación (`true`) o la canceló (`false`).
+   *
+   * ### Descripción:
+   * - Si `borrar` es `true`:
+   *   - Llama al método `eliminarListaDeNumeros` para eliminar las sustancias seleccionadas.
+   * - Independientemente de la acción, desactiva la alerta de confirmación (`confirmacionAlerta = false`).
+   *
+   * ### Ejemplo de uso:
+   * ```ts
+   * confirmarEliminacionSustancias(true); // Elimina las sustancias
+   * confirmarEliminacionSustancias(false); // Cancela la eliminación
+   * ```
+   */
+  confirmarEliminacionSustancias(borrar: boolean): void {
+    if (borrar) {
+      this.eliminarListaDeNumeros();
+    }
+    this.confirmacionAlerta = false;
   }
 
   /**

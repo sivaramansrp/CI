@@ -95,7 +95,7 @@
             [disabled]="!sustanciasSensiblesSeleccionadas.length">
             Modificar
           </button>
-          <button type="button" name="eliminarListaDeNumeros" class="btn btn-danger ms-2" (click)="eliminarListaDeNumeros()"
+          <button type="button" name="eliminarListaDeNumeros" class="btn btn-danger ms-2" (click)="eliminarModal()"
             [disabled]="!sustanciasSensiblesSeleccionadas.length">
             Eliminar
           </button>
@@ -284,3 +284,22 @@
     </div>
   </form>
 </div>
+@if(confirmacionAlerta){
+<section>
+  <lib-notificaciones
+    [notificacionInput]="seleccionarFilaNotificacion"
+    (confirmacionModal)="confirmarEliminacionSustancias($event)"
+  >
+  </lib-notificaciones>
+</section>
+}
+
+@if(mostrarAlerta){
+<section>
+  <lib-notificaciones
+    [notificacionInput]="nuevaNotificacion"
+    (confirmacionModal)="mostrarAlerta = false"
+  >
+  </lib-notificaciones>
+</section>
+}
