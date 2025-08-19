@@ -548,14 +548,14 @@ export class DatosDelSolicitudModificacionComponent
     private domicilioEstablecimientoQuery: DatosDelSolicituteSeccionQuery,
      private consultaioQuery: ConsultaioQuery
   ) {
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroy$),
-        map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-        })
-      )
-      .subscribe()
+    // this.consultaioQuery.selectConsultaioState$
+    //   .pipe(
+    //     takeUntil(this.destroy$),
+    //     map((seccionState) => {
+    //       this.esFormularioSoloLectura = seccionState.readonly;
+    //     })
+    //   )
+    //   .subscribe()
   }
 
   /**
@@ -573,11 +573,28 @@ export class DatosDelSolicitudModificacionComponent
       this.eliminarNumeroYFechaControls();
     }
     this.obtenerScianTablaDatos();
-    this.cargarDatosDesdeApi()
-    if (this.esFormularioSoloLectura) {
-      this.domicilioEstablecimiento.disable();
-      this.solicitudEstablecimientoForm.disable();
-    }
+    this.cargarDatosDesdeApi();
+
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((seccionState) => {
+      this.esFormularioSoloLectura = seccionState.readonly;
+      if (this.esFormularioSoloLectura) {
+        this.domicilioEstablecimiento.disable();
+        this.solicitudEstablecimientoForm.disable();
+      } else {
+        this.domicilioEstablecimiento.enable();
+        this.solicitudEstablecimientoForm.enable();
+        this.domicilioEstablecimiento.get('observaciones')?.disable();
+      }
+    });
+
+  // Listen for changes on the 'scian' control
+  this.scianForm.get('scian')?.valueChanges
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((selectedId) => {
+      this.scianForm.get('descripcionScian')?.setValue(selectedId, { emitEvent: false });
+    });
   }
 
   /**
@@ -672,7 +689,9 @@ eliminarSeleccionados(): void {
       .select()
       .pipe(takeUntil(this.destroy$))
       .subscribe((state) => {
+        // console.log('Loaded state for domicilioEstablecimiento:', state);
         this.domicilioEstablecimiento.patchValue(state, { emitEvent: false });
+        this.domicilioEstablecimiento.get('observaciones')?.setValue(state.observaciones);
       });
     this.domicilioEstablecimientoQuery
       .select()
@@ -706,7 +725,7 @@ eliminarSeleccionados(): void {
     });
     this.scianForm = this.fb.group({
       scian: ['', Validators.required],
-      descripcionScian: [''],
+      descripcionScian: [{ value: '', disabled: true }],
     });
 
     this.solicitudEstablecimientoForm = this.fb.group({
