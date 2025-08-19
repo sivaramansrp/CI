@@ -1,6 +1,7 @@
 import {
   ALERTA_DE_MANIFESTO_Y_DECLARACIONES,
   ALERTA_OPCIONS,
+  DESHABILITADA_EN_INIT,
   MENSAJE_EMERGENTE_DE_CONFIRMACION,
   MENSAJE_SIN_FILA_SELECCIONADA,
   MODIFICADOR_MENSAJE_NO_FILA_SELECCIONADA,
@@ -590,7 +591,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   crearDatosSolicitudForm(): void {
     this.datosSolicitudForm = this.fb.group({
       rfcSanitario: [
-        this.datosSolicitudFormState.rfcSanitario,
+        {
+          value: this.datosSolicitudFormState.rfcSanitario,
+          disabled: DESHABILITADA_EN_INIT.includes(this.idProcedimiento),
+        },
         [
           Validators.required,
           Validators.minLength(2),
@@ -599,7 +603,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         ],
       ],
       denominacionRazon: [
-        this.datosSolicitudFormState.denominacionRazon,
+        {
+          value: this.datosSolicitudFormState.denominacionRazon,
+          disabled: DESHABILITADA_EN_INIT.includes(
+                this.idProcedimiento
+              ),
+        },
         [
           Validators.required,
           Validators.minLength(2),
@@ -607,7 +616,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         ],
       ],
       correoElectronico: [
-        this.datosSolicitudFormState.correoElectronico,
+        {
+          value: this.datosSolicitudFormState.correoElectronico,
+          disabled: DESHABILITADA_EN_INIT.includes(this.idProcedimiento),
+        },
         [
           Validators.required,
           Validators.minLength(2),
@@ -616,7 +628,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         ],
       ],
       codigoPostal: [
-        this.datosSolicitudFormState.codigoPostal,
+        {
+          value: this.datosSolicitudFormState.codigoPostal,
+          disabled: DESHABILITADA_EN_INIT.includes(this.idProcedimiento),
+        },
         [
           Validators.required,
           Validators.minLength(2),
@@ -634,7 +649,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           disabled:
             PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA.includes(
               this.idProcedimiento
-            ),
+            ) || DESHABILITADA_EN_INIT.includes(this.idProcedimiento),
         },
         [
           Validators.required,
@@ -643,21 +658,38 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         ],
       ],
       localidad: [
-        this.datosSolicitudFormState.localidad,
+        {
+          value: this.datosSolicitudFormState.localidad,
+          disabled: DESHABILITADA_EN_INIT.includes(this.idProcedimiento),
+        },
         [Validators.pattern(REGEX_IMPORTE_PAGO)],
       ],
-      colonia: [this.datosSolicitudFormState.colonia],
+      colonia: [
+        {
+          value: this.datosSolicitudFormState.colonia,
+          disabled: DESHABILITADA_EN_INIT.includes(this.idProcedimiento),
+        },
+      ],
       calleYNumero: [
-        this.datosSolicitudFormState.calleYNumero,
+        {
+          value: this.datosSolicitudFormState.calleYNumero,
+          disabled: DESHABILITADA_EN_INIT.includes(this.idProcedimiento),
+        },
         [Validators.required],
       ],
       calle: [this.datosSolicitudFormState.calle, [Validators.required]],
       lada: [
-        this.datosSolicitudFormState.lada,
+        {
+          value: this.datosSolicitudFormState.lada,
+          disabled: DESHABILITADA_EN_INIT.includes(this.idProcedimiento),
+        },
         [Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)],
       ],
       telefono: [
-        this.datosSolicitudFormState.telefono,
+        {
+          value: this.datosSolicitudFormState.telefono,
+          disabled: DESHABILITADA_EN_INIT.includes(this.idProcedimiento),
+        },
         [
           Validators.required,
           Validators.maxLength(5),

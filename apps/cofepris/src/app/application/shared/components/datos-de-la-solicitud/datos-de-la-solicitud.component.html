@@ -748,23 +748,27 @@
       <ng-titulo titulo="Manifiestos y declaraciones"></ng-titulo>
       <div class="mt-5">
         <div class="alert alert-info">
-          <label style="font-weight: normal">
-            <input type="checkbox" id="manifesto" formControlName="manifesto" />
-            <span class="form-label" *ngIf="esCampoRequerido('manifesto')">
-              <span
-                [ngClass]="
-                  datosSolicitudForm.get('manifesto')?.invalid &&
-                  (datosSolicitudForm.get('manifesto')?.touched ||
-                    datosSolicitudForm.get('manifesto')?.dirty)
-                    ? 'mensaje-error'
-                    : ''
-                "
-              >
-                *</span
-              >
-            </span>
-            {{ textoManifestoContenido }}
-          </label>
+          <div class="row align-items-center justify-content-start py-2" >
+            <div class="col-auto d-flex align-items-start pt-1">
+              <input class="form-check-input me-3" type="checkbox" id="manifesto" formControlName="manifesto" />
+              <label class="form-check-label ms-2" for="manifesto" *ngIf="esCampoRequerido('manifesto')">
+                <span
+                  [ngClass]="
+                    datosSolicitudForm.get('manifesto')?.invalid &&
+                    (datosSolicitudForm.get('manifesto')?.touched ||
+                      datosSolicitudForm.get('manifesto')?.dirty)
+                      ? 'mensaje-error'
+                      : ''
+                  "
+                >
+                  *</span
+                >
+              </label>
+            </div>
+            <div class="col align-items-center" style="margin-left: 38px;">
+              <label for="manifesto">{{ textoManifestoContenido }}</label>
+            </div>
+          </div>
         </div>
         <div
           class="mensaje-error"
