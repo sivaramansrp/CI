@@ -69,6 +69,9 @@ export interface Tramite303Store {
      * Transportista a modificar en el trámite 303.
      */
     transportistaModificar?: Transportista;
+    /**
+     * Indica si se debe mostrar un campo para el número IMMEX.
+     */
     immex: string;
     /**
      * Indica si se debe mostrar un campo para el padrón de importadores.
