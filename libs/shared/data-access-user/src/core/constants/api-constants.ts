@@ -303,3 +303,14 @@ export const API_GET_SOLICITUD_DOCUMENTOS = `sat-t${TRAMITE}/solicitud/${IDSOLIC
  */
 export const API_GET_TAREAS_DOCUMENTOS = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/bitacora`;
   
+/**
+ * Id opinion que se utilizará en las consultas.
+ * Este valor debe ser reemplazado por el tramite correspondiente.
+ */
+export const IDOPINION= '{idOpinion}';
+
+/**
+ * API para Consultar detalle de opinion del tramite generico.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/consulta-detalle%20opninion 
+ */
+export const API_GET_OPINION_DETALLE = `sat-t${TRAMITE}/tramite/opinion/${IDOPINION}/detalle`
