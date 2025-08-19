@@ -40,6 +40,15 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit {
    */
   @Input() precisa!: boolean;
 
+   /**
+   * @Input
+   * Identificador único del procedimiento asociado.
+   * Este valor es requerido y se utiliza para determinar el procedimiento actual.
+   *
+   * @type {number}
+   */
+   @Input() idProcedimiento!: number;
+
   /**
    * Catálogo de datos de idiomas disponibles.
    * @type {Catalogo[]}

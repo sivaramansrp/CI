@@ -188,7 +188,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
       calle: ['', [Validators.required]],
       numeroLetra: ['', [Validators.required]],
       lada: [''],
-      telefono: ['', [Validators.required]],
+      telefono: [''],
       fax: [''],
       correoElectronico: ['', [Validators.required, Validators.email, Validators.pattern(/^[a-zA-Z0-9._%+-]+@gmail\.com$/)]],
     });
