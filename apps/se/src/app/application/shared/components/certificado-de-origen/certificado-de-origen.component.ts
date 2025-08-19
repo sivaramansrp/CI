@@ -1,6 +1,6 @@
 import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent,Notificacion, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, MERCANCIA_SELECCIONADAS, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
-import { Component,ElementRef,EventEmitter, Input, OnDestroy, OnInit, Output,ViewChild } from '@angular/core';
+import { Component,ElementRef,EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output,ViewChild, SimpleChanges } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -56,13 +56,13 @@ export const FECHA_FINAL = {
     AlertComponent,
     NotificacionesComponent
     
-  ],
+  ],  
   templateUrl: './certificado-de-origen.component.html',
   providers:[ToastrService],
   styleUrl: './certificado-de-origen.component.scss'
 })
 
-export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
+export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges {
   /**
  * Título mostrado en el componente.  
  * Puede ser personalizado desde el componente padre mediante [title].  
@@ -103,7 +103,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
    * Indica si hay mercancías disponibles para su procesamiento o visualización.
    * @type {boolean}
    */
-  @Input() mercanciasDisponibles!: boolean;
+  @Input() mercanciasDisponibles!:boolean;
      /**
      * @public
      * @property {Notificacion} nuevaNotificacion
@@ -357,14 +357,6 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
    */
   constructor(private fb: FormBuilder) {
 
-    // Si hay datos del formulario, se los asigna al formulario después de un pequeño retraso.
-
-    setTimeout(() => {
-      if (this.datosForm) {
-        this.formCertificado.patchValue(this.datosForm);
-      }
-    }, 100);
-
     this.actualizarDatosFormularioSolicitud();
   }
 
@@ -378,8 +370,8 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
    * @command
    * Utilice este método para inicializar el formulario antes de interactuar con los datos del certificado.
    */
-  createForm(): void {
-    this.formCertificado = this.fb.group({
+  async createForm(): Promise<void> {
+    this.formCertificado = await this.fb.group({
       si: [false],
       entidadFederativa: ['', [Validators.required, Validators.min(0)]],
   bloque: ['', [Validators.required, Validators.min(0)]],
@@ -438,12 +430,25 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
 */
   inicializarEstadoFormulario(): void {
     if (!this.formCertificado) {
-      this.createForm();
+      this.createForm();   
     }
+   
     if (this.esFormularioSoloLectura) {
       this.formCertificado.disable();
     }
   }
+
+ngOnChanges(changes: SimpleChanges):void {
+  if (changes['datosForm']?.currentValue) {
+    if(this.formCertificado){
+  this.formCertificado.patchValue(this.datosForm);
+    }
+    else{
+      this.createForm();
+    }
+  
+  }
+}
   /**
  * Inicializa el formulario para gestionar archivos.
  * 
@@ -529,6 +534,13 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
     this.inicializarEstadoFormulario();
     this.inicializarFormularioArchivo();
   }
+   validarFormularios(): boolean {
+if(this.formCertificado.valid){
+  return true;
+}
+this.formCertificado.markAllAsTouched();
+return false;
+  }
 
   /**
    * Método del ciclo de vida ngOnDestroy. Se utiliza para cancelar las suscripciones y evitar fugas de memoria.
@@ -550,6 +562,9 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
     * y su estado asociado en el store.
     */
   setValoresStore(formGroupName: string, campo: string, storeStateName: string): void {
+    if(this.formCertificado.get('si')?.value){
+     this.formCertificado.get('primerApellido')?.setValidators([Validators.required,Validators.maxLength(20)]);
+    }
     const VALOR = this.formCertificado.get(campo)?.value;
     this.formaValida.emit(this.formCertificado.valid);
     this.formCertificadoEvent.emit({ formGroupName, campo, valor: VALOR, storeStateName });
@@ -652,4 +667,6 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
       this.guardarClicado = [];
     }
   }
+
+ 
 }

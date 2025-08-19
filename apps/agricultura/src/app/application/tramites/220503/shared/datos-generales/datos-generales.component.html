@@ -138,72 +138,8 @@
         </div>
         <div class="col-md-12 mt-5">
           <div class="table-container">
-            <table class="table table-responsive">
-              <thead>
-                <tr>
-                  <th style="width: 20px"></th>
-                  <th style="width: 20px"></th>
-                  <th class="name-column">
-                    No. partida
-                    <div class="icon-stack">
-                      <i
-                        [ngClass]="{
-                          'bi-caret-up-fill': currentDirection === -1,
-                          'bi-caret-up': currentDirection !== -1
-                        }"
-                        (click)="rotateRow(-1)"
-                      >
-                      </i>
-                      <i
-                        [ngClass]="{
-                          'bi-caret-down-fill': currentDirection === 1,
-                          'bi-caret-down': currentDirection !== 1
-                        }"
-                        (click)="rotateRow(1)"
-                      >
-                      </i>
-                    </div>
-                  </th>
-                  <th>Tipo de requisito</th>
-                  <th>Requisito</th>
-                  <th>Número de certificado internacional</th>
-                  <th>Fracción arancelaria</th>
-                  <th>Descripción de la fracción</th>
-                  <th>Nico</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                <tr
-                  *ngFor="let row of rows; let i = index"
-                  [class.visible-row]="i === currentIndex"
-                  [class.hidden-row]="i !== currentIndex"
-                >
-                  <td
-                    style="
-                      background-color: rgb(233, 236, 239);
-                      text-align: center !important;
-                    "
-                  >
-                    1
-                  </td>
-                  <td>
-                    <button title="''" type="button" class="btn btn-link">
-                      <i class="bi bi-plus"></i>
-                    </button>
-                  </td>
-                  <td style="text-align: center !important">
-                    {{ row.Partida }}
-                  </td>
-                  <td>{{ row.Tiporequisito }}</td>
-                  <td>{{ row.Requisito }}</td>
-                  <td>{{ row.Certificado }}</td>
-                  <td>{{ row.Fraccion }}</td>
-                  <td>{{ row.Descripcion }}</td>
-                  <td>{{ row.Nico }}</td>
-                </tr>
-              </tbody>
-            </table>
+               <app-tabla-dinamica  [configuracionTabla]="configuracionColumnasTabla"
+            [datos]="tablaFilaDatos" ></app-tabla-dinamica>
           </div>
         </div>
       </div>

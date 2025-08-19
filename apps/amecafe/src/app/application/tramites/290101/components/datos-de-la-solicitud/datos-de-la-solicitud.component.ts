@@ -26,7 +26,7 @@ import { CatalogosService } from '../../servicios/catalogos.service';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosSolicitudFormaInt } from '../../modelos/datos-de-interfaz.model';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -119,9 +119,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * 
    * @type {boolean}
    * @memberof DatosDeLaSolicitudComponent
-   * @input
    */
-  @Input() esFormularioSoloLectura!: boolean;
+ esFormularioSoloLectura!: boolean;
 
   /**
    * Opciones para el componente de radio buttons.
@@ -537,12 +536,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Navega a la ruta relativa '../bodegas' para permitir al usuario
    * gestionar los datos específicos de bodegas asociadas al trámite.
    * Utiliza navegación relativa a la ruta actual.
+   * Limpia el estado del formulario de bodegas antes de navegar.
    * 
    * @method redirigirBodegas
    * @returns {void}
    * @memberof DatosDeLaSolicitudComponent
    */
   redirigirBodegas(): void {
+    // Limpiar el estado del formulario de bodegas antes de navegar
+    this.tramiteStore.clearBodegasTramite();
+    
     this.router.navigate(['../bodegas'],
       {
         relativeTo: this.activatedRoute,
@@ -555,12 +558,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Navega a la ruta relativa '../cafe-de-exportadores' para permitir
    * al usuario gestionar los datos específicos de café de exportación.
    * Utiliza navegación relativa a la ruta actual.
+   * Limpia el estado del formulario de café exportadores antes de navegar.
    * 
    * @method redirigirCafeExportadores
    * @returns {void}
    * @memberof DatosDeLaSolicitudComponent
    */
   redirigirCafeExportadores(): void {
+    // Limpiar el estado del formulario de café exportadores antes de navegar
+    this.tramiteStore.clearCafExportTramite();
+    
     this.router.navigate(['../cafe-de-exportadores'],
       {
         relativeTo: this.activatedRoute,
@@ -580,6 +587,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @memberof DatosDeLaSolicitudComponent
    */
   redirigirBeneficios(): void {
+    this.tramiteStore.clearBeneficiosTramite();
     this.router.navigate(['../beneficios'],
       {
         relativeTo: this.activatedRoute,
@@ -593,12 +601,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Navega a la ruta relativa '../regiones' para permitir al usuario
    * gestionar los datos específicos de regiones de compra.
    * Utiliza navegación relativa a la ruta actual.
+   * Limpia el estado del formulario de regiones antes de navegar.
    * 
    * @method redirigirRegiones
    * @returns {void}
    * @memberof DatosDeLaSolicitudComponent
    */
   redirigirRegiones(): void {
+    // Limpiar el estado del formulario de regiones antes de navegar
+    this.tramiteStore.clearRegionTramite();
+    
     this.router.navigate(['../regiones'],
       {
         relativeTo: this.activatedRoute,

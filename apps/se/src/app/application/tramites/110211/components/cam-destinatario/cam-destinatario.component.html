@@ -4,7 +4,7 @@
     [esFormularioSoloLectura]="esFormularioSoloLectura" [razonSocialEditable]="true"></app-datos-del-destinatario>
   <app-destinatario (formaValida)="setFormValidaDestinatario($event)" [datosForm]="formDestinatarioValues"
     (formDestinatarioEvent)="setValoresStoreDe($event)"
-    [esFormularioSoloLectura]="esFormularioSoloLectura"></app-destinatario>
+    [esFormularioSoloLectura]="esFormularioSoloLectura" #destinatarioRef></app-destinatario>
   <form [formGroup]="exportadorForm">
     <div class="row mt-5">
       <ng-titulo titulo="Datos del representante legal del exportador" />
@@ -12,7 +12,7 @@
         <label class="form-label" for="lugar">Lugar*:</label>
         <input type="text" id="lugar" class="form-control" formControlName="lugar"
           (change)="setValoresStore(exportadorForm, 'lugar', 'setLugar')" />
-        @if (exportadorForm.get('lugar')?.invalid && exportadorForm.get('lugar')?.touched) {
+        @if (exportadorForm.get('lugar')?.invalid && (exportadorForm.get('lugar')?.touched || exportadorForm.get('lugar')?.dirty)) {
         <span class="mensaje-error">Lugar es obligatorio.</span>
         }
       </div>
@@ -23,7 +23,7 @@
         <label class="form-label" for="exportador">Nombre del representante legal del exportador*:</label>
         <input type="text" id="exportador" class="form-control" formControlName="exportador"
           (change)="setValoresStore(exportadorForm, 'exportador', 'setExportador')" />
-        @if (exportadorForm.get('exportador')?.invalid && exportadorForm.get('exportador')?.touched) {
+        @if (exportadorForm.get('exportador')?.invalid && (exportadorForm.get('exportador')?.touched || exportadorForm.get('exportador')?.dirty)) {
         @if (exportadorForm.get('exportador')?.errors?.['required']) {
         <span class="mensaje-error">Este campo es obligatorio.</span>
         }
@@ -39,7 +39,7 @@
         <label class="form-label" for="empresa">Empresa*:</label>
         <input type="text" id="empresa" class="form-control" formControlName="empresa"
           (change)="setValoresStore(exportadorForm, 'empresa', 'setEmpresa')" />
-        @if (exportadorForm.get('empresa')?.invalid && exportadorForm.get('empresa')?.touched) {
+        @if (exportadorForm.get('empresa')?.invalid && (exportadorForm.get('empresa')?.touched || exportadorForm.get('empresa')?.dirty)) {
         <span class="mensaje-error">Este campo es obligatorio.</span>
         }
       </div>
@@ -48,7 +48,7 @@
         <label class="form-label" for="cargo">Cargo*:</label>
         <input type="text" id="cargo" class="form-control" formControlName="cargo"
           (change)="setValoresStore(exportadorForm, 'cargo', 'setCargo')" />
-        @if (exportadorForm.get('cargo')?.invalid && exportadorForm.get('cargo')?.touched) {
+        @if (exportadorForm.get('cargo')?.invalid && (exportadorForm.get('cargo')?.touched || exportadorForm.get('cargo')?.dirty)) {
         <span class="mensaje-error">Este campo es obligatorio.</span>
         }
       </div>
@@ -57,7 +57,7 @@
         <label class="form-label" for="lada">Lada:</label>
         <input type="text" id="lada" class="form-control" formControlName="lada"
           (change)="setValoresStore(exportadorForm, 'lada', 'setLada')" />
-        @if (exportadorForm.get('lada')?.invalid && exportadorForm.get('lada')?.touched) {
+        @if (exportadorForm.get('lada')?.invalid && (exportadorForm.get('lada')?.touched || exportadorForm.get('lada')?.dirty)) {
         @if (exportadorForm.get('lada')?.errors?.['pattern']) {
         <span class="mensaje-error">Solo se permiten números.</span>
         }
@@ -68,7 +68,7 @@
         <label class="form-label" for="telfono">Teléfono*:</label>
         <input type="text" id="telfono" class="form-control" formControlName="telfono"
           (change)="setValoresStore(exportadorForm, 'telfono', 'setTelfono')" />
-        @if (exportadorForm.get('telfono')?.invalid && exportadorForm.get('telfono')?.touched) {
+        @if (exportadorForm.get('telfono')?.invalid && (exportadorForm.get('telfono')?.touched || exportadorForm.get('telfono')?.dirty)) {
         @if (exportadorForm.get('telfono')?.errors?.['required']) {
         <span class="mensaje-error">Este campo es obligatorio.</span>
         }
@@ -84,7 +84,7 @@
         <label class="form-label" for="fax">FAX*:</label>
         <input type="text" id="fax" class="form-control" formControlName="fax"
           (change)="setValoresStore(exportadorForm, 'fax', 'setFax')" />
-        @if (exportadorForm.get('fax')?.invalid && exportadorForm.get('fax')?.touched) {
+        @if (exportadorForm.get('fax')?.invalid && (exportadorForm.get('fax')?.touched || exportadorForm.get('fax')?.dirty)) {
         @if (exportadorForm.get('fax')?.errors?.['required']) {
         <span class="mensaje-error">Este campo es obligatorio.</span>
         }
@@ -98,7 +98,7 @@
         <label class="form-label" for="correo">Correo electrónico*:</label>
         <input type="text" id="correo" class="form-control" formControlName="correo"
           (change)="setValoresStore(exportadorForm, 'correo', 'setCorreo')" />
-        @if (exportadorForm.get('correo')?.invalid && exportadorForm.get('correo')?.touched) {
+        @if (exportadorForm.get('correo')?.invalid && (exportadorForm.get('correo')?.touched || exportadorForm.get('correo')?.dirty)) {
         @if (exportadorForm.get('correo')?.errors?.['required']) {
         <span class="mensaje-error">Este campo es obligatorio.</span>
         }

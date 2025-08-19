@@ -12,6 +12,7 @@
             formControlName="entidadFederativa"
             [isDisabled]="esFormularioSoloLectura"
             (selectionChange)="procesarDatosDelHijo($event)"
+            [placeholder]="'Seleccione una opción'"
           ></app-catalogo-select>
         </form>
       </div>
@@ -68,6 +69,7 @@
           [(ngModel)]="rfcEmpresa"
           name="rfdecontri"
           class="form-control"
+          maxlength="13"
           [disabled]="esFormularioSoloLectura"
           (ngModelChange)="enCambioDeCampo('rfcEmpresa', $event)"
         />
@@ -157,6 +159,9 @@
           type="text"
           id="{{ item.campo }}"
           [formControlName]="item.campo"
+          [maxlength]="item.maxlength || null"
+          (input)="item.campo === 'nombreEmpresaExt' ? onInputChange(item.campo, $event) : null"
+          [disabled]="esFormularioSoloLectura"
         />
       </div>
       } @else if (item.tipo_input === 'select') {
@@ -175,9 +180,12 @@
         <label for="{{ item.campo }}">{{ item.labelNombre }}:</label>
         <textarea
           class="form-control"
-          id="{{ item.labelNombre }}"
+          id="{{ item.campo }}"
           rows="15"
           [formControlName]="item.campo"
+          [maxlength]="item.maxlength || null"
+          (input)="item.campo === 'direccionEmpresaExtranjera' ? onInputChange(item.campo, $event) : null"
+          [disabled]="esFormularioSoloLectura"
         ></textarea>
       </div>
       } }
@@ -196,7 +204,7 @@
             name="agregarServicio"
             (click)="agregarEmpresaExtranjera()"
             class="btn btn-primary mx-2"
-            [disabled]="!formularioEmpresaExtranjera.valid"
+           [disabled]="esFormularioSoloLectura"
           >
             Agregar
           </button>
@@ -215,3 +223,22 @@
     </div>
   </div>
 </div>
+<!-- Confirmation Modal for Adding/Deleting Service -->
+@if (mostrarNotificacionAgregar && notificacionAgregarServicio) {
+<section>
+  <lib-notificaciones 
+    [notificacionInput]="notificacionAgregarServicio" 
+    (confirmacionModal)="manejarConfirmacion($event)">
+  </lib-notificaciones>
+</section>
+}
+
+<!-- RFC Validation Notification -->
+@if (nuevaNotificacionRfc) {
+<section>
+  <lib-notificaciones 
+    [notificacionInput]="nuevaNotificacionRfc" 
+    (confirmacionModal)="confirmarNotificacionRfc($event)">
+  </lib-notificaciones>
+</section>
+}

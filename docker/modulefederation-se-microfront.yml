@@ -1,7 +1,9 @@
 services:
 #-----------------------------------------------------------------
   modulefederation-se-microfront:
-    image: ghcr.io/vucem30/dockerized-modulefederation-se-microfront:1.0.25
+
+    image: ghcr.io/vucem30/dockerized-modulefederation-se-microfront:1.0.31
+
     build: 
       context: ./../
       dockerfile: apps/se/Dockerfile.dev

@@ -64,10 +64,11 @@ export class DatosSolitudeComponent implements OnInit, OnDestroy {
       takeUntil(this.destruirNotificacion$),
       map((seccionState) => {
        this.esFormularioSoloLectura = seccionState.readonly;
-       
+       this.disableGenerical();
+       this.guardarDatosFormulario();
       })
     )
-    .subscribe()
+    .subscribe();
   }
 
 
@@ -77,15 +78,47 @@ export class DatosSolitudeComponent implements OnInit, OnDestroy {
    */
 
   guardarDatosFormulario(): void {
+     if (!this.preOperativeForm) {
+      return;
+    }
     if (this.esFormularioSoloLectura) {
     this.preOperativeForm.get('ideGenerica1')?.disable();
-    this.preOperativeForm.get('observaciones')?.disable();
   }else {
     this.preOperativeForm.get('ideGenerica1')?.enable();
-    this.preOperativeForm.get('observaciones')?.enable();
   }
+
+  this.disableGenerical();
 }
 
+
+  /**
+   * Disables or enables the 'observaciones' control in the `preOperativeForm` form group
+   * based on the form's read-only state and the value of the 'ideGenerica1' control.
+   *
+   * - If the form is not initialized, the method returns immediately.
+   * - If the form is in read-only mode (`esFormularioSoloLectura` is true), the 'observaciones' control is always disabled.
+   * - If the form is not in read-only mode, the 'observaciones' control is disabled unless
+   *   the value of 'ideGenerica1' is exactly 'Modificación', in which case it is enabled.
+   */
+  disableGenerical(): void {
+    // Verificar si el formulario está inicializado antes de acceder a él
+    if (!this.preOperativeForm) {
+      return;
+    }
+    
+    // Si el formulario está en modo solo lectura, siempre deshabilitar observaciones
+    if (this.esFormularioSoloLectura) {
+      this.preOperativeForm.get('observaciones')?.disable();
+      return;
+    }
+    
+    // Si no está en modo solo lectura, verificar el valor de ideGenerica1
+    if (!(this.preOperativeForm.get('ideGenerica1')?.value === 'Modificación')) {
+      this.preOperativeForm.get('observaciones')?.disable();
+    } else {
+      this.preOperativeForm.get('observaciones')?.enable();
+    }
+  }
 
   /**
    * Método del ciclo de vida que se ejecuta al inicializar el componente.
@@ -107,6 +140,9 @@ export class DatosSolitudeComponent implements OnInit, OnDestroy {
    * Inicializa los valores del formulario con el estado actual de la solicitud.
    */
   crearFormularioOperativo(): void {
+    if (!this.solicitudPermisoState?.preOperativFormState) {
+      return;
+    }
     this.preOperativeForm = this.formBuilder.group({
       ideGenerica1: [
         this.solicitudPermisoState.preOperativFormState.ideGenerica1,
@@ -116,6 +152,7 @@ export class DatosSolitudeComponent implements OnInit, OnDestroy {
         [Validators.required],
       ],
     });
+    this.disableGenerical();
   }
 
   /**
@@ -123,10 +160,14 @@ export class DatosSolitudeComponent implements OnInit, OnDestroy {
    * campo Nombre del campo del formulario a actualizar.
    */
   setValoresStore(campo: string): void {
+    if (!this.preOperativeForm) {
+      return;
+    }
     const VALOR = this.preOperativeForm.get(campo)?.value;
     this.tramite260703Store.actualizarEstadoFormularioPreOperativo({
       [campo]: VALOR,
     });
+    
   }
 
   /**

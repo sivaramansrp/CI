@@ -22,7 +22,7 @@
           > </button>
         </div>
          <!-- Cuerpo del panel plegable -->
-        @if(colapsable){
+        @if(colapsable && !esFormularioSoloLectura)  {
         <div class="panel-collapse collapse in" id="panel-01">
           <div class="panel-body">
             <!-- Componente de alerta que muestra texto -->
@@ -33,27 +33,8 @@
             </div>
             <!-- Tabla responsiva para mostrar solicitudes -->
             <div class="col-md-12">
-              <table class="table table-responsive table-striped">
-                <thead>
-                  <tr>
-                   <!-- Encabezados de tabla dinámicos desde la entrada -->
-                    @for (item of tablaHeadData; track $index) {
-                    <th>{{ item }}</th>
-                    }
-                  </tr>
-                </thead>
-                <tbody>
-                   <!-- Filas dinámicas a partir de datos de entrada -->
-                  @for (item of tablaFilaDatos; let i = $index; track i) {
-                  <tr>
-                    <td>{{ item.fechaCreacion }}</td>
-                    <td>{{ item.mercancia }}</td>
-                    <td>{{ item.cantidad }}</td>
-                    <td>{{ item.proovedor }}</td>
-                  </tr>
-                  }
-                </tbody>
-              </table>
+        <app-tabla-dinamica  [configuracionTabla]="configuracionColumnaSolicitud"
+            [datos]="tablaFilaDatos" ></app-tabla-dinamica>
             </div>
           </div>
         </div>

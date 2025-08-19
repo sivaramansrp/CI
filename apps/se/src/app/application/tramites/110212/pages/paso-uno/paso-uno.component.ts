@@ -53,7 +53,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * Emite evento cuando se cambia de tab para ocultar error message.
    */
-  @Output() tabChanged = new EventEmitter<void>();
+  @Output() cambioDePestana = new EventEmitter<void>();
 
   /**
    * Índice de la pestaña activa.
@@ -144,7 +144,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.indice = i;
     this.store.setPestanaActiva(this.indice);
     // Ocultar mensaje de error al cambiar de pestaña
-    this.tabChanged.emit();
+    this.cambioDePestana.emit();
   }
   /**
    * @method fetchGetDatosConsulta

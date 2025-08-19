@@ -79,7 +79,7 @@ export interface Tramite130110State {
   /**
    * Valor en USD de las partidas de la mercancía ingresado en el formulario.
    */
-  valorPartidaUSDPartidasDeLaMercancia: number;
+  valorPartidaUSDPartidasDeLaMercancia: string;
 
   /**
    * Descripción de las partidas de la mercancía ingresada en el formulario.
@@ -151,7 +151,7 @@ export function createInitialState(): Tramite130110State {
     regimen: '',
     clasificacion: '',
     cantidadPartidasDeLaMercancia: '',
-    valorPartidaUSDPartidasDeLaMercancia: 0,
+    valorPartidaUSDPartidasDeLaMercancia: '',
     descripcionPartidasDeLaMercancia: '',
     valorFacturaUSD: '',
     bloque: '',

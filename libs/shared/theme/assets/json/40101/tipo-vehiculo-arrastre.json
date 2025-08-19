@@ -1,6 +1,5 @@
 {
   "datos": [
-    { "id": "", "descripcion": "Seleccione un valor" },
     { "id": 1, "descripcion": "OTROS." },
     { "id": 2, "descripcion": "FLAT 20'(FLAT 20')." },
     { "id": 3, "descripcion": "FLAT 40'(FLAT 40')." },

@@ -99,14 +99,16 @@
             <div class="container mt-4">
               <ng-titulo titulo="Cargar Archivo"> </ng-titulo>
               <div class="row align-items-center mb-3">
-                <div class="col-auto">
+                <div class="col-md-3">
                   <label for="archivoNacionales" class="form-label mb-0 me-3">
                     Archivo:
                   </label>
                 </div>
-                <div class="col-md-8">
-                  <input type="file" id="archivoNacionales" class="form-control w-100" />
-                </div>
+              </div>
+              <div class="row align-items-center mb-3">
+              <div class="col-md-8">
+                <input type="file" id="archivoNacionales" class="form-control w-100" />
+              </div>
               </div>
             </div>
           </div>
@@ -166,12 +168,12 @@
           <div class="col-md-6 col-sm-6"></div>
           <div class="col-md-6 col-sm-6 text-end">
             <div class="btn-group">
-              <button class="btn btn-primary me-2" type="button" [disabled]="esFormularioSoloLectura">
-                Elimina Partida
+              <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura">
+                Eliminar Partida
               </button>
-              <button class="btn btn-danger" type="button" (click)="navegarParaModificarPartida()" [disabled]="disabled"
+              <button class="btn btn-primary" type="button" (click)="navegarParaModificarPartida()" [disabled]="disabled"
                 data-bs-toggle="modal" data-bs-target="#modalModificarPartida">
-                Mofificar partida
+                Modificar partida
               </button>
             </div>
           </div>

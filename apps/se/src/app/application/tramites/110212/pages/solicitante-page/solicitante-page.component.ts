@@ -176,7 +176,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    * Método que se ejecuta cuando cambia de tab en paso-uno.
    * Oculta el mensaje de error de validación.
    */
-  onTabChanged(): void {
+  alCambiarPestana(): void {
     this.esFormaValido = false;
   }
 

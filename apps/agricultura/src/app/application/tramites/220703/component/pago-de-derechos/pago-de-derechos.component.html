@@ -55,6 +55,8 @@
         [datos]="fachaDePago"
         (valorCambiado)="cambioFechaPagoDeDerechos($event)"
         [setFecha]="this.tramiteState.fechaPagoDeDerechos"
+        [isDisabled]="esFormularioSoloLectura"
+        formControlName="fechaPagoDeDerechos"
       ></input-fecha>
       </div>
 
@@ -70,7 +72,7 @@
 
       <div class="d-flex justify-content-end mt-5">
         <div class="btn-group">
-          <button class="btn btn-danger mx-3" type="button">
+          <button class="btn btn-danger mx-3" [disabled]="esFormularioSoloLectura" type="button">
             Borrar datos del pago
           </button>
         </div>
@@ -130,6 +132,8 @@
         [datos]="fachaDePagoRevision"
         (valorCambiado)="cambioFechaPagoDeDerechosRevision($event)"
         [setFecha]="this.tramiteState.fechaPagoDeDerechosRevision"
+        [isDisabled]="esFormularioSoloLectura"
+        formControlName="fechaPagoDeDerechosRevision"
       ></input-fecha>
       </div>
 

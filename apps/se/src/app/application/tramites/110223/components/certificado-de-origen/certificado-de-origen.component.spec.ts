@@ -22,8 +22,32 @@ describe('CertificadoDeOrigenComponent', () => {
       getUMC: jest.fn().mockReturnValue(of({ code: 200, data: [] })),
       getUnidadMedida: jest.fn().mockReturnValue(of({ code: 200, data: [] })),
       getTipoFactura: jest.fn().mockReturnValue(of({ code: 200, data: [] })),
-      getSolicitudesTabla: jest.fn().mockReturnValue(of([])),
-      getSolicitudesDataTabla: jest.fn().mockReturnValue(of([])),
+      getSolicitudesTabla: jest.fn().mockReturnValue(
+        of([
+          {
+            fraccionArancelaria: '123456',
+            nombreTecnico: 'Tecnico',
+            nombreComercial: 'Comercial',
+            numeroRegistroProductos: 'REG123',
+            fechaExpedicion: '2025-01-01',
+            fechaVencimiento: '2025-12-31',
+          },
+        ])
+      ),
+      getSolicitudesDataTabla: jest.fn().mockReturnValue(
+        of([
+          {
+            fraccionArancelaria: '123456',
+            cantidad: '10',
+            unidadMedida: 'kg',
+            valorMercancia: '1000',
+            tipoFactura: 'Factura',
+            numFactura: 'F123',
+            complementoDescripcion: 'Desc',
+            fechaFactura: '2025-04-28',
+          },
+        ])
+      ),
     };
 
     tramiteStoreMock = {
@@ -41,7 +65,30 @@ describe('CertificadoDeOrigenComponent', () => {
     };
 
     tramiteQueryMock = {
-      selectSolicitud$: of({}),
+      selectSolicitud$: of({
+        mercanciaSeleccionadasTablaData: [
+          {
+            fraccionArancelaria: '123456',
+            cantidad: '10',
+            unidadMedida: 'kg',
+            valorMercancia: '1000',
+            tipoFactura: 'Factura',
+            numFactura: 'F123',
+            complementoDescripcion: 'Desc',
+            fechaFactura: '2025-04-28',
+          },
+        ],
+        mercanciaDisponsiblesTablaDatos: [
+          {
+            fraccionArancelaria: '123456',
+            nombreTecnico: 'Tecnico',
+            nombreComercial: 'Comercial',
+            numeroRegistroProductos: 'REG123',
+            fechaExpedicion: '2025-01-01',
+            fechaVencimiento: '2025-12-31',
+          },
+        ],
+      }),
     };
 
     validacionesServiceMock = {
@@ -56,7 +103,10 @@ describe('CertificadoDeOrigenComponent', () => {
         { provide: RegistroService, useValue: registroServiceMock },
         { provide: Tramite110223Store, useValue: tramiteStoreMock },
         { provide: Tramite110223Query, useValue: tramiteQueryMock },
-        { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
+        {
+          provide: ValidacionesFormularioService,
+          useValue: validacionesServiceMock,
+        },
       ],
     }).compileComponents();
   });
@@ -84,6 +134,7 @@ describe('CertificadoDeOrigenComponent', () => {
   });
 
   it('should validate the destinatario form', () => {
+    component.ngOnInit();
     const SPY = jest.spyOn(component.registroForm, 'markAllAsTouched');
     component.validarDestinatarioFormulario();
     expect(SPY).toHaveBeenCalled();

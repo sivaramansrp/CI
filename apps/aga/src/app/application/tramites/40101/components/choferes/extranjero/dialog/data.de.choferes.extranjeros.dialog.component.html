@@ -336,11 +336,14 @@
               <div>
                 <input type="email" class="form-control" formControlName="correoElectronico" />
               </div>
-              @if(formChoferes.get('correoElectronico')?.invalid && (formChoferes.get('correoElectronico')?.touched || submitted)) {
+              @if(formChoferes.get('correoElectronico')?.errors?.['required'] && (formChoferes.get('correoElectronico')?.touched || submitted)) {
                 <div class="text-danger">
-                  @if(formChoferes.get('correoElectronico')?.errors?.['email']) {
-                    <small>Por favor, escribe una dirección de correo válida.</small>
-                  }
+                  <small class="text-danger">Este campo es obligatorio.</small>
+                </div>
+              }
+              @if(formChoferes.get('correoElectronico')?.errors?.['email'] && (formChoferes.get('correoElectronico')?.touched || submitted)) {
+                <div class="text-danger">
+                  <small>Por favor, escribe una dirección de correo válida.</small>
                 </div>
               }
             </div>
@@ -351,11 +354,14 @@
               <div>
                 <input type="tel" class="form-control" formControlName="telefono" />
               </div>
-              @if(formChoferes.get('telefono')?.invalid && (formChoferes.get('telefono')?.touched || submitted)) {
+              @if(formChoferes.get('telefono')?.errors?.['required'] && (formChoferes.get('telefono')?.touched || submitted)) {
                 <div class="text-danger">
-                  @if(formChoferes.get('telefono')?.errors?.['pattern']) {
-                    <small>El teléfono solo debe contener dígitos.</small>
-                  }
+                  <small class="text-danger">Este campo es obligatorio.</small>
+                </div>
+              }
+              @if(formChoferes.get('telefono')?.errors?.['pattern'] && (formChoferes.get('telefono')?.touched || submitted)) {
+                <div class="text-danger">
+                  <small>Por favor, sólo escribe dígitos.</small>
                 </div>
               }
             </div>

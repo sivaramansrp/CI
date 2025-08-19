@@ -1,11 +1,11 @@
 import { ADUANA_DATA, CLASIFICACION_PRODUCTO_DATA, CLAVE_SCIAN_DATA, DESCRIPCION_SCIAN_DATA, ESPECIFICAR_DATA, ESTADO_DATA, ESTADO_FISICO_DATA, REGIMEN_AL_QUE_DATA, TIPO_PRODUCTO_DATA } from '../../constants/catalogs.enum';
-import { Catalogo, InputFecha, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Catalogo, CategoriaMensaje, InputFecha, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, REGEX_CORREO_ELECTRONICO_EXPORTADOR, TablaSeleccion, TipoNotificacionEnum } from '@libs/shared/data-access-user/src';
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { CONFIGURACION_COLUMNAS_MERCANCIAS, CONFIGURACION_COLUMNAS_SOLI } from '../../constants/column-config.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HACERLOS_RADIO_OPTIONS, OPCION_DE_BOTON_DE_RADIO, TEXTOS } from '../../constants/constantes.enum';
+import { HACERLOS_RADIO_OPTIONS, NOTA, OPCION_DE_BOTON_DE_RADIO, TEXTOS } from '../../constants/constantes.enum';
 
 import { CrossList,MercanciaCrossList,MercanciasInfo } from '../../models/mercancia.model';
 import { FilaData, FilaData2, ListaClave } from '../../models/fila-modal';
@@ -13,20 +13,20 @@ import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud260915State, Solicitud260915Store } from '../../estados/tramites260915.store';
 import { CommonModule } from '@angular/common';
 
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 
 import { CrosslistComponent } from '@libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
 
 import { DatosEmpresaComponent } from '../datos-empresa/datos-empresa.component';
-import { InputFechaComponent } from '@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
 
+import { TablaDinamicaComponent, TablePaginationComponent } from '@libs/shared/data-access-user/src';
 import { InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
 import { PermisoSanitarioDispositivosMedicosService } from '../../services/permiso-sanitario-dispositivos-medicos.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Solicitud260915Query } from '../../estados/tramites260915.query';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 /**
  * Componente para gestionar los datos de la solicitud.
@@ -34,11 +34,126 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule,InputRadioComponent,TituloComponent,CatalogoSelectComponent,TablaDinamicaComponent,InputRadioComponent,InputFechaComponent,CrosslistComponent,InputCheckComponent,NotificacionesComponent,DatosEmpresaComponent],
+  imports: [CommonModule,
+    ReactiveFormsModule,
+    InputRadioComponent,
+    TituloComponent,
+    CatalogoSelectComponent,
+    TablaDinamicaComponent,
+    InputRadioComponent,
+    CrosslistComponent,
+    InputCheckComponent,
+    NotificacionesComponent,
+    DatosEmpresaComponent,
+    TooltipModule,
+    TablePaginationComponent
+  ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrls: ['./datos-de-la-solicitud.component.scss'],
 })
 export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
+ 
+/**
+ * Indica qué tabla se está utilizando para eliminar datos.
+ * Puede ser 'scian' para la tabla de SCIAN o 'mercancias' para la tabla de mercancías.
+ */
+eliminarTablaDatos: 'scian' | 'mercancias' = 'scian';
+
+  /**
+ * Referencia al componente CrosslistComponent.
+ * @type {CrosslistComponent}
+ */
+@ViewChild(CrosslistComponent) crosslistComponent!: CrosslistComponent;
+
+
+  /**
+   * Almacena el rango de días seleccionados.
+   * Utilizado para guardar los días seleccionados en el componente.
+   */
+  selectRangoDias: string[] = [];
+  /**
+   * Almacena el rango de días seleccionados para el campo de fecha de fabricación.
+   * Utilizado para guardar los días seleccionados en el componente.
+   */
+  campoDeBotones = [
+  {
+    /**
+     * Nombre del botón para agregar todos los elementos.
+     */
+    btnNombre: 'Agregar todos',
+    /**
+     * Clase CSS del botón.
+     */
+    class: 'btn-default',
+    /**
+     * Función para agregar todos los elementos.
+     *
+     */
+    funcion: (): void => {
+      if (this.crosslistComponent) {
+        this.crosslistComponent.agregar('t');
+      }
+    },
+  },
+  {
+    /**
+     * Nombre del botón para agregar la selección actual.
+     */
+    btnNombre: 'Agregar selección',
+    /**
+     * Clase CSS del botón.
+     */
+    class: 'btn-primary',
+    /**
+     * Función para agregar la selección actual.
+     * 
+     */
+    funcion: (): void => {
+      if (this.crosslistComponent) {
+        this.crosslistComponent.agregar('');
+      }
+    },
+  },
+  {
+    /**
+     * Nombre del botón para restar la selección actual.
+     */
+    btnNombre: 'Restar selección',
+    /**
+     * Clase CSS del botón.
+     */
+    class: 'btn-primary',
+    /**
+     * Función para restar la selección actual.
+     *
+     */
+
+    funcion: (): void => {
+      if (this.crosslistComponent) {
+        this.crosslistComponent.quitar('');
+      }
+    },
+  },
+  {
+    /**
+     * Nombre del botón para restar todos los elementos.
+     */
+    btnNombre: 'Restar todos',
+    /**
+     * Clase CSS del botón.
+     */
+    class: 'btn-default',
+    /**
+     * Función para restar todos los elementos.
+     * 
+     */
+    funcion: (): void => {
+      if (this.crosslistComponent) {
+        this.crosslistComponent.quitar('t');
+      }
+    },
+  },
+];
    /** Formulario principal para los datos de la solicitud */
    dataDeLaSolicitudForm!: FormGroup;
 
@@ -53,6 +168,11 @@ export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
  
    /** Sujeto para manejar la destrucción de observables */
    private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+   /**
+   * Indica si el formulario es colapsable.
+   * Permite mostrar u ocultar el contenido del formulario.
+   */
+  colapsable = false;
  
    /** Formulario para la clave SCIAN */
    clavaScianForm!: FormGroup;
@@ -87,6 +207,8 @@ export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
 
   /** Referencia al modal de alerta */
   @ViewChild('modalAlerta') modalElement!: ElementRef;
+
+  @ViewChild('agreagarClaveScian') agreagarClaveScianElemento!: ElementRef;
 
 /** 
  * Configuración para la notificación actual.
@@ -187,6 +309,24 @@ mercanciasData: MercanciasInfo[] = [];
  */
 public estadoFisicoData = ESTADO_FISICO_DATA;
 
+/**
+   * Mensaje que indica un requisito obligatorio para acceder a la nota.
+   */
+  REQUISITO_OBLIGATORIO = NOTA.REQUISITO_OBLIGATORIO_PARA_ACCEDER_NOTA;
+  /**
+   * Mensaje que indica que se debe capturar información obligatoria.
+   */
+  DEBE_CAPTURAR = NOTA.DEBE_CAPTURAR;
+
+/**
+   * Indica si el diálogo de notificación está habilitado.
+   */
+  public esHabilitarElDialogo: boolean = false;
+  
+  /**
+   * Notificación que se muestra al usuario.
+   */
+
   /** Constructor del componente 
    * @param consultaioQuery Consulta de estado de solo lectura.*/
 
@@ -219,7 +359,9 @@ public estadoFisicoData = ESTADO_FISICO_DATA;
     } else {
       this.createForm();
       this.createclaveScianForm();
-    }
+   
+  }
+    
   }
 
   /**
@@ -237,7 +379,8 @@ public estadoFisicoData = ESTADO_FISICO_DATA;
       this.dataDeLaSolicitudForm.enable();
       this.clavaScianForm.enable();
       this.datosDelTramiteRealizar.enable();
-     
+      
+      
     }
   }
 
@@ -253,7 +396,6 @@ public estadoFisicoData = ESTADO_FISICO_DATA;
     this.inicializarEstadoFormulario();
     this.getEstadosData();
     this.getClaveScianData();
-    this.getClaveDescripcionDelData();
     this.getRegimenalqueData();
     this.getAduanaData();
     this.getEspificarData();
@@ -264,7 +406,7 @@ public estadoFisicoData = ESTADO_FISICO_DATA;
     this.getEstadoFisicoData();
     this.getMercanciasDatosData();
   }
- 
+
  /**
  * Método para crear el formulario de clave SCIAN.
  * Inicializa un formulario reactivo con los campos `claveScian` y `descripcionDelScian`,
@@ -282,9 +424,10 @@ public estadoFisicoData = ESTADO_FISICO_DATA;
     this.clavaScianForm = this.fb.group({
       claveScianG: this.fb.group({
         claveScian: ['', Validators.required],
-        descripcionDelScian: ['', Validators.required]
+        descripcionDelScian: [{ value: '', disabled: true }, Validators.required]
       }),
     });
+   
   }
 
   /** Configuración del formulario con validaciones para los campos del trámite. */
@@ -294,13 +437,18 @@ createForm(): void{
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.dataDeLaSolicitudState = seccionState;
+          if (this.esFormularioSoloLectura && seccionState.tableData) {
+            this.tableData = [...seccionState.tableData];
+          } else if (seccionState.tableData) {
+            this.tableData = [...seccionState.tableData];
+          }
         })
       )
       .subscribe();
   this.dataDeLaSolicitudForm = this.fb.group({
-      descripcionFraccionArancelaria: [this.dataDeLaSolicitudState?.descripcionFraccionArancelaria, Validators.required],
+      descripcionFraccionArancelaria: [{value: this.dataDeLaSolicitudState?.descripcionFraccionArancelaria, disabled: true}],
       cantidadUMT:[this.dataDeLaSolicitudState?.cantidadUMT, Validators.required],
-      umt:[this.dataDeLaSolicitudState?.descripcionFraccionArancelaria, Validators.required],
+      umt:[{value: this.dataDeLaSolicitudState?.descripcionFraccionArancelaria, disabled: true}],
       cantidadUMC:[this.dataDeLaSolicitudState?.cantidadUMC, Validators.required],
       umc:[this.dataDeLaSolicitudState?.umc, Validators.required],
       tipoProducto: [this.dataDeLaSolicitudState?.tipoProducto, Validators.required],
@@ -313,12 +461,46 @@ createForm(): void{
       presentacionFarmaceutica:[this.dataDeLaSolicitudState?.presentacionFarmaceutica, Validators.required],
       fraccionArancelaria:[this.dataDeLaSolicitudState?.fraccionArancelaria, Validators.required],
       
+       datosMercanciaForm: this.fb.group({
+        clasificaionProductos: [this.dataDeLaSolicitudState?.clasificaionProductos, Validators.required],
+        especificarProducto: [this.dataDeLaSolicitudState?.especificarProducto, Validators.required],
+        nombreProductoEspecifico: [this.dataDeLaSolicitudState?.nombreProductoEspecifico, Validators.required],
+        denominacionDistintiva: [this.dataDeLaSolicitudState?.denominacionDistintiva, Validators.required],
+        denominacionNombre: [this.dataDeLaSolicitudState?.denominacionNombre, Validators.required],
+        tipoProducto: [this.dataDeLaSolicitudState?.tipoProducto, Validators.required],
+        estadoFisico: [this.dataDeLaSolicitudState?.estadoFisico, Validators.required],
+        fraccionArancelaria: [this.dataDeLaSolicitudState?.fraccionArancelaria, Validators.required],
+        descripcionFraccionArancelaria: [{
+          value: this.dataDeLaSolicitudState?.descripcionFraccionArancelaria, 
+          disabled: true
+        }, Validators.required],
+        cantidadUMT: [this.dataDeLaSolicitudState?.cantidadUMT, Validators.required],
+        umt: [{
+          value: this.dataDeLaSolicitudState?.umt, 
+          disabled: true
+        }, Validators.required],
+        cantidadUMC: [this.dataDeLaSolicitudState?.cantidadUMC, Validators.required],
+        umc: [this.dataDeLaSolicitudState?.umc, Validators.required],
+        presentacionFarmaceutica: [this.dataDeLaSolicitudState?.presentacionFarmaceutica, Validators.required]
+      }),
       
       datosDelTramiteRealizar: this.fb.group({
       tipoOperacion:[this.dataDeLaSolicitudState?.tipoOperacion],
-      justification: [{ value: this.dataDeLaSolicitudState.justification || '', disabled: true }],
+      justification: [
+        { 
+          value: this.dataDeLaSolicitudState?.justification, 
+          disabled: true 
+        }
+      ],
+      rfcdelResponsableSanitario:[this.dataDeLaSolicitudState?.rfcdelResponsableSanitario],
       denominacion: [this.dataDeLaSolicitudState?.denominacion, Validators.required],
-      correoElectronico: [this.dataDeLaSolicitudState?.correoElectronico, Validators.required],
+      correoElectronico: [
+      this.dataDeLaSolicitudState?.correoElectronico, 
+        [
+          Validators.required, 
+          Validators.pattern(REGEX_CORREO_ELECTRONICO_EXPORTADOR)
+        ]
+      ],
       codigopostal: [this.dataDeLaSolicitudState?.codigopostal, Validators.required],
       estado: [this.dataDeLaSolicitudState?.estado, Validators.required],
       municipoyalcaldia: [this.dataDeLaSolicitudState?.municipoyalcaldia, Validators.required],
@@ -345,6 +527,8 @@ createForm(): void{
     }),
    
   });
+
+   
 }
 
 /**
@@ -369,20 +553,52 @@ closeModal(): void {
 }
 
 /**
- * Método para eliminar un pedimento de la lista.
- * @param borrar Indica si se debe proceder con la eliminación del pedimento.
+ * Método actualizado para eliminar un pedimento/mercancía de la lista.
+ * @param borrar Indica si se debe proceder con la eliminación.
  */
 eliminarPedimento(borrar: boolean): void {
-  if (borrar) {
-    // Filtrar las filas seleccionadas
-    this.tableData = this.tableData.filter((row) => {
-      const ROW_ID = row.id || (row.claveScianG && row.claveScianG.claveScian);
-      return !this.filasSeleccionadas.has(Number(ROW_ID));
-    });
+  
+  if (borrar && this.filasSeleccionadas && this.filasSeleccionadas.size > 0) {
+    const IDS_SELECCIONADOS = Array.from(this.filasSeleccionadas);
+    
+    if (this.eliminarTablaDatos === 'scian') {
+      this.tableData = this.tableData.filter((row) => {
+        const ROW_ID = row.id;
+        const SHOULD_KEEP = !IDS_SELECCIONADOS.includes(ROW_ID);
+        return SHOULD_KEEP;
+      });
+      
+      
+      this.solicitud260915Store.setTramite260915State({
+        tableData: this.tableData
+      });
+      
+    } else if (this.eliminarTablaDatos === 'mercancias') {
+      this.mercanciasData = this.mercanciasData.filter((row) => {
+        const SHOULD_KEEP = !IDS_SELECCIONADOS.includes(row.id || 0);
+        return SHOULD_KEEP;
+      });
+      
+    }
 
-    // Borrar la selección y la notificación
     this.filasSeleccionadas.clear();
-    this.nuevaNotificacion = null;
+    
+    this.cdr.detectChanges();
+  }
+  
+  this.clearNotificacion();
+}
+/**
+ * Maneja el evento de eliminar mercancías.
+ * Verifica si hay filas seleccionadas antes de mostrar el modal de confirmación.
+ */
+onEliminarMercancias(): void {
+  this.eliminarTablaDatos = 'mercancias';
+  
+  if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
+    this.abrirModal(0, true, false);
+  } else {
+    this.abrirModal(0, false, false);
   }
 }
 
@@ -394,33 +610,64 @@ eliminarPedimento(borrar: boolean): void {
  * @param i Índice del elemento que se desea eliminar (por defecto 0).
  * @param isSeleccionarEstablecimiento Indica si se debe mostrar el mensaje para seleccionar un establecimiento.
  */
- abrirModal(i: number = 0,isSeleccionarEstablecimiento: boolean = false): void {
-  if(this.filasSeleccionadas && this.filasSeleccionadas.size > 0){
-  this.nuevaNotificacion = {
-    tipoNotificacion: 'alert',
-    categoria: 'danger',
-    modo: 'action',
-    titulo: '',
-    mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
-    cerrar: false,
-    tiempoDeEspera: 0,
-    txtBtnAceptar: 'Aceptar',
-    txtBtnCancelar: 'Cancelar',
+abrirModal(
+  i: number,
+  isNoRowsSelected: boolean,
+  isModificarSinSeleccion: boolean,
+  customMessage: string = ''
+): void {
+  if (customMessage) {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'info',
+      titulo: '',
+      mensaje: customMessage,
+      cerrar: false,
+      tiempoDeEspera: 0,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+      tamanioModal: 'modal-sm',
+    };
+  } else if (isNoRowsSelected) {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'info',
+      titulo: '',
+      mensaje: 'Selecciona un registro.',
+      cerrar: false,
+      tiempoDeEspera: 0,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+      tamanioModal: 'modal-sm',
+    };
+  } else if (isModificarSinSeleccion) {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'info',
+      titulo: '',
+      mensaje: 'Selecciona sólo un registro para modificar.',
+      cerrar: false,
+      tiempoDeEspera: 0,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+      tamanioModal: 'modal-sm',
+    };
+  } else if (this.filasSeleccionadas && this.filasSeleccionadas.size > 0) {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
+      cerrar: false,
+      tiempoDeEspera: 0,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
   }
-} else if(isSeleccionarEstablecimiento){
-  this.nuevaNotificacion = {
-    tipoNotificacion: 'alert',
-    categoria: 'danger',
-    modo: 'action',
-    titulo: '',
-    mensaje: 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.',
-    cerrar: false,
-    tiempoDeEspera: 2000,
-    txtBtnAceptar: 'Aceptar',
-    txtBtnCancelar: 'Cancelar',
-  };
-}
- 
   this.elementoParaEliminar = i;
 }
 
@@ -465,6 +712,14 @@ paisProcedencis_colapsable(): void {
 }
 
 /**
+ * Alterna el estado de la propiedad `colapsable` entre verdadero y falso.
+ * Cambia el estado del panel colapsable en la interfaz de usuario.
+ */
+paisDeColapsable(): void{
+  this.paisProcedencisColapsable = !this.paisProcedencisColapsable;
+}
+
+/**
 * Método para alternar el estado colapsable del uso específico.
 * Cambia el valor de `usoEspecifico` entre verdadero y falso.
 */
@@ -490,13 +745,13 @@ usoEspecificoColapsable(): void {
   }
 
     /** Obtiene los datos de descripción del SCIAN */
-  getClaveDescripcionDelData(): void{
-    this.permisosanitariodisposivos.getClaveDescripcionDelData()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.descripcionDelScianData.catalogos = data as Catalogo[];
-      });
-  }
+  getClaveDescripcionDelData(claveScianId?: string): void{
+  this.permisosanitariodisposivos.getClaveDescripcionDelData(claveScianId)
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((data) => {
+      this.descripcionDelScianData.catalogos = data as Catalogo[];
+    });
+}
 
     /** Obtiene los datos del régimen */
   getRegimenalqueData(): void{
@@ -563,7 +818,7 @@ usoEspecificoColapsable(): void {
 
   /** Muestra el modal de selección de establecimiento */
   seleccionarEstablecimiento(): void {
-    this.abrirModal(0,true);
+    this.abrirModal(0, false, false, "Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento");
   }
 
     /** Limpia el formulario de clave SCIAN */
@@ -571,6 +826,25 @@ usoEspecificoColapsable(): void {
     this.clavaScianForm.reset();
   }
 
+
+  /**
+ * Limpia todos los campos del formulario de datos de mercancía.
+ * Restablece el formulario a su estado inicial con valores vacíos.
+ */
+onLimpiarDatosMercancia(): void {
+   this.datosMercanciaForm.reset();
+  
+  this.indiceFilaSeleccionada = null;
+  this.filasSeleccionadas.clear();
+  
+  this.paisOrigen = false;
+  this.paisProcedencisColapsable = false;
+  this.usoEspecifico = false;
+  
+  this.clearNotificacion();
+  
+  this.cdr.detectChanges();
+}
 /**
  * Muestra el formulario para agregar una nueva clave SCIAN.
  */  
@@ -583,21 +857,28 @@ onAgregar(): void{
  * Elimina las filas seleccionadas de la tabla.
  * Si no hay filas seleccionadas, muestra un mensaje de advertencia en la consola.
  */
-  onDelete(): void {
-    if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
-      console.warn('No rows selected for deletion.');
-      return;
-    }
-    this.abrirModal();
+onDelete(): void {
+  this.eliminarTablaDatos = 'scian';
+  
+  if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
+    this.abrirModal(0, true, false);
+  } else {
+    this.abrirModal(0, false, false);
   }
+}
   
     /** Cancela la acción de agregar clave SCIAN */
   onCancelar(): void {
-    this.showClavaScianForm = false; 
+     const MODAL_INSTANCIA = Modal.getInstance(
+      this.agreagarClaveScianElemento.nativeElement
+    );
+    if (MODAL_INSTANCIA) {
+      MODAL_INSTANCIA.hide();
+    }
     this.clavaScianForm.reset(); 
   }
 
-    /** Agrega una nueva mercancia a la tabla */
+  /** Agrega una nueva mercancia a la tabla */
   agregarMercanciaGrid(): void {
     if (this.modalElement) {
      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
@@ -606,39 +887,72 @@ onAgregar(): void{
  }
 
   /** Maneja la selección de filas */
-    onfilasSeleccionadas(filasSeleccionadas: FilaData[] | MercanciasInfo[]): void {
-      if (filasSeleccionadas.length > 0 && 'clasificaionProductos' in filasSeleccionadas[0]) {
-        this.filasSeleccionadas = new Set((filasSeleccionadas as MercanciasInfo[]).map((row) => row.id));
-       }
-      else if (filasSeleccionadas.length > 0 && 'claveScianG' in filasSeleccionadas[0] && 'claveScian' in filasSeleccionadas[0].claveScianG) {
-        this.filasSeleccionadas = new Set((filasSeleccionadas as FilaData[]).map((row) => Number(row.claveScianG.claveScian)));
-      } else {
-        this.filasSeleccionadas.clear();
-      }
+  onfilasSeleccionadas(filasSeleccionadas: FilaData[] | MercanciasInfo[]): void {
+  
+  if (filasSeleccionadas.length > 0) {
+    if ('clasificaionProductos' in filasSeleccionadas[0]) {
+      const IDS = (filasSeleccionadas as MercanciasInfo[]).map((row) => row.id);
+      this.filasSeleccionadas = new Set(IDS);
     }
-    
+    else if ('claveScianG' in filasSeleccionadas[0]) {
+      const IDS = (filasSeleccionadas as FilaData[]).map((row) => row.id); 
+      this.filasSeleccionadas = new Set(IDS);
+    }
+  } else {
+    this.filasSeleccionadas.clear();
+  }
+}
    /** Maneja el envío del formulario de clave SCIAN. 
  * Busca las descripciones correspondientes en los catálogos y las asigna al formulario.
  * Luego, agrega los datos a la tabla y reinicia el formulario.
  */ 
-  onSubmit(): void {
-    const FORM_DATA = { ...this.clavaScianForm.value };
-    FORM_DATA.claveScianG.claveScian = this.claveScianData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(FORM_DATA.claveScianG.claveScian)
-    )?.descripcion || 'Not Found';
-  
-    FORM_DATA.claveScianG.descripcionDelScian = this.descripcionDelScianData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(FORM_DATA.claveScianG.descripcionDelScian)
-    )?.descripcion || 'Not Found';
-    this.tableData.push(FORM_DATA);
-    this.showClavaScianForm = false;
-      this.clavaScianForm.reset(); 
+onSubmit(): void {
+  if (this.clavaScianForm.invalid) {
+    this.clavaScianForm.markAllAsTouched();
+    return;
   }
+
+  const FORM_DATA = { ...this.clavaScianForm.value };
+  
+  const DESCRIPCION_DEL_SCIAN = this.clavaScianForm.get('claveScianG.descripcionDelScian')?.value || '';
+  
+  const CLAVE_SCIAN_ITEM = this.claveScianData.catalogos.find(
+    (item: Catalogo) => String(item.id) === String(FORM_DATA.claveScianG.claveScian)
+  );
+
+  const DESCRIPCION_ITEM = this.descripcionDelScianData.catalogos.find(
+    (item) => String(item.id) === String(DESCRIPCION_DEL_SCIAN)
+  );
+
+  const NEW_ID = this.tableData.length > 0 ? 
+    Math.max(...this.tableData.map(item => item.id || 0)) + 1 : 1;
+
+  const NEW_SCIAN_DATA = {
+    id: NEW_ID, 
+    claveScianG: {
+      claveScian: CLAVE_SCIAN_ITEM?.descripcion || FORM_DATA.claveScianG.claveScian,
+      descripcionDelScian: DESCRIPCION_ITEM?.descripcion || DESCRIPCION_DEL_SCIAN || 'Not Found'
+    }
+  };
+
+  this.tableData = [...this.tableData, NEW_SCIAN_DATA];
+  
+  this.solicitud260915Store.setTramite260915State({
+    tableData: this.tableData
+  });
+
+  this.clavaScianForm.reset();
+  this.onCancelar(); 
+}
 
   /** Obtiene el formulario de datos del trámite a realizar */
 
 get datosDelTramiteRealizar(): FormGroup {
   return this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar') as FormGroup;
+}
+
+get datosMercanciaForm(): FormGroup {
+  return this.dataDeLaSolicitudForm.get('datosMercanciaForm') as FormGroup;
 }
 /** Alterna el estado del campo de licencia sanitaria en función del aviso de funcionamiento. 
  * Si el aviso de funcionamiento está activado, deshabilita el campo de licencia sanitaria. 
@@ -656,7 +970,8 @@ toggleLicenciaSanitaria(): void {
 }
 /** Guarda los datos del formulario de la solicitud. */
 onSave(): void {
-    const FORM_DATA = { ...this.dataDeLaSolicitudForm.value };
+    const FORM_DATA = { ...this.datosMercanciaForm.value };
+    
     FORM_DATA.tipoProducto = this.tipoProductoData.catalogos.find(
       (item: Catalogo) => String(item.id) === String(FORM_DATA.tipoProducto)
     )?.descripcion || FORM_DATA.tipoProducto;
@@ -672,26 +987,69 @@ onSave(): void {
     FORM_DATA.estadoFisico = this.estadoFisicoData.catalogos.find(
       (item: Catalogo) => String(item.id) === String(FORM_DATA.estadoFisico)
     )?.descripcion || FORM_DATA.estadoFisico;
+
     if (this.indiceFilaSeleccionada !== null) {
-      this.mercanciasData[this.indiceFilaSeleccionada] = { ...this.mercanciasData[this.indiceFilaSeleccionada], ...FORM_DATA };
+      this.mercanciasData = [
+        ...this.mercanciasData.slice(0, this.indiceFilaSeleccionada),
+        { ...this.mercanciasData[this.indiceFilaSeleccionada], ...FORM_DATA },
+        ...this.mercanciasData.slice(this.indiceFilaSeleccionada + 1)
+      ];
       this.indiceFilaSeleccionada = null; 
     } else {
-      this.mercanciasData.push(FORM_DATA);
+      const NEW_ID = this.mercanciasData.length > 0 ? 
+        Math.max(...this.mercanciasData.map(item => item.id || 0)) + 1 : 1;
+      
+      this.mercanciasData = [...this.mercanciasData, {
+        ...FORM_DATA,
+        id: NEW_ID
+      }];
     }
-    this.dataDeLaSolicitudForm.reset();
-  
+    
+    this.datosMercanciaForm.reset();
+    this.filasSeleccionadas.clear();
+    
+    this.cdr.detectChanges();
+    this.closeModal();
+}
+
+/**
+ * Maneja el evento de modificar mercancías.
+ * Verifica que haya exactamente una fila seleccionada.
+ */
+onModificarMercancias(): void {
+  if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
+    this.abrirModal(0,false, true);
+  } else if (this.filasSeleccionadas.size > 1) {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Debe seleccionar exactamente un registro para modificar.',
+      cerrar: false,
+      tiempoDeEspera: 0,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+      tamanioModal: 'modal-sm',
+    };
+  } else {
+    this.onModificar();
+  }
 }
 /** Modifica una fila seleccionada de la tabla de mercancías. 
  * Verifica que solo haya una fila seleccionada. Si la fila existe, 
  * carga sus datos en el formulario y muestra el modal para editarla.
  */
 onModificar(): void {
-  if (!this.filasSeleccionadas || this.filasSeleccionadas.size > 1) {
+  if (!this.filasSeleccionadas || this.filasSeleccionadas.size !== 1) {
     return;
   }
 
   const SELECTED_ID = Array.from(this.filasSeleccionadas)[0];
-  const SELECTED_ROW_INDEX = this.mercanciasData.findIndex((row) => row.id === SELECTED_ID);
+  
+  const SELECTED_ROW_INDEX = this.mercanciasData.findIndex((row) => {
+    return row.id === SELECTED_ID;
+  });
 
   if (SELECTED_ROW_INDEX === -1) {
     return;
@@ -700,38 +1058,38 @@ onModificar(): void {
   this.indiceFilaSeleccionada = SELECTED_ROW_INDEX;
   const SELECTED_ROW = this.mercanciasData[SELECTED_ROW_INDEX];
 
-  // Parche los valores del formulario con la asignación correcta para los campos del catálogo
-  this.dataDeLaSolicitudForm.patchValue({
-    descripcionFraccionArancelaria: SELECTED_ROW.descripcionFraccion,
-    cantidadUMT: SELECTED_ROW.cantidadUMT,
-    umt: SELECTED_ROW.unidadUMT,
-    cantidadUMC: SELECTED_ROW.cantidadUMC,
-    umc: SELECTED_ROW.unidad,
+  this.datosMercanciaForm.patchValue({
+    clasificaionProductos: this.delProducto.catalogos.find(
+      (item) => item.descripcion === SELECTED_ROW.clasificaionProductos
+    )?.id || SELECTED_ROW.clasificaionProductos,
+    especificarProducto: this.especificarData.catalogos.find(
+      (item) => item.descripcion === SELECTED_ROW.especificarProducto
+    )?.id || SELECTED_ROW.especificarProducto,
+    nombreProductoEspecifico: SELECTED_ROW.nombreProductoEspecifico || '',
+    denominacionDistintiva: SELECTED_ROW.denominacionDistintiva || '',
+    denominacionNombre: SELECTED_ROW.denominacionNombre || '',
     tipoProducto: this.tipoProductoData.catalogos.find(
       (item) => item.descripcion === SELECTED_ROW.tipoProducto
     )?.id || SELECTED_ROW.tipoProducto,
-    clasificaionProductos: this.delProducto.catalogos.find(
-      (item) => item.descripcion === SELECTED_ROW.clasificacion
-    )?.id || SELECTED_ROW.clasificacion,
-    especificarProducto: this.especificarData.catalogos.find(
-      (item) => item.descripcion === SELECTED_ROW.especificar
-    )?.id || SELECTED_ROW.especificar,
-    nombreProductoEspecifico: SELECTED_ROW.denominacionEspecifica,
-    denominacionDistintiva: SELECTED_ROW.denominacionDistintiva,
-    denominacionNombre: SELECTED_ROW.denominacionComun,
     estadoFisico: this.estadoFisicoData.catalogos.find(
       (item) => item.descripcion === SELECTED_ROW.estadoFisico
     )?.id || SELECTED_ROW.estadoFisico,
-    presentacionFarmaceutica: SELECTED_ROW.presentacion,
-    fraccionArancelaria: SELECTED_ROW.fraccionArancelaria,
+    fraccionArancelaria: SELECTED_ROW.fraccionArancelaria || '',
+    descripcionFraccionArancelaria: SELECTED_ROW.descripcionFraccionArancelaria || '',
+    cantidadUMT: SELECTED_ROW.cantidadUMT || '',
+    umt: SELECTED_ROW.umt || '',
+    cantidadUMC: SELECTED_ROW.cantidadUMC || '',
+    umc: SELECTED_ROW.umc || '',
+    presentacionFarmaceutica: SELECTED_ROW.presentacionFarmaceutica || ''
   });
 
-  // mostrar el modal
   const MODAL_ELEMENT = document.getElementById('modalAgregarMercancia');
   if (MODAL_ELEMENT) {
     const MODAL_INSTANCE = new Modal(MODAL_ELEMENT);
     MODAL_INSTANCE.show();
-  } 
+  } else {
+    console.error('Modal element not found.');
+  }
 }
 /**
  * Maneja el evento de cambio en el tipo de operación.
@@ -742,13 +1100,15 @@ changeEvent(): void{
   const TIPO_OPERACION = this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar.tipoOperacion')?.value;
   const JUSTIFICACION_CONTROL = this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar.justification'); 
 
-      if (TIPO_OPERACION === 'modificacion') {
-        JUSTIFICACION_CONTROL?.enable(); 
-      } else {
-        JUSTIFICACION_CONTROL?.disable(); 
-        JUSTIFICACION_CONTROL?.setValue(''); 
-      }
-    
+  if (TIPO_OPERACION === '0' || TIPO_OPERACION === '1' || TIPO_OPERACION === '2') {
+    JUSTIFICACION_CONTROL?.enable(); 
+    JUSTIFICACION_CONTROL?.setValidators([Validators.required]);
+  } else {
+    JUSTIFICACION_CONTROL?.disable(); 
+    JUSTIFICACION_CONTROL?.setValue(''); 
+    JUSTIFICACION_CONTROL?.clearValidators();
+  }
+  JUSTIFICACION_CONTROL?.updateValueAndValidity();
 }
 /**
  * Obtiene los datos de las mercancías desde el servicio.
@@ -781,4 +1141,91 @@ getMercanciasDatosData(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();
   }
+  get isCorreoElectronicoInvalid(): boolean {
+  const CORREO_CONTROL = this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar.correoElectronico');
+  return Boolean(CORREO_CONTROL?.invalid && (CORREO_CONTROL?.touched || CORREO_CONTROL?.dirty));
+  }
+ 
+   /**
+   * Abre el cuadro de diálogo modal para el registro de vehículos.
+   */
+  agregarClaveScian(): void {
+    if (this.agreagarClaveScianElemento) {
+      const MODAL_INSTANCIA = new Modal(
+        this.agreagarClaveScianElemento?.nativeElement,
+        { backdrop: false }
+      );
+      MODAL_INSTANCIA.show();
+    }
+  }
+
+   /**
+   * Envía los datos del formulario y muestra el modal de confirmación.
+   * Si el formulario es inválido, marca todos los campos como tocados.
+   */
+  enviarDialogData(datos?:string): void {
+    this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'modal',
+        titulo: '',
+        mensaje: datos ? datos : this.REQUISITO_OBLIGATORIO,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+        tamanioModal: 'modal-md',
+      };
+  }
+    /**
+   * Método para cerrar el modal de confirmación.
+   * @returns {void}
+   */
+  cerrarModal(): void {
+    this.esHabilitarElDialogo = false;
+  }
+
+/**
+ * Handles the change event for claveScian dropdown.
+ * When a value is selected, it fetches the corresponding description data
+ * and patches the value to descripcionDelScian field.
+ * @param selectedValue - The selected claveScian value
+ */
+onClaveScianChange(event: Event | string): void {
+  let selectedValue: string;
+  
+  if (typeof event === 'string') {
+    selectedValue = event;
+  } else if (event && typeof event === 'object' && 'target' in event) {
+    selectedValue = (event.target as HTMLSelectElement)?.value || '';
+  } else {
+    selectedValue = String(event || '');
+  }
+  
+  if (selectedValue) {
+    this.getClaveDescripcionDelData(selectedValue);
+    
+    this.permisosanitariodisposivos.getClaveDescripcionDelData(selectedValue)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (data) => {
+          this.descripcionDelScianData.catalogos = data as Catalogo[];
+          
+          const DESCRIPTION_ITEM = this.descripcionDelScianData.catalogos.find(
+            (item: Catalogo) =>String(item.id) === String(selectedValue)
+          );
+          
+          if (DESCRIPTION_ITEM) {
+            this.clavaScianForm.get('claveScianG.descripcionDelScian')?.patchValue(DESCRIPTION_ITEM.id || DESCRIPTION_ITEM.descripcion);
+          }
+        },
+        error: (err) => {
+          console.error('Error al obtener los datos de descripción del SCIAN:', err);
+        }
+      });
+  } else {
+    this.clavaScianForm.get('claveScianG.descripcionDelScian')?.patchValue('');
+    this.descripcionDelScianData.catalogos = [];
+  }
+}
+
 }

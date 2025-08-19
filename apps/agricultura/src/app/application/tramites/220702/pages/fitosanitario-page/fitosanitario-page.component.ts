@@ -10,9 +10,11 @@ import { map, takeUntil } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { PiePaginaInformacionComponent } from '@libs/shared/data-access-user/src';
 import { SeccionQuery } from '../../../../estados/queries/seccion.query';
 import { Subject } from 'rxjs';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
+
 
 /**
  * Interfaz que representa la acción de un botón.
@@ -41,7 +43,8 @@ interface AccionBoton {
     PasoDosComponent,
     PasoTresComponent,
     BtnContinuarComponent,
-    WizardComponent
+    WizardComponent,
+    PiePaginaInformacionComponent
   ],
   templateUrl: './fitosanitario-page.component.html',
   

@@ -167,6 +167,11 @@ export const DOMICILIOS_RFC_SOLICITANTE_TABLA_DATOS = [
     clave: (item: DomiciliosRfcSolicitanteTabla): string => item.perfilEmpresa,
     orden: 12,
   },
+  {
+    encabezado: 'Perfil Almacen General',
+    clave: (item: DomiciliosRfcSolicitanteTabla): string => item.perfilAlmacenGeneral,
+    orden: 13,
+  },
 ];
 
 export const CONTROL_INVESTARIOS_TABLA_DATOS = [

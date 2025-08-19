@@ -1046,7 +1046,7 @@
     "id": 150,
     "tramite": 260301,
     "linkDashboard": "/cofepris/importacion-materias-primas-estupefacientes/contenedor-de-pasos",
-    "linkDepartment": "/cofepris/importacion-materias-primas-estupefacientes/contenedor-de-pasos",
+    "linkDepartment": "/pago/importacion-materias-primas-estupefacientes/contenedor-de-pasos",
     "department": "cofepris"
   },
   {
@@ -1711,7 +1711,7 @@
     "id": 245,
     "tramite": 80206,
     "linkDashboard": "/se/modalidad-ampliacion/registro",
-    "linkDepartment": "/se/modalidad-ampliacion/registro",
+    "linkDepartment": "/pago/modalidad-ampliacion/registro",
     "department": "se"
   },
   {

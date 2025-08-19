@@ -6,16 +6,19 @@
   [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
    [datos]="tableData"
    (listaDeFilaSeleccionada)="onfilaSeleccionadasChange($event)"
-
    >
 </app-tabla-dinamica>
 <div class="col-md-12 d-flex justify-content-end mt-3">
   <div class="btn-group">
           <button class="btn btn-primary me-3" type="button" *ngIf="!tableData?.length" (click)="onAgregar()" data-bs-toggle="modal" data-bs-target="#tercerosRelacionadosModal">Agregar</button>
           @if(filaSeleccionada){
-            <button class="btn btn-default  me-3" type="button"  
-   [disabled]="!filaSeleccionada" (click)="enModificar()" data-bs-toggle="modal" data-bs-target="#tercerosRelacionadosModal">Modificar</button>
-    <button  class="btn btn-danger me-3" type="button" [disabled]="!filaSeleccionada" (click)="onDeletefilaSeleccionadas()">Eliminar</button>
+            <button class="btn btn-default  me-3" type="button"             
+*ngIf="filaSeleccionadas.size > 0"
+               [disabled]="!filaSeleccionada || esFormularioSoloLectura" 
+ (click)="enModificar()" data-bs-toggle="modal" data-bs-target="#tercerosRelacionadosModal">Modificar</button>
+    <button  class="btn btn-danger me-3" type="button"  *ngIf="filaSeleccionadas.size > 0"
+            [disabled]="filaSeleccionadas.size === 0 || esFormularioSoloLectura" 
+ (click)="onDeletefilaSeleccionadas()">Eliminar</button>
           }
     
   </div>
@@ -48,7 +51,7 @@
               [disabled]="esFormularioSoloLectura">
             </app-input-radio>
                </div>
-               <div *ngIf="datosDelTramiteRealizar.get('tipoPersona')?.touched && datosDelTramiteRealizar.get('tipoPersona')?.invalid" class="text-danger">
+               <div *ngIf="datosDelTramiteRealizar.get('tipoPersona')?.touched && datosDelTramiteRealizar.get('tipoPersona')?.invalid"   class="text-danger validation-message">
                 Este campo es obligatorio.
               </div>
           </div>
@@ -62,7 +65,7 @@
               [ngClass]="{'is-invalid': destinatarioForm.get('datosDelTramiteRealizar.denominacion')?.touched && destinatarioForm.get('datosDelTramiteRealizar.denominacion')?.invalid}"
               />
               
-             <div *ngIf="datosDelTramiteRealizar.get('denominacion')?.touched && datosDelTramiteRealizar.get('denominacion')?.invalid" class="text-danger">
+             <div *ngIf="datosDelTramiteRealizar.get('denominacion')?.touched && datosDelTramiteRealizar.get('denominacion')?.invalid"   class="text-danger validation-message">
               Este campo es obligatorio.
          </div>
 
@@ -133,7 +136,7 @@
               [disabled]="esFormularioSoloLectura"
               [ngClass]="{'is-invalid': destinatarioForm.get('datosDelTramiteRealizar.domicilio')?.touched && destinatarioForm.get('datosDelTramiteRealizar.domicilio')?.invalid}"
               ></textarea>
-              <div *ngIf="datosDelTramiteRealizar.get('domicilio')?.touched && datosDelTramiteRealizar.get('domicilio')?.invalid" class="text-danger">
+              <div *ngIf="datosDelTramiteRealizar.get('domicilio')?.touched && datosDelTramiteRealizar.get('domicilio')?.invalid"   class="text-danger validation-message">
                 Este campo es obligatorio.
               </div>
             </div>
@@ -152,12 +155,12 @@
               [disabled]="esFormularioSoloLectura"
             ></app-catalogo-select>
             @if(isPaisRequired){
-              <small class="text-danger">
+              <small   class="text-danger validation-message">
                 Por favor, selecciona una opción.
               </small>
             }
            @if(isPaisInvalid){
-            <small class="text-danger">
+            <small   class="text-danger validation-message">
               Este campo es obligatorio.
             </small>
            }
@@ -179,13 +182,13 @@
               }"
               />
               @if(isCodigoPostalMaxLengthExceeded){
-                <small class="text-danger">
+                <small   class="text-danger validation-message">
                   Por favor, no escribas más de 5 caracteres.
                 </small>
               }
 
               <div *ngIf="destinatarioForm.get('datosDelTramiteRealizar.codigopostal')?.touched &&
-              destinatarioForm.get('datosDelTramiteRealizar.codigopostal')?.hasError('pattern')" class="text-danger">
+              destinatarioForm.get('datosDelTramiteRealizar.codigopostal')?.hasError('pattern')"   class="text-danger validation-message">
                Por favor, sólo escribe dígitos.
            </div>
               
@@ -204,7 +207,7 @@
               }"
               />
               @if(isTelefonoPatternInvalid){
-                <small class="text-danger">
+                <small   class="text-danger validation-message">
                   Por favor, sólo escribe dígitos.
                 </small>
               }
@@ -219,7 +222,7 @@
                   'is-invalid': isCorreoElectronicoInvalid
                 }"/>
                 @if(isCorreoElectronicoInvalid){
-                  <small class="text-danger">
+                  <small   class="text-danger validation-message">
                     Por favor, escribe una dirección de correo válida.
                   </small>
                 }
@@ -235,7 +238,7 @@
                 <button class="btn btn-primary me-2"
                 type="button"(click)="onLimpiar()">Limpiar</button>
                 <button class="btn btn-primary me-2"
-                type="submit" data-bs-dismiss="modal">Guardar</button>
+                type="submit" >Guardar</button>
             </div>
           
         </div>

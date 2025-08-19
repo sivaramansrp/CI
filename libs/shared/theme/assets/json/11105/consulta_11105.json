@@ -17,11 +17,11 @@
     "numeroInterior": "5B",
     "telefono": "5512345678",
     "correoElectronico": "juan.perez@example.com",
-    "pais": "México",
+    "pais": "1",
     "codigoPostal": "03100",
     "estado": "Ciudad de México",
     "colonia": "Del Valle",
-    "opcion": true,
+    "opcion": "si",
     "folioOriginal": "FO-ABC-123",
     "justificacionDelDesistimiento": "El cliente canceló el pedido."
   }

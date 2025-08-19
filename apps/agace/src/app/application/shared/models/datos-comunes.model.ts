@@ -18,12 +18,21 @@ export const DATOS_COMUNES_TEXTOS_DOS = {
  * Contiene constantes de texto comunes utilizadas en la aplicación.
  */
 export const DATOS_COMUNES_TEXTOS_TRES = {
-    alerta: `<p><strong>Nota:</strong> De contar con un programa IMMEX activo y
+    alerta: `<p><strong>Nota: </strong> De contar con un programa IMMEX activo y
           vigente al momento de ingresar la solicitud, se mostrarán los
           domicilios registrados ante la Secretaría de Economía. Así mismo,
           podrá incluir otros domicilios que se encuentren relacionados con el
           RFC del solicitante, dando click en el botón "Agregar" y seleccionado
           la Entidad Federativa.</p>`,
+}
+
+/**
+ * Contiene constantes de texto comunes utilizadas en la aplicación.
+ */
+export const DATOS_COMUNES_TEXTOS_CUATRO = {
+    alerta: `<p>Deberá anexar un archivo con el reporte de saldos de mercancía de
+     importación temporal de un periodo de un mes, que se encuentre dentro de los
+      tres meses anteriores a la fecha de la presente solicitud.</p>`,
 }
 
 /**

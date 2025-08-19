@@ -16,9 +16,9 @@
             <div class="col-md-4 form-group">
               <label class="form-label" for="nombres">Nombre(s): </label>
               <input type="text" id="nombres" class="form-control" formControlName="nombres" (change)="setValoresStore('formDatosDelDestinatario','nombres','setFormDatosDelDestinatario')" />
-            @if(formDatosDelDestinatario.controls['nombres'].invalid && formDatosDelDestinatario.controls['nombres'].touched) {
+            @if(formDatosDelDestinatario.controls['nombres'].invalid ) {
       <div class="d-grid">
-        @if(formDatosDelDestinatario.controls['nombres'].errors?.['required']) {
+        @if(formDatosDelDestinatario.controls['nombres'].errors?.['required']&& formDatosDelDestinatario.controls['nombres'].touched) {
           <span class="mensaje-error">Este campo es obligatorio</span>
         }
         @if(formDatosDelDestinatario.controls['nombres'].errors?.['maxlength']) {

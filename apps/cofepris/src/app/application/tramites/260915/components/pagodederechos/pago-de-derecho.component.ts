@@ -16,6 +16,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
+import moment from 'moment';
 
 /**
  * Componente para gestionar el pago de derechos en el trámite 260915.
@@ -81,6 +82,11 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
     required: false,
     habilitado: true,
   };
+
+  /**
+   * Indica si hay un error relacionado con la fecha de pago.
+   */
+  fechaPagoError: boolean = false;
 
   /**
    * Constructor del componente.
@@ -192,7 +198,34 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
    * @param evento Fecha seleccionada en formato de cadena.
    */
   seleccionarFechaInicio(evento: string): void {
-    this.solicitud260915Store.getValue().fechadepago = evento;
+    this.solicitud260915Store.update((state) => ({
+      ...state,
+      fechadepago: evento
+    }));
+    
+    const FECHA_SELECCIONADA = moment(evento, 'DD/MM/YYYY');
+    const FECHA_ACTUAL = moment().startOf('day');
+    const ES_FECHA_FUTURA = FECHA_SELECCIONADA.isAfter(FECHA_ACTUAL);
+    
+    this.fechaPagoError = ES_FECHA_FUTURA;
+    
+    this.pagoDeDerechos.get('fechadepago')?.setValue(evento);
+    
+    if (ES_FECHA_FUTURA) {
+      this.pagoDeDerechos.get('fechadepago')?.setErrors({ 'futureDate': true });
+    } else {
+      const ERRORES_ACTUALES = this.pagoDeDerechos.get('fechadepago')?.errors;
+      if (ERRORES_ACTUALES) {
+        delete ERRORES_ACTUALES['futureDate'];
+        if (Object.keys(ERRORES_ACTUALES).length === 0) {
+          this.pagoDeDerechos.get('fechadepago')?.setErrors(null);
+        } else {
+          this.pagoDeDerechos.get('fechadepago')?.setErrors(ERRORES_ACTUALES);
+        }
+      }
+    }
+    
+    this.pagoDeDerechos.get('fechadepago')?.markAsTouched();
   }
 
   /**
