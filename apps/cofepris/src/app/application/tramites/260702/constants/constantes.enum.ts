@@ -16,3 +16,5 @@ export const TEXTOS = {
     { label: 'Física', value: 'fisica' },
     { label: 'Moral', value: 'moral' },
   ];
+
+  

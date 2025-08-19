@@ -15,7 +15,6 @@ import { ReplaySubject, map, takeUntil } from 'rxjs';
 import {
   Catalogo,
   CatalogoSelectComponent,
-  ConsultaioQuery,
   InputFecha,
   InputFechaComponent,
   REGEX_REEMPLAZAR,
@@ -23,6 +22,7 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 
+import{ConsultaioQuery} from '@ng-mf/data-access-user';
 import { RegistrarSolicitudMcpService } from '../../services/registrar-solicitud-mcp.service';
 
 import {
@@ -69,6 +69,8 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
     required: false,
     habilitado: true,
   };
+
+ 
   /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
@@ -183,31 +185,37 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
     this.pagoDeDerechosForm = this.fb.group({
       pagoDeDerechos: this.fb.group({
         clavedereferencia: [
-          this.pagoDeDerechosState?.clavedereferencia,
+          { value: this.pagoDeDerechosState?.clavedereferencia, disabled: this.esFormularioSoloLectura },
           [Validators.required, Validators.pattern(REGEX_REEMPLAZAR)],
         ],
         cadenadeladependencia: [
-          this.pagoDeDerechosState?.cadenadeladependencia,
-         [Validators.pattern(REGEX_REEMPLAZAR)],
+          { value: this.pagoDeDerechosState?.cadenadeladependencia, disabled: this.esFormularioSoloLectura },
+          [Validators.pattern(REGEX_REEMPLAZAR)],
         ],
-        banco: [this.pagoDeDerechosState?.banco],
+        banco: [
+          { value: this.pagoDeDerechosState?.banco, disabled: this.esFormularioSoloLectura },
+          [Validators.required],
+        ],
         llavedepago: [
-          this.pagoDeDerechosState?.llavedepago,
-         [Validators.pattern(REGEX_REEMPLAZAR)],
+          { value: this.pagoDeDerechosState?.llavedepago, disabled: this.esFormularioSoloLectura },
+          [Validators.pattern(REGEX_REEMPLAZAR)],
         ],
         fechadepago: [
-          this.pagoDeDerechosState?.fechadepago,
-          Validators.required,
+          { value: this.pagoDeDerechosState?.fechadepago, disabled: this.esFormularioSoloLectura },
+          [Validators.required],
         ],
         importedepago: [
-          this.pagoDeDerechosState?.importedepago,
+          { value: this.pagoDeDerechosState?.importedepago, disabled: this.esFormularioSoloLectura },
           [Validators.pattern(REGEX_SOLO_DIGITOS)],
         ],
       }),
     });
   }
-  seleccionarFechaInicio(evento: string): void {
-    this.solicitud260702Store.setFechadePago(evento);
+  cambioFechaPago(nuevo_fechadepago: string): void {
+    this.pagoDeDerechosForm.patchValue({
+      fechadepago: nuevo_fechadepago,
+    });
+    this.setValoresStore(this.pagoDeDerechosForm, 'fechadepago', 'setFechadePago');
   }
 
   /**
