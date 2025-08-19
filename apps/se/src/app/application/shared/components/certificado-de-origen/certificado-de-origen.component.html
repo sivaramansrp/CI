@@ -459,3 +459,9 @@
 @if(nuevaNotificacion){
   <lib-notificaciones [notificacionInput]="nuevaNotificacion" ></lib-notificaciones>
   }  
+  @if (nuevaNotificacionUno) {
+    <section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacionUno" >
+    </lib-notificaciones>
+    </section>
+    }

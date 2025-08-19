@@ -2,7 +2,7 @@ import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent,
 import { CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, MERCANCIA_SELECCIONADAS, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
 import { Component,ElementRef,EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output,ViewChild, SimpleChanges } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl,FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators,ValidationErrors,ValidatorFn} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormularioSi } from '../../models/certificado-origen.model';
 import { Mercancia } from '../../models/modificacion.enum';
@@ -111,6 +111,13 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
      * @command Este campo debe ser inicializado antes de su uso.
      */
      public nuevaNotificacion!: Notificacion;
+      /**
+     * @public
+     * @property {Notificacion} nuevaNotificacion
+     * @description Representa una nueva notificación que se utilizará en el componente.
+     * @command Este campo debe ser inicializado antes de su uso.
+     */
+      public nuevaNotificacionUno!: Notificacion;
 
      /**
    * @descripcion
@@ -392,7 +399,9 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
   telefono:[''],
   correoElectronico:[''],
 
-    });
+    },
+    { validators: CertificadoDeOrigenComponent.dateRangeValidator(this) } 
+  );
     this.applyPrimerApellidoValidation();
   }
   /* * Aplica las validaciones al campo 'primerApellido', 'calle' y 'numeroLetra' del formulario.
@@ -666,6 +675,48 @@ return false;
     if (this.seleccionadaguardarClicado.length > 0) {
       this.guardarClicado = [];
     }
+  }
+  /**
+ * Validador de rango de fechas.
+ * 
+ * Este método valida que la fecha de inicio sea menor o igual a la fecha de fin.
+ * Si la fecha de inicio es mayor a la fecha de fin, se genera una notificación de error.
+ * 
+ * @param {CertificadoOrigenComponent} component - Instancia del componente para acceder a sus propiedades.
+ * @returns {ValidatorFn} Función de validación que retorna un error si las fechas no son válidas.
+ */
+  static dateRangeValidator(component: CertificadoDeOrigenComponent): ValidatorFn {
+    return (formGroup: AbstractControl): ValidationErrors | null => {
+      const START_DATE = formGroup.get('fechaInicioInput')?.value;
+      const END_DATE = formGroup.get('fechaFinalInput')?.value;
+  
+      if (START_DATE && END_DATE) {
+        const [START_DAY, START_MONTH, START_YEAR] = START_DATE.split('/').map(Number);
+        const [END_DAY, END_MONTH, END_YEAR] = END_DATE.split('/').map(Number);
+  
+        const PARSED_START_DATE = new Date(START_YEAR, START_MONTH - 1, START_DAY);
+        const PARSE_END_DATE = new Date(END_YEAR, END_MONTH - 1, END_DAY);
+  
+        if (PARSED_START_DATE > PARSE_END_DATE) {
+          
+          component.nuevaNotificacionUno = {
+            tipoNotificacion: 'alert',
+            categoria: 'danger',
+            modo: 'action',
+            titulo: '',
+            mensaje: 'La fecha de inicio debe ser menor a la fecha fin.',
+            cerrar: true,
+            tiempoDeEspera: 5000,
+            txtBtnAceptar: 'Aceptar',
+            txtBtnCancelar: '',
+          };
+  
+          return { dateRangeInvalid: true };
+        }
+      }
+  
+      return null;
+    };
   }
 
  

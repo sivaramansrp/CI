@@ -105,10 +105,10 @@ export class DatosDelDestinatarioComponent implements OnDestroy, OnInit,OnChange
       nombres: ['', [Validators.maxLength(20)]],
       primerApellido: ['', [ Validators.maxLength(20)]],
       segundoApellido: ['', [Validators.maxLength(20)]],
-      numeroDeRegistroFiscal: ['', [Validators.maxLength(30),Validators.required]],
+      numeroDeRegistroFiscal: ['',[Validators.maxLength(30),Validators.required]],
       razonSocial: [{ value: '', disabled: this.razonSocialEditable }],
     });
-    this.applyNumeroRegistroFiscalValidation();
+   
   }
 /**
  * Aplica validaciones al campo 'numeroDeRegistroFiscal' y 'primerApellido' del formulario
