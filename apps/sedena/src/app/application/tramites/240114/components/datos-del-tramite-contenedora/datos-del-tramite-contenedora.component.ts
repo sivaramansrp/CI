@@ -35,6 +35,12 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * @property {Subject<void>} unsubscribe$
    */
   private unsubscribe$ = new Subject<void>();
+  
+  /**
+   * Indica si se deben usar botones personalizados en el componente.
+   * Cuando es `true`, el componente mostrará y gestionará la lógica de botones personalizados.
+   */
+  usarBotonesPersonalizados: boolean = true;
 
   /**
    * Datos de la tabla de mercancías que se muestran en el formulario.

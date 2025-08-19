@@ -62,6 +62,19 @@ export class ScianTablaComponent implements OnInit {
    */
   public scianNinoRequerido = true;
 
+
+  /**
+   * Almacena el mensaje de error para mostrar cuando el formulario es inválido.
+   * Stores the error message to display when the form is invalid.
+   */
+  mensajeFormularioInvalido: string = '';
+
+  /**
+   * Indica si el usuario ha hecho clic en el botón de agregar SCiAN.
+   * Se utiliza para determinar si se debe mostrar un mensaje de error.
+   */
+  clicado: boolean = true;
+
   /**
    * Referencia al modal principal para mostrar diferentes tipos de modales.
    * Se utiliza para gestionar el estado de modales de Bootstrap.
@@ -98,7 +111,7 @@ export class ScianTablaComponent implements OnInit {
     });
 
     this.scianNinoRequerido =
-    PROCEDIMIENTOS_NO_PARA_ELEMENTO_DESCRIPCION_REQUERIDO.includes(this.idProcedimiento)
+      PROCEDIMIENTOS_NO_PARA_ELEMENTO_DESCRIPCION_REQUERIDO.includes(this.idProcedimiento)
         ? false
         : true;
   }
@@ -111,6 +124,7 @@ export class ScianTablaComponent implements OnInit {
    * @param event - Objeto del tipo `Catalogo` que contiene los datos del elemento seleccionado.
    */
   claveSelecionada(event: Catalogo): void {
+    this.mensajeFormularioInvalido = '';
     this.scianNinoLista = this.scianLista.filter((ele) => ele.id === event.id);
     this.scianForm.patchValue({
       scianNino: this.scianNinoLista[0].id
@@ -127,7 +141,9 @@ export class ScianTablaComponent implements OnInit {
    * @returns {void} No retorna ningún valor.
    */
   agregarScian(): void {
-    if (this.scianForm.invalid) {
+    if (this.scianForm.invalid && this.clicado) {
+      this.scianForm.get('clave')?.markAsTouched();
+      this.mensajeFormularioInvalido = 'Este campo es obligatorio';
       return;
     }
     if (this.scianConfigDatos && this.scianConfigDatos.find(item => item.clave === this.scianNinoLista[0].descripcion)) {
@@ -160,6 +176,17 @@ export class ScianTablaComponent implements OnInit {
     this.modalRef?.hide();
   }
 
+
+  /**
+   * Restablece el mensaje de formulario inválido y el estado de clic.
+   * 
+   * Este método limpia la propiedad `mensajeFormularioInvalido` y establece `clicked` en `false`.
+   * Normalmente se utiliza para restablecer el estado del formulario después de un envío inválido o interacción del usuario.
+   */
+  restablecerMensaje(): void {
+    this.mensajeFormularioInvalido = '';
+    this.clicado = false;
+  }
   /**
    * Restablece el formulario SCIAN a su estado inicial.
    * Este método reinicia todos los campos del formulario SCIAN,
