@@ -116,7 +116,19 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
      * @property {boolean} esFormularioSoloLectura
      */
     @Input() esFormularioSoloLectura: boolean = false;
-  
+
+    /**
+   * Controla la visibilidad del modal de alerta.
+   * @property {boolean} mostrarAlerta
+   */
+  mostrarAlerta: boolean = false;
+
+/**
+   * Mensaje mostrado en el modal de alerta.
+   * @property {string} mensajeDeAlerta
+   */
+  mensajeDeAlerta: string = '';  
+   
 
   /**
    * Constructor del componente.
@@ -151,6 +163,33 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Activa el modal de alerta.
+   * @method activarModal
+   * @returns {void}
+   */
+  activarModal(): void {
+    this.mostrarAlerta = true;
+  }
+
+  /**
+   * Cierra el modal de alerta.
+   * @method cerrarModal
+   * @returns {void}
+   */
+  aceptar(): void {
+    this.mostrarAlerta = false;
+  }
+
+    /**
+   * Cierra el modal de alerta.
+   * @method cerrarModal
+   */
+  cerrarModal():void{
+    this.mostrarAlerta = false;
+  }
+
+
+  /**
    * Inicializa el formulario con datos del store.
    * @method inicializarFormularioDesdeAlmacen
    */
@@ -167,7 +206,7 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
           this.formularioInfoRegistro.patchValue({
             seleccionaLaModalidad: this.tramiteState.seleccionaLaModalidad || '',
             seleccionarRegla: this.tramiteState.seleccionarRegla || '',
-            sector: this.tramiteState.sectorSelecion || '',
+            sector: this.tramiteState.sector || '',
           });
         })
       )
@@ -271,10 +310,17 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    * @param {Catalogo | Catalogo[]} data - Datos recibidos.
    */
   procesarDatosDelHijo(data: Catalogo): void {
-    this.isSelectedRegla = true;
+    this.formularioInfoRegistro.get('seleccionarRegla')?.setValue(data.id);
+    if (this.reglaSeleccionada && this.reglaSeleccionada.length > 0 && data.id === this.reglaSeleccionada[0].id) {
+      this.isSelectedRegla = true;
+    } else {
+      this.isSelectedRegla = false;
+       this.mensajeDeAlerta = "El programa que solicita la ampliaci�n no est� asociado a la zona fronteriza norte.";
+      this.activarModal();
+    }
     this.ampliacionServiciosService.enviarDeberiaMostrar(this.isSelectedRegla);
     this.tramite80206Store.setIsSelectedRegla(this.isSelectedRegla);
-    this.tramite80206Store.setAduanaDeIngresoSeleccion(data.id.toString() || '');
+    this.tramite80206Store.setSeleccionarRegla(data.id.toString() || '');
   }
 
   /**
@@ -283,8 +329,10 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    * @param {Catalogo | Catalogo[]} data - Datos del sector seleccionado.
    */
   cambioDeSector(data: Catalogo): void {
+    this.formularioInfoRegistro.get('sector')?.setValue(data.id);
+
     this.recibioSector = Array.isArray(data) ? data : [data];
-    this.tramite80206Store.setSectorSeleccion(data?.id.toString() || '');
+    this.tramite80206Store.setSector(data?.id.toString() || '');
   }
 
   /**

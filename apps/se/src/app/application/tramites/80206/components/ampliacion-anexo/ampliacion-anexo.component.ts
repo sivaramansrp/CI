@@ -415,8 +415,8 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
       volumenAnual: "",
     };
     this.tramite80206Store.setDatosImmex([...this.datosImmex, CUERPODATOS]);
-  }
     this.fraccionArancelaria = '';
+  }
   }
   
   /**
@@ -433,8 +433,13 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
    */
   agregarImportacion(): void {
     if(this.domiciliosSeleccionados.length === 0) {
-      this.mensajeDeAlerta = 'Debe seleccionar una fracción de importación';
+      this.mensajeDeAlerta = 'Debe seleccionar una fracción de exportación';
       this.activarModal();
+    }
+    else if (this.domiciliosSeleccionados[0]?.fraccionArancelaria === this.importacion) {
+      this.mensajeDeAlerta = "La solicitud contiene fracciones arancelarias que pertenecen al grupo 3R's, la fracción que desea ingresar pertenece a otro grupo por lo tanto no es válida.";
+      this.activarModal();
+      this.importacion = '';
     }
     else{
     const CUERPODATOS = {
@@ -453,7 +458,7 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
       volumenAnual: this.domiciliosSeleccionados[0]?.volumenAnual,
     }
     this.tramite80206Store.setDatosImportacion([...this.datosImportacion, CUERPODATOS]);
-
+    this.importacion = '';
   }
 }
 
