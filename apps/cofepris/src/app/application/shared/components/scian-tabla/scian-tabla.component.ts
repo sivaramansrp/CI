@@ -1,7 +1,8 @@
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Catalogo, TablaScianConfig } from '../../models/datos-solicitud.model';
 import { CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule, Location } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { PROCEDIMIENTOS_NO_PARA_ELEMENTO_DESCRIPCION_REQUERIDO } from '../../constantes/datos-scian.enum';
@@ -9,10 +10,10 @@ import { PROCEDIMIENTOS_NO_PARA_ELEMENTO_DESCRIPCION_REQUERIDO } from '../../con
 @Component({
   selector: 'app-scian-tabla',
   standalone: true,
+  providers: [BsModalService, DatosSolicitudService],
   imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent],
   templateUrl: './scian-tabla.component.html',
-  styleUrl: './scian-tabla.component.scss',
-  providers: [DatosSolicitudService],
+  styleUrl: './scian-tabla.component.scss'
 })
 export class ScianTablaComponent implements OnInit {
 
@@ -27,6 +28,19 @@ export class ScianTablaComponent implements OnInit {
    * Este valor debe ser proporcionado por el componente padre.
    */
   @Input() public idProcedimiento!: number;
+
+  /**
+   * @property {TablaScianConfig[]} scianConfigDatos
+   * @description
+   * Almacena la configuración de la tabla SCIAN.
+   */
+  @Input() public scianConfigDatos!: TablaScianConfig[];
+
+  /**
+   * Referencia al template del modal de datos obligatorios.
+   * Se muestra cuando faltan campos requeridos o hay errores de validación.
+   */
+  @ViewChild('templateDatosDuplicados') templateDatosDuplicados!: TemplateRef<void>;
 
   /**
    * Formulario reactivo que contiene los controles relacionados con el SCiAN.
@@ -49,6 +63,12 @@ export class ScianTablaComponent implements OnInit {
   public scianNinoRequerido = true;
 
   /**
+   * Referencia al modal principal para mostrar diferentes tipos de modales.
+   * Se utiliza para gestionar el estado de modales de Bootstrap.
+   */
+  modalRef?: BsModalRef;
+
+  /**
    * Constructor del componente. Inicializa servicios e invoca la carga inicial de la lista SCiAN.
    * 
    * @param fb - Servicio para la creación de formularios reactivos.
@@ -58,7 +78,9 @@ export class ScianTablaComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private ubicaccion: Location,
-    public datosSolicitudService: DatosSolicitudService
+    public datosSolicitudService: DatosSolicitudService,
+    @Inject(BsModalService)
+    private modalService: BsModalService
   ) {
     // Carga la lista de SCiAN desde un archivo JSON a través del servicio.
     this.datosSolicitudService.obtenerRespuestaPorUrl(this, 'scianLista', '/cofepris/scianTabla.json');
@@ -108,12 +130,34 @@ export class ScianTablaComponent implements OnInit {
     if (this.scianForm.invalid) {
       return;
     }
-    const SCIAN_IDX: TablaScianConfig = {
-      clave: this.scianNinoLista[0].descripcion,
-      descripcion: this.scianForm.get('scianNino')?.value
+    if (this.scianConfigDatos && this.scianConfigDatos.find(item => item.clave === this.scianNinoLista[0].descripcion)) {
+      // Mostrar un modal de advertencia por duplicado
+      const MODAL_CONFIG = {
+        animated: true,
+        keyboard: false,
+        ignoreBackdropClick: true,
+        class: 'modal-sm'
+      };
+      this.modalRef = this.modalService.show(this.templateDatosDuplicados, MODAL_CONFIG);
+    }else{
+      const SCIAN_IDX: TablaScianConfig = {
+        clave: this.scianNinoLista[0].descripcion,
+        descripcion: this.scianForm.get('scianNino')?.value
+      }
+      this.scianSeleccionado.emit(SCIAN_IDX);
+      this.ubicaccion.back();
     }
-    this.scianSeleccionado.emit(SCIAN_IDX);
-    this.ubicaccion.back();
+    
+  }
+
+   /**
+   * Cierra el modal de datos duplicados.
+   * @returns {void}
+   * @public
+   * @memberof ScianTablaContenedoraComponent
+   */
+  cerrarModalDatosDuplicados(): void {
+    this.modalRef?.hide();
   }
 
   /**

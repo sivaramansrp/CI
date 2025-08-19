@@ -47,7 +47,15 @@
       <button class="btn btn-primary" (click)="eliminarPlantas()">Eliminar plantas</button>
     </div>
   </div>
-
+@if(nuevaNotificacion) {
+<section>
+    <lib-notificaciones
+        [notificacionInput]="nuevaNotificacion"
+        (confirmacionModal)="confirmacionModal($event)"
+    >
+    </lib-notificaciones>
+</section>
+}
   <div class="row mt-5">
     <app-complementaria-immex></app-complementaria-immex>
   </div>

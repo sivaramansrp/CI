@@ -61,9 +61,11 @@
   <div class="row mt-4">
     <div class="col-md-8">
       <div class="form-group">
-        <label for="justificacionImportacionExportacion" class="form-label"
-          >Justificación y beneficio que se obtiene*:</label
-        >
+        <label for="justificacionImportacionExportacion" class="form-label d-flex align-items-center">
+          Justificación y beneficio que se obtiene*:
+            <span class="ms-3"></span>
+            <a *ngIf="esAyuda" href="javascript:void(0)" class="form-label ms-3" [ngClass]="{ 'ayuda-disabled': esFormularioSoloLectura }">Ayuda</a>
+        </label>
         <textarea
           class="form-control"
           rows="2"
@@ -79,6 +81,33 @@
         class="text-danger"
       >
         <small *ngIf="paisForm.controls['justificacionImportacionExportacion'].errors?.['required']"
+          >Este campo es obligatorio</small
+        >
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <div class="row mt-4" *ngIf="esNumeroDePermiso">
+    <div class="col-md-8">
+      <div class="form-group">
+        <label for="numeroPermisoImportacion" class="form-label"
+          >Número de permiso de importación:</label
+        >
+        <input type="text"
+          class="form-control"
+          id="numeroPermisoImportacion"
+          formControlName="numeroPermisoImportacion"
+          (change)="setValoresStore(paisForm,'numeroPermisoImportacion')"
+        >
+        <div
+        *ngIf="
+          paisForm.controls['numeroPermisoImportacion'].invalid &&
+          paisForm.controls['numeroPermisoImportacion'].touched
+        "
+        class="text-danger"
+      >
+        <small *ngIf="paisForm.controls['numeroPermisoImportacion'].errors?.['required']"
           >Este campo es obligatorio</small
         >
         </div>
