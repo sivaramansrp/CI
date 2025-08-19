@@ -430,7 +430,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         };
       })
     );
-    this.loadDatosTablaData();
+    this.cargarDatosTablaData();
   }
 
   /**
@@ -456,9 +456,9 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   /**
    * Cargar datos de la tabla.
    */
-  loadDatosTablaData(): void {
+  cargarDatosTablaData(): void {
     this.solicitud10301Service
-      .getDatosTableData()
+      .obtenerDatosTableData()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data: RespuestaCatalog[]) => {
         this.mercanciaDatos = data as unknown as DatosMercancia[];

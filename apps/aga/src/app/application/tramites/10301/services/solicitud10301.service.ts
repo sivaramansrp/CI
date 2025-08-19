@@ -70,7 +70,7 @@ export class Solicitud10301Service {
    * Obtiene los datos para mostrar en la tabla.
    * @returns Un observable con la respuesta de los catálogos de datos de la tabla.
    */
-  getDatosTableData(): Observable<RespuestaCatalog[]> {
+  obtenerDatosTableData(): Observable<RespuestaCatalog[]> {
     return this.http.get<RespuestaCatalog[]>(`assets/json/10301/datosTabla.json`);
   }
   
