@@ -490,9 +490,9 @@
           <div class="form-group mt-5">
             <div class="panel-group ficha-collapse" id="accordion">
               <div class="panel panel-default">
-                <div class="panel-heading" (click)="mostrar_colapsable()" tabindex="0">
+                <div class="panel-heading" (click)="mostrar_colapsable(1)" tabindex="0">
                   <p class="panel-title fw-bold">País de origen</p>
-                  <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
+                  <button type="button" class="collpase-button" [class.collapsed]="!paisDeOriginColapsable" [disabled]="esFormularioSoloLectura"></button>
                 </div>
                 @if (colapsable) {
                 <div class="panel-collapse collapse in" id="panel-01">
@@ -509,11 +509,11 @@
           <div class="form-group mt-5">
             <div class="panel-group ficha-collapse" id="accordion">
               <div class="panel panel-default">
-                <div class="panel-heading" (click)="mostrar_colapsable()" tabindex="0">
+                <div class="panel-heading" (click)="mostrar_colapsable(2)" tabindex="0">
                   <p class="panel-title fw-bold">
                     País donde se produce o fabrica el ingrediente activo
                   </p>
-                  <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
+                  <button type="button" class="collpase-button" [class.collapsed]="!paisDoneFabricaColapsable" [disabled]="esFormularioSoloLectura"></button>
                 </div>
                 @if (colapsable) {
                 <div class="panel-collapse collapse in" id="panel-01">

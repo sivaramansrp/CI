@@ -585,6 +585,9 @@ export class DomicilioComponent implements OnInit, OnDestroy {
     { fraccion: '0402.10.01', descripcion: 'Leche en polvo, sin azúcar' },
     { fraccion: '1006.30.99', descripcion: 'Arroz semiblanqueado' }
   ];
+
+  public paisDeOriginColapsable: boolean = false;
+  public paisDoneFabricaColapsable: boolean = false;
   /**
    * Etiqueta de la lista de fechas.
    * */
@@ -912,7 +915,12 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Alterna el estado colapsable de la sección del formulario.
    * @method mostrar_colapsable
    */
-  mostrar_colapsable(): void {
+  mostrar_colapsable(orden: number): void {
+    if(orden === 1) {
+      this.paisDeOriginColapsable = !this.paisDeOriginColapsable;
+    } else if(orden === 2) {
+      this.paisDoneFabricaColapsable = !this.paisDoneFabricaColapsable;
+    }
     this.colapsable = !this.colapsable;
   }
 

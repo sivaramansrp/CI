@@ -25,7 +25,10 @@ import { TramitesAsociadosSeccionComponent } from '../../shared/components/trami
 
 import { TercerosRelacionadosFabricanteComponent } from '../../shared/components/terceros-relacionados-fabricante/terceros-relacionados-fabricante.component';
 
+import { ManifiestosComponent } from '../../shared/components/manifiestos-declaraciones/manifiestos-declaraciones.component';
+
 import { PagoDeDerechosEntradaComponent } from '../../shared/components/pago-de-derechos-entrada/pago-de-derechos-entrada.component';
+import { RepresentanteLegalComponent } from '../../shared/components/representante-legal/representante-legal.component';
 
 
 @NgModule({
@@ -45,7 +48,9 @@ import { PagoDeDerechosEntradaComponent } from '../../shared/components/pago-de-
     DatosDelSolicitudModificacionComponent,
     TramitesAsociadosSeccionComponent,
     TercerosRelacionadosFabricanteComponent,
-    PagoDeDerechosEntradaComponent
+    PagoDeDerechosEntradaComponent,
+    ManifiestosComponent,
+    RepresentanteLegalComponent
   ],
   providers: [provideHttpClient(), ToastrService,InicioSesionService,SubirDocumentoService ],
 })
