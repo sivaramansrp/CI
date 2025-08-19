@@ -3,7 +3,7 @@ name: Build and Deploy Profepa Microfront to MicroK8s
 on:
   push:
     branches:
-      - qa-1
+      - develop
     paths:
       - 'apps/profepa/**'
       - 'libs/**'
@@ -47,7 +47,6 @@ jobs:
         tags: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
         build-args: |
           NODE_ENV=production
-
   deploy:
     name: Deploy to MicroK8s via SSH
     runs-on: ubuntu-latest
@@ -57,15 +56,38 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Copy K8s manifests to remote
-      uses: appleboy/scp-action@v0.1.7
-      with:
-        host: ${{ secrets.REMOTE_SRV_IP }}
-        username: ${{ secrets.REMOTE_SRV_USER }}
-        key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
-        source: "k8s/profepa-microfront/"
-        target: "~/profepa-microfront-manifests/"
-
+    - name: List K8s manifests before SCP
+      run: |
+        echo "Listing files in k8s/profepa-microfront/"
+        ls -l k8s/profepa-microfront/ || echo "Directory does not exist"
+        echo "Recursive find from k8s/"
+        find k8s
+    - name: Show full file paths
+      run: |
+        realpath k8s/profepa-microfront/profepa-microfront-deployment-dev.yaml
+        realpath k8s/profepa-microfront/profepa-microfront-service-dev.yaml
+        realpath k8s/profepa-microfront/profepa-microfront-ingress-dev.yaml
+    - name: Write private key for scp
+      run: |
+        echo "${{ secrets.REMOTE_SRV_PRIV_KEY }}" > /tmp/remote_key
+        chmod 600 /tmp/remote_key
+    - name: Make sure target directory exists on remote
+      run: |
+        ssh -i /tmp/remote_key -o StrictHostKeyChecking=no \
+          ${{ secrets.REMOTE_SRV_USER }}@${{ secrets.REMOTE_SRV_IP }} \
+          "mkdir -p ~/profepa-microfront-manifests/"
+    - name: Copy K8s manifests to remote using scp
+      run: |
+        scp -i /tmp/remote_key -o StrictHostKeyChecking=no \
+          k8s/profepa-microfront/profepa-microfront-deployment-dev.yaml \
+          k8s/profepa-microfront/profepa-microfront-service-dev.yaml \
+          k8s/profepa-microfront/profepa-microfront-ingress-dev.yaml \
+          ${{ secrets.REMOTE_SRV_USER }}@${{ secrets.REMOTE_SRV_IP }}:~/profepa-microfront-manifests/
+    - name: Verify files on remote
+      run: |
+        ssh -i /tmp/remote_key -o StrictHostKeyChecking=no \
+          ${{ secrets.REMOTE_SRV_USER }}@${{ secrets.REMOTE_SRV_IP }} \
+          "ls -l ~/profepa-microfront-manifests/"
     - name: Deploy on MicroK8s host via SSH
       uses: appleboy/ssh-action@v1
       with:
@@ -76,12 +98,40 @@ jobs:
         script: |
           echo "Logging in to GHCR..."
           echo ${{ secrets.GHCR_PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
-          echo "Updating deployment image (if deployment exists)..."
-          kubectl set image deployment/modulefederation-profepa-microfront-dev modulefederation-profepa-microfront=${IMAGE_NAME}:${IMAGE_TAG} --namespace=default || true
-
           echo "Applying K8s manifests..."
-          kubectl apply -f ~/profepa-microfront-manifests/profepa-microfront-service-dev.yaml
-          kubectl apply -f ~/profepa-microfront-manifests/profepa-microfront-ingress-dev.yaml
-
+          microk8s kubectl apply -f ~/profepa-microfront-manifests/profepa-microfront-deployment-dev.yaml
+          microk8s kubectl apply -f ~/profepa-microfront-manifests/profepa-microfront-service-dev.yaml
+          microk8s kubectl apply -f ~/profepa-microfront-manifests/profepa-microfront-ingress-dev.yaml
+          echo "Updating deployment image (if deployment exists)..."
+          if microk8s kubectl get deployment modulefederation-profepa-microfront-dev --namespace=default > /dev/null 2>&1; then
+            microk8s kubectl set image deployment/modulefederation-profepa-microfront-dev modulefederation-profepa-microfront=${IMAGE_NAME}:${IMAGE_TAG} --namespace=default
+          else
+            echo "Deployment modulefederation-profepa-microfront-dev not found, skipping image update."
+          fi
           echo "Deployment completed."
+    
+    - name: Get deployed package.json version
+      id: get_version
+      run: echo "PACKAGE_VERSION=$(jq -r .version < package.json)" >> $GITHUB_ENV
+
+    - name: Wait for deployment to be ready
+      run: |
+        for i in {1..10}; do
+          if curl -sSf "https://front.v30.ultrasist.net/profepa/pago/seleccion-tramite" > /dev/null; then
+            echo "Deployment is up!"
+            break
+          fi
+          echo "Waiting for deployment... ($i/10)"
+          sleep 10
+        done
+    - name: Confirm deployed version on webpage
+      run: |
+        PAGE=$(curl -sSf "https://front.v30.ultrasist.net/profepa/pago/seleccion-tramite")
+        echo "Page content:"
+        echo "$PAGE"
+        if echo "$PAGE" | grep -q "${PACKAGE_VERSION}"; then
+          echo "Version ${PACKAGE_VERSION} found on deployed page. Deployment successful!"
+        else
+          echo "ERROR: Version ${PACKAGE_VERSION} NOT found on deployed page."
+          exit 1
+        fi
