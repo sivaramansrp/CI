@@ -3,7 +3,7 @@
     <div>
       <ng-titulo titulo="Partidas de la mercancía"></ng-titulo>
       <ng-alert
-        [CONTENIDO]="'Debes capturar una fracción arrancelaria en el campo de texto para que se realice la busqueda y se carguen los datos del catálogo del componente de la lista despegable.'"></ng-alert>
+        [CONTENIDO]="MENSAJES_TEXTOS.MENSAJES_FRACCION_ARANCELARIA_REQUERIDA"></ng-alert>
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
@@ -72,7 +72,7 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="valorPartidaUSD">Valor partida USD*:</label>
-            <input class="form-control" type="number" id="valorPartidaUSD"
+            <input class="form-control" type="text" id="valorPartidaUSD"
               formControlName="valorPartidaUSDPartidasDeLaMercancia" aria-labelledby="valorPartidaUSD" (change)="
                 setValoresStore(partidasDelaMercanciaForm, 'valorPartidaUSDPartidasDeLaMercancia')
               " />
@@ -81,8 +81,7 @@
                 *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('required')">Este
                 campo es obligatorio.</small>
               <small
-                *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('pattern')">Ingrese
-                un número válido.</small>
+                *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('pattern')">Por favor, escribe un número entero válido</small>
               <small
                 *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('min')">El
                 valor debe ser mayor o igual a 0.</small>
@@ -103,7 +102,7 @@
         <div class="col-md-8"></div>
         <div class="col-md-4 text-end">
           <div class="btn-group">
-            <button class="btn btn-primary me-2" type="button" data-bs-toggle="modal" [disabled]="esFormularioSoloLectura"
+            <button class="btn btn-default me-2" type="button" data-bs-toggle="modal" [disabled]="esFormularioSoloLectura"
               data-bs-target="#modalCargarArchivo">
               Cargar archivo
             </button>
@@ -113,6 +112,16 @@
           </div>
         </div>
       </div>
+
+      <div class="row mt-4">
+        <div class="col-md-12 d-flex justify-content-center">
+          <ng-alert
+        [CONTENIDO]="MENSAJES_TEXTOS.MENSAJES_MERCANCIA_REQUERIDA"
+        class="w-100 text-center"
+          ></ng-alert>
+        </div>
+      </div>
+
     </div>
   </form>
 
@@ -121,26 +130,29 @@
     <div class="modal-dialog modal-dialog-centered modal-fullscreen">
       <div class="modal-content">
         <div class="modal-body">
-          <div class="row">
+
             <div class="container mt-5">
-              <ng-titulo titulo="Cargar Archivo"> </ng-titulo>
+              <ng-titulo titulo="Cargar archivo"> </ng-titulo>
               <div class="row mb-5">
-                <div class="col-md-12 d-flex justify-content-between align-items-center">
-                  <div class="d-flex align-items-center">
-                    <label for="archivoNacionales" class="form-label me-3">
-                      Archivo:
-                    </label>
-                    <input type="file" id="archivoNacionales" class="form-control w-auto" />
-                  </div>
-                  <div></div>
-                </div>
+              <div class="col-md-12">
+                <label for="archivoNacionales" class="form-label me-3">
+                Archivo:
+                </label>
+              </div>
+              </div>
+              <div class="row mb-5">
+              <div class="col-md-12">
+                <input type="file" id="archivoNacionales" class="form-control w-auto"
+                aria-label="Seleccionar archivo"
+                data-bs-button-label="Seleccionar archivo"
+                data-bs-placeholder="Sin archivos seleccionados"
+                />
+              </div>
               </div>
             </div>
-
-          </div>
+            </div>
 
           <div class="row btn-row">
-            <div class="col-md-7"></div>
             <div class="col-md-4 text-end">
               <div class="btn-group">
                 <button type="button" id="cancelarCHN" name="cancelar" class="btn btn-primary cancel me-2" [disabled]="esFormularioSoloLectura"
@@ -200,7 +212,7 @@
           <div class="col-md-6 col-sm-6 text-end">
             <div class="btn-group">
               <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura">
-                Elimina Partida
+                Eliminar Partida
               </button>
               <button class="btn btn-primary" type="button" (click)="navegarParaModificarPartida()" [disabled]="disabled"
                 data-bs-toggle="modal" data-bs-target="#modalModificarPartida" [disabled]="esFormularioSoloLectura">
@@ -328,4 +340,3 @@
 
     </div>
   </div>
-</div>

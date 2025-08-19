@@ -108,9 +108,10 @@ export class ImportacionMaterialDeInvestigacionCientificaService {
    */
   getTablaDatos(): Observable<PartidasDeLaMercanciaModelo[]> {
       return this.http.get<PartidasDeLaMercanciaModelo[]>(
-            'assets/json/130111/partidas-de-la.json'
+            'assets/json/130112/partidas-de-la.json'
           );
     }
+    
   /**
   * Actualiza el estado del formulario en el store.
   * @param DATOS Estado actualizado del trámite.
