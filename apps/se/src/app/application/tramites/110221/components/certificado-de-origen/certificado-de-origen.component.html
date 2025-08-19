@@ -173,6 +173,22 @@
                 )
               "
             />
+             <div
+    *ngIf="
+      validacionForm.get('fraccionArancelaria')?.invalid &&
+      (validacionForm.get('fraccionArancelaria')?.dirty ||
+        validacionForm.get('fraccionArancelaria')?.touched)
+    "
+    class="text-danger mt-1"
+  >
+
+    <small *ngIf="validacionForm.get('fraccionArancelaria')?.errors?.['pattern']">
+      Solo se permiten números.
+    </small>
+    <small *ngIf="validacionForm.get('fraccionArancelaria')?.errors?.['maxlength']">
+      Máximo 8 dígitos permitidos.
+    </small>
+  </div>
           </div>
           <div class="col-md-4">
             <label># Registro producto:</label>

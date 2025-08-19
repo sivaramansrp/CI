@@ -705,8 +705,8 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         fraccionArancelaria: [
           this.solicitudState?.fraccionArancelaria,
           [
-            Validators.required,
             Validators.pattern(REG_X.REGEX_FRACCION_ARANCELARIA),
+            Validators.maxLength(8)
           ],
         ],
         numeroRegistro: [
