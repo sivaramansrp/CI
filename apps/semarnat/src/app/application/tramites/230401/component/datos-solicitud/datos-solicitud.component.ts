@@ -654,7 +654,7 @@ public aduanasDeEntradaLabel: CrossListLable = {
   setValoresStore(form: FormGroup, campo: string): void {
     const VALRO = form.get(campo)?.value;
     if (campo === 'cantidad' && VALRO !== null && VALRO !== undefined) {
-      const NUMERO_ACTIVO = Number(VALRO);
+      const NUMERO_ACTIVO = String(VALRO);
       this.tramite230401Store.setCantidad(NUMERO_ACTIVO);
     }
   }
