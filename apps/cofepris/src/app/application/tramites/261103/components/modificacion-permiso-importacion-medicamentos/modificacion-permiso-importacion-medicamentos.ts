@@ -50,8 +50,8 @@ export class ModificacionPermisoImportacionMedicamentosComponent implements OnIn
    * @public
    */
     public radioOptions: { label: string; value: string }[] = [
-      { label: 'Prorroga', value: 'Prorroga' },
-      { label: 'Modificacion', value: 'Modificacion' },
+      { label: 'Prórroga', value: 'Prorroga' },
+      { label: 'Modificación', value: 'Modificacion' },
     ];
   /**
    * Clase de alerta informativa.
@@ -109,6 +109,7 @@ export class ModificacionPermisoImportacionMedicamentosComponent implements OnIn
           map((seccionState: { readonly: boolean }) => {
             this.esFormularioSoloLectura = seccionState.readonly;
             this.guardarDatosFormulario();
+            this.disableGenerical();
           })
         )
         .subscribe()
@@ -177,6 +178,8 @@ export class ModificacionPermisoImportacionMedicamentosComponent implements OnIn
       ideGenerica1: [this.seccionState?.ideGenerica1],
       observaciones: [this.seccionState?.observaciones, [Validators.required]],
     });
+
+    this.disableGenerical();
   }
   /**
    * Validar campo del formulario
@@ -214,6 +217,7 @@ export class ModificacionPermisoImportacionMedicamentosComponent implements OnIn
 inicializarEstadoFormulario(): void {
   if (this.esFormularioSoloLectura) {
     this.guardarDatosFormulario();
+    this.disableGenerical();
   } else {
     this.obtenerDatosFormulario();
   }
@@ -243,4 +247,36 @@ guardarDatosFormulario(): void {
     this.preOperativeForm.enable();
   }
 }
+
+
+/**
+   * Disables or enables the 'observaciones' control in the `preOperativeForm` form group
+   * based on the form's read-only state and the value of the 'ideGenerica1' control.
+   *
+   * - If the form is not initialized, the method returns immediately.
+   * - If the form is in read-only mode (`esFormularioSoloLectura` is true), the 'observaciones' control is always disabled.
+   * - If the form is not in read-only mode, the 'observaciones' control is disabled unless
+   *   the value of 'ideGenerica1' is exactly 'Modificación', in which case it is enabled.
+   */
+  disableGenerical(): void {
+    // Verificar si el formulario está inicializado antes de acceder a él
+    if (!this.preOperativeForm) {
+      return;
+    }
+
+    // Si el formulario está en modo solo lectura, siempre deshabilitar observaciones
+    if (this.esFormularioSoloLectura) {
+      this.preOperativeForm.get('observaciones')?.disable();
+      return;
+    }
+
+    // Si no está en modo solo lectura, verificar el valor de ideGenerica1
+    if (!(this.preOperativeForm.get('ideGenerica1')?.value === 'Modificacion')) {
+      this.preOperativeForm.get('observaciones')?.disable();
+    } else {
+      this.preOperativeForm.get('observaciones')?.enable();
+    }
+  }
+
+
 }

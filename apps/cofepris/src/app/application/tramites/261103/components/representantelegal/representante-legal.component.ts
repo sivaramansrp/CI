@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from "@ng-mf/data-access-user";
 import { DatosProcedureQuery } from '../../../../estados/queries/tramites261103.query';
 import { DatosProcedureState } from '../../../../estados/tramites/tramites261103.store';
 import { DatosProcedureStore } from '../../../../estados/tramites/tramites261103.store';
@@ -63,11 +64,18 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    */
   constructor(private fb: FormBuilder,
     private store: DatosProcedureStore,
-    private query: DatosProcedureQuery
+    private query: DatosProcedureQuery,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    // Constructor del componente
-    // Note: ConsultaioQuery removed due to lazy-loading restrictions
-    // ReadOnly state will be handled differently
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.esFormularioSoloLectura = seccionState.readonly;
+        this.aplicarEstadoFormulario();
+      })
+    )
+    .subscribe();
   }
 
   /**
@@ -102,9 +110,30 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
       representanteLegalApPaterno: [{ value: this.seccionState?.representanteLegalApPaterno ,disabled:false},[Validators.required]],
       representanteLegalApMaterno: [{ value: this.seccionState?.representanteLegalApMaterno,disabled:false },[Validators.required]],
     });
+
+    this.aplicarEstadoFormulario();
+  }
+
+
+  
+  /**
+   * Aplica el estado de solo lectura al formulario.
+   * 
+   * Este método habilita o deshabilita todos los controles del formulario
+   * basándose en el valor de la propiedad `esFormularioSoloLectura`.
+   * Si el formulario está en modo solo lectura, todos los campos se deshabilitan.
+   * En caso contrario, todos los campos se habilitan para permitir la edición.
+   * 
+   * @returns {void}
+   */
+  private aplicarEstadoFormulario(): void {
+    if (!this.domicilioEstablecimiento) {
+      return;
+    }
+
     if (this.esFormularioSoloLectura) {
       this.domicilioEstablecimiento.disable();
-    }else{
+    } else {
       this.domicilioEstablecimiento.enable();
     }
   }

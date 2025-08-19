@@ -13,6 +13,7 @@ import { ConsultaioQuery } from "@ng-mf/data-access-user";
 import { DatosProcedureQuery } from '../../../../estados/queries/tramites261103.query';
 import { DatosProcedureState } from '../../../../estados/tramites/tramites261103.store';
 import { FABRICANTE_TABLA } from '../../../../shared/constantes/terceros-relacionados-fabricante.enum';
+import { ModificacionPermisoImportacionMedicamentosService } from '../../services/modificacion-permiso-importacion-medicamentos.service';
 import { OTROS_TABLA } from '../../../../shared/constantes/terceros-relacionados-fabricante.enum';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 
@@ -139,9 +140,17 @@ export class TercerosRelacionadosFabricanteComponent implements OnInit, OnDestro
   public configuracionOtrosTabla: ConfiguracionColumna<Otros>[] =
     TercerosRelacionadosFabricanteComponent.generateConfiguracionTabla(this.configuracionOtros);
 
+  listaFilaFabricante: Fabricante[] = [];
+  listaFilaFacturador: Fabricante[] = [];
+  listaFilaProveedor: Fabricante[] = [];
+  listaFilaCertificado: Fabricante[] = [];
+  listaFilaOtros: Otros[] = [];
+
     constructor(
       private datosProcedureQuery : DatosProcedureQuery,
-      private consultaioQuery: ConsultaioQuery) {
+      private consultaioQuery: ConsultaioQuery,
+      private servicio: ModificacionPermisoImportacionMedicamentosService
+    ) {
       this.consultaioQuery.selectConsultaioState$
     .pipe(
       takeUntil(this.destroyed$),
@@ -162,6 +171,8 @@ export class TercerosRelacionadosFabricanteComponent implements OnInit, OnDestro
     .subscribe((estado: DatosProcedureState) => {
       this.estadoSeleccionado = estado;
     });
+    this.obtenerTablaDatos();
+    this.obtenerOtrosTablaDatos();
   }
 
 
@@ -186,6 +197,68 @@ export class TercerosRelacionadosFabricanteComponent implements OnInit, OnDestro
       clave: (item: T) => item[field.clave] as string | number | boolean | undefined,
       orden: index + 1,
     }));
+  }
+
+
+  /**
+   * Obtiene los datos de la tabla de fabricantes y los asigna a las propiedades correspondientes.
+   * 
+   * Llama al servicio para recuperar los datos de la tabla de fabricantes (`Fabricante[]`) y los asigna tanto a 
+   * `fabricanteTablaDatos` como a `facturadorTablaDatos`. El observable se gestiona para cancelar la suscripción 
+   * cuando el componente se destruye, evitando fugas de memoria.
+   */
+  public obtenerTablaDatos():void {
+    this.servicio.getTablaDatos().pipe(
+      takeUntil(this.destroyed$),
+    ).subscribe((datos: Fabricante[]) => {
+      this.fabricanteTablaDatos = datos;
+      this.facturadorTablaDatos = datos;
+    });
+  }
+
+  /**
+   * Obtiene los datos de la tabla de otros y los asigna a la propiedad correspondiente.
+   *
+   * Llama al servicio para recuperar los datos de la tabla de otros (`Otros[]`) y los asigna a
+   * `otrosTablaDatos`. El observable se gestiona para cancelar la suscripción
+   * cuando el componente se destruye, evitando fugas de memoria.
+   */
+
+  public obtenerOtrosTablaDatos():void {
+    this.servicio.getOtrosTablaDatos().pipe(
+      takeUntil(this.destroyed$),
+    ).subscribe((datos: Otros[]) => {
+      this.otrosTablaDatos = datos;
+    });
+  }
+
+  /**
+   * Maneja la actualización de filas para diferentes tipos de listas de terceros relacionados.
+   * 
+   * @param fila - Array de objetos Fabricante o Otros que representan las filas seleccionadas.
+   * @param tipoLista - El tipo de lista a actualizar ('fabricante', 'facturador', 'proveedor', 'certificado', 'otros').
+   */
+  manejarFila(fila: Fabricante[] | Otros[], tipoLista: 'fabricante' | 'facturador' | 'proveedor' | 'certificado' | 'otros'): void {
+    switch (tipoLista) {
+      case 'fabricante':
+        this.listaFilaFabricante = fila as Fabricante[];
+        break;
+      case 'facturador':
+        this.listaFilaFacturador = fila as Fabricante[];
+        break;
+      case 'proveedor':
+        this.listaFilaProveedor = fila as Fabricante[];
+        break;
+      case 'certificado':
+        this.listaFilaCertificado = fila as Fabricante[];
+        break;
+      case 'otros':
+        this.listaFilaOtros = fila as Otros[];
+        break;
+      default:
+        // Opcionalmente maneja valores inesperados
+        break;
+    }
   }
 
   /**

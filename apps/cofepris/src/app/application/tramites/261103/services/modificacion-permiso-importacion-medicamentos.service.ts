@@ -1,5 +1,5 @@
+import { Catalogo, Fabricante, Otros } from '@libs/shared/data-access-user/src';
 import { AbstractControl } from '@angular/forms';
-import { Catalogo } from '@libs/shared/data-access-user/src';
 import { DatosProcedureState } from '../../../estados/tramites/tramites261103.store';
 import { DatosProcedureStore } from '../../../estados/tramites/tramites261103.store';
 import { Domicilio } from '../modelos/domicilio-establecimientos.model';
@@ -185,4 +185,24 @@ private destroyNotifier$: Subject<void> = new Subject<void>();
   actualizarEstadoFormulario(DATOS: DatosProcedureState): void {
     this.store.establecerDatos(DATOS);
   }
+
+
+  /**
+   * Obtiene la lista de fabricantes desde un archivo JSON local.
+   *
+   * @returns Un Observable que emite un array de objetos `Fabricante` cargados desde 'assets/json/261103/tabla-datos.json'.
+   */
+  getTablaDatos(): Observable<Fabricante[]> {
+    return this.http.get<Fabricante[]>('assets/json/261103/tabla-datos.json');
+  }
+
+  /**
+   * Obtiene un array de objetos `Otros` desde un archivo JSON local.
+   *
+   * @returns Un `Observable` que emite un array de objetos `Otros` cargados desde 'assets/json/261103/otros-tabla-datos.json'.
+   */
+  getOtrosTablaDatos(): Observable<Otros[]> {
+    return this.http.get<Otros[]>('assets/json/261103/otros-tabla-datos.json');
+  }
+
 }
