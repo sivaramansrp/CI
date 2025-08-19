@@ -532,7 +532,7 @@
               <div class="panel panel-default">
                 <div class="panel-heading" (click)="mostrar_colapsableDuos()" tabindex="0">
                   <p class="panel-title fw-bold">País donde se elabora el producto</p>
-                  <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
+                  <button type="button" class="collpase-button" [class.collapsed]="!paisDoneProductoColapsable" [disabled]="esFormularioSoloLectura"></button>
                 </div>
                 @if (colapsableDuos) {
                 <div class="panel-collapse collapse in" id="panel-01">
@@ -551,7 +551,7 @@
               <div class="panel panel-default">
                 <div class="panel-heading" (click)="mostrar_colapsableTres()" tabindex="0">
                   <p class="panel-title fw-bold">País proveedor</p>
-                  <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
+                  <button type="button" class="collpase-button" [class.collapsed]="!paisProveedorColapsable" [disabled]="esFormularioSoloLectura"></button>
                 </div>
                 @if (colapsableTres) {
                 <div class="panel-collapse collapse in" id="panel-01">
@@ -572,7 +572,7 @@
                   <p class="panel-title fw-bold">
                     País de procedencia/País del último puerto de embarque
                   </p>
-                  <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
+                  <button type="button" class="collpase-button" [class.collapsed]="!paisProcedenciaDelColapsable" [disabled]="esFormularioSoloLectura"></button>
                 </div>
                 @if (colapsableTress) {
                 <div class="panel-collapse collapse in" id="panel-01">
