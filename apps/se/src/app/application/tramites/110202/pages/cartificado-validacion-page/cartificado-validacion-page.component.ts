@@ -1,4 +1,4 @@
-import { BtnContinuarComponent, DatosPasos, ListaPasosWizard, PAGO_DE_DERECHOS, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent, DatosPasos, ListaPasosWizard, PAGO_DE_DERECHOS, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { PASOS } from '../../constantes/modificacion.enum';
@@ -28,7 +28,7 @@ interface AccionBoton {
     WizardComponent,
     BtnContinuarComponent,
     PasoUnoComponent,
-    PasoDosComponent,
+    PasoDosComponent,AlertComponent
   ],
   templateUrl: './cartificado-validacion-page.component.html',
   styleUrl: './cartificado-validacion-page.component.scss'
@@ -61,7 +61,16 @@ export class CartificadoValidacionPageComponent {
       this.seccionStore.establecerFormaValida([res]);
     });
   }
+   /** 
+   * Índice del paso actual del wizard.
+   * Representa la pestaña activa principal.
+   */
   indice: number = 1;
+  /**
+   * Controla si se debe mostrar la alerta en pantalla.
+   * Se activa cuando el subíndice del child componente es 3.
+   */
+  mostrarAlerta: boolean = false;
 
   /**
    * Referencia al componente del asistente (wizard).

@@ -61,6 +61,15 @@ export class Tramite260302Query extends Query<Tramite260302State> {
   );
 
   /**
+   * @property {Observable<TablaScianConfig[]>} getScianConfigDatos$
+   * @description
+   * Selecciona la configuración de la tabla SCIAN desde el estado.
+   */
+  getScianConfigDatos$ = this.select(
+    (state) => state.scianConfigDatos
+  );
+
+  /**
    * @property {Observable<DatosSolicitudFormState>} getDatosSolicitudFormState$
    * @description
    * Selecciona el estado del formulario de datos de la solicitud.

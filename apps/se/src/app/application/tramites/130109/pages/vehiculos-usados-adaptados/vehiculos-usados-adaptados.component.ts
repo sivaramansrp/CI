@@ -2,12 +2,17 @@ import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '../../enums/accion-botton.enum';
 import { PASOS } from '../../constants/pasos.enum';
-
+/*
+* Componente que representa la página de vehículos usados adaptados.
+*/
 @Component({
   selector: 'app-vehiculos-usados-adaptados',
   templateUrl: './vehiculos-usados-adaptados.component.html',
   styleUrl: './vehiculos-usados-adaptados.component.css',
 })
+/*
+* Clase que representa el componente para la gestión de vehículos usados adaptados.
+*/
 export class VehiculosUsadosAdaptadosComponent {
  /**
    * Lista de pasos del asistente (wizard) para solicitar la importación.

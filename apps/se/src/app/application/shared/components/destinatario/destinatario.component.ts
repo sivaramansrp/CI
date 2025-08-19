@@ -209,16 +209,16 @@ export class DestinatarioComponent implements OnInit, OnDestroy,AfterViewInit,On
   createForm(): void {
 this.formDestinatario = this.fb.group({
   paisDestin: [''],
-  ciudad: ['', [Validators.required]],
-  calle: ['', [Validators.required]],
-  numeroLetra: ['', [Validators.required]],
-  lada: ['', [Validators.pattern(/^\d+$/)]],
-  telefono: ['', [Validators.pattern(/^\d+$/)]],
-  fax: ['', [Validators.pattern(/^\d+$/)]],
+  ciudad: ['', [Validators.required,Validators.maxLength(50)]],
+  calle: ['', [Validators.required,Validators.maxLength(90)]],
+  numeroLetra: ['', [Validators.required,Validators.maxLength(30)]],
+  lada: ['', [Validators.pattern(/^\d+$/),Validators.maxLength(5)]],
+  telefono: ['', [Validators.pattern(/^\d+$/),Validators.maxLength(30)]],
+  fax: ['', [Validators.pattern(/^\d+$/),Validators.maxLength(20)]],
   correoElectronico: ['', [
     Validators.required,
     Validators.email,
-    Validators.maxLength(100),
+    Validators.maxLength(70),
     Validators.pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/) 
   ]]
 });

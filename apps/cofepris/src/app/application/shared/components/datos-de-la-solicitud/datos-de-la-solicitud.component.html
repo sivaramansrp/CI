@@ -6,7 +6,8 @@
         <div class="panel panel-default">
           <div class="panel-heading" (click)="mostrarColapsable(1)">
             <h4 class="panel-title">
-              <a> Opciones de pre-llenado de Solicitud </a>
+            <i class="bi bi-clipboard"></i>
+                Opciones de pre-llenado de Solicitud
             </h4>
             <button
               type="button"
@@ -57,7 +58,7 @@
       <div class="col-md-6">
         <div class="form-group">
           <label class="form-label" for="rfcSanitario"
-            >RFC del responsable sanitario</label
+            >RFC del responsable sanitario*</label
           >
           <span class="form-label" *ngIf="esCampoRequerido('rfcSanitario')"
             >*</span
@@ -94,7 +95,7 @@
       >
         <div class="form-group">
           <label class="form-label municipio-label" for="denominacionRazon"
-            >Denominación o razón social</label
+            >Denominación o razón social*</label
           >
           <span
             class="form-label municipio-label"
@@ -456,7 +457,7 @@
       <div class="col-md-3 my-3">
         <div class="form-group">
           <label class="form-label municipio-label" for="telefono"
-            >S.C.I.A.N.
+            >S.C.I.A.N.*
           </label>
           <span class="form-label" *ngIf="esCampoRequerido('scian')">*</span>
           <span class="form-label">:</span>
@@ -470,32 +471,34 @@
         [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
       ></app-tabla-dinamica>
     </div>
-    <div class="row">
-      <div class="col-md-12">
-        <div class="pull-right ml-2">
-          <button
-            type="button"
-            name="eliminarScian"
-            class="btn btn-danger ms-2"
-            (click)="eliminarModal()"
-            [disabled]="formularioDeshabilitado"
-          >
-            Eliminar
-          </button>
-          <button
-            type="button"
-            name="agregarScian"
-            class="btn btn-primary ms-2"
-            data-bs-toggle="modal"
-            data-bs-target="#modalAgregarScain"
-            (click)="agregarScian()"
-            [disabled]="formularioDeshabilitado"
-          >
-            Agregar
-          </button>
+    @if (!esSinAccionAlIniciar) {
+      <div class="row">
+        <div class="col-md-12">
+          <div class="pull-right ml-2">
+            <button
+              type="button"
+              name="eliminarScian"
+              class="btn btn-danger ms-2"
+              (click)="eliminarModal()"
+              [disabled]="formularioDeshabilitado"
+            >
+              Eliminar
+            </button>
+            <button
+              type="button"
+              name="agregarScian"
+              class="btn btn-primary ms-2"
+              data-bs-toggle="modal"
+              data-bs-target="#modalAgregarScain"
+              (click)="agregarScian()"
+              [disabled]="formularioDeshabilitado"
+            >
+              Agregar
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    }
     }
 
     <div class="row mt-2">
@@ -676,7 +679,7 @@
     <div class="row mt-5">
       <div class="col-md-12">
         <div class="pull-right">
-          @if (tablaMercanciasConfig.datos.length) {
+         
           <button
             type="button"
             name="modificarMercancias"
@@ -687,7 +690,7 @@
             Modificar
           </button>
           <button
-            *ngIf="tablaMercanciasConfig.datos.length > 0"
+            
             type="button"
             name="eliminarMercancias"
             class="btn btn-primary ms-2"
@@ -696,7 +699,7 @@
           >
             Eliminar
           </button>
-          }
+          
           <button
             type="button"
             name="agregarMercancias"
@@ -748,23 +751,27 @@
       <ng-titulo titulo="Manifiestos y declaraciones"></ng-titulo>
       <div class="mt-5">
         <div class="alert alert-info">
-          <label style="font-weight: normal">
-            <input type="checkbox" id="manifesto" formControlName="manifesto" />
-            <span class="form-label" *ngIf="esCampoRequerido('manifesto')">
-              <span
-                [ngClass]="
-                  datosSolicitudForm.get('manifesto')?.invalid &&
-                  (datosSolicitudForm.get('manifesto')?.touched ||
-                    datosSolicitudForm.get('manifesto')?.dirty)
-                    ? 'mensaje-error'
-                    : ''
-                "
-              >
-                *</span
-              >
-            </span>
-            {{ textoManifestoContenido }}
-          </label>
+          <div class="row align-items-center justify-content-start py-2" >
+            <div class="col-auto d-flex align-items-start pt-1">
+              <input class="form-check-input me-3" type="checkbox" id="manifesto" formControlName="manifesto" />
+              <label class="form-check-label ms-2" for="manifesto" *ngIf="esCampoRequerido('manifesto')">
+                <span
+                  [ngClass]="
+                    datosSolicitudForm.get('manifesto')?.invalid &&
+                    (datosSolicitudForm.get('manifesto')?.touched ||
+                      datosSolicitudForm.get('manifesto')?.dirty)
+                      ? 'mensaje-error'
+                      : ''
+                  "
+                >
+                  *</span
+                >
+              </label>
+            </div>
+            <div class="col align-items-center" style="margin-left: 38px;">
+              <label for="manifesto">{{ textoManifestoContenido }}</label>
+            </div>
+          </div>
         </div>
         <div
           class="mensaje-error"
@@ -897,7 +904,7 @@
     <ng-template #campoCorreoElectronico>
       <div class="form-group">
         <label class="form-label" for="correoElectronico"
-          >Correo electrónico
+          >Correo electrónico*
         </label>
         <span
           class="form-label municipio-label"
