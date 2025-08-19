@@ -1,5 +1,5 @@
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { CatalogoSelectComponent, InputRadioComponent, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
@@ -91,6 +91,32 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     const FRACCION_ARANCELARIA = this.formularioDatos.get('fraccionArancelaria')?.value;
     
     return Boolean(CANTIDAD && CANTIDAD_LETRA && UNIDAD_MEDIDA && FRACCION_ARANCELARIA);
+  }
+
+  /** Getters para verificar el estado disabled de los dropdowns de clasificación */
+  get claveResiduoDisabled(): boolean {
+    return this.formularioResiduo?.get('claveResiduo')?.disabled ?? true;
+  }
+
+  get nombreDisabled(): boolean {
+    return this.formularioResiduo?.get('nombre')?.disabled ?? true;
+  }
+
+  get descripcionDisabled(): boolean {
+    return this.formularioResiduo?.get('descripcion')?.disabled ?? true;
+  }
+
+  /** Getters para obtener los valores actuales de los dropdowns (para mostrar en disabled state) */
+  get claveResiduoValue(): string {
+    return this.formularioResiduo?.getRawValue()?.claveResiduo || '';
+  }
+
+  get nombreValue(): string {
+    return this.formularioResiduo?.getRawValue()?.nombre || '';
+  }
+
+  get descripcionValue(): string {
+    return this.formularioResiduo?.getRawValue()?.descripcion || '';
   }
 
   /** Enum de tipos de selección de tabla para uso en template */
@@ -219,11 +245,13 @@ export class DatosResiduosPeligrososComponent implements OnInit {
    * @param fb - Servicio para construir formularios reactivos.
    * @param formularioStore - Store Akita que gestiona el estado del formulario.
    * @param formularioQuery - Query Akita para consultar el estado del formulario.
+   * @param cdr - Change Detector Reference para forzar detección de cambios.
    */
   constructor(
     public fb: FormBuilder,
     private formularioStore: FormularioResiduoStore,
-    private formularioQuery: FormularioResiduoQuery
+    private formularioQuery: FormularioResiduoQuery,
+    private cdr: ChangeDetectorRef
   ) {}
 
   /**
@@ -237,6 +265,16 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     // Inicialmente dropdowns vacíos hasta que se haga búsqueda/selección
     this.etiquetasForm.nombre = [];
     this.etiquetasForm.nico = [];
+    
+    // Asegurar que los dropdowns de clasificación estén deshabilitados al inicializar
+    this.formularioResiduo.get('claveResiduo')?.disable();
+    this.formularioResiduo.get('nombre')?.disable();
+    this.formularioResiduo.get('descripcion')?.disable();
+    
+    // Verificar estado después de la inicialización
+    setTimeout(() => {
+      this.verificarEstadoDropdowns();
+    }, 100);
   }
 
   /**
@@ -271,9 +309,9 @@ export class DatosResiduosPeligrososComponent implements OnInit {
       cantidadLetra: [{ value: '', disabled: true }],
       unidadMedida: ['', Validators.required],
       clasificacion: ['', Validators.required],
-      claveResiduo: ['', Validators.required],
-      nombre: ['', Validators.required],
-      descripcion: ['', Validators.required],
+      claveResiduo: [{ value: '', disabled: true }, Validators.required],
+      nombre: [{ value: '', disabled: true }, Validators.required],
+      descripcion: [{ value: '', disabled: true }, Validators.required],
       creti: ['', Validators.required],
       estadoFisico: ['', Validators.required],
       manifiesto: ['', Validators.required],
@@ -287,8 +325,30 @@ export class DatosResiduosPeligrososComponent implements OnInit {
    */
   private recuperarValoresDesdeStore(): void {
     const ESTADO = this.formularioQuery.getValue();
+    
+    // Guardar el estado actual de disabled de los controles importantes
+    const CLAVE_RESIDUO_DISABLED = this.formularioResiduo.get('claveResiduo')?.disabled;
+    const NOMBRE_DISABLED = this.formularioResiduo.get('nombre')?.disabled;
+    const DESCRIPCION_DISABLED = this.formularioResiduo.get('descripcion')?.disabled;
+    
     this.formularioDatos.patchValue(ESTADO.formularioDatos, { emitEvent: false });
     this.formularioResiduo.patchValue(ESTADO.formularioResiduo, { emitEvent: false });
+    
+    // Restaurar el estado disabled después del patch si estaban deshabilitados
+    if (CLAVE_RESIDUO_DISABLED) {
+      this.formularioResiduo.get('claveResiduo')?.disable();
+    }
+    if (NOMBRE_DISABLED) {
+      this.formularioResiduo.get('nombre')?.disable();
+    }
+    if (DESCRIPCION_DISABLED) {
+      this.formularioResiduo.get('descripcion')?.disable();
+    }
+    
+    // Asegurar que los dropdowns de clasificación permanezcan deshabilitados por defecto
+    this.formularioResiduo.get('claveResiduo')?.disable();
+    this.formularioResiduo.get('nombre')?.disable();
+    this.formularioResiduo.get('descripcion')?.disable();
   }
 
   /**
@@ -486,8 +546,112 @@ export class DatosResiduosPeligrososComponent implements OnInit {
   }
 
   /**
-   * Muestra notificación cuando se intenta agregar un duplicado
+   * Maneja el cambio en el campo cantidad para auto-llenar cantidad en letra
    */
+  onCantidadChange(): void {
+    const CANTIDAD_VALUE = this.formularioResiduo.get('cantidad')?.value;
+    
+    if (CANTIDAD_VALUE && !isNaN(parseFloat(CANTIDAD_VALUE))) {
+      const NUMERO = parseFloat(CANTIDAD_VALUE);
+      
+      // Conversión básica de números a letras
+      let cantidadLetra = '';
+      if (NUMERO === 1) {
+        cantidadLetra = 'UNO';
+      } else if (NUMERO === 2) {
+        cantidadLetra = 'DOS';
+      } else if (NUMERO === 3) {
+        cantidadLetra = 'TRES';
+      } else if (NUMERO === 10) {
+        cantidadLetra = 'DIEZ';
+      } else if (NUMERO === 100) {
+        cantidadLetra = 'CIEN';
+      } else if (NUMERO === 1000) {
+        cantidadLetra = 'MIL';
+      } else {
+        // Para números más complejos, usar formato básico
+        cantidadLetra = NUMERO.toString().toUpperCase();
+      }
+      
+      // Auto-llenar el campo cantidad letra
+      this.formularioResiduo.get('cantidadLetra')?.setValue(cantidadLetra);
+    } else {
+      // Limpiar si no hay valor válido
+      this.formularioResiduo.get('cantidadLetra')?.setValue('');
+    }
+  }
+
+  /**
+   * Maneja el cambio en el radio button de clasificación
+   */
+  onClasificacionChange(): void {
+    const CLASIFICACION_SELECCIONADA = this.formularioResiduo.get('clasificacion')?.value;
+    
+    if (CLASIFICACION_SELECCIONADA) {
+      this.manejarCambioClasificacion(CLASIFICACION_SELECCIONADA);
+    } else {
+      // Si no hay selección, deshabilitar todos
+      this.formularioResiduo.get('claveResiduo')?.disable();
+      this.formularioResiduo.get('nombre')?.disable();
+      this.formularioResiduo.get('descripcion')?.disable();
+    }
+  }
+
+  /**
+   * Método para verificar y forzar el estado de los dropdowns (para debugging)
+   */
+  verificarEstadoDropdowns(): void {
+    const CLASIFICACION_VALUE = this.formularioResiduo.get('clasificacion')?.value;
+    
+    // Forzar deshabilitación si no hay clasificación seleccionada
+    if (!CLASIFICACION_VALUE) {
+      this.formularioResiduo.get('claveResiduo')?.disable();
+      this.formularioResiduo.get('nombre')?.disable();
+      this.formularioResiduo.get('descripcion')?.disable();
+    }
+  }
+
+  /**
+   * Maneja la lógica de habilitar/deshabilitar dropdowns según la clasificación seleccionada
+   */
+  private manejarCambioClasificacion(clasificacionSeleccionada: string): void {
+    // Guardar los valores actuales antes de hacer cambios
+    const CLAVE_ACTUAL = this.formularioResiduo.get('claveResiduo')?.value;
+    const NOMBRE_ACTUAL = this.formularioResiduo.get('nombre')?.value;
+    const DESCRIPCION_ACTUAL = this.formularioResiduo.get('descripcion')?.value;
+    
+    // Deshabilitar todos los dropdowns primero (manteniendo sus valores)
+    this.formularioResiduo.get('claveResiduo')?.disable();
+    this.formularioResiduo.get('nombre')?.disable();
+    this.formularioResiduo.get('descripcion')?.disable();
+    
+    // Restaurar los valores después de deshabilitar (algunos componentes los pierden)
+    if (CLAVE_ACTUAL) {
+      this.formularioResiduo.get('claveResiduo')?.setValue(CLAVE_ACTUAL);
+    }
+    if (NOMBRE_ACTUAL) {
+      this.formularioResiduo.get('nombre')?.setValue(NOMBRE_ACTUAL);
+    }
+    if (DESCRIPCION_ACTUAL) {
+      this.formularioResiduo.get('descripcion')?.setValue(DESCRIPCION_ACTUAL);
+    }
+    
+    // Habilitar el dropdown correspondiente según la selección
+    if (clasificacionSeleccionada === 'Clave de residuo') {
+      this.formularioResiduo.get('claveResiduo')?.enable();
+    } else if (clasificacionSeleccionada === 'Nombre') {
+      this.formularioResiduo.get('nombre')?.enable();
+    } else if (clasificacionSeleccionada === 'Descripción') {
+      this.formularioResiduo.get('descripcion')?.enable();
+    }
+    
+    // Forzar detección de cambios para actualizar la UI
+    this.cdr.detectChanges();
+    
+    // Actualizar el store después de los cambios
+    this.formularioStore.actualizarFormularioResiduo(this.formularioResiduo.getRawValue());
+  }
+
   mostrarNotificacionDuplicado(): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',

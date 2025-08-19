@@ -129,7 +129,7 @@
         <div class="row mb-3">
           <div class="col-md-4">
             <label for="cantidad" class="form-label">Cantidad*:</label>
-            <input type="text" class="form-control" id="cantidad" maxlength="18.5" formControlName="cantidad" (change)="actualizarCampoFormularioResiduo('cantidad')"
+            <input type="text" class="form-control" id="cantidad" maxlength="18.5" formControlName="cantidad" (change)="actualizarCampoFormularioResiduo('cantidad'); onCantidadChange()" (input)="onCantidadChange()"
             [ngClass]="formularioResiduo.get('cantidad')?.invalid && formularioResiduo.get('cantidad')?.touched ? 'required' : ''"
             />
             @if (formularioResiduo.get('cantidad')?.hasError('required') &&
@@ -172,22 +172,30 @@
         <div class="row mb-3">
           <div class="col-md-8">
             <label>Clasificación / Tipo*:</label>
-            <app-input-radio [radioOptions]="clasificacionRadioOptions" [isRequired]="true" [layout]="'horizontal'" formControlName="clasificacion" (change)="actualizarCampoFormularioResiduo('clasificacion')"></app-input-radio>
+            <app-input-radio 
+              [radioOptions]="clasificacionRadioOptions" 
+              [isRequired]="true" 
+              [layout]="'horizontal'" 
+              formControlName="clasificacion" 
+              (change)="actualizarCampoFormularioResiduo('clasificacion'); onClasificacionChange()" 
+              (click)="onClasificacionChange()"
+              (selectionChange)="onClasificacionChange()">
+            </app-input-radio>
           </div>
         </div>
         <div class="row mb-3">
           <div class="col-md-4">
-            <app-catalogo-select [catalogo]="etiquetasForm.residuo" [label]="'Clave de residuo'" [required]="true" formControlName="claveResiduo" (change)="actualizarCampoFormularioResiduo('claveResiduo')"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="etiquetasForm.residuo" [label]="'Clave de residuo'" [required]="true" [isDisabled]="claveResiduoDisabled" formControlName="claveResiduo" (change)="actualizarCampoFormularioResiduo('claveResiduo')"></app-catalogo-select>
           </div>
         </div>
         <div class="row mb-3">
           <div class="col-md-4">
-            <app-catalogo-select [catalogo]="etiquetasForm.tipoNombre" [label]="'Nombre'" [required]="true" formControlName="nombre" (change)="actualizarCampoFormularioResiduo('nombre')"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="etiquetasForm.tipoNombre" [label]="'Nombre'" [required]="true" [isDisabled]="nombreDisabled" formControlName="nombre" (change)="actualizarCampoFormularioResiduo('nombre')"></app-catalogo-select>
           </div>
         </div>
         <div class="row mb-3">
           <div class="col-md-4">
-            <app-catalogo-select [catalogo]="etiquetasForm.descripcion" [label]="'Descripción'" [required]="true" formControlName="descripcion" (change)="actualizarCampoFormularioResiduo('descripcion')"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="etiquetasForm.descripcion" [label]="'Descripción'" [required]="true" [isDisabled]="descripcionDisabled" formControlName="descripcion" (change)="actualizarCampoFormularioResiduo('descripcion')"></app-catalogo-select>
           </div>
         </div>
         <div class="row mb-3">
