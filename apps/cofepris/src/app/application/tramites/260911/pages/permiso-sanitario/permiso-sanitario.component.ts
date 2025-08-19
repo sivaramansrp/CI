@@ -37,6 +37,44 @@ interface AccionBoton {
 })
 export class PermisoSanitarioComponent {
   /**
+   * Controls visibility of the payment confirmation modal
+   */
+  showPaymentModal: boolean = false;
+
+  /**
+   * Stores the last AccionBoton event for use after confirmation
+   */
+  private lastContinueEvent: AccionBoton | null = null;
+
+  /**
+   * Handler for the continuarEvento from btn-continuar
+   */
+  onContinuar(event: AccionBoton): void {
+    // Here you can add your condition to show the modal, e.g. if payment data is missing
+    // For now, always show the modal for demonstration
+    this.lastContinueEvent = event;
+    this.showPaymentModal = true;
+  }
+
+  /**
+   * Handler for No button in modal
+   */
+  onPaymentModalNo(): void {
+    this.showPaymentModal = false;
+    this.lastContinueEvent = null;
+  }
+
+  /**
+   * Handler for Yes button in modal
+   */
+  onPaymentModalYes(): void {
+    this.showPaymentModal = false;
+    if (this.lastContinueEvent) {
+      this.getValorIndice(this.lastContinueEvent);
+      this.lastContinueEvent = null;
+    }
+  }
+  /**
    * Variable para almacenar mensajes de información o error.
    */
   message: string | undefined;
