@@ -395,6 +395,12 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
    * @method actualizaGridEmpresasNacionales
    */
   actualizaGridEmpresasNacionales(): void {
+    const EXISTS = this.datosImmex.some(item => item.fraccionArancelaria === this.fraccionArancelaria);
+    if (EXISTS) {
+      this.mensajeDeAlerta = 'La fracción arancelaria que desea agregar a la lista ya existe.';
+      this.activarModal();
+    }
+    else{
     const CUERPODATOS = {
       fraccion: "1",
       fraccionArancelaria: this.fraccionArancelaria,
@@ -408,9 +414,9 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
       volumenrMensual: "",
       volumenAnual: "",
     };
-
     this.tramite80206Store.setDatosImmex([...this.datosImmex, CUERPODATOS]);
-
+    this.fraccionArancelaria = '';
+  }
   }
   
   /**
@@ -427,7 +433,13 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
    */
   agregarImportacion(): void {
     if(this.domiciliosSeleccionados.length === 0) {
+      this.mensajeDeAlerta = 'Debe seleccionar una fracción de exportación';
       this.activarModal();
+    }
+    else if (this.domiciliosSeleccionados[0]?.fraccionArancelaria === this.importacion) {
+      this.mensajeDeAlerta = "La solicitud contiene fracciones arancelarias que pertenecen al grupo 3R's, la fracción que desea ingresar pertenece a otro grupo por lo tanto no es válida.";
+      this.activarModal();
+      this.importacion = '';
     }
     else{
     const CUERPODATOS = {
@@ -446,7 +458,7 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
       volumenAnual: this.domiciliosSeleccionados[0]?.volumenAnual,
     }
     this.tramite80206Store.setDatosImportacion([...this.datosImportacion, CUERPODATOS]);
-
+    this.importacion = '';
   }
 }
 

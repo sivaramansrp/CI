@@ -84,7 +84,9 @@ export const DEPOSITO_FISCAL = [
       desactivado: false,
       soloLectura: false,
       validadores: [
-        
+        {
+          tipo: 'required'
+        }
       ],
       layout: 'horizontal',
       marcadorDePosicion: '',
@@ -109,7 +111,9 @@ export const DEPOSITO_FISCAL = [
       desactivado: false,
       soloLectura: false,
       validadores: [
-        
+        {
+          tipo: 'required'
+        }
       ],
       layout: 'horizontal',
       marcadorDePosicion: '',
@@ -162,7 +166,9 @@ export const ELABORACION = [
     desactivado: false,
     soloLectura: false,
     validadores: [
-      
+      {
+        tipo: 'required'
+      }
     ],
     layout: 'horizontal',
     marcadorDePosicion: '',
@@ -187,7 +193,9 @@ export const ELABORACION = [
     desactivado: false,
     soloLectura: false,
     validadores: [
-      
+      {
+        tipo: 'required'
+      }
     ],
     layout: 'horizontal',
     marcadorDePosicion: '',
@@ -239,7 +247,9 @@ export const RECINTO_FISCALIZADO = [
     desactivado: false,
     soloLectura: false,
     validadores: [
-      
+      {
+        tipo: 'required'
+      }
     ],
     layout: 'horizontal',
     marcadorDePosicion: '',
@@ -264,7 +274,9 @@ export const RECINTO_FISCALIZADO = [
     desactivado: false,
     soloLectura: false,
     validadores: [
-      
+      {
+        tipo: 'required'
+      }
     ],
     layout: 'horizontal',
     marcadorDePosicion: '',
@@ -368,6 +380,7 @@ export const IMPORTACION_TEMPORAL = [
     soloLectura: false,
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    marginTop: 5
+    marginTop: 5,
+    mostrar: true
   }
 ];

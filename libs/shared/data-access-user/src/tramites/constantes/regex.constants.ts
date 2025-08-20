@@ -809,3 +809,14 @@ export const REGEX_NO_SOLO_NUMEROS = /^(?=.*\D).*$/;
  * Debe contener entre 8 y 20 caracteres alfanuméricos (letras y números).
  */
 export const CERTIFICATE_OF_ORIGIN_NUMBER = /^[A-Za-z0-9]{8,20}$/;
+
+/**
+ * Expresión regular para validar importes numéricos de hasta 16 dígitos.
+ * 
+ * Esta constante se utiliza para asegurar que el valor ingresado sea un número entero
+ * positivo, sin decimales ni separadores, y que contenga entre 1 y 16 dígitos.
+ * 
+ * Ejemplos válidos: "1", "1234567890123456"
+ * Ejemplos inválidos: "123.45", "abc", "12345678901234567"
+ */
+export const IMPORTE = /^\d{1,16}$/;

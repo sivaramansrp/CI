@@ -124,7 +124,7 @@ export class PaisProcendenciaComponent implements OnInit, OnChanges {
        * Clase CSS del botón.
        * @type {string}
        */
-      class: 'btn-primary',
+      class: 'btn-default',
       /**
        * Función para agregar todos los elementos.
        *
@@ -145,7 +145,7 @@ export class PaisProcendenciaComponent implements OnInit, OnChanges {
        * Clase CSS del botón.
        * @type {string}
        */
-      class: 'btn-default',
+      class: 'btn-primary',
       /**
        * Función para agregar la selección actual.
        *
@@ -166,7 +166,7 @@ export class PaisProcendenciaComponent implements OnInit, OnChanges {
        * Clase CSS del botón.
        * @type {string}
        */
-      class: 'btn-danger',
+      class: 'btn-primary',
       /**
        * Función para restar la selección actual.
        *
