@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AvisoRetornoComponent } from './aviso-retorno.component';
+import { SolicitudPageComponent } from './solicitud-page.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { WizardComponent, AccionBoton } from '@libs/shared/data-access-user/src';
 
-describe('AvisoRetornoComponent', () => {
-  let component: AvisoRetornoComponent;
-  let fixture: ComponentFixture<AvisoRetornoComponent>;
+describe('SolicitudPageComponent', () => {
+  let component: SolicitudPageComponent;
+  let fixture: ComponentFixture<SolicitudPageComponent>;
   let mockWizardComponent: WizardComponent;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AvisoRetornoComponent],
+      declarations: [SolicitudPageComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA], // Ignores <app-wizard> or similar in HTML
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AvisoRetornoComponent);
+    fixture = TestBed.createComponent(SolicitudPageComponent);
     component = fixture.componentInstance;
 
     // Force trigger change detection so ngOnInit runs

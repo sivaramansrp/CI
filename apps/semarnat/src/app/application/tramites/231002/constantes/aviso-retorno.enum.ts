@@ -12,7 +12,7 @@ export const PASOS = [
     completado: true
   },
   {
-    indice: 3,
+    indice: 2,
     titulo: 'Firmar solicitud',
     /** Indica que el paso aún no está activo */
     activo: false,
