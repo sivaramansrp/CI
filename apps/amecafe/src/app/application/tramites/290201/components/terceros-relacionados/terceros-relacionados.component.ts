@@ -529,6 +529,9 @@ restoreSelection(): void {
 }
 
 
+/**
+ * Método para inicializar el estado del formulario.
+ */
 onTabSwitch(): void {
   if (this.tableData.length === 0) {
     this.getDestinatarioData().then(() => {
@@ -540,7 +543,6 @@ onTabSwitch(): void {
     return;
   }
 
-  // Restore the selection state of rows
   this.restoreSelection();
 }
 
