@@ -167,15 +167,37 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
     public getNombreDelDepartamento(): void {
       this.bandejaSvc.getDepartamento().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
         const API_RESPONSE = JSON.parse(JSON.stringify(response));
-        const DATOS = API_RESPONSE.data;
+        let DATOS = API_RESPONSE.data;
+
+        // Ordena por ACRONIMO
+        DATOS = DATOS.sort((a: { ACRONIMO: string }, b: { ACRONIMO: string }) =>
+          a.ACRONIMO.localeCompare(b.ACRONIMO)
+        );
+
+        // Agrupa por ACRONIMO
+        const AGRUPADOS: { [KEY: string]: Departamento[] } = {};
+        DATOS.forEach((item: Departamento) => {
+          const KEY = item.ACRONIMO || 'Sin acrónimo';
+          if (!AGRUPADOS[KEY]) {
+            AGRUPADOS[KEY] = [];
+          }
+          AGRUPADOS[KEY].push(item);
+        });
+
+        // Convierte agrupados a array si lo necesitas, aquí solo asigna los datos ordenados
         this.departamentoDatos = DATOS;
-        const CLASIFICACION_FIELD = this.bandejaDeTareasForma.find((datos: ModeloDeFormaDinamica) => datos.id === 'departamento') as ModeloDeFormaDinamica;
+
+        const CLASIFICACION_FIELD = this.bandejaDeTareasForma.find(
+          (datos: ModeloDeFormaDinamica) => datos.id === 'departamento'
+        ) as ModeloDeFormaDinamica;
         if (CLASIFICACION_FIELD) {
           if (!CLASIFICACION_FIELD.opciones) {
-            CLASIFICACION_FIELD.opciones = DATOS.map((item: { ID_DEPENDENCIA: number; ACRONIMO: string }) => ({
-              descripcion: item.ACRONIMO,
-              id: item.ID_DEPENDENCIA,
-            }));
+        CLASIFICACION_FIELD.opciones = DATOS.map(
+          (item: { ID_DEPENDENCIA: number; ACRONIMO: string }) => ({
+            descripcion: item.ACRONIMO,
+            id: item.ID_DEPENDENCIA,
+          })
+        );
           }
         }
       });
@@ -190,19 +212,52 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
      *   - Para cualquier otro valor, reinicia el estado de selección del departamento.
      */
     public departamento(event: { campo: string; valor: string }): void {
-      if(event.campo === 'departamento') {
+      if (event.campo === 'departamento') {
         this.selectedDepartamentoObj.tieneDepartamento = true;
-        const SELECTED_DEPARTAMENTO = this.departamentoDatos.filter((item) => item.ID_DEPENDENCIA === Number(event.valor));
-        if(SELECTED_DEPARTAMENTO[0].ACRONIMO !== null && SELECTED_DEPARTAMENTO[0].ACRONIMO !== undefined && SELECTED_DEPARTAMENTO[0].ACRONIMO !== '') {
+        // Filtra el departamento seleccionado
+        const SELECTED_DEPARTAMENTO = this.departamentoDatos.filter(
+          (item) => item.ID_DEPENDENCIA === Number(event.valor)
+        );
+        if (
+          SELECTED_DEPARTAMENTO[0]?.ACRONIMO !== null &&
+          SELECTED_DEPARTAMENTO[0]?.ACRONIMO !== undefined &&
+          SELECTED_DEPARTAMENTO[0]?.ACRONIMO !== ''
+        ) {
+          // Asigna el acrónimo al objeto seleccionado
           this.selectedDepartamentoObj.nombreDelDepartamento = SELECTED_DEPARTAMENTO[0].ACRONIMO;
+
+          // Agrupa los departamentos por acrónimo
+          const AGRUPADOS: { [key: string]: Departamento[] } = {};
+          this.departamentoDatos.forEach((item: Departamento) => {
+        const KEY = item.ACRONIMO || 'Sin acrónimo';
+        if (!AGRUPADOS[KEY]) {
+          AGRUPADOS[KEY] = [];
+        }
+        AGRUPADOS[KEY].push(item);
+          });
+
+          // Ordena los departamentos dentro de cada grupo por nombre
+          Object.keys(AGRUPADOS).forEach((key) => {
+        AGRUPADOS[key] = AGRUPADOS[key].sort((a, b) =>
+          (a.NOMBRE || '').localeCompare(b.NOMBRE || '')
+        );
+          });
+
+          // Si necesitas usar los agrupados, puedes asignarlos a una propiedad
+          // this.departamentoAgrupados = AGRUPADOS;
+
+          // Obtiene los procedimientos relacionados con el acrónimo seleccionado
           this.getProcedimiento(SELECTED_DEPARTAMENTO[0].ACRONIMO);
         }
-      } else if(event.campo === 'procedimiento') {
+      } else if (event.campo === 'procedimiento') {
         this.selectedDepartamentoObj.tieneDepartamento = false;
-        const SELECTED_PROCEDURE = this.procedureNumero.filter((item) => item.id === Number(event.valor));
-       this.selectedDepartamentoObj.numeroDeProcedimiento = String( SELECTED_PROCEDURE[0].tramite);
+        // Filtra el procedimiento seleccionado
+        const SELECTED_PROCEDURE = this.procedureNumero.filter(
+          (item) => item.id === Number(event.valor)
+        );
+        this.selectedDepartamentoObj.numeroDeProcedimiento = String(SELECTED_PROCEDURE[0]?.tramite || '');
       } else {
-          this.selectedDepartamentoObj.tieneDepartamento = false;
+        this.selectedDepartamentoObj.tieneDepartamento = false;
       }
 
     }
@@ -216,13 +271,24 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
      */
     public getProcedimiento(departamento: string): void {
         this.procedureNumero = [];
-        this.procedureNumero = tramiteDetailsData.filter((v) => v.department === departamento.toLocaleLowerCase());
-        const FILTERED_FIELD = this.bandejaDeTareasForma.find((datos: ModeloDeFormaDinamica) => datos.id === 'procedimiento') as ModeloDeFormaDinamica;
+        // Filtra y elimina registros repetidos por 'tramite'
+        const PROCEDIMIENTOS_FILTRADOS = tramiteDetailsData
+          .filter((v) => v.department === departamento.toLocaleLowerCase())
+          .filter(
+            (item, index, self) =>
+              self.findIndex((t) => t.tramite === item.tramite) === index
+          );
+        this.procedureNumero = PROCEDIMIENTOS_FILTRADOS;
+        const FILTERED_FIELD = this.bandejaDeTareasForma.find(
+          (datos: ModeloDeFormaDinamica) => datos.id === 'procedimiento'
+        ) as ModeloDeFormaDinamica;
         if (FILTERED_FIELD) {
-          FILTERED_FIELD.opciones = this.procedureNumero.map((item: { id: number; tramite: number }) => ({
+          FILTERED_FIELD.opciones = this.procedureNumero.map(
+            (item: { id: number; tramite: number }) => ({
               descripcion: item.tramite,
               id: item.id,
-            }));
+            })
+          );
         }
     }
 

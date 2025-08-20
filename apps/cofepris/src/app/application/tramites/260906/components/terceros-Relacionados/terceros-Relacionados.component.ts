@@ -17,6 +17,13 @@ import nacionalidadRedio from '@libs/shared/theme/assets/json/260906/nacionalida
 import tipoPersonaoptions from '@libs/shared/theme/assets/json/260906/tipoPersonaoptions.json';
 
 /**
+ * Interface que extiende TablaDatos para incluir la funcionalidad de selección.
+ */
+interface TablaDatosConSeleccion extends TablaDatos {
+  selected?: boolean;
+}
+
+/**
 * Constante que define el texto de alerta para las tablas de terceros relacionados.
 * Este texto indica que las tablas con asterisco son obligatorias.
 */
@@ -77,38 +84,6 @@ export class TercerosRelacionadoesComponent implements OnInit, OnDestroy {
    * @description Controla si se muestra o no el formulario para agregar un facturador.
    */
   showFacturador = false;
-
-  /**
-   * Indicador de visibilidad para los botones del formulario de fabricante.
-   * Inicialmente no visible (`false`).
-   *
-   * @description Controla si se muestran o no los botones para el formulario de fabricante.
-   */
-  showFabricanteButtons = false;
-
-  /**
-   * Indicador de visibilidad para los botones del formulario de destinatario.
-   * Inicialmente no visible (`false`).
-   *
-   * @description Controla si se muestran o no los botones para el formulario de destinatario.
-   */
-  showDestinatarioButtons = false;
-
-  /**
-   * Indicador de visibilidad para los botones del formulario de proveedor.
-   * Inicialmente no visible (`false`).
-   *
-   * @description Controla si se muestran o no los botones para el formulario de proveedor.
-   */
-  showProveedorButtons = false;
-
-  /**
-   * Indicador de visibilidad para los botones del formulario de facturador.
-   * Inicialmente no visible (`false`).
-   *
-   * @description Controla si se muestran o no los botones para el formulario de facturador.
-   */
-  showFacturadorButtons = false;
 
   /**
    * Selección del tipo de persona.
@@ -742,7 +717,7 @@ export class TercerosRelacionadoesComponent implements OnInit, OnDestroy {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de fabricantes.
    */
-  fabricanteRowData: TablaDatos[] = [];
+  fabricanteRowData: TablaDatosConSeleccion[] = [];
 
   /**
    * Datos de las filas para la tabla de destinatarios.
@@ -750,7 +725,7 @@ export class TercerosRelacionadoesComponent implements OnInit, OnDestroy {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de destinatarios.
    */
-  destinatarioRowData: TablaDatos[] = [];
+  destinatarioRowData: TablaDatosConSeleccion[] = [];
 
   /**
    * Datos de las filas para la tabla de proveedores.
@@ -758,7 +733,7 @@ export class TercerosRelacionadoesComponent implements OnInit, OnDestroy {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de proveedores.
    */
-  proveedorRowData: TablaDatos[] = [];
+  proveedorRowData: TablaDatosConSeleccion[] = [];
 
   /**
    * Datos de las filas para la tabla de facturadores.
@@ -766,7 +741,31 @@ export class TercerosRelacionadoesComponent implements OnInit, OnDestroy {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de facturadores.
    */
-  facturadorRowData: TablaDatos[] = [];
+  facturadorRowData: TablaDatosConSeleccion[] = [];
+
+  /**
+   * Indica si hay filas seleccionadas en la tabla de fabricantes.
+   * Se utiliza para mostrar/ocultar los botones de "Eliminar" y "Modificar".
+   */
+  hasFabricanteSelection = false;
+
+  /**
+   * Indica si hay filas seleccionadas en la tabla de destinatarios.
+   * Se utiliza para mostrar/ocultar los botones de "Eliminar" y "Modificar".
+   */
+  hasDestinatarioSelection = false;
+
+  /**
+   * Indica si hay filas seleccionadas en la tabla de proveedores.
+   * Se utiliza para mostrar/ocultar los botones de "Eliminar" y "Modificar".
+   */
+  hasProveedorSelection = false;
+
+  /**
+   * Indica si hay filas seleccionadas en la tabla de facturadores.
+   * Se utiliza para mostrar/ocultar los botones de "Eliminar" y "Modificar".
+   */
+  hasFacturadorSelection = false;
 
   /**
    * Maneja el cambio en los checkboxes para seleccionar el tipo de persona.
@@ -1369,15 +1368,174 @@ export class TercerosRelacionadoesComponent implements OnInit, OnDestroy {
       this.agregarDestinatarioFormGroup?.disable();
       this.agregarProveedorFormGroup?.disable();
       this.agregarFacturadorFormGroup?.disable();
-      this.fabricanteRowData = this.solicitudState?.Fabricante || [];
-      this.destinatarioRowData = this.solicitudState?.Destinatario || [];
-      this.proveedorRowData = this.solicitudState?.Proveedor || [];
-      this.facturadorRowData = this.solicitudState?.Facturador || [];
+      this.fabricanteRowData = (this.solicitudState?.Fabricante || []) as TablaDatosConSeleccion[];
+      this.destinatarioRowData = (this.solicitudState?.Destinatario || []) as TablaDatosConSeleccion[];
+      this.proveedorRowData = (this.solicitudState?.Proveedor || []) as TablaDatosConSeleccion[];
+      this.facturadorRowData = (this.solicitudState?.Facturador || []) as TablaDatosConSeleccion[];
     } else {
       this.agregarFabricanteFormGroup?.enable();
       this.agregarDestinatarioFormGroup?.enable();
       this.agregarProveedorFormGroup?.enable();
       this.agregarFacturadorFormGroup?.enable();
+    }
+  }
+
+  /**
+   * Limpia todos los campos del formulario de fabricante.
+   * Reinicia el formulario a su estado inicial y resetea los indicadores de tipo de persona.
+   */
+  limpiarFabricanteForm(): void {
+    this.agregarFabricanteFormGroup.reset();
+    this.fisica = false;
+    this.moral = false;
+    this.nacional = false;
+    this.extranjero = false;
+    this.initializeAgregarFabricanteFormGroup();
+  }
+
+  /**
+   * Limpia todos los campos del formulario de destinatario.
+   * Reinicia el formulario a su estado inicial y resetea los indicadores de tipo de persona.
+   */
+  limpiarDestinatarioForm(): void {
+    this.agregarDestinatarioFormGroup.reset();
+    this.fisica = false;
+    this.moral = false;
+    this.initializeAgregarDestinatarioFormGroup();
+  }
+
+  /**
+   * Limpia todos los campos del formulario de proveedor.
+   * Reinicia el formulario a su estado inicial y resetea los indicadores de tipo de persona.
+   */
+  limpiarProveedorForm(): void {
+    this.agregarProveedorFormGroup.reset();
+    this.fisica = false;
+    this.moral = false;
+    this.initializeAgregarProveedorFormGroup();
+  }
+
+  /**
+   * Limpia todos los campos del formulario de facturador.
+   * Reinicia el formulario a su estado inicial y resetea los indicadores de tipo de persona.
+   */
+  limpiarFacturadorForm(): void {
+    this.agregarFacturadorFormGroup.reset();
+    this.fisica = false;
+    this.moral = false;
+    this.initializeAgregarFacturadorFormGroup();
+  }
+
+  /**
+   * Maneja el cambio de selección en la tabla de fabricantes.
+   * @param hasSelection Indica si hay filas seleccionadas.
+   */
+  onFabricanteSelectionChange(hasSelection: boolean): void {
+    this.hasFabricanteSelection = hasSelection;
+  }
+
+  /**
+   * Maneja el cambio de selección en la tabla de destinatarios.
+   * @param hasSelection Indica si hay filas seleccionadas.
+   */
+  onDestinatarioSelectionChange(hasSelection: boolean): void {
+    this.hasDestinatarioSelection = hasSelection;
+  }
+
+  /**
+   * Maneja el cambio de selección en la tabla de proveedores.
+   * @param hasSelection Indica si hay filas seleccionadas.
+   */
+  onProveedorSelectionChange(hasSelection: boolean): void {
+    this.hasProveedorSelection = hasSelection;
+  }
+
+  /**
+   * Maneja el cambio de selección en la tabla de facturadores.
+   * @param hasSelection Indica si hay filas seleccionadas.
+   */
+  onFacturadorSelectionChange(hasSelection: boolean): void {
+    this.hasFacturadorSelection = hasSelection;
+  }
+
+  /**
+   * Elimina las filas seleccionadas de la tabla de fabricantes.
+   */
+  eliminarFabricanteSeleccionado(): void {
+    // Filtrar las filas que no están seleccionadas
+    this.fabricanteRowData = this.fabricanteRowData.filter((item: TablaDatosConSeleccion) => item.selected);
+    this.Sanitario260906Store.setFabricante(this.fabricanteRowData);
+  }
+
+  /**
+   * Elimina las filas seleccionadas de la tabla de destinatarios.
+   */
+  eliminarDestinatarioSeleccionado(): void {
+    // Filtrar las filas que no están seleccionadas
+    this.destinatarioRowData = this.destinatarioRowData.filter((item: TablaDatosConSeleccion) => !item.selected);
+    this.Sanitario260906Store.setDestinatario(this.destinatarioRowData);
+  }
+
+  /**
+   * Elimina las filas seleccionadas de la tabla de proveedores.
+   */
+  eliminarProveedorSeleccionado(): void {
+    // Filtrar las filas que no están seleccionadas
+    this.proveedorRowData = this.proveedorRowData.filter((item: TablaDatosConSeleccion) => !item.selected);
+    this.Sanitario260906Store.setProveedor(this.proveedorRowData);
+  }
+
+  /**
+   * Elimina las filas seleccionadas de la tabla de facturadores.
+   */
+  eliminarFacturadorSeleccionado(): void {
+    // Filtrar las filas que no están seleccionadas
+    this.facturadorRowData = this.facturadorRowData.filter((item: TablaDatosConSeleccion) => !item.selected);
+    this.Sanitario260906Store.setFacturador(this.facturadorRowData);
+    this.hasFacturadorSelection = false;
+  }
+
+  /**
+   * Modifica la primera fila seleccionada de la tabla de fabricantes.
+   */
+  modificarFabricanteSeleccionado(): void {
+    const SELECTED_ROW = this.fabricanteRowData.find((item: TablaDatosConSeleccion) => item.selected);
+    if (SELECTED_ROW) {
+      // Abrir el formulario de agregar fabricante para modificar
+      this.toggleDivFabricante();
+    }
+  }
+
+  /**
+   * Modifica la primera fila seleccionada de la tabla de destinatarios.
+   */
+  modificarDestinatarioSeleccionado(): void {
+    const SELECTED_ROW = this.destinatarioRowData.find((item: TablaDatosConSeleccion) => item.selected);
+    if (SELECTED_ROW) {
+      // Abrir el formulario de agregar destinatario para modificar
+      this.toggleDivDestinatario();
+    }
+  }
+
+  /**
+   * Modifica la primera fila seleccionada de la tabla de proveedores.
+   */
+  modificarProveedorSeleccionado(): void {
+    const SELECTED_ROW = this.proveedorRowData.find((item: TablaDatosConSeleccion) => item.selected);
+    if (SELECTED_ROW) {
+      // Abrir el formulario de agregar proveedor para modificar
+      this.toggleDivProveedor();
+    }
+  }
+
+  /**
+   * Modifica la primera fila seleccionada de la tabla de facturadores.
+   */
+  modificarFacturadorSeleccionado(): void {
+    const SELECTED_ROW = this.facturadorRowData.find((item: TablaDatosConSeleccion) => item.selected);
+    if (SELECTED_ROW) {
+      // Abrir el formulario de agregar facturador para modificar
+      this.toggleDivFacturador();
     }
   }
 }

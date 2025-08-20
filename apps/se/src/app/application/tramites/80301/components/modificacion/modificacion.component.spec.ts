@@ -75,7 +75,7 @@ describe('ModificacionComponent', () => {
 
     it('should toggle the status of a table row from "Activada" to "Baja"', () => {
         component.datosTabla = [
-            { id: 2, desEstatus: 'Activada', codigoPostal: '12345', localidad: 'Localidad2', delegacionMunicipio: 'Delegacion2' },
+            { id: 2, desEstatus: 'Activada', descripcion: 'Descripción 2', tipoDeServicio: '12345', testado: 'Localidad2'},
         ];
 
         const event = {

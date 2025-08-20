@@ -25,6 +25,7 @@ import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { ELEMENTOS_REQUERIDOS } from '../../constantes/consumo-personal.enum';
 import { Subject } from 'rxjs';
 import { Tramite260102Query } from '../../estados/queries/tramite260102Query.query';
 
@@ -142,11 +143,17 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * @private
    */
   private seccion!: SeccionLibState;
-   /**
-  * Indica si el formulario está en modo solo lectura.
-  * Cuando es `true`, los campos del formulario no se pueden editar.
-  */
-  public esFormularioSoloLectura: boolean = false; 
+    /**
+     * @property {string[]} elementosRequeridos
+     * @description
+     * Lista de elementos requeridos para el trámite.
+     */
+    public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS;
+  /**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando es `true`, los campos del formulario no se pueden editar.
+ */
+  public esFormularioSoloLectura: boolean = false;
   /**
    * @constructor
    * @description Inyecta servicios para obtener y actualizar el estado del trámite
@@ -198,14 +205,14 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-       this.consultaQuery.selectConsultaioState$
-          .pipe(
-            takeUntil(this.destroyNotifier$),
-            map((seccionState) => {
-              this.esFormularioSoloLectura = seccionState.readonly;
-            })
-          )
-          .subscribe();
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -250,16 +257,6 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    */
   datasolicituActualizar(event: DatosSolicitudFormState): void {
     this.tramite260102Store.updateDatosSolicitudFormState(event);
-    const SECCION: number = 1;
-    const FORMAS_VALIDADAS = this.seccion.formaValida;
-    const ES_VALIDO_EL_FORM = this.esFormValido();
-    if (ES_VALIDO_EL_FORM) {
-      FORMAS_VALIDADAS[SECCION] = true;
-      this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
-    } else {
-      FORMAS_VALIDADAS[SECCION] = false;
-      this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
-    }
   }
 
   /**

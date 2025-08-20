@@ -6,6 +6,7 @@
             [radioOptions]="opcionDeBotonDeRadio"
             [isRequired]="true"
             [layout]="'horizontal'"
+            formControlName="tipoOperacion"
           ></app-input-radio> 
      <div class="row">
         <div class="col-md-8">
@@ -21,7 +22,7 @@
     <ng-titulo titulo="Datos del establecimiento" />
     
         <div class="text-end">
-          <button type="button" class="btn btn-primary" name="seleccionarEstablecimiento" id="btnEstablecimiento" title="Selecciona para habilitar los campos del establecimiento" (click)="seleccionarEstablecimiento()" >Seleccionar establecimiento</button>
+          <button type="button" class="btn btn-primary" name="seleccionarEstablecimiento" id="btnEstablecimiento" title="Selecciona para habilitar los campos del establecimiento" (click)="seleccionarEstablecimiento()"  [disabled]="esFormularioSoloLectura">Seleccionar establecimiento</button>
         </div>
         @if (nuevaNotificacion) {
           <section>
@@ -114,14 +115,15 @@
       [configuracionTabla]="configuracionColumnasoli"
        [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
         [datos]="tableData"
-        (listaDeFilaSeleccionada)="onfilasSeleccionadas($event)">
+        (listaDeFilaSeleccionada)="onfilasSeleccionadas($event)"
+         [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
     </app-tabla-dinamica>
     <div class="col-md-12 d-flex justify-content-end">
         <div class="btn-group">
           <button class="btn btn-danger"
-            type="button" (click)="onDelete()">Eliminar</button>
+            type="button" (click)="onDelete()" [disabled]="esFormularioSoloLectura">Eliminar</button>
             <button class="btn btn-primary me-2"
-            type="submit" (click)="onAgregar()">Agregar</button>
+            type="submit" (click)="onAgregar()" [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
     </div>
     @if (nuevaNotificacion) {
@@ -186,6 +188,7 @@
           [label]="'Aviso de funcionamiento'"
           [required]="true"
           formControlName="avisoDeFuncionamiento"
+          [disabled]="esFormularioSoloLectura"
           (change)="setValoresStore(datosDelTramiteRealizar,'avisoDeFuncionamiento', 'setAvisoDeFuncionamiento')"
           ></lib-input-check>
         </div>
@@ -226,6 +229,8 @@
          [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
           [configuracionTabla]="mercanciasDatos"
           [datos]="mercanciasConfiguracionTabla"
+          (listaDeFilaSeleccionada)="onfilasSeleccionadas($event)"
+           [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           >
           </app-tabla-dinamica>
       </div>
@@ -237,8 +242,9 @@
               <h4 class="modal-title">Datos mercancía</h4>
             </div>
             <div class="modal-body">
-              <div class="row mt-5">
-                <div class="col-md-6">
+              
+                  <div class="row mt-5">
+                    <div class="col-md-6">
                   <app-catalogo-select 
                   id="delProductoData"
                   formControlName="clasificaionProductos"
@@ -436,24 +442,21 @@
               <div class="col-md-12 d-flex justify-content-end align-items-end">
                 <div class="btn-group">
                   <button class="btn btn-default ms-3" type="button" data-bs-dismiss="modal" (click)="clearNotificacion()">Cancelar</button>
-                  <button type="button" class="btn btn-primary ms-3" >Modificar </button>
+                  <button class="btn btn-primary ms-3" type="button" data-bs-dismiss="modal" (click)="onSave()"[disabled]="esFormularioSoloLectura">Agregar</button>
                 </div>
               </div>
             </div>
           </div>
         </div>
    </div>
-      
-
-
 <div class="col-md-12 d-flex justify-content-end">
-  <button type="button" class="btn btn-primary" name="agregarAduana" id="btnagregarAduana" data-bs-toggle="modal" data-bs-target="#modalAgregarMercancia" (click)="agregarMercanciaGrid()"> Modificar </button>
+  <button type="button" class="btn btn-primary" name="modificar" id="btnmodificar"  (click)="onModificarMercancias()" [disabled]="esFormularioSoloLectura" >Modificar</button>
 </div>
   <ng-titulo titulo="Manifiestos y declaraciones" />
   <div class="alert alert-info">
     <label style="font-weight: normal">
       <div class="col-md-1 mt-5">
-        <input type="checkbox" class="mt-5" />
+        <input type="checkbox" class="mt-5" [disabled]="esFormularioSoloLectura"/>
         <b> *</b>
       </div>
       <div class="col-md-11 mt-4">{{ TEXTOS.TEXTOS_MANIFIESTOS}} </div>
@@ -461,7 +464,7 @@
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label" for="">Los datos o anexos pueden contener información confidencial ¿Está de acuerdo en hacerlos públicos?*:</label>
-    <app-input-radio [radioOptions]="hacerlosRadioOptions" [selectedValue]="hercelosSeleccionados" [layout]="'horizontal'"></app-input-radio>
+    <app-input-radio formControlName="hacerlosPublicos" [radioOptions]="hacerlosRadioOptions" [selectedValue]="hercelosSeleccionados" [layout]="'horizontal'" [disabled]="esFormularioSoloLectura"></app-input-radio>
   </div>
   <ng-container formGroupName="datosDelTramiteRealizar"> 
 
@@ -474,7 +477,7 @@
     />
   </div>
   <div class="col-md-2 mt-4">
-    <button type="button" class="btn btn-primary">Buscar</button>
+    <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Buscar</button>
   </div>
 </div>
 <div class="row mt-5">

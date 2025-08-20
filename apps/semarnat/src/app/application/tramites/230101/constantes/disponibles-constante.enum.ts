@@ -143,3 +143,16 @@ export const TEST_CROSS_LIST: string[] = [
   'test 2',
   'test 3'
 ];
+
+/**
+ * Encabezados de la tabla de solicitudes.
+ * Define los títulos de las columnas que se mostrarán en la tabla.
+ */
+export const SOLICITUD_HEADER = {
+  "hSolicitud": [
+    "Fecha Creación",
+    "Mercancía",
+    "Cantidad",
+    "Proveedor"
+  ]
+}
