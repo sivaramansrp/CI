@@ -52,20 +52,20 @@
   <h6>Datos de los residuos peligrosos a retornar por primera vez ó subsecuente*:</h6>
   <div class="row mb-3">
     <div class="col-md-12">
-      <ng-table [commonTableHeader]=" etiquetasForm.table[0].encabezadoDeTabla" [commonTableBody]="etiquetasForm.table[0].cuerpoTabla" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></ng-table>
-      <nav aria-label="Page navigation example">
-        <ul class="pagination d-flex justify-content-center">
-          <li class="page-item">
-            <a class="page-link">1</a>
-          </li>
-        </ul>
-      </nav>
+      <app-tabla-dinamica 
+        [configuracionTabla]="configuracionTabla" 
+        [datos]="datosTabla" 
+        [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+        tableId="tablaResiduosPeligrosos"
+        (listaDeFilaSeleccionada)="onFilasSeleccionadas($event)">
+      </app-tabla-dinamica>
     </div>
   </div>
   <div class="row mb-5">
     <div class="col text-end">
       <div class="btn-group">
-        <button class="btn btn-primary me-2" type="button" [disabled]="esFormularioSoloLectura">Borrar</button>
+        <button class="btn btn-primary me-2" type="button" [disabled]="esFormularioSoloLectura || !hayFilasSeleccionadas" (click)="borrarFilasSeleccionadas()">Borrar</button>
         <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#modalAgregarMercancias" (click)="agregarOperacionImp()" [disabled]="esFormularioSoloLectura">Agregar</button>
       </div>
     </div>
@@ -267,7 +267,7 @@
 <div class="modal fade" id="modalAgregarMercancias" tabindex="-1" aria-labelledby="modalAgregarMercanciasLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
     <div class="modal-content">
-      <app-datos-residuos-peligrosos></app-datos-residuos-peligrosos>
+      <app-datos-residuos-peligrosos (residuoAgregado)="onResiduoAgregado($event)"></app-datos-residuos-peligrosos>
     </div>
   </div>
 </div>

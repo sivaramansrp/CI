@@ -1,5 +1,5 @@
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { CatalogoSelectComponent, InputRadioComponent, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
@@ -11,6 +11,7 @@ import { EstadoFormularioResiduo } from '../../models/datos-residuos.model';
 import { FormularioResiduoQuery } from '../../estados/queries/datos-residuos.query';
 import { FormularioResiduoStore } from '../../estados/tramites/datos-residuos.store';
 
+import { ResiduoPeligroso } from '../../models/aviso-catalogo.model';
 import rawData from '@libs/shared/theme/assets/json/231002/solicitud.json';
 
 /**
@@ -50,6 +51,9 @@ interface MateriaPrima {
   styleUrl: './datos-residuos-peligrosos.component.scss'
 })
 export class DatosResiduosPeligrososComponent implements OnInit {
+  /** Event emitter para enviar datos del residuo al componente padre */
+  @Output() residuoAgregado = new EventEmitter<ResiduoPeligroso>();
+
   /** Formulario para los datos generales del residuo. */
   formularioDatos!: FormGroup;
 
@@ -742,5 +746,49 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     
     // Actualizar estado del botón borrar
     this.borrarHabilitado = this.itemsSeleccionados.size > 0;
+  }
+
+  /**
+   * Agrega un residuo peligroso y emite el evento al componente padre
+   */
+  agregarResiduoPeligroso(): void {
+    if (this.formularioResiduo.valid && this.materiasPrimasTabla.length > 0) {
+      // Crear el objeto con todos los datos del residuo según la interface ResiduoPeligroso
+      const RESIDUO_DATA: ResiduoPeligroso = {
+        origenResiduoGeneracion: 'Producción Industrial', // Se puede obtener del radio seleccionado
+        fraccionArancelaria: this.formularioResiduo.get('fraccionArancelaria')?.value || '',
+        nombreResiduo: this.formularioResiduo.get('residuoPeligroso')?.value || '',
+        nico: this.formularioResiduo.get('nico')?.value || '',
+        acotacion: this.formularioResiduo.get('acotacion')?.value || '',
+        nombreResiduoPeligroso: this.formularioResiduo.get('residuoPeligroso')?.value || '',
+        cantidad: this.formularioResiduo.get('cantidad')?.value || '',
+        cantidadLetra: this.formularioResiduo.get('cantidadLetra')?.value || '',
+        unidadMedida: this.formularioResiduo.get('unidadMedida')?.value || '',
+        claveClasificacion: this.formularioResiduo.get('claveResiduo')?.value || '',
+        nombreClasificacion: this.formularioResiduo.get('nombre')?.value || '',
+        descripcionClasificacion: this.formularioResiduo.get('descripcion')?.value || '',
+        descripcionOtraClasificacion: '', // Campo opcional
+        creti: this.formularioResiduo.get('creti')?.value || '',
+        estadoFisico: this.formularioResiduo.get('estadoFisico')?.value || '',
+        descripcionOtroEstadoFisico: '', // Campo opcional
+        numeroManifiesto: this.formularioResiduo.get('manifiesto')?.value || '',
+        tipoContenedor: this.formularioResiduo.get('tipoContenedor')?.value || '',
+        descripcionOtroContenedor: '', // Campo opcional
+        capacidad: this.formularioResiduo.get('capacidad')?.value || ''
+      };
+
+      // Emitir el evento con los datos
+      this.residuoAgregado.emit(RESIDUO_DATA);
+
+      // Limpiar formularios
+      this.formularioResiduo.reset();
+      this.formularioDatos.reset();
+      this.materiasPrimas = [];
+      this.materiasPrimasTabla = [];
+      this.itemsSeleccionados.clear();
+      this.borrarHabilitado = false;
+
+
+    } 
   }
 }
