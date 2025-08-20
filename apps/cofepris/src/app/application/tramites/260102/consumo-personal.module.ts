@@ -1,11 +1,8 @@
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
-
+import { ConsumoPersonalRoutingModule } from './consumo-personal-routing.module';
 import { NgModule } from '@angular/core';
 
-import { ToastrModule } from 'ngx-toastr';
-import { ToastrService } from 'ngx-toastr';
-
-import { ConsumoPersonalRoutingModule } from './consumo-personal-routing.module';
 
 @NgModule({
   declarations: [],

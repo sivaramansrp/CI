@@ -14,9 +14,9 @@ import {
 } from '@ng-mf/data-access-user';
 import { Solicitud80301State, Tramite80301Store } from '../../estados/tramite80301.store';
 
-import { CONFIGURACION_MODIFICACION } from '../../constantes/modificacion.enum';
+import { CONFIGURACION_IMPORTACION, CONFIGURACION_MODIFICACION } from '../../constantes/modificacion.enum';
 import { ComplementariaImmexComponent } from '../complementaria-immex/complementaria-immex.component';
-import { DatosDelModificacion } from '../../models/datos-tramite.model';
+import { DatosDelServicios } from '../../models/datos-tramite.model';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Tramite80301Query } from '../../estados/tramite80301.query';
 
@@ -89,12 +89,19 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    * Configuración de las columnas de la tabla dinámica.
    * Define las propiedades de cada columna, como encabezado, clave y orden.
    */
-  public encabezadoDeTabla: ConfiguracionColumna<DatosDelModificacion>[] = CONFIGURACION_MODIFICACION;
+  public encabezadoDeTabla: ConfiguracionColumna<DatosDelServicios>[] = CONFIGURACION_MODIFICACION;
+
+    /**
+   * Configuración de las columnas de la tabla dinámica.
+   * Define las propiedades de cada columna, como encabezado, clave y orden.
+   */
+  public importacionTabla: ConfiguracionColumna<DatosDelServicios>[] = CONFIGURACION_IMPORTACION;
+
 
   /**
    * Define los datos que se mostrarán en la tabla dinámica.
    */
-  datosTabla: DatosDelModificacion[] = [];
+  datosTabla: DatosDelServicios[] = [];
 
   /**
    * Método que se ejecuta al inicializar el componente.

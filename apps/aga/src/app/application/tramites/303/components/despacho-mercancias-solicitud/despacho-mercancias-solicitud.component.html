@@ -151,19 +151,165 @@
         </div>
       </div>
     </div>
+    <div class="row">
+      <agentes-agencias-aduanales></agentes-agencias-aduanales>
+    </div>
+    <div class="row">
+      <datos-transportista></datos-transportista>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <label class="control-label" for="buscar">Señale si se encuentra suspendida en el Padrón de Importadores o en
+          el Padón de Importadores de Sectores Especificos o Padrón de Exporadores Sextorial.*:</label>
+      </div>
+      <div class="col-md-2">
+        <input class="form-check-input me-3" type="radio" formControlName="padron" value="a" id="padron_si"
+          (change)="setValoresStore(formDespacho,'padron', 'setPadronValue')">
+        <label class="control-label" for="padron_si">Sí</label>
+      </div>
+      <div class="col-md-2">
+        <input class="form-check-input me-3" type="radio" formControlName="padron" value="aa" id="padron_no"
+          (change)="setValoresStore(formDespacho,'padron', 'setPadronValue')">
+        <label class="control-label" for="padron_no">No</label>
+      </div>
+    </div>
+    <div class="row">
+      <ng-titulo titulo="Control de inventarios" />
+      <div class="row">
+        <div class="col-md-12">
+          <label class="control-label" for="buscar">Indique si cuenta con un sistema de control de inventarios de
+            conformidad con el artículo 59, fracción I de la ley*:</label>
+        </div>
+        <div class="col-md-2">
+          <input class="form-check-input me-3" type="radio" formControlName="controlInventarios" value="a"
+            id="control_inventarios_si"
+            (change)="setValoresStore(formDespacho,'controlInventarios', 'setControlInventariosValue')">
+          <label class="control-label" for="control_inventarios_si">Sí</label>
+        </div>
+        <div class="col-md-2">
+          <input class="form-check-input me-3" type="radio" formControlName="controlInventarios" value="aa"
+            id="control_inventarios_no"
+            (change)="setValoresStore(formDespacho,'controlInventarios', 'setControlInventariosValue')">
+          <label class="control-label" for="control_inventarios_no">No</label>
+        </div>
+      </div>
+      <div class="row" *ngIf="mostrarControlInventarios">
+        <form [formGroup]="formInventario" class="row">
+          <div class="col-md-8">
+            <label for="nombreSistema" class="form-label">Nombre del sistema o datos para su identificación*:</label>
+            <input type="text" id="nombreSistema" formControlName="nombreSistema"
+              class="form-control font-weight-titulo text-title" />
+          </div>
+          <div class="col-md-4">
+            <label for="lugarradicacion" class="form-label">Lugar de radicación*:</label>
+            <input type="text" id="lugarradicacion" formControlName="lugarRadicacion"
+              class="form-control font-weight-titulo text-title" />
+          </div>
+          <div class="col-12 m-2">
+            <div class="alert alert-info">
+              <input class="form-check-input" type="checkbox" id="esSistemaControl" formControlName="esSistemaControl">
+              Indica si se trata de un sistema de control de inventarios conforme el anexo 24
+            </div>
+          </div>
+          <div class="col-12 text-end">
+            <button class="btn btn-default" type="button" (click)="agregarInventario()">Agregar</button>
+          </div>
+        </form>
+      </div>
+      <div class="row mt-4">
+        <div class="table-responsive">
+          <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
+            [configuracionTabla]="encabezadoDeTablaInventarios" [datos]="listaControlInventarios"
+            (listaDeFilaSeleccionada)="listaControlInventariosSeleccionados = $event">
+          </app-tabla-dinamica>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-md-12 text-end mt-2">
+          <div class="btn-group">
+            <button class="btn btn-default" type="button" (click)="modificarInventario()">Modificar</button>
+            <button class="btn btn-default" type="button" (click)="eliminarInventario()">Eliminar</button>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-4">
+          <br />
+          <ng-alert [CONTENIDO]="TEXTOS.TEXTO_INVENTARIOS"></ng-alert>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <label class="control-label" for="buscar">Señale si al momento de ingresar su solicitud lleva la contabilidad
+            en medios electrónicos de conformidad con el artículo 28, fracción III del CFF y la regla 2.8.1.5. de la
+            RMF.*:</label>
+        </div>
+        <div class="col-md-2">
+          <input class="form-check-input me-3" type="radio" formControlName="contabilidad" value="a"
+            id="contabilidad_si" (change)="setValoresStore(formDespacho,'contabilidad', 'setContabilidadValue')">
+          <label class="control-label" for="contabilidad_si">Sí</label>
+        </div>
+        <div class="col-md-2">
+          <input class="form-check-input me-3" type="radio" formControlName="contabilidad" value="aa"
+            id="contabilidad_no" (change)="setValoresStore(formDespacho,'contabilidad', 'setContabilidadValue')">
+          <label class="control-label" for="contabilidad_no">No</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <label class="control-label" for="buscar">Señale si ingresa mensualmente su informe contable a través del
+            portal del SAT de conformidad con el artículo 28, fracción IV del CFF y la regla 2.8.1.6. de la
+            RMF.*:</label>
+        </div>
+        <div class="col-md-2">
+          <input class="form-check-input me-3" type="radio" formControlName="ingresoInforme" value="a"
+            id="control_inventarios_si"
+            (change)="setValoresStore(formDespacho,'ingresoInforme', 'setIngresoInformeValue')">
+          <label class="control-label" for="ingresoInforme_si">Sí</label>
+        </div>
+        <div class="col-md-2">
+          <input class="form-check-input me-3" type="radio" formControlName="ingresoInforme" value="aa"
+            id="control_inventarios_no"
+            (change)="setValoresStore(formDespacho,'ingresoInforme', 'setIngresoInformeValue')">
+          <label class="control-label" for="ingresoInforme_no">No</label>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-md-12">
+          <label class="control-label" for="buscar">Señale si al momento de ingresar su solicitud el SAT ha interpuesto
+            una querella o denuncia penal en contra de socios, accionistas, representante legal o integrantes de la
+            administración de la empresa solicitante o, en su caso, declaratoria de perjuicio, durante los últimos 3
+            años anteriores a la presentación de la solicitud *:</label>
+        </div>
+        <div class="col-md-2">
+          <input class="form-check-input me-3" type="radio" formControlName="interposicion" value="a"
+            id="interposicion_si" (change)="setValoresStore(formDespacho,'interposicion', 'setInterposicionValue')">
+          <label class="control-label" for="interposicion_si">Sí</label>
+        </div>
+        <div class="col-md-2">
+          <input class="form-check-input me-3" type="radio" formControlName="interposicion" value="aa"
+            id="interposicion_no" (change)="setValoresStore(formDespacho,'interposicion', 'setInterposicionValue')">
+          <label class="control-label" for="interposicion_no">No</label>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <input class="form-check-input" type="checkbox" id="checkboxManifiesto1" formControlName="checkboxManifiesto1"
+          (change)="setValoresStore(formDespacho,'checkboxManifiesto1', 'setCheckboxManifiesto1Value')">
+        <label class="form-check-label text-muted" for="checkboxManifiesto1">
+          <span class="text-danger">*</span>
+          Una vez manifestado lo anterior, autorizo al SAT para que, a través de la AGACE, realice las inspecciones a
+          que hace referencia la regla 7.5.1., fracción XII a las instalaciones en las que se realizan procesos
+          productivos.
+        </label>
+        <input class="form-check-input" type="checkbox" id="checkboxManifiesto2" formControlName="checkboxManifiesto2"
+          (change)="setValoresStore(formDespacho,'checkboxManifiesto2', 'setCheckboxManifiesto2Value')">
+        <label class="form-check-label text-muted" for="checkboxManifiesto2">
+          <span class="text-danger">*</span>
+          Bajo protesta de decir verdad, manifiesto que los datos asentados en el presente documento son ciertos y que
+          las facultades que me fueron otorgadas para representar a la solicitante no me han sido modificadas y/o
+          revocadas.
+        </label>
+      </div>
+    </div>
   </form>
-  <div class="row">
-    <agentes-agencias-aduanales></agentes-agencias-aduanales>
-  </div>
-  <div class="row">
-    <datos-transportista></datos-transportista>
-  </div>
-  <div class="row">
-    <control-inventarios></control-inventarios>
-  </div>
-  <div class="row">
-    <agregar-miembros-empresa></agregar-miembros-empresa>
-  </div>
 </div>
 @if (nuevaNotificacion) {
 <section>
