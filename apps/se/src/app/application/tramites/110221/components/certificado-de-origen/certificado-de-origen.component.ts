@@ -283,6 +283,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * @type {Notificacion}
    */
   public nuevaNotificacion!: Notificacion;
+  mostrarModal:boolean = false;
   /**
    * Constructor del componente.
    * @param fb Constructor de formularios reactivos
@@ -444,6 +445,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Busca mercancías disponibles basándose en el tratado seleccionado.
    */
   buscarMercancias(): void {
+    this.mostrarModal = true;
     if (this.registroForm.get('validacionForm.tratado')?.value === 1) {
       this.hayMercanciasDisponibles = false;
     } else {
@@ -462,6 +464,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   cancelar(): void {
     this.esFormulario = false;
     this.esMercanciaEnEdicion = true;
+    this.mostrarModal =false;
   }
 
   /**
