@@ -7,6 +7,7 @@
 <div class="container" *ngIf="!esFormulario">
   <form [formGroup]="registroForm" (ngSubmit)="validarDestinatarioFormulario()">
     <ng-container formGroupName="validacionForm">
+      <div class="row">
       <div class="col-md-12" *ngIf="!cargarArchivo">
         <div class="form-group">
           <label class="form-label" for="nroRegistro"
@@ -14,8 +15,8 @@
           >
         </div>
       </div>
-      <div class="row" *ngIf="!cargarArchivo">
-        <div class="col">
+      
+        <div class="col-md-6">
           <div class="form-check"></div>
           <input
             class="form-check-input"
@@ -25,20 +26,30 @@
             formControlName="tercerOperador"
             (change)="setValoresStore(validacionForm, 'tercerOperador')"
           />
-          <label class="form-check-label" for="tercerOperador">Si</label>
+          <label class="form-check-label md-3" for="tercerOperador" >Si</label>
         </div>
+      
       </div>
+      <div class="row">
       <div
-        class="col-md-12"
+        class="col-md-6"
         *ngIf="!registroForm.get('validacionForm.tercerOperador')?.value"
       >
-        <app-input-radio
-          [radioOptions]="opcionDeBotonDeRadio"
-          [layout]="'horizontal'"
-          name="rangoDeFecha"
-          formControlName="rangoDeFecha"
-          (change)="radioBotonSeleccionado($event)"
-        ></app-input-radio>
+       <label class="form-label" for="nombres">Periodo:</label>
+      <div>
+      <input type="radio" class="form-check-input mt-1" id="rangoDeFecha" value="periodo" formControlName="rangoDeFecha" (change)="setValoresStore(validacionForm, 'rangoDeFecha')" />
+      </div>
+      </div>
+         <div
+        class="col-md-6"
+        *ngIf="!registroForm.get('validacionForm.tercerOperador')?.value"
+      >
+       <label class="form-label" for="nombres">Una sola importación:</label>
+      <div>
+        <input type="radio" class="form-check-input mt-1" id="rangoDeFecha" value="sola" formControlName="rangoDeFecha" (change)="setValoresStore(validacionForm, 'rangoDeFecha')" />
+        </div>
+         
+      </div>
       </div>
       <div
         class="row"

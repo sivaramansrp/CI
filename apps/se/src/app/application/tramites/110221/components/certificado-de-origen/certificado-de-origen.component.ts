@@ -700,7 +700,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         numeroDeRegistroFiscal: [this.solicitudState?.numeroDeRegistroFiscal, [Validators.required]],
         razonSocial: [this.solicitudState?.razonSocial, [Validators.required]],
         tratado: [this.solicitudState?.tratado, [Validators.required]],
-        rangoDeFecha: [''],
+        rangoDeFecha: [this.solicitudState?.rangoDeFecha || 'sola'],
         pais: [this.solicitudState?.pais, [Validators.required]],
         fraccionArancelaria: [
           this.solicitudState?.fraccionArancelaria,
