@@ -26,7 +26,7 @@ export const MENSAJE_DE_ALERTA: string =
   'Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio Exterior por los mecanismos de la misma.';
 
 export const INPUT_FECHA_CONFIG = {
-  labelNombre: 'Fecha de pago',
+  labelNombre: 'Fecha de pago:',
   required: false,
   habilitado: true,
 };
