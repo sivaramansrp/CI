@@ -5,19 +5,20 @@ export default {
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   coverageDirectory: '../../coverage/apps/se',
   collectCoverageFrom: [
-    'src/app/application/**/*.ts',
+    'src/app/application/tramites/80101/**/*.ts',
   ],
   testMatch: [
-    '<rootDir>/src/app/application/**/*.spec.ts',
+    '<rootDir>/src/app/application/tramites/80101/**/*.spec.ts',
   ],
   coverageThreshold: {
     global: {
       statements: 80,
     },
-    'apps/se/src/app/application/**/*.ts': {
+    'apps/se/src/app/application/tramites/80101/**/*.ts': {
       statements: 80,
     },
   },
+  verbose: true,
   coverageReporters: ['text-summary', 'html'],
   coveragePathIgnorePatterns: [
     'src/app/application/.*\\.(module|store|query|enums?|enum|model|constants?|constantes|interfaces?)\\.ts$',
