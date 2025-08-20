@@ -551,6 +551,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
           selectedSectorDatos: [],
         })
       );
+      this.listSelectedView = [];
     }
     else if (event && this.listSelectedProducir.length > 0) {
       const VALOR = this.AutorizacionProsecStore.getValue().producirDatos;
@@ -567,6 +568,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
           selectedProducirDatos: [],
         })
       );
+      this.listSelectedProducir = [];
     }
   }
 
