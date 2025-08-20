@@ -16,7 +16,7 @@ import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramit
 import { SolicitarDocumentosEvaluacionComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitar-documentos-evaluacion/solicitar-documentos-evaluacion.component';
 import { SolicitarOpinionComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitar-opinion/solicitar-opinion.component';
 
-import { ConsultaioQuery, ConsultaioState, ConsultaioStore, FECHA_DE_INICIO } from '@ng-mf/data-access-user';
+import { CategoriaMensaje, ConsultaioQuery, ConsultaioState, ConsultaioStore, FECHA_DE_INICIO, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { LISTA_TRIMITES } from '../shared/constantes/lista-trimites.enums';
 
@@ -33,6 +33,11 @@ import { OpinionResponse } from '@libs/shared/data-access-user/src/core/models/1
 import { RequerimientosResponse } from '@libs/shared/data-access-user/src/core/models/130118/requerimientos-response.model';
 import { TabsSolicitudServiceTsService } from "../core/services/evaluar-tramite/tabs-solicitud.service.ts.service";
 import { TareasSolicitud } from "@libs/shared/data-access-user/src/core/models/130118/consulta-tareas-response.model";
+
+import { GuardarRequerimiento } from '../core/models/evaluar/request/guardar-requerimiento-request.model';
+import { GuardarRequerimientoService } from '../core/services/evaluar-tramite/guardarRequerimiento.service';
+import { IniciarRequerimientoRequest } from '../core/models/evaluar/request/iniciar-requerimiento-request.model';
+import { IniciarRequerimientoResponse } from '@libs/shared/data-access-user/src/core/models/130118/Iniciar-requerimiento-response.model';
 
 /**
  * @component
@@ -68,8 +73,7 @@ import { TareasSolicitud } from "@libs/shared/data-access-user/src/core/models/1
     FirmaElectronicaComponent,
     CapturarRequerimientoComponent,
     SolicitarDocumentosEvaluacionComponent,
-    SolicitarOpinionComponent
-  ],
+    SolicitarOpinionComponent, NotificacionesComponent],
   templateUrl: './evaluar.component.html',
   styleUrl: './evaluar.component.scss',
 })
@@ -104,6 +108,13 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @description Indica si se debe mostrar la sección de firma electrónica.
    */
   firmar: boolean = false;
+
+  /** ID del requerimiento */
+  idRequerimiento!: number;
+
+  /** Justificación del requerimiento */
+  justificacion!: string;
+
   /**
    * @property {ConsultaioState} guardarDatos
    * @description Estado actual del trámite consultado.
@@ -120,6 +131,13 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @description Índice de la pestaña de dictamen seleccionada.
    */
   indiceDictamen: number = 1;
+
+  /** Datos de respuesta al iniciar un requerimiento */
+  dataIniciarRequerimiento!: IniciarRequerimientoResponse;
+
+  /** Nueva notificación a gestionar */
+  nuevaNotificacion!: Notificacion;
+
   /**
    * @property {SolicitudRequerimientosState} requerimientoState
    * @description Estado actual de los requerimientos asociados al trámite.
@@ -241,7 +259,8 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     private evaluarSolicitudService: EvaluarSolicitudService,
     private tabsSolicitudServiceTsService: TabsSolicitudServiceTsService,
     private iniciarService: IniciarService,
-    private guardarService: GuardarDictamenService
+    private guardarService: GuardarDictamenService,
+    private guardarRequerimientoService: GuardarRequerimientoService
   ) {
 
     this.consultaioQuery.selectConsultaioState$
@@ -601,6 +620,8 @@ export class EvaluarComponent implements OnInit, OnDestroy {
 
     if (i === 1) {
       this.iniciarDictamen();
+    } else if (i === 2) {
+      this.iniciarRequerimiento();
     }
   }
 
@@ -739,6 +760,86 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     this.indice = 1;
     this.indiceDictamen = 1;
   }
+
+  /**
+   * Inicia el proceso de requerimiento con datos predefinidos
+   * Realiza una petición POST para iniciar un requerimiento y maneja la respuesta
+   */
+  iniciarRequerimiento(): void {
+    const FOLIOTRAMITE = '0201300101820251118000024';
+
+    const PAYLOAD: IniciarRequerimientoRequest = {
+      cve_usuario: 'CORL731209CC1',
+      id_accion: '617'
+    };
+
+    this.iniciarService.postIniciarRequerimiento(this.tramite, FOLIOTRAMITE, PAYLOAD)
+      .subscribe({
+        next: (resp) => {
+          this.dataIniciarRequerimiento = resp.datos ?? {} as IniciarRequerimientoResponse;
+        },
+        error: (err) => {
+          console.error('Error al guardar el dictamen', err);
+        }
+      });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-explicit-any
+  onFormRequerimientoChanged(formValue: any) {
+    this.justificacion = formValue.justificacionRequerimiento
+  }
+
+  /** 
+   * Guarda un requerimiento con los datos proporcionados
+   * Realiza una petición POST y maneja diferentes escenarios de respuesta
+   * @description Gestiona notificaciones de éxito o error según la respuesta del servidor
+   */
+  guardarRequerimiento(): void {
+    const FOLIOTRAMITE = '0201300101820251118000024';
+
+    const PAYLOAD: GuardarRequerimiento = {
+      id_accion: '12',
+      justificacion: this.justificacion,
+      alcance_requerimiento: 'X0XX'
+    };
+
+    this.guardarRequerimientoService.postGuardarRequerimiento(this.tramite, FOLIOTRAMITE, PAYLOAD)
+      .subscribe({
+        next: (resp) => {
+          if (resp.codigo === '00') {
+            this.idRequerimiento = resp.datos?.id_requerimiento || 0;
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.EXITO,
+              modo: 'action',
+              titulo: 'Éxito',
+              mensaje: resp.mensaje,
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          } else {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: resp.error || 'Error al guardar.',
+              mensaje:
+                resp.causa ||
+                resp.mensaje ||
+                'Ocurrió un error al guardar el requerimiento.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+        },
+        error: (err) => {
+          console.error('Error al guardar el dictamen', err);
+        }
+      });
+  }
+
   /**
    * @method ngOnDestroy
    * @description Método del ciclo de vida que se ejecuta al destruir el componente.
