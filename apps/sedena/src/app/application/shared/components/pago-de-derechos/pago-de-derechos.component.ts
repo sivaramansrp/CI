@@ -170,15 +170,15 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
     this.pagoDerechosForm = this.fb.group({
       claveReferencia: [
         this.pagoDerechoFormState?.claveReferencia || '',
-        Validators.required,
+       [Validators.required, Validators.maxLength(9)]
       ],
       cadenaDependencia: [
         this.pagoDerechoFormState?.cadenaDependencia || '',
-        Validators.required,
+        [Validators.required, Validators.maxLength(14)]
       ],
       llavePago: [
         this.pagoDerechoFormState?.llavePago || '',
-        Validators.required,
+        [Validators.required, Validators.maxLength(30)]
       ],
       fechaPago: [
         this.pagoDerechoFormState?.fechaPago || '',
