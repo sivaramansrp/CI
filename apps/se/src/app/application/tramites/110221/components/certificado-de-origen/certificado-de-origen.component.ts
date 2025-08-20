@@ -456,7 +456,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Busca mercancías disponibles basándose en el tratado seleccionado.
    */
   buscarMercancias(): void {
-    if (this.registroForm.get('validacionForm.tratado')?.value === 0) {
+    if (this.registroForm.get('validacionForm.tratado')?.value === 1) {
       this.hayMercanciasDisponibles = false;
     } else {
       this.hayMercanciasDisponibles = true;
