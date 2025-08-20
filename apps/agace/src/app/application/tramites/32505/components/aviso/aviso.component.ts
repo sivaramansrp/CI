@@ -1,15 +1,19 @@
 import {
   ALPHANUMERIC_PATTERN,
   ENCABEZADAS_CONSTANT,
+  ENCABEZADAS_CONSTANT_CONSULTA,
   RADIO_OPCIONS,
   RADIO_OPCIONS_AVISO,
+  RADIO_OPCIONS_CONFIRMIDAD,
   RADIO_TIPO_AVISO,
   TABLA_DE_DATOS_AVISO,
+  TABLA_DE_DATOS_AVISO_CONSULTA,
 } from '../../constants/avios-procesos.enum';
 import {
   AvisoTablaDatos,
   CatalogoLista,
   ColumnasTabla,
+  ColumnasTablaConsulta,
 } from '../../models/avios-model';
 import {
   BotonAccionesTipos,
@@ -79,6 +83,8 @@ import { Tramite32505Query } from '../../../../estados/queries/tramite32505.quer
   standalone: true,
 })
 export class AvisoComponent implements OnInit, OnDestroy {
+
+
   /**
    * Subject para destruir notificador.
    */
@@ -109,6 +115,11 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @description Opciones de tipo de aviso disponibles para selección.
    */
   radioTipoAviso = RADIO_TIPO_AVISO;
+  /**
+   * @property {typeof RADIO_OPCIONS_CONFIRMIDAD} radioConfirmidad
+   * @description Opciones de confirmidad disponibles para selección.
+   */
+  radioConfirmidad = RADIO_OPCIONS_CONFIRMIDAD;
 
   /**
    * @property {typeof RADIO_OPCIONS_AVISO} radioOpcionsAviso
@@ -179,6 +190,15 @@ export class AvisoComponent implements OnInit, OnDestroy {
     datos: ColumnasTabla[];
   } = TABLA_DE_DATOS_AVISO;
 
+  /**
+ * @property {Object} tablaDeDatos
+ * @description Configuración de la tabla de datos utilizada en el componente.
+ */
+  tablaDeDatosConsulta: {
+    encabezadas: (typeof ENCABEZADAS_CONSTANT_CONSULTA)[];
+    datos: ColumnasTablaConsulta[];
+  } = TABLA_DE_DATOS_AVISO_CONSULTA;
+  
   /**
    * @property {ElementRef} datosAviso
    * @description Referencia al elemento del modal para buscar mercancías.

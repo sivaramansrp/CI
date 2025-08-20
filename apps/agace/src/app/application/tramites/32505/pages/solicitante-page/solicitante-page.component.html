@@ -7,15 +7,19 @@
       <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
     <div class="row">
-      @switch (indice) { @case (1) {
-      <paso-uno></paso-uno>
-      } 
+      @switch (indice) {
+      @case (1) {
+      <paso-uno ></paso-uno>
       }
-
-      <btn-continuar
-        [datos]="datosPasos"
-        (continuarEvento)="getValorIndice($event)"
-      ></btn-continuar>
+      @case (2) {
+      <app-paso-tres></app-paso-tres>
+      }
+      }
+      
+      <btn-continuar [datos]="datosPasos"  (continuarEvento)="getValorIndice($event)"></btn-continuar>
     </div>
   </div>
+  @if (confirmacionNotificacion) {
+  <lib-notificaciones [notificacionInput]="confirmacionNotificacion" (confirmacionModal)="manejarConfirmacion($event)"></lib-notificaciones>
+  }
 </div>
