@@ -191,33 +191,33 @@ export class DerechosComponent implements OnInit, OnDestroy {
     if (!control.value) {
       return null;
     }
-    let SELECTED_DATE: Date;
+    let fechaSeleccionada: Date;
     if (typeof control.value === 'string' && control.value.includes('/')) {
-      const PARTS = control.value.split('/');
-      if (PARTS.length === 3) {
-        const DAY = parseInt(PARTS[0], 10);
-        const MONTH = parseInt(PARTS[1], 10);
-        const YEAR = parseInt(PARTS[2], 10);
-        SELECTED_DATE = new Date(YEAR, MONTH - 1, DAY);
+      const PARTES = control.value.split('/');
+      if (PARTES.length === 3) {
+        const DIA = parseInt(PARTES[0], 10);
+        const MES = parseInt(PARTES[1], 10);
+        const ANIO = parseInt(PARTES[2], 10);
+        fechaSeleccionada = new Date(ANIO, MES - 1, DIA);
       } else {
-        SELECTED_DATE = new Date(control.value);
+        fechaSeleccionada = new Date(control.value);
       }
     } else {
-      SELECTED_DATE = new Date(control.value);
+      fechaSeleccionada = new Date(control.value);
     }
     
     // Verificar si la fecha es válida
-    if (isNaN(SELECTED_DATE.getTime())) {
+    if (isNaN(fechaSeleccionada.getTime())) {
       return { fechaInvalida: true }; // Retorna error para fechas inválidas
     }
     
-    const CURRENT_DATE = new Date();
+    const FECHA_ACTUAL = new Date();
     
     // Restablecer la hora para comparar solo las fechas
-    SELECTED_DATE.setHours(0, 0, 0, 0);
-    CURRENT_DATE.setHours(0, 0, 0, 0);
-    
-    if (SELECTED_DATE > CURRENT_DATE) {
+    fechaSeleccionada.setHours(0, 0, 0, 0);
+    FECHA_ACTUAL.setHours(0, 0, 0, 0);
+
+    if (fechaSeleccionada > FECHA_ACTUAL) {
       return { fechaInvalida: true }; // Retorna un objeto de error para fechas futuras
     }
     
