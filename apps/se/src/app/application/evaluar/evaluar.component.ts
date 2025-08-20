@@ -325,12 +325,36 @@ export class EvaluarComponent implements OnInit, OnDestroy {
           if (response.codigo === '00') {
             this.documentosSolicitud = response.datos ?? [];
           } else {
-            console.error('Error en respuesta:', response.mensaje);
+             window.scrollTo({ top: 0, behavior: 'smooth' }); 
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: response.error || 'Error en documentos.',
+              mensaje:
+                response.causa ||
+                response.mensaje ||
+                response.error ||
+                'Error en documentos.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
           }
         },
         error: (error) => {
-          console.error('Error al llamar el servicio:', error);
-        }
+          window.scrollTo({ top: 0, behavior: 'smooth' }); 
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: '',
+            mensaje: error?.error?.error || 'Error inesperado en documentos.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+      }
       });
   }
 
@@ -352,12 +376,36 @@ export class EvaluarComponent implements OnInit, OnDestroy {
           if (response.codigo === '00') {
             this.requerimientosSolicitud = response.datos ?? [];
           } else {
-            console.error('Error en respuesta:', response.mensaje);
+             window.scrollTo({ top: 0, behavior: 'smooth' }); 
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: response.error || 'Error en requerimientos.',
+              mensaje:
+                response.causa ||
+                response.mensaje ||
+                response.error ||
+                'Error en requerimientos.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
           }
         },
         error: (error) => {
-          console.error('Error al llamar el servicio:', error);
-        }
+          window.scrollTo({ top: 0, behavior: 'smooth' }); 
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: '',
+            mensaje: error?.error?.error || 'Error inesperado en requerimientos.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+      }
       });
   }
 
@@ -379,12 +427,36 @@ export class EvaluarComponent implements OnInit, OnDestroy {
           if (response.codigo === '00') {
             this.dictamenesSolicitud = response.datos ?? [];
           } else {
-            console.error('Error en respuesta:', response.mensaje);
+            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: response.error || 'Error en dictamenes.',
+              mensaje:
+                response.causa ||
+                response.mensaje ||
+                response.error ||
+                'Error en dictamenes.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
           }
         },
-        error: (error) => {
-          console.error('Error al llamar el servicio:', error);
-        }
+       error: (error) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' }); 
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: '',
+            mensaje: error?.error?.error || 'Error inesperado en dictamenes.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+      }
       });
   }
 
@@ -406,12 +478,36 @@ export class EvaluarComponent implements OnInit, OnDestroy {
           if (response.codigo === '00') {
             this.tareasSolicitud = response.datos ?? [];
           } else {
-            console.error('Error en respuesta:', response.mensaje);
+            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: response.error || 'Error en tareas.',
+              mensaje:
+                response.causa ||
+                response.mensaje ||
+                response.error ||
+                'Error en tareas.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
           }
         },
-        error: (error) => {
-          console.error('Error al llamar el servicio:', error);
-        }
+       error: (error) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' }); 
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: '',
+            mensaje: error?.error?.error || 'Error inesperado en tareas.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+      }
       });
   }
 
@@ -430,12 +526,36 @@ export class EvaluarComponent implements OnInit, OnDestroy {
           if (response.codigo === '00') {
             this.opinion = response.datos ?? [];
           } else {
-            console.error('Error en respuesta:', response.mensaje);
+             window.scrollTo({ top: 0, behavior: 'smooth' }); 
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: response.error || 'Error en opiniones.',
+              mensaje:
+                response.causa ||
+                response.mensaje ||
+                response.error ||
+                'Error en opiniones.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
           }
         },
-        error: (error) => {
-          console.error('Error al llamar el servicio:', error);
-        }
+       error: (error) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' }); 
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: '',
+            mensaje: error?.error?.error || 'Error inesperado en opiniones.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+      }
       });
   }
 
@@ -455,12 +575,36 @@ export class EvaluarComponent implements OnInit, OnDestroy {
           if (response.codigo === '00') {
             this.acusesResolucion = response.datos ?? {} as AcusesResolucionResponse;
           } else {
-            console.error('Error en respuesta:', response.mensaje);
+            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: response.error || 'Error en acuse.',
+              mensaje:
+                response.causa ||
+                response.mensaje ||
+                response.error ||
+                'Error en acuse.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
           }
         },
         error: (error) => {
-          console.error('Error al llamar el servicio:', error);
-        }
+          window.scrollTo({ top: 0, behavior: 'smooth' }); 
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: '',
+            mensaje: error?.error?.error || 'Error inesperado en acuse.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+      }
       });
   }
 
@@ -477,13 +621,37 @@ export class EvaluarComponent implements OnInit, OnDestroy {
           if (response.codigo === '00') {
             this.envioDigital = response.datos ?? {} as EnvioDigitalResponse;
           } else {
-            console.error('Error en respuesta:', response.mensaje);
+            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: response.error || 'Error en envio digital',
+              mensaje:
+                response.causa ||
+                response.mensaje ||
+                response.error ||
+                'Error en envio digital.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            }; 
           }
         },
         error: (error) => {
-          console.error('Error al llamar el servicio:', error);
-        }
-      });
+          window.scrollTo({ top: 0, behavior: 'smooth' }); 
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: '',
+            mensaje: error?.error?.error || 'Error inesperado en envio digital.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+      }
+    });
   }
 
   /**
