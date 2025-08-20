@@ -90,7 +90,9 @@ export interface ColumnasTabla {
   headerFormaPago: string;
   headerMontoDTA: string;
 }
-
+/**
+ * Representa las columnas de la tabla de consulta.
+ */
 export interface ColumnasTablaConsulta {
   headerPropiedad: string;
   headerNombreTitulo: string;

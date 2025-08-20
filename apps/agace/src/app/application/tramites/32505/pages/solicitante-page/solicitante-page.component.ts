@@ -113,7 +113,6 @@ export class SolicitantePageComponent {
       const EVENT: AccionBoton = { accion: 'cont', valor: this.indice + 1 };
       this.proceedWithNavigation(EVENT);
     }
-    // If false, do nothing - stay on current tab
   }
 
   /**

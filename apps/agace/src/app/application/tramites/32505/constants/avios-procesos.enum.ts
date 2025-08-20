@@ -187,6 +187,9 @@ export const TABLA_DE_DATOS_AVISO = {
   datos: [],
 };
 
+/**
+ * Representa la tabla de datos de aviso de consulta.
+ */
 export const TABLA_DE_DATOS_AVISO_CONSULTA = {
   encabezadas: [
     {
