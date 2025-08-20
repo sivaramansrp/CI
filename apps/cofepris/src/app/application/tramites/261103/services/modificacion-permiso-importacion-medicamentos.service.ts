@@ -171,6 +171,15 @@ private destroyNotifier$: Subject<void> = new Subject<void>();
   getRegistroPasoUnoData(): Observable<DatosProcedureState> {
     return this.http.get<DatosProcedureState>('assets/json/261103/tramites-datos.json');
   }
+
+  /**
+   * Obtiene los datos del registro de la sección de registro.
+   * @returns {Observable<DatosProcedureState>} : Retorna un observable con los datos del registro.
+   */
+  getRegistrarDatos(): Observable<DatosProcedureState> {
+    return this.http.get<DatosProcedureState>('assets/json/261103/registrar-datos.json');
+  }
+
   /**
  * Actualiza el estado del formulario con los datos proporcionados.
  * 
