@@ -1,9 +1,12 @@
-import { BtnContinuarComponent, DatosPasos } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent, DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import {
+  Notificacion,
+  NotificacionesComponent,
+} from '@libs/shared/data-access-user/src';
 import { PASOS } from './../../constants/avios-procesos.enum';
+import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { WizardComponent } from '@ng-mf/data-access-user';
 interface AccionBoton {
   accion: string;
   valor: number;
@@ -13,7 +16,7 @@ interface AccionBoton {
   templateUrl: './solicitante-page.component.html',
   styleUrl: './solicitante-page.component.scss',
   standalone: true,
-  imports: [WizardComponent,PasoUnoComponent,BtnContinuarComponent],
+  imports: [WizardComponent,PasoUnoComponent,BtnContinuarComponent,PasoTresComponent,NotificacionesComponent],
 })
 export class SolicitantePageComponent {
   /**
@@ -30,12 +33,28 @@ export class SolicitantePageComponent {
    */
   indice: number = 1;
 
+
   /**
    * Referencia al componente del wizard.
    * 
    * Esta propiedad utiliza `@ViewChild` para obtener una referencia al componente `WizardComponent`.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+  /**
+   * Referencia al componente paso uno.
+   */
+  @ViewChild(PasoUnoComponent) pasoUnoComponent!: PasoUnoComponent;
+
+  /**
+   * Referencia al componente de notificaciones.
+   */
+  @ViewChild(NotificacionesComponent) notificacionesComponent!: NotificacionesComponent;
+
+  /**
+   * Notificación para confirmaciones.
+   */
+  public confirmacionNotificacion!: Notificacion;
 
   /**
    * Datos de los pasos del wizard.
@@ -66,20 +85,50 @@ export class SolicitantePageComponent {
    */
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 6) {
-      this.indice = e.valor;
-      this.datosPasos.indice = this.indice;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
+      if (e.accion === 'cont' && this.indice === 1 && this.pasoUnoComponent?.indice === 2) {
+        this.confirmacionNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Debes agregar Datos del Aviso',
+          cerrar: false,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: ''
+        };
       } else {
-        this.wizardComponent.atras();
+        this.proceedWithNavigation(e);
       }
     }
   }
 
   /**
-   * Método para continuar al siguiente paso en el wizard.
+   * Maneja la respuesta de confirmación del modal.
+   * 
+   * @param {boolean} respuesta - Respuesta del usuario (true o false).
    */
-  continuar(): void {
-    this.getValorIndice({ accion: 'cont', valor: this.indice + 1 });
+  manejarConfirmacion(respuesta: boolean): void {
+    if (respuesta) {
+      const EVENT: AccionBoton = { accion: 'cont', valor: this.indice + 1 };
+      this.proceedWithNavigation(EVENT);
+    }
   }
+
+  /**
+   * Método para proceder con la navegación del wizard.
+   * 
+   * @param {AccionBoton} e - El objeto que contiene la acción y el valor del índice.
+   */
+  private proceedWithNavigation(e: AccionBoton): void {
+    this.indice = e.valor;
+    this.datosPasos.indice = this.indice;
+    if (e.accion === 'cont') {
+      this.wizardComponent.siguiente();
+    } else {
+      this.wizardComponent.atras();
+    }
+  }
+
+
 }
