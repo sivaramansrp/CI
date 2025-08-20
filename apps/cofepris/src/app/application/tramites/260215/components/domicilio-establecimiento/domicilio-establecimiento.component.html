@@ -184,12 +184,12 @@
     <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla"
       [datos]="mercanciasTablaDatos"></app-tabla-dinamica>
     <div class="container text-end mt-5">
-      <button class="btn btn-default me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias"
+      <button class="btn btn-default me-2" data-bs-toggle="modal" data-bs-target="#modalMercancias"
         [disabled]="esFormularioSoloLectura">
         Modificar
       </button>
       <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
-      <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias"
+      <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalMercancias"
         [disabled]="esFormularioSoloLectura">
         Agregar
       </button>
@@ -212,7 +212,7 @@
                   formAgente,
                   'claveScianModal',
                   'setClaveScianModal'
-                )
+                );onCambioClaveScian();
               "></app-catalogo-select>
           </div>
           <div class="form-group">
@@ -243,7 +243,7 @@
   </div>
 </div>
 
-<div class="modal fade" id="modalAddAgentMercancias" tabindex="-1" aria-labelledby="modalAddAgentMercanciasLabel"
+<div class="modal fade" id="modalMercancias" #modalMercancias tabindex="-1" aria-labelledby="modalMercancias"
   aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" style="max-width: 80vw">
     <div class="modal-content">
@@ -254,7 +254,7 @@
         <form [formGroup]="formMercancias">
           <div class="form-group">
             <app-catalogo-select [catalogo]="estado" formControlName="clasificacion"
-              [label]="'Clasificación del producto'" [required]="true" [isDisabled]="esFormularioSoloLectura"
+              [label]="'Clasificación del producto'" [required]="true" [mostrarErrores]="false" [isDisabled]="esFormularioSoloLectura"
               name="clasificacion" (change)="
                 setValoresStore(
                   formMercancias,
@@ -262,13 +262,23 @@
                   'setClasificacion'
                 )
               "></app-catalogo-select>
+              <div class="mensaje-error" *ngIf="formMercancias.get('clasificacion')?.invalid && formMercancias.get('clasificacion')?.touched">
+                <span *ngIf="formMercancias.get('clasificacion')?.errors?.['required']">
+                  Este campo es obligatorio
+                </span>
+              </div>
           </div>
           <div class="form-group">
-            <app-catalogo-select [catalogo]="estado" formControlName="especificar"
+            <app-catalogo-select [catalogo]="estado" formControlName="especificar" [mostrarErrores]="false"
               [label]="'Especificar clasificación del producto'" [required]="true"
               [isDisabled]="esFormularioSoloLectura" name="especificar" (change)="
                 setValoresStore(formMercancias, 'especificar', 'setEspecificar')
               "></app-catalogo-select>
+            <div class="mensaje-error" *ngIf="formMercancias.get('especificar')?.invalid && formMercancias.get('especificar')?.touched">
+              <span *ngIf="formMercancias.get('especificar')?.errors?.['required']">
+                Este campo es obligatorio
+              </span>
+            </div>
           </div>
           <div class="form-group">
             <label for="denominacionEspecifica">Denominación específica del producto*:</label>
@@ -319,7 +329,7 @@
             </div>
           </div>
           <div class="form-group">
-            <app-catalogo-select [catalogo]="estado" formControlName="tipoDeProducto" [label]="'Tipo de producto'"
+            <app-catalogo-select [catalogo]="estadoDatos" formControlName="tipoDeProducto" [mostrarErrores]="false" [label]="'Tipo de producto'"
               [required]="true" [isDisabled]="esFormularioSoloLectura" name="tipoDeProducto" (change)="
                 setValoresStore(
                   formMercancias,
@@ -327,9 +337,33 @@
                   'setTipoDeProducto'
                 )
               "></app-catalogo-select>
+            <div class="mensaje-error" *ngIf="formMercancias.get('tipoDeProducto')?.invalid && formMercancias.get('tipoDeProducto')?.touched">
+              <span *ngIf="formMercancias.get('tipoDeProducto')?.errors?.['required']">
+                Este campo es obligatorio
+              </span>
+            </div>
           </div>
+            <div class="form-group" *ngIf="formMercancias.get('tipoDeProducto')?.value === '3'">
+            <label for="especifique">Especifique*:</label>
+            <textarea
+              id="especifiqueTipoDeProducto"
+              formControlName="especifiqueTipoDeProducto"
+              class="form-control"
+              maxlength="100"
+              required
+              (change)="setValoresStore(formMercancias, 'especifiqueTipoDeProducto', 'setEspecifiqueTipoDeProducto')"
+            ></textarea>
+            <div class="mensaje-error" *ngIf="formMercancias.get('especifiqueTipoDeProducto')?.invalid && formMercancias.get('especifiqueTipoDeProducto')?.touched">
+              <span *ngIf="formMercancias.get('especifiqueTipoDeProducto')?.errors?.['required']">
+              Este campo es obligatorio
+              </span>
+              <span *ngIf="formMercancias.get('especifiqueTipoDeProducto')?.errors?.['maxlength']">
+              Por favor, no escribas más de 100 caracteres
+              </span>
+            </div>
+            </div>
           <div class="form-group">
-            <app-catalogo-select [catalogo]="estado" formControlName="estadoFisico" [label]="'Estado físico'"
+            <app-catalogo-select [catalogo]="estadoDatos" formControlName="estadoFisico" [mostrarErrores]="false" [label]="'Estado físico'"
               [required]="true" [isDisabled]="esFormularioSoloLectura" name="estadoFisico" (change)="
                 setValoresStore(
                   formMercancias,
@@ -337,12 +371,36 @@
                   'setEstadoFisico'
                 )
               "></app-catalogo-select>
+              <div class="mensaje-error" *ngIf="formMercancias.get('estadoFisico')?.invalid && formMercancias.get('estadoFisico')?.touched">
+                <span *ngIf="formMercancias.get('estadoFisico')?.errors?.['required']">
+                  Este campo es obligatorio
+                </span>
+              </div>
           </div>
+             <div class="form-group" *ngIf="formMercancias.get('estadoFisico')?.value === '6'">
+            <label for="especifique">Especifique*:</label>
+            <textarea
+              id="especifiqueEstado"
+              formControlName="especifiqueEstado"
+              class="form-control"
+              maxlength="200"
+              required
+              (change)="setValoresStore(formMercancias, 'especifiqueEstado', 'setEspecifiqueEstado')"
+            ></textarea>
+            <div class="mensaje-error" *ngIf="formMercancias.get('especifiqueEstado')?.invalid && formMercancias.get('especifiqueEstado')?.touched">
+              <span *ngIf="formMercancias.get('especifiqueEstado')?.errors?.['required']">
+              Este campo es obligatorio
+              </span>
+              <span *ngIf="formMercancias.get('especifiqueEstado')?.errors?.['maxlength']">
+              Por favor, no escribas más de 200 caracteres
+              </span>
+            </div>
+            </div>
             <div class="form-group">
             <label for="fraccionArancelaria">Fracción arancelaria*:<span class="bi bi-question-circle-fill fs-4 m-1"
               title="Descripción numérica o desglose de un código de clasificación que otorga el Sistema Armonizado" data-bs-toggle="tooltip"></span></label>
             <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control"
-              minlength="8"
+              maxlength="8"
               (change)="
                 setValoresStore(
                   formMercancias,
@@ -354,8 +412,8 @@
               <span *ngIf="formMercancias.get('fraccionArancelaria')?.errors?.['required']">
               Este campo es obligatorio
               </span>
-              <span *ngIf="formMercancias.get('fraccionArancelaria')?.errors?.['minlength']">
-             Por favor, no escribas menos de 8 caracteres
+              <span *ngIf="formMercancias.get('fraccionArancelaria')?.errors?.['maxLength']">
+                Por favor, no escribas más de 8 caracteres
               </span>
               <span *ngIf="formMercancias.get('fraccionArancelaria')?.errors?.['pattern']">
               Por favor, sólo escribe dígitos
@@ -415,11 +473,16 @@
 </div>
             </div>
           <div class="form-group">
-            <app-catalogo-select [catalogo]="estado" formControlName="UMC" [label]="'UMC'" [required]="true"
+            <app-catalogo-select [catalogo]="estado" formControlName="UMC" [mostrarErrores]="false" [label]="'UMC'" [required]="true"
              [tooltipQuestionCircle]="true" [tooltipQuestionCircleText]="'Unidad de medida de comercialización'"
            [isDisabled]="esFormularioSoloLectura" name="UMC"
               (change)="setValoresStore(formMercancias, 'UMC', 'setUMC')"></app-catalogo-select>
-          </div>
+              <div class="mensaje-error" *ngIf="formMercancias.get('UMC')?.invalid && formMercancias.get('UMC')?.touched">
+                <span *ngIf="formMercancias.get('UMC')?.errors?.['required']">
+                  Este campo es obligatorio
+                </span>
+              </div>
+            </div>
             <div class="form-group">
             <label for="presentacion">Presentación farmacéutica o tipo de envase*:</label>
             <input
@@ -499,13 +562,13 @@
         </form>
       </div>
       <div class="modal-footer custom-footer">
-        <button [disabled]="esFormularioSoloLectura" type="button" class="btn btn-default" data-bs-dismiss="modal">
+        <button [disabled]="esFormularioSoloLectura" type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal>
           Limpiar
         </button>
-        <button [disabled]="esFormularioSoloLectura" type="button" class="btn btn-default" data-bs-dismiss="modal">
+        <button [disabled]="esFormularioSoloLectura" type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal>
           Cancelar
         </button>
-        <button [disabled]="esFormularioSoloLectura" type="button" class="btn btn-primary" data-bs-dismiss="modal">
+        <button [disabled]="esFormularioSoloLectura" type="button" class="btn btn-primary" (click)="onAgregar()">
           Agregar
         </button>
       </div>
@@ -515,7 +578,7 @@
 
 @if (nuevaNotificacion) {
   <section>
-    <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion"  (confirmacionModal)="eliminarPedimento($event)" >
     </lib-notificaciones>
   </section>
   }
