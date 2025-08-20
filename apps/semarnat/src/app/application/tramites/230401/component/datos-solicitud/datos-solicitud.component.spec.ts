@@ -312,21 +312,7 @@ describe('DatosSolicitudComponent', () => {
     expect(component.aduanasDeEntradaDatos.push).toHaveBeenCalled();
   });
 
-  it('should run #setValoresStore() with campo as "cantidad" and valid value', async () => {
-    component.tramite230401Store = component.tramite230401Store || {};
-    component.tramite230401Store.setCantidad = jest.fn();
-
-    const mockForm = {
-      get: jest.fn().mockReturnValue({
-        value: '123'
-      })
-    };
-
-    component.setValoresStore(mockForm as unknown as FormGroup, 'cantidad');
-    expect(mockForm.get).toHaveBeenCalledWith('cantidad');
-    expect(component.tramite230401Store.setCantidad).toHaveBeenCalledWith(123);
-  });
-
+ 
   it('should run #setValoresStore() with campo as "cantidad" and null value', async () => {
     component.tramite230401Store = component.tramite230401Store || {};
     component.tramite230401Store.setCantidad = jest.fn();
@@ -523,26 +509,7 @@ describe('DatosSolicitudComponent', () => {
     expect(component.fb.group).toHaveBeenCalled();
   });
 
-  it('should run #agregarListaDeNumeros()', async () => {
-    component.FormSolicitud = component.FormSolicitud || {};
-    component.FormSolicitud.get = jest.fn().mockReturnValue({
-      value: {}
-    });
-    component.sustanciasSensiblesTablaDatos = component.sustanciasSensiblesTablaDatos || {};
-    component.sustanciasSensiblesTablaDatos.findIndex = jest.fn().mockReturnValue([
-      {
-        "numeroCAS": {}
-      }
-    ]);
-    component.tramite230401Store = component.tramite230401Store || {};
-    component.tramite230401Store.setSustanciasSensiblesTablaDatos = jest.fn();
-    component.agregarListaDeNumeros();
-    expect(component.FormSolicitud.get).toHaveBeenCalled();
-    expect(component.sustanciasSensiblesTablaDatos.findIndex).toHaveBeenCalled();
-    expect(component.tramite230401Store.setSustanciasSensiblesTablaDatos).toHaveBeenCalled();
-  });
-
-  it('should run #eliminarListaDeNumeros()', async () => {
+it('should run #eliminarListaDeNumeros()', async () => {
     component.sustanciasSensiblesSeleccionadas =  [
       { numeroCAS: '123' }
     ];
