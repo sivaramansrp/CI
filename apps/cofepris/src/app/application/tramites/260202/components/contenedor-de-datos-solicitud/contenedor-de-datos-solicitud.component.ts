@@ -18,6 +18,7 @@ import {
 } from '../../estados/tramite260202Store.store';
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-materias-primas.enum';
 import { Subject } from 'rxjs';
@@ -51,6 +52,10 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    */
   @Input()
   formularioDeshabilitado: boolean = false;
+     /** Indica si el formulario debe mostrarse en modo solo lectura.  
+ *  Controla la habilitación o deshabilitación de los campos. */
+  public esFormularioSoloLectura: boolean = false;
+  
   /**
    *
    *
@@ -152,9 +157,16 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramite260202Query: Tramite260202Query,
-    private tramite260202Store: Tramite260202Store
+    private tramite260202Store: Tramite260202Store,private consultaQuery: ConsultaioQuery
   ) {
-    // Constructor vacío, se inyectan las dependencias para su uso en el componente.
+     this.consultaQuery.selectConsultaioState$
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            map((seccionState) => {
+              this.esFormularioSoloLectura = seccionState.readonly;
+            })
+          )
+          .subscribe();
   }
 
   /**

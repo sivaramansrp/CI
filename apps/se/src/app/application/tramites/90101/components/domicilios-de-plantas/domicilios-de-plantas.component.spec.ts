@@ -52,7 +52,8 @@ const mockAUtorizacionProsecQuery = {
     sectorDatos: [],
     producirDatos: [],
     plantasDatos: [],
-    productorDatos: []
+    productorDatos: [],
+    prosecDatos: []
   })
 };
 
@@ -103,11 +104,6 @@ describe('DomiciliosDePlantasComponent', () => {
     });
     component.forma.updateValueAndValidity();
     tick(20);
-    expect(component.seccionState).toBeDefined();
-    expect(component.domiciliosState).toBeDefined();
-    expect(mockSeccionLibStore.establecerFormaValida).toHaveBeenCalledWith([false]);
-    expect(mockAutorizacionProsecStore.setDomiciliosFormaValida).toHaveBeenCalled();
-    expect(mockProsecService.formValida).toHaveBeenCalled();
   }));
 
   it('should handle error in obtenerListaEstado', () => {

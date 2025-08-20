@@ -463,6 +463,8 @@ opcionSeleccionMexicana = [
     }
 }
 
+
+
   /** Método para establecer valores en el store de la solicitud */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Solicitud120603Store): void {
     const VALOR = form.get(campo)?.value;

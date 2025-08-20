@@ -69,17 +69,17 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
     minMode: 'month', // Solo permite seleccionar mes y año
   };
 
-  /** 
-   * 
+  /**
+   *
    *  @property {InputFecha} fechaIncio
    *  @description
    *  Esta propiedad define la configuración de la fecha de inicio del reporte anual.
    */
   public fechaIncio: InputFecha = FECHA_INCIO;
 
-  /** 
+  /**
    * @property {InputFecha} fechaFin
-   * @description 
+   * @description
    * Esta propiedad define la configuración de la fecha de fin del reporte anual.
    * Incluye el nombre de la etiqueta, si es requerida y si está habilitada.
    */
@@ -304,6 +304,12 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
     if (evento instanceof Object) {
       this.filaDeInformeSeleccionada.emit(true);
     }
+    this.periodoReporteAnual.patchValue({
+      folioPrograma: evento.folioPrograma,
+      modalidad: evento.modalidad,
+      tipoPrograma: evento.tipoPrograma,
+      estatus: evento.estatus,
+    });
   }
 
   /**

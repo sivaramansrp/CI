@@ -8,22 +8,32 @@ import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
 /**
- * Interfaz que representa el estado completo del trámite 240114.
+ * @interface Tramite240114State
+ * @description Representa el estado de la aplicación para el trámite 240114.
+ * Contiene información sobre las pestañas seleccionadas, datos de destinatarios,
+ * proveedores, pagos, mercancías y otros detalles relacionados con el trámite.
  *
- * @property {number} [tabSeleccionado] - Pestaña actualmente activa en el flujo.
- * @property {DestinoFinal[]} destinatarioFinalTablaDatos - Lista de destinatarios finales registrados.
- * @property {Proveedor[]} proveedorTablaDatos - Lista de proveedores registrados.
+ * @property {number} [tabSeleccionado] - Número de la pestaña actualmente seleccionada.
+ * @property {DestinoFinal[]} destinatarioFinalTablaDatos - Lista de datos de destinatarios finales.
+ * @property {Proveedor[]} proveedorTablaDatos - Lista de datos de proveedores.
  * @property {PagoDerechosFormState} pagoDerechos - Información del formulario de pago de derechos.
- * @property {MercanciaDetalle[]} mercancialTablaDatos - Lista de mercancías registradas.
- * @property {DatosDelTramiteFormState} datosDelTramite - Información general del formulario de datos del trámite.
+ * @property {MercanciaDetalle[]} merccancialTablaDatos - Lista de detalles de mercancías.
+ * @property {DatosDelTramiteFormState} datosDelTramite - Información del formulario de datos del trámite.
+ * @property {DestinoFinal | null} [modificarDestinarioDatos] - Datos del destinatario a modificar (opcional).
+ * @property {Proveedor | null} [modificarProveedorDatos] - Datos del proveedor a modificar (opcional).
+ *
+ * @command Este estado se utiliza para gestionar y almacenar los datos relacionados con el trámite 240114.
  */
 export interface Tramite240114State {
   tabSeleccionado?: number;
   destinatarioFinalTablaDatos: DestinoFinal[];
   proveedorTablaDatos: Proveedor[];
   pagoDerechos: PagoDerechosFormState;
-  mercancialTablaDatos: MercanciaDetalle[];
+  merccancialTablaDatos: MercanciaDetalle[];
   datosDelTramite: DatosDelTramiteFormState;
+  modificarDestinarioDatos?: DestinoFinal | null;
+  modificarProveedorDatos?: Proveedor | null;
+  modificarMercanciasDatos?: MercanciaDetalle | null;
 }
 
 /**
@@ -45,7 +55,7 @@ export function createInitialState(): Tramite240114State {
       fechaPago: '',
       importePago: '',
     },
-    mercancialTablaDatos: [],
+    merccancialTablaDatos: [],
     datosDelTramite: {
       permisoGeneral: '',
       usoFinal: '',
@@ -157,14 +167,179 @@ export class Tramite240114Store extends Store<Tramite240114State> {
   public updateMercanciaTablaDatos(newMercancia: MercanciaDetalle[]): void {
     this.update((state) => ({
       ...state,
-      mercancialTablaDatos: [...state.mercancialTablaDatos, ...newMercancia],
+      merccancialTablaDatos: [...state.merccancialTablaDatos, ...newMercancia],
     }));
   }
 
-  //create a function to set entire state
   /**
-   * Actualiza el estado completo con un nuevo estado.
-   * @param newState El nuevo estado a establecer.
+   * Actualiza el objeto de mercancía que se está modificando en el estado.
+   *
+   * @param {MercanciaDetalle} datos - Objeto de mercancía con los datos actualizados.
+   */
+  public actualizarMercancias(datos: MercanciaDetalle): void {
+    this.update((state) => ({
+      ...state,
+      modificarMercanciasDatos: datos,
+    }));
+  }
+
+  /**
+   * Actualiza una mercancía existente en la lista de mercancías del estado,
+   * reemplazando el elemento que coincide con el `tableIndex` del nuevo objeto proporcionado.
+   * Después de la actualización, restablece el estado de modificación de mercancía a `null`.
+   *
+   * @param {MercanciaDetalle[]} datos - Arreglo que contiene la mercancía actualizada.
+   */
+  public actualizarMercanciasdatos(datos: MercanciaDetalle[]): void {
+    this.update((state) => ({
+      ...state,
+      merccancialTablaDatos: state.merccancialTablaDatos.map((item) =>
+        item.tableIndex === datos[0].tableIndex ? datos[0] : item
+      ),
+    }));
+    this.setModificarMercanciasDatos(null);
+  }
+
+  /**
+   * Establece el objeto de mercancía que se va a modificar en el estado.
+   *
+   * @param {MercanciaDetalle | null} mercancia - Objeto de mercancía a modificar o `null` para limpiar el estado.
+   */
+  public setModificarMercanciasDatos(mercancia: MercanciaDetalle | null): void {
+    this.update((state) => ({
+      ...state,
+      modificarMercanciasDatos: mercancia,
+    }));
+  }
+
+  /**
+   * Reemplaza la lista completa de mercancías en el estado.
+   *
+   * @param {MercanciaDetalle[]} mercancias - Nueva lista de objetos de mercancía.
+   */
+  public setMercanciasDatosTabla(mercancias: MercanciaDetalle[]): void {
+    this.update((state) => ({
+      ...state,
+      merccancialTablaDatos: [...mercancias],
+    }));
+  }
+
+  /**
+   * Actualiza los datos de un destinatario final específico.
+   *
+   * @method actualizarDatosDestinatario
+   * @param {DestinoFinal} datos - Datos del destinatario final a modificar.
+   * @returns {void}
+   */
+  public actualizarDatosDestinatario(datos: DestinoFinal): void {
+    this.update((state) => ({
+      ...state,
+      modificarDestinarioDatos: datos,
+      modificarProveedorDatos: null,
+    }));
+  }
+
+  /**
+   * Actualiza los datos de un proveedor específico.
+   *
+   * @method actualizarDatosProveedor
+   * @param {Proveedor} datos - Datos del proveedor a modificar.
+   * @returns {void}
+   */
+  public actualizarDatosProveedor(datos: Proveedor): void {
+    this.update((state) => ({
+      ...state,
+      modificarProveedorDatos: datos,
+      modificarDestinarioDatos: null,
+    }));
+  }
+  /**
+   * Elimina un destinatario de la tabla de destinatarios.
+   *
+   * @param destinatarioFinal - El destinatario que se eliminará de la tabla de destinatarios.
+   * @returns void
+   */
+  eliminarDestinatarioFinal(destinatarioFinal: DestinoFinal): void {
+    this.update((state) => {
+      const INDICE_A_ELIMINAR = state.destinatarioFinalTablaDatos.findIndex(
+        (ele) =>
+          Object.keys(destinatarioFinal).some(
+            (key) =>
+              destinatarioFinal[key as keyof DestinoFinal] ===
+              ele[key as keyof DestinoFinal]
+          )
+      );
+
+      if (INDICE_A_ELIMINAR !== -1) {
+        state.destinatarioFinalTablaDatos.splice(INDICE_A_ELIMINAR, 1);
+      }
+
+      return {
+        ...state,
+        destinatarioFinalTablaDatos: [...state.destinatarioFinalTablaDatos],
+      };
+    });
+  }
+
+  /**
+   * Elimina un Proveedor de la tabla de Proveedor.
+   *
+   * @param proveedorFinal - El Proveedor que se eliminará de la tabla de Proveedor.
+   * @returns void
+   */
+  eliminareliminarProveedorFinal(proveedorFinal: Proveedor): void {
+    this.update((state) => {
+      const INDICE_A_ELIMINAR = state.proveedorTablaDatos.findIndex((ele) =>
+        Object.keys(proveedorFinal).some(
+          (key) =>
+            proveedorFinal[key as keyof Proveedor] ===
+            ele[key as keyof Proveedor]
+        )
+      );
+
+      if (INDICE_A_ELIMINAR !== -1) {
+        state.proveedorTablaDatos.splice(INDICE_A_ELIMINAR, 1);
+      }
+
+      return {
+        ...state,
+        proveedorTablaDatos: [...state.proveedorTablaDatos],
+      };
+    });
+  }
+
+  /**
+   * Elimina una mercancía específica de la lista `merccancialTablaDatos` en el estado.
+   *
+   * @param datos Los detalles de la mercancía que se desea eliminar.
+   *
+   * @remarks
+   * Esta función actualiza el estado filtrando la mercancía que coincida exactamente con todos los campos de `datos`.
+   *
+   * @example
+   * eliminarMercancias({ id: 1, nombre: 'Producto A', cantidad: 10 });
+   */
+  eliminarMercancias(datos: MercanciaDetalle): void {
+    this.update((state) => {
+      const MERCANCIAS_ACTUALIZADAS = state.merccancialTablaDatos.filter(
+        (ele) =>
+          !Object.keys(datos).every(
+            (key) =>
+              datos[key as keyof MercanciaDetalle] ===
+              ele[key as keyof MercanciaDetalle]
+          )
+      );
+      return {
+        ...state,
+        merccancialTablaDatos: MERCANCIAS_ACTUALIZADAS,
+      };
+    });
+  }
+
+  /**
+   * Actualiza el estado del store con un nuevo estado.
+   *
+   * @param newState - El nuevo estado que se establecerá en el store.
    */
   public setState(newState: Tramite240114State): void {
     this.update(newState);

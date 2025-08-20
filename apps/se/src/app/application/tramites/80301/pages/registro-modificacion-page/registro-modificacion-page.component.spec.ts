@@ -1,95 +1,184 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { RegistroModificacionPageComponent } from './registro-modificacion-page.component';
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { AccionBoton, ListaPasosWizard } from '@libs/shared/data-access-user/src';
-// 🔧 Mock de WizardComponent
-@Component({
-  selector: 'app-wizard',
-  template: '',
-})
-class MockWizardComponent {
-  @Input() listaPasos: ListaPasosWizard[] = [];
-  siguiente = jest.fn();
-  atras = jest.fn();
-}
+import { BtnContinuarComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { PASOS_EXPORTACION } from '../../constantes/elegibilidad-de-textiles.enums';
+import { PasoUnoComponent } from './paso-uno/paso-uno.component';
+import { PasoTresComponent } from './paso-tres/paso-tres.component';
+import { PasoDosComponent } from './paso-dos/paso-dos.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ToastrService } from 'ngx-toastr/toastr/toastr.service';
+import { ToastrModule } from 'ngx-toastr';
+import { of } from 'rxjs';
 
-// 🔧 Mocks de pasos y botón
-@Component({ selector: 'app-paso-uno', template: '' }) class MockPasoUno {}
-@Component({ selector: 'app-paso-dos', template: '' }) class MockPasoDos {}
-@Component({ selector: 'app-paso-tres', template: '' }) class MockPasoTres {}
-
-@Component({
-  selector: 'btn-continuar',
-  template: '',
-})
-class MockBtnContinuar {
-  @Input() datos: any;
-  @Output() continuarEvento = new EventEmitter<AccionBoton>();
-}
-
-fdescribe('RegistroModificacionPageComponent', () => {
+describe('RegistroModificacionPageComponent', () => {
   let component: RegistroModificacionPageComponent;
-  let fixture: ComponentFixture<RegistroModificacionPageComponent>;
+  let fixture: any;
+  let wizardComponentSpy: jest.Mocked<WizardComponent>;
 
   beforeEach(async () => {
+    wizardComponentSpy = {
+      siguiente: jest.fn(() => of()),
+      atras: jest.fn(() => of()),
+    } as any;
+
     await TestBed.configureTestingModule({
-      declarations: [
+      imports: [
         RegistroModificacionPageComponent,
-        MockWizardComponent,
-        MockPasoUno,
-        MockPasoDos,
-        MockPasoTres,
-        MockBtnContinuar,
-      ]
+        WizardComponent,
+        PasoUnoComponent,
+        PasoTresComponent,
+        PasoDosComponent,
+        BtnContinuarComponent,
+        HttpClientTestingModule,
+        ToastrModule.forRoot(),
+      ],
+      providers:[]
     }).compileComponents();
 
     fixture = TestBed.createComponent(RegistroModificacionPageComponent);
     component = fixture.componentInstance;
+    (component as any).wizardComponent = wizardComponentSpy;
     fixture.detectChanges();
   });
 
-  it('debería crearse correctamente', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería inicializar con el paso 1', () => {
-    expect(component.indice).toBe(1);
-    expect(component.datosPasos.indice).toBe(1);
+  it('should initialize pasosSolicitar from PASOS_EXPORTACION', () => {
+    expect(component.pasosSolicitar).toBe(PASOS_EXPORTACION);
   });
 
-  it('debería avanzar al siguiente paso cuando acción sea "cont"', () => {
-    // Simular referencia al wizard
+  it('should initialize datosPasos correctly', () => {
+    expect(component.datosPasos.nroPasos).toBe(PASOS_EXPORTACION.length);
+    expect(component.datosPasos.indice).toBe(1);
+    expect(component.datosPasos.txtBtnAnt).toBe('Anterior');
+    expect(component.datosPasos.txtBtnSig).toBe('Continuar');
+  });
+
+  it('should update indice and call wizardComponent.siguiente on "cont" action', () => {
+    const accion = { valor: 2, accion: 'cont' };
     component.wizardComponent = {
-      siguiente: jest.fn(),
-      atras: jest.fn()
+      siguiente: jest.fn(() => of()),
+      atras: jest.fn(() => of()),
     } as any;
-
-    const action: AccionBoton = { valor: 2, accion: 'cont' };
-    component.getValorIndice(action);
-
+    component.getValorIndice(accion);
     expect(component.indice).toBe(2);
+    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+  });
+
+  it('should update indice and call wizardComponent.atras on "ant" action', () => {
+    const accion = { valor: 1, accion: 'ant' };
+    component.wizardComponent = {
+      siguiente: jest.fn(() => of()),
+      atras: jest.fn(() => of()),
+    } as any;
+    component.getValorIndice(accion);
+    expect(component.indice).toBe(1);
+    expect(component.wizardComponent.atras).toHaveBeenCalled();
+    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+  });
+
+  it('should not update indice or call wizardComponent if valor is out of range', () => {
+    const initialIndice = component.indice;
+    component.wizardComponent = {
+      siguiente: jest.fn(() => of()),
+      atras: jest.fn(() => of()),
+    } as any;
+    component.getValorIndice({ valor: 0, accion: 'cont' });
+    expect(component.indice).toBe(initialIndice);
+    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+
+    component.getValorIndice({
+      valor: PASOS_EXPORTACION.length + 1,
+      accion: 'ant',
+    });
+    expect(component.indice).toBe(initialIndice);
+    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+  });
+
+  it('should call wizardComponent.siguiente only when accion is "cont" and valor is valid', () => {
+    const accion = { valor: 2, accion: 'cont' };
+    component.wizardComponent = {
+      siguiente: jest.fn(() => of()),
+      atras: jest.fn(() => of()),
+    } as any;
+    component.getValorIndice(accion);
+    expect(component.wizardComponent.siguiente).toHaveBeenCalledTimes(1);
+    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+  });
+
+  it('should call wizardComponent.atras only when accion is not "cont" and valor is valid', () => {
+    const accion = { valor: 2, accion: 'ant' };
+    component.wizardComponent = {
+      siguiente: jest.fn(() => of()),
+      atras: jest.fn(() => of()),
+    } as any;
+    component.getValorIndice(accion);
+    expect(component.wizardComponent.atras).toHaveBeenCalledTimes(1);
+    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+  });
+
+  it('should not call wizardComponent methods if valor is less than 1', () => {
+    component.wizardComponent = {
+      siguiente: jest.fn(() => of()),
+      atras: jest.fn(() => of()),
+    } as any;
+    component.getValorIndice({ valor: 0, accion: 'cont' });
+    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+  });
+
+  it('should not call wizardComponent methods if valor is greater than nroPasos', () => {
+     component.wizardComponent = {
+      siguiente: jest.fn(() => of()),
+      atras: jest.fn(() => of()),
+    } as any;
+    component.getValorIndice({ valor: PASOS_EXPORTACION.length + 1, accion: 'cont' });
+    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+  });
+
+  it('should update indice to the correct value when valor is valid', () => {
+    component.wizardComponent = {
+      siguiente: jest.fn(() => of()),
+      atras: jest.fn(() => of()),
+    } as any;
+    component.getValorIndice({ valor: 3, accion: 'cont' });
+    expect(component.indice).toBe(3);
+  });
+
+  it('should not update indice when valor is invalid', () => {
+    const initialIndice = component.indice;
+    component.wizardComponent = {
+      siguiente: jest.fn(() => of()),
+      atras: jest.fn(() => of()),
+    } as any;
+    component.getValorIndice({ valor: -1, accion: 'cont' });
+    expect(component.indice).toBe(initialIndice);
+  });
+
+  it('should handle edge case when valor is exactly 1', () => {
+    component.wizardComponent = {
+      siguiente: jest.fn(() => of()),
+      atras: jest.fn(() => of()),
+    } as any;
+    component.getValorIndice({ valor: 1, accion: 'cont' });
+    expect(component.indice).toBe(1);
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
 
-  it('debería retroceder al paso anterior cuando acción sea "atras"', () => {
+  it('should handle edge case when valor is exactly nroPasos', () => {
+    const lastStep = PASOS_EXPORTACION.length;
     component.wizardComponent = {
-      siguiente: jest.fn(),
-      atras: jest.fn()
+      siguiente: jest.fn(() => of()),
+      atras: jest.fn(() => of()),
     } as any;
-
-    const action: AccionBoton = { valor: 1, accion: 'atras' };
-    component.getValorIndice(action);
-
-    expect(component.indice).toBe(1);
-    expect(component.wizardComponent.atras).toHaveBeenCalled();
-  });
-
-  it('no debería cambiar de paso si el valor está fuera del rango permitido', () => {
-    component.indice = 2;
-    const action: AccionBoton = { valor: 10, accion: 'cont' };
-    component.getValorIndice(action);
-
-    // No debe cambiar el índice
-    expect(component.indice).toBe(2);
+    component.getValorIndice({ valor: lastStep, accion: 'cont' });
+    expect(component.indice).toBe(lastStep);
+    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
 });

@@ -1,19 +1,19 @@
 <div class="container">
-  <h6 class="mt-4">Seleccione el tipo de operación que desea realizar *:</h6>
+  <h6 class="mt-4">Seleccione el tipo de operación que desea realizar*:</h6>
   <form [formGroup]="preOperativeForm">
     <div class="row mt-5">
       <div class="col-md-12">
         <app-input-radio
           [radioOptions]="radioOptions"
           formControlName="ideGenerica1"
-          (change)="setValoresStore('ideGenerica1')"
+          (change)="setValoresStore('ideGenerica1'); disableGenerical()"
           [layout]="'horizontal'"
         ></app-input-radio>
       </div>
     </div>
 
     <div class="row mt-5">
-      <label for="observaciones">justificacion *:</label>
+      <label for="observaciones">justificacion*:</label>
       <div class="col-md-8">
     
       <textarea
@@ -26,8 +26,7 @@
           preOperativeForm.get('observaciones')?.touched &&
           preOperativeForm.get('observaciones')?.invalid
         "
-        [disabled]="!(preOperativeForm.get('ideGenerica1')?.value === 'Modificación')"
-        (change)="setValoresStore('observaciones')"
+        (change)="setValoresStore('observaciones');"
       ></textarea>
           
     </div>

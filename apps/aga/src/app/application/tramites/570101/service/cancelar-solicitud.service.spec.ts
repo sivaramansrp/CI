@@ -58,10 +58,7 @@ describe('CancelarSolicitudService', () => {
 
   it('debería obtener tipo de solicitud', (done) => {
     const mockTipos: CancelarModalidad[] = [{
-      id: 1, descripcion: 'Total',
-      modalidad: function (modalidad: any): unknown {
-        throw new Error('Function not implemented.');
-      }
+      id: 1, descripcion: 'Total'
     }];
     httpClientMock.get.mockReturnValue(of(mockTipos));
 

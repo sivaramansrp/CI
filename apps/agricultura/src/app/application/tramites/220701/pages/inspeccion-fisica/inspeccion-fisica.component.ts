@@ -83,11 +83,24 @@ export class InspeccionFisicaComponent {
    */
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
+      // Calcular el nuevo índice basado en la acción
+      let indiceActualizado = e.valor;
       if (e.accion === 'cont') {
-        this.componenteWizard.siguiente();
-      } else {
-        this.componenteWizard.atras();
+        indiceActualizado = e.valor + 1;
+      } else if (e.accion === 'ant') {
+        indiceActualizado = e.valor - 1;
+      }
+
+      // Validar rango del índice
+      if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
+        this.indice = indiceActualizado;
+        this.datosPasos.indice = this.indice;
+        
+        if (e.accion === 'cont') {
+          this.componenteWizard.siguiente();
+        } else {
+          this.componenteWizard.atras();
+        }
       }
     }
   }

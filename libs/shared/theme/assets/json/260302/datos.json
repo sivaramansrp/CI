@@ -57,10 +57,11 @@
     "denominacionRazon": "Laboratorios Salud Integral S.A. de C.V.",
     "correoElectronico": "contacto@saludintegral.mx",
     "codigoPostal": "03100",
-    "estado": "Ciudad de México",
+    "estado": "101",
     "municipioAlcaldia": "Benito Juárez",
     "localidad": "Narvarte",
     "colonia": "Piedad Narvarte",
+    "calleYNumero": "Av. Ejemplo 123",
     "calle": "Avenida Universidad",
     "lada": "55",
     "telefono": "12345678",
@@ -69,13 +70,14 @@
     "regimen": "Persona Moral",
     "adunasDeEntradas": "Aduana del Aeropuerto Internacional de la Ciudad de México",
     "aeropuerto": false,
-    "publico": "sí",
+    "publico": "Si",
     "representanteRfc": "DEF987654321",
     "representanteNombre": "Juan Carlos",
     "apellidoPaterno": "Hernández",
     "apellidoMaterno": "López",
     "regimenLaMercancia": "Importación definitiva",
-    "aduana": "Aduana de Veracruz"
+    "aduana": "101",
+    "manifesto": true
   },
   "mercanciaForm": {
     "clasificacionProducto": "Medicamento",
@@ -105,8 +107,44 @@
     "paisOrigen": "España"
   },
   "opcionConfigDatos": "TABLA_OPCION_DATA",
-  "scianConfigDatos": [],
-  "tablaMercanciasConfigDatos": [],
+  "scianConfigDatos": [
+    {
+      "clave": "010.001.0010.00",
+      "descripcion": "Medicamento antibiótico de amplio espectro"
+    }   
+  ],
+  "tablaMercanciasConfigDatos": [{
+    "clasificacionProducto": "Medicamento",
+    "especificarClasificacionProducto": "Antibiótico",
+    "denominacionEspecificaProducto": "Amoxicilina",
+    "denominacionDistintiva": "Amoxil",
+    "denominacionComun": "Amoxicilina",
+    "formaFarmaceutica": "Cápsula",
+    "estadoFisico": "Sólido",
+    "fraccionArancelaria": "30049099",
+    "descripcionFraccion": "Medicamentos que contienen antibióticos",
+    "unidadMedidaComercializacion": "Caja",
+    "cantidadUMC": "100",
+    "unidadMedidaTarifa": "Kilogramo",
+    "cantidadUMT": "50",
+    "presentacion": "Caja con 10 cápsulas",
+    "numeroRegistroSanitario": "123456789",
+    "paisOrigen": "México",
+    "paisProcedencia": "México",
+    "tipoProducto": "Farmacéutico",
+    "usoEspecifico": "Tratamiento de infecciones bacterianas",
+    "detallarUsoEspecifico": "Infecciones respiratorias y urinarias",
+    "numeroDePiezasAFabricar": "1000",
+    "descripcionNumeroDePiezas": "Cápsulas",
+    "numeroCAS": "26787-78-0",
+    "cantidadDeLotes": "10",
+    "kgPorLote": "5",
+    "paisDeDestino": "Estados Unidos",
+    "denominacionCumonInternacional": "Amoxicillin",
+    "marcaComercialDenominacion": "Amoxil",
+    "especifique": "N/A",
+    "especifiqueObligatorio": "No aplica"
+  }],
   "seleccionadoopcionDatos": [],
   "seleccionadoScianDatos": [],
   "seleccionadoTablaMercanciasDatos": [],
@@ -118,8 +156,9 @@
     "cadenaDependencia": "SAT-COFEPRIS-2025",
     "estado": "Pagado",
     "llavePago": "LLAVE123456",
-    "fechaPago": "2025-06-10",
-    "importePago": "2500.00"
+    "fechaPago": "10/06/2025",
+    "importePago": "2500.00",
+    "banco": "1"
   },
   "tabSeleccionado": 1
 }

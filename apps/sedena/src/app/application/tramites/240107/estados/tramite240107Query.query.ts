@@ -77,4 +77,13 @@ export class Tramite240107Query extends Query<Tramite240107State> {
   public getMercanciaTablaDatos$ = this.select(
     (state) => state.merccancialTablaDatos
   );
+
+  /**
+   * Observable que emite los datos de los terceros (destinatarios y proveedores) a modificar.
+   *
+   * @property {Observable<DestinoFinal | Proveedor | null>} obtenerTercerosDatos$
+   */
+  public obtenerTercerosDatos$ = this.select((state) => {
+    return state.modificarDestinarioDatos || state.modificarProveedorDatos || null;
+  });
 }

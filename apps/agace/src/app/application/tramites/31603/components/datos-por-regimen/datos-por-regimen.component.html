@@ -22,7 +22,7 @@
         </div>
     </form>
     }
-    @if(valorSeleccionado === 'Si') {
+    @if(valorSeleccionado) {
         <form [formGroup]="indiqueSiForma">
             <div class="row mb-3">  
                 <formas-dinamicas 
@@ -36,14 +36,14 @@
                 </formas-dinamicas>
             </div>
         </form>
-        <app-conceptos></app-conceptos>
+        <app-conceptos [siONo]="valorSeleccionado"></app-conceptos>
     }
     @if (mostrarSoloDepositoFiscal) {
     <form [formGroup]="depositoFiscalForma">
         <div class="row mb-3">  
             <formas-dinamicas 
                 [formularioTitulo]="'Depósito fiscal para someterse al proceso de ensamble y fabricación de vehículos'"
-                [formularioSubtitulo]="'Deberá anexar una copia simple de autorización para el establecimiento del depósito fiscal para someterse al proceso de ensamble y fabricación de vehículos a empresas de la industria terminal vigente.'"
+                [formularioSubtitulo]="'Deberá anexar una copia simple de autorización para el establecimiento del depósito fiscal para someterse al proceso de ensamble y fabricación de vehículos a empresas de la industria terminal vigente'"
                 [forma]="depositoFiscalFormGroup" 
                 [formularioDatos]="depositoFiscalDatos"
                 [estado]="solicitudState"

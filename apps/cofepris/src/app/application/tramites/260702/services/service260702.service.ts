@@ -46,6 +46,9 @@ export class Service260702Service {
     this.tramite260702Store.setLlavedoPago(DATOS.llavedepago);
     this.tramite260702Store.setFechadePago(DATOS.fechadepago);
     this.tramite260702Store.setImportedePago(DATOS.importedepago);
+    this.tramite260702Store.setTipoOperacion(DATOS.tipoOperacion);
+    this.tramite260702Store.setTableData(DATOS.tableData);
+    this.tramite260702Store.setTableData2(DATOS.tableData2);
     this.tramite260702Store.setTipoPersona(DATOS.tipoPersona);
     this.tramite260702Store.setNombre(DATOS.nombre);
     this.tramite260702Store.setPrimerApellido(DATOS.primerApellido);
@@ -70,6 +73,7 @@ export class Service260702Service {
     );
     this.tramite260702Store.setLicenciaSanitaria(DATOS.licenciaSanitaria);
     this.tramite260702Store.setRegimenalque(DATOS.regimenalque);
+    this.tramite260702Store.setHacerlosPublicos(DATOS.hacerlosPublicos);
     this.tramite260702Store.setAduana(DATOS.aduana);
     this.tramite260702Store.setRfc(DATOS.rfc);
     this.tramite260702Store.setLegalRazonSocial(DATOS.legalRazonSocial);

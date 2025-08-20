@@ -1,6 +1,5 @@
 <div class="container my-4">
 
-    <!-- Formulario dinamico de tipo de personas -->
     <form [formGroup]="formularioInfoRegistro">
         <div class="row">
             <div class="col-md-6">
@@ -41,10 +40,10 @@
     <div class="row" *ngIf="isSelectedRegla">
         <div class="col-md-12">
             <div class="pull-right">
-                <button name="agregarServicio" (click)="agregarServiciosAmpliacion()" class="btn btn-primary mx-2">
+                <button name="agregarServicio" (click)="agregarServiciosAmpliacion()" class="btn btn-primary mx-2" [disabled]="esFormularioSoloLectura">
                     Agregar
                 </button>
-                <button name="eliminarServicio" (click)="eliminarServiciosGrid()" class="btn btn-danger">
+                <button name="eliminarServicio" (click)="eliminarServiciosGrid()" class="btn btn-danger" [disabled]="esFormularioSoloLectura">
                     Eliminar
                 </button>
 
@@ -62,8 +61,24 @@
         <div *ngIf="isSelectedRegla">
             <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion"
                 (listaDeFilaSeleccionada)="seleccionarDomicilios($event)"
-                [configuracionTabla]="configuracionTablaSector" [datos]="datosSector"></app-tabla-dinamica>
+                [configuracionTabla]="configuracionTablaSector" [datos]="datosSector" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
         </div>
 
 
+    </div>
+
+    <div class="modal" tabindex="-1" [ngClass]="{'show': mostrarAlerta}"
+        [ngStyle]="{'display': mostrarAlerta ? 'block' : 'none'}">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 350px;">
+            <div class="modal-content">
+                <div class="modal-header" style="height: 50px;">
+                </div>
+                <div class="modal-body">
+                    <p>{{ mensajeDeAlerta }}</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-primary" (click)="aceptar()">Aceptar</button>
+                </div>
+            </div>
+        </div>
     </div>
