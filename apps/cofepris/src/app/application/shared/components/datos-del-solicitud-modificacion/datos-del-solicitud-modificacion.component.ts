@@ -548,14 +548,7 @@ export class DatosDelSolicitudModificacionComponent
     private domicilioEstablecimientoQuery: DatosDelSolicituteSeccionQuery,
      private consultaioQuery: ConsultaioQuery
   ) {
-    // this.consultaioQuery.selectConsultaioState$
-    //   .pipe(
-    //     takeUntil(this.destroy$),
-    //     map((seccionState) => {
-    //       this.esFormularioSoloLectura = seccionState.readonly;
-    //     })
-    //   )
-    //   .subscribe()
+   //
   }
 
   /**
@@ -589,7 +582,17 @@ export class DatosDelSolicitudModificacionComponent
       }
     });
 
-  // Listen for changes on the 'scian' control
+  /**
+ * Se suscribe a los cambios del campo 'scian' del formulario `scianForm`.
+ * 
+ * Cada vez que el valor del campo 'scian' cambia, se actualiza automáticamente
+ * el campo 'descripcionScian' con el nuevo valor seleccionado, sin emitir 
+ * un nuevo evento de cambio (gracias a `emitEvent: false`).
+ * 
+ * La suscripción se mantiene activa hasta que el observable `destroy$` emite un valor, 
+ * lo cual suele hacerse en `ngOnDestroy` para evitar fugas de memoria.
+ *
+ */
   this.scianForm.get('scian')?.valueChanges
     .pipe(takeUntil(this.destroy$))
     .subscribe((selectedId) => {
@@ -689,9 +692,7 @@ eliminarSeleccionados(): void {
       .select()
       .pipe(takeUntil(this.destroy$))
       .subscribe((state) => {
-        // console.log('Loaded state for domicilioEstablecimiento:', state);
         this.domicilioEstablecimiento.patchValue(state, { emitEvent: false });
-        this.domicilioEstablecimiento.get('observaciones')?.setValue(state.observaciones);
       });
     this.domicilioEstablecimientoQuery
       .select()
