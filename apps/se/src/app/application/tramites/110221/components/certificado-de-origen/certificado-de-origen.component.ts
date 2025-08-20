@@ -285,13 +285,17 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy,AfterView
    */
   public nuevaNotificacion!: Notificacion;
   mostrarModal:boolean = false;
+  selectedRow!: SeleccionadasTabla;
 
     modalInstance!: Modal;
+      modalInstance2!: Modal;
       /**
        * @descripcion
        * Referencia al elemento del modal de modificación.
        */
       @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
+      @ViewChild('modifyModal2', { static: false }) modifyModal2!: ElementRef;
+      
   /**
    * Constructor del componente.
    * @param fb Constructor de formularios reactivos
@@ -362,6 +366,9 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy,AfterView
     if (this.modifyModal) {
       this.modalInstance = new Modal(this.modifyModal.nativeElement);
     }
+   if (this.modifyModal2) {
+  this.modalInstance2 = new Modal(this.modifyModal2.nativeElement);
+   }
   }
   /**
    * Método que se ejecuta al destruir el componente.
@@ -457,9 +464,6 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy,AfterView
    * Busca mercancías disponibles basándose en el tratado seleccionado.
    */
   buscarMercancias(): void {
-  if (this.modalInstance) {
-      this.modalInstance.show();
-    }
     if (this.registroForm.get('validacionForm.tratado')?.value === 1) {
       this.hayMercanciasDisponibles = false;
     } else {
@@ -479,6 +483,13 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy,AfterView
   this.modalInstance.hide();
   }
 
+  onFilaSeleccionada(event:ColumnasTabla):void{
+    if(this.modalInstance){
+this.modalInstance.show();
+this.mercanciaForm.get('validacionMercanciaForm')?.patchValue(event);
+    } 
+  }
+
   /**
    * Agrega una nueva mercancía al formulario.
    */
@@ -492,25 +503,28 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy,AfterView
     if (this.mercanciaForm.valid) {
       this.esMercanciaEnEdicion = true;
       this.esFormulario = false;
-      this.mercanciaSeleccionadasTablaData.splice(0, 1, {
-        fraccionArancelaria:
-          this.mercanciaForm?.value.validacionMercanciaForm
-            .fraccionMercanArancelaria,
+      const ROW = {
+        id:Math.floor(Math.random() * 1000),
+        fraccionArancelaria: this.mercanciaForm?.value.validacionMercanciaForm.fraccionMercanciaArancelaria,
         cantidad: this.mercanciaForm?.value.validacionMercanciaForm.cantidad,
-        unidadMedida:
-          this.mercanciaForm?.value.validacionMercanciaForm.unidadMedida,
-        valorMercancia:
-          this.mercanciaForm?.value.validacionMercanciaForm.valordelamercancia,
-        tipoFactura:
-          this.mercanciaForm?.value.validacionMercanciaForm.tipoFactura,
-        numFactura:
-          this.mercanciaForm?.value.validacionMercanciaForm.numeroFactura,
-        complementoDescripcion:
-          this.mercanciaForm?.value.validacionMercanciaForm
-            .complementoDelaDescripcion,
-        fechaFactura: this.mercanciaForm?.value.validacionMercanciaForm.fecha,
-      });
+    unidadMedida: this.mercanciaForm?.value.validacionMercanciaForm.umc,
+    valorMercancia: this.mercanciaForm?.value.validacionMercanciaForm.valorMercancia,
+    tipoFactura: this.mercanciaForm?.value.validacionMercanciaForm.tipoFactura,
+    numFactura: this.mercanciaForm?.value.validacionMercanciaForm.numeroFactura,
+    complementoDescripcion: this.mercanciaForm?.value.validacionMercanciaForm.complementoDelaDescripcion,
+    fechaFactura: this.mercanciaForm?.value.validacionMercanciaForm.fecha
     }
+  this.mercanciaSeleccionadasTablaData = [
+    ...this.mercanciaSeleccionadasTablaData,
+    ROW,
+  ];
+this.mercanciaForm.get('validacionMercanciaForm')?.reset(); 
+   this.modalInstance.hide();
+    }
+  }
+
+onFilaSeleccionadaradio(event: SeleccionadasTabla): void {
+this.selectedRow = event;
   }
 
   /**
@@ -526,6 +540,14 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy,AfterView
     this.getTipoFactura();
   }
 
+cerrarEdicionMercancia():void{
+  if(this.selectedRow){
+this.mercanciaSeleccionadasTablaData = this.mercanciaSeleccionadasTablaData.filter((item) => item.id !== this.selectedRow.id);
+  }
+  else{
+    this.errorMessageExportador();
+  }
+}
   /**
    * Configura los encabezados y cuerpo de la tabla de mercancías.
    */
@@ -538,7 +560,10 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy,AfterView
    * Activa el formulario para cargar archivos.
    */
   cargaArchivo(): void {
-    this.cargarArchivo = true;
+    if(this.modifyModal2){
+   this.modalInstance2.show();
+    }
+ 
   }
 
   /**
@@ -547,6 +572,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy,AfterView
   darError(): void {
     this.mostrarErrores = true;
     this.cargarArchivo = false;
+    this.modalInstance2.hide();
   }
 
   /**
@@ -623,7 +649,8 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy,AfterView
    * Cierra el formulario de carga de archivos.
    */
   cerrarAdjuntarArchivoMercancias(): void {
-    this.cargarArchivo = false;
+    this.cargarArchivo=false;
+  this.modalInstance2.hide();
   }
 
   /**
@@ -762,7 +789,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy,AfterView
         numeroDeSerie: [
           this.solicitudState?.numeroDeSerie || ''
         ],
-        tipoFactura: [this.solicitudState?.tipoFactura, [Validators.required]],
+        tipoFactura: [this.solicitudState?.tipoFactura],
         fecha: [this.solicitudState?.fecha, [Validators.required]],
         numeroFactura: [
           this.solicitudState?.numeroFactura,

@@ -192,12 +192,21 @@
 ],
 "mercanciaDisponsiblesTablaDatos":[
   {
-    "fraccionArancelaria": "30049099",
-    "nombreTecnico": "Paracetamol",
-    "nombreComercial": "Tylenol",
-    "numeroRegistroProductos": "REG-123456",
-    "fechaExpedicion": "2025-01-01",
-    "fechaVencimiento": "2027-01-01"
+    "fraccionMercanciaArancelaria": "12345678",
+    "nombreTecnico": "Producto Técnico Ejemplo",
+    "nombreComercialDelaMercancia": "Mercancía Comercial Ejemplo",
+    "criterioParaConferir": "Criterio de Ejemplo",
+    "nombreEnIngles": "Sample Technical Product",
+    "valordeContenidoRegional": "75%",
+    "cantidad": "100",
+    "umc": "kg",
+    "valorDelaMercancia": "5000",
+    "complementoDelaDescripcion": "Descripción complementaria de ejemplo",
+    "numeroDeSerie": "SN123456789",
+    "tipoFactura": "Factura Comercial",
+    "fecha": "2024-06-01",
+    "numeroFactura": "FAC-20240601-001",
+    "otrasInstancias": "Instancia adicional de ejemplo"
   }
   ]
 }
