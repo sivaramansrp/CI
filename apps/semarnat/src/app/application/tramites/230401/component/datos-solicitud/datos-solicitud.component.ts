@@ -11,7 +11,7 @@ import {
   SeccionLibQuery,
   TablaSeleccion,
   ValidacionesFormularioService,
-  NotificacionesComponent
+  
 } from '@ng-mf/data-access-user';
 import {
   CONFIGURACION_SUSTANCIAS_SENSIBLES,
@@ -19,7 +19,7 @@ import {
   CROSLISTA_DE_PAISES,
   LISTA_DE_ENTRADA_PERSONALIZADA,
 } from '../../enum/pantallas-constante.enum';
-import { Component, OnDestroy, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -70,17 +70,10 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   public confirmacionAlerta: boolean = false;
 
   /**
-   * @property {any[]} scianLista
-   * Lista de registros SCIAN seleccionados.
+   * @property {boolean} mostrarNotificacion
+   * Controla la visibilidad del modal de notificación de eliminación exitosa.
    */
-  public scianLista: any[] = [];
-
-  /**
-   * @description
-   * Objeto que representa una nueva notificación de eliminación.
-   * Se utiliza para mostrar mensajes de alerta o información al usuario.
-   */
-  public nuevaNotificacionEliminar!: Notificacion;
+  public mostrarNotificacion: boolean = false;
 
   /**
    * @description
@@ -96,6 +89,22 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     tiempoDeEspera: 2000,
     txtBtnAceptar: 'Aceptar',
     txtBtnCancelar: 'Cancelar',
+  };
+
+  /**
+   * @property {Notificacion} notificacionEliminacionExitosa
+   * Configuración para el modal de eliminación exitosa.
+   */
+  public notificacionEliminacionExitosa: Notificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'success',
+    modo: 'info',
+    titulo: '',
+    mensaje: 'El registro fue eliminado correctamente',
+    cerrar: true,
+    tiempoDeEspera: 3000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: '',
   };
 
   /**
@@ -1021,17 +1030,17 @@ creatFormSolicitud(): void {
     }
 
     // Cargar los datos de la sustancia seleccionada en el formulario
-    const sustanciaSeleccionada = this.sustanciasSensiblesSeleccionadas[0];
+    const SUSTANCIA_SELECCIONADA = this.sustanciasSensiblesSeleccionadas[0];
     this.FormSolicitud.patchValue({
-      numeroCas: sustanciaSeleccionada.numeroCAS,
-      descripcionNoArancelaria: sustanciaSeleccionada.descripcionNoArancelaria,
-      nombreQuimico: sustanciaSeleccionada.nombreQuimico
+      numeroCas: SUSTANCIA_SELECCIONADA.numeroCAS,
+      descripcionNoArancelaria: SUSTANCIA_SELECCIONADA.descripcionNoArancelaria,
+      nombreQuimico: SUSTANCIA_SELECCIONADA.nombreQuimico
     });
 
     // Opcional: Marcar que se está modificando un registro existente
     // Esto puede ser útil para cambiar el comportamiento del botón "Agregar"
     this.modoModificacion = true;
-    this.sustanciaEnModificacion = sustanciaSeleccionada;
+    this.sustanciaEnModificacion = SUSTANCIA_SELECCIONADA;
   }
 
   /**
@@ -1062,7 +1071,7 @@ creatFormSolicitud(): void {
       nombreQuimico: this.FormSolicitud.get('nombreQuimico')?.value || `Nombre químico ${this.FormSolicitud.get('numeroCas')?.value}`,
     };
 
-    let UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS = [...this.sustanciasSensiblesTablaDatos];
+    const UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS = [...this.sustanciasSensiblesTablaDatos];
 
     if (this.modoModificacion && this.sustanciaEnModificacion) {
       // Actualizar la sustancia existente
@@ -1194,19 +1203,33 @@ creatFormSolicitud(): void {
    * ### Descripción:
    * - Si `borrar` es `true`:
    *   - Llama al método `eliminarListaDeNumeros` para eliminar las sustancias seleccionadas.
+   *   - Muestra el modal de eliminación exitosa.
+   * - Si `borrar` es `false`: Solo cierra el modal de confirmación.
    * - Independientemente de la acción, desactiva la alerta de confirmación (`confirmacionAlerta = false`).
    *
    * ### Ejemplo de uso:
    * ```ts
-   * confirmarEliminacionSustancias(true); // Elimina las sustancias
+   * confirmarEliminacionSustancias(true); // Elimina las sustancias y muestra confirmación
    * confirmarEliminacionSustancias(false); // Cancela la eliminación
    * ```
    */
   confirmarEliminacionSustancias(borrar: boolean): void {
+    this.confirmacionAlerta = false;
+    
     if (borrar) {
       this.eliminarListaDeNumeros();
+      // Mostrar el modal de eliminación exitosa
+      this.mostrarNotificacion = true;
     }
-    this.confirmacionAlerta = false;
+  }
+
+  /**
+   * Cierra el modal de notificación de eliminación exitosa.
+   *
+   * @param evento - Evento del modal (no utilizado en este caso)
+   */
+  cerrarNotificacionEliminacion(evento: boolean): void {
+    this.mostrarNotificacion = false;
   }
 
   /**
