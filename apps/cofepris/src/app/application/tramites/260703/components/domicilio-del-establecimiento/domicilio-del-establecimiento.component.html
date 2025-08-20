@@ -3,7 +3,7 @@
   <form [formGroup]="domicilloDelEstablecimientoForm">
     <div class="row">
       <div class="col-md-4">
-        <label for="codigoPostal" class="form-label">Código postal *:</label>
+        <label for="codigoPostal" class="form-label">Código postal*:</label>
         <input
           type="text"
           name="codigoPostal"
@@ -38,7 +38,6 @@
       <div class="col-md-4">
         <app-catalogo-select
           [catalogo]="estado"
-          [placeholder]="'VERACRUZ'"
           formControlName="estado"
           [label]="'Estado'"
           [required]="true"
@@ -48,7 +47,7 @@
       </div>
       <div class="col-md-4">
         <label for="descripcionMunicipio" class="form-label"
-          >Municipio y alcaldía *:</label
+          >Municipio y alcaldía*:</label
         >
         <input
           type="text"
@@ -116,7 +115,7 @@
     </div>
     <div class="row">
       <div class="col-md-8">
-        <label for="calle" class="form-label">Calle *:</label>
+        <label for="calle" class="form-label">Calle*:</label>
         <input
           type="text"
           name="calle"
@@ -160,7 +159,7 @@
         />
       </div>
       <div class="col-md-3">
-        <label for="telefono" class="form-label">Teléfono *:</label>
+        <label for="telefono" class="form-label">Teléfono*:</label>
         <input
           type="text"
           name="telefono"
@@ -195,7 +194,7 @@
 
     <div class="row" class="mt-5">
       <div class="form-group">
-        <label class="form-label" for="scian">S.C.I.A.N. *:</label>
+        <label class="form-label" for="scian">S.C.I.A.N.*:</label>
         <app-tabla-dinamica
           [configuracionTabla]="configuracionTabla"
           [datos]="scianDatos"
@@ -206,7 +205,7 @@
       </div>
       <div class="row" style="padding-bottom: 20px; text-align: right">
         <div>
-          <button type="button" class="btn me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+          <button type="button" class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
           <button
             type="button"
             class="btn btn-primary me-2"
@@ -226,18 +225,26 @@
             id="funcionamiento"
             formControlName="funcionamiento"
             (change)="setValoresStore('funcionamiento')"
-          />Aviso de funcionamiento *
+          />Aviso de funcionamiento*
         </label>
       </div>
       <div class="col-md-4">
         <label class="form-label" for="licencia" 
         *ngIf='this.domicilloDelEstablecimientoForm.get("funcionamiento")?.value'
-          >No. de licencia sanitaria:
+          >No. de licencia sanitaria: <span
+          class="bi bi-question-circle-fill"
+          title=""
+          data-bs-toggle="tooltip"
+        ></span>
         </label>
         <label class="form-label" for="licencia"
         *ngIf='!this.domicilloDelEstablecimientoForm.get("funcionamiento")?.value'
 
-          >No. de licencia sanitaria*:
+          >No. de licencia sanitaria*: <span
+          class="bi bi-question-circle-fill"
+          title=""
+          data-bs-toggle="tooltip"
+        ></span>
         </label>
         <input
           type="text"
@@ -278,7 +285,7 @@
     </div>
     <div class="row mt-5">
       <div class="form-group">
-        <label class="form-label" for="mercancias">Mercancías *:</label>
+        <label class="form-label" for="mercancias">Mercancías*:</label>
         <app-tabla-dinamica
           [configuracionTabla]="configuracionTablaMercancia"
           [datos]="mercanciaDatos"

@@ -9,6 +9,10 @@ export interface BandejaDeTareasPendientes {
     origin: string;
     fechaInicioTramite: string;
     diasHabilesTranscurridos: string;
+    action_id?: string;
+    current_user?: string;
+    id_solicitud?: string;
+    nombre_pagina?: string;
 }
 
 export interface SeleccionadoDepartamento {
@@ -30,6 +34,10 @@ export interface SeleccionadoTramite {
     fechaDeAsignacion: string;
     estadoDeTramite: string;
     origin: string;
+    action_id: string;
+    current_user: string;
+    id_solicitud: string;
+    nombre_pagina: string;
 }
 
 /**

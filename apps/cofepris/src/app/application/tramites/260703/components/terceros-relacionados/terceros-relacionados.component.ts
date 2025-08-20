@@ -33,7 +33,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       clave: (item: Destinatario) => item.nombre,
       orden: 1,
     },
-    { encabezado: 'R.F.C', clave: (item: Destinatario) => item.rfc, orden: 2 },
+    { encabezado: 'R.F.C.', clave: (item: Destinatario) => item.rfc, orden: 2 },
     { encabezado: 'CURP', clave: (item: Destinatario) => item.curp, orden: 3 },
     {
       encabezado: 'Teléfono',
@@ -109,7 +109,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       clave: (item: Fabricante) => item.nombre,
       orden: 1,
     },
-    { encabezado: 'R.F.C', clave: (item: Fabricante) => item.rfc, orden: 2 },
+    { encabezado: 'R.F.C.', clave: (item: Fabricante) => item.rfc, orden: 2 },
     { encabezado: 'CURP', clave: (item: Fabricante) => item.curp, orden: 3 },
     {
       encabezado: 'Teléfono',
@@ -224,7 +224,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * filaSeleccionada Lista de destinatarios seleccionados.
    */
   manejarFilaSeleccionadaDestinatario(filaSeleccionada: Destinatario[]): void {
-    this.destinatarioTablaSeleccion = filaSeleccionada.length > 0;
+    this.destinatarioTablaSeleccion = Boolean(filaSeleccionada && filaSeleccionada.length > 0);
   }
 
   /**
@@ -232,7 +232,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * filaSeleccionada Lista de fabricantes seleccionados.
    */
   manejarFilaSeleccionadaFabricante(filaSeleccionada: Fabricante[]): void {
-    this.fabricanteTablaSeleccion = filaSeleccionada.length > 0;
+    this.fabricanteTablaSeleccion = Boolean(filaSeleccionada && filaSeleccionada.length > 0);
   }
 
   /**

@@ -37,6 +37,7 @@
                 [formularioDatos]="permisoDesistirFormDatos"
                 [estado]="solicitudState"
                 [soloLectura]="esFormularioSoloLectura"
+                [templateMap]="templateMap"
                 (emitirCambioDeValor)="establecerCambioDeValor($event)"
                 >
             </formas-dinamicas>
@@ -45,7 +46,7 @@
     <form [formGroup]="porcentajeMontoForm">
         <div class="col-md-6">
             <div class="form-group">
-                <label class="form-label" for="telefono"><span class="text-danger">* </span>Porcentaje:</label>
+                <label class="form-label" for="telefono">Porcentaje*:</label>
                 <input class="form-control" id="telefono" formControlName="porcentaje" placeholder="" type="text"/>
                 <div *ngIf="porcentajeMontoForm.controls['porcentaje'].invalid && porcentajeMontoForm.controls['porcentaje'].touched">
                     <div class="mensaje-error" *ngIf="porcentajeMontoForm.controls['porcentaje'].errors?.['required']">
@@ -62,7 +63,7 @@
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                <label class="form-label" for="telefono"><span class="text-danger">* </span>Monto:</label>
+                <label class="form-label" for="telefono">Monto*:</label>
                 <input class="form-control" id="telefono" formControlName="monto" placeholder="" type="text"/>
                 <div *ngIf="porcentajeMontoForm.controls['monto'].invalid && porcentajeMontoForm.controls['monto'].touched">
                     <div class="mensaje-error" *ngIf="porcentajeMontoForm.controls['monto'].errors?.['required']">
@@ -99,6 +100,7 @@
                 [formularioTitulo]="'De las siguientes opciones, declare por lo menos una'"
                 [forma]="deLasSiguientesFormGroup" 
                 [formularioDatos]="deLasSiguientesDatos"
+                [templateMap]="templateMap"
                 [estado]="solicitudState"
                 [soloLectura]="esFormularioSoloLectura"
                 (emitirCambioDeValor)="establecerCambioDeValor($event)"
@@ -118,8 +120,43 @@
                 >
             </formas-dinamicas>
         </div>
+
+        <ng-template #customTemplate2>
+            <div class="d-flex">
+                <label class="form-label w-100" for="fechaDeOperaciones">Fecha de Operaciones</label>
+                <input class="form-control" type="date" name="fechaDeOperaciones" id="fechaDeOperaciones" formControlName="fechaDeOperaciones" [ngClass]="esValido('fechaDeOperaciones') ? 'required' : ''" (change)="valorCambio($event, 'fechaDeOperaciones')"/>
+            </div>
+        </ng-template>
+
+        <ng-template #customTemplate3>
+            <div class="d-flex">
+                <label class="form-label w-100" for="numeroDeEmpleados">Número de Empleados</label>
+                <input class="form-control" type="text" name="numeroDeEmpleados" id="numeroDeEmpleados" formControlName="numeroDeEmpleados" [ngClass]="esValido('numeroDeEmpleados') ? 'required' : ''" (change)="valorCambio($event, 'numeroDeEmpleados')"/>
+            </div>
+        </ng-template>
+
+        <ng-template #customTemplate4>
+            <div class="d-flex">
+                <label class="form-label w-100" for="total">Total de Maquinaria</label>
+                <input class="form-control" type="text" name="total" id="total" formControlName="total" [ngClass]="esValido('total') ? 'required' : ''" (change)="valorCambio($event, 'total')"/>
+            </div>
+        </ng-template>
     </form>
     <div class="d-flex justify-content-end mt-5">
         <button type="button" class="btn btn-danger" [disabled]="esFormularioSoloLectura">Borrar datos del pago</button>
     </div>
 </div>
+
+<ng-template #customTemplate1>
+    @if (mostrarCustomSection1) {
+        <div class="alert alert-info mt-3">
+            <div class="form-check">
+                <p>
+                    Anexe documentación que acredite que está al amparo del procedimiento 
+                    previsto en antepenúltimo párrafo de la Regla de Carácter General en 
+                    Materia de Comercio Exterior 5.2.13, o que ha efectuado el pago de los créditos
+                </p>
+            </div>
+        </div>
+    }
+  </ng-template>

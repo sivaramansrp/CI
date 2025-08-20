@@ -244,12 +244,16 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
       ROW_OBJETO.estadoDeTramite,
       !this.tieneBandeja ? false : true,
       false,
-      true
+      true,
+      ROW_OBJETO.action_id,
+      ROW_OBJETO.current_user,
+      ROW_OBJETO.id_solicitud,
+      ROW_OBJETO.nombre_pagina
     );
     if (!this.tieneBandeja) {
       this.router.navigate([this.procedureUrl]);
     }
-    if (ORIGIN === 'FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO') {
+    if (ORIGIN === 'FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO' || ORIGIN === 'AtenderRequerimiento') {
       this.router.navigate([
         `/${this.tramiteData[0].department}/proceso-requerimiento`,
       ]);
