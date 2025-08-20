@@ -3,8 +3,11 @@ import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { API_GET_INICAR_DICTAMEN, NUMFOLIOTRAMITE } from '../../../constantes/130118/api-constants';
+import { API_GET_INICAR_DICTAMEN, API_POST_INICIAR_REQUERIMIENTO, NUMFOLIOTRAMITE, TRAMITE } from '../../../constantes/130118/api-constants';
 import { Observable } from 'rxjs';
+
+import { IniciarRequerimientoRequest } from '../../models/evaluar/request/iniciar-requerimiento-request.model';
+import { IniciarRequerimientoResponse } from '@libs/shared/data-access-user/src/core/models/130118/Iniciar-requerimiento-response.model';
 
 
 @Injectable({
@@ -36,6 +39,20 @@ export class IniciarService {
   getIniciarDictamen(numFolio: string): Observable<BaseResponse<null>> {
     const ENDPOINT = `${this.host}${API_GET_INICAR_DICTAMEN.replace(NUMFOLIOTRAMITE, numFolio)}`;
     return this.http.get<BaseResponse<null>>(ENDPOINT);
+  }
+
+  /** 
+   * Inicia un nuevo requerimiento en el sistema
+   * @param tramite - Número de trámite asociado al requerimiento
+   * @param numFolio - Número de folio del trámite
+   * @param PAYLOAD - Datos para iniciar el requerimiento
+   * @returns Observable con la respuesta del servidor del requerimiento iniciado
+   */
+  postIniciarRequerimiento(tramite: number, numFolio: string, PAYLOAD: IniciarRequerimientoRequest):
+    Observable<BaseResponse<IniciarRequerimientoResponse>> {
+    const ENDPOINT = `${this.host}${API_POST_INICIAR_REQUERIMIENTO.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolio)}`;
+
+    return this.http.post<BaseResponse<IniciarRequerimientoResponse>>(ENDPOINT, PAYLOAD);
   }
 
 }
