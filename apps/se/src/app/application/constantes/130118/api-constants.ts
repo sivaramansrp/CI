@@ -145,3 +145,15 @@ export const API_GET_ENVIO_DIGITAL = `tramite/${NUMFOLIOTRAMITE}/envio-digital/d
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/consulta-detalle%20opninion
  */
 export const API_GET_OPINION = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/opiniones`
+
+/**
+ * API para iniciar requerimiento trámite 130118
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Requerimiento/iniciar-generar-requerimiento
+ */
+export const API_POST_INICIAR_REQUERIMIENTO = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/requerimiento/iniciar`;
+
+/**
+ * API para guardar el requerimiento del trámite 130118
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Requerimiento/guardar-requerimiento
+ */
+export const API_POST_GUARDAR_REQUERIMIENTO = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/requerimiento/generar/guardar`
