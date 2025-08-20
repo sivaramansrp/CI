@@ -44,6 +44,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { Terceros260211Query } from '../../../../estados/queries/terceros260211.query';
 import { Terceros260211State } from '../../../../estados/tramites/terceros260211.store';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { Tramite260212Query } from '../../../../estados/queries/tramite260212.query';
 import { Tramite260212Store } from '../../../../estados/tramites/tramite260212.store';
 
 /**
@@ -409,6 +410,8 @@ editFabricanteIndex?: number;
     private tercerosService: TercerosService,
     private consultaioQuery: ConsultaioQuery,
          private terceros260211Query: Terceros260211Query,
+           private tramite260212Query:Tramite260212Query
+       
   ) {}
 
   /**
@@ -431,7 +434,18 @@ editFabricanteIndex?: number;
         this.tablaEncabezadoData = (data as { columns: string[] }).columns;
       }
     });
-
+    /**
+ * Suscripción al observable `selectTereceros$` del store `Tramite260212Query`.
+ * Permite actualizar las tablas de datos de la UI con los valores almacenados en el store.
+ * Si los arreglos del store contienen elementos, se asignan a las propiedades correspondientes
+ * del componente para mostrarlos en la tabla.
+ */
+   this.tramite260212Query.selectTereceros$.subscribe(state => {
+    this.fabricanteTablaDatos = state.Fabricantes;
+    this.proveedorTablaDatos = state.Proveedores;
+    this.facturadorTablaDatos = state.Facturadores;
+    this.destinatarioFinalTablaDatos = state.Destinatarios;
+  });
     /**
      * Obtiene los datos para los selectores desde el servicio de terceros.
      * Actualiza la propiedad `dropdownData` con los datos obtenidos.
@@ -510,6 +524,7 @@ eliminarFabricante(): void {
   );
   // Limpia la selección
   this.fabricanteSeleccionadoDatos = [];
+  this.tramite260212Store.setFabricantes(this.fabricanteTablaDatos);
 }
 /**
  * Elimina los destinatarioFinalTablaDatos de la tabla.
@@ -521,6 +536,7 @@ eliminarDestinario(): void {
   );
   // Limpia la selección
   this.destinatarioSeleccionadoDatos = [];
+  this.tramite260212Store.setDestinatarios(this.destinatarioFinalTablaDatos);
 }
 /**
  * Elimina los proveedorSeleccionadoDatos de la tabla.
@@ -532,6 +548,7 @@ eliminarProveedor(): void {
   );
   // Limpia la selección
   this.proveedorSeleccionadoDatos = [];
+  this.tramite260212Store.setProveedors(this.proveedorTablaDatos);
 }
 /**
  * Elimina los facturadorSeleccionadoDatos de la tabla.
@@ -543,6 +560,7 @@ eliminarFacturador(): void {
   );
   // Limpia la selección
   this.facturadorSeleccionadoDatos = [];
+  this.tramite260212Store.setFacturadors(this.facturadorTablaDatos);
 }
   /**
    * Inicializa el formulario para agregar un fabricante.
@@ -692,6 +710,7 @@ submitFabricantesForm(): void {
     this.agregarFabricanteFormGroup.controls[key].disable();
   }
 });
+ this.tramite260212Store.setFabricantes(this.fabricanteTablaDatos);
  /**
      * Cambia la visibilidad de las secciones del componente.
      */
@@ -721,6 +740,7 @@ submitDestinatariosForm():void {
       this.agregarDestinatarioFormGroup.controls[key].disable();
     }
   });
+  this.tramite260212Store.setDestinatarios(this.destinatarioFinalTablaDatos);
   this.showTableDiv = !this.showTableDiv;
   this.showDestinatario = !this.showDestinatario;
    this.destinatarioSeleccionadoDatos = [];
@@ -753,7 +773,7 @@ submitProveedoresForm(): void {
     }
   });
 
-  
+  this.tramite260212Store.setProveedors(this.proveedorTablaDatos);
   this.showTableDiv = !this.showTableDiv;
   this.showProveedor = !this.showProveedor;
    this.proveedorSeleccionadoDatos = [];
@@ -785,7 +805,7 @@ submitFacturadoresForm(): void {
       this.agregarFacturadorFormGroup.controls[key].disable();
     }
   });
-
+this.tramite260212Store.setFacturadors(this.facturadorTablaDatos);
   this.showTableDiv = !this.showTableDiv;
   this.showFacturador = !this.showFacturador;
   this.facturadorSeleccionadoDatos = [];
@@ -1541,173 +1561,6 @@ submitFacturadoresForm(): void {
      */
     this.showTableDiv = !this.showTableDiv;
     this.showFabricante = !this.showFabricante;
-  }
-
-  /**
-   * Envía el formulario de Destinatario y actualiza los datos en el store.
-   * Obtiene los valores seleccionados de los dropdowns y crea una nueva fila para la tabla.
-   *
-   * @description Este método es llamado al enviar el formulario de agregar un destinatario.
-   */
-  submitDestinatarioForm(): void {
-    if (this.agregarDestinatarioFormGroup.valid) {
-    /**
-     * Obtiene el valor de la localidad seleccionada en el formulario.
-     */
-    const LOCALIDAD_VALUE = this.localidadDropdownData.find(
-      (item: Catalogo) =>
-        item.id === Number(this.agregarDestinatarioFormGroup.value.localidad)
-    )?.descripcion;
-
-    /**
-     * Obtiene el valor de la pais seleccionada en el formulario.
-     */
-    const PAIS_VALUE = this.paisDropdownData.find(
-      (item: Catalogo) =>
-        item.id === Number(this.agregarDestinatarioFormGroup.value.pais)
-    )?.descripcion;
-
-    /**
-     * Obtiene el valor del municipio seleccionado en el formulario.
-     */
-    const MUNICIPIO_VALUE = this.municipioDropdownData.find(
-      (item: Catalogo) =>
-        item.id ===
-        Number(this.agregarDestinatarioFormGroup.value.municipioAlcaldia)
-    )?.descripcion;
-
-    /**
-     * Obtiene el valor del código postal seleccionado en el formulario.
-     */
-    const CODIGO_POSTAL_VALUE = this.codigoPostalDropdownData.find(
-      (item: Catalogo) =>
-        item.id ===
-        Number(this.agregarDestinatarioFormGroup.value.codigoPostaloEquivalente)
-    )?.descripcion;
-
-    /**
-     * Obtiene el valor de la colonia seleccionada en el formulario.
-     */
-    const COLONIA_VALUE = this.coloniaDropdownData.find(
-      (item: Catalogo) =>
-        item.id === Number(this.agregarDestinatarioFormGroup.value.colonia)
-    )?.descripcion;
-
-    /**
-     * Crea una nueva fila para la tabla de destinatarios.
-     * Esta fila contiene los datos del formulario de agregar un destinatario.
-     *
-     * @description Esta fila se agrega a la lista de filas del destinatario.
-     */
-    const DESTINATARIO_ROW = {
-      /**
-       * Datos de la fila que se mostrarán en la tabla.
-       * Cada elemento del arreglo corresponde a una columna de la tabla.
-       */
-      tbodyData: [
-        /**
-         * Denominación o razón social del destinatario.
-         */
-        this.agregarDestinatarioFormGroup.value.denominacionRazonSocial,
-
-        /**
-         * RFC del destinatario.
-         */
-        this.agregarDestinatarioFormGroup.value.rfc,
-
-        /**
-         * CURP del destinatario.
-         */
-        this.agregarDestinatarioFormGroup.value.curp,
-
-        /**
-         * Teléfono del destinatario, incluyendo lada.
-         */
-        this.agregarDestinatarioFormGroup.value.lada +
-          '-' +
-          this.agregarDestinatarioFormGroup.value.telefono,
-
-        /**
-         * Correo electrónico del destinatario.
-         */
-        this.agregarDestinatarioFormGroup.value.correoElectronico,
-
-        /**
-         * Calle del destinatario.
-         */
-        this.agregarDestinatarioFormGroup.value.calle,
-
-        /**
-         * Número exterior del destinatario.
-         */
-        this.agregarDestinatarioFormGroup.value.numeroExterior,
-
-        /**
-         * Número interior del destinatario.
-         */
-        this.agregarDestinatarioFormGroup.value.numeroInterior,
-
-        /**
-         * País del destinatario.
-         */
-        PAIS_VALUE,
-
-        /**
-         * Colonia del destinatario.
-         */
-        COLONIA_VALUE,
-
-        /**
-         * Municipio del destinatario.
-         */
-
-        MUNICIPIO_VALUE,
-
-        /**
-         * Localidad del destinatario.
-         */
-        LOCALIDAD_VALUE,
-
-        /**
-         * Entidad federativa del destinatario.
-         */
-        this.agregarDestinatarioFormGroup.value.entidadFederativa,
-
-        /**
-         * Estado o localidad del destinatario.
-         */
-        this.agregarDestinatarioFormGroup.value.estadoLocalidad,
-
-        /**
-         * Código postal del destinatario.
-         */
-        CODIGO_POSTAL_VALUE,
-
-        /**
-         * Colonia equivalente del destinatario.
-         */
-        this.agregarDestinatarioFormGroup.value.coloniaoEquivalente,
-      ],
-    };
-
-    /**
-     * Agrega la nueva fila a la lista de filas del destinatario.
-     */
-    this.destinatarioRowData.push(DESTINATARIO_ROW);
-
-    /**
-     * Actualiza el estado del store con los nuevos datos del destinatario.
-     */
-    this.tramite260212Store.setDestinatario(this.destinatarioRowData);
-
-    /**
-     * Cambia la visibilidad de las secciones del componente.
-     */
-    this.showTableDiv = !this.showTableDiv;
-    this.showDestinatario = !this.showDestinatario;
-  } else {
-    this.agregarDestinatarioFormGroup.markAllAsTouched();
-  }
   }
 
   /**
