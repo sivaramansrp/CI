@@ -74,7 +74,6 @@ interface RadioOpcion {
     AlertComponent,
     TablaDinamicaComponent,
     InputFechaComponent,
-    InputRadioComponent
   ],
   templateUrl: './certificado-de-origen.component.html',
   styleUrl: './certificado-de-origen.component.css',
