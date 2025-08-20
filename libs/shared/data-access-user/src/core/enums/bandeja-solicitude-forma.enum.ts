@@ -159,4 +159,21 @@ export const BANDEJA_DE_TAREAS_PENDIENTES_FORMA = [
     valorPredeterminado: '',
     marginTop: 0
   },
+  {
+    id: 'rfc',
+    labelNombre: 'RFC',
+    campo: 'rfc',
+    clase: 'col-md-6',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [
+      {
+        tipo: 'required'
+      }
+    ],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0
+  },
 ];
