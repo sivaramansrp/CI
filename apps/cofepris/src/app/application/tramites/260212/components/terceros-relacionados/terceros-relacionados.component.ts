@@ -3,7 +3,7 @@
  */
 import { CommonModule } from '@angular/common';
 
-import { AlertComponent, ConsultaioQuery } from '@ng-mf/data-access-user';
+import { AlertComponent, ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import {
@@ -28,13 +28,16 @@ import {
 import { TercerosService } from '../../services/terceros.service';
 
 import { 
+  CONFIGURATION_TABLA_FABRICANTE, 
   NACIONALIDAD_OPCIONES_DE_BOTON_DE_RADIO,
-  PERSONA_OPCIONES_DE_BOTON_DE_RADIO
+  PERSONA_OPCIONES_DE_BOTON_DE_RADIO,
+  TABLA_ROWDATA
 } from '../../constantes/permiso-maquila.enum';
 import { ModalComponent } from '../modal/modal.component';
 
 import {
   DatosSeleccionados,
+  FabricanteDatos,
   TablaDatos,
 } from '../../models/permiso-maquila.models';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -73,7 +76,7 @@ const TERCEROS_TEXTO_DE_ALERTA =
     ModalComponent,
     CatalogoSelectComponent,
     InputRadioComponent,
-    TooltipModule
+    TooltipModule,TablaDinamicaComponent
   ],
 })
 
@@ -82,6 +85,70 @@ const TERCEROS_TEXTO_DE_ALERTA =
  * Utiliza formularios reactivos y componentes personalizados para mostrar datos.
  */
 export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
+  
+ /**
+ * @property {ConfiguracionColumna<FabricanteDatos>[]} configuracionTablaFabricante
+ * Configuración de columnas para la tabla de fabricantes.
+ */
+configuracionTablaFabricante: ConfiguracionColumna<FabricanteDatos>[] = CONFIGURATION_TABLA_FABRICANTE;
+
+/**
+ * @property {ConfiguracionColumna<FabricanteDatos>[]} configuracionTablaDestinatarioFinal
+ * Configuración de columnas para la tabla de destinatarios finales.
+ */
+configuracionTablaDestinatarioFinal: ConfiguracionColumna<FabricanteDatos>[] = CONFIGURATION_TABLA_FABRICANTE;
+
+/**
+ * @property {ConfiguracionColumna<FabricanteDatos>[]} configuracionTablaProveedor
+ * Configuración de columnas para la tabla de proveedores.
+ */
+configuracionTablaProveedor: ConfiguracionColumna<FabricanteDatos>[] = CONFIGURATION_TABLA_FABRICANTE;
+
+/**
+ * @property {ConfiguracionColumna<FabricanteDatos>[]} configuracionTablaFacturador
+ * Configuración de columnas para la tabla de facturadores.
+ */
+configuracionTablaFacturador: ConfiguracionColumna<FabricanteDatos>[] = CONFIGURATION_TABLA_FABRICANTE;
+
+/**
+ * Lista de fabricantes obtenida desde un archivo JSON.
+ * Cada fabricante contiene información como nombre, RFC, CURP, teléfono, correo electrónico y dirección.
+ */
+fabricanteTablaDatos: FabricanteDatos[] = TABLA_ROWDATA;
+
+/**
+ * Lista de destinatarios finales obtenida desde un archivo JSON.
+ * Cada destinatario contiene información como nombre, RFC, CURP, teléfono, correo electrónico y dirección.
+ */
+destinatarioFinalTablaDatos: FabricanteDatos[] = TABLA_ROWDATA;
+
+/**
+ * Lista de proveedores obtenida desde un archivo JSON.
+ * Cada proveedor contiene información como nombre, RFC, CURP, teléfono, correo electrónico y dirección.
+ */
+proveedorTablaDatos: FabricanteDatos[] = TABLA_ROWDATA;
+
+/**
+ * Lista de facturadores obtenida desde un archivo JSON.
+ * Cada facturador contiene información como nombre, RFC, CURP, teléfono, correo electrónico y dirección.
+ */
+facturadorTablaDatos: FabricanteDatos[] = TABLA_ROWDATA;
+
+
+    /**
+   * @property {string} rutaAcciones
+   * Ruta relativa hacia la sección de acciones.
+   */
+  public fabricanteSeleccionadoDatos: FabricanteDatos[] = [];
+  public destinatarioSeleccionadoDatos: FabricanteDatos[] = [];
+  public proveedorSeleccionadoDatos: FabricanteDatos[] = [];
+  public facturadorSeleccionadoDatos: FabricanteDatos[] = [];
+
+   /**
+   * Configuración de las columnas de la tabla de exportadores.
+   * Define el encabezado, clave y el orden de las columnas para la tabla de exportadores.
+   */
+  public checkbox = TablaSeleccion.CHECKBOX;
   /**
    * Indica si el formulario debe mostrarse solo en modo de lectura.
    * Inicialmente establecido en `true`.
