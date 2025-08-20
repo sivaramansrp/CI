@@ -438,7 +438,7 @@
     </ng-container>
   </form>
 </div>
-  <div class="modal fade show d-block m-5" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="modifyModalLabel" *ngIf="mostrarModal">
+  <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="modifyModalLabel" #modifyModal>
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
         <div class="modal-body">
@@ -615,7 +615,7 @@
                   ></app-catalogo-select>
                 </div>
               </div>
-              <div class="col-md-12 mt-5 d-flex justify-content-end">
+              <div class="col-md-12 mt-5 mb-5 d-flex justify-content-end">
                 <button
                   type="button"
                   class="btn btn-default ms-3"

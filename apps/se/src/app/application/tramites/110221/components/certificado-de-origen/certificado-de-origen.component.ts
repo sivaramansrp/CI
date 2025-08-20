@@ -1,3 +1,4 @@
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   AlertComponent,
   Catalogo,
@@ -23,7 +24,6 @@ import {
   HEADERS,
   HEADERS_DATA,
   SeleccionadasTabla, } from '../../models/registro.model';
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   ConsultaioQuery,
   ConsultaioState,
@@ -40,6 +40,7 @@ import { Tramite110221State, Tramite110221Store } from '../../estados/tramite110
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
+import { Modal } from 'bootstrap';
 import { Tramite110221Query } from '../../estados/tramite110221.query';
 import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
 import mercanciaDisponsibleTable from '@libs/shared/theme/assets/json/110221/mercancia-disponsible.json';
@@ -70,7 +71,7 @@ const TERCEROS_TEXTO_DE_ALERTA =
   templateUrl: './certificado-de-origen.component.html',
   styleUrl: './certificado-de-origen.component.css',
 })
-export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
+export class CertificadoDeOrigenComponent implements OnInit, OnDestroy,AfterViewInit {
   /**
    * Texto de alerta mostrado en el componente.
    */
@@ -284,6 +285,13 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    */
   public nuevaNotificacion!: Notificacion;
   mostrarModal:boolean = false;
+
+    modalInstance!: Modal;
+      /**
+       * @descripcion
+       * Referencia al elemento del modal de modificación.
+       */
+      @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
   /**
    * Constructor del componente.
    * @param fb Constructor de formularios reactivos
@@ -350,7 +358,11 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.getUnidadMedida();
     this.getTipoFactura();
   }
-
+  ngAfterViewInit(): void {
+    if (this.modifyModal) {
+      this.modalInstance = new Modal(this.modifyModal.nativeElement);
+    }
+  }
   /**
    * Método que se ejecuta al destruir el componente.
    */
@@ -445,7 +457,9 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Busca mercancías disponibles basándose en el tratado seleccionado.
    */
   buscarMercancias(): void {
-    this.mostrarModal = true;
+  if (this.modalInstance) {
+      this.modalInstance.show();
+    }
     if (this.registroForm.get('validacionForm.tratado')?.value === 1) {
       this.hayMercanciasDisponibles = false;
     } else {
@@ -462,9 +476,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Cancela la edición de la mercancía.
    */
   cancelar(): void {
-    this.esFormulario = false;
-    this.esMercanciaEnEdicion = true;
-    this.mostrarModal =false;
+  this.modalInstance.hide();
   }
 
   /**
