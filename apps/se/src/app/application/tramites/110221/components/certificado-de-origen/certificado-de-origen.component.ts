@@ -709,18 +709,15 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
           ],
         ],
         numeroRegistro: [
-          this.solicitudState?.numeroRegistro,
-          [Validators.required],
+          this.solicitudState?.numeroRegistro
         ],
         nombreComercial: [
           this.solicitudState?.nombreComercial,
-          [Validators.required],
         ],
         fechaInicial: [
           this.solicitudState?.fechaInicial,
-          [Validators.required],
         ],
-        fechaFinal: [this.solicitudState?.fechaFinal, [Validators.required]],
+        fechaFinal: [this.solicitudState?.fechaFinal],
         archivo: [this.solicitudState?.archivo, [Validators.required]],
       }),
     });
