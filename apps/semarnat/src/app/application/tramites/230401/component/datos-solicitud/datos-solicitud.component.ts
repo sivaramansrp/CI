@@ -977,9 +977,7 @@ creatFormSolicitud(): void {
       this.solicitudState?.cantidad,
       [Validators.required, Validators.min(1), Validators.max(999999999999.999), MaxDigitsValidator()],
     ],
-    cantidadLetra: [
-      { value: this.solicitudState?.cantidadLetra, disabled: true },
-    ],
+    cantidadLetra: [{ value: '', disabled: true }],
     unidadDeMedida: [
       this.solicitudState?.unidadDeMedida,
       [Validators.required],
@@ -1234,17 +1232,18 @@ creatFormSolicitud(): void {
    * se actualizan los campos 'representanteNombre', 'apellidoPaterno'
    * y 'apellidoMaterno' con datos específicos.
    */
-  buscarRepresentanteRfc(): void {
-    const RFC = this.FormSolicitud.get('cantidad')?.value;
-    if (RFC) {
-      this.FormSolicitud.patchValue({
-        cantidadLetra: 'EUROFOODS DE MEXICO',
-        
-      });
-    } 
-  }
+buscarRepresentanteRfc(): void {
+  const RFC = this.FormSolicitud.get('cantidad')?.value;
 
-  /**
+  if (RFC) {
+    const CONTROL = this.FormSolicitud.get('cantidadLetra');
+    CONTROL?.enable({ emitEvent: false });
+    CONTROL?.setValue('EUROFOODS DE MEXICO', { emitEvent: false });
+    CONTROL?.disable({ emitEvent: false });
+  }
+}
+
+/**
    * Cierra el modal de notificación de eliminación exitosa.
    *
    * @param _evento - Evento del modal (no utilizado en este caso)
