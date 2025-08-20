@@ -168,9 +168,7 @@ export const BANDEJA_DE_TAREAS_PENDIENTES_FORMA = [
     desactivado: false,
     soloLectura: false,
     validadores: [
-      {
-        tipo: 'required'
-      }
+
     ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
