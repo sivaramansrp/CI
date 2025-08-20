@@ -7,6 +7,7 @@ import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { FECHA_DE_PAGO } from '../../models/solicitud-datos.model';
+import { IMPORTE } from '@libs/shared/data-access-user/src';
 import { Permiso260906Query } from '../../../../estados/queries/permiso260906.query';
 import { Sanitario260906Store } from '../../../../estados/tramites/sanitario260906.store';
 import { SanitarioService } from '../../services/sanitario.service';
@@ -119,7 +120,7 @@ export class DerechosComponent implements OnInit, OnDestroy {
         [DerechosComponent.validateFechaMenorIgualHoy.bind(this)],
       ],
       importe: [this.solicitudState?.importe, [
-        Validators.pattern(/^\d{1,16}$/),
+        Validators.pattern(IMPORTE),
         Validators.maxLength(16)
       ]],
     });
