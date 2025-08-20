@@ -66,7 +66,7 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
   constructor(
     private consultaQuery: ConsultaioQuery,
     private solicitud150101Store: Solicitud150101Store,
-    private solicitudService: SolicitudService,
+    private solicitudService: SolicitudService
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -77,7 +77,8 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
-      .pipe(takeUntil(this.destroyNotifier$),
+      .pipe(
+        takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.consultaState = seccionState;
         })
@@ -98,13 +99,22 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.solicitudService
-      .getRegistroSolicitudDatos().pipe(
-        takeUntil(this.destroyNotifier$)
-      )
+      .getRegistroSolicitudDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp) {
           this.esDatosRespuesta = true;
-          this.solicitud150101Store.setRegistroSolicitudAnualState(resp);
+          const RESP_WITH_STRING_EXPORTACIONES = {
+            ...resp,
+            totalExportaciones:
+              resp.totalExportaciones !== undefined &&
+              resp.totalExportaciones !== null
+                ? String(resp.totalExportaciones)
+                : '',
+          };
+          this.solicitud150101Store.setRegistroSolicitudAnualState(
+            RESP_WITH_STRING_EXPORTACIONES
+          );
         }
       });
   }
