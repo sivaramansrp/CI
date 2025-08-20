@@ -27,15 +27,17 @@ import { Tramite32505Query } from '../../../../estados/queries/tramite32505.quer
   standalone: true,
 })
 export class PasoUnoComponent implements OnDestroy, OnInit {
-/**
-   * Estado de la consulta, que se obtiene a través del ConsultaioQuery.
-   * Este estado contiene información sobre la consulta actual.
+  /**
+     * Estado de la consulta, que se obtiene a través del ConsultaioQuery.
+     * Este estado contiene información sobre la consulta actual.
+     */
+  public consultaState!: ConsultaioState;
+
+  /**
+   * @property {EventEmitter<boolean>} booleanEvent
+   * @description Emite un evento booleano para notificar cambios o acciones en el componente.
    */
-  public consultaState!: ConsultaioState; 
-
-    @Output() booleanEvent = new EventEmitter<boolean>();
-
-
+  @Output() booleanEvent = new EventEmitter<boolean>();
 
   /**
    * @property {Subject<void>} destroyNotifier$

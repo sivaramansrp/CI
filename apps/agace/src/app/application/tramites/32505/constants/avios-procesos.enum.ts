@@ -408,7 +408,10 @@ export const RADIO_TIPO_AVISO = [
   { label: 'Manual', value: 'Manual' },
   { label: 'Carga masiva', value: 'Carga masiva' },
 ];
-
+/**
+ * @constant RADIO_OPCIONS_CONFIRMIDAD
+ * @description Opciones de radio para seleccionar la confirmación (Sí o No).
+ */
 export const RADIO_OPCIONS_CONFIRMIDAD = [
   { label: 'Si', value: 'si' },
   { label: 'No', value: 'no' },

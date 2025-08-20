@@ -277,8 +277,6 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   public nuevaNotificacion!: Notificacion;
 
-  public nuevaNotificacion1!: Notificacion;
-
   /**
    * @property {ColumnasTabla[]} filaSeleccionadaLista
    * @description Lista de filas seleccionadas en la tabla de avisos.
