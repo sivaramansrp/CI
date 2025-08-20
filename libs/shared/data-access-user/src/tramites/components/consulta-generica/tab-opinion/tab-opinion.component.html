@@ -16,7 +16,7 @@
       <ng-container>
         @switch (indice) {
         @case (1) {
-         <lib-opinion [opinion] = "opinion" (idOpinionSeleccionada)="onIdOpinionSeleccionada($event)"></lib-opinion>
+         <lib-opinion [opinion]="opinion" (idOpinionSeleccionada)="onIdOpinionSeleccionada($event)"></lib-opinion>
         }
         @case (2) {
          <lib-detalle-opinion [solicitud]="solicitud"></lib-detalle-opinion>
@@ -25,3 +25,9 @@
       </ng-container>
     </div>
   </div>
+
+@if(nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion"></lib-notificaciones>
+</section>
+}

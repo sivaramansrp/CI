@@ -20,13 +20,13 @@
             <lib-documentos [documentos]="documentos"></lib-documentos>
             }
             @case (2) {
-            <lib-dictamenes [dictamenes]="dictamenes"></lib-dictamenes>
+            <tab-dictamen [tramite]="tramite" [dictamenes]="dictamenes"></tab-dictamen>
             }
             @case(3) {
             <lib-consultarequerimientos [requerimientos]="requerimientos"></lib-consultarequerimientos>
             }
             @case(4) {
-            <tab-opinion [tramite]="tramite" [opinion] = "opinion"></tab-opinion>
+            <tab-opinion [tramite]="tramite" [opinion]="opinion"></tab-opinion>
             }
             @case (5) {
             <lib-acuses-resoluciones [acusesResolucion]="acusesResolucion"></lib-acuses-resoluciones>

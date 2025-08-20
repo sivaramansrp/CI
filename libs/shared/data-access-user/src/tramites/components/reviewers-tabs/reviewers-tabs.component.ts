@@ -3,20 +3,20 @@ import { AcusesResolucionResponse } from "../../../core/models/130118/consulta-a
 import { AcusesResolucionesComponent } from "../consulta-generica/bandeja-acuses-resoluciones/acuses-resoluciones.component";
 import { CommonModule } from "@angular/common";
 import { ConsultarequerimientosComponent } from "../consulta-generica/consulta-requerimientos/consulta-requerimientos.component";
-import { DictamenesComponent } from "../consulta-generica/bandeja-dictamenes/dictamenes.component";
 import { DictamenesResponse } from "../../../core/models/130118/dictamenes-response.model";
 import { DocumentoSolicitud } from "../../../core/models/130118/consulta-documentos-response.model";
 import { DocumentosComponent } from "../consulta-generica/bandeja-documentos/documentos.component";
 import { EnvioDigitalComponent } from "../consulta-generica/consulta-envio-digital/envio-digital.component";
 import { EnvioDigitalResponse } from "../../../core/models/130118/envio-digital-response.model";
-import { OpinionComponent } from "../consulta-generica/consulta-opinion/opiniones.component";
 import { OpinionResponse } from "../../../core/models/130118/opinion-response.model";
 import { RequerimientosResponse } from "../../../core/models/130118/requerimientos-response.model";
+import { TabDictamenComponent } from "../consulta-generica/tab-dictamen/tab-dictamen.component";
 import { TabOpinionComponent } from "../consulta-generica/tab-opinion/tab-opinion.component";
 import { Tabulaciones } from "../../../core/models/lista-trimites.model";
 import { TareasSolicitud } from "../../../core/models/130118/consulta-tareas-response.model";
 import { TareasTramiteComponent } from "../consulta-generica/bandeja-tareas-tramite/tareas-tramite.component";
 import tramiteDetailsData from '@libs/shared/theme/assets/json/shared/lista-trimites-tabs.json';
+
 
 
 
@@ -36,7 +36,7 @@ import tramiteDetailsData from '@libs/shared/theme/assets/json/shared/lista-trim
  */@Component({
   selector: 'app-reviewers-tabs',
   standalone: true,
-  imports: [CommonModule,DocumentosComponent,DictamenesComponent, ConsultarequerimientosComponent, TabOpinionComponent, AcusesResolucionesComponent, TareasTramiteComponent, EnvioDigitalComponent],
+  imports: [CommonModule,DocumentosComponent, TabDictamenComponent, ConsultarequerimientosComponent, TabOpinionComponent, AcusesResolucionesComponent, TareasTramiteComponent, EnvioDigitalComponent],
   templateUrl: './reviewers-tabs.component.html',
   styleUrl: './reviewers-tabs.component.scss',
 })
