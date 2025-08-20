@@ -24,7 +24,7 @@ export const INPUT_FECHA_INICIO = {
   /**
    * Etiqueta mostrada para el campo.
    */
-  labelNombre: 'Fecha inicio',
+  labelNombre: 'Fecha inicio:',
 
   /**
    * Indica si el campo es obligatorio.
@@ -44,7 +44,7 @@ export const INPUT_FECHA_FIN = {
   /**
    * Etiqueta mostrada para el campo.
    */
-  labelNombre: 'Fecha fin',
+  labelNombre: 'Fecha fin:',
 
   /**
    * Indica si el campo es obligatorio.
@@ -116,7 +116,7 @@ export const INFORMACION_DESCRIPCION_CUPO = [
   },
   {
     id: 'fechaInicioCupo',
-    labelNombre: 'Fecha inicio vigencia del cupo',
+    labelNombre: 'Fecha inicio vigencia del cupo:',
     campo: 'fechaInicioCupo',
     clase: 'col-md-4',
     tipoInput: 'date',
@@ -130,7 +130,7 @@ export const INFORMACION_DESCRIPCION_CUPO = [
   },
   {
     id: 'fechaFinCupo',
-    labelNombre: 'Fecha fin vigencia del cupo',
+    labelNombre: 'Fecha fin vigencia del cupo:',
     campo: 'fechaFinCupo',
     clase: 'col-md-4',
     tipoInput: 'date',

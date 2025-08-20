@@ -49,14 +49,23 @@
       </div>
       <div class="col-md-4">
         <div class="form-field">
-            <label for="mercancia" class="form-label">Cantidad de contenedores en que arriba la mercancía*:<span class="bi bi-question-circle-fill" title="Número de tolvas, furgones o contenedores en que arriba la mercancía" data-bs-toggle="tooltip"></span></label>
-            <input class="form-control" type="text" formControlName="mercancia" id="mercancia" (change)="setMercancia($event)" />
-               <div class="d-grid"
-          *ngIf="grupoFormularioPadre.get(claveDeControl)?.get('mercancia')?.errors?.['required'] &&
-          grupoFormularioPadre.get(claveDeControl)?.get('mercancia')?.touched
-  "
-        >
-          <span class="mensaje-error">Este campo es obligatorio.</span>
+          <label for="mercancia" class="form-label"></label>
+            Cantidad de contenedores en que arriba la mercancía*:
+            <span class="bi bi-question-circle-fill" title="Número de tolvas, furgones o contenedores en que arriba la mercancía" data-bs-toggle="tooltip"></span>
+          </label>
+          <input class="form-control" type="text" formControlName="mercancia" id="mercancia" (change)="setMercancia($event)" />
+          <div class="d-grid"
+            *ngIf="grupoFormularioPadre.get(claveDeControl)?.get('mercancia')?.errors?.['required'] &&
+            grupoFormularioPadre.get(claveDeControl)?.get('mercancia')?.touched"
+          >
+            <span class="mensaje-error">Este campo es obligatorio.</span>
+          </div>
+          <div class="d-grid"
+            *ngIf="grupoFormularioPadre.get(claveDeControl)?.get('mercancia')?.touched &&
+            !grupoFormularioPadre.get(claveDeControl)?.get('mercancia')?.valid"
+          >
+            <span class="mensaje-error">Por favor, verifica la cantidad ingresada.</span>
+          </div>
         </div>
         </div>
       </div>

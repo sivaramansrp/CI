@@ -95,11 +95,15 @@
                 <div class="col-md-4">
                     <input-fecha [datos]="fechaIncicioAsignacion"
                         [setFecha]="asignacionForm.get('fechaInicioVigencia')?.value" id="fechaInicioVigencia" aria-label="Fecha inicio vigencia"
+                        [tooltipQuestionCircle]="true"
+                        [tooltipQuestionCircleText]="'Fecha de inicio vigencia de la asignación'"
                         (valorCambiado)="cambioFechaInicio($event)" />
                 </div>
                 <div class="col-md-4">
                     <input-fecha [datos]="fechaFinAsignacion" [setFecha]="asignacionForm.get('fechaFinVigencia')?.value"
-                        id="fechaFinVigencia" aria-label="Fecha fin vigencia" (valorCambiado)="cambioFechaFin($event)" />
+                    [tooltipQuestionCircle]="true"
+                    [tooltipQuestionCircleText]="'Fecha de fin vigencia de la asignación'"
+                    id="fechaFinVigencia" aria-label="Fecha fin vigencia" (valorCambiado)="cambioFechaFin($event)" />
                 </div>
             </div>
         </div>

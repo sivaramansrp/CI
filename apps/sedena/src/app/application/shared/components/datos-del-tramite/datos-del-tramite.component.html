@@ -76,7 +76,7 @@
       <div class="row mb-3">
         <!-- Fecha única de pago -->
         <div class="col-md-4">
-          <input-fecha [datos]="fechaInicioInput" name="fechaPago" (valorCambiado)="onFechaCambiada($event)"
+          <input-fecha [datos]="fechaInicioInput" name="fechaPago" (valorCambiado)="onFechaCambiada($event)" [tooltipQuestionCircle]="true" [tooltipQuestionCircleText]="fechaInicioInput.labelNombre"
             [setFecha]="form.get('fechaPago')?.value" [isDisabled]="esFormularioSoloLectura"></input-fecha>
           <div class="error-message">
             <small class="text-danger" *ngIf="

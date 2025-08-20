@@ -3,7 +3,7 @@
     "claveReferencia": "1234567890",
     "cadenaDependencia": "DEP123456",
     "llavePago": "LLAVE987654",
-    "fechaPago": "2024-06-20",
+    "fechaPago": "20/06/2024",
     "importePago": "1500.00",
     "banco": "1"
   },
@@ -33,10 +33,11 @@
     "marca": "MarcaEjemplo",
     "especifique": "Especificación adicional",
     "claveDeLos": "CLAVE123",
-    "fechaDeFabricacio": "2024-01-01",
-    "fechaDeCaducidad": "2025-01-01",
+    "fechaDeFabricacio": "01/01/2024",
+    "fechaDeCaducidad": "01/01/2025",
     "regimenLaMercancia": "Definitivo",
-    "aduana": "Aduana Norte"
+    "aduana": "Aduana Norte",
+    "manifesto": true
   },
   "scianConfigDatos": [
     {

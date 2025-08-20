@@ -65,3 +65,11 @@ export const CONFIGURACION_MERCANCIA = [
     orden: 5, // Orden en que se mostrará la columna
   }
 ];
+
+/**
+ * @constant IDPROCEDIMIENTO
+ * @description
+ * Identificador numérico del procedimiento actual para el trámite 110204.
+ * Se utiliza para configurar y asociar el proceso en los componentes y servicios relacionados.
+ */
+export const IDPROCEDIMIENTO = 110204;

@@ -244,12 +244,16 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
       ROW_OBJETO.estadoDeTramite,
       !this.tieneBandeja ? false : true,
       false,
-      true
+      true,
+      ROW_OBJETO.action_id,
+      ROW_OBJETO.current_user,
+      ROW_OBJETO.id_solicitud,
+      ROW_OBJETO.nombre_pagina
     );
     if (!this.tieneBandeja) {
       this.router.navigate([this.procedureUrl]);
     }
-    if (ORIGIN === 'FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO') {
+    if (ORIGIN === 'FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO' || ORIGIN === 'AtenderRequerimiento') {
       this.router.navigate([
         `/${this.tramiteData[0].department}/proceso-requerimiento`,
       ]);
@@ -348,12 +352,34 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
     const TIPO_SOLICITUD = BANDEJA_SOLICITUDE_FORM_GROUP?.controls['tipoSolicitud']?.value;
     const BODY = {
       rfc_usuario: "",
-      roles: [""]
+      roles: [""],
+      certificado: {
+        cert_serial_number: "",
+        tipo_certificado: ""
+      }
+
     };
 
     if (TIPO_SOLICITUD === TipoSolicitud.SOLICITANTE) {
-      BODY.rfc_usuario = this.bandejaSolicitudeFormGroup.get('rfc')?.value;
-      BODY.roles = this.bandejaSolicitudeFormGroup.get('roles')?.value;
+      BODY.rfc_usuario = "AAL0409235E6";
+      BODY.roles = ["PersonaMoral"];
+      BODY.certificado = {
+        cert_serial_number: "20001000000100001815",
+        tipo_certificado: "TIPCE.02"
+      };
+
+      this.bandejaDeSolicitudeService.postBandejaTareas(BODY).pipe(
+        map((datos: BandejaDeTareasPendientes[]) => {
+          this.configuracionTablaDatos = datos as unknown as T[];
+        })
+      ).subscribe();
+      this.hasValidForm = true
+      if (this.configuracionTablaDatos.length > 0) {
+        this.tieneConfiguracionTablaDatos = true;
+      } else {
+        this.configuracionTablaDatos = this.duplicarDatos;
+        this.tieneConfiguracionTablaDatos = false;
+      }
     }
 
     if (TIPO_SOLICITUD === TipoSolicitud.FUNCIONARIO) {

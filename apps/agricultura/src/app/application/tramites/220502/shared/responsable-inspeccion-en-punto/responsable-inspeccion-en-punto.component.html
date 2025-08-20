@@ -1,10 +1,10 @@
-  <fieldset [formGroupName]="claveDeControl">
-    <ng-titulo titulo="Responsable inspección en punto" />
-    <div class="row">
-      <div class="col-md-4">
-        <div class="form-field">
-          <label for="nombreInsp" class="form-label">Nombre(s):</label>
-          <input
+<fieldset [formGroupName]="claveDeControl">
+  <ng-titulo titulo="Responsable inspección en punto" />
+  <div class="row">
+    <div class="col-md-4">
+      <div class="form-field">
+        <label for="nombreInsp" class="form-label">Nombre(s):</label>
+        <input
           class="form-control"
           type="text"
           formControlName="nombre"
@@ -22,12 +22,12 @@
         >
           Por favor, no escribas más de 150 caracteres
         </span>
-        </div>
       </div>
-      <div class="col-md-4">
-        <div class="form-field">
-            <label for="primerapellido" class="form-label">Primer apellido:</label>
-            <input
+    </div>
+    <div class="col-md-4">
+      <div class="form-field">
+        <label for="primerapellido" class="form-label">Primer apellido:</label>
+        <input
           class="form-control"
           type="text"
           formControlName="primerapellido"
@@ -46,12 +46,12 @@
         >
           Por favor, no escribas más de 80 caracteres
         </span>
-        </div>
       </div>
-      <div class="col-md-4">
-        <div class="form-field">
-            <label for="segundoapellido" class="form-label"
-            >Segundo apellido:</label
+    </div>
+    <div class="col-md-4">
+      <div class="form-field">
+        <label for="segundoapellido" class="form-label"
+          >Segundo apellido:</label
         >
         <input
           class="form-control"
@@ -72,11 +72,11 @@
         >
           Por favor, no escribas más de 80 caracteres
         </span>
-        </div>
       </div>
-      <div class="col-md-4">
-        <div class="form-field">
-            <label for="mercancia" class="form-label"
+    </div>
+    <div class="col-md-4">
+      <div class="form-field">
+        <label for="mercancia" class="form-label"
           >Cantidad de contenedores en que arriba la mercancía<span
             class="require"
             [ngClass]="{
@@ -87,12 +87,11 @@
             }"
             >*</span
           >:<span
-            class="bi bi-question-circle-fill"
-            title="Número de tolvas, furgones o contenedores en que arriba la mercancía"
-            data-bs-toggle="tooltip"
-          ></span
-        ></label>
-            <input
+            tooltip="Número de tolvas, furgones o contenedores en que arriba la mercancía"
+            ><i class="bi bi-question-circle-fill"></i
+          ></span>
+        </label>
+        <input
           class="form-control"
           type="text"
           formControlName="mercancia"
@@ -133,10 +132,10 @@
           Este campo es obligatorio
         </span>
       </div>
-      </div>
-      <div class="col-md-4">
-        <div class="form-field">
-          <app-catalogo-select
+    </div>
+    <div class="col-md-4">
+      <div class="form-field">
+        <app-catalogo-select
           id="tipoContenedor"
           [catalogo]="tipoContenedor.catalogos"
           [label]="tipoContenedor.labelNombre"
@@ -146,7 +145,7 @@
           formControlName="tipocontenedor"
           (selectionChange)="setTipoContenedor($event)"
         ></app-catalogo-select>
-        </div>
+      </div>
     </div>
-    </div>
-  </fieldset>
+  </div>
+</fieldset>

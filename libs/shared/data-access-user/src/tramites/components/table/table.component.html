@@ -14,7 +14,7 @@
         <tbody>
             @for (data of tableData.tableBody; track $index) {
                 <tr>
-                    <td><input type="checkbox" [(ngModel)]="data.selected"  [disabled]="disableSeleccionTablaCheckBox" aria-label="Select Row"></td>
+                    <td><input type="checkbox" [(ngModel)]="data.selected" (change)="onRowSelectionChange()" [disabled]="disableSeleccionTablaCheckBox" aria-label="Select Row"></td>
                     @for (element of data.tbodyData; track $index) {
                         <td>{{element}}</td>
     
