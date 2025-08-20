@@ -4,7 +4,7 @@
         "paisDestino": "MEXICO (ESTADOS UNIDOS MEXICANOS)",
         "fechaPago": "05/06/2025",
         "usoFinal": "Fabricación de componentes electrónicos",
-        "unoSemestre": "true",
+        "unoSemestre": "unoSemestre",
         "anoEnCurso": "true",
         "informacionConfidencial": "true",
         "aduanasSeleccionadas": [

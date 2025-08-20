@@ -34,46 +34,42 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   AlertComponent,
+  CatalogoSelectComponent,
   InputRadioComponent,
   Notificacion,
   NotificacionesComponent,
   Pedimento,
+  REGEX_IMPORTE_PAGO,
   REGEX_RFC,
   REGEX_SOLO_DIGITOS,
   REGEX_SOLO_NUMEROS,
+  TablaDinamicaComponent,
   TablePaginationComponent,
+  TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import {
   Catalogo,
   DatosDeTablaSeleccionados,
   DatosSolicitudFormState,
   OpcionConfig,
+  ScianConfig,
   TablaMercanciasConfig,
   TablaMercanciasDatos,
   TablaOpcionConfig,
+  TablaScianConfig,
 } from '../../models/datos-solicitud.model';
-import {
-  CatalogoSelectComponent,
-  REGEX_IMPORTE_PAGO,
-  TablaDinamicaComponent,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
 import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
-  Output,
+  Output, SimpleChanges,
 } from '@angular/core';
-import {
-  ScianConfig,
-  TablaScianConfig,
-} from '../../models/datos-solicitud.model';
-import { delay, takeUntil } from 'rxjs/operators';
+import { Subject, delay, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-import { Subject } from 'rxjs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json';
 
@@ -96,7 +92,7 @@ import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json'
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
-export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, OnChanges {
   /**
    * @property {Subject<void>} destroyNotifier$
    * Subject utilizado para cancelar suscripciones activas al destruir el componente.
@@ -589,10 +585,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       this.idProcedimiento === NUMERO_TRAMITE.TRAMITE_260103
         ? 'Municipio y alcaldía'
         : 'Municipio o alcaldía';
-
-    if (this.formularioDeshabilitado) {
-      this.datosSolicitudForm.disable();
-    }
   }
 
   /**
@@ -766,7 +758,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         this.datosSolicitudFormState.manifesto,
         [Validators.required],
       ],
+      manifiestosCasillaDeVerificacion: [
+        this.datosSolicitudFormState.manifiestosCasillaDeVerificacion,
+        [Validators.required],
+      ],
     });
+    if (this.formularioDeshabilitado) {
+      this.datosSolicitudForm.disable();
+    }
 
     if (this.mostrarNotificacion) {
       const EMPTY = Object.entries(this.datosSolicitudFormState)
@@ -777,7 +776,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       }
     }
   }
-
+  /**
+   * Hook que se ejecuta cuando cambian las propiedades de entrada del componente.
+   * Permite habilitar o deshabilitar los formularios según el modo de solo lectura.
+   * @param {SimpleChanges} changes - Cambios detectados en las propiedades de entrada.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['formularioDeshabilitado'] && this.datosSolicitudForm) {
+      if (this.formularioDeshabilitado) {
+        this.datosSolicitudForm.disable();
+      } else {
+        this.datosSolicitudForm.enable();
+      }
+    }
+  }
   /**
  * @method actualizarDatosFormularioSolicitud
  * @description Actualiza las validaciones de los campos del formulario `datosSolicitudForm`
@@ -1193,6 +1205,24 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Método que se llama cuando se busca un RFC en el modal de búsqueda.
+   * Si el parámetro `buscar` es verdadero, se actualizan los campos del formulario
+   * con valores predeterminados relacionados con el representante.
+   *
+   * @param {boolean} buscar - Indica si se debe buscar el RFC del representante.
+   */
+  obtenerModalDeBuscar(buscar: boolean): void {
+    if (buscar) {
+      this.datosSolicitudForm.patchValue({
+        representanteRfc: 'REP123456789',
+        representanteNombre: 'EUROFOODS DE MEXICO',
+        apellidoPaterno: 'GONZALEZ',
+        apellidoMaterno: 'PINAL',
+      });
+      this.mostrarAlerta = false;
+    }
+  }
+  /**
    * Método que verifica si un campo debe ser habilitado o deshabilitado
    * según el procedimiento actual.
    *
@@ -1238,7 +1268,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   abrirRfcModal(): void {
     this.mostrarRfcAlerta = true;
-    this.nuevaNotificacion = {
+    this.nuevaRfcNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
       modo: 'action',
