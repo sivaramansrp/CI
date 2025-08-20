@@ -5,7 +5,7 @@
             <a data-toggle="tab" (click)="seleccionaTab(1)" (keydown.enter)="seleccionaTab(1)" tabindex="0">Solicitante</a>
         </li>
         <li [ngClass]="indice === 2 ? 'active' : ''">
-            <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)" tabindex="1">Aviso</a>
+            <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)" tabindex="1">{{ consultaState.parameter === "READ_PROCEDURE" ? 'Datos del Trámite' : 'Aviso' }}</a>
         </li>
       </ul>
   
