@@ -82,6 +82,21 @@ export const CONFIGURACION_MODIFICACION = [
   },
 ];
 
+/**
+ * @constant CONFIGURACION_IMPORTACION
+ * @description
+ * Configuración utilizada para definir las columnas y el orden de visualización
+ * en el módulo de importación de servicios.  
+ * Cada objeto de la configuración representa una columna con su encabezado, 
+ * la clave a mostrar (función que obtiene el valor del objeto `DatosDelServicios`)
+ * y el orden en que debe aparecer.
+ *
+ * @example
+ * // Ejemplo de uso:
+ * CONFIGURACION_IMPORTACION.forEach(columna => {
+ *   console.log(columna.encabezado, columna.clave(elemento));
+ * });
+ */
 export const CONFIGURACION_IMPORTACION = [
   {
     encabezado: 'Fracción',
