@@ -115,7 +115,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Esta propiedad almacena la instancia del formulario principal de la solicitud,
    * permitiendo el manejo de controles, validaciones y estados del formulario en el componente.
    */
-  FormSolicitud!: FormGroup;
+  formSolicitud!: FormGroup;
   
   /**
    * Representa el identificador numérico del tipo de solicitud seleccionada por el usuario.
@@ -510,7 +510,7 @@ public aduanasDeEntradaLabel: CrossListLable = {
       )
       .subscribe();
 
-    this.FormSolicitud.statusChanges
+    this.formSolicitud.statusChanges
       .pipe(
         takeUntil(this.destroyNotifier$),
         delay(10),
@@ -518,7 +518,7 @@ public aduanasDeEntradaLabel: CrossListLable = {
           const SECCION: number = 1;
           const FORMAS_VALIDADAS = this.seccion.formaValida;
           const ES_VALIDO_EL_FORM = this.esFormValido();
-          if (this.FormSolicitud.valid || (ES_VALIDO_EL_FORM)) {
+          if (this.formSolicitud.valid || (ES_VALIDO_EL_FORM)) {
             FORMAS_VALIDADAS[SECCION] = true;
             this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
           } else {
@@ -532,9 +532,9 @@ public aduanasDeEntradaLabel: CrossListLable = {
 
 
     /**
-     * Inicializa el estado del formulario `FormSolicitud`.
+     * Inicializa el estado del formulario `formSolicitud`.
      *
-     * - Si el formulario no ha sido creado, lo inicializa llamando a `creatFormSolicitud()`.
+     * - Si el formulario no ha sido creado, lo inicializa llamando a `creatformSolicitud()`.
      * - Si el formulario está configurado como solo lectura (`esFormularioSoloLectura`), lo deshabilita para evitar modificaciones.
      * - Si no está en modo solo lectura, habilita el formulario para permitir la edición.
      *
@@ -542,13 +542,13 @@ public aduanasDeEntradaLabel: CrossListLable = {
      * Este método debe llamarse durante la inicialización del componente para asegurar que el formulario tenga el estado correcto según el contexto de uso.
      */
      inicializarEstadoFormulario(): void {
-      if(!this.FormSolicitud){
-        this.creatFormSolicitud();
+      if(!this.formSolicitud){
+        this.creatformSolicitud();
       }
       if (this.esFormularioSoloLectura) {
-          this.FormSolicitud?.disable();
+          this.formSolicitud?.disable();
       } else {
-        this.FormSolicitud?.enable();
+        this.formSolicitud?.enable();
       }
     }
     
@@ -564,11 +564,11 @@ public aduanasDeEntradaLabel: CrossListLable = {
    *                    `false` si al menos uno de los controles habilitados es inválido.
    */
   esFormValido(): boolean {
-    for(const NOMBRE_DEL_CONTROL in this.FormSolicitud.controls) {
+    for(const NOMBRE_DEL_CONTROL in this.formSolicitud.controls) {
       if(!NOMBRE_DEL_CONTROL){
         continue;
       }
-      const CONTROL = this.FormSolicitud.get(NOMBRE_DEL_CONTROL);
+      const CONTROL = this.formSolicitud.get(NOMBRE_DEL_CONTROL);
       if (CONTROL && CONTROL.enabled && CONTROL.invalid) {
         return false;
       }
@@ -730,10 +730,10 @@ public aduanasDeEntradaLabel: CrossListLable = {
    */
   tipoSolicitudSeleccion(): void {
     this.tipoSolicitudSeleccionada = parseInt(
-      this.FormSolicitud.get('tipoSolicitud')?.value,
+      this.formSolicitud.get('tipoSolicitud')?.value,
       10
     );
-    const TIPO_SOLICITUD = this.FormSolicitud.get('tipoSolicitud')?.value;
+    const TIPO_SOLICITUD = this.formSolicitud.get('tipoSolicitud')?.value;
     if (TIPO_SOLICITUD) {
       this.tramite230401Store.setTipoSolicitud(TIPO_SOLICITUD);
     }
@@ -744,12 +744,12 @@ public aduanasDeEntradaLabel: CrossListLable = {
    * Maneja la selección del número de permiso coferprise en el formulario.
    *
    * Obtiene el valor actual del campo 'noDePermisocoferprise' desde el formulario
-   * `FormSolicitud` y lo establece en el store `tramite230401Store` mediante el método
+   * `formSolicitud` y lo establece en el store `tramite230401Store` mediante el método
    * `setNoDePermisocoferprise`. Este método se utiliza para mantener sincronizado el valor
    * del permiso coferprise seleccionado entre el formulario y el estado global de la aplicación.
    */
   noDePermisocoferpriseSeleccion(): void {
-    const NO_DE_PERMISOCOFERPRISE = this.FormSolicitud.get(
+    const NO_DE_PERMISOCOFERPRISE = this.formSolicitud.get(
       'noDePermisocoferprise'
     )?.value;
     this.tramite230401Store.setNoDePermisocoferprise(NO_DE_PERMISOCOFERPRISE);
@@ -770,11 +770,11 @@ public aduanasDeEntradaLabel: CrossListLable = {
    * formulario como en el store de la aplicación.
    */
   fraccionArancelariaSeleccion(): void {
-    const FRACCION_ARANCELARIA = this.FormSolicitud.get(
+    const FRACCION_ARANCELARIA = this.formSolicitud.get(
       'fraccionArancelaria'
     )?.value;
-    const DESCRIPCION_DE_LA_FRACCION = `Descripción de la fracción arancelaria ${this.FormSolicitud.get('fraccionArancelaria')?.value}`;
-    this.FormSolicitud.patchValue({
+    const DESCRIPCION_DE_LA_FRACCION = `Descripción de la fracción arancelaria ${this.formSolicitud.get('fraccionArancelaria')?.value}`;
+    this.formSolicitud.patchValue({
       descripcionDeLaFraccion: DESCRIPCION_DE_LA_FRACCION,
     })
     this.tramite230401Store.setDescripcionDeLaFraccion(DESCRIPCION_DE_LA_FRACCION);
@@ -786,7 +786,7 @@ public aduanasDeEntradaLabel: CrossListLable = {
   /**
    * Selecciona la autorización ingresada en el formulario y la almacena en el estado global.
    *
-   * Obtiene el valor actual del campo 'autorizacion' del formulario `FormSolicitud`
+   * Obtiene el valor actual del campo 'autorizacion' del formulario `formSolicitud`
    * y lo envía al store `tramite230401Store` mediante el método `setAutorizacion`.
    *
    * @remarks
@@ -794,7 +794,7 @@ public aduanasDeEntradaLabel: CrossListLable = {
    * por el usuario en el flujo del trámite 230401.
    */
   seleccioneAutorizacion(): void {
-    const AUTORIZACION = this.FormSolicitud.get('autorizacion')?.value;
+    const AUTORIZACION = this.formSolicitud.get('autorizacion')?.value;
     this.tramite230401Store.setAutorizacion(AUTORIZACION);
   }
 
@@ -813,10 +813,10 @@ public aduanasDeEntradaLabel: CrossListLable = {
    * @returns {void} No retorna ningún valor.
    */
   numeroCasSeleccione(): void {
-    const NUMERO_CAS = this.FormSolicitud.get('numeroCas')?.value;
-    const DESCRIPCION_NO_ARANCELARIA = `Descripción no arancelaria ${this.FormSolicitud.get('numeroCas')?.value}`;
-    const NOMBRE_QUIMICO = `Nombre químico ${this.FormSolicitud.get('numeroCas')?.value}`;
-    this.FormSolicitud.patchValue({
+    const NUMERO_CAS = this.formSolicitud.get('numeroCas')?.value;
+    const DESCRIPCION_NO_ARANCELARIA = `Descripción no arancelaria ${this.formSolicitud.get('numeroCas')?.value}`;
+    const NOMBRE_QUIMICO = `Nombre químico ${this.formSolicitud.get('numeroCas')?.value}`;
+    this.formSolicitud.patchValue({
       descripcionNoArancelaria: DESCRIPCION_NO_ARANCELARIA,
       nombreQuimico: NOMBRE_QUIMICO,
     })
@@ -829,7 +829,7 @@ public aduanasDeEntradaLabel: CrossListLable = {
   /**
    * Maneja el evento de selección de clasificación en el formulario de solicitud.
    *
-   * Obtiene el valor actual del campo 'clasificacion' del formulario `FormSolicitud`
+   * Obtiene el valor actual del campo 'clasificacion' del formulario `formSolicitud`
    * y lo establece en el store `tramite230401Store` mediante el método `setClasificacion`.
    *
    * @remarks
@@ -837,7 +837,7 @@ public aduanasDeEntradaLabel: CrossListLable = {
    * cada vez que el usuario realiza un cambio en el campo correspondiente del formulario.
    */
   clasificacionSeleccione(): void {
-    const CLASIFICACION = this.FormSolicitud.get('clasificacion')?.value;
+    const CLASIFICACION = this.formSolicitud.get('clasificacion')?.value;
     this.tramite230401Store.setClasificacion(CLASIFICACION);
   }
 
@@ -854,7 +854,7 @@ public aduanasDeEntradaLabel: CrossListLable = {
    * se refleje correctamente en el store.
    */
   estadoFisicoSeleccione(): void {
-    const ESTADO_FISICO = this.FormSolicitud.get('estadoFisico')?.value;
+    const ESTADO_FISICO = this.formSolicitud.get('estadoFisico')?.value;
     this.tramite230401Store.setEstadoFisico(ESTADO_FISICO);
   }
 
@@ -869,7 +869,7 @@ public aduanasDeEntradaLabel: CrossListLable = {
  * @returns {void}
  */
 datosObjectoSeleccione(): void {
-  const DAT_OS_OBJECTO = this.FormSolicitud.get('datosObjecto')?.value;
+  const DAT_OS_OBJECTO = this.formSolicitud.get('datosObjecto')?.value;
   this.tramite230401Store.setDatosObjecto(DAT_OS_OBJECTO);
 }
 
@@ -883,7 +883,7 @@ datosObjectoSeleccione(): void {
    * @returns {void} No devuelve ningún valor.
    */
   unidadDeMedidaSeleccione(): void {
-    const UNIDAD_DE_MEDIDA = this.FormSolicitud.get('unidadDeMedida')?.value;
+    const UNIDAD_DE_MEDIDA = this.formSolicitud.get('unidadDeMedida')?.value;
     this.tramite230401Store.setUnidadDeMedida(UNIDAD_DE_MEDIDA);
   }
 
@@ -901,8 +901,8 @@ datosObjectoSeleccione(): void {
  *
  * @returns {void}
  */
-creatFormSolicitud(): void {
-  this.FormSolicitud = this.fb.group({
+creatformSolicitud(): void {
+  this.formSolicitud = this.fb.group({
     tipoSolicitud: [
       this.solicitudState?.tipoSolicitud,
       [Validators.required],
@@ -1029,7 +1029,7 @@ creatFormSolicitud(): void {
 
     // Cargar los datos de la sustancia seleccionada en el formulario
     const SUSTANCIA_SELECCIONADA = this.sustanciasSensiblesSeleccionadas[0];
-    this.FormSolicitud.patchValue({
+    this.formSolicitud.patchValue({
       numeroCas: SUSTANCIA_SELECCIONADA.numeroCAS,
       descripcionNoArancelaria: SUSTANCIA_SELECCIONADA.descripcionNoArancelaria,
       nombreQuimico: SUSTANCIA_SELECCIONADA.nombreQuimico
@@ -1063,10 +1063,10 @@ creatFormSolicitud(): void {
    */
   agregarListaDeNumeros(): void {
     const SUSTANCIA_SENSIBLE: SustanciaSensible = {
-      numeroCAS: this.FormSolicitud.get('numeroCas')?.value,
+      numeroCAS: this.formSolicitud.get('numeroCas')?.value,
       cas: '',
-      descripcionNoArancelaria: this.FormSolicitud.get('descripcionNoArancelaria')?.value || `Descripción no arancelaria ${this.FormSolicitud.get('numeroCas')?.value}`,
-      nombreQuimico: this.FormSolicitud.get('nombreQuimico')?.value || `Nombre químico ${this.FormSolicitud.get('numeroCas')?.value}`,
+      descripcionNoArancelaria: this.formSolicitud.get('descripcionNoArancelaria')?.value || `Descripción no arancelaria ${this.formSolicitud.get('numeroCas')?.value}`,
+      nombreQuimico: this.formSolicitud.get('nombreQuimico')?.value || `Nombre químico ${this.formSolicitud.get('numeroCas')?.value}`,
     };
 
     const UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS = [...this.sustanciasSensiblesTablaDatos];
@@ -1101,7 +1101,7 @@ creatFormSolicitud(): void {
     this.tramite230401Store.setSustanciasSensiblesTablaDatos(UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS);
 
     // Limpiar el formulario
-    this.FormSolicitud.patchValue({
+    this.formSolicitud.patchValue({
       numeroCas: '',
       descripcionNoArancelaria: '',
       nombreQuimico: ''
@@ -1137,7 +1137,12 @@ creatFormSolicitud(): void {
     }
   }
 
-    eliminarPedimentoConfirmacion(borrar: boolean): void {
+  /**
+   * Confirma la eliminación de un pedimento.
+   *
+   * @param borrar Indica si se debe proceder con la eliminación.
+   */
+  eliminarPedimentoConfirmacion(borrar: boolean): void {
     if (borrar) {
       // Remove the problematic code that was causing errors
       // Just handle the elimination logic for pedimentos if needed
@@ -1233,10 +1238,10 @@ creatFormSolicitud(): void {
    * y 'apellidoMaterno' con datos específicos.
    */
 buscarRepresentanteRfc(): void {
-  const RFC = this.FormSolicitud.get('cantidad')?.value;
+  const RFC = this.formSolicitud.get('cantidad')?.value;
 
   if (RFC) {
-    const CONTROL = this.FormSolicitud.get('cantidadLetra');
+    const CONTROL = this.formSolicitud.get('cantidadLetra');
     CONTROL?.enable({ emitEvent: false });
     CONTROL?.setValue('EUROFOODS DE MEXICO', { emitEvent: false });
     CONTROL?.disable({ emitEvent: false });
