@@ -263,7 +263,7 @@
           <label class="form-label" for="cantidad">Cantidad*:</label>
           <input class="form-control" id="cantidad" type="text"
             formControlName="cantidad" [ngClass]="isValid(FormSolicitud, 'cantidad') ? 'required' : ''"
-            (change)="setValoresStore(FormSolicitud,'cantidad')">
+            (change)="setValoresStore(FormSolicitud,'cantidad')" (click)="buscarRepresentanteRfc()">
             <div class="mensaje-error" *ngIf="FormSolicitud.get('cantidad')?.errors?.['maxDigits']">
               Este campo permite 12 enteros y tres decimales</div>
         </div>

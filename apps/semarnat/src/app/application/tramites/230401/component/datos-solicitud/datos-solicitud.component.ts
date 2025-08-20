@@ -1223,6 +1223,27 @@ creatFormSolicitud(): void {
     }
   }
 
+    /**
+   * Busca el RFC del representante en el formulario y, si existe,
+   * actualiza los campos relacionados con el nombre, apellido paterno
+   * y apellido materno del representante con valores predeterminados.
+   *
+   * @remarks
+   * Este método verifica si el campo 'representanteRfc' tiene un valor
+   * en el formulario `datosSolicitudForm`. Si el valor está presente,
+   * se actualizan los campos 'representanteNombre', 'apellidoPaterno'
+   * y 'apellidoMaterno' con datos específicos.
+   */
+  buscarRepresentanteRfc(): void {
+    const RFC = this.FormSolicitud.get('cantidad')?.value;
+    if (RFC) {
+      this.FormSolicitud.patchValue({
+        cantidadLetra: 'EUROFOODS DE MEXICO',
+        
+      });
+    } 
+  }
+
   /**
    * Cierra el modal de notificación de eliminación exitosa.
    *

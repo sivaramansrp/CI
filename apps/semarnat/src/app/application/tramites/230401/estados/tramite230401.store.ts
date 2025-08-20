@@ -96,7 +96,7 @@ export interface Solicitud230401State {
    * Porcentaje de concentración de la sustancia.
    * @example 37.5
    */
-  datosPorcentaje: number;
+  datosPorcentaje: string;
 
   /**
    * Componentes adicionales de la sustancia.
@@ -184,7 +184,7 @@ export function initializeSolicitud230401State(): Solicitud230401State {
     unNumero: '',
     datosNombreComercial: '',
     datosNumeroComun: '',
-    datosPorcentaje: 1,
+    datosPorcentaje: " ",
     datosComponentes: '',
     clasificacion: '',
     estadoFisico: '',
@@ -406,7 +406,7 @@ export class Tramite230401Store extends Store<Solicitud230401State> {
    *
    * @param datosPorcentaje - El porcentaje de los datos que se va a guardar.
    */
-  public setDatosPorcentaje(datosPorcentaje: number): void {
+  public setDatosPorcentaje(datosPorcentaje: string): void {
     this.update((state) => ({
       ...state,
       datosPorcentaje,
