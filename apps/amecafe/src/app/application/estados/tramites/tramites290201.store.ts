@@ -243,6 +243,9 @@ otrasCaracteristicas: string;
  * @description Lista de datos de la tabla utilizada para almacenar información relacionada con el trámite.
  */
 tableData: FilaData2[];
+
+filaSeleccionada: FilaData2 | null; // Fila seleccionada actualmente
+  filaSeleccionadas: number[]; // ID de filas seleccionadas
 }
 export function createInitialSolicitudState(): Solicitud290201State {
   return {
@@ -480,6 +483,8 @@ otrasCaracteristicas: '',
  * @description Lista de datos de la tabla utilizada para almacenar información relacionada con el trámite.
  */
 tableData: [],
+    filaSeleccionada: null, // Currently selected row
+    filaSeleccionadas: [], // IDs of selected rows
   };
 }
 @Injectable({
@@ -996,4 +1001,22 @@ public setDatosDeTabla(tableData: FilaData2[]): void {
     tableData
   }));
 }
+/**
+ * @method setFilaSeleccionada
+ * @description Actualiza la fila seleccionada en el estado.
+ * @param {FilaData2 | null} filaSeleccionada - Fila seleccionada o null si no hay selección.
+ */
+public setFilaSeleccionada(filaSeleccionada: FilaData2 | null): void {
+    this.update((state) => ({
+      ...state,
+      filaSeleccionada,
+    }));
+  }
+
+  public setFilaSeleccionadas(filaSeleccionadas: number[]): void {
+    this.update((state) => ({
+      ...state,
+      filaSeleccionadas,
+    }));
+  }
 }
