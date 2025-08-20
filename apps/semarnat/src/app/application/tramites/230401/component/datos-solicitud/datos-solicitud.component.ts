@@ -1226,9 +1226,9 @@ creatFormSolicitud(): void {
   /**
    * Cierra el modal de notificación de eliminación exitosa.
    *
-   * @param evento - Evento del modal (no utilizado en este caso)
+   * @param _evento - Evento del modal (no utilizado en este caso)
    */
-  cerrarNotificacionEliminacion(evento: boolean): void {
+  cerrarNotificacionEliminacion(_evento: boolean): void {
     this.mostrarNotificacion = false;
   }
 
