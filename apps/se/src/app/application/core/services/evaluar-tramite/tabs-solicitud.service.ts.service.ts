@@ -105,7 +105,9 @@ export class TabsSolicitudServiceTsService {
    */
   getEnvioDigital(tramite: number, numFolioTramite: string): Observable<BaseResponse<EnvioDigitalResponse>> {
     const ENDPOINT = `${this.host}${API_GET_ENVIO_DIGITAL.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolioTramite)}`;
-    return this.http.get<BaseResponse<EnvioDigitalResponse>>(ENDPOINT);
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const params = new HttpParams().set('esFuncionario', 'true');
+    return this.http.get<BaseResponse<EnvioDigitalResponse>>(ENDPOINT, { params });
   }
 
   /**
