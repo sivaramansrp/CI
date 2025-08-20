@@ -196,6 +196,7 @@
             <div class="panel-collapse collapse in" id="panel-01">
               <div class="panel-body">
                 <crosslist
+                  [botones]="farmaceuticaBotons"
                   [fechas]="seleccionarOrigenFormaFormaceutica"
                   [label]="formaFaramaceuticaLabel"
                   [fechasSeleccionadas]="seleccionadasFormaFormaceuticaDatos"
@@ -351,7 +352,7 @@
     <div class="row">
       <div class="col-md-10">
         <div class="form-group">
-          <label class="form-label" for="numeroCAS">Número CAS:</label>
+          <label class="form-label" for="numeroCAS">Número CAS</label>
           <input
             class="form-control"
             id="marcaComercialDenominación"
@@ -445,6 +446,7 @@
             <div class="panel-collapse collapse in" id="panel-01">
               <div class="panel-body">
                 <crosslist
+                  [botones]="paisDeProcedenciaBotons"
                   [fechas]="usoEspesificoDatos"
                   [label]="usoEspesificoLabel"
                   [fechasSeleccionadas]="seleccionadasUsoEspesificoDatos"
@@ -461,7 +463,7 @@
     </div>
   </form>
 
-  <div class="row mt-3">
+  <div class="row mt-3 mb-5">
     <div class="col-md-12">
       <div class="pull-right ml-2">
         <button

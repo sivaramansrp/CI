@@ -6,7 +6,7 @@ import { Tramite303Store, Tramite303StoreService } from '../../../../core/estado
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Tramite303Query } from '../../../../core/queries/tramite303.query';
-import { TransportistaService } from '../../../../core/services/303/trasportista.service';
+import { TransportistaService } from '../../../../core/services/303/transportista.service';
 
 @Component({
   selector: 'app-registro-trasportista',

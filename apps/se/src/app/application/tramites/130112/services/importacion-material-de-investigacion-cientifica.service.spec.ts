@@ -99,7 +99,7 @@ describe('ImportacionMaterialDeInvestigacionCientificaService', () => {
       expect(data).toEqual(mockResponse);
     });
 
-    const req = httpMock.expectOne('assets/json/130112/producto-otions.json');
+    const req = httpMock.expectOne('assets/json/130112/producto-options.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });

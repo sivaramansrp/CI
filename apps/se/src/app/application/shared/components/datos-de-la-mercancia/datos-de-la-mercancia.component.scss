@@ -6,6 +6,8 @@ textarea {
     border-radius: 4px;
     resize: vertical; /* Permitir unicamente cambio de tamaño vertical */
     box-sizing: border-box; /* Incluye relleno y borde en el ancho/alto total del elemento */
+    resize: none; /* Deshabilitar el cambio de tamaño manual */
+    overflow: hidden;
   }
   
   /* Ajustes para pantallas más pequeñas */
@@ -21,3 +23,16 @@ textarea {
       min-height: 80px; /*  Altura aún más reducida para pantallas muy pequeñas*/
     }
   }
+
+.textarea-error {
+  border: 1px solid #dc3545 !important;
+}
+.label-error {
+  color: #dc3545 !important;
+}
+.asterisk-red {
+  color: #dc3545 !important;
+}
+.input-error {
+  border: 1px solid #dc3545 !important; 
+}

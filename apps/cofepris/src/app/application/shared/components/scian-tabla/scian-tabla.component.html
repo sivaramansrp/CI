@@ -25,19 +25,19 @@
             </div>
         </div>
        </form>
-       <div class="row mt-3">
+       <div class="row mt-5 mb-5">
         <div class="col-md-4">
             <p>* Campos obligatorios</p>
           </div>
         <div class="col-md-8">
             <div class="pull-right ml-2 mb-8">
-                <button type="button" name="eliminarScian" class="btn btn-default"
-                (click)="limpiarScian()">
-                    Limpiar  
+                <button type="button" name="eliminarScian" class="btn btn-default ms-2"
+                  (click)="cancelar()">
+                    Cancelar
                 </button>
                 <button type="button" name="eliminarScian" class="btn btn-default ms-2"
-                (click)="cancelar()">
-                Cancelar
+                (click)="limpiarScian()">
+                    Limpiar  
                 </button>
                 <button type="button" name="agregarScian" class="btn btn-primary ms-2" (click)="agregarScian()">
                     Agregar
@@ -46,3 +46,24 @@
         </div>
     </div>
     </div>
+
+    <!-- Modal de datos duplicados -->
+<ng-template #templateDatosDuplicados>
+  <div class="modal-header">
+    <h4 class="modal-title">Alerta</h4>
+  </div>
+  <div class="modal-body">
+    <p class="mb-0">
+      Datos duplicados.
+    </p>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="cerrarModalDatosDuplicados()"
+    >
+      Aceptar
+    </button>
+  </div>
+</ng-template>

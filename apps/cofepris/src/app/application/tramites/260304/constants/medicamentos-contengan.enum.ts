@@ -188,7 +188,7 @@ export const PRODUCTO_TABLA_ESTUPEFACIENTES_EXPORTICON = [
     orden: 2,
   },
   {
-    encabezado: 'Denominación común internacional (DCI)',
+    encabezado: 'Denominación común internacional (DCI) o Denominación genérica o nombre científico',
     clave: (ele: TablaMercanciasDatos): string | undefined =>
       ele.denominacionCumonInternacional, // Reemplaza 'ele.denominacionEspecificaProducto' con la clave correcta
     orden: 3,
@@ -215,46 +215,45 @@ export const PRODUCTO_TABLA_ESTUPEFACIENTES_EXPORTICON = [
       ele.descripcionFraccion, // Reemplaza 'ele.descripcionFraccion' con la clave correcta
     orden: 7,
   },
-
+  {
+    encabezado: 'Cantidad UMC',
+    clave: (ele: TablaMercanciasDatos): string => ele.cantidadUMC, // Reemplaza 'ele.cantidadUMT' con la clave correcta
+    orden: 8,
+  },
   {
     encabezado: 'Cantidad de lotes ',
     clave: (ele: TablaMercanciasDatos): string | undefined =>
       ele.cantidadDeLotes, // Reemplaza 'ele.descripcionFraccion' con la clave correcta
-    orden: 8,
+    orden: 9,
+  },
+  {
+    encabezado: 'Número de registro sanitario',
+    clave: (ele: TablaMercanciasDatos): string | undefined => ele.numeroRegistroSanitario,
+    orden: 10,
   },
   {
     encabezado: 'Presentación',
     clave: (ele: TablaMercanciasDatos): string => ele.presentacion, // Reemplaza 'ele.Presentación' con la clave correcta
-    orden: 9,
+    orden: 11,
   },
   {
     encabezado: 'Uso especifico',
     clave: (ele: TablaMercanciasDatos): string => ele.usoEspecifico, // Reemplaza 'ele.usoEspecifico' con la clave correcta
-    orden: 10,
+    orden: 12,
+  },
+  {
+    encabezado: 'Detallar uso específico',
+    clave: (ele: TablaMercanciasDatos): string | undefined => ele.detallarUsoEspecifico,
+    orden: 13,
   },
   {
     encabezado: 'País de destino',
     clave: (ele: TablaMercanciasDatos): string | undefined => ele.paisDeDestino, // Reemplaza 'ele.paisProcedencia' con la clave correcta
-    orden: 11,
+    orden: 14,
   },
   {
     encabezado: 'Forma farmacéutica',
     clave: (ele: TablaMercanciasDatos): string => ele.formaFarmaceutica, // Reemplaza 'ele.formaFarmaceutica' con la clave correcta
-    orden: 12,
-  },
-  {
-    encabezado: 'Estado físico',
-    clave: (ele: TablaMercanciasDatos): string => ele.estadoFisico, // Reemplaza 'ele.estadoFisico' con la clave correcta
-    orden: 13,
-  },
-  {
-    encabezado: 'Unidad de medida de tarifa (UMT)',
-    clave: (ele: TablaMercanciasDatos): string => ele.unidadMedidaTarifa, // Reemplaza 'ele.unidadMedidaTarifa' con la clave correcta
-    orden: 14,
-  },
-  {
-    encabezado: 'Cantidad UMT',
-    clave: (ele: TablaMercanciasDatos): string => ele.cantidadUMT, // Reemplaza 'ele.cantidadUMT' con la clave correcta
     orden: 15,
   },
   {
@@ -264,15 +263,20 @@ export const PRODUCTO_TABLA_ESTUPEFACIENTES_EXPORTICON = [
     orden: 16,
   },
   {
-    encabezado: 'Cantidad UMC',
-    clave: (ele: TablaMercanciasDatos): string => ele.cantidadUMC, // Reemplaza 'ele.cantidadUMT' con la clave correcta
+    encabezado: 'Cantidad UMT',
+    clave: (ele: TablaMercanciasDatos): string => ele.cantidadUMT, // Reemplaza 'ele.cantidadUMT' con la clave correcta
     orden: 17,
   },
   {
-    encabezado: 'Tipo producto',
-    clave: (ele: TablaMercanciasDatos): string => ele.tipoProducto, // Reemplaza 'ele.tipoProducto' con la clave correcta
+    encabezado: 'Unidad de medida de tarifa (UMT)',
+    clave: (ele: TablaMercanciasDatos): string => ele.unidadMedidaTarifa, // Reemplaza 'ele.unidadMedidaTarifa' con la clave correcta
     orden: 18,
   },
+  {
+    encabezado: 'Tipo de Producto',
+    clave: (ele: TablaMercanciasDatos): string => ele.tipoProducto, // Reemplaza 'ele.tipoProducto' con la clave correcta
+    orden: 19,
+  }
 ];
 
 /**
@@ -325,6 +329,7 @@ export const ELEMENTOS_REQUERIDOS = [
   'denominacionRazon',
   'scian',
   'correoElectronico',
+  'manifesto'
 ];
 
 /**
