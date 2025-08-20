@@ -10,11 +10,13 @@ import { OpinionDetalleResponse } from '../../../../core/models/130118/opinion-d
 import { OpinionResponse } from '../../../../core/models/130118/opinion-response.model';
 import { Subject } from 'rxjs';
 
+import { CategoriaMensaje, Notificacion, NotificacionesComponent } from '../../notificaciones/notificaciones.component';
+
 
 @Component({
   selector: 'tab-opinion',
   standalone: true,
-  imports: [CommonModule, OpinionComponent, DetalleOpinionComponent],
+  imports: [CommonModule, OpinionComponent, DetalleOpinionComponent, NotificacionesComponent],
   templateUrl: './tab-opinion.component.html',
   styleUrl: './tab-opinion.component.scss',
 })
@@ -50,6 +52,17 @@ export class TabOpinionComponent implements OnDestroy{
   @Input() tramite!: number;
 
   /**
+   * URL de la página actual.
+  */
+  public nuevaNotificacion: Notificacion | null = null;
+  
+  /**
+   * Folio temporal de la solicitud.
+   * Se utiliza para mostrar el folio en la notificación de éxito.
+  */
+  public alertaNotificacion!: Notificacion;
+
+  /**
    * Constructor del componente
    * @param detalleOpinonService Servicio para obtener detalles de opiniones
    */
@@ -75,12 +88,43 @@ export class TabOpinionComponent implements OnDestroy{
   getSolicitud(idOpinion: string): void {
     this.detalleOpinonService
       .getDetalleOpinion(this.tramite, idOpinion)
-      .subscribe((data) => {
-       if (data.codigo === "00") {
-          this.solicitud = data.datos ?? {} as OpinionDetalleResponse;
-          this.seleccionaTab(2); 
+      .subscribe({
+        next: (data) => {
+          if (data.codigo === "00") {
+            this.solicitud = data.datos ?? {} as OpinionDetalleResponse;
+            this.seleccionaTab(2);
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.seleccionaTab(1);
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: data.error || 'Error detalle opinión',
+              mensaje:
+                data.causa ||
+                data.mensaje ||
+                data.error ||
+                'Ocurrió un error al consultar detalle opinión.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+        },
+        error: (error) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: '',
+            mensaje: error?.error?.error || 'Error inesperado en detalle opinión.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
         }
-
       });
   }
 

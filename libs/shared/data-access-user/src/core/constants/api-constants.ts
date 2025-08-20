@@ -314,3 +314,15 @@ export const IDOPINION= '{idOpinion}';
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/consulta-detalle%20opninion 
  */
 export const API_GET_OPINION_DETALLE = `sat-t${TRAMITE}/tramite/opinion/${IDOPINION}/detalle`
+
+/**
+ * Id dictamen que se utilizará en las consultas.
+ * Este valor debe ser reemplazado por el tramite correspondiente.
+ */
+export const IDDICTAMEN= '{idDictamen}';
+
+/**
+ * API para Consultar detalle de dictamen del tramite generico.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/buscar-dictamen-by-idDictamen 
+ */
+export const API_GET_DICTAMEN_DETALLE = `sat-t${TRAMITE}/tramite/dictamen/${IDDICTAMEN}`

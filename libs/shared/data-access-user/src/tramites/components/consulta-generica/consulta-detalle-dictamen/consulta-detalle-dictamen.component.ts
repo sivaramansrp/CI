@@ -1,0 +1,161 @@
+import { BodyTablaDictamenObservaciones, HeaderTablaDictamenObservacion } from '../../../../core/models/shared/consulta-generica.model';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject } from 'rxjs';
+
+import { CONSULTA_DICTAMEN_OBSERVACIONES } from '../../../../core/enums/consulta-generica.enum';
+import { CommonModule } from '@angular/common';
+import { DictamenDetalleResponse } from '../../../../core/models/130118/dictamen-detalle-response.model';
+
+@Component({
+  selector: 'lib-detalle-dictamen',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
+  templateUrl: './consulta-detalle-dictamen.component.html',
+  styleUrl: './consulta-detalle-dictamen.component.scss',
+})
+export class ConsultaDetalleDictamenComponent implements OnInit, OnChanges, OnDestroy {
+
+  /**
+    * Recibe los datos del dictamen desde el componente padre 
+  */
+  @Input() dictamenDetalle!: DictamenDetalleResponse;
+
+  /**
+   * Formulario reactivo para dictamen.
+   * @type {FormGroup}
+  */
+  public detalleForm!: FormGroup;
+
+  /**
+   * Subject utilizado para manejar la cancelación de suscripciones.
+   * @type {Subject<void>}
+  */
+  public unsubscribe$ = new Subject<void>();
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = true;
+
+  /**
+   * Método para abrir el detalle del dictamen.
+   */
+  public verDetalle = ConsultaDetalleDictamenComponent.verDetalle;
+
+  /**
+   * Encabezado de la tabla de observaciones.
+   * Contiene las columnas que se mostrarán en la tabla.
+   * @type {HeaderTablaDictamenObservacion[]}
+  */
+  readonly encabezadoTablaObservaciones: HeaderTablaDictamenObservacion[] = CONSULTA_DICTAMEN_OBSERVACIONES.encabezadoDictamenObservaciones;
+
+   /**
+     * Datos de la tabla de observaciones.
+     * Contiene los registros que se mostrarán en la tabla.
+     * @type {BodyTablaDictamenObservaciones[]}
+     */
+    public datosTablaObservaciones: BodyTablaDictamenObservaciones[] = [];
+
+    
+  
+  /**
+    * Constructor para la consulta de opiniones.
+    * @param fb FormBuilder para crear formularios reactivos.
+  */
+  constructor(
+    private fb: FormBuilder
+  ) {
+     /** 
+     * Formulario reactivo para detalle.
+     */
+    this.detalleForm = this.fb.group({
+      estatus: ['', Validators.required],
+      sentidoDictamen: ['', Validators.required],
+      fechaCreacion: ['', Validators.required],
+      tipoDictamen: ['', Validators.required],
+      dictaminadoPor: ['', Validators.required],
+      fechaGeneracion: ['', Validators.required],
+      autorizadoPor: ['', Validators.required],
+      fechaAutorizacion: ['', Validators.required],
+      justificacionDictamen: ['', Validators.required],
+    });
+  }
+  
+  ngOnInit(): void {
+    this.inicializarEstadoFormulario(); 
+  }
+
+  /**
+   * Ciclo de vida: ngOnChanges
+   * Reacciona a cambios en las propiedades de entrada del componente.
+   * @param changes Objeto que contiene los cambios en las propiedades (@Input)
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['dictamenDetalle'] && changes['dictamenDetalle'].currentValue) {
+        this.getDetalleDictamen();
+      }
+  }
+
+  /**
+   * Método para obtener la información de la solicitud para detalle de dictamen.
+   * @returns {void}
+   */
+  getDetalleDictamen(): void {
+    /** 
+     * Verifica si hay datos y actualiza el formulario.
+     */
+    if (this.dictamenDetalle !== null) {
+      const SOLICITUDDATA = this.dictamenDetalle;
+
+      this.detalleForm.patchValue({
+        estatus: SOLICITUDDATA.estado_dictamen,
+        sentidoDictamen: SOLICITUDDATA.sentido_dictamen,
+        fechaCreacion: SOLICITUDDATA.fecha_creacion,
+        tipoDictamen: SOLICITUDDATA.tipo_dictamen,
+        dictaminadoPor: SOLICITUDDATA.dictaminado,
+        fechaGeneracion: SOLICITUDDATA.fecha_emision,
+        autorizadoPor: SOLICITUDDATA.autorizado,
+        fechaAutorizacion: SOLICITUDDATA.fecha_autorizacion,
+        justificacionDictamen: SOLICITUDDATA.justificacion,
+      });
+      
+      this.datosTablaObservaciones = (SOLICITUDDATA.observaciones || []).map((obs) => ({
+        id: obs.id_observacion,
+        fechaObservacion: obs.fecha_observacion,
+        fechaAtencion: obs.fecha_atencion,
+        generadaPor: `${obs.nombre} ${obs.apellido_paterno} ${obs.apellido_materno}`.trim(),
+        estatusObservacion: obs.estado_observacion
+      }));
+
+    } 
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos.
+  */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.detalleForm.disable();
+    } 
+  }
+
+  /**
+   * Abre la pestaña para mostrar el detalle del dictamen.
+   * @param {number} _id - Es el Id del dictamen.
+   * @returns {void}
+   */
+  static verDetalle(_id: number): void {
+    // Lógica para abrir el detalle del dictamen
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
+   * Cancela todas las suscripciones activas para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+}

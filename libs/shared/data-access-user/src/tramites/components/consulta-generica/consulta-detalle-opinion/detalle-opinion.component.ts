@@ -140,6 +140,11 @@ export class DetalleOpinionComponent implements OnInit, OnChanges, OnDestroy {
     this.inicializarEstadoFormulario();    
   }
 
+  /**
+   * Ciclo de vida: ngOnChanges
+   * Reacciona a cambios en las propiedades de entrada del componente.
+   * @param changes Objeto que contiene los cambios en las propiedades (@Input)
+ */
   ngOnChanges(changes: SimpleChanges): void {
       if (changes['solicitud'] && changes['solicitud'].currentValue) {
         this.getSolicitud();

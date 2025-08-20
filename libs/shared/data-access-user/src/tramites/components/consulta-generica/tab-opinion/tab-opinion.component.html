@@ -4,20 +4,30 @@
         <li [ngClass]="indice === 1 ? 'active' : ''">
           <a (click)="seleccionaTab(1)" (keyup.enter)="seleccionaTab(1)" (keydown.space)="seleccionaTab(1)" tabindex="0" data-toggle="tab" >Opinión</a>
         </li>
-        <li *ngIf="indice === 2" [ngClass]="indice === 2 ? 'active' : ''">
-          <a (click)="seleccionaTab(2)" (keyup.enter)="seleccionaTab(2)" (keydown.space)="seleccionaTab(2)" tabindex="0" data-toggle="tab" >Detalle</a>
-        </li>
+       <li [ngClass]="{ 'active': indice === 2, 'disabled': indice !== 2 }">
+        <a (click)="indice !== 2 ? $event.preventDefault() : seleccionaTab(2)"
+           (keyup.enter)="indice === 2 && seleccionaTab(2)"
+           (keydown.space)="indice === 2 && seleccionaTab(2)"
+           tabindex="0"
+           data-toggle="tab">Detalle</a>
+      </li>
       </ul>
   
       <ng-container>
         @switch (indice) {
         @case (1) {
-         <lib-opinion [opinion] = "opinion" (idOpinionSeleccionada)="onIdOpinionSeleccionada($event)"></lib-opinion>
+         <lib-opinion [opinion]="opinion" (idOpinionSeleccionada)="onIdOpinionSeleccionada($event)"></lib-opinion>
         }
         @case (2) {
-         <lib-detalle-opinion *ngIf="indice === 2" [solicitud]="solicitud"></lib-detalle-opinion>
+         <lib-detalle-opinion [solicitud]="solicitud"></lib-detalle-opinion>
         }
         }
       </ng-container>
     </div>
   </div>
+
+@if(nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion"></lib-notificaciones>
+</section>
+}
