@@ -79,10 +79,10 @@
           <input
             class="cursor-pointer"
             type="radio"
-            name="filaSeleccionada"
+            [name]="'filaSeleccionada_' + tableId"
             [(ngModel)]="idFilaSeleccionada"
             [value]="i"
-            (change)="seleccionarFila(i, fila)"
+            (change)="seleccionarFila($event, i, fila)"
             [checked]="idFilaSeleccionada === i"
             aria-label="Seleccionar"
             [disabled]="disableSeleccionTablaRadio"
