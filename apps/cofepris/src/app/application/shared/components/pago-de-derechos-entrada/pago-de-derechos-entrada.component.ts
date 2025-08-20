@@ -141,6 +141,7 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly
+             this.guardarDatosFormulario();
         })
       )
       .subscribe()
