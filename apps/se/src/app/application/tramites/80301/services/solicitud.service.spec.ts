@@ -1,115 +1,157 @@
-// @ts-nocheck
-import { async } from '@angular/core/testing';
-import { Injectable } from '@angular/core';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
+import { TestBed } from '@angular/core/testing';
 import { SolicitudService } from './solicitud.service';
 import { HttpClient } from '@angular/common/http';
+import { of } from 'rxjs';
 import { Tramite80301Store } from '../estados/tramite80301.store';
+import {
+  Solicitud80301State,
+  Solicitud80301StateObj,
+} from '../estados/tramite80301.store';
+import { DatosDelModificacion } from '../models/datos-tramite.model';
+import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 
-@Injectable()
-class MockHttpClient {
-  post() {};
-}
-
-@Injectable()
-class MockTramite80301Store {}
+import {
+  Anexo,
+  Bitacora,
+  Complimentaria,
+  Federetarios,
+  Operacions,
+} from '../models/plantas-consulta.model';
 
 describe('SolicitudService', () => {
-  let service;
+  let service: SolicitudService;
+  let httpClientSpy: jest.Mocked<HttpClient>;
+  let storeSpy: jest.Mocked<Tramite80301Store>;
 
   beforeEach(() => {
-    service = new SolicitudService({}, {});
-  });
+    httpClientSpy = {
+      get: jest.fn(),
+    } as any;
 
-  it('should run #getDatosDelSolicitante()', async () => {
-    service.http = service.http || {};
-    service.http.get = jest.fn().mockReturnValue(observableOf({}));
-    service.getDatosDelSolicitante();
-    expect(service.http.get).toHaveBeenCalled();
-  });
+    storeSpy = {
+      setRfc: jest.fn(),
+      setFederal: jest.fn(),
+      setTipo: jest.fn(),
+      setPrograma: jest.fn(),
+    } as any;
 
-  it('should run #getDatosModificacion()', async () => {
-    service.http = service.http || {};
-    service.http.get = jest.fn();
-    service.getDatosModificacion();
-    expect(service.http.get).toHaveBeenCalled();
-  });
-
-  it('should run #getModificacion()', async () => {
-    service.http = service.http || {};
-    service.http.get = jest.fn();
-    service.getModificacion();
-    expect(service.http.get).toHaveBeenCalled();
-  });
-
-  it('should run #getDatosTableData()', async () => {
-    service.http = service.http || {};
-    service.http.get = jest.fn();
-    service.getDatosTableData();
-    expect(service.http.get).toHaveBeenCalled();
-  });
-
-  it('should run #obtenerComplimentaria()', async () => {
-    service.http = service.http || {};
-    service.http.get = jest.fn().mockReturnValue(observableOf({}));
-    service.obtenerComplimentaria();
-    expect(service.http.get).toHaveBeenCalled();
-  });
-
-  it('should run #obtenerAnexo()', async () => {
-    service.http = service.http || {};
-    service.http.get = jest.fn().mockReturnValue(observableOf({}));
-    service.obtenerAnexo();
-    expect(service.http.get).toHaveBeenCalled();
-  });
-
-  it('should run #obtenerFederetarios()', async () => {
-    service.http = service.http || {};
-    service.http.get = jest.fn().mockReturnValue(observableOf({}));
-    service.obtenerFederetarios();
-    expect(service.http.get).toHaveBeenCalled();
-  });
-
-  it('should run #obtenerOperacion()', async () => {
-    service.http = service.http || {};
-    service.http.get = jest.fn().mockReturnValue(observableOf({}));
-    service.obtenerOperacion();
-    expect(service.http.get).toHaveBeenCalled();
-  });
-
-  it('should run #obtenerBitacora()', async () => {
-    service.http = service.http || {};
-    service.http.get = jest.fn().mockReturnValue(observableOf({}));
-    service.obtenerBitacora();
-    expect(service.http.get).toHaveBeenCalled();
-  });
-
-  it('should run #actualizarEstadoFormulario()', async () => {
-    service.store = service.store || {};
-    service.store.setRfc = jest.fn();
-    service.store.setFederal = jest.fn();
-    service.store.setTipo = jest.fn();
-    service.store.setPrograma = jest.fn();
-    service.actualizarEstadoFormulario({
-      datosModificacion: {
-        rfc: {},
-        federal: {},
-        tipo: {},
-        programa: {}
-      }
+    TestBed.configureTestingModule({
+      providers: [
+        SolicitudService,
+        { provide: HttpClient, useValue: httpClientSpy },
+        { provide: Tramite80301Store, useValue: storeSpy },
+      ],
     });
-    expect(service.store.setRfc).toHaveBeenCalled();
-    expect(service.store.setFederal).toHaveBeenCalled();
-    expect(service.store.setTipo).toHaveBeenCalled();
-    expect(service.store.setPrograma).toHaveBeenCalled();
+    service = TestBed.inject(SolicitudService);
   });
 
-  it('should run #obtenerTramiteDatos()', async () => {
-    service.http = service.http || {};
-    service.http.get = jest.fn();
-    service.obtenerTramiteDatos();
-    expect(service.http.get).toHaveBeenCalled();
+  it('should be created', () => {
+    expect(service).toBeTruthy();
   });
 
+  it('getDatosDelSolicitante should return data', (done) => {
+    const mockData: RespuestaCatalogos[] = [{ id: 1 } as any];
+    httpClientSpy.get.mockReturnValue(of({ data: mockData }));
+    service.getDatosDelSolicitante().subscribe((result) => {
+      expect(result).toEqual(mockData);
+      done();
+    });
+  });
+
+  it('getDatosModificacion should return data', (done) => {
+    const mockData: RespuestaCatalogos[] = [{ id: 2 } as any];
+    httpClientSpy.get.mockReturnValue(of(mockData));
+    service.getDatosModificacion().subscribe((result) => {
+      expect(result).toEqual(mockData);
+      done();
+    });
+  });
+
+  it('getModificacion should return data', (done) => {
+    const mockData: RespuestaCatalogos[] = [{ id: 3 } as any];
+    httpClientSpy.get.mockReturnValue(of(mockData));
+    service.getModificacion().subscribe((result) => {
+      expect(result).toEqual(mockData);
+      done();
+    });
+  });
+
+  it('getDatosTableData should return table data', (done) => {
+    const mockData: DatosDelModificacion[] = [{ campo: 'valor' } as any];
+    httpClientSpy.get.mockReturnValue(of(mockData));
+    service.getDatosTableData().subscribe((result) => {
+      expect(result).toEqual(mockData);
+      done();
+    });
+  });
+
+  it('obtenerComplimentaria should return complimentaria data', (done) => {
+    const mockData: Complimentaria[] = [{ nombre: 'test' } as any];
+    httpClientSpy.get.mockReturnValue(of({ data: mockData }));
+    service.obtenerComplimentaria().subscribe((result) => {
+      expect(result).toEqual(mockData);
+      done();
+    });
+  });
+
+  it('obtenerAnexo should return anexo data', (done) => {
+    const mockData: Anexo[] = [{ archivo: 'file.pdf' } as any];
+    httpClientSpy.get.mockReturnValue(of({ data: mockData }));
+    service.obtenerAnexo().subscribe((result) => {
+      expect(result).toEqual(mockData);
+      done();
+    });
+  });
+
+  it('obtenerFederetarios should return federetarios data', (done) => {
+    const mockData: Federetarios[] = [{ nombre: 'fed' } as any];
+    httpClientSpy.get.mockReturnValue(of({ data: mockData }));
+    service.obtenerFederetarios().subscribe((result) => {
+      expect(result).toEqual(mockData);
+      done();
+    });
+  });
+
+  it('obtenerOperacion should return operacion data', (done) => {
+    const mockData: Operacions[] = [{ operacion: 'op' } as any];
+    httpClientSpy.get.mockReturnValue(of({ data: mockData }));
+    service.obtenerOperacion().subscribe((result) => {
+      expect(result).toEqual(mockData);
+      done();
+    });
+  });
+
+  it('obtenerBitacora should return bitacora data', (done) => {
+    const mockData: Bitacora[] = [{ registro: 'bit' } as any];
+    httpClientSpy.get.mockReturnValue(of({ data: mockData }));
+    service.obtenerBitacora().subscribe((result) => {
+      expect(result).toEqual(mockData);
+      done();
+    });
+  });
+
+  it('actualizarEstadoFormulario should call store methods', () => {
+    const datos: Solicitud80301State = {
+      datosModificacion: {
+        rfc: 'RFC123',
+        federal: 'FED',
+        tipo: 'TIPO',
+        programa: 'PROG',
+      },
+    } as any;
+    service.actualizarEstadoFormulario(datos);
+    expect(storeSpy.setRfc).toHaveBeenCalledWith('RFC123');
+    expect(storeSpy.setFederal).toHaveBeenCalledWith('FED');
+    expect(storeSpy.setTipo).toHaveBeenCalledWith('TIPO');
+    expect(storeSpy.setPrograma).toHaveBeenCalledWith('PROG');
+  });
+
+  it('obtenerTramiteDatos should return tramite datos', (done) => {
+    const mockData: Solicitud80301StateObj = { some: 'data' } as any;
+    httpClientSpy.get.mockReturnValue(of(mockData));
+    service.obtenerTramiteDatos().subscribe((result) => {
+      expect(result).toEqual(mockData);
+      done();
+    });
+  });
 });

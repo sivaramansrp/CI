@@ -1,14 +1,20 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
+import { TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Bitacora } from '../../models/plantas-consulta.model';
 import { CONFIGURACION_BITACORA_TABLA } from '../../constantes/modificacion.enum';
+import { CommonModule } from '@angular/common';
+import { ComplementariaImmexComponent } from '../complementaria-immex/complementaria-immex.component';
 import { ConfiguracionColumna } from '../../models/configuracio-columna.model';
 import { ModificacionSolicitudeService } from '../../services/modificacion-solicitude.service';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-bitacora',
   templateUrl: './bitacora.component.html',
+  standalone: true,
+  imports: [TituloComponent, TablaDinamicaComponent, ComplementariaImmexComponent, CommonModule, ReactiveFormsModule],
 })
 export class BitacoraComponent implements OnDestroy {
   /**
