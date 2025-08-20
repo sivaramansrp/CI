@@ -16,7 +16,7 @@
         </div>
       </div>
       
-        <div class="col-md-6 d-flex align-items-start justify-content-center">
+        <div class="col-md-6 d-flex align-items-center justify-content-start">
           <div class="form-check">
             <input
               class="form-check-input"
@@ -271,30 +271,14 @@
         <div class="row mt-5">
           <label>Mercancías disponibles</label>
         </div>
-        <div class="table-container mt-5" *ngIf="!hayMercanciasDisponibles">
+        <div class="table-container mt-5" >
           <app-tabla-dinamica
             [tipoSeleccionTabla]="tablaSeleccion.UNDEFINED"
             [configuracionTabla]="headers"
             [disableSeleccionTablaRadio]="soloLectura"
-          ></app-tabla-dinamica>
-        </div>
-        <div class="table-container mt-5" *ngIf="hayMercanciasDisponibles">
-          <app-tabla-dinamica
-            [tipoSeleccionTabla]="tablaSeleccion.UNDEFINED"
-            [configuracionTabla]="headers"
             [datos]="mercanciaDisponsiblesTablaDatos"
-            (click)="manejarClic()"
-            [disableSeleccionTablaRadio]="soloLectura"
           ></app-tabla-dinamica>
         </div>
-        <nav
-          aria-label="Page navigation example"
-          *ngIf="hayMercanciasDisponibles"
-        >
-          <ul class="pagination d-flex justify-content-center mb-3">
-            <li class="page-item"><a class="page-link">1</a></li>
-          </ul>
-        </nav>
       </ng-container>
       <ng-titulo titulo="Carga de mercancías por archivo" />
       <div
@@ -454,7 +438,7 @@
     </ng-container>
   </form>
 </div>
-<div class="container" *ngIf="!esMercanciaEnEdicion && esFormulario">
+<div class="container" >
   <ng-titulo titulo="Datos de la mercancía" />
   <form [formGroup]="mercanciaForm" (ngSubmit)="validarMercanciaForm()">
     <ng-container formGroupName="validacionMercanciaForm">
@@ -511,26 +495,8 @@
             "
           />
         </div>
-      </div>
-      <div class="row mt-5">
-        <div class="col-md-8">
-          <label>Nomre en inglés:</label>
-          <input
-            type="text"
-            required="true"
-            class="form-control grisColor"
-            formControlName="nombreEnIngles"
-            readonly
-            (change)="
-              setValoresStore(
-                validacionMercanciaForm,
-                'nombreEnIngles'
-              )
-            "
-          />
-        </div>
-        <div class="col-md-4">
-          <label>Criterio para conferir origen:</label>
+             <div class="col-md-4">
+          <label>Criterio para trato preferencial:</label>
           <input
             type="text"
             required="true"
@@ -541,6 +507,40 @@
               setValoresStore(
                 validacionMercanciaForm,
                 'criterioParaConferir'
+              )
+            "
+          />
+        </div>
+      </div>
+      <div class="row mt-5">
+        <div class="col-md-4">
+          <label>Valor de contenido regional:</label>
+          <input
+            type="text"
+            required="true"
+            class="form-control grisColor"
+            formControlName="valordeContenidoRegional"
+            readonly
+            (change)="
+              setValoresStore(
+                validacionMercanciaForm,
+                'nombreEnIngles'
+              )
+            "
+          />
+          </div>
+           <div class="col-md-4">
+          <label>Otras instancias:</label>
+          <input
+            type="text"
+            required="true"
+            class="form-control grisColor"
+            formControlName="otrasInstancias"
+            readonly
+            (change)="
+              setValoresStore(
+                validacionMercanciaForm,
+                'otrasInstancias'
               )
             "
           />
@@ -589,6 +589,20 @@
         </div>
       </div>
       <div class="row mt-5">
+        <div class="col-md-8">
+          <label>Complemento de la descripción*:</label>
+          <textarea
+            class="form-control"
+            rows="3"
+            formControlName="complementoDelaDescripcion"
+            (change)="
+              setValoresStore(
+                validacionMercanciaForm,
+                'complementoDelaDescripcion'
+              )
+            "
+          ></textarea>
+        </div>
         <div class="col-md-4">
           <label>Valor de la mercancía(dólares)*:</label>
           <input
@@ -604,20 +618,25 @@
             "
           />
         </div>
-        <div class="col-md-8">
-          <label>Complemento de la descripción*:</label>
-          <textarea
-            cols="80"
-            rows="3"
-            formControlName="complementoDelaDescripcion"
+        
+      </div>
+      <div class="row">
+         <div class="col-md-6">
+          <label>Número de serie</label>
+          <input
+            type="text"
+            required="true"
+            class="form-control"
+            formControlName="numeroDeSerie"
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
-                'complementoDelaDescripcion'
+                'numeroDeSerie'
               )
             "
-          ></textarea>
+          />
         </div>
+
       </div>
       <div class="row mt-5">
         <div class="col-md-4">
@@ -628,12 +647,12 @@
             [isDisabled]="soloLectura"
           ></input-fecha>
         </div>
-        <div class="col-md-4">
-          <label>N° factura*:</label>
+        <div class="col-md-4 ">
+          <label>N° factura / Referencia *:</label>
           <input
             type="text"
             required="true"
-            class="form-control"
+            class="form-control mt-8"
             formControlName="numeroFactura"
             (change)="
               setValoresStore(
@@ -643,10 +662,10 @@
             "
           />
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 mt-5">
           <app-catalogo-select
             [catalogo]="optionsTipoFactura"
-            [label]="'Tipo de factura'"
+            [label]="''"
             [required]="true"
             id="tipoFactura"
             formControlName="tipoFactura"
@@ -681,3 +700,8 @@
     </ng-container>
   </form>
 </div>
+
+   @if(mostrarMensajeError){
+            <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+        (confirmacionModal)="eliminarErrorMessage()"></lib-notificaciones>
+    }

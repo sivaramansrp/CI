@@ -173,6 +173,7 @@ export interface Tramite110221State {
   fechaFinal: string;
   archivo: string;
   fraccionMercanciaArancelaria: string;
+  otrasInstancias:string;
   nombreTecnico: string;
   nombreComercialDelaMercancia: string;
   criterioParaConferir: string;
@@ -185,7 +186,8 @@ export interface Tramite110221State {
   fecha: string;
   numeroFactura: string;
   mercanciaSeleccionadasTablaData:SeleccionadasTabla[],
-  mercanciaDisponsiblesTablaDatos:ColumnasTabla[]
+  mercanciaDisponsiblesTablaDatos:ColumnasTabla[],
+  valordeContenidoRegional:string
 }
 
 /**
@@ -296,7 +298,9 @@ export function createInitialState(): Tramite110221State {
     tipoFactura: '',
     fecha: '',
     mercanciaSeleccionadasTablaData:[],
-    mercanciaDisponsiblesTablaDatos:[]
+    mercanciaDisponsiblesTablaDatos:[],
+    otrasInstancias:'',
+    valordeContenidoRegional:''
 
   };
 }

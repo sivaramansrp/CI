@@ -3,6 +3,8 @@ import {
   Catalogo,
   CatalogosSelect,
   InputFecha,
+  Notificacion,
+  NotificacionesComponent,
   REGEX_PATRON_DECIMAL_2,
   REGEX_SOLO_DIGITOS,
   REG_X,
@@ -25,7 +27,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   ConsultaioQuery,
   ConsultaioState,
-  InputRadioComponent,
 } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
@@ -48,16 +49,6 @@ import mercanciaTable from '@libs/shared/theme/assets/json/110221/mercancia.json
 
 const TERCEROS_TEXTO_DE_ALERTA =
   'Para continuar con el trámite, debes agregar por lo menos una mercancía.';
-interface RadioOpcion {
-  /**
-   * Etiqueta visible para el usuario.
-   */
-  label: string;
-  /**
-   * Valor interno asignado a la opción seleccionada.
-   */
-  value: string;
-}
 /**
  * Componente que representa el formulario de certificado de origen en el trámite.
  */
@@ -74,6 +65,7 @@ interface RadioOpcion {
     AlertComponent,
     TablaDinamicaComponent,
     InputFechaComponent,
+    NotificacionesComponent
   ],
   templateUrl: './certificado-de-origen.component.html',
   styleUrl: './certificado-de-origen.component.css',
@@ -252,7 +244,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   /**
    * Datos de la tabla de mercancías disponibles.
    */
-  public mercanciaDisponsiblesTablaDatos: ColumnasTabla[] = [];
+  public mercanciaDisponsiblesTablaDatos: ColumnasTabla[] = [] as ColumnasTabla[];
 
   /**
    * Datos de la tabla de mercancías seleccionadas.
@@ -281,20 +273,16 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Configuración de las columnas de la tabla de mercancías seleccionadas.
    */
   public headersData = HEADERS_DATA;
-  /**
-   * Opciones para el botón de radio.
-   * @property {RadioOpcion[]} opcionDeBotonDeRadio
+   /**
+   * Indica si se debe mostrar el mensaje de error.
+   * @type {boolean}
    */
-  opcionDeBotonDeRadio: RadioOpcion[] = [
-    {
-      label: 'Periodo',
-      value: 'periodo',
-    },
-    {
-      label: 'Una sola importación:',
-      value: 'sola',
-    },
-  ];
+  public mostrarMensajeError: boolean = false;
+ /**
+   * Representa una nueva notificación que será utilizada en el componente.
+   * @type {Notificacion}
+   */
+  public nuevaNotificacion!: Notificacion;
   /**
    * Constructor del componente.
    * @param fb Constructor de formularios reactivos
@@ -324,7 +312,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
           // Set table data from solicitudState if available
           if (this.solicitudState) {
             this.mercanciaSeleccionadasTablaData = this.solicitudState.mercanciaSeleccionadasTablaData ?? [];
-            this.mercanciaDisponsiblesTablaDatos = this.solicitudState.mercanciaDisponsiblesTablaDatos ?? [];
+            this.mercanciaDisponsiblesTablaDatos = this.solicitudState.mercanciaDisponsiblesTablaDatos.length !== 0 ? this.solicitudState.mercanciaDisponsiblesTablaDatos: this.getMercanciaDisponsibleTableData;
           }
         })
       )
@@ -339,10 +327,10 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
           this.consultaDatos = seccionState;
           this.soloLectura = this.consultaDatos.readonly;
           this.inicializarEstadoFormulario();
-          // Set table data again after readonly state changes
+          // Set table data again after readonly state changesmercanciaDisponsiblesTablaDatos
           if (this.solicitudState) {
             this.mercanciaSeleccionadasTablaData = this.solicitudState.mercanciaSeleccionadasTablaData ?? [];
-            this.mercanciaDisponsiblesTablaDatos = this.solicitudState.mercanciaDisponsiblesTablaDatos ?? [];
+            this.mercanciaDisponsiblesTablaDatos = this.solicitudState.mercanciaDisponsiblesTablaDatos.length !== 0 ? this.solicitudState.mercanciaDisponsiblesTablaDatos : this.getMercanciaDisponsibleTableData;
           }
         })
       )
@@ -351,7 +339,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     // Set table data if solicitudState is already available
     if (this.solicitudState) {
       this.mercanciaSeleccionadasTablaData = this.solicitudState.mercanciaSeleccionadasTablaData ?? [];
-      this.mercanciaDisponsiblesTablaDatos = this.solicitudState.mercanciaDisponsiblesTablaDatos ?? [];
+      this.mercanciaDisponsiblesTablaDatos = this.solicitudState.mercanciaDisponsiblesTablaDatos.length !== 0 ? this.solicitudState.mercanciaDisponsiblesTablaDatos : this.getMercanciaDisponsibleTableData;
     }
 
     this.mercanciatable();
@@ -725,24 +713,23 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.mercanciaForm = this.fb.group({
       validacionMercanciaForm: this.fb.group({
         fraccionMercanciaArancelaria: [
-          this.solicitudState?.fraccionMercanciaArancelaria,
-          [Validators.required],
+          this.solicitudState?.fraccionMercanciaArancelaria || ''
         ],
         nombreTecnico: [
-          this.solicitudState?.nombreTecnico,
-          [Validators.required],
+          this.solicitudState?.nombreTecnico || ''
         ],
         nombreComercialDelaMercancia: [
-          this.solicitudState?.nombreComercialDelaMercancia,
-          [Validators.required],
+          this.solicitudState?.nombreComercialDelaMercancia || ''
         ],
         criterioParaConferir: [
-          this.solicitudState?.criterioParaConferir,
-          [Validators.required],
+          this.solicitudState?.criterioParaConferir || ''
         ],
         nombreEnIngles: [
           this.solicitudState?.nombreEnIngles,
           [Validators.required],
+        ],
+        valordeContenidoRegional: [
+          this.solicitudState?.valordeContenidoRegional || '',
         ],
         cantidad: [
           this.solicitudState?.cantidad,
@@ -757,12 +744,17 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
           this.solicitudState?.complementoDelaDescripcion,
           [Validators.required],
         ],
+        numeroDeSerie: [
+          this.solicitudState?.numeroDeSerie || ''
+        ],
         tipoFactura: [this.solicitudState?.tipoFactura, [Validators.required]],
         fecha: [this.solicitudState?.fecha, [Validators.required]],
         numeroFactura: [
           this.solicitudState?.numeroFactura,
           [Validators.required],
         ],
+        otrasInstancias:[this.solicitudState?.otrasInstancias || ''],
+        
       }),
     });
 
@@ -783,4 +775,24 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       this.mercanciaForm?.enable();
     }
   }
-}
+
+    eliminarErrorMessage():void {
+    this.mostrarMensajeError =false;
+  }
+  errorMessageExportador(): void {
+        this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'info',
+        titulo: 'Selección requerida',
+        mensaje: 'Debe seleccionar al menos un exportador para continuar.',
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Cancelar',
+        txtBtnCancelar: '',
+        };
+          this.mostrarMensajeError =true;
+      }
+    }
+  
+  
