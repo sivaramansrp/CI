@@ -1,12 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  ConsultaioQuery,
-  ConsultaioState,
-} from '@ng-mf/data-access-user';
-import {
-  Solicitud32505State,
-  Tramite32505Store,
-} from '../../../../estados/tramites/trimite32505.store';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Solicitud32505State, Tramite32505Store } from '../../../../estados/tramites/trimite32505.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AvisoComponent } from '../../components/aviso/aviso.component';
 import { AvisoService } from '../../services/aviso.service';
@@ -38,6 +32,9 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * Este estado contiene información sobre la consulta actual.
    */
   public consultaState!: ConsultaioState; 
+
+    @Output() booleanEvent = new EventEmitter<boolean>();
+
 
 
   /**
