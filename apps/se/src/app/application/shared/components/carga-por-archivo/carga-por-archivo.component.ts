@@ -4,6 +4,11 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
+/**
+ * Componente encargado de gestionar la carga de archivos para la capacidad instalada.
+ * Permite al usuario seleccionar un archivo, visualizar el nombre del archivo seleccionado
+ * y muestra información y ayudas sobre el formato y los campos requeridos.
+ */
 @Component({
   selector: 'app-carga-por-archivo',
   standalone: true,
@@ -11,6 +16,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
   templateUrl: './carga-por-archivo.component.html',
   styleUrl: './carga-por-archivo.component.scss',
 })
+
 export class CargaPorArchivoComponent {
 
   /** Contiene los textos y mensajes utilizados en el componente para mostrar información y ayudas al usuario. */
@@ -47,5 +53,13 @@ export class CargaPorArchivoComponent {
     if (INPUT.files && INPUT.files.length > 0) {
       this.filaSeleccionadaNombre = INPUT.files[0].name;
     }
+  }
+
+  /**
+   * Devuelve el nombre del archivo seleccionado o el texto por defecto si no hay archivo seleccionado.
+   * @returns {string} Nombre del archivo o texto por defecto.
+   */
+  get fila(): string {
+    return this.filaSeleccionadaNombre ? this.filaSeleccionadaNombre : this.TEXTOS.CARGA_DE_ARCHIVO_DE_TEXTO;
   }
 }

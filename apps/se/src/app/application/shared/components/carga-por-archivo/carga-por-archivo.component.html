@@ -33,7 +33,7 @@
     <div class="col-md-12 mt-3">
         <input type="file" id="fileInput" #fileInput hidden (change)="onFilaSeleccionada($event)" >
         <span for="fileInput" class="custom-upload-btn" (click)="fileInput.click()">{{ TEXTOS.CARGA_DE_ARCHIVOS }}</span>
-        <span class="file-name">{{ filaSeleccionadaNombre || TEXTOS.CARGA_DE_ARCHIVO_DE_TEXTO }}</span>
+        <span class="file-name">{{ fila }}</span>
     </div>
     <div class="col-md-12 mt-5 mb-5">
         <button type="button" class="btn btn-primary me-2" (click)="cambioPathe()"> Agregar </button>
