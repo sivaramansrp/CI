@@ -42,6 +42,7 @@ import { TercerosFabricanteQuery } from '../../estados/queries/terceros-fabrican
 import { TercerosFabricanteService } from '../../services/terceros-fabricante.service';
 import TipoPersonaRadioOptions from '@libs/shared/theme/assets/json/260501/tipo-persona-options.json';
 import TipoPersonaTresRadioOptions from '@libs/shared/theme/assets/json/260501/tipo-persona-tres-options.json';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 /**
  * Componente que gestiona los terceros relacionados.
@@ -61,6 +62,7 @@ import TipoPersonaTresRadioOptions from '@libs/shared/theme/assets/json/260501/t
     ModalComponent,
     CatalogoSelectComponent,
     InputRadioComponent,
+    TooltipModule
   ],
 })
 
@@ -653,8 +655,16 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     this.tipoPersonaSelection = formGroup.get('tipoPersona')?.value || '';
     const TIPO_PERSONA_CONTROL = formGroup.get('tipoPersona');
     if (TIPO_PERSONA_CONTROL?.value) {
-      formGroup.get('rfc')?.enable();
-      formGroup.get('curp')?.enable();
+      if(this.fisica || this.moral) {
+          formGroup.get('rfc')?.enable();
+          formGroup.get('curp')?.disable();
+      } else if(this.noContribuyente) {
+          formGroup.get('rfc')?.disable();
+          formGroup.get('curp')?.enable();
+      } else {
+          formGroup.get('rfc')?.enable();
+          formGroup.get('curp')?.enable();
+      }
       formGroup.get('denominacionRazonSocial')?.enable();
       formGroup.get('nombre')?.enable();
       formGroup.get('primerApellido')?.enable();
@@ -907,6 +917,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   }
 
   public tercerosInputChecked(checkBoxName: string): void {
+    this.fisica = false;
+    this.moral = false;
+    this.noContribuyente = false;
     if (checkBoxName === 'nacional') {
       this.nacional = true;
       this.extranjero = false;
@@ -1451,6 +1464,10 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   cambiarRadio(value: string | number): void {
     const VALOR_SELECCIONADO = value as string;
+    const TIPO_PERSONA_CONTROL = this.agregarFabricanteFormGroup.get('tipoPersona');
+    if (TIPO_PERSONA_CONTROL) {
+      TIPO_PERSONA_CONTROL.reset();
+    }
     this.tercerosInputChecked(VALOR_SELECCIONADO);
   }
 

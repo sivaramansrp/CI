@@ -93,7 +93,12 @@ export interface ProsecState {
   sectorDatos: FilaSectors[];
   producirDatos: FilaProducir[];
   plantasDatos: FilaPlantas[];
+  prosecDatos: FilaPlantas[];
   productorDatos: FilaProductos[];
+  selectedDatos?: FilaPlantas[];
+  selectedSectorDatos?: FilaSectors[];
+  selectedProducirDatos?: FilaProducir[];
+  selectedProductorDatos?: FilaProductos[];
 }
 
 /**
@@ -122,8 +127,13 @@ export function createInitialState(): ProsecState {
     producirDatos: [],
     plantasDatos: [
     ],
+    prosecDatos: [],
     productorDatos: [
-    ]
+    ],
+    selectedDatos: [],
+    selectedSectorDatos: [],
+    selectedProducirDatos: [],
+    selectedProductorDatos: []
   };
 }
 
@@ -290,6 +300,17 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
    */
   public setPlantasDatos(plantasDatos: FilaPlantas[]): void {
     this.update((state) => ({ ...state, plantasDatos }));
+  }
+
+  /**
+   * @method setProsecDatos
+   * @description
+   * Actualiza el arreglo de datos de plantas PROSEC en el estado.
+   * @param {FilaPlantas[]} prosecDatos - Nuevo arreglo de plantas PROSEC a almacenar.
+   * @returns {void}
+   */
+  public setProsecDatos(prosecDatos: FilaPlantas[]): void {
+    this.update((state) => ({ ...state, prosecDatos }));
   }
 
   /**

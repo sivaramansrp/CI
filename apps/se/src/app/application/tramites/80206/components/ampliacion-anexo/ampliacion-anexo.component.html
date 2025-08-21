@@ -44,7 +44,7 @@
             <div class="form-group">
 
                 <label for="fraccionArancelaria">Fracción arancelaria:</label>
-                <input type="text" id="fraccionArancelaria" [(ngModel)]="fraccionArancelaria" [disabled]="esFormularioSoloLectura"name="fraccionArancelaria"
+                <input type="text" id="fraccionArancelaria" [(ngModel)]="fraccionArancelaria" [disabled]="esFormularioSoloLectura" name="fraccionArancelaria"
                     class="form-control" (ngModelChange)="enCambioDeCampo('fraccionArancelaria', $event)" />
 
             </div>
@@ -53,11 +53,11 @@
         <div class="row">
             <div class="col-md-12 mb-5">
                 <div class="pull-right">
-                    <button name="eliminarServicio" (click)="eliminarServiciosGrid()" class="btn btn-danger">
+                    <button name="eliminarServicio" (click)="eliminarServiciosGrid()" class="btn btn-danger" [disabled]="esFormularioSoloLectura">
                         Eliminar
                     </button>
                     <button name="agregarServicio" (click)="actualizaGridEmpresasNacionales()"
-                        class="btn btn-primary mx-2">
+                        class="btn btn-primary mx-2" [disabled]="esFormularioSoloLectura">
                         Agregar
                     </button>
                 </div>
@@ -73,7 +73,7 @@
 
             <div class="form-group">
 
-                <label for="importacion">fracción arancelaria de la mercancia de importación:</label>
+                <label for="importacion">Fracción arancelaria de la mercancia de importación:</label>
                 <input type="text" id="importacion" [(ngModel)]="importacion" [disabled]="esFormularioSoloLectura" name="importacion" class="form-control"
                     (ngModelChange)="enCambioDeCampo('importacion', $event)" />
 
@@ -83,10 +83,10 @@
         <div class="row">
             <div class="col-md-12 mb-5">
                 <div class="pull-right">
-                    <button name="eliminarServicio" (click)="eliminarImportacion()" class="btn btn-danger">
+                    <button name="eliminarServicio" (click)="eliminarImportacion()" class="btn btn-danger" [disabled]="esFormularioSoloLectura">
                         Eliminar
                     </button>
-                    <button name="agregarServicio" (click)="agregarImportacion()" class="btn btn-primary mx-2">
+                    <button name="agregarServicio" (click)="agregarImportacion()" class="btn btn-primary mx-2" [disabled]="esFormularioSoloLectura">
                         Agregar
                     </button>
                 </div>
@@ -123,7 +123,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="fraccion">Fracción:</label>
-                    <input type="text" id="fraccion" [(ngModel)]="fraccion" [disabled]="esFormularioSoloLectura" name="fraccion" class="form-control"
+                    <input type="text" id="fraccion" [(ngModel)]="fraccion" name="fraccion" class="form-control"
                         (ngModelChange)="enCambioDeCampo('fraccion', $event)" disabled />
                 </div>
             </div>
@@ -147,10 +147,10 @@
         <div class="row my-4">
             <div class="col-md-12">
                 <div class="pull-right">
-                    <button name="eliminar" class="btn btn-danger">
+                    <button name="eliminar" class="btn btn-danger" [disabled]="esFormularioSoloLectura">
                         Cancelar
                     </button>
-                    <button name="agregar" class="btn btn-primary mx-2">
+                    <button name="agregar" class="btn btn-primary mx-2" [disabled]="esFormularioSoloLectura">
                         Modificar
                     </button>
                 </div>

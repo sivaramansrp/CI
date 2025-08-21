@@ -78,7 +78,7 @@ export interface Solicitud230401State {
    * Número UN (United Nations) para transporte de mercancías peligrosas.
    * @example 2209
    */
-  unNumero: number;
+  unNumero: string;
 
   /**
    * Datos adicionales sobre el nombre comercial.
@@ -96,7 +96,7 @@ export interface Solicitud230401State {
    * Porcentaje de concentración de la sustancia.
    * @example 37.5
    */
-  datosPorcentaje: number;
+  datosPorcentaje: string;
 
   /**
    * Componentes adicionales de la sustancia.
@@ -138,7 +138,7 @@ export interface Solicitud230401State {
    * Cantidad solicitada.
    * @example 500
    */
-  cantidad: number;
+  cantidad: string;
 
   /**
    * Cantidad solicitada en letras.
@@ -181,18 +181,18 @@ export function initializeSolicitud230401State(): Solicitud230401State {
     descripcionNoArancelaria: '',
     nombreQuimico: '',
     nombreDeLaMercancia: '',
-    unNumero: 1,
+    unNumero: '',
     datosNombreComercial: '',
     datosNumeroComun: '',
-    datosPorcentaje: 1,
+    datosPorcentaje: " ",
     datosComponentes: '',
     clasificacion: '',
     estadoFisico: '',
     datosObjecto: '',
     especifique: '',
     especifiqueDos: '',
-    cantidad: 1,
-    cantidadLetra: 'Uno',
+    cantidad: '',
+    cantidadLetra: '',
     unidadDeMedida: '',
     sustanciasSensiblesTablaDatos: [],
     pagoDerechosState: {
@@ -370,7 +370,7 @@ export class Tramite230401Store extends Store<Solicitud230401State> {
    *
    * @param unNumero - El número UN que se va a guardar.
    */
-  public setUnNumero(unNumero: number): void {
+  public setUnNumero(unNumero: string): void {
     this.update((state) => ({
       ...state,
       unNumero,
@@ -406,7 +406,7 @@ export class Tramite230401Store extends Store<Solicitud230401State> {
    *
    * @param datosPorcentaje - El porcentaje de los datos que se va a guardar.
    */
-  public setDatosPorcentaje(datosPorcentaje: number): void {
+  public setDatosPorcentaje(datosPorcentaje: string): void {
     this.update((state) => ({
       ...state,
       datosPorcentaje,
@@ -478,7 +478,7 @@ export class Tramite230401Store extends Store<Solicitud230401State> {
    *
    * @param cantidad - La cantidad que se va a guardar.
    */
-  public setCantidad(cantidad: number): void {
+  public setCantidad(cantidad: string): void {
     this.update((state) => ({
       ...state,
       cantidad,

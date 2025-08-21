@@ -59,7 +59,7 @@ export class SolicitanteComponent implements OnInit,OnDestroy {
   guardarDatos!: ConsultaioState;
   private destroyNotifier$: Subject<void> = new Subject();
 
-  @Input() RFC: string= 'SAAE5901017V9';
+  @Input() RFC: string= 'LEQI8101314S7';
 
   datosGenerales?:DatosGeneralesModel;
 

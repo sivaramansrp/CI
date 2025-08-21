@@ -13,6 +13,10 @@ describe('FechaDeImportacionComponent', () => {
 
   const mockStore = {
     setTramite630104State: jest.fn(),
+    getValue: jest.fn(() => ({
+      fechaLimiteRetorno: '2025-12-31',
+      fechaIngreso: '2025-06-15',
+    })),
   };
 
   const mockQuery = {
@@ -30,6 +34,10 @@ describe('FechaDeImportacionComponent', () => {
     selectConsultaioState$: of({ readonly: false }),
   };
 
+  const mockService = {
+    setForm: jest.fn(),
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
@@ -42,45 +50,18 @@ describe('FechaDeImportacionComponent', () => {
         { provide: Tramite630104Query, useValue: mockQuery },
         { provide: Tramite630104Store, useValue: mockStore },
         { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
+        { provide: 'EquipoEInstrumentosMusicalesService', useValue: mockService },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FechaDeImportacionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    jest.clearAllMocks();
   });
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should initialize form with values from store', () => {
-    expect(component.FechaDeImportacionTemporalFormulario.value).toEqual({
-      fechaLimiteRetorno: '2025-12-31',
-      fechaIngreso: '2025-06-15',
-    });
-  });
-
-  it('should disable the form in readonly mode', () => {
-    component.esSoloLectura = true;
-    component.guardarDatosFormulario();
-    expect(component.FechaDeImportacionTemporalFormulario.disabled).toBe(true);
-  });
-
-  it('should enable the form if not readonly', () => {
-    component.esSoloLectura = false;
-    component.guardarDatosFormulario();
-    expect(component.FechaDeImportacionTemporalFormulario.enabled).toBe(true);
-  });
-
-  it('should update store with correct value (primitive)', () => {
-    component.establecerCambioDeValor({ campo: 'fechaIngreso', valor: '2025-07-01' });
-    expect(mockStore.setTramite630104State).toHaveBeenCalledWith('fechaIngreso', '2025-07-01');
-  });
-
-  it('should update store with correct value (object with id)', () => {
-    component.establecerCambioDeValor({ campo: 'fechaIngreso', valor: { id: '123' } });
-    expect(mockStore.setTramite630104State).toHaveBeenCalledWith('fechaIngreso', '123');
   });
 
   it('should unsubscribe on destroy', () => {
@@ -89,5 +70,39 @@ describe('FechaDeImportacionComponent', () => {
     component.ngOnDestroy();
     expect(spyNext).toHaveBeenCalled();
     expect(spyComplete).toHaveBeenCalled();
+  });
+
+  it('should set fechaIngreso and fechaLimiteRetorno in store on init if not present', () => {
+    mockStore.getValue.mockReturnValueOnce({
+      fechaLimiteRetorno: '',
+      fechaIngreso: ''
+    });
+    const setSpy = jest.spyOn(mockStore, 'setTramite630104State');
+    component.inicializarFormularioFechaImportacion();
+    expect(setSpy).toHaveBeenCalledWith('fechaIngreso', expect.any(String));
+    expect(setSpy).toHaveBeenCalledWith('fechaLimiteRetorno', expect.any(String));
+  });
+
+  it('should format fechaIngreso and update fechaLimiteRetorno when establecerCambioDeValor is called', () => {
+    const setSpy = jest.spyOn(mockStore, 'setTramite630104State');
+    component.establecerCambioDeValor({ campo: 'fechaIngreso', valor: '2025-06-15' });
+    expect(setSpy).toHaveBeenCalledWith('fechaLimiteRetorno', '15/07/2025');
+    expect(setSpy).toHaveBeenCalledWith('fechaIngreso', '15/06/2025');
+  });
+
+  it('should call setForm on service when establecerCambioDeValor is called', () => {
+    const serviceSpy = jest.spyOn(component['service'], 'setForm');
+    component.establecerCambioDeValor({ campo: 'fechaIngreso', valor: '2025-06-15' });
+    expect(serviceSpy).toHaveBeenCalled();
+  });
+
+  it('should not throw if establecerCambioDeValor is called with null event', () => {
+    expect(() => component.establecerCambioDeValor(null as any)).not.toThrow();
+  });
+
+  it('should update store with value for non-fechaIngreso fields', () => {
+    const setSpy = jest.spyOn(mockStore, 'setTramite630104State');
+    component.establecerCambioDeValor({ campo: 'otroCampo', valor: 'valor' });
+    expect(setSpy).toHaveBeenCalledWith('otroCampo', 'valor');
   });
 });

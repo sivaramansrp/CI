@@ -53,3 +53,19 @@ export const TEXTOS_REQUISITOS = {
       <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona "Agregar nuevo".</p>`,
     ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar documentos"</p>`,
 };
+/**
+ * @constant ERROR_FORMA_ALERT
+ * @description
+ * Mensaje HTML que se muestra como alerta cuando faltan campos por capturar en el formulario.
+ * Se utiliza para informar al usuario que debe completar todos los campos requeridos antes de continuar.
+ */
+export const ERROR_FORMA_ALERT =
+  `
+<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+      Faltan campos por capturar.
+    </div>
+  </div>
+</div>
+`

@@ -383,7 +383,7 @@ fetchTableDummyJson(): void {
       /**
        * Tipo de persona (física o moral).
        */
-      tipoPersona: new FormControl(this.tipoPersonaValue, [Validators.required]),
+      tipoPersona: new FormControl('', [Validators.required]),
       /**
        * RFC del tercero.
        * Requiere validación adicional mediante `rfcValidator`.
@@ -574,7 +574,7 @@ fetchTableDummyJson(): void {
       /**
        * País del destinatario.
        */
-      pais: new FormControl('', [Validators.required]),
+      pais: new FormControl(this.defaultPaisValue, [Validators.required]),
       /**
        * Control del formulario para el nombre del usuario.
        * Este campo es obligatorio.
@@ -986,6 +986,16 @@ fetchTableDummyJson(): void {
    */
   submitFabricanteForm():void {
     /**
+     * Obtiene los valores de LADA y TELEFONO del formulario.
+     */
+  const { LADA, TELEFONO } = this.agregarFabricanteFormGroup.value;
+/**
+ * Obtiene el valor completo del teléfono, incluyendo lada y número.
+ */
+const FULLTELEFONO = LADA || TELEFONO 
+  ? `${LADA ?? ''}${LADA && TELEFONO ? '-' : ''}${TELEFONO ?? ''}`
+  : '';
+    /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
     const LOCALIDAD_VALOR = this.localidadDropdownData.find(
@@ -1048,10 +1058,7 @@ fetchTableDummyJson(): void {
         /**
          * Teléfono del fabricante, incluyendo lada.
          */
-        this.agregarFabricanteFormGroup.value.lada +
-          '-' +
-          this.agregarFabricanteFormGroup.value.telefono,
-
+        FULLTELEFONO,
         /**
          * Correo electrónico del fabricante.
          */
@@ -1138,6 +1145,16 @@ fetchTableDummyJson(): void {
    * @description Este método es llamado al enviar el formulario de agregar un destinatario.
    */
   submitDestinatarioForm():void {
+       /**
+     * Obtiene los valores de LADA y TELEFONO del formulario.
+     */
+  const { LADA, TELEFONO } = this.agregarFabricanteFormGroup.value;
+/**
+ * Obtiene el valor completo del teléfono, incluyendo lada y número.
+ */
+const FULLTELEFONODESTINATARIO = LADA || TELEFONO 
+  ? `${LADA ?? ''}${LADA && TELEFONO ? '-' : ''}${TELEFONO ?? ''}`
+  : '';
     /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
@@ -1201,10 +1218,7 @@ fetchTableDummyJson(): void {
         /**
          * Teléfono del destinatario, incluyendo lada.
          */
-        this.agregarDestinatarioFormGroup.value.lada +
-          '-' +
-          this.agregarDestinatarioFormGroup.value.telefono,
-
+        FULLTELEFONODESTINATARIO,
         /**
          * Correo electrónico del destinatario.
          */

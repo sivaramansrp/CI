@@ -194,6 +194,14 @@ export interface Solicitud260215State {
     * El valor de apellidoMaterno.
    */
    apellidoMaterno:string;
+   /**
+    * El valor de especifiqueTipoDeProducto.
+   */
+   especifiqueTipoDeProducto:string;
+   /**
+    * El valor de especifiqueEstado.
+   */
+   especifiqueEstado:string;
 
 }
 
@@ -388,6 +396,14 @@ export function createInitialState(): Solicitud260215State {
       */
       apellidoMaterno: '',
 
+        /**
+         * El valor de especifiqueTipoDeProducto.
+         */
+        especifiqueTipoDeProducto: '',
+        /**
+         * El valor de especifiqueEstado.
+         */
+        especifiqueEstado: '',
 
   };
 }
@@ -927,6 +943,28 @@ public setApellidoPaterno(apellidoPaterno: string): void {
       this.update((state) => ({
           ...state,
           apellidoMaterno,
+      }));
+  }
+
+  /**
+   * Establece el estado de especifiqueTipoDeProducto.
+   * @param especifiqueTipoDeProducto - El valor de especifiqueTipoDeProducto.
+   */
+  public setEspecifiqueTipoDeProducto(especifiqueTipoDeProducto: string): void {
+      this.update((state) => ({
+          ...state,
+          especifiqueTipoDeProducto,
+      }));
+  }
+
+  /**
+   * Establece el estado de especifiqueEstado.
+   * @param especifiqueEstado - El valor de especifiqueEstado.
+   */
+  public setEspecifiqueEstado(especifiqueEstado: string): void {
+      this.update((state) => ({
+          ...state,
+          especifiqueEstado,
       }));
   }
 }

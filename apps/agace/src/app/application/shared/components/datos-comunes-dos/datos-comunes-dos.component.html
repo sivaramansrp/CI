@@ -3,7 +3,6 @@
   <div class="row mb-3">
     <div class="col-md-6">
         <app-catalogo-select
-            [placeholder]="'Seleccione un valor'"
             formControlName="comboBimestresIDCSeleccione"
             [isDisabled]="esFormularioSoloLectura"
             [catalogo]="comboBimestresIDC"
@@ -22,24 +21,31 @@
     </div>
 </div>
 <ng-alert [CONTENIDO]="TEXTOS.alerta"></ng-alert>
+@if (mostrarMensajeError) {
+  <div class="col-md-12">
+    <p class="mensaje-error">Se debe agregar por lo menos un domicilio registrado</p>
+  </div>
+}
 <div class="row mt-5">
     <div class="col-md-12">
-        <app-tabla-dinamica 
+        <app-tabla-dinamica
+         [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
             [configuracionTabla]="instalacionesPrincipalesTabla"
             [datos]="instalacionesPrincipalesTablaDatos" 
-            [tipoSeleccionTabla]="tablaSeleccionCheckbox">
+            [tipoSeleccionTabla]="tablaSeleccionCheckbox"
+            (filaSeleccionada)="onFilaSeleccionada($event)">
         </app-tabla-dinamica>
     </div>
     <div class="d-flex justify-content-end mt-3 mb-4">
-      <button class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura">Modificar</button>
+      <button class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura" (click)="modificarRegistro(instalacionesPrincipales)">Modificar</button>
       <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
-      <button class="btn btn-primary me-2" (click)="abrirModal(instalacionesPrincipales)" [disabled]="esFormularioSoloLectura">Agregar</button>
+      <button class="btn btn-primary me-2" (click)="abrirModal(agregarInstalacionesPrincipales)" [disabled]="esFormularioSoloLectura">Agregar</button>
     </div>
 </div>
 <div class="row mt-5">
     <div class="col-md-12">
         <label for="articuloDelCff"><span class="text-danger">*</span> {{dinamicaRadio.radio13.descripcion}}</label>
-        <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" formControlName="ingresar" [layout]="'horizontal'" (change)="setValoresStore(comunesDosForm,'ingresar','setIngresar')"></app-input-radio>
+        <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" formControlName="ingresar" [layout]="'horizontal'" [gridLayout]="true" (change)="setValoresStore(comunesDosForm,'ingresar','setIngresar')"></app-input-radio>
         @if(comunesDosForm.controls['ingresar'].invalid && comunesDosForm.controls['ingresar'].touched) {
             <div class="mensaje-error">Este campo es obligatorio.</div>
           }
@@ -48,7 +54,7 @@
 <div class="row mt-5">
     <div class="col-md-12">
         <label for="exportadoresSectorial"><span class="text-danger">*</span> {{dinamicaRadio.radio14.descripcion}}</label>
-        <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" formControlName="encuentraSus" [layout]="'horizontal'" (change)="setValoresStore(comunesDosForm,'encuentraSus','setEncuentraSus')"></app-input-radio>
+        <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" formControlName="encuentraSus" [layout]="'horizontal'" [gridLayout]="true" (change)="setValoresStore(comunesDosForm,'encuentraSus','setEncuentraSus')"></app-input-radio>
         @if(comunesDosForm.controls['encuentraSus'].invalid && comunesDosForm.controls['encuentraSus'].touched) {
             <div class="mensaje-error">Este campo es obligatorio.</div>
           }
@@ -85,18 +91,20 @@
           </div>
     </div>
 </div>
-<div class="row">
-    <div class="col-md-12">
-        <div class="form-group d-flex align-items-center gap-2">
-            <label for="registrosQue2" class="form-label mb-0">Registros que existen actualmente. </label>
-            <input type="text" class="form-control w-50 input-margin-left"
-                 formControlName="registrosQue2"
-                  id="registrosQue2"
-                  (change)="setValoresStore(comunesDosForm,'registrosQue2','setRegistrosQue2')"
-                  />
-          </div>
-    </div>
-</div>
+  <div class="row mt-2">
+      <div class="form-group d-flex align-items-center justify-content-between">
+        <div class="col-md-4">
+          <label for="registrosQue2" class="form-label mb-0">Registros que existen actualmente. </label>
+        </div>
+        <div class="col-md-7">
+          <input type="text" class="form-control w-50"
+                formControlName="registrosQue2"
+                id="registrosQue2"
+                (change)="setValoresStore(comunesDosForm,'registrosQue2','setRegistrosQue2')"
+                />
+        </div>
+        </div>
+  </div>
 <ng-titulo titulo="Proveedores"></ng-titulo>
 <div class="row">
     <div class="col-md-12">
@@ -113,6 +121,7 @@
               type="file"
               id="archivoNacionales"
               class="form-control w-auto"
+              formControlName="registrosQue3"
             />
           </div>
           <div>
@@ -151,11 +160,9 @@
               [radioOptions]="opcionDeBotonDeRadio"
               [isRequired]="true"
               [layout]="'horizontal'"
-              [gap]="'493px'"
+              [gridLayout]="true"
               formControlName="ensucaso"
               (change)="setValoresStore(comunesDosForm,'ensucaso','setEnsucaso')"
-              [isBold]="true"
-              [labelMargin]="'0px'"
               [showDescription]="true"
             ></app-input-radio>
           </div>
@@ -172,11 +179,9 @@
               [radioOptions]="opcionDeBotonDeRadio"
               [isRequired]="true"
               [layout]="'horizontal'"
-              [gap]="'493px'"
+              [gridLayout]="true"
               formControlName="alMomento"
               (change)="setValoresStore(comunesDosForm,'alMomento','setAlMomento')"
-              [isBold]="true"
-              [labelMargin]="'0px'"
               [showDescription]="true"
             ></app-input-radio>
           </div>
@@ -193,11 +198,9 @@
               [radioOptions]="opcionDeBotonDeRadio"
               [isRequired]="true"
               [layout]="'horizontal'"
-              [gap]="'493px'"
+              [gridLayout]="true"
               (change)="setValoresStore(comunesDosForm,'delMismomodo','setDelMismomodo')"
               formControlName="delMismomodo"
-              [isBold]="true"
-              [labelMargin]="'0px'"
               [showDescription]="true"
             ></app-input-radio>
           </div>
@@ -214,11 +217,9 @@
               [radioOptions]="opcionDeBotonDeRadio"
               [isRequired]="true"
               [layout]="'horizontal'"
-              [gap]="'493px'"
+              [gridLayout]="true"
               formControlName="encuentra"
               (change)="setValoresStore(comunesDosForm,'encuentra','setEncuentra')"
-              [isBold]="true"
-              [labelMargin]="'0px'"
               [showDescription]="true"
             ></app-input-radio>
           </div>
@@ -235,11 +236,9 @@
               [radioOptions]="opcionDeBotonDeRadio"
               [isRequired]="true"
               [layout]="'horizontal'"
-              [gap]="'493px'"
+              [gridLayout]="true"
               formControlName="susCertificados"
               (change)="setValoresStore(comunesDosForm,'susCertificados','setSusCertificados')"
-              [isBold]="true"
-              [labelMargin]="'0px'"
               [showDescription]="true"
             ></app-input-radio>
           </div>
@@ -256,11 +255,9 @@
               [radioOptions]="opcionDeBotonDeRadio"
               [isRequired]="true"
               [layout]="'horizontal'"
-              [gap]="'493px'"
+              [gridLayout]="true"
               formControlName="afirmativo"
               (change)="setValoresStore(comunesDosForm,'afirmativo','setAfirmativo')"
-              [isBold]="true"
-              [labelMargin]="'0px'"
               [showDescription]="true"
             ></app-input-radio>
           </div>
@@ -277,11 +274,9 @@
               [radioOptions]="opcionDeBotonDeRadio"
               [isRequired]="true"
               [layout]="'horizontal'"
-              [gap]="'493px'"
-              [isBold]="true"
+              [gridLayout]="true"
               formControlName="actualizado"
               (change)="setValoresStore(comunesDosForm,'actualizado','setActualizado')"
-              [labelMargin]="'0px'"
               [showDescription]="true"
             ></app-input-radio>
           </div>
@@ -301,9 +296,7 @@
               [radioOptions]="opcionDeBotonDeRadio"
               [isRequired]="true"
               [layout]="'horizontal'"
-              [gap]="'493px'"
-              [isBold]="true"
-              [labelMargin]="'0px'"
+              [gridLayout]="true"
               formControlName="momentoIngresar"
               (change)="setValoresStore(comunesDosForm,'momentoIngresar','setMomentoIngresar')"
               [showDescription]="true"
@@ -315,7 +308,7 @@
     </div>
 </div>
 @if(!datosComunesObj.tieneProcedure.activo) {
-  <ng-titulo titulo="Controls Inventarios"></ng-titulo>
+  <ng-titulo titulo="Control Inventarios"></ng-titulo>
 <div class="row">
     <div class="col-md-12">
         <label for="indiqueCuenta"><span class="text-danger">*</span> {{dinamicaRadio.radio16.descripcion}}</label>
@@ -324,10 +317,8 @@
               [radioOptions]="opcionDeBotonDeRadio"
               [isRequired]="true"
               [layout]="'horizontal'"
-              [gap]="'493px'"
-              [isBold]="true"
+              [gridLayout]="true"
               formControlName="indiqueCuenta"
-              [labelMargin]="'0px'"
               [showDescription]="true"
               (change)="setValoresStore(comunesDosForm,'indiqueCuenta','setIndiqueCuenta')"
             ></app-input-radio>
@@ -384,6 +375,7 @@
   <div class="row mt-3">
     <div class="col-md-12">
         <lib-input-check 
+        [isDisabled]="esFormularioSoloLectura" 
             [id]="'indiqueCheck'" 
             formControlName="indiqueCheck"
             [label]="'Indique, si cuenta con un sistema de control de inventarios de conformidad con las disposiciones previstas por el Anexo 24.'" 
@@ -393,23 +385,27 @@
         </lib-input-check>
     </div>
     <div class="d-flex align-items-end justify-content-end">
-        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Agregar</button>
+        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="controlInventariosAgregar()">Agregar</button>
     </div>
   </div>
   <div class="row mt-3">
     <h5 class="mb-3">Control Inventarios</h5>
     <div class="col-md-12">
         <app-tabla-dinamica 
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
             [configuracionTabla]="controlInentariosTabla"
             [datos]="controlInentariosTablaDatos" 
-            [tipoSeleccionTabla]="tablaSeleccionCheckbox">
+            [tipoSeleccionTabla]="tablaSeleccionCheckbox"
+            (filaSeleccionada)="seleccionarControlInventarios($event)">
         </app-tabla-dinamica>
     </div>
     <div class="d-flex justify-content-end mt-3 mb-4">
-        <button class="btn btn-primary me-2" (click)="abrirModal(modificar)" [disabled]="esFormularioSoloLectura">Modificar</button>
+        <button class="btn btn-primary me-2" (click)="modificarControlInventarios(modificar)" [disabled]="esFormularioSoloLectura">Modificar</button>
         <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
     </div>
-    <p>Deberá anexar un archivo con el reporte de saldos de mercancía de importación temporal de un periodo de un mes, que se encuentre dentro de los tres meses anteriores a la fecha de la presente solicitud.</p>
+  </div>
+  <div class="row mt-3">
+    <ng-alert [CONTENIDO]="TEXTOS_CUATRO.alerta"></ng-alert>
   </div>
   <div class="row mt-3">
     <div class="col-md-12">
@@ -419,9 +415,7 @@
               [radioOptions]="opcionDeBotonDeRadio"
               [isRequired]="true"
               [layout]="'horizontal'"
-              [gap]="'493px'"
-              [isBold]="true"
-              [labelMargin]="'0px'"
+              [gridLayout]="true"
               [showDescription]="true"
               formControlName="contabilidad"
                 (change)="setValoresStore(comunesDosForm,'contabilidad','setContabilidad')"
@@ -441,9 +435,7 @@
               [radioOptions]="opcionDeBotonDeRadio"
               [isRequired]="true"
               [layout]="'horizontal'"
-              [gap]="'493px'"
-              [isBold]="true"
-              [labelMargin]="'0px'"
+              [gridLayout]="true"
               formControlName="rmfRadio"
               [showDescription]="true"
                 (change)="setValoresStore(comunesDosForm,'rmfRadio','setRmfRadio')"
@@ -462,9 +454,7 @@
               [radioOptions]="opcionDeBotonDeRadio"
               [isRequired]="true"
               [layout]="'horizontal'"
-              [gap]="'493px'"
-              [isBold]="true"
-              [labelMargin]="'0px'"
+              [gridLayout]="true"
                 formControlName="vinculacionRegistroCancelado"
                 (change)="setValoresStore(comunesDosForm,'vinculacionRegistroCancelado','setVinculacionRegistroCancelado')"
               [showDescription]="true"
@@ -483,9 +473,7 @@
               [radioOptions]="opcionDeBotonDeRadio"
               [isRequired]="true"
               [layout]="'horizontal'"
-              [gap]="'493px'"
-              [isBold]="true"
-              [labelMargin]="'0px'"
+              [gridLayout]="true"
               formControlName="proveedoresListadoSAT"
               (change)="setValoresStore(comunesDosForm,'proveedoresListadoSAT','setProveedoresListadoSAT')"
               [showDescription]="true"
@@ -509,7 +497,7 @@
         <form [formGroup]="instalacionesPrincipalesForm">
             <div class="row">
                 <div class="col-md-8">
-                    <label for="instalacionesPrincipales"><span class="text-danger">*</span>Instalaciones principales</label>
+                    <label for="instalacionesPrincipales">Instalaciones principales*:</label>
                     <app-input-radio [radioOptions]="opcionDeBotonDeRadio" formControlName="instalacionesPrincipales" [isRequired]="true" [layout]="'horizontal'"></app-input-radio>
                 </div>
                 <div class="col-md-4">
@@ -521,7 +509,6 @@
                 <div class="col-md-4">
                     <app-catalogo-select
                         [label]="'Tipo de instalación'"
-                        [placeholder]="'Seleccione un valor'"
                         [catalogo]="sectorProductivoAgace"
                         formControlName="tipoDeInstalacion"
                         [required]="true"
@@ -529,8 +516,8 @@
                     </app-catalogo-select>
                 </div>
                 <div class="col-md-4">
-                    <label for="entidadFederative">Entidad federativa</label>
-                    <input type="text" id="entidadFederative" formControlName="entidadFederative" class="form-control">
+                    <label for="entidadFederativa">Entidad federativa</label>
+                    <input type="text" id="entidadFederativa" formControlName="entidadFederativa" class="form-control">
                 </div>
                 <div class="col-md-4">
                     <label for="registroAnte">Registro ante SE/SAT</label>
@@ -549,18 +536,18 @@
             </div>
             <div class="row mt-3">
                 <div class="col-md-4">
-                    <label for="procesoProductivo"><span class="text-danger">*</span>Proceso productivo</label>
+                    <label for="procesoProductivo">Proceso productivo*:</label>
                     <app-input-radio [radioOptions]="opcionDeBotonDeRadio" formControlName="procesoProductivo" [isRequired]="true" [layout]="'horizontal'"></app-input-radio>
                 </div>
                 <div class="col-md-8">
-                    <label for="acreditacionDelUso"><span class="text-danger">*</span>Acreditación del uso y goce del inmueble</label>
+                    <label for="acreditacionDelUso">Acreditación del uso y goce del inmueble*:</label>
                     <app-input-radio [radioOptions]="opcionDeBotonDeRadio" formControlName="acreditacionDelUso" [isRequired]="true" [layout]="'horizontal'"></app-input-radio>
                 </div>
             </div>
         </form>
     </div>
     <div class="model-footer d-flex justify-content-end p-3">
-        <button type="button" class="btn btn-primary me-2" (click)="modalRef?.hide()">Aceptar</button>
+        <button type="button" class="btn btn-primary me-2" (click)="instalacionesAceptar()">Aceptar</button>
         <button type="button" class="btn btn-danger" (click)="modalRef?.hide()">Cancelar</button>
     </div>
 </ng-template>
@@ -573,8 +560,11 @@
         <form [formGroup]="modificarForm">
             <div class="row">
                 <div class="col-md-6">
-                    <label for="nombreDelSistema">Nombre del sistema o datos para su identificación</label>
+                    <label for="nombreDelSistema">Nombre del sistema o datos para su identificación*:</label>
                     <input type="text" id="nombreDelSistema" formControlName="nombreDelSistema" class="form-control">
+                    @if(modificarForm.controls['nombreDelSistema'].invalid && modificarForm.controls['nombreDelSistema'].touched) {
+                      <div class="mensaje-error">Este campo es obligatorio.</div>
+                    }
                 </div>
                 <div class="col-md-6">
                     <lib-input-check 
@@ -587,8 +577,11 @@
             </div>
             <div class="row mt-3">
                 <div class="col-md-6">
-                    <label for="lugar">Lugar de radicación</label>
+                    <label for="lugar">Lugar de radicación*:</label>
                     <input type="text" id="lugar" formControlName="lugar" class="form-control">
+                    @if(modificarForm.controls['lugar'].invalid && modificarForm.controls['lugar'].touched) {
+                      <div class="mensaje-error">Este campo es obligatorio.</div>
+                    }
                 </div>
             </div>
         </form>
@@ -597,6 +590,48 @@
         <button type="button" class="btn btn-primary me-2" (click)="modalRef?.hide()">Aceptar</button>
         <button type="button" class="btn btn-danger" (click)="modalRef?.hide()">Cancelar</button>
     </div>
+</ng-template>
+
+<ng-template #agregarInstalacionesPrincipales>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Instalaciones</h4>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="instalacionesPrincipalesForm">
+      <div class="col-md-4">
+          <label for="entidadFederativa">Entidad federativa</label>
+          <app-catalogo-select
+            formControlName="entidadFederativa"
+            [isDisabled]="esFormularioSoloLectura"
+            [catalogo]="entidadFederativa"
+            (selectionChange)="onEntidadFederativaChange($event)"
+            >
+        </app-catalogo-select>
+      </div>
+
+      <div class="col-md-12 mt-3">
+          <label class="form-label text-start">Instalaciones</label>
+        </div>
+
+        <div class="col-md-12 mt-4">
+          <app-tabla-dinamica
+            [tipoSeleccionTabla]="tablaSeleccionCheckbox"
+            [configuracionTabla]="instalacionesConfiguracionColumnas"
+            [datos]="instalacionesTablaDatos"
+            (listaDeFilaSeleccionada)="seleccionarlistaInstalaciones($event)"
+          >
+          </app-tabla-dinamica>
+        </div>
+
+        <div class="col-md-12 mt-3 mb-4">
+          <div class="d-flex justify-content-end">
+            <button type="button" id="aceptar" class="btn btn-primary" (click)="instalacionesConfirm()">Aceptar</button>
+            <button type="button" id="cancelar" class="btn btn-danger ms-3" (click)="modalRef?.hide()">Cancelar</button>
+          </div>
+        </div>
+    </form>
+  </div>
+
 </ng-template>
 
 

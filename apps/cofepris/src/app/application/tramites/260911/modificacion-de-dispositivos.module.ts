@@ -14,7 +14,7 @@ import { PermisoSanitarioComponent } from './pages/permiso-sanitario/permiso-san
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/services/shared/subir-documento/subir-documento.service';
-import { TercerosRelacionadosComponent } from './component/terceros-relacionados/terceros-relacionados.component';
+import { TercerosRelacionadosVistaComponent } from './component/terceros-relacionados/terceros-relacionados-vista.component.ts';
 import { ToastrService } from 'ngx-toastr';
 import { TramitesAsociadoComponent } from './component/tramites-asociado/tramites-asociado.component';
 import { provideHttpClient } from '@angular/common/http';
@@ -29,7 +29,7 @@ import { provideHttpClient } from '@angular/common/http';
         ModificacionDeDispositivosRoutingModule,
         WizardComponent,
         SolicitanteComponent,
-        TercerosRelacionadosComponent,
+        TercerosRelacionadosVistaComponent,
         TramitesAsociadoComponent,
         DatosDeLaSolicitudComponent,
         DomicilioDelEstablecimientoComponent,

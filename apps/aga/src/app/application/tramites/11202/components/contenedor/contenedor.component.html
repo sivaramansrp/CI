@@ -58,7 +58,7 @@
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="numeroContenedor">Número del equipo*:</label>
+            <label class="form-label" for="numeroContenedor">Número de equipo*:</label>
             <input type="text" class="form-control" id="numeroContenedor"
               formControlName="numeroContenedor" (change)="
                 setValoresStore(
@@ -240,6 +240,9 @@
         aria-labelledby="modalArchivoCsv" aria-hidden="true" #modalArchivoCsv>
         <div class="modal-dialog" role="document">
             <div class="modal-content">
+                <div *ngIf="archivoDescripcion">
+                  <ng-alert [CONTENIDO]="archivo_descripcion"></ng-alert>
+                </div>
                 <div class="modal-header">
                     <h4 class="modal-title">Cargar archivo</h4>
                 </div>

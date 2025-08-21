@@ -1,156 +1,144 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { of } from 'rxjs';
-
 import { DespachoMercanciasSolicitudComponent } from './despacho-mercancias-solicitud.component';
 import { Tramite303StoreService } from '../../../../core/estados/tramites/tramite303.store';
 import { Tramite303Query } from '../../../../core/queries/tramite303.query';
+import { TransportistaService } from '../../../../core/services/303/transportista.service';
+import { ControlInventario } from '../../../../core/models/303/control-inventario.model';
 
 describe('DespachoMercanciasSolicitudComponent', () => {
-  let component: DespachoMercanciasSolicitudComponent;
-  let mockTramite303State: Partial<Tramite303StoreService>;
-  let mockTramite303Query: Partial<Tramite303Query>;
-  let formBuilder: FormBuilder;
+	let component: DespachoMercanciasSolicitudComponent;
+	let fixture: ComponentFixture<DespachoMercanciasSolicitudComponent>;
+	let mockTramite303State: Partial<Tramite303StoreService>;
+	let mockTramite303Query: Partial<Tramite303Query>;
+	let mockTransportistaService: Partial<TransportistaService>;
 
-  beforeEach(() => {
-    // Crear mocks simples para los servicios
-    mockTramite303State = {
-      setSelectImmex: jest.fn(),
-      setCheckboxesImmex: jest.fn(),
-      setCumplimientoValue: jest.fn(),
-      setAutorizarValue: jest.fn(),
-      setListadoValue: jest.fn(),
-      setCertificadosValue: jest.fn(),
-      setArt17Value: jest.fn(),
-      setBuzonValue: jest.fn(),
-      setCuentaImmexValue: jest.fn(),
-      setCheckboxImportacion1Value: jest.fn(),
-      setCheckboxImportacion2Value: jest.fn()
-    };
+	const mockInventario: ControlInventario = {
+		id: 'inv1',
+		nombreSistema: 'Sistema X',
+		lugarRadicacion: 'CDMX',
+		esSistemaControl: true
+	};
 
-    mockTramite303Query = {
-      selectSolicitud$: of({
-        mostrarCheckboxesImmex: false,
-        mostrarSelectImmex: true,
-        cumplimiento: 'a',
-        autorizar: 'a',
-        listado: 'a',
-        certificados: 'a',
-        art17: 'a',
-        buzon: 'a',
-        cuentaImmex: 'a',
-        checkboxImportacion1: false,
-        checkboxImportacion2: false,
-        indice: 0,
-        tipoFigura: ''
-      })
-    };
+			const mockTramiteConsultado = {
+				indice: 1,
+				tipoFigura: '',
+				lugarRadicacion: '',
+				mostrarCheckboxesImmex: false,
+				mostrarSelectImmex: true,
+				listaInventarios: [mockInventario],
+				cumplimiento: 'a', autorizar: 'a', listado: 'a', certificados: 'a', art17: 'a', buzon: 'a', cuentaImmex: 'a', checkboxImportacion1: false, checkboxImportacion2: false, immex: '1', padron: '1', controlInventarios: 'a', contabilidad: 'a', interposicion: 'a', checkboxManifiesto1: false, checkboxManifiesto2: false, ingresoInforme: ''
+			};
 
-    formBuilder = new FormBuilder();
-    component = new DespachoMercanciasSolicitudComponent(
-      formBuilder,
-      mockTramite303State as Tramite303StoreService,
-      mockTramite303Query as Tramite303Query
-    );
-  });
+	beforeEach(async () => {
+		mockTramite303State = {
+			setSelectImmex: jest.fn(),
+			setCheckboxesImmex: jest.fn(),
+			setListaInventarios: jest.fn()
+		};
+		mockTramite303Query = {
+			selectSolicitud$: of(mockTramiteConsultado)
+		};
+		mockTransportistaService = {
+			obtenerDatosImmex: jest.fn().mockReturnValue(of([]))
+		};
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+		await TestBed.configureTestingModule({
+			imports: [ReactiveFormsModule],
+			declarations: [DespachoMercanciasSolicitudComponent],
+			providers: [
+				FormBuilder,
+				{ provide: Tramite303StoreService, useValue: mockTramite303State },
+				{ provide: Tramite303Query, useValue: mockTramite303Query },
+				{ provide: TransportistaService, useValue: mockTransportistaService }
+			],
+			schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
+		})
+		.overrideTemplate(DespachoMercanciasSolicitudComponent, '')
+		.compileComponents();
 
-  it('should initialize component correctly on ngOnInit', () => {
-    component.ngOnInit();
+		fixture = TestBed.createComponent(DespachoMercanciasSolicitudComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
 
-    // El catNumeroIMMEX puede ser undefined en el entorno de pruebas debido al import del JSON
-    expect(component.formDespacho).toBeDefined();
-    expect(component.mostrarSelectImmex).toBe(true);
-    expect(component.mostrarCheckboxesImmex).toBe(false);
-  });
+	it('debería crear el componente correctamente', () => {
+		expect(component).toBeTruthy();
+	});
 
-  it('should create form with all required controls', () => {
-    component.ngOnInit();
+	it('debería inicializar el formulario y cargar inventarios', () => {
+		component.ngOnInit();
+		expect(component.listaControlInventarios).toEqual([mockInventario]);
+		expect(component.formInventario).toBeDefined();
+	});
 
-    const form = component.formDespacho;
-    expect(form.get('cumplimiento')).toBeTruthy();
-    expect(form.get('autorizar')).toBeTruthy();
-    expect(form.get('listado')).toBeTruthy();
-    expect(form.get('certificados')).toBeTruthy();
-    expect(form.get('art17')).toBeTruthy();
-    expect(form.get('buzon')).toBeTruthy();
-    expect(form.get('cuentaImmex')).toBeTruthy();
-    expect(form.get('checkboxImportacion1')).toBeTruthy();
-    expect(form.get('checkboxImportacion2')).toBeTruthy();
-    expect(form.get('immex')).toBeTruthy();
-  });
+	it('debería mostrar notificación al agregar inventario inválido', () => {
+		component.formInventario.patchValue({ nombreSistema: '', lugarRadicacion: '', esSistemaControl: false });
+		component.agregarInventario();
+		expect(component.nuevaNotificacion).toBeDefined();
+		expect(component.nuevaNotificacion.mensaje).toContain('No hay información para guardar');
+	});
 
-  it('should create notification object correctly', () => {
-    component.notificaciones();
+	it('debería agregar un inventario correctamente', () => {
+		component.formInventario.patchValue({ nombreSistema: 'Nuevo', lugarRadicacion: 'CDMX', esSistemaControl: true });
+		component.listaControlInventarios = [];
+		component.agregarInventario();
+		expect(component.listaControlInventarios.length).toBe(1);
+		expect(component.nuevaNotificacion.mensaje).toContain('Datos guardados correctamente');
+		expect(mockTramite303State.setListaInventarios).toHaveBeenCalled();
+	});
 
-    expect(component.nuevaNotificacion).toEqual({
-      tipoNotificacion: 'alert',
-      categoria: 'info',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'Es un requisito necesario para acceder al Registro de Despacho de Mercancías de las empresas, de conformidad con la regla 7.5.1. de las.G.C.E.',
-      cerrar: true,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-    });
-  });
+	it('debería modificar un inventario correctamente', () => {
+		component.listaControlInventarios = [mockInventario];
+		component.inventarioEnEdicion = mockInventario;
+		component.formInventario.patchValue({ nombreSistema: 'Modificado', lugarRadicacion: 'CDMX', esSistemaControl: false });
+		component.agregarInventario();
+		expect(component.listaControlInventarios[0].nombreSistema).toBe('Modificado');
+		expect(component.nuevaNotificacion.mensaje).toContain('Inventario modificado correctamente');
+	});
 
-  it('should call store service methods in setValoresStore', () => {
-    component.ngOnInit();
-    
-    component.setValoresStore(component.formDespacho, 'cumplimiento', 'setCumplimientoValue');
-    expect(mockTramite303State.setCumplimientoValue).toHaveBeenCalledWith('a');
-  });
+	it('debería mostrar notificación si no hay inventarios seleccionados para modificar', () => {
+		component.listaControlInventariosSeleccionados = [];
+		component.modificarInventario();
+		expect(component.nuevaNotificacion.mensaje).toContain('No hay inventarios seleccionados para modificar');
+	});
 
-  it('should handle checkbox values correctly in setValoresStore', () => {
-    component.ngOnInit();
-    component.formDespacho.get('checkboxImportacion1')?.setValue(true);
-    
-    component.setValoresStore(component.formDespacho, 'checkboxImportacion1', 'setCheckboxImportacion1Value');
-    expect(mockTramite303State.setCheckboxImportacion1Value).toHaveBeenCalledWith(true);
-  });
+	it('debería mostrar notificación si hay más de un inventario seleccionado para modificar', () => {
+		component.listaControlInventariosSeleccionados = [mockInventario, { ...mockInventario, id: 'inv2' }];
+		component.modificarInventario();
+		expect(component.nuevaNotificacion.mensaje).toContain('Solo se puede modificar un inventario a la vez');
+	});
 
-  it('should toggle IMMEX display when cuentaImmex changes to "a"', () => {
-    component.ngOnInit();
+	it('debería preparar el formulario para modificar inventario', () => {
+		component.listaControlInventariosSeleccionados = [mockInventario];
+		component.modificarInventario();
+		expect(component.inventarioEnEdicion).toEqual(mockInventario);
+		expect(component.formInventario.get('nombreSistema')?.value).toBe(mockInventario.nombreSistema);
+	});
 
-    component.formDespacho.get('cuentaImmex')?.setValue('a');
-    
-    expect(component.mostrarSelectImmex).toBe(true);
-    expect(component.mostrarCheckboxesImmex).toBe(false);
-    expect(mockTramite303State.setSelectImmex).toHaveBeenCalledWith(true);
-    expect(mockTramite303State.setCheckboxesImmex).toHaveBeenCalledWith(false);
-  });
+	it('debería mostrar notificación si no hay inventarios seleccionados para eliminar', () => {
+		component.listaControlInventariosSeleccionados = [];
+		component.eliminarInventario();
+		expect(component.nuevaNotificacion.mensaje).toContain('No hay inventarios seleccionados para eliminar');
+	});
 
-  it('should toggle IMMEX display when cuentaImmex changes to "aa"', () => {
-    component.ngOnInit();
+	it('debería eliminar inventario correctamente', () => {
+		component.listaControlInventarios = [mockInventario, { ...mockInventario, id: 'inv2' }];
+		component.listaControlInventariosSeleccionados = [mockInventario];
+		component.eliminarInventario();
+		expect(component.listaControlInventarios.length).toBe(1);
+		expect(component.listaControlInventarios[0].id).toBe('inv2');
+		expect(component.listaControlInventariosSeleccionados.length).toBe(0);
+		expect(mockTramite303State.setListaInventarios).toHaveBeenCalled();
+	});
 
-    component.formDespacho.get('cuentaImmex')?.setValue('aa');
-    
-    expect(component.mostrarSelectImmex).toBe(false);
-    expect(component.mostrarCheckboxesImmex).toBe(true);
-    expect(mockTramite303State.setSelectImmex).toHaveBeenCalledWith(false);
-    expect(mockTramite303State.setCheckboxesImmex).toHaveBeenCalledWith(true);
-  });
-
-  it('should call notificaciones when specific form values change', () => {
-    component.ngOnInit();
-    jest.spyOn(component, 'notificaciones');
-
-    component.formDespacho.get('cumplimiento')?.setValue('aa');
-    expect(component.notificaciones).toHaveBeenCalled();
-  });
-
-  it('should complete destroyNotifier on ngOnDestroy', () => {
-    const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
-
-    component.ngOnDestroy();
-
-    expect(destroyNotifierSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
-  });
+	it('debería completar el subject destroyNotifier en ngOnDestroy', () => {
+		const spyNext = jest.spyOn(component['destroyNotifier$'], 'next');
+		const spyComplete = jest.spyOn(component['destroyNotifier$'], 'complete');
+		component.ngOnDestroy();
+		expect(spyNext).toHaveBeenCalled();
+		expect(spyComplete).toHaveBeenCalled();
+	});
 });

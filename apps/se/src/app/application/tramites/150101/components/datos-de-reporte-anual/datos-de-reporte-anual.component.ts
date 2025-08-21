@@ -78,6 +78,17 @@ export class DatosDeReporteAnnualComponent implements OnDestroy {
       )
       .subscribe();
 
+    this.inicializarFormulario();
+  }
+
+  /**
+   * @method inicializarFormulario
+   * @description Inicializa el formulario reactivo con los valores actuales del estado de la solicitud.
+   * Define los controles y sus validaciones para ventas totales, exportaciones, importaciones, saldo y porcentaje de exportación.
+   * Algunos campos están deshabilitados según su naturaleza de solo lectura.
+   * @returns {void}
+   */
+  inicializarFormulario(): void {
     this.formReporteAnnual = this.fb.group({
       ventasTotales: [
         { value: this.solicitud150101State.ventasTotales, disabled: false },
@@ -109,8 +120,6 @@ export class DatosDeReporteAnnualComponent implements OnDestroy {
         [Validators.maxLength(16)],
       ],
     });
-
-    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -123,10 +132,13 @@ export class DatosDeReporteAnnualComponent implements OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.formularioDeshabilitado) {
       this.formReporteAnnual.disable();
-    } else if (!this.formularioDeshabilitado) {
+    } else {
       this.formReporteAnnual.enable();
+      this.formReporteAnnual.get('totalImportaciones')?.disable();
+      this.formReporteAnnual.get('saldo')?.disable();
+      this.formReporteAnnual.get('porcentajeExportacion')?.disable();
     }
-  }  
+  }
 
   /**
    * @description Actualiza las ventas totales en el store y recalcula el reporte.
@@ -144,7 +156,7 @@ export class DatosDeReporteAnnualComponent implements OnDestroy {
    */
   obtenerTotalExportaciones(evento: Event): void {
     const VALUE = (evento.target as HTMLInputElement).value;
-    this.solicitud150101Store.actualizarTotalExportaciones(parseFloat(VALUE));
+    this.solicitud150101Store.actualizarTotalExportaciones(VALUE);
 
     const VENTAS_TOTALES =
       parseFloat(this.formReporteAnnual.get('ventasTotales')?.value) || 0;
@@ -183,7 +195,9 @@ export class DatosDeReporteAnnualComponent implements OnDestroy {
       ? TOTAL_PORCENTAJE
       : 0;
 
-    this.solicitud150101Store.actualizarPorcentajeExportacion(TOTAL_PORCENTAJE_VALUE);
+    this.solicitud150101Store.actualizarPorcentajeExportacion(
+      TOTAL_PORCENTAJE_VALUE
+    );
     const TOTAL_SALDO: number = TOTAL_EXPORTACIONES - TOTAL_IMPORTACIONES;
     this.solicitud150101Store.actualizarSaldo(TOTAL_SALDO);
   }
