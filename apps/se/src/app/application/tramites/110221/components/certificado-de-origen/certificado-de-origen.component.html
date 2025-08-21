@@ -66,6 +66,9 @@
               formControlName="nombres"
               (change)="setValoresStore(validacionForm, 'nombres')"
             />
+            <div *ngIf="validacionForm.get('nombres')?.errors?.['required'] && (validacionForm.get('nombres')?.touched || validacionForm.get('nombres')?.dirty)" class="text-danger">
+              <small>Este campo es obligatorio.</small>
+            </div>
           </div>
 
           <div class="col-md-4 form-group">
@@ -83,6 +86,9 @@
                   'primerApellido' )
               "
             />
+            <div *ngIf="validacionForm.get('primerApellido')?.errors?.['required'] && (validacionForm.get('primerApellido')?.touched || validacionForm.get('primerApellido')?.dirty)" class="text-danger">
+              <small>Este campo es obligatorio.</small>
+            </div>
           </div>
 
           <div class="col-md-4 form-group">
@@ -119,6 +125,9 @@
                 )
               "
             />
+            <div *ngIf="validacionForm.get('numeroDeRegistroFiscal')?.errors?.['required'] && (validacionForm.get('numeroDeRegistroFiscal')?.touched || validacionForm.get('numeroDeRegistroFiscal')?.dirty)" class="text-danger">
+              <small>Este campo es obligatorio.</small>
+            </div>
           </div>
 
           <div class="col-md-8 form-group">
@@ -135,6 +144,9 @@
                 )
               "
             />
+            <div *ngIf="validacionForm.get('razonSocial')?.errors?.['required'] && (validacionForm.get('razonSocial')?.touched || validacionForm.get('razonSocial')?.dirty)" class="text-danger">
+              <small>Este campo es obligatorio.</small>
+            </div>
           </div>
         </div>
       </div>
@@ -154,6 +166,9 @@
               "
               [isDisabled]="soloLectura"
             ></app-catalogo-select>
+            <div *ngIf="validacionForm.get('tratado')?.errors?.['required'] && (validacionForm.get('tratado')?.touched || validacionForm.get('tratado')?.dirty)" class="text-danger">
+              <small>Seleccione un tratado/acuerdo.</small>
+            </div>
           </div>
           <div class="col-md-4">
             <app-catalogo-select
@@ -166,6 +181,9 @@
               (change)="setValoresStore(validacionForm, 'pais')"
               [isDisabled]="soloLectura"
             ></app-catalogo-select>
+            <div *ngIf="validacionForm.get('pais')?.errors?.['required'] && (validacionForm.get('pais')?.touched || validacionForm.get('pais')?.dirty)" class="text-danger">
+              <small>Seleccione un país/bloque.</small>
+            </div>
           </div>
         </div>
         <div class="row mt-5">

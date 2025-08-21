@@ -201,7 +201,6 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
       EntidadFederativaDates: ['', [Validators.required, Validators.min(0)]],
       representacionFederalDates: ['', [Validators.required, Validators.min(0)]],
       precisaDates: ['', this.precisa ? [Validators.required] : []]
-
     });
   }
  /**

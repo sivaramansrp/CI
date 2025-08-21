@@ -38,6 +38,7 @@ import { ValidarInicialmenteCertificadoService } from '../../services/validar-in
   templateUrl: './destinatario.component.html',
   styleUrl: './destinatario.component.css',
 })
+
 export class DestinatarioComponent implements OnInit, OnDestroy {
   /**
    * Una cadena que representa la clase CSS para una alerta de información.
@@ -281,4 +282,28 @@ setdestinatarioForm():void{
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+  /**
+ * @method validatorCheck
+ * @description Método que valida el estado del formulario.
+ * Verifica si todos los formularios hijos son válidos.
+ * @returns {boolean} - Retorna true si todos los formularios son válidos, de lo contrario false.
+ */
+
+  validatorCheck(): boolean {
+    if (!this.registroForm) {
+      return false;
+    }
+    const DESTINATARIO_FORM_VALID = this.registroForm.get('destinatarioForm')?.valid;
+    const DOMICILIO_FORM_VALID = this.registroForm.get('domicilioForm')?.valid;
+    const REPRESENTANTE_LEGAL_FORM_VALID = this.registroForm.get('representanteLegalForm')?.valid;
+
+    if (DESTINATARIO_FORM_VALID && DOMICILIO_FORM_VALID && REPRESENTANTE_LEGAL_FORM_VALID) {
+      return true;
+    }
+    this.registroForm.get('destinatarioForm')?.markAllAsTouched();
+    this.registroForm.get('domicilioForm')?.markAllAsTouched();
+    this.registroForm.get('representanteLegalForm')?.markAllAsTouched();
+    return false;
+  }
 }
+

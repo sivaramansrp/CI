@@ -904,6 +904,22 @@ getError(controlName: string, error: string): boolean {
         };
           this.mostrarMensajeError =true;
       }
+    
+
+  validatorCheck(): boolean {
+  const IS_REGISTRO_FORM_VALID = this.registroForm.valid;
+  const IS_MERCANCIA_FORM_VALID = this.mercanciaForm.valid;
+
+  if (!IS_REGISTRO_FORM_VALID) {
+    this.registroForm.markAllAsTouched();
+  }
+  if (!IS_MERCANCIA_FORM_VALID) {
+    this.mercanciaForm.markAllAsTouched();
+  }
+
+  return IS_REGISTRO_FORM_VALID && IS_MERCANCIA_FORM_VALID;
+}
+
     }
   
   

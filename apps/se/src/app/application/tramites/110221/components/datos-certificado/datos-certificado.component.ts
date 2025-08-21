@@ -1,6 +1,7 @@
 import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
+import { DatosCertificadoDeComponent } from '../../../../shared/components/datos-certificado-de/datos-certificado-de.component';
 import { FormBuilder } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Tramite110221Query } from '../../estados/tramite110221.query';
@@ -83,6 +84,12 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
       this.formDatosCertificadoValues = estado;
     });
   }
+  /**
+   * @property solicitante - Referencia al componente `SolicitanteComponent` que se utiliza para manejar
+   *                          la lógica y los datos relacionados con el solicitante en este paso del trámite.
+   * @command Este decorador `@ViewChild` permite acceder al componente hijo para interactuar con sus métodos y propiedades.
+   */
+  @ViewChild('datosCertificadoDe') datosCertificadoDeRef!: DatosCertificadoDeComponent;
 
   /**
    * @descripcion
@@ -228,4 +235,9 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+  validarFormulario(): boolean {
+    return this.datosCertificadoDeRef.validarFormularios();
+  }
+ 
 }

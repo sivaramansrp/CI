@@ -508,4 +508,6 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+
 }

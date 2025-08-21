@@ -1,6 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CertificadoDeOrigenComponent } from '../../components/certificado-de-origen/certificado-de-origen.component';
+import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
+import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
+import { HistoricoDeProductoresComponent } from '../../components/historico-de-productores/historico-de-productores.component';
 import { Tramite110221Store } from '../../estados/tramite110221.store';
 import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
 
@@ -21,6 +25,33 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
+
+  /**
+   * @property solicitante - Referencia al componente `SolicitanteComponent` que se utiliza para manejar
+   *                          la lógica y los datos relacionados con el solicitante en este paso del trámite.
+   * @command Este decorador `@ViewChild` permite acceder al componente hijo para interactuar con sus métodos y propiedades.
+   */
+  @ViewChild('solicitanteRef') solicitante!: SolicitanteComponent;
+
+  /**
+   * @property certificadoDeOrigen - Referencia al componente `CertificadoDeOrigenComponent` para manejar la lógica y datos del certificado de origen.
+   */
+  @ViewChild('certificadoDeOrigenRef') certificadoDeOrigen!: CertificadoDeOrigenComponent;
+
+  /**
+   * @property historicoDeProductores - Referencia al componente `HistoricoDeProductoresComponent` para manejar la lógica y datos históricos de productores.
+   */
+  @ViewChild('historicoDeProductoresRef') historicoDeProductores!: HistoricoDeProductoresComponent;
+
+  /**
+   * @property destinatario - Referencia al componente `DestinatarioComponent` para manejar la lógica y datos del destinatario.
+   */
+  @ViewChild('destinatarioRef') destinatario!: DestinatarioComponent;
+
+  /**
+   * @property datosCertificado - Referencia al componente `DatosCertificadoComponent` para manejar la lógica y datos del certificado.
+   */
+  @ViewChild('datosCertificadoRef') datosCertificado!: DatosCertificadoComponent;
 
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
@@ -90,5 +121,44 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+
+  validarFormularios():boolean{
+  let isValid = true;
+
+    if (this.solicitante?.form) {
+      if (this.solicitante.form.invalid) {
+        this.solicitante.form.markAllAsTouched();
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.certificadoDeOrigen) {
+      if (!this.certificadoDeOrigen.validatorCheck()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.destinatario) {
+      if (!this.destinatario.validatorCheck()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.datosCertificado) {
+      if (!this.datosCertificado.validatorCheck()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    return isValid;
   }
 }
