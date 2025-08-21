@@ -192,12 +192,6 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     return this.validacionesService.isValid(form, field) || false;
   }
 
-  /**
-   * Obtiene el formulario de validación.
-   */
-  get validacionForm(): FormGroup {
-    return this.registroForm.get('validacionForm') as FormGroup;
-  }
 
   /**
    * Maneja el cambio de país de destino en el formulario.
@@ -215,39 +209,30 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    */
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
-      validacionForm: this.fb.group({
-        nombre: [this.solicitudState?.nombre, [Validators.required]],
-        apellidoPrimer: [
-          this.solicitudState?.apellidoPrimer,
-          [Validators.required],
-        ],
-        apellidoSegundo: [
-          this.solicitudState?.apellidoSegundo,
-          [Validators.required],
-        ],
-        numeroFiscal: [
-          this.solicitudState?.numeroFiscal,
-          [Validators.required],
-        ],
-        razonSocial: [this.solicitudState?.razonSocial, [Validators.required]],
-        ciudad: [this.solicitudState?.ciudad, [Validators.required]],
-        calle: [this.solicitudState?.calle, [Validators.required]],
-        numeroLetra: [this.solicitudState?.numeroLetra, [Validators.required]],
-        paisDestino: [this.solicitudState?.paisDestino, Validators.required],
-        lada: [this.solicitudState?.lada, [Validators.required]],
-        telefono: [
-          this.solicitudState?.telefono,
-          [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
-        ],
-        fax: [
-          this.solicitudState?.fax,
-          [Validators.pattern(REGEX_SOLO_DIGITOS)],
-        ],
-        correoElectronico: [
-          this.solicitudState?.correoElectronico,
-          [Validators.required, Validators.email],
-        ]
-      }),
+      destinatarioForm : this.fb.group({
+      nombre: [this.solicitudState?.destinatarioForm.nombre||'', [Validators.required, Validators.maxLength(250)]],
+      numeroFiscal: [this.solicitudState?.destinatarioForm.numeroFiscal||'', [Validators.required, Validators.maxLength(30)]],
+    }),
+     domicilioForm : this.fb.group({
+      calle: [this.solicitudState.domicilioForm.calle || '', [Validators.required, Validators.maxLength(90)]],
+      numeroLetra: [this.solicitudState.domicilioForm.numeroLetra || '', [Validators.required, Validators.maxLength(30)]],
+      paisDestino: [this.solicitudState.domicilioForm.paisDestino || '', Validators.required],
+      ciudad: [this.solicitudState.domicilioForm.ciudad || '', [Validators.required, Validators.maxLength(50)]],
+      correoElectronico: [this.solicitudState.domicilioForm.correoElectronico || '', [Validators.required, Validators.email, Validators.maxLength(70)]],
+      lada: [this.solicitudState.domicilioForm.lada || '', [Validators.maxLength(5)]],
+      telefono: [this.solicitudState.domicilioForm.telefono || '', [Validators.maxLength(20)]],
+    }),
+    representanteLegalForm : this.fb.group({
+  lugar: [this.solicitudState?.representanteLegalForm.lugar || '', Validators.required],
+  nombreRepresentante: [this.solicitudState?.representanteLegalForm.nombreRepresentante || '', Validators.required],
+  empresa: [this.solicitudState?.representanteLegalForm.empresa || '', Validators.required],
+  cargo: [this.solicitudState?.representanteLegalForm.cargo || '', Validators.required],
+  lada: [this.solicitudState?.representanteLegalForm.lada || ''],
+  telefono: [this.solicitudState?.representanteLegalForm.telefono || '', Validators.required],
+  fax: [this.solicitudState?.representanteLegalForm.fax || '', Validators.required], 
+  correoElectronico: [this.solicitudState?.representanteLegalForm.correoElectronico || '', [Validators.required, Validators.email]] 
+})
+
     });
     this.inicializarEstadoFormulario();
   }
@@ -262,7 +247,15 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
       this.registroForm?.enable();
     }
   }
-
+setrepresentanteLegalForm():void{
+  this.store.setRepresentanteLegalForm(this.registroForm.value.representanteLegalForm)
+}
+setdomicilioForm():void{
+  this.store.setDomicilioForm(this.registroForm.value.domicilioForm)
+}
+setdestinatarioForm():void{
+  this.store.setDestinatarioForm(this.registroForm.value.destinatarioForm)
+}
   /**
    * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
    * @param form - El formulario reactivo.

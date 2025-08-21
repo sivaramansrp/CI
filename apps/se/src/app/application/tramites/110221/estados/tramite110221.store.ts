@@ -10,6 +10,33 @@ import { Mercancia } from '../../../shared/models/modificacion.enum';
  * Contiene todas las propiedades y formularios requeridos en el flujo del trámite, así como los datos y banderas de validación.
  * 
  */
+
+export interface DestinatarioForm {
+  nombre: string;
+  numeroFiscal: string;
+}
+
+export interface DomicilioForm {
+  calle: string;
+  numeroLetra: string;
+  paisDestino: string | null;
+  ciudad: string;
+  correoElectronico: string;
+  lada: string;
+  telefono: string;
+}
+
+export interface RepresentanteLegalForm{
+  lugar: string;
+  nombreRepresentante: string;
+  empresa: string;
+  cargo: string;
+  lada: string;
+  telefono: string;
+  fax: string;
+  correoElectronico: string;
+}
+
 export interface Tramite110221State {
   /**
    * @property {Object} formCertificado - Datos del formulario principal de certificado.
@@ -125,6 +152,24 @@ export interface Tramite110221State {
    * Utilizada para controlar el flujo del trámite, puede ser utilizada en condiciones lógicas dentro del store.
    */
   si?: boolean;
+  /**
+   * @property {DestinatarioForm} destinatarioForm - Formulario de destinatario.
+   * @description
+   * Contiene los campos del formulario para el destinatario, como nombre y número fiscal.
+   */
+  destinatarioForm: DestinatarioForm;
+  /**
+   * @property {DomicilioForm} domicilioForm - Formulario de domicilio.
+   * @description
+   * Contiene los campos del formulario para el domicilio, como calle, número/letra, país destino, ciudad, correo electrónico, lada y teléfono.
+   */
+  domicilioForm: DomicilioForm;
+  /**
+   * @property {RepresentanteLegalForm} representanteLegalForm - Formulario de representante legal.
+   * @description
+   * Contiene los campos del formulario para el representante legal, como lugar, nombre, empresa, cargo, lada, teléfono, fax y correo electrónico.
+   */
+  representanteLegalForm: RepresentanteLegalForm;
   /**
    * @property {boolean} [productorMismoExportador] - Indica si el productor es el mismo que el exportador.
    * @description
@@ -300,8 +345,10 @@ export function createInitialState(): Tramite110221State {
     mercanciaSeleccionadasTablaData:[],
     mercanciaDisponsiblesTablaDatos:[],
     otrasInstancias:'',
-    valordeContenidoRegional:''
-
+    valordeContenidoRegional:'',
+  destinatarioForm: {} as DestinatarioForm,
+  domicilioForm: {} as DomicilioForm,
+  representanteLegalForm: {} as RepresentanteLegalForm
   };
 }
 
@@ -671,5 +718,39 @@ export class Tramite110221Store extends Store<Tramite110221State> {
       mercanciaDisponsiblesTablaDatos,
     }));
   }
-  
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de destinatario.
+   * @param destinatarioForm - Objeto que contiene los valores del formulario de destinatario.
+   */
+  setDestinatarioForm(destinatarioForm: DestinatarioForm): void {
+    this.update((state) => ({
+      ...state,
+      destinatarioForm,
+    }));
+  }
+
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de domicilio.
+   * @param domicilioForm - Objeto que contiene los valores del formulario de domicilio.
+   */
+  setDomicilioForm(domicilioForm: DomicilioForm): void {
+    this.update((state) => ({
+      ...state,
+      domicilioForm,
+    }));
+  }
+
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de representante legal.
+   * @param representanteLegalForm - Objeto que contiene los valores del formulario de representante legal.
+   */
+  setRepresentanteLegalForm(representanteLegalForm: RepresentanteLegalForm): void {
+    this.update((state) => ({
+      ...state,
+      representanteLegalForm,
+    }));
+  }
 }
