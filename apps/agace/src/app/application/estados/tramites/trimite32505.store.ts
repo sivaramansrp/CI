@@ -26,6 +26,10 @@ export interface Solicitud32505State {
    * Tipo de búsqueda general.
    */
   tipoBusqueda: string;
+  /**
+   * Confirmidad.
+   */
+  confirmidad: string;
 
   /**
    * Estado de la solicitud.
@@ -199,6 +203,7 @@ export function createInitialState(): Solicitud32505State {
     pais: '',
     anio: '',
     tipoBusqueda: '',
+    confirmidad: '',
     tipoBusquedaAviso: '',
     folioTipo: '',
     numeroSerie: '',
@@ -314,6 +319,18 @@ export class Tramite32505Store extends Store<Solicitud32505State> {
     this.update((state) => ({
       ...state,
       tipoBusqueda
+    }));
+  }
+
+  /**
+   * @method setConfirmidad
+   * @description Actualiza el estado del campo `confirmidad`.
+   * @param {string} confirmidad - Valor a actualizar.
+   */
+  public setConfirmidad(confirmidad: string): void {
+    this.update((state) => ({
+      ...state,
+      confirmidad
     }));
   }
 

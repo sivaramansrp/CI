@@ -8,21 +8,37 @@
         </div>
       </div>
       <ng-titulo titulo="Materias primas relacionadas" />
+        <div class="col-12">
+          @if (esFormaValido) {
+          <div
+            class="alert alert-info alert-danger text-center"
+            [innerHTML]="alertaErrorFormulario"
+          ></div>
+          }
+        </div>
       <form [formGroup]="formularioDatos">
-        <div class="row mb-3 align-items-end">
+        <div class="row mb-3">
           <div class="col-md-4">
             <div class="form-group mb-3">
               <label for="numero" class="form-label">Número de bitácora*:</label>
-              <input type="text" class="form-control" id="numero" formControlName="numero" (change)="actualizarCampoFormularioDatos('numero')">
+              <input type="text" class="form-control" id="numero" formControlName="numero" (change)="actualizarCampoFormularioDatos('numero')"
+              [ngClass]="formularioDatos.get('numero')?.invalid && formularioDatos.get('numero')?.touched ? 'is-invalid' : ''"
+              />
+              @if (formularioDatos.get('numero')?.hasError('required') &&
+              formularioDatos.get('numero')?.touched) {
+              <div class="text-danger">
+                <small>Este campo es obligatorio</small>
+              </div>
+              }
             </div>
           </div>
-          <div class="col-md-4 d-flex justify-content-start">
-            <button type="button" class="btn btn-primary">Buscar</button>
+          <div class="col-md-3 d-flex justify-content-end mt-5 buscar">
+            <button type="button" class="btn btn-primary" (click)="buscarMateriaPrima()">Buscar</button>
           </div>
         </div>
         <div class="row mb-3">
           <div class="col-md-4">
-            <app-catalogo-select [catalogo]="etiquetasForm.nombre" [label]="'Nombre de la materia prima'" [required]="true" formControlName="nombreMateriaPrima" (change)="actualizarCampoFormularioDatos('nombreMateriaPrima')"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="etiquetasForm.nombre" [label]="'Nombre de la materia prima'" [required]="true" formControlName="nombreMateriaPrima" (change)="actualizarCampoFormularioDatos('nombreMateriaPrima'); onNombreMateriaPrimaChange()"></app-catalogo-select>
           </div>
         </div>
         <div class="row mb-3">
@@ -55,7 +71,7 @@
         </div>
         <div class="row mt-5">
           <div class="col-md-12 d-flex justify-content-end align-items-end">
-            <button type="submit" class="btn btn-primary ms-3"> Agregar </button>
+            <button type="button" class="btn btn-primary ms-3" [disabled]="!agregarHabilitado" (click)="agregarMateriaPrima()"> Agregar </button>
           </div>
         </div>
       </form>
@@ -63,48 +79,83 @@
         <h6>Materias primas relacionadas*:</h6>
         <div class="row mb-3">
           <div class="col-md-12">
-            <ng-table [commonTableHeader]="etiquetasForm.PrimasRelacionadas[0].encabezadoDeTabla" [commonTableBody]="etiquetasForm.PrimasRelacionadas[0].cuerpoTabla"></ng-table>
-            <nav aria-label="Page navigation example">
-              <ul class="pagination d-flex justify-content-center">
-                <li class="page-item">
-                  <a class="page-link">1</a>
-                </li>
-              </ul>
-            </nav>
+            <app-tabla-dinamica 
+              [configuracionTabla]="configuracionTablaMaterias" 
+              [datos]="materiasPrimasTabla"
+              [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+              [disableSeleccionTablaCheckBox]="false"
+              tableId="tablaMateriasPrimas"
+              (listaDeFilaSeleccionada)="onFilasSeleccionadas($event)"
+              >
+            </app-tabla-dinamica>
           </div>
         </div>
       </div>
       <div class="row mt-5">
         <div class="col-md-12 d-flex justify-content-end align-items-end">
-          <button class="btn btn-danger" type="button">Borrar</button>
+          <button class="btn btn-danger" type="button" [disabled]="!borrarHabilitado" (click)="borrarElementosSeleccionados()">Borrar</button>
         </div>
       </div>
-      <ng-titulo titulo="Datos de los residuos peligrosos a reciclar" />
+      <ng-titulo titulo="Datos de los residuos peligrosos a retornar" />
       <form [formGroup]="formularioResiduo">
         <div class="row mb-3">
           <div class="col-md-4">
-            <app-catalogo-select [catalogo]="etiquetasForm.arancelaria" [label]="'Fracción arancelaria'" [required]="true" formControlName="fraccionArancelaria" (change)="actualizarCampoFormularioResiduo('fraccionArancelaria')"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="etiquetasForm.arancelaria" [label]="'Fracción arancelaria'" [required]="true" formControlName="fraccionArancelaria" (change)="actualizarCampoFormularioResiduo('fraccionArancelaria'); onFraccionArancelariaChange()"></app-catalogo-select>
           </div>
           <div class="col-md-4">
-            <app-catalogo-select [catalogo]="etiquetasForm.nico" [label]="'N I C O'" [required]="true" formControlName="nico" (change)="actualizarCampoFormularioResiduo('nico')"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="etiquetasForm.nico" [label]="'N I C O'" [required]="true" formControlName="nico" (change)="actualizarCampoFormularioResiduo('nico'); onNicoChange()"></app-catalogo-select>
           </div>
         </div>
         <div class="row mb-3">
           <div class="col-md-8">
             <label class="form-label">Acotación*:</label>
-            <textarea class="form-control textarea-auto-height" cols="50" rows="5" formControlName="acotacion" (change)="actualizarCampoFormularioResiduo('acotacion')"></textarea>
+            <textarea class="form-control textarea-auto-height" cols="50" rows="8" formControlName="acotacion" (change)="actualizarCampoFormularioResiduo('acotacion')"></textarea>
           </div>
         </div>
         <div class="row mb-3">
           <div class="col-md-8">
             <label for="peligroso" class="form-label">Nombre del residuo peligroso generado*:</label>
-            <input type="text" class="form-control" id="peligroso" formControlName="residuoPeligroso" (change)="actualizarCampoFormularioResiduo('residuoPeligroso')">
+            <input type="text" class="form-control" id="peligroso" formControlName="residuoPeligroso" (change)="actualizarCampoFormularioResiduo('residuoPeligroso')"
+            [ngClass]="formularioResiduo.get('residuoPeligroso')?.invalid && formularioResiduo.get('residuoPeligroso')?.touched ? 'required' : ''"
+            />
+            @if (formularioResiduo.get('residuoPeligroso')?.hasError('required') &&
+            formularioResiduo.get('residuoPeligroso')?.touched) {
+            <div class="text-danger">
+              <small>Este campo es obligatorio</small>
+            </div>
+            }
           </div>
         </div>
         <div class="row mb-3">
           <div class="col-md-4">
             <label for="cantidad" class="form-label">Cantidad*:</label>
-            <input type="text" class="form-control" id="cantidad" formControlName="cantidad" (change)="actualizarCampoFormularioResiduo('cantidad')">
+            <input type="text" class="form-control" id="cantidad" maxlength="18.5" formControlName="cantidad" (change)="actualizarCampoFormularioResiduo('cantidad'); onCantidadChange()" (input)="onCantidadChange()"
+            [ngClass]="formularioResiduo.get('cantidad')?.invalid && formularioResiduo.get('cantidad')?.touched ? 'required' : ''"
+            />
+            @if (formularioResiduo.get('cantidad')?.hasError('required') &&
+            formularioResiduo.get('cantidad')?.touched) {
+            <div class="text-danger">
+              <small>Este campo es obligatorio</small>
+            </div>
+            }
+            @if (formularioResiduo.get('cantidad')?.hasError('pattern') &&
+            formularioResiduo.get('cantidad')?.touched) {
+            <div class="text-danger">
+              <small>Debe ingresar un número.</small>
+            </div>
+            }
+            @if (formularioResiduo.get('cantidad')?.hasError('noComma') &&
+            formularioResiduo.get('cantidad')?.touched) {
+            <div class="text-danger">
+              <small>No está permitido capturar "," (COMA)</small>
+            </div>
+            }
+            @if (formularioResiduo.get('cantidad')?.hasError('maxDigits') &&
+            formularioResiduo.get('cantidad')?.touched) {
+            <div class="text-danger">
+              <small>No se pueden ingresar más de 6 cifras significativas a la izquierda o a la derecha después del punto decimal (999999.999999)</small>
+            </div>
+            }
           </div>
         </div>
         <div class="row mb-3">
@@ -121,22 +172,30 @@
         <div class="row mb-3">
           <div class="col-md-8">
             <label>Clasificación / Tipo*:</label>
-            <app-input-radio [radioOptions]="clasificacionRadioOptions" [isRequired]="true" [layout]="'horizontal'" formControlName="clasificacion" (change)="actualizarCampoFormularioResiduo('clasificacion')"></app-input-radio>
+            <app-input-radio 
+              [radioOptions]="clasificacionRadioOptions" 
+              [isRequired]="true" 
+              [layout]="'horizontal'" 
+              formControlName="clasificacion" 
+              (change)="actualizarCampoFormularioResiduo('clasificacion'); onClasificacionChange()" 
+              (click)="onClasificacionChange()"
+              (selectionChange)="onClasificacionChange()">
+            </app-input-radio>
           </div>
         </div>
         <div class="row mb-3">
           <div class="col-md-4">
-            <app-catalogo-select [catalogo]="etiquetasForm.residuo" [label]="'Clave de residuo'" [required]="true" formControlName="claveResiduo" (change)="actualizarCampoFormularioResiduo('claveResiduo')"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="etiquetasForm.residuo" [label]="'Clave de residuo'" [required]="true" [isDisabled]="claveResiduoDisabled" formControlName="claveResiduo" (change)="actualizarCampoFormularioResiduo('claveResiduo')"></app-catalogo-select>
           </div>
         </div>
         <div class="row mb-3">
           <div class="col-md-4">
-            <app-catalogo-select [catalogo]="etiquetasForm.tipoNombre" [label]="'Nombre'" [required]="true" formControlName="nombre" (change)="actualizarCampoFormularioResiduo('nombre')"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="etiquetasForm.tipoNombre" [label]="'Nombre'" [required]="true" [isDisabled]="nombreDisabled" formControlName="nombre" (change)="actualizarCampoFormularioResiduo('nombre')"></app-catalogo-select>
           </div>
         </div>
         <div class="row mb-3">
           <div class="col-md-4">
-            <app-catalogo-select [catalogo]="etiquetasForm.descripcion" [label]="'Descripción'" [required]="true" formControlName="descripcion" (change)="actualizarCampoFormularioResiduo('descripcion')"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="etiquetasForm.descripcion" [label]="'Descripción'" [required]="true" [isDisabled]="descripcionDisabled" formControlName="descripcion" (change)="actualizarCampoFormularioResiduo('descripcion')"></app-catalogo-select>
           </div>
         </div>
         <div class="row mb-3">
@@ -152,7 +211,15 @@
         <div class="row mb-3">
           <div class="col-md-8">
             <label for="manifiesto" class="form-label">No de manifiesto*:</label>
-            <input type="text" class="form-control" id="manifiesto" formControlName="manifiesto" (change)="actualizarCampoFormularioResiduo('manifiesto')">
+            <input type="text" class="form-control" id="manifiesto" formControlName="manifiesto" maxlength="50" (change)="actualizarCampoFormularioResiduo('manifiesto')"
+              [ngClass]="formularioResiduo.get('manifiesto')?.invalid && formularioResiduo.get('manifiesto')?.touched ? 'required' : ''"
+            />
+            @if (formularioResiduo.get('manifiesto')?.hasError('required') &&
+            formularioResiduo.get('manifiesto')?.touched) {
+            <div class="text-danger">
+              <small>Este campo es obligatorio</small>
+            </div>
+            }
           </div>
         </div>
         <div class="row mb-3">
@@ -163,14 +230,27 @@
         <div class="row mb-3">
           <div class="col-md-8">
             <label for="capacidad" class="form-label">Capacidad*:</label>
-            <input type="text" class="form-control" id="capacidad" formControlName="capacidad" (change)="actualizarCampoFormularioResiduo('capacidad')">
+            <input type="text" class="form-control" id="capacidad" formControlName="capacidad" maxlength="250" (change)="actualizarCampoFormularioResiduo('capacidad')"
+              [ngClass]="formularioResiduo.get('capacidad')?.invalid && formularioResiduo.get('capacidad')?.touched ? 'required' : ''"
+            />
+            @if (formularioResiduo.get('capacidad')?.hasError('required') &&
+            formularioResiduo.get('capacidad')?.touched) {
+            <div class="text-danger">
+              <small>Este campo es obligatorio</small>
+            </div>
+            }
           </div>
         </div>
         <div class="row mt-3">
           <div class="col-md-12 text-end">
             <button type="button" id="cancelarDatosOperacionImp" class="mid btn btn-default me-3" data-bs-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Agregar</button>
+            <button type="button" class="btn btn-primary" (click)="agregarResiduoPeligroso()" data-bs-dismiss="modal">Agregar</button>
           </div>
         </div>
       </form>
     </div>
+
+
+@if(nuevaNotificacion.mensaje){
+<lib-notificaciones [notificacionInput]="nuevaNotificacion"></lib-notificaciones>
+}

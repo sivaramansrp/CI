@@ -6,7 +6,7 @@
         "llavePago": "LLAVE987654",
         "fechaPago": "20/06/2024",
         "importePago": "1500.00",
-        "banco": "Banco Ejemplo"
+        "banco": "1"
     },
     "datosSolicitudFormState": {
         "rfcSanitario": "SAN123456789",
@@ -26,7 +26,8 @@
         "regimen": 102,
         "adunasDeEntradas": 102,
         "aeropuerto": true,
-        "publico": "no",
+        "publico": "No",
+        "manifiestosCasillaDeVerificacion": true,
         "representanteRfc": "REP123456789",
         "representanteNombre": "Juan",
         "apellidoPaterno": "Pérez",

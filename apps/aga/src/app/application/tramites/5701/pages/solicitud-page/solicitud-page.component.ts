@@ -241,24 +241,25 @@ export class SolicitudPageComponent implements OnInit {
   getValorIndice(e: AccionBoton): void {
     // Validar el formulario del componente hijo antes de continuar
     const VALIDA_FORM=this.SolicitudPasoComponent.validarFormularioPadre();
-  if (!VALIDA_FORM) {
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'success',
-      modo: 'action',
-      titulo: TITULO_MODAL_AVISO,
-      mensaje: 'Has proporcionado información con formato incorrecto o no proporcionaste información en campos obligatorios.',
-      cerrar: false,
-      txtBtnAceptar: TEXTO_CERRAR,
-      txtBtnCancelar: CAMPO_VACIO,
-    };
-    this.indice = 1;
-    this.wizardComponent.indiceActual = 1;
-    
-    return;
-  }
+    if (!VALIDA_FORM) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'success',
+        modo: 'action',
+        titulo: TITULO_MODAL_AVISO,
+        mensaje: 'Has proporcionado información con formato incorrecto o no proporcionaste información en campos obligatorios.',
+        cerrar: false,
+        txtBtnAceptar: TEXTO_CERRAR,
+        txtBtnCancelar: CAMPO_VACIO,
+      };
+      this.indice = 1;
+      this.datosPasos.indice = 1;
+      this.wizardComponent.indiceActual = 1;
+      
+      return;
+    }
     // Nos encontramos en el paso 1, se guarda parcialmente la información.
-    if (this.indice === 1) {
+    if (this.indice === 1 && VALIDA_FORM) {
       this.enviaSolicitudRequest()
         .pipe(
           takeUntil(this.destroyNotifier$),
@@ -276,6 +277,7 @@ export class SolicitudPageComponent implements OnInit {
               };
               this.indice = 1;
               this.wizardComponent.indiceActual = 1;
+              this.wizardComponent.atras();
               return;
             }
 

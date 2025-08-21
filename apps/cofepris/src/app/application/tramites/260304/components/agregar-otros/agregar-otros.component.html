@@ -3,12 +3,13 @@
   <form [formGroup]="agregarDatosForm">
     <div class="row mb-5">
       <div class="col-10">
-        <label class="form-label">Tercero nombre descripcion * :</label>
+        <label class="form-label">Tercero nombre descripcion*:</label>
         <div class="col-12">
           <input
             type="text"
             class="form-control"
             formControlName="nombreDescripcion"
+            maxlength="254"
             [ngClass]="esInvalido('nombreDescripcion') ? 'required' : ''"
           />
           <div *ngIf="esInvalido('nombreDescripcion')" class="text-danger">
@@ -23,10 +24,10 @@
     </div>
     <!-- Datos Generales -->
 
-    <div class="row">
+    <div class="row mb-5">
       <h4>Datos generales</h4>
       <div class="col-md-6">
-        <label class="form-label">Terceros nacionalidad * :</label>
+        <label class="form-label">Terceros nacionalidad*:</label>
         <div class="form-check">
           <app-input-radio
             [radioOptions]="radioOpcions"
@@ -39,7 +40,7 @@
         </div>
       </div>
       <div class="col-md-6">
-        <label class="form-label">Tipo persona * :</label>
+        <label class="form-label">Tipo persona*:</label>
 
         <div class="form-check">
           <app-input-radio
@@ -55,10 +56,10 @@
       </div>
     </div>
 
-    @if(agregarDatosForm.get('nacionalidad')?.value === 'true') {
+    @if(agregarDatosForm.get('nacionalidad')?.value === '' || agregarDatosForm.get('nacionalidad')?.value === 'true') {
     <div class="row">
       <div class="form-group col-md-4">
-        <label class="form-label mt-3 fs-2" for="rfc">R.F.C. * :</label>
+        <label class="form-label mt-3 fs-2" for="rfc">R.F.C.*:</label>&nbsp;
         <span
           class="bi bi-question-circle-fill"
           title="R.F.C"
@@ -77,12 +78,12 @@
             Este campo es obligatorio
           </small>
           <small *ngIf="agregarDatosForm.controls['rfc'].errors?.['pattern']">
-            Existen datos incorrectos que no cumplen con el formato esperado
+            Existen datos incorrectos que no cumplen con el formato esperado.
           </small>
         </div>
       </div>
       <div class="form-group col-md-4">
-        <label class="form-label mt-3 fs-2" for="curp">C.U.R.P. * :</label>
+        <label class="form-label mt-3 fs-2" for="curp">C.U.R.P.*:</label>
         <input
           class="form-control"
           id="terceros_curp"
@@ -101,29 +102,36 @@
       <div class="row">
         <div class="col-md-12">
           <div class="pull-right">
-            <button
-              type="button"
-              id="buscarEmpresa"
-              name="buscarEmpresa"
-              class="btn btn-primary ms-2"
-              (click)="seBuscaRfc()"
-            >
-              Buscar
-            </button>
+            @if(agregarDatosForm.get('nacionalidad')?.value !== '' && agregarDatosForm.get('nacionalidad')?.value !== '') {
+              <button
+                type="button"
+                id="buscarEmpresa"
+                name="buscarEmpresa"
+                class="btn btn-primary ms-2"
+                (click)="seBuscaRfc()"
+              >
+                Buscar
+              </button>
+            } @else{
+              <div class="mt-5 mb-5"></div>
+            }
           </div>
         </div>
       </div>
+      
     </div>
     }
+
+    <div class="row mt-5 mb-5"></div>
 
     <!-- Datos Personales -->
     @if(agregarDatosForm.get('tipoPersona')?.value === tipoPersona.FISICA ||
     agregarDatosForm.get('tipoPersona')?.value === tipoPersona.NO_CONTRIBUYENTE)
     {
     <h4 class="mt-4">Datos personales</h4>
-    <div class="row">
+    <div class="row mb-5">
       <div class="col-md-4">
-        <label class="form-label">Nombre(s) * :</label>
+        <label class="form-label">Nombre(s)*:</label>
         <input
           type="text"
           class="form-control"
@@ -140,12 +148,12 @@
           <small
             *ngIf="agregarDatosForm.controls['nombres'].errors?.['pattern']"
           >
-            Existen datos incorrectos que no cumplen con el formato esperado
+            Existen datos incorrectos que no cumplen con el formato esperado.
           </small>
         </div>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Primer apellido * :</label>
+        <label class="form-label">Primer apellido*:</label>
         <input
           type="text"
           class="form-control"
@@ -162,7 +170,7 @@
           <small
             *ngIf="agregarDatosForm.controls['primerApellido'].errors?.['pattern']"
           >
-            Existen datos incorrectos que no cumplen con el formato esperado
+            Existen datos incorrectos que no cumplen con el formato esperado.
           </small>
         </div>
       </div>
@@ -183,7 +191,7 @@
           <small
             *ngIf="agregarDatosForm.controls['segundoApellido'].errors?.['pattern']"
           >
-            Existen datos incorrectos que no cumplen con el formato esperado
+            Existen datos incorrectos que no cumplen con el formato esperado.
           </small>
         </div>
       </div>
@@ -192,7 +200,7 @@
     <div class="row">
       <div class="form-group col-md-4">
         <label class="form-label row mt-3 ms-2 fs-2" for="razonSocial"
-          >Denominación/razón social * :</label
+          >Denominación/razón social*:</label
         >
         <input
           class="form-control"
@@ -212,13 +220,14 @@
           <small
             *ngIf="agregarDatosForm.controls['razonSocial'].errors?.['pattern']"
           >
-            Existen datos incorrectos que no cumplen con el formato esperado
+            Existen datos incorrectos que no cumplen con el formato esperado.
           </small>
         </div>
       </div>
     </div>
     }
 
+    <div class="row mt-5 mb-5"></div>
     <!-- Domicilio -->
     <h4>Domicilio</h4>
     <div class="row">
@@ -228,6 +237,7 @@
           formControlName="pais"
           [label]="'País'"
           [required]="true"
+          [isDisabled]="agregarDatosForm.get('nacionalidad')?.value !== 'false'"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -256,7 +266,7 @@
 
     <div class="row mt-3">
       <div class="col-md-8">
-        <label class="form-label">Calle * :</label>
+        <label class="form-label">Calle*:</label>&nbsp;
         <span
           class="bi bi-question-circle-fill"
           title="Calle"
@@ -329,12 +339,12 @@
           <small
             *ngIf="agregarDatosForm.controls['telefono'].errors?.['pattern']"
           >
-            Existen datos incorrectos que no cumplen con el formato esperado
+            Existen datos incorrectos que no cumplen con el formato esperado.
           </small>
         </div>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Correo electrónico:</label>
+        <label class="form-label">Correo electrónico:</label>&nbsp;
         <span
           class="bi bi-question-circle-fill"
           title="Correo electrónico"

@@ -233,9 +233,13 @@
         "establecimiento":[
           {
             "id": 1,
-            "descripcion": ""
+            "descripcion": "AAAAAAAAAA"
+          },
+           {
+            "id": 1,
+            "descripcion": "ABCDS45155555"
           }
-        ]      
-      
 
-}
+        ]
+      }
+

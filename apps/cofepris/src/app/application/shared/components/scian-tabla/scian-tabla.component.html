@@ -5,34 +5,35 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <app-catalogo-select [catalogo]="scianLista" formControlName="clave" [label]="'Clave S.C.I.A.N.'"
-                        [required]="true" name="clave"
+                        [required]="true" name="clave" (click)="restablecerMensaje()"
                         (selectionChange)="claveSelecionada($event)"></app-catalogo-select>
+                    <div *ngIf="scianForm.get('clave')?.touched && scianForm.get('clave')?.invalid" class="text-danger" class="text-danger">
+                        <small>{{ mensajeFormularioInvalido }}</small>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <app-catalogo-select
-                    [catalogo]="scianNinoLista"
-                    formControlName="scianNino"
-                    [label]="'Descripción del S.C.I.A.N.'"
-                    [required]="scianNinoRequerido"
-                    name="scianNino"
-                    [isDisabled]="true"
-                  ></app-catalogo-select>
+                    <app-catalogo-select [catalogo]="scianNinoLista" formControlName="scianNino"
+                        [label]="'Descripción del S.C.I.A.N.'" [required]="scianNinoRequerido" name="scianNino"
+                        [isDisabled]="true"></app-catalogo-select>
                 </div>
             </div>
         </div>
        </form>
+       
        <div class="row mt-5 mb-5">
         <div class="col-md-4">
             <p>* Campos obligatorios</p>
-          </div>
+        </div>
         <div class="col-md-8">
             <div class="pull-right ml-2 mb-8">
-                <button type="button" name="eliminarScian" class="btn btn-default ms-2"
-                  (click)="cancelar()">
+                <button type="button" name="eliminarScian" class="btn btn-default" (click)="limpiarScian()">
+                    Limpiar
+                </button>
+                <button type="button" name="eliminarScian" class="btn btn-default ms-2" (click)="cancelar()">
                     Cancelar
                 </button>
                 <button type="button" name="eliminarScian" class="btn btn-default ms-2"

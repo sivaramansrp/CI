@@ -1,12 +1,15 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, Notificacion, NotificacionesComponent, SoloLetrasNumerosDirective, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AbstractControl,FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors,ValidatorFn, Validators} from '@angular/forms';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent,Notificacion, SoloLetrasNumerosDirective, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, forwardRef } from '@angular/core';
+import { Component,ElementRef,EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, forwardRef } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormularioSi } from '../../models/certificado-origen.model';
 import { Mercancia } from '../../models/modificacion.enum';
+import { Modal } from 'bootstrap';
+import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
 import { Subject } from 'rxjs';
+import { ToastrService } from "ngx-toastr";
 
 
 /**
@@ -70,6 +73,7 @@ export const FECHA_FIN = {
     forwardRef(() => SoloLetrasNumerosDirective),
   ],  
   templateUrl: './certificado-de-origen.component.html',
+  providers:[ToastrService],
   styleUrl: './certificado-de-origen.component.scss'
 })
 
@@ -115,6 +119,27 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
    * @type {boolean}
    */
   @Input() mercanciasDisponibles!:boolean;
+     /**
+     * @public
+     * @property {Notificacion} nuevaNotificacion
+     * @description Representa una nueva notificación que se utilizará en el componente.
+     * @command Este campo debe ser inicializado antes de su uso.
+     */
+     public nuevaNotificacion!: Notificacion;
+      /**
+     * @public
+     * @property {Notificacion} nuevaNotificacion
+     * @description Representa una nueva notificación que se utilizará en el componente.
+     * @command Este campo debe ser inicializado antes de su uso.
+     */
+      public nuevaNotificacionUno!: Notificacion;
+
+     /**
+   * @descripcion
+   * Mensaje de alerta que se muestra al usuario.
+   */
+  mensajeDeAlerta: string = 'Los datos marcados con asterisco son obligatorios. Favor de capturarlos.';
+
 
   /**
    * Propiedad de entrada que representa el estado del formulario histórico.
@@ -262,11 +287,34 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
   */
   TEXTOS = TEXTOS_REQUISITOS;
 
+  
+
   /**
    * Subject para gestionar el ciclo de vida del componente y cancelar las suscripciones.
    * @type {Subject<void>}
    */
   destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+     * Referencia al elemento del modal para gestionar archivos.
+     * 
+     * Se utiliza para abrir o cerrar el modal de archivos.
+     */
+    @ViewChild('modalArchivo') modalArchivo!: ElementRef;
+    /**
+   * Nombre del archivo seleccionado.
+   * 
+   * Contiene el nombre del archivo que el usuario ha seleccionado para adjuntar.
+   */
+    nombreArchivo: string = '';
+
+      /**
+   * Formulario para gestionar los archivos adjuntos.
+   * 
+   * Permite capturar y validar los datos relacionados con los archivos adjuntos.
+   */
+  formularioArchivo!: FormGroup;
+
 
   /**
    * Configuración de las columnas de la tabla de mercancia.
@@ -299,11 +347,30 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
    */
   datos: Mercancia[] = [];
 
+   /**
+     * Muestra el modal para cargar un archivo.
+     * 
+     * Este método utiliza el modal de Bootstrap para mostrar el modal de carga de archivos.
+     */
+    cargaArchivo(): void {
+      if (this.modalArchivo) {
+        const MODAL_INSTANCE = new Modal(this.modalArchivo.nativeElement);
+        MODAL_INSTANCE.show();
+      }
+    }
+
   /**
    * Estado de la selección de la tabla.
    * @type {TablaSeleccion}
    */
   seleccionTabla = TablaSeleccion.UNDEFINED;
+    /**
+   * Referencia al botón para cerrar el modal.
+   * 
+   * Se utiliza para cerrar el modal de manera programada.
+   */
+    @ViewChild('closeModal') closeModal!: ElementRef;
+
 
   /**
    * Tipo de selección de la tabla (radio o checkbox).
@@ -329,14 +396,6 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
    * @type {Mercancia}
    */
   datosSeleccionados!: Mercancia;
-
-    /**
-   * @property {Notificacion} nuevaNotificacion
-   * @description
-   * Objeto que almacena la información de la notificación a mostrar en el componente.
-   * Se utiliza para mostrar mensajes de alerta, éxito o información al usuario.
-   */
-  nuevaNotificacion!: Notificacion;
 
   /**
    * @property {boolean} mostrarError
@@ -385,9 +444,9 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
   fechaInicioInput: [''],
   fechaFinalInput: [''],
   nombres: ['', [Validators.maxLength(20)]],
-  primerApellido: [''],
+  primerApellido: ['', [Validators.maxLength(20)]],
   segundoApellido: ['', [Validators.maxLength(20)]],
-  numeroDeRegistroFiscal: ['', [Validators.maxLength(30)]],
+  numeroDeRegistroFiscal: ['', [Validators.required,Validators.maxLength(30)]],
   razonSocial: [''],
   calle: ['', [Validators.maxLength(90)]],
   numeroLetra: ['', [Validators.maxLength(30)]],
@@ -396,9 +455,43 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
   lada: [''],
   telefono: [''],
   fax:[''],
-  correo:['']
-    });
+  correo:[''],
+  correoElectronico:[''],
+
+    },
+    { validators: CertificadoDeOrigenComponent.dateRangeValidator(this) } 
+  );
   }
+  /* * Aplica las validaciones al campo 'primerApellido', 'calle' y 'numeroLetra' del formulario.
+    * 
+    * @remarks
+    * Este método establece validaciones condicionales basadas en el valor de `idProcedimiento`.
+    * Si `idProcedimiento` es 110205, los campos son opcionales; de lo contrario, son obligatorios.
+    */
+  applyPrimerApellidoValidation(): void {
+    const PRIMER_APELLIDO = this.formCertificado.get('primerApellido');
+    const CALLE = this.formCertificado.get('calle');
+    const NUMERO_LETRA = this.formCertificado.get('numeroLetra');
+  
+    if (!PRIMER_APELLIDO || !CALLE || !NUMERO_LETRA) return;
+  
+    if (this.idProcedimiento === 110205) {
+    
+      PRIMER_APELLIDO.setValidators([Validators.maxLength(20)]);
+      CALLE.setValidators([Validators.maxLength(90)]);
+      NUMERO_LETRA.setValidators([Validators.maxLength(30)]);
+    } else {
+      PRIMER_APELLIDO.setValidators([Validators.required, Validators.maxLength(20)]);
+      CALLE.setValidators([Validators.required, Validators.maxLength(90)]);
+      NUMERO_LETRA.setValidators([Validators.required, Validators.maxLength(30)]);
+    }
+  
+    PRIMER_APELLIDO.updateValueAndValidity();
+    CALLE.updateValueAndValidity();
+    NUMERO_LETRA.updateValueAndValidity();
+  }
+  
+  
   /**
 * Evalúa si se debe inicializar o cargar datos en el formulario.
 */
@@ -423,6 +516,16 @@ ngOnChanges(changes: SimpleChanges):void {
   
   }
 }
+  /**
+ * Inicializa el formulario para gestionar archivos.
+ * 
+ * Este método configura los campos y validaciones del formulario relacionado con los archivos adjuntos.
+ */
+  inicializarFormularioArchivo(): void {
+    this.formularioArchivo = this.fb.group({
+      archivo: ['', [Validators.required]],
+    });
+  }
   /**
    * Actualiza los validadores requeridos en los campos del formulario especificados
    * en la lista `elementosRequeridos`.
@@ -454,6 +557,40 @@ ngOnChanges(changes: SimpleChanges):void {
   tipoSeleccion(estado: Catalogo): void {
     this.paisBloquEvent.emit(estado);
   }
+
+   /**
+   * Maneja la selección de un archivo en el input de carga de archivos.
+   * 
+   * Este método actualiza el nombre del archivo seleccionado en la propiedad `nombreArchivo`.
+   * 
+   * @param {Event} event - El evento generado al seleccionar un archivo.
+   */
+   alSeleccionarArchivo(event: Event): void {
+    const INPUT = event.target as HTMLInputElement;
+    const FILE = INPUT?.files ? INPUT.files[0] : null;
+    this.nombreArchivo = FILE ? FILE.name : 'Sin archivos seleccionados';
+  }
+    /**
+   * Cierra el modal activo.
+   * 
+   * Este método utiliza la referencia al botón de cierre del modal para cerrarlo.
+   */
+    cerrarModal(): void {
+      if (this.closeModal) {
+        this.closeModal.nativeElement.click();
+      }
+    }
+   /**
+   * Envía los datos y cierra el modal.
+   * 
+   * Este método realiza el envío de datos y cierra el modal de manera programada.
+   */
+   enviar(): void {
+    this.cerrarModal();
+    
+  }
+
+  
   /**
    * @inheritdoc
    * 
@@ -464,6 +601,7 @@ ngOnChanges(changes: SimpleChanges):void {
     this.fechaFin = FECHA_ID.includes(this.idProcedimiento);
     this.inicializarEstadoFormulario();
     this.nuevaNotificacion = {} as Notificacion
+    this.inicializarFormularioArchivo();
   }
    validarFormularios(): boolean {
   if(this.formCertificado.valid){
@@ -516,19 +654,27 @@ ngOnChanges(changes: SimpleChanges):void {
     if (this.formCertificado && this.formCertificado.valid) {
       this.setbuscarMercanciaEvent.emit(true);
     }
-    else {
-      this.mostrarError = true;
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: '',
-        modo: 'action',
-        titulo: '',
-        mensaje: 'Los datos marcados con asterisco son obligatorios. Favor de capturarlos.',
-        cerrar: false,
-        tiempoDeEspera: 2000,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
+    else{
+      this.abrirModaldos();
+    }
+  }
+   /**
+   * Abre un modal con una notificación configurada.
+   * 
+   * @command abrirModal
+   * @description Este método configura y muestra un modal con una notificación de alerta.
+   */
+   public abrirModaldos(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: this.mensajeDeAlerta,
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
     }
   }
 
@@ -593,6 +739,48 @@ ngOnChanges(changes: SimpleChanges):void {
     if (this.seleccionadaguardarClicado.length > 0) {
       this.guardarClicado = [];
     }
+  }
+  /**
+ * Validador de rango de fechas.
+ * 
+ * Este método valida que la fecha de inicio sea menor o igual a la fecha de fin.
+ * Si la fecha de inicio es mayor a la fecha de fin, se genera una notificación de error.
+ * 
+ * @param {CertificadoOrigenComponent} component - Instancia del componente para acceder a sus propiedades.
+ * @returns {ValidatorFn} Función de validación que retorna un error si las fechas no son válidas.
+ */
+  static dateRangeValidator(component: CertificadoDeOrigenComponent): ValidatorFn {
+    return (formGroup: AbstractControl): ValidationErrors | null => {
+      const START_DATE = formGroup.get('fechaInicioInput')?.value;
+      const END_DATE = formGroup.get('fechaFinalInput')?.value;
+  
+      if (START_DATE && END_DATE) {
+        const [START_DAY, START_MONTH, START_YEAR] = START_DATE.split('/').map(Number);
+        const [END_DAY, END_MONTH, END_YEAR] = END_DATE.split('/').map(Number);
+  
+        const PARSED_START_DATE = new Date(START_YEAR, START_MONTH - 1, START_DAY);
+        const PARSE_END_DATE = new Date(END_YEAR, END_MONTH - 1, END_DAY);
+  
+        if (PARSED_START_DATE > PARSE_END_DATE) {
+          
+          component.nuevaNotificacionUno = {
+            tipoNotificacion: 'alert',
+            categoria: 'danger',
+            modo: 'action',
+            titulo: '',
+            mensaje: 'La fecha de inicio debe ser menor a la fecha fin.',
+            cerrar: true,
+            tiempoDeEspera: 5000,
+            txtBtnAceptar: 'Aceptar',
+            txtBtnCancelar: '',
+          };
+  
+          return { dateRangeInvalid: true };
+        }
+      }
+  
+      return null;
+    };
   }
 
   /**

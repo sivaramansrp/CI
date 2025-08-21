@@ -98,6 +98,14 @@ export class GestionarEmpresasSubfabricantesComponent implements OnInit {
     this._estadoCatalogo = valor;
   }
 
+  /**
+   * Indica si se debe mostrar la tabla inicial.
+   * Esta propiedad se utiliza para controlar la visibilidad de la tabla de subfabricantes.
+   *
+   * @type {boolean}
+   * @default false
+   */
+  @Input() showTablaInicial: boolean = false;
 
   /**
    * Obtiene el estado del catálogo.

@@ -59,8 +59,9 @@
   <div>
     <div class="table-responsive table-wrapper">
       <h4> Cupos disponibles</h4>
-      <app-tabla-dinamica [configuracionTabla]="configuracionTabla"  (filaClic)="listaDeFilaSeleccionada($event)"
-      [datos]="datos"></app-tabla-dinamica>
+      <app-tabla-dinamica [configuracionTabla]="configuracionTabla"  
+      [datos]="datos"
+      (dblclick)="onTablaDblClick($event)"></app-tabla-dinamica>
     </div>
   </div>
 <app-descripcion-del-cupo *ngIf="mostrarDescripcionDelCupo || esFormularioSoloLectura">

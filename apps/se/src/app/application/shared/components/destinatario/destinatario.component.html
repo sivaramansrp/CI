@@ -134,9 +134,9 @@
             (change)="setValoresStore('formDestinatario','ciudad','setFormDestinatario')" />
           @if(formDestinatario.controls['ciudad'].invalid && (formDestinatario.controls['ciudad'].touched || formDestinatario.controls['ciudad'].dirty)) {
           <div class="d-grid">
-            @if(formDestinatario.controls['ciudad'].errors?.['required']) {
-            <span class="mensaje-error">Este campo es obligatorio</span>
-            }
+            @if(formDestinatario.controls['ciudad'].errors?.['required']&& formDestinatario.controls['ciudad'].touched) {
+              <span class="mensaje-error">Este campo es obligatorio</span>
+              }
             @if(formDestinatario.controls['ciudad'].errors?.['maxlength']) {
             <span class="mensaje-error">
               Por favor, no escribas más de 50 caracteres
@@ -153,9 +153,9 @@
               (change)="setValoresStore('formDestinatario','calle','setFormDestinatario')" />
             @if(formDestinatario.controls['calle'].invalid && (formDestinatario.controls['calle'].touched || formDestinatario.controls['calle'].dirty)) {
             <div class="d-grid">
-              @if(formDestinatario.controls['calle'].errors?.['required']) {
-              <span class="mensaje-error">Este campo es obligatorio</span>
-              }
+              @if(formDestinatario.controls['calle'].errors?.['required']&& formDestinatario.controls['calle'].touched) {
+                <span class="mensaje-error">Este campo es obligatorio</span>
+                }
               @if(formDestinatario.controls['calle'].errors?.['maxlength']) {
               <span class="mensaje-error">
                 Por favor, no escribas más de 90 caracteres
@@ -171,9 +171,9 @@
               (change)="setValoresStore('formDestinatario','numeroLetra','setFormDestinatario')" />
             @if(formDestinatario.controls['numeroLetra'].invalid && (formDestinatario.controls['numeroLetra'].touched || formDestinatario.controls['numeroLetra'].dirty)) {
             <div class="d-grid">
-              @if(formDestinatario.controls['numeroLetra'].errors?.['required']) {
-              <span class="mensaje-error">Este campo es obligatorio</span>
-              }
+              @if(formDestinatario.controls['numeroLetra'].errors?.['required']&& formDestinatario.controls['numeroLetra'].touched) {
+                <span class="mensaje-error">Este campo es obligatorio</span>
+                }
               @if(formDestinatario.controls['numeroLetra'].errors?.['maxlength']) {
               <span class="mensaje-error">
                 Por favor, no escribas más de 30 caracteres
@@ -207,10 +207,10 @@
               (change)="setValoresStore('formDestinatario','telefono','setFormDestinatario')" />
             @if(formDestinatario.controls['telefono'].invalid && (formDestinatario.controls['telefono'].touched || formDestinatario.controls['telefono'].dirty)) {
             <div class="d-grid">
-              @if(formDestinatario.controls['telefono'].errors?.['required']) {
+              @if(formDestinatario.controls['telefono'].errors?.['required']&& formDestinatario.controls['telefono'].touched) {
               <span class="mensaje-error">Este campo es obligatorio</span>
               }
-              @if(formDestinatario.controls['telefono'].errors?.['maxlength']) {
+              @if(formDestinatario.controls['telefono'].errors?.['maxlength']&& formDestinatario.controls['telefono'].touched) {
               <span class="mensaje-error">Por favor, no escribas más de 30 caracteres</span>
               }
                 @if(formDestinatario.controls['telefono'].errors?.['pattern']) {
@@ -242,9 +242,9 @@
           }
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="correoElectronico">Correo electrónico*:</label>
+              <label class="form-label" for="correoElectronico">Correo electrónico*: </label>
               <span class="bi bi-question-circle-fill"
-                title="Una persona física es entendida como toda persona con una actividad específica"
+                title="ejemplo@dominio.com"
                 data-bs-toggle="tooltip"></span>
               <input type="text" id="correoElectronico" class="form-control" formControlName="correoElectronico"
                 (change)="setValoresStore('formDestinatario','correoElectronico','setFormDestinatario')" />
@@ -253,10 +253,12 @@
             @if (formDestinatario.get('correoElectronico')?.invalid &&
             (formDestinatario.get('correoElectronico')?.touched || formDestinatario.get('correoElectronico')?.dirty)) {
             <div class="d-grid">
-              @if (formDestinatario.get('correoElectronico')?.errors?.['required']) {
+              @if (formDestinatario.get('correoElectronico')?.errors?.['required'] &&
+              formDestinatario.get('correoElectronico')?.touched) {
               <span class="mensaje-error">Este campo es obligatorio</span>
               }
-              @if (formDestinatario.get('correoElectronico')?.errors?.['email']) {
+              @if (formDestinatario.get('correoElectronico')?.errors?.['email']&&
+              formDestinatario.get('correoElectronico')?.touched) {
               <span class="mensaje-error">Por favor, escribe una dirección de correo válida.</span>
               }
               @if(formDestinatario.controls['correoElectronico'].errors?.['maxlength']) {
