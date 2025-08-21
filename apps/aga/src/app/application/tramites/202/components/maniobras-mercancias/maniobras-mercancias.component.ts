@@ -114,9 +114,9 @@ export class ManiobrasMercanciasComponent implements OnDestroy {
    */
   inicializarEstadoFormulario(): void {
     if (this.formularioDeshabilitado) {
-      this.maniobrasMercanciasForm.disable();
+      this.maniobrasMercanciasForm?.disable();
     } else if (!this.formularioDeshabilitado) {
-      this.maniobrasMercanciasForm.enable();
+      this.maniobrasMercanciasForm?.enable();
     }
   }
 
