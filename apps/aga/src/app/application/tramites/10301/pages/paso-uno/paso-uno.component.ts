@@ -109,7 +109,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       .subscribe((respuesta) => {
         if (respuesta.success) {
           this.tramite10301Store.setManifesto(respuesta.datos.manifesto);
-          this.tramite10301Store.setAduana([{ id: 1, descripcion: respuesta.datos.aduana }]);
+          this.tramite10301Store.setAduana(respuesta.datos.aduana);
           this.tramite10301Store.setNombre(respuesta.datos.nombre);
           this.tramite10301Store.setTipoMercancia(respuesta.datos.tipoMercancia);
           this.tramite10301Store.setUsoEspecifico(respuesta.datos.usoEspecifico);
@@ -125,6 +125,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
           this.tramite10301Store.setEstado(respuesta.datos.estado);
           this.tramite10301Store.setColonia(respuesta.datos.colonia);
           this.tramite10301Store.setOpcion(respuesta.datos.opcion);
+          this.tramite10301Store.setPais(respuesta.datos.pais);
+          console.log('aduana:', respuesta.datos.aduana);
+          console.log('pais:', respuesta.datos.pais);
         }
       });
   }

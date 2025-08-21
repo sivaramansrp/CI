@@ -1,3 +1,5 @@
+import { Catalogo } from "@libs/shared/data-access-user/src";
+
 /**
  * Respuesta de la consulta de datos del trámite.
  */
@@ -16,7 +18,7 @@ export interface ConsultaDatos {
   manifesto: string; 
 
   /** Identificador de la aduana */
-  aduana: string; 
+  aduana: Catalogo[] | null; 
 
   /** Nombre de la empresa o persona que realiza la solicitud. */
   nombre: string;
@@ -62,6 +64,9 @@ export interface ConsultaDatos {
 
   /** Opción seleccionada por el usuario (casilla, alternativa, etc.). */
   opcion: string;
+
+  /** Identificador del país del domicilio. */
+  pais: Catalogo[] | null;
 
   /** Datos de la mercancía, incluyendo fines, tipo, uso, condición, marca, año, modelo y serie. */
   mercanciaDatos: DatosMercancia[];

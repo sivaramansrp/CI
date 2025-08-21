@@ -395,17 +395,18 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         this.aduana = {
           labelNombre: 'Aduana por la que ingresará la mercancía',
           required: false,
-          primerOpcion: 'Selecciona un valor',
+          primerOpcion: 'Seleccione una opción',
           catalogos: aduana ?? [],
         };
       })
     );
+    console.log('aduana from catalog:', this.aduana.catalogos);
     this.subscriptions.push(
       this.query.selectAno$.subscribe((ano) => {
         this.ano = {
           labelNombre: 'Año',
           required: false,
-          primerOpcion: 'Selecciona un valor',
+          primerOpcion: 'Seleccione una opción',
           catalogos: ano || [],
         };
       })
@@ -415,7 +416,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         this.condicion = {
           labelNombre: 'Condición de la mercancía',
           required: false,
-          primerOpcion: 'Selecciona un valor',
+          primerOpcion: 'Seleccione una opción',
           catalogos: condicion ?? [],
         };
       })
@@ -425,7 +426,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         this.pais = {
           labelNombre: 'País',
           required: false,
-          primerOpcion: 'Selecciona un valor',
+          primerOpcion: 'Seleccione una opción',
           catalogos: pais ?? [],
         };
       })
@@ -449,7 +450,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Opciones de radio.
    */
   radioOpcions = [
-    { label: 'Sí', value: 'sí' },
+    { label: 'Sí', value: 'si' },
     { label: 'No', value: 'no' },
   ];
 
@@ -669,6 +670,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       }),
     });
 
+    console.log('aduana from ts:', this.solicitudState?.aduana);
+    console.log('pais from ts:', this.solicitudState?.pais);
     this.agregarMercanciasForm = this.fb.group({
       datosMercancia: this.fb.group({
         tipoMercancia: [

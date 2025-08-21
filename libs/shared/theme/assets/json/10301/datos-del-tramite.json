@@ -3,7 +3,7 @@
   "message": "",
   "datos": {
     "manifesto": true,
-    "aduna": 1,
+    "aduana": 2,
     "nombre": "Electronica",
     "calle": "Calle Principal",
     "numeroExterior": "100",
@@ -14,7 +14,7 @@
     "pais": 1,
     "estado": "11122",
     "colonia": "55",
-    "opcion": "sí",
+    "opcion": "si",
     "mercanciaDatos": [
       {
         "id": 1,
