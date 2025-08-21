@@ -130,22 +130,15 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       if (this.solicitante.form.invalid) {
         this.solicitante.form.markAllAsTouched();
         isValid = false;
-        console.log('Solicitante form is invalid');
-      } else {
-        console.log('Solicitante form is valid');
       }
     } else {
       isValid = false;
-      console.log('Solicitante form is missing');
     }
 
     if (this.certificadoDeOrigen) {
       if (!this.certificadoDeOrigen.validatorCheck()) {
         isValid = false;
-        console.log('CertificadoDeOrigen validation failed');
-      } else {
-        console.log('CertificadoDeOrigen validation passed');
-      }
+      } 
     } else {
       isValid = false;
 
@@ -154,28 +147,18 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     if (this.destinatario) {
       if (!this.destinatario.validatorCheck()) {
         isValid = false;
-        console.log('Destinatario validation failed');
-      } else {
-        console.log('Destinatario validation passed');
       }
     } else {
       isValid = false;
-      console.log('Destinatario component is missing');
     }
 
     if (this.datosCertificado) {
       if (!this.datosCertificado.validarFormulario()) {
         isValid = false;
-        console.log('DatosCertificado validation failed');
-      } else {
-        console.log('DatosCertificado validation passed');
       }
     } else {
       isValid = false;
-      console.log('DatosCertificado component is missing');
     }
-
-    console.log('Final form validation result:', isValid);
     return isValid;
   }
 }

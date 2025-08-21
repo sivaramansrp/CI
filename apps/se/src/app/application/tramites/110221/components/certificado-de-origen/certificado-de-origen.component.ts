@@ -279,6 +279,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy,AfterView
    * @type {boolean}
    */
   public tableErrorMensajeError: boolean = false;
+
  /**
    * Representa una nueva notificación que será utilizada en el componente.
    * @type {Notificacion}
@@ -792,7 +793,7 @@ cerrarEdicionMercancia():void{
           this.solicitudState?.fechaInicial,
         ],
         fechaFinal: [this.solicitudState?.fechaFinal],
-        archivo: [this.solicitudState?.archivo, [Validators.required]],
+        archivo: [this.solicitudState?.archivo],
       }),
     });
 
@@ -912,23 +913,35 @@ getError(controlName: string, error: string): boolean {
     
 
   validatorCheck(): boolean {
-  const IS_REGISTRO_FORM_VALID = this.registroForm.valid;
-  const IS_MERCANCIA_FORM_VALID = this.mercanciaForm.valid;
-  if (!IS_REGISTRO_FORM_VALID) {
-    this.registroForm.markAllAsTouched();
+    const TERCER_OPERADOR_VALUE = this.registroForm.get('validacionForm.tercerOperador')?.value;
+    const VALIDACION_FORM_GROUP = this.registroForm.get('validacionForm') as FormGroup;
+
+    if (TERCER_OPERADOR_VALUE) {
+      VALIDACION_FORM_GROUP.get('nombres')?.setValidators([Validators.required]);
+      VALIDACION_FORM_GROUP.get('primerApellido')?.setValidators([Validators.required]);
+      VALIDACION_FORM_GROUP.get('numeroDeRegistroFiscal')?.setValidators([Validators.required]);
+      VALIDACION_FORM_GROUP.get('razonSocial')?.setValidators([Validators.required]);
+    } else {
+      VALIDACION_FORM_GROUP.get('nombres')?.clearValidators();
+      VALIDACION_FORM_GROUP.get('primerApellido')?.clearValidators();
+      VALIDACION_FORM_GROUP.get('numeroDeRegistroFiscal')?.clearValidators();
+      VALIDACION_FORM_GROUP.get('razonSocial')?.clearValidators();
+    }
+    VALIDACION_FORM_GROUP.get('nombres')?.updateValueAndValidity();
+    VALIDACION_FORM_GROUP.get('primerApellido')?.updateValueAndValidity();
+    VALIDACION_FORM_GROUP.get('numeroDeRegistroFiscal')?.updateValueAndValidity();
+    VALIDACION_FORM_GROUP.get('razonSocial')?.updateValueAndValidity();
+
+    const IS_REGISTRO_FORM_VALID = this.registroForm.valid;
+    if (!IS_REGISTRO_FORM_VALID) {
+      this.registroForm.markAllAsTouched();
+    }
+    if (this.mercanciaSeleccionadasTablaData.length === 0) {
+      this.tableErrorMensajeError = true;
+      return false;
+    }
+    return IS_REGISTRO_FORM_VALID;
   }
-  if (!IS_MERCANCIA_FORM_VALID) {
-    this.mercanciaForm.markAllAsTouched();
-  }
-  if(this.mercanciaSeleccionadasTablaData.length < 1) {
-    this.mostrarMensajeError = true;
-  }
-  if(this.mercanciaSeleccionadasTablaData.length === 0){
-    this.tableErrorMensajeError = true;
-    return false;
-  }
-  return IS_REGISTRO_FORM_VALID && IS_MERCANCIA_FORM_VALID;
-}
 
     }
   
