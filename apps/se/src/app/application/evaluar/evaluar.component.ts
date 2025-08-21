@@ -24,6 +24,7 @@ import { AcusesResolucionResponse } from '@libs/shared/data-access-user/src/core
 import { DictamenesResponse } from '@libs/shared/data-access-user/src/core/models/130118/dictamenes-response.model';
 import { DocumentoSolicitud } from "@libs/shared/data-access-user/src/core/models/130118/consulta-documentos-response.model";
 import { EnvioDigitalResponse } from '@libs/shared/data-access-user/src/core/models/130118/envio-digital-response.model';
+import { EvaluacionOpcionResponse } from '../core/models/evaluar/response/evaluar-estado-evaluacion-response.model';
 import { EvaluarSolicitudService } from '../core/services/evaluar-tramite/evaluar-solicitud.service';
 import { GuardarDictamenRequest } from '../core/models/evaluar/request/guardar-dictamen-request.model';
 import { GuardarDictamenService } from '../core/services/evaluar-tramite/guardar-dictamen.service';
@@ -38,6 +39,7 @@ import { GuardarRequerimiento } from '../core/models/evaluar/request/guardar-req
 import { GuardarRequerimientoService } from '../core/services/evaluar-tramite/guardarRequerimiento.service';
 import { IniciarRequerimientoRequest } from '../core/models/evaluar/request/iniciar-requerimiento-request.model';
 import { IniciarRequerimientoResponse } from '@libs/shared/data-access-user/src/core/models/130118/Iniciar-requerimiento-response.model';
+import { TabsResponse } from '@libs/shared/data-access-user/src/core/models/130118/consulta-tabs-response.model';
 
 /**
  * @component
@@ -239,6 +241,18 @@ export class EvaluarComponent implements OnInit, OnDestroy {
   yaCargoOpinion = false;
 
   /**
+   * @property {EvaluacionOpcionResponse} evaluacionTramite
+   * @description Almacena la respuesta de evaluación del trámite.
+ */
+  evaluacionTramite!: EvaluacionOpcionResponse;
+
+  /**
+   * @property {TabsResponse} tabs
+   * @description Almacena la respuesta de pestañas disponibles.
+ */
+  tabs!: TabsResponse;
+
+  /**
  * @constructor
  * @description Constructor del componente. Inicializa los servicios y suscripciones necesarias para la evaluación del trámite.
  * 
@@ -304,7 +318,160 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     } else {
       this.router.navigate([`/${this.guardarDatos?.department.toLowerCase()}/seleccion-tramite`]);
     }
-    this.opcionesEvaluacion();
+
+    this.getEvaluacionTramite();
+    this.getTabs();
+  }
+
+  /**
+   * @method getTabs
+   * @description Obtiene las pestañas disponibles para el trámite
+   * 
+   * Realiza una petición al servicio para recuperar las pestañas habilitadas
+   * para el trámite actual. Asigna las pestañas a la variable tabs si la respuesta
+   * es exitosa (código '00'), o muestra un error en caso contrario.
+   * 
+   * @returns {void}
+ */
+  getTabs(): void{
+    this.tabsSolicitudServiceTsService.getTabs(this.tramite, this.guardarDatos.id_solicitud)
+    .subscribe({
+      next: (response) => {
+        if (response.codigo === '00') {
+          this.tabs = response.datos ?? {} as TabsResponse;
+        } else {
+           window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: response.error || 'Error en solicitud estado.',
+            mensaje:
+              response.causa ||
+              response.mensaje ||
+              response.error ||
+              'Error en opciones solicitud estado.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      },
+      error: (error) => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: CategoriaMensaje.ERROR,
+          modo: 'action',
+          titulo: '',
+          mensaje: error?.error?.error || 'Error inesperado en solicitud estado.',
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        };
+      }
+    });
+  }
+
+  /**
+   * @method getEvaluacionTramite
+   * @description Obtiene la evaluación del trámite actual
+   * 
+   * Realiza una petición al servicio para recuperar el estado de evaluación
+   * del trámite. Asigna la evaluación a la variable evaluacionTramite si la respuesta
+   * es exitosa (código '00'), o muestra un error en caso contrario.
+   * 
+   * @returns {void}
+ */
+  getEvaluacionTramite(): void {
+    this.evaluarSolicitudService.getEvaluacionTramite(this.tramite, this.guardarDatos.folioTramite)
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === '00') {
+            this.evaluacionTramite = response.datos ?? {} as EvaluacionOpcionResponse;
+            this.opcionesEvaluacion();
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: response.error || 'Error en iniciar evaluar tramite.',
+              mensaje:
+                response.causa ||
+                response.mensaje ||
+                response.error ||
+                'Error en opciones de iniciar evaluar tramite.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+        },
+        error: (error) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: '',
+            mensaje: error?.error?.error || 'Error inesperado en iniciar evaluar tramite.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      });
+  }
+
+  /**
+   * @method getPrepararEvaluacion
+   * @description Prepara la evaluación del trámite con la opción seleccionada
+   * 
+   * Realiza una petición al servicio para preparar el proceso de evaluación
+   * según la opción especificada. Maneja la respuesta exitosa (código '00')
+   * o muestra un error en caso contrario.
+   * 
+   * @param {string} opcion - Opción de evaluación seleccionada
+   * @returns {void}
+ */
+  getPrepararEvaluacion(opcion: string): void{
+    this.evaluarSolicitudService.postPrepararEvaluacion(this.tramite,this.guardarDatos.folioTramite, opcion)
+    .subscribe({
+        next: (response) => {
+          if (response.codigo !== '00') {
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: response.error || 'Error preparar tramite.',
+              mensaje:
+                response.causa ||
+                response.mensaje ||
+                response.error ||
+                'Error en preparar tramite.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+        },
+        error: (error) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: '',
+            mensaje: error?.error?.error || 'Error preparar tramite.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      });
   }
 
   /**
@@ -318,8 +485,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @returns {void}
  */
   getDocumentosSolicitud(): void {
-    const IDSOLICITUD = '202757440'
-    this.tabsSolicitudServiceTsService.getDocumentosSolicitud(this.tramite, IDSOLICITUD)
+    this.tabsSolicitudServiceTsService.getDocumentosSolicitud(this.tramite, this.guardarDatos.id_solicitud)
       .subscribe({
         next: (response) => {
           if (response.codigo === '00') {
@@ -369,8 +535,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getRequerimientos(): void {
-    const NUMFOLIOTRAMITE = '0402600400220214006000415'
-    this.tabsSolicitudServiceTsService.getRequerimientos(this.tramite, NUMFOLIOTRAMITE)
+    this.tabsSolicitudServiceTsService.getRequerimientos(this.tramite, this.guardarDatos.folioTramite)
       .subscribe({
         next: (response) => {
           if (response.codigo === '00') {
@@ -420,8 +585,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getDictamenes(): void {
-    const NUMFOLIOTRAMITE = '0201300101820161931039462'
-    this.tabsSolicitudServiceTsService.getDictamenes(this.tramite, NUMFOLIOTRAMITE)
+    this.tabsSolicitudServiceTsService.getDictamenes(this.tramite, this.guardarDatos.folioTramite)
       .subscribe({
         next: (response) => {
           if (response.codigo === '00') {
@@ -471,8 +635,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @returns {void}
  */
   getTareasSolicitud(): void {
-    const NUMFOLIOTRAMITE = '0201100100120242540000372'
-    this.tabsSolicitudServiceTsService.getTareasSolicitud(this.tramite, NUMFOLIOTRAMITE)
+    this.tabsSolicitudServiceTsService.getTareasSolicitud(this.tramite, this.guardarDatos.folioTramite)
       .subscribe({
         next: (response) => {
           if (response.codigo === '00') {
@@ -519,8 +682,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getOpiniones(): void {
-    const NUMFOLIOTRAMITE = '0201200600320232336000029'
-    this.tabsSolicitudServiceTsService.getOpiniones(this.tramite, NUMFOLIOTRAMITE)
+    this.tabsSolicitudServiceTsService.getOpiniones(this.tramite, this.guardarDatos.folioTramite)
       .subscribe({
         next: (response) => {
           if (response.codigo === '00') {
@@ -568,8 +730,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getAcusesResolucion(): void {
-    const NUMFOLIOTRAMITE = '0402600100420214006000153'
-    this.tabsSolicitudServiceTsService.getAcusesResolucion(this.tramite, NUMFOLIOTRAMITE)
+    this.tabsSolicitudServiceTsService.getAcusesResolucion(this.tramite, this.guardarDatos.folioTramite)
       .subscribe({
         next: (response) => {
           if (response.codigo === '00') {
@@ -614,8 +775,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @description Método para obtener el envío digital asociado a un trámite.
    */
   getEnvioDigital(): void {
-    const NUMFOLIOTRAMITE = '0201100202220222540000013'
-    this.tabsSolicitudServiceTsService.getEnvioDigital(this.tramite, NUMFOLIOTRAMITE)
+    this.tabsSolicitudServiceTsService.getEnvioDigital(this.tramite, this.guardarDatos.folioTramite)
       .subscribe({
         next: (response) => {
           if (response.codigo === '00') {
@@ -710,14 +870,13 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    */
   opcionesEvaluacion(): void {
 
-    const FOLIOTRAMITE = '0201300101820251118000019';
-
     const PAYLOAD: OpcionesEvaluacionRequest = {
-      cve_rol_capturista: 'ROL123',
-      considera_capturista: true
+      cve_rol_capturista: 'AAL0403235E8',
+      considera_capturista: true,
+      estado_evaluacion: this.evaluacionTramite.estado_evaluacion
     };
 
-    this.evaluarSolicitudService.postOpcionesEvaluacion(FOLIOTRAMITE, PAYLOAD)
+    this.evaluarSolicitudService.postOpcionesEvaluacion(PAYLOAD)
       .subscribe({
         next: (response) => {
           if (response.codigo === '00') {
@@ -788,8 +947,12 @@ export class EvaluarComponent implements OnInit, OnDestroy {
 
     if (i === 1) {
       this.iniciarDictamen();
+      this.getPrepararEvaluacion("GENERAR_DICTAMEN");
     } else if (i === 2) {
       this.iniciarRequerimiento();
+      this.getPrepararEvaluacion("GENERAR_REQUERIMIENTO");
+    } else if (i === 3) {
+      this.getPrepararEvaluacion("SOLICITAR_OPINION");
     }
   }
 
@@ -803,9 +966,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   iniciarDictamen(): void {
-    const FOLIOTRAMITE = '0201300101820251118000019';
-
-    this.iniciarService.getIniciarDictamen(FOLIOTRAMITE).subscribe({
+    this.iniciarService.getIniciarDictamen(this.guardarDatos.folioTramite).subscribe({
       next: () => {
         this.obtenerCriterios();
 
@@ -817,10 +978,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
   }
 
   obtenerCriterios(): void {
-
-    const IDSOLICITUD = '202744892';
-
-    this.guardarService.getCriterios(IDSOLICITUD).subscribe({
+    this.guardarService.getCriterios(this.guardarDatos.id_solicitud).subscribe({
       next: (resp) => {
         this.conformidadDictamen = resp.datos ?? '';
       },
@@ -847,7 +1005,6 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   guardarFirmar(datosDictamen?: any): void {
-    const FOLIOTRAMITE = '0201300101820251118000019';
 
     if (!datosDictamen) {
       console.error('No se recibieron datos del dictamen.');
@@ -859,7 +1016,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       justificacion_dictamen: datosDictamen.mensajeDictamen
     };
 
-    this.guardarService.postGuadarDictamen(FOLIOTRAMITE, PAYLOAD)
+    this.guardarService.postGuadarDictamen(this.guardarDatos.folioTramite, PAYLOAD)
       .subscribe({
         next: (resp) => {
           this.firmar = true;
@@ -934,14 +1091,13 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * Realiza una petición POST para iniciar un requerimiento y maneja la respuesta
    */
   iniciarRequerimiento(): void {
-    const FOLIOTRAMITE = '0201300101820251118000024';
 
     const PAYLOAD: IniciarRequerimientoRequest = {
       cve_usuario: 'CORL731209CC1',
       id_accion: '617'
     };
 
-    this.iniciarService.postIniciarRequerimiento(this.tramite, FOLIOTRAMITE, PAYLOAD)
+    this.iniciarService.postIniciarRequerimiento(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
       .subscribe({
         next: (resp) => {
           this.dataIniciarRequerimiento = resp.datos ?? {} as IniciarRequerimientoResponse;
@@ -963,7 +1119,6 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @description Gestiona notificaciones de éxito o error según la respuesta del servidor
    */
   guardarRequerimiento(): void {
-    const FOLIOTRAMITE = '0201300101820251118000024';
 
     const PAYLOAD: GuardarRequerimiento = {
       id_accion: '12',
@@ -971,7 +1126,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       alcance_requerimiento: 'X0XX'
     };
 
-    this.guardarRequerimientoService.postGuardarRequerimiento(this.tramite, FOLIOTRAMITE, PAYLOAD)
+    this.guardarRequerimientoService.postGuardarRequerimiento(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
       .subscribe({
         next: (resp) => {
           if (resp.codigo === '00') {
