@@ -98,4 +98,13 @@ export class Pantallas301Service {
       })
     );
   }
+
+  //Example of API integration. P.S.:- Once real API is available, this should be updated.
+  public getOpiniones(numFolioTramite: string | number): Observable<JSONResponse> {
+    return this._http.get<JSONResponse>(PROC_301.OPINIONES(numFolioTramite)).pipe(
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
+  }
 }

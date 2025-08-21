@@ -41,4 +41,5 @@ export const PROC_301 = {
     POST_FORM_DATA: `${BASE_URL}` + `${API}` + `${API_VERSION}` + `${PROCEDURE}` + `${SOLICITUD}` + '/guardar',
     GET_FORM_DATA: `${BASE_URL}` + `${API}` + `${API_VERSION}` + `${PROCEDURE}` + `${SOLICITUD}` + '/acuse',
     CONSULTA_SOLICITUDE: `${BASE_URL}` + `${API}` + `${API_VERSION}` + `${PROCEDURE}` + `${TRAMITE}` + '/consulta' + '/${id}',
+    OPINIONES: (numFolioTramite: string | number) => `${BASE_URL}` + `${API}` + `${API_VERSION}` + `${PROCEDURE}` + `${TRAMITE}` + `/${numFolioTramite}/opiniones`
 };
