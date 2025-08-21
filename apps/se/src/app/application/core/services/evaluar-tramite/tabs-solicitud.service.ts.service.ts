@@ -5,13 +5,14 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { API_GET_ACUSES_RESOLUCION, API_GET_DICTAMENES, API_GET_ENVIO_DIGITAL, API_GET_OPINION, API_GET_REQUERIMIENTOS, API_GET_SOLICITUD_DOCUMENTOS, API_GET_TAREAS_DOCUMENTOS, IDSOLICITUD, NUMFOLIOTRAMITE, TRAMITE } from '../../../constantes/130118/api-constants';
+import { API_GET_ACUSES_RESOLUCION, API_GET_DICTAMENES, API_GET_ENVIO_DIGITAL, API_GET_OPINION, API_GET_REQUERIMIENTOS, API_GET_SOLICITUD_DOCUMENTOS, API_GET_TABS, API_GET_TAREAS_DOCUMENTOS, IDSOLICITUD, NUMFOLIOTRAMITE, TRAMITE } from '../../../constantes/130118/api-constants';
 import { AcusesResolucionResponse } from '@libs/shared/data-access-user/src/core/models/130118/consulta-acuses-response.model';
 import { DictamenesResponse } from '@libs/shared/data-access-user/src/core/models/130118/dictamenes-response.model';
 import { DocumentoSolicitud } from '@libs/shared/data-access-user/src/core/models/130118/consulta-documentos-response.model';
 import { EnvioDigitalResponse } from '@libs/shared/data-access-user/src/core/models/130118/envio-digital-response.model';
 import { OpinionResponse } from '@libs/shared/data-access-user/src/core/models/130118/opinion-response.model';
 import { RequerimientosResponse } from '@libs/shared/data-access-user/src/core/models/130118/requerimientos-response.model';
+import { TabsResponse } from '@libs/shared/data-access-user/src/core/models/130118/consulta-tabs-response.model';
 import { TareasSolicitud } from '@libs/shared/data-access-user/src/core/models/130118/consulta-tareas-response.model';
 
 
@@ -33,6 +34,17 @@ export class TabsSolicitudServiceTsService {
     this.host = `${ENVIRONMENT.API_HOST}/api/`;
   }
 
+  /**
+   * Consulta las pestañas disponibles para el trámite
+   * 
+   * @param tramite Número del trámite
+   * @param idSolicitud ID de solicitud
+   * @returns Observable con la respuesta del servidor
+ */
+  getTabs(tramite: number, idSolicitud: string): Observable<BaseResponse<TabsResponse>> {
+    const ENDPOINT = `${this.host}${API_GET_TABS.replace(TRAMITE, tramite.toString()).replace(IDSOLICITUD, idSolicitud)}`;
+    return this.http.get<BaseResponse<TabsResponse>>(ENDPOINT);
+  }
   /**
    * Consulta los documentos de la solicitud del trámite 130118.
    * 
