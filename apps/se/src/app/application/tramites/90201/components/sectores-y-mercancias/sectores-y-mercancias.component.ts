@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { FRACCION_TABLA, SECTORES_TABLA } from '@libs/shared/data-access-user/src/core/enums/90201/productor-indirecto-tabla.enum';
-import { FormBuilder,FormGroup,ReactiveFormsModule,Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MercanciasTabla, SectoresTabla } from '@libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
-import {Solicitud90201State,Tramite90201Store } from '../../../../estados/tramites/tramite90201.store';
+import { Solicitud90201State, Tramite90201Store } from '../../../../estados/tramites/tramite90201.store';
 import { Subject, Subscription, map, merge, takeUntil } from 'rxjs';
 import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
@@ -145,13 +145,13 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * Arreglo que almacena los datos seleccionados de la tabla de sectores.
    * Este arreglo se utiliza para almacenar los sectores seleccionados por el usuario en la tabla.
   */
-  public seleccionadoDatos!: SectoresTabla | null;
+  public seleccionadoDatos!: SectoresTabla[] | null;
 
   /**
    * Arreglo que almacena los datos seleccionados de la tabla de mercancías.
    * Este arreglo se utiliza para almacenar las mercancías seleccionadas por el usuario en la tabla.
    */
-  public seleccionadoMercancia!: MercanciasTabla | null;
+  public seleccionadoMercancia!: MercanciasTabla[] | null;
   /**
    * Constructor del componente SectoresYMercanciasComponent.
    * 
@@ -315,11 +315,16 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
       categoria: 'danger',
       modo: 'action',
       titulo: '',
-      mensaje: '¿Está seguro que desea eliminar el sector seleccionado?',
+      mensaje: (Array.isArray(this.seleccionadoDatos) && this.seleccionadoDatos.length >= 1)
+        ? '¿Está seguro que desea eliminar el sector seleccionado?'
+        : 'Seleccione el sector que desea eliminar.',
       cerrar: false,
       tiempoDeEspera: 2000,
+      txtBtnCancelar: (Array.isArray(this.seleccionadoDatos) && this.seleccionadoDatos.length >= 1)
+        ? 'Cancelar'
+        : '',
       txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: 'Cancelar',
+
     };
   }
 
@@ -328,7 +333,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @param event - Los datos de la fila seleccionada de tipo `SectoresTabla`.
    */
   public seleccionDeFilaDeTabla(event: SectoresTabla): void {
-    this.seleccionadoDatos = event;
+    this.seleccionadoDatos = [event];
   }
 
   /**
@@ -336,7 +341,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @param event - Los datos de la fila seleccionada de tipo `MercanciasTabla`.
    */
   public seleccionDeFilaDeTablaMercancias(event: MercanciasTabla): void {
-    this.seleccionadoMercancia = event;
+    this.seleccionadoMercancia = [event];
   }
 
   /**
@@ -353,7 +358,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
     }
     if (this.seleccionadoDatos) {
       this.sectores = this.sectores.filter(
-        (elementos) => this.seleccionadoDatos?.sectores !== elementos.sectores
+        (elementos) => this.seleccionadoDatos && this.seleccionadoDatos[0]?.sectores !== elementos.sectores
       );
       this.seleccionadoDatos = null;
     }
@@ -372,7 +377,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
     }
     if (this.seleccionadoMercancia) {
       this.mercancias = this.mercancias.filter(
-        (elementos) => this.seleccionadoMercancia?.fraccion !== elementos.fraccion
+        (elementos) => this.seleccionadoMercancia && this.seleccionadoMercancia[0]?.fraccion !== elementos.fraccion
       );
       this.seleccionadoMercancia = null;
     }
