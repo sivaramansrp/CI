@@ -6,8 +6,13 @@ import { Observable } from 'rxjs';
 
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { GuardarDictamenRequest } from '../../models/evaluar/request/guardar-dictamen-request.model';
+import { SentidosDisponiblesResponse } from '@libs/shared/data-access-user/src/core/models/130118/sentidos-disponibles.model';
 
-import { API_GET_DICTAMEN, API_POST_GUARDAR_DICTAMEN, IDSOLICITUDDICTAMEN, NUMFOLIOTRAMITE } from '../../../constantes/130118/api-constants';
+
+import { API_GET_DICTAMEN_CRITERIOS, API_GET_SENTIDOS_DISPONIBLES, API_POST_GUARDAR_DICTAMEN, API_POST_MOSTRAR_FIRMAR, IDSOLICITUDDICTAMEN, NUMFOLIOTRAMITE, TRAMITE } from '../../../constantes/130118/api-constants';
+import { GuardarDictamenResponse } from '../../models/evaluar/response/guardar-dictamen-response.model';
+import { MostrarFirmarRequest } from '../../models/evaluar/request/firmar-mostrar-dictamen.request.model';
+import { MostrarFirmarResponse } from '../../models/evaluar/response/mostrar-firmar-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -35,23 +40,45 @@ export class GuardarDictamenService {
    * @param PAYLOAD Datos del dictamen a guardar.
    * @returns Observable con la respuesta del servidor.
    */
-  postGuadarDictamen(numFolio: string, PAYLOAD: GuardarDictamenRequest):
-    Observable<BaseResponse<string>> {
-    const ENDPOINT = `${this.host}` +
-      API_POST_GUARDAR_DICTAMEN.replace(NUMFOLIOTRAMITE, numFolio);
-
-    return this.http.post<BaseResponse<string>>(ENDPOINT, PAYLOAD);
+  postGuadarDictamen(tramite: number, numFolio: string, PAYLOAD: GuardarDictamenRequest): Observable<BaseResponse<GuardarDictamenResponse>> {
+    const ENDPOINT = `${this.host}${API_POST_GUARDAR_DICTAMEN.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolio)}`;
+    return this.http.post<BaseResponse<GuardarDictamenResponse>>(ENDPOINT, PAYLOAD);
   }
-
 
   /**
    * Inicia el dictamen del trámite 130118.
    * @param numFolio Número de folio del trámite.
    * @returns Observable con la respuesta del servidor.
    */
-  getCriterios(idSolicitud: string): Observable<BaseResponse<string>> {
-    const ENDPOINT = `${this.host}${API_GET_DICTAMEN.replace(IDSOLICITUDDICTAMEN, idSolicitud)}`;
+  getCriterios(tramite: number, idSolicitud: string): Observable<BaseResponse<string>> {
+    const ENDPOINT = `${this.host}${API_GET_DICTAMEN_CRITERIOS.replace(TRAMITE, tramite.toString()).replace(IDSOLICITUDDICTAMEN, idSolicitud)}`;
     return this.http.get<BaseResponse<string>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene los sentidos disponibles para el trámite 130118.
+   * @param tramite Número de trámite.
+   * @returns Observable con la respuesta del servidor.
+   */
+  getSentidosDisponibles(tramite: string): Observable<BaseResponse<SentidosDisponiblesResponse[]>> {
+    const ENDPOINT = `${this.host}${API_GET_SENTIDOS_DISPONIBLES.replace(TRAMITE, tramite)}`;
+    return this.http.get<BaseResponse<SentidosDisponiblesResponse[]>>(ENDPOINT);
+  }
+
+  /**
+    * Envía una solicitud para mostrar y firmar el dictamen del trámite 130118.
+    * @param tramite Número de trámite.   
+    * @param numFolio Número de folio del trámite.
+    * @param PAYLOAD Datos necesarios para mostrar y firmar el dictamen.
+    * @return Observable con la respuesta del servidor.
+    * 
+    */
+
+  postFirmarMostrar(tramite: number, numFolio: string, PAYLOAD: MostrarFirmarRequest):
+    Observable<BaseResponse<MostrarFirmarResponse>> {
+    const ENDPOINT = `${this.host}${API_POST_MOSTRAR_FIRMAR.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolio)}`;
+
+    return this.http.post<BaseResponse<MostrarFirmarResponse>>(ENDPOINT, PAYLOAD);
   }
 
 }
