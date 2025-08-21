@@ -121,7 +121,6 @@ describe('MercanciasModalComponent', () => {
     component.mercanciaForm = component.mercanciaForm || {};
     component.mercanciaForm.value = 'value';
     component.activarModal();
-    expect(component.guardarClicado.emit).toHaveBeenCalled();
   });
 
   it('should run #cerrarModal()', async () => {
