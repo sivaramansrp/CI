@@ -35,8 +35,12 @@
                 <ng-container>
                     @switch (indice) {
                     @case (1) {
-                    <app-generar-dictamen [isAntecedentes]="false" [conformidad]="conformidadDictamen"
-                        (enviarEvento)="enviarEvento($event)"></app-generar-dictamen>
+                    <app-generar-dictamen [isAntecedentes]="false" 
+                    [conformidad]="conformidadDictamen"
+                    [dataIniciarDictamen]="dataIniciarDictamen"
+                    [opcionesSentidosDisponibles]="opcionesSentidosDispobles"
+                    (enviarEvento)="enviarEvento($event)">
+                    </app-generar-dictamen>
                     }
                     @case (2) {
                     <br>

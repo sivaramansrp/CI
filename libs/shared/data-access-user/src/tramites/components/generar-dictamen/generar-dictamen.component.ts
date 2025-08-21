@@ -3,6 +3,8 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from "@angular/forms";
 import { ANTECEDENTES_DICTAMEN } from "../../../core/constants/constantes-generales";
 import { CommonModule } from "@angular/common";
+import { IniciarDictamenResponse } from "../../../core/models/130118/iniciar-dictamen-response.model";
+import { SentidosDisponiblesResponse } from "../../../core/models/130118/sentidos-disponibles.model";
 import { ValidacionesFormularioService } from "../../../core/services/shared/validaciones-formulario/validaciones-formulario.service";
 
 
@@ -61,6 +63,19 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
    * Si es true, los antecedentes son editables; si es false, son de solo lectura.
    */
   @Input() public isAntecedentes = true;
+
+  /**
+   * @property {IniciarDictamenResponse} dataIniciarDictamen
+   * @description Datos del dictamen iniciados, utilizados para prellenar el formulario.
+   * Debe ser proporcionado por el componente padre.
+   */
+  @Input() dataIniciarDictamen!: IniciarDictamenResponse;
+
+   /**
+   * @property {SentidosDisponiblesResponse} opcionesSentidosDisponibles
+   * @description Datos para el llenado de los radios de los sentidos disponibles.
+   */
+  @Input() opcionesSentidosDisponibles : SentidosDisponiblesResponse[] = [];
 
   /**
    * @property {string} conformidad
@@ -163,7 +178,7 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
    * @returns {void}
    */
   private actualizarVisibilidadCamposFecha(valorCumplimiento: string): void {
-    const ESDICTAMENACEPTADO = valorCumplimiento === '1';
+    const ESDICTAMENACEPTADO = valorCumplimiento === 'SEDI.AC';
     this.mostrarCamposFecha = ESDICTAMENACEPTADO;
 
     // Actualizar validadores según la visibilidad
@@ -214,6 +229,21 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['conformidad'] && this.dictamenForm) {
       this.dictamenForm.get('antecedentesReadonly')?.setValue(this.conformidad);
+    }
+    if (changes['dataIniciarDictamen'] && changes['dataIniciarDictamen'].currentValue) {
+      const FECHA_INICIO = this.dataIniciarDictamen.fecha_inicio_vigencia
+        ? this.dataIniciarDictamen.fecha_inicio_vigencia.split(' ')[0]
+        : '';
+      const FECHAFIN = this.dataIniciarDictamen.fecha_fin_vigencia
+        ? this.dataIniciarDictamen.fecha_fin_vigencia.split(' ')[0]
+        : '';
+      this.dictamenForm.patchValue({
+        cumplimiento: this.dataIniciarDictamen.ide_sent_dictamen,
+        mensajeDictamen: this.dataIniciarDictamen.justificacion,
+        fechaInicioVigenciaAutorizada: FECHA_INICIO,
+        fechaFinVigenciaAutorizada: FECHAFIN
+      });
+
     }
   }
 

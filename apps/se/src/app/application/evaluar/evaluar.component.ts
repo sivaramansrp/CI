@@ -37,8 +37,12 @@ import { TareasSolicitud } from "@libs/shared/data-access-user/src/core/models/1
 
 import { GuardarRequerimiento } from '../core/models/evaluar/request/guardar-requerimiento-request.model';
 import { GuardarRequerimientoService } from '../core/services/evaluar-tramite/guardarRequerimiento.service';
+import { IniciarDictamenResponse } from '@libs/shared/data-access-user/src/core/models/130118/iniciar-dictamen-response.model';
 import { IniciarRequerimientoRequest } from '../core/models/evaluar/request/iniciar-requerimiento-request.model';
 import { IniciarRequerimientoResponse } from '@libs/shared/data-access-user/src/core/models/130118/Iniciar-requerimiento-response.model';
+import { MostrarFirmarRequest } from '../core/models/evaluar/request/firmar-mostrar-dictamen.request.model';
+import { MostrarFirmarResponse } from '../core/models/evaluar/response/mostrar-firmar-response.model';
+import { SentidosDisponiblesResponse } from '@libs/shared/data-access-user/src/core/models/130118/sentidos-disponibles.model';
 import { TabsResponse } from '@libs/shared/data-access-user/src/core/models/130118/consulta-tabs-response.model';
 
 /**
@@ -117,6 +121,9 @@ export class EvaluarComponent implements OnInit, OnDestroy {
   /** Justificación del requerimiento */
   justificacion!: string;
 
+  /** Datos del dictamen a generar */
+  dataIniciarDictamen!: IniciarDictamenResponse;
+
   /**
    * @property {ConsultaioState} guardarDatos
    * @description Estado actual del trámite consultado.
@@ -161,6 +168,15 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @description Texto que representa la conformidad del dictamen, utilizado en el formulario de generación de dictamen.
    */
   conformidadDictamen: string = '';
+
+  /** 
+   * @property {GuardarDictamenRequest} guardarDictamenRequest
+   * @description Objeto que contiene los datos necesarios para guardar un dictamen.
+   */
+  opcionesSentidosDispobles: SentidosDisponiblesResponse[] = [];
+
+  /** Response del servicio de firmar mostrar */
+  mostrarFirmarData!: MostrarFirmarResponse;
 
   /**
    * @property {DocumentoSolicitud[]} documentos
@@ -333,44 +349,44 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * 
    * @returns {void}
  */
-  getTabs(): void{
+  getTabs(): void {
     this.tabsSolicitudServiceTsService.getTabs(this.tramite, this.guardarDatos.id_solicitud)
-    .subscribe({
-      next: (response) => {
-        if (response.codigo === '00') {
-          this.tabs = response.datos ?? {} as TabsResponse;
-        } else {
-           window.scrollTo({ top: 0, behavior: 'smooth' });
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === '00') {
+            this.tabs = response.datos ?? {} as TabsResponse;
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: response.error || 'Error en solicitud estado.',
+              mensaje:
+                response.causa ||
+                response.mensaje ||
+                response.error ||
+                'Error en opciones solicitud estado.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+        },
+        error: (error) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
           this.nuevaNotificacion = {
             tipoNotificacion: 'toastr',
             categoria: CategoriaMensaje.ERROR,
             modo: 'action',
-            titulo: response.error || 'Error en solicitud estado.',
-            mensaje:
-              response.causa ||
-              response.mensaje ||
-              response.error ||
-              'Error en opciones solicitud estado.',
+            titulo: '',
+            mensaje: error?.error?.error || 'Error inesperado en solicitud estado.',
             cerrar: false,
             txtBtnAceptar: '',
             txtBtnCancelar: '',
           };
         }
-      },
-      error: (error) => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        this.nuevaNotificacion = {
-          tipoNotificacion: 'toastr',
-          categoria: CategoriaMensaje.ERROR,
-          modo: 'action',
-          titulo: '',
-          mensaje: error?.error?.error || 'Error inesperado en solicitud estado.',
-          cerrar: false,
-          txtBtnAceptar: '',
-          txtBtnCancelar: '',
-        };
-      }
-    });
+      });
   }
 
   /**
@@ -435,12 +451,12 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @param {string} opcion - Opción de evaluación seleccionada
    * @returns {void}
  */
-  getPrepararEvaluacion(opcion: string): void{
-    this.evaluarSolicitudService.postPrepararEvaluacion(this.tramite,this.guardarDatos.folioTramite, opcion)
-    .subscribe({
+  getPrepararEvaluacion(opcion: string): void {
+    this.evaluarSolicitudService.postPrepararEvaluacion(this.tramite, this.guardarDatos.folioTramite, opcion)
+      .subscribe({
         next: (response) => {
           if (response.codigo !== '00') {
-            
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
@@ -491,7 +507,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
           if (response.codigo === '00') {
             this.documentosSolicitud = response.datos ?? [];
           } else {
-             window.scrollTo({ top: 0, behavior: 'smooth' }); 
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
               categoria: CategoriaMensaje.ERROR,
@@ -509,7 +525,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
           }
         },
         error: (error) => {
-          window.scrollTo({ top: 0, behavior: 'smooth' }); 
+          window.scrollTo({ top: 0, behavior: 'smooth' });
           this.nuevaNotificacion = {
             tipoNotificacion: 'toastr',
             categoria: CategoriaMensaje.ERROR,
@@ -520,7 +536,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
             txtBtnAceptar: '',
             txtBtnCancelar: '',
           };
-      }
+        }
       });
   }
 
@@ -541,7 +557,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
           if (response.codigo === '00') {
             this.requerimientosSolicitud = response.datos ?? [];
           } else {
-             window.scrollTo({ top: 0, behavior: 'smooth' }); 
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
               categoria: CategoriaMensaje.ERROR,
@@ -559,7 +575,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
           }
         },
         error: (error) => {
-          window.scrollTo({ top: 0, behavior: 'smooth' }); 
+          window.scrollTo({ top: 0, behavior: 'smooth' });
           this.nuevaNotificacion = {
             tipoNotificacion: 'toastr',
             categoria: CategoriaMensaje.ERROR,
@@ -570,7 +586,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
             txtBtnAceptar: '',
             txtBtnCancelar: '',
           };
-      }
+        }
       });
   }
 
@@ -591,7 +607,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
           if (response.codigo === '00') {
             this.dictamenesSolicitud = response.datos ?? [];
           } else {
-            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
               categoria: CategoriaMensaje.ERROR,
@@ -608,8 +624,8 @@ export class EvaluarComponent implements OnInit, OnDestroy {
             };
           }
         },
-       error: (error) => {
-          window.scrollTo({ top: 0, behavior: 'smooth' }); 
+        error: (error) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
           this.nuevaNotificacion = {
             tipoNotificacion: 'toastr',
             categoria: CategoriaMensaje.ERROR,
@@ -620,7 +636,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
             txtBtnAceptar: '',
             txtBtnCancelar: '',
           };
-      }
+        }
       });
   }
 
@@ -641,7 +657,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
           if (response.codigo === '00') {
             this.tareasSolicitud = response.datos ?? [];
           } else {
-            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
               categoria: CategoriaMensaje.ERROR,
@@ -658,8 +674,8 @@ export class EvaluarComponent implements OnInit, OnDestroy {
             };
           }
         },
-       error: (error) => {
-          window.scrollTo({ top: 0, behavior: 'smooth' }); 
+        error: (error) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
           this.nuevaNotificacion = {
             tipoNotificacion: 'toastr',
             categoria: CategoriaMensaje.ERROR,
@@ -670,7 +686,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
             txtBtnAceptar: '',
             txtBtnCancelar: '',
           };
-      }
+        }
       });
   }
 
@@ -688,7 +704,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
           if (response.codigo === '00') {
             this.opinion = response.datos ?? [];
           } else {
-             window.scrollTo({ top: 0, behavior: 'smooth' }); 
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
               categoria: CategoriaMensaje.ERROR,
@@ -705,8 +721,8 @@ export class EvaluarComponent implements OnInit, OnDestroy {
             };
           }
         },
-       error: (error) => {
-          window.scrollTo({ top: 0, behavior: 'smooth' }); 
+        error: (error) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
           this.nuevaNotificacion = {
             tipoNotificacion: 'toastr',
             categoria: CategoriaMensaje.ERROR,
@@ -717,7 +733,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
             txtBtnAceptar: '',
             txtBtnCancelar: '',
           };
-      }
+        }
       });
   }
 
@@ -736,7 +752,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
           if (response.codigo === '00') {
             this.acusesResolucion = response.datos ?? {} as AcusesResolucionResponse;
           } else {
-            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
               categoria: CategoriaMensaje.ERROR,
@@ -754,7 +770,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
           }
         },
         error: (error) => {
-          window.scrollTo({ top: 0, behavior: 'smooth' }); 
+          window.scrollTo({ top: 0, behavior: 'smooth' });
           this.nuevaNotificacion = {
             tipoNotificacion: 'toastr',
             categoria: CategoriaMensaje.ERROR,
@@ -765,7 +781,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
             txtBtnAceptar: '',
             txtBtnCancelar: '',
           };
-      }
+        }
       });
   }
 
@@ -781,7 +797,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
           if (response.codigo === '00') {
             this.envioDigital = response.datos ?? {} as EnvioDigitalResponse;
           } else {
-            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
               categoria: CategoriaMensaje.ERROR,
@@ -795,11 +811,11 @@ export class EvaluarComponent implements OnInit, OnDestroy {
               cerrar: false,
               txtBtnAceptar: '',
               txtBtnCancelar: '',
-            }; 
+            };
           }
         },
         error: (error) => {
-          window.scrollTo({ top: 0, behavior: 'smooth' }); 
+          window.scrollTo({ top: 0, behavior: 'smooth' });
           this.nuevaNotificacion = {
             tipoNotificacion: 'toastr',
             categoria: CategoriaMensaje.ERROR,
@@ -810,8 +826,8 @@ export class EvaluarComponent implements OnInit, OnDestroy {
             txtBtnAceptar: '',
             txtBtnCancelar: '',
           };
-      }
-    });
+        }
+      });
   }
 
   /**
@@ -948,6 +964,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     if (i === 1) {
       this.iniciarDictamen();
       this.getPrepararEvaluacion("GENERAR_DICTAMEN");
+      this.getSentidosDisponibles();
     } else if (i === 2) {
       this.iniciarRequerimiento();
       this.getPrepararEvaluacion("GENERAR_REQUERIMIENTO");
@@ -966,9 +983,17 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   iniciarDictamen(): void {
-    this.iniciarService.getIniciarDictamen(this.guardarDatos.folioTramite).subscribe({
-      next: () => {
-        this.obtenerCriterios();
+    const PAYLOAD: IniciarRequerimientoRequest = {
+      cve_usuario: 'CORL731209CC1',
+      id_accion: this.guardarDatos.action_id
+    };
+
+    this.iniciarService.postIniciarDictamen(this.tramite, this.guardarDatos.folioTramite, PAYLOAD).subscribe({
+      next: (resp) => {
+        if (resp.codigo === '00') {
+          this.dataIniciarDictamen = resp.datos ?? {} as IniciarDictamenResponse;
+          this.obtenerCriterios();
+        }
 
       },
       error: (err) => {
@@ -977,10 +1002,35 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * @method iniciarRequerimiento
+   * @description Inicia el requerimiento del trámite 130118.
+   * 
+   * Llama al servicio `IniciarService` para iniciar el requerimiento con un número de folio predefinido.
+   * Muestra un mensaje en la consola si el requerimiento se inicia correctamente o si ocurre un error.
+   * 
+   * @returns {void}
+   */
   obtenerCriterios(): void {
-    this.guardarService.getCriterios(this.guardarDatos.id_solicitud).subscribe({
+    this.guardarService.getCriterios(this.tramite, this.guardarDatos.id_solicitud).subscribe({
       next: (resp) => {
         this.conformidadDictamen = resp.datos ?? '';
+      },
+      error: (err) => {
+        console.error('Error al obtener criterios:', err);
+      }
+    });
+  }
+
+  /**
+   * @method getSentidosDisponibles
+   * @description Obtiene los sentidos disponibles para el dictamen del trámite 130118.
+   * Realiza una petición al servicio `GuardarDictamenService` para recuperar los sentidos disponibles.
+   */
+  getSentidosDisponibles(): void {
+    this.guardarService.getSentidosDisponibles(this.tramite.toString()).subscribe({
+      next: (resp) => {
+        this.opcionesSentidosDispobles = resp.datos ?? [];
       },
       error: (err) => {
         console.error('Error al obtener criterios:', err);
@@ -1004,7 +1054,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  guardarFirmar(datosDictamen?: any): void {
+  guardarDictamen(datosDictamen?: any): void {
 
     if (!datosDictamen) {
       console.error('No se recibieron datos del dictamen.');
@@ -1013,17 +1063,117 @@ export class EvaluarComponent implements OnInit, OnDestroy {
 
     const PAYLOAD: GuardarDictamenRequest = {
       ide_sentido_dictamen: datosDictamen.cumplimiento,
-      justificacion_dictamen: datosDictamen.mensajeDictamen
+      justificacion_dictamen: datosDictamen.mensajeDictamen,
+      id_accion: this.guardarDatos.action_id,
+      cve_usuario: 'MAVL621207C95'
     };
 
-    this.guardarService.postGuadarDictamen(this.guardarDatos.folioTramite, PAYLOAD)
+    this.guardarService.postGuadarDictamen(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
       .subscribe({
         next: (resp) => {
-          this.firmar = true;
+          if (resp.codigo === '00') {
+            this.getTabs();
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: resp.error || 'Error preparar tramite.',
+              mensaje:
+                resp.causa ||
+                resp.mensaje ||
+                resp.error ||
+                'Error en preparar tramite.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
         },
         error: (err) => {
-          console.error('Error al guardar el dictamen', err);
-          // Mostrar mensaje de error si aplica
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: '',
+            mensaje: err?.error?.error || 'Error preparar tramite.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      });
+  }
+
+  /**
+   * @method firmarMostrar
+   * @description Guarda y muestra el dictamen firmado.
+   * 
+   * Envía una solicitud al servicio `GuardarDictamenService` para guardar el dictamen con los datos proporcionados.
+   * Si la respuesta es exitosa, actualiza la propiedad `mostrarFirmarData` con los datos del dictamen.
+   * En caso de error, muestra un mensaje en la consola.
+   * 
+   * @param {any} datosDictamen - Datos del dictamen a guardar y mostrar.
+   * @returns {void}
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  firmarMostrarDictamen(datosDictamen?: any): void {
+
+    if (!datosDictamen) {
+      console.error('No se recibieron datos del dictamen.');
+      return;
+    }
+
+    const PAYLOAD: MostrarFirmarRequest = {
+      ide_sentido_dictamen: datosDictamen.cumplimiento,
+      justificacion_dictamen: datosDictamen.mensajeDictamen,
+      id_accion: this.guardarDatos.action_id,
+      cve_usuario: 'MAVL621207C95',
+      solicitante: {
+        rfc: 'MAVL621207C95',
+        nombre: 'PRUEBA',
+        apellido_paterno: 'PRUEBA',
+        apellido_materno: 'PRUEBA'
+      }
+    };
+
+    this.guardarService.postFirmarMostrar(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
+      .subscribe({
+        next: (resp) => {
+          if (resp.codigo === '00') {
+            this.mostrarFirmarData = resp.datos ?? {} as MostrarFirmarResponse;
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: resp.error || 'Error preparar tramite.',
+              mensaje:
+                resp.causa ||
+                resp.mensaje ||
+                resp.error ||
+                'Error en preparar tramite.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+        },
+        error: (err) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: '',
+            mensaje: err?.error?.error || 'Error preparar tramite.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
         }
       });
   }
@@ -1037,7 +1187,11 @@ export class EvaluarComponent implements OnInit, OnDestroy {
   enviarEvento(e: { events: string, datos: unknown }): void {
     switch (e.events) {
       case 'guardar':
-        this.guardarFirmar(e.datos);
+        this.guardarDictamen(e.datos);
+        break;
+      case 'firmar':
+        this.firmarMostrarDictamen(e.datos);
+        this.firmar = true;
         break;
       case 'cancelar':
         this.indice = 1;
@@ -1054,7 +1208,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
   continuar(): void {
     const DATOS = 3;
     if (this.indiceDictamen === 2 || Number(this.requerimientoState.idTipoRequerimiento) === DATOS) {
-      this.guardarFirmar();
+      this.guardarDictamen();
     } else {
       this.indiceDictamen = 2;
     }
@@ -1094,7 +1248,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
 
     const PAYLOAD: IniciarRequerimientoRequest = {
       cve_usuario: 'CORL731209CC1',
-      id_accion: '617'
+      id_accion: this.guardarDatos.action_id
     };
 
     this.iniciarService.postIniciarRequerimiento(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
@@ -1121,7 +1275,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
   guardarRequerimiento(): void {
 
     const PAYLOAD: GuardarRequerimiento = {
-      id_accion: '12',
+      id_accion: this.guardarDatos.action_id,
       justificacion: this.justificacion,
       alcance_requerimiento: 'X0XX'
     };
