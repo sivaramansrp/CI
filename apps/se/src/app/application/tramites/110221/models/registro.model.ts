@@ -26,14 +26,27 @@ export interface ColumnasTabla {
  */
 export interface SeleccionadasTabla {
   id?: number;
-  fraccionArancelaria: string;
+  fraccionMercanciaArancelaria?: string;
+  nombreTecnico?: string;
+  nombreComercialDelaMercancia?: string;
+  criterioParaConferir?: string;
+  nombreEnIngles?: string;
+  valordeContenidoRegional?: string;
   cantidad: string;
+  umc?: string;
+  valorDelaMercancia?: string;
+  complementoDelaDescripcion?: string;
+  numeroDeSerie?: string;
+  tipoFactura: string;
+  fecha?: string;
+  numeroFactura?: string;
+  otrasInstancias?: string;
+  fraccionArancelaria: string;
   unidadMedida: string;
   valorMercancia: string;
-  tipoFactura: string;
-  numFactura: string;
   complementoDescripcion: string;
   fechaFactura: string;
+  numFactura: string;
 }
 
 /**

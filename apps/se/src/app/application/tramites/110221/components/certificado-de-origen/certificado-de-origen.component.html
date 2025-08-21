@@ -563,7 +563,7 @@
                   type="button"
                   class="btn btn-primary ms-3"
                   (click)="agregar()"
-                  [disabled]="soloLectura || mercanciaForm.get('validacionMercanciaForm')?.invalid"
+                  [disabled]="soloLectura || mercanciaSeleccionadasTablaData.length === 1"
                 >
                   Agregar
                 </button>

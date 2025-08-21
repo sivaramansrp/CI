@@ -476,7 +476,7 @@ this.mercanciaForm.get('validacionMercanciaForm')?.patchValue(event);
   }
 
   /**
-   * Agrega una nueva mercancía al formulario.
+   * Agrega o actualiza una mercancía en la tabla.
    */
   agregar(): void {
     this.getTratado();
@@ -485,27 +485,42 @@ this.mercanciaForm.get('validacionMercanciaForm')?.patchValue(event);
     this.getUnidadMedida();
     this.getTipoFactura();
 
-    if (this.mercanciaForm.valid) {
-      this.esFormulario = false;
-      const ROW = {
-        id:Math.floor(Math.random() * 1000),
-        fraccionArancelaria: this.mercanciaForm?.value.validacionMercanciaForm.fraccionMercanciaArancelaria,
-        cantidad: this.mercanciaForm?.value.validacionMercanciaForm.cantidad,
-    unidadMedida: this.mercanciaForm?.value.validacionMercanciaForm.umc,
-    valorMercancia: this.mercanciaForm?.value.validacionMercanciaForm.valorMercancia,
-    tipoFactura: this.mercanciaForm?.value.validacionMercanciaForm.tipoFactura,
-    numFactura: this.mercanciaForm?.value.validacionMercanciaForm.numeroFactura,
-    complementoDescripcion: this.mercanciaForm?.value.validacionMercanciaForm.complementoDelaDescripcion,
-    fechaFactura: this.mercanciaForm?.value.validacionMercanciaForm.fecha
+    const FORM_GROUP = this.mercanciaForm.get('validacionMercanciaForm');
+    if (!FORM_GROUP?.valid) {
+      FORM_GROUP?.markAllAsTouched();
+      return;
     }
-  this.mercanciaSeleccionadasTablaData = [
-    ...this.mercanciaSeleccionadasTablaData,
-    ROW,
-  ];
-  this.store.setMercanciaSeleccionadasTablaData(this.mercanciaSeleccionadasTablaData);
-this.mercanciaForm.get('validacionMercanciaForm')?.reset(); 
-   this.modalInstance.hide();
+
+    const FORM_VALUE = FORM_GROUP.value;
+    const IS_NEW = FORM_VALUE.id === 0;
+    const ROW: SeleccionadasTabla = {
+      ...FORM_VALUE,
+      fraccionArancelaria: FORM_VALUE.fraccionMercanciaArancelaria,
+      unidadMedida: FORM_VALUE.umc,
+      valorMercancia: FORM_VALUE.valorDelaMercancia,
+      complementoDescripcion: FORM_VALUE.complementoDelaDescripcion,
+      fechaFactura: FORM_VALUE.fecha,
+      numFactura: FORM_VALUE.numeroFactura,
+      cantidad: FORM_VALUE.cantidad
+    };
+  
+    if (IS_NEW) {
+      ROW.id = Math.floor(Math.random() * 1000);
+      this.mercanciaSeleccionadasTablaData = [...this.mercanciaSeleccionadasTablaData, ROW];
+    } else {
+      const IDX = this.mercanciaSeleccionadasTablaData.findIndex(item => item.id === FORM_VALUE.id);
+        this.selectedRow = ROW;
+      if (IDX !== -1) {
+        this.mercanciaSeleccionadasTablaData[IDX] = ROW;
+      } else {
+        this.mercanciaSeleccionadasTablaData = [...this.mercanciaSeleccionadasTablaData, ROW];
+      }
     }
+
+    this.store.setMercanciaSeleccionadasTablaData([...this.mercanciaSeleccionadasTablaData]);
+    FORM_GROUP.reset();
+    this.modalInstance.hide();
+    this.esFormulario = false;
   }
 
 onFilaSeleccionadaradio(event: SeleccionadasTabla): void {
@@ -516,7 +531,13 @@ this.selectedRow = event;
    * Modifica una mercancía existente.
    */
   modificar(): void {
-    this.esFormulario = true;
+if(this.selectedRow){
+  this.mercanciaForm.get('validacionMercanciaForm')?.patchValue(this.selectedRow);
+  this.modalInstance.show();
+}
+else{
+  this.errorMessageExportador();
+}
     this.getTratado();
     this.getPais();
     this.getUMC();
@@ -739,6 +760,7 @@ cerrarEdicionMercancia():void{
 
     this.mercanciaForm = this.fb.group({
       validacionMercanciaForm: this.fb.group({
+        id: [0 , [Validators.required]],
         fraccionMercanciaArancelaria: [
           this.solicitudState?.fraccionMercanciaArancelaria || ''
         ],
@@ -806,6 +828,7 @@ cerrarEdicionMercancia():void{
       if(event){
     this.mercanciaSeleccionadasTablaData = this.mercanciaSeleccionadasTablaData.filter((item) => item.id !== this.selectedRow.id);
     this.store.setMercanciaSeleccionadasTablaData(this.mercanciaSeleccionadasTablaData);
+    this.selectedRow = {} as SeleccionadasTabla;
       }
     this.mostrarMensajeError =false;
     }
