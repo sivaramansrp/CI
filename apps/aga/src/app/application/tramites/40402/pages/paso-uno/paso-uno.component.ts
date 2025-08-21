@@ -1,8 +1,33 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, FormularioDinamico, SolicitanteComponent } from '@ng-mf/data-access-user';
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { map, takeUntil } from 'rxjs';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  FormularioDinamico
+  } from '@ng-mf/data-access-user';
+  
+import { AsignarPersonaComponent } from '../../components/asignar-persona/asignar-persona/asignar-persona.component';
+import { DatosTramiteComponent } from '../../components/datos-tramite/datos-tramite.component';
+import { SolicitanteComponent } from '../../components/solicitante/solicitante.component';
+
+import {FormControl, FormGroup, Validators } from '@angular/forms';
+
+import {
+  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
+  PERSONA_MORAL_NACIONAL
+} from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+
 import { Subject } from 'rxjs';
+
+import { map, takeUntil } from 'rxjs/operators';
+
 import { Tramite40402Store } from '../../estados/tramite40402.store';
 import { TransportacionMaritimaService } from '../../services/transportacion-maritima/transportacion-maritima.service';
 
@@ -19,11 +44,152 @@ import { TransportacionMaritimaService } from '../../services/transportacion-mar
 })
 export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
   /**
+   * Indica si el formulario de DatosTramite es válido tras intentar continuar.
+   */
+  public mostrarErrorDatosTramite: boolean = false;
+
+  /**
+   * Método que se llama al hacer clic en "Continuar".
+   * Valida el formulario de DatosTramite, marca todos los campos como tocados y muestra alerta si es inválido.
+   */
+  public continuar(): void {
+    if (this.DatosTramite?.formulario) {
+      this.DatosTramite.formulario.markAllAsTouched();
+      this.mostrarErrorDatosTramite = !this.DatosTramite.formulario.valid;
+    } else {
+      this.mostrarErrorDatosTramite = true;
+    }
+  }
+  /**
+   * Marca todos los formularios hijos como tocados y retorna si todos son válidos.
+   * Similar a validarDestinatarioFormulario en 220402.
+   * @returns {boolean} true si todos los formularios son válidos, false si falta capturar campos.
+   */
+  /**
+   * Valida únicamente el formulario de datos-tramite.component
+   * Marca todos los campos como tocados y retorna si es válido.
+   * @returns {boolean} true si el formulario es válido, false si falta capturar campos.
+   */
+  public validarFormulariosPasoUno(): boolean {
+    if (this.DatosTramite?.formulario) {
+      this.DatosTramite.formulario.markAllAsTouched();
+      if (this.DatosTramite.formulario.invalid) {
+        return false;
+      }
+      return true;
+    }
+    return false;
+  }
+  /**
+   * Índice del paso actual en el asistente.
+   * @type {number}
+   */
+  @Input() indice: number = 1;
+
+  /**
    * Referencia al componente Solicitante.
-   * 
    * @type {SolicitanteComponent}
    */
-  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+    /**
+     * Referencia al componente Solicitante.
+     * Permite acceder a los métodos y propiedades del componente Solicitante desde este componente padre.
+     */
+    @ViewChild('Solicitante', { static: false }) Solicitante?: SolicitanteComponent;
+    /**
+     * Referencia al componente DatosTramite.
+     * Permite validar y manipular el formulario de datos del trámite.
+     */
+    @ViewChild('DatosTramite', { static: false }) DatosTramite?: DatosTramiteComponent;
+    /**
+     * Referencia al componente AsignarPersona.
+     * Permite acceder a la lógica de asignación de persona en el trámite.
+     */
+    @ViewChild('AsignarPersona', { static: false }) AsignarPersona?: AsignarPersonaComponent;
+
+    /** Form groups para cada tab (debes ajustar los controles según tus necesidades) */
+  public formGroupTab1: FormGroup = new FormGroup({
+    campo1: new FormControl('', Validators.required)
+  });
+  public formGroupTab2: FormGroup = new FormGroup({    
+    campo2: new FormControl('', Validators.required)
+  });
+
+/**
+ * Valida todos los formularios hijos y marca los campos inválidos como tocados para mostrar errores de validación.
+ * Devuelve true si todos los formularios son válidos, false si falta capturar campos.
+ */
+public validarFormularios(): boolean {
+  if (this.DatosTramite?.formulario) {
+    this.DatosTramite.formulario.markAllAsTouched();
+    return this.DatosTramite.formulario.valid;
+  }
+  return false;
+}
+
+  /**
+   * Valida un FormGroup, marcando todos sus controles como tocados para mostrar errores de validación.
+   * @param {FormGroup | undefined} formGroup - El FormGroup a validar.
+   * @returns {boolean} true si el FormGroup es válido, true si es undefined, false si es inválido.
+   */
+  private static validarFormGroup(formGroup: FormGroup | undefined): boolean {
+    if (formGroup) {
+      Object.values(formGroup.controls).forEach(control => control.markAsTouched());
+      return formGroup.valid;
+    }
+    return true;
+  }
+
+  /**
+   * Valida un formulario dentro de un componente, marcando todos los campos como tocados y ejecutando una función opcional para mostrar errores.
+   * @param {Record<string, unknown>} comp - El componente que contiene el formulario.
+   * @param {string} formProp - El nombre de la propiedad del formulario dentro del componente.
+   * @param {string} mostrarErroresProp - El nombre de la función para mostrar errores (opcional).
+   * @returns {boolean} true si el formulario es válido o el componente es undefined, false si es inválido.
+   */
+  private static validarCompForm(
+    comp: Record<string, unknown>,
+    formProp: string,
+    mostrarErroresProp: string
+  ): boolean {
+    if (comp && comp[formProp] instanceof FormGroup) {
+      (comp[formProp] as FormGroup).markAllAsTouched();
+      if (typeof comp[mostrarErroresProp] === 'function') {
+        (comp[mostrarErroresProp] as () => void)();
+      }
+      return (comp[formProp] as FormGroup).valid;
+    }
+    return true;
+  }
+
+  /**
+   * Valida todos los formularios de los componentes hijos del paso uno.
+   * Marca todos los campos como tocados para mostrar errores de validación.
+   * @returns {{ tab1Valid: boolean; tab2Valid: boolean }} Un objeto con la validez de los formularios de la pestaña 1 y 2.
+   */
+  public validarTodosLosFormularios(): { tab1Valid: boolean; tab2Valid: boolean } {
+    const VALIDATE_COMPONENT_FORM = (component: unknown, formProp: string): boolean => {
+      if (
+        component &&
+        typeof component === 'object' &&
+        formProp in component &&
+        (component as Record<string, unknown>)[formProp] instanceof FormGroup
+      ) {
+        ((component as Record<string, unknown>)[formProp] as FormGroup).markAllAsTouched();
+        return ((component as Record<string, unknown>)[formProp] as FormGroup).valid;
+      }
+      return true;
+    };
+
+    const TAB1_VALID = VALIDATE_COMPONENT_FORM(this.DatosTramite, 'formulario') &&
+                      VALIDATE_COMPONENT_FORM(this.Solicitante, 'solicitudForm');
+    const TAB2_VALID = VALIDATE_COMPONENT_FORM(this.AsignarPersona, 'formulario');
+
+    return {
+      tab1Valid: TAB1_VALID,
+      tab2Valid: TAB2_VALID
+    };
+  }
+
 
   /**
    * Tipo de persona asociada al trámite.
@@ -45,13 +211,6 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
    * @type {FormularioDinamico[]}
    */
   domicilioFiscal: FormularioDinamico[] = [];
-
-  /**
-   * Índice de la pestaña activa.
-   * 
-   * @type {number}
-   */
-  indice: number = 1;
 
   /**
    * Estado de validación del formulario.

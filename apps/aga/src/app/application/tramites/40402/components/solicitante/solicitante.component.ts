@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import mockData from '@libs/shared/theme/assets/json/40402/solicitante-mockdata.json';
@@ -9,10 +9,19 @@ import mockData from '@libs/shared/theme/assets/json/40402/solicitante-mockdata.
   selector: 'app-solicitante',
   templateUrl: './solicitante.component.html',
   styleUrl: './solicitante.component.scss',
-  standalone:true,
-  imports:[TituloComponent, ReactiveFormsModule]
+  standalone: true,
+  imports: [TituloComponent, ReactiveFormsModule]
 })
-export class SolicitanteComponent implements OnInit {
+export class SolicitanteComponent implements OnInit,OnDestroy {
+  /**
+   * Marca todos los campos del formulario principal y del modal como tocados para mostrar errores.
+   */
+  public markAllAsTouched(): void {
+    if (this.solicitudForm) {
+      this.solicitudForm.markAllAsTouched();
+    }
+  }
+
   /**
    * Grupo de formulario para el formulario de solicitud.
    */
@@ -22,7 +31,7 @@ export class SolicitanteComponent implements OnInit {
    * Constructor para inyectar las dependencias necesarias.
    * @param fb - Servicio FormBuilder para crear formularios reactivos.
    */
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef) { }
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -79,5 +88,25 @@ export class SolicitanteComponent implements OnInit {
     this.solicitudForm.get('numeroInterior')?.setValue(mockData?.numeroInterior);
     this.solicitudForm.get('lada')?.setValue(mockData?.lada);
     this.solicitudForm.get('telefono')?.setValue(mockData?.telefono);
+  }
+
+    /**
+   * Muestra los errores del formulario principal marcando todos los campos como tocados.
+   * 
+   * Este método es útil para activar la visualización de errores de validación en el formulario.
+   * Se asegura de que todos los campos del formulario principal sean marcados como tocados,
+   * lo que desencadena la visualización de mensajes de error para los campos inválidos.
+   * 
+   * @returns {void}
+   */
+  public mostrarErrores(): void {
+  this.solicitudForm?.markAllAsTouched?.();
+  this.cdr.detectChanges();
+  }
+
+  ngOnDestroy(): void {
+    if (this.solicitudForm) {
+      this.solicitudForm.reset();
+    }
   }
 }
