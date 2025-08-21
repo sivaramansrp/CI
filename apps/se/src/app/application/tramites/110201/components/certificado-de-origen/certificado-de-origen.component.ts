@@ -26,7 +26,7 @@ import {
   OPTIONS_UNIDAD_MEDIDA,
   SeleccionadasTabla,
 } from '../../models/registro.model';
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -97,6 +97,12 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Formulario reactivo para los datos de la mercancía.
    */
   mercanciaForm!: FormGroup;
+
+  /**
+   * Referencia al modal para agregar/editar mercancía.
+   */
+  @ViewChild('modalAgregar') modalAgregar!: ElementRef;
+
   /**
    * Catálogo de países.
    */
@@ -512,6 +518,52 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.getUnidadMedida();
     this.getTipoFactura();
   }
+
+  /**
+   * Abre el modal para agregar una mercancía desde la tabla de mercancías disponibles.
+   * @param rowData Datos de la fila seleccionada de tipo ColumnasTabla
+   */
+  abrirModalMercancia(rowData: ColumnasTabla): void {
+    if (rowData) {
+      // Configurar el modal para agregar nueva mercancía
+      this.esFormulario = true;
+      this.esMercanciaEnEdicion = false;
+
+      // Cargar catálogos necesarios
+      this.getTratado();
+      this.getPais();
+      this.getUMC();
+      this.getUnidadMedida();
+      this.getTipoFactura();
+
+      // Popuar el formulario con los datos de la mercancía disponible seleccionada
+      this.mercanciaForm.patchValue({
+        validacionMercanciaForm: {
+          fraccionMercanciaArancelaria: rowData.fraccionArancelaria || '',
+          nombreTecnico: rowData.nombreTecnico || '',
+          nombreComercialDelaMercancia: rowData.nombreComercial || '',
+          // Los demás campos se dejan vacíos para que el usuario los complete
+          cantidad: '',
+          valorDelaMercancia: '',
+          tipoFactura: '',
+          numeroFactura: '',
+          complementoDelaDescripcion: '',
+          fecha: '',
+          marca: '',
+          umc: '',
+          masaBruta: '',
+          unidadMedida: '',
+          criterioParaConferir: '',
+          nombreEnIngles: ''
+        }
+      });
+
+      // Abrir el modal usando Bootstrap
+      const BOOTSTRAP_MODAL = new (window as unknown as { bootstrap: { Modal: new (element: Element) => { show(): void } } }).bootstrap.Modal(this.modalAgregar.nativeElement);
+      BOOTSTRAP_MODAL.show();
+    }
+  }
+
   /**
    * Agrega una mercancía al formulario.
    */
