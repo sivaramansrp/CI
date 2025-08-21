@@ -3,11 +3,26 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, delay, map, of, takeUntil } from 'rxjs';
 import { Tramite110205State, Tramite110205Store } from '../../estados/tramite110205.store';
+import { AbstractControl} from '@angular/forms';
 import { FECHA } from '../../constantes/peru-certificado.module';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { PeruCertificadoService } from '../../services/peru-certificado.service';
+import { REGEX_PATRON_DECIMAL_15_4 } from '@ng-mf/data-access-user';
+import { REGEX_PATRON_DECIMAL_16_4} from '@ng-mf/data-access-user';
 import { Tramite110205Query } from '../../estados/tramite110205.query';
+import { ValidationErrors } from '@angular/forms';
+
+export function validarCantidad(control: AbstractControl): ValidationErrors | null {
+  const VAL= control.value;
+
+  if (VAL=== null || VAL === undefined || VAL === '') {return null}
+
+  const REGEX= /^\d{1,16}(\.\d{1,4})?$/;
+
+  return REGEX.test(VAL.toString()) ? null : { cantidadInvalida: true };
+}
+
 
 
 /**
@@ -20,6 +35,8 @@ import { Tramite110205Query } from '../../estados/tramite110205.query';
   templateUrl: './mercancia.component.html',
   styleUrl: './mercancia.component.scss',
 })
+
+
 export class MercanciaComponent implements OnInit, OnDestroy {
   /**
    * @descripcion
@@ -172,11 +189,11 @@ export class MercanciaComponent implements OnInit, OnDestroy {
       nombreIngles: [{ value: this.mercanciaState.mercanciaForm['nombreIngles'], disabled: true }],
       otrasInstancias: [{ value: this.mercanciaState.mercanciaForm['otrasInstancias'], disabled: true }],
       criterioParaConferirOrigen: [{ value: this.mercanciaState.mercanciaForm['criterioParaConferirOrigen'], disabled: true }],
-      cantidad: [this.mercanciaState.cantidad, Validators.required],
+      cantidad: [this.mercanciaState.cantidad, [Validators.required,Validators.pattern(REGEX_PATRON_DECIMAL_16_4)]],
       umc: [this.mercanciaState.umc, Validators.required],
-      valorMercancia: [this.mercanciaState.valorMercancia, Validators.required],
-      complementoDescripcion: [this.mercanciaState.complementoDescripcion, Validators.required],
-      numeroFactura: [this.mercanciaState.numeroFactura, Validators.required],
+      valorMercancia: [this.mercanciaState.valorMercancia,[Validators.required,Validators.pattern(REGEX_PATRON_DECIMAL_15_4)]],
+      complementoDescripcion: [this.mercanciaState.complementoDescripcion,[ Validators.required, Validators.maxLength(200)]],
+      numeroFactura: [this.mercanciaState.numeroFactura,[ Validators.required,Validators.maxLength(36)]],
       tipoFactura: [this.mercanciaState.tipoFactura, Validators.required],
     });
   }
@@ -196,7 +213,24 @@ export class MercanciaComponent implements OnInit, OnDestroy {
    */
   activarModal(): void {
     this.mostrarAlerta = true;
+   this.abrirModal() 
   }
+  /*
+    * @descripcion
+    * Marca todos los campos del formulario como tocados para mostrar los errores de validación.
+    * @param formGroup - El grupo de formulario que contiene los controles a marcar.
+    */
+  markAllFieldsAsTouched(formGroup: FormGroup): void {
+    Object.values(formGroup.controls).forEach(control => {
+      control.markAsTouched();
+  
+        if ((control as FormGroup).controls) {
+        const CHILD = control as FormGroup;
+        this.markAllFieldsAsTouched(CHILD);
+      }
+    });
+  }
+  
 
   /**
    * @descripcion
@@ -238,7 +272,8 @@ export class MercanciaComponent implements OnInit, OnDestroy {
    * @descripcion
    * Acepta los datos del formulario, los guarda en el almacén y emite los eventos correspondientes.
    */
-  aceptar(): void {
+  acceptar(agregar:boolean): void {
+    if(agregar && this.mercanciaForm.valid){
     this.guardarClicado.emit(this.mercanciaForm.value);
     this.store.setmercanciaTabla([this.mercanciaForm.value]);
 
@@ -253,6 +288,10 @@ export class MercanciaComponent implements OnInit, OnDestroy {
         });
     }
   }
+  else{
+    this.markAllFieldsAsTouched(this.mercanciaForm);
+  }
+}                                
 
   /**
    * @descripcion

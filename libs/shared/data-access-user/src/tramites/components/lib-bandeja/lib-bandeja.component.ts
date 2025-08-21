@@ -350,6 +350,7 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
     
     const BANDEJA_SOLICITUDE_FORM_GROUP: FormGroup | null = this.dinamicasBandejaForma.get('bandejaSolicitudeFormGroup') as FormGroup | null;
     const TIPO_SOLICITUD = BANDEJA_SOLICITUDE_FORM_GROUP?.controls['tipoSolicitud']?.value;
+    const RFC = BANDEJA_SOLICITUDE_FORM_GROUP?.controls['rfc']?.value;
     const BODY = {
       rfc_usuario: "",
       roles: [""],
@@ -361,7 +362,7 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
     };
 
     if (TIPO_SOLICITUD === TipoSolicitud.SOLICITANTE) {
-      BODY.rfc_usuario = "AAL0409235E6";
+      BODY.rfc_usuario = RFC;
       BODY.roles = ["PersonaMoral"];
       BODY.certificado = {
         cert_serial_number: "20001000000100001815",
@@ -383,7 +384,7 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
     }
 
     if (TIPO_SOLICITUD === TipoSolicitud.FUNCIONARIO) {
-      BODY.rfc_usuario = "FOGE7812179H5";
+      BODY.rfc_usuario = RFC;
       BODY.roles = ["Dictaminador"]
 
         this.bandejaDeSolicitudeService.postBandejaTareas(BODY).pipe(

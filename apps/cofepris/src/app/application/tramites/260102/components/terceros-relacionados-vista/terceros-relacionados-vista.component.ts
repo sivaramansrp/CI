@@ -8,6 +8,7 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { TIPO_ACTUALIZACION } from '../../../../shared/constantes/datos-solicitud.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260102Query } from '../../estados/queries/tramite260102Query.query';
 import { Tramite260102Store } from '../../estados/stores/tramite260102Store.store';
@@ -162,6 +163,135 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   addFacturadores(newFacturadores: Facturador[]): void {
     this.tramiteStore.updateFacturadorTablaDatos(newFacturadores);
   }
+    /**
+     * @method fabricanteEventoModificar
+     * @description Método manejador de eventos que se ejecuta cuando se seleccionan
+     * fabricantes para modificación. Actualiza el store con la selección actual
+     * para permitir operaciones de edición sobre los registros seleccionados.
+     * 
+     * @param {Fabricante[]} seleccionadaFabricante - Arreglo de objetos Fabricante
+     *   que han sido seleccionados por el usuario para modificación
+     * @returns {void}
+     * @access public
+     * @since 1.0.0
+     */
+    fabricanteEventoModificar(seleccionadaFabricante: Fabricante[]): void {
+      this.tramiteStore.updateSeleccionadoTablaFabricanteDatos(seleccionadaFabricante);
+    }
+  
+    /**
+     * @method destinatarioEventoModificar
+     * @description Método manejador de eventos que procesa la selección de destinatarios
+     * finales para modificación. Sincroniza la selección con el store para habilitar
+     * las operaciones de edición correspondientes.
+     * 
+     * @param {Destinatario[]} seleccionadaDestinatario - Arreglo de objetos Destinatario
+     *   seleccionados por el usuario para ser modificados
+     * @returns {void}
+     * @access public
+     * @since 1.0.0
+     */
+    destinatarioEventoModificar(seleccionadaDestinatario: Destinatario[]): void {
+      this.tramiteStore.updateSeleccionadoTablaDestinatarioDatos(
+        seleccionadaDestinatario,
+      );
+    }
+  
+    /**
+     * @method proveedorEventoModificar
+     * @description Método manejador de eventos que gestiona la selección de proveedores
+     * para modificación. Actualiza el estado del store con los proveedores seleccionados
+     * para facilitar las operaciones de edición subsecuentes.
+     * 
+     * @param {Proveedor[]} seleccionadaProveedor - Arreglo de objetos Proveedor
+     *   que el usuario ha seleccionado para modificar
+     * @returns {void}
+     * @access public
+     * @since 1.0.0
+     */
+    proveedorEventoModificar(seleccionadaProveedor: Proveedor[]): void {
+      this.tramiteStore.updateSeleccionadoTablaProveedorDatos(seleccionadaProveedor);
+    }
+  
+    /**
+     * @method facturadorEventoModificar
+     * @description Método manejador de eventos que procesa la selección de facturadores
+     * para modificación. Interactúa con el store para mantener actualizada la lista
+     * de facturadores seleccionados y habilitar su edición.
+     * 
+     * @param {Facturador[]} seleccionadaFacturador - Arreglo de objetos Facturador
+     *   seleccionados por el usuario para operaciones de modificación
+     * @returns {void}
+     * @access public
+     * @since 1.0.0
+     */
+    facturadorEventoModificar(seleccionadaFacturador: Facturador[]): void {
+      this.tramiteStore.updateSeleccionadoTablaFacturadorDatos(seleccionadaFacturador);
+    }
+  
+    /**
+     * @method eliminarFabricante
+     * @description Método público que elimina fabricantes específicos de la tabla de datos.
+     * Recibe la lista actualizada después de la eliminación y actualiza el store
+     * utilizando el tipo de actualización ELIMINAR para mantener la integridad de los datos.
+     * 
+     * @param {Fabricante[]} fabricante - Arreglo actualizado de fabricantes después
+     *   de realizar la operación de eliminación
+     * @returns {void}
+     * @access public
+     * @since 1.0.0
+     */
+    eliminarFabricante(fabricante: Fabricante[]): void {
+      this.tramiteStore.updateFabricanteTablaDatos(fabricante, TIPO_ACTUALIZACION.ELIMINAR);
+    }
+  
+    /**
+     * @method eliminarDestinatario
+     * @description Método público que procesa la eliminación de destinatarios finales.
+     * Actualiza el store con la lista resultante después de la eliminación,
+     * especificando el tipo de operación para el manejo correcto del estado.
+     * 
+     * @param {Destinatario[]} destinatario - Arreglo de destinatarios actualizado
+     *   post-eliminación que se sincronizará con el store
+     * @returns {void}
+     * @access public
+     * @since 1.0.0
+     */
+    eliminarDestinatario(destinatario: Destinatario[]): void {
+      this.tramiteStore.updateDestinatarioFinalTablaDatos(destinatario, TIPO_ACTUALIZACION.ELIMINAR);
+    }
+  
+    /**
+     * @method eliminarProveedor
+     * @description Método público que gestiona la eliminación de proveedores del trámite.
+     * Recibe la lista de proveedores actualizada y la sincroniza con el store
+     * usando el tipo de actualización apropiado para operaciones de eliminación.
+     * 
+     * @param {Proveedor[]} proveedor - Arreglo de proveedores resultante después
+     *   de la operación de eliminación
+     * @returns {void}
+     * @access public
+     * @since 1.0.0
+     */
+    eliminarProveedor(proveedor: Proveedor[]): void {
+      this.tramiteStore.updateProveedorTablaDatos(proveedor, TIPO_ACTUALIZACION.ELIMINAR);
+    }
+  
+    /**
+     * @method eliminarFacturador
+     * @description Método público que maneja la eliminación de facturadores del sistema.
+     * Actualiza el estado del store con la lista de facturadores resultante,
+     * especificando el tipo de operación ELIMINAR para el procesamiento correcto.
+     * 
+     * @param {Facturador[]} facturador - Arreglo de facturadores actualizado
+     *   después de realizar la eliminación correspondiente
+     * @returns {void}
+     * @access public
+     * @since 1.0.0
+     */
+    eliminarFacturador(facturador: Facturador[]): void {
+      this.tramiteStore.updateFacturadorTablaDatos(facturador, TIPO_ACTUALIZACION.ELIMINAR);
+    }
 
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.

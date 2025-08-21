@@ -18,9 +18,10 @@ describe('BitacoraComponent', () => {
         FormsModule,
         ReactiveFormsModule,
         ToastrModule.forRoot(),
-        HttpClientTestingModule
+        HttpClientTestingModule,
+        BitacoraComponent
       ],
-      declarations: [BitacoraComponent],
+      declarations: [],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
         provideToastr({

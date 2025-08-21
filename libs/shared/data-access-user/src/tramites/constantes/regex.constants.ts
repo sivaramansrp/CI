@@ -133,6 +133,17 @@ export const REGEX_SOLO_DIGITOS = /^\d+$/;
 export const REGEX_PATRON_DECIMAL_15_4 = /^\d{0,15}(\.\d{1,4})?$/;
 
 /**
+ * Expresión regular para validar un número decimal con hasta 15 dígitos enteros y 4 decimales.
+ *
+ * Desglose de la expresión regular:
+ * - ^: Aserción para el inicio de la cadena.
+ * - \d{0,15}: Coincide con entre 0 y 16 dígitos enteros.
+ * - (\.\d{1,4})?: Coincide con un punto seguido de entre 1 y 4 dígitos decimales, opcional.
+ * - $: Aserción para el final de la cadena.
+ */
+export const REGEX_PATRON_DECIMAL_16_4 = /^\d{0,16}(\.\d{1,4})?$/;
+
+/**
  * Expresión regular que valida un patrón alfanumérico.
  *
  * Esta expresión regular permite letras mayúsculas y minúsculas (incluyendo la Ñ y ñ)
@@ -809,3 +820,14 @@ export const REGEX_NO_SOLO_NUMEROS = /^(?=.*\D).*$/;
  * Debe contener entre 8 y 20 caracteres alfanuméricos (letras y números).
  */
 export const CERTIFICATE_OF_ORIGIN_NUMBER = /^[A-Za-z0-9]{8,20}$/;
+
+/**
+ * Expresión regular para validar importes numéricos de hasta 16 dígitos.
+ * 
+ * Esta constante se utiliza para asegurar que el valor ingresado sea un número entero
+ * positivo, sin decimales ni separadores, y que contenga entre 1 y 16 dígitos.
+ * 
+ * Ejemplos válidos: "1", "1234567890123456"
+ * Ejemplos inválidos: "123.45", "abc", "12345678901234567"
+ */
+export const IMPORTE = /^\d{1,16}$/;

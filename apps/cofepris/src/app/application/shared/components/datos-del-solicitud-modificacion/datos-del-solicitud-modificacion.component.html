@@ -56,7 +56,7 @@
           </div>
           <div>
             <textarea cols="70" rows="5" id="observacionesId" class="form-control" formControlName="observaciones"
-              placeholder="Justificación" (change)="
+              placeholder="Justificación" maxlength="2000" (change)="
                 enCambioDeControl('domicilioEstablecimiento', 'observaciones')
               "></textarea>
           </div>
@@ -401,7 +401,7 @@
 
     @if (mostrarScianBotones) {
       <div class="d-flex justify-content-end">
-      <button type="button" class="btn btn-default btn-space me-2" [disabled]="esFormularioSoloLectura ? true : false">
+      <button type="button" class="btn btn-danger btn-space me-2" [disabled]="esFormularioSoloLectura ? true : false">
         Eliminar
       </button>
       <button type="button" class="btn btn-primary btn-space" data-bs-toggle="modal" data-bs-target="#modalClave"
@@ -429,7 +429,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria:
-            <span class="bi bi-question-circle-fill" title="No. de licencia sanitaria"
+            <span class="bi bi-question-circle-fill" title="Número de la autorización indicado en el documento emitido por la autoridad sanitaria competente"
               data-bs-toggle="tooltip"></span></label>
           <input class="form-control" id="licenciaSanitaria" placeholder="" type="text" maxlength="20"
             formControlName="noLicenciaSanitaria" (change)="
@@ -452,7 +452,7 @@
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="estado" [label]="'Régimen'" [required]="true" name="regimen" [isDisabled]="esFormularioSoloLectura"
-          [tooltipQuestionCircle]="true" formControlName="regimen" (change)="
+          [tooltipQuestionCircle]="true" tooltipQuestionCircleText = "Régimen al que se destinará la mercancía" formControlName="regimen" (change)="
             enCambioDeControl('solicitudEstablecimientoForm', 'regimen')
           "></app-catalogo-select>
         <div
@@ -524,7 +524,7 @@
 
 <div class="modal fade" #establecimientoModal tabindex="-1" aria-labelledby="establecimientoModalLabel"
   aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <form [formGroup]="scianForm">
         <div class="modal-body">
@@ -532,27 +532,27 @@
           <div class="row">
             <div class="col-md-8">
               <app-catalogo-select [catalogo]="scianJson" [label]="'Clave S.C.I.A.N.*'"
-                [placeholder]="'Seleccione una valor'" formControlName="scian"
+                [placeholder]="'Seleccione una opción'" formControlName="scian"
                 (change)="enCambioDeControl('scianForm', 'scian')"></app-catalogo-select>
             </div>
           </div>
           <div class="row">
-            <div class="col-md-8">
-              <label for="descripcionScian">Descripción del S.C.I.A.N.</label>
-              <input type="text" id="descripcionScianId" formControlName="descripcionScian" class="form-control"
-                (change)="enCambioDeControl('scianForm', 'descripcionScian')" />
+             <div class="col-md-8">
+              <app-catalogo-select [catalogo]="scianJson" [label]="'Descripción del S.C.I.A.N.'"
+                [placeholder]="'Seleccione una opción'" formControlName="descripcionScian"
+                (change)="enCambioDeControl('scianForm', 'descripcionScian')" [isDisabled]="true"></app-catalogo-select>
             </div>
           </div>
         </div>
         <div class="modal-footer mt-5">
-          <button type="button" class="btn btn-primary" (click)="limpiarScianForm()">
+          <button type="button" class="btn btn-default" (click)="limpiarScianForm()">
             Limpiar
           </button>
-          <button type="button" class="btn btn-primary" (click)="cerrarModal()">
+          <button type="button" class="btn btn-default" (click)="cerrarModal()">
             Cancelar
           </button>
           <button type="button" class="btn btn-primary" (click)="guardarScian()">
-            Guardar
+            Agregar
           </button>
         </div>
       </form>
@@ -609,7 +609,7 @@
               Denominación o nombre científico*:
               <span
               class="bi bi-question-circle-fill"
-              title="No. de licencia sanitaria"
+              title="Denominación común internacional o genérica"
               data-bs-toggle="tooltip"
               ></span>
             </label>
@@ -661,7 +661,7 @@
             <label for="fraccionArancelaria">Fracción arancelaria*:
               <span
               class="bi bi-question-circle-fill"
-              title="No. de licencia sanitaria"
+              title="Descripción numérica o desglose de un código de clasificación que otorga el Sistema Armonizado"
               data-bs-toggle="tooltip"
               ></span>
             </label>
@@ -711,7 +711,7 @@
                 <label for="UMT">UMT*:
                   <span
                    class="bi bi-question-circle-fill"
-                   title="UMT"
+                   title="Unidad de medida de la tarifa"
                   data-bs-toggle="tooltip"
                   ></span>
                 </label>
@@ -730,8 +730,7 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                <label for="cantidadUMC">Cantidad UMC*:<span class="bi bi-question-circle-fill"
-                data-bs-toggle="tooltip"></span></label>
+                <label for="cantidadUMC">Cantidad UMC*:</label>
                 <input type="text" id="cantidadUMC" formControlName="cantidadUMC" class="form-control" />
                 <div class="text-danger" *ngIf="getErrorMessage('cantidadUMC')">
                   {{ getErrorMessage('cantidadUMC') }}
@@ -747,6 +746,7 @@
                   [required]="true"
                   name="UMC"
                   [tooltipQuestionCircle]="true"
+                  tooltipQuestionCircleText = "Unidad de medida de comercialización"
                 ></app-catalogo-select>
                 <div class="text-danger" *ngIf="getErrorMessage('UMC')">
                   {{ getErrorMessage('UMC') }}

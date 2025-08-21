@@ -5,7 +5,7 @@
     (tipoEstadoSeleccionEvent)="tipoEstadoSeleccion($event)"
     (paisBloquEvent)="tipoSeleccion($event)"
     (setbuscarMercanciaEvent)="conseguirDisponiblesDatos()"
-    [tableData]="disponiblesDatos || []"
+    [tableData]="(datosTablaUno$ | async) ||  []"
     (filaClics)="abrirModificarModal($event)"
     [tablaSeleccionEvent]="tablaSeleccionEvent"
     [guardarClicado]="(datosTabla$ | async) ||  []"
@@ -15,10 +15,14 @@
     [cargoDeMercancias]="cargoDeMercancias"
     [mercanciasDisponibles]="mercanciasDisponibles"
     [esFormularioSoloLectura]="esFormularioSoloLectura"
-    (formCertificadoEvent)="setValoresStore($event)" >
+    (formCertificadoEvent)="setValoresStore($event)"
+    [tramiteState]="formCertificadoValues"
+    [domicilio]="true"
+    [idProcedimiento]="idProcedimiento">
 </app-certificado-de-origen>
 
 <div class="modal fade" #modifyModal tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
     <app-mercancia [esFormularioSoloLectura]="esFormularioSoloLectura" [datosSeleccionados]="datosSeleccionados" (guardarClicado)="abrirModificarModal($event)"
         (cerrarClicado)="cerrarModificarModal()"></app-mercancia>
 </div>
+ 
