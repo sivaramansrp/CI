@@ -23,7 +23,7 @@
       <div class="row">
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="options" formControlName="aduana" [label]="'Aduana/sección aduanera'"
-            [placeholder]="'Selecciona un valor'" [required]="true"
+            [placeholder]="'Seleccione una opción'" [required]="true"
             (change)="setValoresStore(datosGenerales, 'aduana', 'setAduana')"
             [isDisabled]="soloLectura"></app-catalogo-select>
           <div *ngIf="isInvalid('datosGenerales.aduana') && solicitudForm.get('datosGenerales.aduana')?.errors?.['required']" class="mensaje-error">
