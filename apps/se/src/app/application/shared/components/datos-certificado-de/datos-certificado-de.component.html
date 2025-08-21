@@ -7,19 +7,26 @@
           <label for="justificacionDictamen" class="form-label">Observaciones:</label>
           <textarea id="justificacionDictamen" formControlName="observacionesDates" (change)="setValoresStore('formDatosCertificado','observacionesDates','setFormDatosCertificado')"   class="mb-4 h-20 w-100" placeholder="" rows="6"></textarea>
         </div>
-        @if(idioma){
+        @if(idioma && idProcedimiento!==110205){
           <div class="col-md-8">
           <label for="presenta" class="form-label">Presenta:</label>
           <textarea id="presenta" formControlName="presenta" (change)="setValoresStore('formDatosCertificado','presenta','setPresenta')"   class="mb-4 h-20 w-100" placeholder="" rows="6"></textarea>
         </div>
 
            }
-        @if(idioma){
+        @if(idioma ){
           <div class="row mb-3">
             <div class="col-md-6">
               <app-catalogo-select [label]="'Idioma'" [catalogo]="idiomaDatos || []" 
               [required]="true" name="estado" formControlName="idiomaDates" (change)="setValoresStore('formDatosCertificado','idiomaDates','setFormDatosCertificado')"
               (selectionChange)="idiomaSeleccion($event)"></app-catalogo-select>
+              @if(formDatosCertificado.get('idiomaDates')?.invalid && (formDatosCertificado.get('idiomaDates')?.touched || formDatosCertificado.get('idiomaDates')?.dirty)) {
+              <div class="d-grid">
+                @if(formDatosCertificado.get('idiomaDates')?.errors?.['required']) {
+                <span class="mensaje-error">Este campo es obligatorio</span>
+                }
+              </div>
+              }
             </div>
           </div>
         }
@@ -27,6 +34,13 @@
           <div class="col-md-8">
             <label for="Precisa" class="form-label">Precisa*:</label>
             <textarea id="Precisa" formControlName="precisaDates" (change)="setValoresStore('formDatosCertificado','precisaDates','setFormDatosCertificado')"  class="mb-4 h-20 w-100" placeholder="" rows="6" required="true"></textarea>
+            @if(formDatosCertificado.get('precisaDates')?.invalid && (formDatosCertificado.get('precisaDates')?.touched || formDatosCertificado.get('precisaDates')?.dirty)) {
+            <div class="d-grid">
+              @if(formDatosCertificado.get('precisaDates')?.errors?.['required']) {
+              <span class="mensaje-error">Este campo es obligatorio</span>
+              }
+            </div>
+            }
           </div>
         }
         <div class="row">
@@ -35,11 +49,25 @@
             <app-catalogo-select [isDisabled]="esFormularioSoloLectura" [label]="'Entidad federativa'" [catalogo]="entidadFederativaDatos || []" 
             [required]="true" name="estado" formControlName="EntidadFederativaDates"
             (selectionChange)="entidadFederativaSeleccion($event)"  (change)="setValoresStore('formDatosCertificado','EntidadFederativaDates','setFormDatosCertificado')"></app-catalogo-select>
+            @if(formDatosCertificado.get('EntidadFederativaDates')?.invalid && (formDatosCertificado.get('EntidadFederativaDates')?.touched || formDatosCertificado.get('EntidadFederativaDates')?.dirty)) {
+            <div class="d-grid">
+              @if(formDatosCertificado.get('EntidadFederativaDates')?.errors?.['required']) {
+              <span class="mensaje-error">Este campo es obligatorio</span>
+              }
+            </div>
+            }
           </div>
           <div class="col-md-6">
             <app-catalogo-select [isDisabled]="esFormularioSoloLectura" [label]="'Representación federal'"  [catalogo]="representacionFederalDatos || []" 
             [required]="true" name="estado" formControlName="representacionFederalDates"
             (selectionChange)="representacionFederalSeleccion($event)"  (change)="setValoresStore('formDatosCertificado','EntidadFederativaDates','setFormDatosCertificado')"></app-catalogo-select>
+            @if(formDatosCertificado.get('representacionFederalDates')?.invalid && (formDatosCertificado.get('representacionFederalDates')?.touched || formDatosCertificado.get('representacionFederalDates')?.dirty)) {
+            <div class="d-grid">
+              @if(formDatosCertificado.get('representacionFederalDates')?.errors?.['required']) {
+              <span class="mensaje-error">Este campo es obligatorio</span>
+              }
+            </div>
+            }
           </div>
         </div>
       </div>

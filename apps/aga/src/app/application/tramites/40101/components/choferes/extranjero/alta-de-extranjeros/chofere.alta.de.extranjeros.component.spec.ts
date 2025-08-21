@@ -123,14 +123,14 @@ describe('ChofereAltaDeExtranjerosComponent', () => {
       expect(component.datosDelChoferExtranjeros).toEqual(mockChoferExtranjeroData);
     });
 
-    it('should not set datosConsulta or isReadonly when readonly is false', () => {
+    it('should not set datosConsulta or esSoloLectura when readonly is false', () => {
       const nonReadonlyState = { ...mockConsultaioState, readonly: false };
       consultaioQueryMock.selectConsultaioState$ = of(nonReadonlyState);
 
       component.ngOnInit();
 
       expect(component.datosConsulta).toBeUndefined();
-      expect(component.isReadonly).toBe(false);
+      expect(component.esSoloLectura).toBe(false);
     });
 
     it('should handle empty datosDelChoferExtranjerosAlta', () => {
@@ -336,7 +336,7 @@ describe('ChofereAltaDeExtranjerosComponent', () => {
 
       comp.ngOnInit();
 
-      expect(comp.isReadonly).toBe(true);
+      expect(comp.esSoloLectura).toBe(true);
       expect(comp.datosConsulta?.readonly).toBe(true);
     });
 
@@ -346,7 +346,7 @@ describe('ChofereAltaDeExtranjerosComponent', () => {
 
       component.ngOnInit();
 
-      expect(component.isReadonly).toBe(false);
+      expect(component.esSoloLectura).toBe(false);
       expect(component.datosConsulta).toBeUndefined();
     });
   });
@@ -354,7 +354,7 @@ describe('ChofereAltaDeExtranjerosComponent', () => {
   describe('Component Properties', () => {
     it('should initialize with default values', () => {
       expect(component.datosDelChoferExtranjeros).toEqual([]);
-      expect(component.isReadonly).toBe(false);
+      expect(component.esSoloLectura).toBe(false);
       expect(component.destroy$).toBeInstanceOf(Subject);
     });
 

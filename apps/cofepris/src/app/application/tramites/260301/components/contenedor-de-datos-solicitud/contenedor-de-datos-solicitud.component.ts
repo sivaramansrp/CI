@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   DatosDeTablaSeleccionados,
   DatosSolicitudFormState,
@@ -17,7 +17,9 @@ import {
   Tramite260301Store,
 } from '../../estados/tramite260301Store.store';
 import { map, takeUntil } from 'rxjs';
+import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { Subject } from 'rxjs';
 import { Tramite260301Query } from '../../estados/tramite260301Query.query';
@@ -43,14 +45,6 @@ import { Tramite260301Query } from '../../estados/tramite260301Query.query';
   styleUrl: './contenedor-de-datos-solicitud.component.scss',
 })
 export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
-
-  /**
-   * @input
-   * @description
-   * Indica si el formulario debe estar deshabilitado. Cuando es `true`, los controles del formulario estarán inactivos y no permitirán la edición por parte del usuario.
-   * @type {boolean}
-   */
-   @Input() formularioDeshabilitado: boolean = false;
 
   /**
    * @property {Subject<void>} destroyNotifier$
@@ -99,6 +93,14 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
     datos: [] as TablaMercanciasDatos[],
   };
 
+    /**
+   * @property {boolean} esFormularioSoloLectura
+   * @description
+   * Indica si el formulario está en modo solo lectura. Cuando es `true`, los campos no se pueden editar.
+   */
+  public esFormularioSoloLectura: boolean = false;
+
+
   /**
    * @property {TablaScianConfig[]} scianConfigDatos
    * @description
@@ -139,21 +141,21 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * @description
    * Identificador del procedimiento.
    */
-  public readonly idProcedimiento = ID_PROCEDIMIENTO;
+  idProcedimiento: number = ID_PROCEDIMIENTO;
 
   /**
    * @property {string[]} elementosRequeridos
    * @description
    * Lista de elementos requeridos para completar el formulario o proceso.
    */
-  public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS;
+  elementosRequeridos = ELEMENTOS_REQUERIDOS;
 
   /**
    * @property {string[]} elementosAnadidos
    * @description
    * Lista de elementos adicionales que pueden ser incluidos en el formulario o proceso.
    */
-  public readonly elementosAnadidos = ELEMENTOS_ANADIDOS;
+  elementosAnadidos = ELEMENTOS_ANADIDOS;
 
   /**
    * @constructor
@@ -165,8 +167,20 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramite260301Query: Tramite260301Query,
-    private tramite260301Store: Tramite260301Store
+    private tramite260301Store: Tramite260301Store,
+    private consultaQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef
+    
   ) {
+     this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.cdr.detectChanges();
+        })
+      )
+      .subscribe();
     //Constructor necesario para inyectar las dependencias
   }
 

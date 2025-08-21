@@ -14,6 +14,7 @@
     <app-tabla-dinamica
       [configuracionTabla]="configuracionTablaDestinatario"
       [datos]="(destinatarioTablaDatos$ | async) || []"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
       (listaDeFilaSeleccionada)="seleccionadaDestinatario = $event"
     ></app-tabla-dinamica>
@@ -67,6 +68,7 @@
     <app-tabla-dinamica
       [configuracionTabla]="configuracionTablaOtros"
       [datos]="(otrasTablaDatos$ | async) || []"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
       (listaDeFilaSeleccionada)="seleccionadaOtros = $event"
     ></app-tabla-dinamica>

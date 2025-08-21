@@ -26,7 +26,7 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { CommonModule, Location } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 import {
   DetalleMercancia,
   DetalleMercanciaEstupefacientes,
@@ -54,6 +54,15 @@ import { Observable } from 'rxjs';
   providers: [DatosSolicitudService],
 })
 export class DatosMercanciaEstupefacientesComponent implements OnInit {
+
+    /**
+     * Un QueryList que contiene todas las instancias de {@link CrosslistComponent} encontradas dentro de la vista.
+     * Esto permite interactuar con múltiples componentes hijos CrosslistComponent, como acceder a sus propiedades o invocar sus métodos.
+     * 
+     * @see {@link ViewChildren}
+     */
+    @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
+
   /**
    * @property {number} idProcedimiento
    * Identificador único del procedimiento asociado a la solicitud.
@@ -165,8 +174,8 @@ export class DatosMercanciaEstupefacientesComponent implements OnInit {
 
   /** Etiquetas personalizadas para los crosslists */
   public paisDeOriginLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de origen',
-    derecha: 'País(es) seleccionado(s)',
+    tituluDeLaIzquierda: 'País de origen:',
+    derecha: 'País(es) seleccionado(s)*:',
   };
 
   /**
@@ -175,8 +184,8 @@ export class DatosMercanciaEstupefacientesComponent implements OnInit {
    * Define los títulos mostrados en la parte izquierda y derecha del componente.
    */
   public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de procedencia',
-    derecha: 'País(es) seleccionados',
+    tituluDeLaIzquierda: 'País de procedencia:',
+    derecha: 'País(es) seleccionado(s)*:',
   };
 
   /**
@@ -185,14 +194,45 @@ export class DatosMercanciaEstupefacientesComponent implements OnInit {
    * Define los títulos para los elementos disponibles y seleccionados.
    */
   public usoEspesificoLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'Uso específico',
-    derecha: 'Uso específico',
+    tituluDeLaIzquierda: 'Uso específico:',
+    derecha: 'Uso específico seleccionado*:',
   };
 
   public formaFaramaceuticaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'Forma farmacéutica',
-    derecha: 'Forma farmacéutica',
+    tituluDeLaIzquierda: 'Forma farmacéutica:',
+    derecha: '*:',
   };
+
+    /**
+   * Botones de acción para gestionar listas de países en la primera sección.
+   */
+  public paisDeProcedenciaBotons = [
+    { btnNombre: 'Agregar todos', class: 'btn-default', funcion: ():void => this.crossList.toArray()[0].agregar('t') },
+    { btnNombre: 'Agregar selección', class: 'btn-primary', funcion: ():void => this.crossList.toArray()[0].agregar('') },
+    { btnNombre: 'Restar selección', class: 'btn-primary', funcion: ():void => this.crossList.toArray()[0].quitar('') },
+    { btnNombre: 'Restar todos', class: 'btn-default', funcion: ():void => this.crossList.toArray()[0].quitar('t') },
+  ];
+
+  /**
+   * Botones de acción para gestionar listas de países en la segunda sección.
+   */
+  paisDeProcedenciaBotonsDos = [
+    { btnNombre: 'Agregar todos', class: 'btn-default', funcion: ():void => this.crossList.toArray()[1].agregar('t') },
+    { btnNombre: 'Agregar selección', class: 'btn-primary', funcion: ():void => this.crossList.toArray()[1].agregar('') },
+    { btnNombre: 'Restar selección', class: 'btn-primary', funcion: ():void => this.crossList.toArray()[1].quitar('') },
+    { btnNombre: 'Restar todos', class: 'btn-default', funcion: ():void => this.crossList.toArray()[1].quitar('t') },
+  ];
+
+  /**
+   * Botones de acción para gestionar listas de países en la tercera sección.
+   */
+  paisDeProcedenciaBotonsTres = [
+    { btnNombre: 'Agregar todos', class: 'btn-default', funcion: ():void => this.crossList.toArray()[2].agregar('t') },
+    { btnNombre: 'Agregar selección', class: 'btn-primary', funcion: ():void => this.crossList.toArray()[2].agregar('') },
+    { btnNombre: 'Restar selección', class: 'btn-primary', funcion: ():void => this.crossList.toArray()[2].quitar('') },
+    { btnNombre: 'Restar todos', class: 'btn-default', funcion: ():void => this.crossList.toArray()[2].quitar('t') },
+  ];
+
 
   /**
    * @property {string[]} seleccionadasPaisDeOriginDatos
@@ -592,15 +632,16 @@ export class DatosMercanciaEstupefacientesComponent implements OnInit {
    * @param events - Arreglo de cadenas que representa los países seleccionados.
    */
   paisDeOriginSeleccionadasChange(events: string[]): void {
-    this.seleccionadasPaisDeOriginDatos = events;
     if (events.length > 0) {
+      this.seleccionadasPaisDeOriginDatos = events;
       this.mercanciaForm.get('paisOrigen')?.setValue(events[0]);
       }
   }
-
+  
+  
   formaFarmaceuticaSeleccionadasChange(events: string[]): void {
-    this.seleccionadasFormaFormaceuticaDatos = events;
     if (events.length > 0) {
+      this.seleccionadasFormaFormaceuticaDatos = events;
       this.mercanciaForm.get('formaFarmaceutica')?.setValue(events[0]);
       }
   }

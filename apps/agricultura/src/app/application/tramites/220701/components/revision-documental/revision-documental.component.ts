@@ -57,7 +57,7 @@ export class RevisionDocumentalComponent {
    * @type {Array<{ index: number; title: string; component: string }>}
    */
   seccionesDeLaSolicitud = [
-    { index: 1, title: 'Dtos Generales', component: 'interna-datos-generales' },
+    { index: 1, title: 'Datos Generales', component: 'interna-datos-generales' },
     { index: 2, title: 'Terceros Relacionados', component: 'interna-terceros-relacionados' },
     { index: 3, title: 'Pago de derechos', component: 'interna-pago-de-derechos' },
   ];

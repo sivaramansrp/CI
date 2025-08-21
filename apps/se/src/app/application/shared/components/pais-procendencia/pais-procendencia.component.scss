@@ -1,3 +1,10 @@
+a.ayuda-disabled {
+  pointer-events: none;     /* Desactiva todos los eventos del mouse (clic, hover, etc.) */
+  color: gray;              /* Cambia el color del texto para indicar que está deshabilitado */
+  text-decoration: none;    /* Elimina el subrayado del enlace */
+  cursor: not-allowed;      /* Cambia el cursor para indicar que no es interactivo */
+}
+
 /* Establece un grupo de botones con ancho completo y diseño de cuadrícula */
 .btn-group {
   width: 100%;

@@ -72,3 +72,19 @@ export const TEXTOS_REQUISITOS =
  * Este identificador se utiliza para referenciar el trámite específico dentro del sistema.
  */
 export const ID_PROCEDIMIENTO = 260216;
+
+/**
+ * @constant {string} FALTAN_CAMPOS_POR_CAPTURAR
+ * @description
+ * Mensaje de error en formato **HTML** que se muestra cuando
+ * el usuario no ha completado todos los campos obligatorios
+ * en el formulario.  
+ *
+ * Incluye un título en negritas **"¡Error de registro!"**
+ * y el texto informativo: *"Faltan campos por capturar."*.
+ *
+ * @example
+ * // Uso dentro de un componente Angular
+ * this.errorMessage = FALTAN_CAMPOS_POR_CAPTURAR;
+ */
+export const FALTAN_CAMPOS_POR_CAPTURAR = '<div><b>¡Error de registro!</b> Faltan campos por capturar.</div>';

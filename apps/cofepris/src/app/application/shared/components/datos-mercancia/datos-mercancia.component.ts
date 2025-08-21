@@ -345,19 +345,19 @@ export class DatosMercanciaComponent implements OnInit {
    * @property {Catalogo[]} paisDeProcedenciaDatos
    * Datos de países para la lista cruzada de procedencia.
    */
-  public paisDeProcedenciaDatos = CROSLISTA_DE_PAISES;
+  public paisDeProcedenciaDatos: string[] = CROSLISTA_DE_PAISES;
 
   /**
    * @property {Catalogo[]} usoEspesificoDatos
    * Datos de usos específicos para lista cruzada.
    */
-  public usoEspesificoDatos = CROSLISTA_DE_PAISES;
+  public usoEspesificoDatos: string[] = CROSLISTA_DE_PAISES;
 
   /**
    * @property {Catalogo[]} seleccionarOrigenDelPais
    * Datos de países para lista cruzada de país de origen.
    */
-  public seleccionarOrigenDelPais = CROSLISTA_DE_PAISES;
+  public seleccionarOrigenDelPais: string[] = CROSLISTA_DE_PAISES;
 
   /**
    * Indica si se debe mostrar el campo de datos de mercancía en la interfaz.

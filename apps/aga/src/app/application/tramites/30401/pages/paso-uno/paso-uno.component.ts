@@ -33,6 +33,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   public consultaState!:ConsultaioState;
 
+  /** Flag to track if data has been loaded previously */
+  private datosYaCargados: boolean = false;
 
     constructor(
     @Inject(RegistroEmpresasTransporteService)
@@ -52,10 +54,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
  * @returns {void}
  */
 ngOnInit(): void {
-      this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+      this.consultaQuery.selectConsultaioState$.pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
           this.consultaState = seccionState;
-      })).subscribe();
-    if (this.consultaState && this.consultaState.update) {
+        })
+      ).subscribe();
+    
+    if (this.consultaState && this.consultaState.update && !this.datosYaCargados) {
       this.guardarDatosFormulario();
     } else {
       this.esDatosRespuesta = true;
@@ -74,6 +80,7 @@ ngOnInit(): void {
       .subscribe((resp) => {
         if(resp){
         this.esDatosRespuesta = true;
+        this.datosYaCargados = true;
         this.registroService.actualizarEstadoFormulario(resp);
         }else {
           this.esDatosRespuesta = false;

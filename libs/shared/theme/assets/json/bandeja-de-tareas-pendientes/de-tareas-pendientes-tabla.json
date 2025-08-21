@@ -3842,8 +3842,13 @@
   {
     "folioTramite": "07440025780842380388259722",
     "departamento": "semarnat",
-    "numeroDeProcedimiento": "230401",
-    "origin": "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO"
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Atender requerimiento",
+    "fechaDeAsignacion": "2023-10-03",
+    "estadoDeTramite": "Completado",
+   "numeroDeProcedimiento": "230401",
+   "origin": "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO"
+
   },
   {
     "folioTramite": "672345678901234",
@@ -3877,6 +3882,10 @@
   },
   {
     "folioTramite": "0453067309596292181625980",
+    "tipoDeTramite": "Solicitud de Proceso Interno",
+    "nombreDeLaTarea": "Authorizar solicitud",
+    "fechaDeAsignacion": "2023-10-04",
+    "estadoDeTramite": "En Proceso",
     "departamento": "semarnat",
     "numeroDeProcedimiento": "230401",
     "origin": "FLUJO_FUNCIONARIO_AUTORIZACION"
@@ -14211,5 +14220,15 @@
     "departamento": "agace",
     "numeroDeProcedimiento": "32618",
     "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
+  },
+  {
+    "folioTramite": "0215523965732296454156773",
+    "tipoDeTramite": "Solicitud de Proceso Interno",
+    "nombreDeLaTarea": "Evaluar solicitud",
+    "fechaDeAsignacion": "2024-10-01",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "aga",
+    "numeroDeProcedimiento": "5701",
+    "origin": "FLUJO_FUNCIONARIO_EVALUAR"
   }
 ]

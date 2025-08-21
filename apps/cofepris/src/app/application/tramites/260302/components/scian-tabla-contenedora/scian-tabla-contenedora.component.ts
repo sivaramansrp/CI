@@ -1,8 +1,10 @@
+import { Component, OnDestroy } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { ID_PROCEDIMIENTO } from '../../constants/exporticon-estupefacientes.enum';
 import { ScianTablaComponent } from '../../../../shared/components/scian-tabla/scian-tabla.component';
 import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.model';
+import { Tramite260302Query } from '../../estados/tramite260302Query.query';
 import { Tramite260302Store } from '../../estados/tramite260302Store.store';
 
 /**
@@ -29,8 +31,8 @@ import { Tramite260302Store } from '../../estados/tramite260302Store.store';
   templateUrl: './scian-tabla-contenedora.component.html',
   styleUrl: './scian-tabla-contenedora.component.scss',
 })
-export class ScianTablaContenedoraComponent {
-  
+export class ScianTablaContenedoraComponent implements OnDestroy {
+
   /**
    * @property {string} idProcedimiento
    * @description
@@ -44,7 +46,26 @@ export class ScianTablaContenedoraComponent {
    * @memberof ScianTablaContenedoraComponent
    */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
-  
+
+   /**
+   * Subject utilizado como notificador para gestionar la destrucción de observables.
+   * Este Subject emite una señal cuando el componente es destruido, permitiendo que
+   * todos los observables suscritos se desuscriban automáticamente para evitar fugas de memoria.
+   * Es una práctica recomendada para el manejo adecuado de suscripciones en Angular.
+   * 
+   * @private
+   * @type {Subject<void>}
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * @property {TablaScianConfig[]} scianConfigDatos
+   * @description
+   * Almacena la configuración de la tabla SCIAN.
+   */
+  public scianConfigDatos!: TablaScianConfig[];
+
+
   /**
    * @constructor
    * @description
@@ -55,8 +76,13 @@ export class ScianTablaContenedoraComponent {
    * @param {Tramite260302Store} tramite260302Store - Store que maneja el estado del trámite 260302
    * @memberof ScianTablaContenedoraComponent
    */
-  constructor(private tramite260302Store: Tramite260302Store) {
+  constructor(private tramite260302Store: Tramite260302Store, private tramite260302Query: Tramite260302Query) {
     // Constructor necesario para inyectar el store del trámite
+    this.tramite260302Query.getScianConfigDatos$.pipe(
+      takeUntil(this.destroyNotifier$))
+      .subscribe((datos) => {
+        this.scianConfigDatos = datos;
+    });
   }
 
   /**
@@ -99,5 +125,19 @@ export class ScianTablaContenedoraComponent {
       ...state,
       scianConfigDatos: [...state.scianConfigDatos, event]
     }));
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description
+   * Método que se ejecuta cuando el componente es destruido.
+   * Se utiliza para limpiar los recursos y evitar fugas de memoria.
+   * 
+   * @public
+   * @memberof ScianTablaContenedoraComponent
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

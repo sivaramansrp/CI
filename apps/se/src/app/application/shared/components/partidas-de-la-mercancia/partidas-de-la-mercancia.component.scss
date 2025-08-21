@@ -11,3 +11,13 @@
 .text-end {
     margin-top: 150px;
 }
+.input-error {
+  border: 1px solid #dc3545 !important; 
+}
+textarea{
+    overflow: hidden;
+}
+.custom-backdrop{
+    z-index: 1045 !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+}

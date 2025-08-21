@@ -3,11 +3,24 @@
         "si": true,
         "nombreComercialForm": "Producto X",
         "registroProductoForm": "12345678",
-        "fraccionArancelariaForm": "0101.21.00",
-        "fechaInicioInput": "2025-05-01",
-        "fechaFinalInput": "2025-06-01",
+        "fraccionArancelariaForm": "0101.21",
+        "fechaInicioInput": "1/5/2024",
+        "fechaFinalInput": "1/6/2024",
         "entidadFederativa": "2",
-        "bloque": "1"
+        "bloque": "1",
+        "nombres": "Juan",
+        "primerApellido": "Pérez",
+        "segundoApellido": "Gómez",
+        "numeroDeRegistroFiscal": "123456789",
+        "razonSocial": "Empresa S.A. de C.V.",
+        "pais": "1",
+        "ciudad": "Ciudad de México",
+        "telefono": "5551234567",
+        "correoElectronico": "juan.perez@example.com",
+        "numeroLetra": "2323",
+      "calle": "12134"
+      
+       
     },
     "mercanciaForm": {
         "fraccionArancelaria": "0201.30.00",
@@ -119,5 +132,21 @@
     },
     "agregarDatosProductorFormulario": {
         "numeroRegistroFiscal": "RFC445566TTT"
-    }
+    },
+    "disponiblesDatos":[{  "fraccionArancelaria": "40021901",
+    "nombreTecnico": "Poli(butadieno-estireno), con un contenido reaccionado de butadieno superior o igual al 90% pero inferior o igual al 97% y10% a 3% respectivamente, de estireno.",
+    "nombreComercial": "Patitos de hule",
+    "numeroRegistroProductos": "254023028953",
+    "fechaVencimiento": "2023-07-05",
+    "fechaExpedicion": "2023-07-05"
+  }],
+  "productoresExportador":[{
+    "id": 1,
+    "nombreProductor": "Empresa Productora S.A.",
+    "numeroRegistroFiscal": "987654321",
+    "direccion": "Av. Principal 123, Lima, Perú",
+    "correoElectronico": "contacto@empresa.com",
+    "telefono": "+51 123456789",
+    "fax": "+51 987654321"
+  }]
 }

@@ -305,7 +305,7 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
       curp: [this.obtenerValor('curp')],
       rfc: [this.obtenerValor('rfc'), [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
       nombreDescripcion: [this.obtenerValor('nombreDescripcion'), [Validators.required]],
-      nacionalidad: ['true'],
+      nacionalidad: ['', Validators.required],
       tipoPersona: ['', Validators.required],
       nombres: [this.obtenerValor('nombres'), [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
       primerApellido: [this.obtenerValor('primerApellido'), [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
@@ -362,6 +362,7 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
           this.datoSeleccionado = seccionState?.[0] ?? ({} as Otros);
           this.crearFormulario();
           this.changeNacionalidad();
+          this.alternarOpcionNoContribuyente(true);
         })
       )
       .subscribe();
@@ -683,27 +684,35 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
    * ```
    */
   changeNacionalidad(): void {
-    if (this.agregarDatosForm?.value?.nacionalidad !== 'true') {
-      this.agregarDatosForm.enable();
-      this.alternarOpcionNoContribuyente(false);
-    } else {
-      this.agregarDatosForm.disable();
-      this.agregarDatosForm.get('nacionalidad')?.enable();
-      this.agregarDatosForm.get('tipoPersona')?.enable();
-      this.agregarDatosForm.get('nombreDescripcion')?.enable();
-      this.agregarDatosForm.get('rfc')?.enable();
-      this.agregarDatosForm.get('curp')?.enable();
-      if (
-        this.agregarDatosForm.value.tipoPersona !==
-        this.tipoPersona.NO_CONTRIBUYENTE
-      ) {
-        this.agregarDatosForm.get('curp')?.disable();
+    const FORM_CONTROLS = ['rfc', 'curp', 'pais', 'estado', 'codigoPostal', 'calle', 'numeroExterior', 'numeroInterior', 'lada', 'telefono', 'correoElectronico'];
+    FORM_CONTROLS.forEach(control => {
+      this.agregarDatosForm.get(control)?.disable();
+    });
+
+    if(this.agregarDatosForm?.value?.nacionalidad !== '' && this.agregarDatosForm?.value?.tipoPersona !== ''){
+      if (this.agregarDatosForm?.value?.nacionalidad !== 'true') {
+        this.agregarDatosForm.enable();
+        this.alternarOpcionNoContribuyente(false);
       } else {
+        this.agregarDatosForm.disable();
+        this.agregarDatosForm.get('nacionalidad')?.enable();
+        this.agregarDatosForm.get('tipoPersona')?.enable();
+        this.agregarDatosForm.get('nombreDescripcion')?.enable();
+        this.agregarDatosForm.get('rfc')?.enable();
         this.agregarDatosForm.get('curp')?.enable();
-        this.agregarDatosForm.get('rfc')?.disable();
+        if (
+          this.agregarDatosForm.value.tipoPersona !==
+          this.tipoPersona.NO_CONTRIBUYENTE
+        ) {
+          this.agregarDatosForm.get('curp')?.disable();
+        } else {
+          this.agregarDatosForm.get('curp')?.enable();
+          this.agregarDatosForm.get('rfc')?.disable();
+        }
+        this.alternarOpcionNoContribuyente(true);
       }
-      this.alternarOpcionNoContribuyente(true);
     }
+    
   }
 
   /**
@@ -761,14 +770,13 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
   alternarOpcionNoContribuyente(debeAgregar: boolean): void {
     const NO_CONTRIBUYENTE = {
       label: TipoPersona.NO_CONTRIBUYENTE,
-      value: TipoPersona.NO_CONTRIBUYENTE,
-      hint: 'No contribuyente'
+      value: TipoPersona.NO_CONTRIBUYENTE
     };
     const INDICE = this.tipoPersonaRadioOpcions.findIndex(
       opcion => opcion.value === TipoPersona.NO_CONTRIBUYENTE
     );
 
-    if (debeAgregar && INDICE === -1) {
+    if ((debeAgregar && INDICE === -1) || this.agregarDatosForm.get('nacionalidad')?.value === '') {
       this.tipoPersonaRadioOpcions.push(NO_CONTRIBUYENTE);
     } else if (!debeAgregar && INDICE !== -1) {
       this.tipoPersonaRadioOpcions.splice(INDICE, 1);
