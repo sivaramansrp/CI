@@ -25,6 +25,8 @@ import { TEXTO_DE_ALERTA } from '../../models/federatarios-y-plantas.model';
 import {
   DEFAULT_ESTADOS,
   FECHA_DE_PAGO,
+  FECHA_DE_Tabla,
+  INMEX_PLANTAS
 } from '../../constantes/federatarios-y-plantas.enum';
 
 import { FormControl } from '@angular/forms';
@@ -470,5 +472,30 @@ export class FederatariosYPlantasComponent implements OnInit {
       txtBtnCancelar: '',
     };
   }
+
+/**
+ * Searches and assigns available IMMEX plants data.
+ *
+ * This method sets the `plantasDisponiblesDatos` property with the value of `FECHA_DE_Tabla`.
+ * Typically used to update the list of available plants for IMMEX operations.
+ *
+ * @remarks
+ * Ensure that `FECHA_DE_Tabla` is defined and contains the expected data structure before calling this method.
+ */
+buscarPlantasImmex(){
+  this.plantasDisponiblesDatos = [FECHA_DE_Tabla];
+}
+
+/**
+ * Adds IMMEX plant data to the `plantasImmexDatos` array.
+ * This method assigns the value of `INMEX_PLANTAS` to the `plantasImmexDatos` property.
+ *
+ * @remarks
+ * Ensure that `INMEX_PLANTAS` is properly defined and contains the expected plant data.
+ */
+agregarPlantas(){
+  this.plantasImmexDatos=[INMEX_PLANTAS]
+
+}
 
 }

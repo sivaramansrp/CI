@@ -184,8 +184,7 @@
               <div class="col-md-12">
                 <div class="pull-right ms-2">
                   <button class="btn btn-primary"
-                  [disabled]="formularioDeshabilitado">Buscar plantas IMMEX</button>
-                </div>
+                  [disabled]="formularioDeshabilitado" (click)="buscarPlantasImmex()">Buscar plantas IMMEX</button>
               </div>
             </div>
           </div>
@@ -216,12 +215,12 @@
                     <ng-alert [CONTENIDO]="textodAlerta"></ng-alert>
                   </div>
                 </div>
-                <div class="row">
-                  <div class="col-md-12">
-                    <div class="pull-right ms-2">
-                      <button class="btn btn-primary"
-                      [disabled]="formularioDeshabilitado">Agregar plantas</button>
-                    </div>
+  
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="pull-right ms-2">
+                    <button class="btn btn-primary"
+                    [disabled]="formularioDeshabilitado" (click)="agregarPlantas()">Agregar plantas</button>
                   </div>
                 </div>
               </div>
