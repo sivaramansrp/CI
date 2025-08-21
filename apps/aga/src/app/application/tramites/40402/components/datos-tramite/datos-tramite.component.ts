@@ -1,6 +1,8 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { DatosTramiteService } from '../../services/datos-tramite.service';
+
 import { Tramite40402Store, Tramitenacionales40402State } from '../../estados/tramite40402.store';
 import { map, takeUntil } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src';
@@ -35,16 +37,19 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
    * Valida el formulario y retorna si es válido
    */
   public validarFormularios(): boolean {
-    if (!this.formulario) { return false; }
+    if (!this.formulario) { 
+      return false; 
+    }
     Object.values(this.formulario.controls).forEach(control => control.markAsTouched());
-    const REQUIRED_FIELDS = ['tipoDeCaatAerea', 'ideCodTransportacionAerea', 'codIataIcao'];
-    for (const FIELD of REQUIRED_FIELDS) {
+    const CAMPOS_REQUIRED = ['tipoDeCaatAerea', 'ideCodTransportacionAerea', 'codIataIcao'];
+    for (const FIELD of CAMPOS_REQUIRED) {
       const CONTROL = this.formulario.get(FIELD);
       if (!CONTROL || CONTROL.invalid || CONTROL.value === null || CONTROL.value === undefined || CONTROL.value === '') {
         return false;
       }
     }
-    return this.formulario.valid;
+    const VALID = this.formulario.valid;
+    return VALID;
   }
   /**
    * Verifica si al menos un campo del formulario está lleno
@@ -69,9 +74,28 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Formulario reactivo para capturar datos del trámite
+   * Constructor del componente
+   * 
+   * @param fb - Constructor de formularios reactivos
+   * @param tramite40402Service - Servicio para operaciones de trámite
+   * @param consultaioQuery - Consulta de estado de trámite
+   * @param tramite40402Query - Consulta de estado específico
+   * @param store - Almacenamiento de estado del trámite
+   * @param cdr - ChangeDetectorRef para detectar cambios
    */
-  formulario!: FormGroup;
+  constructor(
+    private datosTramiteService: DatosTramiteService,
+    private fb: FormBuilder,
+    private tramite40402Service: Tramite40402Service,
+    private consultaioQuery: ConsultaioQuery,
+    private tramite40402Query: Tramite40402Query,
+    private store: Tramite40402Store,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+  get formulario(): FormGroup {
+    return this.datosTramiteService.formulario;
+  }
   
   /**
    * Lista de códigos de transportación
@@ -119,25 +143,6 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
   soloLectura: boolean = false;
 
   /**
-   * Constructor del componente
-   * 
-   * @param fb - Constructor de formularios reactivos
-   * @param tramite40402Service - Servicio para operaciones de trámite
-   * @param consultaioQuery - Consulta de estado de trámite
-   * @param tramite40402Query - Consulta de estado específico
-   * @param store - Almacenamiento de estado del trámite
-   * @param cdr - ChangeDetectorRef para detectar cambios
-   */
-  constructor(
-    private fb: FormBuilder,
-    private tramite40402Service: Tramite40402Service,
-    private consultaioQuery: ConsultaioQuery,
-    private tramite40402Query: Tramite40402Query,
-    private store: Tramite40402Store,
-    private cdr: ChangeDetectorRef
-  ) {}
-
-  /**
    * Inicialización del componente
    */
   ngOnInit(): void {
@@ -171,23 +176,7 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
    * Inicializa el formulario reactivo
    */
   private inicializarFormulario(): void {
-    const PREV_VALUES = this.formulario ? this.formulario.getRawValue() : {};
-    const PREV_TOUCHED = this.formulario ? Object.keys(this.formulario.controls).reduce((acc, key) => {
-      acc[key] = this.formulario.controls[key].touched;
-      return acc;
-    }, {} as Record<string, boolean>) : {};
-
-    this.formulario = this.fb.group({
-      tipoDeCaatAerea: [PREV_VALUES.tipoDeCaatAerea ?? this.transportacionMaritimaState?.tipoDeCaatAerea, [Validators.required]],
-      ideCodTransportacionAerea: [PREV_VALUES.ideCodTransportacionAerea ?? this.transportacionMaritimaState?.ideCodTransportacionAerea, [Validators.required]],
-      codIataIcao: [PREV_VALUES.codIataIcao ?? this.transportacionMaritimaState?.codIataIcao, [Validators.required, Validators.maxLength(3)]],
-    });
-    Object.keys(PREV_TOUCHED).forEach(key => {
-      if (PREV_TOUCHED[key]) {
-        this.formulario.controls[key].markAsTouched();
-      }
-    });
-    this.inicializarEstadoFormulario();
+  this.inicializarEstadoFormulario();
   }
 
   /**
