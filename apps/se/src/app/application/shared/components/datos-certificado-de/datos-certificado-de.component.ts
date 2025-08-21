@@ -39,6 +39,13 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
    * @input
    */
   @Input() precisa!: boolean;
+  /**
+   * Bandera que indica si se requiere precisión en los datos.
+   * @type {boolean}
+   * @input
+   */
+  @Input() idoPeam: boolean =true;
+
 
    /**
    * @Input
@@ -190,7 +197,7 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
     this.formDatosCertificado = this.fb.group({
       observacionesDates: [''],
       presenta: [''],
-      idiomaDates: ['', [Validators.required, Validators.min(0)]],
+      idiomaDates: ['', this.idoPeam ? [Validators.required, Validators.min(0)] : []],
       EntidadFederativaDates: ['', [Validators.required, Validators.min(0)]],
       representacionFederalDates: ['', [Validators.required, Validators.min(0)]],
       precisaDates: ['', this.precisa ? [Validators.required] : []]
@@ -282,5 +289,11 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
+validatorFunction():boolean{
+  if(this.formDatosCertificado.valid){
+    return true;
+  }
+    this.formDatosCertificado.markAllAsTouched();
+    return false;
+}
 }

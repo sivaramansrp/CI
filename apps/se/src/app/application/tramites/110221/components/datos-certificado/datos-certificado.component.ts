@@ -80,7 +80,6 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     this.query.formDatosCertificado$.pipe(
       takeUntil(this.destroyNotifier$)
     ).subscribe(estado => {
-      console.log('Estado del formulario de certificado:', estado);
       this.formDatosCertificadoValues = estado;
     });
   }
@@ -181,7 +180,6 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    */
   obtenerDatosFormulario(e: { formGroupName: string, campo: string, valor: unknown, storeStateName: string }): void {
     const { campo: CAMPO, valor: VALOR } = e;
-    console.log('Datos del formulario:', e);
     this.store.setFormDatosCertificado({[CAMPO]: VALOR });
   }
 
