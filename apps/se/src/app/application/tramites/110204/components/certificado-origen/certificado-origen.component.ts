@@ -1,7 +1,8 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Catalogo, InputFecha, InputFechaComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { Observable, Subject, map, takeUntil } from 'rxjs';
+import { Observable, Subject, map, of, takeUntil } from 'rxjs';
+import { CargaPorArchivoComponent } from '../carga-por-archivo/carga-por-archivo.component';
 import { CatalogoSelectComponent} from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CertificadosOrigenGridService } from '../../services/certificadosOrigenGrid.service';
@@ -62,7 +63,8 @@ export const FECHA_FINAL = {
     InputFechaComponent,
     CatalogoSelectComponent,
     MercanciasModalComponent,
-    CertificadoDeOrigenComponent
+    CertificadoDeOrigenComponent,
+    CargaPorArchivoComponent
 ],
   providers: [ToastrService],
   templateUrl: './certificado-origen.component.html',
@@ -165,6 +167,8 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    */
     modalInstance!: Modal;
 
+    buscarModel!: Modal
+
     /**
      * @descripcion
      * Indica si el campo de mercancías está activo.
@@ -187,6 +191,8 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * Referencia al modal de modificación en la plantilla HTML.
    */
       @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
+
+      @ViewChild('buscarMercanciaModal', { static: false }) buscarMercanciaModal!: ElementRef;
 
   /**
    * Constructor del componente.
@@ -218,7 +224,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * Observable que emite los datos de la mercancia en formato tabla.
    * @type {Observable<Mercancia[]>}
    */
-  datosTabla$: Observable<Mercancia[]> | undefined;
+  datosTabla$: Observable<Mercancia[]> = of([]);
 
   /**
    * @property {number} idProcedimiento
@@ -286,7 +292,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
     this.datos1 = (this.tramiteQuery.selectBuscarMercancia$ as Observable<Mercancias[]>).pipe(
       map((mercancias: Mercancias[]) => mercancias as unknown as Mercancia[])
     );
-    this.datosTabla$ = this.tramiteQuery.selectmercanciaTabla$ as Observable<Mercancia[]>;
+    
   }
 
   /**
@@ -306,6 +312,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
       )
       .subscribe();
 
+    this.datosTabla$ = this.tramiteQuery.selectmercanciaTabla$;
   }
 
   /**
@@ -384,11 +391,16 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
         );
   }
 
+  abrirModalCargaPorArchivo(): void {
+    if(this.buscarModel) {
+      this.buscarModel.show();
+    }
+  }
     /**
    * Método para abrir el modal de modificación.
    */
     abrirModificarModal(datos1: Mercancia): void {
-      this.datosSeleccionados = datos1 as unknown as Mercancias;    
+      this.datosSeleccionados = datos1 as unknown as Mercancias;
       this.store.setFormMercancia({ ...datos1 });
         
       if (this.modalInstance) {
@@ -396,6 +408,10 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
       }      
     }
     
+
+    guardarClicado(event: Mercancia[]): void {
+    this.datosTabla$ = of(event);
+  }
 
     /**
      * Cierra el modal de modificación si está abierto.
@@ -440,6 +456,9 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
       // Inicializa el modal de modificación
       if (this.modifyModal) {
         this.modalInstance = new Modal(this.modifyModal.nativeElement);
+      }
+      if(this.buscarMercanciaModal) {
+        this.buscarModel = new Modal(this.buscarMercanciaModal.nativeElement);
       }
     }  
     

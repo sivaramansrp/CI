@@ -181,6 +181,8 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
    */
   @Output() setbuscarMercanciaEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
+  @Output() setModelCargaPorArchivo: EventEmitter<boolean> = new EventEmitter<boolean>();
+
   /**
    * Propiedad de salida que emite la fila seleccionada de mercancia.
    * @type {EventEmitter<Mercancia>}
@@ -512,6 +514,10 @@ return false;
    */
   abrirModal(tableData: Mercancia): void {
     this.filaClics.emit(tableData);
+  }
+
+  abrirModalCargaPorArchivo(): void {
+    this.setModelCargaPorArchivo.emit(true);
   }
 
   /**
