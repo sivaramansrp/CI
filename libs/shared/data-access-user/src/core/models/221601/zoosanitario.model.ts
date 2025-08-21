@@ -91,17 +91,17 @@ export const CONFIGURATION_TABLA_MERCANCIAS = [
  * con un encabezado, una clave de acceso al campo del destinatario, y un orden
  * de visualización.
  */
-export const CONFIGURATION_TABLA_DESTINATARIO = [
+export const CONFIGURATION_TABLA_DESTINATARIO: ConfiguracionColumna<Destinatario>[] = [
     { encabezado: 'Nombre/denominación o razón social', clave: (item: Destinatario): string => item.nombreDenominacionORazonSocial, orden: 1 },
-    { encabezado: 'Teléfono', clave: (item: Destinatario): string => item.telefono, orden: 2 },
+    { encabezado: 'Teléfono', clave: (item: Destinatario): string => item.telefono || '', orden: 2 },
     { encabezado: 'Correo electrónico', clave: (item: Destinatario): string => item.correoElectronico, orden: 3 },
     { encabezado: 'Calle', clave: (item: Destinatario): string => item.calle, orden: 4 },
     { encabezado: 'Número exterior', clave: (item: Destinatario): string => item.numeroExterior, orden: 5 },
-    { encabezado: 'Número interior', clave: (item: Destinatario): string => item.numeroInterior, orden: 6 },
-    { encabezado: 'País', clave: (item: Destinatario): string | undefined => item.pais, orden: 7 },
-    { encabezado: 'Colonia', clave: (item: Destinatario): string | undefined => item.colonia, orden: 8 },
-    { encabezado: 'Municipio o Alcaldía', clave: (item: Destinatario): string | undefined => item.municipioOAlcaldia, orden: 9 },
-    { encabezado: 'Entidad Federativa', clave: (item: Destinatario): string | undefined => item.entidadFederativa, orden: 10 },
+    { encabezado: 'Número interior', clave: (item: Destinatario): string => item.numeroInterior || '', orden: 6 },
+    { encabezado: 'País', clave: (item: Destinatario): string => item.pais || '', orden: 7 },
+    { encabezado: 'Colonia', clave: (item: Destinatario): string => item.colonia || '', orden: 8 },
+    { encabezado: 'Delegación', clave: (item: Destinatario): string => item.municipioOAlcaldia || '', orden: 9 },
+    { encabezado: 'Entidad Federativa', clave: (item: Destinatario): string => item.entidadFederativa || '', orden: 10 },
     { encabezado: 'Código Postal', clave: (item: Destinatario): string => item.codigoPostal, orden: 11 }
   ];
   /**
@@ -318,4 +318,29 @@ export interface PreOperativo {
   value: string;
 }
 
-  
+/**
+ * Interfaz que representa los detalles de una mercancía.
+ */
+export interface MercanciaDellate {
+  noPartida: string;
+  fechaDesde: string;
+  FechadeSacrificio: string;
+  FechadeCaducidad: string;
+  FechadefinElaboracion: string;
+  FechafindeSacrificio: string;
+  FechafindeCaducidad: string;
+}
+
+/**
+ * Configuración de las columnas para la tabla de mercancías detalladas.
+ */
+export const CONFIGURATION_TABLAS_MERCANCIASDELLATE: ConfiguracionColumna<MercanciaDellate>[] = [
+  { encabezado: 'Número de lote', clave: (item: MercanciaDellate) => item.noPartida, orden: 1 },
+  { encabezado: 'Fecha de elaboración o empaque o proceso', clave: (item: MercanciaDellate) => item.fechaDesde, orden: 2 },
+  { encabezado: 'Fecha de producción o sacrificio', clave: (item: MercanciaDellate) => item.FechadeSacrificio, orden: 3 },
+  { encabezado: 'Fecha de caducidad del producto o consumo preferente', clave: (item: MercanciaDellate) => item.FechadeCaducidad, orden: 4 },
+  { encabezado: 'Fecha fin de elaboración o empaque o proceso', clave: (item: MercanciaDellate) => item.FechadefinElaboracion, orden: 5 },
+  { encabezado: 'Fecha fin de producción o sacrificio', clave: (item: MercanciaDellate) => item.FechafindeSacrificio, orden: 6 },
+  { encabezado: 'Fecha fin de caducidad del producto o consumo preferente', clave: (item: MercanciaDellate) => item.FechafindeCaducidad, orden: 7 },
+];
+

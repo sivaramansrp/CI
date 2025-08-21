@@ -54,11 +54,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
    */
   consultaDatos!: ConsultaioState;
-  /**
-   * @property {FormGroup} solicitanteForm
-   * @description Formulario reactivo que contiene los datos del solicitante.
-   */
-  solicitanteForm!: FormGroup;
 
   /**
    * Estado actual de la solicitud.
@@ -73,16 +68,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false;
 
   ngOnInit(): void {
-    this.solicitanteForm = this.fb.group({
-      adace: [{ value: this.solicitudState?.adace || 'ADACE-01', disabled: this.esFormularioSoloLectura }]
-    });
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.consultaDatos = seccionState;
           this.esFormularioSoloLectura = this.consultaDatos.readonly;
-          this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
@@ -91,22 +82,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-  * @method inicializarEstadoFormulario
-  * @description Inicializa el estado del formulario según el modo de solo lectura.
-  * 
-  * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles del formulario.
-  * En caso contrario, habilita los controles del formulario
-  * 
-  * @returns {void}
-  */
-  inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.solicitanteForm.get('adace')?.disable();
-    } else {
-      this.solicitanteForm.get('adace')?.enable();
-    }
-  }
   /**
  * @method fetchGetDatosConsulta
  * @description Método para obtener los datos de consulta desde el servicio `DatosTramiteService` y actualizar el estado del store `tramite32508Store`.

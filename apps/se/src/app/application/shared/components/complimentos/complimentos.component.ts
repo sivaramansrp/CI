@@ -790,7 +790,6 @@ this.formaComplimentos.disable();
         const INDICEALT = this.camposFormularioTipoPersona.findIndex(
           (ele) => ele.campo === PAIS
         );
-        this.camposFormularioDefault[INDICE].opciones = datos;
         this.camposFormularioTipoPersona[INDICEALT].opciones = datos;
       });
   }
@@ -839,7 +838,7 @@ this.formaComplimentos.disable();
     const VALUE = CONTROL.get('formaDatos')?.value;
     if (VALUE) {
       this.accionistasAgregados.emit(VALUE);
-      this.formaComplimentos.reset();
+      CONTROL.get('formaDatos')?.reset();
     }
   }
 
@@ -847,6 +846,7 @@ this.formaComplimentos.disable();
    * @description Elimina los accionistas seleccionados y emite el evento correspondiente.
    * @returns {void}
    */
+  
   eliminarAccionistas(): void {
       this.eliminarUnoConfirmationNotificacion.cerrar = false;
     if (this.empresaAccionistasSeleccionados.length) {

@@ -832,6 +832,22 @@ export const CERTIFICATE_OF_ORIGIN_NUMBER = /^[A-Za-z0-9]{8,20}$/;
  */
 export const IMPORTE = /^\d{1,16}$/;
 
+
+/**
+ * Expresión regular para validar números con hasta 6 dígitos enteros y opcionalmente hasta 6 decimales.
+ *
+ * Ejemplos válidos:
+ * - "123456"
+ * - "123.456789"
+ * - "1.1"
+ *
+ * Ejemplos no válidos:
+ * - "1234567" (más de 6 dígitos enteros)
+ * - "123.1234567" (más de 6 decimales)
+ * - "abc" (no es un número)
+ */
+export const MAX_DIGITS_VALIDATOR = /^(\d{1,6})(\.\d{1,6})?$/;
+
 /**
  * Expresión regular para validar direcciones de correo electrónico.
  * Permite letras minúsculas, números y los caracteres . _ % + - antes del @,
