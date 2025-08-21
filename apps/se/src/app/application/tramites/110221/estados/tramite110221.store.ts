@@ -648,5 +648,28 @@ export class Tramite110221Store extends Store<Tramite110221State> {
       ...valores,
     }));
   } 
+  /**
+   * @descripcion
+   * Actualiza los datos de la tabla de mercancías seleccionadas.
+   * @param mercanciaSeleccionadasTablaData - Array de objetos `SeleccionadasTabla` que representa las mercancías seleccionadas.
+   */
+  setMercanciaSeleccionadasTablaData(mercanciaSeleccionadasTablaData: SeleccionadasTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaSeleccionadasTablaData,
+    }));
+  }
+
+  /**
+   * @descripcion
+   * Actualiza los datos de la tabla de mercancías disponibles.
+   * @param mercanciaDisponsiblesTablaDatos - Array de objetos `ColumnasTabla` que representa las mercancías disponibles.
+   */
+  setMercanciaDisponsiblesTablaDatos(mercanciaDisponsiblesTablaDatos: ColumnasTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaDisponsiblesTablaDatos,
+    }));
+  }
   
 }

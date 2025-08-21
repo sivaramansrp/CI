@@ -307,14 +307,7 @@
         <div class="row mt-5">
           <label>Mercancías seleccionadas</label>
         </div>
-        <div class="table-container mt-5" *ngIf="!esMercanciaEnEdicion">
-          <app-tabla-dinamica
-            [tipoSeleccionTabla]="tablaSeleccion.RADIO"
-            [configuracionTabla]="headersData"
-            [disableSeleccionTablaRadio]="soloLectura"
-          ></app-tabla-dinamica>
-        </div>
-        <div class="table-container mt-5" *ngIf="esMercanciaEnEdicion">
+        <div class="table-container mt-5">
             <app-tabla-dinamica
             [tipoSeleccionTabla]="tablaSeleccion.RADIO"
             [configuracionTabla]="headersData"
@@ -323,14 +316,13 @@
            (filaSeleccionada)="onFilaSeleccionadaradio($event)"
           ></app-tabla-dinamica>
         </div>
-        <nav aria-label="Page navigation example" *ngIf="esMercanciaEnEdicion">
+        <nav aria-label="Page navigation example" >
           <ul class="pagination d-flex justify-content-center mb-3">
             <li class="page-item"><a class="page-link">1</a></li>
           </ul>
         </nav>
         <div
           class="col-md-12 mt-5 d-flex justify-content-end"
-          *ngIf="esMercanciaEnEdicion"
         >
           <button
             type="button"

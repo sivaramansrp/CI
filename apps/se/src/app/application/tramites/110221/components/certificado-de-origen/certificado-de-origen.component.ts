@@ -123,11 +123,6 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy,AfterView
   hayMercanciasDisponibles: boolean = false;
 
   /**
-   * Indica si se está editando una mercancía.
-   */
-  esMercanciaEnEdicion = false;
-
-  /**
    * Datos de la tabla de mercancías disponibles.
    */
   public getMercanciaDisponsibleTableData = mercanciaDisponsibleTable;
@@ -324,7 +319,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy,AfterView
           this.solicitudState = seccionState;
           // Set table data from solicitudState if available
           if (this.solicitudState) {
-            this.mercanciaSeleccionadasTablaData = this.solicitudState.mercanciaSeleccionadasTablaData ?? [];
+            this.mercanciaSeleccionadasTablaData = this.solicitudState.mercanciaSeleccionadasTablaData || [];
             this.mercanciaDisponsiblesTablaDatos = this.solicitudState.mercanciaDisponsiblesTablaDatos.length !== 0 ? this.solicitudState.mercanciaDisponsiblesTablaDatos: this.getMercanciaDisponsibleTableData;
           }
         })
@@ -340,21 +335,11 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy,AfterView
           this.consultaDatos = seccionState;
           this.soloLectura = this.consultaDatos.readonly;
           this.inicializarEstadoFormulario();
-          // Set table data again after readonly state changesmercanciaDisponsiblesTablaDatos
-          if (this.solicitudState) {
-            this.mercanciaSeleccionadasTablaData = this.solicitudState.mercanciaSeleccionadasTablaData ?? [];
-            this.mercanciaDisponsiblesTablaDatos = this.solicitudState.mercanciaDisponsiblesTablaDatos.length !== 0 ? this.solicitudState.mercanciaDisponsiblesTablaDatos : this.getMercanciaDisponsibleTableData;
-          }
+          this.mercanciaSeleccionadasTablaData = this.solicitudState.mercanciaSeleccionadasTablaData || [];
+          this.mercanciaDisponsiblesTablaDatos = this.solicitudState.mercanciaDisponsiblesTablaDatos.length !== 0 ? this.solicitudState.mercanciaDisponsiblesTablaDatos : this.getMercanciaDisponsibleTableData;
         })
       )
       .subscribe();
-
-    // Set table data if solicitudState is already available
-    if (this.solicitudState) {
-      this.mercanciaSeleccionadasTablaData = this.solicitudState.mercanciaSeleccionadasTablaData ?? [];
-      this.mercanciaDisponsiblesTablaDatos = this.solicitudState.mercanciaDisponsiblesTablaDatos.length !== 0 ? this.solicitudState.mercanciaDisponsiblesTablaDatos : this.getMercanciaDisponsibleTableData;
-    }
-
     this.mercanciatable();
     this.getTratado();
     this.getPais();
@@ -501,7 +486,6 @@ this.mercanciaForm.get('validacionMercanciaForm')?.patchValue(event);
     this.getTipoFactura();
 
     if (this.mercanciaForm.valid) {
-      this.esMercanciaEnEdicion = true;
       this.esFormulario = false;
       const ROW = {
         id:Math.floor(Math.random() * 1000),
@@ -518,6 +502,7 @@ this.mercanciaForm.get('validacionMercanciaForm')?.patchValue(event);
     ...this.mercanciaSeleccionadasTablaData,
     ROW,
   ];
+  this.store.setMercanciaSeleccionadasTablaData(this.mercanciaSeleccionadasTablaData);
 this.mercanciaForm.get('validacionMercanciaForm')?.reset(); 
    this.modalInstance.hide();
     }
@@ -532,7 +517,6 @@ this.selectedRow = event;
    */
   modificar(): void {
     this.esFormulario = true;
-    this.esMercanciaEnEdicion = false;
     this.getTratado();
     this.getPais();
     this.getUMC();
@@ -812,7 +796,6 @@ cerrarEdicionMercancia():void{
       this.registroForm?.disable();
       this.mercanciaForm?.disable();
       this.hayMercanciasDisponibles = true;
-      this.esMercanciaEnEdicion = true;
     } else {
       this.registroForm?.enable();
       this.mercanciaForm?.enable();
@@ -822,6 +805,7 @@ cerrarEdicionMercancia():void{
     eliminarErrorMessage(event: boolean):void {
       if(event){
     this.mercanciaSeleccionadasTablaData = this.mercanciaSeleccionadasTablaData.filter((item) => item.id !== this.selectedRow.id);
+    this.store.setMercanciaSeleccionadasTablaData(this.mercanciaSeleccionadasTablaData);
       }
     this.mostrarMensajeError =false;
     }
