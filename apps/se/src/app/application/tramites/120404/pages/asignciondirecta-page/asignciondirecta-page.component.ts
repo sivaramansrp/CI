@@ -11,21 +11,6 @@ import { ASIGNACION } from '../../constants/asignacion.enum';
 import { DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 
-
-
-
-
-
-
-/**
- * Componente para la gestión de la página de asignación directa.
- * @selector app-asignciondirecta-page
- * @templateUrl ./asignciondirecta-page.component.html
- * @styleUrl ./asignciondirecta-page.component.scss
- */
-
-
-
 interface AccionBoton {
   /**
    * The action to be performed.
@@ -36,6 +21,7 @@ interface AccionBoton {
    */
   valor: number;
 }
+
 @Component({
   selector: 'app-asignciondirecta-page',
   templateUrl: './asignciondirecta-page.component.html',
@@ -47,7 +33,6 @@ export class AsignciondirectaPageComponent {
    */
   pasos: ListaPasosWizard[] = ASIGNACION;
   
-
   /**
    * Índice del paso actual.
    */
@@ -66,9 +51,27 @@ export class AsignciondirectaPageComponent {
   /**
    * Referencia al componente Wizard.
    */
-@ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+  /**
+   * Property to show/hide the search error message
+   */
+  public showBuscarError = false;
+
+  /**
+   * Method to handle the search attempt event from child components.
+   * It sets the `showBuscarError` property based on the submitted and invalid state of the form.
+   *
+   * @param {Object} event - The event object containing `submitted` and `invalid` properties.
+   */
+  onBuscarIntento(event: {submitted: boolean, invalid: boolean}): void {
+    this.showBuscarError = event.submitted && event.invalid;
+  }
 
   public getValorIndice(e: AccionBoton): void {
+    // Clear errors when navigating
+    this.showBuscarError = false;
+    
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

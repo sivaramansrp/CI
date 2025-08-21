@@ -5,9 +5,9 @@
  * @module AsignciontabComponent
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite120404State, Tramite120404Store } from '../../estados/store/tramite120404.store';
 import { Catalogo } from '@ng-mf/data-access-user';
@@ -36,6 +36,17 @@ import { Tramite120404Query } from '../../estados/queries/tramite120404.query';
   styleUrls: ['./asigncion-tab.component.scss'],
 })
 export class AsignciontabComponent implements OnInit, OnDestroy {
+
+    /**
+   * Event emitter for search attempt notifications
+   */
+  @Output() buscarIntento = new EventEmitter<{submitted: boolean, invalid: boolean}>();
+
+  /**
+   * Flag to track if form has been submitted
+   */
+  submitted = false;
+
   /**
    * Sujeto para manejar la destrucción del componente.
    */
@@ -117,14 +128,45 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Custom validator to check if the value is a valid number
+   * @param control - The form control to validate
+   * @returns ValidationErrors or null
+   */
+  private static numeroValidoValidator(control: AbstractControl): ValidationErrors | null {
+    if (!control.value) {
+      return null; // Don't validate empty values, let required validator handle it
+    }
+    
+    const value = control.value.toString().trim();
+    const isValidNumber = /^\d+$/.test(value); // Only allows digits
+    
+    if (!isValidNumber) {
+      return { 
+        numeroInvalido: { 
+          valor: value 
+        } 
+      };
+    }
+    
+    return null;
+  }
+
+  /**
    * Inicializa el formulario de asignación.
    */
   initForm(): void {
-     this.obtenerEstadoSolicitud();
-      this.asignacionForm = this.fb.group({
+    this.obtenerEstadoSolicitud();
+    this.asignacionForm = this.fb.group({
       asignacionRadio: [this.solicitudState?.asignacionRadio || ''],
       asignacionsolitud: [this.solicitudState?.asignacionsolitud || '', Validators.required],
-      numTramite: [this.solicitudState?.numTramite || '', [Validators.required, Validators.maxLength(30)]],
+      numTramite: [
+        this.solicitudState?.numTramite || '', 
+        [
+          Validators.required, 
+          Validators.maxLength(30),
+          AsignciontabComponent.numeroValidoValidator
+        ]
+      ],
     });
   }
   
@@ -168,6 +210,27 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Gets the error message for numTramite field
+   * @returns string with the appropriate error message
+   */
+  getNumTramiteErrorMessage(): string {
+    const control = this.asignacionForm.get('numTramite');
+    if (control?.errors && control.touched) {
+      if (control.errors['required']) {
+        return 'Este campo es obligatorio';
+      }
+      if (control.errors['numeroInvalido']) {
+        const valor = control.errors['numeroInvalido'].valor;
+        return `El valor (${valor}) debe ser un número válido`;
+      }
+      if (control.errors['maxlength']) {
+        return 'El número no puede exceder 30 caracteres';
+      }
+    }
+    return '';
+  }
+
+  /**
    * Carga los datos del combo de unidad de medida.
    */
   loadComboUnidadMedida(): void {
@@ -205,12 +268,22 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   buscar(): void {
- if (this.asignacionForm.valid) {
-    this.buscarDatos = true;
-  } else {
-    this.asignacionForm.markAllAsTouched();
-    this.buscarDatos = false;
-  }
+    this.submitted = true;
+    const FORM = this.asignacionForm;
+    
+    // Emit the search attempt event
+    this.buscarIntento.emit({
+      submitted: this.submitted,
+      invalid: FORM.invalid
+    });
+
+    if (FORM.valid) {
+      this.buscarDatos = true;
+    } else {
+      this.asignacionForm.markAllAsTouched();
+      this.buscarDatos = false;
+      return;
+    }
   }
 
   /**
