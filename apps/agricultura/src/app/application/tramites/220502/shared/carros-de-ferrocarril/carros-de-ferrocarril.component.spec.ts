@@ -55,4 +55,51 @@ describe('CarrosDeFerrocarrilComponent', () => {
     fixture.detectChanges();
     expect(component.tablaFilaDatos).toEqual(TESTFILADATOS);
   });
+
+  it('should update tableData.tableHeader when tablaHeadData changes', () => {
+    const changes = {
+      tablaHeadData: {
+        currentValue: ['Columna 1', 'Columna 2'],
+        previousValue: [],
+        firstChange: false,
+        isFirstChange: () => false
+      }
+    };
+    component.ngOnChanges(changes);
+    expect(component.tableData.tableHeader).toEqual(['Columna 1', 'Columna 2']);
+  });
+
+  it('should update tableData.tableBody when tablaFilaDatos changes', () => {
+    const filaDatos: CarrosDeFerrocarril[] = [
+      { idInspeccionFisica: 1, numeroAutorizacion: 'A', numeroPartidaMercancia: 'X', numeroTotalCarros: 2 }
+    ];
+    const changes = {
+      tablaFilaDatos: {
+        currentValue: filaDatos,
+        previousValue: [],
+        firstChange: false,
+        isFirstChange: () => false
+      }
+    };
+    component.ngOnChanges(changes);
+    expect(component.tableData.tableBody).toEqual(filaDatos);
+  });
+
+  it('should not update tableData if changes do not contain tablaHeadData or tablaFilaDatos', () => {
+    component.tableData.tableHeader = [];
+    component.tableData.tableBody = [];
+    const changes = {};
+    component.ngOnChanges(changes);
+    expect(component.tableData.tableHeader).toEqual([]);
+    expect(component.tableData.tableBody).toEqual([]);
+  });
+
+  it('should accept formularioDeshabilitado as input', () => {
+    component.formularioDeshabilitado = true;
+    fixture.detectChanges();
+    expect(component.formularioDeshabilitado).toBe(true);
+    component.formularioDeshabilitado = false;
+    fixture.detectChanges();
+    expect(component.formularioDeshabilitado).toBe(false);
+  });
 });

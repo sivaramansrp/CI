@@ -132,22 +132,14 @@ export class RegistroEmpresaComponent implements OnDestroy, OnInit {
    * Actualiza el índice del paso y navega al siguiente o anterior paso según la acción.
    * @param e Objeto que contiene la acción y el valor del paso.
    */
+  
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
-      if (e.accion === 'cont' && this.indice === 1 && e.valor === 2) {
-        this.showAlert = true; // Mostrar la alerta
-        return; // Detener más ejecución
-        
-      }
-  
-      this.indice = e.valor;
-  
+      this.indice = e.valor; // Actualiza el índice activo.
       if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-        this.showAlert = true; // Mostrar la alerta solo en "Continuar"
-      } else if (e.accion === 'atras') {
-        this.wizardComponent.atras();
-        this.showAlert = false; // Ocultar la alerta sobre "Atras"
+        this.wizardComponent.siguiente(); // Navega al paso siguiente.
+      } else {
+        this.wizardComponent.atras(); // Regresa al paso anterior.
       }
     }
   }

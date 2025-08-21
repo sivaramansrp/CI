@@ -31,7 +31,7 @@ export interface Tramite130112State {
   /**
    * Valor en USD de la partida ingresada en el formulario.
    */
-  valorPartidaUSD: number;
+  valorPartidaUSD: string;
 
   /**
    * Unidad de medida seleccionada en el formulario.
@@ -86,7 +86,7 @@ export interface Tramite130112State {
   /**
    * Valor en USD de las partidas de la mercancía ingresado en el formulario.
    */
-  valorPartidaUSDPartidasDeLaMercancia: number;
+  valorPartidaUSDPartidasDeLaMercancia: string;
 
   /**
    * Descripción de las partidas de la mercancía ingresada en el formulario.
@@ -149,7 +149,7 @@ export function createInitialState(): Tramite130112State {
     producto: '',
     descripcion: '',
     cantidad: '',
-    valorPartidaUSD: 0,
+    valorPartidaUSD: '',
     unidadMedida: '',
     defaultProducto: 'Nuevo',
     regimen: '',
@@ -157,7 +157,7 @@ export function createInitialState(): Tramite130112State {
     cantidadPartidasDeLaMercancia: '',
     fraccionTigiePartidasDeLaMercancia: '',
     fraccionDescripcionPartidasDeLaMercancia: '',
-    valorPartidaUSDPartidasDeLaMercancia: 0,
+    valorPartidaUSDPartidasDeLaMercancia: '',
     descripcionPartidasDeLaMercancia: '',
     valorFacturaUSD: '',
     bloque: '',

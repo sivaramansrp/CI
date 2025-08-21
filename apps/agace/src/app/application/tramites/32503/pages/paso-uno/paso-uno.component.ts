@@ -60,7 +60,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy, AfterViewInit {
    * @property {ConsultaioState} consultaDatos
    * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
    */
-  consultaDatos!: ConsultaioState;
+  public consultaDatos!: ConsultaioState;
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
   /**

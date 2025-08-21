@@ -572,7 +572,7 @@ public obtenerCatalogosUMC(): Observable<Catalogo[]> {
    * @returns {void}
    */
   public mostrar_colapsable(): void {
-    if(!this.eliminarDatosTabla){
+    if(!this.esFormularioSoloLectura){
   this.colapsable = !this.colapsable;
     }
     else{

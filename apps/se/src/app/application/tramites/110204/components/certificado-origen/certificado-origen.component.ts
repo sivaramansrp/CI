@@ -7,6 +7,7 @@ import { CertificadoDeOrigenComponent } from '../../../../shared/components/cert
 import { CertificadosOrigenGridService } from '../../services/certificadosOrigenGrid.service';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { IDPROCEDIMIENTO } from '../../constantes/modificacion.enum';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { Mercancias } from '../../models/plantas-consulta.model';
 import { MercanciasModalComponent } from '../mercancias-modal/mercancias-modal.component';
@@ -218,6 +219,14 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * @type {Observable<Mercancia[]>}
    */
   datosTabla$: Observable<Mercancia[]> | undefined;
+
+  /**
+   * @property {number} idProcedimiento
+   * @description
+   * Identificador numérico del procedimiento actual para el trámite 110204.
+   * Se utiliza para configurar y asociar el proceso en los componentes y servicios relacionados.
+   */
+  idProcedimiento: number = IDPROCEDIMIENTO
 
   /**
    * Constructor del componente CertificadoOrigenComponent.

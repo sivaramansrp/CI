@@ -1,7 +1,7 @@
 import { Catalogo, ConfiguracionColumna, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Contenedor11202State, Contenedor11202Store } from '../../estados/contenedor11202.store';
-import { CSV_DE_TABLA, GRID_CONTENEDORES, SOLICITUD_11202_ENUM } from '../../constantes/retorno-contenedores.enum';
+import { CSV_DE_TABLA, ELGIR_DE_ARCHIVO, GRID_CONTENEDORES, SOLICITUD_11202_ENUM } from '../../constantes/retorno-contenedores.enum';
 import { DatosDelCsvArchivo, GridContenedores } from '../../models/datos-tramite.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -69,6 +69,11 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Indicates whether the add container type section is visible.
    */
   seccionContenedor: boolean = false;
+
+  /**
+   * Referencia al elemento del modal para agregar mercancías.
+   */
+  @ViewChild('modalArchivoCsv') modalArchivo!: ElementRef;
 
   /**
    * @property {Catalogo[]} catalogAduanas
@@ -166,6 +171,11 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Bandera para mostrar la sección de adjuntar archivo.
    */
+  archivoDescripcion: boolean = false;
+
+  /**
+   * Bandera para mostrar la sección de adjuntar archivo.
+   */
   mostrarSeccionArchivoCsv: boolean = false;
 
   /**
@@ -177,6 +187,11 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Etiqueta del archivo seleccionado.
    */
   elgirDeArchivo: string = SOLICITUD_11202_ENUM.ELGIR_DE_ARCHIVO;
+
+  /**
+   * Descripción del archivo seleccionado.
+   */
+  archivo_descripcion: string = ELGIR_DE_ARCHIVO.ARCHIVO_DESCRIPCION;
 
   /**
    * Elemento de entrada de archivo HTML.
@@ -237,13 +252,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.contenedores = this.contenedorState.contenedores;
     this.cargarCatalogAduanas();
     this.crearFormSolicitud();
-    this.solicitudForm.get('tipoBusqueda')?.valueChanges
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe(value => {
-      if (value) {
-        this.solicitudForm.get('tipoBusqueda')?.disable();
-      }
-    });
     this.cargarCatalogContenedores();
     this.loadDatosTablaData();
   }
@@ -381,12 +389,13 @@ export class ContenedorComponent implements OnInit, OnDestroy {
           if (respuesta?.success) {
             respuesta.datos.id = this.datosDelCsvArchivo.length + 1;
             this.datosDelCsvArchivo = [...this.datosDelCsvArchivo, respuesta.datos];
-            console.log('Datos del CSV:', this.datosDelCsvArchivo);
             (this.contenedorStore.setDelCsv as (valor: DatosDelCsvArchivo[]) => void)(this.datosDelCsvArchivo);
           }
         }
       );
-    } 
+    } else {
+      this.archivoDescripcion = true;
+    }
   }
 
   /**
@@ -470,13 +479,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       }),
     });
     this.mostrarCampos();
-    this.solicitudForm.get('tipoBusqueda')?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe(() => {
-      this.setValoresStore(
-        this.solicitudForm,
-        'tipoBusqueda',
-        'setTipoBusqueda'
-      );
+    this.solicitudForm.get('tipoBusqueda')?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe(value => {
+      this.setValoresStore(this.solicitudForm, 'tipoBusqueda', 'setTipoBusqueda');
       this.mostrarCampos();
+      if (value) {
+        this.solicitudForm.get('tipoBusqueda')?.disable();
+      }
     });
     this.inicializarEstadoFormulario();
   }

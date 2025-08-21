@@ -9,12 +9,21 @@ import { Observable } from 'rxjs';
 import { PermisoImportacionBiologicaState } from '../../../shared/estados/permiso-importacion-biologica.store';
 import { PermisoImportacionBiologicaStore } from '../../../shared/estados/permiso-importacion-biologica.store';
 
-
+/*
+** Servicio para manejar los datos del formulario en el asistente de modificación de permisos de medicamentos de uso.
+** Este servicio utiliza un BehaviorSubject para almacenar y gestionar el estado de los datos del formulario.
+*/
 @Injectable({
   providedIn: 'root',
 })
 
-export class ModificacionPermisoMeds{
+/**
+ * ModificacionPermisoMeds
+ * 
+ * Servicio para manejar los datos del formulario en el asistente de modificación de permisos de medicamentos de uso.
+ * Este servicio utiliza un BehaviorSubject para almacenar y gestionar el estado de los datos del formulario.
+ */
+export class ModificacionPermisoMeds {
      /**
    * AppConfig es una inyección de dependencias que proporciona la configuración de la aplicación.
    */

@@ -19,3 +19,9 @@ textarea {
   .align-middle {
     vertical-align: middle !important;
   }
+
+  #observacionesId{
+    resize: none;
+    height: 120px;
+    overflow-y: auto;
+  }

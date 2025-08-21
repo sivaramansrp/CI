@@ -1,41 +1,47 @@
 import {
+  BANCO_CATALOGOS,
+  ESTADO_CATALOGOS
+} from '../../constantes/pago-banco.enum';
+import {
   Catalogo,
+  ConsultaioQuery,
+  InputFecha,
+  InputFechaComponent,
   REGEX_LLAVE_DE_PAGO_DE_DERECHO,
   REGEX_PATRON_DECIMAL_2,
+  TituloComponent
 } from '@ng-mf/data-access-user';
 import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
+  OnInit,
   Output,
+  SimpleChanges
 } from '@angular/core';
 import {
   FECHA_DE_PAGO,
-  PagoDerechosFormState,
+  PagoDerechosFormState
 } from '../../models/terceros-relacionados.model';
 import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
+import {
   PagoDerechosState,
-  PagoDerechosStore,
+  PagoDerechosStore
 } from '../../estados/stores/pago-de-derechos.store';
-import { Subject, map } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { BANCO } from '../../constantes/datos-solicitud.enum';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-
-import { BANCO_CATALOGOS, ESTADO_CATALOGOS } from '../../constantes/pago-banco.enum';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { InputFecha } from '@ng-mf/data-access-user';
-import { InputFechaComponent } from '@ng-mf/data-access-user';
-import { OnInit } from '@angular/core';
 import { PagoDerechosQuery } from '../../estados/queries/pago-derechos.query';
-import { ReactiveFormsModule } from '@angular/forms';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { Validators } from '@angular/forms';
-import { takeUntil } from 'rxjs';
+
 
 /**
  * @component PagoDeDerechosComponent
@@ -56,7 +62,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './pago-de-derechos.component.html',
   styleUrl: './pago-de-derechos.component.css',
 })
-export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
   /**
    * @method eliminarMercancia
    * @description Emits an event to delete one or more merchandise items.
@@ -117,13 +123,13 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @property {Catalogo[]} estadosDatos
    * Lista de estados obtenida desde el servicio de catálogos.
    */
-  public estadosDatos: Catalogo[]=ESTADO_CATALOGOS;
+  public estadosDatos: Catalogo[] = ESTADO_CATALOGOS;
 
   /**
    * Arreglo que contiene los datos del catálogo.
    * @type {Catalogo[]}
    */
-  public bancoDatos: Catalogo[]=BANCO_CATALOGOS;
+  public bancoDatos: Catalogo[] = BANCO_CATALOGOS;
   /**
    * Indica si el campo "banco" es obligatorio.
    * @type {boolean}
@@ -156,8 +162,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private pagoDerechosStore: PagoDerechosStore,
     private pagoDerechosQuery: PagoDerechosQuery,
     private consultaioQuery: ConsultaioQuery
-  ) {   
-    
+  ) {
+
     // Inicializa el formulario.
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -221,8 +227,26 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     if (this.formularioDeshabilitado) {
       this.pagoDerechosForm.disable();
     }
-  
-    this.pagoDerechosForm.patchValue(this.pagoDerechoFormState);
+
+    setTimeout(() => {
+
+      this.pagoDerechosForm.patchValue(this.pagoDerechoFormState);
+    }, 0);
+  }
+
+  /**
+   * Hook que se ejecuta cuando cambian las propiedades de entrada del componente.
+   * Permite habilitar o deshabilitar los formularios según el modo de solo lectura.
+   * @param {SimpleChanges} changes - Cambios detectados en las propiedades de entrada.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['formularioDeshabilitado'] && this.pagoDerechosForm) {
+      if (this.formularioDeshabilitado) {
+        this.pagoDerechosForm.disable();
+      } else {
+        this.pagoDerechosForm.enable();
+      }
+    }
   }
 
   /**
@@ -235,7 +259,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .obtenerListaEstados()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
-        this.estadosDatos = data;    
+        this.estadosDatos = data;
         this.pagoDerechosForm.patchValue({
           estado: this.pagoDerechoFormState?.estado || '',
         });
@@ -252,7 +276,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .getBancoDatos()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
-        this.bancoDatos = data;       
+        this.bancoDatos = data;
         this.pagoDerechosForm.patchValue({
           banco: this.solicitudState?.banco || '',
           estado: this.solicitudState?.estado || '',
@@ -276,6 +300,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   onFechaCambiada(fecha: string): void {
     this.pagoDerechosForm.patchValue({ fechaPago: fecha });
+    this.pagoDerechosForm.get('fechaPago')?.markAsTouched();
+    this.pagoDerechosForm.get('fechaPago')?.markAsDirty();
     this.setValoresStore(this.pagoDerechosForm, 'fechaPago', 'setFechaPago');
   }
 

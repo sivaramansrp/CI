@@ -1,5 +1,8 @@
 import { Observable, map } from 'rxjs';
-import { Tramite130203State, Tramite130203Store } from '../estados/tramites/tramites130203.store';
+import {
+  Tramite130203State,
+  Tramite130203Store,
+} from '../estados/tramites/tramites130203.store';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -19,7 +22,7 @@ export class ExportacionDeDiamantesEnBrutoService {
    * @returns {Observable<Catalogo[]>}
    */
   getListaDePaisesDisponibles(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('/assets/json/130202/pais-procenia.json');
+    return this.http.get<Catalogo[]>('/assets/json/130203/pais-procenia.json');
   }
 
   /**
@@ -30,7 +33,7 @@ export class ExportacionDeDiamantesEnBrutoService {
 
   getPaisesPorBloque(_bloqueId: number): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(
-      '/assets/json/130202/paises-por-bloque.json'
+      '/assets/json/130203/paises-por-bloque.json'
     );
   }
 
@@ -40,7 +43,7 @@ export class ExportacionDeDiamantesEnBrutoService {
    */
   getEntidadFederativa(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(
-      '/assets/json/130202/entidad-federativa.json'
+      '/assets/json/130203/entidad-federativa.json'
     );
   }
 
@@ -50,7 +53,7 @@ export class ExportacionDeDiamantesEnBrutoService {
    */
   getRepresentacionFederal(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(
-      '/assets/json/130202/representacion-federal.json'
+      '/assets/json/130203/representacion-federal.json'
     );
   }
 
@@ -60,7 +63,7 @@ export class ExportacionDeDiamantesEnBrutoService {
    */
   getSolicitudeOptions(): Observable<ProductoResponse> {
     return this.http.get<ProductoResponse>(
-      'assets/json/130202/solicitude-options.json'
+      'assets/json/130203/solicitude-options.json'
     );
   }
 
@@ -70,7 +73,7 @@ export class ExportacionDeDiamantesEnBrutoService {
    */
   getProductoOptions(): Observable<ProductoResponse> {
     return this.http.get<ProductoResponse>(
-      'assets/json/130202/producto-otions.json'
+      'assets/json/130203/producto-options.json'
     );
   }
 
@@ -86,7 +89,9 @@ export class ExportacionDeDiamantesEnBrutoService {
   * Obtiene los nombres en inglés desde un archivo JSON local.  
   */
   getNombresIngles(): Observable<string[]> {
-    return this.http.get<string[]>('assets/json/130203/nomber-en-ingles-del.json');
+    return this.http.get<string[]>(
+      'assets/json/130203/nomber-en-ingles-del.json'
+    );
   }
 
   /**
@@ -95,7 +100,7 @@ export class ExportacionDeDiamantesEnBrutoService {
    */
   getTablaDatos(): Observable<PartidasDeLaMercanciaModelo[]> {
     return this.http.get<PartidasDeLaMercanciaModelo[]>(
-      'assets/json/130111/partidas-de-la.json'
+      'assets/json/130203/partidas-de-la.json'
     );
   }
 
@@ -105,7 +110,9 @@ export class ExportacionDeDiamantesEnBrutoService {
   */
   getNombreExporter(): Observable<string> {
     return this.http
-    .get<{ nombreExportador: string }>('assets/json/130203/nombre-exporter.json')
+      .get<{ nombreExportador: string }>(
+        'assets/json/130203/nombre-exporter.json'
+      )
     .pipe(map((response) => response.nombreExportador));
   }
 

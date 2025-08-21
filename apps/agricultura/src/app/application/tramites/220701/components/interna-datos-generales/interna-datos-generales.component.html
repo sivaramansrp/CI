@@ -42,7 +42,7 @@
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="claveControlUnico">Clave UCON*:
+              <label class="form-label" for="claveControlUnico">Clave UCON:
                 <i class="bi bi-question-circle-fill" style="margin-bottom: '5px'"></i></label>
               <input formControlName="claveControlUnico" value="" class="form-control" id="claveControlUnico"
                 placeholder="" type="text" appUppercase />
@@ -51,12 +51,12 @@
           <div class="col-md-4">
             <app-catalogo-select [catalogo]="establecimientoTIF.catalogos" formControlName="establecimientoTIFs"
               [label]="'Establecimiento TIF'" name="establecimientoTIFs"
-              [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+              [isDisabled]="esFormularioSoloLectura||true"></app-catalogo-select>
           </div>
           <div class="col-md-4">
             <app-catalogo-select [catalogo]="veterinario.catalogos" formControlName="nombreVeterinario"
               [label]="'Nombre del médico veterinario'" name="nombreVeterinario"
-              [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+              [isDisabled]="esFormularioSoloLectura||true"></app-catalogo-select>
           </div>
         </div>
         <div class="row">
@@ -84,12 +84,12 @@
           </div>
           <div class="col-md-12">
             <input class="form-check-input me-3" type="radio" name="tipoMercancia" formControlName="tipoMercancia"
-             value="animales" id="certficacion_a" [disabled]="forma.get('datosDelaSolicitud')?.get('tipoMercancia')?.disabled ?? false" />
+               value="animales" id="certficacion_a" [disabled]="esFormularioSoloLectura" />
             <label class="form-label" for="certficacion_a">Animales Vivos</label>
           </div>
           <div class="col-md-12">
-            <input class="form-check-input me-3" type="radio" name="tipoMercancia" formControlName="tipoMercancia"
-              value="subproductos" id="certficacion_aa" [disabled]="forma.get('datosDelaSolicitud')?.get('tipoMercancia')?.disabled ?? false" />
+              <input class="form-check-input me-3" type="radio" name="tipoMercancia" formControlName="tipoMercancia"
+                value="subproductos" id="certficacion_aa" [disabled]="esFormularioSoloLectura" />
             <label class="form-label" for="certficacion_aa">Productos Subproductos</label>
           </div>
         </div>
@@ -138,7 +138,7 @@
       <div class="col-md-8">
         <app-catalogo-select [catalogo]="empresaTransportista.catalogos" [label]="empresaTransportista.labelNombre"
           [placeholder]="empresaTransportista.primerOpcion" 
-          formControlName="empresaTransportista" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+          formControlName="empresaTransportista" [isDisabled]="esFormularioSoloLectura || true"></app-catalogo-select>
       </div>
     </div>
   </form>

@@ -35,7 +35,7 @@ describe('DatosComponent', () => {
         { provide: Solicitud150101Store, useClass: MockSolicitud150101Store },
         { provide: SolicitudService, useClass: MockSolicitudService },
       ],
-      schemas: [NO_ERRORS_SCHEMA]
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosComponent);
@@ -44,7 +44,7 @@ describe('DatosComponent', () => {
     solicitudStore = TestBed.inject(Solicitud150101Store) as any;
 
     component.solicitante = {
-      obtenerTipoPersona: jest.fn()
+      obtenerTipoPersona: jest.fn(),
     } as any;
 
     fixture.detectChanges();
@@ -53,11 +53,14 @@ describe('DatosComponent', () => {
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
-  
+
   it('should update esDatosRespuesta and call store when guardarDatosFormulario is called', () => {
     component.guardarDatosFormulario();
     expect(solicitudService.getRegistroSolicitudDatos).toHaveBeenCalled();
-    expect(solicitudStore.setRegistroSolicitudAnualState).toHaveBeenCalledWith({ nombre: 'Test Data' });
+    expect(solicitudStore.setRegistroSolicitudAnualState).toHaveBeenCalledWith({
+      nombre: 'Test Data',
+      totalExportaciones: '',
+    });
     expect(component.esDatosRespuesta).toBe(true);
   });
 

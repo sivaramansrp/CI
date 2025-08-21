@@ -26,35 +26,31 @@ import { RegistroModificacionPageComponent } from './pages/registro-modificacion
 import { RegistroModificacionRoutingModule } from './registro-modificacion.routing.module';
 
 @NgModule({
-    declarations: [
-        RegistroModificacionPageComponent,
-        PasoUnoComponent,
-        PasoTresComponent,
-        BitacoraComponent,
-        
-    ],
-    imports: [
-        TablaDinamicaComponent,
-        TituloComponent,
-        ComplementariaImmexComponent,
-        CommonModule,
-        SolicitanteComponent,
-        FirmaElectronicaComponent,
-        ModificacionComponent,
-        PasoDosComponent,
-        BtnContinuarComponent,
-        FormsModule,
-        WizardComponent,
-        ReactiveFormsModule,
-        RouterModule,
-        RegistroModificacionRoutingModule,
-        TituloComponent,
-         AlertComponent,
-          AnexarDocumentosComponent
-    ],
-    exports:[],
-     providers: [ModificacionSolicitudeService,
-        ToastrService
-      ]
+  declarations: [],
+  imports: [
+    TablaDinamicaComponent,
+    TituloComponent,
+    ComplementariaImmexComponent,
+    CommonModule,
+    SolicitanteComponent,
+    FirmaElectronicaComponent,
+    ModificacionComponent,
+    PasoDosComponent,
+    BtnContinuarComponent,
+    FormsModule,
+    WizardComponent,
+    ReactiveFormsModule,
+    RouterModule,
+    RegistroModificacionRoutingModule,
+    TituloComponent,
+    AlertComponent,
+    AnexarDocumentosComponent,
+    RegistroModificacionPageComponent,
+    PasoUnoComponent,
+    PasoTresComponent,
+    BitacoraComponent,
+  ],
+  exports: [],
+  providers: [ModificacionSolicitudeService, ToastrService],
 })
-export class RegistroModificacionModule { }
+export class RegistroModificacionModule {}

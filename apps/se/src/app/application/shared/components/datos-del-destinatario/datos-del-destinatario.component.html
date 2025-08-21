@@ -16,9 +16,9 @@
             <div class="col-md-4 form-group">
               <label class="form-label" for="nombres">Nombre(s): </label>
               <input type="text" id="nombres" class="form-control" formControlName="nombres" (change)="setValoresStore('formDatosDelDestinatario','nombres','setFormDatosDelDestinatario')" />
-            @if(formDatosDelDestinatario.controls['nombres'].invalid && formDatosDelDestinatario.controls['nombres'].touched) {
+            @if(formDatosDelDestinatario.controls['nombres'].invalid ) {
       <div class="d-grid">
-        @if(formDatosDelDestinatario.controls['nombres'].errors?.['required']) {
+        @if(formDatosDelDestinatario.controls['nombres'].errors?.['required']&& formDatosDelDestinatario.controls['nombres'].touched) {
           <span class="mensaje-error">Este campo es obligatorio</span>
         }
         @if(formDatosDelDestinatario.controls['nombres'].errors?.['maxlength']) {
@@ -59,7 +59,7 @@
             </div>
       
             <div class="col-md-4 form-group">
-              <label class="form-label" for="numeroDeRegistroFiscal">Número de registro fiscal:</label>
+              <label class="form-label" for="numeroDeRegistroFiscal">Número de registro fiscal<span *ngIf="idProcedimiento === 110205">*</span>:</label>
               <input type="text" id="numeroDeRegistroFiscal" class="form-control" formControlName="numeroDeRegistroFiscal" (change)="setValoresStore('formDatosDelDestinatario','numeroDeRegistroFiscal','setFormDatosDelDestinatario')" />
               @if(formDatosDelDestinatario.controls['numeroDeRegistroFiscal'].invalid && formDatosDelDestinatario.controls['numeroDeRegistroFiscal'].touched) {
       <div class="d-grid">

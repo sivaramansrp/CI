@@ -165,7 +165,7 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
       cerrar: false,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
+      txtBtnCancelar: this.seleccionados.length >= 1 ? 'Cancelar' : '',
     };
 
   }
