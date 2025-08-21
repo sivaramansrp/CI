@@ -18,7 +18,8 @@
     [esFormularioSoloLectura]="esFormularioSoloLectura"
     (formCertificadoEvent)="setValoresStore($event)"
     [idProcedimiento]="idProcedimiento"
-    (setModelCargaPorArchivo)="abrirModalCargaPorArchivo()" >
+    (setModelCargaPorArchivo)="abrirModalCargaPorArchivo()"
+    [domicilioTercer]="true" >
 </app-certificado-de-origen>
 
 <div class="modal fade" #modifyModal tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">

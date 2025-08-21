@@ -1,6 +1,6 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, Notificacion, NotificacionesComponent, SoloLetrasNumerosDirective, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, forwardRef } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -65,7 +65,9 @@ export const FECHA_FIN = {
     InputFechaComponent,
     CatalogoSelectComponent,
     InputCheckComponent,
-    AlertComponent
+    AlertComponent,
+    NotificacionesComponent,
+    forwardRef(() => SoloLetrasNumerosDirective),
   ],  
   templateUrl: './certificado-de-origen.component.html',
   styleUrl: './certificado-de-origen.component.scss'
@@ -132,6 +134,21 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
    */
   @Input() paisBloqu!: Catalogo[];
 
+    /**
+   * @property {Catalogo[]} paises
+   * @description
+   * Propiedad de entrada que recibe el arreglo de países disponibles para seleccionar en el formulario.
+   * Se utiliza para mostrar opciones de país en los menús desplegables del componente.
+   */
+  @Input() paises!: Catalogo[];
+
+  /**
+   * @property {boolean} domicilioTercer
+   * @description
+   * Propiedad de entrada que indica si el domicilio de un tercero debe mostrarse o estar habilitado en el formulario.
+   * Permite controlar la visualización de campos relacionados con el domicilio de terceros.
+   */
+  @Input() domicilioTercer!: boolean;
   /**
    * Propiedad de entrada que recibe los datos de la tabla de mercancia.
    * @type {Mercancia[]}
@@ -313,6 +330,22 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
    */
   datosSeleccionados!: Mercancia;
 
+    /**
+   * @property {Notificacion} nuevaNotificacion
+   * @description
+   * Objeto que almacena la información de la notificación a mostrar en el componente.
+   * Se utiliza para mostrar mensajes de alerta, éxito o información al usuario.
+   */
+  nuevaNotificacion!: Notificacion;
+
+  /**
+   * @property {boolean} mostrarError
+   * @description
+   * Indica si se debe mostrar un mensaje de error en el componente.
+   * Se utiliza para controlar la visualización de alertas cuando el formulario no es válido.
+   */
+  mostrarError: boolean = true;
+
   /**
     * Emisor de eventos para indicar si el formulario es válido.
     * @type {EventEmitter<boolean>}
@@ -358,6 +391,12 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
   razonSocial: [''],
   calle: ['', [Validators.maxLength(90)]],
   numeroLetra: ['', [Validators.maxLength(30)]],
+  pais: [''],
+  ciudad: [''],
+  lada: [''],
+  telefono: [''],
+  fax:[''],
+  correo:['']
     });
   }
   /**
@@ -424,13 +463,14 @@ ngOnChanges(changes: SimpleChanges):void {
   ngOnInit(): void {
     this.fechaFin = FECHA_ID.includes(this.idProcedimiento);
     this.inicializarEstadoFormulario();
+    this.nuevaNotificacion = {} as Notificacion
   }
    validarFormularios(): boolean {
-if(this.formCertificado.valid){
-  return true;
-}
-this.formCertificado.markAllAsTouched();
-return false;
+  if(this.formCertificado.valid){
+    return true;
+  }
+  this.formCertificado.markAllAsTouched();
+  return false;
   }
 
   /**
@@ -473,7 +513,23 @@ return false;
    * Método que emite un evento para buscar la mercancia.
    */
   buscarMercancia(): void {
-    this.setbuscarMercanciaEvent.emit(true);
+    if (this.formCertificado && this.formCertificado.valid) {
+      this.setbuscarMercanciaEvent.emit(true);
+    }
+    else {
+      this.mostrarError = true;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Los datos marcados con asterisco son obligatorios. Favor de capturarlos.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
   }
 
   /**
@@ -539,5 +595,16 @@ return false;
     }
   }
 
- 
+  /**
+   * @method aceptar
+   * @description
+   * Oculta el mensaje de error en el componente estableciendo la propiedad `mostrarError` en `false`.
+   * Se utiliza generalmente como acción al aceptar una notificación o alerta mostrada al usuario.
+   * 
+   * @returns {void}
+   */
+  aceptar(): void {
+    this.mostrarError = false;
+  }
+
 }
