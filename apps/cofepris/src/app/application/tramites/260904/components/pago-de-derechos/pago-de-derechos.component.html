@@ -61,11 +61,13 @@
               type="text"
               name="llaveDePago"
               formControlName="llaveDePago"
+              maxlength="31"
               (change)="setValoresStore(pagoDeDerechosForm,'llaveDePago')"
+              (input)="validarLongitudMaxima('llaveDePago', 31)"
             />
             <div *ngIf="esInvalido('llaveDePago')" class="text-danger">
-              <small *ngIf="pagoDeDerechosForm.controls['llaveDePago'].hasError('required')">Llave de pago es obligatoria.</small>
-              <small *ngIf="pagoDeDerechosForm.controls['llaveDePago'].hasError('pattern')">Solo se permiten 10 caracteres en mayúsculas y números.</small>
+              <small *ngIf="pagoDeDerechosForm.controls['llaveDePago'].hasError('required')">Todos los campos de pago son requeridos</small>
+              <small *ngIf="pagoDeDerechosForm.controls['llaveDePago'].hasError('maxlength')">Máximo 30 caracteres.</small>
           </div>
           </div>
         </div>

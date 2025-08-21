@@ -305,6 +305,24 @@ public validarFechaFutura(fecPago:string): void {
     );
   }
 
+  /**
+   * Valida la longitud máxima de un campo y marca el control como tocado para mostrar errores.
+   * 
+   * Este método se ejecuta en el evento input para mostrar errores de validación
+   * cuando el usuario alcanza el límite de caracteres, incluso cuando el HTML
+   * maxlength previene la entrada de más caracteres.
+   * 
+   * @param controlName - Nombre del control a validar
+   * @param maxLength - Longitud máxima permitida
+   * @returns void
+   */
+  public validarLongitudMaxima(controlName: string, maxLength: number): void {
+    const CONTROL = this.pagoDeDerechosForm.get(controlName);
+    if (CONTROL && CONTROL.value && CONTROL.value.length >= maxLength) {
+      CONTROL.markAsTouched();
+      CONTROL.markAsDirty();
+    }
+  }
 
 
   /**
