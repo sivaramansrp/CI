@@ -102,6 +102,12 @@ export class TransporteComponent implements OnInit, OnChanges {
   @Input() tipoTransporteSeleccionado!: string;
 
   /**
+   * Título personalizado para el modal.
+   * @type {string}
+   */
+  @Input() tituloModalPersonalizado: string = 'Datos del transporte de arribo/salida (al/del) país';
+
+  /**
    * Emisor de eventos para enviar los datos de la tabla.
    */
   @Output() datosTabla: EventEmitter<TransporteDespacho[]> = new EventEmitter<
