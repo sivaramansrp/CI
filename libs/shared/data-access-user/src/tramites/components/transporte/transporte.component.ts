@@ -1157,6 +1157,20 @@ export class TransporteComponent implements OnInit, OnChanges {
       this.tipoTransporteForma.get('tipoTransporte')?.value,
       10
     );
+
+    const FORMULARIO_NOMBRE = TransporteComponent.nombreFormaTransporte(
+      TIPO_TRANSPORTE
+    ) as keyof this;
+
+    const FORMULARIO = this[FORMULARIO_NOMBRE] as FormGroup;
+
+    const VALORES = TransporteComponent.tieneValoresValidos(FORMULARIO);
+
+    if (!VALORES && !this.observaciones.value) {
+      this.cerrarModal();
+      return;
+    }
+
     const TRANSPORTE: TransporteDespacho = this.bodyTabla.find(
       (item) => item === this.registroSeleccionado
     ) as TransporteDespacho;
