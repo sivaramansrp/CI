@@ -653,5 +653,5 @@
 
    @if(mostrarMensajeError){
             <lib-notificaciones [notificacionInput]="nuevaNotificacion"
-        (confirmacionModal)="eliminarErrorMessage()"></lib-notificaciones>
+        (confirmacionModal)="eliminarErrorMessage($event)"></lib-notificaciones>
     }

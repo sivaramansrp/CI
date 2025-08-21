@@ -541,8 +541,9 @@ this.selectedRow = event;
   }
 
 cerrarEdicionMercancia():void{
+  
   if(this.selectedRow){
-this.mercanciaSeleccionadasTablaData = this.mercanciaSeleccionadasTablaData.filter((item) => item.id !== this.selectedRow.id);
+    this.eliminarMensajeConfirmacion();
   }
   else{
     this.errorMessageExportador();
@@ -818,9 +819,13 @@ this.mercanciaSeleccionadasTablaData = this.mercanciaSeleccionadasTablaData.filt
     }
   }
 
-    eliminarErrorMessage():void {
+    eliminarErrorMessage(event: boolean):void {
+      if(event){
+    this.mercanciaSeleccionadasTablaData = this.mercanciaSeleccionadasTablaData.filter((item) => item.id !== this.selectedRow.id);
+      }
     this.mostrarMensajeError =false;
-  }
+    }
+
   errorMessageExportador(): void {
         this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -832,6 +837,21 @@ this.mercanciaSeleccionadasTablaData = this.mercanciaSeleccionadasTablaData.filt
         tiempoDeEspera: 2000,
         txtBtnAceptar: 'Cancelar',
         txtBtnCancelar: '',
+        };
+          this.mostrarMensajeError =true;
+      }
+
+        eliminarMensajeConfirmacion(): void {
+        this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'info',
+        titulo: 'Confirmación requerida',
+        mensaje: '¿Desea eliminar este dato?',
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Sí',
+        txtBtnCancelar: 'No',
         };
           this.mostrarMensajeError =true;
       }
