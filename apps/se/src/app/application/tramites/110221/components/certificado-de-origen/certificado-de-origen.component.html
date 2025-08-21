@@ -549,11 +549,11 @@
         </div>
       </div>
 
-      <div class="col-md-4 ">
-        <label class="mb-8">N° factura / Referencia *:</label>
+      <div class="col-md-4 mt-8">
+        <label >N° factura / Referencia *:</label>
         <input
           type="text"
-          class="form-control mt-8"
+          class="form-control"
           formControlName="numeroFactura"
         />
         <div *ngIf="isInvalid('numeroFactura')" class="text-danger">
@@ -561,7 +561,7 @@
         </div>
       </div>
 
-      <div class="col-md-4 mt-5">
+      <div class="col-md-4 mt-7">
         <app-catalogo-select
           [catalogo]="optionsTipoFactura"
           [label]="''"
