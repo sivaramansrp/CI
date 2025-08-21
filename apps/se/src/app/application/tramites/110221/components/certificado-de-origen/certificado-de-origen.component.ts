@@ -454,6 +454,21 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy,AfterView
     } else {
       this.hayMercanciasDisponibles = true;
     }
+ if (this.registroForm.get('validacionForm.fechaInicial')?.value === this.registroForm.get('validacionForm.fechaFinal')?.value) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'info',
+        titulo: 'Error de fechas',
+        mensaje: 'La fecha inicial debe ser anterior a la fecha final.',
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.mostrarMensajeError = true;
+      return;
+    }
     this.getTratado();
     this.getPais();
     this.getUMC();
@@ -518,7 +533,25 @@ this.mercanciaForm.get('validacionMercanciaForm')?.patchValue(event);
     }
 
     this.store.setMercanciaSeleccionadasTablaData([...this.mercanciaSeleccionadasTablaData]);
-    FORM_GROUP.reset();
+    FORM_GROUP.reset({
+  id: 0,
+  fraccionMercanciaArancelaria: '',
+  nombreTecnico: '',
+  nombreComercialDelaMercancia: '',
+  criterioParaConferir: '',
+  nombreEnIngles: '',
+  valordeContenidoRegional: '',
+  cantidad: '',
+  umc: '',
+  valorDelaMercancia: '',
+  complementoDelaDescripcion: '',
+  numeroDeSerie: '',
+  tipoFactura: '',
+  fecha: '',
+  numeroFactura: '',
+  otrasInstancias: ''
+});
+
     this.modalInstance.hide();
     this.esFormulario = false;
   }
@@ -809,6 +842,15 @@ cerrarEdicionMercancia():void{
 
     this.inicializarEstadoFormulario();
   }
+isInvalid(controlName: string): boolean {
+  const CONTROL = this.mercanciaForm.get(`validacionMercanciaForm.${controlName}`);
+  return Boolean(CONTROL && CONTROL.invalid && CONTROL.touched);
+}
+
+getError(controlName: string, error: string): boolean {
+  return this.mercanciaForm.get(`validacionMercanciaForm.${controlName}`)?.hasError(error) ?? false;
+}
+
 
   /**
    * Inicializa el estado del formulario según el modo de solo lectura.
