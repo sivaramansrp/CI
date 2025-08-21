@@ -15,12 +15,12 @@
       @switch (indice) {
       @case (1) {
         @if(esDatosRespuesta){
-      <datos-empresa></datos-empresa>
+      <datos-empresa (datosEmpresaBuscar)="datosEmpresa($event)"></datos-empresa>
         }
       }
       @case (2) {
         @if(esDatosRespuesta){
-      <app-cancelacion-certificados></app-cancelacion-certificados>
+      <app-cancelacion-certificados (datosEmpresaBuscar)="datosEmpresa($event)"></app-cancelacion-certificados>
         }
       }
       }

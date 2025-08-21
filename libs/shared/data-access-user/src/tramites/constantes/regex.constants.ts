@@ -831,3 +831,38 @@ export const CERTIFICATE_OF_ORIGIN_NUMBER = /^[A-Za-z0-9]{8,20}$/;
  * Ejemplos inválidos: "123.45", "abc", "12345678901234567"
  */
 export const IMPORTE = /^\d{1,16}$/;
+
+
+/**
+ * Expresión regular para validar números con hasta 6 dígitos enteros y opcionalmente hasta 6 decimales.
+ *
+ * Ejemplos válidos:
+ * - "123456"
+ * - "123.456789"
+ * - "1.1"
+ *
+ * Ejemplos no válidos:
+ * - "1234567" (más de 6 dígitos enteros)
+ * - "123.1234567" (más de 6 decimales)
+ * - "abc" (no es un número)
+ */
+export const MAX_DIGITS_VALIDATOR = /^(\d{1,6})(\.\d{1,6})?$/;
+
+/**
+ * Expresión regular para validar direcciones de correo electrónico.
+ * Permite letras minúsculas, números y los caracteres . _ % + - antes del @,
+ * seguido de un dominio y una extensión de 2 a 4 letras.
+ * Ejemplo válido: usuario@dominio.com
+ */
+export const EMAIL = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/i;
+
+/**
+ * Expresión regular para validar direcciones de páginas web (URL).
+ * Permite URLs con o sin http(s), dominios válidos y rutas opcionales.
+ * Ejemplos válidos:
+ * - https://www.ejemplo.com
+ * - http://ejemplo.com
+ * - www.ejemplo.com
+ * - ejemplo.com/ruta
+ */
+export const WEBPAGE = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;

@@ -1,11 +1,9 @@
-
-
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { CAPTURA_MERCANCIA, DATOS_SOLICITUD, Mercancias, OPCIONES_DE_BOTON_DE_RADIO } from '@libs/shared/data-access-user/src/core/models/221601/zoosanitario.model';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFechaComponent, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { CAPTURA_MERCANCIA, CONFIGURATION_TABLAS_MERCANCIASDELLATE, DATOS_SOLICITUD, MercanciaDellate, Mercancias, OPCIONES_DE_BOTON_DE_RADIO, PreOperativo } from '@libs/shared/data-access-user/src/core/models/221601/zoosanitario.model';
 import { Solicitud221601State, Tramite221601Store } from '../../../../estados/tramites/tramite221601.store';
 import { CONFIGURATION_TABLAS_MERCANCIAS } from '@libs/shared/data-access-user/src/core/models/221601/zoosanitario.model';
 import { CommonModule } from '@angular/common';
@@ -15,6 +13,9 @@ import { Tramite221601Query } from '../../../../estados/queries/tramite221601.qu
 import realizar from '@libs/shared/theme/assets/json/221601/zoosanitario.json';
 
 import { ModalComponent } from '../modal/modal.component';
+import { ZoosanitarioService } from '../../service/zoosanitario.service';
+
+import { INPUT_FECHA_CONFIGURACION } from '@libs/shared/data-access-user/src/core/enums/221601/fecha.enum';
 
 
 /**
@@ -51,7 +52,8 @@ import { ModalComponent } from '../modal/modal.component';
     AlertComponent,
     CommonModule,
     InputRadioComponent,
-    ModalComponent
+    ModalComponent,
+    InputFechaComponent
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrls: ['./datos-de-la-solicitud.component.scss']
@@ -87,9 +89,20 @@ import { ModalComponent } from '../modal/modal.component';
  */
 
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+  /**
+   * property tipoPersonaOptions
+   * description Opciones para el tipo de persona (física o moral).
+   */
+  tipoPersonaOptions: PreOperativo[] = [];
   /** Modal para mostrar la información de terceros */
   
    showtercerosModal = false;
+
+    /**
+      * Constante para configurar el input de fecha.
+      * Define las propiedades del campo de entrada de fecha.
+      */
+       INPUT_FECHA_CONFIGURACION = INPUT_FECHA_CONFIGURACION;
 
 /** Indica si el formulario debe mostrarse en modo solo lectura.  
  *  Controla la habilitación o deshabilitación de los campos. */
@@ -148,10 +161,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   mercancias: Mercancias[] = realizar.mercancias;
 
+   /**
+   * Lista de mercancías detalladas (rellenar con datos válidos o dejar como array vacío si no existen datos).
+   */
+  mercanciasdellate: MercanciaDellate[] = [];
+
   /**
    * Configuración de las columnas para la tabla dinámica que muestra las mercancías.
    */
   configuracionTabla: ConfiguracionColumna<Mercancias>[] = CONFIGURATION_TABLAS_MERCANCIAS;
+
+ /**
+   * Configuración de las columnas para la tabla dinámica que muestra las mercancías.
+   */
+  configuracionTablaDelLate: ConfiguracionColumna<MercanciaDellate>[] = CONFIGURATION_TABLAS_MERCANCIASDELLATE;
 
   /**
 * Indica si se deben mostrar las opciones de prellenado en la interfaz de usuario.
@@ -192,7 +215,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private tramite221601Store: Tramite221601Store,
     private tramite221601Query: Tramite221601Query,
       private consultaioQuery: ConsultaioQuery,
-        private validacionesService: ValidacionesFormularioService,  
+        private validacionesService: ValidacionesFormularioService, 
+        private service: ZoosanitarioService 
   ) {
     // Constructor que inyecta las dependencias necesarias
     this.consultaioQuery.selectConsultaioState$
@@ -230,6 +254,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
    this.inicializarCombinacionFormulario();
+     this.cargarRadio();
   }
 
   showMercanciaModal = false;
@@ -237,7 +262,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 mercanciaForm = this.fb.group({
   paisOrigen: ['', Validators.required],
   regulacion: ['', Validators.required],
-  nombreProducto: ['', Validators.required],
+  nombreProducto: ['', Validators.required, Validators.maxLength(50)],
   fracciónArancelaria: ['', Validators.required],
   unidad2: ['', Validators.required, { disabled: true }],
   nico: ['', Validators.required],
@@ -251,17 +276,28 @@ mercanciaForm = this.fb.group({
   edadAnimal: ['', Validators.required],
   paisOrigen1: ['', Validators.required],
   paisdeprocedencia: ['', Validators.required],
+  tipoProducto: [''],
+  presentacion: ['', Validators.required],
+  cantidadPresentacion: ['', Validators.required],
+  tipoPresentacion: [''],
+  tipoPlanta: [''],
+  plantaAutorizadaOrigen: [''],
   nombreLote: [''],
-  codigoArancelario: [''],
-  edadAnimal1: [''],
-  fasedeDesarrollo: [''],
-  funciónZootecnica: [''],
-  nombredela: [''],
-  numerodeIdentificacion: [''],
-  raza: [''],
-  nombreCientifico: [''],
-  sexo: [''],
-  tipoEspecie: [''], 
+  //  tipoPersona: [this.solicitudState?.tipoPersona || 'fisica', Validators.required],
+  tipoPersona: ['fisica', Validators.required],
+  fechaElaboracion: [''],
+  fechaProduccion: [''],
+  fechaCaducidad: [''],
+  tipoEspecie: [''],
+  fecha: [''], // <-- Add this line to define the 'fecha' control
+  numeroLote: [''],
+  rangoFecha: ['No'], // Default to "No"
+  fechaDesde: [''],
+  fechaHasta: [''],
+  FechadeCaducidad: [''],
+  FechadelCaducidad: [''],
+  FechadeSacrificio: [''],
+  FechadelSacrificio: ['']
 });
 
 
@@ -299,7 +335,7 @@ mercanciaForm = this.fb.group({
       clave: [this.solicitudState.clave,[Validators.required, Validators.maxLength(15)]],
       establecimiento: [this.solicitudState.establecimiento, Validators.required],
       regimen: [this.solicitudState.regimen, Validators.required],
-      veterinario: [this.solicitudState.veterinario, Validators.required],
+      veterinario: [this.solicitudState.veterinario, Validators.required, Validators.maxLength(50)],
       capturaMercancia: [this.solicitudState.capturaMercancia, Validators.required]
     });
 
@@ -331,6 +367,14 @@ mercanciaForm = this.fb.group({
         // No se requiere ninguna acción en el formulario
       }
   }
+
+    cargarRadio(): void {
+    this.service.obtenerRadiooption()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
+        this.tipoPersonaOptions = resp;
+      });
+  }
   /**
  * Actualiza el estado del store `tramite221601Store` con los datos del formulario `MedioForm`.
  *
@@ -352,6 +396,41 @@ mercanciaForm = this.fb.group({
     this.tramite221601Store.update(UPDATED_FORM_DATA);
   }
   /**
+   * property fisica
+   * description Indica si el tipo de persona es física.
+   */
+  public fisica = false;
+
+  /**
+   * property moral
+   * description Indica si el tipo de persona es moral.
+   */
+  public moral = false;
+
+  /**
+   * method inputChecked
+   * description Cambia el estado de los checkboxes según el tipo de persona.
+   * param checkBoxName Nombre del checkbox seleccionado.
+   */
+  public inputChecked(checkBoxName: string): void {
+    if (checkBoxName === 'fisica') {
+      this.fisica = true;
+      this.moral = false;
+    } else {
+      this.fisica = false;
+      this.moral = true;
+    }
+  }
+  /**
+   * method cambiarRadioFisica
+   * description Cambia el estado del radio button según el valor seleccionado.
+   * param value Valor seleccionado.
+   */
+  cambiarRadioFisica(value: string | number): void {
+    const VALOR_SELECCIONADO = value as string;
+    this.inputChecked(VALOR_SELECCIONADO);
+  }
+  /**
    * Método que actualiza los valores del store con los datos del formulario.
    * 
    * @param form - Formulario reactivo con los datos actuales.
@@ -362,6 +441,42 @@ mercanciaForm = this.fb.group({
     const VALOR = form.get(campo)?.value;
     (this.tramite221601Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+
+   /**
+
+ * Método para cambiar la fecha final.
+
+ * @param nuevo_valor Nuevo valor de la fecha final.
+
+ */
+fechaFuturaSeleccionada = false;
+  cambioFechaFinal(nuevo_valor: string): void {
+    this.mercanciaForm.patchValue({
+      fecha: nuevo_valor,
+    });
+   this.tramite221601Store.setFecha(nuevo_valor);
+  this.mercanciaForm.get('fecha')?.setValue(nuevo_valor);
+
+  let seleccionada: Date | null = null;
+  if (nuevo_valor && nuevo_valor.includes('/')) {
+    const [DAY, MONTH, YEAR] = nuevo_valor.split('/').map(Number);
+    seleccionada = new Date(YEAR, MONTH - 1, DAY);
+  } else {
+    seleccionada = new Date(nuevo_valor); 
+  }
+
+  const HOY = new Date();
+  HOY.setHours(0, 0, 0, 0);
+
+  if (seleccionada && seleccionada > HOY) {
+    this.fechaFuturaSeleccionada = true;
+    this.mercanciaForm.get('fecha')?.setErrors({ futureDate: true });
+  } else {
+    this.fechaFuturaSeleccionada = false;
+    this.mercanciaForm.get('fecha')?.setErrors(null);
+  }
+  }
+
 /**
  * Método para abrir dialogo mercancías.
  * 
@@ -416,11 +531,41 @@ mercanciaForm = this.fb.group({
  *
  * @memberof DatosDeLaSolicitudComponent
  */
-guardarMercancia():void {
-  if (this.mercanciaForm.valid) {
-    // Map all required Mercancias properties here, using FORM_VALUE and defaults as needed
+guardarMercancia(event?: Event): void {
+ 
+  if (event) {
+    event.preventDefault();
+  }
+
+const NUEVAMERCANCIA : MercanciaDellate = {
+    noPartida: this.mercanciaForm.get('numeroLote')?.value || 'N/A',
+    fechaDesde: this.mercanciaForm.get('fechaDesde')?.value || this.mercanciaForm.get('fechaElaboracion')?.value || '',
+    FechadeSacrificio: this.mercanciaForm.get('FechadeSacrificio')?.value || this.mercanciaForm.get('fechaProduccion')?.value || '',
+    FechadeCaducidad: this.mercanciaForm.get('FechadeCaducidad')?.value || this.mercanciaForm.get('fechaCaducidad')?.value || '',
+    FechadefinElaboracion: this.mercanciaForm.get('fechaHasta')?.value || '',
+    FechafindeSacrificio: this.mercanciaForm.get('FechadelSacrificio')?.value || '',
+    FechafindeCaducidad: this.mercanciaForm.get('FechadelCaducidad')?.value || ''
+  };
+
+this.mercanciasdellate = [...this.mercanciasdellate, NUEVAMERCANCIA];
+this.resetMercanciaForm();
 }
+
+/**
+ * Resets the merchandise form to its initial state
+ */
+private resetMercanciaForm(): void {
+  this.mercanciaForm.reset();
+  this.mercanciaForm.patchValue({
+    rangoFecha: 'No', // Reset to default value
+    tipoPersona: 'fisica' // Reset to default value
+  });
+  
+  // Reset the visibility flags
+  this.mostrarRangoFechas = false;
+  this.opcionSiSeleccionada = false;
 }
+
   /**
    * Closes the modal for adding merchandise.
    *
@@ -440,4 +585,139 @@ cerrarModal(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+  /**
+   * Opciones para el radio button de rango de fechas
+   */
+  opcionesRangoFecha = [
+    { value: 'No', label: 'No' },
+    { value: 'Si', label: 'Sí' }
+  ];
+
+  /**
+   * Indicates if date range fields should be shown (when "No" is selected)
+   */
+  mostrarRangoFechas = false;
+
+  /**
+   * Indicates if "Sí" option is selected
+   */
+  opcionSiSeleccionada = false;
+
+  /**
+   * Handles radio button change for date range option
+   * @param valor - Selected value ('Si' or 'No')
+   */
+  cambiarOpcionRangoFecha(valor: string): void {
+    this.mercanciaForm.patchValue({
+      rangoFecha: valor
+    });
+    
+    if (valor === 'No') {
+      this.mostrarRangoFechas = true;
+      this.opcionSiSeleccionada = false;
+      // Clear single date fields when "No" is selected
+      this.mercanciaForm.patchValue({
+        fechaElaboracion: '',
+        fechaProduccion: '',
+        fechaCaducidad: ''
+      });
+    } else if (valor === 'Si') {
+      this.mostrarRangoFechas = false;
+      this.opcionSiSeleccionada = true;
+      // Clear date range fields when "Sí" is selected
+      this.mercanciaForm.patchValue({
+        fechaDesde: '',
+        fechaHasta: ''
+      });
+    }
+  }
+
+  /**
+   * Handles date change for "Desde" field
+   * @param nuevoValor - New date value
+   */
+  cambioFechaDesde(nuevoValor: string): void {
+    this.mercanciaForm.patchValue({
+      fechaDesde: nuevoValor
+    });
+    this.tramite221601Store.setFechaDesde(nuevoValor);
+  }
+  /**
+   * Handles date change for "Caducidad" field
+   * @param nuevoValor - New date value
+   */
+  cambioFechadeCaducidad(nuevoValor: string): void {
+      this.mercanciaForm.patchValue({
+      FechadeCaducidad: nuevoValor
+    });
+    this.tramite221601Store.setFechadeCaducidad(nuevoValor);
+  }
+
+  /**
+   * Handles date change for "Hasta" field
+   * @param nuevoValor - New date value
+   */
+  cambioFechaHasta(nuevoValor: string): void {
+    this.mercanciaForm.patchValue({
+      fechaHasta: nuevoValor
+    });
+    this.tramite221601Store.setFechaHasta(nuevoValor);
+  }
+
+  /**
+   * Handles date change for "Fecha de elaboración" field
+   * @param nuevoValor - New date value
+   */
+  cambioFechaElaboracion(nuevoValor: string): void {
+    this.mercanciaForm.patchValue({
+      fechaElaboracion: nuevoValor
+    });
+    this.tramite221601Store.setFechaElaboracion(nuevoValor);
+  }
+
+  /**
+   * Handles date change for "Fecha de producción" field
+   * @param nuevoValor - New date value
+   */
+  cambioFechaProduccion(nuevoValor: string): void {
+    this.mercanciaForm.patchValue({
+      fechaProduccion: nuevoValor
+    });
+    this.tramite221601Store.setFechaProduccion(nuevoValor);
+  }
+
+  /**
+   * Handles date change for "Fecha de caducidad" field
+   * @param nuevoValor - New date value
+   */
+  cambioFechadelCaducidad(nuevoValor: string): void {
+    this.mercanciaForm.patchValue({
+      FechadelCaducidad: nuevoValor
+    });
+    this.tramite221601Store.setFechadelCaducidad(nuevoValor);
+  }
+
+  /**
+   * Handles date change for "Fecha de sacrificio" field
+   * @param nuevoValor - New date value
+   */
+  cambioFechadeSacrificio(nuevoValor: string): void {
+    this.mercanciaForm.patchValue({
+      FechadeSacrificio: nuevoValor
+    });
+    this.tramite221601Store.setFechadeSacrificio(nuevoValor);
+  }
+
+  /**
+   * Handles date change for "Fecha de sacrificio" field
+   * @param nuevoValor - New date value
+   */
+  cambioFechadelSacrificio(nuevoValor: string): void {
+    this.mercanciaForm.patchValue({
+      FechadelSacrificio: nuevoValor
+    });
+    this.tramite221601Store.setFechadelSacrificio(nuevoValor);
+  }
+
 }

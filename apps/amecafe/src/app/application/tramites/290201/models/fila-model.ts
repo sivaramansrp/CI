@@ -40,5 +40,7 @@ export interface FilaData2 {
         telefono: number; // Número de teléfono.
         correoelectronico: string; // Dirección de correo electrónico.
     };
+      selected?: boolean; // Agregue esta propiedad a la selección de filas
+
 }
 
