@@ -39,6 +39,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * @type {boolean}
    */
   @Input() esFormularioSoloLectura!: boolean;
+  nuevaNotificacionStatus:boolean = false;
 
   /**
    * Propiedad de entrada que contiene una lista de opciones de catálogo para el "Tipo Factura".
@@ -328,28 +329,43 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * Agrega los productores seleccionados a la lista de productores agregados.
    */
   productoresSeleccionados(): void {
+    if(this.seleccionadoProductoresExportador.length !== 0){
     this.agregarProductoresExportador = [...this.agregarProductoresExportador, ...this.seleccionadoProductoresExportador];
     this.productoresExportador = this.productoresExportador.filter(elementos => !this.seleccionadoProductoresExportador.some(elementosSecundarios => elementosSecundarios.id === elementos.id));
     this.seleccionadoProductoresExportador = [];
+    }
+    else{
+      this.abrirModal();
+    }
   }
 
   /**
    * Elimina los productores seleccionados de la lista de productores agregados.
    */
   eliminarProductoresSeleccionados(): void {
+    if(this.seleccionadoAgregarProductoresExportador.length !== 0){
     this.productoresExportador = [...this.productoresExportador, ...this.seleccionadoAgregarProductoresExportador];
     this.agregarProductoresExportador = this.agregarProductoresExportador.filter(elementos => !this.seleccionadoAgregarProductoresExportador.some(elementosSecundarios => elementosSecundarios.id === elementos.id));
     this.seleccionadoAgregarProductoresExportador = [];
+    }
+    else{
+      this.abrirModal();
+    }
   }
 
   /**
    * Abre el modal para agregar datos del productor.
    */
   agregarDatosProductorPorExportador(): void {
+    if(this.seleccionadoProductoresExportador.length !== 0){
     if (this.modalElement?.nativeElement) {
       const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
       MODAL_INSTANCE.show();
     }
+  }
+  else{
+    this.abrirModal();
+  }
   }
 
   /**
@@ -419,7 +435,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * - Llama a este método para abrir el modal de mercancía.
    */
   agregarMercancia(): void {
-    if (this.esTipoDeSeleccionado) {
+    if (this.esTipoDeSeleccionado && this.mercanciaDatosSeleccionada.length > 0) {
       if (this.modalElementsMercancia?.nativeElement) {
         const MODAL_INSTANCE = new Modal(this.modalElementsMercancia.nativeElement);
         MODAL_INSTANCE.show();
@@ -457,7 +473,8 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   mercanciaAgregarSeleccionada(): void {
     if (this.modalElements?.nativeElement) {
       const MODAL_INSTANCE = new Modal(this.modalElements.nativeElement);
-      MODAL_INSTANCE.show();
+      MODAL_INSTANCE.hide();
+     this.mercanciaDatos.push(this.formularioMercancia.value);
     }
   }
 
@@ -479,6 +496,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
     }
+    this.nuevaNotificacionStatus = true;
   }
 
   /**
