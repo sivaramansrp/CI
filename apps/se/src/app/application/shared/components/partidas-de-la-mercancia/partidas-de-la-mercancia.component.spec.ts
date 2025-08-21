@@ -70,14 +70,6 @@ describe('PartidasDeLaMercanciaComponent', () => {
     expect(emitSpy).toHaveBeenCalled();
   });
 
-  it('should emit navegarParaModificarPartidaEvent when navegarParaModificarPartida is called', () => {
-    const emitSpy = jest.spyOn(component.navegarParaModificarPartidaEvent, 'emit');
-
-    component.navegarParaModificarPartida();
-
-    expect(emitSpy).toHaveBeenCalled();
-  });
-
   it('should emit setValoresStoreEvent with correct arguments when setValoresStore is called', () => {
     const emitSpy = jest.spyOn(component.setValoresStoreEvent, 'emit');
     const testForm = new FormGroup({

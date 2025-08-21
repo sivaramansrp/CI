@@ -45,11 +45,15 @@ export class BandejaDeSolicitudeService {
                     nombreDeLaTarea: dato.action_name,
                     fechaDeAsignacion: dato.fecha_inicio_tarea,
                     estadoDeTramite: dato.estado_tramite,
-                    departamento: dato.bp_name,
+                    departamento: BandejaDeSolicitudeService.obtenerAppPorIdDependencia(Number(String(dato.folio_tramite).substring(0, 2))),
                     numeroDeProcedimiento: dato.tipo_tramite,
                     origin: dato.action_name,
                     fechaInicioTramite: dato.fecha_inicio_tramite,
-                    diasHabilesTranscurridos: dato.dias_trascurridos
+                    diasHabilesTranscurridos: dato.dias_trascurridos,
+                    action_id: dato.action_id,
+                    current_user: dato.current_user,
+                    id_solicitud: dato.id_solicitud,
+                    nombre_pagina: dato.nombre_pagina
                 } as BandejaDeTareasPendientes))
             }),
             catchError(() => {
@@ -57,5 +61,29 @@ export class BandejaDeSolicitudeService {
                 return throwError(() => ERROR);
             })
         );
+    }
+    /**
+   * Retorna el nombre del app según el id_dependencia proporcionado.
+   * @param idDependencia - El id de la dependencia.
+   * @returns El nombre del app correspondiente, o undefined si no existe.
+   */
+    public static obtenerAppPorIdDependencia(idDependencia: number): string | undefined {
+        const DEPENDENCIA_APP_MAP: Record<number, string> = {
+            1: 'aga',
+            2: 'se',
+            4: 'cofepris',
+            5: 'semarnat',
+            6: 'sedena',
+            8: 'profepa',
+            9: 'inah',
+            10: 'inbal',
+            11: 'amecafe',
+            12: 'crt',
+            15: 'agricultur',
+            17: 'sener',
+            25: 'agace',
+            27: 'stps'
+        };
+        return DEPENDENCIA_APP_MAP[idDependencia];
     }
 }

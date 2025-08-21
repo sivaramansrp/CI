@@ -325,7 +325,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
 
     // Inicializar el formulario principal
     this.crearFormulario();
- if(this.scianBodyData?.length== 0){
+ if(this.scianBodyData?.length === 0){
    this.obtenerSCIAN();
  }
 
@@ -693,7 +693,9 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
    * con los productos restantes. Si no hay productos seleccionados, no realiza ninguna acción.
    * */
   eliminarScianGrid(): void {
-    if (!this.scianSeleccionados?.length) return;
+    if (!this.scianSeleccionados?.length) {
+      return;
+    }
   
     const CLAVES_A_ELIMINAR = this.scianSeleccionados.map(
       (SCIAN) => SCIAN.claveScian

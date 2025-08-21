@@ -2,11 +2,16 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject,map, takeUntil } from 'rxjs';
 import { VehiculosUsadosAdaptadosService } from '../../services/vehiculos-usados-adaptados.service';
-
+/*
+* Componente que representa el primer paso del asistente para la gestión de vehículos usados adaptados.
+*/
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
 })
+/*
+* Componente que representa el primer paso del asistente para la gestión de vehículos usados adaptados.
+*/
 export class PasoUnoComponent implements OnInit, OnDestroy {
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;

@@ -101,3 +101,11 @@ export const SOLICITUD_11202_ENUM = {
    */
   ELGIR_DE_ARCHIVO: 'No se eligió ningún archivo'
 };
+
+export const ELGIR_DE_ARCHIVO = {
+  /**
+   * Descripción del archivo a elegir.
+   * @type {string}
+   */
+  ARCHIVO_DESCRIPCION: 'El archivo no tiene la extensión definida CSV, deberá de adjuntar el archivo correcto.'
+};
