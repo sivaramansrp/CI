@@ -7,6 +7,7 @@ import {
   CATALOGOS_ID,
   Catalogo,
   CatalogosService,
+  EMAIL,
   InputFecha,
   InputFechaComponent,
   NotificacionesComponent,
@@ -14,6 +15,8 @@ import {
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
+  ValidacionesFormularioService,
+  WEBPAGE,
 } from '@libs/shared/data-access-user/src';
 import {
   Component,
@@ -313,7 +316,8 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     private catalogosServices: CatalogosService,
     private complimentosService: ComplimentosService,
      private consultaioQuery: ConsultaioQuery,
-     private tramiteStore: TramiteStore
+     private tramiteStore: TramiteStore,
+     private validacionesService: ValidacionesFormularioService
   ) {
     
        this.consultaioQuery.selectConsultaioState$
@@ -384,7 +388,7 @@ this.formaComplimentos.disable();
       modalidad: [{ value: '', disabled: true }],
       programaPreOperativo: [false],
       datosGeneralis: this.fb.group({
-        paginaWWeb: ['', [Validators.required, Validators.maxLength(120)]],
+        paginaWWeb: ['', [Validators.required, Validators.maxLength(120), Validators.pattern(WEBPAGE)]],
         localizacion: ['', [Validators.required, Validators.maxLength(120)]],
       }),
       obligacionesFiscales: this.fb.group({
@@ -426,6 +430,23 @@ this.formaComplimentos.disable();
       }, 0);
     }
   }
+
+  /**
+  * compo doc
+  * @method isValid
+  * @description 
+  * Verifica si un campo específico del formulario es válido.
+  * @param field El nombre del campo que se desea validar.
+  * @returns {boolean | null} Un valor booleano que indica si el campo es válido.
+  */
+  public esValido(formgroup: string, campo: string): boolean | null {
+    const FORMGRUPO = this.formaComplimentos.get(formgroup) as FormGroup;
+    return this.validacionesService.isValid(FORMGRUPO, campo);
+  }
+
+  // get datosGeneralis(): FormGroup {
+  //   return this.formaComplimentos.get('datosGeneralis') as FormGroup;
+  // }
 
   /**
    * Aplica los datos del complemento al formulario, transformando los valores según sea necesario.
@@ -635,7 +656,7 @@ this.formaComplimentos.disable();
           pais: ['', Validators.required],
           codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
           estado: ['', Validators.required],
-          correoElectronico: ['', [Validators.required, Validators.maxLength(200)]],
+          correoElectronico: ['', [Validators.required, Validators.maxLength(200), Validators.pattern(EMAIL)]],
         });
 
       case TIPO_FORMA.TIPO_PERSONA:
@@ -645,7 +666,7 @@ this.formaComplimentos.disable();
           pais: ['', Validators.required],
           codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
           estado: ['', [Validators.required, Validators.maxLength(250)]],
-          correoElectronico: ['', [Validators.required, Validators.maxLength(200)]],
+          correoElectronico: ['', [Validators.required, Validators.maxLength(200), Validators.pattern(EMAIL)]],
           apellidoPaterno: ['', [Validators.required, Validators.maxLength(200)]],
         });
       
@@ -666,7 +687,7 @@ this.formaComplimentos.disable();
           pais: ['', Validators.required],
           codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
           estado: ['', Validators.required],
-          correoElectronico: ['', [Validators.required, Validators.maxLength(200)]],
+          correoElectronico: ['', [Validators.required, Validators.maxLength(200), Validators.pattern(EMAIL)]],
         });
     }
   }
@@ -1259,5 +1280,22 @@ this.formaComplimentos.disable();
     }
     
     return true;
+  }
+
+  onDesenfoque(campo: string): void {
+    const CONTROL = this.formaComplimentos.get(`formaSocioAccionistas.formaDatos.${campo}`);
+    CONTROL?.markAsTouched();
+  }
+
+  onCambio(event: Event, campo: string): void {
+    const VALOR = (event.target as HTMLInputElement).value;
+    const CONTROL = this.formaComplimentos.get(`formaSocioAccionistas.formaDatos.${campo}`);
+    if (VALOR) {
+      CONTROL?.setValue(VALOR, { emitEvent: true });
+      CONTROL?.markAsTouched({ onlySelf: true });
+      CONTROL?.updateValueAndValidity();
+    } else {
+      CONTROL?.markAsDirty();
+    }
   }
 }
