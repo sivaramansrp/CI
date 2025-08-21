@@ -466,7 +466,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy,AfterView
         categoria: 'danger',
         modo: 'info',
         titulo: 'Error de fechas',
-        mensaje: 'La fecha inicial debe ser anterior a la fecha final.',
+        mensaje: 'Los datos marcados con asterisco son obligatorios. Favor de capturarlos.',
         cerrar: true,
         tiempoDeEspera: 2000,
         txtBtnAceptar: 'Aceptar',
