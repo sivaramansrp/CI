@@ -1,11 +1,10 @@
-import { ALERTA_DE_APLICACION_REGISTRADA, ERROR_FORMA_ALERT } from '../../constants/programa-seleccionado.enum';
+import { ALERTA_DE_APLICACION_REGISTRADA, ERROR_FORMA_ALERT, PANTA_WIZARD_PASOS } from '../../constants/programa-seleccionado.enum';
 import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AVISO } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '@ng-mf/data-access-user';
-import { PANTA_PASOS } from '@ng-mf/data-access-user';
 import { ValidacionDeFormularioService } from '../../services/forma-servicio/validacion-de-formulario.service';
 import { WizardService } from '@ng-mf/data-access-user';
 
@@ -24,7 +23,7 @@ export class PantallasComponent implements OnInit, OnDestroy {
    * Lista de pasos del wizard cargados desde una constante.
    * Cada paso contiene información relevante para el flujo del wizard.
    */
-  public pantallasPasos: ListaPasosWizard[] = PANTA_PASOS;
+  public pantallasPasos: ListaPasosWizard[] = PANTA_WIZARD_PASOS;
 
   /**
    * @description
