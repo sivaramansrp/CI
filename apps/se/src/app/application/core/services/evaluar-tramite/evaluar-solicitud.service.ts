@@ -60,6 +60,6 @@ export class EvaluarSolicitudService {
     const ENDPOINT = `${this.host}` + API_GET_EVALUAR_MOSTRAR.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, folioTramite);
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const params = new HttpParams().set('opcion', opcion);
-    return this.http.post<BaseResponse<string>>(ENDPOINT, { params });
+    return this.http.post<BaseResponse<string>>(ENDPOINT,null, { params });
   }
 }
