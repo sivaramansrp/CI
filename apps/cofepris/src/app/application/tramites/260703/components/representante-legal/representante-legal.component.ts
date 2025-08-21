@@ -62,7 +62,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy{
       takeUntil(this.destruirNotificador$),
       map((seccionState) => {
        this.esFormularioSoloLectura = seccionState.readonly;
-       
+       this.guardarDatosFormulario();
       })
     )
     .subscribe()
@@ -74,6 +74,9 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy{
    */
 
   guardarDatosFormulario(): void {
+    if(!this.representanteLegalForm){
+      return;
+    }
     if (this.esFormularioSoloLectura) {
     this.representanteLegalForm.disable();
   }else{
@@ -129,6 +132,9 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy{
     * {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
     */
     setValoresStore(campo: string): void {
+      if (!this.representanteLegalForm) {
+        return;
+      }
       const VALOR = this.representanteLegalForm.get(campo)?.value;
       this.tramite260703Store.actualizarEstadoFormularioRepresentanteLegal({
         [campo]: VALOR

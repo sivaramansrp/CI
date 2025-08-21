@@ -490,9 +490,9 @@
           <div class="form-group mt-5">
             <div class="panel-group ficha-collapse" id="accordion">
               <div class="panel panel-default">
-                <div class="panel-heading" (click)="mostrar_colapsable()" tabindex="0">
-                  <p class="panel-title">País de origen</p>
-                  <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
+                <div class="panel-heading" (click)="mostrar_colapsable(1)" tabindex="0">
+                  <p class="panel-title fw-bold">País de origen</p>
+                  <button type="button" class="collpase-button" [class.collapsed]="!paisDeOriginColapsable" [disabled]="esFormularioSoloLectura"></button>
                 </div>
                 @if (colapsable) {
                 <div class="panel-collapse collapse in" id="panel-01">
@@ -509,17 +509,17 @@
           <div class="form-group mt-5">
             <div class="panel-group ficha-collapse" id="accordion">
               <div class="panel panel-default">
-                <div class="panel-heading" (click)="mostrar_colapsable()" tabindex="0">
+                <div class="panel-heading" (click)="mostrar_colapsable(2)" tabindex="0">
                   <p class="panel-title fw-bold">
                     País donde se produce o fabrica el ingrediente activo
                   </p>
-                  <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
+                  <button type="button" class="collpase-button" [class.collapsed]="!paisDoneFabricaColapsable" [disabled]="esFormularioSoloLectura"></button>
                 </div>
                 @if (colapsable) {
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
-                    <crosslist [fechas]="seleccionarOrigenDelPais" [label]="paisDeProcedenciaLabel"
-                      [botones]="paisDeProcedenciaBotones" [isDisabled]="esFormularioSoloLectura"></crosslist>
+                    <crosslist [fechas]="seleccionarOrigenDelPaisDuos" [label]="paisDeProcedenciaLabel"
+                      [botones]="paisDeProcedenciaBotonesDuos" [isDisabled]="esFormularioSoloLectura"></crosslist>
                   </div>
                 </div>
                 }
@@ -532,13 +532,13 @@
               <div class="panel panel-default">
                 <div class="panel-heading" (click)="mostrar_colapsableDuos()" tabindex="0">
                   <p class="panel-title fw-bold">País donde se elabora el producto</p>
-                  <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
+                  <button type="button" class="collpase-button" [class.collapsed]="!paisDoneProductoColapsable" [disabled]="esFormularioSoloLectura"></button>
                 </div>
                 @if (colapsableDuos) {
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
-                    <crosslist [fechas]="seleccionarOrigenDelPaisDuos" [label]="paisDeDondeLabel"
-                      [botones]="paisDeProcedenciaBotonesDuos" [isDisabled]="esFormularioSoloLectura"></crosslist>
+                    <crosslist [fechas]="seleccionarOrigenDelPaisTres" [label]="paisDeDondeLabel"
+                      [botones]="paisDeProcedenciaBotonesTres" [isDisabled]="esFormularioSoloLectura"></crosslist>
                   </div>
                 </div>
                 }
@@ -551,13 +551,13 @@
               <div class="panel panel-default">
                 <div class="panel-heading" (click)="mostrar_colapsableTres()" tabindex="0">
                   <p class="panel-title fw-bold">País proveedor</p>
-                  <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
+                  <button type="button" class="collpase-button" [class.collapsed]="!paisProveedorColapsable" [disabled]="esFormularioSoloLectura"></button>
                 </div>
                 @if (colapsableTres) {
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
-                    <crosslist [fechas]="seleccionarOrigenDelPaisTres" [label]="paisOrigenLabel"
-                      [botones]="paisDeProcedenciaBotonesTres" [isDisabled]="esFormularioSoloLectura"></crosslist>
+                    <crosslist [fechas]="seleccionarOrigenDelPaisCuatro" [label]="paisOrigenLabel"
+                      [botones]="paisDeProcedenciaBotonesCuatro" [isDisabled]="esFormularioSoloLectura"></crosslist>
                   </div>
                 </div>
                 }
@@ -572,13 +572,13 @@
                   <p class="panel-title fw-bold">
                     País de procedencia/País del último puerto de embarque
                   </p>
-                  <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
+                  <button type="button" class="collpase-button" [class.collapsed]="!paisProcedenciaDelColapsable" [disabled]="esFormularioSoloLectura"></button>
                 </div>
                 @if (colapsableTress) {
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
-                    <crosslist [fechas]="seleccionarOrigenDelPaisCuatro" [label]="paisEmbarqueLabel"
-                      [botones]="paisDeProcedenciaBotonesCuatro" [isDisabled]="esFormularioSoloLectura"></crosslist>
+                    <crosslist [fechas]="seleccionarOrigenDelPaisCinco" [label]="paisEmbarqueLabel"
+                      [botones]="paisDeProcedenciaBotonesCinco" [isDisabled]="esFormularioSoloLectura"></crosslist>
                   </div>
                 </div>
                 }
@@ -594,7 +594,7 @@
           </div>
           <div class="form-group">
             <app-catalogo-select [catalogo]="estado" formControlName="objetoImportacion"
-              [label]="'objeto de importación'" [required]="true" name="objetoImportacion" (change)="
+              [label]="'Objeto de la importación'" [required]="true" name="objetoImportacion" (change)="
                 setValoresStore(formMercancias, 'especificar', 'setEspecificar')"
               [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
           </div>

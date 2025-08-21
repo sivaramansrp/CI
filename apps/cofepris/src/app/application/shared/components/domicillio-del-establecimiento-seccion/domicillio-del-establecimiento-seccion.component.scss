@@ -1,0 +1,23 @@
+.btn-disabled-state {
+  cursor: not-allowed !important;
+  
+  &:hover {
+    cursor: not-allowed !important;
+  }
+}
+
+.btn-enabled-state {
+  cursor: pointer;
+  
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  
+  &.btn-disabled-state {
+    cursor: not-allowed !important;
+  }
+}

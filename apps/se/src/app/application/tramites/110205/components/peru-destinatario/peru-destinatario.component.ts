@@ -89,6 +89,12 @@ export class PeruDestinatarioComponent implements OnInit, OnDestroy {
    */
   private seccionState!: SeccionLibState;
 
+    /**
+   * @property {string} idProcedimiento
+   * @description Identificador del procedimiento, utilizado para la gestión del trámite.
+   */
+   public idProcedimiento = 110205;
+
   /**
    * @constructor
    * @description

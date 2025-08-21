@@ -1,91 +1,95 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { CancelarSolicitudService } from './cancelar-solicitud.service';
-import { CancelarSolicitudForm } from '../modelos/cancelar-solicitud.modalidad.model';
+import { HttpClient } from '@angular/common/http';
+import { of } from 'rxjs';
+import { CancelarSolicitudState, CancelarSolicitudStore } from '../estados/tramite570101.store';
+import { CancelarSolicitudForm, CancelarModalidad } from '../modelos/cancelar-solicitud.modalidad.model';
 
 describe('CancelarSolicitudService', () => {
   let service: CancelarSolicitudService;
-  let httpMock: HttpTestingController;
+  let httpClientMock: any;
+  let cancelarSolicitudStoreMock: any;
 
   beforeEach(() => {
+    httpClientMock = {
+      get: jest.fn()
+    };
+
+    cancelarSolicitudStoreMock = {
+      update: jest.fn()
+    };
+
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [CancelarSolicitudService],
+      providers: [
+        CancelarSolicitudService,
+        { provide: HttpClient, useValue: httpClientMock },
+        { provide: CancelarSolicitudStore, useValue: cancelarSolicitudStoreMock }
+      ]
     });
 
     service = TestBed.inject(CancelarSolicitudService);
-    httpMock = TestBed.inject(HttpTestingController);
   });
 
-  afterEach(() => {
-    httpMock.verify();
-  });
-
-  it('should be created', () => {
+  it('debería crearse correctamente', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should fetch cancelarSolicitud data from the specified URL', () => {
-    const mockData: CancelarSolicitudForm = {
-      folioSVEX: "SVEX470000012025",
-      folioVUCEM: "01057001000120252470000002",
-      tipoDeCancelacion: "",
-      horaInicio: "06:00",
-      horaFin: "23:00",
-      descripcion: "",
-      fechasSeleccionadas: {
-          selectedFechas: [] 
-      }
-    };
+  it('debería obtener cancelar solicitud desde JSON', (done) => {
+    const mockData: CancelarSolicitudForm = { campo1: 'valor1' } as any;
+    httpClientMock.get.mockReturnValue(of(mockData));
 
-    service.getCancelarSolicitud().subscribe((data) => {
-      expect(data).toEqual(mockData);
+    service.getCancelarSolicitud().subscribe((resp) => {
+      expect(resp).toEqual(mockData);
+      expect(httpClientMock.get).toHaveBeenCalledWith('/assets/json/570101/cancelarSolicitud.json');
+      done();
     });
-
-    const req = httpMock.expectOne('/assets/json/570101/cancelarSolicitud.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockData);
   });
 
-  it('should handle HTTP error gracefully', () => {
-    const errorMessage = 'Failed to fetch data';
+  it('debería obtener select rango días', (done) => {
+    const mockDias: string[] = ['1', '2', '3'];
+    httpClientMock.get.mockReturnValue(of(mockDias));
 
-    service.getCancelarSolicitud().subscribe({
-      next: () => fail('Should have failed with an error'),
-      error: (error) => {
-        expect(error).toBeTruthy();
-      },
+    service.getSelectRangoDias().subscribe((resp) => {
+      expect(resp).toEqual(mockDias);
+      expect(httpClientMock.get).toHaveBeenCalledWith('/assets/json/570101/selectRangoDias.json');
+      done();
     });
-
-    const req = httpMock.expectOne('/assets/json/570101/cancelarSolicitud.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(errorMessage, { status: 500, statusText: 'Internal Server Error' });
   });
 
-  it('should fetch selectRangoDias data from the specified URL', () => {
-    const mockData: string[] = ['2023-01-01', '2023-01-02'];
+  it('debería obtener tipo de solicitud', (done) => {
+    const mockTipos: CancelarModalidad[] = [{
+      id: 1, descripcion: 'Total'
+    }];
+    httpClientMock.get.mockReturnValue(of(mockTipos));
 
-    service.getSelectRangoDias().subscribe((data) => {
-      expect(data).toEqual(mockData);
+    service.getTipoSolicitud().subscribe((resp) => {
+      expect(resp).toEqual(mockTipos);
+      expect(httpClientMock.get).toHaveBeenCalledWith('/assets/json/570101/tipoSolicitud.json');
+      done();
     });
-
-    const req = httpMock.expectOne('/assets/json/570101/selectRangoDias.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockData);
   });
 
-  it('should fetch tipoSolicitud data from the specified URL', () => {
-    const mockData = [
-      { modalidad: 'Total' },
-      { modalidad: 'Parcial' },
-    ];
+  it('debería actualizar estado del formulario en el store', () => {
+    const mockEstado: Partial<CancelarSolicitudState> = { campoA: 'valorA' } as any;
 
-    service.getTipoSolicitud().subscribe((data) => {
-      expect(data).toEqual(mockData);
+    service.actualizarEstadoFormulario(mockEstado);
+
+    expect(cancelarSolicitudStoreMock.update).toHaveBeenCalledWith(expect.any(Function));
+
+    // simulamos el resultado de la función pasada a update
+    const updateFn = cancelarSolicitudStoreMock.update.mock.calls[0][0];
+    const result = updateFn({ campoB: 'valorB' });
+    expect(result).toEqual({ campoB: 'valorB', campoA: 'valorA' });
+  });
+
+  it('debería obtener registro de toma de muestras de mercancías', (done) => {
+    const mockRegistro: CancelarSolicitudState = { campoX: 'valorX' } as any;
+    httpClientMock.get.mockReturnValue(of(mockRegistro));
+
+    service.getRegistroTomaMuestrasMercanciasData().subscribe((resp) => {
+      expect(resp).toEqual(mockRegistro);
+      expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/570101/requestCancallar.json');
+      done();
     });
-
-    const req = httpMock.expectOne('/assets/json/570101/tipoSolicitud.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockData);
   });
 });

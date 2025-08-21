@@ -9,13 +9,16 @@ import {
 import {
   AlertComponent,
   Catalogo,
+  ConfiguracionColumna,
   ConsultaioQuery,
   NotificacionesComponent,
+  TablaSeleccion,
   TableComponent,
   TablePaginationComponent,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent,InputRadioComponent,Notificacion } from '@libs/shared/data-access-user/src';
+import { CONFIGURATION_TABLA_MODIFICACION_SOCIOS, MESSAGE_NAC, ModificacionSociosItem } from '../../enums/modificacion-socios.enum';
+import { CatalogoSelectComponent, InputRadioComponent, Notificacion, TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import {
   FormBuilder,
   FormGroup,
@@ -29,7 +32,6 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { CommonModule } from '@angular/common';
-import { MESSAGE_NAC } from '../../enums/modificacion-socios.enum';
 import { Modal } from 'bootstrap';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
 import { Tramite32301Store } from '../../estados/tramite32301.store';
@@ -50,12 +52,12 @@ interface PreOperativoIn {
     InputRadioComponent,
     AlertComponent,
     NotificacionesComponent,
+    TablaDinamicaComponent
   ],
   templateUrl: './modificacion-socios.component.html',
 })
 export class ModificacionSociosComponent
-  implements OnInit, AfterViewInit, OnDestroy
-{
+  implements OnInit, AfterViewInit, OnDestroy {
   // Definición de las columnas de la tabla
   tableColumns: string[] = [];
   declaretableColumns: string[] = [];
@@ -116,17 +118,41 @@ export class ModificacionSociosComponent
    * Se utiliza para almacenar y gestionar notificaciones que indican acciones exitosas.
    */
   public correctamenteNotificacion!: Notificacion;
-   /**
-  * Indica si el formulario está en modo solo lectura.
-  * Cuando es `true`, los campos del formulario no se pueden editar.
-  */
-  esFormularioSoloLectura: boolean = false; 
+  /**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando es `true`, los campos del formulario no se pueden editar.
+ */
+  esFormularioSoloLectura: boolean = false;
 
   /**
-   * Constructor de la clase, donde se inyectan los servicios y almacenes necesarios
-   * para la gestión del trámite 32301 y la manipulación de formularios reactivos.
+ * Fila seleccionada en la tabla de mercancías seleccionadas.
+ * 
+ * Representa la mercancía seleccionada actualmente en la tabla de mercancías seleccionadas.
+ */
+  seleccionadasFila!: ModificacionSociosItem | null;
+
+  /**
+    * Estado de la selección de la tabla.
+    * @type {TablaSeleccion}
+    */
+  seleccionTabla = TablaSeleccion.CHECKBOX;
+  /**
+   * Encabezados de la tabla de fracciones arancelarias.
    */
-  
+  modificacionSociosHeader: ModificacionSociosItem[] = [];
+
+  /**
+ * Configuración de las columnas de la tabla de fusión y escisión.
+ * @type {ConfiguracionColumna<ModificacionSociosItem>[]}
+ */
+  configuracionModificacionSocios: ConfiguracionColumna<ModificacionSociosItem>[] = CONFIGURATION_TABLA_MODIFICACION_SOCIOS;
+
+  /** Dat
+/**
+* Constructor de la clase, donde se inyectan los servicios y almacenes necesarios
+* para la gestión del trámite 32301 y la manipulación de formularios reactivos.
+*/
+
   constructor(
     /**
      * Servicio para la creación y gestión de formularios reactivos.
@@ -157,15 +183,20 @@ export class ModificacionSociosComponent
      * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
      * - La suscripción se cancela automáticamente cuando `destroy$` emite un valor (para evitar fugas de memoria).
      */
+    this.Tramite32301Query.selectState$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((state) => {
+        this.modificacionSociosHeader = state.modificacionSociosHeader || [];
+      });
     this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroy$),
-      map((seccionState)=>{
-        this.esFormularioSoloLectura = seccionState.readonly; 
-        this.inicializarEstadoFormulario();
-      })
-    )
-    .subscribe()
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
   }
 
   /**
@@ -173,7 +204,7 @@ export class ModificacionSociosComponent
    * Se encarga de realizar llamadas a servicios para obtener los datos necesarios.
    */
   ngOnInit(): void {
-   this.inicializarEstadoFormulario();
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -185,33 +216,33 @@ export class ModificacionSociosComponent
       this.guardarDatosFormulario();
     } else {
       this.inicializarFormulario();
-    }  
+    }
   }
 
-   /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
-   */
+  /**
+  * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+  * Luego reinicializa el formulario con los valores actualizados desde el store.
+  */
   guardarDatosFormulario(): void {
-      this.inicializarFormulario();
-      if (this.esFormularioSoloLectura) {
-        this.agregarMiembroDeLaEmpresaFrom.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.agregarMiembroDeLaEmpresaFrom.enable();
-      }
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.agregarMiembroDeLaEmpresaFrom.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.agregarMiembroDeLaEmpresaFrom.enable();
+    }
   }
 
-   /**
-   * Inicializa el formulario reactivo para capturar el valor de 'registro'.
-   * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
-   * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
-   * con el valor inicial obtenido del store.
-   */
+  /**
+  * Inicializa el formulario reactivo para capturar el valor de 'registro'.
+  * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
+  * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
+  * con el valor inicial obtenido del store.
+  */
 
   inicializarFormulario(): void {
- /**
-     * Inicializa el formulario para agregar un miembro a la empresa.
-     */
+    /**
+        * Inicializa el formulario para agregar un miembro a la empresa.
+        */
     this.initAgregarMiembroDeLaEmpresaForm();
 
     /**
@@ -512,7 +543,82 @@ export class ModificacionSociosComponent
       this.agregarModelInstance.show();
     }
   }
+  /**
+   * Maneja la selección de filas en la tabla de seleccionadas.
+   * 
+   * Este método asigna la fila seleccionada a `seleccionadasFila`.
+   * 
+   * @param {ModificacionSociosItem} evento - La fila seleccionada en la tabla de mercancías seleccionadas.
+   */
+  seleccionDeFilas(evento: ModificacionSociosItem): void {
+    this.seleccionadasFila = evento;
+  }
+  /**
+   * Elimina la fracción seleccionada de la lista de fracciones.
+   * 
+   * Este método busca la fracción por su ID y la elimina de la lista `modificacionSociosHeader`.
+   * Si la fracción no se encuentra, actualiza el store con la lista actualizada.
+   * 
+   * @param {number} id - El ID de la fracción a eliminar.
+   */
+  eliminarModificacionSociosSeleccionada(id: number): void {
+     const INDEX = this.modificacionSociosHeader.findIndex(item => Number(item.id) === id);
+    if (INDEX !== -1) {
+      this.modificacionSociosHeader = this.modificacionSociosHeader.filter(item => Number(item.id) !== id);
+      this.seleccionadasFila = null;
+      this.store.setModificacionSociosHeader(this.modificacionSociosHeader);
+    } 
+  }
+  /**
+   * Agrega o actualiza un `ModificacionSociosItem` en el arreglo `modificacionSociosHeader` según los valores proporcionados en el formulario.
+   * Si existe un elemento con el mismo `id`, se actualiza; de lo contrario, se agrega uno nuevo.
+   * Reinicia la fila seleccionada y oculta el modal si está presente, luego reinicia el formulario.
+   *
+   * @param form - El `FormGroup` que contiene los valores para la modificación.
+   */
+  aggregarModificacionSocios(form: FormGroup): void {
+    const FORM_VALUES = form.getRawValue();
 
+    const NUEVA_MODIFICACION_SOCIOS_ITEM: ModificacionSociosItem = {
+      id: this.seleccionadasFila?.id ?? FORM_VALUES.id ?? this.modificacionSociosHeader.length + 1,
+      tipoDePersona: 'Física',
+      nombre: FORM_VALUES.nombreCompleto,
+      rfc: FORM_VALUES.rfc,
+      caracter: FORM_VALUES.ensucarácterde,
+      nacionalidad: FORM_VALUES.nacionalidad,
+      obligadoTributarMexico: FORM_VALUES.obligadoaTributarenMéxico,
+      nombreEmpresa: FORM_VALUES.nombreEmpresa,
+      tipoMovimiento: 'Ratificado'
+    };
+
+    const INDEX = this.modificacionSociosHeader.findIndex(
+      item => item.id === NUEVA_MODIFICACION_SOCIOS_ITEM.id
+    );
+
+    if (INDEX !== -1) {
+      this.modificacionSociosHeader = this.modificacionSociosHeader.map((item, i) =>
+        i === INDEX ? NUEVA_MODIFICACION_SOCIOS_ITEM : item
+      );
+    } else {
+      this.modificacionSociosHeader = [
+        ...this.modificacionSociosHeader,
+        NUEVA_MODIFICACION_SOCIOS_ITEM
+      ];
+    }
+
+    this.store.setModificacionSociosHeader(this.modificacionSociosHeader);
+    this.seleccionadasFila = null;
+
+    if (this.agregarModelInstance) {
+      this.agregarModelInstance.hide();
+    }
+    this.agregarMiembroDeLaEmpresaFrom.reset();
+  }
+
+  /**
+   * Abre el modal para la acción de "Raticar" si la instancia existe.
+   * Configura los parámetros de la notificación que se mostrará al usuario.
+   */
   openRaticarModal(): void {
     /** Abre el modal para la acción de "Raticar" si la instancia existe */
     this.raticarNotificacion = {

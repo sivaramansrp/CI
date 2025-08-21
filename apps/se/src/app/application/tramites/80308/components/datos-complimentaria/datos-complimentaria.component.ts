@@ -120,7 +120,7 @@ export class DatosComplimentariaComponent implements OnDestroy {
               CONFIGURACION_SERVICIOS;
 
   constructor(
-    public modificionService: ModificacionSolicitudeService,
+    private modificionService: ModificacionSolicitudeService,
     private toastr: ToastrService
   ) {
     this.obtenerFederetarios(); // Carga los federetarios.

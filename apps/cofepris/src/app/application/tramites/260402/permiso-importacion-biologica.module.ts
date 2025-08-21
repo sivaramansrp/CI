@@ -28,6 +28,7 @@ import { TercerosProcedenciaService } from '../../shared/services/terceros-proce
 
 import { PagoDeDerechosEntradaService } from '../../shared/services/pago-de-derechos-entrada.service';
 
+import { PagoDeDerechosBancoComponent } from "../../shared/components/pago-de-derechos-banco/pago-de-derechos-banco.component";
 import { PagoDeDerechosEntradaComponent } from '../../shared/components/pago-de-derechos-entrada/pago-de-derechos-entrada.component';
 import { PropietarioComponent } from '../../shared/components/propietario/propietario.component';
 
@@ -47,8 +48,9 @@ import { PropietarioComponent } from '../../shared/components/propietario/propie
     TercerosRelacionadosProcedenciaComponent,
     DatosGeneralesComponent,
     PagoDeDerechosEntradaComponent,
-    PropietarioComponent
-  ],
+    PropietarioComponent,
+    PagoDeDerechosBancoComponent
+],
   providers: [provideHttpClient(), ToastrService,PagoDeDerechosEntradaService,TercerosProcedenciaService,InicioSesionService,SubirDocumentoService ],
 })
 export class EntradaHumanaModule { }

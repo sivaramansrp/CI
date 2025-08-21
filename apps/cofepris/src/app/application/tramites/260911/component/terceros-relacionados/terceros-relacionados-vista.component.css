@@ -1,4 +1,4 @@
-// Alineación centrada para todos los elementos de la tabla
+
 table,
 th,
 td {
@@ -6,7 +6,7 @@ td {
   vertical-align: middle;
 }
 
-// Estilos profundos en el DOM para sobrescribir estilos de componentes
+
 ::ng-deep table,
 ::ng-deep th,
 ::ng-deep td {
@@ -14,7 +14,7 @@ td {
   vertical-align: middle !important;
 }
 
-// Selectores específicos para el componente de tabla dinámica
+
 ::ng-deep app-tabla-dinamica table,
 ::ng-deep app-tabla-dinamica th,
 ::ng-deep app-tabla-dinamica td {
@@ -22,7 +22,7 @@ td {
   vertical-align: middle !important;
 }
 
-// Selectores adicionales para encabezados y celdas de tabla
+
 ::ng-deep .table th,
 ::ng-deep .table td,
 ::ng-deep .table-responsive th,
@@ -31,7 +31,7 @@ td {
   vertical-align: middle !important;
 }
 
-// Sobrescrituras de tablas de Bootstrap
+
 ::ng-deep .table-striped th,
 ::ng-deep .table-striped td,
 ::ng-deep .table-bordered th,
