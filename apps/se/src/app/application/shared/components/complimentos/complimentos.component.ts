@@ -444,10 +444,6 @@ this.formaComplimentos.disable();
     return this.validacionesService.isValid(FORMGRUPO, campo);
   }
 
-  // get datosGeneralis(): FormGroup {
-  //   return this.formaComplimentos.get('datosGeneralis') as FormGroup;
-  // }
-
   /**
    * Aplica los datos del complemento al formulario, transformando los valores según sea necesario.
    */
@@ -1282,11 +1278,21 @@ this.formaComplimentos.disable();
     return true;
   }
 
+  /**
+ * Marca como tocado el control especificado dentro del formulario de socios accionistas al perder el foco.
+ * @param campo - Nombre del campo que perdió el foco.
+ */
   onDesenfoque(campo: string): void {
     const CONTROL = this.formaComplimentos.get(`formaSocioAccionistas.formaDatos.${campo}`);
     CONTROL?.markAsTouched();
   }
 
+  /**
+ * Actualiza el valor del campo especificado en el formulario de socios accionistas cuando cambia su valor.
+ * Marca el control como tocado y actualiza su validez; si el valor está vacío, lo marca como modificado.
+ * @param event - Evento de cambio del input.
+ * @param campo - Nombre del campo a actualizar.
+ */
   onCambio(event: Event, campo: string): void {
     const VALOR = (event.target as HTMLInputElement).value;
     const CONTROL = this.formaComplimentos.get(`formaSocioAccionistas.formaDatos.${campo}`);
