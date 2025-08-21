@@ -358,10 +358,8 @@ get selectedTipoPersona(): string | undefined {
       });
   }
   /**
-   * Método para obtener los datos del destinatario.
-   * Utiliza el servicio `registrarsolicitud` para obtener los datos y los asigna a `tableData`.
+   * Método para restaurar la selección de filas en la tabla.
    */
- 
   getDestinatarioData(): Promise<void> {
   return new Promise((resolve) => {
     this.solicitud290201Store._select((state) => state.tableData).subscribe((data) => {
@@ -502,9 +500,10 @@ this.solicitud290201Store.setFilaSeleccionada(this.filaSeleccionada);
   this.solicitud290201Store.setFilaSeleccionadas(Array.from(this.filaSeleccionadas));
   this.changeDetectorRef.detectChanges();
 }
-
-
-// Restore the selection state from the store
+  /**
+ * Método para restaurar la selección de filas en la tabla.
+ * Utiliza los datos del store para restaurar las filas seleccionadas y actualiza el estado del componente.
+ */
 restoreSelection(): void {
 
   this.solicitud290201Store._select((state) => state.filaSeleccionadas).subscribe((selectedIds) => {

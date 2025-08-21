@@ -243,9 +243,14 @@ otrasCaracteristicas: string;
  * @description Lista de datos de la tabla utilizada para almacenar información relacionada con el trámite.
  */
 tableData: FilaData2[];
-
-filaSeleccionada: FilaData2 | null; // Fila seleccionada actualmente
-  filaSeleccionadas: number[]; // ID de filas seleccionadas
+  /**
+   * Fila seleccionada actualmente.
+   */
+filaSeleccionada: FilaData2 | null; 
+  /**
+   * Datos de la nueva fila del destinatario.
+   */
+  filaSeleccionadas: number[]; 
 }
 export function createInitialSolicitudState(): Solicitud290201State {
   return {
@@ -1012,8 +1017,12 @@ public setFilaSeleccionada(filaSeleccionada: FilaData2 | null): void {
       filaSeleccionada,
     }));
   }
-
-  public setFilaSeleccionadas(filaSeleccionadas: number[]): void {
+/**
+ * @method setFilaSeleccionadas
+ * @description Actualiza las filas seleccionadas en el estado.
+ * @param {number[]} filaSeleccionadas - IDs de las filas seleccionadas.
+ */
+public setFilaSeleccionadas(filaSeleccionadas: number[]): void {
     this.update((state) => ({
       ...state,
       filaSeleccionadas,
