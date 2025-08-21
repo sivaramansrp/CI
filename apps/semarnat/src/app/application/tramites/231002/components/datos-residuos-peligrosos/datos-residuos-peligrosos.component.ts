@@ -2,7 +2,7 @@ import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validatio
 import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { CatalogoSelectComponent, InputRadioComponent, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent, InputRadioComponent, MAX_DIGITS_VALIDATOR, Notificacion, NotificacionesComponent, REGEX_DECIMAL, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { RadioOpcion, SolicitudJson } from '@libs/shared/data-access-user/src/core/models/231002/solicitud.model';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
@@ -73,7 +73,7 @@ export class DatosResiduosPeligrososComponent implements OnInit {
   esFormaValido = false;
 
   /** Mensaje de error a mostrar */
-  formErrorAlert = '';
+  alertaErrorFormulario = '';
 
   /** Objeto de notificación para mostrar popup */
   public nuevaNotificacion: Notificacion = {} as Notificacion;
@@ -101,11 +101,17 @@ export class DatosResiduosPeligrososComponent implements OnInit {
   get claveResiduoDisabled(): boolean {
     return this.formularioResiduo?.get('claveResiduo')?.disabled ?? true;
   }
-
+ 
+  /**
+   * Getter para verificar si el campo 'nombre' del formulario de residuo está deshabilitado.
+   */
   get nombreDisabled(): boolean {
     return this.formularioResiduo?.get('nombre')?.disabled ?? true;
   }
 
+  /**
+   * Getter para verificar si el campo 'descripcion' del formulario de residuo está deshabilitado.
+   */
   get descripcionDisabled(): boolean {
     return this.formularioResiduo?.get('descripcion')?.disabled ?? true;
   }
@@ -115,10 +121,16 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     return this.formularioResiduo?.getRawValue()?.claveResiduo || '';
   }
 
+   /**
+   * Getter para verificar si el campo 'nombreValue' del formulario de residuo está deshabilitado.
+   */
   get nombreValue(): string {
     return this.formularioResiduo?.getRawValue()?.nombre || '';
   }
 
+  /**
+   * Getter para verificar si el campo 'descripcionValue' del formulario de residuo está deshabilitado.
+   */
   get descripcionValue(): string {
     return this.formularioResiduo?.getRawValue()?.descripcion || '';
   }
@@ -306,7 +318,7 @@ export class DatosResiduosPeligrososComponent implements OnInit {
       residuoPeligroso: ['', Validators.required],
       cantidad: ['', [
         Validators.required,
-        Validators.pattern(/^\d+(\.\d+)?$/),
+        Validators.pattern(REGEX_DECIMAL),
         DatosResiduosPeligrososComponent.noCommaValidator,
         DatosResiduosPeligrososComponent.maxDigitsValidator
       ]],
@@ -372,7 +384,7 @@ export class DatosResiduosPeligrososComponent implements OnInit {
   private static maxDigitsValidator(control: AbstractControl): ValidationErrors | null {
     const VALUE = control.value;
     if (VALUE) {
-      const REGEX = /^(\d{1,6})(\.\d{1,6})?$/;
+      const REGEX = MAX_DIGITS_VALIDATOR;
       if (!REGEX.test(VALUE)) {
         return { maxDigits: true };
       }
@@ -418,7 +430,7 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     if (!NUMERO) {
       // No mostrar alert, solo la validación del campo
       this.esFormaValido = false;
-      this.formErrorAlert = '';
+      this.alertaErrorFormulario = '';
       return;
     }
 
@@ -437,7 +449,7 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     if (MATERIA_ENCONTRADA) {
       // Ocultar mensaje de error si existe
       this.esFormaValido = false;
-      this.formErrorAlert = '';
+      this.alertaErrorFormulario = '';
       
       // Solo actualizar las opciones del dropdown cuando se encuentra la materia
       this.etiquetasForm.nombre = [
@@ -448,7 +460,7 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     } else {
       // Mostrar mensaje de error cuando no se encuentra la materia prima
       this.esFormaValido = true;
-      this.formErrorAlert = 'El número de bitácora no existe';
+      this.alertaErrorFormulario = 'El número de bitácora no existe';
       
       // Si no se encuentra, limpiar el dropdown
       this.etiquetasForm.nombre = [];
@@ -471,7 +483,7 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     if (MATERIA_ENCONTRADA) {
       // Ocultar mensaje de error si existe
       this.esFormaValido = false;
-      this.formErrorAlert = '';
+      this.alertaErrorFormulario = '';
       
       // Auto-llenar los campos PERO mantenerlos disabled
       this.formularioDatos.get('cantidad')?.setValue(MATERIA_ENCONTRADA.cantidad);
@@ -656,6 +668,9 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     this.formularioStore.actualizarFormularioResiduo(this.formularioResiduo.getRawValue());
   }
 
+  /**
+   * Muestra una notificación de error cuando se intenta agregar un residuo duplicado.
+   */
   mostrarNotificacionDuplicado(): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
