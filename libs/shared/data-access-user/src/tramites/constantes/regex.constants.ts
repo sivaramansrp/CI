@@ -847,3 +847,22 @@ export const IMPORTE = /^\d{1,16}$/;
  * - "abc" (no es un número)
  */
 export const MAX_DIGITS_VALIDATOR = /^(\d{1,6})(\.\d{1,6})?$/;
+
+/**
+ * Expresión regular para validar direcciones de correo electrónico.
+ * Permite letras minúsculas, números y los caracteres . _ % + - antes del @,
+ * seguido de un dominio y una extensión de 2 a 4 letras.
+ * Ejemplo válido: usuario@dominio.com
+ */
+export const EMAIL = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/i;
+
+/**
+ * Expresión regular para validar direcciones de páginas web (URL).
+ * Permite URLs con o sin http(s), dominios válidos y rutas opcionales.
+ * Ejemplos válidos:
+ * - https://www.ejemplo.com
+ * - http://ejemplo.com
+ * - www.ejemplo.com
+ * - ejemplo.com/ruta
+ */
+export const WEBPAGE = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
