@@ -12,6 +12,7 @@ import { OpinionResponse } from "../../../core/models/130118/opinion-response.mo
 import { RequerimientosResponse } from "../../../core/models/130118/requerimientos-response.model";
 import { TabDictamenComponent } from "../consulta-generica/tab-dictamen/tab-dictamen.component";
 import { TabOpinionComponent } from "../consulta-generica/tab-opinion/tab-opinion.component";
+import { TabsResponse } from "../../../core/models/130118/consulta-tabs-response.model";
 import { Tabulaciones } from "../../../core/models/lista-trimites.model";
 import { TareasSolicitud } from "../../../core/models/130118/consulta-tareas-response.model";
 import { TareasTramiteComponent } from "../consulta-generica/bandeja-tareas-tramite/tareas-tramite.component";
@@ -62,6 +63,12 @@ export class ReviewersTabsComponent implements OnChanges, OnInit {
    * @description Referencia al componente hijo que se debe mostrar en la pestaña activa.
    */
   @Input() viewChild!: Type<unknown>;
+
+  /**
+   * @property {TabsResponse[]} tabs
+   * @description Tabs de solicitud.
+   */
+  @Input() tabs!: TabsResponse;
 
   /**
    * @property {DocumentoSolicitud[]} documentos
@@ -144,6 +151,40 @@ export class ReviewersTabsComponent implements OnChanges, OnInit {
     if (changes['viewChild'] && this.viewChild) {
       this.updateTabs();
     }
+
+    if (!this.tabs){ return;}
+
+  // Mapper entre los nombres del servicio y los ids del JSON
+  const TABSMAPPER: Record<string, string> = {
+    solicitudes: "solicitud",
+    documentos: "documentos",
+    dictamenes: "dictamen",
+    requerimientos: "requerimientos",
+    opiniones: "opiniones",
+    acusesResoluciones: "resoluciones",
+    tareaTramite: "tareas",
+    envioDigital: "enviodigital",
+    estadoTransmision: "" 
+  };
+
+  this.listaDeTabulaciones = tramiteDetailsData
+    .map(tab => {
+      // Buscar el nombre correspondiente en TabsResponse
+      const TABKEY = Object.keys(TABSMAPPER).find(
+        key => TABSMAPPER[key] === tab.id
+      );
+
+      if (!TABKEY) {return null; }
+
+      const VALUE = this.tabs[TABKEY as keyof TabsResponse];
+
+      if (VALUE === null) {return null;} 
+      return {
+        ...tab,
+        disabled: VALUE === false 
+      };
+    })
+    .filter(Boolean) as Tabulaciones[];
   }
   /**
    * @method seleccionaTab
