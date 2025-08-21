@@ -4,7 +4,7 @@
         <h5>Fabricante*:</h5>
         <div class="col-md-12">
             <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="fabricanteTablaDatos"
-                [tipoSeleccionTabla]="checkbox" (listaDeFilaSeleccionada)="manejarFila($event, 'fabricante')" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
+                [tipoSeleccionTabla]="checkbox" (listaDeFilaSeleccionada)="manejarFila($event, 'fabricante')" [disableSeleccionTablaCheckBox]="debeEstarDeshabilitado">
             </app-tabla-dinamica>
             <div class="d-flex justify-content-end mt-4">
                 <ng-container *ngIf="listaFilaFabricante.length">
@@ -15,7 +15,7 @@
                         Modificar
                 </button>
                 </ng-container>
-                <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Agregar</button>
+                <button type="button" class="btn btn-primary" [disabled]="debeEstarDeshabilitado">Agregar</button>
             </div>
         </div>
     </div>
@@ -23,18 +23,18 @@
         <h5>Facturador*:</h5>
         <div class="col-md-12">
             <app-tabla-dinamica [configuracionTabla]="configuracionFacturadorTabla" [datos]="fabricanteTablaDatos"
-                [tipoSeleccionTabla]="checkbox"  (listaDeFilaSeleccionada)="manejarFila($event, 'facturador')" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
+                [tipoSeleccionTabla]="checkbox"  (listaDeFilaSeleccionada)="manejarFila($event, 'facturador')" [disableSeleccionTablaCheckBox]="debeEstarDeshabilitado">
             </app-tabla-dinamica>
             <div class="d-flex justify-content-end mt-4">
                 <ng-container *ngIf="listaFilaFacturador.length">
-                <button type="button" class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura">
+                <button type="button" class="btn btn-danger me-2" [disabled]="debeEstarDeshabilitado">
                     Eliminar
                 </button>
-                <button type="button" class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">
+                <button type="button" class="btn btn-default me-2" [disabled]="debeEstarDeshabilitado">
                     Modificar
                 </button>
                 </ng-container>
-                <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Agregar</button>
+                <button type="button" class="btn btn-primary" [disabled]="debeEstarDeshabilitado">Agregar</button>
             </div>
         </div>
     </div>
@@ -42,14 +42,14 @@
         <h5>Proveedor/distribuidor:</h5>
         <div class="col-md-12">
             <app-tabla-dinamica [configuracionTabla]="configuracionProveedorTabla" [datos]="fabricanteTablaDatos"
-                [tipoSeleccionTabla]="checkbox"  (listaDeFilaSeleccionada)="manejarFila($event, 'proveedor')" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
+                [tipoSeleccionTabla]="checkbox"  (listaDeFilaSeleccionada)="manejarFila($event, 'proveedor')" [disableSeleccionTablaCheckBox]="debeEstarDeshabilitado">
             </app-tabla-dinamica>
             <div class="d-flex justify-content-end mt-4">
                 <ng-container *ngIf="listaFilaProveedor.length">
-                <button type="button" class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura">
+                <button type="button" class="btn btn-danger me-2" [disabled]="debeEstarDeshabilitado">
                     Eliminar
                 </button>
-                <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">
+                <button type="button" class="btn btn-default" [disabled]="debeEstarDeshabilitado">
                     Modificar
                 </button>
                 </ng-container>
@@ -60,14 +60,14 @@
         <h5>Certificado analítico:</h5>
         <div class="col-md-12">
             <app-tabla-dinamica [configuracionTabla]="configuracionCertificadoAnaliticoTabla"
-                [datos]="fabricanteTablaDatos"  (listaDeFilaSeleccionada)="manejarFila($event, 'certificado')" [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
+                [datos]="fabricanteTablaDatos"  (listaDeFilaSeleccionada)="manejarFila($event, 'certificado')" [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="debeEstarDeshabilitado">
             </app-tabla-dinamica>
             <div class="d-flex justify-content-end mt-4">
                 <ng-container *ngIf="listaFilaCertificado.length">
-                <button type="button" class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura">
+                <button type="button" class="btn btn-danger me-2" [disabled]="debeEstarDeshabilitado">
                     Eliminar
                 </button>
-                <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">
+                <button type="button" class="btn btn-default" [disabled]="debeEstarDeshabilitado">
                     Modificar
                 </button>
             </ng-container>
@@ -78,14 +78,14 @@
         <h5>Otros:</h5>
         <div class="col-md-12">
             <app-tabla-dinamica [configuracionTabla]="configuracionOtrosTabla" [datos]="otrosTablaDatos"
-                [tipoSeleccionTabla]="checkbox" (listaDeFilaSeleccionada)="manejarFila($event, 'otros')" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
+                [tipoSeleccionTabla]="checkbox" (listaDeFilaSeleccionada)="manejarFila($event, 'otros')" [disableSeleccionTablaCheckBox]="debeEstarDeshabilitado">
             </app-tabla-dinamica>
             <div class="d-flex justify-content-end mt-4">
                 <ng-container *ngIf="listaFilaOtros.length">
-                <button type="button" class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura">
+                <button type="button" class="btn btn-danger me-2" [disabled]="debeEstarDeshabilitado">
                     Eliminar
                 </button>
-                <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">
+                <button type="button" class="btn btn-default" [disabled]="debeEstarDeshabilitado">
                     Modificar
                 </button>
                 </ng-container>

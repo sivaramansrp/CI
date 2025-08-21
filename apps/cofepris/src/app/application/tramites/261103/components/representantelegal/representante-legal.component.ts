@@ -120,21 +120,32 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    * Aplica el estado de solo lectura al formulario.
    * 
    * Este método habilita o deshabilita todos los controles del formulario
-   * basándose en el valor de la propiedad `esFormularioSoloLectura`.
-   * Si el formulario está en modo solo lectura, todos los campos se deshabilitan.
-   * En caso contrario, todos los campos se habilitan para permitir la edición.
+   * basándose en el valor de la propiedad `esFormularioSoloLectura` y el valor de `ideGenerica1`.
+   * 
+   * Lógica de habilitación:
+   * - Si el formulario está en modo solo lectura, todos los campos se deshabilitan.
+   * - Si no está en modo solo lectura, los campos solo se habilitan si `ideGenerica1` es 'Modificacion'.
+   * - En cualquier otro caso, los campos se deshabilitan.
+   * 
+   * Este método es público para permitir que componentes padre puedan aplicar cambios de estado del formulario.
    * 
    * @returns {void}
    */
-  private aplicarEstadoFormulario(): void {
+  public aplicarEstadoFormulario(): void {
     if (!this.domicilioEstablecimiento) {
       return;
     }
 
-    if (this.esFormularioSoloLectura) {
-      this.domicilioEstablecimiento.disable();
-    } else {
+    // Obtener el valor de ideGenerica1 del estado
+    const IDE_GENERICA_1 = this.seccionState?.ideGenerica1;
+    
+    // Determinar si los campos deben estar habilitados
+    const DEBE_ESTAR_HABILITADO = !this.esFormularioSoloLectura && (IDE_GENERICA_1 === 'Modificacion');
+
+    if (DEBE_ESTAR_HABILITADO) {
       this.domicilioEstablecimiento.enable();
+    } else {
+      this.domicilioEstablecimiento.disable();
     }
   }
 

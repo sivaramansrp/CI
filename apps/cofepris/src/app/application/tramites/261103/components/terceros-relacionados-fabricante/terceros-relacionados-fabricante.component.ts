@@ -146,6 +146,22 @@ export class TercerosRelacionadosFabricanteComponent implements OnInit, OnDestro
   listaFilaCertificado: Fabricante[] = [];
   listaFilaOtros: Otros[] = [];
 
+  /**
+   * Getter que determina si los campos deben estar deshabilitados.
+   * 
+   * Los campos deben deshabilitarse cuando:
+   * - El formulario está en modo solo lectura (esFormularioSoloLectura = true), O
+   * - El valor de ideGenerica1 es nulo, undefined, vacío, o no es 'Modificacion'
+   * 
+   * @returns {boolean} true si los campos deben estar deshabilitados, false si deben estar habilitados
+   */
+  public get debeEstarDeshabilitado(): boolean {
+    const IDE_GENERICA_1 = this.estadoSeleccionado?.ideGenerica1;
+    const ES_IDE_GENERICA_1_VALIDO = IDE_GENERICA_1 && IDE_GENERICA_1.trim() !== '' && IDE_GENERICA_1 === 'Modificacion';
+    
+    return this.esFormularioSoloLectura || !ES_IDE_GENERICA_1_VALIDO;
+  }
+
     constructor(
       private datosProcedureQuery : DatosProcedureQuery,
       private consultaioQuery: ConsultaioQuery,

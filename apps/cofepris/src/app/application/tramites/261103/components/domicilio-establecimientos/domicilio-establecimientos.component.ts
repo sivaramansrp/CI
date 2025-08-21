@@ -159,10 +159,17 @@ ngOnInit(): void {
       lada: [{ value: this.seccionState?.lada, disabled: false }],
       telefono: [{ value: this.seccionState?.telefono, disabled: false }]
     });
-    if (this.esFormularioSoloLectura) {
-      this.domicilioEstablecimiento.disable();
-    } else{
+    
+    // Obtener el valor de ideGenerica1 del estado
+    const IDE_GENERICA_1 = this.seccionState?.ideGenerica1;
+    
+    // Determinar si los campos deben estar habilitados
+    const DEBE_ESTAR_HABILITADO = !this.esFormularioSoloLectura && (IDE_GENERICA_1 === 'Modificacion');
+    
+    if (DEBE_ESTAR_HABILITADO) {
       this.domicilioEstablecimiento.enable();
+    } else {
+      this.domicilioEstablecimiento.disable();
     }
   }
 
@@ -190,10 +197,17 @@ ngOnInit(): void {
         licencia: [{ value: this.seccionState?.licencia, disabled: false }],
         regimen: [{ value: this.seccionState?.regimen, disabled: false }],
       });
-      if (this.esFormularioSoloLectura) {
-        this.AvisodeFuncionamiento.disable();
-      } else{
+      
+      // Obtener el valor de ideGenerica1 del estado
+      const IDE_GENERICA_1 = this.seccionState?.ideGenerica1;
+      
+      // Determinar si los campos deben estar habilitados
+      const DEBE_ESTAR_HABILITADO = !this.esFormularioSoloLectura && (IDE_GENERICA_1 === 'Modificacion');
+      
+      if (DEBE_ESTAR_HABILITADO) {
         this.AvisodeFuncionamiento.enable();
+      } else {
+        this.AvisodeFuncionamiento.disable();
       }
     }
 
@@ -284,6 +298,19 @@ inicializarEstadoFormulario(): void {
         this.establecerdomicilioEstablecimiento(); 
         this.avisodeFuncionamientomiento(); 
         this.loadScian();
+    }
+
+    /**
+     * Getter que determina si los componentes deben estar deshabilitados.
+     * 
+     * Combina la lógica de `esFormularioSoloLectura` e `ideGenerica1` para determinar
+     * si los componentes de la interfaz (como app-tabla-dinamica y botones) deben estar deshabilitados.
+     * 
+     * @returns {boolean} true si los componentes deben estar deshabilitados, false si deben estar habilitados
+     */
+    get debeEstarDeshabilitado(): boolean {
+        const IDE_GENERICA_1 = this.seccionState?.ideGenerica1;
+        return this.esFormularioSoloLectura || (IDE_GENERICA_1 !== 'Modificacion');
     }
 }
 
