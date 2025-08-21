@@ -53,7 +53,7 @@
     "claveDeLos": "CLAVE123",
     "fechaDeFabricacio": "2024-01-01",
     "fechaDeCaducidad": "2025-01-01",
-    "regimenLaMercancia": "Definitivo",
+    "regimenLaMercancia": "101",
     "aduana": "101",
     "manifesto": true
   },
