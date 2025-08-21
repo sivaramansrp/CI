@@ -471,7 +471,11 @@ export class DomicilioComponent implements OnInit, OnDestroy {
     this.inicializarEstadoFormulario();
     this.autocompletarMercancias();
   }
-
+  /**
+   * Método para autocompletar los campos de mercancías.
+   * Se suscribe a los cambios en el campo 'fraccionArancelaria' y actualiza
+   * automáticamente los campos relacionados si se cumple la condición.
+   */
 autocompletarMercancias():void{
   this.formMercancias.get('fraccionArancelaria')?.valueChanges.subscribe(value => {
     if (value && value.length === 8) {
@@ -669,7 +673,11 @@ onCambioClaveScian(): void {
     };
 
   }
-
+/**
+ * Método para eliminar un pedimento.
+ * @param borrar - Indica si se debe borrar el pedimento.
+ * @returns void
+ */
   public eliminarPedimento(borrar: boolean): void {
     if (!borrar || !this.seleccionados) {
       return;
