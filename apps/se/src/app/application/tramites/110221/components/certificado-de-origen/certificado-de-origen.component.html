@@ -65,6 +65,7 @@
               class="form-control"
               formControlName="nombres"
               (change)="setValoresStore(validacionForm, 'nombres')"
+              maxlength="250"
             />
             <div *ngIf="validacionForm.get('nombres')?.errors?.['required'] && (validacionForm.get('nombres')?.touched || validacionForm.get('nombres')?.dirty)" class="text-danger">
               <small>Este campo es obligatorio.</small>
@@ -85,6 +86,7 @@
                   validacionForm,
                   'primerApellido' )
               "
+              maxlength="30"
             />
             <div *ngIf="validacionForm.get('primerApellido')?.errors?.['required'] && (validacionForm.get('primerApellido')?.touched || validacionForm.get('primerApellido')?.dirty)" class="text-danger">
               <small>Este campo es obligatorio.</small>

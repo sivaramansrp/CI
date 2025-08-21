@@ -37,9 +37,9 @@
         </div>
       </div>
     </div>
-    </ng-container>
- 
-    <ng-container formGroupName="domicilioForm">
+  </ng-container>
+
+  <ng-container formGroupName="domicilioForm">
     <ng-titulo titulo="Domicilio del destinatario" />
     <div class="row">
       <div class="col-md-4 mb-3">
@@ -80,15 +80,15 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-        <app-catalogo-select [catalogo]="optionsPaisDestino" [label]="'País Destino'" [required]="true"
-          placeholder="Selecciona un valor" id="paisDestino" formControlName="paisDestino"
-          (change)="setdomicilioForm()" [isDisabled]="soloLectura"></app-catalogo-select>
-        <div
-          class="mensaje-error"
-          *ngIf="registroForm.get('domicilioForm.paisDestino')?.errors?.['required'] && (registroForm.get('domicilioForm.paisDestino')?.touched || registroForm.get('domicilioForm.paisDestino')?.dirty)"
-        >
-          Este campo es obligatorio.
-        </div>
+          <app-catalogo-select [catalogo]="optionsPaisDestino" [label]="'País Destino'" [required]="true"
+            placeholder="Selecciona un valor" id="paisDestino" formControlName="paisDestino"
+            (change)="setdomicilioForm()" [isDisabled]="soloLectura"></app-catalogo-select>
+          <div
+            class="mensaje-error"
+            *ngIf="registroForm.get('domicilioForm.paisDestino')?.errors?.['required'] && (registroForm.get('domicilioForm.paisDestino')?.touched || registroForm.get('domicilioForm.paisDestino')?.dirty)"
+          >
+            Este campo es obligatorio.
+          </div>
         </div>
       </div>
       <div class="col-md-4 mb-3">
@@ -161,8 +161,9 @@
         />
       </div>
     </div>
-    </ng-container>
-     <ng-container formGroupName="representanteLegalForm">
+  </ng-container>
+
+  <ng-container formGroupName="representanteLegalForm">
     <ng-titulo titulo="Datos del representante legal del exportador" />
     <div class="row">
       <div class="col-md-8 mb-3">
@@ -228,7 +229,7 @@
           maxlength="70"
           id="cargo"
           formControlName="cargo"
-            (change)="setrepresentanteLegalForm()"
+          (change)="setrepresentanteLegalForm()"
         />
         <div
           class="mensaje-error"
@@ -245,7 +246,7 @@
           id="segundoApellido"
           maxlength="5"
           formControlName="lada"
-            (change)="setrepresentanteLegalForm()"
+          (change)="setrepresentanteLegalForm()"
         />
       </div>
       <div class="col-md-3 mb-3">
@@ -256,7 +257,7 @@
           class="form-control"
           id="segundoApellido"
           formControlName="telefono"
-            (change)="setrepresentanteLegalForm()"
+          (change)="setrepresentanteLegalForm()"
         />
         <div
           class="mensaje-error"
@@ -275,7 +276,7 @@
           id="nombre"
           maxlength="20"
           formControlName="fax"
-            (change)="setrepresentanteLegalForm()"
+          (change)="setrepresentanteLegalForm()"
         />
         <div
           class="mensaje-error"
@@ -297,7 +298,7 @@
           id="correoElectronico"
           maxlength="70"
           formControlName="correoElectronico"
-            (change)="setrepresentanteLegalForm()"
+          (change)="setrepresentanteLegalForm()"
         />
         <div
           class="mensaje-error"
