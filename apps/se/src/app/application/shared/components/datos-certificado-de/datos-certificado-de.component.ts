@@ -208,7 +208,7 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
    * @param changes - Objeto con pares clave/valor de las propiedades que han cambiado.
    */
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['datosFormCertificado'] && this.datosFormCertificado) {
+    if (changes['datosFormCertificado'] || this.datosFormCertificado) {
       if (this.formDatosCertificado) {
         this.formDatosCertificado.patchValue(this.datosFormCertificado);
       } else {

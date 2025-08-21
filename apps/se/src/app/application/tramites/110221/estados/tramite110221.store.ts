@@ -455,14 +455,16 @@ export class Tramite110221Store extends Store<Tramite110221State> {
    * Actualiza los datos del formulario de certificado en el almacén.
    * @param values - Objeto que contiene los valores a actualizar en el formulario de certificado.
    */
-  setFormDatosCertificado(values: { [key: string]: unknown}): void {
-    this.update((state) => ({
-      formDatosCertificado: {
-        ...state.formDatosCertificado,
-        ...values,
-      },
-    }));
-  }
+setFormDatosCertificado(values: { [key: string]: unknown }): void {
+  this.update((state) => ({
+    ...state,
+    formDatosCertificado: {
+      ...state.formDatosCertificado, 
+      ...values,                     
+    },
+  }));
+}
+
 
   /**
    * @descripcion
