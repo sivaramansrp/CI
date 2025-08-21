@@ -274,6 +274,11 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy,AfterView
    * @type {boolean}
    */
   public mostrarMensajeError: boolean = false;
+    /**
+   * Indica si se debe mostrar el mensaje de error.
+   * @type {boolean}
+   */
+  public tableErrorMensajeError: boolean = false;
  /**
    * Representa una nueva notificación que será utilizada en el componente.
    * @type {Notificacion}
@@ -914,6 +919,13 @@ getError(controlName: string, error: string): boolean {
   }
   if (!IS_MERCANCIA_FORM_VALID) {
     this.mercanciaForm.markAllAsTouched();
+  }
+  if(this.mercanciaSeleccionadasTablaData.length < 1) {
+    this.mostrarMensajeError = true;
+  }
+  if(this.mercanciaSeleccionadasTablaData.length === 0){
+    this.tableErrorMensajeError = true;
+    return false;
   }
   return IS_REGISTRO_FORM_VALID && IS_MERCANCIA_FORM_VALID;
 }

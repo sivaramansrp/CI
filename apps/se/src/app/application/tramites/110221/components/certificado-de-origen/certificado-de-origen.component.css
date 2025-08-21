@@ -132,3 +132,6 @@ table {
 .mt-6{
   margin-top: 7rem;
 }
+.danger{
+  color: red;
+}

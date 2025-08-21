@@ -330,8 +330,11 @@
             [configuracionTabla]="headersData"
             [datos]="mercanciaSeleccionadasTablaData"
             [disableSeleccionTablaRadio]="soloLectura"
-           (filaSeleccionada)="onFilaSeleccionadaradio($event)"
+            (filaSeleccionada)="onFilaSeleccionadaradio($event)"
           ></app-tabla-dinamica>
+        </div>
+        <div *ngIf="tableErrorMensajeError && mercanciaSeleccionadasTablaData.length === 0">
+          <small  class="danger mt-3">No hay mercancías seleccionadas. Por favor seleccione al menos una mercancía.</small>
         </div>
         <nav aria-label="Page navigation example" >
           <ul class="pagination d-flex justify-content-center mb-3">
