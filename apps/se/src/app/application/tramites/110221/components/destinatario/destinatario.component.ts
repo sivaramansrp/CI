@@ -4,7 +4,6 @@ import {
   ConsultaioQuery,
   ConsultaioState,
   PAGO_DE_DERECHOS,
-  REGEX_SOLO_DIGITOS,
   TituloComponent,
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
@@ -144,10 +143,11 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+          this.donanteDomicilio();
         })
       )
       .subscribe();
-    this.donanteDomicilio();
+    
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),

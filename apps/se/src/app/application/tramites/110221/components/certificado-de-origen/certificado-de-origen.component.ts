@@ -318,11 +318,13 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy,AfterView
    * Método que se ejecuta al inicializar el componente.
    */
   ngOnInit(): void {
+
     this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+              this.donanteDomicilio();
           // Set table data from solicitudState if available
           if (this.solicitudState) {
             this.mercanciaSeleccionadasTablaData = this.solicitudState.mercanciaSeleccionadasTablaData || [];
@@ -332,7 +334,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy,AfterView
       )
       .subscribe();
 
-    this.donanteDomicilio();
+
 
     this.consultaioQuery.selectConsultaioState$
       .pipe(
