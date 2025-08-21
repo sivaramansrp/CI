@@ -15,7 +15,7 @@
       <ng-alert [CONTENIDO]="TEXTOS"></ng-alert>
 
       <div class="col-md-12 mt-5 d-flex justify-content-end">
-        <button type="button" class="btn btn-primary ms-3">Cargar</button>
+        <button type="button" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura">Cargar</button>
       </div>
     </div>
   </div>
