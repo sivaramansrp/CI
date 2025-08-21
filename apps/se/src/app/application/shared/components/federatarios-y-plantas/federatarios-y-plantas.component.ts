@@ -149,6 +149,12 @@ export class FederatariosYPlantasComponent implements OnInit {
   public federatariosFormGroup!: FormGroup;
 
   /**
+   * Grupo de controles del formulario para federatarios
+   * @property {FormGroup} federatariosCatalogoGroup
+   */
+  public federatariosCatalogoGroup!: FormGroup;
+
+  /**
    * Emisor de eventos para los datos del formulario de federatarios.
    * @type {EventEmitter<FederatariosEncabezado>}
    */
@@ -274,7 +280,19 @@ export class FederatariosYPlantasComponent implements OnInit {
       estadoOptions: new FormControl('',
         Validators.required
       ),
+      
     });
+    this.federatariosCatalogoGroup = new FormGroup({
+      estadoUno: new FormControl('',
+        Validators.required
+      ),
+      estadoDos: new FormControl('',
+        Validators.required
+      ),
+      estadoTres: new FormControl('',
+        Validators.required
+      ),
+    })
   }
   /**
    * Navega a la ruta de acciones
@@ -306,6 +324,10 @@ export class FederatariosYPlantasComponent implements OnInit {
    * @returns {void}
    */
   aggregarDatos(): void {
+    if (this.federatariosFormGroup.invalid) {
+      this.agregarUnoModal();
+      return;
+    }
     this.datosFormaFedratario.emit(this.federatariosFormGroup.value);
     this.federatariosFormGroup.reset();
   }
@@ -373,6 +395,22 @@ export class FederatariosYPlantasComponent implements OnInit {
       modo: 'action',
       titulo: '',
       mensaje: 'No se seleccionaron datos de los miembros federados.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+  /**
+   * Abre un modal para agregar un nuevo miembro federado.
+   */
+  agregarUnoModal(): void {
+    this.miembrosNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Introduzca el Nombre completo y correcto del Notario.',
       cerrar: true,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
