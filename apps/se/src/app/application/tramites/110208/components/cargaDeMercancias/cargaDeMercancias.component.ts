@@ -1,4 +1,5 @@
 import { ALERTA_PARA, FECHA_DE_FACTURA } from '@libs/shared/data-access-user/src/tramites/constantes/110208/certificado.enum';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -156,12 +157,13 @@ export class CargaDeMercanciasComponent implements OnInit, OnDestroy {
       nombreTecnio: [{ value: '', disabled: true }],
       nombreEnIngles: [{ value: '', disabled: true }],
       criterioPara: [{ value: '', disabled: true }],
-      marca: [this.solicitudState?.marca],
+      marca: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9\s]*$/)]],
       umc: [this.solicitudState?.umc],
-      cantidad: [this.solicitudState?.cantidad, Validators.required],
-      valorDeLa: [this.solicitudState?.valorDeLa, Validators.required],
-      complementoDescripcion: [this.solicitudState?.complementoDescripcion, Validators.required],
-      nFactura: [this.solicitudState?.nFactura, Validators.required],
+      cantidad: [this.solicitudState?.cantidad,[Validators.required,CargaDeMercanciasComponent.numericValidator()]],
+      valorDeLa: [this.solicitudState?.valorDeLa,[Validators.required,CargaDeMercanciasComponent.numericValidator()]],
+      complementoDescripcion: [this.solicitudState?.complementoDescripcion,[Validators.maxLength(200),
+      Validators.pattern(/^[a-zA-Z0-9\s.,-]*$/)]],
+      nFactura: [this.solicitudState?.nFactura,[Validators.required,Validators.maxLength(20)]],
       tipoDeFactura: [this.solicitudState?.tipoDeFactura, Validators.required],
       fechaFactura: [this.solicitudState?.fechaFactura, Validators.required],
     });
@@ -169,8 +171,8 @@ export class CargaDeMercanciasComponent implements OnInit, OnDestroy {
       Object.keys(this.formMercancia.controls).forEach((key) => {
         this.formMercancia.get(key)?.disable();
       });
-    }
   }
+}
 
   /**
    * Obtiene los datos de la tabla de mercancías.
@@ -298,7 +300,40 @@ export class CargaDeMercanciasComponent implements OnInit, OnDestroy {
   */
   public esValido(campo: string): boolean | null {
     return this.validacionesService.isValid(this.formMercancia, campo);
+  } 
+ /**
+   * Valida que el valor sea numérico, positivo y con hasta 15 enteros y 4 decimales.
+   * Permite vacío, pero rechaza ceros o negativos.
+   */
+  static numericValidator(): ValidatorFn {
+    const REGEX_VALUE = /^\d{1,15}(\.\d{1,4})?$/;
+  return (control: AbstractControl): ValidationErrors | null => {
+    const VALOR = control.value;
+    if (VALOR === null || VALOR === undefined || VALOR === '') {return null} 
+    if (!REGEX_VALUE.test(VALOR)) {
+      return { invalidNumber: true };
+    }    
+    if (parseFloat(VALOR) <= 0) {
+      return { greaterThanZero: true };
+    } return null;
+  };
+}
+/**
+ * Formatea el valor de un control a 4 decimales.
+ * Si el valor es válido y numérico, lo convierte con precisión fija.
+ * No emite evento al actualizar el control.
+ * Evita errores cuando el valor es nulo o vacío.
+ */
+formatearACuatroDecimales(controlName: string): void {
+  const CONTROL = this.formMercancia.get(controlName);
+  const VALOR = CONTROL?.value;
+  if (VALOR !== null && VALOR !== undefined && VALOR !== '') {
+    const NUMERO = parseFloat(VALOR);
+    if (!isNaN(NUMERO)) {     
+      CONTROL?.setValue(NUMERO.toFixed(4), { emitEvent: false });
+    }
   }
+}
 
 
   /**
