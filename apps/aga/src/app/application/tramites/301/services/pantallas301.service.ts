@@ -35,7 +35,7 @@ export class Pantallas301Service {
    *
    * @param {HttpClient} http - Servicio de Angular para realizar solicitudes HTTP.
    */
-  constructor(private http: HttpClient, private _http: HttpCoreService) { }
+  constructor(private http: HttpClient, private _httpCoreService: HttpCoreService) { }
 
   /**
    * @method getPantallaDatos
@@ -92,7 +92,7 @@ export class Pantallas301Service {
 
   //Example of API integration. P.S.:- Once real API is available, this should be updated.
   public getEstadoCatalogo(): Observable<JSONResponse> {
-    return this._http.get<JSONResponse>(PROC_301.ESTADO).pipe(
+    return this._httpCoreService.get<JSONResponse>(PROC_301.ESTADO).pipe(
       catchError((error) => {
         return throwError(() => error);
       })
@@ -101,7 +101,7 @@ export class Pantallas301Service {
 
   //Example of API integration. P.S.:- Once real API is available, this should be updated.
   public getOpiniones(numFolioTramite: string | number): Observable<JSONResponse> {
-    return this._http.get<JSONResponse>(PROC_301.OPINIONES(numFolioTramite)).pipe(
+    return this._httpCoreService.get<JSONResponse>(PROC_301.OPINIONES(numFolioTramite)).pipe(
       catchError((error) => {
         return throwError(() => error);
       })
