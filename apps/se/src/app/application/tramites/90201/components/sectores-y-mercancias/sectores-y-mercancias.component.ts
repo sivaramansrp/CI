@@ -145,13 +145,13 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * Arreglo que almacena los datos seleccionados de la tabla de sectores.
    * Este arreglo se utiliza para almacenar los sectores seleccionados por el usuario en la tabla.
   */
-  public seleccionadoDatos!: SectoresTabla[] | null;
+  public seleccionadoDatos!: SectoresTabla[];
 
   /**
    * Arreglo que almacena los datos seleccionados de la tabla de mercancías.
    * Este arreglo se utiliza para almacenar las mercancías seleccionadas por el usuario en la tabla.
    */
-  public seleccionadoMercancia!: MercanciasTabla[] | null;
+  public seleccionadoMercancia!: MercanciasTabla[];
   /**
    * Constructor del componente SectoresYMercanciasComponent.
    * 
@@ -360,7 +360,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
       this.sectores = this.sectores.filter(
         (elementos) => this.seleccionadoDatos && this.seleccionadoDatos[0]?.sectores !== elementos.sectores
       );
-      this.seleccionadoDatos = null;
+      this.seleccionadoDatos = [];
     }
 
   }
@@ -379,7 +379,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
       this.mercancias = this.mercancias.filter(
         (elementos) => this.seleccionadoMercancia && this.seleccionadoMercancia[0]?.fraccion !== elementos.fraccion
       );
-      this.seleccionadoMercancia = null;
+      this.seleccionadoMercancia = [];
     }
 
   }
