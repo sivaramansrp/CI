@@ -103,12 +103,42 @@ export class DatosDelDestinatarioComponent implements OnDestroy, OnInit,OnChange
   createForm(): void {
     this.formDatosDelDestinatario = this.fb.group({
       nombres: ['', [Validators.maxLength(20)]],
-      primerApellido: ['', [Validators.required, Validators.maxLength(20)]],
+      primerApellido: ['', [ Validators.maxLength(20)]],
       segundoApellido: ['', [Validators.maxLength(20)]],
-      numeroDeRegistroFiscal: ['', [Validators.maxLength(30)]],
+      numeroDeRegistroFiscal: ['',[Validators.maxLength(30),Validators.required]],
       razonSocial: [{ value: '', disabled: this.razonSocialEditable }],
     });
+   
   }
+/**
+ * Aplica validaciones al campo 'numeroDeRegistroFiscal' y 'primerApellido' del formulario
+ * 'formDatosDelDestinatario' según el procedimiento actual.
+ *  * @remarks
+ * Este método establece validadores específicos para los campos 'numeroDeRegistroFiscal' y 'primerApellido'
+ * basándose en el identificador del procedimiento (`idProcedimiento`).
+ * * Si el procedimiento es 110205, 'numeroDeRegistroFiscal' es requerido y 'primerApellido' no lo es.
+ * * En otros casos, 'numeroDeRegistroFiscal' no es requerido y 'primerApellido' es requerido.
+ * * @returns {void} No retorna ningún valor.
+ * */
+  applyNumeroRegistroFiscalValidation(): void {
+    const NUMERO_REGISTRO_FISCAL = this.formDatosDelDestinatario.get('numeroDeRegistroFiscal');
+    const PRIMER_APELLIDO = this.formDatosDelDestinatario.get('primerApellido');
+  
+    if (!NUMERO_REGISTRO_FISCAL || !PRIMER_APELLIDO) return;
+  
+    if (this.idProcedimiento === 110205) {
+      NUMERO_REGISTRO_FISCAL.setValidators([Validators.required, Validators.maxLength(30)]);
+      PRIMER_APELLIDO.setValidators([Validators.maxLength(20)]); 
+    } else {
+      NUMERO_REGISTRO_FISCAL.setValidators([Validators.maxLength(30)]); 
+      PRIMER_APELLIDO.setValidators([Validators.required, Validators.maxLength(20)]);
+    }
+  
+    NUMERO_REGISTRO_FISCAL.updateValueAndValidity();
+    PRIMER_APELLIDO.updateValueAndValidity();
+  }
+  
+  
   /**
 * Evalúa si se debe inicializar o cargar datos en el formulario.
 */

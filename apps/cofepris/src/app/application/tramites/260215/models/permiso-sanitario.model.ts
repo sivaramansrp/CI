@@ -169,7 +169,7 @@ export interface TablaDatos {
  */
 export interface SolicitudModel {
   fechaCreacion: string;
-  mercancía: string;
+  mercancia: string;
   cantidad: string;
   proveedor: string;
 }
