@@ -1,8 +1,9 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AlertComponent, REGEX_RFC } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite260911State, Tramite260911Store } from '../../estados/tramite260911.store';
 import { ALERT } from '../../enums/datos-de-la-solicitud.enum';
-import { AlertComponent } from '@libs/shared/data-access-user/src';
+
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
@@ -286,7 +287,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, AfterViewInit, OnDes
     });
 
     this.datosDelEstablecimiento = this.fb.group({
-      rfcDel: [this.solicitudState?.rfcDel, Validators.required],
+      rfcDel: [this.solicitudState?.rfcDel, [Validators.required, Validators.pattern(REGEX_RFC)]],
       denominacion: [this.solicitudState?.denominacion, [Validators.required, Validators.maxLength(100)]],
       correo: [this.solicitudState?.correo, [Validators.required, Validators.email, Validators.maxLength(320)]],
     });

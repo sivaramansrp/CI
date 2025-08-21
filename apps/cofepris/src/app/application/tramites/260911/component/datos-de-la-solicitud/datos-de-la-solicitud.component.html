@@ -104,10 +104,11 @@
               (change)="setValorStore(datosDelEstablecimiento,'rfcDel')"
             />
              <div
-            *ngIf="datosDelEstablecimiento.get('rfcDel')?.invalid && datosDelEstablecimiento.get('rfcDel')?.touched"
+            *ngIf="datosDelEstablecimiento.get('rfcDel')?.invalid && datosDelEstablecimiento.get('rfcDel')?.touched && datosDelEstablecimiento.get('rfcDel')?.errors?.['pattern']"
             class="text-danger">
               El RFC no tiene un formato valido.
-          </div>
+            </div> 
+            
           </div>
         </div>
         <div class="col-md-8">

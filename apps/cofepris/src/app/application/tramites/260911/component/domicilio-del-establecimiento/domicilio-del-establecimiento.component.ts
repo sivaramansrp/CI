@@ -776,13 +776,26 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
     });
 
     this.domicilio = this.fb.group({
-      avisoCheckbox: [true],
-      licenciaSanitaria: [{ value: this.solicitudState?.licenciaSanitaria, disabled: true }],
+  avisoCheckbox: [true],
+  licenciaSanitaria: [this.solicitudState?.licenciaSanitaria],
       regimen: [this.solicitudState?.regimen, [Validators.required]],
       aduanasEntradas: [this.solicitudState?.aduanasEntradas, [Validators.required]],
       importPermitNumberCNSNS: [{ value: this.solicitudState?.importPermitNumberCNSNS, disabled: false }],
       aifaCheckbox: [true],
       manifests: [true],
+    });
+
+    if (this.domicilio.get('avisoCheckbox')?.value) {
+      this.domicilio.get('licenciaSanitaria')?.disable();
+    }
+
+    this.domicilio.get('avisoCheckbox')?.valueChanges.subscribe((checked: boolean) => {
+      const LICENCIA_SANITARIA_CONTROL = this.domicilio.get('licenciaSanitaria');
+      if (checked) {
+        LICENCIA_SANITARIA_CONTROL?.disable();
+      } else {
+        LICENCIA_SANITARIA_CONTROL?.enable();
+      }
     });
 
     this.representanteLegal = this.fb.group({
