@@ -42,6 +42,13 @@ export class PeruDatosCertificadoComponent implements OnInit, OnDestroy {
    * Almacena la lista de representaciones federales disponibles.
    */
   representacionFederal: Catalogo[] = [];
+ 
+   /**
+   * @property {string} idProcedimiento
+   * @description Identificador del procedimiento, utilizado para la gestión del trámite.
+   */
+   public idProcedimiento = 110205;
+
 
   /**
    * @private

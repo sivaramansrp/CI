@@ -15,7 +15,19 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
+import {
+  BUSCAR_CUPOS_ERROR,
+  TABLA_DE_DATOS_CUPOS,
+  TABLA_DE_DATOS_DISPONIBLES,
+} from '../../constants/cancelaciones.enum';
 import {
   FormBuilder,
   FormGroup,
@@ -23,10 +35,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
-import {
-  TABLA_DE_DATOS_CUPOS,
-  TABLA_DE_DATOS_DISPONIBLES,
-} from '../../constants/cancelaciones.enum';
 import {
   Tramite140205State,
   Tramite140205Store,
@@ -61,7 +69,21 @@ import { Tramite140205Query } from '../../../../estados/queries/tramite140205.qu
     TablaDinamicaComponent,
   ],
 })
-export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
+export class CancelacionCertificadosComponent
+  implements OnInit, OnDestroy, AfterViewInit
+{
+  /**
+   * Evento de salida que notifica al componente padre
+   * cuando se realiza la acción de búsqueda de empresa.
+   *
+   * @event
+   * @type {EventEmitter<boolean>}
+   * @example
+   * <!-- Uso en plantilla del componente padre -->
+   * <app-mi-componente (datosEmpresaBuscar)="onBuscarEmpresa($event)"></app-mi-componente>
+   */
+  @Output() datosEmpresaBuscar = new EventEmitter<boolean>();
+
   /**
    * Subject para destruir notificador.
    */
@@ -72,7 +94,16 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
    */
   soloLectura: boolean = false;
 
-  
+  /**
+   * Subject que emite un valor cuando el componente se destruye.
+   *
+   * @description
+   * Se utiliza como mecanismo para desuscribir observables de forma
+   * automática en `ngOnDestroy`, evitando fugas de memoria.
+   *
+   * @private
+   * @type {ReplaySubject<boolean>}
+   */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
@@ -130,6 +161,14 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
   optionFederal!: Catalogo[];
 
   /**
+   * Mensaje de error asociado a la búsqueda de empresa.
+   *
+   * @type {string}
+   * @default ''
+   */
+  BUSCAR_EMPRESA_ERROR: string = '';
+
+  /**
    * @property {TablaSeleccion} tablaDeDatos
    * @description Tabla de selección para la tabla de cupos.
    */
@@ -184,6 +223,30 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+          this.solicitudForm?.patchValue({
+            grupoDatalleCupo: {
+              aduanero: this.solicitudState?.grupoDatalleCupo?.aduanero,
+              descripcionProducto:
+                this.solicitudState?.grupoDatalleCupo?.descripcionProducto,
+              clasificacionSubproducto:
+                this.solicitudState?.grupoDatalleCupo?.clasificacionSubproducto,
+              unidad: this.solicitudState?.grupoDatalleCupo?.unidad,
+              mecanismo: this.solicitudState?.grupoDatalleCupo?.mecanismo,
+              tratado: this.solicitudState?.grupoDatalleCupo?.tratado,
+              arancelarias: this.solicitudState?.grupoDatalleCupo?.arancelarias,
+              paises: this.solicitudState?.grupoDatalleCupo?.paises,
+              observaciones:
+                this.solicitudState?.grupoDatalleCupo?.observaciones,
+              fundamentos: this.solicitudState?.grupoDatalleCupo?.fundamentos,
+              fin: this.solicitudState?.grupoDatalleCupo?.fin,
+              inicio: this.solicitudState?.grupoDatalleCupo?.inicio,
+            },
+            grupoFolio: {
+              montoAsignado: this.solicitudState?.grupoFolio?.montoAsignado,
+              montoDisponible: this.solicitudState?.grupoFolio?.montoDisponible,
+              montoExpedido: this.solicitudState?.grupoFolio?.montoExpedido,
+            },
+          });
         })
       )
       .subscribe();
@@ -196,6 +259,7 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
     this.cargarFederal();
     this.cargarCuposTabla2();
     this.cargarCuposTabla();
+    this.fetchGetDatos();
 
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -207,6 +271,25 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+  }
+
+  /**
+   * Método para obtener los datos de consulta del servicio.
+   *  Este método realiza una llamada al servicio `CertificadosOrigenService`
+   *  para obtener los datos necesarios para la consulta del certificado de origen.
+   *  @returns {void}
+   *  @memberof PasoUnoComponent
+   * */
+  public fetchGetDatos(): void {
+    this.cancelacionCertificadosService
+      .getDatosConsulta()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((respuesta) => {
+        if (respuesta.success) {
+          this.store.setGrupoFolio(respuesta.datos.GrupoFolio);
+          this.store.setGrupoDatalleCupo(respuesta.datos.GrupoDatalleCupo);
+        }
+      });
   }
 
   /**
@@ -242,8 +325,7 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
     if (this.soloLectura) {
       this.solicitudForm.disable();
       this.cargarCuposTabla();
-    } 
-    else {
+    } else {
       this.solicitudForm.enable();
     }
   }
@@ -266,40 +348,110 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
       }),
 
       grupoDatalleCupo: this.fb.group({
-        aduanero: [this.solicitudState?.grupoDatalleCupo?.aduanero, []],
+        aduanero: [
+          {
+            value: this.solicitudState?.grupoDatalleCupo?.aduanero,
+            disabled: true,
+          },
+          [],
+        ],
         descripcionProducto: [
-          this.solicitudState?.grupoDatalleCupo?.descripcionProducto,
+          {
+            value: this.solicitudState?.grupoDatalleCupo?.descripcionProducto,
+            disabled: true,
+          },
           [],
         ],
         clasificacionSubproducto: [
-          this.solicitudState?.grupoDatalleCupo?.clasificacionSubproducto,
+          {
+            value:
+              this.solicitudState?.grupoDatalleCupo?.clasificacionSubproducto,
+            disabled: true,
+          },
           [],
         ],
-        unidad: [this.solicitudState?.grupoDatalleCupo?.unidad, []],
-        mecanismo: [this.solicitudState?.grupoDatalleCupo?.mecanismo, []],
-        tratado: [this.solicitudState?.grupoDatalleCupo?.tratado, []],
-        arancelarias: [this.solicitudState?.grupoDatalleCupo?.arancelarias, []],
-        paises: [this.solicitudState?.grupoDatalleCupo?.paises, []],
+        unidad: [
+          {
+            value: this.solicitudState?.grupoDatalleCupo?.unidad,
+            disabled: true,
+          },
+          [],
+        ],
+        mecanismo: [
+          {
+            value: this.solicitudState?.grupoDatalleCupo?.mecanismo,
+            disabled: true,
+          },
+          [],
+        ],
+        tratado: [
+          {
+            value: this.solicitudState?.grupoDatalleCupo?.tratado,
+            disabled: true,
+          },
+          [],
+        ],
+        arancelarias: [
+          {
+            value: this.solicitudState?.grupoDatalleCupo?.arancelarias,
+            disabled: true,
+          },
+          [],
+        ],
+        paises: [
+          {
+            value: this.solicitudState?.grupoDatalleCupo?.paises,
+            disabled: true,
+          },
+          [],
+        ],
         observaciones: [
-          this.solicitudState?.grupoDatalleCupo?.observaciones,
+          {
+            value: this.solicitudState?.grupoDatalleCupo?.observaciones,
+            disabled: true,
+          },
           [],
         ],
-        fundamentos: [this.solicitudState?.grupoDatalleCupo?.fundamentos, []],
-        fin: [this.solicitudState?.grupoDatalleCupo?.fin, []],
-        inicio: [this.solicitudState?.grupoDatalleCupo?.inicio, []],
+        fundamentos: [
+          {
+            value: this.solicitudState?.grupoDatalleCupo?.fundamentos,
+            disabled: true,
+          },
+          [],
+        ],
+        fin: [
+          { value: this.solicitudState?.grupoDatalleCupo?.fin, disabled: true },
+          [],
+        ],
+        inicio: [
+          {
+            value: this.solicitudState?.grupoDatalleCupo?.inicio,
+            disabled: true,
+          },
+          [],
+        ],
       }),
 
       grupoFolio: this.fb.group({
         montoAsignado: [
-          this.solicitudState?.grupoFolio?.montoAsignado,
+          {
+            value: this.solicitudState?.grupoFolio?.montoAsignado,
+            disabled: true,
+          },
           [Validators.required],
         ],
         montoDisponible: [
-          this.solicitudState?.grupoFolio?.montoDisponible,
+          {
+            value: this.solicitudState?.grupoFolio?.montoDisponible,
+            disabled: true,
+          },
           [Validators.required],
         ],
         montoExpedido: [
-          this.solicitudState?.grupoFolio?.montoExpedido,
+          {
+            value: this.solicitudState?.grupoFolio?.montoExpedido,
+            disabled: true,
+          },
           [Validators.required],
         ],
       }),
@@ -307,7 +459,20 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
     this.inicializarFormulario();
   }
 
-  
+  /**
+   * Hook del ciclo de vida de Angular que se ejecuta después de que la vista
+   * y sus componentes hijos han sido inicializados.
+   *
+   * @description
+   * - Deshabilita el grupo de formulario `grupoDatalleCupo`.
+   * - Deshabilita el grupo de formulario `grupoFolio`.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  ngAfterViewInit(): void {
+    this.solicitudForm?.get('grupoDatalleCupo')?.disable();
+    this.solicitudForm?.get('grupoFolio')?.disable();
+  }
 
   /**
    * @property {TablaSeleccion} tablaSeleccion
@@ -348,7 +513,14 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
    * @description Método para habilitar la visualización de los datos generales de la empresa.
    */
   buscarCupos(): void {
-    this.cargarCuposTabla();
+    const GRUPO_CUPO = this.solicitudForm.get('grupoCupo') as FormGroup;
+    if (GRUPO_CUPO.invalid) {
+      GRUPO_CUPO.markAllAsTouched();
+      this.BUSCAR_EMPRESA_ERROR = BUSCAR_CUPOS_ERROR;
+      this.datosEmpresaBuscar.emit(true);
+    }
+    this.BUSCAR_EMPRESA_ERROR = '';
+    this.datosEmpresaBuscar.emit(true);
   }
 
   /**

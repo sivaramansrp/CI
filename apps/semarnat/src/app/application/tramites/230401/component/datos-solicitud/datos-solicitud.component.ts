@@ -5,10 +5,13 @@ import {
   ConsultaioQuery,
   CrossListLable,
   MaxDigitsValidator,
+  Notificacion,
+  Pedimento,
   REGEX_SOLO_DIGITOS,
   SeccionLibQuery,
   TablaSeleccion,
-  ValidacionesFormularioService
+  ValidacionesFormularioService,
+  
 } from '@ng-mf/data-access-user';
 import {
   CONFIGURACION_SUSTANCIAS_SENSIBLES,
@@ -39,12 +42,70 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/
 import { Solicitud230401Query } from '../../estados/queries/solicitud230401.query';
 import { Subject } from 'rxjs';
 import { SustanciaSensible } from '../../models/tramies230401.model';
+
 @Component({
   selector: 'app-datos-solicitud',
   templateUrl: './datos-solicitud.component.html',
   styleUrl: './datos-solicitud.component.scss',
 })
 export class DatosSolicitudComponent implements OnInit, OnDestroy {
+
+    /**
+   * @description
+   * Objeto que representa una nueva notificación.
+   * Se utiliza para mostrar mensajes de alerta o información al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
+   * Controla la visibilidad del modal de alerta.
+   * @property {boolean} mostrarAlerta
+   */
+  public mostrarAlerta: boolean = false;
+
+  /**
+   * Controla la visibilidad del modal de confirmación para eliminar.
+   * @property {boolean} confirmacionAlerta
+   */
+  public confirmacionAlerta: boolean = false;
+
+  /**
+   * @property {boolean} mostrarNotificacion
+   * Controla la visibilidad del modal de notificación de eliminación exitosa.
+   */
+  public mostrarNotificacion: boolean = false;
+
+  /**
+   * @description
+   * Objeto que representa una notificación para confirmación de eliminación.
+   */
+  public seleccionarFilaNotificacion: Notificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: '',
+    mensaje: '¿Estás seguro que deseas eliminar los registros seleccionados?',
+    cerrar: true,
+    tiempoDeEspera: 2000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: 'Cancelar',
+  };
+
+  /**
+   * @property {Notificacion} notificacionEliminacionExitosa
+   * Configuración para el modal de eliminación exitosa.
+   */
+  public notificacionEliminacionExitosa: Notificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'success',
+    modo: 'info',
+    titulo: '',
+    mensaje: 'El registro fue eliminado correctamente',
+    cerrar: true,
+    tiempoDeEspera: 3000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: '',
+  };
 
   /**
    * Representa el formulario reactivo utilizado para capturar y validar los datos de la solicitud.
@@ -54,7 +115,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Esta propiedad almacena la instancia del formulario principal de la solicitud,
    * permitiendo el manejo de controles, validaciones y estados del formulario en el componente.
    */
-  FormSolicitud!: FormGroup;
+  formSolicitud!: FormGroup;
   
   /**
    * Representa el identificador numérico del tipo de solicitud seleccionada por el usuario.
@@ -449,7 +510,7 @@ public aduanasDeEntradaLabel: CrossListLable = {
       )
       .subscribe();
 
-    this.FormSolicitud.statusChanges
+    this.formSolicitud.statusChanges
       .pipe(
         takeUntil(this.destroyNotifier$),
         delay(10),
@@ -457,7 +518,7 @@ public aduanasDeEntradaLabel: CrossListLable = {
           const SECCION: number = 1;
           const FORMAS_VALIDADAS = this.seccion.formaValida;
           const ES_VALIDO_EL_FORM = this.esFormValido();
-          if (this.FormSolicitud.valid || (ES_VALIDO_EL_FORM)) {
+          if (this.formSolicitud.valid || (ES_VALIDO_EL_FORM)) {
             FORMAS_VALIDADAS[SECCION] = true;
             this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
           } else {
@@ -471,9 +532,9 @@ public aduanasDeEntradaLabel: CrossListLable = {
 
 
     /**
-     * Inicializa el estado del formulario `FormSolicitud`.
+     * Inicializa el estado del formulario `formSolicitud`.
      *
-     * - Si el formulario no ha sido creado, lo inicializa llamando a `creatFormSolicitud()`.
+     * - Si el formulario no ha sido creado, lo inicializa llamando a `creatformSolicitud()`.
      * - Si el formulario está configurado como solo lectura (`esFormularioSoloLectura`), lo deshabilita para evitar modificaciones.
      * - Si no está en modo solo lectura, habilita el formulario para permitir la edición.
      *
@@ -481,13 +542,13 @@ public aduanasDeEntradaLabel: CrossListLable = {
      * Este método debe llamarse durante la inicialización del componente para asegurar que el formulario tenga el estado correcto según el contexto de uso.
      */
      inicializarEstadoFormulario(): void {
-      if(!this.FormSolicitud){
-        this.creatFormSolicitud();
+      if(!this.formSolicitud){
+        this.creatformSolicitud();
       }
       if (this.esFormularioSoloLectura) {
-          this.FormSolicitud?.disable();
+          this.formSolicitud?.disable();
       } else {
-        this.FormSolicitud?.enable();
+        this.formSolicitud?.enable();
       }
     }
     
@@ -503,11 +564,11 @@ public aduanasDeEntradaLabel: CrossListLable = {
    *                    `false` si al menos uno de los controles habilitados es inválido.
    */
   esFormValido(): boolean {
-    for(const NOMBRE_DEL_CONTROL in this.FormSolicitud.controls) {
+    for(const NOMBRE_DEL_CONTROL in this.formSolicitud.controls) {
       if(!NOMBRE_DEL_CONTROL){
         continue;
       }
-      const CONTROL = this.FormSolicitud.get(NOMBRE_DEL_CONTROL);
+      const CONTROL = this.formSolicitud.get(NOMBRE_DEL_CONTROL);
       if (CONTROL && CONTROL.enabled && CONTROL.invalid) {
         return false;
       }
@@ -654,7 +715,7 @@ public aduanasDeEntradaLabel: CrossListLable = {
   setValoresStore(form: FormGroup, campo: string): void {
     const VALRO = form.get(campo)?.value;
     if (campo === 'cantidad' && VALRO !== null && VALRO !== undefined) {
-      const NUMERO_ACTIVO = Number(VALRO);
+      const NUMERO_ACTIVO = String(VALRO);
       this.tramite230401Store.setCantidad(NUMERO_ACTIVO);
     }
   }
@@ -669,10 +730,10 @@ public aduanasDeEntradaLabel: CrossListLable = {
    */
   tipoSolicitudSeleccion(): void {
     this.tipoSolicitudSeleccionada = parseInt(
-      this.FormSolicitud.get('tipoSolicitud')?.value,
+      this.formSolicitud.get('tipoSolicitud')?.value,
       10
     );
-    const TIPO_SOLICITUD = this.FormSolicitud.get('tipoSolicitud')?.value;
+    const TIPO_SOLICITUD = this.formSolicitud.get('tipoSolicitud')?.value;
     if (TIPO_SOLICITUD) {
       this.tramite230401Store.setTipoSolicitud(TIPO_SOLICITUD);
     }
@@ -683,12 +744,12 @@ public aduanasDeEntradaLabel: CrossListLable = {
    * Maneja la selección del número de permiso coferprise en el formulario.
    *
    * Obtiene el valor actual del campo 'noDePermisocoferprise' desde el formulario
-   * `FormSolicitud` y lo establece en el store `tramite230401Store` mediante el método
+   * `formSolicitud` y lo establece en el store `tramite230401Store` mediante el método
    * `setNoDePermisocoferprise`. Este método se utiliza para mantener sincronizado el valor
    * del permiso coferprise seleccionado entre el formulario y el estado global de la aplicación.
    */
   noDePermisocoferpriseSeleccion(): void {
-    const NO_DE_PERMISOCOFERPRISE = this.FormSolicitud.get(
+    const NO_DE_PERMISOCOFERPRISE = this.formSolicitud.get(
       'noDePermisocoferprise'
     )?.value;
     this.tramite230401Store.setNoDePermisocoferprise(NO_DE_PERMISOCOFERPRISE);
@@ -709,11 +770,11 @@ public aduanasDeEntradaLabel: CrossListLable = {
    * formulario como en el store de la aplicación.
    */
   fraccionArancelariaSeleccion(): void {
-    const FRACCION_ARANCELARIA = this.FormSolicitud.get(
+    const FRACCION_ARANCELARIA = this.formSolicitud.get(
       'fraccionArancelaria'
     )?.value;
-    const DESCRIPCION_DE_LA_FRACCION = `Descripción de la fracción arancelaria ${this.FormSolicitud.get('fraccionArancelaria')?.value}`;
-    this.FormSolicitud.patchValue({
+    const DESCRIPCION_DE_LA_FRACCION = `Descripción de la fracción arancelaria ${this.formSolicitud.get('fraccionArancelaria')?.value}`;
+    this.formSolicitud.patchValue({
       descripcionDeLaFraccion: DESCRIPCION_DE_LA_FRACCION,
     })
     this.tramite230401Store.setDescripcionDeLaFraccion(DESCRIPCION_DE_LA_FRACCION);
@@ -725,7 +786,7 @@ public aduanasDeEntradaLabel: CrossListLable = {
   /**
    * Selecciona la autorización ingresada en el formulario y la almacena en el estado global.
    *
-   * Obtiene el valor actual del campo 'autorizacion' del formulario `FormSolicitud`
+   * Obtiene el valor actual del campo 'autorizacion' del formulario `formSolicitud`
    * y lo envía al store `tramite230401Store` mediante el método `setAutorizacion`.
    *
    * @remarks
@@ -733,7 +794,7 @@ public aduanasDeEntradaLabel: CrossListLable = {
    * por el usuario en el flujo del trámite 230401.
    */
   seleccioneAutorizacion(): void {
-    const AUTORIZACION = this.FormSolicitud.get('autorizacion')?.value;
+    const AUTORIZACION = this.formSolicitud.get('autorizacion')?.value;
     this.tramite230401Store.setAutorizacion(AUTORIZACION);
   }
 
@@ -752,10 +813,10 @@ public aduanasDeEntradaLabel: CrossListLable = {
    * @returns {void} No retorna ningún valor.
    */
   numeroCasSeleccione(): void {
-    const NUMERO_CAS = this.FormSolicitud.get('numeroCas')?.value;
-    const DESCRIPCION_NO_ARANCELARIA = `Descripción no arancelaria ${this.FormSolicitud.get('numeroCas')?.value}`;
-    const NOMBRE_QUIMICO = `Nombre químico ${this.FormSolicitud.get('numeroCas')?.value}`;
-    this.FormSolicitud.patchValue({
+    const NUMERO_CAS = this.formSolicitud.get('numeroCas')?.value;
+    const DESCRIPCION_NO_ARANCELARIA = `Descripción no arancelaria ${this.formSolicitud.get('numeroCas')?.value}`;
+    const NOMBRE_QUIMICO = `Nombre químico ${this.formSolicitud.get('numeroCas')?.value}`;
+    this.formSolicitud.patchValue({
       descripcionNoArancelaria: DESCRIPCION_NO_ARANCELARIA,
       nombreQuimico: NOMBRE_QUIMICO,
     })
@@ -768,7 +829,7 @@ public aduanasDeEntradaLabel: CrossListLable = {
   /**
    * Maneja el evento de selección de clasificación en el formulario de solicitud.
    *
-   * Obtiene el valor actual del campo 'clasificacion' del formulario `FormSolicitud`
+   * Obtiene el valor actual del campo 'clasificacion' del formulario `formSolicitud`
    * y lo establece en el store `tramite230401Store` mediante el método `setClasificacion`.
    *
    * @remarks
@@ -776,7 +837,7 @@ public aduanasDeEntradaLabel: CrossListLable = {
    * cada vez que el usuario realiza un cambio en el campo correspondiente del formulario.
    */
   clasificacionSeleccione(): void {
-    const CLASIFICACION = this.FormSolicitud.get('clasificacion')?.value;
+    const CLASIFICACION = this.formSolicitud.get('clasificacion')?.value;
     this.tramite230401Store.setClasificacion(CLASIFICACION);
   }
 
@@ -793,7 +854,7 @@ public aduanasDeEntradaLabel: CrossListLable = {
    * se refleje correctamente en el store.
    */
   estadoFisicoSeleccione(): void {
-    const ESTADO_FISICO = this.FormSolicitud.get('estadoFisico')?.value;
+    const ESTADO_FISICO = this.formSolicitud.get('estadoFisico')?.value;
     this.tramite230401Store.setEstadoFisico(ESTADO_FISICO);
   }
 
@@ -808,7 +869,7 @@ public aduanasDeEntradaLabel: CrossListLable = {
  * @returns {void}
  */
 datosObjectoSeleccione(): void {
-  const DAT_OS_OBJECTO = this.FormSolicitud.get('datosObjecto')?.value;
+  const DAT_OS_OBJECTO = this.formSolicitud.get('datosObjecto')?.value;
   this.tramite230401Store.setDatosObjecto(DAT_OS_OBJECTO);
 }
 
@@ -822,7 +883,7 @@ datosObjectoSeleccione(): void {
    * @returns {void} No devuelve ningún valor.
    */
   unidadDeMedidaSeleccione(): void {
-    const UNIDAD_DE_MEDIDA = this.FormSolicitud.get('unidadDeMedida')?.value;
+    const UNIDAD_DE_MEDIDA = this.formSolicitud.get('unidadDeMedida')?.value;
     this.tramite230401Store.setUnidadDeMedida(UNIDAD_DE_MEDIDA);
   }
 
@@ -840,8 +901,8 @@ datosObjectoSeleccione(): void {
  *
  * @returns {void}
  */
-creatFormSolicitud(): void {
-  this.FormSolicitud = this.fb.group({
+creatformSolicitud(): void {
+  this.formSolicitud = this.fb.group({
     tipoSolicitud: [
       this.solicitudState?.tipoSolicitud,
       [Validators.required],
@@ -916,15 +977,79 @@ creatFormSolicitud(): void {
       this.solicitudState?.cantidad,
       [Validators.required, Validators.min(1), Validators.max(999999999999.999), MaxDigitsValidator()],
     ],
-    cantidadLetra: [
-      { value: this.solicitudState?.cantidadLetra, disabled: true },
-    ],
+    cantidadLetra: [{ value: '', disabled: true }],
     unidadDeMedida: [
       this.solicitudState?.unidadDeMedida,
       [Validators.required],
     ],
   });
 }
+
+  /**
+   * Modifica una sustancia sensible seleccionada en la lista de datos.
+   * 
+   * Este método permite al usuario modificar los datos de una sustancia sensible
+   * que ya existe en la tabla. Primero verifica que haya exactamente una sustancia
+   * seleccionada, luego carga sus datos en el formulario para su edición.
+   * 
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  modificarListaDeNumeros(): void {
+    if (this.sustanciasSensiblesSeleccionadas.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'info',
+        titulo: 'Advertencia',
+        mensaje: 'Debe seleccionar una sustancia para modificar.',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+      };
+      this.mostrarAlerta = true;
+      return;
+    }
+
+    if (this.sustanciasSensiblesSeleccionadas.length > 1) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'info',
+        titulo: 'Advertencia',
+        mensaje: 'Solo puede modificar una sustancia a la vez. Seleccione únicamente un registro.',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+      };
+      this.mostrarAlerta = true;
+      return;
+    }
+
+    // Cargar los datos de la sustancia seleccionada en el formulario
+    const SUSTANCIA_SELECCIONADA = this.sustanciasSensiblesSeleccionadas[0];
+    this.formSolicitud.patchValue({
+      numeroCas: SUSTANCIA_SELECCIONADA.numeroCAS,
+      descripcionNoArancelaria: SUSTANCIA_SELECCIONADA.descripcionNoArancelaria,
+      nombreQuimico: SUSTANCIA_SELECCIONADA.nombreQuimico
+    });
+
+    // Opcional: Marcar que se está modificando un registro existente
+    // Esto puede ser útil para cambiar el comportamiento del botón "Agregar"
+    this.modoModificacion = true;
+    this.sustanciaEnModificacion = SUSTANCIA_SELECCIONADA;
+  }
+
+  /**
+   * Indica si el componente está en modo modificación de una sustancia existente.
+   */
+  private modoModificacion: boolean = false;
+
+  /**
+   * Sustancia que está siendo modificada actualmente.
+   */
+  private sustanciaEnModificacion: SustanciaSensible | null = null;
 
   /**
    * Agrega una sustancia sensible a la lista de datos en la tabla.
@@ -938,21 +1063,52 @@ creatFormSolicitud(): void {
    */
   agregarListaDeNumeros(): void {
     const SUSTANCIA_SENSIBLE: SustanciaSensible = {
-      numeroCAS: this.FormSolicitud.get('numeroCas')?.value,
+      numeroCAS: this.formSolicitud.get('numeroCas')?.value,
       cas: '',
-      descripcionNoArancelaria: `Descripción no arancelaria ${this.FormSolicitud.get('numeroCas')?.value}`,
-      nombreQuimico: `Nombre químico ${this.FormSolicitud.get('numeroCas')?.value}`,
+      descripcionNoArancelaria: this.formSolicitud.get('descripcionNoArancelaria')?.value || `Descripción no arancelaria ${this.formSolicitud.get('numeroCas')?.value}`,
+      nombreQuimico: this.formSolicitud.get('nombreQuimico')?.value || `Nombre químico ${this.formSolicitud.get('numeroCas')?.value}`,
     };
-    const EXISTING_INDEX = this.sustanciasSensiblesTablaDatos.findIndex(
-      (item) => item.numeroCAS === SUSTANCIA_SENSIBLE.numeroCAS
-    );
+
     const UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS = [...this.sustanciasSensiblesTablaDatos];
-    if (EXISTING_INDEX !== -1) {
-      UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS.splice(EXISTING_INDEX, 1, SUSTANCIA_SENSIBLE);
+
+    if (this.modoModificacion && this.sustanciaEnModificacion) {
+      // Actualizar la sustancia existente
+      const EXISTING_INDEX = UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS.findIndex(
+        (item) => item.numeroCAS === this.sustanciaEnModificacion?.numeroCAS
+      );
+      
+      if (EXISTING_INDEX !== -1) {
+        UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS[EXISTING_INDEX] = SUSTANCIA_SENSIBLE;
+      }
+      
+      // Resetear modo modificación
+      this.modoModificacion = false;
+      this.sustanciaEnModificacion = null;
     } else {
-      UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS.push(SUSTANCIA_SENSIBLE);
+      // Agregar nueva sustancia o actualizar si ya existe
+      const EXISTING_INDEX = UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS.findIndex(
+        (item) => item.numeroCAS === SUSTANCIA_SENSIBLE.numeroCAS
+      );
+
+      if (EXISTING_INDEX !== -1) {
+        UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS[EXISTING_INDEX] = SUSTANCIA_SENSIBLE;
+      } else {
+        UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS.push(SUSTANCIA_SENSIBLE);
+      }
     }
+
+    // Actualizar el store con la nueva lista
     this.tramite230401Store.setSustanciasSensiblesTablaDatos(UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS);
+
+    // Limpiar el formulario
+    this.formSolicitud.patchValue({
+      numeroCas: '',
+      descripcionNoArancelaria: '',
+      nombreQuimico: ''
+    });
+
+    // Limpiar selecciones
+    this.sustanciasSensiblesSeleccionadas = [];
   }
 
   /**
@@ -982,29 +1138,123 @@ creatFormSolicitud(): void {
   }
 
   /**
-   * Modifica los valores del formulario "FormSolicitud" con los datos
-   * seleccionados de la lista "sustanciasSensiblesSeleccionadas".
-   * 
-   * Si la lista "sustanciasSensiblesSeleccionadas" está vacía, no realiza
-   * ninguna acción y retorna inmediatamente.
-   * 
-   * Los campos actualizados en el formulario incluyen:
-   * - `numeroCas`: Número CAS de la sustancia seleccionada.
-   * - `cas`: Código CAS de la sustancia seleccionada.
-   * - `descripcionNoArancelaria`: Descripción no arancelaria de la sustancia seleccionada.
-   * - `nombreQuimico`: Nombre químico de la sustancia seleccionada.
+   * Confirma la eliminación de un pedimento.
+   *
+   * @param borrar Indica si se debe proceder con la eliminación.
    */
-  modificarListaDeNumeros(): void {
-    if (this.sustanciasSensiblesSeleccionadas.length === 0) {
+  eliminarPedimentoConfirmacion(borrar: boolean): void {
+    if (borrar) {
+      // Remove the problematic code that was causing errors
+      // Just handle the elimination logic for pedimentos if needed
+    }
+    this.confirmacionAlerta = false;
+    if (borrar && this.pedimentos.length > 0) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+  }
+/**
+   * @description
+   * Arreglo que almacena los pedimentos asociados al establecimiento.
+   * Cada pedimento contiene información relevante para el trámite.
+   */
+  pedimentos: Array<Pedimento> = [];
+
+   /**
+   * @description
+   * Variable que almacena el índice del elemento que se desea eliminar de la lista de pedimentos.
+   * Utilizada para realizar operaciones de eliminación en el arreglo `pedimentos`.
+   */
+  elementoParaEliminar!: number;
+  
+
+   /**
+   * Método que maneja la lógica para mostrar un modal de confirmación
+   * antes de eliminar registros marcados. Si no hay elementos en la lista
+   * `scianLista`, muestra una alerta y detiene la ejecución.
+   *
+   * @remarks
+   * Este método configura una notificación de tipo alerta con un mensaje
+   * de confirmación para la eliminación de registros. La notificación incluye
+   * opciones para aceptar o cancelar la acción.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  eliminarModal(): void {
+    if (!this.sustanciasSensiblesSeleccionadas.length) {
+      this.mostrarAlerta = true;
       return;
     }
-    const DATOS_SELECCIONADOS = this.sustanciasSensiblesSeleccionadas[0];
-    this.FormSolicitud.patchValue({
-      numeroCas: DATOS_SELECCIONADOS.numeroCAS,
-      cas: DATOS_SELECCIONADOS.cas,
-      descripcionNoArancelaria: DATOS_SELECCIONADOS.descripcionNoArancelaria,
-      nombreQuimico: DATOS_SELECCIONADOS.nombreQuimico,
-    })
+    this.seleccionarFilaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: '¿Estás seguro que deseas eliminar los registros seleccionados?',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+    this.confirmacionAlerta = true;
+  }
+
+  /**
+   * Maneja la confirmación de eliminación de sustancias sensibles.
+   *
+   * @param borrar Indica si el usuario confirmó la eliminación (`true`) o la canceló (`false`).
+   *
+   * ### Descripción:
+   * - Si `borrar` es `true`:
+   *   - Llama al método `eliminarListaDeNumeros` para eliminar las sustancias seleccionadas.
+   *   - Muestra el modal de eliminación exitosa.
+   * - Si `borrar` es `false`: Solo cierra el modal de confirmación.
+   * - Independientemente de la acción, desactiva la alerta de confirmación (`confirmacionAlerta = false`).
+   *
+   * ### Ejemplo de uso:
+   * ```ts
+   * confirmarEliminacionSustancias(true); // Elimina las sustancias y muestra confirmación
+   * confirmarEliminacionSustancias(false); // Cancela la eliminación
+   * ```
+   */
+  confirmarEliminacionSustancias(borrar: boolean): void {
+    this.confirmacionAlerta = false;
+    
+    if (borrar) {
+      this.eliminarListaDeNumeros();
+      // Mostrar el modal de eliminación exitosa
+      this.mostrarNotificacion = true;
+    }
+  }
+
+    /**
+   * Busca el RFC del representante en el formulario y, si existe,
+   * actualiza los campos relacionados con el nombre, apellido paterno
+   * y apellido materno del representante con valores predeterminados.
+   *
+   * @remarks
+   * Este método verifica si el campo 'representanteRfc' tiene un valor
+   * en el formulario `datosSolicitudForm`. Si el valor está presente,
+   * se actualizan los campos 'representanteNombre', 'apellidoPaterno'
+   * y 'apellidoMaterno' con datos específicos.
+   */
+buscarRepresentanteRfc(): void {
+  const RFC = this.formSolicitud.get('cantidad')?.value;
+
+  if (RFC) {
+    const CONTROL = this.formSolicitud.get('cantidadLetra');
+    CONTROL?.enable({ emitEvent: false });
+    CONTROL?.setValue('EUROFOODS DE MEXICO', { emitEvent: false });
+    CONTROL?.disable({ emitEvent: false });
+  }
+}
+
+/**
+   * Cierra el modal de notificación de eliminación exitosa.
+   *
+   * @param _evento - Evento del modal (no utilizado en este caso)
+   */
+  cerrarNotificacionEliminacion(_evento: boolean): void {
+    this.mostrarNotificacion = false;
   }
 
   /**

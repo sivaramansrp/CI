@@ -1,8 +1,8 @@
 {
   "numeroOficio": "OF-12345",
-  "fechaInicialInput": "2024-06-01",
-  "fechaFinalInput": "2024-06-30",
-  "fechaPago": "2024-06-15",
+  "fechaInicialInput": "1/06/2024",
+  "fechaFinalInput": "30/06/2024",
+  "fechaPago": "15/06/2024",
   "monedaNacional": 1,
   "numeroOperacion": "OP-98765",
   "llavePago": "LLAVE-001",

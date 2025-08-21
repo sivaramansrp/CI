@@ -78,7 +78,7 @@ describe('ProgramasReporteAnnualComponent', () => {
   });
 
   it('should initialize the form with state values', () => {
-    const formValue = component.periodoReporteAnual.value;
+    const formValue = component.periodoReporteAnual.getRawValue();
     expect(formValue.folioPrograma).toBe('123');
     expect(formValue.modalidad).toBe('Presencial');
     expect(formValue.tipoPrograma).toBe('Anual');
@@ -115,7 +115,8 @@ describe('ProgramasReporteAnnualComponent', () => {
 
     component.actualizarProgramasReporte(mockEvento);
 
-    expect(component.periodoReporteAnual.value.folioPrograma).toBe('ABC123');
+    const formValue = component.periodoReporteAnual.getRawValue();
+    expect(formValue.folioPrograma).toBe('ABC123');
     expect(mockSolicitudStore.actualizarFolioPrograma).toHaveBeenCalledWith(
       'ABC123'
     );

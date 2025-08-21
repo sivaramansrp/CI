@@ -146,6 +146,12 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
   nombreSubproducto$: Observable<Catalogo | null> =
     this.tramite120401Query.nombreSubproducto$;
 
+  /**
+   * Almacena la última fila seleccionada en la tabla de selección de cupo. 
+   * Si no se ha seleccionado ninguna fila, su valor es null.
+   */
+  lastClickedRow: SeleccionDelCupoTabla | null = null;
+
 /**
  * Constructor del componente SeleccionDelCupoComponent.
  * Inicializa los servicios y suscripciones necesarias para el funcionamiento del componente.
@@ -337,8 +343,10 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
    * `mostrarDescripcionDelCupo`.
    */
   listaDeFilaSeleccionada(fila: SeleccionDelCupoTabla): void {
+  if (this.filaSeleccionada !== fila || !this.mostrarDescripcionDelCupo) {
     this.filaSeleccionada = fila;
-    this.mostrarDescripcionDelCupo = !this.mostrarDescripcionDelCupo;
+    this.mostrarDescripcionDelCupo = true;
+  }
   }
 
 /**
@@ -394,4 +402,37 @@ buscarCupos(): void {
     this.seleccionForm.markAllAsTouched();
   }
 }
+/*
+
+
+*/
+/**
+ * Maneja el evento de doble clic en una celda de la tabla. 
+ * Determina la fila seleccionada a partir del evento y llama al método `listaDeFilaSeleccionada` 
+ * pasando el elemento correspondiente de `datos`.
+ */
+onTablaDblClick(evt: MouseEvent): void {
+  const TD = (evt.target as HTMLElement).closest('td');
+  if (!TD) { return; }
+
+  const TR = TD.parentElement;
+  if (!TR) { return; }
+
+  const TABLE = TR.closest('table');
+  if (!TABLE) { return; }
+
+  const TBODY = TABLE.querySelector('tbody');
+  if (!TBODY) { return; }
+
+  const ROWS = Array.from(TBODY.querySelectorAll('tr'));
+  const ROW_INDEX = ROWS.indexOf(TR as HTMLTableRowElement);
+
+  if (ROW_INDEX >= 0 && ROW_INDEX < this.datos.length) {
+    const MATCH = this.datos[ROW_INDEX];
+    if (MATCH) {
+      this.listaDeFilaSeleccionada(MATCH);
+    }
+  }
+}
+
 }

@@ -224,8 +224,8 @@ export class FusionOescisionComponent
    * @returns {FormControl} El control de fecha del formulario.
    */
   get fechaControl(): FormControl {
-  return this.formulario.get('personaFusionEscisionDTO.fecha') as FormControl;
-}
+    return this.formulario.get('personaFusionEscisionDTO.fecha') as FormControl;
+  }
 
   /** Inicializa formularios y obtiene opciones del servicio */
   ngOnInit(): void {
@@ -372,7 +372,7 @@ export class FusionOescisionComponent
   }
 
   /** Cambia dinámicamente los títulos y etiquetas según la opción seleccionada */
-  mostrarFusionOEscision(ev: string | number): void {    
+  mostrarFusionOEscision(ev: string | number): void {
     if (ev === 1 || ev === '1') {
       this.isSelectFusionEscision = true;
       this.fusionOescisionTitulo = 'Datos de las empresas fusionadas';
@@ -539,8 +539,13 @@ export class FusionOescisionComponent
    */
   static formatFechaToInputDate(fecha: string): string {
     // Convierte '2025/03/08' → '2025-03-08'
-    if (fecha) {
-      return fecha.replace(/\//g, '-');
+    if (!fecha) { return ''; }
+
+    const PARTS = fecha.includes('/') ? fecha.split('/') : fecha.split('-');
+
+    if (PARTS.length === 3) {
+      const [DAY, MONTH, YEAR] = PARTS;
+      return `${YEAR}-${MONTH.padStart(2, '0')}-${DAY.padStart(2, '0')}`;
     }
     return '';
   }
@@ -585,6 +590,7 @@ export class FusionOescisionComponent
 
     if (this.ModificarFusionEscisionInstance) {
       this.ModificarFusionEscisionInstance.hide();
+      this.divCompletoVisible = true;
     }
     this.personaFusionEscisionModal.reset();
   }

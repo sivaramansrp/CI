@@ -51,7 +51,7 @@
   </button>
 </div>
 
-<div *ngIf="datosTablaSubfabricantesDisponibles.length > 0" class="row mt-5">
+<div *ngIf="datosTablaSubfabricantesDisponibles.length > 0 || showTablaInicial" class="row mt-5">
   <div class="col-md-12">
     <label for="submanufacturerasdisponibles"
       >Submanufactureras disponibles:</label
@@ -78,7 +78,7 @@
     </button>
   </div>
 </div>
-<div *ngIf="datosTablaSubfabricantesSeleccionadas.length > 0" class="row mt-5">
+<div *ngIf="datosTablaSubfabricantesSeleccionadas.length > 0 || showTablaInicial" class="row mt-5">
   <div class="col-md-12">
     <label for="submanufacturerasdisponibles"
       >Plantas submanufactureras seleccionadas:</label

@@ -1,98 +1,76 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
 import { PasoTresComponent } from './paso-tres.component';
 import { Router } from '@angular/router';
-import { TramiteFolioService, TramiteStore } from '@ng-mf/data-access-user';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-
-@Injectable()
-class MockRouter {
-  navigate() {};
-}
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
+import { TramiteFolioService } from '@ng-mf/data-access-user';
+import { TramiteStore } from '@ng-mf/data-access-user';
+import { of, throwError } from 'rxjs';
 
 describe('PasoTresComponent', () => {
-  let fixture;
-  let component;
+  let component: PasoTresComponent;
+  let routerMock: jest.Mocked<Router>;
+  let tramiteFolioServiceMock: jest.Mocked<TramiteFolioService>;
+  let tramiteStoreMock: jest.Mocked<TramiteStore>;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule,HttpClientTestingModule ],
-      declarations: [
-        PasoTresComponent,
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
-      ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
-      providers: [
-        { provide: Router, useClass: MockRouter },
-        TramiteFolioService,
-        TramiteStore
-      ]
-    }).overrideComponent(PasoTresComponent, {
+    routerMock = {
+      navigate: jest.fn(),
+    } as any;
 
-    }).compileComponents();
-    fixture = TestBed.createComponent(PasoTresComponent);
-    component = fixture.debugElement.componentInstance;
+    tramiteFolioServiceMock = {
+      obtenerTramite: jest.fn(),
+    } as any;
+
+    tramiteStoreMock = {
+      establecerTramite: jest.fn(()=>of()),
+    } as any;
+
+    component = new PasoTresComponent(
+      routerMock,
+      tramiteFolioServiceMock,
+      tramiteStoreMock
+    );
   });
 
-
-  it('should run #constructor()', async () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #obtenerTipoPersona()', async () => {
-
-    component.obtenerTipoPersona({});
-
+  describe('obtenerTipoPersona', () => {
+    it('should set tipoPersona', () => {
+      component.obtenerTipoPersona(2);
+      expect(component.tipoPersona).toBe(2);
+    });
   });
 
-  it('should run #obtieneFirma()', async () => {
-    component.serviciosExtraordinariosServices = component.serviciosExtraordinariosServices || {};
-    component.serviciosExtraordinariosServices.obtenerTramite = jest.fn().mockReturnValue(observableOf({}));
-    component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.establecerTramite = jest.fn();
-    component.router = component.router || {};
-    component.router.navigate = jest.fn();
-    component.obtieneFirma({});
-    // expect(component.serviciosExtraordinariosServices.obtenerTramite).toHaveBeenCalled();
-    // expect(component.tramiteStore.establecerTramite).toHaveBeenCalled();
-    // expect(component.router.navigate).toHaveBeenCalled();
+  describe('obtieneFirma', () => {
+    it('should call establecerTramite and navigate when firma is provided', () => {
+      const tramiteData = { data: { id: 1 } };
+      tramiteFolioServiceMock.obtenerTramite.mockReturnValue(of());
+      const firma = 'firma123';
+      component.obtieneFirma(firma);
+      expect(tramiteFolioServiceMock.obtenerTramite).toHaveBeenCalledWith(19);
+    });
+
+    it('should not call obtenerTramite if firma is empty', () => {
+      component.obtieneFirma('');
+      expect(tramiteFolioServiceMock.obtenerTramite).not.toHaveBeenCalled();
+    });
+
+    it('should handle error from obtenerTramite', () => {
+      tramiteFolioServiceMock.obtenerTramite.mockReturnValue(throwError(() => new Error('error')));
+      jest.spyOn(console, 'error').mockImplementation(() => {});
+      component.obtieneFirma('firma123');
+      expect(routerMock.navigate).not.toHaveBeenCalled();
+      expect(tramiteStoreMock.establecerTramite).not.toHaveBeenCalled();
+    });
   });
 
-  it('should run #ngOnDestroy()', async () => {
-    component.destroyed$ = component.destroyed$ || {};
-    component.destroyed$.next = jest.fn();
-    component.destroyed$.complete = jest.fn();
-    component.ngOnDestroy();
-    // expect(component.destroyed$.next).toHaveBeenCalled();
-    // expect(component.destroyed$.complete).toHaveBeenCalled();
+  describe('ngOnDestroy', () => {
+    it('should complete destroyed$', () => {
+      const completeSpy = jest.spyOn<any, any>(component['destroyed$'], 'complete');
+      const nextSpy = jest.spyOn<any, any>(component['destroyed$'], 'next');
+      component.ngOnDestroy();
+      expect(nextSpy).toHaveBeenCalledWith(true);
+      expect(completeSpy).toHaveBeenCalled();
+    });
   });
-
 });

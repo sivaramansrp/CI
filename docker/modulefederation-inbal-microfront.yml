@@ -1,7 +1,7 @@
 services:
 #----------------------------------------------------------------
   modulefederation-inbal-microfront:
-    image: ghcr.io/vucem30/dockerized-modulefederation-inbal-microfront:1.0.1
+    image: ghcr.io/vucem30/dockerized-modulefederation-inbal-microfront:1.0.2
     build: 
       context: ./../
       dockerfile: apps/inbal/Dockerfile.dev
