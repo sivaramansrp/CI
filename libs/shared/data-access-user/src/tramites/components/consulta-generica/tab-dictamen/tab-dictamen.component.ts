@@ -88,7 +88,7 @@ export class TabDictamenComponent implements OnDestroy{
  */
   getDetalleDictamen(idDictamen: string): void {
     this.detalleDictamenService
-      .getDetalleDictamen(this.tramite, "187568522")
+      .getDetalleDictamen(this.tramite, idDictamen)
       .subscribe({
        next: (data) => {
           if (data.codigo === "00") {
