@@ -71,7 +71,7 @@ export const FECHA_FINAL = {
  * Configuración para el campo de fecha de factura.
  */
 export const FECHA_FACTURA = {
-  labelNombre: 'Fecha de factura / Referencia /n Tipo de factura / Referencia: /n Tipo de factura / Referencia:',
+  labelNombre: 'Fecha de factura / Referencia <br> Tipo de factura / Referencia: <b> Tipo de factura / Referencia:',
   required: true,
   habilitado: true,
 };
