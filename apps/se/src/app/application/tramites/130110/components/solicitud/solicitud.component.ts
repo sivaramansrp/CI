@@ -1,6 +1,6 @@
-import { Catalogo, ConsultaioQuery, REGEX_NUMERO_DECIMAL_ENTERO, REG_X } from '@ng-mf/data-access-user';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite130110State, Tramite130110Store } from '../../../../estados/tramites/tramites130110.store';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
@@ -167,6 +167,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     * Propiedad privada.
    */
     private seccionState!: Tramite130110State;
+    /**
+     * Indica si se debe mostrar el error de clasificación.
+     */
+    mostrarErrorClasificacion = true;
 
     /**
      * Constructor del componente.
@@ -234,11 +238,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
      * jest.spyOnInicializa los formularios reactivos `formDelTramite` y `mercanciaForm`.
      */
     
-    inicializarFormularios(): void {
-      this.tramite130110Query.selectSolicitud$?.pipe(takeUntil(this.destroyed$))
-      .subscribe((data: Tramite130110State) => {
-        this.seccionState = data;
-      });
+    inicializarFormularios(): void {   
       this.formDelTramite = this.fb.group({
         solicitud: [this.seccionState?.solicitud, Validators.required],
         regimen: [this.seccionState?.regimen, Validators.required],
@@ -248,67 +248,65 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.mercanciaForm = this.fb.group({
         producto: [],
         descripcion: [
-           this.seccionState?.descripcion,
+         this.seccionState?.descripcion,
           [
             Validators.required,
-            Validators.minLength(10),
-            Validators.maxLength(500),
+            SolicitudComponent.validarSinCaracterAnguloDerecho
           ],
         ],
         fraccion: [this.seccionState?.fraccion, Validators.required],
         cantidad: [
-           this.seccionState?.cantidad,
+          this.seccionState?.cantidad,
           [
             Validators.required,
-            Validators.pattern(REG_X.SOLO_NUMEROS),
+            SolicitudComponent.validarNumeroTresDecimales,
             Validators.min(1),
           ],
         ],
-   
         valorFacturaUSD: [
-           this.seccionState?.valorFacturaUSD,
+          this.seccionState?.valorFacturaUSD,
           [
             Validators.required,
-            Validators.pattern(REG_X.DECIMALES_DOS_LUGARES),
+            SolicitudComponent.validarNumeroTresDecimales,
             Validators.min(0.01),
           ],
         ],
    
         unidadMedida: [this.seccionState?.unidadMedida, Validators.required],
       });
-      this.partidasDelaMercanciaForm = this.fb.group({
+     this.partidasDelaMercanciaForm = this.fb.group({
         cantidadPartidasDeLaMercancia: [
-           this.seccionState?.cantidadPartidasDeLaMercancia,
+          this.seccionState?.cantidadPartidasDeLaMercancia,
           [
             Validators.required,
-            Validators.pattern(REG_X.SOLO_NUMEROS),
+            SolicitudComponent.validarCatorceEnterosTresDecimales,
             Validators.maxLength(18),
           ],
         ],
         descripcionPartidasDeLaMercancia: [
-           this.seccionState?.descripcionPartidasDeLaMercancia,
+          this.seccionState?.descripcionPartidasDeLaMercancia,
           [Validators.required, Validators.maxLength(255)],
         ],
         valorPartidaUSDPartidasDeLaMercancia: [
-           this.seccionState?.valorPartidaUSDPartidasDeLaMercancia,
+          this.seccionState?.valorPartidaUSDPartidasDeLaMercancia,
           [
             Validators.required,
             Validators.min(0),
-            Validators.pattern(REGEX_NUMERO_DECIMAL_ENTERO),
+            SolicitudComponent.validarCatorceEnterosTresDecimales,
             Validators.maxLength(20),
           ],
         ],
       });
-   
+        
       this.paisForm = this.fb.group({
-        bloque: [this.seccionState?.bloque ],
+        bloque: [this.seccionState?.bloque],
         usoEspecifico: [this.seccionState?.usoEspecifico, Validators.required],
-        justificacionImportacionExportacion: [this.seccionState?.justificacionImportacionExportacion,Validators.required],
+        justificacionImportacionExportacion: [this.seccionState?.justificacionImportacionExportacion, [Validators.required]],
         observaciones: [this.seccionState?.observaciones],
       });
       this.frmRepresentacionForm = this.fb.group({
-        entidad: [this.seccionState?.descripcion, Validators.required],
-        representacion: [this.seccionState?.descripcion, Validators.required],
+        entidad: [this.seccionState?.entidad, Validators.required],
+        representacion: [this.seccionState?.representacion, Validators.required],
       });
     }
     /**
@@ -521,13 +519,27 @@ export class SolicitudComponent implements OnInit, OnDestroy {
      * jest.spyOnActualiza el almacén con nuevos valores basados en eventos de formulario.
      * jest.spyOnEvento que incluye el formulario, el campo y el método a ejecutar.
      */
-    setValoresStore($event: { form: FormGroup; campo: string }): void {
+      setValoresStore($event: { form: FormGroup; campo: string }): void {
       const VALOR = $event.form.get($event.campo)?.value;
-      this.tramite130110Store.actualizarEstado({ [$event.campo]: VALOR });
-      if($event.campo === 'fraccion'){
+
+      if ($event.campo === 'regimen') {
+        this.formDelTramite.get('clasificacion')?.setValue('');
+        this.mostrarErrorClasificacion = false;
+        this.tramite130110Store.actualizarEstado({
+          [ $event.campo ]: VALOR,
+          clasificacion: ''
+        });
+      } else {
+        this.tramite130110Store.actualizarEstado({ [ $event.campo ]: VALOR });
+        if ($event.campo === 'clasificacion' && VALOR) {
+          this.mostrarErrorClasificacion = true;
+        }
+      }
+
+      if ($event.campo === 'fraccion') {
         this.tramite130110Store.actualizarEstado({'unidadMedida': '1'});
       }
-    }
+ }
    
   /**
    * Determina si el botón "Modificar" debe estar deshabilitado.
@@ -548,5 +560,50 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.destroyed$.next();
       this.destroyed$.complete();
     }
+    /**
+     * Valida que un string no contenga el carácter de ángulo derecho (›).
+     */
+    static validarSinCaracterAnguloDerecho(control: AbstractControl): ValidationErrors | null {
+      if (typeof control.value === 'string' && control.value.includes('›')) {
+        return { validarSinCaracterAnguloDerecho: true };
+      }
+      return null;
+    }
+    /**
+     * Valida que un número tenga como máximo tres decimales.
+     */
+    static validarNumeroTresDecimales(control: AbstractControl): ValidationErrors | null {
+      const VALOR = control.value;
+      if (VALOR === null || VALOR === undefined || VALOR === '') { return null; }
+
+      if (!/^\d+(\.\d+)?$/.test(VALOR)) {
+        return { noEsNumero: true };
+      }
+
+      if (/^\d+\.\d{4,}$/.test(VALOR)) {
+        return { maximoTresDecimales: true };
+      }
+
+      return null;
+    }
+
+    /*
+    Valida que un número tenga como máximo 14 enteros y 3 decimales.
+    */
+    static validarCatorceEnterosTresDecimales(control: AbstractControl): ValidationErrors | null {
+       const VALOR = control.value;
+        if (VALOR === null || VALOR === undefined || VALOR === '') { return null; }
+
+        if (!/^\d*\.?\d*$/.test(VALOR)) {
+          return { noEsNumero: true };
+        }
+
+        if (!/^\d{1,14}(\.\d{1,3})?$/.test(VALOR)) {
+          return { validarCatorceEnterosTresDecimales: true };
+        }
+
+        return null;
+   }
+
   }
    

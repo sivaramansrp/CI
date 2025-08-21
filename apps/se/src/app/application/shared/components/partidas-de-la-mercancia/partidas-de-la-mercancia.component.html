@@ -18,8 +18,12 @@
                      <small
                         *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('required')">Este campo es obligatorio.</small>
                      <small
-                        *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('pattern')">
+                        *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('noEsNumero')">
                      Por favor, escribe un número entero válido</small>
+                     <small
+                     *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('validarCatorceEnterosTresDecimales')">
+                     La cantidad no cumple el formato especificado. Formato es máximo 14 dígitos enteros y máximo 3 decimales
+                     </small>
                      <small
                         *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('maxlength')">Máximo
                      18 caracteres.</small>
@@ -46,7 +50,11 @@
                         *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('required')">Este
                      campo es obligatorio.</small>
                      <small
-                        *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('pattern')">
+                     *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('validarCatorceEnterosTresDecimales')">
+                     La cantidad no cumple el formato especificado. Formato es máximo 14 dígitos enteros y máximo 3 decimales
+                     </small>
+                     <small
+                        *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('noEsNumero')">
                      Por favor, escribe un número entero válido</small>
                      <small
                         *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('min')">El
