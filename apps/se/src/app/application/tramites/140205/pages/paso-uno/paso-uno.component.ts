@@ -1,5 +1,16 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  SolicitanteComponent,
+} from '@ng-mf/data-access-user';
 import { CancelacionCertificadosComponent } from '../../components/cancelacion-certificados/cancelacion-certificados.component';
 import { CancelacionCertificadosService } from '../../services/cancelacionCertificados.service';
 import { CommonModule } from '@angular/common';
@@ -13,7 +24,7 @@ import { takeUntil } from 'rxjs';
 
 /**
  * Componente para gestionar el paso uno del trámite.
- * 
+ *
  * Este componente permite al usuario navegar entre diferentes pestañas y gestionar
  * las secciones relacionadas con el trámite, como solicitante, destinatario, histórico
  * de productores y datos del certificado.
@@ -23,10 +34,13 @@ import { takeUntil } from 'rxjs';
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
   standalone: true,
-  imports: [CommonModule,DatosEmpresaComponent,CancelacionCertificadosComponent]
+  imports: [
+    CommonModule,
+    DatosEmpresaComponent,
+    CancelacionCertificadosComponent,
+  ],
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
-
   /**
    * @property {ConsultaioState} consultaDatos
    * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
@@ -41,7 +55,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   /**
    * Referencia al componente `SolicitanteComponent`.
-   * 
+   *
    * Esta propiedad utiliza `@ViewChild` para obtener una referencia al componente
    * de solicitante dentro de la plantilla.
    */
@@ -49,48 +63,73 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   /**
    * Índice de la pestaña activa.
-   * 
+   *
    * Esta propiedad indica cuál pestaña está activa actualmente.
    */
   indice: number = 1;
 
   /**
    * Estado actual del trámite.
-   * 
+   *
    * Esta propiedad almacena el estado del trámite obtenido desde el store.
    */
   public tramiteState!: Tramite140205State;
 
   /**
    * Notificador para destruir las suscripciones y evitar fugas de memoria.
-   * 
+   *
    * Este `Subject` se utiliza para cancelar las suscripciones activas cuando
    * el componente se destruye.
    */
   destroyNotifier$: Subject<void> = new Subject();
 
-
-    /**
+  /**
    * @property {Tramite140205State} solicitudState
    * @description Estado actual de la solicitud.
    */
   public solicitudState!: Tramite140205State;
+
+  /**
+   * Referencia al componente DatosEmpresaComponent
+   */
+  @ViewChild(DatosEmpresaComponent)
+  datosEmpresaComponent!: DatosEmpresaComponent;
+
+  /**
+   * Referencia al componente hijo `CancelacionCertificadosComponent`
+   * mediante `@ViewChild`.
+   *
+   * Se utiliza para acceder a sus métodos y propiedades desde este componente.
+   */
+  @ViewChild(CancelacionCertificadosComponent)
+  cancelacionCertificadosComponent!: CancelacionCertificadosComponent;
+
+  /**
+   * Evento de salida que emite un valor booleano
+   * al realizar la búsqueda de empresa.
+   *
+   * @event
+   * @type {EventEmitter<boolean>}
+   * @default false
+   */
+  @Output() datosEmpresaBuscar = new EventEmitter<boolean>(false);
+
   /**
    * Constructor del componente.
-   * 
+   *
    * @param {Tramite140205Store} store - Store para gestionar el estado del trámite.
    * @param {Tramite140205Query} tramiteQuery - Query para obtener el estado del trámite.
    */
   constructor(
     public store: Tramite140205Store,
     public tramiteQuery: Tramite140205Query,
-     private cancelacionCertificadosService: CancelacionCertificadosService,
-     private consultaioQuery: ConsultaioQuery
-  ) { }
+    private cancelacionCertificadosService: CancelacionCertificadosService,
+    private consultaioQuery: ConsultaioQuery
+  ) {}
 
   /**
    * Método que se ejecuta al inicializar el componente.
-   * 
+   *
    * Este método suscribe al estado del trámite y establece la pestaña activa
    * según el estado almacenado.
    */
@@ -105,8 +144,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       .subscribe();
     this.indice = this.tramiteState.pestanaActiva;
 
-   
-
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -115,7 +152,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-   
+
     if (this.consultaDatos.update) {
       this.fetchGetDatosConsulta();
     } else {
@@ -124,33 +161,34 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.indice = this.tramiteState.pestanaActiva;
   }
 
-   /**
+  /**
    * Método para obtener los datos de consulta del servicio.
    *  Este método realiza una llamada al servicio `CertificadosOrigenService`
    *  para obtener los datos necesarios para la consulta del certificado de origen.
    *  @returns {void}
    *  @memberof PasoUnoComponent
    * */
-   public fetchGetDatosConsulta(): void {
+  public fetchGetDatosConsulta(): void {
     this.cancelacionCertificadosService
       .getDatosConsulta()
-      .pipe(takeUntil(this.destroyNotifier$)).subscribe((respuesta) => {
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((respuesta) => {
         if (respuesta.success) {
           this.esDatosRespuesta = true;
-       this.store.setGrupoEmpresa(respuesta.datos.GrupoEmpresa);
-       this.store.setGrupoFolio(respuesta.datos.GrupoFolio);
-       this.store.setGrupoCupo(respuesta.datos.GrupoCupo);
-        this.store.setGrupoDatalleCupo(respuesta.datos.GrupoDatalleCupo);
+          this.store.setGrupoEmpresa(respuesta.datos.GrupoEmpresa);
+          this.store.setGrupoFolio(respuesta.datos.GrupoFolio);
+          this.store.setGrupoCupo(respuesta.datos.GrupoCupo);
+          this.store.setGrupoDatalleCupo(respuesta.datos.GrupoDatalleCupo);
         }
       });
   }
 
   /**
    * Método para seleccionar una pestaña específica.
-   * 
+   *
    * Este método actualiza el índice de la pestaña activa y almacena el valor
    * en el store.
-   * 
+   *
    * @param {number} i - El índice de la pestaña a seleccionar.
    */
   seleccionaTab(i: number): void {
@@ -159,8 +197,23 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Método que emite el evento de búsqueda de empresa.
+   *
+   * @param {boolean} evento - Indica si se ejecutó la búsqueda de empresa.
+   *
+   * @description
+   * Utiliza el `EventEmitter` `datosEmpresaBuscar` para notificar al componente
+   * padre que se ha realizado la acción de búsqueda de empresa.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  datosEmpresa(evento: boolean): void {
+    this.datosEmpresaBuscar.emit(evento);
+  }
+
+  /**
    * Método que se ejecuta al destruir el componente.
-   * 
+   *
    * Este método emite un valor al `destroyNotifier$` y lo completa para cancelar
    * todas las suscripciones activas y evitar fugas de memoria.
    */
