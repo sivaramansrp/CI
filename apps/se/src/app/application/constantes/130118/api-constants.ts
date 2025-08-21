@@ -1,4 +1,10 @@
 /**
+ * Tramite que se utilizará en las consultas.
+ * Este valor debe ser reemplazado por el tramite correspondiente.
+ */
+export const TRAMITE= '{tramite}';
+
+/**
  * API para guardar la solicitud del tramite 130118.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/guardar
  */
@@ -60,11 +66,22 @@ export const API_GET_MOLINO_ACTIVOS = `sat-t130118/catalogo/molinos-acero`;
 export const NUMFOLIOTRAMITE = '{numFolioTramite}';
 
 /**
+ * API para obtener evaluar iniciar tramite 130118.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Evaluar-Solicitud/getOpcionesEvaluacion
+ */
+export const API_GET_EVALUAR_INICIAR = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/evaluar/iniciar`;
+
+/**
  * API para obtener las opciones de evaluación del tramite 130118.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Evaluar-Solicitud/opciones-evaluacion
  */
-export const API_POST_OPCIONES_EVALUACION = `sat-t130118/tramite/${NUMFOLIOTRAMITE}/opciones-evaluacion`;
+export const API_POST_OPCIONES_EVALUACION = `sat-t130118/evaluar/opciones-evaluacion-capturista`;
 
+/**
+ * API para prepar evaluacion tramite 130118.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Evaluar-Solicitud/getOpcionesEvaluacion
+ */
+export const API_GET_EVALUAR_MOSTRAR = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/evaluar/mostrar`;
 
 /**
  * API para iniciar el dictamen del tramite 130118.
@@ -91,10 +108,10 @@ export const API_GET_DICTAMEN = `sat-t130118/solicitud/${IDSOLICITUDDICTAMEN}/di
 export const API_POST_GUARDAR_DICTAMEN = `sat-t130118/tramite/${NUMFOLIOTRAMITE}/dictamen/generar/guardar`;
 
 /**
- * Tramite que se utilizará en las consultas.
- * Este valor debe ser reemplazado por el tramite correspondiente.
+ * API para Consultar que tabs mostrar 130118.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/estado-consulta-solicitud
  */
-export const TRAMITE= '{tramite}';
+export const API_GET_TABS = `sat-t${TRAMITE}/tramite/solicitud/${IDSOLICITUD}/estado`;
 
 /**
  * API para Consultar documentos de solicitud del tramite 130118.
