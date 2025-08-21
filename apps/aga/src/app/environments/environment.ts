@@ -10,9 +10,3 @@ export const ENVIRONMENT = {
   URL_SERVER_JSON_AUXILIAR: 'https://dev.v30.ultrasist.net/api/json-auxiliar',
   MOCK: true
 };
-
-export const API_ENVIRONMENT = {
-  BASE_URL: 'http://vucem-auth-public-alb-1414112343.us-east-1.elb.amazonaws.com',
-  API: '/api',
-  API_VERSION: '/v3'
-};
