@@ -167,6 +167,7 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
     private validacionesService: ValidacionesFormularioService,
     private consultaioQuery: ConsultaioQuery
   ) {
+    this.inicializarFormulario();
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyed$),
@@ -182,24 +183,42 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
         takeUntil(this.destroyed$),
         map((respuesta: Solicitud150101State) => {
           this.solicitud150101State = respuesta;
+          if (this.periodoReporteAnual) {
+            this.periodoReporteAnual.patchValue({
+              reporteAnualFechaInicio: respuesta.reporteAnualFechaInicio,
+              reporteAnualFechaFin: respuesta.reporteAnualFechaFin,
+              folioPrograma: respuesta.folioPrograma,
+              modalidad: respuesta.modalidad,
+              tipoPrograma: respuesta.tipoPrograma,
+              estatus: respuesta.estatus,
+            });
+          }
         })
       )
       .subscribe();
 
     this.obtenerReporteFechas();
     this.obtenerProgramasReporte();
+  }
 
+  /**
+   * @method inicializarFormulario
+   * @description
+   * Inicializa el formulario `periodoReporteAnual` con los valores actuales del estado de la solicitud.
+   * Establece los valores iniciales y el estado habilitado/deshabilitado de los controles.
+   * Este método debe llamarse al crear el componente o cuando se actualiza el estado de la solicitud.
+   * @returns {void}
+   */
+  inicializarFormulario(): void {
     this.periodoReporteAnual = this.fb.group({
       reporteAnualFechaInicio: [
         {
           value: this.solicitud150101State?.reporteAnualFechaInicio,
-          disabled: true,
         },
       ],
       reporteAnualFechaFin: [
         {
           value: this.solicitud150101State?.reporteAnualFechaFin,
-          disabled: true,
         },
       ],
       folioPrograma: [
@@ -213,8 +232,6 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
       ],
       estatus: [{ value: this.solicitud150101State?.estatus, disabled: true }],
     });
-
-    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -227,8 +244,13 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.formularioDeshabilitado) {
       this.periodoReporteAnual.disable();
-    } else if (!this.formularioDeshabilitado) {
+    } else {
       this.periodoReporteAnual.enable();
+      // Vuelve a deshabilitar los campos que deben permanecer deshabilitados
+      this.periodoReporteAnual.get('folioPrograma')?.disable();
+      this.periodoReporteAnual.get('modalidad')?.disable();
+      this.periodoReporteAnual.get('tipoPrograma')?.disable();
+      this.periodoReporteAnual.get('estatus')?.disable();
     }
   }
 

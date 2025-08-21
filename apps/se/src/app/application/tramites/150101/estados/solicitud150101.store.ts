@@ -44,7 +44,7 @@ export interface Solicitud150101State {
   /**
    * Total de exportaciones.
    */
-  totalExportaciones: number;
+  totalExportaciones: string;
 
   /**
    * Total de importaciones.
@@ -106,7 +106,7 @@ export function createInitialState(): Solicitud150101State {
     /**
      * Total de exportaciones.
      */
-    totalExportaciones: 0,
+    totalExportaciones: '',
 
     /**
      * Total de importaciones.
@@ -121,7 +121,7 @@ export function createInitialState(): Solicitud150101State {
     /**
      * Porcentaje de exportación.
      */
-    porcentajeExportacion: 0
+    porcentajeExportacion: 0,
   };
 }
 
@@ -149,7 +149,7 @@ export class Solicitud150101Store extends Store<Solicitud150101State> {
   setReporteAnualFechaFin(reporteAnualFechaFin: string): void {
     this.update((state) => ({
       ...state,
-      reporteAnualFechaFin
+      reporteAnualFechaFin,
     }));
   }
 
@@ -204,7 +204,7 @@ export class Solicitud150101Store extends Store<Solicitud150101State> {
   setReporteAnualFechaInicio(reporteAnualFechaInicio: string): void {
     this.update((state) => ({
       ...state,
-      reporteAnualFechaInicio
+      reporteAnualFechaInicio,
     }));
   }
 
@@ -223,7 +223,7 @@ export class Solicitud150101Store extends Store<Solicitud150101State> {
    * Actualiza el total de exportaciones.
    * @param totalExportaciones Total de exportaciones.
    */
-  actualizarTotalExportaciones(totalExportaciones: number): void {
+  actualizarTotalExportaciones(totalExportaciones: string): void {
     this.update((state) => ({
       ...state,
       totalExportaciones,
@@ -267,7 +267,9 @@ export class Solicitud150101Store extends Store<Solicitud150101State> {
    * Actualiza el estado de la solicitud anual con nuevos datos.
    * @param nuevoDatos Nuevo estado de la solicitud anual.
    */
-  public setRegistroSolicitudAnualState(nuevoDatos: Solicitud150101State): void {
+  public setRegistroSolicitudAnualState(
+    nuevoDatos: Solicitud150101State
+  ): void {
     this.update(nuevoDatos);
   }
 }

@@ -17,9 +17,11 @@ import {
 } from '@libs/shared/data-access-user/src';
 import {
   Component,
+  ElementRef,
   OnDestroy,
   OnInit,
   QueryList,
+  ViewChild,
   ViewChildren,
 } from '@angular/core';
 import {
@@ -42,6 +44,7 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Modal } from 'bootstrap';
 import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
 import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 export interface RespuestaTabla {
@@ -204,7 +207,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.obtenerEstadoList();
-    this.obtenerTablaDatos();
+    this.obtenerEstadoDatos();
     this.obtenerMercanciasDatos();
     this.domicilio = this.fb.group({
       codigoPostal: [
@@ -256,12 +259,14 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       denominacionDistintiva: ['', Validators.required],
       denominacionComun: ['', Validators.required],
       tipoDeProducto: ['', Validators.required],
+      especifiqueTipoDeProducto: ['', [Validators.required, Validators.maxLength(100)]],
       estadoFisico: ['', Validators.required],
+      especifiqueEstado: ['', [Validators.required, Validators.maxLength(200)]],
       fraccionArancelaria: [
         this.solicitudState?.fraccionArancelaria,
         [
           Validators.required,
-          Validators.minLength(8),
+          Validators.maxLength(8),
           Validators.pattern(/^\d+$/)
         ]
       ],
@@ -327,6 +332,11 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Se utiliza para poblar el catálogo de estados en el formulario.
    */
   public estado: Catalogo[] = [];
+  /**
+   * Lista de estados obtenida del servicio.
+   * Se utiliza para poblar el catálogo de estados en el formulario.
+   */
+  public estadoDatos: Catalogo[] = [];
 
   /**
    * Lista de países utilizada en las listas cruzadas.
@@ -436,15 +446,51 @@ export class DomicilioComponent implements OnInit, OnDestroy {
     * Se utiliza para mostrar mensajes de alerta o información al usuario.
     */
   public nuevaNotificacion!: Notificacion;
+  /**
+     * Instancia del modal para gestionar archivos.
+     *
+     * Se utiliza para abrir o cerrar el modal de archivos.
+     */
+  modalInstances: Modal | null = null;
+  /**
+   * Referencia al modal para agregar agentes a las mercancías.
+   * Se utiliza para abrir o cerrar el modal de agregar agentes.
+   */
+  @ViewChild('modalMercancias') modalMercancias!: ElementRef;
 
   /**
-   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * Llama a la función `inicializarEstadoFormulario` para configurar el estado inicial del formulario.
-   */
+ * Referencia al botón para cerrar el modal.
+ */
+  @ViewChild('closeModal') closeModal!: ElementRef;
+
+  /**
+  * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+  * Llama a la función `inicializarEstadoFormulario` para configurar el estado inicial del formulario.
+  */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
+    this.autocompletarMercancias();
   }
-
+  /**
+   * Método para autocompletar los campos de mercancías.
+   * Se suscribe a los cambios en el campo 'fraccionArancelaria' y actualiza
+   * automáticamente los campos relacionados si se cumple la condición.
+   */
+autocompletarMercancias():void{
+  this.formMercancias.get('fraccionArancelaria')?.valueChanges.subscribe(value => {
+    if (value && value.length === 8) {
+      this.formMercancias.patchValue({
+        descripcionFraccion: 'Descripción automática de la fracción',
+        UMT: 'KG'
+      }, { emitEvent: false });
+    } else {
+      this.formMercancias.patchValue({
+        descripcionFraccion: '',
+        UMT: ''
+      }, { emitEvent: false });
+    }
+  });
+}
   /**
    * Botones de acción disponibles para gestionar las listas de fechas (primer grupo).
    * Permiten agregar o quitar países de la lista cruzada principal.
@@ -549,6 +595,30 @@ export class DomicilioComponent implements OnInit, OnDestroy {
         this.estado = data?.data;
       });
   }
+  /**
+   * Obtiene los datos del estado seleccionado.
+   * @param id - El ID del estado a obtener
+   * 
+   */
+  obtenerEstadoDatos(): void {
+    this.service
+      .getEstado()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.estadoDatos = data;
+      });
+  }
+/**
+ * Maneja el cambio en el campo de clave SCian
+ */
+onCambioClaveScian(): void {
+  const VALOR_CLAVE_SCIAN = this.formAgente.get('claveScianModal')?.value;
+  if (VALOR_CLAVE_SCIAN) {
+    this.formAgente.patchValue(
+      { claveDescripcionModal: VALOR_CLAVE_SCIAN }, 
+    );
+  }
+}
 
   /**
  * Maneja el cambio en el campo de licencia sanitaria
@@ -590,28 +660,52 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Recorre la lista de seleccionados y elimina cada uno de ellos de la tabla de
    */
   eliminarFila(): void {
-    if (!this.seleccionados || this.seleccionados.length === 0) {
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: 'danger',
-        modo: 'action',
-        titulo: '',
-        mensaje: 'Selecciona un registro.',
-        cerrar: true,
-        tiempoDeEspera: 3000,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: (this.seleccionados?.length ?? 0) === 0 ? 'Selecciona un registro.' : '¿Estás seguro que deseas eliminar los registros marcados?',
+      cerrar: true,
+      tiempoDeEspera: 3000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: (this.seleccionados?.length ?? 0) === 0 ? '' : 'Cancelar',
+    };
+
+  }
+/**
+ * Método para eliminar un pedimento.
+ * @param borrar - Indica si se debe borrar el pedimento.
+ * @returns void
+ */
+  public eliminarPedimento(borrar: boolean): void {
+    if (!borrar || !this.seleccionados) {
       return;
     }
-    this.nicoTablaDatos = this.nicoTablaDatos.filter(item =>
-      !this.seleccionados.some(selected =>
-        selected.clave_Scian === item.clave_Scian
-      )
-    );
-    this.seleccionados = [];
+    if (this.seleccionados) {
+      this.nicoTablaDatos = this.nicoTablaDatos.filter(item =>
+        !this.seleccionados.some(selected =>
+          selected.clave_Scian === item.clave_Scian
+        )
+      );
+      this.seleccionados = [];
+    }
   }
-
+  /**
+   * Maneja el evento de agregar un nuevo elemento.
+   * Si el formulario es inválido, marca todos los controles como tocados.
+   * Si el formulario es válido, realiza la lógica correspondiente.
+   */
+  onAgregar(): void {
+    if (this.formMercancias.invalid) {
+      this.formMercancias.markAllAsTouched();
+    }
+    else {
+      if (this.closeModal) {
+        this.closeModal.nativeElement.click();
+      }
+    }
+  }
   /**
    * Agrega una nueva fila a la tabla NICO con valores del formulario
    */

@@ -290,10 +290,10 @@
     <div class="col-12">
       <label> Socios y Accionistas</label>
       <label class="my-3 col-12">Datos de los socios y/o accionistas:</label>
-
       <app-tabla-dinamica [configuracionTabla]="tablaSociaAccionistas" [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
         (listaDeFilaSeleccionada)="empresaAccionistasSeleccionados = $event" [datos]="datosSocioAccionistas"
-        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"></app-tabla-dinamica>
+        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
+        [mode]="'client'" [showPagination]="true" [totalItems]="totalItemsDatosSocioAccionistas"></app-tabla-dinamica>
     </div>
     <div class="col-12">
       <div class="pull-right">
@@ -311,7 +311,8 @@
         [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
         (listaDeFilaSeleccionada)="accionistasExtranjerosSeleccionados = $event"
         [datos]="datosSocioAccionistasExtrenjeros"
-        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"></app-tabla-dinamica>
+        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
+        [mode]="'client'" [showPagination]="true" [totalItems]="totalItemsDatosSocioAccionistasExtranjeros"></app-tabla-dinamica>
     </div>
     <div class="col-12">
       <div class="pull-right">

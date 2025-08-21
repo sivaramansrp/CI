@@ -305,6 +305,22 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
        */
       fechaInicioInput: InputFecha = FECHA_DE_PAGO;
 
+      /**
+ * Obtiene el número total de socios accionistas registrados en el formulario.
+ * @returns {number} Total de socios accionistas. 
+ */
+  get totalItemsDatosSocioAccionistas(): number {
+    return this.datosSocioAccionistas.length;
+  }
+
+       /**
+ * Obtiene el número total de socios accionistas registrados en el formulario.
+ * @returns {number} Total de socios accionistas. 
+ */
+  get totalItemsDatosSocioAccionistasExtranjeros(): number {
+    return this.datosSocioAccionistasExtrenjeros.length;
+  }
+
   /**
    * Constructor para inicializar el formulario de datos del subcontratista.
    * @param {FormBuilder} fb - FormBuilder para la creación del formulario reactivo.

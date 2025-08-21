@@ -548,14 +548,7 @@ export class DatosDelSolicitudModificacionComponent
     private domicilioEstablecimientoQuery: DatosDelSolicituteSeccionQuery,
      private consultaioQuery: ConsultaioQuery
   ) {
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroy$),
-        map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-        })
-      )
-      .subscribe()
+   //
   }
 
   /**
@@ -573,11 +566,38 @@ export class DatosDelSolicitudModificacionComponent
       this.eliminarNumeroYFechaControls();
     }
     this.obtenerScianTablaDatos();
-    this.cargarDatosDesdeApi()
-    if (this.esFormularioSoloLectura) {
-      this.domicilioEstablecimiento.disable();
-      this.solicitudEstablecimientoForm.disable();
-    }
+    this.cargarDatosDesdeApi();
+
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((seccionState) => {
+      this.esFormularioSoloLectura = seccionState.readonly;
+      if (this.esFormularioSoloLectura) {
+        this.domicilioEstablecimiento.disable();
+        this.solicitudEstablecimientoForm.disable();
+      } else {
+        this.domicilioEstablecimiento.enable();
+        this.solicitudEstablecimientoForm.enable();
+        this.domicilioEstablecimiento.get('observaciones')?.disable();
+      }
+    });
+
+  /**
+ * Se suscribe a los cambios del campo 'scian' del formulario `scianForm`.
+ * 
+ * Cada vez que el valor del campo 'scian' cambia, se actualiza automáticamente
+ * el campo 'descripcionScian' con el nuevo valor seleccionado, sin emitir 
+ * un nuevo evento de cambio (gracias a `emitEvent: false`).
+ * 
+ * La suscripción se mantiene activa hasta que el observable `destroy$` emite un valor, 
+ * lo cual suele hacerse en `ngOnDestroy` para evitar fugas de memoria.
+ *
+ */
+  this.scianForm.get('scian')?.valueChanges
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((selectedId) => {
+      this.scianForm.get('descripcionScian')?.setValue(selectedId, { emitEvent: false });
+    });
   }
 
   /**
@@ -706,7 +726,7 @@ eliminarSeleccionados(): void {
     });
     this.scianForm = this.fb.group({
       scian: ['', Validators.required],
-      descripcionScian: [''],
+      descripcionScian: [{ value: '', disabled: true }],
     });
 
     this.solicitudEstablecimientoForm = this.fb.group({
