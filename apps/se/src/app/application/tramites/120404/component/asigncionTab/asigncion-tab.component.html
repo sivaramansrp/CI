@@ -28,7 +28,7 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group custom-clasifi-regimen-catalogo">
-                    <label for="clasificacionRegimen">Número de oficio de asignación*</label>
+                    <label for="clasificacionRegimen">Número de oficio de asignación*:</label>
                     <input type="text" class="form-control" formControlName="numTramite" id="numTramite"
                         (change)="setValoresStore(asignacionForm,'numTramite')">
                     <div *ngIf="isInvalid('numTramite')" class="mensaje-error">
