@@ -49,9 +49,13 @@ export class ModificacionPermisoMedsUsoComponent {
          * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
          */
           public infoAlert = 'alert-info';
-      /*
-       *  * Se define el mensaje de datos para la modificación del permiso sanitario.
-       *  * Este mensaje se utiliza para mostrar información relevante al usuario.
+      /**
+       * Contiene los datos relacionados con la modificación de permisos.
+       * 
+       * Esta variable almacena la información necesaria para actualizar
+       * o modificar los permisos existentes en el sistema.
+       * 
+       * @type {TipoDeDato} - Reemplaza con el tipo real de MODIFICACION_PERMISO_DATA si es necesario.
        */
         msgData =MODIFICACION_PERMISO_DATA;
         /**

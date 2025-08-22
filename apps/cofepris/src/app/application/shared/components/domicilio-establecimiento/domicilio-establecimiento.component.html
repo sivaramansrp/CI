@@ -58,8 +58,7 @@
   <div class="row">
     <div class="col-md-8">
       <div class="form-group">
-        <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Domicilio, calle, número interior, numero exterior, lote"
-            ata-bs-toggle="tooltip"></span></label>
+        <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill mx-2" tooltip="Domicilio, calle, número interior, numero exterior, lote" placement="top"></span></label>
         <input class="form-control" id="calle" placeholder="" type="text" maxlength="100" formControlName="calle"
           (change)="setValoresStore(domicilio, 'calle', 'setCalle')" />
         <div *ngIf="domicilio.get('calle')?.touched && domicilio.get('calle')?.errors?.['required']"
@@ -123,8 +122,7 @@
     <div class="col-md-4">
       <div class="form-group">
         <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria*:</label>
-         <span class="bi bi-question-circle-fill fs-4 m-1" [title]="'Número de la autorización indicado en el documento emitido por la autoridad sanitaria competente'" data-bs-toggle="tooltip">
-         </span>
+        <span class="bi bi-question-circle-fill mx-2" tooltip="Número de la autorización indicado en el documento emitido por la autoridad sanitaria competente" placement="top"></span>
         <input class="form-control" id="licenciaSanitaria" placeholder="" type="text"
           formControlName="licenciaSanitaria" (change)="
                     setValoresStore(
@@ -307,6 +305,7 @@
               </small>
             </div>
           </div>
+        @if(tieneUsoEspecifico) {
           <div class="form-group">
             <label for="usoEspecifico" class="form-label text-start">Uso específico*:</label>
             <textarea id="usoEspecifico" class="form-control text-area-uso" formControlName="usoEspecifico" (change)="
@@ -328,10 +327,10 @@
               </small>
             </div>
           </div>
+          }
           <div class="form-group">
             <label for="fraccionArancelaria">Fracción arancelaria*:</label>
-            <span class="bi bi-question-circle-fill fs-4 m-1"  [title]="'Descripción numérica o desglose de un código de clasificación que otorga el sistema armonizado'" ata-bs-toggle="tooltip">
-            </span>
+            <span class="bi bi-question-circle-fill" tooltip="Descripción numérica o desglose de un código de clasificación que otorga el sistema armonizado" placement="top"></span>
             <input type="text" id="fraccionArancelaria" (focusout)="setDescripcionFraccion()" formControlName="fraccionArancelaria" class="form-control"
               (change)="
                 setValoresStore(
@@ -397,8 +396,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label for="UMT">UMT:</label>
-                <span class="bi bi-question-circle-fill fs-4 m-1" [title]="'Unidad de medida de la tarifa'" ata-bs-toggle="tooltip">
-                </span>
+                    <span class="bi bi-question-circle-fill mx-2" tooltip="Unidad de medida de la tarifa" placement="top"></span>
                 <input type="text" id="UMT" formControlName="UMT" class="form-control"
                   (change)="setValoresStore(formMercancias, 'UMT', 'setUMT')" />
               </div>
@@ -490,9 +488,9 @@
           <div class="form-group mt-5">
             <div class="panel-group ficha-collapse" id="accordion">
               <div class="panel panel-default">
-                <div class="panel-heading" (click)="mostrar_colapsable()" tabindex="0">
+                <div class="panel-heading" (click)="mostrar_colapsable(1)" tabindex="0">
                   <p class="panel-title fw-bold">País de origen</p>
-                  <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
+                  <button type="button" class="collpase-button" [class.collapsed]="!paisDeOriginColapsable" [disabled]="esFormularioSoloLectura"></button>
                 </div>
                 @if (colapsable) {
                 <div class="panel-collapse collapse in" id="panel-01">
@@ -509,11 +507,11 @@
           <div class="form-group mt-5">
             <div class="panel-group ficha-collapse" id="accordion">
               <div class="panel panel-default">
-                <div class="panel-heading" (click)="mostrar_colapsable()" tabindex="0">
+                <div class="panel-heading" (click)="mostrar_colapsable(2)" tabindex="0">
                   <p class="panel-title fw-bold">
                     País donde se produce o fabrica el ingrediente activo
                   </p>
-                  <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
+                  <button type="button" class="collpase-button" [class.collapsed]="!paisDoneFabricaColapsable" [disabled]="esFormularioSoloLectura"></button>
                 </div>
                 @if (colapsable) {
                 <div class="panel-collapse collapse in" id="panel-01">
@@ -532,7 +530,7 @@
               <div class="panel panel-default">
                 <div class="panel-heading" (click)="mostrar_colapsableDuos()" tabindex="0">
                   <p class="panel-title fw-bold">País donde se elabora el producto</p>
-                  <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
+                  <button type="button" class="collpase-button" [class.collapsed]="!paisDoneProductoColapsable" [disabled]="esFormularioSoloLectura"></button>
                 </div>
                 @if (colapsableDuos) {
                 <div class="panel-collapse collapse in" id="panel-01">
@@ -551,7 +549,7 @@
               <div class="panel panel-default">
                 <div class="panel-heading" (click)="mostrar_colapsableTres()" tabindex="0">
                   <p class="panel-title fw-bold">País proveedor</p>
-                  <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
+                  <button type="button" class="collpase-button" [class.collapsed]="!paisProveedorColapsable" [disabled]="esFormularioSoloLectura"></button>
                 </div>
                 @if (colapsableTres) {
                 <div class="panel-collapse collapse in" id="panel-01">
@@ -572,7 +570,7 @@
                   <p class="panel-title fw-bold">
                     País de procedencia/País del último puerto de embarque
                   </p>
-                  <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
+                  <button type="button" class="collpase-button" [class.collapsed]="!paisProcedenciaDelColapsable" [disabled]="esFormularioSoloLectura"></button>
                 </div>
                 @if (colapsableTress) {
                 <div class="panel-collapse collapse in" id="panel-01">
@@ -588,7 +586,7 @@
           }
           <div class="form-group">
             <app-catalogo-select [catalogo]="estado" formControlName="clasificacionToxicologica"
-              [label]="'clasificación toxicológica'" [required]="true" name="clasificacionToxicologica" (change)="
+              [label]="'Clasificación toxicológica'" [required]="true" name="clasificacionToxicologica" (change)="
                 setValoresStore(formMercancias, 'especificar', 'setEspecificar')"
               [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
           </div>

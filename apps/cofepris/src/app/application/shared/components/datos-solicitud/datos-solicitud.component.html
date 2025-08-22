@@ -56,8 +56,7 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="correo">Correo electrónico*:<span class="bi bi-question-circle-fill fs-4 m-1"
-            title="ejemplo@dominio.com" ata-bs-toggle="tooltip"></span></label>
+          <label class="form-label" for="correo">Correo electrónico*: <span class="bi bi-question-circle-fill mx-2" tooltip="ejemplo@dominio.com" placement="top"></span></label>
           <input
             class="form-control"
             id="correo"
@@ -83,7 +82,9 @@
     [isGarantiasOfrecidasVisible]="isGarantiasOfrecidasVisible"
     [esPaginacionVisible]="esPaginacionVisible"
     [tieneDomicilioHabilitar]="tieneDomicilioHabilitar"
-    [mostrarNumeroRegistro]="mostrarNumeroRegistro">
+    [mostrarNumeroRegistro]="mostrarNumeroRegistro"
+    [tieneUsoEspecifico]="tieneUsoEspecifico"
+    >
   </app-domicillo>
   <app-manifiestos></app-manifiestos>
   <app-representante-legal-rfc></app-representante-legal-rfc>

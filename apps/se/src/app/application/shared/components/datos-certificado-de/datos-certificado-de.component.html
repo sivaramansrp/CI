@@ -7,14 +7,14 @@
           <label for="justificacionDictamen" class="form-label">Observaciones:</label>
           <textarea id="justificacionDictamen" formControlName="observacionesDates" (change)="setValoresStore('formDatosCertificado','observacionesDates','setFormDatosCertificado')"   class="mb-4 h-20 w-100" placeholder="" rows="6"></textarea>
         </div>
-        @if(idioma){
+        @if(idioma && idProcedimiento!==110205){
           <div class="col-md-8">
           <label for="presenta" class="form-label">Presenta:</label>
           <textarea id="presenta" formControlName="presenta" (change)="setValoresStore('formDatosCertificado','presenta','setPresenta')"   class="mb-4 h-20 w-100" placeholder="" rows="6"></textarea>
         </div>
 
            }
-        @if(idioma){
+        @if(idioma ){
           <div class="row mb-3">
             <div class="col-md-6">
               <app-catalogo-select [label]="'Idioma'" [catalogo]="idiomaDatos || []" 

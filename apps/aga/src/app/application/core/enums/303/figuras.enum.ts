@@ -1,4 +1,5 @@
 import { AgenteAduanal } from "../../models/303/agente-aduanal.model";
+import { ControlInventario } from "../../models/303/control-inventario.model";
 
 /**
  * Configuración del encabezado de la tabla de figuras aduanales.
@@ -20,3 +21,11 @@ export enum TipoFiguraSeleccionada {
     AgenciaAduanal = '3'
 }
 
+/**
+ * Configuración del encabezado de la tabla de control de inventarios.
+ */
+export const CONTROL_INVENTARIOS = [
+    { encabezado: 'Nombre del sistema o datos para su identificación', clave: (item: ControlInventario) => item.nombreSistema, orden: 1 },
+    { encabezado: 'Lugar de radicación', clave: (item: ControlInventario) => item.lugarRadicacion, orden: 2 },
+    { encabezado: 'Indique si se trata de un sistema de control de inventarios conforme el anexo 24', clave: (item: ControlInventario) => item.esSistemaControl, orden: 3 },
+]

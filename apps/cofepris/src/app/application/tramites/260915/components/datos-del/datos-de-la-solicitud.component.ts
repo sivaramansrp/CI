@@ -1152,8 +1152,7 @@ getMercanciasDatosData(): void {
   agregarClaveScian(): void {
     if (this.agreagarClaveScianElemento) {
       const MODAL_INSTANCIA = new Modal(
-        this.agreagarClaveScianElemento?.nativeElement,
-        { backdrop: false }
+        this.agreagarClaveScianElemento?.nativeElement
       );
       MODAL_INSTANCIA.show();
     }

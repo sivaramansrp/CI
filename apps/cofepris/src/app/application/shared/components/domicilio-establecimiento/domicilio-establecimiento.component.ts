@@ -50,6 +50,7 @@ import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-
 import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
 import { Modal } from 'bootstrap';
 import { TablePaginationComponent } from '@ng-mf/data-access-user';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 export interface RespuestaTabla {
   code: number;
@@ -76,12 +77,18 @@ export interface MercanciasTabla {
     CatalogoSelectComponent,
     TablaDinamicaComponent,
     CrosslistComponent,
-    TablePaginationComponent
+    TablePaginationComponent,
+    TooltipModule
   ],
   templateUrl: './domicilio-establecimiento.component.html',
   styleUrls: ['./domicilio-establecimiento.component.scss'],
 })
 export class DomicilioComponent implements OnInit, OnDestroy {
+
+  /**
+   * Indica si el campo GarantiasOfrecidasVisible es visible.
+   */
+  @Input() tieneUsoEspecifico: boolean = true;
   /**
      * Indica si el campo GarantiasOfrecidasVisible es visible.
      */
@@ -326,17 +333,17 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   aduanasEntradaBotons = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-primary',
+      class: 'btn-default',
       funcion: (): void => this.crossList.toArray()[0].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-default',
+      class: 'btn-primary',
       funcion: (): void => this.crossList.toArray()[0].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-danger',
+      class: 'btn-primary',
       funcion: (): void => this.crossList.toArray()[0].quitar(''),
     },
     {
@@ -590,6 +597,28 @@ export class DomicilioComponent implements OnInit, OnDestroy {
     { fraccion: '0402.10.01', descripcion: 'Leche en polvo, sin azúcar' },
     { fraccion: '1006.30.99', descripcion: 'Arroz semiblanqueado' }
   ];
+  /**
+   * Estado de colapsabilidad para los diferentes países.
+   */
+  public paisDeOriginColapsable: boolean = false;
+  /**
+   * Estado de colapsabilidad para el país donde se fabrica.
+   */
+  public paisDoneFabricaColapsable: boolean = false;
+  /**
+   * Indica si la sección colapsable para el "País donde se elabora el producto" está expandida o colapsada.
+   * Cuando es `true`, la sección está expandida; cuando es `false`, está colapsada.
+   */
+  public paisDoneProductoColapsable: boolean = false;
+  /**
+   * Estado de colapsabilidad para el país proveedor.
+   */
+  public paisProveedorColapsable: boolean = false;
+  /**
+   * Estado de colapsabilidad para el país de procedencia.
+   * Cuando es `true`, la sección está expandida; cuando es `false`, está colapsada.
+   */
+  public paisProcedenciaDelColapsable: boolean = false;
   /**
    * Etiqueta de la lista de fechas.
    * */
@@ -927,7 +956,12 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Alterna el estado colapsable de la sección del formulario.
    * @method mostrar_colapsable
    */
-  mostrar_colapsable(): void {
+  mostrar_colapsable(orden: number): void {
+    if(orden === 1) {
+      this.paisDeOriginColapsable = !this.paisDeOriginColapsable;
+    } else if(orden === 2) {
+      this.paisDoneFabricaColapsable = !this.paisDoneFabricaColapsable;
+    }
     this.colapsable = !this.colapsable;
   }
 
@@ -937,6 +971,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
   mostrar_colapsableDuos(): void {
     this.colapsableDuos = !this.colapsableDuos;
+    this.paisDoneProductoColapsable = !this.paisDoneProductoColapsable;
   }
 
   /**
@@ -945,6 +980,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
   mostrar_colapsableTres(): void {
     this.colapsableTres = !this.colapsableTres;
+    this.paisProveedorColapsable = !this.paisProveedorColapsable;
   }
 
    /**
@@ -953,6 +989,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
   mostrar_procedencia(): void {
     this.colapsableTress = !this.colapsableTress;
+    this.paisProcedenciaDelColapsable = !this.paisProcedenciaDelColapsable;
   }
 
   /**

@@ -1,20 +1,11 @@
+import { Component, OnDestroy } from '@angular/core';
+import { Subject, catchError, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-
-import { Component } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
-
 import { Router } from '@angular/router';
-
 import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
-
 import { TramiteCofeprisStore } from '../../../../estados/tramite.store';
 
-import { Subject } from 'rxjs';
-import { catchError } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-paso-tres',
   standalone: true,

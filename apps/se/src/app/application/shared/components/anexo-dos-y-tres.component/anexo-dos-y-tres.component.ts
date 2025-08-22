@@ -98,6 +98,12 @@ export class AnexoDosYTresComponent implements OnInit {
    */
   public nuevaTresNotificacion!: Notificacion;
 
+  /** Inventarios seleccionados por el usuario */
+  public seleccionarDosTablaData: AnexoEncabezado[] = [] as AnexoEncabezado[];
+
+  /** Inventarios seleccionados por el usuario */
+  public seleccionarTresTablaData: AnexoEncabezado[] = [] as AnexoEncabezado[];
+
   /**
    * Constructor del componente
    * @param fb FormBuilder para crear formularios
@@ -142,28 +148,27 @@ export class AnexoDosYTresComponent implements OnInit {
    * Elimina elementos del Anexo Dos que no tienen estatus
    */
   eliminarAnexoDos(): void {
-  const SELECTED = this.anexoDosTablaLista.some(idx => idx.estatus);
-  if(!SELECTED){
-    this.nuevaDosNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'Seleccione el anexo que desea eliminar',
-      cerrar: true,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-    };
-    return;
+  this.anexoDosTablaLista = this.anexoDosTablaLista.filter((idx) => {
+    return !idx.estatus;
+  });
+  if (this.nuevaDosNotificacion) {
+    this.nuevaDosNotificacion.cerrar = false;
   }
 
-    this.abrirDosModal();
 
-    this.anexoDosTablaLista = this.anexoDosTablaLista.filter((idx) => {
-      return !idx.estatus;
-    });
-    this.obtenerAnexoDosDevolverLaLlamada.emit(this.anexoDosTablaLista);
+   if (this.seleccionarDosTablaData.length > 0) {
+
+      this.anexoDosTablaLista = this.anexoDosTablaLista.filter(item => {
+
+        return !this.seleccionarDosTablaData.some(selectedItem =>
+          selectedItem.encabezadoFraccion === item.encabezadoFraccion &&
+          selectedItem.encabezadoDescripcion === item.encabezadoDescripcion
+        );
+      });
+
+      this.seleccionarDosTablaData = [];
+     this.obtenerAnexoDosDevolverLaLlamada.emit(this.anexoDosTablaLista);
+    }
   }
 
   /**
@@ -202,27 +207,15 @@ export class AnexoDosYTresComponent implements OnInit {
    * Agrega un nuevo elemento al Anexo Dos
    */
   agregarAnexoDos(): void {
-  const FRACCION = this.anexoDosFormGroup.get('fraccionArancelaria')?.value?.trim() || '';
-  const DESCRIPCION = this.anexoDosFormGroup.get('descripcion')?.value?.trim() || '';
-  if (FRACCION === '' || DESCRIPCION === '') {
-    this.nuevaDosNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'Debe proporcionar la fracción y la descripción',
-      cerrar: true,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-    };
-    return;
-  }
   const OBJECTO_IDX: AnexoEncabezado = {
-    encabezadoFraccion: FRACCION,
-    encabezadoDescripcion: DESCRIPCION,
-    estatus: false,
-  };
+      encabezadoFraccion: this.anexoDosFormGroup.get('fraccionArancelaria')
+        ?.value,
+      encabezadoDescripcion: this.anexoDosFormGroup.get('descripcion')?.value,
+      estatus: false,
+    };
+    if(OBJECTO_IDX.encabezadoFraccion.trim() === '' || OBJECTO_IDX.encabezadoDescripcion.trim() === '') {
+      return; // No agregar si los campos están vacíos
+    }
     this.anexoDosTablaLista = [...this.anexoDosTablaLista, OBJECTO_IDX];
     this.obtenerAnexoDosDevolverLaLlamada.emit(this.anexoDosTablaLista);
     this.anexoDosFormGroup.reset();
@@ -264,23 +257,27 @@ export class AnexoDosYTresComponent implements OnInit {
    * Elimina elementos del Anexo Tres que no tienen estatus
    */
   eliminarAnexoTres(): void {
-  const SELECTED = this.anexoTresTablaLista.some(idx => idx.estatus);
-  if(!SELECTED){
-    this.nuevaTresNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'Seleccione el anexo que desea eliminar',
-      cerrar: true,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-    };
-    return;
+ this.anexoTresTablaLista = this.anexoTresTablaLista.filter((idx) => {
+    return !idx.estatus;
+  });
+  if (this.nuevaTresNotificacion) {
+    this.nuevaTresNotificacion.cerrar = false;
   }
 
-  this.abrirTresModal();
+
+   if (this.seleccionarTresTablaData.length > 0) {
+
+      this.anexoTresTablaLista = this.anexoTresTablaLista.filter(item => {
+
+        return !this.seleccionarTresTablaData.some(selectedItem =>
+          selectedItem.encabezadoFraccion === item.encabezadoFraccion &&
+          selectedItem.encabezadoDescripcion === item.encabezadoDescripcion
+        );
+      });
+
+      this.seleccionarTresTablaData = [];
+     this.obtenerAnexoTresDevolverLaLlamada.emit(this.anexoTresTablaLista);
+    }
 
     this.anexoTresTablaLista = this.anexoTresTablaLista.filter((idx) => {
       return !idx.estatus;
@@ -292,28 +289,16 @@ export class AnexoDosYTresComponent implements OnInit {
    * Agrega un nuevo elemento al Anexo Tres
    */
   agregarAnexoTres(): void {
-    const FRACCION = this.anexoTresFormGroup.get('fraccionArancelaria')?.value?.trim() || '';
-    const DESCRIPCION = this.anexoTresFormGroup.get('descripcion')?.value?.trim() || '';
-    if (FRACCION === '' || DESCRIPCION === '') {
-      this.nuevaTresNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'Debe proporcionar la fracción y la descripción',
-      cerrar: true,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
+     const OBJECTO_IDX: AnexoEncabezado = {
+      encabezadoFraccion: this.anexoTresFormGroup.get('fraccionArancelaria')
+        ?.value,
+      encabezadoDescripcion: this.anexoTresFormGroup.get('descripcion')?.value,
+      estatus: false,
     };
-    return;
-  }
-    const OBJECTO_IDX: AnexoEncabezado = {
-    encabezadoFraccion: FRACCION,
-    encabezadoDescripcion: DESCRIPCION,
-    estatus: false,
-  };
-    this.anexoTresTablaLista = [...this.anexoTresTablaLista, OBJECTO_IDX];
+    if(OBJECTO_IDX.encabezadoFraccion.trim() === '' || OBJECTO_IDX.encabezadoDescripcion.trim() === '') {
+      return; // No agregar si los campos están vacíos
+    }
+   this.anexoTresTablaLista = [...this.anexoTresTablaLista, OBJECTO_IDX]
     this.obtenerAnexoTresDevolverLaLlamada.emit(this.anexoTresTablaLista);
     this.anexoTresFormGroup.reset();
   }
@@ -323,17 +308,8 @@ export class AnexoDosYTresComponent implements OnInit {
    * @param event Lista de encabezados del Anexo Dos
    */
   setAnexoDosLista(event: AnexoEncabezado[]): void {
-    const LISTA_SELECCIONADA = event ? event : [];
-    this.anexoDosTablaLista = this.anexoDosTablaLista.map((idx) => {
-      const INDICE = LISTA_SELECCIONADA.findIndex(
-        (obj) => obj.encabezadoFraccion === idx.encabezadoFraccion
-      );
-      if (INDICE !== -1) {
-        idx.estatus = true;
-      }
-      return idx;
-    });
-    this.obtenerAnexoDosDevolverLaLlamada.emit(this.anexoDosTablaLista);
+ this.seleccionarDosTablaData = event;
+ this.obtenerAnexoDosDevolverLaLlamada.emit(this.anexoDosTablaLista);
   }
 
   /**
@@ -341,16 +317,7 @@ export class AnexoDosYTresComponent implements OnInit {
    * @param event Lista de encabezados del Anexo Tres
    */
   setAnexoTresLista(event: AnexoEncabezado[]): void {
-    const LISTA_SELECCIONADA = event ? event : [];
-    this.anexoTresTablaLista = this.anexoTresTablaLista.map((idx) => {
-      const INDICE = LISTA_SELECCIONADA.findIndex(
-        (obj) => obj.encabezadoFraccion === idx.encabezadoFraccion
-      );
-      if (INDICE !== -1) {
-        idx.estatus = true;
-      }
-      return idx;
-    });
-    this.obtenerAnexoTresDevolverLaLlamada.emit(this.anexoTresTablaLista);
+ this.seleccionarTresTablaData = event;
+  this.obtenerAnexoTresDevolverLaLlamada.emit(this.anexoTresTablaLista);
   }
 }

@@ -1,7 +1,9 @@
 import { Component, OnDestroy } from '@angular/core';
+import { FirmaElectronicaComponent, TramiteFolioService } from '@ng-mf/data-access-user';
 import { ReplaySubject, catchError, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { TramiteFolioService } from '@ng-mf/data-access-user';
 import { TramiteStore } from '@ng-mf/data-access-user';
 
 /**
@@ -12,6 +14,8 @@ import { TramiteStore } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-paso-tres',
   templateUrl: './paso-tres.component.html',
+  standalone: true,
+  imports: [FirmaElectronicaComponent,CommonModule, ReactiveFormsModule],
 })
 export class PasoTresComponent implements OnDestroy {
   /**

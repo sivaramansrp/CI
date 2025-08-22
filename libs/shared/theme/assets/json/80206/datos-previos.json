@@ -53,7 +53,7 @@
       "id": 101,
       "descripcion": "Aduana de Manzanillo"
     },
-    "sectorSelecion": {
+"sectorSelecion": {
       "id": 10,
       "descripcion": "Automotriz"
     },
@@ -66,8 +66,8 @@
     "cantidad": "100",
     "valor": "15000",
     "seleccionaLaModalidad": "Ampliación 3RS",
-    "seleccionarRegla": "Regla 8va",
-    "sector": "Automotriz",
+    "seleccionarRegla": "170",
+    "sector": "170",
     "sectorDesplegable": [
       {
         "id": 1,
@@ -84,6 +84,6 @@
         "descripcion": "Regla Octava"
       }
     ],
-    "isSelectedRegla": false
+    "isSelectedRegla": true
   }
   

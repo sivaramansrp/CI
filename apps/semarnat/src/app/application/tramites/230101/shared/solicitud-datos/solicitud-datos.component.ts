@@ -16,6 +16,7 @@ import { TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { Subject, map, takeUntil } from 'rxjs';
+import { SOLICITUD_HEADER } from '../../constantes/disponibles-constante.enum';
 
 /**
  * Componente que representa los datos de la solicitud.
@@ -41,9 +42,9 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    */
   colapsable: boolean = true;
   /**
-   * Recibe datos del encabezado de la tabla como propiedad de entrada
+   * Contiene los datos del encabezado de la tabla, definidos en `SOLICITUD_HEADER.hSolicitud`.
    */
-  @Input() tablaHeadData: string[] = [];
+  tablaHeadData = SOLICITUD_HEADER.hSolicitud;
   /**
    * Recibe la lista de solicitudes como datos de fila de la tabla.
    */

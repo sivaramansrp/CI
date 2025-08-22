@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AlertComponent, ConsultaioQuery, ConsultaioState, FormularioDinamico, PAGO_DE_DERECHOS, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -39,6 +39,13 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
 
   // Índice para manejar la pestaña seleccionada
   indice: number = 1;
+ /**
+ * Evento que emite un valor booleano al componente padre.
+ * Se activa cuando el subíndice del child componente cambia.
+ * - true: el subíndice es 3 (mostrar alerta)
+ * - false: cualquier otro valor de subíndice
+ */
+   @Output() alertaEvento = new EventEmitter<boolean>();
 
   /**
    * Clase CSS utilizada para mostrar alertas informativas.
@@ -92,6 +99,12 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   seleccionaTab(indice: number): void {
     // Establece el índice de la pestaña seleccionada
     this.indice = indice;
+     /**
+ * Verifica si el subíndice actual es 3 y emite un valor booleano al padre.
+ * - true: mostrar alerta
+ * - false: ocultar alerta
+ */
+     this.alertaEvento.emit(this.indice === 3);
   }
   /**
    * @inheritdoc

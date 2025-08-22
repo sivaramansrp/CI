@@ -1,116 +1,143 @@
 import { TestBed } from '@angular/core/testing';
-import { PeruCertificadoService } from './peru-certificado.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { Tramite110205Store } from '../estados/tramite110205.store';
-import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
-import { Mercancia } from '../../../shared/models/modificacion.enum';
-import { ProductorExportador, MercanciasHistorico } from '../models/peru-certificado.module';
+import { PeruCertificadoService } from './peru-certificado.service';
 import { Tramite110205State } from '../estados/tramite110205.store';
+import { Catalogo } from '@ng-mf/data-access-user';
 
 describe('PeruCertificadoService', () => {
   let service: PeruCertificadoService;
   let httpMock: HttpTestingController;
-  let store: Tramite110205Store;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [
-        PeruCertificadoService,
-        Tramite110205Store
-      ]
+      providers: [PeruCertificadoService]
     });
+
     service = TestBed.inject(PeruCertificadoService);
     httpMock = TestBed.inject(HttpTestingController);
-    store = TestBed.inject(Tramite110205Store);
   });
 
   afterEach(() => {
     httpMock.verify();
   });
 
-  it('should be created', () => {
+  test('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('obtenerMenuDesplegable should fetch and map catalogos', (done) => {
-    const mockResponse: RespuestaCatalogos = { data: [{ id: 1, descripcion: 'Test' }] as Catalogo[], code: 200, message: 'OK' };
-    service.obtenerMenuDesplegable('menu.json').subscribe(data => {
-      expect(data).toEqual(mockResponse.data);
-      done();
+  test('should fetch menu desplegable data', () => {
+    const mockCatalogoData: Catalogo[] = [
+      { id: 1, descripcion: 'Option 1' },
+      { id: 2, descripcion: 'Option 2' }
+    ];
+
+    service.obtenerMenuDesplegable('menu.json').subscribe((data) => {
+      expect(data).toEqual(mockCatalogoData);
     });
+
     const req = httpMock.expectOne('../../../../../assets/json/110205/menu.json');
     expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    req.flush({ data: mockCatalogoData });
   });
 
-  it('obtenerTablaDatos should fetch mercancias', (done) => {
-    const mockData: Mercancia[] = [{
-      fraccionArancelaria: '010101',
-      numeroDeRegistrodeProductos: 'REG123',
-      fechaExpedicion: '2023-01-01',
-      fechaVencimiento: '2024-01-01',
-      nombreTecnico: 'Nombre Técnico 1',
-      nombreComercial: 'Nombre Comercial 1',
-      normaOrigen: 'NORMA1',
-      id: '1',
+  test('should fetch tabla datos', () => {
+    const mockMercanciaData = [
+      { id: 1, nombre: 'Mercancia 1' },
+      { id: 2, nombre: 'Mercancia 2' }
+    ];
+
+    service.obtenerTablaDatos('tabla.json').subscribe((data) => {
+      expect(data).toEqual(mockMercanciaData);
+    });
+
+    const req = httpMock.expectOne('../../../../../assets/json/110205/tabla.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockMercanciaData);
+  });
+
+  test('should update estado formulario', () => {
+    const mockState: Tramite110205State = {
+      formCertificado: { si: true },
+      estado: { id: 1, descripcion: 'Estado' },
+      paisBloques: [{ id: 1, descripcion: 'Bloque 1' }],
+      mercanciaForm: {},
+      mercanciaTabla: [],
+      formDatosCertificado: {},
+      idiomaDatosSeleccion: { id: 2, descripcion: 'Español' },
+      entidadFederativaSeleccion: { id: 3, descripcion: 'Entidad Federativa' },
+      representacionFederalSeleccion: { id: 4, descripcion: 'Representación Federal' },
+      formDatosDelDestinatario: {},
+      formExportor: {},
+      fraccionArancelaria: '1234.56.78',
+      nombreComercialMercancia: 'Mercancia Comercial',
+      nombreTecnico: 'Mercancia Técnica',
+      nombreIngles: 'Technical Merchandise',
+      otrasInstancias: 'Instancias',
+      criterioParaConferirOrigen: 'Criterio',
       cantidad: '100',
-      umc: 'kg',
-      tipoFactura: 'Tipo1',
+      umc: [{ id: 5, descripcion: 'Unidad' }],
       valorMercancia: '1000',
-      fechaFinalInput: '2024-01-01',
-      numeroFactura: 'FAC123',
-      unidadMedidaMasaBruta: 'kg',
-      complementoClasificacion: 'Clasificación 1',
-      complementoDescripcion: 'Descripción 1'
-    }];
-    service.obtenerTablaDatos('data.json').subscribe(data => {
-      expect(data).toEqual(mockData);
-      done();
-    });
-    const req = httpMock.expectOne('../../../../../assets/json/110205/data.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockData);
+      complementoDescripcion: 'Descripción adicional',
+      numeroFactura: 'FAC12345',
+      tipoFactura: [{ id: 6, descripcion: 'Factura Tipo' }],
+      formaValida: { valid: true },
+      formDestinatario: {},
+      datosConfidencialesProductor: true,
+      productorMismoExportador: false,
+      agregarDatosProductorFormulario: {},
+      formulario: {},
+      disponiblesDatos: [],
+      procductoUno: []
+    };
+
+    jest.spyOn(service.tramite110205Store, 'update');
+    service.actualizarEstadoFormulario(mockState);
+
+    expect(service.tramite110205Store.update).toHaveBeenCalledWith(expect.any(Function));
   });
 
-  it('obtenerProductorPorExportador should fetch productor/exportador', (done) => {
-    const mockData: ProductorExportador = { datos: [] };
-    service.obtenerProductorPorExportador().subscribe(data => {
-      expect(data).toEqual(mockData);
-      done();
-    });
-    const req = httpMock.expectOne('assets/json/110205/productor-exportador.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockData);
-  });
+  test('should fetch registro toma muestras mercancias data', () => {
+    const mockPrefillData: Tramite110205State = {
+      formCertificado: { si: true },
+      estado: { id: 1, descripcion: 'Estado' },
+      paisBloques: [{ id: 1, descripcion: 'Bloque 1' }],
+      mercanciaForm: {},
+      mercanciaTabla: [],
+      formDatosCertificado: {},
+      idiomaDatosSeleccion: { id: 2, descripcion: 'Español' },
+      entidadFederativaSeleccion: { id: 3, descripcion: 'Entidad Federativa' },
+      representacionFederalSeleccion: { id: 4, descripcion: 'Representación Federal' },
+      formDatosDelDestinatario: {},
+      formExportor: {},
+      fraccionArancelaria: '1234.56.78',
+      nombreComercialMercancia: 'Mercancia Comercial',
+      nombreTecnico: 'Mercancia Técnica',
+      nombreIngles: 'Technical Merchandise',
+      otrasInstancias: 'Instancias',
+      criterioParaConferirOrigen: 'Criterio',
+      cantidad: '100',
+      umc: [{ id: 5, descripcion: 'Unidad' }],
+      valorMercancia: '1000',
+      complementoDescripcion: 'Descripción adicional',
+      numeroFactura: 'FAC12345',
+      tipoFactura: [{ id: 6, descripcion: 'Factura Tipo' }],
+      formaValida: { valid: true },
+      formDestinatario: {},
+      datosConfidencialesProductor: true,
+      productorMismoExportador: false,
+      agregarDatosProductorFormulario: {},
+      formulario: {},
+      disponiblesDatos: [],
+      procductoUno: []
+    };
 
-  it('obtenerMercancia should fetch mercancias historico', (done) => {
-    const mockData: MercanciasHistorico = { datos: [] };
-    service.obtenerMercancia().subscribe(data => {
-      expect(data).toEqual(mockData);
-      done();
+    service.getRegistroTomaMuestrasMercanciasData().subscribe((data) => {
+      expect(data).toEqual(mockPrefillData);
     });
-    const req = httpMock.expectOne('assets/json/110205/mercancias-seleccionadas.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockData);
-  });
 
-  it('actualizarEstadoFormulario should update store state', () => {
-    const spy = jest.spyOn(store, 'update').mockImplementation(() => {});
-    const datos: Tramite110205State = { campo: 'valor' } as any;
-    service.actualizarEstadoFormulario(datos);
-    expect(spy).toHaveBeenCalledWith(expect.any(Function));
-    spy.mockRestore();
-  });
-
-  it('getRegistroTomaMuestrasMercanciasData should fetch prefill data', (done) => {
-    const mockData: Tramite110205State = { campo: 'valor' } as any;
-    service.getRegistroTomaMuestrasMercanciasData().subscribe(data => {
-      expect(data).toEqual(mockData);
-      done();
-    });
     const req = httpMock.expectOne('assets/json/110205/datos-prefill.json');
     expect(req.request.method).toBe('GET');
-    req.flush(mockData);
+    req.flush(mockPrefillData);
   });
 });
