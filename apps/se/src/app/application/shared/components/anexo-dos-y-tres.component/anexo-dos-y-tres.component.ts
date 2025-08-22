@@ -207,7 +207,7 @@ export class AnexoDosYTresComponent implements OnInit {
    * Agrega un nuevo elemento al Anexo Dos
    */
   agregarAnexoDos(): void {
-    const OBJECTO_IDX: AnexoEncabezado = {
+  const OBJECTO_IDX: AnexoEncabezado = {
       encabezadoFraccion: this.anexoDosFormGroup.get('fraccionArancelaria')
         ?.value,
       encabezadoDescripcion: this.anexoDosFormGroup.get('descripcion')?.value,
@@ -289,7 +289,7 @@ export class AnexoDosYTresComponent implements OnInit {
    * Agrega un nuevo elemento al Anexo Tres
    */
   agregarAnexoTres(): void {
-    const OBJECTO_IDX: AnexoEncabezado = {
+     const OBJECTO_IDX: AnexoEncabezado = {
       encabezadoFraccion: this.anexoTresFormGroup.get('fraccionArancelaria')
         ?.value,
       encabezadoDescripcion: this.anexoTresFormGroup.get('descripcion')?.value,

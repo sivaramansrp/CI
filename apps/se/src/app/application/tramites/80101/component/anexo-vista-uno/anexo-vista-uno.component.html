@@ -9,3 +9,39 @@
   [formularioDeshabilitado]="formularioDeshabilitado"
 >
 </app-anexo-uno>
+
+<ng-container *ngIf="mostrarComplementarFraccionPopup">
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <app-complementar-fraccion-vista></app-complementar-fraccion-vista>
+      <button class="btn btn-secondary mt-3" (click)="cerrarComplementarFraccion()">Cerrar</button>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="mostrarProveedorClientePopup">
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <app-contenedor-proveedor-cliente></app-contenedor-proveedor-cliente>
+      <button class="btn btn-secondary mt-3" (click)="cerrarContenedorProveedorCliente()">Cerrar</button>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="mostrarProyectoImmexPopup">
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <app-proyecto-immex-vista></app-proyecto-immex-vista>
+      <button class="btn btn-secondary mt-3" (click)="cerrarProyectoImmex()">Cerrar</button>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="mostrarProveedorPorArchivoPopup">
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <app-proveedor-por-archivo-vista></app-proveedor-por-archivo-vista>
+      <button class="btn btn-secondary mt-3" (click)="cerrarProveedorPorArchivo()">Cerrar</button>
+    </div>
+  </div>
+</ng-container>
