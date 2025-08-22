@@ -1,59 +1,77 @@
 import { CommonModule } from '@angular/common';
-
-import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
 
 import { Modal } from 'bootstrap';
-
-import { Subject, distinctUntilChanged, map, merge, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
+import { distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
+import { merge } from 'rxjs';
 
 import {
   CatalogoSelectComponent,
   ConfiguracionColumna,
   ConsultaioQuery,
+  InputRadioComponent,
+  REGEX_PATRON_DECIMAL_12_3,
   REGEX_POSTAL,
   REGEX_TELEFONO_DIGITOS,
   TablaDinamicaComponent,
   TablaSeleccion,
   TableBodyData,
   TituloComponent,
-  ValidacionesFormularioService,
-  
+  ValidacionesFormularioService
 } from '@libs/shared/data-access-user/src';
 
 import { DatosDelMercancia } from '../constants/exencion-impuestos.enum';
-
-import { Catalogo, Solicitud103State, Tramite103Store } from '../estados/tramite103.store';
 import { Tramite103Query } from '../estados/tramite103.query';
-
+import {
+  Catalogo,
+  Solicitud103State,
+  Tramite103Store
+} from '../estados/tramite103.store';
 import { ExencionImpuestosService } from '../services/exencion-impuestos.service';
 import { MercanciaTableService } from '../services/mercancia-table.service';
+
 
 
 /**
  * Maneja formularios, catálogos, tablas de mercancías y modales relacionados con el trámite.
  */
-@Component({
-  selector: 'app-exencion-impuestos',
-  standalone: true,
-  imports: [
-    CatalogoSelectComponent,
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    TituloComponent,
-    TablaDinamicaComponent
-  ],
-  templateUrl: './exencion-impuestos.component.html',
-  styleUrls: ['./exencion-impuestos.component.scss']
-})
-export class ExencionImpuestosComponent implements OnInit, OnDestroy {
+
+  @Component({
+    selector: 'app-exencion-impuestos',
+    standalone: true,
+    imports: [
+      CatalogoSelectComponent,
+      FormsModule,
+      ReactiveFormsModule,
+      TituloComponent,
+      TablaDinamicaComponent,
+      CommonModule
+    ],
+    templateUrl: './exencion-impuestos.component.html',
+    styleUrls: ['./exencion-impuestos.component.scss'],
+  })
+  export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   /**
    * Ayuda para obtener una descripción del catálogo por identificación o valor de descripción.
    */
   static obtenerDescripcion(catalog: Catalogo[] | undefined, value: string | number): string {
     if (!catalog) { return value as string; }
-    const FOUND = catalog.find(item => item.id === value || item.id === Number(value) || item.descripcion === value);
+  const FOUND = catalog.find(item => item.id === value || item.id === Number(value) || item.descripcion === value);
     return FOUND ? FOUND.descripcion : value as string;
   }
 
@@ -100,30 +118,31 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
    */
   agregarMercanciasConfirm(): void {
     this.envioIntentado = true;
-    const datos = this.agregarMercanciasForm.get('datosMercancia');
-    if (!datos) return;
-    const vehiculoSeleccionado = datos.get('vehiculo')?.value;
+    const DATOS = this.agregarMercanciasForm.get('datosMercancia');
+    if (!DATOS) return;
+    const VEHICULO_SELECCIONADO = DATOS.get('vehiculo')?.value;
     // Campos principales requeridos
-    const camposPrincipales = [
+    const CAMPOS_PRINCIPALES = [
       'tipoDeMercancia',
       'usoEspecifico',
       'cantidad',
       'condicionMercancia',
       'unidadMedida'
     ];
-    let camposValidos = camposPrincipales.every(campo => {
-      const ctrl = datos.get(campo);
-      return ctrl && ctrl.value !== null && ctrl.value !== '';
+    let CAMPOS_VALIDOS = CAMPOS_PRINCIPALES.every(CAMPO => {
+      const CTRL = DATOS.get(CAMPO);
+      return CTRL && CTRL.value !== null && CTRL.value !== '';
     });
     // Si el checkbox de vehículo está seleccionado, agregar directamente y cerrar el modal
-    if (vehiculoSeleccionado && this.agregarMercanciasForm.valid) {
+    if (VEHICULO_SELECCIONADO && this.agregarMercanciasForm.valid) {
       this.agregarMercancias();
       // Cerrar el modal de agregar mercancías
       if (this.modalElement && this.modalElement.nativeElement) {
-        const win = window as any;
-        if (win.bootstrap) {
-          const modalAgregarMercancias = win.bootstrap.Modal.getInstance(this.modalElement.nativeElement) || new win.bootstrap.Modal(this.modalElement.nativeElement);
-          modalAgregarMercancias.hide();
+  const WIN = window as { bootstrap?: { Modal: unknown } };
+        if (WIN.bootstrap) {
+          const ModalClass = WIN.bootstrap.Modal as typeof Modal;
+          const MODAL_AGREGAR_MERCANCIAS = ModalClass.getInstance(this.modalElement.nativeElement) || new ModalClass(this.modalElement.nativeElement);
+          MODAL_AGREGAR_MERCANCIAS.hide();
         } else {
           this.modalElement.nativeElement.style.display = 'none';
         }
@@ -131,13 +150,14 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
       return;
     }
     // Si NO es vehículo y los campos principales son válidos, mostrar el modal de confirmación
-    if (!vehiculoSeleccionado && camposValidos) {
+    if (!VEHICULO_SELECCIONADO && CAMPOS_VALIDOS) {
       // Mostrar el modal de confirmación sin cerrar el modal principal
-      const win = window as any;
-      const modalAgregar = document.getElementById('confirmarModalAgregar');
-      if (modalAgregar && win.bootstrap) {
-        const modalInstance = new win.bootstrap.Modal(modalAgregar);
-        modalInstance.show();
+  const WIN = window as { bootstrap?: { Modal: unknown } };
+      const MODAL_AGREGAR = document.getElementById('confirmarModalAgregar');
+      if (MODAL_AGREGAR && WIN.bootstrap) {
+        const ModalClass = WIN.bootstrap.Modal as typeof Modal;
+        const MODAL_INSTANCE = new ModalClass(MODAL_AGREGAR);
+        MODAL_INSTANCE.show();
       }
       return;
     }
@@ -161,8 +181,8 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   seleccionarFila(row: any): void {
-    const idx = this.mercanciaBodyData.indexOf(row);
-    this.filaSeleccionada = idx;
+  const IDX = this.mercanciaBodyData.indexOf(row);
+  this.filaSeleccionada = IDX;
   }
 
   /**
@@ -178,19 +198,19 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
       return;
     }
     this.filaEditando = index;
-    const row = this.mercanciaBodyData[index];
+  const ROW = this.mercanciaBodyData[index];
     this.agregarMercanciasForm.patchValue({
       datosMercancia: {
-        tipoDeMercancia: row.tbodyData[0] ?? '',
-        cantidad: row.tbodyData[1] ?? '',
-        unidadMedida: row.tbodyData[2] ?? '',
-        ano: row.tbodyData[3] ?? '',
-        modelo: row.tbodyData[4] ?? '',
-        marca: row.tbodyData[5] ?? '',
-        serie: row.tbodyData[6] ?? '',
-        usoEspecifico: row.tbodyData[7] ?? '', // Uso específico after Numero de serie
-        condicionMercancia: row.tbodyData[8] ?? '',
-        vehiculo: row.tbodyData[9] === 'Sí',
+        tipoDeMercancia: ROW.tbodyData[0] ?? '',
+        cantidad: ROW.tbodyData[1] ?? '',
+        unidadMedida: ROW.tbodyData[2] ?? '',
+        ano: ROW.tbodyData[3] ?? '',
+        modelo: ROW.tbodyData[4] ?? '',
+        marca: ROW.tbodyData[5] ?? '',
+        serie: ROW.tbodyData[6] ?? '',
+        usoEspecifico: ROW.tbodyData[7] ?? '', // Uso específico after Numero de serie
+        condicionMercancia: ROW.tbodyData[8] ?? '',
+        vehiculo: ROW.tbodyData[9] === 'Sí',
       }
     });
     this.abrirDialogoMercancias();
@@ -568,7 +588,14 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
         unidadMedida: [this.solicitudState?.unidadMedida, [Validators.required]],
         vehiculo: [this.solicitudState?.vehiculo ?? false],
         ano: [this.solicitudState?.ano ?? ''],
-        cantidad: [this.solicitudState?.cantidad, [Validators.required]],
+        cantidad: [
+          this.solicitudState?.cantidad,
+          [
+            Validators.required,
+            Validators.pattern(REGEX_PATRON_DECIMAL_12_3),
+            Validators.min(1)
+          ]
+        ],
         marca: [this.solicitudState?.marca],
         modelo: [this.solicitudState?.modelo],
         serie: [this.solicitudState?.serie]
@@ -689,39 +716,21 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   destinoMercanciaSeleccion(): void {
-      setTimeout(() => {
-        this.tramiteForm.get('importadorExportador.opcion')?.setValue('si', { emitEvent: false });
-      });
-  this.tramiteForm.get('importadorExportador.opcion')?.setValue('si', { emitEvent: false });
-    // Evite bucles infinitos con protección de reentrada
-    if (this.isProcessingDestinoSelection) {
-      return;
-    }
-    
-    this.isProcessingDestinoSelection = true;
-    
-    try {
-      const DESTINO_MERCANCIA = this.tramiteForm.get('exencionImpuestos.destinoMercancia')?.value;
-      this.store.setDestinoMercancia(DESTINO_MERCANCIA);
-      // Buscar el objeto destinoMercancia seleccionado
-      const destinoObj = this.destinoMercancia.find(d => d.id === DESTINO_MERCANCIA);
-      const opcionControl = this.tramiteForm.get('importadorExportador.opcion');
-      if (destinoObj && destinoObj.descripcion && destinoObj.descripcion.toLowerCase().includes('salud')) {
-        this.opcionDeshabilitado = false;
-        opcionControl?.enable({ emitEvent: false });
-        // Simplemente establezca el valor actual sin la manipulación del tiempo.
-        if (opcionControl?.value) {
-          opcionControl.updateValueAndValidity({ emitEvent: false });
-        }
-      } else {
-        this.opcionDeshabilitado = true;
-        this.valorSeleccionado = '';
-        opcionControl?.setValue('', { emitEvent: false });
-        opcionControl?.disable({ emitEvent: false });
+    // Habilita el radio solo si destinoMercancia es 'Salud Pública' (id: 3)
+    const DESTINO_MERCANCIA = this.tramiteForm.get('exencionImpuestos.destinoMercancia')?.value;
+    this.store.setDestinoMercancia(DESTINO_MERCANCIA);
+    const OPCION_CONTROL = this.tramiteForm.get('importadorExportador.opcion');
+    if (DESTINO_MERCANCIA === 3) {
+      // Si se habilita, restaura el valor anterior o selecciona 'si' por defecto
+      this.opcionDeshabilitado = false;
+      OPCION_CONTROL?.enable({ emitEvent: false });
+      if (!OPCION_CONTROL?.value) {
+        OPCION_CONTROL?.setValue('si', { emitEvent: false });
       }
-    } finally {
-      // Restablecer siempre la bandera
-      this.isProcessingDestinoSelection = false;
+    } else {
+      // Si se deshabilita, no borra el valor, solo deshabilita el control
+      this.opcionDeshabilitado = true;
+      OPCION_CONTROL?.disable({ emitEvent: false });
     }
   }
 
@@ -729,24 +738,24 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
    * Maneja la selección de condición de mercancía y actualiza el almacén.
    */
   condicionMercanciaSeleccion(): void {
-    const CONDICION_MERCANCIA = this.agregarMercanciasForm.get('datosMercancia.condicionMercancia')?.value;
-    this.store.setCondicionMercancia(CONDICION_MERCANCIA);
+  const CONDICION_MERCANCIA = this.agregarMercanciasForm.get('datosMercancia.condicionMercancia')?.value;
+  this.store.setCondicionMercancia(CONDICION_MERCANCIA);
   }
 
   /**
    * Maneja la selección de unidad de medida y actualiza el almacén.
    */
   unidadMedidaSeleccion(): void {
-    const UNIDAD_MEDIDA = this.agregarMercanciasForm.get('datosMercancia.unidadMedida')?.value;
-    this.store.setUnidadMedida(UNIDAD_MEDIDA);
+  const UNIDAD_MEDIDA = this.agregarMercanciasForm.get('datosMercancia.unidadMedida')?.value;
+  this.store.setUnidadMedida(UNIDAD_MEDIDA);
   }
 
   /**
    * Maneja la selección de año y actualiza el almacén.
    */
   anoSeleccion(): void {
-    const ANO = this.agregarMercanciasForm.get('datosMercancia.ano')?.value;
-    this.store.setAno(ANO);
+  const ANO = this.agregarMercanciasForm.get('datosMercancia.ano')?.value;
+  this.store.setAno(ANO);
   }
 
   /**
@@ -784,12 +793,12 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   vehiculo(): void {
-    const vehiculoCtrl = this.agregarMercanciasForm.get('datosMercancia.vehiculo');
-    const marcaCtrl = this.agregarMercanciasForm.get('datosMercancia.marca');
-    const anoCtrl = this.agregarMercanciasForm.get('datosMercancia.ano');
-    const serieCtrl = this.agregarMercanciasForm.get('datosMercancia.serie');
-    const modeloCtrl = this.agregarMercanciasForm.get('datosMercancia.modelo');
-    const VEHICULO = vehiculoCtrl?.value;
+    const VEHICULO_CTRL = this.agregarMercanciasForm.get('datosMercancia.vehiculo');
+    const MARCA_CTRL = this.agregarMercanciasForm.get('datosMercancia.marca');
+    const ANO_CTRL = this.agregarMercanciasForm.get('datosMercancia.ano');
+    const SERIE_CTRL = this.agregarMercanciasForm.get('datosMercancia.serie');
+    const MODELO_CTRL = this.agregarMercanciasForm.get('datosMercancia.modelo');
+    const VEHICULO = VEHICULO_CTRL?.value;
     
     // Actualizar tienda
     this.store.setVehiculo(VEHICULO);
@@ -798,15 +807,15 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
       this.abrirModalVehiculoSeguro();
     } else {
       // Borrar validadores cuando no están marcados
-      marcaCtrl?.clearValidators();
-      modeloCtrl?.clearValidators();
-      serieCtrl?.clearValidators();
-      anoCtrl?.clearValidators();
+      MARCA_CTRL?.clearValidators();
+      MODELO_CTRL?.clearValidators();
+      SERIE_CTRL?.clearValidators();
+      ANO_CTRL?.clearValidators();
       
-      marcaCtrl?.updateValueAndValidity({ emitEvent: false });
-      modeloCtrl?.updateValueAndValidity({ emitEvent: false });
-      serieCtrl?.updateValueAndValidity({ emitEvent: false });
-      anoCtrl?.updateValueAndValidity({ emitEvent: false });
+      MARCA_CTRL?.updateValueAndValidity({ emitEvent: false });
+      MODELO_CTRL?.updateValueAndValidity({ emitEvent: false });
+      SERIE_CTRL?.updateValueAndValidity({ emitEvent: false });
+      ANO_CTRL?.updateValueAndValidity({ emitEvent: false });
     }
   }
 
@@ -818,22 +827,23 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
    */
   abrirModalVehiculoSeguro(): void {
     setTimeout(() => {
-      const modalVehiculo = document.getElementById('confirmarModalVehiculo');
-      if (modalVehiculo) {
+      const MODAL_VEHICULO = document.getElementById('confirmarModalVehiculo');
+      if (MODAL_VEHICULO) {
         try {
-          const win = window as any;
-          if (win.bootstrap && win.bootstrap.Modal) {
-            const modalInstance = new win.bootstrap.Modal(modalVehiculo, {
+          const WIN = window as { bootstrap?: { Modal: unknown } };
+          if (WIN.bootstrap && WIN.bootstrap.Modal) {
+            const ModalClass = WIN.bootstrap.Modal as typeof Modal;
+            const MODAL_INSTANCE = new ModalClass(MODAL_VEHICULO, {
               backdrop: 'static',
               keyboard: false,
               focus: false 
             });
-            modalInstance.show();
+            MODAL_INSTANCE.show();
           } else {
-            modalVehiculo.style.display = 'block';
-            modalVehiculo.style.zIndex = '1070';
-            modalVehiculo.classList.add('show');
-            modalVehiculo.setAttribute('aria-hidden', 'false');
+            MODAL_VEHICULO.style.display = 'block';
+            MODAL_VEHICULO.style.zIndex = '1070';
+            MODAL_VEHICULO.classList.add('show');
+            MODAL_VEHICULO.setAttribute('aria-hidden', 'false');
             
             // Agregar fondo manualmente
             const backdrop = document.createElement('div');
@@ -884,14 +894,14 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   cancelarVehiculo(): void {
-    const vehiculoCtrl = this.agregarMercanciasForm.get('datosMercancia.vehiculo');
+    const VEHICULO_CTRL = this.agregarMercanciasForm.get('datosMercancia.vehiculo');
     const marcaCtrl = this.agregarMercanciasForm.get('datosMercancia.marca');
     const anoCtrl = this.agregarMercanciasForm.get('datosMercancia.ano');
     const serieCtrl = this.agregarMercanciasForm.get('datosMercancia.serie');
     const modeloCtrl = this.agregarMercanciasForm.get('datosMercancia.modelo');
     
     // Desmarque la casilla de verificación del vehículo y borre los validadores.
-    vehiculoCtrl?.setValue(false, { emitEvent: false });
+    VEHICULO_CTRL?.setValue(false, { emitEvent: false });
     marcaCtrl?.clearValidators();
     modeloCtrl?.clearValidators();
     serieCtrl?.clearValidators();
