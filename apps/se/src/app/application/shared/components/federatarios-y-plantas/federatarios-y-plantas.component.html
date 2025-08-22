@@ -238,6 +238,7 @@
           </div>
           <div class="row">
             <div class="d-flex flex-row flex-wrap">
+               <!-- Complementar planta -->
               <div class="p-2">
                 <button
                   class="btn btn-danger"
@@ -247,23 +248,17 @@
                   Complementar planta
                 </button>
               </div>
+              <!-- Montos de inversión -->
               <div class="p-2">
                 <button
                   class="btn btn-danger"
-                  (click)="abrirMontosInversion()"
+                  (click)="irAAcciones('../montos-inversion-acciones')"
                   [disabled]="formularioDeshabilitado "
                 >
                   Montos de inversión
                 </button>
               </div>
-              <ng-container *ngIf="mostrarMontosInversionPopup">
-                <div class="modal-overlay">
-                  <div class="modal-content">
-                    <app-montos-de-inversion></app-montos-de-inversion>
-                    <button class="btn btn-secondary mt-3" (click)="cerrarMontosInversion()">Cerrar</button>
-                  </div>
-                </div>
-              </ng-container>
+              <!-- Empleados -->
               <div class="p-2">
                 <button
                   class="btn btn-danger"
@@ -273,6 +268,7 @@
                   Empleados
                 </button>
               </div>
+              <!-- Capacidad Instalada -->
               <div class="p-2">
                 <button
                   class="btn btn-danger"

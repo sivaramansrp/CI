@@ -16,6 +16,12 @@ import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
 import { takeUntil } from 'rxjs';
 
+import { ComplementarFraccionVistaComponent } from '../complementar-fraccion-vista/complementar-fraccion-vista.component';
+import { ContenedorProveedorClienteComponent } from '../contenedor-proveedor-cliente/contenedor-proveedor-cliente.component';
+import { ProveedorPorArchivoVistaComponent } from '../proveedor-por-archivo-vista/proveedor-por-archivo-vista.component';
+import { ProyectoImmexVistaComponent } from '../proyecto-immex-vista/proyecto-immex-vista.component';
+
+
 /**
  * Método que se ejecuta al inicializar el componente.
  * Suscribe a los observables para importar y exportar datos de tablas,
@@ -85,7 +91,7 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-anexo-vista-uno',
   standalone: true,
-  imports: [CommonModule, AnexoUnoComponent],
+  imports: [CommonModule, AnexoUnoComponent, ComplementarFraccionVistaComponent,ContenedorProveedorClienteComponent,ProyectoImmexVistaComponent,ProveedorPorArchivoVistaComponent],
   templateUrl: './anexo-vista-uno.component.html',
   styleUrl: './anexo-vista-uno.component.scss',
 })
@@ -186,6 +192,38 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * Bandera utilizada para controlar la visibilidad del popup de "Complementar Fracción".
+   * Se establece en `true` para mostrar el popup y en `false` para ocultarlo.
+   *
+   * @property {boolean} mostrarComplementarFraccionPopup
+   */
+  public mostrarComplementarFraccionPopup: boolean = false;
+
+   /**
+   * Bandera utilizada para controlar la visibilidad del popup de "Proveedor/Cliente".
+   * Se establece en `true` para mostrar el popup y en `false` para ocultarlo.
+   *
+   * @property {boolean} mostrarProveedorClientePopup
+   */
+  public mostrarProveedorClientePopup: boolean = false;
+
+  /**
+   * Bandera utilizada para controlar la visibilidad del popup de "Proyecto Immex".
+   * Se establece en `true` para mostrar el popup y en `false` para ocultarlo.
+   *
+   * @property {boolean} mostrarProyectoImmexPopup
+   */
+  public mostrarProyectoImmexPopup: boolean = false;
+
+  /**
+   * Bandera utilizada para controlar la visibilidad del popup de "Proveedor por Archivo".
+   * Se establece en `true` para mostrar el popup y en `false` para ocultarlo.
+   *
+   * @property {boolean} mostrarProveedorPorArchivoPopup
+   */
+  public mostrarProveedorPorArchivoPopup: boolean = false;
+
+  /**
    * Constructor del componente AnexoVistaUnoComponent.
    * @param {Router} router - Servicio de enrutamiento de Angular para navegar entre rutas.
    * @param {ActivatedRoute} activatedRoute - Servicio que proporciona información sobre la ruta activa.
@@ -269,10 +307,34 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
     if (event && event.catagoria && event.id && event.datos) {
       this.store.setAnnexoUnoSeccionActiva(event.id);
       this.store.setDatosParaNavegar(event.datos);
-      this.router.navigate([`../${event.catagoria}`], {
-        relativeTo: this.activatedRoute,
-      });
+
+      if (event.catagoria === 'complementar-fraccion') {
+        this.mostrarComplementarFraccionPopup = true;
+      } else if (event.catagoria === 'contenedor-proveedor-cliente') {
+        this.mostrarProveedorClientePopup = true;
+      } else if (event.catagoria === 'proyecto-immex') {
+        this.mostrarProyectoImmexPopup = true;
+      } else if (event.catagoria === 'proveedor-por-archivo') {
+        this.mostrarProveedorPorArchivoPopup = true;
+      }
     }
+  }
+
+  /** Cierra el popup de "Complementar Fracción". Establece mostrarComplementarFraccionPopup en false. */
+  cerrarComplementarFraccion(): void {
+    this.mostrarComplementarFraccionPopup = false;
+  }
+
+   cerrarContenedorProveedorCliente(): void {
+    this.mostrarProveedorClientePopup = false;
+  }
+
+   cerrarProyectoImmex(): void {
+    this.mostrarProyectoImmexPopup = false;
+  }
+
+   cerrarProveedorPorArchivo(): void {
+    this.mostrarProveedorPorArchivoPopup = false;
   }
 
   /**
