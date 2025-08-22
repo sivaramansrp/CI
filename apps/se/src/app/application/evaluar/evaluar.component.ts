@@ -1072,6 +1072,17 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (resp) => {
           if (resp.codigo === '00') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.EXITO,
+              modo: 'action',
+              titulo: 'Éxito',
+              mensaje: resp.mensaje,
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
             this.getTabs();
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
