@@ -194,9 +194,12 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
     mercanciasDisponiblesTabla: boolean = true;
 
     /**
-   * Referencia al modal de modificación en la plantilla HTML.
+   * @property {ElementRef} modifyModal
+   * @description
+   * Referencia al elemento del modal de modificación en la plantilla HTML.
+   * Se utiliza para inicializar y controlar la instancia del modal de modificación desde el componente.
    */
-      @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
+    @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
 
         /**
    * @property {ElementRef} buscarMercanciaModal
@@ -411,6 +414,14 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
         );
   }
 
+  /**
+   * @method abrirModalCargaPorArchivo
+   * @description
+   * Abre el modal de carga por archivo utilizando la instancia de `buscarModel`.
+   * Si la instancia del modal existe, muestra el modal en la interfaz de usuario.
+   * 
+   * @returns {void}
+   */
   abrirModalCargaPorArchivo(): void {
     if(this.buscarModel) {
       this.buscarModel.show();
@@ -428,7 +439,15 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
       }      
     }
     
-
+  /**
+   * @method guardarClicado
+   * @description
+   * Actualiza el observable `datosTabla$` con el arreglo de mercancías recibido como parámetro.
+   * Se utiliza para reflejar los datos seleccionados o modificados en la tabla de mercancías del componente.
+   * 
+   * @param {Mercancia[]} event - Arreglo de mercancías que se asigna al observable de la tabla.
+   * @returns {void}
+   */
     guardarClicado(event: Mercancia[]): void {
     this.datosTabla$ = of(event);
   }

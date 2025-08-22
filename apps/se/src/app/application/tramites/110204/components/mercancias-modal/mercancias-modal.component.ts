@@ -70,7 +70,12 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    * @description Evento emitido cuando el usuario hace clic en cerrar el modal de mercancías.
    */
   @Output() cerrarClicado = new EventEmitter();
-
+  /**
+   * @property {EventEmitter<any>} tablaSeleccionEvent
+   * @description
+   * Evento emitido cuando se realiza una selección en la tabla de mercancías del modal.
+   * Permite notificar al componente padre que se ha realizado una acción de selección en la tabla.
+   */
   @Output() tablaSeleccionEvent = new EventEmitter();
 
 
@@ -108,6 +113,12 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    */
   private actualizandoFormulario = false;
 
+    /**
+   * @property {Notificacion} nuevaNotificacion
+   * @description
+   * Objeto que almacena la información de la notificación a mostrar en el modal de mercancías.
+   * Se utiliza para mostrar mensajes de alerta, éxito o información al usuario dentro del componente.
+   */
   nuevaNotificacion!: Notificacion;
 
   /**

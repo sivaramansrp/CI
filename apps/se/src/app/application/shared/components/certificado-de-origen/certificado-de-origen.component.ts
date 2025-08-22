@@ -222,7 +222,12 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
    * @type {EventEmitter<boolean>}
    */
   @Output() setbuscarMercanciaEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
-
+  /**
+   * @property {EventEmitter<boolean>} setModelCargaPorArchivo
+   * @description
+   * Evento de salida que emite un valor booleano para indicar que se debe abrir el modal de carga por archivo.
+   * Permite notificar al componente padre para mostrar el modal correspondiente.
+   */
   @Output() setModelCargaPorArchivo: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /**
@@ -504,7 +509,16 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
       this.formCertificado.disable();
     }
   }
-
+  /**
+   * @method ngOnChanges
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta cuando cambian las propiedades de entrada del componente.
+   * Si la propiedad `datosForm` cambia y tiene un valor actual, actualiza el formulario `formCertificado` con los nuevos datos.
+   * Si el formulario no existe, lo crea antes de aplicar los valores.
+   * 
+   * @param {SimpleChanges} changes - Objeto que contiene los cambios en las propiedades de entrada.
+   * @returns {void}
+   */
 ngOnChanges(changes: SimpleChanges):void {
   if (changes['datosForm']?.currentValue) {
     if(this.formCertificado){
@@ -718,6 +732,15 @@ ngOnChanges(changes: SimpleChanges):void {
     this.filaClics.emit(tableData);
   }
 
+
+  /**
+   * @method abrirModalCargaPorArchivo
+   * @description
+   * Emite un evento para indicar que se debe abrir el modal de carga por archivo.
+   * Utiliza el EventEmitter `setModelCargaPorArchivo` para notificar al componente padre.
+   * 
+   * @returns {void}
+   */
   abrirModalCargaPorArchivo(): void {
     this.setModelCargaPorArchivo.emit(true);
   }
