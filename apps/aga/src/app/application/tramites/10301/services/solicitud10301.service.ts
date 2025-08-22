@@ -33,30 +33,6 @@ export class Solicitud10301Service {
     // Constructor para inyección de dependencias
   }
 
-  // /**
-  //  * Actualiza el estado del formulario almacenado en el store con los datos recibidos.
-  //  * Cada propiedad del objeto DATOS es asignada al store correspondiente.
-  //  * @param DATOS Objeto con los datos actuales del formulario (tipo Solicitud10301State).
-  //  */
-  // actualizarEstadoFormulario(DATOS: Solicitud10301State): void {
-  //   this.tramite10301Store.setTipoMercancia(DATOS.tipoMercancia);
-  //   this.tramite10301Store.setUsoEspecifico(DATOS.usoEspecifico);
-  //   this.tramite10301Store.setMarca(DATOS.marca);
-  //   this.tramite10301Store.setModelo(DATOS.modelo);
-  //   this.tramite10301Store.setSerie(DATOS.serie);
-  //   this.tramite10301Store.setCalle(DATOS.calle);
-  //   this.tramite10301Store.setNumeroExterior(DATOS.numeroExterior);
-  //   this.tramite10301Store.setNumeroInterior(DATOS.numeroInterior);
-  //   this.tramite10301Store.setTelefono(DATOS.telefono);
-  //   this.tramite10301Store.setCorreoElectronico(DATOS.correoElectronico);
-  //   this.tramite10301Store.setCodigoPostal(DATOS.codigoPostal);
-  //   this.tramite10301Store.setEstado(DATOS.estado);
-  //   this.tramite10301Store.setColonia(DATOS.colonia);
-  //   this.tramite10301Store.setOpcion(DATOS.opcion);
-  //   this.tramite10301Store.setPais(DATOS.pais);
-  //   this.tramite10301Store.setAduana(DATOS.aduana);
-  // }
-
   /**
    * Obtiene los datos del trámite desde un archivo JSON local.
    * Este método permite inicializar o cargar los datos previamente almacenados.

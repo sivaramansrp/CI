@@ -371,6 +371,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.consultaDatos = seccionState;
           this.esFormularioSoloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
@@ -400,7 +401,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         };
       })
     );
-    console.log('aduana from catalog:', this.aduana.catalogos);
     this.subscriptions.push(
       this.query.selectAno$.subscribe((ano) => {
         this.ano = {
@@ -440,9 +440,9 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
-      this.guardarDatosDelFormulario();
+      this.tramiteForm.disable();
     } else {
-      this.donanteDomicilio();
+      this.tramiteForm.enable();
     }
   }
 
@@ -572,19 +572,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Habilita o deshabilita el formulario `tramiteForm` según el estado de solo lectura.
-   * 
-   * - Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es `true`), el formulario se deshabilita.
-   * - De lo contrario, el formulario se habilita.
-   */
-  guardarDatosDelFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.tramiteForm.disable();
-    } else {
-      this.tramiteForm.enable();
-    }
-  }
-  /**
    * Establece los valores en el store de tramite10301.
    *
    * @param {FormGroup} form - El formulario del cual se obtiene el valor.
@@ -670,8 +657,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       }),
     });
 
-    console.log('aduana from ts:', this.solicitudState?.aduana);
-    console.log('pais from ts:', this.solicitudState?.pais);
     this.agregarMercanciasForm = this.fb.group({
       datosMercancia: this.fb.group({
         tipoMercancia: [
