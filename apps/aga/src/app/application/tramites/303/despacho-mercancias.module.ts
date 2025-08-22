@@ -26,10 +26,10 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RegistroPageComponent } from './pages/registro-page/registro-page.component';
-import { RepresentanteFiscalComponent } from '@ng-mf/data-access-user';
 import { RouterModule } from '@angular/router';
 import { SelectPaisesComponent } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
 import { TestPageComponent } from './pages/test-page/test-page.component';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
@@ -69,7 +69,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     InputFechaComponent,
     CrosslistComponent,
     SelectPaisesComponent,
-    RepresentanteFiscalComponent,
+    TercerosRelacionadosComponent,
     forwardRef(() => AnexarDocumentosComponent),
     ToastrModule.forRoot(),
     NotificacionesComponent,

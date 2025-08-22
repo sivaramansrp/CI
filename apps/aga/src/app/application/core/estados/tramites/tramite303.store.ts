@@ -1,6 +1,7 @@
 import { Store, StoreConfig } from "@datorama/akita";
 import { AgenteAduanal } from "../../models/303/agente-aduanal.model";
 import { ControlInventario } from "../../models/303/control-inventario.model";
+import { EnlaceOperativo } from "../../models/303/enlace-operativo.model";
 import { Injectable } from "@angular/core";
 import { Transportista } from "@libs/shared/data-access-user/src";
 
@@ -108,7 +109,11 @@ export interface Tramite303Store {
     /**
      * Indica si se debe mostrar un campo para el ingreso de informes.
      */
-    ingresoInforme:string;
+    ingresoInforme: string;
+    /**
+     * Lista de enlaces operativos asociados al trámite 303.
+     */
+    listaEnlaces: EnlaceOperativo[];
 }
 export function createInitialState(): Tramite303Store {
     return {
@@ -138,6 +143,7 @@ export function createInitialState(): Tramite303Store {
         checkboxManifiesto1: false,
         checkboxManifiesto2: false,
         ingresoInforme: '',
+        listaEnlaces: []
     };
 }
 
@@ -429,4 +435,16 @@ export class Tramite303StoreService extends Store<Tramite303Store> {
             checkboxManifiesto2,
         }));
     }
+
+    /**
+     * Establece la lista de enlaces operativos en el estado del trámite 303.
+     * @param listaEnlaces Lista de enlaces operativos a establecer.
+     */
+    setListaEnlaces(listaEnlaces: EnlaceOperativo[]): void {
+        this.update((state) => ({
+            ...state,
+            listaEnlaces,
+        }));
+    }
+
 }

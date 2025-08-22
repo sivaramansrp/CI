@@ -1,4 +1,5 @@
 import { RouterModule, Routes } from '@angular/router';
+import { EnlaceOperativoComponent } from './components/enlace-operativo/enlace-operativo.component';
 import { NgModule } from '@angular/core';
 import { RegistroFiguraComponent } from './components/registro-figura/registro-figura.component';
 import { RegistroPageComponent } from './pages/registro-page/registro-page.component';
@@ -28,6 +29,10 @@ export const ROUTES: Routes = [
   {
     path: 'registro-trasportista',
     component: RegistroTrasportistaComponent
+  },
+  {
+    path: 'enlace-operativo',
+    component: EnlaceOperativoComponent
   },
   {
     path: 'test',
