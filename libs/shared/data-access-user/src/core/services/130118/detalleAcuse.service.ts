@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { API_GET_DESCARGAR_ACUSE, ENVIRONMENT, UUID } from '../../..';
+import { API_GET_DESCARGAR_ACUSE, DOCUMENTOMINIO, ENVIRONMENT, TRAMITE } from '../../..';
 import { BaseResponse } from '../../models/5701/base-response.model';
 import { DocumentoResponse } from '../../models/shared/documentos-request.model';
 import { Observable } from 'rxjs';
@@ -26,12 +26,13 @@ export class AcuseDetalleService {
   }
 
   /**
-   * Consulta para url de acuse
-   * @param uuid Valor de descarga
+   * Consulta para base64 de descarga
+   * @param tramite Número identificador del trámite
+   * @param documentoMinio  Valor de descarga
    * @returns Observable con la respuesta del servidor
  */
-  getDescargarAcuse(uuid: string): Observable<BaseResponse<DocumentoResponse>> {
-    const ENDPOINT = `${this.host}${API_GET_DESCARGAR_ACUSE.replace(UUID, uuid)}`;
+  getDescargarAcuse(tramite: number, documentoMinio : string): Observable<BaseResponse<DocumentoResponse>> {
+    const ENDPOINT = `${this.host}${API_GET_DESCARGAR_ACUSE.replace(TRAMITE, tramite.toString()).replace(DOCUMENTOMINIO, documentoMinio)}`;
     return this.http.get<BaseResponse<DocumentoResponse>>(ENDPOINT);
   }
 }

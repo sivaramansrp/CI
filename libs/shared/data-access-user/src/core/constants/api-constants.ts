@@ -340,13 +340,13 @@ export const IDOBSERVACION= '{idObservacion}';
 export const API_GET_DICTAMEN_DETALLE_OBSERVACION = `sat-t${TRAMITE}/dictamen/observacion/${IDOBSERVACION}`
 
 /**
- * UUID para descargas.
+ * DOCUMENTOMINIO para descargas.
  * Este valor debe ser reemplazado por el tramite correspondiente.
  */
-export const UUID= '{uuid}';
+export const DOCUMENTOMINIO= '{documentoMinio}';
 
 /**
  * API para Consultar url de descarga de dictamen.
- * @see  
+ * @see  https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/consulta-documento-oficial
  */
-export const API_GET_DESCARGAR_ACUSE= `generador-documento/tramite/documento/${UUID}`
+export const API_GET_DESCARGAR_ACUSE= `sat-t${TRAMITE}/documento-oficiales/${DOCUMENTOMINIO}`

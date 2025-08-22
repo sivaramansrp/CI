@@ -97,6 +97,12 @@ export class BandejaAcusesComponent implements OnChanges, OnDestroy {
    */
   public unsubscribe$ = new Subject<void>();
 
+  /**
+   * @property {number} tramite
+   * @description Identificador del trámite asociado a las pestañas.
+   */
+  @Input() tramite!: number;
+
 
   constructor(
     private router: Router,
@@ -202,7 +208,7 @@ export class BandejaAcusesComponent implements OnChanges, OnDestroy {
    * base64Archivos('a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'descargar');
    */
   base64Archivos(uuid: string, accion: 'abrir' | 'descargar'): void {
-  this.acuseDetalleService.getDescargarAcuse( uuid).subscribe({
+  this.acuseDetalleService.getDescargarAcuse(this.tramite, uuid).subscribe({
     next: (data) => {
       if (data?.codigo === "00" && data?.datos?.contenido) {
         BandejaAcusesComponent.manejarPdf(
