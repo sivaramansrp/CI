@@ -4,6 +4,7 @@
 
 const { ModuleFederationPlugin } = require('webpack').container;
 const mf = require('@angular-architects/module-federation/webpack');
+const webpack = require("webpack");
 const path = require('path');
 const share = mf.share;
 
@@ -27,6 +28,11 @@ module.exports = {
     }
   },
   plugins: [
+    // DISABLE ngDevMode as it is not needed in a remoteEntry
+    new webpack.DefinePlugin({
+        ngDevMode: "undefined",
+    }),
+    // END DISABLE ngDevMode as it is not needed in a remoteEntry
     new ModuleFederationPlugin({
       name: 'inah',
       filename: 'remoteAppEntry.js',
