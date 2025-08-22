@@ -7,7 +7,10 @@
 
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, } from '@angular/forms';
+
+import { AbstractControl ,ValidationErrors} from '@angular/forms';
+
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite120404State, Tramite120404Store } from '../../estados/store/tramite120404.store';
 import { Catalogo } from '@ng-mf/data-access-user';
@@ -137,13 +140,13 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
       return null; // Don't validate empty values, let required validator handle it
     }
     
-    const value = control.value.toString().trim();
-    const isValidNumber = /^\d+$/.test(value); // Only allows digits
-    
-    if (!isValidNumber) {
+    const VALUE = control.value.toString().trim();
+    const ISVALIDNUMBER = /^\d+$/.test(VALUE); // Only allows digits
+
+    if (!ISVALIDNUMBER) {
       return { 
         numeroInvalido: { 
-          valor: value 
+          valor: VALUE 
         } 
       };
     }
@@ -214,16 +217,16 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
    * @returns string with the appropriate error message
    */
   getNumTramiteErrorMessage(): string {
-    const control = this.asignacionForm.get('numTramite');
-    if (control?.errors && control.touched) {
-      if (control.errors['required']) {
+    const CONTROL = this.asignacionForm.get('numTramite');
+    if (CONTROL?.errors && CONTROL.touched) {
+      if (CONTROL.errors['required']) {
         return 'Este campo es obligatorio';
       }
-      if (control.errors['numeroInvalido']) {
-        const valor = control.errors['numeroInvalido'].valor;
-        return `El valor (${valor}) debe ser un número válido`;
+      if (CONTROL.errors['numeroInvalido']) {
+        const VALOR = CONTROL.errors['numeroInvalido'].valor;
+        return `El valor (${VALOR}) debe ser un número válido`;
       }
-      if (control.errors['maxlength']) {
+      if (CONTROL.errors['maxlength']) {
         return 'El número no puede exceder 30 caracteres';
       }
     }
@@ -282,7 +285,6 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
     } else {
       this.asignacionForm.markAllAsTouched();
       this.buscarDatos = false;
-      return;
     }
   }
 
