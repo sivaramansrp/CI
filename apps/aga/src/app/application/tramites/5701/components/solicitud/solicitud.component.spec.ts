@@ -294,5 +294,20 @@ describe('SolicitudComponent', () => {
             // Verify tipoOperacion is reset to -1 (SIN_VALORES)
             expect((component as any).despacho.get('tipoOperacion')?.value).toBe('-1');
         });
+
+        it('should reset tipoOperacion when limpiaCamposDdaLda is called', () => {
+            // Set tipoOperacion to a specific value
+            (component as any).despacho.get('tipoOperacion')?.setValue('exportacion');
+            expect((component as any).despacho.get('tipoOperacion')?.value).toBe('exportacion');
+
+            // Mock the store update method
+            (component as any).setValoresStore = jest.fn();
+
+            // Call the method that should reset tipoOperacion
+            component.limpiaCamposDdaLda();
+
+            // Verify tipoOperacion is reset to -1 (SIN_VALORES)
+            expect((component as any).despacho.get('tipoOperacion')?.value).toBe('-1');
+        });
     });
 });
