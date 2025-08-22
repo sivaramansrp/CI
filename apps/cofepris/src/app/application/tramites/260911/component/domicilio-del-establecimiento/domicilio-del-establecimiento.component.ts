@@ -67,6 +67,8 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
    * Índice del elemento de mercancía seleccionado en la tabla.
    */
   selectedMercanciaIndex: number | null = null;
+  selectedMercanciaCount: number = 0;
+  isEditBlocked: boolean = false;
   /**
    * Obtiene el estado del formulario de mercancía basado en el elemento seleccionado.
    *
@@ -211,6 +213,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
    * @param event - Arreglo de objetos `MercanciasInfo` que representa las filas seleccionadas.
    */
   onMercanciaRowSelected(event: MercanciasInfo[]): void {
+    this.selectedMercanciaCount = event ? event.length : 0;
     if (event && event.length > 0) {
       const SELECTED_ROW = event[0];
       this.selectedMercanciaIndex = this.mercanciasTablaDatos.findIndex(row => row === SELECTED_ROW);
@@ -269,10 +272,12 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
    */
   onModificarMercancia(index: number): void {
     this.selectedMercanciaIndex = index;
+    this.isEditBlocked = this.selectedMercanciaCount > 1;
     if (this.datosMercanciaContenedoraComp) {
       // Patch form in child with mapped data
       const MAPPED = DomicilioDelEstablecimientoComponent.mapMercanciasInfoToForm(this.mercanciasTablaDatos[index]);
       this.datosMercanciaContenedoraComp.mercanciaForm.patchValue(MAPPED);
+      this.datosMercanciaContenedoraComp.setEditBlocked(this.isEditBlocked);
     }
     this.openMercanciaModal();
   }

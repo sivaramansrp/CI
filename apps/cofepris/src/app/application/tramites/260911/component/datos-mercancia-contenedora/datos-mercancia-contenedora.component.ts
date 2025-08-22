@@ -70,6 +70,7 @@ import { MercanciasInfo } from '@libs/shared/data-access-user/src/core/models/26
   providers: [DatosSolicitudService],
 })
 export class DatosMercanciaContenedoraComponent implements OnInit {
+  public isEditBlocked: boolean = false;
   /**
    * Evento emitido cuando se hace clic en el botón Agregar en el modal de Mercancías
    */
@@ -480,6 +481,17 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
     this.validarElementos();
     this.crearMercanciaForm();
     this.crossListRequirdos();
+  }
+
+  setEditBlocked(blocked: boolean): void {
+    this.isEditBlocked = blocked;
+    if (this.mercanciaForm) {
+      if (blocked) {
+        this.mercanciaForm.disable();
+      } else {
+        this.mercanciaForm.enable();
+      }
+    }
   }
 
   /**
