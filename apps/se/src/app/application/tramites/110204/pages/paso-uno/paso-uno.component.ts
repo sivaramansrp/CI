@@ -74,7 +74,7 @@ export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
    * Esto previene fugas de memoria.
    * @private
    */
-  private destroyNotifier$ = new Subject<void>();
+  public destroyNotifier$ = new Subject<void>();
 
   /**
    * Controla si el formulario se encuentra deshabilitado (solo lectura).
