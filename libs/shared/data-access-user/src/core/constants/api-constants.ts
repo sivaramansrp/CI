@@ -326,3 +326,27 @@ export const IDDICTAMEN= '{idDictamen}';
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/buscar-dictamen-by-idDictamen 
  */
 export const API_GET_DICTAMEN_DETALLE = `sat-t${TRAMITE}/tramite/dictamen/${IDDICTAMEN}`
+
+/**
+ * Id observacion que se utilizará en las consultas.
+ * Este valor debe ser reemplazado por el tramite correspondiente.
+ */
+export const IDOBSERVACION= '{idObservacion}';
+
+/**
+ * API para Consultar detalle de observacion del dictamen del tramite generico.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/get-By-Id-Observacion 
+ */
+export const API_GET_DICTAMEN_DETALLE_OBSERVACION = `sat-t${TRAMITE}/dictamen/observacion/${IDOBSERVACION}`
+
+/**
+ * UUID para descargas.
+ * Este valor debe ser reemplazado por el tramite correspondiente.
+ */
+export const UUID= '{uuid}';
+
+/**
+ * API para Consultar url de descarga de dictamen.
+ * @see  
+ */
+export const API_GET_DESCARGAR_ACUSE= `generador-documento/tramite/documento/${UUID}`

@@ -1,8 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ObservacionDetalleResponse } from '../../../../core/models/130118/observacion-detalle-response.model';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
+
 
 @Component({
   selector: 'lib-detalle-observacion-dictamen',
@@ -11,7 +13,12 @@ import { Subject } from 'rxjs';
   templateUrl: './consulta-detalle-observacion-dictamen.component.html',
   styleUrl: './consulta-detalle-observacion-dictamen.component.scss',
 })
-export class ConsultaDetalleObservacionDictamenComponent implements OnInit, OnDestroy {
+export class ConsultaDetalleObservacionDictamenComponent implements OnInit, OnChanges, OnDestroy {
+
+  /**
+    * Recibe los datos observacionn de dictamen desde el componente padre 
+  */
+  @Input() dictamenObservacionDetalle!: ObservacionDetalleResponse;
   /**
    * Formulario reactivo para la solicitud de observacion dictamen.
    * @type {FormGroup}
@@ -55,12 +62,41 @@ export class ConsultaDetalleObservacionDictamenComponent implements OnInit, OnDe
   }
 
   /**
+    * Ciclo de vida: ngOnChanges
+    * Reacciona a cambios en las propiedades de entrada del componente.
+    * @param changes Objeto que contiene los cambios en las propiedades (@Input)
+  */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['dictamenObservacionDetalle'] && changes['dictamenObservacionDetalle'].currentValue) {
+      this.getDetalleObservacionDictamen();
+    }
+  }
+
+  /**
    * Evalúa si se debe inicializar o cargar datos.
    * Además, obtiene la información del catálogo de mercancía.
   */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.observacionForm.disable();
+    } 
+  }
+
+  /**
+   * Método para obtener la información de la solicitud para detalle observacion de dictamen.
+   * @returns {void}
+   */
+  getDetalleObservacionDictamen(): void {
+    /** 
+     * Verifica si hay datos y actualiza el formulario.
+     */
+    if (this.dictamenObservacionDetalle !== null) {
+      const SOLICITUDDATA = this.dictamenObservacionDetalle;
+
+      this.observacionForm.patchValue({
+        descripcion: SOLICITUDDATA.descripcion,
+      });
+      
     } 
   }
   

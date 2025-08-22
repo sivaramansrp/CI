@@ -1,5 +1,5 @@
 import { BodyTablaDictamenObservaciones, HeaderTablaDictamenObservacion } from '../../../../core/models/shared/consulta-generica.model';
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 
@@ -39,10 +39,6 @@ export class ConsultaDetalleDictamenComponent implements OnInit, OnChanges, OnDe
   */
   esFormularioSoloLectura: boolean = true;
 
-  /**
-   * Método para abrir el detalle del dictamen.
-   */
-  public verDetalle = ConsultaDetalleDictamenComponent.verDetalle;
 
   /**
    * Encabezado de la tabla de observaciones.
@@ -57,6 +53,12 @@ export class ConsultaDetalleDictamenComponent implements OnInit, OnChanges, OnDe
      * @type {BodyTablaDictamenObservaciones[]}
      */
     public datosTablaObservaciones: BodyTablaDictamenObservaciones[] = [];
+
+  /** 
+   * Evento que emite el ID de observacion seleccionado
+   * @output {number} idObservacionSeleccionado - ID de la observacion seleccionado
+  */
+  @Output() idObservacionSeleccionado = new EventEmitter<number>();
 
     
   
@@ -143,11 +145,11 @@ export class ConsultaDetalleDictamenComponent implements OnInit, OnChanges, OnDe
 
   /**
    * Abre la pestaña para mostrar el detalle del dictamen.
-   * @param {number} _id - Es el Id del dictamen.
+   * @param {number} id - Es el Id del dictamen.
    * @returns {void}
    */
-  static verDetalle(_id: number): void {
-    // Lógica para abrir el detalle del dictamen
+  verDetalle(id: number): void {
+    this.idObservacionSeleccionado.emit(id);
   }
 
   /**

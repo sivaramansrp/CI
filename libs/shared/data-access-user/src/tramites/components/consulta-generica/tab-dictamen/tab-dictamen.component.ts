@@ -7,6 +7,7 @@ import { ConsultaDetalleObservacionDictamenComponent } from '../consulta-detalle
 import { DetalleDictamenService } from '../../../../core/services/130118/detalleDictamen.service';
 import { DictamenDetalleResponse } from '../../../../core/models/130118/dictamen-detalle-response.model';
 import { DictamenesResponse } from '../../../../core/models/130118/dictamenes-response.model';
+import { ObservacionDetalleResponse } from '../../../../core/models/130118/observacion-detalle-response.model';
 
 import { CategoriaMensaje, Notificacion, NotificacionesComponent } from '../../notificaciones/notificaciones.component';
 import { Subject } from 'rxjs';
@@ -44,6 +45,16 @@ export class TabDictamenComponent implements OnDestroy{
    * ID del dictamen actualmente seleccionada
    */
   idDictamenActual!: string;
+
+  /**
+   * ID de la observacion seleccionada
+   */
+  idObservacionActual!: number;
+
+  /**
+    * Detalle completo de observacion del dictamen seleccionado
+  */
+  observacionDictamen!: ObservacionDetalleResponse;
 
   /**
    * @property {number} tramite
@@ -121,6 +132,62 @@ export class TabDictamenComponent implements OnDestroy{
           modo: 'action',
           titulo: '',
           mensaje: error?.error?.error || 'Error inesperado en detalle dictamen.',
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        };
+      }
+    });
+  }
+
+  /**
+   * Maneja la selección de una observacion
+   * @param id ID de la observacion seleccionada
+   */
+  onIdObservacionSeleccionado(id: number): void {
+    this.idObservacionActual = id;
+    this.seleccionaTab(3);
+    this.getObservacionDictamen(this.idObservacionActual);
+  }
+
+  /**
+   * Obtiene el detalle de la observacion
+   * @param idDictamen ID del dictamen a consultar
+ */
+  getObservacionDictamen(observacion: number): void{
+    this.detalleDictamenService.getObservacionDictamen(this.tramite, observacion)
+    .subscribe({
+       next: (data) => {
+          if (data.codigo === "00") {
+            this.observacionDictamen = data.datos ?? {} as ObservacionDetalleResponse
+          this.seleccionaTab(3);
+        }else{
+          window.scrollTo({ top: 0, behavior: 'smooth' }); 
+          this.seleccionaTab(2);
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: data.error || 'Error detalle observación dictamen',
+            mensaje:
+              data.causa ||
+              data.mensaje ||
+              data.error ||
+              'Ocurrió un error al consultar detalle observación dictamen.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          }; 
+        }
+      },
+      error: (error) => {
+        window.scrollTo({ top: 0, behavior: 'smooth' }); 
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: CategoriaMensaje.ERROR,
+          modo: 'action',
+          titulo: '',
+          mensaje: error?.error?.error || 'Error inesperado en detalle observación dictamen.',
           cerrar: false,
           txtBtnAceptar: '',
           txtBtnCancelar: '',

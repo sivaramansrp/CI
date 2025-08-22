@@ -23,10 +23,10 @@
             (idDictamenSeleccionado)="onIdDictamenSeleccionado($event)"></lib-dictamenes>
         }
         @case (2) {
-        <lib-detalle-dictamen [dictamenDetalle]="dictamenDetalle"></lib-detalle-dictamen>
+        <lib-detalle-dictamen (idObservacionSeleccionado)="onIdObservacionSeleccionado($event)" [dictamenDetalle]="dictamenDetalle"></lib-detalle-dictamen>
         }
         @case (3) {
-        <lib-detalle-observacion-dictamen></lib-detalle-observacion-dictamen>
+        <lib-detalle-observacion-dictamen [dictamenObservacionDetalle]="observacionDictamen"></lib-detalle-observacion-dictamen>
         }
         }
     </ng-container>

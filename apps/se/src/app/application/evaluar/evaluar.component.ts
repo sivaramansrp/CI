@@ -887,7 +887,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
   opcionesEvaluacion(): void {
 
     const PAYLOAD: OpcionesEvaluacionRequest = {
-      cve_rol_capturista: 'AAL0403235E8',
+      cve_rol_capturista: this.guardarDatos.current_user,
       considera_capturista: true,
       estado_evaluacion: this.evaluacionTramite.estado_evaluacion
     };
@@ -984,7 +984,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    */
   iniciarDictamen(): void {
     const PAYLOAD: IniciarRequerimientoRequest = {
-      cve_usuario: 'CORL731209CC1',
+      cve_usuario: this.guardarDatos.current_user,
       id_accion: this.guardarDatos.action_id
     };
 
@@ -1065,7 +1065,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       ide_sentido_dictamen: datosDictamen.cumplimiento,
       justificacion_dictamen: datosDictamen.mensajeDictamen,
       id_accion: this.guardarDatos.action_id,
-      cve_usuario: 'MAVL621207C95'
+      cve_usuario: this.guardarDatos.current_user
     };
 
     this.guardarService.postGuadarDictamen(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
@@ -1130,9 +1130,9 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       ide_sentido_dictamen: datosDictamen.cumplimiento,
       justificacion_dictamen: datosDictamen.mensajeDictamen,
       id_accion: this.guardarDatos.action_id,
-      cve_usuario: 'MAVL621207C95',
+      cve_usuario: this.guardarDatos.current_user,
       solicitante: {
-        rfc: 'MAVL621207C95',
+        rfc: this.guardarDatos.current_user,
         nombre: 'PRUEBA',
         apellido_paterno: 'PRUEBA',
         apellido_materno: 'PRUEBA'
@@ -1247,7 +1247,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
   iniciarRequerimiento(): void {
 
     const PAYLOAD: IniciarRequerimientoRequest = {
-      cve_usuario: 'CORL731209CC1',
+      cve_usuario: this.guardarDatos.current_user,
       id_accion: this.guardarDatos.action_id
     };
 

@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { API_GET_DICTAMEN_DETALLE, ENVIRONMENT, IDDICTAMEN, TRAMITE } from '../../..';
+import { API_GET_DICTAMEN_DETALLE, API_GET_DICTAMEN_DETALLE_OBSERVACION, ENVIRONMENT, IDDICTAMEN, IDOBSERVACION, TRAMITE } from '../../..';
 import { BaseResponse } from '../../models/5701/base-response.model';
 import { DictamenDetalleResponse } from '../../models/130118/dictamen-detalle-response.model';
 import { Observable } from 'rxjs';
+import { ObservacionDetalleResponse } from '../../models/130118/observacion-detalle-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -33,5 +34,16 @@ export class DetalleDictamenService {
   getDetalleDictamen(tramite: number, idDictamen: string): Observable<BaseResponse<DictamenDetalleResponse>> {
     const ENDPOINT = `${this.host}${API_GET_DICTAMEN_DETALLE.replace(TRAMITE, tramite.toString()).replace(IDDICTAMEN, idDictamen)}`;
     return this.http.get<BaseResponse<DictamenDetalleResponse>>(ENDPOINT);
+  }
+
+  /**
+   * Consulta el detalle observacion de un dictamen específico
+   * @param tramite Número identificador del trámite
+   * @param idObservacion ID único de la observacion a consultar
+   * @returns Observable con la respuesta del servidor
+ */
+  getObservacionDictamen(tramite: number, idObservacion: number): Observable<BaseResponse<ObservacionDetalleResponse>> {
+    const ENDPOINT = `${this.host}${API_GET_DICTAMEN_DETALLE_OBSERVACION.replace(TRAMITE, tramite.toString()).replace(IDOBSERVACION, idObservacion.toString())}`;
+    return this.http.get<BaseResponse<ObservacionDetalleResponse>>(ENDPOINT);
   }
 }

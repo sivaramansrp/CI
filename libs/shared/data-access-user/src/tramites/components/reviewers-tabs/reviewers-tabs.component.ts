@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, Type, ViewChild, ViewContainerRef } from "@angular/core";
 import { AcusesResolucionResponse } from "../../../core/models/130118/consulta-acuses-response.model";
-import { AcusesResolucionesComponent } from "../consulta-generica/bandeja-acuses-resoluciones/acuses-resoluciones.component";
+import { BandejaAcusesComponent } from "../consulta-generica/bandeja-acuses/bandeja-acuses.component";
 import { CommonModule } from "@angular/common";
 import { ConsultarequerimientosComponent } from "../consulta-generica/consulta-requerimientos/consulta-requerimientos.component";
 import { DictamenesResponse } from "../../../core/models/130118/dictamenes-response.model";
@@ -37,7 +37,7 @@ import tramiteDetailsData from '@libs/shared/theme/assets/json/shared/lista-trim
  */@Component({
   selector: 'app-reviewers-tabs',
   standalone: true,
-  imports: [CommonModule,DocumentosComponent, TabDictamenComponent, ConsultarequerimientosComponent, TabOpinionComponent, AcusesResolucionesComponent, TareasTramiteComponent, EnvioDigitalComponent],
+  imports: [CommonModule,DocumentosComponent, TabDictamenComponent, ConsultarequerimientosComponent, TabOpinionComponent, BandejaAcusesComponent, TareasTramiteComponent, EnvioDigitalComponent],
   templateUrl: './reviewers-tabs.component.html',
   styleUrl: './reviewers-tabs.component.scss',
 })
