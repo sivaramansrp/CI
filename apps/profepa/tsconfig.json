@@ -7,11 +7,7 @@
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "baseUrl": ".",
-    "paths": {
-      "src/environments/*": ["apps/profepa/src/environments/*"]
-    }
+    "noFallthroughCasesInSwitch": true
   },
   "files": [],
   "include": [],
