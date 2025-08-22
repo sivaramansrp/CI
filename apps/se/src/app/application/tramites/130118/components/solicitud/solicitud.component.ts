@@ -28,6 +28,13 @@ import moment from 'moment';
 export class SolicitudComponent implements OnInit, OnDestroy {
 
   /**
+    * @property {ConsultaioState[]} consultaState
+    * @description Consulta solicitud.
+  */
+  @Input() consultaState!: ConsultaioState;
+  
+
+  /**
    * Lista de catálogos de régimen de mercancía.
    */
   regimenMercancia!: Catalogos[];
@@ -234,7 +241,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * para llenar un formulario y realizar diversas acciones basadas en los datos recibidos.
   */
   obtenerDataSolicitud(): void {
-    const FOLIO = '0201300101820251119000004';
+    const FOLIO = this.consultaState.folioTramite;
     this.consultaSolicitudService.getDetalleSolicitud(FOLIO).subscribe({
       next: (response) => {
         if (response?.codigo === '00' && response?.datos) {
