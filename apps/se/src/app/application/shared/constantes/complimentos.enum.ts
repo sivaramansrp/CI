@@ -53,7 +53,7 @@ export const FORMA_SOCIO_ACCIONISTAS: DatosCatalago[] = [
   },
   {
     labelNombre: 'País',
-    campo: 'estado',
+    campo: 'pais',
     class: 'col-md-6 col-10 mt-1',
     tipo_input: 'select-catalog',
     required: true,
@@ -338,7 +338,7 @@ export const TABLA_SOCIO_ACCIONISTAS_EXTRANJEROS = [
   },
   {
     encabezado: 'CP',
-    clave: (ele: SociaoAccionistas): string | undefined => ele.cp,
+    clave: (ele: SociaoAccionistas): string | undefined => ele.codigoPostal,
     orden: 6,
   },
   {
