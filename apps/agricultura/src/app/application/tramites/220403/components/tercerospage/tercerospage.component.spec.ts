@@ -22,7 +22,9 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 
-// Mocks for dependencies
+/**
+ * Mocks para dependencias
+ */
 class MockConsultaioQuery {
   selectConsultaioState$ = of({ readonly: true });
 }
@@ -68,7 +70,9 @@ class MockExportaccionAcuicolaService {
     .mockReturnValue(of([{ id: 10, descripcion: 'México' }]));
 }
 
-// Mock for Bootstrap Modal
+/**
+ * Mock para Bootstrap Modal
+ */
 const mockShow = jest.fn();
 jest.mock('bootstrap', () => ({
   Modal: function () {
