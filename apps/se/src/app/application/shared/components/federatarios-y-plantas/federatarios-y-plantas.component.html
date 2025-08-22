@@ -67,7 +67,7 @@
             <div class="form-group">
               <input-fecha [datos]="fechaInicioInput" [isDisabled]="formularioDeshabilitado"
                 (valorCambiado)="onFechaCambiada($event)"
-                [setFecha]="federatariosFormGroup.get('fechaInicioInput')?.value"></input-fecha>
+                [setFecha]="federatariosFormGroup.get('fechaInicioInput')?.value" [deshabilitarFuturas]="true"></input-fecha>
             </div>
           </div>
 
@@ -205,31 +205,31 @@
                 </div>
                 <div class="row">
                   <div class="d-flex flex-row flex-wrap">
-                    <div class="p-2">
+                    <div class="p-1">
                       <button class="btn btn-danger" (click)="irAAcciones('../complementar-plantas-acciones')"
                         [disabled]="formularioDeshabilitado ">
                         Complementar planta
                       </button>
                     </div>
-                    <div class="p-2">
+                    <div class="p-1">
                       <button class="btn btn-danger" (click)="irAAcciones('../montos-inversion-acciones')"
                         [disabled]="formularioDeshabilitado ">
                         Montos de inversión
                       </button>
                     </div>
-                    <div class="p-2">
+                    <div class="p-1">
                       <button class="btn btn-danger" (click)="irAAcciones('../empleados-acciones')"
                         [disabled]="formularioDeshabilitado ">
                         Empleados
                       </button>
                     </div>
-                    <div class="p-2">
+                    <div class="p-1">
                       <button class="btn btn-danger" (click)="irAAcciones('../capacidad-instalada-acciones')"
                         [disabled]="formularioDeshabilitado ">
                         Capacidad Instalada
                       </button>
                     </div>
-                    <div class="p-2">
+                    <div class="p-1">
                       <button class="btn btn-primary" (click)="irAAcciones('../proveedor-por-archivo')"
                         [disabled]="formularioDeshabilitado ">
                         Carga por archivo
@@ -239,7 +239,7 @@
                 </div>
                 <div class="row">
                   <div class="col-md-12">
-                    <div class="p-2 pull-right me-5">
+                    <div class="p-1 pull-right">
                       <button class="btn btn-danger end" [disabled]="formularioDeshabilitado ">Eliminar plantas</button>
                     </div>
                   </div>
