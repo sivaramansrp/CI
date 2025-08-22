@@ -1,0 +1,66 @@
+
+@if(slectTramite) {
+<div class="container mt-2">
+    <div>
+        <div *ngIf="isDictamen">
+          
+            <div class="row">
+                <div class="col-md-12 mt-3 mb-3">
+                    <lib-encabezado-requerimiento [numFolioTramite]="guardarDatos.folioTramite"
+                        [tipoTramite]="guardarDatos.tipoDeTramite"></lib-encabezado-requerimiento>
+                </div>
+            </div>
+            <div class="row margin-top">
+               
+                <ng-container>
+                   
+                   <app-generar-dictamen [isAntecedentes]="false" 
+                    [dataIniciarDictamen]="dataIniciarDictamen"
+                    [opcionesSentidosDisponibles]="opcionesSentidosDispobles"
+                    [soloLectura]="true">
+                    </app-generar-dictamen> 
+                   
+                   
+               
+                    <div class="d-flex justify-content-lg-end h3">
+                        <button class="btn  btn-primary ms-2" type="button" >Autorizar</button>
+                        <button type="button" class="btn btn-default ms-2" >Observar</button>
+                    </div>
+                    
+                   
+                </ng-container>
+            </div>
+
+        </div>
+        <div *ngIf="isFirma">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="titulo mt-5 mb-5">Firmar</h2>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <firma-electronica [tipo]="''" [cadenaOriginal]="cadenaOriginal"
+                        (datosFirma)="obtieneFirma($event)"></firma-electronica>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-5 mt-5">
+            <app-reviewers-tabs [viewChild]="viewChild" [tramite]="tramite" [tabs]="tabs" [documentos]="documentosSolicitud"
+                [tareasSolicitud]="tareasSolicitud" [dictamenes]="dictamenesSolicitud"
+                [envioDigital]="envioDigital" [opinion]="opinion"
+                [requerimientos]="requerimientosSolicitud" [acusesResolucion]="acusesResolucion"
+                (viewChildcambioDePestana)="viewChildcambioDePestana($event)"
+                (tabSeleccionado)="onTabSeleccionado($event)">
+            </app-reviewers-tabs>
+        </div>
+    </div>
+</div>
+}
+@if(nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+  </lib-notificaciones>
+</section>
+}

@@ -35,6 +35,12 @@ import { ValidacionesFormularioService } from "../../../core/services/shared/val
 })
 export class GenerarDictamenComponent implements OnInit, OnChanges {
   /**
+  
+   * Si es true, los antecedentes son editables; si es false, son de solo lectura.
+   */
+  @Input() public soloLectura = false;
+
+  /**
    * @property {FormGroup} dictamenForm
    * @description Formulario reactivo para la captura de los datos del dictamen.
    */
@@ -152,6 +158,10 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
 
     // Establecer el estado inicial
     this.actualizarVisibilidadCamposFecha(this.dictamenForm.get('cumplimiento')?.value);
+
+    if(this.soloLectura){
+      this.dictamenForm.disable();
+    }
   }
 
   /**

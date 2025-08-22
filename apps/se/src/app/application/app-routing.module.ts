@@ -655,6 +655,11 @@ const ROUTES: Routes = [
       import('./evaluar/evaluar.component').then((m) => m.EvaluarComponent),
   },
   {
+    path: 'autorizar-dictamen',
+    loadComponent: () =>
+      import('./autorizar-dictamen/autorizar-dictamen.component').then((m) => m.AutorizarDictamenComponent),
+  },
+  {
     path: 'autorizar',
     loadComponent: () =>
       import('./autorizar/autorizar.component').then(
