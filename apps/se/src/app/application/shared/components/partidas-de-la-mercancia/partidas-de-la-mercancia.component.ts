@@ -1,6 +1,19 @@
-
-import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { ConfiguracionColumna, Notificacion, NotificacionesComponent, TipoNotificacionEnum } from '@ng-mf/data-access-user';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
+import {
+  ConfiguracionColumna,
+  Notificacion,
+  NotificacionesComponent,
+  TipoNotificacionEnum,
+} from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
@@ -10,7 +23,6 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-
 
 /**
  * PartidasDeLaMercanciaComponent
@@ -32,8 +44,11 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
   templateUrl: './partidas-de-la-mercancia.component.html',
   styleUrl: './partidas-de-la-mercancia.component.scss',
 })
-export class PartidasDeLaMercanciaComponent implements OnChanges{
-
+export class PartidasDeLaMercanciaComponent implements OnChanges {
+  /**
+   * @description Referencia al input de archivo para nacionales.
+   */
+  @ViewChild('archivoNacionales') archivoNacionalesElemento!: ElementRef;
   /**
    * @description Referencia al elemento de la partida que se va a modificar.
    */
@@ -120,6 +135,11 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    * Indica si el popup de serie agregada está abierto.
    */
   notificacionInput: boolean = false;
+
+  /**
+   * Nombre del archivo seleccionado por el usuario.
+   */
+  nombreArchivoSeleccionado: string = '';
   
   /**
    * Constructor para inicializar el componente e inyectar dependencias.
@@ -128,7 +148,6 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
   constructor(private fb: FormBuilder) {
     //  Constructor del componente
   }
-
 
   /**
      * Método del ciclo de vida que se ejecuta cuando cambian las propiedades de entrada del componente.
@@ -225,7 +244,7 @@ validarModificarPartida(): void {
       cerrar: true,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
-      tamanioModal:'modal-sm'
+        tamanioModal: 'modal-sm',
     };
     this.notificacionInput = true;
     return;
@@ -241,7 +260,7 @@ validarModificarPartida(): void {
       cerrar: true,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
-      tamanioModal: 'modal-sm'
+        tamanioModal: 'modal-sm',
     };
     this.notificacionInput = true;
     return;
@@ -257,7 +276,7 @@ validarModificarPartida(): void {
       cerrar: true,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
-      tamanioModal: 'modal-sm'
+        tamanioModal: 'modal-sm',
     };
     this.notificacionInput = true;
     return;
@@ -273,7 +292,7 @@ validarModificarPartida(): void {
       cerrar: true,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
-      tamanioModal: 'modal-sm'
+        tamanioModal: 'modal-sm',
     };
     this.notificacionInput = true;
     return;
@@ -289,14 +308,19 @@ validarModificarPartida(): void {
       cerrar: true,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
-      tamanioModal: 'modal-sm'
+        tamanioModal: 'modal-sm',
     };
     this.notificacionInput = true;
     return;
   }
 
-  if (this.modificarPartidaElemento && this.modificarPartidaElemento.nativeElement) {
-    const MODAL_INSTANCIA = Modal.getInstance(this.modificarPartidaElemento.nativeElement);
+    if (
+      this.modificarPartidaElemento &&
+      this.modificarPartidaElemento.nativeElement
+    ) {
+      const MODAL_INSTANCIA = Modal.getInstance(
+        this.modificarPartidaElemento.nativeElement
+      );
     if (MODAL_INSTANCIA) {
       MODAL_INSTANCIA.hide();
     }
@@ -310,4 +334,16 @@ validarModificarPartida(): void {
     this.notificacionInput = false;
   }
 
+  /**
+   * Maneja el evento de selección de archivo y actualiza el nombre del archivo seleccionado.
+   * @param evento Evento de cambio del input de archivo.
+   */
+  archivoSeleccionado(evento: Event): void {
+    const INPUT = evento.target as HTMLInputElement;
+    if (INPUT.files && INPUT.files.length > 0) {
+      this.nombreArchivoSeleccionado = INPUT.files[0].name;
+    } else {
+      this.nombreArchivoSeleccionado = '';
+    }
+  }
 }
