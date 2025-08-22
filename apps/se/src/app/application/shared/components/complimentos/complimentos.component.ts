@@ -331,9 +331,9 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     private fb: FormBuilder,
     private catalogosServices: CatalogosService,
     private complimentosService: ComplimentosService,
-     private consultaioQuery: ConsultaioQuery,
-     private tramiteStore: TramiteStore,
-     private validacionesService: ValidacionesFormularioService
+    private consultaioQuery: ConsultaioQuery,
+    private tramiteStore: TramiteStore,
+    private validacionesService: ValidacionesFormularioService
   ) {
     
        this.consultaioQuery.selectConsultaioState$
@@ -616,7 +616,7 @@ this.formaComplimentos.disable();
    * @returns {void}
    */
   ngOnInit(): void {
-     this.inicializarCertificadoFormulario();
+    this.inicializarCertificadoFormulario();
     this.getCatalogoPaises();
     this.getCatalogoEstado();
     this.loadComboUnidadMedida();
@@ -816,7 +816,7 @@ this.formaComplimentos.disable();
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos) => {
         const INDICE = this.camposFormulario.findIndex(
-          (ele) => ele.campo === ESTADO
+          (ele) => ele.campo === 'pais'
         );
         const INDICEALT = this.camposFormularioTipoPersona.findIndex(
           (ele) => ele.campo === ESTADO
@@ -835,11 +835,29 @@ this.formaComplimentos.disable();
     const CONTROL = this.formaComplimentos.get(
       'formaSocioAccionistas'
     ) as FormGroup;
-    const VALUE = CONTROL.get('formaDatos')?.value;
+    let VALUE = CONTROL.get('formaDatos')?.value;
+    if (VALUE.pais) {
+      const DATOS = {
+        ...VALUE,
+        pais: ComplimentosComponent.obtenerDescripcion(this.estados, VALUE.pais)
+      }
+    VALUE = DATOS;
+    }
     if (VALUE) {
       this.accionistasAgregados.emit(VALUE);
       CONTROL.get('formaDatos')?.reset();
     }
+  }
+
+  /**
+ * @method obtenerDescripcion
+ * @description
+ * Obtiene la descripción de la fracción arancelaria seleccionada en el formulario dinámico.
+ * @returns {string} Descripción de la fracción arancelaria seleccionada o una cadena vacía si no existe.
+ */
+  public static obtenerDescripcion(array: Catalogo[], id: string): string {
+    const DESCRIPCION = array.find((ele: Catalogo) => Number(ele.id) === Number(id))?.descripcion;
+    return DESCRIPCION ?? '';
   }
 
   /**
