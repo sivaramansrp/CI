@@ -180,7 +180,7 @@ export class ProveedorClienteComponent implements OnChanges {
       razonSocial:
         this.formularioProveedorCliente.get('razonSocialCliente')?.value,
     };
-    this.proveedorClienteTablsDatos.push(PROVEEDOR_CLIENTE);
+    this.proveedorClienteTablsDatos = [...this.proveedorClienteTablsDatos, PROVEEDOR_CLIENTE];
   }
 
   /**
