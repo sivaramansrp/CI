@@ -2113,6 +2113,16 @@
         "origin": "READ_PROCEDURE"
     },
     {
+        "id": "130116",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "130116",
+        "origin": "READ_PROCEDURE"
+    },
+    {
         "id": "130119",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
