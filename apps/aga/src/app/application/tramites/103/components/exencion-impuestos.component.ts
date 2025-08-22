@@ -716,17 +716,21 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
    * @returns {void}
    */
   destinoMercanciaSeleccion(): void {
-    // Solo habilita radio si destinoMercancia es 'Salud Pública' (id: 3)
+    // Habilita el radio solo si destinoMercancia es 'Salud Pública' (id: 3)
     const DESTINO_MERCANCIA = this.tramiteForm.get('exencionImpuestos.destinoMercancia')?.value;
     this.store.setDestinoMercancia(DESTINO_MERCANCIA);
-    this.opcionDeshabilitado = DESTINO_MERCANCIA !== 3;
     const OPCION_CONTROL = this.tramiteForm.get('importadorExportador.opcion');
-    if (this.opcionDeshabilitado) {
-      this.valorSeleccionado = '';
-      OPCION_CONTROL?.setValue('', { emitEvent: false });
-      OPCION_CONTROL?.disable({ emitEvent: false });
-    } else {
+    if (DESTINO_MERCANCIA === 3) {
+      // Si se habilita, restaura el valor anterior o selecciona 'si' por defecto
+      this.opcionDeshabilitado = false;
       OPCION_CONTROL?.enable({ emitEvent: false });
+      if (!OPCION_CONTROL?.value) {
+        OPCION_CONTROL?.setValue('si', { emitEvent: false });
+      }
+    } else {
+      // Si se deshabilita, no borra el valor, solo deshabilita el control
+      this.opcionDeshabilitado = true;
+      OPCION_CONTROL?.disable({ emitEvent: false });
     }
   }
 

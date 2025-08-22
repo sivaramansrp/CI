@@ -169,6 +169,7 @@
             <div class="form-check mb-2" *ngFor="let option of radioOpcions">
               <input class="form-check-input" type="radio" [id]="'opcion_' + option.value" [value]="option.value"
                 formControlName="opcion"
+                [checked]="importadorExportador.get('opcion')?.value === option.value"
                 (change)="cambiarRadio(option.value); setValoresStore(importadorExportador, 'opcion', 'setOpcion')">
               <label class="form-check-label ms-2" [for]="'opcion_' + option.value">{{ option.label }}</label>
             </div>
