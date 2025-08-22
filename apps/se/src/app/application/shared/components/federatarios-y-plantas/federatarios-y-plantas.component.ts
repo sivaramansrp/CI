@@ -51,7 +51,7 @@ import { Validators } from '@angular/forms';
     InputFechaComponent,
     CatalogoSelectComponent,
     FormsModule,
-    NotificacionesComponent
+    NotificacionesComponent,
   ],
   templateUrl: './federatarios-y-plantas.component.html',
   styleUrl: './federatarios-y-plantas.component.scss',
