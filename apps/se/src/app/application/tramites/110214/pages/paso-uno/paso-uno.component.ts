@@ -164,9 +164,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   public continuar(): void {
     if (this.validarFormularios()) {
       // Lógica para continuar al siguiente paso
-    } else {
-      this.nuevaNotificacion('Error', 'Por favor, complete todos los campos requeridos antes de continuar.');
-    }
+    } 
   }
 
   /**
@@ -175,11 +173,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @param {string} titulo - Título de la notificación.
    * @param {string} mensaje - Mensaje de la notificación.
    */
-  // eslint-disable-next-line class-methods-use-this
-  private nuevaNotificacion(titulo: string, mensaje: string): void {
-    // Implementa la lógica para mostrar la notificación
-    console.error(`${titulo}: ${mensaje}`);
-  }
+  
 
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

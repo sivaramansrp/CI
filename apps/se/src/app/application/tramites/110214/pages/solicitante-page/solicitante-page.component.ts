@@ -163,8 +163,6 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    */
   mostrarMensajePeligro(): void {
     if (this.isPeligro) {
-      // eslint-disable-next-line no-alert
-      alert('Por favor, complete todos los campos obligatorios antes de continuar.');
       this.isPeligro = false;
     }
   }
