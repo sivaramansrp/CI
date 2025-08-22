@@ -325,14 +325,17 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
     this.mostrarComplementarFraccionPopup = false;
   }
 
+  /** Cierra el popup de "Proveedor/Cliente". Establece mostrarProveedorClientePopup en false. */
    cerrarContenedorProveedorCliente(): void {
     this.mostrarProveedorClientePopup = false;
   }
 
+  /** Cierra el popup de "Proyecto IMMEX". Establece mostrarProyectoImmexPopup en false. */
    cerrarProyectoImmex(): void {
     this.mostrarProyectoImmexPopup = false;
   }
 
+  /** Cierra el popup de "Proveedor por Archivo". Establece mostrarProveedorPorArchivoPopup en false. */
    cerrarProveedorPorArchivo(): void {
     this.mostrarProveedorPorArchivoPopup = false;
   }
