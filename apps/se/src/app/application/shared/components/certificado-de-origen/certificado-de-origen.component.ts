@@ -472,9 +472,9 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
     const PRIMER_APELLIDO = this.formCertificado.get('primerApellido');
     const CALLE = this.formCertificado.get('calle');
     const NUMERO_LETRA = this.formCertificado.get('numeroLetra');
-  
-    if (!PRIMER_APELLIDO || !CALLE || !NUMERO_LETRA) return;
-  
+
+    if (!PRIMER_APELLIDO || !CALLE || !NUMERO_LETRA) { return; }
+
     if (this.idProcedimiento === 110205) {
     
       PRIMER_APELLIDO.setValidators([Validators.maxLength(20)]);
@@ -651,7 +651,7 @@ ngOnChanges(changes: SimpleChanges):void {
    * Método que emite un evento para buscar la mercancia.
    */
   buscarMercancia(): void {
-    if (this.formCertificado && this.formCertificado.valid) {
+    if((this.formCertificado.get('entidadFederativa')?.value !== '' && this.formCertificado.get('entidadFederativa')?.value !== null)&&(this.formCertificado.get('bloque')?.value!=='' && this.formCertificado.get('bloque')?.value !== null)){
       this.setbuscarMercanciaEvent.emit(true);
     }
     else{

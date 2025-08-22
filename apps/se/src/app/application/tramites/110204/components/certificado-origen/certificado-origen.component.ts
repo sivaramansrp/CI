@@ -167,6 +167,12 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    */
     modalInstance!: Modal;
 
+  /**
+   * @property {Modal} buscarModel
+   * @description
+   * Instancia del modal de búsqueda de mercancía.
+   * Se utiliza para mostrar y controlar el modal de búsqueda de mercancías en el componente.
+   */
     buscarModel!: Modal
 
     /**
@@ -192,7 +198,21 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    */
       @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
 
-      @ViewChild('buscarMercanciaModal', { static: false }) buscarMercanciaModal!: ElementRef;
+        /**
+   * @property {ElementRef} buscarMercanciaModal
+   * @description
+   * Referencia al elemento del modal de búsqueda de mercancía en la plantilla HTML.
+   * Se utiliza para controlar la apertura y cierre del modal desde el componente.
+   */
+  @ViewChild('buscarMercanciaModal', { static: false }) buscarMercanciaModal!: ElementRef;
+
+  /**
+   * @property {CertificadoDeOrigenComponent} certificadoDeOrigen
+   * @description
+   * Referencia al componente hijo `CertificadoDeOrigenComponent`.
+   * Permite acceder a los métodos y propiedades del componente de certificado de origen desde el componente padre.
+   */
+  @ViewChild('certificadoDeOrigen') certificadoDeOrigen!: CertificadoDeOrigenComponent;
 
   /**
    * Constructor del componente.
@@ -436,30 +456,50 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
   }
 
   /**
- * @descripcion
- * Actualiza el almacén con los datos del formulario de certificado.
- * @param event - Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del almacén.
- */
-setValoresStore(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
-  const { campo: CAMPO, valor: VALOR } = event;
-  this.store.setFormCertificado({ [CAMPO]: VALOR });
-}
+   * @descripcion
+   * Actualiza el almacén con los datos del formulario de certificado.
+   * @param event - Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del almacén.
+   */
+  setValoresStore(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
+    const { campo: CAMPO, valor: VALOR } = event;
+    this.store.setFormCertificado({ [CAMPO]: VALOR });
+  }
+  /**
+   * @method validarFormulario
+   * @description
+   * Valida el formulario de certificado de origen utilizando el componente hijo `CertificadoDeOrigenComponent`.
+   * Retorna `true` si el formulario es válido, de lo contrario retorna `false`.
+   * Si el componente hijo no está disponible, retorna `false`.
+   *
+   * @returns {boolean} Indica si el formulario es válido.
+   */
+  validarFormulario(): boolean {
+    let isValid = true;
+    if (this.certificadoDeOrigen) {
+      if (!this.certificadoDeOrigen.validarFormularios()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    return isValid;
+  }
 
-    /**
-     * @inheritdoc
-     * @method
-     * @description
-     * Este método se ejecuta después de que la vista del componente ha sido inicializada.
-     * Inicializa el modal de modificación si está disponible.
-     */
-    ngAfterViewInit():void {
-      // Inicializa el modal de modificación
-      if (this.modifyModal) {
-        this.modalInstance = new Modal(this.modifyModal.nativeElement);
-      }
-      if(this.buscarMercanciaModal) {
-        this.buscarModel = new Modal(this.buscarMercanciaModal.nativeElement);
-      }
-    }  
+  /**
+   * @inheritdoc
+   * @method
+   * @description
+   * Este método se ejecuta después de que la vista del componente ha sido inicializada.
+   * Inicializa el modal de modificación si está disponible.
+   */
+  ngAfterViewInit():void {
+    // Inicializa el modal de modificación
+    if (this.modifyModal) {
+      this.modalInstance = new Modal(this.modifyModal.nativeElement);
+    }
+    if(this.buscarMercanciaModal) {
+      this.buscarModel = new Modal(this.buscarMercanciaModal.nativeElement);
+    }
+  }  
     
 }

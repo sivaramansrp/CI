@@ -13,8 +13,8 @@
             <p>Archivo:</p>
             <input type="file" (change)="onFileSelected($event)" />
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default">Cerrar</button>
+        <div class="modal-footer justify-content-end">
+            <button type="button" class="btn btn-default" (click)="cerrarModal()">Cerrar</button>
             <button type="button" class="btn btn-primary">Enviar</button>
         </div>
       </div>
