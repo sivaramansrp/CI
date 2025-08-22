@@ -48,10 +48,40 @@ import mercanciaSeleccionadasTable from '@libs/shared/theme/assets/json/110221/m
 import mercanciaTable from '@libs/shared/theme/assets/json/110221/mercancia.json';
 
 
-const TERCEROS_TEXTO_DE_ALERTA =
-  'Para continuar con el trámite, debes agregar por lo menos una mercancía.';
 /**
- * Componente que representa el formulario de certificado de origen en el trámite.
+ * @constant
+ * @description Mensaje de alerta mostrado cuando no se han agregado mercancías
+ * @type {string}
+ */
+const TERCEROS_TEXTO_DE_ALERTA = 'Para continuar con el trámite, debes agregar por lo menos una mercancía.';
+
+/**
+ * @description
+ * Componente para la gestión del certificado de origen en el trámite 110221.
+ * 
+ * Este componente es responsable de:
+ * - Gestión de formularios de certificado y mercancías
+ * - Manejo de catálogos (países, tratados, UMC)
+ * - Control de mercancías disponibles y seleccionadas
+ * - Validaciones de formularios
+ * - Gestión de modales y notificaciones
+ * 
+ * @usageNotes
+ * ### Ejemplo de uso
+ * ```html
+ * <app-certificado-de-origen
+ *   [soloLectura]="false"
+ *   (formValida)="onFormularioValido($event)">
+ * </app-certificado-de-origen>
+ * ```
+ * 
+ * @implements {OnInit}
+ * @implements {OnDestroy}
+ * @implements {AfterViewInit}
+ * 
+ * @publicApi
+ * @module Tramites110221
+ * @version 1.0.0
  */
 @Component({
   selector: 'app-certificado-de-origen',
@@ -78,27 +108,118 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy,AfterView
   TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
 
   /**
-   * Formulario reactivo para los datos del certificado.
+   * @description
+   * Formulario reactivo principal para los datos del certificado.
+   * 
+   * Contiene los siguientes grupos de campos:
+   * - Datos del operador (tercero)
+   * - Información del tratado y país
+   * - Rangos de fechas
+   * - Información de registro y fracciones
+   * 
+   * @type {FormGroup}
+   * @property {FormGroup} validacionForm - Grupo principal de validación
+   * 
+   * @example
+   * ```typescript
+   * // Estructura del formulario
+   * this.registroForm = this.fb.group({
+   *   validacionForm: this.fb.group({
+   *     tercerOperador: [null],
+   *     nombres: ['', Validators.required],
+   *     // ... otros campos
+   *   })
+   * });
+   * ```
    */
   registroForm!: FormGroup;
 
   /**
-   * Formulario reactivo para los datos de la mercancía.
+   * @description
+   * Formulario reactivo para la gestión de datos de mercancías.
+   * 
+   * Contiene los campos necesarios para:
+   * - Información arancelaria
+   * - Datos comerciales
+   * - Valores y cantidades
+   * - Información de facturación
+   * 
+   * @type {FormGroup}
+   * @property {FormGroup} validacionMercanciaForm - Grupo de validación de mercancías
+   * 
+   * @example
+   * ```typescript
+   * // Estructura del formulario
+   * this.mercanciaForm = this.fb.group({
+   *   validacionMercanciaForm: this.fb.group({
+   *     fraccionMercanciaArancelaria: [''],
+   *     nombreTecnico: [''],
+   *     // ... otros campos
+   *   })
+   * });
+   * ```
    */
   mercanciaForm!: FormGroup;
 
   /**
-   * Catálogo de países.
+   * @description
+   * Catálogo de países disponibles para selección.
+   * 
+   * Este catálogo se utiliza para la selección del país de origen
+   * en el formulario del certificado.
+   * 
+   * @type {CatalogosSelect}
+   * @see CatalogosSelect
+   * 
+   * @example
+   * ```typescript
+   * // Estructura del catálogo
+   * {
+   *   id: number;
+   *   descripcion: string;
+   *   codigo: string;
+   * }
+   * ```
    */
   pais!: CatalogosSelect;
 
   /**
-   * Catálogo de tratados.
+   * @description
+   * Catálogo de tratados comerciales disponibles.
+   * 
+   * Contiene la lista de tratados que pueden ser seleccionados
+   * para el certificado de origen.
+   * 
+   * @type {CatalogosSelect}
+   * @see CatalogosSelect
+   * 
+   * @example
+   * ```typescript
+   * // Uso en el componente
+   * if (this.tratado.id === 1) {
+   *   // Lógica específica para el tratado
+   * }
+   * ```
    */
   tratado!: CatalogosSelect;
 
   /**
-   * Catálogo de unidades de medida comercial (UMC).
+   * @description
+   * Catálogo de Unidades de Medida Comercial (UMC).
+   * 
+   * Lista de unidades de medida utilizadas para especificar
+   * las cantidades de mercancías en el certificado.
+   * 
+   * @type {CatalogosSelect}
+   * @see CatalogosSelect
+   * 
+   * @example
+   * ```typescript
+   * // Ejemplo de unidades
+   * // - Kilogramos (KG)
+   * // - Piezas (PZA)
+   * // - Metros (M)
+   * ```
    */
   umc!: CatalogosSelect;
 
@@ -288,22 +409,96 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy,AfterView
   mostrarModal:boolean = false;
   selectedRow!: SeleccionadasTabla;
 
-    modalInstance!: Modal;
-      modalInstance2!: Modal;
-      /**
-       * @descripcion
-       * Referencia al elemento del modal de modificación.
-       */
-      @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
-      @ViewChild('modifyModal2', { static: false }) modifyModal2!: ElementRef;
+  /**
+   * @description
+   * Instancia del modal principal de Bootstrap.
+   * Se utiliza para la edición y modificación de mercancías.
+   * 
+   * @type {Modal}
+   * @see Bootstrap.Modal
+   */
+  modalInstance!: Modal;
+
+  /**
+   * @description
+   * Instancia del modal secundario de Bootstrap.
+   * Se utiliza para la carga de archivos y confirmaciones.
+   * 
+   * @type {Modal}
+   * @see Bootstrap.Modal
+   */
+  modalInstance2!: Modal;
+
+  /**
+   * @description
+   * Referencia al elemento DOM del modal principal de modificación.
+   * 
+   * Este decorador permite acceder y manipular el modal de modificación
+   * de mercancías en el DOM.
+   * 
+   * @type {ElementRef}
+   * @viewChild
+   * 
+   * @example
+   * ```html
+   * <div #modifyModal class="modal fade">
+   *   <!-- Contenido del modal de modificación -->
+   * </div>
+   * ```
+   */
+  @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
+
+  /**
+   * @description
+   * Referencia al elemento DOM del modal secundario.
+   * 
+   * Este decorador permite acceder y manipular el modal secundario
+   * utilizado para cargar archivos y mostrar confirmaciones.
+   * 
+   * @type {ElementRef}
+   * @viewChild
+   * 
+   * @example
+   * ```html
+   * <div #modifyModal2 class="modal fade">
+   *   <!-- Contenido del modal secundario -->
+   * </div>
+   * ```
+   */
+  @ViewChild('modifyModal2', { static: false }) modifyModal2!: ElementRef;
       
   /**
-   * Constructor del componente.
-   * @param fb Constructor de formularios reactivos
-   * @param store Tienda para gestionar el estado del trámite
-   * @param query Consultas para obtener datos del estado del trámite
-   * @param validacionesService Servicio para validar formularios
-   * @param consultaioQuery Consulta del estado de la solicitud
+   * @description
+   * Constructor del componente CertificadoDeOrigen.
+   * 
+   * Inicializa los servicios necesarios para:
+   * - Validación inicial del certificado
+   * - Construcción de formularios reactivos
+   * - Gestión del estado del trámite
+   * - Validaciones de formularios
+   * - Consultas de estado
+   * 
+   * @constructor
+   * @param {ValidarInicialmenteCertificadoService} validarInicialmenteCertificadoService - Servicio de validación inicial
+   * @param {FormBuilder} fb - Servicio para construcción de formularios
+   * @param {Tramite110221Store} store - Store para gestión del estado
+   * @param {Tramite110221Query} query - Servicio de consultas del trámite
+   * @param {ValidacionesFormularioService} validacionesService - Servicio de validaciones
+   * @param {ConsultaioQuery} consultaioQuery - Servicio de consultas generales
+   * 
+   * @example
+   * ```typescript
+   * constructor(
+   *   private validarInicialmenteCertificadoService: ValidarInicialmenteCertificadoService,
+   *   public fb: FormBuilder,
+   *   private store: Tramite110221Store,
+   *   private query: Tramite110221Query,
+   *   private validacionesService: ValidacionesFormularioService,
+   *   private consultaioQuery: ConsultaioQuery
+   * ) {
+   *   // Inicialización del componente
+   * }
+   * ```
    */
   constructor(
     private validarInicialmenteCertificadoService: ValidarInicialmenteCertificadoService,
@@ -315,7 +510,34 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy,AfterView
   ) {}
 
   /**
-   * Método que se ejecuta al inicializar el componente.
+   * @description
+   * Método del ciclo de vida que se ejecuta al inicializar el componente.
+   * 
+   * Realiza las siguientes tareas:
+   * 1. Suscribe a los cambios del estado de la solicitud
+   * 2. Inicializa las tablas de mercancías
+   * 3. Carga los catálogos necesarios:
+   *    - Tratados
+   *    - Países
+   *    - Unidades de medida (UMC)
+   *    - Tipo de factura
+   * 
+   * @method
+   * @lifecycle
+   * @implements OnInit
+   * 
+   * @example
+   * ```typescript
+   * ngOnInit(): void {
+   *   // Suscripción al estado
+   *   this.query.selectSolicitud$.pipe(
+   *     takeUntil(this.destroyNotifier$),
+   *     map((state) => {
+   *       // Manejo del estado
+   *     })
+   *   ).subscribe();
+   * }
+   * ```
    */
   ngOnInit(): void {
 
@@ -914,6 +1136,28 @@ getError(controlName: string, error: string): boolean {
       }
     
 
+  /**
+   * @description
+   * Valida el formulario completo y sus dependencias.
+   * 
+   * Este método realiza las siguientes validaciones:
+   * 1. Verifica el estado del tercer operador
+   * 2. Ajusta las validaciones según el estado del operador
+   * 3. Valida la presencia de mercancías seleccionadas
+   * 4. Marca todos los campos como tocados si hay errores
+   * 
+   * @method
+   * @returns {boolean} true si el formulario es válido, false en caso contrario
+   * 
+   * @example
+   * ```typescript
+   * if (this.validatorCheck()) {
+   *   // Proceder con el envío del formulario
+   * } else {
+   *   // Mostrar errores de validación
+   * }
+   * ```
+   */
   validatorCheck(): boolean {
     const TERCER_OPERADOR_VALUE = this.registroForm.get('validacionForm.tercerOperador')?.value;
     const VALIDACION_FORM_GROUP = this.registroForm.get('validacionForm') as FormGroup;
