@@ -8,7 +8,7 @@
             <div class="form-group">
               <label class="form-label" for="nombre">Nombre(s)*:</label>
               <input class="form-control min-hgt uppercase" id="nombre" formControlName="nombre" type="text"
-                maxlength="28" />
+                maxlength="28" [ngClass]="esValido(federatariosFormGroup, 'nombre') ? 'required' : ''"/>
               <div *ngIf="federatariosFormGroup.get('nombre')?.invalid && federatariosFormGroup.get('nombre')?.touched"
                 class="text-danger">
                 <small *ngIf="federatariosFormGroup.get('nombre')?.errors?.['required']">Este campo es
@@ -22,7 +22,7 @@
             <div class="form-group">
               <label class="form-label" for="primerApellido">Primer apellido*</label>
               <input class="form-control min-hgt uppercase" id="primerApellido" formControlName="primerApellido"
-                type="text" maxlength="20" />
+                type="text" maxlength="20" [ngClass]="esValido(federatariosFormGroup, 'primerApellido') ? 'required' : ''"/>
               <div
                 *ngIf="federatariosFormGroup.get('primerApellido')?.invalid && federatariosFormGroup.get('primerApellido')?.touched"
                 class="text-danger">
@@ -52,7 +52,7 @@
             <div class="form-group">
               <label class="form-label" for="numeroDeActa">Número de acta*:</label>
               <input class="form-control min-hgt" id="numeroDeActa" formControlName="numeroDeActa" type="text"
-                maxlength="6" />
+                maxlength="6" [ngClass]="esValido(federatariosFormGroup, 'numeroDeActa') ? 'required' : ''"/>
               <div
                 *ngIf="federatariosFormGroup.get('numeroDeActa')?.invalid && federatariosFormGroup.get('numeroDeActa')?.touched"
                 class="text-danger">
@@ -75,7 +75,7 @@
             <div class="form-group">
               <label class="form-label" for="numeroDeNotaria">Número de notaría*:</label>
               <input class="form-control min-hgt" id="numeroDeNotaria" formControlName="numeroDeNotaria" type="text"
-                maxlength="6" />
+                maxlength="6" [ngClass]="esValido(federatariosFormGroup, 'numeroDeNotaria') ? 'required' : ''"/>
               <div
                 *ngIf="federatariosFormGroup.get('numeroDeNotaria')?.invalid && federatariosFormGroup.get('numeroDeNotaria')?.touched"
                 class="text-danger">

@@ -47,7 +47,7 @@
         <div class="form-group">
           <label class="form-label" for="rfcSanitario">RFC del responsable sanitario</label>
           <span class="form-label" *ngIf="esCampoRequerido('rfcSanitario')">*</span>
-          <span class="form-label mx-1">:</span>
+          <span class="form-label">:</span>
           <input class="form-control" id="rfcSanitario" type="text" maxlength="13" formControlName="rfcSanitario"
             [ngClass]="
               isValid(datosSolicitudForm, 'rfcSanitario') ? 'required' : ''
