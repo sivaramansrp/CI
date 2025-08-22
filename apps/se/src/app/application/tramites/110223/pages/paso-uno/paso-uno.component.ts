@@ -101,6 +101,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit, AfterViewInit {
    * Carga el catálogo de entidades federativas desde el servicio.
    */
   ngOnInit(): void {
+     this.fetchGetDatosConsulta();
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),

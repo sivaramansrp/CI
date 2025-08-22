@@ -1,9 +1,9 @@
-import { Catalogo, CatalogosSelect, ConsultaioQuery, ConsultaioState, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, CatalogosSelect, ConsultaioState, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component'; 
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user'; 
 import { RegistroService } from '../../services/registro.service';
 import { Solicitud110223State } from '../../../../estados/tramites/Tramite110223.store';
 import { Tramite110223Query } from '../../../../estados/queries/tramite110223.query';
@@ -139,11 +139,12 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+           this.donanteDomicilio();
         })
       )
       .subscribe();
 
-    this.donanteDomicilio();
+   
 
     if (this.entidadDescripcion.includes('8') && this.entidadFederativaData === 'DURANGO') {
       this.isJustificacion = true;
