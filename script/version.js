@@ -7,4 +7,4 @@ if (!fs.existsSync(envDir)) {
   fs.mkdirSync(envDir, { recursive: true });
 }
 const content = `export const APP_VERSION = 'PROFEPA:${version}';\n`;
-const envDir = path.join(__dirname, '..', 'apps', 'profepa', 'src', 'environments');
+fs.writeFileSync(path.join(envDir, 'version.ts'), content);
