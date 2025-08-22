@@ -197,7 +197,7 @@
           <ng-container formGroupName="datosMercancia">
             <div class="row">
               <div class="col-md-8">
-                <label for="tipoDeMercancia">Tipo de mercancía:</label>
+                <label for="tipoDeMercancia">Tipo de mercancía*:</label>
                 <input type="text" class="form-control" formControlName="tipoDeMercancia" id="tipoDeMercancia"
                   maxlength="200"
                   size="100"
@@ -213,7 +213,7 @@
             </div>
             <div class="row mt-3">
               <div class="col-md-8">
-                <label for="usoEspecifico">Uso específico de la mercancía:</label>
+                <label for="usoEspecifico">Uso específico de la mercancía*:</label>
                 <input type="text" class="form-control" formControlName="usoEspecifico" id="usoEspecifico"
                 maxlength="512"
                 size="50"  
@@ -227,7 +227,7 @@
                 }
               </div>
               <div class="col-md-4">
-                <app-catalogo-select [catalogo]="condicionMercancia" [label]="'Condición de la mercancía'"
+                <app-catalogo-select [catalogo]="condicionMercancia" [label]="'Condición de la mercancía*'"
                   [required]="true" formControlName="condicionMercancia" (change)="condicionMercanciaSeleccion()"
                   name="condicionMercancia" [isDisabled]="soloLectura"></app-catalogo-select>
                 @if (agregarMercanciasForm.get('datosMercancia.condicionMercancia')?.invalid &&
@@ -239,19 +239,31 @@
             </div>
             <div class="row">
               <div class="col-md-8">
-                <label for="cantidadComercial">Cantidad:</label>
+                <label for="cantidadComercial">Cantidad*:</label>
                 <input type="text" class="form-control" formControlName="cantidad" id="cantidad" maxlength="20" size="20"
                   (change)="setValoresStore(exencionImpuestos, 'datosMercancia.cantidad', 'setCantidad')" />
-                @if (agregarMercanciasForm.get('datosMercancia.cantidad')?.invalid &&
-                (agregarMercanciasForm.get('datosMercancia.cantidad')?.touched ||
-                agregarMercanciasForm.get('datosMercancia.cantidad')?.dirty)) {
-                <div class="text-danger small mt-1">
-                  Este campo es obligatorio.
-                </div>
-                }
+                  @if (
+                    agregarMercanciasForm.get('datosMercancia.cantidad')?.errors?.['required'] &&
+                    (agregarMercanciasForm.get('datosMercancia.cantidad')?.touched ||
+                    agregarMercanciasForm.get('datosMercancia.cantidad')?.dirty || envioIntentado)
+                  ) {
+                    <div class="text-danger small mt-1">Este campo es obligatorio.</div>
+                  } @else if (
+                    agregarMercanciasForm.get('datosMercancia.cantidad')?.errors?.['pattern'] &&
+                    (agregarMercanciasForm.get('datosMercancia.cantidad')?.touched ||
+                    agregarMercanciasForm.get('datosMercancia.cantidad')?.dirty)
+                  ) {
+                    <div class="text-danger small mt-1">Formato inválido. Máximo 12 enteros y 3 decimales.</div>
+                  } @else if (
+                    agregarMercanciasForm.get('datosMercancia.cantidad')?.errors?.['min'] &&
+                    (agregarMercanciasForm.get('datosMercancia.cantidad')?.touched ||
+                    agregarMercanciasForm.get('datosMercancia.cantidad')?.dirty)
+                  ) {
+                    <div class="text-danger small mt-1">Por favor, escribe un valor mayor o igual a 1</div>
+                  }
               </div>
               <div class="col-md-4">
-                <app-catalogo-select [catalogo]="unidadMedida" [label]="'Unidad de medida'" [required]="true"
+                <app-catalogo-select [catalogo]="unidadMedida" [label]="'Unidad de medida*'" [required]="true"
                   name="unidadMedida" formControlName="unidadMedida" (change)="unidadMedidaSeleccion()"
                   [isDisabled]="soloLectura"></app-catalogo-select>
                 @if (agregarMercanciasForm.get('datosMercancia.unidadMedida')?.invalid &&
