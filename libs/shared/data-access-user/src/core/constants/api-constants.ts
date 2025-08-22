@@ -350,3 +350,15 @@ export const DOCUMENTOMINIO= '{documentoMinio}';
  * @see  https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/consulta-documento-oficial
  */
 export const API_GET_DESCARGAR_ACUSE= `sat-t${TRAMITE}/documento-oficiales/${DOCUMENTOMINIO}`
+
+/**
+ * IDREQUERIMIENTO para detalle de requerimiento.
+ * Este valor debe ser reemplazado por el tramite correspondiente.
+ */
+export const IDREQUERIMIENTO= '{idRequerimiento}';
+
+/**
+ * API para Consultar detalle de un requerimiento del tramite generico.
+ * @see https://api-v30.cloud-ultrasist.net/api/tramite-flujo/swagger-ui/index.html#/Consulta-Requerimiento/getDetalleByIdRequerimiento
+ */
+export const API_GET_REQUERIMIENTO_DETALLE = `sat-t${TRAMITE}/tramite/requerimiento/${IDREQUERIMIENTO}/detalle`
