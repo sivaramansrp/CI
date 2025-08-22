@@ -260,5 +260,47 @@ describe('SolicitudComponent', () => {
             expect(component.revisionDisabled).toBe(true);
             expect(component.certificacionesDisabled).toBe(true);
         });
+
+        it('should clear tipoOperacion field when DD is unchecked via limpiaCamposDdaLda', () => {
+            // Setup: Mock the despacho form with required fields including tipoOperacion
+            const mockDespachoForm = mockFormBuilder.group({
+                idAduanaDespacho: ['someValue'],
+                aduanaDespacho: ['someValue'], 
+                idSeccionDespacho: ['someValue'],
+                seccionAduanera: ['someValue'],
+                nombreRecinto: ['someValue'],
+                relacionSociedad: [true],
+                encargoConferido: [true],
+                domicilioDespacho: ['someValue'],
+                tipoDespacho: ['someValue'],
+                tipoDespachoDescripcion: ['someValue'],
+                tipoOperacion: [2] // Exportación value that should be cleared
+            });
+
+            // Spy on setValue calls to verify clearing behavior
+            const setValueSpy = jest.spyOn(mockDespachoForm.get('tipoOperacion')!, 'setValue');
+            
+            // Mock the store update method to avoid dependency issues
+            component.setValoresStore = jest.fn();
+            
+            // Override the component's despacho form getter
+            Object.defineProperty(component, 'despacho', {
+                get: () => mockDespachoForm,
+                configurable: true
+            });
+
+            // Call the method that should clear the fields
+            component.limpiaCamposDdaLda();
+
+            // Verify tipoOperacion was reset to SIN_VALORES (-1)
+            expect(setValueSpy).toHaveBeenCalledWith('-1');
+            
+            // Verify store was updated for tipoOperacion
+            expect(component.setValoresStore).toHaveBeenCalledWith(
+                mockDespachoForm, 
+                'tipoOperacion', 
+                'setTipoOperacion'
+            );
+        });
     });
 });
