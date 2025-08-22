@@ -10,7 +10,7 @@ WORKDIR /app
 COPY *.json ./
 
 # --- Copy scripts directory (needed for postinstall/versioning) ---
-COPY scripts ./scripts
+COPY script ./script
 
 # --- Install dependencies ---
 RUN npm install -g pnpm && \
