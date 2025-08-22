@@ -4,14 +4,14 @@
             <a data-toggle="tab" (click)="seleccionaTab(1)" (keydown.enter)="seleccionaTab(1)"
                 (keydown.space)="seleccionaTab(1)" role="button" tabindex="0">Dictamenes</a>
         </li>
-        <li [ngClass]="{ 'active': indice === 2, 'disabled': indice !== 2 }">
-            <a data-toggle="tab" (click)="indice !== 2 ? $event.preventDefault() : seleccionaTab(2)"
-                (keyup.enter)="indice === 2 && seleccionaTab(2)" (keydown.space)="indice === 2 && seleccionaTab(2)"
+        <li [ngClass]="{ 'active': indice === 2, 'disabled': indice < 2 }">
+            <a data-toggle="tab" (click)="indice < 2 ? $event.preventDefault() : seleccionaTab(2)"
+                (keyup.enter)="indice < 2 && seleccionaTab(2)" (keydown.space)="indice < 2 && seleccionaTab(2)"
                 role="button" tabindex="0">Detalle</a>
         </li>
-        <li [ngClass]="{ 'active': indice === 3, 'disabled': indice !== 3 }">
-            <a data-toggle="tab" (click)="indice !== 3 ? $event.preventDefault() : seleccionaTab(3)"
-                (keyup.enter)="indice === 3 && seleccionaTab(3)" (keydown.space)="indice === 3 && seleccionaTab(3)"
+        <li [ngClass]="{ 'active': indice === 3, 'disabled': indice < 3 }">
+            <a data-toggle="tab" (click)="indice < 3 ? $event.preventDefault() : seleccionaTab(3)"
+                (keyup.enter)="indice < 3 && seleccionaTab(3)" (keydown.space)="indice === 3 && seleccionaTab(3)"
                 role="button" tabindex="0">Detalle de observación</a>
         </li>
     </ul>
