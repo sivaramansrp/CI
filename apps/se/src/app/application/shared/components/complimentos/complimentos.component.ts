@@ -7,6 +7,7 @@ import {
   CATALOGOS_ID,
   Catalogo,
   CatalogosService,
+  EMAIL,
   InputFecha,
   InputFechaComponent,
   NotificacionesComponent,
@@ -14,6 +15,8 @@ import {
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
+  ValidacionesFormularioService,
+  WEBPAGE,
 } from '@libs/shared/data-access-user/src';
 import {
   Component,
@@ -329,7 +332,8 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     private catalogosServices: CatalogosService,
     private complimentosService: ComplimentosService,
      private consultaioQuery: ConsultaioQuery,
-     private tramiteStore: TramiteStore
+     private tramiteStore: TramiteStore,
+     private validacionesService: ValidacionesFormularioService
   ) {
     
        this.consultaioQuery.selectConsultaioState$
@@ -400,7 +404,7 @@ this.formaComplimentos.disable();
       modalidad: [{ value: '', disabled: true }],
       programaPreOperativo: [false],
       datosGeneralis: this.fb.group({
-        paginaWWeb: ['', [Validators.required, Validators.maxLength(120)]],
+        paginaWWeb: ['', [Validators.required, Validators.maxLength(120), Validators.pattern(WEBPAGE)]],
         localizacion: ['', [Validators.required, Validators.maxLength(120)]],
       }),
       obligacionesFiscales: this.fb.group({
@@ -441,6 +445,19 @@ this.formaComplimentos.disable();
         this.aplicarDatosFormulario();
       }, 0);
     }
+  }
+
+  /**
+  * compo doc
+  * @method isValid
+  * @description 
+  * Verifica si un campo específico del formulario es válido.
+  * @param field El nombre del campo que se desea validar.
+  * @returns {boolean | null} Un valor booleano que indica si el campo es válido.
+  */
+  public esValido(formgroup: string, campo: string): boolean | null {
+    const FORMGRUPO = this.formaComplimentos.get(formgroup) as FormGroup;
+    return this.validacionesService.isValid(FORMGRUPO, campo);
   }
 
   /**
@@ -651,7 +668,7 @@ this.formaComplimentos.disable();
           pais: ['', Validators.required],
           codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
           estado: ['', Validators.required],
-          correoElectronico: ['', [Validators.required, Validators.maxLength(200)]],
+          correoElectronico: ['', [Validators.required, Validators.maxLength(200), Validators.pattern(EMAIL)]],
         });
 
       case TIPO_FORMA.TIPO_PERSONA:
@@ -661,7 +678,7 @@ this.formaComplimentos.disable();
           pais: ['', Validators.required],
           codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
           estado: ['', [Validators.required, Validators.maxLength(250)]],
-          correoElectronico: ['', [Validators.required, Validators.maxLength(200)]],
+          correoElectronico: ['', [Validators.required, Validators.maxLength(200), Validators.pattern(EMAIL)]],
           apellidoPaterno: ['', [Validators.required, Validators.maxLength(200)]],
         });
       
@@ -682,7 +699,7 @@ this.formaComplimentos.disable();
           pais: ['', Validators.required],
           codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
           estado: ['', Validators.required],
-          correoElectronico: ['', [Validators.required, Validators.maxLength(200)]],
+          correoElectronico: ['', [Validators.required, Validators.maxLength(200), Validators.pattern(EMAIL)]],
         });
     }
   }
@@ -773,7 +790,6 @@ this.formaComplimentos.disable();
         const INDICEALT = this.camposFormularioTipoPersona.findIndex(
           (ele) => ele.campo === PAIS
         );
-        this.camposFormularioDefault[INDICE].opciones = datos;
         this.camposFormularioTipoPersona[INDICEALT].opciones = datos;
       });
   }
@@ -822,7 +838,7 @@ this.formaComplimentos.disable();
     const VALUE = CONTROL.get('formaDatos')?.value;
     if (VALUE) {
       this.accionistasAgregados.emit(VALUE);
-      this.formaComplimentos.reset();
+      CONTROL.get('formaDatos')?.reset();
     }
   }
 
@@ -830,6 +846,7 @@ this.formaComplimentos.disable();
    * @description Elimina los accionistas seleccionados y emite el evento correspondiente.
    * @returns {void}
    */
+  
   eliminarAccionistas(): void {
       this.eliminarUnoConfirmationNotificacion.cerrar = false;
     if (this.empresaAccionistasSeleccionados.length) {
@@ -1275,5 +1292,32 @@ this.formaComplimentos.disable();
     }
     
     return true;
+  }
+
+  /**
+ * Marca como tocado el control especificado dentro del formulario de socios accionistas al perder el foco.
+ * @param campo - Nombre del campo que perdió el foco.
+ */
+  onDesenfoque(campo: string): void {
+    const CONTROL = this.formaComplimentos.get(`formaSocioAccionistas.formaDatos.${campo}`);
+    CONTROL?.markAsTouched();
+  }
+
+  /**
+ * Actualiza el valor del campo especificado en el formulario de socios accionistas cuando cambia su valor.
+ * Marca el control como tocado y actualiza su validez; si el valor está vacío, lo marca como modificado.
+ * @param event - Evento de cambio del input.
+ * @param campo - Nombre del campo a actualizar.
+ */
+  onCambio(event: Event, campo: string): void {
+    const VALOR = (event.target as HTMLInputElement).value;
+    const CONTROL = this.formaComplimentos.get(`formaSocioAccionistas.formaDatos.${campo}`);
+    if (VALOR) {
+      CONTROL?.setValue(VALOR, { emitEvent: true });
+      CONTROL?.markAsTouched({ onlySelf: true });
+      CONTROL?.updateValueAndValidity();
+    } else {
+      CONTROL?.markAsDirty();
+    }
   }
 }
