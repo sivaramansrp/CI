@@ -50,6 +50,7 @@ import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-
 import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
 import { Modal } from 'bootstrap';
 import { TablePaginationComponent } from '@ng-mf/data-access-user';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 export interface RespuestaTabla {
   code: number;
@@ -76,12 +77,18 @@ export interface MercanciasTabla {
     CatalogoSelectComponent,
     TablaDinamicaComponent,
     CrosslistComponent,
-    TablePaginationComponent
+    TablePaginationComponent,
+    TooltipModule
   ],
   templateUrl: './domicilio-establecimiento.component.html',
   styleUrls: ['./domicilio-establecimiento.component.scss'],
 })
 export class DomicilioComponent implements OnInit, OnDestroy {
+
+  /**
+   * Indica si el campo GarantiasOfrecidasVisible es visible.
+   */
+  @Input() tieneUsoEspecifico: boolean = true;
   /**
      * Indica si el campo GarantiasOfrecidasVisible es visible.
      */
@@ -326,17 +333,17 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   aduanasEntradaBotons = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-primary',
+      class: 'btn-default',
       funcion: (): void => this.crossList.toArray()[0].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-default',
+      class: 'btn-primary',
       funcion: (): void => this.crossList.toArray()[0].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-danger',
+      class: 'btn-primary',
       funcion: (): void => this.crossList.toArray()[0].quitar(''),
     },
     {

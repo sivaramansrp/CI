@@ -340,7 +340,12 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
             this.forma.get('datosDelaSolicitud')?.get('claveControlUnico')?.disable();
             this.forma.get('datosDelaSolicitud')?.get('folioControlUnico')?.disable();
             this.forma.get('datosDelaSolicitud')?.get('numeroGuia')?.disable();
-            this.forma.get('datosDelaSolicitud')?.get('tipoMercancia')?.disable();
+            // tipoMercancia solo se deshabilita en modo solo lectura
+            if (this.esFormularioSoloLectura) {
+              this.forma.get('datosDelaSolicitud')?.get('tipoMercancia')?.disable();
+            } else {
+              this.forma.get('datosDelaSolicitud')?.get('tipoMercancia')?.enable();
+            }
             this.movilizacionForm.get('coordenadas')?.disable();
             this.movilizacionForm.get('identTransporte')?.disable();
             this.movilizacionForm.get('empresaTransportista')?.disable();
@@ -383,12 +388,15 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
             if (this.esFormularioSoloLectura) {
               this.forma.disable();
               this.movilizacionForm.disable();
+              this.forma.get('datosDelaSolicitud')?.get('tipoMercancia')?.disable();
             } else {
+              this.forma.enable();
+              this.movilizacionForm.enable();
               // Mantener campos específicos deshabilitados incluso cuando el formulario está habilitado
               this.forma.get('datosDelaSolicitud')?.get('claveControlUnico')?.disable();
               this.forma.get('datosDelaSolicitud')?.get('folioControlUnico')?.disable();
               this.forma.get('datosDelaSolicitud')?.get('numeroGuia')?.disable();
-              this.forma.get('datosDelaSolicitud')?.get('tipoMercancia')?.disable();
+              this.forma.get('datosDelaSolicitud')?.get('tipoMercancia')?.enable();
               this.movilizacionForm.get('coordenadas')?.disable();
               this.movilizacionForm.get('identTransporte')?.disable();
               this.movilizacionForm.get('empresaTransportista')?.disable();
@@ -452,7 +460,12 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
       this.forma.get('datosDelaSolicitud')?.get('claveControlUnico')?.disable();
       this.forma.get('datosDelaSolicitud')?.get('folioControlUnico')?.disable();
       this.forma.get('datosDelaSolicitud')?.get('numeroGuia')?.disable();
-      this.forma.get('datosDelaSolicitud')?.get('tipoMercancia')?.disable();
+      // tipoMercancia solo se deshabilita en modo solo lectura
+      if (this.esFormularioSoloLectura) {
+        this.forma.get('datosDelaSolicitud')?.get('tipoMercancia')?.disable();
+      } else {
+        this.forma.get('datosDelaSolicitud')?.get('tipoMercancia')?.enable();
+      }
       this.movilizacionForm.get('coordenadas')?.disable();
       this.movilizacionForm.get('identTransporte')?.disable();
       this.movilizacionForm.get('empresaTransportista')?.disable();
@@ -474,7 +487,12 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
       this.forma.get('datosDelaSolicitud')?.get('claveControlUnico')?.disable();
       this.forma.get('datosDelaSolicitud')?.get('folioControlUnico')?.disable();
       this.forma.get('datosDelaSolicitud')?.get('numeroGuia')?.disable();
-      this.forma.get('datosDelaSolicitud')?.get('tipoMercancia')?.disable();
+      // tipoMercancia solo se deshabilita en modo solo lectura
+      if (this.esFormularioSoloLectura) {
+        this.forma.get('datosDelaSolicitud')?.get('tipoMercancia')?.disable();
+      } else {
+        this.forma.get('datosDelaSolicitud')?.get('tipoMercancia')?.enable();
+      }
       this.movilizacionForm.get('identTransporte')?.disable();
       this.movilizacionForm.get('empresaTransportista')?.disable();
     } else {

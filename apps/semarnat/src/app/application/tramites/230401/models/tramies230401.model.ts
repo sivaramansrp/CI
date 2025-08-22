@@ -57,7 +57,7 @@ export interface PagoDerechosState {
     /**
      * Etiqueta que representa el nombre del campo, en este caso "Fecha de pago:".
      */
-    labelNombre: 'Fecha de pago:',
+    labelNombre: 'Fecha de pago',
     
     /**
      * Indica si el campo es obligatorio. Valor `true` significa que es requerido.

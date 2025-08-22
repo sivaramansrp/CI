@@ -1,5 +1,5 @@
 import { ConfiguracionColumna, TipoPersona } from '@ng-mf/data-access-user';
-import { DetalleMercancíaProductoTerminado, Otros } from '../models/medicamentos-contengan.model';
+import { DetalleMercancíaProductoTerminado, Otros, TipoPersonaModel } from '../models/medicamentos-contengan.model';
 import { Destinatario } from '../../../shared/models/terceros-relacionados.model';
 import { TablaMercanciasDatos } from '../../../shared/models/datos-solicitud.model';
 
@@ -314,9 +314,9 @@ export const TERCEROS_NACIONALIDAD_RADIO_OPCIONS = [
  * @const TERCEROS_PERSONA_RADIO_OPCIONS
  * @description Opciones de tipo de persona para terceros.
  */
-export const TERCEROS_PERSONA_RADIO_OPCIONS = [
-  { label: 'Física', value: TipoPersona.FISICA ,hint:'Física'},
-  { label: 'Moral', value: TipoPersona.MORAL,hint:'Moral' }
+export const TERCEROS_PERSONA_RADIO_OPCIONS: TipoPersonaModel[] = [
+  { label: 'Física', value: TipoPersona.FISICA, hint:'Una persona física es entendida como toda persona con una actividad específica'},
+  { label: 'Moral', value: TipoPersona.MORAL, hint:'Una persona moral es entendida como una empresa con una actividad específica' }
 ];
 
 /**

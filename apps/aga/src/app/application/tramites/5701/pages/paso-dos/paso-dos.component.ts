@@ -10,6 +10,7 @@ import {
 import { Notificacion, TEXTOS } from '@ng-mf/data-access-user';
 import { map } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
 /**
  * Componente que representa el paso dos del proceso de solicitud de documentos.
  */
@@ -82,14 +83,16 @@ export class PasoDosComponent implements OnInit {
    * @type {Notificacion}
    */
   public alertaNotificacion: Notificacion = {
-    tipoNotificacion: 'banner',
-    categoria: 'warning',
-    modo: 'action',
-    titulo: '',
-    mensaje: TEXTOS.INSTRUCCIONES,
-    cerrar: true,
-    txtBtnAceptar: '',
-    txtBtnCancelar: '',
+
+  tipoNotificacion: 'banner',
+  categoria: 'success',
+  modo: 'action',
+  titulo: '',
+  mensaje: TEXTOS.INSTRUCCIONES,
+  cerrar: true,
+  txtBtnAceptar: '',
+  txtBtnCancelar: '',
+
   };
 
   /**

@@ -1,10 +1,10 @@
+import { PRODUCTO_TABLA_DATA, TIPO_ACTUALIZACION } from '../../../../shared/constantes/datos-solicitud.enum';
 import { DatosSolicitudFormState } from '../../../../shared/models/datos-solicitud.model';
 import { Destinatario } from '../../../../shared/models/terceros-relacionados.model';
 import { Fabricante } from '../../../../shared/models/terceros-relacionados.model';
 import { Facturador } from '../../../../shared/models/terceros-relacionados.model';
 import { Injectable } from '@angular/core';
 import { MercanciaForm } from '../../../../shared/models/datos-solicitud.model';
-import { PRODUCTO_TABLA_DATA } from '../../../../shared/constantes/datos-solicitud.enum';
 import { PagoDerechosFormState } from '../../../../shared/models/terceros-relacionados.model';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Store } from '@datorama/akita';
@@ -28,7 +28,11 @@ export interface Tramite260102State {
    * Utilizado para representar entidades que reciben el producto o mercancía.
    */
   destinatarioFinalTablaDatos: Destinatario[];
-
+  /**
+   * @property tabSeleccionado
+   * @description Indica qué pestaña está seleccionada actualmente en el formulario.
+   */
+  tabSeleccionado?: number;
   /**
    * @property facturadorTablaDatos
    * @description Lista de facturadores registrados en la tabla.
@@ -119,6 +123,34 @@ export interface Tramite260102State {
    * Incluye clave de referencia, cadena de dependencia, importe y fecha de pago.
    */
   pagoDerechos: PagoDerechosFormState;
+
+  /**
+   * @property seleccionadoTablaFabricanteDatos
+   * @description Registros seleccionados en la tabla de fabricantes.
+   * Permite manejar qué fabricantes han sido marcados como seleccionados por el usuario.
+   */
+  seleccionadoTablaFabricanteDatos?: Fabricante[];
+
+  /**
+   * @property seleccionadoTablaDestinatarioDatos
+   * @description Registros seleccionados en la tabla de destinatarios.
+   * Permite manejar qué destinatarios han sido marcados como seleccionados por el usuario.
+   */
+  seleccionadoTablaDestinatarioDatos?: Destinatario[];
+
+  /**
+   * @property seleccionadoTablaProveedorDatos
+   * @description Registros seleccionados en la tabla de proveedores.
+   * Permite manejar qué proveedores han sido marcados como seleccionados por el usuario.
+   */
+  seleccionadoTablaProveedorDatos?: Proveedor[];
+
+  /**
+   * @property seleccionadoTablaFacturadorDatos
+   * @description Registros seleccionados en la tabla de facturadores.
+   * Permite manejar qué facturadores han sido marcados como seleccionados por el usuario.
+   */
+  seleccionadoTablaFacturadorDatos?: Facturador[];
 }
 
 /**
@@ -165,6 +197,7 @@ export function createInitialState(): Tramite260102State {
       claveDeLos: '',
       fechaDeFabricacio: '',
       fechaDeCaducidad: '',
+      manifiestosCasillaDeVerificacion: false,
     },
     mercanciaForm: {
       clasificacionProducto: '',
@@ -202,6 +235,10 @@ export function createInitialState(): Tramite260102State {
       fechaPago: '',
       importePago: '',
     },
+    seleccionadoTablaDestinatarioDatos: [],
+    seleccionadoTablaFabricanteDatos: [],
+    seleccionadoTablaProveedorDatos: [],
+    seleccionadoTablaFacturadorDatos: [],
   };
 }
 /**
@@ -269,11 +306,26 @@ export class Tramite260102Store extends Store<Tramite260102State> {
    * @param {Fabricante[]} newFabricantes - El array de nuevos fabricantes a agregar.
    * @returns {void}
    */
-  public updateFabricanteTablaDatos(newFabricantes: Fabricante[]): void {
-    this.update((state) => ({
-      ...state,
-      fabricanteTablaDatos: [...state.fabricanteTablaDatos, ...newFabricantes],
-    }));
+  public updateFabricanteTablaDatos(
+    nuevoFabricante: Fabricante[],
+    tipoActualizacion?: string
+  ): void {
+    this.update((state) => {
+      return {
+        ...state,
+        fabricanteTablaDatos:
+          tipoActualizacion === TIPO_ACTUALIZACION.ELIMINAR
+            ? [...nuevoFabricante]
+            : [
+              ...Tramite260102Store.actualizarLista(
+                state.fabricanteTablaDatos,
+                nuevoFabricante,
+                'rfc'
+              ),
+            ],
+        seleccionadoTablaFabricanteDatos: [],
+      };
+    });
   }
 
   /**
@@ -283,15 +335,25 @@ export class Tramite260102Store extends Store<Tramite260102State> {
    * @returns {void}
    */
   public updateDestinatarioFinalTablaDatos(
-    newDestinatarios: Destinatario[]
+    newDestinatarios: Destinatario[],
+    tipoActualizacion?: string
   ): void {
-    this.update((state) => ({
-      ...state,
-      destinatarioFinalTablaDatos: [
-        ...state.destinatarioFinalTablaDatos,
-        ...newDestinatarios,
-      ],
-    }));
+    this.update((state) => {
+      return {
+        ...state,
+        destinatarioFinalTablaDatos:
+          tipoActualizacion === TIPO_ACTUALIZACION.ELIMINAR
+            ? [...newDestinatarios]
+            : [
+              ...Tramite260102Store.actualizarLista(
+                state.destinatarioFinalTablaDatos,
+                newDestinatarios,
+                'rfc'
+              ),
+            ],
+        seleccionadoTablaDestinatarioDatos: [],
+      };
+    });
   }
 
   /**
@@ -300,11 +362,28 @@ export class Tramite260102Store extends Store<Tramite260102State> {
    * @param {Proveedor[]} newProveedores - El array de nuevos proveedores a agregar.
    * @returns {void}
    */
-  public updateProveedorTablaDatos(newProveedores: Proveedor[]): void {
-    this.update((state) => ({
-      ...state,
-      proveedorTablaDatos: [...state.proveedorTablaDatos, ...newProveedores],
-    }));
+  public updateProveedorTablaDatos(
+    newProveedores: Proveedor[],
+    tipoActualizacion?: string
+  ): void {
+    this.update((state) => {
+      return {
+        ...state,
+        proveedorTablaDatos:
+          tipoActualizacion === TIPO_ACTUALIZACION.ELIMINAR
+            ? [...newProveedores]
+            : [
+              ...Tramite260102Store.actualizarLista(
+                state.proveedorTablaDatos,
+                newProveedores,
+                newProveedores?.[0]?.nombreRazonSocial !== ''
+                  ? 'nombreRazonSocial'
+                  : 'razonSocial'
+              ),
+            ],
+        seleccionadoTablaDestinatarioDatos: [],
+      };
+    });
   }
 
   /**
@@ -313,10 +392,24 @@ export class Tramite260102Store extends Store<Tramite260102State> {
    * @param {Facturador[]} newFacturadores - El array de nuevos facturadores a agregar.
    * @returns {void}
    */
-  public updateFacturadorTablaDatos(newFacturadores: Facturador[]): void {
+  public updateFacturadorTablaDatos(newFacturadores: Facturador[],
+    tipoActualizacion?: string
+  ): void {
     this.update((state) => ({
       ...state,
-      facturadorTablaDatos: [...state.facturadorTablaDatos, ...newFacturadores],
+      facturadorTablaDatos:
+        tipoActualizacion === TIPO_ACTUALIZACION.ELIMINAR
+          ? [...newFacturadores]
+          : [
+            ...Tramite260102Store.actualizarLista(
+              state.facturadorTablaDatos,
+              newFacturadores,
+              newFacturadores?.[0]?.nombreRazonSocial !== ''
+                ? 'nombreRazonSocial'
+                : 'razonSocial'
+            ),
+          ],
+      seleccionadoTablaFacturadorDatos: [],
     }));
   }
 
@@ -358,6 +451,7 @@ export class Tramite260102Store extends Store<Tramite260102State> {
     this.update((state) => ({
       ...state,
       tablaMercanciasConfigDatos,
+      seleccionadoTablaMercanciasDatos: []
     }));
   }
 
@@ -372,6 +466,90 @@ export class Tramite260102Store extends Store<Tramite260102State> {
       ...state,
       pagoDerechos: nuevoPagoDerechos,
     }));
+  }
+
+  /**
+  * @method updateSeleccionadoTablaFabricanteDatos
+  * @description Actualiza la lista de fabricantes seleccionados en el estado.
+  * @param {Fabricante[]} nuevoTablaFabricanteDatos - Nueva lista de fabricantes seleccionados.
+  * @returns {void}
+  */
+  public updateSeleccionadoTablaFabricanteDatos(
+    nuevoTablaFabricanteDatos: Fabricante[]
+  ): void {
+    this.update((state) => ({
+      ...state,
+      seleccionadoTablaFabricanteDatos: nuevoTablaFabricanteDatos,
+    }));
+  }
+  /**
+   * @method updateSeleccionadoTablaDestinatarioDatos
+   * @description Actualiza la lista de destinatarios seleccionados en el estado.
+   * @param {Destinatario[]} nuevoTablaDestinatarioDatos - Nueva lista de destinatarios seleccionados.
+   * @returns {void}
+   */
+  public updateSeleccionadoTablaDestinatarioDatos(
+    nuevoTablaDestinatarioDatos: Destinatario[]
+  ): void {
+    this.update((state) => ({
+      ...state,
+      seleccionadoTablaDestinatarioDatos: nuevoTablaDestinatarioDatos,
+    }));
+  }
+  /**
+   * @method updateSeleccionadoTablaProveedorDatos
+   * @description Actualiza la lista de proveedores seleccionados en el estado.
+   * @param {Proveedor[]} nuevoTablaProveedorDatos - Nueva lista de proveedores seleccionados.
+   * @returns {void}
+   */
+  public updateSeleccionadoTablaProveedorDatos(
+    nuevoTablaProveedorDatos: Proveedor[]
+  ): void {
+    this.update((state) => ({
+      ...state,
+      seleccionadoTablaProveedorDatos: nuevoTablaProveedorDatos,
+    }));
+  }
+  /**
+   * @method updateSeleccionadoTablaFacturadorDatos
+   * @description Actualiza la lista de facturadores seleccionados en el estado.
+   * @param {Facturador[]} nuevoTablaFacturadorDatos - Nueva lista de facturadores seleccionados.
+   * @returns {void}
+   */
+  public updateSeleccionadoTablaFacturadorDatos(
+    nuevoTablaFacturadorDatos: Facturador[]
+  ): void {
+    this.update((state) => ({
+      ...state,
+      seleccionadoTablaFacturadorDatos: nuevoTablaFacturadorDatos,
+    }));
+  }
+
+  /**
+ * @method actualizarLista
+ * @description Actualiza los datos seleccionados de la tabla de fabricantes.
+ * @param {Fabricante[]} seleccionadoTablaFabricanteDatos - Nuevo array de datos seleccionados de fabricantes.
+ */
+  public static actualizarLista<
+    T extends Fabricante | Destinatario | Proveedor | Facturador
+  >(
+    listaOriginal: T[],
+    nuevosLista: T[],
+    clave: keyof T
+  ): Fabricante[] | Destinatario[] | Proveedor[] | Facturador[] {
+    const LISTA_ACTUALIZADA = [...listaOriginal];
+
+    const INDICE_ENCONTRADO = LISTA_ACTUALIZADA.findIndex(
+      (item) => item?.[clave] === nuevosLista?.[0]?.[clave]
+    );
+
+    if (INDICE_ENCONTRADO !== -1) {
+      LISTA_ACTUALIZADA.splice(INDICE_ENCONTRADO, 1, nuevosLista[0]);
+    } else {
+      LISTA_ACTUALIZADA.push(...nuevosLista);
+    }
+
+    return LISTA_ACTUALIZADA;
   }
 }
 

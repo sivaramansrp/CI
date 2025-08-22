@@ -118,22 +118,30 @@
             <div class="modal-body">
                <div class="row">
                   <div class="container mt-4">
-                      <ng-alert
+                     <ng-alert
                      *ngIf="mostrarNotificacion"
                      [CONTENIDO]="TEXTOS.INSTRUCCIONES"
                      [CUSTOMECLASS]="'infoError'"
                      (close)="mostrarNotificacion = false"></ng-alert>
-                     <ng-titulo titulo="Cargar Archivo"> </ng-titulo>
+                     <ng-titulo titulo="Cargar archivo"> </ng-titulo>
+                  
                      <div class="row align-items-center mb-3">
                         <div class="col-md-3">
-                           <label for="archivoNacionales" class="form-label mb-0 me-3">
-                           Archivo:
-                           </label>
+                           <label for="archivoNacionales" class="form-label mb-0 me-3">Archivo:</label>
                         </div>
                      </div>
+                  
                      <div class="row align-items-center mb-3">
-                        <div class="col-md-8">
-                           <input type="file" id="archivoNacionales" class="form-control w-100" />
+                        <div class="col-md-6 d-flex align-items-center">
+                           <input type="file" id="archivoNacionales" class="d-none" (change)="archivoSeleccionado($event)" #archivoNacionalesElemento />
+
+                           <div class="input-group w-100">
+                              <button type="button" (click)="archivoNacionalesElemento?.click()">
+                                 Seleccionar archivo
+                              </button>
+                              <input type="text" class="form-control" [value]="nombreArchivoSeleccionado || 'Sin archivos seleccionados'" readonly
+                                 style="background-color: #fff; cursor: default;" />
+                           </div>
                         </div>
                      </div>
                   </div>

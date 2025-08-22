@@ -11,7 +11,6 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tab
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
-
 /**
  * PartidasDeLaMercanciaComponent
  * Este componente es responsable de gestionar las partidas de la mercancía.
@@ -124,6 +123,24 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    * Si está configurada como `true`, la tabla estará deshabilitada.
    */
   @Input() disabled: boolean = false;
+
+  /*
+
+  */
+  /**
+   * @description Referencia al elemento del DOM asociado con el archivo de nacionales.
+   * Utilizado para acceder y manipular directamente el elemento en la plantilla.
+   * 
+   * @type {ElementRef}
+   * @memberof PartidasDeLaMercanciaComponent
+   * @viewChild archivoNacionales
+   */
+  @ViewChild('archivoNacionales') archivoNacionalesElemento!: ElementRef;
+ 
+  /**
+   * Nombre del archivo seleccionado por el usuario.
+   */
+  nombreArchivoSeleccionado: string = '';
   
   /**
    * Constructor para inicializar el componente e inyectar dependencias.
@@ -132,7 +149,6 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
   constructor(private fb: FormBuilder) {
     //  Constructor del componente
   }
-
 
   /**
      * Método del ciclo de vida que se ejecuta cuando cambian las propiedades de entrada del componente.
@@ -243,4 +259,16 @@ enviarArchivo(): void {
     this.mostrarNotificacion = true;
   }
 }
+  /**
+   * Maneja el evento de selección de archivo y actualiza el nombre del archivo seleccionado.
+   * @param evento Evento de cambio del input de archivo.
+   */
+  archivoSeleccionado(evento: Event): void {
+    const INPUT = evento.target as HTMLInputElement;
+    if (INPUT.files && INPUT.files.length > 0) {
+      this.nombreArchivoSeleccionado = INPUT.files[0].name;
+    } else {
+      this.nombreArchivoSeleccionado = '';
+    }
+  }
 }
