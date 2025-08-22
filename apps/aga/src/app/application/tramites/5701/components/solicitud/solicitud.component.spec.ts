@@ -261,4 +261,38 @@ describe('SolicitudComponent', () => {
             expect(component.certificacionesDisabled).toBe(true);
         });
     });
+
+    // Test for tipoOperacion reset when LDA/DD is unchecked
+    describe('LDA/DD Checkbox Reset', () => {
+        beforeEach(() => {
+            // Setup despacho form controls for testing
+            (component as any).despacho = mockFormBuilder.group({
+                lda: [false],
+                dd: [false],
+                tipoOperacion: ['1'], // Set initial value to test reset
+                tipoDespacho: ['1'],
+                rfcDespachoLDA: [''],
+                folioDDEX: ['']
+            });
+            
+            // Mock required properties
+            component.despachoSeleccionado = false;
+            (component as any).tramite5701Store = {
+                setLDA: jest.fn(),
+                setDD: jest.fn()
+            };
+        });
+
+        it('should reset tipoOperacion when unchecking LDA or DD', () => {
+            // Set tipoOperacion to a specific value
+            (component as any).despacho.get('tipoOperacion')?.setValue('importacion');
+            expect((component as any).despacho.get('tipoOperacion')?.value).toBe('importacion');
+
+            // Call the method that should reset tipoOperacion when unchecking
+            component.activaDesactivaCheckLDA_DDEX('lda');
+
+            // Verify tipoOperacion is reset to -1 (SIN_VALORES)
+            expect((component as any).despacho.get('tipoOperacion')?.value).toBe('-1');
+        });
+    });
 });
