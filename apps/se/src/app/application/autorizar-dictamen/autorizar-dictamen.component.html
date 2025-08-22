@@ -2,7 +2,7 @@
 @if(slectTramite) {
 <div class="container mt-2">
     <div>
-        <div *ngIf="!firmar">
+        <div *ngIf="isDictamen">
           
             <div class="row">
                 <div class="col-md-12 mt-3 mb-3">
@@ -14,12 +14,11 @@
                
                 <ng-container>
                    
-                    <app-generar-dictamen [isAntecedentes]="false" 
-                    [conformidad]="conformidadDictamen"
+                   <app-generar-dictamen [isAntecedentes]="false" 
                     [dataIniciarDictamen]="dataIniciarDictamen"
                     [opcionesSentidosDisponibles]="opcionesSentidosDispobles"
-                    (enviarEvento)="enviarEvento($event)">
-                    </app-generar-dictamen>
+                    [soloLectura]="true">
+                    </app-generar-dictamen> 
                    
                    
                
@@ -33,7 +32,7 @@
             </div>
 
         </div>
-        <div *ngIf="firmar">
+        <div *ngIf="isFirma">
             <div class="row">
                 <div class="col-md-12">
                     <h2 class="titulo mt-5 mb-5">Firmar</h2>

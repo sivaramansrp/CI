@@ -140,11 +140,13 @@
     </div>
     }
 
-    <div class="row mt-5 mb-5">
+    @if(!soloLectura){
+     <div class="row mt-5 mb-5">
         <div class="col-md-12 d-flex justify-content-end">
             <button type="button" class="btn btn-primary me-3" (click)="firmar()">Guardar y firmar</button>
             <button type="button" class="btn btn-primary me-3" (click)="guardar()">Guardar</button>
             <button type="button" class="btn btn-default me-3" (click)="cancelar()">Cancelar</button>
         </div>
-    </div>
+     </div>
+    }
 </form>
