@@ -1,5 +1,6 @@
 import { Component, NgZone } from '@angular/core';
 import { akitaDevtools } from '@datorama/akita';
+import { APP_VERSION } from '../../environments/version';
 
 @Component({
   selector: 'app-root',
@@ -8,6 +9,7 @@ import { akitaDevtools } from '@datorama/akita';
 })
 export class AppComponent {
   title = 'vucem-3.0-frontend';
+  appVersion = APP_VERSION; // <-- Add this property
 
   constructor(
     private ngZone: NgZone,
