@@ -23,7 +23,7 @@ export class HttpCoreService {
    * Constructor de la clase
    * @param http: Constructor de HttpClient
    */
-  constructor(public http: HttpClient) {
+  constructor(private http: HttpClient) {
     
   }
   /**
