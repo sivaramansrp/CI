@@ -48,7 +48,8 @@ import { TabsResponse } from '@libs/shared/data-access-user/src/core/models/1301
 
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { FirmarDictamenRequest } from '../core/models/evaluar/request/firmar-dictamen-request.model';
-import { FirmarDictamenService } from '../core/services/evaluar-tramite/FirmarDictamen.service';
+
+import { FirmarDictamenService } from '../core/services/evaluar-tramite/firmarDictamen.service';
 
 /**
  * @component
@@ -1306,7 +1307,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
         cert_serial_number: this.datosFirmaReales.certSerialNumber,
         clave_usuario: this.datosFirmaReales.rfc,
         fecha_firma: EvaluarComponent.formatFecha(new Date()),
-        clave_rol: this.guardarDatos.current_user,
+        clave_rol: 'Dictaminador',
         sello: FIRMAHEX,
       }
     };
@@ -1315,7 +1316,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         tap((firmaResponse: BaseResponse<null>) => {
-          if (firmaResponse.codigo !== '00' || !firmaResponse.datos) {
+          if (firmaResponse.codigo !== '00') {
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
               categoria: CategoriaMensaje.ERROR,
@@ -1326,9 +1327,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
               txtBtnAceptar: '',
               txtBtnCancelar: '',
             };
-            throw new Error('Firma no exitosa');
           }else if( firmaResponse.codigo === '00'){
-            this.router.navigate(['bandeja-de-tareas-pendientes']);
               this.nuevaNotificacion = {
                 tipoNotificacion: 'toastr',
                 categoria: CategoriaMensaje.EXITO,
@@ -1339,6 +1338,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
                 txtBtnAceptar: '',
                 txtBtnCancelar: '',
             }
+            this.router.navigate(['bandeja-de-tareas-pendientes']);
           }
 
         }),
