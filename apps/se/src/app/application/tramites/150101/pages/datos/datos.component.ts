@@ -3,6 +3,8 @@ import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-use
 import { Subject, map, takeUntil } from 'rxjs';
 
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import {DatosDeReporteAnnualComponent} from '../../components/datos-de-reporte-anual/datos-de-reporte-anual.component';
+import { ProgramasReporteAnnualComponent} from '../../components/programas-reporte-anual/programas-reporte-anual.component';
 import { Solicitud150101Store } from '../../estados/solicitud150101.store';
 import { SolicitudService } from '../../services/registro-solicitud-anual.service';
 
@@ -51,6 +53,17 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
    * Datos de respuesta del servidor utilizados para actualizar el formulario.
    */
   public esDatosRespuesta: boolean = false;
+  
+    /**
+     * Referencia al componente `CertificadoOrigenComponent`.
+     */
+    @ViewChild('datosDeComp', { static: false }) datosDeComp: DatosDeReporteAnnualComponent | undefined;
+  
+    /**
+     * Referencia al componente `CertificadoOrigenComponent`.
+     */
+    @ViewChild('programasDeComp', { static: false }) programasDeComp: ProgramasReporteAnnualComponent | undefined;
+  
 
   /**
    * Subject para notificar la destrucción del componente.
@@ -137,6 +150,44 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
       this.estaHabilitado = evento;
     }
   }
+  /**
+   * Valida todos los formularios del paso uno.
+   * 
+   * Este método valida principalmente el formulario de solicitante que es el único
+   * obligatorio. Los otros formularios solo se validan si están disponibles.
+   * 
+   * @returns {boolean} `true` si todos los formularios son válidos, `false` en caso contrario.
+   */
+  public validarTodosLosFormularios(): number {
+   
+    
+    if (this.indice >= 2 && this.datosDeComp && this.datosDeComp.formReporteAnnual) {
+      this.datosDeComp.formReporteAnnual.markAllAsTouched();
+      if((this.datosDeComp.formReporteAnnual.get('ventasTotales')?.value===''||this.datosDeComp.formReporteAnnual.get('ventasTotales')?.value===null) &&(this.datosDeComp.formReporteAnnual.get('totalExportaciones')?.value===null||this.datosDeComp.formReporteAnnual.get('totalExportaciones')?.value==='')){
+        return 1;
+      }
+      else if((this.datosDeComp.formReporteAnnual.get('ventasTotales')?.value===''||this.datosDeComp.formReporteAnnual.get('ventasTotales')?.value===null) &&this.datosDeComp.formReporteAnnual.get('totalExportaciones')?.value>=0){
+        this.datosDeComp.diferenciaTotal();
+        return 2;
+
+      }
+      else if(Number(this.datosDeComp.formReporteAnnual.get('ventasTotales')?.value) < Number(this.datosDeComp.formReporteAnnual.get('totalExportaciones')?.value)){
+       this.datosDeComp.diferenciaTotal();
+        return 3;
+      }
+      else if(this.datosDeComp.formReporteAnnual.get('ventasTotales')?.value>=0 && (this.datosDeComp.formReporteAnnual.get('totalExportaciones')?.value===null||this.datosDeComp.formReporteAnnual.get('totalExportaciones')?.value==='')){
+        return 4;
+      }
+     
+    }
+    else if(this.indice===2&& this.programasDeComp?.periodoReporteAnual.get('estatus')?.value!==''){
+      this.programasDeComp?.showAlert();
+      return 5;
+    }
+    return 0;
+  }
+  
+  
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
