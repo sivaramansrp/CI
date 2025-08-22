@@ -16,8 +16,8 @@ import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramit
 import { SolicitarDocumentosEvaluacionComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitar-documentos-evaluacion/solicitar-documentos-evaluacion.component';
 import { SolicitarOpinionComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitar-opinion/solicitar-opinion.component';
 
-import { CategoriaMensaje, ConsultaioQuery, ConsultaioState, ConsultaioStore, FECHA_DE_INICIO, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
-import { Subject, map, takeUntil } from 'rxjs';
+import { CategoriaMensaje, ConsultaioQuery, ConsultaioState, ConsultaioStore,FECHA_DE_INICIO, Notificacion, NotificacionesComponent, base64ToHex, encodeToISO88591Hex } from '@ng-mf/data-access-user';
+import { Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 import { LISTA_TRIMITES } from '../shared/constantes/lista-trimites.enums';
 
 import { AcusesResolucionResponse } from '@libs/shared/data-access-user/src/core/models/130118/consulta-acuses-response.model';
@@ -35,6 +35,7 @@ import { RequerimientosResponse } from '@libs/shared/data-access-user/src/core/m
 import { TabsSolicitudServiceTsService } from "../core/services/evaluar-tramite/tabs-solicitud.service.ts.service";
 import { TareasSolicitud } from "@libs/shared/data-access-user/src/core/models/130118/consulta-tareas-response.model";
 
+
 import { GuardarRequerimiento } from '../core/models/evaluar/request/guardar-requerimiento-request.model';
 import { GuardarRequerimientoService } from '../core/services/evaluar-tramite/guardarRequerimiento.service';
 import { IniciarDictamenResponse } from '@libs/shared/data-access-user/src/core/models/130118/iniciar-dictamen-response.model';
@@ -44,6 +45,10 @@ import { MostrarFirmarRequest } from '../core/models/evaluar/request/firmar-most
 import { MostrarFirmarResponse } from '../core/models/evaluar/response/mostrar-firmar-response.model';
 import { SentidosDisponiblesResponse } from '@libs/shared/data-access-user/src/core/models/130118/sentidos-disponibles.model';
 import { TabsResponse } from '@libs/shared/data-access-user/src/core/models/130118/consulta-tabs-response.model';
+
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
+import { FirmarDictamenRequest } from '../core/models/evaluar/request/firmar-dictamen-request.model';
+import { FirmarDictamenService } from '../core/services/evaluar-tramite/FirmarDictamen.service';
 
 /**
  * @component
@@ -236,10 +241,31 @@ export class EvaluarComponent implements OnInit, OnDestroy {
   yaCargoAcuses = false;
 
   /**
+  * Cadena original generada a partir de los datos del trámite.
+  * Esta cadena será firmada con el certificado digital y la llave privada proporcionados.
+  */
+  cadenaOriginal?: string;
+
+  /**
    * @property {boolean} yaCargoDictamenes
    * @description Indica si los dictamenes ya han sido cargados.
    */
   yaCargoDictamenes = false;
+
+  /**
+* Objeto que contiene los datos reales de la firma electrónica generada después del proceso de firma.
+* Incluye:
+* - firma: Cadena de la firma generada (en base64).
+* - certSerialNumber: Número de serie del certificado digital.
+* - rfc: RFC extraído del certificado.
+* - fechaFin: Fecha de vencimiento del certificado.
+*/
+  datosFirmaReales!: {
+    firma: string;
+    certSerialNumber: string;
+    rfc: string;
+    fechaFin: string;
+  };
 
   /**
    * @property {boolean} yaCaegoRequerimientos
@@ -290,7 +316,8 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     private tabsSolicitudServiceTsService: TabsSolicitudServiceTsService,
     private iniciarService: IniciarService,
     private guardarService: GuardarDictamenService,
-    private guardarRequerimientoService: GuardarRequerimientoService
+    private guardarRequerimientoService: GuardarRequerimientoService,
+    private firmarDictamenService: FirmarDictamenService
   ) {
 
     this.consultaioQuery.selectConsultaioState$
@@ -1155,6 +1182,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
         next: (resp) => {
           if (resp.codigo === '00') {
             this.mostrarFirmarData = resp.datos ?? {} as MostrarFirmarResponse;
+            this.cadenaOriginal = resp.datos?.cadena_original;
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
             this.nuevaNotificacion = {
@@ -1230,12 +1258,124 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     * @param {string} ev - Cadena que representa la firma obtenida.
     * @returns {void}
     */
-  obtieneFirma(ev: string): void {
-    const FIRMA: string = ev;
-    if (FIRMA) {
-      this.router.navigate(['bandeja-de-tareas-pendientes']);
-    }
+  obtieneFirma(datos: {
+    firma: string;
+    certSerialNumber: string;
+    rfc: string;
+    fechaFin: string;
+  }): void {
+    this.datosFirmaReales = datos;
+    this.firmaDictamen(datos.firma);
   }
+
+  /**
+   * @method firmaDictamen
+   * @description Firma el dictamen con los datos proporcionados.
+   * 
+   * Convierte la cadena original y la firma a formato hexadecimal, prepara el payload
+   * y envía una solicitud al servicio `FirmarDictamenService` para completar la firma.
+   * Maneja la respuesta y muestra notificaciones según el resultado de la operación.
+   * 
+   * @param {string} firma - Firma en base64 a ser procesada.
+   * @returns {void}
+   */
+  firmaDictamen(firma: string): void {
+    if (!this.cadenaOriginal || !this.datosFirmaReales) {
+      console.error('Faltan datos para completar la firma');
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'toastr',
+        categoria: CategoriaMensaje.ERROR,
+        modo: 'action',
+        titulo: 'Error',
+        mensaje: 'Faltan datos para completar la firma.',
+        cerrar: false,
+        txtBtnAceptar: '',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    const CADENAHEX = encodeToISO88591Hex(this.cadenaOriginal);
+    const FIRMAHEX = base64ToHex(firma);
+    const NUMFOLIO = this.guardarDatos.folioTramite;
+
+    const PAYLOAD: FirmarDictamenRequest = {
+      id_accion: this.guardarDatos.action_id,
+      firma: {
+        cadena_original: CADENAHEX,
+        cert_serial_number: this.datosFirmaReales.certSerialNumber,
+        clave_usuario: this.datosFirmaReales.rfc,
+        fecha_firma: EvaluarComponent.formatFecha(new Date()),
+        clave_rol: this.guardarDatos.current_user,
+        sello: FIRMAHEX,
+      }
+    };
+
+    this.firmarDictamenService.postGuadarDictamen(this.tramite,NUMFOLIO, PAYLOAD)
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        tap((firmaResponse: BaseResponse<null>) => {
+          if (firmaResponse.codigo !== '00' || !firmaResponse.datos) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: 'Error al firmar la solicitud',
+              mensaje: firmaResponse.mensaje || firmaResponse.error || 'Ocurrió un error al procesar la firma.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+            throw new Error('Firma no exitosa');
+          }else if( firmaResponse.codigo === '00'){
+            this.router.navigate(['bandeja-de-tareas-pendientes']);
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'toastr',
+                categoria: CategoriaMensaje.EXITO,
+                modo: 'action',
+                titulo: 'Firma exitosa',
+                mensaje: 'La firma del dictamen se ha realizado correctamente.',
+                cerrar: false,
+                txtBtnAceptar: '',
+                txtBtnCancelar: '',
+            }
+          }
+
+        }),
+        catchError((error) => {
+          console.error('Error en el proceso de firma:', error);
+          if (!this.nuevaNotificacion) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: 'Error inesperado',
+              mensaje: error?.error.error || 'Ocurrió un error al procesar la firma.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
+
+  static formatFecha(fecha: string | Date): string {
+    const DATE_OBJ = new Date(fecha);
+    const PAD = (n: number): string => n.toString().padStart(2, '0');
+
+    const YYYY = DATE_OBJ.getFullYear();
+    const MM = PAD(DATE_OBJ.getMonth() + 1);
+    const DD = PAD(DATE_OBJ.getDate());
+    const HH = PAD(DATE_OBJ.getHours());
+    const MM_MINUTES = PAD(DATE_OBJ.getMinutes());
+    const SS = PAD(DATE_OBJ.getSeconds());
+
+    return `${YYYY}-${MM}-${DD} ${HH}:${MM_MINUTES}:${SS}`;
+  }
+
   /**
    * @method cancelar
    * @description Método para restablecer los índices de las pestañas principales y de dictamen.

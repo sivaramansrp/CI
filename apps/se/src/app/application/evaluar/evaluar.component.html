@@ -16,18 +16,18 @@
             </div>
             <div class="row margin-top">
                 <ul class="nav nav-tabs justify-content-center">
-                    <li *ngIf="tieneOpcion('GENERAR_DICTAMEN')" [ngClass]="indice === 1 ? 'active' : ''">
+                    <li *ngIf="tieneOpcion('Generar un dictamen')" [ngClass]="indice === 1 ? 'active' : ''">
                         <a data-toggle="tab" (click)="seleccionaTab(1)" (keydown.enter)="seleccionaTab(1)"
                             (keydown.space)="seleccionaTab(1)" role="button" tabindex="0">Dictamen</a>
                     </li>
 
-                    <li *ngIf="tieneOpcion('GENERAR_REQUERIMIENTO')" [ngClass]="indice === 2 ? 'active' : ''">
+                    <li *ngIf="tieneOpcion('Generar requerimiento de información')" [ngClass]="indice === 2 ? 'active' : ''">
                         <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)"
                             (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">Requerimiento de
                             información</a>
                     </li>
 
-                    <li *ngIf="tieneOpcion('SOLICITAR_OPINION')" [ngClass]="indice === 3 ? 'active' : ''">
+                    <li *ngIf="tieneOpcion('Solicitar opinión')" [ngClass]="indice === 3 ? 'active' : ''">
                         <a data-toggle="tab" (click)="seleccionaTab(3)" (keydown.enter)="seleccionaTab(3)"
                             (keydown.space)="seleccionaTab(3)" role="button" tabindex="3">Solicitar opinión</a>
                     </li>
@@ -98,7 +98,8 @@
             </div>
             <div class="row justify-content-center">
                 <div class="col-md-6">
-                    <firma-electronica tipo="" (firma)="obtieneFirma($event)"></firma-electronica>
+                    <firma-electronica [tipo]="''" [cadenaOriginal]="cadenaOriginal"
+                        (datosFirma)="obtieneFirma($event)"></firma-electronica>
                 </div>
             </div>
         </div>

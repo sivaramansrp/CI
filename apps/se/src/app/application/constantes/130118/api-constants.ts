@@ -2,7 +2,7 @@
  * Tramite que se utilizará en las consultas.
  * Este valor debe ser reemplazado por el tramite correspondiente.
  */
-export const TRAMITE= '{tramite}';
+export const TRAMITE = '{tramite}';
 
 /**
  * API para guardar la solicitud del tramite 130118.
@@ -50,7 +50,7 @@ export const CVEFRACCION = '{cveFraccion}';
 /**
  * API para obtener los molinos de acero habilitados.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/habilitar-molino-acero
- */ 
+ */
 export const API_GET_MOLINOS_ACERO_HABILITAR = `sat-t130118/fraccion-arancelaria/${CVEFRACCION}/molinos-acero/habilitar`;
 
 /**
@@ -190,3 +190,9 @@ export const API_GET_SENTIDOS_DISPONIBLES = `sat-t${TRAMITE}/catalogo/sentidos-d
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Dictamen/mostra-firmar-dictamen
  */
 export const API_POST_MOSTRAR_FIRMAR = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/dictamen/generar/mostrar-firmar`;
+
+/**
+ * API firmar
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Requerimiento/firmar_1
+ */
+export const API_POST_FIRMAR_DICTAMEN = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/dictamen/generar/firmar`;
