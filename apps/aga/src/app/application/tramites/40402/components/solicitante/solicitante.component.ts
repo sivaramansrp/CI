@@ -30,6 +30,7 @@ export class SolicitanteComponent implements OnInit,OnDestroy {
   /**
    * Constructor para inyectar las dependencias necesarias.
    * @param fb - Servicio FormBuilder para crear formularios reactivos.
+   * @param cdr - ChangeDetectorRef para detectar cambios en la vista.
    */
   constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef) { }
 
@@ -104,6 +105,14 @@ export class SolicitanteComponent implements OnInit,OnDestroy {
   this.cdr.detectChanges();
   }
 
+  /**
+   * Método que se ejecuta al destruir el componente.
+   *
+   * Limpia y reinicia el formulario de solicitud para evitar retención de datos en memoria.
+   * Es útil para liberar recursos y asegurar que el formulario no conserve valores previos al destruir el componente.
+   *
+   * @returns {void}
+   */
   ngOnDestroy(): void {
     if (this.solicitudForm) {
       this.solicitudForm.reset();

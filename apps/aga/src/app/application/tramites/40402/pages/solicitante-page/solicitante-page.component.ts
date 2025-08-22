@@ -167,9 +167,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    */
 getValorIndice(e: AccionBoton): void {
   this.esFormaValido = false;
-  // Always validate datos-tramite before moving to paso 2
   if (e.accion === 'cont' && e.valor === 1) {
-    // Trying to move to paso 2
     const ES_VALIDO = this.pasoUnoComponent ? this.pasoUnoComponent.validarFormularios() : true;
     if (!ES_VALIDO) {
       this.nuevaNotificacion = {
@@ -196,7 +194,7 @@ getValorIndice(e: AccionBoton): void {
     }
     return;
   }
-  // ...existing code for other navigation...
+
   if (this.indice !== 1) {
     let INDICE_ACTUALIZADO = e.valor;
     if (e.accion === 'cont') {

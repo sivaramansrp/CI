@@ -118,6 +118,14 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
   public grupoFormularioUno: FormGroup = new FormGroup({
     campoUno: new FormControl('', Validators.required)
   });
+  /**
+   * Grupo de formulario para la segunda pestaña del asistente.
+   *
+   * Contiene el campo:
+   * - campoDos: Campo requerido para la segunda sección del formulario.
+   *
+   * @type {FormGroup}
+   */
   public grupoFormularioDos: FormGroup = new FormGroup({    
     campoDos: new FormControl('', Validators.required)
   });

@@ -46,7 +46,7 @@
                 @if (personaMoralExtranjeraForm.get('correoPME')?.hasError('required') && personaMoralExtranjeraForm.get('correoPME')?.touched) {
                   <div class="mensaje-error">Este campo es obligatorio.</div>
                 }
-                @if (personaMoralExtranjeraForm.get('correoPME')?.hasError('email') && personaMoralExtranjeraForm.get('correoPME')?.touched) {
+                @if (personaMoralExtranjeraForm.get('correoPME')?.hasError('pattern') && personaMoralExtranjeraForm.get('correoPME')?.touched) {
                   <div class="mensaje-error">Por favor, escribe una dirección de correo válida.</div>
                 }
               </div>

@@ -74,14 +74,16 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Constructor del componente
-   * 
-   * @param fb - Constructor de formularios reactivos
-   * @param tramite40402Service - Servicio para operaciones de trámite
-   * @param consultaioQuery - Consulta de estado de trámite
-   * @param tramite40402Query - Consulta de estado específico
-   * @param store - Almacenamiento de estado del trámite
-   * @param cdr - ChangeDetectorRef para detectar cambios
+   * Constructor del componente DatosTramiteComponent.
+   * Inicializa las dependencias necesarias para la gestión y validación de los datos del trámite.
+   *
+   * @param datosTramiteService Servicio compartido para la gestión del formulario de datos del trámite.
+   * @param fb Constructor de formularios reactivos.
+   * @param tramite40402Service Servicio para operaciones específicas del trámite 40402.
+   * @param consultaioQuery Consulta de estado global del trámite.
+   * @param tramite40402Query Consulta de estado específico del trámite 40402.
+   * @param store Almacenamiento y gestión de estado del trámite.
+   * @param cdr ChangeDetectorRef para la detección y actualización de cambios en la vista.
    */
   constructor(
     private datosTramiteService: DatosTramiteService,

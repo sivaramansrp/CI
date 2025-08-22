@@ -49,12 +49,12 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
 })
 export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   /**
-   * Helper to get description from catalog by id or description value.
+   * Ayuda para obtener una descripción del catálogo por identificación o valor de descripción.
    */
-  obtenerDescripcion(catalog: Catalogo[] | undefined, value: string | number): string {
+  static obtenerDescripcion(catalog: Catalogo[] | undefined, value: string | number): string {
     if (!catalog) { return value as string; }
-    const found = catalog.find(item => item.id === value || item.id === Number(value) || item.descripcion === value);
-    return found ? found.descripcion : value as string;
+    const FOUND = catalog.find(item => item.id === value || item.id === Number(value) || item.descripcion === value);
+    return FOUND ? FOUND.descripcion : value as string;
   }
 
   /**
@@ -1079,13 +1079,13 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
       orden: idx,
       clave: (row: TableBodyData) => {
         if (encabezado.toLowerCase().includes('condición')) {
-          return this.obtenerDescripcion(this.condicionMercancia, row.tbodyData?.[idx]);
+          return ExencionImpuestosComponent.obtenerDescripcion(this.condicionMercancia, row.tbodyData?.[idx]);
         }
         if (encabezado.toLowerCase().includes('unidad')) {
-          return this.obtenerDescripcion(this.unidadMedida, row.tbodyData?.[idx]);
+          return ExencionImpuestosComponent.obtenerDescripcion(this.unidadMedida, row.tbodyData?.[idx]);
         }
         if (encabezado.toLowerCase().includes('año') || encabezado.toLowerCase().includes('ano')) {
-          return this.obtenerDescripcion(this.ano, row.tbodyData?.[idx]);
+          return ExencionImpuestosComponent.obtenerDescripcion(this.ano, row.tbodyData?.[idx]);
         }
         return row.tbodyData?.[idx] ?? '';
       }

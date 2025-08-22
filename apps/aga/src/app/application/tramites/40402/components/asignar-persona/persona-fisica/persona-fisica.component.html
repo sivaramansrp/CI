@@ -80,7 +80,7 @@
                 @if (personaFisicaExtranjeraForm.get('correoPFE')?.errors?.['required'] && personaFisicaExtranjeraForm.get('correoPFE')?.touched) {
                   <div class="mensaje-error">Este campo es obligatorio.</div>
                 }
-                @if (personaFisicaExtranjeraForm.get('correoPFE')?.errors?.['email'] && personaFisicaExtranjeraForm.get('correoPFE')?.touched) {
+                @if (personaFisicaExtranjeraForm.get('correoPFE')?.errors?.['pattern'] && personaFisicaExtranjeraForm.get('correoPFE')?.touched) {
                   <div class="mensaje-error">Por favor, escribe una dirección de correo válida.</div>
                 }
               </div>

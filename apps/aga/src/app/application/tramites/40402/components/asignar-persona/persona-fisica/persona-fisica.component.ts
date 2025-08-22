@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { CommonModule } from '@angular/common';
 
 import {
@@ -27,6 +26,7 @@ import {
   CatalogoSelectComponent,
   Notificacion,
   NotificacionesComponent,
+  REGEX_CORREO_ELECTRONICO,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent
@@ -274,7 +274,7 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
         [
           Validators.required,
           Validators.maxLength(320),
-          Validators.email
+          Validators.pattern(REGEX_CORREO_ELECTRONICO)
         ]
       ],
       paisPFE: [

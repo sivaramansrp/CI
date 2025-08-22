@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, Notificacion, NotificacionesComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, Notificacion, NotificacionesComponent, REGEX_CORREO_ELECTRONICO, TablaSeleccion } from '@ng-mf/data-access-user';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -209,7 +209,7 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
         [
           Validators.required,
           Validators.maxLength(320),
-          Validators.email
+          Validators.pattern(REGEX_CORREO_ELECTRONICO)
         ]
       ],
       paisPME: [
