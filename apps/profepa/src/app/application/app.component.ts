@@ -1,6 +1,6 @@
 import { Component, NgZone } from '@angular/core';
 import { akitaDevtools } from '@datorama/akita';
-import { APP_VERSION } from '../../environments/version';
+import { APP_VERSION } from 'src/environments/version';
 
 @Component({
   selector: 'app-root',
