@@ -1,20 +1,16 @@
 import { AccuseComponentes, ListaComponentes, Tabulaciones } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
 import { Component, OnDestroy, OnInit, Type } from "@angular/core";
-import { CapturarRequerimientoComponent } from '@libs/shared/data-access-user/src/tramites/components/capturar-requerimiento/capturar-requerimiento.component';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from "@angular/common";
 import { Router } from '@angular/router';
-import { SolicitudRequerimientosState } from '@libs/shared/data-access-user/src/core/estados/requerimientos.store';
 
-import { SolicitudRequerimientoQuery } from '@libs/shared/data-access-user/src/core/queries/requerimientos.query';
 
 import { EncabezadoRequerimientoComponent } from '@libs/shared/data-access-user/src/tramites/components/encabezado-requerimiento/encabezado-requerimiento.component';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src/tramites/components/firma-electronica/firma-electronica.component';
 import { GenerarDictamenComponent } from '@libs/shared/data-access-user/src/tramites/components/generar-dictamen/generar-dictamen.component';
 import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramites/components/reviewers-tabs/reviewers-tabs.component';
-import { SolicitarDocumentosEvaluacionComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitar-documentos-evaluacion/solicitar-documentos-evaluacion.component';
-import { SolicitarOpinionComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitar-opinion/solicitar-opinion.component';
+
 
 import { CategoriaMensaje, ConsultaioQuery, ConsultaioState, ConsultaioStore, FECHA_DE_INICIO, Notificacion, NotificacionesComponent, base64ToHex, encodeToISO88591Hex } from '@ng-mf/data-access-user';
 import { Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
@@ -24,31 +20,25 @@ import { AcusesResolucionResponse } from '@libs/shared/data-access-user/src/core
 import { DictamenesResponse } from '@libs/shared/data-access-user/src/core/models/130118/dictamenes-response.model';
 import { DocumentoSolicitud } from "@libs/shared/data-access-user/src/core/models/130118/consulta-documentos-response.model";
 import { EnvioDigitalResponse } from '@libs/shared/data-access-user/src/core/models/130118/envio-digital-response.model';
-import { EvaluacionOpcionResponse } from '../core/models/evaluar/response/evaluar-estado-evaluacion-response.model';
-import { EvaluarSolicitudService } from '../core/services/evaluar-tramite/evaluar-solicitud.service';
-import { GuardarDictamenRequest } from '../core/models/evaluar/request/guardar-dictamen-request.model';
 import { GuardarDictamenService } from '../core/services/evaluar-tramite/guardar-dictamen.service';
-import { IniciarService } from '../core/services/evaluar-tramite/iniciar.service';
-import { OpcionesEvaluacionRequest } from '../core/models/evaluar/request/opciones-evaluacion.model';
 import { OpinionResponse } from '@libs/shared/data-access-user/src/core/models/130118/opinion-response.model';
 import { RequerimientosResponse } from '@libs/shared/data-access-user/src/core/models/130118/requerimientos-response.model';
 import { TabsSolicitudServiceTsService } from "../core/services/evaluar-tramite/tabs-solicitud.service.ts.service";
 import { TareasSolicitud } from "@libs/shared/data-access-user/src/core/models/130118/consulta-tareas-response.model";
 
 
-import { GuardarRequerimiento } from '../core/models/evaluar/request/guardar-requerimiento-request.model';
-import { GuardarRequerimientoService } from '../core/services/evaluar-tramite/guardarRequerimiento.service';
-import { IniciarDictamenResponse } from '@libs/shared/data-access-user/src/core/models/130118/iniciar-dictamen-response.model';
-import { IniciarRequerimientoRequest } from '../core/models/evaluar/request/iniciar-requerimiento-request.model';
-import { IniciarRequerimientoResponse } from '@libs/shared/data-access-user/src/core/models/130118/Iniciar-requerimiento-response.model';
-import { MostrarFirmarRequest } from '../core/models/evaluar/request/firmar-mostrar-dictamen.request.model';
-import { MostrarFirmarResponse } from '../core/models/evaluar/response/mostrar-firmar-response.model';
+
 import { SentidosDisponiblesResponse } from '@libs/shared/data-access-user/src/core/models/130118/sentidos-disponibles.model';
 import { TabsResponse } from '@libs/shared/data-access-user/src/core/models/130118/consulta-tabs-response.model';
 
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
-import { FirmarDictamenRequest } from '../core/models/evaluar/request/firmar-dictamen-request.model';
-import { FirmarDictamenService } from '../core/services/evaluar-tramite/FirmarDictamen.service';
+
+import { AutorizarDictamenService } from '../core/services/autorizar-dictamen/autorizar-dictamen.service';
+import { IniciarAutorizacionResponse } from '@libs/shared/data-access-user/src/core/models/130118/iniciar-autorizar-dictamen-response.model';
+
+import { FirmaAutorizarDictamenRequest } from '../core/models/autorizar-requerimiento/request/firma-autorizar-request.model';
+import { MostrarFirmaRequest } from '../core/models/autorizar-requerimiento/request/mostrar-firmar-request.model';
+import { MostrarFirmarResponse } from '../core/models/autorizar-requerimiento/response/mostrar-firmar-response.model';
 
 @Component({
   selector: 'app-autorizar-dictamen',
@@ -63,13 +53,14 @@ import { FirmarDictamenService } from '../core/services/evaluar-tramite/FirmarDi
   styleUrl: './autorizar-dictamen.component.scss',
 })
 export class AutorizarDictamenComponent implements OnInit, OnDestroy {
-/** Datos del dictamen a generar */
-  dataIniciarDictamen!: IniciarDictamenResponse;
+
   /**
-   * @property {SolicitudRequerimientosState} requerimientoState
-   * @description Estado actual de los requerimientos asociados al trámite.
+   * @property {IniciarAutorizacionResponse} dataAutorizarDictamen
+   * @description Datos obtenidos al iniciar el dictamen de autorización.
    */
-  public requerimientoState!: SolicitudRequerimientosState;
+  dataAutorizarDictamen!: IniciarAutorizacionResponse;
+
+
   /**
     * @property {AccuseComponentes | undefined} slectTramite
     * @description Objeto que representa el trámite seleccionado actualmente.
@@ -121,6 +112,15 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
   * @private
   */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /** Response del servicio de firmar mostrar */
+  mostrarFirmarData!: MostrarFirmarResponse;
+
+  /**
+ * @property {string} conformidadDictamen
+ * @description Texto que representa la conformidad del dictamen, utilizado en el formulario de generación de dictamen.
+ */
+  conformidadDictamen: string = '';
 
   /**
  * Cadena original generada a partir de los datos del trámite.
@@ -179,10 +179,10 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
    */
   acusesResolucion!: AcusesResolucionResponse;
 
-    /**
-   * @property {boolean} yaCargoDocumentos
-   * @description Indica si los documentos de la solicitud ya han sido cargados.
-   */
+  /**
+ * @property {boolean} yaCargoDocumentos
+ * @description Indica si los documentos de la solicitud ya han sido cargados.
+ */
   yaCargoDocumentos = false;
 
   /**
@@ -197,10 +197,10 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
    */
   yaCargoAcuses = false;
 
-    /**
-   * @property {boolean} yaCargoDictamenes
-   * @description Indica si los dictamenes ya han sido cargados.
-   */
+  /**
+ * @property {boolean} yaCargoDictamenes
+ * @description Indica si los dictamenes ya han sido cargados.
+ */
   yaCargoDictamenes = false;
 
   /**
@@ -241,16 +241,12 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
   constructor(private router: Router,
     private consultaioStore: ConsultaioStore,
     private consultaioQuery: ConsultaioQuery,
-    private solicitudRequerimientoQuery: SolicitudRequerimientoQuery,
-    private evaluarSolicitudService: EvaluarSolicitudService,
     private tabsSolicitudServiceTsService: TabsSolicitudServiceTsService,
-    private iniciarService: IniciarService,
     private guardarService: GuardarDictamenService,
-    private guardarRequerimientoService: GuardarRequerimientoService,
-    private firmarDictamenService: FirmarDictamenService
+    private autorizarDictamenService: AutorizarDictamenService
   ) {
 
-     this.consultaioQuery.selectConsultaioState$
+    this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -258,15 +254,6 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe()
-    this.solicitudRequerimientoQuery.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.requerimientoState = seccionState;
-          this.deshabilitarSolicitarDocumentos = !seccionState.activarTabSolicitarDocumentos;
-        })
-      )
-      .subscribe();
     this.tramite = Number(this.guardarDatos?.procedureId);
     this.consultaioStore.solicitanteConsultaio({
       folioDelTramite: this.guardarDatos?.folioTramite,
@@ -292,7 +279,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
     } else {
       this.router.navigate([`/${this.guardarDatos?.department.toLowerCase()}/seleccion-tramite`]);
     }
-
+    this.iniciarDictamenAutorizar();
     this.getSentidosDisponibles();
     this.getTabs();
   }
@@ -325,7 +312,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
     fechaFin: string;
   }): void {
     this.datosFirmaReales = datos;
-    this.firmaDictamen(datos.firma);
+    this.firmaAutorizarDictamen(datos.firma);
   }
 
   static formatFecha(fecha: string | Date): string {
@@ -392,14 +379,14 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
       });
   }
 
-    /**
-   * @method ngOnDestroy
-   * @description Método del ciclo de vida que se ejecuta al destruir el componente.
-   * 
-   * Cancela todas las suscripciones activas para evitar fugas de memoria.
-   * 
-   * @returns {void}
-   */
+  /**
+ * @method ngOnDestroy
+ * @description Método del ciclo de vida que se ejecuta al destruir el componente.
+ * 
+ * Cancela todas las suscripciones activas para evitar fugas de memoria.
+ * 
+ * @returns {void}
+ */
   onTabSeleccionado(indice: number): void {
     if (indice === 1 && !this.yaCargoDocumentos) {
       this.yaCargoDocumentos = true;
@@ -777,6 +764,68 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
       });
   }
 
+
+/**
+ * * @method firmarMostrarAutorizarDictamen
+ * * @description Prepara y envía una solicitud para mostrar la interfaz de firma electrónica
+ * * para autorizar un dictamen.
+ */
+  firmarMostrarAutorizarDictamen(): void {
+
+    const PAYLOAD: MostrarFirmaRequest = {
+      id_accion: this.guardarDatos.action_id,
+      cve_usuario: this.guardarDatos.current_user,
+      id_dictamen: this.dataAutorizarDictamen.id_dictamen,
+      usuario_perfil: {
+        rfc: this.guardarDatos.current_user,
+        nombre: 'PRUEBA',
+        apellido_paterno: 'PRUEBA',
+        apellido_materno: 'PRUEBA'
+      },
+    };
+
+    this.autorizarDictamenService.postFirmarMostrar(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
+      .subscribe({
+        next: (resp) => {
+          if (resp.codigo === '00') {
+            this.mostrarFirmarData = resp.datos ?? {} as MostrarFirmarResponse;
+            this.cadenaOriginal = resp.datos?.cadena_original;
+            this.isDictamen = false;
+            this.isFirma = true;
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: resp.error || 'Error preparar tramite.',
+              mensaje:
+                resp.causa ||
+                resp.mensaje ||
+                resp.error ||
+                'Error en preparar tramite.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+        },
+        error: (err) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: '',
+            mensaje: err?.error?.error || 'Error preparar tramite.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      });
+  }
+
   /**
      * @method firmaDictamen
      * @description Firma el dictamen con los datos proporcionados.
@@ -788,7 +837,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
      * @param {string} firma - Firma en base64 a ser procesada.
      * @returns {void}
      */
-  firmaDictamen(firma: string): void {
+  firmaAutorizarDictamen(firma: string): void {
     if (!this.cadenaOriginal || !this.datosFirmaReales) {
       console.error('Faltan datos para completar la firma');
       this.nuevaNotificacion = {
@@ -808,19 +857,23 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
     const FIRMAHEX = base64ToHex(firma);
     const NUMFOLIO = this.guardarDatos.folioTramite;
 
-    const PAYLOAD: FirmarDictamenRequest = {
+    const PAYLOAD: FirmaAutorizarDictamenRequest = {
       id_accion: this.guardarDatos.action_id,
       firma: {
+        id_solicitud: Number(this.guardarDatos.id_solicitud),
         cadena_original: CADENAHEX,
         cert_serial_number: this.datosFirmaReales.certSerialNumber,
         clave_usuario: this.datosFirmaReales.rfc,
         fecha_firma: AutorizarDictamenComponent.formatFecha(new Date()),
-        clave_rol: this.guardarDatos.current_user,
+        clave_rol: 'Dictaminador',
         sello: FIRMAHEX,
+        fecha_fin_vigencia: AutorizarDictamenComponent.formatFecha(this.datosFirmaReales.fechaFin),
+        documentos_requeridos: []
       }
     };
 
-    this.firmarDictamenService.postGuadarDictamen(this.tramite, NUMFOLIO, PAYLOAD)
+
+    this.autorizarDictamenService.firmarAutorizar(this.tramite, NUMFOLIO, PAYLOAD)
       .pipe(
         takeUntil(this.destroyNotifier$),
         tap((firmaResponse: BaseResponse<null>) => {
@@ -835,9 +888,8 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
               txtBtnAceptar: '',
               txtBtnCancelar: '',
             };
-            throw new Error('Firma no exitosa');
+
           } else if (firmaResponse.codigo === '00') {
-            this.router.navigate(['bandeja-de-tareas-pendientes']);
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
               categoria: CategoriaMensaje.EXITO,
@@ -848,6 +900,9 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
               txtBtnAceptar: '',
               txtBtnCancelar: '',
             }
+            this.isDictamen = false;
+            this.isFirma = false;
+            this.isAcuse = true;
           }
 
         }),
@@ -888,6 +943,26 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
   }
 
   /**
+ * @method iniciarRequerimiento
+ * @description Inicia el requerimiento del trámite 130118.
+ * 
+ * Llama al servicio `IniciarService` para iniciar el requerimiento con un número de folio predefinido.
+ * Muestra un mensaje en la consola si el requerimiento se inicia correctamente o si ocurre un error.
+ * 
+ * @returns {void}
+ */
+  obtenerCriterios(): void {
+    this.guardarService.getCriterios(this.tramite, this.guardarDatos.id_solicitud).subscribe({
+      next: (resp) => {
+        this.conformidadDictamen = resp.datos ?? '';
+      },
+      error: (err) => {
+        console.error('Error al obtener criterios:', err);
+      }
+    });
+  }
+
+  /**
    * @method iniciarDictamen
    * @description Inicia el dictamen del trámite 130118.
    * 
@@ -896,16 +971,13 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
    * 
    * @returns {void}
    */
-  iniciarDictamen(): void {
-    const PAYLOAD: IniciarRequerimientoRequest = {
-      cve_usuario: this.guardarDatos.current_user,
-      id_accion: this.guardarDatos.action_id
-    };
+  iniciarDictamenAutorizar(): void {
 
-    this.iniciarService.postIniciarDictamen(this.tramite, this.guardarDatos.folioTramite, PAYLOAD).subscribe({
+    this.autorizarDictamenService.getIniciarDictamen(this.tramite, this.guardarDatos.folioTramite).subscribe({
       next: (resp) => {
         if (resp.codigo === '00') {
-          this.dataIniciarDictamen = resp.datos ?? {} as IniciarDictamenResponse;
+          this.dataAutorizarDictamen = resp.datos ?? {} as IniciarAutorizacionResponse;
+          this.obtenerCriterios()
         }
 
       },
@@ -914,6 +986,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
       }
     });
   }
+
   /**
      * @method loadComponent
      * @description Carga dinámicamente un componente hijo según la ruta especificada en el objeto recibido.

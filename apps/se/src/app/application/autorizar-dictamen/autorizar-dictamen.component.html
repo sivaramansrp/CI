@@ -1,9 +1,8 @@
-
 @if(slectTramite) {
 <div class="container mt-2">
     <div>
         <div *ngIf="isDictamen">
-          
+
             <div class="row">
                 <div class="col-md-12 mt-3 mb-3">
                     <lib-encabezado-requerimiento [numFolioTramite]="guardarDatos.folioTramite"
@@ -11,23 +10,21 @@
                 </div>
             </div>
             <div class="row margin-top">
-               
+
                 <ng-container>
-                   
-                   <app-generar-dictamen [isAntecedentes]="false" 
-                    [dataIniciarDictamen]="dataIniciarDictamen"
-                    [opcionesSentidosDisponibles]="opcionesSentidosDispobles"
-                    [soloLectura]="true">
-                    </app-generar-dictamen> 
-                   
-                   
-               
+
+                    <app-generar-dictamen [isAntecedentes]="false" 
+                    [dataIniciarDictamenAutorizar]="dataAutorizarDictamen"
+                    [conformidad]="conformidadDictamen"
+                    [opcionesSentidosDisponibles]="opcionesSentidosDispobles" [soloLectura]="true"
+                        >
+                    </app-generar-dictamen>
+
                     <div class="d-flex justify-content-lg-end h3">
-                        <button class="btn  btn-primary ms-2" type="button" >Autorizar</button>
-                        <button type="button" class="btn btn-default ms-2" >Observar</button>
+                        <button class="btn  btn-primary ms-2" type="button" (click)="firmarMostrarAutorizarDictamen()">Autorizar</button>
+                        <button type="button" class="btn btn-default ms-2">Observar</button>
                     </div>
-                    
-                   
+
                 </ng-container>
             </div>
 
@@ -47,9 +44,9 @@
         </div>
 
         <div class="row mb-5 mt-5">
-            <app-reviewers-tabs [viewChild]="viewChild" [tramite]="tramite" [tabs]="tabs" [documentos]="documentosSolicitud"
-                [tareasSolicitud]="tareasSolicitud" [dictamenes]="dictamenesSolicitud"
-                [envioDigital]="envioDigital" [opinion]="opinion"
+            <app-reviewers-tabs [viewChild]="viewChild" [tramite]="tramite" [tabs]="tabs"
+                [documentos]="documentosSolicitud" [tareasSolicitud]="tareasSolicitud"
+                [dictamenes]="dictamenesSolicitud" [envioDigital]="envioDigital" [opinion]="opinion"
                 [requerimientos]="requerimientosSolicitud" [acusesResolucion]="acusesResolucion"
                 (viewChildcambioDePestana)="viewChildcambioDePestana($event)"
                 (tabSeleccionado)="onTabSeleccionado($event)">
@@ -60,7 +57,7 @@
 }
 @if(nuevaNotificacion) {
 <section>
-  <lib-notificaciones [notificacionInput]="nuevaNotificacion">
-  </lib-notificaciones>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+    </lib-notificaciones>
 </section>
 }

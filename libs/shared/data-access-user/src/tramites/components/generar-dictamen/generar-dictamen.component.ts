@@ -7,6 +7,8 @@ import { IniciarDictamenResponse } from "../../../core/models/130118/iniciar-dic
 import { SentidosDisponiblesResponse } from "../../../core/models/130118/sentidos-disponibles.model";
 import { ValidacionesFormularioService } from "../../../core/services/shared/validaciones-formulario/validaciones-formulario.service";
 
+import { IniciarAutorizacionResponse } from "../../../core/models/130118/iniciar-autorizar-dictamen-response.model";
+
 
 
 /**
@@ -76,6 +78,13 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
    * Debe ser proporcionado por el componente padre.
    */
   @Input() dataIniciarDictamen!: IniciarDictamenResponse;
+
+  /**
+   * @property {IniciarAutorizacionResponse} dataIniciarDictamenAutorizar
+   * @description Datos del dictamen de autorización iniciados, utilizados para prellenar el formulario.
+   * Debe ser proporcionado por el componente padre.
+   */
+  @Input() dataIniciarDictamenAutorizar!: IniciarAutorizacionResponse;
 
    /**
    * @property {SentidosDisponiblesResponse} opcionesSentidosDisponibles
@@ -253,7 +262,21 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
         fechaInicioVigenciaAutorizada: FECHA_INICIO,
         fechaFinVigenciaAutorizada: FECHAFIN
       });
+    }
 
+     if (changes['dataIniciarDictamenAutorizar'] && changes['dataIniciarDictamenAutorizar'].currentValue) {
+      const FECHA_INICIO = this.dataIniciarDictamenAutorizar.fecha_inicio_vigencia
+        ? this.dataIniciarDictamenAutorizar.fecha_inicio_vigencia.split(' ')[0]
+        : '';
+      const FECHAFIN = this.dataIniciarDictamenAutorizar.fecha_fin_vigencia
+        ? this.dataIniciarDictamenAutorizar.fecha_fin_vigencia.split(' ')[0]
+        : '';
+      this.dictamenForm.patchValue({
+        cumplimiento: this.dataIniciarDictamenAutorizar.ide_sent_dictamen,
+        mensajeDictamen: this.dataIniciarDictamenAutorizar.justificacion,
+        fechaInicioVigenciaAutorizada: FECHA_INICIO,
+        fechaFinVigenciaAutorizada: FECHAFIN
+      });
     }
   }
 
