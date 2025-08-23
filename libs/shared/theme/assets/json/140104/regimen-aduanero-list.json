@@ -1,4 +1,4 @@
 [
-  { "id": 0, "descripcion": "Exportación" },
-  { "id": 1, "descripcion": "Importación" }
+  { "id": 1, "descripcion": "Exportación" },
+  { "id": 2, "descripcion": "Importación" }
 ]

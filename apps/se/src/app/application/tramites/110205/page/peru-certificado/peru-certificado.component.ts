@@ -95,7 +95,7 @@ export class PeruCertificadoComponent implements OnDestroy {
       takeUntil(this.destroyNotifier$)
     ).subscribe((res) => {
       this.seccionStore.establecerSeccion([true]);
-      this.seccionStore.establecerFormaValida([res]);
+      this.seccionStore.establecerFormaValida([true]);
     });
   }
 

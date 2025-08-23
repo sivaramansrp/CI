@@ -75,6 +75,29 @@ export class Tramite240114Query extends Query<Tramite240114State> {
    * @property {Observable<MercanciaDetalle[]>} getMercanciaTablaDatos$
    */
   public getMercanciaTablaDatos$ = this.select(
-    (state) => state.mercancialTablaDatos
+    (state) => state.merccancialTablaDatos
   );
+
+  /**
+   * @description
+   * Selector que obtiene los datos de la tabla de mercancías modificadas desde el estado.
+   *
+   * @returns Observable con los datos de las mercancías modificadas.
+   *
+   */
+  public getmodificarMercanciaTablaDatos$ = this.select((state) => {
+    return state.modificarMercanciasDatos;
+  });
+
+
+  /**
+   * @method obtenerTercerosDatos$
+   * @description Devuelve los datos del destinatario o proveedor modificados desde el estado.
+   * Si no existen datos modificados, retorna null.
+   * 
+   * @returns {any | null} Los datos del destinatario o proveedor modificados, o null si no existen.
+   */
+  public obtenerTercerosDatos$ = this.select((state) => {
+    return state.modificarDestinarioDatos || state.modificarProveedorDatos || null;
+  });
 }

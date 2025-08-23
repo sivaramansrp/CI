@@ -6,18 +6,10 @@ import {
   Pedimento,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import {
-  Solicitud260215State,
-  Tramite260215Store,
-} from '../../estados/tramites/tramite260215.store';
+import { Solicitud260215State, Tramite260215Store, } from '../../estados/tramites/tramite260215.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
@@ -77,33 +69,33 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
    * Se utiliza en combinación con takeUntil en las suscripciones.
    */
   private destroyNotifier$: Subject<void> = new Subject();
-  
-
-    /**
-   * Arreglo que almacena los datos de la solicitud.
-   * Se utiliza para gestionar la información relacionada con las solicitudes en el componente.
-   */
-    solicitudData: SolicitudModel[] = []
 
 
-   /**
-  * Indica si el formulario está en modo solo lectura.
-  * Cuando es `true`, los campos del formulario no se pueden editar.
-  */
-  public esFormularioSoloLectura: boolean = false; 
+  /**
+ * Arreglo que almacena los datos de la solicitud.
+ * Se utiliza para gestionar la información relacionada con las solicitudes en el componente.
+ */
+  solicitudData: SolicitudModel[] = []
 
-   /**
-     * @description
-     * Objeto que representa una nueva notificación.
-     * Se utiliza para mostrar mensajes de alerta o información al usuario.
-     */
-    public nuevaNotificacion!: Notificacion;
 
-    /**
-   * @description
-   * Variable que almacena el índice del elemento que se desea eliminar de la lista de pedimentos.
-   * Utilizada para realizar operaciones de eliminación en el arreglo `pedimentos`.
-   */
+  /**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando es `true`, los campos del formulario no se pueden editar.
+ */
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
+    * @description
+    * Objeto que representa una nueva notificación.
+    * Se utiliza para mostrar mensajes de alerta o información al usuario.
+    */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
+ * @description
+ * Variable que almacena el índice del elemento que se desea eliminar de la lista de pedimentos.
+ * Utilizada para realizar operaciones de eliminación en el arreglo `pedimentos`.
+ */
   elementoParaEliminar!: number;
 
   /**
@@ -134,35 +126,35 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
     private consultaioQuery: ConsultaioQuery,
     private serviciosPermisoSanitarioService: ServiciosPermisoSanitarioService,
   ) {
-     /**
-     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
-     *
-     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
-     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
-     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
-     */
+    /**
+    * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+    *
+    * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+    * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+    * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+    */
     this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState)=>{
-        this.esFormularioSoloLectura = seccionState.readonly; 
-      })
-    )
-    .subscribe()
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe()
   }
 
- /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
-   * Si el formulario está en modo solo lectura, lo deshabilita; de lo contrario, lo habilita.
-   */
+  /**
+    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+    * Luego reinicializa el formulario con los valores actualizados desde el store.
+    * Si el formulario está en modo solo lectura, lo deshabilita; de lo contrario, lo habilita.
+    */
   guardarDatosFormulario(): void {
-      this.inicializarFormulario();
-      if (this.esFormularioSoloLectura) {
-        this.forma.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.forma.enable();
-      }
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.forma.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.forma.enable();
+    }
   }
 
 
@@ -177,8 +169,8 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
     } else {
       this.inicializarFormulario();
 
-       this.actualizarEstado();
-    }  
+      this.actualizarEstado();
+    }
   }
 
   /**
@@ -191,21 +183,21 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
       .subscribe((data): void => {
         this.solicitudData = data
       });
-    }
+  }
 
-/**
- * Inicializa el formulario reactivo para la solicitud del trámite 260215.
- *
- * - Se suscribe al observable `selectSolicitud$` para obtener el estado actual de la solicitud
- *   y lo asigna a la propiedad `solicitudState`.
- * - Crea el formulario (`forma`) utilizando `FormBuilder`, estableciendo los valores iniciales
- *   de los campos a partir de `solicitudState` y deshabilitándolos.
- * - Los campos `denominacion` y `correo` son requeridos.
- *
- * @remarks
- * La suscripción al observable se gestiona con `takeUntil` para evitar fugas de memoria.
- */
- inicializarFormulario(): void {
+  /**
+   * Inicializa el formulario reactivo para la solicitud del trámite 260215.
+   *
+   * - Se suscribe al observable `selectSolicitud$` para obtener el estado actual de la solicitud
+   *   y lo asigna a la propiedad `solicitudState`.
+   * - Crea el formulario (`forma`) utilizando `FormBuilder`, estableciendo los valores iniciales
+   *   de los campos a partir de `solicitudState` y deshabilitándolos.
+   * - Los campos `denominacion` y `correo` son requeridos.
+   *
+   * @remarks
+   * La suscripción al observable se gestiona con `takeUntil` para evitar fugas de memoria.
+   */
+  inicializarFormulario(): void {
     this.tramite260215Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -215,28 +207,55 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.forma = this.fb.group({
-      rfcDel: [{ value: this.solicitudState?.rfcDel, disabled: true }],
+      rfcDel: [{ value: this.solicitudState?.rfcDel, disabled: true },
+      [Validators.maxLength(13),
+      Validators.pattern(/^[A-ZÑ&]{3,4}[0-9]{6}[A-Z0-9]{3}$/)]
+      ],
       denominacion: [
         { value: this.solicitudState?.denominacion, disabled: true },
-        [Validators.required, Validators.maxLength(100)]
+        [Validators.required, Validators.maxLength(100),
+        Validators.pattern(/^[^<>]*$/)
+        ]
+
       ],
       correo: [
         { value: this.solicitudState?.correo, disabled: true },
-        [Validators.required, Validators.maxLength(320)]
+        [Validators.required, Validators.email, Validators.maxLength(320)]
       ],
     });
+  }
+  /**
+   * Valida que un número tenga como máximo tres decimales.
+   * @param control - El control a validar.
+   * @returns Un objeto de errores de validación o null si es válido.
+   */
+  static validarNumeroTresDecimales(control: AbstractControl): ValidationErrors | null {
+    const VALOR = control.value;
+    if (VALOR === null || VALOR === undefined || VALOR === '') { return null; }
+
+    // No es un número o contiene letras
+    if (!/^\d+(\.\d+)?$/.test(VALOR)) {
+      return { noEsNumero: true };
+    }
+
+    // Más de 3 decimales
+    if (/^\d+\.\d{4,}$/.test(VALOR)) {
+      return { maximoTresDecimales: true };
+    }
+
+    return null;
   }
   /**
    * Grupo de formularios principal.
    * Contiene los controles reactivos del formulario de datos de la solicitud.
    */
- public forma!: FormGroup;
+  public forma!: FormGroup;
 
   /**
    * Indica si la sección es colapsable.
    * Permite alternar la visualización de la sección principal del formulario.
    */
- public colapsable: boolean = true;
+  public colapsable: boolean = true;
 
   /**
    * Constantes importadas desde el archivo de enumeración que contienen textos importantes y de advertencia.
@@ -257,14 +276,14 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
    * Inicializa el estado del formulario y carga los datos necesarios.
    */
   ngOnInit(): void {
-   this.inicializarEstadoFormulario()
+    this.inicializarEstadoFormulario()
   }
 
-    /**
-   * Método que se llama cuando se envía el formulario.
-   * Se utiliza para establecer los valores en el store de DatosDomicilioLegal y mostrar una notificación.
-   * @param i Índice del elemento para el cual se abre el modal de notificación.
-   */
+  /**
+ * Método que se llama cuando se envía el formulario.
+ * Se utiliza para establecer los valores en el store de DatosDomicilioLegal y mostrar una notificación.
+ * @param i Índice del elemento para el cual se abre el modal de notificación.
+ */
   abrirModal(i: number = 0): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
@@ -325,17 +344,17 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
     )(VALOR);
   }
 
-    /**
-   * Configuración de la tabla para mostrar las solicitudes.
-   * Define las columnas con encabezados y claves para los datos relevantes de las solicitudes.
-   * Incluye detalles como fecha de creación, mercancía, cantidad y proveedor.
-   */
-    configuracionTablaSolicitud: ConfiguracionColumna<SolicitudModel>[] = [
-      { encabezado: 'Fecha Creación', clave: (item: SolicitudModel) => item.fechaCreacion, orden: 1 },
-      { encabezado: 'Mercancía', clave: (item: SolicitudModel) => item.mercancía, orden: 2 },
-      { encabezado: 'Cantidad', clave: (item: SolicitudModel) => item.cantidad, orden: 3 },
-      { encabezado: 'Proveedor', clave: (item: SolicitudModel) => item.proveedor, orden: 4 }
-    ];
+  /**
+ * Configuración de la tabla para mostrar las solicitudes.
+ * Define las columnas con encabezados y claves para los datos relevantes de las solicitudes.
+ * Incluye detalles como fecha de creación, mercancía, cantidad y proveedor.
+ */
+  configuracionTablaSolicitud: ConfiguracionColumna<SolicitudModel>[] = [
+    { encabezado: 'Fecha Creación', clave: (item: SolicitudModel) => item.fechaCreacion, orden: 1 },
+    { encabezado: 'Mercancía', clave: (item: SolicitudModel) => item.mercancia, orden: 2 },
+    { encabezado: 'Cantidad', clave: (item: SolicitudModel) => item.cantidad, orden: 3 },
+    { encabezado: 'Proveedor', clave: (item: SolicitudModel) => item.proveedor, orden: 4 }
+  ];
 
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
