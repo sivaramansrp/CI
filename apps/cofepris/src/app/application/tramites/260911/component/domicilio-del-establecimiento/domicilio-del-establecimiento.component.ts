@@ -1,6 +1,7 @@
 import { ALERT, OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/domicilio-del-establecimiento.enum';
 import { AfterViewInit, Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputCheckComponent, InputRadioComponent, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { FormControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 import { DatosMercanciaContenedoraComponent } from '../datos-mercancia-contenedora/datos-mercancia-contenedora.component';
@@ -74,12 +75,13 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
    *
    * @returns {MercanciaForm} El estado del formulario de mercancía.
    */
-  get mercanciaFormState(): MercanciaForm {
-    if (this.selectedMercanciaIndex !== null && this.mercanciasTablaDatos[this.selectedMercanciaIndex]) {
-      return DomicilioDelEstablecimientoComponent.mapMercanciasInfoToForm(this.mercanciasTablaDatos[this.selectedMercanciaIndex]);
+    private _mercanciaFormState: MercanciaForm = DomicilioDelEstablecimientoComponent.getEmptyMercanciaForm();
+    get mercanciaFormState(): MercanciaForm {
+      return this._mercanciaFormState;
     }
-    return DomicilioDelEstablecimientoComponent.getEmptyMercanciaForm();
-  }
+    set mercanciaFormState(value: MercanciaForm) {
+      this._mercanciaFormState = value;
+    }
 
   /**
    * Obtiene un formulario de mercancía vacío.
@@ -135,6 +137,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
       estadoFisico: string;
       fraccionArancelaria: string;
       descripcionFraccion: string;
+      presentacion: string;
     } => ({
       clasificacionProducto: info.clasificacion || '',
       especificarClasificacionProducto: info.especificar || '',
@@ -146,6 +149,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
       estadoFisico: info.estadoFisico || '',
       fraccionArancelaria: info.fraccionArancelaria || '',
       descripcionFraccion: info.descripcionFraccion || '',
+      presentacion: info.presentacion || '',
     });
     /**
      * Mapea la información de mercancías a un formulario de mercancía.
@@ -271,14 +275,25 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
    * @param index - Índice de la mercancía a modificar.
    */
   onModificarMercancia(index: number): void {
+  // Debug: log selected row data to check for missing fields
+  console.log('Selected row for modificar:', this.mercanciasTablaDatos[index]);
     this.selectedMercanciaIndex = index;
     this.isEditBlocked = this.selectedMercanciaCount > 1;
-    if (this.datosMercanciaContenedoraComp) {
-      // Patch form in child with mapped data
-      const MAPPED = DomicilioDelEstablecimientoComponent.mapMercanciasInfoToForm(this.mercanciasTablaDatos[index]);
-      this.datosMercanciaContenedoraComp.mercanciaForm.patchValue(MAPPED);
-      this.datosMercanciaContenedoraComp.setEditBlocked(this.isEditBlocked);
+    if (this.isEditBlocked) {
+      // Prevent modal opening if multiple rows are selected (old logic preserved)
+      return;
     }
+    // Set mercanciaFormState to mapped object so child form initializes with correct values
+    this.mercanciaFormState = DomicilioDelEstablecimientoComponent.mapMercanciasInfoToForm(this.mercanciasTablaDatos[index]);
+    if (this.datosMercanciaContenedoraComp) {
+      this.datosMercanciaContenedoraComp.setEditBlocked(false);
+    }
+    // Open modal after a short delay to ensure form is ready
+    setTimeout(() => {
+      if (this.modalSeleccionaRegistroMercanciaInstance) {
+        this.modalSeleccionaRegistroMercanciaInstance.show();
+      }
+    }, 100);
     this.openMercanciaModal();
   }
 
