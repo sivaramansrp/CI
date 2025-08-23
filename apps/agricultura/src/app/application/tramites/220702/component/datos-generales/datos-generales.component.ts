@@ -8,13 +8,14 @@ import { CatalogoSelectComponent, CatalogosSelect, ConfiguracionColumna, Seccion
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MERCANCIA_SERVICIO, MercanciaInfo } from '../../constantes/acuicola.enum';
+import { TramiteState, TramiteStore } from '../../estados/tramite220702.store';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery} from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudInt } from '../../modelos/acuicola.model';
 import { FitosanitarioService } from '../../service/fitosanitario.service';
 import { OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
-import { TramiteStore } from '../../estados/tramite220702.store';
+
 import { TramiteStoreQuery } from '../../estados/tramite220702.query';
 import { delay } from 'rxjs';
 import { map } from 'rxjs';
@@ -41,6 +42,14 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    */
   datosGeneralesForm!: FormGroup;
 
+  /**
+   * Estado actual del trámite.
+   * 
+   * @remarks
+   * Esta propiedad almacena la información relacionada con el estado del trámite en curso.
+   * Se inicializa como un objeto vacío del tipo `TramiteState`.
+   */
+  tramiteState: TramiteState={} as TramiteState;
   /**
    * Catálogo de aduanas de ingreso.
    * @type {CatalogosSelect}
@@ -284,7 +293,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
       numeroDeGuia: [{ value: '564738', disabled: true }, Validators.required],
       numeroFerrocaril: [{ value: '98754332', disabled: true }, Validators.required],
       regimenAlQueDestina: ['', Validators.required],
-      datosParaMovilizacion: ['', Validators.required],
+      datosParaMovilizacion: [{ value: this.tramiteState.InternaDatosGeneralesState.datosParaMovilizacion, disabled: true }, Validators.required],
       puntoDeVerificacion: ['', Validators.required],
       identificacionDelTransporte: [{ value: '', disabled: true }, Validators.required],
       nombreDeLaEmpresaTransportista: [{ value: '', disabled: true }, Validators.required],

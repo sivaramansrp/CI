@@ -9,8 +9,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { TramiteState } from '../constantes/acuicola.enum';
-import { TramiteStore } from '../estados/tramite220702.store';
+
+import { TramiteState,TramiteStore } from '../estados/tramite220702.store';
 import { map } from 'rxjs';
 
 /**
@@ -300,9 +300,10 @@ export class FitosanitarioService {
     this.tramiteStore.setMedioDeTransporte(DATOS.medioDeTransporte);
     this.tramiteStore.setIdentificacionTransporte(DATOS.identificacionTransporte);
     this.tramiteStore.setOficinaDeInspeccion(DATOS.oficinaDeInspeccion);
-    this.tramiteStore.setSolicitudTramite(DATOS.DatosDeLaSolicitudInt);
-  
-     }
+    this.tramiteStore.setSolicitudTramite(DATOS.SolicitudState) 
+    this.tramiteStore.setFechaDeInspeccion(DATOS.fechaDeInspeccion);
+
+  }
 
   /**
    * Obtiene los datos de ampliación de servicios desde un archivo JSON.
