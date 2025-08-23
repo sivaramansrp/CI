@@ -365,7 +365,9 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
     };
     this.limpiarFormulario();
   }
-
+/**
+ * Habilita los campos del formulario.
+ */
   habilitarCampos(): void {
     const RFC = this.FormTrasportista.get('rfc');
     const NOMBRE = this.FormTrasportista.get('nombre');

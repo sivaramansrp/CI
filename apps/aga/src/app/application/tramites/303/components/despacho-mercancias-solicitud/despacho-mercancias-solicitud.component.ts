@@ -187,10 +187,8 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite303StoreService): void {
     const VALOR = form.get(campo)?.value;
-
-    // Forzar conversión a boolean si el campo es checkbox
+    // Obtener el valor actual del campo
     const ISCHECKBOX = campo === 'checkboxImportacion1' || campo === 'checkboxImportacion2';
-
     if (ISCHECKBOX) {
       (this.tramite303State[metodoNombre] as (value: boolean) => void)(Boolean(VALOR));
     } else {
