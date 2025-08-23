@@ -2,7 +2,7 @@ import { ANEXO_II_SERVICIO, ANEXO_IMPORTACION_SERVICIO } from '../../../../share
 import { Component, Input } from '@angular/core';
 import { ANEXO_I_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { ActivatedRoute } from '@angular/router';
-import { AnexoDosEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
+import { AnexoDosEncabezado, DatosComplimento } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { AnexoUnoComponent } from '../../../../shared/components/anexo-uno/anexo-uno.component';
 import { AnexoUnoEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { CommonModule } from '@angular/common';
@@ -289,6 +289,17 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
     this.anexoDosTablaLista = event ? event : [];
     this.store.setExportarDatosTabla(this.anexoDosTablaLista);
   }
+
+/**
+   * Modifica los datos de los cumplimientos y los almacena en el estado.
+   *
+   * @param complimentos - Objeto de tipo `DatosComplimentos` que contiene los datos de los cumplimientos a actualizar.
+   * @returns void
+   */
+  modifierComplimentos(complimentos: DatosComplimento): void {
+    this.store.setDatosComplimento(complimentos);
+  }
+
 
   /**
    * Navega a una ruta específica basada en el evento proporcionado.

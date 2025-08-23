@@ -116,3 +116,8 @@ export interface ProveedorClienteTabla {
   rfcClinte: string;
   razonSocial: string;
 }
+
+export interface DatosComplimento {
+  fraccionArancelaria: string;
+  descripcion: string;
+}

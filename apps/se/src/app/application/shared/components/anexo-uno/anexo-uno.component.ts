@@ -4,6 +4,7 @@ import {
   AnexoDosEncabezado,
   AnexoUnoConfiguartion,
   AnexoUnoEncabezado,
+  DatosComplimento,
   RutaNombre,
 } from '../../models/nuevo-programa-industrial.model';
 import { Component, OnInit } from '@angular/core';
@@ -18,6 +19,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
+import { delay, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-anexo-uno',
@@ -62,6 +64,14 @@ export class AnexoUnoComponent implements OnInit {
    */
   @Input() formularioDeshabilitado: boolean = false;
 
+   /**
+     * Notificador utilizado para manejar la destrucción o desuscripción de observables.
+     * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
+     *
+     * @property {Subject<void>} destroyNotifier$
+     */
+    private destroyNotifier$: Subject<void> = new Subject();
+
   /**
    * Evento para devolver la llamada del Anexo Uno
    */
@@ -82,6 +92,12 @@ export class AnexoUnoComponent implements OnInit {
    */
   @Output() rutaLaFraccionDeComplemento: EventEmitter<RutaNombre> =
     new EventEmitter<RutaNombre>();
+
+
+
+@Output()
+  complimentosDatos: EventEmitter<DatosComplimento> =
+    new EventEmitter<DatosComplimento>(true);
 
   /**
    * Datos seleccionados de importación
@@ -195,6 +211,13 @@ export class AnexoUnoComponent implements OnInit {
       this.anexoUnoFormGroup.disable();
       this.anexoDosFormGroup.disable();
     }
+      this.anexoUnoFormGroup.valueChanges
+          .pipe(delay(100))
+          .pipe(takeUntil(this.destroyNotifier$))
+          .subscribe((_) => {
+            this.complimentosDatos.emit(this.anexoUnoFormGroup.value);
+          });
+    
   }
 
   /**

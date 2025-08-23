@@ -957,7 +957,9 @@ this.formaComplimentos.disable();
    * @returns {void}
    */
   eliminarAccionistasExtrenjeros(): void {
-    this.eliminarDosConfirmationNotificacion.cerrar = false;
+    if(this.eliminarDosConfirmationNotificacion && this.eliminarDosConfirmationNotificacion.cerrar){
+       this.eliminarDosConfirmationNotificacion.cerrar = false;
+    }
     if (this.accionistasExtranjerosSeleccionados.length) {
       this.accionistasExtranjerosEliminado.emit(
         this.accionistasExtranjerosSeleccionados

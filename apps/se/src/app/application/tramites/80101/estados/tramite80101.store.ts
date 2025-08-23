@@ -1,6 +1,7 @@
 import {
   AnexoEncabezado,
   AnexoUnoEncabezado,
+  DatosComplimento,
 } from '../../../shared/models/nuevo-programa-industrial.model';
 import {
   AnnexoDosTres,
@@ -104,6 +105,11 @@ export interface Tramite80101State {
   datosComplimentos: DatosComplimentos;
 
   /**
+   * Datos complementarios relacionados con el trámite.
+   */
+  datosComplimento: DatosComplimento;
+
+  /**
    * Tabla de datos complementarios de socios y accionistas.
    */
   tablaDatosComplimentos: SociaoAccionistas[];
@@ -205,6 +211,10 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
     entidadFederativaEmpresaExt: '',
     nombreEmpresaExt: '',
     direccionEmpresaExtranjera: '',
+  },
+  datosComplimento:{
+    fraccionArancelaria: "",
+    descripcion: "",
   },
   datosComplimentos: {
     modalidad: 'Industrial',
@@ -570,7 +580,20 @@ export class Tramite80101Store extends Store<Tramite80101State> {
       return { ...state, datosComplimentos: VALUE };
     });
   }
-
+/**
+   * Actualiza el estado con los datos complementarios proporcionados.
+   *
+   * @param datosComplimento - Objeto que contiene los datos complementarios a actualizar.
+   *
+   * Este método combina los datos existentes en el estado con los nuevos datos proporcionados
+   * y actualiza el estado con el resultado.
+   */
+  setDatosComplimento(datosComplimento: DatosComplimento): void {
+    this.update((state) => {
+      const VALUE = { ...state.datosComplimento, ...datosComplimento };
+      return { ...state, datosComplimento: VALUE };
+    });
+  }
   /**
    * Establece los datos del subcontratista en el estado de la tienda.
    *
