@@ -42,6 +42,9 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
   mostrarControlInventarios = false;
   /** Formulario para el control de inventarios */
   formInventario!: FormGroup;
+
+  /** Subject para destruir las suscripciones. */
+  private destruirSuscripcion$: Subject<void> = new Subject();
   /** Inventario en edición */
   inventarioEnEdicion?: ControlInventario;
   /** Texto de la sección */
@@ -77,6 +80,7 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
       lugarRadicacion: ['', Validators.required],
       esSistemaControl: [false]
     });
+    this.createFormulario();
     this.ObtenerDatosCatalogoImmex();
   }
 
@@ -92,7 +96,7 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
           console.error('Error al consultar catálogo IMMEX', _error);
           return of([]);
         }),
-        takeUntil(this.destroyNotifier$)
+        takeUntil(this.destruirSuscripcion$)
       )
       .subscribe();
   }
@@ -111,14 +115,14 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
       cuentaImmex: [this.tramiteConsultado?.cuentaImmex, Validators.required],
       checkboxImportacion1: [this.tramiteConsultado?.checkboxImportacion1 || false],
       checkboxImportacion2: [this.tramiteConsultado?.checkboxImportacion2 || false],
-      immex: [this.tramiteConsultado?.immex, Validators.required], 
+      immex: [this.tramiteConsultado?.immex, Validators.required], // ✅ corregido
       padron: [this.tramiteConsultado?.padron, Validators.required],
-      controlInventarios: [this.tramiteConsultado?.controlInventarios, Validators.required],
+      controlInventarios: [this.tramiteConsultado?.controlInventarios, Validators.required], // ✅ string, no boolean
       contabilidad: [this.tramiteConsultado?.contabilidad, Validators.required],
-      interposicion: [this.tramiteConsultado?.interposicion, Validators.required], 
+      interposicion: [this.tramiteConsultado?.interposicion, Validators.required], // ✅ corregido
       checkboxManifiesto1: [this.tramiteConsultado?.checkboxManifiesto1 || false],
       checkboxManifiesto2: [this.tramiteConsultado?.checkboxManifiesto2 || false],
-      ingresoInforme: [this.tramiteConsultado?.ingresoInforme, Validators.required],
+      ingresoInforme: [this.tramiteConsultado?.ingresoInforme || false],
     });
     this.monitorValores();
   }
@@ -183,8 +187,8 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite303StoreService): void {
     const VALOR = form.get(campo)?.value;
+    // Obtener el valor actual del campo
     const ISCHECKBOX = campo === 'checkboxImportacion1' || campo === 'checkboxImportacion2';
-
     if (ISCHECKBOX) {
       (this.tramite303State[metodoNombre] as (value: boolean) => void)(Boolean(VALOR));
     } else {
@@ -218,6 +222,7 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
       };
       return;
     }
+
     if (this.inventarioEnEdicion) {
       const INVENTARIO_ACTUALIZADO: ControlInventario = {
         ...this.inventarioEnEdicion,
@@ -225,9 +230,11 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
         lugarRadicacion: this.formInventario.get('lugarRadicacion')?.value,
         esSistemaControl: (this.formInventario.get('esSistemaControl')?.value) as boolean
       };
+
       this.listaControlInventarios = this.listaControlInventarios.map(inv =>
         inv.id === this.inventarioEnEdicion?.id ? INVENTARIO_ACTUALIZADO : inv
       );
+
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'success',
@@ -303,39 +310,14 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
     }
 
     const INVENTARIO_SELECCIONADO = this.listaControlInventariosSeleccionados[0];
-    if (!INVENTARIO_SELECCIONADO || typeof INVENTARIO_SELECCIONADO !== 'object') {
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: 'error',
-        modo: 'action',
-        titulo: '',
-        mensaje: 'Inventario seleccionado no es válido',
-        cerrar: true,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
-      return;
-    }
     this.inventarioEnEdicion = INVENTARIO_SELECCIONADO;
-    try {
-      this.formInventario.patchValue({
-        nombreSistema: INVENTARIO_SELECCIONADO.nombreSistema ?? '',
-        lugarRadicacion: INVENTARIO_SELECCIONADO.lugarRadicacion ?? '',
-        esSistemaControl: INVENTARIO_SELECCIONADO.esSistemaControl ?? false
-      });
-    } catch (error) {
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: 'error',
-        modo: 'action',
-        titulo: '',
-        mensaje: 'Error al modificar el inventario: ' + (error instanceof Error ? error.message : String(error)),
-        cerrar: true,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
-      return;
-    }
+
+    this.formInventario.patchValue({
+      nombreSistema: INVENTARIO_SELECCIONADO.nombreSistema,
+      lugarRadicacion: INVENTARIO_SELECCIONADO.lugarRadicacion,
+      esSistemaControl: INVENTARIO_SELECCIONADO.esSistemaControl
+    });
+
     this.listaControlInventariosSeleccionados = [];
   }
 
