@@ -136,3 +136,51 @@ export interface OpcionesDeRadio {
    */
   value: string | number;
 }
+
+  /**
+   * Interface para los datos recibidos al agregar un residuo peligroso
+   */
+export interface ResiduoAgregadoData {
+    fraccionArancelaria?: string;
+    residuoPeligroso?: string;
+    nico?: string;
+    acotacion?: string;
+    cantidad?: string;
+    cantidadLetra?: string;
+    unidadMedida?: string;
+    claveResiduo?: string;
+    nombre?: string;
+    descripcion?: string;
+    creti?: string;
+    estadoFisico?: string;
+    manifiesto?: string;
+    tipoContenedor?: string;
+    capacidad?: string;
+    
+  }
+
+  /**
+   * Interface para los datos de residuo peligroso en la tabla
+   */
+  export interface ResiduoPeligroso {
+    origenResiduoGeneracion: string;
+    fraccionArancelaria: string;
+    nombreResiduo: string;
+    nico: string;
+    acotacion: string;
+    nombreResiduoPeligroso: string;
+    cantidad: string;
+    cantidadLetra: string;
+    unidadMedida: string;
+    claveClasificacion: string;
+    nombreClasificacion: string;
+    descripcionClasificacion: string;
+    descripcionOtraClasificacion: string;
+    creti: string;
+    estadoFisico: string;
+    descripcionOtroEstadoFisico: string;
+    numeroManifiesto: string;
+    tipoContenedor: string;
+    descripcionOtroContenedor: string;
+    capacidad: string;
+  }

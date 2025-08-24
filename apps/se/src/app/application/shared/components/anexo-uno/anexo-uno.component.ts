@@ -245,14 +245,14 @@ export class AnexoUnoComponent implements OnInit {
       this.anexoUnoFormGroup.markAllAsTouched();
       return;
     }
-
+    const SERIAL = this.anexoUnoTablaLista.length + 1;
     const OBJECTO_IDX: AnexoUnoEncabezado = {
-      encabezadoFraccion: this.anexoUnoFormGroup.get('fraccionArancelaria')
-        ?.value,
+      encabezadoFraccion: SERIAL.toString(),
       encabezadoDescripcionComercial:
         this.anexoUnoFormGroup.get('descripcion')?.value,
       estatus: false,
-      encabezadoFraccionArancelaria: '',
+      encabezadoFraccionArancelaria: this.anexoUnoFormGroup.get('fraccionArancelaria')
+        ?.value,
       encabezadoAnexoII: '',
       encabezadoTipo: '',
       encabezadoUmt: '',
@@ -261,7 +261,7 @@ export class AnexoUnoComponent implements OnInit {
     };
     
     // Reinicia el formulario después de agregar el objeto
-    this.anexoUnoTablaLista.push(OBJECTO_IDX);
+    this.anexoUnoTablaLista = [...this.anexoUnoTablaLista, OBJECTO_IDX];
     this.obtenerAnexoUnoDevolverLaLlamada.emit(this.anexoUnoTablaLista);
   }
 
@@ -273,19 +273,19 @@ export class AnexoUnoComponent implements OnInit {
       this.anexoDosFormGroup.markAllAsTouched();
       return;
     }
-
+    const SERIAL = this.anexoDosTablaLista.length + 1;
     const OBJECTO_IDX: AnexoDosEncabezado = {
-      encabezadoFraccion: this.anexoDosFormGroup.get('fraccionArancelaria')
-        ?.value,
+      encabezadoFraccion: SERIAL.toString(),
       encabezadoDescripcionComercial:
         this.anexoDosFormGroup.get('descripcion')?.value,
-      encabezadoFraccionExportacion: '',
+      encabezadoFraccionExportacion: this.anexoDosFormGroup.get('fraccionArancelaria')
+        ?.value,
       encabezadoFraccionImportacion: '',
       estatus: false,
     };
     this.anexoDosFormGroup.reset();
     // Reinicia el formulario después de agregar el objeto
-    this.anexoDosTablaLista.push(OBJECTO_IDX);
+    this.anexoDosTablaLista = [...this.anexoDosTablaLista, OBJECTO_IDX];
     this.obtenerAnexoDosDevolverLaLlamada.emit(this.anexoDosTablaLista);
   }
 

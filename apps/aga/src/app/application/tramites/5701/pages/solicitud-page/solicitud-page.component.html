@@ -15,15 +15,12 @@
         ></lib-notificaciones>
       </div>
     </div>
-
+    <app-wizard [listaPasos]="pasos" id="wizard5701"></app-wizard>
     <div class="row mt-5" *ngIf="indice === 2">
       <div class="col-md-12">
         <ng-titulo titulo="Requisitos opcionales" />
       </div>
     </div>
-
-    <app-wizard [listaPasos]="pasos" id="wizard5701"></app-wizard>
-
     <div class="row">
       <div class="col-md-12">
         @switch (indice) { @case (1) {

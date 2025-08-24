@@ -1,6 +1,6 @@
 [
-  { "id": 0, "descripcion": "Asignación directa" },
-  { "id": 1, "descripcion": "Licitación Pública" },
-  { "id": 2, "descripcion": "Primero en tiempo primero en derecho" },
-  { "id": 3, "descripcion": "Prorrateo" }
+  { "id": 1, "descripcion": "Asignación directa" },
+  { "id": 2, "descripcion": "Licitación Pública" },
+  { "id": 3, "descripcion": "Primero en tiempo primero en derecho" },
+  { "id": 4, "descripcion": "Prorrateo" }
 ]

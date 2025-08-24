@@ -2,7 +2,10 @@ import { Catalogo, ConsultaioQuery, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import { Tramite130114State, Tramite130114Store } from '../../../estados/tramites/tramite130114.store'
+import {
+  Tramite130114State,
+  Tramite130114Store,
+} from '../../../estados/tramites/tramite130114.store';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { DiamanteBrutoService } from '../../130114/services/diamante-bruto.service';
 import { HttpClient } from '@angular/common/http';
@@ -16,8 +19,6 @@ import { Tramite130114Query } from '../../../estados/queries/tramite130114.query
 import fractionValues from '@libs/shared/theme/assets/json/130114/fraccion_arancelaria.json';
 import solicitudeSelectVal from '@libs/shared/theme/assets/json/130114/solicitud-select.json';
 import unidadOptions from '@libs/shared/theme/assets/json/130114/unidad_da.json';
-
-
 
 /**
  * Componente para gestionar la solicitud de mercancías de diamantes brutos.
@@ -76,7 +77,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Configuración de las columnas para la tabla de partidas.
    * @type {ConfiguracionColumna<string>[]}
    */
-    tableHeaderData: ConfiguracionColumna<PartidasDeLaMercanciaModelo>[] = PARTIDASDELAMERCANCIA_TABLA;
+  tableHeaderData: ConfiguracionColumna<PartidasDeLaMercanciaModelo>[] =
+    PARTIDASDELAMERCANCIA_TABLA;
 
   /**
    * Datos para el cuerpo de la tabla de partidas.
@@ -244,7 +246,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           this.esFormularioSoloLectura = seccionState.readonly; 
         })
       )
-      .subscribe()
+      .subscribe();
   }
 
   /**
@@ -437,7 +439,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
-
   /**
    * Carga las opciones configurables para los formularios desde el servicio.
    */
@@ -447,9 +448,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           this.opcionesSolicitud = data.options;
-        
+          this.Tramite130114Store.actualizarEstado({
+            solicitud: data.options[0]?.value || '',
+            defaultSelect: data.defaultSelect || 'Inicial',
+          });
         },
-        error: (error) => console.error('Error loading solicitude options:', error),
+        error: (error) =>
+          console.error('Error loading solicitude options:', error),
       });
 
     this.DiamanteBrutoService.getProductoOptions()
@@ -474,7 +479,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       ? filasSeleccionadas
       : [];
     if (this.filaSeleccionada) {
-      this.Tramite130114Store.actualizarEstado({filaSeleccionada:this.filaSeleccionada});
+      this.Tramite130114Store.actualizarEstado({
+        filaSeleccionada: this.filaSeleccionada,
+      });
     }
   }
 
@@ -489,11 +496,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
  * 
  */
   obtenerTablaDatos(): void {
-    this.DiamanteBrutoService.getTablaDatos().pipe(takeUntil(this.destroyed$)).subscribe((data) => {
+    this.DiamanteBrutoService.getTablaDatos()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
       this.tableBodyData = data;
       this.formForTotalCount.patchValue({
-        cantidadTotal:data[0].cantidad,
-        valorTotalUSD:data[0].totalUSD
+          cantidadTotal: data[0].cantidad,
+          valorTotalUSD: data[0].totalUSD,
       });
     });
 }
@@ -515,8 +524,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   navegarParaModificarPartida(): void {
     if (this.filaSeleccionada) {
-       this.Tramite130114Store.actualizarEstado({mostrarTabla:true});
-      this.Tramite130114Store.actualizarEstado({filaSeleccionada:this.filaSeleccionada});
+      this.Tramite130114Store.actualizarEstado({ mostrarTabla: true });
+      this.Tramite130114Store.actualizarEstado({
+        filaSeleccionada: this.filaSeleccionada,
+      });
     }
   }
 
@@ -588,10 +599,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
  * Este método verifica si no hay filas seleccionadas en la tabla dinámica.
  * 
  */
-disabledModificar() : boolean {
+  disabledModificar(): boolean {
   let disabled = false;
-  if(this.filaSeleccionada.length === 0){
-    disabled = true
+    if (this.filaSeleccionada.length === 0) {
+      disabled = true;
   }
   return disabled;
 }
