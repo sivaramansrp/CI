@@ -40,7 +40,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * Formulario reactivo para capturar los datos generales de la solicitud.
    * @type {FormGroup}
    */
-  datosGeneralesForm!: FormGroup;
+  datosGeneralesForm: FormGroup;
 
   /**
    * Estado actual del trámite.
@@ -179,7 +179,8 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
     private readonly consultaioQuery: ConsultaioQuery
-  ) { 
+  ) {
+    this.datosGeneralesForm = this.fb.group({});
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -211,12 +212,21 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
-    this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.solicitudState = seccionState.SolicitudState;
-      })
-    ).subscribe();
+    if (this.esFormularioSoloLectura) {
+      this.fitosanitarioService.getDatosGeneralesConsulta()
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((loadedData: DatosDeLaSolicitudInt) => {
+          this.tramiteStore.setSolicitudTramite(loadedData);
+          this.datosGeneralesForm.patchValue(loadedData);
+        });
+    } else {
+      this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState.SolicitudState;
+        })
+      ).subscribe();
+    }
 
     this.iniciarFormulario();
     this.getAduanaDeIngreso();
@@ -285,18 +295,19 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   iniciarFormulario(): void {
+    const SOLICITUD_STATE = this.solicitudState || {};
     this.datosGeneralesForm = this.fb.group({
-      folioDelTramite: [{ value: '62340024220100001', disabled: true }, Validators.required],
-      aduanaDeIngreso: ['', Validators.required],
-      oficinaDeInspeccion: ['', Validators.required],
-      puntoDeInspeccion: ['', Validators.required],
-      numeroDeGuia: [{ value: '564738', disabled: true }, Validators.required],
-      numeroFerrocaril: [{ value: '98754332', disabled: true }, Validators.required],
-      regimenAlQueDestina: ['', Validators.required],
-      datosParaMovilizacion: [{ value: this.tramiteState.InternaDatosGeneralesState.datosParaMovilizacion, disabled: true }, Validators.required],
-      puntoDeVerificacion: ['', Validators.required],
-      identificacionDelTransporte: [{ value: '', disabled: true }, Validators.required],
-      nombreDeLaEmpresaTransportista: [{ value: '', disabled: true }, Validators.required],
+      folioDelTramite: [{ value: SOLICITUD_STATE.folioDelTramite || '', disabled: true }, Validators.required],
+      aduanaDeIngreso: [SOLICITUD_STATE.aduanaDeIngreso || '', Validators.required],
+      oficinaDeInspeccion: [SOLICITUD_STATE.oficinaDeInspeccion || '', Validators.required],
+      puntoDeInspeccion: [SOLICITUD_STATE.puntoDeInspeccion || '', Validators.required],
+      numeroDeGuia: [{ value: SOLICITUD_STATE.numeroDeGuia || '', disabled: true }, Validators.required],
+      numeroFerrocaril: [{ value: SOLICITUD_STATE.numeroFerrocaril || '', disabled: true }, Validators.required],
+      regimenAlQueDestina: [SOLICITUD_STATE.regimenAlQueDestina || '', Validators.required],
+      datosParaMovilizacion: [{ value: SOLICITUD_STATE.datosParaMovilizacion || '', disabled: true }, Validators.required],
+      puntoDeVerificacion: [SOLICITUD_STATE.puntoDeVerificacion || '', Validators.required],
+      identificacionDelTransporte: [{ value: SOLICITUD_STATE.identificacionDelTransporte || '', disabled: true }, Validators.required],
+      nombreDeLaEmpresaTransportista: [{ value: SOLICITUD_STATE.nombreDeLaEmpresaTransportista || '', disabled: true }, Validators.required],
     });
   }
 
