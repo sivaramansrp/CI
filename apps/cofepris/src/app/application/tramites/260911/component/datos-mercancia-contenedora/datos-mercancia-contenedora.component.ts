@@ -90,14 +90,21 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
   }
   onAgregarMercancia(): void {
     if (this.mercanciaForm.valid) {
+      // Helper to get description from catalog by ID
+      const GET_CATALOG_DESC = (catalog: Catalogo[], id: number | string | null): string => {
+        if (id === null || id === undefined) { return ''; }
+        const FOUND = catalog.find(item => item.id === Number(id));
+        if (FOUND) { return String(FOUND.descripcion); }
+        return typeof id === 'string' ? id : String(id);
+      };
       const MERCANCIA: MercanciasInfo = {
-        clasificacion: this.mercanciaForm.get('clasificacionProducto')?.value,
-        especificar: this.mercanciaForm.get('especificarClasificacionProducto')?.value,
+        clasificacion: GET_CATALOG_DESC(this.clasificacionProductoDatos, this.mercanciaForm.get('clasificacionProducto')?.value),
+        especificar: GET_CATALOG_DESC(this.especificarClasificacionProductoDatos, this.mercanciaForm.get('especificarClasificacionProducto')?.value),
         denominacionEspecifica: this.mercanciaForm.get('denominacionEspecificaProducto')?.value,
         denominacionDistintiva: this.mercanciaForm.get('denominacionDistintiva')?.value,
         denominacionComun: this.mercanciaForm.get('denominacionComun')?.value,
-        formaFarmaceutica: this.mercanciaForm.get('formaFarmaceutica')?.value,
-        estadoFisico: this.mercanciaForm.get('estadoFisico')?.value,
+        formaFarmaceutica: GET_CATALOG_DESC(this.formaFarmaceuticaDatos, this.mercanciaForm.get('formaFarmaceutica')?.value),
+        estadoFisico: GET_CATALOG_DESC(this.estadoFisicoDatos, this.mercanciaForm.get('estadoFisico')?.value),
         fraccionArancelaria: this.mercanciaForm.get('fraccionArancelaria')?.value,
         descripcionFraccion: this.mercanciaForm.get('descripcionFraccion')?.value,
         unidad: this.mercanciaForm.get('cantidadUmcValor')?.value,
@@ -108,13 +115,20 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
         numeroRegistro: this.mercanciaForm.get('numeroRegistroSanitario')?.value,
         paisDeOrigen: this.mercanciaForm.get('paisDeOriginDatos')?.value?.[0],
         paisDeProcedencia: this.mercanciaForm.get('paisDeProcedenciaDatos')?.value?.[0],
-        tipoProducto: this.mercanciaForm.get('tipoProducto')?.value,
+        tipoProducto: GET_CATALOG_DESC(this.tipoProductoDatos, this.mercanciaForm.get('tipoProducto')?.value),
         usoEspecifico: this.mercanciaForm.get('usoEspecifico')?.value?.[0],
         fechaCaducidad: this.mercanciaForm.get('fechaCaducidad')?.value,
       };
       this.agregarMercancia.emit(MERCANCIA);
     } else {
       this.mercanciaForm.markAllAsTouched();
+      // Debug: log invalid controls and errors
+      const INVALID_CONTROLS = Object.keys(this.mercanciaForm.controls).filter(key => this.mercanciaForm.get(key)?.invalid);
+      INVALID_CONTROLS.forEach(key => {
+        const CONTROL = this.mercanciaForm.get(key);
+        console.warn('Control inválido:', key, CONTROL?.errors);
+      });
+      console.warn('Formulario de mercancía no válido, revise los campos marcados.');
     }
   }
   /**
@@ -771,8 +785,8 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
     if (!this.areCatalogsLoaded()) {
       return;
     }
-  const { mappedUmtId, finalMappedUmcId } = this.getUmtUmcIds();
-  this.mercanciaForm = this.buildMercanciaForm(mappedUmtId, finalMappedUmcId);
+  const { MAPPED_UMT_ID, FINAL_MAPPED_UMC_ID } = this.getUmtUmcIds();
+  this.mercanciaForm = this.buildMercanciaForm(MAPPED_UMT_ID, FINAL_MAPPED_UMC_ID);
     this.removeInvalidControls();
     this.addExtraControls();
   }
@@ -801,20 +815,20 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
     return true;
   }
 
-  private getUmtUmcIds(): { mappedUmtId: number | null, finalMappedUmcId: number | null } {
+  private getUmtUmcIds(): { MAPPED_UMT_ID: number | null, FINAL_MAPPED_UMC_ID: number | null } {
     const INCOMING_UMT_VALOR = String(this.obtenerValor('cantidadUmtValor'));
-    let mappedUmtId = DatosMercanciaContenedoraComponent.matchCatalogId(this.cantidadUmcDatos, INCOMING_UMT_VALOR);
-    let finalMappedUmcId = mappedUmtId;
-    if (mappedUmtId === null && this.cantidadUmcDatos.length > 0) {
-      mappedUmtId = this.cantidadUmcDatos[0].id;
+    let MAPPED_UMT_ID = DatosMercanciaContenedoraComponent.matchCatalogId(this.cantidadUmcDatos, INCOMING_UMT_VALOR);
+    let FINAL_MAPPED_UMC_ID = MAPPED_UMT_ID;
+    if (MAPPED_UMT_ID === null && this.cantidadUmcDatos.length > 0) {
+      MAPPED_UMT_ID = this.cantidadUmcDatos[0].id;
     }
-    if (finalMappedUmcId === null && this.cantidadUmcDatos.length > 0) {
-      finalMappedUmcId = this.cantidadUmcDatos[0].id;
+    if (FINAL_MAPPED_UMC_ID === null && this.cantidadUmcDatos.length > 0) {
+      FINAL_MAPPED_UMC_ID = this.cantidadUmcDatos[0].id;
     }
-    return { mappedUmtId, finalMappedUmcId };
+    return { MAPPED_UMT_ID, FINAL_MAPPED_UMC_ID };
   }
 
-  private buildMercanciaForm(mappedUmtId: number | null, finalMappedUmcId: number | null): FormGroup {
+  private buildMercanciaForm(MAPPED_UMT_ID: number | null, FINAL_MAPPED_UMC_ID: number | null): FormGroup {
     return this.fb.group({
       presentacion: [
         this.obtenerValor('presentacion'),
@@ -884,11 +898,11 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
         ],
       ],
       cantidadUmt: [
-        mappedUmtId ?? null,
+        MAPPED_UMT_ID ?? null,
         Validators.required,
       ],
       cantidadUmc: [
-        finalMappedUmcId ?? null,
+        FINAL_MAPPED_UMC_ID ?? null,
         Validators.required,
       ],
       fechaCaducidad: [this.obtenerValor('fechaCaducidad') ?? null],
@@ -905,11 +919,23 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
   }
 
   private removeInvalidControls(): void {
-    const CONTROLS_A_ELIMINAR = [...this.elementosNoValidos];
+    // Never remove catalog dropdown controls
+    const ALWAYS_KEEP = [
+      'clasificacionProducto',
+      'especificarClasificacionProducto',
+      'tipoProducto',
+      'formaFarmaceutica',
+      'estadoFisico'
+    ];
+    const CONTROLS_A_ELIMINAR = [...this.elementosNoValidos].filter(ctrl => !ALWAYS_KEEP.includes(ctrl));
     if (this.detalleMercancia) {
-      CONTROLS_A_ELIMINAR.push('formaFarmaceutica', 'denominacionDistintiva');
+      ['formaFarmaceutica', 'denominacionDistintiva'].forEach(ctrl => {
+        if (!ALWAYS_KEEP.includes(ctrl)) {
+          CONTROLS_A_ELIMINAR.push(ctrl);
+        }
+      });
     }
-    if (this.elementosNoValidos.length) {
+    if (CONTROLS_A_ELIMINAR.length) {
       for (const NOMBRE_DEL_CONTROL of CONTROLS_A_ELIMINAR) {
         if (this.mercanciaForm.contains(NOMBRE_DEL_CONTROL)) {
           this.mercanciaForm.removeControl(NOMBRE_DEL_CONTROL, {
@@ -936,7 +962,7 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
     }
   }
 
-  private static matchCatalogId(catalog: Catalogo[], value: string): number | null {
+  public static matchCatalogId(catalog: Catalogo[], value: string): number | null {
     if (!catalog || !value) { return null; }
     const NORMALIZED_VALUE = DatosMercanciaContenedoraComponent.normalize(value);
     const FOUND = catalog.find(item => DatosMercanciaContenedoraComponent.normalize(item.descripcion) === NORMALIZED_VALUE);
@@ -944,14 +970,15 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
   }
 
   private static normalize(str: string): string {
+    if (typeof str !== 'string') {
+      return '';
+    }
     return str
-      ? str
-          .replace(/\//g, ' ')
-          .replace(/\s+/g, ' ')
-          .replace(/[.,#!$%&*;:{}=\-_`~()]/g, '')
-          .toLowerCase()
-          .trim()
-      : '';
+      .replace(/\//g, ' ')
+      .replace(/\s+/g, ' ')
+      .replace(/[.,#!$%&*;:{}=\-_`~()]/g, '')
+      .toLowerCase()
+      .trim();
 
   }
 

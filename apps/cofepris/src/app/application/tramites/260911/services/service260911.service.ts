@@ -1,8 +1,9 @@
+import {BehaviorSubject, Observable} from 'rxjs';
 import { Tramite260911State, Tramite260911Store } from '../estados/tramite260911.store';
 import { ENVIRONMENT } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+
 // ...existing code...
 
 /**

@@ -1,8 +1,9 @@
 import { ALERT, OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/domicilio-del-establecimiento.enum';
 import { AfterViewInit, Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputCheckComponent, InputRadioComponent, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { FormControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { FormControl } from '@angular/forms';
+
 
 import { DatosMercanciaContenedoraComponent } from '../datos-mercancia-contenedora/datos-mercancia-contenedora.component';
 
@@ -275,25 +276,85 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
    * @param index - Índice de la mercancía a modificar.
    */
   onModificarMercancia(index: number): void {
-  // Debug: log selected row data to check for missing fields
-  console.log('Selected row for modificar:', this.mercanciasTablaDatos[index]);
     this.selectedMercanciaIndex = index;
     this.isEditBlocked = this.selectedMercanciaCount > 1;
     if (this.isEditBlocked) {
-      // Prevent modal opening if multiple rows are selected (old logic preserved)
       return;
     }
-    // Set mercanciaFormState to mapped object so child form initializes with correct values
-    this.mercanciaFormState = DomicilioDelEstablecimientoComponent.mapMercanciasInfoToForm(this.mercanciasTablaDatos[index]);
-    if (this.datosMercanciaContenedoraComp) {
-      this.datosMercanciaContenedoraComp.setEditBlocked(false);
-    }
-    // Open modal after a short delay to ensure form is ready
-    setTimeout(() => {
-      if (this.modalSeleccionaRegistroMercanciaInstance) {
-        this.modalSeleccionaRegistroMercanciaInstance.show();
+    // Map row data to form state, ensuring catalog fields use IDs
+    const SELECTED_ROW = this.mercanciasTablaDatos[index];
+    this.mercanciaFormState = DomicilioDelEstablecimientoComponent.mapMercanciasInfoToForm(SELECTED_ROW);
+
+    // Ensure catalogs are loaded before building and patching the child form
+    const CATALOGS_LOADED = [
+      this.datosMercanciaContenedoraComp.clasificacionProductoDatos,
+      this.datosMercanciaContenedoraComp.especificarClasificacionProductoDatos,
+      this.datosMercanciaContenedoraComp.tipoProductoDatos,
+      this.datosMercanciaContenedoraComp.formaFarmaceuticaDatos,
+      this.datosMercanciaContenedoraComp.estadoFisicoDatos
+    ].every(arr => Array.isArray(arr) && arr.length);
+
+    const PATCH_CHILD_FORM = () => {
+      this.datosMercanciaContenedoraComp.crearMercanciaForm();
+      // Always re-add missing catalog controls after form creation
+      const CATALOG_FIELDS = [
+        'clasificacionProducto',
+        'especificarClasificacionProducto',
+        'tipoProducto',
+        'formaFarmaceutica',
+        'estadoFisico'
+      ];
+      CATALOG_FIELDS.forEach(field => {
+        if (!this.datosMercanciaContenedoraComp.mercanciaForm.contains(field)) {
+          this.datosMercanciaContenedoraComp.mercanciaForm.addControl(field, new FormControl(null, Validators.required));
+        }
+      });
+      if (this.datosMercanciaContenedoraComp.mercanciaForm) {
+        this.datosMercanciaContenedoraComp.mercanciaForm.patchValue({
+          clasificacionProducto: DatosMercanciaContenedoraComponent.matchCatalogId(this.datosMercanciaContenedoraComp.clasificacionProductoDatos, SELECTED_ROW.clasificacion),
+          especificarClasificacionProducto: DatosMercanciaContenedoraComponent.matchCatalogId(this.datosMercanciaContenedoraComp.especificarClasificacionProductoDatos, SELECTED_ROW.especificar),
+          tipoProducto: DatosMercanciaContenedoraComponent.matchCatalogId(this.datosMercanciaContenedoraComp.tipoProductoDatos, SELECTED_ROW.tipoProducto),
+          formaFarmaceutica: DatosMercanciaContenedoraComponent.matchCatalogId(this.datosMercanciaContenedoraComp.formaFarmaceuticaDatos, SELECTED_ROW.formaFarmaceutica),
+          estadoFisico: DatosMercanciaContenedoraComponent.matchCatalogId(this.datosMercanciaContenedoraComp.estadoFisicoDatos, SELECTED_ROW.estadoFisico),
+          presentacion: SELECTED_ROW.presentacion,
+          numeroRegistroSanitario: SELECTED_ROW.numeroRegistro,
+          fraccionArancelaria: SELECTED_ROW.fraccionArancelaria,
+          descripcionFraccion: SELECTED_ROW.descripcionFraccion,
+          cantidadUmtValor: SELECTED_ROW.unidadUMT,
+          cantidadUmt: SELECTED_ROW.cantidadUMT,
+          cantidadUmcValor: SELECTED_ROW.unidad,
+          cantidadUmc: SELECTED_ROW.cantidadUMC,
+          fechaCaducidad: SELECTED_ROW.fechaCaducidad,
+          paisDeOriginDatos: SELECTED_ROW.paisDeOrigen ? [SELECTED_ROW.paisDeOrigen] : [],
+          paisDeProcedenciaDatos: SELECTED_ROW.paisDeProcedencia ? [SELECTED_ROW.paisDeProcedencia] : [],
+          usoEspecifico: SELECTED_ROW.usoEspecifico ? [SELECTED_ROW.usoEspecifico] : []
+        });
+        this.datosMercanciaContenedoraComp.setEditBlocked(false);
       }
-    }, 100);
+    };
+
+    if (this.datosMercanciaContenedoraComp) {
+      if (CATALOGS_LOADED) {
+        PATCH_CHILD_FORM();
+      } else {
+        // Wait and retry after 200ms until catalogs are loaded
+        const RETRY_PATCH = (): void => {
+          const LOADED = [
+            this.datosMercanciaContenedoraComp.clasificacionProductoDatos,
+            this.datosMercanciaContenedoraComp.especificarClasificacionProductoDatos,
+            this.datosMercanciaContenedoraComp.tipoProductoDatos,
+            this.datosMercanciaContenedoraComp.formaFarmaceuticaDatos,
+            this.datosMercanciaContenedoraComp.estadoFisicoDatos
+          ].every(arr => Array.isArray(arr) && arr.length);
+          if (LOADED) {
+            PATCH_CHILD_FORM();
+          } else {
+            setTimeout(RETRY_PATCH, 200);
+          }
+        };
+        RETRY_PATCH();
+      }
+    }
     this.openMercanciaModal();
   }
 
@@ -388,8 +449,52 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
     document.querySelectorAll('.modal-backdrop').forEach(bd => bd.remove());
     document.body.classList.remove('modal-open');
     document.body.style.removeProperty('padding-right');
-    if (this.datosMercanciaContenedoraComp && this.selectedMercanciaIndex === null) {
-      this.datosMercanciaContenedoraComp.resetForm();
+    // If adding a new row (not editing), ensure catalogs are loaded before resetting and opening modal
+    if (this.selectedMercanciaIndex === null) {
+      const CATALOGS_LOADED = [
+        this.datosMercanciaContenedoraComp?.clasificacionProductoDatos,
+        this.datosMercanciaContenedoraComp?.especificarClasificacionProductoDatos,
+        this.datosMercanciaContenedoraComp?.tipoProductoDatos,
+        this.datosMercanciaContenedoraComp?.formaFarmaceuticaDatos,
+        this.datosMercanciaContenedoraComp?.estadoFisicoDatos
+      ].every(arr => Array.isArray(arr) && arr.length);
+
+      const RESET_AND_OPEN = () => {
+        this.mercanciaFormState = DomicilioDelEstablecimientoComponent.getEmptyMercanciaForm();
+        if (this.datosMercanciaContenedoraComp) {
+          this.datosMercanciaContenedoraComp.crearMercanciaForm();
+          this.datosMercanciaContenedoraComp.resetForm();
+        }
+        if (this.modalAddMercanciasRef) {
+          const WIN = window as Window & { bootstrap?: { Modal?: typeof Modal } };
+          this.bootstrapModalMercanciasInstance = WIN.bootstrap?.Modal
+            ? new WIN.bootstrap.Modal(this.modalAddMercanciasRef.nativeElement)
+            : undefined;
+          this.bootstrapModalMercanciasInstance?.show();
+        }
+      };
+
+      if (CATALOGS_LOADED) {
+        RESET_AND_OPEN();
+        return;
+      }
+      // Wait and retry after 200ms until catalogs are loaded
+      const RETRY_RESET = (): void => {
+        const LOADED = [
+          this.datosMercanciaContenedoraComp.clasificacionProductoDatos,
+          this.datosMercanciaContenedoraComp.especificarClasificacionProductoDatos,
+          this.datosMercanciaContenedoraComp.tipoProductoDatos,
+          this.datosMercanciaContenedoraComp.formaFarmaceuticaDatos,
+          this.datosMercanciaContenedoraComp.estadoFisicoDatos
+        ].every(arr => Array.isArray(arr) && arr.length);
+        if (LOADED) {
+          RESET_AND_OPEN();
+        } else {
+          setTimeout(RETRY_RESET, 200);
+        }
+      };
+      RETRY_RESET();
+      return;
     }
     if (this.modalAddMercanciasRef) {
       const WIN = window as Window & { bootstrap?: { Modal?: typeof Modal } };
@@ -407,6 +512,8 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
     if (this.bootstrapModalMercanciasInstance && typeof this.bootstrapModalMercanciasInstance.hide === 'function') {
       this.bootstrapModalMercanciasInstance.hide();
     }
+    // Always reset selectedMercanciaIndex after closing modal
+    this.selectedMercanciaIndex = null;
     const BACKDROPS = document.querySelectorAll('.modal-backdrop');
     BACKDROPS.forEach(bd => bd.parentNode?.removeChild(bd));
     document.body.classList.remove('modal-open');
