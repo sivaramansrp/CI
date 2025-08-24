@@ -812,6 +812,7 @@
     [catalogoTransporte]="tipoVehiculo"
     [tipoTransporteSeleccionado]="solicitudState.tipoTransporte"
     [tablaTransporte]="solicitudState.transporte"
+    [tituloModalPersonalizado]="'Datos del vehículo de como se presentará al despacho'"
     (seleccionTipoTransporte)="changeSeleccionTipoTransporte($event)"
     (datosTabla)="changeAgregarVehiculo($event, 'vehiculo')"
   ></lib-transporte>
@@ -821,6 +822,7 @@
     [catalogoTransporte]="tipoTransporte"
     [tipoTransporteSeleccionado]="solicitudState.tipoTransporteArriboSalida"
     [tablaTransporte]="solicitudState.transporteArriboDatos"
+    [tituloModalPersonalizado]="'Datos del transporte de arribo/salida (al/del país)'"
     (seleccionTipoTransporte)="changeSeleccionTipoVehiculo($event)"
     (datosTabla)="changeAgregarVehiculo($event, 'transporte')"
   ></lib-transporte>

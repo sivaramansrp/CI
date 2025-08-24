@@ -1,4 +1,4 @@
-import { AgregarTransporteComponent } from '@ng-mf/data-access-user';
+import { AgregarTransporteComponent, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { AsignarPersonaComponent } from './components/asignar-persona/asignar-persona/asignar-persona.component';
@@ -14,7 +14,7 @@ import { InputCheckComponent } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { InputHoraComponent } from '@ng-mf/data-access-user';
 import { NgModule } from '@angular/core';
-import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
+import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentanteFiscalComponent } from '@ng-mf/data-access-user';
@@ -32,7 +32,7 @@ import { forwardRef } from '@angular/core';
   declarations: [
     SolicitantePageComponent,
     PasoUnoComponent,
-    PasoDosComponent,
+    PasoTresComponent,
     DatosTramiteComponent,
   ],
   imports: [
@@ -56,9 +56,10 @@ import { forwardRef } from '@angular/core';
     forwardRef(() => RepresentanteFiscalComponent),
     forwardRef(() => SelectPaisesComponent),
     forwardRef(() => CatalogoSelectComponent),
-    AsignarPersonaComponent
-  ],
-  exports: [PasoUnoComponent, PasoDosComponent],
+    AsignarPersonaComponent,
+    NotificacionesComponent
+],
+  exports: [PasoUnoComponent, PasoTresComponent],
   providers: [ToastrService, CatalogosService],
 })
 export class CodigoTransportistaModule {}

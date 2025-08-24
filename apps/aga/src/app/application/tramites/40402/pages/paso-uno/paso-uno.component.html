@@ -17,14 +17,13 @@
           <app-solicitante #Solicitante></app-solicitante> 
         } @case (2) { 
           @if (esDatosRespuesta) {
-            <app-datos-tramite></app-datos-tramite>
+            <app-datos-tramite #DatosTramite></app-datos-tramite>
           }
         } @case (3) {
           @if (esDatosRespuesta) {
-            <app-asignar-persona></app-asignar-persona>
+            <app-asignar-persona #AsignarPersona></app-asignar-persona>
           }
         } 
       }
     </ng-container>
-  </div>
 </div>

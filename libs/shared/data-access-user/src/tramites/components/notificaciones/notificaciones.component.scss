@@ -12,42 +12,8 @@
     text-align: center !important;
 }
 
-.custom-banner-azul {
-  background-color: #b3d9ff !important; /* Azul claro */
-  border-color: #87ceeb !important;
-  color: #004080 !important; /* Texto azul oscuro para contraste */
-  text-align: left;
-  line-height: 1.3;
-  font-size: 0.9rem; /* Texto más pequeño también en el banner */
-  
-  .alert-link {
-    color: #003366 !important;
-  }
-  
-  /* Ocultar el botón de cerrar */
-  .close, .btn-close {
-    display: none !important;
-  }
-  
-  span {
-    text-align: left;
-    display: block;
-    line-height: 1.3;
-    font-size: 0.9rem;
-  }
-}
 
-/* Alternativa global si necesitas aplicarlo a todos los banners */
-::ng-deep .custom-banner-azul {
-  background-color: #b3d9ff !important;
-  border-color: #87ceeb !important;
-  color: #004080 !important;
-  text-align: left;
-  
-  .close, .btn-close {
-    display: none !important;
-  }
-}
+
 
 .texto-bien-formateado {
   text-align: left;

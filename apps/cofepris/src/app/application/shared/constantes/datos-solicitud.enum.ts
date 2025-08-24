@@ -407,7 +407,7 @@ export const OCULTAR_FACTURADOR = [260102];
  * // Ejemplo de uso:
  */
 export const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE = [
-  260216, 260208, 260209, 260213,
+  260216, 260208, 260209, 260213
 ];
 
 /**
@@ -735,7 +735,7 @@ export const MENSAJE_EMERGENTE_DE_CONFIRMACION =
  *  Identificadores de notificación.
  */
 export const MOSTRAR_NOTIFICACION = [
-  260219, 260302, 260304, 260206, 260201, 260103, 260203, 260214, 260301, 260209
+  260219, 260302, 260304, 260206, 260201, 260103, 260203, 260214, 260301, 260209,260205
 ];
 
 /**
@@ -763,7 +763,7 @@ export const TIPO_PRODUCTO_ESPECIAL = '3';
  * @remarks
  * Esta constante se utiliza para filtrar procedimientos que no deben ser considerados en el contexto de manifiestos y declaraciones.
  */
-export const PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES = [260217, 260210, 260218, 260208, 260209, 260301, 260219, 260216, 260302, 260304];
+export const PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES = [260217, 260210, 260218, 260208, 260209, 260301, 260219, 260216, 260302, 260304, 260205, 260203];
 
 /**
  * @const ES_PUNTO_Y_COMA

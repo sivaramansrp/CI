@@ -28,9 +28,20 @@ import {
 import {
   ColumnasTabla,
   CombinacionRequerida,
+  ConsultarEmpresaProductora,
   DatosRealizar,
+  FilaSolicitud,
+  FilaSolicitudRespuesta,
+  FormularioGrupo,
 } from '../../models/acuicola.module';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import {
   DATOS_COMBINACION_REQUERIDA,
   DATOS_TRAMITE_REALIZAR,
@@ -47,44 +58,14 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ExportaccionAcuicolaService } from '../../services/exportaccion-acuicola.service';
 import { MENSAJE_DOBLE_CLIC } from '../../constants/acuicola.module';
+import { Modal } from 'bootstrap';
 import { Tramite220403Query } from '../../estados/tramite220403.query';
 import { Tramite220403Store } from '../../estados/tramite220403.store';
 
-/**
- * @interface FilaSolicitud
- * @description
- * Representa una fila de la tabla de solicitudes, incluyendo información relevante sobre la solicitud.
- */
-interface FilaSolicitud {
-  /**
-   * @property {string} fechaCreacion
-   * @description
-   * Fecha de creación de la solicitud en formato ISO 8601.
-   */
-  fechaCreacion: string;
-  /**
-   * @property {string} mercancia
-   * @description
-   * Nombre o descripción de la mercancía solicitada.
-   */
-  mercancia: string;
-  /**
-   * @property {number} cantidad
-   * @description
-   * Cantidad de la mercancía solicitada.
-   */
-  cantidad: number;
-  /**
-   * @property {string} proveedor
-   * @description
-   * Nombre del proveedor de la mercancía.
-   */
-  proveedor: string;
-}
 @Component({
   selector: 'app-datos-de-la-solicitud',
   templateUrl: './datos-de-la-solicitud.component.html',
-  styleUrl: './datos-de-la-solicitud.component.css',
+  styleUrl: './datos-de-la-solicitud.component.scss',
   standalone: true,
   imports: [
     TituloComponent,
@@ -144,7 +125,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @description Indica si la sección es colapsable.
    * @type {boolean}
    */
-  colapsable: boolean = false;
+  colapsable: boolean = true;
 
   /**
    * @property {string} alertMessage
@@ -178,7 +159,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       clave: (fila) => fila.cantidad.toString(),
       orden: 3,
     },
-    { encabezado: 'Proveedor', clave: (fila) => fila.proveedor, orden: 4 },
+    { encabezado: 'Proovedor', clave: (fila) => fila.proveedor, orden: 4 },
   ];
 
   /**
@@ -193,7 +174,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           inputType: InputTypes.RADIO,
           props: DATOS_TRAMITE_REALIZAR[0] as unknown as Props,
           class: 'col-md-8',
-          value: 'animal',
         },
         {
           inputType: InputTypes.BREAK_CONTENT,
@@ -275,17 +255,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           inputType: InputTypes.BUTTON,
           props: DATOS_COMBINACION_REQUERIDA[3] as unknown as Props,
           class: 'col-md-2',
-        }
+        },
       ],
     },
   ];
   tableData: {
     headers: {
-      encabezado: string,
-      clave: (ele: ColumnasTabla) => string,
-      orden: number
-    }[],
-    data: [],
+      encabezado: string;
+      clave: (ele: ColumnasTabla) => string;
+      orden: number;
+    }[];
+    data: ColumnasTabla[];
   } = {
     headers: [
       {
@@ -364,7 +344,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         orden: 5,
       },
     ],
-    data: []
+    data: [],
   };
   /**
    * Almacena la configuración de la tabla de selección utilizada en el formulario.
@@ -380,6 +360,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Representa el formulario principal del componente.
    */
   formulario!: FormGroup;
+
+  /**
+   * @property {FormGroup} consultarEmpresaProductoraForm
+   * @description
+   * Formulario reactivo utilizado para consultar los datos de la empresa productora en el trámite.
+   */
+  consultarEmpresaProductoraForm!: FormGroup;
 
   /**
    * Objeto utilizado para almacenar eventos dentro del componente.
@@ -406,6 +393,22 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   consultaDatos!: ConsultaioState;
 
   /**
+   * Almacena los datos de la solicitud.
+   * @type {FilaSolicitud[]}
+   */
+  solicitudDatos: FilaSolicitud[] = [];
+
+  /**
+   * Referencia al elemento del modal.
+   */
+  @ViewChild('modalAgregarImportador') modalElement!: ElementRef;
+
+  /**
+   * Referencia al botón de cerrar el modal.
+   */
+  @ViewChild('closeModal') closeModal!: ElementRef;
+
+  /**
    * Constructor del componente DatosDeLaSolicitudComponent.
    * Inicializa los servicios y dependencias necesarias para el funcionamiento del componente.
    *
@@ -428,6 +431,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private seccionQuery: SeccionLibQuery,
     private consultaQuery: ConsultaioQuery
   ) {
+    this.obtenerSolicitudDatos();
     this.crearFormulario();
     this.configuracion.forEach(
       (eachConfig: InputConfig, groupIndex: number) => {
@@ -494,7 +498,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.formulario.statusChanges
-      .pipe(takeUntil(this.destroyNotifier$)) // Ensures unsubscribe on component destruction
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(() => {
         this.tramite220403store.setDatosRealizar(
           this.formulario.get('datosRealizar')?.value
@@ -545,6 +549,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.formulario = this.fb.group({
       datosRealizar: this.fb.group({}),
       combinacionRequerida: this.fb.group({}),
+    });
+    this.consultarEmpresaProductoraForm = this.fb.group({
+      razonSocial: [{ value: '', disabled: true }],
+      codigoPostal: [{ value: '', disabled: true }, Validators.required],
+      pais: [{ value: '', disabled: true }, Validators.required],
+      estado: [{ value: '', disabled: true }],
+      calle: [{ value: '', disabled: true }, Validators.required],
+      numeroExterior: [{ value: '', disabled: true }, Validators.required],
+      numeroInterior: [{ value: '', disabled: true }],
+      telefono: [{ value: '', disabled: true }],
+      correoElectronico: [{ value: '', disabled: true }]
     });
   }
 
@@ -704,10 +719,93 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * @method mostrar_colapsable
-   * @description 
+   * @description
    * Muestra o esconde la sección colapsable.
    */
   mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
+  }
+
+  /**
+   * Método para obtener los datos de la solicitud y almacenarlos en `solicitudDatos`.
+   * @returns {void}
+   */
+  obtenerSolicitudDatos(): void {
+    this.exportaccionAcuicolaServcios
+      .obtenerSolicitudDatos()
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((resultado: FilaSolicitudRespuesta) => {
+          this.solicitudDatos = resultado.data;
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   *
+   * @param event Evento que se dispara al seleccionar una fila en la tabla.
+   * @description
+   * Maneja la selección de una fila en la tabla y obtiene el certificado de exportación correspondiente.
+   * @returns {void}
+   */
+  filaSeleccionada(): void {
+    this.exportaccionAcuicolaServcios
+      .certificadoExportacion()
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((certificado: FormularioGrupo) => {
+          this.formulario
+            .get('datosRealizar')
+            ?.patchValue(certificado.datosRealizar);
+          this.formulario
+            .get('combinacionRequerida')
+            ?.patchValue(certificado.combinacionRequerida);
+          this.tableData.data = certificado.mercanciasTablaDatos || [];
+          this.tramite220403store.setDatosRealizar(certificado.datosRealizar);
+          this.tramite220403store.setCombinacionRequerida(
+            certificado.combinacionRequerida
+          );
+          this.tramite220403store.setTransporte(certificado.transporte);
+          this.tramite220403store.setPagoDerechos(certificado.pagoDerechos);
+          this.tramite220403store.setMercanciasTablaDatos(
+            certificado.mercanciasTablaDatos || []
+          );
+          this.tramite220403store.setImportadorDatos(
+            certificado.importadorDatos || []
+          );
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * Abre el diálogo para consultar los datos de la empresa.
+   * @returns {void}
+   */
+  abrirDialogoConsultar(): void {
+    this.exportaccionAcuicolaServcios.obtenerConsultarEmpresaDatos()
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((resultado: ConsultarEmpresaProductora) => {
+        this.consultarEmpresaProductoraForm.patchValue({
+          razonSocial: resultado.razonSocial || '',
+          codigoPostal: resultado.codigoPostal || '',
+          pais: resultado.pais || '',
+          estado: resultado.estado || '',
+          calle: resultado.calle || '',
+          numeroExterior: resultado.numeroExterior || '',
+          numeroInterior: resultado.numeroInterior || '',
+          telefono: resultado.telefono || '',
+          correoElectronico: resultado.correoElectronico || ''
+        })
+      })
+    )
+    .subscribe();
+    
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
   }
 }

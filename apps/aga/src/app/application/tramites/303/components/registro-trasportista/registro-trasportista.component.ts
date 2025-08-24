@@ -187,18 +187,23 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
     }
 
     if (ESEXTRANJEROFISICA) {
+      NOMBRE?.enable({ emitEvent: false });
+      APELLIDOPATERNO?.enable({ emitEvent: false });
+      APELLIDOMATERNO?.enable({ emitEvent: false });
+
       NOMBRE?.setValidators([Validators.required]);
       APELLIDOPATERNO?.setValidators([Validators.required]);
       TAXID?.setValidators([Validators.required]);
     }
 
     if (ESNACIONALMORAL) {
-      this.FormTrasportista.get('razonSocial')?.disable({ emitEvent: false });
+      this.FormTrasportista.get('razonSocial')?.disable({ emitEvent: true });
       RFC?.setValidators([Validators.required]);
       RAZONSOCIAL?.setValidators([Validators.required]);
     }
 
     if (ESEXTRANJEROMORAL) {
+      RAZONSOCIAL?.enable({ emitEvent: false });
       RAZONSOCIAL?.setValidators([Validators.required]);
       TAXID?.setValidators([Validators.required]);
     }
@@ -360,7 +365,23 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
     };
     this.limpiarFormulario();
   }
-
+/**
+ * Habilita los campos del formulario.
+ */
+  habilitarCampos(): void {
+    const RFC = this.FormTrasportista.get('rfc');
+    const NOMBRE = this.FormTrasportista.get('nombre');
+    const APELLIDOPATERNO = this.FormTrasportista.get('apellidoPaterno');
+    const APELLIDOMATERNO = this.FormTrasportista.get('apellidoMaterno');
+    const TAXID = this.FormTrasportista.get('taxID');
+    const RAZONSOCIAL = this.FormTrasportista.get('razonSocial');
+    NOMBRE?.enable({ emitEvent: false });
+    APELLIDOPATERNO?.enable({ emitEvent: false });
+    APELLIDOMATERNO?.enable({ emitEvent: false });
+    TAXID?.enable({ emitEvent: false });
+    RAZONSOCIAL?.enable({ emitEvent: false });
+    RFC?.enable({ emitEvent: false });
+  }
   /**
    * Guarda los datos del transportista.
    * @returns void
@@ -382,7 +403,7 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
       setTimeout(() => { this.alerta = null; }, 4000);
       return;
     }
-
+    this.habilitarCampos();
     const FORM_VALUE = this.FormTrasportista.value;
 
     const TRANSPORTISTA: Transportista = {
