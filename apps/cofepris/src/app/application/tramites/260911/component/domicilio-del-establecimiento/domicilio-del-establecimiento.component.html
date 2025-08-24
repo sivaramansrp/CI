@@ -95,8 +95,7 @@
               formControlName="localidad"
               appUppercase
               aria-labelledby="localidad"
-              maxlength="120"
-              pattern="^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]{1,30}$"
+              maxlength="121"
               (input)="onLocalidadInput($event)"
               (change)="setValorStore(form, 'localidad')"
             />
@@ -104,11 +103,8 @@
               <div *ngIf="form.get('localidad')?.hasError('required')">
                 Por favor, corrija el localidad.
               </div>
-              <div *ngIf="form.get('localidad')?.hasError('maxlength')">
+              <div *ngIf="form.get('localidad')?.errors?.['maxlength']">
                 La localidad no puede tener más de 120 caracteres
-              </div>
-               <div *ngIf="form.get('localidad')?.hasError('pattern')">
-                El valor capturado no es válido.
               </div>
             </div>
           </div>
@@ -144,6 +140,17 @@
         <div class="col-md-8">
           <div class="form-group">
             <label class="form-label" for="calle">Calle*:</label>
+             <input
+              class="form-control"
+              type="text"
+              id="lada"
+              formControlName="calle"
+              appUppercase
+              aria-labelledby="calle"
+              maxlength="100"
+              (input)="onCalleInput($event)"
+              (change)="setValorStore(form, 'calle')"
+            />
             <div *ngIf="form.get('calle')?.touched && form.get('calle')?.invalid" class="text-danger">
               <div *ngIf="form.get('calle')?.hasError('required')">
                 Este campo es obligatorio

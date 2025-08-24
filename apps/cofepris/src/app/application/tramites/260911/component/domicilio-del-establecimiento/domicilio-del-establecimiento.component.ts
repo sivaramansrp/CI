@@ -618,11 +618,43 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
   onBuscarRepresentanteLegal(): void {
     const RFC_CONTROL = this.representanteLegal.get('rfc');
     if (RFC_CONTROL && RFC_CONTROL.invalid) {
+      // Si el RFC es inválido, limpiar y habilitar para entrada manual
       this.enableLegalFields = true;
+      this.representanteLegal.get('nombre')?.setValue('');
+      this.representanteLegal.get('apellidoPaterno')?.setValue('');
+      this.representanteLegal.get('apellidoMaterno')?.setValue('');
       this.representanteLegal.get('nombre')?.enable();
       this.representanteLegal.get('apellidoPaterno')?.enable();
       this.representanteLegal.get('apellidoMaterno')?.enable();
+      return;
+    }
+
+    // Si el RFC es válido, buscar en el servicio
+    const RFC_VALUE = RFC_CONTROL?.value;
+    if (RFC_VALUE) {
+      this.domicilioDelEstablecimientoService.buscarRepresentanteLegalPorRFC(RFC_VALUE).subscribe(result => {
+        if (result) {
+          // Si se encuentra, puedes llenar los campos (opcional)
+          this.representanteLegal.get('nombre')?.setValue(result.nombre);
+          this.representanteLegal.get('apellidoPaterno')?.setValue(result.apellidoPaterno);
+          this.representanteLegal.get('apellidoMaterno')?.setValue(result.apellidoMaterno);
+          this.enableLegalFields = false;
+          this.representanteLegal.get('nombre')?.disable();
+          this.representanteLegal.get('apellidoPaterno')?.disable();
+          this.representanteLegal.get('apellidoMaterno')?.disable();
+        } else {
+          // Si no se encuentra, limpiar y habilitar para entrada manual
+          this.enableLegalFields = true;
+          this.representanteLegal.get('nombre')?.setValue('');
+          this.representanteLegal.get('apellidoPaterno')?.setValue('');
+          this.representanteLegal.get('apellidoMaterno')?.setValue('');
+          this.representanteLegal.get('nombre')?.enable();
+          this.representanteLegal.get('apellidoPaterno')?.enable();
+          this.representanteLegal.get('apellidoMaterno')?.enable();
+        }
+      });
     } else {
+      // Si no hay RFC, deshabilitar los campos
       this.enableLegalFields = false;
       this.representanteLegal.get('nombre')?.disable();
       this.representanteLegal.get('apellidoPaterno')?.disable();
@@ -1058,11 +1090,13 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
 
       if (CONTROL) {
         CONTROL.markAsTouched();
-        if (VALUE && VALUE.length === 120) {
+        // Only set error if length > 120
+        if (VALUE && VALUE.length > 120) {
           CONTROL.setErrors({ ...CONTROL.errors, maxlength: { requiredLength: 120, actualLength: VALUE.length } });
-        } else if (VALUE && VALUE.length < 120) {
+        } else {
+          // Remove maxlength error if length <= 120
           const ERRORS = CONTROL.errors;
-          if (ERRORS) {
+          if (ERRORS && ERRORS['maxlength']) {
             delete ERRORS['maxlength'];
             const HAS_OTHER_ERRORS = Object.keys(ERRORS).length > 0;
             CONTROL.setErrors(HAS_OTHER_ERRORS ? ERRORS : null);

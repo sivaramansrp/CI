@@ -28,6 +28,7 @@ describe('DomicilioDelEstablecimientoComponent', () => {
 				obtenerMercanciasDatos: jest.fn().mockReturnValue(of({ code: 200, data: [], message: '' })),
 				getEntidad: jest.fn().mockReturnValue(of([])),
 				getRepresentacion: jest.fn().mockReturnValue(of([])),
+				buscarRepresentanteLegalPorRFC: jest.fn().mockReturnValue(of({})),
 			} as any;
 		const dummyTramite260911$ = of({});
 		querySpy = {
@@ -175,10 +176,9 @@ describe('DomicilioDelEstablecimientoComponent', () => {
 			const event = { target: { value: '123456789012' } } as any;
 			component.onCodigoPostalInput(event);
 			expect(component.form.get('codigoPostal')?.errors).toBeTruthy();
-			// Test other input handlers similarly
 			component.onMunicipioOAlcaldiaInput({ target: { value: 'a'.repeat(120) } } as any);
 			expect(component.form.get('municipioOAlcaldia')?.errors).toBeTruthy();
-			component.onLocalidadInput({ target: { value: 'a'.repeat(120) } } as any);
+			component.onLocalidadInput({ target: { value: 'a'.repeat(121) } } as any);
 			expect(component.form.get('localidad')?.errors).toBeTruthy();
 			component.onColoniasInput({ target: { value: 'a'.repeat(120) } } as any);
 			expect(component.form.get('colonias')?.errors).toBeTruthy();
