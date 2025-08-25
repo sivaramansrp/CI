@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import {
   Destinatario,
   Fabricante,
@@ -47,6 +47,7 @@ import { Tramite260911Store } from '../../estados/tramite260911.store';
   styleUrl: './terceros-relacionados-vista.component.scss',
 })
 export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
+   @Input() disabled: boolean = false;
   fabricanteTablaDatos: Fabricante[] = [];
   destinatarioFinalTablaDatos: Destinatario[] = [];
   proveedorTablaDatos: ProveedorWithId[] = [];

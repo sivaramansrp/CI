@@ -155,11 +155,12 @@
               class="form-control"
               id="correo"
               placeholder=""
-              type="text"
+              type="email"
               formControlName="correo"
               maxlength="320"
               (change)="setValorStore(datosDelEstablecimiento,'correo')"
               (input)="validarLongitudMaxima('correo', 320)"
+              [ngClass]="isValid(datosDelEstablecimiento, 'correo') ? 'required' : ''"
             />
             <div *ngIf="datosDelEstablecimiento.get('correo')?.invalid && datosDelEstablecimiento.get('correo')?.touched" class="text-danger">
               <span *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['required']">

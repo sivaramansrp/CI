@@ -14,6 +14,7 @@
                 maxlength="10"
                 (change)="setValoresStore(pagoDeDerechosForm,'claveDeReferencia')"
                 (input)="validarLongitudMaxima('claveDeReferencia', 10)"
+                [disabled]="disabled"
               />
             <div *ngIf="esInvalido('claveDeReferencia')" class="text-danger">
               <small *ngIf="pagoDeDerechosForm.controls['claveDeReferencia'].hasError('required')">Todos los campos de pago son requeridos</small>
@@ -33,6 +34,7 @@
               maxlength="15"
               (change)="setValoresStore(pagoDeDerechosForm,'cadenaPagoDependencia')"
               (input)="validarLongitudMaxima('cadenaPagoDependencia', 15)"
+              [disabled]="disabled"
             />
             <div *ngIf="esInvalido('cadenaPagoDependencia')" class="text-danger">
               <small *ngIf="pagoDeDerechosForm.controls['cadenaPagoDependencia'].hasError('maxlength')">Máximo 14 caracteres.</small>
@@ -46,7 +48,7 @@
               [label]="'Banco'"
               id="clave"
               formControlName="clave"
-              [isDisabled]="esFormularioSoloLectura" 
+              [isDisabled]="disabled" 
               (change)="setValoresStore(pagoDeDerechosForm, 'clave')"
             >
             </app-catalogo-select>
@@ -70,6 +72,7 @@
               maxlength="31"
               (change)="setValoresStore(pagoDeDerechosForm,'llaveDePago')"
               (input)="validarLongitudMaxima('llaveDePago', 31)"
+              [disabled]="disabled"
             />
             <div *ngIf="esInvalido('llaveDePago')" class="text-danger">
               <small *ngIf="pagoDeDerechosForm.controls['llaveDePago'].hasError('required')">Todos los campos de pago son requeridos</small>
@@ -87,6 +90,7 @@
             name="fecPago"
             formControlName="fecPago"
             (change)="setValoresStore(pagoDeDerechosForm,'fecPago'); validarFechaFutura('fecPago')"
+            [disabled]="disabled"
           />
             <div *ngIf="esInvalido('fecPago')" class="text-danger">
               <small *ngIf="pagoDeDerechosForm.controls['fecPago'].hasError('required')">Todos los campos de pago son requeridos.</small>
@@ -105,6 +109,7 @@
               formControlName="impPago"
               maxlength="17"
               (change)="setValoresStore(pagoDeDerechosForm,'impPago'); validarSinComas('impPago')"
+              [disabled]="disabled"
             />
               <div *ngIf="esInvalido('impPago')" class="text-danger">
               <small *ngIf="pagoDeDerechosForm.controls['impPago'].hasError('required')">Todos los campos de pago son requeridos.</small>
@@ -118,7 +123,7 @@
       </div>
   
       <div class="d-flex justify-content-end mt-5">
-  <button type="button" class="btn btn-primary ms-2 d-flex" [disabled]="esFormularioSoloLectura" (click)="resetPagoDeDerechos()">Borrar datos del pago</button>
+  <button type="button" class="btn btn-primary ms-2 d-flex" [disabled]="disabled" (click)="resetPagoDeDerechos()">Borrar datos del pago</button>
       </div>
     </form>
   </div>

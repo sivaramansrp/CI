@@ -38,7 +38,7 @@
               [label]="'Estado'"
               name="estado"
               [required]="true"
-              [isDisabled]="esFormularioSoloLectura" 
+              [isDisabled]="esFormularioSoloLectura || disabled" 
               formControlName="estado"
               (change)="setValorStore(form, 'estado')"
             >
@@ -297,7 +297,7 @@
                     [label]="'Clave S.C.I.A.N.'"
                     [required]="true"
                     name="entidad"
-                    [isDisabled]="esFormularioSoloLectura" 
+                    [isDisabled]="esFormularioSoloLectura || disabled"
                     [required]="true"
                     formControlName="entidad"
                     (selectionChange)="setValorStore(nicoTablaForm, 'entidad')"
@@ -319,7 +319,7 @@
                   [label]="'Descripción del S.C.I.A.N.'"
                   [required]="true"
                   name="representacion"
-                  [isDisabled]="esFormularioSoloLectura" 
+                  [isDisabled]="esFormularioSoloLectura || disabled"
                   formControlName="representacion"
                   (selectionChange)="setValorStore(nicoTablaForm, 'representacion')"
                   >
@@ -400,7 +400,7 @@
           formControlName="regimen" 
           [label]="'Régimen'" 
           [required]="true"
-          [isDisabled]="esFormularioSoloLectura" 
+          [isDisabled]="esFormularioSoloLectura || disabled" 
           name="regimen" 
           [tooltipQuestionCircle]="true"
           [tooltipQuestionCircleText]="'Régimen al que se destinará la mercancía'"
@@ -416,7 +416,7 @@
           formControlName="aduanasEntradas" 
           [label]="'Aduanas de entradas'"
           [required]="true" 
-          [isDisabled]="esFormularioSoloLectura" 
+          [isDisabled]="esFormularioSoloLectura || disabled" 
           name="aduanasEntradas"
           (change)="setValorStore(domicilio, 'aduanasEntradas')"
         ></app-catalogo-select>
@@ -430,7 +430,7 @@
           <label class="form-label" for="importPermitNumberCNSNS"
           >Número de Permiso de Importación expedido por la CNSNS:
             <span 
-              class="bi bi-question-circle-fill" 
+              class="bi bi-question-circle-fill"
               title="No. de licencia sanitaria"
               data-bs-toggle="tooltip"
               ></span
@@ -533,7 +533,6 @@
             </div>
           </div>
         </div>
-      </div>
     </div>
 
     <div class="row mt-2">

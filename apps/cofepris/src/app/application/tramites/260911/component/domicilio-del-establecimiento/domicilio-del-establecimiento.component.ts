@@ -1,5 +1,7 @@
 import { ALERT, OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/domicilio-del-establecimiento.enum';
 import { AfterViewInit, Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Input, OnChanges } from '@angular/core';
+  
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputCheckComponent, InputRadioComponent, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { FormControl } from '@angular/forms';
@@ -64,7 +66,45 @@ import { Tramite260911Query } from '../../estados/tramite260911.query';
   templateUrl: './domicilio-del-establecimiento.component.html',
   styleUrl: './domicilio-del-establecimiento.component.scss',
 })
-export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, AfterViewInit {
+export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
+  @Input() disabled: boolean = false;
+
+    ngOnChanges(): void {
+      
+      if (!this.esFormularioSoloLectura && !this.disabled) {
+        this.form?.enable();
+        this.domicilio?.enable();
+        this.representanteLegal?.enable();
+      } else {
+        this.form?.disable();
+        this.domicilio?.disable();
+        this.representanteLegal?.disable();
+      }
+
+      
+      const AVISO_CHECKBOX_VALUE = this.domicilio?.get('avisoCheckbox')?.value;
+      const LICENCIA_SANITARIA_CONTROL = this.domicilio?.get('licenciaSanitaria');
+      if (LICENCIA_SANITARIA_CONTROL) {
+        if (AVISO_CHECKBOX_VALUE) {
+          LICENCIA_SANITARIA_CONTROL.disable();
+        } else {
+          LICENCIA_SANITARIA_CONTROL.enable();
+        }
+      }
+
+      if (this.representanteLegal) {
+        if (this.enableLegalFields) {
+          this.representanteLegal.get('nombre')?.enable();
+          this.representanteLegal.get('apellidoPaterno')?.enable();
+          this.representanteLegal.get('apellidoMaterno')?.enable();
+        } else {
+          this.representanteLegal.get('nombre')?.disable();
+          this.representanteLegal.get('apellidoPaterno')?.disable();
+          this.representanteLegal.get('apellidoMaterno')?.disable();
+        }
+      }
+    }
+
   /**
    * Índice del elemento de mercancía seleccionado en la tabla.
    */
@@ -234,13 +274,11 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
    */
   onAgregarMercancia(event: MercanciasInfo): void {
   if (this.selectedMercanciaIndex !== null && this.selectedMercanciaIndex >= 0) {
-    // Update existing row
     this.mercanciasTablaDatos = this.mercanciasTablaDatos.map((row, idx) =>
       idx === this.selectedMercanciaIndex ? event : row
     );
     this.selectedMercanciaIndex = null;
   } else {
-    // Add new row
     this.mercanciasTablaDatos = [...this.mercanciasTablaDatos, event];
   }
   this.cerrarMercanciaModal();
@@ -281,11 +319,8 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
     if (this.isEditBlocked) {
       return;
     }
-    // Map row data to form state, ensuring catalog fields use IDs
     const SELECTED_ROW = this.mercanciasTablaDatos[index];
     this.mercanciaFormState = DomicilioDelEstablecimientoComponent.mapMercanciasInfoToForm(SELECTED_ROW);
-
-    // Ensure catalogs are loaded before building and patching the child form
     const CATALOGS_LOADED = [
       this.datosMercanciaContenedoraComp.clasificacionProductoDatos,
       this.datosMercanciaContenedoraComp.especificarClasificacionProductoDatos,
@@ -294,9 +329,8 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
       this.datosMercanciaContenedoraComp.estadoFisicoDatos
     ].every(arr => Array.isArray(arr) && arr.length);
 
-    const PATCH_CHILD_FORM = () => {
+    const PATCH_CHILD_FORM = (): void => {
       this.datosMercanciaContenedoraComp.crearMercanciaForm();
-      // Always re-add missing catalog controls after form creation
       const CATALOG_FIELDS = [
         'clasificacionProducto',
         'especificarClasificacionProducto',
@@ -337,7 +371,6 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
       if (CATALOGS_LOADED) {
         PATCH_CHILD_FORM();
       } else {
-        // Wait and retry after 200ms until catalogs are loaded
         const RETRY_PATCH = (): void => {
           const LOADED = [
             this.datosMercanciaContenedoraComp.clasificacionProductoDatos,
@@ -449,7 +482,6 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
     document.querySelectorAll('.modal-backdrop').forEach(bd => bd.remove());
     document.body.classList.remove('modal-open');
     document.body.style.removeProperty('padding-right');
-    // If adding a new row (not editing), ensure catalogs are loaded before resetting and opening modal
     if (this.selectedMercanciaIndex === null) {
       const CATALOGS_LOADED = [
         this.datosMercanciaContenedoraComp?.clasificacionProductoDatos,
@@ -459,7 +491,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
         this.datosMercanciaContenedoraComp?.estadoFisicoDatos
       ].every(arr => Array.isArray(arr) && arr.length);
 
-      const RESET_AND_OPEN = () => {
+      const RESET_AND_OPEN = (): void => {
         this.mercanciaFormState = DomicilioDelEstablecimientoComponent.getEmptyMercanciaForm();
         if (this.datosMercanciaContenedoraComp) {
           this.datosMercanciaContenedoraComp.crearMercanciaForm();
@@ -478,7 +510,6 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
         RESET_AND_OPEN();
         return;
       }
-      // Wait and retry after 200ms until catalogs are loaded
       const RETRY_RESET = (): void => {
         const LOADED = [
           this.datosMercanciaContenedoraComp.clasificacionProductoDatos,
@@ -512,7 +543,6 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
     if (this.bootstrapModalMercanciasInstance && typeof this.bootstrapModalMercanciasInstance.hide === 'function') {
       this.bootstrapModalMercanciasInstance.hide();
     }
-    // Always reset selectedMercanciaIndex after closing modal
     this.selectedMercanciaIndex = null;
     const BACKDROPS = document.querySelectorAll('.modal-backdrop');
     BACKDROPS.forEach(bd => bd.parentNode?.removeChild(bd));
@@ -871,6 +901,15 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
       const FIRST_OPTION = this.subRepresentacion && this.subRepresentacion.length > 0 ? this.subRepresentacion[0].id : '';
       this.nicoTablaForm.get('representacion')?.setValue(FIRST_OPTION);
     });
+    if (!this.esFormularioSoloLectura && !this.disabled) {
+      this.form.enable();
+      this.domicilio.enable();
+      this.representanteLegal.enable();
+    } else {
+      this.form.disable();
+      this.domicilio.disable();
+      this.representanteLegal.disable();
+    }
   }
  
 
@@ -935,8 +974,8 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
     });
 
     this.domicilio = this.fb.group({
-  avisoCheckbox: [true],
-  licenciaSanitaria: [this.solicitudState?.licenciaSanitaria],
+      avisoCheckbox: [true],
+      licenciaSanitaria: [this.solicitudState?.licenciaSanitaria],
       regimen: [this.solicitudState?.regimen, [Validators.required]],
       aduanasEntradas: [this.solicitudState?.aduanasEntradas, [Validators.required]],
       importPermitNumberCNSNS: [{ value: this.solicitudState?.importPermitNumberCNSNS, disabled: false }],
@@ -1033,7 +1072,6 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
     const CONTROL = this.form.get('codigoPostal');
     
     if (CONTROL) {
-      // Marcar como touched para mostrar errores
       CONTROL.markAsTouched();
       
       // Si el valor tiene exactamente 12 caracteres, forzar el error de maxlength
@@ -1090,11 +1128,9 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
 
       if (CONTROL) {
         CONTROL.markAsTouched();
-        // Only set error if length > 120
         if (VALUE && VALUE.length > 120) {
           CONTROL.setErrors({ ...CONTROL.errors, maxlength: { requiredLength: 120, actualLength: VALUE.length } });
         } else {
-          // Remove maxlength error if length <= 120
           const ERRORS = CONTROL.errors;
           if (ERRORS && ERRORS['maxlength']) {
             delete ERRORS['maxlength'];
@@ -1258,7 +1294,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
       .getRepresentacion()
       .pipe(takeUntil(this.destroy$))
       .subscribe((data: Catalogo[]) => {
-        this.allRepresentaciones = data; // Store all options
+        this.allRepresentaciones = data;
       this.updateRepresentacionOptions(this.nicoTablaForm.get('entidad')?.value);
       });
   }

@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AbstractControl, FormBuilder } from '@angular/forms';
+import { AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { AlertComponent, REGEX_RFC } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite260911State, Tramite260911Store } from '../../estados/tramite260911.store';
@@ -6,7 +7,7 @@ import { ALERT } from '../../enums/datos-de-la-solicitud.enum';
 
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { FormBuilder } from '@angular/forms';
+
 import { FormGroup } from '@angular/forms';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/datos-de-la-solicitud.enum';
@@ -46,7 +47,21 @@ import { Validators } from '@angular/forms';
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
+
 export class DatosDeLaSolicitudComponent implements OnInit, AfterViewInit, OnDestroy {
+  // Custom RFC-compliant email validator allowing up to 320 chars and long local part
+  static rfcEmailValidator(control: import('@angular/forms').AbstractControl): Record<string, unknown> | null {
+    if (!control.value) {
+      return null;
+    }
+    // Allow local part longer than 64 chars, enforce total <= 320 and basic format
+    const BASIC_EMAIL_REGEX = /^[A-Za-z0-9!#$%&'*+/=?^_`{|}~.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    if (control.value.length > 320) {
+      return { maxlength: true };
+    }
+    return BASIC_EMAIL_REGEX.test(control.value) ? null : { email: true };
+  }
+  @Output() radioButtonSelectedChange = new EventEmitter<boolean>();
 
   /** Estado actual de la solicitud proveniente del store */
   public solicitudState!: Tramite260911State;
@@ -226,26 +241,22 @@ export class DatosDeLaSolicitudComponent implements OnInit, AfterViewInit, OnDes
     if (CONTROL && CONTROL.value) {
       CONTROL.markAsTouched();
       CONTROL.markAsDirty();
-      
-      if (CONTROL.value.length === maxLength) {
-        // Obtener errores existentes y agregar maxlength
+      // Solo marcar error si la longitud es MAYOR al máximo permitido
+      if (CONTROL.value.length > maxLength) {
         const CURRENT_ERRORS = CONTROL.errors || {};
         const NEW_ERRORS = {
           ...CURRENT_ERRORS,
           maxlength: { requiredLength: maxLength, actualLength: CONTROL.value.length }
         };
         CONTROL.setErrors(NEW_ERRORS);
-      } else if (CONTROL.value.length < maxLength) {
-        // Limpiar solo el error de maxlength si el texto es menor al límite
+      } else {
+        // Limpiar solo el error de maxlength si el texto es menor o igual al límite
         const ERRORS = CONTROL.errors;
         if (ERRORS && ERRORS['maxlength']) {
           delete ERRORS['maxlength'];
-          // Mantener otros errores si existen
           CONTROL.setErrors(Object.keys(ERRORS).length === 0 ? null : ERRORS);
         }
       }
-      
-      // Forzar la actualización de validación
       CONTROL.updateValueAndValidity({ emitEvent: false });
     }
   }
@@ -289,11 +300,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, AfterViewInit, OnDes
     this.datosDelEstablecimiento = this.fb.group({
       rfcDel: [this.solicitudState?.rfcDel, [Validators.required, Validators.pattern(REGEX_RFC)]],
       denominacion: [this.solicitudState?.denominacion, [Validators.required, Validators.maxLength(100)]],
-      correo: [this.solicitudState?.correo, [Validators.required, Validators.email, Validators.maxLength(320)]],
+      correo: [
+        this.solicitudState?.correo,
+        [Validators.required, DatosDeLaSolicitudComponent.rfcEmailValidator, Validators.maxLength(320)]
+      ],
     });
 
     // Verificar si hay un valor inicial en el radio button
     this.isRadioButtonSelected = Boolean(this.solicitudState.btonDeRadio);
+    // Si no hay radio seleccionado, deshabilitar las secciones
+    if (!this.isRadioButtonSelected) {
+      this.disableSections();
+    }
     
     // Deshabilitar secciones si no hay radio button seleccionado
     if (!this.isRadioButtonSelected) {
@@ -346,7 +364,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, AfterViewInit, OnDes
    */
   onRadioButtonChange(value: string | null): void {
     this.isRadioButtonSelected = Boolean(value);
-    
+    this.radioButtonSelectedChange.emit(this.isRadioButtonSelected);
     if (this.isRadioButtonSelected) {
       this.enableSections();
     } else {
@@ -385,6 +403,27 @@ export class DatosDeLaSolicitudComponent implements OnInit, AfterViewInit, OnDes
     this.mostrarModal = true;
   }
 
+   /**
+     * Valida si el campo de un formulario no contiene errores
+     * @param {AbstractControl} control  : Control del formulario
+     * @param {string} campo  : Nombre del campo a validar, si el control es un FormGroup
+     * @returns {boolean | null} : Retorna true si el campo contiene errores y ha sido tocado, de lo contrario retorna false
+     */
+    // eslint-disable-next-line class-methods-use-this
+    public isValid(control: AbstractControl, campo?: string): boolean | null {
+      if (!control) {
+        return null;
+      }
+      if (control instanceof FormGroup && campo) {
+        const CHILD = control.controls[campo];
+        if (!CHILD) {
+          return null;
+        }
+        return CHILD.errors && CHILD.touched;
+      }
+      return control.errors && control.touched;
+    }
+  
   /**
    * Cierra el modal de selección de establecimiento.
    */

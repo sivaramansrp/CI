@@ -17,7 +17,12 @@ import { Solocitud260911Service } from '../../services/service260911.service';
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
 })
+
 export class PasoUnoComponent implements OnInit, OnDestroy {
+  isRadioButtonSelectedGlobal: boolean = false;
+  onRadioButtonSelectedChange(selected: boolean) {
+    this.isRadioButtonSelectedGlobal = selected;
+  }
 
   /**
    * Indica si se han recibido correctamente los datos desde el servidor.

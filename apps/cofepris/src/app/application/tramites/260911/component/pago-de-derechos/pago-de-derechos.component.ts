@@ -1,6 +1,6 @@
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { Catalogo, CatalogoSelectComponent, REGEX_NUMERO_DECIMAL_2_DIGITOS, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite260911State, Tramite260911Store } from '../../estados/tramite260911.store';
 import { CommonModule } from '@angular/common';
@@ -33,6 +33,7 @@ import { Tramite260911Query } from '../../estados/tramite260911.query';
   styleUrl: './pago-de-derechos.component.scss',
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+  @Input() disabled: boolean = false;
   /**
    * Resetea todos los campos del formulario de pago de derechos y actualiza el store.
    * Marca los controles como tocados para mostrar errores de campos requeridos si están vacíos.
@@ -166,6 +167,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
     this.obtenerBancoList();
+      // Disable all fields if disabled input is true
+      if (this.disabled) {
+        this.pagoDeDerechosForm.disable();
+      }
   }
 
   /**
