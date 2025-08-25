@@ -1,6 +1,7 @@
 import {
   AnexoEncabezado,
   AnexoUnoEncabezado,
+  DatosAnexotressUno,
   DatosComplimento,
 } from '../../../shared/models/nuevo-programa-industrial.model';
 import {
@@ -109,6 +110,12 @@ export interface Tramite80101State {
    */
   datosComplimento: DatosComplimento;
 
+   /**
+   * Datos complementarios relacionados con el trámite.
+   */
+  datosAnexoTress: DatosAnexotressUno;
+
+
   /**
    * Tabla de datos complementarios de socios y accionistas.
    */
@@ -215,6 +222,10 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
   datosComplimento:{
     fraccionArancelaria: "",
     descripcion: "",
+  },
+  datosAnexoTress:{
+    fraccionArancelaria:"",
+  descripcion: ""
   },
   datosComplimentos: {
     modalidad: 'Industrial',
@@ -914,4 +925,19 @@ export class Tramite80101Store extends Store<Tramite80101State> {
       ],
     }));
   }
+
+  /**
+   * Updates the `datosAnexoTres` property in the store with the provided data.
+   * Merges the existing `datosAnexoTress` state with the new `datosAnexoTres` values.
+   * Logs the merged result to the console for debugging purposes.
+   *
+   * @param datosAnexoTres - An object containing the new data to merge into `datosAnexoTres`.
+   */
+  setDatosAnexoTres(datosAnexoTress: DatosAnexotressUno): void {
+    this.update((state) => {
+      const VALUE = { ...state.datosAnexoTress, ...datosAnexoTress };
+      return { ...state, datosAnexoTress: VALUE };
+    });
+  }
+
 }

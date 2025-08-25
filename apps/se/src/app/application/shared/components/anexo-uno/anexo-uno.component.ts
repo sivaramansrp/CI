@@ -107,6 +107,17 @@ export class AnexoUnoComponent implements OnInit {
     | AnexoDosEncabezado
     | AnexoUnoEncabezado;
 
+
+    @Input()
+  /**
+   * Establece el formulario de datos del subcontratista.
+   * @param valor - Formulario reactivo con los datos del subcontratista.
+   */
+  set formularioDatosSubcontratista(valor: FormGroup) {
+    this.anexoUnoFormGroup.setValue(valor.value);
+  }
+
+
   /**
    * Datos seleccionados de exportación
    * @property {AnexoDosEncabezado | AnexoUnoEncabezado} datosExportacionSeleccionados

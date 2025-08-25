@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { ANEXO_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { AnexoDosYTresComponent } from '../../../../shared/components/anexo-dos-y-tres.component/anexo-dos-y-tres.component';
-import { AnexoEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
+import { AnexoEncabezado, DatosAnexotressUno } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { CommonModule } from '@angular/common';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -10,6 +10,7 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
 import { takeUntil } from 'rxjs';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 /**
  * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -112,6 +113,19 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * Holds the data for the first annex section of the "Anexo Tres" form.
+   * 
+   * @type {DatosAnexotressUno}
+   */
+  datosAnexoUno!: DatosAnexotressUno;
+
+  /**
+   * Form group instance for managing the controls and validation of the "Anexo Uno" section.
+   * This FormGroup is used to encapsulate form fields and their validation logic within the component.
+   */
+  public anexoTressFormGroup!: FormGroup;
+
+  /**
    * Constructor de la clase AnexoVistaDosYTresComponent.
    *
    * @param query - Servicio de consulta para Tramite80101.
@@ -119,7 +133,8 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
    */
   constructor(
     private query: Tramite80101Query,
-    private store: Tramite80101Store
+    private store: Tramite80101Store,
+    private fb: FormBuilder,
   ) {
     //constructor vacío
   }
@@ -152,6 +167,30 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
           this.anexoTresTablaLista = anexoTresTablaLista;
         }
       });
+    this.inicializarFormularioDatosSubcontratista();
+    this.obtenerDatosDelAlmacen()
+  }
+
+
+  obtenerDatosDelAlmacen(): void {
+    this.query.selectDatosAnexoTres$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datosAnexoTres) => {
+        console.log('datosAnexoTres', datosAnexoTres);
+        this.anexoTressFormGroup.setValue(datosAnexoTres);
+      });
+  }
+
+
+  /**
+     * Inicializa el formulario de datos del subcontratista con los datos obtenidos o con valores vacíos si no hay datos disponibles.
+     * @method inicializarFormularioDatosSubcontratista
+     */
+  inicializarFormularioDatosSubcontratista(): void {
+    this.anexoTressFormGroup = this.fb.group({
+      fraccionArancelaria: ['', [Validators.required, Validators.maxLength(10)]],
+      descripcion: ['', [Validators.required, Validators.maxLength(1000)]],
+    });
   }
 
   /**
@@ -172,6 +211,17 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
   obtenerAnexoTresDevolverLaLlamada(event: AnexoEncabezado[]): void {
     this.anexoTresTablaLista = event ? event : [];
     this.store.setAnnexoTresTableLista(this.anexoTresTablaLista);
+  }
+
+  /**
+     * Modifica los datos de los cumplimientos y los almacena en el estado.
+     *
+     * @param complimentos - Objeto de tipo `DatosComplimentos` que contiene los datos de los cumplimientos a actualizar.
+     * @returns void
+     */
+  modifierComplimentos(complimentos: DatosAnexotressUno): void {
+    console.log('sddsss', complimentos);
+    this.store.setDatosAnexoTres(complimentos);
   }
 
   /**

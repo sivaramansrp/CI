@@ -20,6 +20,7 @@ import { ComplementarFraccionVistaComponent } from '../complementar-fraccion-vis
 import { ContenedorProveedorClienteComponent } from '../contenedor-proveedor-cliente/contenedor-proveedor-cliente.component';
 import { ProveedorPorArchivoVistaComponent } from '../proveedor-por-archivo-vista/proveedor-por-archivo-vista.component';
 import { ProyectoImmexVistaComponent } from '../proyecto-immex-vista/proyecto-immex-vista.component';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 
 /**
@@ -223,6 +224,10 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
    */
   public mostrarProveedorPorArchivoPopup: boolean = false;
 
+   datosAnexoUno!: DatosComplimento;
+   
+ public anexoUnoFormGroup!: FormGroup;
+
   /**
    * Constructor del componente AnexoVistaUnoComponent.
    * @param {Router} router - Servicio de enrutamiento de Angular para navegar entre rutas.
@@ -234,7 +239,8 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private store: Tramite80101Store,
-    private query: Tramite80101Query
+    private query: Tramite80101Query,
+    private fb: FormBuilder,
   ) {}
 
   /**
@@ -269,7 +275,26 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
           this.anexoDosTablaLista = exportarTablsDatos;
         }
       });
+      this.inicializarFormularioDatosSubcontratista();
+     this.obtenerDatosDelAlmacen();
   }
+
+
+/**
+   * Obtiene los datos del almacén y los asigna al formulario de información de registro.
+   * Se suscribe al observable `infoRegisterEstado$` para obtener los datos, y cuando se reciben,
+   * se actualiza la propiedad `infoRegistro` y se establece el valor del formulario `formularioInfoRegistro`.
+   *
+   * @method obtenerDatosDelAlmacen
+   */
+  obtenerDatosDelAlmacen(): void {
+    this.query.selectDatosComplimentos$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datosComplimentos) => {
+        console.log('dssd', datosComplimentos);
+        this.anexoUnoFormGroup.setValue(datosComplimentos);
+      });
+    }
 
   /**
    * Método para obtener la devolución de llamada del anexo Uno.
@@ -290,6 +315,18 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
     this.store.setExportarDatosTabla(this.anexoDosTablaLista);
   }
 
+
+/**
+   * Inicializa el formulario de datos del subcontratista con los datos obtenidos o con valores vacíos si no hay datos disponibles.
+   * @method inicializarFormularioDatosSubcontratista
+   */
+  inicializarFormularioDatosSubcontratista(): void {
+    this.anexoUnoFormGroup = this.fb.group({
+     fraccionArancelaria: ['', [Validators.required, Validators.maxLength(10)]],
+      descripcion: ['', [Validators.required, Validators.maxLength(1000)]],
+    });
+  }
+
 /**
    * Modifica los datos de los cumplimientos y los almacena en el estado.
    *
@@ -297,6 +334,7 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
    * @returns void
    */
   modifierComplimentos(complimentos: DatosComplimento): void {
+    console.log('complimentos', complimentos);
     this.store.setDatosComplimento(complimentos);
   }
 
