@@ -1,5 +1,5 @@
 import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Subject,map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ComplementarQuery } from '../../../estados/queries/complementar.query';
@@ -75,6 +75,12 @@ export class MontosDeInversionComponent implements OnInit {
    */
   private destroyNotifier$: Subject<void> = new Subject();
   /**
+   * Evento que se emite al cerrar el popup.
+   * 
+   * Se utiliza para notificar al componente padre que el popup ha sido cerrado.
+   */
+  @Output() cerrarPopup = new EventEmitter<void>();
+  /**
    * Constructor del componente.
    * @constructor
    * @param {FormBuilder} fb - Servicio para construcción de formularios
@@ -130,6 +136,6 @@ export class MontosDeInversionComponent implements OnInit {
    * @returns {void}
    */
   regrasar(): void {
-    this.ubicaccion.back();
+    this.cerrarPopup.emit();
   }
 }

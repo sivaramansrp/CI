@@ -138,6 +138,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     if (this.consultaState.update) {
       this.guardarDatosFormulario();
     } else {
+      this.getRegistrarDatos();
       this.esDatosRespuesta = true;
     }
   }
@@ -224,4 +225,18 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
             } 
          });
         }
+
+
+        getRegistrarDatos(): void {
+          this.modificacionPermisoImportacionMedicamentosService
+            .getRegistrarDatos()
+            .pipe(takeUntil(this.notificadorDestruccion$))
+            .subscribe((resp) => {
+              if (resp) {
+                this.esDatosRespuesta = true;
+                this.modificacionPermisoImportacionMedicamentosService.actualizarEstadoFormulario(resp);
+              }
+            });
+        }
+
 }

@@ -294,6 +294,7 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
       representacionFederalDates: ['', [Validators.required, Validators.min(0)]],
       precisaDates: ['', this.precisa ? [Validators.required] : []]
     });
+    this.formDatosCertificado.patchValue(this.datosFormCertificado);
   }
  /**
    * @method ngOnChanges
