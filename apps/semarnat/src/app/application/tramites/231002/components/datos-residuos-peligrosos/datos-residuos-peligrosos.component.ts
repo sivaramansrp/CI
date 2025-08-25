@@ -842,26 +842,22 @@ export class DatosResiduosPeligrososComponent implements OnInit {
    * Cierra el modal de forma segura
    */
   private static cerrarModal(): void {
-    try {
-      const MODAL_ELEMENT = document.getElementById('modalDatosResiduosPeligrosos');
-      if (MODAL_ELEMENT) {
-        const MODAL = Modal.getInstance(MODAL_ELEMENT);
-        if (MODAL) {
-          MODAL.hide();
-        } else {
-          // Si no hay instancia, crear una nueva y cerrarla
-          const NEW_MODAL = new Modal(MODAL_ELEMENT);
-          NEW_MODAL.hide();
-        }
+    const MODAL_ELEMENT = document.getElementById('modalDatosResiduosPeligrosos');
+    if (MODAL_ELEMENT) {
+      const MODAL = Modal.getInstance(MODAL_ELEMENT);
+      if (MODAL) {
+        MODAL.hide();
       } else {
-        // Alternativa: usar el dismiss modal de Bootstrap directamente
-        const CLOSE_BUTTON = document.querySelector('[data-bs-dismiss="modal"]') as HTMLElement;
-        if (CLOSE_BUTTON) {
-          CLOSE_BUTTON.click();
-        }
+        // Si no hay instancia, crear una nueva y cerrarla
+        const NEW_MODAL = new Modal(MODAL_ELEMENT);
+        NEW_MODAL.hide();
       }
-    } catch (error) {
-      console.warn('No se pudo cerrar el modal automáticamente:', error);
+    } else {
+      // Alternativa: usar el dismiss modal de Bootstrap directamente
+      const CLOSE_BUTTON = document.querySelector('[data-bs-dismiss="modal"]') as HTMLElement;
+      if (CLOSE_BUTTON) {
+        CLOSE_BUTTON.click();
+      }
     }
   }
 }
