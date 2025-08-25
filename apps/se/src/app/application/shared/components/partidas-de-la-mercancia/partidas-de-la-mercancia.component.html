@@ -118,11 +118,10 @@
             <div class="modal-body">
                <div class="row">
                   <div class="container mt-4">
-                     <ng-alert
-                     *ngIf="mostrarNotificacion"
-                     [CONTENIDO]="TEXTOS.INSTRUCCIONES"
-                     [CUSTOMECLASS]="'infoError'"
-                     (close)="mostrarNotificacion = false"></ng-alert>
+                     <div *ngIf="mostrarNotificacion"
+                     class="alert alert-info alert-danger text-center"
+                     [innerHTML]="TEXTOS.INSTRUCCIONES"
+                  ></div>
                      <ng-titulo titulo="Cargar archivo"> </ng-titulo>
                   
                      <div class="row align-items-center mb-3">

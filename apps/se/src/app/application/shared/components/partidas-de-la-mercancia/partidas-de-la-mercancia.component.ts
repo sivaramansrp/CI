@@ -1,6 +1,6 @@
 
-import { AlertComponent, ConfiguracionColumna, Notificacion } from '@ng-mf/data-access-user';
 import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ConfiguracionColumna, Notificacion } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { PARTIDASDELAMERCANCIA_TABLA, TEXTOS } from '../../constantes/partidas-de-la-mercancia.enum';
 import { CommonModule } from '@angular/common';
@@ -25,8 +25,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     ReactiveFormsModule,
     TituloComponent,
     TablaDinamicaComponent,
-    TooltipModule,
-    AlertComponent
+    TooltipModule
   ],
   templateUrl: './partidas-de-la-mercancia.component.html',
   styleUrl: './partidas-de-la-mercancia.component.scss',
@@ -123,17 +122,9 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    * Si está configurada como `true`, la tabla estará deshabilitada.
    */
   @Input() disabled: boolean = false;
-
-  /*
-
-  */
   /**
-   * @description Referencia al elemento del DOM asociado con el archivo de nacionales.
+   * Referencia al elemento del DOM asociado con el archivo de nacionales.
    * Utilizado para acceder y manipular directamente el elemento en la plantilla.
-   * 
-   * @type {ElementRef}
-   * @memberof PartidasDeLaMercanciaComponent
-   * @viewChild archivoNacionales
    */
   @ViewChild('archivoNacionales') archivoNacionalesElemento!: ElementRef;
  
@@ -249,7 +240,7 @@ validarModificarPartida(): void {
 }
 
 enviarArchivo(): void {
- const INPUT_FILE = document.getElementById('archivoNacionales') as HTMLInputElement;
+  const INPUT_FILE = document.getElementById('archivoNacionales') as HTMLInputElement;
   if (!INPUT_FILE || !INPUT_FILE.files || INPUT_FILE.files.length === 0) {
     return;
   }
@@ -257,6 +248,21 @@ enviarArchivo(): void {
   const EXTENSION = FILE.name.split('.').pop()?.toLowerCase();
   if (EXTENSION !== 'csv') {
     this.mostrarNotificacion = true;
+    return;
+  }
+  this.mostrarNotificacion = false;
+  const MODAL = document.getElementById('modalCargarArchivo');
+  if (MODAL) {
+    const MODAL_INSTANCE = window['bootstrap']?.Modal?.getInstance(MODAL);
+    if (MODAL_INSTANCE) {
+      MODAL_INSTANCE.hide();
+    } else {
+      (MODAL).classList.remove('show');
+      (MODAL).style.display = 'none';
+      document.body.classList.remove('modal-open');
+    }
+    const BACKDROPS = document.querySelectorAll('.modal-backdrop');
+    BACKDROPS.forEach(backdrop => backdrop.parentNode?.removeChild(backdrop));
   }
 }
   /**

@@ -6,7 +6,7 @@ import { PASOS } from '../../constants/pasos.enum';
 @Component({
   selector: 'app-importacion-neumaticos-comercializar',
   templateUrl: './importacion-neumaticos-comercializar.component.html',
-  styleUrl: './importacion-neumaticos-comercializar.component.css',
+  styleUrl: './importacion-neumaticos-comercializar.component.scss',
 })
 export class ImportacionNeumaticosComercializarComponent {
        /**
