@@ -211,12 +211,11 @@ public solicitudState!: Solicitud230401State;
  * @type {CrossListLable}
  */
 public paisDeProcedenciaLabel: CrossListLable = {
-  tituluDeLaIzquierda: 'País de procedencia',
-  derecha: 'País(es) seleccionados *:',
+  tituluDeLaIzquierda: 'País de procedencia:',
+  derecha: 'País(es) seleccionado(s)*:',
   showUnoTitulo: false,
   showDosTitulo: false
 };
-
 /**
  * Etiqueta configurada para la selección cruzada del país donde se elabora el producto.
  * 
@@ -226,8 +225,8 @@ public paisDeProcedenciaLabel: CrossListLable = {
  * @type {CrossListLable}
  */
 public paisDelProductoLabel: CrossListLable = {
-  tituluDeLaIzquierda: 'País donde se elabora el producto',
-  derecha: 'País(es) seleccionado(s) *:',
+  tituluDeLaIzquierda: 'País donde se elabora el producto:',
+  derecha: 'País(es) seleccionado(s)*:',
   showUnoTitulo: false,
   showDosTitulo: false
 };
@@ -241,8 +240,8 @@ public paisDelProductoLabel: CrossListLable = {
  * @type {CrossListLable}
  */
 public aduanasDeEntradaLabel: CrossListLable = {
-  tituluDeLaIzquierda: 'Aduanas de entrada disponibles',
-  derecha: 'Aduanas de entrada seleccionadas *:',
+  tituluDeLaIzquierda: 'Aduanas de entrada disponibles:',
+  derecha: 'Aduanas de entrada seleccionadas*:',
   showUnoTitulo: false,
   showDosTitulo: false
 };

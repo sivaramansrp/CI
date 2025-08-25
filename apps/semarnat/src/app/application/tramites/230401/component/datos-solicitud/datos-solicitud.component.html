@@ -266,6 +266,8 @@
             (change)="setValoresStore(formSolicitud,'cantidad')" (click)="buscarRepresentanteRfc()">
             <div class="mensaje-error" *ngIf="formSolicitud.get('cantidad')?.errors?.['maxDigits']">
               Este campo permite 12 enteros y tres decimales</div>
+               <div class="mensaje-error" *ngIf="formSolicitud.get('cantidad')?.errors?.['required'] && formSolicitud.get('cantidad')?.touched">
+              Este campo es obligatorio</div>
         </div>
       </div>
       <div class="col-md-8">
