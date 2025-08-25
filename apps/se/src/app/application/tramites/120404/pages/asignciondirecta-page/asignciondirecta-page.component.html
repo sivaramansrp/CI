@@ -12,18 +12,17 @@
     </div>
 
     <app-wizard [listaPasos]="pasos"></app-wizard>
-
-    <div [ngSwitch]="indice">
-      <div *ngSwitchCase="1">
-  <app-solicitante-entidad (buscarIntento)="onBuscarIntento($event)"></app-solicitante-entidad>
-      </div>
-      <div *ngSwitchCase="2">
-        <app-paso-dos></app-paso-dos>
-      </div>
-      <div *ngSwitchCase="3">
-        <app-paso-tres></app-paso-tres>
-      </div>
-    </div>
+   @switch (indice) {
+    @case (1) {
+     <app-solicitante-entidad (buscarIntento)="onBuscarIntento($event)"></app-solicitante-entidad>
+     }
+    @case (2) {
+   <app-paso-dos></app-paso-dos>
+    }
+    @case (3) {
+      <app-paso-tres></app-paso-tres>
+    }
+  }
     
     <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
 </div>

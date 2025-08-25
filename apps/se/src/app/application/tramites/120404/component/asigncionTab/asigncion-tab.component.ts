@@ -41,12 +41,12 @@ import { Tramite120404Query } from '../../estados/queries/tramite120404.query';
 export class AsignciontabComponent implements OnInit, OnDestroy {
 
     /**
-   * Event emitter for search attempt notifications
-   */
+     * Emisor de eventos para notificaciones de intentos de búsqueda
+     */
   @Output() buscarIntento = new EventEmitter<{submitted: boolean, invalid: boolean}>();
 
   /**
-   * Flag to track if form has been submitted
+   * Indicador para rastrear si el formulario ha sido enviado
    */
   submitted = false;
 
