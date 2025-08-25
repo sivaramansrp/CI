@@ -11,6 +11,7 @@ import { EstadoFormularioResiduo } from '../../models/datos-residuos.model';
 import { FormularioResiduoQuery } from '../../estados/queries/datos-residuos.query';
 import { FormularioResiduoStore } from '../../estados/tramites/datos-residuos.store';
 
+import { Modal } from 'bootstrap';
 import { ResiduoPeligroso } from '../../models/aviso-catalogo.model';
 import rawData from '@libs/shared/theme/assets/json/231002/solicitud.json';
 
@@ -86,6 +87,13 @@ export class DatosResiduosPeligrososComponent implements OnInit {
 
   /** Estado del botón borrar */
   borrarHabilitado = false;
+
+    /**
+   * Instancia del modal para gestionar archivos.
+   *
+   * Se utiliza para abrir o cerrar el modal de archivos.
+   */
+  modalInstances: Modal | null = null;
 
   /** Getter para verificar si el botón Agregar debe estar habilitado */
   get agregarHabilitado(): boolean {
@@ -767,43 +775,93 @@ export class DatosResiduosPeligrososComponent implements OnInit {
    * Agrega un residuo peligroso y emite el evento al componente padre
    */
   agregarResiduoPeligroso(): void {
-    if (this.formularioResiduo.valid && this.materiasPrimasTabla.length > 0) {
-      // Crear el objeto con todos los datos del residuo según la interface ResiduoPeligroso
-      const RESIDUO_DATA: ResiduoPeligroso = {
-        origenResiduoGeneracion: 'Producción Industrial', // Se puede obtener del radio seleccionado
-        fraccionArancelaria: this.formularioResiduo.get('fraccionArancelaria')?.value || '',
-        nombreResiduo: this.formularioResiduo.get('residuoPeligroso')?.value || '',
-        nico: this.formularioResiduo.get('nico')?.value || '',
-        acotacion: this.formularioResiduo.get('acotacion')?.value || '',
-        nombreResiduoPeligroso: this.formularioResiduo.get('residuoPeligroso')?.value || '',
-        cantidad: this.formularioResiduo.get('cantidad')?.value || '',
-        cantidadLetra: this.formularioResiduo.get('cantidadLetra')?.value || '',
-        unidadMedida: this.formularioResiduo.get('unidadMedida')?.value || '',
-        claveClasificacion: this.formularioResiduo.get('claveResiduo')?.value || '',
-        nombreClasificacion: this.formularioResiduo.get('nombre')?.value || '',
-        descripcionClasificacion: this.formularioResiduo.get('descripcion')?.value || '',
-        descripcionOtraClasificacion: '', // Campo opcional
-        creti: this.formularioResiduo.get('creti')?.value || '',
-        estadoFisico: this.formularioResiduo.get('estadoFisico')?.value || '',
-        descripcionOtroEstadoFisico: '', // Campo opcional
-        numeroManifiesto: this.formularioResiduo.get('manifiesto')?.value || '',
-        tipoContenedor: this.formularioResiduo.get('tipoContenedor')?.value || '',
-        descripcionOtroContenedor: '', // Campo opcional
-        capacidad: this.formularioResiduo.get('capacidad')?.value || ''
-      };
+    // Validar que el formulario de residuo sea válido
+    if (this.formularioResiduo.invalid) {
+      // Marcar todos los campos como tocados para mostrar mensajes de error del formulario de residuo
+      Object.keys(this.formularioResiduo.controls).forEach(key => {
+        const CONTROL = this.formularioResiduo.get(key);
+        if (CONTROL) {
+          CONTROL.markAsTouched();
+        }
+      });
+      return; // Salir de la función si el formulario es inválido
+    }
 
-      // Emitir el evento con los datos
-      this.residuoAgregado.emit(RESIDUO_DATA);
+    // Validar que se hayan agregado materias primas
+    if (this.materiasPrimas.length === 0) {
+      // Mostrar mensaje de error si no hay materias primas
+      this.esFormaValido = true;
+      this.alertaErrorFormulario = 'Debe agregar al menos una materia prima relacionada';
+      return;
+    }
 
-      // Limpiar formularios
-      this.formularioResiduo.reset();
-      this.formularioDatos.reset();
-      this.materiasPrimas = [];
-      this.materiasPrimasTabla = [];
-      this.itemsSeleccionados.clear();
-      this.borrarHabilitado = false;
+    // Crear el objeto con todos los datos del residuo según la interface ResiduoPeligroso
+    const RESIDUO_DATA: ResiduoPeligroso = {
+      origenResiduoGeneracion: 'Producción Industrial', // Se puede obtener del radio seleccionado
+      fraccionArancelaria: this.formularioResiduo.get('fraccionArancelaria')?.value || '',
+      nombreResiduo: this.formularioResiduo.get('residuoPeligroso')?.value || '',
+      nico: this.formularioResiduo.get('nico')?.value || '',
+      acotacion: this.formularioResiduo.get('acotacion')?.value || '',
+      nombreResiduoPeligroso: this.formularioResiduo.get('residuoPeligroso')?.value || '',
+      cantidad: this.formularioResiduo.get('cantidad')?.value || '',
+      cantidadLetra: this.formularioResiduo.get('cantidadLetra')?.value || '',
+      unidadMedida: this.formularioResiduo.get('unidadMedida')?.value || '',
+      claveClasificacion: this.formularioResiduo.get('claveResiduo')?.value || '',
+      nombreClasificacion: this.formularioResiduo.get('nombre')?.value || '',
+      descripcionClasificacion: this.formularioResiduo.get('descripcion')?.value || '',
+      descripcionOtraClasificacion: '', // Campo opcional
+      creti: this.formularioResiduo.get('creti')?.value || '',
+      estadoFisico: this.formularioResiduo.get('estadoFisico')?.value || '',
+      descripcionOtroEstadoFisico: '', // Campo opcional
+      numeroManifiesto: this.formularioResiduo.get('manifiesto')?.value || '',
+      tipoContenedor: this.formularioResiduo.get('tipoContenedor')?.value || '',
+      descripcionOtroContenedor: '', // Campo opcional
+      capacidad: this.formularioResiduo.get('capacidad')?.value || ''
+    };
 
+    // Emitir el evento con los datos
+    this.residuoAgregado.emit(RESIDUO_DATA);
 
-    } 
+    // Limpiar formularios y datos relacionados
+    this.formularioResiduo.reset();
+    this.formularioDatos.reset();
+    this.materiasPrimas = [];
+    this.materiasPrimasTabla = [];
+    this.itemsSeleccionados.clear();
+    this.borrarHabilitado = false;
+    
+    // Limpiar mensaje de error si existe
+    this.esFormaValido = false;
+    this.alertaErrorFormulario = '';
+
+    // Cerrar el modal usando Bootstrap's modal API
+    DatosResiduosPeligrososComponent.cerrarModal();
+  }
+
+  /**
+   * Cierra el modal de forma segura
+   */
+  private static cerrarModal(): void {
+    try {
+      const MODAL_ELEMENT = document.getElementById('modalDatosResiduosPeligrosos');
+      if (MODAL_ELEMENT) {
+        const MODAL = Modal.getInstance(MODAL_ELEMENT);
+        if (MODAL) {
+          MODAL.hide();
+        } else {
+          // Si no hay instancia, crear una nueva y cerrarla
+          const NEW_MODAL = new Modal(MODAL_ELEMENT);
+          NEW_MODAL.hide();
+        }
+      } else {
+        // Alternativa: usar el dismiss modal de Bootstrap directamente
+        const CLOSE_BUTTON = document.querySelector('[data-bs-dismiss="modal"]') as HTMLElement;
+        if (CLOSE_BUTTON) {
+          CLOSE_BUTTON.click();
+        }
+      }
+    } catch (error) {
+      console.warn('No se pudo cerrar el modal automáticamente:', error);
+    }
   }
 }
