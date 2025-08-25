@@ -108,7 +108,7 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <h5 class="mt-3">List de Número CAS *:</h5>
+        <h5 class="mt-3">List de Número CAS*:</h5>
         <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" [configuracionTabla]="configuracionSustanciasTabla"
           [datos]="sustanciasSensiblesTablaDatos"
           (listaDeFilaSeleccionada)="sustanciasSensiblesSeleccionadas = $event"></app-tabla-dinamica>
@@ -152,7 +152,7 @@
         </div>
         <div class="col-md-6">
           <div class="form-group">
-            <label class="form-label" for="datosNumeroComun">Nombre común *:</label>
+            <label class="form-label" for="datosNumeroComun">Nombre común*:</label>
             <input class="form-control" id="datosNumeroComun" type="text" maxlength="250"
               formControlName="datosNumeroComun" [ngClass]="isValid(formSolicitud, 'datosNumeroComun') ? 'required' : ''"
               (change)="setValoresStore(formSolicitud,'datosNumeroComun')">
@@ -163,7 +163,7 @@
       <div class="row mt-5">
         <div class="col-md-6">
           <div class="form-group">
-            <label class="form-label" for="datosPorcentaje">Porcentaje de concentración *:</label>
+            <label class="form-label" for="datosPorcentaje">Porcentaje de concentración*:</label>
             <input class="form-control" id="datosPorcentaje" type="number"
               formControlName="datosPorcentaje" [ngClass]="isValid(formSolicitud, 'datosPorcentaje') ? 'required' : ''"
               (change)="setValoresStore(formSolicitud,'datosPorcentaje')" maxlength="100">
