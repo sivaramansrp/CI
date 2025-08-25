@@ -86,6 +86,13 @@ export class ProyectoImmexComponent implements OnInit {
   public seleccionList: ProyectoImmexEncabezado[] = [];
 
   /**
+   * Evento que se emite al cerrar el popup.
+   * 
+   * Se utiliza para notificar al componente padre que el popup ha sido cerrado.
+   */
+  @Output() cerrarPopup = new EventEmitter<void>();
+
+  /**
    * Constructor de la clase ProyectoImmexComponent.
    * @param {FormBuilder} fb - FormBuilder para la creación del formulario reactivo.
    * @param {Location} ubicaccion - Servicio de Angular para manejar la ubicación del navegador.
@@ -172,7 +179,7 @@ export class ProyectoImmexComponent implements OnInit {
       estatus: false,
       encabezadoFraccion: this.proyectoImmexDatos?.fraccionArancelaria,
     };
-    this.proyectoImmexTablaLista.push(OBJECTO_IDX);
+    this.proyectoImmexTablaLista = [...this.proyectoImmexTablaLista, OBJECTO_IDX];
     this.obtenerProyectoTablaDevolverLaLlamada.emit(
       this.proyectoImmexTablaLista
     );
@@ -222,6 +229,6 @@ export class ProyectoImmexComponent implements OnInit {
    * @returns {void}
    */
   regresar(): void {
-    this.ubicaccion.back();
+    this.cerrarPopup.emit();
   }
 }
