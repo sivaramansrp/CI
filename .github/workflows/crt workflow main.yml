@@ -1,26 +1,26 @@
-name: Build, Push, Deploy Profepa App
+name: Build, Push, Deploy crt App
 
 on:
   # push:
   #   branches:
   #     - develop
   #   paths:
-  #     - 'apps/profepa/**'
+  #     - 'apps/crt/**'
   #     - 'libs/**'
   #     - 'package.json'
   #     - 'nx.json'
   #     - 'angular.json'
   #     - 'workspace.json'
   #     - 'docker/**'
-  #     - 'k8s/profepa-microfront/**'
-  #     - '.github/workflows/profepa-build-deploy.yml'
+  #     - 'k8s/crt-microfront/**'
+  #     - '.github/workflows/crt workflow main.yml'
   workflow_dispatch:
 
 jobs:
   build-push-deploy:
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/dockerized-modulefederation-profepa-microfront
+      IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/dockerized-modulefederation-crt-microfront
 
     steps:
       - name: Checkout code
@@ -44,11 +44,11 @@ jobs:
         run: npm install -g @angular/cli
 
       - name: Build Angular app (Nx)
-        run: npx nx build profepa --configuration=production
+        run: npx nx build crt --configuration=production
 
       - name: Inject version into build
         if: hashFiles('script/inject-version.js') != ''
-        run: node script/inject-version.js profepa
+        run: node script/inject-version.js crt
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
@@ -59,7 +59,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t $IMAGE_NAME:${{ env.VERSION }} -f apps/profepa/Dockerfile.dev .
+          docker build -t $IMAGE_NAME:${{ env.VERSION }} -f apps/crt/Dockerfile.dev
 
       - name: Push Docker image
         run: |
@@ -67,7 +67,7 @@ jobs:
 
       - name: Update deployment manifest image tag
         run: |
-          sed -i "s|\(image: ghcr.io/vucem30-dev/dockerized-modulefederation-profepa-microfront:\).*|\1${VERSION}|" k8s/profepa-microfront/profepa-microfront-deployment-dev.yaml
+          sed -i "s|\(image: ghcr.io/vucem30-dev/dockerized-modulefederation-crt-microfront:\).*|\1${VERSION}|" k8s/crt-microfront/crt-microfront-deployment-dev.yaml
 
       - name: Upload Kubernetes manifests to server
         uses: appleboy/scp-action@v0.1.7
@@ -75,8 +75,8 @@ jobs:
           host: ${{ secrets.REMOTE_SRV_IP }}
           username: ${{ secrets.REMOTE_SRV_USER }}
           key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
-          source: "k8s/profepa-microfront"
-          target: "~/profepa-microfront/"
+          source: "k8s/crt-microfront"
+          target: "~/crt-microfront/"
 
       - name: Deploy on Microk8s via SSH
         uses: appleboy/ssh-action@v1
@@ -86,7 +86,7 @@ jobs:
           key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
           script: |
             set -e
-            cd ~/profepa-microfront/
+            cd ~/crt-microfront/
             # Apply all .yaml, .yml, .json files in this directory
             for f in *.yaml *.yml *.json; do
               [ -e "$f" ] && microk8s.kubectl apply -f "$f"

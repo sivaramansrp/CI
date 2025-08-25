@@ -25,7 +25,7 @@
   "modelo": "llenar",
   "productoDescripcion": "llenar",
   "cvePaisDestino": "llenar",
-  "seleccionadaManifiesto": [false],
+  "seleccionadaManifiesto": [true],
   "informacionConfidencial": "1",
   "rfc": "AAL0409235E6",
   "nombreOrazonsocial": "llenar",

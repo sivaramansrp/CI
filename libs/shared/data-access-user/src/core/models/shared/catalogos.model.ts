@@ -166,13 +166,3 @@ export interface CatalogoTipoDocumento {
    */
   description: string;
 }
-
-/**
- * Modelo que representa un número IMMEX.
- */
-export interface NumeroImmex {
-  /** Identificador único del número IMMEX */
-  id: string;
-  /** Descripción del número IMMEX */
-  descripcion: string;
-}
