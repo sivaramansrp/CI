@@ -92,26 +92,31 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'app-anexo-vista-uno',
   standalone: true,
-  imports: [CommonModule, AnexoUnoComponent, ComplementarFraccionVistaComponent,ContenedorProveedorClienteComponent,ProyectoImmexVistaComponent,ProveedorPorArchivoVistaComponent],
+  imports: [
+    CommonModule,
+    AnexoUnoComponent,
+    ComplementarFraccionVistaComponent,
+    ContenedorProveedorClienteComponent,
+    ProyectoImmexVistaComponent,
+    ProveedorPorArchivoVistaComponent,
+  ],
   templateUrl: './anexo-vista-uno.component.html',
   styleUrl: './anexo-vista-uno.component.scss',
 })
 export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
-
-
   /**
    * Configuración para el componente "Anexo Vista Uno".
-   * 
+   *
    * Esta propiedad define los parámetros utilizados para configurar la tabla
    * y el encabezado en el componente. Los valores especificados son utilizados
    * para determinar el tipo de selección en la tabla y el encabezado que se muestra.
-   * 
+   *
    * Propiedades:
    * - `anexoUnoTablaSeleccionRadio`: Define el tipo de selección en la tabla como RADIO.
    *   Utiliza la constante `TablaSeleccion.RADIO` para especificar este comportamiento.
    * - `anexoUnoEncabezadoDeTabla`: Especifica el encabezado de la tabla utilizando la constante
    *   `ANEXO_I_SERVICIO`, que representa el texto o configuración del encabezado.
-   * 
+   *
    * Uso:
    * Esta configuración es utilizada para personalizar la funcionalidad y apariencia
    * del componente "Anexo Vista Uno", asegurando que cumpla con los requisitos específicos
@@ -124,17 +129,17 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
 
   /**
    * Configuración para el componente "Anexo Vista Uno".
-   * 
+   *
    * Esta propiedad define los parámetros utilizados para configurar la tabla
    * y el encabezado en el componente. Los valores especificados son utilizados
    * para determinar el tipo de selección en la tabla y el encabezado que se muestra.
-   * 
+   *
    * Propiedades:
    * - `anexoUnoTablaSeleccionRadio`: Define el tipo de selección en la tabla como RADIO.
    *   Utiliza la constante `TablaSeleccion.RADIO` para especificar este comportamiento.
    * - `anexoUnoEncabezadoDeTabla`: Especifica el encabezado de la tabla utilizando la constante
    *   `ANEXO_I_SERVICIO`, que representa el texto o configuración del encabezado.
-   * 
+   *
    * Uso:
    * Esta configuración es utilizada para personalizar la funcionalidad y apariencia
    * del componente "Anexo Vista Uno", asegurando que cumpla con los requisitos específicos
@@ -147,18 +152,18 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
 
   /**
    * Configuración para la importación de anexos en el componente.
-   * 
+   *
    * Esta propiedad define los parámetros utilizados para la configuración
    * de la tabla de selección y el encabezado de la tabla en el contexto
    * de la importación de anexos.
-   * 
+   *
    * Propiedades:
    * - `anexoDosTablaSeleccionRadio`: Define el tipo de selección en la tabla,
    *   utilizando la enumeración `TablaSeleccion.RADIO` para habilitar la selección
    *   por radio botón.
    * - `anexoDosEncabezadoDeTabla`: Especifica el encabezado de la tabla para la
    *   importación de anexos, utilizando la constante `ANEXO_IMPORTACION_SERVICIO`.
-   * 
+   *
    * Uso:
    * Esta configuración es utilizada para personalizar el comportamiento y la
    * presentación de la tabla de selección en el proceso de importación de anexos.
@@ -200,7 +205,7 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
    */
   public mostrarComplementarFraccionPopup: boolean = false;
 
-   /**
+  /**
    * Bandera utilizada para controlar la visibilidad del popup de "Proveedor/Cliente".
    * Se establece en `true` para mostrar el popup y en `false` para ocultarlo.
    *
@@ -225,23 +230,20 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
   public mostrarProveedorPorArchivoPopup: boolean = false;
 
   /**
-   * Holds the complementary data for the first annex.
+   * Fracción seleccionada actualmente.
    * 
-   * @type {DatosComplimento}
+   * Almacena la fracción que ha sido seleccionada por el usuario.
+   * Si no hay ninguna fracción seleccionada, su valor será `null`.
    */
-   datosAnexoUno!: DatosComplimento;
-   
-/**
- * Instancia de FormGroup para gestionar los controles y la validación del formulario "Anexo Uno".
- * Se utiliza para manejar el estado del formulario, la validación y la lógica de envío dentro del componente AnexoVistaUnoComponent.
- */
- public anexoUnoFormGroup!: FormGroup;
+  public selectedFraccion: string | null = null;
 
-/**
- * Instancia de FormGroup para gestionar los controles y la validación del formulario "Anexo Dos".
- * Se utiliza para manejar el estado del formulario, la validación y la lógica de envío dentro del componente AnexoVistaUnoComponent.
- */
- public anexoDosFormGroup!: FormGroup;
+  /**
+   * Identificador de la tabla seleccionada.
+   * 
+   * Indica qué tabla está activa o seleccionada actualmente, por ejemplo, 'IMPORT' u otro valor.
+   * Se utiliza para determinar en cuál lista (anexo uno o anexo dos) se deben aplicar las modificaciones.
+   */
+  public selectedTableId: string = '';
 
   /**
    * Constructor del componente AnexoVistaUnoComponent.
@@ -260,18 +262,18 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * 
-   * En este método, se configuran dos suscripciones a observables para manejar datos 
-   * relacionados con tablas de importación y exportación. Estas suscripciones se 
-   * cancelan automáticamente cuando el componente se destruye, utilizando el operador 
+   *
+   * En este método, se configuran dos suscripciones a observables para manejar datos
+   * relacionados con tablas de importación y exportación. Estas suscripciones se
+   * cancelan automáticamente cuando el componente se destruye, utilizando el operador
    * `takeUntil` con el observable `destroyNotifier$`.
-   * 
-   * - La primera suscripción escucha el observable `selectImportarTablsDatos$` y, si 
+   *
+   * - La primera suscripción escucha el observable `selectImportarTablsDatos$` y, si
    *   contiene datos, los asigna a la propiedad `anexoUnoTablaLista`.
-   * - La segunda suscripción escucha el observable `selectExportarTablsDatos$` y, si 
+   * - La segunda suscripción escucha el observable `selectExportarTablsDatos$` y, si
    *   contiene datos, los asigna a la propiedad `anexoDosTablaLista`.
-   * 
-   * Este método asegura que los datos necesarios para las tablas de anexos se carguen 
+   *
+   * Este método asegura que los datos necesarios para las tablas de anexos se carguen
    * correctamente al inicializar el componente.
    */
   ngOnInit(): void {
@@ -403,7 +405,9 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
       this.store.setAnnexoUnoSeccionActiva(event.id);
       this.store.setDatosParaNavegar(event.datos);
 
-      if (event.catagoria === 'complementar-fraccion') {
+      if (event && event.catagoria === 'complementar-fraccion' && event.datos) {
+        this.selectedFraccion = event.datos.encabezadoFraccion;
+        this.selectedTableId = event.id;
         this.mostrarComplementarFraccionPopup = true;
       } else if (event.catagoria === 'contenedor-proveedor-cliente') {
         this.mostrarProveedorClientePopup = true;
@@ -421,18 +425,72 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
   }
 
   /** Cierra el popup de "Proveedor/Cliente". Establece mostrarProveedorClientePopup en false. */
-   cerrarContenedorProveedorCliente(): void {
+  cerrarContenedorProveedorCliente(): void {
     this.mostrarProveedorClientePopup = false;
   }
 
   /** Cierra el popup de "Proyecto IMMEX". Establece mostrarProyectoImmexPopup en false. */
-   cerrarProyectoImmex(): void {
+  cerrarProyectoImmex(): void {
     this.mostrarProyectoImmexPopup = false;
   }
 
   /** Cierra el popup de "Proveedor por Archivo". Establece mostrarProveedorPorArchivoPopup en false. */
-   cerrarProveedorPorArchivo(): void {
+  cerrarProveedorPorArchivo(): void {
     this.mostrarProveedorPorArchivoPopup = false;
+  }
+
+  /**
+   * Guarda los valores complementarios de una fracción en la tabla correspondiente.
+   *
+   * Dependiendo del tipo de tabla seleccionada (`IMPORT` o no), actualiza los valores
+   * de moneda y volumen (mensual y anual) en la lista correspondiente (`anexoUnoTablaLista` o `anexoDosTablaLista`)
+   * usando la descripción de la fracción como identificador.
+   *
+   * @param data Objeto que contiene la información de la fracción a complementar:
+   *  - descripcion: Identificador de la fracción.
+   *  - monedaNacionalMensual: Valor mensual en moneda nacional (opcional).
+   *  - monedaNacionalDeDosPeriodos: Valor anual en moneda nacional (opcional).
+   *  - volumenMensual: Volumen mensual (opcional).
+   *  - twoPeriodVolume: Volumen anual (opcional).
+   */
+  onGuardarComplementarFraccion(data: {
+    descripcion: string;
+    monedaNacionalMensual?: number;
+    monedaNacionalDeDosPeriodos?: number;
+    volumenMensual?: number;
+    twoPeriodVolume?: number;
+  }): void {
+    if (this.selectedTableId === 'IMPORT') {
+      const IDX = this.anexoUnoTablaLista.findIndex(
+        (item) => item.encabezadoFraccion === data.descripcion
+      );
+      if (IDX !== -1) {
+        this.anexoUnoTablaLista[IDX].encabezadoValorEnMonedaMensual =
+          data.monedaNacionalMensual ?? 0;
+        this.anexoUnoTablaLista[IDX].encabezadoValorEnMonedaAnual =
+          data.monedaNacionalDeDosPeriodos ?? 0;
+        this.anexoUnoTablaLista[IDX].encabezadoVolumenMensual =
+          data.volumenMensual ?? 0;
+        this.anexoUnoTablaLista[IDX].encabezadoVolumenAnual =
+          data.twoPeriodVolume ?? 0;
+        this.anexoUnoTablaLista = [...this.anexoUnoTablaLista]; 
+      }
+    } else {
+      const IDX = this.anexoDosTablaLista.findIndex(
+        (item) => item.encabezadoFraccion === data.descripcion
+      );
+      if (IDX !== -1) {
+        this.anexoDosTablaLista[IDX].encabezadoValorEnMonedaMensual =
+          data.monedaNacionalMensual ?? 0;
+        this.anexoDosTablaLista[IDX].encabezadoValorEnMonedaAnual =
+          data.monedaNacionalDeDosPeriodos ?? 0;
+        this.anexoDosTablaLista[IDX].encabezadoVolumenMensual =
+          data.volumenMensual ?? 0;
+        this.anexoDosTablaLista[IDX].encabezadoVolumenAnual =
+          data.twoPeriodVolume ?? 0;
+        this.anexoDosTablaLista = [...this.anexoDosTablaLista];
+    }
+  }
   }
 
   /**

@@ -35,7 +35,11 @@ export interface AnexoUnoEncabezado {
   encabezadoTipo: string;
   encabezadoUmt: string;
   encabezadoCategoria: string;
-  encabezadoValorEnMercado: string;
+  encabezadoValorEnMonedaMensual?: number;
+  encabezadoValorEnMonedaAnual?: number;
+  encabezadoVolumenMensual?: number;
+  encabezadoVolumenAnual?: number;
+  encabezadoValorEnMercado?: string;
   estatus: boolean;
 }
 
@@ -44,6 +48,15 @@ export interface AnexoDosEncabezado {
   encabezadoFraccionExportacion: string;
   encabezadoDescripcionComercial: string;
   encabezadoFraccionImportacion: string;
+  encabezadoDescripcionComercialImportacion: string;
+  encabezadoAnexoII?: string;
+  encabezadoTipo?: string;
+  encabezadoUmt?: string;
+  encabezadoCategoria?: string;
+  encabezadoValorEnMonedaMensual?: number;
+  encabezadoValorEnMonedaAnual?: number;
+  encabezadoVolumenMensual?: number;
+  encabezadoVolumenAnual?: number;
   estatus: boolean;
 }
 
