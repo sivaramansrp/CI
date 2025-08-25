@@ -341,13 +341,11 @@
     <div class="row mt-3">
       <div class="col-md-8">
         <label class="form-label"
-          >Calle
-          @if(agregarFabricanteForm.controls['calle'].errors?.['required']){
-          <span class="text-danger">*</span>
-          }:</label
+          >Calle<span [ngClass]="{'text-danger': agregarFabricanteForm.controls['calle'].errors?.['required']}">*</span>:
+          </label
         >
         <span tooltip="Domicilio, calle, número interior, número exterior, lote"
-          ><i class="bi bi-question-circle-fill"></i
+          > <i class="bi bi-question-circle-fill"></i
         ></span>
         <input
           type="text"
@@ -366,11 +364,7 @@
       </div>
       <div class="col-md-4">
         <label class="form-label"
-          >Número exterior
-          @if(agregarFabricanteForm.controls['numeroExterior'].errors?.['required']){
-          <span class="text-danger">*</span>
-          } :</label
-        >
+          >Número exterior<span [ngClass]="{'text-danger': agregarFabricanteForm.controls['numeroExterior'].errors?.['required']}">*</span>:</label>
         <input
           type="text"
           class="form-control"

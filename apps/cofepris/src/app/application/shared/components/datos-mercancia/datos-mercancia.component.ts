@@ -4,8 +4,19 @@ import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
+  ValidationErrors,
   Validators,
 } from '@angular/forms';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import {
   CROSLISTA_DE_PAISES,
   DATOS_MERCANCIA_CAMPO,
@@ -28,21 +39,12 @@ import {
   NotificacionesComponent,
   Pedimento,
   REGEX_NUMERO_12_ENTEROS_5_DECIMALES,
-  REGEX_SOLO_NUMEROS,
+  SOLO_REGEX_NUMEROS,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { CommonModule, Location } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  QueryList,
-  ViewChildren,
-} from '@angular/core';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { DetalleMercancia } from '../../models/detalle-mercancia.model';
 import { DetalleMercanciaComponent } from '../detalle-mercancia/detalle-mercancia.component';
@@ -65,13 +67,13 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     DetalleMercanciaComponent,
     TablaDinamicaComponent,
     TooltipModule,
-    NotificacionesComponent
+    NotificacionesComponent,
   ],
   templateUrl: './datos-mercancia.component.html',
   styleUrl: './datos-mercancia.component.scss',
   providers: [DatosSolicitudService],
 })
-export class DatosMercanciaComponent implements OnInit {
+export class DatosMercanciaComponent implements OnInit, AfterViewInit {
   /**
    * @property {number} idProcedimiento
    * Identificador único del procedimiento asociado a la solicitud.
@@ -252,22 +254,22 @@ export class DatosMercanciaComponent implements OnInit {
     {
       btnNombre: 'Agregar todos',
       class: 'btn-default',
-      funcion: (): void => this.crossList.toArray()[2].agregar('t'),
+      funcion: (): void => this.crossList.toArray()[0].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
       class: 'btn-primary',
-      funcion: (): void => this.crossList.toArray()[2].agregar(''),
+      funcion: (): void => this.crossList.toArray()[0].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
       class: 'btn-primary',
-      funcion: (): void => this.crossList.toArray()[2].quitar(''),
+      funcion: (): void => this.crossList.toArray()[0].quitar(''),
     },
     {
       btnNombre: 'Restar todos',
       class: 'btn-default',
-      funcion: (): void => this.crossList.toArray()[2].quitar('t'),
+      funcion: (): void => this.crossList.toArray()[0].quitar('t'),
     },
   ];
 
@@ -278,22 +280,22 @@ export class DatosMercanciaComponent implements OnInit {
     {
       btnNombre: 'Agregar todos',
       class: 'btn-default',
-      funcion: (): void => this.crossList.toArray()[2].agregar('t'),
+      funcion: (): void => this.crossList.toArray()[1].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
       class: 'btn-primary',
-      funcion: (): void => this.crossList.toArray()[2].agregar(''),
+      funcion: (): void => this.crossList.toArray()[1].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
       class: 'btn-primary',
-      funcion: (): void => this.crossList.toArray()[2].quitar(''),
+      funcion: (): void => this.crossList.toArray()[1].quitar(''),
     },
     {
       btnNombre: 'Restar todos',
       class: 'btn-default',
-      funcion: (): void => this.crossList.toArray()[2].quitar('t'),
+      funcion: (): void => this.crossList.toArray()[1].quitar('t'),
     },
   ];
 
@@ -433,6 +435,74 @@ export class DatosMercanciaComponent implements OnInit {
       ? true
       : false;
   }
+  ngAfterViewInit(): void {
+    this.paisDeProcedenciaBotonsUno = [
+      {
+        btnNombre: 'Agregar todos',
+        class: 'btn-default',
+        funcion: (): void => this.crossList.toArray()[0].agregar('t'),
+      },
+      {
+        btnNombre: 'Agregar selección',
+        class: 'btn-primary',
+        funcion: (): void => this.crossList.toArray()[0].agregar(''),
+      },
+      {
+        btnNombre: 'Restar selección',
+        class: 'btn-primary',
+        funcion: (): void => this.crossList.toArray()[0].quitar(''),
+      },
+      {
+        btnNombre: 'Restar todos',
+        class: 'btn-default',
+        funcion: (): void => this.crossList.toArray()[0].quitar('t'),
+      },
+    ];
+    this.paisDeProcedenciaBotonsDos = [
+      {
+        btnNombre: 'Agregar todos',
+        class: 'btn-default',
+        funcion: (): void => this.crossList.toArray()[1].agregar('t'),
+      },
+      {
+        btnNombre: 'Agregar selección',
+        class: 'btn-primary',
+        funcion: (): void => this.crossList.toArray()[1].agregar(''),
+      },
+      {
+        btnNombre: 'Restar selección',
+        class: 'btn-primary',
+        funcion: (): void => this.crossList.toArray()[1].quitar(''),
+      },
+      {
+        btnNombre: 'Restar todos',
+        class: 'btn-default',
+        funcion: (): void => this.crossList.toArray()[1].quitar('t'),
+      },
+    ];
+    this.paisDeProcedenciaBotonsTres = [
+      {
+        btnNombre: 'Agregar todos',
+        class: 'btn-default',
+        funcion: (): void => this.crossList.toArray()[2].agregar('t'),
+      },
+      {
+        btnNombre: 'Agregar selección',
+        class: 'btn-primary',
+        funcion: (): void => this.crossList.toArray()[2].agregar(''),
+      },
+      {
+        btnNombre: 'Restar selección',
+        class: 'btn-primary',
+        funcion: (): void => this.crossList.toArray()[2].quitar(''),
+      },
+      {
+        btnNombre: 'Restar todos',
+        class: 'btn-default',
+        funcion: (): void => this.crossList.toArray()[2].quitar('t'),
+      },
+    ];
+  }
 
   /**
    * @method ngOnInit
@@ -570,6 +640,7 @@ export class DatosMercanciaComponent implements OnInit {
           'numeroRegistroSanitario',
           'fechaCaducidad',
         ];
+        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
         break;
       default:
         if (this.detalleMercancia) {
@@ -737,7 +808,11 @@ export class DatosMercanciaComponent implements OnInit {
       estadoFisico: [this.obtenerValor('estadoFisico'), Validators.required],
       fraccionArancelaria: [
         this.obtenerValor('fraccionArancelaria'),
-        Validators.required,
+        [
+          Validators.required,
+          Validators.maxLength(8),
+          Validators.pattern(SOLO_REGEX_NUMEROS),
+        ],
       ],
       descripcionFraccion: [
         {
@@ -769,8 +844,8 @@ export class DatosMercanciaComponent implements OnInit {
           Validators.pattern(REGEX_NUMERO_12_ENTEROS_5_DECIMALES),
         ],
       ],
-      cantidadUmc: [this.obtenerValor('cantidadUmc'), Validators.required],
-      presentacion: [this.obtenerValor('presentacion'), Validators.required],
+      cantidadUmc: [this.obtenerValor('cantidadUmc'), [Validators.required]],
+      presentacion: [this.obtenerValor('presentacion'), [Validators.required]],
       numeroRegistroSanitario: [
         this.obtenerValor('numeroRegistroSanitario'),
         Validators.required,
@@ -778,15 +853,15 @@ export class DatosMercanciaComponent implements OnInit {
       fechaCaducidad: [this.obtenerValor('fechaCaducidad')],
       paisDeOriginDatos: [
         this.obtenerValor('paisDeOriginDatos') || [],
-        Validators.required,
+        matrizRequerida,
       ],
       paisDeProcedenciaDatos: [
         this.obtenerValor('paisDeProcedenciaDatos') || [],
-        Validators.required,
+        matrizRequerida,
       ],
       usoEspecifico: [
         this.obtenerValor('usoEspecifico') || [],
-        Validators.required,
+        matrizRequerida,
       ],
     });
 
@@ -914,6 +989,10 @@ export class DatosMercanciaComponent implements OnInit {
    * @returns {void} Este método no devuelve ningún valor.
    */
   agregarMercancia(): void {
+    if (this.mercanciaForm.invalid) {
+      this.mercanciaForm.markAllAsTouched();
+      return;
+    }
     const VALORTABLAMERCANCIA: TablaMercanciasDatos =
       this.mercanciaForm.getRawValue();
     VALORTABLAMERCANCIA.paisOrigen =
@@ -996,28 +1075,19 @@ export class DatosMercanciaComponent implements OnInit {
    * @returns {void} Este método no retorna ningún valor.
    */
   cambiarFraccionArancelaria(): void {
-    if (
-      this.mercanciaForm.get('fraccionArancelaria') &&
-      this.mercanciaForm.get('cantidadUmt')?.disabled
-    ) {
-      this.mercanciaForm
-        .get('descripcionFraccion')
-        ?.setValue(DESCRIPCION_FRACCION_DESHABILITADO_VALOR);
-      this.mercanciaForm.get('cantidadUmt')?.setValue(UMT_DESHABILITADO_VALOR);
-    } else if (this.mercanciaForm.get('fraccionArancelaria')?.value) {
-      if (
-        REGEX_SOLO_NUMEROS.test(
-          this.mercanciaForm.get('fraccionArancelaria')?.value
-        )
-      ) {
+    const FRACCION = this.mercanciaForm.get('fraccionArancelaria')?.value;
+    if (!FRACCION) {
+      this.mercanciaForm.get('descripcionFraccion')?.setValue('');
+    } else if (FRACCION && this.mercanciaForm.get('cantidadUmt')?.disabled) {
+      if (isNaN(Number(FRACCION))) {
+        this.abrirModal();
+      } else {
         this.mercanciaForm
           .get('descripcionFraccion')
           ?.setValue(DESCRIPCION_FRACCION_DESHABILITADO_VALOR);
         this.mercanciaForm
           .get('cantidadUmt')
           ?.setValue(UMT_DESHABILITADO_VALOR);
-      } else {
-        this.abrirModal();
       }
     }
   }
@@ -1053,4 +1123,11 @@ export class DatosMercanciaComponent implements OnInit {
 
     this.elementoParaEliminar = i;
   }
+}
+
+export function matrizRequerida(
+  control: AbstractControl
+): ValidationErrors | null {
+  const VALUE = control.value;
+  return Array.isArray(VALUE) && VALUE.length === 0 ? { required: true } : null;
 }

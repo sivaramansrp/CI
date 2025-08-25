@@ -820,3 +820,5 @@ export const CERTIFICATE_OF_ORIGIN_NUMBER = /^[A-Za-z0-9]{8,20}$/;
  * Ejemplos inválidos: "123.45", "abc", "12345678901234567"
  */
 export const IMPORTE = /^\d{1,16}$/;
+
+export const SOLO_REGEX_NUMEROS = /^[0-9]*$/;

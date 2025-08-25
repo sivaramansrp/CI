@@ -294,10 +294,8 @@
         <span
           class="form-label mx-2"
           *ngIf="elementosRequeridos.includes('calle')"
-        >
-          <span [ngClass]="agregarDestinatarioFinal.controls['calle'].errors?.['required'] ? 'text-danger':''">*</span>
-        </span>
-        <span class="form-label">:</span>
+        ><span [ngClass]="agregarDestinatarioFinal.controls['calle'].errors?.['required'] ? 'text-danger':''">*</span>
+        </span><span class="form-label">:</span>
         <span tooltip="Domicilio, calle, número interior, número exterior, lote"
           ><i class="bi bi-question-circle-fill"></i
         ></span>
@@ -321,11 +319,9 @@
         <span
           class="form-label mx-2"
           *ngIf="elementosRequeridos.includes('numeroExterior')"
-        >
-          <span
+        ><span
             [ngClass]="agregarDestinatarioFinal.controls['numeroExterior'].errors?.['required'] ?  'text-danger':''"
-            >*</span
-          >
+            >*</span>
         </span>
         <span class="form-label">:</span>
         <input

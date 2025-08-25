@@ -155,7 +155,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * Actualmente incluye solo el campo 'correoElectronico', pero se puede expandir
    * según los requisitos del sistema.
    */
-  elementosRequeridos: string[] = ['correoElectronico','denominacionRazon','scian'];
+  elementosRequeridos: string[] = ['correoElectronico','denominacionRazon','scian','manifesto'];
 
   /**
    * @constructor

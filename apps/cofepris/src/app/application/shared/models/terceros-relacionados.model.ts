@@ -7,7 +7,7 @@ import { ConfiguracionColumna } from '@ng-mf/data-access-user';
  */
 export const MENSAJE_TABLA_OBLIGATORIA = `
   <p style="text-align: center;">
-    Las tablas marcadas con un asterisco son obligatorias. Debes agregar al menos un registro para continuar.
+    Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.
   </p>
 `;
 

@@ -137,6 +137,8 @@ export class CatalogoSelectComponent
  */
   @Input() isLabelBottomSpace: boolean = false;
 
+  @Input() isBold: boolean = false;
+
   /**
    * @description Formulario reactivo que contiene el control del select.
    * Este formulario se utiliza para gestionar el estado y las validaciones del select.
