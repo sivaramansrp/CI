@@ -48,7 +48,7 @@
               [label]="'Banco'"
               id="clave"
               formControlName="clave"
-              [isDisabled]="disabled" 
+              [isDisabled]="esFormularioSoloLectura || !!pagoDeDerechosForm.get('clave')?.disabled"
               (change)="setValoresStore(pagoDeDerechosForm, 'clave')"
             >
             </app-catalogo-select>

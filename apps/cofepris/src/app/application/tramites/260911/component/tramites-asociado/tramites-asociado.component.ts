@@ -27,6 +27,7 @@ import { TramitesAsociadosService } from '../../services/datos-de-la-solicitud/t
 })
 export class TramitesAsociadoComponent implements OnInit, OnDestroy {
   @Input() disabled: boolean = false;
+  @Input() tipoTramite?: string;
 
   /**
    * Configuración de las columnas de la tabla dinámica.

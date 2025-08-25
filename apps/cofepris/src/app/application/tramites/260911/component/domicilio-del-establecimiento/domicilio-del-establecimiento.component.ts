@@ -68,49 +68,30 @@ import { Tramite260911Query } from '../../estados/tramite260911.query';
 })
 export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
   @Input() disabled: boolean = false;
+  @Input() tipoTramite: string = '';
 
-    ngOnChanges(): void {
-      
-      if (!this.esFormularioSoloLectura && !this.disabled) {
-        this.form?.enable();
-        this.domicilio?.enable();
-        this.representanteLegal?.enable();
-      } else {
-        this.form?.disable();
-        this.domicilio?.disable();
-        this.representanteLegal?.disable();
-      }
 
-      
-      const AVISO_CHECKBOX_VALUE = this.domicilio?.get('avisoCheckbox')?.value;
-      const LICENCIA_SANITARIA_CONTROL = this.domicilio?.get('licenciaSanitaria');
-      if (LICENCIA_SANITARIA_CONTROL) {
-        if (AVISO_CHECKBOX_VALUE) {
-          LICENCIA_SANITARIA_CONTROL.disable();
-        } else {
-          LICENCIA_SANITARIA_CONTROL.enable();
-        }
-      }
-
-      if (this.representanteLegal) {
-        if (this.enableLegalFields) {
-          this.representanteLegal.get('nombre')?.enable();
-          this.representanteLegal.get('apellidoPaterno')?.enable();
-          this.representanteLegal.get('apellidoMaterno')?.enable();
-        } else {
-          this.representanteLegal.get('nombre')?.disable();
-          this.representanteLegal.get('apellidoPaterno')?.disable();
-          this.representanteLegal.get('apellidoMaterno')?.disable();
-        }
-      }
-    }
 
   /**
    * Índice del elemento de mercancía seleccionado en la tabla.
    */
   selectedMercanciaIndex: number | null = null;
+  /**
+   * Contador de elementos de mercancía seleccionados.
+   */
   selectedMercanciaCount: number = 0;
+  /**
+   * Indica si la edición está bloqueada.
+   */
   isEditBlocked: boolean = false;
+  /**
+   * Indica si la tabla de mercancías está deshabilitada.
+   */
+  isMercanciasTableDisabled: boolean = true;
+  /**
+   * Indica si la tabla de NICO está deshabilitada.
+   */
+  isNicoTablaDisabled: boolean = true;
   /**
    * Obtiene el estado del formulario de mercancía basado en el elemento seleccionado.
    *
@@ -893,6 +874,11 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
     this.loadEntidad();
     this.loadRepresentacion();
     this.inicializarEstadoFormulario();
+    this.form.get('estado')?.disable();
+    this.nicoTablaForm.get('entidad')?.disable();
+    this.nicoTablaForm.get('representacion')?.disable();
+    this.domicilio.get('regimen')?.disable();
+    this.domicilio.get('aduanasEntradas')?.disable();
     this.obtenerTablaDatos();
     this.obtenerEstadoList();
     this.obtenerMercanciasDatos();
@@ -901,18 +887,82 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
       const FIRST_OPTION = this.subRepresentacion && this.subRepresentacion.length > 0 ? this.subRepresentacion[0].id : '';
       this.nicoTablaForm.get('representacion')?.setValue(FIRST_OPTION);
     });
-    if (!this.esFormularioSoloLectura && !this.disabled) {
-      this.form.enable();
-      this.domicilio.enable();
-      this.representanteLegal.enable();
-    } else {
-      this.form.disable();
-      this.domicilio.disable();
-      this.representanteLegal.disable();
+    if (!this.esFormularioSoloLectura) {
+      this.form?.disable();
+      this.domicilio?.disable();
+      this.representanteLegal?.disable();
     }
   }
+  /**
+   * Detecta cambios en las propiedades de entrada del componente.
+   */
  
+ngOnChanges(): void {
+  if (this.tipoTramite === '1' || this.tipoTramite === '2') {
+    this.isMercanciasTableDisabled = false;
+    this.isNicoTablaDisabled = false;
+  } else {
+    this.isMercanciasTableDisabled = true;
+    this.isNicoTablaDisabled = true;
+  }
+  this.form.get('estado')?.disable();
+  this.nicoTablaForm.get('entidad')?.disable();
+  this.nicoTablaForm.get('representacion')?.disable();
+  this.domicilio.get('regimen')?.disable();
+  this.domicilio.get('aduanasEntradas')?.disable();
+  if (!this.esFormularioSoloLectura && !this.disabled) {
+    this.form?.disable();
+    this.domicilio?.disable();
+    this.representanteLegal?.disable();
+    this.form?.get('estado')?.disable();
+    this.nicoTablaForm?.get('entidad')?.disable();
+    this.nicoTablaForm?.get('representacion')?.disable();
+    this.domicilio?.get('regimen')?.disable();
+    this.domicilio?.get('aduanasEntradas')?.disable();
 
+    if (this.tipoTramite === '1' || this.tipoTramite === '2') {
+      this.form?.enable();
+      this.domicilio?.enable();
+      this.representanteLegal?.enable();
+      // Enable dropdowns
+      this.form?.get('estado')?.enable();
+      this.nicoTablaForm?.get('entidad')?.enable();
+      this.nicoTablaForm?.get('representacion')?.enable();
+      this.domicilio?.get('regimen')?.enable();
+      this.domicilio?.get('aduanasEntradas')?.enable();
+      this.domicilio?.get('licenciaSanitaria')?.disable();
+      this.representanteLegal?.get('nombre')?.disable();
+      this.representanteLegal?.get('apellidoPaterno')?.disable();
+      this.representanteLegal?.get('apellidoMaterno')?.disable();
+    } else if (this.tipoTramite === '0') {
+      this.form?.disable();
+      this.domicilio?.disable();
+      this.representanteLegal?.disable();
+      if (this.form?.get('justificacion')) {
+        this.form.get('justificacion')?.enable();
+      }
+      this.form?.get('estado')?.disable();
+      this.nicoTablaForm?.get('entidad')?.disable();
+      this.nicoTablaForm?.get('representacion')?.disable();
+      this.domicilio?.get('regimen')?.disable();
+      this.domicilio?.get('aduanasEntradas')?.disable();
+    }
+    const AVISO_CHECKBOX_VALUE = this.domicilio?.get('avisoCheckbox')?.value;
+    const LICENCIA_SANITARIA_CONTROL = this.domicilio?.get('licenciaSanitaria');
+    if (LICENCIA_SANITARIA_CONTROL) {
+      if (AVISO_CHECKBOX_VALUE) {
+        LICENCIA_SANITARIA_CONTROL.disable();
+      } else {
+        LICENCIA_SANITARIA_CONTROL.enable();
+      }
+    }
+    if (this.representanteLegal) {
+      this.representanteLegal.get('nombre')?.disable();
+      this.representanteLegal.get('apellidoPaterno')?.disable();
+      this.representanteLegal.get('apellidoMaterno')?.disable();
+    }
+  }
+    }
 
 
   /** Guarda los datos seleccionados en el modal SCIAN */
@@ -983,6 +1033,8 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
       manifests: [true],
     });
 
+   
+
     if (this.domicilio.get('avisoCheckbox')?.value) {
       this.domicilio.get('licenciaSanitaria')?.disable();
     }
@@ -1003,6 +1055,11 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
       apellidoPaterno: [{ value: this.solicitudState?.apellidoPaterno, disabled: true }, [Validators.required]],
       apellidoMaterno: [{ value: this.solicitudState?.apellidoMaterno, disabled: true }, [Validators.required]],
     });
+     this.form.get('estado')?.disable();
+    this.nicoTablaForm.get('entidad')?.disable();
+    this.nicoTablaForm.get('representacion')?.disable();
+    this.domicilio.get('regimen')?.disable();
+    this.domicilio.get('aduanasEntradas')?.disable();
   }
 
   /**

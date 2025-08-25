@@ -49,19 +49,16 @@ import { Validators } from '@angular/forms';
 })
 
 export class DatosDeLaSolicitudComponent implements OnInit, AfterViewInit, OnDestroy {
-  // Custom RFC-compliant email validator allowing up to 320 chars and long local part
-  static rfcEmailValidator(control: import('@angular/forms').AbstractControl): Record<string, unknown> | null {
-    if (!control.value) {
-      return null;
-    }
-    // Allow local part longer than 64 chars, enforce total <= 320 and basic format
-    const BASIC_EMAIL_REGEX = /^[A-Za-z0-9!#$%&'*+/=?^_`{|}~.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-    if (control.value.length > 320) {
-      return { maxlength: true };
-    }
-    return BASIC_EMAIL_REGEX.test(control.value) ? null : { email: true };
-  }
+
+  /**
+   * Evento emitido cuando se selecciona un botón de radio.
+   */
   @Output() radioButtonSelectedChange = new EventEmitter<boolean>();
+
+  /**
+   * Evento emitido cuando cambia el tipo de trámite.
+   */
+  @Output() tipoTramiteChange = new EventEmitter<string>();
 
   /** Estado actual de la solicitud proveniente del store */
   public solicitudState!: Tramite260911State;
@@ -164,8 +161,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, AfterViewInit, OnDes
       this.form.disable();
       this.datosDelEstablecimiento.disable();
     } else {
-      this.form.enable();
-      this.datosDelEstablecimiento.enable();
+      const RADIO_VALUE = this.form.get('btonDeRadio')?.value;
+      if (!RADIO_VALUE) {
+        this.disableSections();
+      } else if (RADIO_VALUE === '0') {
+        this.enableProrrogaOnly();
+      } else {
+        this.enableSections();
+      }
     }
   }
 
@@ -260,7 +263,26 @@ export class DatosDeLaSolicitudComponent implements OnInit, AfterViewInit, OnDes
       CONTROL.updateValueAndValidity({ emitEvent: false });
     }
   }
-
+  /**
+   * Validador personalizado para correos electrónicos que permite una parte local mayor a 64 caracteres,
+   * pero exige que el correo completo no exceda los 320 caracteres y cumpla con un formato básico.
+   * 
+   * @param control Control de formulario de Angular que contiene el valor a validar.
+   * @returns Un objeto con el error de validación si el valor no es válido, o `null` si es válido.
+   *
+   * @compo Validador de correo electrónico para RFC. Permite correos con parte local extensa y verifica formato básico.
+   */
+  static rfcEmailValidator(control: import('@angular/forms').AbstractControl): Record<string, unknown> | null {
+    if (!control.value) {
+      return null;
+    }
+    // Permitir parte local mayor a 64 caracteres, exigir total <= 320 y formato básico
+    const BASIC_EMAIL_REGEX = /^[A-Za-z0-9!#$%&'*+/=?^_`{|}~.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    if (control.value.length > 320) {
+      return { maxlength: true };
+    }
+    return BASIC_EMAIL_REGEX.test(control.value) ? null : { email: true };
+  }
   /**
    * Método de destrucción del ciclo de vida del componente.
    * Libera recursos y cancela suscripciones.
@@ -308,20 +330,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, AfterViewInit, OnDes
 
     // Verificar si hay un valor inicial en el radio button
     this.isRadioButtonSelected = Boolean(this.solicitudState.btonDeRadio);
-    // Si no hay radio seleccionado, deshabilitar las secciones
-    if (!this.isRadioButtonSelected) {
-      this.disableSections();
-    }
-    
-    // Deshabilitar secciones si no hay radio button seleccionado
-    if (!this.isRadioButtonSelected) {
-      this.disableSections();
-    }
-
     // Suscribirse a cambios en el radio button
     this.form.get('btonDeRadio')?.valueChanges.subscribe(value => {
       this.onRadioButtonChange(value);
     });
+
+    // Aplica el estado correcto de los campos según el valor inicial del radio
+    const RADIO_VALUE = this.form.get('btonDeRadio')?.value;
+    if (RADIO_VALUE === undefined || RADIO_VALUE === null || RADIO_VALUE === '') {
+      this.disableSections();
+    } else if (RADIO_VALUE === '0') {
+      this.enableProrrogaOnly();
+    } else {
+      this.enableSections();
+    }
   }
 
   /**
@@ -363,10 +385,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, AfterViewInit, OnDes
    * @param value Valor seleccionado del radio button.
    */
   onRadioButtonChange(value: string | null): void {
-    this.isRadioButtonSelected = Boolean(value);
+    this.isRadioButtonSelected = value !== undefined && value !== null && value !== '';
     this.radioButtonSelectedChange.emit(this.isRadioButtonSelected);
     if (this.isRadioButtonSelected) {
-      this.enableSections();
+      if (value === '0') {
+        this.enableProrrogaOnly();
+      } else {
+        this.enableSections();
+      }
     } else {
       this.disableSections();
     }
@@ -376,11 +402,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, AfterViewInit, OnDes
    * Deshabilita todas las secciones excepto el radio button.
    */
   disableSections(): void {
-    // Deshabilitar el campo de justificación
-    this.form.get('justificacion')?.disable();
-    
-    // Deshabilitar todos los campos del formulario de datos del establecimiento
-    this.datosDelEstablecimiento.disable();
+  // Deshabilitar el campo de justificación
+  this.form.get('justificacion')?.disable();
+  // Deshabilitar todos los campos del formulario de datos del establecimiento
+  this.datosDelEstablecimiento.disable();
   }
 
   /**
@@ -390,9 +415,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, AfterViewInit, OnDes
     if (!this.esFormularioSoloLectura) {
       // Habilitar el campo de justificación
       this.form.get('justificacion')?.enable();
-      
       // Habilitar todos los campos del formulario de datos del establecimiento
       this.datosDelEstablecimiento.enable();
+    }
+
+  }
+
+  /**
+   * Habilita solo el campo de justificación para la opción 'Prórroga'.
+   * Deshabilita todos los campos de datosDelEstablecimiento.
+   */
+  enableProrrogaOnly(): void {
+    if (!this.esFormularioSoloLectura) {
+      this.form.get('justificacion')?.enable();
+      this.datosDelEstablecimiento.disable();
     }
   }
 
@@ -409,8 +445,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, AfterViewInit, OnDes
      * @param {string} campo  : Nombre del campo a validar, si el control es un FormGroup
      * @returns {boolean | null} : Retorna true si el campo contiene errores y ha sido tocado, de lo contrario retorna false
      */
-    // eslint-disable-next-line class-methods-use-this
-    public isValid(control: AbstractControl, campo?: string): boolean | null {
+   // eslint-disable-next-line class-methods-use-this
+   public isInvalid(control: AbstractControl, campo?: string): boolean | null {
       if (!control) {
         return null;
       }

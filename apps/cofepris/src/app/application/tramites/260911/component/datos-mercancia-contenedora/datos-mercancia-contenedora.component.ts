@@ -79,15 +79,7 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
      * Evento emitido cuando se hace clic en el botón Cancelar en el modal de Mercancías
      */
     @Output() cancelarMercanciaModal = new EventEmitter<void>();
-
-    cerrarMercanciaModal(): void {
-      this.cancelarMercanciaModal.emit();
-    }
-  public resetForm(): void {
-    if (this.mercanciaForm) {
-      this.mercanciaForm.reset();
-    }
-  }
+   
   onAgregarMercancia(): void {
     if (this.mercanciaForm.valid) {
       // Helper to get description from catalog by ID
@@ -656,6 +648,22 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
     }
   }
 
+   /**
+     * Cierra el modal de mercancía emitiendo el evento cancelarMercanciaModal.
+     */
+
+    cerrarMercanciaModal(): void {
+      this.cancelarMercanciaModal.emit();
+    }
+    /**
+     * Reinicia el formulario de mercancía.
+     */
+  public resetForm(): void {
+    if (this.mercanciaForm) {
+      this.mercanciaForm.reset();
+    }
+  }
+
   /**
    * Restablece los valores de los campos clave en el formulario.
    */
@@ -919,7 +927,6 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
   }
 
   private removeInvalidControls(): void {
-    // Never remove catalog dropdown controls
     const ALWAYS_KEEP = [
       'clasificacionProducto',
       'especificarClasificacionProducto',

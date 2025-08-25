@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import {
   Destinatario,
   Fabricante,
@@ -46,27 +46,96 @@ import { Tramite260911Store } from '../../estados/tramite260911.store';
   templateUrl: './terceros-relacionados-vista.component.html',
   styleUrl: './terceros-relacionados-vista.component.scss',
 })
-export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
-   @Input() disabled: boolean = false;
-  fabricanteTablaDatos: Fabricante[] = [];
-  destinatarioFinalTablaDatos: Destinatario[] = [];
-  proveedorTablaDatos: ProveedorWithId[] = [];
-  facturadorTablaDatos: FacturadorWithId[] = [];
+export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy, OnChanges {
 
+  /**
+   * Tipo de trámite actual.
+   */
+  @Input() tipoTramite: string = '';
+  /**
+   * Estado de habilitación de la tabla de fabricantes.
+   */
+  isFabricanteTablaDatosDisabled: boolean = true;
+  /**
+   * Estado de habilitación de la tabla de destinatarios finales.
+   */
+  isDestinatarioFinalTablaDatosDisabled: boolean = true;
+  /**
+   * Estado de habilitación de la tabla de proveedores.
+   */
+  isProveedorTablaDatosDisabled: boolean = true;
+  /**
+   * Estado de habilitación de la tabla de facturadores.
+   */
+   
+  isFacturadorTablaDatosDisabled: boolean = true;
+  /**
+   * Datos de la tabla de fabricantes.
+   */
+  fabricanteTablaDatos: Fabricante[] = [];
+  /**
+   * Datos de la tabla de destinatarios finales.
+   */
+  destinatarioFinalTablaDatos: Destinatario[] = [];
+  /**
+   * Datos de la tabla de proveedores.
+   */
+  proveedorTablaDatos: ProveedorWithId[] = [];
+  /**
+   * Datos de la tabla de facturadores.
+   */
+  facturadorTablaDatos: FacturadorWithId[] = [];
+  /**
+   * Datos de la tabla de fabricantes seleccionados.
+   */
   fabricanteSeleccionadoDatos: Fabricante[] = [];
+  /**
+   * Datos de la tabla de destinatarios finales seleccionados.
+   */
   destinatarioSeleccionadoDatos: Destinatario[] = [];
+  /**
+   * Datos de la tabla de proveedores seleccionados.
+   */
   proveedorSeleccionadoDatos: ProveedorWithId[] = [];
+  /**
+   * Datos de la tabla de facturadores seleccionados.
+   */
   facturadorSeleccionadoDatos: FacturadorWithId[] = [];
 
+  /**
+   * Estado de habilitación de los botones de acción para la tabla de fabricantes.
+   */
   fabricanteButtonState = { showModificar: false, showEliminar: false };
+  /**
+   * Estado de habilitación de los botones de acción para la tabla de destinatarios finales.
+   */
   destinatarioButtonState = { showModificar: false, showEliminar: false };
+  /**
+   * Estado de habilitación de los botones de acción para la tabla de proveedores.
+   */
   proveedorButtonState = { showModificar: false, showEliminar: false };
+  /**
+   * Estado de habilitación de los botones de acción para la tabla de facturadores.
+   */
   facturadorButtonState = { showModificar: false, showEliminar: false };
 
-  esFormularioSoloLectura = false; 
+  /**
+   * Indica si el formulario debe mostrarse en modo de solo lectura.
+   */
+  esFormularioSoloLectura = false;
 
+  /**
+   * Subject para manejar la destrucción del componente.
+   */
   private destroy$ = new Subject<void>();
 
+  /**
+   * Constructor de la clase.
+   *
+   * @param tramiteQuery - Servicio para consultar datos del trámite.
+   * @param tramiteStore - Servicio para almacenar datos del trámite.
+   * @param renderer - Servicio para manipular el DOM.
+   */
   constructor(
     private tramiteQuery: Tramite260911Query,
     private tramiteStore: Tramite260911Store,
@@ -74,7 +143,13 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     private el: ElementRef
   ) {}
 
-
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Suscribe a los observables para obtener los datos de las tablas.
+   *
+   * @method ngOnInit
+   * @returns {void}
+   */
   ngOnInit(): void {
     this.tramiteQuery.getFabricanteTablaDatos$
       .pipe(takeUntil(this.destroy$))
@@ -101,7 +176,27 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
         this.facturadorTablaDatos = datos as FacturadorWithId[];
       });
   }
+/**
+ * Método del ciclo de vida de Angular que se ejecuta al detectar cambios en las propiedades de entrada.
+ * Se utiliza para actualizar el estado de los checkboxes de las tablas según el tipo de trámite.
+ *
+ * @method ngOnChanges
+ * @returns {void}
+ */
 
+  ngOnChanges(): void {
+  if (this.tipoTramite === '1' || this.tipoTramite === '2') {
+    this.isFabricanteTablaDatosDisabled = false;
+    this.isDestinatarioFinalTablaDatosDisabled = false;
+    this.isProveedorTablaDatosDisabled = false;
+    this.isFacturadorTablaDatosDisabled = false;
+  } else {
+    this.isFabricanteTablaDatosDisabled = true;
+    this.isDestinatarioFinalTablaDatosDisabled = true;
+    this.isProveedorTablaDatosDisabled = true;
+    this.isFacturadorTablaDatosDisabled = true;
+  }
+}
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Limpia los recursos suscritos para evitar fugas de memoria.

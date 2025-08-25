@@ -45,7 +45,7 @@
           [radioOptions]="btonDeRadio"
           [layout]="'horizontal'"
           formControlName="btonDeRadio"
-          (change)="setValorStore(form,'btonDeRadio')"
+          (change)="setValorStore(form,'btonDeRadio'); tipoTramiteChange.emit(form.get('btonDeRadio')?.value)"
         ></app-input-radio>
         <div *ngIf="form.get('btonDeRadio')?.invalid && form.get('btonDeRadio')?.touched" class="text-danger">
             Este campo es obligatorio
@@ -83,7 +83,7 @@
             type="button"
             class="btn btn-primary"
             (click)="mostrarModalEstablecimiento()"
-            [disabled]="esFormularioSoloLectura || !isRadioButtonSelected"
+            [disabled]="esFormularioSoloLectura || !isRadioButtonSelected || form.get('btonDeRadio')?.value === '0'"
           >
             Seleccionar establecimiento
           </button>
@@ -160,7 +160,7 @@
               maxlength="320"
               (change)="setValorStore(datosDelEstablecimiento,'correo')"
               (input)="validarLongitudMaxima('correo', 320)"
-              [ngClass]="isValid(datosDelEstablecimiento, 'correo') ? 'required' : ''"
+              [ngClass]="isInvalid(datosDelEstablecimiento, 'correo') ? 'required' : ''"
             />
             <div *ngIf="datosDelEstablecimiento.get('correo')?.invalid && datosDelEstablecimiento.get('correo')?.touched" class="text-danger">
               <span *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['required']">
@@ -193,6 +193,7 @@
       <div class="modal-footer justify-content-center">
         <button type="button" class="btn btn-primary" (click)="cerrarModal()">Aceptar</button>
       </div>
+        <div class="row" [ngClass]="{'disabled-section': !isRadioButtonSelected || form.get('btonDeRadio')?.value === '0'}">
     </div>
   </div>
 </div>

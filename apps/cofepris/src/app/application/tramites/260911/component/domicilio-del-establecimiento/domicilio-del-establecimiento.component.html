@@ -38,7 +38,7 @@
               [label]="'Estado'"
               name="estado"
               [required]="true"
-              [isDisabled]="esFormularioSoloLectura || disabled" 
+              [isDisabled]="esFormularioSoloLectura || !!form.get('estado')?.disabled"
               formControlName="estado"
               (change)="setValorStore(form, 'estado')"
             >
@@ -231,7 +231,7 @@
   [tipoSeleccionTabla]="tablaSeleccionCheckbox" 
   [configuracionTabla]="nicoTabla"
   [datos]="nicoTablaDatos" 
-  [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+  [disableSeleccionTablaCheckBox]="esFormularioSoloLectura || isNicoTablaDisabled"
   (listaDeFilaSeleccionada)="onScianRowSelected($event)">
     </app-tabla-dinamica>
     <!-- Row selection UI below the table -->
@@ -297,7 +297,7 @@
                     [label]="'Clave S.C.I.A.N.'"
                     [required]="true"
                     name="entidad"
-                    [isDisabled]="esFormularioSoloLectura || disabled"
+                    [isDisabled]="esFormularioSoloLectura"
                     [required]="true"
                     formControlName="entidad"
                     (selectionChange)="setValorStore(nicoTablaForm, 'entidad')"
@@ -319,7 +319,7 @@
                   [label]="'Descripción del S.C.I.A.N.'"
                   [required]="true"
                   name="representacion"
-                  [isDisabled]="esFormularioSoloLectura || disabled"
+                  [isDisabled]="esFormularioSoloLectura "
                   formControlName="representacion"
                   (selectionChange)="setValorStore(nicoTablaForm, 'representacion')"
                   >
@@ -400,7 +400,7 @@
           formControlName="regimen" 
           [label]="'Régimen'" 
           [required]="true"
-          [isDisabled]="esFormularioSoloLectura || disabled" 
+          [isDisabled]="esFormularioSoloLectura || !!domicilio.get('regimen')?.disabled"
           name="regimen" 
           [tooltipQuestionCircle]="true"
           [tooltipQuestionCircleText]="'Régimen al que se destinará la mercancía'"
@@ -416,7 +416,7 @@
           formControlName="aduanasEntradas" 
           [label]="'Aduanas de entradas'"
           [required]="true" 
-          [isDisabled]="esFormularioSoloLectura || disabled" 
+          [isDisabled]="esFormularioSoloLectura || !!domicilio.get('aduanasEntradas')?.disabled"
           name="aduanasEntradas"
           (change)="setValorStore(domicilio, 'aduanasEntradas')"
         ></app-catalogo-select>
@@ -453,7 +453,7 @@
           [label]="'Aeropuerto Internacional Felipe Ángeles (AIFA).'"
           [required]="true" 
           formControlName="aifaCheckbox" 
-          [isDisabled]="esFormularioSoloLectura"
+                    [isDisabled]="esFormularioSoloLectura || !!nicoTablaForm.get('entidad')?.disabled"
           (change)="setValorStore(domicilio, 'aifaCheckbox')"
         ></lib-input-check>
       </div>
@@ -470,7 +470,7 @@
           [tipoSeleccionTabla]="tablaSeleccionCheckbox" 
           [configuracionTabla]="mercanciasTabla"
           [datos]="mercanciasTablaDatos" 
-          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura || isMercanciasTableDisabled"
           (listaDeFilaSeleccionada)="onMercanciaRowSelected($event)">
         </app-tabla-dinamica>
         <div class="container text-end mt-5">
@@ -545,7 +545,7 @@
               [label]="''" 
               [required]="true"
               formControlName="manifests"
-              [isDisabled]="esFormularioSoloLectura"
+                  [isDisabled]="esFormularioSoloLectura || !!nicoTablaForm.get('representacion')?.disabled"
               (change)="onManifestsChange()"
             ></lib-input-check>
             <span class="fw-bold align-middle"> *</span>
