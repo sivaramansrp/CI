@@ -1,6 +1,8 @@
 import {
   AnexoEncabezado,
   AnexoUnoEncabezado,
+  DatosAnexotressUno,
+  DatosComplimento,
 } from '../../../shared/models/nuevo-programa-industrial.model';
 import {
   AnnexoDosTres,
@@ -104,6 +106,28 @@ export interface Tramite80101State {
   datosComplimentos: DatosComplimentos;
 
   /**
+   * Datos complementarios relacionados con el trámite.
+   */
+  datosComplimento: DatosComplimento;
+
+  
+  /**
+   * Datos complementarios relacionados con el trámite.
+   */
+  datosComplimentoDos: DatosComplimento;
+
+   /**
+   * Datos complementarios relacionados con el trámite.
+   */
+  datosAnexoTress: DatosAnexotressUno;
+
+     /**
+   * Datos complementarios relacionados con el trámite.
+   */
+  datosAnexoTressDos: DatosAnexotressUno;
+
+
+  /**
    * Tabla de datos complementarios de socios y accionistas.
    */
   tablaDatosComplimentos: SociaoAccionistas[];
@@ -205,6 +229,22 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
     entidadFederativaEmpresaExt: '',
     nombreEmpresaExt: '',
     direccionEmpresaExtranjera: '',
+  },
+  datosComplimento:{
+    fraccionArancelaria: "",
+    descripcion: "",
+  },
+   datosComplimentoDos:{
+    fraccionArancelaria: "",
+    descripcion: "",
+  },
+  datosAnexoTress:{
+    fraccionArancelaria:"",
+  descripcion: ""
+  },
+  datosAnexoTressDos:{
+     fraccionArancelaria:"",
+  descripcion: ""
   },
   datosComplimentos: {
     modalidad: 'Industrial',
@@ -574,7 +614,35 @@ export class Tramite80101Store extends Store<Tramite80101State> {
       return { ...state, datosComplimentos: VALUE };
     });
   }
+/**
+   * Actualiza el estado con los datos complementarios proporcionados.
+   *
+   * @param datosComplimento - Objeto que contiene los datos complementarios a actualizar.
+   *
+   * Este método combina los datos existentes en el estado con los nuevos datos proporcionados
+   * y actualiza el estado con el resultado.
+   */
+  setDatosComplimento(datosComplimento: DatosComplimento): void {
+    this.update((state) => {
+      const VALUE = { ...state.datosComplimento, ...datosComplimento };
+      return { ...state, datosComplimento: VALUE };
+    });
+  }
 
+  /**
+   * Actualiza el estado with los datos complementarios proporcionados.
+   *
+   * @param datosComplimentoDos - Objeto que contiene los datos complementarios a actualizar.
+   *
+   * Este método combina los datos existentes en el estado con los nuevos datos proporcionados
+   * y actualiza el estado con el resultado.
+   */
+  setDatosComplimentoDos(datosComplimentoDos: DatosComplimento): void {
+    this.update((state) => {
+      const VALUE = { ...state.datosComplimentoDos, ...datosComplimentoDos };
+      return { ...state, datosComplimentoDos: VALUE };
+    });
+  }
   /**
    * Establece los datos del subcontratista en el estado de la tienda.
    *
@@ -895,4 +963,31 @@ export class Tramite80101Store extends Store<Tramite80101State> {
       ],
     }));
   }
+
+  /**
+   * Actualiza la propiedad `datosAnexoTress` en el store con los datos proporcionados.
+   * Fusiona el estado existente de `datosAnexoTress` con los nuevos valores recibidos.
+   *
+   * @param datosAnexoTress - Objeto que contiene los nuevos datos a fusionar en `datosAnexoTress`.
+   */
+  setDatosAnexoTres(datosAnexoTress: DatosAnexotressUno): void {
+    this.update((state) => {
+      const VALUE = { ...state.datosAnexoTress, ...datosAnexoTress };
+      return { ...state, datosAnexoTress: VALUE };
+    });
+  }
+
+  /**
+   * Actualiza la propiedad `datosAnexoTressDos` en el store con los datos proporcionados.
+   * Fusiona el estado existente de `datosAnexoTressDos` con los nuevos valores recibidos.
+   *
+   * @param datosAnexoTressDos - Objeto que contiene los nuevos datos a fusionar en `datosAnexoTressDos`.
+   */
+  setDatosAnexoTresDos(datosAnexoTressDos: DatosAnexotressUno): void {
+    this.update((state) => {
+      const VALUE = { ...state.datosAnexoTressDos, ...datosAnexoTressDos };
+      return { ...state, datosAnexoTressDos: VALUE };
+    });
+  }
+
 }
