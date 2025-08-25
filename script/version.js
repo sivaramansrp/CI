@@ -5,7 +5,7 @@ const { version } = require('../package.json');
 // Accept app name as a command-line argument
 const appName = process.argv[2];
 if (!appName) {
-  console.error('Usage: node scripts/version.js <app-name>');
+  console.error('Usage: node script/version.js <app-name>');
   process.exit(1);
 }
 
