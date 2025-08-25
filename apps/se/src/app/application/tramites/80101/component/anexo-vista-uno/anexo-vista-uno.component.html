@@ -1,12 +1,17 @@
 <app-anexo-uno
+
   [anexoConfiguartion]="anexoUnoConfig"
   [anexoDosConfiguartion]="anexoDosConfig"
   [anexoUnoTablaLista]="anexoUnoTablaLista"
   [anexoDosTablaLista]="anexoDosTablaLista"
+  (complimentosDatos)="modifierComplimentos($event)"
   (obtenerAnexoUnoDevolverLaLlamada)="obtenerAnexoUnoDevolverLaLlamada($event)"
   (obtenerAnexoDosDevolverLaLlamada)="obtenerAnexoDosDevolverLaLlamada($event)"
   (rutaLaFraccionDeComplemento)="rutaLaFraccionDeComplemento($event)"
   [formularioDeshabilitado]="formularioDeshabilitado"
+  [formularioDatosSubcontratista]="anexoUnoFormGroup"
+  [formularioDatosSubcontratistaDos]="anexoDosFormGroup"
+  (complimentosDatosDos)="modifierDosComplimentos($event)"
 >
 </app-anexo-uno>
 

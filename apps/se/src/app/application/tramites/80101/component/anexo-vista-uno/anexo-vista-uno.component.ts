@@ -2,7 +2,7 @@ import { ANEXO_II_SERVICIO, ANEXO_IMPORTACION_SERVICIO } from '../../../../share
 import { Component, Input } from '@angular/core';
 import { ANEXO_I_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { ActivatedRoute } from '@angular/router';
-import { AnexoDosEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
+import { AnexoDosEncabezado, DatosComplimento } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { AnexoUnoComponent } from '../../../../shared/components/anexo-uno/anexo-uno.component';
 import { AnexoUnoEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { CommonModule } from '@angular/common';
@@ -20,6 +20,7 @@ import { ComplementarFraccionVistaComponent } from '../complementar-fraccion-vis
 import { ContenedorProveedorClienteComponent } from '../contenedor-proveedor-cliente/contenedor-proveedor-cliente.component';
 import { ProveedorPorArchivoVistaComponent } from '../proveedor-por-archivo-vista/proveedor-por-archivo-vista.component';
 import { ProyectoImmexVistaComponent } from '../proyecto-immex-vista/proyecto-immex-vista.component';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 
 /**
@@ -224,6 +225,25 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
   public mostrarProveedorPorArchivoPopup: boolean = false;
 
   /**
+   * Holds the complementary data for the first annex.
+   * 
+   * @type {DatosComplimento}
+   */
+   datosAnexoUno!: DatosComplimento;
+   
+/**
+ * Form group instance for managing the controls and validation of the "Anexo Uno" form.
+ * Used to handle form state, validation, and submission logic within the AnexoVistaUnoComponent.
+ */
+ public anexoUnoFormGroup!: FormGroup;
+
+/**
+ * Form group instance for managing the controls and validation of the "Anexo Dos" section.
+ * Used to encapsulate form fields and their state within the Anexo Vista Uno component.
+ */
+ public anexoDosFormGroup!: FormGroup;
+
+  /**
    * Constructor del componente AnexoVistaUnoComponent.
    * @param {Router} router - Servicio de enrutamiento de Angular para navegar entre rutas.
    * @param {ActivatedRoute} activatedRoute - Servicio que proporciona información sobre la ruta activa.
@@ -234,7 +254,8 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private store: Tramite80101Store,
-    private query: Tramite80101Query
+    private query: Tramite80101Query,
+    private fb: FormBuilder,
   ) {}
 
   /**
@@ -269,7 +290,37 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
           this.anexoDosTablaLista = exportarTablsDatos;
         }
       });
+      this.inicializarFormularioDatosSubcontratista();
+     this.obtenerDatosDelAlmacen();
+         this.inicializarFormularioDatosDosSubcontratista();
+     this.obtenerDatosDosDelAlmacen();
   }
+
+
+/**
+   * Obtiene los datos del almacén y los asigna al formulario de información de registro.
+   * Se suscribe al observable `infoRegisterEstado$` para obtener los datos, y cuando se reciben,
+   * se actualiza la propiedad `infoRegistro` y se establece el valor del formulario `formularioInfoRegistro`.
+   *
+   * @method obtenerDatosDelAlmacen
+   */
+  obtenerDatosDelAlmacen(): void {
+    this.query.selectDatosComplimentos$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datosComplimentos) => {
+        this.anexoUnoFormGroup.setValue(datosComplimentos);
+      });
+    }
+
+
+ obtenerDatosDosDelAlmacen(): void {
+    this.query.selectDatosComplimentosDos$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datosComplimentos) => {
+        this.anexoDosFormGroup.setValue(datosComplimentos);
+      });
+    }
+
 
   /**
    * Método para obtener la devolución de llamada del anexo Uno.
@@ -289,6 +340,50 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
     this.anexoDosTablaLista = event ? event : [];
     this.store.setExportarDatosTabla(this.anexoDosTablaLista);
   }
+
+
+/**
+   * Inicializa el formulario de datos del subcontratista con los datos obtenidos o con valores vacíos si no hay datos disponibles.
+   * @method inicializarFormularioDatosSubcontratista
+   */
+  inicializarFormularioDatosSubcontratista(): void {
+    this.anexoUnoFormGroup = this.fb.group({
+     fraccionArancelaria: ['', [Validators.required, Validators.maxLength(10)]],
+      descripcion: ['', [Validators.required, Validators.maxLength(1000)]],
+    });
+  }
+
+  /**
+   * Inicializa el formulario de datos del subcontratista con los datos obtenidos o con valores vacíos si no hay datos disponibles.
+   * @method inicializarFormularioDatosSubcontratista
+   */
+  inicializarFormularioDatosDosSubcontratista(): void {
+    this.anexoDosFormGroup = this.fb.group({
+     fraccionArancelaria: ['', [Validators.required, Validators.maxLength(10)]],
+      descripcion: ['', [Validators.required, Validators.maxLength(1000)]],
+    });
+  }
+
+/**
+   * Modifica los datos de los cumplimientos y los almacena en el estado.
+   *
+   * @param complimentos - Objeto de tipo `DatosComplimentos` que contiene los datos de los cumplimientos a actualizar.
+   * @returns void
+   */
+  modifierComplimentos(complimentos: DatosComplimento): void {
+    this.store.setDatosComplimento(complimentos);
+  }
+
+  /**
+   * Modifica los datos de los cumplimientos y los almacena en el estado.
+   *
+   * @param complimentos - Objeto de tipo `DatosComplimentos` que contiene los datos de los cumplimientos a actualizar.
+   * @returns void
+   */
+  modifierDosComplimentos(complimentos: DatosComplimento): void {
+    this.store.setDatosComplimentoDos(complimentos);
+  }
+
 
   /**
    * Navega a una ruta específica basada en el evento proporcionado.

@@ -1,7 +1,7 @@
 import { AlertComponent, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { Component, OnInit } from '@angular/core';
 import { ANEXO_TRES_ALERTA } from '../../constantes/anexo-dos-y-tres.enum';
-import { Anexo1y3Configuartion } from '../../models/nuevo-programa-industrial.model';
+import { Anexo1y3Configuartion, DatosAnexotressUno } from '../../models/nuevo-programa-industrial.model';
 import { AnexoEncabezado } from '../../models/nuevo-programa-industrial.model';
 import { CommonModule } from '@angular/common';
 import { EventEmitter } from '@angular/core';
@@ -13,6 +13,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
+import { delay, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-anexo-dos-y-tres',
@@ -84,6 +85,52 @@ export class AnexoDosYTresComponent implements OnInit {
   @Output() obtenerAnexoTresDevolverLaLlamada: EventEmitter<AnexoEncabezado[]> =
     new EventEmitter<AnexoEncabezado[]>(true);
 
+
+  /**
+   * Emits events containing data of type `DatosAnexotressUno` from the component.
+   * 
+   * This output can be subscribed to by parent components to receive updates
+   * whenever relevant data changes or is submitted within this component.
+   *
+   * @remarks
+   * The `EventEmitter` is initialized with `true` to indicate it is asynchronous.
+   *
+   * @eventProperty
+   */
+  @Output()
+  anexoTressDatos: EventEmitter<DatosAnexotressUno> =
+    new EventEmitter<DatosAnexotressUno>(true);
+
+    @Output()
+  anexoTressDatosDos: EventEmitter<DatosAnexotressUno> =
+    new EventEmitter<DatosAnexotressUno>(true);
+
+  @Input()
+  /**
+   * Establece el formulario de datos del subcontratista.
+   * @param valor - Formulario reactivo con los datos del subcontratista.
+   */
+  set formularioDatosSubcontratista(valor: FormGroup) {
+    this.anexoDosFormGroup.setValue(valor.value);
+  }
+
+
+   @Input()
+  /**
+   * Establece el formulario de datos del subcontratista.
+   * @param valor - Formulario reactivo con los datos del subcontratista.
+   */
+  set formularioDatosDosSubcontratista(valor: FormGroup) {
+    this.anexoTresFormGroup.setValue(valor.value);
+  }
+  /**
+* Notificador utilizado para manejar la destrucción o desuscripción de observables.
+* Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
+*
+* @property {Subject<void>} destroyNotifier$
+*/
+  private destroyNotifier$: Subject<void> = new Subject();
+
   /**
    * @description
    * Objeto que representa una nueva notificación.
@@ -112,17 +159,31 @@ export class AnexoDosYTresComponent implements OnInit {
     this.crearFormularioAnexoDos();
     this.crearFormularioAnexoTres();
   }
-  
+
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * Si el formulario está deshabilitado (`formularioDeshabilitado` es verdadero),
    * deshabilita los grupos de formularios `anexoDosFormGroup` y `anexoTresFormGroup`.
    */
   ngOnInit(): void {
-    if( this.formularioDeshabilitado ) {
+    if (this.formularioDeshabilitado) {
       this.anexoDosFormGroup.disable();
       this.anexoTresFormGroup.disable();
     }
+
+    this.anexoDosFormGroup.valueChanges
+      .pipe(delay(100))
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((_) => {
+        this.anexoTressDatos.emit(this.anexoDosFormGroup.value);
+      });
+      this.anexoTresFormGroup.valueChanges
+      .pipe(delay(100))
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((_) => {
+        this.anexoTressDatosDos.emit(this.anexoTresFormGroup.value);
+      });
+
   }
   /**
    * Crea el formulario del Anexo Dos
@@ -148,15 +209,15 @@ export class AnexoDosYTresComponent implements OnInit {
    * Elimina elementos del Anexo Dos que no tienen estatus
    */
   eliminarAnexoDos(): void {
-  this.anexoDosTablaLista = this.anexoDosTablaLista.filter((idx) => {
-    return !idx.estatus;
-  });
-  if (this.nuevaDosNotificacion) {
-    this.nuevaDosNotificacion.cerrar = false;
-  }
+    this.anexoDosTablaLista = this.anexoDosTablaLista.filter((idx) => {
+      return !idx.estatus;
+    });
+    if (this.nuevaDosNotificacion) {
+      this.nuevaDosNotificacion.cerrar = false;
+    }
 
 
-   if (this.seleccionarDosTablaData.length > 0) {
+    if (this.seleccionarDosTablaData.length > 0) {
 
       this.anexoDosTablaLista = this.anexoDosTablaLista.filter(item => {
 
@@ -167,7 +228,7 @@ export class AnexoDosYTresComponent implements OnInit {
       });
 
       this.seleccionarDosTablaData = [];
-     this.obtenerAnexoDosDevolverLaLlamada.emit(this.anexoDosTablaLista);
+      this.obtenerAnexoDosDevolverLaLlamada.emit(this.anexoDosTablaLista);
     }
   }
 
@@ -207,13 +268,13 @@ export class AnexoDosYTresComponent implements OnInit {
    * Agrega un nuevo elemento al Anexo Dos
    */
   agregarAnexoDos(): void {
-  const OBJECTO_IDX: AnexoEncabezado = {
+    const OBJECTO_IDX: AnexoEncabezado = {
       encabezadoFraccion: this.anexoDosFormGroup.get('fraccionArancelaria')
         ?.value,
       encabezadoDescripcion: this.anexoDosFormGroup.get('descripcion')?.value,
       estatus: false,
     };
-    if(OBJECTO_IDX.encabezadoFraccion.trim() === '' || OBJECTO_IDX.encabezadoDescripcion.trim() === '') {
+    if (OBJECTO_IDX.encabezadoFraccion.trim() === '' || OBJECTO_IDX.encabezadoDescripcion.trim() === '') {
       return; // No agregar si los campos están vacíos
     }
     this.anexoDosTablaLista = [...this.anexoDosTablaLista, OBJECTO_IDX];
@@ -221,23 +282,23 @@ export class AnexoDosYTresComponent implements OnInit {
     this.anexoDosFormGroup.reset();
   }
 
-    /**
-   * Abre un modal con una notificación configurada para confirmar una acción de eliminación.
-   * 
-   * Este método inicializa un objeto de notificación con los siguientes parámetros:
-   * - `tipoNotificacion`: Define el tipo de notificación como "alerta".
-   * - `categoria`: Establece la categoría de la notificación como "peligro".
-   * - `modo`: Configura el modo de la notificación como "acción".
-   * - `titulo`: Campo para el título de la notificación (vacío por defecto).
-   * - `mensaje`: Mensaje que se muestra en la notificación, en este caso,
-   *   pregunta si el usuario está seguro de que desea eliminar.
-   * - `cerrar`: Indica si la notificación puede cerrarse manualmente (true).
-   * - `tiempoDeEspera`: Tiempo en milisegundos antes de que la notificación desaparezca automáticamente (2000 ms).
-   * - `txtBtnAceptar`: Texto del botón de aceptación ("Aceptar").
-   * - `txtBtnCancelar`: Texto del botón de cancelación (vacío por defecto).
-   * 
-   * @returns {void} Este método no devuelve ningún valor.
-   */
+  /**
+ * Abre un modal con una notificación configurada para confirmar una acción de eliminación.
+ * 
+ * Este método inicializa un objeto de notificación con los siguientes parámetros:
+ * - `tipoNotificacion`: Define el tipo de notificación como "alerta".
+ * - `categoria`: Establece la categoría de la notificación como "peligro".
+ * - `modo`: Configura el modo de la notificación como "acción".
+ * - `titulo`: Campo para el título de la notificación (vacío por defecto).
+ * - `mensaje`: Mensaje que se muestra en la notificación, en este caso,
+ *   pregunta si el usuario está seguro de que desea eliminar.
+ * - `cerrar`: Indica si la notificación puede cerrarse manualmente (true).
+ * - `tiempoDeEspera`: Tiempo en milisegundos antes de que la notificación desaparezca automáticamente (2000 ms).
+ * - `txtBtnAceptar`: Texto del botón de aceptación ("Aceptar").
+ * - `txtBtnCancelar`: Texto del botón de cancelación (vacío por defecto).
+ * 
+ * @returns {void} Este método no devuelve ningún valor.
+ */
   abrirTresModal(): void {
     this.nuevaTresNotificacion = {
       tipoNotificacion: 'alert',
@@ -257,15 +318,15 @@ export class AnexoDosYTresComponent implements OnInit {
    * Elimina elementos del Anexo Tres que no tienen estatus
    */
   eliminarAnexoTres(): void {
- this.anexoTresTablaLista = this.anexoTresTablaLista.filter((idx) => {
-    return !idx.estatus;
-  });
-  if (this.nuevaTresNotificacion) {
-    this.nuevaTresNotificacion.cerrar = false;
-  }
+    this.anexoTresTablaLista = this.anexoTresTablaLista.filter((idx) => {
+      return !idx.estatus;
+    });
+    if (this.nuevaTresNotificacion) {
+      this.nuevaTresNotificacion.cerrar = false;
+    }
 
 
-   if (this.seleccionarTresTablaData.length > 0) {
+    if (this.seleccionarTresTablaData.length > 0) {
 
       this.anexoTresTablaLista = this.anexoTresTablaLista.filter(item => {
 
@@ -276,7 +337,7 @@ export class AnexoDosYTresComponent implements OnInit {
       });
 
       this.seleccionarTresTablaData = [];
-     this.obtenerAnexoTresDevolverLaLlamada.emit(this.anexoTresTablaLista);
+      this.obtenerAnexoTresDevolverLaLlamada.emit(this.anexoTresTablaLista);
     }
 
     this.anexoTresTablaLista = this.anexoTresTablaLista.filter((idx) => {
@@ -289,16 +350,16 @@ export class AnexoDosYTresComponent implements OnInit {
    * Agrega un nuevo elemento al Anexo Tres
    */
   agregarAnexoTres(): void {
-     const OBJECTO_IDX: AnexoEncabezado = {
+    const OBJECTO_IDX: AnexoEncabezado = {
       encabezadoFraccion: this.anexoTresFormGroup.get('fraccionArancelaria')
         ?.value,
       encabezadoDescripcion: this.anexoTresFormGroup.get('descripcion')?.value,
       estatus: false,
     };
-    if(OBJECTO_IDX.encabezadoFraccion.trim() === '' || OBJECTO_IDX.encabezadoDescripcion.trim() === '') {
+    if (OBJECTO_IDX.encabezadoFraccion.trim() === '' || OBJECTO_IDX.encabezadoDescripcion.trim() === '') {
       return; // No agregar si los campos están vacíos
     }
-   this.anexoTresTablaLista = [...this.anexoTresTablaLista, OBJECTO_IDX]
+    this.anexoTresTablaLista = [...this.anexoTresTablaLista, OBJECTO_IDX]
     this.obtenerAnexoTresDevolverLaLlamada.emit(this.anexoTresTablaLista);
     this.anexoTresFormGroup.reset();
   }
@@ -308,8 +369,8 @@ export class AnexoDosYTresComponent implements OnInit {
    * @param event Lista de encabezados del Anexo Dos
    */
   setAnexoDosLista(event: AnexoEncabezado[]): void {
- this.seleccionarDosTablaData = event;
- this.obtenerAnexoDosDevolverLaLlamada.emit(this.anexoDosTablaLista);
+    this.seleccionarDosTablaData = event;
+    this.obtenerAnexoDosDevolverLaLlamada.emit(this.anexoDosTablaLista);
   }
 
   /**
@@ -317,7 +378,7 @@ export class AnexoDosYTresComponent implements OnInit {
    * @param event Lista de encabezados del Anexo Tres
    */
   setAnexoTresLista(event: AnexoEncabezado[]): void {
- this.seleccionarTresTablaData = event;
-  this.obtenerAnexoTresDevolverLaLlamada.emit(this.anexoTresTablaLista);
+    this.seleccionarTresTablaData = event;
+    this.obtenerAnexoTresDevolverLaLlamada.emit(this.anexoTresTablaLista);
   }
 }
