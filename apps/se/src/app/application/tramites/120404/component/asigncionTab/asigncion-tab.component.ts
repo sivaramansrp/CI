@@ -171,6 +171,8 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
         ]
       ],
     });
+    
+  this.asignacionForm.updateValueAndValidity();
   }
   
 /**
@@ -253,6 +255,7 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
       this.asignacionForm.disable();
     } else { 
       this.asignacionForm.enable();
+ this.asignacionForm.updateValueAndValidity();
     } 
 }
   /**
@@ -261,6 +264,10 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
   setValoresStore(form: FormGroup, campo: string): void {
     const VALOR = form.get(campo)?.value;
     this.tramite120404Store.establecerDatos({ [campo]: VALOR });
+     const CONTROL = form.get(campo);
+    if (CONTROL) {
+      CONTROL.updateValueAndValidity();
+    }
   }
 
   /**
@@ -272,8 +279,9 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
    */
   buscar(): void {
     this.submitted = true;
+    this.asignacionForm.updateValueAndValidity();
     const FORM = this.asignacionForm;
-      this.buscarIntento.emit({
+    this.buscarIntento.emit({
       submitted: this.submitted,
       invalid: FORM.invalid
     });
