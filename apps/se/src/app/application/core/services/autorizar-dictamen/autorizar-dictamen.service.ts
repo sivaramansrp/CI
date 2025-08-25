@@ -1,18 +1,20 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
+import { ENVIRONMENT, IDSOLICITUD } from '@libs/shared/data-access-user/src';
 
-import { API_POST_FIRMAR, API_POST_INICIAR_AUTORIZAR_DICTAMEN, API_POST_MOSTRAR_FIRMAR, NUMFOLIOTRAMITE, TRAMITE } from '../../../constantes/autorizar-dictamen/api-constants';
+import { API_POST_FIRMAR, API_POST_INICIAR_AUTORIZAR_DICTAMEN, API_POST_MOSTRAR_FIRMAR, API_POST_OBSERVACION_GUARDAR, API_POST_OFICIO_AUTORIZACION, API_POST_OFICIO_RECHAZADO, NUMFOLIOTRAMITE, TRAMITE} from '../../../constantes/autorizar-dictamen/api-constants';
 
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { Observable } from 'rxjs';
 
 import { IniciarAutorizacionResponse } from '@libs/shared/data-access-user/src/core/models/130118/iniciar-autorizar-dictamen-response.model';
 
+import { DocumentoOficialResponse } from '../../models/autorizar-requerimiento/response/oficio-autorizacion-response.model';
 import { FirmaAutorizarDictamenRequest } from '../../models/autorizar-requerimiento/request/firma-autorizar-request.model';
 import { MostrarFirmaRequest } from '../../models/autorizar-requerimiento/request/mostrar-firmar-request.model';
 import { MostrarFirmarResponse } from '../../models/autorizar-requerimiento/response/mostrar-firmar-response.model';
+import { ObservacionRequest } from '../../models/130118/request/observacion-guardar-request.model';
 
 @Injectable({
   providedIn: 'root'
@@ -76,4 +78,38 @@ export class AutorizarDictamenService {
     return this.http.post<BaseResponse<null>>(ENDPOINT, PAYLOAD);
   }
 
+  /** 
+   * Genera oficio de autorización para una solicitud
+   * @param tramite - Número de trámite asociado
+   * @param idSolicitud - ID de la solicitud a autorizar
+   * @returns Observable con la respuesta del oficio generado
+  */
+  postOficioAutorizacion(tramite: number, idSolicitud : number): Observable<BaseResponse<DocumentoOficialResponse>> {
+    const ENDPOINT = `${this.host}${API_POST_OFICIO_AUTORIZACION.replace(TRAMITE, tramite.toString()).replace(IDSOLICITUD, idSolicitud.toString())}`;
+    return this.http.post<BaseResponse<DocumentoOficialResponse>>(ENDPOINT, null);
+  }
+
+  /** 
+   * Genera oficio de autorización para una solicitud rechazada
+   * @param tramite - Número de trámite asociado
+   * @param idSolicitud - ID de la solicitud a autorizar
+   * @returns Observable con la respuesta del oficio generado
+  */
+  postOficioRechazado(tramite: number, idSolicitud : number): Observable<BaseResponse<DocumentoOficialResponse>>{
+     const ENDPOINT = `${this.host}${API_POST_OFICIO_RECHAZADO.replace(TRAMITE, tramite.toString()).replace(IDSOLICITUD, idSolicitud.toString())}`;
+    return this.http.post<BaseResponse<DocumentoOficialResponse>>(ENDPOINT, null);
+  }
+
+  /** 
+   * Guarda una nueva observación en el sistema
+   * @param tramite - Número de trámite asociado
+   * @param numFolio - Número de folio del trámite
+   * @param PAYLOAD - Datos de la observación a guardar
+   * @returns Observable con la respuesta de la operación
+ */
+  postObservacionGuardar(tramite: number, numFolio: string, PAYLOAD: ObservacionRequest):
+    Observable<BaseResponse<string>> {
+    const ENDPOINT = `${this.host}${API_POST_OBSERVACION_GUARDAR.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolio)}`;
+    return this.http.post<BaseResponse<string>>(ENDPOINT, PAYLOAD);
+  }
 }

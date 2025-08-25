@@ -1,7 +1,7 @@
 import { AccuseComponentes, ListaComponentes, Tabulaciones } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
 import { Component, OnDestroy, OnInit, Type } from "@angular/core";
 
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from "@angular/common";
 import { Router } from '@angular/router';
 
@@ -26,19 +26,21 @@ import { RequerimientosResponse } from '@libs/shared/data-access-user/src/core/m
 import { TabsSolicitudServiceTsService } from "../core/services/evaluar-tramite/tabs-solicitud.service.ts.service";
 import { TareasSolicitud } from "@libs/shared/data-access-user/src/core/models/130118/consulta-tareas-response.model";
 
-
-
 import { SentidosDisponiblesResponse } from '@libs/shared/data-access-user/src/core/models/130118/sentidos-disponibles.model';
 import { TabsResponse } from '@libs/shared/data-access-user/src/core/models/130118/consulta-tabs-response.model';
 
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 
+import { AcuseDetalleService } from '@libs/shared/data-access-user/src/core/services/130118/detalleAcuse.service';
 import { AutorizarDictamenService } from '../core/services/autorizar-dictamen/autorizar-dictamen.service';
 import { IniciarAutorizacionResponse } from '@libs/shared/data-access-user/src/core/models/130118/iniciar-autorizar-dictamen-response.model';
 
+import { BodyTablaResolucion, HeaderTablaResolucion } from '@libs/shared/data-access-user/src/core/models/shared/consulta-generica.model';
+import { CONSULTA_RESOLUCIONES } from '@libs/shared/data-access-user/src/core/enums/consulta-generica.enum';
 import { FirmaAutorizarDictamenRequest } from '../core/models/autorizar-requerimiento/request/firma-autorizar-request.model';
 import { MostrarFirmaRequest } from '../core/models/autorizar-requerimiento/request/mostrar-firmar-request.model';
 import { MostrarFirmarResponse } from '../core/models/autorizar-requerimiento/response/mostrar-firmar-response.model';
+import { ObservacionRequest } from '../core/models/130118/request/observacion-guardar-request.model';
 
 @Component({
   selector: 'app-autorizar-dictamen',
@@ -68,22 +70,28 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
   slectTramite!: AccuseComponentes | undefined;
 
   /**
-   * @property {boolean} firmar
-   * @description Indica si se debe mostrar la sección de firma electrónica.
+   * @property {boolean} isDictamen
+   * @description Indica si se debe mostrar la sección de dictamen.
   */
   isDictamen: boolean = true;
 
   /**
-   * @property {boolean} firmar
+   * @property {boolean} isFirma
    * @description Indica si se debe mostrar la sección de firma electrónica.
   */
   isFirma: boolean = false;
-
+  
   /**
-   * @property {boolean} firmar
+   * @property {boolean} isDocumento
    * @description Indica si se debe mostrar la sección de firma electrónica.
   */
-  isAcuse: boolean = false;
+  isDocumento: boolean = false;
+
+  /**
+   * @property {boolean} isObservacion
+   * @description Indica si se debe la observacion.
+  */
+  isObservacion: boolean = false;
 
   /** Nueva notificación a gestionar */
   nuevaNotificacion!: Notificacion;
@@ -223,6 +231,26 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
    */
   deshabilitarSolicitarDocumentos: boolean = false;
 
+  /**
+   * Encabezado de la tabla de resoluciones.
+   * Contiene las columnas que se mostrarán en la tabla de resoluciones.
+   * @type {HeaderTablaResolucion[]}
+  */
+  readonly encabezadoTablaResolucion: HeaderTablaResolucion[] = CONSULTA_RESOLUCIONES.encabezadoTablaResolucion;
+  
+  /**
+   * Datos de la tabla de resoluciones.
+   * Contiene los registros que se mostrarán en la tabla de resoluciones.
+   * @type {BodyTablaResolucion[]}
+  */
+  datosTablaResolucion: BodyTablaResolucion[] = [];
+
+  /**
+   * Formulario reactivo para la solicitud de observacion dictamen.
+   * @type {FormGroup}
+  */
+  public observacionForm!: FormGroup;
+  
 
   /**
    * @constructor
@@ -243,7 +271,9 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
     private consultaioQuery: ConsultaioQuery,
     private tabsSolicitudServiceTsService: TabsSolicitudServiceTsService,
     private guardarService: GuardarDictamenService,
-    private autorizarDictamenService: AutorizarDictamenService
+    private autorizarDictamenService: AutorizarDictamenService,
+    private acuseDetalleService : AcuseDetalleService,
+    private fb: FormBuilder,
   ) {
 
     this.consultaioQuery.selectConsultaioState$
@@ -259,6 +289,13 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
       folioDelTramite: this.guardarDatos?.folioTramite,
       fechaDeInicio: FECHA_DE_INICIO,
       estadoDelTramite: this.guardarDatos?.estadoDeTramite
+    });
+
+    /** 
+      * Formulario reactivo para detalle observacion.
+    */
+    this.observacionForm = this.fb.group({
+      observacion: ['', Validators.required],
     });
   }
 
@@ -865,7 +902,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
         cert_serial_number: this.datosFirmaReales.certSerialNumber,
         clave_usuario: this.datosFirmaReales.rfc,
         fecha_firma: AutorizarDictamenComponent.formatFecha(new Date()),
-        clave_rol: 'Dictaminador',
+        clave_rol: 'Autorizador',
         sello: FIRMAHEX,
         fecha_fin_vigencia: AutorizarDictamenComponent.formatFecha(this.datosFirmaReales.fechaFin),
         documentos_requeridos: []
@@ -902,7 +939,13 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
             }
             this.isDictamen = false;
             this.isFirma = false;
-            this.isAcuse = true;
+            this.isDocumento = false;
+            if (this.dataAutorizarDictamen.sentido_dictamen === "Aceptado"){
+                this.postOficioAutorizacion();
+            } else {
+              this.postOficioRechazado();
+            }
+           
           }
 
         }),
@@ -924,6 +967,204 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+  }
+
+  /**
+   * @method postOficioAutorizacion
+   * @description Genera y obtiene el oficio de autorización
+   * 
+   * Realiza una petición al servicio para generar el oficio de autorización
+   * para la solicitud actual. Si la respuesta es exitosa (código '00'), 
+   * actualiza la tabla de resoluciones con el documento generado.
+   * 
+   * @returns {void}
+ */
+  postOficioAutorizacion(): void {
+    this.autorizarDictamenService.postOficioAutorizacion(this.tramite, Number(this.guardarDatos.id_solicitud))
+    .subscribe({
+      next: (resp) => {
+        if(resp.codigo === "00" && resp.datos){
+          this.datosTablaResolucion = [{
+            id: 1,
+            idDocumento: '1',
+            documento: resp.datos.nombre_archivo ?? '',
+            urlPdf: resp.datos.llave_archivo ?? ''
+          }];
+          this.isDocumento = true;
+        }else{
+           window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: resp.error || 'Error al obtener oficio.',
+              mensaje:
+                resp.causa ||
+                resp.mensaje ||
+                resp.error ||
+                'Error al obtener oficio.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+        }
+      },
+      error: (error) => {
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: CategoriaMensaje.ERROR,
+          modo: 'action',
+          titulo: 'Error inesperado',
+          mensaje: error?.error.error || 'Ocurrió un error al obtener oficio.',
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        };
+      }
+    });
+  }
+
+  /**
+   * @method postOficioRechazado
+   * @description Genera y obtiene el oficio de rechazo
+   * 
+   * Realiza una petición al servicio para generar el oficio de rechazo
+   * para la solicitud actual. Si la respuesta es exitosa (código '00'), 
+   * actualiza la tabla de resoluciones con el documento generado.
+   * 
+   * @returns {void}
+ */
+  postOficioRechazado(): void {
+    this.autorizarDictamenService.postOficioRechazado(this.tramite, Number(this.guardarDatos.id_solicitud))
+    .subscribe({
+      next: (resp) => {
+        if(resp.codigo === "00" && resp.datos){
+          this.datosTablaResolucion = [{
+            id: 1,
+            idDocumento: '1',
+            documento: resp.datos.nombre_archivo ?? '',
+            urlPdf: resp.datos.llave_archivo ?? ''
+          }];
+          this.isDocumento = true;
+        }else{
+           window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: resp.error || 'Error al obtener oficio.',
+              mensaje:
+                resp.causa ||
+                resp.mensaje ||
+                resp.error ||
+                'Error al obtener oficio.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+        }
+      },
+      error: (error) => {
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: CategoriaMensaje.ERROR,
+          modo: 'action',
+          titulo: 'Error inesperado',
+          mensaje: error?.error.error || 'Ocurrió un error al obtener oficio.',
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        };
+      }
+    });
+  }
+
+  /**
+   * @method getObservar
+   * @description Activa el modo de observación en la interfaz
+   * 
+   * Habilita el panel de observaciones y desactiva los demás paneles
+   * (dictamen, firma y documento) para evitar conflictos visuales.
+   * 
+   * @returns {void}
+  */
+  getObservar(): void{
+    this.isObservacion = true;
+    
+    this.isDictamen = false;
+    this.isFirma = false;
+    this.isDocumento = false;
+  }
+
+  /**
+   * @method postTerminar
+   * @description Finaliza y guarda la observación actual
+   * 
+   * Construye el payload con los datos del formulario de observación
+   * y realiza una petición al servicio para guardar la observación.
+   * Si la respuesta es exitosa (código '00'), regresa a la vista anterior.
+   * 
+   * @returns {void}
+   */
+  postTerminar(): void{
+    const PAYLOAD: ObservacionRequest = {
+      id_accion: this.guardarDatos.id_solicitud,
+      observacion: this.observacionForm.get('observacion')?.value,
+      cve_usuario: this.guardarDatos.current_user,
+    };
+     this.autorizarDictamenService.postObservacionGuardar(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
+    .subscribe({
+      next: (resp) => {
+        if(resp.codigo === "00" && resp.datos){
+          this.getRegresar();
+        }else{
+           window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: resp.error || 'Error al guardar observación.',
+              mensaje:
+                resp.causa ||
+                resp.mensaje ||
+                resp.error ||
+                'Error al guardar observación.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+        }
+      },
+      error: (error) => {
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: CategoriaMensaje.ERROR,
+          modo: 'action',
+          titulo: 'Error inesperado',
+          mensaje: error?.error.error || 'Error al guardar observación.',
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        };
+      }
+    });
+  }
+
+  /**
+   * @method getRegresar
+   * @description Regresa a la bandeja de tareas pendientes
+   * 
+   * Desactiva el modo de observación, reactiva el modo de dictamen
+   * y navega de regreso a la bandeja de tareas pendientes.
+   * 
+   * @returns {void}
+   */
+  getRegresar(): void{
+    this.isObservacion = false;
+    this.isDictamen = true;
+    this.isFirma = false;
+    this.isDocumento = false;
+    this.router.navigate(['bandeja-de-tareas-pendientes']);
   }
 
   /**
@@ -1021,6 +1262,73 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
   selectTramite(i: number): void {
     this.tramite = i;
     this.slectTramite = LISTA_TRIMITES.find((v) => v.tramite === i);
+  }
+
+  /**
+   * Abre un archivo PDF en una nueva pestaña del navegador.
+   *
+   * @param {string} url - La URL del archivo PDF que se va a abrir.
+   * @returns {void}
+   */
+  descargarPdfResolucion(url: string): void {
+    this.base64Archivos(url, 'descargar');
+  }
+
+  /**
+   * Obtiene el contenido base64 de un archivo y realiza la acción especificada.
+   * @param {string} uuid - Identificador único del archivo a obtener.
+   * @param {'abrir' | 'descargar'} accion - Acción a realizar con el archivo.
+   * @returns {void}
+   * @example
+   * // Abre el archivo en una nueva pestaña
+   * base64Archivos('a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'abrir');
+   * 
+   * // Descarga el archivo
+   * base64Archivos('a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'descargar');
+   */
+  base64Archivos(uuid: string, accion: 'abrir' | 'descargar'): void {
+    this.acuseDetalleService.getDescargarAcuse(this.tramite, uuid).subscribe({
+      next: (data) => {
+        if (data?.codigo === "00" && data?.datos?.contenido) {
+          AutorizarDictamenComponent.manejarPdf(
+            data.datos.contenido,
+            data.datos.nombre_archivo, 
+            accion
+          );
+        }
+      },
+    });
+  }
+
+ /**
+ * Método genérico para manejar un PDF en base64.
+ *
+ * @param base64 Contenido del PDF en base64.
+ * @param nombreArchivo Nombre del archivo a descargar (si aplica).
+ * @param accion 'abrir' para abrir en pestaña o 'descargar' para forzar descarga.
+ */
+  static manejarPdf(base64: string, nombreArchivo: string, accion: 'abrir' | 'descargar'): void {
+    // Decodificar el base64
+    const BYTE_CHARACTERS = atob(base64);
+    const BYTE_NUMBERS = new Array(BYTE_CHARACTERS.length);
+    for (let i = 0; i < BYTE_CHARACTERS.length; i++) {
+      BYTE_NUMBERS[i] = BYTE_CHARACTERS.charCodeAt(i);
+    }
+    const BYTE_ARRAY = new Uint8Array(BYTE_NUMBERS);
+
+    // Crear el Blob y la URL
+    const BLOB = new Blob([BYTE_ARRAY], { type: 'application/pdf' });
+    const URLCODIFICADA = URL.createObjectURL(BLOB);
+
+    if (accion === 'abrir') {
+      window.open(URLCODIFICADA, '_blank');
+    } else {
+      const LINK = document.createElement('a');
+      LINK.href = URLCODIFICADA;
+      LINK.download = nombreArchivo.endsWith('.pdf') ? nombreArchivo : `${nombreArchivo}.pdf`;
+      LINK.click();
+      URL.revokeObjectURL(URLCODIFICADA);
+    }
   }
 
   /**

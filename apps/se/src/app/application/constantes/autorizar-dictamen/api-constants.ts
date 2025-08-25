@@ -1,3 +1,5 @@
+import { IDSOLICITUD } from "@libs/shared/data-access-user/src";
+
 /**
  * Tramite que se utilizará en las consultas.
  * Este valor debe ser reemplazado por el tramite correspondiente.
@@ -27,3 +29,21 @@ export const API_POST_MOSTRAR_FIRMAR = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMIT
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Requerimiento/iniciar-generar-requerimiento
  */
 export const API_POST_FIRMAR = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/autorizar/firmar`;
+
+/**
+ * API para obtener oficio resolucion 130118
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Autorizar-Dictamen/guardar-documento
+ */
+export const API_POST_OFICIO_AUTORIZACION = `sat-t${TRAMITE}/solicitud/${IDSOLICITUD}/dictamen/autorizar/oficio-autorizacion/guardar`;
+
+/**
+ * API para obtener oficio resolucion rechazado 130118
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Autorizar-Dictamen/guardar-documento-rechazado
+ */
+export const API_POST_OFICIO_RECHAZADO = `sat-t${TRAMITE}/solicitud/${IDSOLICITUD}/dictamen/autorizar/oficio-rechazado/guardar`;
+
+/**
+ * API para guardar observacion 130118
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Autorizar-Dictamen
+ */
+export const API_POST_OBSERVACION_GUARDAR = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/dictamen/observacion/guardar`;
