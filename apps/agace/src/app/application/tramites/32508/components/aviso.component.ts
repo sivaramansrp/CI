@@ -119,9 +119,32 @@ export class AvisoComponent implements OnInit, AfterViewInit, OnDestroy {
    * Nombre del archivo seleccionado.
    */
   nombreArchivo: string = '';
+
+  /**
+   * Indica si se debe mostrar la disminución.
+   */
   monstrarDisminucion: boolean = false;
+
+  /**
+   * Indica si se debe mostrar la compensación.
+   */
   mostrarCompensacion: boolean = false;
+
+  /**
+   * Indica si se deben mostrar la disminución y compensación.
+   */
   mostrarDisminucionYCompensacion: boolean = false;
+
+  /**
+   * Indica si se debe aplicar una disminución parcial.
+   */
+  disminucionParcial: boolean = false;
+
+  /**
+   * Fecha de pago asociada a la solicitud.
+   * Se inicializa con el valor constante `FECHA_DE_PAGO` que contiene la fecha predeterminada de pago.
+   */
+  fechaPago: InputFecha = FECHA_PAGO;
 
   /**
    * @property {ConsultaioState} consultaDatos
@@ -317,8 +340,10 @@ export class AvisoComponent implements OnInit, AfterViewInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
 
-
     const AVISO_RADIO = this.avisoForm.get('tipoDictamen')?.value === '' ? 'disminucion' : this.avisoForm.get('tipoDictamen')?.value ;
+    if (campo === 'tipoDictamen') {
+      this.avisoForm.get('radioParcial')?.setValue(null);
+    }
 
     if (AVISO_RADIO === 'disminucion') {
       this.monstrarDisminucion = true;
@@ -334,7 +359,13 @@ export class AvisoComponent implements OnInit, AfterViewInit, OnDestroy {
       this.mostrarDisminucionYCompensacion = true;
     }
 
+    const RADIO_PARCIAL = this.avisoForm.get('radioParcial')?.value;
 
+    if (RADIO_PARCIAL === 'si') {
+      this.disminucionParcial = true;
+    } else {
+      this.disminucionParcial = false;
+    }
   }
   /**
    * Configura el formulario con los valores iniciales del estado.
@@ -362,6 +393,8 @@ export class AvisoComponent implements OnInit, AfterViewInit, OnDestroy {
       archivo: [null, [Validators.required]],
       compensacionAplicada: [this.solicitudState?.compensacionAplicada, [Validators.required]],
       saldoPendienteCompensar: [this.solicitudState?.saldoPendienteCompensar, [Validators.required]],
+      ingresos: [this.solicitudState?.ingresos, [Validators.required]],
+      dictaminadaCantidad: [this.solicitudState?.dictaminadaCantidad, [Validators.required]]
     });
     this.inicializarEstadoFormulario();
   }
@@ -382,6 +415,14 @@ export class AvisoComponent implements OnInit, AfterViewInit, OnDestroy {
       this.avisoForm?.enable();
       ['adace', 'nombre'].map(field =>this.avisoForm.get(field)?.disable());
     }
+  }
+
+  /**
+   * Actualiza la fecha de pago en el store
+   * @param evento Fecha de pago
+   */
+  actualizarFechaPago(evento: string): void {
+    this.store.setFechaPago(evento);
   }
 
   /**

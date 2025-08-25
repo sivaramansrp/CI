@@ -1,5 +1,6 @@
 import { 
   AccionBoton, 
+  BtnContinuarComponent, 
   DatosPasos, 
   ListaPasosWizard, 
   WizardComponent 
@@ -8,6 +9,9 @@ import {
 import { Component, ViewChild } from '@angular/core';
 
 import { PASOS_EXPORTACION } from '../../constantes/elegibilidad-de-textiles.enums';
+import { PasoDosComponent } from './paso-dos/paso-dos.component';
+import { PasoTresComponent } from './paso-tres/paso-tres.component';
+import { PasoUnoComponent } from './paso-uno/paso-uno.component';
 
 /**
  * Componente para gestionar la página de registro y modificación.
@@ -16,6 +20,8 @@ import { PASOS_EXPORTACION } from '../../constantes/elegibilidad-de-textiles.enu
 @Component({
   selector: 'app-registro-modificacion-page',
   templateUrl: './registro-modificacion-page.component.html',
+  standalone: true,
+  imports: [WizardComponent, PasoUnoComponent, PasoTresComponent, PasoDosComponent, BtnContinuarComponent],
 })
 export class RegistroModificacionPageComponent {
   /**

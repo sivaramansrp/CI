@@ -91,6 +91,9 @@
                             (change)="setValoresStoreAgregarForm('agregarDatosProductorFormulario','numeroRegistroFiscal')"
                             formControlName="numeroRegistroFiscal"
                             [ngClass]="isValid(agregarDatosProductorFormulario, 'numeroRegistroFiscal') ? 'required' : ''">
+                        <div *ngIf="agregarDatosProductorFormulario.get('numeroRegistroFiscal')?.errors?.['required'] && (agregarDatosProductorFormulario.get('numeroRegistroFiscal')?.touched || agregarDatosProductorFormulario.get('numeroRegistroFiscal')?.dirty)" class="text-danger">
+                            <small>Este campo es obligatorio.</small>
+                        </div>
                     </div>
                     @if(ocultarFax){
                     <div class="col-md-4">
@@ -111,7 +114,7 @@
     </div>
 </div>
 
-@if(nuevaNotificacion){
+@if(nuevaNotificacionStatus){
 <lib-notificaciones [notificacionInput]="nuevaNotificacion"></lib-notificaciones>
 }
 

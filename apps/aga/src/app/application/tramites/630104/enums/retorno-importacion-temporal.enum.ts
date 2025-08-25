@@ -76,7 +76,7 @@ export const FORMULARIO_DATOS_MERCANCIA = [
         id: 'motivo',
         labelNombre: 'Motivo o justificación de la importación temporal',
         campo: 'motivo',
-        clase: 'col-md-12',
+        clase: 'col-md-12 mt-3',
         tipoInput: 'textarea',
         desactivado: false,
         soloLectura: false,
@@ -93,7 +93,7 @@ export const FORMULARIO_DATOS_MERCANCIA = [
         id: 'nombre',
         labelNombre: 'Nombre commercial del artista o grupo musical',
         campo: 'nombreComercial',
-        clase: 'col-md-12',
+        clase: 'col-md-12 mt-3',
         tipoInput: 'text',
         desactivado: false,
         soloLectura: false,
@@ -110,7 +110,7 @@ export const FORMULARIO_DATOS_MERCANCIA = [
         id: 'observaciones',
         labelNombre: 'Observaciones',
         campo: 'observaciones',
-        clase: 'col-md-12',
+        clase: 'col-md-12 mt-3',
         tipoInput: 'textarea',
         desactivado: false,
         soloLectura: false,
@@ -126,7 +126,7 @@ export const FORMULARIO_DATOS_MERCANCIA = [
         id: 'listaMercancia',
         labelNombre: 'Lista detallada de la mercancía',
         campo: 'listaMercancia',
-        clase: 'col-md-12',
+        clase: 'col-md-12 mt-3',
         tipoInput: 'textarea',
         desactivado: false,
         soloLectura: false,
@@ -201,7 +201,7 @@ export const FORMULARIO_FECHA_IMPORTACION = [
             { tipo: 'required' }
         ],
         marcadorDePosicion: '',
-        valorPredeterminado: '',
+        valorPredeterminado: '10/02/2025',
         marginTop: 4,
         habilitado: true
     },
@@ -218,7 +218,7 @@ export const FORMULARIO_FECHA_IMPORTACION = [
         ],
         tooltipQuestionCircle: true,
         marcadorDePosicion: '',
-        valorPredeterminado: '',
+        valorPredeterminado: '10/03/2025',
         marginTop: 4,
         habilitado: true
     }
@@ -875,7 +875,7 @@ export const FORMULARIO_TIPO_REPRESENTANTE_DIRECCION = [
         campo: 'pais',
         clase: 'col-md-6',
         tipoInput: 'select-catalogos',
-        desactivado: true,
+        desactivado: false,
         soloLectura: false,
         validadores: [
             { tipo: 'required' }
@@ -884,83 +884,17 @@ export const FORMULARIO_TIPO_REPRESENTANTE_DIRECCION = [
         valorPredeterminado: '',
         marginTop: 4
     },
-    {
-        id: 'td_entidadFederativa_representante',
-        labelNombre: 'Entidad federativa',
-        campo: 'entidadFederativa',
-        clase: 'col-md-6',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'required' },
-            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el estado y localidad.' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 4
-    },
-    {
-        id: 'td_municipio_representante',
-        labelNombre: 'Municipio o delegación',
-        campo: 'municipio',
-        clase: 'col-md-6',
-        tipoInput: 'select-catalogos',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'required' },
-            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el municipio.' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
-    },
-    {
+     {
         id: '',
         labelNombre: '',
         campo: '',
-        clase: 'col-md-4',
+        clase: 'col-md-6',
         tipoInput: '',
         desactivado: false,
         soloLectura: false,
-        validadores: [],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 0
-    },
-    {
-        id: 'ddlLocalidad',
-        labelNombre: 'Localidad',
-        campo: 'localidad',
-        clase: 'col-md-6',
-        tipoInput: 'select-catalogos',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'required' },
-            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el localidad.' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 5
-    },
-
-    {
-        id: 'ddlColonia',
-        labelNombre: 'Colonia',
-        campo: 'colonia',
-        clase: 'col-md-6',
-        tipoInput: 'select-catalogos',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'required' },
-            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el estado y localidad.' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 5
+        marginTop: 4
     },
     {
         id: 'correoElectronico',

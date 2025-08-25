@@ -253,7 +253,7 @@
         <div class="col-md-12">
             <div class="alert alert-info">
                 <input class="form-check-input" type="checkbox" [id]="'manifiesto-' + i"
-                    [value]="manifiesto.declaracion.clave" [checked]="seleccionadaManifiesto.value[i]" class="required"
+                    [value]="manifiesto.declaracion.clave" [checked]="seleccionadaManifiesto.value[i]" class="required"  [disabled]="esFormularioSoloLectura"
                     (change)="onManifiestoCheckboxCambiar($event, i)" />
                 <div class="manifiesto-descripcion">
                     <label>* {{manifiesto.declaracion.descripcion}}</label>
@@ -268,7 +268,8 @@
             <label class="form-label" for="informacionConfidencial">Los datos o anexos pueden contener información
                 confidencial ¿Está de acuerdo en hacerlos públicos?*:</label>
             <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
-                formControlName="informacionConfidencial"
+                formControlName="informacionConfidencial" 
+                [disabled]="esFormularioSoloLectura"
                 (change)="setValoresStore(manifiestosForm,'informacionConfidencial', 'setInformacionConfidencial')"
                 ></app-input-radio>
         </div>

@@ -8,7 +8,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, SolicitanteComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { FORMULARIO_DATOS_PROPIETARIO_DIRECCION, FORMULARIO_DATOS_PROPIETARIO_NOMBRE } from '../../enums/retorno-importacion-temporal.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { Tramite630104State, Tramite630104Store } from '../../estados/tramites/tramite630104.store';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
@@ -99,7 +99,7 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
    * @param fb - Constructor de formularios reactivos.
    * @param tramite630104Store - Store para manejar el estado del trámite.
    * @param tramite630104Query - Query para consultar el estado del trámite.
-   * @param retornoImportacionTemporalService - Servicio para obtener datos de catálogos.
+   * @param equipoEInstrumentosMusicalesService - Servicio para obtener datos de catálogos.
    * @param consultaioQuery - Servicio para consultar el estado de la consulta de entrada/salida
    */
   constructor(
@@ -109,14 +109,32 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
     private equipoEInstrumentosMusicalesService: EquipoEInstrumentosMusicalesService,
     private consultaioQuery: ConsultaioQuery
   ) {
-     this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyed$),
-      map((seccionState) => {
-        this.esFormularioSoloLectura = seccionState.readonly;
-      })
-    )
-    .subscribe();
+    this.inicializarFormulario()
+  }
+
+  /**
+   * Guarda los datos del formulario y ajusta el estado de solo lectura.
+   * Deshabilita o habilita los campos según corresponda.
+   */
+  guardarDatosFormulario(): void {
+    if (!this.tipoPropietarioFormulario) {
+      return;
+    }
+    
+    if (this.esFormularioSoloLectura) {
+      this.tipoPropietarioFormulario.disable();
+      this.formularioDatosPropietarioDireccion = this.formularioDatosPropietarioDireccion.map(campo => ({
+        ...campo,
+        desactivado: true
+      }));
+
+    } else if (!this.esFormularioSoloLectura) {
+      this.tipoPropietarioFormulario.enable();
+      this.formularioDatosPropietarioDireccion = this.formularioDatosPropietarioDireccion.map(campo => ({
+        ...campo,
+        desactivado: false
+      }));
+    } 
   }
 
   /**
@@ -124,31 +142,44 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
    * Inicializa el formulario y obtiene datos de catálogos.
    */
   ngOnInit(): void {
-    this.tramite630104Query.selectSeccionState$
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe((estado: Tramite630104State) => {
-      this.estadoSeleccionado = estado;
-      this.inicializarFormulario();
-      this.inicializarEstadoFormulario();
-    });
     this.getValorStore();
-    this.inicializarFormulario();
     this.getPropietario();
     this.getTipoDePropietario();
+    this.inicializarFormulario();
+    this.obtenerEstadoValor();
     this.getPais();
     this.cambiarPropietario();
     this.cambiarTipoPropietario();
+  }
+
+   /**
+   * Se suscribe al observable del estado del trámite (`Tramite220103Query`)
+   * para obtener y almacenar el estado actual en `estadoSeleccionado`.
+   * La suscripción se gestiona con `takeUntil` para limpiarse automáticamente
+   * en `ngOnDestroy`.
+   */
+  obtenerEstadoValor(): void {
+   this.consultaioQuery.selectConsultaioState$
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((estadoConsulta) => {
+      this.esFormularioSoloLectura = estadoConsulta.readonly;
+      this.guardarDatosFormulario()
+    });
   }
 
   /**
    * Cambia la visibilidad de los campos según el tipo de propietario seleccionado.
    */
   cambiarTipoPropietario(): void {
+    if (!this.tipoPropietarioFormulario) {
+      return;
+    }
+    
     const TIPO_PROPIETARIO_VALOR = this.tipoPropietarioFormulario.get('tipoDePropietario')?.value;
-    const NOMBRE_CAMPO = this.formularioDatosPropietarioNombre.find((campo) => campo.id === 'nombre');
-    const APELLIDO_PATERNO_CAMPO = this.formularioDatosPropietarioNombre.find((campo) => campo.id === 'apellidoPaterno');
-    const APELLIDO_MATERNO_CAMPO = this.formularioDatosPropietarioNombre.find((campo) => campo.id === 'apellidoMaterno');
-    const RAZON_SOCIAL_CAMPO = this.formularioDatosPropietarioNombre.find((campo) => campo.id === 'razonSocial');
+    const NOMBRE_CAMPO = this.formularioDatosPropietarioDireccion.find((campo) => campo.id === 'nombre');
+    const APELLIDO_PATERNO_CAMPO = this.formularioDatosPropietarioDireccion.find((campo) => campo.id === 'apellidoPaterno');
+    const APELLIDO_MATERNO_CAMPO = this.formularioDatosPropietarioDireccion.find((campo) => campo.id === 'apellidoMaterno');
+    const RAZON_SOCIAL_CAMPO = this.formularioDatosPropietarioDireccion.find((campo) => campo.id === 'razonSocial');
 
     if (NOMBRE_CAMPO && APELLIDO_PATERNO_CAMPO && APELLIDO_MATERNO_CAMPO && RAZON_SOCIAL_CAMPO) {
       NOMBRE_CAMPO.mostrar = TIPO_PROPIETARIO_VALOR === '1';
@@ -160,42 +191,13 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.
-   * Además, obtiene la información del catálogo de mercancía.
-   */
-  inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario();
-    } else {
-      this.inicializarFormulario();
-    }
-  }
-
-  /**
-   * @method
-   * @name guardarDatosFormulario
-   * @description
-   * Inicializa los formularios y obtiene los datos de la tabla.
-   * Dependiendo del modo de solo lectura (`esFormularioSoloLectura`),
-   * deshabilita o habilita todos los formularios del componente.
-   * Si el formulario está en modo solo lectura, todos los formularios se deshabilitan para evitar modificaciones.
-   * Si no está en modo solo lectura, todos los formularios se habilitan para permitir la edición.
-   *
-   * @returns {void}
-   */
-  guardarDatosFormulario(): void {
-    this.inicializarFormulario();
-    if (this.esFormularioSoloLectura) {
-      this.tipoPropietarioFormulario.disable();
-    } else {
-      this.tipoPropietarioFormulario.enable();
-    }
-  }
-
-  /**
    * Cambia la visibilidad de los componentes según el propietario seleccionado.
    */
   cambiarPropietario(): void {
+    if (!this.tipoPropietarioFormulario) {
+      return;
+    }
+    
     this.mostrarTipoPropietario = this.tipoPropietarioFormulario.get('propietario')?.value === '2';
     this.mostrarSolicitante = this.tipoPropietarioFormulario.get('propietario')?.value === '1';
   }
@@ -262,10 +264,13 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
 
   /**
    * Establece un cambio de valor en el store basado en un evento.
-   * 
-   * @param $event - Evento que contiene el campo y el valor a actualizar.
+   *  Evento que contiene el campo y el valor a actualizar.
    */
   establecerCambioDeValor($event: { campo: string; valor: unknown }): void {
+    if (!$event || typeof $event !== 'object' || !$event.campo) {
+      return;
+    }
+
     if (typeof $event.valor === 'object' && $event.valor !== null && 'id' in $event.valor) {
       this.tramite630104Store.setTramite630104State($event.campo, String(($event.valor as { id: unknown }).id));
     } else {

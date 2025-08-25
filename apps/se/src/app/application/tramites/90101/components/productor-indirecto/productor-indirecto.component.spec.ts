@@ -25,7 +25,8 @@ const mockProsecState: ProsecState = {
   sectorDatos: [],
   producirDatos: [],
   plantasDatos: [],
-  productorDatos: []
+  productorDatos: [],
+  prosecDatos: [] // Added missing property
 };
 
 class MockAUtorizacionProsecQuery {

@@ -1,4 +1,4 @@
-import { ColumnasTabla } from "../models/avios-model";
+import { ColumnasTabla, ColumnasTablaConsulta } from "../models/avios-model";
 
 /**
  * @constant ENCABEZADAS_CONSTANT
@@ -15,7 +15,25 @@ import { ColumnasTabla } from "../models/avios-model";
 * **/
 export const ENCABEZADAS_CONSTANT = {
   encabezado: '',
-  clave:(_ele: ColumnasTabla): string => '',
+  clave: (_ele: ColumnasTabla): string => '',
+  orden: 0,
+};
+/**
+ * @constant ENCABEZADAS_CONSTANT_CONSULTA
+ * @description Define la estructura de las encabezadas de la tabla de consulta, incluyendo el encabezado, clave y orden.
+ * @type {Object}
+ * @property {string} encabezado - El encabezado de la columna.
+ * @property {function} clave - Función que toma un elemento de tipo ColumnasTablaConsulta y devuelve un valor.
+ * @property {number} orden - El orden de la columna.
+ * @default {Object} - Objeto con propiedades por defecto para la encabezada de la tabla.
+ * @example
+ * const encabezada = ENCABEZADAS_CONSTANT_CONSULTA.encabezado; // ''
+ * const clave = ENCABEZADAS_CONSTANT_CONSULTA.clave; // (ele: ColumnasTablaConsulta) => ''
+ * const orden = ENCABEZADAS_CONSTANT_CONSULTA.orden; // 0
+ */
+export const ENCABEZADAS_CONSTANT_CONSULTA = {
+  encabezado: '',
+  clave: (_ele: ColumnasTablaConsulta): string => '',
   orden: 0,
 };
 
@@ -169,6 +187,161 @@ export const TABLA_DE_DATOS_AVISO = {
   datos: [],
 };
 
+/**
+ * Representa la tabla de datos de aviso de consulta.
+ */
+export const TABLA_DE_DATOS_AVISO_CONSULTA = {
+  encabezadas: [
+    {
+      encabezado: 'Datos del tipo de registro',
+      clave: (ele: ColumnasTablaConsulta): string => ele.headerTipoRegistro,
+      orden: 1,
+    },
+    {
+      encabezado: 'NIV o número de serie',
+      clave: (ele: ColumnasTablaConsulta): string => ele.headerNIV,
+      orden: 2,
+    },
+    {
+      encabezado: 'Año modelo',
+      clave: (ele: ColumnasTablaConsulta): string => ele.headerAnioModelo,
+      orden: 3,
+    },
+    {
+      encabezado: 'Marca',
+      clave: (ele: ColumnasTablaConsulta): string => ele.headerMarca,
+      orden: 4,
+    },
+    {
+      encabezado: 'Modelo',
+      clave: (ele: ColumnasTablaConsulta): string => ele.headerModelo,
+      orden: 5,
+    },
+    {
+      encabezado: 'Tipo/Variante',
+      clave: (ele: ColumnasTablaConsulta): string => ele.headerTVV,
+      orden: 6,
+    },
+    {
+      encabezado: 'No. de cilindros',
+      clave: (ele: ColumnasTablaConsulta): string => ele.headerCilindros,
+      orden: 7,
+    },
+    {
+      encabezado: 'No. de puertas',
+      clave: (ele: ColumnasTablaConsulta): string => ele.headerPuertas,
+      orden: 8,
+    },
+    {
+      encabezado: 'Tipo de combustible',
+      clave: (ele: ColumnasTablaConsulta): string => ele.headerTipoCombustible,
+      orden: 9,
+    },
+    {
+      encabezado:
+        'Nombre en el título de propiedad extranjero o en su caso, nombre de la persona a la que se haya concedido la propiedad',
+      clave: (ele: ColumnasTablaConsulta): string => ele.headerNombreTitulo,
+      orden: 10,
+    },
+    {
+      encabezado: 'No. del título de propiedad',
+      clave: (ele: ColumnasTablaConsulta): string => ele.headerNoTitulo,
+      orden: 11,
+    },
+    {
+      encabezado: 'País que emitió el título de propiedad',
+      clave: (ele: ColumnasTablaConsulta): string => ele.headerPais,
+      orden: 12,
+    },
+    {
+      encabezado: 'Estado o provincia de emisión del titulo de propiedad',
+      clave: (ele: ColumnasTablaConsulta): string => ele.headerEstado,
+      orden: 13,
+    },
+    {
+      encabezado: 'No. de placas de circulación en el país de procedencia',
+      clave: (ele: ColumnasTablaConsulta): string => ele.headerPlacas,
+      orden: 14,
+    },
+    {
+      encabezado: 'Forma de adquisición del vehículo importado',
+      clave: (ele: ColumnasTablaConsulta): string => ele.headerAdquisicion,
+      orden: 15,
+    },
+    {
+      encabezado: 'No. de documento de exportación',
+      clave: (ele: ColumnasTablaConsulta): string => ele.headerDocumentoExportacion,
+      orden: 16,
+    },
+    {
+      encabezado: 'Aduana de importación',
+      clave: (ele: ColumnasTablaConsulta): string => ele.headerAduana,
+      orden: 17,
+    },
+    {
+      encabezado: 'Patente de importación',
+      clave: (ele: ColumnasTablaConsulta): string => ele.headerPatente,
+      orden: 18,
+    },
+    {
+      encabezado: 'Pedimento de importación',
+      clave: (ele: ColumnasTablaConsulta): string => ele.headerPedimento,
+      orden: 19,
+    },
+    {
+      encabezado: 'Kilometraje a la fecha de la importación',
+      clave: (ele: ColumnasTablaConsulta): string => ele.headerKilometraje,
+      orden: 20,
+    },
+    {
+      encabezado: 'Valor en dólares',
+      clave: (ele: ColumnasTablaConsulta): string => ele.headerValorDolares,
+      orden: 21,
+    },
+    {
+      encabezado: 'Valor en la aduana',
+      clave: (ele: ColumnasTablaConsulta): string => ele.headerValorAduana,
+      orden: 22,
+    },
+    {
+      encabezado: 'Monto de IGI pagado',
+      clave: (ele: ColumnasTablaConsulta): string => ele.headerMontoIGI,
+      orden: 23,
+    },
+    {
+      encabezado: 'Forma de pago del IGI',
+      clave: (ele: ColumnasTablaConsulta): string => ele.headerFormaPago,
+      orden: 24,
+    },
+    {
+      encabezado: 'Monto de DTA pagado',
+      clave: (ele: ColumnasTablaConsulta): string => ele.headerMontoDTA,
+      orden: 25,
+    },
+    {
+      encabezado: 'Folio del CFDI por el servicio de importación',
+      clave: (ele: ColumnasTablaConsulta): string => ele.headerFolioCFDI,
+      orden: 26,
+    },
+    {
+      encabezado: 'Valor de venta en territorio nacional sin IVA',
+      clave: (ele: ColumnasTablaConsulta): string => ele.headerFolioCFDI,
+      orden: 27,
+    },
+    {
+      encabezado: 'Folio del CFDI por la venta en territorio nacional',
+      clave: (ele: ColumnasTablaConsulta): string => ele.headerFolioCFDI,
+      orden: 28,
+    },
+    {
+      encabezado:
+        'Identificador de transacción de VUCEM correspondiente al aviso de importación previa relacionado',
+      clave: (ele: ColumnasTablaConsulta): string => ele.headerFolioCFDI,
+      orden: 29,
+    },
+  ],
+  datos: [],
+};
 
 /**
  * @constant PASOS
@@ -234,6 +407,14 @@ export const RADIO_OPCIONS = [
 export const RADIO_TIPO_AVISO = [
   { label: 'Manual', value: 'Manual' },
   { label: 'Carga masiva', value: 'Carga masiva' },
+];
+/**
+ * @constant RADIO_OPCIONS_CONFIRMIDAD
+ * @description Opciones de radio para seleccionar la confirmación (Sí o No).
+ */
+export const RADIO_OPCIONS_CONFIRMIDAD = [
+  { label: 'Si', value: 'si' },
+  { label: 'No', value: 'no' },
 ];
 
 /**

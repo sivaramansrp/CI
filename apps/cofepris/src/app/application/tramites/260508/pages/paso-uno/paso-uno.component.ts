@@ -20,6 +20,11 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * @type {SolicitanteComponent}
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+  /**
+   * Indica si el solicitante tiene uso específico.
+   * @type {boolean}
+   */
+  public tieneUsoEspecifico: boolean = false;
 
   /**
    * Se ejecuta después de que la vista ha sido inicializada.

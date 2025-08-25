@@ -6,13 +6,13 @@
     <div class="mt-5">
       <h5>Fabricante:</h5>
       <div class="table-responsive mt-5">
-        <ng-table [commonTableHeader]="fabricanteHeaderData" [commonTableBody]="fabricanteRowData" [disableSeleccionTablaCheckBox]="soloLectura"></ng-table>
+        <ng-table [commonTableHeader]="fabricanteHeaderData" [commonTableBody]="fabricanteRowData" [disableSeleccionTablaCheckBox]="soloLectura" (seleccionCambio)="onFabricanteSelectionChange($event)"></ng-table>
       </div>
       <br />
       <div class="d-flex justify-content-end mt-3">
-        <div *ngIf="showFabricanteButtons">
-          <button class="btn btn-danger" type="button" [disabled]="soloLectura">Eliminar</button>
-          <button class="btn btn-default" type="button" [disabled]="soloLectura">Modificar</button>
+        <div *ngIf="hasFabricanteSelection && !soloLectura" class="me-2">
+          <button class="btn btn-danger me-2" type="button" (click)="eliminarFabricanteSeleccionado()">Eliminar</button>
+          <button class="btn btn-secondary me-2" type="button" (click)="modificarFabricanteSeleccionado()">Modificar</button>
         </div>
         <button type="button" class="btn btn-primary" (click)="toggleDivFabricante()" [disabled]="soloLectura"> Agregar </button>
       </div>
@@ -21,13 +21,13 @@
     <div class="mt-5">
       <h5>Destinatario (destino final)*:</h5>
       <div class="table-responsive mt-5">
-        <ng-table [commonTableHeader]="destinatarioHeaderData" [commonTableBody]="destinatarioRowData" [disableSeleccionTablaCheckBox]="soloLectura"></ng-table>
+        <ng-table [commonTableHeader]="destinatarioHeaderData" [commonTableBody]="destinatarioRowData" [disableSeleccionTablaCheckBox]="soloLectura" (seleccionCambio)="onDestinatarioSelectionChange($event)"></ng-table>
       </div>
       <br />
       <div class="d-flex justify-content-end mt-3">
-        <div *ngIf="showDestinatarioButtons">
-          <button class="btn btn-danger" type="button" [disabled]="soloLectura">Eliminar</button>
-          <button class="btn btn-default" type="button" [disabled]="soloLectura">Modificar</button>
+        <div *ngIf="hasDestinatarioSelection && !soloLectura" class="me-2">
+          <button class="btn btn-danger me-2" type="button" (click)="eliminarDestinatarioSeleccionado()">Eliminar</button>
+          <button class="btn btn-secondary me-2" type="button" (click)="modificarDestinatarioSeleccionado()">Modificar</button>
         </div>
         <button type="button" class="btn btn-primary" (click)="toggleDivDestinatario()" [disabled]="soloLectura"> Agregar </button>
       </div>
@@ -36,13 +36,13 @@
     <div class="mt-5">
       <h5>Proveedor:</h5>
       <div class="table-responsive mt-5">
-        <ng-table [commonTableHeader]="proveedorHeaderData" [commonTableBody]="proveedorRowData" [disableSeleccionTablaCheckBox]="soloLectura"></ng-table>
+        <ng-table [commonTableHeader]="proveedorHeaderData" [commonTableBody]="proveedorRowData" [disableSeleccionTablaCheckBox]="soloLectura" (seleccionCambio)="onProveedorSelectionChange($event)"></ng-table>
       </div>
       <br />
       <div class="d-flex justify-content-end mt-3">
-        <div *ngIf="showProveedorButtons">
-          <button class="btn btn-danger" type="button" [disabled]="soloLectura">Eliminar</button>
-          <button class="btn btn-default" type="button" [disabled]="soloLectura">Modificar</button>
+        <div *ngIf="hasProveedorSelection && !soloLectura" class="me-2">
+          <button class="btn btn-danger me-2" type="button" (click)="eliminarProveedorSeleccionado()">Eliminar</button>
+          <button class="btn btn-secondary me-2" type="button" (click)="modificarProveedorSeleccionado()">Modificar</button>
         </div>
         <button type="button" class="btn btn-primary" (click)="toggleDivProveedor()" [disabled]="soloLectura"> Agregar </button>
       </div>
@@ -51,13 +51,13 @@
     <div class="mt-5">
       <h5>Facturador:</h5>
       <div class="table-responsive mt-5">
-        <ng-table [commonTableHeader]="facturadorHeaderData" [commonTableBody]="facturadorRowData" [disableSeleccionTablaCheckBox]="soloLectura"></ng-table>
+        <ng-table [commonTableHeader]="facturadorHeaderData" [commonTableBody]="facturadorRowData" [disableSeleccionTablaCheckBox]="soloLectura" (seleccionCambio)="onFacturadorSelectionChange($event)"></ng-table>
       </div>
       <br />
       <div class="d-flex justify-content-end mt-3">
-        <div *ngIf="showFacturadorButtons">
-          <button class="btn btn-danger" type="button" [disabled]="soloLectura">Eliminar</button>
-          <button class="btn btn-default" type="button" [disabled]="soloLectura">Modificar</button>
+        <div *ngIf="hasFacturadorSelection && !soloLectura" class="me-2">
+          <button class="btn btn-danger me-2" type="button" (click)="eliminarFacturadorSeleccionado()">Eliminar</button>
+          <button class="btn btn-secondary me-2" type="button" (click)="modificarFacturadorSeleccionado()">Modificar</button>
         </div>
         <button type="button" class="btn btn-primary" (click)="toggleDivFacturador()" [disabled]="soloLectura"> Agregar </button>
       </div>
@@ -74,17 +74,31 @@
       <div class="row">
         <div class="col-md-6">
           <div>
-            <h6>Terceros nacionalidad*:</h6>
+            <h6>Terceros nacionalidad*: <span class="bi bi-question-circle-fill fs-4 m-1" title="Seleccione si es nacional o extranjero" data-bs-toggle="tooltip"></span></h6>
             <div class="mt-2">
               <app-input-radio [radioOptions]="nacionalidadOptions" [isRequired]="true" formControlName="tercerosNacionalidad" [layout]="'vertical'" (valueChange)="cambiarRadio($event)"></app-input-radio>
+              @if(agregarFabricanteFormGroup.get('tercerosNacionalidad')?.invalid && (agregarFabricanteFormGroup.get('tercerosNacionalidad')?.touched || agregarFabricanteFormGroup.get('tercerosNacionalidad')?.dirty)) {
+                <div class="d-grid">
+                  @if(agregarFabricanteFormGroup.get('tercerosNacionalidad')?.errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
             </div>
           </div>
         </div>
         <div class="col-md-6">
           <div>
-            <h6>Tipo persona*:</h6>
+            <h6>Tipo persona*: <span class="bi bi-question-circle-fill fs-4 m-1" title="Seleccione si es persona física o moral" data-bs-toggle="tooltip"></span></h6>
             <div class="mt-2">
-              <app-input-radio [radioOptions]="tipoPersonaOptions" [isRequired]="true" formControlName="tipoPersona" [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event, 2)"></app-input-radio>
+              <app-input-radio [radioOptions]="tipoPersonaOptions" [isRequired]="true" formControlName="tipoPersona" [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event, 2)" [showTooltip]="true"></app-input-radio>
+              @if(agregarFabricanteFormGroup.get('tipoPersona')?.invalid && (agregarFabricanteFormGroup.get('tipoPersona')?.touched || agregarFabricanteFormGroup.get('tipoPersona')?.dirty)) {
+                <div class="d-grid">
+                  @if(agregarFabricanteFormGroup.get('tipoPersona')?.errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
             </div>
           </div>
         </div>
@@ -99,6 +113,13 @@
                 <label for="rfc" class="form-label">R.F.C*: <span class="bi bi-question-circle-fill fs-4 m-1" title="Title" ata-bs-toggle="tooltip"></span>
                 </label>
                 <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
+                @if(agregarFabricanteFormGroup.get('rfc')?.invalid && (agregarFabricanteFormGroup.get('rfc')?.touched || agregarFabricanteFormGroup.get('rfc')?.dirty)) {
+                  <div class="d-grid">
+                    @if(agregarFabricanteFormGroup.get('rfc')?.errors?.['required']) {
+                      <span class="mensaje-error">Este campo es obligatorio</span>
+                    }
+                  </div>
+                }
               </div>
             </div>
           </div>
@@ -109,19 +130,43 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label for="nombre" class="form-label">Nombre(s)*: </label>
+                <span class="bi bi-question-circle-fill fs-4 m-1" title="Nombre(s)" ata-bs-toggle="tooltip"></span>
                 <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" />
+                @if(agregarFabricanteFormGroup.get('nombre')?.invalid && (agregarFabricanteFormGroup.get('nombre')?.touched || agregarFabricanteFormGroup.get('nombre')?.dirty)) {
+                  <div class="d-grid">
+                    @if(agregarFabricanteFormGroup.get('nombre')?.errors?.['required']) {
+                      <span class="mensaje-error">Este campo es obligatorio</span>
+                    }
+                  </div>
+                }
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
                 <label class="form-label" for="primerApellido">Primer apellido*:</label>
+                <span class="bi bi-question-circle-fill fs-4 m-1" title="Primer apellido" ata-bs-toggle="tooltip"></span>
                 <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido" class="form-control" />
+                @if(agregarFabricanteFormGroup.get('primerApellido')?.invalid && (agregarFabricanteFormGroup.get('primerApellido')?.touched || agregarFabricanteFormGroup.get('primerApellido')?.dirty)) {
+                  <div class="d-grid">
+                    @if(agregarFabricanteFormGroup.get('primerApellido')?.errors?.['required']) {
+                      <span class="mensaje-error">Este campo es obligatorio</span>
+                    }
+                  </div>
+                }
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
                 <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
+                <span class="bi bi-question-circle-fill fs-4 m-1" title="Segundo apellido" ata-bs-toggle="tooltip"></span>
                 <input type="text" id="segundoApellido" formControlName="segundoApellido" name="segundoApellido" class="form-control" />
+                @if(agregarFabricanteFormGroup.get('segundoApellido')?.invalid && (agregarFabricanteFormGroup.get('segundoApellido')?.touched || agregarFabricanteFormGroup.get('segundoApellido')?.dirty)) {
+                  <div class="d-grid">
+                    @if(agregarFabricanteFormGroup.get('segundoApellido')?.errors?.['required']) {
+                      <span class="mensaje-error">Este campo es obligatorio</span>
+                    }
+                  </div>
+                }
               </div>
             </div>
           </div> 
@@ -132,6 +177,13 @@
                 <label for="curp" class="form-label">R.F.C*: <span class="bi bi-question-circle-fill fs-4 m-1" title="Title" ata-bs-toggle="tooltip"></span>
                 </label>
                 <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
+                @if(agregarFabricanteFormGroup.get('curp')?.invalid && (agregarFabricanteFormGroup.get('curp')?.touched || agregarFabricanteFormGroup.get('curp')?.dirty)) {
+                  <div class="d-grid">
+                    @if(agregarFabricanteFormGroup.get('curp')?.errors?.['required']) {
+                      <span class="mensaje-error">Este campo es obligatorio</span>
+                    }
+                  </div>
+                }
               </div>
             </div>
           </div>
@@ -139,7 +191,15 @@
             <div class="col-md-8">
               <div class="form-group">
                 <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
+                <span class="bi bi-question-circle-fill fs-4 m-1" title="Denominación/razón social" ata-bs-toggle="tooltip"></span>
                 <input type="text" class="form-control" id="denominacionRazonSocial" formControlName="denominacionRazonSocial" name="denominacionRazonSocial" />
+                @if(agregarFabricanteFormGroup.get('denominacionRazonSocial')?.invalid && (agregarFabricanteFormGroup.get('denominacionRazonSocial')?.touched || agregarFabricanteFormGroup.get('denominacionRazonSocial')?.dirty)) {
+                  <div class="d-grid">
+                    @if(agregarFabricanteFormGroup.get('denominacionRazonSocial')?.errors?.['required']) {
+                      <span class="mensaje-error">Este campo es obligatorio</span>
+                    }
+                  </div>
+                }
               </div>
             </div>
           </div> 
@@ -148,7 +208,15 @@
             <div class="col-md-8">
               <div class="form-group">
                 <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
+                <span class="bi bi-question-circle-fill fs-4 m-1" title="Denominación/razón social" ata-bs-toggle="tooltip"></span>
                 <input type="text" class="form-control" id="denominacionRazonSocial" formControlName="denominacionRazonSocial" name="denominacionRazonSocial" />
+                @if(agregarFabricanteFormGroup.get('denominacionRazonSocial')?.invalid && (agregarFabricanteFormGroup.get('denominacionRazonSocial')?.touched || agregarFabricanteFormGroup.get('denominacionRazonSocial')?.dirty)) {
+                  <div class="d-grid">
+                    @if(agregarFabricanteFormGroup.get('denominacionRazonSocial')?.errors?.['required']) {
+                      <span class="mensaje-error">Este campo es obligatorio</span>
+                    }
+                  </div>
+                }
               </div>
             </div>
           </div> 
@@ -159,18 +227,39 @@
               <div class="form-group">
                 <label for="nombre" class="form-label">Nombre(s)*: </label>
                 <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" />
+                @if(agregarFabricanteFormGroup.get('nombre')?.invalid && (agregarFabricanteFormGroup.get('nombre')?.touched || agregarFabricanteFormGroup.get('nombre')?.dirty)) {
+                  <div class="d-grid">
+                    @if(agregarFabricanteFormGroup.get('nombre')?.errors?.['required']) {
+                      <span class="mensaje-error">Este campo es obligatorio</span>
+                    }
+                  </div>
+                }
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
                 <label class="form-label" for="primerApellido">Primer apellido*:</label>
                 <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido" class="form-control" />
+                @if(agregarFabricanteFormGroup.get('primerApellido')?.invalid && (agregarFabricanteFormGroup.get('primerApellido')?.touched || agregarFabricanteFormGroup.get('primerApellido')?.dirty)) {
+                  <div class="d-grid">
+                    @if(agregarFabricanteFormGroup.get('primerApellido')?.errors?.['required']) {
+                      <span class="mensaje-error">Este campo es obligatorio</span>
+                    }
+                  </div>
+                }
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
                 <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
                 <input type="text" id="segundoApellido" formControlName="segundoApellido" name="segundoApellido" class="form-control" />
+                @if(agregarFabricanteFormGroup.get('segundoApellido')?.invalid && (agregarFabricanteFormGroup.get('segundoApellido')?.touched || agregarFabricanteFormGroup.get('segundoApellido')?.dirty)) {
+                  <div class="d-grid">
+                    @if(agregarFabricanteFormGroup.get('segundoApellido')?.errors?.['required']) {
+                      <span class="mensaje-error">Este campo es obligatorio</span>
+                    }
+                  </div>
+                }
               </div>
             </div>
           </div> 
@@ -225,12 +314,26 @@
                 <div class="form-group">
                   <label for="extranjeroEstado" class="form-label">Estado*: </label>
                   <input type="text" id="extranjeroEstado" formControlName="extranjeroEstado" name="extranjeroEstado" class="form-control" />
+                  @if(agregarFabricanteFormGroup.get('extranjeroEstado')?.invalid && (agregarFabricanteFormGroup.get('extranjeroEstado')?.touched || agregarFabricanteFormGroup.get('extranjeroEstado')?.dirty)) {
+                    <div class="d-grid">
+                      @if(agregarFabricanteFormGroup.get('extranjeroEstado')?.errors?.['required']) {
+                        <span class="mensaje-error">Este campo es obligatorio</span>
+                      }
+                    </div>
+                  }
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
                   <label class="form-label" for="extranjeroCodigo">Código postal o equivalente:</label>
                   <input type="text" id="extranjeroCodigo" formControlName="extranjeroCodigo" name="extranjeroCodigo" class="form-control" />
+                  @if(agregarFabricanteFormGroup.get('extranjeroCodigo')?.invalid && (agregarFabricanteFormGroup.get('extranjeroCodigo')?.touched || agregarFabricanteFormGroup.get('extranjeroCodigo')?.dirty)) {
+                    <div class="d-grid">
+                      @if(agregarFabricanteFormGroup.get('extranjeroCodigo')?.errors?.['required']) {
+                        <span class="mensaje-error">Este campo es obligatorio</span>
+                      }
+                    </div>
+                  }
                 </div>
               </div>
             </div>
@@ -249,18 +352,34 @@
                 <label class="form-label" for="calle">Calle*: <span class="bi bi-question-circle-fill fs-4 m-1" title="Title" ata-bs-toggle="tooltip"></span>
                 </label>
                 <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" />
+                @if(agregarFabricanteFormGroup.get('calle')?.invalid && (agregarFabricanteFormGroup.get('calle')?.touched || agregarFabricanteFormGroup.get('calle')?.dirty)) {
+                    <div class="d-grid">
+                      @if(agregarFabricanteFormGroup.get('calle')?.errors?.['required']) {
+                        <span class="mensaje-error">Este campo es obligatorio</span>
+                      }
+                    </div>
+                  }
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
                 <label for="numeroExterior" class="form-label">Número exterior*: </label>
                 <input type="text" id="numeroExterior" formControlName="numeroExterior" class="form-control" name="numeroExterior" />
+                @if(agregarFabricanteFormGroup.get('numeroExterior')?.invalid && (agregarFabricanteFormGroup.get('numeroExterior')?.touched || agregarFabricanteFormGroup.get('numeroExterior')?.dirty)) {
+                  <div class="d-grid">
+                    @if(agregarFabricanteFormGroup.get('numeroExterior')?.errors?.['required']) {
+                      <span class="mensaje-error">Este campo es obligatorio</span>
+                    }
+                  </div>
+                }
               </div>
             </div>
           </div>
           <div class="col-md-4 mt-5">
             <div class="form-group">
-              <label class="form-label" for="numeroInterior">Número interior:</label>
+              <label class="form-label" for="numeroInterior">Número interior:
+                <span class="bi bi-question-circle-fill fs-4 m-1" title="Número interior" ata-bs-toggle="tooltip"></span>
+              </label>
               <input class="form-control" type="text" id="numeroInterior" formControlName="numeroInterior" name="numeroInterior" />
             </div>
           </div>
@@ -272,7 +391,9 @@
           </div>
           <div class="col-md-3 mt-5">
             <div class="form-group">
-              <label class="form-label" for="telefono">Teléfono:</label>
+              <label class="form-label" for="telefono">Teléfono:
+                <span class="bi bi-question-circle-fill fs-4 m-1" title="Teléfono" ata-bs-toggle="tooltip"></span>
+              </label>
               <input class="form-control" type="text" id="telefono" formControlName="telefono" name="telefono" />
             </div>
           </div>
@@ -291,7 +412,7 @@
           <div class="row">
             <div class="col-md-12 d-flex justify-content-end gap-1">
               <button type="button" class="btn btn-danger" (click)="toggleDivFabricante()" [disabled]="soloLectura"> Cancelar </button>
-              <button type="button" class="btn btn-default" [disabled]="soloLectura"> Limpiar </button>
+              <button type="button" class="btn btn-default" (click)="limpiarFabricanteForm()" [disabled]="soloLectura"> Limpiar </button>
               <button type="button" class="btn btn-primary" (click)="submitFabricanteForm()" [disabled]="soloLectura"> Guardar </button>
             </div>
           </div>
@@ -310,24 +431,29 @@
       <div class="row">
         <div class="col-md-6 offset-md-6">
           <div>
-            <h6>Tipo persona*:</h6>
+            <h6>Tipo persona*: <span class="bi bi-question-circle-fill fs-4 m-1" title="Seleccione si es persona física o moral" data-bs-toggle="tooltip"></span></h6>
             <div class="mt-2">
-              <app-input-radio [radioOptions]="tipoPersonaOptions" [isRequired]="true" formControlName="tipoPersona" [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event, 4)"></app-input-radio>
+              <app-input-radio [radioOptions]="tipoPersonaOptions" [isRequired]="true" formControlName="tipoPersona" [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event, 4)" [showTooltip]="true"></app-input-radio>
             </div>
           </div>
         </div>
       </div>
       <hr />
       <div class="row">
-        <div>
           <div class="col-md-4">
             <div class="form-group">
               <label for="rfc" class="form-label">R.F.C*: <span class="bi bi-question-circle-fill fs-4 m-1" title="Title" ata-bs-toggle="tooltip"></span>
               </label>
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
+              @if(agregarDestinatarioFormGroup.get('rfc')?.invalid && (agregarDestinatarioFormGroup.get('rfc')?.touched || agregarDestinatarioFormGroup.get('rfc')?.dirty)) {
+                <div class="d-grid">
+                  @if(agregarDestinatarioFormGroup.get('rfc')?.errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
             </div>
-          </div>
-        </div> 
+          </div> 
         @if (fisica || (!fisica && !moral)){ 
           <div class="row">
             <div class="col-md-4">
@@ -335,6 +461,13 @@
                 <label for="curp" class="form-label">C.U.R.P*: <span class="bi bi-question-circle-fill fs-4 m-1" title="Title" ata-bs-toggle="tooltip"></span>
                 </label>
                 <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
+                @if(agregarDestinatarioFormGroup.get('curp')?.invalid && (agregarDestinatarioFormGroup.get('curp')?.touched || agregarDestinatarioFormGroup.get('curp')?.dirty)) {
+                  <div class="d-grid">
+                    @if(agregarDestinatarioFormGroup.get('curp')?.errors?.['required']) {
+                      <span class="mensaje-error">Este campo es obligatorio</span>
+                    }
+                  </div>
+                }
               </div>
             </div>
           </div> 
@@ -344,6 +477,13 @@
               <div class="form-group">
                 <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
                 <input type="text" class="form-control" id="denominacionRazonSocial" formControlName="denominacionRazonSocial" name="denominacionRazonSocial" />
+                @if(agregarDestinatarioFormGroup.get('denominacionRazonSocial')?.invalid && (agregarDestinatarioFormGroup.get('denominacionRazonSocial')?.touched || agregarDestinatarioFormGroup.get('denominacionRazonSocial')?.dirty)) {
+                  <div class="d-grid">
+                    @if(agregarDestinatarioFormGroup.get('denominacionRazonSocial')?.errors?.['required']) {
+                      <span class="mensaje-error">Este campo es obligatorio</span>
+                    }
+                  </div>
+                }
               </div>
             </div>
           </div> 
@@ -390,12 +530,26 @@
               <label class="form-label" for="calle">Calle*: <span class="bi bi-question-circle-fill fs-4 m-1" title="Title" ata-bs-toggle="tooltip"></span>
               </label>
               <input type="text" id="calle" formControlName="calle" class="form-control" name="calle" />
+              @if(agregarDestinatarioFormGroup.get('calle')?.invalid && (agregarDestinatarioFormGroup.get('calle')?.touched || agregarDestinatarioFormGroup.get('calle')?.dirty)) {
+                    <div class="d-grid">
+                      @if(agregarDestinatarioFormGroup.get('calle')?.errors?.['required']) {
+                        <span class="mensaje-error">Este campo es obligatorio</span>
+                      }
+                    </div>
+                  }
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
               <label for="numeroExterior" class="form-label">Número exterior*: </label>
               <input type="text" id="numeroExterior" formControlName="numeroExterior" class="form-control" name="numeroExterior" />
+              @if(agregarDestinatarioFormGroup.get('numeroExterior')?.invalid && (agregarDestinatarioFormGroup.get('numeroExterior')?.touched || agregarDestinatarioFormGroup.get('numeroExterior')?.dirty)) {
+                <div class="d-grid">
+                  @if(agregarDestinatarioFormGroup.get('numeroExterior')?.errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
             </div>
           </div>
           <div class="col-md-4 mt-5">
@@ -431,7 +585,7 @@
           <div class="row">
             <div class="col-md-12 d-flex justify-content-end gap-1">
               <button type="button" class="btn btn-danger" (click)="toggleDivDestinatario()" [disabled]="soloLectura"> Cancelar </button>
-              <button type="button" class="btn btn-default" [disabled]="soloLectura"> Limpiar </button>
+              <button type="button" class="btn btn-default" (click)="limpiarDestinatarioForm()" [disabled]="soloLectura"> Limpiar </button>
               <button type="button" class="btn btn-primary" (click)="submitDestinatarioForm()" [disabled]="soloLectura"> Guardar </button>
             </div>
           </div>
@@ -449,9 +603,9 @@
       <div class="row">
         <div class="col-md-6 offset-md-6">
           <div>
-            <h6>Tipo persona*:</h6>
+            <h6>Tipo persona*: <span class="bi bi-question-circle-fill fs-4 m-1" title="Seleccione si es persona física o moral" data-bs-toggle="tooltip"></span></h6>
             <div class="mt-2">
-              <app-input-radio [radioOptions]="tipoPersonaOptions" [isRequired]="true" formControlName="tipoPersona" [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event, 3)"></app-input-radio>
+              <app-input-radio [radioOptions]="tipoPersonaOptions" [isRequired]="true" formControlName="tipoPersona" [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event, 3)" [showTooltip]="true"></app-input-radio>
             </div>
           </div>
         </div>
@@ -464,18 +618,31 @@
             <div class="form-group">
               <label for="nombre" class="form-label">Nombre(s)*: </label>
               <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" />
+              <div *ngIf="agregarProveedorFormGroup.get('nombre')?.invalid && (agregarProveedorFormGroup.get('nombre')?.touched || agregarProveedorFormGroup.get('nombre')?.dirty)">
+                <small class="text-danger" *ngIf="agregarProveedorFormGroup.get('nombre')?.errors?.['required']">Este campo es obligatorio</small>
+              </div>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="primerApellido">Primer apellido*:</label>
               <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido" class="form-control" />
+              <div *ngIf="agregarProveedorFormGroup.get('primerApellido')?.invalid && (agregarProveedorFormGroup.get('primerApellido')?.touched || agregarProveedorFormGroup.get('primerApellido')?.dirty)">
+                <small class="text-danger" *ngIf="agregarProveedorFormGroup.get('primerApellido')?.errors?.['required']">Este campo es obligatorio</small>
+              </div>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
               <input type="text" id="segundoApellido" formControlName="segundoApellido" name="segundoApellido" class="form-control" />
+              @if(agregarProveedorFormGroup.get('segundoApellido')?.invalid && (agregarProveedorFormGroup.get('segundoApellido')?.touched || agregarProveedorFormGroup.get('segundoApellido')?.dirty)) {
+                <div class="d-grid">
+                  @if(agregarProveedorFormGroup.get('numeroExterior')?.errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
             </div>
           </div>
         </div> 
@@ -485,6 +652,9 @@
             <div class="form-group">
               <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
               <input type="text" class="form-control" id="denominacionRazonSocial" formControlName="denominacionRazonSocial" name="denominacionRazonSocial" />
+              <div *ngIf="agregarProveedorFormGroup.get('denominacionRazonSocial')?.invalid && (agregarProveedorFormGroup.get('denominacionRazonSocial')?.touched || agregarProveedorFormGroup.get('denominacionRazonSocial')?.dirty)">
+                <small class="text-danger" *ngIf="agregarProveedorFormGroup.get('denominacionRazonSocial')?.errors?.['required']">Este campo es obligatorio</small>
+              </div>
             </div>
           </div>
         </div> 
@@ -502,12 +672,18 @@
           <div class="form-group">
             <label class="form-label" for="estado">Estado*:</label>
             <input class="form-control" type="text" id="estado" formControlName="estado" name="estado" />
+            <div *ngIf="agregarProveedorFormGroup.get('estado')?.invalid && (agregarProveedorFormGroup.get('estado')?.touched || agregarProveedorFormGroup.get('estado')?.dirty)">
+              <small class="text-danger" *ngIf="agregarProveedorFormGroup.get('estado')?.errors?.['required']">Este campo es obligatorio</small>
+            </div>
           </div>
         </div>
         <div class="col-md-4 mt-5">
           <div class="form-group">
             <label class="form-label" for="codigoPostaloEquivalente">Código postal o equivalente*:</label>
             <input class="form-control" type="text" id="codigoPostaloEquivalente" formControlName="codigoPostaloEquivalente" name="codigoPostaloEquivalente" />
+            <div *ngIf="agregarProveedorFormGroup.get('codigoPostaloEquivalente')?.invalid && (agregarProveedorFormGroup.get('codigoPostaloEquivalente')?.touched || agregarProveedorFormGroup.get('codigoPostaloEquivalente')?.dirty)">
+              <small class="text-danger" *ngIf="agregarProveedorFormGroup.get('codigoPostaloEquivalente')?.errors?.['required']">Este campo es obligatorio</small>
+            </div>
           </div>
         </div>
         <div class="col-md-4 mt-5">
@@ -523,18 +699,35 @@
             <label class="form-label" for="calle">Calle*: <span class="bi bi-question-circle-fill fs-4 m-1" title="Title" ata-bs-toggle="tooltip"></span>
             </label>
             <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" />
+            @if(agregarProveedorFormGroup.get('calle')?.invalid && (agregarProveedorFormGroup.get('calle')?.touched || agregarProveedorFormGroup.get('calle')?.dirty)) {
+              <div class="d-grid">
+                @if(agregarProveedorFormGroup.get('calle')?.errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                }
+              </div>
+            }
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
             <label for="numeroExterior" class="form-label">Número exterior*: </label>
             <input type="text" class="form-control" id="numeroExterior" formControlName="numeroExterior" name="numeroExterior" />
+            @if(agregarProveedorFormGroup.get('numeroExterior')?.invalid && (agregarProveedorFormGroup.get('numeroExterior')?.touched || agregarProveedorFormGroup.get('numeroExterior')?.dirty)) {
+              <div class="d-grid">
+                @if(agregarProveedorFormGroup.get('numeroExterior')?.errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                }
+              </div>
+            }
           </div>
         </div>
         <div class="col-md-4 mt-5">
           <div class="form-group">
             <label class="form-label" for="numeroInterior">Número interior:</label>
             <input type="text" class="form-control" id="numeroInterior" formControlName="numeroInterior" name="numeroInterior" />
+            <div *ngIf="agregarProveedorFormGroup.get('numeroInterior')?.invalid && (agregarProveedorFormGroup.get('numeroInterior')?.touched || agregarProveedorFormGroup.get('numeroInterior')?.dirty)">
+              <small class="text-danger" *ngIf="agregarProveedorFormGroup.get('numeroInterior')?.errors?.['required']">Este campo es obligatorio</small>
+            </div>
           </div>
         </div>
         <div class="col-md-1 mt-5">
@@ -563,7 +756,7 @@
         <div class="row">
           <div class="col-md-12 d-flex justify-content-end gap-1">
             <button type="button" class="btn btn-danger" (click)="toggleDivProveedor()" [disabled]="soloLectura"> Cancelar </button>
-            <button type="button" class="btn btn-default" [disabled]="soloLectura"> Limpiar </button>
+            <button type="button" class="btn btn-default" (click)="limpiarProveedorForm()" [disabled]="soloLectura"> Limpiar </button>
             <button type="button" class="btn btn-primary" (click)="submitProveedorForm()" [disabled]="soloLectura"> Guardar </button>
           </div>
         </div>
@@ -580,8 +773,8 @@
       <div class="row">
         <div class="col-md-6 offset-md-6">
           <div>
-            <h6>Tipo persona*:</h6>
-            <app-input-radio [radioOptions]="tipoPersonaOptions" [isRequired]="true" formControlName="tipoPersona" [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event, 1)"></app-input-radio>
+            <h6>Tipo persona*: <span class="bi bi-question-circle-fill fs-4 m-1" title="Seleccione si es persona física o moral" data-bs-toggle="tooltip"></span></h6>
+            <app-input-radio [radioOptions]="tipoPersonaOptions" [isRequired]="true" formControlName="tipoPersona" [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event, 1)" [showTooltip]="true"></app-input-radio>
           </div>
         </div>
       </div>
@@ -606,6 +799,13 @@
               <div class="form-group">
                 <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
                 <input type="text" id="segundoApellido" formControlName="segundoApellido" name="segundoApellido" class="form-control" />
+                @if(agregarFacturadorFormGroup.get('segundoApellido')?.invalid && (agregarFacturadorFormGroup.get('segundoApellido')?.touched || agregarFacturadorFormGroup.get('segundoApellido')?.dirty)) {
+                <div class="d-grid">
+                  @if(agregarFacturadorFormGroup.get('segundoApellido')?.errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
               </div>
             </div>
           </div> 
@@ -638,6 +838,13 @@
             <div class="form-group">
               <label class="form-label" for="codigoPostaloEquivalente">Código postal o equivalente*:</label>
               <input class="form-control" type="text" id="codigoPostaloEquivalente" formControlName="codigoPostaloEquivalente" name="codigoPostaloEquivalente" />
+              @if(agregarFacturadorFormGroup.get('numeroExterior')?.invalid && (agregarFacturadorFormGroup.get('numeroExterior')?.touched || agregarFacturadorFormGroup.get('numeroExterior')?.dirty)) {
+                <div class="d-grid">
+                  @if(agregarFacturadorFormGroup.get('numeroExterior')?.errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
             </div>
           </div>
           <div class="col-md-4 mt-5">
@@ -653,12 +860,26 @@
               <label class="form-label" for="calle">Calle*: <span class="bi bi-question-circle-fill fs-4 m-1" title="Title" ata-bs-toggle="tooltip"></span>
               </label>
               <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" />
+              @if(agregarProveedorFormGroup.get('calle')?.invalid && (agregarProveedorFormGroup.get('calle')?.touched || agregarProveedorFormGroup.get('calle')?.dirty)) {
+                <div class="d-grid">
+                  @if(agregarProveedorFormGroup.get('calle')?.errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
               <label for="numeroExterior" class="form-label">Número exterior*: </label>
               <input type="text" id="numeroExterior" formControlName="numeroExterior" name="numeroExterior" class="form-control" />
+              @if(agregarFabricanteFormGroup.get('numeroExterior')?.invalid && (agregarFabricanteFormGroup.get('numeroExterior')?.touched || agregarFabricanteFormGroup.get('numeroExterior')?.dirty)) {
+                <div class="d-grid">
+                  @if(agregarFabricanteFormGroup.get('numeroExterior')?.errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
             </div>
           </div>
           <div class="col-md-4 mt-5">
@@ -693,7 +914,7 @@
           <div class="row">
             <div class="col-md-12 d-flex justify-content-end gap-1">
               <button type="button" class="btn btn-danger" (click)="toggleDivFacturador()" [disabled]="soloLectura"> Cancelar </button>
-              <button type="button" class="btn btn-default" [disabled]="soloLectura"> Limpiar </button>
+              <button type="button" class="btn btn-default" (click)="limpiarFacturadorForm()" [disabled]="soloLectura"> Limpiar </button>
               <button type="button" class="btn btn-primary" (click)="submitFacturadorForm()" [disabled]="soloLectura"> Guardar </button>
             </div>
           </div>

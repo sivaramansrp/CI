@@ -111,15 +111,14 @@ describe('DatosDeLaSolicitudComponent', () => {
   });
 
   it('should run #constructor()', async () => {
-    //expect(component).toBeTruthy();
+    expect(component).toBeTruthy();
   });
 
   it('should run #inicializarEstadoFormulario()', async () => {
     component.guardarDatosFormulario = jest.fn();
     component.inicializarFormulario = jest.fn();
     component.inicializarEstadoFormulario();
-    //expect(component.guardarDatosFormulario).toHaveBeenCalled();
-    //expect(component.inicializarFormulario).toHaveBeenCalled();
+    expect(component.inicializarFormulario).toHaveBeenCalled();
   });
 
   it('should run #guardarDatosFormulario()', async () => {
@@ -206,18 +205,18 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.ngOnInit();
     component.tramiteStore.setSolicitudTramite({ mockData: true });
     component.ngOnInit();
-    //expect(component.getHoraDeInspeccion).toHaveBeenCalled();
-    //expect(component.cargarDatos).toHaveBeenCalled();
-    //expect(component.getAduanaDeIngreso).toHaveBeenCalled();
-    //expect(component.getOficinaDeInspeccion).toHaveBeenCalled();
-    //expect(component.getPuntoDeInspeccion).toHaveBeenCalled();
-    //expect(component.getTipoContenedor).toHaveBeenCalled();
-    //expect(component.obtenerResponsableDatos).toHaveBeenCalled();
-    //expect(component.getMedioDeTransporte).toHaveBeenCalled();
-    //expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
-    //expect(component.datosDeLaSolicitudForm.patchValue).toHaveBeenCalled();
-    //expect(component.tramiteStore.setSolicitudTramite).toHaveBeenCalled();
-    //expect(component.obtenerDatos).toHaveBeenCalled();
+    expect(component.getHoraDeInspeccion).toHaveBeenCalled();
+    expect(component.cargarDatos).toHaveBeenCalled();
+    expect(component.getAduanaDeIngreso).toHaveBeenCalled();
+    expect(component.getOficinaDeInspeccion).toHaveBeenCalled();
+    expect(component.getPuntoDeInspeccion).toHaveBeenCalled();
+    expect(component.getTipoContenedor).toHaveBeenCalled();
+    expect(component.obtenerResponsableDatos).toHaveBeenCalled();
+    expect(component.getMedioDeTransporte).toHaveBeenCalled();
+    expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
+    expect(component.datosDeLaSolicitudForm.patchValue).toHaveBeenCalled();
+    expect(component.tramiteStore.setSolicitudTramite).toHaveBeenCalled();
+    expect(component.obtenerDatos).toHaveBeenCalled();
   });
 
   it('should run #obtenerDatos()', async () => {
@@ -280,7 +279,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(
       component.acuicolaService.obtenerDatosCertificados
     ).toHaveBeenCalled();
-    //expect(component.datosDeLaSolicitudForm.patchValue).toHaveBeenCalled();
+    expect(component.datosDeLaSolicitudForm.patchValue).toHaveBeenCalled();
   });
 
   it('should run #getHoraDeInspeccion()', async () => {
@@ -292,7 +291,7 @@ describe('DatosDeLaSolicitudComponent', () => {
       })
     );
     component.getHoraDeInspeccion();
-    //expect(component.acuicolaService.getHoraDeInspeccion).toHaveBeenCalled();
+    expect(component.acuicolaService.getHoraDeInspeccion).toHaveBeenCalled();
   });
 
   it('should run #getAduanaDeIngreso()', async () => {
@@ -304,7 +303,7 @@ describe('DatosDeLaSolicitudComponent', () => {
       })
     );
     component.getAduanaDeIngreso();
-    //expect(component.acuicolaService.getAduanaDeIngreso).toHaveBeenCalled();
+    expect(component.acuicolaService.getAduanaDeIngreso).toHaveBeenCalled();
   });
 
   it('should run #getOficinaDeInspeccion()', async () => {
@@ -318,7 +317,7 @@ describe('DatosDeLaSolicitudComponent', () => {
         })
       );
     component.getOficinaDeInspeccion();
-    //expect(component.acuicolaService.getOficinaDeInspeccion).toHaveBeenCalled();
+    expect(component.acuicolaService.getOficinaDeInspeccion).toHaveBeenCalled();
   });
 
   it('should run #getPuntoDeInspeccion()', async () => {
@@ -330,7 +329,7 @@ describe('DatosDeLaSolicitudComponent', () => {
       })
     );
     component.getPuntoDeInspeccion();
-    //expect(component.acuicolaService.getPuntoDeInspeccion).toHaveBeenCalled();
+    expect(component.acuicolaService.getPuntoDeInspeccion).toHaveBeenCalled();
   });
 
   it('should run #getTipoContenedor()', async () => {
@@ -342,7 +341,7 @@ describe('DatosDeLaSolicitudComponent', () => {
       })
     );
     component.getTipoContenedor();
-    //expect(component.acuicolaService.getTipoContenedor).toHaveBeenCalled();
+    expect(component.acuicolaService.getTipoContenedor).toHaveBeenCalled();
   });
 
   it('should run #getMedioDeTransporte()', async () => {
@@ -354,7 +353,7 @@ describe('DatosDeLaSolicitudComponent', () => {
       })
     );
     component.getMedioDeTransporte();
-    //expect(component.acuicolaService.getMedioDeTransporte).toHaveBeenCalled();
+    expect(component.acuicolaService.getMedioDeTransporte).toHaveBeenCalled();
   });
 
   it('should run #obtenerResponsableDatos()', async () => {
@@ -368,7 +367,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(
       component.acuicolaService.obtenerResponsableDatos
     ).toHaveBeenCalled();
-    //expect(component.datosDeLaSolicitudForm.patchValue).toHaveBeenCalled();
+    expect(component.datosDeLaSolicitudForm.patchValue).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -376,7 +375,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    //expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    //expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 });

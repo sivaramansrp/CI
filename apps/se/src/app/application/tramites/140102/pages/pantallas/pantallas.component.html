@@ -21,11 +21,9 @@
     <app-datos [consultaState]="consultaState"
       (pestanaCambiado)="pestanaCambiado($event)"></app-datos>
     } @case (2) {
-    <app-paso-dos></app-paso-dos>
-    } @case (3) {
     <app-paso-tres></app-paso-tres>
     }
-    }
+  }
   </div>
   <btn-continuar [datos]="datosPasos"  (continuarEvento)="getValorIndice($event)">
   </btn-continuar>

@@ -22,4 +22,9 @@
       (continuarEvento)="getValorIndice($event)"
     ></btn-continuar>
   </div>
+    @if (indice === 1) {
+      <div class="mover-abajo">
+        <ng-alert [CONTENIDO]="TEXTOS" ></ng-alert>
+      </div>
+    }
 </div>

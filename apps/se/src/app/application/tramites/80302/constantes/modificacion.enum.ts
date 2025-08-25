@@ -201,9 +201,6 @@ export const CONFIGURACION_SERVICIOS = [
  * incluyendo información completa de la dirección y datos de contacto
  */
 export const CONFIGURACION_MODIFICACION = [
-    { encabezado: 'Id', 
-      clave: (ele: DatosDelModificacion):number | undefined => ele.id, 
-      orden: 0 },
     { encabezado: 'Calle', 
       clave: (ele: DatosDelModificacion):string | undefined => ele.calle, 
       orden: 2 },
@@ -239,7 +236,7 @@ export const CONFIGURACION_MODIFICACION = [
       clave: (ele: DatosDelModificacion):string | undefined => ele.pais, 
       orden: 9 },
     {
-      encabezado: 'Telefono',
+      encabezado: 'Teléfono',
       clave: (ele: DatosDelModificacion):string | undefined => ele.telefono,
       orden: 10,
     },
