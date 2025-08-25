@@ -1242,9 +1242,10 @@ this.formaComplimentos.disable();
   }
 
   /**
-   * Handles notification confirmation for RFC validation
-   * @param confirmar Indicates if the user confirmed the notification
-   */
+ * Maneja la confirmación de la notificación para eliminar registros.
+ * Si el usuario confirma, elimina la notificación correspondiente.
+ * @param confirmar Indica si el usuario confirmó la notificación.
+ */
   confirmarEliminarNotificacion(confirmar: boolean): void {
     if (confirmar) {
       if (this.eliminarNotificacion) {
@@ -1254,9 +1255,11 @@ this.formaComplimentos.disable();
   }
 
   /**
-   * Handles notification confirmation for RFC validation
-   * @param confirmar Indicates if the user confirmed the notification
-   */
+ * Maneja la confirmación de la notificación para eliminar accionistas extranjeros.
+ * Si el usuario confirma, emite el evento con los accionistas seleccionados y limpia la lista.
+ * Si no confirma, elimina la notificación correspondiente.
+ * @param confirmar Indica si el usuario confirmó la notificación.
+ */
   confirmarEliminarDosConfirmation(confirmar: boolean): void {
     if (confirmar) {
       this.accionistasExtranjerosEliminado.emit(this.accionistasExtranjerosSeleccionados);
@@ -1271,9 +1274,11 @@ this.formaComplimentos.disable();
   }
 
   /**
-   * Handles notification confirmation for RFC validation
-   * @param confirmar Indicates if the user confirmed the notification
-   */
+ * Maneja la confirmación de la notificación para eliminar accionistas seleccionados.
+ * Si el usuario confirma, emite el evento con los accionistas seleccionados.
+ * Si no confirma, elimina la notificación correspondiente.
+ * @param confirmar Indica si el usuario confirmó la notificación.
+ */
   confirmarEliminarUnoConfirmation(confirmar: boolean): void {
     if (confirmar) {
       this.accionistasEliminados.emit(this.empresaAccionistasSeleccionados);

@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { AlertComponent, Notificacion, NotificacionesComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { InputFecha } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
@@ -29,6 +28,7 @@ import {
   INMEX_PLANTAS
 } from '../../constantes/federatarios-y-plantas.enum';
 
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
@@ -496,7 +496,7 @@ export class FederatariosYPlantasComponent implements OnInit {
  * @remarks
  * Ensure that `FECHA_DE_Tabla` is defined and contains the expected data structure before calling this method.
  */
-buscarPlantasImmex(){
+buscarPlantasImmex(): void {
   this.plantasDisponiblesDatos = [FECHA_DE_Tabla];
 }
 
@@ -507,9 +507,8 @@ buscarPlantasImmex(){
  * @remarks
  * Ensure that `INMEX_PLANTAS` is properly defined and contains the expected plant data.
  */
-agregarPlantas(){
-  this.plantasImmexDatos=[INMEX_PLANTAS]
-
+agregarPlantas(): void {
+  this.plantasImmexDatos = [INMEX_PLANTAS];
 }
 
 }
