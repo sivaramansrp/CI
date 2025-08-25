@@ -5,7 +5,13 @@
     <div class="text-end">
         <button type="button" class="btn btn-primary" name="seleccionarEstablecimiento" id="btnEstablecimiento"
             title="Selecciona para habilitar los campos del establecimiento" data-bs-toggle="modal" [disabled]="esFormularioSoloLectura"
-            data-bs-target="#modalAlerta" (click)="seleccionarEstablecimiento()">Seleccionar establecimiento</button>
+            data-bs-target="#modalAlerta" (click)="seleccionarEstablecimiento()">Seleccionar establecimiento
+        <span
+            class="bi"
+            title="Selecciona para habilitar los campos del establecimiento"
+            data-bs-toggle="tooltip"
+            ></span>
+        </button>
     </div>
 
     @if(modalAlerta) {
@@ -34,6 +40,10 @@
             <input type="text" class="form-control" formControlName="correoElectronico" id="correoElectronico"
                 maxlength="320"
                 (change)="setValoresStore(datosDelEstablecimientoForm,'correoElectronico', 'setCorreoElectronico')">
+            <div *ngIf="datosDelEstablecimientoForm.get('correoElectronico')?.touched">
+            <small *ngIf="datosDelEstablecimientoForm.get('correoElectronico')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            <small *ngIf="datosDelEstablecimientoForm.get('correoElectronico')?.errors?.['pattern']" class="text-danger espaciador-campo-pequeño">El valor ingresado no es una dirección válida de correo electrónico</small>
+            </div>
         </div>
     </div>
 </div>
@@ -127,7 +137,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalAddSCIAN" tabindex="-1" aria-labelledby="modalAddSCIANLabel" aria-hidden="true">
+    <div class="modal fade" id="modalAddSCIAN" tabindex="-1" aria-labelledby="modalAddSCIANLabel" aria-hidden="true" data-backdrop="false">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -158,12 +168,10 @@
                                     #closeModal>
                                     Cancelar
                                 </button>
-                                <button type="button" name="limpiarSCIAN" class="btn btn-danger ms-2"
-                                    >
+                                <button type="button" name="limpiarSCIAN" class="btn btn-danger ms-2" (click)="limpiarSCIAN()">
                                     Limpiar
                                 </button>
-                                <button type="button" name="agregar" class="btn btn-primary ms-2"
-                                    >
+                                <button type="button" name="agregar" class="btn btn-primary ms-2" (click)="agregarSCIAN(); closeModal.click()"  >
                                     Agregar
                                 </button>
                             </div>
@@ -211,37 +219,10 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalAgregarMercancia" tabindex="-1" aria-labelledby="modalAgregarMercanciaLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Datos mercancía</h4>
-                </div>
-                <div class="modal-body">
-                    <app-datos-mercancia></app-datos-mercancia>
-                </div>
-                <div class="modal-footer custom-footer">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="pull-right">
-                                <button type="button" name="limpiarSCIAN" class="btn btn-danger">
-                                    Limpiar
-                                </button>
-                                <button type="button" name="cancelar" class="btn btn-default ms-2"
-                                    data-bs-dismiss="modal" #closeModal>
-                                    Cancelar
-                                </button>
-                                <button type="button" name="agregar" class="btn btn-primary ms-2">
-                                    Agregar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="modal fade" #modifyModal tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
+        <app-datos-mercancia (cerrarClicado)="cerrarModificarModal()" (guardarClicado)="abrirModificarModal($event)"></app-datos-mercancia>
     </div>
+    
 </div>
 
 <!--Manifiestos y declaraciones-->

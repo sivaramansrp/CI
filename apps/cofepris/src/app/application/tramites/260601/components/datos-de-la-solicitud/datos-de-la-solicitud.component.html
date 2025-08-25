@@ -20,17 +20,7 @@
                             <label for="solicitud">Solicitud</label>
                         </div>
                         <div class="col-md-12">
-                            <table class="table table-responsive table-striped">
-                                <thead>
-                                    <tr>
-                                        @for (item of tablaHeadData; track $index) {
-                                        <th>{{ item }}</th>
-                                        }
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
+                            <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="configuracionTabla" [datos]="solicitudDatos" ></app-tabla-dinamica>
                         </div>
                     </div>
                 </div>

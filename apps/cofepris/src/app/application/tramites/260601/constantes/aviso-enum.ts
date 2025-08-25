@@ -1,4 +1,4 @@
-import {ProductoTable,ScianTable} from '../models/aviso-model';
+import {ProductoTable,ScianTable, SolicitudTable} from '../models/aviso-model';
 /**
  * Contiene el aviso de privacidad simplificado con su correspondiente enlace al aviso integral.
  */
@@ -200,4 +200,29 @@ export const SCIAN_TABLA_CONFIGURACION = [{
   encabezado: 'Descripción S.C.I.A.N.',
   clave: (ele: ScianTable): string | undefined => ele.descripcionScian,
   orden: 2
+}]; 
+
+/**
+ * @const SOLICITUD_TABLA_CONFIGURACION
+ * @description
+ * Configuración de columnas para la tabla de solicitudes.
+ * Define la estructura y comportamiento de cada columna en la tabla dinámica.
+ * @type {Array<{encabezado: string, clave: (ele: SolicitudTable) => string | undefined, orden: number}>}
+ */
+export const SOLICITUD_TABLA_CONFIGURACION = [{
+  encabezado: 'Fecha Creación',
+  clave: (ele: SolicitudTable): string | undefined => ele.fechaCreacion,
+  orden: 1
+}, {
+  encabezado: 'Mercancía',
+  clave: (ele: SolicitudTable): string | undefined => ele.mercancia,
+  orden: 2
+}, {
+  encabezado: 'Cantidad',
+  clave: (ele: SolicitudTable): string | undefined => ele.cantidad,
+  orden: 3
+}, {
+  encabezado: 'Proveedor',
+  clave: (ele: SolicitudTable): string | undefined => ele.proveedor,
+  orden: 4
 }]; 

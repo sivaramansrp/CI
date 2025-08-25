@@ -6,17 +6,19 @@ import {
   SCIAN_TABLA_CONFIGURACION,
 } from '../../constantes/aviso-enum';
 import {
-  AvisoSanitarioState,
-  Tramite260601Store,
-} from '../../../../estados/tramites/tramite260601.store';
-import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
-import {
+  AfterViewInit,
   Component,
   ElementRef,
   OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
+import {
+  AvisoSanitarioState,
+  Tramite260601Store,
+} from '../../../../estados/tramites/tramite260601.store';
+import { Catalogo, ConsultaioQuery, REGEX_REEMPLAZAR } from '@ng-mf/data-access-user';
+
 import {
   FormArray,
   FormBuilder,
@@ -37,11 +39,10 @@ import {
   NotificacionesComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
-  TableBodyData,
   TableComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Manifiestos, ManifiestosRespuesta,ProductoTable,ScianTable} from '../../models/aviso-model';
+import { Manifiestos, ManifiestosRespuesta,ProductoInput,ProductoTable,ScianTable} from '../../models/aviso-model';
 import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
 import { DatosMercanciaComponent } from '../datos-mercancia/datos-mercancia.component';
 import { Modal } from 'bootstrap';
@@ -74,7 +75,7 @@ import scianTable from '@libs/shared/theme/assets/json/260601/scian-table.json';
   templateUrl: './datos-del-establecimiento.component.html',
   styleUrl: './datos-del-establecimiento.component.css',
 })
-export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
+export class DatosDelEstablecimientoComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Formulario principal para los datos del establecimiento.
    */
@@ -235,6 +236,38 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
    */
   public nuevaNotificacion!: Notificacion;
 
+    /**
+   * @property {boolean} limpiar
+   * @description
+   * Indica si se deben limpiar los campos del formulario de mercancía.
+   * Cuando es `true`, se reinician todos los campos en el formulario de mercancía.
+   */
+  limpiar: boolean = false;
+
+  /**
+   * @property {boolean} showModalAgregarMercancia
+   * @description
+   * Controla la visibilidad del modal para agregar una nueva mercancía.
+   * Cuando es `true`, el modal se muestra en la interfaz de usuario.
+   */
+  showModalAgregarMercancia: boolean = false;
+
+  /**
+   * @property {Modal} modalInstance
+   * @description
+   * Instancia del modal de Bootstrap utilizada para controlar programáticamente
+   * las acciones del modal (mostrar, ocultar) desde el componente.
+   */
+  modalInstance!: Modal;
+
+  /**
+   * @property {ElementRef} modifyModal
+   * @description
+   * Referencia al elemento DOM del modal de modificación de datos.
+   * Se utiliza para inicializar la instancia del modal de Bootstrap.
+   */
+  @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
+
   /**
    * Constructor del componente. Utilizado para inyectar servicios necesarios.
    *
@@ -283,6 +316,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
       map((seccionState) => {
         this.productoBodyData = seccionState.productoBodyData;
         this.scianBodyData = seccionState.scianBodyData;
+        this.avisoSanitarioState = seccionState;
       })
     )
       
@@ -318,18 +352,13 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.avisoSanitarioState = seccionState;
           this.productoBodyData = seccionState.productoBodyData;
-       this.scianBodyData = seccionState.scianBodyData;
+          this.scianBodyData = seccionState.scianBodyData;
         })
       )
       .subscribe();
 
     // Inicializar el formulario principal
     this.crearFormulario();
- if(this.scianBodyData?.length === 0){
-   this.obtenerSCIAN();
- }
-
-    this.obtenerProducto();
 
     this.estadoSeleccion();
     this.claveScianSeleccion();
@@ -375,7 +404,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
       ],
       correoElectronico: [
         { value: this.avisoSanitarioState?.correoElectronico, disabled: true },
-        [Validators.maxLength(320)],
+        [Validators.maxLength(320), Validators.pattern(REGEX_REEMPLAZAR)],
       ],
     });
     this.domicilloDelEstablecimientoForm = this.fb.group({
@@ -652,6 +681,10 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
       const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
       MODAL_INSTANCE.show();
     }
+    this.showModalAgregarMercancia = true;
+    if (this.modalInstance) {
+        this.modalInstance.show();
+      }
   }
 
   /**
@@ -710,7 +743,94 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
   
     this.tramite260601Store?.setScianTabla?.(DATOS_ACTUALIZADOS);
   }
-  
+
+    /**
+   * @method agregarSCIAN
+   * @description
+   * Agrega un nuevo registro SCIAN a la tabla y actualiza el store.
+   * Toma los valores de los campos cveSCIAN y cveSCIANDescripcion del formulario
+   * y los agrega al arreglo de datos de la tabla SCIAN.
+   * @returns {void}
+   */
+  agregarSCIAN(): void {
+    // Tomar los valores del formulario y agregarlos a scianBodyData
+    const CLAVEACIAN = this.scianForm.get('cveSCIAN')?.value;
+    const DESCRIPCION_SC = this.scianForm.get('cveSCIANDescripcion')?.value;
+    this.scianBodyData = [
+      ...this.scianBodyData,
+      { claveScian: CLAVEACIAN, descripcionScian: DESCRIPCION_SC }
+    ];
+    this.tramite260601Store.setScianTabla(this.scianBodyData);
+  }
+
+  /**
+   * @method limpiarSCIAN
+   * @description
+   * Limpia todos los campos del formulario SCIAN, reiniciándolos a su estado inicial.
+   * @returns {void}
+   */
+  limpiarSCIAN(): void {
+    this.scianForm.reset();
+  }
+
+  /**
+   * @method limpiarMercancia
+   * @description
+   * Limpia la clasificación del producto en el store y activa la bandera de limpieza
+   * para que el componente de datos de mercancía reinicie sus campos.
+   * @returns {void}
+   */
+  limpiarMercancia(): void {
+    this.tramite260601Store.setProductoClasificacion('');
+    this.limpiar = true    
+  }
+
+  /**
+   * @method ngAfterViewInit
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta después de que Angular inicializa las vistas del componente.
+   * Inicializa la instancia del modal Bootstrap si existe la referencia al elemento DOM.
+   * @returns {void}
+   */
+  ngAfterViewInit(): void {
+    if (this.modifyModal) {
+      this.modalInstance = new Modal(this.modifyModal.nativeElement);
+    }
+  }
+
+  /**
+   * @method cerrarModificarModal
+   * @description
+   * Cierra el modal de modificación si existe una instancia del modal Bootstrap.
+   * @returns {void}
+   */
+  cerrarModificarModal(): void {
+    if (this.modalInstance) {
+      this.modalInstance.hide();
+    }
+  }
+
+  /**
+   * @method abrirModificarModal
+   * @description
+   * Abre el modal de modificación y carga los datos del producto seleccionado.
+   * Crea un nuevo objeto ProductoTable con los datos recibidos y actualiza la tabla y el store.
+   * @param {ProductoInput} data - Datos del producto a modificar.
+   * @returns {void}
+   */
+  abrirModificarModal(data: ProductoInput): void {
+    const NEW_ARRAY: ProductoTable = {
+      clasificacionDelProducto: data.cveEspecificoProductoClasifi ?? '',
+      tipoDeProducto: data.cveTipoProducto ?? '',
+      fraccionArancelaria: data.fraccionArancelaria ?? '',
+      descripcionDeLaFraccion: data.fraccionArancelariaDescripcion ?? '',
+      modelo: data.modelo ?? '',
+      descripcionDelProducto: data.productoDescripcion ?? '',
+      paisDeOrigen: data.paisDeOrigen ?? ''
+    };
+    this.productoBodyData = [NEW_ARRAY] as ProductoTable[];
+    this.tramite260601Store.setProductoTabla(this.productoBodyData);
+  }
 
   /**
    * Se ejecuta al destruir el componente.
