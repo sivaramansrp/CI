@@ -151,6 +151,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
       TARGET.textContent = 'Activar';
     }
     TARGET.textContent = 'Activar';
+    this.prosecService.setIsBaja(this.isBaja);
   }
   /**
    * Se ejecuta al destruir el componente.

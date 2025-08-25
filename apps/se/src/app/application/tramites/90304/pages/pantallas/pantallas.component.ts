@@ -1,5 +1,6 @@
 import { AccionBoton, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
+import { ProsecService } from '../../services/prosec/prosec.service';
 
 /**
  * Componente principal para la gestión de pantallas en el wizard de cupos.
@@ -30,6 +31,13 @@ export class PantallasComponent {
   @ViewChild(WizardComponent)
   public wizardComponent!: WizardComponent;
 
+  isBaja: boolean = true;
+  
+  constructor( private prosecService: ProsecService) { }
+
+  ngOnInit() {
+    this.prosecService.isBaja$.subscribe(val => this.isBaja = val);
+  }
   /**
    * Datos utilizados para el control del wizard.
    * @type {DatosPasos}
@@ -48,7 +56,7 @@ export class PantallasComponent {
    * @returns {void}
    */
   public getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
+    if (e.valor > 0 && e.valor <= this.pantallasPasos.length && this.isBaja === true) {
       this.indice = e.valor;
       this.datosPasos.indice = e.valor;
 
@@ -57,6 +65,8 @@ export class PantallasComponent {
       } else {
         this.wizardComponent.atras();
       }
+    } else {
+      alert('No se puede continuar porque no es baja.');
     }
   }
 }

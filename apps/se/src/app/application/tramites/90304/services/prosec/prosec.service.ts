@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-
 import { EmpresasListaResquesta, ModificacionResquesta } from '../../models/prosec.model';
 import { MercanciasResquesta, PlantasTabla, ProductorIndirectoResquesta, SectorTabla } from '../../../../shared/models/complementaria.model';
 import { BitacoraResquesta } from '../../../../shared/models/bitacora.model';
@@ -16,6 +15,10 @@ import { BitacoraResquesta } from '../../../../shared/models/bitacora.model';
 })
 export class ProsecService {
 
+  private isBajaSubject = new BehaviorSubject<boolean>(true);
+
+  isBaja$ = this.isBajaSubject.asObservable();
+
   /**
    * Constructor del servicio.
    * @param http - Servicio HTTP para realizar peticiones.
@@ -23,6 +26,14 @@ export class ProsecService {
   constructor(
     private http: HttpClient
   ) { }
+
+  /**
+   * Establece el valor de si es baja o no.
+   * @param value - Valor booleano que indica si es baja o no.
+   */
+  setIsBaja(value: boolean) {
+    this.isBajaSubject.next(value);
+  }
 
   /**
    * Obtiene los datos del documentos seleccionados.
