@@ -630,7 +630,7 @@ export class Tramite80101Store extends Store<Tramite80101State> {
   }
 
   /**
-   * Actualiza el estado con los datos complementarios proporcionados.
+   * Actualiza el estado with los datos complementarios proporcionados.
    *
    * @param datosComplimentoDos - Objeto que contiene los datos complementarios a actualizar.
    *
@@ -967,7 +967,6 @@ export class Tramite80101Store extends Store<Tramite80101State> {
   /**
    * Actualiza la propiedad `datosAnexoTress` en el store con los datos proporcionados.
    * Fusiona el estado existente de `datosAnexoTress` con los nuevos valores recibidos.
-   * Muestra el resultado fusionado en la consola para fines de depuración.
    *
    * @param datosAnexoTress - Objeto que contiene los nuevos datos a fusionar en `datosAnexoTress`.
    */
@@ -978,7 +977,13 @@ export class Tramite80101Store extends Store<Tramite80101State> {
     });
   }
 
-setDatosAnexoTresDos(datosAnexoTressDos: DatosAnexotressUno): void {
+  /**
+   * Actualiza la propiedad `datosAnexoTressDos` en el store con los datos proporcionados.
+   * Fusiona el estado existente de `datosAnexoTressDos` con los nuevos valores recibidos.
+   *
+   * @param datosAnexoTressDos - Objeto que contiene los nuevos datos a fusionar en `datosAnexoTressDos`.
+   */
+  setDatosAnexoTresDos(datosAnexoTressDos: DatosAnexotressUno): void {
     this.update((state) => {
       const VALUE = { ...state.datosAnexoTressDos, ...datosAnexoTressDos };
       return { ...state, datosAnexoTressDos: VALUE };

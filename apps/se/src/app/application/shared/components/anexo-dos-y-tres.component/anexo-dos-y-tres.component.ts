@@ -91,10 +91,22 @@ export class AnexoDosYTresComponent implements OnInit {
    * 
    * Este output puede ser suscrito por componentes padres para recibir actualizaciones
    * siempre que los datos relevantes cambien o se envíen dentro de este componente.
+   * Los datos son emitidos cuando hay cambios en el formulario anexoDosFormGroup.
    *
    * @remarks
    * El `EventEmitter` se inicializa con `true` para indicar que es asíncrono.
+   * Este evento se dispara con un retraso de 100ms después de cada cambio en el formulario
+   * para evitar emisiones excesivas durante cambios rápidos.
    *
+   * @example
+   * ```html
+   * <app-anexo-dos-y-tres
+   *   (anexoTressDatos)="manejarDatosAnexo($event)">
+   * </app-anexo-dos-y-tres>
+   * ```
+   * 
+   * @see DatosAnexotressUno
+   * @see anexoDosFormGroup
    * @eventProperty
    */
   @Output()
