@@ -130,7 +130,7 @@ export class ExporticonMercanciaEstupefacientesComponent
    */
   public usoEspesificoLabel: CrossListLable = {
     tituluDeLaIzquierda: 'Uso específico',
-    derecha: 'Uso específico seleccionado',
+    derecha: 'Uso específico seleccionado*:',
   };
 
   /**
@@ -140,7 +140,7 @@ export class ExporticonMercanciaEstupefacientesComponent
    */
   public formaFaramaceuticaLabel: CrossListLable = {
     tituluDeLaIzquierda: 'Forma farmacéutica',
-    derecha: 'Forma farmacéutica',
+    derecha: '*:',
   };
 
   /**

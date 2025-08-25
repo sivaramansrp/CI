@@ -260,5 +260,96 @@ describe('SolicitudComponent', () => {
             expect(component.revisionDisabled).toBe(true);
             expect(component.certificacionesDisabled).toBe(true);
         });
+
+        it('should clear tipoOperacion field when DD is unchecked via limpiaCamposDdaLda', () => {
+            // Setup: Mock the despacho form with required fields including tipoOperacion
+            const mockDespachoForm = mockFormBuilder.group({
+                idAduanaDespacho: ['someValue'],
+                aduanaDespacho: ['someValue'], 
+                idSeccionDespacho: ['someValue'],
+                seccionAduanera: ['someValue'],
+                nombreRecinto: ['someValue'],
+                relacionSociedad: [true],
+                encargoConferido: [true],
+                domicilioDespacho: ['someValue'],
+                tipoDespacho: ['someValue'],
+                tipoDespachoDescripcion: ['someValue'],
+                tipoOperacion: [2] // Exportación value that should be cleared
+            });
+
+            // Spy on setValue calls to verify clearing behavior
+            const setValueSpy = jest.spyOn(mockDespachoForm.get('tipoOperacion')!, 'setValue');
+            
+            // Mock the store update method to avoid dependency issues
+            component.setValoresStore = jest.fn();
+            
+            // Override the component's despacho form getter
+            Object.defineProperty(component, 'despacho', {
+                get: () => mockDespachoForm,
+                configurable: true
+            });
+
+            // Call the method that should clear the fields
+            component.limpiaCamposDdaLda();
+
+            // Verify tipoOperacion was reset to SIN_VALORES (-1)
+            expect(setValueSpy).toHaveBeenCalledWith('-1');
+            
+            // Verify store was updated for tipoOperacion
+            expect(component.setValoresStore).toHaveBeenCalledWith(
+                mockDespachoForm, 
+                'tipoOperacion', 
+                'setTipoOperacion'
+            );
+        });
+    });
+
+    // Test for tipoOperacion reset when LDA/DD is unchecked
+    describe('LDA/DD Checkbox Reset', () => {
+        beforeEach(() => {
+            // Setup despacho form controls for testing
+            (component as any).despacho = mockFormBuilder.group({
+                lda: [false],
+                dd: [false],
+                tipoOperacion: ['1'], // Set initial value to test reset
+                tipoDespacho: ['1'],
+                rfcDespachoLDA: [''],
+                folioDDEX: ['']
+            });
+            
+            // Mock required properties
+            component.despachoSeleccionado = false;
+            (component as any).tramite5701Store = {
+                setLDA: jest.fn(),
+                setDD: jest.fn()
+            };
+        });
+
+        it('should reset tipoOperacion when unchecking LDA or DD', () => {
+            // Set tipoOperacion to a specific value
+            (component as any).despacho.get('tipoOperacion')?.setValue('importacion');
+            expect((component as any).despacho.get('tipoOperacion')?.value).toBe('importacion');
+
+            // Call the method that should reset tipoOperacion when unchecking
+            component.activaDesactivaCheckLDA_DDEX('lda');
+
+            // Verify tipoOperacion is reset to -1 (SIN_VALORES)
+            expect((component as any).despacho.get('tipoOperacion')?.value).toBe('-1');
+        });
+
+        it('should reset tipoOperacion when limpiaCamposDdaLda is called', () => {
+            // Set tipoOperacion to a specific value
+            (component as any).despacho.get('tipoOperacion')?.setValue('exportacion');
+            expect((component as any).despacho.get('tipoOperacion')?.value).toBe('exportacion');
+
+            // Mock the store update method
+            (component as any).setValoresStore = jest.fn();
+
+            // Call the method that should reset tipoOperacion
+            component.limpiaCamposDdaLda();
+
+            // Verify tipoOperacion is reset to -1 (SIN_VALORES)
+            expect((component as any).despacho.get('tipoOperacion')?.value).toBe('-1');
+        });
     });
 });

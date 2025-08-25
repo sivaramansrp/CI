@@ -113,6 +113,13 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   esFormularioSoloLectura!: boolean;
 
   /**
+   * Lista de elementos que son obligatorios para completar el formulario.
+   * Actualmente incluye solo el campo 'correoElectronico', pero se puede expandir
+   * según los requisitos del sistema.
+   */
+   elementosRequeridos: string[] = ['correoElectronico','denominacionRazon','rfcSanitario'];
+
+  /**
    * Constructor de la clase que inicializa el estado del trámite y determina si el formulario es de solo lectura.
    * 
    * @param {tramite260203Store} tramiteStore - Store que contiene el estado del trámite 260204.

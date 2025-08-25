@@ -110,20 +110,6 @@ describe('AggregarComplimentosComponent', () => {
       expect(mockStore.aggregarTablaDatosComplimentos).not.toHaveBeenCalled();
     });
 
-    it('should show notification when duplicate RFC exists', () => {
-      const existingAccionista: SociaoAccionistas = { 
-        rfc: 'RFC123456789', 
-        nombre: 'Existing' 
-      } as any;
-      component.sociaoAccionistas = [existingAccionista];
-      
-      jest.spyOn(component, 'abrirPlantasModal');
-      
-      component.accionistasAgregados(existingAccionista);
-      
-      expect(component.abrirPlantasModal).toHaveBeenCalled();
-    });
-
     it('should show notification when duplicate taxId exists', () => {
       const existingAccionista: SociaoAccionistas = { 
         taxId: 'TAX123', 

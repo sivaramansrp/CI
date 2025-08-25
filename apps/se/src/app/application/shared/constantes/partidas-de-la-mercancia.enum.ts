@@ -33,3 +33,7 @@ import { PartidasDeLaMercanciaModelo } from '../models/partidas-de-la-mercancia.
     }
   ]
   
+  export const TEXTOS = {
+  INSTRUCCIONES: `<h5 style="text-align: center;">El formato del archivo a cargar no es válido. Favor de verificar</h5>
+ `
+  }

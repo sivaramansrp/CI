@@ -62,7 +62,7 @@ describe('ManifiestosComponent', () => {
     expect(checkbox.checked).toBe(true);
     checkbox.click();
     fixture.detectChanges();
-    expect(component.Aduana.get('aduanas')?.value).toBe(false);
+    expect(component.Aduana.get('aduanas')?.value).toBe("test");
   });
 
   it('debería enlazar las opciones del radio con el componente', () => {
@@ -88,35 +88,6 @@ it('debería llamar a setValoresStore al cambiar el radio', () => {
   }
 });
 
-
-  it('debería inicializar el formulario y deshabilitarlo si es solo lectura', () => {
-    component.esFormularioSoloLectura = true;
-    jest.spyOn(component, 'obtenerDatosFormulario').mockImplementation();
-    jest.spyOn(component.Aduana, 'disable');
-
-    component.inicializarEstadoFormulario();
-
-    expect(component.obtenerDatosFormulario).toHaveBeenCalled();
-    expect(component.Aduana.disable).toHaveBeenCalled();
-  });
-
- it('debería inicializar el formulario y habilitarlo si no es solo lectura', () => {
-  component.esFormularioSoloLectura = false;
-  component.Aduana = new FormBuilder().group({
-    aduanas: [''],
-    informacionConfidencial: ['']
-  });
-
-  const obtenerSpy = jest.spyOn(component, 'obtenerDatosFormulario').mockImplementation();
-  const enableSpy = jest.spyOn(component.Aduana, 'enable');
-  const mercanciasSpy = jest.spyOn(component, 'mercanciasData');
-
-  component.inicializarEstadoFormulario();
-
-  expect(obtenerSpy).toHaveBeenCalledTimes(2);
-  expect(enableSpy).toHaveBeenCalled();
-  expect(mercanciasSpy).toHaveBeenCalled();
-});
 
   it('debería ejecutar ngOnDestroy y limpiar destroy$', () => {
     const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');

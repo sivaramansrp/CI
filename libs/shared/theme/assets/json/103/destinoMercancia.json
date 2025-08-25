@@ -3,23 +3,23 @@
   "data": [
     {
       "id": 0,
-      "descripcion": "Enseñanza"
+      "descripcion": "Culturales"
     },
     {
       "id": 1,
-      "descripcion": "Investigación"
+      "descripcion": "Enseñanza"
     },
     {
       "id": 2,
-      "descripcion": "Salud Publica"
+      "descripcion": "Investigación"
     },
     {
       "id": 3,
-      "descripcion": "Servicio Social"
+      "descripcion": "Salud Pública"
     },
     {
       "id": 4,
-      "descripcion": "Culturales"
+      "descripcion": "Servicio Social"
     }
   ],
   "message": "destino Mercancia"

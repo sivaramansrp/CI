@@ -1,6 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Catalogo, ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
@@ -34,10 +43,15 @@ import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/parti
   templateUrl: './partidas-de-la-mercancia.component.html',
   styleUrl: './partidas-de-la-mercancia.component.scss',
 })
-export class PartidasDeLaMercanciaComponent implements OnChanges{
+export class PartidasDeLaMercanciaComponent implements OnChanges {
   /**
-  * @description Indica si el formulario debe mostrarse en modo solo lectura.
-  */
+   * @description Referencia al input de archivo para nacionales.
+   */
+  @ViewChild('archivoNacionales') archivoNacionalesElemento!: ElementRef;
+
+  /**
+   * @description Indica si el formulario debe mostrarse en modo solo lectura.
+   */
   @Input() esFormularioSoloLectura!: boolean;
   /**
    * form
@@ -55,8 +69,9 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    * tableHeaderData
    * Configuración de las columnas de la tabla dinámica.
    */
-  @Input() tableHeaderData: ConfiguracionColumna<PartidasDeLaMercanciaModelo>[] =
-     PARTIDASDELAMERCANCIA_TABLA;
+  @Input()
+  tableHeaderData: ConfiguracionColumna<PartidasDeLaMercanciaModelo>[] =
+    PARTIDASDELAMERCANCIA_TABLA;
 
   /**
    * tableBodyData
@@ -70,7 +85,6 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    */
   @Input() mostrarTabla = false;
 
-  
   /**
    * Lista de elementos del catálogo de fracciones arancelarias.
    */
@@ -101,12 +115,20 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    * Nombre del campo que se está actualizando.
    * Nombre del método que realiza la actualización.
    */
-  @Output() setValoresStoreEvent = new EventEmitter<{ form: FormGroup; campo: string; }>();
+  @Output() setValoresStoreEvent = new EventEmitter<{
+    form: FormGroup;
+    campo: string;
+  }>();
 
   /**
    * Tipo de selección de la tabla dinámica (checkbox).
    */
   CHECKBOX = TablaSeleccion.CHECKBOX;
+
+  /**
+   * Nombre del archivo seleccionado por el usuario.
+   */
+  nombreArchivoSeleccionado: string = '';
 
   /**
    * Constructor para inicializar el componente e inyectar dependencias.
@@ -116,27 +138,27 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
     //  Constructor del componente
   }
   /**
-  * Habilita o deshabilita el formulario según el modo de solo lectura.  
-  * Controla el estado del formulario al iniciar el componente.
-  */
-   /**
-     * Método del ciclo de vida que se ejecuta cuando cambian las propiedades de entrada del componente.
-     *
-     * Si la propiedad `esFormularioSoloLectura` cambia, habilita o deshabilita el formulario según su valor.
-     * Esto permite que el formulario se muestre en modo solo lectura o editable dinámicamente.
-     *
-     * @param changes - Objeto que contiene los cambios detectados en las propiedades de entrada.
-     */
-    ngOnChanges(changes: SimpleChanges): void {
-      // Verifica si el formulario ha cambiado y actualiza su estado
-      if (changes['esFormularioSoloLectura']) {
-        if (this.esFormularioSoloLectura) {
+   * Habilita o deshabilita el formulario según el modo de solo lectura.
+   * Controla el estado del formulario al iniciar el componente.
+   */
+  /**
+   * Método del ciclo de vida que se ejecuta cuando cambian las propiedades de entrada del componente.
+   *
+   * Si la propiedad `esFormularioSoloLectura` cambia, habilita o deshabilita el formulario según su valor.
+   * Esto permite que el formulario se muestre en modo solo lectura o editable dinámicamente.
+   *
+   * @param changes - Objeto que contiene los cambios detectados en las propiedades de entrada.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    // Verifica si el formulario ha cambiado y actualiza su estado
+    if (changes['esFormularioSoloLectura']) {
+      if (this.esFormularioSoloLectura) {
         this.partidasDelaMercanciaForm.disable();
-       }else{
+      } else {
         this.partidasDelaMercanciaForm.enable();
-       }
       }
     }
+  }
   /**
    * Verifica si un control del formulario es inválido.
    * Nombre del control en el formulario.
@@ -144,14 +166,18 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    */
   esInvalido(nombreControl: string): boolean {
     const CONTROL = this.partidasDelaMercanciaForm.get(nombreControl);
-    return CONTROL ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) : false;
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
   }
 
   /**
    * Maneja las filas seleccionadas en la tabla dinámica y emite un evento.
    * Lista de filas seleccionadas.
    */
-  handleListaDeFilaSeleccionada(filasSeleccionadas: PartidasDeLaMercanciaModelo[]): void {
+  handleListaDeFilaSeleccionada(
+    filasSeleccionadas: PartidasDeLaMercanciaModelo[]
+  ): void {
     this.filaSeleccionadaChange.emit(filasSeleccionadas);
   }
 
@@ -174,5 +200,18 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    */
   setValoresStore(form: FormGroup, campo: string): void {
     this.setValoresStoreEvent.emit({ form, campo });
+  }
+
+  /**
+   * Maneja el evento de selección de archivo y actualiza el nombre del archivo seleccionado.
+   * @param evento Evento de cambio del input de archivo.
+   */
+  archivoSeleccionado(evento: Event): void {
+    const INPUT = evento.target as HTMLInputElement;
+    if (INPUT.files && INPUT.files.length > 0) {
+      this.nombreArchivoSeleccionado = INPUT.files[0].name;
+    } else {
+      this.nombreArchivoSeleccionado = '';
+    }
   }
 }

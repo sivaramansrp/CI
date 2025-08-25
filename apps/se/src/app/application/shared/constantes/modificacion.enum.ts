@@ -255,6 +255,21 @@ export const CONFIGURACION_MERCANCIA_TABLA = [
     encabezado: 'Nombre comercial', // Título de la columna
     clave: (ele: Mercancia): string | undefined => ele.nombreComercial, // Función que devuelve el nombre comercial de la mercancía
     orden: 5, // Orden en que se mostrará la columna
+  },
+  {
+    encabezado: 'Número de registro de productos', // Título de la columna
+    clave: (ele: Mercancia): string | undefined => ele.numeroDeRegistrodeProductos, // Función que devuelve el número de registro de productos
+    orden: 6, // Orden en que se mostrará la columna
+  },
+  {
+    encabezado: 'Fecha expedición', // Título de la columna
+    clave: (ele: Mercancia): string | undefined => ele.fechaExpedicion, // Función que devuelve la fecha de expedición de la mercancía
+    orden: 7, // Orden en que se mostrará la columna
+  },
+  {
+    encabezado: 'Fecha vencimiento', // Título de la columna
+    clave: (ele: Mercancia): string | undefined => ele.fechaVencimiento, // Función que devuelve la fecha de vencimiento de la mercancía
+    orden: 8, // Orden en que se mostrará la columna
   }
 ];
 

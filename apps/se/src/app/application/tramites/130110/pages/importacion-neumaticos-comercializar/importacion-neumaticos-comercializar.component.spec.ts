@@ -3,6 +3,7 @@ import { ImportacionNeumaticosComercializarComponent } from './importacion-neuma
 import { BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { HttpClientModule } from '@angular/common/http';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('ImportacionNeumaticosComercializarComponent', () => {
   let component: ImportacionNeumaticosComercializarComponent;
@@ -12,6 +13,7 @@ describe('ImportacionNeumaticosComercializarComponent', () => {
     await TestBed.configureTestingModule({
       imports: [WizardComponent, BtnContinuarComponent, SolicitanteComponent,HttpClientModule],
       declarations: [ImportacionNeumaticosComercializarComponent,PasoUnoComponent],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ImportacionNeumaticosComercializarComponent);

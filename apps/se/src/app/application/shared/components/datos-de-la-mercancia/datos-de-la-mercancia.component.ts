@@ -29,6 +29,10 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 })
 export class DatosDeLaMercanciaComponent implements OnChanges {
   /**
+   * Show tooltip for Valor factura USD (only for 130111)
+   */
+  @Input() mostrarTooltipValorFacturaUSD: boolean = false;
+  /**
   * @description Indica si el formulario debe mostrarse en modo solo lectura.
   */
   @Input() esFormularioSoloLectura!: boolean;

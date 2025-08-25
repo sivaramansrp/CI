@@ -8,6 +8,7 @@ import * as PATH from 'path';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const { ModuleFederationPlugin } = container;
+const webpack = require("webpack");
 const SHARE = MF.share;
 
 const SHARED_MAPPINGS = new MF.SharedMappings();
@@ -43,6 +44,11 @@ module.exports = {
     }
   },
   plugins: [
+    // DISABLE ngDevMode as it is not needed in a remoteEntry
+    new webpack.DefinePlugin({
+        ngDevMode: "undefined",
+    }),
+    // END DISABLE ngDevMode as it is not needed in a remoteEntry
     new ModuleFederationPlugin({
       name: 'dashboard',
       // Agregar filename para asegurar que el punto de entrada remoto sea constante

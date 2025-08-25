@@ -331,9 +331,9 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     private fb: FormBuilder,
     private catalogosServices: CatalogosService,
     private complimentosService: ComplimentosService,
-     private consultaioQuery: ConsultaioQuery,
-     private tramiteStore: TramiteStore,
-     private validacionesService: ValidacionesFormularioService
+    private consultaioQuery: ConsultaioQuery,
+    private tramiteStore: TramiteStore,
+    private validacionesService: ValidacionesFormularioService
   ) {
     
        this.consultaioQuery.selectConsultaioState$
@@ -616,7 +616,7 @@ this.formaComplimentos.disable();
    * @returns {void}
    */
   ngOnInit(): void {
-     this.inicializarCertificadoFormulario();
+    this.inicializarCertificadoFormulario();
     this.getCatalogoPaises();
     this.getCatalogoEstado();
     this.loadComboUnidadMedida();
@@ -816,7 +816,7 @@ this.formaComplimentos.disable();
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos) => {
         const INDICE = this.camposFormulario.findIndex(
-          (ele) => ele.campo === ESTADO
+          (ele) => ele.campo === 'pais'
         );
         const INDICEALT = this.camposFormularioTipoPersona.findIndex(
           (ele) => ele.campo === ESTADO
@@ -835,11 +835,34 @@ this.formaComplimentos.disable();
     const CONTROL = this.formaComplimentos.get(
       'formaSocioAccionistas'
     ) as FormGroup;
-    const VALUE = CONTROL.get('formaDatos')?.value;
-    if (VALUE) {
-      this.accionistasAgregados.emit(VALUE);
-      CONTROL.get('formaDatos')?.reset();
+    const FORMADATOS_GROUP = CONTROL?.get('formaDatos') as FormGroup;
+    if (FORMADATOS_GROUP?.valid) {
+      let VALUE = CONTROL.get('formaDatos')?.value;
+      if (VALUE.pais) {
+        const DATOS = {
+          ...VALUE,
+          pais: ComplimentosComponent.obtenerDescripcion(this.estados, VALUE.pais)
+        };
+      VALUE = DATOS;
+      }
+      if (VALUE) {
+        this.accionistasAgregados.emit(VALUE);
+        CONTROL.get('formaDatos')?.reset();
+      }
+    } else {
+      FORMADATOS_GROUP?.markAllAsTouched();
     }
+  }
+
+  /**
+ * @method obtenerDescripcion
+ * @description
+ * Obtiene la descripción de la fracción arancelaria seleccionada en el formulario dinámico.
+ * @returns {string} Descripción de la fracción arancelaria seleccionada o una cadena vacía si no existe.
+ */
+  public static obtenerDescripcion(array: Catalogo[], id: string): string {
+    const DESCRIPCION = array.find((ele: Catalogo) => Number(ele.id) === Number(id))?.descripcion;
+    return DESCRIPCION ?? '';
   }
 
   /**
@@ -848,9 +871,11 @@ this.formaComplimentos.disable();
    */
   
   eliminarAccionistas(): void {
+    if (this.eliminarUnoConfirmationNotificacion) {
       this.eliminarUnoConfirmationNotificacion.cerrar = false;
+    }
     if (this.empresaAccionistasSeleccionados.length) {
-      this.accionistasEliminados.emit(this.empresaAccionistasSeleccionados);
+      this.abrirEliminarUnoConfirmationModal();
     } else {
       this.abrirEliminarModal();
     }
@@ -905,10 +930,6 @@ this.formaComplimentos.disable();
    * @returns {void} No retorna ningún valor.
    */
   abrirEliminarUnoConfirmationModal(): void {
-    if(!this.empresaAccionistasSeleccionados.length) {
-      this.abrirEliminarModal();
-      return;
-    }
     this.eliminarUnoConfirmationNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
@@ -918,7 +939,7 @@ this.formaComplimentos.disable();
       cerrar: true,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
+      txtBtnCancelar: 'Cancelar',
     };
   }
 
@@ -939,11 +960,11 @@ this.formaComplimentos.disable();
    * @returns {void}
    */
   eliminarAccionistasExtrenjeros(): void {
-    this.eliminarDosConfirmationNotificacion.cerrar = false;
+    if (this.eliminarDosConfirmationNotificacion) {
+      this.eliminarDosConfirmationNotificacion.cerrar = false;
+    }
     if (this.accionistasExtranjerosSeleccionados.length) {
-      this.accionistasExtranjerosEliminado.emit(
-        this.accionistasExtranjerosSeleccionados
-      );
+      this.abrirEliminarDosConfirmationModal();
     } else {
       this.abrirEliminarModal();
     }
@@ -967,10 +988,6 @@ this.formaComplimentos.disable();
    * @returns {void} No retorna ningún valor.
    */
   abrirEliminarDosConfirmationModal(): void {
-      if(!this.accionistasExtranjerosSeleccionados.length) {
-      this.abrirEliminarModal();
-      return;
-    }
     this.eliminarDosConfirmationNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
@@ -980,7 +997,7 @@ this.formaComplimentos.disable();
       cerrar: true,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
+      txtBtnCancelar: 'Cancelar',
     };
   }
   /**
@@ -1225,6 +1242,52 @@ this.formaComplimentos.disable();
   }
 
   /**
+ * Maneja la confirmación de la notificación para eliminar registros.
+ * Si el usuario confirma, elimina la notificación correspondiente.
+ * @param confirmar Indica si el usuario confirmó la notificación.
+ */
+  confirmarEliminarNotificacion(confirmar: boolean): void {
+    if (confirmar) {
+      if (this.eliminarNotificacion) {
+      this.eliminarNotificacion = undefined as unknown as Notificacion;
+    }
+    }
+  }
+
+  /**
+ * Maneja la confirmación de la notificación para eliminar accionistas extranjeros.
+ * Si el usuario confirma, emite el evento con los accionistas seleccionados y limpia la lista.
+ * Si no confirma, elimina la notificación correspondiente.
+ * @param confirmar Indica si el usuario confirmó la notificación.
+ */
+  confirmarEliminarDosConfirmation(confirmar: boolean): void {
+    if (confirmar) {
+      this.accionistasExtranjerosEliminado.emit(this.accionistasExtranjerosSeleccionados);
+      const TAX_IDS = this.accionistasExtranjerosSeleccionados.map(x => x.taxId);
+      this.accionistasExtranjerosSeleccionados =
+        this.accionistasExtranjerosSeleccionados.filter(
+          item => !TAX_IDS.includes(item.taxId)
+        );
+    } else {
+      this.eliminarDosConfirmationNotificacion = undefined as unknown as Notificacion;
+    }
+  }
+
+  /**
+ * Maneja la confirmación de la notificación para eliminar accionistas seleccionados.
+ * Si el usuario confirma, emite el evento con los accionistas seleccionados.
+ * Si no confirma, elimina la notificación correspondiente.
+ * @param confirmar Indica si el usuario confirmó la notificación.
+ */
+  confirmarEliminarUnoConfirmation(confirmar: boolean): void {
+    if (confirmar) {
+      this.accionistasEliminados.emit(this.empresaAccionistasSeleccionados);
+    } else {
+      this.eliminarUnoConfirmationNotificacion = undefined as unknown as Notificacion;
+    }
+  }
+
+  /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.
    * @method ngOnDestroy
@@ -1300,7 +1363,9 @@ this.formaComplimentos.disable();
  */
   onDesenfoque(campo: string): void {
     const CONTROL = this.formaComplimentos.get(`formaSocioAccionistas.formaDatos.${campo}`);
-    CONTROL?.markAsTouched();
+    if (CONTROL?.value === '' || CONTROL?.value === null) {
+      CONTROL?.markAsTouched();
+    }
   }
 
   /**
@@ -1312,12 +1377,16 @@ this.formaComplimentos.disable();
   onCambio(event: Event, campo: string): void {
     const VALOR = (event.target as HTMLInputElement).value;
     const CONTROL = this.formaComplimentos.get(`formaSocioAccionistas.formaDatos.${campo}`);
+    if (!CONTROL) {
+      return;
+    }
     if (VALOR) {
       CONTROL?.setValue(VALOR, { emitEvent: true });
       CONTROL?.markAsTouched({ onlySelf: true });
       CONTROL?.updateValueAndValidity();
     } else {
       CONTROL?.markAsDirty();
+      CONTROL?.markAsTouched();
     }
   }
 }
