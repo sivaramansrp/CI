@@ -105,12 +105,29 @@ export class Tramite80101Query extends Query<Tramite80101State> {
    */
   selectDatosComplimentos$ = this.select((state) => state.datosComplimento);
 
+/**
+   * Selecciona los datos de cumplimientos del estado.
+   */
+  selectDatosDosComplimentos$ = this.select((state) => state.datosComplimentoDos);
+
+/**
+   * Selecciona los datos de cumplimientos del estado.
+   */
+  selectDatosComplimentosDos$ = this.select((state) => state.datosComplimentoDos);
+
   /**
    * Observable selector for retrieving the `datosAnexoTress` property from the application state.
    * 
    * @returns An observable emitting the current value of `datosAnexoTress` from the state.
    */
   selectDatosAnexoTres$ = this.select((state) => state.datosAnexoTress);
+
+  /**
+   * Observable selector for retrieving the `datosAnexoTress` property from the application state.
+   * 
+   * @returns An observable emitting the current value of `datosAnexoTress` from the state.
+   */
+  selectDatosAnexoTressDos$ = this.select((state) => state.datosAnexoTressDos);
 
   /**
    * Selecciona los datos del subcontratista del estado.

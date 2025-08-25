@@ -125,6 +125,12 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
    */
   public anexoTressFormGroup!: FormGroup;
 
+    /**
+   * Form group instance for managing the controls and validation of the "Anexo Uno" section.
+   * This FormGroup is used to encapsulate form fields and their validation logic within the component.
+   */
+  public anexoTressDosFormGroup!: FormGroup;
+
   /**
    * Constructor de la clase AnexoVistaDosYTresComponent.
    *
@@ -168,16 +174,44 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
         }
       });
     this.inicializarFormularioDatosSubcontratista();
-    this.obtenerDatosDelAlmacen()
+    this.obtenerDatosDelAlmacen();
+    this.inicializarFormularioDatosDosSubcontratista();
+    this.obtenerDatosDelAlmacenDos();
   }
 
 
+  /**
+   * Retrieves data from the store for "Anexo Tres" and updates the form group with the received values.
+   * 
+   * Subscribes to the `selectDatosAnexoTres$` observable from the query service, 
+   * listens until the component is destroyed, and sets the form group's value 
+   * with the emitted data. Also logs the received data to the console for debugging purposes.
+   *
+   * @remarks
+   * This method should be called to synchronize the form group with the latest data from the store.
+   */
   obtenerDatosDelAlmacen(): void {
     this.query.selectDatosAnexoTres$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datosAnexoTres) => {
-        console.log('datosAnexoTres', datosAnexoTres);
         this.anexoTressFormGroup.setValue(datosAnexoTres);
+      });
+  }
+
+
+    /**
+     * Retrieves data from the second storage (Almacen Dos) by subscribing to the `selectDatosAnexoTressDos$` observable.
+     * Updates the `anexoTressFormGroup` with the received data.
+     * The subscription is automatically unsubscribed when `destroyNotifier$` emits.
+     *
+     * @remarks
+     * This method is typically used to populate the form group with data from the store.
+     */
+    obtenerDatosDelAlmacenDos(): void {
+    this.query.selectDatosAnexoTressDos$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datosAnexoTres) => {
+        this.anexoTressDosFormGroup.setValue(datosAnexoTres);
       });
   }
 
@@ -188,6 +222,17 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
      */
   inicializarFormularioDatosSubcontratista(): void {
     this.anexoTressFormGroup = this.fb.group({
+      fraccionArancelaria: ['', [Validators.required, Validators.maxLength(10)]],
+      descripcion: ['', [Validators.required, Validators.maxLength(1000)]],
+    });
+  }
+
+    /**
+     * Inicializa el formulario de datos del subcontratista con los datos obtenidos o con valores vacíos si no hay datos disponibles.
+     * @method inicializarFormularioDatosSubcontratista
+     */
+  inicializarFormularioDatosDosSubcontratista(): void {
+    this.anexoTressDosFormGroup = this.fb.group({
       fraccionArancelaria: ['', [Validators.required, Validators.maxLength(10)]],
       descripcion: ['', [Validators.required, Validators.maxLength(1000)]],
     });
@@ -220,9 +265,19 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
      * @returns void
      */
   modifierComplimentos(complimentos: DatosAnexotressUno): void {
-    console.log('sddsss', complimentos);
     this.store.setDatosAnexoTres(complimentos);
   }
+
+/**
+     * Modifica los datos de los cumplimientos y los almacena en el estado.
+     *
+     * @param complimentos - Objeto de tipo `DatosComplimentos` que contiene los datos de los cumplimientos a actualizar.
+     * @returns void
+     */
+  modifierComplimentosDos(complimentos: DatosAnexotressUno): void {
+    this.store.setDatosAnexoTresDos(complimentos);
+  }
+
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.

@@ -101,6 +101,9 @@ export class AnexoDosYTresComponent implements OnInit {
   anexoTressDatos: EventEmitter<DatosAnexotressUno> =
     new EventEmitter<DatosAnexotressUno>(true);
 
+    @Output()
+  anexoTressDatosDos: EventEmitter<DatosAnexotressUno> =
+    new EventEmitter<DatosAnexotressUno>(true);
 
   @Input()
   /**
@@ -111,6 +114,15 @@ export class AnexoDosYTresComponent implements OnInit {
     this.anexoDosFormGroup.setValue(valor.value);
   }
 
+
+   @Input()
+  /**
+   * Establece el formulario de datos del subcontratista.
+   * @param valor - Formulario reactivo con los datos del subcontratista.
+   */
+  set formularioDatosDosSubcontratista(valor: FormGroup) {
+    this.anexoTresFormGroup.setValue(valor.value);
+  }
   /**
 * Notificador utilizado para manejar la destrucción o desuscripción de observables.
 * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
@@ -164,6 +176,12 @@ export class AnexoDosYTresComponent implements OnInit {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((_) => {
         this.anexoTressDatos.emit(this.anexoDosFormGroup.value);
+      });
+      this.anexoTresFormGroup.valueChanges
+      .pipe(delay(100))
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((_) => {
+        this.anexoTressDatosDos.emit(this.anexoTresFormGroup.value);
       });
 
   }

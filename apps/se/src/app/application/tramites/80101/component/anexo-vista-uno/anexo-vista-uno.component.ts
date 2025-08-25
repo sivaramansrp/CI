@@ -224,9 +224,24 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
    */
   public mostrarProveedorPorArchivoPopup: boolean = false;
 
+  /**
+   * Holds the complementary data for the first annex.
+   * 
+   * @type {DatosComplimento}
+   */
    datosAnexoUno!: DatosComplimento;
    
+/**
+ * Form group instance for managing the controls and validation of the "Anexo Uno" form.
+ * Used to handle form state, validation, and submission logic within the AnexoVistaUnoComponent.
+ */
  public anexoUnoFormGroup!: FormGroup;
+
+/**
+ * Form group instance for managing the controls and validation of the "Anexo Dos" section.
+ * Used to encapsulate form fields and their state within the Anexo Vista Uno component.
+ */
+ public anexoDosFormGroup!: FormGroup;
 
   /**
    * Constructor del componente AnexoVistaUnoComponent.
@@ -277,6 +292,8 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
       });
       this.inicializarFormularioDatosSubcontratista();
      this.obtenerDatosDelAlmacen();
+         this.inicializarFormularioDatosDosSubcontratista();
+     this.obtenerDatosDosDelAlmacen();
   }
 
 
@@ -291,10 +308,19 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
     this.query.selectDatosComplimentos$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datosComplimentos) => {
-        console.log('dssd', datosComplimentos);
         this.anexoUnoFormGroup.setValue(datosComplimentos);
       });
     }
+
+
+ obtenerDatosDosDelAlmacen(): void {
+    this.query.selectDatosComplimentosDos$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datosComplimentos) => {
+        this.anexoDosFormGroup.setValue(datosComplimentos);
+      });
+    }
+
 
   /**
    * Método para obtener la devolución de llamada del anexo Uno.
@@ -327,6 +353,17 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Inicializa el formulario de datos del subcontratista con los datos obtenidos o con valores vacíos si no hay datos disponibles.
+   * @method inicializarFormularioDatosSubcontratista
+   */
+  inicializarFormularioDatosDosSubcontratista(): void {
+    this.anexoDosFormGroup = this.fb.group({
+     fraccionArancelaria: ['', [Validators.required, Validators.maxLength(10)]],
+      descripcion: ['', [Validators.required, Validators.maxLength(1000)]],
+    });
+  }
+
 /**
    * Modifica los datos de los cumplimientos y los almacena en el estado.
    *
@@ -334,8 +371,17 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
    * @returns void
    */
   modifierComplimentos(complimentos: DatosComplimento): void {
-    console.log('complimentos', complimentos);
     this.store.setDatosComplimento(complimentos);
+  }
+
+  /**
+   * Modifica los datos de los cumplimientos y los almacena en el estado.
+   *
+   * @param complimentos - Objeto de tipo `DatosComplimentos` que contiene los datos de los cumplimientos a actualizar.
+   * @returns void
+   */
+  modifierDosComplimentos(complimentos: DatosComplimento): void {
+    this.store.setDatosComplimentoDos(complimentos);
   }
 
 

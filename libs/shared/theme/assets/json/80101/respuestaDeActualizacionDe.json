@@ -11,7 +11,7 @@
     },
     "obligacionesFiscales": {
       "opinionPositiva": "Sí",
-      "fechaExpedicion": "15/05/2025",
+      "fechaExpedicion": "05/05/2025",
       "aceptarObligacionFiscal": "Aceptado"
     },
     "formaModificaciones": {
@@ -277,6 +277,25 @@
     "fechaDelActa": "01/10/2025",
     "numeroDeNotaria": "456",
     "entidadFederativa": "1",
-    "municipioODelegacion": "1"
+    "municipioODelegacion": "1",
+    "estado":"1",
+    "estadoOptions":"1"
+  },
+  "datosComplimento":{
+    "fraccionArancelaria": "fraccionArancelar",
+    "descripcion": "descripcion test"
+  },
+  "datosComplementoDos":{
+    "fraccionArancelaria": "fraccionArance",
+    "descripcion": "descripcionXZS"
+  },
+  "datosAnexoTress":{
+    "fraccionArancelaria":"fraccionArancelari",
+  "descripcion": "descripcion CFRDFF"
+  },
+
+   "datosAnexoTressDos":{
+    "fraccionArancelaria":"fraccionArancelaria",
+  "descripcion": "descripcion test"
   }
 }

@@ -110,10 +110,21 @@ export interface Tramite80101State {
    */
   datosComplimento: DatosComplimento;
 
+  
+  /**
+   * Datos complementarios relacionados con el trámite.
+   */
+  datosComplimentoDos: DatosComplimento;
+
    /**
    * Datos complementarios relacionados con el trámite.
    */
   datosAnexoTress: DatosAnexotressUno;
+
+     /**
+   * Datos complementarios relacionados con el trámite.
+   */
+  datosAnexoTressDos: DatosAnexotressUno;
 
 
   /**
@@ -223,8 +234,16 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
     fraccionArancelaria: "",
     descripcion: "",
   },
+   datosComplimentoDos:{
+    fraccionArancelaria: "",
+    descripcion: "",
+  },
   datosAnexoTress:{
     fraccionArancelaria:"",
+  descripcion: ""
+  },
+  datosAnexoTressDos:{
+     fraccionArancelaria:"",
   descripcion: ""
   },
   datosComplimentos: {
@@ -605,6 +624,21 @@ export class Tramite80101Store extends Store<Tramite80101State> {
       return { ...state, datosComplimento: VALUE };
     });
   }
+
+  /**
+   * Actualiza el estado con los datos complementarios proporcionados.
+   *
+   * @param datosComplimentoDos - Objeto que contiene los datos complementarios a actualizar.
+   *
+   * Este método combina los datos existentes en el estado con los nuevos datos proporcionados
+   * y actualiza el estado con el resultado.
+   */
+  setDatosComplimentoDos(datosComplimentoDos: DatosComplimento): void {
+    this.update((state) => {
+      const VALUE = { ...state.datosComplimentoDos, ...datosComplimentoDos };
+      return { ...state, datosComplimentoDos: VALUE };
+    });
+  }
   /**
    * Establece los datos del subcontratista en el estado de la tienda.
    *
@@ -937,6 +971,13 @@ export class Tramite80101Store extends Store<Tramite80101State> {
     this.update((state) => {
       const VALUE = { ...state.datosAnexoTress, ...datosAnexoTress };
       return { ...state, datosAnexoTress: VALUE };
+    });
+  }
+
+setDatosAnexoTresDos(datosAnexoTressDos: DatosAnexotressUno): void {
+    this.update((state) => {
+      const VALUE = { ...state.datosAnexoTressDos, ...datosAnexoTressDos };
+      return { ...state, datosAnexoTressDos: VALUE };
     });
   }
 
