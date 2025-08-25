@@ -4,6 +4,7 @@ import { CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_M
 import { Component,ElementRef,EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, forwardRef } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
 import { CommonModule } from '@angular/common';
+import {EIGHT_DIGIT_NUMBER_REGEX} from '@ng-mf/data-access-user'
 import { FormularioSi } from '../../models/certificado-origen.model';
 import { Mercancia } from '../../models/modificacion.enum';
 import { Modal } from 'bootstrap';
@@ -443,7 +444,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
       si: [false],
       entidadFederativa: ['', [Validators.required, Validators.min(0)]],
   bloque: ['', [Validators.required, Validators.min(0)]],
-  fraccionArancelariaForm: ['', [Validators.maxLength(8)]],
+  fraccionArancelariaForm: ['', [Validators.maxLength(8),Validators.pattern(EIGHT_DIGIT_NUMBER_REGEX)]],
   registroProductoForm: ['', [Validators.maxLength(12)]],
   nombreComercialForm: ['', [Validators.maxLength(200)]],
   fechaInicioInput: [''],
@@ -570,6 +571,36 @@ ngOnChanges(changes: SimpleChanges):void {
    */
   tipoSeleccion(estado: Catalogo): void {
     this.paisBloquEvent.emit(estado);
+  }
+/**
+ * Validador personalizado para asegurar que la fecha de inicio no sea posterior a la fecha final.
+ *  * @param componente La instancia del componente que contiene el formulario.
+ * @returns Un objeto de errores de validación si la fecha de inicio es posterior a la fecha final, o null si no hay errores.
+ * @remarks
+ * Este validador se utiliza para validar un rango de fechas en un formulario reactivo de Angular.
+ * Asegura que la fecha de inicio no sea posterior a la fecha final.
+ * @command
+ * Utilice este validador en la configuración del formulario para aplicar la validación de rango de fechas.
+ * Por ejemplo, en el método `createForm()`, agregue `{ validators: CertificadoDeOrigenComponent.dateRangeValidator(this) }` al grupo del formulario.
+ * */
+  verificarRFCDos(): void {
+   
+    if ( this.formCertificado.get('fraccionArancelariaForm')?.errors?.['pattern']) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Datos incorrectos, favor de verificar.',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
+    else {
+     this.buscarMercancia();
+    }
   }
 
    /**
