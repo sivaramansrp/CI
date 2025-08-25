@@ -1,6 +1,6 @@
 
+import { AlertComponent, ConfiguracionColumna, Notificacion } from '@ng-mf/data-access-user';
 import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { ConfiguracionColumna, Notificacion } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { PARTIDASDELAMERCANCIA_TABLA, TEXTOS } from '../../constantes/partidas-de-la-mercancia.enum';
 import { CommonModule } from '@angular/common';
@@ -25,7 +25,8 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     ReactiveFormsModule,
     TituloComponent,
     TablaDinamicaComponent,
-    TooltipModule
+    TooltipModule,
+    AlertComponent
   ],
   templateUrl: './partidas-de-la-mercancia.component.html',
   styleUrl: './partidas-de-la-mercancia.component.scss',
@@ -132,7 +133,7 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    * Nombre del archivo seleccionado por el usuario.
    */
   nombreArchivoSeleccionado: string = '';
-  
+
   /**
    * Constructor para inicializar el componente e inyectar dependencias.
    * FormBuilder para crear formularios reactivos.
@@ -252,17 +253,9 @@ enviarArchivo(): void {
   }
   this.mostrarNotificacion = false;
   const MODAL = document.getElementById('modalCargarArchivo');
-  if (MODAL) {
-    const MODAL_INSTANCE = window['bootstrap']?.Modal?.getInstance(MODAL);
-    if (MODAL_INSTANCE) {
-      MODAL_INSTANCE.hide();
-    } else {
-      (MODAL).classList.remove('show');
-      (MODAL).style.display = 'none';
-      document.body.classList.remove('modal-open');
-    }
-    const BACKDROPS = document.querySelectorAll('.modal-backdrop');
-    BACKDROPS.forEach(backdrop => backdrop.parentNode?.removeChild(backdrop));
+  if (MODAL && window['bootstrap']?.Modal) {
+    const MODAL_INSTANCE = window['bootstrap'].Modal.getInstance(MODAL) || new window['bootstrap'].Modal(MODAL);
+    MODAL_INSTANCE.hide();
   }
 }
   /**
