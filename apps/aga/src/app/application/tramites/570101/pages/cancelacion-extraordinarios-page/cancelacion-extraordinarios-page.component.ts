@@ -82,18 +82,6 @@ export class CancelacionExtraordinariosPageComponent {
   public folio: string = '';
 
   /**
-   * Se ejecuta después de que las vistas del componente han sido inicializadas.
-   * Aquí se pueden realizar suscripciones a cambios en los formularios hijos.
-   */
-  // ngAfterViewInit(): void { debugger;
-  //   this.cancelarSolicitudComp?.formCancelorSolicitud
-  //     .get('folioSVEX')
-  //     ?.valueChanges.subscribe((val: string) => {
-  //       this.folio = val || '';
-  //     });
-  // }
-
-  /**
    * Almacena temporalmente la acción del usuario mientras se valida.
    * Se utiliza para ejecutar la navegación después de la confirmación modal.
    */
