@@ -253,7 +253,7 @@
         <div class="col-md-12">
             <div class="alert alert-info">
                 <input class="form-check-input" type="checkbox" [id]="'manifiesto-' + i"
-                    [value]="manifiesto.declaracion.clave" [checked]="seleccionadaManifiesto.value[i]" class="required"
+                    [value]="manifiesto.declaracion.clave" [checked]="seleccionadaManifiesto.value[i]" class="required"  [disabled]="esFormularioSoloLectura"
                     (change)="onManifiestoCheckboxCambiar($event, i)" />
                 <div class="manifiesto-descripcion">
                     <label>* {{manifiesto.declaracion.descripcion}}</label>

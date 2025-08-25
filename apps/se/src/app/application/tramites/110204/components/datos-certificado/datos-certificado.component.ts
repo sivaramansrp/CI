@@ -186,9 +186,6 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
             if (this.formDatosCertificado.valid || (ES_VALIDO_EL_FORM)) {
               FORMAS_VALIDADAS[SECCION] = true;
               this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
-            } else {
-              FORMAS_VALIDADAS[SECCION] = false;
-              this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
             }
           })
         )
@@ -310,6 +307,23 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
           console.error('Error al cargar los estados:', error);
         }
       );
+  }
+
+   /**
+   * @method validarFormularioDatos
+   * @description
+   * Valida el formulario de datos del certificado.
+   * Retorna `true` si el formulario es válido, de lo contrario marca todos los controles como tocados y retorna `false`.
+   * Se utiliza para mostrar los errores de validación en la interfaz cuando el formulario no cumple con los requisitos.
+   *
+   * @returns {boolean} Indica si el formulario de datos del certificado es válido.
+   */
+  validarFormularioDatos(): boolean {
+    if (this.formDatosCertificado.valid) {
+      return true;
+    }
+    this.formDatosCertificado.markAllAsTouched();
+    return false
   }
 
   /**
