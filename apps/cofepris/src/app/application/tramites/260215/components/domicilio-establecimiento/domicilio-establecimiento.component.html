@@ -473,9 +473,9 @@
 </div>
             </div>
           <div class="form-group">
-            <app-catalogo-select [catalogo]="estado" [label]="'UMC'" formControlName="UMC"   [required]="true"  name="Unidad de medida de comercialización"
-             [tooltipQuestionCircle]="true" [mostrarErrores]="false"
-           [isDisabled]="esFormularioSoloLectura"
+            <app-catalogo-select [catalogo]="estado" [label]="'UMC'" formControlName="UMC"   [required]="true" 
+             [tooltipQuestionCircle]="true" [tooltipQuestionCircleText]="'Unidad de medida de comercialización'" [mostrarErrores]="false"
+             name="UMC"  [isDisabled]="esFormularioSoloLectura"
               (change)="setValoresStore(formMercancias, 'UMC', 'setUMC')"></app-catalogo-select>
               <div class="mensaje-error" *ngIf="formMercancias.get('UMC')?.invalid && formMercancias.get('UMC')?.touched">
                 <span *ngIf="formMercancias.get('UMC')?.errors?.['required']">
