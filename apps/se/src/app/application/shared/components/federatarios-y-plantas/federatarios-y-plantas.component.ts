@@ -339,6 +339,7 @@ export class FederatariosYPlantasComponent implements OnInit {
   aggregarDatos(): void {
     if (this.federatariosFormGroup.invalid) {
       this.agregarUnoModal();
+      this.federatariosFormGroup.markAllAsTouched();
       return;
     }
     this.datosFormaFedratario.emit(this.federatariosFormGroup.value);
