@@ -866,3 +866,11 @@ export const EMAIL = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/i;
  * - ejemplo.com/ruta
  */
 export const WEBPAGE = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+/*
+  * Expresión regular para validar un número de 8 dígitos.
+  * Esta expresión asegura que la cadena contenga exactamente 8 dígitos numéricos (0-9).
+  * Ejemplos válidos: "12345678", "00000001"
+  *   
+  * Ejemplos no válidos: "1234567" (menos de 8 dígitos), "123456789" (más de 8 dígitos), "1234abcd" (contiene letras)
+  */
+ export const EIGHT_DIGIT_NUMBER_REGEX = /^\d{8}$/;

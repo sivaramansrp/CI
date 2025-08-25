@@ -334,7 +334,9 @@
                     'formCertificado',
                   'fraccionArancelariaForm',
                   'setFormCertificadoGenric')"
-                    id="fracciónArancelaria">
+                    id="fracciónArancelaria"
+                >
+                    
             </div>
               @if(formCertificado.controls['fraccionArancelariaForm'].invalid && (formCertificado.controls['fraccionArancelariaForm'].touched || formCertificado.controls['fraccionArancelariaForm'].dirty)) {
     <div class="d-grid">
@@ -412,7 +414,7 @@
 
         @if(mercanciasDisponibles){
             <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-                <button class="btn btn-primary"  (click)="buscarMercancia()" [disabled]="esFormularioSoloLectura">Buscar mercancías</button>
+                <button class="btn btn-primary" (click)="verificarRFCDos()"   [disabled]="esFormularioSoloLectura">Buscar mercancías</button>
             </div>
         } @else {
             <div class="col-12 d-flex justify-content-end mt-3 mb-4">
