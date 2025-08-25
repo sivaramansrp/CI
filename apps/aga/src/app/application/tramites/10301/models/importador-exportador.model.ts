@@ -162,9 +162,6 @@ export interface RespuestaCatalog {
 
     /** Número de serie de la mercancía. */
     serie: string;
-    
-    /** Identificador de la aduana asociada a la mercancía. */
-    condicionMercancia: string;
 
     /** Datos de la mercancía, incluyendo fines, tipo, uso, condición, marca, año, modelo y serie. */
     mercanciaDatos: DatosMercancia[];

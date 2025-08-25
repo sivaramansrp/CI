@@ -703,19 +703,34 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Agregar mercancia.
    */
   agregarMercancia(): void {
-    this.importarExportar.agregarMercancia().pipe(takeUntil(this.destroyNotifier$)).subscribe(
-      (respuesta) => {
-        if (respuesta?.success) {
-          respuesta.datos.id = this.mercanciaDatos.length + 1;
-          this.mercanciaDatos = [...this.mercanciaDatos, respuesta.datos];
-          (this.store.setDatosMercancia as (valor: DatosMercancia[]) => void)(this.mercanciaDatos);
-          this.agregarMercanciasForm.reset();
-          this.agregarMercanciasForm.markAsUntouched();
-          this.agregarMercanciasForm.markAsPristine();
-          this.cerrarModal();
+    console.log('Aduana catalogos:', this.aduana?.catalogos);
+    console.log('Condicion catalogos:', this.condicion?.catalogos);
+    console.log('Ano catalogos:', this.ano?.catalogos);
+    console.log('Pais catalogos:', this.pais?.catalogos);
+    console.log('SelectRangoDias:', this.selectRangoDias);
+    console.log('SelectRangoDias:', this.agregarMercanciasForm);
+    console.log('SelectRangoDias:', this.agregarMercanciasForm.valid);
+    if (this.agregarMercanciasForm.valid) {
+      this.importarExportar.agregarMercancia().pipe(takeUntil(this.destroyNotifier$)).subscribe(
+        (respuesta) => {
+          if (respuesta?.success) {
+            respuesta.datos.id = this.mercanciaDatos.length + 1;
+            this.mercanciaDatos = [...this.mercanciaDatos, respuesta.datos];
+            (this.store.setDatosMercancia as (valor: DatosMercancia[]) => void)(this.mercanciaDatos);
+            this.agregarMercanciasForm.reset();
+            this.agregarMercanciasForm.markAsUntouched();
+            this.agregarMercanciasForm.markAsPristine();
+            this.cerrarModal();
+            // if (this.modalConfirmacion) {
+            //   const MODEL = new Modal(this.modalConfirmacion.nativeElement);
+            //   MODEL.show();
+            // }
+          }
         }
-      }
-    );
+      );
+    } else {
+      this.agregarMercanciasForm.markAllAsTouched();
+    }
   }
 
   /**
@@ -743,6 +758,16 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    */
   get fechasSeleccionadas(): FormArray {
     return this.tramiteForm.get('fechasSeleccionadas') as FormArray;
+  }
+
+  /**
+   * Verifica si el control del formulario es inválido y ha sido tocado.
+   * @param {string} id El nombre del control del formulario.
+   * @returns {boolean} `true` si el control es inválido y tocado, `null` si no existe el control.
+   */
+  isInvalid(id: string): boolean {
+    const CONTROL = this.agregarMercanciasForm.get(id);
+    return CONTROL ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) : false;
   }
 
   /**

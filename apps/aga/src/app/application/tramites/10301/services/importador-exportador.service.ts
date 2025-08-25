@@ -56,8 +56,6 @@ export class ImportadorExportadorService {
   getCondicion(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(
       'assets/json/10301/condicion.json'
-    ).pipe(
-      tap(response => this.store.setCondicion(response.data))
     );
   }
 
