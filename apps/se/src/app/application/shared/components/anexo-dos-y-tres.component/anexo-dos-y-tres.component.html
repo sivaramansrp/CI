@@ -82,7 +82,7 @@
                 (listaDeFilaSeleccionada)="setAnexoTresLista($event)"
                 [disableSeleccionTablaCheckBox]="formularioDeshabilitado"></app-tabla-dinamica>
         </div>
-        <button class="btn btn-primary mt-5 pull-right">Guardar</button>
+        <button class="btn btn-primary mt-5 pull-right"  [disabled]="formularioDeshabilitado">Guardar</button>
     </form>
 </div>
 @if (nuevaDosNotificacion && nuevaDosNotificacion.cerrar) {
