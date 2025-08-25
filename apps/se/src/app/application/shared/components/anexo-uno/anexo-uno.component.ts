@@ -4,6 +4,7 @@ import {
   AnexoDosEncabezado,
   AnexoUnoConfiguartion,
   AnexoUnoEncabezado,
+  DatosComplimento,
   RutaNombre,
 } from '../../models/nuevo-programa-industrial.model';
 import { Component, OnInit } from '@angular/core';
@@ -18,6 +19,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
+import { delay, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-anexo-uno',
@@ -63,6 +65,14 @@ export class AnexoUnoComponent implements OnInit {
   @Input() formularioDeshabilitado: boolean = false;
 
   /**
+    * Notificador utilizado para manejar la destrucción o desuscripción de observables.
+    * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
+    *
+    * @property {Subject<void>} destroyNotifier$
+    */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
    * Evento para devolver la llamada del Anexo Uno
    */
   @Output() obtenerAnexoUnoDevolverLaLlamada: EventEmitter<
@@ -83,6 +93,35 @@ export class AnexoUnoComponent implements OnInit {
   @Output() rutaLaFraccionDeComplemento: EventEmitter<RutaNombre> =
     new EventEmitter<RutaNombre>();
 
+
+
+  /**
+   * Emits events containing `DatosComplimento` data to notify parent components of changes or updates.
+   * 
+   * @remarks
+   * This `EventEmitter` is used to communicate from the child component to its parent, typically when
+   * the `DatosComplimento` data has been modified or needs to be sent upwards in the component hierarchy.
+   *
+   * @eventProperty
+   * @type {EventEmitter<DatosComplimento>}
+   */
+  @Output()
+  complimentosDatos: EventEmitter<DatosComplimento> =
+    new EventEmitter<DatosComplimento>(true);
+
+  /**
+   * Emits events containing `DatosComplimento` data when relevant changes occur.
+   * 
+   * @remarks
+   * This output can be subscribed to by parent components to receive updates.
+   *
+   * @eventProperty
+   */
+  @Output()
+  complimentosDatosDos: EventEmitter<DatosComplimento> =
+    new EventEmitter<DatosComplimento>(true);
+
+
   /**
    * Datos seleccionados de importación
    * @property {AnexoDosEncabezado | AnexoUnoEncabezado} datosImportacionSeleccionados
@@ -90,6 +129,26 @@ export class AnexoUnoComponent implements OnInit {
   public datosImportacionSeleccionados!:
     | AnexoDosEncabezado
     | AnexoUnoEncabezado;
+
+
+  @Input()
+  /**
+   * Establece el formulario de datos del subcontratista.
+   * @param valor - Formulario reactivo con los datos del subcontratista.
+   */
+  set formularioDatosSubcontratista(valor: FormGroup) {
+    this.anexoUnoFormGroup.setValue(valor.value);
+  }
+
+
+  @Input()
+  /**
+   * Establece el formulario de datos del subcontratista.
+   * @param valor - Formulario reactivo con los datos del subcontratista.
+   */
+  set formularioDatosSubcontratistaDos(valor: FormGroup) {
+    this.anexoDosFormGroup.setValue(valor.value);
+  }
 
   /**
    * Datos seleccionados de exportación
@@ -122,23 +181,23 @@ export class AnexoUnoComponent implements OnInit {
     this.crearFormularioAnexoDos();
   }
 
-    /**
-   * Abre un modal con una notificación configurada para confirmar una acción de eliminación.
-   * 
-   * Este método inicializa un objeto de notificación con los siguientes parámetros:
-   * - `tipoNotificacion`: Define el tipo de notificación como "alerta".
-   * - `categoria`: Establece la categoría de la notificación como "peligro".
-   * - `modo`: Configura el modo de la notificación como "acción".
-   * - `titulo`: Campo para el título de la notificación (vacío por defecto).
-   * - `mensaje`: Mensaje que se muestra en la notificación, en este caso,
-   *   pregunta si el usuario está seguro de que desea eliminar.
-   * - `cerrar`: Indica si la notificación puede cerrarse manualmente (true).
-   * - `tiempoDeEspera`: Tiempo en milisegundos antes de que la notificación desaparezca automáticamente (2000 ms).
-   * - `txtBtnAceptar`: Texto del botón de aceptación ("Aceptar").
-   * - `txtBtnCancelar`: Texto del botón de cancelación (vacío por defecto).
-   * 
-   * @returns {void} Este método no devuelve ningún valor.
-   */
+  /**
+ * Abre un modal con una notificación configurada para confirmar una acción de eliminación.
+ * 
+ * Este método inicializa un objeto de notificación con los siguientes parámetros:
+ * - `tipoNotificacion`: Define el tipo de notificación como "alerta".
+ * - `categoria`: Establece la categoría de la notificación como "peligro".
+ * - `modo`: Configura el modo de la notificación como "acción".
+ * - `titulo`: Campo para el título de la notificación (vacío por defecto).
+ * - `mensaje`: Mensaje que se muestra en la notificación, en este caso,
+ *   pregunta si el usuario está seguro de que desea eliminar.
+ * - `cerrar`: Indica si la notificación puede cerrarse manualmente (true).
+ * - `tiempoDeEspera`: Tiempo en milisegundos antes de que la notificación desaparezca automáticamente (2000 ms).
+ * - `txtBtnAceptar`: Texto del botón de aceptación ("Aceptar").
+ * - `txtBtnCancelar`: Texto del botón de cancelación (vacío por defecto).
+ * 
+ * @returns {void} Este método no devuelve ningún valor.
+ */
   abrirUnoModal(): void {
     this.nuevaUnoNotificacion = {
       tipoNotificacion: 'alert',
@@ -184,17 +243,31 @@ export class AnexoUnoComponent implements OnInit {
       txtBtnCancelar: '',
     };
   }
-  
+
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * Si el formulario está deshabilitado (`formularioDeshabilitado` es verdadero),
    * deshabilita los grupos de formularios `anexoUnoFormGroup` y `anexoDosFormGroup`.
    */
   ngOnInit(): void {
-        if (this.formularioDeshabilitado) {
+    if (this.formularioDeshabilitado) {
       this.anexoUnoFormGroup.disable();
       this.anexoDosFormGroup.disable();
     }
+    this.anexoUnoFormGroup.valueChanges
+      .pipe(delay(100))
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((_) => {
+        this.complimentosDatos.emit(this.anexoUnoFormGroup.value);
+      });
+
+    this.anexoDosFormGroup.valueChanges
+      .pipe(delay(100))
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((_) => {
+        this.complimentosDatosDos.emit(this.anexoDosFormGroup.value);
+      });
+
   }
 
   /**
