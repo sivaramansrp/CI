@@ -50,7 +50,7 @@
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="pantallasActionService.fraccionArancelaria" formControlName="fraccionArancelaria"
           [label]="'Fracción arancelaria'" [required]="true" name="fraccionArancelaria" [isDisabled]="esFormularioSoloLectura"
-          (change)="fraccionArancelariaSeleccion()"></app-catalogo-select>
+          (change)="fraccionArancelariaSeleccion()" [placeholder]="'Seleccione una opción'"></app-catalogo-select>
       </div>
       <div class="col-md-8">
         <div class="form-group">
@@ -100,7 +100,7 @@
             Eliminar
           </button>
           <button type="button" name="agregarListaDeNumeros" class="btn btn-primary ms-2" (click)="agregarListaDeNumeros()"
-            [disabled]="!formSolicitud.get('numeroCas')?.value || !formSolicitud.get('fraccionArancelaria')?.value">
+            >
             Agregar
           </button>
         </div>

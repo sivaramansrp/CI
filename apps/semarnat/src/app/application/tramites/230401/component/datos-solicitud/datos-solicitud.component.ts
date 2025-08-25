@@ -1289,10 +1289,10 @@ buscarRepresentanteRfc(): void {
  * @returns boolean indicating if quantity is <= 400
  */
 isCantidadMenorOIgualA400(): boolean {
-  const cantidad = this.formSolicitud.get('cantidad')?.value;
-  if (cantidad) {
-    const cantidadNumerica = parseFloat(cantidad);
-    return !isNaN(cantidadNumerica) && cantidadNumerica <= 400;
+  const CANTIDAD = this.formSolicitud.get('cantidad')?.value;
+  if (CANTIDAD) {
+    const CANTIDAD_NUMERICA = parseFloat(CANTIDAD);
+    return !isNaN(CANTIDAD_NUMERICA) && CANTIDAD_NUMERICA <= 400;
   }
   return false;
 }
@@ -1302,10 +1302,10 @@ isCantidadMenorOIgualA400(): boolean {
  * @returns boolean indicating if quantity is > 400
  */
 isCantidadMayorA400(): boolean {
-  const cantidad = this.formSolicitud.get('cantidad')?.value;
-  if (cantidad) {
-    const cantidadNumerica = parseFloat(cantidad);
-    return !isNaN(cantidadNumerica) && cantidadNumerica > 400;
+  const CANTIDAD = this.formSolicitud.get('cantidad')?.value;
+  if (CANTIDAD) {
+    const CANTIDAD_NUMERICA = parseFloat(CANTIDAD);
+    return !isNaN(CANTIDAD_NUMERICA) && CANTIDAD_NUMERICA > 400;
   }
   return false;
 }
