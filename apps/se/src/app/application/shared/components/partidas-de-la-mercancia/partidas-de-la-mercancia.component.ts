@@ -128,6 +128,8 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    * Utilizado para acceder y manipular directamente el elemento en la plantilla.
    */
   @ViewChild('archivoNacionales') archivoNacionalesElemento!: ElementRef;
+
+  @ViewChild('cargarArchivo') cargarArchivoElemento!: ElementRef;		
  
   /**
    * Nombre del archivo seleccionado por el usuario.
@@ -239,7 +241,15 @@ validarModificarPartida(): void {
     }
   }
 }
+/*
 
+*/
+/**
+ * Método que gestiona la carga de un archivo desde un input HTML. 
+ * Verifica que el archivo seleccionado exista y que su extensión sea `.csv`. 
+ * Si no se selecciona ningún archivo o la extensión no es válida, muestra una notificación de error.
+ * Si el archivo es válido, oculta la notificación y cierra el modal de carga.
+ */
 enviarArchivo(): void {
   const INPUT_FILE = document.getElementById('archivoNacionales') as HTMLInputElement;
   if (!INPUT_FILE || !INPUT_FILE.files || INPUT_FILE.files.length === 0) {
@@ -252,11 +262,7 @@ enviarArchivo(): void {
     return;
   }
   this.mostrarNotificacion = false;
-  const MODAL = document.getElementById('modalCargarArchivo');
-  if (MODAL && window['bootstrap']?.Modal) {
-    const MODAL_INSTANCE = window['bootstrap'].Modal.getInstance(MODAL) || new window['bootstrap'].Modal(MODAL);
-    MODAL_INSTANCE.hide();
-  }
+  this.cerrarCargarArchivoModal();
 }
   /**
    * Maneja el evento de selección de archivo y actualiza el nombre del archivo seleccionado.
@@ -270,4 +276,31 @@ enviarArchivo(): void {
       this.nombreArchivoSeleccionado = '';
     }
   }
+
+  /*
+   * Abre el modal para cargar un archivo.
+   */
+  abrirCargarArchivoModal(): void {
+  if (this.cargarArchivoElemento && this.cargarArchivoElemento.nativeElement) {
+      const MODAL_INSTANCIA = new Modal(
+        this.cargarArchivoElemento?.nativeElement,
+        { backdrop: false }
+      );
+      MODAL_INSTANCIA.show();
+    }
+}
+/*
+ * Cierra el modal para cargar un archivo.
+ */
+cerrarCargarArchivoModal(): void {
+  if (this.cargarArchivoElemento && this.cargarArchivoElemento.nativeElement) {
+    const MODAL_INSTANCIA = Modal.getInstance(
+      this.cargarArchivoElemento.nativeElement
+    );
+    if (MODAL_INSTANCIA) {
+      MODAL_INSTANCIA.hide();
+    }
+  }
+}
+
 }

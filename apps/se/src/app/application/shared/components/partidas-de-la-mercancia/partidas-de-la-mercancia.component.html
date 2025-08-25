@@ -97,8 +97,9 @@
             <div class="col-md-8"></div>
             <div class="col-md-4 text-end">
                <div class="btn-group">
-                  <button class="btn btn-primary me-2" type="button" data-bs-toggle="modal"
-                     data-bs-target="#modalCargarArchivo" [disabled]="esFormularioSoloLectura">
+                  <button class="btn btn-primary me-2" type="button"  
+                  [disabled]="esFormularioSoloLectura"
+                  (click)="abrirCargarArchivoModal()">
                   Cargar archivo
                   </button>
                   <button class="btn btn-primary ms-2" (click)="validarYEnviarFormulario()" [disabled]="esFormularioSoloLectura">
@@ -110,56 +111,70 @@
       </div>
    </form>
    <!-- modal start-->
-   <div #modalRef class="modal fade test-modal" id="modalCargarArchivo" tabindex="-1"
-      aria-hidden="true"
-      data-bs-backdrop="static">
-      <div class="modal-dialog modal-dialog-centered modal-xl">
-         <div class="modal-content">
-            <div class="modal-body">
-               <div class="row">
-                  <div class="container mt-4">
-                   <div *ngIf="mostrarNotificacion" class="col-md-12">
-                     <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
-                  </div>
-                     <ng-titulo titulo="Cargar archivo"> </ng-titulo>
-                  
-                     <div class="row align-items-center mb-3">
-                        <div class="col-md-3">
-                           <label for="archivoNacionales" class="form-label mb-0 me-3">Archivo:</label>
-                        </div>
-                     </div>
-                  
-                     <div class="row align-items-center mb-3">
-                        <div class="col-md-6 d-flex align-items-center">
-                           <input type="file" id="archivoNacionales" class="d-none" (change)="archivoSeleccionado($event)" #archivoNacionalesElemento />
 
-                           <div class="input-group w-100">
-                              <button type="button" (click)="archivoNacionalesElemento?.click()">
-                                 Seleccionar archivo
-                              </button>
-                              <input type="text" class="form-control" [value]="nombreArchivoSeleccionado || 'Sin archivos seleccionados'" readonly
-                                 style="background-color: #fff; cursor: default;" />
-                           </div>
+   <div
+                            class="modal fade custom-backdrop"
+                            id="cargarArchivo"
+                            tabindex="-1"
+                            aria-labelledby="cargarArchivoLabel"
+                            aria-hidden="true"
+                            data-bs-focus="false"
+                            data-backdrop="false" 
+                            #cargarArchivo
+                            >
+                            <div class="modal-dialog modal-dialog-centered modal-xl">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h4 class="modal-title mt-0"></h4>
+                                  </div>
+                                  <div class="modal-body">
+                                        <div class="modal-body">
+										   <div class="row">
+											  <div class="container mt-4">
+											   <div *ngIf="mostrarNotificacion" class="col-md-12">
+												 <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+											  </div>
+												 <ng-titulo titulo="Cargar archivo"> </ng-titulo>
+											  
+												 <div class="row align-items-center mb-3">
+													<div class="col-md-3">
+													   <label for="archivoNacionales" class="form-label mb-0 me-3">Archivo:</label>
+													</div>
+												 </div>
+											  
+												 <div class="row align-items-center mb-3">
+													<div class="col-md-6 d-flex align-items-center">
+													   <input type="file" id="archivoNacionales" class="d-none" (change)="archivoSeleccionado($event)" #archivoNacionalesElemento />
+
+													   <div class="input-group w-100">
+														  <button type="button" (click)="archivoNacionalesElemento?.click()">
+															 Seleccionar archivo
+														  </button>
+														  <input type="text" class="form-control" [value]="nombreArchivoSeleccionado || 'Sin archivos seleccionados'" readonly
+															 style="background-color: #fff; cursor: default;" />
+													   </div>
+													</div>
+												 </div>
+											  </div>
+										   </div>
+										</div>
+                                    <footer class="footer d-flex py-5 gap-3 justify-content-end">
+                                        <div class="row btn-row">
+                                       <div class="btn-group">
+                                          <button type="button" id="cancelarCHN" name="cancelar" class="btn btn-primary cancel me-2"
+                                             data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">
+                                          Cerrar
+                                          </button>
+                                          <button type="button" class="btn btn-primary ms-2" [disabled]="esFormularioSoloLectura" (click)="enviarArchivo()">Enviar</button>
+                                       </div>
+									         </div>
+                                    </footer>
+                                  </div>
+                              </div>
+                            </div>
                         </div>
-                     </div>
-                  </div>
-               </div>
-               <div class="row btn-row">
-                  <div class="col-md-7"></div>
-                  <div class="col-md-4 text-end">
-                     <div class="btn-group">
-                        <button type="button" id="cancelarCHN" name="cancelar" class="btn btn-primary cancel me-2"
-                           data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">
-                        Cerrar
-                        </button>
-                        <button type="button" class="btn btn-primary ms-2" [disabled]="esFormularioSoloLectura" (click)="enviarArchivo()">Enviar</button>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </div>
-   </div>
+
+   
    <!-- modal end -->
    <div class="row">
       <div>
