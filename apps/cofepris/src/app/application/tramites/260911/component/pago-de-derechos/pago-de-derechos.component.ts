@@ -273,7 +273,15 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    */
   public validarLongitudMaxima(controlName: string, maxLength: number): void {
     const CONTROL = this.pagoDeDerechosForm.get(controlName);
-    if (CONTROL && CONTROL.value && CONTROL.value.length >= maxLength) {
+    if (CONTROL) {
+      if (CONTROL.value && CONTROL.value.length > maxLength) {
+        CONTROL.setErrors({ ...CONTROL.errors, longitudMaxima: true });
+      } else {
+        if (CONTROL.errors) {
+          const { longitudMaxima: LONGITUD_MAXIMA, ...OTHER_ERRORS } = CONTROL.errors;
+          CONTROL.setErrors(Object.keys(OTHER_ERRORS).length ? OTHER_ERRORS : null);
+        }
+      }
       CONTROL.markAsTouched();
       CONTROL.markAsDirty();
     }

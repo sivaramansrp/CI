@@ -328,6 +328,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, AfterViewInit, OnDes
       ],
     });
 
+      // Marcar como touched si no está seleccionado para mostrar el mensaje de error desde el inicio
+      if (!this.solicitudState.btonDeRadio) {
+        this.form.get('btonDeRadio')?.markAsTouched();
+      }
+
     // Verificar si hay un valor inicial en el radio button
     this.isRadioButtonSelected = Boolean(this.solicitudState.btonDeRadio);
     // Suscribirse a cambios en el radio button
