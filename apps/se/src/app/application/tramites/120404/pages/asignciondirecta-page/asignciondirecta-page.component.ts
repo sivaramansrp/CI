@@ -13,11 +13,11 @@ import { ListaPasosWizard } from '@ng-mf/data-access-user';
 
 interface AccionBoton {
   /**
-   * The action to be performed.
+   * La acción a realizar.
    */
   accion: string;
   /**
-   * The value associated with the action.
+   * El valor asociado con la acción.
    */
   valor: number;
 }
@@ -39,7 +39,7 @@ export class AsignciondirectaPageComponent {
   indice: number = 1;
 
   /**
-   * The data for the steps in the wizard.
+   * Los datos para los pasos del wizard.
    */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
@@ -54,24 +54,26 @@ export class AsignciondirectaPageComponent {
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
-   * Property to show/hide the search error message
+   * Propiedad para mostrar/ocultar el mensaje de error de búsqueda
    */
   public showBuscarError = false;
 
   /**
-   * Method to handle the search attempt event from child components.
-   * It sets the `showBuscarError` property based on the submitted and invalid state of the form.
+   * Método para manejar el evento de intento de búsqueda desde componentes hijos.
+   * Establece la propiedad `showBuscarError` según el estado de enviado e inválido del formulario.
    *
-   * @param {Object} event - The event object containing `submitted` and `invalid` properties.
+   * @param {Object} event - El objeto de evento que contiene las propiedades `submitted` e `invalid`.
    */
   onBuscarIntento(event: {submitted: boolean, invalid: boolean}): void {
     this.showBuscarError = event.submitted && event.invalid;
   }
 
+  /**
+   * Maneja la acción del botón de navegación en el wizard.
+   * @param e - Objeto que contiene la acción y el valor asociado.
+   */
   public getValorIndice(e: AccionBoton): void {
-    // Clear errors when navigating
-    this.showBuscarError = false;
-    
+   this.showBuscarError = false;
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

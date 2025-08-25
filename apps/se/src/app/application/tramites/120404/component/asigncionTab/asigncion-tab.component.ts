@@ -131,17 +131,17 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Custom validator to check if the value is a valid number
-   * @param control - The form control to validate
-   * @returns ValidationErrors or null
+   * Validador personalizado para comprobar si el valor es un número válido
+   * @param control - El control de formulario a validar
+   * @returns ValidationErrors o null
    */
   private static numeroValidoValidator(control: AbstractControl): ValidationErrors | null {
     if (!control.value) {
-      return null; // Don't validate empty values, let required validator handle it
+      return null; // No validar valores vacíos, dejar que el validador 'required' lo maneje
     }
     
     const VALUE = control.value.toString().trim();
-    const ISVALIDNUMBER = /^\d+$/.test(VALUE); // Only allows digits
+    const ISVALIDNUMBER = /^\d+$/.test(VALUE); // Solo permite dígitos
 
     if (!ISVALIDNUMBER) {
       return { 
@@ -213,8 +213,8 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Gets the error message for numTramite field
-   * @returns string with the appropriate error message
+   * Obtiene el mensaje de error para el campo numTramite
+   * @returns cadena con el mensaje de error correspondiente
    */
   getNumTramiteErrorMessage(): string {
     const CONTROL = this.asignacionForm.get('numTramite');
@@ -273,9 +273,7 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
   buscar(): void {
     this.submitted = true;
     const FORM = this.asignacionForm;
-    
-    // Emit the search attempt event
-    this.buscarIntento.emit({
+      this.buscarIntento.emit({
       submitted: this.submitted,
       invalid: FORM.invalid
     });
