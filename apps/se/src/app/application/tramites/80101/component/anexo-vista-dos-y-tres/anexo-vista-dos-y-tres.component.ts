@@ -1,7 +1,8 @@
+import { AnexoEncabezado, DatosAnexotressUno } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { Component, Input } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ANEXO_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { AnexoDosYTresComponent } from '../../../../shared/components/anexo-dos-y-tres.component/anexo-dos-y-tres.component';
-import { AnexoEncabezado, DatosAnexotressUno } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { CommonModule } from '@angular/common';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -10,7 +11,6 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
 import { takeUntil } from 'rxjs';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 /**
  * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -113,21 +113,21 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Holds the data for the first annex section of the "Anexo Tres" form.
-   * 
+   * Almacena los datos para la primera sección del anexo "Anexo Tres" en el formulario.
+   *
    * @type {DatosAnexotressUno}
    */
   datosAnexoUno!: DatosAnexotressUno;
 
-  /**
-   * Form group instance for managing the controls and validation of the "Anexo Uno" section.
-   * This FormGroup is used to encapsulate form fields and their validation logic within the component.
+    /**
+   * Instancia del grupo de formulario para gestionar los controles y validación de la sección "Anexo Tres".
+   * Este FormGroup se utiliza para encapsular los campos del formulario y su lógica de validación
    */
   public anexoTressFormGroup!: FormGroup;
 
     /**
-   * Form group instance for managing the controls and validation of the "Anexo Uno" section.
-   * This FormGroup is used to encapsulate form fields and their validation logic within the component.
+   * Instancia del grupo de formulario para gestionar los controles y validación de la sección "Anexo Tres".
+   * Este FormGroup se utiliza para encapsular los campos del formulario y su lógica de validación
    */
   public anexoTressDosFormGroup!: FormGroup;
 
@@ -200,12 +200,12 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
 
 
     /**
-     * Retrieves data from the second storage (Almacen Dos) by subscribing to the `selectDatosAnexoTressDos$` observable.
-     * Updates the `anexoTressFormGroup` with the received data.
-     * The subscription is automatically unsubscribed when `destroyNotifier$` emits.
+     * Recupera datos del segundo almacén (Almacén Dos) suscribiéndose al observable `selectDatosAnexoTressDos$`.
+     * Actualiza el `anexoTressFormGroup` con los datos recibidos.
+     * La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor.
      *
      * @remarks
-     * This method is typically used to populate the form group with data from the store.
+     * Este método se utiliza normalmente para poblar el grupo de formulario con datos del almacén.
      */
     obtenerDatosDelAlmacenDos(): void {
     this.query.selectDatosAnexoTressDos$

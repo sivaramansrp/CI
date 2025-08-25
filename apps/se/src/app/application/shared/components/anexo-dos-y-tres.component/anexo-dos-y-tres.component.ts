@@ -1,7 +1,8 @@
 import { AlertComponent, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
-import { Component, OnInit } from '@angular/core';
-import { ANEXO_TRES_ALERTA } from '../../constantes/anexo-dos-y-tres.enum';
 import { Anexo1y3Configuartion, DatosAnexotressUno } from '../../models/nuevo-programa-industrial.model';
+import { Component, OnInit } from '@angular/core';
+import { delay, Subject, takeUntil } from 'rxjs';
+import { ANEXO_TRES_ALERTA } from '../../constantes/anexo-dos-y-tres.enum';
 import { AnexoEncabezado } from '../../models/nuevo-programa-industrial.model';
 import { CommonModule } from '@angular/common';
 import { EventEmitter } from '@angular/core';
@@ -13,7 +14,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
-import { delay, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-anexo-dos-y-tres',
@@ -87,13 +87,13 @@ export class AnexoDosYTresComponent implements OnInit {
 
 
   /**
-   * Emits events containing data of type `DatosAnexotressUno` from the component.
+   * Emite eventos que contienen datos del tipo `DatosAnexotressUno` desde el componente.
    * 
-   * This output can be subscribed to by parent components to receive updates
-   * whenever relevant data changes or is submitted within this component.
+   * Este output puede ser suscrito por componentes padres para recibir actualizaciones
+   * siempre que los datos relevantes cambien o se envíen dentro de este componente.
    *
    * @remarks
-   * The `EventEmitter` is initialized with `true` to indicate it is asynchronous.
+   * El `EventEmitter` se inicializa con `true` para indicar que es asíncrono.
    *
    * @eventProperty
    */

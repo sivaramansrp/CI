@@ -123,9 +123,9 @@ export class Tramite80101Query extends Query<Tramite80101State> {
   selectDatosAnexoTres$ = this.select((state) => state.datosAnexoTress);
 
   /**
-   * Observable selector for retrieving the `datosAnexoTress` property from the application state.
+   * Selector observable para obtener la propiedad `datosAnexoTress` del estado de la aplicación.
    * 
-   * @returns An observable emitting the current value of `datosAnexoTress` from the state.
+   * @returns Un observable que emite el valor actual de `datosAnexoTress` desde el estado.
    */
   selectDatosAnexoTressDos$ = this.select((state) => state.datosAnexoTressDos);
 

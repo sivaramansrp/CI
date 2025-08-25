@@ -232,14 +232,14 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
    datosAnexoUno!: DatosComplimento;
    
 /**
- * Form group instance for managing the controls and validation of the "Anexo Uno" form.
- * Used to handle form state, validation, and submission logic within the AnexoVistaUnoComponent.
+ * Instancia de FormGroup para gestionar los controles y la validación del formulario "Anexo Uno".
+ * Se utiliza para manejar el estado del formulario, la validación y la lógica de envío dentro del componente AnexoVistaUnoComponent.
  */
  public anexoUnoFormGroup!: FormGroup;
 
 /**
- * Form group instance for managing the controls and validation of the "Anexo Dos" section.
- * Used to encapsulate form fields and their state within the Anexo Vista Uno component.
+ * Instancia de FormGroup para gestionar los controles y la validación del formulario "Anexo Dos".
+ * Se utiliza para manejar el estado del formulario, la validación y la lógica de envío dentro del componente AnexoVistaUnoComponent.
  */
  public anexoDosFormGroup!: FormGroup;
 

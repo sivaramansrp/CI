@@ -961,11 +961,11 @@ export class Tramite80101Store extends Store<Tramite80101State> {
   }
 
   /**
-   * Updates the `datosAnexoTres` property in the store with the provided data.
-   * Merges the existing `datosAnexoTress` state with the new `datosAnexoTres` values.
-   * Logs the merged result to the console for debugging purposes.
+   * Actualiza la propiedad `datosAnexoTress` en el store con los datos proporcionados.
+   * Fusiona el estado existente de `datosAnexoTress` con los nuevos valores recibidos.
+   * Muestra el resultado fusionado en la consola para fines de depuración.
    *
-   * @param datosAnexoTres - An object containing the new data to merge into `datosAnexoTres`.
+   * @param datosAnexoTress - Objeto que contiene los nuevos datos a fusionar en `datosAnexoTress`.
    */
   setDatosAnexoTres(datosAnexoTress: DatosAnexotressUno): void {
     this.update((state) => {
