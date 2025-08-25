@@ -1,26 +1,26 @@
-name: Build, Push, Deploy crt App
+name: Build, Push, Deploy inah App
 
 on:
   # push:
   #   branches:
   #     - develop
   #   paths:
-  #     - 'apps/crt/**'
+  #     - 'apps/inah/**'
   #     - 'libs/**'
   #     - 'package.json'
   #     - 'nx.json'
   #     - 'angular.json'
   #     - 'workspace.json'
   #     - 'docker/**'
-  #     - 'k8s/crt-microfront/**'
-  #     - '.github/workflows/crt workflow main.yml'
+  #     - 'k8s/inah-microfront/**'
+  #     - '.github/workflows/inah workflow.yml'
   workflow_dispatch:
 
 jobs:
   build-push-deploy:
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/dockerized-modulefederation-crt-microfront
+      IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/dockerized-modulefederation-inah-microfront
 
     steps:
       - name: Checkout code
@@ -36,7 +36,6 @@ jobs:
         run: |
           echo "VERSION=$(jq -r .version package.json)" >> $GITHUB_ENV
           echo "version=$(jq -r .version package.json)" >> $GITHUB_OUTPUT
-
       - name: Install dependencies
         run: npm ci
 
@@ -44,11 +43,11 @@ jobs:
         run: npm install -g @angular/cli
 
       - name: Build Angular app (Nx)
-        run: npx nx build crt --configuration=production
+        run: npx nx build inah --configuration=production
 
       - name: Inject version into build
         if: hashFiles('script/inject-version.js') != ''
-        run: node script/inject-version.js crt
+        run: node script/inject-version.js inah
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
@@ -59,24 +58,21 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t $IMAGE_NAME:${{ env.VERSION }} -f apps/crt/Dockerfile.dev
-
+          docker build -t $IMAGE_NAME:${{ env.VERSION }} -f apps/inah/Dockerfile.dev .
       - name: Push Docker image
         run: |
           docker push $IMAGE_NAME:${{ env.VERSION }}
-
       - name: Update deployment manifest image tag
         run: |
-          sed -i "s|\(image: ghcr.io/vucem30-dev/dockerized-modulefederation-crt-microfront:\).*|\1${VERSION}|" k8s/crt-microfront/crt-microfront-deployment-dev.yaml
-
+          sed -i "s|\(image: ghcr.io/vucem30-dev/dockerized-modulefederation-inah-microfront:\).*|\1${VERSION}|" k8s/inah-microfront/inah-microfront-deployment-dev.yaml
       - name: Upload Kubernetes manifests to server
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.REMOTE_SRV_IP }}
           username: ${{ secrets.REMOTE_SRV_USER }}
           key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
-          source: "k8s/crt-microfront"
-          target: "~/crt-microfront/"
+          source: "k8s/inah-microfront"
+          target: "~/inah-microfront/"
 
       - name: Deploy on Microk8s via SSH
         uses: appleboy/ssh-action@v1
@@ -86,14 +82,13 @@ jobs:
           key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
           script: |
             set -e
-            cd ~/crt-microfront/
+            cd ~/inah-microfront/
             # Apply all .yaml, .yml, .json files in this directory
             for f in *.yaml *.yml *.json; do
               [ -e "$f" ] && microk8s.kubectl apply -f "$f"
             done
             # Recursively apply manifests in subdirectories as well
             find . -type f \( -name '*.yaml' -o -name '*.yml' -o -name '*.json' \) -exec microk8s.kubectl apply -f {} \;
-
       - name: Wait for deployment to become ready
         run: sleep 60
 
