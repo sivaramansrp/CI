@@ -273,8 +273,15 @@
       <div class="col-md-8">
         <div class="form-group">
           <label class="form-label" for="cantidadLetra">Cantidad(letra)*:</label>
-          <input class="form-control" id="cantidadLetra" formControlName="cantidadLetra" type="text">
-        </div>
+          <input class="form-control" id="cantidadLetra" formControlName="cantidadLetra" type="text"
+           [ngClass]="isValid(formSolicitud, 'cantidadLetra') ? 'required' : ''">
+    <div class="custom-error" *ngIf="formSolicitud.get('cantidadLetra')?.errors?.['required'] && formSolicitud.get('cantidadLetra')?.touched">
+      Si la cantidad capturada es mayor a 400 es obligatorio capturar la cantidad en letra.
+    </div>
+    <div class="custom-error mt-2" *ngIf="formSolicitud.get('cantidad')?.value && isCantidadMenorOIgualA400()">
+      Si la cantidad capturada es menor o igual a 400 no es obligatorio anexar la Póliza de seguro y recibo de pago vigentes.
+    </div>
+  </div>
       </div>
     </div>
 

@@ -976,7 +976,10 @@ creatformSolicitud(): void {
       this.solicitudState?.cantidad,
       [Validators.required, Validators.min(1), Validators.max(999999999999.999), MaxDigitsValidator()],
     ],
-    cantidadLetra: [{ value: '', disabled: true }],
+    cantidadLetra: [
+      this.solicitudState?.cantidadLetra || '', 
+      [Validators.required] // Add required validator
+    ], // Remove the disabled state
     unidadDeMedida: [
       this.solicitudState?.unidadDeMedida,
       [Validators.required],
@@ -1237,21 +1240,33 @@ creatformSolicitud(): void {
    * y 'apellidoMaterno' con datos específicos.
    */
 buscarRepresentanteRfc(): void {
-  const RFC = this.formSolicitud.get('cantidad')?.value;
+  const CANTIDAD = this.formSolicitud.get('cantidad')?.value;
 
-  if (RFC) {
-    const CONTROL = this.formSolicitud.get('cantidadLetra');
-    CONTROL?.enable({ emitEvent: false });
-    CONTROL?.setValue('EUROFOODS DE MEXICO', { emitEvent: false });
-    CONTROL?.disable({ emitEvent: false });
+  if (CANTIDAD) {
+    const CANTIDAD_NUMERICA = parseFloat(CANTIDAD);
+    const CONTROL_CANTIDAD_LETRA = this.formSolicitud.get('cantidadLetra');
+    
+    if (CANTIDAD_NUMERICA && CANTIDAD_NUMERICA > 400) {
+      // If quantity is greater than 400, make cantidadLetra required and enable it
+      CONTROL_CANTIDAD_LETRA?.enable({ emitEvent: false });
+      CONTROL_CANTIDAD_LETRA?.setValue('', { emitEvent: false });
+      CONTROL_CANTIDAD_LETRA?.setValidators([Validators.required]);
+      CONTROL_CANTIDAD_LETRA?.updateValueAndValidity();
+    } else {
+      // If quantity is 400 or less, disable cantidadLetra and remove required validation
+      CONTROL_CANTIDAD_LETRA?.setValue('EUROFOODS DE MEXICO', { emitEvent: false });
+      CONTROL_CANTIDAD_LETRA?.disable({ emitEvent: false });
+      CONTROL_CANTIDAD_LETRA?.clearValidators();
+      CONTROL_CANTIDAD_LETRA?.updateValueAndValidity();
+    }
   }
 }
 
 /**
-   * Cierra el modal de notificación de eliminación exitosa.
-   *
-   * @param _evento - Evento del modal (no utilizado en este caso)
-   */
+ * Cierra el modal de notificación de eliminación exitosa.
+ *
+ * @param _evento - Evento del modal (no utilizado en este caso)
+ */
   cerrarNotificacionEliminacion(_evento: boolean): void {
     this.mostrarNotificacion = false;
   }
@@ -1268,4 +1283,30 @@ buscarRepresentanteRfc(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+  /**
+ * Checks if the quantity is less than or equal to 400
+ * @returns boolean indicating if quantity is <= 400
+ */
+isCantidadMenorOIgualA400(): boolean {
+  const cantidad = this.formSolicitud.get('cantidad')?.value;
+  if (cantidad) {
+    const cantidadNumerica = parseFloat(cantidad);
+    return !isNaN(cantidadNumerica) && cantidadNumerica <= 400;
+  }
+  return false;
+}
+
+/**
+ * Checks if the quantity is greater than 400
+ * @returns boolean indicating if quantity is > 400
+ */
+isCantidadMayorA400(): boolean {
+  const cantidad = this.formSolicitud.get('cantidad')?.value;
+  if (cantidad) {
+    const cantidadNumerica = parseFloat(cantidad);
+    return !isNaN(cantidadNumerica) && cantidadNumerica > 400;
+  }
+  return false;
+}
 }
