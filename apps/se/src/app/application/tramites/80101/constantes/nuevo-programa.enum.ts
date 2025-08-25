@@ -306,10 +306,16 @@ export const TEXTOS_REQUISITOS = {
  * Este catálogo puede ser utilizado para inicializar o proporcionar valores predeterminados
  * en formularios o procesos relacionados con fracciones.
  */
-export const COMPLEMENTAR_FRACCION_CATALOGO_DATOS = [{
-  id: 0,
-  descripcion: ''
-}];
+export const COMPLEMENTAR_FRACCION_CATALOGO_DATOS = [
+    {
+      id: 1,
+      descripcion: 'Materia Prima',
+    },
+    {
+      id: 2,
+      descripcion: 'Producto terminado',
+    },
+];
 
 
 /**

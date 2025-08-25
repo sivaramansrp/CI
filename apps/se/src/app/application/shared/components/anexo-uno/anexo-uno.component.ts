@@ -253,13 +253,17 @@ export class AnexoUnoComponent implements OnInit {
       estatus: false,
       encabezadoFraccionArancelaria: this.anexoUnoFormGroup.get('fraccionArancelaria')
         ?.value,
-      encabezadoAnexoII: '',
-      encabezadoTipo: '',
-      encabezadoUmt: '',
+      encabezadoAnexoII: 'NO SENSIBLE',
+      encabezadoTipo: 'EXPORTACION',
+      encabezadoUmt: 'Kilogramo',
       encabezadoCategoria: '',
       encabezadoValorEnMercado: '',
+      encabezadoValorEnMonedaMensual: 0,
+      encabezadoValorEnMonedaAnual: 0,
+      encabezadoVolumenMensual: 0,
+      encabezadoVolumenAnual: 0,
     };
-    
+    this.anexoUnoFormGroup.reset();
     // Reinicia el formulario después de agregar el objeto
     this.anexoUnoTablaLista = [...this.anexoUnoTablaLista, OBJECTO_IDX];
     this.obtenerAnexoUnoDevolverLaLlamada.emit(this.anexoUnoTablaLista);
@@ -278,10 +282,19 @@ export class AnexoUnoComponent implements OnInit {
       encabezadoFraccion: SERIAL.toString(),
       encabezadoDescripcionComercial:
         this.anexoDosFormGroup.get('descripcion')?.value,
+      estatus: false,
       encabezadoFraccionExportacion: this.anexoDosFormGroup.get('fraccionArancelaria')
         ?.value,
       encabezadoFraccionImportacion: '',
-      estatus: false,
+      encabezadoDescripcionComercialImportacion: '',
+      encabezadoAnexoII: 'NO SENSIBLE',
+      encabezadoTipo: 'IMPORTACION',
+      encabezadoUmt: 'Kilogramo',
+      encabezadoCategoria: '',
+      encabezadoValorEnMonedaMensual: 0,
+      encabezadoValorEnMonedaAnual: 0,
+      encabezadoVolumenMensual: 0,
+      encabezadoVolumenAnual: 0,
     };
     this.anexoDosFormGroup.reset();
     // Reinicia el formulario después de agregar el objeto
