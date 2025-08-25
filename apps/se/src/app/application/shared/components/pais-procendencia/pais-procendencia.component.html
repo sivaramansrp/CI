@@ -64,7 +64,7 @@
         <label for="justificacionImportacionExportacion" class="form-label d-flex align-items-center">
           Justificación y beneficio que se obtiene*:
             <span class="ms-3"></span>
-            <a *ngIf="esAyuda" href="javascript:void(0)" class="form-label ms-3" [ngClass]="{ 'ayuda-disabled': esFormularioSoloLectura }">Ayuda</a>
+            <a *ngIf="esAyuda" href="javascript:void(0)" (click)="abrirAyuda()" class="form-label ms-3" [ngClass]="{ 'ayuda-disabled': esFormularioSoloLectura }">Ayuda</a>
         </label>
         <textarea
           class="form-control"
@@ -133,3 +133,8 @@
 
   </form>
 </div>
+<lib-notificaciones
+  *ngIf="mostrarAyuda"
+  [notificacionInput]="notificacionAyuda"
+  (confirmacionModal)="mostrarAyuda = false">
+</lib-notificaciones>

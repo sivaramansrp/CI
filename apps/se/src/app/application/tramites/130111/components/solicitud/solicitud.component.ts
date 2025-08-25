@@ -16,6 +16,7 @@ import { ImportacionDeVehiculosService } from '../../services/importacion-de-veh
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 
 import { Tramite130111State, Tramite130111Store } from '../../../../estados/tramites/tramites130111.store';
+import { ID_PROCEDIMIENTO } from '../../constants/importacion-de-vehiculos-usados-pasos.enum';
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
 import { Tramite130111Query } from '../../../../estados/queries/tramite130111.query';
 
@@ -173,6 +174,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
      * Indica si se debe mostrar el error de clasificación.
      */
     mostrarErrorClasificacion = true;
+     /**
+       * Identificador del procedimiento.
+       * @property {number} idProcedimiento
+       */
+      public idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * Constructor del componente.
    */
