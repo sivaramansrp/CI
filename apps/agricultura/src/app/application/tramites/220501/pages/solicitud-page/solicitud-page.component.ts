@@ -1,14 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { DatosPasos, ListaPasosWizard, PASOS, SECCIONES_TRAMITE_5701, WizardComponent } from '@ng-mf/data-access-user';
 import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ALERTA_220501 } from '@libs/shared/data-access-user/src/tramites/constantes/mensajes-error-formularios';
-import { DatosPasos } from '@ng-mf/data-access-user';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from'@ng-mf/data-access-user';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { SECCIONES_TRAMITE_5701 } from'@ng-mf/data-access-user';
 import { SeccionQuery } from'../../../../estados/queries/seccion.query';
-import { WizardComponent } from'@ng-mf/data-access-user';
 /**
  * Interfaz que define la estructura de una acción de botón.
  */
