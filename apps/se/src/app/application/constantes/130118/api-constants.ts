@@ -183,7 +183,7 @@ export const API_POST_GUARDAR_REQUERIMIENTO = `sat-t${TRAMITE}/tramite/${NUMFOLI
  * API para consultar los sentidos disponibles
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Catalogos/consulta-sentidos-disponibles
  */
-export const API_GET_SENTIDOS_DISPONIBLES = `sat-t${TRAMITE}/catalogo/sentidos-disponibles`;
+export const API_GET_SENTIDOS_DISPONIBLES = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/generar/sentidos-disponibles`;
 
 /**
  * API para mostrar y firmar el dictamen

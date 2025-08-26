@@ -1056,7 +1056,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * Realiza una petición al servicio `GuardarDictamenService` para recuperar los sentidos disponibles.
    */
   getSentidosDisponibles(): void {
-    this.guardarService.getSentidosDisponibles(this.tramite.toString()).subscribe({
+    this.guardarService.getSentidosDisponibles(this.tramite.toString(), this.guardarDatos.folioTramite).subscribe({
       next: (resp) => {
         this.opcionesSentidosDispobles = resp.datos ?? [];
       },

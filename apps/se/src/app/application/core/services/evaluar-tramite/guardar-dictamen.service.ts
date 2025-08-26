@@ -60,8 +60,8 @@ export class GuardarDictamenService {
    * @param tramite Número de trámite.
    * @returns Observable con la respuesta del servidor.
    */
-  getSentidosDisponibles(tramite: string): Observable<BaseResponse<SentidosDisponiblesResponse[]>> {
-    const ENDPOINT = `${this.host}${API_GET_SENTIDOS_DISPONIBLES.replace(TRAMITE, tramite)}`;
+  getSentidosDisponibles(tramite: string, numFolio: string): Observable<BaseResponse<SentidosDisponiblesResponse[]>> {
+    const ENDPOINT = `${this.host}${API_GET_SENTIDOS_DISPONIBLES.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolio)}`;
     return this.http.get<BaseResponse<SentidosDisponiblesResponse[]>>(ENDPOINT);
   }
 
