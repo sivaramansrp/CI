@@ -352,3 +352,25 @@
   </lib-notificaciones>
 </section>
 }
+
+@if (eliminarNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="eliminarNotificacion" (confirmacionModal)="confirmarEliminarNotificacion($event)">
+  </lib-notificaciones>
+</section>
+}
+
+@if (eliminarDosConfirmationNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="eliminarDosConfirmationNotificacion" (confirmacionModal)="confirmarEliminarDosConfirmation($event)">
+  </lib-notificaciones>
+</section>
+}
+
+@if (eliminarUnoConfirmationNotificacion) {
+  <section>
+    <lib-notificaciones [notificacionInput]="eliminarUnoConfirmationNotificacion" (confirmacionModal)="confirmarEliminarUnoConfirmation($event)">
+    </lib-notificaciones>
+  </section>
+}
+

@@ -1,5 +1,5 @@
 import { AbstractControl, ValidationErrors } from '@angular/forms';
-import { Catalogo, ConsultaioQuery, REGEX_NUMERO_DECIMAL_ENTERO, REG_X } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -258,15 +258,15 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       });
       this.partidasDelaMercanciaForm = this.fb.group({
         cantidadPartidasDeLaMercancia: [
-         this.seccionState?.cantidadPartidasDeLaMercancia,
+          this.seccionState?.cantidadPartidasDeLaMercancia,
           [
             Validators.required,
-            Validators.pattern(REG_X.SOLO_NUMEROS),
+            SolicitudComponent.validarCatorceEnterosTresDecimales,
             Validators.maxLength(18),
           ],
         ],
         descripcionPartidasDeLaMercancia: [
-         this.seccionState?.descripcionPartidasDeLaMercancia,
+          this.seccionState?.descripcionPartidasDeLaMercancia,
           [Validators.required, Validators.maxLength(255)],
         ],
         valorPartidaUSDPartidasDeLaMercancia: [
@@ -274,7 +274,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           [
             Validators.required,
             Validators.min(0),
-            Validators.pattern(REGEX_NUMERO_DECIMAL_ENTERO),
+            SolicitudComponent.validarCatorceEnterosTresDecimales,
             Validators.maxLength(20),
           ],
         ],
@@ -550,12 +550,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       const VALOR = control.value;
       if (VALOR === null || VALOR === undefined || VALOR === '') { return null; }
 
-      // No es un número o contiene letras
       if (!/^\d+(\.\d+)?$/.test(VALOR)) {
         return { noEsNumero: true };
       }
 
-      // Más de 3 decimales
       if (/^\d+\.\d{4,}$/.test(VALOR)) {
         return { maximoTresDecimales: true };
       }
@@ -571,6 +569,24 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         return { validarSinCaracterAnguloDerecho: true };
       }
       return null;
+    }
+
+     /*
+    Valida que un número tenga como máximo 14 enteros y 3 decimales.
+    */
+    static validarCatorceEnterosTresDecimales(control: AbstractControl): ValidationErrors | null {
+      const VALOR = control.value;
+        if (VALOR === null || VALOR === undefined || VALOR === '') { return null; }
+
+        if (!/^\d*\.?\d*$/.test(VALOR)) {
+          return { noEsNumero: true };
+        }
+
+        if (!/^\d{1,14}(\.\d{1,3})?$/.test(VALOR)) {
+          return { validarCatorceEnterosTresDecimales: true };
+        }
+
+        return null;
     }
 }
    

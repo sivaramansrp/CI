@@ -1,5 +1,5 @@
 import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { DIRECTOS, Directos } from '../../constantes/empleados.enum';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Subject,map,takeUntil } from 'rxjs';
@@ -101,6 +101,14 @@ export class EmpleadosComponent implements OnInit {
   fetchaFinVigencia = FECHA_FIN_VIGENCIA;
 
   /**
+   * Evento que se emite al cerrar el popup.
+   * 
+   * Se utiliza para notificar al componente padre que el popup ha sido cerrado.
+   */
+  @Output() cerrarPopup = new EventEmitter<void>();
+  
+
+  /**
    * Constructor del componente.
    * @constructor
    * @param {FormBuilder} fb - Servicio para construcción de formularios
@@ -156,7 +164,7 @@ export class EmpleadosComponent implements OnInit {
    * @returns {void}
    */
   regrasar(): void {
-    this.ubicaccion.back();
+    this.cerrarPopup.emit();
   }
    /**
    * Maneja los cambios en el campo "Fecha de Pago".

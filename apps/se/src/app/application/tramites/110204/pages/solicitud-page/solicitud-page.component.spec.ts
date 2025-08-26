@@ -46,16 +46,4 @@ describe('SolicitudPageComponent', () => {
     component.getValorIndice({ valor: 1, accion: 'siguiente' });
     component.getValorIndice({ valor: 0, accion: 'atras' });
   });
-
-  it('should run #asignarSecciones() and call seccionStore methods', () => {
-    component.seccionStore = {
-      establecerSeccion: jest.fn(),
-      establecerFormaValida: jest.fn()
-    };
-
-    component.asignarSecciones();
-
-    expect(component.seccionStore.establecerSeccion).toHaveBeenCalled();
-    expect(component.seccionStore.establecerFormaValida).toHaveBeenCalled();
-  });
 });

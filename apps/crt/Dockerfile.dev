@@ -35,7 +35,7 @@ RUN echo "Building crt image for environment: $NODE_ENV"
 RUN npx nx build crt --configuration=$NODE_ENV --base-href=/crt/ --skip-nx-cache --verbose
 
 # --- Inject version into built index.html ---
-RUN node script/inject-version.js
+RUN node script/inject-version.js crt
 
 # ------------------------------
 # Stage 2: Serve with Nginx

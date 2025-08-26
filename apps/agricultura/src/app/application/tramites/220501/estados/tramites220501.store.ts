@@ -9,7 +9,7 @@ export interface Solicitud220501State {
   /**
    * Medio de transporte utilizado.
    */
-  medioDeTransporte: number;
+  medioDeTransporte: number | string;
   /**
    * Identificación del transporte.
    */
@@ -115,10 +115,6 @@ export interface Solicitud220501State {
    */
   fetchapago: string;
   /**
-   * Indica si se debe mostrar el formulario para agregar mercancía.
-   */
-  mostrarAgregarMercancia: boolean;
-  /**
    * Fracción arancelaria de la mercancía.
    */
   fraccionArancelaria: string;
@@ -183,7 +179,7 @@ export interface Solicitud220501State {
  */
 export function crearEstadoInicial(): Solicitud220501State {
   return {
-    medioDeTransporte: -1,
+    medioDeTransporte: '',
     identificacionTransporte: '',
     esSolicitudFerros: '',
     totalGuias: '',
@@ -210,7 +206,6 @@ export function crearEstadoInicial(): Solicitud220501State {
     llavePago: '',
     importePago: '',
     fetchapago: '',
-    mostrarAgregarMercancia: false,
     fraccionArancelaria: '',
     descripcionFraccion: '',
     nico: '',
@@ -256,7 +251,7 @@ export class Solicitud220501Store extends Store<Solicitud220501State> {
    * @param medioDeTransporte Medio de transporte utilizado.
    * @returns void
    */
-  public setMedioDeTransporte(medioDeTransporte: number): void {
+  public setMedioDeTransporte(medioDeTransporte: number | string): void {
     this.update((state) => ({
       ...state,
       medioDeTransporte,
@@ -574,18 +569,6 @@ export class Solicitud220501Store extends Store<Solicitud220501State> {
     this.update((state) => ({
       ...state,
       fetchapago,
-    }));
-  }
-
-  /**
-   * Establece si se debe mostrar el formulario para agregar mercancía.
-   * @param value Indica si se debe mostrar el formulario para agregar mercancía.
-   * @returns void
-   */
-  public setMostrarAgregarMercancia(value: boolean): void {
-    this.update((state) => ({
-      ...state,
-      mostrarAgregarMercancia: value,
     }));
   }
 

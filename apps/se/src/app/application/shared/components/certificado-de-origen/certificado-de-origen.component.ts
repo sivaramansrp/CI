@@ -1,9 +1,10 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent,Notificacion, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AbstractControl,FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors,ValidatorFn, Validators} from '@angular/forms';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent,Notificacion, SoloLetrasNumerosDirective, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
-import { Component,ElementRef,EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output,ViewChild, SimpleChanges } from '@angular/core';
+import { Component,ElementRef,EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, forwardRef } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
-import { AbstractControl,FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators,ValidationErrors,ValidatorFn} from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import {EIGHT_DIGIT_NUMBER_REGEX} from '@ng-mf/data-access-user'
 import { FormularioSi } from '../../models/certificado-origen.model';
 import { Mercancia } from '../../models/modificacion.enum';
 import { Modal } from 'bootstrap';
@@ -69,8 +70,8 @@ export const FECHA_FIN = {
     CatalogoSelectComponent,
     InputCheckComponent,
     AlertComponent,
-    NotificacionesComponent
-    
+    NotificacionesComponent,
+    forwardRef(() => SoloLetrasNumerosDirective),
   ],  
   templateUrl: './certificado-de-origen.component.html',
   providers:[ToastrService],
@@ -159,6 +160,21 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
    */
   @Input() paisBloqu!: Catalogo[];
 
+    /**
+   * @property {Catalogo[]} paises
+   * @description
+   * Propiedad de entrada que recibe el arreglo de países disponibles para seleccionar en el formulario.
+   * Se utiliza para mostrar opciones de país en los menús desplegables del componente.
+   */
+  @Input() paises!: Catalogo[];
+
+  /**
+   * @property {boolean} domicilioTercer
+   * @description
+   * Propiedad de entrada que indica si el domicilio de un tercero debe mostrarse o estar habilitado en el formulario.
+   * Permite controlar la visualización de campos relacionados con el domicilio de terceros.
+   */
+  @Input() domicilioTercer!: boolean;
   /**
    * Propiedad de entrada que recibe los datos de la tabla de mercancia.
    * @type {Mercancia[]}
@@ -207,6 +223,13 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
    * @type {EventEmitter<boolean>}
    */
   @Output() setbuscarMercanciaEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
+  /**
+   * @property {EventEmitter<boolean>} setModelCargaPorArchivo
+   * @description
+   * Evento de salida que emite un valor booleano para indicar que se debe abrir el modal de carga por archivo.
+   * Permite notificar al componente padre para mostrar el modal correspondiente.
+   */
+  @Output() setModelCargaPorArchivo: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /**
    * Propiedad de salida que emite la fila seleccionada de mercancia.
@@ -381,6 +404,14 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
   datosSeleccionados!: Mercancia;
 
   /**
+   * @property {boolean} mostrarError
+   * @description
+   * Indica si se debe mostrar un mensaje de error en el componente.
+   * Se utiliza para controlar la visualización de alertas cuando el formulario no es válido.
+   */
+  mostrarError: boolean = true;
+
+  /**
     * Emisor de eventos para indicar si el formulario es válido.
     * @type {EventEmitter<boolean>}
     */
@@ -413,7 +444,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
       si: [false],
       entidadFederativa: ['', [Validators.required, Validators.min(0)]],
   bloque: ['', [Validators.required, Validators.min(0)]],
-  fraccionArancelariaForm: ['', [Validators.maxLength(8)]],
+  fraccionArancelariaForm: ['', [Validators.maxLength(8),Validators.pattern(EIGHT_DIGIT_NUMBER_REGEX)]],
   registroProductoForm: ['', [Validators.maxLength(12)]],
   nombreComercialForm: ['', [Validators.maxLength(200)]],
   fechaInicioInput: [''],
@@ -425,9 +456,12 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
   razonSocial: [''],
   calle: ['', [Validators.maxLength(90)]],
   numeroLetra: ['', [Validators.maxLength(30)]],
-  pais:[''],
-  ciudad:[''],
-  telefono:[''],
+  pais: [''],
+  ciudad: [''],
+  lada: [''],
+  telefono: [''],
+  fax:[''],
+  correo:[''],
   correoElectronico:[''],
 
     },
@@ -444,9 +478,9 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
     const PRIMER_APELLIDO = this.formCertificado.get('primerApellido');
     const CALLE = this.formCertificado.get('calle');
     const NUMERO_LETRA = this.formCertificado.get('numeroLetra');
-  
-    if (!PRIMER_APELLIDO || !CALLE || !NUMERO_LETRA) return;
-  
+
+    if (!PRIMER_APELLIDO || !CALLE || !NUMERO_LETRA) { return; }
+
     if (this.idProcedimiento === 110205) {
     
       PRIMER_APELLIDO.setValidators([Validators.maxLength(20)]);
@@ -476,7 +510,16 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
       this.formCertificado.disable();
     }
   }
-
+  /**
+   * @method ngOnChanges
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta cuando cambian las propiedades de entrada del componente.
+   * Si la propiedad `datosForm` cambia y tiene un valor actual, actualiza el formulario `formCertificado` con los nuevos datos.
+   * Si el formulario no existe, lo crea antes de aplicar los valores.
+   * 
+   * @param {SimpleChanges} changes - Objeto que contiene los cambios en las propiedades de entrada.
+   * @returns {void}
+   */
 ngOnChanges(changes: SimpleChanges):void {
   if (changes['datosForm']?.currentValue) {
     if(this.formCertificado){
@@ -529,6 +572,36 @@ ngOnChanges(changes: SimpleChanges):void {
   tipoSeleccion(estado: Catalogo): void {
     this.paisBloquEvent.emit(estado);
   }
+/**
+ * Validador personalizado para asegurar que la fecha de inicio no sea posterior a la fecha final.
+ *  * @param componente La instancia del componente que contiene el formulario.
+ * @returns Un objeto de errores de validación si la fecha de inicio es posterior a la fecha final, o null si no hay errores.
+ * @remarks
+ * Este validador se utiliza para validar un rango de fechas en un formulario reactivo de Angular.
+ * Asegura que la fecha de inicio no sea posterior a la fecha final.
+ * @command
+ * Utilice este validador en la configuración del formulario para aplicar la validación de rango de fechas.
+ * Por ejemplo, en el método `createForm()`, agregue `{ validators: CertificadoDeOrigenComponent.dateRangeValidator(this) }` al grupo del formulario.
+ * */
+  verificarRFCDos(): void {
+   
+    if ( this.formCertificado.get('fraccionArancelariaForm')?.errors?.['pattern']) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Datos incorrectos, favor de verificar.',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
+    else {
+     this.buscarMercancia();
+    }
+  }
 
    /**
    * Maneja la selección de un archivo en el input de carga de archivos.
@@ -572,14 +645,15 @@ ngOnChanges(changes: SimpleChanges):void {
   ngOnInit(): void {
     this.fechaFin = FECHA_ID.includes(this.idProcedimiento);
     this.inicializarEstadoFormulario();
+    this.nuevaNotificacion = {} as Notificacion
     this.inicializarFormularioArchivo();
   }
    validarFormularios(): boolean {
-if(this.formCertificado.valid){
-  return true;
-}
-this.formCertificado.markAllAsTouched();
-return false;
+  if(this.formCertificado.valid){
+    return true;
+  }
+  this.formCertificado.markAllAsTouched();
+  return false;
   }
 
   /**
@@ -689,6 +763,19 @@ return false;
     this.filaClics.emit(tableData);
   }
 
+
+  /**
+   * @method abrirModalCargaPorArchivo
+   * @description
+   * Emite un evento para indicar que se debe abrir el modal de carga por archivo.
+   * Utiliza el EventEmitter `setModelCargaPorArchivo` para notificar al componente padre.
+   * 
+   * @returns {void}
+   */
+  abrirModalCargaPorArchivo(): void {
+    this.setModelCargaPorArchivo.emit(true);
+  }
+
   /**
  * Método que asigna un objeto de tipo `Mercancia` al arreglo de mercancías seleccionadas para guardar.
  * @param {Mercancia} evento - Objeto de tipo `Mercancia` que ha sido seleccionado.
@@ -750,5 +837,16 @@ return false;
     };
   }
 
- 
+  /**
+   * @method aceptar
+   * @description
+   * Oculta el mensaje de error en el componente estableciendo la propiedad `mostrarError` en `false`.
+   * Se utiliza generalmente como acción al aceptar una notificación o alerta mostrada al usuario.
+   * 
+   * @returns {void}
+   */
+  aceptar(): void {
+    this.mostrarError = false;
+  }
+
 }

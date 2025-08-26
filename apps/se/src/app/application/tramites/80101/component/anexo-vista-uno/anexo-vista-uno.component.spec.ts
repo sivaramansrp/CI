@@ -91,20 +91,36 @@ describe('AnexoVistaUnoComponent', () => {
     expect(component.store.setExportarDatosTabla).toHaveBeenCalled();
   });
 
-  it('should run #rutaLaFraccionDeComplemento()', async () => {
-    component.store = component.store || {};
-    component.store.setAnnexoUnoSeccionActiva = jest.fn();
-    component.store.setDatosParaNavegar = jest.fn();
-    component.router = component.router || {};
-    component.router.navigate = jest.fn();
-    component.rutaLaFraccionDeComplemento({
-      catagoria: {},
-      id: {},
-      datos: {}
-    });
-    expect(component.store.setAnnexoUnoSeccionActiva).toHaveBeenCalled();
-    expect(component.store.setDatosParaNavegar).toHaveBeenCalled();
-    expect(component.router.navigate).toHaveBeenCalled();
+  it('should set mostrarProveedorClientePopup to true when categoria is "contenedor-proveedor-cliente"', () => {
+    component.store = { setAnnexoUnoSeccionActiva: jest.fn(), setDatosParaNavegar: jest.fn() };
+    const event = { catagoria: 'contenedor-proveedor-cliente', id: '2', datos: {} };
+    component.rutaLaFraccionDeComplemento(event);
+    expect(component.mostrarProveedorClientePopup).toBe(true);
+  });
+
+  it('should close popups with respective close methods', () => {
+    component.mostrarComplementarFraccionPopup = true;
+    component.cerrarComplementarFraccion();
+    expect(component.mostrarComplementarFraccionPopup).toBe(false);
+
+    component.mostrarProveedorClientePopup = true;
+    component.cerrarContenedorProveedorCliente();
+    expect(component.mostrarProveedorClientePopup).toBe(false);
+
+    component.mostrarProyectoImmexPopup = true;
+    component.cerrarProyectoImmex();
+    expect(component.mostrarProyectoImmexPopup).toBe(false);
+
+    component.mostrarProveedorPorArchivoPopup = true;
+    component.cerrarProveedorPorArchivo();
+    expect(component.mostrarProveedorPorArchivoPopup).toBe(false);
+  });
+
+  it('should set mostrarProyectoImmexPopup to true when categoria is "proyecto-immex"', () => {
+    component.store = { setAnnexoUnoSeccionActiva: jest.fn(), setDatosParaNavegar: jest.fn() };
+    const event = { catagoria: 'proyecto-immex', id: '3', datos: {} };
+    component.rutaLaFraccionDeComplemento(event);
+    expect(component.mostrarProyectoImmexPopup).toBe(true);
   });
 
   it('should run #ngOnDestroy()', async () => {
