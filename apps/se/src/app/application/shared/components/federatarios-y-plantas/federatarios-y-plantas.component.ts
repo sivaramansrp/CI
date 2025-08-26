@@ -131,6 +131,12 @@ export class FederatariosYPlantasComponent implements OnInit {
   @Input() estadoOptionsConfig!: CatalogoDatosIdx;
 
   /**
+   * Emite eventos relacionados con acciones en la sección.
+   * @event accionSeccion
+   */
+  @Output() accionSeccion: EventEmitter<string> = new EventEmitter<string>();
+
+  /**
    * Opciones de estados disponibles
    * @property {[]} estadoOptions
    */
@@ -316,9 +322,12 @@ export class FederatariosYPlantasComponent implements OnInit {
       this.abrirPlantasModal();
       return;
     }
-    this.router.navigate([accionesPath], {
-      relativeTo: this.activatedRoute,
-    });
+  /**
+   * Emite la acción seleccionada si existen observadores suscritos a `accionSeccion`.
+   */
+  if (this.accionSeccion.observers.length > 0) {
+    this.accionSeccion.emit(accionesPath);
+  }
   }
 
   /**

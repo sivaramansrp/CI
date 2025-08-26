@@ -1,7 +1,7 @@
 import { ActivatedRoute, Router } from '@angular/router';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { TABLA_DATOS, TEXTOS } from '../../constantes/carga-por-archivo.enum';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 /**
@@ -27,6 +27,13 @@ export class CargaPorArchivoComponent {
 
   /** Almacena el nombre del archivo seleccionado por el usuario para la carga por archivo. */
   public filaSeleccionadaNombre: string | null = null;
+  /**
+   * Evento que se emite al cerrar el popup.
+   * 
+   * Se utiliza para notificar al componente padre que el popup ha sido cerrado.
+   */
+  @Output() cerrarPopup = new EventEmitter<void>();
+  
 
   /**
    * Constructor de la clase CargaPorArchivoComponent.
@@ -42,6 +49,16 @@ export class CargaPorArchivoComponent {
     this.router.navigate(['../action'], {
       relativeTo: this.activatedRoute,
     });
+  }
+
+  /**
+   * Cierra el popup de carga por archivo.
+   * 
+   * Emite el evento `cerrarPopup` para notificar al componente padre que
+   * se debe cerrar el popup correspondiente.
+   */
+  cerrarCargaPorArchivo(): void {
+    this.cerrarPopup.emit();
   }
 
   /**

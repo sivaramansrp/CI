@@ -32,15 +32,7 @@
       </app-catalogo-select>
     </div>
   </div>
-  @if (nuevaNotificacion) {
-  <section>
-    <lib-notificaciones
-      [notificacionInput]="nuevaNotificacion"
-      (confirmacionModal)="eliminarPedimento($event)"
-    >
-    </lib-notificaciones>
-  </section>
-  }
+  
 
   <h6 class="gap">Selección de sucursal</h6>
 

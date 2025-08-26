@@ -1,20 +1,24 @@
 <app-anexo-uno
+
   [anexoConfiguartion]="anexoUnoConfig"
-  [anexoDosConfiguartion]="anexoDosConfig"
+  [anexoDosConfiguartion]="anexoImportacionConfig"
   [anexoUnoTablaLista]="anexoUnoTablaLista"
   [anexoDosTablaLista]="anexoDosTablaLista"
+  (complimentosDatos)="modifierComplimentos($event)"
   (obtenerAnexoUnoDevolverLaLlamada)="obtenerAnexoUnoDevolverLaLlamada($event)"
   (obtenerAnexoDosDevolverLaLlamada)="obtenerAnexoDosDevolverLaLlamada($event)"
   (rutaLaFraccionDeComplemento)="rutaLaFraccionDeComplemento($event)"
   [formularioDeshabilitado]="formularioDeshabilitado"
+  [formularioDatosSubcontratista]="anexoUnoFormGroup"
+  [formularioDatosSubcontratistaDos]="anexoDosFormGroup"
+  (complimentosDatosDos)="modifierDosComplimentos($event)"
 >
 </app-anexo-uno>
 
 <ng-container *ngIf="mostrarComplementarFraccionPopup">
   <div class="modal-overlay">
     <div class="modal-content">
-      <app-complementar-fraccion-vista></app-complementar-fraccion-vista>
-      <button class="btn btn-secondary mt-3" (click)="cerrarComplementarFraccion()">Cerrar</button>
+      <app-complementar-fraccion-vista [descripcion]="selectedFraccion ?? ''" (guardarComplementarFraccion)="onGuardarComplementarFraccion($event)" (cerrarPopup)="cerrarComplementarFraccion()"></app-complementar-fraccion-vista>
     </div>
   </div>
 </ng-container>
@@ -22,8 +26,7 @@
 <ng-container *ngIf="mostrarProveedorClientePopup">
   <div class="modal-overlay">
     <div class="modal-content">
-      <app-contenedor-proveedor-cliente></app-contenedor-proveedor-cliente>
-      <button class="btn btn-secondary mt-3" (click)="cerrarContenedorProveedorCliente()">Cerrar</button>
+      <app-contenedor-proveedor-cliente (cerrarPopup)="cerrarContenedorProveedorCliente()"></app-contenedor-proveedor-cliente>
     </div>
   </div>
 </ng-container>
@@ -31,8 +34,7 @@
 <ng-container *ngIf="mostrarProyectoImmexPopup">
   <div class="modal-overlay">
     <div class="modal-content">
-      <app-proyecto-immex-vista></app-proyecto-immex-vista>
-      <button class="btn btn-secondary mt-3" (click)="cerrarProyectoImmex()">Cerrar</button>
+      <app-proyecto-immex-vista (cerrarPopup)="cerrarProyectoImmex()"></app-proyecto-immex-vista>
     </div>
   </div>
 </ng-container>
@@ -40,8 +42,7 @@
 <ng-container *ngIf="mostrarProveedorPorArchivoPopup">
   <div class="modal-overlay">
     <div class="modal-content">
-      <app-proveedor-por-archivo-vista></app-proveedor-por-archivo-vista>
-      <button class="btn btn-secondary mt-3" (click)="cerrarProveedorPorArchivo()">Cerrar</button>
+      <app-proveedor-por-archivo-vista (cerrarPopup)="cerrarProveedorPorArchivo()"></app-proveedor-por-archivo-vista>
     </div>
   </div>
 </ng-container>
