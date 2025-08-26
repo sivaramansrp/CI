@@ -78,3 +78,9 @@ export const TABLA_EMPRESAS_LISTA: ConfiguracionColumna<EmpresasLista>[] = [
         orden: 14
     }
 ];
+
+export const ALERTA_ERROR = `<p style='text-align: center;'>Corrija los siguientes errores:</p>
+<div style="display: grid; grid-template-columns: auto 1fr; align-items: center; width: 100%; color: #d0021b;">
+  <span>1.</span>
+  <span style="text-align: center;">(La solicitud no cuenta con productores indirectos validos para realizar la baja)es un campo requerido</span>
+</div>`;

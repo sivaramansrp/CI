@@ -146,12 +146,12 @@ export class ModificacionComponent implements OnInit, OnDestroy {
   isBaja: boolean = true;
   onFilaClic(event: Event): void {
     const TARGET = event.target as HTMLInputElement;
-    if (TARGET.tagName === 'BUTTON' && TARGET.textContent?.trim() === 'BAJA') {
+    if (TARGET.tagName === 'BUTTON' && TARGET.textContent?.trim() === 'Baja') {
       this.isBaja = false;
       TARGET.textContent = 'Activar';
+      this.prosecService.setIsBaja(this.isBaja);
     }
     TARGET.textContent = 'Activar';
-    this.prosecService.setIsBaja(this.isBaja);
   }
   /**
    * Se ejecuta al destruir el componente.
