@@ -383,22 +383,46 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
  
   /**
+   * @method onPartidasSeleccion
+   * @description
+   * Maneja la selección de partidas en la tabla dinámica.
+   * Se ejecuta cuando el usuario selecciona o deselecciona filas en la tabla.
+   * @param {OctavaTemporal[]} lista - Array de partidas seleccionadas
+   */
+  onPartidasSeleccion(lista: OctavaTemporal[]): void {
+    this.partidasSeleccionadas = [...lista]; // Create new array reference
+    
+    if (!this.partidasSeleccionadas.length) {
+      return;
+    }
+    
+    // If there's a selected row, populate the edit form with its data
+    const FILA_SELECCIONADA = this.partidasSeleccionadas[0];
+    if (FILA_SELECCIONADA) {
+      this.modificarPartidaForm?.patchValue({
+        modificar_cantidad: FILA_SELECCIONADA.cantidad,
+        modificar_descripcion: FILA_SELECCIONADA.descripción,
+        valor_partidas_usd: FILA_SELECCIONADA.totalUsd,
+        fraccion_partidas: FILA_SELECCIONADA.fraccionArancelaria,
+      });
+    }
+  }
+
+  /**
    * Método para calcular los totales de cantidad y valor en USD.
    */
   calculateTotals(): void {
-    const CANTIDAD_TOTAL = this.tableBodyData.reduce(
-      (sum: number, item: { tbodyData: string[] }) =>
-        sum + parseFloat(item.tbodyData[0]),
-      0
+    const CANTIDAD_TOTAL = this.datosSocios.reduce(
+      (sum: number, item: OctavaTemporal) => sum + Number(item.cantidad || 0), 0
     );
-    const VALOR_TOTAL_USD = this.tableBodyData.reduce(
-      (sum: number, item: { tbodyData: string[] }) =>
-        sum + parseFloat(item.tbodyData[5]),
-      0
+    const VALOR_TOTAL_USD = this.datosSocios.reduce(
+      (sum: number, item: OctavaTemporal) => sum + Number(item.totalUsd || 0), 0
     );
 
-    this.formForTotalCount.controls['cantidadTotal'].setValue(CANTIDAD_TOTAL);
-    this.formForTotalCount.controls['valorTotalUSD'].setValue(VALOR_TOTAL_USD);
+    this.formForTotalCount.patchValue({
+      cantidadTotal: CANTIDAD_TOTAL,
+      valorTotalUSD: VALOR_TOTAL_USD
+    });
   }
  
   /**
@@ -440,157 +464,67 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
    * @method agregar
    * @description
    * Este método se utiliza para agregar una nueva partida de mercancía a la tabla dinámica.
-   * Verifica si el formulario `ninoFormGroup` es válido antes de crear un objeto con los datos
+   * Verifica si el formulario `form` es válido antes de crear un objeto con los datos
    * de la partida. Luego, agrega este objeto a la lista de datos de la tabla y actualiza el
    * estado dinámico del trámite con la nueva partida. Finalmente, reinicia el formulario.
-   *
-   * Funcionalidad:
-   * - Valida el formulario `ninoFormGroup` antes de procesar los datos.
-   * - Crea un objeto con los datos de la partida, incluyendo cantidad, unidad de medida,
-   *   fracción arancelaria, descripción, precio unitario y total en USD.
-   * - Agrega la nueva partida a la tabla dinámica y actualiza el estado dinámico del trámite.
-   * - Reinicia el formulario para permitir la entrada de una nueva partida.
-   *
-   * @example
-   * this.agregar();
-   * // Agrega una nueva partida de mercancía a la tabla dinámica y actualiza el estado del trámite.
    */
   public agregar(): void {
     if (this.form.valid) {
+      const VALOR_PARTIDA = Number(this.form.get('valorPartidaUSD')?.value || 0);
+      const CANTIDAD = Number(this.form.get('cantidad')?.value || 0);
+
       const PRODUCTOS = {
-        cantidad: this.form.get('cantidad')?.value,
-        unidadDeMedida: 'valor ficticio',
+        cantidad: CANTIDAD,
+        unidadDeMedida: 'kg',
         fraccionArancelaria: this.form.get('fraccionArancelariaTIGIE')?.value,
         descripción: this.form.get('descripcion')?.value,
         colonia: 'Centro',
-        precioUnitarioUSD: '100',
-        totalUsd: 1000
+        precioUnitarioUSD: VALOR_PARTIDA.toString(),
+        totalUsd: VALOR_PARTIDA * CANTIDAD
       };
-      this.datosSocios?.push(PRODUCTOS);
+      this.datosSocios = [...this.datosSocios, PRODUCTOS];
       this.tramite130102Store.setPartidasTabla('partidas_tabla', this.datosSocios);
+      this.calculateTotals();
       this.form.reset();      
     }
   }
  
   /**
-   * Método para verificar si un control del formulario es inválido.
-   * @param {string} nombreControl - Nombre del control del formulario.
-   * @returns {boolean} - Retorna true si el control es inválido, de lo contrario false.
-   */
-  esInvalido(nombreControl: string): boolean {
-    const CONTROL = this.form.get(nombreControl);
-    return CONTROL
-      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
-      : false;
-  }
-
-   /**
-   * Validador que verifica que el valor del campo no tenga espacios al inicio ni al final.
-   * 
-   * @param control - Control del formulario a validar.
-   * @returns Un objeto con el error 'leadingSpaces' si hay espacios al inicio o final, o null si es válido.
-   */
-  private static noLeadingSpacesValidator(control: AbstractControl): ValidationErrors | null {
-    if (control.value && control.value.trim() !== control.value) {
-      return { leadingSpaces: true };
-    }
-    return null;
-  }
-
-  /**
-   *  compo doc
-   * @method cargarArchivo
+   * @method guardarEdicion
    * @description
-   * Abre el modal de cargar archivo
-   */
-  cargarArchivo(): void {
-    if (this.cargarArchivoInstance) {
-      this.cargarArchivoInstance.show();
-    }
-  }
-
-  /**
-   *  compo doc
-   * @method cerrar
-   * @description
-   * Cierra el modal de cargar archivo
-   */
-  cerrar(): void {
-    if (this.cargarArchivoInstance) {
-      this.cargarArchivoInstance.hide();
-    }
-  }
-
-  /*
-    * @method abrirModalEditar
-    */
-  onPartidasSeleccion(lista: OctavaTemporal[]): void {
-    this.partidasSeleccionadas = [];
-    this.partidasSeleccionadas = lista;
-    if (!this.partidasSeleccionadas.length) {
-      return;
-    }
-    const FILA_SELECCIONADA = this.partidasSeleccionadas[0];
-    if (FILA_SELECCIONADA) {
-      this.modificarPartidaForm?.patchValue({
-        modificar_cantidad: FILA_SELECCIONADA.cantidad,
-        modificar_descripcion: FILA_SELECCIONADA.descripción,
-        valor_partidas_usd: FILA_SELECCIONADA.totalUsd,
-        fraccion_partidas: FILA_SELECCIONADA.fraccionArancelaria,
-      });
-    }
-  }
-
-  /**
-   * @method eliminar
-   * @description
-   * Elimina las partidas seleccionadas de la tabla dinámica (`datosTabla`).
-   * Recorre el arreglo de partidas seleccionadas y elimina cada una de ellas de la tabla,
-   * actualizando el estado dinámico del trámite en el store después de cada eliminación.
-   */
-    eliminar(): void {
-      if (this.partidasSeleccionadas.length) {
-        this.partidasSeleccionadas.forEach((ele: OctavaTemporal) => {
-          const INDICE = this.datosSocios.findIndex((item) => item.fraccionArancelaria === ele.fraccionArancelaria);
-          if (INDICE !== -1) {
-            this.datosSocios.splice(INDICE, 1);
-            this.tramite130102Store.setPartidasTabla('partidas_tabla', this.datosSocios);
-          }
-        });
-      } else {
-        const MODAL = new Modal(this.modalConfirmacionRef.nativeElement);
-        MODAL.show();
-      }
-    }
-
-  /*
-   * @method abrirModalEditar
-   */
-  abrirModalEditar(): void {
-    if (!this.modalEditar) {
-      this.modalEditar = new Modal(this.modalEditarRef.nativeElement);
-    }
-    this.modalEditar.show();
-  }
-
-  /**
-   *
-   * @method abrirModalEditar
+   * Guarda los cambios realizados en el modal de edición
    */
   guardarEdicion(): void {
     if (this.partidasSeleccionadas.length) {
-      const INDEX = this.datosSocios.findIndex((item) => item === this.partidasSeleccionadas[0]);
+      const INDEX = this.datosSocios.findIndex((item) => 
+        item.fraccionArancelaria === this.partidasSeleccionadas[0].fraccionArancelaria &&
+        item.cantidad === this.partidasSeleccionadas[0].cantidad &&
+        item.descripción === this.partidasSeleccionadas[0].descripción &&
+        item.totalUsd === this.partidasSeleccionadas[0].totalUsd
+      );
+      
       if (INDEX !== -1) {
-        this.datosSocios[INDEX] = {
-          ...this.datosSocios[INDEX],
-          cantidad: this.modificarPartidaForm.get('modificar_cantidad')?.value,
-          descripción: this.modificarPartidaForm.get('modificar_descripcion')?.value,
-          totalUsd: this.modificarPartidaForm.get('valor_partidas_usd')?.value,
-          fraccionArancelaria: this.modificarPartidaForm.get('fraccion_partidas')?.value,
-        };
+        const VALOR_PARTIDA = Number(this.modificarPartidaForm.get('valor_partidas_usd')?.value || 0);
+        const CANTIDAD = Number(this.modificarPartidaForm.get('modificar_cantidad')?.value || 0);
+       this.datosSocios = this.datosSocios.map((item, index) => {
+          if (index === INDEX) {
+            return {
+              ...item,
+              cantidad: CANTIDAD,
+              descripción: this.modificarPartidaForm.get('modificar_descripcion')?.value,
+              totalUsd: VALOR_PARTIDA,
+              fraccionArancelaria: this.modificarPartidaForm.get('fraccion_partidas')?.value,
+              precioUnitarioUSD: CANTIDAD > 0 ? (VALOR_PARTIDA / CANTIDAD).toString() : '0'
+            };
+          }
+          return item;
+        });
+        
         this.tramite130102Store.setPartidasTabla('partidas_tabla', this.datosSocios);
+        this.calculateTotals();
       }
       this.modalEditar?.hide();
+      this.partidasSeleccionadas = [];
     }
   }
 
@@ -617,5 +551,107 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+   * Validador personalizado para verificar que no haya espacios al inicio del campo.
+   * @param control - Control del formulario a validar
+   * @returns Error de validación si hay espacios al inicio, null si es válido
+   */
+  static noLeadingSpacesValidator(control: AbstractControl): ValidationErrors | null {
+    const VALUE = control.value;
+    if (VALUE && typeof VALUE === 'string' && VALUE.startsWith(' ')) {
+      return { leadingSpaces: true };
+    }
+    return null;
+  }
+
+  /**
+   * Método para verificar si un campo del formulario es inválido.
+   * @param campo - Nombre del campo a verificar
+   * @returns true si el campo es inválido y ha sido tocado, false en caso contrario
+   */
+  esInvalido(campo: string): boolean {
+    const CONTROL = this.form.get(campo);
+    return Boolean(CONTROL && CONTROL.invalid && (CONTROL.dirty || CONTROL.touched));
+  }
+
+  /**
+   * @method eliminar
+   * @description
+   * Elimina las partidas seleccionadas de la tabla dinámica (`datosSocios`).
+   * Recorre el arreglo de partidas seleccionadas y elimina cada una de ellas de la tabla,
+   * actualizando el estado dinámico del trámite en el store después de cada eliminación.
+   */
+  eliminar(): void {
+    if (this.partidasSeleccionadas.length) {
+      
+      const PARTIDAS_A_ELIMINAR = [...this.partidasSeleccionadas];
+
+      PARTIDAS_A_ELIMINAR.forEach((elementoAEliminar: OctavaTemporal) => {
+        const INDICE = this.datosSocios.findIndex((item) =>
+          item.fraccionArancelaria === elementoAEliminar.fraccionArancelaria &&
+          item.cantidad === elementoAEliminar.cantidad &&
+          item.descripción === elementoAEliminar.descripción &&
+          item.totalUsd === elementoAEliminar.totalUsd
+        );
+        if (INDICE !== -1) {
+          this.datosSocios.splice(INDICE, 1);
+        }
+      });
+      
+      
+      this.datosSocios = [...this.datosSocios];
+      
+    
+      this.tramite130102Store.setPartidasTabla('partidas_tabla', this.datosSocios);
+      this.calculateTotals();
+      
+    
+      this.partidasSeleccionadas = [];
+    } else {
+      const MODAL = new Modal(this.modalConfirmacionRef.nativeElement);
+      MODAL.show();
+    }
+  }
+
+  /**
+   * @method abrirModalEditar
+   * @description
+   * Abre el modal para editar una partida seleccionada.
+   * Verifica que haya una partida seleccionada antes de abrir el modal.
+   */
+  abrirModalEditar(): void {
+    if (this.partidasSeleccionadas.length) {
+      if (this.modalEditarRef) {
+        this.modalEditar = new Modal(this.modalEditarRef.nativeElement);
+        this.modalEditar.show();
+      }
+    } else {
+      const MODAL = new Modal(this.modalConfirmacionRef.nativeElement);
+      MODAL.show();
+    }
+  }
+
+  /**
+   * @method cargarArchivo
+   * @description
+   * Abre el modal para cargar un archivo.
+   */
+  cargarArchivo(): void {
+    if (this.cargarArchivoInstance) {
+      this.cargarArchivoInstance.show();
+    }
+  }
+
+  /**
+   * @method cerrar
+   * @description
+   * Cierra el modal de carga de archivo.
+   */
+  cerrar(): void {
+    if (this.cargarArchivoInstance) {
+      this.cargarArchivoInstance.hide();
+    }
   }
 }
