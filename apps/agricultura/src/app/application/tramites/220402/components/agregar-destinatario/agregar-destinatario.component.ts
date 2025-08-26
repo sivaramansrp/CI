@@ -273,15 +273,17 @@ export class AgregarDestinatarioComponent implements OnDestroy, OnInit {
     if (this.destinatarioForm.valid) {
       const VALOR = this.destinatarioForm.getRawValue();
       const PAIS: string = this.Opciones.find(opt => opt.id.toString() === VALOR.datosPersonales.pais)?.descripcion || '';
-      this.destinatario = [...this.destinatario,
-      {
-        id: this.destinatario.length = 1,
-        nombreDenominacionORazonSocial: VALOR.datosPersonales.denominacion,
-        telefono: VALOR.datosPersonales.telefono,
-        correoElectronico: VALOR.datosPersonales.telefono,
-        domicilio: VALOR.datosPersonales.domicilio,
-        pais: PAIS
-      }]
+      this.destinatario = [
+        ...this.destinatario,
+        {
+          id: this.destinatario.length + 1,
+          nombreDenominacionORazonSocial: VALOR.datosPersonales.denominacion,
+          telefono: VALOR.datosPersonales.telefono,
+          correoElectronico: VALOR.datosPersonales.correoElectronico,
+          domicilio: VALOR.datosPersonales.domicilio,
+          pais: PAIS
+        }
+      ];
       this.closeDomicilio.nativeElement.click();
     }
   }
