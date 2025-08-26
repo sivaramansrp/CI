@@ -192,6 +192,9 @@ export interface TablaMercanciasDatos {
   especifique?: string;
   especifiqueObligatorio?:string;
   fechaCaducidad?: string;
+    paisDeOriginDatos?: string[];
+  paisDeProcedenciaDatos?: string[];
+  usoEspecificos?: string[]
 }
 
 /**

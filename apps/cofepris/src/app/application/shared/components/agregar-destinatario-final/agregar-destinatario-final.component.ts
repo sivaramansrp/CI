@@ -1,8 +1,18 @@
 import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators
+} from '@angular/forms';
+import {
   Catalogo,
   CatalogoSelectComponent,
   REGEX_CORREO_ELECTRONICO,
   REGEX_NOMBRE,
+  REGEX_RFC_FISICA,
+  REGEX_RFC_MORAL,
   REGEX_TELEFONO,
   TipoPersona,
   TituloComponent
@@ -17,12 +27,6 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators
-} from '@angular/forms';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Destinatario } from '../../models/terceros-relacionados.model';
 import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE } from '../../constantes/datos-solicitud.enum';
@@ -51,8 +55,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrl: './agregar-destinatario-final.component.css',
 })
 export class AgregarDestinatarioFinalComponent
-  implements OnDestroy, OnInit, OnChanges
-{
+  implements OnDestroy, OnInit, OnChanges {
   /**
    * Subject utilizado para gestionar la desuscripción de observables.
    * Se completa en `ngOnDestroy()` para prevenir fugas de memoria.
@@ -229,9 +232,8 @@ export class AgregarDestinatarioFinalComponent
     if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.MORAL) {
       nombreRazonSocial = VALOR_FORMULARIO.denominacionRazon;
     } else if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA) {
-      nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${
-        VALOR_FORMULARIO.primerApellido
-      } ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
+      nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${VALOR_FORMULARIO.primerApellido
+        } ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
     } else {
       nombreRazonSocial = ''; // Valor por defecto si tipoPersona es otro
     }
@@ -259,7 +261,7 @@ export class AgregarDestinatarioFinalComponent
       lada: VALOR_FORMULARIO.lada,
     };
 
-    this.destinatarios.push(NUEVO_DESTINATARIO);
+    this.destinatarios = [...this.destinatarios, NUEVO_DESTINATARIO];
     this.updateDestinatarioFinalTablaDatos.emit(this.destinatarios);
     this.agregarDestinatarioFinal.reset();
     this.ubicaccion.back();
@@ -339,8 +341,7 @@ export class AgregarDestinatarioFinalComponent
     this.agregarDestinatarioFinal = this.fb.group({
       tipoPersona: ['', Validators.required],
       rfc: [
-        this.obtenerValor('rfc'),
-        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
+        this.obtenerValor('rfc'), [Validators.required],
       ],
       nombres: [
         {
@@ -353,15 +354,15 @@ export class AgregarDestinatarioFinalComponent
       ],
       denominacionRazon: [
         this.obtenerValor('razonSocial'),
-        Validators.required,
-        Validators.pattern(REGEX_NOMBRE),
+        [Validators.required,
+        Validators.pattern(REGEX_NOMBRE)],
       ],
       primerApellido: [
         {
-          value: this.elementosDeshabilitados.includes('pais')
+          value: this.elementosDeshabilitados.includes('primerApellido')
             ? ''
             : this.obtenerValor('primerApellido'),
-          disabled: this.elementosDeshabilitados.includes('pais'),
+          disabled: this.elementosDeshabilitados.includes('primerApellido'),
         },
         [Validators.required, Validators.pattern(REGEX_NOMBRE)],
       ],
@@ -377,7 +378,7 @@ export class AgregarDestinatarioFinalComponent
       pais: [
         {
           value: this.elementosDeshabilitados.includes('pais')
-            ? '1'
+            ? '2'
             : this.obtenerValor('pais'),
           disabled: this.elementosDeshabilitados.includes('pais'),
         },
@@ -435,6 +436,41 @@ export class AgregarDestinatarioFinalComponent
     return this.datoSeleccionado?.[0]?.[field as keyof Destinatario] ?? '';
   }
 
+
+  /**
+   * Validador personalizado para RFC según el tipo de persona (Física o Moral).
+   *
+   * @param TIPO_PERSONA El tipo de persona para el cual se debe validar el RFC.
+   * @returns Una función validadora que verifica si el valor cumple con el formato RFC correspondiente.
+   *          Si el valor es inválido, retorna un objeto con la clave de error específica.
+   *          Si el tipo de persona es desconocido o el valor está vacío, retorna null.
+   */
+  static rfcFisicaValidator(TIPO_PERSONA: TipoPersona): (CONTROL: AbstractControl) => ValidationErrors | null {
+    return (CONTROL: AbstractControl): ValidationErrors | null => {
+      const VALUE = CONTROL?.value;
+
+      if (!VALUE) {
+        return null;
+      }
+
+      let REGEX;
+      let ERROR_KEY;
+
+      if (TIPO_PERSONA === TipoPersona.FISICA) {
+        REGEX = REGEX_RFC_FISICA;
+        ERROR_KEY = { INVALID_RFC_FISICA: true };
+      } else if (TIPO_PERSONA === TipoPersona.MORAL) {
+        REGEX = REGEX_RFC_MORAL;
+        ERROR_KEY = { INVALID_RFC_MORAL: true };
+      } else {
+        return null;
+      }
+
+      return REGEX.test(VALUE) ? null : ERROR_KEY;
+    };
+
+  }
+
   /**
    * Valida elementos según el `idProcedimiento` y establece
    * las listas de elementos no válidos y añadidos.
@@ -464,6 +500,8 @@ export class AgregarDestinatarioFinalComponent
         break;
       case 260214:
         this.elementosRequeridos = ['calle', 'numeroExterior'];
+        this.elementosDeshabilitados = ['pais'];
+        this.elementosNoRequeridos = ['colonia'];
         break;
       default:
         this.elementosDeshabilitados = [];
@@ -512,6 +550,7 @@ export class AgregarDestinatarioFinalComponent
    * @returns {void} No retorna ningún valor.
    */
   changeNacionalidad(): void {
+    const VALOR_FORMULARIO = this.agregarDestinatarioFinal.getRawValue();
     if (this.agregarDestinatarioFinal?.value?.tipoPersona === '') {
       Object.keys(this.agregarDestinatarioFinal.controls).forEach(
         (controlName) => {
@@ -523,6 +562,15 @@ export class AgregarDestinatarioFinalComponent
       );
     } else {
       if (this.agregarDestinatarioFinal?.get('tipoPersona')?.value) {
+        const RFC_CONTROL = this.agregarDestinatarioFinal.get('rfc');
+        if (RFC_CONTROL) {
+          RFC_CONTROL.setValidators([
+              Validators.required,
+            AgregarDestinatarioFinalComponent.rfcFisicaValidator(VALOR_FORMULARIO.tipoPersona)
+          ]);
+          RFC_CONTROL.markAsTouched();
+          RFC_CONTROL.updateValueAndValidity();
+        }
         Object.keys(this.agregarDestinatarioFinal.controls).forEach(
           (controlName) => {
             if (
@@ -538,6 +586,9 @@ export class AgregarDestinatarioFinalComponent
         (controlName) => {
           this.agregarDestinatarioFinal.get(controlName)?.enable();
           this.estaDeshabilitadoDesplegable = false;
+          this.agregarDestinatarioFinal.patchValue({
+            pais: 2
+          });
         }
       );
     }

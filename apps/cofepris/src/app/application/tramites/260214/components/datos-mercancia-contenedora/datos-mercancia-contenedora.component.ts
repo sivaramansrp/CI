@@ -97,28 +97,39 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
    */
   mercanciaSeleccionado(event: TablaMercanciasDatos): void {
     this.SeleccionadoDatos = event;
+    console.log(this.SeleccionadoDatos, 'SeleccionadoDatos');
+
 
     const SELECCIONADO_MERCANCIA = {
-      clasificacionProducto: event.clasificacionProducto,
-      especificarClasificacionProducto: event.especificarClasificacionProducto,
-      denominacionEspecificaProducto: event.denominacionEspecificaProducto,
-      denominacionDistintiva: event.denominacionComun,
-      denominacionComun: event.denominacionComun,
-      formaFarmaceutica: event.formaFarmaceutica,
-      estadoFisico: event.estadoFisico,
-      fraccionArancelaria: event.fraccionArancelaria,
-      descripcionFraccion: event.descripcionFraccion,
-      unidadMedidaComercializacion: event.unidadMedidaComercializacion,
-      cantidadUMC: event.cantidadUMC,
-      unidadMedidaTarifa: event.unidadMedidaTarifa,
-      cantidadUMT: event.cantidadUMT,
-      presentacion: event.presentacion,
-      numeroRegistroSanitario: event.numeroRegistroSanitario,
-      paisOrigen: event.paisOrigen,
-      paisProcedencia: event.paisProcedencia,
-      tipoProducto: event.tipoProducto,
-      usoEspecifico: event.usoEspecifico,
-    };
+  clasificacionProducto: event.clasificacionProducto,
+  especificarClasificacionProducto: event.especificarClasificacionProducto,
+  denominacionEspecificaProducto: event.denominacionEspecificaProducto,
+  denominacionDistintiva: event.denominacionDistintiva,
+  denominacionComun: event.denominacionComun,
+  tipoProducto: event.tipoProducto,
+  estadoFisico: event.estadoFisico,
+  fraccionArancelaria: event.fraccionArancelaria,
+  descripcionFraccion: event.descripcionFraccion,
+  cantidadUmtValor: event.cantidadUMT,
+  cantidadUmt: event.cantidadUMT,
+  cantidadUmcValor: event.cantidadUMC,
+  cantidadUmc: event.cantidadUMC,
+  unidadMedidaComercializacion: event.unidadMedidaComercializacion,
+  cantidadUMC: event.cantidadUMC,
+  unidadMedidaTarifa: event.unidadMedidaTarifa,
+  cantidadUMT: event.cantidadUMT,
+  presentacion: event.presentacion,
+  paisDeOriginDatos: event.paisDeOriginDatos,
+  paisDeProcedenciaDatos: event.paisDeProcedenciaDatos,
+  paisOrigen: event.paisOrigen,
+  paisProcedencia: event.paisProcedencia,
+  usoEspecificos: event.usoEspecificos,
+  usoEspecifico: event.usoEspecifico,
+  formaFarmaceutica: event.formaFarmaceutica,
+  numeroRegistroSanitario: event.numeroRegistroSanitario,
+};
+
+console.log(SELECCIONADO_MERCANCIA,'SELECCIONADO_MERCANCIA');
 
     const INDICES = this.tramiteState.tablaMercanciasConfigDatos.findIndex(
       (idx) =>

@@ -415,33 +415,33 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       ? false
       : true;
 
-    this.tercerosService
-      .getFabricanteTablaDatos()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((response: Destinatario[]) => {
-        this.fabricanteTablaDatos = response;
-      });
+    // this.tercerosService
+    //   .getFabricanteTablaDatos()
+    //   .pipe(takeUntil(this.destroy$))
+    //   .subscribe((response: Destinatario[]) => {
+    //     this.fabricanteTablaDatos = response;
+    //   });
 
-    this.tercerosService
-      .getFabricanteTablaDatos()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((response: Destinatario[]) => {
-        this.destinatarioFinalTablaDatos = response;
-      });
+    // this.tercerosService
+    //   .getFabricanteTablaDatos()
+    //   .pipe(takeUntil(this.destroy$))
+    //   .subscribe((response: Destinatario[]) => {
+    //     this.destinatarioFinalTablaDatos = response;
+    //   });
 
-    this.tercerosService
-      .getFabricanteTablaDatos()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((response: Proveedor[]) => {
-        this.proveedorTablaDatos = response;
-      });
+    // this.tercerosService
+    //   .getFabricanteTablaDatos()
+    //   .pipe(takeUntil(this.destroy$))
+    //   .subscribe((response: Proveedor[]) => {
+    //     this.proveedorTablaDatos = response;
+    //   });
 
-    this.tercerosService
-      .getFabricanteTablaDatos()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((response: Facturador[]) => {
-        this.facturadorTablaDatos = response;
-      });
+    // this.tercerosService
+    //   .getFabricanteTablaDatos()
+    //   .pipe(takeUntil(this.destroy$))
+    //   .subscribe((response: Facturador[]) => {
+    //     this.facturadorTablaDatos = response;
+    //   });
   }
 
   /**

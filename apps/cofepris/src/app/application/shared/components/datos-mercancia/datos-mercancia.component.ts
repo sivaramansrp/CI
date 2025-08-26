@@ -245,32 +245,32 @@ export class DatosMercanciaComponent implements OnInit {
     derecha: 'Uso específico',
   };
 
-  /**
+ /**
    * Botones de acción para gestionar listas de países en la tercera sección.
    */
   paisDeProcedenciaBotonsUno = [
     {
       btnNombre: 'Agregar todos',
       class: 'btn-default',
-      funcion: (): void => this.crossList.toArray()[2].agregar('t'),
+      funcion: (): void => this.crossList.toArray()[0].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
       class: 'btn-primary',
-      funcion: (): void => this.crossList.toArray()[2].agregar(''),
+      funcion: (): void => this.crossList.toArray()[0].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
       class: 'btn-primary',
-      funcion: (): void => this.crossList.toArray()[2].quitar(''),
+      funcion: (): void => this.crossList.toArray()[0].quitar(''),
     },
     {
       btnNombre: 'Restar todos',
       class: 'btn-default',
-      funcion: (): void => this.crossList.toArray()[2].quitar('t'),
+      funcion: (): void => this.crossList.toArray()[0].quitar('t'),
     },
   ];
-
+ 
   /**
    * Botones de acción para gestionar listas de países en la tercera sección.
    */
@@ -278,25 +278,25 @@ export class DatosMercanciaComponent implements OnInit {
     {
       btnNombre: 'Agregar todos',
       class: 'btn-default',
-      funcion: (): void => this.crossList.toArray()[2].agregar('t'),
+      funcion: (): void => this.crossList.toArray()[1].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
       class: 'btn-primary',
-      funcion: (): void => this.crossList.toArray()[2].agregar(''),
+      funcion: (): void => this.crossList.toArray()[1].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
       class: 'btn-primary',
-      funcion: (): void => this.crossList.toArray()[2].quitar(''),
+      funcion: (): void => this.crossList.toArray()[1].quitar(''),
     },
     {
       btnNombre: 'Restar todos',
       class: 'btn-default',
-      funcion: (): void => this.crossList.toArray()[2].quitar('t'),
+      funcion: (): void => this.crossList.toArray()[1].quitar('t'),
     },
   ];
-
+ 
   /**
    * Botones de acción para gestionar listas de países en la tercera sección.
    */
@@ -917,12 +917,12 @@ export class DatosMercanciaComponent implements OnInit {
     const VALORTABLAMERCANCIA: TablaMercanciasDatos =
       this.mercanciaForm.getRawValue();
     VALORTABLAMERCANCIA.paisOrigen =
-      this.mercanciaForm.get('paisDeOriginDatos')?.value[0];
+      this.mercanciaForm.get('paisDeOriginDatos')?.value.join(', ');
     VALORTABLAMERCANCIA.paisProcedencia = this.mercanciaForm.get(
       'paisDeProcedenciaDatos'
-    )?.value[0];
+    )?.value.join(', ');
     VALORTABLAMERCANCIA.usoEspecifico =
-      this.mercanciaForm.get('usoEspecifico')?.value[0];
+      this.mercanciaForm.get('usoEspecifico')?.value.join(', ');
     VALORTABLAMERCANCIA.unidadMedidaComercializacion =
       this.mercanciaForm.get('cantidadUmcValor')?.value;
     VALORTABLAMERCANCIA.cantidadUMC =
@@ -931,6 +931,8 @@ export class DatosMercanciaComponent implements OnInit {
       this.mercanciaForm.get('cantidadUmtValor')?.value;
     VALORTABLAMERCANCIA.cantidadUMT =
       this.mercanciaForm.get('cantidadUmt')?.value;
+    console.log(VALORTABLAMERCANCIA, 'VALORTABLAMERCANCIA');
+
     this.mercanciaSeleccionado.emit(VALORTABLAMERCANCIA);
     this.ubicaccion.back();
   }
