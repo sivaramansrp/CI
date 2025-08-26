@@ -1,9 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, PASOS4, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
+import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent } from '@ng-mf/data-access-user';
 import { AccionBoton } from '../../models/nuevo-programa-industrial.model';
 import { Subject } from 'rxjs';
-import { Tramite80101Query } from '../../estados/tramite80101.query';
-import { takeUntil } from 'rxjs';
 
 /**
  * Obtiene el valor del índice de la acción del botón y actualiza el estado del componente.

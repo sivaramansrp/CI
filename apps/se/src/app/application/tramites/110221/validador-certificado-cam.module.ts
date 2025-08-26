@@ -16,6 +16,7 @@ import { PasoUnoComponent } from './page/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentanteLegalComponent } from '../../shared/components/representante-legal/representante-legal.component';
 import { RouterModule } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { ValidadorCertificadoCamRoutingModule } from './validador-certificado-cam-routing.module';
 
 
@@ -48,6 +49,9 @@ import { ValidadorCertificadoCamRoutingModule } from './validador-certificado-ca
     RepresentanteLegalComponent,
     DestinatarioComponent,
     CertificadoDeOrigenComponent
+  ],
+    providers: [
+    ToastrService
   ]
 })
 export class ValidadorCertificadoCamModule { }

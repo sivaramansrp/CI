@@ -25,7 +25,7 @@
     "regimen": "101",
     "adunasDeEntradas": "101",
     "aeropuerto": true,
-    "publico": "no",
+    "publico": "No",
     "representanteRfc": "REP123456789",
     "representanteNombre": "Juan",
     "apellidoPaterno": "Pérez",

@@ -372,7 +372,22 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
       txtBtnCancelar: '',
     }
   }
+  /**
+   * Valida el formulario del componente.
+   * 
+   * @returns {boolean} `true` si el formulario es válido, de lo contrario `false`.
+   */
+public validarFormulario(): boolean {
+  let isValid = true;
 
+  if (this.formulario.invalid) {
+    this.formulario.markAllAsTouched();
+    isValid = false;
+  }
+
+
+  return isValid;
+}
   /**
    * Método que se ejecuta al destruir el componente.
    * 
