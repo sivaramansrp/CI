@@ -1,5 +1,5 @@
 import { AccionBoton, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@libs/shared/data-access-user/src';
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ALERTA_ERROR } from '../../constantes/prosec.enum';
 import { ProsecService } from '../../services/prosec/prosec.service';
 
@@ -11,7 +11,7 @@ import { ProsecService } from '../../services/prosec/prosec.service';
   templateUrl: './pantallas.component.html',
   styles: ``
 })
-export class PantallasComponent {
+export class PantallasComponent implements OnInit {
   /**
    * Lista de pasos del wizard.
    * @type {ListaPasosWizard[]}
