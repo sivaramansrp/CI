@@ -60,7 +60,7 @@ export const EXPORTADOR_CONFIGURACION_TABLA: ConfiguracionColumna<Exportador>[] 
   { encabezado: "Nombre/denominación o razón social", clave: (item: Exportador) => item.nombre, orden: 1, },
   { encabezado: "Teléfono", clave: (item: Exportador) => item.telefono, orden: 2, },
   { encabezado: "Correo electrónico", clave: (item: Exportador) => item.correoElectronico, orden: 3, },
-  { encabezado: "Domoicilio", clave: (item: Exportador) => item.domoicilio, orden: 4, },
+  { encabezado: "Domicilio", clave: (item: Exportador) => item.domicilio, orden: 4, },
   { encabezado: "País", clave: (item: Exportador) => item.pais, orden: 5, },
 
 ];

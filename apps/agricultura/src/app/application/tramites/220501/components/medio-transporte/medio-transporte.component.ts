@@ -1,28 +1,38 @@
-import { AlertComponent, Catalogo, ConsultaioQuery, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent, InputRadioComponent } from '@libs/shared/data-access-user/src';
+import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
+import {
+  AlertComponent,
+  Catalogo,
+  ConsultaioQuery,
+  TableComponent,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
+import {
+  CatalogoSelectComponent,
+  InputRadioComponent,
+} from '@libs/shared/data-access-user/src';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { AgregarMercanciaComponent } from '../agregar-mercancia/agregar-mercancia.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { MercanciaTabla } from '../../models/medio-transporte.model';
+import { Modal } from 'bootstrap';
+import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/sagarpa.enum';
 import { OnDestroy } from '@angular/core';
 import { Output } from '@angular/core';
-import { Subject } from 'rxjs';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { merge } from 'rxjs';
-import { takeUntil } from 'rxjs';
-
-import { AgregarMercanciaComponent } from '../agregar-mercancia/agregar-mercancia.component';
-import { MercanciaTabla } from '../../models/medio-transporte.model';
-import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/sagarpa.enum';
 import { SagarpaService } from '../../services/sagarpa/sagarpa.service';
 import { Solicitud220501Query } from '../../estados/tramites220501.query';
 import { Solicitud220501State } from '../../estados/tramites220501.store';
 import { Solicitud220501Store } from '../../estados/tramites220501.store';
+import { Subject } from 'rxjs';
 import { TEXTOS } from '../../constantes/texto-enum';
+import { Validators } from '@angular/forms';
+import { map } from 'rxjs';
 import mercanciaTable from '@libs/shared/theme/assets/json/220501/mercancia-table.json';
+import { merge } from 'rxjs';
+import { takeUntil } from 'rxjs';
+
 
 /**
  * Componente para seleccionar el medio de transporte.
@@ -32,17 +42,24 @@ import mercanciaTable from '@libs/shared/theme/assets/json/220501/mercancia-tabl
   templateUrl: './medio-transporte.component.html',
   styleUrl: './medio-transporte.component.scss',
   standalone: true,
-  imports: [ReactiveFormsModule, TituloComponent, CommonModule, CatalogoSelectComponent,
-    InputRadioComponent, AlertComponent, TableComponent, AgregarMercanciaComponent
+  imports: [
+    ReactiveFormsModule,
+    TituloComponent,
+    CommonModule,
+    CatalogoSelectComponent,
+    InputRadioComponent,
+    AlertComponent,
+    TableComponent,
+    AgregarMercanciaComponent,
   ],
 })
 /**
  * Componente que permite seleccionar el medio de transporte para una solicitud.
  * Utiliza Reactive Forms para la gestión del formulario y RxJS para la gestión de datos asíncronos.
- * 
+ *
  * @class MedioTransporteComponent
  */
-export class MedioTransporteComponent implements OnDestroy {
+export class MedioTransporteComponent implements AfterViewInit, OnDestroy {
   /**
    * Evento emitido cuando se selecciona un medio de transporte.
    */
@@ -59,8 +76,8 @@ export class MedioTransporteComponent implements OnDestroy {
   medioDeTransporte!: Catalogo[];
 
   /**
-  * Indica si se debe mostrar una advertencia.
-  */
+   * Indica si se debe mostrar una advertencia.
+   */
   mostrarAdvertencia: boolean = false;
 
   /**
@@ -72,11 +89,6 @@ export class MedioTransporteComponent implements OnDestroy {
    * Constantes de texto.
    */
   TEXTOS = TEXTOS;
-
-  /**
-   * Indica si se debe mostrar el componente de agregar mercancía.
-   */
-  mostrarAgregarMercancia: boolean = false;
 
   /**
    * Array que contiene los datos del encabezado para la tabla de mercancías.
@@ -104,19 +116,19 @@ export class MedioTransporteComponent implements OnDestroy {
   public getMercanciaTableData = mercanciaTable;
 
   /**
-    * Subject para desuscribirse de los observables.
-    * @type {Subject<void>}
-    */
+   * Subject para desuscribirse de los observables.
+   * @type {Subject<void>}
+   */
   private destroyed$ = new Subject<void>();
 
-  /** 
-   * Estado de la solicitud 220501. 
+  /**
+   * Estado de la solicitud 220501.
    * Se inicializa como un objeto vacío con la estructura de Solicitud220501State.
    */
   solicitud220501State: Solicitud220501State = {} as Solicitud220501State;
 
-  /** 
-   * Variable que almacena las opciones disponibles para el botón de radio. 
+  /**
+   * Variable que almacena las opciones disponibles para el botón de radio.
    */
   opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
 
@@ -124,6 +136,32 @@ export class MedioTransporteComponent implements OnDestroy {
    * Indica si el formulario está deshabilitado.
    */
   formularioDeshabilitado: boolean = false;
+
+  /**
+   * Indica si se ha seleccionado un medio de transporte.
+   */
+  seleccionado: boolean = false;
+
+  /**
+   * Referencia al elemento del modal.
+   */
+  @ViewChild('modalModificarSaldoMercancia')
+  modalElement!: ElementRef<HTMLDivElement>;
+
+  /**
+   * Referencia al botón de modificar el saldo de la mercancía.
+   */
+  @ViewChild('modificarBtn') modificarBtn!: ElementRef<HTMLButtonElement>;
+
+  /**
+   * Referencia al botón de cerrar el modal.
+   */
+  @ViewChild('closeModal') closeModal!: ElementRef;
+
+  /**
+   * Indica si el formulario es válido.
+   */
+  @Input() formValida: boolean = false;
 
   /**
    * Constructor del componente.
@@ -143,14 +181,27 @@ export class MedioTransporteComponent implements OnDestroy {
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.formularioDeshabilitado = seccionState.readonly;
-          if(seccionState.readonly || seccionState.update){
-             this.inicializarEstadoFormulario();
+          if (seccionState.readonly || seccionState.update) {
+            this.inicializarEstadoFormulario();
           }
         })
       )
       .subscribe();
 
     this.inicializarFormulario();
+  }
+
+  /**
+   * Método que se ejecuta después de que la vista del componente ha sido inicializada.
+   * Se encarga de manejar el cierre del modal y limpiar el fondo.
+   * @returns {void}
+   */
+  ngAfterViewInit(): void {
+    this.modalElement.nativeElement.addEventListener('hidden.bs.modal', () => {
+      document.querySelectorAll('.modal-backdrop').forEach((el) => el.remove());
+      document.body.classList.remove('modal-open');
+      document.body.style.removeProperty('padding-right');
+    });
   }
 
   /**
@@ -162,17 +213,18 @@ export class MedioTransporteComponent implements OnDestroy {
       this.medioTransporteForm?.disable();
     } else if (!this.formularioDeshabilitado) {
       this.medioTransporteForm?.enable();
+      this.medioTransporteForm.get('esSolicitudFerros')?.disable();
     }
   }
 
   /**
    * Método que se ejecuta al inicializar el componente.
-   * 
+   *
    * Este método realiza las siguientes acciones:
    * 1. Inicializa los catálogos necesarios para el formulario.
    * 2. Obtiene los datos de las mercancías.
    * 3. Selecciona el medio de transporte.
-   * 
+   *
    * @returns {void}
    */
   inicializarFormulario(): void {
@@ -184,15 +236,16 @@ export class MedioTransporteComponent implements OnDestroy {
           this.solicitud220501State = data;
           this.medioTransporteForm.patchValue({
             medioDeTransporte: this.solicitud220501State.medioDeTransporte,
-            identificacionTransporte: this.solicitud220501State.identificacionTransporte,
+            identificacionTransporte:
+              this.solicitud220501State.identificacionTransporte,
             esSolicitudFerros: this.solicitud220501State.esSolicitudFerros,
             totalGuias: this.solicitud220501State.totalGuias,
           });
           this.mercanciaBodyData = [
             {
               tbodyData: this.solicitud220501State.mercanciaTablaDatos,
-            }
-          ]
+            },
+          ];
         })
       )
       .subscribe();
@@ -205,36 +258,45 @@ export class MedioTransporteComponent implements OnDestroy {
    */
   crearFormulario(): void {
     this.medioTransporteForm = this.fb.group({
-      medioDeTransporte: new FormControl(this.solicitud220501State.medioDeTransporte, [Validators.required]),
-      identificacionTransporte: new FormControl(this.solicitud220501State.identificacionTransporte, [Validators.maxLength(30)]),
-      esSolicitudFerros: new FormControl(this.solicitud220501State.esSolicitudFerros, [Validators.required]),
-      totalGuias: new FormControl(this.solicitud220501State.totalGuias, [Validators.maxLength(50)]),
+      medioDeTransporte: new FormControl(
+        this.solicitud220501State.medioDeTransporte,
+        [Validators.required]
+      ),
+      identificacionTransporte: new FormControl(
+        this.solicitud220501State.identificacionTransporte,
+        [Validators.maxLength(30)]
+      ),
+      esSolicitudFerros: new FormControl(
+        { value: this.solicitud220501State.esSolicitudFerros, disabled: true },
+        [Validators.required]
+      ),
+      totalGuias: new FormControl(this.solicitud220501State.totalGuias, [
+        Validators.maxLength(50),
+      ]),
     });
 
-    this.inicializarEstadoFormulario();    
+    this.inicializarEstadoFormulario();
   }
 
   /**
    * Inicializa los catálogos necesarios para el formulario.
    */
   private inicializaCatalogos(): void {
-    const MEDIODETRANSPORTE$ = this.sagarpaService
-      .getMediodetransporte()
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((resp) => {
-          this.medioDeTransporte = resp.data;
-        })
-      );
+    const MEDIODETRANSPORTE$ = this.sagarpaService.getMediodetransporte().pipe(
+      takeUntil(this.destroyed$),
+      map((resp) => {
+        this.medioDeTransporte = resp.data;
+      })
+    );
     merge(MEDIODETRANSPORTE$).subscribe();
   }
 
   /**
    * Método para obtener los datos de las mercancías.
-   * 
+   *
    * Este método asigna los datos del encabezado y del cuerpo de la tabla de mercancías
    * a las propiedades correspondientes del componente.
-   * 
+   *
    * @returns {void}
    */
   public obtenerMercancia(): void {
@@ -242,12 +304,14 @@ export class MedioTransporteComponent implements OnDestroy {
     if (this.solicitud220501State.mercanciaTablaDatos.length <= 0) {
       this.mercanciaBodyData = this.getMercanciaTableData.tableBody;
     }
-    this.solicitud220501Store.setMercanciaTablaDatos(this.mercanciaBodyData[0].tbodyData);
+    this.solicitud220501Store.setMercanciaTablaDatos(
+      this.mercanciaBodyData[0].tbodyData
+    );
   }
 
   /**
    * Método para actualizar los datos de la mercancía en la tabla.
-   * 
+   *
    * @param datos Datos de la mercancía a actualizar.
    */
   actualizarMercanciaEnTabla(datos: MercanciaTabla): void {
@@ -259,11 +323,12 @@ export class MedioTransporteComponent implements OnDestroy {
       datos.saldoACapturar,
       datos.unidaddeMedidaDeUMT,
       datos.cantidadTotalUMT,
-      datos.saldoPendiente
+      datos.saldoPendiente,
     ];
-    this.solicitud220501Store.setMercanciaTablaDatos(this.mercanciaBodyData[0].tbodyData);
-    this.mostrarAgregarMercancia = false;
-    this.solicitud220501Store.setMostrarAgregarMercancia(this.mostrarAgregarMercancia);
+    this.solicitud220501Store.setMercanciaTablaDatos(
+      this.mercanciaBodyData[0].tbodyData
+    );
+    this.cerrarModal();
   }
 
   /**
@@ -284,40 +349,51 @@ export class MedioTransporteComponent implements OnDestroy {
     } else if (this.esSolicitudFerrosValor === '0') {
       this.transporteSeleccionado.emit(false);
     }
-    this.mostrarAgregarMercancia = false;
-    this.solicitud220501Store.setMostrarAgregarMercancia(this.mostrarAgregarMercancia)
-    this.solicitud220501Store.setEsSolicitudFerros(this.esSolicitudFerrosValor)
+    this.solicitud220501Store.setEsSolicitudFerros(this.esSolicitudFerrosValor);
   }
 
   /**
    * Método para modificar los saldos de mercancía.
    */
   modificarSaldosMercancia(): void {
-    this.obtenerMercancia();
-    this.mostrarAgregarMercancia = true;
-    this.solicitud220501Store.setMostrarAgregarMercancia(this.mostrarAgregarMercancia)
+    if (this.seleccionado) {
+      this.obtenerMercancia();
+
+      if (this.modalElement) {
+        const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+        MODAL_INSTANCE.show();
+      }
+    }
   }
 
   /**
-   * Método para manejar el evento de agregar mercancía.
-   * @param e Valor booleano que indica si se debe mostrar el componente de agregar mercancía.
+   * Método para cerrar el modal de modificación de saldo de mercancía.
+   * Este método oculta el modal si está abierto.
+   * @returns {void}
    */
-  obtenerAgregarMercanciaEvent(e: boolean): void {
-    this.mostrarAgregarMercancia = e;
-    this.solicitud220501Store.setMostrarAgregarMercancia(this.mostrarAgregarMercancia)
+  cerrarModal(): void {
+    if (this.modalElement) {
+      const MODAL_INSTANCE = Modal.getOrCreateInstance(
+        this.modalElement.nativeElement
+      );
+      MODAL_INSTANCE.hide();
+    }
+    this.seleccionado = false;
   }
 
-  /** 
-   * Obtiene el valor de la identificación del transporte desde el formulario 
+  /**
+   * Obtiene el valor de la identificación del transporte desde el formulario
    * y actualiza el store con dicho valor.
    */
   getIdentificacionTransporte(): void {
-    const VALUE = this.medioTransporteForm.get('identificacionTransporte')?.value;
+    const VALUE = this.medioTransporteForm.get(
+      'identificacionTransporte'
+    )?.value;
     this.solicitud220501Store.setIdentificacionTransporte(VALUE);
   }
 
-  /** 
-   * Obtiene el valor del total de guías amparadas desde el formulario 
+  /**
+   * Obtiene el valor del total de guías amparadas desde el formulario
    * y actualiza el store con dicho valor.
    */
   getTotalGuiasAmparadas(): void {
@@ -326,10 +402,18 @@ export class MedioTransporteComponent implements OnDestroy {
   }
 
   /**
-  * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
-  * Desuscribe el componente de todos los observables.
-  * @returns {void}
-  */
+   * Método para manejar el cambio de selección en el componente.
+   * @param event El evento de cambio de selección.
+   */
+  onSeleccionCambio(event: boolean): void {
+    this.seleccionado = event;
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Desuscribe el componente de todos los observables.
+   * @returns {void}
+   */
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();

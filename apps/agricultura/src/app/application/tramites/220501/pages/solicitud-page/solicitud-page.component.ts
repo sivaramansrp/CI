@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Subject, map, takeUntil } from 'rxjs';
-
 import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
+import { Subject, map, takeUntil } from 'rxjs';
+import { ALERTA_220501 } from '@libs/shared/data-access-user/src/tramites/constantes/mensajes-error-formularios';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from'@ng-mf/data-access-user';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { SECCIONES_TRAMITE_5701 } from'@ng-mf/data-access-user';
 import { SeccionQuery } from'../../../../estados/queries/seccion.query';
 import { WizardComponent } from'@ng-mf/data-access-user';
@@ -57,6 +58,26 @@ export class SolicitudPageComponent implements OnInit {
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
+   * Referencia al componente PasoUnoComponent
+   */
+  @ViewChild(PasoUnoComponent) pasoUnoComponent!: PasoUnoComponent;
+
+  /**
+   * Mensaje de error a mostrar.
+   */
+  esValido = true;
+
+  /**
+   * Una cadena que representa la clase CSS para una alerta de error.
+   */
+  infoError = 'alert-danger';
+
+  /**
+   * Asigna el mensaje de error a mostrar al atributo `ALERTA`.
+   */
+  ALERTA = ALERTA_220501;
+
+  /**
  * Datos de los pasos del asistente.
  */
   datosPasos: DatosPasos = {
@@ -106,6 +127,16 @@ export class SolicitudPageComponent implements OnInit {
  */
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
+      if (this.indice === 1) {
+        const SOLICITUD = this.pasoUnoComponent?.solicitudComponent;
+        this.esValido = SOLICITUD?.validarFormulario() ?? false;
+      }
+
+      if (!this.esValido) {
+        this.datosPasos.indice = 1;
+        return;
+      }
+
       this.indice = e.valor;
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
