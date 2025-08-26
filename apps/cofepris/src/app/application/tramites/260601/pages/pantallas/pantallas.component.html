@@ -3,7 +3,11 @@
         <div class="col-md-6">
             <h2>Aviso sanitario de importación de productos</h2>
         </div>
-
+        @if(esFormaValido){
+        <div class="col-md-12">
+          <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+        </div>
+        }
         <app-wizard [listaPasos]="pasos"></app-wizard>
 
     </div>

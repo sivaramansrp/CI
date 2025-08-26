@@ -287,6 +287,15 @@ export class DatosDelEstablecimientoComponent implements OnInit, AfterViewInit, 
   @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
 
   /**
+   * @property {RepresentanteLegalComponent} representanteLegal
+   * @description
+   * Referencia al componente hijo RepresentanteLegalComponent.
+   * Se utiliza para acceder a sus propiedades y métodos, especialmente para la validación de formularios
+   * relacionados con la información del representante legal del establecimiento.
+   */
+  @ViewChild('representanteLegal') representanteLegal!: RepresentanteLegalComponent;
+
+  /**
    * Constructor del componente. Utilizado para inyectar servicios necesarios.
    *
    * @param fb FormBuilder para construir formularios reactivos.
@@ -900,6 +909,12 @@ export class DatosDelEstablecimientoComponent implements OnInit, AfterViewInit, 
     this.domicilloDelEstablecimientoForm.markAllAsTouched();
     this.scianForm.markAllAsTouched();
     this.manifiestosForm.markAllAsTouched();
+    if(this.representanteLegal){
+      if(!this.representanteLegal.validarFormulario()){
+        return false
+      }
+      return false
+    }
     return false
   }
 

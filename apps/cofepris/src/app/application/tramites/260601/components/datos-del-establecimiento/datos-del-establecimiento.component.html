@@ -63,10 +63,16 @@
             <input type="text" name="codigoPostal" id="codigoPostal" class="form-control" formControlName="codigoPostal"
                 maxlength="12"
                 (change)="setValoresStore(domicilloDelEstablecimientoForm,'codigoPostal', 'setCodigoPostal')">
+                <div *ngIf="domicilloDelEstablecimientoForm.get('codigoPostal')?.touched && domicilloDelEstablecimientoForm.get('codigoPostal')?.invalid">
+            <small *ngIf="domicilloDelEstablecimientoForm.get('codigoPostal')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            </div>
         </div>
         <div class="col-md-4">
             <app-catalogo-select [catalogo]="estado" formControlName="cveEstado" [label]="'Estado'" [required]="true"
                 name="cveEstado" (change)="estadoSeleccion()" [isDisabled]="habilitarEstado || esFormularioSoloLectura"></app-catalogo-select>
+                <div *ngIf="domicilloDelEstablecimientoForm.get('cveEstado')?.touched && domicilloDelEstablecimientoForm.get('cveEstado')?.invalid">
+            <small *ngIf="domicilloDelEstablecimientoForm.get('cveEstado')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            </div>
             <input type="hidden" name="clave" id="idClaveEntidadFederativa">
         </div>
         <div class="col-md-4">
@@ -74,6 +80,9 @@
             <input type="text" name="descripcionMunicipio" id="descripcionMunicipio" class="form-control"
                 formControlName="descripcionMunicipio" maxlength="120"
                 (change)="setValoresStore(domicilloDelEstablecimientoForm,'descripcionMunicipio', 'setDescripcionMunicipio')">
+                <div *ngIf="domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.touched && domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.invalid">
+            <small *ngIf="domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            </div>
         </div>
     </div>
     <div class="row">
@@ -82,12 +91,18 @@
             <input type="text" name="informacionExtra" id="informacionExtra" class="form-control"
                 formControlName="informacionExtra" maxlength="120"
                 (change)="setValoresStore(domicilloDelEstablecimientoForm,'informacionExtra', 'setInformacionExtra')">
+                <div *ngIf="domicilloDelEstablecimientoForm.get('informacionExtra')?.touched && domicilloDelEstablecimientoForm.get('informacionExtra')?.invalid">
+            <small *ngIf="domicilloDelEstablecimientoForm.get('informacionExtra')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            </div>
         </div>
         <div class="col-md-4">
             <label for="descripcionColonia" class="form-label">Colonia*:</label>
             <input type="text" name="descripcionColonia" id="descripcionColonia" class="form-control"
                 formControlName="descripcionColonia" maxlength="120"
                 (change)="setValoresStore(domicilloDelEstablecimientoForm,'descripcionColonia', 'setDescripcionColonia')">
+                <div *ngIf="domicilloDelEstablecimientoForm.get('descripcionColonia')?.touched && domicilloDelEstablecimientoForm.get('descripcionColonia')?.invalid">
+            <small *ngIf="domicilloDelEstablecimientoForm.get('descripcionColonia')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            </div>
         </div>
     </div>
     <div class="row">
@@ -98,6 +113,9 @@
                 <i class="bi bi-question-circle-fill"></i></span></label>
             <input type="text" name="calle" id="calle" class="form-control" formControlName="calle" maxlength="90"
                 (change)="setValoresStore(domicilloDelEstablecimientoForm,'calle', 'setCalle')">
+                <div *ngIf="domicilloDelEstablecimientoForm.get('calle')?.touched && domicilloDelEstablecimientoForm.get('calle')?.invalid">
+            <small *ngIf="domicilloDelEstablecimientoForm.get('calle')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            </div>
         </div>
     </div>
     <div class="row">
@@ -110,6 +128,9 @@
             <label for="telefono" class="form-label">Teléfono:</label>
             <input type="text" name="telefono" id="telefono" class="form-control" formControlName="telefono"
                 maxlength="30" (change)="setValoresStore(domicilloDelEstablecimientoForm,'telefono', 'setTelefono')">
+                <div *ngIf="domicilloDelEstablecimientoForm.get('telefono')?.touched && domicilloDelEstablecimientoForm.get('telefono')?.invalid">
+            <small *ngIf="domicilloDelEstablecimientoForm.get('telefono')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            </div>
         </div>
     </div>
     <div class="row">
@@ -200,10 +221,16 @@
             <app-catalogo-select [catalogo]="regimenes" formControlName="cveRegimenes"
                 [label]="'Régimen al que se destinará'" [required]="true" name="cveRegimenes"
                 (change)="regimenesSeleccion()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+                <div *ngIf="domicilloDelEstablecimientoForm.get('cveRegimenes')?.touched && domicilloDelEstablecimientoForm.get('cveRegimenes')?.invalid">
+            <small *ngIf="domicilloDelEstablecimientoForm.get('cveRegimenes')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            </div>
         </div>
         <div class="col-md-8">
             <app-catalogo-select [catalogo]="aduanas" formControlName="cveAduanas" [label]="'Aduana'" [required]="true"
                 name="cveAduanas" (change)="aduanaSeleccion()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+                <div *ngIf="domicilloDelEstablecimientoForm.get('cveAduanas')?.touched && domicilloDelEstablecimientoForm.get('cveAduanas')?.invalid">
+            <small *ngIf="domicilloDelEstablecimientoForm.get('cveAduanas')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            </div>
         </div>
     </div>
 
@@ -263,4 +290,4 @@
 </ng-container>
 
 <!--Representante legal-->
-<app-representante-legal></app-representante-legal>
+<app-representante-legal #representanteLegal></app-representante-legal>

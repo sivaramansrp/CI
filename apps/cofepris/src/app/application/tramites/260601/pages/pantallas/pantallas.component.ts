@@ -1,3 +1,4 @@
+import { AVISO_PRIVACIDAD, ERROR_FORMA_ALERT } from '../../constantes/aviso-enum';
 import { Component, ViewChild } from '@angular/core';
 
 import {
@@ -8,7 +9,6 @@ import {
   PASOS,
   WizardComponent,
 } from '@ng-mf/data-access-user';
-import { AVISO_PRIVACIDAD } from '../../constantes/aviso-enum';
 import { CommonModule } from '@angular/common';
 import { DatosComponent } from '../datos/datos.component';
 import { FirmarSolicitudComponent } from '../firmar-solicitud/firmar-solicitud.component';
@@ -101,6 +101,13 @@ export class PantallasComponent {
    * Se utiliza para acceder a sus métodos de validación y a la información capturada por el usuario.
    */
   @ViewChild(DatosComponent) pasoUnoComponent!: DatosComponent;
+  /**
+   * @property {string} formErrorAlert
+   * @description
+   * Mensaje HTML que se muestra como alerta cuando faltan campos por capturar en el formulario.
+   * Utiliza la constante ERROR_FORMA_ALERT definida en los archivos de constantes del módulo.
+   */
+  public formErrorAlert = ERROR_FORMA_ALERT;
 
   /**
    * Selecciona la pestaña especificada.
