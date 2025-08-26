@@ -6,6 +6,7 @@ import { DatosComponent } from './pages/datos/datos.component';
 import { DatosDeReporteAnnualComponent } from './components/datos-de-reporte-anual/datos-de-reporte-anual.component';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
+import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { ProgramasReporteAnnualComponent } from './components/programas-reporte-anual/programas-reporte-anual.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -38,7 +39,8 @@ import { provideHttpClient } from '@angular/common/http';
     TablaDinamicaComponent,
     AcuseComponent,
     AcusePageComponent,
-    BsDatepickerModule.forRoot()
+    BsDatepickerModule.forRoot(),
+    NotificacionesComponent,
   ],
   providers: [provideHttpClient(), ToastrService],
 })

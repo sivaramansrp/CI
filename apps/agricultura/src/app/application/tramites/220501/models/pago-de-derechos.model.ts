@@ -263,8 +263,8 @@ export interface Exportador {
   telefono: string;
   /** Correo electrónico del destinatario. */
   correoElectronico: string;
-  /** domoicilio del destinatario. */
-  domoicilio: string;
+  /** domicilio del destinatario. */
+  domicilio: string;
   /** País del destinatario. */
   pais: string;
   

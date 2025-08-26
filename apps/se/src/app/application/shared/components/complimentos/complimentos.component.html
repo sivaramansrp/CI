@@ -215,7 +215,7 @@
         } @else if (item.tipo_input === 'select-catalog') {
         <div [ngClass]="item.class">
           <app-catalogo-select [catalogo]="item?.opcionesCatalogo || []" [label]="item.labelNombre"
-            [required]="item.required" [formControlName]="item.campo"></app-catalogo-select>
+            [required]="item.required" [formControlName]="item.campo" (change)="onCambio($event, item.campo)"></app-catalogo-select>
         </div>
 
         } @else {
@@ -352,3 +352,25 @@
   </lib-notificaciones>
 </section>
 }
+
+@if (eliminarNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="eliminarNotificacion" (confirmacionModal)="confirmarEliminarNotificacion($event)">
+  </lib-notificaciones>
+</section>
+}
+
+@if (eliminarDosConfirmationNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="eliminarDosConfirmationNotificacion" (confirmacionModal)="confirmarEliminarDosConfirmation($event)">
+  </lib-notificaciones>
+</section>
+}
+
+@if (eliminarUnoConfirmationNotificacion) {
+  <section>
+    <lib-notificaciones [notificacionInput]="eliminarUnoConfirmationNotificacion" (confirmacionModal)="confirmarEliminarUnoConfirmation($event)">
+    </lib-notificaciones>
+  </section>
+}
+

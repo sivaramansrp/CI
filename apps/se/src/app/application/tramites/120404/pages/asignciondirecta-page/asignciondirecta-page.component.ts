@@ -11,31 +11,17 @@ import { ASIGNACION } from '../../constants/asignacion.enum';
 import { DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 
-
-
-
-
-
-
-/**
- * Componente para la gestión de la página de asignación directa.
- * @selector app-asignciondirecta-page
- * @templateUrl ./asignciondirecta-page.component.html
- * @styleUrl ./asignciondirecta-page.component.scss
- */
-
-
-
 interface AccionBoton {
   /**
-   * The action to be performed.
+   * La acción a realizar.
    */
   accion: string;
   /**
-   * The value associated with the action.
+   * El valor asociado con la acción.
    */
   valor: number;
 }
+
 @Component({
   selector: 'app-asignciondirecta-page',
   templateUrl: './asignciondirecta-page.component.html',
@@ -47,14 +33,13 @@ export class AsignciondirectaPageComponent {
    */
   pasos: ListaPasosWizard[] = ASIGNACION;
   
-
   /**
    * Índice del paso actual.
    */
   indice: number = 1;
 
   /**
-   * The data for the steps in the wizard.
+   * Los datos para los pasos del wizard.
    */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
@@ -66,9 +51,29 @@ export class AsignciondirectaPageComponent {
   /**
    * Referencia al componente Wizard.
    */
-@ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
+  /**
+   * Propiedad para mostrar/ocultar el mensaje de error de búsqueda
+   */
+  public showBuscarError = false;
+
+  /**
+   * Método para manejar el evento de intento de búsqueda desde componentes hijos.
+   * Establece la propiedad `showBuscarError` según el estado de enviado e inválido del formulario.
+   *
+   * @param {Object} event - El objeto de evento que contiene las propiedades `submitted` e `invalid`.
+   */
+  onBuscarIntento(event: {submitted: boolean, invalid: boolean}): void {
+    this.showBuscarError = event.submitted && event.invalid;
+  }
+
+  /**
+   * Maneja la acción del botón de navegación en el wizard.
+   * @param e - Objeto que contiene la acción y el valor asociado.
+   */
   public getValorIndice(e: AccionBoton): void {
+   this.showBuscarError = false;
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

@@ -9,19 +9,9 @@
           type="text"
           formControlName="nombre"
           id="nombreInsp"
+          maxlength="150"
           (change)="setNombre($event)"
         />
-        <span
-          *ngIf="
-            grupoFormularioPadre
-              .get(claveDeControl + '.nombre')
-              ?.hasError('maxlength') &&
-            grupoFormularioPadre.get(claveDeControl + '.nombre')?.touched
-          "
-          class="text-danger"
-        >
-          Por favor, no escribas más de 150 caracteres
-        </span>
       </div>
     </div>
     <div class="col-md-4">
@@ -32,20 +22,9 @@
           type="text"
           formControlName="primerapellido"
           id="primerapellido"
+          maxlength="80"
           (change)="setPrimerapellido($event)"
         />
-        <span
-          *ngIf="
-            grupoFormularioPadre
-              .get(claveDeControl + '.primerapellido')
-              ?.hasError('maxlength') &&
-            grupoFormularioPadre.get(claveDeControl + '.primerapellido')
-              ?.touched
-          "
-          class="text-danger"
-        >
-          Por favor, no escribas más de 80 caracteres
-        </span>
       </div>
     </div>
     <div class="col-md-4">
@@ -58,20 +37,9 @@
           type="text"
           formControlName="segundoapellido"
           id="segundoapellido"
+          maxlength="80"
           (change)="setSegundoapellido($event)"
         />
-        <span
-          *ngIf="
-            grupoFormularioPadre
-              .get(claveDeControl + '.segundoapellido')
-              ?.hasError('maxlength') &&
-            grupoFormularioPadre.get(claveDeControl + '.segundoapellido')
-              ?.touched
-          "
-          class="text-danger"
-        >
-          Por favor, no escribas más de 80 caracteres
-        </span>
       </div>
     </div>
     <div class="col-md-4">
@@ -81,12 +49,13 @@
             class="require"
             [ngClass]="{
               'text-danger':
-                grupoFormularioPadre.get(claveDeControl + '.mercancia')
+                (grupoFormularioPadre.get(claveDeControl + '.mercancia')
                   ?.invalid &&
-                grupoFormularioPadre.get(claveDeControl + '.mercancia')?.touched
+                grupoFormularioPadre.get(claveDeControl + '.mercancia')?.touched &&
+                grupoFormularioPadre.get(claveDeControl + '.mercancia')?.dirty) || formValida
             }"
             >*</span
-          >:<span
+          >: <span
             tooltip="Número de tolvas, furgones o contenedores en que arriba la mercancía"
             ><i class="bi bi-question-circle-fill"></i
           ></span>
@@ -96,6 +65,9 @@
           type="text"
           formControlName="mercancia"
           id="mercancia"
+          maxlength="3"
+          min="1"
+          [ngClass]="{ 'border-color': formValida }"
           (change)="setMercancia($event)"
         />
         <span
@@ -103,6 +75,9 @@
             grupoFormularioPadre
               .get(claveDeControl + '.mercancia')
               ?.hasError('pattern') &&
+            !(grupoFormularioPadre
+              .get(claveDeControl + '.mercancia')
+              ?.hasError('required')) &&
             grupoFormularioPadre.get(claveDeControl + '.mercancia')?.touched
           "
           class="text-danger"
@@ -111,21 +86,11 @@
         </span>
         <span
           *ngIf="
-            grupoFormularioPadre
-              .get(claveDeControl + '.mercancia')
-              ?.hasError('maxlength') &&
-            grupoFormularioPadre.get(claveDeControl + '.mercancia')?.touched
-          "
-          class="text-danger"
-        >
-          Por favor, no escriba más de 3 dígitos.
-        </span>
-        <span
-          *ngIf="
-            grupoFormularioPadre
+            (grupoFormularioPadre
               .get(claveDeControl + '.mercancia')
               ?.hasError('required') &&
-            grupoFormularioPadre.get(claveDeControl + '.mercancia')?.touched
+            grupoFormularioPadre.get(claveDeControl + '.mercancia')?.touched &&
+            grupoFormularioPadre.get(claveDeControl + '.mercancia')?.dirty) || formValida
           "
           class="text-danger"
         >
@@ -139,7 +104,6 @@
           id="tipoContenedor"
           [catalogo]="tipoContenedor.catalogos"
           [label]="tipoContenedor.labelNombre"
-          [placeholder]="tipoContenedor.primerOpcion"
           [required]="tipoContenedor.required"
           [isDisabled]="formularioDeshabilitado"
           formControlName="tipocontenedor"
