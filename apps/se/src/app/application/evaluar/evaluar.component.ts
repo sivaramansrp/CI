@@ -49,6 +49,9 @@ import { TabsResponse } from '@libs/shared/data-access-user/src/core/models/1301
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { FirmarDictamenRequest } from '../core/models/evaluar/request/firmar-dictamen-request.model';
 
+import { CodigoRespuesta } from '../core/enum/enum-130118';
+import { CriteriosResponse } from '@libs/shared/data-access-user/src/core/models/130118/criterios-response.model';
+import { DictamenForm } from '@libs/shared/data-access-user/src/core/models/130118/dictamen-form.model';
 import { FirmarDictamenService } from '../core/services/evaluar-tramite/firmarDictamen.service';
 
 /**
@@ -173,7 +176,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @property {string} conformidadDictamen
    * @description Texto que representa la conformidad del dictamen, utilizado en el formulario de generación de dictamen.
    */
-  conformidadDictamen: string = '';
+  conformidadDictamen!: CriteriosResponse;
 
   /** 
    * @property {GuardarDictamenRequest} guardarDictamenRequest
@@ -381,7 +384,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     this.tabsSolicitudServiceTsService.getTabs(this.tramite, this.guardarDatos.id_solicitud)
       .subscribe({
         next: (response) => {
-          if (response.codigo === '00') {
+          if (response.codigo === CodigoRespuesta.EXITO) {
             this.tabs = response.datos ?? {} as TabsResponse;
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -431,7 +434,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     this.evaluarSolicitudService.getEvaluacionTramite(this.tramite, this.guardarDatos.folioTramite)
       .subscribe({
         next: (response) => {
-          if (response.codigo === '00') {
+          if (response.codigo === CodigoRespuesta.EXITO) {
             this.evaluacionTramite = response.datos ?? {} as EvaluacionOpcionResponse;
             this.opcionesEvaluacion();
           } else {
@@ -532,7 +535,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     this.tabsSolicitudServiceTsService.getDocumentosSolicitud(this.tramite, this.guardarDatos.id_solicitud)
       .subscribe({
         next: (response) => {
-          if (response.codigo === '00') {
+          if (response.codigo === CodigoRespuesta.EXITO) {
             this.documentosSolicitud = response.datos ?? [];
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -582,7 +585,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     this.tabsSolicitudServiceTsService.getRequerimientos(this.tramite, this.guardarDatos.folioTramite)
       .subscribe({
         next: (response) => {
-          if (response.codigo === '00') {
+          if (response.codigo === CodigoRespuesta.EXITO) {
             this.requerimientosSolicitud = response.datos ?? [];
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -632,7 +635,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     this.tabsSolicitudServiceTsService.getDictamenes(this.tramite, this.guardarDatos.folioTramite)
       .subscribe({
         next: (response) => {
-          if (response.codigo === '00') {
+          if (response.codigo === CodigoRespuesta.EXITO) {
             this.dictamenesSolicitud = response.datos ?? [];
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -682,7 +685,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     this.tabsSolicitudServiceTsService.getTareasSolicitud(this.tramite, this.guardarDatos.folioTramite)
       .subscribe({
         next: (response) => {
-          if (response.codigo === '00') {
+          if (response.codigo === CodigoRespuesta.EXITO) {
             this.tareasSolicitud = response.datos ?? [];
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -729,7 +732,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     this.tabsSolicitudServiceTsService.getOpiniones(this.tramite, this.guardarDatos.folioTramite)
       .subscribe({
         next: (response) => {
-          if (response.codigo === '00') {
+          if (response.codigo === CodigoRespuesta.EXITO) {
             this.opinion = response.datos ?? [];
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -777,7 +780,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     this.tabsSolicitudServiceTsService.getAcusesResolucion(this.tramite, this.guardarDatos.folioTramite)
       .subscribe({
         next: (response) => {
-          if (response.codigo === '00') {
+          if (response.codigo === CodigoRespuesta.EXITO) {
             this.acusesResolucion = response.datos ?? {} as AcusesResolucionResponse;
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -822,7 +825,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     this.tabsSolicitudServiceTsService.getEnvioDigital(this.tramite, this.guardarDatos.folioTramite)
       .subscribe({
         next: (response) => {
-          if (response.codigo === '00') {
+          if (response.codigo === CodigoRespuesta.EXITO) {
             this.envioDigital = response.datos ?? {} as EnvioDigitalResponse;
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -923,7 +926,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     this.evaluarSolicitudService.postOpcionesEvaluacion(PAYLOAD)
       .subscribe({
         next: (response) => {
-          if (response.codigo === '00') {
+          if (response.codigo === CodigoRespuesta.EXITO) {
             this.opcionesDisponibles = response.datos ?? [];
           } else {
             console.error('Error en respuesta:', response.mensaje);
@@ -980,9 +983,16 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     this.tramite = i;
     this.slectTramite = LISTA_TRIMITES.find((v) => v.tramite === i);
   }
+
   /**
    * @method seleccionaTab
    * @description Cambia la pestaña principal seleccionada.
+   * 
+   * * Valores posibles del parámetro `i`:
+   *  - 1: Pestaña "Dictamen"
+   *  - 2: Pestaña "Requerimiento de información"
+   *  - 3: Pestaña "Solicitar opinión"
+   * 
    * @param {number} i - Índice de la pestaña.
    * @returns {void}
    */
@@ -1018,7 +1028,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
 
     this.iniciarService.postIniciarDictamen(this.tramite, this.guardarDatos.folioTramite, PAYLOAD).subscribe({
       next: (resp) => {
-        if (resp.codigo === '00') {
+        if (resp.codigo === CodigoRespuesta.EXITO) {
           this.dataIniciarDictamen = resp.datos ?? {} as IniciarDictamenResponse;
           this.obtenerCriterios();
         }
@@ -1042,7 +1052,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
   obtenerCriterios(): void {
     this.guardarService.getCriterios(this.tramite, this.guardarDatos.id_solicitud).subscribe({
       next: (resp) => {
-        this.conformidadDictamen = resp.datos ?? '';
+        this.conformidadDictamen = resp.datos ?? {} as CriteriosResponse;
       },
       error: (err) => {
         console.error('Error al obtener criterios:', err);
@@ -1082,10 +1092,9 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  guardarDictamen(datosDictamen?: any): void {
+  guardarDictamen(datosDictamen?: DictamenForm): void {
 
     if (!datosDictamen) {
-      console.error('No se recibieron datos del dictamen.');
       return;
     }
 
@@ -1099,7 +1108,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     this.guardarService.postGuadarDictamen(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
       .subscribe({
         next: (resp) => {
-          if (resp.codigo === '00') {
+          if (resp.codigo === CodigoRespuesta.EXITO) {
             window.scrollTo({ top: 0, behavior: 'smooth' });
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
@@ -1181,7 +1190,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     this.guardarService.postFirmarMostrar(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
       .subscribe({
         next: (resp) => {
-          if (resp.codigo === '00') {
+          if (resp.codigo === CodigoRespuesta.EXITO) {
             this.mostrarFirmarData = resp.datos ?? {} as MostrarFirmarResponse;
             this.cadenaOriginal = resp.datos?.cadena_original;
           } else {
@@ -1224,7 +1233,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @param {{ events: string, datos: unknown }} e - Objeto con el tipo de evento y los datos asociados.
    * @returns {void}
    */
-  enviarEvento(e: { events: string, datos: unknown }): void {
+  enviarEvento(e: { events: string, datos: DictamenForm }): void {
     switch (e.events) {
       case 'guardar':
         this.guardarDictamen(e.datos);
@@ -1327,7 +1336,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
               txtBtnAceptar: '',
               txtBtnCancelar: '',
             };
-          }else if( firmaResponse.codigo === '00'){
+          }else if( firmaResponse.codigo === CodigoRespuesta.EXITO){
               this.nuevaNotificacion = {
                 tipoNotificacion: 'toastr',
                 categoria: CategoriaMensaje.EXITO,
@@ -1434,7 +1443,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     this.guardarRequerimientoService.postGuardarRequerimiento(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
       .subscribe({
         next: (resp) => {
-          if (resp.codigo === '00') {
+          if (resp.codigo === CodigoRespuesta.EXITO) {
             this.idRequerimiento = resp.datos?.id_requerimiento || 0;
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',

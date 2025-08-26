@@ -10,6 +10,7 @@ import { SentidosDisponiblesResponse } from '@libs/shared/data-access-user/src/c
 
 
 import { API_GET_DICTAMEN_CRITERIOS, API_GET_SENTIDOS_DISPONIBLES, API_POST_GUARDAR_DICTAMEN, API_POST_MOSTRAR_FIRMAR, IDSOLICITUDDICTAMEN, NUMFOLIOTRAMITE, TRAMITE } from '../../../constantes/130118/api-constants';
+import { CriteriosResponse } from '@libs/shared/data-access-user/src/core/models/130118/criterios-response.model';
 import { GuardarDictamenResponse } from '../../models/evaluar/response/guardar-dictamen-response.model';
 import { MostrarFirmarRequest } from '../../models/evaluar/request/firmar-mostrar-dictamen.request.model';
 import { MostrarFirmarResponse } from '../../models/evaluar/response/mostrar-firmar-response.model';
@@ -50,9 +51,9 @@ export class GuardarDictamenService {
    * @param numFolio Número de folio del trámite.
    * @returns Observable con la respuesta del servidor.
    */
-  getCriterios(tramite: number, idSolicitud: string): Observable<BaseResponse<string>> {
+  getCriterios(tramite: number, idSolicitud: string): Observable<BaseResponse<CriteriosResponse>> {
     const ENDPOINT = `${this.host}${API_GET_DICTAMEN_CRITERIOS.replace(TRAMITE, tramite.toString()).replace(IDSOLICITUDDICTAMEN, idSolicitud)}`;
-    return this.http.get<BaseResponse<string>>(ENDPOINT);
+    return this.http.get<BaseResponse<CriteriosResponse>>(ENDPOINT);
   }
 
   /**
