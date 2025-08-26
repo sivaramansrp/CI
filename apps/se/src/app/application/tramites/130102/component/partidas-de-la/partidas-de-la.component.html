@@ -251,3 +251,25 @@
     </div>
   </div>
 </div>
+
+<!-- Confirmation Modal -->
+@if(confirmacionAlerta){
+<section>
+  <lib-notificaciones
+    [notificacionInput]="seleccionarFilaNotificacion"
+    (confirmacionModal)="confirmarEliminacionSustancias($event)"
+  >
+  </lib-notificaciones>
+</section>
+}
+
+<!-- Success Modal -->
+@if(mostrarNotificacion){
+<section>
+  <lib-notificaciones
+    [notificacionInput]="notificacionEliminacionExitosa"
+    (confirmacionModal)="cerrarNotificacionEliminacion($event)"
+  >
+  </lib-notificaciones>
+</section>
+}
