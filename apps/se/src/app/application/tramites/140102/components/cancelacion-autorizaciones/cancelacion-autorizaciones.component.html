@@ -4,5 +4,10 @@
       <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="tableHeaderExtranjeros"
         [datos]="CancelacionTabladatos" [disableSeleccionTablaRadio]="consultaState.readonly"></app-tabla-dinamica>
     </div>
+      <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+        <li class="page-item"><a class="page-link">1</a></li>
+      </ul>
+    </nav>
     <app-programa-seleccionado [consultaState]="consultaState"> </app-programa-seleccionado>
 </div>

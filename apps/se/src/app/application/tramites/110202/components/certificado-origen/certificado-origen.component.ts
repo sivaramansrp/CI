@@ -3,7 +3,7 @@ import { AlertComponent, Catalogo, CatalogoSelectComponent, InputFecha, InputFec
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable, Subject, delay, map, takeUntil} from 'rxjs';
 
-import { CAPTURA_MERCANCIAS, CATALOGOS_DATOS, CONFIGURACION_MERCANCIA, CONFIGURATION_TABLA_MERCANCIAS, FECHA_FINALS, MERCANCIAS_DATOS } from '../../constantes/modificacion.enum';
+import { CAPTURA_MERCANCIAS, CATALOGOS_DATOS, CONFIGURACION_MERCANCIA, CONFIGURATION_TABLA_MERCANCIAS, FECHA_FINALS, MERCANCIAS_DATOS} from '../../constantes/modificacion.enum';
 import { ConfiguracionColumna, Mercancias } from '../../models/configuracion-columna.model';
 
 import { CertificadoDeOrigenComponent } from "../../../../shared/components/certificado-de-origen/certificado-de-origen.component";
@@ -300,7 +300,7 @@ umc: Catalogo[] = CATALOGOS_DATOS;
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {          
           this.esFormularioSoloLectura = seccionState.readonly;
-        })
+                  })
       )
       .subscribe();
   }

@@ -76,7 +76,11 @@
         </div>
       </div>
       <div class="col-md-4 form-group">
-        <label class="form-label" for="valorFacturaUSD">Valor factura USD<span class="require" [ngClass]="{'asterisk-red': esInvalido('valorFacturaUSD')}">*</span>:</label>
+        <label class="form-label" for="valorFacturaUSD">Valor factura USD<span class="require" [ngClass]="{'asterisk-red': esInvalido('valorFacturaUSD')}">*</span>:
+        <span *ngIf="mostrarTooltipValorFacturaUSD" class="bi bi-question-circle-fill"
+                     tooltip="En caso de no contar con valor factura proporciona el valor estimado"
+                     data-bs-toggle="tooltip"></span>
+      </label>
         <input
           class="form-control"
           id="valorFacturaUSD"

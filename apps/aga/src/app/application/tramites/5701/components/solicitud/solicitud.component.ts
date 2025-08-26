@@ -3006,6 +3006,7 @@ export class SolicitudComponent
       this.despacho.get('folioDDEX')?.updateValueAndValidity();
 
       this.despacho.get('tipoDespacho')?.setValue(SIN_VALORES);
+      this.despacho.get('tipoOperacion')?.setValue(SIN_VALORES);
       this.mostarSelectTipoDespacho = false;
 
       this.desactivarSelects(true);
@@ -3067,6 +3068,7 @@ export class SolicitudComponent
     this.despacho.get('domicilioDespacho')?.setValue('');
     this.despacho.get('tipoDespacho')?.setValue(SIN_VALORES);
     this.despacho.get('tipoDespachoDescripcion')?.setValue('');
+    this.despacho.get('tipoOperacion')?.setValue(SIN_VALORES);
 
     this.despacho.get('idAduanaDespacho')?.markAsUntouched();
 
@@ -3113,6 +3115,7 @@ export class SolicitudComponent
       'tipoDespachoDescripcion',
       'setDescripcionTipoDespacho'
     );
+    this.setValoresStore(this.despacho, 'tipoOperacion', 'setTipoOperacion');
   }
 
   /**

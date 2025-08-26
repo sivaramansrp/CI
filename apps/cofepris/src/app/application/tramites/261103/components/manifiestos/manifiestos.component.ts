@@ -90,6 +90,27 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
   esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Getter que determina si los campos deben estar deshabilitados.
+   * 
+   * Los campos deben deshabilitarse cuando:
+   * - El formulario está en modo solo lectura (esFormularioSoloLectura = true), O
+   * - El valor de ideGenerica1 es nulo, undefined, vacío, o no es 'Modificacion'
+   * 
+   * @returns {boolean} true si los campos deben estar deshabilitados, false si deben estar habilitados
+   */
+  public get debeEstarDeshabilitado(): boolean {
+    // Return true if seccionState is not initialized yet
+    if (!this.seccionState) {
+      return true;
+    }
+    
+    const IDE_GENERICA_1 = this.seccionState.ideGenerica1;
+    const ES_IDE_GENERICA_1_VALIDO = IDE_GENERICA_1 && IDE_GENERICA_1.trim() !== '' && IDE_GENERICA_1 === 'Modificacion';
+    
+    return this.esFormularioSoloLectura || !ES_IDE_GENERICA_1_VALIDO;
+  }
   /**
    * Constructor del componente.
    * @param fb FormBuilder para construir formularios reactivos.
@@ -108,6 +129,10 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyNotifier$),
       map((seccionState: { readonly: boolean }) => {
         this.esFormularioSoloLectura = seccionState.readonly;
+        // Apply state after form exists
+        if (this.Aduana) {
+          this.aplicarEstadoFormulario();
+        }
       })
     )
     .subscribe()
@@ -144,25 +169,13 @@ public mercanciasData(): void {
   )
   .subscribe()
   this.Aduana = this.fb.group({
-    aduanas: [
-      {
-        value: this.seccionState?.aduanas || '',
-        disabled: false,
-      },
-    ],
-    informacionConfidencial: [
-      {
-        value: this.seccionState?.informacionConfidencial || '',
-        disabled: false,
-      },
-    ],
-    Si: [{ value: '', disabled: false }],
+    aduanas: [this.seccionState?.aduanas || ''],
+    informacionConfidencial: [this.seccionState?.informacionConfidencial || ''],
+    Si: [''],
   });
-  if (this.esFormularioSoloLectura) {
-    this.Aduana.disable();
-  } else {
-    this.Aduana.enable();
-  }
+  
+  // Apply the correct disable/enable state after form creation
+  this.aplicarEstadoFormulario();
 }
 
   /**
@@ -200,31 +213,29 @@ public mercanciasData(): void {
   }
 
   /**
- * Inicializa el estado del formulario.
- * 
- * Este método realiza las siguientes acciones:
- * 
- * 1. Llama al método `obtenerDatosFormulario` para cargar los datos del estado actual.
- * 2. Si el formulario está en modo solo lectura (`esFormularioSoloLectura`):
- *    - Deshabilita el formulario reactivo `Aduana` utilizando el método `disable`.
- * 3. Si el formulario no está en modo solo lectura:
- *    - Habilita el formulario reactivo `Aduana` utilizando el método `enable`.
- *    - Llama nuevamente al método `obtenerDatosFormulario` para asegurarse de que los datos estén actualizados.
- *    - Llama al método `mercanciasData` para cargar los datos relacionados con las mercancías.
- * 
- * Este método es útil para configurar el estado inicial del formulario y sincronizarlo
- * con los datos del estado global de la aplicación.
- * 
- * @returns {void}
- */
-  inicializarEstadoFormulario(): void {
-    this.obtenerDatosFormulario();
-    if (this.esFormularioSoloLectura) {
-      this.Aduana.disable();
-    } else {
+   * Aplica el estado de habilitación/deshabilitación al formulario.
+   * 
+   * Este método verifica si el formulario existe y aplica la lógica unificada
+   * que considera tanto `esFormularioSoloLectura` como `ideGenerica1` para
+   * determinar si los campos deben estar habilitados o deshabilitados.
+   * 
+   * @returns {void}
+   */
+  public aplicarEstadoFormulario(): void {
+    if (!this.Aduana || !this.seccionState) {
+      return;
+    }
+    
+    // Obtener el valor de ideGenerica1 del estado
+    const IDE_GENERICA_1 = this.seccionState.ideGenerica1;
+    
+    // Determinar si los campos deben estar habilitados
+    const DEBE_ESTAR_HABILITADO = !this.esFormularioSoloLectura && (IDE_GENERICA_1 === 'Modificacion');
+    
+    if (DEBE_ESTAR_HABILITADO) {
       this.Aduana.enable();
-      this.obtenerDatosFormulario();
-      this.mercanciasData();
+    } else {
+      this.Aduana.disable();
     }
   }
   /**

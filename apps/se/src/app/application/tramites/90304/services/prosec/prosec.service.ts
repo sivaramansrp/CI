@@ -1,14 +1,13 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-
+import { BehaviorSubject, Observable } from 'rxjs';
 import { EmpresasListaResquesta, ModificacionResquesta } from '../../models/prosec.model';
 import { MercanciasResquesta, PlantasTabla, ProductorIndirectoResquesta, SectorTabla } from '../../../../shared/models/complementaria.model';
 import { BitacoraResquesta } from '../../../../shared/models/bitacora.model';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 
 /**
- * Servicio para obtener los datos de la aplicación PROSEC.
+ * Servicio para obtener y gestionar los datos de la aplicación PROSEC.
  * @class ProsecService
  */
 @Injectable({
@@ -17,12 +16,32 @@ import { BitacoraResquesta } from '../../../../shared/models/bitacora.model';
 export class ProsecService {
 
   /**
-   * Constructor del servicio.
-   * @param http - Servicio HTTP para realizar peticiones.
+   * Variable reactiva para indicar si es baja.
+   * @type {BehaviorSubject<boolean>}
+   */
+  private isBajaSubject = new BehaviorSubject<boolean>(true);
+
+  /**
+   * Observable para consultar el estado de baja.
+   * @type {Observable<boolean>}
+   */
+  isBaja$ = this.isBajaSubject.asObservable();
+
+  /**
+   * Constructor del servicio ProsecService.
+   * @param http - Servicio HTTP para realizar peticiones a archivos JSON.
    */
   constructor(
     private http: HttpClient
   ) { }
+
+  /**
+   * Establece el valor de si es baja o no.
+   * @param value - Valor booleano que indica si es baja o no.
+   */
+  setIsBaja(value: boolean) {
+    this.isBajaSubject.next(value);
+  }
 
   /**
    * Obtiene los datos del documentos seleccionados.

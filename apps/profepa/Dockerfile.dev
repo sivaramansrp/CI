@@ -35,7 +35,7 @@ RUN echo "Building profepa image for environment: $NODE_ENV"
 RUN npx nx build profepa --configuration=$NODE_ENV --base-href=/profepa/ --skip-nx-cache --verbose
 
 # --- Inject version into built index.html ---
-RUN node script/inject-version.js
+RUN node script/inject-version.js profepa
 
 # ------------------------------
 # Stage 2: Serve with Nginx
