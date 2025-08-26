@@ -1,7 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos } from '@ng-mf/data-access-user';
+import { DatosPasos, SeccionLibState } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
+import { Subject } from 'rxjs';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 interface AccionBoton {
@@ -14,8 +15,10 @@ interface AccionBoton {
   styles: ``,
 })
 export class RegistroPageComponent {
-  pasos: Array<ListaPasosWizard> = PASOS;
+  pasos: ListaPasosWizard[] = PASOS;
   indice: number = 1;
+  public seccion!: SeccionLibState;
+  private destroyNotifier$: Subject<void> = new Subject();
 
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
@@ -30,7 +33,7 @@ export class RegistroPageComponent {
     this.indice = i;
   }
 
-  getValorIndice(e: AccionBoton):void {
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

@@ -11,7 +11,6 @@ import { TEXTOS_303 } from '@ng-mf/data-access-user';
 })
 export class PasoDosComponent implements OnInit {
   TEXTOS = TEXTOS_303;
-
   tiposDocumentos: Catalogo[] = [];
   documentosSeleccionados: Catalogo[] = [];
 
@@ -31,7 +30,6 @@ export class PasoDosComponent implements OnInit {
         descripcion: 'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)'
       }
     ]
-
   }
 
   getTiposDocumentos(): void {
@@ -42,6 +40,7 @@ export class PasoDosComponent implements OnInit {
     })
   }
 
+  
   agregarDocumento(id: number): void {
     this.tiposDocumentos.forEach( el => {
       if (el.id === id) {
@@ -50,6 +49,10 @@ export class PasoDosComponent implements OnInit {
     })
   }
 
+  /**
+   * Método para eliminar un documento de la lista de documentos seleccionados.
+   * @param i Índice del documento a eliminar.
+   */
   eliminar(i: number): void {
     this.documentosSeleccionados.splice(i, 1)
   }

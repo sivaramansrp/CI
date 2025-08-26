@@ -188,7 +188,9 @@ export class TercerosRelacionadosComponent implements OnInit {
       .subscribe();
   }
 
-  /** Método para crear el formulario reactivo del representante legal */
+  /** 
+   * Método para crear el formulario reactivo del representante legal 
+   */
   crearRepresentanteLegalForm(): void {
     this.representanteLegalForm = this.fb.group({
       rfcBusqueda: ['', [Validators.required, Validators.pattern(REGEX_RFC)]],
@@ -201,8 +203,9 @@ export class TercerosRelacionadosComponent implements OnInit {
     });
   }
 
-
-  /** Método de ayuda para saber si un campo es inválido */
+  /** 
+   * Método de ayuda para saber si un campo es inválido 
+   */
   campoInvalido(campo: string): boolean {
     const CONTROL = this.representanteLegalForm.get(campo);
     return Boolean(CONTROL && CONTROL.invalid && (CONTROL.dirty || CONTROL.touched));
@@ -272,7 +275,6 @@ export class TercerosRelacionadosComponent implements OnInit {
     this.enlacesOperativos = this.enlacesOperativos.filter(enlace => !RFCS_TO_DELETE.includes(enlace.rfc));
     this.enlacesOperativosSeleccionados = [];
     this.tramite303State.setListaEnlaces(this.enlacesOperativos);
-
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'success',

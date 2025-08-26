@@ -1,17 +1,39 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CONSTANTES } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
-
 
 @Component({
   selector: 'pago-derechos',
   templateUrl: './pago-derechos.component.html',
-  styleUrl: './pago-derechos.component.scss'
+  styleUrls: ['./pago-derechos.component.scss']
 })
 export class PagoDerechosComponent {
-  public pagoDerechos: FormGroup = this.fb.group({
-    nombre: ['', [Validators.required]],
-    correo: ['', [Validators.required, Validators.pattern(CONSTANTES.EXP_CORREO)]]
-  })
-  constructor( private fb: FormBuilder) {}
+  public pagoDerechos!: FormGroup;
+
+  constructor(private fb: FormBuilder) {
+    this.crearPagoDerechosForm();
+  }
+
+  /**
+   * Crea el formulario para la captura de pago de derechos
+   */
+  crearPagoDerechosForm() {
+    this.pagoDerechos = this.fb.group({
+      claveReferencia: ['', Validators.required],
+      cadenaDependencia: [''],
+      banco: [''],
+      llavePago: [''],
+      fechaPago: ['', Validators.required],
+      importePago: [
+        '',
+        [Validators.required, Validators.min(0.01)]
+      ]
+    });
+  }
+
+  /**
+   * Borra los datos del formulario de pago de derechos
+   */
+  borrarDatosPago() {
+    this.pagoDerechos.reset();
+  }
 }
