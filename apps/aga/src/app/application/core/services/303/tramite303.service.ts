@@ -1,4 +1,5 @@
 import { Observable, map } from 'rxjs';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Notificadores } from '../../models/303/notificadores.model';
@@ -28,5 +29,9 @@ export class Tramite303Service {
    */
   consultaNotificadores(): Observable<Notificadores[]> {
     return this.http.get<Notificadores[]>(`/assets/json/303/notificadores.json`);
+  }
+
+  consultaBanco(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>(`/assets/json/303/cat-banco.json`);
   }
 }

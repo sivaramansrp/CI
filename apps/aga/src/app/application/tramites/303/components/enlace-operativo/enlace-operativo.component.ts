@@ -78,7 +78,7 @@ export class EnlaceOperativoComponent implements OnInit {
   /**
    * Inicializa el formulario de enlace operativo.
    */
-  private inicializarFormulario() {
+  private inicializarFormulario(): void {
     this.FormEnlaceOperativo = this.fb.group({
       rfcBusqueda: [''],
       rfc: [{ value: '', disabled: true }],
@@ -96,7 +96,7 @@ export class EnlaceOperativoComponent implements OnInit {
   /**
    * Busca un enlace operativo por su RFC.
    */
-  buscarEnlaceOperativo() {
+  buscarEnlaceOperativo(): void {
     this.formSubmitted = true;
     if (this.FormEnlaceOperativo.get('rfcBusqueda')?.valid) {
       const RFC = this.FormEnlaceOperativo.get('rfcBusqueda')?.value;
@@ -117,18 +117,6 @@ export class EnlaceOperativoComponent implements OnInit {
             };
           }
         },
-        error: (error) => {
-          this.nuevaNotificacion = {
-            tipoNotificacion: 'alert',
-            categoria: 'danger',
-            modo: 'action',
-            titulo: 'Error',
-            mensaje: 'Error al buscar el enlace operativo',
-            cerrar: true,
-            txtBtnAceptar: 'Aceptar',
-            txtBtnCancelar: '',
-          };
-        }
       });
     }
   }
@@ -136,7 +124,7 @@ export class EnlaceOperativoComponent implements OnInit {
   /**
  * Acepta el enlace operativo: agrega uno nuevo o modifica uno existente.
  */
-  aceptaEnlace() {
+  aceptaEnlace(): void {
     if (!this.FormEnlaceOperativo.valid) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -235,7 +223,7 @@ export class EnlaceOperativoComponent implements OnInit {
    * Carga los datos del enlace operativo en el formulario para su modificación.
    * @param enlaceOperativo El enlace operativo a cargar en el formulario.
    */
-  cargarFormularioModificar(enlaceOperativo?: EnlaceOperativo) {
+  cargarFormularioModificar(enlaceOperativo?: EnlaceOperativo): void {
     if (enlaceOperativo) {
       this.FormEnlaceOperativo.patchValue({
         rfcBusqueda: enlaceOperativo.rfc,

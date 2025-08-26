@@ -20,8 +20,8 @@
       </div>
 
       <div class="col-md-4">
-        <label class="control-label" for="banco">Banco:</label>
-        <input class="form-control" id="banco" placeholder="Banco" type="text" formControlName="banco">
+        <app-catalogo-select [catalogo]="catBancos" formControlName="banco" [label]="'Seleccione un valor'"
+          [required]="true" name="banco"></app-catalogo-select>
       </div>
 
       <div class="col-md-4">
