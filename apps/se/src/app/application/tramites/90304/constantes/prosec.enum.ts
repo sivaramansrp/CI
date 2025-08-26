@@ -79,6 +79,10 @@ export const TABLA_EMPRESAS_LISTA: ConfiguracionColumna<EmpresasLista>[] = [
     }
 ];
 
+/**
+ * Mensaje de error para productores indirectos no válidos.
+ * @type {string}
+ */
 export const ALERTA_ERROR = `<p style='text-align: center;'>Corrija los siguientes errores:</p>
 <div style="display: grid; grid-template-columns: auto 1fr; align-items: center; width: 100%; color: #d0021b;">
   <span>1.</span>
