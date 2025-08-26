@@ -546,8 +546,24 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.tramite260601Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+  
+  /**
+   * @method paisChange
+   * @description
+   * Maneja el cambio de selección en la lista de países de origen.
+   * Actualiza el arreglo de países seleccionados y actualiza el valor en el formulario.
+   * @param {string[]} event - Arreglo de países seleccionados en el componente crosslist.
+   * @returns {void}
+   */
+  paisChange(event: string[]): void {
+    const VALUE = event[0];
+    this.seleccionarPaisOrigen = [VALUE];
+    this.agregarMercanciaForm.patchValue({
+      cvePais: VALUE,
+    });
+  }
 
-    /**
+  /**
    * @method paisDeProcedenciaChange
    * @description
    * Maneja el cambio de selección en la lista de países de procedencia.

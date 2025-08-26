@@ -1,5 +1,5 @@
 import { AlertComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { SOLICITUD_HEADER, SOLICITUD_TABLA_CONFIGURACION, TEXTOS_SOLICITUD } from '../../constantes/aviso-enum';
 import { Solicitud, SolicitudTable } from '../../models/aviso-model';
 import { Subject, takeUntil } from 'rxjs';
@@ -68,6 +68,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * cuando el componente se destruye, evitando fugas de memoria.
    */
   public destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * @property {DatosDelEstablecimientoComponent} datosDelEstablecimiento
+   * @description
+   * Referencia al componente hijo DatosDelEstablecimientoComponent.
+   * Se utiliza para acceder a sus propiedades y métodos, especialmente para la validación de formularios.
+   */
+  @ViewChild('datosDelEstablecimiento') datosDelEstablecimiento!: DatosDelEstablecimientoComponent;
+  
   /**
    * Alterna el panel plegable (expandir/contraer)
    */
@@ -111,6 +120,27 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         });
       
     }
+
+    /**
+   * @method validarFormulario
+   * @description
+   * Valida el formulario de datos de la solicitud, verificando principalmente el componente hijo DatosDelEstablecimiento.
+   * Si el componente hijo existe, llama a su método validarFormularios() para verificar la validez de sus formularios.
+   * Si alguno de los formularios es inválido o el componente hijo no existe, retorna falso.
+   * 
+   * @returns {boolean} Retorna true si todos los formularios son válidos, false en caso contrario.
+   */
+    validarFormulario(): boolean {
+    let isValid = true;
+    if (this.datosDelEstablecimiento) {
+      if (!this.datosDelEstablecimiento.validarFormularios()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    return isValid;
+  }
 
   /**
    * @method ngOnDestroy

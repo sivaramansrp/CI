@@ -47,6 +47,7 @@ import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
 import { DatosMercanciaComponent } from '../datos-mercancia/datos-mercancia.component';
 import { Modal } from 'bootstrap';
 import { RepresentanteLegalComponent } from '../representante-legal/representante-legal.component';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite260601Query } from '../../../../estados/queries/tramite260601.query';
 import productoTable from '@libs/shared/theme/assets/json/260601/producto-table.json';
 import scianTable from '@libs/shared/theme/assets/json/260601/scian-table.json';
@@ -70,6 +71,7 @@ import scianTable from '@libs/shared/theme/assets/json/260601/scian-table.json';
     RepresentanteLegalComponent,
     NotificacionesComponent,
     TablaDinamicaComponent,
+    TooltipModule,
   ],
   providers: [AvisoSanitarioService],
   templateUrl: './datos-del-establecimiento.component.html',
@@ -259,6 +261,22 @@ export class DatosDelEstablecimientoComponent implements OnInit, AfterViewInit, 
    * las acciones del modal (mostrar, ocultar) desde el componente.
    */
   modalInstance!: Modal;
+
+  /**
+   * @property {Modal} modalAddSCIANInstance
+   * @description
+   * Instancia del modal de Bootstrap utilizada para controlar programáticamente
+   * el modal para agregar registros SCIAN desde el componente.
+   * Permite mostrar y ocultar el modal mediante métodos de la API de Bootstrap.
+   */
+  modalAddSCIANInstance!: Modal;
+
+  /**
+   * @property {ElementRef} modalAlerta
+   * @description
+   * Referencia al elemento DOM del modal de alerta.
+   */
+  @ViewChild('modalAddSCIAN', { static: false }) modalAddSCIAN!: ElementRef;
 
   /**
    * @property {ElementRef} modifyModal
@@ -796,6 +814,9 @@ export class DatosDelEstablecimientoComponent implements OnInit, AfterViewInit, 
     if (this.modifyModal) {
       this.modalInstance = new Modal(this.modifyModal.nativeElement);
     }
+    if (this.modalAddSCIAN) {
+      this.modalAddSCIANInstance = new Modal(this.modalAddSCIAN.nativeElement);
+    }
   }
 
   /**
@@ -830,6 +851,56 @@ export class DatosDelEstablecimientoComponent implements OnInit, AfterViewInit, 
     };
     this.productoBodyData = [NEW_ARRAY] as ProductoTable[];
     this.tramite260601Store.setProductoTabla(this.productoBodyData);
+  }
+
+  /**
+   * @method abrirModalAgregarSCIAN
+   * @description
+   * Abre el modal para agregar un nuevo registro SCIAN.
+   * Utiliza la instancia del modal Bootstrap para mostrarlo en la interfaz.
+   * @returns {void}
+   */
+  abrirModalAgregarSCIAN(): void {
+    if (this.modalAddSCIANInstance) {
+      this.modalAddSCIANInstance.show();
+    }
+  }
+
+  /**
+   * @method cancelarAgregarSCIAN
+   * @description
+   * Cierra el modal para agregar un nuevo registro SCIAN sin guardar cambios.
+   * Utiliza la instancia del modal Bootstrap para ocultarlo de la interfaz.
+   * @returns {void}
+   */
+  cancelarAgregarSCIAN(): void {
+    if (this.modalAddSCIANInstance) {
+      this.modalAddSCIANInstance.hide();
+    }
+  }
+
+  /**
+   * @method validarFormularios
+   * @description
+   * Valida todos los formularios relacionados con los datos del establecimiento.
+   * Si todos los formularios son válidos, retorna true.
+   * Si alguno es inválido, marca todos los campos como tocados para mostrar los errores y retorna false.
+   * 
+   * @returns {boolean} true si todos los formularios son válidos, false en caso contrario.
+   */
+  validarFormularios(): boolean {
+    if (this.datosDelEstablecimientoForm.valid &&
+      this.domicilloDelEstablecimientoForm.valid &&
+      this.scianForm.valid &&
+      this.manifiestosForm.valid
+    ) {
+      return true;
+    }
+    this.datosDelEstablecimientoForm.markAllAsTouched();
+    this.domicilloDelEstablecimientoForm.markAllAsTouched();
+    this.scianForm.markAllAsTouched();
+    this.manifiestosForm.markAllAsTouched();
+    return false
   }
 
   /**
