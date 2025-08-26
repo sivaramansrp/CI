@@ -35,7 +35,7 @@
     </div>
     <div class="row">
       @switch (indice) { @case (1) {
-      <app-datos #pasoUnoRef></app-datos>
+      <app-datos #pasoUnoRef (cambioDePestana)="alCambiarPestana()"></app-datos>
       } @case (2) {
       <app-paso-tres></app-paso-tres>
       } }

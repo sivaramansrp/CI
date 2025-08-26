@@ -184,4 +184,11 @@ export class SolicitudDeReporteComponent {
       this.wizardComponent.siguiente();
   }
 }
+ /**
+   * Método que se ejecuta cuando cambia de tab en paso-uno.
+   * Oculta el mensaje de error de validación.
+   */
+ alCambiarPestana(): void {
+  this.esFormaValido = false;
+}
 }

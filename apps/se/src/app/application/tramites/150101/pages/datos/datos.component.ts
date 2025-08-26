@@ -4,6 +4,8 @@ import { Subject, map, takeUntil } from 'rxjs';
 
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import {DatosDeReporteAnnualComponent} from '../../components/datos-de-reporte-anual/datos-de-reporte-anual.component';
+import { EventEmitter } from '@angular/core';
+import { Output } from '@angular/core';
 import { ProgramasReporteAnnualComponent} from '../../components/programas-reporte-anual/programas-reporte-anual.component';
 import { Solicitud150101Store } from '../../estados/solicitud150101.store';
 import { SolicitudService } from '../../services/registro-solicitud-anual.service';
@@ -63,7 +65,12 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
      * Referencia al componente `CertificadoOrigenComponent`.
      */
     @ViewChild('programasDeComp', { static: false }) programasDeComp: ProgramasReporteAnnualComponent | undefined;
-  
+    
+    /**
+   * Emite evento cuando se cambia de tab para ocultar error message.
+   */
+   @Output() cambioDePestana = new EventEmitter<void>();
+
 
   /**
    * Subject para notificar la destrucción del componente.
@@ -139,6 +146,7 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+    this.cambioDePestana.emit();
   }
 
   /**
