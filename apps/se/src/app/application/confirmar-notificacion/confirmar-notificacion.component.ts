@@ -1,4 +1,4 @@
-import { CategoriaMensaje, FirmaElectronicaComponent, Notificacion, NotificacionesComponent, TramiteFolioStore, base64ToHex, encodeToISO88591Hex, } from '@ng-mf/data-access-user';
+import { CategoriaMensaje, ConsultaioQuery, ConsultaioState, FirmaElectronicaComponent, Notificacion, NotificacionesComponent, TramiteFolioStore, base64ToHex, encodeToISO88591Hex, } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CadenaOriginalRequest } from '../core/models/confirmar-notificacion/request/generar-cadena-original-request.model';
 import { CadenaOriginalService } from '../core/services/confirmar-notificacion/CadenaOriginal.service';
@@ -12,7 +12,7 @@ import { NotificacionActoAdministrativoComponent } from '../shared/components/no
 import { Router } from '@angular/router';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
-import { Subject, catchError, of, takeUntil, tap } from 'rxjs';
+import { Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { FirmaRequest } from '../core/models/confirmar-notificacion/request/firma-request.model';
 
@@ -54,10 +54,10 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
    */
   public indiceDePaso = 1;
 
-   /**
-   * Folio del trámite que se está procesando.
-   * Este folio es único para cada trámite y se utiliza para identificarlo en el sistema.
-   */
+  /**
+  * Folio del trámite que se está procesando.
+  * Este folio es único para cada trámite y se utiliza para identificarlo en el sistema.
+  */
   folio: string = '';
 
   /**
@@ -85,6 +85,13 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
   cadenaOriginal?: string;
 
   /**
+     * @property {ConsultaioState} guardarDatos
+     * @description Estado actual del trámite consultado.
+     */
+  guardarDatos!: ConsultaioState;
+
+
+  /**
 * Objeto que contiene los datos reales de la firma electrónica generada después del proceso de firma.
 * Incluye:
 * - firma: Cadena de la firma generada (en base64).
@@ -108,6 +115,7 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
     private router: Router,
     private confirmarNotificacionService: ConfirmarNotificacionService,
     private location: Location,
+    private consultaioQuery: ConsultaioQuery,
     private firmaService: FirmaService,
     private tramiteStore: TramiteFolioStore,
     private cadenaOriginalService: CadenaOriginalService) {
@@ -118,6 +126,14 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.guardarDatos = seccionState;
+        })
+      )
+      .subscribe()
     this.getConfirmarNotificacion();
   }
 
@@ -162,10 +178,10 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
 
     const CADENAHEX = encodeToISO88591Hex(this.cadenaOriginal);
     const FIRMAHEX = base64ToHex(firma);
-    const NUMFOLIO = '0201300101820252540000005';
+    const NUMFOLIO = this.guardarDatos.folioTramite;
 
     const PAYLOAD: FirmaRequest = {
-      id_accion: '12345', // o el ID que corresponda
+      id_accion: this.guardarDatos.action_id, // o el ID que corresponda
       firma: {
         cadena_original: CADENAHEX,
         cert_serial_number: this.datosFirmaReales.certSerialNumber,
@@ -176,7 +192,7 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.firmaService.postFirma(NUMFOLIO,PAYLOAD)
+    this.firmaService.postFirma(NUMFOLIO, PAYLOAD)
       .pipe(
         takeUntil(this.destroy$),
         tap((firmaResponse: BaseResponse<string>) => {
@@ -245,7 +261,7 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getConfirmarNotificacion(): void {
-    const NUMFOLIO = '0201300101820252540000005';
+    const NUMFOLIO = this.guardarDatos.folioTramite;
     this.confirmarNotificacionService.getIniciarNotificacion(NUMFOLIO).subscribe({
       next: (response) => {
         if (response.codigo === '00') {
@@ -275,7 +291,7 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
    * Este método se encarga de llamar al servicio correspondiente para generar la cadena original.
    */
   obtenerCadenaOriginal(): void {
-    const NUMFOLIO = '0201300101820252540000005';
+    const NUMFOLIO = this.guardarDatos.folioTramite;
     const PAYLOAD: CadenaOriginalRequest = {
       fecha_firma: ConfirmarNotificacionComponent.formatFecha(new Date()),
       usuario: {
