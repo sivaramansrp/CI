@@ -1,31 +1,32 @@
 /* eslint-disable no-useless-concat */
 
-import { COMUN_URL } from "@libs/shared/data-access-user/src";
+import { ENVIRONMENT } from "@libs/shared/data-access-user/src/enviroments/enviroment";
+
 
 /**
  * url base de la API
  */
-const BASE_URL = COMUN_URL.BASE_URL;
+const BASE_URL = ENVIRONMENT.API_HOST;
 /**
  * API nombre
  */
-const API = COMUN_URL.API;
+const API = ENVIRONMENT.API;
 /**
  * versión de la API
  */
-const API_VERSION = COMUN_URL.API_VERSION;
+const API_VERSION = ENVIRONMENT.API_VERSION;
 /**
  * Catálogo de la API
  */
-const CATALOGO = COMUN_URL.CATALOGO_URL;
+const CATALOGO = ENVIRONMENT.CATALOGO_URL;
 /**
  * Solicitud de la API
  */
-const SOLICITUD = COMUN_URL.SOLICITUD_URL;
+const SOLICITUD = ENVIRONMENT.SOLICITUD_URL;
 /**
  * Trámite de la API
  */
-const TRAMITE = COMUN_URL.TRAMITE_URL;
+const TRAMITE = ENVIRONMENT.TRAMITE_URL;
 /**
  * Procedimiento de la API
  */

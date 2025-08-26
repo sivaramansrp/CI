@@ -10,11 +10,30 @@ import { NotificacionesComponent } from "@ng-mf/data-access-user";
 import { Subject } from 'rxjs';
 
 /**
- * Componente para gestionar el histórico de productores.
+ * @description
+ * Componente para gestionar el histórico de productores en el sistema VUCEM.
  * 
- * Este componente permite al usuario visualizar, seleccionar y gestionar productores relacionados
- * con el trámite. También incluye la funcionalidad para agregar nuevos productores y gestionar
- * datos confidenciales.
+ * Este componente proporciona una interfaz completa para:
+ * - Visualizar y gestionar productores relacionados con el trámite
+ * - Agregar y eliminar productores
+ * - Gestionar datos confidenciales
+ * - Manejar la relación entre productores y exportadores
+ * - Gestionar mercancías asociadas
+ * 
+ * @usageNotes
+ * ### Ejemplo de uso básico
+ * ```typescript
+ * <app-historico-productores
+ *   [productoresExportador]="listaProductores"
+ *   [tramiteState]="estadoTramite"
+ *   [esFormularioSoloLectura]="false"
+ *   (formHistoricoEvent)="onFormularioActualizado($event)">
+ * </app-historico-productores>
+ * ```
+ * 
+ * @publicApi
+ * @moduleName Productores
+ * @version 1.0.0
  */
 @Component({
   selector: 'app-historico-productores',
@@ -25,20 +44,57 @@ import { Subject } from 'rxjs';
 })
 export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   /**
+   * @description
    * Formulario principal para gestionar los datos de los productores.
+   * Este formulario reactivo contiene los campos necesarios para el registro
+   * y manipulación de la información de los productores.
+   * 
+   * @type {FormGroup}
+   * @property {FormControl} datosConfidencialesProductor - Control para gestionar datos confidenciales
+   * @property {FormControl} productorMismoExportador - Control para indicar si el productor es el mismo que el exportador
+   * 
+   * @example
+   * ```typescript
+   * this.formulario = this.fb.group({
+   *   datosConfidencialesProductor: [],
+   *   productorMismoExportador: []
+   * });
+   * ```
    */
   formulario!: FormGroup;
   /**
- * Formulario para gestionar los datos de mercancías.
- * 
- * Permite capturar y validar los datos relacionados con las mercancías.
- */
+   * @description
+   * Formulario reactivo para gestionar los datos de mercancías.
+   * 
+   * Este formulario contiene todos los campos necesarios para la captura
+   * y validación de información relacionada con las mercancías del productor.
+   * 
+   * @type {FormGroup}
+   * @property {FormControl} fraccionArancelaria - Fracción arancelaria de la mercancía (deshabilitado)
+   * @property {FormControl} nombreComercial - Nombre comercial del producto (deshabilitado)
+   * @property {FormControl} nombreTecnico - Nombre técnico del producto (deshabilitado)
+   * @property {FormControl} numeroDeRegistroFiscal - Número de registro fiscal
+   * @property {FormControl} valorMercancia - Valor de la mercancía (deshabilitado)
+   * @property {FormControl} complemento - Información complementaria (deshabilitado)
+   * @property {FormControl} numeroFactura - Número de factura (deshabilitado)
+   * @property {FormControl} tipoFactura - Tipo de factura (requerido, valor mínimo: 0)
+   * 
+   * @example
+   * ```typescript
+   * this.formularioMercancia = this.fb.group({
+   *   fraccionArancelaria: [{ value: [], disabled: true }],
+   *   nombreComercial: [{ value: [[]], disabled: true }],
+   *   // ... otros campos
+   * });
+   * ```
+   */
   formularioMercancia!: FormGroup;
     /**
    * Indica si el formulario debe mostrarse solo en modo de lectura.
    * @type {boolean}
    */
   @Input() esFormularioSoloLectura!: boolean;
+  nuevaNotificacionStatus:boolean = false;
 
   /**
    * Propiedad de entrada que contiene una lista de opciones de catálogo para el "Tipo Factura".
@@ -227,10 +283,26 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   agregarDatosProductorFormulario!: FormGroup;
 
   /**
-   * Constructor del componente.
+   * @description
+   * Constructor del componente HistoricoProductores.
    * 
-   * @param {FormBuilder} fb - Constructor para crear formularios reactivos.
-   * @param {ValidacionesFormularioService} validacionesService - Servicio para validar formularios.
+   * Inicializa las dependencias necesarias para el funcionamiento del componente:
+   * - FormBuilder para la creación de formularios reactivos
+   * - ValidacionesFormularioService para la validación de campos
+   * 
+   * @param {FormBuilder} fb - Servicio de Angular para construir formularios reactivos
+   * @param {ValidacionesFormularioService} validacionesService - Servicio personalizado para validaciones
+   * 
+   * @example
+   * ```typescript
+   * constructor(
+   *   public fb: FormBuilder,
+   *   private validacionesService: ValidacionesFormularioService
+   * ) { }
+   * ```
+   * 
+   * @see FormBuilder
+   * @see ValidacionesFormularioService
    */
   constructor(
     public fb: FormBuilder,
@@ -238,9 +310,27 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   ) { }
 
   /**
-   * Método que se ejecuta al inicializar el componente.
+   * @description
+   * Método del ciclo de vida que se ejecuta al inicializar el componente.
    * 
-   * Carga los datos iniciales, configura los formularios y suscribe al estado del trámite.
+   * Realiza las siguientes tareas de inicialización:
+   * 1. Inicializa el formulario principal
+   * 2. Configura el estado inicial del formulario
+   * 3. Inicializa el formulario de mercancías
+   * 4. Configura el formulario de datos del productor
+   * 5. Carga los datos del estado del trámite si existen
+   * 
+   * @lifecycle
+   * @implements {OnInit}
+   * 
+   * @example
+   * ```typescript
+   * ngOnInit(): void {
+   *   this.initFormulario();
+   *   this.inicializarEstadoFormulario();
+   *   // ... otras inicializaciones
+   * }
+   * ```
    */
   ngOnInit(): void {
     this.initFormulario();
@@ -328,28 +418,43 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * Agrega los productores seleccionados a la lista de productores agregados.
    */
   productoresSeleccionados(): void {
+    if(this.seleccionadoProductoresExportador.length !== 0){
     this.agregarProductoresExportador = [...this.agregarProductoresExportador, ...this.seleccionadoProductoresExportador];
     this.productoresExportador = this.productoresExportador.filter(elementos => !this.seleccionadoProductoresExportador.some(elementosSecundarios => elementosSecundarios.id === elementos.id));
     this.seleccionadoProductoresExportador = [];
+    }
+    else{
+      this.abrirModal();
+    }
   }
 
   /**
    * Elimina los productores seleccionados de la lista de productores agregados.
    */
   eliminarProductoresSeleccionados(): void {
+    if(this.seleccionadoAgregarProductoresExportador.length !== 0){
     this.productoresExportador = [...this.productoresExportador, ...this.seleccionadoAgregarProductoresExportador];
     this.agregarProductoresExportador = this.agregarProductoresExportador.filter(elementos => !this.seleccionadoAgregarProductoresExportador.some(elementosSecundarios => elementosSecundarios.id === elementos.id));
     this.seleccionadoAgregarProductoresExportador = [];
+    }
+    else{
+      this.abrirModal();
+    }
   }
 
   /**
    * Abre el modal para agregar datos del productor.
    */
   agregarDatosProductorPorExportador(): void {
+    if(this.seleccionadoProductoresExportador.length !== 0){
     if (this.modalElement?.nativeElement) {
       const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
       MODAL_INSTANCE.show();
     }
+  }
+  else{
+    this.abrirModal();
+  }
   }
 
   /**
@@ -419,7 +524,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * - Llama a este método para abrir el modal de mercancía.
    */
   agregarMercancia(): void {
-    if (this.esTipoDeSeleccionado) {
+    if (this.esTipoDeSeleccionado && this.mercanciaDatosSeleccionada.length > 0) {
       if (this.modalElementsMercancia?.nativeElement) {
         const MODAL_INSTANCE = new Modal(this.modalElementsMercancia.nativeElement);
         MODAL_INSTANCE.show();
@@ -457,15 +562,41 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   mercanciaAgregarSeleccionada(): void {
     if (this.modalElements?.nativeElement) {
       const MODAL_INSTANCE = new Modal(this.modalElements.nativeElement);
-      MODAL_INSTANCE.show();
+      MODAL_INSTANCE.hide();
+     this.mercanciaDatos.push(this.formularioMercancia.value);
     }
   }
 
   /**
-   * Abre un modal con una notificación configurada.
+   * @description
+   * Abre un modal de notificación con una configuración predeterminada de alerta.
    * 
-   * @command abrirModal
-   * @description Este método configura y muestra un modal con una notificación de alerta.
+   * Este método configura una notificación con las siguientes características:
+   * - Tipo: Alerta
+   * - Categoría: Peligro
+   * - Modo: Acción
+   * - Tiempo de espera: 2000ms
+   * - Botón de aceptar personalizado
+   * 
+   * @method
+   * @public
+   * 
+   * @example
+   * ```typescript
+   * // Ejemplo de uso del método
+   * this.abrirModal();
+   * 
+   * // La notificación se configurará como:
+   * this.nuevaNotificacion = {
+   *   tipoNotificacion: 'alert',
+   *   categoria: 'danger',
+   *   modo: 'action',
+   *   // ... otras propiedades
+   * }
+   * ```
+   * 
+   * @see Notificacion
+   * @see NotificacionesComponent
    */
   public abrirModal(): void {
     this.nuevaNotificacion = {
@@ -479,6 +610,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
     }
+    this.nuevaNotificacionStatus = true;
   }
 
   /**
@@ -490,4 +622,6 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+
 }

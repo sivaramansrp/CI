@@ -375,4 +375,8 @@ export class Tramite110204Store extends Store<TramiteState> {
   public setIdiomaDatos(idiomaDatos: Catalogo[]): void {
     this.update((state) => ({ ...state, idiomaDatos }));
   }
+
+  public setMercanciaTabla(mercanciaTabla: Mercancia[]): void {
+    this.update((state) => ({ ...state, mercanciaTabla }));
+  }
 }

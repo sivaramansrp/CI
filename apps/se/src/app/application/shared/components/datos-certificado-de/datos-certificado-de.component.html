@@ -60,7 +60,7 @@
           <div class="col-md-6">
             <app-catalogo-select [isDisabled]="esFormularioSoloLectura" [label]="'Representación federal'"  [catalogo]="representacionFederalDatos || []" 
             [required]="true" name="estado" formControlName="representacionFederalDates"
-            (selectionChange)="representacionFederalSeleccion($event)"  (change)="setValoresStore('formDatosCertificado','EntidadFederativaDates','setFormDatosCertificado')"></app-catalogo-select>
+            (selectionChange)="representacionFederalSeleccion($event)"  (change)="setValoresStore('formDatosCertificado','representacionFederalDates','setFormDatosCertificado')"></app-catalogo-select>
             @if(formDatosCertificado.get('representacionFederalDates')?.invalid && (formDatosCertificado.get('representacionFederalDates')?.touched || formDatosCertificado.get('representacionFederalDates')?.dirty)) {
             <div class="d-grid">
               @if(formDatosCertificado.get('representacionFederalDates')?.errors?.['required']) {

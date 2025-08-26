@@ -6,7 +6,7 @@
       <div class="col-md-8">
         <label class="form-label" for="foliodel">Folio del trámite:</label>
         <input formControlName="foliodel" value="1502200200120240301000015" class="form-control" id="foliodel"
-          placeholder="" readonly type="text" libUppercase />
+          type="text" libUppercase />
       </div>
     </div>
     <div class="row">
@@ -15,12 +15,12 @@
         <div class="col-md-4">
           <app-catalogo-select id="aduanaIngreso" [catalogo]="aduanaIngreso.catalogos"
             [label]="aduanaIngreso.labelNombre" [placeholder]="aduanaIngreso.primerOpcion"
-            [isDisabled]="formularioDeshabilitado" formControlName="aduanaIngreso"
+            [isDisabled]="true" formControlName="aduanaIngreso"
             (selectionChange)="seleccionarAduanaIngreso($event)"></app-catalogo-select>
         </div>
         <div class="col-md-8">
           <app-catalogo-select [catalogo]="oficianaInspeccion.catalogos" [label]="oficianaInspeccion.labelNombre"
-            [placeholder]="oficianaInspeccion.primerOpcion" [isDisabled]="formularioDeshabilitado"
+            [placeholder]="oficianaInspeccion.primerOpcion" [isDisabled]="true"
             formControlName="oficinaInspeccion"
             (selectionChange)="seleccionarOficianaInspeccion($event)"></app-catalogo-select>
         </div>
@@ -28,7 +28,7 @@
       <div class="row">
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="puntoInspeccion.catalogos" [label]="puntoInspeccion.labelNombre"
-            [placeholder]="puntoInspeccion.primerOpcion" [isDisabled]="formularioDeshabilitado"
+            [placeholder]="puntoInspeccion.primerOpcion" [isDisabled]="true"
             formControlName="puntoInspeccion"
             (selectionChange)="seleccionarPuntoInspeccion($event)"></app-catalogo-select>
         </div>
@@ -37,14 +37,14 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="claveUCON">Clave UCON:
-              <i class="bi bi-question-circle-fill" style="margin-bottom: '5px'"></i></label>
+              <i class="bi bi-question-circle-fill" title="Sólo para usuarios que cuenten con la contraseña UCON e importen productos cárnicos" style="margin-bottom: '5px'"></i></label>
             <input formControlName="claveUCON" value="" class="form-control" id="claveUCON" placeholder="" type="text"
               libUppercase />
           </div>
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="establecimiento.catalogos" [label]="establecimiento.labelNombre"
-            [placeholder]="establecimiento.primerOpcion" [isDisabled]="formularioDeshabilitado"
+            [placeholder]="establecimiento.primerOpcion" [isDisabled]="true"
             formControlName="establecimientoTIF"></app-catalogo-select>
         </div>
         <div class="col-md-4">
@@ -65,7 +65,7 @@
         <div class="col-md-8">
           <app-catalogo-select [catalogo]="regimenDestinaran.catalogos" [label]="regimenDestinaran.labelNombre"
             [placeholder]="regimenDestinaran.primerOpcion" formControlName="regimen"
-            [isDisabled]="formularioDeshabilitado" (selectionChange)="seleccionarRegimen($event)"></app-catalogo-select>
+            [isDisabled]="true" (selectionChange)="seleccionarRegimen($event)"></app-catalogo-select>
         </div>
       </div>
     </div>
@@ -197,7 +197,7 @@
         <div class="row">
           <div class="col-md-4">
             <app-catalogo-select [catalogo]="movilizacionNacional.catalogos" [label]="movilizacionNacional.labelNombre"
-              [placeholder]="movilizacionNacional.primerOpcion" [isDisabled]="formularioDeshabilitado"
+              [placeholder]="movilizacionNacional.primerOpcion" [isDisabled]="true"
               formControlName="movilizacion"
               (selectionChange)="seleccionarMovilizacionNacional($event)"></app-catalogo-select>
           </div>
@@ -208,12 +208,12 @@
           </div>
           <div class="col-md-4">
             <app-catalogo-select [catalogo]="puntoVerificacion.catalogos" [label]="puntoVerificacion.labelNombre"
-              [placeholder]="puntoVerificacion.primerOpcion" [isDisabled]="formularioDeshabilitado"
+              [placeholder]="puntoVerificacion.primerOpcion" [isDisabled]="true"
               formControlName="punto" (selectionChange)="seleccionarPuntoVerificacion($event)"></app-catalogo-select>
           </div>
           <div class="col-md-8">
             <app-catalogo-select [catalogo]="empresaTransportista.catalogos" [label]="empresaTransportista.labelNombre"
-              [placeholder]="empresaTransportista.primerOpcion" [isDisabled]="formularioDeshabilitado"
+              [placeholder]="empresaTransportista.primerOpcion" [isDisabled]="true"
               formControlName="nombreEmpresa"></app-catalogo-select>
           </div>
         </div>

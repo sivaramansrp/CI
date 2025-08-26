@@ -6,14 +6,14 @@
         }
         <!--Datos del tramite a realizar-->
         <app-datos-del-tramite-a-realizar claveDeControl="datoseDelTramiteRealizar" [procedimiento]="220501"
-            [formularioDeshabilitado]="formularioDeshabilitado"></app-datos-del-tramite-a-realizar>
+            [formularioDeshabilitado]="formularioDeshabilitado" [formValida]="formValida"></app-datos-del-tramite-a-realizar>
 
         <!--Responsable inspeccion en punto-->
         <app-responsable-inspeccion-en-punto claveDeControl="responsableInspeccionEnPunto"
-            [formularioDeshabilitado]="formularioDeshabilitado"></app-responsable-inspeccion-en-punto>
+            [formularioDeshabilitado]="formularioDeshabilitado" [formValida]="formValida"></app-responsable-inspeccion-en-punto>
 
         <!--Medio de transporte-->
-        <app-medio-transporte (transporteSeleccionado)="onTransporteSeleccionado($event)"></app-medio-transporte>
+        <app-medio-transporte (transporteSeleccionado)="onTransporteSeleccionado($event)" [formValida]="formValida"></app-medio-transporte>
 
         @if (mostrarSeccion) {
         <!--Cantidad de carros de ferrocarril 2-->

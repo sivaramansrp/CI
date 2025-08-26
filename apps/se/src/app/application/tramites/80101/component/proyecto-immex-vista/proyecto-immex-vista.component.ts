@@ -1,6 +1,6 @@
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Catalogo } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DOCUMENTO_CATALOGO_DATOS } from '../../constantes/nuevo-programa.enum';
 import { PROYECTO_DATOS } from '../../constantes/nuevo-programa.enum';
 import { PROYECTO_IMMEX_CONFIG } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
@@ -66,6 +66,14 @@ export class ProyectoImmexVistaComponent {
     proyectoImmexSeleccionCheckBox: TablaSeleccion.CHECKBOX,
     proyectoImmexTabla: PROYECTO_IMMEX_CONFIG
   };
+
+  /**
+   * Evento que se emite para cerrar el popup actual.
+   * 
+   * Notifica al componente padre que se debe cerrar el popup.
+   * No envía ningún dato, solo indica la acción de cierre.
+   */
+  @Output() cerrarPopup = new EventEmitter<void>();
 
   /**
    * Método para asignar la lista de proyectos IMMEX a la propiedad `proyectoImmexTablaLista`.

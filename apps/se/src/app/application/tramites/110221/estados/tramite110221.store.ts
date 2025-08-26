@@ -10,6 +10,33 @@ import { Mercancia } from '../../../shared/models/modificacion.enum';
  * Contiene todas las propiedades y formularios requeridos en el flujo del trámite, así como los datos y banderas de validación.
  * 
  */
+
+export interface DestinatarioForm {
+  nombre: string;
+  numeroFiscal: string;
+}
+
+export interface DomicilioForm {
+  calle: string;
+  numeroLetra: string;
+  paisDestino: string | null;
+  ciudad: string;
+  correoElectronico: string;
+  lada: string;
+  telefono: string;
+}
+
+export interface RepresentanteLegalForm{
+  lugar: string;
+  nombreRepresentante: string;
+  empresa: string;
+  cargo: string;
+  lada: string;
+  telefono: string;
+  fax: string;
+  correoElectronico: string;
+}
+
 export interface Tramite110221State {
   /**
    * @property {Object} formCertificado - Datos del formulario principal de certificado.
@@ -126,6 +153,24 @@ export interface Tramite110221State {
    */
   si?: boolean;
   /**
+   * @property {DestinatarioForm} destinatarioForm - Formulario de destinatario.
+   * @description
+   * Contiene los campos del formulario para el destinatario, como nombre y número fiscal.
+   */
+  destinatarioForm: DestinatarioForm;
+  /**
+   * @property {DomicilioForm} domicilioForm - Formulario de domicilio.
+   * @description
+   * Contiene los campos del formulario para el domicilio, como calle, número/letra, país destino, ciudad, correo electrónico, lada y teléfono.
+   */
+  domicilioForm: DomicilioForm;
+  /**
+   * @property {RepresentanteLegalForm} representanteLegalForm - Formulario de representante legal.
+   * @description
+   * Contiene los campos del formulario para el representante legal, como lugar, nombre, empresa, cargo, lada, teléfono, fax y correo electrónico.
+   */
+  representanteLegalForm: RepresentanteLegalForm;
+  /**
    * @property {boolean} [productorMismoExportador] - Indica si el productor es el mismo que el exportador.
    * @description
    * Bandera que indica si el productor y el exportador son la misma entidad, utilizada para simplificar el flujo del trámite.
@@ -173,6 +218,7 @@ export interface Tramite110221State {
   fechaFinal: string;
   archivo: string;
   fraccionMercanciaArancelaria: string;
+  otrasInstancias:string;
   nombreTecnico: string;
   nombreComercialDelaMercancia: string;
   criterioParaConferir: string;
@@ -185,7 +231,8 @@ export interface Tramite110221State {
   fecha: string;
   numeroFactura: string;
   mercanciaSeleccionadasTablaData:SeleccionadasTabla[],
-  mercanciaDisponsiblesTablaDatos:ColumnasTabla[]
+  mercanciaDisponsiblesTablaDatos:ColumnasTabla[],
+  valordeContenidoRegional:string
 }
 
 /**
@@ -296,8 +343,12 @@ export function createInitialState(): Tramite110221State {
     tipoFactura: '',
     fecha: '',
     mercanciaSeleccionadasTablaData:[],
-    mercanciaDisponsiblesTablaDatos:[]
-
+    mercanciaDisponsiblesTablaDatos:[],
+    otrasInstancias:'',
+    valordeContenidoRegional:'',
+  destinatarioForm: {} as DestinatarioForm,
+  domicilioForm: {} as DomicilioForm,
+  representanteLegalForm: {} as RepresentanteLegalForm
   };
 }
 
@@ -404,14 +455,16 @@ export class Tramite110221Store extends Store<Tramite110221State> {
    * Actualiza los datos del formulario de certificado en el almacén.
    * @param values - Objeto que contiene los valores a actualizar en el formulario de certificado.
    */
-  setFormDatosCertificado(values: { [key: string]: unknown}): void {
-    this.update((state) => ({
-      formDatosCertificado: {
-        ...state.formDatosCertificado,
-        ...values,
-      },
-    }));
-  }
+setFormDatosCertificado(values: { [key: string]: unknown }): void {
+  this.update((state) => ({
+    ...state,
+    formDatosCertificado: {
+      ...state.formDatosCertificado, 
+      ...values,                     
+    },
+  }));
+}
+
 
   /**
    * @descripcion
@@ -644,5 +697,62 @@ export class Tramite110221Store extends Store<Tramite110221State> {
       ...valores,
     }));
   } 
-  
+  /**
+   * @descripcion
+   * Actualiza los datos de la tabla de mercancías seleccionadas.
+   * @param mercanciaSeleccionadasTablaData - Array de objetos `SeleccionadasTabla` que representa las mercancías seleccionadas.
+   */
+  setMercanciaSeleccionadasTablaData(mercanciaSeleccionadasTablaData: SeleccionadasTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaSeleccionadasTablaData,
+    }));
+  }
+
+  /**
+   * @descripcion
+   * Actualiza los datos de la tabla de mercancías disponibles.
+   * @param mercanciaDisponsiblesTablaDatos - Array de objetos `ColumnasTabla` que representa las mercancías disponibles.
+   */
+  setMercanciaDisponsiblesTablaDatos(mercanciaDisponsiblesTablaDatos: ColumnasTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaDisponsiblesTablaDatos,
+    }));
+  }
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de destinatario.
+   * @param destinatarioForm - Objeto que contiene los valores del formulario de destinatario.
+   */
+  setDestinatarioForm(destinatarioForm: DestinatarioForm): void {
+    this.update((state) => ({
+      ...state,
+      destinatarioForm,
+    }));
+  }
+
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de domicilio.
+   * @param domicilioForm - Objeto que contiene los valores del formulario de domicilio.
+   */
+  setDomicilioForm(domicilioForm: DomicilioForm): void {
+    this.update((state) => ({
+      ...state,
+      domicilioForm,
+    }));
+  }
+
+  /**
+   * @descripcion
+   * Actualiza los datos del formulario de representante legal.
+   * @param representanteLegalForm - Objeto que contiene los valores del formulario de representante legal.
+   */
+  setRepresentanteLegalForm(representanteLegalForm: RepresentanteLegalForm): void {
+    this.update((state) => ({
+      ...state,
+      representanteLegalForm,
+    }));
+  }
 }

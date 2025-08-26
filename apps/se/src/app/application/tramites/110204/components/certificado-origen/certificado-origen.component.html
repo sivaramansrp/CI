@@ -1,4 +1,4 @@
-<app-certificado-de-origen 
+<app-certificado-de-origen #certificadoDeOrigen
     [operador]="operador"
     [tratadoAcuerdo]="(estados$ | async) || []"
     [paisBloqu]="(pais$ | async) || []"
@@ -9,6 +9,7 @@
     (filaClics)="abrirModificarModal($event)"
     [tablaSeleccionEvent]="tablaSeleccionEvent"
     [guardarClicado]="(datosTabla$ | async) ||  []"
+    (guardarClicadoEvent)="guardarClicado($event)"
     (formaValida)="setFormValida($event)"
     [datosForm]="formCertificado"
     [cargoDeMercancias]="cargoDeMercancias"
@@ -16,10 +17,15 @@
     [mercanciasDisponiblesTabla]="mercanciasDisponiblesTabla"
     [esFormularioSoloLectura]="esFormularioSoloLectura"
     (formCertificadoEvent)="setValoresStore($event)"
-    [idProcedimiento]="idProcedimiento" >
+    [idProcedimiento]="idProcedimiento"
+    (setModelCargaPorArchivo)="abrirModalCargaPorArchivo()"
+    [domicilioTercer]="true" >
 </app-certificado-de-origen>
 
 <div class="modal fade" #modifyModal tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
     <app-mercancias-modal [esFormularioSoloLectura]="esFormularioSoloLectura" [datosSeleccionados]="datosSeleccionados" (guardarClicado)="abrirModificarModal($event)"
         (cerrarClicado)="cerrarModificarModal()"></app-mercancias-modal>
+</div>
+<div class="modal fade" #buscarMercanciaModal tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
+    <app-carga-por-archivo></app-carga-por-archivo>
 </div>

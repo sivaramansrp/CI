@@ -74,12 +74,28 @@ export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
    * Esto previene fugas de memoria.
    * @private
    */
-  private destroyNotifier$ = new Subject<void>();
+  public destroyNotifier$ = new Subject<void>();
 
   /**
    * Controla si el formulario se encuentra deshabilitado (solo lectura).
    */
   formularioDeshabilitado: boolean = false;
+
+    /**
+   * @property {CertificadoOrigenComponent} certificadoOrigen
+   * @description
+   * Referencia al componente hijo `CertificadoOrigenComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario de certificado de origen desde el componente padre.
+   */
+  @ViewChild('CertificadoOrigen') certificadoOrigen!: CertificadoOrigenComponent;
+
+  /**
+   * @property {DatosCertificadoComponent} datosCertificado
+   * @description
+   * Referencia al componente hijo `DatosCertificadoComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario de datos del certificado desde el componente padre.
+   */
+  @ViewChild('DatosCertificado') datosCertificado!: DatosCertificadoComponent;
 
   /**
    * Constructor con inyección de dependencias para servicios de detección de cambios,
@@ -146,6 +162,46 @@ export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   seleccionaTab(indice: number): void {
     this.indice = indice;
+  }
+
+  /**
+   * @method validarFormularios
+   * @description
+   * Valida todos los formularios del paso uno: solicitante, certificado de origen y datos del certificado.
+   * Marca los controles como tocados si algún formulario es inválido para mostrar los errores de validación.
+   * Retorna `true` si todos los formularios son válidos, de lo contrario retorna `false`.
+   *
+   * @returns {boolean} Indica si todos los formularios del paso uno son válidos.
+   */
+  public validarFormularios(): boolean {
+    let isValid = true;
+
+    if (this.solicitante?.form) {
+      if (this.solicitante.form.invalid) {
+        this.solicitante.form.markAllAsTouched();
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.certificadoOrigen) {
+      if (!this.certificadoOrigen.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.datosCertificado) {
+      if (!this.datosCertificado.validarFormularioDatos()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    return isValid;
   }
 
   /**

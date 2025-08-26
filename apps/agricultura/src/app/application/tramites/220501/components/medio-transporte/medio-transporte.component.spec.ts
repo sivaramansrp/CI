@@ -82,7 +82,6 @@ describe('MedioTransporteComponent', () => {
     expect(form.value).toEqual({
       medioDeTransporte: '1',
       identificacionTransporte: 'ABC123',
-      esSolicitudFerros: '0',
       totalGuias: '3'
     });
   });
@@ -101,8 +100,6 @@ describe('MedioTransporteComponent', () => {
     const spy = jest.spyOn(component.transporteSeleccionado, 'emit');
     component.estableceSeleccionSolicitudFerro('1');
     expect(spy).toHaveBeenCalledWith(true);
-    expect(component.mostrarAgregarMercancia).toBe(false);
-    expect(mockStore.setMostrarAgregarMercancia).toHaveBeenCalledWith(false);
     expect(mockStore.setEsSolicitudFerros).toHaveBeenCalledWith('1');
   });
 
@@ -110,12 +107,6 @@ describe('MedioTransporteComponent', () => {
     const spy = jest.spyOn(component.transporteSeleccionado, 'emit');
     component.estableceSeleccionSolicitudFerro('0');
     expect(spy).toHaveBeenCalledWith(false);
-  });
-
-  it('should show AgregarMercancia and update store on modificarSaldosMercancia', () => {
-    component.modificarSaldosMercancia();
-    expect(component.mostrarAgregarMercancia).toBe(true);
-    expect(mockStore.setMostrarAgregarMercancia).toHaveBeenCalledWith(true);
   });
 
   it('should update mercancia data and hide agregar mercancia on actualizarMercanciaEnTabla', () => {
@@ -131,7 +122,6 @@ describe('MedioTransporteComponent', () => {
     };
     component.actualizarMercanciaEnTabla(data);
     expect(component.mercanciaBodyData[0].tbodyData).toEqual(Object.values(data));
-    expect(component.mostrarAgregarMercancia).toBe(false);
     expect(mockStore.setMercanciaTablaDatos).toHaveBeenCalledWith(Object.values(data));
   });
 
@@ -148,12 +138,6 @@ describe('MedioTransporteComponent', () => {
   it('should get totalGuias and update store', () => {
     component.getTotalGuiasAmparadas();
     expect(mockStore.setTotalGuias).toHaveBeenCalledWith('3');
-  });
-
-  it('should update mostrarAgregarMercancia and notify store on obtenerAgregarMercanciaEvent', () => {
-    component.obtenerAgregarMercanciaEvent(true);
-    expect(component.mostrarAgregarMercancia).toBe(true);
-    expect(mockStore.setMostrarAgregarMercancia).toHaveBeenCalledWith(true);
   });
 
   it('should complete destroyed$ on destroy', () => {

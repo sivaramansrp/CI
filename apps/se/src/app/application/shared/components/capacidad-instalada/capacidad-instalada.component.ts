@@ -1,7 +1,7 @@
 import { CAPACIDAD_INSTALADA, CapacidadInstalada } from '../../constantes/capacidad-instalada.enum';
 import { CatalogoSelectComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent,} from '@libs/shared/data-access-user/src';
 import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import {Subject,map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -39,6 +39,15 @@ export class CapacidadInstaladaComponent implements OnInit {
      * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
      */
     private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Evento que se emite al cerrar el popup.
+   * 
+   * Se utiliza para notificar al componente padre que el popup ha sido cerrado.
+   */
+    @Output() cerrarPopup = new EventEmitter<void>();
+    
+
   /**
    * Constructor de la clase CapacidadInstaladaComponent
    * @param {Location} ubicaccion - Servicio de Angular para manejar la ubicación del navegador
@@ -87,7 +96,8 @@ export class CapacidadInstaladaComponent implements OnInit {
    * @returns {void}
    */
   regrasar(): void {
-    this.ubicaccion.back();
+    this.cerrarPopup.emit();
+
   }
   /** Inicializa los datos del formulario suscribiéndose al estado del trámite.  
  *  Asigna el estado actual al modelo local del componente. */

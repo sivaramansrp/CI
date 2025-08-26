@@ -119,7 +119,8 @@
           <label style="font-weight: normal; text-align: justify;">
             Nota: Para este trámite es indispensable enviar a la AMECAFE el catálogo de productos de exportación. Para
             mayor referencia consulta la guía disponible en: <a href="http://www.amecafe.org.mx"
-              target="_blank">www.amecafe.org.mx</a>
+              target="_blank" *ngIf="!esFormularioSoloLectura">www.amecafe.org.mx</a>
+              <span *ngIf="esFormularioSoloLectura">www.amecafe.org.mx</span>
           </label>
         </div>
       </div>
@@ -129,8 +130,7 @@
     <div class="row">
       <div class="col-md-12">
         <div class="form-group">
-          <label for="observaciones">Observaciones</label>
-          <span class="require">*</span>
+          <label for="observaciones">Observaciones<span class="require">*</span>:</label>
           <textarea formControlName="observaciones" cols="60" rows="3" class="form-control required" id="valueTA"
             [required]="true" [disabled]="esFormularioSoloLectura"></textarea>
         </div>

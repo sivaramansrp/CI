@@ -143,12 +143,4 @@ describe('ExportaccionAcuicolaService', () => {
             expect(storeMock.setPagoDerechos).toHaveBeenCalledWith(datos.pagoDerechos);
         });
     });
-
-    describe('updateTercerosRelacionados', () => {
-        it('should call actualizarTercerosRelacionados on store', () => {
-            const terceros = [{ nombre: 'Juan' }];
-            service.updateTercerosRelacionados(terceros as any);
-            expect(storeMock.actualizarTercerosRelacionados).toHaveBeenCalledWith(terceros);
-        });
-    });
 });

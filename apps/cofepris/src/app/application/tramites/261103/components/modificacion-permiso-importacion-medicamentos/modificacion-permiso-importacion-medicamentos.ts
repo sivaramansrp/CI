@@ -22,6 +22,7 @@ import { RepresentanteLegalComponent } from '../representantelegal/representante
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
+import { ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
@@ -45,13 +46,22 @@ export class ModificacionPermisoImportacionMedicamentosComponent implements OnIn
   /** Subject para notificar la destrucción del componente */
   private destroy$ = new Subject<void>();
 
+  /**
+   * Referencias a los componentes hijos para poder llamar sus métodos de habilitación/deshabilitación
+   */
+  @ViewChild(DatosestablecimientoComponent) datosEstablecimientoComponent!: DatosestablecimientoComponent;
+  @ViewChild(DomicilioEstablecimientosComponent) domicilioEstablecimientosComponent!: DomicilioEstablecimientosComponent;
+  @ViewChild(MercanciasComponent) mercanciasComponent!: MercanciasComponent;
+  @ViewChild(ManifiestosComponent) manifestosComponent!: ManifiestosComponent;
+  @ViewChild(RepresentanteLegalComponent) representanteLegalComponent!: RepresentanteLegalComponent;
+
     /**
    * Opciones del componente de radio input.
    * @public
    */
     public radioOptions: { label: string; value: string }[] = [
-      { label: 'Prorroga', value: 'Prorroga' },
-      { label: 'Modificacion', value: 'Modificacion' },
+      { label: 'Prórroga', value: 'Prorroga' },
+      { label: 'Modificación', value: 'Modificacion' },
     ];
   /**
    * Clase de alerta informativa.
@@ -109,6 +119,7 @@ export class ModificacionPermisoImportacionMedicamentosComponent implements OnIn
           map((seccionState: { readonly: boolean }) => {
             this.esFormularioSoloLectura = seccionState.readonly;
             this.guardarDatosFormulario();
+            this.disableGenerical();
           })
         )
         .subscribe()
@@ -177,6 +188,8 @@ export class ModificacionPermisoImportacionMedicamentosComponent implements OnIn
       ideGenerica1: [this.seccionState?.ideGenerica1],
       observaciones: [this.seccionState?.observaciones, [Validators.required]],
     });
+
+    this.disableGenerical();
   }
   /**
    * Validar campo del formulario
@@ -214,6 +227,7 @@ export class ModificacionPermisoImportacionMedicamentosComponent implements OnIn
 inicializarEstadoFormulario(): void {
   if (this.esFormularioSoloLectura) {
     this.guardarDatosFormulario();
+    this.disableGenerical();
   } else {
     this.obtenerDatosFormulario();
   }
@@ -228,6 +242,7 @@ inicializarEstadoFormulario(): void {
 * 3. Evalúa si el formulario está en modo solo lectura (`esFormularioSoloLectura`):
 *    - Si está en modo solo lectura, deshabilita el formulario utilizando el método `disable`.
 *    - Si no está en modo solo lectura, habilita el formulario utilizando el método `enable`.
+* 4. Aplica el estado del formulario a todos los componentes hijos a través de `disableGenerical`.
 * 
 * Este método es útil para sincronizar los datos del formulario con el estado global de la aplicación
 * y configurar su estado (habilitado o deshabilitado) según corresponda.
@@ -242,5 +257,101 @@ guardarDatosFormulario(): void {
   } else {
     this.preOperativeForm.enable();
   }
+  
+  // Aplicar el estado del formulario a todos los componentes hijos
+  this.disableGenerical();
 }
+
+
+/**
+   * Deshabilita o habilita el control 'observaciones' en el formulario `preOperativeForm`
+   * basado en el estado de solo lectura del formulario y el valor del control 'ideGenerica1'.
+   * También aplica la misma lógica de habilitación/deshabilitación a todos los componentes hijos.
+   *
+   * - Si el formulario no está inicializado, el método retorna inmediatamente.
+   * - Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es true), 
+   *   el control 'observaciones' y todos los campos de componentes hijos siempre se deshabilitan.
+   * - Si el formulario no está en modo solo lectura, el control 'observaciones' y los campos
+   *   de componentes hijos se deshabilitan a menos que el valor de 'ideGenerica1' sea exactamente 
+   *   'Modificacion', en cuyo caso se habilitan.
+   * - Aplica el estado de solo lectura a todos los componentes hijos llamando sus respectivos métodos.
+   */
+  disableGenerical(): void {
+    // Verificar si el formulario está inicializado antes de acceder a él
+    if (!this.preOperativeForm) {
+      return;
+    }
+
+    // Determinar si los campos deben estar habilitados o deshabilitados
+    const DEBE_ESTAR_HABILITADO = !this.esFormularioSoloLectura && 
+                               (this.preOperativeForm.get('ideGenerica1')?.value === 'Modificacion');
+
+    // Aplicar estado al campo observaciones del formulario principal
+    if (DEBE_ESTAR_HABILITADO) {
+      this.preOperativeForm.get('observaciones')?.enable();
+    } else {
+      this.preOperativeForm.get('observaciones')?.disable();
+    }
+
+    // Aplicar el estado a todos los componentes hijos
+    this.aplicarEstadoFormularioComponentesHijos(DEBE_ESTAR_HABILITADO);
+  }
+
+  /**
+   * Aplica el estado del formulario (habilitado/deshabilitado) a todos los componentes hijos.
+   * 
+   * Este método llama a los métodos de aplicación de estado de formulario de cada componente hijo
+   * considerando tanto el estado de solo lectura como la lógica condicional de habilitación.
+   * 
+   * @param DEBE_ESTAR_HABILITADO - Indica si los formularios deben estar habilitados (true) o deshabilitados (false)
+   * 
+   * Componentes controlados:
+   * - datos-establecimiento: Controla formulario `datosdelestablecimiento`
+   * - domicilio-establecimientos: Controla formularios `domicilioEstablecimiento` y `AvisodeFuncionamiento`
+   * - mercancias: Controla formulario `aduanaFormulario`
+   * - manifiestos: Controla formulario `Aduana`
+   * - representante-legal: Controla formulario `domicilioEstablecimiento`
+   * 
+   * @returns {void}
+   */
+  private aplicarEstadoFormularioComponentesHijos(DEBE_ESTAR_HABILITADO: boolean): void {
+    // Establecer temporalmente el estado para que los componentes hijos lo lean
+    const ESTADO_ORIGINAL = this.esFormularioSoloLectura;
+    this.esFormularioSoloLectura = !DEBE_ESTAR_HABILITADO;
+
+    // Aplicar estado al componente de datos de establecimiento
+    if (this.datosEstablecimientoComponent) {
+      this.datosEstablecimientoComponent.esFormularioSoloLectura = !DEBE_ESTAR_HABILITADO;
+      this.datosEstablecimientoComponent.aplicarEstadoFormulario();
+    }
+
+    // Aplicar estado al componente de domicilio de establecimientos
+    if (this.domicilioEstablecimientosComponent) {
+      this.domicilioEstablecimientosComponent.esFormularioSoloLectura = !DEBE_ESTAR_HABILITADO;
+      this.domicilioEstablecimientosComponent.guardarDatosFormulario();
+    }
+
+    // Aplicar estado al componente de mercancías
+    if (this.mercanciasComponent) {
+      this.mercanciasComponent.esFormularioSoloLectura = !DEBE_ESTAR_HABILITADO;
+      this.mercanciasComponent.guardarDatosFormulario();
+    }
+
+    // Aplicar estado al componente de manifiestos
+    if (this.manifestosComponent) {
+      this.manifestosComponent.esFormularioSoloLectura = !DEBE_ESTAR_HABILITADO;
+      this.manifestosComponent.aplicarEstadoFormulario();
+    }
+
+    // Aplicar estado al componente de representante legal
+    if (this.representanteLegalComponent) {
+      this.representanteLegalComponent.esFormularioSoloLectura = !DEBE_ESTAR_HABILITADO;
+      this.representanteLegalComponent.aplicarEstadoFormulario();
+    }
+
+    // Restaurar el estado original
+    this.esFormularioSoloLectura = ESTADO_ORIGINAL;
+  }
+
+
 }

@@ -4,3 +4,11 @@ td {
   text-align: center;
   vertical-align: middle;
 }
+
+.modal-dialog {
+  max-width: 1100px !important;
+}
+
+.modal-footer {
+  justify-content: end;
+}
