@@ -76,6 +76,8 @@
          [placeholder]="'Seleccione una unidad de medida'"
          formControlName="unidadMedida"
             [isDisabled]="esFormularioSoloLectura ? true : false"
+            [tooltipQuestionCircle]="true"
+            [tooltipQuestionCircleText]="'Unidad de medida de la tarifa'"
         ></app-catalogo-select>
         @if (formDelLa.controls['unidadMedida'].invalid && formDelLa.controls['unidadMedida'].touched) {
           <div class="text-danger">
@@ -125,8 +127,9 @@
           >Valor factura USD<span class="require">*</span>:</label
         ><span
           class="bi bi-question-circle-fill"
-          title="Valor factura USD"
+          title="En caso de no contar con valor factura proporciona el dólar como valor estimado"
           data-bs-toggle="tooltip"
+
         ></span>
         <input
           class="form-control"
