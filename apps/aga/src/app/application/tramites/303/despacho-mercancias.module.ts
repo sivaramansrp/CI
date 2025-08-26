@@ -5,13 +5,10 @@ import { AgentesAgenciasAduanalesComponent } from './components/agentes-agencias
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { ConfirmarNotificacionComponent } from './components/confirmar-notificacion/confirmar-notificacion.component';
-import { ControlInventariosComponent } from './components/control-inventarios/control-inventarios.component';
 import { CrosslistComponent } from '@ng-mf/data-access-user';
 import { DatosTransportistaComponent } from './components/datos-transportista/datos-transportista.component';
 import { DespachoMercanciasRoutingModule } from './despacho-mercancias-routing.module';
 import { DespachoMercanciasSolicitudComponent } from './components/despacho-mercancias-solicitud/despacho-mercancias-solicitud.component';
-import { EmpleadosContratadosComponent } from './components/empleados-contratados/empleados-contratados.component';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { InputCheckComponent } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
@@ -28,25 +25,20 @@ import { RouterModule } from '@angular/router';
 import { SelectPaisesComponent } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
-import { TestPageComponent } from './pages/test-page/test-page.component';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 @NgModule({
   declarations: [
     AgentesAgenciasAduanalesComponent,
-    ConfirmarNotificacionComponent,
-    ControlInventariosComponent,
     DatosTransportistaComponent,
     DespachoMercanciasSolicitudComponent,
-    EmpleadosContratadosComponent,
-    PagoDerechosComponent,
     PasoCuatroComponent,
     PasoDosComponent,
     PasoTresComponent,
     PasoUnoComponent,
     RegistroPageComponent,
-    TestPageComponent,
+    PagoDerechosComponent
   ],
   imports: [
     CommonModule,

@@ -95,7 +95,7 @@ export class TercerosRelacionadosComponent implements OnInit {
   /**
    * Busca y carga los notificadores disponibles.
    */
-  buscarNotificadores() {
+  buscarNotificadores(): void {
     this.servicio.consultaNotificadores()
       .pipe(
         map((data) => {
