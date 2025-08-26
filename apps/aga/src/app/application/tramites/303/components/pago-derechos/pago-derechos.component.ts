@@ -33,21 +33,26 @@ export class PagoDerechosComponent implements OnInit {
    */
   crearPagoDerechosForm(): void {
     this.pagoDerechos = this.fb.group({
-      claveReferencia: ['', Validators.required],
-      cadenaDependencia: [''],
+      claveReferencia: ['', Validators.required, { disabled: true }],
+      cadenaDependencia: [{ value: '', disabled: true }],
       banco: [''],
       llavePago: [''],
       fechaPago: ['', Validators.required],
-      importePago: [
-        '',
-        [Validators.required, Validators.min(0.01)]
-      ]
+      importePago: [{ value: '', disabled: true }]
     });
   }
 
+
+  /**
+   * Método de ciclo de vida que se ejecuta al inicializar el componente.
+   */
   ngOnInit(): void {
     this.catalogoBancos();
   }
+
+  /**
+   * Consulta el catálogo de bancos.
+   */
   catalogoBancos(): void {
     this.servicios.consultaBanco()
       .pipe(
@@ -58,6 +63,26 @@ export class PagoDerechosComponent implements OnInit {
         }),
         catchError((_error) => {
           console.error('Error al consultar catálogo IMMEX', _error);
+          return of([]);
+        }),
+        takeUntil(this.destruirSuscripcion$)
+      )
+      .subscribe();
+  }
+
+  /**
+   * Obtiene los datos de pago.
+   */
+  obtenerDatosPago(): void {
+    this.servicios.consultaImportePago()
+      .pipe(
+        map((data) => {
+          if (data) {
+            this.pagoDerechos.patchValue(data);
+          }
+        }),
+        catchError((_error) => {
+          console.error('Error al consultar importe de pago', _error);
           return of([]);
         }),
         takeUntil(this.destruirSuscripcion$)
