@@ -1,12 +1,10 @@
-import { Component, OnDestroy } from '@angular/core';
+import { AlertComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
-import { AlertComponent } from '@ng-mf/data-access-user';
-import { Input } from '@angular/core';
 import { SagarpaService } from '../../../220501/services/sagarpa/sagarpa.service';
 import { Solicitud } from '../../models/solicitud-pantallas.model';
 import { Solicitud220501Store } from '../../../220501/estados/tramites220501.store';
 import { TEXTOS } from '../../../220501/constantes/texto-enum';
-import { TituloComponent } from '@ng-mf/data-access-user';
 
 /**
  * Componente que representa los datos de la solicitud.

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import {
   AlertComponent,
   Catalogo,
@@ -10,28 +10,18 @@ import {
   CatalogoSelectComponent,
   InputRadioComponent,
 } from '@libs/shared/data-access-user/src';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Solicitud220501State, Solicitud220501Store } from '../../estados/tramites220501.store';
+import { Subject, map, merge, takeUntil } from 'rxjs';
 import { AgregarMercanciaComponent } from '../agregar-mercancia/agregar-mercancia.component';
 import { CommonModule } from '@angular/common';
-import { EventEmitter } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
 import { MercanciaTabla } from '../../models/medio-transporte.model';
 import { Modal } from 'bootstrap';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/sagarpa.enum';
-import { OnDestroy } from '@angular/core';
-import { Output } from '@angular/core';
 import { SagarpaService } from '../../services/sagarpa/sagarpa.service';
 import { Solicitud220501Query } from '../../estados/tramites220501.query';
-import { Solicitud220501State } from '../../estados/tramites220501.store';
-import { Solicitud220501Store } from '../../estados/tramites220501.store';
-import { Subject } from 'rxjs';
 import { TEXTOS } from '../../constantes/texto-enum';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
 import mercanciaTable from '@libs/shared/theme/assets/json/220501/mercancia-table.json';
-import { merge } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 
 /**
