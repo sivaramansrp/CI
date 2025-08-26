@@ -9,7 +9,7 @@
     [catalogo]="regimenAduaneroList"
     formControlName="regimenAduanero"
     [label]="'Régimen aduanero'"
-    [required]="false"
+    [required]="true"
     name="regimenAduanero"
   ></app-catalogo-select>
   </div>
@@ -18,7 +18,7 @@
     [catalogo]="mecanismoAsignacionList"
     formControlName="mecanismoAsignacion"
     [label]="'Mecanismo de asignación'"
-    [required]="false"
+    [required]="true"
     name="mecanismoAsignacion"
   ></app-catalogo-select>
   </div>
@@ -63,7 +63,7 @@
 
   </div>
   
-  <div class="row">
+  <div class="row mt-3">
     <div class="col-md-12 d-flex justify-content-end mt-10">
       <button type="button" class="btn btn-primary" (click)="buscar($event)">Buscar</button>
   </div>
@@ -71,8 +71,13 @@
     <div class="row">
       <div class="col-md-12">
         <h5>Cupos disponibles</h5>
-        <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionSolicitud" [configuracionTabla]="configuracionColumnasCuposDisponibles"
+        <app-tabla-dinamica [configuracionTabla]="configuracionColumnasCuposDisponibles"
           [datos]="cuposDisponiblesTabla"></app-tabla-dinamica>
+          <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <li class="page-item"><a class="page-link">1</a></li>
+        </ul>
+      </nav>
   
       </div>
     </div>
@@ -228,7 +233,7 @@
       </form>
     </div>
     <div class="row" *ngIf="mostrarDetalleDelCupo">
-      <ng-titulo [titulo]="'Ofico'"></ng-titulo>
+      <ng-titulo [titulo]="'Oficio'"></ng-titulo>
     </div>
     <div class="row" *ngIf="mostrarDetalleDelCupo">
       <form [formGroup]="montoForm">
@@ -271,10 +276,15 @@
         </form>
     </div>
     <div class="row" *ngIf="mostrarDetalleDelCupo">
-      <div class="col-md-12">
+      <div class="col-md-12 mt-5">
         <h5>Certificados disponibles</h5>
         <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionSolicitud" [configuracionTabla]="configuracionColumnasCertificadosDisponibles"
           [datos]="CertificadosDisponiblesTabla"></app-tabla-dinamica>
+           <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <li class="page-item"><a class="page-link">1</a></li>
+        </ul>
+      </nav>
           <div class="row mt-2">
             <div class="col-md-12 d-flex justify-content-end">
               <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
@@ -288,12 +298,17 @@
           <h5>Certificados a cancelar</h5>
           <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionSolicitud" [configuracionTabla]="configuracionColumnasCertificadosACancelar"
             [datos]="CertificadosACancelarTabla"></app-tabla-dinamica>
+             <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <li class="page-item"><a class="page-link">1</a></li>
+        </ul>
+      </nav>
             <div class="row mt-2">
               <div class="col-md-12 d-flex justify-content-end">
-                <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+                <button type="button" class="btn btn-primary me-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
                   aria-controls="offcanvasRight">Eliminar seleccionado</button>
                 <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                  aria-controls="offcanvasRight" (click)="devlover($event)">Devlover facturas</button>
+                  aria-controls="offcanvasRight" (click)="devlover($event)">Devolver facturas</button>
               </div>
             </div> 
         </div>

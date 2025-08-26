@@ -1,12 +1,25 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, ConsultaioState, PAGO_DE_DERECHOS, REGEX_SOLO_DIGITOS, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import {
+  AlertComponent,
+  Catalogo,
+  ConsultaioQuery,
+  ConsultaioState,
+  PAGO_DE_DERECHOS,
+  TituloComponent,
+  ValidacionesFormularioService,
+} from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { Tramite110221State, Tramite110221Store } from '../../estados/tramite110221.store';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
-import { RegistroService } from '../../services/registro.service';
-import { Solicitud110221State } from '../../../../estados/tramites/Tramite110221.store';
-import { Tramite110221Query } from '../../../../estados/queries/Tramite110221.query';
-import { Tramite110221Store } from '../../../../estados/tramites/Tramite110221.store';
+import { Tramite110221Query } from '../../estados/tramite110221.query';
+import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
 
 /**
  * Componente que representa el formulario de destinatario en el trámite.
@@ -19,11 +32,12 @@ import { Tramite110221Store } from '../../../../estados/tramites/Tramite110221.s
     CommonModule,
     TituloComponent,
     CatalogoSelectComponent,
-    ReactiveFormsModule,
+    ReactiveFormsModule
   ],
   templateUrl: './destinatario.component.html',
   styleUrl: './destinatario.component.css',
 })
+
 export class DestinatarioComponent implements OnInit, OnDestroy {
   /**
    * Una cadena que representa la clase CSS para una alerta de información.
@@ -44,7 +58,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   /**
    * Estado actual de la solicitud.
    */
-  public solicitudState!: Solicitud110221State;
+  public solicitudState!: Tramite110221State;
 
   /**
    * Notificador para destruir observables al destruir el componente.
@@ -66,7 +80,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * Contiene una lista de objetos del catálogo obtenidos desde el servicio.
    * Estas opciones se utilizan para poblar los selectores en el formulario.
    */
-  options!: Catalogo[];
+  optionsPaisDestino!: Catalogo[];
 
   /**
    * Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
@@ -78,7 +92,11 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * @default false
    */
   soloLectura: boolean = false;
-
+  /**
+   * Catálogo de países de destino.
+   * @type {Catalogo[]}
+   */
+  
   /**
    * Constructor del componente.
    * @param registroService Servicio para obtener datos de catálogos.
@@ -89,7 +107,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * @param consultaioQuery Consulta para obtener datos del estado de consulta.
    */
   constructor(
-    private registroService: RegistroService,
+    private ValidarInicialmenteCertificadoService: ValidarInicialmenteCertificadoService,
     public fb: FormBuilder,
     private store: Tramite110221Store,
     private query: Tramite110221Query,
@@ -120,17 +138,16 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.getPaisDestino();
-    this.getTransporte();
-
     this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+          this.donanteDomicilio();
         })
       )
       .subscribe();
-    this.donanteDomicilio();
+    
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -147,24 +164,12 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * Obtiene el catálogo de países de destino desde el servicio.
    */
   getPaisDestino(): void {
-    this.registroService
-      .getPaisDestino().pipe(takeUntil(this.destroyNotifier$))
+    this.ValidarInicialmenteCertificadoService
+      .getPaisDestino()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
-          this.options = resp.data as Catalogo[];
-        }
-      });
-  }
-
-  /**
-   * Obtiene el catálogo de medios de transporte desde el servicio.
-   */
-  getTransporte(): void {
-    this.registroService
-      .getTransporte().pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((resp) => {
-        if (resp.code === 200) {
-          this.options = resp.data as Catalogo[];
+          this.optionsPaisDestino = resp.data as Catalogo[];
         }
       });
   }
@@ -188,26 +193,16 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     return this.validacionesService.isValid(form, field) || false;
   }
 
-  /**
-   * Establece valores en el estado de la tienda.
-   * @param form Formulario reactivo.
-   * @param campo Nombre del campo del formulario.
-   * @param metodoNombre Método de la tienda para actualizar el estado.
-   */
-  setValoresStore(
-    form: FormGroup,
-    campo: string,
-    metodoNombre: keyof Tramite110221Store
-  ): void {
-    const VALOR = form.get(campo)?.value;
-    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
-  }
 
   /**
-   * Obtiene el formulario de validación.
+   * Maneja el cambio de país de destino en el formulario.
+   * @param {Catalogo} event - El catálogo seleccionado.
+   * @returns {void}
    */
-  get validacionForm(): FormGroup {
-    return this.registroForm.get('validacionForm') as FormGroup;
+  cambioPaisDestino(event: Catalogo): void {
+    this.registroForm.patchValue({
+      paisDestino: event.id,
+    });
   }
 
   /**
@@ -215,38 +210,30 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    */
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
-      validacionForm: this.fb.group({
-        nombre: [this.solicitudState?.nombre, [Validators.required]],
-        apellidoPrimer: [
-          this.solicitudState?.apellidoPrimer,
-          [Validators.required],
-        ],
-        apellidoSegundo: [
-          this.solicitudState?.apellidoSegundo,
-          [Validators.required],
-        ],
-        numeroFiscal: [
-          this.solicitudState?.numeroFiscal,
-          [Validators.required],
-        ],
-        razonSocial: [this.solicitudState?.razonSocial, [Validators.required]],
-        ciudad: [this.solicitudState?.ciudad, [Validators.required]],
-        calle: [this.solicitudState?.calle, [Validators.required]],
-        numeroLetra: [this.solicitudState?.numeroLetra, [Validators.required]],
-        lada: [this.solicitudState?.lada, [Validators.required]],
-        telefono: [
-          this.solicitudState?.telefono,
-          [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
-        ],
-        fax: [
-          this.solicitudState?.fax,
-          [Validators.pattern(REGEX_SOLO_DIGITOS)],
-        ],
-        correoElectronico: [
-          this.solicitudState?.correoElectronico,
-          [Validators.required, Validators.email],
-        ],
-      }),
+      destinatarioForm : this.fb.group({
+      nombre: [this.solicitudState?.destinatarioForm.nombre||'', [Validators.required, Validators.maxLength(250)]],
+      numeroFiscal: [this.solicitudState?.destinatarioForm.numeroFiscal||'', [Validators.required, Validators.maxLength(30)]],
+    }),
+     domicilioForm : this.fb.group({
+      calle: [this.solicitudState.domicilioForm.calle || '', [Validators.required, Validators.maxLength(90)]],
+      numeroLetra: [this.solicitudState.domicilioForm.numeroLetra || '', [Validators.required, Validators.maxLength(30)]],
+      paisDestino: [this.solicitudState.domicilioForm.paisDestino || '', Validators.required],
+      ciudad: [this.solicitudState.domicilioForm.ciudad || '', [Validators.required, Validators.maxLength(50)]],
+      correoElectronico: [this.solicitudState.domicilioForm.correoElectronico || '', [Validators.required, Validators.email, Validators.maxLength(70)]],
+      lada: [this.solicitudState.domicilioForm.lada || '', [Validators.maxLength(5)]],
+      telefono: [this.solicitudState.domicilioForm.telefono || '', [Validators.maxLength(20)]],
+    }),
+    representanteLegalForm : this.fb.group({
+  lugar: [this.solicitudState?.representanteLegalForm.lugar || '', Validators.required],
+  nombreRepresentante: [this.solicitudState?.representanteLegalForm.nombreRepresentante || '', Validators.required],
+  empresa: [this.solicitudState?.representanteLegalForm.empresa || '', Validators.required],
+  cargo: [this.solicitudState?.representanteLegalForm.cargo || '', Validators.required],
+  lada: [this.solicitudState?.representanteLegalForm.lada || ''],
+  telefono: [this.solicitudState?.representanteLegalForm.telefono || '', Validators.required],
+  fax: [this.solicitudState?.representanteLegalForm.fax || '', Validators.required], 
+  correoElectronico: [this.solicitudState?.representanteLegalForm.correoElectronico || '', [Validators.required, Validators.email]] 
+})
+
     });
     this.inicializarEstadoFormulario();
   }
@@ -261,6 +248,31 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
       this.registroForm?.enable();
     }
   }
+setrepresentanteLegalForm():void{
+  this.store.setRepresentanteLegalForm(this.registroForm.value.representanteLegalForm)
+}
+setdomicilioForm():void{
+  this.store.setDomicilioForm(this.registroForm.value.domicilioForm)
+}
+setdestinatarioForm():void{
+  this.store.setDestinatarioForm(this.registroForm.value.destinatarioForm)
+}
+  /**
+   * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
+   * @param form - El formulario reactivo.
+   * @param campo - El nombre del campo en el formulario.
+   */
+  setValoresStore(form: FormGroup | null, campo: string): void {
+    if (!form) {
+      return;
+    }
+    const CONTROL = form.get(campo);
+    if (CONTROL && CONTROL.value !== null && CONTROL.value !== undefined) {
+      this.store.actualizarEstado({
+        [campo]: CONTROL.value,
+      });
+    }
+  }
 
   /**
    * Método que se ejecuta al destruir el componente.
@@ -270,4 +282,28 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+  /**
+ * @method validatorCheck
+ * @description Método que valida el estado del formulario.
+ * Verifica si todos los formularios hijos son válidos.
+ * @returns {boolean} - Retorna true si todos los formularios son válidos, de lo contrario false.
+ */
+
+  validatorCheck(): boolean {
+    if (!this.registroForm) {
+      return false;
+    }
+    const DESTINATARIO_FORM_VALID = this.registroForm.get('destinatarioForm')?.valid;
+    const DOMICILIO_FORM_VALID = this.registroForm.get('domicilioForm')?.valid;
+    const REPRESENTANTE_LEGAL_FORM_VALID = this.registroForm.get('representanteLegalForm')?.valid;
+
+    if (DESTINATARIO_FORM_VALID && DOMICILIO_FORM_VALID && REPRESENTANTE_LEGAL_FORM_VALID) {
+      return true;
+    }
+    this.registroForm.get('destinatarioForm')?.markAllAsTouched();
+    this.registroForm.get('domicilioForm')?.markAllAsTouched();
+    this.registroForm.get('representanteLegalForm')?.markAllAsTouched();
+    return false;
+  }
 }
+

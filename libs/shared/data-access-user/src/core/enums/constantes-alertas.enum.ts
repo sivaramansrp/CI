@@ -178,7 +178,7 @@ export const ALERTA_DE_MATERIAL = {
 };
 
 export const PAGO_DE_DERECHOS = {
-  ADJUNTAR: `<h5>Aviso de privacidad simplificado</h5>
+  ADJUNTAR: `<h5 style="text-align: center;">Aviso de privacidad simplificado</h5>
   <p>El Servicio de Administración Tributaria (SAT), es el sujeto obligado y responsable del tratamiento de los datos personales que se recaban a través de la Ventanilla Digital Mexicana de Comercio Exterior (VUCEM), los datos personales podrán ser utilizados y transferidos a la autoridades competentes, con la finalidad de llevar a cabo cualquier trámite relacionado con importaciones, exportaciones y tránsito de mercancías de comercio exterior, incluyendo las regulaciones y restricciones no arancelarias que, conforme a la legislación aplicable, sea exigido por las autoridades competentes en materia de comercio exterior. Para mayor información acerca del tratamiento y derechos que puede hacer valer, usted puede acceder al aviso integral en el portal www.sat.gob.mx.</p>`,
 };
 
@@ -229,15 +229,6 @@ export const TODOS_PASOS = {
   efectos de identificar tu Solicitud. Un folio oficial le será asignado a la Solicitud al momento en que ésta sea firmada.</p>`,
 };
 
-export const MANIFIESTOS = {
-  Importante: `<div class="form-check d-flex">
-   <input class="form-check-input" type="checkbox" id="manifiestos">* 
-  <label class="form-check-label" for="manifiestos">
-    Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio Exterior por los mecanismos de la misma.
-  </label>
-  </div>`
-};
-
 export const REQUISITOS = {
   Importante: `<p>La solicitud ha quedado registrada con el número temporal 202767918. Éste no tiene validez legal y sirve solamente para
 efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.</p>`
@@ -257,11 +248,15 @@ Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo do
 
 
 export const LASTABLA = {
-  Importante: `<p>Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.</p>`
+  Importante: `
+    <div class="text-center">
+      <p>Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.</p>
+    </div>
+  `
 };
 
 export const TERCEROS = {
-  alerta: `<p>Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.</p>`,
+  alerta: `<p class="text-align-center">Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.</p>`,
 }
 
 

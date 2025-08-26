@@ -41,8 +41,8 @@ describe('PagoDeDerechosComponent', () => {
       getBancoDatos: jest.fn().mockReturnValue(of({ data: [{ id: 1, nombre: 'Banco Test' }] }))
     };
     tramite260303StoreMock = {
-      SetFechaDePago: jest.fn(),
-      SetClaveDeReferencia: jest.fn()
+      setFechaDePago: jest.fn(),
+      setClaveDeReferencia: jest.fn()
     };
     tramite260303QueryMock = {
       selectSolicitud$: of({
@@ -92,7 +92,7 @@ describe('PagoDeDerechosComponent', () => {
     component.cerrarPagoDerechosForm();
     component.cambioFechaFinal('2024-06-27');
     expect(component.pagoDerechosForm.get('fechaDePago')?.value).toBe('2024-06-27');
-    expect(tramite260303StoreMock.SetFechaDePago).toHaveBeenCalledWith('2024-06-27');
+    expect(tramite260303StoreMock.setFechaDePago).toHaveBeenCalledWith('2024-06-27');
   });
  
   it('debe deshabilitar el formulario si consultaState.readonly es true', () => {
@@ -112,8 +112,8 @@ describe('PagoDeDerechosComponent', () => {
   it('debe llamar al método correcto del store en setValoresStore', () => {
     component.cerrarPagoDerechosForm();
     component.pagoDerechosForm.get('claveDeReferencia')?.setValue('ABC123');
-    component.setValoresStore(component.pagoDerechosForm, 'claveDeReferencia', 'SetClaveDeReferencia');
-    expect(tramite260303StoreMock.SetClaveDeReferencia).toHaveBeenCalledWith('ABC123');
+    component.setValoresStore(component.pagoDerechosForm, 'claveDeReferencia', 'setClaveDeReferencia');
+    expect(tramite260303StoreMock.setClaveDeReferencia).toHaveBeenCalledWith('ABC123');
   });
  
   it('debe limpiar destroyNotifier$ en ngOnDestroy', () => {

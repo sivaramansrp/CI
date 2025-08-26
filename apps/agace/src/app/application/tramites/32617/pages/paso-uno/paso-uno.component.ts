@@ -77,7 +77,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   seccionesDeLaSolicitud = [
     { index: 1, title: 'Solicitante', component: 'solicitante' },
     { index: 2, title: 'Datos Comunes', component: 'datos-comunes' },
-    { index: 3, title: 'Terceros relacionados', component: 'terceros-relacionados' },
+    { index: 3, title: 'Terceros Relacionados', component: 'terceros-relacionados' },
     { index: 4, title: 'Tercerización Logística', component: 'importador-exportador' },
     { index: 5, title: 'CTPAT', component: 'c-tpat' },
     { index: 6, title: 'Perfiles', component: 'perfiles' }
@@ -117,20 +117,18 @@ ngOnInit(): void {
     }
 }
 
-/**
+  /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
   guardarDatosFormulario(): void {
     this.registroService
-      .getRegistroTomaMuestrasMercanciasData().pipe(
-        map((resp: StoreResponse) => resp),
-        takeUntil(this.destroyNotifier$)
-      )
+      .obtenerDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
-        if (resp && resp.data) {
+        if (resp) {
           this.esDatosRespuesta = true;
-          this.registroService.actualizarEstadoFormulario(resp.data);
+          this.registroService.actualizarEstado(resp);
         } else {
           this.esDatosRespuesta = false;
         }

@@ -344,6 +344,24 @@ export const IMMEX_SERVICIO = [
      */
     orden: 7
   },
+  {
+    /**
+     * @description Encabezado para la columna de fecha fin de vigencia
+     * @type {string}
+     */
+    encabezado: 'Fecha fin vigencia',
+    /**
+     * @description Función extractora para obtener la fecha de fin de vigencia del permiso
+     * @param {immexInfo} ele - Objeto con información del permiso IMMEX
+     * @returns {string} Fecha de fin de vigencia en formato establecido
+     */
+    clave: (ele: immexInfo) => ele.IMMEX_Columna_8,
+    /**
+     * @description Orden de presentación de la columna en la tabla
+     * @type {number}
+     */
+    orden: 8
+  }
 ]
 
 /**
@@ -421,6 +439,16 @@ export interface immexInfo {
    * @required
    */
   IMMEX_Columna_7: string;
+
+  /**
+   * @description Fecha de fin de vigencia del permiso IMMEX en formato establecido.
+   * Fecha hasta la cual el permiso IMMEX es válido y puede ser utilizado para operaciones de comercio exterior.
+   * @type {string}
+   * @format date
+   * @example "2025-01-15"
+   * @required
+   */
+  IMMEX_Columna_8: string;
 
   /**
    * @description Indicador del estado activo (true) o inactivo (false) del registro.

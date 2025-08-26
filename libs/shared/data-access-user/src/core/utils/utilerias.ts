@@ -93,3 +93,168 @@ export function dateLessThanOrEqualToday(control: AbstractControl): ValidationEr
         const DATESTRING = new Date(fecha);
         return moment(DATESTRING).format('YYYY-MM-DD HH:mm:ss');
     }
+
+    /**
+     * Limpia y deshabilita el input con id 'desProgramaFomento'.
+     */
+    /**
+     * Limpia y deshabilita un control de formulario HTML según su tipo.
+     *
+     * @param id - El identificador del elemento HTML a manipular.
+     * @param tipo - El tipo de control, puede ser 'textbox' (campo de texto) o 'checkbox' (casilla de verificación).
+     * @param soloLimpiarTextbox - Opcional. Si es verdadero y el tipo es 'textbox', solo limpia el valor sin deshabilitar el control.
+     *
+     * Si el tipo es 'textbox', se limpia el valor del campo y se deshabilita el control, a menos que `soloLimpiarTextbox` sea verdadero.
+     * Si el tipo es 'checkbox', se desmarca la casilla y se habilita el control.
+     * Si el elemento no existe, la función no realiza ninguna acción.
+     */
+    export function limpiarYDeshabilitarControl(
+        id: string,
+        tipo: 'textbox' | 'checkbox',
+        soloLimpiarTextbox?: boolean
+    ): void {
+        const ELEMENT = document.getElementById(id) as HTMLInputElement;
+        if (!ELEMENT) {
+            return;
+        }
+
+        if (tipo === 'textbox') {
+            ELEMENT.value = '';
+            if (!soloLimpiarTextbox) {
+                ELEMENT.disabled = true;
+            }
+        } else if (tipo === 'checkbox') {
+            ELEMENT.checked = false;
+            ELEMENT.disabled = false;
+        }
+    }
+
+    /**
+     * Realiza una copia profunda de un objeto utilizando JSON.
+     * 
+     * @param obj - El objeto a copiar. Si no se proporciona, se utiliza un objeto vacío por defecto.
+     * @returns Una copia profunda del objeto original.
+     */
+    export function doDeepCopy(obj: unknown = {}) {
+        return JSON.parse(JSON.stringify(obj));
+    }
+
+    /**
+     * Verifica si un valor es un objeto.
+     *
+     * @param value - El valor a verificar.
+     * @returns Verdadero si el valor es un objeto, falso en caso contrario.
+     */
+    export function esObject(value: unknown): boolean {
+        return value !== null && typeof value === 'object';
+    }
+
+    /**
+     * Verifica si un valor es un array válido (no vacío).
+     *
+     * @param value - El valor a verificar.
+     * @returns Verdadero si el valor es un array no vacío, falso en caso contrario.
+     */
+    export function esValidArray(value: unknown): boolean {
+        return Array.isArray(value) && value.length > 0;
+    }
+
+    /**
+     * Verifica si un valor está definido (no es nulo ni indefinido).
+     *
+     * @param value - El valor a verificar.
+     * @returns Verdadero si el valor está definido, falso en caso contrario.
+     */
+    export function esDefined(value: any): boolean {
+        return value && 'undefined' !== typeof value;
+    }
+
+    /**
+     * Verifica si un valor es una cadena válida (no vacía).
+     *
+     * @param str - El valor a verificar.
+     * @returns Verdadero si el valor es una cadena no vacía, falso en caso contrario.
+     */
+    export function esValidString(str: unknown): boolean {
+        return 'string' === typeof str && 0 < str.length;
+    }
+
+    /**
+     * Formatea un JSON para su visualización.
+     * @param json - El JSON a formatear.
+     * @returns El JSON formateado.
+     */
+    export function getFormattedJson(json: any) {
+        return esValidString(json) ? JSON.parse(json) : json;
+    }
+
+    /**
+     * Parsea un JSON a partir de una cadena.
+     * @param str - La cadena a parsear.
+     * @returns El objeto JSON parseado o la cadena original en caso de error.
+     */
+    export function getParsedJson(str: any) {
+        try {
+            return JSON.parse(str);
+        } catch (error) {
+            return str;
+        }
+    }
+
+    /**
+     * Verifica si un objeto es válido (no vacío).
+     * @param obj - El objeto a verificar.
+     * @returns Verdadero si el objeto es válido, falso en caso contrario.
+     */
+    export function esValidObject(obj:any): boolean {
+        return esObject(obj) && Object.keys(obj).length > 0;
+    }
+
+    /**
+     * Verifica si un objeto está vacío.
+     * @param obj - El objeto a verificar.
+     * @returns Verdadero si el objeto está vacío, falso en caso contrario.
+     */
+    export function esObjectEmpty(obj: any): boolean {
+        return Object.keys(obj).length === 0;
+    }
+
+    /**
+     * Verifica si un valor es indefinido.
+     * @param value - El valor a verificar.
+     * @returns Verdadero si el valor es indefinido, falso en caso contrario.
+     */
+    export function esUndefined(value: any): boolean {
+        return typeof value === 'undefined' || !value;
+    }
+
+    /**
+     * Verifica si un valor es válido (no nulo ni indefinido).
+     * @param datos - El valor a verificar.
+     * @returns Verdadero si el valor es válido, falso en caso contrario.
+     */
+    export function getValidDatos(datos: any) {
+        return !(esUndefined(datos) || datos === null || datos === '');
+    }
+
+    /**
+    * Elimina duplicados de un array de cualquier tipo (primitivos u objetos).
+    * Para objetos, compara usando JSON.stringify (puede tener limitaciones con funciones o propiedades no enumerables).
+    *
+    * @param arr - Array de cualquier tipo.
+    * @returns Un nuevo array sin duplicados.
+    */
+    export function removeDuplicatesFromArray<T>(arr: T[]): T[] {
+      const SEEN = new Set<string>();
+      return arr.filter(item => {
+        const KEY = typeof item === 'object' && item !== null
+          ? JSON.stringify(item)
+          : String(item);
+        if (SEEN.has(KEY)) {
+          return false;
+        }
+        SEEN.add(KEY);
+        return true;
+      });
+    }
+

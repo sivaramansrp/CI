@@ -1,45 +1,13 @@
-import {
-  CROSLISTA_DE_PAISES,
-  INPUT_FECHA_CADUCIDAD_CONFIG,
-} from '../../enum/permiso.enum';
-import {
-  Catalogo,
-  CatalogoSelectComponent,
-  ConfiguracionColumna,
-  CrossListLable,
-  CrosslistComponent,
-  InputFechaComponent,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
-import {
-  Component,
-  OnDestroy,
-  OnInit,
-  QueryList,
-  ViewChildren,
-} from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import {
-  MERCANCIAS_DATA,
-  MercanciasInfo,
-  NICO_TABLA,
-  NicoInfo,
-} from '../../models/permiso-sanitario.model';
-import {
-  Solicitud260215State,
-  Tramite260215Store,
-} from '../../estados/tramites/tramite260215.store';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { CROSLISTA_DE_PAISES, INPUT_FECHA_CADUCIDAD_CONFIG } from '../../enum/permiso.enum';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrossListLable, CrosslistComponent, InputFechaComponent, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { MERCANCIAS_DATA, MercanciasInfo, NICO_TABLA, NicoInfo } from '../../models/permiso-sanitario.model';
+import { Solicitud260215State, Tramite260215Store } from '../../estados/tramites/tramite260215.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Modal } from 'bootstrap';
 import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
 import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 export interface RespuestaTabla {
@@ -83,6 +51,7 @@ export interface MercanciasTabla {
     TablaDinamicaComponent,
     CrosslistComponent,
     InputFechaComponent,
+    NotificacionesComponent
   ],
   templateUrl: './domicilio-establecimiento.component.html',
   styleUrls: ['./domicilio-establecimiento.component.css'],
@@ -201,17 +170,43 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.obtenerEstadoList();
-    this.obtenerTablaDatos();
+    this.obtenerEstadoDatos();
     this.obtenerMercanciasDatos();
     this.domicilio = this.fb.group({
-      codigoPostal: [this.solicitudState?.codigoPostal, Validators.required],
+      codigoPostal: [
+        this.solicitudState?.codigoPostal,
+        [ Validators.required, 
+          Validators.maxLength(12),
+          Validators.pattern('^[0-9]*$')]
+      ],
       estado: [this.solicitudState?.estado, Validators.required],
-      muncipio: [this.solicitudState?.muncipio, Validators.required],
-      localidad: [this.solicitudState?.localidad],
-      colonia: [this.solicitudState?.colonia],
-      calle: [this.solicitudState?.calle],
-      lada: [this.solicitudState?.lada],
-      telefono: [this.solicitudState?.telefono, Validators.required],
+      muncipio: [
+        this.solicitudState?.muncipio,
+        [Validators.required, Validators.maxLength(120)]
+      ],
+      localidad: [
+        this.solicitudState?.localidad,
+        [Validators.maxLength(120)]
+      ],
+      colonia: [
+        this.solicitudState?.colonia,
+        [Validators.maxLength(120)]
+      ],
+      calle: [
+        this.solicitudState?.calle,
+        [Validators.required, Validators.maxLength(100)]
+      ],
+      lada: [
+        this.solicitudState?.lada,
+        [ Validators.maxLength(5),
+          Validators.pattern('^[0-9]*$')]
+      ],
+      telefono: [
+        this.solicitudState?.telefono,
+        [Validators.required, 
+         Validators.maxLength(30),
+         Validators.pattern('^[0-9]*$')]
+      ],
       avisoCheckbox: [this.solicitudState?.avisoCheckbox],
       licenciaSanitaria: [
         { value: this.solicitudState?.licenciaSanitaria, disabled: false },
@@ -232,16 +227,42 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       denominacionDistintiva: ['', Validators.required],
       denominacionComun: ['', Validators.required],
       tipoDeProducto: ['', Validators.required],
+      especifiqueTipoDeProducto: ['', [Validators.required, Validators.maxLength(100)]],
       estadoFisico: ['', Validators.required],
-      fraccionArancelaria: ['', Validators.required],
+      especifiqueEstado: ['', [Validators.required, Validators.maxLength(200)]],
+      fraccionArancelaria: [
+        this.solicitudState?.fraccionArancelaria,
+        [
+          Validators.required,
+          Validators.maxLength(8),
+          Validators.minLength(8),
+          Validators.pattern(/^\d+$/)
+        ]
+      ],
       descripcionFraccion: [{ value: '', disabled: true }, Validators.required],
-      cantidadUMT: ['', Validators.required],
+      cantidadUMT: [
+        this.solicitudState?.cantidadUMT,
+        [
+          Validators.required,
+          DomicilioComponent.cantidadUMTValidator()
+        ]
+      ],
       UMT: [{ value: '', disabled: true }, Validators.required],
-      cantidadUMC: ['', Validators.required],
+      cantidadUMC: [
+        this.solicitudState?.cantidadUMC,
+        [
+          Validators.required,
+          DomicilioComponent.cantidadUMCValidator()
+        ]
+      ],
       UMC: ['', Validators.required],
-      presentacion: ['', Validators.required],
-      numeroRegistro: ['', Validators.required],
-      fechaCaducidad: [''],
+      presentacion: [
+        this.solicitudState?.presentacion,
+        [
+          Validators.required,
+          Validators.maxLength(250)
+        ]
+      ],
     });
   }
 
@@ -280,6 +301,11 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Se utiliza para poblar el catálogo de estados en el formulario.
    */
   public estado: Catalogo[] = [];
+  /**
+   * Lista de estados obtenida del servicio.
+   * Se utiliza para poblar el catálogo de estados en el formulario.
+   */
+  public estadoDatos: Catalogo[] = [];
 
   /**
    * Lista de países utilizada en las listas cruzadas.
@@ -355,22 +381,136 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   public seleccionarOrigenDelPaisTres: string[] = this.crosListaDePaises;
 
   /**
-   * Etiqueta de la lista de fechas para países de procedencia.
+   * @description
+   * Etiqueta de la lista de fechas para países de origen.
    * Define los textos de los lados izquierdo y derecho de la lista cruzada.
+   * Utilizada para mostrar la selección de países de origen en el formulario.
    */
-  public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de procedencia',
-    derecha: 'País(es) seleccionados',
+  public paisDeOrigenLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'País de origen:',
+    derecha: 'País(es) seleccionado(s)*:',
   };
 
   /**
-   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * Llama a la función `inicializarEstadoFormulario` para configurar el estado inicial del formulario.
+   * @description
+   * Etiqueta de la lista de fechas para países de procedencia (segunda lista).
+   * Define los textos de los lados izquierdo y derecho de la lista cruzada.
    */
+  public paisDeProcedenciaLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'País de procedencia:',
+    derecha: 'País(es) seleccionado(s)*:',
+  };
+
+  /**
+   * @description Uso específico de la mercancía.
+   * Define los textos de los lados izquierdo y derecho de la lista cruzada.
+   */
+  public usoEspecifico: CrossListLable = {
+    tituluDeLaIzquierda: 'Uso específico:',
+    derecha: 'Uso específico seleccionado*:',
+  };
+  /**
+    * @description
+    * Objeto que representa una nueva notificación.
+    * Se utiliza para mostrar mensajes de alerta o información al usuario.
+    */
+  public nuevaNotificacion!: Notificacion;
+  /**
+     * Instancia del modal para gestionar archivos.
+     *
+     * Se utiliza para abrir o cerrar el modal de archivos.
+     */
+  modalInstances: Modal | null = null;
+  /**
+   * Referencia al modal para agregar agentes a las mercancías.
+   * Se utiliza para abrir o cerrar el modal de agregar agentes.
+   */
+  @ViewChild('modalMercancias') modalMercancias!: ElementRef;
+
+  /**
+ * Referencia al botón para cerrar el modal.
+ */
+  @ViewChild('closeModal') closeModal!: ElementRef;
+
+  /**
+  * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+  * Llama a la función `inicializarEstadoFormulario` para configurar el estado inicial del formulario.
+  */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
+    this.autocompletarMercancias();
   }
+  /**
+   * Validador para la cantidad en unidades de medida comercial (UMC).
+   * Verifica que el valor sea un número válido y cumpla con las restricciones de formato.
+   * 
+   */
+  static cantidadUMCValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const VALUE = control.value;
 
+      if (VALUE === null || VALUE === '') {
+        return null;
+      }
+
+      const NUMERIC_REGEX = /^[0-9]+(\.[0-9]+)?$/;
+      if (!NUMERIC_REGEX.test(VALUE)) {
+        return { invalidFormat: true };
+      }
+
+      const [INTEGER_PART, DECIMAL_PART] = VALUE.split('.');
+      if (INTEGER_PART.length > 12 || (DECIMAL_PART && DECIMAL_PART.length > 10)) {
+        return { maxPrecision: true };
+      }
+
+      return null;
+    };
+  }
+  /**
+   * Validador para la cantidad en unidades de medida térmica (UMT).
+   * Verifica que el valor sea un número válido y cumpla con las restricciones de formato.
+   */
+   static cantidadUMTValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const VALUE = control.value;
+
+      if (VALUE === null || VALUE === '') {
+        return null;
+      }
+
+      const NUMERIC_REGEX = /^[0-9]+(\.[0-9]+)?$/;
+      if (!NUMERIC_REGEX.test(VALUE)) {
+        return { invalidFormat: true };
+      }
+
+      const [INTEGER_PART, DECIMAL_PART] = VALUE.split('.');
+      if (INTEGER_PART.length > 12 || (DECIMAL_PART && DECIMAL_PART.length > 5)) {
+        return { maxPrecision: true };
+      }
+
+      return null;
+    };
+  }
+  /**
+   * Método para autocompletar los campos de mercancías.
+   * Se suscribe a los cambios en el campo 'fraccionArancelaria' y actualiza
+   * automáticamente los campos relacionados si se cumple la condición.
+   */
+autocompletarMercancias():void{
+  this.formMercancias.get('fraccionArancelaria')?.valueChanges.subscribe(value => {
+    if (value && value.length === 8) {
+      this.formMercancias.patchValue({
+        descripcionFraccion: 'Descripción automática de la fracción',
+        UMT: 'KG'
+      }, { emitEvent: false });
+    } else {
+      this.formMercancias.patchValue({
+        descripcionFraccion: '',
+        UMT: ''
+      }, { emitEvent: false });
+    }
+  });
+}
   /**
    * Botones de acción disponibles para gestionar las listas de fechas (primer grupo).
    * Permiten agregar o quitar países de la lista cruzada principal.
@@ -475,6 +615,136 @@ export class DomicilioComponent implements OnInit, OnDestroy {
         this.estado = data?.data;
       });
   }
+  /**
+   * Obtiene los datos del estado seleccionado.
+   * @param id - El ID del estado a obtener
+   * 
+   */
+  obtenerEstadoDatos(): void {
+    this.service
+      .getEstado()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.estadoDatos = data;
+      });
+  }
+/**
+ * Maneja el cambio en el campo de clave SCian
+ */
+onCambioClaveScian(): void {
+  const VALOR_CLAVE_SCIAN = this.formAgente.get('claveScianModal')?.value;
+  if (VALOR_CLAVE_SCIAN) {
+    this.formAgente.patchValue(
+      { claveDescripcionModal: VALOR_CLAVE_SCIAN }, 
+    );
+  }
+}
+
+  /**
+ * Maneja el cambio en el campo de licencia sanitaria
+ * @param event - El evento del input
+ */
+  onLicenciaSanitariaChange(event: Event): void {
+    const INPUT = event.target as HTMLInputElement;
+    const VALUE = INPUT.value.trim();
+
+    // Si hay valor en licencia sanitaria, deshabilitar el checkbox de aviso
+    if (VALUE) {
+      this.domicilio.get('avisoCheckbox')?.setValue(false);
+      this.domicilio.get('avisoCheckbox')?.disable();
+    } else {
+      // Si no hay valor, habilitar el checkbox
+      this.domicilio.get('avisoCheckbox')?.enable();
+    }
+  }
+
+  /**
+   * Maneja la selección de agentes aduanales en la tabla NICO.
+   * Actualiza la lista de seleccionados con los elementos seleccionados.
+   * @param event - Evento que contiene los elementos seleccionados.
+   */
+
+  public seleccionados: NicoInfo[] = [];
+
+  /**
+   * Maneja el cambio en la selección de elementos en la tabla NICO.
+   * @param event Evento que contiene los elementos seleccionados de la tabla NICO.
+   * Actualiza la lista de seleccionados con los elementos seleccionados.
+   * 
+   */
+  onSeleccionChange(event: NicoInfo[]): void {
+    this.seleccionados = event;
+  }
+  /**
+   * Elimina los elementos seleccionados de la tabla NICO.
+   * Recorre la lista de seleccionados y elimina cada uno de ellos de la tabla de
+   */
+  eliminarFila(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: (this.seleccionados?.length ?? 0) === 0 ? 'Selecciona un registro.' : '¿Estás seguro que deseas eliminar los registros marcados?',
+      cerrar: true,
+      tiempoDeEspera: 3000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: (this.seleccionados?.length ?? 0) === 0 ? '' : 'Cancelar',
+    };
+
+  }
+/**
+ * Método para eliminar un pedimento.
+ * @param borrar - Indica si se debe borrar el pedimento.
+ * @returns void
+ */
+  public eliminarPedimento(borrar: boolean): void {
+    if (!borrar || !this.seleccionados) {
+      return;
+    }
+    if (this.seleccionados) {
+      this.nicoTablaDatos = this.nicoTablaDatos.filter(item =>
+        !this.seleccionados.some(selected =>
+          selected.clave_Scian === item.clave_Scian
+        )
+      );
+      this.seleccionados = [];
+    }
+  }
+  /**
+   * Maneja el evento de agregar un nuevo elemento.
+   * Si el formulario es inválido, marca todos los controles como tocados.
+   * Si el formulario es válido, realiza la lógica correspondiente.
+   */
+  onAgregar(): void {
+    if (this.formMercancias.invalid) {
+      this.formMercancias.markAllAsTouched();
+    }
+    else {
+      if (this.closeModal) {
+        this.closeModal.nativeElement.click();
+      }
+    }
+  }
+  /**
+   * Agrega una nueva fila a la tabla NICO con valores del formulario
+   */
+  agregarFila(): void {
+    // Verificar que el formulario sea válido antes de agregar
+    if (this.formAgente.valid) {
+      const NUEVO_ITEM: NicoInfo = {
+        clave_Scian: this.formAgente.get('claveScianModal')?.value || '',
+        descripcion_Scian: this.formAgente.get('claveDescripcionModal')?.value || ''
+      };
+
+      // Agregar el nuevo item a la tabla de NICO
+      this.nicoTablaDatos = [...this.nicoTablaDatos, NUEVO_ITEM];
+
+      // Limpiar el formulario después de agregar
+      this.formAgente.reset();
+    }
+  }
+
 
   /**
    * Método para obtener los datos de la tabla NICO desde el servicio y asignarlos a la tabla correspondiente.

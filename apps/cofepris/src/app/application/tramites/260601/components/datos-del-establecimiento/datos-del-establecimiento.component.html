@@ -4,8 +4,14 @@
 <div [formGroup]="datosDelEstablecimientoForm">
     <div class="text-end">
         <button type="button" class="btn btn-primary" name="seleccionarEstablecimiento" id="btnEstablecimiento"
-            title="Selecciona para habilitar los campos del establecimiento" data-bs-toggle="modal" [disabled]="esFormularioSoloLectura"
-            data-bs-target="#modalAlerta" (click)="seleccionarEstablecimiento()">Seleccionar establecimiento</button>
+            data-bs-toggle="modal" [disabled]="esFormularioSoloLectura"
+            data-bs-target="#modalAlerta" (click)="seleccionarEstablecimiento()" tooltip="Selecciona para habilitar los campos del establecimiento">Seleccionar establecimiento
+        <span
+            class="bi"
+            tooltip="Selecciona para habilitar los campos del establecimiento"
+            data-bs-toggle="tooltip"
+            ></span>
+        </button>
     </div>
 
     @if(modalAlerta) {
@@ -24,16 +30,25 @@
             <label for="razonSocial" class="form-label">Denominación o razón social*:</label>
             <input type="text" class="form-control" formControlName="razonSocial" id="razonSocial" size="68"
                 (change)="setValoresStore(datosDelEstablecimientoForm,'razonSocial', 'setRazonSocial')">
+            <div *ngIf="datosDelEstablecimientoForm.get('razonSocial')?.touched && datosDelEstablecimientoForm.get('razonSocial')?.invalid">
+            <small *ngIf="datosDelEstablecimientoForm.get('razonSocial')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            </div>
         </div>
     </div>
     <div class="row">
         <div class="col-md-4">
-            <label for="correoElectronico" class="form-label">Correo electrónico: <span
-                    class="bi bi-question-circle-fill" title="ejemplo@dominio.com"
-                    data-bs-toggle="tooltip"></span></label>
+            <label for="correoElectronico" class="form-label">Correo electrónico: 
+                <span
+                    tooltip="ejemplo@dominio.com"
+                    data-bs-toggle="tooltip">
+                    <i class="bi bi-question-circle-fill"></i></span></label>
             <input type="text" class="form-control" formControlName="correoElectronico" id="correoElectronico"
                 maxlength="320"
                 (change)="setValoresStore(datosDelEstablecimientoForm,'correoElectronico', 'setCorreoElectronico')">
+            <div *ngIf="datosDelEstablecimientoForm.get('correoElectronico')?.touched">
+            <small *ngIf="datosDelEstablecimientoForm.get('correoElectronico')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            <small *ngIf="datosDelEstablecimientoForm.get('correoElectronico')?.errors?.['pattern']" class="text-danger espaciador-campo-pequeño">El valor ingresado no es una dirección válida de correo electrónico</small>
+            </div>
         </div>
     </div>
 </div>
@@ -48,10 +63,16 @@
             <input type="text" name="codigoPostal" id="codigoPostal" class="form-control" formControlName="codigoPostal"
                 maxlength="12"
                 (change)="setValoresStore(domicilloDelEstablecimientoForm,'codigoPostal', 'setCodigoPostal')">
+                <div *ngIf="domicilloDelEstablecimientoForm.get('codigoPostal')?.touched && domicilloDelEstablecimientoForm.get('codigoPostal')?.invalid">
+            <small *ngIf="domicilloDelEstablecimientoForm.get('codigoPostal')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            </div>
         </div>
         <div class="col-md-4">
             <app-catalogo-select [catalogo]="estado" formControlName="cveEstado" [label]="'Estado'" [required]="true"
-                name="cveEstado" (change)="estadoSeleccion()" [isDisabled]="habilitarEstado"></app-catalogo-select>
+                name="cveEstado" (change)="estadoSeleccion()" [isDisabled]="habilitarEstado || esFormularioSoloLectura"></app-catalogo-select>
+                <div *ngIf="domicilloDelEstablecimientoForm.get('cveEstado')?.touched && domicilloDelEstablecimientoForm.get('cveEstado')?.invalid">
+            <small *ngIf="domicilloDelEstablecimientoForm.get('cveEstado')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            </div>
             <input type="hidden" name="clave" id="idClaveEntidadFederativa">
         </div>
         <div class="col-md-4">
@@ -59,6 +80,9 @@
             <input type="text" name="descripcionMunicipio" id="descripcionMunicipio" class="form-control"
                 formControlName="descripcionMunicipio" maxlength="120"
                 (change)="setValoresStore(domicilloDelEstablecimientoForm,'descripcionMunicipio', 'setDescripcionMunicipio')">
+                <div *ngIf="domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.touched && domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.invalid">
+            <small *ngIf="domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            </div>
         </div>
     </div>
     <div class="row">
@@ -67,21 +91,31 @@
             <input type="text" name="informacionExtra" id="informacionExtra" class="form-control"
                 formControlName="informacionExtra" maxlength="120"
                 (change)="setValoresStore(domicilloDelEstablecimientoForm,'informacionExtra', 'setInformacionExtra')">
+                <div *ngIf="domicilloDelEstablecimientoForm.get('informacionExtra')?.touched && domicilloDelEstablecimientoForm.get('informacionExtra')?.invalid">
+            <small *ngIf="domicilloDelEstablecimientoForm.get('informacionExtra')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            </div>
         </div>
         <div class="col-md-4">
             <label for="descripcionColonia" class="form-label">Colonia*:</label>
             <input type="text" name="descripcionColonia" id="descripcionColonia" class="form-control"
                 formControlName="descripcionColonia" maxlength="120"
                 (change)="setValoresStore(domicilloDelEstablecimientoForm,'descripcionColonia', 'setDescripcionColonia')">
+                <div *ngIf="domicilloDelEstablecimientoForm.get('descripcionColonia')?.touched && domicilloDelEstablecimientoForm.get('descripcionColonia')?.invalid">
+            <small *ngIf="domicilloDelEstablecimientoForm.get('descripcionColonia')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            </div>
         </div>
     </div>
     <div class="row">
         <div class="col-md-8">
-            <label for="calle" class="form-label">Calle*: <span class="bi bi-question-circle-fill"
-                    title="Domicilio, calle, n&uacute;mero interior, n&uacute;mero exterior, lote"
-                    data-bs-toggle="tooltip"></span></label>
+            <label for="calle" class="form-label">Calle*: <span
+                    tooltip="Domicilio, calle, n&uacute;mero interior, n&uacute;mero exterior, lote"
+                    data-bs-toggle="tooltip">
+                <i class="bi bi-question-circle-fill"></i></span></label>
             <input type="text" name="calle" id="calle" class="form-control" formControlName="calle" maxlength="90"
                 (change)="setValoresStore(domicilloDelEstablecimientoForm,'calle', 'setCalle')">
+                <div *ngIf="domicilloDelEstablecimientoForm.get('calle')?.touched && domicilloDelEstablecimientoForm.get('calle')?.invalid">
+            <small *ngIf="domicilloDelEstablecimientoForm.get('calle')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            </div>
         </div>
     </div>
     <div class="row">
@@ -94,6 +128,9 @@
             <label for="telefono" class="form-label">Teléfono:</label>
             <input type="text" name="telefono" id="telefono" class="form-control" formControlName="telefono"
                 maxlength="30" (change)="setValoresStore(domicilloDelEstablecimientoForm,'telefono', 'setTelefono')">
+                <div *ngIf="domicilloDelEstablecimientoForm.get('telefono')?.touched && domicilloDelEstablecimientoForm.get('telefono')?.invalid">
+            <small *ngIf="domicilloDelEstablecimientoForm.get('telefono')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            </div>
         </div>
     </div>
     <div class="row">
@@ -105,22 +142,28 @@
 
     <label class="form-label scian">S.C.I.A.N.*:</label>
 
-    <ng-table [commonTableHeader]="scianHeaderData" [commonTableBody]="scianBodyData"></ng-table>
+    <app-tabla-dinamica 
+    [tipoSeleccionTabla]="tablaSeleccion" 
+    [datos]="scianBodyData"
+    [configuracionTabla]="configuracionTablaSCIAN"
+    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+    (listaDeFilaSeleccionada)="seleccionarDomicilios($event)"
+    >
+</app-tabla-dinamica>
 
     <div class="row">
         <div class="col-md-8"></div>
         <div class="col-md-4 text-end">
             <div class="btn-group">
-                <button class="btn btn-default me-1" type="button" id="btnScianEliminar">Eliminar</button>
-                <button type="button" class="btn btn-primary ms-2" id="btnScianAgregar" data-bs-toggle="modal" [disabled]="esFormularioSoloLectura"
-                    data-bs-target="#modalAddSCIAN">
+                <button class="btn btn-default me-1" type="button" id="btnScianEliminar"[disabled]="esFormularioSoloLectura" (click)="eliminarScianGrid()">Eliminar</button>
+                <button type="button" class="btn btn-primary ms-2" id="btnScianAgregar" data-bs-toggle="modal" [disabled]="esFormularioSoloLectura" (click)="abrirModalAgregarSCIAN()">
                     Agregar
                 </button>
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="modalAddSCIAN" tabindex="-1" aria-labelledby="modalAddSCIANLabel" aria-hidden="true">
+    <div class="modal fade" #modalAddSCIAN tabindex="-1" aria-labelledby="modalAddSCIANLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -147,16 +190,14 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="pull-right">
-                                <button type="button" name="cancelar" class="btn btn-default" data-bs-dismiss="modal"
+                                <button type="button" name="cancelar" class="btn btn-default" data-bs-dismiss="modal" (click)="cancelarAgregarSCIAN()"
                                     #closeModal>
                                     Cancelar
                                 </button>
-                                <button type="button" name="limpiarSCIAN" class="btn btn-danger ms-2"
-                                    >
+                                <button type="button" name="limpiarSCIAN" class="btn btn-danger ms-2" (click)="limpiarSCIAN()">
                                     Limpiar
                                 </button>
-                                <button type="button" name="agregar" class="btn btn-primary ms-2"
-                                    >
+                                <button type="button" name="agregar" class="btn btn-primary ms-2" (click)="agregarSCIAN(); closeModal.click()"  >
                                     Agregar
                                 </button>
                             </div>
@@ -180,16 +221,26 @@
             <app-catalogo-select [catalogo]="regimenes" formControlName="cveRegimenes"
                 [label]="'Régimen al que se destinará'" [required]="true" name="cveRegimenes"
                 (change)="regimenesSeleccion()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+                <div *ngIf="domicilloDelEstablecimientoForm.get('cveRegimenes')?.touched && domicilloDelEstablecimientoForm.get('cveRegimenes')?.invalid">
+            <small *ngIf="domicilloDelEstablecimientoForm.get('cveRegimenes')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            </div>
         </div>
         <div class="col-md-8">
             <app-catalogo-select [catalogo]="aduanas" formControlName="cveAduanas" [label]="'Aduana'" [required]="true"
                 name="cveAduanas" (change)="aduanaSeleccion()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+                <div *ngIf="domicilloDelEstablecimientoForm.get('cveAduanas')?.touched && domicilloDelEstablecimientoForm.get('cveAduanas')?.invalid">
+            <small *ngIf="domicilloDelEstablecimientoForm.get('cveAduanas')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            </div>
         </div>
     </div>
 
     <label class="form-label scian">Datos del producto*:</label>
 
-    <ng-table [commonTableHeader]="productoHeaderData" [commonTableBody]="productoBodyData"></ng-table>
+    <app-tabla-dinamica  [datos]="productoBodyData"
+     [tipoSeleccionTabla]="tablaSeleccion" 
+     [configuracionTabla]="configuracionTabla"
+     [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+     ></app-tabla-dinamica>
 
     <div class="row">
         <div class="col-md-12 text-end">
@@ -200,37 +251,10 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalAgregarMercancia" tabindex="-1" aria-labelledby="modalAgregarMercanciaLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Datos mercancía</h4>
-                </div>
-                <div class="modal-body">
-                    <app-datos-mercancia></app-datos-mercancia>
-                </div>
-                <div class="modal-footer custom-footer">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="pull-right">
-                                <button type="button" name="limpiarSCIAN" class="btn btn-danger">
-                                    Limpiar
-                                </button>
-                                <button type="button" name="cancelar" class="btn btn-default ms-2"
-                                    data-bs-dismiss="modal" #closeModal>
-                                    Cancelar
-                                </button>
-                                <button type="button" name="agregar" class="btn btn-primary ms-2">
-                                    Agregar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="modal fade" #modifyModal tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
+        <app-datos-mercancia (cerrarClicado)="cerrarModificarModal()" (guardarClicado)="abrirModificarModal($event)"></app-datos-mercancia>
     </div>
+    
 </div>
 
 <!--Manifiestos y declaraciones-->
@@ -242,7 +266,7 @@
         <div class="col-md-12">
             <div class="alert alert-info">
                 <input class="form-check-input" type="checkbox" [id]="'manifiesto-' + i"
-                    [value]="manifiesto.declaracion.clave" [checked]="seleccionadaManifiesto.value[i]" class="required"
+                    [value]="manifiesto.declaracion.clave" [checked]="seleccionadaManifiesto.value[i]" class="required"  [disabled]="esFormularioSoloLectura"
                     (change)="onManifiestoCheckboxCambiar($event, i)" />
                 <div class="manifiesto-descripcion">
                     <label>* {{manifiesto.declaracion.descripcion}}</label>
@@ -257,7 +281,8 @@
             <label class="form-label" for="informacionConfidencial">Los datos o anexos pueden contener información
                 confidencial ¿Está de acuerdo en hacerlos públicos?*:</label>
             <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
-                formControlName="informacionConfidencial"
+                formControlName="informacionConfidencial" 
+                [disabled]="esFormularioSoloLectura"
                 (change)="setValoresStore(manifiestosForm,'informacionConfidencial', 'setInformacionConfidencial')"
                 ></app-input-radio>
         </div>
@@ -265,4 +290,4 @@
 </ng-container>
 
 <!--Representante legal-->
-<app-representante-legal></app-representante-legal>
+<app-representante-legal #representanteLegal></app-representante-legal>

@@ -349,7 +349,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
                         descTipoPedimento: 'Por evaluar',
                         numero: '',
                         comprobanteValor: '',
-                        pedimentoValidado: response.datos.pedimento_valido,
+                        pedimentoValidado: 'false',
                       };
 
                       this.nuevaNotificacion = {
@@ -518,8 +518,12 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
 
         if (TIPO_PEDIMENTO) {
           this.pedimentos[rowIndex].tipoPedimento = TIPO_PEDIMENTO.id;
-          this.pedimentos[rowIndex].numero = '';
           this.pedimentos[rowIndex].comprobanteValor = '';
+
+          // Clear numero field when changing to "Remesa consolidado" (id: 4)
+          if (TIPO_PEDIMENTO.id === 4) {
+            this.pedimentos[rowIndex].numero = '';
+          }
 
           if (TIPO_PEDIMENTO.id) {
             if (TIPO_PEDIMENTO.id !== 4) {

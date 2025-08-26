@@ -1,6 +1,6 @@
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FECHA_FINAL_110208, FECHA_INICIO_110208 } from '@libs/shared/data-access-user/src/tramites/constantes/110208/certificado.enum';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, ModeloDeFormaDinamica, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FECHA_FINAL_110208, FECHA_INICIO_110208, MERCANCIA_MODAL_FORMA } from '@libs/shared/data-access-user/src/tramites/constantes/110208/certificado.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NICO_TABLA, NicoInfo } from '@libs/shared/data-access-user/src/core/models/110208/certificado.model';
 import { Solicitud110208State, Tramite110208Store } from '../../../../estados/tramites/tramite110208.store';
@@ -8,6 +8,9 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CargaDeMercanciasComponent } from '../cargaDeMercancias/cargaDeMercancias.component';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
+import { InputFechaComponent } from '@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
+import Modal from 'bootstrap/js/dist/modal';
 import { Tramite110208Query } from '../../../../estados/queries/tramite110208.query';
 import { ValidarInicalmenteService } from '../../services/validar-inicalmente/validar-inicalmente.service';
 
@@ -24,7 +27,8 @@ import { ValidarInicalmenteService } from '../../services/validar-inicalmente/va
     CatalogoSelectComponent,
     InputFechaComponent,
     TablaDinamicaComponent,
-    CargaDeMercanciasComponent
+    CargaDeMercanciasComponent,
+    FormasDinamicasComponent
   ],
   templateUrl: './certificado-origen.component.html',
   styleUrl: './certificado-origen.component.css',
@@ -70,6 +74,11 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
   estado: Catalogo[] = [];
 
   /**
+   * Lista de catálogos de países.
+   */
+  public pais: Catalogo[] = [];
+
+  /**
    * Configuración de la fecha de inicio.
    */
   public fechaInicioInput: InputFecha = FECHA_INICIO_110208;
@@ -78,6 +87,26 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * Configuración de la fecha final.
    */
   public fechaFinalInput: InputFecha = FECHA_FINAL_110208;
+
+  /**
+   * Referencia al elemento modal en el template
+   */
+  @ViewChild('modal', { static: false }) modal!: ElementRef;
+
+  /**
+   * Instancia del modal de Bootstrap
+   */
+  public modalInstance!: Modal;
+
+  /**
+ * Formulario reactivo para gestionar los datos del modal de mercancía.
+ */
+  public modalForma: FormGroup = new FormGroup({});
+
+  /**
+ * Datos de configuración para los campos del formulario modal de mercancía.
+ */
+  public modalFormData = MERCANCIA_MODAL_FORMA;
 
   /**
    * Constructor del componente.
@@ -110,7 +139,12 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
     this.obtenerEstadoList();
-    this.obtenerTablaDatosCertificado(); 
+    this.obtenerPaisList();
+    this.obtenerUMCList();
+    this.obtenerTipoDeFacturaList();
+    if (this.esFormularioSoloLectura) {
+      this.obtenerTablaDatosCertificado();
+    }
   }
 
   /**
@@ -141,11 +175,15 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     if (this.esFormularioSoloLectura) {
       Object.keys(this.formCertificado.controls).forEach((key) => {
         this.formCertificado.get(key)?.disable();
-      });
-    } else {
-      Object.keys(this.formCertificado.controls).forEach((key) => {
-        this.formCertificado.get(key)?.enable();
-      });
+      });      
+    }
+
+    if (this.solicitudState?.fechaInicio) {
+      this.formCertificado.get('fechaInicio')?.setValue(this.solicitudState?.fechaInicio);
+    }
+
+    if (this.solicitudState?.fechaFinal) {
+      this.formCertificado.get('fechaFinal')?.setValue(this.solicitudState?.fechaFinal);
     }
   }
 
@@ -160,6 +198,61 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
         this.estado = DATOS;
       });
   }
+
+  /**
+   * Obtiene la lista de estados desde un archivo JSON.
+   */
+  obtenerPaisList(): void {
+    this.service.obtenerPaisList()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        const DATOS = data?.data;
+        this.pais = DATOS;
+      });
+  }
+
+  /**
+   * Obtiene la lista de estados desde un archivo JSON.
+   */
+  obtenerUMCList(): void {
+    this.service.obtenerUMCList()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        const UMC_FIELD = this.modalFormData.find(
+          (datos: ModeloDeFormaDinamica) => datos.campo === 'umc'
+        ) as ModeloDeFormaDinamica;
+        if (UMC_FIELD) {
+          UMC_FIELD.opciones = data.data.map(
+            (item: { id: number; descripcion: string }) => ({
+              descripcion: item.descripcion,
+              id: item.id,
+            })
+          );
+        }
+      });
+  }
+
+  /**
+   * Obtiene la lista de estados desde un archivo JSON.
+   */
+  obtenerTipoDeFacturaList(): void {
+    this.service.obtenerTipoDeFacturaList()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        const TIPO_DE_FACTURA_FIELD = this.modalFormData.find(
+          (datos: ModeloDeFormaDinamica) => datos.campo === 'tipoDeFactura'
+        ) as ModeloDeFormaDinamica;
+        if (TIPO_DE_FACTURA_FIELD) {
+          TIPO_DE_FACTURA_FIELD.opciones = data.data.map(
+            (item: { id: number; descripcion: string }) => ({
+              descripcion: item.descripcion,
+              id: item.id,
+            })
+          );
+        }
+      });
+  }
+  
 
   /**
    * Obtiene los datos de la tabla NICO desde el servicio.
@@ -222,7 +315,11 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     campo: string,
     metodoNombre: keyof Tramite110208Store
   ): void {
-    this.mostrarTercerOperador = true;
+    if (campo === 'bloque' && form.get('bloque')?.value === '2') {
+      this.mostrarTercerOperador = true;
+    } else {
+      this.mostrarTercerOperador = false;
+    }
     const VALOR = form.get(campo)?.value;
     (this.tramite110208Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
@@ -241,8 +338,40 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     if (VALOR && VALOR!== null) {
     (this.tramite110208Store[metodoNombre] as (value: unknown) => void)(VALOR);
+    }
   }
-}
+
+  /**
+   * Busca y carga las mercancías en la tabla si el campo "bloque" del formulario tiene valor.
+   */
+  public buscarMercancias(): void {
+    if (this.formCertificado.get('bloque')?.value) {
+      this.obtenerTablaDatosCertificado(); 
+    } else {
+      this.formCertificado.get('bloque')?.markAsTouched();
+    }
+  }
+
+  /**
+ * Muestra el modal de detalle cuando se hace clic en una fila de la tabla NICO.
+ * @param fila - Fila seleccionada de la tabla NICO.
+ */
+  public emitirFilaClic(fila: NicoInfo): void {
+    if (fila) {
+      if (this.modal) {
+        this.modalInstance = new Modal(this.modal.nativeElement);
+        this.modalInstance.show();
+        this.modalForma.patchValue({
+          fraccionArancelaria: fila.fraccion_arancelaria,
+          nombreComercial: fila.nombre_comercial,
+          nombreTecnio: fila.nombre_tecnico,
+          nombreEnIngles: fila.nombre_comercial,
+          criterioPara: 'B',
+        })
+      }
+    }
+  }
+
   /**
    * Método que se ejecuta al destruir el componente.
    * Libera recursos y evita pérdidas de memoria.

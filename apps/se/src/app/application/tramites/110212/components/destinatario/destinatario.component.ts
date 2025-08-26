@@ -182,19 +182,19 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
       grupoRepresentativo: this.fb.group({
         lugar: [
           this.solicitudState?.grupoRepresentativo?.lugar,
-          [Validators.required, Validators.maxLength(40)],
+          [Validators.required],
         ],
         nombreExportador: [
           this.solicitudState?.grupoRepresentativo?.nombreExportador,
-          [Validators.required, Validators.maxLength(40)],
+          [Validators.required],
         ],
         empresa: [
           this.solicitudState?.grupoRepresentativo?.empresa,
-          [Validators.required, Validators.maxLength(40)],
+          [Validators.required],
         ],
         cargo: [
           this.solicitudState?.grupoRepresentativo?.cargo,
-          [Validators.required, Validators.maxLength(40)],
+          [Validators.required],
         ],
         lada: [this.solicitudState?.grupoRepresentativo?.lada, []],
         telefono: [
@@ -207,7 +207,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
         ],
         correoElectronico: [
           this.solicitudState?.grupoRepresentativo?.correoElectronico,
-          [Validators.required, Validators.email],
+          [Validators.required, Validators.pattern(REGEX_CORREO_ELECTRONICO)],
         ],
       }),
     });
@@ -286,23 +286,6 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
-  /**
-   * Limita el número de dígitos en un input de tipo número.
-   *
-   * @param {Event} event - El evento de input.
-   * @param {number} maxLength - El número máximo de dígitos permitidos.
-   */
-  limitDigits(event: Event, maxLength: number): void {
-    const INPUT = event.target as HTMLInputElement;
-    if (INPUT.value.length > maxLength) {
-      INPUT.value = INPUT.value.slice(0, maxLength);
-      // Actualizar el valor del control del formulario
-      const CONTROL = this.registroFormulario.get('grupoDeDirecciones.fax');
-      if (CONTROL) {
-        CONTROL.setValue(INPUT.value);
-      }
-    }
-  }
 
   /**
    * Obtiene el grupo receptor del formulario.

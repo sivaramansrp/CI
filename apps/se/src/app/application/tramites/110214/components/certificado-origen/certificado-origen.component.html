@@ -18,28 +18,28 @@
         </div>
       </div>
     </div>
-    <div class="row mt-3" *ngIf="solicitudState?.tercerOperador">
+    <div class="row" *ngIf="solicitudState?.tercerOperador">
       <ng-container formGroupName="grupoOperador" *ngIf="formularioCertificado.get('grupoOperador')">
-
-      <div class="col-md-4">
+    <div class="row">
+      <div class="col-md-4 mb-3">
         <label for="nombre">Nombre(s):</label>
         <input type="text" id="nombre" class="form-control" formControlName="nombreTercerOperador"  [disabled]="soloLectura" />
       </div>
-      <div class="col-md-4">
+      <div class="col-md-4 mb-3">
         <label for="primerApellido">Primer apellido:</label>
         <input type="text" id="primerApellido" class="form-control" formControlName="primerApellidoTercerOperador"  [disabled]="soloLectura"/>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-4 mb-3">
         <label for="segundoApellido">Segundo apellido:</label>
         <input type="text" id="segundoApellido" class="form-control" formControlName="segundoApellidoTercerOperador"  [disabled]="soloLectura" />
       </div>
-   
-     <div class="row mt-3">
-      <div class="col-md-4">
+   </div>
+     <div class="row">
+      <div class="col-md-4 mb-3">
         <label for="registroFiscal">Número de registro fiscal*:</label>
         <input type="text" id="registroFiscal" class="form-control" formControlName="registroFiscalTercerOperador"  [disabled]="soloLectura"/>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-4 mb-3">
         <label for="razonSocial">Razón social:</label>
         <input type="text" id="razonSocial" class="form-control" formControlName="razonSocialTercerOperador"  [disabled]="soloLectura" />
       </div>
@@ -53,8 +53,8 @@
         </div>
         <div class="form-check">
           <input type="radio" (change)="setValoresStore(formularioCertificado, 'blnPeriodo', 'setPeriodo')"
-            formControlName="blnPeriodo" id="periodo" value="0" class="form-check-input">
-          <label class="form-check-label" for="periodo"></label>
+            formControlName="blnPeriodo" id="periodo" value="0" class="form-check-input custom-radio">
+          <label class="form-check-label custom-radio-label" for="periodo"></label>
         </div>
       </div>
       <div class="col-md-6">
@@ -63,8 +63,8 @@
         </div>
         <div class="form-check">
           <input type="radio" (change)="setValoresStore(formularioCertificado, 'blnPeriodo', 'setPeriodo')"
-            formControlName="blnPeriodo" id="importacion" value="1" class="form-check-input">
-          <label class="form-check-label" for="importacion"></label>
+            formControlName="blnPeriodo" id="importacion" value="1" class="form-check-input custom-radio">
+          <label class="form-check-label custom-radio-label" for="importacion"></label>
         </div>
       </div>
     </div>
@@ -307,38 +307,43 @@
                   (change)=" setValoresStore( formularioMercancia, 'numeroSerie', 'setNumeroSerie' ) " />
               </div>
             </div>
-
-            <div class="row mt-5">
+          
+            <div class="row">
               <div class="col-md-4">
                 <input-fecha [setFecha]="formularioMercancia.get('fecha')?.value" [datos]="fechaFacturaInput"
                   (valorCambiado)="cambioFechaFactura($event)" [isDisabled]="soloLectura"></input-fecha>
-                  @if (formularioMercancia.get('fecha')?.hasError('invalidDate')) {
-                    <div class="text-danger">
-                      <small>El formato de la fecha es inválido.</small>
-                    </div>
-                  } @else if (formularioMercancia.get('fecha')?.hasError('futureDate')) {
-                    <div class="text-danger">
-                      <small>La fecha no puede ser futura.</small>
-                    </div>
-                  }
-                  
-               
+                @if (formularioMercancia.get('fecha')?.hasError('invalidDate')) {
+                  <div class="text-danger">
+                    <small>El formato de la fecha es inválido.</small>
+                  </div>
+                } @else if (formularioMercancia.get('fecha')?.hasError('futureDate')) {
+                  <div class="text-danger">
+                    <small>La fecha no puede ser futura.</small>
+                  </div>
+                }
               </div>
-              <div class="col-md-4">
-                <label>N° factura / Referencia</label>
+               <div class="col-md-4 d-flex flex-column align-items-start">
+                <label class="mb-3">N° factura / Referencia</label>
                 <input type="text" required="true" class="form-control" formControlName="numeroFactura"
-                  (change)=" setValoresStore( formularioMercancia, 'numeroFactura', 'setNumeroFactura' ) " />
+                  [ngClass]="isValid(formularioMercancia,'numeroFactura') ? 'required' : ''"
+                  (change)=" setValoresStore( formularioMercancia, 'numeroFactura', 'setNumeroFactura' ) " 
+                  />
+                @if (formularioMercancia.get('numeroFactura')?.touched && formularioMercancia.get('numeroFactura')?.errors) {
+                  <div class="text-danger">
+                    <small>Este campo es obligatorio.</small>
+                  </div>
+                }
               </div>
               <div class="col-md-4">
                 <app-catalogo-select [catalogo]="optionsTipoFactura" [label]="'Tipo de factura'" id="tipoFactura"
                   formControlName="tipoFactura" [required]="true"
                   (change)=" setValoresStore( formularioMercancia, 'tipoFactura', 'setTipoFactura' ) "
                   [isDisabled]="soloLectura"></app-catalogo-select>
-                  @if (isValid(formularioMercancia, 'tipoFactura')) {
-                    <div class="text-danger">
-                      <small>Este campo es obligatorio.</small>
-                    </div>
-                  }                  
+                @if (isValid(formularioMercancia, 'tipoFactura')) {
+                  <div class="text-danger">
+                    <small>Este campo es obligatorio.</small>
+                  </div>
+                }
               </div>
             </div>
           </ng-container>

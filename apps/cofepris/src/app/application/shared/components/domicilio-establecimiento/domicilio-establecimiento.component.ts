@@ -50,6 +50,7 @@ import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-
 import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
 import { Modal } from 'bootstrap';
 import { TablePaginationComponent } from '@ng-mf/data-access-user';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 export interface RespuestaTabla {
   code: number;
@@ -76,12 +77,18 @@ export interface MercanciasTabla {
     CatalogoSelectComponent,
     TablaDinamicaComponent,
     CrosslistComponent,
-    TablePaginationComponent
+    TablePaginationComponent,
+    TooltipModule
   ],
   templateUrl: './domicilio-establecimiento.component.html',
   styleUrls: ['./domicilio-establecimiento.component.scss'],
 })
 export class DomicilioComponent implements OnInit, OnDestroy {
+
+  /**
+   * Indica si el campo GarantiasOfrecidasVisible es visible.
+   */
+  @Input() tieneUsoEspecifico: boolean = true;
   /**
      * Indica si el campo GarantiasOfrecidasVisible es visible.
      */
@@ -100,6 +107,11 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Referencia a los componentes de la lista de fechas.
    */
   @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
+
+   /**
+   * Indica si se debe mostrar el número de registro en la interfaz.
+   */
+  @Input() mostrarNumeroRegistro: boolean = true;
 
   /**
    * Estado de la solicitud.
@@ -124,6 +136,13 @@ export class DomicilioComponent implements OnInit, OnDestroy {
      * Indica si el campo esPaginacionVisible es visible.
      */
   @Input() esPaginacionVisible: boolean = false;
+
+  /**
+   * Indica si la sección de domicilio debe estar habilitada.
+   * Cuando se establece en `true`, los campos de domicilio estarán disponibles para ingresar datos.
+   * Este valor normalmente lo proporciona un componente padre para controlar el estado habilitado.
+   */
+  @Input() tieneDomicilioHabilitar: boolean = false;
 
   /**
     * Número total de elementos en la tabla.
@@ -156,6 +175,11 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Indica si el formulario es de actualización.
    */
   private esFormularioActualizacion: boolean = false;
+
+  /**
+   * Indica si el formulario de mercancías ha sido enviado.
+   */
+  public tieneFormularioMercanciasEnviado: boolean = false;
 
   /**
    * Datos completos de los establecimientos.
@@ -275,6 +299,25 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       paisDeOriginDatos: [this.solicitudState?.aduanasDeEntrada || []],
       garantiasOfrecidas: [this.solicitudState?.garantiasOfrecidas],
     });
+
+
+    /**
+     * Configura el grupo de formularios 'domicilio' con controles y validadores según el estado actual de la solicitud.
+     */
+    if(this.tieneDomicilioHabilitar) {
+      this.domicilio.disable();
+    }
+    /**
+ * Añade el control 'numeroRegistro' al formulario 'domicilio' si la propiedad
+ * `mostrarNumeroRegistro` es verdadera.
+ * 
+ * El control incluye las siguientes validaciones:
+ * - Requerido (`Validators.required`)
+ * - Longitud máxima de 50 caracteres (`Validators.maxLength(50)`)
+ */
+    if (this.mostrarNumeroRegistro) {
+      this.domicilio.addControl('numeroRegistro', this.fb.control('', [Validators.required, Validators.maxLength(50)]));
+    }
   }
 
 
@@ -295,17 +338,17 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   aduanasEntradaBotons = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-primary',
+      class: 'btn-default',
       funcion: (): void => this.crossList.toArray()[0].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-default',
+      class: 'btn-primary',
       funcion: (): void => this.crossList.toArray()[0].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-danger',
+      class: 'btn-primary',
       funcion: (): void => this.crossList.toArray()[0].quitar(''),
     },
     {
@@ -399,6 +442,11 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   mercanciasTablaDatos: MercanciasInfo[] = [];
 
   /**
+   * Lista de mercancías seleccionadas.
+   */
+  public seleccionarlistaMercancias: MercanciasInfo[] = [];
+
+  /**
    * Lista de aduanas de entrada seleccionadas.
    */
   aduanasDeEntradaSeleccionadas: string[] = [];
@@ -432,7 +480,11 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * @property {boolean} colapsableTres
    */
   colapsableTres: boolean = false;
-
+ /**
+   * Indica si la sección es colapsableTres.
+   * @property {boolean} colapsableTress
+   */
+  colapsableTress: boolean = false;
   /**
    * Lista de rangos de días seleccionarOrigenDelPais.
    */
@@ -452,6 +504,11 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Lista de rangos de días seleccionarOrigenDelPaisCuatro.
    */
   seleccionarOrigenDelPaisCuatro: string[] = this.crosListaDePaises;
+
+  /**
+   * Lista de rangos de días seleccionarOrigenDelPaisCinco.
+   */
+  seleccionarOrigenDelPaisCinco: string[] = this.crosListaDePaises;
   /**
    * Instancia del Modal de Bootstrap utilizada para controlar la visualización y el comportamiento del cuadro de diálogo modal
    * dentro del componente DomicilioEstablecimientoComponent.
@@ -466,6 +523,30 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * */
   public paisDeProcedenciaLabel: CrossListLable = {
     tituluDeLaIzquierda: 'País productor del ingrediente activo:',
+    derecha: 'País(es) seleccionado(s)*:',
+  };
+
+ /**
+   * Etiqueta de la lista de fechas.
+   * */
+  public paisDeDondeLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'País donde se elabora el producto:',
+    derecha: 'País(es) seleccionado(s)*:',
+  };
+
+  /**
+   * Etiqueta de la lista de fechas.
+   * */
+  public paisOrigenLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'País de origen:',
+    derecha: 'País(es) seleccionado(s)*:',
+  };
+
+  /**
+   * Etiqueta de la lista de fechas.
+   * */
+  public paisEmbarqueLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'País de procedencia:',
     derecha: 'País(es) seleccionado(s)*:',
   };
 
@@ -527,6 +608,28 @@ export class DomicilioComponent implements OnInit, OnDestroy {
     { fraccion: '1006.30.99', descripcion: 'Arroz semiblanqueado' }
   ];
   /**
+   * Estado de colapsabilidad para los diferentes países.
+   */
+  public paisDeOriginColapsable: boolean = false;
+  /**
+   * Estado de colapsabilidad para el país donde se fabrica.
+   */
+  public paisDoneFabricaColapsable: boolean = false;
+  /**
+   * Indica si la sección colapsable para el "País donde se elabora el producto" está expandida o colapsada.
+   * Cuando es `true`, la sección está expandida; cuando es `false`, está colapsada.
+   */
+  public paisDoneProductoColapsable: boolean = false;
+  /**
+   * Estado de colapsabilidad para el país proveedor.
+   */
+  public paisProveedorColapsable: boolean = false;
+  /**
+   * Estado de colapsabilidad para el país de procedencia.
+   * Cuando es `true`, la sección está expandida; cuando es `false`, está colapsada.
+   */
+  public paisProcedenciaDelColapsable: boolean = false;
+  /**
    * Etiqueta de la lista de fechas.
    * */
   ngOnInit(): void {
@@ -538,6 +641,19 @@ export class DomicilioComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
+    
+    this.service.event$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((valor) => {
+          this.tieneDomicilioHabilitar = (valor as boolean);
+          if (!this.tieneDomicilioHabilitar) {
+            this.domicilio.enable();
+          }
+        })
+      )
+      .subscribe()
     this.obtenerEstadoList();
     this.obtenerMercanciasDatos();
     this.configurarFormularioDomicillio()
@@ -586,16 +702,25 @@ export class DomicilioComponent implements OnInit, OnDestroy {
           Validators.maxLength(100),
         ],
       ],
-      numeroRegistro: [
-        '',
-        [
-          Validators.required,
-          Validators.maxLength(50),
-        ],
-      ],
       clasificacionToxicologica: ['', Validators.required],
       objetoImportacion: ['', Validators.required],
     });
+
+/**
+ * Si la propiedad `mostrarNumeroRegistro` es verdadera, agrega el control
+ * `numeroRegistro` al formulario `formMercancias`.
+ *
+ * Este control se inicializa con un valor vacío y contiene las siguientes validaciones:
+ * - `Validators.required`: el campo es obligatorio.
+ * - `Validators.maxLength(50)`: el valor no debe superar los 50 caracteres.
+ */
+    if (this.mostrarNumeroRegistro) {
+      this.formMercancias.addControl(
+        'numeroRegistro',
+        this.fb.control('', [Validators.required, Validators.maxLength(50)])
+      );
+    }
+
     this.seleccionadasAduanasEntradaDatos = this.solicitudState?.aduanasDeEntrada;
 
     this.inicializarEstadoFormulario();
@@ -621,7 +746,9 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * @memberof DomicilioEstablecimientoComponent
    */
   limpiarScianForm(): void {
-    this.formAgente.reset();
+   Object.keys(this.formAgente.controls).forEach(key => {
+    this.formAgente.get(key)?.setValue(null);
+  });
   }
 
   /**
@@ -641,6 +768,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
         descripcion_Scian: this.formAgente.get('claveDescripcionModal')?.value,
       };
       this.nicoTablaDatos.push(NUEVO_DATO);
+      this.nicoTablaDatos = [...this.nicoTablaDatos]; 
       this.formAgente.reset();
       this.cerrarModalScian();
     }
@@ -660,27 +788,23 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   readonly paisDeProcedenciaBotones = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-primary',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[0].agregar('t'),
+      class: 'btn-default uno',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('uno')})].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[0].agregar(''),
+      class: 'btn-primary uno',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('uno')})].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-danger',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[0].quitar(''),
+      class: 'btn-primary uno',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('uno')})].quitar(''),
     },
     {
       btnNombre: 'Restar todos',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[0].quitar('t'),
+      class: 'btn-default uno',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('uno')})].quitar('t'),
     },
   ];
 
@@ -690,27 +814,23 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   readonly paisDeProcedenciaBotonesDuos = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-primary',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[1].agregar('t'),
+      class: 'btn-default duos',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('duos')})].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[1].agregar(''),
+      class: 'btn-primary duos',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('duos')})].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-danger',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[1].quitar(''),
+      class: 'btn-primary duos',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('duos')})].quitar(''),
     },
     {
       btnNombre: 'Restar todos',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[1].quitar('t'),
+      class: 'btn-default duos',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('duos')})].quitar('t'),
     },
   ];
 
@@ -720,27 +840,23 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   readonly paisDeProcedenciaBotonesTres = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-primary',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[2].agregar('t'),
+      class: 'btn-default tres',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('tres')})].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[2].agregar(''),
+      class: 'btn-primary tres',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('tres')})].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-danger',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[2].quitar(''),
+      class: 'btn-primary tres',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('tres')})].quitar(''),
     },
     {
       btnNombre: 'Restar todos',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[2].quitar('t'),
+      class: 'btn-default tres',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('tres')})].quitar('t'),
     },
   ];
   /**
@@ -749,27 +865,49 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   readonly paisDeProcedenciaBotonesCuatro = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-primary',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[3].agregar('t'),
+      class: 'btn-default cuatro',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cuatro')})].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[3].agregar(''),
+      class: 'btn-primary cuatro',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cuatro')})].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-danger',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[3].quitar(''),
+      class: 'btn-primary cuatro',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cuatro')})].quitar(''),
     },
     {
       btnNombre: 'Restar todos',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[3].quitar('t'),
+      class: 'btn-default cuatro',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cuatro')})].quitar('t'),
+    },
+  ];
+
+  /**
+   * Botones de acción disponibles para gestionar las listas de fechas.
+   */
+  readonly paisDeProcedenciaBotonesCinco = [
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-default cinco',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cinco')})].agregar('t'),
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-primary cinco',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cinco')})].agregar(''),
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-primary cinco',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cinco')})].quitar(''),
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default cinco',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cinco')})].quitar('t'),
     },
   ];
 
@@ -782,7 +920,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       .getObtenerEstadoList()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data): void => {
-        this.estado = data?.data;
+        this.estado = data;
       });
   }
   /**
@@ -828,7 +966,12 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Alterna el estado colapsable de la sección del formulario.
    * @method mostrar_colapsable
    */
-  mostrar_colapsable(): void {
+  mostrar_colapsable(orden: number): void {
+    if(orden === 1) {
+      this.paisDeOriginColapsable = !this.paisDeOriginColapsable;
+    } else if(orden === 2) {
+      this.paisDoneFabricaColapsable = !this.paisDoneFabricaColapsable;
+    }
     this.colapsable = !this.colapsable;
   }
 
@@ -838,6 +981,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
   mostrar_colapsableDuos(): void {
     this.colapsableDuos = !this.colapsableDuos;
+    this.paisDoneProductoColapsable = !this.paisDoneProductoColapsable;
   }
 
   /**
@@ -846,6 +990,25 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
   mostrar_colapsableTres(): void {
     this.colapsableTres = !this.colapsableTres;
+    this.paisProveedorColapsable = !this.paisProveedorColapsable;
+  }
+
+   /**
+   * Alterna el estado colapsable de la sección del formulario.
+   * @method mostrar_colapsableTress
+   */
+  mostrar_procedencia(): void {
+    this.colapsableTress = !this.colapsableTress;
+    this.paisProcedenciaDelColapsable = !this.paisProcedenciaDelColapsable;
+  }
+
+  /**
+   * Sets the value of the 'descripcionFraccion' field in the 'formMercancias' form group to the string 'descripcionFraccion'.
+   * If the control does not exist, no action is taken.
+   */
+  setDescripcionFraccion():void{
+    this.formMercancias.get('descripcionFraccion')?.setValue('descripcionFraccion');
+    this.formMercancias.get('UMT')?.setValue('UMT32131');
   }
   /**
    * Establece el valor de un campo en el store de Tramite31601.
@@ -877,10 +1040,21 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Este método se utiliza para gestionar la adición dinámica de mercancías en el componente.
    */
   agregarMercancia(): void {
-    if (this.formMercancias.valid) {
-      const NUEVA_MERCANCIA = { ...this.formMercancias.getRawValue() };
+    this.tieneFormularioMercanciasEnviado = true;
+    if (!this.formMercancias.invalid) {
+      const RAW = this.formMercancias.getRawValue();
+    
+      const NUEVA_MERCANCIA: MercanciasInfo = {
+      ...RAW,
+      cantidadUmt: RAW.cantidadUMT,
+      cantidadUmc: RAW.cantidadUMC,
+      umc: RAW.UMC,
+      unidadMedidaTarifa: RAW.UMT,
+    };
       this.listaMercancias.push(NUEVA_MERCANCIA);
+      this.mercanciasTablaDatos = [...this.listaMercancias];
       this.formMercancias.reset();
+      this.tieneFormularioMercanciasEnviado = false;
     }
   }
 
@@ -898,6 +1072,24 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       INDICE_INICIAL,
       INDICE_INICIAL + this.elementosPorPagina
     );
+  }
+/**   * Autocompleta el campo de fracción arancelaria con la descripción correspondiente.
+   *   * Si el campo de fracción arancelaria tiene un valor, realiza una solicitud al servicio para obtener
+   *   * la descripción asociada y actualiza el formulario con esa información.
+   */
+  autoCompleteFraccionArancelaria(): void {
+    const FRACCION = this.formMercancias.get('fraccionArancelaria')?.value;
+    if (FRACCION) {
+      this.service
+        .getFraccionArancelaria()
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((data): void => {
+          this.formMercancias.patchValue({
+            descripcionFraccion: data?.descripcion,
+            UMT: data?.umt
+          });
+        });
+    }
   }
 
   /**
@@ -934,6 +1126,61 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   public limpiar(forma: FormGroup): void {
     if (forma) {
       forma.reset();
+    }
+  }
+
+  /**
+   * @method seleccionarlistaSeccionMercancias
+   * @description
+   * Método que selecciona una lista de secciones de mercancías.
+   * @param {event}
+   */
+  public seleccionarlistaSeccionMercancias(event: MercanciasInfo[]): void {
+    this.seleccionarlistaMercancias = event;
+  }
+
+  /**
+   * @method eliminarMercancia
+   * @description
+   * Método que elimina una mercancía de la lista de mercancías seleccionadas.
+   */
+  public eliminarMercancia(): void {
+    if (this.seleccionarlistaMercancias.length > 0) {
+      this.mercanciasTablaDatos = this.mercanciasTablaDatos.filter(
+        (item) => {
+          return !this.seleccionarlistaMercancias.some(selectedItems => 
+            selectedItems.nombreComercial === item.nombreComercial &&
+            selectedItems.nombreComun === item.nombreComun &&
+            selectedItems.fraccionArancelaria === item.fraccionArancelaria &&
+            selectedItems.objetoImportacion === item.objetoImportacion &&
+            selectedItems.cantidadUmt === item.cantidadUmt
+          );
+        }
+      );
+      this.listaMercancias = [...this.mercanciasTablaDatos];
+      this.seleccionarlistaMercancias = [];
+    }
+  }
+
+  /**
+   * @method modificarMercancia
+   * @description
+   * Método que modifica una mercancía de la lista de mercancías seleccionadas.
+   */
+  public modificarMercancia(): void {
+    if(this.seleccionarlistaMercancias.length !== 0) {
+      this.formMercancias.get('nombreComercial')?.setValue(this.seleccionarlistaMercancias[0].nombreComercial);
+      this.formMercancias.get('nombreComun')?.setValue(this.seleccionarlistaMercancias[0].nombreComun);
+      this.formMercancias.get('nombreCientifico')?.setValue(this.seleccionarlistaMercancias[0].nombreCientifico);
+      this.formMercancias.get('usoEspecifico')?.setValue(this.seleccionarlistaMercancias[0].usoEspecifico);
+      this.formMercancias.get('fraccionArancelaria')?.setValue(this.seleccionarlistaMercancias[0].fraccionArancelaria);
+      this.formMercancias.get('descripcionFraccion')?.setValue(this.seleccionarlistaMercancias[0].descripcionFraccion);
+      this.formMercancias.get('cantidadUmt')?.setValue(this.seleccionarlistaMercancias[0].cantidadUmt);
+      this.formMercancias.get('UMC')?.setValue(this.seleccionarlistaMercancias[0].umc);
+      this.formMercancias.get('cantidadUMC')?.setValue(this.seleccionarlistaMercancias[0].cantidadUmc);
+      this.formMercancias.get('porcentajeConcentracion')?.setValue(this.seleccionarlistaMercancias[0].porcentajeConcentracion);
+      this.formMercancias.get('clasificacionToxicologica')?.setValue(this.seleccionarlistaMercancias[0].clasificacionToxicologica);
+      this.formMercancias.get('objetoImportacion')?.setValue(this.seleccionarlistaMercancias[0].objetoImportacion);
     }
   }
 

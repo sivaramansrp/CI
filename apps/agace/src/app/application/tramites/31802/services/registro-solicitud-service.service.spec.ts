@@ -11,6 +11,7 @@ describe('RegistroSolicitudService', () => {
 
   beforeEach(() => {
     storeMock = {
+      setNumeroOficio: jest.fn(),
       setNumeroOperacion: jest.fn(),
       setLlave: jest.fn(),
       setManifiesto1: jest.fn(),
@@ -20,6 +21,8 @@ describe('RegistroSolicitudService', () => {
       setRenovacion: jest.fn(),
       setHomologacion: jest.fn(),
       setMonedaNacional: jest.fn(),
+      setFechaInicio: jest.fn(),
+      setFechaFinal: jest.fn(),
     };
 
     TestBed.configureTestingModule({
@@ -43,39 +46,56 @@ describe('RegistroSolicitudService', () => {
 
   it('should call all store setters in actualizarEstadoFormulario', () => {
     const datos: Solicitud31802State = {
-      numeroOperacion: 123,
-      llave: 'abc',
-      manifiesto1: 'm1',
-      manifiesto2: 'm2',
-      manifiesto3: 'm3',
+     numeroOficio: '12345',
+      llave: 'llave',
+      manifiesto1: true,
+      manifiesto2: true,
+      manifiesto3: true,
+      numeroOperacion: '123',
       fechaPago: '2024-01-01',
-      renovacion: true,
+      monedaNacional: 'MXN',
+      renovacion: false,
       homologacion: false,
-      monedaNacional: 'MXN'
+      fechaInicio: '25/12/2023',
+      fechaFinal: '25/12/2024',
+      manifiesto4: true,
+      manifiesto5: true,
+      opcion: 'no',
+      valorSeleccionado: null
     };
     service.actualizarEstadoFormulario(datos);
-    expect(storeMock.setNumeroOperacion).toHaveBeenCalledWith(123);
-    expect(storeMock.setLlave).toHaveBeenCalledWith('abc');
-    expect(storeMock.setManifiesto1).toHaveBeenCalledWith('m1');
-    expect(storeMock.setManifiesto2).toHaveBeenCalledWith('m2');
-    expect(storeMock.setManifiesto3).toHaveBeenCalledWith('m3');
+    expect(storeMock.setNumeroOficio).toHaveBeenCalledWith('12345');
+    expect(storeMock.setNumeroOperacion).toHaveBeenCalledWith('123');
+    expect(storeMock.setLlave).toHaveBeenCalledWith('llave');
+    expect(storeMock.setManifiesto1).toHaveBeenCalledWith(true);
+    expect(storeMock.setManifiesto2).toHaveBeenCalledWith(true);
+    expect(storeMock.setManifiesto3).toHaveBeenCalledWith(true);
     expect(storeMock.setFechaPago).toHaveBeenCalledWith('2024-01-01');
-    expect(storeMock.setRenovacion).toHaveBeenCalledWith(true);
+    expect(storeMock.setRenovacion).toHaveBeenCalledWith(false);
     expect(storeMock.setHomologacion).toHaveBeenCalledWith(false);
     expect(storeMock.setMonedaNacional).toHaveBeenCalledWith('MXN');
+    expect(storeMock.setFechaInicio).toHaveBeenCalledWith('25/12/2023');
+    expect(storeMock.setFechaFinal).toHaveBeenCalledWith('25/12/2024');
   });
 
   it('should get datos de aviso de renovacion doc from JSON', () => {
     const mockResponse: Solicitud31802State = {
-      numeroOperacion: 1,
+     numeroOficio: '12345',
       llave: 'llave',
-      manifiesto1: 'm1',
-      manifiesto2: 'm2',
-      manifiesto3: 'm3',
+      manifiesto1: true,
+      manifiesto2: true,
+      manifiesto3: true,
+      numeroOperacion: '123',
       fechaPago: '2024-01-01',
-      renovacion: true,
+      monedaNacional: 'MXN',
+      renovacion: false,
       homologacion: false,
-      monedaNacional: 'MXN'
+      fechaInicio: '25/12/2023',
+      fechaFinal: '25/12/2024',
+      manifiesto4: true,
+      manifiesto5: true,
+      opcion: 'no',
+      valorSeleccionado: null
     };
     service.getDatosDeAvisoRenovacionDoc().subscribe(res => {
       expect(res).toEqual(mockResponse);

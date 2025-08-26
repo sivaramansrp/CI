@@ -13,11 +13,11 @@ import { MESES, SEMANA } from '../../../core/enums/constantes-alertas.enum';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { CommonModule } from '@angular/common';
 import { InputFecha } from '../../../core/models/shared/components.model';
-
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 @Component({
   selector: 'input-fecha',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, BsDatepickerModule],
+  imports: [CommonModule, ReactiveFormsModule, BsDatepickerModule, TooltipModule],
   templateUrl: './input-fecha.component.html',
   styleUrl: './input-fecha.component.scss',
 })
@@ -41,6 +41,11 @@ export class InputFechaComponent implements OnInit, OnChanges {
    * Indica si se debe mostrar el ícono de ayuda (círculo con signo de interrogación).
    */
   @Input() tooltipQuestionCircle: boolean = false;
+
+  /**
+   * Texto que se mostrará en el tooltip del ícono de ayuda.
+   */
+  @Input() tooltipQuestionCircleText!: string;
 
   @Input() deshabilitarFuturas: boolean = false;
 
@@ -82,7 +87,7 @@ export class InputFechaComponent implements OnInit, OnChanges {
   /**
    * Bandera para indicar si el control debe estar deshabilitado.
    */
-  @Input() isDisabled!: boolean;
+  @Input() isDisabled: boolean = false;
 
   constructor(private fb: FormBuilder) {
     moment.locale('es');
@@ -110,6 +115,14 @@ export class InputFechaComponent implements OnInit, OnChanges {
         this.Formulario.get('fechaString')?.reset();
       } else {
         this.setFechaEnInput();
+      }
+    }
+    if (changes['isDisabled']) {
+      const IS_DISABLED = changes['isDisabled'].currentValue;
+      if (IS_DISABLED) {
+        this.Formulario.disable();
+      } else {
+        this.Formulario.enable();
       }
     }
   }
@@ -337,18 +350,18 @@ export class InputFechaComponent implements OnInit, OnChanges {
   }
 
   isFutureDate(day: { value: number; indexWeek: number }): boolean {
-  if (!this.deshabilitarFuturas) {
-    return false;
+    if (!this.deshabilitarFuturas) {
+      return false;
+    }
+
+    const SELECTED_YEAR = this.Formulario.get('anio')?.value;
+    const SELECTMONTH = this.Formulario.get('mes')?.value;
+    const DAYVALUE = day.value;
+
+    const FECHADIA = moment(`${SELECTED_YEAR}-${SELECTMONTH}-${DAYVALUE}`, 'YYYY-M-D');
+    const HOY = moment().startOf('day');
+
+    return FECHADIA.isAfter(HOY);
   }
-
-  const SELECTED_YEAR = this.Formulario.get('anio')?.value;
-  const SELECTMONTH = this.Formulario.get('mes')?.value;
-  const DAYVALUE = day.value;
-
-  const FECHADIA = moment(`${SELECTED_YEAR}-${SELECTMONTH}-${DAYVALUE}`, 'YYYY-M-D');
-  const HOY = moment().startOf('day');
-
-  return FECHADIA.isAfter(HOY);
-}
 
 }

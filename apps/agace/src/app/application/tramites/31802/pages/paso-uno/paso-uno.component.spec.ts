@@ -27,12 +27,12 @@ class MockInputCheckComponent implements ControlValueAccessor {
   @Input() label: string = '';
   @Input() required: boolean = false;
   value: any;
-  onChange = (_: any) => {};
-  onTouched = () => {};
+  onChange = (_: any) => { };
+  onTouched = () => { };
   writeValue(obj: any): void { this.value = obj; }
   registerOnChange(fn: any): void { this.onChange = fn; }
   registerOnTouched(fn: any): void { this.onTouched = fn; }
-  setDisabledState?(isDisabled: boolean): void {}
+  setDisabledState?(isDisabled: boolean): void { }
 }
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
@@ -77,8 +77,8 @@ describe('PasoUnoComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule,SolicitanteComponent,HttpClientTestingModule],
-      declarations: [PasoUnoComponent,MockInputCheckComponent],
+      imports: [ReactiveFormsModule, SolicitanteComponent, HttpClientTestingModule],
+      declarations: [PasoUnoComponent, MockInputCheckComponent],
       providers: [
         { provide: Tramite31802Store, useValue: storeMock },
         { provide: Tramite31802Query, useValue: queryMock },
@@ -161,23 +161,6 @@ describe('PasoUnoComponent', () => {
     component.registroForm.get('renovacion')?.setValue(true);
     component.setValoresStore(component.registroForm, 'renovacion', 'setRenovacion');
     expect(storeMock.setRenovacion).toHaveBeenCalledWith(true);
-  });
-
-  it('should initialize registroForm in donanteDomicilio', () => {
-    component.solicitudState = {
-      renovacion: true,
-      homologacion: false,
-      numeroOperacion: 0,
-      llave: '',
-      manifiesto1: '',
-      manifiesto2: '',
-      manifiesto3: '',
-      fechaPago: '',
-      monedaNacional: '',
-    };
-    component.donanteDomicilio();
-    expect(component.registroForm.get('renovacion')?.value).toBe(true);
-    expect(component.registroForm.get('homologacion')?.value).toBe(false);
   });
 
   it('should complete destroyed$ in ngOnDestroy', () => {

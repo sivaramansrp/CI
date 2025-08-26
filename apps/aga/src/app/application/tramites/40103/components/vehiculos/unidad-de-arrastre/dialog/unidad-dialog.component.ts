@@ -11,33 +11,44 @@
  * @implements {OnInit}
  */
 
-import { Component, Input, Output, EventEmitter, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { CatalogoSelectComponent, NotificacionesComponent, Notificacion, TipoNotificacionEnum, CategoriaMensaje } from '@libs/shared/data-access-user/src';
+
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+
+import { Catalogo, CatalogoSelectComponent, CategoriaMensaje, Notificacion, TipoNotificacionEnum } from '@libs/shared/data-access-user/src';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+
+import { DatosUnidad } from '../../../../models/registro-muestras-mercancias.model';
 import { modificarTerrestreService } from '../../../services/modificacar-terrestre.service';
-import { takeUntil, Subject } from 'rxjs';
+
+import { Subject, takeUntil } from 'rxjs';
+
+// Usar interfaces importadas para consistencia de tipos
+type CatalogoItem = Catalogo;
+type UnidadData = DatosUnidad;
 
 @Component({
   selector: 'app-unidad-dialog',
   templateUrl: './unidad-dialog.component.html',
   styleUrls: ['./unidad-dialog.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, CatalogoSelectComponent, NotificacionesComponent],
+  imports: [CommonModule, ReactiveFormsModule, CatalogoSelectComponent, TooltipModule],
 })
-export class UnidadDialogComponent implements OnInit {
+export class UnidadDialogComponent implements OnInit, OnDestroy {
   /**
    * Datos de la unidad a editar o visualizar.
-   * @type {any}
+   * @type {UnidadData}
    * @public
    */
-  @Input() unidad: any;
+  @Input() unidad: UnidadData | null = null;
   /**
    * Listado de unidades existentes para calcular el siguiente identificador.
-   * @type {any[]}
+   * @type {UnidadData[]}
    * @public
    */
-  @Input() unidades: any[] = [];
+  @Input() unidades: UnidadData[] = [];
   /**
    * Indica si el formulario es de solo lectura.
    * @type {boolean}
@@ -46,38 +57,38 @@ export class UnidadDialogComponent implements OnInit {
   @Input() readonly = false;
   /**
    * Catálogo de tipos de unidad disponibles.
-   * @type {any[]}
+   * @type {CatalogoItem[]}
    * @public
    */
-  @Input() tipoDeUnidadCatalogo: any[] = [];
+  @Input() tipoDeUnidadCatalogo: CatalogoItem[] = [];
   /**
    * Catálogo de países emisores disponibles.
-   * @type {any[]}
+   * @type {CatalogoItem[]}
    * @public
    */
-  @Input() paisEmisorCatalogo: any[] = [];
+  @Input() paisEmisorCatalogo: CatalogoItem[] = [];
   /**
    * Catálogo de años disponibles.
-   * @type {any[]}
+   * @type {CatalogoItem[]}
    * @public
    */
-  @Input() anoCatalogo: any[] = [];
+  @Input() anoCatalogo: CatalogoItem[] = [];
   /**
    * Catálogo de tipos de arrastre disponibles.
-   * @type {any[]}
+   * @type {CatalogoItem[]}
    * @public
    */
-  @Input() tipoArrastre: any[] = [];
+  @Input() tipoArrastre: CatalogoItem[] = [];
   /**
    * Evento emitido al guardar los datos de la unidad.
    * @event
    */
-  @Output() save = new EventEmitter<any>();
+  @Output() guardar = new EventEmitter<UnidadData>();
   /**
    * Evento emitido al cancelar la operación o cerrar el modal.
    * @event
    */
-  @Output() cancel = new EventEmitter<void>();
+  @Output() cancelar = new EventEmitter<void>();
 
   /**
    * Formulario reactivo que contiene los controles de la unidad.
@@ -109,7 +120,7 @@ export class UnidadDialogComponent implements OnInit {
    * @type {any}
    * @public
    */
-  modalRef?: any; // Replace with BsModalRef if using ngx-bootstrap
+  modalRef?: unknown; // Reemplazar con BsModalRef si se usa ngx-bootstrap
 
   /**
    * Subject utilizado para destruir las suscripciones al destruir el componente.
@@ -128,78 +139,122 @@ export class UnidadDialogComponent implements OnInit {
    * Inicializa el formulario y carga los catálogos necesarios.
    * Si se está editando una unidad, carga sus datos en el formulario.
    */
-  ngOnInit() {
+  ngOnInit(): void {
+    // Restablecer estado de notificación
+    this.showNotification = false;
+    this.loadCatalogData();
+    this.initializeForm();
+    this.setupFormValueSubscriptions();
+  }
 
+  /**
+   * Carga los datos de catálogos si no están disponibles
+   */
+  private loadCatalogData(): void {
     if (!this.tipoDeUnidadCatalogo || this.tipoDeUnidadCatalogo.length === 0) {
       this.modificarTerrestreService.obtenerTipoArrastre()
         .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe((datos: any) => {
+        .subscribe((datos: { datos: CatalogoItem[] }) => {
           this.tipoDeUnidadCatalogo = datos.datos;
         });
     }
     if (!this.tipoArrastre || this.tipoArrastre.length === 0) {
       this.modificarTerrestreService.obtenerTipoArrastre()
         .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe((datos: any) => {
+        .subscribe((datos: { datos: CatalogoItem[] }) => {
           this.tipoArrastre = datos.datos;
         });
     }
     if (!this.anoCatalogo || this.anoCatalogo.length === 0) {
       this.modificarTerrestreService.obtenerAno()
         .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe((datos: any) => {
+        .subscribe((datos: { datos: CatalogoItem[] }) => {
           this.anoCatalogo = datos.datos;
         });
     }
     if (!this.paisEmisorCatalogo || this.paisEmisorCatalogo.length === 0) {
       this.modificarTerrestreService.obtenerPaisEmisor()
         .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe((datos: any) => {
+        .subscribe((datos: { datos: CatalogoItem[] }) => {
           this.paisEmisorCatalogo = datos.datos;
         });
     }
+  }
 
-    // Calculate nextId logic (if not editing)
-    let nextId = 1;
+  /**
+   * Inicializa el formulario con datos de la unidad
+   */
+  private initializeForm(): void {
+    // Calcular lógica de próximo ID (si no se está editando)
+    let siguienteId = 1;
     if (Array.isArray(this.unidades) && this.unidades.length > 0) {
-      const maxId = Math.max(...this.unidades.map(u => Number(u.idDeUnidad) || 0));
-      nextId = maxId + 1;
+      const ID_MAXIMO = Math.max(...this.unidades.map(u => Number(u['idDeUnidad' as keyof UnidadData]) || 0));
+      siguienteId = ID_MAXIMO + 1;
     }
-    const isEdit = !!(this.unidad && this.unidad.idDeUnidad);
+    const ES_EDICION = Boolean(this.unidad && this.unidad['idDeUnidad' as keyof UnidadData]);
     this.unidadForm = this.fb.group({
-      numero: [this.unidad?.numero || '', [Validators.required, Validators.maxLength(20)]],
-      tipoDeUnidad: [this.unidad?.tipoDeUnidad || '', Validators.required],
-      idDeUnidad: [{ value: isEdit ? this.unidad.idDeUnidad : nextId, disabled: true }, Validators.required],
-      numeroPlaca: [this.unidad?.numeroPlaca || '', Validators.required],
-      paisEmisor: [this.unidad?.paisEmisor || '', Validators.required],
-      estado: [this.unidad?.estado || '', Validators.required],
-      marca: [this.unidad?.marca || '', Validators.required],
-      modelo: [this.unidad?.modelo || '', Validators.required],
-      ano: [this.unidad?.ano || '', Validators.required],
-      transponder: [this.unidad?.transponder || '', Validators.required],
-      colorUnidad: [this.unidad?.colorUnidad || '', Validators.required],
-      numeroEconomico: [this.unidad?.numeroEconomico || '', Validators.required],
-      numero2daPlaca: [this.unidad?.numero2daPlaca || ''],
-      estado2daPlaca: [this.unidad?.estado2daPlaca || ''],
-      paisEmisor2daPlaca: [this.unidad?.paisEmisor2daPlaca || ''],
-      descripcion: [this.unidad?.descripcion || '', Validators.maxLength(120)]
+      numero: [this.unidad?.['numero' as keyof UnidadData] || '', [Validators.required, Validators.minLength(17), Validators.maxLength(17)]],
+      tipoDeUnidad: [this.unidad?.['tipoDeUnidad' as keyof UnidadData] || '', Validators.required],
+      idDeUnidad: [{ value: ES_EDICION ? this.unidad?.['idDeUnidad' as keyof UnidadData] : siguienteId, disabled: true }, Validators.required],
+      numeroPlaca: [this.unidad?.['numeroPlaca' as keyof UnidadData] || '', [Validators.required, Validators.maxLength(10)]],
+      paisEmisor: [this.unidad?.['paisEmisor' as keyof UnidadData] || '', Validators.required],
+      estado: [this.unidad?.['estado' as keyof UnidadData] || '', Validators.required],
+      marca: [this.unidad?.['marca' as keyof UnidadData] || '', [Validators.required, Validators.maxLength(50)]],
+      modelo: [this.unidad?.['modelo' as keyof UnidadData] || '', [Validators.required, Validators.maxLength(50)]],
+      ano: [this.unidad?.['ano' as keyof UnidadData] || '', Validators.required],
+      transponder: [this.unidad?.['transponder' as keyof UnidadData] || '', [Validators.required, Validators.maxLength(50)]],
+      colorUnidad: [this.unidad?.['colorUnidad' as keyof UnidadData] || '', Validators.required],
+      numeroEconomico: [this.unidad?.['numeroEconomico' as keyof UnidadData] || '', [Validators.required, Validators.maxLength(50)]],
+      numero2daPlaca: [this.unidad?.['numero2daPlaca' as keyof UnidadData] || '', Validators.maxLength(20)],
+      estado2daPlaca: [this.unidad?.['estado2daPlaca' as keyof UnidadData] || '', Validators.maxLength(50)],
+      paisEmisor2daPlaca: [this.unidad?.['paisEmisor2daPlaca' as keyof UnidadData] || ''],
+      descripcion: [this.unidad?.['descripcion' as keyof UnidadData] || '', Validators.maxLength(200)]
     });
+  }
+
+  /**
+   * Configura las suscripciones de cambio de valor del formulario con temporización mejorada y manejo de errores
+   */
+  private setupFormValueSubscriptions(): void {
+    // Inicialmente deshabilitar campo descripción
     this.unidadForm.get('descripcion')?.disable();
-    this.unidadForm.get('tipoDeUnidad')?.valueChanges.subscribe((selectedValue) => {
-      const id = Number(selectedValue);
-      if (id === 1) {
-        this.unidadForm.get('descripcion')?.enable();
-      } else {
-        this.unidadForm.get('descripcion')?.disable();
+    
+    // Configurar suscripción con takeUntil para limpieza adecuada
+    this.unidadForm.get('tipoDeUnidad')?.valueChanges
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((selectedValue) => {
+        const IDENTIFICADOR = Number(selectedValue);
+        const DESCRIPCION_CONTROL = this.unidadForm.get('descripcion');
+        
+        if (IDENTIFICADOR === 1) { 
+          DESCRIPCION_CONTROL?.enable();
+        } else {
+          DESCRIPCION_CONTROL?.disable();
+          DESCRIPCION_CONTROL?.setValue(''); // Limpiar valor cuando esté deshabilitado
+        }
+      });
+    
+    // También verificar valor inicial en caso de que el formulario esté pre-poblado
+    setTimeout(() => {
+      const VALOR_ACTUAL = this.unidadForm.get('tipoDeUnidad')?.value;
+      if (VALOR_ACTUAL) {
+        const IDENTIFICADOR = Number(VALOR_ACTUAL);
+        const DESCRIPCION_CONTROL = this.unidadForm.get('descripcion');
+        
+        if (IDENTIFICADOR === 1) {
+          DESCRIPCION_CONTROL?.enable();
+        } else {
+          DESCRIPCION_CONTROL?.disable();
+        }
       }
-    });
+    }, 100);
   }
 
   /**
    * Abre el modal de la unidad.
    * (Implementar lógica de apertura si es necesario)
    */
-  abiertoModal(): void {
+  static abiertoModal(): void {
     // Este método debería abrir el diálogo modal.
   }
 
@@ -207,17 +262,22 @@ export class UnidadDialogComponent implements OnInit {
    * Cierra el modal y emite el evento de cancelación.
    */
   cerrarModal(): void {
-    this.cancel.emit();
+    this.showNotification = false;
+    this.cancelar.emit();
   }
 
   /**
    * Limpia los datos del formulario de unidad, manteniendo el idDeUnidad y deshabilitando los campos necesarios.
    */
-  limpiarUnidadData(): void {
-    if (!this.unidadForm) return;
-    const idValue = this.unidadForm.get('idDeUnidad')?.value;
+  limpiarDatosUnidad(): void {
+    if (!this.unidadForm) {return;}
+    
+    // Limpiar notificaciones
+    this.showNotification = false;
+    
+    const VALOR_ID = this.unidadForm.get('idDeUnidad')?.value;
     this.unidadForm.reset();
-    this.unidadForm.get('idDeUnidad')?.setValue(idValue);
+    this.unidadForm.get('idDeUnidad')?.setValue(VALOR_ID);
     this.unidadForm.get('idDeUnidad')?.disable();
     this.unidadForm.get('descripcion')?.disable();
   }
@@ -226,24 +286,35 @@ export class UnidadDialogComponent implements OnInit {
    * Guarda los datos del formulario de unidad si es válido.
    * Si el formulario es inválido, muestra una notificación de alerta.
    */
-  guardarUnidadData(): void {
+  guardarDatosUnidad(): void {
     this.unidadForm.markAllAsTouched();
     this.unidadForm.updateValueAndValidity();
+  
+
+    // Verificación detallada de validación de campos
+    Object.keys(this.unidadForm.controls).forEach(key => {
+      const CONTROL_FORMULARIO = this.unidadForm.get(key);
+      if (CONTROL_FORMULARIO && CONTROL_FORMULARIO.invalid) {
+          // Log para depuración
+      }
+    });
     if (this.unidadForm.valid) {
-      const raw = this.unidadForm.getRawValue();
-      const unidadData = {
-        ...raw,
-        tipoDeUnidadArrastre: raw.tipoDeUnidad,
-        vinVehiculo: raw.numero
+      this.showNotification = false; // Limpiar notificaciones previas
+      const DATOS_BRUTOS = this.unidadForm.getRawValue();
+      const DATOS_UNIDAD = {
+        ...DATOS_BRUTOS,
+        tipoDeUnidadArrastre: DATOS_BRUTOS.tipoDeUnidad,
+        vinVehiculo: DATOS_BRUTOS.numero
       };
-      this.save.emit(unidadData);
-      this.cerrarModal();
+      this.guardar.emit(DATOS_UNIDAD);
+      // Cerrar modal después de guardar exitosamente
+      this.cancelar.emit();
     } else {
       this.alertaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
         categoria: CategoriaMensaje.INFORMACION,
         modo: 'action',
-        titulo: 'Alert',
+        titulo: 'Alerta',
         mensaje: 'Formulario inválido, por favor verifica los campos.',
         cerrar: true,
         txtBtnAceptar: 'Aceptar',
@@ -259,8 +330,8 @@ export class UnidadDialogComponent implements OnInit {
    * @returns true si el control es inválido y tocado, de lo contrario null
    */
   isInvalid(controlName: string): boolean | null {
-    const control = this.unidadForm.get(controlName);
-    return control ? control.invalid && control.touched : null;
+    const CONTROL_FORMULARIO = this.unidadForm.get(controlName);
+    return CONTROL_FORMULARIO ? CONTROL_FORMULARIO.invalid && CONTROL_FORMULARIO.touched : null;
   }
 
   /**
@@ -268,5 +339,14 @@ export class UnidadDialogComponent implements OnInit {
    */
   get getFormValues(): { [key: string]: AbstractControl } {
     return this.unidadForm.controls;
+  }
+
+  /**
+   * Gancho del ciclo de vida que se llama cuando se destruye el componente.
+   * Se utiliza para limpiar suscripciones y evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

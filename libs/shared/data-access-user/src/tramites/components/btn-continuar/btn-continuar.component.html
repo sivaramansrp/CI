@@ -7,6 +7,7 @@
       type="button"
       class="btn btn-default"
       (click)="anterior()"
+      [hidden]="ocultabotonAnterior"
       [style.visibility]="btnAntVisible"
     >
       {{ datos.txtBtnAnt }}

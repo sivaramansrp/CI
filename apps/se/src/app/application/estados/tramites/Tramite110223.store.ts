@@ -1,5 +1,10 @@
+import {
+  SeleccionadasTabla,
+} from '../../tramites/110221/models/registro.model';
+
 import { Store, StoreConfig } from '@datorama/akita';
 import { AgregarDatosProductorFormulario } from '../../tramites/110223/models/certificado-origen.model';
+import { ColumnasTabla } from '../../tramites/110223/models/registro.model';
 import { Injectable } from '@angular/core';
 
 /** CONSTANTES PARA VALORES PREDEFINIDOS */
@@ -74,6 +79,8 @@ export interface Solicitud110223State {
   nombreRepresentanteLegalExportador: string;
   empresa: string;
   cargo: string;
+  mercanciaSeleccionadasTablaData: SeleccionadasTabla[];
+  mercanciaDisponsiblesTablaDatos: ColumnasTabla[];
 }
 
 /**
@@ -82,10 +89,10 @@ export interface Solicitud110223State {
  */
 export function createInitialState(): Solicitud110223State {
   return {
-    cargo: '',
-    empresa: '',
-    lugar: '',
-    nombreRepresentanteLegalExportador: '',
+    cargo: VALOR_POR_DEFECTO,
+    empresa: VALOR_POR_DEFECTO,
+    lugar: VALOR_POR_DEFECTO,
+    nombreRepresentanteLegalExportador: VALOR_POR_DEFECTO,
     tercerOperador: false,
     tratado: VALOR_NULO,
     pais: VALOR_NULO,
@@ -141,6 +148,8 @@ export function createInitialState(): Solicitud110223State {
       numeroRegistroFiscal: '',
       fax: '',
     },
+    mercanciaSeleccionadasTablaData: [],
+    mercanciaDisponsiblesTablaDatos: [],
   };
 }
 
@@ -807,6 +816,14 @@ export class Tramite110223Store extends Store<Solicitud110223State> {
         fax,
       },
     }));
+  }
+
+  setMercanciaSeleccionadasTablaData(data: SeleccionadasTabla[]): void {
+    this.update({ mercanciaSeleccionadasTablaData: data });
+  }
+
+  setMercanciaDisponsiblesTablaDatos(data: ColumnasTabla[]): void {
+    this.update({ mercanciaDisponsiblesTablaDatos: data });
   }
 
   /**

@@ -60,7 +60,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy, AfterViewInit {
    * @property {ConsultaioState} consultaDatos
    * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
    */
-  consultaDatos!: ConsultaioState;
+  public consultaDatos!: ConsultaioState;
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
   /**
@@ -99,6 +99,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy, AfterViewInit {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.consultaDatos = seccionState;
+          this.esDatosRespuesta = this.consultaDatos.readonly;
         })
       )
       .subscribe();
@@ -108,6 +109,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy, AfterViewInit {
       this.esDatosRespuesta = true;
     }
   }
+
   /**
    * Obtiene los datos de consulta desde el servicio y actualiza el estado del store.
    * 

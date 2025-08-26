@@ -29,7 +29,6 @@
                     <label for="idConfidencialesProductores">No</label>
                 </div>
             </div>
-            {{productoresExportador.length}} productoresExportador
             <div class="col-md-12" *ngIf="tramiteState?.productorMismoExportador">
                 <h6>Productores por exportador</h6>
                 <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns"

@@ -5,10 +5,15 @@
  *
  * @module BajaUnidadComponent
  */
-import { UnidadTabla } from '../../../../models/registro-muestras-mercancias.model';
-import { Component } from '@angular/core';
-import { UNIDAD_TABLA_CONFIG } from '../../../../enum/transportista-terrestre.enum';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
+
+import { Catalogo, ConsultaioQuery, ConsultaioState, TablaSeleccion } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+
+import { CatalogoLista, DatosUnidad, UnidadTabla } from '../../../../models/registro-muestras-mercancias.model';
+import { modificarTerrestreService } from '../../../services/modificacar-terrestre.service';
+import { obtenerColumnasUnidad } from '../../../../enum/unidad-de-arrastre.enum';
 
 @Component({
   selector: 'app-baja-unidad',
@@ -20,30 +25,30 @@ import { TablaSeleccion } from '@ng-mf/data-access-user';
  *
  * @class
  */
-export class BajaUnidadComponent {
+export class BajaUnidadComponent implements OnInit, OnDestroy {
   /**
    * Catálogo de tipos de unidad de arrastre.
-   * @type {UnidadTabla[]}
+   * @type {Catalogo[]}
    */
-  tipoDeUnidadCatalogo: UnidadTabla[] = [];
+  tipoDeUnidadCatalogo: Catalogo[] = [];
 
   /**
    * Catálogo de países emisores.
-   * @type {UnidadTabla[]}
+   * @type {Catalogo[]}
    */
-  paisEmisorCatalogo: UnidadTabla[] = [];
+  paisEmisorCatalogo: Catalogo[] = [];
 
   /**
    * Catálogo de años.
-   * @type {UnidadTabla[]}
+   * @type {Catalogo[]}
    */
-  anoCatalogo: UnidadTabla[] = [];
+  anoCatalogo: Catalogo[] = [];
 
   /**
    * Catálogo de tipos de arrastre.
-   * @type {UnidadTabla[]}
+   * @type {Catalogo[]}
    */
-  tipoArrastre: UnidadTabla[] = [];
+  tipoArrastre: Catalogo[] = [];
 
   /**
    * Lista de unidades de arrastre.
@@ -52,10 +57,28 @@ export class BajaUnidadComponent {
   unidadesArrastre: UnidadTabla[] = [];
 
   /**
-   * Configuración de columnas para la tabla de unidades.
-   * @type {*}
+   * Getter que convierte UnidadTabla[] a DatosUnidad[] para el componente de diálogo.
+   * @returns {DatosUnidad[]}
    */
-  columnasUnidad = UNIDAD_TABLA_CONFIG.encabezadas;
+  get unidadesArrastreDatos(): DatosUnidad[] {
+    return this.unidadesArrastre.map(unidad => ({ 
+      ...unidad,
+      colorVehiculo: '',
+      numero2daPlaca: '',
+      estado2daPlaca: '',
+      paisEmisor2daPlaca: '',
+      descripcion: ''
+    }));
+  }
+
+  /**
+   * Configuración de columnas para la tabla de unidades.
+   * Utiliza la configuración centralizada del enum.
+   * @type {ConfiguracionColumna<UnidadTabla>[]}
+   */
+  get columnasUnidad(): ConfiguracionColumna<UnidadTabla>[] {
+    return obtenerColumnasUnidad(this.tipoDeUnidadCatalogo, this.paisEmisorCatalogo);
+  }
 
   /**
    * Tipo de selección de la tabla (radio, checkbox, etc).
@@ -73,26 +96,101 @@ export class BajaUnidadComponent {
    * Indica si la vista es de solo lectura.
    * @type {boolean}
    */
-  esSoloLectura = false;
+  esSoloLectura: boolean = false;
+
+  /**
+   * @property {Subject<void>}
+   * Sujeto para destruir las suscripciones.
+   */
+  public destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * @property {ConsultaioState}
+   * Almacena el estado de consulta actual.
+   */
+  datosConsulta!: ConsultaioState;
 
   /**
    * Indica si se muestra el diálogo de unidad.
    * @type {boolean}
    */
-  showUnidadDialog = false;
+  mostrarDialogoUnidad = false;
 
   /**
    * Datos para el diálogo de unidad.
-   * @type {UnidadTabla | {}}
+   * @type {DatosUnidad | null}
    */
-  unidadDialogData: UnidadTabla | {} = {};
+  datosDialogoUnidad: DatosUnidad | null = null;
+
+  /**
+   * Constructor del componente `BajaUnidadComponent`.
+   *
+   * @constructor
+   * @param {ConsultaioQuery} consultaioQuery - Servicio para consultar el estado de consulta y determinar el modo de solo lectura.
+   * @param {modificarTerrestreService} modificarTerrestreService - Servicio para obtener catálogos.
+   */
+  constructor(
+    private consultaioQuery: ConsultaioQuery,
+    private modificarTerrestreService: modificarTerrestreService,
+    private cdr: ChangeDetectorRef
+  ) { }
+
+  /**
+   * Método de ciclo de vida de Angular que se llama cuando el componente se inicializa.
+   */
+  ngOnInit(): void {
+    // Cargar todos los catálogos
+    this.modificarTerrestreService.obtenerTipoArrastre()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos: CatalogoLista) => {
+        this.tipoDeUnidadCatalogo = datos.datos as Catalogo[];
+      });
+
+    this.modificarTerrestreService.obtenerPaisEmisor()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos: CatalogoLista) => {
+        this.paisEmisorCatalogo = datos.datos as Catalogo[];
+      });
+
+    this.modificarTerrestreService.obtenerAno()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos: CatalogoLista) => {
+        this.anoCatalogo = datos.datos as Catalogo[];
+      });
+
+    /**
+     * Suscribe al estado de consulta para determinar si el formulario debe estar en modo solo lectura.
+     * Si el estado indica `readonly`, actualiza las propiedades `datosConsulta` e `esSoloLectura` del componente.
+     *
+     * @observable selectConsultaioState$
+     * @effect Actualiza el modo de solo lectura del formulario según el estado de consulta.
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          if (seccionState.readonly) {
+            this.datosConsulta = seccionState;
+            this.esSoloLectura = this.datosConsulta.readonly;
+          }
+        })
+      ).subscribe();
+  }
+
+  /**
+   * Método de ciclo de vida de Angular que se llama cuando el componente se destruye.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 
   /**
    * Maneja la selección de filas en la tabla de unidades de arrastre.
    * @param {UnidadTabla[]} event - Unidades seleccionadas.
    * @returns {void}
    */
-  onUnidadRowSelected(event: UnidadTabla[]) {
+  onUnidadRowSelected(event: UnidadTabla[]): void {
     this.unidadesArrastreSelected = event || [];
   }
 
@@ -100,32 +198,75 @@ export class BajaUnidadComponent {
    * Elimina las unidades seleccionadas del listado.
    * @returns {void}
    */
-  eliminarUnidad() {
+  eliminarUnidad(): void {
     if (this.unidadesArrastreSelected.length === 0) {
       return;
     }
-    this.unidadesArrastre = this.unidadesArrastre.filter(
-      u => !this.unidadesArrastreSelected.includes(u)
-    );
+    
+    // Crear Sets con los identificadores únicos de las unidades seleccionadas
+    const VINS_SELECCIONADOS = new Set(this.unidadesArrastreSelected.map(u => u.vinVehiculo).filter(vin => vin));
+    const IDS_SELECCIONADOS = new Set(this.unidadesArrastreSelected.map(u => u.idDeVehiculo).filter(id => id));
+    
+    // Filtrar las unidades usando múltiples identificadores únicos
+    this.unidadesArrastre = this.unidadesArrastre.filter(u => {
+      // Primero intentar con VIN
+      if (u.vinVehiculo && VINS_SELECCIONADOS.has(u.vinVehiculo)) {
+        return false;
+      }
+      // Luego con ID de vehículo
+      if (u.idDeVehiculo && IDS_SELECCIONADOS.has(u.idDeVehiculo)) {
+        return false;
+      }
+      // Como último recurso, usar referencia de objeto
+      return !this.unidadesArrastreSelected.includes(u);
+    });
+    
     this.unidadesArrastreSelected = [];
   }
 
   /**
    * Agrega una unidad actualizada desde el diálogo y la selecciona.
-   * @param {UnidadTabla} updatedUnidad - Unidad actualizada.
+   * @param {DatosUnidad} updatedUnidad - Unidad actualizada.
    * @returns {void}
    */
-  onUnidadDialogSave(updatedUnidad: UnidadTabla) {
-    this.unidadesArrastre.push(updatedUnidad);
+  alGuardarDialogoUnidad(updatedUnidad: DatosUnidad): void {
+    // Generar ID temporal si no existe
+    const NEXT_ID = this.unidadesArrastre.length > 0 
+      ? Math.max(...this.unidadesArrastre.map(u => Number(u.idDeVehiculo) || 0)) + 1 
+      : 1;
+    
+    // Convertir DatosUnidad a UnidadTabla para agregar a la lista
+    const UNIDAD_TABLA: UnidadTabla = { 
+      ...updatedUnidad,
+      idDeVehiculo: updatedUnidad.idDeVehiculo || String(NEXT_ID)
+    };
+    
+    // Crear una copia mutable del array antes de agregar
+    const UNIDADES_MUTABLES = [...this.unidadesArrastre];
+    UNIDADES_MUTABLES.push(UNIDAD_TABLA);
+    this.unidadesArrastre = UNIDADES_MUTABLES;
     this.unidadesArrastreSelected = [this.unidadesArrastre[this.unidadesArrastre.length - 1]];
-    this.showUnidadDialog = false;
+    this.mostrarDialogoUnidad = false;
+    // Forzar detección de cambios para asegurar que el modal se cierre
+    this.cdr.detectChanges();
   }
 
   /**
    * Elimina la fila de unidad seleccionada.
    * @returns {void}
    */
-  eliminarUnidadRow() {
+  eliminarUnidadRow(): void {
     this.eliminarUnidad();
+  }
+
+  /**
+   * Abre el modal para agregar datos de unidades de arrastre mediante búsqueda.
+   * Inicializa el diálogo para permitir al usuario buscar y agregar unidades al listado.
+   * 
+   * @returns {void}
+   */
+  agregarModal(): void {
+    this.datosDialogoUnidad = null;
+    this.mostrarDialogoUnidad = true;
   }
 }

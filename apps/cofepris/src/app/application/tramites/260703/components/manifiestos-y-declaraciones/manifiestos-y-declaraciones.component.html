@@ -13,6 +13,7 @@
               [value]="manifiesto.declaracion.clave"
               [checked]="seleccionadaManifiesto.value[i]"
               class="required"
+              [disabled]="esFormularioSoloLectura"
               (change)="onManifiestoCheckboxCambiar($event, i)"
             />
             <div class="manifiesto-descripcion">
@@ -34,6 +35,7 @@
             [isRequired]="true"
             [layout]="'horizontal'"
             formControlName="informacionConfidencial"
+            
             (change)="setValoresStore('informacionConfidencial')"
           ></app-input-radio>
         </div>

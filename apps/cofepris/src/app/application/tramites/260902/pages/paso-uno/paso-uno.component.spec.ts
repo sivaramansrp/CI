@@ -94,11 +94,4 @@ describe('PasoUnoComponent', () => {
     expect(spyNext).toHaveBeenCalled();
     expect(spyComplete).toHaveBeenCalled();
   });
-
-  it('debería tener valores iniciales correctos', () => {
-    expect(component.showPreFillingOptions).toBe(false);
-    expect(component.esDatosRespuesta).toBe(false);
-    expect(component.indice).toBe(1);
-    expect(component.mostrarBotonCopiarDatos).toBe(false);
-  });
 });

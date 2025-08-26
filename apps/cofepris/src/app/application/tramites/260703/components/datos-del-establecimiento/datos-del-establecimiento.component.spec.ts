@@ -43,11 +43,11 @@ describe('DatosDelEstablecimientoComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize solicitudPermisoState on ngOnInit', () => {
+  it('debería inicializar solicitudPermisoState en ngOnInit', () => {
     component.ngOnInit();
     expect(component.solicitudPermisoState).toEqual({
       datosDelEstablecimientoFormState: {
@@ -57,14 +57,14 @@ describe('DatosDelEstablecimientoComponent', () => {
     });
   });
 
-  it('should create the datosDelEstablecimientoForm on ngOnInit', () => {
+  it('debería crear el datosDelEstablecimientoForm en ngOnInit', () => {
     component.ngOnInit();
     expect(component.datosDelEstablecimientoForm).toBeDefined();
     expect(component.datosDelEstablecimientoForm.get('razonSocial')?.value).toBe('Empresa XYZ');
     expect(component.datosDelEstablecimientoForm.get('correoElectronico')?.value).toBe('empresa@xyz.com');
   });
 
-  it('should call actualizarDatosDelFormularioDelEstablecimiento when setValoresStore is called', () => {
+  it('debería llamar a actualizarDatosDelFormularioDelEstablecimiento cuando se llama setValoresStore', () => {
     component.ngOnInit();
     component.setValoresStore('razonSocial');
     expect(tramite260703StoreMock.actualizarDatosDelFormularioDelEstablecimiento).toHaveBeenCalledWith({
@@ -72,7 +72,7 @@ describe('DatosDelEstablecimientoComponent', () => {
     });
   });
 
-  it('should update the form value and call setValoresStore', () => {
+  it('debería actualizar el valor del formulario y llamar setValoresStore', () => {
     component.ngOnInit();
     const spy = jest.spyOn(component, 'setValoresStore');
     component.datosDelEstablecimientoForm.get('razonSocial')?.setValue('Nueva Empresa');
@@ -83,7 +83,7 @@ describe('DatosDelEstablecimientoComponent', () => {
     });
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
+  it('debería limpiar las suscripciones en ngOnDestroy', () => {
     const destroySpy = jest.spyOn(component['destruirNotificacion$'], 'next');
     const completeSpy = jest.spyOn(component['destruirNotificacion$'], 'complete');
 

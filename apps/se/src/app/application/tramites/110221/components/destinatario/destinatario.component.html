@@ -1,111 +1,325 @@
 <form [formGroup]="registroForm" (ngSubmit)="validarDestinatarioFormulario()">
-  <ng-container formGroupName="validacionForm">
+
+  <ng-container formGroupName="destinatarioForm">
     <ng-titulo titulo="Datos del destinatario" />
     <div class="row">
       <div class="col-md-4 mb-3">
-        <label>Nombre(s):</label>
-        <input type="text" class="form-control" formControlName="nombre" (change)="setValoresStore(validacionForm, 'nombre', 'setNombre')" />
+        <label>Nombre(s)*:</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="nombre"
+          maxlength="250"
+          (change)="setdestinatarioForm()"
+        />
+        <div
+          class="mensaje-error"
+          *ngIf="registroForm.get('destinatarioForm.nombre')?.errors?.['required'] && (registroForm.get('destinatarioForm.nombre')?.touched || registroForm.get('destinatarioForm.nombre')?.dirty)"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
-      <div class="col-md-4 mb-3">
-        <label>Primer apellido:</label>
-        <input type="text" class="form-control" id="primerApellido" formControlName="apellidoPrimer" (click)="onClick()" (change)=" setValoresStore( validacionForm, 'apellidoPrimer', 'setApellidoPrimer' ) " />
-      </div>
-      <div class="col-md-4 mb-3">
-        <label>Segundo apellido:</label>
-        <input type="text" class="form-control" id="segundoApellido" formControlName="apellidoSegundo" (change)=" setValoresStore( validacionForm, 'apellidoSegundo', 'setApellidoSegundo' ) " />
-      </div>
-    </div>
-    <div class="row">
       <div class="col-md-4 mb-3">
         <label>Número de registro fiscal*:</label>
-        <input type="text" class="form-control" id="denominacion" formControlName="numeroFiscal" (change)=" setValoresStore(validacionForm, 'numeroFiscal', 'setNumeroFiscal') " />
-      </div>
-      <div class="col-md-8 mb-3">
-        <label>Razón social:</label>
-        <input type="text" class="form-control" [ngClass]="{ 'gray-class': registroForm.get('validacionForm.apellidoPrimer')?.value !== '' }" id="denominacion" [readonly]=" registroForm.get('validacionForm.apellidoPrimer')?.value !== '' " formControlName="razonSocial" (change)=" setValoresStore(validacionForm, 'razonSocial', 'setRazonSocial') " />
+        <input
+          type="text"
+          class="form-control"
+          id="denominacion"
+          formControlName="numeroFiscal"
+          (change)="setdestinatarioForm()"
+          maxlength="30"
+        />
+        <div
+          class="mensaje-error"
+          *ngIf="registroForm.get('destinatarioForm.numeroFiscal')?.errors?.['required'] && (registroForm.get('destinatarioForm.numeroFiscal')?.touched || registroForm.get('destinatarioForm.numeroFiscal')?.dirty)"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
     </div>
+  </ng-container>
+
+  <ng-container formGroupName="domicilioForm">
     <ng-titulo titulo="Domicilio del destinatario" />
-    <div class="row">
-      <div class="col-md-8 mb-3">
-        <label>Ciudad (población, estado o provincia)*:</label>
-        <input type="text" class="form-control" id="denominacion" formControlName="ciudad" (change)="setValoresStore(validacionForm, 'ciudad', 'setCiudad')" />
-      </div>
-    </div>
     <div class="row">
       <div class="col-md-4 mb-3">
         <label>Calle*:</label>
-        <input type="text" class="form-control" id="nombre" formControlName="calle" (change)="setValoresStore(validacionForm, 'calle', 'setCalle')" />
+        <input
+          type="text"
+          class="form-control"
+          id="nombre"
+          maxlength="90"
+          formControlName="calle"
+          (change)="setdomicilioForm()"
+        />
+        <div
+          class="mensaje-error"
+          *ngIf="registroForm.get('domicilioForm.calle')?.errors?.['required'] && (registroForm.get('domicilioForm.calle')?.touched || registroForm.get('domicilioForm.calle')?.dirty)"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
       <div class="col-md-4 mb-3">
         <label>Número y/o letra*:</label>
-        <input type="text" class="form-control" id="primerApellido" formControlName="numeroLetra" (change)=" setValoresStore(validacionForm, 'numeroLetra', 'setNumeroLetra') " />
+        <input
+          type="text"
+          class="form-control"
+          id="primerApellido"
+          maxlength="30"
+          formControlName="numeroLetra"
+          (change)="setdomicilioForm()"
+        />
+        <div
+          class="mensaje-error"
+          *ngIf="registroForm.get('domicilioForm.numeroLetra')?.errors?.['required'] && (registroForm.get('domicilioForm.numeroLetra')?.touched || registroForm.get('domicilioForm.numeroLetra')?.dirty)"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
-      <div class="col-md-1 mb-3">
-        <label>Lada:</label>
-        <input type="text" class="form-control" id="segundoApellido" formControlName="lada" (change)="setValoresStore(validacionForm, 'lada', 'setLada')" />
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <app-catalogo-select [catalogo]="optionsPaisDestino" [label]="'País Destino'" [required]="true"
+            placeholder="Selecciona un valor" id="paisDestino" formControlName="paisDestino"
+            (change)="setdomicilioForm()" [isDisabled]="soloLectura"></app-catalogo-select>
+          <div
+            class="mensaje-error"
+            *ngIf="registroForm.get('domicilioForm.paisDestino')?.errors?.['required'] && (registroForm.get('domicilioForm.paisDestino')?.touched || registroForm.get('domicilioForm.paisDestino')?.dirty)"
+          >
+            Este campo es obligatorio.
+          </div>
+        </div>
       </div>
-      <div class="col-md-3 mb-3">
-        <label>Teléfono:</label>
-        <input type="text" class="form-control" id="segundoApellido" formControlName="telefono" (change)="setValoresStore(validacionForm, 'telefono', 'setTelefono')" />
+      <div class="col-md-4 mb-3">
+        <label>Ciudad (población, estado o provincia)*:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="denominacion"
+          formControlName="ciudad"
+          maxlength="50"
+          (change)="setdomicilioForm()"
+        />
+        <div
+          class="mensaje-error"
+          *ngIf="registroForm.get('domicilioForm.ciudad')?.errors?.['required'] && (registroForm.get('domicilioForm.ciudad')?.touched || registroForm.get('domicilioForm.ciudad')?.dirty)"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-4 mb-3">
-        <label>Fax:</label>
-        <input type="text" class="form-control" id="nombre" formControlName="fax" (change)="setValoresStore(validacionForm, 'fax', 'setFax')" />
-      </div>
-      <div class="col-md-4 mb-3">
         <label>Correo electrónico*:</label>
-        <span class="bi bi-question-circle-fill" title="ejemplo@dominio.com" data-bs-toggle="tooltip"></span>
-        <input type="text" class="form-control" id="primerApellido" formControlName="correoElectronico" (change)=" setValoresStore( validacionForm, 'correoElectronico', 'setCorreoElectronico' ) " />
+        <span
+          class="bi bi-question-circle-fill"
+          title="ejemplo@dominio.com"
+          data-bs-toggle="tooltip"
+        ></span>
+        <input
+          type="text"
+          class="form-control"
+          id="primerApellido"
+          maxlength="70"
+          formControlName="correoElectronico"
+          (change)="setdomicilioForm()"
+        />
+        <div
+          class="mensaje-error"
+          *ngIf="registroForm.get('domicilioForm.correoElectronico')?.errors?.['required'] && (registroForm.get('domicilioForm.correoElectronico')?.touched || registroForm.get('domicilioForm.correoElectronico')?.dirty)"
+        >
+          Este campo es obligatorio.
+        </div>
+        <div
+          class="mensaje-error"
+          *ngIf="registroForm.get('domicilioForm.correoElectronico')?.errors?.['email'] && (registroForm.get('domicilioForm.correoElectronico')?.touched || registroForm.get('domicilioForm.correoElectronico')?.dirty)"
+        >
+          El correo electrónico no es válido.
+        </div>
+      </div>
+      <div class="col-md-1 mb-3">
+        <label>Lada:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="segundoApellido"
+          formControlName="lada"
+          maxlength="5"
+          (change)="setdomicilioForm()"
+        />
+      </div>
+      <div class="col-md-3 mb-3">
+        <label>Teléfono:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="segundoApellido"
+          maxlength="20"
+          formControlName="telefono"
+          (change)="setdomicilioForm()"
+        />
       </div>
     </div>
+  </ng-container>
+
+  <ng-container formGroupName="representanteLegalForm">
     <ng-titulo titulo="Datos del representante legal del exportador" />
     <div class="row">
       <div class="col-md-8 mb-3">
         <label>Lugar*:</label>
-        <input type="text" class="form-control" id="denominacion" formControlName="ciudad" (change)="setValoresStore(validacionForm, 'ciudad', 'setCiudad')" />
+        <input
+          type="text"
+          class="form-control"
+          id="lugar"
+          maxlength="70"
+          formControlName="lugar"
+          (change)="setrepresentanteLegalForm()"
+        />
+        <div
+          class="mensaje-error"
+          *ngIf="registroForm.get('representanteLegalForm.lugar')?.errors?.['required'] && (registroForm.get('representanteLegalForm.lugar')?.touched || registroForm.get('representanteLegalForm.lugar')?.dirty)"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-8 mb-3">
         <label>Nombre del representante legal del exportador*:</label>
-        <input type="text" class="form-control" id="denominacion" formControlName="ciudad" (change)="setValoresStore(validacionForm, 'ciudad', 'setCiudad')" />
+        <input
+          type="text"
+          class="form-control"
+          id="nombreRepresentante"
+          maxlength="70"
+          formControlName="nombreRepresentante"
+          (change)="setrepresentanteLegalForm()"
+        />
+        <div
+          class="mensaje-error"
+          *ngIf="registroForm.get('representanteLegalForm.nombreRepresentante')?.errors?.['required'] && (registroForm.get('representanteLegalForm.nombreRepresentante')?.touched || registroForm.get('representanteLegalForm.nombreRepresentante')?.dirty)"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-4 mb-3">
         <label>Empresa*:</label>
-        <input type="text" class="form-control" id="nombre" formControlName="calle" (change)="setValoresStore(validacionForm, 'calle', 'setCalle')" />
+        <input
+          type="text"
+          class="form-control"
+          id="empresa"
+          maxlength="90"
+          formControlName="empresa"
+          (change)="setrepresentanteLegalForm()"
+        />
+        <div
+          class="mensaje-error"
+          *ngIf="registroForm.get('representanteLegalForm.empresa')?.errors?.['required'] && (registroForm.get('representanteLegalForm.empresa')?.touched || registroForm.get('representanteLegalForm.empresa')?.dirty)"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
       <div class="col-md-4 mb-3">
         <label>Cargo*:</label>
-        <input type="text" class="form-control" id="primerApellido" formControlName="numeroLetra" (change)=" setValoresStore(validacionForm, 'numeroLetra', 'setNumeroLetra') " />
+        <input
+          type="text"
+          class="form-control"
+          maxlength="70"
+          id="cargo"
+          formControlName="cargo"
+          (change)="setrepresentanteLegalForm()"
+        />
+        <div
+          class="mensaje-error"
+          *ngIf="registroForm.get('representanteLegalForm.cargo')?.errors?.['required'] && (registroForm.get('representanteLegalForm.cargo')?.touched || registroForm.get('representanteLegalForm.cargo')?.dirty)"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
       <div class="col-md-1 mb-3">
         <label>Lada:</label>
-        <input type="text" class="form-control" id="segundoApellido" formControlName="lada" (change)="setValoresStore(validacionForm, 'lada', 'setLada')" />
+        <input
+          type="text"
+          class="form-control"
+          id="segundoApellido"
+          maxlength="5"
+          formControlName="lada"
+          (change)="setrepresentanteLegalForm()"
+        />
       </div>
       <div class="col-md-3 mb-3">
         <label>Teléfono*:</label>
-        <input type="text" class="form-control" id="segundoApellido" formControlName="telefono" (change)="setValoresStore(validacionForm, 'telefono', 'setTelefono')" />
+        <input
+          type="text"
+          maxlength="20"
+          class="form-control"
+          id="segundoApellido"
+          formControlName="telefono"
+          (change)="setrepresentanteLegalForm()"
+        />
+        <div
+          class="mensaje-error"
+          *ngIf="registroForm.get('representanteLegalForm.telefono')?.errors?.['required'] && (registroForm.get('representanteLegalForm.telefono')?.touched || registroForm.get('representanteLegalForm.telefono')?.dirty)"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-4 mb-3">
         <label>Fax*:</label>
-        <input type="text" class="form-control" id="nombre" formControlName="fax" (change)="setValoresStore(validacionForm, 'fax', 'setFax')" />
+        <input
+          type="text"
+          class="form-control"
+          id="nombre"
+          maxlength="20"
+          formControlName="fax"
+          (change)="setrepresentanteLegalForm()"
+        />
+        <div
+          class="mensaje-error"
+          *ngIf="registroForm.get('representanteLegalForm.fax')?.errors?.['required'] && (registroForm.get('representanteLegalForm.fax')?.touched || registroForm.get('representanteLegalForm.fax')?.dirty)"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
       <div class="col-md-4 mb-3">
         <label>Correo electrónico*:</label>
-        <span class="bi bi-question-circle-fill" title="ejemplo@dominio.com" data-bs-toggle="tooltip"></span>
-        <input type="text" class="form-control" id="primerApellido" formControlName="correoElectronico" (change)=" setValoresStore( validacionForm, 'correoElectronico', 'setCorreoElectronico' ) " />
+        <span
+          class="bi bi-question-circle-fill"
+          title="ejemplo@dominio.com"
+          data-bs-toggle="tooltip"
+        ></span>
+        <input
+          type="text"
+          class="form-control"
+          id="correoElectronico"
+          maxlength="70"
+          formControlName="correoElectronico"
+          (change)="setrepresentanteLegalForm()"
+        />
+        <div
+          class="mensaje-error"
+          *ngIf="registroForm.get('representanteLegalForm.correoElectronico')?.errors?.['required'] && (registroForm.get('representanteLegalForm.correoElectronico')?.touched || registroForm.get('representanteLegalForm.correoElectronico')?.dirty)"
+        >
+          Este campo es obligatorio.
+        </div>
+        <div
+          class="mensaje-error"
+          *ngIf="registroForm.get('representanteLegalForm.correoElectronico')?.errors?.['email'] && (registroForm.get('representanteLegalForm.correoElectronico')?.touched || registroForm.get('representanteLegalForm.correoElectronico')?.dirty)"
+        >
+          El correo electrónico no es válido.
+        </div>
       </div>
     </div>
     <div class="mt-5">
       <div class="mt-5">
-        <ng-alert [CONTENIDO]="TEXTOS.ADJUNTAR" [CUSTOMECLASS]="infoAlert"></ng-alert>
+        <ng-alert
+          [CONTENIDO]="TEXTOS.ADJUNTAR"
+          [CUSTOMECLASS]="infoAlert"
+        ></ng-alert>
       </div>
     </div>
   </ng-container>

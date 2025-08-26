@@ -32,7 +32,7 @@ export class ChofereAltaDeExtranjerosComponent implements OnInit, OnDestroy {
    * Configuración de las columnas de la tabla.
    * Define el encabezado, la clave de acceso a los datos y el orden de las columnas.
    */
-  ConfiguracionColumna: ConfiguracionColumna<ChoferesExtranjeros>[] =
+  configuracionColumna: ConfiguracionColumna<ChoferesExtranjeros>[] =
     CHOFERES_EXTRANJEROS_TABLA;
 
 
@@ -69,10 +69,10 @@ export class ChofereAltaDeExtranjerosComponent implements OnInit, OnDestroy {
 
   /**
    * Referencia al elemento del modal de Bootstrap para agregar mercancías.
-   * @property {TemplateRef} agregarModal
+   * @property {TemplateRef} datosDeChoferesModal
    */
   @ViewChild('datosDeChoferesModal', { static: false })
-  agregarModalDialog!: TemplateRef<Element>;  
+  datosDeChoferesModal!: TemplateRef<Element>;  
 
 
   /**
@@ -115,7 +115,11 @@ export class ChofereAltaDeExtranjerosComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         map((data) => {
-          this.datosDelChoferExtranjeros = this.datosDelChoferExtranjeros.concat(data?.datosDelChoferExtranjerosAlta ?? []);
+          // Solo inicializar los datos si el arreglo está vacío para evitar sobrescribir cambios locales
+          if (this.datosDelChoferExtranjeros.length === 0) {
+            // Crear una copia mutable del arreglo para evitar problemas de inmutabilidad
+            this.datosDelChoferExtranjeros = [...(data?.datosDelChoferExtranjerosAlta ?? [])];
+          }
         })
       )
       .subscribe();
@@ -142,47 +146,44 @@ export class ChofereAltaDeExtranjerosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Adds a new row by resetting the `datosChofere` object and opening a modal dialog with the provided template.
+   * Agrega una nueva fila reiniciando el objeto `datosChofere` y abriendo un diálogo modal con la plantilla proporcionada.
    * 
-   * @param template - The template reference used to display the modal dialog.
+   * @param template - La referencia de plantilla utilizada para mostrar el diálogo modal.
    * @returns void
    */
-  addNewRow(template: TemplateRef<unknown>): void {
+  agregarNuevaFila(template: TemplateRef<unknown>): void {
     this.datosChofere = {} as ChoferesExtranjeros;
-    this.openModal(template);
+    this.abrirModal(template);
   }
 
   /**
-   * Abre un modal para editar la fila seleccionada de chofer nacional.
+   * Abre un modal para editar la fila seleccionada de chofer extranjero.
    * 
    * @param template - Referencia a la plantilla del modal que se debe abrir.
    * 
    * Si no hay filas seleccionadas en `choferesExtranjerosSelected`, muestra una advertencia en la consola y no realiza ninguna acción.
    * Si hay al menos una fila seleccionada, asigna la primera fila seleccionada a `datosChofere` y abre el modal correspondiente.
    */
-  editSelectedRow(template: TemplateRef<unknown>): void {
+  editarFilaSeleccionada(template: TemplateRef<unknown>): void {
     if (this.datosDelChoferExtranjerosSelected.length === 0) {
-      console.warn('No rows selected for editing.');
       return;
     }
     this.datosChofere = this.datosDelChoferExtranjerosSelected[0];
-    this.openModal(template);
+    this.abrirModal(template);
   }
 
   /**
-   * Elimina las filas seleccionadas de la lista de datos de choferes nacionales.
+   * Elimina las filas seleccionadas de la lista de datos de choferes extranjeros.
    * 
    * Si hay elementos seleccionados en `choferesExtranjerosSelected`, estos se eliminan de la lista principal `choferesExtranjeros`
    * y se limpia la selección. Si no hay elementos seleccionados, muestra una advertencia en la consola.
    */
-  deleteSelectedRow(): void {
+  eliminarFilaSeleccionada(): void {
     if (this.datosDelChoferExtranjerosSelected.length > 0) {
       this.datosDelChoferExtranjeros = this.datosDelChoferExtranjeros.filter(
         (item) => !this.datosDelChoferExtranjerosSelected.includes(item)
       );
       this.datosDelChoferExtranjerosSelected = [];
-    } else {
-      console.warn('No rows selected for deletion.');
     }
   }
 
@@ -191,7 +192,7 @@ export class ChofereAltaDeExtranjerosComponent implements OnInit, OnDestroy {
    * 
    * @param template Referencia al template que se mostrará dentro del modal.
    */
-  openModal(template: TemplateRef<unknown>): void {
+  abrirModal(template: TemplateRef<unknown>): void {
     this.modalRef = this.bsModalService.show(template, {
       class: 'modal-fullscreen',
     });
@@ -204,21 +205,43 @@ export class ChofereAltaDeExtranjerosComponent implements OnInit, OnDestroy {
    * Esta función verifica si existe una referencia al modal (`modalRef`), 
    * y en caso afirmativo, lo oculta y establece la referencia a `null`.
    */
-  cancelModal(): void {
-    this.modalRef?.hide();
-    this.modalRef = null;
+  cancelarModal(): void {
+    if (this.modalRef) {
+      this.modalRef.hide();
+      this.modalRef = null;
+    }
   }
 
   /**
-   * Agrega un nuevo objeto de tipo `ChoferesExtranjeros` al arreglo `datosDelChoferExtranjeros`.
+   * Agrega un nuevo objeto de tipo `ChoferesExtranjeros` al arreglo `datosDelChoferExtranjeros`
+   * o actualiza uno existente si se está modificando.
    * Limpia la selección actual de choferes y cierra el modal.
    *
-   * @param data - Los datos del chofer extranjero a agregar.
+   * @param data - Los datos del chofer extranjero a agregar o actualizar.
    */
-  addModal(data: ChoferesExtranjeros): void {
-    this.datosDelChoferExtranjeros.push(data);
+  agregarModal(data: ChoferesExtranjeros): void {
+    // Crear una copia mutable del arreglo para evitar errores de inmutabilidad
+    const arregloMutable = [...this.datosDelChoferExtranjeros];
+    
+    // Verificar si estamos actualizando un registro existente o agregando uno nuevo
+    const indiceExistente = arregloMutable.findIndex(item => item.numero === data.numero);
+    
+    if (indiceExistente >= 0) {
+      // Actualizar registro existente
+      arregloMutable[indiceExistente] = data;
+    } else {
+      // Agregar nuevo registro
+      arregloMutable.push(data);
+    }
+    
+    // Asignar el arreglo modificado de vuelta a la propiedad
+    this.datosDelChoferExtranjeros = arregloMutable;
+    
+    // Actualizar el estado en el servicio para persistir los cambios
+    this.chofer40103Service.updateDatosDelChoferExtranjero(this.datosDelChoferExtranjeros);
+    
     this.datosDelChoferExtranjerosSelected = [];
-    this.cancelModal();
+    this.cancelarModal();
   }
 
   

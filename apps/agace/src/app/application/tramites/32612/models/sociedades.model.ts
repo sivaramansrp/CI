@@ -62,8 +62,8 @@ export interface Instalaciones {
  */
 export interface MandatariosDeAgenteAduanal {
     rfc: string;
-    nombre: string;
-    aiCorriente: string;
+    razonSocial: string;
+    fiscales: string;
 }
 
 /**
@@ -83,17 +83,17 @@ export const ENLACE_TABLA = [
     orden: 1,
   },
   {
-    encabezado: 'Nombre',
+    encabezado: 'Denominación o Razón social ',
     clave: (ele: Sociedades): string => ele.denominacion,
     orden: 2,
   },
   {
-    encabezado: 'Apellido Paterno',
+    encabezado: 'Aduana en la que actua',
     clave: (ele: Sociedades): string => ele.aduanaEnLaQueActua,
     orden: 3,
   },
   {
-    encabezado: 'Apellido Materno',
+    encabezado: 'Al corriente de sus obligaciones fiscales',
     clave: (ele: Sociedades): string => ele.fiscales,
     orden: 4,
   }
@@ -214,12 +214,12 @@ export const MANDATARIOS_DE_AGENTE_ADUANAL = [
     },
     {
         encabezado: 'Nombre',
-        clave: (ele: MandatariosDeAgenteAduanal): string => ele.nombre,
+        clave: (ele: MandatariosDeAgenteAduanal): string => ele.razonSocial,
         orden: 2,
     },
     {
         encabezado: 'AI Corriente',
-        clave: (ele: MandatariosDeAgenteAduanal): string => ele.aiCorriente,
+        clave: (ele: MandatariosDeAgenteAduanal): string => ele.fiscales,
         orden: 3,
     }
 ];

@@ -5,7 +5,9 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
+// eslint-disable-next-line sort-imports
 import {
+  CAMPO_VACIO,
   DatosPasos,
   ListaPasosWizard,
   Notificacion,
@@ -14,6 +16,8 @@ import {
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
+  TEXTO_CERRAR,
+  TITULO_MODAL_AVISO,
   TercerosQuery,
   TercerosState,
   TransporteDespacho,
@@ -36,8 +40,10 @@ import {
   Tramite5701Store,
 } from '../../../../core/estados/tramites/tramite5701.store';
 import { GuardaSolicitudService } from '../../../../core/services/5701/guardar/guarda-solicitud.service';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
+
 
 /**
  * Interface que representa una acción de botón con su nombre y valor asociado.
@@ -122,6 +128,10 @@ export class SolicitudPageComponent implements OnInit {
    * @type {Notificacion}
    */
   public alertaNotificacion!: Notificacion;
+
+  formularioPadreEsValido: boolean = false;
+
+  @ViewChild(PasoUnoComponent) SolicitudPasoComponent!: PasoUnoComponent;
 
   /**
    * Representa los datos de configuración para los pasos de un proceso.
@@ -229,8 +239,27 @@ export class SolicitudPageComponent implements OnInit {
    * Si la acción no es 'cont', retrocede al paso anterior del wizard.
    */
   getValorIndice(e: AccionBoton): void {
+    // Validar el formulario del componente hijo antes de continuar
+    const VALIDA_FORM=this.SolicitudPasoComponent.validarFormularioPadre();
+    if (!VALIDA_FORM) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'success',
+        modo: 'action',
+        titulo: TITULO_MODAL_AVISO,
+        mensaje: 'Has proporcionado información con formato incorrecto o no proporcionaste información en campos obligatorios.',
+        cerrar: false,
+        txtBtnAceptar: TEXTO_CERRAR,
+        txtBtnCancelar: CAMPO_VACIO,
+      };
+      this.indice = 1;
+      this.datosPasos.indice = 1;
+      this.wizardComponent.indiceActual = 1;
+      
+      return;
+    }
     // Nos encontramos en el paso 1, se guarda parcialmente la información.
-    if (this.indice === 1) {
+    if (this.indice === 1 && VALIDA_FORM) {
       this.enviaSolicitudRequest()
         .pipe(
           takeUntil(this.destroyNotifier$),
@@ -248,6 +277,7 @@ export class SolicitudPageComponent implements OnInit {
               };
               this.indice = 1;
               this.wizardComponent.indiceActual = 1;
+              this.wizardComponent.atras();
               return;
             }
 
@@ -367,7 +397,7 @@ export class SolicitudPageComponent implements OnInit {
               tipo_transporte: TIPO_TRANSPORTE_ARRIBO_SALIDA,
               emp_transportista: (transporte.emp_transportista || '') as string,
               numero_porte: transporte.numero_porte || '',
-              fecha_porte: (formatearFechaConMoment(transporte.fecha_porte || '')) as string,
+              fecha_porte: (formatearFechaConMoment(new Date().toISOString()) || '') as string,
               marca_transporte: transporte.marca_transporte || '',
               modelo_transporte: transporte.modelo_transporte || '',
               placas_transporte: transporte.placas_transporte || '',
@@ -456,7 +486,7 @@ export class SolicitudPageComponent implements OnInit {
               tipo_transporte: TIPO_TRANSPORTE_DESPACHO,
               emp_transportista: (transporte.emp_transportista || '') as string,
               numero_porte: transporte.numero_porte || '',
-              fecha_porte: (formatearFechaConMoment(transporte.fecha_porte || '')) as string,
+              fecha_porte: (formatearFechaConMoment(new Date().toISOString()) || '') as string,
               marca_transporte: transporte.marca_transporte || '',
               modelo_transporte: transporte.modelo_transporte || '',
               placas_transporte: transporte.placas_transporte || '',
@@ -763,5 +793,9 @@ export class SolicitudPageComponent implements OnInit {
    */
   resetearEstadoArchivos(): void {
     this.hayArchivosSeleccionados = false;
+  }
+
+  onFormularioPadreValido(isValid: boolean): void {
+    this.formularioPadreEsValido = isValid;
   }
 }

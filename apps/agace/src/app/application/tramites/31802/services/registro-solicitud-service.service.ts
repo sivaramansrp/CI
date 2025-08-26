@@ -28,15 +28,20 @@ export class RegistroSolicitudService {
    */
 
   public actualizarEstadoFormulario(DATOS: Solicitud31802State): void {
+    this.tramite31802Store.setNumeroOficio(DATOS.numeroOficio);
     this.tramite31802Store.setNumeroOperacion(DATOS.numeroOperacion);
     this.tramite31802Store.setLlave(DATOS.llave);
     this.tramite31802Store.setManifiesto1(DATOS.manifiesto1);
     this.tramite31802Store.setManifiesto2(DATOS.manifiesto2);
     this.tramite31802Store.setManifiesto3(DATOS.manifiesto3);
+    this.tramite31802Store.setManifiesto4(DATOS.manifiesto4);
+    this.tramite31802Store.setManifiesto5(DATOS.manifiesto5);
     this.tramite31802Store.setFechaPago(DATOS.fechaPago);
     this.tramite31802Store.setRenovacion(DATOS.renovacion);
     this.tramite31802Store.setHomologacion(DATOS.homologacion);
     this.tramite31802Store.setMonedaNacional(DATOS.monedaNacional);
+    this.tramite31802Store.setFechaInicio(DATOS.fechaInicio);
+    this.tramite31802Store.setFechaFinal(DATOS.fechaFinal);
   }
 
     /**

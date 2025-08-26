@@ -24,7 +24,7 @@ import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
   * // Uso de la constante en un componente:
   * console.log(TIPO_DE_GARANTIA_NOTA);
   */
-export const TIPO_DE_GARANTIA_NOTA = `<p><strong>Nota: </strong>Es importante señalar que, para cumplir con todos los requisitos establecidos en la normatividad vigente para la aceptación de la garantía (carta de crédito), DEBERÁ presentar en las oficinas de la AGACE, ubicadas en: Av. Hidalgo 77, Col. Guerrero, C.P. 06300, Ciudad de México, el original de la carta de crédito en materia de IVA e IEPS emitida en hoja membretada de la institución de crédito emisora.</p>
+export const TIPO_DE_GARANTIA_NOTA = `<p><strong>Nota: </strong></br>Es importante señalar que, para cumplir con todos los requisitos establecidos en la normatividad vigente para la aceptación de la garantía (carta de crédito), DEBERÁ presentar en las oficinas de la AGACE, ubicadas en: Av. Hidalgo 77, Col. Guerrero, C.P. 06300, Ciudad de México, el original de la carta de crédito en materia de IVA e IEPS emitida en hoja membretada de la institución de crédito emisora.</p>
     <p>Dicha carta de crédito deberá ser presentada mediante escrito libre que contenga los requisitos establecidos en los artículos 18 y 18-A del Código Fiscal de la Federación, y acreditando la personalidad del representante legal de conformidad con el artículo 19 del Código Fiscal de la Federación.</p>`;
 
     /**
@@ -52,6 +52,7 @@ export const TIPO_SECTOR = [
     campo: 'tipoSector',
     clase: 'col-md-8',
     tipoInput: 'radio',
+    layout: 'horizontal',
     desactivado: true,
     soloLectura: false,
     validadores: [],
@@ -103,7 +104,7 @@ export const MANIFIESTO_BAJO_PROTESTA = [
   {
     id: 'manifiesto4',
     labelNombre:
-      'Bajo protesta de decir la verdad, manifiesto que los datos asentados en el presente documento son ciertos y que las facultades que me fueron otorgadas para representar al solicitante no han sido modificadas ni revocadas',
+      'Bajo protesta de decir la verdad, manifiesto que los datos asentados en el presente documento son ciertos y que las facultades que me fueron otorgadas para representar al solicitante no han sido modificadas y/o revocadas',
     campo: 'bajoProtesta',
     clase: 'col-md-12',
     tipoInput: 'checkbox',

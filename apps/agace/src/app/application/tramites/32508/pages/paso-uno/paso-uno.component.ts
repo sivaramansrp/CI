@@ -1,10 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, FormularioDinamico } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Solicitud32508State, Tramite32508Store } from '../../state/Tramite32508.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AdaceService } from '../../services/adace.service';
-import { Router } from '@angular/router';
 
 /**
  * Componente que representa el primer paso del trámite.
@@ -16,7 +15,6 @@ import { Router } from '@angular/router';
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
   constructor(
-    private router: Router,
     private consultaioQuery: ConsultaioQuery,
     private tramite32508Store: Tramite32508Store,
     private adaceService: AdaceService,
@@ -57,8 +55,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   consultaDatos!: ConsultaioState;
 
-  solicitanteForm!: FormGroup;
-
   /**
    * Estado actual de la solicitud.
    */
@@ -72,16 +68,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false;
 
   ngOnInit(): void {
-    this.solicitanteForm = this.fb.group({
-      adace: [{ value: this.solicitudState?.adace || 'ADACE-01', disabled: this.esFormularioSoloLectura }]
-    });
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.consultaDatos = seccionState;
           this.esFormularioSoloLectura = this.consultaDatos.readonly;
-          this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
@@ -90,22 +82,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-  * @method inicializarEstadoFormulario
-  * @description Inicializa el estado del formulario según el modo de solo lectura.
-  * 
-  * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles del formulario.
-  * En caso contrario, habilita los controles del formulario
-  * 
-  * @returns {void}
-  */
-  inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.solicitanteForm.get('adace')?.disable();
-    } else {
-      this.solicitanteForm.get('adace')?.enable();
-    }
-  }
   /**
  * @method fetchGetDatosConsulta
  * @description Método para obtener los datos de consulta desde el servicio `DatosTramiteService` y actualizar el estado del store `tramite32508Store`.

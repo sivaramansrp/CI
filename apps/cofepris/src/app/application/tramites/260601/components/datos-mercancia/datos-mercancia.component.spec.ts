@@ -156,6 +156,13 @@ fdescribe('DatosMercanciaComponent', () => {
         mostrarRfcFabricanteBuscarBoton: false,
         mostrarCurpFabricanteBuscarBoton: false,
         inhabilitarPaisFabricante: true,
+        proveedorTablaDatos: [],
+        fabricanteTablaDatos: [],
+        scianBodyData: [],
+        productoBodyData: [],
+        cvePaisDeOrigen: ['PaisOrigen1'],
+        cvePaisDeProcedencia: ['PaisProcedencia1'],
+        cveUsoEspecifico: ['UsoEspecifico1'],
       }),
     };
 

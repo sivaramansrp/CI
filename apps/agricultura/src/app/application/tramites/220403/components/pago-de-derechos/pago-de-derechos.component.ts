@@ -46,7 +46,7 @@ import { Tramite220403Store } from '../../estados/tramite220403.store';
 @Component({
   selector: 'app-pago-de-derechos',
   templateUrl: './pago-de-derechos.component.html',
-  styleUrl: './pago-de-derechos.component.css',
+  styleUrl: './pago-de-derechos.component.scss',
   standalone: true,
   imports: [ TituloComponent, AlertComponent, TablaDinamicaComponent, InputRadioComponent, InputFechaComponent, CatalogoSelectComponent, FormsModule, ReactiveFormsModule, CommonModule ],
 })
@@ -220,11 +220,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
           if( (this.formulario.get('pagoDerechos')?.valid) ){
             const VALIDA = this.formulario.get('pagoDerechos')?.valid ? true : false;
             this.tramite220403store.setPagoDerechosValidada(VALIDA);
-            this.exportaccionAcuicolaServcios.actualizarFormaValida();
-          }
-          else{
-            this.seccionStore.establecerSeccion([true]);
-            this.seccionStore.establecerFormaValida([false]);
           }
         });
 

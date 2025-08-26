@@ -45,7 +45,7 @@ export function createInitialState(): TramiteState {
             tipoContenedor: '',
             medioDeTransporte: '',
             identificacionTransporte: '',
-            esSolicitudFerros: ''
+            esSolicitudFerros: '0',
         },
         InternaDatosGeneralesState: {
             folioControlUnico: 0,
@@ -63,7 +63,8 @@ export function createInitialState(): TramiteState {
             movilizacionNacional: '',
             identTransporte: '',
             puntoVerificacion: '',
-            empresaTransportista: ''
+            empresaTransportista: '',
+            tipoMercancia: 'subproductos', 
         },
         FormularioPagoState: {
             exentoPago: '',
@@ -73,7 +74,7 @@ export function createInitialState(): TramiteState {
             banco: '',
             llavePago: '',
             fechaFactura: '',
-            importePago: ''
+            importePago: '',
         },
         PagosDeDerechosState: {
             claveDeReferencia: '',
@@ -87,7 +88,8 @@ export function createInitialState(): TramiteState {
             bancoRevision: '',
             llaveDePagoRevision: '',
             fechaInicioRevision: '',
-            importeDePagoRevision: ''
+            importeDePagoRevision: '',
+            exentoPagoRevision: '',
         }
     };
 }

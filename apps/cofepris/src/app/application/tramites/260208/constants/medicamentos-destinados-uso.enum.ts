@@ -50,4 +50,13 @@ export const ELEMENTOS_REQUERIDOS = [
   'denominacionRazon',
   'scian',
   'correoElectronico',
+  'mercancia'
+];
+
+/**
+ * @const ELEMENTOS_REQUERIDOS_TR
+ * @description Lista de elementos requeridos para el trámite.
+ */
+export const ELEMENTOS_REQUERIDOS_TR = [
+  'destinoFinal'
 ];

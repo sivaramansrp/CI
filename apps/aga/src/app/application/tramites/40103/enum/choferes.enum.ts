@@ -8,7 +8,7 @@ export const CHOFERES_NACIONALES_ALTA: ConfiguracionColumna<DatosDelChoferNacion
         orden: 1,
     },
     {
-        encabezado: 'Número',
+        encabezado: 'Nombre',
         clave: (item: DatosDelChoferNacional) => item.nombre,
         orden: 2,
     },
@@ -58,7 +58,7 @@ export const CHOFERES_NACIONALES_ALTA: ConfiguracionColumna<DatosDelChoferNacion
         orden: 11,
     },
     {
-        encabezado: 'País de Residencia',
+        encabezado: 'País de residencia',
         clave: (item: DatosDelChoferNacional) => item.paisDeResidencia,
         orden: 12,
     }
@@ -71,7 +71,7 @@ export const CHOFERES_EXTRANJEROS_TABLA: ConfiguracionColumna<ChoferesExtranjero
         orden: 1,
     },
     {
-        encabezado: 'Número',
+        encabezado: 'Nombre',
         clave: (item: ChoferesExtranjeros) => item.numero,
         orden: 2,
     },

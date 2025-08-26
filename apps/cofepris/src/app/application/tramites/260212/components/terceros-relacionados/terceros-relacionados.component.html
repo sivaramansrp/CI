@@ -11,77 +11,99 @@
     <div class="mt-5">
       <h5>Fabricante:</h5>
       <div class="table-responsive mt-5">
-        <ng-table [commonTableHeader]="tablaEncabezadoData" [commonTableBody]="fabricanteRowData" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></ng-table>
+       
+       <app-tabla-dinamica
+      [configuracionTabla]="configuracionTablaFabricante"
+      [datos]="fabricanteTablaDatos"
+      [tipoSeleccionTabla]="checkbox"   
+      (listaDeFilaSeleccionada)="fabricanteSeleccionadoDatos = $event"   
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
+    ></app-tabla-dinamica>  
       </div>
       <br />
 
-      <div class="d-flex justify-content-end mt-3">
-        <div *ngIf="showFabricanteButtons">
-          <button class="btn btn-danger" type="button">Eliminar</button>
-          <button class="btn btn-default" type="button">Modificar</button>
-        </div>
-        <button type="button" class="btn btn-primary" (click)="toggleDivFabricante()" [disabled]="esFormularioSoloLectura">
-          Agregar
-        </button>
-      </div>
-    </div>
+   <div class="d-flex justify-content-end mt-3">
+  <button *ngIf="(fabricanteSeleccionadoDatos || []).length > 0" class="btn btn-danger me-3" type="button"  (click)="eliminarFabricante()">Eliminar</button>
+  <button *ngIf="(fabricanteSeleccionadoDatos || []).length > 0" class="btn btn-default me-3" type="button"  (click)="modificarFabricante()">Modificar</button>
+  <button type="button" class="btn btn-primary" (click)="toggleDivFabricante()" [disabled]="esFormularioSoloLectura">
+    Agregar
+  </button>
+</div>
 
     <!-- La mesa del destinatario en exhibición -->
     <div class="mt-5">
       <h5>Destinatario (destino final)*:</h5>
       <div class="table-responsive mt-5">
-        <ng-table [commonTableHeader]="tablaEncabezadoData" [commonTableBody]="destinatarioRowData" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
-        </ng-table>
+      
+         <app-tabla-dinamica
+      [configuracionTabla]="configuracionTablaDestinatarioFinal"
+      [datos]="destinatarioFinalTablaDatos"
+      [tipoSeleccionTabla]="checkbox"
+      (listaDeFilaSeleccionada)="destinatarioSeleccionadoDatos = $event"      
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
+    ></app-tabla-dinamica>
       </div>
       <br />
 
       <div class="d-flex justify-content-end mt-3">
-        <div *ngIf="showDestinatarioButtons">
-          <button class="btn btn-danger" type="button">Eliminar</button>
-          <button class="btn btn-default" type="button">Modificar</button>
-        </div>
-        <button type="button" class="btn btn-primary" (click)="toggleDivDestinatario()" [disabled]="esFormularioSoloLectura">
-          Agregar
-        </button>
-      </div>
+  <button *ngIf="(destinatarioSeleccionadoDatos || []).length > 0" class="btn btn-danger me-3" type="button" (click)="eliminarDestinario()">Eliminar</button>
+  <button *ngIf="(destinatarioSeleccionadoDatos || []).length > 0" class="btn btn-default me-3" type="button" (click)="modificarDestinatario()">Modificar</button>
+  <button type="button" class="btn btn-primary" (click)="toggleDivDestinatario()" [disabled]="esFormularioSoloLectura">
+    Agregar
+  </button>
+</div>
     </div>
 
     <!-- La mesa del proveedor en exhibición -->
     <div class="mt-5">
       <h5>Proveedor:</h5>
       <div class="table-responsive mt-5">
-        <ng-table [commonTableHeader]="tablaEncabezadoData" [commonTableBody]="proveedorRowData" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></ng-table>
+        
+       <app-tabla-dinamica
+      [configuracionTabla]="configuracionTablaProveedor"
+      [datos]="proveedorTablaDatos"
+      [tipoSeleccionTabla]="checkbox"
+   (listaDeFilaSeleccionada)="proveedorSeleccionadoDatos = $event"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
+    ></app-tabla-dinamica>
+
       </div>
       <br />
 
       <div class="d-flex justify-content-end mt-3">
-        <div *ngIf="showProveedorButtons">
-          <button class="btn btn-danger" type="button">Eliminar</button>
-          <button class="btn btn-default" type="button">Modificar</button>
-        </div>
-        <button type="button" class="btn btn-primary" (click)="toggleDivProveedor()" [disabled]="esFormularioSoloLectura">
-          Agregar
-        </button>
-      </div>
+  <button *ngIf="(proveedorSeleccionadoDatos || []).length > 0" class="btn btn-danger me-3" type="button"  (click)="eliminarProveedor()">Eliminar</button>
+  <button *ngIf="(proveedorSeleccionadoDatos || []).length > 0" class="btn btn-default me-3" type="button" (click)="modificarProveedor()">Modificar</button>
+  <button type="button" class="btn btn-primary" (click)="toggleDivProveedor()" [disabled]="esFormularioSoloLectura">
+    Agregar
+  </button>
+</div>
+
     </div>
 
     <!-- La mesa del facturador en exhibición -->
     <div class="mt-5">
       <h5>Facturador:</h5>
       <div class="table-responsive mt-5">
-        <ng-table [commonTableHeader]="tablaEncabezadoData" [commonTableBody]="facturadorRowData" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></ng-table>
+       
+     <app-tabla-dinamica
+      [configuracionTabla]="configuracionTablaFacturador"
+      [datos]="facturadorTablaDatos"
+      [tipoSeleccionTabla]="checkbox"   
+      (listaDeFilaSeleccionada)="facturadorSeleccionadoDatos = $event"  
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
+    ></app-tabla-dinamica>
+     
       </div>
       <br />
 
       <div class="d-flex justify-content-end mt-3">
-        <div *ngIf="showFacturadorButtons">
-          <button class="btn btn-danger" type="button">Eliminar</button>
-          <button class="btn btn-default" type="button">Modificar</button>
-        </div>
-        <button type="button" class="btn btn-primary" (click)="toggleDivFacturador()" [disabled]="esFormularioSoloLectura">
-          Agregar
-        </button>
-      </div>
+  <button *ngIf="(facturadorSeleccionadoDatos || []).length > 0" class="btn btn-danger me-3" type="button"  (click)="eliminarFacturador()">Eliminar</button>
+  <button *ngIf="(facturadorSeleccionadoDatos || []).length > 0" class="btn btn-default me-3" type="button" (click)="modificarFacturador()">Modificar</button>
+  <button type="button" class="btn btn-primary" (click)="toggleDivFacturador()" [disabled]="esFormularioSoloLectura">
+    Agregar
+  </button>
+</div>
+
     </div>
   </div>
 </div>
@@ -121,11 +143,10 @@
 
       <div class="p-4 row">
         @if (nacional && fisica || (!fisica && !moral)){
-        <div class="row">
+        <div class="row"> 
           <div class="col-md-4">
             <div class="form-group">
-              <label for="rfc" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Registro Federal de Contribuyente"
-                  ata-bs-toggle="tooltip"></span>
+              <label for="rfc" class="form-label">R.F.C*:<span tooltip="Registro Federal de Contribuyente" class="p-2"><i class="bi bi-question-circle-fill"></i></span>
               </label>
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" [ngClass]="{ 'required': esInvalido(agregarFabricanteFormGroup, 'rfc') }"/>
               @if (agregarFabricanteFormGroup.get('rfc')?.hasError('required') && agregarFabricanteFormGroup.get('rfc')?.touched) {
@@ -173,8 +194,7 @@
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label for="rfc" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Registro Federal de Contribuyente" ata-bs-toggle="tooltip"></span>
+              <label for="rfc" class="form-label">R.F.C*:<span tooltip="Registro Federal de Contribuyente" class="p-2"><i class="bi bi-question-circle-fill"></i></span>
               </label>
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" [ngClass]="{ 'required': esInvalido(agregarFabricanteFormGroup, 'rfc') }"/>
               @if (agregarFabricanteFormGroup.get('rfc')?.hasError('required') && agregarFabricanteFormGroup.get('rfc')?.touched) {
@@ -266,7 +286,7 @@
                 <div class="col-md-4">
                   <div class="form-group">
                     <app-catalogo-select [catalogo]="dropdownData" [label]="'Estado/localidad'" [required]="true"
-                      for="estadoLocalidad" id="estadoLocalidad" formControlName="estadoLocalidad"></app-catalogo-select>
+                      for="estadoLocalidad" id="estadoLocalidad" formControlName="estadoLocalidad" [isDisabled]="agregarFabricanteFormGroup.get('tipoPersona')?.value ? false : true"></app-catalogo-select>
                   </div>
                 </div>
 
@@ -274,7 +294,7 @@
                   <div class="form-group">
                     <app-catalogo-select [catalogo]="municipioDropdownData" [label]="'Municipio/alcaldía'" [required]="true"
                       for="municipioAlcaldia" id="municipioAlcaldia"
-                      formControlName="municipioAlcaldia"></app-catalogo-select>
+                      formControlName="municipioAlcaldia" [isDisabled]="agregarFabricanteFormGroup.get('tipoPersona')?.value ? false : true"></app-catalogo-select>
                   </div>
                 </div>
               </div>
@@ -283,7 +303,7 @@
                 <div class="col-md-4">
                   <div class="form-group">
                     <app-catalogo-select [catalogo]="localidadDropdownData" [label]="'Localidad'" [required]="false"
-                      for="localidad" id="localidad" formControlName="localidad" name="localidad"></app-catalogo-select>
+                      for="localidad" id="localidad" formControlName="localidad" name="localidad" [isDisabled]="agregarFabricanteFormGroup.get('tipoPersona')?.value ? false : true"></app-catalogo-select>
                   </div>
                 </div>
 
@@ -291,14 +311,14 @@
                   <div class="form-group">
                     <app-catalogo-select [catalogo]="codigoPostalDropdownData" [label]="'Código postal o equivalente'"
                        for="codigoPostaloEquivalente" id="codigoPostaloEquivalente"
-                      formControlName="codigoPostaloEquivalente"></app-catalogo-select>
+                      formControlName="codigoPostaloEquivalente" [isDisabled]="agregarFabricanteFormGroup.get('tipoPersona')?.value ? false : true"></app-catalogo-select>
                   </div>
                 </div>
 
                 <div class="col-md-4">
                   <div class="form-group">
                     <app-catalogo-select [catalogo]="coloniaDropdownData" [label]="'Colonia'" for="colonia" id="colonia"
-                      formControlName="colonia"></app-catalogo-select>
+                      formControlName="colonia" [isDisabled]="agregarFabricanteFormGroup.get('tipoPersona')?.value ? false : true"></app-catalogo-select>
                   </div>
                 </div>
               </div>
@@ -310,7 +330,7 @@
                 <div class="col-md-4">
                   <div class="form-group">
                     <app-catalogo-select [catalogo]="paisDropdownData" [label]="'País'" [required]="true" for="pais"
-                      id="pais" formControlName="pais" name="pais" [isDisabled]="true"></app-catalogo-select>
+                      id="pais" formControlName="pais" name="pais" [isDisabled]="agregarFabricanteFormGroup.get('tipoPersona')?.value ? false : true"></app-catalogo-select>
                   </div>
                 </div>
 
@@ -328,7 +348,7 @@
                 <div class="col-md-4">
                   <div class="form-group">
                     <label class="form-label" for="extranjeroCodigo">Código postal o equivalente:</label>
-                    <input type="text" id="extranjeroCodigo" name="extranjeroCodigo" class="form-control" />
+                    <input type="text" id="extranjeroCodigo" name="extranjeroCodigo" class="form-control" formControlName="extranjeroCodigo"/>
                   </div>
                 </div>
               </div>
@@ -337,7 +357,7 @@
                 <div class="col-md-4">
                   <div class="form-group">
                     <label class="form-label" for="extranjeroColonia">Colonia o equivalente:</label>
-                    <input class="form-control" type="text" id="extranjeroColonia" name="extranjeroColonia" />
+                    <input class="form-control" type="text" id="extranjeroColonia" name="extranjeroColonia" formControlName="extranjeroColonia"/>
                   </div>
                 </div>
               </div>
@@ -346,8 +366,7 @@
             <div class="row">
               <div class="col-md-8">
                 <div class="form-group">
-                  <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1"
-                      title="Domicilio, calle, número interior, número exterior, lote" ata-bs-toggle="tooltip"></span></label>
+                  <label class="form-label" for="calle">Calle*:<span tooltip="Domicilio, calle, número interior, número exterior, lote" class="p-2"><i class="bi bi-question-circle-fill"></i></span></label>
                   <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" [ngClass]="{ 'required': esInvalido(agregarFabricanteFormGroup, 'calle') }"/>
                     @if (agregarFabricanteFormGroup.get('calle')?.hasError('required') && agregarFabricanteFormGroup.get('calle')?.touched) {
                       <div class="mensaje-error">Este campo es obligatorio.</div>
@@ -393,8 +412,8 @@
 
               <div class="col-md-4">
                 <div class="form-group">
-                  <label class="form-label" for="correoElectronico">Correo electrónico:<span
-                      class="bi bi-question-circle-fill fs-4 m-1" title="ejemplo@dominio.com" ata-bs-toggle="tooltip"></span></label>
+                  <label class="form-label" for="correoElectronico">Correo electrónico:<span tooltip="ejemplo@dominio.com" class="p-2"><i class="bi bi-question-circle-fill"></i></span>
+                  </label>
                   <input class="form-control" type="text" id="correoElectronico" formControlName="correoElectronico"
                     name="correoElectronico" />
                 </div>
@@ -408,16 +427,13 @@
                 </div>
 
                 <div class="col-md-9 d-flex justify-content-end gap-1">
-                  <button type="button" class="btn btn-danger ms-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                    aria-controls="offcanvasRight" (click)="toggleDivFabricante()">
+                  <button type="button" class="btn btn-danger ms-2" (click)="toggleDivFabricante()">
                     Cancelar
                   </button>
-                  <button type="button" class="btn btn-default ms-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                    aria-controls="offcanvasRight" (click)="limpiarFabricanteForm()">
+                  <button type="button" class="btn btn-default ms-2" (click)="limpiarFabricanteForm()">
                     Limpiar
                   </button>
-                  <button type="button" class="btn btn-primary ms-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                    aria-controls="offcanvasRight" (click)="submitFabricanteForm()">
+                  <button type="button" class="btn btn-primary ms-2"  (click)="submitFabricantesForm()">
                     Guardar
                   </button>
                 </div>
@@ -436,11 +452,10 @@
 <app-modal [active]="showDestinatario">
   <div class="agregar-destinatario-container">
     <ng-titulo titulo="Agregar destinatario (destino final)" />
-
+    <h5>Datos generales</h5>
     <form [formGroup]="agregarDestinatarioFormGroup">
       <!--botones de radio -->
-      <div class="row p-4">
-        <h5>Datos generales</h5>
+      <div class="row">
 
         <div class="col-md-6 offset-md-6">
           <div>
@@ -452,12 +467,12 @@
           </div>
         </div>
       </div>
-      <div class="row p-4">
+
+      <div class="row">
         @if (fisica || (!fisica && !moral)) {
-          <div class="col-md-4 p-2">
+          <div class="col-md-4">
             <div class="form-group">
-              <label for="rfc" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Registro Federal de Contribuyente"
-                  ata-bs-toggle="tooltip"></span>
+              <label for="rfc" class="form-label">R.F.C*:<span tooltip="Registro Federal de Contribuyente" class="p-2"><i class="bi bi-question-circle-fill"></i></span>
               </label>
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" [ngClass]="{ 'required': esInvalido(agregarDestinatarioFormGroup, 'rfc') }"/>
               @if (agregarDestinatarioFormGroup.get('rfc')?.hasError('required') && agregarDestinatarioFormGroup.get('rfc')?.touched) {
@@ -465,197 +480,216 @@
                 }
             </div>
           </div>
-          <div class="row mt-5">
-          <h5>Datos personales</h5>
-          <div class="row d-flex datos-personales-form-container">
+          @if (!fisica && !moral) {
             <div class="col-md-4">
               <div class="form-group">
-                <label for="nombre" class="form-label">Nombre(s)*: </label>
-                <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" [ngClass]="{ 'required': esInvalido(agregarDestinatarioFormGroup, 'nombre') }"/>
-                @if (agregarDestinatarioFormGroup.get('nombre')?.hasError('required') && agregarDestinatarioFormGroup.get('nombre')?.touched) {
-                  <div class="mensaje-error">Este campo es obligatorio.</div>
-                }
+                <label for="curp" class="form-label">C.U.R.P*:</label>
+                <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" [ngClass]="{ 'required': esInvalido(agregarDestinatarioFormGroup, 'curp') }"/>
+                @if (agregarDestinatarioFormGroup.get('curp')?.hasError('required') && agregarDestinatarioFormGroup.get('curp')?.touched) {
+                    <div class="mensaje-error">Este campo es obligatorio.</div>
+                  }
               </div>
             </div>
-
-            <div class="col-md-4">
-              <div class="form-group">
-                <label class="form-label" for="primerApellido">Primer apellido*:</label>
-                <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido"
-                  class="form-control" [ngClass]="{ 'required': esInvalido(agregarDestinatarioFormGroup, 'primerApellido') }"/>
-                @if (agregarDestinatarioFormGroup.get('primerApellido')?.hasError('required') && agregarDestinatarioFormGroup.get('primerApellido')?.touched) {
-                  <div class="mensaje-error">Este campo es obligatorio.</div>
-                }
+          }
+          <div class="col-md-12 mt-5">
+            <h5>Datos personales</h5>
+            <div class="row d-flex datos-personales-form-container">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="nombre" class="form-label">Nombre(s)*: </label>
+                  <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" [ngClass]="{ 'required': esInvalido(agregarDestinatarioFormGroup, 'nombre') }"/>
+                  @if (agregarDestinatarioFormGroup.get('nombre')?.hasError('required') && agregarDestinatarioFormGroup.get('nombre')?.touched) {
+                    <div class="mensaje-error">Este campo es obligatorio.</div>
+                  }
+                </div>
               </div>
-            </div>
 
-            <div class="col-md-4">
-              <div class="form-group">
-                <label class="form-label" for="segundoApellido">Segundo apellido:</label>
-                <input type="text" id="segundoApellido" formControlName="segundoApellido" name="segundoApellido"
-                  class="form-control" />
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label" for="primerApellido">Primer apellido*:</label>
+                  <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido"
+                    class="form-control" [ngClass]="{ 'required': esInvalido(agregarDestinatarioFormGroup, 'primerApellido') }"/>
+                  @if (agregarDestinatarioFormGroup.get('primerApellido')?.hasError('required') && agregarDestinatarioFormGroup.get('primerApellido')?.touched) {
+                    <div class="mensaje-error">Este campo es obligatorio.</div>
+                  }
+                </div>
               </div>
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label" for="segundoApellido">Segundo apellido:</label>
+                  <input type="text" id="segundoApellido" formControlName="segundoApellido" name="segundoApellido"
+                    class="form-control" />
+                </div>
+              </div>
+              @if (!fisica && !moral) {
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
+                    <input type="text" class="form-control" id="denominacionRazonSocial" [ngClass]="{ 'required': esInvalido(agregarDestinatarioFormGroup, 'denominacionRazonSocial') }"
+                      formControlName="denominacionRazonSocial" name="denominacionRazonSocial" />
+                      @if (agregarDestinatarioFormGroup.get('rfc')?.hasError('required') && agregarDestinatarioFormGroup.get('rfc')?.touched) {
+                    <div class="mensaje-error">Este campo es obligatorio.</div>
+                  }
+                  </div>
+                </div>
+              }
             </div>
           </div>
-        </div>
         }
       </div>
       
 
         @if (moral ){
-          <div class="p-4">
-            <div class="row">
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="rfc" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Registro Federal de Contribuyente"
-                      ata-bs-toggle="tooltip"></span>
-                  </label>
-                  <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" [ngClass]="{ 'required': esInvalido(agregarDestinatarioFormGroup, 'rfc') }"/>
-                  @if (agregarDestinatarioFormGroup.get('rfc')?.hasError('required') && agregarDestinatarioFormGroup.get('rfc')?.touched) {
-                  <div class="mensaje-error">Este campo es obligatorio.</div>
-                }
-                </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="rfc" class="form-label">R.F.C*:<span tooltip="Registro Federal de Contribuyente" class="p-2"><i class="bi bi-question-circle-fill"></i></span>
+                </label>
+                <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" [ngClass]="{ 'required': esInvalido(agregarDestinatarioFormGroup, 'rfc') }"/>
+                @if (agregarDestinatarioFormGroup.get('rfc')?.hasError('required') && agregarDestinatarioFormGroup.get('rfc')?.touched) {
+                <div class="mensaje-error">Este campo es obligatorio.</div>
+              }
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-8">
-                <div class="form-group">
-                  <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
-                  <input type="text" class="form-control" id="denominacionRazonSocial" [ngClass]="{ 'required': esInvalido(agregarDestinatarioFormGroup, 'denominacionRazonSocial') }"
-                    formControlName="denominacionRazonSocial" name="denominacionRazonSocial" />
-                    @if (agregarDestinatarioFormGroup.get('rfc')?.hasError('required') && agregarDestinatarioFormGroup.get('rfc')?.touched) {
-                  <div class="mensaje-error">Este campo es obligatorio.</div>
-                }
-                </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="form-group">
+                <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
+                <input type="text" class="form-control" id="denominacionRazonSocial" [ngClass]="{ 'required': esInvalido(agregarDestinatarioFormGroup, 'denominacionRazonSocial') }"
+                  formControlName="denominacionRazonSocial" name="denominacionRazonSocial" />
+                  @if (agregarDestinatarioFormGroup.get('rfc')?.hasError('required') && agregarDestinatarioFormGroup.get('rfc')?.touched) {
+                <div class="mensaje-error">Este campo es obligatorio.</div>
+              }
               </div>
             </div>
           </div>
         }
         
-        <div class="row p-4 mt-6">
-          <h5>Domicilio</h5>
-          <div class="row d-flex domicilio-form-container">
-            <div class="col-md-4">
-              <div class="form-group">
-                <app-catalogo-select [catalogo]="paisDropdownData" [label]="'País'" [required]="true" for="pais" id="pais"
-                  formControlName="pais" name="pais" [isDisabled]="true"></app-catalogo-select>
+        <div class="row mt-6">
+          <div class="col-md-12">
+            <h5>Domicilio</h5>
+            <div class="row d-flex domicilio-form-container">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <app-catalogo-select [catalogo]="paisDropdownData" [label]="'País'" [required]="true" for="pais" id="pais"
+                    formControlName="pais" name="pais" [isDisabled]="true"></app-catalogo-select>
+                </div>
               </div>
-            </div>
 
-            <div class="col-md-4">
-              <div class="form-group">
-                <app-catalogo-select [catalogo]="dropdownData" [label]="'Estado/localidad'" [required]="true"
-                  for="estadoLocalidad" id="estadoLocalidad" formControlName="estadoLocalidad"
-                  name="estadoLocalidad" [isDisabled]="desactivarCampos"></app-catalogo-select>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <app-catalogo-select [catalogo]="dropdownData" [label]="'Estado/localidad'" [required]="true"
+                    for="estadoLocalidad" id="estadoLocalidad" formControlName="estadoLocalidad"
+                    name="estadoLocalidad" [isDisabled]="desactivarCampos" ></app-catalogo-select>
+                </div>
               </div>
-            </div>
 
-            <div class="col-md-4">
-              <div class="form-group">
-                <app-catalogo-select [catalogo]="municipioDropdownData" [label]="'Municipio/alcaldía'" [required]="true"
-                  for="municipioAlcaldia" id="municipioAlcaldia" formControlName="municipioAlcaldia"
-                  name="municipioAlcaldia" [isDisabled]="desactivarCampos"></app-catalogo-select>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <app-catalogo-select [catalogo]="municipioDropdownData" [label]="'Municipio/alcaldía'" [required]="true"
+                    for="municipioAlcaldia" id="municipioAlcaldia" formControlName="municipioAlcaldia"
+                    name="municipioAlcaldia" [isDisabled]="desactivarCampos"></app-catalogo-select>
+                </div>
               </div>
-            </div>
 
-            <div class="col-md-4">
-              <div class="form-group">
-                <app-catalogo-select [catalogo]="localidadDropdownData" [label]="'Localidad'" [required]="false"
-                  for="localidad" id="localidad" formControlName="localidad" name="localidad" [isDisabled]="desactivarCampos"></app-catalogo-select>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <app-catalogo-select [catalogo]="localidadDropdownData" [label]="'Localidad'" [required]="false"
+                    for="localidad" id="localidad" formControlName="localidad" name="localidad" [isDisabled]="desactivarCampos"></app-catalogo-select>
+                </div>
               </div>
-            </div>
 
-            <div class="col-md-4">
-              <div class="form-group">
-                <app-catalogo-select [catalogo]="codigoPostalDropdownData" [label]="'Código postal o equivalente'" 
-                  for="codigoPostaloEquivalente" id="codigoPostaloEquivalente" formControlName="codigoPostaloEquivalente"
-                  name="codigoPostaloEquivalente" [isDisabled]="desactivarCampos"></app-catalogo-select>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <app-catalogo-select [catalogo]="codigoPostalDropdownData" [label]="'Código postal o equivalente'" 
+                    for="codigoPostaloEquivalente" id="codigoPostaloEquivalente" formControlName="codigoPostaloEquivalente"
+                    name="codigoPostaloEquivalente" [isDisabled]="desactivarCampos"></app-catalogo-select>
+                </div>
               </div>
-            </div>
 
-            <div class="col-md-4">
-              <div class="form-group">
-                <app-catalogo-select [catalogo]="coloniaDropdownData" [label]="'Colonia'" for="colonia" id="colonia"
-                  formControlName="colonia" name="colonia" [isDisabled]="desactivarCampos"></app-catalogo-select>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <app-catalogo-select [catalogo]="coloniaDropdownData" [label]="'Colonia'" for="colonia" id="colonia"
+                    formControlName="colonia" name="colonia" [isDisabled]="desactivarCampos"></app-catalogo-select>
+                </div>
               </div>
-            </div>
 
-            <div class="col-md-8">
-              <div class="form-group">
-                <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1"
-                    title="Domicilio, calle, número interior, número exterior, lote" ata-bs-toggle="tooltip"></span></label>
-                <input type="text" id="calle" formControlName="calle" class="form-control" name="calle" [ngClass]="{ 'required': esInvalido(agregarDestinatarioFormGroup, 'calle') }"/>
-                @if (agregarDestinatarioFormGroup.get('rfc')?.hasError('required') && agregarDestinatarioFormGroup.get('rfc')?.touched) {
-                  <div class="mensaje-error">Este campo es obligatorio.</div>
-                }
-              </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="numeroExterior" class="form-label">Número exterior*:
-                </label>
-                <input type="text" id="numeroExterior" formControlName="numeroExterior" class="form-control"
-                  name="numeroExterior" [ngClass]="{ 'required': esInvalido(agregarDestinatarioFormGroup, 'numeroExterior') }"/>
+              <div class="col-md-8">
+                <div class="form-group">
+                  <label class="form-label" for="calle">Calle*:<span tooltip="Domicilio, calle, número interior, número exterior, lote" class="p-2"><i class="bi bi-question-circle-fill"></i></span>
+                  </label>
+                  <input type="text" id="calle" formControlName="calle" class="form-control" name="calle" [ngClass]="{ 'required': esInvalido(agregarDestinatarioFormGroup, 'calle') }"/>
                   @if (agregarDestinatarioFormGroup.get('rfc')?.hasError('required') && agregarDestinatarioFormGroup.get('rfc')?.touched) {
-                  <div class="mensaje-error">Este campo es obligatorio.</div>
-                }
-              </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="form-group">
-                <label class="form-label" for="numeroInterior">Número interior:</label>
-                <input type="text" id="numeroInterior" formControlName="numeroInterior" class="form-control"
-                  name="numeroInterior" />
-              </div>
-            </div>
-
-            <div class="col-md-1">
-              <div class="form-group">
-                <label class="form-label" for="lada">Lada:</label>
-                <input type="text" id="lada" formControlName="lada" class="form-control" name="lada" />
-              </div>
-            </div>
-
-            <div class="col-md-3">
-              <div class="form-group">
-                <label class="form-label" for="telefono">Teléfono:</label>
-                <input type="text" id="telefono" formControlName="telefono" class="form-control" name="telefono" />
-              </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="form-group">
-                <label class="form-label" for="correoElectronico">Correo electrónico:<span
-                    class="bi bi-question-circle-fill fs-4 m-1" title="ejemplo@dominio.com" ata-bs-toggle="tooltip"></span></label>
-                <input type="text" id="correoElectronico" formControlName="correoElectronico" class="form-control"
-                  name="correoElectronico" />
-              </div>
-            </div>
-
-            <!-- campos -->
-             <div class="row mt-5 align-items-center justify-content-between">
-                <div class="col-md-3 text-muted">
-                  <span>*Campos obligatorios</span>
+                    <div class="mensaje-error">Este campo es obligatorio.</div>
+                  }
                 </div>
+              </div>
 
-                <div class="col-md-9 d-flex justify-content-end gap-1">
-                  <button type="button" class="btn btn-danger ms-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                    aria-controls="offcanvasRight" (click)="toggleDivDestinatario()">
-                    Cancelar
-                  </button>
-                  <button type="button" class="btn btn-default ms-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                    aria-controls="offcanvasRight" (click)="limpiarDestinatarioForm()">
-                    Limpiar
-                  </button>
-                  <button type="button" class="btn btn-primary ms-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                    aria-controls="offcanvasRight" (click)="submitDestinatarioForm()">
-                    Guardar
-                  </button>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="numeroExterior" class="form-label">Número exterior*:
+                  </label>
+                  <input type="text" id="numeroExterior" formControlName="numeroExterior" class="form-control"
+                    name="numeroExterior" [ngClass]="{ 'required': esInvalido(agregarDestinatarioFormGroup, 'numeroExterior') }"/>
+                    @if (agregarDestinatarioFormGroup.get('rfc')?.hasError('required') && agregarDestinatarioFormGroup.get('rfc')?.touched) {
+                    <div class="mensaje-error">Este campo es obligatorio.</div>
+                  }
                 </div>
+              </div>
 
-             </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label" for="numeroInterior">Número interior:</label>
+                  <input type="text" id="numeroInterior" formControlName="numeroInterior" class="form-control"
+                    name="numeroInterior" />
+                </div>
+              </div>
+
+              <div class="col-md-1">
+                <div class="form-group">
+                  <label class="form-label" for="lada">Lada:</label>
+                  <input type="text" id="lada" formControlName="lada" class="form-control" name="lada" />
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="form-label" for="telefono">Teléfono:</label>
+                  <input type="text" id="telefono" formControlName="telefono" class="form-control" name="telefono" />
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label" for="correoElectronico">Correo electrónico:<span tooltip="ejemplo@dominio.com" class="p-2"><i class="bi bi-question-circle-fill"></i></span>
+                    </label>
+                  <input type="text" id="correoElectronico" formControlName="correoElectronico" class="form-control"
+                    name="correoElectronico" />
+                </div>
+              </div>
+
+              <!-- campos -->
+              <div class="col-md-12 mt-5 align-items-center justify-content-between">
+                  <div class="col-md-3 text-muted">
+                    <span>*Campos obligatorios</span>
+                  </div>
+
+                  <div class="col-md-9 text-end">
+                    <button type="button" class="btn btn-danger ms-2" (click)="toggleDivDestinatario()">
+                      Cancelar
+                    </button>
+                    <button type="button" class="btn btn-default ms-2" (click)="limpiarDestinatarioForm()">
+                      Limpiar
+                    </button>
+                    <button type="button" class="btn btn-primary ms-2" (click)="submitDestinatariosForm()">
+                      Guardar
+                    </button>
+                  </div>
+
+              </div>
+            </div>
           </div>
         </div>
     </form>
@@ -770,7 +804,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <app-catalogo-select [catalogo]="paisDropdownData" [label]="'País'" [required]="true" for="pais" id="pais"
-                formControlName="pais" name="pais" [isDisabled]="true"></app-catalogo-select>
+                formControlName="pais" name="pais" [isDisabled]="agregarProveedorFormGroup.get('tipoPersona')?.value ? false : true"></app-catalogo-select>
             </div>
           </div>
 
@@ -807,8 +841,8 @@
         <div class="row d-flex">
           <div class="col-md-8">
             <div class="form-group">
-              <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Domicilio, calle, número interior, número exterior, lote"
-                  ata-bs-toggle="tooltip"></span></label>
+              <label class="form-label" for="calle">Calle*:<span tooltip="Domicilio, calle, número interior, número exterior, lote" class="p-2"><i class="bi bi-question-circle-fill"></i></span>
+              </label>
               <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" [ngClass]="{ 'required': esInvalido(agregarProveedorFormGroup, 'calle') }"/>
                @if (agregarProveedorFormGroup.get('calle')?.hasError('required') && agregarProveedorFormGroup.get('calle')?.touched) {
                   <div class="mensaje-error">Este campo es obligatorio.</div>
@@ -853,8 +887,8 @@
 
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="correoElectronico">Correo electrónico:<span
-                  class="bi bi-question-circle-fill fs-4 m-1" title="ejemplo@dominio.com" ata-bs-toggle="tooltip"></span></label>
+              <label class="form-label" for="correoElectronico">Correo electrónico:<span tooltip="ejemplo@dominio.com" class="p-2"><i class="bi bi-question-circle-fill"></i></span>
+                </label>
               <input type="text" class="form-control" id="correoElectronico" formControlName="correoElectronico"
                 name="correoElectronico" />
             </div>
@@ -877,7 +911,7 @@
                 Limpiar
               </button>
               <button type="button" class="btn btn-primary ms-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                aria-controls="offcanvasRight" (click)="submitProveedorForm()">
+                aria-controls="offcanvasRight" (click)="submitProveedoresForm()">
                 Guardar
               </button>
             </div>
@@ -962,7 +996,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <app-catalogo-select [catalogo]="paisDropdownData" [label]="'País'" [required]="true" for="pais" id="pais"
-                    formControlName="pais" name="pais" [isDisabled]="true"></app-catalogo-select>
+                    formControlName="pais" name="pais" [isDisabled]="agregarFacturadorFormGroup.get('tipoPersona')?.value ? false : true"></app-catalogo-select>
                 </div>
               </div>
 
@@ -999,8 +1033,8 @@
            <div class="row d-flex">
               <div class="col-md-8">
                 <div class="form-group">
-                  <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1"
-                      title="Domicilio, calle, número interior, número exterior, lote" ata-bs-toggle="tooltip"></span></label>
+                  <label class="form-label" for="calle">Calle*:<span tooltip="Domicilio, calle, número interior, número exterior, lote" class="p-2"><i class="bi bi-question-circle-fill"></i></span>
+                  </label>
                   <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" [ngClass]="{ 'required': esInvalido(agregarFacturadorFormGroup, 'calle') }"/>
                   @if (agregarFacturadorFormGroup.get('calle')?.hasError('required') && agregarFacturadorFormGroup.get('calle')?.touched) {
                   <div class="mensaje-error">Este campo es obligatorio.</div>
@@ -1045,8 +1079,8 @@
 
             <div class="col-md-4">
               <div class="form-group">
-                <label class="form-label" for="correoElectronico">Correo electrónico:<span
-                    class="bi bi-question-circle-fill fs-4 m-1" title="ejemplo@dominio.com" ata-bs-toggle="tooltip"></span></label>
+                <label class="form-label" for="correoElectronico">Correo electrónico:<span tooltip="ejemplo@dominio.com" class="p-2"><i class="bi bi-question-circle-fill"></i></span>
+                </label>
                 <input class="form-control" type="text" id="correoElectronico" formControlName="correoElectronico"
                   name="correoElectronico" [ngClass]="{ 'required': esInvalido(agregarFacturadorFormGroup, 'correoElectronico') }"/>
               </div>
@@ -1069,7 +1103,7 @@
                 Limpiar
               </button>
               <button type="button" class="btn btn-primary ms-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                aria-controls="offcanvasRight" (click)="submitFacturadorForm()">
+                aria-controls="offcanvasRight" (click)="submitFacturadoresForm()">
                 Guardar
               </button>
             </div>

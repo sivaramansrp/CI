@@ -1,9 +1,10 @@
+/* eslint-disable class-methods-use-this */
 import {
   Catalogo,
   ConsultaioQuery,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter,OnDestroy, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -19,7 +20,6 @@ import { Cupo } from '@libs/shared/data-access-user/src/core/models/140103/cance
 import { OficioComponent } from '../oficio/oficio.component';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { Tramite140103Query } from '../../../../estados/queries/tramite140103.query';
-import cancelacions from '@libs/shared/theme/assets/json/140103/cancelacion.json';
 import cancelcatalog from '@libs/shared/theme/assets/json/140103/cancelcatalog.json';
 
 
@@ -96,6 +96,7 @@ interface Cupos {
     CatalogoSelectComponent,
     FormsModule,
     ReactiveFormsModule,
+   
   ],
   templateUrl: './cancelacion-de-certificado.component.html',
   styleUrl: './cancelacion-de-certificado.component.css',
@@ -146,13 +147,22 @@ interface Cupos {
  * Implementa los hooks de ciclo de vida OnInit y OnDestroy para inicialización y limpieza.
  */
 export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
+/**
+   * @desc Evento de salida que emite el estado de la búsqueda de intento de cancelación de certificado.
+   * @param {Object} value - Objeto que contiene el estado del formulario.
+   * @param {boolean} value.submitted - Indica si el formulario fue enviado.
+   * @param {boolean} value.invalid - Indica si el formulario es inválido.
+   * @event
+   * @memberof CancelacionDeCertificadoComponent
+   */
+   @Output() buscarIntento = new EventEmitter<{submitted: boolean, invalid: boolean}>();
   /**
    * Lista de cupos que contiene los datos necesarios para realizar la cancelación de certificados. Esta propiedad se carga
    * a partir de un archivo JSON, lo que permite a la aplicación manejar múltiples cupos con facilidad.
    *
    * @type {Cupo[]}
    */
-  Cancelacion: Cupo[] = cancelacions;
+  Cancelacion: Cupo[] = [];
   cancelacionForm!: FormGroup;
 
   /**
@@ -238,6 +248,7 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
     },
   ];
 
+  submitted = false; 
 
   /**
  * @constructor
@@ -385,4 +396,55 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+  /**
+   * Método que se ejecuta al hacer clic en el botón "Buscar" del formulario de cancelación.
+   * Este método emite un evento con el estado del formulario, indicando si fue enviado y si es inválido.
+   * Si el formulario es inválido, se puede implementar lógica adicional para manejar los errores.
+   */
+  
+ buscarCupos(): void {
+  this.submitted = true;
+  const FORM = this.cancelacionForm;
+  this.buscarIntento.emit({
+    submitted: this.submitted,
+    invalid: FORM.invalid
+  });
+
+if (FORM.invalid) {
+    FORM.markAllAsTouched();
+    return;
+  }
+
+/**
+ * @desc Crea un nuevo objeto de tipo Cupos con información relevante para la cancelación de certificados.
+ * 
+ * @property {number} cupo - Número aleatorio generado para el cupo, entre 1 y 1000.
+ * @property {string} nombreProducto - Nombre del producto obtenido del catálogo según el valor seleccionado en el formulario.
+ * @property {string} nombreSubproducto - Nombre del subproducto obtenido del catálogo según el valor seleccionado en el formulario.
+ * @property {string} mecanismoAsignacion - Nombre del mecanismo de asignación obtenido del catálogo según el valor seleccionado en el formulario.
+ * @property {string} tipoCupo - Tipo de cupo, en este caso siempre 'General'.
+ * 
+ */
+const NUEVO_CUPO: Cupos = {
+    cupo: Math.floor(Math.random() * 1000) + 1, 
+    nombreProducto: this.obtenerNombreDelCatalogo(this.producto, FORM.value.producto),
+    nombreSubproducto: this.obtenerNombreDelCatalogo(this.subproducto, FORM.value.subproducto),
+    mecanismoAsignacion: this.obtenerNombreDelCatalogo(this.mecanismo, FORM.value.mecanismo),
+    tipoCupo: 'General' 
+  };
+  
+this.Cancelacion = [...this.Cancelacion, NUEVO_CUPO];
+}
+/**
+ * Devuelve la descripción de un elemento de catálogo dado su ID.
+ *
+ * @param {Catalogo[]} catalogo - Lista de elementos de catálogo.
+ * @param {number | string} id - Identificador del elemento a buscar.
+ * @returns {string} Descripción del elemento encontrado, o cadena vacía si no existe.
+ */
+obtenerNombreDelCatalogo(catalogo: Catalogo[], id: number | string): string {
+  const IDCADENA = String(id);
+  const CATALOG_ITEM = catalogo.find(i => String(i.id) === IDCADENA);
+  return CATALOG_ITEM?.descripcion ?? '';
+}
 }

@@ -1,6 +1,6 @@
 <div class="col-md-12">
     <div class="row">
-        <ng-titulo titulo="Datos de socio y/o accionistas" />
+        <ng-titulo titulo="Datos de los socios y/o accionistas" />
         <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="datosComplimentaria" ></app-tabla-dinamica>
     </div>
 
@@ -12,6 +12,22 @@
     <div class="row">
         <ng-titulo titulo="Datos de las plantas donde se realizarán las operaciones IMMEX" />
         <app-tabla-dinamica [configuracionTabla]="configuracionOperacion" [datos]="datosOperacions" ></app-tabla-dinamica>
+    </div>
+    <div class="row">
+        <ng-titulo titulo="Empresas submanufactureras" />
+        <app-tabla-dinamica
+            [configuracionTabla]="configuracionTablaImmex"
+            [datos]="datosImmex"
+        ></app-tabla-dinamica>
+    </div>
+    <div class="row">
+        <ng-titulo titulo="Planta manufactureras" />
+        <app-tabla-dinamica [configuracionTabla]="configuracionOperacion" [datos]="datosPlanta"></app-tabla-dinamica>
+    </div>
+
+    <div class="row">
+        <ng-titulo titulo="Servicios Immex" />
+        <app-tabla-dinamica [configuracionTabla]="configuracionServicios" [datos]="datosServicios"></app-tabla-dinamica>
     </div>
 </div>
 <app-datos-certificacion></app-datos-certificacion>

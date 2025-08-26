@@ -31,10 +31,6 @@
   margin: 0px 25px 25px 0px;
 }
 
-textarea.form-control {
-  height: 0% !important;
-}
-
 .modalsm {
   width: fit-content;
   margin-left: 115px;
@@ -47,4 +43,8 @@ textarea.form-control {
 
 .ng-touched.ng-invalid {
   border-color: #dc3545 !important;
+}
+
+textarea#domicilio.form-control {
+  resize: none !important;
 }

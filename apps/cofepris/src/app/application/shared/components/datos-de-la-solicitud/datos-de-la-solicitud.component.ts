@@ -1,7 +1,10 @@
 import {
   ALERTA_DE_MANIFESTO_Y_DECLARACIONES,
   ALERTA_OPCIONS,
+  DESHABILITADA_EN_INIT,
+  MENSAJE_EMERGENTE_DE_CONFIRMACION,
   MENSAJE_SIN_FILA_SELECCIONADA,
+  MODIFICADOR_MENSAJE_NO_FILA_SELECCIONADA,
   MOSTRAR_NOTIFICACION,
   NUMERO_TRAMITE,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE,
@@ -9,53 +12,67 @@ import {
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO,
+  PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES,
   PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA,
   PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO,
   PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO,
   PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA,
   PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL,
   REPRESENTANTE_LEGAL,
+  SIN_ACCION_AL_INICIAR,
+  TEXTO_MANIFESTO_Y_DECLARACIONES,
 } from '../../constantes/datos-solicitud.enum';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   AlertComponent,
+  CatalogoSelectComponent,
+  InputRadioComponent,
   Notificacion,
   NotificacionesComponent,
   Pedimento,
+  REGEX_IMPORTE_PAGO,
   REGEX_RFC,
   REGEX_SOLO_DIGITOS,
   REGEX_SOLO_NUMEROS,
+  TablaDinamicaComponent,
+  TablePaginationComponent,
+  TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import {
   Catalogo,
   DatosDeTablaSeleccionados,
   DatosSolicitudFormState,
   OpcionConfig,
+  ScianConfig,
   TablaMercanciasConfig,
   TablaMercanciasDatos,
   TablaOpcionConfig,
+  TablaScianConfig,
 } from '../../models/datos-solicitud.model';
-import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { delay, takeUntil } from 'rxjs';
-import { AbstractControl } from '@angular/forms';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output, SimpleChanges,
+} from '@angular/core';
+import { Subject, delay, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-import { Input } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ScianConfig } from '../../models/datos-solicitud.model';
-import { Subject } from 'rxjs';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TablaScianConfig } from '../../models/datos-solicitud.model';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json';
+
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
@@ -69,11 +86,13 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     FormsModule,
     NotificacionesComponent,
     TooltipModule,
+    InputRadioComponent,
+    TablePaginationComponent,
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
-export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, OnChanges {
   /**
    * @property {Subject<void>} destroyNotifier$
    * Subject utilizado para cancelar suscripciones activas al destruir el componente.
@@ -195,6 +214,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Mensaje de alerta relacionado con el manifiesto y declaraciones.
    */
   public alertaDeManifestoContenido = ALERTA_DE_MANIFESTO_Y_DECLARACIONES;
+
+  /**
+   * @property {string} textoManifestoContenido
+   * Texto que se muestra en el manifiesto y declaraciones.
+   */
+  public textoManifestoContenido = TEXTO_MANIFESTO_Y_DECLARACIONES;
 
   /**
    * @property {string} alertaOpicion
@@ -329,10 +354,34 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   public mostrarAlerta: boolean = false;
 
   /**
+   * Controla la visibilidad del modal de alerta.
+   * @property {boolean} mostrarAlerta
+   */
+  public confirmacionAlerta: boolean = false;
+
+  /**
    * Mensaje de alerta que se muestra al usuario.
    * @property {string} mensajeDeAlerta
    */
   public mensajeDeAlerta: string = MENSAJE_SIN_FILA_SELECCIONADA;
+
+  /**
+   * Mensaje de alerta que se muestra cuando no se ha seleccionado
+   * una fila o se han seleccionado más de una al intentar modificar.
+   *
+   * Se inicializa con la constante `MODIFICADOR_MENSAJE_NO_FILA_SELECCIONADA`.
+   */
+  public modificadorMensajeDeAlerta: string =
+    MODIFICADOR_MENSAJE_NO_FILA_SELECCIONADA;
+
+  /**
+   * Mensaje emergente que solicita confirmación al usuario antes
+   * de ejecutar una acción importante (por ejemplo, eliminar un registro).
+   *
+   * Se inicializa con la constante `MENSAJE_EMERGENTE_DE_CONFIRMACION`.
+   */
+  public mensajeEmergenteConfirmacion: string =
+    MENSAJE_EMERGENTE_DE_CONFIRMACION;
 
   /**
    * @description
@@ -376,6 +425,36 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   /** Nueva notificación relacionada con el RFC. */
   public seleccionarFilaNotificacion!: Notificacion;
+  /**
+   * Representa el estado de un grupo de botones de radio, inicializado con el valor `radio_si_no`.
+   * Esto se utiliza típicamente para manejar opciones binarias (por ejemplo, Sí/No).
+   */
+  public radioBtn = radio_si_no;
+  /**
+   * Representa el valor de selección predeterminado para un componente específico.
+   * Esto puede ser una cadena o un número, inicializado como una cadena vacía.
+   */
+  public predeterminadoSeleccionar: string | number = '';
+
+  /** Indica si el trámite es un manifiesto. */
+  esManifesto: boolean = false;
+
+  /**
+   * Indica si el campo utiliza punto y coma como separador.
+   */
+  esPuntoYComa: boolean = false;
+
+  /**
+   * @const SIN_ACCION_AL_INICIAR
+   * @description Lista de identificadores de procedimientos que no requieren acción al iniciar.
+   * @type {number[]}
+   */
+  sinAccionAlIniciar = SIN_ACCION_AL_INICIAR;
+
+  /**
+   * Indica si el trámite no requiere acción al iniciar.
+   */
+  esSinAccionAlIniciar: boolean = false;
 
   /**
    * @constructor
@@ -435,13 +514,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
+    this.crearDatosSolicitudForm();
+    this.actualizarDatosFormularioSolicitud();
+    this.esManifesto =
+      PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES.includes(
+        this.idProcedimiento
+      );
     this.mostrarNotificacion = MOSTRAR_NOTIFICACION.includes(
       this.idProcedimiento
     )
       ? true
       : false;
-    this.crearDatosSolicitudForm();
-    this.actualizarDatosFormularioSolicitud();
+
+    this.esSinAccionAlIniciar = SIN_ACCION_AL_INICIAR.includes(this.idProcedimiento);
+
     this.mostrarCorreoElectronico =
       PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC.includes(
         this.idProcedimiento
@@ -499,10 +585,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       this.idProcedimiento === NUMERO_TRAMITE.TRAMITE_260103
         ? 'Municipio y alcaldía'
         : 'Municipio o alcaldía';
-
-    if (this.formularioDeshabilitado) {
-      this.datosSolicitudForm.disable();
-    }
   }
 
   /**
@@ -516,23 +598,47 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   crearDatosSolicitudForm(): void {
     this.datosSolicitudForm = this.fb.group({
       rfcSanitario: [
-        this.datosSolicitudFormState.rfcSanitario,
+        {
+          value: this.datosSolicitudFormState.rfcSanitario,
+          disabled: DESHABILITADA_EN_INIT.includes(this.idProcedimiento),
+        },
         [
+          Validators.required,
           Validators.minLength(2),
           Validators.maxLength(120),
           Validators.pattern(REGEX_RFC),
         ],
       ],
       denominacionRazon: [
-        this.datosSolicitudFormState.denominacionRazon,
-        [Validators.minLength(2), Validators.maxLength(120)],
+        {
+          value: this.datosSolicitudFormState.denominacionRazon,
+          disabled: DESHABILITADA_EN_INIT.includes(
+                this.idProcedimiento
+              ),
+        },
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(120),
+        ],
       ],
       correoElectronico: [
-        this.datosSolicitudFormState.correoElectronico,
-        [Validators.minLength(2), Validators.maxLength(120), Validators.email],
+        {
+          value: this.datosSolicitudFormState.correoElectronico,
+          disabled: DESHABILITADA_EN_INIT.includes(this.idProcedimiento),
+        },
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(120),
+          Validators.email,
+        ],
       ],
       codigoPostal: [
-        this.datosSolicitudFormState.codigoPostal,
+        {
+          value: this.datosSolicitudFormState.codigoPostal,
+          disabled: DESHABILITADA_EN_INIT.includes(this.idProcedimiento),
+        },
         [
           Validators.required,
           Validators.minLength(2),
@@ -550,7 +656,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           disabled:
             PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA.includes(
               this.idProcedimiento
-            ),
+            ) || DESHABILITADA_EN_INIT.includes(this.idProcedimiento),
         },
         [
           Validators.required,
@@ -558,19 +664,39 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           Validators.maxLength(120),
         ],
       ],
-      localidad: [this.datosSolicitudFormState.localidad],
-      colonia: [this.datosSolicitudFormState.colonia],
+      localidad: [
+        {
+          value: this.datosSolicitudFormState.localidad,
+          disabled: DESHABILITADA_EN_INIT.includes(this.idProcedimiento),
+        },
+        [Validators.pattern(REGEX_IMPORTE_PAGO)],
+      ],
+      colonia: [
+        {
+          value: this.datosSolicitudFormState.colonia,
+          disabled: DESHABILITADA_EN_INIT.includes(this.idProcedimiento),
+        },
+      ],
       calleYNumero: [
-        this.datosSolicitudFormState.calleYNumero,
+        {
+          value: this.datosSolicitudFormState.calleYNumero,
+          disabled: DESHABILITADA_EN_INIT.includes(this.idProcedimiento),
+        },
         [Validators.required],
       ],
       calle: [this.datosSolicitudFormState.calle, [Validators.required]],
       lada: [
-        this.datosSolicitudFormState.lada,
+        {
+          value: this.datosSolicitudFormState.lada,
+          disabled: DESHABILITADA_EN_INIT.includes(this.idProcedimiento),
+        },
         [Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)],
       ],
       telefono: [
-        this.datosSolicitudFormState.telefono,
+        {
+          value: this.datosSolicitudFormState.telefono,
+          disabled: DESHABILITADA_EN_INIT.includes(this.idProcedimiento),
+        },
         [
           Validators.required,
           Validators.maxLength(5),
@@ -625,9 +751,21 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           ),
         },
       ],
-      regimenLaMercancia: ['101', [Validators.required]],
+      regimenLaMercancia: [this.datosSolicitudFormState.regimenLaMercancia, [Validators.required]],
       aduana: [this.datosSolicitudFormState.aduana, [Validators.required]],
+      mercancias: [this.tablaMercanciasConfig.datos, matrizRequerida],
+      manifesto: [
+        this.datosSolicitudFormState.manifesto,
+        [Validators.required],
+      ],
+      manifiestosCasillaDeVerificacion: [
+        this.datosSolicitudFormState.manifiestosCasillaDeVerificacion,
+        [Validators.required],
+      ],
     });
+    if (this.formularioDeshabilitado) {
+      this.datosSolicitudForm.disable();
+    }
 
     if (this.mostrarNotificacion) {
       const EMPTY = Object.entries(this.datosSolicitudFormState)
@@ -638,7 +776,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       }
     }
   }
-
+  /**
+   * Hook que se ejecuta cuando cambian las propiedades de entrada del componente.
+   * Permite habilitar o deshabilitar los formularios según el modo de solo lectura.
+   * @param {SimpleChanges} changes - Cambios detectados en las propiedades de entrada.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['formularioDeshabilitado'] && this.datosSolicitudForm) {
+      if (this.formularioDeshabilitado) {
+        this.datosSolicitudForm.disable();
+      } else {
+        this.datosSolicitudForm.enable();
+      }
+    }
+  }
   /**
  * @method actualizarDatosFormularioSolicitud
  * @description Actualiza las validaciones de los campos del formulario `datosSolicitudForm`
@@ -744,19 +895,60 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   eliminarMercancias(): void {
     if (!this.tablaMercanciasLista.length) {
-      this.mostrarAlerta = true;
+      this.confirmacionAlerta = true;
       return;
     }
-    this.tablaMercanciasConfig.datos = this.tablaMercanciasConfig.datos.filter(
-      (idx: TablaMercanciasDatos) => {
-        return !this.tablaMercanciasLista.some(
-          (idx2: TablaMercanciasDatos) =>
-            idx2.clasificacionProducto === idx.clasificacionProducto
-        );
+    if (this.tablaMercanciasLista.length > 0) {
+      this.seleccionarFilaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: this.mensajeEmergenteConfirmacion,
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+      };
+      this.confirmacionAlerta = true;
+    }
+  }
+
+  /**
+   * Elimina un pedimento de la lista de mercancías tras la confirmación del usuario.
+   *
+   * @param borrar Indica si el usuario confirmó la eliminación (`true`) o la canceló (`false`).
+   *
+   * ### Descripción:
+   * - Si `borrar` es `true`:
+   *   - Filtra los datos de `tablaMercanciasConfig.datos` eliminando aquellos
+   *     que coincidan en `clasificacionProducto` con los elementos de `tablaMercanciasLista`.
+   *   - Si existe un emisor en `mercanciasSeleccionado`, emite la lista actualizada de datos.
+   *   - Elimina el elemento de la lista `pedimentos` en la posición `elementoParaEliminar`.
+   * - Independientemente de la acción, desactiva la alerta de confirmación (`confirmacionAlerta = false`).
+   *
+   * ### Ejemplo de uso:
+   * ```ts
+   * eliminarPedimentoConfirmacion(true); // Elimina el pedimento
+   * eliminarPedimentoConfirmacion(false); // Cancela la eliminación
+   * ```
+   */
+  eliminarPedimentoConfirmacion(borrar: boolean): void {
+    if (borrar) {
+      this.tablaMercanciasConfig.datos =
+        this.tablaMercanciasConfig.datos.filter((idx: TablaMercanciasDatos) => {
+          return !this.tablaMercanciasLista.some(
+            (idx2: TablaMercanciasDatos) =>
+              idx2.clasificacionProducto === idx.clasificacionProducto
+          );
+        });
+      if (this.mercanciasSeleccionado) {
+        this.mercanciasSeleccionado.emit(this.tablaMercanciasConfig.datos);
       }
-    );
-    if (this.mercanciasSeleccionado) {
-      this.mercanciasSeleccionado.emit(this.tablaMercanciasConfig.datos);
+    }
+    this.confirmacionAlerta = false;
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
   }
 
@@ -820,6 +1012,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   modificarDatos(): void {
     if (!this.tablaMercanciasLista.length) {
+      this.seleccionarFilaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: this.modificadorMensajeDeAlerta,
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
       this.mostrarAlerta = true;
       return;
     }
@@ -954,6 +1157,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       txtBtnCancelar: '',
     };
     this.alternarControlesDeFormulario(true);
+    this.esSinAccionAlIniciar = false;
 
     this.elementoParaEliminar = i;
   }
@@ -1001,6 +1205,24 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Método que se llama cuando se busca un RFC en el modal de búsqueda.
+   * Si el parámetro `buscar` es verdadero, se actualizan los campos del formulario
+   * con valores predeterminados relacionados con el representante.
+   *
+   * @param {boolean} buscar - Indica si se debe buscar el RFC del representante.
+   */
+  obtenerModalDeBuscar(buscar: boolean): void {
+    if (buscar) {
+      this.datosSolicitudForm.patchValue({
+        representanteRfc: 'REP123456789',
+        representanteNombre: 'EUROFOODS DE MEXICO',
+        apellidoPaterno: 'GONZALEZ',
+        apellidoMaterno: 'PINAL',
+      });
+      this.mostrarAlerta = false;
+    }
+  }
+  /**
    * Método que verifica si un campo debe ser habilitado o deshabilitado
    * según el procedimiento actual.
    *
@@ -1046,7 +1268,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   abrirRfcModal(): void {
     this.mostrarRfcAlerta = true;
-    this.nuevaNotificacion = {
+    this.nuevaRfcNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
       modo: 'action',
@@ -1071,6 +1293,31 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Actualiza el valor de `predeterminadoSeleccionar` basado en el valor proporcionado.
+   *
+   * @param value - El nuevo valor a establecer para `predeterminadoSeleccionar`.
+   *                Puede ser una cadena o un número.
+   */
+  public cambioDeValorIndique(value: string | number): void {
+    this.predeterminadoSeleccionar = value;
+  }
+
+  /**
+   * @method formularioSolicitudValidacion
+   * Valida el formulario de solicitud verificando si todos los campos cumplen con las reglas de validación.
+   * Si el formulario es inválido, marca todos los controles como tocados para mostrar los mensajes de error.
+   *
+   * @returns {boolean} - Retorna `true` si el formulario es válido, de lo contrario `false`.
+   */
+  formularioSolicitudValidacion(): boolean {
+    if (this.datosSolicitudForm.valid) {
+      return true;
+    }
+    this.datosSolicitudForm.markAllAsTouched();
+    return false;
+  }
+
+  /**
    * Emite un evento con los datos seleccionados de la tabla.
    *
    * Este método recopila las listas seleccionadas de SCIAN, mercancías y opciones,
@@ -1083,4 +1330,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+}
+export function matrizRequerida(
+  control: AbstractControl
+): ValidationErrors | null {
+  const VALUE = control.value;
+  return Array.isArray(VALUE) && VALUE.length === 0 ? { required: true } : null;
 }

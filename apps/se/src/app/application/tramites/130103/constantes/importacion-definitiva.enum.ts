@@ -56,7 +56,6 @@ export const DATOS_DEL_TRAMITE_REALIZAR = [
     desactivado: false,
     soloLectura: false,
     validadores: [{ tipo: 'required' }],
-    marcadorDePosicion: 'Selecciona un valor',
     valorPredeterminado: '',
     marginTop: 0,
   },
@@ -82,7 +81,6 @@ export const DATOS_DEL_TRAMITE_REALIZAR = [
     desactivado: false,
     soloLectura: false,
     validadores: [{ tipo: 'required' }],
-    marcadorDePosicion: 'Selecciona un valor',
     valorPredeterminado: '',
     marginTop: 0,
   },
@@ -167,7 +165,6 @@ export const DATOS_DE_LA_MERCANCIA = [
     soloLectura: false,
     validadores: [{ tipo: 'required' }],
     marginTop: 0,
-    marcadorDePosicion: 'Selecciona un valor',
   },
   {
     id: 'unidad_de_medida',
@@ -178,7 +175,6 @@ export const DATOS_DE_LA_MERCANCIA = [
     desactivado: false,
     soloLectura: false,
     validadores: [{ tipo: 'required' }],
-    marcadorDePosicion: 'Selecciona un valor',
     marginTop: 0,
   },
   {
@@ -373,7 +369,6 @@ export const USO_ESPECIFICO_DE_LA_MERCANCIA = [
     desactivado: false,
     soloLectura: false,
     validadores: [{ tipo: 'required' }],
-    marcadorDePosicion: 'Selecciona un valor',
     marginTop: 0,
   },
   {
@@ -420,7 +415,6 @@ export const CRITERIO_DE_DICTAMEN_DE_REGLA_OCTAVA = [
     desactivado: false,
     soloLectura: false,
     validadores: [{ tipo: 'required' }],
-    marcadorDePosicion: 'Selecciona un valor',
     marginTop: 0,
   },
   {
@@ -504,7 +498,6 @@ export const PAIS_PROCEDENCIA = [
     desactivado: false,
     soloLectura: false,
     validadores: [{ tipo: '' }],
-    marcadorDePosicion: 'Selecciona un valor',
     marginTop: 0,
   },
   {
@@ -539,7 +532,7 @@ export const PAIS_PROCEDENCIA = [
  */
 export const REPRESENTACION_FEDERAL = [
   {
-    id: 'entidad',
+    id: 'Entidad federativa*:',
     labelNombre: 'Entidad federativa',
     campo: 'entidad',
     clase: 'col-md-4',
@@ -547,7 +540,6 @@ export const REPRESENTACION_FEDERAL = [
     desactivado: false,
     soloLectura: false,
     validadores: [{ tipo: 'required' }],
-    marcadorDePosicion: 'Selecciona un valor',
     marginTop: 0,
   },
   {

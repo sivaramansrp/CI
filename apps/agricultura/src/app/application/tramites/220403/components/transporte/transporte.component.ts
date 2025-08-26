@@ -46,7 +46,7 @@ import { Transporte } from '../../models/acuicola.module';
 @Component({
   selector: 'app-transporte',
   templateUrl: './transporte.component.html',
-  styleUrl: './transporte.component.css',
+  styleUrl: './transporte.component.scss',
   standalone: true,
   imports: [TituloComponent, AlertComponent, TablaDinamicaComponent, InputRadioComponent, InputFechaComponent, CatalogoSelectComponent, FormsModule, ReactiveFormsModule, CommonModule ], 
 })
@@ -200,11 +200,6 @@ export class TransporteComponent implements OnInit, OnDestroy {
     if (this.formulario.get('transporte')?.valid) {
       const VALIDA = this.formulario.get('transporte')?.valid ? true : false;
       this.tramite220403store.setTransporteValidada(VALIDA);
-      this.exportaccionAcuicolaServcios.actualizarFormaValida();
-    }
-    else{
-      this.seccionStore.establecerSeccion([true]);
-      this.seccionStore.establecerFormaValida([false]);
     }
   });
 

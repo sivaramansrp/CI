@@ -1,5 +1,6 @@
 import { ALERTA_PARA, FECHA_DE_FACTURA } from '@libs/shared/data-access-user/src/tramites/constantes/110208/certificado.enum';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, TablaDinamicaComponent, TituloComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MERCANCIA_TABLA, MercanciasFormInfo, MercanciasInfo } from '@libs/shared/data-access-user/src/core/models/110208/certificado.model';
@@ -7,10 +8,10 @@ import { Solicitud110208State, Tramite110208Store } from '../../../../estados/tr
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { InputFechaComponent } from '@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
 import { Modal } from 'bootstrap';
 import { Tramite110208Query } from '../../../../estados/queries/tramite110208.query';
 import { ValidarInicalmenteService } from '../../services/validar-inicalmente/validar-inicalmente.service';
-
 /**
  * Componente que gestiona la carga de mercancías.
  */
@@ -93,6 +94,12 @@ export class CargaDeMercanciasComponent implements OnInit, OnDestroy {
    */
   estado: Catalogo[] = [];
 
+  /** Almacena la fila seleccionada de la tabla de mercancías. */
+  public seleccionadoRow: MercanciasInfo | null = null;
+
+  /** Instancia del modal utilizada para mostrar y ocultar el diálogo de mercancías. */
+  private modalInstance!: Modal;
+
   /**
    * Constructor del componente.
    * @param fb Constructor del formulario reactivo.
@@ -106,6 +113,7 @@ export class CargaDeMercanciasComponent implements OnInit, OnDestroy {
     public tramite110208Store: Tramite110208Store,
     private tramite110208Query: Tramite110208Query,
     private consultaioQuery: ConsultaioQuery,
+    private validacionesService: ValidacionesFormularioService
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -149,25 +157,22 @@ export class CargaDeMercanciasComponent implements OnInit, OnDestroy {
       nombreTecnio: [{ value: '', disabled: true }],
       nombreEnIngles: [{ value: '', disabled: true }],
       criterioPara: [{ value: '', disabled: true }],
-      marca: [this.solicitudState?.marca],
+      marca: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9\s]*$/)]],
       umc: [this.solicitudState?.umc],
-      cantidad: [this.solicitudState?.cantidad, Validators.required],
-      valorDeLa: [this.solicitudState?.valorDeLa, Validators.required],
-      complementoDescripcion: [this.solicitudState?.complementoDescripcion, Validators.required],
-      nFactura: [this.solicitudState?.nFactura],
-      tipoDeFactura: [this.solicitudState?.tipoDeFactura],
-      fechaFactura: [this.solicitudState?.fechaFactura],
+      cantidad: [this.solicitudState?.cantidad,[Validators.required,CargaDeMercanciasComponent.numericValidator()]],
+      valorDeLa: [this.solicitudState?.valorDeLa,[Validators.required,CargaDeMercanciasComponent.numericValidator()]],
+      complementoDescripcion: [this.solicitudState?.complementoDescripcion,[Validators.maxLength(200),
+      Validators.pattern(/^[a-zA-Z0-9\s.,-]*$/)]],
+      nFactura: [this.solicitudState?.nFactura,[Validators.required,Validators.maxLength(20)]],
+      tipoDeFactura: [this.solicitudState?.tipoDeFactura, Validators.required],
+      fechaFactura: [this.solicitudState?.fechaFactura, Validators.required],
     });
     if (this.esFormularioSoloLectura) {
       Object.keys(this.formMercancia.controls).forEach((key) => {
         this.formMercancia.get(key)?.disable();
       });
-    } else {
-      Object.keys(this.formMercancia.controls).forEach((key) => {
-        this.formMercancia.get(key)?.enable();
-      });
-    }
   }
+}
 
   /**
    * Obtiene los datos de la tabla de mercancías.
@@ -204,9 +209,18 @@ export class CargaDeMercanciasComponent implements OnInit, OnDestroy {
    * Abre el modal para agregar mercancías.
    */
   abrirDialogoMercancias(): void {
-    if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_INSTANCE.show();
+    if (this.seleccionadoRow) {
+      if (this.modalElement) {
+        this.modalInstance = new Modal(this.modalElement.nativeElement);
+        this.modalInstance.show();
+        this.formMercancia.patchValue({
+          fraccionArancelaria: this.seleccionadoRow.fraccion_arancelaria,
+          nombreComercial: 'TSB Door Latch ZV GL2 left',
+          nombreTecnio: 'NOMBRE EN INGLES',
+          nombreEnIngles: 'NOMBRE EN INGLES',
+          criterioPara: this.seleccionadoRow.valor_mercancia,
+        });
+      }
     }
   }
 
@@ -265,6 +279,62 @@ export class CargaDeMercanciasComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.tramite110208Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+
+  /**
+ * Asigna la fila seleccionada de la tabla de mercancías al atributo correspondiente.
+ * @param event - Fila de mercancía seleccionada.
+ */
+  filaSeleccionadaEvento(event: MercanciasInfo): void {
+    if (event) {
+      this.seleccionadoRow = event; 
+    }
+  }
+
+  /**
+  * compo doc
+  * @method esValido
+  * @description 
+  * Verifica si un campo específico del formulario es válido.
+  * @param campo El nombre del campo que se desea validar.
+  * @returns {boolean | null} Un valor booleano que indica si el campo es válido.
+  */
+  public esValido(campo: string): boolean | null {
+    return this.validacionesService.isValid(this.formMercancia, campo);
+  } 
+ /**
+   * Valida que el valor sea numérico, positivo y con hasta 15 enteros y 4 decimales.
+   * Permite vacío, pero rechaza ceros o negativos.
+   */
+  static numericValidator(): ValidatorFn {
+    const REGEX_VALUE = /^\d{1,15}(\.\d{1,4})?$/;
+  return (control: AbstractControl): ValidationErrors | null => {
+    const VALOR = control.value;
+    if (VALOR === null || VALOR === undefined || VALOR === '') {return null} 
+    if (!REGEX_VALUE.test(VALOR)) {
+      return { invalidNumber: true };
+    }    
+    if (parseFloat(VALOR) <= 0) {
+      return { greaterThanZero: true };
+    } return null;
+  };
+}
+/**
+ * Formatea el valor de un control a 4 decimales.
+ * Si el valor es válido y numérico, lo convierte con precisión fija.
+ * No emite evento al actualizar el control.
+ * Evita errores cuando el valor es nulo o vacío.
+ */
+formatearACuatroDecimales(controlName: string): void {
+  const CONTROL = this.formMercancia.get(controlName);
+  const VALOR = CONTROL?.value;
+  if (VALOR !== null && VALOR !== undefined && VALOR !== '') {
+    const NUMERO = parseFloat(VALOR);
+    if (!isNaN(NUMERO)) {     
+      CONTROL?.setValue(NUMERO.toFixed(4), { emitEvent: false });
+    }
+  }
+}
+
 
   /**
    * Método que se ejecuta al destruir el componente.

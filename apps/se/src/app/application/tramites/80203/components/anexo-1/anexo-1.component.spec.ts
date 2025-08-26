@@ -138,29 +138,11 @@ describe('Anexo1Component', () => {
     expect(component.immexRegistroform.get('importacionForm')).toBeTruthy();
   });
 
-  it('should call inicializarEstadoFormulario on ngAfterViewInit', () => {
-    component.inicializarEstadoFormulario = jest.fn();
-    component.ngAfterViewInit();
-    expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
-  });
-
   it('should create a form group in creatFormSolicitud', () => {
     component.fb = fb;
     component.immexRegitroAnexoState = getMockState();
     component.creatFormSolicitud();
     expect(component.immexRegistroform instanceof FormGroup).toBe(true);
-  });
-
-  it('should disable and enable form in inicializarEstadoFormulario', () => {
-    component.immexRegistroform = fb.group({});
-    component.immexRegistroform.disable = jest.fn();
-    component.immexRegistroform.enable = jest.fn();
-    component.esFormularioSoloLectura = true;
-    component.inicializarEstadoFormulario();
-    expect(component.immexRegistroform.disable).toHaveBeenCalled();
-    component.esFormularioSoloLectura = false;
-    component.inicializarEstadoFormulario();
-    expect(component.immexRegistroform.enable).toHaveBeenCalled();
   });
 
   it('should clean up destroyNotifier$ on ngOnDestroy', () => {

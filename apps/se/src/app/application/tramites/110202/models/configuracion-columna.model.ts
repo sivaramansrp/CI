@@ -178,3 +178,15 @@ export interface Mercancia {
   fraccionNaladiSa96: string;
   fraccionNaladiSa02: string;
 }
+/**
+ * Modelo que representa los datos de una mercancía.
+ * Utilizado para formularios, tablas y sincronización con el store.
+ * Contiene información básica como cantidad, valor y clasificación.
+ */
+export interface Mercancias {
+  unidadDeMedida: string;
+  cantidad: string;
+  fraccionArancelaria: string;
+  valorMercancia: string;
+  tipoDeFactura: string;
+}

@@ -9,7 +9,6 @@ import {
   InputRadioComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
-  TableBodyData,
   TituloComponent,
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
@@ -30,10 +29,10 @@ import {
 } from '@angular/forms';
 import { Subject, Subscription, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { DatosMercancia, RespuestaCatalog } from '../../models/importador-exportador.model';
 import { ImportadorExportadorService } from '../../services/importador-exportador.service';
 import { Tramite10301Query } from '../../estados/tramite10301.query';
-import mercanciaTable from '@libs/shared/theme/assets/json/10301/mercancia-table.json';
-import { DatosMercancia } from '../../models/importador-exportador.model';
+import { Solicitud10301Service } from '../../services/solicitud10301.service';
 
 /**
  * Texto de adjuntar para terceros.
@@ -312,6 +311,11 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       encabezado: 'Uso específico de la mercancía',
       clave: (articulo) => articulo.usoEspecifico,
       orden: 8,
+    },
+    {
+      encabezado: 'Condición de la mercancía',
+      clave: (articulo) => articulo.condicion,
+      orden: 9,
     }
   ];
 
@@ -338,7 +342,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     private store: Tramite10301Store,
     private query: Tramite10301Query,
     private fb: FormBuilder,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private solicitud10301Service: Solicitud10301Service
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -425,6 +430,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         };
       })
     );
+    this.cargarDatosTablaData();
   }
 
   /**
@@ -434,7 +440,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosDelFormulario();
-      this.agregarMercancia();
     } else {
       this.donanteDomicilio();
     }
@@ -447,6 +452,19 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     { label: 'Sí', value: 'sí' },
     { label: 'No', value: 'no' },
   ];
+
+  /**
+   * Cargar datos de la tabla.
+   */
+  cargarDatosTablaData(): void {
+    this.solicitud10301Service
+      .obtenerDatosTableData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data: RespuestaCatalog[]) => {
+        this.mercanciaDatos = data as unknown as DatosMercancia[];
+      });
+  }
+
   /**
    * Cambia el valor seleccionado del radio.
    * @param value Valor seleccionado.
@@ -674,7 +692,11 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         serie: [
           this.solicitudState?.serie,
           [Validators.required, Validators.maxLength(50)],
-        ]
+        ],
+        condicionMercancia: [
+          this.solicitudState?.condicionMercancia,
+          [Validators.required, Validators.maxLength(50)],
+        ],
       }),
     });
 
@@ -697,7 +719,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       (respuesta) => {
         if (respuesta?.success) {
           respuesta.datos.id = this.mercanciaDatos.length + 1;
-          this.mercanciaDatos.push(respuesta.datos);
+          this.mercanciaDatos = [...this.mercanciaDatos, respuesta.datos];
           (this.store.setDatosMercancia as (valor: DatosMercancia[]) => void)(this.mercanciaDatos);
           this.agregarMercanciasForm.reset();
           this.agregarMercanciasForm.markAsUntouched();

@@ -3,6 +3,8 @@ import {
   ConsultaioState,
   InputFecha,
   InputFechaComponent,
+  InputRadioComponent,
+  REGEX_SOLO_NUMEROS,
   TituloComponent,
   ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
@@ -35,11 +37,12 @@ import { Tramite31802Query } from '../state/Tramite31802.query';
     CommonModule,
     TituloComponent,
     InputFechaComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    InputRadioComponent
 ],
   providers: [RegistroSolicitudService],
   templateUrl: './Solicitud.component.html',
-  styleUrl: './Solicitud.component.css',
+  styleUrl: './Solicitud.component.scss',
 })
 export class SolicitudComponent implements OnInit, OnDestroy {
   /**
@@ -78,15 +81,34 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   registroForm!: FormGroup;
 
-
+  /**
+   * Flag para determinar si el formulario es de solo lectura.
+   */
   esFormularioSoloLectura: boolean = false;
 
-
-  private destroyNotifier$: Subject<void> = new Subject();
   /**
-    * Subject para destruir notificador.
-    */
+   * Subject para destruir notificador.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Consulta los datos del formulario.
+   */
   consultaDatos!: ConsultaioState;
+
+  /**
+   * Valor seleccionado del radio.
+   */
+  valorSeleccionado!: string;
+
+  /**
+   * Opciones de radio.
+   */
+  radioOpcions = [
+    { label: 'Sí', value: 'si' },
+    { label: 'No', value: 'no' },
+  ];
+
   /**
    * Notificador para cancelar suscripciones activas.
    * Se utiliza para evitar fugas de memoria al destruir el componente.
@@ -135,14 +157,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.donanteDomicilio()
+    this.donanteDomicilio();
   }
 
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosDelFormulario();
     } else {
-      this.datosDeAvisoForm()
+      this.donanteDomicilio();
     }
   }
   /**
@@ -150,23 +172,29 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    *
    * @param nuevo_fechaPago Nueva fecha de pago seleccionada.
    */
-  cambioFechaPago(nuevo_fechaPago: string): void {
+ cambioFechaPago(nuevo_fechaPago: string): void {
     this.registroForm.patchValue({
       fechaPago: nuevo_fechaPago,
     });
     this.setValoresStore(this.registroForm, 'fechaPago', 'setFechaPago');
   }
-
-  /**
+    /**
    * Maneja el envío del formulario.
    * Valida el formulario antes de realizar acciones adicionales.
    */
   enviarFormulario(): void {
     if (this.registroForm.valid) {
       // Aquí se implementará la lógica para manejar el envío del formulario.
-    } else {
-      this.validarDestinatarioFormulario();
-    }
+    } 
+  }
+
+  /**
+   * Cambia el valor seleccionado del radio.
+   * @param valor Valor seleccionado.
+   */
+  cambiarRadio(valor: string | number):void {
+    this.valorSeleccionado = valor as string;
+    this.store.setValorSeleccionado(this.valorSeleccionado);
   }
 
   /**
@@ -219,30 +247,20 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
-      llave: [this.solicitudState?.llave, [Validators.required]],
-      manifiesto1: [this.solicitudState?.manifiesto1, [Validators.required]],
-      manifiesto2: [this.solicitudState?.manifiesto2, [Validators.required]],
-      manifiesto3: [this.solicitudState?.manifiesto3, [Validators.required]],
-      numeroOperacion: [this.solicitudState?.numeroOperacion, [Validators.required]],
-      fechaPago: [this.solicitudState?.fechaPago, [Validators.required]],
-      monedaNacional: [this.solicitudState?.monedaNacional, [Validators.required]],
+      numeroOficio: [{value: this.solicitudState?.numeroOficio, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      llave: [{value: this.solicitudState?.llave, disabled: this.esFormularioSoloLectura}, [Validators.required, Validators.maxLength(20)]],
+      manifiesto1: [{value: this.solicitudState?.manifiesto1, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      manifiesto2: [{value: this.solicitudState?.manifiesto2, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      manifiesto3: [{value: this.solicitudState?.manifiesto3, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      numeroOperacion: [{value: this.solicitudState?.numeroOperacion, disabled: this.esFormularioSoloLectura}, [Validators.required, Validators.maxLength(20), Validators.pattern(REGEX_SOLO_NUMEROS)]],
+      fechaPago: [{value : this.solicitudState?.fechaPago,disabled :this.esFormularioSoloLectura}, [Validators.required]],
+      monedaNacional: [{value: this.solicitudState?.monedaNacional, disabled: this.esFormularioSoloLectura}, [Validators.required, Validators.maxLength(12), Validators.pattern(REGEX_SOLO_NUMEROS)]],
+      fechaInicio:[{value: this.solicitudState?.fechaInicio, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      fechaFinal: [{value: this.solicitudState?.fechaFinal, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      manifiesto4: [{value: this.solicitudState?.manifiesto4, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      manifiesto5: [{value: this.solicitudState?.manifiesto5, disabled: this.esFormularioSoloLectura}, [Validators.required]],
+      opcion: [{ value: this.solicitudState?.opcion, disabled: this.esFormularioSoloLectura }, [Validators.required]]
     });
-
-    this.inicializarEstadoFormulario();
-  }
-
-  /**
- * datosDeltrimiteForm los campos del formulario si es de solo lectura.
- * Si el formulario es de solo lectura, deshabilita los campos del formulario de importador/exportador.
- */
-
-  datosDeAvisoForm(): void {
-    if (this.esFormularioSoloLectura) {
-      this.registroForm.get('llave')?.disable();
-      this.registroForm.get('numeroOperacion')?.disable();
-      this.registroForm.get('fechaPago')?.disable();
-      this.registroForm.get('monedaNacional')?.disable();
-    }
   }
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.

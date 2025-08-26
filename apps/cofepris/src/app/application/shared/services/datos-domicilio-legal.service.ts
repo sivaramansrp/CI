@@ -3,20 +3,32 @@ import {
   RespuestaCatalogos,
 } from '@libs/shared/data-access-user/src';
 import { DatosDomicilioLegalState, DatosDomicilioLegalStore } from '../estados/stores/datos-domicilio-legal.store';
+import { FraccionArancelaria, PermisoModel } from '../models/datos-domicilio-legal.model';
+
 import {
   MercanciasTabla,
   RespuestaTabla,
 } from '../components/domicilio-establecimiento/domicilio-establecimiento.component';
+import { Observable, Subject } from 'rxjs';
 import { DatosDomicilioLegalQuery } from '../estados/queries/datos-domicilio-legal.query';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { PermisoModel } from '../models/datos-domicilio-legal.model';
-
 @Injectable({
   providedIn: 'root',
 })
 export class DatosDomicilioLegalService {
+
+    /**
+     * Subject utilizado para emitir y escuchar eventos personalizados dentro del servicio.
+     * Puede ser suscrito para comunicación basada en eventos entre componentes o servicios.
+     * @private
+     */
+    private eventSubject = new Subject();
+    /**
+     * Flujo observable que emite eventos desde el subject interno de eventos.
+     * Suscríbete a este observable para escuchar notificaciones de eventos.
+     */
+    event$ = this.eventSubject.asObservable();
   /**
    * Servicio para obtener datos de terceros relacionados y permisos.
    *
@@ -29,11 +41,22 @@ export class DatosDomicilioLegalService {
   /**
    * Obtiene los datos de selección desde un archivo JSON local.
    *
-   * @returns Observable que emite un objeto RespuestaCatalogos.
+   * @returns Observable que emite un objeto Catalogo.
    */
-  getObtenerEstadoList(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>(
-      'assets/json/260501/seleccion.json'
+  getObtenerEstadoList(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>(
+      'assets/json/260512/clavescian.json'
+    );
+  }
+
+  /**
+   * Obtiene los datos de selección desde un archivo JSON local.
+   *
+   * @returns Observable que emite un objeto Catalogo.
+   */
+  getObtenerEstadoDescripcionList(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>(
+      'assets/json/260512/clavescian-descripcion.json'
     );
   }
 
@@ -129,12 +152,17 @@ export class DatosDomicilioLegalService {
       this.datosDomicilioLegalStore.setNumeroRegistro(DATOS.numeroRegistro);
       this.datosDomicilioLegalStore.setFechaCaducidad(DATOS.fechaCaducidad);
       this.datosDomicilioLegalStore.setCumplimiento(DATOS.cumplimiento);
+      this.datosDomicilioLegalStore.setMensaje(DATOS.mensaje);
       this.datosDomicilioLegalStore.setRfc(DATOS.rfc);
       this.datosDomicilioLegalStore.setNombre(DATOS.nombre);
       this.datosDomicilioLegalStore.setApellidoPaterno(DATOS.apellidoPaterno);
       this.datosDomicilioLegalStore.setApellidoMaterno(DATOS.apellidoMaterno);
       if (Array.isArray(DATOS.aduanasDeEntrada)) {this.datosDomicilioLegalStore.setPaisDeOriginDatos(DATOS.aduanasDeEntrada);}
       this.datosDomicilioLegalStore.setGarantiasOfrecidas(DATOS.garantiasOfrecidas);
+      this.datosDomicilioLegalStore.setNombre(DATOS.nombre);
+      this.datosDomicilioLegalStore.setApellidoPaterno(DATOS.apellidoPaterno);
+      this.datosDomicilioLegalStore.setApellidoMaterno(DATOS.apellidoMaterno);
+      this.datosDomicilioLegalStore.setMensaje(DATOS.mensaje);
   }
 
   /**
@@ -164,4 +192,21 @@ export class DatosDomicilioLegalService {
         'assets/json/cofepris/mercancias-tabla.json'
       );
     }
+    /**
+     * Obtiene los datos de la fracción arancelaria desde un archivo JSON local.
+     *
+     * @returns Observable que emite un objeto FraccionArancelaria.
+     */
+    getFraccionArancelaria():Observable<FraccionArancelaria>{
+      return this.http.get<FraccionArancelaria>('assets/json/cofepris/fraccion-arancelaria.json');
+    }
+
+  /**
+   * Emite un evento booleano a los suscriptores a través de eventSubject.
+   *
+   * @param datos - El valor booleano que se emitirá a los observadores.
+   */
+  emitEvent(datos: boolean): void {
+    this.eventSubject.next(datos);
+  }
 }

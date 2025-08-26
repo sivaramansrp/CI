@@ -12,7 +12,7 @@
       <div class="row">
         @switch(indice){
             @case(1){
-                <app-solicitante-tabs [indice]="capturarTapIndice" (SolicitanteEventCertificado)="isModificar($event,1)"></app-solicitante-tabs>
+                <app-solicitante-tabs [indice]="capturarTapIndice"></app-solicitante-tabs>
             }@case(2){
               <app-paso-tres></app-paso-tres>
             }

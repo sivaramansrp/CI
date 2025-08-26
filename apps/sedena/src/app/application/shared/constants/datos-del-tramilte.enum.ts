@@ -28,7 +28,7 @@ export const CROSLISTA_ADUANAS_DISPONIBLES: string[] = [
  * @description Representa códigos específicos utilizados en el sistema para identificar tipos de permisos definitivos.
  */
 export const PERMISO_DEFINITIVO_TITULO = [
-  240119, 240120, 240118, 240107, 240106, 240108, 240308,240117, 240121, 240405, 240111,240305, 240311, 240411, 240122, 240407, 240123, 240321,240112
+  240119, 240120, 240118, 240107, 240106, 240108, 240308, 240117, 240121, 240405, 240111, 240305, 240311, 240411, 240122, 240407, 240123, 240321, 240112,240105,240108
 ];
 
 /**
@@ -38,7 +38,7 @@ export const PERMISO_DEFINITIVO_TITULO = [
  * @type {number[]}
  * @description Representa códigos específicos utilizados en el sistema para identificar permisos aduaneros.
  */
-export const PERMISO_ADUNA_TITULO = [240119, 240120, 240118, 240123];
+export const PERMISO_ADUNA_TITULO = [240119, 240120, 240118, 240123,240117];
 
 /**
  * Identificadores numéricos relacionados con permisos OCULTAR_BOTONES.
@@ -47,16 +47,16 @@ export const PERMISO_ADUNA_TITULO = [240119, 240120, 240118, 240123];
  * @type {number[]}
  * @description Representa códigos específicos utilizados en el sistema para identificar permisos OCULTAR_BOTONES.
  */
-export const OCULTAR_BOTONES = [240120, 240121, 240107,240311, 240407, 240123,240321, 240118];
+export const OCULTAR_BOTONES = [240120, 240121, 240107, 240311, 240407, 240123, 240321, 240118];
 
- /**
- * @const NO_VISIBILIDAD_UMC
- * @type {number[]}
- * @description Arreglo que contiene los identificadores numéricos de las UMC (Unidades de Medida y Clasificación) 
- * que no deben ser visibles en la aplicación.
- * @author [Tu Nombre o Equipo]
- */
- export const NO_VISIBILIDAD_UMC: number[] = [
+/**
+* @const NO_VISIBILIDAD_UMC
+* @type {number[]}
+* @description Arreglo que contiene los identificadores numéricos de las UMC (Unidades de Medida y Clasificación) 
+* que no deben ser visibles en la aplicación.
+* @author [Tu Nombre o Equipo]
+*/
+export const NO_VISIBILIDAD_UMC: number[] = [
   240122
 ];
 
@@ -72,6 +72,7 @@ export const PAISE_DENTINO_EITIQUETA: Map<number, string> = new Map<
   string
 >([
   [240119, 'País de procedencia'],
+  [240117, 'País de procedencia'],
   [240120, 'País de procedencia'],
   [240118, 'País de procedencia'],
   [240123, 'País de procedencia'],
@@ -81,6 +82,11 @@ export const PAISE_DENTINO_EITIQUETA: Map<number, string> = new Map<
   [240305, 'paise destino'],
   [240411, 'paise destino'],
   [240407, 'País destino'],
+  [240102, 'País destino'],
+  [240101, 'País destino'],
+  [240105, 'País destino'],
+  [240107, 'País destino'],
+  [240106, 'País destino'],
 ]);
 
 /**
@@ -90,7 +96,7 @@ export const PAISE_DENTINO_EITIQUETA: Map<number, string> = new Map<
  * @type {number[]}
  * @description Contiene un arreglo de identificadores numéricos que representan mercancías específicas para las cuales se permite mostrar la lista cruzada.
  */
-export const PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA = [240108, 240107, 240117, 240121, 240111, 240311, 240122];
+export const PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA = [240108, 240107, 240117, 240121, 240111, 240311, 240122,240105];
 
 /**
  * Período del semestre habilitado.
@@ -100,7 +106,7 @@ export const PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA = [240108, 240107, 240
  * @description Contiene un arreglo de números que identifican el semestre habilitado. Este valor puede ser utilizado para validar o configurar funcionalidades relacionadas con el período académico activo.
  */
 export const PERIODO_SEMESTRE_HABILITADO = [
-  240119, 240108, 240107, 240114, 240106, 240308, 240117, 240121, 240405, 240111,240305, 240311, 240411, 240407,240321
+  240119, 240108, 240107, 240114, 240106, 240308, 240117, 240121, 240405, 240111, 240305, 240311, 240411, 240407, 240321,240105
 ];
 
 /**
@@ -137,7 +143,7 @@ export const FETCHA_SALIDA = [240123];
  * @type {number[]}
  * @description Contiene un arreglo de identificadores numéricos relacionados con CURP en el sistema.
  */
-export const ES_CURP = [240107, 240114, 240118, 240117, 240121,240311];
+export const ES_CURP = [240107, 240114, 240118, 240117, 240121, 240311];
 
 /**
  * Identificadores numéricos relacionados con RFC.
@@ -159,6 +165,10 @@ export const PERIODO_UNO_SEMESTRE = [
   {
     label: '1° semestre',
     value: 'unoSemestre',
+  },
+    {
+    label: '2° semestre',
+    value: 'dosSemestre',
   },
 ];
 
@@ -205,7 +215,7 @@ export const AGGREGAR_MERCANCIA_PAISE_OCULTAR = [240108];
  * @description Contiene un arreglo de identificadores numéricos relacionados con permisos de justificación específicos.
  * Este valor es utilizado en el sistema para identificar trámites que requieren justificación.
  */
-export const PERMISO_JUSTIFICACION = [240308, 240405,240305, 240411, 240407,240321];
+export const PERMISO_JUSTIFICACION = [240308, 240405, 240305, 240411, 240407, 240321];
 
 /**
  * Constante que define una lista de permisos generales que deben ser ocultados.
@@ -233,7 +243,7 @@ export const ES_RFC = [240117];
  * @description Contiene un arreglo de identificadores numéricos que representan permisos generales desactivados en el sistema.
  * Este valor es utilizado para identificar permisos que no están habilitados o disponibles en ciertas funcionalidades.
  */
-export const DESACTIVADO_PERMISO_GENERAL = [240405, 240411,240321];
+export const DESACTIVADO_PERMISO_GENERAL = [240405, 240411, 240321];
 
 /**
  * @constant
@@ -242,4 +252,4 @@ export const DESACTIVADO_PERMISO_GENERAL = [240405, 240411,240321];
  * @description Contiene un arreglo de identificadores numéricos relacionados con aduanas específicas.
  * Este valor es utilizado en el sistema para identificar trámites o permisos asociados a estas aduanas.
  */
-export const ADUANA_TEXTO = [240123, 240120, 240118];
+export const ADUANA_TEXTO = [240123, 240120, 240118,240119,240117];

@@ -15,7 +15,7 @@ export interface Solicitud30901State {
   /** Descripción del motivo por el cual no se tomó muestra. */
   descMotivoFaltaMuestra: string;
   /** Código de la fracción concatenada. */
-  comboFraccionConcatenada: number;
+  comboFraccionConcatenada: number | null;
   /** Fracción concatenada. */
   fraccionConcatenada: string;
   /** Descripción de la fracción arancelaria. */
@@ -55,7 +55,7 @@ export function createInitialSolicitudState(): Solicitud30901State {
     opcionDeImportador: 1,
     tomaMuestraDespacho: '',
     descMotivoFaltaMuestra: '',
-    comboFraccionConcatenada: 0,
+    comboFraccionConcatenada: null,
     fraccionConcatenada: '',
     fracciondescripcion: '',
     comboNicos: 0,
@@ -110,7 +110,7 @@ export class Solicitud30901Store extends Store<Solicitud30901State> {
   }
 
   /** Actualiza el código de la fracción concatenada. */
-  public setComboFraccionConcatenada(comboFraccionConcatenada: number): void {
+  public setComboFraccionConcatenada(comboFraccionConcatenada: number | null): void {
     this.update((state) => ({
       ...state,
       comboFraccionConcatenada,

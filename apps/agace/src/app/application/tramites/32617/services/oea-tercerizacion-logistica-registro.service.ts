@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { PersonaRespuestaTabla } from '../modelos/personas-notificaciones-tabla.model';
+import { RepresentanteLegal } from '../../32605/models/solicitud.model';
 
 /**
  * Servicio para manejar las renovaciones de muestras de mercancías.
@@ -94,6 +95,16 @@ sectorListaDeSelects(): Observable<{
   }
 
   /**
+   * Actualiza el estado completo de la solicitud 32617 en el store.
+   * Recibe un objeto con todos los datos del formulario y los persiste en el estado global.
+   *
+   * param datos - Objeto completo del estado de la solicitud con todos los campos actualizados
+   */
+  actualizarEstado(datos: Tramites32617State): void {
+    this.tramite32617Store.establecerDatos(datos);
+  }
+
+  /**
    * Obtiene los datos de toma de muestras de mercancías desde un archivo JSON local.
    *
    * @returns {Observable<Tramites32617State>} Un observable que emite los datos del trámite 32617.
@@ -136,6 +147,16 @@ sectorListaDeSelects(): Observable<{
   }
 
   /**
+   * Obtiene los datos del representante legal desde un archivo JSON local.
+   * @returns Observable con un objeto de tipo RepresentanteLegal.
+   */
+  conseguirRepresentanteLegalDatos(): Observable<RepresentanteLegal> {
+    return this.http.get<RepresentanteLegal>(
+      'assets/json/32610/representante-legal-datos.json'
+    );
+  }
+
+  /**
    * Obtiene la lista de transportistas desde un archivo JSON local.
    * @returns Observable con un arreglo de TransportistasTable.
    */
@@ -143,10 +164,7 @@ sectorListaDeSelects(): Observable<{
     return this.http.get<{ [key: string]: TransportistasListaInterface }>('assets/json/32617/transportistas-lista.json');
   }
 
-   getDatos(): Observable<Tramites32617State> {
-    return this.http.get<Tramites32617State>('assets/json/32617/datos.json');
-  }
-
+  
 
   /**
    * Obtiene los datos de la tabla de personas.
@@ -165,6 +183,16 @@ sectorListaDeSelects(): Observable<{
   */
   getDatosDeLaSolicitud(): Observable<Tramites32617State> {
     return this.http.get<Tramites32617State>('assets/json/32617/datos-de-la-solicitud-terceros.json');
+  }
+
+  /**
+   * Obtiene los datos completos de la solicitud desde un archivo JSON local.
+   * Utilizado para cargar información predeterminada o datos guardados previamente.
+   *
+   * returns Observable que emite el estado completo de la solicitud 32617
+   */
+  obtenerDatos(): Observable<Tramites32617State> {
+    return this.http.get<Tramites32617State>('assets/json/32617/datos.json');
   }
 
 }

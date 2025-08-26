@@ -63,6 +63,8 @@ export interface MercanciasInfo {
     valor_mercancia:string;
     tipo_de_factura:string;
     numero:string;
+    complemento:string;
+    fecha:string;
 }
 
 export const MERCANCIA_TABLA = [
@@ -99,6 +101,18 @@ export const MERCANCIA_TABLA = [
         encabezado: 'Número',
         clave: (ele: MercanciasInfo) => ele.numero,
         orden: 6,
+    },
+     {
+        
+        encabezado: 'Complemento descripción',
+        clave: (ele: MercanciasInfo) => ele.complemento,
+        orden: 7,
+    },
+     {
+        
+        encabezado: 'Fecha factura',
+        clave: (ele: MercanciasInfo) => ele.fecha,
+        orden: 7,
     },
 ];
 
@@ -176,6 +190,17 @@ export interface MercanciasFormInfo {
      * Número de factura asociado a la mercancía.
      */
     nFactura: string;
+
+    /**
+     * Tipo de factura de la mercancía.
+     */
+    tipoDeFactura?: string;
+
+    /**
+     * Fecha de la factura de la mercancía.
+     */
+    fechaDeFactura?: string;
+    
 }
 
 /**

@@ -15,7 +15,7 @@
         </app-catalogo-select>
   </form>
   
-  <label class="form-label text-left">Indique todos los dom, ilios registrados ante el RFC del solicitante e indique aquellos en que se desarrollen actividades relacionadas con su proceso productivo y/o la prestación de servicios.</label>
+  <label class="form-label text-left">Indique todos los domicilios registrados ante el RFC del solicitante e indique aquellos en que se desarrollen actividades relacionadas con su proceso productivo y/o la prestación de servicios.</label>
   
   <ng-alert [CONTENIDO]="DOMICILIO_REGISTRADOS"></ng-alert>
 	<div *ngIf="mostrarErroresValidacion && DomiciliosRfcSolicitanteList.length === 0 && forma.get('domiciliosRFCTabla')?.touched" class="mt-3">

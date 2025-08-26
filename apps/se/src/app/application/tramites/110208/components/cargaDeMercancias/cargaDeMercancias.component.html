@@ -1,35 +1,32 @@
 <ng-titulo titulo="Carga de mercancías por archivo" />
-<div class="row w-100">
-    <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-        <button class="btn btn-primary" [disabled]="esFormularioSoloLectura ? true : false">Carga por archivo</button>
-    </div>
+<div class="text-end mt-3 mb-4">
+    <button class="btn btn-primary" [disabled]="esFormularioSoloLectura ? true : false">Carga por archivo</button>
 </div>
 <div class="row mt-5">
     <ng-alert [CONTENIDO]="alerta.inst"></ng-alert>
 </div>
 <h6 class="mt-5">Mercancías seleccionadas</h6>
-<app-tabla-dinamica [configuracionTabla]="mercanciasTabla"
-[datos]="mercanciasTablaDatos" [tipoSeleccionTabla]="tipoSeleccionTabla"></app-tabla-dinamica>
+    <app-tabla-dinamica 
+        [configuracionTabla]="mercanciasTabla"
+        [datos]="mercanciasTablaDatos"
+        [tipoSeleccionTabla]="tipoSeleccionTabla"
+        (filaSeleccionada)="filaSeleccionadaEvento($event)">
+    </app-tabla-dinamica>
 <ul class="pagination d-flex justify-content-center">
     <li class="page-item"><a class="page-link" href="#">1</a></li>
 </ul>
-<div class="row w-100">
-    <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-        <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
-        <button class="btn btn-primary" data-bs-toggle="modal"
-        data-bs-target="#modalAgregarMercancias" (click)="abrirDialogoMercancias()" [disabled]="esFormularioSoloLectura ? true : false">Modificar</button>
-    </div>
+<div class="text-end mt-3 mb-3">
+    <button class="btn btn-danger me-3" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
+    <button class="btn btn-primary" (click)="abrirDialogoMercancias()" [disabled]="esFormularioSoloLectura ? true : false">Modificar</button>
 </div>
 
-<div class="modal fade" id="modalAgregarMercancias" tabindex="-1" aria-labelledby="modalAgregarMercanciasLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered width">
+<div class="modal fade" #modalAgregarMercancias id="modalAgregarMercancias" tabindex="-1" aria-labelledby="modalAgregarMercanciasLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Datos de la mercancía</h4>
-            </div>
-            <div class="modal-body modal-body-height">
-                <form [formGroup]="formMercancia">
+            <div class="modal-body">
+                <ng-titulo titulo="Datos de la mercancía" />
+                <div class="col-md-12">
+                    <form [formGroup]="formMercancia">
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
@@ -71,19 +68,42 @@
                             <div class="form-group">
                                 <label for="marca">Marca:</label>
                                 <input type="text" id="marca" formControlName="marca" class="form-control" (change)="setValoresStore(formMercancia,'marca', 'setMarca')">
-                              </div>
+                              
+                            @if(formMercancia.controls['marca'].invalid && formMercancia.controls['marca'].touched) {
+                            <div class="d-grid">  
+                            @if(formMercancia.controls['marca'].errors?.['maxlength']) {
+                            <span class="mensaje-error">La marca no puede ser mayor a 50 caracteres</span>
+                             }
+                             @if(formMercancia.controls['marca'].errors?.['pattern']) {
+                           <span class="mensaje-error">No se permiten caracteres especiales</span>
+                            }
+                            </div>
+                             }
+
+                            </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="cantidad">Cantidad*:</label>
-                                <input type="text" id="cantidad" formControlName="cantidad" class="form-control" (change)="setValoresStore(formMercancia,'cantidad', 'setCantidad')">
+                                <input type="number" id="cantidad" formControlName="cantidad" class="form-control" (change)="setValoresStore(formMercancia,'cantidad', 'setCantidad')"  (blur)="formatearACuatroDecimales('cantidad')" [ngClass]="esValido('cantidad') ? 'required' : ''">
+                                <div *ngIf="formMercancia.get('cantidad')?.touched && formMercancia.get('cantidad')?.hasError('required')" class="mensaje-error">
+                                 Este campo es obligatorio
+                                </div>
+
+                               <div *ngIf="formMercancia.get('cantidad')?.touched && formMercancia.get('cantidad')?.hasError('invalidNumber')" class="mensaje-error">
+                                El valor debe ser un número con hasta 15 dígitos enteros y hasta 4 dígitos decimales
+                                 </div>
+
+                                <div *ngIf="formMercancia.get('cantidad')?.touched && formMercancia.get('cantidad')?.hasError('greaterThanZero')" class="mensaje-error">
+                                La cantidad a exportar debe ser mayor a cero. El valor de la mercancía debe ser mayor a cero
+                                </div>
                               </div>
                         </div>
                     </div>
                     <div class="row mt-3">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <app-catalogo-select [catalogo]="estado" [label]="'UMC'"
+                                <app-catalogo-select [catalogo]="estado" [label]="'UMC'" [tooltipQuestionCircle]="true"
                                 [required]="true" name="umc" formControlName="umc" [isDisabled]="esFormularioSoloLectura ? true : false" (change)="setValoresStore(formMercancia,'umc', 'setUmc')"
                                 ></app-catalogo-select>
                             </div>
@@ -93,13 +113,36 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="valorDeLa">Valor de la mercancía (dólares)*:</label>
-                                <input type="text" id="valorDeLa" formControlName="valorDeLa" class="form-control" (change)="setValoresStore(formMercancia,'valorDeLa', 'setValorDeLa')">
+                                <input type="number" id="valorDeLa" formControlName="valorDeLa" class="form-control" [ngClass]="esValido('valorDeLa') ? 'required' : ''" (blur)="formatearACuatroDecimales('valorDeLa')" (change)="setValoresStore(formMercancia,'valorDeLa', 'setValorDeLa')">
+                                  <div *ngIf="formMercancia.get('valorDeLa')?.touched && formMercancia.get('valorDeLa')?.hasError('required')" class="mensaje-error">
+                                   Este campo es obligatorio
+                                </div>
+
+                                 <div *ngIf="formMercancia.get('valorDeLa')?.touched && formMercancia.get('valorDeLa')?.hasError('invalidNumber')" class="mensaje-error">
+                                El valor debe ser un número con hasta 15 dígitos enteros y hasta 4 dígitos decimales
+                               </div>
+
+                               <div *ngIf="formMercancia.get('valorDeLa')?.touched && formMercancia.get('valorDeLa')?.hasError('greaterThanZero')" class="mensaje-error">
+                                El valor de la mercancía debe ser mayor a cero
+                                </div>
                               </div>
                         </div>
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label for="complementoDescripcion">Complemento de la descripción*:</label>
-                                <input type="text" id="complementoDescripcion" formControlName="complementoDescripcion" class="form-control h-70" (change)="setValoresStore(formMercancia,'complementoDescripcion', 'setComplementoDescripcion')">
+                                <textarea id="complementoDescripcion" rows="5" formControlName="complementoDescripcion" [ngClass]="esValido('complementoDescripcion') ? 'required' : ''" class="form-control textarea-height" (change)="setValoresStore(formMercancia,'complementoDescripcion', 'setComplementoDescripcion')"></textarea>
+                                <div *ngIf="formMercancia.get('complementoDescripcion')?.touched && formMercancia.get('complementoDescripcion')?.hasError('required')" class="mensaje-error">
+                                 Este campo es obligatorio
+                                </div>
+                                 <div *ngIf="formMercancia.get('complementoDescripcion')?.touched && formMercancia.get('complementoDescripcion')?.hasError('maxlength')" 
+                                 class="mensaje-error">
+                                 Por favor, no escribas más de 200 caracteres
+                                 </div>
+
+                               <div *ngIf="formMercancia.get('complementoDescripcion')?.touched && formMercancia.get('complementoDescripcion')?.hasError('pattern')" 
+                                class="mensaje-error">
+                               Solo se permiten caracteres alfanuméricos
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -107,7 +150,14 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="nFactura">N° factura*:</label>
-                                <input type="text" id="nFactura" formControlName="nFactura" class="form-control" (change)="setValoresStore(formMercancia,'nFactura', 'setNFactura')">
+                                <input type="text" id="nFactura" formControlName="nFactura" class="form-control"  [ngClass]="esValido('nFactura') ? 'required' : ''" (change)="setValoresStore(formMercancia,'nFactura', 'setNFactura')">
+                                <div *ngIf="formMercancia.get('nFactura')?.touched && formMercancia.get('nFactura')?.hasError('required')" class="mensaje-error">
+                                    Este campo es obligatorio
+                                </div>
+                                 <div *ngIf="formMercancia.get('nFactura')?.touched && formMercancia.get('nFactura')?.hasError('maxlength')" 
+                                 class="mensaje-error">
+                                 Por favor, no escribas más de 20 caracteres
+                                 </div>
                               </div>
                         </div>
                         <div class="col-md-4">
@@ -126,12 +176,16 @@
                             </div>
                         </div>
                     </div>
-                </form>
+                    </form>
+                </div>
                 
-            </div>
-            <div class="modal-footer custom-footer">
-                <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal [disabled]="esFormularioSoloLectura ? true : false">Cerrar</button>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" #closeModal [disabled]="esFormularioSoloLectura ? true : false">Agregar</button>
+                <div class="col-md-12 mt-5 mb-5">
+                    <div class="pull-left text-muted text-vertical-align-button" id="lblCamposObligatorios">* Campos obligatorios</div>
+                    <div class="text-end">
+                        <button type="button" class="btn btn-default me-3" data-bs-dismiss="modal" #closeModal [disabled]="esFormularioSoloLectura ? true : false">Cancelar</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" #closeModal [disabled]="esFormularioSoloLectura ? true : false">Agregar</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

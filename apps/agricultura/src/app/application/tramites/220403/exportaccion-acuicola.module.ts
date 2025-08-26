@@ -1,4 +1,5 @@
 import { AlertComponent, TercerosComponent } from '@ng-mf/data-access-user';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { AcuicolaComponent } from './pages/acuicola/acuicola.component';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
@@ -14,7 +15,6 @@ import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { InputHoraComponent } from '@ng-mf/data-access-user';
 import { InputRadioComponent } from "@ng-mf/data-access-user";
 import { NavComponent } from '@ng-mf/data-access-user';
-import { NgModule } from '@angular/core';
 import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
@@ -69,6 +69,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     PasoUnoComponent,
 ],
   providers:[ToastrService],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 
 export class ExportaccionAcuicolaModule { }

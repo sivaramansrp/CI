@@ -102,6 +102,12 @@ export class TransporteComponent implements OnInit, OnChanges {
   @Input() tipoTransporteSeleccionado!: string;
 
   /**
+   * Título personalizado para el modal.
+   * @type {string}
+   */
+  @Input() tituloModalPersonalizado: string = 'Datos del transporte de arribo/salida (al/del) país';
+
+  /**
    * Emisor de eventos para enviar los datos de la tabla.
    */
   @Output() datosTabla: EventEmitter<TransporteDespacho[]> = new EventEmitter<
@@ -1163,6 +1169,20 @@ export class TransporteComponent implements OnInit, OnChanges {
       this.tipoTransporteForma.get('tipoTransporte')?.value,
       10
     );
+
+    const FORMULARIO_NOMBRE = TransporteComponent.nombreFormaTransporte(
+      TIPO_TRANSPORTE
+    ) as keyof this;
+
+    const FORMULARIO = this[FORMULARIO_NOMBRE] as FormGroup;
+
+    const VALORES = TransporteComponent.tieneValoresValidos(FORMULARIO);
+
+    if (!VALORES && !this.observaciones.value) {
+      this.cerrarModal();
+      return;
+    }
+
     const TRANSPORTE: TransporteDespacho = this.bodyTabla.find(
       (item) => item === this.registroSeleccionado
     ) as TransporteDespacho;

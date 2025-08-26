@@ -246,7 +246,7 @@ export const TEXTOS = {
     INSTRUCCIONES: `
     <p> El archivo no debe exceder los 1000 registros. Para descargar plantilla del archivo de excel de click* </br> <strong><a href="#">Descargar plantilla</a></strong> </p>`,
     CARGA_DE_ARCHIVOS: `Seleccionar archivo`,
-    CARGA_DE_ARCHIVO_DE_TEXTO: `Sin archivos seleccionados`,
+    CARGA_DE_ARCHIVO_DE_TEXTO: ` Sin archivos seleccionados`,
     CARGA_DE_ARCHIVO_DE_TEXTO_EXITOSO: `El formato del archivo es correcto. Se enviará un correo de notificación con el resultado.`,
 };
 

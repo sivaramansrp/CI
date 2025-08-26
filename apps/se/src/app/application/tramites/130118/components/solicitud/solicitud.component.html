@@ -212,7 +212,7 @@
         </div>
         <div class="col-md-4">
           <div class="input-group">
-            <input-fecha [setFecha]="datosMercancia.get('fechaSalida')?.value" [datos]="fechaFinalInput"
+            <input-fecha [isDisabled]="ocultarForm" [setFecha]="datosMercancia.get('fechaSalida')?.value" [datos]="fechaFinalInput"
               [tooltipQuestionCircle]="true" [deshabilitarFuturas]="true"
               (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
           </div>
@@ -263,7 +263,7 @@
           <label for="molino" class="form-label">Molino*:</label>
           <select class="form-control form-select" formControlName="razonSocial" (change)="setValoresStore(datosProducto,'razonSocial', 'setRazonSocial')">
             <option [ngValue]="null">Selecciona una opción</option>
-            <option *ngFor="let molino of molinos" [value]="molino.clave">
+            <option *ngFor="let molino of molinos" [value]="molino.descripcion">
               {{ molino.descripcion }}
             </option>
           </select>

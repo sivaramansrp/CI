@@ -1,5 +1,5 @@
-import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
-import { HistoricoColumnas } from "./certificado-origen.model";
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { HistoricoColumnas } from './certificado-origen.model';
 
 /**
  * Interfaz que define la estructura de las columnas de la tabla.
@@ -342,6 +342,36 @@ export interface ConsultaDatos {
    * Fax adicional para el productor.
    */
   agregarDatosProductorFax: string;
+
+  /**
+   * Lugar de la operación o actividad.
+   */
+  lugar: string;
+
+  /**
+   * Nombre del representante legal del exportador.
+   */
+  nombreRepresentanteLegalExportador: string;
+
+  /**
+   * Nombre del representante legal del productor.
+   */
+  empresa: string;
+
+  /**
+   * Cargo del representante legal.
+   */
+  cargo: string;
+
+  /**
+   * Datos de las mercancías seleccionadas en la tabla.
+   */
+  mercanciaSeleccionadasTablaData: SeleccionadasTabla[];
+
+  /**
+   * Datos de las mercancías disponibles en la tabla.
+   */
+  mercanciaDisponsiblesTablaDatos: ColumnasTabla[];
 }
 
 /**

@@ -6,8 +6,7 @@
     "Descripción Nico",
     "Cantidad solicitada en UMT",
     "Unidad de medida de tarifa (UMT)",
-    "Cantidad total UMT",
-    "Saldo pendiente"
+    "Cantidad total UMT"
   ],
   "hHistorialinspeccion": [
     "Número parcialidad/remesa",
@@ -69,8 +68,7 @@
         "Trigo para molienda",
         50,
         "kg",
-        500,
-        100
+        500
       ]
     }
   ],

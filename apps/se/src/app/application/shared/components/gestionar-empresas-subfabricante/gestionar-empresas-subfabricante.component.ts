@@ -1,6 +1,5 @@
 import {
   Catalogo,
-  CatalogoSelectComponent,
   ConfiguracionColumna,
   TablaDinamicaComponent,
   TablaSeleccion,
@@ -18,6 +17,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 @Component({
@@ -98,6 +98,14 @@ export class GestionarEmpresasSubfabricantesComponent implements OnInit {
     this._estadoCatalogo = valor;
   }
 
+  /**
+   * Indica si se debe mostrar la tabla inicial.
+   * Esta propiedad se utiliza para controlar la visibilidad de la tabla de subfabricantes.
+   *
+   * @type {boolean}
+   * @default false
+   */
+  @Input() showTablaInicial: boolean = false;
 
   /**
    * Obtiene el estado del catálogo.
@@ -346,7 +354,23 @@ export class GestionarEmpresasSubfabricantesComponent implements OnInit {
    * @description Este método emite el evento `plantasPorAgrupar` con las plantas disponibles seleccionadas.
    */
   agregarPlantas(): void {
-    this.plantasPorAgrupar.emit(this.plantasDisponiblesSeleccionadas);
+    if (this.plantasDisponiblesSeleccionadas.length > 0) {
+      // Emitir el evento con las plantas seleccionadas
+      this.plantasPorAgrupar.emit(this.plantasDisponiblesSeleccionadas);
+      
+      // Remover las plantas seleccionadas de la lista de disponibles
+      this._datosTablaSubfabricantesDisponibles = this._datosTablaSubfabricantesDisponibles.filter(
+        planta => !this.plantasDisponiblesSeleccionadas.some(
+          plantaSeleccionada => planta.rfc === plantaSeleccionada.rfc && 
+                               planta.razonSocial === plantaSeleccionada.razonSocial &&
+                               planta.calle === plantaSeleccionada.calle &&
+                               planta.numExterior === plantaSeleccionada.numExterior
+        )
+      );
+      
+      // Limpiar la selección
+      this.plantasDisponiblesSeleccionadas = [];
+    }
   }
 
   /**
@@ -368,7 +392,28 @@ export class GestionarEmpresasSubfabricantesComponent implements OnInit {
    */
   eliminarPlantas(): void {
     if (this.plantasSeleccionadas.length > 0) {
+      // Agregar las plantas de vuelta a la lista de disponibles
+      const PLANTAS_A_RESTAURAR = this.plantasSeleccionadas.filter(plantaSeleccionada => {
+        // Verificar que la planta no esté ya en la lista de disponibles
+        return !this._datosTablaSubfabricantesDisponibles.some(
+          planta => planta.rfc === plantaSeleccionada.rfc && 
+                   planta.razonSocial === plantaSeleccionada.razonSocial &&
+                   planta.calle === plantaSeleccionada.calle &&
+                   planta.numExterior === plantaSeleccionada.numExterior
+        );
+      });
+      
+      // Crear nueva array de disponibles con las plantas restauradas
+      this._datosTablaSubfabricantesDisponibles = [
+        ...this._datosTablaSubfabricantesDisponibles,
+        ...PLANTAS_A_RESTAURAR
+      ];
+      
+      // Emitir el evento para eliminar
       this.plantasPorEliminar.emit(this.plantasSeleccionadas);
+      
+      // Limpiar la selección
+      this.plantasSeleccionadas = [];
     }
   }
 

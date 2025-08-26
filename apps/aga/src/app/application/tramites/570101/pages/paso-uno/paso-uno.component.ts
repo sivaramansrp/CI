@@ -88,7 +88,6 @@ export class PasoUnoComponent implements OnDestroy {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
-    this.pestanaCambiado.emit(this.indice);
   }
 
   /**

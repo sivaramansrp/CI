@@ -1,7 +1,6 @@
-import { CombinacionRequerida, DatosRealizar, FormularioGrupo, PagoDerechos, Transporte } from '../models/acuicola.module';
+import { ColumnasTabla, CombinacionRequerida, DatosRealizar, EmpresaProductora, FormularioGrupo, Importador, PagoDerechos, TercerosRelacionados, Transporte } from '../models/acuicola.module';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { PersonaTerceros } from '@libs/shared/data-access-user/src';
 
 /**
  * Estado inicial del formulario para el trámite 220403.
@@ -12,12 +11,12 @@ import { PersonaTerceros } from '@libs/shared/data-access-user/src';
  */
 export const INITIAL_STATE: FormularioGrupo = {
   datosRealizar: {
-    certificadoTipo: 'animal',
+    certificadoTipo: '',
     aduanaEmbarque: '',
     numeroContenedor: '',
-    parisOrigen: '',
+    paisOrigen: '',
     entidadFederativaOrigen: '',
-    municipoOrigen: '',
+    municipioOrigen: '',
     paisDestino: '',
   },
   combinacionRequerida: {
@@ -33,18 +32,32 @@ export const INITIAL_STATE: FormularioGrupo = {
     numeroFlejes: '',
   },
   pagoDerechos: {
-    claveReferencia: '',
-    cadenaDependencia: '',
+    claveReferencia: '454002245',
+    cadenaDependencia: '0001841471CAEX',
     banco: '',
     llavePago: '',
     fechaPago: '',
-    importePago: '',
+    importePago: '761.0',
   },
   datosRealizarValidada: false,
   combinacionRequeridaValidada: false,
   transporteValidada: false,
   pagoDerechosValidada: false,
-  tercerosRelacionados: [],
+  tercerosRelacionados: {
+    tipoPersona: '',
+    nombre: '',
+    apellidoPaterno: '',
+    apellidoMaterno: '',
+    razonSocial: '',
+    pais: '',
+    domicilio: '',
+    lada: '',
+    telefono: '',
+    correoElectronico: ''
+  },
+  mercanciasTablaDatos: [],
+  empresaProductoraDatos: [],
+  importadorDatos: [],
 };
 
 /**
@@ -191,14 +204,226 @@ export class Tramite220403Store extends Store<FormularioGrupo> {
   }
 
   /**
-   * @method actualizarTercerosRelacionados
-   * @description Updates the store with related third parties.
-   * @param tercerosRelacionados Array of related third-party persons.
+   * @method setTercerosRelacionados
+   * @description
+   * Establece los terceros relacionados en el estado.
+   * 
+   * @param {any[]} tercerosRelacionados - Los terceros relacionados que se van a establecer en el estado.
+   * 
+   * @returns {void} - No devuelve ningún valor.
    */
-  public actualizarTercerosRelacionados(tercerosRelacionados: PersonaTerceros[]): void {
-    this.update(state => ({
+  setTercerosRelacionados(tercerosRelacionados: TercerosRelacionados): void {
+    this.update((state) => ({
       ...state,
       tercerosRelacionados: tercerosRelacionados,
+    }));
+  }
+
+  /**
+   * @method setMercanciasTablaDatos
+   * @description
+   * Establece los datos de la tabla de mercancías en el estado.
+   * 
+   * @param {ColumnasTabla[]} mercanciasTablaDatos - Los datos de las mercancías que se van a establecer en el estado.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setMercanciasTablaDatos(mercanciasTablaDatos: ColumnasTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciasTablaDatos,
+    }));
+  }
+
+  /**
+   * @method setEmpresaProductoraDatos
+   * @description
+   * Establece los datos de la empresa productora en el estado.
+   * 
+   * @param {EmpresaProductora[]} empresaProductoraDatos - Los datos de la empresa productora que se van a establecer en el estado.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setEmpresaProductoraDatos(empresaProductoraDatos: EmpresaProductora[]): void {
+    this.update((state) => ({
+      ...state,
+      empresaProductoraDatos,
+    }));
+  }
+
+  /**
+   * @method setImportadorDatos
+   * @description
+   * Establece los datos del importador en el estado.
+   * 
+   * @param {Importador[]} importadorDatos - Los datos del importador que se van a establecer en el estado.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setImportadorDatos(importadorDatos: Importador[]): void {
+    this.update((state) => ({
+      ...state,
+      importadorDatos,
+    }));
+  }
+
+  /**
+   * @method setTipoPersona
+   * @description
+   * Establece el tipo de persona en el estado.
+   * 
+   * @param {string} tipoPersona - El tipo de persona que se va a establecer en el estado.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setTipoPersona(tipoPersona: string): void {
+    this.update((state) => ({
+      ...state,
+      tipoPersona,
+    }));
+  }
+
+  /**
+   * @method setNombre
+   * @description
+   * Establece el nombre en el estado.
+   * 
+   * @param {string} nombre - El nombre que se va a establecer en el estado.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setNombre(nombre: string): void {
+    this.update((state) => ({
+      ...state,
+      nombre,
+    }));
+  }
+
+  /**
+   * @method setApellidoPaterno
+   * @description
+   * Establece el apellido paterno en el estado.
+   * 
+   * @param {string} apellidoPaterno - El apellido paterno que se va a establecer en el estado.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setApellidoPaterno(apellidoPaterno: string): void {
+    this.update((state) => ({
+      ...state,
+      apellidoPaterno,
+    }));
+  }
+
+  /**
+   * @method setApellidoMaterno
+   * @description
+   * Establece el apellido materno en el estado.
+   * 
+   * @param {string} apellidoMaterno - El apellido materno que se va a establecer en el estado.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setApellidoMaterno(apellidoMaterno: string): void {
+    this.update((state) => ({
+      ...state,
+      apellidoMaterno,
+    }));
+  }
+
+  /**
+   * @method setRazonSocial
+   * @description
+   * Establece la razón social en el estado.
+   * 
+   * @param {string} razonSocial - La razón social que se va a establecer en el estado.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setRazonSocial(razonSocial: string): void {
+    this.update((state) => ({
+      ...state,
+      razonSocial,
+    }));
+  }
+
+  /**
+   * @method setPais
+   * @description
+   * Establece el país en el estado.
+   * 
+   * @param {string} pais - El país que se va a establecer en el estado.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setPais(pais: string): void {
+    this.update((state) => ({
+      ...state,
+      pais,
+    }));
+  }
+
+  /**
+   * @method setDomicilio
+   * @description
+   * Establece el domicilio en el estado.
+   * 
+   * @param {string} domicilio - El domicilio que se va a establecer en el estado.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setDomicilio(domicilio: string): void {
+    this.update((state) => ({
+      ...state,
+      domicilio,
+    }));
+  }
+
+  /**
+   * @method setLada
+   * @description
+   * Establece la lada en el estado.
+   * 
+   * @param {string} lada - La lada que se va a establecer en el estado.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setLada(lada: string): void {
+    this.update((state) => ({
+      ...state,
+      lada,
+    }));
+  }
+
+  /**
+   * @method setTelefono
+   * @description
+   * Establece el teléfono en el estado.
+   * 
+   * @param {string} telefono - El teléfono que se va a establecer en el estado.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setTelefono(telefono: string): void {
+    this.update((state) => ({
+      ...state,
+      telefono,
+    }));
+  }
+
+  /**
+   * @method setCorreoElectronico
+   * @description
+   * Establece el correo electrónico en el estado.
+   * 
+   * @param {string} correoElectronico - El correo electrónico que se va a establecer en el estado.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+  setCorreoElectronico(correoElectronico: string): void {
+    this.update((state) => ({
+      ...state,
+      correoElectronico,
     }));
   }
 

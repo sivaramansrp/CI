@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
+import { Notificacion, NotificacionesComponent } from '@libs/shared/data-access-user/src';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ComplimentosComponent } from '../../../../shared/components/complimentos/complimentos.component';
@@ -19,11 +20,11 @@ import { Tramite80101Store } from '../../estados/tramite80101.store';
 @Component({
   selector: 'app-aggregar-complimentos',
   standalone: true,
-  imports: [CommonModule, ComplimentosComponent],
+  imports: [CommonModule, ComplimentosComponent, NotificacionesComponent],
   templateUrl: './aggregar-complimentos.component.html',
   styleUrl: './aggregar-complimentos.component.scss',
 })
-export class AggregarComplimentosComponent {
+export class AggregarComplimentosComponent implements OnDestroy{
   /**
    * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.Add commentMore actions
    */
@@ -64,6 +65,32 @@ export class AggregarComplimentosComponent {
    */
   tablaDatosComplimentosExtranjera$: Observable<SociaoAccionistas[]>;
 
+    /**
+  * @description
+  * Objeto que representa una nueva notificación.
+  * Se utiliza para mostrar mensajes de alerta o información al usuario.
+  */
+    public plantasNotificacion!: Notificacion;
+
+  /**
+   * Arreglo que almacena los datos de los accionistas nacionales.
+   * @type {SociaoAccionistas[]}
+   * @description Este arreglo se utiliza para almacenar los datos de los accionistas
+   * nacionales que se agregan a la tabla de cumplimentos.
+   * @remarks
+   * Los datos de los accionistas se gestionan a través del estado del store `Tramite80101Store`. 
+   * */
+    public sociaoAccionistas: SociaoAccionistas[] = [];
+
+  /**
+   * Arreglo que almacena los datos de los accionistas extranjeros.
+   *  * @type {SociaoAccionistas[]}
+   * @description Este arreglo se utiliza para almacenar los datos de los accionistas
+   * extranjeros que se agregan a la tabla de cumplimentos extranjeros.
+   * @remarks
+   **/
+    public sociaoAccionistasExtranjera: SociaoAccionistas[] = [];
+
   /**
    * Constructor de la clase `AggregarComplimentosComponent`.
    *
@@ -87,6 +114,16 @@ export class AggregarComplimentosComponent {
       .subscribe((datos) => {
         this.datosComplimentos = datos;
       });
+    this.tablaDatosComplimentos$.pipe(takeUntil(this.destroyNotifier$)).subscribe(
+      (datosTabla) => {
+        this.sociaoAccionistas = datosTabla;
+      }
+    );
+    this.tablaDatosComplimentosExtranjera$.pipe(takeUntil(this.destroyNotifier$)).subscribe(
+      (datosTablaExtranjera) => {
+        this.sociaoAccionistasExtranjera = datosTablaExtranjera;
+      }
+    );
   }
 
   /**
@@ -107,10 +144,20 @@ export class AggregarComplimentosComponent {
    *                De lo contrario, se agrega a la tabla de datos extranjeros.
    */
   accionistasAgregados(datos: SociaoAccionistas): void {
-    if (datos.rfc) {
+    const SOCIAO_ACCIONISTAS = this.sociaoAccionistas.findIndex(
+      (accionista) => accionista.rfc === datos.rfc
+    )
+    const SOCIAO_ACCIONISTAS_EXTRANJERA = this.sociaoAccionistasExtranjera.findIndex(
+      (accionista) => accionista.taxId === datos.taxId
+    );
+    if (datos.rfc && SOCIAO_ACCIONISTAS === -1) {
+      // Si el RFC es válido y no existe en la tabla, se agrega a la tabla de datos nacionales
       this.store.aggregarTablaDatosComplimentos(datos);
-    } else {
+    } else if (SOCIAO_ACCIONISTAS_EXTRANJERA === -1) {
+      // Si el RFC no es válido y no existe en la tabla de extranjeros, se agrega a la tabla de datos extranjeros
       this.store.aggregarTablaDatosComplimentosExtranjera(datos);
+    } else {
+      this.abrirPlantasModal();
     }
   }
 
@@ -123,7 +170,10 @@ export class AggregarComplimentosComponent {
    * correspondientes en la tabla de complementos.
    */
   accionistasEliminados(datos: SociaoAccionistas[]): void {
-    this.store.eliminarTablaDatosComplimentos(datos);
+    this.sociaoAccionistas = this.sociaoAccionistas.filter(
+      (accionista) => !datos.some((dato) => dato.rfc === accionista.rfc)
+    );
+    this.store.eliminarTablaDatosComplimentos(this.sociaoAccionistas);
   }
 
   /**
@@ -133,6 +183,65 @@ export class AggregarComplimentosComponent {
    * los accionistas extranjeros a eliminar.
    */
   accionistasExtranjerosEliminado(datos: SociaoAccionistas[]): void {
-    this.store.eliminarTablaDatosComplimentosExtranjera(datos);
+    this.sociaoAccionistasExtranjera = this.sociaoAccionistasExtranjera.filter(
+      (accionista) => !datos.some((dato) => dato.taxId === accionista.taxId)
+    );
+    this.store.eliminarTablaDatosComplimentosExtranjera(this.sociaoAccionistasExtranjera);
+  }
+
+      /**
+   * Método para manejar la selección de plantas IMMEX.
+   * 
+   * Este método recibe un evento de tipo `PlantasImmex` y lo agrega al arreglo
+   * `plantasImmexSeleccionadoDatos`, asegurando que no se dupliquen entradas.
+   * 
+   * @param {PlantasImmex} event - Objeto de tipo `PlantasImmex` que representa la planta seleccionada.
+   */
+  closePlantasModal(): void {
+    this.plantasNotificacion.cerrar = false;
+  }
+
+    /**
+   * Abre un modal relacionado con las plantas Immex y configura una notificación
+   * para alertar al usuario en caso de que no se hayan seleccionado datos de las plantas.
+   *
+   * La notificación configurada tiene las siguientes características:
+   * - Tipo de notificación: 'alert'
+   * - Categoría: 'danger'
+   * - Modo: 'action'
+   * - Título: vacío
+   * - Mensaje: 'No se seleccionaron datos de las plantas Immex.'
+   * - Cierre automático: habilitado
+   * - Tiempo de espera: 2000 milisegundos
+   * - Texto del botón Aceptar: 'Aceptar'
+   * - Texto del botón Cancelar: vacío
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  abrirPlantasModal(): void {
+    this.plantasNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Los datos ya existen',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
+   * Se utiliza para limpiar recursos y evitar fugas de memoria.
+   *
+   * @returns void
+   */
+  ngOnDestroy(): void {
+    // Emitir un valor para notificar que el componente se está destruyendo
+    this.destroyNotifier$.next();
+    // Completar el Subject para liberar recursos
+    this.destroyNotifier$.complete();
   }
 }

@@ -60,8 +60,8 @@ export const STR_NACIONAL = 'Nacional';
  * Cada opción incluye una etiqueta (`label`) y un valor (`value`).
  */
 export const TIPO_PERSONA_OPCIONES = [
-  { label: 'Física', value: 'Fisica' },
-  { label: 'Moral', value: 'Moral' },
+  { label: 'Física', value: 'Fisica', hint:'Fisica' },
+  { label: 'Moral', value: 'Moral', hint:'Moral' },
 ];
 
 /**
@@ -219,7 +219,7 @@ export const AGREGARPROVEEDORFORM =[240118, 240120];
  * @description Contiene un arreglo de identificadores numéricos que indican 
  * los campos que son requeridos para los derechos en el sistema.
  */
-export const CAMPO_OBLIGATORIO_DERECHOS = [240111,240112, 240118, 240120];
+export const CAMPO_OBLIGATORIO_DERECHOS = [240111,240112, 240118, 240120,240114];
 
 
 /**

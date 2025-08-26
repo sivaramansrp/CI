@@ -42,7 +42,7 @@ export const PASOS = [
  * @type {string}
  */
 export const TITULOMENSAJE =
-  'Registro de solicitud de modificación programa IMMEX (Modificación Alta a domicilio de una planta, bodega o almacén)';
+  'Registro de solicitud IMMEX modalidad servicios';
 
 /**
  * @const TEXTOS_REQUISITOS
@@ -88,7 +88,7 @@ export const CONFIGURACION_DOMICILIOS = [
     orden: 4,
   },
   {
-    encabezado: 'Año del programa IMMEXad',
+    encabezado: 'Año del programa IMMEX',
     clave: (ele: ServicioInmex): string | undefined => ele.anoIMMEX,
     orden: 5,
   },
@@ -107,6 +107,12 @@ export const CONFIGURACION_DOMICILIOS = [
  * 
  * **/
 export const CONFIGURACION_SERVICIO_IMMEX = [
+
+    {
+    encabezado: 'Clave',
+    clave: (ele: Servicio): string | undefined => ele.clave,
+    orden: 1,
+  },
   {
     encabezado: 'Descripión del servicio',
     clave: (ele: Servicio): string | undefined => ele.descripionDelServicio,
@@ -180,6 +186,7 @@ export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
     tipo_input: 'text',
     required: true,
     orden: 1,
+    maxlength: 50
   },
   {
     labelNombre: 'Nombre del empresa',
@@ -188,6 +195,7 @@ export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
     tipo_input: 'text',
     required: true,
     orden: 2,
+    maxlength: 100
   },
   {
     labelNombre: 'País',
@@ -195,7 +203,7 @@ export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
     class: 'col-md-10 col-10',
     tipo_input: 'select',
     required: true,
-    opciones: [],
+    opcionesCatalogo: [], // Use this instead of opciones
     orden: 3,
   },
   {
@@ -205,6 +213,7 @@ export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
     tipo_input: 'textarea',
     required: true,
     orden: 4,
+    maxlength: 300
   },
 ];
 
@@ -245,7 +254,7 @@ export const FORMA_SOCIO_ACCIONISTAS: DatosCatalago[] = [
     labelNombre: 'País',
     campo: 'pais',
     class: 'col-md-6 col-10 mt-1',
-    tipo_input: 'select-paise',
+    tipo_input: 'select',
     required: true,
     opciones: [],
     orden: 3,

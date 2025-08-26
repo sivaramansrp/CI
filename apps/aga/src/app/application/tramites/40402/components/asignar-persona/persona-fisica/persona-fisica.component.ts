@@ -1,31 +1,55 @@
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { FormBuilder, FormControl } from '@angular/forms';
-import { CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA } from '../../../constants/transportacion-maritima.enum';
-import { Catalogo } from '@libs/shared/data-access-user/src';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
+
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
+
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+
+import { Subject, map, merge, takeUntil } from 'rxjs';
+
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  Notificacion,
+  NotificacionesComponent,
+  REGEX_CORREO_ELECTRONICO,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent
+} from '@libs/shared/data-access-user/src';
+import {
+  ConsultaioQuery,
+  ConsultaioState
+} from '@ng-mf/data-access-user';
+
 import { PersonaFisicaExtranjeraForm } from '../../../../40402/models/transportacion-maritima.model';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { TEXTOS } from '../../../constants/transportacion-maritima.enum';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Tramite40402Query } from '../../../estados/tramite40402.query';
-import { Tramite40402Store } from '../../../estados/tramite40402.store';
-import { Tramitenacionales40402State } from '../../../estados/tramite40402.store';
 import { TransportacionMaritimaService } from '../../../../40402/services/transportacion-maritima/transportacion-maritima.service';
-import { Validators } from '@angular/forms';
-import { ViewChild } from '@angular/core';
-import { map } from 'rxjs';
-import { merge } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
+import {
+  CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA,
+  TEXTOS
+} from '../../../constants/transportacion-maritima.enum';
+import { Tramite40402Query } from '../../../estados/tramite40402.query';
+
+import {
+  Tramite40402Store,
+  Tramitenacionales40402State
+} from '../../../estados/tramite40402.store';
+
 
 /**
  * Componente para gestionar la información de personas físicas extranjeras.
@@ -39,16 +63,29 @@ import { takeUntil } from 'rxjs';
     ReactiveFormsModule,
     TituloComponent,
     CatalogoSelectComponent,
-    TablaDinamicaComponent
-  ],
+    TablaDinamicaComponent,
+    TooltipModule,
+    NotificacionesComponent
+],
   templateUrl: './persona-fisica.component.html',
   styleUrl: './persona-fisica.component.css',
 })
 export class PersonaFisicaComponent implements OnInit, OnDestroy {
   /**
+   * Índice del registro seleccionado en la tabla.
+   * Se utiliza para identificar el registro a modificar o eliminar.
+   */
+  indiceSeleccionado: number | null = null;
+
+  /**
    * Configuración de la tabla de selección.
    */
   TablaSeleccion = TablaSeleccion;
+
+  /**
+   * Almacena las filas seleccionadas para eliminación múltiple
+   */
+  selectedRows: PersonaFisicaExtranjeraForm[] = [];
   
   /**
    * Formulario reactivo para gestionar la información de personas físicas extranjeras.
@@ -78,8 +115,9 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
 
   /**
    * Referencia al botón de cerrar el modal.
+   * Se utiliza para cerrar el modal de edición/agregado.
    */
-  @ViewChild('closeModal') closeModal!: ElementRef;
+  @ViewChild('cerrarModal') cerrarModal!: ElementRef;
 
   /**
    * Estado de la solicitud.
@@ -92,7 +130,7 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
   private destruirNotificador$: Subject<void> = new Subject();
 
   /**
-   * @property {ConsultaioState} consultaDatos
+    indiceSeleccionado: number | null = null;
    * @description
    * Datos de consulta del trámite almacenados en el estado global.
    */
@@ -112,6 +150,17 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
   soloLectura: boolean = false;
 
   /**
+   * Alerta de notificación para mostrar mensajes al usuario.
+   * @type {Notificacion}
+   */
+  public alertaNotificacion!: Notificacion;
+
+  /**
+   * Bandera para mostrar la notificación.
+   */
+  mostrarNotificacion: boolean = false;
+
+  /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios reactivos.
    * @param tramite40402Store Store para gestionar el estado del trámite 40402.
@@ -124,7 +173,8 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
     private tramite40402Store: Tramite40402Store,
     private tramite40402Query: Tramite40402Query,
     private transportacionMaritimaService: TransportacionMaritimaService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef
   ) {
     // El constructor se utiliza para la inyección de dependencias
   }
@@ -159,6 +209,29 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+  }
+
+  /**
+   * Maneja la selección de filas de la tabla (para selección múltiple)
+   */
+  onFilasSeleccionadas(filas: PersonaFisicaExtranjeraForm[]): void {
+    this.selectedRows = filas;
+  }
+
+  /**
+   * Elimina los registros seleccionados de la tabla
+   */
+  eliminarRegistrosSeleccionados(): void {
+    if (this.selectedRows.length === 0) {
+      // Opcional: mostrar notificación de que no hay registros seleccionados
+      return;
+    }
+    this.personaFisicaExtranjeraTabla = this.personaFisicaExtranjeraTabla.filter(
+      item => !this.selectedRows.includes(item)
+    );
+    this.tramite40402Store.setPersonaFisicaExtranjeraTabla(this.personaFisicaExtranjeraTabla);
+    this.selectedRows = [];
+    this.indiceSeleccionado = null;
   }
 
   /**
@@ -200,7 +273,8 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
         this.transportacionMaritimaState?.correoPFE,
         [
           Validators.required,
-          Validators.maxLength(320)
+          Validators.maxLength(320),
+          Validators.pattern(REGEX_CORREO_ELECTRONICO)
         ]
       ],
       paisPFE: [
@@ -290,26 +364,173 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
    */
   agregarPFE(personaFisicaExtranjeraFormDatos: PersonaFisicaExtranjeraForm): void {
     this.personaFisicaExtranjeraForm.markAllAsTouched();
-    if (this.personaFisicaExtranjeraForm.invalid) {
-      return;
+    this.personaFisicaExtranjeraForm.updateValueAndValidity();
+
+    if (this.personaFisicaExtranjeraForm.valid) {
+      const PAIS = this.pais?.find((pais) => pais.id === Number(personaFisicaExtranjeraFormDatos.paisPFE))?.descripcion;
+      const REGISTRO = {
+        nombrePFE: personaFisicaExtranjeraFormDatos.nombrePFE,
+        apellidoPaternoPFE: personaFisicaExtranjeraFormDatos.apellidoPaternoPFE,
+        apellidoMaternoPFE: personaFisicaExtranjeraFormDatos.apellidoMaternoPFE,
+        seguroNumero: personaFisicaExtranjeraFormDatos.seguroNumero,
+        estadoPFE: personaFisicaExtranjeraFormDatos.estadoPFE,
+        correoPFE: personaFisicaExtranjeraFormDatos.correoPFE,
+        paisPFE: PAIS || '',
+        codigoPostalPFE: personaFisicaExtranjeraFormDatos.codigoPostalPFE,
+        ciudadPFE: personaFisicaExtranjeraFormDatos.ciudadPFE,
+        callePFE: personaFisicaExtranjeraFormDatos.callePFE,
+        numeroExteriorPFE: personaFisicaExtranjeraFormDatos.numeroExteriorPFE,
+        numeroInteriorPFE: personaFisicaExtranjeraFormDatos.numeroInteriorPFE,
+        domicilioPFE: `${personaFisicaExtranjeraFormDatos.callePFE} ${personaFisicaExtranjeraFormDatos.numeroExteriorPFE} ${personaFisicaExtranjeraFormDatos.ciudadPFE} ${personaFisicaExtranjeraFormDatos.estadoPFE} ${PAIS} ${personaFisicaExtranjeraFormDatos.codigoPostalPFE}`.trim()
+      };
+      const NUEVO_CUERPO_TABLA = [...this.personaFisicaExtranjeraTabla];
+      if (this.indiceSeleccionado !== null) {
+        NUEVO_CUERPO_TABLA[this.indiceSeleccionado] = REGISTRO;
+      } else {
+        NUEVO_CUERPO_TABLA.push(REGISTRO);
+      }
+      this.personaFisicaExtranjeraTabla = NUEVO_CUERPO_TABLA;
+      this.tramite40402Store.setPersonaFisicaExtranjeraTabla(this.personaFisicaExtranjeraTabla);
+      this.limpiarDatosPFE();
+      this.indiceSeleccionado = null;
+      this.cerrarModalFunc();
+
+      // Mostrar notificación después de cerrar modal
+      setTimeout(() => {
+        this.alertaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'INFORMACION',
+          modo: 'html',
+          titulo: 'Registro agregado',
+          mensaje: 'Datos guardados correctamente',
+          cerrar: true,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+        this.mostrarNotificacion = true;
+        this.cdr.detectChanges();
+      }, 100);
+    } else {
+      // Mostrar notificación de alerta si el formulario no es válido
+      this.alertaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'INFORMACION',
+        modo: 'action',
+        titulo: 'Formulario inválido',
+        mensaje: 'Por favor verifique los campos obligatorios.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.mostrarNotificacion = true;
     }
-    const PAIS = this.pais?.find((pais) => pais.id === Number(personaFisicaExtranjeraFormDatos.paisPFE))?.descripcion;
+}
+    /**
+     * Bandera para mostrar la notificación cuando ya existe un registro agregado.
+     * @type {boolean}
+     */
+  mostrarNotificacionYaAgregada: boolean = false;
+    /**
+     * Objeto de notificación que se muestra cuando ya existe un registro agregado.
+     * @type {Notificacion}
+     */
+  notificacionYaAgregada!: Notificacion;
+  
 
-    const NUEVO_CUERPO_TABLA = [...this.personaFisicaExtranjeraTabla];
+  /**
+   * Maneja el evento de clic en el botón "Agregar".
+   * Si ya existe un registro, muestra una notificación en vez de abrir el modal.
+   * @param event Evento de clic del botón
+   * @returns {void}
+   */
+enAgregarClic(event: Event): void {
+    if (this.personaFisicaExtranjeraTabla.length > 0) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.alertaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'INFORMACION',
+        modo: 'action',
+        titulo: 'Registro existente',
+        mensaje: 'Ya ha sido agregada a la solicitud una persona física extranjera.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.mostrarNotificacion = true;
+    } else {
+      this.indiceSeleccionado = null;
+    }
+  }
+  /**
+   * Cierra el modal mediante programación.
+   * @returns {void}
+   */
+  cerrarModalFunc(): void {
+    // Blur the currently focused element (likely inside the modal)
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+    if (this.cerrarModal) {
+      this.cerrarModal.nativeElement.click();
+      // Move focus to notification button after modal closes for accessibility
+      setTimeout(() => {
+        const NOTIF_BTN = document.querySelector('.btn-aceptar-notificacion') as HTMLElement;
+        if (NOTIF_BTN) { NOTIF_BTN.focus(); }
+      }, 100);
+    }
+  }
 
-    NUEVO_CUERPO_TABLA.push({
-      nombrePFE: `${personaFisicaExtranjeraFormDatos.nombrePFE} ${personaFisicaExtranjeraFormDatos.apellidoPaternoPFE} ${personaFisicaExtranjeraFormDatos.apellidoMaternoPFE}`.trim(),
-      seguroNumero: personaFisicaExtranjeraFormDatos.seguroNumero,
-      estadoPFE: personaFisicaExtranjeraFormDatos.estadoPFE,
-      correoPFE: personaFisicaExtranjeraFormDatos.correoPFE,
-      acciones: personaFisicaExtranjeraFormDatos.acciones,
-      paisPFE: PAIS || '',
-      domicilioPFE: `${personaFisicaExtranjeraFormDatos.callePFE} ${personaFisicaExtranjeraFormDatos.numeroExteriorPFE} ${personaFisicaExtranjeraFormDatos.ciudadPFE} ${personaFisicaExtranjeraFormDatos.estadoPFE} ${PAIS} ${personaFisicaExtranjeraFormDatos.codigoPostalPFE}`.trim(),
-    });
-    this.personaFisicaExtranjeraTabla = NUEVO_CUERPO_TABLA;
-    this.tramite40402Store.setPersonaFisicaExtranjeraTabla(this.personaFisicaExtranjeraTabla);
-    this.limpiarDatosPFE();
-    this.cerrarModal();
+  /**
+   * Selecciona un registro de la tabla para modificar o eliminar.
+   */
+  /**
+   * Selecciona un registro de la tabla para modificar o eliminar.
+   * Puede recibir el índice o el objeto del registro.
+   */
+  seleccionarRegistro(registro: PersonaFisicaExtranjeraForm | number): void {
+    if (typeof registro === 'number') {
+      this.indiceSeleccionado = registro;
+    } else {
+      const INDICE = this.personaFisicaExtranjeraTabla.indexOf(registro);
+      this.indiceSeleccionado = INDICE !== -1 ? INDICE : null;
+    }
+  }
+
+  /**
+   * Elimina el registro seleccionado de la tabla.
+   */
+  eliminarRegistro(): void {
+    if (this.indiceSeleccionado !== null) {
+      this.personaFisicaExtranjeraTabla.splice(this.indiceSeleccionado, 1);
+      this.personaFisicaExtranjeraTabla = [...this.personaFisicaExtranjeraTabla];
+      this.tramite40402Store.setPersonaFisicaExtranjeraTabla(this.personaFisicaExtranjeraTabla);
+      this.indiceSeleccionado = null;
+    }
+  }
+
+  /**
+   * Abre el modal de modificación con los datos pre-cargados.
+   */
+  modificarRegistro(): void {
+    if (this.indiceSeleccionado !== null) {
+      const REGISTRO = this.personaFisicaExtranjeraTabla[this.indiceSeleccionado];
+      this.personaFisicaExtranjeraForm.patchValue({
+        nombrePFE: REGISTRO.nombrePFE,
+        apellidoPaternoPFE: REGISTRO.apellidoPaternoPFE,
+        apellidoMaternoPFE: REGISTRO.apellidoMaternoPFE,
+        seguroNumero: REGISTRO.seguroNumero,
+        estadoPFE: REGISTRO.estadoPFE,
+        correoPFE: REGISTRO.correoPFE,
+        paisPFE: this.pais?.find(p => p.descripcion === REGISTRO.paisPFE)?.id ?? '',
+        codigoPostalPFE: REGISTRO.codigoPostalPFE,
+        ciudadPFE: REGISTRO.ciudadPFE,
+        callePFE: REGISTRO.callePFE,
+        numeroExteriorPFE: REGISTRO.numeroExteriorPFE,
+        numeroInteriorPFE: REGISTRO.numeroInteriorPFE,
+      });
+      // Abrir modal (puede requerir lógica adicional si no se abre automáticamente)
+    }
   }
 
   /**
@@ -345,11 +566,6 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
    * Cierra el modal mediante programación.
    * @returns {void}
    */
-  cerrarModal(): void {
-    if (this.closeModal) {
-      this.closeModal.nativeElement.click();
-    }
-  }
 
   /**
    * Establece valores en el store del trámite.

@@ -9,15 +9,15 @@
           <input type="text" class="form-control" id="permiso-immex" formControlName="permisoImmexDatos" placeholder="" />
         </div>
         <div class="col-12 container text-end mt-5">
-          <button class="btn btn-default me-2">Eliminar</button>
-          <button class="btn btn-primary" (click)="showTableExportacion()">Agregar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+          <button class="btn btn-primary" (click)="showTableExportacion()" [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
       </div>
       <div class="row  mt-5" *ngIf="showTableExport">
-        <app-tabla-dinamica *ngIf="immexTableDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionRadio" [configuracionTabla]="permisoImmexTabla" [datos]="immexTableDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+        <app-tabla-dinamica *ngIf="immexTableDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionRadio" [configuracionTabla]="permisoImmexTabla" [datos]="immexTableDatos" [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
 
         <div class="container text-end mt-5">
-          <button class="btn btn-primary me-2" (click)="showFraccionExportacion()">Mostrar detalle mercancía</button>
+          <button class="btn btn-primary me-2" (click)="showFraccionExportacion()" [disabled]="esFormularioSoloLectura">Mostrar detalle mercancía</button>
         </div>
       </div>
     
@@ -36,8 +36,8 @@
           </div>
         </div>
         <div class="col-12 container text-end mt-5">
-          <button class="btn btn-default me-2">Eliminar</button>
-          <button class="btn btn-primary" (click)="showTableFractionExport()">Agregar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+          <button class="btn btn-primary" (click)="showTableFractionExport()" [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
         <div class="row  mt-5" *ngIf="showTableFractionExp">
           <app-tabla-dinamica 
@@ -45,10 +45,10 @@
           [tipoSeleccionTabla]="tablaSeleccionRadio"
           [configuracionTabla]="fraccionExportacionTabla"
           [datos]="fraccionTablaDatos"
-          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
+          [disableSeleccionTablaRadio]="esFormularioSoloLectura">
         </app-tabla-dinamica>
           <div class="container text-end mt-5">
-            <button class="btn btn-primary me-2" (click)="showProductoImportacion()">Mostrar detalle mercancía</button>
+            <button class="btn btn-primary me-2" (click)="showProductoImportacion()" [disabled]="esFormularioSoloLectura">Mostrar detalle mercancía</button>
           </div>
         </div>    
       </div>
@@ -82,7 +82,7 @@
           </div>
         </div>
         <div class="col-12 container text-end mt-5">
-          <button class="btn btn-primary" (click)="showTableNicoExport()">Agregar Nico</button>
+          <button class="btn btn-primary" (click)="showTableNicoExport()" [disabled]="esFormularioSoloLectura">Agregar Nico</button>
         </div>  
         <div class="row  mt-5" *ngIf="showTableNicoExp">
           <h6>Nico</h6>
@@ -112,14 +112,14 @@
           <input type="text" class="form-control" id="permisoImmexDatos" name="permisoImmexDatosx" formControlName="permisoImmexDatos" />
         </div>
         <div class="col-12 container text-end mt-5">
-          <button class="btn btn-default me-2">Eliminar</button>
-          <button class="btn btn-primary" (click)="showTableImportacion()">Agregar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+          <button class="btn btn-primary" (click)="showTableImportacion()" [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
       </div>
       <div class="row  mt-5" *ngIf="showTableImport">
-        <app-tabla-dinamica *ngIf="immexTableDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionRadio" [configuracionTabla]="permisoImmexTabla" [datos]="immexTableDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+        <app-tabla-dinamica *ngIf="immexTableDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionRadio" [configuracionTabla]="permisoImmexTabla" [datos]="immexTableDatos" [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
         <div class="container text-end mt-5">
-          <button class="btn btn-primary me-2" (click)="showCommodityImportacion()">Mostrar detalle mercancía</button>
+          <button class="btn btn-primary me-2" (click)="showCommodityImportacion()" [disabled]="esFormularioSoloLectura">Mostrar detalle mercancía</button>
         </div>
       </div>
 
@@ -166,13 +166,13 @@
           </div>
         </div>
         <div class="col-12 container text-end mt-5">
-          <button class="btn btn-primary" (click)="showTableNicoImport()">Agregar Nico</button>
+          <button class="btn btn-primary" (click)="showTableNicoImport()" [disabled]="esFormularioSoloLectura">Agregar Nico</button>
         </div>  
         <div class="row  mt-5" *ngIf="showTableNicoImp">
           <h6>Nico</h6>
           <div class="col-12 col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-7">
             <app-tabla-dinamica  *ngIf="nicoTablaDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"
-            [datos]="nicoTablaDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+            [datos]="nicoTablaDatos" [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
           </div>
           <div class="container text-start mt-5">
             <button class="btn btn-default me-2">Eliminar Nico</button>
@@ -188,7 +188,7 @@
           [tipoSeleccionTabla]="tablaSeleccionRadio"
           [configuracionTabla]="fraccionExportacionTabla"
           [datos]="fraccionTablaDatos"
-          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
+          [disableSeleccionTablaRadio]="esFormularioSoloLectura">
         </app-tabla-dinamica>
         
         </div> 

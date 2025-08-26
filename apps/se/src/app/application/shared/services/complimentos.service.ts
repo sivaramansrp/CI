@@ -1,4 +1,4 @@
-import { Observable, map } from 'rxjs';
+import { Observable, catchError, map, throwError } from 'rxjs';
 
 import { Catalogo } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
@@ -25,4 +25,18 @@ export class ComplimentosService {
         .pipe(map((res: any) => res.data))
     );
   }
+
+  /**
+     * @method getDatos
+     * Método para obtener datos desde un archivo JSON.
+     * @returns {Observable<unknown>} Un Observable que emite los datos obtenidos o un error.
+     */
+    getDatos(): Observable<unknown> {
+        return this.http.get('assets/json/80102/pagoderechos.json') // Realiza una solicitud GET al archivo JSON.
+          .pipe(
+            catchError((error: unknown) => { // Maneja errores en la solicitud.
+              return throwError(() => error); // Lanza el error para que pueda ser manejado por el suscriptor.
+            })
+          );
+     }
 }

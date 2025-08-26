@@ -68,10 +68,10 @@
             [catalogo]="actividadProductiva.catalogos"
             [label]="actividadProductiva.labelNombre"
             [placeholder]="actividadProductiva.primerOpcion"
-            [required]="true"
             id="actividadProductiva"
             formControlName="actividadProductiva"
             [isDisabled]="esFormularioSoloLectura"
+            [required]="actividadProductiva.required"
           ></app-catalogo-select>
         </div>
       </div>

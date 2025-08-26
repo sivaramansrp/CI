@@ -122,11 +122,19 @@
       "regimen": "101",
       "adunasDeEntradas":"101",
       "aeropuerto": true,
-      "publico": "sí",
+      "publico": "Si",
       "representanteRfc": "RNC123456QW1",
       "representanteNombre": "Carlos",
       "apellidoPaterno": "Ramírez",
-      "apellidoMaterno": "López"
+      "apellidoMaterno": "López",
+      "marca": "MarcaEjemplo",
+      "especifique": "Especificación adicional",
+      "claveDeLos": "CLAVE123",
+      "fechaDeFabricacio": "01/01/2024",
+      "fechaDeCaducidad": "01/01/2025",
+      "regimenLaMercancia": "Definitivo",
+      "aduana": "Aduana Norte",
+      "manifesto": true
     },
     "mercanciaForm": {
       "clasificacionProducto": "Medicamento",
@@ -145,7 +153,7 @@
       "cantidadUmc": "cajas",
       "presentacion": "Caja con 20 cápsulas",
       "numeroRegistroSanitario": "RS-1234567-SSA",
-      "fechaCaducidad": "2026-12-31",
+      "fechaCaducidad": "31/12/2026",
       "paisDeOriginDatos": ["España"],
       "paisDeProcedenciaDatos": ["España"]
     },
@@ -198,7 +206,7 @@
         "cadenaDependencia": "SAT-COFEPRIS-2025",
         "estado": "Pagado",
         "llavePago": "LLP1234567890XYZ",
-        "fechaPago": "2025-06-01",
+        "fechaPago": "01/06/2025",
         "importePago": "1520.50",
         "banco": "1"
       }      

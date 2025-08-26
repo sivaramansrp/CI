@@ -5,30 +5,83 @@
             <h3 class="titulo-dictamen">Generar Dictamen</h3>
         </div>
         }
-        <div class="d-flex gap-3 justify-content-center">
-            <div class="border px-4 py-2 d-flex align-items-center radio-button">
-                <input class="form-check-input me-3 seleccion-radio" type="radio" name="cumplimiento" value="1"
-                    id="sentidoDictamenAceptado" formControlName="cumplimiento">
-                <label class="control-label" for="sentidoDictamenAceptado">Aceptado</label>
+        <div class="col-md-12">
+            <div class="col-md-3 d-flex align-items-center">
+                <label class="form-label mb-0" style="min-width: 150px;">*Sentido dictamen:</label>
             </div>
-            <div class="border px-4 py-2 d-flex align-items-center radio-button">
-                <input class="form-check-input me-3 seleccion-radio" type="radio" name="cumplimiento" value="2"
-                    id="sentidoDictamenRechazado" formControlName="cumplimiento">
-                <label class="control-label" for="sentidoDictamenRechazado">Rechazado</label>
+            <div class="col-md-8 d-flex justify-content-center">
+                <div class="d-flex gap-3">
+                    <div class="border px-4 py-2 d-flex align-items-center radio-button">
+                        <input class="form-check-input me-3 seleccion-radio" type="radio" name="cumplimiento" value="a"
+                            id="sentidoDictamenAceptado">
+                        <label class="control-label mb-0" for="sentidoDictamenAceptado">Aceptado</label>
+                    </div>
+                    <div class="border px-4 py-2 d-flex align-items-center radio-button">
+                        <input class="form-check-input me-3 seleccion-radio" type="radio" name="cumplimiento" value="b"
+                            id="sentidoDictamenRechazado">
+                        <label class="control-label mb-0" for="sentidoDictamenRechazado">Rechazado</label>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <div class="row mt-5">
         <div class="col-md-12">
-            <label for="justificacionDictamen" class="form-label">Sentido dictamen / justificación del
-                dictamen<span class="text-danger">*</span>:</label>
+            <label for="justificacionDictamen" class="form-label">
+                Justificación de la observación<span class="text-danger">*</span>:
+            </label>
             <textarea id="justificacionDictamen" class="form-control text-height" formControlName="mensajeDictamen"
-                placeholder="" [ngClass]="isValid('mensajeDictamen') ? 'required' : ''"></textarea>
-            @if (dictamenForm.get('mensajeDictamen')?.invalid && dictamenForm.get('mensajeDictamen')?.touched) {
-            <div class="text-danger">
+                [ngClass]="{ 'is-invalid': dictamenForm.get('mensajeDictamen')?.invalid && dictamenForm.get('mensajeDictamen')?.touched }"></textarea>
+
+            @if (dictamenForm.get('mensajeDictamen')?.touched && dictamenForm.get('mensajeDictamen')?.errors) {
+            <div class="text-danger" *ngIf="dictamenForm.get('mensajeDictamen')?.errors?.['required']">
                 Este campo es obligatorio.
             </div>
+            <div class="text-danger" *ngIf="dictamenForm.get('mensajeDictamen')?.errors?.['soloEspacios']">
+                No se permiten solo espacios en blanco.
+            </div>
+            <div class="text-danger" *ngIf="dictamenForm.get('mensajeDictamen')?.errors?.['maxlength']">
+                No puede exceder los 2000 caracteres.
+            </div>
             }
+        </div>
+
+    </div>
+
+    <!-- De conformidad con section -->
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h4>De conformidad con</h4>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <label for="antecedentesEditables" class="form-label">
+                *Antecedentes que sustentan el dictamen:
+            </label>
+            <textarea id="antecedentesEditables" class="form-control text-height"
+                formControlName="antecedentesEditables"
+                [ngClass]="{ 'is-invalid': dictamenForm.get('antecedentesEditables')?.invalid && dictamenForm.get('antecedentesEditables')?.touched }"></textarea>
+
+            @if (dictamenForm.get('antecedentesEditables')?.touched &&
+            dictamenForm.get('antecedentesEditables')?.errors) {
+            <div class="text-danger" *ngIf="dictamenForm.get('antecedentesEditables')?.errors?.['required']">
+                Este campo es obligatorio.
+            </div>
+            <div class="text-danger" *ngIf="dictamenForm.get('antecedentesEditables')?.errors?.['soloEspacios']">
+                No se permiten solo espacios en blanco.
+            </div>
+            <div class="text-danger" *ngIf="dictamenForm.get('mensajeDictamen')?.errors?.['maxlength']">
+                No puede exceder los 2000 caracteres.
+            </div>
+            }
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <textarea id="antecedentesReadonly" class="form-control text-height" formControlName="antecedentesReadonly"
+                placeholder="Fracción I numeral 2 del Anexo 2.2.2 del Acuerdo por el que la Secretaría de Economía emite reglas y criterios de carácter general en materia de Comercio Exterior, publicado en el Diario Oficial de la Federación el 6 de julio de 2007 y sus modificaciones.">
+</textarea>
         </div>
     </div>
 
@@ -36,11 +89,13 @@
     @if (mostrarCamposFecha) {
     <div class="row mt-5">
         <div class="col-md-6">
-            <label for="fechaInicioVigenciaAutorizada" class="form-label">*Fecha de inicio de vigencia autorizada:</label>
-            <input type="date" id="fechaInicioVigenciaAutorizada" class="form-control" 
-                   formControlName="fechaInicioVigenciaAutorizada"
-                   [ngClass]="isValid('fechaInicioVigenciaAutorizada') ? 'required' : ''">
-            @if (dictamenForm.get('fechaInicioVigenciaAutorizada')?.invalid && dictamenForm.get('fechaInicioVigenciaAutorizada')?.touched) {
+            <label for="fechaInicioVigenciaAutorizada" class="form-label">*Fecha de inicio de vigencia
+                autorizada:</label>
+            <input type="date" id="fechaInicioVigenciaAutorizada" class="form-control"
+                formControlName="fechaInicioVigenciaAutorizada"
+                [ngClass]="isValid('fechaInicioVigenciaAutorizada') ? 'required' : ''">
+            @if (dictamenForm.get('fechaInicioVigenciaAutorizada')?.invalid &&
+            dictamenForm.get('fechaInicioVigenciaAutorizada')?.touched) {
             <div class="text-danger">
                 Este campo es obligatorio.
             </div>
@@ -48,10 +103,11 @@
         </div>
         <div class="col-md-6">
             <label for="fechaFinVigenciaAutorizada" class="form-label">*Fecha de fin de vigencia autorizada:</label>
-            <input type="date" id="fechaFinVigenciaAutorizada" class="form-control" 
-                   formControlName="fechaFinVigenciaAutorizada"
-                   [ngClass]="isValid('fechaFinVigenciaAutorizada') ? 'required' : ''">
-            @if (dictamenForm.get('fechaFinVigenciaAutorizada')?.invalid && dictamenForm.get('fechaFinVigenciaAutorizada')?.touched) {
+            <input type="date" id="fechaFinVigenciaAutorizada" class="form-control"
+                formControlName="fechaFinVigenciaAutorizada"
+                [ngClass]="isValid('fechaFinVigenciaAutorizada') ? 'required' : ''">
+            @if (dictamenForm.get('fechaFinVigenciaAutorizada')?.invalid &&
+            dictamenForm.get('fechaFinVigenciaAutorizada')?.touched) {
             <div class="text-danger">
                 Este campo es obligatorio.
             </div>
@@ -62,8 +118,9 @@
 
     <div class="row mt-5 mb-5">
         <div class="col-md-12 d-flex justify-content-end">
-            <button type="button" class="btn btn-default me-3" (click)="cancelar()">{{botonDeCancelar}}</button>
-            <button type="button" class="btn btn-primary" (click)="guardarFirmar()">{{botonGuardar}}</button>
+            <button type="button" class="btn btn-primary me-3" (click)="guardar()">Guardar</button>
+            <button type="button" class="btn btn-default me-3" (click)="cancelar()">Cancelar</button>
+            <button type="button" class="btn btn-primary" (click)="firmar()">Firmar</button>
         </div>
     </div>
 </form>

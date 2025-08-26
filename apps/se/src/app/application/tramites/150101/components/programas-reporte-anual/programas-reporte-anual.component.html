@@ -1,52 +1,88 @@
 <div class="container">
   <form [formGroup]="periodoReporteAnual">
-    <ng-titulo titulo="Periodo que cubre reporte annual" />
+    <ng-titulo titulo="Periodo que cubre reporte anual" />
 
-    <div class="row">
+    <div class="row mb-5">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="reporteAnualFechaInicio">Incio:</label>
-          <input type="text" class="form-control input-date" formControlName="reporteAnualFechaInicio"
-            id="reporteAnualFechaInicio" bsDatepicker [bsConfig]="bsConfig" />
+          <input-fecha
+            (valorCambiado)="onFechaInicio($event)"
+            [setFecha]="
+              periodoReporteAnual.get('reporteAnualFechaInicio')?.value
+            "
+            [datos]="fechaIncio"
+            [isDisabled]="true"
+          ></input-fecha>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="reporteAnualFechaFin">Fin:</label>
-          <input type="text" class="form-control input-date" formControlName="reporteAnualFechaFin"
-            id="reporteAnualFechaFin" bsDatepicker [bsConfig]="bsConfig" />
+          <input-fecha
+            (valorCambiado)="onFechaFin($event)"
+            [setFecha]="periodoReporteAnual.get('reporteAnualFechaFin')?.value"
+            [datos]="fechaFin"
+            [isDisabled]="true"
+          ></input-fecha>
         </div>
       </div>
-      <div class="col-md-4"></div>
+      <div class="col-md-4 mb-5"></div>
     </div>
-    <div class="row mt-5">
-      <div class="col-md-12">
-        <app-tabla-dinamica [tipoSeleccionTabla]="solicitudSeleccionTabla" [datos]="solicitudDatos"
-          [configuracionTabla]="solicitudConfiguracionTabla" [disableSeleccionTablaRadio]="formularioDeshabilitado"
-          (filaSeleccionada)="actualizarProgramasReporte($event)">
+    <div class="row mt-5 mb-5">
+      <div class="col-md-12 mt-5">
+        <app-tabla-dinamica
+          [tipoSeleccionTabla]="solicitudSeleccionTabla"
+          [datos]="solicitudDatos"
+          [configuracionTabla]="solicitudConfiguracionTabla"
+          [disableSeleccionTablaRadio]="formularioDeshabilitado"
+          (filaSeleccionada)="actualizarProgramasReporte($event)"
+        >
         </app-tabla-dinamica>
       </div>
     </div>
     <div class="row mt-3">
       <div class="col-md-4">
         <label class="form-label" for="folioPrograma">Folio de programa:</label>
-        <input type="text" id="folioPrograma" class="form-control" formControlName="folioPrograma" />
+        <input
+          type="text"
+          id="folioPrograma"
+          class="form-control"
+          formControlName="folioPrograma"
+        />
       </div>
       <div class="col-md-4">
-        <label class="form-label" for="modalidad">Selecciona la modalidad:</label>
-        <input type="text" id="modalidad" class="form-control" formControlName="modalidad" />
+        <label class="form-label" for="modalidad"
+          >Selecciona la modalidad:</label
+        >
+        <input
+          type="text"
+          id="modalidad"
+          class="form-control"
+          formControlName="modalidad"
+        />
       </div>
-      <div class="col-md-4"></div>
+    </div>
+    <div class="row mt-3">
       <div class="col-md-4">
         <label class="form-label" for="tipoPrograma">Tipo programa:</label>
-        <input type="text" id="tipoPrograma" class="form-control" formControlName="tipoPrograma" />
+        <input
+          type="text"
+          id="tipoPrograma"
+          class="form-control"
+          formControlName="tipoPrograma"
+        />
       </div>
       <div class="col-md-4">
         <label class="form-label" for="estatus">Estatus:</label>
-        <input type="text" id="estatus" class="form-control" formControlName="estatus" />
+        <input
+          type="text"
+          id="estatus"
+          class="form-control"
+          formControlName="estatus"
+        />
       </div>
-      <div class="col-md-4"></div>
     </div>
-
   </form>
 </div>
+@if(nuevaNotificacion){
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion" ></lib-notificaciones>
+  } 

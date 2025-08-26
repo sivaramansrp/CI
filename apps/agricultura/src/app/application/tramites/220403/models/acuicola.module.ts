@@ -1,5 +1,3 @@
-import { PersonaTerceros } from "@libs/shared/data-access-user/src";
-
 /**
  * @interface ListsPasoWizard
  * @description
@@ -110,6 +108,12 @@ export interface FormularioGrupo {
    */
   pagoDerechos: PagoDerechos,
   /**
+   * @property {TercerosRelacionados[]} tercerosRelacionados
+   * @description
+   * Lista de terceros relacionados con el trámite.
+   */
+  tercerosRelacionados: TercerosRelacionados,
+  /**
    * @property {ColumnasTabla[]} columnasTabla
    * @description
    * Columnas de la tabla de partidas arancelarias y mercancías.
@@ -133,12 +137,27 @@ export interface FormularioGrupo {
    * Indica si el pago de derechos ha sido validado.
    */
   pagoDerechosValidada: boolean,
+
   /**
-   * @property {ColumnasTabla[]} columnasTabla
+   * @property {ColumnasTabla[]} mercanciasTablaDatos
    * @description
-   * Columnas de la tabla de partidas arancelarias y mercancías.
+   * Datos de las mercancías en la tabla.
    */
-  tercerosRelacionados: PersonaTerceros[];
+  mercanciasTablaDatos: ColumnasTabla[];
+
+  /**
+   * @property {EmpresaProductora[]} empresaProductoraDatos
+   * @description
+   * Datos de la empresa productora.
+   */
+  empresaProductoraDatos: EmpresaProductora[];
+
+  /**
+   * @property {Importador[]} importadorDatos
+   * @description
+   * Datos del importador.
+   */
+  importadorDatos: Importador[];
 }
 
 /**
@@ -166,11 +185,11 @@ export interface DatosRealizar {
     */
   numeroContenedor: string,
   /**
-   * @property {string} parisOrigen
+   * @property {string} paisOrigen
    * @description
-   * parisOrigen de la mercancía relacionada con el trámite.
+   * paisOrigen de la mercancía relacionada con el trámite.
    */
-  parisOrigen: string,
+  paisOrigen: string,
   /**
    * @property {string} entidadFederativaOrigen
    * @description
@@ -182,7 +201,7 @@ export interface DatosRealizar {
    * @description
    * municipioOrigen de la mercancía relacionada con el trámite.
    */
-  municipoOrigen: string,
+  municipioOrigen: string,
   /**
    * @property {string} paisDestino
    * @description
@@ -300,6 +319,84 @@ export interface PagoDerechos {
 }
 
 /**
+ * @interface TercerosRelacionados
+ * @description
+ * Representa los terceros relacionados con el trámite.
+ */
+export interface TercerosRelacionados {
+
+  /**
+   * @property {string} tipoPersona
+   * @description
+   * Tipo de persona (física o moral) del importador.
+   */
+  tipoPersona: string;
+
+  /**
+   * @property {string} nombre
+   * @description
+   * Nombre del importador.
+   */
+  nombre: string;
+
+  /**
+   * @property {string} apellidoPaterno
+   * @description
+   * Apellido paterno del importador.
+   */
+  apellidoPaterno: string;
+
+  /**
+   * @property {string} apellidoMaterno
+   * @description
+   * Apellido materno del importador.
+   */
+  apellidoMaterno: string;
+
+  /**
+   * @property {string} razonSocial
+   * @description
+   * Razón social del importador.
+   */
+  razonSocial: string;
+
+  /**
+   * @property {string} pais
+   * @description
+   * País del importador.
+   */
+  pais: string;
+
+  /**
+   * @property {string} domicilio
+   * @description
+   * Domicilio del importador.
+   */
+  domicilio: string;
+
+  /**
+   * @property {string} lada
+   * @description
+   * Lada telefónica del importador.
+   */
+  lada: string;
+
+  /**
+   * @property {string} telefono
+   * @description
+   * Teléfono del importador.
+   */
+  telefono: string;
+
+  /**
+   * @property {string} correoElectronico
+   * @description
+   * Correo electrónico del importador.
+   */
+  correoElectronico: string;
+}
+
+/**
  * @interface ColumnasTabla
  * @description
  * Define las columnas de la tabla de partidas arancelarias y mercancías.
@@ -395,4 +492,191 @@ export interface ColumnasTabla {
    * Presentación de la mercancía (por ejemplo, congelada, fresca).
    */
   paisProcedencia: string,
+}
+
+/**
+ * @interface FilaSolicitud
+ * @description
+ * Representa una fila de la tabla de solicitudes, incluyendo información relevante sobre la solicitud.
+ */
+export interface FilaSolicitud {
+  /**
+   * @property {string} fechaCreacion
+   * @description
+   * Fecha de creación de la solicitud en formato ISO 8601.
+   */
+  fechaCreacion: string;
+  /**
+   * @property {string} mercancia
+   * @description
+   * Nombre o descripción de la mercancía solicitada.
+   */
+  mercancia: string;
+  /**
+   * @property {number} cantidad
+   * @description
+   * Cantidad de la mercancía solicitada.
+   */
+  cantidad: number;
+  /**
+   * @property {string} proveedor
+   * @description
+   * Nombre del proveedor de la mercancía.
+   */
+  proveedor: string;
+}
+
+/**
+ * @interface FilaSolicitudRespuesta
+ * @description
+ * Representa la respuesta del servidor al solicitar datos de una fila de solicitud.
+ */
+export interface FilaSolicitudRespuesta {
+  /**
+   * @property {number} code
+   * @description
+   * Código de respuesta del servidor.
+   */
+  code: number;
+
+  /**
+   * @property {FilaSolicitud[]} data
+   * @description
+   * Lista de filas de solicitud obtenidas.
+   */
+  data: FilaSolicitud[];
+
+  /**
+   * @property {string} message
+   * @description
+   * Mensaje de respuesta del servidor.
+   */
+  message: string;
+}
+
+/**
+ * @interface Exportador
+ * @description Representa un exportador de productos acuícolas.
+ */
+export interface EmpresaProductora {
+  /**
+   * @property {string} nombre
+   * @description Nombre de la empresa productora.
+   */
+  nombre: string;
+
+  /**
+   * @property {string} telefono
+   * @description Número de teléfono de la empresa productora.
+   */
+  telefono: string;
+
+  /**
+   * @property {string} correoElectronico
+   * @description Correo electrónico de la empresa productora.
+   */
+  correoElectronico: string;
+
+  /**
+   * @property {string} numeroCertificado
+   * @description Número de certificado de la empresa productora.
+   */
+  numeroCertificado: string;
+
+  /**
+   * @property {string} domicilio
+   * @description Domicilio de la empresa productora.
+   */
+  domicilio: string;
+
+  /**
+   * @property {string} pais
+   * @description País de la empresa productora.
+   */
+  pais: string;
+}
+
+/**
+ * Representa la información de un importador.
+ */
+export interface Importador {
+  /**
+   * @property {string} nombre
+   * @description Nombre del importador.
+   */
+  nombre: string;
+
+  /**
+   * @property {string} telefono
+   * @description Número de teléfono del importador.
+   */
+  telefono: string;
+
+  /**
+   * @property {string} correoElectronico
+   * @description Correo electrónico del importador.
+   */
+  correoElectronico: string;
+
+  /**
+   * @property {string} domicilio
+   * @description Domicilio del importador.
+   */
+  domicilio: string;
+
+  /**
+   * @property {string} pais
+   * @description País del importador.
+   */
+  pais: string;
+}
+
+/**
+ * Representa la información de una empresa productora consultada.
+ */
+export interface ConsultarEmpresaProductora {
+  /**
+   * Nombre o razón social de la empresa.
+   */
+  razonSocial: string;
+
+  /**
+   * Código postal de la dirección de la empresa.
+   */
+  codigoPostal: string;
+
+  /**
+   * País donde se encuentra la empresa.
+   */
+  pais: string;
+
+  /**
+   * Estado o provincia de la empresa.
+   */
+  estado: string;
+
+  /**
+   * Calle de la dirección de la empresa.
+   */
+  calle: string;
+
+  /**
+   * Número exterior de la dirección.
+   */
+  numeroExterior: string;
+
+  /**
+   * Número interior de la dirección (si aplica).
+   */
+  numeroInterior: string;
+
+  /**
+   * Número telefónico de contacto de la empresa.
+   */
+  telefono: string;
+
+  /**
+   * Correo electrónico de contacto de la empresa.
+   */
+  correoElectronico: string;
 }

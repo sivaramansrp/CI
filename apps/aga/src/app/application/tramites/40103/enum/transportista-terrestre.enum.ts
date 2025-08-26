@@ -19,8 +19,8 @@
  */
 
 import { UnidadTabla, VehiculoTabla } from "../models/registro-muestras-mercancias.model";
-import { UnidadTablaConfig } from "../../40102/models/registro-muestras-mercancias.model";
-import { VehiculoTablaConfig } from "../../40101/models/registro-muestras-mercancias.model";
+import { UnidadTablaConfig } from "../../40103/models/registro-muestras-mercancias.model";
+import { VehiculoTablaConfig } from "../../40103/models/registro-muestras-mercancias.model";
 
 /**
  * Configuración de textos y constantes para la página de gestión de choferes.
@@ -244,7 +244,7 @@ export const CHOFERES_PAGE = {
  *
  * @constant {Object}
  */
-export const VEHICULO_PAGE= {
+export const VEHICULO_PAGE = {
   /**
    * @property {string} SELECTED_TAB
    * Título de la pestaña seleccionada para parque vehicular.
@@ -454,116 +454,68 @@ export const VEHICULOS_TABLA_CONFIG: VehiculoTablaConfig = {
       orden: 2,
     },
     /**
-     * Configuración para la columna de ID de vehículo.
-     */
-    {
-      encabezado: 'ID de vehículo',
-      clave: (item: VehiculoTabla) => item.idDeVehiculo,
-      orden: 3,
-    },
-    /**
-     * Configuración para la columna de número de placas.
-     */
-    {
-      encabezado: 'Número de Placas',
-      clave: (item: VehiculoTabla) => item.numeroPlaca,
-      orden: 4,
-    },
-    /**
-     * Configuración para la columna de país emisor.
-     */
-    {
-      encabezado: 'País Emisor',
-      clave: (item: VehiculoTabla) => item.paisEmisor,
-      orden: 5,
-    },
-    /**
-     * Configuración para la columna de estado o provincia.
-     */
-    {
-      encabezado: 'Estado o provincia',
-      clave: (item: VehiculoTabla) => item.estado,
-      orden: 6,
-    },
-    /**
-     * Configuración para la columna de marca.
-     */
-    {
-      encabezado: 'Marca',
-      clave: (item: VehiculoTabla) => item.marca,
-      orden: 7,
-    },
-    /**
-     * Configuración para la columna de modelo.
-     */
-    {
-      encabezado: 'Modelo',
-      clave: (item: VehiculoTabla) => item.modelo,
-      orden: 8,
-    },
-    /**
-     * Configuración para la columna de año.
-     */
-    {
-      encabezado: 'Año',
-      clave: (item: VehiculoTabla) => item.ano,
-      orden: 9,
-    },
-    /**
-     * Configuración para la columna de transponder.
-     */
-    {
-      encabezado: 'Transponder',
-      clave: (item: VehiculoTabla) => item.transponder,
-      orden: 10,
-    },
-    /**
-     * Configuración para la columna de color.
-     */
-    {
-      encabezado: 'Color',
-      clave: (item: VehiculoTabla) => item.colorVehiculo,
-      orden: 11,
-    },
-    /**
-     * Configuración para la columna de número económico.
+     * Configuración para la columna de Número económico.
      */
     {
       encabezado: 'Número económico',
       clave: (item: VehiculoTabla) => item.numuroEconomico,
-      orden: 12,
+      orden: 3,
     },
     /**
-     * Configuración para la columna de número de segunda placa.
+     * Configuración para la columna de Transponder.
      */
     {
-      encabezado: 'Número 2da Placa',
-      clave: (item: VehiculoTabla) => item.numero2daPlaca,
-      orden: 13,
+      encabezado: 'Transponder',
+      clave: (item: VehiculoTabla) => item.transponder,
+      orden: 4,
     },
     /**
-     * Configuración para la columna de estado emisor de segunda placa.
+     * Configuración para la columna de Número de placas.
      */
     {
-      encabezado: 'Estado Emisor 2da Placa',
-      clave: (item: VehiculoTabla) => item.estado2daPlaca,
-      orden: 14,
+      encabezado: 'Número de Placas',
+      clave: (item: VehiculoTabla) => item.numeroPlaca,
+      orden: 5,
     },
     /**
-     * Configuración para la columna de país emisor de segunda placa.
+     * Configuración para la columna de País emisor.
      */
     {
-      encabezado: 'País Emisor 2da Placa',
-      clave: (item: VehiculoTabla) => item.paisEmisor2daPlaca,
-      orden: 15,
+      encabezado: 'País Emisor',
+      clave: (item: VehiculoTabla) => item.paisEmisor,
+      orden: 6,
     },
     /**
-     * Configuración para la columna de descripción.
+     * Configuración para la columna de Estado o provincia.
      */
     {
-      encabezado: 'Descripción',
-      clave: (item: VehiculoTabla) => item.descripcion,
-      orden: 16,
+      encabezado: 'Estado o provincia',
+      clave: (item: VehiculoTabla) => item.estado,
+      orden: 7,
+    },
+    /**
+     * Configuración para la columna de Marca.
+     */
+    {
+      encabezado: 'Marca',
+      clave: (item: VehiculoTabla) => item.marca,
+      orden: 8,
+    },
+    /**
+     * Configuración para la columna de Modelo.
+     */
+    {
+      encabezado: 'Modelo',
+      clave: (item: VehiculoTabla) => item.modelo,
+      orden: 9,
+    },
+    /**
+     * Configuración para la columna de Año.
+     */
+    {
+      encabezado: 'Año',
+      clave: (item: VehiculoTabla) => item.ano,
+      orden: 10,
     },
   ],
   /**
@@ -571,7 +523,7 @@ export const VEHICULOS_TABLA_CONFIG: VehiculoTablaConfig = {
    * Array de datos de vehículos para ser mostrados en la tabla.
    * Inicializado vacío y poblado dinámicamente según las necesidades del sistema.
    */
-   datos: [],
+  datos: [],
 };
 
 /**
@@ -605,10 +557,11 @@ export const UNIDAD_TABLA_CONFIG: UnidadTablaConfig = {
      * @property {Function} clave - Función que extrae el VIN del item
      * @property {number} orden - Posición de la columna en la tabla
      */
+
     {
       encabezado: 'VIN del vehículo',
       clave: (item: UnidadTabla) => item.vinVehiculo,
-      orden: 1,
+      orden: 2,
     },
     /**
      * Configuración para la columna de tipo de unidad de arrastre.
@@ -616,7 +569,7 @@ export const UNIDAD_TABLA_CONFIG: UnidadTablaConfig = {
     {
       encabezado: 'Tipo de unidad de arrastre',
       clave: (item: UnidadTabla) => item.tipoDeUnidadArrastre,
-      orden: 2,
+      orden: 3,
     },
     /**
      * Configuración para la columna de número económico.
@@ -624,21 +577,21 @@ export const UNIDAD_TABLA_CONFIG: UnidadTablaConfig = {
     {
       encabezado: 'Número económico',
       clave: (item: UnidadTabla) => item.numeroEconomico,
-      orden: 3,
+      orden: 4,
     },
     /**
      * Configuración para la columna de número de placas.
      */
     {
-      encabezado: 'Número de Placas',
+      encabezado: 'Número de placas',
       clave: (item: UnidadTabla) => item.numeroPlaca,
-      orden: 4,
+      orden: 5,
     },
     /**
      * Configuración para la columna de país emisor.
      */
     {
-      encabezado: 'País Emisor',
+      encabezado: 'País emisor',
       clave: (item: UnidadTabla) => item.paisEmisor,
       orden: 5,
     },

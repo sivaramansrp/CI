@@ -20,11 +20,25 @@
           <app-catalogo-select
             [catalogo]="catalogosArray[i]" 
             [label]="inputFields[i].label"
-            [required]="inputFields[i].required"
             [formControlName]="inputFields[i].controlName"
             (selectionChange)="setValoresStore(form, inputFields[i].controlName)"
             [isDisabled]="esFormularioSoloLectura"
+            [placeholder]="'Seleccione una opción'"
           ></app-catalogo-select>
+          <div *ngIf="esInvalido(inputFields[i].controlName)">
+          <small
+            class="text-danger"
+            *ngIf="
+              form.get(inputFields[i].controlName)?.errors?.['required'] &&
+              (
+                inputFields[i].controlName !== 'clasificacion' ||
+                mostrarErrorClasificacion
+              )
+            "
+          >
+            Este campo es obligatorio
+          </small>
+        </div>
         </div>
       </div>
     </div>

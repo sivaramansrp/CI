@@ -7,13 +7,13 @@ import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Input } from '@angular/core';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SeccionLibQuery} from '@libs/shared/data-access-user/src';
 import { SeccionLibState} from '@libs/shared/data-access-user/src';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { Subject } from 'rxjs';
-import { TramiteState } from '../../estados/tramite290101.store';
 import { TramiteStore } from '../../estados/tramite290101.store';
 import { TramiteStoreQuery } from '../../estados/tramite290101.query';
 import { Validators } from '@angular/forms';
@@ -26,7 +26,7 @@ import { tap } from 'rxjs/operators';
   selector: 'app-bodegas',
   templateUrl: './cafe-de-exportadores.component.html',
 })
-export class CafeDeExportadoresComponent implements OnInit {
+export class CafeDeExportadoresComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo para los datos de café de exportadores.
    * @type {FormGroup}
@@ -146,19 +146,28 @@ export class CafeDeExportadoresComponent implements OnInit {
   }
 
     inicializarFormulario(): void {
-    this.tramiteStoreQuery.selectSolicitudTramite$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.cafeExportFormState = seccionState.CafeExportFormState;
-        })
-      )
-      .subscribe()
+      // Inicializar el formulario primero
       this.cafeExportForm = this.fb.group({
         descripcionMercancia: ['', [Validators.required, Validators.maxLength(15)]],
         clasificacion: ['', Validators.required],
         porcentajeConcentracion: ['', Validators.required],
       });
+
+      // Solo una suscripción para el estado del trámite
+      this.tramiteStoreQuery.selectSolicitudTramite$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            if (seccionState && seccionState.CafeExportFormState) {
+              this.cafeExportFormState = seccionState.CafeExportFormState;
+              // Solo hacer patch si hay datos válidos
+              if (CafeDeExportadoresComponent.hasValidStateData(this.cafeExportFormState)) {
+                this.cafeExportForm.patchValue(this.cafeExportFormState, { emitEvent: false });
+              }
+            }
+          })
+        )
+        .subscribe();
   }
 
     /**
@@ -166,80 +175,65 @@ export class CafeDeExportadoresComponent implements OnInit {
    * @param {number} index - Índice de la pestaña a seleccionar.
    */
     seleccionaTab(index: number): void {
-      const CAFE_EXPORTADORES={
-        TABLA_Columna_1: this.cafeExportForm.value.descripcionMercancia,
-        TABLA_Columna_2: this.cafeExportForm.value.clasificacion,
-        TABLA_Columna_3: this.cafeExportForm.value.porcentajeConcentracion,
-        estatus:true,
-      }
-      this.tramiteStore.setCafeExportacionTabla([CAFE_EXPORTADORES]);
-
-      this.router.navigate(['../cafe-exportadores'], { queryParams: { tab: index },
+      // Solo agregar datos a la tabla si el formulario es válido y tiene datos
+      if (this.cafeExportForm.valid) {
+        const CAFE_EXPORTADORES = {
+          TABLA_Columna_1: this.cafeExportForm.value.descripcionMercancia,
+          TABLA_Columna_2: this.cafeExportForm.value.clasificacion,
+          TABLA_Columna_3: this.cafeExportForm.value.porcentajeConcentracion,
+          estatus: true,
+        };
+        this.tramiteStore.setCafeExportacionTabla([CAFE_EXPORTADORES]);
+        this.router.navigate(['../cafe-exportadores'], { queryParams: { tab: index },
         relativeTo: this.activatedRoute,});
+      } else {
+      this.cafeExportForm.markAllAsTouched();
+    }
+
+      
     }
   
+  /**
+   * Método de inicialización del componente.
+   * Configura el formulario y carga los catálogos necesarios.
+   */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
-    this.tramiteStoreQuery.selectSolicitudTramite$
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(seccionState => {
-        this.cafeExportFormState = seccionState.CafeExportFormState;
-      });
     this.cargarClasificacion();
 
-    /**
-    * Se suscribe a los cambios en el estado de la solicitud de trámite.
-    * Actualiza el formulario con los datos obtenidos del estado.
-    */
-    this.tramiteStoreQuery.selectSolicitudTramite$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState: TramiteState) => {
-        if (seccionState) {
-          this.cafeExportFormState = seccionState?.CafeExportFormState;
-          this.cafeExportForm.patchValue(this.cafeExportFormState);
-        }
-      })
-    )
-    .subscribe();
-    /**
-     * Se suscribe a los cambios en el estado del formulario.
-     * Después de un breve retraso, actualiza el estado de la solicitud en el store.
-     * También asegura que el botón "Guardar" se habilite/deshabilite correctamente.
-     */
-    this.cafeExportForm.statusChanges
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      delay(10),
-      tap(() => {
-        const ACTIVE_STATE = { ...this.cafeExportForm.value };
-        this.tramiteStore.setCafExportTramite(ACTIVE_STATE);
-      })
-    )
-    .subscribe();
+    // Suscripción para cambios en el formulario con debounce
+    this.cafeExportForm.valueChanges
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        delay(300), // Aumentar el delay para evitar actualizaciones excesivas
+        tap(() => {
+          if (this.cafeExportForm.valid) {
+            const ACTIVE_STATE = { ...this.cafeExportForm.value };
+            this.tramiteStore.setCafExportTramite(ACTIVE_STATE);
+          }
+        })
+      )
+      .subscribe();
 
     /**
      * Se suscribe a los cambios en el estado de la sección.
      * Almacena la información de la sección en la propiedad `seccion`.
      * Para el botón de validación Continuar
      */
-
     this.seccionQuery.selectSeccionState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.seccion = seccionState;
-      })
-    )
-    .subscribe();
-
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccion = seccionState;
+        })
+      )
+      .subscribe();
   }
 
   /**
    * Carga la clasificación o tipo de café desde el servicio de catálogos.
    * Se suscribe a los cambios y actualiza el catálogo en el formulario.
    */
-
   cargarClasificacion(): void {
     this.catalogosService.cargarClasificacion()
      .pipe(takeUntil(this.destroyNotifier$))
@@ -260,11 +254,46 @@ export class CafeDeExportadoresComponent implements OnInit {
   /**
    * Cancela la operación actual y restablece el formulario.
    */
+
+  
+/**
+   * Cancela la operación actual y restablece el formulario.
+   */
   cancelarBodega(): void {
-    takeUntil(this.destroyNotifier$)
     this.cafeExportForm.reset();
+    // Navegar directamente sin llamar seleccionaTab para evitar agregar filas vacías
+    this.router.navigate(['../cafe-exportadores'], { queryParams: { tab: 2 },
+      relativeTo: this.activatedRoute });
   }
 
 
-  
+  /**
+   * Método genérico para obtener la descripción de un catálogo basado en su ID.
+   * @param {CatalogosSelect} catalogo - El catálogo donde buscar.
+   * @param {string | number} id - El ID del elemento a buscar.
+   * @returns {string | undefined} La descripción del elemento encontrado o undefined si no existe.
+   */
+  private static obtenerDescripcionPorId(catalogo: CatalogosSelect, id: string | number): string | undefined {
+    return catalogo.catalogos.find((item) => item.id === Number(id))?.descripcion;
+  }
+
+  /**
+   * Verifica si el estado tiene datos válidos para hacer patch al formulario
+   */
+  private static hasValidStateData(state: CafExportFormaInt): boolean {
+    return state && Object.values(state).some(value => 
+      value !== null && value !== undefined && value !== ''
+    );
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description Hook del ciclo de vida que se llama cuando el componente es destruido.
+   * Garantiza la limpieza adecuada emitiendo un valor al subject `destroyNotifier$` 
+   * y completándolo para liberar recursos y prevenir fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }

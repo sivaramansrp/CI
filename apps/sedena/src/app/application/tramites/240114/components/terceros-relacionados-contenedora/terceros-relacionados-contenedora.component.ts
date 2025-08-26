@@ -1,19 +1,15 @@
+import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
+import { Subject, map, takeUntil } from 'rxjs';
+import { AgregarDestinatarioFinalContenedoraComponent } from '../../../240114/components/agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
+import { AgregarProveedorContenedoraComponent } from '../../../240114/components/agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 import { CommonModule } from '@angular/common';
-
-import { Component, ViewChild } from '@angular/core';
-import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
-import { OnInit } from '@angular/core';
-import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { Subject } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240114Query } from '../../estados/tramite240114Query.query';
 import { Tramite240114Store } from '../../estados/tramite240114Store.store';
-import { takeUntil } from 'rxjs';
-
-import { ModalComponent } from '../../../../shared/components/modal/modal.component';
-
-import { AgregarDestinatarioFinalContenedoraComponent } from '../../../240114/components/agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
-import { AgregarProveedorContenedoraComponent } from '../../../240114/components/agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 
 /**
  * @title Terceros Relacionados Contenedora
@@ -28,6 +24,12 @@ import { AgregarProveedorContenedoraComponent } from '../../../240114/components
   templateUrl: './terceros-relacionados-contenedora.component.html',
 })
 export class TercerosRelacionadosContenedoraComponent implements OnInit {
+  /**
+   * Referencia al componente Modal utilizado para mostrar formularios dinámicos.
+   * @type {ModalComponent}
+   * @memberof TercerosRelacionadosContenedoraComponent
+   * @description Componente Modal utilizado para mostrar formularios dinámicos.
+   */
   @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
   /**
    * Observable para limpiar las suscripciones activas al destruir el componente.
@@ -46,6 +48,11 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
    * @property {Proveedor[]} proveedorTablaDatos
    */
   proveedorTablaDatos: Proveedor[] = [];
+  /**
+   * Indica si el formulario es de solo lectura.
+   * @property {boolean}
+   */
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -53,12 +60,18 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
    * @method constructor
    * @param {Tramite240114Store} tramiteStore - Store de Akita que maneja el estado del trámite.
    * @param {Tramite240114Query} tramiteQuery - Query de Akita para obtener datos del trámite.
+   * @param {ConsultaioQuery} consultaQuery - Query para obtener el estado de la consulta.
+   * @param {Router} router - Router de Angular para la navegación.
+   * @param {ActivatedRoute} activatedRoute - ActivatedRoute de Angular para obtener parámetros de ruta.
    * @returns {void}
    */
   constructor(
     private tramiteStore: Tramite240114Store,
-    private tramiteQuery: Tramite240114Query // eslint-disable-next-line no-empty-function
-  ) {}
+    private tramiteQuery: Tramite240114Query,
+    private consultaQuery: ConsultaioQuery,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
+  ) { }
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
@@ -79,6 +92,14 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
       .subscribe((data) => {
         this.proveedorTablaDatos = data;
       });
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -110,5 +131,70 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
    */
   cerrarModal(): void {
     this.modalComponent.cerrar();
+  }
+  /**
+ * Actualiza la lista de destinatarios finales en el store del trámite.
+ *
+ * @method modificarDestinarioDatos
+ * @param {DestinoFinal[]} event - Lista de destinatarios finales actualizada.
+ * @returns {void}
+ */
+  modificarDestinarioDatos(datos: DestinoFinal): void {
+    this.tramiteStore.actualizarDatosDestinatario(datos);
+    this.irAAcciones();
+  }
+  /**
+   * Actualiza la lista de proveedores en el store del trámite.
+   *
+   * @method modificarProveedorDatos
+   * @param {Proveedor} datos - Proveedor a modificar.
+   * @returns {void}
+   */
+  modificarProveedorDatos(datos: Proveedor): void {
+    this.tramiteStore.actualizarDatosProveedor(datos);
+    this.irAAccionesProveedor();
+  }
+
+  /**
+   * Navega a una ruta relativa dentro del flujo actual.
+   * @method irAAcciones
+   * @param {string} accionesPath - Ruta relativa a la que se desea navegar.
+   * @returns {void}
+   */
+  irAAcciones(): void {
+    this.router.navigate(['../agregar-destino-final'], {
+      relativeTo: this.activatedRoute,
+    });
+  }
+  /**
+   * Navega a una ruta relativa dentro del flujo actual.
+   * @method irAAcciones
+   * @param {string} accionesPath - Ruta relativa a la que se desea navegar.
+   * @returns {void}
+   */
+  irAAccionesProveedor(): void {
+    this.router.navigate(['../agregar-proveedor'], {
+      relativeTo: this.activatedRoute,
+    });
+  }
+  /**
+   * @method eliminarDestinatarioFinal
+   * @description Elimina el primer DestinoFinal final de la tabla de datos.
+   * Si no hay DestinoFinal finales seleccionados, no realiza ninguna acción.
+   */
+  eliminarDestinatarioFinal(datos: DestinoFinal): void {
+    if (datos) {
+      this.tramiteStore.eliminarDestinatarioFinal(datos);
+    }
+  }
+  /**
+   * @method eliminarProveedor
+   * @description Elimina el primer Proveedor final de la tabla de datos.
+   * Si no hay Proveedor finales seleccionados, no realiza ninguna acción.
+   */
+  eliminarProveedor(datos: Proveedor): void {
+    if (datos) {
+      this.tramiteStore.eliminareliminarProveedorFinal(datos);
+    }
   }
 }

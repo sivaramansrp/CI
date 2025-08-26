@@ -5,39 +5,48 @@
  *
  * @module VehiculoDialogComponent
  */
-import { Component, Input, Output, EventEmitter, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { CatalogoSelectComponent, NotificacionesComponent, Notificacion, TipoNotificacionEnum, CategoriaMensaje } from '@libs/shared/data-access-user/src';
-import { modificarTerrestreService } from '../../../services/modificacar-terrestre.service';
-import { takeUntil, Subject } from 'rxjs';
 
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
+
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+
+import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { DatosVehiculo } from '../../../../models/registro-muestras-mercancias.model';
+import { modificarTerrestreService } from '../../../services/modificacar-terrestre.service';
+
+type CatalogoItem = Catalogo;
+type VehiculoData = DatosVehiculo;
 @Component({
   selector: 'app-vehiculo-dialog',
   templateUrl: './vehiculo-dialog.component.html',
   styleUrls: ['./vehiculo-dialog.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, CatalogoSelectComponent, NotificacionesComponent],
+  imports: [CommonModule, ReactiveFormsModule, CatalogoSelectComponent, TooltipModule],
 })
 /**
  * Componente de diálogo para agregar o editar información de vehículos.
  *
  * @class
  * @implements {OnInit}
+ * @implements {OnChanges}
  */
-export class VehiculoDialogComponent implements OnInit {
+export class VehiculoDialogComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Vehículo a editar (si aplica).
-   * @type {*}
+   * @type {VehiculoData}
    * @memberof VehiculoDialogComponent
    */
-  @Input() vehiculo: any;
+  @Input() vehiculo: VehiculoData | null = null;
 
   /**
    * Lista de vehículos existentes.
-   * @type {any[]}
+   * @type {VehiculoData[]}
    */
-  @Input() vehiculos: any[] = [];
+  @Input() vehiculos: VehiculoData[] = [];
 
   /**
    * Indica si el formulario es de solo lectura.
@@ -47,33 +56,39 @@ export class VehiculoDialogComponent implements OnInit {
 
   /**
    * Catálogo de tipos de vehículo.
-   * @type {any[]}
+   * @type {CatalogoItem[]}
    */
-  @Input() tipoDeVehiculoCatalogo: any[] = [];
+  @Input() tipoDeVehiculoCatalogo: CatalogoItem[] = [];
 
   /**
    * Catálogo de países emisores.
-   * @type {any[]}
+   * @type {CatalogoItem[]}
    */
-  @Input() paisEmisorCatalogo: any[] = [];
+  @Input() paisEmisorCatalogo: CatalogoItem[] = [];
 
   /**
    * Catálogo de años.
-   * @type {any[]}
+   * @type {CatalogoItem[]}
    */
-  @Input() anoCatalogo: any[] = [];
+  @Input() anoCatalogo: CatalogoItem[] = [];
 
   /**
    * Catálogo de tipos de arrastre.
-   * @type {any[]}
+   * @type {CatalogoItem[]}
    */
-  @Input() tipoArrastre: any[] = [];
+  @Input() tipoArrastre: CatalogoItem[] = [];
+
+  /**
+   * Catálogo de colores de vehículos.
+   * @type {CatalogoItem[]}
+   */
+  @Input() colorVehiculoCatalogo: CatalogoItem[] = [];
 
   /**
    * Evento emitido al guardar el vehículo.
-   * @type {EventEmitter<any>}
+   * @type {EventEmitter<VehiculoData>}
    */
-  @Output() save = new EventEmitter<any>();
+  @Output() save = new EventEmitter<VehiculoData>();
 
   /**
    * Evento emitido al cancelar la operación.
@@ -88,18 +103,6 @@ export class VehiculoDialogComponent implements OnInit {
   vehiculoForm!: FormGroup;
 
   /**
-   * Indica si se debe mostrar la notificación.
-   * @type {boolean}
-   */
-  showNotification: boolean = false;
-
-  /**
-   * Objeto de notificación para alertas.
-   * @type {Notificacion}
-   */
-  alertaNotificacion!: Notificacion;
-
-  /**
    * Referencia a la plantilla del modal.
    * @type {TemplateRef<unknown>}
    */
@@ -107,9 +110,9 @@ export class VehiculoDialogComponent implements OnInit {
 
   /**
    * Referencia al modal (si se usa un servicio de modal).
-   * @type {*}
+   * @type {unknown}
    */
-  modalRef?: any; 
+  modalRef?: unknown; 
 
   /**
    * Notificador para destruir suscripciones.
@@ -125,88 +128,169 @@ export class VehiculoDialogComponent implements OnInit {
   constructor(private fb: FormBuilder, private modificarTerrestreService: modificarTerrestreService) {}
 
   /**
+   * Detecta cambios en las propiedades de entrada y actualiza el formulario.
+   * @param {SimpleChanges} changes - Cambios detectados en las propiedades.
+   * @returns {void}
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    // Si la lista de vehículos cambia, recalcular el ID siguiente
+    if (changes['vehiculos'] && this.vehiculoForm) {
+      this.actualizarIdSiguiente();
+    }
+  }
+
+  /**
    * Inicializa el componente, catálogos y formulario.
    * @returns {void}
    */
-  ngOnInit() {
+  ngOnInit(): void {
+    this.loadCatalogData();
+    this.initializeForm();
+    this.setupFormValueSubscriptions();
+  }
+
+  /**
+   * Carga los datos de catálogos si no están disponibles
+   */
+  private loadCatalogData(): void {
     if (!this.tipoDeVehiculoCatalogo || this.tipoDeVehiculoCatalogo.length === 0) {
       this.modificarTerrestreService.obtenerTipoDeVehiculo()
         .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe((datos: any) => {
+        .subscribe((datos: { datos: CatalogoItem[] }) => {
           this.tipoDeVehiculoCatalogo = datos.datos;
         });
     }
     if (!this.tipoArrastre || this.tipoArrastre.length === 0) {
       this.modificarTerrestreService.obtenerTipoArrastre()
         .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe((datos: any) => {
+        .subscribe((datos: { datos: CatalogoItem[] }) => {
           this.tipoArrastre = datos.datos;
         });
     }
     if (!this.anoCatalogo || this.anoCatalogo.length === 0) {
       this.modificarTerrestreService.obtenerAno()
         .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe((datos: any) => {
+        .subscribe((datos: { datos: CatalogoItem[] }) => {
           this.anoCatalogo = datos.datos;
         });
     }
     if (!this.paisEmisorCatalogo || this.paisEmisorCatalogo.length === 0) {
       this.modificarTerrestreService.obtenerPaisEmisor()
         .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe((datos: any) => {
+        .subscribe((datos: { datos: CatalogoItem[] }) => {
           this.paisEmisorCatalogo = datos.datos;
         });
     }
+  }
 
-    let nextId = 1;
+  /**
+   * Inicializa el formulario con datos del vehículo
+   */
+  private initializeForm(): void {
+    let siguienteId = 1;
     if (Array.isArray(this.vehiculos) && this.vehiculos.length > 0) {
-      const maxId = Math.max(...this.vehiculos.map(v => Number(v.idDeVehiculo) || 0));
-      nextId = maxId + 1;
+      const ID_MAXIMO = Math.max(...this.vehiculos.map(v => Number(v['idDeVehiculo' as keyof VehiculoData]) || 0));
+      siguienteId = ID_MAXIMO + 1;
     }
-    const isEdit = !!(this.vehiculo && this.vehiculo.idDeVehiculo);
+    const ES_EDICION = Boolean(this.vehiculo && this.vehiculo['idDeVehiculo' as keyof VehiculoData]);
     this.vehiculoForm = this.fb.group({
-      numero: [this.vehiculo?.numero || '', [Validators.required, Validators.maxLength(20)]],
-      tipoDeVehiculo: [this.vehiculo?.tipoDeVehiculo || '', Validators.required],
-      idDeVehiculo: [{ value: isEdit ? this.vehiculo.idDeVehiculo : nextId, disabled: true }, Validators.required],
-      numeroPlaca: [this.vehiculo?.numeroPlaca || '', Validators.required],
-      paisEmisor: [this.vehiculo?.paisEmisor || '', Validators.required],
-      estado: [this.vehiculo?.estado || '', Validators.required],
-      marca: [this.vehiculo?.marca || '', Validators.required],
-      modelo: [this.vehiculo?.modelo || '', Validators.required],
-      ano: [this.vehiculo?.ano || '', Validators.required],
-      transponder: [this.vehiculo?.transponder || '', Validators.required],
-      colorVehiculo: [this.vehiculo?.colorVehiculo || '', Validators.required],
-      numeroEconomico: [this.vehiculo?.numeroEconomico || '', Validators.required],
-      numero2daPlaca: [this.vehiculo?.numero2daPlaca || ''],
-      estado2daPlaca: [this.vehiculo?.estado2daPlaca || ''],
-      paisEmisor2daPlaca: [this.vehiculo?.paisEmisor2daPlaca || ''],
-      descripcion: [this.vehiculo?.descripcion || '', Validators.maxLength(120)]
+      numero: [this.vehiculo?.['numero' as keyof VehiculoData] || '', [Validators.required, Validators.maxLength(20)]],
+      tipoDeVehiculo: [this.vehiculo?.['tipoDeVehiculo' as keyof VehiculoData] || '', Validators.required],
+      idDeVehiculo: [{ value: ES_EDICION ? this.vehiculo?.['idDeVehiculo' as keyof VehiculoData] : siguienteId, disabled: true }, Validators.required],
+      numeroPlaca: [this.vehiculo?.['numeroPlaca' as keyof VehiculoData] || '', Validators.required],
+      paisEmisor: [this.vehiculo?.['paisEmisor' as keyof VehiculoData] || '', Validators.required],
+      estado: [this.vehiculo?.['estado' as keyof VehiculoData] || '', Validators.required],
+      marca: [this.vehiculo?.['marca' as keyof VehiculoData] || '', Validators.required],
+      modelo: [this.vehiculo?.['modelo' as keyof VehiculoData] || '', Validators.required],
+      ano: [this.vehiculo?.['ano' as keyof VehiculoData] || '', Validators.required],
+      transponder: [this.vehiculo?.['transponder' as keyof VehiculoData] || '', Validators.required],
+      colorVehiculo: [this.vehiculo?.['colorVehiculo' as keyof VehiculoData] || '', Validators.required],
+      numeroEconomico: [this.vehiculo?.['numeroEconomico' as keyof VehiculoData] || '', Validators.required],
+      numero2daPlaca: [this.vehiculo?.['numero2daPlaca' as keyof VehiculoData] || ''],
+      estado2daPlaca: [this.vehiculo?.['estado2daPlaca' as keyof VehiculoData] || ''],
+      paisEmisor2daPlaca: [this.vehiculo?.['paisEmisor2daPlaca' as keyof VehiculoData] || ''],
+      descripcion: [this.vehiculo?.['descripcion' as keyof VehiculoData] || '', Validators.maxLength(120)]
     });
+  }
+
+  /**
+   * Actualiza el ID siguiente en el formulario cuando cambia la lista de vehículos.
+   * @returns {void}
+   */
+  private actualizarIdSiguiente(): void {
+    if (!this.vehiculoForm) {
+      return;
+    }
+    
+    // Solo actualizar si no es un modo de edición
+    const ES_EDICION = Boolean(this.vehiculo && this.vehiculo['idDeVehiculo' as keyof VehiculoData]);
+    if (ES_EDICION) {
+      return;
+    }
+    
+    let siguienteId = 1;
+    if (Array.isArray(this.vehiculos) && this.vehiculos.length > 0) {
+      const ID_MAXIMO = Math.max(...this.vehiculos.map(v => Number(v['idDeVehiculo' as keyof VehiculoData]) || 0));
+      siguienteId = ID_MAXIMO + 1;
+    }
+    
+    // Actualizar el valor del campo idDeVehiculo en el formulario
+    const CONTROL_ID = this.vehiculoForm.get('idDeVehiculo');
+    if (CONTROL_ID) {
+      CONTROL_ID.setValue(siguienteId);
+    }
+  }
+
+  /**
+   * Configura las suscripciones de cambio de valor del formulario con temporización mejorada y manejo de errores
+   */
+  private setupFormValueSubscriptions(): void {
     this.vehiculoForm.get('descripcion')?.disable();
-    this.vehiculoForm.get('tipoDeVehiculo')?.valueChanges.subscribe((selectedValue) => {
-      const id = Number(selectedValue);
-      if (id === 1) {
-        this.vehiculoForm.get('descripcion')?.enable();
-      } else {
-        this.vehiculoForm.get('descripcion')?.disable();
+    
+    this.vehiculoForm.get('tipoDeVehiculo')?.valueChanges
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((selectedValue) => {
+        const IDENTIFICADOR = Number(selectedValue);
+        const DESCRIPCION_CONTROL = this.vehiculoForm.get('descripcion');
+        
+        if (IDENTIFICADOR === 1) { // OTROS
+          DESCRIPCION_CONTROL?.enable();
+        } else {
+          DESCRIPCION_CONTROL?.disable();
+          DESCRIPCION_CONTROL?.setValue('');
+        }
+      });
+    
+    setTimeout(() => {
+      const VALOR_ACTUAL = this.vehiculoForm.get('tipoDeVehiculo')?.value;
+      if (VALOR_ACTUAL) {
+        const IDENTIFICADOR = Number(VALOR_ACTUAL);
+        const DESCRIPCION_CONTROL = this.vehiculoForm.get('descripcion');
+        
+        if (IDENTIFICADOR === 1) {
+          DESCRIPCION_CONTROL?.enable();
+        } else {
+          DESCRIPCION_CONTROL?.disable();
+        }
       }
-    });
+    }, 100);
   }
 
   /**
    * Abre el modal de diálogo (si se implementa con un servicio de modal).
    * @returns {void}
    */
-  openModal(): void {
+  static abiertoModal(): void {
     // Este método debería abrir el diálogo modal.
-}
+  }
 
   /**
    * Cierra el modal de diálogo y emite el evento de cancelación.
    * @returns {void}
    */
-  closeModal(): void {
+  cerrarModal(): void {
     this.cancel.emit();
+    this.vehiculoForm.reset();
   }
 
   /**
@@ -214,10 +298,12 @@ export class VehiculoDialogComponent implements OnInit {
    * @returns {void}
    */
   limpiarVehiculoData(): void {
-    if (!this.vehiculoForm) return;
-    const idValue = this.vehiculoForm.get('idDeVehiculo')?.value;
+    if (!this.vehiculoForm) {
+      return;
+    }
+    const VALOR_ID = this.vehiculoForm.get('idDeVehiculo')?.value;
     this.vehiculoForm.reset();
-    this.vehiculoForm.get('idDeVehiculo')?.setValue(idValue);
+    this.vehiculoForm.get('idDeVehiculo')?.setValue(VALOR_ID);
     this.vehiculoForm.get('idDeVehiculo')?.disable();
     this.vehiculoForm.get('descripcion')?.disable();
   }
@@ -230,24 +316,16 @@ export class VehiculoDialogComponent implements OnInit {
   guardarVehiculoData(): void {
     this.vehiculoForm.markAllAsTouched();
     this.vehiculoForm.updateValueAndValidity();
+    
     if (this.vehiculoForm.valid) {
-      const vehiculoData = {
+      const DATOS_VEHICULO = {
         ...this.vehiculoForm.getRawValue()
       };
-      this.save.emit(vehiculoData);
-      this.closeModal();
+      this.save.emit(DATOS_VEHICULO);
+      // Cerrar modal después de guardar exitosament
+      this.cancel.emit();
     } else {
-      this.alertaNotificacion = {
-        tipoNotificacion: TipoNotificacionEnum.ALERTA,
-        categoria: CategoriaMensaje.INFORMACION,
-        modo: 'action',
-        titulo: 'Alert',
-        mensaje: 'Formulario inválido, por favor verifica los campos.',
-        cerrar: true,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
-      this.showNotification = true;
+      // El formulario es inválido, los errores de validación se mostrarán en la plantilla
     }
   }
 
@@ -257,8 +335,8 @@ export class VehiculoDialogComponent implements OnInit {
    * @returns {boolean | null} True si es inválido y tocado, null si no existe.
    */
   isInvalid(controlName: string): boolean | null {
-    const control = this.vehiculoForm.get(controlName);
-    return control ? control.invalid && control.touched : null;
+    const CONTROL_FORMULARIO = this.vehiculoForm.get(controlName);
+    return CONTROL_FORMULARIO ? CONTROL_FORMULARIO.invalid && CONTROL_FORMULARIO.touched : null;
   }
 
   /**
@@ -268,5 +346,14 @@ export class VehiculoDialogComponent implements OnInit {
    */
   get getFormValues(): { [key: string]: AbstractControl } {
     return this.vehiculoForm.controls;
+  }
+
+  /**
+   * Gancho del ciclo de vida que se llama cuando se destruye el componente.
+   * Se utiliza para limpiar suscripciones y evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

@@ -1,5 +1,5 @@
+import { AVISO, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@ng-mf/data-access-user';
 
 /**
  * @descripcion
@@ -28,6 +28,13 @@ interface AccionBoton {
  * Componente que representa la página de solicitud.
  */
 export class SolicitudPageComponent {
+     /**
+   * Constantes importadas desde el archivo de enumeración para los mensajes de advertencia.
+   *
+   * @type {AVISO}
+   * @memberof RegistroParaLaComponent
+   */
+  public ADVERTENCIA = AVISO;
   /**
    * Lista de pasos del asistente.
    * @type {ListaPasosWizard[]}

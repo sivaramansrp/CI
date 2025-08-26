@@ -3,7 +3,7 @@
 
     <div class="modal-header">
       <h5 class="modal-title">Datos de Choferes</h5>
-      <button type="button" class="btn-close" (click)="closeModal()"></button>
+      <button type="button" class="btn-close" (click)="cerrarModal()"></button>
     </div>
     <div class="modal-body ">
       <div class="container-fluid">
@@ -24,12 +24,16 @@
                 <input type="text" class="form-control" formControlName="numero" size="30" id="numeroCHN"
                   maxlength="200" />
               </div>
-              <div *ngIf="getFormValues['numero'].invalid && (getFormValues['numero'].touched || submitted)"
-                class="text-danger">
-                <small *ngIf="getFormValues['numero'].errors?.['required']">Este campo es obligatorio.</small>
-                <small *ngIf="getFormValues['numero'].errors?.['maxLength']">El número no puede tener más de 200
-                  caracteres.</small>
-              </div>
+              @if(getFormValues['numero'].invalid && (getFormValues['numero'].touched || submitted)) {
+                <div class="text-danger">
+                  @if(getFormValues['numero'].errors?.['required']) {
+                    <small class="text-danger">Este campo es obligatorio.</small>
+                  }
+                  @if(getFormValues['numero'].errors?.['maxLength']) {
+                    <small>El número no puede tener más de 200 caracteres.</small>
+                  }
+                </div>
+              }
             </div>
 
             <div class="col-md-4">
@@ -39,28 +43,34 @@
               <div>
                 <input type="text" class="form-control" formControlName="primerApellido" maxlength="200" />
               </div>
-              <div
-                *ngIf="getFormValues['primerApellido'].invalid && (getFormValues['primerApellido'].touched || submitted)"
-                class="text-danger">
-                <small *ngIf="getFormValues['primerApellido'].errors?.['required']">Este campo es obligatorio.</small>
-                <small *ngIf="getFormValues['primerApellido'].errors?.['maxLength']">El nombre no puede tener más de 200
-                  caracteres.</small>
-              </div>
+              @if(getFormValues['primerApellido'].invalid && (getFormValues['primerApellido'].touched || submitted)) {
+                <div class="text-danger">
+                  @if(getFormValues['primerApellido'].errors?.['required']) {
+                    <small class="text-danger">Este campo es obligatorio.</small>
+                  }
+                  @if(getFormValues['primerApellido'].errors?.['maxLength']) {
+                    <small>El nombre no puede tener más de 200 caracteres.</small>
+                  }
+                </div>
+              }
             </div>
             <div class="col-md-4">
               <div>
                 <label for="apellidoMaterno">Segundo Apellido:</label>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="segundoApellido" readonly maxlength="200" />
+                <input type="text" class="form-control" formControlName="segundoApellido" maxlength="200" />
               </div>
-              <div
-                *ngIf="getFormValues['segundoApellido'].invalid && (getFormValues['segundoApellido'].touched || submitted)"
-                class="text-danger">
-                <small *ngIf="getFormValues['segundoApellido'].errors?.['required']">Este campo es obligatorio.</small>
-                <small *ngIf="getFormValues['segundoApellido'].errors?.['maxLength']">El nombre no puede tener más de 200
-                  caracteres.</small>
-              </div>
+              @if(getFormValues['segundoApellido'].invalid && (getFormValues['segundoApellido'].touched || submitted)) {
+                <div class="text-danger">
+                  @if(getFormValues['segundoApellido'].errors?.['required']) {
+                    <small class="text-danger">Este campo es obligatorio.</small>
+                  }
+                  @if(getFormValues['segundoApellido'].errors?.['maxLength']) {
+                    <small>El nombre no puede tener más de 200 caracteres.</small>
+                  }
+                </div>
+              }
             </div>
           </div>
 
@@ -70,12 +80,13 @@
                 <app-catalogo-select class="nacionalidad" [catalogo]="paisList" [placeholder]="'Seleccione un valor'"
                   formControlName="nacionalidad" [isDisabled]="readonly" name="nacionalidad" [label]="'Nacionalidad'"
                   [required]="true" (selectionChange)="onPaisChange($event)"></app-catalogo-select>
-                <div
-                  *ngIf="formChoferes.get('nacionalidad')?.invalid && (formChoferes.get('nacionalidad')?.touched || submitted)"
-                  class="text-danger">
-                  <small *ngIf="formChoferes.get('nacionalidad')?.errors?.['required']">Este campo es
-                    obligatorio.</small>
-                </div>
+                @if(formChoferes.get('nacionalidad')?.invalid && (formChoferes.get('nacionalidad')?.touched || submitted)) {
+                  <div class="text-danger">
+                    @if(formChoferes.get('nacionalidad')?.errors?.['required']) {
+                      <small class="text-danger">Este campo es obligatorio.</small>
+                    }
+                  </div>
+                }
               </div>
             </div>
 
@@ -86,13 +97,16 @@
               <div>
                 <input type="text" class="form-control" formControlName="numeroDeGafete" maxlength="24" />
               </div>
-              <div
-                *ngIf="getFormValues['numeroDeGafete'].invalid && (getFormValues['numeroDeGafete'].touched || submitted)"
-                class="text-danger">
-                <small *ngIf="getFormValues['numeroDeGafete'].errors?.['required']">Este campo es obligatorio.</small>
-                <small *ngIf="getFormValues['numeroDeGafete'].errors?.['maxLength']">El gafete no puede tener más de 24
-                  caracteres.</small>
-              </div>
+              @if(getFormValues['numeroDeGafete'].invalid && (getFormValues['numeroDeGafete'].touched || submitted)) {
+                <div class="text-danger">
+                  @if(getFormValues['numeroDeGafete'].errors?.['required']) {
+                    <small class="text-danger">Este campo es obligatorio.</small>
+                  }
+                  @if(getFormValues['numeroDeGafete'].errors?.['maxLength']) {
+                    <small>El gafete no puede tener más de 24 caracteres.</small>
+                  }
+                </div>
+              }
             </div>
             <div class="col-md-4">
               <div>
@@ -101,34 +115,40 @@
               <div>
                 <input type="text" class="form-control" formControlName="vigenciaGafete" maxlength="15" />
               </div>
-              <div
-                *ngIf="getFormValues['vigenciaGafete'].invalid && (getFormValues['vigenciaGafete'].touched || submitted)"
-                class="text-danger">
-                <small *ngIf="getFormValues['vigenciaGafete'].errors?.['required']">Este campo es obligatorio.</small>
-                <small *ngIf="getFormValues['vigenciaGafete'].errors?.['maxLength']">La vigencia del gafete no puede
-                  tener más de 15 caracteres.</small>
-              </div>
+              @if(getFormValues['vigenciaGafete'].invalid && (getFormValues['vigenciaGafete'].touched || submitted)) {
+                <div class="text-danger">
+                  @if(getFormValues['vigenciaGafete'].errors?.['required']) {
+                    <small class="text-danger">Este campo es obligatorio.</small>
+                  }
+                  @if(getFormValues['vigenciaGafete'].errors?.['maxLength']) {
+                    <small>La vigencia del gafete no puede tener más de 15 caracteres.</small>
+                  }
+                </div>
+              }
             </div>
           </div>
 
           <div class="row mt-3">
             <div class="col-md-4">
               <div>
-                <label for="numberDelSocial">Número de Segur Social*:</label>
+                <label for="numberDelSocial">Número del seguro social*:</label>
               </div>
               <div>
                 <input type="text" class="form-control" formControlName="numeroDelSeguroSocial" maxlength="18" />
               </div>
-              <div
-                *ngIf="getFormValues['numeroDelSeguroSocial'].invalid && (getFormValues['numeroDelSeguroSocial'].touched || submitted)"
-                class="text-danger">
-                <small *ngIf="getFormValues['numeroDelSeguroSocial'].errors?.['required']">Este campo es
-                  obligatorio.</small>
-                <small *ngIf="getFormValues['numeroDelSeguroSocial'].errors?.['maxLength']">El número de seguridad
-                  social no puede tener más de 11 caracteres.</small>
-                <small *ngIf="getFormValues['numeroDelSeguroSocial'].errors?.['pattern']">El número de seguridad social
-                  debe tener 18 dígitos.</small>
-              </div>
+              @if(getFormValues['numeroDelSeguroSocial'].invalid && (getFormValues['numeroDelSeguroSocial'].touched || submitted)) {
+                <div class="text-danger">
+                  @if(getFormValues['numeroDelSeguroSocial'].errors?.['required']) {
+                    <small class="text-danger">Este campo es obligatorio.</small>
+                  }
+                  @if(getFormValues['numeroDelSeguroSocial'].errors?.['maxLength']) {
+                    <small>El número de seguridad social no puede tener más de 18 caracteres.</small>
+                  }
+                  @if(getFormValues['numeroDelSeguroSocial'].errors?.['pattern']) {
+                    <small>Por favor, sólo escribe dígitos.</small>
+                  }
+                </div>
+              }
             </div>
             <div class="col-md-4">
               <div>
@@ -139,14 +159,16 @@
               <div>
                 <input type="text" class="form-control" formControlName="numberDeIdeFiscal" maxlength="18" />
               </div>
-              <div
-                *ngIf="getFormValues['numberDeIdeFiscal'].invalid && (getFormValues['numberDeIdeFiscal'].touched || submitted)"
-                class="text-danger">
-                <small *ngIf="getFormValues['numberDeIdeFiscal'].errors?.['required']">Este campo es
-                  obligatorio.</small>
-                <small *ngIf="getFormValues['numberDeIdeFiscal'].errors?.['maxLength']">El nombre no puede tener más de
-                  18 caracteres.</small>
-              </div>
+              @if(getFormValues['numberDeIdeFiscal'].invalid && (getFormValues['numberDeIdeFiscal'].touched || submitted)) {
+                <div class="text-danger">
+                  @if(getFormValues['numberDeIdeFiscal'].errors?.['required']) {
+                    <small class="text-danger">Este campo es obligatorio.</small>
+                  }
+                  @if(getFormValues['numberDeIdeFiscal'].errors?.['maxLength']) {
+                    <small>El nombre no puede tener más de 18 caracteres.</small>
+                  }
+                </div>
+              }
             </div>
             <div class="col-md-4 mt-3">
               <div class="pull-right justify-content-end">
@@ -170,10 +192,13 @@
                 <app-catalogo-select class="paisChn" [catalogo]="paisList" placeholder="Seleccione un país"
                   formControlName="pais" [required]="true" [isDisabled]="readonly" name="pais" label="País"
                   (selectionChange)="onPaisChange($event)"></app-catalogo-select>
-                <div *ngIf="formChoferes.get('pais')?.invalid && (formChoferes.get('pais')?.touched || submitted)"
-                  class="text-danger">
-                  <small *ngIf="formChoferes.get('pais')?.errors?.['required']">Este campo es obligatorio.</small>
-                </div>
+                @if(formChoferes.get('pais')?.invalid && (formChoferes.get('pais')?.touched || submitted)) {
+                  <div class="text-danger">
+                    @if(formChoferes.get('pais')?.errors?.['required']) {
+                      <small class="text-danger">Este campo es obligatorio.</small>
+                    }
+                  </div>
+                }
               </div>
             </div>
             <div class="col-md-4 mb-3">
@@ -183,12 +208,16 @@
               <div>
                 <input type="text" class="form-control" formControlName="codigoPostal" />
               </div>
-              <div *ngIf="getFormValues['codigoPostal'].invalid && (getFormValues['codigoPostal'].touched || submitted)"
-                class="text-danger">
-                <small *ngIf="getFormValues['codigoPostal'].errors?.['required']">Este campo es obligatorio.</small>
-                <small *ngIf="getFormValues['codigoPostal'].errors?.['maxLength']">codigoPostal no puede tener más de 10
-                  caracteres.</small>
-              </div>
+              @if(getFormValues['codigoPostal'].invalid && (getFormValues['codigoPostal'].touched || submitted)) {
+                <div class="text-danger">
+                  @if(getFormValues['codigoPostal'].errors?.['required']) {
+                    <small class="text-danger">Este campo es obligatorio.</small>
+                  }
+                  @if(getFormValues['codigoPostal'].errors?.['maxLength']) {
+                    <small>codigoPostal no puede tener más de 10 caracteres.</small>
+                  }
+                </div>
+              }
             </div>
 
             <div class="col-md-4">
@@ -198,13 +227,19 @@
               <div>
                 <input type="text" class="form-control" formControlName="estado" />
               </div>
-              <div *ngIf="getFormValues['estado'].invalid && (getFormValues['estado'].touched || submitted)"
-                class="text-danger">
-                <small *ngIf="getFormValues['estado'].errors?.['required']">Este campo es obligatorio.</small>
-                <small *ngIf="getFormValues['estado'].errors?.['maxLength']">El estado no puede tener más de 11
-                  caracteres.</small>
-                <small *ngIf="getFormValues['estado'].errors?.['pattern']">El estado debe tener 11 dígitos.</small>
-              </div>
+              @if(getFormValues['estado'].invalid && (getFormValues['estado'].touched || submitted)) {
+                <div class="text-danger">
+                  @if(getFormValues['estado'].errors?.['required']) {
+                    <small class="text-danger">Este campo es obligatorio.</small>
+                  }
+                  @if(getFormValues['estado'].errors?.['maxLength']) {
+                    <small>El estado no puede tener más de 11 caracteres.</small>
+                  }
+                  @if(getFormValues['estado'].errors?.['pattern']) {
+                    <small>El estado debe tener 11 dígitos.</small>
+                  }
+                </div>
+              }
             </div>
           </div>
 
@@ -217,31 +252,38 @@
               <div>
                 <input type="text" class="form-control" formControlName="calle" />
               </div>
-              <div *ngIf="getFormValues['calle'].invalid && (getFormValues['calle'].touched || submitted)"
-                class="text-danger">
-                <small *ngIf="getFormValues['calle'].errors?.['required']">Este campo es obligatorio.</small>
-                <small *ngIf="getFormValues['calle'].errors?.['maxLength']">calle no puede tener más de 10
-                  caracteres.</small>
-              </div>
+              @if(getFormValues['calle'].invalid && (getFormValues['calle'].touched || submitted)) {
+                <div class="text-danger">
+                  @if(getFormValues['calle'].errors?.['required']) {
+                    <small class="text-danger">Este campo es obligatorio.</small>
+                  }
+                  @if(getFormValues['calle'].errors?.['maxLength']) {
+                    <small>calle no puede tener más de 10 caracteres.</small>
+                  }
+                </div>
+              }
             </div>
             <div class="col-md-4">
               <div>
-                <label for="numeroExterior">Número Exterior*:</label>
+                <label for="numeroExterior">Número exterior*:</label>
               </div>
               <div>
                 <input type="text" class="form-control" formControlName="numeroExterior" />
               </div>
-              <div
-                *ngIf="getFormValues['numeroExterior'].invalid && (getFormValues['numeroExterior'].touched || submitted)"
-                class="text-danger">
-                <small *ngIf="getFormValues['numeroExterior'].errors?.['required']">Este campo es obligatorio.</small>
-                <small *ngIf="getFormValues['numeroExterior'].errors?.['maxLength']">Numero Exterior no puede tener más
-                  de 10 caracteres.</small>
-              </div>
+              @if(getFormValues['numeroExterior'].invalid && (getFormValues['numeroExterior'].touched || submitted)) {
+                <div class="text-danger">
+                  @if(getFormValues['numeroExterior'].errors?.['required']) {
+                    <small class="text-danger">Este campo es obligatorio.</small>
+                  }
+                  @if(getFormValues['numeroExterior'].errors?.['maxLength']) {
+                    <small>Numero Exterior no puede tener más de 10 caracteres.</small>
+                  }
+                </div>
+              }
             </div>
             <div class="col-md-4">
               <div>
-                <label for="numeroInterior">Número Interior:</label>
+                <label for="numeroInterior">Número interior:</label>
               </div>
               <div>
                 <input type="text" class="form-control" formControlName="numeroInterior" />
@@ -256,12 +298,13 @@
                 <app-catalogo-select class="paisDeResidencia" [catalogo]="paisList" formControlName="paisDeResidencia"
                   placeholder="Seleccione un valor" [required]="true" [isDisabled]="readonly" name="paisDeResidencia"
                   label="País de residencia"></app-catalogo-select>
-                <div
-                  *ngIf="formChoferes.get('paisDeResidencia')?.invalid && (formChoferes.get('paisDeResidencia')?.touched || submitted)"
-                  class="text-danger">
-                  <small *ngIf="formChoferes.get('paisDeResidencia')?.errors?.['required']">Este campo es
-                    obligatorio.</small>
-                </div>
+                @if(formChoferes.get('paisDeResidencia')?.invalid && (formChoferes.get('paisDeResidencia')?.touched || submitted)) {
+                  <div class="text-danger">
+                    @if(formChoferes.get('paisDeResidencia')?.errors?.['required']) {
+                      <small class="text-danger">Este campo es obligatorio.</small>
+                    }
+                  </div>
+                }
               </div>
             </div>
 
@@ -272,12 +315,16 @@
               <div>
                 <input type="text" class="form-control" formControlName="ciudad" />
               </div>
-              <div *ngIf="getFormValues['ciudad'].invalid && (getFormValues['ciudad'].touched || submitted)"
-                class="text-danger">
-                <small *ngIf="getFormValues['ciudad'].errors?.['required']">Este campo es obligatorio.</small>
-                <small *ngIf="getFormValues['ciudad'].errors?.['maxLength']">ciudad no puede tener más de 10
-                  caracteres.</small>
-              </div>
+              @if(getFormValues['ciudad'].invalid && (getFormValues['ciudad'].touched || submitted)) {
+                <div class="text-danger">
+                  @if(getFormValues['ciudad'].errors?.['required']) {
+                    <small class="text-danger">Este campo es obligatorio.</small>
+                  }
+                  @if(getFormValues['ciudad'].errors?.['maxLength']) {
+                    <small>ciudad no puede tener más de 10 caracteres.</small>
+                  }
+                </div>
+              }
             </div>
           </div>
 
@@ -289,25 +336,34 @@
               <div>
                 <input type="email" class="form-control" formControlName="correoElectronico" />
               </div>
-              <div
-                *ngIf="formChoferes.get('correoElectronico')?.invalid && (formChoferes.get('correoElectronico')?.touched || submitted)"
-                class="text-danger">
-                <small *ngIf="formChoferes.get('correoElectronico')?.errors?.['email']">Correo electrónico no es
-                  válido.</small>
-              </div>
+              @if(formChoferes.get('correoElectronico')?.errors?.['required'] && (formChoferes.get('correoElectronico')?.touched || submitted)) {
+                <div class="text-danger">
+                  <small class="text-danger">Este campo es obligatorio.</small>
+                </div>
+              }
+              @if(formChoferes.get('correoElectronico')?.errors?.['email'] && (formChoferes.get('correoElectronico')?.touched || submitted)) {
+                <div class="text-danger">
+                  <small>Por favor, escribe una dirección de correo válida.</small>
+                </div>
+              }
             </div>
             <div class="col-md-4">
               <div>
-                <label for="solicitud.telefono">Teléfono</label>
+                <label for="solicitud.telefono">Teléfono:</label>
               </div>
               <div>
                 <input type="tel" class="form-control" formControlName="telefono" />
               </div>
-              <div *ngIf="formChoferes.get('telefono')?.invalid && (formChoferes.get('telefono')?.touched || submitted)"
-                class="text-danger">
-                <small *ngIf="formChoferes.get('telefono')?.errors?.['pattern']">El teléfono solo debe contener
-                  dígitos.</small>
-              </div>
+              @if(formChoferes.get('telefono')?.errors?.['required'] && (formChoferes.get('telefono')?.touched || submitted)) {
+                <div class="text-danger">
+                  <small class="text-danger">Este campo es obligatorio.</small>
+                </div>
+              }
+              @if(formChoferes.get('telefono')?.errors?.['pattern'] && (formChoferes.get('telefono')?.touched || submitted)) {
+                <div class="text-danger">
+                  <small>Por favor, sólo escribe dígitos.</small>
+                </div>
+              }
             </div>
           </div>
 
@@ -316,8 +372,8 @@
         <div class="row mt-3 mb-3">
           <div class="col-md-12">
             <div class="pull-right justify-content-end">
-              <button type="button" class="btn btn-default mr-3" (click)="resetForm()">Limpiar</button>
-              <button type="button" class="btn btn-danger mr-3" (click)="closeModal()">Cancelar</button>
+              <button type="button" class="btn btn-default mr-3" (click)="limpiarFormulario()">Limpiar</button>
+              <button type="button" class="btn btn-danger mr-3" (click)="cerrarModal()">Cancelar</button>
               <button type="button" class="btn btn-primary mr-3" (click)="guardarFilaEditada()">Guardar</button>
             </div>
           </div>

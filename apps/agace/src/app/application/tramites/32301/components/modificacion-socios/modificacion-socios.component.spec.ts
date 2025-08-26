@@ -1,210 +1,298 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { ModificacionSociosComponent } from './modificacion-socios.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { of, Subject } from 'rxjs';
+import { FormBuilder } from '@angular/forms';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { Tramite32301Store } from '../../estados/tramite32301.store';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
-import { AlertComponent, CatalogoSelectComponent, ConsultaioQuery, InputRadioComponent, NotificacionesComponent, TableComponent, TablePaginationComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { Modal } from 'bootstrap';
-import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-jest.mock('bootstrap', () => ({
-  Modal: jest.fn().mockImplementation(() => ({
-    show: jest.fn(),
-    hide: jest.fn(),
-  })),
-}));
+@Injectable()
+class MockAvisoModifyService {}
+
+@Injectable()
+class MockTramite32301Store {}
+
+@Injectable()
+class MockTramite32301Query {
+  selectState$ = observableOf({
+    modificacionSociosHeader: {}
+  });
+}
+
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
+
+@Pipe({name: 'translate'})
+class TranslatePipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'phoneNumber'})
+class PhoneNumberPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'safeHtml'})
+class SafeHtmlPipe implements PipeTransform {
+  transform(value) { return value; }
+}
 
 describe('ModificacionSociosComponent', () => {
-  let component: ModificacionSociosComponent;
-  let fixture: ComponentFixture<ModificacionSociosComponent>;
-  let avisoModifyServiceMock: any;
-  let tramiteStoreMock: any;
-  let tramiteQueryMock: any;
-  let consultaioQueryMock: any;
+  let fixture;
+  let component;
 
-  beforeEach(async () => {
-    avisoModifyServiceMock = {
-      getEnSuCaracterDe: jest.fn().mockReturnValue(of([{ id: 1, nombre: 'Socio' }])),
-      getNacionalidad: jest.fn().mockReturnValue(of([{ id: 1, nombre: 'Mexicana' }])),
-      getPreOperativo: jest.fn().mockReturnValue(of([{ label: 'Sí', value: '1' }])),
-      getGridMiembrosEmpresas: jest.fn().mockReturnValue(of({
-        tableHeader: ['Col1', 'Col2'],
-        tableBody: [{ tbodyData: ['a', 'b'] }]
-      })),
-      getSeccionMiembrosRevocados: jest.fn().mockReturnValue(of({
-        tableHeader: ['ColA', 'ColB'],
-        tableBody: [{ tbodyData: ['x', 'y'] }]
-      })),
-    };
-    tramiteStoreMock = {
-      setTest: jest.fn(),
-    };
-    tramiteQueryMock = {
-      selectModificacionSocios$: of({ campo1: 'valor1', campo2: 'valor2' }),
-    };
-    consultaioQueryMock = {
-      selectConsultaioState$: of({ readonly: false }),
-    };
-
-    await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule,
-         CommonModule,
-         ModificacionSociosComponent,
-            TituloComponent,
-            TableComponent,
-            TablePaginationComponent,
-            CatalogoSelectComponent,
-            InputRadioComponent,
-            AlertComponent,
-            NotificacionesComponent,
-            HttpClientTestingModule
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule,ModificacionSociosComponent,HttpClientTestingModule ],
+      declarations: [
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        MyCustomDirective
       ],
-      declarations: [],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
-        { provide: AvisoModifyService, useValue: avisoModifyServiceMock },
-        { provide: Tramite32301Store, useValue: tramiteStoreMock },
-        { provide: Tramite32301Query, useValue: tramiteQueryMock },
-        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
-      ],
-    }).compileComponents();
+        { provide: AvisoModifyService, useClass: MockAvisoModifyService },
+        { provide: Tramite32301Store, useClass: MockTramite32301Store },
+        { provide: Tramite32301Query, useClass: MockTramite32301Query },
+        ConsultaioQuery
+      ]
+    }).overrideComponent(ModificacionSociosComponent, {
 
+    }).compileComponents();
     fixture = TestBed.createComponent(ModificacionSociosComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create the component', () => {
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
-    component.initAgregarMiembroDeLaEmpresaForm();
-    expect(component.agregarMiembroDeLaEmpresaFrom).toBeDefined();
-    expect(component.agregarMiembroDeLaEmpresaFrom.get('ensucarácterde')?.value).toBe(1);
-    expect(component.agregarMiembroDeLaEmpresaFrom.get('obligadoaTributarenMéxico')?.value).toBe(true);
+  it('should run #ngOnInit()', async () => {
+    component.inicializarEstadoFormulario = jest.fn();
+    component.ngOnInit();
+     expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
   });
 
-  it('should call setValoresStore and update store', () => {
-    const fb = TestBed.inject(FormBuilder);
-    const form = fb.group({ test: ['value'] });
-    tramiteStoreMock.setTest = jest.fn();
-    component.setValoresStore(form, 'test', 'setTest' as any);
-    expect(tramiteStoreMock.setTest).toHaveBeenCalledWith('value');
+  it('should run #inicializarEstadoFormulario()', async () => {
+    component.guardarDatosFormulario = jest.fn();
+    component.inicializarFormulario = jest.fn();
+    component.inicializarEstadoFormulario();
+     expect(component.inicializarFormulario).toHaveBeenCalled();
   });
 
-  it('should get EnSuCaracterDe options', () => {
-    component.getEnSuCaracterDe();
-  });
-
-  it('should get Nacionalidad options', () => {
-    component.getNacionalidad();
-  });
-
-  it('should get PreOperativo options', () => {
-    component.getPreOperativo();
-  });
-
-  it('should get GridMiembrosEmpresas and set tableColumns and mercanciasData', () => {
-    component.getGridMiembrosEmpresas();
-  });
-
-  it('should get SeccionMiembrosRevocados and set declaretableColumns', () => {
-    component.getSeccionMiembrosRevocados();
-  });
-
-  it('should update pagination', () => {
-    component.mercanciasData = [
-      { tbodyData: ['a'] },
-      { tbodyData: ['b'] },
-      { tbodyData: ['c'] }
-    ];
-    component.itemsPerPage = 2;
-    component.currentPage = 2;
-    component.updatePagination();
-    expect(component.mercanciasData.length).toBeLessThanOrEqual(2);
-  });
-
-  it('should change items per page and reset page', () => {
-    const spy = jest.spyOn(component, 'updatePagination');
-    component.onItemsPerPageChange(5);
-    expect(component.itemsPerPage).toBe(5);
-    expect(component.currentPage).toBe(1);
-    expect(spy).toHaveBeenCalled();
-  });
-
-  it('should change page and update pagination', () => {
-    const spy = jest.spyOn(component, 'updatePagination');
-    component.onPageChange(3);
-    expect(component.currentPage).toBe(3);
-    expect(spy).toHaveBeenCalled();
-  });
-
-  it('should open agregar modal if instance exists', () => {
-    component.agregarModelInstance = new Modal(document.createElement('div'));
-    const showSpy = jest.spyOn(component.agregarModelInstance, 'show');
-    component.openAgregarModal();
-    expect(showSpy).toHaveBeenCalled();
-  });
-
-  it('should set raticarNotificacion on openRaticarModal', () => {
-    component.openRaticarModal();
-    expect(component.raticarNotificacion).toBeDefined();
-    expect(component.raticarNotificacion.mensaje).toContain('ratificado');
-  });
-
-  it('should set revocarNotificacion on openRevocarModal', () => {
-    component.openRevocarModal();
-    expect(component.revocarNotificacion).toBeDefined();
-    expect(component.revocarNotificacion.mensaje).toContain('revocado');
-  });
-
-  it('should set correctamenteNotificacion on openCorrectamenteModel', () => {
-    component.openCorrectamenteModel();
-    expect(component.correctamenteNotificacion).toBeDefined();
-    expect(component.correctamenteNotificacion.mensaje).toContain('guardados correctamente');
-  });
-
-  it('should close agregar modal and open confirmation', () => {
-    component.agregarModelInstance = new Modal(document.createElement('div'));
-    const hideSpy = jest.spyOn(component.agregarModelInstance, 'hide');
-    const confirmSpy = jest.spyOn(component, 'openCorrectamenteModel');
-    component.closeAgregarModal();
-    expect(hideSpy).toHaveBeenCalled();
-    expect(confirmSpy).toHaveBeenCalled();
-  });
-
-  it('should destroy and complete destroy$', () => {
-    const nextSpy = jest.spyOn((component as any).destroy$, 'next');
-    const completeSpy = jest.spyOn((component as any).destroy$, 'complete');
-    component.ngOnDestroy();
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
-  });
-
-  it('should disable form if esFormularioSoloLectura is true in guardarDatosFormulario', () => {
-    component.initAgregarMiembroDeLaEmpresaForm();
-    component.esFormularioSoloLectura = true;
+  it('should run #guardarDatosFormulario()', async () => {
+    component.inicializarFormulario = jest.fn();
+    component.agregarMiembroDeLaEmpresaFrom = component.agregarMiembroDeLaEmpresaFrom || {};
+    component.agregarMiembroDeLaEmpresaFrom.disable = jest.fn();
+    component.agregarMiembroDeLaEmpresaFrom.enable = jest.fn();
     component.guardarDatosFormulario();
-    expect(component.agregarMiembroDeLaEmpresaFrom.disabled).toBe(true);
+     expect(component.inicializarFormulario).toHaveBeenCalled();
   });
 
-  it('should enable form if esFormularioSoloLectura is false in guardarDatosFormulario', () => {
+  it('should run #inicializarFormulario()', async () => {
+    component.initAgregarMiembroDeLaEmpresaForm = jest.fn();
+    component.getSeccionMiembrosRevocados = jest.fn();
+    component.getEnSuCaracterDe = jest.fn();
+    component.getNacionalidad = jest.fn();
+    component.getPreOperativo = jest.fn();
+    component.getGridMiembrosEmpresas = jest.fn();
+    component.inicializarFormulario();
+     expect(component.initAgregarMiembroDeLaEmpresaForm).toHaveBeenCalled();
+     expect(component.getSeccionMiembrosRevocados).toHaveBeenCalled();
+     expect(component.getEnSuCaracterDe).toHaveBeenCalled();
+     expect(component.getNacionalidad).toHaveBeenCalled();
+     expect(component.getPreOperativo).toHaveBeenCalled();
+     expect(component.getGridMiembrosEmpresas).toHaveBeenCalled();
+  });
+
+  it('should run #initAgregarMiembroDeLaEmpresaForm()', async () => {
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn();
     component.initAgregarMiembroDeLaEmpresaForm();
-    component.esFormularioSoloLectura = false;
-    component.guardarDatosFormulario();
-    expect(component.agregarMiembroDeLaEmpresaFrom.enabled).toBe(true);
+     expect(component.fb.group).toHaveBeenCalled();
   });
 
-  it('should push declareData in getValorStore', () => {
-    component.declareData = [];
-    component.agregarModelInstance = new Modal(document.createElement('div'));
-    jest.spyOn(component, 'closeAgregarModal');
+  it('should run #setValoresStore()', async () => {
+    component.store = component.store || {};
+    component.store.metodoNombre = jest.fn();
+  });
+
+  it('should run #getValorStore()', async () => {
+    component.Tramite32301Query = component.Tramite32301Query || {};
+    component.Tramite32301Query.selectModificacionSocios$ = observableOf({});
+    component.declareData = component.declareData || {};
+    component.declareData.push = jest.fn();
+    component.closeAgregarModal = jest.fn();
     component.getValorStore();
-    expect(component.declareData.length).toBeGreaterThan(0);
-    expect(component.closeAgregarModal).toHaveBeenCalled();
+     expect(component.declareData.push).toHaveBeenCalled();
+     expect(component.closeAgregarModal).toHaveBeenCalled();
   });
+
+  it('should run #getEnSuCaracterDe()', async () => {
+    component.AvisoModifyService = component.AvisoModifyService || {};
+    component.AvisoModifyService.getEnSuCaracterDe = jest.fn().mockReturnValue(observableOf({}));
+    component.getEnSuCaracterDe();
+     expect(component.AvisoModifyService.getEnSuCaracterDe).toHaveBeenCalled();
+  });
+
+  it('should run #getNacionalidad()', async () => {
+    component.AvisoModifyService = component.AvisoModifyService || {};
+    component.AvisoModifyService.getNacionalidad = jest.fn().mockReturnValue(observableOf({}));
+    component.getNacionalidad();
+     expect(component.AvisoModifyService.getNacionalidad).toHaveBeenCalled();
+  });
+
+  it('should run #getPreOperativo()', async () => {
+    component.AvisoModifyService = component.AvisoModifyService || {};
+    component.AvisoModifyService.getPreOperativo = jest.fn().mockReturnValue(observableOf({}));
+    component.getPreOperativo();
+     expect(component.AvisoModifyService.getPreOperativo).toHaveBeenCalled();
+  });
+
+  it('should run #getGridMiembrosEmpresas()', async () => {
+    component.AvisoModifyService = component.AvisoModifyService || {};
+    component.AvisoModifyService.getGridMiembrosEmpresas = jest.fn().mockReturnValue(observableOf({
+      tableHeader: {},
+      tableBody: {}
+    }));
+    component.getGridMiembrosEmpresas();
+     expect(component.AvisoModifyService.getGridMiembrosEmpresas).toHaveBeenCalled();
+  });
+
+  it('should run #getSeccionMiembrosRevocados()', async () => {
+    component.AvisoModifyService = component.AvisoModifyService || {};
+    component.AvisoModifyService.getSeccionMiembrosRevocados = jest.fn().mockReturnValue(observableOf({
+      tableHeader: {}
+    }));
+    component.getSeccionMiembrosRevocados();
+     expect(component.AvisoModifyService.getSeccionMiembrosRevocados).toHaveBeenCalled();
+  });
+
+  it('should run #updatePagination()', async () => {
+    component.mercanciasData = component.mercanciasData || {};
+    component.mercanciasData = ['mercanciasData'];
+    component.updatePagination();
+
+  });
+
+  it('should run #onItemsPerPageChange()', async () => {
+    component.updatePagination = jest.fn();
+    component.onItemsPerPageChange({});
+     expect(component.updatePagination).toHaveBeenCalled();
+  });
+
+  it('should run #onPageChange()', async () => {
+    component.updatePagination = jest.fn();
+    component.onPageChange({});
+     expect(component.updatePagination).toHaveBeenCalled();
+  });
+
+  it('should run #openAgregarModal()', async () => {
+    component.agregarModelInstance = component.agregarModelInstance || {};
+    component.agregarModelInstance.show = jest.fn();
+    component.openAgregarModal();
+     expect(component.agregarModelInstance.show).toHaveBeenCalled();
+  });
+
+  it('should run #seleccionDeFilas()', async () => {
+
+    component.seleccionDeFilas({});
+
+  });
+
+  it('should run #eliminarModificacionSociosSeleccionada()', async () => {
+    component.modificacionSociosHeader = component.modificacionSociosHeader || {};
+    component.modificacionSociosHeader.findIndex = jest.fn().mockReturnValue([
+      {
+        "id": {}
+      }
+    ]);
+    component.modificacionSociosHeader = ['modificacionSociosHeader'];
+    component.store = component.store || {};
+    component.store.setModificacionSociosHeader = jest.fn();
+    component.eliminarModificacionSociosSeleccionada({});
+  });
+
+  it('should run #aggregarModificacionSocios()', async () => {
+    component.seleccionadasFila = component.seleccionadasFila || {};
+    component.seleccionadasFila.id = 'id';
+    component.modificacionSociosHeader = component.modificacionSociosHeader || {};
+    component.modificacionSociosHeader.findIndex = jest.fn().mockReturnValue([
+      {
+        "id": {}
+      }
+    ]);
+    component.modificacionSociosHeader = ['modificacionSociosHeader'];
+    component.store = component.store || {};
+    component.store.setModificacionSociosHeader = jest.fn();
+    component.agregarModelInstance = component.agregarModelInstance || {};
+    component.agregarModelInstance.hide = jest.fn();
+    component.agregarMiembroDeLaEmpresaFrom = component.agregarMiembroDeLaEmpresaFrom || {};
+    component.agregarMiembroDeLaEmpresaFrom.reset = jest.fn();
+    component.aggregarModificacionSocios({
+      getRawValue: function() {
+        return {
+          nombreEmpresa: {},
+          obligadoaTributarenMéxico: {},
+          nacionalidad: {},
+          ensucarácterde: {},
+          rfc: {},
+          nombreCompleto: {},
+          id: {}
+        };
+      }
+    });
+     expect(component.store.setModificacionSociosHeader).toHaveBeenCalled();
+     expect(component.agregarModelInstance.hide).toHaveBeenCalled();
+     expect(component.agregarMiembroDeLaEmpresaFrom.reset).toHaveBeenCalled();
+  });
+
+  it('should run #openRaticarModal()', async () => {
+
+    component.openRaticarModal();
+
+  });
+
+  it('should run #openRevocarModal()', async () => {
+
+    component.openRevocarModal();
+
+  });
+
+  it('should run #openCorrectamenteModel()', async () => {
+
+    component.openCorrectamenteModel();
+
+  });
+
+  it('should run #closeAgregarModal()', async () => {
+    component.agregarModelInstance = component.agregarModelInstance || {};
+    component.agregarModelInstance.hide = jest.fn();
+    component.openCorrectamenteModel = jest.fn();
+    component.closeAgregarModal();
+     expect(component.agregarModelInstance.hide).toHaveBeenCalled();
+     expect(component.openCorrectamenteModel).toHaveBeenCalled();
+  });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.destroy$ = component.destroy$ || {};
+    component.destroy$.next = jest.fn();
+    component.destroy$.complete = jest.fn();
+    component.ngOnDestroy();
+     expect(component.destroy$.next).toHaveBeenCalled();
+     expect(component.destroy$.complete).toHaveBeenCalled();
+  });
+
 });

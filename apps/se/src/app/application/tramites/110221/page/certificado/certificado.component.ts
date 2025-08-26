@@ -1,0 +1,151 @@
+/**
+ * @component CertificadoComponent
+ * @descripcion
+ * Componente responsable de manejar el flujo de pasos para el trámite de certificado zoosanitario para importación.
+ * Permite la navegación entre los pasos del wizard, controla el índice actual, y gestiona la validación de las secciones.
+ * Además, expone los textos y títulos relevantes para la interfaz y utiliza el componente Wizard para la navegación.
+ *
+ * @import { Component, ViewChild } from '@angular/core';
+ * @import { WizardComponent } from '@ng-mf/data-access-user';
+ * @import { DatosPasos } from '@ng-mf/data-access-user';
+ * @import { PASOS } from '../../constantes/peru-certificado.module';
+ */
+import { AccionBoton, ListaPasoWizard } from '../../models/peru-certificado.model';
+import { Component, ViewChild } from '@angular/core';
+import { DatosPasos, SeccionLibStore } from '@ng-mf/data-access-user';
+import { ERROR_FORMA_ALERT } from '../../../120601/constantes/definiciones.enum';
+import { PASOS } from '../../constantes/peru-certificado.model';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { Subject } from 'rxjs';
+import { Tramite110221Query } from '../../estados/tramite110221.query';
+import { WizardComponent } from '@ng-mf/data-access-user';
+
+/**
+ * @component CertificadoComponent
+ * @description
+ * Componente responsable de manejar el flujo de pasos para el trámite de certificado zoosanitario para importación.
+ * Permite la navegación entre los pasos del wizard, controla el índice actual, y gestiona la validación de las secciones.
+ * Además, expone los textos y títulos relevantes para la interfaz y utiliza el componente Wizard para la navegación.
+ *
+ * @import { Component, ViewChild } from '@angular/core';
+ * @import { WizardComponent } from '@ng-mf/data-access-user';
+ * @import { DatosPasos } from '@ng-mf/data-access-user';
+ * @import { PASOS } from '../../constantes/peru-certificado.module';
+ */
+@Component({
+  selector: 'app-certificado',
+  templateUrl: './certificado.component.html',
+  styleUrl: './certificado.component.scss',
+})
+export class CertificadoComponent {
+  esFormaValido: boolean = false;
+  /**
+   * Array de pasos del wizard.
+   * @type {Array<ListaPasoWizard>}
+   */
+  pasos = PASOS;
+
+  /**
+   * El título del mensaje mostrado en la vista.
+   * @type {string | null}
+   */
+  tituloMensaje: string | null = 'Zoosanitario para importación';
+
+  /**
+   * Referencia al componente Wizard para controlar la navegación entre pasos.
+   * @type {WizardComponent}
+   */
+  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+    /**
+ * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+ * const isValid = this.pasoUnoComponent.validateForms();
+ * const formsValidity = this.pasoUnoComponent.getAllFormsValidity();
+ */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+
+
+  /**
+   * El índice del paso actual.
+   * @type {number}
+   */
+  indice: number = 1;
+
+  /**
+   * Datos de los pasos del wizard, incluyendo textos de botones y número de pasos.
+   * @type {DatosPasos}
+   */
+  datosPasos: DatosPasos = {
+    nroPasos: this.pasos.length,
+    indice: this.indice,
+    txtBtnAnt: 'Anterior',
+    txtBtnSig: 'Continuar',
+  };
+
+  /**
+   * Notificador para destruir los observables y evitar posibles fugas de memoria.
+   * @type {Subject<void>}
+   * @private
+   */
+  destroyNotifier$: Subject<void> = new Subject();
+    /**
+ * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+ */
+  public formErrorAlert = ERROR_FORMA_ALERT;
+
+  /**
+   * Inyecta los servicios necesarios y suscribe a la validación de la forma para actualizar el estado de la sección.
+   * @param seccionStore Servicio para manejar el estado de la sección.
+   * @param tramiteQuery Query para consultar el estado del trámite.
+   */
+  constructor(private seccionStore: SeccionLibStore, private tramiteQuery: Tramite110221Query) {
+  }
+
+  /**
+   * Maneja la acción del botón y determina la navegación (siguiente o anterior) en el wizard.
+   * @param {AccionBoton} e - Objeto de acción que contiene la acción y el valor a manejar.
+   */
+getValorIndice(e: AccionBoton): void {
+  this.esFormaValido = false;
+
+  // Validar formularios antes de continuar desde el paso uno
+  if (this.indice === 1 && e.accion === 'cont') {
+    const IS_VALID = this.validarTodosFormulariosPasoUno();
+    if (!IS_VALID) {
+      this.esFormaValido = true;
+      return; // Si no es válido, no avanza de página
+    }
+  }
+
+  // Calcular el nuevo índice basado en la acción
+  let indiceActualizado = e.valor;
+  if (e.accion === 'cont') {
+    indiceActualizado = e.valor + 1;
+  } else if (e.accion === 'ant') {
+    indiceActualizado = e.valor - 1;
+  }
+
+  // Validar que el nuevo índice esté dentro de los límites permitidos
+  if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
+    // Actualizar el índice y datosPasos
+    this.indice = indiceActualizado;
+    this.datosPasos.indice = indiceActualizado;
+
+    if (e.accion === 'cont') {
+      this.wizardComponent.siguiente();
+    } else if (e.accion === 'ant') {
+      this.wizardComponent.atras();
+    }
+  }
+}
+   private validarTodosFormulariosPasoUno(): boolean {
+    if (!this.pasoUnoComponent) {
+      return true;
+    }
+    const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validarFormularios();
+    if (!ISFORM_VALID_TOUCHED) {
+      return false;
+    }
+    return true;
+  }
+}

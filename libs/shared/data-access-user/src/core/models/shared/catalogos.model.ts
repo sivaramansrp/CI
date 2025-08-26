@@ -59,7 +59,7 @@ export interface Catalogo {
   /** Identificador relacionado con acotación opcional. */
   relacionadaAcotacionId?: number;
   /** Decripcion del titulo del select, cuando se requiera. */
-  title?: string; 
+  title?: string;
 }
 
 /**
@@ -154,4 +154,15 @@ export interface RespuestaDocuemntosRequeridos {
   nombreArchivo: string;
   /** Estatus del documento requerido. */
   estatus: string;
+}
+
+export interface CatalogoTipoDocumento {
+  /**
+   * Identificador único del documento.
+   */
+  id: number;
+  /**
+   * Descripción del documento.
+   */
+  description: string;
 }

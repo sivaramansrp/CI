@@ -14,7 +14,14 @@
             id="fraccionArancelaria"
             formControlName="fraccionArancelaria"
             type="text"
+            maxlength="10"
           />
+          <div
+            *ngIf="anexoUnoFormGroup.get('fraccionArancelaria')?.invalid && (anexoUnoFormGroup.get('fraccionArancelaria')?.touched || anexoUnoFormGroup.get('fraccionArancelaria')?.dirty)"
+            class="text-danger mt-1"
+          >
+            Este campo es obligatorio y debe ser válido.
+          </div>
         </div>
       </div>
     </div>
@@ -30,13 +37,20 @@
             class="form-control"
             style="height: 60%; resize: none"
             formControlName="descripcion"
+            maxlength="1000"
           ></textarea>
+          <div
+            *ngIf="anexoUnoFormGroup.get('descripcion')?.invalid && (anexoUnoFormGroup.get('descripcion')?.touched || anexoUnoFormGroup.get('descripcion')?.dirty)"
+            class="text-danger mt-1"
+          >
+            Este campo es obligatorio y debe ser válido.
+          </div>
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-12 container text-end mt-5">
-        <button class="btn btn-default me-2" (click)="eliminarAnexoUno()"
+        <button class="btn btn-danger me-2" (click)="abrirUnoModal()"
         [disabled]="formularioDeshabilitado">
           Eliminar
         </button>
@@ -66,20 +80,21 @@
   <div class="row">
     <div class="col-12 container text-end mt-5">
       <button
-        class="btn btn-default me-2"
+        class="btn btn-danger me-2"
         (click)="setRuta('complementar-fraccion', 'IMPORT')"
+        [disabled]="formularioDeshabilitado"
       >
-        Complementar Función
+        Complementar Fracción
       </button>
 
       <button
-        class="btn btn-primary me-2"
+        class="btn btn-danger me-2"
         (click)="setRuta('contenedor-proveedor-cliente', 'IMPORT')"
       [disabled]="formularioDeshabilitado">
         Proveedor Cliente
       </button>
       <button
-        class="btn btn-primary me-2"
+        class="btn btn-danger me-2"
         (click)="setRuta('proyecto-immex', 'IMPORT')"
       [disabled]="formularioDeshabilitado">
         Proyecto IMMEX
@@ -106,7 +121,14 @@
             id="fraccionArancelaria"
             formControlName="fraccionArancelaria"
             type="text"
+            maxlength="10"
           />
+          <div
+            *ngIf="anexoDosFormGroup.get('fraccionArancelaria')?.invalid && (anexoDosFormGroup.get('fraccionArancelaria')?.touched || anexoDosFormGroup.get('fraccionArancelaria')?.dirty)"
+            class="text-danger mt-1"
+          >
+            Este campo es obligatorio y debe ser válido.
+          </div>
         </div>
       </div>
     </div>
@@ -122,13 +144,20 @@
             class="form-control"
             style="height: 60%; resize: none"
             formControlName="descripcion"
+            maxlength="1000"
           ></textarea>
+          <div
+            *ngIf="anexoDosFormGroup.get('descripcion')?.invalid && (anexoDosFormGroup.get('descripcion')?.touched || anexoDosFormGroup.get('descripcion')?.dirty)"
+            class="text-danger mt-1"
+          >
+            Este campo es obligatorio y debe ser válido.
+          </div>
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-12 container text-end mt-5">
-        <button class="btn btn-default me-2" (click)="eliminarAnexoDos()"
+        <button class="btn btn-danger me-2" (click)="abrirDosModal()"
         [disabled]="formularioDeshabilitado">
           Eliminar
         </button>
@@ -152,14 +181,14 @@
   <div class="row">
     <div class="col-12 container text-end mt-5">
       <button
-        class="btn btn-default me-2"
+        class="btn btn-danger me-2"
         (click)="setRuta('complementar-fraccion', 'EXPORT')"
         [disabled]="formularioDeshabilitado"
       >
-        Complementar Función
+        Complementar Fracción
       </button>
       <button
-        class="btn btn-primary me-2"
+        class="btn btn-danger me-2"
         (click)="setRuta('contenedor-proveedor-cliente', 'EXPORT')"
       [disabled]="formularioDeshabilitado">
         Proveedor Cliente
@@ -167,3 +196,16 @@
     </div>
   </div>
 </div>
+
+@if (nuevaDosNotificacion && nuevaDosNotificacion.cerrar) {
+<section>
+    <lib-notificaciones [notificacionInput]="nuevaDosNotificacion" (confirmacionModal)="eliminarAnexoDos()">
+    </lib-notificaciones>
+</section>
+}
+@if (nuevaUnoNotificacion && nuevaUnoNotificacion.cerrar) {
+<section>
+    <lib-notificaciones [notificacionInput]="nuevaUnoNotificacion" (confirmacionModal)="eliminarAnexoUno()">
+    </lib-notificaciones>
+</section>
+}

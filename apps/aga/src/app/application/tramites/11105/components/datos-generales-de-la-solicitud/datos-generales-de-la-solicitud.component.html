@@ -2,19 +2,28 @@
   <form [formGroup]="tramiteForm" (ngSubmit)="validarDestinatarioFormulario()" class="row mt-5">
     <div class="col-md-12">
       <ng-container>
-        <label>Datos Requeridos*:</label>
         <div class="alert alert-info">
           <label style="font-weight: normal">
             <input type="checkbox" formControlName="manifesto" id="manifesto" (change)="setValoresStore(tramiteForm, 'manifesto', 'setManifesto')"/>
-            *Manifesto bajo protesta de decir verdad que el donante de la mercancía es extranjero
+            Manifiesto bajo protesta de decir verdad que el donante de la mercancía es extranjero.
           </label>
         </div>
         <div class="row mt-5">
           <div class="col-md-8">
             <app-catalogo-select [catalogo]="aduana.catalogos" [label]="aduana.labelNombre"
-              [placeholder]="aduana.primerOpcion" [required]="true" id="aduana" formControlName="aduana"
+              id="aduana" formControlName="aduana"
               [isDisabled]="true" (change)="setValoresStore(tramiteForm, 'aduana', 'setAduana')">
             </app-catalogo-select>
+          </div>
+          <div class="col-md-1"></div>
+          <div class="col-md-3 input-check">
+            <lib-input-check
+              [id]="'organismoPublico'"
+              [label]="'Organismo público'"
+              [required]="false"
+              formControlName="organismoPublico"
+              (change)="setValoresStore(tramiteForm, 'organismoPublico', 'setOrganismoPublico')"
+            ></lib-input-check>
           </div>
         </div>
 
@@ -22,7 +31,7 @@
         <div class="row mt-5">
           <div class="col-md-8">
             <app-catalogo-select [catalogo]="propositoDeLaMercancia.catalogos"
-              [label]="propositoDeLaMercancia.labelNombre" [placeholder]="propositoDeLaMercancia.primerOpcion" [required]="true" id="tipoMercancia" formControlName="tipoMercancia" [isDisabled]="true" (change)="setValoresStore(tramiteForm, 'tipoMercancia', 'setTipoMercancia')">
+              [label]="propositoDeLaMercancia.labelNombre" id="tipoMercancia" formControlName="tipoMercancia" [isDisabled]="true" (change)="setValoresStore(tramiteForm, 'tipoMercancia', 'setTipoMercancia')">
             </app-catalogo-select>
           </div>
         </div>
@@ -34,67 +43,75 @@
       </div>
       <div class="col-md-12 mt-5 d-flex justify-content-end">
         <button type="button" class="btn btn-primary ms-3" (click)="nextTabla()">
-          Agregar
+          Consultar
         </button>
       </div>
 
-      <ng-titulo titulo="Datos del donante extrajero" />
+      <ng-titulo titulo="Datos del donante extranjero" />
       <ng-container>
         <div class="row">
           <div class="col-md-8">
-            <label>Nombre*:</label>
-            <input type="text" required="true" class="form-control" id="nombre" formControlName="nombre" [ngClass]="isValid(tramiteForm, 'nombre') ? 'required' : '' " (change)="setValoresStore(tramiteForm, 'nombre', 'setNombre')" readonly/>
+            <label>Nombre(s):</label>
+            <input type="text" class="form-control" id="nombre" formControlName="nombre"/>
+          </div>
+          <div class="col-md-1"></div>
+          <div class="col-md-3 input-check">
+            <lib-input-check
+              [id]="'personaFisica'"
+              [label]="'Persona física'"
+              [required]="false"
+              [isDisabled]="true"
+              formControlName="personaFisica"
+              (change)="setValoresStore(tramiteForm, 'personaFisica', 'setPersonaFisica')"
+            ></lib-input-check>
           </div>
         </div>
         <div class="row mt-3">
-          <div class="col-md-8">
-            <label>Calle*:</label>
-            <input type="text" required="true" class="form-control" maxlength="100" id="calle" formControlName="calle" [ngClass]="isValid(tramiteForm, 'calle') ? 'required' : ''" (change)="setValoresStore(tramiteForm, 'calle', 'setCalle')"/>
+          <div class="col-md-4">
+            <label>Código postal:</label>
+            <input type="text" class="form-control" id="codigoPostal" formControlName="codigoPostal"/>
           </div>
           <div class="col-md-4">
-            <label>Número exterior*:</label>
-            <input type="text" required="true" class="form-control" id="numeroExterior" formControlName="numeroExterior" [ngClass]="isValid(tramiteForm, 'numeroExterior') ? 'required' : ''" (change)="setValoresStore(tramiteForm, 'numeroExterior', 'setNumeroExterior')"/>
+            <app-catalogo-select [catalogo]="pais"
+              [label]="'País'" id="pais" formControlName="pais" [isDisabled]="true">
+            </app-catalogo-select>
+          </div>
+          <div class="col-md-4">
+            <label>Estado:</label>
+            <input type="text" class="form-control" id="estado" formControlName="estado"/>
           </div>
         </div>
         <div class="row mt-3">
+          <div class="col-md-4">
+            <label>Calle:</label>
+            <input type="text" class="form-control" maxlength="100" id="calle" formControlName="calle" [ngClass]="isValid(tramiteForm, 'calle') ? 'required' : ''" (change)="setValoresStore(tramiteForm, 'calle', 'setCalle')"/>
+          </div>
+          <div class="col-md-4">
+            <label>Número exterior:</label>
+            <input type="text" class="form-control" id="numeroExterior" formControlName="numeroExterior"/>
+          </div>
           <div class="col-md-4">
             <label>Número interior:</label>
-            <input type="text" class="form-control" id="numeroInterior" formControlName="numeroInterior" [ngClass]="isValid(tramiteForm, 'numeroInterior') ? 'required' : ''" (change)="setValoresStore(tramiteForm, 'numeroInterior', 'setNumeroInterior')"/>
+            <input type="text" class="form-control" id="numeroInterior" formControlName="numeroInterior"/>
           </div>
-
+        </div>
+        <div class="row mt-3">
           <div class="col-md-4">
-            <label>Teléfono:</label>
-            <input type="text" class="form-control" id="telefono" formControlName="telefono" maxlength="30" [ngClass]="isValid(tramiteForm, 'telefono') ? 'required' : ''" (change)="setValoresStore(tramiteForm, 'telefono', 'setTelefono')"/>
+            <label>Colonia:</label>
+            <input type="text" class="form-control" id="colonia" formControlName="colonia"/>
           </div>
           <div class="col-md-4">
             <label>Correo electrónico:</label>
-            <input type="text" class="form-control" id="correoElectronico" formControlName="correoElectronico" [ngClass]="isValid(tramiteForm, 'correoElectronico') ? 'required' : ''" (change)="setValoresStore(tramiteForm, 'correoElectronico', 'setCorreoElectronico')"/>
-          </div>
-        </div>
-        <div class="row mt-3">
-          <div class="col-md-4">
-            <label>País:</label>
-            <input type="text" class="form-control" id="pais" formControlName="pais" [ngClass]="isValid(tramiteForm, 'pais') ? 'required' : ''" (change)="setValoresStore(tramiteForm, 'pais', 'setPais')"/>
+            <input type="text" class="form-control" id="correoElectronico" formControlName="correoElectronico"/>
           </div>
           <div class="col-md-4">
-            <label>Código postal*:</label>
-            <input type="text" required="true" class="form-control" id="codigoPostal" formControlName="codigoPostal" [ngClass]="isValid(tramiteForm, 'codigoPostal') ? 'required' : ''" (change)="setValoresStore(tramiteForm, 'codigoPostal', 'setCodigoPostal')"/>
-          </div>
-          <div class="col-md-4">
-            <label>Estado*:</label>
-            <input type="text" required="true" class="form-control" id="estado" formControlName="estado" [ngClass]="isValid(tramiteForm, 'estado') ? 'required' : ''" (change)="setValoresStore(tramiteForm, 'estado', 'setEstado')"/>
-          </div>
-        </div>
-        <div class="row mt-3">
-          <div class="col-md-4">
-            <label>Colonia*:</label>
-            <input type="text" required="true" class="form-control" id="colonia" formControlName="colonia" [ngClass]="isValid(tramiteForm, 'colonia') ? 'required' : ''" (change)="setValoresStore(tramiteForm, 'colonia', 'setColonia')"/>
+            <label>Teléfono:</label>
+            <input type="text" class="form-control" id="telefono" formControlName="telefono"/>
           </div>
         </div>
 
         <div class="row mt-5">
-          <label required="true">Señale si la mercancía formará parte del patrimonio de su
-            representada*:</label>
+          <label required="true">Señale si la mercancía formará parte del patrimonio de su representada</label>
           <app-input-radio [radioOptions]="radioOpcions" [selectedValue]="valorSeleccionado"
             (valueChange)="cambiarRadio($event)" id="opcion" formControlName="opcion" (change)="setValoresStore(tramiteForm, 'opcion', 'setOpcion')">
           </app-input-radio>

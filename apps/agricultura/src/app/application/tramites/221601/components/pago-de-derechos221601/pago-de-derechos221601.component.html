@@ -40,8 +40,8 @@
           
           <div class="col-md-4">
             <div class="form-group">
-              <app-catalogo-select [catalogo]="bancocatalogo" formControlName="banco" [label]="'Banco'" [isDisabled]="esFormularioSoloLectura" [placeholder]="'Seleccione un valor'"
-                [required]="true" name="banco" (change)="setValoresStore(pagoDerechosForm, 'banco', 'setBanco')">
+              <app-catalogo-select [catalogo]="bancocatalogo" formControlName="banco" [label]="'Banco'" [isDisabled]="esFormularioSoloLectura" [placeholder]="'Seleccione un opción'"
+                [required]="true" name="banco" (change)="setValoresStore(pagoDerechosForm, 'banco', 'setBanco')" >
               </app-catalogo-select>
             </div>
           </div>
@@ -100,7 +100,8 @@
       <div class="col-md-12">
         <div class="pull-right">
           <button type="button" class="btn btn-primary ms-2" 
-            [disabled]="esFormularioSoloLectura ? true : false">
+            [disabled]="esFormularioSoloLectura ? true : false"
+            (click)="borrarDatosPago()">
             Borrar datos del pago
           </button>
         </div>
@@ -108,4 +109,3 @@
     </div>
     </form>
   </div>
-  

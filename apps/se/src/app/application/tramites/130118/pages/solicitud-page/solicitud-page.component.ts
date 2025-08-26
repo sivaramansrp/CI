@@ -5,17 +5,18 @@ import { Location } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 
 import { AVISO, CategoriaMensaje, DatosPasos, ListaPasosWizard, Notificacion, PASOS, WizardComponent } from '@ng-mf/data-access-user';
-import { GuadarSolicitudRequest } from '../../../../core/models/request/guardar-solicitud-request.model';
+import { GuadarSolicitudRequest } from '../../../../core/models/130118/request/guardar-solicitud-request.model';
 import { GuardarService } from '../../../../core/services/130118/guardar.service';
 import { IniciarService } from '../../../../core/services/130118/iniciar.service';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 import { Observable, Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
-import { IniciarRequest } from '../../../../core/models/request/iniciar-request.model';
+import { IniciarRequest } from '../../../../core/models/130118/request/iniciar-request.model';
 
 import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
 
 import { Solicitud130118State, Tramite130118Store } from '../../estados/tramites/tramite130118.store';
+import { MSG_REGISTRO_EXITOSO } from '../../../../core/enum/enum-130118';
 
 /**
  * Interfaz que define la estructura de una acción de botón.
@@ -102,6 +103,17 @@ export class SolicitudPageComponent implements OnInit {
    * URL de la página actual.
    */
   public nuevaNotificacion: Notificacion | null = null;
+
+  /**
+   * Folio temporal de la solicitud.
+   * Se utiliza para mostrar el folio en la notificación de éxito.
+   */
+  public alertaNotificacion!: Notificacion;
+
+    /**
+   * Estado del tramite Folio
+   */
+  public folioTemporal: number = 0;
 
   /**
    * Mensaje de alerta a mostrar en caso de error.
@@ -296,8 +308,16 @@ export class SolicitudPageComponent implements OnInit {
             }
 
             if (e.valor > 0 && e.valor < 5) {
-
-
+              this.alertaNotificacion = {
+                tipoNotificacion: 'banner',
+                categoria: 'success',
+                modo: 'action',
+                titulo: '',
+                mensaje: MSG_REGISTRO_EXITOSO(String(this.folioTemporal)),
+                cerrar: true,
+                txtBtnAceptar: '',
+                txtBtnCancelar: '',
+              };
               this.indice = e.valor;
               this.actualizarDatosPasos();
               if (e.accion === 'cont') {
@@ -403,6 +423,7 @@ export class SolicitudPageComponent implements OnInit {
         // Si la respuesta es exitosa, actualiza el ID de la solicitud en el store
         if (response?.codigo === '00' && response?.datos?.id_solicitud) {
           this.tramite130118Store.setIdSolicitud(response.datos.id_solicitud);
+          this.folioTemporal = response.datos.id_solicitud
           return { exito: true };
         }
 

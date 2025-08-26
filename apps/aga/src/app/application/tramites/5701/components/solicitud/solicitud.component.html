@@ -81,7 +81,7 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="RFCImpExp">RFC*:</label>
+          <label class="form-label" for="RFCImpExp">RFC<span [ngClass]="isRequired(datosImportadorExportador, 'RFCImpExp') ? 'required' : ''">*</span>:</label>
           <input
             class="form-control"
             id="rfc"
@@ -89,11 +89,6 @@
             type="text"
             formControlName="RFCImpExp"
             maxlength="13"
-            [ngClass]="{
-              'is-invalid':
-                isRequired(datosImportadorExportador, 'RFCImpExp') ||
-                isErrorPattern(datosImportadorExportador, 'RFCImpExp')
-            }"
             libUppercase
             (blur)="validaRfc()"
             (input)="cambiosInput('RFCImpExp', datosImportadorExportador)"
@@ -331,7 +326,7 @@
   <div formGroupName="datosServicio">
     <div class="row">
       <div class="col-md-4">
-        <label for="fechaInicio" class="form-label">Fecha inicio*:</label>
+        <label for="fechaInicio" class="form-label">Fecha inicio<span [ngClass]="isRequired(datosServicio, 'fechaInicio') ? 'required' : ''">*</span>:</label>
         <input
           class="form-control"
           type="date"
@@ -342,7 +337,6 @@
           autofocus="false"
           (change)="changeFechaInicio(); limpiarFechas()"
           (blur)="limpiarFechas()"
-          [ngClass]="isValid(datosServicio, 'fechaInicio') ? 'required' : ''"
           (keydown)="$event.preventDefault()"
         />
         <div
@@ -354,29 +348,36 @@
       </div>
 
       <div class="col-md-4">
+        <label for="fechaInicio" class="form-label">Hora Inicio<span [ngClass]="isRequired(datosServicio, 'horaInicio') ? 'required' : ''">*</span>:</label>
         <input-hora
           #horaInicio
           formControlName="horaInicio"
-          [label]="'Hora inicio'"
           [required]="true"
           [inputId]="'horaInicio'"
+          [ngClass]="isValid(datosServicio, 'horaInicio') ? 'is-invalid' : ''"
           (change)="changeHoraInicio()"
         ></input-hora>
+        <div
+          *ngIf="isRequired(datosServicio, 'horaInicio')"
+          class="mensaje-error"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-4">
-        <label for="fechaFinal" class="form-label">Fecha final*:</label>
+        <label for="fechaFinal" class="form-label">Fecha final<span [ngClass]="isRequired(datosServicio, 'fechaFinal') ? 'required' : ''">*</span>:</label>
         <input
           class="form-control"
           type="date"
           name="fechaFinal"
           id="fechaFinal"
+          autofocus="false"
           formControlName="fechaFinal"
           (change)="changeFechaFinal()"
           (blur)="limpiarFechas()"
-          [ngClass]="{ 'is-invalid': isRequired(datosServicio, 'fechaFinal') }"
           (keydown)="$event.preventDefault()"
         />
         <div
@@ -388,14 +389,20 @@
       </div>
 
       <div class="col-md-4">
+        <label for="horaFin" class="form-label">Hora Fin<span [ngClass]="isRequired(datosServicio, 'horaFinal') ? 'required' : ''">*</span>:</label>
         <input-hora
           #horaFinal
-          formControlName="horaFinal"
-          [label]="'Hora final'"
+          formControlName="horaFinal"          
           [required]="true"
           [inputId]="'horaFinal'"
           (change)="changeHoraFinal()"
         ></input-hora>
+        <div
+          *ngIf="isRequired(datosServicio, 'horaFinal')"
+          class="mensaje-error"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
     </div>
 
@@ -529,8 +536,7 @@
 
     <div class="row">
       <div class="col-md-4">
-        <label class="form-label" for="">Aduana:</label>
-        <span>*</span>
+        <label class="form-label" for="">Aduana<span [ngClass]="isErrorNoMenosUno(despacho, 'idAduanaDespacho') ? 'required' : ''">*</span>:</label>
         <select
           class="form-select form-control"
           formControlName="idAduanaDespacho"
@@ -624,6 +630,12 @@
           [disabledPrimerOption]="false"
           (change)="changeTipoOperacion()"
         ></app-catalogo-select>
+        <div
+          *ngIf="isErrorNoMenosUno(despacho, 'tipoOperacion')"
+          class="mensaje-error"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
     </div>
 
@@ -713,6 +725,12 @@
           [required]="true"
           (change)="setValoresStore(mercancia, 'paisOrigen', 'setPaisOrigen')"
         ></app-select-paises>
+        <div
+          *ngIf="isErrorNoMenosUno(mercancia, 'paisOrigen')"
+          class="mensaje-error"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
 
       <div class="col-md-4">
@@ -725,6 +743,12 @@
             setValoresStore(mercancia, 'paisProcedencia', 'setPaisProcedencia')
           "
         ></app-select-paises>
+        <div
+          *ngIf="isErrorNoMenosUno(mercancia, 'paisProcedencia')"
+          class="mensaje-error"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
 
       <div class="col-md-8">
@@ -788,6 +812,7 @@
     [catalogoTransporte]="tipoVehiculo"
     [tipoTransporteSeleccionado]="solicitudState.tipoTransporte"
     [tablaTransporte]="solicitudState.transporte"
+    [tituloModalPersonalizado]="'Datos del vehículo de como se presentará al despacho'"
     (seleccionTipoTransporte)="changeSeleccionTipoTransporte($event)"
     (datosTabla)="changeAgregarVehiculo($event, 'vehiculo')"
   ></lib-transporte>
@@ -797,6 +822,7 @@
     [catalogoTransporte]="tipoTransporte"
     [tipoTransporteSeleccionado]="solicitudState.tipoTransporteArriboSalida"
     [tablaTransporte]="solicitudState.transporteArriboDatos"
+    [tituloModalPersonalizado]="'Datos del transporte de arribo/salida (al/del país)'"
     (seleccionTipoTransporte)="changeSeleccionTipoVehiculo($event)"
     (datosTabla)="changeAgregarVehiculo($event, 'transporte')"
   ></lib-transporte>
@@ -902,20 +928,13 @@
           [datos]="datosTablaPagos"
           [itemsPerPage]="10"
           [tableId]="'tablaPagos'"
+          [showPagination]="true" [mode]="'client'"
           (listaDeFilaSeleccionada)="lineaCapturaSeleccionados = $event"
           
         >
         </app-tabla-dinamica>
         
       </div>
-      <div class="col-md-2"></div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-12 d-flex justify-content-center">
-        <app-paginador-tabla [totalPaginas]="1"></app-paginador-tabla>
-      </div>
-      <div class="col-md-2"></div>
     </div>
   </div>
   }

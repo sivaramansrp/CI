@@ -22,8 +22,32 @@ describe('CertificadoDeOrigenComponent', () => {
       getUMC: jest.fn().mockReturnValue(of({ code: 200, data: [] })),
       getUnidadMedida: jest.fn().mockReturnValue(of({ code: 200, data: [] })),
       getTipoFactura: jest.fn().mockReturnValue(of({ code: 200, data: [] })),
-      getSolicitudesTabla: jest.fn().mockReturnValue(of([])),
-      getSolicitudesDataTabla: jest.fn().mockReturnValue(of([])),
+      getSolicitudesTabla: jest.fn().mockReturnValue(
+        of([
+          {
+            fraccionArancelaria: '123456',
+            nombreTecnico: 'Tecnico',
+            nombreComercial: 'Comercial',
+            numeroRegistroProductos: 'REG123',
+            fechaExpedicion: '2025-01-01',
+            fechaVencimiento: '2025-12-31',
+          },
+        ])
+      ),
+      getSolicitudesDataTabla: jest.fn().mockReturnValue(
+        of([
+          {
+            fraccionArancelaria: '123456',
+            cantidad: '10',
+            unidadMedida: 'kg',
+            valorMercancia: '1000',
+            tipoFactura: 'Factura',
+            numFactura: 'F123',
+            complementoDescripcion: 'Desc',
+            fechaFactura: '2025-04-28',
+          },
+        ])
+      ),
     };
 
     tramiteStoreMock = {
@@ -41,7 +65,30 @@ describe('CertificadoDeOrigenComponent', () => {
     };
 
     tramiteQueryMock = {
-      selectSolicitud$: of({}),
+      selectSolicitud$: of({
+        mercanciaSeleccionadasTablaData: [
+          {
+            fraccionArancelaria: '123456',
+            cantidad: '10',
+            unidadMedida: 'kg',
+            valorMercancia: '1000',
+            tipoFactura: 'Factura',
+            numFactura: 'F123',
+            complementoDescripcion: 'Desc',
+            fechaFactura: '2025-04-28',
+          },
+        ],
+        mercanciaDisponsiblesTablaDatos: [
+          {
+            fraccionArancelaria: '123456',
+            nombreTecnico: 'Tecnico',
+            nombreComercial: 'Comercial',
+            numeroRegistroProductos: 'REG123',
+            fechaExpedicion: '2025-01-01',
+            fechaVencimiento: '2025-12-31',
+          },
+        ],
+      }),
     };
 
     validacionesServiceMock = {
@@ -56,7 +103,10 @@ describe('CertificadoDeOrigenComponent', () => {
         { provide: RegistroService, useValue: registroServiceMock },
         { provide: Tramite110223Store, useValue: tramiteStoreMock },
         { provide: Tramite110223Query, useValue: tramiteQueryMock },
-        { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
+        {
+          provide: ValidacionesFormularioService,
+          useValue: validacionesServiceMock,
+        },
       ],
     }).compileComponents();
   });
@@ -78,36 +128,37 @@ describe('CertificadoDeOrigenComponent', () => {
   });
 
   it('should call getTratado on initialization', () => {
-    const spy = jest.spyOn(registroServiceMock, 'getTratado');
+    const SPY = jest.spyOn(registroServiceMock, 'getTratado');
     component.ngOnInit();
-    expect(spy).toHaveBeenCalled();
+    expect(SPY).toHaveBeenCalled();
   });
 
   it('should validate the destinatario form', () => {
-    const spy = jest.spyOn(component.registroForm, 'markAllAsTouched');
+    component.ngOnInit();
+    const SPY = jest.spyOn(component.registroForm, 'markAllAsTouched');
     component.validarDestinatarioFormulario();
-    expect(spy).toHaveBeenCalled();
+    expect(SPY).toHaveBeenCalled();
   });
 
   it('should validate the mercancia form', () => {
-    const spy = jest.spyOn(component.mercanciaForm, 'markAllAsTouched');
+    const SPY = jest.spyOn(component.mercanciaForm, 'markAllAsTouched');
     component.validarMercanciaForm();
-    expect(spy).toHaveBeenCalled();
+    expect(SPY).toHaveBeenCalled();
   });
 
   it('should set values in the store', () => {
-    const spy = jest.spyOn(tramiteStoreMock, 'setTratado');
+    const SPY = jest.spyOn(tramiteStoreMock, 'setTratado');
     component.setValoresStore(component.registroForm, 'tratado', 'setTratado');
-    expect(spy).toHaveBeenCalled();
+    expect(SPY).toHaveBeenCalled();
   });
 
   it('should handle file selection', () => {
-    const event = {
+    const EVENT = {
       target: {
         files: [{ name: 'test-file.txt' }],
       },
     } as unknown as Event;
-    component.alSeleccionarArchivo(event);
+    component.alSeleccionarArchivo(EVENT);
     expect(component.nombreArchivo).toBe('test-file.txt');
   });
 
@@ -127,25 +178,30 @@ describe('CertificadoDeOrigenComponent', () => {
   });
 
   it('should destroy subscriptions on ngOnDestroy', () => {
-    const spy = jest.spyOn(component.destroyNotifier$, 'next');
+    const SPY = jest.spyOn(component.destroyNotifier$, 'next');
     component.ngOnDestroy();
-    expect(spy).toHaveBeenCalledWith();
+    expect(SPY).toHaveBeenCalledWith();
   });
 
   it('should handle agregar logic', () => {
-    component.mercanciaForm.patchValue({
-      validacionMercanciaForm: {
-        fraccionMercanArancelaria: '123',
-        cantidad: 10,
-        unidadMedida: 'kg',
-        valordelamercancia: 100,
-        tipoFactura: 'Factura',
-        numeroFactura: '12345',
-        complementoDelaDescripcion: 'Test',
-        fecha: '2025-04-28',
-      },
+    const VALIDACION_MERCANCIA_FORM_GROUP = component.fb.group({
+      fraccionMercanArancelaria: ['123'],
+      cantidad: [10],
+      unidadMedida: ['kg'],
+      valordelamercancia: [100],
+      tipoFactura: ['Factura'],
+      numeroFactura: ['12345'],
+      complementoDelaDescripcion: ['Test'],
+      fecha: ['2025-04-28'],
     });
+
+    component.mercanciaForm.setControl(
+      'validacionMercanciaForm',
+      VALIDACION_MERCANCIA_FORM_GROUP
+    );
+
     component.agregar();
+
     expect(component.esMercanciaEnEdicion).toBe(true);
     expect(component.mercanciaSeleccionadasTablaData.length).toBe(1);
   });
@@ -157,7 +213,7 @@ describe('CertificadoDeOrigenComponent', () => {
   });
 
   it('should validate form fields using isValid', () => {
-    const result = component.isValid(component.registroForm, 'tratado');
-    expect(result).toBe(true);
+    const RESULT = component.isValid(component.registroForm, 'tratado');
+    expect(RESULT).toBe(true);
   });
 });

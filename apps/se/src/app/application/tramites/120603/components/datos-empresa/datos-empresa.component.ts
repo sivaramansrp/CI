@@ -7,7 +7,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { SociosYAccionistasData, SociosYAccionistasExtranjerosData } from '../../models/filaData.modal';
+import { SeleccionDeSucursalData, SociosYAccionistasData, SociosYAccionistasExtranjerosData } from '../../models/filaData.modal';
 import { Solicitud120603State, Solicitud120603Store } from '../../estados/tramite120603.store';
 import { CommonModule } from '@angular/common';
 import { RegistroComoEmpresaService } from '../../services/registro-como-empresa.service';
@@ -73,6 +73,8 @@ nacionalidadMexicanaNo = NacionalidadMexicana.NO;
   /** Datos de la tabla de socios y accionistas extranjeros */
   datosTablaExtranjeros: SociosYAccionistasExtranjerosData[] = [];
 
+  sucursalDeData: SeleccionDeSucursalData[] = [];
+
   /** Tipo de selección de la tabla */
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
 
@@ -84,8 +86,8 @@ nacionalidadMexicanaNo = NacionalidadMexicana.NO;
 
   /** Opciones de selección mexicana */
   opcionSeleccionPersona = [
-    { label: 'Persona Física', value: TipoPersona.FISICA },
-    { label: 'Persona Moral', value: TipoPersona.MORAL },
+    { label: 'Persona física', value: TipoPersona.FISICA },
+    { label: 'Persona moral', value: TipoPersona.MORAL },
   ];
 
   /** Opciones de selección mexicana */
@@ -125,7 +127,7 @@ opcionSeleccionMexicana = [
    esFormularioVisible = false;
    
   /** Notificación nueva */
-  public nuevaNotificacion: Notificacion | null = null;
+  public nuevaNotificacion!: Notificacion;
 
   /** Indica si el formulario es de solo lectura */  
   esFormularioSoloLectura: boolean = false;
@@ -165,6 +167,7 @@ opcionSeleccionMexicana = [
     this.getSociosYAccionistasExtranjerosData();
     this.getPaisData();
     this.subscribeToEstadoDataChanges();
+    this.getSucursalData();
     this.registroComoEmpresa.getRepresentacionFederalData().pipe(takeUntil(this.destroyed$)).subscribe(() => {
       this.subscribeToEstadoDataChanges();
     });
@@ -261,7 +264,7 @@ opcionSeleccionMexicana = [
       cerrar: false,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: 'Cancelar',
+      txtBtnCancelar: '',
     };
 
     this.elementoParaEliminar = i;
@@ -271,7 +274,6 @@ opcionSeleccionMexicana = [
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
-    this.nuevaNotificacion = null;
   }
   /** Método para validar el RFC ingresado en el formulario */
   checkRFCValidation(): void {
@@ -356,6 +358,15 @@ opcionSeleccionMexicana = [
         this.datosTablaExtranjeros = data as unknown as SociosYAccionistasExtranjerosData[];
       });
   }
+  /** Método para obtener los datos de sucursales */
+  getSucursalData(): void {
+    this.registroComoEmpresa
+      .getSucursalData()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.sucursalDeData = data as unknown as SeleccionDeSucursalData[];
+      });
+  }
 
   /** Método para obtener los datos del país */
   getPaisData(): void {
@@ -371,7 +382,7 @@ opcionSeleccionMexicana = [
   onAgregar(): void {
     const PAIS_ID = this.formularioEmpresa.get('datosPais')?.value;
     const PAIS_DESCRIPTION = this.paisData.catalogos.find((pais) => pais.id === Number(PAIS_ID))?.descripcion || '';
-    const NEW_ENTRY: SociosYAccionistasExtranjerosData = {
+    const NUEVA_ENTRADA: SociosYAccionistasExtranjerosData = {
       taxId: this.formularioEmpresa.get('taxId')?.value,
       razonSocial: this.formularioEmpresa.get('razonSocial')?.value,
       datosPais: PAIS_DESCRIPTION,
@@ -383,8 +394,8 @@ opcionSeleccionMexicana = [
       id: 0
     };
 
-    this.datosTablaExtranjeros.push(NEW_ENTRY);
-    this.formularioEmpresa.patchValue({
+    this.datosTablaExtranjeros = [...this.datosTablaExtranjeros, NUEVA_ENTRADA];
+        this.formularioEmpresa.patchValue({
       taxId: '',
       razonSocial: '',
       datosPais: '',
@@ -449,10 +460,9 @@ opcionSeleccionMexicana = [
     if (this.esFormularioSoloLectura) {
       this.formularioEmpresa?.disable();
     }
-    else {
-      this.formularioEmpresa?.enable();
-    }
 }
+
+
 
   /** Método para establecer valores en el store de la solicitud */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Solicitud120603Store): void {

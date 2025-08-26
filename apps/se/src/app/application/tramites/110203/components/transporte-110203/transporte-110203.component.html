@@ -6,7 +6,7 @@
            <div class="row">
              <div class="col-md-4">          
 
-              <app-catalogo-select [catalogo]="medio" [label]="'Medio de transporte'"  name="medio"
+              <app-catalogo-select [isDisabled]="esFormularioSoloLectura" [catalogo]="medio" [label]="'Medio de transporte'"  name="medio"
               formControlName="medio" (change)="setValoresStore(transporteForm,'medio', 'setMedio')">
           </app-catalogo-select>
 

@@ -14,6 +14,7 @@
 import { CommonModule } from '@angular/common';
 
 import {
+  ChangeDetectorRef,
   Component,
   Input,
   OnChanges,
@@ -42,7 +43,9 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 
-import { InputRadioComponent } from '@ng-mf/data-access-user';
+import { ConsultaioState } from '@ng-mf/data-access-user';
+
+import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 
 import {
   EXPEDICION_FACTURA_FECHA,
@@ -109,11 +112,24 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    */
   pagosDeDerechosState!: PagosDeDerechosFormInt;
 
+   /**
+   * Configuración para el input de fecha de salida.
+   * Proporciona un valor inicial para el campo de fecha.
+   * @type {InputFecha}
+   */
+  fechaFinalInput: InputFecha = EXPEDICION_FACTURA_FECHA;
+
   /**
    * @property {CatalogosSelect} banco
    * @description Información del banco seleccionado en el formulario.
    */
   banco!: CatalogosSelect;
+
+  /**
+   * @property {CatalogosSelect} bancoRevision
+   * @description Información del banco seleccionado en el formulario de revisión.
+   */
+  bancoRevision!: CatalogosSelect;
 
   /**
    * @property {OpcionDeRadio[]} exentoPagoRadio
@@ -164,7 +180,13 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    * @property {boolean} esFormularioSoloLectura
    * @description Indica si el formulario debe mostrarse solo en modo de lectura.
    */
-  @Input() esFormularioSoloLectura!: boolean;
+  @Input() esFormularioSoloLectura: boolean = false;
+
+  /**
+   * @property {ConsultaioState} consultaState
+   * @description Estado actual de la consulta gestionado por el store ConsultaioQuery.
+   */
+  @Input() consultaState?: ConsultaioState;
 
   /**
    * @property {string} setFecha
@@ -193,6 +215,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    * @param {SeccionLibQuery} seccionQuery Consulta de estado de la tienda Akita para secciones.
    * @param {SeccionLibStore} seccionStore Tienda Akita para manejar el estado de la sección.
    * @param {ConsultaioQuery} consultaioQuery Consulta Akita para manejar y actualizar el estado de una sección.
+   * @param {ChangeDetectorRef} cdr Servicio para controlar la detección de cambios.
    */
   constructor(
     private readonly fb: FormBuilder,
@@ -201,17 +224,28 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
     private tramiteStore: TramiteStore,
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
+          this.cdr.detectChanges();
           this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
+  }
+
+  /**
+   * @getter isBorrarButtonDisabled
+   * @description Determina si el botón "Borrar datos del pago" debe estar deshabilitado.
+   * @returns {boolean} True si está en modo consulta (solo lectura), false en caso contrario.
+   */
+  get isBorrarButtonDisabled(): boolean {
+    return this.consultaState?.readonly ?? this.esFormularioSoloLectura;
   }
 
   /**
@@ -258,50 +292,83 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
       )
       .subscribe();
 
+    // Establecer exentoPagoValor a 'Si' si no está ya establecido desde el estado
+    if (!this.pagosDeDerechosState?.exentoPago) {
+      this.exentoPagoValor = 'Si';
+    } else {
+      this.exentoPagoValor = this.pagosDeDerechosState.exentoPago;
+    }
+
+    // Establecer exentoPagoRevisionValor a 'Si' si no está ya establecido desde el estado
+    if (!this.pagosDeDerechosState?.exentoPagoRevision) {
+      this.exentoPagoRevisionValor = 'Si';
+    } else {
+      this.exentoPagoRevisionValor = this.pagosDeDerechosState.exentoPagoRevision;
+    }
+
     this.pagosDeDerechosForm = this.fb.group({
+      justificacion: [
+        {value: '', disabled: true},
+        Validators.required,
+      ],
       claveDeReferencia: [
-        this.pagosDeDerechosState?.claveDeReferencia || '',
+        {value: this.pagosDeDerechosState?.claveDeReferencia || '', disabled: true},
         Validators.required,
       ],
       cadenaDependencia: [
-        this.pagosDeDerechosState?.cadenaDependencia || '',
+        {value: this.pagosDeDerechosState?.cadenaDependencia || '', disabled: true},
         Validators.required,
       ],
-      banco: [this.pagosDeDerechosState?.banco || '', Validators.required],
+      banco: [
+        {value: this.pagosDeDerechosState?.banco || '', disabled: true}, 
+        Validators.required
+      ],
       exentoPago: [
-        this.pagosDeDerechosState?.exentoPago || '',
+        {value: this.pagosDeDerechosState?.exentoPago || 'Si', disabled: true},
         Validators.required,
       ],
       llaveDePago: [
-        this.pagosDeDerechosState?.llaveDePago || '',
+        {value: this.pagosDeDerechosState?.llaveDePago || '', disabled: true},
         Validators.required,
       ],
       fechaInicio: [
-        this.pagosDeDerechosState?.fechaInicio || '',
+        {value: this.pagosDeDerechosState?.fechaInicio || '', disabled: true},
         Validators.required,
       ],
       importeDePago: [
-        this.pagosDeDerechosState?.importeDePago || '',
+        {value: this.pagosDeDerechosState?.importeDePago || '', disabled: true},
         Validators.required,
       ],
       claveDeReferenciaRevision: [
-        this.pagosDeDerechosState?.claveDeReferenciaRevision || '',
+        {value: this.pagosDeDerechosState?.claveDeReferenciaRevision || '', disabled: true},
+        Validators.required,
+      ],
+      cadenaDependenciaRevision: [
+        {value: '', disabled: true},
+        Validators.required,
+      ],
+      justificacionRevision: [
+        {value: '', disabled: true},
         Validators.required,
       ],
       bancoRevision: [
-        this.pagosDeDerechosState?.bancoRevision || '',
+        {value: this.pagosDeDerechosState?.bancoRevision || '', disabled: true},
         Validators.required,
       ],
       llaveDePagoRevision: [
-        this.pagosDeDerechosState?.llaveDePagoRevision || '',
+        {value: this.pagosDeDerechosState?.llaveDePagoRevision || '', disabled: true},
         Validators.required,
       ],
       fechaInicioRevision: [
-        this.pagosDeDerechosState?.fechaInicioRevision || '',
+        {value: this.pagosDeDerechosState?.fechaInicioRevision || '', disabled: true},
         Validators.required,
       ],
       importeDePagoRevision: [
-        this.pagosDeDerechosState?.importeDePagoRevision || '',
+        {value: this.pagosDeDerechosState?.importeDePagoRevision || '', disabled: true},
+        Validators.required,
+      ],
+      exentoPagoRevision: [
+        {value: this.pagosDeDerechosState?.exentoPagoRevision || 'Si', disabled: true},
         Validators.required,
       ],
     });
@@ -340,7 +407,35 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
           (seccionState: { PagosDeDerechosState: PagosDeDerechosFormInt }) => {
             if (seccionState) {
               this.pagosDeDerechosState = seccionState.PagosDeDerechosState;
-              this.pagosDeDerechosForm.patchValue(this.pagosDeDerechosState);
+              const PATCH_DATA = { ...this.pagosDeDerechosState };
+              // Asegurar que exentoPago permanezca 'Si' y deshabilitado
+              if (PATCH_DATA.exentoPago !== 'Si') {
+                PATCH_DATA.exentoPago = 'Si';
+                this.exentoPagoValor = 'Si';
+              }
+              // Asegurar que exentoPagoRevision permanezca 'Si' y deshabilitado
+              if (PATCH_DATA.exentoPagoRevision !== 'Si') {
+                PATCH_DATA.exentoPagoRevision = 'Si';
+                this.exentoPagoRevisionValor = 'Si';
+              }
+              this.pagosDeDerechosForm.patchValue(PATCH_DATA);
+              // Volver a deshabilitar todos los controles especificados después del parcheo
+              this.pagosDeDerechosForm.get('justificacion')?.disable();
+              this.pagosDeDerechosForm.get('claveDeReferencia')?.disable();
+              this.pagosDeDerechosForm.get('cadenaDependencia')?.disable();
+              this.pagosDeDerechosForm.get('banco')?.disable();
+              this.pagosDeDerechosForm.get('exentoPago')?.disable();
+              this.pagosDeDerechosForm.get('llaveDePago')?.disable();
+              this.pagosDeDerechosForm.get('fechaInicio')?.disable();
+              this.pagosDeDerechosForm.get('importeDePago')?.disable();
+              this.pagosDeDerechosForm.get('claveDeReferenciaRevision')?.disable();
+              this.pagosDeDerechosForm.get('cadenaDependenciaRevision')?.disable();
+              this.pagosDeDerechosForm.get('justificacionRevision')?.disable();
+              this.pagosDeDerechosForm.get('bancoRevision')?.disable();
+              this.pagosDeDerechosForm.get('llaveDePagoRevision')?.disable();
+              this.pagosDeDerechosForm.get('fechaInicioRevision')?.disable();
+              this.pagosDeDerechosForm.get('importeDePagoRevision')?.disable();
+              this.pagosDeDerechosForm.get('exentoPagoRevision')?.disable();
             }
           }
         )
@@ -399,7 +494,23 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
       .pagoDeCargarDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data: PagoDeDerechos) => {
-        this.pagosDeDerechosForm.patchValue(data);
+        // Crear datos de parcheo con exentoPago establecido a 'Si'
+        const PATCH_DATA = { 
+          ...data, 
+          exentoPago: 'Si' 
+        };
+        this.exentoPagoValor = 'Si';
+        this.pagosDeDerechosForm.patchValue(PATCH_DATA);
+        // Volver a deshabilitar todos los controles especificados después del parcheo
+        this.pagosDeDerechosForm.get('justificacion')?.disable();
+        this.pagosDeDerechosForm.get('claveDeReferencia')?.disable();
+        this.pagosDeDerechosForm.get('cadenaDependencia')?.disable();
+        this.pagosDeDerechosForm.get('banco')?.disable();
+        this.pagosDeDerechosForm.get('exentoPago')?.disable();
+        this.pagosDeDerechosForm.get('llaveDePago')?.disable();
+        this.pagosDeDerechosForm.get('fechaInicio')?.disable();
+        this.pagosDeDerechosForm.get('importeDePago')?.disable();
+        this.pagosDeDerechosForm.get('cadenaDependenciaRevision')?.disable();
       });
   }
 
@@ -422,7 +533,13 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
           this.banco = {
-            labelNombre: 'Banco*',
+            labelNombre: 'Banco',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+          this.bancoRevision = {
+            labelNombre: 'Banco',
             required: false,
             primerOpcion: 'Selecciona un valor',
             catalogos: RESPONSE,
@@ -466,6 +583,22 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data: PagoDeDerechosRevision) => {
         this.pagosDeDerechosForm.patchValue(data);
+        // Asegurar que todos los controles especificados permanezcan deshabilitados después de cualquier parcheo
+        this.pagosDeDerechosForm.get('justificacion')?.disable();
+        this.pagosDeDerechosForm.get('claveDeReferencia')?.disable();
+        this.pagosDeDerechosForm.get('cadenaDependencia')?.disable();
+        this.pagosDeDerechosForm.get('banco')?.disable();
+        this.pagosDeDerechosForm.get('exentoPago')?.disable();
+        this.pagosDeDerechosForm.get('llaveDePago')?.disable();
+        this.pagosDeDerechosForm.get('fechaInicio')?.disable();
+        this.pagosDeDerechosForm.get('importeDePago')?.disable();
+        this.pagosDeDerechosForm.get('claveDeReferenciaRevision')?.disable();
+        this.pagosDeDerechosForm.get('cadenaDependenciaRevision')?.disable();
+        this.pagosDeDerechosForm.get('justificacionRevision')?.disable();
+        this.pagosDeDerechosForm.get('bancoRevision')?.disable();
+        this.pagosDeDerechosForm.get('llaveDePagoRevision')?.disable();
+        this.pagosDeDerechosForm.get('fechaInicioRevision')?.disable();
+        this.pagosDeDerechosForm.get('importeDePagoRevision')?.disable();
       });
   }
 
@@ -512,11 +645,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
         if (typeof this.generarFormulario === 'function') {
           this.generarFormulario(OBJECT_DATE);
         }
+        // Mantener fechaInicio deshabilitado ya que está en la lista de campos a deshabilitar
         if (
           this.pagosDeDerechosForm &&
           this.pagosDeDerechosForm.controls['fechaInicio']
         ) {
-          this.pagosDeDerechosForm.controls['fechaInicio'].enable();
+          this.pagosDeDerechosForm.controls['fechaInicio'].disable();
         }
       }
     }
@@ -536,6 +670,121 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
       });
     }
   }
+  
+  /**
+   * Actualiza la fecha de inicio en el formulario.
+   * @method cambioFechaInicio
+   * @param {string} nuevoValor - Nueva fecha de inicio.
+   */
+  cambioFechaInicio(nuevoValor: string): void {
+    this.pagosDeDerechosForm.patchValue({
+      fechaInicio: nuevoValor,
+    });
+  }
+
+  /**
+   * Actualiza la fecha de inicio de revisión en el formulario.
+   * @method cambioFechaInicioRevision
+   * @param {string} nuevoValor - Nueva fecha de inicio de revisión.
+   */
+  cambioFechaInicioRevision(nuevoValor: string): void {
+    this.pagosDeDerechosForm.patchValue({
+      fechaInicioRevision: nuevoValor,
+    });
+  }
+
+  /**
+   * Actualiza la fecha de pago en el formulario.
+   * @method cambioFechaFinal
+   * @param {string} nuevoValor - Nueva fecha de pago.
+   */
+  cambioFechaFinal(nuevoValor: string): void {
+    this.pagosDeDerechosForm.patchValue({
+      fechaPago: nuevoValor,
+    });
+    this.fechaPagoDate = nuevoValor;
+  }
+
+
+  /**
+   * Borra todos los datos del formulario de pago de derechos.
+   * Resetea los valores del formulario y actualiza el store.
+   * @method borrarDatosPago
+   */
+  borrarDatosPago(): void {
+    this.pagosDeDerechosForm.patchValue({
+      justificacion: '',
+      claveDeReferencia: '',
+      cadenaDependencia: '',
+      banco: '',
+      llaveDePago: '',
+      fechaInicio: '',
+      importeDePago: '',
+      justificacionRevision: '',
+      claveDeReferenciaRevision: '',
+      cadenaDependenciaRevision: '',
+      bancoRevision: '',
+      llaveDePagoRevision: '',
+      fechaInicioRevision: '',
+      importeDePagoRevision: '',
+    });
+    this.fechaPagoDate = '';
+    const VALOR = this.pagosDeDerechosForm.value;
+    this.tramiteStore.setPagoDeDerechosTramite(VALOR);
+  }
+
+  /**
+   * Actualiza el valor de un campo en el formulario y lo guarda en el store.
+   * Aplica lógica especial para patchear valores en consulta flow cuando se seleccionan banco o bancoRevision.
+   * @method setValoresStore
+   * @param {FormGroup} formulario - El formulario con el campo que se está actualizando.
+   * @param {string} campo - El nombre del campo que se actualizará.
+   */
+  setValoresStore(
+    _formulario: FormGroup,
+    _campo: string,
+  ): void {
+    this.actualizarValoresConsulta();
+    const VALOR = this.pagosDeDerechosForm.value;
+    this.tramiteStore.setPagoDeDerechosTramite(VALOR);
+  }
+
+  /**
+   * Actualiza ciertos valores en el formulario basados en condiciones específicas para el flujo de consulta.
+   * Si se selecciona un banco y estamos en modo consulta, se patchean valores de ejemplo.
+   * @method actualizarValoresConsulta
+   */
+  actualizarValoresConsulta(): void {
+    // Solo aplicar la lógica de patcheo en modo de solo lectura (consulta flow)
+    if (!this.esFormularioSoloLectura) {
+      return;
+    }
+
+    const HOY = moment().format('YYYY-MM-DD');
+    const FORM_VALUES = this.pagosDeDerechosForm.value;
+
+    // Si se selecciona un banco en la sección principal y justificación tiene valor
+    if (FORM_VALUES.banco && FORM_VALUES.justificacion) {
+      this.pagosDeDerechosForm.patchValue({
+        claveDeReferencia: 'valor',
+        cadenaDependencia: 'valor',
+        llaveDePago: 'valor',
+        fechaInicio: HOY,
+        importeDePago: 'valor',
+      });
+    }
+
+    // Si se selecciona un banco en la sección de revisión y justificación revisión tiene valor
+    if (FORM_VALUES.bancoRevision && FORM_VALUES.justificacionRevision) {
+      this.pagosDeDerechosForm.patchValue({
+        claveDeReferenciaRevision: 'valor',
+        cadenaDependenciaRevision: 'valor',
+        llaveDePagoRevision: 'valor',
+        fechaInicioRevision: HOY,
+        importeDePagoRevision: 'valor',
+      });
+    }
+  }
 
   /**
    * @method ngOnDestroy
@@ -546,6 +795,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    *
    * @see {@link destroyNotifier$} Subject utilizado para cancelar suscripciones activas.
    */
+
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

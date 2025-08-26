@@ -1,4 +1,4 @@
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { CancelacionDeCertificateComponent } from './components/cancelacionde/cancelacion-de-certificado.component';
 import { CancelacionDeComponent } from './pages/cancelacion/cancelacion-de.component';
 import { CancelacionDeRoutingModule } from './cancelacion-de-routing.module';
@@ -16,10 +16,14 @@ import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 
+import { ReactiveFormsModule } from '@angular/forms';
+
+
 @NgModule({
   declarations: [
     CancelacionDeComponent,
-    DatosComponent,FirmarSolicitudComponent
+    DatosComponent,FirmarSolicitudComponent,
+   
   ],
   imports: [
     CommonModule,Solicitante140103Component,
@@ -29,7 +33,8 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     TituloComponent,
     DevolverComponent,DetalleComponent,OficioComponent,
   
-    WizardComponent,FirmaElectronicaComponent
+    WizardComponent,FirmaElectronicaComponent, ReactiveFormsModule,
+    TablaDinamicaComponent
   
   ],
   providers: [

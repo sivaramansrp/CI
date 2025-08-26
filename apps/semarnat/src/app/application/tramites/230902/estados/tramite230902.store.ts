@@ -1,6 +1,9 @@
-import { Store, StoreConfig } from '@datorama/akita';
-import { ConfiguracionItem } from '../enum/mercancia.enum';
 import { Injectable } from '@angular/core';
+
+import { Store, StoreConfig } from '@datorama/akita';
+
+import { ConfiguracionItem } from '../enum/mercancia.enum';
+import { ConfiguracionItem as TercerosConfiguracionItem } from '../enum/tereceors.enum';
 
 
 /**
@@ -44,6 +47,21 @@ export interface Solicitud230902State {
   /** Datos de la tabla de mercancías asociada al trámite. */
   mercanciaTablaDatos: ConfiguracionItem[];
 
+  /** Datos de la tabla de terceros asociada al trámite. */
+  tercerosTablaDatos: TercerosConfiguracionItem[];
+
+  /** Lista original de aduanas. */
+  listaOriginalAduanas:string[];
+
+  /** Lista de aduanas seleccionadas. */
+  listaSeleccionadaAduanas:string[];
+
+  /** Lista original de movimientos. */
+  listaOriginalMovimiento: string[];
+  
+  /** Lista de movimientos seleccionados. */
+  listaSeleccionadaMovimiento: string[];
+
 }
 
 export function createInitialState(): Solicitud230902State {
@@ -60,6 +78,11 @@ export function createInitialState(): Solicitud230902State {
     popupAbierto: false,
     popupCerrado: true,
     mercanciaTablaDatos: [],
+    tercerosTablaDatos: [],
+    listaOriginalAduanas: [],
+    listaSeleccionadaAduanas: [],
+    listaOriginalMovimiento: [],
+    listaSeleccionadaMovimiento: [],
   };
 }
 
@@ -133,6 +156,44 @@ export class Tramite230902Store extends Store<Solicitud230902State> {
     this.update((state) => ({
       ...state,
       mercanciaTablaDatos,
+    }));
+  }
+
+  /**
+   * Establece los datos de la tabla de terceros en el estado.
+   * 
+   * {TercerosConfiguracionItem[]} tercerosTablaDatos - Datos de la tabla de terceros.
+   */
+  public setTercerosTablaDatos(tercerosTablaDatos: TercerosConfiguracionItem[]): void {
+    this.update((state) => ({
+      ...state,
+      tercerosTablaDatos,
+    }));
+  }
+
+  public setListaOriginalAduanas(listaOriginalAduanas: string[]): void {
+    this.update((state) => ({
+      ...state,
+      listaOriginalAduanas,
+    }));
+  }
+  public setListaSeleccionadaAduanas(listaSeleccionadaAduanas: string[]): void {
+    this.update((state) => ({
+      ...state,
+      listaSeleccionadaAduanas,
+    }));
+  }
+
+  public setListaOriginalMovimiento(listaOriginalMovimiento: string[]): void {
+    this.update((state) => ({
+      ...state,
+      listaOriginalMovimiento,
+    }));
+  }
+  public setListaSeleccionadaMovimiento(listaSeleccionadaMovimiento: string[]): void {
+    this.update((state) => ({
+      ...state,
+      listaSeleccionadaMovimiento,
     }));
   }
 

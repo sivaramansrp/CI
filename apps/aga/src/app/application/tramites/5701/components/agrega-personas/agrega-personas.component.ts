@@ -288,6 +288,7 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
             };
 
             this.habilitarCamposFormulario();
+            this.personaForm.reset();
           }
         }),
         takeUntil(this.destroyNotifier$)
@@ -415,18 +416,17 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
     if (responsable !== null && !EXISTE_RESPONSABLE) {
       this.personas.push(responsable);
       this.responsablesDespachoChange.emit(this.personas);
+
+      // Only reset form fields when person is successfully added
+      this.gafeteRespoDespacho.setValue('');
+      responsable = null;
+      this.gafeteRespoDespacho.reset();
+      this.claseFormaNovalida = false;
+      this.personaForm.get('nombreRespoDespacho')?.disable();
+      this.personaForm.get('paternoRespoDespacho')?.disable();
+      this.personaForm.get('maternoRespoDespacho')?.disable();
+      this.personaForm.reset();
     }
-
-    this.gafeteRespoDespacho.setValue('');
-
-    responsable = null;
-
-    this.gafeteRespoDespacho.reset();
-    this.claseFormaNovalida = false;
-    this.personaForm.get('nombreRespoDespacho')?.disable();
-    this.personaForm.get('paternoRespoDespacho')?.disable();
-    this.personaForm.get('maternoRespoDespacho')?.disable();
-    this.personaForm.reset();
   }
 
   /**

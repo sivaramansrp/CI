@@ -103,16 +103,21 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.consultaState = seccionState;
-          this.esFormularioSoloLectura = seccionState.readonly;
+            })
+      )
+      .subscribe();
+          //this.esFormularioSoloLectura = seccionState.readonly;
           if (this.consultaState.update) {
             this.guardarDatosFormulario();
           } else {
             this.esDatosRespuesta = true;
           }
-        })
-      )
-      .subscribe();
+      
   }
+  /**
+   * Inicializa el formulario y establece el estado de solo lectura.
+   * @method inicializarFormulario
+   */
   guardarDatosFormulario(): void {
     this.importacionDeAcuiculturaService
       .getDatosDeLaSolicitudData()
@@ -126,6 +131,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         }
       });
   }
+  /**
+   * @inheritdoc
+   *
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Utiliza el Subject `destroyNotifier$` para notificar la destrucción y completar las suscripciones.
+   *
+   * @override
+   */
 
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

@@ -105,7 +105,6 @@ export class ModificacionComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.consultaDatos = seccionState;
           this.esFormularioSoloLectura = this.consultaDatos.readonly;
-          this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
@@ -120,15 +119,17 @@ export class ModificacionComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
     this.inicializarFormulario();
     this.loadDatosModificacion();
     this.inicializarEstadoFormulario();
     this.loadDatosTablaData();
+    this.inicializarEstadoFormulario();
 
     this.actividadProductiva = {
-      labelNombre: 'Activided productiva',
-      required: false,
-      primerOpcion: 'Selecciona un valor',
+      labelNombre: 'Actividad productiva',
+      required: true,
+      primerOpcion: 'Seleccione una opción',
       catalogos: ACTIVIDAD_PRODUCTIVA
     };
   }

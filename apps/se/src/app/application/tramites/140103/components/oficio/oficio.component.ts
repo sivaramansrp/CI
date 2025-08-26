@@ -1,4 +1,4 @@
-import { BtnContinuarComponent, DatosPasos, ListaPasosWizard, TituloComponent } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent, DatosPasos, ListaPasosWizard, Notificacion, NotificacionesComponent, Pedimento, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -12,6 +12,10 @@ import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramit
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import oficiodata from '@libs/shared/theme/assets/json/140103/oficiotable.json';
 
+import { DevolverComponent } from '../devolver/devolver.component';
+
+import { ModalComponent } from '../model/modal.component';
+
 /** Representa la configuración de un ítem de oficio con datos del certificado y su origen. */
 interface ConfiguracionItem {
   folioOficioCertificado: string;
@@ -20,6 +24,9 @@ interface ConfiguracionItem {
   fabricante: string;
   importador: string;
   unidadPrimaria: number;
+  montoExpediente: number;
+  montocancelar: number;
+  montoutilizado: number;
 }
 /**
  * Componente para gestionar la visualización y actualización de los datos de los oficios de certificados.
@@ -48,7 +55,10 @@ interface ConfiguracionItem {
     ReactiveFormsModule,
     TituloComponent,
     BtnContinuarComponent,
-    CommonModule
+    CommonModule,
+    DevolverComponent,
+    ModalComponent,
+    NotificacionesComponent,
   ],
   templateUrl: './oficio.component.html',
   styleUrls: ['./oficio.component.scss']
@@ -84,11 +94,38 @@ interface ConfiguracionItem {
  */
 export class OficioComponent implements OnInit, OnDestroy{
 
+   /**
+   * @description
+   * Variable que almacena el índice del elemento que se desea eliminar de la lista de pedimentos.
+   * Utilizada para realizar operaciones de eliminación en el arreglo `pedimentos`.
+   */
+  elementoParaEliminar!: number;
+
+  /**
+   * @description
+   * Objeto que representa una nueva notificación.
+   * Se utiliza para mostrar mensajes de alerta o información al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+   /**
+   * @description
+   * Arreglo que almacena los pedimentos asociados al establecimiento.
+   * Cada pedimento contiene información relevante para el trámite.
+   */
+  pedimentos: Array<Pedimento> = [];
+
   /**
    * Lista de certificados cargados desde un archivo JSON.
    * Esta lista contiene la información de los oficios y su estado.
    */
-  Certificados: [] = [];
+  Certificados: ConfiguracionItem[] = [];
+  /** 
+ * Certificado actualmente seleccionado en la configuración.
+ * Puede ser nulo si no se ha seleccionado ningún certificado.
+ * Utilizado para mostrar o procesar la información del certificado.
+ */
+  selectedCertificados: ConfiguracionItem | null = null;
 
   /**
    * Lista de datos de oficios, cada uno representando un certificado que será mostrado en la tabla.
@@ -106,6 +143,9 @@ export class OficioComponent implements OnInit, OnDestroy{
     { encabezado: 'Fabricante', clave: (item: ConfiguracionItem) => item.fabricante, orden: 4 },
     { encabezado: 'Importador', clave: (item: ConfiguracionItem) => item.importador, orden: 5 },
     { encabezado: 'Unidad Primaria', clave: (item: ConfiguracionItem) => item.unidadPrimaria, orden: 6 },
+    { encabezado: 'Monto Expediente', clave: (item: ConfiguracionItem) => item.montoExpediente, orden: 7 },
+    { encabezado: 'Monto a Cancelar', clave: (item: ConfiguracionItem) => item.montocancelar, orden: 8 },
+    { encabezado: 'Monto Utilizado', clave: (item: ConfiguracionItem) => item.montoutilizado, orden: 9 },
   ];
 
   /**
@@ -200,7 +240,35 @@ export class OficioComponent implements OnInit, OnDestroy{
     this.inicializarEstadoFormulario();
 
   }
+/**
+   * Método que se invoca al seleccionar una fila en la tabla de certificados.
+   * Actualiza la variable `selectedCertificado` con el certificado seleccionado.
+   * 
+   * @param cancelar - El certificado seleccionado de la tabla.
+   */
+  onSeleccionarFila(cancelar: ConfiguracionItem): void {
+    this.selectedCertificados = cancelar;
+  }
+/**
+   * Método que se ejecuta al destruir el componente.
+   * Limpia el Subject `destroyNotifier$` para evitar fugas de memoria.
+   */
 
+onClickSeleccionar(): void {
+    if (!this.selectedCertificados) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Seleccione un registro.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    } 
+  }
  /**
    * Determina si se debe cargar un formulario nuevo o uno existente.
    * Ejecuta la lógica correspondiente según el estado del componente.
@@ -243,8 +311,114 @@ export class OficioComponent implements OnInit, OnDestroy{
    * para cancelar automáticamente las suscripciones a observables y evitar fugas de memoria.
    * 
    */
+
+  showDevolverModal = false;
+
+/**
+ * @method abrirDevolverFacturas
+ * @description
+ * Abre el modal para devolver facturas, estableciendo la variable `showDevolverModal` en `true`.
+ * 
+ * @memberof OficioComponent
+ */
+abrirDevolverFacturas() : void {
+  this.showDevolverModal = true;
+}
+
+ /**
+   * @description
+   * Método que se invoca para abrir un modal de confirmación antes de eliminar un pedimento.
+   * Muestra una notificación al usuario y establece el índice del pedimento a eliminar.
+   * @param i Índice del pedimento a eliminar. Por defecto es 0.
+   */
+
+  abrirModal(i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'seleccione un registro',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    }
+
+    this.elementoParaEliminar = i;
+  }
+
+   /**
+   * @description
+   * Método que se invoca para eliminar un pedimento del arreglo `pedimentos`.
+   * Si el parámetro `borrar` es verdadero, elimina el pedimento en el índice almacenado en `elementoParaEliminar`.
+   * @param borrar Indica si se debe proceder con la eliminación del pedimento.
+   */
+  eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta justo antes de destruir el componente.
+   * 
+   * Este método se utiliza para limpiar recursos, específicamente para completar
+   * el `Subject` `destroyNotifier$`, el cual es usado en combinación con el operador `takeUntil`
+   * para cancelar automáticamente las suscripciones a observables y evitar fugas de memoria.
+   * 
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Limpia el Subject `destroyNotifier$` para evitar fugas de memoria.
+   */
+
+  selectedCertificado: CertificadosCancelar | null = null;
+  showCapturaMontoModal = false;
+
+  /**
+   * Método que se invoca al seleccionar una fila en la tabla de certificados.
+   * Actualiza la variable `selectedCertificado` con el certificado seleccionado.
+   * 
+   * @param certificado - El certificado seleccionado de la tabla.
+   */
+  onSeleccionRow(certificado: CertificadosCancelar): void {
+    this.selectedCertificado = certificado;
+  }
+
+  /**
+   * Método que se invoca al hacer clic en el botón "Seleccionar" de la tabla.
+   * Si no hay un certificado seleccionado, muestra una notificación de error.
+   * Si hay un certificado seleccionado, muestra el modal para capturar el monto.
+   */
+  onSeleccionarClick(): void {
+    if (!this.selectedCertificado) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Seleccione un registro.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    } else {
+      this.showCapturaMontoModal = true;
+    }
+  }
+
+  /**
+   * Método que se invoca para cerrar el modal de captura de monto.
+   * Resetea la variable `selectedCertificado` a null y oculta el modal.
+   */
+  closeCapturaMontoModal():void {
+    this.showCapturaMontoModal = false;
+    this.selectedCertificado = null;
   }
 }

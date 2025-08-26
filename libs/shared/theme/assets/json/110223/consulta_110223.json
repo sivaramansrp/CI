@@ -2,14 +2,82 @@
   "success": true,
   "message": "",
   "datos": {
+    "mercanciaSeleccionadasTablaData": [
+      {
+        "fraccionArancelaria": "0901.21.01",
+        "cantidad": "500",
+        "unidadMedida": "Kilogramos",
+        "valorMercancia": "87500.75",
+        "tipoFactura": "Factura electrónica",
+        "numFactura": "FE-2023-04521",
+        "complementoDescripcion": "Café tostado en grano, 100% arábiga, grado premium",
+        "fechaFactura": "22/05/2023"
+      },
+      {
+        "fraccionArancelaria": "8703.23.01",
+        "cantidad": "25",
+        "unidadMedida": "Unidades",
+        "valorMercancia": "3250000.00",
+        "tipoFactura": "Factura comercial",
+        "numFactura": "FC-2023-07894",
+        "complementoDescripcion": "Automóviles compactos, modelo 2023, color blanco, transmisión automática",
+        "fechaFactura": "10/07/2023"
+      },
+      {
+        "fraccionArancelaria": "2208.30.01",
+        "cantidad": "2000",
+        "unidadMedida": "Litros",
+        "valorMercancia": "150000.25",
+        "tipoFactura": "Factura electrónica",
+        "numFactura": "FE-2023-03215",
+        "complementoDescripcion": "Tequila 100% agave, reposado, 38% alc. vol., embotellado en Jalisco",
+        "fechaFactura": "05/09/2023"
+      },
+      {
+        "fraccionArancelaria": "6110.20.01",
+        "cantidad": "1200",
+        "unidadMedida": "Docenas",
+        "valorMercancia": "180000.00",
+        "tipoFactura": "Factura comercial",
+        "numFactura": "FC-2023-05678",
+        "complementoDescripcion": "Suéteres de lana merino, tejido a mano, varios colores, tallas S-XL",
+        "fechaFactura": "18/11/2023"
+      }
+    ],
+    "mercanciaDisponsiblesTablaDatos": [
+      {
+        "fraccionArancelaria": "34029002",
+        "nombreTecnico": "Composiciones constituidas por polialquifenol-formaldehido oxietilado y/o polioxipropileno oxietilado, aunque contengan solventes orgánicos, para la fabricación de de hulsificantes para la industria petrolera.",
+        "nombreComercial": "PRUEBA DE LA FIRMA DE ORIGEN",
+        "numeroRegistroProductos": "254023028918",
+        "fechaVencimiento": "2033-04-26",
+        "fechaExpedicion": "2033-03-23"
+      },
+      {
+        "fraccionArancelaria": "40021901",
+        "nombreTecnico": "Poli(butadieno-estireno), con un contenido reaccionado de butadieno superior o igual al 90% pero inferior o igual al 97% y10% a 3% respectivamente, de estireno.",
+        "nombreComercial": "Patitos de hule",
+        "numeroRegistroProductos": "254023028953",
+        "fechaVencimiento": "2023-07-05",
+        "fechaExpedicion": "2023-07-05"
+      },
+      {
+        "fraccionArancelaria": "59080003",
+        "nombreTecnico": "prueba para RPE",
+        "nombreComercial": "nombre comercial",
+        "numeroRegistroProductos": "254023028966",
+        "fechaVencimiento": "2023-07-14",
+        "fechaExpedicion": "2023-07-14"
+      }
+    ],
     "tercerOperador": true,
     "tratado": "0",
     "pais": "2",
     "fraccionArancelaria": "12345678",
     "numeroRegistro": "MX-REG-001",
     "nombreComercial": "Producto Mexicano",
-    "fechaInicial": "2025-01-01",
-    "fechaFinal": "2025-12-31",
+    "fechaInicial": "01/01/2025",
+    "fechaFinal": "31/12/2025",
     "archivo": "certificado_t_mec.pdf",
     "fraccionMercanciaArancelaria": "98765432",
     "nombreTecnico": "Compuesto Químico MX-12",
@@ -22,12 +90,12 @@
     "valorDelaMercancia": "15000.00",
     "complementoDelaDescripcion": "Producto biodegradable, uso doméstico",
     "tipoFactura": "1",
-    "fecha": "2025-06-01",
+    "fecha": "01/06/2025",
     "numeroFactura": "FAC-2025-MX-456",
     "numeroSerie": "SERIE-00987",
     "observaciones": "Producto sujeto a inspección fitosanitaria.",
-    "entidad": "8",
-    "representacion": "1",
+    "entidad": "2",
+    "representacion": "2",
     "casillaVerificacion": true,
     "justificacion": "Cumple con las normas del tratado T-MEC",
     "nombre": "Juan",
@@ -38,11 +106,15 @@
     "numeroDeRegistroFiscal": "REGFIS-MX-001",
     "telefono": "5551234567",
     "fax": "5551234568",
+    "lugar":"Guadalajara",
+    "nombreRepresentanteLegalExportador": "Juan Pérez",
+    "empresa": "Empresa Exportadora S.A. de C.V.",
+    "cargo": "Gerente de Exportaciones",
     "correoElectronico": "juan.perez@empresa.mx",
     "nacion": "1",
     "datosConfidencialesProductor": true,
     "productorMismoExportador": true,
     "numeroRegistroFiscal": "PROD-MX-998877",
     "agregarDatosProductorFax": "5559998888"
-  }  
+  }
 }

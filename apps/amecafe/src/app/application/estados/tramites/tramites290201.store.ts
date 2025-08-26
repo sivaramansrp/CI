@@ -1,6 +1,8 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
+import { FilaData2 } from '../../tramites/290201/models/fila-model';
+
 /**
  * Creacion del estado inicial para la interfaz de tramite 290201
  * @returns Solicitud290201
@@ -236,6 +238,19 @@ numeroInterior: string;
  * @description Otras características del domicilio.
  */
 otrasCaracteristicas: string;
+/**
+ * @property {FilaData2[]} tableData
+ * @description Lista de datos de la tabla utilizada para almacenar información relacionada con el trámite.
+ */
+tableData: FilaData2[];
+  /**
+   * Fila seleccionada actualmente.
+   */
+filaSeleccionada: FilaData2 | null; 
+  /**
+   * Datos de la nueva fila del destinatario.
+   */
+  filaSeleccionadas: number[]; 
 }
 export function createInitialSolicitudState(): Solicitud290201State {
   return {
@@ -466,7 +481,15 @@ numeroInterior: '',
  * @property {string} otrasCaracteristicas
  * @description Otras características del domicilio.
  */
-otrasCaracteristicas: ''
+otrasCaracteristicas: '',
+
+/**
+ * @property {FilaData2[]} tableData
+ * @description Lista de datos de la tabla utilizada para almacenar información relacionada con el trámite.
+ */
+tableData: [],
+    filaSeleccionada: null, // Currently selected row
+    filaSeleccionadas: [], // IDs of selected rows
   };
 }
 @Injectable({
@@ -972,4 +995,37 @@ public setOtrasCaracteristicas(otrasCaracteristicas: string): void {
       otrasCaracteristicas,
   }));
 }
+/**
+ * @method setTableData
+ * @description Actualiza el estado con los datos de la tabla proporcionados.
+ * @param {FilaData2[]} tableData - Lista de datos de la tabla.
+ */
+public setDatosDeTabla(tableData: FilaData2[]): void {
+  this.update((state) => ({
+    ...state,
+    tableData
+  }));
+}
+/**
+ * @method setFilaSeleccionada
+ * @description Actualiza la fila seleccionada en el estado.
+ * @param {FilaData2 | null} filaSeleccionada - Fila seleccionada o null si no hay selección.
+ */
+public setFilaSeleccionada(filaSeleccionada: FilaData2 | null): void {
+    this.update((state) => ({
+      ...state,
+      filaSeleccionada,
+    }));
+  }
+/**
+ * @method setFilaSeleccionadas
+ * @description Actualiza las filas seleccionadas en el estado.
+ * @param {number[]} filaSeleccionadas - IDs de las filas seleccionadas.
+ */
+public setFilaSeleccionadas(filaSeleccionadas: number[]): void {
+    this.update((state) => ({
+      ...state,
+      filaSeleccionadas,
+    }));
+  }
 }
