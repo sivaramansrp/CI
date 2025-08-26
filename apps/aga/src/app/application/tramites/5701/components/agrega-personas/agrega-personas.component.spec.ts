@@ -279,6 +279,21 @@ describe('AgregaPersonasComponent', () => {
       expect(component.personaForm.get('paternoRespoDespacho')?.value).toBe('');
       expect(component.personaForm.get('maternoRespoDespacho')?.value).toBe('');
     });
+
+    it('should set userHasInteracted to true when agregarPersona is called', () => {
+      // Arrange
+      component.userHasInteracted = false;
+      component.gafeteRespoDespacho.setValue('123');
+      component.personaForm.get('nombreRespoDespacho')?.setValue('Juan');
+      component.personaForm.get('paternoRespoDespacho')?.setValue('Pérez');
+      component.personaForm.get('maternoRespoDespacho')?.setValue('López');
+
+      // Act
+      component.agregarPersona();
+
+      // Assert
+      expect(component.userHasInteracted).toBe(true);
+    });
   });
 
   describe('setValoresStore', () => {
