@@ -13,8 +13,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AlertComponent, Catalogo, Pedimento, REGEX_NUMERO_DECIMAL_ENTERO, REG_X, TablaDinamicaComponent, TablaSeleccion, TituloComponent, UppercaseDirective, NotificacionesComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, Pedimento, REGEX_NUMERO_DECIMAL_ENTERO, REG_X, TablaDinamicaComponent, TablaSeleccion, TituloComponent, UppercaseDirective } from '@libs/shared/data-access-user/src';
 import { MERCANCIA_TABLA, MODIFICAR_PARTIDAS_FORM } from '../../constantes/octava-temporal.enum';
+import{ Notificacion, NotificacionesComponent } from '@libs/shared/data-access-user/src';
+
 import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
 import { Subject, map, takeUntil } from 'rxjs'; 
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
@@ -70,7 +72,7 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
    * @description
    * Objeto que representa una notificación para confirmación de eliminación.
    */
-  public seleccionarFilaNotificacion: any = {
+  public seleccionarFilaNotificacion: Notificacion = {
     tipoNotificacion: 'alert',
     categoria: 'danger',
     modo: 'action',
@@ -86,7 +88,7 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
    * @property notificacionEliminacionExitosa
    * Configuración para el modal de eliminación exitosa.
    */
-  public notificacionEliminacionExitosa: any = {
+  public notificacionEliminacionExitosa: Notificacion = {
     tipoNotificacion: 'alert',
     categoria: 'success',
     modo: 'info',
@@ -315,12 +317,7 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-
- fraccionArancelariaTIGIESelection(): void {
-    // Implement if needed
-  }
-
-  /**
+/**
    * Validates and submits the form
    */
   validarYEnviarFormulario(): void {
