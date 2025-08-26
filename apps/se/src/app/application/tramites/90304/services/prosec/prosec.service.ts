@@ -1,10 +1,10 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { EmpresasListaResquesta, ModificacionResquesta } from '../../models/prosec.model';
 import { MercanciasResquesta, PlantasTabla, ProductorIndirectoResquesta, SectorTabla } from '../../../../shared/models/complementaria.model';
 import { BitacoraResquesta } from '../../../../shared/models/bitacora.model';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 
 /**
  * Servicio para obtener los datos de la aplicación PROSEC.
