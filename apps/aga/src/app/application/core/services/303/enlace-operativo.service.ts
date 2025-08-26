@@ -11,6 +11,11 @@ export class EnlaceOperativoService {
     constructor(private http: HttpClient) {
     }
 
+    /**
+     * Busca un enlace operativo por su RFC.
+     * @param rfc RFC del enlace operativo a buscar.
+     * @returns Observable con el enlace operativo encontrado o undefined.
+     */
     buscarEnlacePorRFC(rfc: string): Observable<EnlaceOperativo | undefined> {
         return this.http
             .get<EnlaceOperativo[]>(`/assets/json/303/enlace-operativo.json`)

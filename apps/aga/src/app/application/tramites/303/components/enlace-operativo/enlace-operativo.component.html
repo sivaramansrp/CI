@@ -49,8 +49,7 @@
             <div class="row mb-3">
                 <div class="col-md-8">
                     <label for="ciudad" class="form-label">Ciudad o Estado de Residencia:</label>
-                    <input id="ciudad" type="text" class="form-control" formControlName="ciudad"
-                        libUppercase />
+                    <input id="ciudad" type="text" class="form-control" formControlName="ciudad" libUppercase />
                 </div>
                 <div class="col-md-4">
                     <label for="cargoPuesto" class="form-label">Cargo o Puesto:</label>
@@ -79,8 +78,8 @@
                 </div>
                 <div class="col-md-4 d-flex align-items-center">
                     <div class="form-check mt-4">
-                        <input id="Suplente" type="checkbox" class="form-check-input" formControlName="Suplente" />
-                        <label for="Suplente" class="form-check-label">Suplente</label>
+                        <input id="suplente" type="checkbox" class="form-check-input" formControlName="suplente" />
+                        <label for="suplente" class="form-check-label">Suplente</label>
                     </div>
                 </div>
             </div>
@@ -94,3 +93,9 @@
         </div>
     </div>
 </div>
+@if (nuevaNotificacion) {
+<section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+    </lib-notificaciones>
+</section>
+}

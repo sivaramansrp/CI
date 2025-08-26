@@ -9,6 +9,9 @@ import { EnlaceOperativoService } from '../../../../core/services/303/enlace-ope
 import { Router } from '@angular/router';
 import { Tramite303Query } from '../../../../core/queries/tramite303.query';
 
+/**
+ * Componente para gestionar el enlace operativo.
+ */
 @Component({
   selector: 'app-enlace-operativo',
   standalone: true,
@@ -29,6 +32,19 @@ export class EnlaceOperativoComponent implements OnInit {
   private destroyNotifier$: Subject<void> = new Subject();
   /** Estado de la solicitud del trámite */
   private tramiteEnlace?: Tramite303Store;
+  /** Enlace operativo a modificar */
+  public enlaceOperativoModificar?: EnlaceOperativo;
+  /** Modo de edición del formulario */
+  public modoEdicion = false;
+
+  /**
+   * Constructor del componente EnlaceOperativoComponent.
+   * @param fb FormBuilder para crear formularios reactivos.
+   * @param router Router para la navegación.
+   * @param servicioServer Servicio para gestionar el enlace operativo.
+   * @param tramite303State Estado del trámite 303.
+   * @param tramite303Query Consultas del trámite 303.
+   */
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -39,17 +55,29 @@ export class EnlaceOperativoComponent implements OnInit {
     this.inicializarFormulario();
   }
 
+  /**
+   * Método de inicialización del componente.
+   */
   ngOnInit(): void {
     this.tramite303Query.selectSolicitud$
       .pipe(
         map((seccionState) => {
           this.tramiteEnlace = seccionState;
+          this.listaEnlaces = seccionState.listaEnlaces;
+          if (seccionState.enlaceOperativoModificar) {
+            this.enlaceOperativoModificar = seccionState.enlaceOperativoModificar;
+            this.modoEdicion = true;
+            this.cargarFormularioModificar(this.enlaceOperativoModificar);
+          }
         }),
         takeUntil(this.destroyNotifier$)
       )
       .subscribe();
   }
 
+  /**
+   * Inicializa el formulario de enlace operativo.
+   */
   private inicializarFormulario() {
     this.FormEnlaceOperativo = this.fb.group({
       rfcBusqueda: [''],
@@ -65,6 +93,9 @@ export class EnlaceOperativoComponent implements OnInit {
     });
   }
 
+  /**
+   * Busca un enlace operativo por su RFC.
+   */
   buscarEnlaceOperativo() {
     this.formSubmitted = true;
     if (this.FormEnlaceOperativo.get('rfcBusqueda')?.valid) {
@@ -102,41 +133,122 @@ export class EnlaceOperativoComponent implements OnInit {
     }
   }
 
+  /**
+ * Acepta el enlace operativo: agrega uno nuevo o modifica uno existente.
+ */
   aceptaEnlace() {
-    this.formSubmitted = true;
-    if (this.FormEnlaceOperativo.valid) {
-      const YA_EXISTE = this.listaEnlaces.some(enlace => enlace.rfc === this.FormEnlaceOperativo.get('rfc')?.value);
+    if (!this.FormEnlaceOperativo.valid) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: 'Aviso',
+        mensaje: 'Por favor complete todos los campos requeridos.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.FormEnlaceOperativo.markAllAsTouched();
+      return;
+    }
+    this.habilitarCampos();
+    const FORM_VALUE = this.FormEnlaceOperativo.value;
+    const ENLACE: EnlaceOperativo = {
+      rfc: FORM_VALUE.rfc || '',
+      nombre: FORM_VALUE.nombre || '',
+      apellidoPaterno: FORM_VALUE.apellidoPaterno || '',
+      apellidoMaterno: FORM_VALUE.apellidoMaterno || '',
+      ciudad: FORM_VALUE.ciudad || '',
+      cargoPuesto: FORM_VALUE.cargoPuesto || '',
+      telefono: FORM_VALUE.telefono || '',
+      correoElectronico: FORM_VALUE.correoElectronico || '',
+      suplente: FORM_VALUE.suplente || false
+    };
+    if (this.modoEdicion) {
+      this.listaEnlaces = this.listaEnlaces.map(e =>
+        e.rfc === this.FormEnlaceOperativo.get('rfc')?.value ? this.FormEnlaceOperativo.value : e
+      );
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'success',
+        modo: 'action',
+        titulo: 'Éxito',
+        mensaje: 'Enlace operativo modificado correctamente.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    } else {
+      const YA_EXISTE = this.listaEnlaces.some(e => e.rfc === ENLACE.rfc);
       if (YA_EXISTE) {
         this.nuevaNotificacion = {
           tipoNotificacion: 'alert',
           categoria: 'warning',
           modo: 'action',
           titulo: 'Aviso',
-          mensaje: 'El enlace operativo ya existe',
+          mensaje: 'Ya existe un enlace operativo con el mismo RFC.',
           cerrar: true,
           txtBtnAceptar: 'Aceptar',
           txtBtnCancelar: '',
         };
-      } else {
-        if (this.listaEnlaces.length === 0) {
-          this.listaEnlaces = [];
-        }
-        
-        this.listaEnlaces.push(this.FormEnlaceOperativo.value);
-        this.FormEnlaceOperativo.reset();
-        this.inicializarFormulario();
-        this.tramite303State.setListaEnlaces(this.listaEnlaces);
-        this.router.navigate(['aga/despacho-mercancias/registro']);
+        return;
       }
-    } else {
-      this.FormEnlaceOperativo.markAllAsTouched();
+      this.listaEnlaces = [...this.listaEnlaces, ENLACE];
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'success',
+        modo: 'action',
+        titulo: 'Éxito',
+        mensaje: 'Enlace operativo agregado correctamente.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
     }
+    this.tramite303State.setListaEnlaces(this.listaEnlaces);
+    this.tramite303State.enlaceOperativoModificar(null as unknown as EnlaceOperativo);
+    this.FormEnlaceOperativo.reset();
+    this.router.navigate(['aga/despacho-mercancias/registro']);
   }
 
-  
 
+  /**
+   * Habilita los campos del formulario de enlace operativo.
+   */
+  habilitarCampos(): void {
+    this.FormEnlaceOperativo.get('rfc')?.enable();
+    this.FormEnlaceOperativo.get('nombre')?.enable();
+    this.FormEnlaceOperativo.get('apellidoPaterno')?.enable();
+    this.FormEnlaceOperativo.get('apellidoMaterno')?.enable();
+    this.FormEnlaceOperativo.get('ciudad')?.enable();
+  }
+
+  /**
+   * Cancela la operación actual y navega de regreso al registro.
+   */
   cancelar(): void {
     this.FormEnlaceOperativo.reset();
     this.router.navigate(['aga/despacho-mercancias/registro']);
+  }
+
+  /**
+   * Carga los datos del enlace operativo en el formulario para su modificación.
+   * @param enlaceOperativo El enlace operativo a cargar en el formulario.
+   */
+  cargarFormularioModificar(enlaceOperativo?: EnlaceOperativo) {
+    if (enlaceOperativo) {
+      this.FormEnlaceOperativo.patchValue({
+        rfcBusqueda: enlaceOperativo.rfc,
+        rfc: enlaceOperativo.rfc,
+        nombre: enlaceOperativo.nombre,
+        apellidoPaterno: enlaceOperativo.apellidoPaterno,
+        apellidoMaterno: enlaceOperativo.apellidoMaterno,
+        cargoPuesto: enlaceOperativo.cargoPuesto,
+        ciudad: enlaceOperativo.ciudad,
+        telefono: enlaceOperativo.telefono,
+        correoElectronico: enlaceOperativo.correoElectronico,
+        suplente: enlaceOperativo.suplente
+      });
+    }
   }
 }

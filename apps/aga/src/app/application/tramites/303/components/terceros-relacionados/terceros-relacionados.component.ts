@@ -6,11 +6,17 @@ import { Tramite303Store, Tramite303StoreService } from '../../../../core/estado
 import { CommonModule } from '@angular/common';
 import { ENLACE_OPERATIVO } from '../../../../core/enums/303/enlace-operativo.enum';
 import { EnlaceOperativo } from '../../../../core/models/303/enlace-operativo.model';
+import { Notificadores } from '../../../../core/models/303/notificadores.model';
 import { NumeroTelefonicoDirective } from '@libs/shared/data-access-user/src/tramites/directives/numeroTelefonico/numero-telefonico.directive';
+import { PERSONAS_OIR_RECIBIR_NOTIFICACIONES } from '../../../../core/enums/303/personas-oir-recibir-notificaciones.enum';
+import { RepresentanteLegal } from '../../../../core/models/303/representante-legal.model';
 import { Router } from '@angular/router';
 import { Tramite303Query } from '../../../../core/queries/tramite303.query';
 import { Tramite303Service } from '../../../../core/services/303/tramite303.service';
 
+/**
+ * Componente para gestionar los terceros relacionados.
+ */
 @Component({
   selector: 'terceros-relacionados',
   standalone: true,
@@ -35,6 +41,20 @@ export class TercerosRelacionadosComponent implements OnInit {
   public enlacesOperativosSeleccionados: EnlaceOperativo[] = [];
   /** Estado del trámite 303 consultado */
   public tramiteConsultado?: Tramite303Store;
+  /** Representante legal asociado al trámite 303 */
+  private representanteLegal?: RepresentanteLegal;
+  /** Encabezado de la tabla de personas para oír y recibir notificaciones */
+  encabezadoNotificadores = PERSONAS_OIR_RECIBIR_NOTIFICACIONES;
+  /** Lista de notificadores */
+  public notificadores: Notificadores[] = [];
+  /**
+   * Constructor del componente TercerosRelacionadosComponent.
+   * @param fb FormBuilder para crear formularios reactivos.
+   * @param servicio Servicio para gestionar el trámite 303.
+   * @param router Router para la navegación.
+   * @param tramite303State Estado del trámite 303.
+   * @param tramite303Query Consultas del trámite 303.
+   */
   constructor(
     private fb: FormBuilder,
     private servicio: Tramite303Service,
@@ -44,12 +64,48 @@ export class TercerosRelacionadosComponent implements OnInit {
   ) {
     this.crearRepresentanteLegalForm();
   }
+
+  /**
+   * Método para inicializar el formulario del representante legal.
+   */
   ngOnInit(): void {
     this.tramite303Query.selectSolicitud$
       .pipe(
         map((seccionState) => {
           this.tramiteConsultado = seccionState;
           this.enlacesOperativos = seccionState.listaEnlaces || [];
+          if (seccionState.representanteLegal) {
+            this.representanteLegal = seccionState.representanteLegal;
+            this.representanteLegalForm.patchValue({
+              rfc: this.representanteLegal.rfc,
+              nombre: this.representanteLegal.nombre,
+              primerApellido: this.representanteLegal.primerApellido,
+              segundoApellido: this.representanteLegal.segundoApellido,
+              telefono: this.representanteLegal.telefono,
+              correo: this.representanteLegal.correo
+            });
+          }
+          this.buscarNotificadores();
+        }),
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe();
+  }
+
+  /**
+   * Busca y carga los notificadores disponibles.
+   */
+  buscarNotificadores() {
+    this.servicio.consultaNotificadores()
+      .pipe(
+        map((data) => {
+          if (data) {
+            this.notificadores = data;
+          }
+        }),
+        catchError((_error) => {
+          console.error('Error al consultar catálogo IMMEX', _error);
+          return of([]);
         }),
         takeUntil(this.destroyNotifier$)
       )
@@ -107,6 +163,8 @@ export class TercerosRelacionadosComponent implements OnInit {
               txtBtnAceptar: 'Aceptar',
               txtBtnCancelar: '',
             };
+            this.representanteLegal = data;
+            this.tramite303State.setRepresentanteLegal(this.representanteLegal);
           } else {
             this.nuevaNotificacion = {
               tipoNotificacion: 'alert',
@@ -134,22 +192,96 @@ export class TercerosRelacionadosComponent implements OnInit {
   crearRepresentanteLegalForm(): void {
     this.representanteLegalForm = this.fb.group({
       rfcBusqueda: ['', [Validators.required, Validators.pattern(REGEX_RFC)]],
-      rfc: ['', { disabled: true }, [Validators.required, Validators.maxLength(13), Validators.pattern(REGEX_RFC)]],
-      nombre: ['', { disabled: true }, Validators.required],
-      primerApellido: ['', { disabled: true }, Validators.required],
-      segundoApellido: ['', { disabled: true }],
+      rfc: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(13), Validators.pattern(REGEX_RFC)]],
+      nombre: [{ value: '', disabled: true }, [Validators.required]],
+      primerApellido: [{ value: '', disabled: true }, [Validators.required]],
+      segundoApellido: [{ value: '', disabled: true }],
       telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
       correo: ['', [Validators.required, Validators.email]],
     });
   }
 
-  // Método de ayuda para saber si un campo es inválido
+
+  /** Método de ayuda para saber si un campo es inválido */
   campoInvalido(campo: string): boolean {
     const CONTROL = this.representanteLegalForm.get(campo);
     return Boolean(CONTROL && CONTROL.invalid && (CONTROL.dirty || CONTROL.touched));
   }
 
+  /**
+   * Método para aceptar el enlace operativo seleccionado.
+   */
   agregarEnlace(): void {
     this.router.navigate(['aga/despacho-mercancias/enlace-operativo']);
+  }
+
+  /**
+   * Método para modificar un enlace operativo existente.
+   * @returns void
+   */
+  modificarEnlace(): void {
+    if (this.enlacesOperativosSeleccionados.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: 'Aviso',
+        mensaje: 'Debe seleccionar al menos un enlace operativo para modificar.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+    if (this.enlacesOperativosSeleccionados.length > 1) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: 'Aviso',
+        mensaje: 'Debe seleccionar solo un enlace operativo para modificar.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+    const SELECT_ENLACE = this.enlacesOperativosSeleccionados[0];
+    this.tramite303State.enlaceOperativoModificar(SELECT_ENLACE);
+    this.router.navigate(['aga/despacho-mercancias/enlace-operativo']);
+  }
+
+  /**
+   * Método para eliminar un enlace operativo existente.
+   */
+  eliminarEnlace(): void {
+    if (this.enlacesOperativosSeleccionados.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: 'Aviso',
+        mensaje: 'Debe seleccionar al menos un enlace operativo para eliminar.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+    const RFCS_TO_DELETE = this.enlacesOperativosSeleccionados.map(enlace => enlace.rfc);
+    this.enlacesOperativos = this.enlacesOperativos.filter(enlace => !RFCS_TO_DELETE.includes(enlace.rfc));
+    this.enlacesOperativosSeleccionados = [];
+    this.tramite303State.setListaEnlaces(this.enlacesOperativos);
+
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'success',
+      modo: 'action',
+      titulo: 'Éxito',
+      mensaje: 'Enlace(s) operativo(s) eliminado(s) correctamente.',
+      cerrar: true,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
   }
 }

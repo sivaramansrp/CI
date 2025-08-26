@@ -3,6 +3,7 @@ import { AgenteAduanal } from "../../models/303/agente-aduanal.model";
 import { ControlInventario } from "../../models/303/control-inventario.model";
 import { EnlaceOperativo } from "../../models/303/enlace-operativo.model";
 import { Injectable } from "@angular/core";
+import { RepresentanteLegal } from "../../models/303/representante-legal.model";
 import { Transportista } from "@libs/shared/data-access-user/src";
 
 export interface Tramite303Store {
@@ -114,6 +115,14 @@ export interface Tramite303Store {
      * Lista de enlaces operativos asociados al trámite 303.
      */
     listaEnlaces: EnlaceOperativo[];
+    /**
+     * Representa el enlace operativo a modificar en el estado del trámite 303.
+     */
+    enlaceOperativoModificar?: EnlaceOperativo;
+    /**
+     * Representa al representante legal asociado al trámite 303.
+     */
+    representanteLegal?: RepresentanteLegal;
 }
 export function createInitialState(): Tramite303Store {
     return {
@@ -143,7 +152,9 @@ export function createInitialState(): Tramite303Store {
         checkboxManifiesto1: false,
         checkboxManifiesto2: false,
         ingresoInforme: '',
-        listaEnlaces: []
+        listaEnlaces: [],
+        enlaceOperativoModificar: undefined,
+        representanteLegal: undefined
     };
 }
 
@@ -349,6 +360,17 @@ export class Tramite303StoreService extends Store<Tramite303Store> {
     }
 
     /**
+     * Establece el enlace operativo a modificar en el estado del trámite 303.
+     * @param enlaceOperativoModificar Enlace operativo a modificar.
+     */
+    public enlaceOperativoModificar(enlaceOperativoModificar: EnlaceOperativo): void {
+        this.update((state) => ({
+            ...state,
+            enlaceOperativoModificar: enlaceOperativoModificar,
+        }));
+    }
+
+    /**
      * Establece el valor del padrón en el estado del trámite 303.
      * @param padron Valor del padrón a establecer.
      */
@@ -433,6 +455,17 @@ export class Tramite303StoreService extends Store<Tramite303Store> {
         this.update((state) => ({
             ...state,
             checkboxManifiesto2,
+        }));
+    }
+
+    /**
+     * Establece el representante legal en el estado del trámite 303.
+     * @param representanteLegal Representante legal a establecer.
+     */
+    setRepresentanteLegal(representanteLegal: RepresentanteLegal): void {
+        this.update((state) => ({
+            ...state,
+            representanteLegal,
         }));
     }
 

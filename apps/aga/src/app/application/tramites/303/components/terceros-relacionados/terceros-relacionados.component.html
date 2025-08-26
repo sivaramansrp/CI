@@ -80,11 +80,24 @@
     </div>
     <div class="d-flex justify-content-lg-end h1">
         <div class="btn-group">
-            <button class="btn btn-default" type="button">Modificar</button>
-            <button class="btn btn-default" type="button">Eliminar</button>
+            <button class="btn btn-default" type="button" (click)="modificarEnlace()">Modificar</button>
+            <button class="btn btn-default" type="button" (click)="eliminarEnlace()">Eliminar</button>
             <button type="button" class="btn btn-primary ms-2" (click)="agregarEnlace()">
                 Agregar
             </button>
         </div>
     </div>
+    <ng-titulo titulo="Personas para oír y recibir notificaciones"></ng-titulo>
+    <div class="row mt-4">
+        <div class="table-responsive">
+            <app-tabla-dinamica [configuracionTabla]="encabezadoNotificadores" [datos]="notificadores">
+            </app-tabla-dinamica>
+        </div>
+    </div>
 </div>
+@if (nuevaNotificacion) {
+<section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+    </lib-notificaciones>
+</section>
+}

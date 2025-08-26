@@ -2,10 +2,8 @@ import { AlertComponent, CatalogoSelectComponent, NotificacionesComponent, Tabla
 import { NgModule, forwardRef } from '@angular/core';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { AgentesAgenciasAduanalesComponent } from './components/agentes-agencias-aduanales/agentes-agencias-aduanales.component';
-import { AgregarMiembrosEmpresaComponent } from './components/agregar-miembros-empresa/agregar-miembros-empresa.component';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
-import { ClientesProveedoresExtrajeroComponent } from './components/clientes-proveedores-extrajero/clientes-proveedores-extrajero.component';
 import { CommonModule } from '@angular/common';
 import { ConfirmarNotificacionComponent } from './components/confirmar-notificacion/confirmar-notificacion.component';
 import { ControlInventariosComponent } from './components/control-inventarios/control-inventarios.component';
@@ -37,8 +35,6 @@ import { WizardComponent } from '@ng-mf/data-access-user';
 @NgModule({
   declarations: [
     AgentesAgenciasAduanalesComponent,
-    AgregarMiembrosEmpresaComponent,
-    ClientesProveedoresExtrajeroComponent,
     ConfirmarNotificacionComponent,
     ControlInventariosComponent,
     DatosTransportistaComponent,

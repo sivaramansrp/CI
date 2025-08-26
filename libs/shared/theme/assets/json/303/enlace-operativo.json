@@ -6,7 +6,6 @@
         "apellidoPaterno": "Gómez",
         "cargoPuesto": "",
         "ciudad": "Ciudad de México",
-        "codigoPostal": "12345",
         "telefono": "",
         "correoElectronico": "",
         "suplente": false
@@ -18,7 +17,6 @@
         "apellidoPaterno": "Martínez",
         "cargoPuesto": "",
         "ciudad": "Guadalajara",
-        "codigoPostal": "45678",
         "telefono": "",
         "correoElectronico": "",
         "suplente": false

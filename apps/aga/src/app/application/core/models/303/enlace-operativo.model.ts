@@ -27,10 +27,6 @@ export interface EnlaceOperativo {
      */
     ciudad: string
     /**
-     * Código Postal del enlace operativo.
-     */
-    codigoPostal: string
-    /**
      * Teléfono del enlace operativo.
      */
     telefono: string

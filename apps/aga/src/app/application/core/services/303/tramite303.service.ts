@@ -1,6 +1,7 @@
 import { Observable, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Notificadores } from '../../models/303/notificadores.model';
 import { RepresentanteLegal } from '../../models/303/representante-legal.model';
 
 @Injectable({
@@ -8,6 +9,10 @@ import { RepresentanteLegal } from '../../models/303/representante-legal.model';
 })
 export class Tramite303Service {
 
+  /**
+   * Constructor del servicio Tramite303Service.
+   * @param http HttpClient para realizar peticiones HTTP.
+   */
   constructor(private http: HttpClient) { }
 
   /** Método para buscar un representante legal por su RFC */
@@ -15,5 +20,13 @@ export class Tramite303Service {
     return this.http
       .get<RepresentanteLegal[]>(`/assets/json/303/representante-legal.json`)
       .pipe(map(list => list.find(t => t.rfc === rfc)));
+  }
+
+  /**
+   * Consulta los notificadores.
+   * @returns Observable con la lista de notificadores.
+   */
+  consultaNotificadores(): Observable<Notificadores[]> {
+    return this.http.get<Notificadores[]>(`/assets/json/303/notificadores.json`);
   }
 }
