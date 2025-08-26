@@ -48,11 +48,20 @@ export class PantallasComponent implements OnInit {
    */
   infoError = 'alert-danger';
 
+  /**
+   * Constructor del componente PantallasComponent.
+   * @param prosecService Servicio para gestionar el estado de baja.
+   */
   constructor( private prosecService: ProsecService ) { }
 
+  /**
+   * Método de inicialización del componente.
+   * Suscribe al observable isBaja$ para actualizar el estado local.
+   */
   ngOnInit() {
     this.prosecService.isBaja$.subscribe(val => this.isBaja = val);
   }
+  
   /**
    * Datos utilizados para el control del wizard.
    * @type {DatosPasos}

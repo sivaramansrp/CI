@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 
 /**
- * Servicio para obtener los datos de la aplicación PROSEC.
+ * Servicio para obtener y gestionar los datos de la aplicación PROSEC.
  * @class ProsecService
  */
 @Injectable({
@@ -15,13 +15,21 @@ import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 })
 export class ProsecService {
 
+  /**
+   * Variable reactiva para indicar si es baja.
+   * @type {BehaviorSubject<boolean>}
+   */
   private isBajaSubject = new BehaviorSubject<boolean>(true);
 
+  /**
+   * Observable para consultar el estado de baja.
+   * @type {Observable<boolean>}
+   */
   isBaja$ = this.isBajaSubject.asObservable();
 
   /**
-   * Constructor del servicio.
-   * @param http - Servicio HTTP para realizar peticiones.
+   * Constructor del servicio ProsecService.
+   * @param http - Servicio HTTP para realizar peticiones a archivos JSON.
    */
   constructor(
     private http: HttpClient
