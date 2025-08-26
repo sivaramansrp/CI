@@ -1,24 +1,37 @@
-import { CONFIGURATION_TABLA_DESTINATARIO, MENSAJEDEALERTA } from '../../constantes/certificado-zoosanitario.enum';
-import { Catalogo, ConfiguracionColumna, ConsultaioQuery, ConsultaioState, TablaSeleccion, REGEX_SOLO_DIGITOS, REGEX_ALFANUMERICO_CON_ESPACIOS } from '@ng-mf/data-access-user';
-import { Component, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { Destinatario, DestinatarioRespuesta } from '../../models/pantallas-captura.model';
-import { CapturaSolicitudeService } from '../../services/captura-solicitud.service';
-import { CatalogosSelect } from '@ng-mf/data-access-user';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { MediodetransporteService } from '../../services/medio-de-transporte.service';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 import { Modal } from 'bootstrap';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ReplaySubject } from 'rxjs';
+
+import { ReplaySubject, Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
+
+import {
+  Catalogo,
+  CatalogosSelect,
+  ConfiguracionColumna,
+  ConsultaioQuery,
+  ConsultaioState,
+  REGEX_ALFANUMERICO_CON_ESPACIOS,
+  REGEX_SOLO_DIGITOS,
+  TablaSeleccion,
+  ValidacionesFormularioService
+} from '@ng-mf/data-access-user';
+
+import {
+  CONFIGURATION_TABLA_DESTINATARIO,
+  MENSAJEDEALERTA
+} from '../../constantes/certificado-zoosanitario.enum';
+
+import { Destinatario, DestinatarioRespuesta } from '../../models/pantallas-captura.model';
+
+import { CapturaSolicitudeService } from '../../services/captura-solicitud.service';
+import { MediodetransporteService } from '../../services/medio-de-transporte.service';
+
 import { Solicitud220402Query } from '../../estados/queries/tramites220402.query';
-import { Solicitud220402State } from '../../estados/tramites/tramites220402.store';
-import { Solicitud220402Store } from '../../estados/tramites/tramites220402.store';
-import { Subject } from 'rxjs';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
+import { Solicitud220402State, Solicitud220402Store } from '../../estados/tramites/tramites220402.store';
+
 
 
 @Component({
@@ -379,7 +392,7 @@ export class AgregarDestinatarioComponent implements OnDestroy, OnInit {
    * 
    * @returns {void}
    */
-  public mostrarErrores() {
+  public mostrarErrores():void {
     this.destinatarioForm?.markAllAsTouched?.();
     this.cdr.detectChanges();
   }
