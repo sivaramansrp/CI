@@ -109,6 +109,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
+
           this.inicializarEstadoFormulario();
         })
       )
@@ -120,16 +121,58 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Inicializa el formulario reactivo y carga los datos necesarios para la solicitud.
    */
   ngOnInit(): void {
-    this.tramite221603Query.selectSolicitud$
+    this.inicializarEstadoFormulario();
+  }
+
+   /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {       
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }  
+  }
+
+/**
+ * @method
+ * @name guardarDatosFormulario
+ * @description
+ * Inicializa los formularios y obtiene los datos de la tabla. 
+ * Dependiendo del modo de solo lectura (`esFormularioSoloLectura`), 
+ * deshabilita o habilita todos los formularios del componente.
+ * Si el formulario está en modo solo lectura, todos los formularios se deshabilitan para evitar modificaciones.
+ * Si no está en modo solo lectura, todos los formularios se habilitan para permitir la edición.
+ * 
+ * @returns {void}
+ */  
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.datosSolicitudForm.get('guia')?.disable();
+        this.datosSolicitudForm.get('justificacionDescription')?.disable();
+      } else {
+        this.datosSolicitudForm.get('guia')?.enable();
+        this.datosSolicitudForm.get('justificacionDescription')?.enable();
+      } 
+  }
+
+  /**
+   * Inicializa el formulario reactivo con los valores actuales del estado de la solicitud.
+   *
+   * Carga los datos de la solicitud, como justificación, aduana, oficina, punto, y régimen.
+   */
+  inicializarFormulario(): void {
+    
+     this.tramite221603Query.selectSolicitud$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((state: Solicitud221603State) => {
         this.solicitudState = state;
       });
 
-    this.inicializarFormulario();
-    this.inicializarEstadoFormulario();
-
-    this.sanidadService
+       this.sanidadService
       .obtenerFormularioDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp: FormularioDatos) => {
@@ -138,24 +181,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       });
     this.sanidadService.inicializaCatalogosRegimen();
     this.sanidadService.inicializaDatosMercancia();
-  }
 
-  inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-       this.datosSolicitudForm.get('guia')?.disable();
-       this.datosSolicitudForm.get('justificacionDescription')?.disable();
-    } else {
-      this.datosSolicitudForm.get('guia')?.enable();
-      this.datosSolicitudForm.get('justificacionDescription')?.enable();
-    }
-  }
 
-  /**
-   * Inicializa el formulario reactivo con los valores actuales del estado de la solicitud.
-   *
-   * Carga los datos de la solicitud, como justificación, aduana, oficina, punto, y régimen.
-   */
-  private inicializarFormulario(): void {
     this.datosSolicitudForm = this.formBuilder.group({
       justificacionDescription: [this.solicitudState.justificacionDescription, Validators.required],
       aduana: [this.solicitudState.aduana, Validators.required],

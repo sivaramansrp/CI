@@ -191,6 +191,14 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
     private desplazarseHaciaArribaService: DesplazarseHaciaArribaService
   ) {
 
+    this.consultaioStore.establecerConsultaio(
+      '221603',
+      'this.guardarDatos?.parameter',
+      'agricultura',
+      ' this.guardarDatos?.folioTramite',
+      'this.guardarDatos?.tipoDeTramite',
+      'this.guardarDatos?.estadoDeTramite',
+      true, false, true);
     /**
      * Suscripción al estado de consulta.
      * Guarda los datos actuales del estado en `guardarDatos`.

@@ -33,7 +33,7 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="clave">Clave de referencia:</label>
+            <label class="form-label" for="clave">Clave de referencia*:</label>
             <input
               class="form-control"
               id="clave"
@@ -47,7 +47,7 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="dependencia"
-              >Cadena de la dependencia:</label
+              >Cadena de la dependencia*:</label
             >
             <input
               class="form-control"
@@ -82,7 +82,7 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="llave">Llave de pago:</label>
+            <label class="form-label" for="llave">Llave de pago*:</label>
             <input
               class="form-control"
               id="llave"
@@ -95,20 +95,18 @@
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="fecha">Fecha de pago:</label>
-            <input
-              class="form-control"
-              id="fecha"
-              type="date"
-              formControlName="fecha"
-              (change)="setValoresStore('fecha', 'setFecha')"
-            />
+             <input-fecha
+                [datos]="INPUT_FECHA_CONFIG" name="fecha"
+                [setFecha]="pagoDerechosForm.get('fecha')?.value"
+                (valorCambiado)="setValoresStore('fecha', 'setFecha')"
+                [isDisabled]="esFormularioSoloLectura"
+              ></input-fecha>
           </div>
         </div>
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="importe">Importe de pago:</label>
+            <label class="form-label" for="importe">Importe de pago*:</label>
             <input
               class="form-control"
               id="importe"
@@ -121,6 +119,19 @@
           </div>
         </div>
       </div>
+
+      <div class="row mt-5">
+      <div class="col-md-12">
+        <div class="pull-right">
+          <button type="button" class="btn btn-primary ms-2" 
+            [disabled]="esFormularioSoloLectura ? true : false"
+            (click)="borrarDatosPago()">
+            Borrar datos del pago
+          </button>
+        </div>
+      </div>
+    </div>
+
     </div>
   </form>
 </div>

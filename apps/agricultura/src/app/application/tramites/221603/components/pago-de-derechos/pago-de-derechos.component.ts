@@ -4,6 +4,7 @@ import { ConsultaioQuery,
 import {
   EXENTO_DE_RADIO_BOTONS,
   FormularioDatos,
+  INPUT_FECHA_CONFIG,
 } from '../../enum/sanidad.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
@@ -66,6 +67,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura: boolean = false;
 
+    /**
+   * Constante para configurar el input de fecha.
+   * Define las propiedades del campo de entrada de fecha.
+   */
+  INPUT_FECHA_CONFIG = INPUT_FECHA_CONFIG;
+
   /**
    * Constructor del componente. Inicializa las dependencias necesarias y prepara el formulario reactivo.
    *
@@ -86,7 +93,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly || true;
+          this.esFormularioSoloLectura = seccionState.readonly;
           this.inicializarEstadoFormulario();
         })
       )
@@ -98,14 +105,64 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Inicializa el formulario reactivo con los valores actuales de la solicitud y configura los catálogos necesarios.
    */
   ngOnInit(): void {
-    this.tramite221603Query.selectSolicitud$
+    this.inicializarEstadoFormulario();
+
+   
+  }
+
+  /**
+   * Inicializa el estado del formulario según si está en modo solo lectura o editable.
+   * Si el formulario es solo lectura, deshabilita los campos correspondientes.
+   * Si es editable, habilita los campos necesarios.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+ * @method
+ * @name guardarDatosFormulario
+ * @description
+ * Inicializa los formularios y obtiene los datos de la tabla. 
+ * Dependiendo del modo de solo lectura (`esFormularioSoloLectura`), 
+ * deshabilita o habilita todos los formularios del componente.
+ * Si el formulario está en modo solo lectura, todos los formularios se deshabilitan para evitar modificaciones.
+ * Si no está en modo solo lectura, todos los formularios se habilitan para permitir la edición.
+ * 
+ * @returns {void}
+ */  
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+      this.disableBanco = true;
+      // this.pagoDerechosForm.get('fecha')?.disable();
+      this.pagoDerechosForm.get('llave')?.disable();
+      this.pagoDerechosForm.get('exentoDePago')?.disable();
+      } else {
+      this.disableBanco = true;
+      // this.pagoDerechosForm.get('fecha')?.enable();
+      this.pagoDerechosForm.get('llave')?.enable();
+      this.pagoDerechosForm.get('exentoDePago')?.enable();
+      } 
+  }
+
+
+  /**
+   * Inicializa el formulario reactivo con los valores actuales de la solicitud.
+   * Configura los campos relacionados con el pago de derechos, como clave, dependencia, banco, llave, fecha e importe.
+   */
+  private inicializarFormulario(): void {
+     this.tramite221603Query.selectSolicitud$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((state: Solicitud221603State) => {
         this.solicitudState = state;
       });
 
     this.sanidadService.inicializaPagoDeDerechosDatosCatalogos();
-    this.inicializarFormulario();
 
 this.disableJustificacion = (this.solicitudState?.exento ?? '') !== '1';
 this.disableBanco = (this.solicitudState?.exento ?? '') === '1';
@@ -120,33 +177,6 @@ this.disableBanco = (this.solicitudState?.exento ?? '') === '1';
           this.limpiarFormularioYDeshabilitarControles();
         }
       });
-    this.inicializarEstadoFormulario();
-  }
-
-  /**
-   * Inicializa el estado del formulario según si está en modo solo lectura o editable.
-   * Si el formulario es solo lectura, deshabilita los campos correspondientes.
-   * Si es editable, habilita los campos necesarios.
-   */
-  inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.disableBanco = true;
-      this.pagoDerechosForm.get('fecha')?.disable();
-      this.pagoDerechosForm.get('llave')?.disable();
-      this.pagoDerechosForm.get('exentoDePago')?.disable();
-    } else {
-      this.disableBanco = true;
-      this.pagoDerechosForm.get('fecha')?.enable();
-      this.pagoDerechosForm.get('llave')?.enable();
-      this.pagoDerechosForm.get('exentoDePago')?.enable();
-    }
-  }
-
-  /**
-   * Inicializa el formulario reactivo con los valores actuales de la solicitud.
-   * Configura los campos relacionados con el pago de derechos, como clave, dependencia, banco, llave, fecha e importe.
-   */
-  private inicializarFormulario(): void {
     this.pagoDerechosForm = this.formBuilder.group({
       exentoDePago: [this.solicitudState.exento, Validators.required],
       justificacion: [this.solicitudState.justificacion, Validators.required],
@@ -219,7 +249,44 @@ this.disableBanco = (this.solicitudState?.exento ?? '') === '1';
    */
   setValoresStore(campo: string, metodoNombre: keyof Tramite221603Store): void {
     const VALOR = this.pagoDerechosForm.get(campo)?.value;
-    (this.tramite221603Store[metodoNombre] as (value: unknown) => void)(VALOR);
+    (this.tramite221603Store[metodoNombre] as (value: unknown) => void)(VALOR);    
+  }
+
+    /**
+   * Método para borrar todos los datos del formulario de pago de derechos.
+   * Resetea los valores del formulario y actualiza el store con valores vacíos,
+   * manteniendo los campos deshabilitados que no deben ser editables.
+   */
+  borrarDatosPago(): void {
+    // Reset form values
+    this.pagoDerechosForm.patchValue({
+      clave: this.solicitudState.clave, // Keep default value
+      dependencia: this.solicitudState.dependencia, // Keep default value
+      banco: '',
+      llave: '',
+      fecha: '',
+      importe: this.solicitudState.importe // Keep default value
+    });
+
+    // Clear form validation errors
+    this.pagoDerechosForm.markAsUntouched();
+    this.pagoDerechosForm.markAsPristine();
+
+    // // Reset future date validation flag
+    // this.fechaFuturaSeleccionada = false;
+
+    // Update store with cleared values
+    const CLEARED_PAGO_FORM: Solicitud221603State = {
+      ...this.solicitudState,
+      clave: this.solicitudState.clave,
+      dependencia: this.solicitudState.dependencia,
+      banco: '',
+      llave: '',
+      fecha: '',
+      importe: this.solicitudState.importe
+    };
+
+    this.tramite221603Store.update(CLEARED_PAGO_FORM);
   }
 
   /**

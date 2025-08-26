@@ -105,13 +105,8 @@
     <div class="col-md-4">
       <div class="form-group">
         <label class="form-label" for="guia">Número de guía:</label>
-        <input
-          class="form-control"
-          id="guia"
-          formControlName="guia"
-          type="number"
-          (change)="setValoresStore('guia', 'setGuia')"
-        />
+        <input class="form-control" id="guia" formControlName="guia" type="text" maxlength="50" size="29"
+            (change)="setValoresStore('guia', 'setGuia')"/>
       </div>
     </div>
 
@@ -120,6 +115,8 @@
         <app-catalogo-select
           [catalogo]="sanidadService.regimen"
           [label]="'Régimen'"
+          [tooltipQuestionCircleText]="'Régimen al que se destinará la mercancía'" 
+          [tooltipQuestionCircle]="true"
           [required]="true"
           name="regimen"
           formControlName="regimen"
