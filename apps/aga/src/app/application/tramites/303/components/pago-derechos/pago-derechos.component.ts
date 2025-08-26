@@ -33,7 +33,7 @@ export class PagoDerechosComponent implements OnInit {
    */
   crearPagoDerechosForm(): void {
     this.pagoDerechos = this.fb.group({
-      claveReferencia: ['', Validators.required, { disabled: true }],
+      claveReferencia: [{ value: '', disabled: true }],
       cadenaDependencia: [{ value: '', disabled: true }],
       banco: [''],
       llavePago: [''],
@@ -48,6 +48,7 @@ export class PagoDerechosComponent implements OnInit {
    */
   ngOnInit(): void {
     this.catalogoBancos();
+    this.obtenerDatosPago();
   }
 
   /**
