@@ -1,12 +1,13 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from "@angular/core";
 
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from "@angular/forms";
-import { ANTECEDENTES_DICTAMEN } from "../../../core/constants/constantes-generales";
 import { CommonModule } from "@angular/common";
 import { IniciarDictamenResponse } from "../../../core/models/130118/iniciar-dictamen-response.model";
 import { SentidosDisponiblesResponse } from "../../../core/models/130118/sentidos-disponibles.model";
 import { ValidacionesFormularioService } from "../../../core/services/shared/validaciones-formulario/validaciones-formulario.service";
 
+import { CriteriosResponse } from "../../../core/models/130118/criterios-response.model";
+import { DictamenForm } from "../../../core/models/130118/dictamen-form.model";
 import { IniciarAutorizacionResponse } from "../../../core/models/130118/iniciar-autorizar-dictamen-response.model";
 
 
@@ -58,7 +59,7 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
    * @property {EventEmitter<{ events: string, datos: unknown }>} enviarEvento
    * @description Evento emitido al guardar o cancelar el dictamen, enviando el tipo de evento y los datos asociados.
    */
-  @Output() public enviarEvento = new EventEmitter<{ events: string, datos: unknown }>();
+  @Output() public enviarEvento = new EventEmitter<{ events: string, datos: DictamenForm }>();
   /**
    * @property {string} botonDeCancelar
    * @description Texto personalizado para el botón de cancelar.
@@ -97,7 +98,7 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
    * @description Texto que representa los antecedentes del dictamen, utilizado para mostrar información relevante.
    * Por defecto, se establece en una constante definida en las constantes generales.
    */
-  @Input() public conformidad: string = ANTECEDENTES_DICTAMEN;
+  @Input() public conformidad!: CriteriosResponse;
 
   /**
    * @property {string} botonGuardar
@@ -146,13 +147,13 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
         value: 'Fracción I numeral 2 del Anexo 2.2.2 del Acuerdo por el que la Secretaría de Economía emite reglas y criterios de carácter general en materia de Comercio Exterior, publicado en el Diario Oficial de la Federación el 6 de julio de 2007 y sus modificaciones.',
         disabled: true
       }],
-      fechaInicioVigenciaAutorizada: [''],
-      fechaFinVigenciaAutorizada: ['']
+      fechaInicioVigenciaAutorizada: [{ value: '', disabled: true }],
+      fechaFinVigenciaAutorizada: [{ value: '', disabled: true }]
     });
 
     // Si hay antecedentes de conformidad, se establece en el campo de solo lectura
     if (this.conformidad) {
-      this.dictamenForm.get('antecedentesReadonly')?.setValue(this.conformidad);
+      this.dictamenForm.get('antecedentesReadonly')?.setValue(this.conformidad.descripcion_criterio);
     }
 
     // Si los antecedentes no son editables, se elimina el control de antecedentesEditables
@@ -247,35 +248,23 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
    */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['conformidad'] && this.dictamenForm) {
-      this.dictamenForm.get('antecedentesReadonly')?.setValue(this.conformidad);
+      this.dictamenForm.get('antecedentesReadonly')?.setValue(this.conformidad.descripcion_criterio);
+      this.dictamenForm.patchValue({
+        fechaInicioVigenciaAutorizada: this.conformidad.fecha_inicio,
+        fechaFinVigenciaAutorizada: this.conformidad.fecha_sugerida,
+      });
     }
     if (changes['dataIniciarDictamen'] && changes['dataIniciarDictamen'].currentValue) {
-      const FECHA_INICIO = this.dataIniciarDictamen.fecha_inicio_vigencia
-        ? this.dataIniciarDictamen.fecha_inicio_vigencia.split(' ')[0]
-        : '';
-      const FECHAFIN = this.dataIniciarDictamen.fecha_fin_vigencia
-        ? this.dataIniciarDictamen.fecha_fin_vigencia.split(' ')[0]
-        : '';
       this.dictamenForm.patchValue({
         cumplimiento: this.dataIniciarDictamen.ide_sent_dictamen,
         mensajeDictamen: this.dataIniciarDictamen.justificacion,
-        fechaInicioVigenciaAutorizada: FECHA_INICIO,
-        fechaFinVigenciaAutorizada: FECHAFIN
       });
     }
 
      if (changes['dataIniciarDictamenAutorizar'] && changes['dataIniciarDictamenAutorizar'].currentValue) {
-      const FECHA_INICIO = this.dataIniciarDictamenAutorizar.fecha_inicio_vigencia
-        ? this.dataIniciarDictamenAutorizar.fecha_inicio_vigencia.split(' ')[0]
-        : '';
-      const FECHAFIN = this.dataIniciarDictamenAutorizar.fecha_fin_vigencia
-        ? this.dataIniciarDictamenAutorizar.fecha_fin_vigencia.split(' ')[0]
-        : '';
       this.dictamenForm.patchValue({
         cumplimiento: this.dataIniciarDictamenAutorizar.ide_sent_dictamen,
-        mensajeDictamen: this.dataIniciarDictamenAutorizar.justificacion,
-        fechaInicioVigenciaAutorizada: FECHA_INICIO,
-        fechaFinVigenciaAutorizada: FECHAFIN
+        mensajeDictamen: this.dataIniciarDictamenAutorizar.justificacion
       });
     }
   }
@@ -306,7 +295,7 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
     this.dictamenForm.markAllAsTouched();
     if (this.dictamenForm.valid) {
       this.enviarEvento.emit({
-        datos: this.dictamenForm.value,
+        datos: this.dictamenForm.value as DictamenForm,
         events: "firmar"
       });
     }
@@ -321,7 +310,7 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
     this.dictamenForm.markAllAsTouched();
     if (this.dictamenForm.valid) {
       this.enviarEvento.emit({
-        datos: this.dictamenForm.value,
+        datos: this.dictamenForm.value as DictamenForm,
         events: "guardar"
       });
     }
@@ -333,6 +322,6 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
    * @returns {void}
    */
   cancelar(): void {
-    this.enviarEvento.emit({ events: "cancelar", datos: null });
+    this.enviarEvento.emit({ events: "cancelar", datos: {} as DictamenForm });
   }
 }
