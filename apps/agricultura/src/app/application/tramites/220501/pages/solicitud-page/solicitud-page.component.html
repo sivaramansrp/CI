@@ -1,9 +1,13 @@
 <div class="page">
   <div class="container">
     <div class="row">
-      <div class="col-md-6">
-        <h2>Captura del certificado zoosanitario para importación</h2>
+      <div class="col-md-8">
+        <h2>Certificado Zoosanitario para Importación</h2>
       </div>
+
+      @if(!esValido) {
+        <ng-alert [CONTENIDO]="ALERTA" [CUSTOMECLASS]="infoError"></ng-alert>
+      }
 
       <app-wizard [listaPasos]="pasos"></app-wizard>
 

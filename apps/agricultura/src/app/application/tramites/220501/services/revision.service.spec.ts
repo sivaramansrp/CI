@@ -228,7 +228,6 @@ describe('RevisionService', () => {
       llavePago: '',
       importePago: '',
       fetchapago: '',
-      mostrarAgregarMercancia: false,
       fraccionArancelaria: '',
       descripcionFraccion: '',
       nico: '',
@@ -276,7 +275,7 @@ describe('RevisionService', () => {
         "nombre": "Miriam Lopez solis",
         "telefono": "52-2298456543",
         "correoElectronico": "miriam@gmail.com",
-        "domoicilio": "este es un domicilio address",
+        "domicilio": "este es un domicilio address",
         "pais": "ANGOLA(REPUBLIC DE)"
       }
     ]
