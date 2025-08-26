@@ -15,6 +15,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import { Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { FirmaRequest } from '../core/models/confirmar-notificacion/request/firma-request.model';
+import { PasoNotificacion } from '../core/enum/enum-130118';
 
 /**
  * @component ConfirmarNotificacionComponent
@@ -52,7 +53,12 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
    *
    * @type {number}
    */
-  public indiceDePaso = 1;
+  public indiceDePaso = PasoNotificacion.CONFIRMAR_NOTIFICACION;
+
+  /**
+   * Enum para pasos de la notificación
+   */
+  PasoNotificacion = PasoNotificacion;
 
   /**
   * Folio del trámite que se está procesando.
@@ -146,7 +152,7 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
    */
   alContinuar(): void {
     this.indiceDePaso = this.indiceDePaso + 1;
-    if (this.indiceDePaso === 2) {
+    if (this.indiceDePaso === this.PasoNotificacion.FIRMAR) {
       this.obtenerCadenaOriginal();
     }
   }
@@ -218,7 +224,7 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
             this.folio,
             firma
           );
-          this.indiceDePaso = 3;
+          this.indiceDePaso = this.PasoNotificacion.ACUSES;
         }),
         catchError((error) => {
           console.error('Error en el proceso de firma:', error);
@@ -335,6 +341,12 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
     });
   }
 
+
+  /** 
+   * Formatea una fecha a string en formato YYYY-MM-DD HH:MM:SS
+   * @param fecha - Fecha a formatear (string o objeto Date)
+   * @returns String con la fecha formateada
+   */
   static formatFecha(fecha: string | Date): string {
     const DATE_OBJ = new Date(fecha);
     const PAD = (n: number): string => n.toString().padStart(2, '0');

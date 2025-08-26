@@ -1,16 +1,16 @@
 <div class="container">
-  @if(indiceDePaso === 1) {
+  @if(indiceDePaso === PasoNotificacion.CONFIRMAR_NOTIFICACION) {
   <div class="row">
     <ng-titulo [titulo]="'Confirmar notificación 130118'"></ng-titulo>
   </div>
   <app-detalles-folio *ngIf="notificacionData" [folioTramite]="notificacionData.num_folio_tramite"
     [tipoSolicitud]="notificacionData.tipo_notificacion">
   </app-detalles-folio>
-  } @if(indiceDePaso === 3){
+  } @if(indiceDePaso === PasoNotificacion.ACUSES){
 
-  }@else if(indiceDePaso ===1) {
+  }@else if(indiceDePaso === PasoNotificacion.CONFIRMAR_NOTIFICACION) {
   <app-notificacion-acto-administrativo [datosNotificacion]="notificacionData"></app-notificacion-acto-administrativo>
-  } @if(indiceDePaso === 2) {
+  } @if(indiceDePaso === PasoNotificacion.FIRMAR) {
   <div class="row mt-5 mb-5">
     <ng-titulo [titulo]="'Firmar'"></ng-titulo>
     <div class="col-md-6">
@@ -20,7 +20,7 @@
   </div>
 
 
-} @if(indiceDePaso === 1) {
+} @if(indiceDePaso === PasoNotificacion.CONFIRMAR_NOTIFICACION) {
 <div class="row mt-5 mb-5">
   <div class="col-md-12">
     <div class="pull-right">
@@ -30,7 +30,7 @@
     </div>
   </div>
 </div>
-} @else if(indiceDePaso === 3) {
+} @else if(indiceDePaso === PasoNotificacion.ACUSES) {
 <div class="row mt-5 mb-5">
   <div class="col-md-12">
     <div class="pull-right">

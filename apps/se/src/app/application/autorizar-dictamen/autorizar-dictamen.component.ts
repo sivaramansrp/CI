@@ -37,6 +37,8 @@ import { IniciarAutorizacionResponse } from '@libs/shared/data-access-user/src/c
 
 import { BodyTablaResolucion, HeaderTablaResolucion } from '@libs/shared/data-access-user/src/core/models/shared/consulta-generica.model';
 import { CONSULTA_RESOLUCIONES } from '@libs/shared/data-access-user/src/core/enums/consulta-generica.enum';
+import { CodigoRespuesta } from '../core/enum/enum-130118';
+import { CriteriosResponse } from '@libs/shared/data-access-user/src/core/models/130118/criterios-response.model';
 import { FirmaAutorizarDictamenRequest } from '../core/models/autorizar-requerimiento/request/firma-autorizar-request.model';
 import { MostrarFirmaRequest } from '../core/models/autorizar-requerimiento/request/mostrar-firmar-request.model';
 import { MostrarFirmarResponse } from '../core/models/autorizar-requerimiento/response/mostrar-firmar-response.model';
@@ -80,7 +82,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
    * @description Indica si se debe mostrar la sección de firma electrónica.
   */
   isFirma: boolean = false;
-  
+
   /**
    * @property {boolean} isDocumento
    * @description Indica si se debe mostrar la sección de firma electrónica.
@@ -128,7 +130,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
  * @property {string} conformidadDictamen
  * @description Texto que representa la conformidad del dictamen, utilizado en el formulario de generación de dictamen.
  */
-  conformidadDictamen: string = '';
+  conformidadDictamen!: CriteriosResponse;
 
   /**
  * Cadena original generada a partir de los datos del trámite.
@@ -237,7 +239,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
    * @type {HeaderTablaResolucion[]}
   */
   readonly encabezadoTablaResolucion: HeaderTablaResolucion[] = CONSULTA_RESOLUCIONES.encabezadoTablaResolucion;
-  
+
   /**
    * Datos de la tabla de resoluciones.
    * Contiene los registros que se mostrarán en la tabla de resoluciones.
@@ -250,7 +252,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
    * @type {FormGroup}
   */
   public observacionForm!: FormGroup;
-  
+
 
   /**
    * @constructor
@@ -272,7 +274,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
     private tabsSolicitudServiceTsService: TabsSolicitudServiceTsService,
     private guardarService: GuardarDictamenService,
     private autorizarDictamenService: AutorizarDictamenService,
-    private acuseDetalleService : AcuseDetalleService,
+    private acuseDetalleService: AcuseDetalleService,
     private fb: FormBuilder,
   ) {
 
@@ -380,7 +382,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
     this.tabsSolicitudServiceTsService.getTabs(this.tramite, this.guardarDatos.id_solicitud)
       .subscribe({
         next: (response) => {
-          if (response.codigo === '00') {
+          if (response.codigo === CodigoRespuesta.EXITO) {
             this.tabs = response.datos ?? {} as TabsResponse;
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -475,7 +477,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
     this.tabsSolicitudServiceTsService.getDocumentosSolicitud(this.tramite, this.guardarDatos.id_solicitud)
       .subscribe({
         next: (response) => {
-          if (response.codigo === '00') {
+          if (response.codigo === CodigoRespuesta.EXITO) {
             this.documentosSolicitud = response.datos ?? [];
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -525,7 +527,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
     this.tabsSolicitudServiceTsService.getRequerimientos(this.tramite, this.guardarDatos.folioTramite)
       .subscribe({
         next: (response) => {
-          if (response.codigo === '00') {
+          if (response.codigo === CodigoRespuesta.EXITO) {
             this.requerimientosSolicitud = response.datos ?? [];
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -575,7 +577,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
     this.tabsSolicitudServiceTsService.getDictamenes(this.tramite, this.guardarDatos.folioTramite)
       .subscribe({
         next: (response) => {
-          if (response.codigo === '00') {
+          if (response.codigo === CodigoRespuesta.EXITO) {
             this.dictamenesSolicitud = response.datos ?? [];
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -625,7 +627,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
     this.tabsSolicitudServiceTsService.getTareasSolicitud(this.tramite, this.guardarDatos.folioTramite)
       .subscribe({
         next: (response) => {
-          if (response.codigo === '00') {
+          if (response.codigo === CodigoRespuesta.EXITO) {
             this.tareasSolicitud = response.datos ?? [];
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -672,7 +674,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
     this.tabsSolicitudServiceTsService.getOpiniones(this.tramite, this.guardarDatos.folioTramite)
       .subscribe({
         next: (response) => {
-          if (response.codigo === '00') {
+          if (response.codigo === CodigoRespuesta.EXITO) {
             this.opinion = response.datos ?? [];
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -720,7 +722,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
     this.tabsSolicitudServiceTsService.getAcusesResolucion(this.tramite, this.guardarDatos.folioTramite)
       .subscribe({
         next: (response) => {
-          if (response.codigo === '00') {
+          if (response.codigo === CodigoRespuesta.EXITO) {
             this.acusesResolucion = response.datos ?? {} as AcusesResolucionResponse;
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -765,7 +767,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
     this.tabsSolicitudServiceTsService.getEnvioDigital(this.tramite, this.guardarDatos.folioTramite)
       .subscribe({
         next: (response) => {
-          if (response.codigo === '00') {
+          if (response.codigo === CodigoRespuesta.EXITO) {
             this.envioDigital = response.datos ?? {} as EnvioDigitalResponse;
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -802,11 +804,11 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
   }
 
 
-/**
- * * @method firmarMostrarAutorizarDictamen
- * * @description Prepara y envía una solicitud para mostrar la interfaz de firma electrónica
- * * para autorizar un dictamen.
- */
+  /**
+   * * @method firmarMostrarAutorizarDictamen
+   * * @description Prepara y envía una solicitud para mostrar la interfaz de firma electrónica
+   * * para autorizar un dictamen.
+   */
   firmarMostrarAutorizarDictamen(): void {
 
     const PAYLOAD: MostrarFirmaRequest = {
@@ -824,7 +826,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
     this.autorizarDictamenService.postFirmarMostrar(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
       .subscribe({
         next: (resp) => {
-          if (resp.codigo === '00') {
+          if (resp.codigo === CodigoRespuesta.EXITO) {
             this.mostrarFirmarData = resp.datos ?? {} as MostrarFirmarResponse;
             this.cadenaOriginal = resp.datos?.cadena_original;
             this.isDictamen = false;
@@ -876,7 +878,6 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
      */
   firmaAutorizarDictamen(firma: string): void {
     if (!this.cadenaOriginal || !this.datosFirmaReales) {
-      console.error('Faltan datos para completar la firma');
       this.nuevaNotificacion = {
         tipoNotificacion: 'toastr',
         categoria: CategoriaMensaje.ERROR,
@@ -926,7 +927,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
               txtBtnCancelar: '',
             };
 
-          } else if (firmaResponse.codigo === '00') {
+          } else if (firmaResponse.codigo === CodigoRespuesta.EXITO) {
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
               categoria: CategoriaMensaje.EXITO,
@@ -940,17 +941,16 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
             this.isDictamen = false;
             this.isFirma = false;
             this.isDocumento = false;
-            if (this.dataAutorizarDictamen.sentido_dictamen === "Aceptado"){
-                this.postOficioAutorizacion();
+            if (this.dataAutorizarDictamen.sentido_dictamen === "Aceptado") {
+              this.postOficioAutorizacion();
             } else {
               this.postOficioRechazado();
             }
-           
+
           }
 
         }),
         catchError((error) => {
-          console.error('Error en el proceso de firma:', error);
           if (!this.nuevaNotificacion) {
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
@@ -981,18 +981,18 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
  */
   postOficioAutorizacion(): void {
     this.autorizarDictamenService.postOficioAutorizacion(this.tramite, Number(this.guardarDatos.id_solicitud))
-    .subscribe({
-      next: (resp) => {
-        if(resp.codigo === "00" && resp.datos){
-          this.datosTablaResolucion = [{
-            id: 1,
-            idDocumento: '1',
-            documento: resp.datos.nombre_archivo ?? '',
-            urlPdf: resp.datos.llave_archivo ?? ''
-          }];
-          this.isDocumento = true;
-        }else{
-           window.scrollTo({ top: 0, behavior: 'smooth' });
+      .subscribe({
+        next: (resp) => {
+          if (resp.codigo === "00" && resp.datos) {
+            this.datosTablaResolucion = [{
+              id: 1,
+              idDocumento: '1',
+              documento: resp.datos.nombre_archivo ?? '',
+              urlPdf: resp.datos.llave_archivo ?? ''
+            }];
+            this.isDocumento = true;
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
               categoria: CategoriaMensaje.ERROR,
@@ -1007,21 +1007,21 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
               txtBtnAceptar: '',
               txtBtnCancelar: '',
             };
+          }
+        },
+        error: (error) => {
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: 'Error inesperado',
+            mensaje: error?.error.error || 'Ocurrió un error al obtener oficio.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
         }
-      },
-      error: (error) => {
-        this.nuevaNotificacion = {
-          tipoNotificacion: 'toastr',
-          categoria: CategoriaMensaje.ERROR,
-          modo: 'action',
-          titulo: 'Error inesperado',
-          mensaje: error?.error.error || 'Ocurrió un error al obtener oficio.',
-          cerrar: false,
-          txtBtnAceptar: '',
-          txtBtnCancelar: '',
-        };
-      }
-    });
+      });
   }
 
   /**
@@ -1036,18 +1036,18 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
  */
   postOficioRechazado(): void {
     this.autorizarDictamenService.postOficioRechazado(this.tramite, Number(this.guardarDatos.id_solicitud))
-    .subscribe({
-      next: (resp) => {
-        if(resp.codigo === "00" && resp.datos){
-          this.datosTablaResolucion = [{
-            id: 1,
-            idDocumento: '1',
-            documento: resp.datos.nombre_archivo ?? '',
-            urlPdf: resp.datos.llave_archivo ?? ''
-          }];
-          this.isDocumento = true;
-        }else{
-           window.scrollTo({ top: 0, behavior: 'smooth' });
+      .subscribe({
+        next: (resp) => {
+          if (resp.codigo === "00" && resp.datos) {
+            this.datosTablaResolucion = [{
+              id: 1,
+              idDocumento: '1',
+              documento: resp.datos.nombre_archivo ?? '',
+              urlPdf: resp.datos.llave_archivo ?? ''
+            }];
+            this.isDocumento = true;
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
               categoria: CategoriaMensaje.ERROR,
@@ -1062,21 +1062,21 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
               txtBtnAceptar: '',
               txtBtnCancelar: '',
             };
+          }
+        },
+        error: (error) => {
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: 'Error inesperado',
+            mensaje: error?.error.error || 'Ocurrió un error al obtener oficio.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
         }
-      },
-      error: (error) => {
-        this.nuevaNotificacion = {
-          tipoNotificacion: 'toastr',
-          categoria: CategoriaMensaje.ERROR,
-          modo: 'action',
-          titulo: 'Error inesperado',
-          mensaje: error?.error.error || 'Ocurrió un error al obtener oficio.',
-          cerrar: false,
-          txtBtnAceptar: '',
-          txtBtnCancelar: '',
-        };
-      }
-    });
+      });
   }
 
   /**
@@ -1088,9 +1088,9 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
    * 
    * @returns {void}
   */
-  getObservar(): void{
+  getObservar(): void {
     this.isObservacion = true;
-    
+
     this.isDictamen = false;
     this.isFirma = false;
     this.isDocumento = false;
@@ -1106,19 +1106,19 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
    * 
    * @returns {void}
    */
-  postTerminar(): void{
+  postTerminar(): void {
     const PAYLOAD: ObservacionRequest = {
       id_accion: this.guardarDatos.id_solicitud,
       observacion: this.observacionForm.get('observacion')?.value,
       cve_usuario: this.guardarDatos.current_user,
     };
-     this.autorizarDictamenService.postObservacionGuardar(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
-    .subscribe({
-      next: (resp) => {
-        if(resp.codigo === "00" && resp.datos){
-          this.getRegresar();
-        }else{
-           window.scrollTo({ top: 0, behavior: 'smooth' });
+    this.autorizarDictamenService.postObservacionGuardar(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
+      .subscribe({
+        next: (resp) => {
+          if (resp.codigo === "00" && resp.datos) {
+            this.getRegresar();
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
               categoria: CategoriaMensaje.ERROR,
@@ -1133,21 +1133,21 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
               txtBtnAceptar: '',
               txtBtnCancelar: '',
             };
+          }
+        },
+        error: (error) => {
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: 'Error inesperado',
+            mensaje: error?.error.error || 'Error al guardar observación.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
         }
-      },
-      error: (error) => {
-        this.nuevaNotificacion = {
-          tipoNotificacion: 'toastr',
-          categoria: CategoriaMensaje.ERROR,
-          modo: 'action',
-          titulo: 'Error inesperado',
-          mensaje: error?.error.error || 'Error al guardar observación.',
-          cerrar: false,
-          txtBtnAceptar: '',
-          txtBtnCancelar: '',
-        };
-      }
-    });
+      });
   }
 
   /**
@@ -1159,7 +1159,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
    * 
    * @returns {void}
    */
-  getRegresar(): void{
+  getRegresar(): void {
     this.isObservacion = false;
     this.isDictamen = true;
     this.isFirma = false;
@@ -1178,7 +1178,17 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
         this.opcionesSentidosDispobles = resp.datos ?? [];
       },
       error: (err) => {
-        console.error('Error al obtener criterios:', err);
+        const MENSAJE = err?.error?.error || 'Error al obtener los sentidos';
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: 'error',
+          modo: 'action',
+          titulo: '',
+          mensaje: MENSAJE,
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        }
       }
     });
   }
@@ -1195,10 +1205,20 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
   obtenerCriterios(): void {
     this.guardarService.getCriterios(this.tramite, this.guardarDatos.id_solicitud).subscribe({
       next: (resp) => {
-        this.conformidadDictamen = resp.datos ?? '';
+        this.conformidadDictamen = resp.datos ?? {} as CriteriosResponse;
       },
       error: (err) => {
-        console.error('Error al obtener criterios:', err);
+        const MENSAJE = err?.error?.error || 'Error al obtener los criterios';
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: 'error',
+          modo: 'action',
+          titulo: '',
+          mensaje: MENSAJE,
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        }
       }
     });
   }
@@ -1216,14 +1236,24 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
 
     this.autorizarDictamenService.getIniciarDictamen(this.tramite, this.guardarDatos.folioTramite).subscribe({
       next: (resp) => {
-        if (resp.codigo === '00') {
+        if (resp.codigo === CodigoRespuesta.EXITO) {
           this.dataAutorizarDictamen = resp.datos ?? {} as IniciarAutorizacionResponse;
           this.obtenerCriterios()
         }
 
       },
       error: (err) => {
-        console.error('Error al iniciar dictamen:', err);
+        const MENSAJE = err?.error?.error || 'Error al iniciar la autorización del dictamen';
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: 'error',
+          modo: 'action',
+          titulo: '',
+          mensaje: MENSAJE,
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        }
       }
     });
   }
@@ -1292,7 +1322,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
         if (data?.codigo === "00" && data?.datos?.contenido) {
           AutorizarDictamenComponent.manejarPdf(
             data.datos.contenido,
-            data.datos.nombre_archivo, 
+            data.datos.nombre_archivo,
             accion
           );
         }
@@ -1300,13 +1330,13 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
     });
   }
 
- /**
- * Método genérico para manejar un PDF en base64.
- *
- * @param base64 Contenido del PDF en base64.
- * @param nombreArchivo Nombre del archivo a descargar (si aplica).
- * @param accion 'abrir' para abrir en pestaña o 'descargar' para forzar descarga.
- */
+  /**
+  * Método genérico para manejar un PDF en base64.
+  *
+  * @param base64 Contenido del PDF en base64.
+  * @param nombreArchivo Nombre del archivo a descargar (si aplica).
+  * @param accion 'abrir' para abrir en pestaña o 'descargar' para forzar descarga.
+  */
   static manejarPdf(base64: string, nombreArchivo: string, accion: 'abrir' | 'descargar'): void {
     // Decodificar el base64
     const BYTE_CHARACTERS = atob(base64);
