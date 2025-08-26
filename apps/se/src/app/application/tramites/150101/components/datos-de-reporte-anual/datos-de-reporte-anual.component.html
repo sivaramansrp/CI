@@ -14,8 +14,7 @@
           id="ventasTotales"
           class="form-control"
           formControlName="ventasTotales"
-          (change)="obtenerVentasTotales($event)"
-          (input)="diferenciaTotal()"
+          (change)="obtenerVentasTotales($event)"         
           (input)="limitarLongitud($event, 16)"
         />
       </div>
@@ -28,9 +27,7 @@
           id="totalExportaciones"
           class="form-control"
           formControlName="totalExportaciones"
-          (input)="obtenerTotalExportaciones($event)"
           (input)="limitarLongitud($event, 16)"
-          (input)="diferenciaTotal()"
         />
       </div>
       <div class="col-md-4">

@@ -265,7 +265,8 @@ export class DatosDeReporteAnnualComponent implements OnDestroy, OnInit {
     if (INPUT.value.length > maxLength) {
       INPUT .value = INPUT.value.slice(0, maxLength);
     }
-    const VAL = this.formularioDeshabilitado;
+      this.obtenerTotalExportaciones(event);
+      this.diferenciaTotal();
   }
   /**
    * @description Actualiza el total de importaciones en el store y recalcula el reporte.

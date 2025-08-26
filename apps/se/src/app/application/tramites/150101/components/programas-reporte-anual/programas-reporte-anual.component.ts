@@ -241,6 +241,12 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
       estatus: [{ value: this.solicitud150101State?.estatus, disabled: true }],
     });
   }
+  /*
+    * Muestra una alerta cuando el reporte anual del programa seleccionado ya ha sido presentado anteriormente.
+    * La alerta informa al usuario que debe seleccionar otro programa para presentar el reporte anual.
+    * @returns {void}
+    * 
+    */
   showAlert(): void {
    
         this.nuevaNotificacion = {
