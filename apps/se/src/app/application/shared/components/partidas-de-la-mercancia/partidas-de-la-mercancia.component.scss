@@ -8,14 +8,18 @@
 .btn-row{
     margin-bottom: 55px;
 }
-.text-end {
-    margin-top: 150px;
-}
 .input-error {
   border: 1px solid #dc3545 !important; 
 }
 textarea{
     overflow: hidden;
+}
+.alert.infoError {
+  border: 2px solid #e53935 !important;
+  background-color: #fbe9e7 !important;
+  color: #b71c1c !important;
+  font-size: 1rem;
+  text-align: center;
 }
 .custom-backdrop{
     z-index: 1045 !important;

@@ -21,3 +21,23 @@
          */
         habilitado: true,
       }
+
+      export const INPUT_FECHA_CONFIGURACION = {
+        /**
+         * Propiedad labelNombre
+         * Descripción: Etiqueta que se muestra como nombre del campo.
+         */
+        labelNombre: '',
+      
+        /**
+         * Propiedad required
+         * Descripción: Indica si el campo es obligatorio.
+         */
+        required: false,
+      
+        /**
+         * Propiedad habilitado
+         * Descripción: Indica si el campo está habilitado para su edición.
+         */
+        habilitado: true,
+      }

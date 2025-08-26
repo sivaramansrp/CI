@@ -1,9 +1,10 @@
 import {
-  ColumnasTabla,
   SeleccionadasTabla,
 } from '../../tramites/110221/models/registro.model';
+
 import { Store, StoreConfig } from '@datorama/akita';
 import { AgregarDatosProductorFormulario } from '../../tramites/110223/models/certificado-origen.model';
+import { ColumnasTabla } from '../../tramites/110223/models/registro.model';
 import { Injectable } from '@angular/core';
 
 /** CONSTANTES PARA VALORES PREDEFINIDOS */

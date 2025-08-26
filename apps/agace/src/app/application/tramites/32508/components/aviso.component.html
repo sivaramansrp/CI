@@ -44,12 +44,12 @@
   <ng-titulo titulo="Datos del dictamen que se presenta" />
   <div class="row mt-5">
     <div class="col-md-4">
-      <app-catalogo-select [catalogo]="anoCatalogo.catalogos" 
+      <app-catalogo-select [catalogo]="anoCatalogo.catalogos" [placeholder]="'Seleccione una opción'"
         [label]="'Año del periodo reportado*'" formControlName="ano"
         (change)=" setValoresStore( avisoForm, 'ano', 'setAno' ) " [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
     </div>
     <div class="col-md-4">
-      <app-catalogo-select [catalogo]="mesCatalogo.catalogos"
+      <app-catalogo-select [catalogo]="mesCatalogo.catalogos" [placeholder]="'Seleccione una opción'"
         [label]="'Mes del periodo reportado*'" formControlName="mes"
         (change)=" setValoresStore( avisoForm, 'mes', 'setMes' ) " [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
     </div>
@@ -104,6 +104,39 @@
         <label>Saldo pendiente de disminuir*:</label>
         <input type="text" class="form-control" required formControlName="saldoPendienteDisminuir"
           (change)=" setValoresStore( avisoForm, 'saldoPendienteDisminuir', 'setSaldoPendienteDisminuir' ) " [disabled]="esFormularioSoloLectura" />
+      </div>
+    </div>
+    <div *ngIf="disminucionParcial" class="row mt-5">
+      <div class="col-md-4">
+        <label>Cantidad pagada*:</label>
+        <input type="text" class="form-control" required formControlName="cantidad"
+          (change)=" setValoresStore( avisoForm, 'cantidad', 'setCantidad' ) " [disabled]="esFormularioSoloLectura" />
+      </div>
+      <div class="col-md-4">
+        <label>Llave de Pago o Línea de Captura*:</label>
+        <input type="text" class="form-control" required formControlName="llaveDePago"
+          (change)=" setValoresStore( avisoForm, 'llaveDePago', 'setLlaveDePago' ) " [disabled]="esFormularioSoloLectura" />
+      </div>
+      <div class="col-md-4">
+        <input-fecha
+          [datos]="fechaPago"
+          [isDisabled]="esFormularioSoloLectura"
+          [setFecha]="avisoForm.get('fechaPago')?.value"
+          (valorCambiado)="actualizarFechaPago($event)"
+        >
+        </input-fecha>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-6">
+        <label>Total de Ingresos por la prestación de los servicios de manejo, almacenaje y custodia de mercancías de comercio exterior*:</label>
+        <input type="text" class="form-control" required formControlName="ingresos"
+          (change)=" setValoresStore( avisoForm, 'ingresos', 'setIngresos' ) " [disabled]="esFormularioSoloLectura" />
+      </div>
+      <div class="col-md-4">
+        <label>Cantidad dictaminada en el mes*:</label>
+        <input type="text" class="form-control" required formControlName="dictaminadaCantidad"
+          (change)=" setValoresStore( avisoForm, 'dictaminadaCantidad', 'setDictaminadaCantidad' ) " [disabled]="esFormularioSoloLectura" />
       </div>
     </div>
     <div class="row mt-5"></div>
@@ -170,6 +203,39 @@
         <label>Saldo pendiente de compensar*:</label>
         <input type="text" class="form-control" required formControlName="saldoPendienteCompensar"
           (change)=" setValoresStore( avisoForm, 'saldoPendienteCompensar', 'setSaldoPendienteCompensar' ) " [disabled]="esFormularioSoloLectura" />
+      </div>
+    </div>
+    <div *ngIf="disminucionParcial" class="row mt-5">
+      <div class="col-md-4">
+        <label>Cantidad pagada*:</label>
+        <input type="text" class="form-control" required formControlName="cantidad"
+          (change)=" setValoresStore( avisoForm, 'cantidad', 'setCantidad' ) " [disabled]="esFormularioSoloLectura" />
+      </div>
+      <div class="col-md-4">
+        <label>Llave de Pago o Línea de Captura*:</label>
+        <input type="text" class="form-control" required formControlName="llaveDePago"
+          (change)=" setValoresStore( avisoForm, 'llaveDePago', 'setLlaveDePago' ) " [disabled]="esFormularioSoloLectura" />
+      </div>
+      <div class="col-md-4">
+        <input-fecha
+          [datos]="fechaPago"
+          [isDisabled]="esFormularioSoloLectura"
+          [setFecha]="avisoForm.get('fechaPago')?.value"
+          (valorCambiado)="actualizarFechaPago($event)"
+        >
+        </input-fecha>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-6">
+        <label>Total de Ingresos por la prestación de los servicios de manejo, almacenaje y custodia de mercancías de comercio exterior*:</label>
+        <input type="text" class="form-control" required formControlName="ingresos"
+          (change)=" setValoresStore( avisoForm, 'ingresos', 'setIngresos' ) " [disabled]="esFormularioSoloLectura" />
+      </div>
+      <div class="col-md-4">
+        <label>Cantidad dictaminada en el mes*:</label>
+        <input type="text" class="form-control" required formControlName="dictaminadaCantidad"
+          (change)=" setValoresStore( avisoForm, 'dictaminadaCantidad', 'setDictaminadaCantidad' ) " [disabled]="esFormularioSoloLectura" />
       </div>
     </div>
     <div class="row mt-5"></div>
@@ -249,6 +315,39 @@
         <label>Saldo pendiente de disminuir*:</label>
         <input type="text" class="form-control" required formControlName="saldoPendienteDisminuir"
           (change)=" setValoresStore( avisoForm, 'saldoPendienteDisminuir', 'setSaldoPendienteDisminuir' ) " [disabled]="esFormularioSoloLectura" />
+      </div>
+      <div *ngIf="disminucionParcial" class="col-md-4">
+        <label>Cantidad pagada*:</label>
+        <input type="text" class="form-control" required formControlName="cantidad"
+          (change)=" setValoresStore( avisoForm, 'cantidad', 'setCantidad' ) " [disabled]="esFormularioSoloLectura" />
+      </div>
+    </div>
+    <div *ngIf="disminucionParcial" class="row mt-5">
+      <div class="col-md-4">
+        <label>Llave de Pago o Línea de Captura*:</label>
+        <input type="text" class="form-control" required formControlName="llaveDePago"
+          (change)=" setValoresStore( avisoForm, 'llaveDePago', 'setLlaveDePago' ) " [disabled]="esFormularioSoloLectura" />
+      </div>
+      <div class="col-md-4">
+        <input-fecha
+          [datos]="fechaPago"
+          [isDisabled]="esFormularioSoloLectura"
+          [setFecha]="avisoForm.get('fechaPago')?.value"
+          (valorCambiado)="actualizarFechaPago($event)"
+        >
+        </input-fecha>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-6">
+        <label>Total de Ingresos por la prestación de los servicios de manejo, almacenaje y custodia de mercancías de comercio exterior*:</label>
+        <input type="text" class="form-control" required formControlName="ingresos"
+          (change)=" setValoresStore( avisoForm, 'ingresos', 'setIngresos' ) " [disabled]="esFormularioSoloLectura" />
+      </div>
+      <div class="col-md-4">
+        <label>Cantidad dictaminada en el mes*:</label>
+        <input type="text" class="form-control" required formControlName="dictaminadaCantidad"
+          (change)=" setValoresStore( avisoForm, 'dictaminadaCantidad', 'setDictaminadaCantidad' ) " [disabled]="esFormularioSoloLectura" />
       </div>
     </div>
     <ng-titulo titulo="Plantillas" />

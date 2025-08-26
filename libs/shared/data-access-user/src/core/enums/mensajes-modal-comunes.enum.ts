@@ -12,7 +12,7 @@ export const MSG_DATOS_GUARDADOS = 'Datos guardados correctamente.';
  * @description Mensaje de advertencia cuando se cambia el tipo de solicitud
  */
 export const ADV_BORRAR_CAMPOS =
-  'Los datos capturados serán borrados, estás de acuerdo (SI/NO)?';
+  'Los datos capturados serán borrados, estás de acuerdo (SÍ/NO)?';
 
 /**
  * @description Mensaje de confirmación cuando se elimina exitosamente un elemento de la tabla.

@@ -46,7 +46,7 @@ import { Tramite220403Store } from '../../estados/tramite220403.store';
 @Component({
   selector: 'app-pago-de-derechos',
   templateUrl: './pago-de-derechos.component.html',
-  styleUrl: './pago-de-derechos.component.css',
+  styleUrl: './pago-de-derechos.component.scss',
   standalone: true,
   imports: [ TituloComponent, AlertComponent, TablaDinamicaComponent, InputRadioComponent, InputFechaComponent, CatalogoSelectComponent, FormsModule, ReactiveFormsModule, CommonModule ],
 })

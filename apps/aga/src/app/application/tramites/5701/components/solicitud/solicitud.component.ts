@@ -150,7 +150,6 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import {
   CONFIRMAR_ELIMINAR_SOLICITUD,
   MSG_ADUANA_PEDIMENTO,
-  MSG_BORRAR_CAMPOS_RECINTOS,
   MSG_ERROR_RFC_NO_ENCONTRADO,
   MSG_ERROR_SELECCIONE_REGISTRO,
   MSG_MONTO_PAGADO_CUBIERTO,
@@ -2926,7 +2925,7 @@ export class SolicitudComponent
           categoria: '',
           modo: 'action',
           titulo: TITULO_MODAL_AVISO,
-          mensaje: MSG_BORRAR_CAMPOS_RECINTOS,
+          mensaje: ADV_BORRAR_CAMPOS,
           cerrar: false,
           txtBtnAceptar: 'Sí',
           txtBtnCancelar: 'No',
@@ -2952,7 +2951,7 @@ export class SolicitudComponent
             categoria: '',
             modo: 'action',
             titulo: TITULO_MODAL_AVISO,
-            mensaje: MSG_BORRAR_CAMPOS_RECINTOS,
+            mensaje: ADV_BORRAR_CAMPOS,
             cerrar: false,
             txtBtnAceptar: 'Sí',
             txtBtnCancelar: 'No',
@@ -3007,6 +3006,7 @@ export class SolicitudComponent
       this.despacho.get('folioDDEX')?.updateValueAndValidity();
 
       this.despacho.get('tipoDespacho')?.setValue(SIN_VALORES);
+      this.despacho.get('tipoOperacion')?.setValue(SIN_VALORES);
       this.mostarSelectTipoDespacho = false;
 
       this.desactivarSelects(true);
@@ -3068,6 +3068,7 @@ export class SolicitudComponent
     this.despacho.get('domicilioDespacho')?.setValue('');
     this.despacho.get('tipoDespacho')?.setValue(SIN_VALORES);
     this.despacho.get('tipoDespachoDescripcion')?.setValue('');
+    this.despacho.get('tipoOperacion')?.setValue(SIN_VALORES);
 
     this.despacho.get('idAduanaDespacho')?.markAsUntouched();
 
@@ -3114,6 +3115,7 @@ export class SolicitudComponent
       'tipoDespachoDescripcion',
       'setDescripcionTipoDespacho'
     );
+    this.setValoresStore(this.despacho, 'tipoOperacion', 'setTipoOperacion');
   }
 
   /**

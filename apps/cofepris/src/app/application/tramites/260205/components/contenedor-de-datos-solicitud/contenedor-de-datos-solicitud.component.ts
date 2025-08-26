@@ -138,7 +138,12 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
     datos: [] as TablaScianConfig[],
   };
 
-
+/**
+   * Lista de elementos que son obligatorios para completar el formulario.
+   * Actualmente incluye solo el campo 'correoElectronico', pero se puede expandir
+   * según los requisitos del sistema.
+   */
+   elementosRequeridos: string[] = ['correoElectronico','denominacionRazon','rfcSanitario'];
   /**
    * Configuración de la tabla de mercancías utilizada en el componente.
    * 

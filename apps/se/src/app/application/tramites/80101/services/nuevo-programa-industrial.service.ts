@@ -112,6 +112,7 @@ export class NuevoProgramaIndustrialService {
    */
 
   actualizarEstadoFormulario(DATOS: Tramite80101State): void {
+
     this.tramite80101Store.update((state) => ({
       ...state,
       ...DATOS,
