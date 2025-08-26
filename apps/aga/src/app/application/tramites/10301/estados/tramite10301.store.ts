@@ -251,6 +251,7 @@ export class Tramite10301Store extends Store<Solicitud10301State> {
   /** Actualiza el catálogo de condiciones. */
   public setCondicion(condicion: Catalogo[]): void {
     this.update((state) => ({ ...state, condicion }));
+    console.log('Condicion en store:', condicion);
   }
 
   /** Actualiza el catálogo de países. */
