@@ -14,6 +14,8 @@
   [fraccionCatalogo]="fraccionCatalogo"
   [unidadCatalogo]="unidadCatalogo"
   [esFormularioSoloLectura] ="esFormularioSoloLectura"
+  [mostrarTooltipValorFacturaUSD]="mostrarTooltipValorFacturaUSD"
+  [mostrarErrores]="mostrarErroresMercancia"
   (setValoresStoreEvent)="setValoresStore($event)"
 ></app-datos-de-la-mercancia>
 
@@ -26,6 +28,7 @@
   [mostrarTabla]="mostrarTabla"
   [esFormularioSoloLectura] ="esFormularioSoloLectura"
   (filaSeleccionadaChange)="manejarlaFilaSeleccionada($event)"
+  [mostrarErrores]="mostrarErroresPartidas"
   (validarYEnviarFormularioEvent)="validarYEnviarFormulario()"
   [disabled]="disabledModificar()"
   (setValoresStoreEvent)="setValoresStore($event)"
@@ -51,3 +54,9 @@
 [esFormularioSoloLectura] ="esFormularioSoloLectura"
 (setValoresStoreEvent)="setValoresStore($event)">
 </app-representacion>
+
+<lib-notificaciones
+  *ngIf="mostrarNotificacion"
+  [notificacionInput]="nuevaNotificacion"
+  (confirmacionModal)="mostrarNotificacion = false">
+</lib-notificaciones>

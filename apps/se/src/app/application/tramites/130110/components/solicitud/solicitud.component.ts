@@ -1,5 +1,5 @@
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, Notificacion } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite130110State, Tramite130110Store } from '../../../../estados/tramites/tramites130110.store';
@@ -181,6 +181,22 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Indica si se debe mostrar el error de clasificación.
    */
   mostrarErrorClasificacion = true;
+  /**
+   * Bandera que indica si se deben mostrar los mensajes de error para el formulario de partidas de la mercancía.
+   */
+    mostrarErroresPartidas = false;
+  /**
+   * Bandera que indica si se deben mostrar los mensajes de error para el formulario de mercancía.
+   */
+    mostrarErroresMercancia = false;
+    /*
+      * @descripcion Indica si se debe mostrar una notificación.
+      */
+    mostrarNotificacion = false;
+    /**
+     * @descripcion Notificación para mostrar mensajes al usuario.
+     */
+    public nuevaNotificacion!: Notificacion;
 
   /**
    * Constructor del componente.
@@ -437,13 +453,62 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Valida el formulario y muestra la tabla dinámica si es válido.
    */
   validarYEnviarFormulario(): void {
-    if (this.partidasDelaMercanciaForm.invalid) {
-      this.partidasDelaMercanciaForm.markAllAsTouched();
-    } else {
-      this.mostrarTabla = true;
-      this.tramite130110Store.setMostrarTabla(true);
+  ['cantidad', 'valorFacturaUSD'].forEach(controlName => {
+    const CONTROL = this.mercanciaForm.get(controlName);
+    if (CONTROL) {
+      CONTROL.markAsTouched();
+      CONTROL.updateValueAndValidity();
     }
+  });
+  
+  if (this.mercanciaForm.get('cantidad')?.invalid ||
+    this.mercanciaForm.get('valorFacturaUSD')?.invalid
+  ) {
+    this.mostrarErroresMercancia = true;
+    this.mostrarErroresPartidas = false;
+    return;
   }
+  this.mostrarErroresMercancia = false;
+  [
+    'cantidadPartidasDeLaMercancia',
+    'valorPartidaUSDPartidasDeLaMercancia',
+    'descripcionPartidasDeLaMercancia'
+  ].forEach(controlName => {
+    const CONTROL = this.partidasDelaMercanciaForm.get(controlName);
+    if (CONTROL) {
+      CONTROL.markAsTouched();
+      CONTROL.updateValueAndValidity();
+    }
+  });
+  if (
+    this.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.invalid ||
+    this.partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.invalid ||
+    this.partidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.invalid
+  ) {
+    this.mostrarErroresPartidas = true;
+    return;
+  }
+    // Si fracción no tiene valor, mostrar popup y detener flujo
+  if (!this.mercanciaForm.get('fraccion')?.value) {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'info',
+      modo: '',
+      titulo: '',
+      mensaje: 'Debes seleccionar una Fracción arancelaria',
+      cerrar: true,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+      tamanioModal: 'modal-sm'
+    };
+    this.mostrarNotificacion = true;
+    return;
+  }
+  this.mostrarErroresPartidas = false;
+  this.mostrarTabla = true;
+  this.tramite130110Store.actualizarEstado({ mostrarTabla: true });
+}
+
 
   /**
    * Navega para modificar una partida específica y actualiza el estado global.

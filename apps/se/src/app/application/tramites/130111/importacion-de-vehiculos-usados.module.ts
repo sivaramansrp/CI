@@ -7,7 +7,7 @@ import { ImportacionDeVehiculosUsadosRoutingModule } from './importacion-de-vehi
 import { ImportacionDeVehiculosUsadosComponent } from './pages/importacion-de-vehiculos-usados/importacion-de-vehiculos-usados.component';
 import { PasoTresComponent } from '../120402/components/paso-tres/paso-tres.component';
 
-import { AlertComponent, BtnContinuarComponent, CrosslistComponent, InputRadioComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, BtnContinuarComponent, CrosslistComponent, InputRadioComponent, NotificacionesComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { DatosDeLaMercanciaComponent } from '../../shared/components/datos-de-la-mercancia/datos-de-la-mercancia.component';
 import { DatosDelTramiteComponent } from '../../shared/components/datos-del-tramite/datos-del-tramite.component';
 
@@ -46,7 +46,8 @@ import { SolicitudComponent } from './components/solicitud/solicitud.component';
     PaisProcendenciaComponent,
     RepresentacionComponent,
     CrosslistComponent,
-    AlertComponent
+    AlertComponent,
+    NotificacionesComponent
   ]
 })
 export class ImportacionDeVehiculosUsadosModule { }
