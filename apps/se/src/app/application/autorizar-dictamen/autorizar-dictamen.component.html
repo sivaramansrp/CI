@@ -84,6 +84,9 @@
                     </table>
                 </div>
             </div>
+             <div class="d-flex justify-content-lg-end h3">
+                 <button type="button" class="btn btn-default ms-2" (click)="getRegresar()">Regresar</button>
+             </div>
         </div>
 
         <div  *ngIf="isObservacion">
@@ -109,7 +112,7 @@
             </div>
         </div>
 
-        <div class="row mb-5 mt-5">
+        <div class="row mb-5 mt-5" *ngIf="!isDocumento">
             <app-reviewers-tabs [viewChild]="viewChild" [tramite]="tramite" [tabs]="tabs"
                 [documentos]="documentosSolicitud" [tareasSolicitud]="tareasSolicitud"
                 [dictamenes]="dictamenesSolicitud" [envioDigital]="envioDigital" [opinion]="opinion"
