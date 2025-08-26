@@ -4,6 +4,4 @@ export interface SentidosDisponiblesResponse {
     descripcion: string;
     /** Clave identificadora del sentido */
     clave: string;
-    /** Nombre del sentido disponible */
-    nombre: string;
 }

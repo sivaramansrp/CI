@@ -256,7 +256,7 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
       this.router.navigate([
         `/${this.tramiteData[0].department}/proceso-requerimiento`,
       ]);
-    } else if(ORIGIN === 'FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION' && this.tramiteData[0].tramite === 130118) {
+    } else if(ORIGIN === 'CONFIRMAR_NOTIFICACION_RESOLUCION' && this.tramiteData[0].tramite === 130118 || ORIGIN === 'ConfirmarNotificacionRes') {
       this.router.navigate([`/${this.tramiteData[0].department}/confirmar-notificacion`]);
     }else if (ORIGIN === 'FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION') {
       this.router.navigate(['/confirmar-notificacion']);
@@ -364,7 +364,7 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
 
     if (TIPO_SOLICITUD === TipoSolicitud.SOLICITANTE) {
       BODY.rfc_usuario = RFC;
-      BODY.roles = ["PersonaMoral"];
+      BODY.roles = ["PersonaFisica"];
       BODY.certificado = {
         cert_serial_number: "20001000000100001815",
         tipo_certificado: "TIPCE.02"
