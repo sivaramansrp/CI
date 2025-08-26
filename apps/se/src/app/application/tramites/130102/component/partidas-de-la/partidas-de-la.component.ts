@@ -323,6 +323,7 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
   validarYEnviarFormulario(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+     
     } else {
       this.agregar();
     }
@@ -332,21 +333,34 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.form.valid) {
       const VALOR_PARTIDA = Number(this.form.get('valorPartidaUSD')?.value || 0);
       const CANTIDAD = Number(this.form.get('cantidad')?.value || 0);
+      const FRACCION_ARANCELARIA = this.form.get('fraccionArancelariaTIGIE')?.value;
+      const DESCRIPCION = this.form.get('descripcion')?.value;
+      const ITEM_EXISTS = this.datosSocios.some(item => 
+        item.fraccionArancelaria === FRACCION_ARANCELARIA &&
+        item.descripción === DESCRIPCION
+      );
 
-      const PRODUCTOS = {
+      if (ITEM_EXISTS) {
+       return;
+      }
+
+      const NUEVO_PRODUCTO: OctavaTemporal = {
         cantidad: CANTIDAD,
-        unidadDeMedida: 'kg',
-        fraccionArancelaria: this.form.get('fraccionArancelariaTIGIE')?.value,
-        descripción: this.form.get('descripcion')?.value,
-        colonia: 'Centro',
-        precioUnitarioUSD: VALOR_PARTIDA.toString(),
-        totalUsd: VALOR_PARTIDA * CANTIDAD
+        unidadDeMedida: 'kg', 
+        fraccionArancelaria: FRACCION_ARANCELARIA,
+        descripción: DESCRIPCION,
+        colonia: 'Centro', 
+        precioUnitarioUSD: (VALOR_PARTIDA / CANTIDAD).toFixed(2),
+        totalUsd: VALOR_PARTIDA
       };
-      this.datosSocios = [...this.datosSocios, PRODUCTOS];
+      this.datosSocios = [...this.datosSocios, NUEVO_PRODUCTO];
       this.tramite130102Store.setPartidasTabla('partidas_tabla', this.datosSocios);
       this.calculateTotals();
-      this.form.reset();      
-    }
+      this.form.reset();
+      } else {
+      
+      this.form.markAllAsTouched();
+   }
   }
 
   /**
@@ -493,5 +507,10 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
   esInvalido(campo: string): boolean {
     const CONTROL = this.form.get(campo);
     return Boolean(CONTROL && CONTROL.invalid && (CONTROL.dirty || CONTROL.touched));
+  }
+
+  // Add this method to check if the entire form is valid
+  get isFormValid(): boolean {
+    return this.form.valid;
   }
 }
