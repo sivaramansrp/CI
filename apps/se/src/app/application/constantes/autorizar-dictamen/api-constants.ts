@@ -28,7 +28,7 @@ export const API_POST_MOSTRAR_FIRMAR = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMIT
  * API para iniciar requerimiento trámite 130118
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Requerimiento/iniciar-generar-requerimiento
  */
-export const API_POST_FIRMAR = `dictamen/tramite/${NUMFOLIOTRAMITE}/autorizar/firmar`;
+export const API_POST_FIRMAR = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/autorizar/firmar`;
 
 /**
  * API para obtener oficio resolucion 130118
