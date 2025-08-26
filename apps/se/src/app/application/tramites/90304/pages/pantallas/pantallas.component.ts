@@ -1,5 +1,6 @@
 import { AccionBoton, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
+import { ALERTA_ERROR } from '../../constantes/prosec.enum';
 import { ProsecService } from '../../services/prosec/prosec.service';
 
 /**
@@ -33,7 +34,21 @@ export class PantallasComponent {
 
   isBaja: boolean = true;
   
-  constructor( private prosecService: ProsecService) { }
+  /** Asigna el mensaje de error ALERTA_PRODUCTORAS_ERROR*/
+  ALERTA_PRODUCTORAS_ERROR = ALERTA_ERROR;
+
+  /**
+   * Indica si se debe mostrar un mensaje de error al agregar.
+   * @type {boolean}
+   */
+  mostrarError: boolean = false;
+
+  /**
+   * Una cadena que representa la clase CSS para una alerta de error.
+   */
+  infoError = 'alert-danger';
+
+  constructor( private prosecService: ProsecService ) { }
 
   ngOnInit() {
     this.prosecService.isBaja$.subscribe(val => this.isBaja = val);
@@ -56,7 +71,7 @@ export class PantallasComponent {
    * @returns {void}
    */
   public getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor <= this.pantallasPasos.length && this.isBaja === true) {
+    if (e.valor > 0 && e.valor <= this.pantallasPasos.length && this.isBaja === false) {
       this.indice = e.valor;
       this.datosPasos.indice = e.valor;
 
@@ -65,8 +80,10 @@ export class PantallasComponent {
       } else {
         this.wizardComponent.atras();
       }
+      this.mostrarError = false;
     } else {
-      alert('No se puede continuar porque no es baja.');
+      this.mostrarError = true;
     }
   }
+
 }

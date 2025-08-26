@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BtnContinuarComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { PantallasComponent } from './pantallas.component';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('PantallasComponent', () => {
   let component: PantallasComponent;
@@ -14,6 +15,7 @@ describe('PantallasComponent', () => {
         WizardComponent,
         BtnContinuarComponent
       ],
+      providers: [ provideHttpClient() ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
