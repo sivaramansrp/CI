@@ -8,12 +8,15 @@
  * Este componente actúa como un contenedor para gestionar y actualizar los datos de la tabla de proveedores en el store del trámite.
  */
 
+import { Component, OnInit } from '@angular/core';
+import { Subject,map, takeUntil } from 'rxjs';
+import { Tramite260214State, Tramite260214Store } from '../../estados/tramite260214Store.store';
+import { ActivatedRoute } from '@angular/router';
 import { AgregarProveedorComponent } from '../../../../shared/components/agregar-proveedor/agregar-proveedor.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { Tramite260214Store } from '../../estados/tramite260214Store.store';
+import { Tramite260214Query } from '../../estados/tramite260214Query.query';
 
 /**
  * @component
@@ -46,7 +49,7 @@ import { Tramite260214Store } from '../../estados/tramite260214Store.store';
   templateUrl: './agregar-proveedor-contenedora.component.html',
   styleUrl: './agregar-proveedor-contenedora.component.scss',
 })
-export class AgregarProveedorContenedoraComponent {
+export class AgregarProveedorContenedoraComponent implements OnInit {
   /**
    * Identificador del procedimiento en curso.
    *
@@ -55,6 +58,11 @@ export class AgregarProveedorContenedoraComponent {
    * según el procedimiento activo.
    */
   idProcedimiento: number = ID_PROCEDIMIENTO;
+  destroyNotifier$ = new Subject<void>();
+
+  public tramiteState!: Tramite260214State;
+
+  proveedorTablaDatos: Proveedor[] = [];
   /**
    * @constructor
    * @description
@@ -62,7 +70,29 @@ export class AgregarProveedorContenedoraComponent {
    *
    * @param {Tramite260214Store} tramite260214Store - Store que administra el estado del trámite 260214.
    */
-  constructor(public tramite260214Store: Tramite260214Store) {}
+  constructor(
+    public tramite260214Store: Tramite260214Store,
+    public tramite260214Query: Tramite260214Query,
+    private route: ActivatedRoute
+  ) {
+    this.tramite260214Query.selectTramiteState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.tramiteState = seccionState;
+          this.proveedorTablaDatos = seccionState.proveedorTablaDatos;
+        })
+      )
+      .subscribe();
+  }
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      if (params['update'] === 'false') {
+        this.proveedorTablaDatos = [];
+      }
+    });
+}
 
   /**
    * @method updateProveedorTablaDatos

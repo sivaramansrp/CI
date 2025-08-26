@@ -16,7 +16,9 @@ export const MENSAJE_TABLA_OBLIGATORIA = `
  * @description Representa los datos correspondientes a un fabricante.
  */
 export interface Fabricante {
-  id?:number;
+  nacionalidad?: string;
+  tipoPersona?: string;
+  id?: number;
   nombreRazonSocial: string;
   rfc: string;
   curp: string;
@@ -105,7 +107,9 @@ export const FABRICANTE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Fabricante>[] 
  * @description Representa los datos correspondientes a un destinatario.
  */
 export interface Destinatario {
-  id?:number;
+  nacionalidad?: string;
+  tipoPersona?: string;
+  id?: number;
   nombreRazonSocial: string;
   rfc: string;
   curp: string;
@@ -122,7 +126,7 @@ export interface Destinatario {
   estadoLocalidad: string;
   codigoPostal: string;
   coloniaEquivalente: string;
-   nombres?: string;
+  nombres?: string;
   primerApellido?: string;
   segundoApellido?: string;
   razonSocial?: string;
@@ -194,6 +198,8 @@ export const DESTINATARIO_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Destinatario
  * @description Representa los datos correspondientes a un proveedor.
  */
 export interface Proveedor {
+  nacionalidad?: string;
+  tipoPersona?: string;
   nombreRazonSocial: string;
   rfc: string;
   curp: string;
@@ -282,6 +288,8 @@ export const PROVEEDOR_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Proveedor>[] =
  * @description Representa los datos correspondientes a un facturador.
  */
 export interface Facturador {
+  nacionalidad?: string;
+  tipoPersona?: string;
   nombreRazonSocial: string;
   rfc: string;
   curp: string;

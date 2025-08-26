@@ -14,9 +14,11 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
-  Output
+  Output,
+  SimpleChanges
 } from '@angular/core';
 import {
   FormBuilder,
@@ -52,7 +54,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './agregar-proveedor.component.html',
   styleUrl: './agregar-proveedor.component.css',
 })
-export class AgregarProveedorComponent implements OnDestroy, OnInit {
+export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
    /**
      * Identificador del procedimiento actual.
      * Utilizado para controlar el flujo de la vista dependiendo del tipo de procedimiento.
@@ -218,7 +220,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
   crearAgregarFormularioProveedor():void{
     this.agregarProveedorForm = this.fb.group({
       nacionalidad: [''],
-      tipoPersona: ['', Validators.required],
+      tipoPersona: [this.obtenerValor('tipoPersona'), Validators.required],
       rfc: [this.obtenerValor('rfc')],
       curp: [this.obtenerValor('curp')],
       denominacionRazon: [
@@ -261,6 +263,34 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
       ],
     });
   }
+
+   ngOnChanges(currentValue: SimpleChanges): void {
+      if (currentValue['datoSeleccionado']) {
+        this.datoSeleccionado = currentValue['datoSeleccionado'].currentValue;
+        setTimeout(() => {
+          if (this.datoSeleccionado?.[0]?.tipoPersona) {
+            this.agregarProveedorForm?.enable();
+          }
+          this.agregarProveedorForm.patchValue({
+            tipoPersona: this.datoSeleccionado?.[0]?.tipoPersona,
+            nombres: this.datoSeleccionado?.[0]?.nombres,
+            primerApellido: this.datoSeleccionado?.[0]?.primerApellido,
+            segundoApellido: this.datoSeleccionado?.[0]?.segundoApellido,
+            pais: this.datoSeleccionado?.[0]?.pais,
+            estado: this.datoSeleccionado?.[0]?.estadoLocalidad,
+            codigoPostal: this.datoSeleccionado?.[0]?.codigoPostal,
+            colonia: this.datoSeleccionado?.[0]?.colonia,
+            calle: this.datoSeleccionado?.[0]?.calle,
+            numeroExterior: this.datoSeleccionado?.[0]?.numeroExterior,
+            numeroInterior: this.datoSeleccionado?.[0]?.numeroInterior,
+            lada: this.datoSeleccionado?.[0]?.lada,
+            denominacionRazon: this.datoSeleccionado?.[0]?.razonSocial,
+            telefono: this.datoSeleccionado?.[0]?.telefono,
+            correoElectronico: this.datoSeleccionado?.[0]?.correoElectronico,
+          });
+        }, 500);
+      }
+    }
 
     /**
    * @method actualizarValidaciones
@@ -340,6 +370,8 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
       nombreRazonSocial = ''; // Valor por defecto si tipoPersona es otro
     }
     const NUEVO_PROVEEDOR: Proveedor = {
+      nacionalidad: VALOR_FORMULARIO.nacionalidad,
+      tipoPersona: VALOR_FORMULARIO.tipoPersona,
       nombreRazonSocial: nombreRazonSocial,
       rfc: '',
       curp: '',

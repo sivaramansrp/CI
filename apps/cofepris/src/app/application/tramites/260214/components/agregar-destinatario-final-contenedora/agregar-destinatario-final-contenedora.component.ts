@@ -8,12 +8,18 @@
  * Este componente actúa como un contenedor para gestionar y actualizar los datos de la tabla de destinatarios finales en el store del trámite.
  */
 
+import { Component, OnInit } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
+import {
+  Tramite260214State,
+  Tramite260214Store,
+} from '../../estados/tramite260214Store.store';
+import { ActivatedRoute } from '@angular/router';
 import { AgregarDestinatarioFinalComponent } from '../../../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { Destinatario } from '../../../../shared/models/terceros-relacionados.model';
 import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
-import { Tramite260214Store } from '../../estados/tramite260214Store.store';
+import { Tramite260214Query } from '../../estados/tramite260214Query.query';
 
 /**
  * @component
@@ -46,7 +52,7 @@ import { Tramite260214Store } from '../../estados/tramite260214Store.store';
   templateUrl: './agregar-destinatario-final-contenedora.component.html',
   styleUrl: './agregar-destinatario-final-contenedora.component.scss',
 })
-export class AgregarDestinatarioFinalContenedoraComponent {
+export class AgregarDestinatarioFinalContenedoraComponent implements OnInit {
   /**
    * Identificador numérico del procedimiento actual.
    *
@@ -58,6 +64,13 @@ export class AgregarDestinatarioFinalContenedoraComponent {
    * - Se inicializa con la constante `ID_PROCEDIMIENTO`.
    */
   idProcedimiento: number = ID_PROCEDIMIENTO;
+
+  destroyNotifier$ = new Subject<void>();
+
+  public tramiteState!: Tramite260214State;
+
+  destinatarioFinalTablaDatos: Destinatario[] = [];
+
   /**
    * @constructor
    * @description
@@ -65,7 +78,29 @@ export class AgregarDestinatarioFinalContenedoraComponent {
    *
    * @param {Tramite260214Store} tramiteStore - Store que administra el estado del trámite 260214.
    */
-  constructor(public tramiteStore: Tramite260214Store) {}
+  constructor(
+    public tramiteStore: Tramite260214Store,
+    public tramite260214Query: Tramite260214Query,
+    private route: ActivatedRoute
+  ) {
+    this.tramite260214Query.selectTramiteState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.tramiteState = seccionState;
+          this.destinatarioFinalTablaDatos = seccionState.destinatarioFinalTablaDatos;
+        })
+      )
+      .subscribe();
+  }
+
+   ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      if (params['update'] === 'false') {
+        this.destinatarioFinalTablaDatos = [];
+      }
+    });
+  }
 
   /**
    * @method updateDestinatarioFinalTablaDatos

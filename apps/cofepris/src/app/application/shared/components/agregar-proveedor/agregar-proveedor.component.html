@@ -1,5 +1,12 @@
 <div class="container mt-4">
-  <ng-titulo titulo="Agregar proveedor"></ng-titulo>
+  <ng-titulo
+    *ngIf="datoSeleccionado?.[0]?.tipoPersona; else agregarProveedor"
+    titulo="Modificar proveedor"
+  ></ng-titulo>
+
+  <ng-template #agregarProveedor>
+    <ng-titulo titulo="Agregar proveedor"></ng-titulo>
+  </ng-template>
   <form [formGroup]="agregarProveedorForm">
     <!-- Datos Generales -->
     <h4>Datos generales</h4>

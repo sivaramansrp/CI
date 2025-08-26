@@ -5,7 +5,7 @@ import {
   REGEX_NOMBRE,
   REGEX_TELEFONO,
   TipoPersona,
-  TituloComponent
+  TituloComponent,
 } from '@ng-mf/data-access-user';
 import { CommonModule, Location } from '@angular/common';
 import {
@@ -15,13 +15,14 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
-  Output
+  Output,
+  SimpleChanges,
 } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
-  Validators
+  Validators,
 } from '@angular/forms';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Destinatario } from '../../models/terceros-relacionados.model';
@@ -29,7 +30,6 @@ import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE } from '../../constantes/datos-sol
 import { Subject } from 'rxjs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { takeUntil } from 'rxjs/operators';
-
 
 /**
  * Componente para agregar un destinatario final (Destinatario) al formulario y almacenarlo.
@@ -211,9 +211,39 @@ export class AgregarDestinatarioFinalComponent
    * Hook de ciclo de vida de Angular que se llama cuando se detectan cambios en las propiedades de entrada.
    * Llama al método `mostrarCamposNoContribuyente()`.
    */
-  ngOnChanges(): void {
+  ngOnChanges(currentValue: SimpleChanges): void {
     this.mostrarCamposNoContribuyente =
       PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
+    if (currentValue['datoSeleccionado']) {
+      this.datoSeleccionado = currentValue['datoSeleccionado'].currentValue;
+      setTimeout(() => {
+        if (this.datoSeleccionado?.[0]?.tipoPersona) {
+          this.agregarDestinatarioFinal.enable();
+        }
+        this.agregarDestinatarioFinal?.patchValue({
+          tipoPersona: this.datoSeleccionado?.[0]?.tipoPersona,
+          rfc: this.datoSeleccionado?.[0]?.rfc,
+          curp: this.datoSeleccionado?.[0]?.curp,
+          nombres: this.datoSeleccionado?.[0]?.nombres,
+          primerApellido: this.datoSeleccionado?.[0]?.primerApellido,
+          segundoApellido: this.datoSeleccionado?.[0]?.segundoApellido,
+          razonSocial: this.datoSeleccionado?.[0]?.razonSocial,
+          pais: this.datoSeleccionado?.[0]?.pais,
+          estado: this.datoSeleccionado?.[0]?.estadoLocalidad,
+          municipio: this.datoSeleccionado?.[0]?.municipioAlcaldia,
+          localidad: this.datoSeleccionado?.[0]?.localidad,
+          codigoPostal: this.datoSeleccionado?.[0]?.codigoPostal,
+          colonia: this.datoSeleccionado?.[0]?.colonia,
+          calle: this.datoSeleccionado?.[0]?.calle,
+          numeroExterior: this.datoSeleccionado?.[0]?.numeroExterior,
+          numeroInterior: this.datoSeleccionado?.[0]?.numeroInterior,
+          lada: this.datoSeleccionado?.[0]?.lada,
+          telefono: this.datoSeleccionado?.[0]?.telefono,
+          correoElectronico: this.datoSeleccionado?.[0]?.correoElectronico,
+          coloniaOEquivalente: this.datoSeleccionado?.[0]?.coloniaEquivalente,
+        });
+      }, 500);
+    }
   }
 
   /**
@@ -236,6 +266,8 @@ export class AgregarDestinatarioFinalComponent
       nombreRazonSocial = ''; // Valor por defecto si tipoPersona es otro
     }
     const NUEVO_DESTINATARIO: Destinatario = {
+      nacionalidad: VALOR_FORMULARIO.nacionalidad,
+      tipoPersona: VALOR_FORMULARIO.tipoPersona,
       nombreRazonSocial: nombreRazonSocial,
       rfc: VALOR_FORMULARIO.rfc,
       curp: '',
@@ -258,7 +290,9 @@ export class AgregarDestinatarioFinalComponent
       razonSocial: VALOR_FORMULARIO.razonSocial,
       lada: VALOR_FORMULARIO.lada,
     };
-
+    if(this.datoSeleccionado?.[0]?.id){
+      NUEVO_DESTINATARIO.id = this.datoSeleccionado[0].id;
+    }
     this.destinatarios.push(NUEVO_DESTINATARIO);
     this.updateDestinatarioFinalTablaDatos.emit(this.destinatarios);
     this.agregarDestinatarioFinal.reset();
@@ -337,7 +371,7 @@ export class AgregarDestinatarioFinalComponent
    */
   crearAgregarFormularioAgregarDestinatarioFinal(): void {
     this.agregarDestinatarioFinal = this.fb.group({
-      tipoPersona: ['', Validators.required],
+      tipoPersona: ['', [Validators.required]],
       rfc: [
         this.obtenerValor('rfc'),
         [Validators.required, Validators.pattern(REGEX_NOMBRE)],
@@ -353,8 +387,7 @@ export class AgregarDestinatarioFinalComponent
       ],
       denominacionRazon: [
         this.obtenerValor('razonSocial'),
-        Validators.required,
-        Validators.pattern(REGEX_NOMBRE),
+        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
       ],
       primerApellido: [
         {
@@ -381,12 +414,15 @@ export class AgregarDestinatarioFinalComponent
             : this.obtenerValor('pais'),
           disabled: this.elementosDeshabilitados.includes('pais'),
         },
-        Validators.required,
+        [Validators.required],
       ],
-      estado: [this.obtenerValor('estadoLocalidad'), Validators.required],
-      municipio: [this.obtenerValor('municipioAlcaldia'), Validators.required],
-      localidad: [this.obtenerValor('localidad'), Validators.required],
-      codigoPostal: [this.obtenerValor('codigoPostal'), Validators.required],
+      estado: [this.obtenerValor('estadoLocalidad'), [Validators.required]],
+      municipio: [
+        this.obtenerValor('municipioAlcaldia'),
+        [Validators.required],
+      ],
+      localidad: [this.obtenerValor('localidad'), [Validators.required]],
+      codigoPostal: [this.obtenerValor('codigoPostal'), [Validators.required]],
       colonia: [
         this.obtenerValor('colonia'),
         !this.elementosNoRequeridos.includes('colonia')

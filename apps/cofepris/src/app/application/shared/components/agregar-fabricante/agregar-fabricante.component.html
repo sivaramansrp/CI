@@ -1,5 +1,12 @@
 <div class="container mt-4">
-  <ng-titulo titulo="Agregar fabricante"></ng-titulo>
+   <ng-titulo
+    *ngIf="datoSeleccionado?.[0]?.id; else agregarFabricante"
+    titulo="Modificar fabricante"
+  ></ng-titulo>
+
+  <ng-template #agregarFabricante>
+    <ng-titulo titulo="Agregar fabricante"></ng-titulo>
+  </ng-template>
   <form [formGroup]="agregarFabricanteForm">
     <!-- Datos Generales -->
     <h4>Datos generales</h4>
@@ -35,7 +42,7 @@
             class="form-check-input"
             formControlName="tipoPersona"
             [value]="tipoPersona.FISICA"
-            (change)="changeNacionalidad()"
+            (change)="changeTipoPersona()"
           />
           Física
           <span
@@ -49,7 +56,7 @@
             class="form-check-input"
             formControlName="tipoPersona"
             [value]="tipoPersona.MORAL"
-            (change)="changeNacionalidad()"
+            (change)="changeTipoPersona()"
           />
           Moral
           <span

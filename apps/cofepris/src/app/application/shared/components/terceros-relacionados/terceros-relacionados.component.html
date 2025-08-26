@@ -27,15 +27,17 @@
     <div class="col-md-12">
       <div class="pull-right">
         @if (fabricanteSeleccionadoDatos.length > 0) {
-        <button
-          type="button"
-          name="modificarMercancias"
-          class="btn btn-default"
-          (click)="modificarFabricante()"
-          [disabled]="formularioDeshabilitado ? true : false"
-        >
-          Modificar
-        </button>
+          @if (fabricanteSeleccionadoDatos.length === 1) {
+            <button
+              type="button"
+              name="modificarMercancias"
+              class="btn btn-default"
+              (click)="modificarFabricante()"
+              [disabled]="formularioDeshabilitado ? true : false"
+            >
+              Modificar
+            </button>
+          }
         <button
           type="button"
           name="eliminarMercancias"
@@ -52,7 +54,7 @@
           class="btn btn-primary ms-2"
           data-bs-toggle="modal"
           data-bs-target="#modalAgregarMercancias"
-          (click)="irAAcciones('../agregar-fabricante')"
+          (click)="irAAcciones('../agregar-fabricante',false)"
           [disabled]="formularioDeshabilitado ? true : false"
         >
           Agregar
@@ -80,15 +82,17 @@
     <div class="col-md-12">
       <div class="pull-right">
         @if (destinatarioSeleccionadoDatos.length > 0) {
-        <button
-          type="button"
-          name="modificarMercancias"
-          class="btn btn-default"
-          (click)="modificarDestinatario()"
-          [disabled]="formularioDeshabilitado ? true : false"
-        >
-          Modificar
-        </button>
+          @if (destinatarioSeleccionadoDatos.length === 1) {
+          <button
+            type="button"
+            name="modificarMercancias"
+            class="btn btn-default"
+            (click)="modificarDestinatario()"
+            [disabled]="formularioDeshabilitado ? true : false"
+          >
+            Modificar
+          </button>
+        }
         <button
           type="button"
           name="eliminarMercancias"
@@ -105,7 +109,7 @@
           class="btn btn-primary ms-2"
           data-bs-toggle="modal"
           data-bs-target="#modalAgregarMercancias"
-          (click)="irAAcciones('../agregar-destinatario-final')"
+          (click)="irAAcciones('../agregar-destinatario-final', false)"
           [disabled]="formularioDeshabilitado ? true : false"
         >
           Agregar
@@ -130,15 +134,17 @@
     <div class="col-md-12">
       <div class="pull-right">
         @if (proveedorSeleccionadoDatos.length > 0) {
-        <button
-          type="button"
-          name="modificarMercancias"
-          class="btn btn-default"
-          (click)="modificarProveedor()"
-          [disabled]="formularioDeshabilitado ? true : false"
-        >
-          Modificar
-        </button>
+           @if (proveedorSeleccionadoDatos.length === 1) {
+            <button
+              type="button"
+              name="modificarMercancias"
+              class="btn btn-default"
+              (click)="modificarProveedor()"
+              [disabled]="formularioDeshabilitado ? true : false"
+            >
+              Modificar
+            </button>
+          }
         <button
           type="button"
           name="eliminarMercancias"
@@ -155,7 +161,7 @@
           class="btn btn-primary ms-2"
           data-bs-toggle="modal"
           data-bs-target="#modalAgregarMercancias"
-          (click)="irAAcciones('../agregar-proveedor')"
+          (click)="irAAcciones('../agregar-proveedor', false)"
           [disabled]="formularioDeshabilitado ? true : false"
         >
           Agregar
@@ -179,15 +185,17 @@
     <div class="col-md-12">
       <div class="pull-right">
         @if (facturadorSeleccionadoDatos.length > 0) {
-        <button
-          type="button"
-          name="modificarMercancias"
-          class="btn btn-default"
-          (click)="modificarFacturador()"
-          [disabled]="formularioDeshabilitado ? true : false"
-        >
-          Modificar
-        </button>
+          @if (facturadorSeleccionadoDatos.length === 1) {
+            <button
+              type="button"
+              name="modificarMercancias"
+              class="btn btn-default"
+              (click)="modificarFacturador()"
+              [disabled]="formularioDeshabilitado ? true : false"
+            >
+              Modificar
+            </button>
+          }
         <button
           type="button"
           name="eliminarMercancias"
@@ -204,7 +212,7 @@
           class="btn btn-primary ms-2"
           data-bs-toggle="modal"
           data-bs-target="#modalAgregarMercancias"
-          (click)="irAAcciones('../agregar-facturador')"
+          (click)="irAAcciones('../agregar-facturador', false)"
           [disabled]="formularioDeshabilitado ? true : false"
         >
           Agregar

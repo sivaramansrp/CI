@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy,OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   Destinatario,
   Fabricante,
@@ -8,6 +8,7 @@ import {
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
+import { TercerosRelacionadosFebService } from '../../../../shared/services/tereceros-relacionados-feb.service';
 import { Tramite260214Query } from '../../estados/tramite260214Query.query';
 import { Tramite260214Store } from '../../estados/tramite260214Store.store';
 
@@ -26,7 +27,6 @@ import { Tramite260214Store } from '../../estados/tramite260214Store.store';
   styleUrl: './terceros-relacionados-vista.component.css',
 })
 export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
-
   /**
    * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
    */
@@ -56,12 +56,12 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   facturadorTablaDatos: Facturador[] = [];
 
-    /**
-     * @property {Subject<void>} destroy$
-     * Subject para cancelar suscripciones y evitar fugas de memoria.
-     * @private
-     */
-    private destroy$ = new Subject<void>();
+  /**
+   * @property {Subject<void>} destroy$
+   * Subject para cancelar suscripciones y evitar fugas de memoria.
+   * @private
+   */
+  private destroy$ = new Subject<void>();
 
   /**
    * @constructor
@@ -72,7 +72,8 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteStore: Tramite260214Store,
-    private tramiteQuery: Tramite260214Query
+    private tramiteQuery: Tramite260214Query,
+    private tercerosService: TercerosRelacionadosFebService
   ) {}
 
   /**
@@ -82,28 +83,59 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.tramiteQuery.getFabricanteTablaDatos$
-         .pipe(takeUntil(this.destroy$))
-         .subscribe((data) => {
-           this.fabricanteTablaDatos = data;
-         });
-   
-       this.tramiteQuery.getDestinatarioFinalTablaDatos$
-         .pipe(takeUntil(this.destroy$))
-         .subscribe((data) => {
-           this.destinatarioFinalTablaDatos = data;
-         });
-   
-       this.tramiteQuery.getProveedorTablaDatos$
-         .pipe(takeUntil(this.destroy$))
-         .subscribe((data) => {
-           this.proveedorTablaDatos = data;
-         });
-   
-       this.tramiteQuery.getFacturadorTablaDatos$
-         .pipe(takeUntil(this.destroy$))
-         .subscribe((data) => {
-           this.facturadorTablaDatos = data;
-         });
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.fabricanteTablaDatos = data;
+      });
+
+    this.tramiteQuery.getDestinatarioFinalTablaDatos$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.destinatarioFinalTablaDatos = data;
+      });
+
+    this.tramiteQuery.getProveedorTablaDatos$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.proveedorTablaDatos = data;
+      });
+
+    this.tramiteQuery.getFacturadorTablaDatos$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.facturadorTablaDatos = data;
+      });
+      //this.loadData();
+  }
+
+  loadData(): void {
+    this.tercerosService
+      .getFabricanteTablaDatos()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((response: Fabricante[]) => {
+        this.addFabricantes(response);
+      });
+
+    this.tercerosService
+      .getDestinatarioTablaDatos()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((response: Destinatario[]) => {
+        this.addDestinatarios(response);
+      });
+
+    this.tercerosService
+      .getProveedorTablaDatos()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((response: Proveedor[]) => {
+        this.addProveedores(response);
+      });
+
+    this.tercerosService
+      .getFacturadorTablaDatos()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((response: Facturador[]) => {
+        this.addFacturadores(response);
+      });
   }
 
   /**
@@ -146,7 +178,23 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     this.tramiteStore.updateFacturadorTablaDatos(newFacturadores);
   }
 
-   /**
+  fabricanteEventoModificar(fabricante: Fabricante[]): void {
+    this.tramiteStore.updateFabricanteTablaDatos(fabricante);
+  }
+
+  destinatarioEventoModificar(destinatario: Destinatario[]): void {
+    this.tramiteStore.updateDestinatarioFinalTablaDatos(destinatario);
+  }
+
+  proveedorEventoModificar(proveedor: Proveedor[]): void {
+    this.tramiteStore.updateProveedorTablaDatos(proveedor);
+  }
+
+  facturadorEventoModificar(facturador: Facturador[]): void {
+    this.tramiteStore.updateFacturadorTablaDatos(facturador);
+  }
+
+  /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
    *
    * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
@@ -154,7 +202,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    *
    * @returns {void} No retorna ningún valor.
    */
-   ngOnDestroy(): void {
+  ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
