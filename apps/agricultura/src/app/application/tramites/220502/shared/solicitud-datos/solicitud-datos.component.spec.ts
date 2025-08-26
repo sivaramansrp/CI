@@ -5,6 +5,7 @@ import { SolicitudDatosComponent } from './solicitud-datos.component';
 import { TestBed } from '@angular/core/testing';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Solicitud } from '../../models/solicitud-pantallas.model';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('SolicitudDatosComponent', () => {
   let component: SolicitudDatosComponent;
@@ -13,7 +14,7 @@ describe('SolicitudDatosComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [ReactiveFormsModule,TituloComponent, AlertComponent,SolicitudDatosComponent],
+      imports: [ReactiveFormsModule,TituloComponent, AlertComponent,SolicitudDatosComponent,HttpClientTestingModule],
     }).compileComponents();
   });
 
