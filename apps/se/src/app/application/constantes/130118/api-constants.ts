@@ -155,6 +155,29 @@ export const API_GET_DICTAMENES = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/di
  */
 export const API_GET_INICIAR_CONFIRMACION_NOTIFICACION = `sat-t130118/tramite/${NUMFOLIOTRAMITE}/confirmar-notificacion/iniciar`;
 
+/**
+ * ID de la resolucion.
+ * Este valor debe ser reemplazado por el ID real de la resolucion.
+ */
+export const IDRESOLUCION= '{idResolucion}';
+
+/** 
+ * API para obtener documento de resolucion 130118.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Dictamen/guardar-dictamen-generado-by-numFolioTramite
+ */
+export const API_POST_RESOLUCION_GUARDAR = `sat-t${TRAMITE}/confirmar-notificacion/resolucion/${IDRESOLUCION}/acuse/guardar`;
+
+/**
+ * ID del requerimiento.
+ * Este valor debe ser reemplazado por el ID real del requerimiento.
+ */
+export const IDREQUERIMIENTO= '{idRequerimiento}';
+/** 
+ * API para obtener documento de resolucion 130118.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Dictamen/guardar-dictamen-generado-by-numFolioTramite
+ */
+export const API_POST_REQUERIMIENTO_GUARDAR = `sat-t${TRAMITE}/confirmar-notificacion/requerimiento/${IDREQUERIMIENTO}/acuse/guardar`;
+
 /** 
  * API para consulta de envio digital 130118.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/get-detalle-estado
