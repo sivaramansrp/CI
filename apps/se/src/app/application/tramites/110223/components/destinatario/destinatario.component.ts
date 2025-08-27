@@ -4,7 +4,6 @@ import {
   ConsultaioQuery,
   ConsultaioState,
   PAGO_DE_DERECHOS,
-  REGEX_SOLO_DIGITOS,
   TituloComponent,
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
@@ -64,6 +63,12 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * Notificador para destruir observables al destruir el componente.
    */
   public destroyNotifier$: Subject<void> = new Subject();
+    /**
+   * Opciones del catálogo.
+   * Contiene una lista de objetos del catálogo obtenidos desde el servicio.
+   * Estas opciones se utilizan para poblar los selectores en el formulario.
+   */
+  optionsPaisDestino!: Catalogo[];
 
   /**
    * Indica si el formulario está deshabilitado.
@@ -163,7 +168,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
-          this.options = resp.data as Catalogo[];
+          this.optionsPaisDestino = resp.data as Catalogo[];
         }
       });
   }
@@ -201,20 +206,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     return this.validacionesService.isValid(form, field) || false;
   }
 
-  /**
-   * Establece valores en el estado de la tienda.
-   * @param form Formulario reactivo.
-   * @param campo Nombre del campo del formulario.
-   * @param metodoNombre Método de la tienda para actualizar el estado.
-   */
-  setValoresStore(
-    form: FormGroup,
-    campo: string,
-    metodoNombre: keyof Tramite110223Store
-  ): void {
-    const VALOR = form.get(campo)?.value;
-    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
-  }
+
 
   /**
    * Obtiene el formulario de validación.
@@ -227,67 +219,42 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * Configura el formulario reactivo con los valores iniciales del estado.
    */
   donanteDomicilio(): void {
-    this.registroForm = this.fb.group({
-      validacionForm: this.fb.group({
-        nombre: [
-          this.solicitudState?.nombre,
-          [Validators.required, Validators.maxLength(150)],
-        ],
-        numeroFiscal: [
-          this.solicitudState?.numeroFiscal,
-          [Validators.required, Validators.maxLength(32)],
-        ],
-        ciudad: [
-          this.solicitudState?.ciudad,
-          [Validators.required, Validators.maxLength(50)],
-        ],
-        calle: [
-          this.solicitudState?.calle,
-          [Validators.required, Validators.maxLength(90)],
-        ],
-        numeroLetra: [this.solicitudState?.numeroLetra, [Validators.required]],
-        numeroDeRegistroFiscal: [
-          this.solicitudState?.numeroDeRegistroFiscal,
-          [Validators.required, Validators.maxLength(13)],
-        ],
-        telefono: [
-          this.solicitudState?.telefono,
-          [
-            Validators.required,
-            Validators.pattern(REGEX_SOLO_DIGITOS),
-            Validators.maxLength(30),
-          ],
-        ],
-        fax: [
-          this.solicitudState?.fax,
-          [Validators.pattern(REGEX_SOLO_DIGITOS), Validators.maxLength(20)],
-        ],
-        correoElectronico: [
-          this.solicitudState?.correoElectronico,
-          [Validators.required, Validators.email, Validators.maxLength(50)],
-        ],
-        nacion: [this.solicitudState?.nacion],
-        lugar: [
-          this.solicitudState?.lugar,
-          [Validators.required, Validators.maxLength(70)],
-        ],
-        nombreRepresentanteLegalExportador: [
-          this.solicitudState?.nombreRepresentanteLegalExportador,
-          [Validators.required, Validators.maxLength(250)],
-        ],
-        empresa: [
-          this.solicitudState?.empresa,
-          [Validators.required, Validators.maxLength(90)],
-        ],
-        cargo: [
-          this.solicitudState?.cargo,
-          [Validators.required, Validators.maxLength(30)],
-        ],
-      }),
-    });
+ this.registroForm = this.fb.group({
+      destinatarioForm : this.fb.group({
+      nombre: [this.solicitudState?.destinatarioForm.nombre||'', [Validators.required, Validators.maxLength(250)]],
+      numeroFiscal: [this.solicitudState?.destinatarioForm.numeroFiscal||'', [Validators.required, Validators.maxLength(30)]],
+    }),
+     domicilioForm : this.fb.group({
+      calle: [this.solicitudState.domicilioForm.calle || '', [Validators.required, Validators.maxLength(90)]],
+      numeroLetra: [this.solicitudState.domicilioForm.numeroLetra || '', [Validators.required, Validators.maxLength(30)]],
+      paisDestino: [this.solicitudState.domicilioForm.paisDestino || '', Validators.required],
+      ciudad: [this.solicitudState.domicilioForm.ciudad || '', [Validators.required, Validators.maxLength(50)]],
+      correoElectronico: [this.solicitudState.domicilioForm.correoElectronico || '', [Validators.required, Validators.email, Validators.maxLength(70)]],
+      lada: [this.solicitudState.domicilioForm.lada || '', [Validators.maxLength(5)]],
+      telefono: [this.solicitudState.domicilioForm.telefono || '', [Validators.maxLength(20)]],
+    }),
+    representanteLegalForm : this.fb.group({
+  lugar: [this.solicitudState?.representanteLegalForm.lugar || '', Validators.required],
+  nombreRepresentante: [this.solicitudState?.representanteLegalForm.nombreRepresentante || '', Validators.required],
+  empresa: [this.solicitudState?.representanteLegalForm.empresa || '', Validators.required],
+  cargo: [this.solicitudState?.representanteLegalForm.cargo || '', Validators.required],
+  lada: [this.solicitudState?.representanteLegalForm.lada || ''],
+  telefono: [this.solicitudState?.representanteLegalForm.telefono || '', Validators.required],
+  fax: [this.solicitudState?.representanteLegalForm.fax || '', Validators.required], 
+  correoElectronico: [this.solicitudState?.representanteLegalForm.correoElectronico || '', [Validators.required, Validators.email]] 
+})
+ });
     this.inicializarEstadoFormulario();
   }
-
+setrepresentanteLegalForm():void{
+  this.store.setRepresentanteLegalForm(this.registroForm.value.representanteLegalForm)
+}
+setdomicilioForm():void{
+  this.store.setDomicilioForm(this.registroForm.value.domicilioForm)
+}
+setdestinatarioForm():void{
+  this.store.setDestinatarioForm(this.registroForm.value.destinatarioForm)
+}
   /**
    * Método que se ejecuta al destruir el componente.
    * Cancela todas las suscripciones activas.
@@ -306,5 +273,22 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     } else {
       this.registroForm?.enable();
     }
+  }
+
+    validatorCheck(): boolean {
+    if (!this.registroForm) {
+      return false;
+    }
+    const DESTINATARIO_FORM_VALID = this.registroForm.get('destinatarioForm')?.valid;
+    const DOMICILIO_FORM_VALID = this.registroForm.get('domicilioForm')?.valid;
+    const REPRESENTANTE_LEGAL_FORM_VALID = this.registroForm.get('representanteLegalForm')?.valid;
+
+    if (DESTINATARIO_FORM_VALID && DOMICILIO_FORM_VALID && REPRESENTANTE_LEGAL_FORM_VALID) {
+      return true;
+    }
+    this.registroForm.get('destinatarioForm')?.markAllAsTouched();
+    this.registroForm.get('domicilioForm')?.markAllAsTouched();
+    this.registroForm.get('representanteLegalForm')?.markAllAsTouched();
+    return false;
   }
 }

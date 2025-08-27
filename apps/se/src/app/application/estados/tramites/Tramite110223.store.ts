@@ -18,6 +18,32 @@ export interface Catalogo {
   id: number;
   descripcion: string;
 }
+export interface DestinatarioForm {
+  nombre: string;
+  numeroFiscal: string;
+}
+
+export interface DomicilioForm {
+  calle: string;
+  numeroLetra: string;
+  paisDestino: string | null;
+  ciudad: string;
+  correoElectronico: string;
+  lada: string;
+  telefono: string;
+}
+
+export interface RepresentanteLegalForm{
+  lugar: string;
+  nombreRepresentante: string;
+  empresa: string;
+  cargo: string;
+  lada: string;
+  telefono: string;
+  fax: string;
+  correoElectronico: string;
+}
+
 
 /**
  * Estado inicial para la interfaz del trámite 110223.
@@ -81,6 +107,24 @@ export interface Solicitud110223State {
   cargo: string;
   mercanciaSeleccionadasTablaData: SeleccionadasTabla[];
   mercanciaDisponsiblesTablaDatos: ColumnasTabla[];
+    /**
+     * @property {DestinatarioForm} destinatarioForm - Formulario de destinatario.
+     * @description
+     * Contiene los campos del formulario para el destinatario, como nombre y número fiscal.
+     */
+    destinatarioForm: DestinatarioForm;
+    /**
+     * @property {DomicilioForm} domicilioForm - Formulario de domicilio.
+     * @description
+     * Contiene los campos del formulario para el domicilio, como calle, número/letra, país destino, ciudad, correo electrónico, lada y teléfono.
+     */
+    domicilioForm: DomicilioForm;
+    /**
+     * @property {RepresentanteLegalForm} representanteLegalForm - Formulario de representante legal.
+     * @description
+     * Contiene los campos del formulario para el representante legal, como lugar, nombre, empresa, cargo, lada, teléfono, fax y correo electrónico.
+     */
+    representanteLegalForm: RepresentanteLegalForm;
 }
 
 /**
@@ -150,6 +194,9 @@ export function createInitialState(): Solicitud110223State {
     },
     mercanciaSeleccionadasTablaData: [],
     mercanciaDisponsiblesTablaDatos: [],
+     destinatarioForm: {} as DestinatarioForm,
+      domicilioForm: {} as DomicilioForm,
+      representanteLegalForm: {} as RepresentanteLegalForm
   };
 }
 
@@ -825,6 +872,41 @@ export class Tramite110223Store extends Store<Solicitud110223State> {
   setMercanciaDisponsiblesTablaDatos(data: ColumnasTabla[]): void {
     this.update({ mercanciaDisponsiblesTablaDatos: data });
   }
+   /**
+     * @descripcion
+     * Actualiza los datos del formulario de representante legal.
+     * @param representanteLegalForm - Objeto que contiene los valores del formulario de representante legal.
+     */
+    setRepresentanteLegalForm(representanteLegalForm: RepresentanteLegalForm): void {
+      this.update((state) => ({
+        ...state,
+        representanteLegalForm,
+      }));
+    }
+     /**
+       * @descripcion
+       * Actualiza los datos del formulario de destinatario.
+       * @param destinatarioForm - Objeto que contiene los valores del formulario de destinatario.
+       */
+      setDestinatarioForm(destinatarioForm: DestinatarioForm): void {
+        this.update((state) => ({
+          ...state,
+          destinatarioForm,
+        }));
+      }
+    
+      /**
+       * @descripcion
+       * Actualiza los datos del formulario de domicilio.
+       * @param domicilioForm - Objeto que contiene los valores del formulario de domicilio.
+       */
+      setDomicilioForm(domicilioForm: DomicilioForm): void {
+        this.update((state) => ({
+          ...state,
+          domicilioForm,
+        }));
+      }
+    
 
   /**
    * Limpia los datos de la solicitud.
