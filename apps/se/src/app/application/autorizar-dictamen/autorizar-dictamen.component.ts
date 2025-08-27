@@ -126,11 +126,6 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
   /** Response del servicio de firmar mostrar */
   mostrarFirmarData!: MostrarFirmarResponse;
 
-  /**
- * @property {string} conformidadDictamen
- * @description Texto que representa la conformidad del dictamen, utilizado en el formulario de generación de dictamen.
- */
-  conformidadDictamen!: CriteriosResponse;
 
   /**
  * Cadena original generada a partir de los datos del trámite.
@@ -1194,36 +1189,6 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
   }
 
   /**
- * @method iniciarRequerimiento
- * @description Inicia el requerimiento del trámite 130118.
- * 
- * Llama al servicio `IniciarService` para iniciar el requerimiento con un número de folio predefinido.
- * Muestra un mensaje en la consola si el requerimiento se inicia correctamente o si ocurre un error.
- * 
- * @returns {void}
- */
-  obtenerCriterios(): void {
-    this.guardarService.getCriterios(this.tramite, this.guardarDatos.id_solicitud).subscribe({
-      next: (resp) => {
-        this.conformidadDictamen = resp.datos ?? {} as CriteriosResponse;
-      },
-      error: (err) => {
-        const MENSAJE = err?.error?.error || 'Error al obtener los criterios';
-        this.nuevaNotificacion = {
-          tipoNotificacion: 'toastr',
-          categoria: 'error',
-          modo: 'action',
-          titulo: '',
-          mensaje: MENSAJE,
-          cerrar: false,
-          txtBtnAceptar: '',
-          txtBtnCancelar: '',
-        }
-      }
-    });
-  }
-
-  /**
    * @method iniciarDictamen
    * @description Inicia el dictamen del trámite 130118.
    * 
@@ -1238,7 +1203,6 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
       next: (resp) => {
         if (resp.codigo === CodigoRespuesta.EXITO) {
           this.dataAutorizarDictamen = resp.datos ?? {} as IniciarAutorizacionResponse;
-          this.obtenerCriterios()
         }
 
       },
