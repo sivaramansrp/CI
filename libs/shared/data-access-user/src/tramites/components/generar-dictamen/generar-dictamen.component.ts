@@ -264,6 +264,7 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
     }
 
      if (changes['dataIniciarDictamenAutorizar'] && changes['dataIniciarDictamenAutorizar'].currentValue) {
+      this.dictamenForm.get('antecedentesReadonly')?.setValue(this.dataIniciarDictamenAutorizar.texto_dictamen);
       this.dictamenForm.patchValue({
         cumplimiento: this.dataIniciarDictamenAutorizar.ide_sent_dictamen,
         mensajeDictamen: this.dataIniciarDictamenAutorizar.justificacion,
