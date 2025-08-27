@@ -251,7 +251,6 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
           this.indiceDePaso = this.PasoNotificacion.ACUSES;
         }),
         catchError((error) => {
-          console.error('Error en el proceso de firma:', error);
           if (!this.nuevaNotificacion) {
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
@@ -420,8 +419,18 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
           this.location.back();
         }
       },
-      error: (err) => {
-        console.error('Error al obtener la notificación:', err);
+      error: (error) => {
+       const MENSAJE = error?.error?.error || 'Error inesperado al consultar notificacion.';
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: 'error',
+          modo: 'action',
+          titulo: '',
+          mensaje: MENSAJE,
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        }
       }
     });
   }
@@ -459,7 +468,6 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
         this.cadenaOriginal = typeof resp.datos === 'string' ? resp.datos : undefined;
       },
       error: (error) => {
-        console.error('Error al iniciar trámite:', error);
         const MENSAJE = error?.error?.error || 'Error inesperado al iniciar trámite.';
         this.nuevaNotificacion = {
           tipoNotificacion: 'toastr',
