@@ -35,8 +35,8 @@
           [datos]="mercanciaDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           (listaDeFilaSeleccionada)="onSelectedRowsChange($event)"></app-tabla-dinamica>
         <div class="col-md-12 mt-5 d-flex justify-content-end">
-          <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura" data-bs-toggle="modal"
-            data-bs-target="#modalAgregarMercancias">Modificar</button>
+          <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura" 
+            (click)="modificar()">Modificar</button>
           <button type="button" class="btn btn-danger ms-3" [disabled]="esFormularioSoloLectura"
             (click)="eliminar()">Eliminar</button>
           <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal"
@@ -47,7 +47,7 @@
       </div>
 
       <div class="modal fade" id="modalAgregarMercancias" tabindex="-1" aria-labelledby="modalAgregarMercanciasLabel"
-        aria-hidden="true">
+        aria-hidden="true" #modalAgregarMercancias>
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-body">
@@ -57,10 +57,10 @@
                 </div>
                 <ng-titulo titulo="Datos de la mercancía" />
                 <label class="mb-5">Fines a los que se destinará la mercancía*:</label>
-                <crosslist [fechas]="selectRangoDias" [botones]="finesDeMercanciaBotons" formControlName="finesElegidos"
+                <crosslist [fechas]="selectRangoDias" [botones]="finesDeMercanciaBotons" formControlName="fechasSeleccionadas"
                   [fechasSeleccionadas]="solicitudState.fechasSeleccionadas" [isDisabled]="esFormularioSoloLectura"
                   (fechasSeleccionadasChange)="changeCrosslist($event)"></crosslist>
-                  <div *ngIf="isInvalid('tipoMercancia')" class="mensaje-error">
+                  <div *ngIf="isInvalid('fechasSeleccionadas')" class="mensaje-error">
                       Este campo es obligatorio.
                   </div>
                 <ng-container formGroupName="datosMercancia">

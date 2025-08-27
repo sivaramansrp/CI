@@ -387,7 +387,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     this.donanteDomicilio();
     this.getAduanaIngresara();
     this.getAno();
-    // this.getCondicion();
     this.getPais();
     this.inicializaCatalogos();
     this.inicializarEstadoFormulario();
@@ -412,16 +411,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         };
       })
     );
-    // this.subscriptions.push(
-    //   this.query.selectCondicion$.subscribe((condicion) => {
-    //     this.condicion = {
-    //       labelNombre: 'Condición de la mercancía',
-    //       required: false,
-    //       primerOpcion: 'Seleccione una opción',
-    //       catalogos: condicion ?? [],
-    //     };
-    //   })
-    // );
     this.subscriptions.push(
       this.query.selectPais$.subscribe((pais) => {
         this.pais = {
@@ -691,7 +680,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         serie: [
           this.solicitudState?.serie,
           [Validators.maxLength(50)],
-        ]
+        ],
+        fechasSeleccionadas: this.fb.array([])
       }),
     });
 
@@ -710,7 +700,12 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Agregar mercancia.
    */
   agregarMercancia(): void {
-    if (this.agregarMercanciasForm.valid) {
+    const FINES = this.agregarMercanciasForm.value.datosMercancia.finesElegidos;
+    const TIPOMERCANCIA = this.agregarMercanciasForm.value.datosMercancia.tipoMercancia;
+    const USOESPECIFICO = this.agregarMercanciasForm.value.datosMercancia.usoEspecifico;
+    const CONDICION = this.agregarMercanciasForm.value.datosMercancia.condicion;
+
+    if (FINES && TIPOMERCANCIA && USOESPECIFICO && CONDICION) {
       this.importarExportar.agregarMercancia().pipe(takeUntil(this.destroyNotifier$)).subscribe(
         (respuesta) => {
           if (respuesta?.success) {
@@ -721,10 +716,10 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
             this.agregarMercanciasForm.markAsUntouched();
             this.agregarMercanciasForm.markAsPristine();
             this.cerrarModal();
-            // if (this.modalConfirmacion) {
-            //   const MODEL = new Modal(this.modalConfirmacion.nativeElement);
-            //   MODEL.show();
-            // }
+            if (this.modalConfirmacion) {
+              const MODEL = new Modal(this.modalConfirmacion.nativeElement);
+              MODEL.show();
+            }
           }
         }
       );
@@ -738,7 +733,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    */
   condicionSeleccion(): void {
     const CONDICION = this.agregarMercanciasForm.get('datosMercancia.condicion')?.value;
-    console.log('Condicion seleccionada:', CONDICION);
     this.store.setCondicion(CONDICION);
   }
 
@@ -760,13 +754,27 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Modifica las filas seleccionadas en la tabla de solicitudes.
+   * Abre un modal para realizar los cambios.
+   */
+  modificar(): void {
+    if (this.filaSeleccionadas && this.filaSeleccionadas.length > 0) {
+      this.agregarMercanciasForm.patchValue(this.filaSeleccionadas);
+      if (this.modalElement) {
+        const MODEL = new Modal(this.modalElement.nativeElement);
+        MODEL.show();
+      }
+    }
+  }
+
 /**
    * Obtiene el array del formulario 'fechasSeleccionadas' del grupo de formulario  'datosServicio'.
    *
    * @returns {FormArray} El array de formulario 'fechasSeleccionadas'.
    */
   get fechasSeleccionadas(): FormArray {
-    return this.tramiteForm.get('fechasSeleccionadas') as FormArray;
+    return (this.tramiteForm.get('fechasSeleccionadas') as FormArray) ?? this.fb.array([]);
   }
 
   /**
@@ -786,9 +794,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @returns void
    */
   changeCrosslist(fechas: string[]): void {
-    fechas.forEach((fecha) => {
-      this.fechasSeleccionadas.push(new FormControl(fecha));
-    });
+    const FECHAS = new FormArray([...fechas.map(fecha => new FormControl(fecha))]);
+    (this.agregarMercanciasForm.get('datosMercancia') as FormGroup).setControl('fechasSeleccionadas', FECHAS);
     this.store.setFechasSeleccionadas(fechas);
   }
   
