@@ -1,15 +1,17 @@
-import { Catalogo, Notificacion } from '@ng-mf/data-access-user';
+import { Catalogo, Notificacion, TEXTOS_303, TablaSeleccion } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, catchError, map, of, takeUntil } from 'rxjs';
 import { Tramite303Store, Tramite303StoreService } from '../../../../core/estados/tramites/tramite303.store';
+import { CONTROL_INVENTARIOS } from '../../../../core/enums/303/figuras.enum';
+import { ControlInventario } from '../../../../core/models/303/control-inventario.model';
 import { Tramite303Query } from '../../../../core/queries/tramite303.query';
-import { TransportistaService } from '../../../../core/services/303/trasportista.service';
+import { TransportistaService } from '../../../../core/services/303/transportista.service';
 
 @Component({
   selector: 'despacho-mercancias-solicitud',
   templateUrl: './despacho-mercancias-solicitud.component.html',
-  styleUrl: './despacho-mercancias-solicitud.component.scss'
+  styleUrls: ['./despacho-mercancias-solicitud.component.scss']
 })
 export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
   /** Formulario para la solicitud de despacho de mercancías */
@@ -21,22 +23,41 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
   /** Indica si se deben mostrar los checkboxes de IMMEX */
   mostrarCheckboxesImmex = false;
   /** Catálogo de números IMMEX */
-  catNumeroIMMEX!: Catalogo[];
+  catNumeroIMMEX: Catalogo[] = [];
   /** Variable para almacenar el valor del campo */
   valor!: string;
   /** Notificador para destruir las suscripciones y evitar fugas de memoria */
   private destroyNotifier$: Subject<void> = new Subject();
   /** Estado del trámite 303 consultado */
   public tramiteConsultado?: Tramite303Store;
+  /** Configuración de la tabla de selección */
+  tablaSeleccion = TablaSeleccion;
+  /** Encabezado de la tabla de figuras */
+  encabezadoDeTablaInventarios = CONTROL_INVENTARIOS;
+  /** Lista de control de inventarios */
+  listaControlInventarios: ControlInventario[] = [];
+  /** Lista de control de inventarios seleccionados */
+  listaControlInventariosSeleccionados: ControlInventario[] = [];
+  /** Indica si se debe mostrar el control de inventarios */
+  mostrarControlInventarios = false;
+  /** Formulario para el control de inventarios */
+  formInventario!: FormGroup;
+
   /** Subject para destruir las suscripciones. */
   private destruirSuscripcion$: Subject<void> = new Subject();
+  /** Inventario en edición */
+  inventarioEnEdicion?: ControlInventario;
+  /** Texto de la sección */
+  TEXTOS = TEXTOS_303;
 
   constructor(
     private fb: FormBuilder,
     private tramite303State: Tramite303StoreService,
-    private tramite303Query: Tramite303Query,
-    private transportistaService: TransportistaService
-  ) { }
+    private transportistaService: TransportistaService,
+    private tramite303Query: Tramite303Query
+  ) {
+    this.createFormulario();
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -49,10 +70,16 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
           this.tramiteConsultado = seccionState;
           this.mostrarCheckboxesImmex = seccionState?.mostrarCheckboxesImmex || false;
           this.mostrarSelectImmex = seccionState?.mostrarSelectImmex ?? true;
+          this.listaControlInventarios = seccionState?.listaInventarios || [];
         }),
         takeUntil(this.destroyNotifier$)
       )
       .subscribe();
+    this.formInventario = this.fb.group({
+      nombreSistema: ['', Validators.required],
+      lugarRadicacion: ['', Validators.required],
+      esSistemaControl: [false]
+    });
     this.createFormulario();
     this.ObtenerDatosCatalogoImmex();
   }
@@ -88,10 +115,18 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
       cuentaImmex: [this.tramiteConsultado?.cuentaImmex, Validators.required],
       checkboxImportacion1: [this.tramiteConsultado?.checkboxImportacion1 || false],
       checkboxImportacion2: [this.tramiteConsultado?.checkboxImportacion2 || false],
-      immex: [this.tramiteConsultado?.cuentaImmex, Validators.required],
+      immex: [this.tramiteConsultado?.immex, Validators.required], // ✅ corregido
+      padron: [this.tramiteConsultado?.padron, Validators.required],
+      controlInventarios: [this.tramiteConsultado?.controlInventarios, Validators.required], // ✅ string, no boolean
+      contabilidad: [this.tramiteConsultado?.contabilidad, Validators.required],
+      interposicion: [this.tramiteConsultado?.interposicion, Validators.required], // ✅ corregido
+      checkboxManifiesto1: [this.tramiteConsultado?.checkboxManifiesto1 || false],
+      checkboxManifiesto2: [this.tramiteConsultado?.checkboxManifiesto2 || false],
+      ingresoInforme: [this.tramiteConsultado?.ingresoInforme || false],
     });
     this.monitorValores();
   }
+
 
   /**
    * Monitorea los cambios en los valores de los controles del formulario.
@@ -100,9 +135,9 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
   monitorValores(): void {
     Object.keys(this.formDespacho.controls).forEach(controlName => {
       this.formDespacho.get(controlName)?.valueChanges.subscribe(value => {
-        if ((controlName === 'cumplimiento' || controlName === 'autorizar' || controlName === 'certificados' || controlName === 'buzon') && value === 'aa') {
+        if ((controlName === 'cumplimiento' || controlName === 'autorizar' || controlName === 'certificados' || controlName === 'buzon' || controlName === 'padron' || controlName === 'controlInventarios') && value === 'aa') {
           this.notificaciones();
-        } else if ((controlName === 'listado' || controlName === 'art17') && value === 'a') {
+        } else if ((controlName === 'listado' || controlName === 'art17' || controlName === 'interposicion') && value === 'a') {
           this.notificaciones();
         } else if (controlName === 'cuentaImmex') {
           if (value === 'a') {
@@ -116,6 +151,12 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
             this.tramite303State.setSelectImmex(false);
             this.tramite303State.setCheckboxesImmex(true);
           }
+        }
+        else if (controlName === 'controlInventarios' && value === 'a') {
+          this.mostrarControlInventarios = true;
+        }
+        else if (controlName === 'controlInventarios' && value === 'aa') {
+          this.mostrarControlInventarios = false;
         }
       });
     });
@@ -146,10 +187,8 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite303StoreService): void {
     const VALOR = form.get(campo)?.value;
-
-    // Forzar conversión a boolean si el campo es checkbox
+    // Obtener el valor actual del campo
     const ISCHECKBOX = campo === 'checkboxImportacion1' || campo === 'checkboxImportacion2';
-
     if (ISCHECKBOX) {
       (this.tramite303State[metodoNombre] as (value: boolean) => void)(Boolean(VALOR));
     } else {
@@ -163,5 +202,148 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+   * Método para agregar un nuevo inventario.
+   * @returns void
+   */
+  agregarInventario(): void {
+    if (this.formInventario.invalid) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'No hay información para guardar',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    if (this.inventarioEnEdicion) {
+      const INVENTARIO_ACTUALIZADO: ControlInventario = {
+        ...this.inventarioEnEdicion,
+        nombreSistema: this.formInventario.get('nombreSistema')?.value,
+        lugarRadicacion: this.formInventario.get('lugarRadicacion')?.value,
+        esSistemaControl: (this.formInventario.get('esSistemaControl')?.value) as boolean
+      };
+
+      this.listaControlInventarios = this.listaControlInventarios.map(inv =>
+        inv.id === this.inventarioEnEdicion?.id ? INVENTARIO_ACTUALIZADO : inv
+      );
+
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'success',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Inventario modificado correctamente',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+
+      this.inventarioEnEdicion = undefined;
+    } else {
+      const NUEVOINVENTARIO: ControlInventario = {
+        id: this.formInventario.get('nombreSistema')?.value + '-' + new Date().getTime(),
+        nombreSistema: this.formInventario.get('nombreSistema')?.value,
+        lugarRadicacion: this.formInventario.get('lugarRadicacion')?.value,
+        esSistemaControl: (this.formInventario.get('esSistemaControl')?.value) as boolean
+      };
+
+      this.listaControlInventarios = [...this.listaControlInventarios, NUEVOINVENTARIO];
+
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'success',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Datos guardados correctamente',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
+
+    this.tramite303State.setListaInventarios(this.listaControlInventarios);
+    this.formInventario.reset({
+      nombreSistema: '',
+      lugarRadicacion: '',
+      esSistemaControl: false
+    });
+  }
+
+  /**
+   * Método para modificar un inventario existente.
+   * @returns void
+   */
+  modificarInventario(): void {
+    if (!this.listaControlInventariosSeleccionados || this.listaControlInventariosSeleccionados.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'No hay inventarios seleccionados para modificar',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+    if (this.listaControlInventariosSeleccionados.length > 1) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Solo se puede modificar un inventario a la vez',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    const INVENTARIO_SELECCIONADO = this.listaControlInventariosSeleccionados[0];
+    this.inventarioEnEdicion = INVENTARIO_SELECCIONADO;
+
+    this.formInventario.patchValue({
+      nombreSistema: INVENTARIO_SELECCIONADO.nombreSistema,
+      lugarRadicacion: INVENTARIO_SELECCIONADO.lugarRadicacion,
+      esSistemaControl: INVENTARIO_SELECCIONADO.esSistemaControl
+    });
+
+    this.listaControlInventariosSeleccionados = [];
+  }
+
+
+  /**
+   * Método para eliminar un inventario existente.
+   * @returns void
+   */
+  eliminarInventario(): void {
+    if (this.listaControlInventariosSeleccionados.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'No hay inventarios seleccionados para eliminar',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+
+    }
+    const IDS_INVENTARIOS = this.listaControlInventariosSeleccionados.map(item => item.id);
+    this.listaControlInventarios = this.listaControlInventarios.filter(INVENTARIO => !IDS_INVENTARIOS.includes(INVENTARIO.id));
+    this.listaControlInventariosSeleccionados = [];
+    this.tramite303State.setListaInventarios(this.listaControlInventarios);
   }
 }

@@ -1,14 +1,15 @@
 
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { AlertComponent, ConfiguracionColumna, Notificacion } from '@ng-mf/data-access-user';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { PARTIDASDELAMERCANCIA_TABLA, TEXTOS } from '../../constantes/partidas-de-la-mercancia.enum';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { PARTIDASDELAMERCANCIA_TABLA } from '../../constantes/partidas-de-la-mercancia.enum';
+import { Modal } from 'bootstrap';
 import { PartidasDeLaMercanciaModelo } from '../../models/partidas-de-la-mercancia.model';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { TituloComponent } from '@ng-mf/data-access-user';
-
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 /**
  * PartidasDeLaMercanciaComponent
@@ -23,12 +24,33 @@ import { TituloComponent } from '@ng-mf/data-access-user';
     CommonModule,
     ReactiveFormsModule,
     TituloComponent,
-    TablaDinamicaComponent
+    TablaDinamicaComponent,
+    TooltipModule,
+    AlertComponent
   ],
   templateUrl: './partidas-de-la-mercancia.component.html',
   styleUrl: './partidas-de-la-mercancia.component.scss',
 })
 export class PartidasDeLaMercanciaComponent implements OnChanges{
+  /**
+   * Textos utilizados en el componente.
+   * @type {typeof TEXTOS}
+   */
+  TEXTOS = TEXTOS;
+
+  /*
+   * @descripcion Indica si se debe mostrar una notificación.
+   */
+  mostrarNotificacion = false;
+  /**
+   * @descripcion Notificación para mostrar mensajes al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
+   * @description Referencia al elemento de la partida que se va a modificar.
+   */
+  @ViewChild('modificarPartidaModal') modificarPartidaElemento!: ElementRef;
   /**
   * @description Indica si el formulario debe mostrarse en modo solo lectura.
   */
@@ -50,7 +72,6 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    * Bandera para mostrar u ocultar la tabla dinámica.
    */
   @Input() mostrarTabla = false;
-
   /**
    * filaSeleccionadaChange
    * Evento que emite las filas seleccionadas en la tabla dinámica.
@@ -103,13 +124,25 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    */
   @Input() disabled: boolean = false;
   /**
+   * Referencia al elemento del DOM asociado con el archivo de nacionales.
+   * Utilizado para acceder y manipular directamente el elemento en la plantilla.
+   */
+  @ViewChild('archivoNacionales') archivoNacionalesElemento!: ElementRef;
+
+  @ViewChild('cargarArchivo') cargarArchivoElemento!: ElementRef;		
+ 
+  /**
+   * Nombre del archivo seleccionado por el usuario.
+   */
+  nombreArchivoSeleccionado: string = '';
+
+  /**
    * Constructor para inicializar el componente e inyectar dependencias.
    * FormBuilder para crear formularios reactivos.
    */
   constructor(private fb: FormBuilder) {
     //  Constructor del componente
   }
-
 
   /**
      * Método del ciclo de vida que se ejecuta cuando cambian las propiedades de entrada del componente.
@@ -159,13 +192,115 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    * Navega para modificar una partida específica, emitiendo un evento.
    */
   navegarParaModificarPartida(): void {
-    this.navegarParaModificarPartidaEvent.emit();
+       if (this.modificarPartidaElemento) {
+      const MODAL_INSTANCIA = new Modal(
+        this.modificarPartidaElemento?.nativeElement,
+        { backdrop: false }
+      );
+      MODAL_INSTANCIA.show();
+    }
   }
 
   /**
-   * Emite un evento para almacenar valores en el store.
+   * Cancela la modificación de una partida específica, cerrando el modal.
    */
-  setValoresStore(form: FormGroup, campo: string): void {
-    this.setValoresStoreEvent.emit({ form, campo });
+  modalCancelar(): void {
+  if (this.modificarPartidaElemento && this.modificarPartidaElemento.nativeElement) {
+    const MODAL_INSTANCIA = Modal.getInstance(
+      this.modificarPartidaElemento.nativeElement
+    );
+    if (MODAL_INSTANCIA) {
+      MODAL_INSTANCIA.hide();
+    }
   }
+  Object.values(this.partidasDelaMercanciaForm.controls).forEach(control => {
+    control.markAsUntouched();
+    control.markAsPristine();
+  });
+}
+/**
+ * Emite un evento para almacenar valores en el store.
+ */
+setValoresStore(form: FormGroup, campo: string): void {
+  this.setValoresStoreEvent.emit({ form, campo });
+}
+
+/**
+ * Valida los campos del formulario antes de modificar una partida.
+ */
+validarModificarPartida(): void {
+  
+  if (this.partidasDelaMercanciaForm.invalid) {
+    this.partidasDelaMercanciaForm.markAllAsTouched();
+    return;
+  }
+  if (this.modificarPartidaElemento && this.modificarPartidaElemento.nativeElement) {
+    const MODAL_INSTANCIA = Modal.getInstance(this.modificarPartidaElemento.nativeElement);
+    if (MODAL_INSTANCIA) {
+      MODAL_INSTANCIA.hide();
+    }
+  }
+}
+/*
+
+*/
+/**
+ * Método que gestiona la carga de un archivo desde un input HTML. 
+ * Verifica que el archivo seleccionado exista y que su extensión sea `.csv`. 
+ * Si no se selecciona ningún archivo o la extensión no es válida, muestra una notificación de error.
+ * Si el archivo es válido, oculta la notificación y cierra el modal de carga.
+ */
+enviarArchivo(): void {
+  const INPUT_FILE = document.getElementById('archivoNacionales') as HTMLInputElement;
+  if (!INPUT_FILE || !INPUT_FILE.files || INPUT_FILE.files.length === 0) {
+    return;
+  }
+  const FILE = INPUT_FILE.files[0];
+  const EXTENSION = FILE.name.split('.').pop()?.toLowerCase();
+  if (EXTENSION !== 'csv') {
+    this.mostrarNotificacion = true;
+    return;
+  }
+  this.mostrarNotificacion = false;
+  this.cerrarCargarArchivoModal();
+}
+  /**
+   * Maneja el evento de selección de archivo y actualiza el nombre del archivo seleccionado.
+   * @param evento Evento de cambio del input de archivo.
+   */
+  archivoSeleccionado(evento: Event): void {
+    const INPUT = evento.target as HTMLInputElement;
+    if (INPUT.files && INPUT.files.length > 0) {
+      this.nombreArchivoSeleccionado = INPUT.files[0].name;
+    } else {
+      this.nombreArchivoSeleccionado = '';
+    }
+  }
+
+  /*
+   * Abre el modal para cargar un archivo.
+   */
+  abrirCargarArchivoModal(): void {
+  if (this.cargarArchivoElemento && this.cargarArchivoElemento.nativeElement) {
+      const MODAL_INSTANCIA = new Modal(
+        this.cargarArchivoElemento?.nativeElement,
+        { backdrop: false }
+      );
+      MODAL_INSTANCIA.show();
+    }
+}
+/*
+ * Cierra el modal para cargar un archivo.
+ */
+cerrarCargarArchivoModal(): void {
+  if (this.cargarArchivoElemento && this.cargarArchivoElemento.nativeElement) {
+    const MODAL_INSTANCIA = Modal.getInstance(
+      this.cargarArchivoElemento.nativeElement
+    );
+    if (MODAL_INSTANCIA) {
+      MODAL_INSTANCIA.hide();
+    }
+  }
+}
+
 }

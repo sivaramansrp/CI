@@ -25,11 +25,21 @@ import { FormDataService } from '../../services/form-data-service';
 
 import { Subject ,forkJoin, map, takeUntil } from 'rxjs';
 import { ModificacionPermisoMeds } from '../../services/modificacion-permiso-meds.service';
-
+/**
+ * Clase que representa el componente de modificación de permisos de importación de tratamientos.
+ */
 @Component({
   selector: 'app-paso-uno-pages',
   templateUrl: './paso-uno-pages.component.html',
 })
+/**
+ * Componente que representa la primera sección de un formulario de modificación de permisos de importación.
+ * Este componente incluye varios subcomponentes para recopilar información del solicitante, datos de la solicitud,
+ * terceros relacionados, pagos de derechos y trámites asociados.
+ * 
+ * @export
+ * @class PasoUnoPagesComponent
+ */
 export class PasoUnoPagesComponent implements OnInit , OnDestroy {
      /**
          * showPreFillingOptions

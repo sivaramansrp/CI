@@ -141,3 +141,19 @@ export const TABLA_DE_DATOS_DISPONIBLES = {
   ],
   datos: [],
 };
+
+/**
+ * Texto de alerta para terceros.
+ * 
+ * Este texto se muestra como un mensaje de advertencia cuando no se han agregado mercancías al trámite.
+ */
+export const BUSCAR_EMPRESA_ERROR = 'El RFC ingresado es invÃ¡lido, favor de ingresar RFC activo y vigente';
+
+/**
+ * Mensaje de error mostrado cuando el usuario intenta realizar
+ * una búsqueda de cupos sin proporcionar los parámetros requeridos.
+ *
+ * @constant
+ * @type {string}
+ */
+export const BUSCAR_CUPOS_ERROR ='Para ejecutar la búsqueda se requiere ingresar al menos el parámetro de búsqueda requerido.';

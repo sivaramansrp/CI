@@ -1,3 +1,4 @@
+import {Catalogo} from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MercanciasTabla } from '../../models/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
@@ -65,5 +66,21 @@ export class DomicilioDelEstablecimientoService {
    */
   obtenerMercanciasDatos(): Observable<MercanciasTabla> {
     return this.http.get<MercanciasTabla>(this.mercanciasDatosUrl);
+  }
+
+  /**
+   * Obtiene la lista de representaciones federales desde un archivo JSON local.
+   * @returns Observable que emite los datos de las representaciones federales.
+   */
+  getRepresentacion(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/260911/descriptionClave.json');
+  }
+
+  /**
+   * Obtiene la lista de entidades federativas desde un archivo JSON local.
+   * @returns Observable que emite los datos de las entidades federativas.
+   */
+  getEntidad(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/260911/clavescian.json');
   }
 }

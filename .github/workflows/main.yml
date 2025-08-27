@@ -1,87 +1,103 @@
-name: Build and Deploy Profepa Microfront to MicroK8s
+name: Build, Push, Deploy Profepa App
 
 on:
-  push:
-    branches:
-      - qa-1
-    paths:
-      - 'apps/profepa/**'
-      - 'libs/**'
-      - 'docker/modulefederation-profepa-microfront.yml'
-      - 'k8s/profepa-microfront/**'
-      - '.github/workflows/profepa-build-deploy.yml'
+  # push:
+  #   branches:
+  #     - develop
+  #   paths:
+  #     - 'apps/profepa/**'
+  #     - 'libs/**'
+  #     - 'package.json'
+  #     - 'nx.json'
+  #     - 'angular.json'
+  #     - 'workspace.json'
+  #     - 'docker/**'
+  #     - 'k8s/profepa-microfront/**'
+  #     - '.github/workflows/profepa-build-deploy.yml'
   workflow_dispatch:
 
-env:
-  IMAGE_NAME: ghcr.io/vucem30/dockerized-modulefederation-profepa-microfront
-  IMAGE_TAG: 1.0.3
-
 jobs:
-  build-and-push:
-    name: Build and Push Docker Image
+  build-push-deploy:
     runs-on: ubuntu-latest
-    permissions:
-      packages: write
-      contents: read
+    env:
+      IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/dockerized-modulefederation-profepa-microfront
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
 
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GHCR_PAT }}
+      - name: Extract app version
+        id: get_version
+        run: |
+          echo "VERSION=$(jq -r .version package.json)" >> $GITHUB_ENV
+          echo "version=$(jq -r .version package.json)" >> $GITHUB_OUTPUT
 
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        file: apps/profepa/Dockerfile.dev
-        push: true
-        tags: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-        build-args: |
-          NODE_ENV=production
+      - name: Install dependencies
+        run: npm ci
 
-  deploy:
-    name: Deploy to MicroK8s via SSH
-    runs-on: ubuntu-latest
-    needs: build-and-push
+      - name: Install Angular CLI
+        run: npm install -g @angular/cli
 
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Build Angular app (Nx)
+        run: npx nx build profepa --configuration=production
 
-    - name: Copy K8s manifests to remote
-      uses: appleboy/scp-action@v0.1.7
-      with:
-        host: ${{ secrets.REMOTE_SRV_IP }}
-        username: ${{ secrets.REMOTE_SRV_USER }}
-        key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
-        source: "k8s/profepa-microfront/"
-        target: "~/profepa-microfront-manifests/"
+      - name: Inject version into build
+        if: hashFiles('script/inject-version.js') != ''
+        run: node script/inject-version.js profepa
 
-    - name: Deploy on MicroK8s host via SSH
-      uses: appleboy/ssh-action@v1
-      with:
-        host: ${{ secrets.REMOTE_SRV_IP }}
-        username: ${{ secrets.REMOTE_SRV_USER }}
-        key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
-        envs: IMAGE_NAME,IMAGE_TAG
-        script: |
-          echo "Logging in to GHCR..."
-          echo ${{ secrets.GHCR_PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GHCR_PAT }}
 
-          echo "Updating deployment image (if deployment exists)..."
-          kubectl set image deployment/modulefederation-profepa-microfront-dev modulefederation-profepa-microfront=${IMAGE_NAME}:${IMAGE_TAG} --namespace=default || true
+      - name: Build Docker image
+        run: |
+          docker build -t $IMAGE_NAME:${{ env.VERSION }} -f apps/profepa/Dockerfile.dev .
 
-          echo "Applying K8s manifests..."
-          kubectl apply -f ~/profepa-microfront-manifests/profepa-microfront-service-dev.yaml
-          kubectl apply -f ~/profepa-microfront-manifests/profepa-microfront-ingress-dev.yaml
+      - name: Push Docker image
+        run: |
+          docker push $IMAGE_NAME:${{ env.VERSION }}
 
-          echo "Deployment completed."
+      - name: Update deployment manifest image tag
+        run: |
+          sed -i "s|\(image: ghcr.io/vucem30-dev/dockerized-modulefederation-profepa-microfront:\).*|\1${VERSION}|" k8s/profepa-microfront/profepa-microfront-deployment-dev.yaml
+
+      - name: Upload Kubernetes manifests to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.REMOTE_SRV_IP }}
+          username: ${{ secrets.REMOTE_SRV_USER }}
+          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
+          source: "k8s/profepa-microfront"
+          target: "~/profepa-microfront/"
+
+      - name: Deploy on Microk8s via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.REMOTE_SRV_IP }}
+          username: ${{ secrets.REMOTE_SRV_USER }}
+          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
+          script: |
+            set -e
+            cd ~/profepa-microfront/
+            # Apply all .yaml, .yml, .json files in this directory
+            for f in *.yaml *.yml *.json; do
+              [ -e "$f" ] && microk8s.kubectl apply -f "$f"
+            done
+            # Recursively apply manifests in subdirectories as well
+            find . -type f \( -name '*.yaml' -o -name '*.yml' -o -name '*.json' \) -exec microk8s.kubectl apply -f {} \;
+
+      - name: Wait for deployment to become ready
+        run: sleep 60
+
+# NOTE:
+# - The push trigger is commented out. This workflow will only run when you manually trigger it from the Actions tab.
+# - The version check step has been removed.
+# - The deployment manifest is updated to use the correct image tag before upload.

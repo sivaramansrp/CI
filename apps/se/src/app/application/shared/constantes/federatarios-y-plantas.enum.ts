@@ -14,6 +14,71 @@ export const FECHA_DE_PAGO = {
 };
 
 /**
+ * Información de domicilio y datos fiscales del solicitante.
+ *
+ * @property calle - Nombre de la calle del domicilio fiscal.
+ * @property numeroExterior - Número exterior del domicilio fiscal.
+ * @property numeroInterior - Número interior del domicilio fiscal.
+ * @property codigoPostal - Código postal del domicilio fiscal.
+ * @property localidad - Localidad del domicilio fiscal.
+ * @property colonia - Colonia del domicilio fiscal.
+ * @property municipioODelegacion - Municipio o delegación del domicilio fiscal.
+ * @property entidadFederativa - Entidad federativa del domicilio fiscal.
+ * @property pais - País del domicilio fiscal.
+ * @property registroFederalDeContribuyentes - RFC del solicitante.
+ * @property domicilioFiscalDelSolicitante - Domicilio fiscal completo del solicitante.
+ * @property razonSocial - Razón social del solicitante.
+ */
+export const FECHA_DE_Tabla = {
+  calle: "Insurgentes Sur",
+  numeroExterior: "456",
+  numeroInterior: "12A",
+  codigoPostal: "03100",
+  localidad: "Ciudad de México",
+  colonia: "Del Valle",
+  municipioODelegacion: "Benito Juárez",
+  entidadFederativa: "Ciudad de México",
+  pais: "México",
+  registroFederalDeContribuyentes: "XYZ890123LMN",
+  domicilioFiscalDelSolicitante: "Insurgentes Sur 456, Interior 12A, Colonia Del Valle, Benito Juárez, Ciudad de México, C.P. 03100, México",
+  razonSocial: "Servicios Digitales Ejemplo S.A. de C.V."
+}
+
+
+/**
+ * Información de la planta INMEX, incluyendo detalles de ubicación, domicilio fiscal y razón social.
+ *
+ * @property {string} planta - Nombre de la planta.
+ * @property {string} calle - Calle donde se ubica la planta.
+ * @property {string} numeroExterior - Número exterior del domicilio.
+ * @property {string} numeroInterior - Número interior o suite del domicilio.
+ * @property {string} codigoPostal - Código postal de la ubicación.
+ * @property {string} localidad - Localidad de la planta.
+ * @property {string} colonia - Colonia donde se encuentra la planta.
+ * @property {string} delegacionMunicipio - Delegación o municipio correspondiente.
+ * @property {string} entidadFederativa - Entidad federativa (estado) de la planta.
+ * @property {string} pais - País donde se ubica la planta.
+ * @property {string} registroFederalDeContribuyentes - RFC de la empresa.
+ * @property {string} domicilioDelSolicitante - Domicilio completo del solicitante.
+ * @property {string} razonSocial - Razón social de la empresa.
+ */
+export const INMEX_PLANTAS= {
+  planta: "Planta Baja",
+  calle: "Av. Paseo de la Reforma",
+  numeroExterior: "789",
+  numeroInterior: "Suite 15",
+  codigoPostal: "06600",
+  localidad: "Ciudad de México",
+  colonia: "Cuauhtémoc",
+  delegacionMunicipio: "Cuauhtémoc",
+  entidadFederativa: "Ciudad de México",
+  pais: "México",
+  registroFederalDeContribuyentes: "LMN456789QRS",
+  domicilioDelSolicitante: "Av. Paseo de la Reforma 789, Suite 15, Colonia Cuauhtémoc, Delegación Cuauhtémoc, Ciudad de México, C.P. 06600, México",
+  razonSocial: "Tecnologías Innovadoras Ejemplo S.A. de C.V."
+};
+
+/**
  * Constante que define los estados predeterminados para un formulario.
  * 
  * Esta constante es un objeto que contiene tres propiedades:

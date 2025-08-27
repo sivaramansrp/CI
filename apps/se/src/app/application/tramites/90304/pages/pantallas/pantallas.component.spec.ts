@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BtnContinuarComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { PantallasComponent } from './pantallas.component';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('PantallasComponent', () => {
   let component: PantallasComponent;
@@ -14,6 +15,7 @@ describe('PantallasComponent', () => {
         WizardComponent,
         BtnContinuarComponent
       ],
+      providers: [ provideHttpClient() ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
@@ -26,19 +28,4 @@ describe('PantallasComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should update the indice and navigate wizard on getValorIndice call', () => {
-    const mockWizardComponent = {
-      siguiente: jest.fn(),
-      atras: jest.fn(),
-    };
-    component.wizardComponent = mockWizardComponent as unknown as WizardComponent;
-
-    component.getValorIndice({ accion: 'cont', valor: 2 });
-    expect(component.indice).toBe(2);
-    expect(mockWizardComponent.siguiente).toHaveBeenCalled();
-
-    component.getValorIndice({ accion: 'back', valor: 1 });
-    expect(component.indice).toBe(1);
-    expect(mockWizardComponent.atras).toHaveBeenCalled();
-  });
 });

@@ -178,6 +178,12 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
   };
 
   /**
+   * Flag para rastrear si el usuario ha interactuado con el formulario.
+   * Se utiliza para mostrar mensajes de validación solo después de la interacción del usuario.
+   */
+  public userHasInteracted = false;
+
+  /**
    * Constructor del componente Pedimento.
    * Se inyectan las dependencias necesarias para el componente, incluyendo servicios y store.
    * tramite5701Query
@@ -259,6 +265,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
    * Esta función emite un evento para validar los campos y luego ejecuta las acciones correspondientes.
    */
   agregaPedimento(): void {
+    this.userHasInteracted = true;
     this.validaCampos.emit();
     if (this.validacion) {
       this.acciones();
@@ -519,6 +526,11 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
         if (TIPO_PEDIMENTO) {
           this.pedimentos[rowIndex].tipoPedimento = TIPO_PEDIMENTO.id;
           this.pedimentos[rowIndex].comprobanteValor = '';
+
+          // Clear numero field when changing to "Remesa consolidado" (id: 4)
+          if (TIPO_PEDIMENTO.id === 4) {
+            this.pedimentos[rowIndex].numero = '';
+          }
 
           if (TIPO_PEDIMENTO.id) {
             if (TIPO_PEDIMENTO.id !== 4) {

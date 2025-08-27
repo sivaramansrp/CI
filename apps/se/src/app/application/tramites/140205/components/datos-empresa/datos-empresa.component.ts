@@ -1,4 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { CancelacionCertificadosService } from '../../services/cancelacionCertificados.service';
 
@@ -16,8 +23,9 @@ import {
 
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
+import { BUSCAR_EMPRESA_ERROR } from '../../constants/cancelaciones.enum';
+import { CommonModule } from '@angular/common';
 import { Tramite140205Query } from '../../../../estados/queries/tramite140205.query';
-
 
 /**
  * @component
@@ -37,22 +45,37 @@ import { Tramite140205Query } from '../../../../estados/queries/tramite140205.qu
   templateUrl: './datos-empresa.component.html',
   styleUrl: './datos-empresa.component.scss',
   standalone: true,
-  imports: [TituloComponent, ReactiveFormsModule],
+  imports: [TituloComponent, ReactiveFormsModule, CommonModule],
 })
-export class DatosEmpresaComponent implements OnInit, OnDestroy {
+export class DatosEmpresaComponent implements OnInit, OnDestroy, AfterViewInit {
+  /**
+   * Subject para destruir notificador.
+   */
+  consultaDatos!: ConsultaioState;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
 
-    /**
-     * Subject para destruir notificador.
-     */
-    consultaDatos!: ConsultaioState;
-    /**
-     * Indica si el formulario está en modo solo lectura.
-     * Cuando es `true`, los campos del formulario no se pueden editar.
-     */
-    soloLectura: boolean = false;
-  
-    
-    private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  /**
+   * Subject utilizado para gestionar la destrucción de suscripciones
+   * y evitar fugas de memoria en el ciclo de vida del componente.
+   *
+   * @private
+   * @type {ReplaySubject<boolean>}
+   */
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
+  /**
+   * Evento de salida que emite un valor booleano al realizar
+   * la búsqueda de empresa.
+   *
+   * @event
+   * @type {EventEmitter<boolean>}
+   */
+  @Output() datosEmpresaBuscar = new EventEmitter<boolean>();
+
   /**
    * @property {FormGroup} solicitudForm
    * @description Grupo de formulario para gestionar los datos de la solicitud.
@@ -78,6 +101,16 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
   public destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * Mensaje de error que se genera al intentar realizar
+   * la búsqueda de una empresa sin los parámetros requeridos
+   * o cuando ocurre un fallo en la operación.
+   *
+   * @type {string}
+   * @default ''
+   */
+  BUSCAR_EMPRESA_ERROR: string = '';
+
+  /**
    * @constructor
    * @description Constructor del componente. Inicializa los servicios necesarios.
    * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
@@ -90,7 +123,7 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
     private store: Tramite140205Store,
     private query: Tramite140205Query,
     private validacionesService: CancelacionCertificadosService,
-     private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -104,12 +137,32 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+          this.solicitudForm?.get('grupoEmpresa')?.patchValue({
+            nombre: this.solicitudState?.grupoEmpresa?.nombre,
+            primerApellido: this.solicitudState?.grupoEmpresa?.primerApellido,
+            segundoApellido: this.solicitudState?.grupoEmpresa?.segundoApellido,
+            actividadEconomica:
+              this.solicitudState?.grupoEmpresa?.actividadEconomica,
+            datosRfc: this.solicitudState?.grupoEmpresa?.datosRfc,
+            clave: this.solicitudState?.grupoEmpresa?.clave,
+            correo: this.solicitudState?.grupoEmpresa?.correo,
+            calle: this.solicitudState?.grupoEmpresa?.calle,
+            numeroExterior: this.solicitudState?.grupoEmpresa?.numeroExterior,
+            numeroInterior: this.solicitudState?.grupoEmpresa?.numeroInterior,
+            codigoPostal: this.solicitudState?.grupoEmpresa?.codigoPostal,
+            colonia: this.solicitudState?.grupoEmpresa?.colonia,
+            pais: this.solicitudState?.grupoEmpresa?.pais,
+            estado: this.solicitudState?.grupoEmpresa?.estado,
+            localidad: this.solicitudState?.grupoEmpresa?.localidad,
+            municipio: this.solicitudState?.grupoEmpresa?.municipio,
+            telefono: this.solicitudState?.grupoEmpresa?.telefono,
+          });
         })
       )
       .subscribe();
     this.initImpresaDatosFormulario();
 
-       this.consultaioQuery.selectConsultaioState$
+    this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
@@ -121,8 +174,7 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-
-    /**
+  /**
    * Destruye el componente y libera recursos.
    *
    * Este método se llama cuando el componente se destruye, asegurando que no queden suscripciones activas.
@@ -130,8 +182,7 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
   inicializarFormulario(): void {
     if (this.soloLectura) {
       this.solicitudForm.disable();
-       this.mostrarDatosGenerales = true;
-
+      this.mostrarDatosGenerales = true;
     } else {
       this.solicitudForm.enable();
     }
@@ -141,7 +192,54 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
    * @description Método para habilitar la visualización de los datos generales de la empresa.
    */
   buscarEmpresa(): void {
-    this.mostrarDatosGenerales = true;
+    const GRUPO_EMPRESA_CONTROL = this.solicitudForm?.get('grupoEmpresa');
+    const RFC_CONTROL =
+      GRUPO_EMPRESA_CONTROL instanceof FormGroup
+        ? GRUPO_EMPRESA_CONTROL.get('rfc')
+        : null;
+    const RFC: string = RFC_CONTROL ? RFC_CONTROL.value : null;
+    if (RFC?.length === 13) {
+      this.fetchGetDatos();
+      this.mostrarDatosGenerales = true;
+      this.BUSCAR_EMPRESA_ERROR = '';
+      this.datosEmpresaBuscar.emit(true);
+    }
+    this.solicitudForm?.get('grupoEmpresa')?.get('rfc')?.markAsTouched();
+    this.BUSCAR_EMPRESA_ERROR = BUSCAR_EMPRESA_ERROR;
+    this.datosEmpresaBuscar.emit(true);
+  }
+
+  /**
+   * Hook del ciclo de vida de Angular que se ejecuta después de que la vista
+   * y sus elementos hijos han sido inicializados.
+   *
+   * @description
+   * - Deshabilita el grupo de formulario `grupoEmpresa`.
+   * - Habilita el control específico `grupoEmpresa.rfc` dentro del formulario.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  ngAfterViewInit(): void {
+    this.solicitudForm?.get('grupoEmpresa')?.disable();
+    this.solicitudForm?.get('grupoEmpresa.rfc')?.enable();
+  }
+
+  /**
+   * Método para obtener los datos de consulta del servicio.
+   *  Este método realiza una llamada al servicio `CertificadosOrigenService`
+   *  para obtener los datos necesarios para la consulta del certificado de origen.
+   *  @returns {void}
+   *  @memberof PasoUnoComponent
+   * */
+  public fetchGetDatos(): void {
+    this.validacionesService
+      .getDatosConsulta()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((respuesta) => {
+        if (respuesta.success) {
+          this.store.setGrupoEmpresa(respuesta.datos.GrupoEmpresa);
+        }
+      });
   }
 
   /**
@@ -162,78 +260,107 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
       grupoEmpresa: this.fb.group({
         rfc: [
           this.solicitudState?.grupoEmpresa?.rfc,
-          [Validators.required, Validators.minLength(12)],
+          [Validators.required, Validators.minLength(13)],
         ],
         nombre: [
-          this.solicitudState?.grupoEmpresa?.nombre,
+          { value: this.solicitudState?.grupoEmpresa?.nombre, disabled: true },
           [Validators.required, Validators.minLength(3)],
         ],
         primerApellido: [
-          this.solicitudState?.grupoEmpresa?.primerApellido,
+          {
+            value: this.solicitudState?.grupoEmpresa?.primerApellido,
+            disabled: true,
+          },
           [Validators.required, Validators.minLength(3)],
         ],
         segundoApellido: [
-          this.solicitudState?.grupoEmpresa?.segundoApellido,
+          {
+            value: this.solicitudState?.grupoEmpresa?.segundoApellido,
+            disabled: true,
+          },
           [Validators.required, Validators.minLength(3)],
         ],
         actividadEconomica: [
-          this.solicitudState?.grupoEmpresa?.actividadEconomica,
+          {
+            value: this.solicitudState?.grupoEmpresa?.actividadEconomica,
+            disabled: true,
+          },
           [Validators.required, Validators.minLength(3)],
         ],
         datosRfc: [
-          this.solicitudState?.grupoEmpresa?.datosRfc,
+          {
+            value: this.solicitudState?.grupoEmpresa?.datosRfc,
+            disabled: true,
+          },
           [Validators.required, Validators.minLength(3)],
         ],
         clave: [
-          this.solicitudState?.grupoEmpresa?.clave,
+          { value: this.solicitudState?.grupoEmpresa?.clave, disabled: true },
           [Validators.required, Validators.minLength(3)],
         ],
         correo: [
-          this.solicitudState?.grupoEmpresa?.correo,
+          { value: this.solicitudState?.grupoEmpresa?.correo, disabled: true },
           [Validators.required, Validators.email],
         ],
         calle: [
-          this.solicitudState?.grupoEmpresa?.calle,
+          { value: this.solicitudState?.grupoEmpresa?.calle, disabled: true },
           [Validators.required, Validators.minLength(3)],
         ],
         numeroExterior: [
-          this.solicitudState?.grupoEmpresa?.numeroExterior,
+          {
+            value: this.solicitudState?.grupoEmpresa?.numeroExterior,
+            disabled: true,
+          },
           [Validators.required, Validators.minLength(1)],
         ],
         numeroInterior: [
-          this.solicitudState?.grupoEmpresa?.numeroInterior,
+          {
+            value: this.solicitudState?.grupoEmpresa?.numeroInterior,
+            disabled: true,
+          },
           [Validators.required, Validators.minLength(1)],
         ],
         codigoPostal: [
-          this.solicitudState?.grupoEmpresa?.codigoPostal,
+          {
+            value: this.solicitudState?.grupoEmpresa?.codigoPostal,
+            disabled: true,
+          },
           [Validators.required, Validators.minLength(5)],
         ],
         colonia: [
-          this.solicitudState?.grupoEmpresa?.colonia,
+          { value: this.solicitudState?.grupoEmpresa?.colonia, disabled: true },
           [Validators.required, Validators.minLength(3)],
         ],
         pais: [
-          this.solicitudState?.grupoEmpresa?.pais,
+          { value: this.solicitudState?.grupoEmpresa?.pais, disabled: true },
           [Validators.required, Validators.minLength(3)],
         ],
         estado: [
-          this.solicitudState?.grupoEmpresa?.estado,
+          { value: this.solicitudState?.grupoEmpresa?.estado, disabled: true },
           [Validators.required, Validators.minLength(3)],
         ],
         localidad: [
-          this.solicitudState?.grupoEmpresa?.localidad,
+          {
+            value: this.solicitudState?.grupoEmpresa?.localidad,
+            disabled: true,
+          },
           [Validators.required, Validators.minLength(3)],
         ],
         municipio: [
-          this.solicitudState?.grupoEmpresa?.municipio,
+          {
+            value: this.solicitudState?.grupoEmpresa?.municipio,
+            disabled: true,
+          },
           [Validators.required, Validators.minLength(3)],
         ],
         telefono: [
-          this.solicitudState?.grupoEmpresa?.telefono,
+          {
+            value: this.solicitudState?.grupoEmpresa?.telefono,
+            disabled: true,
+          },
           [Validators.required, Validators.minLength(10)],
         ],
       }),
-      
     });
     this.inicializarFormulario();
   }

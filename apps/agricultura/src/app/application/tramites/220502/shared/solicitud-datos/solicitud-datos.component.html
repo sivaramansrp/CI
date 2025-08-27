@@ -45,7 +45,7 @@
                 <tbody>
                    <!-- Dynamic Rows from Input Data -->
                   @for (item of tablaFilaDatos; let i = $index; track i) {
-                  <tr>
+                  <tr (dblclick)="alClicFila()">
                     <td>{{ item.fechaCreacion }}</td>
                     <td>{{ item.mercancia }}</td>
                     <td>{{ item.cantidad }}</td>

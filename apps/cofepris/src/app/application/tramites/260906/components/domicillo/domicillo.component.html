@@ -36,7 +36,7 @@
     <div class="col-md-8">
       <div class="form-group">
         <label class="form-label" for="calle">Calle*:</label>
-        <span class="bi-question-circle-fill" data-bs-toggle="tooltip"></span>
+        <span class="bi-question-circle-fill" title="Calle" data-bs-toggle="tooltip"></span>
         <input class="form-control" id="calle" placeholder="" type="text" formControlName="calle" (change)="setValoresStore(domicilio,'calle', 'setCalle')" />
       </div>
     </div>
@@ -79,7 +79,7 @@
     <div class="col-md-4">
       <div class="form-group">
         <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria:</label>
-        <span class="bi-question-circle-fill" data-bs-toggle="tooltip"></span>
+        <span class="bi-question-circle-fill" title="No. de licencia sanitaria" data-bs-toggle="tooltip"></span>
         <input class="form-control" id="licenciaSanitaria" placeholder="" type="text" formControlName="licenciaSanitaria" (change)="setValoresStore(domicilio,'licenciaSanitaria', 'setLicenciaSanitaria')" />
       </div>
     </div>
@@ -171,7 +171,7 @@
           </div>
           <div class="form-group">
             <label for="denominacionComun">Denominación o nombre científico*:</label>
-            <span class="bi-question-circle-fill" data-bs-toggle="tooltip"></span>
+            <span class="bi-question-circle-fill" title="Denominación o nombre científico" data-bs-toggle="tooltip"></span>
             <input type="text" id="denominacionComun" formControlName="denominacionComun" class="form-control" (change)="setValoresStore(formMercancias,'denominacionComun', 'setDenominacionComun')">
           </div>
           <div class="form-group">
@@ -185,7 +185,7 @@
           </div>
           <div class="form-group">
             <label for="fraccionArancelaria">Fracción arancelaria*:</label>
-            <span class="bi-question-circle-fill" data-bs-toggle="tooltip"></span>
+            <span class="bi-question-circle-fill" title="Fracción arancelaria" data-bs-toggle="tooltip"></span>
             <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control" (change)="setValoresStore(formMercancias,'fraccionArancelaria', 'setFraccionArancelaria')">
           </div>
           <div class="form-group">
@@ -198,7 +198,7 @@
           </div>
           <div class="form-group">
             <label for="UMT">UMT*:</label>
-            <span class="bi-question-circle-fill" data-bs-toggle="tooltip"></span>
+            <span class="bi-question-circle-fill" title="Unidad de medida" data-bs-toggle="tooltip"></span>
             <input type="text" id="UMT" formControlName="UMT" class="form-control" (change)="setValoresStore(formMercancias,'UMT', 'setUMT')">
           </div>
           <div class="form-group">

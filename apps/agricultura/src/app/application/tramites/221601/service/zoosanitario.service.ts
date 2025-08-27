@@ -108,6 +108,20 @@ export class ZoosanitarioService {
   obtenerRadio(): Observable<PreOperativo[]> {
     return this.http.get<PreOperativo[]>('assets/json/221601/tipoPersonaradio.json');
   }
+
+  /**
+   * @description Obtiene una lista de objetos de tipo PreOperativo desde un archivo JSON local.
+   * @returns {Observable<PreOperativo[]>} Un observable que emite un arreglo de objetos PreOperativo.
+   * @method obtenerRadio
+   * @memberof ExportacionService
+   * @example
+   * this.exportacionService.obtenerRadio().subscribe((data: PreOperativo[]) => {
+   *   console.log(data);
+   * });
+   */
+  obtenerRadiooption(): Observable<PreOperativo[]> {
+    return this.http.get<PreOperativo[]>('assets/json/221601/tipoPersona.json');
+  }
   }
   
   

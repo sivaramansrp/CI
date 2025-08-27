@@ -56,6 +56,11 @@ export class DatosDelTramiteComponent implements OnChanges{
   @Input() catalogosArray: Catalogo[][] = [];
 
   /**
+   * @description Indica si se debe mostrar el error de clasificación.
+   */
+  @Input() mostrarErrorClasificacion: boolean = true;
+
+  /**
    * @description Opciones de solicitud configuradas para el formulario.
    */
 

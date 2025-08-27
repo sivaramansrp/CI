@@ -1,6 +1,5 @@
 import {
   Catalogo,
-  CatalogoSelectComponent,
   ConfiguracionColumna,
   TablaDinamicaComponent,
   TablaSeleccion,
@@ -18,6 +17,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 @Component({
@@ -98,6 +98,14 @@ export class GestionarEmpresasSubfabricantesComponent implements OnInit {
     this._estadoCatalogo = valor;
   }
 
+  /**
+   * Indica si se debe mostrar la tabla inicial.
+   * Esta propiedad se utiliza para controlar la visibilidad de la tabla de subfabricantes.
+   *
+   * @type {boolean}
+   * @default false
+   */
+  @Input() showTablaInicial: boolean = false;
 
   /**
    * Obtiene el estado del catálogo.

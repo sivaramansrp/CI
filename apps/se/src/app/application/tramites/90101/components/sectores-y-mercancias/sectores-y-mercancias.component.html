@@ -8,7 +8,7 @@
         <div class="row">
             <div class="form-group">
                 <div class="col-md-4">
-                    <app-catalogo-select [catalogo]="sector" [label]="'Sector'" [required]="true" formControlName="sector" name="sector" 
+                    <app-catalogo-select [catalogo]="sector" [label]="'Sector'" formControlName="sector" name="sector" 
                     [isDisabled]="esFormularioSoloLectura"
                     (change)="
                     setValoresStore(
@@ -24,13 +24,13 @@
         </div>
         <div class="row">
             <div class=" text-end mt-5">
-                <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar sector</button>
+                <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" (click)="eliminarSector()">Eliminar sector</button>
                 <button class="btn btn-primary" (click)="agregarSector()" [disabled]="esFormularioSoloLectura">Agregar sector</button>
             </div>
         </div>
         <div class="row">
             <h6>Solicitud PROSEC sector plural:</h6>
-            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.RADIO" [configuracionTabla]="sectorColumnsConfiguracion" [datos]="sectors" ></app-tabla-dinamica>
+            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.RADIO" [configuracionTabla]="sectorColumnsConfiguracion" [datos]="sectors" (filaClic)="seleccionarFila($event)" ></app-tabla-dinamica>
         </div>
         <div class="row">
             <div class="col-md-12">
@@ -42,7 +42,7 @@
         </div>
         <div class="row">
             <div class="col-md-4">
-                <label class="form-label" for="Fraccion_arancelaria">Fracción arancelaria:</label>
+                <label class="form-label" for="Fraccion_arancelaria">Fracción arancelaria*:</label>
                 <input type="text" 
                 value=""
                 class="form-control" 
@@ -58,17 +58,31 @@
                 maxlength="8"
                 libSoloNumeros
                 >
+                <div
+                *ngIf="sectoresYMercancias.get('Fraccion_arancelaria')?.invalid && sectoresYMercancias.get('Fraccion_arancelaria')?.touched">
+                <small class="mensaje-error">Este campo es obligatorio.</small>
+                </div>
             </div>
         </div>
         <div class="row mb-5">
             <div class=" text-end mt-5">
-                <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+                <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" (click)="eliminarSector()">Eliminar</button>
                 <button class="btn btn-primary" (click)="agregarProducir()" [disabled]="esFormularioSoloLectura">Agregar</button>
             </div>
         </div>
         <div class="row">
             <h6>Solicitud PROSEC sector plural:</h6>
-            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.RADIO" [configuracionTabla]="producirColumnConfiguracion" [datos]="producir" ></app-tabla-dinamica>
+            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.RADIO" [configuracionTabla]="producirColumnConfiguracion" [datos]="producir" (filaSeleccionada)="seleccionarFilaProducir($event)"></app-tabla-dinamica>
         </div>
     </form>
+    <div>
+        @if(espectaculoAlerta){
+            <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+            (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
+        }
+        @if(espectaculoConfirmar){
+            <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+            (confirmacionModal)="eliminarPedimentoDatos($event)"></lib-notificaciones>
+        }
+    </div>
 </div>
