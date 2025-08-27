@@ -1102,7 +1102,10 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       ide_sentido_dictamen: datosDictamen.cumplimiento,
       justificacion_dictamen: datosDictamen.mensajeDictamen,
       id_accion: this.guardarDatos.action_id,
-      cve_usuario: this.guardarDatos.current_user
+      cve_usuario: this.guardarDatos.current_user,
+      fecha_inicio_vigencia: this.conformidadDictamen.fecha_inicio,
+      fecha_fin_vigencia: this.conformidadDictamen.fecha_fin_vigencia,
+      texto_dictamen: this.conformidadDictamen.texto_dictamen
     };
 
     this.guardarService.postGuadarDictamen(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
@@ -1179,12 +1182,15 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       justificacion_dictamen: datosDictamen.mensajeDictamen,
       id_accion: this.guardarDatos.action_id,
       cve_usuario: this.guardarDatos.current_user,
+      fecha_inicio_vigencia: this.conformidadDictamen.fecha_inicio,
+      fecha_fin_vigencia: this.conformidadDictamen.fecha_fin_vigencia,
+      texto_dictamen: this.conformidadDictamen.texto_dictamen,
       solicitante: {
         rfc: this.guardarDatos.current_user,
         nombre: 'PRUEBA',
         apellido_paterno: 'PRUEBA',
         apellido_materno: 'PRUEBA'
-      }
+      },
     };
 
     this.guardarService.postFirmarMostrar(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)

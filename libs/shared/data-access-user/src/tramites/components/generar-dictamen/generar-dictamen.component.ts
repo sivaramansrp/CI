@@ -153,7 +153,7 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
 
     // Si hay antecedentes de conformidad, se establece en el campo de solo lectura
     if (this.conformidad) {
-      this.dictamenForm.get('antecedentesReadonly')?.setValue(this.conformidad.descripcion_criterio);
+      this.dictamenForm.get('antecedentesReadonly')?.setValue(this.conformidad.texto_dictamen);
     }
 
     // Si los antecedentes no son editables, se elimina el control de antecedentesEditables
@@ -248,23 +248,27 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
    */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['conformidad'] && this.dictamenForm) {
-      this.dictamenForm.get('antecedentesReadonly')?.setValue(this.conformidad.descripcion_criterio);
+      this.dictamenForm.get('antecedentesReadonly')?.setValue(this.conformidad.texto_dictamen);
       this.dictamenForm.patchValue({
         fechaInicioVigenciaAutorizada: this.conformidad.fecha_inicio,
-        fechaFinVigenciaAutorizada: this.conformidad.fecha_sugerida,
+        fechaFinVigenciaAutorizada: this.conformidad.fecha_fin_vigencia,
       });
     }
     if (changes['dataIniciarDictamen'] && changes['dataIniciarDictamen'].currentValue) {
       this.dictamenForm.patchValue({
         cumplimiento: this.dataIniciarDictamen.ide_sent_dictamen,
         mensajeDictamen: this.dataIniciarDictamen.justificacion,
+        fechaInicioVigenciaAutorizada: this.dataIniciarDictamen.fecha_inicio_vigencia,
+        fechaFinVigenciaAutorizada: this.dataIniciarDictamen.fecha_fin_vigencia,
       });
     }
 
      if (changes['dataIniciarDictamenAutorizar'] && changes['dataIniciarDictamenAutorizar'].currentValue) {
       this.dictamenForm.patchValue({
         cumplimiento: this.dataIniciarDictamenAutorizar.ide_sent_dictamen,
-        mensajeDictamen: this.dataIniciarDictamenAutorizar.justificacion
+        mensajeDictamen: this.dataIniciarDictamenAutorizar.justificacion,
+        fechaInicioVigenciaAutorizada: this.dataIniciarDictamenAutorizar.fecha_inicio_vigencia,
+        fechaFinVigenciaAutorizada: this.dataIniciarDictamenAutorizar.fecha_fin_vigencia,
       });
     }
   }
