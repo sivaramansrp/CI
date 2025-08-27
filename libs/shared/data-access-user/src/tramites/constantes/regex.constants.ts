@@ -831,3 +831,17 @@ export const CERTIFICATE_OF_ORIGIN_NUMBER = /^[A-Za-z0-9]{8,20}$/;
  * Ejemplos inválidos: "123.45", "abc", "12345678901234567"
  */
 export const IMPORTE = /^\d{1,16}$/;
+/**
+ * Expresión regular para validar números decimales con hasta 13 dígitos enteros y exactamente 2 decimales.
+ *
+ * Ejemplos válidos:
+ * - "1234567890123.12"
+ * - "1.23"
+ *
+ * Ejemplos no válidos:
+ * - "12345678901234.12" (más de 13 dígitos enteros)
+ * - "123.1" (menos de 2 decimales)
+ * - "123" (sin decimales)
+ */
+export const REGEX_DECIMAL_16_TOTAL = /^\d{1,13}\.\d{2}$/;
+ 
