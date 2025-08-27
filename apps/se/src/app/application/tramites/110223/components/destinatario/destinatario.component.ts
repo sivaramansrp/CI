@@ -18,9 +18,9 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component'; 
 import { CommonModule } from '@angular/common';
 import { RegistroService } from '../../services/registro.service';
-import { Solicitud110223State } from '../../../../estados/tramites/Tramite110223.store';
-import { Tramite110223Query } from '../../../../estados/queries/tramite110223.query';
-import { Tramite110223Store } from '../../../../estados/tramites/Tramite110223.store';
+import { Tramite110223Query } from '../../query/tramite110223.query';
+import { Tramite110223Store } from '../../estados/Tramite110223.store';
+import { TramiteState } from '../../estados/Tramite110223.store';
 
 /**
  * Componente que representa el formulario de destinatario en el trámite.
@@ -57,7 +57,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   /**
    * Estado actual de la solicitud.
    */
-  public solicitudState!: Solicitud110223State;
+  public solicitudState!: TramiteState;
 
   /**
    * Notificador para destruir observables al destruir el componente.
