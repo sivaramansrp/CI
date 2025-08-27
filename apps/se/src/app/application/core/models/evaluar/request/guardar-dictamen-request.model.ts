@@ -11,4 +11,10 @@ export interface GuardarDictamenRequest {
     ide_sentido_dictamen: string;
     /** Justificación del dictamen */
     justificacion_dictamen: string;
+    /** Fecha de inicio de vigencia autorizada */
+    fecha_inicio_vigencia: string;
+    /** Fecha de fin de vigencia autorizada */
+    fecha_fin_vigencia: string;
+    /** Texto del dictamen */
+    texto_dictamen: string;
 }
