@@ -93,7 +93,7 @@
     "webpack-dev-server": "^4.0.0"
   },
   "overrides": {
-    "@nx/webpack": {
+    "@nx/webpack":  {
       "webpack": "5.91.0"
     }
   }
