@@ -1,5 +1,5 @@
 import { Mercancia } from "../../../shared/models/modificacion.enum";
-import { MercanciaTabla } from "../../110221/models/peru-certificado.model";
+import { MercanciaTabla } from "../../../shared/models/certificado-origen.model";
 
 /**
  * Representa las columnas del histórico de productores.
@@ -280,4 +280,13 @@ export interface MercanciasHistorico {
   * objeto de tipo `MercanciaTabla`.
   */
   datos: Mercancia[];
+}
+export interface MercanciasHistoricos {
+  /**
+  * @property {MercanciaTabla[]} datos - Lista de datos históricos de mercancías.
+  * @description
+  * Arreglo que contiene los datos históricos de mercancías, cada uno representado por un
+  * objeto de tipo `MercanciaTabla`.
+  */
+  datos: MercanciaTabla[];
 }

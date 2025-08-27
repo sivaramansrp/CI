@@ -6,7 +6,7 @@ import { FormBuilder } from '@angular/forms';
 import { HistoricoColumnas} from '../../../110223/models/certificado-origen.model';
 import { HistoricoProductoresComponent } from '../../../../shared/components/historico-productores/historico-productores.component';
 import { HttpErrorResponse } from '@angular/common/http';
-import { MercanciaTabla } from '../../../110221/models/peru-certificado.model';
+import { MercanciaTabla } from '../../../../shared/models/certificado-origen.model';
 import { Subject } from 'rxjs';
 import { Tramite110223Query } from '../../query/tramite110223.query';
 import { Tramite110223Store } from '../../estados/Tramite110223.store';
@@ -50,11 +50,10 @@ export class HistoricoProductoressComponent implements OnInit, OnDestroy {
    */
   productoresExportador: HistoricoColumnas[] = [];
   /**
-   * @property {MercanciaTabla[]} mercancia - Arreglo que contiene información de las mercancías.
+   * @property {MercanciaTabla[]} MercanciaTabla - Arreglo que contiene información de las mercancías.
    * @command Este arreglo se utiliza para almacenar y gestionar los datos relacionados con las mercancías en el componente.
    */
   mercancia: MercanciaTabla[] = [];
-
   /**
    * Notificador para destruir las suscripciones y evitar fugas de memoria.
    */
@@ -160,10 +159,13 @@ export class HistoricoProductoressComponent implements OnInit, OnDestroy {
   /**
    * Carga la lista de productores disponibles para el exportador desde el servicio.
    */
+  /**
+   * Carga la lista de productores disponibles para el exportador desde el servicio.
+   */
   cargarMercancia(): void {
-    // this.certificadoDeService.obtenerMercancia().pipe(takeUntil(this.destroyNotifier$)).subscribe(respuesta => {
-    //   this.mercancia = respuesta.datos;
-    // });
+ this.certificadoDeService.obtenerMercancias().pipe(takeUntil(this.destroyNotifier$)).subscribe(respuesta => {
+      this.mercancia = respuesta.datos;
+    });
   }
 
   /**

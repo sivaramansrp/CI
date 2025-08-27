@@ -1,8 +1,9 @@
-import { Catalogo, CatalogoLista, DisponiblesTabla, MercanciasHistorico, SeleccionadasTabla } from '../models/certificado-origen.model';
+import { Catalogo, CatalogoLista, DisponiblesTabla, MercanciasHistorico, MercanciasHistoricos, SeleccionadasTabla } from '../models/certificado-origen.model';
 import { Observable,map } from 'rxjs';
 import { Tramite110223Store, TramiteState } from '../estados/Tramite110223.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MercanciaTabla } from '../../110221/models/peru-certificado.model';
 import { ProductorExportador } from '../models/certificado-origen.model';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 
@@ -160,6 +161,11 @@ export class CertificadosOrigenService {
          return this.http
            .get<MercanciasHistorico>('assets/json/110223/mercancias-seleccionadas.json');
        }
+          obtenerMercancias(): Observable<MercanciasHistoricos> {
+              return this.http
+                .get<MercanciasHistoricos>('assets/json/110221/mercancias-seleccionadas.json');
+            }
+      
       
         /**
          * Obtiene la lista de países bloque desde un archivo JSON local.
