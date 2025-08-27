@@ -16,6 +16,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Subject, delay, map, takeUntil, tap } from 'rxjs';
+import { TEXTO, MODALIDAD } from '../../constantes/prosec.module';
 import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
@@ -27,7 +28,6 @@ import { ProsecService } from '../../services/prosec.service';
 import { SeccionLibQuery } from '@ng-mf/data-access-user';
 import { SeccionLibState } from '@ng-mf/data-access-user';
 import { SeccionLibStore } from '@ng-mf/data-access-user';
-import { TEXTO } from '../../constantes/prosec.module';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
 @Component({
@@ -63,6 +63,10 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     /** Bandera de solo lectura (puedes adaptarla si tienes lógica para esto) */
   public esFormularioSoloLectura: boolean = false;
 
+   
+  /** Lista de empleados seleccionados en la tabla */
+  public seleccionarProsecDisponiblesLista: FilaPlantas[] = [] as FilaPlantas[];
+
    /**
    * Bandera para determinar si el formulario es de actualización.
    * Inicialmente establecido en `false`.
@@ -89,6 +93,8 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
   ActividadProductiva: Catalogo[] = [];
 
   plantasDatos: FilaPlantas[] = [];
+  /** Datos de las plantas obtenidos del servicio */
+  plantasDatosPROSEC: FilaPlantas[] = [];
 
   TablaSeleccion = TablaSeleccion;
 
@@ -262,7 +268,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
   initActionFormBuild(): void {
     // Se asegura que el formulario se inicialice correctamente con las validaciones necesarias
     this.forma = this.fb.group({
-      modalidad: [this.domiciliosState.modalidad],
+      modalidad: [{value:this.domiciliosState.modalidad ? this.domiciliosState.modalidad : MODALIDAD, disabled: true}],
       Estado: [this.domiciliosState.Estado, Validators.required],
       RepresentacionFederal: [
         this.domiciliosState.RepresentacionFederal,
@@ -332,7 +338,15 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     this.obtenerListaEstado();
     this.obtenerListaFederal();
     this.obtenerListaActividad();
-    this.recuperarDatos();
+    if (this.esFormularioSoloLectura) {
+      this.recuperarDatos();
+    }
+  }
+
+  
+    /** Guarda la selección de número de empleados hecha por el usuario.*/
+  seleccionarProsecDisponibles(evento: FilaPlantas[]): void {
+    this.seleccionarProsecDisponiblesLista = evento;
   }
 
   /**
@@ -350,6 +364,9 @@ recuperarDatos(): void {
       next: (response) => {
         if (response && 'plantasDatos' in response && Array.isArray(response.plantasDatos)) {
           this.plantasDatos = response.plantasDatos;
+          if (this.esFormularioSoloLectura) {
+            this.plantasDatosPROSEC = [...this.plantasDatos];
+          }
         } else {
           this.plantasDatos = [];
         }
@@ -358,6 +375,41 @@ recuperarDatos(): void {
         this.plantasDatos = [];
       },
     });
+  }
+/**   * Método para mostrar los domicilios de las plantas.
+   * Este método llama a la función `recuperarDatos` para obtener y mostrar los domicilios de las plantas.
+   * @returns {void}
+   */
+  public mostrarDomicilios(): void {
+    const VALOR_ESTADO = this.forma.get('Estado')?.value;
+    if (VALOR_ESTADO) {
+      this.recuperarDatos();
+    }
+  }
+
+  /**
+   * Método para agregar las plantas seleccionadas a la lista de plantas PROSEC.
+   * Este método copia las plantas seleccionadas desde la lista `plantasDatos` a la lista `plantasDatosPROSEC`
+   * y luego limpia la lista `plantasDatos`.
+   * @returns {void}
+   */
+  public agregarPlantas(): void {
+    this.plantasDatosPROSEC = [...this.plantasDatos];
+    this.plantasDatos = [];
+  }
+
+  /**
+   * Método para eliminar las plantas seleccionadas de la lista de plantas PROSEC.
+   * Este método elimina las plantas que están en la lista `seleccionarProsecDisponiblesLista`
+   * de la lista `plantasDatos` y luego limpia la lista `seleccionarProsecDisponiblesLista`.
+   * @returns {void}
+   */
+  public eliminarPlantas(): void {
+    if(this.seleccionarProsecDisponiblesLista.length > 0) {
+      const plantasAEliminar = this.seleccionarProsecDisponiblesLista.map(planta => planta.registro);
+      this.plantasDatos = this.plantasDatos.filter(planta => !plantasAEliminar.includes(planta.registro));
+      this.seleccionarProsecDisponiblesLista = [];
+    }
   }
 
   /**
