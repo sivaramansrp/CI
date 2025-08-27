@@ -361,9 +361,6 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
     if (this.tabIndex) {
       this.store.setindicePrevioRuta(this.tabIndex);
     }
-    this.router.navigate(['../complementar-plantas'], {
-      relativeTo: this.activatedRoute,
-    });
   }
 
   /**
