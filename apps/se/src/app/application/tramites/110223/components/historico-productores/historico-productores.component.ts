@@ -161,7 +161,6 @@ export class HistoricoProductoressComponent implements OnInit, OnDestroy {
    * Carga la lista de productores disponibles para el exportador desde el servicio.
    */
   cargarMercancia(): void {
-    console.log('Cargar mercancia');
     // this.certificadoDeService.obtenerMercancia().pipe(takeUntil(this.destroyNotifier$)).subscribe(respuesta => {
     //   this.mercancia = respuesta.datos;
     // });

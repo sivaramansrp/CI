@@ -158,7 +158,7 @@ export class CertificadosOrigenService {
         */
        obtenerMercancia(): Observable<MercanciasHistorico> {
          return this.http
-           .get<MercanciasHistorico>('assets/json/110221/mercancias-seleccionadas.json');
+           .get<MercanciasHistorico>('assets/json/110223/mercancias-seleccionadas.json');
        }
       
         /**
