@@ -16,7 +16,7 @@ import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramit
 import { SolicitarDocumentosEvaluacionComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitar-documentos-evaluacion/solicitar-documentos-evaluacion.component';
 import { SolicitarOpinionComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitar-opinion/solicitar-opinion.component';
 
-import { CategoriaMensaje, ConsultaioQuery, ConsultaioState, ConsultaioStore,FECHA_DE_INICIO, Notificacion, NotificacionesComponent, base64ToHex, encodeToISO88591Hex } from '@ng-mf/data-access-user';
+import { CategoriaMensaje, ConsultaioQuery, ConsultaioState, ConsultaioStore, FECHA_DE_INICIO, Notificacion, NotificacionesComponent, base64ToHex, encodeToISO88591Hex } from '@ng-mf/data-access-user';
 import { Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 import { LISTA_TRIMITES } from '../shared/constantes/lista-trimites.enums';
 
@@ -929,11 +929,33 @@ export class EvaluarComponent implements OnInit, OnDestroy {
           if (response.codigo === CodigoRespuesta.EXITO) {
             this.opcionesDisponibles = response.datos ?? [];
           } else {
-            console.error('Error en respuesta:', response.mensaje);
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: response.error || '',
+              mensaje:
+                response.causa ||
+                response.mensaje ||
+                '',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
           }
         },
         error: (error) => {
-          console.error('Error al llamar el servicio:', error);
+          const MENSAJE = error?.error?.error || 'Error inesperado en opciones de evaluación.';
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: 'error',
+            modo: 'action',
+            titulo: '',
+            mensaje: MENSAJE,
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          }
         }
       });
   }
@@ -1035,7 +1057,17 @@ export class EvaluarComponent implements OnInit, OnDestroy {
 
       },
       error: (err) => {
-        console.error('Error al iniciar dictamen:', err);
+        const MENSAJE = err?.error?.error || 'Error al obtener los criterios';
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: 'error',
+          modo: 'action',
+          titulo: '',
+          mensaje: MENSAJE,
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        }
       }
     });
   }
@@ -1055,7 +1087,17 @@ export class EvaluarComponent implements OnInit, OnDestroy {
         this.conformidadDictamen = resp.datos ?? {} as CriteriosResponse;
       },
       error: (err) => {
-        console.error('Error al obtener criterios:', err);
+        const MENSAJE = err?.error?.error || 'Error al obtener los criterios';
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: 'error',
+          modo: 'action',
+          titulo: '',
+          mensaje: MENSAJE,
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        }
       }
     });
   }
@@ -1071,7 +1113,17 @@ export class EvaluarComponent implements OnInit, OnDestroy {
         this.opcionesSentidosDispobles = resp.datos ?? [];
       },
       error: (err) => {
-        console.error('Error al obtener criterios:', err);
+        const MENSAJE = err?.error?.error || 'Error al obtener los criterios';
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: 'error',
+          modo: 'action',
+          titulo: '',
+          mensaje: MENSAJE,
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        }
       }
     });
   }
@@ -1173,7 +1225,6 @@ export class EvaluarComponent implements OnInit, OnDestroy {
   firmarMostrarDictamen(datosDictamen?: any): void {
 
     if (!datosDictamen) {
-      console.error('No se recibieron datos del dictamen.');
       return;
     }
 
@@ -1297,7 +1348,6 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    */
   firmaDictamen(firma: string): void {
     if (!this.cadenaOriginal || !this.datosFirmaReales) {
-      console.error('Faltan datos para completar la firma');
       this.nuevaNotificacion = {
         tipoNotificacion: 'toastr',
         categoria: CategoriaMensaje.ERROR,
@@ -1327,7 +1377,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.firmarDictamenService.postGuadarDictamen(this.tramite,NUMFOLIO, PAYLOAD)
+    this.firmarDictamenService.postGuadarDictamen(this.tramite, NUMFOLIO, PAYLOAD)
       .pipe(
         takeUntil(this.destroyNotifier$),
         tap((firmaResponse: BaseResponse<null>) => {
@@ -1342,23 +1392,22 @@ export class EvaluarComponent implements OnInit, OnDestroy {
               txtBtnAceptar: '',
               txtBtnCancelar: '',
             };
-          }else if( firmaResponse.codigo === CodigoRespuesta.EXITO){
-              this.nuevaNotificacion = {
-                tipoNotificacion: 'toastr',
-                categoria: CategoriaMensaje.EXITO,
-                modo: 'action',
-                titulo: 'Firma exitosa',
-                mensaje: 'La firma del dictamen se ha realizado correctamente.',
-                cerrar: false,
-                txtBtnAceptar: '',
-                txtBtnCancelar: '',
+          } else if (firmaResponse.codigo === CodigoRespuesta.EXITO) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.EXITO,
+              modo: 'action',
+              titulo: 'Firma exitosa',
+              mensaje: 'La firma del dictamen se ha realizado correctamente.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
             }
             this.router.navigate(['bandeja-de-tareas-pendientes']);
           }
 
         }),
         catchError((error) => {
-          console.error('Error en el proceso de firma:', error);
           if (!this.nuevaNotificacion) {
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
@@ -1423,7 +1472,17 @@ export class EvaluarComponent implements OnInit, OnDestroy {
           this.dataIniciarRequerimiento = resp.datos ?? {} as IniciarRequerimientoResponse;
         },
         error: (err) => {
-          console.error('Error al guardar el dictamen', err);
+          const MENSAJE = err?.error?.error || 'Error al obtener los criterios';
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: 'error',
+            modo: 'action',
+            titulo: '',
+            mensaje: MENSAJE,
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          }
         }
       });
   }
@@ -1478,7 +1537,17 @@ export class EvaluarComponent implements OnInit, OnDestroy {
           }
         },
         error: (err) => {
-          console.error('Error al guardar el dictamen', err);
+          const MENSAJE = err?.error?.error || 'Error al obtener los criterios';
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: 'error',
+            modo: 'action',
+            titulo: '',
+            mensaje: MENSAJE,
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          }
         }
       });
   }
