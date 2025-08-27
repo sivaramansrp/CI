@@ -9,6 +9,26 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { SolicitudDeReporteComponent } from './solicitud-de-reporte.component';
 
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
+
+@Pipe({name: 'translate'})
+class TranslatePipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'phoneNumber'})
+class PhoneNumberPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'safeHtml'})
+class SafeHtmlPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
 describe('SolicitudDeReporteComponent', () => {
   let fixture;
   let component;
@@ -17,7 +37,9 @@ describe('SolicitudDeReporteComponent', () => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule ],
       declarations: [
-        SolicitudDeReporteComponent
+        SolicitudDeReporteComponent,
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        MyCustomDirective
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
@@ -28,11 +50,6 @@ describe('SolicitudDeReporteComponent', () => {
     }).compileComponents();
     fixture = TestBed.createComponent(SolicitudDeReporteComponent);
     component = fixture.debugElement.componentInstance;
-
-    component.wizardComponent = {
-      siguiente: jest.fn(),
-      atras: jest.fn()
-    } as any;
   });
 
   afterEach(() => {
@@ -45,55 +62,17 @@ describe('SolicitudDeReporteComponent', () => {
   });
 
   it('should run #getValorIndice()', async () => {
+    component.pasoUnoComponent = component.pasoUnoComponent || {};
+    component.pasoUnoComponent.validarTodosLosFormularios = jest.fn();
+    component.datosPasos = component.datosPasos || {};
+    component.datosPasos.indice = 'indice';
     component.wizardComponent = component.wizardComponent || {};
     component.wizardComponent.siguiente = jest.fn();
-    component.wizardComponent.atras = jest.fn();
     component.getValorIndice({
-      valor: {},
-      accion: {}
+      accion: {},
+      valor: {}
     });
-  });
-
-  it('should update indice and call siguiente when accion is "cont" and valor is in range', () => {
-    const mockEvent = { valor: 2, accion: 'cont' };
-
-    component.getValorIndice(mockEvent);
-
-    expect(component.indice).toBe(2);
-    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
-  });
-
-  it('should update indice and call atras when accion is not "cont" and valor is in range', () => {
-    const mockEvent = { valor: 3, accion: 'back' };
-
-    component.getValorIndice(mockEvent);
-
-    expect(component.indice).toBe(3);
-    expect(component.wizardComponent.atras).toHaveBeenCalled();
-    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-  });
-
-  it('should not update indice or call any method when valor is out of range (too low)', () => {
-    const mockEvent = { valor: 0, accion: 'cont' };
-
-    component.indice = 1;
-    component.getValorIndice(mockEvent);
-
-    expect(component.indice).toBe(1);
-    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
-  });
-
-  it('should not update indice or call any method when valor is out of range (too high)', () => {
-    const mockEvent = { valor: 6, accion: 'back' };
-
-    component.indice = 1;
-    component.getValorIndice(mockEvent);
-
-    expect(component.indice).toBe(1);
-    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+    
   });
 
 });

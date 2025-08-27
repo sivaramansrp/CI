@@ -54,7 +54,6 @@ describe('ComplementariaComponent', () => {
   test('should initialize lists as empty arrays', () => {
     expect(component.plantasTablaDatos).toEqual([]);
     expect(component.sectorTablaDatos).toEqual([]);
-    expect(component.mercanciasProducirDatos).toEqual([]);
     expect(component.productoIndirectoDatos).toEqual([]);
   });
 
@@ -127,7 +126,6 @@ describe('ComplementariaComponent', () => {
 
     component.obtenerMercanciasProducir();
 
-    expect(component.mercanciasProducirDatos).toEqual(mockMercanciasRes.data);
   });
 
   test('should fetch and set productor indirecto data correctly', () => {

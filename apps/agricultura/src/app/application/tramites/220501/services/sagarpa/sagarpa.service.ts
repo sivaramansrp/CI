@@ -57,4 +57,12 @@ export class SagarpaService {
   getRegistroTomaMuestrasMercanciasData(): Observable<RegistroTomaMuestrasMercanciasDatos> {
     return this.http.get<RegistroTomaMuestrasMercanciasDatos>('assets/json/220501/registro_toma_muestras_mercancias.json');
   }
+
+  /**
+   * Método para obtener los datos de la selección de registro de toma de muestras de mercancías.
+   * @returns Observable con los datos de la selección de registro de toma de muestras de mercancías.
+   */
+  obtenerSeleccionadaRegistroDatos(): Observable<RegistroTomaMuestrasMercanciasDatos> {
+    return this.http.get<RegistroTomaMuestrasMercanciasDatos>('assets/json/220501/seleccionada_registro_datos.json');
+  }
 }
