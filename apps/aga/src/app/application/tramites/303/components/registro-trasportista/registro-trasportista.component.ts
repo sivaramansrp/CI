@@ -365,9 +365,9 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
     };
     this.limpiarFormulario();
   }
-/**
- * Habilita los campos del formulario.
- */
+  /**
+   * Habilita los campos del formulario.
+   */
   habilitarCampos(): void {
     const RFC = this.FormTrasportista.get('rfc');
     const NOMBRE = this.FormTrasportista.get('nombre');
@@ -407,8 +407,8 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
     const FORM_VALUE = this.FormTrasportista.value;
 
     const TRANSPORTISTA: Transportista = {
-      idPersonaTransportista: this.modoEdicion
-        ? this.transportistaModificar!.idPersonaTransportista
+      idPersonaTransportista: this.modoEdicion && this.transportistaModificar
+        ? this.transportistaModificar.idPersonaTransportista
         : crypto.randomUUID(),
       tipoPersona: FORM_VALUE.tipoPersona,
       nacionalidad: FORM_VALUE.nacionalidad,

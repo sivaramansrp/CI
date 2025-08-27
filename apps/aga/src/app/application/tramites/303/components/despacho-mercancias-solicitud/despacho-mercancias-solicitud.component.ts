@@ -84,6 +84,9 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
     this.ObtenerDatosCatalogoImmex();
   }
 
+  /**
+   * Obtiene los datos del catálogo IMMEX.
+   */
   ObtenerDatosCatalogoImmex(): void {
     this.transportistaService.obtenerDatosImmex()
       .pipe(
