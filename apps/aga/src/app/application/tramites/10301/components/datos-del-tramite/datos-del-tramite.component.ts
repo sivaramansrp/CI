@@ -113,12 +113,12 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   /**
    * Catálogo de aduanas.
    */
-  aduana!: CatalogosSelect;
+  aduana!: Catalogo[];
 
   /**
    * Catálogo de años.
    */
-  ano!: CatalogosSelect;
+  ano!: Catalogo[];
 
   /**
    * Catálogo de condiciones.
@@ -128,7 +128,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   /**
    * Catálogo de países.
    */
-  pais!: CatalogosSelect;
+  pais!: Catalogo[];
 
   /**
    * Lista de rangos de días seleccionados.
@@ -385,42 +385,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.donanteDomicilio();
-    this.getAduanaIngresara();
-    this.getAno();
-    this.getPais();
     this.inicializaCatalogos();
     this.inicializarEstadoFormulario();
-
-    this.subscriptions.push(
-      this.query.selectAduana$.subscribe((aduana) => {
-        this.aduana = {
-          labelNombre: 'Aduana por la que ingresará la mercancía',
-          required: false,
-          primerOpcion: 'Seleccione una opción',
-          catalogos: aduana ?? [],
-        };
-      })
-    );
-    this.subscriptions.push(
-      this.query.selectAno$.subscribe((ano) => {
-        this.ano = {
-          labelNombre: 'Año',
-          required: false,
-          primerOpcion: 'Seleccione una opción',
-          catalogos: ano || [],
-        };
-      })
-    );
-    this.subscriptions.push(
-      this.query.selectPais$.subscribe((pais) => {
-        this.pais = {
-          labelNombre: 'País',
-          required: false,
-          primerOpcion: 'Seleccione una opción',
-          catalogos: pais ?? [],
-        };
-      })
-    );
     this.cargarDatosTablaData();
   }
 
@@ -466,55 +432,13 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtiene el catálogo de años.
-   */
-  getAno(): void {
-    this.getAnoSubscription = this.importarExportar
-      .getAno()
-      .subscribe((resp) => {
-        if (resp.code === 200) {
-          const RESPONSE = resp.data;
-          this.store.setAno(RESPONSE);
-        }
-      });
-  }
-
-  // /**
-  //  * Obtiene el catálogo de condiciones.
-  //  */
-  // getCondicion(): void {
-  //   this.getCondicionSubscription = this.importarExportar
-  //     .getCondicion()
-  //     .subscribe((resp) => {
-  //       if (resp.code === 200) {
-  //         const RESPONSE = resp.data;
-  //         this.store.setCondicion(RESPONSE);
-  //       }
-  //     });
-  // }
-
-  /**
-   * Obtiene el catálogo de países.
-   */
-  getPais(): void {
-    this.getPaisSubscription = this.importarExportar
-      .getPais()
-      .subscribe((resp) => {
-        if (resp.code === 200) {
-          const RESPONSE = resp.data;
-          this.store.setPais(RESPONSE);
-        }
-      });
-  }
-
-  /**
    * Inicializa los catálogos necesarios para el componente.
    */
   inicializaCatalogos(): void {
     const FINES$ = this.importarExportar.getFinesDeMercancia().pipe(
       map((resp) => {
         this.fines = resp.data;
-        this.selectRangoDias = this.pais.catalogos.map(
+        this.selectRangoDias = this.fines.map(
           (fines: Catalogo) => fines.descripcion
         );
       })
@@ -528,27 +452,32 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         })
       );
 
-    merge(FINES$, CONDICION$).pipe(takeUntil(this.destroyNotifier$)).subscribe();
-
-  }
-
-  /**
-   * Obtiene la información de la aduana por la que ingresará la mercancía y actualiza el store con los datos obtenidos.
-   * 
-   * Este método se suscribe al observable `getAduanaIngresara` del servicio `importarExportar`.
-   * Si la respuesta es exitosa (código HTTP 200), almacena los datos recibidos en el estado de la aplicación usando el método `store.setAduana`.
-   * 
-   * @returns void
-   */
-  getAduanaIngresara(): void {
-    this.getAduanaIngresaraSubscription = this.importarExportar
+    const ADUANA$ = this.importarExportar
       .getAduanaIngresara()
-      .subscribe((resp) => {
-        if (resp.code === 200) {
-          const RESPONSE = resp.data;
-          this.store.setAduana(RESPONSE);
-        }
-      });
+      .pipe(
+        map((resp) => {
+          this.aduana = resp.data;
+        })
+      );
+
+    const ANO$ = this.importarExportar
+      .getAno()
+      .pipe(
+        map((resp) => {
+          this.ano = resp.data;
+        })
+      );
+
+    const PAIS$ = this.importarExportar
+      .getPais()
+      .pipe(
+        map((resp) => {
+          this.pais = resp.data;
+        })
+      );
+
+    merge(FINES$, CONDICION$, ADUANA$, ANO$, PAIS$).pipe(takeUntil(this.destroyNotifier$)).subscribe();
+
   }
 
   /**
@@ -734,6 +663,33 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   condicionSeleccion(): void {
     const CONDICION = this.agregarMercanciasForm.get('datosMercancia.condicion')?.value;
     this.store.setCondicion(CONDICION);
+  }
+
+  /**
+   * Maneja la selección de la aduana.
+   * Obtiene el valor del formulario y lo establece en el store.
+   */
+  aduanaSeleccion(): void {
+    const ADUANA = this.tramiteForm.get('importadorExportador.aduana')?.value;
+    this.store.setAduana(ADUANA);
+  }
+
+  /**
+   * Maneja la selección de la ano.
+   * Obtiene el valor del formulario y lo establece en el store.
+   */
+  anoSeleccion(): void {
+    const ANO = this.agregarMercanciasForm.get('datosMercancia.ano')?.value;
+    this.store.setAduana(ANO);
+  }
+
+  /**
+   * Maneja la selección de la pais.
+   * Obtiene el valor del formulario y lo establece en el store.
+   */
+  paisSeleccion(): void {
+    const PAIS = this.tramiteForm.get('importadorExportador.pais')?.value;
+    this.store.setAduana(PAIS);
   }
 
   /**

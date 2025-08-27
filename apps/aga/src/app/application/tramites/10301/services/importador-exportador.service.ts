@@ -30,11 +30,7 @@ export class ImportadorExportadorService {
    * @returns Observable con la respuesta del catálogo de aduanas.
    */
   getAduanaIngresara(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>(
-      'assets/json/10301/aduanaIngresara.json'
-    ).pipe(
-      tap(response => this.store.setAduana(response.data))
-    );
+    return this.http.get<RespuestaCatalogos>('assets/json/10301/aduanaIngresara.json');
   }
 
   /**
@@ -43,9 +39,7 @@ export class ImportadorExportadorService {
    * @returns Observable con la respuesta del catálogo de años.
    */
   getAno(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>('assets/json/10301/ano.json').pipe(
-      tap(response => this.store.setAno(response.data))
-    );
+    return this.http.get<RespuestaCatalogos>('assets/json/10301/ano.json');
   }
 
   /**

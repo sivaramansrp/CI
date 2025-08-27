@@ -18,10 +18,15 @@
         </div>
         <div class="row mt-5">
           <div class="col-md-8">
-            <app-catalogo-select [catalogo]="aduana.catalogos" [label]="aduana.labelNombre"
-              [placeholder]="aduana.primerOpcion" [required]="true" id="aduana" formControlName="aduana" (change)="
-                setValoresStore(importadorExportador, 'aduana', 'setAduana')
-              " [isDisabled]="esFormularioSoloLectura">
+            <app-catalogo-select
+              [catalogo]="aduana"
+              [label]="'Aduana por la que ingresará la mercancía'"
+              formControlName="aduana"
+              [placeholder]="'Seleccione una opción'"
+              [isDisabled]="esFormularioSoloLectura"
+              (change)="aduanaSeleccion()"
+              name="aduana"
+            >
             </app-catalogo-select>
           </div>
         </div>
@@ -121,10 +126,16 @@
                   </div>
                   <div class="row mt-3">
                     <div class="col-md-4">
-                      <app-catalogo-select [catalogo]="ano.catalogos" [label]="ano.labelNombre"
-                        [placeholder]="ano.primerOpcion" [required]="false" id="ano" formControlName="ano" (change)="
-                  setValoresStore(datosMercancia, 'ano', 'setAno')
-                " [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+                      <app-catalogo-select
+                          [catalogo]="ano"
+                          [label]="'Año'"
+                          formControlName="ano"
+                          [placeholder]="'Seleccione una opción'"
+                          [isDisabled]="esFormularioSoloLectura"
+                          (change)="anoSeleccion()"
+                          name="ano"
+                        >
+                        </app-catalogo-select>
                     </div>
                     <div class="col-md-4">
                       <label>Modelo:</label>
@@ -242,10 +253,16 @@
         </div>
         <div class="row mt-3">
           <div class="col-md-4">
-            <app-catalogo-select [catalogo]="pais.catalogos" [label]="pais.labelNombre"
-              [placeholder]="pais.primerOpcion" [required]="true" id="pais" formControlName="pais"
-              (change)="setValoresStore(importadorExportador, 'pais', 'setPais')"
-              [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+              <app-catalogo-select
+                [catalogo]="pais"
+                [label]="'País'"
+                formControlName="pais"
+                [placeholder]="'Seleccione una opción'"
+                [isDisabled]="esFormularioSoloLectura"
+                (change)="paisSeleccion()"
+                name="pais"
+              >
+              </app-catalogo-select>
           </div>
           <div class="col-md-4">
             <label>Código postal*:</label>
