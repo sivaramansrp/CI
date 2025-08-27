@@ -14,8 +14,13 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
+import { BodyTablaResolucion } from '@libs/shared/data-access-user/src/core/models/shared/consulta-generica.model';
 import { FirmaRequest } from '../core/models/confirmar-notificacion/request/firma-request.model';
-import { PasoNotificacion } from '../core/enum/enum-130118';
+
+import { CodigoRespuesta, PasoNotificacion } from '../core/enum/enum-130118';
+import { AcuseReciboComponent } from '../shared/components/acuse-recibo/acuse-recibo.component';
+import { FirmaConfirmarResponse } from '../core/models/confirmar-notificacion/response/confirmar-notificacion-response.model';
+
 
 /**
  * @component ConfirmarNotificacionComponent
@@ -36,6 +41,7 @@ import { PasoNotificacion } from '../core/enum/enum-130118';
     NotificacionActoAdministrativoComponent,
     FirmaElectronicaComponent,
     NotificacionesComponent,
+    AcuseReciboComponent
   ],
   templateUrl: './confirmar-notificacion.component.html',
   styleUrl: './confirmar-notificacion.component.scss',
@@ -95,6 +101,19 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
      * @description Estado actual del trámite consultado.
      */
   guardarDatos!: ConsultaioState;
+
+  /**
+   * @property {string} banderaVistaAcuse
+   * @description Estado para saber estado de la vista.
+  */
+   banderaVistaAcuse!: string;
+
+  /**
+   * Datos de la tabla.
+   * Contiene los registros que se mostrarán en la tabla.
+   * @type {BodyTablaResolucion[]}
+  */
+  datosTabla: BodyTablaResolucion[] = [];
 
 
   /**
@@ -201,8 +220,8 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
     this.firmaService.postFirma(NUMFOLIO, PAYLOAD)
       .pipe(
         takeUntil(this.destroy$),
-        tap((firmaResponse: BaseResponse<string>) => {
-          if (firmaResponse.codigo !== '00' || !firmaResponse.datos) {
+        tap((firmaResponse: BaseResponse<FirmaConfirmarResponse>) => {
+          if (firmaResponse.codigo !== CodigoRespuesta.EXITO || !firmaResponse.datos) {
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
               categoria: CategoriaMensaje.ERROR,
@@ -214,10 +233,15 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
               txtBtnCancelar: '',
             };
             throw new Error('Firma no exitosa');
+          }else if (firmaResponse.codigo === CodigoRespuesta.EXITO){
+            if(firmaResponse.datos.tipo_acuse === "Resolucion"){
+              this.banderaVistaAcuse = firmaResponse.datos.tipo_acuse;
+              this.postResolucion(firmaResponse.datos.id_acuse);
+            }else{
+               this.postRequerimiento(firmaResponse.datos.id_acuse);
+            }
           }
-
-          // Éxito: guardar folio
-          this.folio = firmaResponse.datos;
+ 
         }),
         tap(() => {
           this.tramiteStore.establecerTramite(
@@ -244,6 +268,116 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+  }
+
+  /**
+   * @method postResolucion
+   * @description Guarda la resolución del proceso actual
+   * 
+   * Realiza una petición al servicio para guardar la resolución
+   * del trámite. Si la respuesta es exitosa (código '00'), prepara
+   * los datos para el envío del acuse correspondiente.
+   * 
+   * @returns {void}
+ */
+  postResolucion(id_acuse: number): void {
+    this.confirmarNotificacionService.postResolucionGuardar(Number(this.guardarDatos.procedureId), id_acuse).subscribe({
+      next: (response) => {
+        if (response.codigo === CodigoRespuesta.EXITO && response.datos) {
+          this.datosTabla = [{
+              id: 1,
+              idDocumento: '1',
+              documento: response.datos.nombre_archivo ?? '',
+              urlPdf: response.datos.llave_archivo ?? ''
+            }];
+        } else {
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: response.error || 'Error al obtener resolución',
+            mensaje:
+                response.causa ||
+                response.mensaje ||
+                response.error || 'Ocurrió un error al obtener resolución.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+           this.indiceDePaso = this.PasoNotificacion.FIRMAR;
+        }
+      },
+      error: (error) => {
+          if (!this.nuevaNotificacion) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: 'Error inesperado',
+              mensaje: error?.error.error || 'Ocurrió un error al obtener resolución.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+          this.indiceDePaso = this.PasoNotificacion.FIRMAR;
+      }
+    });
+  }
+
+  /**
+   * @method postRequerimiento
+   * @description Guarda el requerimiento del proceso actual
+   * 
+   * Realiza una petición al servicio para guardar el requerimiento
+   * del trámite. Si la respuesta es exitosa (código '00'), prepara
+   * los datos para el envío del acuse correspondiente.
+   * 
+   * @returns {void}
+ */
+  postRequerimiento(id_acuse: number): void {
+    this.confirmarNotificacionService.postRequerimientoGuardar(Number(this.guardarDatos.procedureId), id_acuse).subscribe({
+      next: (response) => {
+        if (response.codigo === CodigoRespuesta.EXITO && response.datos) {
+           this.datosTabla = [{
+              id: 1,
+              idDocumento: '1',
+              documento: response.datos.nombre_archivo ?? '',
+              urlPdf: response.datos.llave_archivo ?? ''
+            }];
+        } else {
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: response.error || 'Error al obtener requerimiento',
+            mensaje:
+                response.causa ||
+                response.mensaje ||
+                response.error || 'Ocurrió un error al obtener requerimiento.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+          this.indiceDePaso = this.PasoNotificacion.FIRMAR;
+        }
+      },
+      error: (error) => {
+          if (!this.nuevaNotificacion) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: 'Error inesperado',
+              mensaje: error?.error.error || 'Ocurrió un error al obtener requerimiento.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+          this.indiceDePaso = this.PasoNotificacion.FIRMAR;
+      }
+    });
   }
 
 

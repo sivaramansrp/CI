@@ -1,6 +1,7 @@
 import { API_POST_FIRMA, NUMFOLIOTRAMITE } from '../../../constantes/confirmar-notificacion/api-constantes';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
+import { FirmaConfirmarResponse } from '../../models/confirmar-notificacion/response/confirmar-notificacion-response.model';
 import { FirmaRequest } from '../../models/confirmar-notificacion/request/firma-request.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -34,10 +35,10 @@ export class FirmaService {
    * @returns Observable que emite la respuesta del servidor con el resultado de la firma
    */
   postFirma(numFolio: string, PAYLOAD: FirmaRequest):
-    Observable<BaseResponse<string>> {
+    Observable<BaseResponse<FirmaConfirmarResponse>> {
     const ENDPOINT = `${this.host}` +
       API_POST_FIRMA.replace(NUMFOLIOTRAMITE, numFolio);
 
-    return this.http.post<BaseResponse<string>>(ENDPOINT, PAYLOAD);
+    return this.http.post<BaseResponse<FirmaConfirmarResponse>>(ENDPOINT, PAYLOAD);
   }
 }
