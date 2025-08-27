@@ -542,7 +542,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
 
     this.tramiteForm = this.fb.group({
       importadorExportador: this.fb.group({
-        aduana: [this.solicitudState?.aduana, [Validators.required]],
+        aduana: [this.solicitudState?.aduana, Validators.required],
         nombre: [
           this.solicitudState?.nombre,
           [Validators.required, Validators.maxLength(50)],

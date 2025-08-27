@@ -3,7 +3,7 @@
   "message": "",
   "datos": {
     "manifesto": true,
-    "aduana": 2,
+    "aduana": "1",
     "nombre": "Electronica",
     "calle": "Calle Principal",
     "numeroExterior": "100",
@@ -11,7 +11,7 @@
     "telefono": "5551234567",
     "correoElectronico": "usuario@ejemplo.com",
     "codigoPostal": "12345",
-    "pais": 1,
+    "pais": "1",
     "estado": "11122",
     "colonia": "55",
     "opcion": "si",

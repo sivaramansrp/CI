@@ -18,7 +18,7 @@ export interface ConsultaDatos {
   manifesto: string; 
 
   /** Identificador de la aduana */
-  aduana: Catalogo[] | null; 
+  aduana: Catalogo[]; 
 
   /** Nombre de la empresa o persona que realiza la solicitud. */
   nombre: string;
@@ -66,7 +66,7 @@ export interface ConsultaDatos {
   opcion: string;
 
   /** Identificador del país del domicilio. */
-  pais: Catalogo[] | null;
+  pais: Catalogo[];
 
   /** Datos de la mercancía, incluyendo fines, tipo, uso, condición, marca, año, modelo y serie. */
   mercanciaDatos: DatosMercancia[];
