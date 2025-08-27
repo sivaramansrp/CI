@@ -3,7 +3,6 @@ import { Observable,map } from 'rxjs';
 import { Tramite110223Store, TramiteState } from '../estados/Tramite110223.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { MercanciaTabla } from '../../110221/models/peru-certificado.model';
 import { ProductorExportador } from '../models/certificado-origen.model';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 

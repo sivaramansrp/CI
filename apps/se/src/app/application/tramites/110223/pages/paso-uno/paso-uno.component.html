@@ -19,16 +19,15 @@
     </ul>
     <ng-container> @switch (indice) { 
       @case (1) { 
-        <solicitante [tabindex]="1" #Solicitante></solicitante>
+        <solicitante [tabindex]="1" ></solicitante>
       } @case (2) { 
           <app-certificado-origen [tabIndex]="2"></app-certificado-origen>
       } @case (3) {
-           <app-historico-productores [tabIndex]="3"></app-historico-productores>
-        
+           <app-historico-productoress [tabIndex]="3"></app-historico-productoress>
       } @case (4) {
           <app-destinatario [tabIndex]="4"></app-destinatario>
       } @case (5) {
-        <app-datos-certificado [hidden]="indice !== 5" #datosCertificadoRef></app-datos-certificado>
+        <app-datos-certificado [hidden]="indice !== 5"></app-datos-certificado>
        } } 
     </ng-container>
   </div>

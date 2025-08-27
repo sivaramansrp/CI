@@ -18,7 +18,7 @@ import { Tramite110223Store } from '../../estados/Tramite110223.store';
  * datos confidenciales.
  */
 @Component({
-  selector: 'app-historico-productores',
+  selector: 'app-historico-productoress',
   standalone: true,
   imports: [HistoricoProductoresComponent],
   templateUrl: './historico-productores.component.html',
