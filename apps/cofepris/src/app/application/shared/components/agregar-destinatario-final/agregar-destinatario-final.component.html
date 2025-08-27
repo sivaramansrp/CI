@@ -73,6 +73,7 @@
           class="form-control"
           [maxlength]="15"
           formControlName="rfc"
+          (input)="onChangeRfc($event)"
           [ngClass]="esInvalido('rfc') ? 'required' : ''"
         />
         <div *ngIf="esInvalido('rfc')" class="text-danger">
@@ -440,3 +441,13 @@
     </div>
   </form>
 </div>
+
+@if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones
+    [notificacionInput]="nuevaNotificacion"
+    (confirmacionModal)="eliminarPedimento($event)"
+  >
+  </lib-notificaciones>
+</section>
+}

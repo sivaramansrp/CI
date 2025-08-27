@@ -1,6 +1,9 @@
 import {
   Catalogo,
   CatalogoSelectComponent,
+  Notificacion,
+  NotificacionesComponent,
+  Pedimento,
   REGEX_CORREO_ELECTRONICO,
   REGEX_NOMBRE,
   REGEX_TELEFONO,
@@ -46,6 +49,7 @@ import { takeUntil } from 'rxjs/operators';
     CatalogoSelectComponent,
     TituloComponent,
     TooltipModule,
+    NotificacionesComponent
   ],
   templateUrl: './agregar-destinatario-final.component.html',
   styleUrl: './agregar-destinatario-final.component.css',
@@ -190,6 +194,24 @@ export class AgregarDestinatarioFinalComponent
    */
   @Input() datoSeleccionado: Destinatario[] | undefined;
 
+  @Input() datoSeleccionadorfc: Destinatario[] | undefined;
+
+  /**
+   * Array con los datos de los pedimentos.
+   * Se utiliza para almacenar los pedimentos ingresados por el usuario.
+   */
+  pedimentos: Array<Pedimento> = [];
+
+  /**
+   * Elemento a eliminar de la tabla de pedimentos.
+   */
+  elementoParaEliminar!: number;
+
+  /**
+   * @descripcion Notificación para mostrar mensajes al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
+
   /**
    * Crea el componente e inicializa el grupo de formulario.
    *
@@ -290,7 +312,7 @@ export class AgregarDestinatarioFinalComponent
       razonSocial: VALOR_FORMULARIO.razonSocial,
       lada: VALOR_FORMULARIO.lada,
     };
-    if(this.datoSeleccionado?.[0]?.id){
+    if (this.datoSeleccionado?.[0]?.id) {
       NUEVO_DESTINATARIO.id = this.datoSeleccionado[0].id;
     }
     this.destinatarios.push(NUEVO_DESTINATARIO);
@@ -609,6 +631,64 @@ export class AgregarDestinatarioFinalComponent
       this.localidadesDatos = this.localidadesTempDatos;
       this.coloniasDatos = this.coloniasTempDatos;
     }
+  }
+
+  onChangeRfc(event: Event): void {
+    const RFC_VALUE = (event.target as HTMLInputElement).value;
+    this.datoSeleccionadorfc?.forEach((dato) => {
+      if (dato.rfc === RFC_VALUE) {
+        const PEDIMENTO = {
+          patente: 0,
+          pedimento: 0,
+          aduana: 0,
+          idTipoPedimento: 0,
+          descTipoPedimento: 'Por evaluar',
+          numero: '',
+          comprobanteValor: '',
+          pedimentoValidado: false,
+        };
+        this.abrirModal(
+          'La información proporcionada de la persona ya existe, favor de verificar.'
+        );
+        this.pedimentos.push(PEDIMENTO);
+      }
+    });
+  }
+
+  /**
+   * Elimina un elemento de la tabla de pedimento, si se confirma la acción.
+   * @param borrar Indica si se debe proceder con la eliminación.
+   * @returns {void}
+   */
+  eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+  }
+
+  /**
+   * Elimina un elemento de la lista de pedimentos en la posición especificada.
+   *
+   * @param {number} i - El índice del elemento a eliminar.
+   *
+   * @remarks
+   * Después de eliminar el elemento, se actualiza el título y mensaje del modal,
+   * y se abre el modal para mostrar un aviso al usuario.
+   */
+  abrirModal(mensaje: string, i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+
+    this.elementoParaEliminar = i;
   }
 
   /**
