@@ -3,7 +3,6 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
-import { Mercancias } from '../../110204/models/plantas-consulta.model';
 
 /**
  * Interfaz que representa la estructura del estado de un trámite 110204.
@@ -90,7 +89,7 @@ export interface TramiteState {
    */
   formaValida: { [key: string]: boolean };
 
-  mercanciaTabla: Mercancias[];
+  mercanciaTabla: Mercancia[];
   
   /** Representación federal (si aplica). */
   representacionFederal: string;
@@ -149,7 +148,6 @@ export const INITIAL_STATE: TramiteState = {
     fraccionArancelariaForm: '',
     fechaInicioInput: '',
     fechaFinalInput: '',
-    
   },
     formulario:{
       datosConfidencialesProductor: false,
@@ -356,7 +354,7 @@ setFormDatosCertificado(values: { [key: string]: unknown }): void {
     this.update((state) => ({ ...state, idiomaDatos }));
   }
 
-  public setMercanciaTabla(mercanciaTabla: Mercancias[]): void {
+  public setMercanciaTabla(mercanciaTabla: Mercancia[]): void {
     this.update((state) => ({ ...state, mercanciaTabla }));
   }
     /**
