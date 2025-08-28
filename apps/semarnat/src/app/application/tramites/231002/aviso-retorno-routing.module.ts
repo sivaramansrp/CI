@@ -1,11 +1,11 @@
 import { RouterModule, Routes } from '@angular/router';
-import { AvisoRetornoComponent } from './pages/aviso-retorno/aviso-retorno.component';
 import { NgModule } from '@angular/core';
+import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 
 const ROUTES: Routes = [ 
     {
       path: 'primera-subsecuente',
-      component: AvisoRetornoComponent,
+      component: SolicitudPageComponent,
     }
 ];
 

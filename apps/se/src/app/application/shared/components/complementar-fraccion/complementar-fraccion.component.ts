@@ -61,6 +61,13 @@ export class ComplementarFraccionComponent implements OnInit {
   public complimentarForm!: FormGroup;
 
   /**
+   * Evento que se emite al cerrar el popup.
+   * 
+   * Se utiliza para notificar al componente padre que el popup ha sido cerrado.
+   */
+  @Output() cerrarPopup = new EventEmitter<void>();
+
+  /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios.
    * @param ubicaccion Servicio de ubicación para navegación.
@@ -122,6 +129,6 @@ export class ComplementarFraccionComponent implements OnInit {
    * @returns {void}
    */
   regresar(): void {
-    this.ubicaccion.back();
+    this.cerrarPopup.emit();
   }
 }

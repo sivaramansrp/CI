@@ -1,4 +1,3 @@
-import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { PersonaFisicaComponent } from '../persona-fisica/persona-fisica.component';
@@ -15,7 +14,6 @@ import { PersonaMoralComponent } from '../persona-moral/persona-moral.component'
   standalone: true,
   imports: [
     CommonModule,
-    AlertComponent,
     PersonaFisicaComponent,
     PersonaMoralComponent,
   ],

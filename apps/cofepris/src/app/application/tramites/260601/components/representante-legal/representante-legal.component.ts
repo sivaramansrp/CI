@@ -275,6 +275,23 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method validarFormulario
+   * @description
+   * Valida el formulario del representante legal.
+   * Si el formulario es válido, retorna `true`.
+   * Si es inválido, marca todos los campos como tocados para mostrar los mensajes de error y retorna `false`.
+   * 
+   * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
+   */
+  validarFormulario(): boolean {
+    if (this.representanteLegalForm.valid) {
+      return true;
+    }
+    this.representanteLegalForm.markAllAsTouched();
+    return false;
+  }
+
+  /**
    * Se ejecuta al destruir el componente.
    * Emite un valor y completa el subject `destruirNotificador$` para cancelar las suscripciones.
    */

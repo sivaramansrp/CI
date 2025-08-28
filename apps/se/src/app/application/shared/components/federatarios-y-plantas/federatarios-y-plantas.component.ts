@@ -4,8 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
-import { AlertComponent, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Notificacion, NotificacionesComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { InputFecha } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
@@ -25,8 +24,11 @@ import { TEXTO_DE_ALERTA } from '../../models/federatarios-y-plantas.model';
 import {
   DEFAULT_ESTADOS,
   FECHA_DE_PAGO,
+  FECHA_DE_Tabla,
+  INMEX_PLANTAS
 } from '../../constantes/federatarios-y-plantas.enum';
 
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
@@ -49,7 +51,7 @@ import { Validators } from '@angular/forms';
     InputFechaComponent,
     CatalogoSelectComponent,
     FormsModule,
-    NotificacionesComponent
+    NotificacionesComponent,
   ],
   templateUrl: './federatarios-y-plantas.component.html',
   styleUrl: './federatarios-y-plantas.component.scss',
@@ -129,6 +131,12 @@ export class FederatariosYPlantasComponent implements OnInit {
   @Input() estadoOptionsConfig!: CatalogoDatosIdx;
 
   /**
+   * Emite eventos relacionados con acciones en la sección.
+   * @event accionSeccion
+   */
+  @Output() accionSeccion: EventEmitter<string> = new EventEmitter<string>();
+
+  /**
    * Opciones de estados disponibles
    * @property {[]} estadoOptions
    */
@@ -145,6 +153,12 @@ export class FederatariosYPlantasComponent implements OnInit {
    * @property {FormGroup} federatariosFormGroup
    */
   public federatariosFormGroup!: FormGroup;
+
+  /**
+   * Grupo de controles del formulario para federatarios
+   * @property {FormGroup} federatariosCatalogoGroup
+   */
+  public federatariosCatalogoGroup!: FormGroup;
 
   /**
    * Emisor de eventos para los datos del formulario de federatarios.
@@ -217,7 +231,7 @@ export class FederatariosYPlantasComponent implements OnInit {
    * @param {Router} router - Servicio de Angular para la navegación.
    * @param {ActivatedRoute} activatedRoute - Servicio de Angular para obtener información sobre la ruta actual.
    */
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private validacionesService: ValidacionesFormularioService) {}
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -272,8 +286,33 @@ export class FederatariosYPlantasComponent implements OnInit {
       estadoOptions: new FormControl('',
         Validators.required
       ),
+      
     });
+    this.federatariosCatalogoGroup = new FormGroup({
+      estadoUno: new FormControl('',
+        Validators.required
+      ),
+      estadoDos: new FormControl('',
+        Validators.required
+      ),
+      estadoTres: new FormControl('',
+        Validators.required
+      ),
+    })
   }
+
+  /**
+  * compo doc
+  * @method esValido
+  * @description 
+  * Verifica si un campo específico del formulario es válido.
+  * @param field El nombre del campo que se desea validar.
+  * @returns {boolean | null} Un valor booleano que indica si el campo es válido.
+  */
+  public esValido(formgroup: FormGroup, campo: string): boolean | null {
+    return this.validacionesService.isValid(formgroup, campo);
+  }
+
   /**
    * Navega a la ruta de acciones
    * @param accionesPath
@@ -283,9 +322,12 @@ export class FederatariosYPlantasComponent implements OnInit {
       this.abrirPlantasModal();
       return;
     }
-    this.router.navigate([accionesPath], {
-      relativeTo: this.activatedRoute,
-    });
+  /**
+   * Emite la acción seleccionada si existen observadores suscritos a `accionSeccion`.
+   */
+  if (this.accionSeccion.observers.length > 0) {
+    this.accionSeccion.emit(accionesPath);
+  }
   }
 
   /**
@@ -304,6 +346,11 @@ export class FederatariosYPlantasComponent implements OnInit {
    * @returns {void}
    */
   aggregarDatos(): void {
+    if (this.federatariosFormGroup.invalid) {
+      this.agregarUnoModal();
+      this.federatariosFormGroup.markAllAsTouched();
+      return;
+    }
     this.datosFormaFedratario.emit(this.federatariosFormGroup.value);
     this.federatariosFormGroup.reset();
   }
@@ -377,6 +424,22 @@ export class FederatariosYPlantasComponent implements OnInit {
       txtBtnCancelar: '',
     };
   }
+  /**
+   * Abre un modal para agregar un nuevo miembro federado.
+   */
+  agregarUnoModal(): void {
+    this.miembrosNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Introduzca el Nombre completo y correcto del Notario.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
 
   /**
    * Método para manejar la selección de plantas IMMEX.
@@ -432,5 +495,29 @@ export class FederatariosYPlantasComponent implements OnInit {
       txtBtnCancelar: '',
     };
   }
+
+/**
+ * Searches and assigns available IMMEX plants data.
+ *
+ * This method sets the `plantasDisponiblesDatos` property with the value of `FECHA_DE_Tabla`.
+ * Typically used to update the list of available plants for IMMEX operations.
+ *
+ * @remarks
+ * Ensure that `FECHA_DE_Tabla` is defined and contains the expected data structure before calling this method.
+ */
+buscarPlantasImmex(): void {
+  this.plantasDisponiblesDatos = [FECHA_DE_Tabla];
+}
+
+/**
+ * Adds IMMEX plant data to the `plantasImmexDatos` array.
+ * This method assigns the value of `INMEX_PLANTAS` to the `plantasImmexDatos` property.
+ *
+ * @remarks
+ * Ensure that `INMEX_PLANTAS` is properly defined and contains the expected plant data.
+ */
+agregarPlantas(): void {
+  this.plantasImmexDatos = [INMEX_PLANTAS];
+}
 
 }

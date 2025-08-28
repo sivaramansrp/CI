@@ -1,6 +1,5 @@
 import {
   Catalogo,
-  CatalogoSelectComponent,
   ConfiguracionColumna,
   TablaDinamicaComponent,
   TablaSeleccion,
@@ -18,6 +17,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 @Component({

@@ -22,6 +22,8 @@ textarea {
   border-radius: 4px; /* Esquinas redondeadas */
   resize: vertical; /* Permite solo el redimensionamiento vertical */
   box-sizing: border-box; /* Incluye el padding y el borde en el tamaño total */
+  resize: none;
+  overflow: hidden;
 }
 
 /* Ajustes para pantallas más pequeñas */

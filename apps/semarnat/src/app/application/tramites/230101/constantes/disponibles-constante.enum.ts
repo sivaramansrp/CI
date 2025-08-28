@@ -150,7 +150,7 @@ export const TEST_CROSS_LIST: string[] = [
  */
 export const SOLICITUD_HEADER = {
   "hSolicitud": [
-    "Fecha Creación",
+    "Fecha creación",
     "Mercancía",
     "Cantidad",
     "Proveedor"

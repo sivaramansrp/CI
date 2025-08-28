@@ -1,9 +1,9 @@
 import { Catalogo, ComplimentarFraccion, ComplimentarFraccionResoponse } from '../../../../shared/models/nuevo-programa-industrial.model';
+import { Component, EventEmitter, Input, Output} from '@angular/core';
 import { COMPLEMENTAR_FRACCION_CATALOGO_DATOS } from '../../constantes/nuevo-programa.enum';
 import { COMPLEMENTAR_FRACCION_DATOS } from '../../constantes/nuevo-programa.enum';
 import { CommonModule } from '@angular/common';
 import { ComplementarFraccionComponent } from '../../../../shared/components/complementar-fraccion/complementar-fraccion.component';
-import { Component } from '@angular/core';
 
 /**
  * Componente Angular para la vista de complementar fracción del trámite 80101.
@@ -45,11 +45,37 @@ export class ComplementarFraccionVistaComponent {
   public complimentarFraccionDatos: ComplimentarFraccion = COMPLEMENTAR_FRACCION_DATOS;
 
   /**
+   * Descripción de la fracción recibida desde el componente padre.
+   * 
+   * Esta propiedad se utiliza para mostrar o utilizar la descripción en el componente hijo.
+   */
+  @Input() descripcion!: string;
+
+  /**
+   * Evento que se emite al guardar la fracción complementada.
+   * 
+   * Envía un objeto de tipo `ComplimentarFraccionResoponse` al componente padre
+   * con los datos actualizados de la fracción.
+   */
+  @Output() guardarComplementarFraccion = new EventEmitter<ComplimentarFraccionResoponse>();
+
+  /**
+   * Evento que se emite para cerrar el popup actual.
+   * 
+   * Notifica al componente padre que se debe cerrar el popup.
+   * No envía ningún dato, solo indica la acción de cierre.
+   */
+  @Output() cerrarPopup = new EventEmitter<void>();
+
+  /**
    * Método para asignar los datos recibidos al atributo `complimentarDatos`.
    * 
    * @param event - Objeto de tipo `ComplimentarFraccionResoponse` que contiene los datos a complementar.
    */
   getDatos(event: ComplimentarFraccionResoponse): void {
-    this.complimentarDatos = event;
-  }
+  this.guardarComplementarFraccion.emit({
+    ...event,
+    descripcion: this.descripcion
+  });
+}
 }

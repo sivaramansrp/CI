@@ -5,12 +5,17 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { API_GET_ACUSES_RESOLUCION, API_GET_DICTAMENES, API_GET_REQUERIMIENTOS, API_GET_SOLICITUD_DOCUMENTOS, API_GET_TAREAS_DOCUMENTOS, IDSOLICITUD, NUMFOLIOTRAMITE, TRAMITE } from '../../../constantes/130118/api-constants';
+import { API_GET_ACUSES_RESOLUCION, API_GET_DICTAMENES, API_GET_ENVIO_DIGITAL, API_GET_OPINION, API_GET_REQUERIMIENTOS, API_GET_SOLICITUD_DOCUMENTOS, API_GET_TABS, API_GET_TAREAS_DOCUMENTOS, IDSOLICITUD, NUMFOLIOTRAMITE, TRAMITE } from '../../../constantes/130118/api-constants';
 import { AcusesResolucionResponse } from '@libs/shared/data-access-user/src/core/models/130118/consulta-acuses-response.model';
 import { DictamenesResponse } from '@libs/shared/data-access-user/src/core/models/130118/dictamenes-response.model';
 import { DocumentoSolicitud } from '@libs/shared/data-access-user/src/core/models/130118/consulta-documentos-response.model';
+import { EnvioDigitalResponse } from '@libs/shared/data-access-user/src/core/models/130118/envio-digital-response.model';
+import { OpinionResponse } from '@libs/shared/data-access-user/src/core/models/130118/opinion-response.model';
 import { RequerimientosResponse } from '@libs/shared/data-access-user/src/core/models/130118/requerimientos-response.model';
+import { TabsResponse } from '@libs/shared/data-access-user/src/core/models/130118/consulta-tabs-response.model';
 import { TareasSolicitud } from '@libs/shared/data-access-user/src/core/models/130118/consulta-tareas-response.model';
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -29,6 +34,17 @@ export class TabsSolicitudServiceTsService {
     this.host = `${ENVIRONMENT.API_HOST}/api/`;
   }
 
+  /**
+   * Consulta las pestañas disponibles para el trámite
+   * 
+   * @param tramite Número del trámite
+   * @param idSolicitud ID de solicitud
+   * @returns Observable con la respuesta del servidor
+ */
+  getTabs(tramite: number, idSolicitud: string): Observable<BaseResponse<TabsResponse>> {
+    const ENDPOINT = `${this.host}${API_GET_TABS.replace(TRAMITE, tramite.toString()).replace(IDSOLICITUD, idSolicitud)}`;
+    return this.http.get<BaseResponse<TabsResponse>>(ENDPOINT);
+  }
   /**
    * Consulta los documentos de la solicitud del trámite 130118.
    * 
@@ -76,7 +92,7 @@ export class TabsSolicitudServiceTsService {
    * @returns Observable con la respuesta del servidor.
    */
   getRequerimientos(tramite: number, numFolioTramite: string): Observable<BaseResponse<RequerimientosResponse[]>> {
-     const ENDPOINT = `${this.host}${API_GET_REQUERIMIENTOS.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolioTramite)}`;
+    const ENDPOINT = `${this.host}${API_GET_REQUERIMIENTOS.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolioTramite)}`;
     return this.http.get<BaseResponse<RequerimientosResponse[]>>(ENDPOINT);
   }
 
@@ -88,7 +104,33 @@ export class TabsSolicitudServiceTsService {
    * @returns Observable con la respuesta del servidor.
    */
   getDictamenes(tramite: number, numFolioTramite: string): Observable<BaseResponse<DictamenesResponse[]>> {
-     const ENDPOINT = `${this.host}${API_GET_DICTAMENES.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolioTramite)}`;
+    const ENDPOINT = `${this.host}${API_GET_DICTAMENES.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolioTramite)}`;
     return this.http.get<BaseResponse<DictamenesResponse[]>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene el envío digital del trámite 130118.
+   *
+   * @param tramite Numero del tramite.
+   * @param numFolioTramite Número de folio del trámite.
+   * @returns Observable con la respuesta del servidor.
+   */
+  getEnvioDigital(tramite: number, numFolioTramite: string): Observable<BaseResponse<EnvioDigitalResponse>> {
+    const ENDPOINT = `${this.host}${API_GET_ENVIO_DIGITAL.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolioTramite)}`;
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const params = new HttpParams().set('esFuncionario', 'true');
+    return this.http.get<BaseResponse<EnvioDigitalResponse>>(ENDPOINT, { params });
+  }
+
+  /**
+   * Obtiene las opiniones relacionadas a un trámite específico.  
+   * 
+   * @param tramite - ID numérico del trámite.  
+   * @param numFolioTramite - Número de folio asociado al trámite.  
+   * @returns Observable con la respuesta del servidor, incluyendo un arreglo de opiniones.  
+   */
+  getOpiniones(tramite: number, numFolioTramite: string): Observable<BaseResponse<OpinionResponse[]>> {
+    const ENDPOINT = `${this.host}${API_GET_OPINION.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolioTramite)}`;
+    return this.http.get<BaseResponse<OpinionResponse[]>>(ENDPOINT);
   }
 }

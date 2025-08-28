@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from "@ng-mf/data-access-user";
 import { DatosProcedureQuery } from '../../../../estados/queries/tramites261103.query';
 import { DatosProcedureState } from '../../../../estados/tramites/tramites261103.store';
 import { DatosProcedureStore } from '../../../../estados/tramites/tramites261103.store';
@@ -63,11 +64,18 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    */
   constructor(private fb: FormBuilder,
     private store: DatosProcedureStore,
-    private query: DatosProcedureQuery
+    private query: DatosProcedureQuery,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    // Constructor del componente
-    // Note: ConsultaioQuery removed due to lazy-loading restrictions
-    // ReadOnly state will be handled differently
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.esFormularioSoloLectura = seccionState.readonly;
+        this.aplicarEstadoFormulario();
+      })
+    )
+    .subscribe();
   }
 
   /**
@@ -102,10 +110,42 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
       representanteLegalApPaterno: [{ value: this.seccionState?.representanteLegalApPaterno ,disabled:false},[Validators.required]],
       representanteLegalApMaterno: [{ value: this.seccionState?.representanteLegalApMaterno,disabled:false },[Validators.required]],
     });
-    if (this.esFormularioSoloLectura) {
-      this.domicilioEstablecimiento.disable();
-    }else{
+
+    this.aplicarEstadoFormulario();
+  }
+
+
+  
+  /**
+   * Aplica el estado de solo lectura al formulario.
+   * 
+   * Este método habilita o deshabilita todos los controles del formulario
+   * basándose en el valor de la propiedad `esFormularioSoloLectura` y el valor de `ideGenerica1`.
+   * 
+   * Lógica de habilitación:
+   * - Si el formulario está en modo solo lectura, todos los campos se deshabilitan.
+   * - Si no está en modo solo lectura, los campos solo se habilitan si `ideGenerica1` es 'Modificacion'.
+   * - En cualquier otro caso, los campos se deshabilitan.
+   * 
+   * Este método es público para permitir que componentes padre puedan aplicar cambios de estado del formulario.
+   * 
+   * @returns {void}
+   */
+  public aplicarEstadoFormulario(): void {
+    if (!this.domicilioEstablecimiento) {
+      return;
+    }
+
+    // Obtener el valor de ideGenerica1 del estado
+    const IDE_GENERICA_1 = this.seccionState?.ideGenerica1;
+    
+    // Determinar si los campos deben estar habilitados
+    const DEBE_ESTAR_HABILITADO = !this.esFormularioSoloLectura && (IDE_GENERICA_1 === 'Modificacion');
+
+    if (DEBE_ESTAR_HABILITADO) {
       this.domicilioEstablecimiento.enable();
+    } else {
+      this.domicilioEstablecimiento.disable();
     }
   }
 

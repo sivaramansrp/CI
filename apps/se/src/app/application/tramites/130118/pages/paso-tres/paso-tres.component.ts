@@ -9,7 +9,7 @@ import { CadenaOriginalService } from '@libs/shared/data-access-user/src/core/se
 import { Subject, catchError, map, of, switchMap, takeUntil, tap } from 'rxjs';
 import { Firma130118Service } from '../../../../core/services/130118/firma130118.service';
 
-import { CategoriaMensaje, DocumentoService, Notificacion, TramiteFolioStore, base64ToHex, encodeToISO88591Hex } from '@libs/shared/data-access-user/src';
+import { CategoriaMensaje, DocumentoService, Notificacion, TramiteFolioQueries, TramiteFolioStore, base64ToHex, encodeToISO88591Hex } from '@libs/shared/data-access-user/src';
 import { FirmarRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/firmar-request.model';
 import { Solicitud130118State } from '../../estados/tramites/tramite130118.store';
 import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
@@ -102,7 +102,8 @@ export class PasoTresComponent implements OnInit, OnDestroy {
     private documentoService: DocumentoService,
     private tramite130118Query: Tramite130118Query,
     private tramiteStore: TramiteFolioStore,
-    private documentosQuery: DocumentosQuery,) { }
+    private documentosQuery: DocumentosQuery,
+    private tramiteFolioQuery: TramiteFolioQueries) { }
 
   /**
    * Hook del ciclo de vida que se llama después de que las propiedades enlazadas a datos de una directiva se inicializan.
@@ -141,43 +142,50 @@ export class PasoTresComponent implements OnInit, OnDestroy {
    * Este método se encarga de llamar al servicio correspondiente para generar la cadena original.
    */
   obtenerCadenaOriginal(): void {
-    this.cadenaOriginalService.generarCadena130118().subscribe({
-      next: (response) => {
-        this.datosCadena = response.datos as CadenaOriginalRequest;
-        this.cadena.obtenerCadenaOriginal(String(this.solicitudState.idSolicitud), this.datosCadena).subscribe({
-          next: (resp) => {
-            if (resp.codigo !== '00') {
-              this.nuevaNotificacion = {
-                tipoNotificacion: 'toastr',
-                categoria: CategoriaMensaje.ERROR,
-                modo: 'action',
-                titulo: '',
-                mensaje: resp.error || 'Error al generar la cadena original.',
-                cerrar: false,
-                txtBtnAceptar: '',
-                txtBtnCancelar: '',
-              };
-              return;
-            }
-            this.cadenaOriginal = typeof resp.datos === 'string' ? resp.datos : undefined;
-          },
-          error: (error) => {
-            console.error('Error al iniciar trámite:', error);
-            const MENSAJE = error?.error?.error || 'Error inesperado al iniciar trámite.';
-            this.nuevaNotificacion = {
-              tipoNotificacion: 'toastr',
-              categoria: 'error',
-              modo: 'action',
-              titulo: '',
-              mensaje: MENSAJE,
-              cerrar: false,
-              txtBtnAceptar: '',
-              txtBtnCancelar: '',
-            }
-          }
-        });
+    const PAYLOAD: CadenaOriginalRequest = {
+      num_folio_tramite: this.tramiteFolioQuery.getTramite() || null,
+      boolean_extranjero: true,
+      solicitante: {
+        rfc: "AAL0409235E6",
+        nombre: "Juan Pérez",
+        es_persona_moral: true,
+        certificado_serial_number: "string"
       },
-      error: (err) => console.error('Error al cargar datos del trámite:', err),
+      cve_rol_capturista: "CapturistaGubernamental",
+      cve_usuario_capturista: "Gubernamental",
+      fecha_firma: "2025-07-01 20:01:25"
+    };
+    this.cadena.obtenerCadenaOriginal(String(this.solicitudState.idSolicitud), PAYLOAD).subscribe({
+      next: (resp) => {
+        if (resp.codigo !== '00') {
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: '',
+            mensaje: resp.error || 'Error al generar la cadena original.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+          return;
+        }
+        this.cadenaOriginal = typeof resp.datos === 'string' ? resp.datos : undefined;
+      },
+      error: (error) => {
+        console.error('Error al iniciar trámite:', error);
+        const MENSAJE = error?.error?.error || 'Error inesperado al iniciar trámite.';
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: 'error',
+          modo: 'action',
+          titulo: '',
+          mensaje: MENSAJE,
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        }
+      }
     });
   }
 

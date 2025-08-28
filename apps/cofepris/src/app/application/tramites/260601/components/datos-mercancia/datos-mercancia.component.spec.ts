@@ -160,6 +160,9 @@ fdescribe('DatosMercanciaComponent', () => {
         fabricanteTablaDatos: [],
         scianBodyData: [],
         productoBodyData: [],
+        cvePaisDeOrigen: ['PaisOrigen1'],
+        cvePaisDeProcedencia: ['PaisProcedencia1'],
+        cveUsoEspecifico: ['UsoEspecifico1'],
       }),
     };
 

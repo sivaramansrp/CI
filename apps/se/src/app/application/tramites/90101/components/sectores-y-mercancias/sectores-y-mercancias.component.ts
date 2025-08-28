@@ -253,7 +253,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
         tap((_value) => {
           if (this.sectoresYMercancias.valid) {
             this.AutorizacionProsecStore.setSectoresFromValida(true);
-            this.ProsecService.formValida();
+            
           }
         })
       )
@@ -284,7 +284,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.sectoresYMercancias.disable();
-      this.seccionStore.establecerFormaValida([true]);
+      
     }
     else {
       this.sectoresYMercancias.enable();
