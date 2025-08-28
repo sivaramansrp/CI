@@ -20,7 +20,7 @@
         @switch (indice) {
         @case (1) {
           <app-solicitud></app-solicitud>
-          <solicitante #Solicitante></solicitante>
+          <solicitante #Solicitante [mostrarDatosTramite]="false"></solicitante>
         }
         @case (2) {
           @if(esDatosRespuesta){

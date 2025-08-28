@@ -31,6 +31,7 @@ export interface Solicitud32502State {
   rfcAgenteAduanal: string;
   numeroPedimento: string;
   claveAduana: string;
+  informacionConfidencial: boolean;
   nombre: string;
   primerApellido: string;
   segundoApellido: string;
@@ -64,6 +65,7 @@ export function createInitialState(): Solicitud32502State {
     entidadFederativa: '',
     delegacionMunicipio: '',
     colonia: '',
+    informacionConfidencial: false,
     calle: '',
     numeroExterior: '',
     numeroInterior: '',
@@ -90,24 +92,8 @@ export function createInitialState(): Solicitud32502State {
  * Clase encargada de manejar y actualizar el estado de la solicitud 32502.
  */
 export class Tramite32502Store extends Store<Solicitud32502State> {
-  /**
- * Método estático para establecer la regla de fracción arancelaria en el estado de la solicitud.
- * 
- * @param {string} arg0 - Valor de la regla de fracción arancelaria que se desea establecer.
- * 
- * @throws {Error} Este método no está implementado actualmente y lanzará un error si se intenta utilizar.
- * 
- * @example
- * Tramite32502Store.setFraccionRegla('Regla123');
- * 
- * Nota: Este método debe ser implementado para actualizar correctamente el estado de la solicitud.
- */
-  public setFraccionRegla(campo: string,valor: string): void {
-   this.update((state) => ({
-      ...state,
-      [campo]: valor
-    }));
-  }
+ 
+ 
   /**
    * Constructor: inicializa el estado con valores por defecto.
    */
@@ -115,29 +101,7 @@ export class Tramite32502Store extends Store<Solicitud32502State> {
     super(createInitialState());
   }
 
-  public setCveFraccionArancelaria(cveFraccionArancelaria: string):void {
-    this.update((state) => ({
-      ...state,
-      cveFraccionArancelaria,
-    }));
-  }
-/**
- * Método para actualizar la fecha de inicio en el estado de la solicitud.
- * 
- * @param {string} fechaInicio - Valor de la fecha de inicio que se desea establecer en el estado.
- * 
- * @description Este método actualiza la propiedad `fechaInicio` del estado de la solicitud con el valor proporcionado.
- * 
- * @example
- * const store = new Tramite32502Store();
- * store.setFechaInicio('2025-06-26');
- */
-  public setFechaInicio(fechaInicio: string) {
-    this.update((state) => ({
-      ...state,
-      fechaInicio,
-    }));
-  }
+
     /** Métodos para actualizar diferentes propiedades del estado de la solicitud. */
     public establecerDatos(datos: Partial<Solicitud32502State>): void {
       this.update((state) => ({

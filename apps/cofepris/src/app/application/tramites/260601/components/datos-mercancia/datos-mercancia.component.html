@@ -1,9 +1,6 @@
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
         <div class="modal-header d-flex justify-content-between">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()">
-          <span aria-hidden="true">&times;</span>
-        </button>
       </div>
         <div class="modal-body">
             <ng-titulo titulo="Datos mercancía" />
@@ -97,22 +94,25 @@
                                     <div class="panel-body">
                                         <!-- País de orígen -->
                                         <ng-container *ngIf="i === 0">
-                                            <crosslist 
-                                            [id]="'paisDeOrigen'"
-                                            [fechas]="seleccionarPaisOrigen" [botones]="botones"
-                                            (fechasSeleccionadasChange)="paisChange($event)"
-                                            [fechasSeleccionadas]="seleccionadaPaisOrigen"
-                                                [label]="paisOrigenCrosslistDatos.label"></crosslist>
+                                            <crosslist #crosslistPaisOrigen
+                                            [fechas]="seleccionarPaisOrigen"
+                                            [showSearchInput1]="true"
+                                            [showSearchInput2]="true"
+                                            [botonField]="botones"
+                                            [isDisabled]="esFormularioSoloLectura"
+                                            [label]="paisOrigenCrosslistDatos.label"></crosslist>
                                         </ng-container>
 
                                         <!-- País de procedencia -->
                                         <ng-container *ngIf="i === 1">
-                                            <crosslist 
-                                            [id]="'paisDeProcedencia'"
-                                            [fechas]="seleccionarPaisProcedencia" [botones]="botones"
-                                            (fechasSeleccionadasChange)="paisDeProcedenciaChange($event)"
-                                            [fechasSeleccionadas]="seleccionadaPaisProcedencia"
-                                                [label]="paisProcedencisCrosslistDatos.label"></crosslist>
+                                            <crosslist #crosslistPaisProcedencia
+                                            [fechas]="seleccionarPaisProcedencia"
+                                            [showSearchInput1]="true"
+                                            [showSearchInput2]="true"
+                                            [botonField]="campoBotones"
+                                            [isDisabled]="esFormularioSoloLectura"
+                                            [label]="paisProcedencisCrosslistDatos.label"></crosslist>
+                                            
                                         </ng-container>
                                     </div>
                                 </div>
@@ -143,11 +143,13 @@
                                 <div class="panel-collapse collapse in" id="panel-01">
                                     <div class="panel-body">
                                         <crosslist 
-                                        [id]="'usoEspecifico'"
-                                        [fechas]="seleccionarUsoEspecifico" [botones]="botones"
-                                        (fechasSeleccionadasChange)="usoEspecificoChange($event)"
-                                        [fechasSeleccionadas]="seleccionadaUsoEspecifico"
-                                            [label]="usoEspecificoCrosslistDatos.label"></crosslist>
+                                        #crosslistUsoEspecifico
+                                        [fechas]="seleccionarUsoEspecifico"
+                                        [showSearchInput1]="true"
+                                        [showSearchInput2]="true"
+                                        [botonField]="UsoBotones"
+                                        [isDisabled]="esFormularioSoloLectura"
+                                        [label]="usoEspecificoCrosslistDatos.label"></crosslist>
                                     </div>
                                 </div>
                                 }
