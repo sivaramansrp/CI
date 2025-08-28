@@ -15,7 +15,7 @@
           class="form-control"
           formControlName="ventasTotales"
           (change)="obtenerVentasTotales($event)"         
-          (input)="limitarLongitud($event, 16)"
+          (change)="limitarLongitud($event, 16)"
         />
       </div>
       <div class="col-md-4">
@@ -27,7 +27,7 @@
           id="totalExportaciones"
           class="form-control"
           formControlName="totalExportaciones"
-          (input)="limitarLongitud($event, 16)"
+          (change)="limitarLongitud($event, 16)"
         />
       </div>
       <div class="col-md-4">
