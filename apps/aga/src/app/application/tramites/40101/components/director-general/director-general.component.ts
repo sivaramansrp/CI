@@ -1,11 +1,17 @@
-import { Chofer40101Store, Choferesnacionales40101State } from '../../estado/chofer40101.store';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+import { Subject } from 'rxjs';
+
 import { map, takeUntil } from 'rxjs/operators';
+
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
 import { Chofer40101Query } from '../../estado/chofer40101.query';
 import { Chofer40101Service } from '../../estado/chofer40101.service';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { Subject } from 'rxjs';
+
+import { Chofer40101Store, Choferesnacionales40101State } from '../../estado/chofer40101.store';
+
 
 @Component({
   selector: 'app-director-general',
