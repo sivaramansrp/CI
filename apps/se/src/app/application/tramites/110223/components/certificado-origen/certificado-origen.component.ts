@@ -444,6 +444,26 @@ this.datosSeleccionados = this.tramiteQuery.getValue().selectedMercancia as unkn
       onMercanciaSeleccionada(evento: Mercancia): void {
          this.store.setSelectedMercancia(evento);
       }
+      /**
+   * @method validarFormulario
+   * @description
+   * Valida el formulario de certificado de origen utilizando el componente hijo `CertificadoDeOrigenComponent`.
+   * Retorna `true` si el formulario es válido, de lo contrario retorna `false`.
+   * Si el componente hijo no está disponible, retorna `false`.
+   *
+   * @returns {boolean} Indica si el formulario es válido.
+   */
+  validarFormulario(): boolean {
+    let isValid = true;
+    if (this.certificadoDeOrigen) {
+      if (!this.certificadoDeOrigen.validarFormularios()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    return isValid;
+  }
   
     /**
      * Cierra el modal de modificación si está abierto.
@@ -477,26 +497,7 @@ this.datosSeleccionados = this.tramiteQuery.getValue().selectedMercancia as unkn
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setFormCertificado({ [CAMPO]: VALOR });
   }
-  /**
-   * @method validarFormulario
-   * @description
-   * Valida el formulario de certificado de origen utilizando el componente hijo `CertificadoDeOrigenComponent`.
-   * Retorna `true` si el formulario es válido, de lo contrario retorna `false`.
-   * Si el componente hijo no está disponible, retorna `false`.
-   *
-   * @returns {boolean} Indica si el formulario es válido.
-   */
-  validarFormulario(): boolean {
-    let isValid = true;
-    if (this.certificadoDeOrigen) {
-      if (!this.certificadoDeOrigen.validarFormularios()) {
-        isValid = false;
-      }
-    } else {
-      isValid = false;
-    }
-    return isValid;
-  }
+
 
   /**
    * @inheritdoc

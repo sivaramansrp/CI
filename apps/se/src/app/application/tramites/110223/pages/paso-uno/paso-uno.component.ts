@@ -84,6 +84,13 @@ export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
    * Permite acceder a los métodos y propiedades del formulario de datos del certificado desde el componente padre.
    */
   @ViewChild('DatosCertificado') datosCertificado!: DatosCertificadoComponent;
+  /**
+   * @property {DatosCertificadoComponent} datosCertificado
+   * @description
+   * Referencia al componente hijo `DatosCertificadoComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario de datos del certificado desde el componente padre.
+   */
+  @ViewChild('Destinatario') destinatario!: DestinatarioComponent;
 
   /**
    * Constructor con inyección de dependencias para servicios de detección de cambios,
@@ -182,13 +189,19 @@ export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     if (this.datosCertificado) {
-      // if (!this.datosCertificado.validarFormularioDatos()) {
-      //   isValid = false;
-      // }
+      if (!this.datosCertificado.validarFormulario()) {
+        isValid = false;
+      }
     } else {
       isValid = false;
     }
-
+    if(this.destinatario){
+       if (!this.destinatario.validatorCheck()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
     return isValid;
   }
 

@@ -5,7 +5,7 @@ import {Observable,Subject, delay, of, takeUntil } from "rxjs";
 import { CertificadosOrigenService } from "../../services/certificado-origen.service";
 import { CommonModule } from "@angular/common";
 import { Mercancia } from "../../../../shared/models/modificacion.enum";
-import { Mercancias } from "../../models/certificado-origen.model";
+
 import { Tramite110223Query } from "../../query/tramite110223.query";
 import { Tramite110223Store } from "../../estados/Tramite110223.store";
 
@@ -112,7 +112,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
  * Cada elemento de este array representa una fila de la tabla.
  *
  * @type {T[]}
- */ datosSeleccionados!: Mercancias;
+ */ datosSeleccionados!: Mercancia;
   /**
    * Subject utilizado para gestionar el ciclo de vida del componente y cancelar l`as suscripciones.
    */
@@ -181,7 +181,14 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
     this.facturas$ = this.tramiteQuery.selectFactura$;
     this.umcs$ = this.tramiteQuery.selectUmc$;
     this.datosTabla$ = this.tramiteQuery.selectmercanciaTabla$;
-    this.datosSeleccionados = this.tramiteQuery.getValue().selectedMercancia as unknown as Mercancia;
+    // Suscríbete a los cambios de selectedMercancia para actualizar datosSeleccionados
+    this.tramiteQuery.select(state => state.selectedMercancia)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((selected) => {
+      this.datosSeleccionados = selected as Mercancia;
+      this.parchearValoresDelFormulario();
+      });
+    
 
   }
 
@@ -223,11 +230,15 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
         normaOrigen: this.datosSeleccionados.normaOrigen,
         cantidad: this.datosSeleccionados.cantidad,
         umc: this.datosSeleccionados.umc,
+        unidadMedidaMasaBruta:this.datosSeleccionados.unidadMedidaMasaBruta,
         valorMercancia: this.datosSeleccionados.valorMercancia,
         complementoClasificacion: this.datosSeleccionados.complementoClasificacion,
         fechaFinalInput: this.datosSeleccionados.fechaFinalInput,
         numeroFactura: this.datosSeleccionados.numeroFactura,
-        tipoFactura: this.datosSeleccionados.tipoFactura
+        tipoFactura: this.datosSeleccionados.tipoFactura,
+        nalad:this.datosSeleccionados.nalad,
+        complementoDescripcion:this.datosSeleccionados.complementoDescripcion
+
       });
     }
   }
@@ -313,43 +324,17 @@ this.mercanciaForm.markAllAsTouched();
    * Dispara el evento para guardar los datos del formulario y muestra una alerta.
    */
   aceptar(): void {
-    const FORM_VALUE = this.mercanciaForm.getRawValue();
-    const ID = FORM_VALUE.id || 0;
-    let currentData: Mercancia[] = [];
+    const FORM_VALUE: Mercancia = this.mercanciaForm.getRawValue();
 
-    // Get current table data ONCE (not subscribe repeatedly)
-    this.datosTabla$.pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      currentData = data ? [...data] : [];
-    }).unsubscribe();
-
-    // Prevent duplicate add/edit
-    if (ID === 0) {
-      // Add as new: assign a random id and push to table only if not already present
-      FORM_VALUE.id = Math.floor(Math.random() * 1000);
-      currentData.push(FORM_VALUE);
-    } else {
-      // Edit existing: find and update by id
-      const IDX = currentData.findIndex(item => item.id === ID);
-      if (IDX !== -1) {
-        currentData[IDX] = FORM_VALUE;
-      } else {
-        // If not found, add as new (optional, remove if not desired)
-        currentData.push(FORM_VALUE);
-      }
+    if (!FORM_VALUE.id) {
+      FORM_VALUE.id = Math.floor(Math.random() * 1000); // random ID if new
     }
 
-    // Remove possible duplicates by id
-    currentData = currentData.filter(
-      (item, index, self) => index === self.findIndex(t => t.id === item.id)
-    );
-
-    this.store.setMercanciaTabla(currentData);
+    this.store.upsertMercancia(FORM_VALUE);
 
     if (this.mostrarAlerta) {
       of(null)
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          delay(100))
+        .pipe(delay(100), takeUntil(this.destroyNotifier$))
         .subscribe(() => {
           this.cerrarModal();
         });
@@ -357,7 +342,6 @@ this.mercanciaForm.markAllAsTouched();
   }
   cerrarModal(): void {
     this.mercanciaForm.reset();
-    this.store.setFormMercancia(this.mercanciaForm.value);
     this.cerrarClicado.emit();
       this.mostrarAlerta = false;
   }

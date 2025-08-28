@@ -385,6 +385,27 @@ setFormDatosCertificado(values: { [key: string]: unknown }): void {
   public setMercanciaTabla(mercanciaTabla: Mercancia[]): void {
     this.update((state) => ({ ...state, mercanciaTabla }));
   }
+   public upsertMercancia(mercancia: Mercancia): void {
+    this.update((STATE) => {
+      const CURRENT = [...STATE.mercanciaTabla];
+      const IDX = CURRENT.findIndex((M) => M.id === mercancia.id);
+
+      if (IDX !== -1) {
+        CURRENT[IDX] = { ...mercancia };
+      } else {
+        CURRENT.push({ ...mercancia });
+      }
+
+      const UNIQUE = CURRENT.filter(
+        (ITEM, INDEX, SELF) => INDEX === SELF.findIndex((T) => T.id === ITEM.id)
+      );
+
+      return { ...STATE, mercanciaTabla: UNIQUE };
+    });
+  }
+
+
+
     /**
      * @descripcion
      * Actualiza los datos del formulario de destinatario.

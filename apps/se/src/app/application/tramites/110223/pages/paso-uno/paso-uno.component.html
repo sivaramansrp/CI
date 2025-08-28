@@ -17,18 +17,10 @@
         <a data-toggle="tab" (click)="seleccionaTab(5)" (keydown.enter)="seleccionaTab(5)" (keydown.space)="seleccionaTab(5)" role="button" tabindex="5">Datos Certificado</a>
       </li>
     </ul>
-    <ng-container> @switch (indice) { 
-      @case (1) { 
-        <solicitante [tabindex]="1" ></solicitante>
-      } @case (2) { 
-          <app-certificado-origen [tabIndex]="2"></app-certificado-origen>
-      } @case (3) {
-           <app-historico-productoress [tabIndex]="3"></app-historico-productoress>
-      } @case (4) {
-          <app-destinatario [tabIndex]="4"></app-destinatario>
-      } @case (5) {
-        <app-datos-certificado [hidden]="indice !== 5"></app-datos-certificado>
-       } } 
-    </ng-container>
+    <solicitante [hidden]="indice !== 1" #SolicitanteComponent></solicitante>
+    <app-certificado-origen [hidden]="indice !== 2" #CertificadoOrigen></app-certificado-origen>
+    <app-historico-productoress [hidden]="indice !== 3" #HistoricoProductores></app-historico-productoress>
+    <app-destinatario [hidden]="indice !== 4" #Destinatario></app-destinatario>
+    <app-datos-certificado [hidden]="indice !== 5" #DatosCertificado></app-datos-certificado>
   </div>
 </div>
