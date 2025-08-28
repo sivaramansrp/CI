@@ -477,7 +477,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, AfterViewInit, 
       cveSCIAN: [this.avisoSanitarioState?.cveSCIAN, [Validators.required]],
       cveSCIANDescripcion: [
         {
-          value: this.avisoSanitarioState?.cveSCIANDescripcion,
+          value: this.avisoSanitarioState?.cveSCIANID,
           disabled: true,
         },
       ],
@@ -572,7 +572,8 @@ export class DatosDelEstablecimientoComponent implements OnInit, AfterViewInit, 
           const SCIAN_DESCRIPCION = result.data[0].descripcion;
           this.scianForm
             .get('cveSCIANDescripcion')
-            ?.setValue(SCIAN_DESCRIPCION);
+            ?.setValue(result.data[0].id);
+          this.tramite260601Store.cveSCIANID(result.data[0].id);
           this.tramite260601Store.setDescripcionScian(SCIAN_DESCRIPCION);
         },
       });
@@ -782,7 +783,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, AfterViewInit, 
   agregarSCIAN(): void {
     // Tomar los valores del formulario y agregarlos a scianBodyData
     const CLAVEACIAN = this.scianForm.get('cveSCIAN')?.value;
-    const DESCRIPCION_SC = this.scianForm.get('cveSCIANDescripcion')?.value;
+    const DESCRIPCION_SC = this.avisoSanitarioState?.cveSCIANDescripcion;
     this.scianBodyData = [
       ...this.scianBodyData,
       { claveScian: CLAVEACIAN, descripcionScian: DESCRIPCION_SC }
