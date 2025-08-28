@@ -11,7 +11,6 @@ import { CertificadoValidacionService } from '../../services/certificado-validac
 import { CommonModule } from '@angular/common';
 
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { Mercancia } from '../../models/configuracion-columna.model';
 import { MercanciasModalComponent } from '../mercancias-modal/mercancias-modal.component';
 import { Modal } from 'bootstrap';
 
@@ -20,6 +19,7 @@ import { Tramite110202Query } from '../../estados/tramite110202.query';
 import { Tramite110202Store } from '../../estados/tramite110202.store';
 
 import { Mercancias110202State, Mercancias110202Store } from '../../estados/mercancias.store';
+import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { Mercancias110202Query } from '../../estados/mercancias.query';
 
 @Component({

@@ -1,7 +1,8 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Injectable } from '@angular/core';
-import { Mercancia } from '../models/configuracion-columna.model';
+import { Mercancia } from '../../../shared/models/modificacion.enum';
+
 
 
 /**
