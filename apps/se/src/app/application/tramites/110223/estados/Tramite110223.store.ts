@@ -3,7 +3,6 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
-import { MercanciaTabla } from '../../110221/models/peru-certificado.model';
 
 /**
  * Interfaz que representa la estructura del estado de un trámite 110204.
@@ -63,8 +62,6 @@ export interface TramiteState {
   /** Lista de catálogos que representan países bloqueados. */
   paisBloques: Catalogo[];
 
-  /** Catálogo que representa un país bloqueado seleccionado. */
-  paisBloque: Catalogo;
 
   /**
    * Objeto que contiene datos del formulario del certificado.
@@ -142,7 +139,7 @@ export const INITIAL_STATE: TramiteState = {
   idiomaDatosSeleccion: { id: -1, descripcion: '' },
   entidadFederativaSeleccion: { id: -1, descripcion: '' },
   representacionFederalSeleccion: { id: -1, descripcion: '' },
-  formCertificado: {
+   formCertificado: {
     entidadFederativa: '',
     tercerOperador: false,
     bloque: '',
@@ -183,7 +180,6 @@ export const INITIAL_STATE: TramiteState = {
   },
   facturas: { id: -1, descripcion: '' },
   buscarMercancia: [],
-  paisBloque: { id: -1, descripcion: '' },
   idiomaDatos: [],
   entidadFederativaDatos: [],
   representacionFederalDatos: [],

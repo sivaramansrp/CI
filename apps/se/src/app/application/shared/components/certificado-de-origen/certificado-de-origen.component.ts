@@ -522,13 +522,10 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
    */
 ngOnChanges(changes: SimpleChanges):void {
   if (changes['datosForm']?.currentValue) {
-    if(this.formCertificado){
-  this.formCertificado.patchValue(this.datosForm);
-    }
-    else{
+    if (!this.formCertificado) {
       this.createForm();
     }
-  
+    this.formCertificado.patchValue(this.datosForm);
   }
 }
   /**
