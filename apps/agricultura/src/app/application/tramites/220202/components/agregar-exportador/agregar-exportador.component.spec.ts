@@ -7,15 +7,18 @@ import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
-import { AgregardestinatarioComponent } from './agregar-exportador.component';
+import { AgregarExportadorComponent } from './agregar-exportador.component';
 import { FormBuilder } from '@angular/forms';
 import { TercerosrelacionadosService } from '../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
+import { FitosanitarioStore } from '../../estados/fitosanitario.store';
 
 @Injectable()
-class MockTercerosrelacionadosService {}
+class MockTercerosrelacionadosService {
+  obtenerSelectorList = jest.fn().mockReturnValue(observableOf({}));
+}
 
 @Injectable()
 class MockRouter {
@@ -23,10 +26,19 @@ class MockRouter {
 }
 
 @Injectable()
-class MockAgriculturaApiService {}
+class MockAgriculturaApiService {
+  updateTercerosExportador = jest.fn().mockReturnValue(observableOf({}));
+}
 
 @Injectable()
-class MockFitosanitarioQuery {}
+class MockFitosanitarioQuery {
+  seleccionarExportador$ = observableOf({});
+}
+
+@Injectable()
+class MockFitosanitarioStore {
+  actualizarSelectedExdora = jest.fn();
+}
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
@@ -48,13 +60,13 @@ class SafeHtmlPipe implements PipeTransform {
   transform(value) { return value; }
 }
 
-describe('AgregardestinatarioComponent', () => {
+describe('AgregarExportadorComponent', () => {
   let fixture;
   let component;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, AgregardestinatarioComponent ],
+      imports: [ FormsModule, ReactiveFormsModule, AgregarExportadorComponent ],
       declarations: [
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
@@ -66,6 +78,7 @@ describe('AgregardestinatarioComponent', () => {
         { provide: Router, useClass: MockRouter },
         { provide: AgriculturaApiService, useClass: MockAgriculturaApiService },
         { provide: FitosanitarioQuery, useClass: MockFitosanitarioQuery },
+        { provide: FitosanitarioStore, useClass: MockFitosanitarioStore },
         {
           provide: ActivatedRoute,
           useValue: {
@@ -78,10 +91,10 @@ describe('AgregardestinatarioComponent', () => {
           }
         }
       ]
-    }).overrideComponent(AgregardestinatarioComponent, {
+    }).overrideComponent(AgregarExportadorComponent, {
 
     }).compileComponents();
-    fixture = TestBed.createComponent(AgregardestinatarioComponent);
+    fixture = TestBed.createComponent(AgregarExportadorComponent);
     component = fixture.debugElement.componentInstance;
   });
 
@@ -94,14 +107,8 @@ describe('AgregardestinatarioComponent', () => {
     component.fb.group = jest.fn().mockReturnValue({
       patchValue: function() {}
     });
-    component.route = component.route || {};
-    component.route.snapshot = {
-      paramMap: {
-        get: function() {}
-      }
-    };
     component.fitosanitarioQuery = component.fitosanitarioQuery || {};
-    component.fitosanitarioQuery.seleccionarTercerosRelacionados$ = observableOf({});
+    component.fitosanitarioQuery.seleccionarExportador$ = observableOf({});
     component.ngOnInit();
     expect(component.fb.group).toHaveBeenCalled();
   });
@@ -146,6 +153,37 @@ describe('AgregardestinatarioComponent', () => {
     expect(component.tercerosrelacionadosService.obtenerSelectorList).toHaveBeenCalled();
   });
 
+  it('should run #onGuardarDestinatario()', async () => {
+    component.destinatarioForm = component.destinatarioForm || {};
+    component.destinatarioForm.valid = true;
+    component.destinatarioForm.value = { test: 'value' };
+    component.destinatarioForm.markAllAsTouched = jest.fn();
+    component.agriculturaApiService = component.agriculturaApiService || {};
+    component.agriculturaApiService.updateTercerosExportador = jest.fn().mockReturnValue(observableOf({}));
+    component.cerrar = component.cerrar || {};
+    component.cerrar.emit = jest.fn();
+    
+    component.onGuardarDestinatario();
+    
+    expect(component.agriculturaApiService.updateTercerosExportador).toHaveBeenCalled();
+    expect(component.cerrar.emit).toHaveBeenCalled();
+  });
+
+  it('should run #onGuardarDestinatario() when form is invalid', async () => {
+    component.destinatarioForm = component.destinatarioForm || {};
+    component.destinatarioForm.valid = false;
+    component.destinatarioForm.markAllAsTouched = jest.fn();
+    component.agriculturaApiService = component.agriculturaApiService || {};
+    component.agriculturaApiService.updateTercerosExportador = jest.fn();
+    component.cerrar = component.cerrar || {};
+    component.cerrar.emit = jest.fn();
+    
+    component.onGuardarDestinatario();
+    
+    expect(component.destinatarioForm.markAllAsTouched).toHaveBeenCalled();
+    expect(component.agriculturaApiService.updateTercerosExportador).not.toHaveBeenCalled();
+    expect(component.cerrar.emit).not.toHaveBeenCalled();
+  });
 
   it('should run #onLimpiarDestinatario()', async () => {
     component.destinatarioForm = component.destinatarioForm || {};
@@ -161,18 +199,30 @@ describe('AgregardestinatarioComponent', () => {
   });
 
   it('should run #onCancelarDestinatario()', async () => {
-    component.router = component.router || {};
-    component.router.navigate = jest.fn();
+    component.cerrar = component.cerrar || {};
+    component.cerrar.emit = jest.fn();
     component.onCancelarDestinatario();
-    expect(component.router.navigate).toHaveBeenCalled();
+    expect(component.cerrar.emit).toHaveBeenCalled();
+  });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.destroyNotifier$ = component.destroyNotifier$ || {};
+    component.destroyNotifier$.next = jest.fn();
+    component.destroyNotifier$.complete = jest.fn();
+    component.fitosanitarioStore = component.fitosanitarioStore || {};
+    component.fitosanitarioStore.actualizarSelectedExdora = jest.fn();
+    component.ngOnDestroy();
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+    expect(component.fitosanitarioStore.actualizarSelectedExdora).toHaveBeenCalled();
   });
 
   it('should run #enCambioValorRadio()', async () => {
     component.destinatarioForm = component.destinatarioForm || {};
     component.destinatarioForm.get = jest.fn().mockReturnValue({
       updateValueAndValidity: function() {},
-      setValidators: function() {},
-      clearValidators: function() {}
+      clearValidators: function() {},
+      setValidators: function() {}
     });
     component.destinatarioForm.value = {
       tipoMercancia: {}

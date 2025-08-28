@@ -21,10 +21,10 @@
       }
     }
     </div>
-    <btn-continuar [datos]="datosPasos" (continuarEvento)="onContinuar($event)"></btn-continuar>
+  <btn-continuar [datos]="datosPasos" [ocultabotonAnterior]="ocultarBtnAnterior" (continuarEvento)="onContinuar($event)"></btn-continuar>
     <ng-alert [CONTENIDO]="AVISO_DE_PRIVACIDAD"></ng-alert>
 
-    <!-- Modal for payment confirmation -->
+    <!-- Modal para confirmación de pago -->
     <div class="modal fade" [class.show]="showPaymentModal" [style.display]="showPaymentModal ? 'block' : 'none'" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
         <div class="modal-content">

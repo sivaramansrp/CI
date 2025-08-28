@@ -253,7 +253,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
         tap((_value) => {
           if (this.sectoresYMercancias.valid) {
             this.AutorizacionProsecStore.setSectoresFromValida(true);
-            this.ProsecService.formValida();
+            
           }
         })
       )
@@ -284,7 +284,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.sectoresYMercancias.disable();
-      this.seccionStore.establecerFormaValida([true]);
+      
     }
     else {
       this.sectoresYMercancias.enable();
@@ -487,21 +487,35 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * Si hay sectores o mercancías seleccionadas, muestra una confirmación antes de eliminarlas.
    */
   eliminarSector(): void {
-    if (this.listSelectedView.length === 0 && this.listSelectedProducir.length === 0) {
+    if (this.listSelectedView.length === 0) {
       this.espectaculoAlerta = true;
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: '',
         modo: 'action',
         titulo: '',
-        mensaje: 'Selecciona la planta que desea eliminar.',
+        mensaje: 'Seleccione el sector que desea eliminar.',
         cerrar: false,
         tiempoDeEspera: 2000,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '', 
       };
     }
-    else if (this.listSelectedView.length > 0 || this.listSelectedProducir.length > 0) {
+    else if (this.listSelectedProducir.length === 0){
+      this.espectaculoAlerta = true;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Seleccione la fraccion que desea eliminar.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
+    else if (this.listSelectedView.length > 0) {
       this.espectaculoConfirmar = true;
       this.espectaculoAlerta = false;
       this.nuevaNotificacion = {
@@ -509,7 +523,22 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
         categoria: 'danger',
         modo: 'action',
         titulo: '',
-        mensaje: '¿Estás seguro de eliminar la(s) planta(s)?',
+        mensaje: '¿Está seguro que desea eliminar el sector seleccionado?',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+      };
+    }
+    else if (this.listSelectedProducir.length > 0){
+      this.espectaculoConfirmar = true;
+      this.espectaculoAlerta = false;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: '¿Está seguro que desea eliminar la fracción seleccionada?',
         cerrar: false,
         tiempoDeEspera: 2000,
         txtBtnAceptar: 'Aceptar',

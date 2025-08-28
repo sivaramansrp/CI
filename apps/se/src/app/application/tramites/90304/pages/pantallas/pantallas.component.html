@@ -4,6 +4,12 @@
             <h3>Registro de solicitud modificación programa PROSEC (Baja de
                 productor indirecto)</h3>
         </div>
+        <br><br>
+        
+        @if(mostrarError) {
+            <ng-alert [CONTENIDO]="ALERTA_PRODUCTORAS_ERROR" [CUSTOMECLASS]="infoError"></ng-alert>
+        }
+
         <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
     </div>
     <div class="row">

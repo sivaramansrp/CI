@@ -75,7 +75,6 @@ export const FORMA_SOCIO_ACCIONISTAS: DatosCatalago[] = [
     class: 'col-md-6 col-10  mt-1',
     tipo_input: 'text',
     required: true,
-    maxlength: 250,
     opciones: [],
     orden: 5,
   },
@@ -156,7 +155,7 @@ export const FORMA_SOCIO_ACCIONISTAS_EXTRANJEROS: DatosCatalago[] = [
     tipo_input: 'select-catalog ',
     required: true,
     opciones: [],
-    maxlength: 250,
+    maxlength: 255,
     orden: 5,
   },
   {

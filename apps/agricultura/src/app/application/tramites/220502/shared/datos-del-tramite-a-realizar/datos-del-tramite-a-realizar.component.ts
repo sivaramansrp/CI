@@ -153,6 +153,11 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
   @Input() procedimiento!: number;
 
   /**
+   * Indica si el formulario es válido.
+   */
+  @Input() formValida!: boolean;
+
+  /**
    * Evento que emite un valor booleano indicando si los certificados han sido autorizados.
    *
    * @event certificadosAutorizEmitido
@@ -226,7 +231,7 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
             const FORM_GROUP = this.grupoFormularioPadre.get(
               this.claveDeControl
             ) as FormGroup;
-            if (this.solicitud220502State.certificadosAutorizados > 0) {
+            if (Number(this.solicitud220502State.certificadosAutorizados) > 0) {
               this.certificadosAutorizEmitido.emit(true);
             } else {
               this.certificadosAutorizEmitido.emit(false);

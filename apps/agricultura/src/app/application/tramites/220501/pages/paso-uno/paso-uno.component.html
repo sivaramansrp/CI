@@ -10,10 +10,11 @@
           data-toggle="tab">{{ consultaState.parameter === parametero.READ_PROCEDEMENTO ? 'Datos
           generales' : 'Datos de la solicitud' }}</a>
       </li>
-      @if(mostrarRevisionDocumental ||
+      @if((mostrarRevisionDocumental ||
       consultaState.parameter === parametero.EVALUAR ||
       consultaState.parameter === parametero.READ_PROCEDEMENTO ||
-      consultaState.parameter === parametero.SUBSECUENTES
+      consultaState.parameter === parametero.SUBSECUENTES) &&
+      pendientesAutorizadosCertificados > 0
       ) {
       <li [ngClass]="indice === 3 ? 'active' : ''">
         <a (click)="seleccionaTab(3)" (keyup.enter)="seleccionaTab(3)" (keydown.space)="seleccionaTab(3)" tabindex="0"

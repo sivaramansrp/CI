@@ -532,7 +532,7 @@ export const PAIS_PROCEDENCIA = [
  */
 export const REPRESENTACION_FEDERAL = [
   {
-    id: 'entidad',
+    id: 'Entidad federativa*:',
     labelNombre: 'Entidad federativa',
     campo: 'entidad',
     clase: 'col-md-4',

@@ -92,6 +92,11 @@ export class ResponsableInspeccionEnPuntoComponent
   @Input() formularioDeshabilitado!: boolean;
 
   /**
+   * Indica si el formulario es válido.
+   */
+  @Input() formValida: boolean = false;
+
+  /**
    * @constructor
    * Inyecta los servicios y dependencias necesarias para el componente.
    *
@@ -118,7 +123,6 @@ export class ResponsableInspeccionEnPuntoComponent
         this.claveDeControl,
         new FormGroup({
           nombre: new FormControl(this.solicitud220502State.nombre, [
-            Validators.required,
             Validators.maxLength(150),
           ]),
           primerapellido: new FormControl(

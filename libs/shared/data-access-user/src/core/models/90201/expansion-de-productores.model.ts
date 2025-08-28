@@ -34,3 +34,8 @@ export interface MercanciasTabla {
   fraccion: string;
   claveDel: string;
 }
+
+export interface FraccionTabla {
+  fraccion: string;
+  claveDel: string;
+}

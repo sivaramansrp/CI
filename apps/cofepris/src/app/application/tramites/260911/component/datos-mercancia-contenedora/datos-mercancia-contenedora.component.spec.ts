@@ -29,20 +29,20 @@ describe('DatosMercanciaContenedoraComponent', () => {
   });
 
   it('should initialize form on ngOnInit', () => {
-    component.ngOnInit();
-    expect(component.mercanciaForm).toBeTruthy();
+  component.ngOnInit();
+  expect(component.mercanciaForm).toBeTruthy();
   });
 
   it('should reset form', () => {
-    component.crearMercanciaForm();
-    component.mercanciaForm.get('clasificacionProducto')?.setValue('test');
-    component.resetForm();
-    expect(component.mercanciaForm.get('clasificacionProducto')?.value).toBeNull();
+  component.crearMercanciaForm();
+  component.mercanciaForm.get('clasificacionProducto')?.setValue('test');
+  component.resetForm();
+  expect(component.mercanciaForm.get('clasificacionProducto')?.value).toBeNull();
   });
 
   it('should emit agregarMercancia if form is valid', () => {
-    component.crearMercanciaForm();
-    component.mercanciaForm.patchValue({
+  component.crearMercanciaForm();
+  component.mercanciaForm.patchValue({
       clasificacionProducto: 'A',
       especificarClasificacionProducto: 'B',
       denominacionEspecificaProducto: 'C',
@@ -70,10 +70,10 @@ describe('DatosMercanciaContenedoraComponent', () => {
   });
 
   it('should mark all as touched if form is invalid', () => {
-    component.crearMercanciaForm();
-    jest.spyOn(component.mercanciaForm, 'markAllAsTouched');
-    component.onAgregarMercancia();
-    expect(component.mercanciaForm.markAllAsTouched).toHaveBeenCalled();
+  component.crearMercanciaForm();
+  jest.spyOn(component.mercanciaForm, 'markAllAsTouched');
+  component.onAgregarMercancia();
+  expect(component.mercanciaForm.markAllAsTouched).toHaveBeenCalled();
   });
 
   it('should emit cancelarMercanciaModal on cerrarMercanciaModal', () => {
@@ -89,8 +89,8 @@ describe('DatosMercanciaContenedoraComponent', () => {
   });
 
   it('should add and remove clave', () => {
-    component.crearMercanciaForm();
-    component.mercanciaForm.patchValue({
+  component.crearMercanciaForm();
+  component.mercanciaForm.patchValue({
       claveDeLos: 'clave',
       fechaDeFabricacio: '2025-01-01',
       fechaDeCaducidad: '2026-01-01',
@@ -103,28 +103,28 @@ describe('DatosMercanciaContenedoraComponent', () => {
   });
 
   it('should patch value on claveListaFn', () => {
-    component.crearMercanciaForm();
-    component.claveConfig.datos = [{ clave: 'clave', fabricacion: '2025-01-01', caducidad: '2026-01-01' }];
-    component.claveListaFn([{ clave: 'clave', fabricacion: '2025-01-01', caducidad: '2026-01-01' }]);
-    expect(component.mercanciaForm.get('claveDeLos')?.value).toBe('clave');
+  component.crearMercanciaForm();
+  component.claveConfig.datos = [{ clave: 'clave', fabricacion: '2025-01-01', caducidad: '2026-01-01' }];
+  component.claveListaFn([{ clave: 'clave', fabricacion: '2025-01-01', caducidad: '2026-01-01' }]);
+  expect(component.mercanciaForm.get('claveDeLos')?.value).toBe('clave');
   });
 
   it('should handle paisDeOriginSeleccionadasChange', () => {
-    component.crearMercanciaForm();
-    component.paisDeOriginSeleccionadasChange(['MX']);
-    expect(component.mercanciaForm.get('paisDeOriginDatos')?.value).toEqual(['MX']);
+  component.crearMercanciaForm();
+  component.paisDeOriginSeleccionadasChange(['MX']);
+  expect(component.mercanciaForm.get('paisDeOriginDatos')?.value).toEqual(['MX']);
   });
 
   it('should handle paisDeProcedenciaSeleccionadasChange', () => {
-    component.crearMercanciaForm();
-    component.paisDeProcedenciaSeleccionadasChange(['MX']);
-    expect(component.mercanciaForm.get('paisDeProcedenciaDatos')?.value).toEqual(['MX']);
+  component.crearMercanciaForm();
+  component.paisDeProcedenciaSeleccionadasChange(['MX']);
+  expect(component.mercanciaForm.get('paisDeProcedenciaDatos')?.value).toEqual(['MX']);
   });
 
   it('should handle usoEspesificoSeleccionadasChange', () => {
-    component.crearMercanciaForm();
-    component.usoEspesificoSeleccionadasChange(['Uso']);
-    expect(component.mercanciaForm.get('usoEspecifico')?.value).toEqual(['Uso']);
+  component.crearMercanciaForm();
+  component.usoEspesificoSeleccionadasChange(['Uso']);
+  expect(component.mercanciaForm.get('usoEspecifico')?.value).toEqual(['Uso']);
   });
 
   it('should toggle mostrarColapsable', () => {
@@ -137,11 +137,11 @@ describe('DatosMercanciaContenedoraComponent', () => {
   });
 
   it('should limpiarMercancia', () => {
-    component.crearMercanciaForm();
-    component.limpiarMercancia();
-    expect(component.seleccionadasUsoEspesificoDatos).toEqual([]);
-    expect(component.seleccionadasPaisDeOriginDatos).toEqual([]);
-    expect(component.seleccionadasPaisDeProcedenciaDatos).toEqual([]);
+  component.crearMercanciaForm();
+  component.limpiarMercancia();
+  expect(component.seleccionadasUsoEspesificoDatos).toEqual([]);
+  expect(component.seleccionadasPaisDeOriginDatos).toEqual([]);
+  expect(component.seleccionadasPaisDeProcedenciaDatos).toEqual([]);
   });
 
   it('should set nuevaNotificacion on cancelar', () => {
@@ -151,12 +151,12 @@ describe('DatosMercanciaContenedoraComponent', () => {
   });
 
   it('should cambiarFraccionArancelaria and abrirModal', () => {
-    component.crearMercanciaForm();
-    component.mercanciaForm.get('fraccionArancelaria')?.setValue('test');
-    jest.spyOn(component, 'abrirModal');
-    component.mercanciaForm.get('cantidadUmt')?.disable();
-    component.cambiarFraccionArancelaria();
-    expect(component.abrirModal).toHaveBeenCalled();
+  component.crearMercanciaForm();
+  component.mercanciaForm.get('fraccionArancelaria')?.setValue('test');
+  jest.spyOn(component, 'abrirModal');
+  component.mercanciaForm.get('cantidadUmt')?.disable();
+  component.cambiarFraccionArancelaria();
+  expect(component.abrirModal).toHaveBeenCalled();
   });
 
   it('should eliminarPedimento', () => {
@@ -178,10 +178,11 @@ describe('DatosMercanciaContenedoraComponent', () => {
   });
 
   it('should validate isValid', () => {
-    component.crearMercanciaForm();
-    const control = component.mercanciaForm.get('clasificacionProducto')!;
-    control.markAsTouched();
-    control.setErrors({ required: true });
-    expect(component.isValid(control)).toBe(true);
+  component.crearMercanciaForm();
+  const control = component.mercanciaForm.get('clasificacionProducto')!;
+  control.markAsTouched();
+  control.setErrors({ required: true });
+  fixture.detectChanges();
+  expect(component.isValid(control)).toBe(true);
   });
 });
