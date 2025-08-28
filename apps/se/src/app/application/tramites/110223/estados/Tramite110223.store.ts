@@ -148,6 +148,7 @@ export const INITIAL_STATE: TramiteState = {
     fraccionArancelariaForm: '',
     fechaInicioInput: '',
     fechaFinalInput: '',
+    
   },
     formulario:{
       datosConfidencialesProductor: false,

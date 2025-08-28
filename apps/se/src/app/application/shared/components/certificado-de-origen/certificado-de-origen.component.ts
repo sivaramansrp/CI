@@ -456,6 +456,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
   razonSocial: [''],
   calle: ['', [Validators.maxLength(90)]],
   numeroLetra: ['', [Validators.maxLength(30)]],
+    numeroLetras: ['', [Validators.maxLength(30)]],
   pais: [''],
   ciudad: [''],
   lada: [''],

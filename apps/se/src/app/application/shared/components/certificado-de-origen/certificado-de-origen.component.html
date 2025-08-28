@@ -231,16 +231,16 @@
                 
                     <div class="col-md-4">
                     <div class="form-group">
-                        <label class="form-label" for="numeroLetra">Número y/o letra<span *ngIf="idProcedimiento !== 110205">*</span>:</label>
-                        <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra" maxlength="30"
-                            (change)="setValoresStore('formCertificado','numeroLetra','setFormCertificadoGenric')" />
+                        <label class="form-label" for="numeroLetras">Número y/o letra<span *ngIf="idProcedimiento !== 110205">*</span>:</label>
+                        <input type="text" id="numeroLetras" class="form-control" formControlName="numeroLetras" maxlength="30"
+                            (change)="setValoresStore('formCertificado','numeroLetras','setFormCertificadoGenric')" />
                     </div>
-                    @if(formCertificado.controls['numeroLetra'].invalid && (formCertificado.controls['numeroLetra'].touched || formCertificado.controls['numeroLetra'].dirty)) {
+                    @if(formCertificado.controls['numeroLetras'].invalid && (formCertificado.controls['numeroLetras'].touched || formCertificado.controls['numeroLetras'].dirty)) {
     <div class="d-grid">
-      @if(formCertificado.controls['numeroLetra'].errors?.['required']) {
+      @if(formCertificado.controls['numeroLetras'].errors?.['required']) {
         <span class="mensaje-error">Este campo es obligatorio</span>
       }
-      @if(formCertificado.controls['numeroLetra'].errors?.['maxlength']) {
+      @if(formCertificado.controls['numeroLetras'].errors?.['maxlength']) {
         <span class="mensaje-error">Por favor, no escribas más de 30 caracteres</span>
       }
     </div>
