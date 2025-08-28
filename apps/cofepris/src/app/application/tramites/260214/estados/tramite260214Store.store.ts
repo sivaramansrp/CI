@@ -192,6 +192,7 @@ export function createInitialState(): Tramite260214State {
       representanteNombre: '',
       apellidoPaterno: '',
       apellidoMaterno: '',
+      manifiestosCasillaDeVerificacion: false,
     },
     mercanciaForm: {
       clasificacionProducto: '',
