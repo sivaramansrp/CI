@@ -13,7 +13,7 @@ RUN npm install -g pnpm && \
 
 # Copy source code
 COPY apps ./apps
-COPY libs ./libs
+COPY libs/shared ./libs/shared
 
 # Build the app
 ARG NODE_ENV=production
