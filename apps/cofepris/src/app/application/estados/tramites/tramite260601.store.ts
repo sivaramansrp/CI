@@ -48,6 +48,14 @@ export interface AvisoSanitarioState {
     /** Descripción de la clave SCIAN. */
     cveSCIANDescripcion: string;
 
+    /**
+   * @property {number | null} cveSCIANID
+   * @description
+   * Identificador numérico de la clave SCIAN (Sistema de Clasificación Industrial de América del Norte).
+   * Puede ser nulo cuando no se ha seleccionado ninguna clasificación.
+   */
+    cveSCIANID: number | null;
+
     /** Indica si el aviso de funcionamiento está activo. */
     avisoFuncionamiento: boolean;
 
@@ -419,6 +427,7 @@ export function createInitialState(): AvisoSanitarioState {
         telefono: null,
         cveSCIAN: '',
         cveSCIANDescripcion: '',
+        cveSCIANID: null,
         avisoFuncionamiento: false,
         cveRegimenes: '',
         cveAduanas: '',
@@ -706,6 +715,20 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
         this.update((state) => ({
             ...state,
             cveSCIANDescripcion,
+        }));
+    }
+  /**
+   * @method cveSCIANID
+   * @description
+   * Actualiza el ID de la clave SCIAN en el estado.
+   * Modifica el identificador numérico asociado al Sistema de Clasificación Industrial de América del Norte.
+   * @param {number} cveSCIANID - Nuevo identificador numérico de la clave SCIAN.
+   * @returns {void}
+   */
+    public cveSCIANID(cveSCIANID: number): void {
+        this.update((state) => ({
+            ...state,
+            cveSCIANID,
         }));
     }
 

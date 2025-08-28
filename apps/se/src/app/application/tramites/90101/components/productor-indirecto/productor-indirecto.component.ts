@@ -331,7 +331,7 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
         categoria: '',
         modo: 'action',
         titulo: '',
-        mensaje: 'Selecciona la planta que desea eliminar.',
+        mensaje: 'Seleccione el productor indirecto que desea eliminar.',
         cerrar: false,
         tiempoDeEspera: 2000,
         txtBtnAceptar: 'Aceptar',
