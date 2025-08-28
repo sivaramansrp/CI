@@ -1,21 +1,19 @@
 import {
   AlertComponent,
   CatalogoSelectComponent,
-  CatalogosSelect,
   ConfiguracionColumna,
-  ConsultaioQuery,
-  ConsultaioState,
   CrosslistComponent,
   InputRadioComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
-  ValidacionesFormularioService,
-} from '@ng-mf/data-access-user';
+  ValidacionesFormularioService
+} from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import {
   Catalogo,
   Solicitud10301State,
-  Tramite10301Store,
+  Tramite10301Store
 } from '../../estados/tramite10301.store';
 import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import {
@@ -25,7 +23,7 @@ import {
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
-  Validators,
+  Validators
 } from '@angular/forms';
 import { Subject, Subscription, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
