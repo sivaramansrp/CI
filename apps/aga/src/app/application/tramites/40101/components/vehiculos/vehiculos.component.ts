@@ -121,22 +121,6 @@ export class VehiculosComponent implements OnInit {
   vehiculoSeleccionado: VehiculoTabla[] = [];
 
   /**
-   * Prepara el proceso de eliminación de vehículos seleccionados.
-   * 
-   * Método placeholder para preparar la eliminación de los vehículos
-   * seleccionados. Actualmente no requiere preparación específica ya que
-   * el modal de confirmación manejará directamente la eliminación.
-   * 
-   * @remarks
-   * - Método preparatorio para futura implementación de lógica previa
-   * - El modal confirmará la eliminación de las filas seleccionadas
-   * - No modifica el estado actual de la aplicación
-   */
-  static prepararEliminarVehiculo(): void {
-    // No se necesita preparación, modal confirmará la eliminación de las filas seleccionadas
-  }
-
-  /**
    * Indica si el componente está en modo de solo lectura.
    * 
    * Flag que controla la habilitación/deshabilitación de elementos interactivos
@@ -744,9 +728,30 @@ export class VehiculosComponent implements OnInit {
    */
   eliminarFilaVehiculo(): void {
     if (this.vehiculoSeleccionado.length > 0) {
-      this.vehiculosTablaConfig.datos = this.vehiculosTablaConfig.datos.filter(
-        (item) => !this.vehiculoSeleccionado.includes(item)
+      const NUMEROS_A_ELIMINAR = new Set(this.vehiculoSeleccionado.map(v => v.numero).filter(Boolean));
+      const IDS_A_ELIMINAR = new Set(this.vehiculoSeleccionado.map(v => v.idDeVehiculo).filter(Boolean));
+      const PLACAS_MARCAS_A_ELIMINAR = new Set(
+        this.vehiculoSeleccionado
+          .filter(v => v.numeroPlaca && v.marca)
+          .map(v => `${v.numeroPlaca}|${v.marca}`)
       );
+
+      this.vehiculosTablaConfig.datos = this.vehiculosTablaConfig.datos.filter(vehiculo => {
+        if (vehiculo.numero && NUMEROS_A_ELIMINAR.has(vehiculo.numero)) {
+          return false;
+        }
+        if (vehiculo.idDeVehiculo && IDS_A_ELIMINAR.has(vehiculo.idDeVehiculo)) {
+          return false;
+        }
+        if (vehiculo.numeroPlaca && vehiculo.marca) {
+          const COMBO_ID = `${vehiculo.numeroPlaca}|${vehiculo.marca}`;
+          if (PLACAS_MARCAS_A_ELIMINAR.has(COMBO_ID)) {
+            return false;
+          }
+        }
+
+        return !this.vehiculoSeleccionado.includes(vehiculo);
+      });
       this.vehiculoSeleccionado = [];
       this.indiceEdicion = null;
       this.vehiculoFormulario.reset();
