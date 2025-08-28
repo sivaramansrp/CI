@@ -36,22 +36,21 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
-      - name: Build ${{ env.APP_NAME }} app
+      - name: Build Docker image
         run: |
-          # Use envsubst to replace ${APP_NAME} in nginx.conf
-          cp apps/${{ env.APP_NAME }}/nginx.conf /tmp/nginx.conf
-          sed -i "s|\${APP_NAME}|${{ env.APP_NAME }}|g" /tmp/nginx.conf
-
-          # Build Docker image
+          # Prepare build context
+          mkdir -p /tmp/crt-docker-context
+          cp apps/crt/nginx.conf /tmp/crt-docker-context/nginx.conf
+          sed -i "s|\${APP_NAME}|crt|g" /tmp/crt-docker-context/nginx.conf
+      
+          # Build image
           docker build \
-            --build-arg APP_NAME=${{ env.APP_NAME }} \
+            --build-arg APP_NAME=crt \
             --build-arg NODE_ENV=production \
-            -t $IMAGE_NAME:${{ env.VERSION }} \
-            -f apps/${{ env.APP_NAME }}/Dockerfile.dev \
             --build-arg VERSION=${{ env.VERSION }} \
-            --build-context node=. \
-            --build-context nginx=/tmp/nginx.conf \
-            .
+            -t $IMAGE_NAME:${{ env.VERSION }} \
+            -f apps/crt/Dockerfile.dev \
+            /tmp/crt-docker-context
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
