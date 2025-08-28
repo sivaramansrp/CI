@@ -10,11 +10,7 @@ import { REG_X } from '@libs/shared/data-access-user/src';
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
 import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
 
-import { Component } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
+import { Component, EventEmitter,Input, OnDestroy, OnInit, Output } from '@angular/core';
 
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -41,9 +37,19 @@ import { takeUntil } from 'rxjs';
 })
 export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
   /**
+   * Evento para enviar los datos modificados al padre y cerrar el modal.
+   */
+  @Input() selectedRow!: import('../../models/certificado-tecnico-japon.enum').CompliMentaria;
+  @Output() datosModificados = new EventEmitter<import('../../models/certificado-tecnico-japon.enum').CompliMentaria>();
+  /**
+   * Evento para cerrar el modal.
+   */
+  @Output() closeModalEvent = new EventEmitter<void>();
+  /**
    * Opciones para la unidad de medida de comercialización.
    * Contiene un arreglo de objetos de tipo `Catalogo`.
    */
+
   unidaddeMedidadeComercializacionOptions: Catalogo[] = [];
 
   /**
@@ -265,5 +271,30 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.estadoSeleccionado = data;
       });
+  }
+
+  /**
+   * Cierra el modal emitiendo el evento correspondiente.
+   */
+  closeModal(): void {
+    this.closeModalEvent.emit();
+  }
+
+  /**
+   * Envía los datos modificados al padre y cierra el modal.
+   */
+  modificarYCerrar(): void {
+    if (this.modifydatosdelcertificado.valid) {
+      // Emitir un objeto que combine la fila seleccionada y los valores del formulario
+      const VALORES_FORM = this.modifydatosdelcertificado.getRawValue();
+      const DATOS_COMPLETOS = {
+        ...this.selectedRow,
+        ...VALORES_FORM
+      };
+      this.datosModificados.emit(DATOS_COMPLETOS);
+      this.closeModal();
+    } else {
+      this.modifydatosdelcertificado.markAllAsTouched();
+    }
   }
 }
