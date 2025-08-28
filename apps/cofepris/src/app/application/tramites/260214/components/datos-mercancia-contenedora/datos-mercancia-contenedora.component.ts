@@ -97,8 +97,6 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
    */
   mercanciaSeleccionado(event: TablaMercanciasDatos): void {
     this.SeleccionadoDatos = event;
-    console.log(this.SeleccionadoDatos, 'SeleccionadoDatos');
-
 
     const SELECCIONADO_MERCANCIA = {
   clasificacionProducto: event.clasificacionProducto,
@@ -123,13 +121,10 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
   paisDeProcedenciaDatos: event.paisDeProcedenciaDatos,
   paisOrigen: event.paisOrigen,
   paisProcedencia: event.paisProcedencia,
-  usoEspecificos: event.usoEspecificos,
   usoEspecifico: event.usoEspecifico,
   formaFarmaceutica: event.formaFarmaceutica,
   numeroRegistroSanitario: event.numeroRegistroSanitario,
 };
-
-console.log(SELECCIONADO_MERCANCIA,'SELECCIONADO_MERCANCIA');
 
     const INDICES = this.tramiteState.tablaMercanciasConfigDatos.findIndex(
       (idx) =>

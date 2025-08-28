@@ -194,7 +194,6 @@ export interface TablaMercanciasDatos {
   fechaCaducidad?: string;
     paisDeOriginDatos?: string[];
   paisDeProcedenciaDatos?: string[];
-  usoEspecificos?: string[]
 }
 
 /**

@@ -164,7 +164,7 @@ export interface FormularioMercancia {
   cantidad: string;
   pais: string;
   valorDelaMercancia: string;
-  complementoDelaDescripcion: string;
+  complementoDescripcion: string;
   tipoFactura: string;
   fecha: string;
   numeroFactura: string;
