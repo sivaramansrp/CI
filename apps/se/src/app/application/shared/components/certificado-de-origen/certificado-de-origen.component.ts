@@ -422,6 +422,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
   @Output() guardarClicadoChange = new EventEmitter<Mercancia[]>(); 
 
    @Output() seleccionado = new EventEmitter<Mercancia>();
+   tableErrorMensajeError: boolean = false;
 
 
   /**
@@ -678,9 +679,6 @@ ngOnChanges(changes: SimpleChanges):void {
     * y su estado asociado en el store.
     */
   setValoresStore(formGroupName: string, campo: string, storeStateName: string): void {
-    if(this.formCertificado.get('si')?.value){
-     this.formCertificado.get('primerApellido')?.setValidators([Validators.required,Validators.maxLength(20)]);
-    }
     const VALOR = this.formCertificado.get(campo)?.value;
     this.formaValida.emit(this.formCertificado.valid);
     this.formCertificadoEvent.emit({ formGroupName, campo, valor: VALOR, storeStateName });
@@ -853,5 +851,47 @@ ngOnChanges(changes: SimpleChanges):void {
   aceptar(): void {
     this.mostrarError = false;
   }
+ validatorCheck(): boolean {
+  if (!this.formCertificado) {
+    return false;
+  }
+
+  const CONTROL_NOMBRES = this.formCertificado.get('nombres');
+  const CONTROL_PRIMER_APELLIDO = this.formCertificado.get('primerApellido');
+  const CONTROL_NUMERO_REGISTRO = this.formCertificado.get('numeroDeRegistroFiscal');
+  const CONTROL_RAZON_SOCIAL = this.formCertificado.get('razonSocial');
+
+  if (this.formCertificado.get('si')?.value) {
+    CONTROL_NOMBRES?.setValidators([Validators.required, Validators.maxLength(20)]);
+    CONTROL_PRIMER_APELLIDO?.setValidators([Validators.required, Validators.maxLength(20)]);
+    CONTROL_NUMERO_REGISTRO?.setValidators([Validators.required, Validators.maxLength(30)]);
+    CONTROL_RAZON_SOCIAL?.setValidators([Validators.required, Validators.maxLength(200)]);
+  } else {
+    CONTROL_NOMBRES?.clearValidators();
+    CONTROL_PRIMER_APELLIDO?.clearValidators();
+    CONTROL_NUMERO_REGISTRO?.clearValidators();
+    CONTROL_RAZON_SOCIAL?.clearValidators();
+  }
+
+  // 🔹 Update all
+  CONTROL_NOMBRES?.updateValueAndValidity();
+  CONTROL_PRIMER_APELLIDO?.updateValueAndValidity();
+  CONTROL_NUMERO_REGISTRO?.updateValueAndValidity();
+  CONTROL_RAZON_SOCIAL?.updateValueAndValidity();
+
+  const IS_REGISTRO_FORM_VALID = this.formCertificado.valid;
+
+  if (!IS_REGISTRO_FORM_VALID) {
+    this.formCertificado.markAllAsTouched();
+  }
+
+  if (this.guardarClicado.length === 0) {
+    this.tableErrorMensajeError = true;
+    return false;
+  }
+
+  return IS_REGISTRO_FORM_VALID;
+}
+
 
 }

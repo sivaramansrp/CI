@@ -456,7 +456,7 @@ this.datosSeleccionados = this.tramiteQuery.getValue().selectedMercancia as unkn
   validarFormulario(): boolean {
     let isValid = true;
     if (this.certificadoDeOrigen) {
-      if (!this.certificadoDeOrigen.validarFormularios()) {
+      if (!this.certificadoDeOrigen.validatorCheck()) {
         isValid = false;
       }
     } else {
