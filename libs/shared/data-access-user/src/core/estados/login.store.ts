@@ -20,9 +20,15 @@ export function createLoginInitialState(): LoginState {
   };
 }
 
+/**
+ * Servicio para gestionar el estado de Login
+ */
 @Injectable({
   providedIn: 'root'
 })
+/**
+ * Configuración del Store para el estado de Login
+ */
 @StoreConfig({ name: 'Login', resettable: true, })
 export class LoginStore extends Store<LoginState> {
   constructor() {

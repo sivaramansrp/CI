@@ -211,6 +211,7 @@ export class FirmaElectronicaComponent implements OnDestroy {
         ESLOGIN
       );
 
+      // Crear el payload para la autenticación
       const PAYLOAD = {
         "rfc": RESULTADO.rfc,
         "certificate": RESULTADO.certificado,

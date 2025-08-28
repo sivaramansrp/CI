@@ -9,10 +9,15 @@ import { Injectable } from '@angular/core';
 })
 export class BandejaDeSolicitudeService {
 
-
-
+  /**
+   * URL base para las peticiones a la API
+   */
   private readonly host: string;
 
+  /**
+   * Constructor de la clase BandejaDeSolicitudeService
+   * @param http - Instancia de HttpClient para realizar peticiones HTTP
+   */
   constructor(private http: HttpClient) {
     this.host = `${ENVIRONMENT.API_HOST}/api/`;
   }

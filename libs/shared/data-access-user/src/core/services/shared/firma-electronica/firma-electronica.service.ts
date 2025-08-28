@@ -122,6 +122,11 @@ export class FirmaElectronicaService {
     }
   }
 
+  /**
+   * Realiza la autenticación del usuario utilizando su RFC y la firma electrónica.
+   * @param payload Objeto que contiene los datos necesarios para la autenticación.
+   * @returns Un observable con la respuesta de la API.
+   */
   public loginFielAuthentication(payload: FielPayload): Observable<JSONResponse> {
     return this.http.post<JSONResponse>(AUTH_ROUTE.LOGIN, payload);
   }
