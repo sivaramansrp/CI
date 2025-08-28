@@ -30,10 +30,17 @@ export function createTareaInitialState(): TareaState {
   };
 }
 
+/**
+ * Servicio para gestionar el estado de Tarea
+ */
 @Injectable({
   providedIn: 'root'
 })
+/**
+ * Configuración del Store para el estado de Tarea
+ */
 @StoreConfig({ name: 'Tarea', resettable: true, })
+
 export class TareaStore extends Store<TareaState> {
   constructor() {
     super(createTareaInitialState());
