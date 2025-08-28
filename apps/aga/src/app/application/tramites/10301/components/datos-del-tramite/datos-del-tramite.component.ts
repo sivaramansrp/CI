@@ -9,13 +9,13 @@ import {
   TituloComponent,
   ValidacionesFormularioService
 } from '@libs/shared/data-access-user/src';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import {
   Catalogo,
   Solicitud10301State,
   Tramite10301Store
 } from '../../estados/tramite10301.store';
 import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import {
   FormArray,
   FormBuilder,
@@ -26,12 +26,12 @@ import {
   Validators
 } from '@angular/forms';
 import { Subject, Subscription, map, merge, takeUntil } from 'rxjs';
-import { CommonModule } from '@angular/common';
 import { DatosMercancia, RespuestaCatalog } from '../../models/importador-exportador.model';
 import { ImportadorExportadorService } from '../../services/importador-exportador.service';
+import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
-import { Tramite10301Query } from '../../estados/tramite10301.query';
 import { Solicitud10301Service } from '../../services/solicitud10301.service';
+import { Tramite10301Query } from '../../estados/tramite10301.query';
 
 /**
  * Texto de adjuntar para terceros.

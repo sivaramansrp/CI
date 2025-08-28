@@ -1,9 +1,9 @@
-import { Solicitud10301State, Tramite10301Store } from '../estados/tramite10301.store';
+import { RespuestaCatalog, RespuestaConsulta } from '../models/importador-exportador.model';
 import { ENVIRONMENT } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RespuestaCatalog, RespuestaConsulta } from '../models/importador-exportador.model';
+import { Tramite10301Store } from '../estados/tramite10301.store';
 
 /**
  * Servicio encargado de gestionar los datos del trámite 10301.
