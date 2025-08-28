@@ -52,10 +52,36 @@ import { Tramite260214Query } from '../../estados/tramite260214Query.query';
   styleUrl: './agregar-facturador-contenedora.component.scss',
 })
 export class AgregarFacturadorContenedoraComponent implements OnInit {
+  /**
+   * Notificador para la destrucción del componente.
+   *
+   * @type {Subject<void>}
+   * @description
+   * Subject utilizado como mecanismo de cancelación para observables activos.  
+   * Cuando se emite un valor en `ngOnDestroy`, todas las suscripciones que usen  
+   * `takeUntil(this.destroyNotifier$)` se completan automáticamente, evitando fugas de memoria.
+   */
   destroyNotifier$ = new Subject<void>();
 
+  /**
+   * Estado actual del trámite 260214.
+   *
+   * @type {Tramite260214State}
+   * @description
+   * Contiene la información y valores asociados al estado del trámite en curso.  
+   * Se actualiza mediante el `Store` y `Query` correspondientes.
+   */
   public tramiteState!: Tramite260214State;
 
+  /**
+   * Lista de facturadores en la tabla de datos.
+   *
+   * @type {Facturador[]}
+   * @description
+   * Arreglo que almacena los registros de facturadores mostrados en la tabla.  
+   * Puede ser actualizado dinámicamente a partir de interacciones del usuario
+   * o de datos obtenidos desde el `Store` o un servicio.
+   */
   facturadorTablaDatos: Facturador[] = [];
   /**
    * @constructor
@@ -80,10 +106,25 @@ export class AgregarFacturadorContenedoraComponent implements OnInit {
       .subscribe();
   }
 
-     ngOnInit(): void {
+  /**
+   * Ciclo de vida de Angular: `ngOnInit`.
+   *
+   * @description
+   * Método ejecutado al inicializar el componente.  
+   *
+   * - Se suscribe a los parámetros de la ruta (`queryParams`).  
+   * - Si el parámetro `update` es igual a `'false'`, se limpia la lista
+   *   de facturadores (`facturadorTablaDatos`).  
+   *
+   * Esto permite controlar si la tabla debe mostrarse vacía o conservar
+   * la información previa según el valor de la URL.
+   */
+  ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       if (params['update'] === 'false') {
         this.facturadorTablaDatos = [];
+      } else if (params['update'] === 'true') {
+        this.facturadorTablaDatos = this.tramiteState.facturadorTablaModificaDatos;
       }
     });
   }

@@ -202,6 +202,12 @@ export class AgregarFacturadorComponent
     });
   }
 
+  /**
+   * Ciclo de vida de Angular: `ngOnChanges`.
+   *
+   * @param {SimpleChanges} currentValue - Objeto que contiene los cambios detectados
+   * en las propiedades de entrada (`@Input`) del componente.
+   */
   ngOnChanges(currentValue: SimpleChanges): void {
     if (currentValue['datoSeleccionado']) {
       this.datoSeleccionado = currentValue['datoSeleccionado'].currentValue;

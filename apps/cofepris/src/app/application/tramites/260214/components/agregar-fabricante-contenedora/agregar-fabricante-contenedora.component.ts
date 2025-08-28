@@ -8,7 +8,7 @@
  * Este componente actúa como un contenedor para gestionar y actualizar los datos de la tabla de fabricantes en el store del trámite.
  */
 
-import { AfterViewInit, Component } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import {
   Tramite260214State,
@@ -52,7 +52,7 @@ import { Tramite260214Query } from '../../estados/tramite260214Query.query';
   templateUrl: './agregar-fabricante-contenedora.component.html',
   styleUrl: './agregar-fabricante-contenedora.component.scss',
 })
-export class AgregarFabricanteContenedoraComponent implements AfterViewInit {
+export class AgregarFabricanteContenedoraComponent implements OnInit {
   /**
    * @constructor
    * @description
@@ -63,12 +63,54 @@ export class AgregarFabricanteContenedoraComponent implements AfterViewInit {
 
   idProcedimiento: number = ID_PROCEDIMIENTO;
 
+  /**
+   * Notificador para la destrucción del componente.
+   *
+   * @type {Subject<void>}
+   * @description
+   * Subject que se utiliza como mecanismo de cancelación para observables.  
+   * Al emitir un valor en `ngOnDestroy`, todas las suscripciones
+   * que usen `takeUntil(this.destroyNotifier$)` se completan, 
+   * evitando fugas de memoria.
+   */
   destroyNotifier$ = new Subject<void>();
 
+  /**
+   * Estado actual del trámite 260214.
+   *
+   * @type {Tramite260214State}
+   * @description
+   * Contiene la información y valores del estado del trámite en curso.  
+   * Se inicializa mediante datos externos o servicios que gestionan
+   * el flujo de la aplicación.
+   */
   public tramiteState!: Tramite260214State;
 
+  /**
+   * Lista de fabricantes en la tabla de datos.
+   *
+   * @type {Fabricante[]}
+   * @description
+   * Arreglo que almacena los registros de fabricantes mostrados en la tabla.  
+   * Se actualiza dinámicamente a partir de la interacción del usuario
+   * o de llamadas a servicios.
+   */
   fabricanteTablaDatos: Fabricante[] = [];
 
+  /**
+   * Constructor del componente.
+   *
+   * @param {Tramite260214Store} tramite260214Store - Store encargado de manejar las acciones y actualizaciones del estado del trámite 260214.
+   * @param {Tramite260214Query} tramite260214Query - Query que expone observables y selectores del estado del trámite 260214.
+   * @param {ActivatedRoute} route - Servicio de Angular que permite acceder a información de la ruta activa, incluyendo parámetros y queryParams.
+   *
+   * @description
+   * - Inyecta las dependencias necesarias para el manejo del estado (`Store` y `Query`) y la navegación (`ActivatedRoute`).  
+   * - Se suscribe al observable `selectTramiteState$` proveniente de `tramite260214Query`.  
+   * - Mediante `takeUntil(this.destroyNotifier$)`, asegura la correcta liberación de la suscripción en `ngOnDestroy`.  
+   * - Con `map`, actualiza la propiedad local `tramiteState` y la lista `fabricanteTablaDatos`
+   *   en función de los valores del estado (`seccionState`).  
+   */
   constructor(
     public tramite260214Store: Tramite260214Store,
     public tramite260214Query: Tramite260214Query,
@@ -85,10 +127,25 @@ export class AgregarFabricanteContenedoraComponent implements AfterViewInit {
       .subscribe();
   }
 
-  ngAfterViewInit(): void {
+  /**
+   * Ciclo de vida de Angular: `ngAfterViewInit`.
+   *
+   * @description
+   * Se ejecuta después de que la vista del componente ha sido inicializada.  
+   *
+   * - Se suscribe a los parámetros de la ruta (`queryParams`).  
+   * - Si el parámetro `update` es igual a `'false'`, se limpia la lista
+   *   de fabricantes (`fabricanteTablaDatos`).  
+   *
+   * Esto permite resetear los datos de la tabla de fabricantes
+   * en función de los parámetros recibidos en la URL tras la carga de la vista.
+   */
+  ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       if (params['update'] === 'false') {
         this.fabricanteTablaDatos = [];
+      }else if (params['update'] === 'true') {
+        this.fabricanteTablaDatos = this.tramiteState.fabricanteTablaModificaDatos;
       }
     });
   }

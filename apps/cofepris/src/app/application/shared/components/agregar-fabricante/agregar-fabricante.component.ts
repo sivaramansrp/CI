@@ -196,6 +196,12 @@ export class AgregarFabricanteComponent
    */
   public habilitarContribuyente: boolean = false;
 
+  /**
+   * Objeto de tipo `Fabricante` asociado al componente.
+   *
+   * @type {Fabricante | undefined}
+   * @optional
+   */
   fabricante?: Fabricante;
 
   /**
@@ -232,11 +238,30 @@ export class AgregarFabricanteComponent
         : false;
   }
 
+  /**
+   * Ciclo de vida de Angular: `ngOnChanges`.
+   *
+   * @param {SimpleChanges} currentValue - Objeto que contiene los cambios en las propiedades de entrada (`@Input`).
+   *
+   * @description
+   * Este método se ejecuta automáticamente cada vez que cambia alguna propiedad de entrada del componente.
+   *
+   * - Verifica si existe un valor en `datoSeleccionado` y si tiene registros.
+   * - Si hay información:
+   *   1. Asigna el nuevo valor de `datoSeleccionado`.
+   *   2. Tras un pequeño retraso (`setTimeout`), habilita el formulario `agregarFabricanteForm`
+   *      si los campos `nacionalidad` y `tipoPersona` están presentes.
+   *   3. Actualiza el formulario con los valores del primer elemento de `datoSeleccionado`.
+   * - Si no existe información, limpia el formulario mediante `reset()`.
+   */
   ngOnChanges(currentValue: SimpleChanges): void {
     if (currentValue['datoSeleccionado'].currentValue?.length > 0) {
       this.datoSeleccionado = currentValue['datoSeleccionado'].currentValue;
       setTimeout(() => {
-        if (this.datoSeleccionado?.[0]?.nacionalidad && this.datoSeleccionado?.[0]?.tipoPersona) {
+        if (
+          this.datoSeleccionado?.[0]?.nacionalidad &&
+          this.datoSeleccionado?.[0]?.tipoPersona
+        ) {
           this.agregarFabricanteForm?.enable();
         }
         this.agregarFabricanteForm?.patchValue({
@@ -263,7 +288,7 @@ export class AgregarFabricanteComponent
           coloniaOEquivalente: this.datoSeleccionado?.[0]?.coloniaEquivalente,
         });
       }, 100);
-    }else{
+    } else {
       this.agregarFabricanteForm?.reset();
     }
   }
@@ -463,7 +488,7 @@ export class AgregarFabricanteComponent
       razonSocial: VALOR_FORMULARIO.razonSocial,
       lada: VALOR_FORMULARIO.lada,
     };
-    if(this.datoSeleccionado?.[0]?.id){
+    if (this.datoSeleccionado?.[0]?.id) {
       NUEVO_FABRICANTE.id = this.datoSeleccionado[0].id;
     }
 

@@ -49,7 +49,7 @@ import { takeUntil } from 'rxjs/operators';
     CatalogoSelectComponent,
     TituloComponent,
     TooltipModule,
-    NotificacionesComponent
+    NotificacionesComponent,
   ],
   templateUrl: './agregar-destinatario-final.component.html',
   styleUrl: './agregar-destinatario-final.component.css',
@@ -194,6 +194,13 @@ export class AgregarDestinatarioFinalComponent
    */
   @Input() datoSeleccionado: Destinatario[] | undefined;
 
+  /**
+   * Lista de destinatarios seleccionados que se reciben como entrada
+   * desde un componente padre.
+   *
+   * @input
+   * @type {Destinatario[] | undefined}
+   */
   @Input() datoSeleccionadorfc: Destinatario[] | undefined;
 
   /**
@@ -633,6 +640,11 @@ export class AgregarDestinatarioFinalComponent
     }
   }
 
+  /**
+   * Maneja el evento de cambio en el campo de RFC.
+   *
+   * @param {Event} event - Evento que se dispara al cambiar el valor del campo de entrada (input).
+   */
   onChangeRfc(event: Event): void {
     const RFC_VALUE = (event.target as HTMLInputElement).value;
     this.datoSeleccionadorfc?.forEach((dato) => {

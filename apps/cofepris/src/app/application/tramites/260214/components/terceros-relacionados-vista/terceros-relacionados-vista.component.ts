@@ -105,7 +105,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.facturadorTablaDatos = data;
       });
-      //this.loadData();
+    //this.loadData();
   }
 
   loadData(): void {
@@ -178,20 +178,56 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     this.tramiteStore.updateFacturadorTablaDatos(newFacturadores);
   }
 
+  /**
+   * @method fabricanteEventoModificar
+   * @description
+   * Actualiza los datos de la tabla de fabricantes en el store del trámite.
+   * Se invoca cuando el componente hijo emite un evento de modificación de fabricantes.
+   *
+   * @param {Fabricante[]} fabricante - Lista de fabricantes modificados que se enviarán al store.
+   * @returns {void} Este método no retorna ningún valor.
+   */
   fabricanteEventoModificar(fabricante: Fabricante[]): void {
-    this.tramiteStore.updateFabricanteTablaDatos(fabricante);
+    this.tramiteStore.fabricanteTablaModificaDatos(fabricante);
   }
 
+  /**
+   * @method destinatarioEventoModificar
+   * @description
+   * Actualiza los datos de la tabla de destinatarios finales en el store del trámite.
+   * Se ejecuta al recibir un evento con la nueva lista de destinatarios.
+   *
+   * @param {Destinatario[]} destinatario - Lista de destinatarios finales que se actualizarán en el store.
+   * @returns {void} Este método no retorna ningún valor.
+   */
   destinatarioEventoModificar(destinatario: Destinatario[]): void {
-    this.tramiteStore.updateDestinatarioFinalTablaDatos(destinatario);
+    this.tramiteStore.destinatarioFinalTablaModificaDatos(destinatario);
   }
 
+  /**
+   * @method proveedorEventoModificar
+   * @description
+   * Actualiza los datos de la tabla de proveedores en el store del trámite.
+   * Se dispara cuando ocurre una modificación en la lista de proveedores.
+   *
+   * @param {Proveedor[]} proveedor - Lista de proveedores modificados que se enviarán al store.
+   * @returns {void} Este método no retorna ningún valor.
+   */
   proveedorEventoModificar(proveedor: Proveedor[]): void {
-    this.tramiteStore.updateProveedorTablaDatos(proveedor);
+    this.tramiteStore.proveedorTablaModificaDatos(proveedor);
   }
 
+  /**
+   * @method facturadorEventoModificar
+   * @description
+   * Actualiza los datos de la tabla de facturadores en el store del trámite.
+   * Se ejecuta al recibir un evento de modificación de facturadores.
+   *
+   * @param {Facturador[]} facturador - Lista de facturadores que se actualizarán en el store.
+   * @returns {void} Este método no retorna ningún valor.
+   */
   facturadorEventoModificar(facturador: Facturador[]): void {
-    this.tramiteStore.updateFacturadorTablaDatos(facturador);
+    this.tramiteStore.facturadorTablaModificaDatos(facturador);
   }
 
   /**

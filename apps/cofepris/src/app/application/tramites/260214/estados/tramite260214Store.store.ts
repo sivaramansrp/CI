@@ -85,6 +85,26 @@ export interface Tramite260214State {
   fabricanteTablaDatos: Fabricante[];
 
   /**
+   * Lista de destinatarios finales relacionados con el trámite.
+   */
+  destinatarioFinalTablaModificaDatos: Destinatario[];
+
+  /**
+   * Lista de facturadores relacionados con el trámite.
+   */
+  facturadorTablaModificaDatos: Facturador[];
+
+  /**
+   * Lista de proveedores relacionados con el trámite.
+   */
+  proveedorTablaModificaDatos: Proveedor[];
+
+  /**
+   * Lista de fabricantes relacionados con el trámite.
+   */
+  fabricanteTablaModificaDatos: Fabricante[];
+
+  /**
    * Estado del formulario de datos de la solicitud.
    */
   datosSolicitudFormState: DatosSolicitudFormState;
@@ -146,6 +166,10 @@ export function createInitialState(): Tramite260214State {
     facturadorTablaDatos: [],
     proveedorTablaDatos: [],
     fabricanteTablaDatos: [],
+    destinatarioFinalTablaModificaDatos: [],
+    facturadorTablaModificaDatos: [],
+    proveedorTablaModificaDatos: [],
+    fabricanteTablaModificaDatos: [],
     datosSolicitudFormState: {
       rfcSanitario: '',
       denominacionRazon: '',
@@ -311,6 +335,13 @@ export class Tramite260214Store extends Store<Tramite260214State> {
       const ACTUALIZADA = [...state.fabricanteTablaDatos];
 
       newFabricantes.forEach((nuevo) => {
+        if (!nuevo?.id) {
+          nuevo.id =
+            ACTUALIZADA.length > 0
+              ? Math.max(...ACTUALIZADA.map((f) => f.id ?? 0)) + 1
+              : 1;
+        }
+
         const INDICE = ACTUALIZADA.findIndex((f) => f.id === nuevo.id);
 
         if (INDICE > -1) {
@@ -342,6 +373,13 @@ export class Tramite260214Store extends Store<Tramite260214State> {
       const ACTUALIZADA = [...state.destinatarioFinalTablaDatos];
 
       newDestinatarios.forEach((nuevo) => {
+        if (!nuevo?.id) {
+          nuevo.id =
+            ACTUALIZADA.length > 0
+              ? Math.max(...ACTUALIZADA.map((f) => f.id ?? 0)) + 1
+              : 1;
+        }
+
         const INDICE = ACTUALIZADA.findIndex((f) => f.id === nuevo.id);
 
         if (INDICE > -1) {
@@ -490,6 +528,72 @@ export class Tramite260214Store extends Store<Tramite260214State> {
     this.update((state) => ({
       ...state,
       tabSeleccionado: tabSeleccionado,
+    }));
+  }
+
+  /**
+   * @method facturadorTablaModificaDatos
+   * @description
+   * Modifica los datos seleccionados en la tabla de facturadores dentro del estado del trámite.
+   * Reemplaza la lista actual por la nueva lista recibida.
+   *
+   * @param {Facturador[]} tabSeleccionado - Lista de facturadores seleccionados que se asignarán al estado.
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  public facturadorTablaModificaDatos(tabSeleccionado: Facturador[]): void {
+    this.update((state) => ({
+      ...state,
+      facturadorTablaModificaDatos: tabSeleccionado,
+    }));
+  }
+
+  /**
+   * @method fabricanteTablaModificaDatos
+   * @description
+   * Actualiza los datos seleccionados en la tabla de fabricantes en el estado del trámite.
+   * Sustituye el arreglo actual por el nuevo conjunto de fabricantes.
+   *
+   * @param {Fabricante[]} tabSeleccionado - Lista de fabricantes seleccionados que se asignarán al estado.
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  public fabricanteTablaModificaDatos(tabSeleccionado: Fabricante[]): void {
+    this.update((state) => ({
+      ...state,
+      fabricanteTablaModificaDatos: tabSeleccionado,
+    }));
+  }
+
+  /**
+   * @method destinatarioFinalTablaModificaDatos
+   * @description
+   * Modifica los datos seleccionados en la tabla de destinatarios finales en el estado del trámite.
+   * Reemplaza el contenido anterior con la nueva lista proporcionada.
+   *
+   * @param {Destinatario[]} tabSeleccionado - Lista de destinatarios finales seleccionados que se asignarán al estado.
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  public destinatarioFinalTablaModificaDatos(
+    tabSeleccionado: Destinatario[]
+  ): void {
+    this.update((state) => ({
+      ...state,
+      destinatarioFinalTablaModificaDatos: tabSeleccionado,
+    }));
+  }
+
+  /**
+   * @method proveedorTablaModificaDatos
+   * @description
+   * Actualiza los datos seleccionados en la tabla de proveedores dentro del estado del trámite.
+   * Sobrescribe la lista previa con los proveedores seleccionados.
+   *
+   * @param {Proveedor[]} tabSeleccionado - Lista de proveedores seleccionados que se asignarán al estado.
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  public proveedorTablaModificaDatos(tabSeleccionado: Proveedor[]): void {
+    this.update((state) => ({
+      ...state,
+      proveedorTablaModificaDatos: tabSeleccionado,
     }));
   }
 }
