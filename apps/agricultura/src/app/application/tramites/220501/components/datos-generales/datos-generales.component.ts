@@ -235,9 +235,7 @@ export class DatosGeneralesComponent implements OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.formularioDeshabilitado) {
       this.forma?.disable();
-    } else if (!this.formularioDeshabilitado) {
-      this.forma?.enable();
-    } 
+    }
   }
 
   /**
@@ -252,15 +250,15 @@ export class DatosGeneralesComponent implements OnDestroy {
       puntoInspeccion: [this.solicitud220501State.puntoInspeccion, Validators.required],
       claveUCON: [{ value: this.solicitud220501State.claveUCON, disabled: true }],
       establecimientoTIF: [this.solicitud220501State.establecimientoTIF, Validators.required],
-      nombre: [this.solicitud220501State.nombre, Validators.required],
+      nombre: [{ value: this.solicitud220501State.nombre, disabled: true }, Validators.required],
       numeroguia: [{ value: this.solicitud220501State.numeroguia, disabled: true }, Validators.required],
       regimen: [this.solicitud220501State.regimen, Validators.required],
-      capturaDatosMercancia: [this.solicitud220501State.capturaDatosMercancia],
+      capturaDatosMercancia: [{ value: this.solicitud220501State.capturaDatosMercancia, disabled: true }, Validators.required],
       coordenadas: [{ value: this.solicitud220501State.coordenadas, disabled: true }],
       movilizacion: [this.solicitud220501State.movilizacion, Validators.required],
       transporte: [{ value: this.solicitud220501State.transporte, disabled: true }],
       punto: [this.solicitud220501State.punto, [Validators.required]],
-      nombreEmpresa: [this.solicitud220501State.nombreEmpresa, Validators.required],
+      nombreEmpresa: [{ value: this.solicitud220501State.nombreEmpresa, disabled: true }, Validators.required],
     });
 
     this.solicitud220501Query.selectSolicitud$

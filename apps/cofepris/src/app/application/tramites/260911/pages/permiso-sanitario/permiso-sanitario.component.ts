@@ -1,41 +1,30 @@
 import { Component, ViewChild } from '@angular/core';
-import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
-import { DatosPasos } from '@ng-mf/data-access-user';
-import { FormGroup } from '@angular/forms';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '@ng-mf/data-access-user';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@ng-mf/data-access-user';
+import { PagoDeDerechosComponent } from '../../component/pago-de-derechos/pago-de-derechos.component';
 
-/**
- * Interfaz que representa la acción de un botón.
- */
+import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
+
+import { FormGroup } from '@angular/forms';
+
 interface AccionBoton {
-  /**
-   * La acción que se va a realizar.
-   */
   accion: string;
-  /**
-   * El valor asociado a la acción.
-   */
   valor: number;
 }
 
-/**
- * Componente que representa los pasos de datos en un proceso de múltiples pasos.
- * Gestiona el flujo de un asistente (wizard) para el trámite de permiso sanitario,
- * incluyendo la navegación entre pasos, manejo de mensajes y datos asociados.
- */
 @Component({
-  /**
-   * Selector del componente utilizado en el HTML.
-   */
-  selector: 'app-permiso-sanitary',
-  /**
-   * Ruta del archivo de plantilla HTML asociado al componente.
-   */
+  selector: 'app-permiso-sanitario',
   templateUrl: './permiso-sanitario.component.html',
+  styleUrls: ['./permiso-sanitario.component.scss']
 })
 export class PermisoSanitarioComponent {
+  /**
+   * Access PagoDeDerechosComponent instance
+   */
+  @ViewChild(PagoDeDerechosComponent) pagoDeDerechosComponent!: PagoDeDerechosComponent;
+  /**
+   * Controla la visibilidad del botón Anterior
+   */
+  ocultarBtnAnterior: boolean = true;
   /**
    * Controls visibility of the payment confirmation modal
    */
@@ -50,10 +39,48 @@ export class PermisoSanitarioComponent {
    * Handler for the continuarEvento from btn-continuar
    */
   onContinuar(event: AccionBoton): void {
-    // Here you can add your condition to show the modal, e.g. if payment data is missing
-    // For now, always show the modal for demonstration
     this.lastContinueEvent = event;
-    this.showPaymentModal = true;
+    let pagoFormValid = true;
+    let pagoFormDisabled = false;
+    let pagoFormBlank = true;
+    if (this.pagoDeDerechosComponent && this.pagoDeDerechosComponent.pagoDeDerechosForm) {
+      const FORM = this.pagoDeDerechosComponent.pagoDeDerechosForm;
+      pagoFormValid = FORM.valid;
+      pagoFormDisabled = FORM.disabled;
+      const CONTROLS = FORM.controls;
+      pagoFormBlank = Object.keys(CONTROLS).every(key => {
+        const VALUE = CONTROLS[key].value;
+        return VALUE === null || VALUE === '' || typeof VALUE === 'undefined';
+      });
+      if (pagoFormDisabled && pagoFormBlank) {
+        this.showPaymentModal = true;
+        this.datosPasos.indice = this.indice;
+        this.ocultarBtnAnterior = false;
+        this.datosPasos.txtBtnAnt = 'Anterior';
+        this.datosPasos.txtBtnSig = 'Continuar';
+        return;
+      }
+    }
+  
+    if (this.indice !== 2) {
+      if (!pagoFormValid) {
+        this.showPaymentModal = true;
+      } else {
+        this.getValorIndice(event);
+      }
+    } else {
+      this.getValorIndice(event);
+    }
+    this.datosPasos.indice = this.indice;
+    if (this.indice === 1) {
+      this.ocultarBtnAnterior = true;
+      this.datosPasos.txtBtnAnt = '';
+      this.datosPasos.txtBtnSig = 'Continuar';
+    } else {
+      this.ocultarBtnAnterior = false;
+      this.datosPasos.txtBtnAnt = 'Anterior';
+      this.datosPasos.txtBtnSig = 'Continuar';
+    }
   }
 
   /**
@@ -62,6 +89,16 @@ export class PermisoSanitarioComponent {
   onPaymentModalNo(): void {
     this.showPaymentModal = false;
     this.lastContinueEvent = null;
+    this.datosPasos.indice = this.indice;
+    if (this.indice === 1) {
+      this.ocultarBtnAnterior = true;
+      this.datosPasos.txtBtnAnt = '';
+      this.datosPasos.txtBtnSig = 'Continuar';
+    } else {
+      this.ocultarBtnAnterior = false;
+      this.datosPasos.txtBtnAnt = 'Anterior';
+      this.datosPasos.txtBtnSig = 'Continuar';
+    }
   }
 
   /**
@@ -72,6 +109,16 @@ export class PermisoSanitarioComponent {
     if (this.lastContinueEvent) {
       this.getValorIndice(this.lastContinueEvent);
       this.lastContinueEvent = null;
+    }
+    this.datosPasos.indice = this.indice;
+    if (this.indice === 1) {
+      this.ocultarBtnAnterior = true;
+      this.datosPasos.txtBtnAnt = '';
+      this.datosPasos.txtBtnSig = 'Continuar';
+    } else {
+      this.ocultarBtnAnterior = false;
+      this.datosPasos.txtBtnAnt = 'Anterior';
+      this.datosPasos.txtBtnSig = 'Continuar';
     }
   }
   /**

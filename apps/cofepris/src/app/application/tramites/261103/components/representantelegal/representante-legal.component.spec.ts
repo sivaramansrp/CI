@@ -6,6 +6,7 @@ import { DatosProcedureQuery } from '../../../../estados/queries/tramites261103.
 import { DatosProcedureStore } from '../../../../estados/tramites/tramites261103.store';
 import { DatosProcedureState } from '../../../../estados/tramites/tramites261103.store';
 import { ModificacionPermisoImportacionMedicamentosService } from '../../services/modificacion-permiso-importacion-medicamentos.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 jest.mock('../../services/modificacion-permiso-importacion-medicamentos.service');
 
@@ -14,6 +15,7 @@ describe('RepresentanteLegalComponent', () => {
   let fixture: ComponentFixture<RepresentanteLegalComponent>;
   let mockStore: DatosProcedureStore;
   let mockQuery: DatosProcedureQuery;
+  let mockConsultaioQuery: ConsultaioQuery;
   let destroy$: Subject<void>;
 
   const mockState: DatosProcedureState = {
@@ -33,7 +35,7 @@ describe('RepresentanteLegalComponent', () => {
     funcionamiento: '',
     licencia: '',
     representanteLegalRFC: '',
-    representanteLegalNombre: '',
+    representanteLegalNombre: 'Juan',
     buscar: '',
     representanteLegalApPaterno: '',
     representanteLegalApMaterno: '',
@@ -57,12 +59,17 @@ describe('RepresentanteLegalComponent', () => {
       selectProrroga$: of(mockState)
     } as unknown as DatosProcedureQuery;
 
+    mockConsultaioQuery = {
+      selectConsultaioState$: of({ readonly: false })
+    } as unknown as ConsultaioQuery;
+
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, RepresentanteLegalComponent],
       providers: [
         FormBuilder,
         { provide: DatosProcedureStore, useValue: mockStore },
-        { provide: DatosProcedureQuery, useValue: mockQuery }
+        { provide: DatosProcedureQuery, useValue: mockQuery },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery }
       ]
     }).compileComponents();
 
@@ -76,15 +83,31 @@ describe('RepresentanteLegalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form on ngOnInit', () => {
+  it('should initialize form on ngOnInit', async () => {
+    // Set up the component state with mock data
+    component['seccionState'] = mockState;
+    
+    // Call ngOnInit to initialize the form
     component.ngOnInit();
+    
+    // Wait for the form to be created
+    await fixture.whenStable();
+    
     expect(component.domicilioEstablecimiento).toBeDefined();
     expect(component.domicilioEstablecimiento.controls['representanteLegalNombre'].value).toBe('Juan');
   });
 
-  it('should set form as read-only if esFormularioSoloLectura is true', () => {
+  it('should set form as read-only if esFormularioSoloLectura is true', async () => {
+    // Set up the component state
+    component['seccionState'] = mockState;
     component.esFormularioSoloLectura = true;
+    
+    // Initialize the form
     component.establecerdomicilioEstablecimiento();
+    
+    // Wait for form to be created
+    await fixture.whenStable();
+    
     expect(component.domicilioEstablecimiento.disabled).toBe(true);
   });
 
@@ -105,10 +128,14 @@ describe('RepresentanteLegalComponent', () => {
   });
 
   it('should return true for isValid when service returns true', () => {
-    (ModificacionPermisoImportacionMedicamentosService.isValid as jest.Mock).mockReturnValue(true);
+    // Create a simple form for testing
     component.domicilioEstablecimiento = component['fb'].group({
-      representanteLegalNombre: ['Carlos']
+      representanteLegalNombre: ['Carlos', []]
     });
+    
+    // Mock the static method
+    jest.spyOn(ModificacionPermisoImportacionMedicamentosService, 'isValid').mockReturnValue(true);
+    
     const result = component.isValid('representanteLegalNombre');
     expect(result).toBe(true);
   });

@@ -10,5 +10,5 @@
 	(destinatarioSeleccionadoDatos)="onDestinatarioSeleccionado($event)"
 	(proveedorSeleccionadoDatos)="onProveedorSeleccionado($event)"
 	(facturadorSeleccionadoDatos)="onFacturadorSeleccionado($event)"
-	[formularioDeshabilitado]="esFormularioSoloLectura"
+	[formularioDeshabilitado]="esFormularioSoloLectura || isFabricanteTablaDatosDisabled || isDestinatarioFinalTablaDatosDisabled || isProveedorTablaDatosDisabled || isFacturadorTablaDatosDisabled"
 ></app-terceros-relacionados>

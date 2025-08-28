@@ -800,7 +800,22 @@ static restrictFutureDates(): ValidatorFn {
     const CHECKBOX = event.target as HTMLInputElement;
     this.mostrarCamposTercerOperador = CHECKBOX.checked;
   }
+  /**
+   * Valida el formulario de datos del certificado.
+   * 
+   * @returns {boolean} - Retorna true si el formulario es válido, false en caso contrario.
+   */
+public validarFormulario(): boolean {
+  let isValid = true;
 
+  if (this.formularioCertificado.invalid) {
+    this.formularioCertificado.markAllAsTouched();
+    isValid = false;
+  }
+
+
+  return isValid;
+}
   /**
    * Método que se ejecuta al destruir el componente.
    * 

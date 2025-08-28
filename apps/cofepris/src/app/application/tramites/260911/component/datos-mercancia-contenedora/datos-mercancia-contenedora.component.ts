@@ -70,6 +70,7 @@ import { MercanciasInfo } from '@libs/shared/data-access-user/src/core/models/26
   providers: [DatosSolicitudService],
 })
 export class DatosMercanciaContenedoraComponent implements OnInit {
+  public isEditBlocked: boolean = false;
   /**
    * Evento emitido cuando se hace clic en el botón Agregar en el modal de Mercancías
    */
@@ -78,25 +79,24 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
      * Evento emitido cuando se hace clic en el botón Cancelar en el modal de Mercancías
      */
     @Output() cancelarMercanciaModal = new EventEmitter<void>();
-
-    cerrarMercanciaModal(): void {
-      this.cancelarMercanciaModal.emit();
-    }
-  public resetForm(): void {
-    if (this.mercanciaForm) {
-      this.mercanciaForm.reset();
-    }
-  }
+   
   onAgregarMercancia(): void {
     if (this.mercanciaForm.valid) {
+      // Helper to get description from catalog by ID
+      const GET_CATALOG_DESC = (catalog: Catalogo[], id: number | string | null): string => {
+        if (id === null || id === undefined) { return ''; }
+        const FOUND = catalog.find(item => item.id === Number(id));
+        if (FOUND) { return String(FOUND.descripcion); }
+        return typeof id === 'string' ? id : String(id);
+      };
       const MERCANCIA: MercanciasInfo = {
-        clasificacion: this.mercanciaForm.get('clasificacionProducto')?.value,
-        especificar: this.mercanciaForm.get('especificarClasificacionProducto')?.value,
+        clasificacion: GET_CATALOG_DESC(this.clasificacionProductoDatos, this.mercanciaForm.get('clasificacionProducto')?.value),
+        especificar: GET_CATALOG_DESC(this.especificarClasificacionProductoDatos, this.mercanciaForm.get('especificarClasificacionProducto')?.value),
         denominacionEspecifica: this.mercanciaForm.get('denominacionEspecificaProducto')?.value,
         denominacionDistintiva: this.mercanciaForm.get('denominacionDistintiva')?.value,
         denominacionComun: this.mercanciaForm.get('denominacionComun')?.value,
-        formaFarmaceutica: this.mercanciaForm.get('formaFarmaceutica')?.value,
-        estadoFisico: this.mercanciaForm.get('estadoFisico')?.value,
+        formaFarmaceutica: GET_CATALOG_DESC(this.formaFarmaceuticaDatos, this.mercanciaForm.get('formaFarmaceutica')?.value),
+        estadoFisico: GET_CATALOG_DESC(this.estadoFisicoDatos, this.mercanciaForm.get('estadoFisico')?.value),
         fraccionArancelaria: this.mercanciaForm.get('fraccionArancelaria')?.value,
         descripcionFraccion: this.mercanciaForm.get('descripcionFraccion')?.value,
         unidad: this.mercanciaForm.get('cantidadUmcValor')?.value,
@@ -107,13 +107,20 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
         numeroRegistro: this.mercanciaForm.get('numeroRegistroSanitario')?.value,
         paisDeOrigen: this.mercanciaForm.get('paisDeOriginDatos')?.value?.[0],
         paisDeProcedencia: this.mercanciaForm.get('paisDeProcedenciaDatos')?.value?.[0],
-        tipoProducto: this.mercanciaForm.get('tipoProducto')?.value,
+        tipoProducto: GET_CATALOG_DESC(this.tipoProductoDatos, this.mercanciaForm.get('tipoProducto')?.value),
         usoEspecifico: this.mercanciaForm.get('usoEspecifico')?.value?.[0],
         fechaCaducidad: this.mercanciaForm.get('fechaCaducidad')?.value,
       };
       this.agregarMercancia.emit(MERCANCIA);
     } else {
       this.mercanciaForm.markAllAsTouched();
+      // Debug: log invalid controls and errors
+      const INVALID_CONTROLS = Object.keys(this.mercanciaForm.controls).filter(key => this.mercanciaForm.get(key)?.invalid);
+      INVALID_CONTROLS.forEach(key => {
+        const CONTROL = this.mercanciaForm.get(key);
+        console.warn('Control inválido:', key, CONTROL?.errors);
+      });
+      console.warn('Formulario de mercancía no válido, revise los campos marcados.');
     }
   }
   /**
@@ -146,7 +153,18 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
    * @property {MercanciaForm} mercanciaFormState
    * Input que recibe el estado inicial del formulario de mercancía.
    */
-  @Input() public mercanciaFormState!: MercanciaForm;
+  private _mercanciaFormState!: MercanciaForm;
+  @Input()
+  set mercanciaFormState(value: MercanciaForm) {
+    this._mercanciaFormState = value;
+    if (value) {
+      // Re-create the form with the new state
+      this.crearMercanciaForm();
+    }
+  }
+  get mercanciaFormState(): MercanciaForm {
+    return this._mercanciaFormState;
+  }
 
   /**
    * @property {TablaMercanciasDatos} datoSeleccionado
@@ -482,6 +500,17 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
     this.crossListRequirdos();
   }
 
+  setEditBlocked(blocked: boolean): void {
+    this.isEditBlocked = blocked;
+    if (this.mercanciaForm) {
+      if (blocked) {
+        this.mercanciaForm.disable();
+      } else {
+        this.mercanciaForm.enable();
+      }
+    }
+  }
+
   /**
    * Lista de elementos que no son válidos.
    * Esta propiedad almacena un arreglo de cadenas que representan
@@ -619,6 +648,22 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
     }
   }
 
+   /**
+     * Cierra el modal de mercancía emitiendo el evento cancelarMercanciaModal.
+     */
+
+    cerrarMercanciaModal(): void {
+      this.cancelarMercanciaModal.emit();
+    }
+    /**
+     * Reinicia el formulario de mercancía.
+     */
+  public resetForm(): void {
+    if (this.mercanciaForm) {
+      this.mercanciaForm.reset();
+    }
+  }
+
   /**
    * Restablece los valores de los campos clave en el formulario.
    */
@@ -745,35 +790,96 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
    * @returns void
    */
   crearMercanciaForm(): void {
-    this.mercanciaForm = this.fb.group({
+    if (!this.areCatalogsLoaded()) {
+      return;
+    }
+  const { MAPPED_UMT_ID, FINAL_MAPPED_UMC_ID } = this.getUmtUmcIds();
+  this.mercanciaForm = this.buildMercanciaForm(MAPPED_UMT_ID, FINAL_MAPPED_UMC_ID);
+    this.removeInvalidControls();
+    this.addExtraControls();
+  }
+
+  private areCatalogsLoaded(): boolean {
+    const CATALOGS_LOADED = [
+      this.clasificacionProductoDatos,
+      this.especificarClasificacionProductoDatos,
+      this.tipoProductoDatos,
+      this.formaFarmaceuticaDatos,
+      this.estadoFisicoDatos,
+      this.cantidadUmcDatos
+    ].every(arr => Array.isArray(arr) && arr.length);
+    if (!CATALOGS_LOADED) {
+      return false;
+    }
+    if (!this.clasificacionProductoDatos?.length ||
+        !this.especificarClasificacionProductoDatos?.length ||
+        !this.tipoProductoDatos?.length ||
+        !this.formaFarmaceuticaDatos?.length ||
+        !this.estadoFisicoDatos?.length ||
+        !this.cantidadUmcDatos?.length) {
+      console.warn('Catalogs not loaded yet, skipping form creation');
+      return false;
+    }
+    return true;
+  }
+
+  private getUmtUmcIds(): { MAPPED_UMT_ID: number | null, FINAL_MAPPED_UMC_ID: number | null } {
+    const INCOMING_UMT_VALOR = String(this.obtenerValor('cantidadUmtValor'));
+    let MAPPED_UMT_ID = DatosMercanciaContenedoraComponent.matchCatalogId(this.cantidadUmcDatos, INCOMING_UMT_VALOR);
+    let FINAL_MAPPED_UMC_ID = MAPPED_UMT_ID;
+    if (MAPPED_UMT_ID === null && this.cantidadUmcDatos.length > 0) {
+      MAPPED_UMT_ID = this.cantidadUmcDatos[0].id;
+    }
+    if (FINAL_MAPPED_UMC_ID === null && this.cantidadUmcDatos.length > 0) {
+      FINAL_MAPPED_UMC_ID = this.cantidadUmcDatos[0].id;
+    }
+    return { MAPPED_UMT_ID, FINAL_MAPPED_UMC_ID };
+  }
+
+  private buildMercanciaForm(MAPPED_UMT_ID: number | null, FINAL_MAPPED_UMC_ID: number | null): FormGroup {
+    return this.fb.group({
+      presentacion: [
+        this.obtenerValor('presentacion'),
+        Validators.required,
+      ],
+      numeroRegistroSanitario: [
+        this.obtenerValor('numeroRegistroSanitario'),
+        Validators.required,
+      ],
       clasificacionProducto: [
-        this.obtenerValor('clasificacionProducto'),
+        DatosMercanciaContenedoraComponent.matchCatalogId(this.clasificacionProductoDatos, String(this.obtenerValor('clasificacionProducto'))) ?? null,
         Validators.required,
       ],
       especificarClasificacionProducto: [
-        this.obtenerValor('especificarClasificacionProducto'),
+        DatosMercanciaContenedoraComponent.matchCatalogId(this.especificarClasificacionProductoDatos, String(this.obtenerValor('especificarClasificacionProducto'))) ?? null,
         Validators.required,
       ],
       denominacionEspecificaProducto: [
-        this.obtenerValor('denominacionEspecificaProducto'),
+        this.obtenerValor('denominacionEspecificaProducto') ?? null,
         Validators.required,
       ],
       denominacionDistintiva: [
-        this.obtenerValor('denominacionDistintiva'),
+        this.obtenerValor('denominacionDistintiva') ?? null,
         Validators.required,
       ],
       denominacionComun: [
-        this.obtenerValor('denominacionComun'),
+        this.obtenerValor('denominacionComun') ?? null,
         Validators.required,
       ],
-      tipoProducto: [this.obtenerValor('tipoProducto'), Validators.required],
+      tipoProducto: [
+        DatosMercanciaContenedoraComponent.matchCatalogId(this.tipoProductoDatos, String(this.obtenerValor('tipoProducto'))) ?? null,
+        Validators.required
+      ],
       formaFarmaceutica: [
-        this.obtenerValor('formaFarmaceutica'),
+        DatosMercanciaContenedoraComponent.matchCatalogId(this.formaFarmaceuticaDatos, String(this.obtenerValor('formaFarmaceutica'))) ?? null,
         Validators.required,
       ],
-      estadoFisico: [this.obtenerValor('estadoFisico'), Validators.required],
+      estadoFisico: [
+        DatosMercanciaContenedoraComponent.matchCatalogId(this.estadoFisicoDatos, String(this.obtenerValor('estadoFisico'))) ?? null,
+        Validators.required,
+      ],
       fraccionArancelaria: [
-        this.obtenerValor('fraccionArancelaria'),
+        this.obtenerValor('fraccionArancelaria') ?? null,
         Validators.required,
       ],
       descripcionFraccion: [
@@ -786,33 +892,28 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
         Validators.required,
       ],
       cantidadUmtValor: [
-        this.obtenerValor('cantidadUmtValor'),
+        this.obtenerValor('cantidadUmtValor') ?? null,
+        [
+          Validators.required,
+          Validators.pattern(REGEX_NUMERO_12_ENTEROS_5_DECIMALES),
+        ],
+      ],
+      cantidadUmcValor: [
+        this.obtenerValor('cantidadUmcValor') ?? null,
         [
           Validators.required,
           Validators.pattern(REGEX_NUMERO_12_ENTEROS_5_DECIMALES),
         ],
       ],
       cantidadUmt: [
-        {
-          value: this.obtenerValor('cantidadUmt'),
-          disabled: this.elementosDeshabilitados.includes('cantidadUmt'),
-        },
+        MAPPED_UMT_ID ?? null,
         Validators.required,
       ],
-      cantidadUmcValor: [
-        this.obtenerValor('cantidadUmcValor'),
-        [
-          Validators.required,
-          Validators.pattern(REGEX_NUMERO_12_ENTEROS_5_DECIMALES),
-        ],
-      ],
-      cantidadUmc: [this.obtenerValor('cantidadUmc'), Validators.required],
-      presentacion: [this.obtenerValor('presentacion'), Validators.required],
-      numeroRegistroSanitario: [
-        this.obtenerValor('numeroRegistroSanitario'),
+      cantidadUmc: [
+        FINAL_MAPPED_UMC_ID ?? null,
         Validators.required,
       ],
-      fechaCaducidad: [this.obtenerValor('fechaCaducidad')],
+      fechaCaducidad: [this.obtenerValor('fechaCaducidad') ?? null],
       paisDeOriginDatos: [
         this.obtenerValor('paisDeOriginDatos') || []
       ],
@@ -823,12 +924,25 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
         this.obtenerValor('usoEspecifico') || []
       ],
     });
+  }
 
-    const CONTROLS_A_ELIMINAR = [...this.elementosNoValidos];
+  private removeInvalidControls(): void {
+    const ALWAYS_KEEP = [
+      'clasificacionProducto',
+      'especificarClasificacionProducto',
+      'tipoProducto',
+      'formaFarmaceutica',
+      'estadoFisico'
+    ];
+    const CONTROLS_A_ELIMINAR = [...this.elementosNoValidos].filter(ctrl => !ALWAYS_KEEP.includes(ctrl));
     if (this.detalleMercancia) {
-      CONTROLS_A_ELIMINAR.push('formaFarmaceutica', 'denominacionDistintiva');
+      ['formaFarmaceutica', 'denominacionDistintiva'].forEach(ctrl => {
+        if (!ALWAYS_KEEP.includes(ctrl)) {
+          CONTROLS_A_ELIMINAR.push(ctrl);
+        }
+      });
     }
-    if (this.elementosNoValidos.length) {
+    if (CONTROLS_A_ELIMINAR.length) {
       for (const NOMBRE_DEL_CONTROL of CONTROLS_A_ELIMINAR) {
         if (this.mercanciaForm.contains(NOMBRE_DEL_CONTROL)) {
           this.mercanciaForm.removeControl(NOMBRE_DEL_CONTROL, {
@@ -837,6 +951,9 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
         }
       }
     }
+  }
+
+  private addExtraControls(): void {
     if (this.elementosAnadidos.length) {
       for (const NOMBRE_DEL_CONTROL of this.elementosAnadidos) {
         if (!this.mercanciaForm.contains(NOMBRE_DEL_CONTROL)) {
@@ -852,6 +969,26 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
     }
   }
 
+  public static matchCatalogId(catalog: Catalogo[], value: string): number | null {
+    if (!catalog || !value) { return null; }
+    const NORMALIZED_VALUE = DatosMercanciaContenedoraComponent.normalize(value);
+    const FOUND = catalog.find(item => DatosMercanciaContenedoraComponent.normalize(item.descripcion) === NORMALIZED_VALUE);
+    return FOUND ? FOUND.id : null;
+  }
+
+  private static normalize(str: string): string {
+    if (typeof str !== 'string') {
+      return '';
+    }
+    return str
+      .replace(/\//g, ' ')
+      .replace(/\s+/g, ' ')
+      .replace(/[.,#!$%&*;:{}=\-_`~()]/g, '')
+      .toLowerCase()
+      .trim();
+
+  }
+
   /**
    * Obtiene el valor de un campo específico del formulario o de los datos seleccionados.
    * @param {keyof TablaMercanciasDatos | keyof MercanciaForm} field - Nombre del campo a obtener.
@@ -860,16 +997,11 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
   public obtenerValor(
     field: keyof TablaMercanciasDatos | keyof MercanciaForm
   ): string | number | undefined | string[] {
-    if (!this.datoSeleccionado && !this.mercanciaFormState) {
-      return undefined;
+    if (this.mercanciaFormState && this.mercanciaFormState[field as keyof MercanciaForm] !== undefined) {
+      return this.mercanciaFormState[field as keyof MercanciaForm];
     }
-    const DATO = this.datoSeleccionado?.[field as keyof TablaMercanciasDatos];
-    if (DATO !== undefined) {
-      return DATO;
-    }
-    const FORM_STATE = this.mercanciaFormState?.[field as keyof MercanciaForm];
-    if (FORM_STATE !== undefined) {
-      return FORM_STATE;
+    if (this.datoSeleccionado && this.datoSeleccionado[field as keyof TablaMercanciasDatos] !== undefined) {
+      return this.datoSeleccionado[field as keyof TablaMercanciasDatos];
     }
     return undefined;
   }
@@ -882,8 +1014,15 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
    */
   // eslint-disable-next-line class-methods-use-this
   public isValid(control: AbstractControl, campo?: string): boolean | null {
+    if (!control) {
+      return null;
+    }
     if (control instanceof FormGroup && campo) {
-      return control.controls[campo].errors && control.controls[campo].touched;
+      const CHILD = control.controls[campo];
+      if (!CHILD) {
+        return null;
+      }
+      return CHILD.errors && CHILD.touched;
     }
     return control.errors && control.touched;
   }

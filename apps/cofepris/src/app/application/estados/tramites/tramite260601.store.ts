@@ -1,5 +1,5 @@
 import { Fabricante, Proveedor } from '../../shared/models/terceros-relacionados.model';
-import {ProductoTable, ScianTable } from '../../tramites/260601/models/aviso-model';
+import {ProductoTable, ScianTable, SolicitudTable } from '../../tramites/260601/models/aviso-model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
@@ -376,6 +376,27 @@ export interface AvisoSanitarioState {
     scianBodyData : ScianTable[];
     /** Datos de productos para la tabla. */
     productoBodyData:ProductoTable[];
+        /**
+     * @property {string[]} cvePaisDeOrigen
+     * @description
+     * Arreglo que contiene las claves de los países de origen seleccionados para el producto.
+     */
+    cvePaisDeOrigen: string[];
+
+    /**
+     * @property {string[]} cvePaisDeProcedencia
+     * @description
+     * Arreglo que contiene las claves de los países de procedencia seleccionados para el producto.
+     */
+    cvePaisDeProcedencia: string[];
+
+    /**
+     * @property {string[]} cveUsoEspecifico
+     * @description
+     * Arreglo que contiene las claves de los usos específicos seleccionados para el producto.
+     */
+    cveUsoEspecifico: string[];
+
 }
 
 /**
@@ -510,6 +531,9 @@ export function createInitialState(): AvisoSanitarioState {
         tabSeleccionado: 1,
         scianBodyData: [],
         productoBodyData: [],
+        cvePaisDeOrigen: [],
+        cvePaisDeProcedencia: [],
+        cveUsoEspecifico: [],
     }
 }
 
@@ -1966,6 +1990,19 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
         this.update((state) => ({
             ...state,
              productoBodyData,
+        }));
+    }
+    /**
+     * @method setSolicitudTabla
+     * @description
+     * Actualiza los datos de la tabla de solicitudes en el estado.
+     * @param {SolicitudTable[]} solicitudBodyData - Nuevo arreglo de datos de solicitudes.
+     * @returns {void}
+     */
+    public setSolicitudTabla(solicitudBodyData: SolicitudTable[]): void {
+        this.update((state) => ({
+            ...state,
+            solicitudBodyData,
         }));
     }
 }

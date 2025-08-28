@@ -37,9 +37,7 @@
     </div>
     <div class="row">
         <div class="col-md-4">
-            <label for="saldoACapturar">Cantidad Solicitada en UMT
-                <span class="text-danger">*</span>:
-            </label>
+            <label for="saldoACapturar">Cantidad Solicitada en UMT*:</label>
             <input type="text" id="saldoACapturar" class="form-control" formControlName="saldoACapturar"
                 (change)="setSaldoACapturar($event)" />
             @if(agregarMercanciaForm.controls['saldoACapturar'].invalid &&
@@ -52,9 +50,9 @@
             }
         </div>
     </div>
-    <div class="row">
+    <div class="row mb-4">
         <div class="text-end">
-            <button type="button" class="btn btn-default" (click)="cerrarModal(false)">Cancelar</button>
+            <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancelar</button>
             <button type="button" class="btn btn-primary" (click)="aceptar()">Aceptar</button>
         </div>
     </div>
