@@ -160,6 +160,15 @@ export interface Tramite260214State {
   tabSeleccionado?: number;
 }
 
+/**
+ * Crea y retorna el estado inicial para el store de la funcionalidad Tramite260214.
+ *
+ * El estado inicial incluye valores por defecto para todos los campos de formularios, tablas,
+ * opciones de configuración y estado de la interfaz de usuario relevantes para el flujo del trámite 260214.
+ * Esta función se utiliza normalmente para inicializar el store o restablecerlo a su estado por defecto.
+ *
+ * @returns {Tramite260214State} El objeto de estado inicial para el store Tramite260214.
+ */
 export function createInitialState(): Tramite260214State {
   return {
     destinatarioFinalTablaDatos: [],
