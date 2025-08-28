@@ -76,6 +76,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura: boolean = false;
 
+   /**
+   * Indica si el formulario es colapsable.
+   */
+  colapsable: boolean = true;
+
   /**
    * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
    */
@@ -227,6 +232,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     const VALOR = this.datosSolicitudForm.get(campo)?.value;
     (this.tramite221603Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+
+   /**
+   * Método para mostrar u ocultar el formulario colapsable.
+   * Cambia el estado de la variable `colapsable`.
+   */
+  mostrar_colapsable(): void {
+    this.colapsable = !this.colapsable;
+  }
+
+
   /**
    * Método que se ejecuta cuando el componente es destruido.
    * Limpia los recursos y previene memory leaks.
