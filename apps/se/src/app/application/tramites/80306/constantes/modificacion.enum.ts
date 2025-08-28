@@ -303,7 +303,7 @@ export const CONFIGURACION_OPERACIONES = [
     orden: 6,
   },
   {
-    encabezado: 'Estado o Distrito Federal',
+    encabezado: 'Entidad federativa',
     clave: (ele: Operacions) : string | undefined => ele.estado,
     orden: 7,
   },
@@ -313,7 +313,7 @@ export const CONFIGURACION_OPERACIONES = [
     orden: 8,
   },
   {
-    encabezado: 'Registro Federal de Contribuyente(RFC)',
+    encabezado: 'Registro Federal de Contribuyen',
     clave: (ele: Operacions) : string | undefined => ele.rfc,
     orden: 9,
   },
@@ -498,7 +498,7 @@ export const CONFIGURACION_EMPRESAS = [
     orden: 7,
   },
   {
-    encabezado: 'Estado o Distrito Federal',
+    encabezado: 'Entidad federativa',
     clave: (ele: Operacions) : string | undefined => ele.estado,
     orden: 8,
   },

@@ -579,7 +579,7 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
         cerrar: false,
         tiempoDeEspera: 2000,
         txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: 'Cancelar',
+        txtBtnCancelar: '',
       };
     } else {
       // Hay filas seleccionadas
