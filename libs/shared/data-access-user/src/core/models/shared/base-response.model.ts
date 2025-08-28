@@ -15,9 +15,11 @@
 export interface BaseResponse<T> {
     codigo: string;
     error?: string;
+    causa?: string;
     path: string;
     timestamp: string;
     mensaje: string;
     datos?: T;
     detalle_errores?: string[];
+    errores_modelo?: string[]
 }

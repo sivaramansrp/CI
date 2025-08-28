@@ -5,6 +5,8 @@ import { Tramite110217Store } from '../../../../estados/tramites/tramite110217.s
 import { Tramite110217Query } from '../../../../estados/queries/tramite110217.query';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { provideHttpClient } from '@angular/common/http';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { of, Subject } from 'rxjs';
 
 describe('DestinatarioComponent', () => {
@@ -23,12 +25,14 @@ describe('DestinatarioComponent', () => {
     TestBed.configureTestingModule({
       imports: [ReactiveFormsModule],
       providers: [
+        provideHttpClient(),
         { provide: Tramite110217Store, useValue: store },
         { provide: Tramite110217Query, useValue: query },
         { provide: ValidacionesFormularioService, useValue: validacionesService },
         { provide: ConsultaioQuery, useValue: consultaioQuery },
         FormBuilder,
       ],
+      schemas: [NO_ERRORS_SCHEMA]
     });
 
     const fb = TestBed.inject(FormBuilder);
@@ -155,5 +159,13 @@ describe('DestinatarioComponent', () => {
     } as any;
     component.donanteDomicilio();
     expect(component.grupoRepresentativo).toBeTruthy();
+  });
+
+  it('should complete destroyNotifier$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

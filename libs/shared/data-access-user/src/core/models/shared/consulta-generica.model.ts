@@ -187,7 +187,31 @@ export interface BodyTablaOpiniones {
   areaSolicitante: string;
   areaResponsable: string;
   estatus: string;
-  urlPdf: string;
+  urlPdf?: string;
+}
+
+/*
+* Interfaz para el cuerpo de la Tabla de observaciones dictamen
+* Se utiliza para mostrar tabla observaciones del componente dictamen.  
+*/ 
+export interface BodyTablaDictamenObservaciones {
+  id: number;
+  fechaObservacion: string;
+  fechaAtencion: string;
+  generadaPor: string;
+  estatusObservacion: string;
+  urlPdf?: string;
+}
+
+/**
+ * ============================
+ * Interfaz para el encabezado de la tabla de las secciones de dictamen (pestaña de detalles de la bandeja de opiniones)
+ * Se utiliza una tabla en la segunda seccion de la pestaña detalles de dictamen.
+ * ============================
+ */
+export interface HeaderTablaDictamenObservacion {
+  key: keyof BodyTablaDictamenObservaciones;
+  valor: string;
 }
 
 /**

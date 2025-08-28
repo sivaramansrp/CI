@@ -1,5 +1,7 @@
 import { AccionBoton, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@libs/shared/data-access-user/src';
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ALERTA_ERROR } from '../../constantes/prosec.enum';
+import { ProsecService } from '../../services/prosec/prosec.service';
 
 /**
  * Componente principal para la gestión de pantallas en el wizard de cupos.
@@ -9,7 +11,7 @@ import { Component, ViewChild } from '@angular/core';
   templateUrl: './pantallas.component.html',
   styles: ``
 })
-export class PantallasComponent {
+export class PantallasComponent implements OnInit {
   /**
    * Lista de pasos del wizard.
    * @type {ListaPasosWizard[]}
@@ -30,6 +32,36 @@ export class PantallasComponent {
   @ViewChild(WizardComponent)
   public wizardComponent!: WizardComponent;
 
+  isBaja: boolean = true;
+  
+  /** Asigna el mensaje de error ALERTA_PRODUCTORAS_ERROR*/
+  ALERTA_PRODUCTORAS_ERROR = ALERTA_ERROR;
+
+  /**
+   * Indica si se debe mostrar un mensaje de error al agregar.
+   * @type {boolean}
+   */
+  mostrarError: boolean = false;
+
+  /**
+   * Una cadena que representa la clase CSS para una alerta de error.
+   */
+  infoError = 'alert-danger';
+
+  /**
+   * Constructor del componente PantallasComponent.
+   * @param prosecService Servicio para gestionar el estado de baja.
+   */
+  constructor( private prosecService: ProsecService ) { }
+
+  /**
+   * Método de inicialización del componente.
+   * Suscribe al observable isBaja$ para actualizar el estado local.
+   */
+  ngOnInit() {
+    this.prosecService.isBaja$.subscribe(val => this.isBaja = val);
+  }
+  
   /**
    * Datos utilizados para el control del wizard.
    * @type {DatosPasos}
@@ -48,7 +80,7 @@ export class PantallasComponent {
    * @returns {void}
    */
   public getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
+    if (e.valor > 0 && e.valor <= this.pantallasPasos.length && this.isBaja === false) {
       this.indice = e.valor;
       this.datosPasos.indice = e.valor;
 
@@ -57,6 +89,10 @@ export class PantallasComponent {
       } else {
         this.wizardComponent.atras();
       }
+      this.mostrarError = false;
+    } else {
+      this.mostrarError = true;
     }
   }
+
 }

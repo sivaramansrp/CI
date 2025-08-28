@@ -5,6 +5,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 import { Component } from '@angular/core';
 import { TercerospageComponent } from './tercerospage.component';
@@ -12,16 +13,35 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
 import { TercerosrelacionadosService } from '../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service';
-import { ActivatedRoute } from '@angular/router';
+import { FitosanitarioStore } from '../../estados/fitosanitario.store';
 
 @Injectable()
-class MockAgriculturaApiService {}
+class MockAgriculturaApiService {
+  getAllDatosForma = jest.fn().mockReturnValue(observableOf({
+    tercerosRelacionados: {},
+    datosForma: {}
+  }));
+  updateTercerosRelacionado = jest.fn().mockReturnValue(observableOf({}));
+  updateTercerosExportador = jest.fn().mockReturnValue(observableOf({}));
+}
 
 @Injectable()
-class MockFitosanitarioQuery {}
+class MockFitosanitarioQuery {
+  selectConsultaioState$ = observableOf({
+    readonly: {}
+  });
+}
 
 @Injectable()
-class MockTercerosrelacionadosService {}
+class MockTercerosrelacionadosService {
+  obtenerSelectorList = jest.fn().mockReturnValue(observableOf({}));
+}
+
+@Injectable()
+class MockFitosanitarioStore {
+  actualizarSelectedTerceros = jest.fn();
+  actualizarSelectedExdora = jest.fn();
+}
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
@@ -60,7 +80,18 @@ describe('TercerospageComponent', () => {
         { provide: AgriculturaApiService, useClass: MockAgriculturaApiService },
         { provide: FitosanitarioQuery, useClass: MockFitosanitarioQuery },
         { provide: TercerosrelacionadosService, useClass: MockTercerosrelacionadosService },
-        { provide: ActivatedRoute, useValue: { snapshot: {}, params: observableOf({}), queryParams: observableOf({}) } }
+        { provide: FitosanitarioStore, useClass: MockFitosanitarioStore },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {url: 'url', params: {}, queryParams: {}, data: {}},
+            url: observableOf('url'),
+            params: observableOf({}),
+            queryParams: observableOf({}),
+            fragment: observableOf('fragment'),
+            data: observableOf({})
+          }
+        }
       ]
     }).overrideComponent(TercerospageComponent, {
 
@@ -113,11 +144,18 @@ describe('TercerospageComponent', () => {
     expect(component.tercerosrelacionadosService.obtenerSelectorList).toHaveBeenCalled();
   });
 
-  it('should run #handleEliminar()', async () => {
+  it('should run #handleEliminarDestinatario()', async () => {
     component.agriculturaApiService = component.agriculturaApiService || {};
     component.agriculturaApiService.updateTercerosRelacionado = jest.fn();
-    component.handleEliminar();
+    component.handleEliminarDestinatario();
     expect(component.agriculturaApiService.updateTercerosRelacionado).toHaveBeenCalled();
+  });
+
+  it('should run #handleEliminarExportador()', async () => {
+    component.agriculturaApiService = component.agriculturaApiService || {};
+    component.agriculturaApiService.updateTercerosExportador = jest.fn();
+    component.handleEliminarExportador();
+    expect(component.agriculturaApiService.updateTercerosExportador).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -127,6 +165,26 @@ describe('TercerospageComponent', () => {
     component.ngOnDestroy();
     expect(component.destroyNotifier$.next).toHaveBeenCalled();
     expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+  });
+
+  it('should run #abrirModalExportador()', async () => {
+    component.fitosanitarioStore = component.fitosanitarioStore || {};
+    component.fitosanitarioStore.actualizarSelectedExdora = jest.fn();
+    component.modalRef = component.modalRef || {};
+    component.modalRef.abrir = jest.fn();
+    component.abrirModalExportador({});
+    expect(component.fitosanitarioStore.actualizarSelectedExdora).toHaveBeenCalled();
+    expect(component.modalRef.abrir).toHaveBeenCalled();
+  });
+
+  it('should run #abrirModalDestinatario()', async () => {
+    component.fitosanitarioStore = component.fitosanitarioStore || {};
+    component.fitosanitarioStore.actualizarSelectedTerceros = jest.fn();
+    component.modalRef = component.modalRef || {};
+    component.modalRef.abrir = jest.fn();
+    component.abrirModalDestinatario({});
+    expect(component.fitosanitarioStore.actualizarSelectedTerceros).toHaveBeenCalled();
+    expect(component.modalRef.abrir).toHaveBeenCalled();
   });
 
 });

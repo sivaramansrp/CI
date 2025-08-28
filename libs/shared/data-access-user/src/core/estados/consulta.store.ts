@@ -16,6 +16,10 @@ export interface ConsultaioState {
   create: boolean;
   update: boolean;
   consultaioSolicitante: ConsultaioSolicitante | null;
+  action_id: string;
+  current_user: string;
+  id_solicitud: string;
+  nombre_pagina: string;
 }
 
 /**
@@ -33,7 +37,11 @@ export function createConsultaInitialState(): ConsultaioState {
     readonly: false,
     create: true,
     update: false,
-    consultaioSolicitante: null
+    consultaioSolicitante: null,
+    action_id: '',
+    current_user: '',
+    id_solicitud: '',
+    nombre_pagina: ''
   };
 }
 

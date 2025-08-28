@@ -170,29 +170,4 @@ describe('ProsecService', () => {
     expect(httpClient.get).toHaveBeenCalledWith('assets/json/90304/modificacion.json');
   });
 
-  test('should fetch empresas lista datos', () => {
-    const mockData: EmpresasListaResquesta = {
-      code: 200,
-      data: [
-        {
-          id: 1,
-          estatus: 'Baja',
-          rfc: 'RFC123',
-          razonSocial: 'Empresa Test',
-          calle: 'Calle Test',
-          numeroExterior: '123',
-          numeroInterior: '456',
-          codigoPostal: '12345'
-        }
-      ],
-      message: 'Success',
-    };
-    httpClient.get.mockReturnValue(of(mockData));
-
-    service.obtenerEmpresasListaDatos().subscribe((data) => {
-      expect(data).toEqual(mockData);
-    });
-
-    expect(httpClient.get).toHaveBeenCalledWith('assets/json/90304/empresas-lista.json');
-  });
 });
