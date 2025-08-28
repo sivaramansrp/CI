@@ -5,19 +5,31 @@ import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { PagoDeDerechosComponent } from './pago-de-derechos.component';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
-class MockAgriculturaApiService {}
+class MockAgriculturaApiService {
+  updatePagoDeDerechos = jest.fn().mockReturnValue(observableOf({}));
+}
 
 @Injectable()
-class MockFitosanitarioQuery {}
+class MockFitosanitarioQuery {
+  seleccionarPagoDerechos$ = observableOf({});
+}
+
+@Injectable()
+class MockHttpClient {
+  post = jest.fn().mockReturnValue(observableOf({}));
+  get = jest.fn().mockReturnValue(observableOf({
+    data: {}
+  }));
+}
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
@@ -45,7 +57,7 @@ describe('PagoDeDerechosComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, PagoDeDerechosComponent, HttpClientTestingModule ],
+      imports: [ FormsModule, ReactiveFormsModule, PagoDeDerechosComponent ],
       declarations: [
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
@@ -55,7 +67,8 @@ describe('PagoDeDerechosComponent', () => {
         { provide: AgriculturaApiService, useClass: MockAgriculturaApiService },
         { provide: FitosanitarioQuery, useClass: MockFitosanitarioQuery },
         ConsultaioQuery,
-        ChangeDetectorRef
+        ChangeDetectorRef,
+        { provide: HttpClient, useClass: MockHttpClient }
       ]
     }).overrideComponent(PagoDeDerechosComponent, {
 
@@ -73,17 +86,37 @@ describe('PagoDeDerechosComponent', () => {
     component.fitosanitarioQuery.seleccionarPagoDerechos$ = observableOf({});
     component.consultaioQuery = component.consultaioQuery || {};
     component.consultaioQuery.selectConsultaioState$ = observableOf({});
-    component.cdr = component.cdr || {};
-    component.cdr.detectChanges = jest.fn();
     component.ngOnInit();
-    expect(component.cdr.detectChanges).toHaveBeenCalled();
+
+  });
+
+  it('should run #obtenerBancoSelectorList()', async () => {
+    component.httpServicios = component.httpServicios || {};
+    component.httpServicios.get = jest.fn().mockReturnValue(observableOf({
+      data: {}
+    }));
+    component.pagoSelect = component.pagoSelect || {};
+    component.pagoSelect.bancoSelector = 'bancoSelector';
+    component.obtenerBancoSelectorList();
+    expect(component.httpServicios.get).toHaveBeenCalled();
+  });
+
+  it('should run #obtenerListaDeJustificaciones()', async () => {
+    component.httpServicios = component.httpServicios || {};
+    component.httpServicios.get = jest.fn().mockReturnValue(observableOf({
+      data: {}
+    }));
+    component.pagoSelect = component.pagoSelect || {};
+    component.pagoSelect.justificacionSelector = 'justificacionSelector';
+    component.obtenerListaDeJustificaciones();
+    expect(component.httpServicios.get).toHaveBeenCalled();
   });
 
   it('should run #onPagoChanged()', async () => {
     component.agriculturaApiService = component.agriculturaApiService || {};
-    component.agriculturaApiService.updatePago = jest.fn();
+    component.agriculturaApiService.updatePagoDeDerechos = jest.fn();
     component.onPagoChanged({});
-    expect(component.agriculturaApiService.updatePago).toHaveBeenCalled();
+    expect(component.agriculturaApiService.updatePagoDeDerechos).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {

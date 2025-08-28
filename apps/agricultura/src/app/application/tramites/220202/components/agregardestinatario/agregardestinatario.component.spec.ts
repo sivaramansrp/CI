@@ -15,7 +15,9 @@ import { AgriculturaApiService } from '../../services/220202/agricultura-api.ser
 import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
 
 @Injectable()
-class MockTercerosrelacionadosService {}
+class MockTercerosrelacionadosService {
+  obtenerSelectorList = jest.fn().mockReturnValue(observableOf({}));
+}
 
 @Injectable()
 class MockRouter {
@@ -23,7 +25,12 @@ class MockRouter {
 }
 
 @Injectable()
-class MockAgriculturaApiService {}
+class MockAgriculturaApiService {
+  getAllDatosForma = jest.fn().mockReturnValue(observableOf({
+    seletedTerceros: {}
+  }));
+  updateTercerosRelacionado = jest.fn().mockReturnValue(observableOf({}));
+}
 
 @Injectable()
 class MockFitosanitarioQuery {}
@@ -94,16 +101,13 @@ describe('AgregardestinatarioComponent', () => {
     component.fb.group = jest.fn().mockReturnValue({
       patchValue: function() {}
     });
-    component.route = component.route || {};
-    component.route.snapshot = {
-      paramMap: {
-        get: function() {}
-      }
-    };
-    component.fitosanitarioQuery = component.fitosanitarioQuery || {};
-    component.fitosanitarioQuery.seleccionarTercerosRelacionados$ = observableOf({});
+    component.agriculturaApiService = component.agriculturaApiService || {};
+    component.agriculturaApiService.getAllDatosForma = jest.fn().mockReturnValue(observableOf({
+      seletedTerceros: {}
+    }));
     component.ngOnInit();
     expect(component.fb.group).toHaveBeenCalled();
+    expect(component.agriculturaApiService.getAllDatosForma).toHaveBeenCalled();
   });
 
   it('should run #ngAfterViewInit()', async () => {
@@ -146,6 +150,37 @@ describe('AgregardestinatarioComponent', () => {
     expect(component.tercerosrelacionadosService.obtenerSelectorList).toHaveBeenCalled();
   });
 
+  it('should run #onGuardarDestinatario()', async () => {
+    component.destinatarioForm = component.destinatarioForm || {};
+    component.destinatarioForm.valid = true;
+    component.destinatarioForm.value = { test: 'value' };
+    component.destinatarioForm.markAllAsTouched = jest.fn();
+    component.agriculturaApiService = component.agriculturaApiService || {};
+    component.agriculturaApiService.updateTercerosRelacionado = jest.fn().mockReturnValue(observableOf({}));
+    component.cerrar = component.cerrar || {};
+    component.cerrar.emit = jest.fn();
+    
+    component.onGuardarDestinatario();
+    
+    expect(component.agriculturaApiService.updateTercerosRelacionado).toHaveBeenCalled();
+    expect(component.cerrar.emit).toHaveBeenCalled();
+  });
+
+  it('should run #onGuardarDestinatario() when form is invalid', async () => {
+    component.destinatarioForm = component.destinatarioForm || {};
+    component.destinatarioForm.valid = false;
+    component.destinatarioForm.markAllAsTouched = jest.fn();
+    component.agriculturaApiService = component.agriculturaApiService || {};
+    component.agriculturaApiService.updateTercerosRelacionado = jest.fn();
+    component.cerrar = component.cerrar || {};
+    component.cerrar.emit = jest.fn();
+    
+    component.onGuardarDestinatario();
+    
+    expect(component.destinatarioForm.markAllAsTouched).toHaveBeenCalled();
+    expect(component.agriculturaApiService.updateTercerosRelacionado).not.toHaveBeenCalled();
+    expect(component.cerrar.emit).not.toHaveBeenCalled();
+  });
 
   it('should run #onLimpiarDestinatario()', async () => {
     component.destinatarioForm = component.destinatarioForm || {};
@@ -161,18 +196,19 @@ describe('AgregardestinatarioComponent', () => {
   });
 
   it('should run #onCancelarDestinatario()', async () => {
-    component.router = component.router || {};
-    component.router.navigate = jest.fn();
+    component.cerrar = component.cerrar || {};
+    component.cerrar.emit = jest.fn();
     component.onCancelarDestinatario();
-    expect(component.router.navigate).toHaveBeenCalled();
+    expect(component.cerrar.emit).toHaveBeenCalled();
   });
 
   it('should run #enCambioValorRadio()', async () => {
     component.destinatarioForm = component.destinatarioForm || {};
     component.destinatarioForm.get = jest.fn().mockReturnValue({
       updateValueAndValidity: function() {},
-      setValidators: function() {},
-      clearValidators: function() {}
+      setValue: function() {},
+      clearValidators: function() {},
+      setValidators: function() {}
     });
     component.destinatarioForm.value = {
       tipoMercancia: {}
