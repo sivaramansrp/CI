@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { Catalogo, ConsultaioQuery, InputFecha, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaSeleccion } from "@libs/shared/data-access-user/src";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
-import { Mercancias, MercanciasHistorico } from "../../models/certificado-origen.model";
 import {Observable,Subject,map, of, takeUntil } from "rxjs";
 import { CargaPorArchivoComponent } from "../../../../shared/components/carga-por-archivo/carga-por-archivo.component";
 import { CertificadoDeOrigenComponent } from "../../../../shared/components/certificado-de-origen/certificado-de-origen.component";
@@ -9,6 +8,7 @@ import { CertificadosOrigenService } from "../../services/certificado-origen.ser
 import { CommonModule } from "@angular/common";
 import { IDPROCEDIMIENTO } from "../../enums/constantes-alertas.enum";
 import { Mercancia } from "../../../../shared/models/modificacion.enum";
+import { MercanciasHistorico } from "../../models/certificado-origen.model";
 import { MercanciasModalComponent } from "../mercancias-modal/mercancias-modal.component";
 import { Modal } from "bootstrap";
 import { ToastrService } from "ngx-toastr";
@@ -154,7 +154,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * @type {Mercancia[]}
    */
 
-    datosSeleccionados!: Mercancias;
+    datosSeleccionados!: Mercancia;
     /**
    * Instancia del modal de modificación.
    */
@@ -287,7 +287,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
       }
     });
   
-
+this.datosSeleccionados = this.tramiteQuery.getValue().selectedMercancia as unknown as Mercancia;
     /**
      * Suscripción al estado de la sección para obtener y actualizar el estado.
      */
@@ -329,6 +329,10 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
       .subscribe();
 
     this.datosTabla$ = this.tramiteQuery.selectmercanciaTabla$;
+     this.datosTabla$.subscribe(data => {
+  this.tablaSeleccionEvent = data.length > 0 ? true : false;
+    
+  });
   }
 
   /**
@@ -424,27 +428,23 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * Método para abrir el modal de modificación.
    */
     abrirModificarModal(datos1: Mercancia): void {
-      this.datosSeleccionados = datos1 as unknown as Mercancias;
-      this.store.setFormMercancia({ ...datos1 });
-        
+      this.store.updateMercancia({} as Mercancia);
+      this.datosSeleccionados = datos1 as unknown as Mercancia;
+      this.store.setFormMercancia({ ...datos1 });    
       if (this.modalInstance) {
         this.modalInstance.show();
       }      
     }
-    
-  /**
-   * @method guardarClicado
-   * @description
-   * Actualiza el observable `datosTabla$` con el arreglo de mercancías recibido como parámetro.
-   * Se utiliza para reflejar los datos seleccionados o modificados en la tabla de mercancías del componente.
-   * 
-   * @param {Mercancia[]} event - Arreglo de mercancías que se asigna al observable de la tabla.
-   * @returns {void}
-   */
-    guardarClicado(event: Mercancia[]): void {
-    this.datosTabla$ = of(event);
-  }
-
+       
+      guardarClicados(event:Mercancia[]):void{
+         this.store.clearSelectedMercancia();
+    this.store.setMercanciaTabla(event);
+      }
+        
+      onMercanciaSeleccionada(evento: Mercancia): void {
+         this.store.setSelectedMercancia(evento);
+      }
+  
     /**
      * Cierra el modal de modificación si está abierto.
      * 
@@ -453,6 +453,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
      * en caso afirmativo, la oculta.
      */
     cerrarModificarModal():void {
+           this.datosSeleccionados = {} as Mercancia;
       if (this.modalInstance) {
         this.tablaSeleccionEvent = true;
         this.modalInstance.hide();

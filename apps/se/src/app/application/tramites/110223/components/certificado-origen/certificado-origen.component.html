@@ -9,7 +9,6 @@
     (filaClics)="abrirModificarModal($event)"
     [tablaSeleccionEvent]="tablaSeleccionEvent"
     [guardarClicado]="(datosTabla$ | async) ||  []"
-    (guardarClicadoEvent)="guardarClicado($event)"
     (formaValida)="setFormValida($event)"
     [datosForm]="formCertificado"
     [cargoDeMercancias]="cargoDeMercancias"
@@ -19,11 +18,13 @@
     (formCertificadoEvent)="setValoresStore($event)"
     [idProcedimiento]="idProcedimiento"
     (setModelCargaPorArchivo)="abrirModalCargaPorArchivo()"
-    [domicilioTercer]="true" >
+    [domicilioTercer]="true"
+    (guardarClicadoChange)="guardarClicados($event)" 
+     (seleccionado)="onMercanciaSeleccionada($event)">
 </app-certificado-de-origen>
 
 <div class="modal fade" #modifyModal tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
-    <app-mercancias-modal [esFormularioSoloLectura]="esFormularioSoloLectura" [datosSeleccionados]="datosSeleccionados" (guardarClicado)="abrirModificarModal($event)"
+    <app-mercancias-modal [esFormularioSoloLectura]="esFormularioSoloLectura"  (guardarClicado)="abrirModificarModal($event)"
         (cerrarClicado)="cerrarModificarModal()"></app-mercancias-modal>
 </div>
 <div class="modal fade" #buscarMercanciaModal tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">

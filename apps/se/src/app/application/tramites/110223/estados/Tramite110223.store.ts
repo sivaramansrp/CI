@@ -4,6 +4,7 @@ import { Catalogo } from '@ng-mf/data-access-user';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
 
+
 /**
  * Interfaz que representa la estructura del estado de un trámite 110204.
  * Este estado contiene formularios, catálogos, listas, valores seleccionados y otros datos requeridos.
@@ -15,6 +16,8 @@ export interface TramiteState {
      * Contiene los campos del formulario para el destinatario, como nombre y número fiscal.
      */
     destinatarioForm: DestinatarioForm;
+
+    selectedMercancia: Mercancia | null;
     /**
      * @property {DomicilioForm} domicilioForm - Formulario de domicilio.
      * @description
@@ -126,6 +129,7 @@ export interface TramiteState {
  * Estado inicial que se utiliza para crear el store con valores por defecto.
  */
 export const INITIAL_STATE: TramiteState = {
+  selectedMercancia: {} as Mercancia,
   destinatarioForm: {} as DestinatarioForm,
   domicilioForm: {} as DomicilioForm,
   representanteLegalForm: {} as RepresentanteLegalForm,
@@ -184,6 +188,7 @@ export const INITIAL_STATE: TramiteState = {
   entidadFederativaDatos: [],
   representacionFederalDatos: [],
   mercanciaTabla: [],
+  
   representacionFederal: '',
       agregarDatosProductorFormulario: {
       numeroRegistroFiscal: '',
@@ -201,11 +206,34 @@ export const INITIAL_STATE: TramiteState = {
  * Cada método `set` permite actualizar secciones específicas del estado de forma inmutable.
  */
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'tramite-110204', resettable: true })
+@StoreConfig({ name: 'tramite-110223', resettable: true })
 export class Tramite110223Store extends Store<TramiteState> {
   constructor() {
     super(INITIAL_STATE);
   }
+    /**
+   * Elimina una o varias mercancías de la tabla.
+   * @param ids Lista de IDs de mercancías a eliminar.
+   */
+  removeMercancia(ids: number[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaTabla: state.mercanciaTabla.filter(m => !ids.includes(Number(m.id ?? -1))),
+    }));
+  }
+   /**
+   * Actualiza una mercancía en la tabla.
+   * @param mercancia Mercancía con los nuevos datos (debe tener id).
+   */
+  updateMercancia(mercancia: Mercancia): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaTabla: state.mercanciaTabla.map(m =>
+        m.id === mercancia.id ? { ...m, ...mercancia } : m
+      ),
+    }));
+  }
+
 
   /**
    * Actualiza el estado seleccionado.
@@ -452,5 +480,24 @@ setFormDatosCertificado(values: { [key: string]: unknown }): void {
       idiomaDatosSeleccion,
     }));
   }
+  /**
+   * Actualiza la mercancía seleccionada.
+   * @param mercancia Objeto de tipo Mercancia.
+   */
+  setSelectedMercancia(mercancia: Mercancia): void {
+    this.update((state) => ({
+      ...state,
+      selectedMercancia: mercancia,
+    }));
+  }
 
+  /**
+   * Limpia la mercancía seleccionada.
+   */
+  clearSelectedMercancia(): void {
+    this.update((state) => ({
+      ...state,
+      selectedMercancia: {} as Mercancia,
+    }));
+  }
 }

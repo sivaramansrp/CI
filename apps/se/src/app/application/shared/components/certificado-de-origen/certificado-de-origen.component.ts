@@ -418,6 +418,10 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
   @Output() formaValida: EventEmitter<boolean> = new EventEmitter<boolean>(
     false
   );
+  
+  @Output() guardarClicadoChange = new EventEmitter<Mercancia[]>(); 
+
+   @Output() seleccionado = new EventEmitter<Mercancia>();
 
 
   /**
@@ -780,6 +784,7 @@ ngOnChanges(changes: SimpleChanges):void {
  */
   obtenerSeleccionadoMercancia(evento: Mercancia): void {
     this.seleccionadaguardarClicado = [evento];
+    this.seleccionado.emit(evento);
   }
 
   /**
@@ -788,8 +793,10 @@ ngOnChanges(changes: SimpleChanges):void {
   * Este método verifica si hay elementos seleccionados antes de vaciar el arreglo `guardarClicado`.
   */
   eliminarSeleccionados(): void {
-    if (this.seleccionadaguardarClicado.length > 0) {
-      this.guardarClicado = [];
+    if (this.seleccionadaguardarClicado.length > 0 && this.guardarClicado?.length > 0) {
+      const IDS_A_ELIMINAR = this.seleccionadaguardarClicado.map(m => m.id);
+      this.guardarClicado = this.guardarClicado.filter(m => !IDS_A_ELIMINAR.includes(m.id));
+        this.guardarClicadoChange.emit(this.guardarClicado);
     }
   }
   /**

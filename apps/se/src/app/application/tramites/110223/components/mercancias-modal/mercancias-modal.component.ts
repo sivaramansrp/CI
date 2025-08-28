@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angula
 import {Observable,Subject, delay, of, takeUntil } from "rxjs";
 import { CertificadosOrigenService } from "../../services/certificado-origen.service";
 import { CommonModule } from "@angular/common";
+import { Mercancia } from "../../../../shared/models/modificacion.enum";
 import { Mercancias } from "../../models/certificado-origen.model";
 import { Tramite110223Query } from "../../query/tramite110223.query";
 import { Tramite110223Store } from "../../estados/Tramite110223.store";
@@ -58,7 +59,31 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    * @property {FormGroup} mercanciaForm
    * @description Formulario reactivo que captura los datos de la mercancía en el modal.
    */
-  mercanciaForm!: FormGroup;
+  mercanciaForm: FormGroup= this.fb.group({
+  fraccionArancelaria: [{ value: '', disabled: true }],  
+  numeroDeRegistrodeProductos: [{ value: '', disabled: true }], 
+  fechaExpedicion: [{ value: '', disabled: true }],     
+  fechaVencimiento: [{ value: '', disabled: true }],    
+  nombreTecnico: [{ value: '', disabled: true }],
+  nombreComercial: [{ value: '', disabled: true }],
+  normaOrigen: [{ value: '', disabled: true }],
+  cantidad: ['', [Validators.required]],
+  umc: ['', [Validators.required]],
+  tipoFactura: ['', [Validators.required]],
+  valorMercancia: ['', [Validators.required]],
+  fechaFinalInput: ['', [Validators.required]],
+  numeroFactura: ['', [Validators.required]],
+  unidadMedidaMasaBruta: [''],                          
+  complementoClasificacion: ['', [Validators.required]],
+  complementoDescripcion: [''],                       
+  fraccionNaladi: [{ value: '', disabled: true }],
+  fraccionNaladiSa93: [{ value: '', disabled: true }],
+  fraccionNaladiSa96: [{ value: '', disabled: true }],
+  fraccionNaladiSa02: [{ value: '', disabled: true }],
+  nalad: ['']                                         
+});
+
+
 
   /**
    * @property {EventEmitter<any>} guardarClicado
@@ -79,14 +104,15 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    */
   @Output() tablaSeleccionEvent = new EventEmitter();
 
+  
+
 
   /**
  * Array de datos a mostrar en la tabla.
  * Cada elemento de este array representa una fila de la tabla.
  *
  * @type {T[]}
- */
-  @Input() datosSeleccionados!: Mercancias;
+ */ datosSeleccionados!: Mercancias;
   /**
    * Subject utilizado para gestionar el ciclo de vida del componente y cancelar l`as suscripciones.
    */
@@ -121,6 +147,11 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    * Se utiliza para mostrar mensajes de alerta, éxito o información al usuario dentro del componente.
    */
   nuevaNotificacion!: Notificacion;
+    /**
+     * Observable que emite los datos de la mercancia en formato tabla.
+     * @type {Observable<Mercancia[]>}
+     */
+    datosTabla$: Observable<Mercancia[]> = of([]);
 
   /**
    * Constructor del componente MercanciasModalComponent.
@@ -149,6 +180,8 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
     });
     this.facturas$ = this.tramiteQuery.selectFactura$;
     this.umcs$ = this.tramiteQuery.selectUmc$;
+    this.datosTabla$ = this.tramiteQuery.selectmercanciaTabla$;
+    this.datosSeleccionados = this.tramiteQuery.getValue().selectedMercancia as unknown as Mercancia;
 
   }
 
@@ -157,23 +190,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    * Inicializa el formulario reactivo de mercancías y configura las suscripciones necesarias.
    */
   ngOnInit(): void {
-    this.mercanciaForm = this.fb.group({
-      fraccionNaladi: [{ value: '', disabled: true }],
-      fraccionNaladiSa93: [{ value: '', disabled: true }],
-      fraccionNaladiSa96: [{ value: '', disabled: true }],
-      fraccionNaladiSa02: [{ value: '', disabled: true }],
-      nombreComercial: [{ value: '', disabled: true }],
-      nombreTecnico: [{ value: '', disabled: true }],
-      normaOrigen: [{ value: '', disabled: true }],
-      cantidad: ['',[Validators.required]],
-      umc: ['', [Validators.required]],
-      valorMercancia: ['', [Validators.required]],
-      complementoClasificacion: ['', [Validators.required]],
-      fechaFinalInput: ['',[Validators.required]],
-      numeroFactura: ['', [Validators.required]],
-      tipoFactura: ['', [Validators.required]]
-    });
-
+   
     this.parchearValoresDelFormulario();
     this.cargarFactura();
     this.cargarUmc();
@@ -196,6 +213,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
 
     if (this.datosSeleccionados) {
       this.mercanciaForm.patchValue({
+        id:this.datosSeleccionados.id|| 0 ,
         fraccionNaladi: this.datosSeleccionados.fraccionNaladi,
         fraccionNaladiSa93: this.datosSeleccionados.fraccionNaladiSa93,
         fraccionNaladiSa96: this.datosSeleccionados.fraccionNaladiSa96,
@@ -295,8 +313,38 @@ this.mercanciaForm.markAllAsTouched();
    * Dispara el evento para guardar los datos del formulario y muestra una alerta.
    */
   aceptar(): void {
-    this.guardarClicado.emit(this.mercanciaForm.getRawValue());
-    this.store.setMercanciaTabla([this.mercanciaForm.getRawValue()]);
+    const FORM_VALUE = this.mercanciaForm.getRawValue();
+    const ID = FORM_VALUE.id || 0;
+    let currentData: Mercancia[] = [];
+
+    // Get current table data ONCE (not subscribe repeatedly)
+    this.datosTabla$.pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      currentData = data ? [...data] : [];
+    }).unsubscribe();
+
+    // Prevent duplicate add/edit
+    if (ID === 0) {
+      // Add as new: assign a random id and push to table only if not already present
+      FORM_VALUE.id = Math.floor(Math.random() * 1000);
+      currentData.push(FORM_VALUE);
+    } else {
+      // Edit existing: find and update by id
+      const IDX = currentData.findIndex(item => item.id === ID);
+      if (IDX !== -1) {
+        currentData[IDX] = FORM_VALUE;
+      } else {
+        // If not found, add as new (optional, remove if not desired)
+        currentData.push(FORM_VALUE);
+      }
+    }
+
+    // Remove possible duplicates by id
+    currentData = currentData.filter(
+      (item, index, self) => index === self.findIndex(t => t.id === item.id)
+    );
+
+    this.store.setMercanciaTabla(currentData);
+
     if (this.mostrarAlerta) {
       of(null)
         .pipe(
@@ -304,11 +352,12 @@ this.mercanciaForm.markAllAsTouched();
           delay(100))
         .subscribe(() => {
           this.cerrarModal();
-          this.tablaSeleccionEvent.emit(true);
         });
     }
   }
   cerrarModal(): void {
+    this.mercanciaForm.reset();
+    this.store.setFormMercancia(this.mercanciaForm.value);
     this.cerrarClicado.emit();
       this.mostrarAlerta = false;
   }
@@ -317,6 +366,7 @@ this.mercanciaForm.markAllAsTouched();
    * Cancela las suscripciones al destruir el componente.
    */
   ngOnDestroy(): void {
+    this.mercanciaForm.reset();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
