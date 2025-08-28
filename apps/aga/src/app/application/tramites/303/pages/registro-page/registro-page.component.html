@@ -15,13 +15,15 @@
       <paso-uno></paso-uno>
       }
       @case (2) {
-      <paso-tres></paso-tres>
+      <paso-dos [cargaArchivosEvento]="cargarArchivosEvento" [regresarSeccionCargarDocumentoEvento]="
+            regresarSeccionCargarDocumentoEvento
+          " (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
+        (reenviarCargaRealizada)="cargaRealizada($event)"></paso-dos>
       }
       @case (3) {
       <paso-cuatro></paso-cuatro>
       }
       }
-
       <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
     </div>
   </div>

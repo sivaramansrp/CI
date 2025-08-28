@@ -185,11 +185,16 @@ export class Tramite303StoreService extends Store<Tramite303Store> {
      * @param state Estado parcial del trámite 303 a establecer.
      * Este método actualiza el estado del trámite 303 con los valores proporcionados.
      */
-    setState(state: Partial<Tramite303Store>) {
+    setState(state: Partial<Tramite303Store>): void {
         this.state = { ...this.state, ...state };
         this.update(this.state);
     }
 
+    /**
+     * 
+     * @param indice Índice del trámite 303 a establecer en el estado.
+     * Este método actualiza el estado del índice del trámite 303.
+     */
     public setIndice(indice: number): void {
         this.update((state) => ({
             ...state,

@@ -1,4 +1,4 @@
-import { AlertComponent, CatalogoSelectComponent, NotificacionesComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, CargaDocumentoComponent, CatalogoSelectComponent, NotificacionesComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { NgModule, forwardRef } from '@angular/core';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { AgentesAgenciasAduanalesComponent } from './components/agentes-agencias-aduanales/agentes-agencias-aduanales.component';
@@ -45,7 +45,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     DespachoMercanciasRoutingModule,
     RouterModule,
     NavComponent,
-    WizardComponent,
+    forwardRef(() => WizardComponent),
     TituloComponent,
     BtnContinuarComponent,
     ReactiveFormsModule,
@@ -62,7 +62,8 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     ToastrModule.forRoot(),
     NotificacionesComponent,
     CatalogoSelectComponent,
-    TablaDinamicaComponent
+    TablaDinamicaComponent,
+    forwardRef(() => CargaDocumentoComponent),
   ],
   exports: [
   ],
