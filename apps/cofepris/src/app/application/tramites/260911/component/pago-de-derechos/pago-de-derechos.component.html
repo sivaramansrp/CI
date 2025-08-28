@@ -11,7 +11,7 @@
                 type="text"
                 name="claveDeReferencia"
                 formControlName="claveDeReferencia"
-                maxlength="10"
+                maxlength="9"
                 (change)="setValoresStore(pagoDeDerechosForm,'claveDeReferencia')"
                 (input)="validarLongitudMaxima('claveDeReferencia', 10)"
                 [disabled]="disabled"
@@ -31,7 +31,7 @@
               type="text"
               name="cadenaPagoDependencia"
               formControlName="cadenaPagoDependencia"
-              maxlength="15"
+              maxlength="14"
               (change)="setValoresStore(pagoDeDerechosForm,'cadenaPagoDependencia')"
               (input)="validarLongitudMaxima('cadenaPagoDependencia', 15)"
               [disabled]="disabled"
@@ -73,6 +73,7 @@
               (input)="validarLongitudMaxima('llaveDePago', 31)"
               [ngClass]="{'is-invalid': esInvalido('llaveDePago')}"
               [disabled]="disabled"
+              maxlength="30"
             />
             <div *ngIf="esInvalido('llaveDePago')" class="text-danger">
               <small *ngIf="pagoDeDerechosForm.controls['llaveDePago'].hasError('required')">Todos los campos de pago son requeridos</small>
@@ -107,7 +108,7 @@
               type="text"
               name="impPago"
               formControlName="impPago"
-              maxlength="17"
+              maxlength="16"
               (change)="setValoresStore(pagoDeDerechosForm,'impPago'); validarSinComas('impPago')"
               [disabled]="disabled"
             />
