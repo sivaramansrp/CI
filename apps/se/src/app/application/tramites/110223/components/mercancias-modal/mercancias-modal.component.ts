@@ -249,9 +249,8 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    * @param nuevo_valor Nuevo valor de la fecha final.
    */
     public cambioFechaFinal(nuevo_valor: string): void {
-
-      this.mercanciaForm.get('fechaFinal')?.setValue(nuevo_valor);
-      this.mercanciaForm.get('fechaFinal')?.markAsUntouched();
+      this.mercanciaForm.get('fechaFinalInput')?.setValue(nuevo_valor);
+      this.mercanciaForm.get('fechaFinalInput')?.markAsUntouched();
     }
   
 
@@ -273,6 +272,10 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
   }
 
   activarModal(): void {
+    if(this.mercanciaForm.invalid){
+this.mercanciaForm.markAllAsTouched();
+    }
+    else{
     this.mostrarAlerta = true;
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
@@ -286,13 +289,14 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
       txtBtnCancelar: '',
     }
   }
+  }
 
   /**
    * Dispara el evento para guardar los datos del formulario y muestra una alerta.
    */
   aceptar(): void {
-    this.guardarClicado.emit(this.mercanciaForm.value);
-    this.store.setMercanciaTabla([this.mercanciaForm.value]);
+    this.guardarClicado.emit(this.mercanciaForm.getRawValue());
+    this.store.setMercanciaTabla([this.mercanciaForm.getRawValue()]);
     if (this.mostrarAlerta) {
       of(null)
         .pipe(
