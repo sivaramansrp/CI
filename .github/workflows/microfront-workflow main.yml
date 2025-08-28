@@ -33,22 +33,12 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "🎯 Building $IMAGE_NAME:$VERSION"
 
-      - name: Install global tools
-        run: |
-          npm install -g nx pnpm
-
-      - name: Install dependencies
-        run: |
-          if [ -f "pnpm-lock.yaml" ]; then
-            pnpm install --frozen-lockfile
-          elif [ -f "yarn.lock" ]; then
-            npm install -g yarn && yarn install --frozen-lockfile
-          else
-            npm ci
-          fi
+      - name: Install pnpm
+        run: npm install -g pnpm
 
       - name: Build ${{ env.APP_NAME }} app
         run: |
+          # Build the app using Nx
           npx nx build ${{ env.APP_NAME }} --configuration=production --base-href=/${{ env.APP_NAME }}/
 
       - name: Inject version into index.html
@@ -71,6 +61,9 @@ jobs:
       - name: Build Docker image
         run: |
           docker build \
+            --build-arg APP_NAME=${{ env.APP_NAME }} \
+            --build-arg NODE_ENV=production \
+            --build-arg VERSION=${{ env.VERSION }} \
             -t $IMAGE_NAME:${{ env.VERSION }} \
             -f apps/${{ env.APP_NAME }}/Dockerfile.dev \
             .
@@ -84,7 +77,7 @@ jobs:
           find k8s/${{ env.APP_NAME }}-microfront/ -type f \( -name "*.yaml" -o -name "*.yml" \) -exec \
             sed -i "s|image: ghcr.io/${{ github.repository_owner }}/dockerized-modulefederation-${{ env.APP_NAME }}-microfront:.*|image: $IMAGE_NAME:${{ env.VERSION }}|g" {} \;
 
-      - name: Deploy to remote server
+      - name: Upload Kubernetes manifests to server
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.REMOTE_SRV_IP }}
@@ -98,7 +91,7 @@ jobs:
         with:
           host: ${{ secrets.REMOTE_SRV_IP }}
           username: ${{ secrets.REMOTE_SRV_USER }}
-          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
+          key: ${{ secrets.REMOTE_PRIV_KEY }}
           script: |
             cd ~/deploy/${{ env.APP_NAME }}
             find . -type f \( -name "*.yaml" -o -name "*.yml" \) -exec microk8s.kubectl apply -f {} \;
