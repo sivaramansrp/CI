@@ -4,91 +4,109 @@ on:
   workflow_dispatch:
     inputs:
       app_name:
-        description: 'crt'
+        description: 'Name of the app to build and deploy (e.g., crt, profepa)'
         required: true
-        default: 'profepa'
+        type: string
+        default: 'crt'
 
 jobs:
   build-push-deploy:
     runs-on: ubuntu-latest
+    if: ${{ contains(fromJSON('["crt", "profepa"]'), github.event.inputs.app_name) }}
     env:
+      APP_NAME: ${{ github.event.inputs.app_name }}
       IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/dockerized-modulefederation-${{ github.event.inputs.app_name }}-microfront
+      BASE_HREF: /${{ github.event.inputs.app_name }}/
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Node
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
-      - name: Extract app version
+      - name: Get version from package.json
         id: get_version
         run: |
-          echo "VERSION=$(jq -r .version package.json)" >> $GITHUB_ENV
-          echo "version=$(jq -r .version package.json)" >> $GITHUB_OUTPUT
+          VERSION=$(jq -r .version package.json)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Image tag: $IMAGE_NAME:$VERSION"
+
+      - name: Install global tools
+        run: |
+          npm install -g nx
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          # Detect package manager and install
+          if [ -f "pnpm-lock.yaml" ]; then
+            npm install -g pnpm && pnpm install --frozen-lockfile
+          elif [ -f "yarn.lock" ]; then
+            npm install -g yarn && yarn install --frozen-lockfile
+          else
+            npm ci
+          fi
 
-      - name: Install Angular CLI
-        run: npm install -g @angular/cli
+      - name: Build ${{ env.APP_NAME }} app
+        run: |
+          npx nx build ${{ env.APP_NAME }} --configuration=production --base-href=$BASE_HREF
 
-      - name: Build Angular app (Nx)
-        run: npx nx build ${{ github.event.inputs.app_name }} --configuration=production
-
-      - name: Inject version into build
-        if: hashFiles('script/inject-version.js') != ''
-        run: node script/inject-version.js ${{ github.event.inputs.app_name }}
+      - name: Inject version into index.html
+        if: success()
+        run: |
+          if [ -f "script/inject-version.js" ]; then
+            node script/inject-version.js ${{ env.APP_NAME }}
+            echo "✅ Version ${{ env.VERSION }} injected into ${{ env.APP_NAME }}"
+          else
+            echo "⚠️ script/inject-version.js not found, skipping version injection"
+          fi
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ github.repository_owner }}
+          username: ${{ github.actor }}
           password: ${{ secrets.GHCR_PAT }}
 
       - name: Build Docker image
         run: |
-          docker build -t $IMAGE_NAME:${{ env.VERSION }} -f apps/${{ github.event.inputs.app_name }}/Dockerfile.dev .
+          docker build \
+            --build-arg APP_NAME=${{ env.APP_NAME }} \
+            -t $IMAGE_NAME:${{ env.VERSION }} \
+            -f apps/${{ env.APP_NAME }}/Dockerfile.dev \
+            .
 
       - name: Push Docker image
         run: |
           docker push $IMAGE_NAME:${{ env.VERSION }}
 
-      - name: Update deployment manifest image tag
+      - name: Update image tag in Kubernetes manifests
         run: |
-          sed -i "s|\(image: ghcr.io/vucem30-dev/dockerized-modulefederation-${{ github.event.inputs.app_name }}-microfront:\).*|\1${VERSION}|" k8s/${{ github.event.inputs.app_name }}-microfront/${{ github.event.inputs.app_name }}-microfront-deployment-dev.yaml
+          find k8s/${{ env.APP_NAME }}-microfront/ -type f \( -name "*.yaml" -o -name "*.yml" \) -exec \
+            sed -i "s|image:.*|image: $IMAGE_NAME:${{ env.VERSION }}|g" {} \;
 
-      - name: Upload Kubernetes manifests to server
+      - name: Deploy to remote server
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.REMOTE_SRV_IP }}
           username: ${{ secrets.REMOTE_SRV_USER }}
           key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
-          source: "k8s/${{ github.event.inputs.app_name }}-microfront"
-          target: "~/${{ github.event.inputs.app_name }}-microfront/"
+          source: "k8s/${{ env.APP_NAME }}-microfront"
+          target: "~/deploy/${{ env.APP_NAME }}/"
 
-      - name: Deploy on Microk8s via SSH
+      - name: Apply Kubernetes manifests
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.REMOTE_SRV_IP }}
           username: ${{ secrets.REMOTE_SRV_USER }}
           key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
           script: |
-            set -e
-            cd ~/${{ github.event.inputs.app_name }}-microfront/
-            # Apply all .yaml, .yml, .json files in this directory
-            for f in *.yaml *.yml *.json; do
-              [ -e "$f" ] && microk8s.kubectl apply -f "$f"
-            done
-            # Recursively apply manifests in subdirectories as well
-            find . -type f \( -name '*.yaml' -o -name '*.yml' -o -name '*.json' \) -exec microk8s.kubectl apply -f {} \;
+            cd ~/deploy/${{ env.APP_NAME }}
+            find . -type f \( -name "*.yaml" -o -name "*.yml" \) -exec microk8s.kubectl apply -f {} \;
 
-      - name: Wait for deployment to become ready
-        run: sleep 60
-
-# NOTE:
-# - To deploy, go to the Actions tab, run this workflow, and input the app name (e.g., profepa, crt).
-# - The workflow will build, inject version, dockerize, and deploy the specified app.
+      - name: Wait for rollout
+        run: |
+          sleep 15
+          microk8s.kubectl rollout status deployment/${{ env.APP_NAME }}-microfront --timeout=60s || true
