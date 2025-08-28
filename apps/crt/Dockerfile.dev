@@ -7,7 +7,7 @@ WORKDIR /app
 
 # Copy dependency configuration files first
 COPY package*.json ./
-COPY pnpm-lock.yaml ./  # Remove this line if you don't use pnpm
+
 
 # Copy scripts directory (needed for postinstall/versioning)
 COPY script ./script
