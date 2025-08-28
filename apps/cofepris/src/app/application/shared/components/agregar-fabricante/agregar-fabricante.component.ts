@@ -1,7 +1,17 @@
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import {
   Catalogo,
   CatalogoSelectComponent,
+  Notificacion,
+  NotificacionesComponent,
+  Pedimento,
   REGEX_CORREO_ELECTRONICO,
   REGEX_NOMBRE,
   REGEX_RFC_FISICA,
@@ -11,14 +21,25 @@ import {
   TituloComponent,
 } from '@ng-mf/data-access-user';
 import { CommonModule, Location } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
-import { PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE, STR_NACIONAL } from '../../constantes/datos-solicitud.enum';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
+import {
+  PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE,
+  STR_NACIONAL,
+} from '../../constantes/datos-solicitud.enum';
 import { Subject, takeUntil } from 'rxjs';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Fabricante } from '../../models/terceros-relacionados.model';
 import { TERCEROS_RELACIONADOS_DATOS_INICIALES } from '../../constantes/terceros-fabricante.enum';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-
 
 /**
  * Componente para agregar datos de un fabricante.
@@ -36,6 +57,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     CatalogoSelectComponent,
     TituloComponent,
     TooltipModule,
+    NotificacionesComponent
   ],
   templateUrl: './agregar-fabricante.component.html',
   styleUrl: './agregar-fabricante.component.css',
@@ -76,6 +98,15 @@ export class AgregarFabricanteComponent
    * @property {Catalogo[]} paisesDatos
    */
   public paisesDatos: Catalogo[] = [];
+
+  /**
+   * Lista de destinatarios seleccionados que se reciben como entrada
+   * desde un componente padre.
+   *
+   * @input
+   * @type {Destinatario[] | undefined}
+   */
+  @Input() datoSeleccionadorfc: Fabricante[] | undefined;
 
   /**
    * @property tipoPersona
@@ -186,14 +217,14 @@ export class AgregarFabricanteComponent
    */
   public municipiosTempDatos: Catalogo[] = [];
   /**
- * Datos de catálogo de colonias.
- * @property {Catalogo[]} coloniasTempDatos
- */
+   * Datos de catálogo de colonias.
+   * @property {Catalogo[]} coloniasTempDatos
+   */
   public coloniasTempDatos: Catalogo[] = [];
   /**
- * Datos de catálogo de localidades.
- * @property {Catalogo[]} localidadesTempDatos
- */
+   * Datos de catálogo de localidades.
+   * @property {Catalogo[]} localidadesTempDatos
+   */
   public localidadesTempDatos: Catalogo[] = [];
 
   /**
@@ -203,6 +234,22 @@ export class AgregarFabricanteComponent
    * @optional
    */
   fabricante?: Fabricante;
+
+  /**
+   * Array con los datos de los pedimentos.
+   * Se utiliza para almacenar los pedimentos ingresados por el usuario.
+   */
+  pedimentos: Array<Pedimento> = [];
+
+  /**
+   * Elemento a eliminar de la tabla de pedimentos.
+   */
+  elementoParaEliminar!: number;
+
+  /**
+   * @descripcion Notificación para mostrar mensajes al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
 
   /**
    * Constructor que inyecta los servicios y crea el formulario de fabricante.
@@ -294,13 +341,13 @@ export class AgregarFabricanteComponent
   }
 
   /**
- * @method cambiarHabilitacionContribuyente
- * @description
- * Habilita el campo de contribuyente en el formulario si el procedimiento actual está incluido en la lista `TERCEROS_RELACIONADOS_DATOS_INICIALES`.
- * Cambia el valor de la propiedad `habilitarContribuyente` a `true` si la condición se cumple.
- * 
- * @returns {void}
- */
+   * @method cambiarHabilitacionContribuyente
+   * @description
+   * Habilita el campo de contribuyente en el formulario si el procedimiento actual está incluido en la lista `TERCEROS_RELACIONADOS_DATOS_INICIALES`.
+   * Cambia el valor de la propiedad `habilitarContribuyente` a `true` si la condición se cumple.
+   *
+   * @returns {void}
+   */
   public cambiarHabilitacionContribuyente(): void {
     if (TERCEROS_RELACIONADOS_DATOS_INICIALES.includes(this.idProcedimiento)) {
       this.habilitarContribuyente = true;
@@ -319,10 +366,7 @@ export class AgregarFabricanteComponent
       tipoPersona: [this.obtenerValor('tipoPersona'), Validators.required],
       rfc: [
         this.obtenerValor('rfc'),
-        [
-          Validators.required,
-          Validators.maxLength(13),
-        ],
+        [Validators.required, Validators.maxLength(13)],
       ],
       curp: [
         this.obtenerValor('curp'),
@@ -456,8 +500,9 @@ export class AgregarFabricanteComponent
     if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.MORAL) {
       nombreRazonSocial = VALOR_FORMULARIO.razonSocial;
     } else if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA) {
-      nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${VALOR_FORMULARIO.primerApellido
-        } ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
+      nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${
+        VALOR_FORMULARIO.primerApellido
+      } ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
     } else {
       nombreRazonSocial = '';
     }
@@ -564,36 +609,35 @@ export class AgregarFabricanteComponent
   }
 
   /**
- * Carga la lista de estados cuando se selecciona un catálogo válido.
- *
- * @param evento Objeto de tipo `Catalogo` que contiene la información seleccionada.
- *
- * ### Descripción:
- * - Si el `id` del evento es mayor que 0, asigna la lista temporal de municipios (`municipiosTempDatos`)
- *   a la lista principal (`municipiosDatos`).
- */
+   * Carga la lista de estados cuando se selecciona un catálogo válido.
+   *
+   * @param evento Objeto de tipo `Catalogo` que contiene la información seleccionada.
+   *
+   * ### Descripción:
+   * - Si el `id` del evento es mayor que 0, asigna la lista temporal de municipios (`municipiosTempDatos`)
+   *   a la lista principal (`municipiosDatos`).
+   */
   cargarEstados(evento: Catalogo): void {
     if (evento.id > 0) {
       this.municipiosDatos = this.municipiosTempDatos;
     }
   }
   /**
- * Carga la lista de municipios, localidades y colonias cuando se selecciona un catálogo válido.
- *
- * @param evento Objeto de tipo `Catalogo` que contiene la información seleccionada.
- *
- * ### Descripción:
- * - Si el `id` del evento es mayor que 0:
- *   - Asigna la lista temporal de localidades (`localidadesTempDatos`) a la lista principal (`localidadesDatos`).
- *   - Asigna la lista temporal de colonias (`coloniasTempDatos`) a la lista principal (`coloniasDatos`).
- */
+   * Carga la lista de municipios, localidades y colonias cuando se selecciona un catálogo válido.
+   *
+   * @param evento Objeto de tipo `Catalogo` que contiene la información seleccionada.
+   *
+   * ### Descripción:
+   * - Si el `id` del evento es mayor que 0:
+   *   - Asigna la lista temporal de localidades (`localidadesTempDatos`) a la lista principal (`localidadesDatos`).
+   *   - Asigna la lista temporal de colonias (`coloniasTempDatos`) a la lista principal (`coloniasDatos`).
+   */
   cargarMunicipios(evento: Catalogo): void {
     if (evento.id > 0) {
       this.localidadesDatos = this.localidadesTempDatos;
       this.coloniasDatos = this.coloniasTempDatos;
     }
   }
-
 
   /**
    * Verifica si un control del formulario es inválido, tocado o modificado.
@@ -623,7 +667,9 @@ export class AgregarFabricanteComponent
    *          Si el valor es inválido, retorna un objeto con la clave de error específica.
    *          Si el tipo de persona es desconocido o el valor está vacío, retorna null.
    */
-  static rfcFisicaValidator(TIPO_PERSONA: TipoPersona): (CONTROL: AbstractControl) => ValidationErrors | null {
+  static rfcFisicaValidator(
+    TIPO_PERSONA: TipoPersona
+  ): (CONTROL: AbstractControl) => ValidationErrors | null {
     return (CONTROL: AbstractControl): ValidationErrors | null => {
       const VALUE = CONTROL?.value;
 
@@ -646,9 +692,59 @@ export class AgregarFabricanteComponent
 
       return REGEX.test(VALUE) ? null : ERROR_KEY;
     };
-
   }
 
+  /**
+   * Maneja el evento de cambio en el campo de RFC.
+   *
+   * @param {Event} event - Evento que se dispara al cambiar el valor del campo de entrada (input).
+   */
+  onChangeRfc(event: Event): void {
+    const RFC_VALUE = (event.target as HTMLInputElement).value;
+    this.datoSeleccionadorfc?.forEach((dato) => {
+      if (dato.rfc === RFC_VALUE) {
+        const PEDIMENTO = {
+          patente: 0,
+          pedimento: 0,
+          aduana: 0,
+          idTipoPedimento: 0,
+          descTipoPedimento: 'Por evaluar',
+          numero: '',
+          comprobanteValor: '',
+          pedimentoValidado: false,
+        };
+        this.abrirModal(
+          'La información proporcionada de la persona ya existe, favor de verificar.'
+        );
+        this.pedimentos.push(PEDIMENTO);
+      }
+    });
+  }
+
+  /**
+   * Elimina un elemento de la lista de pedimentos en la posición especificada.
+   *
+   * @param {number} i - El índice del elemento a eliminar.
+   *
+   * @remarks
+   * Después de eliminar el elemento, se actualiza el título y mensaje del modal,
+   * y se abre el modal para mostrar un aviso al usuario.
+   */
+  abrirModal(mensaje: string, i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+
+    this.elementoParaEliminar = i;
+  }
 
   /**
    * Habilita o deshabilita los controles del formulario según el estado de los campos
@@ -663,7 +759,9 @@ export class AgregarFabricanteComponent
     if (RFC_CONTROL) {
       RFC_CONTROL.setValidators([
         Validators.required,
-        AgregarFabricanteComponent.rfcFisicaValidator(VALOR_FORMULARIO.tipoPersona)
+        AgregarFabricanteComponent.rfcFisicaValidator(
+          VALOR_FORMULARIO.tipoPersona
+        ),
       ]);
       RFC_CONTROL.markAsTouched();
       RFC_CONTROL.updateValueAndValidity();
@@ -791,6 +889,17 @@ export class AgregarFabricanteComponent
           pais: 2,
         });
       }
+    }
+  }
+
+    /**
+   * Elimina un elemento de la tabla de pedimento, si se confirma la acción.
+   * @param borrar Indica si se debe proceder con la eliminación.
+   * @returns {void}
+   */
+  eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
   }
 

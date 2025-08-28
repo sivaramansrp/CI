@@ -810,30 +810,30 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
     this.mercanciaForm = this.fb.group({
       clasificacionProducto: [
         this.obtenerValor('clasificacionProducto'),
-        Validators.required,
+        [Validators.required],
       ],
       especificarClasificacionProducto: [
         this.obtenerValor('especificarClasificacionProducto'),
-        Validators.required,
+        [Validators.required],
       ],
       denominacionEspecificaProducto: [
         this.obtenerValor('denominacionEspecificaProducto'),
-        Validators.required,
+        [Validators.required],
       ],
       denominacionDistintiva: [
         this.obtenerValor('denominacionDistintiva'),
-        Validators.required,
+        [Validators.required],
       ],
       denominacionComun: [
         this.obtenerValor('denominacionComun'),
-        Validators.required,
+        [Validators.required],
       ],
-      tipoProducto: [this.obtenerValor('tipoProducto'), Validators.required],
+      tipoProducto: [this.obtenerValor('tipoProducto'), [Validators.required]],
       formaFarmaceutica: [
         this.obtenerValor('formaFarmaceutica'),
-        Validators.required,
+        [Validators.required],
       ],
-      estadoFisico: [this.obtenerValor('estadoFisico'), Validators.required],
+      estadoFisico: [this.obtenerValor('estadoFisico'), [Validators.required]],
       fraccionArancelaria: [
         this.obtenerValor('fraccionArancelaria'),
         [
@@ -849,7 +849,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
             'descripcionFraccion'
           ),
         },
-        Validators.required,
+        [Validators.required],
       ],
       cantidadUmtValor: [
         this.obtenerValor('cantidadUmtValor'),
@@ -863,7 +863,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
           value: this.obtenerValor('cantidadUmt'),
           disabled: this.elementosDeshabilitados.includes('cantidadUmt'),
         },
-        Validators.required,
+        [Validators.required],
       ],
       cantidadUmcValor: [
         this.obtenerValor('cantidadUmcValor'),
@@ -876,23 +876,23 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
       presentacion: [this.obtenerValor('presentacion'), [Validators.required]],
       numeroRegistroSanitario: [
         this.obtenerValor('numeroRegistroSanitario'),
-        Validators.required,
+        [Validators.required],
       ],
       fechaCaducidad: [this.obtenerValor('fechaCaducidad')],
       paisDeOriginDatos: [
         PAIS_DE_ORIGEN,
-        Validators.required,
-        matrizRequerida
+          [Validators.required,
+          matrizRequerida]
       ],
       paisDeProcedenciaDatos: [
         PAIS_DE_PROCEDENCIA,
-        Validators.required,
-        matrizRequerida
+       [ Validators.required,
+        matrizRequerida]
       ],
       usoEspecifico: [
         USO_ESPECIFICOS,
-        Validators.required,
-        matrizRequerida
+        [Validators.required,
+        matrizRequerida]
       ],
     });
 

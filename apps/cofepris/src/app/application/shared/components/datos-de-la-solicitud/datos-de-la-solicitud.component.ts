@@ -1034,6 +1034,7 @@ export class DatosDeLaSolicitudComponent
         mercanciasSeleccionados: this.tablaMercanciasLista,
         opcionSeleccionados: this.opcionLista,
         opcionesColapsableState: this.opcionesColapsable,
+        isModificar: true,
       });
       this.irAAcciones('../mercancia-datos');
     }

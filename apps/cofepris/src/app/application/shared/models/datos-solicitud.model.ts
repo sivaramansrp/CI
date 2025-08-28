@@ -209,6 +209,7 @@ export interface DatosDeTablaSeleccionados {
   mercanciasSeleccionados: TablaMercanciasDatos[];
   opcionSeleccionados: TablaOpcionConfig[];
   opcionesColapsableState: boolean;
+  isModificar?: boolean;
 }
 
 /**
