@@ -1,46 +1,9 @@
-import {
-  CROSLISTA_DE_PAISES,
-  INPUT_FECHA_CADUCIDAD_CONFIG,
-} from '../../enum/permiso.enum';
-import {
-  Catalogo,
-  CatalogoSelectComponent,
-  ConfiguracionColumna,
-  CrossListLable,
-  CrosslistComponent,
-  InputFechaComponent,
-  Notificacion,
-  NotificacionesComponent,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
-import {
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  QueryList,
-  ViewChild,
-  ViewChildren,
-} from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import {
-  MERCANCIAS_DATA,
-  MercanciasInfo,
-  NICO_TABLA,
-  NicoInfo,
-} from '../../models/permiso-sanitario.model';
-import {
-  Solicitud260215State,
-  Tramite260215Store,
-} from '../../estados/tramites/tramite260215.store';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { CROSLISTA_DE_PAISES, INPUT_FECHA_CADUCIDAD_CONFIG } from '../../enum/permiso.enum';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrossListLable, CrosslistComponent, InputFechaComponent, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { MERCANCIAS_DATA, MercanciasInfo, NICO_TABLA, NicoInfo } from '../../models/permiso-sanitario.model';
+import { Solicitud260215State, Tramite260215Store } from '../../estados/tramites/tramite260215.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
@@ -212,7 +175,9 @@ export class DomicilioComponent implements OnInit, OnDestroy {
     this.domicilio = this.fb.group({
       codigoPostal: [
         this.solicitudState?.codigoPostal,
-        [Validators.required, Validators.pattern('^[0-9]*$')]
+        [ Validators.required, 
+          Validators.maxLength(12),
+          Validators.pattern('^[0-9]*$')]
       ],
       estado: [this.solicitudState?.estado, Validators.required],
       muncipio: [
@@ -233,11 +198,14 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       ],
       lada: [
         this.solicitudState?.lada,
-        [Validators.pattern('^[0-9]*$')]
+        [ Validators.maxLength(5),
+          Validators.pattern('^[0-9]*$')]
       ],
       telefono: [
         this.solicitudState?.telefono,
-        [Validators.required, Validators.pattern('^[0-9]*$')]
+        [Validators.required, 
+         Validators.maxLength(30),
+         Validators.pattern('^[0-9]*$')]
       ],
       avisoCheckbox: [this.solicitudState?.avisoCheckbox],
       licenciaSanitaria: [
@@ -267,6 +235,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
         [
           Validators.required,
           Validators.maxLength(8),
+          Validators.minLength(8),
           Validators.pattern(/^\d+$/)
         ]
       ],
@@ -275,7 +244,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
         this.solicitudState?.cantidadUMT,
         [
           Validators.required,
-          Validators.pattern(/^\d{1,12}(\.\d{1,5})?$/) // 12 integers, up to 5 decimals
+          DomicilioComponent.cantidadUMTValidator()
         ]
       ],
       UMT: [{ value: '', disabled: true }, Validators.required],
@@ -283,7 +252,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
         this.solicitudState?.cantidadUMC,
         [
           Validators.required,
-          Validators.pattern(/^\d{1,12}(\.\d{1,10})?$/) // 12 integers, up to 10 decimals
+          DomicilioComponent.cantidadUMCValidator()
         ]
       ],
       UMC: ['', Validators.required],
@@ -470,6 +439,57 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
     this.autocompletarMercancias();
+  }
+  /**
+   * Validador para la cantidad en unidades de medida comercial (UMC).
+   * Verifica que el valor sea un número válido y cumpla con las restricciones de formato.
+   * 
+   */
+  static cantidadUMCValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const VALUE = control.value;
+
+      if (VALUE === null || VALUE === '') {
+        return null;
+      }
+
+      const NUMERIC_REGEX = /^[0-9]+(\.[0-9]+)?$/;
+      if (!NUMERIC_REGEX.test(VALUE)) {
+        return { invalidFormat: true };
+      }
+
+      const [INTEGER_PART, DECIMAL_PART] = VALUE.split('.');
+      if (INTEGER_PART.length > 12 || (DECIMAL_PART && DECIMAL_PART.length > 10)) {
+        return { maxPrecision: true };
+      }
+
+      return null;
+    };
+  }
+  /**
+   * Validador para la cantidad en unidades de medida térmica (UMT).
+   * Verifica que el valor sea un número válido y cumpla con las restricciones de formato.
+   */
+   static cantidadUMTValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const VALUE = control.value;
+
+      if (VALUE === null || VALUE === '') {
+        return null;
+      }
+
+      const NUMERIC_REGEX = /^[0-9]+(\.[0-9]+)?$/;
+      if (!NUMERIC_REGEX.test(VALUE)) {
+        return { invalidFormat: true };
+      }
+
+      const [INTEGER_PART, DECIMAL_PART] = VALUE.split('.');
+      if (INTEGER_PART.length > 12 || (DECIMAL_PART && DECIMAL_PART.length > 5)) {
+        return { maxPrecision: true };
+      }
+
+      return null;
+    };
   }
   /**
    * Método para autocompletar los campos de mercancías.

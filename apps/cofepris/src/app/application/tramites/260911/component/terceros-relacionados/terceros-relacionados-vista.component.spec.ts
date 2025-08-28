@@ -1,6 +1,6 @@
 
 import { TestBed } from '@angular/core/testing';
-import { TercerosRelacionadosVistaComponent } from './terceros-relacionados-vista.component.ts';
+import { TercerosRelacionadosVistaComponent } from './terceros-relacionados-vista.component';
 import { Renderer2, ElementRef } from '@angular/core';
 import { of } from 'rxjs';
 

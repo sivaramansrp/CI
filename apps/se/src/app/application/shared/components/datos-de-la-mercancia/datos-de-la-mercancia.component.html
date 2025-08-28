@@ -29,7 +29,7 @@
     ></textarea>
     <div *ngIf="esInvalido('descripcion')" class="text-danger mt-1">
       <small *ngIf="form.controls['descripcion'].errors?.['required']">
-        Este campo es obligatorio
+        Este campo es obligatorio.
       </small>
       <small *ngIf="form.controls['descripcion'].errors?.['validarSinCaracterAnguloDerecho']">
       Por favor, corrige la descripción/dirección
@@ -62,7 +62,7 @@
         />
         <div *ngIf="esInvalido('cantidad')" class="text-danger">
           <small *ngIf="form.controls['cantidad'].errors?.['required']">
-          Este campo es obligatorio
+          Este campo es obligatorio.
         </small>
         <small *ngIf="form.controls['cantidad'].errors?.['noEsNumero']">
           Por favor, escribe un número entero válido
@@ -93,7 +93,7 @@
         />
         <div *ngIf="esInvalido('valorFacturaUSD')" class="text-danger">
           <small *ngIf="form.controls['valorFacturaUSD'].errors?.['required']">
-          Este campo es obligatorio
+          Este campo es obligatorio.
         </small>
         <small *ngIf="form.controls['valorFacturaUSD'].errors?.['noEsNumero']">
           Por favor, escribe un número entero válido

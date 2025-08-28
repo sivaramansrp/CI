@@ -5,6 +5,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { FraccionTabla, SectoresTabla } from '@libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
 import {
   SolicitudSectoresYMercanciasState,
   TramiteSectoresYMercanciasStore,
@@ -16,14 +17,15 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/trami
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { FRACCION } from '../../../core/enum/90102';
 import { SECTORESY } from '@libs/shared/data-access-user/src';
 import { SectoresMercanciasService } from '../../services/sectores-mercancias.service';
-import { SectoresTabla } from '@libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { TramiteSectoresYMercanciasQuery } from '../../estados/queries/sectores-y-mercancias.query';
 import sectoresTabla from '@libs/shared/theme/assets/json/90201/sectores-tabla.json';
+import fraccionTabla from '@libs/shared/theme/assets/json/90201/fraccion-tabla.json';
 /**
  * Componente SectoresYMercancias que se utiliza para mostrar y gestionar los SectoresYMercancias.
  *
@@ -52,6 +54,19 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * Este formulario se utiliza para gestionar y validar los datos de entrada relacionados con sectores y mercancías.
    */
   public sectoresForm!: FormGroup;
+
+  /**
+   * Lista de sectores seleccionados en la tabla.
+   *
+   * @type {SectoresTabla[]}
+   */
+  public seleccionarSectorLista: SectoresTabla | null = null;
+  /**
+   * Lista de fracciones seleccionadas en la tabla.
+   *
+   * @type {FraccionTabla[]}
+   */
+  public seleccionarFraccionLista: FraccionTabla | null = null;
   /**
    * Indica si un elemento está seleccionado.
    *
@@ -94,10 +109,21 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
     },
   ];
 
+  /** Configuración para las columnas de la tabla de fracción arancelaria.
+   * Este array define las columnas para una tabla, incluyendo el nombre del encabezado,
+   * la clave para acceder a los datos en cada fila y el orden de las columnas.
+   */
+  public configuracionFraccionTabla: ConfiguracionColumna<FraccionTabla>[] = FRACCION;
+
   /**
    * Un array de objetos `SectoresTabla` que representa los sectores.
    */
-  public sectores: SectoresTabla[] = sectoresTabla;
+  public sectores: SectoresTabla[] = [];
+
+  /**
+   * Un array de objetos `FraccionTabla` que representa las fracciones arancelarias.
+   */
+  public fraccion: FraccionTabla[] = [];
   /**
    * Representa la selección de radio del enumerado TablaSeleccion.
    * Esta propiedad se utiliza para gestionar el estado de selección del botón de radio en el componente.
@@ -172,6 +198,10 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
     this.establecerFormSectores();
 
     this.inicializarEstadoFormulario();
+    if (this.esFormularioActualizacion) {
+      this.sectores = sectoresTabla;
+      this.fraccion = fraccionTabla;
+    }
   }
 
   /**
@@ -214,6 +244,18 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
     this.establecerFormSectores();
   }
 
+  /** Agrega una nueva fracción arancelaria a la lista de fracciones.
+   * Este método obtiene el valor del campo 'fraccion' del formulario y, si no está vacío o solo contiene espacios en blanco,
+   * asigna una lista predefinida de fracciones a la propiedad `fraccion`.
+   * Actualmente, la lista de fracciones se obtiene de un archivo JSON importado.
+   */
+  public agregarFraccion(): void {
+    const FRACCION = this.sectoresForm.get('fraccion')?.value;
+    if(FRACCION && FRACCION.trim() !== '') {
+      this.fraccion = fraccionTabla;
+    }
+  }
+
   /**
    * Inicializa el `sectoresForm` con valores predeterminados y validadores.
    *
@@ -245,6 +287,58 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
     );
 
     merge(CATALOGO$).pipe(takeUntil(this.destroyNotifier$)).subscribe();
+  }
+  /**
+   * Agrega un nuevo sector a la lista de sectores si el campo de sector no está vacío.
+   * Este método obtiene el valor del campo 'sector' del formulario y, si no está vacío o solo contiene espacios en blanco,
+   * asigna una lista predefinida de sectores a la propiedad `sectores`.
+   * Actualmente, la lista de sectores se obtiene de un archivo JSON importado.
+   */
+  public agregarSector(): void {
+    const SECTOR = this.sectoresForm.get('sector')?.value;
+    if(SECTOR && SECTOR.trim() !== '') {
+      this.sectores = sectoresTabla;
+    }
+  }
+
+  
+  /** Guarda la selección de número de empleados hecha por el usuario.*/
+  seleccionarSector(evento: SectoresTabla): void {
+    this.seleccionarSectorLista = evento;
+  }
+
+   
+  /** Guarda la selección de número de empleados hecha por el usuario.*/
+  seleccionarFraccion(evento: FraccionTabla): void {
+    this.seleccionarFraccionLista = evento;
+  }
+
+  /**
+   * Elimina los sectores seleccionados de la lista de sectores.
+   * Este método elimina los sectores que están en la lista `seleccionarSectorLista`
+   * de la lista `sectores` y luego limpia la lista `seleccionarSectorLista`.
+   * @returns {void}
+   */
+  public eliminarSector(): void {
+    if(this.seleccionarSectorLista) {
+      const sectoresAEliminar = [this.seleccionarSectorLista.claveDel];
+      this.sectores = this.sectores.filter(sector => !sectoresAEliminar.includes(sector.claveDel));
+      this.seleccionarSectorLista = null;
+    }
+  }
+
+  /**
+   * Elimina las fracciones seleccionadas de la lista de fracciones.
+   * Este método elimina las fracciones que están en la lista `seleccionarFraccionLista`
+   * de la lista `fraccion` y luego limpia la lista `seleccionarFraccionLista`.
+   * @returns {void}
+   */
+  public eliminarFraccion(): void {
+    if(this.seleccionarFraccionLista) {
+      const fraccionesAEliminar = [this.seleccionarFraccionLista.fraccion];
+      this.fraccion = this.fraccion.filter(fraccion => !fraccionesAEliminar.includes(fraccion.fraccion));
+      this.seleccionarFraccionLista = null;
+    }
   }
 
   /**

@@ -46,7 +46,6 @@ import { TercerosRelacionadosComponent } from './components/terceros-relacionado
     ReactiveFormsModule,
     FormsModule,
     ReactiveFormsModule,
-    AlertComponent,
     InputFechaComponent,
     SolicitudDatosComponent,
     DatosDelTramiteARealizarComponent,

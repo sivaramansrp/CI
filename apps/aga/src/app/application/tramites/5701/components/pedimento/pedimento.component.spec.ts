@@ -96,6 +96,20 @@ describe('PedimentoComponent', () => {
     // expect(component.acciones).toHaveBeenCalled();
   });
 
+  it('should set userHasInteracted to true when agregaPedimento is called', async () => {
+    // Arrange
+    component.userHasInteracted = false;
+    component.validaCampos = component.validaCampos || {};
+    component.validaCampos.emit = jest.fn();
+    component.acciones = jest.fn();
+
+    // Act
+    component.agregaPedimento();
+
+    // Assert
+    expect(component.userHasInteracted).toBe(true);
+  });
+
   it('should run #acciones()', async () => {
     component.pedimentoForm = component.pedimentoForm || {};
     component.pedimentoForm.value = 'value';

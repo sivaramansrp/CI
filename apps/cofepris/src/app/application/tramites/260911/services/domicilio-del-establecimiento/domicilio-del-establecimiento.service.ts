@@ -6,6 +6,12 @@ import { Observable } from 'rxjs';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { RespuestaTabla } from '../../models/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
 
+// Interface para el representante legal
+export interface RepresentanteLegal {
+  rfc: string;
+  nombreDenominacionORazonSocial: string;
+}
+
 /**
  * Servicio para la gestión de operaciones relacionadas con el domicilio del establecimiento.
  * Proporciona métodos para recuperar datos de tablas, catálogos de estados y mercancías
@@ -83,4 +89,31 @@ export class DomicilioDelEstablecimientoService {
   getEntidad(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/260911/clavescian.json');
   }
+
+    buscarRepresentanteLegalPorRFC(
+      rfc: string
+    ): Observable<{ nombre: string; apellidoPaterno: string; apellidoMaterno: string } | null> {
+      // Busca el RFC en el archivo destinatario-de-tabla.json
+      return new Observable(observer => {
+        this.http.get<RepresentanteLegal[]>('assets/json/260911/destinatario-de-tabla.json').subscribe(data => {
+          const FOUND = data.find(item => item.rfc === rfc);
+          if (FOUND) {
+            // Separar nombre en nombre, apellidoPaterno, apellidoMaterno si es posible
+            const NOMBRE_COMPLETO = FOUND.nombreDenominacionORazonSocial || '';
+            const PARTES = NOMBRE_COMPLETO.split(' ');
+            observer.next({
+              nombre: PARTES[0] || '',
+              apellidoPaterno: PARTES[1] || '',
+              apellidoMaterno: PARTES.slice(2).join(' ') || ''
+            });
+          } else {
+            observer.next(null);
+          }
+          observer.complete();
+        }, () => {
+          observer.next(null);
+          observer.complete();
+        });
+      });
+    }
 }

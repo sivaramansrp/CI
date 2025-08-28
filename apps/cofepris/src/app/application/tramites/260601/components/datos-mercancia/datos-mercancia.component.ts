@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -8,17 +8,19 @@ import {
 } from '@angular/forms';
 import { Observable, Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { EventEmitter } from '@angular/core';
 
 import {
   AvisoSanitarioState,
   Tramite260601Store,
 } from '../../../../estados/tramites/tramite260601.store';
-import { BOTONS, CATALOGOS_ID, PANELS } from '../../constantes/aviso-enum';
+import { CATALOGOS_ID, PANELS } from '../../constantes/aviso-enum';
 import {
   Catalogo,
   CatalogoSelectComponent,
   ConsultaioQuery,
   CrosslistComponent,
+  TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { CrossList, MercanciaCrossList } from '../../models/aviso-model';
 import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
@@ -36,6 +38,7 @@ import { Tramite260601Query } from '../../../../estados/queries/tramite260601.qu
     ReactiveFormsModule,
     CatalogoSelectComponent,
     CrosslistComponent,
+    TituloComponent
   ],
   templateUrl: './datos-mercancia.component.html',
   styleUrl: './datos-mercancia.component.css',
@@ -84,7 +87,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   /**
    * Botones configurados para acciones en tablas, como agregar o restar elementos.
    */
-  botones = BOTONS;
+
 
   /**
    * Datos de listas cruzadas específicas de uso.
@@ -135,6 +138,206 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   esFormularioSoloLectura: boolean = false;
+
+    /**
+   * @property {string[]} seleccionadaPaisOrigen
+   * @description
+   * Arreglo que almacena los países de origen seleccionados en el componente crosslist.
+   * Estos valores se utilizan para actualizar el formulario de mercancía.
+   */
+  seleccionadaPaisOrigen: string[] = [];
+
+  /**
+   * @property {string[]} seleccionadaPaisProcedencia
+   * @description
+   * Arreglo que almacena los países de procedencia seleccionados en el componente crosslist.
+   * Estos valores se utilizan para actualizar el formulario de mercancía.
+   */
+  seleccionadaPaisProcedencia: string[] = [];
+
+  /**
+   * @property {string[]} seleccionadaUsoEspecifico
+   * @description
+   * Arreglo que almacena los usos específicos seleccionados en el componente crosslist.
+   * Estos valores se utilizan para actualizar el formulario de mercancía.
+   */
+  seleccionadaUsoEspecifico: string[] = [];
+
+  /**
+   * @property {QueryList<CrosslistComponent>} crosslistComponent
+   * @description
+   * Referencia a todos los componentes CrosslistComponent presentes en la plantilla.
+   * Se utiliza para ejecutar métodos como agregar o quitar elementos en todas las listas.
+   */
+  @ViewChild('crosslistPaisOrigen') crosslistComponent!: CrosslistComponent;
+
+    /**
+   * @property {CrosslistComponent} crosslistPaisOrigenComponent
+   * @description
+   * Referencia al componente CrosslistComponent para la selección de países de procedencia.
+   * Permite manipular programáticamente la lista y acceder a los métodos de agregar/quitar elementos.
+   */
+  @ViewChild('crosslistPaisProcedencia') crosslistPaisOrigenComponent!: CrosslistComponent;
+
+  /**
+   * @property {CrosslistComponent} crosslistUsoEspecificoComponent
+   * @description
+   * Referencia al componente CrosslistComponent para la selección de usos específicos.
+   * Permite manipular programáticamente la lista y acceder a los métodos de agregar/quitar elementos.
+   */
+  @ViewChild('crosslistUsoEspecifico') crosslistUsoEspecificoComponent!: CrosslistComponent;
+
+
+  /**
+   * @property {EventEmitter<void>} cerrarClicado
+   * @description
+   * Evento que se emite cuando el usuario hace clic en el botón de cerrar el modal.
+   * El componente padre debe escuchar este evento para ocultar o cerrar el modal.
+   */
+  @Output() cerrarClicado = new EventEmitter<void>();
+
+  /**
+   * @property {EventEmitter<any>} guardarClicado
+   * @description
+   * Evento que se emite cuando el usuario hace clic en el botón de guardar.
+   * Envía los datos del formulario al componente padre para su procesamiento.
+   */
+  @Output() guardarClicado = new EventEmitter();
+
+  /**
+   * @property {Array<{btnNombre: string, class: string, funcion: Function}>} botones
+   * @description
+   * Configuración de los botones para controlar las acciones en los componentes crosslist.
+   * Cada botón tiene un nombre, una clase CSS y una función asociada que manipula las listas.
+   */
+  botones = [
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-primary',
+      funcion: (): void => {
+        if (this.crosslistComponent) {
+          this.crosslistComponent.agregar('t');
+        }
+      }
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-default',
+      funcion: (): void => {
+        if (this.crosslistComponent) {
+          this.crosslistComponent.agregar('');
+        }
+      },
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-danger',
+      funcion: (): void => {
+        if (this.crosslistComponent) {
+          this.crosslistComponent.quitar('');
+        }
+      },
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default',
+      funcion: (): void => {
+        if (this.crosslistComponent) {
+          this.crosslistComponent.quitar('t');
+        }
+      },
+    },
+  ];
+
+  /**
+   * @property {Array<{btnNombre: string, class: string, funcion: Function}>} campoBotones
+   * @description
+   * Configuración de los botones para controlar las acciones en el componente crosslist de países de procedencia.
+   * Cada botón tiene un nombre, una clase CSS y una función asociada que manipula la lista de países.
+   */
+  campoBotones = [
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-primary',
+      funcion: (): void => {
+        if (this.crosslistPaisOrigenComponent) {
+          this.crosslistPaisOrigenComponent.agregar('t');
+        }
+      }
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-default',
+      funcion: (): void => {
+        if (this.crosslistPaisOrigenComponent) {
+          this.crosslistPaisOrigenComponent.agregar('');
+        }
+      },
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-danger',
+      funcion: (): void => {
+        if (this.crosslistPaisOrigenComponent) {
+          this.crosslistPaisOrigenComponent.quitar('');
+        }
+      },
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default',
+      funcion: (): void => {
+        if (this.crosslistPaisOrigenComponent) {
+          this.crosslistPaisOrigenComponent.quitar('t');
+        }
+      },
+    },
+  ];
+
+  /**
+   * @property {Array<{btnNombre: string, class: string, funcion: Function}>} UsoBotones
+   * @description
+   * Configuración de los botones para controlar las acciones en el componente crosslist de usos específicos.
+   * Cada botón tiene un nombre, una clase CSS y una función asociada que manipula la lista de usos específicos.
+   */
+  UsoBotones = [
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-primary',
+      funcion: (): void => {
+        if (this.crosslistUsoEspecificoComponent) {
+          this.crosslistUsoEspecificoComponent.agregar('t');
+        }
+      }
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-default',
+      funcion: (): void => {
+        if (this.crosslistUsoEspecificoComponent) {
+          this.crosslistUsoEspecificoComponent.agregar('');
+        }
+      },
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-danger',
+      funcion: (): void => {
+        if (this.crosslistUsoEspecificoComponent) {
+          this.crosslistUsoEspecificoComponent.quitar('');
+        }
+      },
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default',
+      funcion: (): void => {
+        if (this.crosslistUsoEspecificoComponent) {
+          this.crosslistUsoEspecificoComponent.quitar('t');
+        }
+      },
+    },
+  ];
 
   /**
    * Constructor del componente.
@@ -282,6 +485,18 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       ],
       cvePaisDestino: [
         this.avisoSanitarioState?.cvePaisDestino,
+        [Validators.required],
+      ],
+      cvePaisDeOrigen: [
+        this.avisoSanitarioState?.cvePaisDeOrigen,
+        [Validators.required],
+      ],
+      cvePaisDeProcedencia: [
+        this.avisoSanitarioState?.cvePaisDeProcedencia,
+        [Validators.required],
+      ],
+      cveUsoEspecifico: [
+        this.avisoSanitarioState?.cveUsoEspecifico,
         [Validators.required],
       ],
     });
@@ -453,6 +668,86 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite260601Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+  
+  /**
+   * @method paisChange
+   * @description
+   * Maneja el cambio de selección en la lista de países de origen.
+   * Actualiza el arreglo de países seleccionados y actualiza el valor en el formulario.
+   * @param {string[]} event - Arreglo de países seleccionados en el componente crosslist.
+   * @returns {void}
+   */
+  paisChange(event: string[]): void {
+    const VALUE = event[0];
+    this.seleccionadaPaisOrigen = [VALUE];
+    this.agregarMercanciaForm.patchValue({
+      cvePais: VALUE,
+    });
+  }
+
+  /**
+   * @method paisDeProcedenciaChange
+   * @description
+   * Maneja el cambio de selección en la lista de países de procedencia.
+   * Actualiza el arreglo de países seleccionados y actualiza el valor en el formulario.
+   * @param {string[]} event - Arreglo de países seleccionados en el componente crosslist.
+   * @returns {void}
+   */
+  paisDeProcedenciaChange(event: string[]): void {
+    const PROCEDENCIA_VALUE = event[0];
+    this.seleccionadaPaisProcedencia = [PROCEDENCIA_VALUE];
+    this.agregarMercanciaForm.patchValue({
+      cvePaisDeProcedencia: PROCEDENCIA_VALUE,
+    });
+  }
+
+  /**
+   * @method usoEspecificoChange
+   * @description
+   * Maneja el cambio de selección en la lista de usos específicos.
+   * Actualiza el arreglo de usos específicos seleccionados y actualiza el valor en el formulario.
+   * @param {string[]} event - Arreglo de usos específicos seleccionados en el componente crosslist.
+   * @returns {void}
+   */
+  usoEspecificoChange(event: string[]): void {
+    const VALUE = event[0];
+    this.seleccionadaUsoEspecifico = [VALUE];
+    this.agregarMercanciaForm.patchValue({
+      cveUsoEspecifico: VALUE,
+    });
+  }
+
+  /**
+   * @method agregarMercancia
+   * @description
+   * Emite los valores del formulario cuando el usuario hace clic en el botón "Guardar".
+   * Luego emite otro evento para cerrar el modal de mercancía.
+   * @returns {void}
+   */
+  agregarMercancia(): void {
+    this.guardarClicado.emit(this.agregarMercanciaForm.value);
+    this.cerrarClicado.emit();
+  }
+
+  /**
+   * @method cerrarModal
+   * @description
+   * Emite un evento para cerrar el modal de mercancía sin guardar cambios.
+   * @returns {void}
+   */
+  cerrarModal(): void {
+    this.cerrarClicado.emit();
+  }
+
+  /**
+   * @method limpiarSCIAN
+   * @description
+   * Reinicia todos los campos del formulario de mercancía a su estado inicial.
+   * @returns {void}
+   */
+  limpiarSCIAN(): void {
+    this.agregarMercanciaForm.reset();
   }
 
   /**

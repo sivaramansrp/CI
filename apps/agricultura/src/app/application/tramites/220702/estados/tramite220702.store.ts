@@ -268,6 +268,9 @@ export function createInitialState(): TramiteState {
          * @property {DatosDeLaSolicitudInt} SolicitudState
          */
         SolicitudState: {
+            folioDelTramite: '',
+            numeroDeGuia: '',
+            numeroFerrocaril: '',
             justificacion: '',
             certificadosAutorizados: '',
             fechaInicio: '',
