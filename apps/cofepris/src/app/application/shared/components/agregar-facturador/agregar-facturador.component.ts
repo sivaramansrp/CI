@@ -148,7 +148,7 @@ export class AgregarFacturadorComponent
    */
   crearAgregarFormularioFacturador(): void {
     this.agregarFacturadorForm = this.fb.group({
-      tipoPersona: [this.obtenerValor('tipoPersona'), Validators.required],
+      tipoPersona: [this.obtenerValor('tipoPersona'), [Validators.required]],
       nombres: [
         this.obtenerValor('nombres'),
         [Validators.required, Validators.pattern(REGEX_NOMBRE)],
@@ -161,8 +161,8 @@ export class AgregarFacturadorComponent
         this.obtenerValor('segundoApellido'),
         [Validators.pattern(REGEX_NOMBRE)],
       ],
-      pais: [this.obtenerValor('pais'), Validators.required],
-      estado: [this.obtenerValor('estadoLocalidad'), Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)],
+      pais: [this.obtenerValor('pais'), [Validators.required]],
+      estado: [this.obtenerValor('estadoLocalidad'), [Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)]],
       codigoPostal: [this.obtenerValor('codigoPostal'),[Validators.pattern(CODIGO_POSTAL)]],
       colonia: [this.obtenerValor('colonia')],
       calle: [this.obtenerValor('calle'), [Validators.required]],

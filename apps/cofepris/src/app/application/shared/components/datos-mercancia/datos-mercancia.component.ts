@@ -1053,11 +1053,11 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    */
   limpiarMercancia(): void {
     this.seleccionadasUsoEspesificoDatos = [];
-    this.usoEspesificoDatos = CROSLISTA_DE_PAISES;
+    this.usoEspesificoDatos = [...CROSLISTA_DE_PAISES];
     this.seleccionadasPaisDeOriginDatos = [];
-    this.paisDeProcedenciaDatos = CROSLISTA_DE_PAISES;
+    this.paisDeProcedenciaDatos = [...CROSLISTA_DE_PAISES];
     this.seleccionadasPaisDeProcedenciaDatos = [];
-    this.seleccionarOrigenDelPais = CROSLISTA_DE_PAISES;
+    this.seleccionarOrigenDelPais = [...CROSLISTA_DE_PAISES];
 
     this.mercanciaForm.reset();
   }
