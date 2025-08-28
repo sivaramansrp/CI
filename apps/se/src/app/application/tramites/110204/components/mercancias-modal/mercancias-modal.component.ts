@@ -138,7 +138,6 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
 
     this.tramiteQuery?.formMercancia$?.pipe(
       takeUntil(this.destroyNotifier$)).subscribe((estado) => {
-
       // eslint-disable-next-line dot-notation
       if (!this.actualizandoFormulario && estado && estado['fraccionNaladiSa02']) {
         this.actualizandoFormulario = true;
