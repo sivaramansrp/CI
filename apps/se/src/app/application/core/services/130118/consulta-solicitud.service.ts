@@ -32,7 +32,7 @@ export class ConsultaSolicitudService {
    * @param numFolio Número de folio del trámite a consultar.
    * @returns Observable que emite la respuesta de la consulta.
    */
-  getCriterios(numFolio: string): Observable<BaseResponse<ConsultaSolicitudResponse>> {
+  getDetalleSolicitud(numFolio: string): Observable<BaseResponse<ConsultaSolicitudResponse>> {
     const ENDPOINT = `${this.host}${API_GET_CONSULTA_SOLICITUD.replace(NUMFOLIOTRAMITE, numFolio)}`;
     return this.http.get<BaseResponse<ConsultaSolicitudResponse>>(ENDPOINT);
   }

@@ -14,7 +14,8 @@
           id="ventasTotales"
           class="form-control"
           formControlName="ventasTotales"
-          (change)="obtenerVentasTotales($event)"
+          (change)="obtenerVentasTotales($event)"         
+          (input)="limitarLongitud($event, 16)"
         />
       </div>
       <div class="col-md-4">
@@ -26,7 +27,7 @@
           id="totalExportaciones"
           class="form-control"
           formControlName="totalExportaciones"
-          (input)="obtenerTotalExportaciones($event)"
+          (input)="limitarLongitud($event, 16)"
         />
       </div>
       <div class="col-md-4">
@@ -39,6 +40,7 @@
           class="form-control"
           formControlName="totalImportaciones"
           (change)="obtenerTotalImportaciones($event)"
+          [disabled]="true"
         />
       </div>
       <div class="col-md-4">
@@ -48,6 +50,7 @@
           id="saldo"
           class="form-control"
           formControlName="saldo"
+          readonly
         />
       </div>
       <div class="col-md-4">
@@ -59,8 +62,12 @@
           id="porcentajeExportacion"
           class="form-control"
           formControlName="porcentajeExportacion"
+          readonly
         />
       </div>
     </div>
   </form>
 </div>
+@if(nuevaNotificacion){
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion" ></lib-notificaciones>
+  }  

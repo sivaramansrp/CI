@@ -234,7 +234,6 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
       (v) => v.tramite === PROCEDURE
     );
     this.procedureUrl = this.tramiteData[0].linkDashboard;
-
     this.consultaioStore.establecerConsultaio(
       String(PROCEDURE),
       ORIGIN,
@@ -257,7 +256,7 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
       this.router.navigate([
         `/${this.tramiteData[0].department}/proceso-requerimiento`,
       ]);
-    } else if(ORIGIN === 'FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION' && this.tramiteData[0].tramite === 130118) {
+    } else if(ORIGIN === 'CONFIRMAR_NOTIFICACION_RESOLUCION' && this.tramiteData[0].tramite === 130118 || ORIGIN === 'ConfirmarNotificacionRes') {
       this.router.navigate([`/${this.tramiteData[0].department}/confirmar-notificacion`]);
     }else if (ORIGIN === 'FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION') {
       this.router.navigate(['/confirmar-notificacion']);
@@ -272,6 +271,8 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
       this.router.navigate(['/subsecuentes']);
     } else if(ORIGIN === 'FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION') {
       this.router.navigate([`/${this.tramiteData[0].department}/verificar-dictamen`]);
+    } else if ((ORIGIN === 'AUTORIZAR_DICTAMEN' || ORIGIN === 'AutorizarDictamen')) {
+      this.router.navigate([`/${this.tramiteData[0].department}/autorizar-dictamen`]);
     }
   }
   /*
@@ -363,7 +364,7 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
 
     if (TIPO_SOLICITUD === TipoSolicitud.SOLICITANTE) {
       BODY.rfc_usuario = RFC;
-      BODY.roles = ["PersonaMoral"];
+      BODY.roles = ["PersonaFisica"];
       BODY.certificado = {
         cert_serial_number: "20001000000100001815",
         tipo_certificado: "TIPCE.02"
@@ -385,7 +386,7 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
 
     if (TIPO_SOLICITUD === TipoSolicitud.FUNCIONARIO) {
       BODY.rfc_usuario = RFC;
-      BODY.roles = ["Dictaminador"]
+      BODY.roles = ["Dictaminador", "Autorizador"]
 
         this.bandejaDeSolicitudeService.postBandejaTareas(BODY).pipe(
         map((datos: BandejaDeTareasPendientes[]) => {

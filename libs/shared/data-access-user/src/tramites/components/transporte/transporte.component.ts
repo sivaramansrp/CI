@@ -661,9 +661,15 @@ export class TransporteComponent implements OnInit, OnChanges {
           (seleccionado) => seleccionado === transporte
         )
     );
+    
+    // Get current transport type from form instead of cached variable
+    const TIPO_TRANSPORTE_ACTUAL = parseInt(
+      this.tipoTransporteForma.get('tipoTransporte')?.value,
+      10
+    );
     const DESCRIPCION_TIPO_TRANSPORTE =
       this.LISTA_TIPO_TRANSPORTE.find(
-        (item) => item.id === parseInt(this.tipoTransporte, 10)
+        (item) => item.id === TIPO_TRANSPORTE_ACTUAL
       )?.nombre ?? '';
 
     this.nuevaNotificacion = {
