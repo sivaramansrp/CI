@@ -76,8 +76,9 @@ export class ContenedorComplementarPlantasComponent implements OnInit, OnDestroy
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private ubicaccion: Location,
-    // eslint-disable-next-line no-empty-function
-  ) { }
+  ) { 
+    // Constructor del componente
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
