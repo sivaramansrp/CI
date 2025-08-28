@@ -13,22 +13,38 @@ import fraccions from '@libs/shared/theme/assets/json/130106/fraccion.json';
 
 /**
  * Valida que el valor sea un número válido:
+ * - Máximo 18 dígitos totales (enteros + decimales)
  * - Máximo 3 dígitos decimales
+ * - Solo valores numéricos
  */
 export function formFieldValidator(control: AbstractControl): ValidationErrors | null {
   const VALUE = control.value;
   if (VALUE === null || VALUE === undefined || VALUE === '') {
     return null;
   }
-  const STRING_VALUE = VALUE.toString();
-  if (!/^\d+(\.\d+)?$/.test(STRING_VALUE)) {
+  
+  const STRING_VALUE = VALUE.toString().trim();
+  
+  // Verificar que solo contenga números, punto decimal y opcionalmente signo negativo
+  if (!/^-?\d+(\.\d+)?$/.test(STRING_VALUE)) {
     return { pattern: true };
   }
-
-  const DECIMAL_VALUE = STRING_VALUE.split('.')[1];
-  if (DECIMAL_VALUE && DECIMAL_VALUE.length > 3) {
+  
+  // Separar parte entera y decimal
+  const parts = STRING_VALUE.replace('-', '').split('.');
+  const INTEGER_PART = parts[0];
+  const DECIMAL_PART = parts[1];
+  
+  // Verificar que no exceda 18 dígitos totales
+  if (STRING_VALUE.replace(/[.-]/g, '').length > 18) {
+    return { maxLength: true };
+  }
+  
+  // Verificar que no tenga más de 3 decimales
+  if (DECIMAL_PART && DECIMAL_PART.length > 3) {
     return { tooManyDecimals: true };
   }
+  
   return null;
 }
 
@@ -282,45 +298,48 @@ export class FraccionComponent implements OnInit, OnDestroy {
    * Inicializa el formulario de la solicitud con los valores del estado.
    * También se suscribe a los cambios en el estado de la solicitud.
    */
-  public inicializarFormulario(): void {
-    this.tramite130106Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$), // Se asegura de limpiar los observables al destruir el componente
-        map((seccionState) => {
-          this.solicitudState = seccionState as Solicitud130106State; // Asigna el estado de la solicitud
-        })
-      )
-      .subscribe(); // Realiza la suscripción para actualizar el estado
- 
-    // Crea el formulario con los valores predeterminados
-    this.fraccionForm = this.fb.group({
-      fraccion: [this.solicitudState.fraccion, Validators.required],
-      cantidad: [this.solicitudState.cantidad, [Validators.required, formFieldValidator]],
-      factura: [this.solicitudState.factura, [Validators.required, formFieldValidator]],
-      umt: [this.solicitudState.umt, Validators.required],
-      mercanciaCantidad: [this.solicitudState.cantidad, [Validators.required, formFieldValidator]],
-      mercanciaFactura: [this.solicitudState.factura, [Validators.required, formFieldValidator]],
-      descripcion: [this.solicitudState.umt, Validators.required],
-      cantidadTotal: [this.solicitudState.umt, Validators.required],
-      valorTotal: [this.solicitudState.umt, Validators.required],
-      especifico: [this.solicitudState.especifico, Validators.required],
-      justificacion: [this.solicitudState.justificacion, Validators.required],
-      observaciones: [this.solicitudState.observaciones],
-      entidad: [this.solicitudState.entidad, Validators.required],
-      representacion: [this.solicitudState.representacion, Validators.required],
-      bloque: [this.solicitudState.bloque, Validators.required],
-      disponible: [this.solicitudState.disponible,],
-      seleccionado: [this.solicitudState.seleccionado, Validators.required],
-    });
-    /* Se suscribe a los cambios del campo 'bloque' del formulario */
-    this.fraccionForm.get('bloque')?.valueChanges.subscribe(() => {
-      this.selectRangoDias =["ESTADOS UNIDOS DE AMERICA CANADA"];
-      this.tramite130106Store.updateSelectRangoDias(this.selectRangoDias)      
-    });
-    /* Actualiza los campos del formulario con base en la lógica actual */
-    this.updateformfied();
-  }
-  /**
+public inicializarFormulario(): void {
+  this.tramite130106Query.selectSolicitud$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.solicitudState = seccionState as Solicitud130106State;
+      })
+    )
+    .subscribe();
+
+  // Crea el formulario con los valores predeterminados
+  this.fraccionForm = this.fb.group({
+    fraccion: [this.solicitudState.fraccion, Validators.required],
+    cantidad: [this.solicitudState.cantidad, [Validators.required, formFieldValidator]],
+    factura: [this.solicitudState.factura, [Validators.required, formFieldValidator]],
+    umt: [this.solicitudState.umt, Validators.required],
+    mercanciaCantidad: [this.solicitudState.cantidad, [Validators.required, formFieldValidator]],
+    mercanciaFactura: [this.solicitudState.factura, [Validators.required, formFieldValidator]],
+    descripcion: [this.solicitudState.umt, Validators.required],
+    cantidadTotal: [this.solicitudState.umt, Validators.required],
+    valorTotal: [this.solicitudState.umt, Validators.required],
+    especifico: [this.solicitudState.especifico, Validators.required],
+    justificacion: [this.solicitudState.justificacion, Validators.required],
+    observaciones: [this.solicitudState.observaciones],
+    entidad: [this.solicitudState.entidad, Validators.required],
+    representacion: [this.solicitudState.representacion, Validators.required],
+    bloque: [this.solicitudState.bloque, Validators.required],
+    disponible: [this.solicitudState.disponible,],
+    seleccionado: [this.solicitudState.seleccionado, Validators.required],
+  });
+  
+  /* Se suscribe a los cambios del campo 'bloque' del formulario */
+  this.fraccionForm.get('bloque')?.valueChanges.subscribe(() => {
+    this.selectRangoDias =["ESTADOS UNIDOS DE AMERICA CANADA"];
+    this.tramite130106Store.updateSelectRangoDias(this.selectRangoDias)      
+  });
+  
+  /* Actualiza los campos del formulario con base en la lógica actual */
+  this.updateformfied();
+}
+
+/**
  * Actualiza los campos del formulario relacionados con fracciones.
  * 
  * Este método deshabilita los campos 'cantidadTotal' y 'valorTotal'
