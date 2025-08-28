@@ -249,6 +249,8 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
    */
   public seleccionadaguardarClicado: Mercancia[] = [];
 
+    public seletedccionadaguardarClicado: Mercancia = {} as Mercancia;
+
   /**
    * Formulario reactivo utilizado para la gestión de los datos del certificado.
    * @type {FormGroup}
@@ -759,8 +761,23 @@ ngOnChanges(changes: SimpleChanges):void {
    * 
    * @returns {void}
    */
-  abrirModal(tableData: Mercancia): void {
-    this.filaClics.emit(tableData);
+  abrirModal(): void {
+    if(this.seleccionadaguardarClicado.length > 0){
+  this.filaClics.emit(this.seletedccionadaguardarClicado);
+    }
+    else{
+       this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'No hay elementos seleccionados para eliminar.',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
   }
 
 
@@ -781,6 +798,7 @@ ngOnChanges(changes: SimpleChanges):void {
  * @param {Mercancia} evento - Objeto de tipo `Mercancia` que ha sido seleccionado.
  */
   obtenerSeleccionadoMercancia(evento: Mercancia): void {
+    this.seletedccionadaguardarClicado = evento
     this.seleccionadaguardarClicado = [evento];
     this.seleccionado.emit(evento);
   }
@@ -791,10 +809,33 @@ ngOnChanges(changes: SimpleChanges):void {
   * Este método verifica si hay elementos seleccionados antes de vaciar el arreglo `guardarClicado`.
   */
   eliminarSeleccionados(): void {
+
     if (this.seleccionadaguardarClicado.length > 0 && this.guardarClicado?.length > 0) {
-      const IDS_A_ELIMINAR = this.seleccionadaguardarClicado.map(m => m.id);
-      this.guardarClicado = this.guardarClicado.filter(m => !IDS_A_ELIMINAR.includes(m.id));
-        this.guardarClicadoChange.emit(this.guardarClicado);
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'info',
+        titulo: 'Confirmación requerida',
+        mensaje: '¿Desea eliminar este dato?',
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Sí',
+        txtBtnCancelar: 'No',
+        };
+     
+    }
+    else{
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'No hay elementos seleccionados para eliminar.',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
     }
   }
   /**
@@ -892,6 +933,14 @@ ngOnChanges(changes: SimpleChanges):void {
 
   return IS_REGISTRO_FORM_VALID;
 }
+eliminarErrorMessage(event:boolean): void {
 
+  if(event){
+ const IDS_A_ELIMINAR = this.seleccionadaguardarClicado.map(m => m.id);
+      this.guardarClicado = this.guardarClicado.filter(m => !IDS_A_ELIMINAR.includes(m.id));
+        this.guardarClicadoChange.emit(this.guardarClicado);
+  }
+  this.nuevaNotificacion = {} as Notificacion;
+}
 
 }

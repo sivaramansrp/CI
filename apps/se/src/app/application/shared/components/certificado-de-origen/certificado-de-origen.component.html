@@ -492,7 +492,7 @@
               <div class="row d-flex  mt-3 mb-4 justify-content-end">
                   <div class="col-12 container text-end mt-5">
                     <button class="btn btn-default me-2" (click)="eliminarSeleccionados()" [disabled]="esFormularioSoloLectura">Eliminar</button>
-                    <button class="btn btn-primary"  (click)="abrirModal(tableData[0])" [disabled]="esFormularioSoloLectura">Modificar</button>
+                    <button class="btn btn-primary"  (click)="abrirModal()" [disabled]="esFormularioSoloLectura">Modificar</button>
                   </div>
               </div>
 
@@ -534,7 +534,7 @@
   </div>
 </div>
 @if(nuevaNotificacion){
-  <lib-notificaciones [notificacionInput]="nuevaNotificacion" ></lib-notificaciones>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion"  (confirmacionModal)="eliminarErrorMessage($event)" ></lib-notificaciones>
   }  
   @if (nuevaNotificacionUno) {
     <section>

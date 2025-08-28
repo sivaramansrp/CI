@@ -287,7 +287,11 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
       }
     });
   
-this.datosSeleccionados = this.tramiteQuery.getValue().selectedMercancia as unknown as Mercancia;
+ this.tramiteQuery.select(state => state.selectedMercancia)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((selected) => {
+      this.datosSeleccionados = selected as Mercancia;
+      });
     /**
      * Suscripción al estado de la sección para obtener y actualizar el estado.
      */
@@ -428,8 +432,6 @@ this.datosSeleccionados = this.tramiteQuery.getValue().selectedMercancia as unkn
    * Método para abrir el modal de modificación.
    */
     abrirModificarModal(datos1: Mercancia): void {
-      this.store.updateMercancia({} as Mercancia);
-      this.datosSeleccionados = datos1 as unknown as Mercancia;
       this.store.setFormMercancia({ ...datos1 });    
       if (this.modalInstance) {
         this.modalInstance.show();

@@ -1,7 +1,6 @@
 {
   "datos": [
     {
-      "id": 1,
       "fraccionNaladi": "",
       "fraccionNaladiSa93": "04021000",
       "fraccionNaladiSa96": "",
@@ -10,7 +9,6 @@
       "nombreComercial": "xxx"
     },
     {
-      "id": 2,
       "fraccionNaladi": "",
       "fraccionNaladiSa93": "03026400",
       "fraccionNaladiSa96": "",
@@ -19,7 +17,6 @@
       "nombreComercial": "Patitos de hule"
     },
     {
-      "id": 3,
       "fraccionNaladi": "",
       "fraccionNaladiSa93": "03026400",
       "fraccionNaladiSa96": "",

@@ -60,6 +60,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    * @description Formulario reactivo que captura los datos de la mercancía en el modal.
    */
   mercanciaForm: FormGroup= this.fb.group({
+    id:[],
   fraccionArancelaria: [{ value: '', disabled: true }],  
   numeroDeRegistrodeProductos: [{ value: '', disabled: true }], 
   fechaExpedicion: [{ value: '', disabled: true }],     
@@ -341,6 +342,7 @@ this.mercanciaForm.markAllAsTouched();
     }
   }
   cerrarModal(): void {
+    this.store.clearSelectedMercancia();
     this.mercanciaForm.reset();
     this.cerrarClicado.emit();
       this.mostrarAlerta = false;
