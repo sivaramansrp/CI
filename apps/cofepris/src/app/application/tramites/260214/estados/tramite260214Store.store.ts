@@ -498,7 +498,8 @@ export class Tramite260214Store extends Store<Tramite260214State> {
   ): void {
     this.update((state) => ({
       ...state,
-      tablaMercanciasConfigDatos,
+      tablaMercanciasConfigDatos: tablaMercanciasConfigDatos,
+      seleccionadoTablaMercanciasDatos: [],
     }));
   }
 
