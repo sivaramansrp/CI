@@ -384,6 +384,8 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
     }
     this.destinatarioForm.reset();
     this.esFormularioVisible = false;
+        this.selectedRows.clear();
+
   } else {
     this.destinatarioForm.markAllAsTouched();
   }
