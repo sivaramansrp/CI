@@ -689,7 +689,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy,AfterView
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'info',
-        titulo: 'Error de fechas',
+        titulo: '',
         mensaje: 'Los datos marcados con asterisco son obligatorios. Favor de capturarlos.',
         cerrar: true,
         tiempoDeEspera: 2000,
