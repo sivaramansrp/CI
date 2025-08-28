@@ -33,7 +33,7 @@ export function createConsultaInitialState(): ConsultaioState {
     readonly: false,
     create: true,
     update: false,
-    consultaioSolicitante: null,
+    consultaioSolicitante: null
   };
 }
 

@@ -10,3 +10,11 @@ export interface PerfilUsuario {
     correoElectronico: string;
     tipoPersona: string
 }
+
+/**
+ * Detalles del resultado del intento de login.
+ */
+export interface LoginDetalle {
+    rfc: string;
+    tieneLogin: boolean;
+}

@@ -9,7 +9,6 @@ import { ConsultaioStore } from '../../../core/estados/consulta.store';
 import { FormasDinamicasComponent } from '../formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { TablaAcciones } from '../../../core/enums/tabla-seleccion.enum';
 import { TablaDinamicaComponent } from '../tabla-dinamica/tabla-dinamica.component';
-import { TablePaginationComponent } from '../table-pagination/table-pagination.component';
 import { TipoSolicitud } from '../../../core/enums/tipoSolicitud.enum';
 import { TramiteDetails } from '../../../core/models/tramiteDetails';
 import { map } from 'rxjs';
@@ -44,7 +43,6 @@ interface BandejaRegistroBase {
     FormasDinamicasComponent,
     RouterModule,
     TablaDinamicaComponent,
-    TablePaginationComponent,
   ],
   templateUrl: './lib-bandeja.component.html',
   styleUrl: './lib-bandeja.component.scss',
@@ -99,6 +97,11 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
     numeroDeProcedimiento: '',
     nombreDelDepartamento: '',
   };
+
+  /**
+   * Nombre del RFC asociado al trámite
+   */
+  @Input() public rfcNombre: string = '';
   
   /**
    * URL a la que se navega al seleccionar un trámite 
@@ -163,6 +166,7 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
    * Valida si la bandeja contiene formulario y aplica filtro a columnas
    */
   ngOnInit(): void {
+    this.mostrarColapsable(1);
     this.filterConfiguracionTabla();
   }
   /*
@@ -204,8 +208,6 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
    * Envía los datos del formulario. Marca el formulario como válido si no hay errores
    */
   public enviarDatos(): void {
-      
-
     const BANDEJA_SOLICITUDE_FORM_GROUP: FormGroup | null = this.dinamicasBandejaForma.get('bandejaSolicitudeFormGroup') as FormGroup | null;
     const SOLICITUD_ID_CONTROL = BANDEJA_SOLICITUDE_FORM_GROUP?.get('solicitudId');
     if (BANDEJA_SOLICITUDE_FORM_GROUP && SOLICITUD_ID_CONTROL && SOLICITUD_ID_CONTROL.valid) {
@@ -281,6 +283,14 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
     if (orden === 1) {
       this.paisDeOriginColapsable = !this.paisDeOriginColapsable;
     }
+    Promise.resolve().then(() => {
+      if (this.paisDeOriginColapsable) {
+        const FORMA_GROUP = this.dinamicasBandejaForma.get('bandejaSolicitudeFormGroup');
+        if (FORMA_GROUP) {
+          FORMA_GROUP.get('rfc')?.setValue(this.rfcNombre);
+        }
+      }
+    });
   }
   /*
    * Cambia la página actual en la tabla

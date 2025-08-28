@@ -1,13 +1,19 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { API_ENVIAR_FIRMA, API_GENERAR_CADENA_ORIGINAL } from '../../../constants/api-constants';
+import { FielPayload, FirmarRequest } from '../../../models/shared/firma-electronica/request/firmar-request.model';
+import { AUTH_ROUTE } from '../../../servers/common-server-route';
 import { BaseResponse } from '../../../models/shared/base-response.model';
 import { CadenaOriginalRequest } from '../../../models/shared/firma-electronica/request/cadena-original-request.model';
 import { ENVIRONMENT } from '../../../../enviroments/enviroment';
-import { FirmarRequest } from '../../../models/shared/firma-electronica/request/firmar-request.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { WindowKey } from '../../../models/shared/window-key';
+
+import { JSONResponse } from '@libs/shared/data-access-user/src';
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -114,5 +120,9 @@ export class FirmaElectronicaService {
     if (HOY < INICIO || HOY > FIN) {
       throw new Error('El certificado no está vigente. Verifica la vigencia del .cer');
     }
+  }
+
+  public loginFielAuthentication(payload: FielPayload): Observable<JSONResponse> {
+    return this.http.post<JSONResponse>(AUTH_ROUTE.LOGIN, payload);
   }
 }
