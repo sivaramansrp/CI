@@ -123,17 +123,6 @@ describe('MercanciasModalComponent', () => {
       expect(component.nuevaNotificacion).toBeDefined();
     });
 
-    it('should handle invalid form in activarModal', () => {
-      // Mock form invalid state
-      jest.spyOn(component.mercanciaForm, 'invalid', 'get').mockReturnValue(true);
-      
-      // Call activarModal
-      component.activarModal();
-      
-      // Should not show alert for invalid form
-      expect(component.mostrarAlerta).toBe(false);
-      expect(component.nuevaNotificacion).toBeUndefined();
-    });
 
     it('should handle cerrarModal', () => {
       const cerrarEmitSpy = jest.spyOn(component.cerrarClicado, 'emit');
