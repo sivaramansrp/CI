@@ -1,11 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoTresComponent } from './paso-tres.component';
 import { Router } from '@angular/router';
-import { TOAST_CONFIG, ToastrService } from 'ngx-toastr';
+import { provideToastr, ToastrService } from 'ngx-toastr';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-
-const toastrServiceMock = { success: jest.fn(), error: jest.fn(), info: jest.fn(), warning: jest.fn() };
+import { CommonModule } from '@angular/common';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
@@ -16,11 +15,14 @@ describe('PasoTresComponent', () => {
     routerMock = { navigate: jest.fn() };
     
     await TestBed.configureTestingModule({
-      imports: [PasoTresComponent, FirmaElectronicaComponent,HttpClientTestingModule],
+      imports: [PasoTresComponent, CommonModule, FirmaElectronicaComponent],
       providers: [
         { provide: Router, useValue: routerMock },
-        { provide: TOAST_CONFIG, useValue: {} }, 
-        { provide: ToastrService, useValue: toastrServiceMock } 
+        ToastrService,
+        provideHttpClient(),
+        provideToastr({
+          positionClass: 'toast-top-right',
+        }),
       ]
     }).compileComponents();
 

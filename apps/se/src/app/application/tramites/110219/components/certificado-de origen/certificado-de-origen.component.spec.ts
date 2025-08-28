@@ -134,14 +134,20 @@ describe('CertificadoDeOrigenComponent', () => {
     component.guardarDatosFormulario();
   });
 
-  it('should mark all as touched if cancelacionForm is invalid in validarDestinatarioFormulario', () => {
+  it('should mark all as touched if validacionForm is invalid in emitirEventoClick', () => {
     component.cancelacionForm = new FormBuilder().group({
-      motivoCancelacion: ['', Validators.required]
+      validacionForm: new FormBuilder().group({
+        motivoCancelacion: ['', Validators.required]
+      })
     });
-    jest.spyOn(component.cancelacionForm, 'markAllAsTouched');
-    component.cancelacionForm.setErrors({ invalid: true });
-    component.validarDestinatarioFormulario();
-    expect(component.cancelacionForm.markAllAsTouched).toHaveBeenCalled();
+    const validacionForm = component.cancelacionForm.get('validacionForm') as FormGroup;
+    jest.spyOn(validacionForm, 'markAllAsTouched');
+    jest.spyOn(component.dataEventContinuar, 'emit');
+    jest.spyOn(component.isDataEventContinuar, 'emit');
+    
+    component.emitirEventoClick();
+    expect(validacionForm.markAllAsTouched).toHaveBeenCalled();
+    expect(component.mostrarErroresValidacion).toBe(true);
   });
 
   it('should call certificadoService.getMercanciaCertificadoTabla and set mercanciaCertificadoTablaDatos in getMercanciaCertificadoTabla', () => {
@@ -215,18 +221,18 @@ describe('CertificadoDeOrigenComponent', () => {
   });
 
   it('should have correct table headers configuration', () => {
-    expect(component.encabezadosMercancias.length).toBe(11);
+    expect(component.encabezadosMercancias.length).toBe(17);
     expect(component.encabezadosMercancias[0].encabezado).toBe('Número de Orden');
     expect(component.encabezadosMercancias[1].encabezado).toBe('Fracción Arancelaria');
     expect(component.encabezadosMercancias[2].encabezado).toBe('Nombre Técnico');
     expect(component.encabezadosMercancias[3].encabezado).toBe('Nombre Comercial');
-    expect(component.encabezadosMercancias[4].encabezado).toBe('Nombre en Ingles');
-    expect(component.encabezadosMercancias[5].encabezado).toBe('Complemento descripción');
-    expect(component.encabezadosMercancias[6].encabezado).toBe('Número de certificado');
-    expect(component.encabezadosMercancias[7].encabezado).toBe('Pais/Bloque');
-    expect(component.encabezadosMercancias[8].encabezado).toBe('Tratado/Acuerdo');
-    expect(component.encabezadosMercancias[9].encabezado).toBe('Fecha expedición');
-    expect(component.encabezadosMercancias[10].encabezado).toBe('Fecha vencimíento');
+    expect(component.encabezadosMercancias[4].encabezado).toBe('Nombre en Inglés');
+    expect(component.encabezadosMercancias[5].encabezado).toBe('Complemento de la descripción');
+    expect(component.encabezadosMercancias[6].encabezado).toBe('Marca');
+    expect(component.encabezadosMercancias[7].encabezado).toBe('Criterio para conferir origen');
+    expect(component.encabezadosMercancias[8].encabezado).toBe('Norma');
+    expect(component.encabezadosMercancias[9].encabezado).toBe('Cantidad a Exportar');
+    expect(component.encabezadosMercancias[10].encabezado).toBe('Unidad de medida de comercialización (Cantidad a Exportar)');
 
     expect(component.encabezadosProductores.length).toBe(6);
     expect(component.encabezadosProductores[0].encabezado).toBe('Nombre del productor');
@@ -234,7 +240,7 @@ describe('CertificadoDeOrigenComponent', () => {
     expect(component.encabezadosProductores[2].encabezado).toBe('Dirección');
     expect(component.encabezadosProductores[3].encabezado).toBe('Correo Electrónico');
     expect(component.encabezadosProductores[4].encabezado).toBe('Teléfono');
-    expect(component.encabezadosProductores[5].encabezado).toBe('Razón Social');
+    expect(component.encabezadosProductores[5].encabezado).toBe('Fax');
   });
 
   it('should correctly extract values through clave functions', () => {
@@ -245,11 +251,11 @@ describe('CertificadoDeOrigenComponent', () => {
       nombreComercial: 'Test Comm',
       nombreIngles: 'Test Eng',
       complementoDescripcion: 'Test Desc',
-      numeroCertificado: 'CERT-123',
-      pais: 'MX',
-      tratado: 'T-MEC',
-      fechaExpedicion: '2023-01-01',
-      fechaVencimiento: '2024-01-01'
+      marca: 'MARCA-123',
+      criterio: 'A',
+      norma: 'NORMA-1',
+      cantidadExportar: '100',
+      unidad: 'KG'
     };
 
     const mockProductor: any = {
@@ -258,7 +264,7 @@ describe('CertificadoDeOrigenComponent', () => {
       direccion: '123 Main St',
       correoElectronico: 'john@example.com',
       telefono: '555-1234',
-      razonSocial: 'Test Corp'
+      fax: '555-4321'
     };
 
     expect(component.encabezadosMercancias[0].clave(mockMercancia)).toBe('1');
@@ -267,17 +273,17 @@ describe('CertificadoDeOrigenComponent', () => {
     expect(component.encabezadosMercancias[3].clave(mockMercancia)).toBe('Test Comm');
     expect(component.encabezadosMercancias[4].clave(mockMercancia)).toBe('Test Eng');
     expect(component.encabezadosMercancias[5].clave(mockMercancia)).toBe('Test Desc');
-    expect(component.encabezadosMercancias[6].clave(mockMercancia)).toBe('CERT-123');
-    expect(component.encabezadosMercancias[7].clave(mockMercancia)).toBe('MX');
-    expect(component.encabezadosMercancias[8].clave(mockMercancia)).toBe('T-MEC');
-    expect(component.encabezadosMercancias[9].clave(mockMercancia)).toBe('2023-01-01');
-    expect(component.encabezadosMercancias[10].clave(mockMercancia)).toBe('2024-01-01');
+    expect(component.encabezadosMercancias[6].clave(mockMercancia)).toBe('MARCA-123');
+    expect(component.encabezadosMercancias[7].clave(mockMercancia)).toBe('A');
+    expect(component.encabezadosMercancias[8].clave(mockMercancia)).toBe('NORMA-1');
+    expect(component.encabezadosMercancias[9].clave(mockMercancia)).toBe('100');
+    expect(component.encabezadosMercancias[10].clave(mockMercancia)).toBe('KG');
 
     expect(component.encabezadosProductores[0].clave(mockProductor)).toBe('John Doe');
     expect(component.encabezadosProductores[1].clave(mockProductor)).toBe('TAX123');
     expect(component.encabezadosProductores[2].clave(mockProductor)).toBe('123 Main St');
     expect(component.encabezadosProductores[3].clave(mockProductor)).toBe('john@example.com');
     expect(component.encabezadosProductores[4].clave(mockProductor)).toBe('555-1234');
-    expect(component.encabezadosProductores[5].clave(mockProductor)).toBe('Test Corp');
+    expect(component.encabezadosProductores[5].clave(mockProductor)).toBe('555-4321');
   });
 });

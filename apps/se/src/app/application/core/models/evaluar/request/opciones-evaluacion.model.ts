@@ -4,6 +4,10 @@
  */
 export interface OpcionesEvaluacionRequest {
     /**
+     * Estado evaluacion.
+     */
+    estado_evaluacion: string;
+    /**
      * Clave de la fracción arancelaria.
      */
     cve_rol_capturista: string;

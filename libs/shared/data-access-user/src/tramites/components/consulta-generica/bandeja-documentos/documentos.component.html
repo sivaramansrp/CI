@@ -14,10 +14,10 @@
         <tr class="table-row" >
           @for (item of encabezadoTablaDocumentos;  let i = $index; track $index) {                  
               <td *ngIf="item.key === 'estatus'">
-              <span *ngIf="row[item.key] === 'Autorizado'" class="text-success">
+              <span *ngIf="row[item.key] === 'Aprobado'" class="text-success">
                 <i class="bi bi-check-circle-fill"></i> {{ 'Correcto' }}
               </span>
-              <span *ngIf="row[item.key] !== 'Autorizado'" class="text-danger">
+              <span *ngIf="row[item.key] !== 'Aprobado'" class="text-danger">
                 <i class="bi bi-x-circle-fill"></i> {{ row[item.key] }}
               </span>
               </td>

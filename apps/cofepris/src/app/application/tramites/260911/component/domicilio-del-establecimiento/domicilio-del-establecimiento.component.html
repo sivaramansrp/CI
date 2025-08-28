@@ -38,7 +38,7 @@
               [label]="'Estado'"
               name="estado"
               [required]="true"
-              [isDisabled]="esFormularioSoloLectura" 
+              [isDisabled]="esFormularioSoloLectura || !!form.get('estado')?.disabled"
               formControlName="estado"
               (change)="setValorStore(form, 'estado')"
             >
@@ -95,8 +95,7 @@
               formControlName="localidad"
               appUppercase
               aria-labelledby="localidad"
-              maxlength="120"
-              pattern="^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]{1,30}$"
+              maxlength="121"
               (input)="onLocalidadInput($event)"
               (change)="setValorStore(form, 'localidad')"
             />
@@ -104,11 +103,8 @@
               <div *ngIf="form.get('localidad')?.hasError('required')">
                 Por favor, corrija el localidad.
               </div>
-              <div *ngIf="form.get('localidad')?.hasError('maxlength')">
+              <div *ngIf="form.get('localidad')?.errors?.['maxlength']">
                 La localidad no puede tener más de 120 caracteres
-              </div>
-               <div *ngIf="form.get('localidad')?.hasError('pattern')">
-                El valor capturado no es válido.
               </div>
             </div>
           </div>
@@ -144,6 +140,17 @@
         <div class="col-md-8">
           <div class="form-group">
             <label class="form-label" for="calle">Calle*:</label>
+             <input
+              class="form-control"
+              type="text"
+              id="lada"
+              formControlName="calle"
+              appUppercase
+              aria-labelledby="calle"
+              maxlength="100"
+              (input)="onCalleInput($event)"
+              (change)="setValorStore(form, 'calle')"
+            />
             <div *ngIf="form.get('calle')?.touched && form.get('calle')?.invalid" class="text-danger">
               <div *ngIf="form.get('calle')?.hasError('required')">
                 Este campo es obligatorio
@@ -224,7 +231,7 @@
   [tipoSeleccionTabla]="tablaSeleccionCheckbox" 
   [configuracionTabla]="nicoTabla"
   [datos]="nicoTablaDatos" 
-  [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+  [disableSeleccionTablaCheckBox]="esFormularioSoloLectura || isNicoTablaDisabled"
   (listaDeFilaSeleccionada)="onScianRowSelected($event)">
     </app-tabla-dinamica>
     <!-- Row selection UI below the table -->
@@ -290,7 +297,7 @@
                     [label]="'Clave S.C.I.A.N.'"
                     [required]="true"
                     name="entidad"
-                    [isDisabled]="esFormularioSoloLectura" 
+                    [isDisabled]="esFormularioSoloLectura"
                     [required]="true"
                     formControlName="entidad"
                     (selectionChange)="setValorStore(nicoTablaForm, 'entidad')"
@@ -312,7 +319,7 @@
                   [label]="'Descripción del S.C.I.A.N.'"
                   [required]="true"
                   name="representacion"
-                  [isDisabled]="esFormularioSoloLectura" 
+                  [isDisabled]="esFormularioSoloLectura "
                   formControlName="representacion"
                   (selectionChange)="setValorStore(nicoTablaForm, 'representacion')"
                   >
@@ -348,17 +355,17 @@
   </div>
     </div>
   </div>
-  <form [formGroup]="domicilio">]
+  <form [formGroup]="domicilio">
     <div class="row align-item-center">
       <div class="col-md-4 mt-5">
         <lib-input-check 
           [id]="'avisoCheckbox'" 
           [label]="'Aviso de funcionamiento:'" 
           [required]="true"
-          formControlName="avisoCheckbox" 
-          [isDisabled]="esFormularioSoloLectura"
-          (change)="setValorStore(domicilio, 'avisoCheckbox')"
-      ></lib-input-check>
+      formControlName="avisoCheckbox" 
+      [isDisabled]="esFormularioSoloLectura"
+      (change)="setValorStore(domicilio, 'avisoCheckbox')"
+    ></lib-input-check>
 
       </div>
       <div class="col-md-4">
@@ -379,8 +386,9 @@
               id="licenciaSanitaria" 
               placeholder="" 
               type="text"
-              formControlName="licenciaSanitaria"
-            />
+                formControlName="licenciaSanitaria"
+                [disabled]="domicilio.get('avisoCheckbox')?.value"
+              />
         </div>
       </div>
     </div>
@@ -392,7 +400,7 @@
           formControlName="regimen" 
           [label]="'Régimen'" 
           [required]="true"
-          [isDisabled]="esFormularioSoloLectura" 
+          [isDisabled]="esFormularioSoloLectura || !!domicilio.get('regimen')?.disabled"
           name="regimen" 
           [tooltipQuestionCircle]="true"
           [tooltipQuestionCircleText]="'Régimen al que se destinará la mercancía'"
@@ -408,7 +416,7 @@
           formControlName="aduanasEntradas" 
           [label]="'Aduanas de entradas'"
           [required]="true" 
-          [isDisabled]="esFormularioSoloLectura" 
+          [isDisabled]="esFormularioSoloLectura || !!domicilio.get('aduanasEntradas')?.disabled"
           name="aduanasEntradas"
           (change)="setValorStore(domicilio, 'aduanasEntradas')"
         ></app-catalogo-select>
@@ -422,7 +430,7 @@
           <label class="form-label" for="importPermitNumberCNSNS"
           >Número de Permiso de Importación expedido por la CNSNS:
             <span 
-              class="bi bi-question-circle-fill" 
+              class="bi bi-question-circle-fill"
               title="No. de licencia sanitaria"
               data-bs-toggle="tooltip"
               ></span
@@ -445,7 +453,7 @@
           [label]="'Aeropuerto Internacional Felipe Ángeles (AIFA).'"
           [required]="true" 
           formControlName="aifaCheckbox" 
-          [isDisabled]="esFormularioSoloLectura"
+                    [isDisabled]="esFormularioSoloLectura || !!nicoTablaForm.get('entidad')?.disabled"
           (change)="setValorStore(domicilio, 'aifaCheckbox')"
         ></lib-input-check>
       </div>
@@ -462,11 +470,11 @@
           [tipoSeleccionTabla]="tablaSeleccionCheckbox" 
           [configuracionTabla]="mercanciasTabla"
           [datos]="mercanciasTablaDatos" 
-          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura || isMercanciasTableDisabled"
           (listaDeFilaSeleccionada)="onMercanciaRowSelected($event)">
         </app-tabla-dinamica>
         <div class="container text-end mt-5">
-          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" (click)="selectedMercanciaIndex !== null ? onModificarMercancia(selectedMercanciaIndex) : mostrarSeleccionaRegistroMercancia()">Modificar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" (click)="selectedMercanciaIndex !== null && selectedMercanciaCount === 1 ? onModificarMercancia(selectedMercanciaIndex) : mostrarSeleccionaRegistroMercancia()">Modificar</button>
           <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" (click)="selectedMercanciaIndex !== null ? onEliminarMercancia(selectedMercanciaIndex) : mostrarSeleccionaRegistroMercancia()">Eliminar</button>
           <button 
             class="btn btn-primary me-2" 
@@ -517,7 +525,7 @@
             <div class="modal-content">
               <div class="modal-header"></div>
               <div class="modal-body text-start">
-                Selecciona un registro de mercancía
+                Selecciona sólo un registro para modificar.
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-primary" (click)="cerrarSeleccionaRegistroMercanciaModal()">Aceptar</button>
@@ -525,7 +533,6 @@
             </div>
           </div>
         </div>
-      </div>
     </div>
 
     <div class="row mt-2">
@@ -538,7 +545,7 @@
               [label]="''" 
               [required]="true"
               formControlName="manifests"
-              [isDisabled]="esFormularioSoloLectura"
+                  [isDisabled]="esFormularioSoloLectura || !!nicoTablaForm.get('representacion')?.disabled"
               (change)="onManifestsChange()"
             ></lib-input-check>
             <span class="fw-bold align-middle"> *</span>
