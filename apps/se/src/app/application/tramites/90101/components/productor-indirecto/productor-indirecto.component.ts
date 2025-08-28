@@ -184,7 +184,7 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
         tap((_value) => {
           if (this.productorIndirecto.valid) {
             this.AutorizacionProsecStore.setProductorFromValida(true);
-            this.ProsecService.formValida()
+            
           }
         })
       )
@@ -212,7 +212,7 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.productorIndirecto.disable();
-      this.seccionStore.establecerFormaValida([true]);
+      
     }
     else {
       this.productorIndirecto.enable();

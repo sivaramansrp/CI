@@ -1,6 +1,6 @@
 {
   "name": "@ng-mf/source",
-  "version": "1.1.80",
+  "version": "1.1.82",
   "license": "MIT",
   "scripts": {
     "setup:local": "npm ci -f --legacy-peer-deps --prefer-offline --no-package-lock --no-audit --no-fund --progress=false",
@@ -93,7 +93,7 @@
     "webpack-dev-server": "^4.0.0"
   },
   "overrides": {
-    "@nx/webpack": {
+    "@nx/webpack":  {
       "webpack": "5.91.0"
     }
   }

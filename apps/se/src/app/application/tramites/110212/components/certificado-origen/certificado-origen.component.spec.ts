@@ -109,6 +109,9 @@ describe('CertificadoOrigenComponent', () => {
   });
 
   it('should call cargarMercanciasDisponibles and set mercanciaDisponsiblesTablaDatos', () => {
+    // Mock the validation method to return true
+    jest.spyOn(component, 'validarCamposRequeridos' as any).mockReturnValue(true);
+    
     component.cargarMercanciasDisponibles();
     expect(validacionPosterioriService.obtenerMercanciasDisponibles).toHaveBeenCalled();
     expect(component.mercanciaDisponsiblesTablaDatos).toEqual([{ id: 1, nombre: 'Mercancía Disponible' }]);
@@ -174,9 +177,25 @@ describe('CertificadoOrigenComponent', () => {
     const modalElement = fixture.debugElement.nativeElement.querySelector('#modalBuscar');
     component.modalBuscar = { nativeElement: modalElement };
     component.soloLectura = false;
-    const clickSpy = jest.spyOn(Modal.prototype, 'show');
-    component.disponiblesSeleccionDeFilas(disponiblesTabla);
-    expect(clickSpy).toHaveBeenCalled();
+    
+    // Mock the Modal show method
+    const mockModalShow = jest.fn();
+    component.modalInstances = { show: mockModalShow } as any;
+    
+    // Set up data with the required id property
+    const testData = { ...disponiblesTabla, id: 1 };
+    
+    // First click - set up the timing variables
+    component.disponiblesSeleccionDeFilas(testData);
+    
+    // Mock the timing variables to simulate a valid double click
+    component.ultimaFilaSeleccionadaId = 1;
+    component.ultimoClickTimestamp = Date.now() - 100; // 100ms ago, within double-click window
+    
+    // Second click should trigger modal
+    component.disponiblesSeleccionDeFilas(testData);
+    
+    expect(mockModalShow).toHaveBeenCalled();
   });
 
   it('should handle cargaArchivo and show modalArchivo', () => {
