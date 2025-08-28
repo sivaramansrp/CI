@@ -41,7 +41,7 @@
                     <label class="form-label" for="factura"> Valor factura USD*:</label>
                     <input class="form-control" id="factura" formControlName="factura" 
                            (change)="setValoresStore(fraccionForm,'factura', 'setFactura')" 
-                           maxlength="18"
+                           maxlength="20"
                            type="text"
                            pattern="[0-9]*\.?[0-9]{0,3}">
                       @if(fraccionForm.controls['factura'].invalid && fraccionForm.controls['factura'].touched) {
@@ -53,10 +53,10 @@
                         <span class="mensaje-error">Por favor, escribe un número entero válido</span>
                       }
                       @if(fraccionForm.controls['factura'].errors?.['maxLength']) {
-                        <span class="mensaje-error">El número no puede tener más de 18 dígitos</span>
+                        <span class="mensaje-error">El número no puede tener más de 20 dígitos</span>
                       }
                       @if(fraccionForm.controls['factura'].errors?.['tooManyDecimals']) {
-                        <span class="mensaje-error">El número debe tener máximo 3 dígitos decimales</span>
+                        <span class="mensaje-error">El número debe tener 3 dígitos decimales</span>
                       }
                     </div>
                     }

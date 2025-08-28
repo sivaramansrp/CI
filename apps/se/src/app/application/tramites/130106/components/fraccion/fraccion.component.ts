@@ -13,7 +13,7 @@ import fraccions from '@libs/shared/theme/assets/json/130106/fraccion.json';
 
 /**
  * Valida que el valor sea un número válido:
- * - Máximo 18 dígitos totales (enteros + decimales)
+ * - Máximo 20 dígitos totales (enteros + decimales)
  * - Máximo 3 dígitos decimales
  * - Solo valores numéricos
  */
@@ -35,8 +35,8 @@ export function formFieldValidator(control: AbstractControl): ValidationErrors |
   const INTEGER_PART = parts[0];
   const DECIMAL_PART = parts[1];
   
-  // Verificar que no exceda 18 dígitos totales
-  if (STRING_VALUE.replace(/[.-]/g, '').length > 18) {
+  // Verificar que no exceda 20 dígitos totales
+  if (STRING_VALUE.replace(/[.-]/g, '').length > 20) {
     return { maxLength: true };
   }
   
