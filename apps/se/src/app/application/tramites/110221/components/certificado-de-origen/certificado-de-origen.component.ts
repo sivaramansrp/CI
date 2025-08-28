@@ -926,11 +926,41 @@ cerrarEdicionMercancia():void{
    * Maneja la selección de archivos.
    * @param event Evento de selección de archivo
    */
-  alSeleccionarArchivo(event: Event): void {
-    const INPUT = event.target as HTMLInputElement;
-    const FILE = INPUT.files?.[0];
-    this.nombreArchivo = FILE ? FILE.name : 'No se eligió ningún archivo';
+/**
+ * Maneja la selección de archivos.
+ * @param event Evento de selección de archivo
+ */
+alSeleccionarArchivo(event: Event): void {
+  const INPUT = event.target as HTMLInputElement;
+  const FILE = INPUT.files?.[0];
+
+  if (FILE) {
+    const EXTENSION = FILE.name.split('.').pop()?.toLowerCase();
+    if (EXTENSION !== 'csv') {
+      this.mostrarMensajeError=true;
+        this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'info',
+        titulo: '',
+        mensaje: 'Debes seleccionar un archivo (txt o CSV)',
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      // Reset input and form control
+      INPUT.value = '';
+    this.registroForm.get('validacionForm.archivo')
+      return;
+    }
+
+    this.nombreArchivo = FILE.name;
+  } else {
+    this.nombreArchivo = 'No se eligió ningún archivo';
   }
+}
+
 
   /**
    * Maneja el envío del formulario.
