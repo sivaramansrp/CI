@@ -84,7 +84,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /** Conjunto de filas seleccionadas en la tabla */
-  selectedRows: Set<number> = new Set();
+  filasSeleccionadas: Set<number> = new Set();
 
   /** Fila seleccionada actualmente */
   selectedRow: Destinatario | null = null;
@@ -319,7 +319,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
-    } else if (this.selectedRows && this.selectedRows.size > 0) {
+    } else if (this.filasSeleccionadas && this.filasSeleccionadas.size > 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
@@ -384,7 +384,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
     }
     this.destinatarioForm.reset();
     this.esFormularioVisible = false;
-        this.selectedRows.clear();
+        this.filasSeleccionadas.clear();
 
   } else {
     this.destinatarioForm.markAllAsTouched();
@@ -405,10 +405,10 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
 
   /**
    * Maneja el cambio de filas seleccionadas en la tabla.
-   * @param selectedRows Filas seleccionadas.
+   * @param filasSeleccionadas Filas seleccionadas.
    */
-  onSelectedRowsChange(selectedRows: Destinatario[]): void {
-    this.selectedRows = new Set(selectedRows.map((row) => row.id));
+  onfilasSeleccionadasChange(filasSeleccionadas: Destinatario[]): void {
+    this.filasSeleccionadas = new Set(filasSeleccionadas.map((row) => row.id));
     this.esFormularioVisible = false;
   }
 
@@ -416,10 +416,10 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
  * Elimina la mercancía seleccionada de la tabla.
  */
 eliminarMercancias(): void {
-  if (this.selectedRows.size === 1) {
-    const SELECTED_ID = Array.from(this.selectedRows)[0];
+  if (this.filasSeleccionadas.size === 1) {
+    const SELECTED_ID = Array.from(this.filasSeleccionadas)[0];
     this.tableData2 = this.tableData2.filter((row) => row.id !== SELECTED_ID);
-    this.selectedRows.clear();
+    this.filasSeleccionadas.clear();
   } else {
     console.warn('Debe seleccionar exactamente una fila para eliminar.');
   }
@@ -429,8 +429,8 @@ editingRowId: number | null = null;
    * Abre el formulario para modificar las mercancías seleccionadas.
    */
   openModificarMercancias(): void {
-    if (this.selectedRows.size === 1) {
-      const SELECTED_ID = Array.from(this.selectedRows)[0];
+    if (this.filasSeleccionadas.size === 1) {
+      const SELECTED_ID = Array.from(this.filasSeleccionadas)[0];
       const SELECTED_ROW_DATA = this.tableData2.find(
         (row) => row.id === SELECTED_ID
       );
@@ -507,7 +507,7 @@ editingRowId: number | null = null;
    * Si hay filas seleccionadas, abre un modal para confirmar la eliminación.
    */
   onDeleted(): void {
-    if (this.selectedRows.size > 0) {
+    if (this.filasSeleccionadas.size > 0) {
       this.abrirModal();
     }
   }

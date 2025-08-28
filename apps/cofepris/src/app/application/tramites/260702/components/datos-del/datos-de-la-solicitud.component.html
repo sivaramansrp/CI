@@ -126,13 +126,6 @@
             type="submit" (click)="onAgregar()" [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
     </div>
-    <!-- @if (nuevaNotificacion) {
-      <section>
-      <lib-notificaciones 
-      [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
-      </lib-notificaciones>
-      </section>
-      } -->
     <div *ngIf="showClavaScianForm">
       <ng-titulo titulo="Clave S.C.I.A.N" />
   <form [formGroup]="clavaScianForm" (ngSubmit)="onSubmit()">
@@ -146,8 +139,7 @@
                       [catalogo]="claveScianData.catalogos"
                       [label]="'Clave S.C.I.A.N'"
                       [required]="true"
-                      [isDisabled]="esFormularioSoloLectura"
-                      
+                      [isDisabled]="esFormularioSoloLectura"                     
                     ></app-catalogo-select>
                   </div>
                </div>
@@ -416,14 +408,7 @@
                   <button class="btn btn-default ms-3" type="button"  (click)="onEliminar()"> Eliminar </button>
                   <button type="button" class="btn btn-primary ms-3"  (click)="onAgregarListaClave()"> Agregar </button>
                 </div>
-              </div>
-              <!-- @if (nuevaNotificacion) {
-                <section>
-                <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="confirmarEliminar()">
-                </lib-notificaciones>
-                </section>
-                } -->
-          
+              </div>       
               <!-- udospecifico crosslist -->
               <div class="col-md-12 mt-4">
                 <div class="panel-group ficha-collapse" id="accordion">
