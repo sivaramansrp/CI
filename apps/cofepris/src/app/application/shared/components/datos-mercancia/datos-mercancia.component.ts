@@ -248,8 +248,8 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
   };
 
   /**
-   * Botones de acción para gestionar listas de países en la tercera sección.
-   */
+    * Botones de acción para gestionar listas de países en la tercera sección.
+    */
   paisDeProcedenciaBotonsUno = [
     {
       btnNombre: 'Agregar todos',
@@ -779,6 +779,34 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    * @returns void
    */
   crearMercanciaForm(): void {
+    const PAIS_DE_ORIGEN = this.obtenerValor('paisDeOriginDatos') || [];
+    const USO_ESPECIFICOS = this.obtenerValor('usoEspecifico') || [];
+    const PAIS_DE_PROCEDENCIA = this.obtenerValor('paisDeProcedenciaDatos') || [];
+
+    this.seleccionadasPaisDeOriginDatos = Array.isArray(PAIS_DE_ORIGEN)
+      ? PAIS_DE_ORIGEN
+      : typeof PAIS_DE_ORIGEN === 'string'
+        ? [PAIS_DE_ORIGEN]
+        : typeof PAIS_DE_ORIGEN === 'number'
+          ? [PAIS_DE_ORIGEN.toString()]
+          : [];
+    this.paisDeOriginColapsable = this.seleccionadasPaisDeOriginDatos.length > 0;
+
+    this.seleccionadasUsoEspesificoDatos = Array.isArray(USO_ESPECIFICOS)
+      ? USO_ESPECIFICOS
+      : typeof USO_ESPECIFICOS === 'string'
+        ? [USO_ESPECIFICOS]
+        : [];
+    this.usoEspesificoColapsable = this.seleccionadasUsoEspesificoDatos.length > 0;
+
+    this.seleccionadasPaisDeProcedenciaDatos = Array.isArray(PAIS_DE_PROCEDENCIA)
+      ? PAIS_DE_PROCEDENCIA
+      : typeof PAIS_DE_PROCEDENCIA === 'string'
+        ? [PAIS_DE_PROCEDENCIA]
+        : [];
+    this.paisDeProcedenciaColapsable = this.seleccionadasPaisDeProcedenciaDatos.length > 0;
+
+
     this.mercanciaForm = this.fb.group({
       clasificacionProducto: [
         this.obtenerValor('clasificacionProducto'),
@@ -852,16 +880,19 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
       ],
       fechaCaducidad: [this.obtenerValor('fechaCaducidad')],
       paisDeOriginDatos: [
-        this.obtenerValor('paisDeOriginDatos') || [],
-        matrizRequerida,
+        PAIS_DE_ORIGEN,
+        Validators.required,
+        matrizRequerida
       ],
       paisDeProcedenciaDatos: [
-        this.obtenerValor('paisDeProcedenciaDatos') || [],
-        matrizRequerida,
+        PAIS_DE_PROCEDENCIA,
+        Validators.required,
+        matrizRequerida
       ],
       usoEspecifico: [
-        this.obtenerValor('usoEspecifico') || [],
-        matrizRequerida,
+        USO_ESPECIFICOS,
+        Validators.required,
+        matrizRequerida
       ],
     });
 
@@ -996,12 +1027,12 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
     const VALORTABLAMERCANCIA: TablaMercanciasDatos =
       this.mercanciaForm.getRawValue();
     VALORTABLAMERCANCIA.paisOrigen =
-      this.mercanciaForm.get('paisDeOriginDatos')?.value[0];
+      this.mercanciaForm.get('paisDeOriginDatos')?.value;
     VALORTABLAMERCANCIA.paisProcedencia = this.mercanciaForm.get(
       'paisDeProcedenciaDatos'
-    )?.value[0];
+    )?.value;
     VALORTABLAMERCANCIA.usoEspecifico =
-      this.mercanciaForm.get('usoEspecifico')?.value[0];
+      this.mercanciaForm.get('usoEspecifico')?.value;
     VALORTABLAMERCANCIA.unidadMedidaComercializacion =
       this.mercanciaForm.get('cantidadUmcValor')?.value;
     VALORTABLAMERCANCIA.cantidadUMC =
@@ -1010,6 +1041,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
       this.mercanciaForm.get('cantidadUmtValor')?.value;
     VALORTABLAMERCANCIA.cantidadUMT =
       this.mercanciaForm.get('cantidadUmt')?.value;
+    this.mercanciaForm.reset();
     this.mercanciaSeleccionado.emit(VALORTABLAMERCANCIA);
     this.ubicaccion.back();
   }

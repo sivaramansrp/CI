@@ -1,39 +1,24 @@
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import {
   Catalogo,
   CatalogoSelectComponent,
   REGEX_CORREO_ELECTRONICO,
   REGEX_NOMBRE,
+  REGEX_RFC_FISICA,
+  REGEX_RFC_MORAL,
   REGEX_TELEFONO,
   TipoPersona,
   TituloComponent,
 } from '@ng-mf/data-access-user';
 import { CommonModule, Location } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import {
-  PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE,
-  STR_NACIONAL,
-} from '../../constantes/datos-solicitud.enum';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE, STR_NACIONAL } from '../../constantes/datos-solicitud.enum';
+import { Subject, takeUntil } from 'rxjs';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Fabricante } from '../../models/terceros-relacionados.model';
-import { Subject } from 'rxjs';
 import { TERCEROS_RELACIONADOS_DATOS_INICIALES } from '../../constantes/terceros-fabricante.enum';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { takeUntil } from 'rxjs/operators';
+
 
 /**
  * Componente para agregar datos de un fabricante.
@@ -195,6 +180,21 @@ export class AgregarFabricanteComponent
    * Se activa dependiendo del procedimiento seleccionado.
    */
   public habilitarContribuyente: boolean = false;
+  /**
+   * Datos de catálogo de municipios.
+   * @property {Catalogo[]} municipiosTempDatos
+   */
+  public municipiosTempDatos: Catalogo[] = [];
+  /**
+ * Datos de catálogo de colonias.
+ * @property {Catalogo[]} coloniasTempDatos
+ */
+  public coloniasTempDatos: Catalogo[] = [];
+  /**
+ * Datos de catálogo de localidades.
+ * @property {Catalogo[]} localidadesTempDatos
+ */
+  public localidadesTempDatos: Catalogo[] = [];
 
   /**
    * Objeto de tipo `Fabricante` asociado al componente.
@@ -294,13 +294,13 @@ export class AgregarFabricanteComponent
   }
 
   /**
-   * @method cambiarHabilitacionContribuyente
-   * @description
-   * Habilita el campo de contribuyente en el formulario si el procedimiento actual está incluido en la lista `TERCEROS_RELACIONADOS_DATOS_INICIALES`.
-   * Cambia el valor de la propiedad `habilitarContribuyente` a `true` si la condición se cumple.
-   *
-   * @returns {void}
-   */
+ * @method cambiarHabilitacionContribuyente
+ * @description
+ * Habilita el campo de contribuyente en el formulario si el procedimiento actual está incluido en la lista `TERCEROS_RELACIONADOS_DATOS_INICIALES`.
+ * Cambia el valor de la propiedad `habilitarContribuyente` a `true` si la condición se cumple.
+ * 
+ * @returns {void}
+ */
   public cambiarHabilitacionContribuyente(): void {
     if (TERCEROS_RELACIONADOS_DATOS_INICIALES.includes(this.idProcedimiento)) {
       this.habilitarContribuyente = true;
@@ -321,7 +321,6 @@ export class AgregarFabricanteComponent
         this.obtenerValor('rfc'),
         [
           Validators.required,
-          Validators.pattern(REGEX_NOMBRE),
           Validators.maxLength(13),
         ],
       ],
@@ -348,7 +347,7 @@ export class AgregarFabricanteComponent
       pais: [
         {
           value: this.elementosDeshabilitados.includes('pais')
-            ? '1'
+            ? '2'
             : this.obtenerValor('pais'),
           disabled: this.elementosDeshabilitados.includes('pais'),
         },
@@ -457,9 +456,8 @@ export class AgregarFabricanteComponent
     if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.MORAL) {
       nombreRazonSocial = VALOR_FORMULARIO.razonSocial;
     } else if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA) {
-      nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${
-        VALOR_FORMULARIO.primerApellido
-      } ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
+      nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${VALOR_FORMULARIO.primerApellido
+        } ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
     } else {
       nombreRazonSocial = '';
     }
@@ -492,7 +490,7 @@ export class AgregarFabricanteComponent
       NUEVO_FABRICANTE.id = this.datoSeleccionado[0].id;
     }
 
-    this.fabricantes.push(NUEVO_FABRICANTE);
+    this.fabricantes = [...this.fabricantes, NUEVO_FABRICANTE];
     this.updateFabricanteTablaDatos.emit(this.fabricantes);
     this.ubicaccion.back();
   }
@@ -528,21 +526,21 @@ export class AgregarFabricanteComponent
       .obtenerListaMunicipios()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
-        this.municipiosDatos = data;
+        this.municipiosTempDatos = data;
       });
 
     this.datosSolicitudService
       .obtenerListaLocalidades()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
-        this.localidadesDatos = data;
+        this.localidadesTempDatos = data;
       });
 
     this.datosSolicitudService
       .obtenerListaColonias()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
-        this.coloniasDatos = data;
+        this.coloniasTempDatos = data;
       });
   }
 
@@ -566,6 +564,38 @@ export class AgregarFabricanteComponent
   }
 
   /**
+ * Carga la lista de estados cuando se selecciona un catálogo válido.
+ *
+ * @param evento Objeto de tipo `Catalogo` que contiene la información seleccionada.
+ *
+ * ### Descripción:
+ * - Si el `id` del evento es mayor que 0, asigna la lista temporal de municipios (`municipiosTempDatos`)
+ *   a la lista principal (`municipiosDatos`).
+ */
+  cargarEstados(evento: Catalogo): void {
+    if (evento.id > 0) {
+      this.municipiosDatos = this.municipiosTempDatos;
+    }
+  }
+  /**
+ * Carga la lista de municipios, localidades y colonias cuando se selecciona un catálogo válido.
+ *
+ * @param evento Objeto de tipo `Catalogo` que contiene la información seleccionada.
+ *
+ * ### Descripción:
+ * - Si el `id` del evento es mayor que 0:
+ *   - Asigna la lista temporal de localidades (`localidadesTempDatos`) a la lista principal (`localidadesDatos`).
+ *   - Asigna la lista temporal de colonias (`coloniasTempDatos`) a la lista principal (`coloniasDatos`).
+ */
+  cargarMunicipios(evento: Catalogo): void {
+    if (evento.id > 0) {
+      this.localidadesDatos = this.localidadesTempDatos;
+      this.coloniasDatos = this.coloniasTempDatos;
+    }
+  }
+
+
+  /**
    * Verifica si un control del formulario es inválido, tocado o modificado.
    * @param {string} nombreControl - Nombre del control a verificar.
    * @returns {boolean} - True si el control es inválido, de lo contrario false.
@@ -585,6 +615,40 @@ export class AgregarFabricanteComponent
   public obtenerValor(field: keyof Fabricante): string | number | undefined {
     return this.datoSeleccionado?.[0]?.[field as keyof Fabricante] ?? '';
   }
+  /**
+   * Validador personalizado para RFC según el tipo de persona (Física o Moral).
+   *
+   * @param TIPO_PERSONA El tipo de persona para el cual se debe validar el RFC.
+   * @returns Una función validadora que verifica si el valor cumple con el formato RFC correspondiente.
+   *          Si el valor es inválido, retorna un objeto con la clave de error específica.
+   *          Si el tipo de persona es desconocido o el valor está vacío, retorna null.
+   */
+  static rfcFisicaValidator(TIPO_PERSONA: TipoPersona): (CONTROL: AbstractControl) => ValidationErrors | null {
+    return (CONTROL: AbstractControl): ValidationErrors | null => {
+      const VALUE = CONTROL?.value;
+
+      if (!VALUE) {
+        return null;
+      }
+
+      let REGEX;
+      let ERROR_KEY;
+
+      if (TIPO_PERSONA === TipoPersona.FISICA) {
+        REGEX = REGEX_RFC_FISICA;
+        ERROR_KEY = { INVALID_RFC_FISICA: true };
+      } else if (TIPO_PERSONA === TipoPersona.MORAL) {
+        REGEX = REGEX_RFC_MORAL;
+        ERROR_KEY = { INVALID_RFC_MORAL: true };
+      } else {
+        return null;
+      }
+
+      return REGEX.test(VALUE) ? null : ERROR_KEY;
+    };
+
+  }
+
 
   /**
    * Habilita o deshabilita los controles del formulario según el estado de los campos
@@ -594,6 +658,16 @@ export class AgregarFabricanteComponent
    * @returns {void} Este método no retorna ningún valor.
    */
   changeNacionalidad(): void {
+    const VALOR_FORMULARIO = this.agregarFabricanteForm.getRawValue();
+    const RFC_CONTROL = this.agregarFabricanteForm.get('rfc');
+    if (RFC_CONTROL) {
+      RFC_CONTROL.setValidators([
+        Validators.required,
+        AgregarFabricanteComponent.rfcFisicaValidator(VALOR_FORMULARIO.tipoPersona)
+      ]);
+      RFC_CONTROL.markAsTouched();
+      RFC_CONTROL.updateValueAndValidity();
+    }
     if (
       this.agregarFabricanteForm?.get('nacionalidad')?.value === '' ||
       this.agregarFabricanteForm?.get('nacionalidad')?.value === undefined
@@ -706,7 +780,7 @@ export class AgregarFabricanteComponent
 
       if (
         (this.agregarFabricanteForm?.get('nacionalidad')?.value ===
-          'nacionalStr' &&
+          this.nacionalStr &&
           this.agregarFabricanteForm?.get('tipoPersona')?.value ===
             this.tipoPersona.FISICA) ||
         this.agregarFabricanteForm?.get('tipoPersona')?.value ===

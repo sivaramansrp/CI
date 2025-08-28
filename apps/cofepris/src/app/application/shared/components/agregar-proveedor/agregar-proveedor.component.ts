@@ -1,10 +1,10 @@
 import {
+  CODIGO_POSTAL,
   Catalogo,
   CatalogoSelectComponent,
   REGEX_CORREO_ELECTRONICO,
   REGEX_IMPORTE_PAGO,
   REGEX_NOMBRE,
-  REGEX_NUMEROS,
   REGEX_TELEFONO,
   TipoPersona,
   TituloComponent,
@@ -244,10 +244,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
           ? [Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)]
           : [],
       ],
-      codigoPostal: [
-        this.obtenerValor('codigoPostal'),
-        [Validators.pattern(REGEX_NUMEROS)],
-      ],
+      codigoPostal: [this.obtenerValor('codigoPostal'),[Validators.pattern(CODIGO_POSTAL)]],
       colonia: [this.obtenerValor('colonia')],
       calle: [this.obtenerValor('calle'), Validators.required],
       numeroExterior: [

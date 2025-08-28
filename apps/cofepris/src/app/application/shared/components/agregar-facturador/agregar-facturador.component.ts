@@ -1,10 +1,11 @@
 import {
+  CODIGO_POSTAL,
   Catalogo,
   CatalogoSelectComponent,
+  REGEX_CODIGO_POSTAL,
   REGEX_CORREO_ELECTRONICO,
   REGEX_IMPORTE_PAGO,
   REGEX_NOMBRE,
-  REGEX_NUMEROS,
   REGEX_TELEFONO,
   TipoPersona,
   TituloComponent,
@@ -161,14 +162,8 @@ export class AgregarFacturadorComponent
         [Validators.pattern(REGEX_NOMBRE)],
       ],
       pais: [this.obtenerValor('pais'), Validators.required],
-      estado: [
-        this.obtenerValor('estadoLocalidad'),
-        [Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)],
-      ],
-      codigoPostal: [
-        this.obtenerValor('codigoPostal'),
-        [Validators.pattern(REGEX_NUMEROS)],
-      ],
+      estado: [this.obtenerValor('estadoLocalidad'), Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)],
+      codigoPostal: [this.obtenerValor('codigoPostal'),[Validators.pattern(CODIGO_POSTAL)]],
       colonia: [this.obtenerValor('colonia')],
       calle: [this.obtenerValor('calle'), [Validators.required]],
       numeroExterior: [
