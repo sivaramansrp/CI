@@ -4,6 +4,7 @@ import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { InputFecha } from '@ng-mf/data-access-user';
+import { Notificacion } from '@ng-mf/data-access-user';
 import { ProgramasReporte } from '../../models/programas-reporte.model';
 import { ReporteFechas } from '../../models/programas-reporte.model';
 import { Solicitud150101Query } from '../../estados/solicitud150101.query';
@@ -69,22 +70,29 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
     minMode: 'month', // Solo permite seleccionar mes y año
   };
 
-  /** 
-   * 
+  /**
+   *
    *  @property {InputFecha} fechaIncio
    *  @description
    *  Esta propiedad define la configuración de la fecha de inicio del reporte anual.
    */
   public fechaIncio: InputFecha = FECHA_INCIO;
 
-  /** 
+  /**
    * @property {InputFecha} fechaFin
-   * @description 
+   * @description
    * Esta propiedad define la configuración de la fecha de fin del reporte anual.
    * Incluye el nombre de la etiqueta, si es requerida y si está habilitada.
    */
 
   public fechaFin: InputFecha = FECHA_FIN;
+   /**
+       * @public
+       * @property {Notificacion} nuevaNotificacion
+       * @description Representa una nueva notificación que se utilizará en el componente.
+       * @command Este campo debe ser inicializado antes de su uso.
+       */
+    public nuevaNotificacion!: Notificacion;
 
   /**
    * @description Evento que se emite al seleccionar una fila de la tabla.
@@ -167,6 +175,7 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
     private validacionesService: ValidacionesFormularioService,
     private consultaioQuery: ConsultaioQuery
   ) {
+    this.inicializarFormulario();
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyed$),
@@ -182,24 +191,42 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
         takeUntil(this.destroyed$),
         map((respuesta: Solicitud150101State) => {
           this.solicitud150101State = respuesta;
+          if (this.periodoReporteAnual) {
+            this.periodoReporteAnual.patchValue({
+              reporteAnualFechaInicio: respuesta.reporteAnualFechaInicio,
+              reporteAnualFechaFin: respuesta.reporteAnualFechaFin,
+              folioPrograma: respuesta.folioPrograma,
+              modalidad: respuesta.modalidad,
+              tipoPrograma: respuesta.tipoPrograma,
+              estatus: respuesta.estatus,
+            });
+          }
         })
       )
       .subscribe();
 
     this.obtenerReporteFechas();
     this.obtenerProgramasReporte();
+  }
 
+  /**
+   * @method inicializarFormulario
+   * @description
+   * Inicializa el formulario `periodoReporteAnual` con los valores actuales del estado de la solicitud.
+   * Establece los valores iniciales y el estado habilitado/deshabilitado de los controles.
+   * Este método debe llamarse al crear el componente o cuando se actualiza el estado de la solicitud.
+   * @returns {void}
+   */
+  inicializarFormulario(): void {
     this.periodoReporteAnual = this.fb.group({
       reporteAnualFechaInicio: [
         {
           value: this.solicitud150101State?.reporteAnualFechaInicio,
-          disabled: true,
         },
       ],
       reporteAnualFechaFin: [
         {
           value: this.solicitud150101State?.reporteAnualFechaFin,
-          disabled: true,
         },
       ],
       folioPrograma: [
@@ -213,9 +240,29 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
       ],
       estatus: [{ value: this.solicitud150101State?.estatus, disabled: true }],
     });
-
-    this.inicializarEstadoFormulario();
   }
+  /*
+    * Muestra una alerta cuando el reporte anual del programa seleccionado ya ha sido presentado anteriormente.
+    * La alerta informa al usuario que debe seleccionar otro programa para presentar el reporte anual.
+    * @returns {void}
+    * 
+    */
+  showAlert(): void {
+   
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: '',
+          mensaje:"El Reporte Anual de el(los) programa(s) seleccionado(s) ha sido presentado anteriormente. Seleccionar otro programa para presentar Reporte Anual.",
+          cerrar: false,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        }
+        
+      }
+    
 
   /**
    * @method inicializarEstadoFormulario
@@ -227,8 +274,13 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.formularioDeshabilitado) {
       this.periodoReporteAnual.disable();
-    } else if (!this.formularioDeshabilitado) {
+    } else {
       this.periodoReporteAnual.enable();
+      // Vuelve a deshabilitar los campos que deben permanecer deshabilitados
+      this.periodoReporteAnual.get('folioPrograma')?.disable();
+      this.periodoReporteAnual.get('modalidad')?.disable();
+      this.periodoReporteAnual.get('tipoPrograma')?.disable();
+      this.periodoReporteAnual.get('estatus')?.disable();
     }
   }
 
@@ -304,6 +356,13 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
     if (evento instanceof Object) {
       this.filaDeInformeSeleccionada.emit(true);
     }
+    this.showAlert();
+    this.periodoReporteAnual.patchValue({
+      folioPrograma: evento.folioPrograma,
+      modalidad: evento.modalidad,
+      tipoPrograma: evento.tipoPrograma,
+      estatus: evento.estatus,
+    });
   }
 
   /**

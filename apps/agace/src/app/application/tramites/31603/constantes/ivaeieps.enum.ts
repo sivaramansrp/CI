@@ -84,7 +84,9 @@ export const PERMISO_A_DESISTIR_DOS = [
     desactivado: false,
     soloLectura: false,
     validadores: [
-      
+      {
+        tipo: 'required'
+      }
     ],
     layout: 'horizontal',
     marcador_de_posicion: '',
@@ -103,7 +105,7 @@ export const PERMISO_A_DESISTIR_DOS = [
     {
     id: 'manifiesteAlgun',
     labelNombre: 'Manifieste si se le ha determinado algun crédito por parte del SAT en los 24 meses anteriores a la fecha de presentacion de la solicitud',
-    campo: 'manifiesteSi',
+    campo: 'manifiesteSiAlgun',
     clase: 'col-md-12',
     tipoInput: 'radio',
     desactivado: false,
@@ -126,6 +128,20 @@ export const PERMISO_A_DESISTIR_DOS = [
     ]
   },
   {
+    id: 'customSection1_permiso',
+    labelNombre: '',
+    campo: '',
+    clase: 'col-md-12',
+    tipoInput: 'custom-html',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    templateKey: 'customSection1',
+  },
+  {
     id: 'manifiesteCorrespondiente',
     labelNombre: 'Manifieste si se le ha emitido resolución de improcedencia de las devoluciones del IVA solicitadas en los últimos 6 meses, contados a partir de la fecha de presentación de la solicitud de certificación correspondiente',
     campo: 'manifiesteCorrespondiente',
@@ -134,7 +150,9 @@ export const PERMISO_A_DESISTIR_DOS = [
     desactivado: false,
     soloLectura: false,
     validadores: [
-      
+      {
+        tipo: 'required'
+      }
     ],
     layout: 'horizontal',
     marcador_de_posicion: '',
@@ -257,7 +275,9 @@ export const PERMISO_A_DESISTIR_TRES = [
     desactivado: false,
     soloLectura: false,
     validadores: [
-      
+      {
+        tipo: 'required'
+      }
     ],
     layout: 'horizontal',
     marcador_de_posicion: '',
@@ -275,14 +295,13 @@ export const PERMISO_A_DESISTIR_TRES = [
   },
   {
     id: 'caso',
-    labelNombre: 'En caso afirmativo, señale si se encuentra al corriente en el cumplimiento de las obligaciones relativas al Anexo 30 sobre dicho registro:',
+    labelNombre: 'En caso afirmativo, señale si se encuentra al corriente en el cumplimiento de las obligaciones relativas al Anexo 30 sobre dicho registro*:',
     campo: 'caso',
     clase: 'col-md-12',
     tipoInput: 'radio',
     desactivado: false,
     soloLectura: false,
     validadores: [
-      
     ],
     layout: 'horizontal',
     marcador_de_posicion: '',
@@ -324,6 +343,20 @@ export const CONFIGURACION_IVAEIEPS_DOS = [
     marcador_de_posicion: '',
   },
   {
+    id: 'customSection2_ivaieps',
+    labelNombre: '',
+    campo: '',
+    clase: 'col-md-5',
+    tipoInput: 'custom-html',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    templateKey: 'customSection2',
+  },
+  {
     labelNombre: 'Que durante los últimos 12 meses anteriores en promedio contaron con más de 2,500 empleados registrados ante el IMSS',
     campo: 'anteElImss',
     clase: 'col-md-12',
@@ -332,13 +365,41 @@ export const CONFIGURACION_IVAEIEPS_DOS = [
     marcador_de_posicion: '',
   },
   {
+    id: 'customSection3_ivaieps',
+    labelNombre: '',
+    campo: '',
+    clase: 'col-md-5',
+    tipoInput: 'custom-html',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    templateKey: 'customSection3',
+  },
+  {
     labelNombre: 'Que el valor de su maquinaria y equipo es superior a los 100,000,000 de pesos',
     campo: 'dePesos',
     clase: 'col-md-12',
     tipoInput: 'checkbox',
     desactivado: false,
     marcador_de_posicion: '',
-  }
+  },
+  {
+    id: 'customSection4_ivaieps',
+    labelNombre: '',
+    campo: '',
+    clase: 'col-md-5',
+    tipoInput: 'custom-html',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    templateKey: 'customSection4',
+  },
 ];
 
 /**
@@ -374,7 +435,7 @@ export const PAGO_DE_DERECHOS = [
       }
     ],
     marcadorDePosicion: '',
-    valorPredeterminado: '',
+    valorPredeterminado: '284000255',
     marginTop: 0
   },
   {
@@ -408,7 +469,7 @@ export const PAGO_DE_DERECHOS = [
       }
     ],
     marcadorDePosicion: '',
-    valorPredeterminado: '',
+    valorPredeterminado: '0111514EC10101',
     marginTop: 0
   },
   {
@@ -476,7 +537,7 @@ export const PAGO_DE_DERECHOS = [
       }
     ],
     marcadorDePosicion: '',
-    valorPredeterminado: '',
+    valorPredeterminado: '30739',
     marginTop: 0
   },
 ];

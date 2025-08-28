@@ -8,6 +8,7 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
 import { ProductoOpción } from '../../constantes/vehiculos-adaptados.enum';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 /**
  * @description Componente para manejar los detalles de la mercancía.
  * Proporciona entradas para configurar un formulario y opciones para productos, fracciones y unidades.
@@ -21,11 +22,16 @@ import { ProductoOpción } from '../../constantes/vehiculos-adaptados.enum';
     TituloComponent,
     InputRadioComponent,
     CatalogoSelectComponent,
+    TooltipModule
   ],
   templateUrl: './datos-de-la-mercancia.component.html',
   styleUrl: './datos-de-la-mercancia.component.scss',
 })
 export class DatosDeLaMercanciaComponent implements OnChanges {
+  /**
+   * Show tooltip for Valor factura USD (only for 130111)
+   */
+  @Input() mostrarTooltipValorFacturaUSD: boolean = false;
   /**
   * @description Indica si el formulario debe mostrarse en modo solo lectura.
   */

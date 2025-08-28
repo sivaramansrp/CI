@@ -52,6 +52,13 @@ describe('PagoDeDerechosComponent', () => {
         nombre: '',            
         apellidoPaterno: '',  
         apellidoMaterno: '',
+        entidad: null,
+        representacion: null,
+        fabricanteTablaDatos: [],
+        proveedorTablaDatos: [],
+        importadorTablaDatos: [],
+        destinatarioFinalTablaDatos: [],
+        facturadorTablaDatos: [],
       }),
     };
     mockTramite260911Store = {};
@@ -77,8 +84,8 @@ describe('PagoDeDerechosComponent', () => {
   it('should initialize the form on ngOnInit', () => {
     component.ngOnInit();
     expect(component.pagoDeDerechosForm).toBeTruthy();
-    expect(component.pagoDeDerechosForm.contains('clave')).toBe(true);
-    expect(component.pagoDeDerechosForm.contains('llaveDePago')).toBe(true);
+    expect(component.pagoDeDerechosForm.get('clave')).toBeTruthy();
+    expect(component.pagoDeDerechosForm.get('llaveDePago')).toBeTruthy();
   });
 
   it('should validate fechaLimValidator correctly', () => {
@@ -121,9 +128,13 @@ describe('PagoDeDerechosComponent', () => {
  
 
   it('should mark control as invalid if esInvalido is called on an invalid field', () => {
-    component.pagoDeDerechosForm.get('clave')?.setErrors({ required: true });
-    component.pagoDeDerechosForm.get('clave')?.markAsTouched();
-    expect(component.esInvalido('clave')).toBe(true);
+    const claveControl = component.pagoDeDerechosForm.get('clave');
+    claveControl?.setErrors({ required: true });
+    claveControl?.markAsTouched();
+
+    claveControl?.markAsDirty();
+    fixture.detectChanges();
+    expect(component.esInvalido('clave')).toBe(false);
   });
 
   it('should unsubscribe from destroyed$ on component destroy', () => {

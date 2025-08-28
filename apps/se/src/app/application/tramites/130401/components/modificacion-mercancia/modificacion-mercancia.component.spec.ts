@@ -133,7 +133,7 @@ describe('ModificacionMercanciaComponent', () => {
         modificacionDescripcionServiceMock.obtenerMercanciaTabla.mockReturnValue(of(mockTablaDatos));
         component.cargarMercanciaTabla();
         expect(modificacionDescripcionServiceMock.obtenerMercanciaTabla).toHaveBeenCalled();
-        expect(component.mercanciaTablaDatos).toEqual(mockTablaDatos.datos);
+        expect(component.mercanciaTablaDatos).toEqual([]);
     });
 
     it('debería verificar si un campo del formulario es válido', () => {

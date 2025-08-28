@@ -16,6 +16,10 @@ export interface ConsultaioState {
   create: boolean;
   update: boolean;
   consultaioSolicitante: ConsultaioSolicitante | null;
+  action_id: string;
+  current_user: string;
+  id_solicitud: string;
+  nombre_pagina: string;
 }
 
 /**
@@ -34,6 +38,10 @@ export function createConsultaInitialState(): ConsultaioState {
     create: true,
     update: false,
     consultaioSolicitante: null,
+    action_id: '',
+    current_user: '',
+    id_solicitud: '',
+    nombre_pagina: ''
   };
 }
 
@@ -54,7 +62,8 @@ export class ConsultaioStore extends Store<ConsultaioState> {
    * @param nombre
    */
   public establecerConsultaio(procedureId: string, parameter: string,
-    department: string, folioTramite: string, tipoDeTramite: string, estadoDeTramite: string, readonly: boolean, create: boolean, update: boolean): void {
+    department: string, folioTramite: string, tipoDeTramite: string, estadoDeTramite: string, readonly: boolean, create: boolean, update: boolean,
+    action_id: string='', current_user: string='', id_solicitud: string='', nombre_pagina: string=''): void {
     this.update(state => ({
       ...state,
       procedureId,
@@ -66,6 +75,10 @@ export class ConsultaioStore extends Store<ConsultaioState> {
       readonly,
       create,
       update,
+      action_id,
+      current_user,
+      id_solicitud,
+      nombre_pagina
     }));
   }
   /**

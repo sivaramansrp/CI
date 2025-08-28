@@ -1,38 +1,32 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// certificado.component.spec.ts
 import { CertificadoComponent } from './certificado.component';
-import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, SharedModule, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
-import { ReactiveFormsModule } from '@angular/forms';
-import { CertificadoDeOrigenComponent } from '../../../110201/components/certificado-de-origen/certificado-de-origen.component';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { PasoDosComponent } from '../paso-dos/paso-dos.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { SeccionLibStore } from '@ng-mf/data-access-user';
+import { Tramite110221Query } from '../../estados/tramite110221.query';
 
 describe('CertificadoComponent', () => {
   let component: CertificadoComponent;
-  let fixture: ComponentFixture<CertificadoComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-    declarations: [CertificadoComponent,PasoUnoComponent,PasoDosComponent],
-    imports: [
-    SharedModule,
-    ReactiveFormsModule,
-    WizardComponent,
-    BtnContinuarComponent,
-    CatalogoSelectComponent,
-    CertificadoDeOrigenComponent,
-    SolicitanteComponent,
-    HttpClientTestingModule,
-    AlertComponent
-      ],
-    }).compileComponents();
+  beforeEach(() => {
+    const mockSeccionStore = {} as SeccionLibStore;
+    const mockTramiteQuery = {} as Tramite110221Query;
 
-    fixture = TestBed.createComponent(CertificadoComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = new CertificadoComponent(mockSeccionStore, mockTramiteQuery);
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should initialize indice as 1', () => {
+    expect(component.indice).toBe(1);
+  });
+
+  it('should update indice when getValorIndice is called with "cont"', () => {
+    // Mock pasoUnoComponent so validation passes
+    component['pasoUnoComponent'] = { validarFormularios: () => true } as any;
+    component['wizardComponent'] = { siguiente: jest.fn(), atras: jest.fn() } as any;
+
+    component.getValorIndice({ accion: 'cont', valor: 1 });
+    expect(component.indice).toBe(2);
   });
 });

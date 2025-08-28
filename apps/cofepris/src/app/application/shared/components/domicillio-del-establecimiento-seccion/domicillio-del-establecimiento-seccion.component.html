@@ -1,21 +1,13 @@
-
-
 <ng-titulo titulo="Domicillio del establecimiento"></ng-titulo>
 <form [formGroup]="domicilioEstablecimiento">
   <div class="row">
     <div id="establecimientoDomicilioCodigoPostal" class="col-md-4">
-      <label for="establecimientoDomicilioCodigoPostal"
-        >Código postal <span class="require">*</span>:</label
-      >
+      <label for="establecimientoDomicilioCodigoPostal">Código postal <span class="require">*</span>:</label>
 
       <div>
-        <input
-          type="text" maxlength="245"
-          id="establecimientoDomicilioCodigoPostalId"
-          formControlName="establecimientoDomicilioCodigoPostal"
-          class="form-control"
-          (change)="onControlChange('establecimientoDomicilioCodigoPostal')"
-        />
+        <input type="text" maxlength="245" id="establecimientoDomicilioCodigoPostalId"
+          formControlName="establecimientoDomicilioCodigoPostal" class="form-control"
+          (change)="onControlChange('establecimientoDomicilioCodigoPostal')" />
         <div *ngIf="hasError('establecimientoDomicilioCodigoPostal', 'required')" class="text-danger mt-1">
           Este campo es obligatorio
         </div>
@@ -23,31 +15,19 @@
     </div>
 
     <div id="Estado" class="col-md-4">
-      <app-catalogo-select
-        [catalogo]="estadoJson"
-        [label]="'Estado*'"
-        [placeholder]="'Seleccione una valor'"
-         [isDisabled]="formularioDeshabilitado"
-        formControlName="establecimientoDomicilioEstado"
-        (change)="onControlChange('establecimientoDomicilioEstado')"
-        [required]="true"
-      ></app-catalogo-select>
-      
+      <app-catalogo-select [catalogo]="estadoJson" [label]="'Estado*'" [placeholder]="'Seleccione una valor'"
+        [isDisabled]="formularioDeshabilitado" formControlName="establecimientoDomicilioEstado"
+        (change)="onControlChange('establecimientoDomicilioEstado')" [required]="true"></app-catalogo-select>
+
     </div>
 
     <div id="establecimientoMunicipioYAlcaldia" class="col-md-4">
-      <label for="establecimientoMunicipioYAlcaldia"
-        >Municipio y alcaldia<span class="require">*</span>:</label
-      >
+      <label for="establecimientoMunicipioYAlcaldia">Municipio y alcaldia<span class="require">*</span>:</label>
 
       <div>
-        <input
-          type="text" maxlength="245"
-          id="establecimientoMunicipioYAlcaldiaId"
-          formControlName="establecimientoMunicipioYAlcaldia"
-          class="form-control"
-          (change)="onControlChange('establecimientoMunicipioYAlcaldia')"
-        />
+        <input type="text" maxlength="245" id="establecimientoMunicipioYAlcaldiaId"
+          formControlName="establecimientoMunicipioYAlcaldia" class="form-control"
+          (change)="onControlChange('establecimientoMunicipioYAlcaldia')" />
         <div *ngIf="hasError('establecimientoMunicipioYAlcaldia', 'required')" class="text-danger mt-1">
           Este campo es obligatorio
         </div>
@@ -56,32 +36,20 @@
   </div>
   <div class="row">
     <div id="establecimientoDomicilioLocalidad" class="col-md-4">
-      <label for="establecimientoDomicilioLocalidad"
-        >Localidad:</label
-      >
+      <label for="establecimientoDomicilioLocalidad">Localidad:</label>
       <div>
-        <input
-          type="text" maxlength="245"
-          id="establecimientoDomicilioLocalidadId"
-          formControlName="establecimientoDomicilioLocalidad"
-          class="form-control"
-          (change)="onControlChange('establecimientoDomicilioLocalidad')"
-        />
+        <input type="text" maxlength="245" id="establecimientoDomicilioLocalidadId"
+          formControlName="establecimientoDomicilioLocalidad" class="form-control"
+          (change)="onControlChange('establecimientoDomicilioLocalidad')" />
       </div>
     </div>
 
     <div id="establecimientoDomicilioColonia" class="col-md-4">
-      <label for="establecimientoDomicilioColonia"
-        >Colonia:</label
-      >
+      <label for="establecimientoDomicilioColonia">Colonia:</label>
       <div>
-        <input
-          type="text" maxlength="245"
-          id="establecimientoDomicilioColoniaId"
-          formControlName="establecimientoDomicilioColonia"
-          class="form-control"
-          (change)="onControlChange('establecimientoDomicilioColonia')"
-        />
+        <input type="text" maxlength="245" id="establecimientoDomicilioColoniaId"
+          formControlName="establecimientoDomicilioColonia" class="form-control"
+          (change)="onControlChange('establecimientoDomicilioColonia')" />
       </div>
     </div>
 
@@ -89,17 +57,12 @@
   </div>
   <div class="row">
     <div id="establecimientoDomicilioCalle" class="col-md-8">
-      <label for="establecimientoDomicilioCalle"
-        >Calle <span>*</span>: <span class="bi bi-question-circle-fill require" data-bs-toggle="tooltip"></span></label
-      >
+      <label for="establecimientoDomicilioCalle">Calle <span>*</span>: <span class="bi bi-question-circle-fill require"
+          data-bs-toggle="tooltip"></span></label>
       <div>
-        <input
-          type="text" maxlength="245"
-          id="establecimientoDomicilioCalleId"
-          formControlName="establecimientoDomicilioCalle"
-          class="form-control"
-          (change)="onControlChange('establecimientoDomicilioCalle')"
-        />
+        <input type="text" maxlength="245" id="establecimientoDomicilioCalleId"
+          formControlName="establecimientoDomicilioCalle" class="form-control"
+          (change)="onControlChange('establecimientoDomicilioCalle')" />
         <div *ngIf="hasError('establecimientoDomicilioCalle', 'required')" class="text-danger mt-1">
           Este campo es obligatorio
         </div>
@@ -108,32 +71,20 @@
   </div>
   <div class="row mb-5">
     <div id="establecimientoDomicilioLada" class="col-md-1">
-      <label for="establecimientoDomicilioLada"
-        >Lada <span class="require">*</span>:</label
-      >
+      <label for="establecimientoDomicilioLada">Lada <span class="require">*</span>:</label>
       <div>
-        <input
-          type="text" maxlength="245"
-          id="establecimientoDomicilioLadaId"
-          formControlName="establecimientoDomicilioLada"
-          class="form-control"
-          (change)="onControlChange('establecimientoDomicilioLada')"
-        />
+        <input type="text" maxlength="245" id="establecimientoDomicilioLadaId"
+          formControlName="establecimientoDomicilioLada" class="form-control"
+          (change)="onControlChange('establecimientoDomicilioLada')" />
       </div>
     </div>
 
     <div id="establecimientoDomicilioTelefono" class="col-md-3">
-      <label for="establecimientoDomicilioTelefono"
-        >Teléfono <span class="require">*</span>:</label
-      >
+      <label for="establecimientoDomicilioTelefono">Teléfono <span class="require">*</span>:</label>
       <div>
-        <input
-          type="text" maxlength="245"
-          id="establecimientoDomicilioTelefonoId"
-          formControlName="establecimientoDomicilioTelefono"
-          class="form-control"
-          (change)="onControlChange('establecimientoDomicilioTelefono')"
-        />
+        <input type="text" maxlength="245" id="establecimientoDomicilioTelefonoId"
+          formControlName="establecimientoDomicilioTelefono" class="form-control"
+          (change)="onControlChange('establecimientoDomicilioTelefono')" />
         <div *ngIf="hasError('establecimientoDomicilioTelefono', 'required')" class="text-danger mt-1">
           Este campo es obligatorio
         </div>
@@ -143,55 +94,36 @@
     <div class="col-md-8"></div>
   </div>
 
-    <label class="mt-5"> S.C.I.A.N. </label>
-    <app-tabla-dinamica
-      [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
-      [configuracionTabla]="configuracionTabla"
-      [datos]="personaparas"
-      [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
-    >
-    </app-tabla-dinamica>
-    <div class="col-md-12 mt-5 d-flex justify-content-end">
-      <button type="button" class="btn btn-danger" [disabled]="formularioDeshabilitado ? true : false">Eliminar</button>
-      <button
-        type="button"
-        class="btn btn-primary ms-3"
-        (click)="openScianModal()"
-        [disabled]="formularioDeshabilitado ? true : false"
-      >
-        Agregar
-      </button>
-    </div>
+  <label class="mt-5"> S.C.I.A.N.* </label>
+  <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="configuracionTabla"
+    [datos]="personaparas" [disableSeleccionTablaCheckBox]="formularioDeshabilitado">
+  </app-tabla-dinamica>
+  <div class="col-md-12 mt-5 d-flex justify-content-end">
+    <button type="button" class="btn btn-danger" [disabled]="formularioDeshabilitado ? true : false">Eliminar</button>
+    <button type="button" class="btn btn-primary ms-3" (click)="openScianModal()"
+      [disabled]="formularioDeshabilitado ? true : false">
+      Agregar
+    </button>
+  </div>
 
- 
+
   <div class="row pt-6">
     <div id="rfcDelProfesionalResponsable" class="col-md-4">
-      <label for="rfcDelProfesionalResponsable"
-        >RFC del profesional responsable :</label
-      >
+      <label for="rfcDelProfesionalResponsable">RFC del profesional responsable :</label>
       <div>
-        <input
-          type="text" maxlength="245"
-          id="rfcDelProfesionalResponsableId"
-          formControlName="rfcDelProfesionalResponsable"
-          class="form-control"
-          (change)="onControlChange('rfcDelProfesionalResponsable')"
-        />
+        <input type="text" maxlength="245" id="rfcDelProfesionalResponsableId"
+          formControlName="rfcDelProfesionalResponsable" class="form-control"
+          (change)="onControlChange('rfcDelProfesionalResponsable')" />
       </div>
     </div>
 
     <div id="nombreDelProfesionalResponsable" class="col-md-8">
       <label for="nombreDelProfesionalResponsable">
-        Nombre del profesional responsable :</label
-      >
+        Nombre del profesional responsable :</label>
       <div>
-        <input
-          type="text" maxlength="245"
-          id="nombreDelProfesionalResponsableId"
-          formControlName="nombreDelProfesionalResponsable"
-          class="form-control"
-          (change)="onControlChange('nombreDelProfesionalResponsable')"
-        />
+        <input type="text" maxlength="245" id="nombreDelProfesionalResponsableId"
+          formControlName="nombreDelProfesionalResponsable" class="form-control"
+          (change)="onControlChange('nombreDelProfesionalResponsable')" />
       </div>
     </div>
   </div>
@@ -199,45 +131,42 @@
   <div class="row mt-5">
     <div class="col-md-4">
       <div class="form-check">
-        <input
-          type="checkbox" maxlength="245"
-          id="avisoDeFuncionamientoId"
-          formControlName="avisoDeFuncionamiento"
-          class="form-check-input"
-          (change)="onControlChange('avisoDeFuncionamiento')"
-        />
+        <input type="checkbox" maxlength="245" id="avisoDeFuncionamientoId" formControlName="avisoDeFuncionamiento"
+          class="form-check-input" (change)="onControlChange('avisoDeFuncionamiento')" />
         <label class="form-check-label" for="avisoDeFuncionamiento">
           Aviso de funcionamiento
         </label>
       </div>
     </div>
     <div class="col-md-4">
-      <label for="noDeLicenciaSanitaria"> No.de licencia sanitaria : <span class="bi bi-question-circle-fill require" data-bs-toggle="tooltip"></span></label>
+      <label for="noDeLicenciaSanitaria"> No.de licencia sanitaria : <span class="bi bi-question-circle-fill require"
+          data-bs-toggle="tooltip"></span></label>
 
       <div class="d-flex flex-column align-items-end">
-        <input
-          type="text" maxlength="245"
-          id="noDeLicenciaSanitariaId"
-          formControlName="noDeLicenciaSanitaria"
-          class="form-control"
-          (change)="onControlChange('noDeLicenciaSanitaria')"
-        />
+        <input type="text" maxlength="245" id="noDeLicenciaSanitariaId" formControlName="noDeLicenciaSanitaria"
+          class="form-control" (change)="onControlChange('noDeLicenciaSanitaria')" />
 
         <div class="mt-4">
-          <button type="button" [disabled]="isCheckboxChecked()" class="btn btn-primary mt-2" [disabled]="formularioDeshabilitado ? true : false">Agregar</button>
+          <button type="button" [disabled]="!isCheckboxChecked() || formularioDeshabilitado"
+            class="btn btn-primary mt-2" [class.btn-disabled-state]="!isCheckboxChecked() || formularioDeshabilitado"
+            [class.btn-enabled-state]="isCheckboxChecked() && !formularioDeshabilitado"
+            [title]="(!isCheckboxChecked() || formularioDeshabilitado) ? 'Debe marcar el checkbox Aviso de funcionamiento para habilitar este botón' : 'Agregar licencia sanitaria'">
+            Agregar
+          </button>
         </div>
         <div class="col-md-12 row mt-4">
-          <textarea
-            id="message"
-            class="form-control mb-5 h-100"
-            placeholder=""
+          <textarea id="message" class="form-control mb-5 h-100" placeholder=""
             formControlName="noDeLicenciaSanitariaObservaciones"
-            (change)="onControlChange('noDeLicenciaSanitariaObservaciones')"
-            row="4"
-          ></textarea>
+            (change)="onControlChange('noDeLicenciaSanitariaObservaciones')" row="4"></textarea>
         </div>
         <div>
-          <button type="button" class=" btn btn-danger" [disabled]="isCheckboxChecked()" [disabled]="formularioDeshabilitado ? true : false">Eliminar</button>
+          <button type="button" class="btn btn-danger" [disabled]="!isCheckboxChecked() || formularioDeshabilitado"
+            (click)="eliminarLicenciaSanitaria()"
+            [class.btn-disabled-state]="!isCheckboxChecked() || formularioDeshabilitado"
+            [class.btn-enabled-state]="isCheckboxChecked() && !formularioDeshabilitado"
+            [title]="(!isCheckboxChecked() || formularioDeshabilitado) ? 'Debe marcar el checkbox Aviso de funcionamiento para habilitar este botón' : 'Eliminar licencia sanitaria'">
+            Eliminar
+          </button>
         </div>
       </div>
     </div>
@@ -246,24 +175,17 @@
   </div>
   <div class="row">
     <div class="col-md-8">
-      <app-catalogo-select
-        [catalogo]="regimenQueDestinara"
-        [label]="'Régimen al que se destinará la mercancía*'"
-        [isDisabled]="formularioDeshabilitado"
-        [placeholder]="'Seleccione un valor'"
+      <app-catalogo-select [catalogo]="regimenQueDestinara" [label]="'Régimen al que se destinará la mercancía*'"
+        [isDisabled]="formularioDeshabilitado" [placeholder]="'Seleccione un valor'"
         formControlName="regimenAlQueSeDestinaraLaMercancía"
-        (change)="onControlChange('regimenAlQueSeDestinaraLaMercancía')"
-      ></app-catalogo-select>
+        [tooltipQuestionCircle]="true"
+        [tooltipQuestionCircleText]="'Régimen al que se destinará la mercancía'"
+        (change)="onControlChange('regimenAlQueSeDestinaraLaMercancía')"></app-catalogo-select>
     </div>
     <div class="col-md-4">
-      <app-catalogo-select
-        [catalogo]="aduanaDeSalida"
-        [label]="'Aduana de salida*'"
-        [isDisabled]="formularioDeshabilitado"
-        [placeholder]="'Seleccione una valor'"
-        formControlName="aduanaDeSalida"
-        (change)="onControlChange('aduanaDeSalida')"
-      ></app-catalogo-select>
+      <app-catalogo-select [catalogo]="aduanaDeSalida" [label]="'Aduana de salida*'"
+        [isDisabled]="formularioDeshabilitado" [placeholder]="'Seleccione una valor'" formControlName="aduanaDeSalida"
+        (change)="onControlChange('aduanaDeSalida')"></app-catalogo-select>
     </div>
   </div>
 </form>
@@ -271,11 +193,7 @@
 
 
 
-<div
-  class="modal fade"
-  #establecimientoModal
-
->
+<div class="modal fade" #establecimientoModal>
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <form [formGroup]="scianForm">
@@ -283,25 +201,16 @@
           <ng-titulo titulo="Clave S.C.I.A.N."></ng-titulo>
           <div class="row">
             <div class="col-md-8">
-              <app-catalogo-select
-                [catalogo]="scianJson"
-                [label]="'Clave S.C.I.A.N.*'"
-                [placeholder]="'Seleccione una valor'"
-                formControlName="scian"
-                (change)="onControlChange('scian')"
-               
-              ></app-catalogo-select>
+              <app-catalogo-select [catalogo]="scianJson" [label]="'Clave S.C.I.A.N.*'"
+                [placeholder]="'Seleccione una valor'" formControlName="scian"
+                (change)="onControlChange('scian')"></app-catalogo-select>
             </div>
           </div>
           <div class="row">
             <div class="col-md-8">
-              <app-catalogo-select
-                [catalogo]="descripcionScianJson"
-                [label]="'Descripción del S.C.I.A.N.*'"
-                [placeholder]="'Seleccione una valor'"
-                formControlName="descripcionScian"
-                (change)="onControlChange('descripcionScian')"
-              ></app-catalogo-select>
+              <app-catalogo-select [catalogo]="descripcionScianJson" [label]="'Descripción del S.C.I.A.N.*'"
+                [placeholder]="'Seleccione una valor'" formControlName="descripcionScian"
+                (change)="onControlChange('descripcionScian')"></app-catalogo-select>
             </div>
           </div>
         </div>
@@ -310,7 +219,7 @@
           <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
             Cancelar
           </button>
-          <button type="button" class="btn btn-primary"  (click)="guardarScian()">Guardar</button>
+          <button type="button" class="btn btn-primary" (click)="guardarScian()">Guardar</button>
         </div>
       </form>
     </div>

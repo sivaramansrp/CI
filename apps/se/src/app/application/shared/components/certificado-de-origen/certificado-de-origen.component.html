@@ -28,8 +28,10 @@
         <div class="row" *ngIf="formCertificado.get('si')?.value  && mercanciasDisponibles">
             <div class="row my-4">
                 <div class="col-md-4 form-group">
-                    <label class="form-label" for="nombres">Nombre(s)*:</label>
-                    <input type="text" id="nombres" class="form-control" formControlName="nombres"
+                  <label class="form-label" for="nombres">
+                    Nombre(s)<span *ngIf="idProcedimiento !== 110205">*</span>:
+                  </label>
+                    <input type="text" id="nombres" class="form-control" formControlName="nombres" maxlength="25"
                         (change)="setValoresStore('formCertificado','nombres','setFormCertificadoGenric')" />
                     @if(formCertificado.controls['nombres'].invalid && (formCertificado.controls['nombres'].touched || formCertificado.controls['nombres'].dirty)) {
                     <div class="d-grid">
@@ -45,8 +47,8 @@
             
                 <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label" for="primerApellido">Primer apellido*:</label>
-                    <input type="text" id="primerApellido" class="form-control" formControlName="primerApellido"
+                    <label class="form-label" for="primerApellido">Primer apellido<span *ngIf="idProcedimiento !== 110205">*</span>:</label>
+                    <input type="text" id="primerApellido" class="form-control" formControlName="primerApellido" maxlength="15"
                         (change)="setValoresStore('formCertificado','primerApellido','setFormCertificadoGenric')" />
                 </div>
                   @if(formCertificado.controls['primerApellido'].invalid && (formCertificado.controls['primerApellido'].touched || formCertificado.controls['primerApellido'].dirty)) {
@@ -64,11 +66,12 @@
                 <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="segundoApellido">Segundo apellido:</label>
-                    <input type="text" id="segundoApellido" class="form-control" formControlName="segundoApellido"
+                    <input type="text" id="segundoApellido" class="form-control" formControlName="segundoApellido" maxlength="15"
                         (change)="setValoresStore('formCertificado','segundoApellido','setFormCertificadoGenric')" />
                 </div>
                  @if(formCertificado.controls['segundoApellido'].invalid && (formCertificado.controls['segundoApellido'].touched || formCertificado.controls['segundoApellido'].dirty)) {
       <div class="d-grid">
+        
         @if(formCertificado.controls['segundoApellido'].errors?.['maxlength']) {
           <span class="mensaje-error">Por favor, no escribas más de 20 caracteres</span>
         }
@@ -79,12 +82,12 @@
               <div class="col-md-4">
               <div class="form-group">
                     <label class="form-label" for="numeroDeRegistroFiscal">Número de registro fiscal*:</label>
-                    <input type="text" id="numeroDeRegistroFiscal" class="form-control" formControlName="numeroDeRegistroFiscal"
+                    <input type="text" id="numeroDeRegistroFiscal" class="form-control" formControlName="numeroDeRegistroFiscal" maxlength="30"
                         (change)="setValoresStore('formCertificado','numeroDeRegistroFiscal','setFormCertificadoGenric')" />
                 </div>
                  @if(formCertificado.controls['numeroDeRegistroFiscal'].invalid && (formCertificado.controls['numeroDeRegistroFiscal'].touched || formCertificado.controls['numeroDeRegistroFiscal'].dirty)) {
       <div class="d-grid">
-        @if(formCertificado.controls['numeroDeRegistroFiscal'].errors?.['required']) {
+        @if(formCertificado.controls['numeroDeRegistroFiscal'].errors?.['required'] && formCertificado.controls['numeroDeRegistroFiscal'].touched) {
           <span class="mensaje-error">Este campo es obligatorio</span>
         }
         @if(formCertificado.controls['numeroDeRegistroFiscal'].errors?.['maxlength']) {
@@ -96,7 +99,7 @@
             
                 <div class="col-md-8">
                 <div class="form-group">
-                    <label class="form-label" for="razonSocial">Razón social*:</label>
+                    <label class="form-label" for="razonSocial">Razón social<span *ngIf="idProcedimiento !== 110205">*</span>:</label>
                     <input type="text" id="razonSocial" class="form-control" formControlName="razonSocial"
                         (change)="setValoresStore('formCertificado','razonSocial','setFormCertificadoGenric')" />
                 </div>
@@ -112,14 +115,106 @@
     }
                 </div>
             </div>
+            <div *ngIf="formCertificado.get('si')?.value && domicilioTercer" >
+              <ng-titulo titulo="Domicilio del tercer operador" />
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <app-catalogo-select [catalogo]="paises || []" [label]="'País'"
+                      name="pais" formControlName="pais"
+                      (change)="setValoresStore('formCertificado','pais','setFormCertificadoGenric')"
+                      [isDisabled]="esFormularioSoloLectura"
+                    ></app-catalogo-select>
+                  </div>
+                </div>
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <label class="form-label" for="ciudad">Ciudad (población, estado o provincia):*:</label>
+                    <input type="text" id="ciudad" class="form-control" formControlName="ciudad"
+                        (change)="setValoresStore('formCertificado','ciudad','setFormCertificadoGenric')" />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <label class="form-label" for="calle" >Calle*:</label>
+                    <input type="text" id="calle" class="form-control" formControlName="calle"
+                        (change)="setValoresStore('formCertificado','calle','setFormCertificadoGenric')" />
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label" for="numeroLetra">Número y/o letra*:</label>
+                  <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra"
+                      (change)="setValoresStore('formCertificado','numeroLetra','setFormCertificadoGenric')" />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-1">
+                  <div class="form-group">
+                    <label class="form-label" for="lada">Lada*:</label>
+                    <input type="text" id="lada" class="form-control" formControlName="lada"
+                        (change)="setValoresStore('formCertificado','lada','setFormCertificadoGenric')" />
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label class="form-label" for="telefono">Teléfono*:</label>
+                    <input type="text" id="telefono" class="form-control" formControlName="telefono"
+                        (change)="setValoresStore('formCertificado','telefono','setFormCertificadoGenric')" />
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label class="form-label" for="fax">Fax:</label>
+                    <input type="text" id="fax" class="form-control" formControlName="fax"
+                        (change)="setValoresStore('formCertificado','fax','setFormCertificadoGenric')" />
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label class="form-label" for="correo">Correo electrónico*:</label>
+                    <input type="email" id="correo" class="form-control" formControlName="correoElectronico"
+                        (change)="setValoresStore('formCertificado','correo','setFormCertificadoGenric')" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
             @if(domicilio){
             <div class="my-4" >
                 <ng-titulo titulo="Domicilio del tercer operador" />
+                <div class="row" *ngIf="idProcedimiento === 110205">
+                  <div class="col-md-4">
+                    <app-catalogo-select [catalogo]="paisBloqu || []" [label]="'País'" [required]="false"
+                        name="estado" formControlName="pais"
+                        (selectionChange)="tipoSeleccion($event)"
+                        [isDisabled]="esFormularioSoloLectura"
+                        (change)="setValoresStore(
+                        'formCertificado',
+                      'pais',
+                      'setFormCertificadoGenric')"
+                       [isDisabled]="esFormularioSoloLectura" ></app-catalogo-select>
+                </div>
+                <div class="col-md-8">
+                  <div class="form-group">
+                <label for="ciudad" class="form-label">Ciudad (población, estado o provincia):</label>
+                <input type="text" class="form-control" formControlName="ciudad" maxlength="20"
+                (change)="setValoresStore(
+                    'formCertificado',
+                  'ciudad',
+                  'setFormCertificadoGenric')"
+                    id="ciudad">
+            </div>
+          
+  
+            </div>
+                </div>
                 <div class="row">
-                    <div class="col-md-4">
+                    <div [ngClass]="idProcedimiento === 110205 ? 'col-md-8' : 'col-md-4'">
                     <div class="form-group">
-                        <label class="form-label" for="calle">Calle*:</label>
-                        <input type="text" id="calle" class="form-control" formControlName="calle"
+                        <label class="form-label" for="calle">Calle<span *ngIf="idProcedimiento !== 110205">*</span>:</label>
+                        <input type="text" id="calle" class="form-control" formControlName="calle" maxlength="90"
                             (change)="setValoresStore('formCertificado','calle','setFormCertificadoGenric')" />
                     </div>
                     @if(formCertificado.controls['calle'].invalid && (formCertificado.controls['calle'].touched || formCertificado.controls['calle'].dirty)) {
@@ -136,8 +231,8 @@
                 
                     <div class="col-md-4">
                     <div class="form-group">
-                        <label class="form-label" for="numeroLetra">Número y/o letra*:</label>
-                        <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra"
+                        <label class="form-label" for="numeroLetra">Número y/o letra<span *ngIf="idProcedimiento !== 110205">*</span>:</label>
+                        <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra" maxlength="30"
                             (change)="setValoresStore('formCertificado','numeroLetra','setFormCertificadoGenric')" />
                     </div>
                     @if(formCertificado.controls['numeroLetra'].invalid && (formCertificado.controls['numeroLetra'].touched || formCertificado.controls['numeroLetra'].dirty)) {
@@ -154,6 +249,37 @@
                 </div>
             </div>
         }
+        <div class="row" *ngIf="idProcedimiento === 110205">
+          <div class="col-md-3">
+            <div class="form-group">
+          <label for="telefono" class="form-label">Teléfono:</label>
+          <input type="text" class="form-control" formControlName="telefono" maxlength="16"
+          (change)="setValoresStore(
+              'formCertificado',
+            'telefono',
+            'setFormCertificadoGenric')"
+              id="telefono">
+      </div>
+    
+
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+      <label for="correoElectronico" class="form-label">Correo electrónico:</label>
+      <span class="bi bi-question-circle-fill"
+      title="ejemplo@dominio.com"
+      data-bs-toggle="tooltip"></span>
+      <input type="text" class="form-control" formControlName="correoElectronico" maxlength="70"
+      (change)="setValoresStore(
+          'formCertificado',
+        'correoElectronico',
+        'setFormCertificadoGenric')"
+          id="correoElectronico">
+  </div>
+
+
+  </div>
+        </div>
         </div>
 
         <ng-titulo titulo="Tratado y país o bloque" />
@@ -202,15 +328,19 @@
                   <div class="form-group">
                 <label for="fracciónArancelaria" class="form-label">Fracción arancelaria:</label>
                 <input type="text" class="form-control" formControlName="fraccionArancelariaForm"
+                maxlength="8"
+                soloLetrasNumeros
                 (change)="setValoresStore(
                     'formCertificado',
                   'fraccionArancelariaForm',
                   'setFormCertificadoGenric')"
-                    id="fracciónArancelaria">
+                    id="fracciónArancelaria"
+                >
+                    
             </div>
               @if(formCertificado.controls['fraccionArancelariaForm'].invalid && (formCertificado.controls['fraccionArancelariaForm'].touched || formCertificado.controls['fraccionArancelariaForm'].dirty)) {
     <div class="d-grid">
-      @if(formCertificado.controls['fraccionArancelariaForm'].errors?.['required']) {
+      @if(formCertificado.controls['fraccionArancelariaForm'].errors?.['required']&& formCertificado.controls['fraccionArancelariaForm'].touched) {
         <span class="mensaje-error">Este campo es obligatorio</span>
       }
       @if(formCertificado.controls['fraccionArancelariaForm'].errors?.['maxlength']) {
@@ -224,14 +354,17 @@
             <div class="col-md-4">
                 <div class="form-group">
                 <label for="registroProducto" class="form-label"># Registro producto:</label>
-                <input type="text" class="form-control" formControlName="registroProductoForm"   (change)="setValoresStore(
+                <input type="text" class="form-control" formControlName="registroProductoForm"  
+                maxlength="12"
+                soloLetrasNumeros
+                (change)="setValoresStore(
                     'formCertificado',
                   'registroProductoForm',
                   'setFormCertificadoGenric')" id="registroProducto">
             </div>
               @if(formCertificado.controls['registroProductoForm'].invalid && (formCertificado.controls['registroProductoForm'].touched || formCertificado.controls['registroProductoForm'].dirty)) {
     <div class="d-grid">
-      @if(formCertificado.controls['registroProductoForm'].errors?.['required']) {
+      @if(formCertificado.controls['registroProductoForm'].errors?.['required'] && formCertificado.controls['registroProductoForm'].touched) {
         <span class="mensaje-error">Este campo es obligatorio</span>
       }
       @if(formCertificado.controls['registroProductoForm'].errors?.['maxlength']) {
@@ -243,14 +376,17 @@
             <div class="col-md-4">
                 <div class="form-group">
                 <label for="nombreComercial" class="form-label">Nombre comercial:</label>
-                <input type="text" class="form-control" formControlName="nombreComercialForm" (change)="setValoresStore(
+                <input type="text" class="form-control" formControlName="nombreComercialForm"
+                maxlength="200"
+                soloLetrasNumeros
+                (change)="setValoresStore(
                     'formCertificado',
                   'nombreComercialForm',
                   'setFormCertificadoGenric')" id="nombreComercial">
             </div>
              @if(formCertificado.controls['nombreComercialForm'].invalid && (formCertificado.controls['nombreComercialForm'].touched || formCertificado.controls['nombreComercialForm'].dirty)) {
     <div class="d-grid">
-      @if(formCertificado.controls['nombreComercialForm'].errors?.['required']) {
+      @if(formCertificado.controls['nombreComercialForm'].errors?.['required'] && formCertificado.controls['nombreComercialForm'].touched) {
         <span class="mensaje-error">Este campo es obligatorio</span>
       }
       @if(formCertificado.controls['nombreComercialForm'].errors?.['maxlength']) {
@@ -272,13 +408,13 @@
             (valorCambiado)="cambioFechaInicio($event)" (change)="setValoresStore('formCertificado','fechaInicioInput','setFormCertificadoGenric')"></input-fecha>
         </div>
         <div class="col-md-4 form-field">
-            <input-fecha [datos]="fechaFinalInput" [setFecha]="formCertificado.get('fechaFinalInput')?.value" (valorCambiado)="cambioFechaFinal($event)" [isDisabled]="esFormularioSoloLectura"
+            <input-fecha [datos]="fechaFin ? fechaFinInput : fechaFinalInput" [setFecha]="formCertificado.get('fechaFinalInput')?.value" (valorCambiado)="cambioFechaFinal($event)" [isDisabled]="esFormularioSoloLectura"
              (change)="setValoresStore('formCertificado','fechaFinalInput','setFormCertificadoGenric')"></input-fecha>
         </div>
 
         @if(mercanciasDisponibles){
             <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-                <button class="btn btn-primary"  (click)="buscarMercancia()" [disabled]="esFormularioSoloLectura">Buscar mercancías</button>
+                <button class="btn btn-primary" (click)="verificarRFCDos()"   [disabled]="esFormularioSoloLectura">Buscar mercancías</button>
             </div>
         } @else {
             <div class="col-12 d-flex justify-content-end mt-3 mb-4">
@@ -322,7 +458,7 @@
 
                 <div class="row d-flex justify-content-end">
                     <div class="col-12 container text-end">
-                      <button class="btn btn-primary my-5" [disabled]="esFormularioSoloLectura">Carga por archivo</button>
+                      <button class="btn btn-primary my-5" (click)="cargaArchivo()"[disabled]="esFormularioSoloLectura">Carga por archivo</button>
                     </div>
                 </div>
 
@@ -365,3 +501,44 @@
     </form>
 
 </div>
+
+<div class="modal fade" id="modalArchivo1" tabindex="-1" #modalArchivo aria-labelledby="modalArchivo" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+        <ng-titulo titulo="Carga de mercancías por archivo" />
+        <form [formGroup]="formularioArchivo">
+          <div class="row">
+            <div class="col-md-8">
+              <div class="form-group">
+                <div>
+                  <label class="control-label"> Archivo: </label>
+                </div>
+                <input class="visually-hidden-file" type="file" formControlName="archivo" id="archivoAdjuntar" size="60"
+                  (change)="alSeleccionarArchivo($event);" />
+                <label class="custome-file-label" for="archivoAdjuntar" value="Seleccionar archivo"
+                  style="background-color: lightgrey; font-weight: bold">Seleccionar archivo</label>
+                <p style="display: inline-block"> {{ nombreArchivo || 'Sin archivos seleccionados' }} </p>
+                <br />
+              </div>
+            </div>
+          </div>
+        </form>
+
+      </div>
+      <div class="modal-footer custom-footer">
+        <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal> Cerrar </button>
+        <button type="submit" class="btn btn-primary" (click)="enviar()"> Enviar </button>
+      </div>
+    </div>
+  </div>
+</div>
+@if(nuevaNotificacion){
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion" ></lib-notificaciones>
+  }  
+  @if (nuevaNotificacionUno) {
+    <section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacionUno" >
+    </lib-notificaciones>
+    </section>
+    }

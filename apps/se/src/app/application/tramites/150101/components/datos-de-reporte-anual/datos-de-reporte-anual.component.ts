@@ -1,7 +1,8 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy,OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Notificacion } from '@ng-mf/data-access-user';
 import { Solicitud150101Query } from '../../estados/solicitud150101.query';
 import { Solicitud150101State } from '../../estados/solicitud150101.store';
 import { Solicitud150101Store } from '../../estados/solicitud150101.store';
@@ -22,7 +23,7 @@ import { SolicitudService } from '../../services/registro-solicitud-anual.servic
  * @implements {OnInit, OnDestroy}
  * @description Este componente maneja la lógica del formulario para capturar los datos del reporte anual.
  */
-export class DatosDeReporteAnnualComponent implements OnDestroy {
+export class DatosDeReporteAnnualComponent implements OnDestroy, OnInit {
   /**
    * @description Formulario reactivo para capturar los datos del reporte anual.
    */
@@ -43,6 +44,20 @@ export class DatosDeReporteAnnualComponent implements OnDestroy {
    * @description Subject para la gestión de las suscripciones y evitar fugas de memoria.
    */
   private destroyed$ = new Subject<void>();
+
+  /**
+   * @descripcion
+   * Mensaje de alerta que se muestra al usuario.
+   */
+    mensajeDeAlerta: string = 'Las Ventas Totales deben ser mayores o iguales al Total de Exportaciones.';
+
+  /**
+     * @public
+     * @property {Notificacion} nuevaNotificacion
+     * @description Representa una nueva notificación que se utilizará en el componente.
+     * @command Este campo debe ser inicializado antes de su uso.
+     */
+  public nuevaNotificacion!: Notificacion;
 
   /**
    * @constructor
@@ -78,6 +93,17 @@ export class DatosDeReporteAnnualComponent implements OnDestroy {
       )
       .subscribe();
 
+    this.inicializarFormulario();
+  }
+
+  /**
+   * @method inicializarFormulario
+   * @description Inicializa el formulario reactivo con los valores actuales del estado de la solicitud.
+   * Define los controles y sus validaciones para ventas totales, exportaciones, importaciones, saldo y porcentaje de exportación.
+   * Algunos campos están deshabilitados según su naturaleza de solo lectura.
+   * @returns {void}
+   */
+  inicializarFormulario(): void {
     this.formReporteAnnual = this.fb.group({
       ventasTotales: [
         { value: this.solicitud150101State.ventasTotales, disabled: false },
@@ -109,9 +135,50 @@ export class DatosDeReporteAnnualComponent implements OnDestroy {
         [Validators.maxLength(16)],
       ],
     });
+    
+
+    this.solicitud150101Query.seleccionarSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((respuesta: Solicitud150101State) => {
+          this.solicitud150101State = respuesta;
+          this.formReporteAnnual.patchValue({
+            saldo: this.solicitud150101State.saldo,
+            porcentajeExportacion: this.solicitud150101State.porcentajeExportacion,
+            ventasTotales: this.solicitud150101State.ventasTotales,
+            totalExportaciones: this.solicitud150101State.totalExportaciones,
+            totalImportaciones: this.solicitud150101State.totalImportaciones,
+        })
+        })
+      )
+      .subscribe();
+
+   
 
     this.inicializarEstadoFormulario();
   }
+  /**
+   * `
+   * @lifecycle
+   * @description Método del ciclo de vida de Angular llamado al inicializar el componente.
+   * Suscribe a los cambios en los campos del formulario para recalcular el reporte anual.
+   * @param {void}
+   * @return {void}
+   * */
+  ngOnInit(): void {
+  this.formReporteAnnual.get('ventasTotales')?.valueChanges
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe(() => this.calcularReporteAnnual());
+
+  this.formReporteAnnual.get('totalExportaciones')?.valueChanges
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe(() => this.calcularReporteAnnual());
+
+  this.formReporteAnnual.get('totalImportaciones')?.valueChanges
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe(() => this.calcularReporteAnnual());
+}
+
 
   /**
    * @method inicializarEstadoFormulario
@@ -123,10 +190,13 @@ export class DatosDeReporteAnnualComponent implements OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.formularioDeshabilitado) {
       this.formReporteAnnual.disable();
-    } else if (!this.formularioDeshabilitado) {
+    } else {
       this.formReporteAnnual.enable();
+      this.formReporteAnnual.get('totalImportaciones')?.disable();
+      this.formReporteAnnual.get('saldo')?.disable();
+      this.formReporteAnnual.get('porcentajeExportacion')?.disable();
     }
-  }  
+  }
 
   /**
    * @description Actualiza las ventas totales en el store y recalcula el reporte.
@@ -144,7 +214,7 @@ export class DatosDeReporteAnnualComponent implements OnDestroy {
    */
   obtenerTotalExportaciones(evento: Event): void {
     const VALUE = (evento.target as HTMLInputElement).value;
-    this.solicitud150101Store.actualizarTotalExportaciones(parseFloat(VALUE));
+    this.solicitud150101Store.actualizarTotalExportaciones(VALUE);
 
     const VENTAS_TOTALES =
       parseFloat(this.formReporteAnnual.get('ventasTotales')?.value) || 0;
@@ -156,7 +226,48 @@ export class DatosDeReporteAnnualComponent implements OnDestroy {
     this.solicitud150101Store.actualizarSaldo(TOTAL_VALUE);
     this.calcularReporteAnnual();
   }
-
+  
+  /**
+   * @description Verifica si el total de exportaciones es mayor que las ventas totales.
+   * Si es así, muestra una notificación de alerta.
+   * @returns {void}
+   */
+  diferenciaTotal(): void {
+    const VENTAS_TOTALES =
+      parseFloat(this.formReporteAnnual.get('ventasTotales')?.value) || 0;
+    const TOTAL_EXPORTACIONES =
+      parseFloat(this.formReporteAnnual.get('totalExportaciones')?.value) || 0;
+      if( VENTAS_TOTALES < TOTAL_EXPORTACIONES) {
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: '',
+          mensaje: this.mensajeDeAlerta,
+          cerrar: false,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        }
+        
+      }
+    }
+  /**
+   * @description Limita la longitud del valor del input a un máximo especificado.
+   * @param event - Evento del input para capturar el valor introducido.
+   * @param maxLength - Longitud máxima permitida para el valor del input.
+   * @return {void}
+   * @example
+   * limitarLongitud(event, 16);
+   * */
+  limitarLongitud(event: Event, maxLength: number): void {
+    const INPUT = event.target as HTMLInputElement;
+    if (INPUT.value.length > maxLength) {
+      INPUT .value = INPUT.value.slice(0, maxLength);
+    }
+      this.obtenerTotalExportaciones(event);
+      this.diferenciaTotal();
+  }
   /**
    * @description Actualiza el total de importaciones en el store y recalcula el reporte.
    * @param evento - Evento del input para capturar el valor introducido.
@@ -183,9 +294,18 @@ export class DatosDeReporteAnnualComponent implements OnDestroy {
       ? TOTAL_PORCENTAJE
       : 0;
 
-    this.solicitud150101Store.actualizarPorcentajeExportacion(TOTAL_PORCENTAJE_VALUE);
+    this.solicitud150101Store.actualizarPorcentajeExportacion(
+      TOTAL_PORCENTAJE_VALUE
+    );
     const TOTAL_SALDO: number = TOTAL_EXPORTACIONES - TOTAL_IMPORTACIONES;
     this.solicitud150101Store.actualizarSaldo(TOTAL_SALDO);
+     
+  this.solicitud150101Store.actualizarSaldo(TOTAL_SALDO);
+  this.solicitud150101Store.actualizarPorcentajeExportacion(TOTAL_PORCENTAJE_VALUE);
+  this.formReporteAnnual.patchValue({
+    saldo: TOTAL_SALDO,
+    porcentajeExportacion: TOTAL_PORCENTAJE_VALUE
+  }, { emitEvent: false }); 
   }
 
   /**

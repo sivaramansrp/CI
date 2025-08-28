@@ -236,3 +236,129 @@ export const API_GET_DOCUMENTOS130118 = 'sat-t130118/solicitud/documentos';
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/idc/swagger-ui/index.html#/idc-ws-end-point-controller/informacionContribuyente
  */
 export const API_GET_IDC_CONTRIBUYENTE = `idc/contribuyente/${RFC_GENERICO}/informacion`;
+
+/**
+ * Constante para el número de folio del tramite.
+ * Debe ser reemplazada por el número de folio real del tramite.
+ */
+export const NUMFOLIOTRAMITE = '{numFolioTramite}';
+
+/**
+ * ID de la solicitud del dictamen que se utilizará en las consultas.
+ * Este valor debe ser reemplazado por el ID real de la solicitud del dictamen.
+ */
+export const IDSOLICITUDDICTAMEN = '{idSolicitudDictamen}';
+
+/**
+ * API para obtener las opciones de evaluación del tramite generico.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Evaluar-Solicitud/opciones-evaluacion
+ */
+export const API_POST_OPCIONES_EVALUACION = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/opciones-evaluacion`;
+
+/**
+ * API para generar el dictamen del tramite generico.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Dictamen/dictamen-criterios-by-idSolicitud
+ */
+export const API_GET_DICTAMEN = `sat-t${TRAMITE}/solicitud/${IDSOLICITUDDICTAMEN}/dictamen/generar/criterios`;
+
+/**
+ * API para guardar el dictamen del tramite generico.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Dictamen/generar-dictamen-by-numFolioTramite
+ */
+export const API_POST_GUARDAR_DICTAMEN = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/dictamen/generar/guardar`;
+
+/**
+ * API para iniciar el dictamen del tramite generico.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Dictamen/generar-dictamen-by-numFolioTramite
+ */
+export const API_GET_INICAR_DICTAMEN = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/dictamen/generar/iniciar`;
+
+/**
+ * API para Consultar acuses de resolución del tramite generico.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Acuse/consulta-acuse-resoluciones-funcionario
+ */
+export const API_GET_ACUSES_RESOLUCION = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/funcionario/acuses-resoluciones`;
+
+/**
+ * API para Consultar dictamenes del tramite generico.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitudes/consultar-dictamenes-by-numFolioTramite
+ */
+export const API_GET_DICTAMENES = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/dictamenes`;
+
+/**
+ * API para Consultar requerimientos del tramite generico.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitudes/get-requerimientos-by-numFolioTramite
+ */
+export const API_GET_REQUERIMIENTOS = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/requerimientos`;
+
+/**
+ * API para Consultar documentos de solicitud del tramite generico.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitudes/consulta-documentos-solicitud
+ */
+export const API_GET_SOLICITUD_DOCUMENTOS = `sat-t${TRAMITE}/solicitud/${IDSOLICITUD}/documentos`;
+
+/**
+ * API para Consultar tareas de solicitud del tramite generico.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitudes/get-tareas-tramite 
+ */
+export const API_GET_TAREAS_DOCUMENTOS = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/bitacora`;
+  
+/**
+ * Id opinion que se utilizará en las consultas.
+ * Este valor debe ser reemplazado por el tramite correspondiente.
+ */
+export const IDOPINION= '{idOpinion}';
+
+/**
+ * API para Consultar detalle de opinion del tramite generico.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/consulta-detalle%20opninion 
+ */
+export const API_GET_OPINION_DETALLE = `sat-t${TRAMITE}/tramite/opinion/${IDOPINION}/detalle`
+
+/**
+ * Id dictamen que se utilizará en las consultas.
+ * Este valor debe ser reemplazado por el tramite correspondiente.
+ */
+export const IDDICTAMEN= '{idDictamen}';
+
+/**
+ * API para Consultar detalle de dictamen del tramite generico.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/buscar-dictamen-by-idDictamen 
+ */
+export const API_GET_DICTAMEN_DETALLE = `sat-t${TRAMITE}/tramite/dictamen/${IDDICTAMEN}`
+
+/**
+ * Id observacion que se utilizará en las consultas.
+ * Este valor debe ser reemplazado por el tramite correspondiente.
+ */
+export const IDOBSERVACION= '{idObservacion}';
+
+/**
+ * API para Consultar detalle de observacion del dictamen del tramite generico.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/get-By-Id-Observacion 
+ */
+export const API_GET_DICTAMEN_DETALLE_OBSERVACION = `sat-t${TRAMITE}/dictamen/observacion/${IDOBSERVACION}`
+
+/**
+ * DOCUMENTOMINIO para descargas.
+ * Este valor debe ser reemplazado por el tramite correspondiente.
+ */
+export const DOCUMENTOMINIO= '{documentoMinio}';
+
+/**
+ * API para Consultar url de descarga de dictamen.
+ * @see  https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/consulta-documento-oficial
+ */
+export const API_GET_DESCARGAR_ACUSE= `sat-t${TRAMITE}/documento-oficiales/${DOCUMENTOMINIO}`
+
+/**
+ * IDREQUERIMIENTO para detalle de requerimiento.
+ * Este valor debe ser reemplazado por el tramite correspondiente.
+ */
+export const IDREQUERIMIENTO= '{idRequerimiento}';
+
+/**
+ * API para Consultar detalle de un requerimiento del tramite generico.
+ * @see https://api-v30.cloud-ultrasist.net/api/tramite-flujo/swagger-ui/index.html#/Consulta-Requerimiento/getDetalleByIdRequerimiento
+ */
+export const API_GET_REQUERIMIENTO_DETALLE = `sat-t${TRAMITE}/tramite/requerimiento/${IDREQUERIMIENTO}/detalle`

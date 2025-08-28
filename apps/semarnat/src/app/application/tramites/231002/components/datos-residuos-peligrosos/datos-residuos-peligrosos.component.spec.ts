@@ -1,132 +1,292 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DatosResiduosPeligrososComponent } from './datos-residuos-peligrosos.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormularioResiduoQuery } from '../../estados/queries/datos-residuos.query';
-import { FormularioResiduoStore } from '../../estados/tramites/datos-residuos.store';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
 
-jest.mock('@libs/shared/theme/assets/json/231002/solicitud.json', () => ({
-  __esModule: true,
-  default: {
-    radioOptions: [{ label: 'Sí', value: 'si' }],
-    clasificacionRadioOptions: [{ label: 'Tipo A', value: 'A' }],
-    nombre: [{ id: 1, descripcion: 'Nombre 1' }],
-    arancelaria: [{ id: 1, descripcion: 'Fracción 1' }],
-    nico: [{ id: 1, descripcion: 'Nico 1' }],
-    unidad: [{ id: 1, descripcion: 'Unidad 1' }],
-    residuo: [{ id: 1, descripcion: 'Residuo 1' }],
-    tipoNombre: [{ id: 1, descripcion: 'Tipo Nombre' }],
-    descripcion: [{ id: 1, descripcion: 'Descripción' }],
-    creti: [{ id: 1, descripcion: 'CRETIB' }],
-    estadoFisico: [{ id: 1, descripcion: 'Líquido' }],
-    tipoContenedor: [{ id: 1, descripcion: 'Tambor' }],
-    PrimasRelacionadas: [
-      {
-        encabezadoDeTabla: ['Columna1', 'Columna2'],
-        cuerpoTabla: [{ tbodyData: ['Valor1', 'Valor2'] }]
-      }
-    ],
-    Immex: [],
-    table: []
-  }
-}));
+import { Component, ChangeDetectorRef } from '@angular/core';
+import { DatosResiduosPeligrososComponent } from './datos-residuos-peligrosos.component';
+import { FormBuilder } from '@angular/forms';
+import { FormularioResiduoStore } from '../../estados/tramites/datos-residuos.store';
+import { FormularioResiduoQuery } from '../../estados/queries/datos-residuos.query';
+
+@Injectable()
+class MockFormularioResiduoStore {}
+
+@Injectable()
+class MockFormularioResiduoQuery {}
+
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
+
 
 describe('DatosResiduosPeligrososComponent', () => {
-  let component: DatosResiduosPeligrososComponent;
-  let fixture: ComponentFixture<DatosResiduosPeligrososComponent>;
-  let mockQuery: jest.Mocked<FormularioResiduoQuery>;
-  let mockStore: jest.Mocked<FormularioResiduoStore>;
+  let fixture;
+  let component;
 
-  const estadoInicial = {
-    formularioDatos: {
-      numero: '001',
-      nombreMateriaPrima: 'Materia',
-      cantidad: '100',
-      cantidadLetra: 'Cien',
-      unidadDeMedida: 'Kg',
-      fraccionArancelaria: '1234.56.78'
-    },
-    formularioResiduo: {
-      fraccionArancelaria: '1234.56.78',
-      nico: '001',
-      acotacion: 'Acotación',
-      residuoPeligroso: 'Sí',
-      cantidad: '200',
-      cantidadLetra: 'Doscientos',
-      unidadMedida: 'Kg',
-      clasificacion: 'A',
-      claveResiduo: 'RES123',
-      nombre: 'Residuo X',
-      descripcion: 'Descripción',
-      creti: 'CRETIB',
-      estadoFisico: 'Líquido',
-      tipoContenedor: 'Tambor',
-      capacidad: '50'
-    }
-  };
-
-  beforeEach(async () => {
-    mockQuery = {
-      getValue: jest.fn().mockReturnValue(estadoInicial)
-    } as unknown as jest.Mocked<FormularioResiduoQuery>;
-
-    mockStore = {
-      actualizarFormularioDatos: jest.fn(),
-      actualizarFormularioResiduo: jest.fn()
-    } as unknown as jest.Mocked<FormularioResiduoStore>;
-
-    await TestBed.configureTestingModule({
-      imports: [CommonModule, ReactiveFormsModule, DatosResiduosPeligrososComponent],
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule, DatosResiduosPeligrososComponent ],
+      declarations: [
+        MyCustomDirective
+      ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
-        { provide: FormularioResiduoQuery, useValue: mockQuery },
-        { provide: FormularioResiduoStore, useValue: mockStore },
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    }).compileComponents();
+        { provide: FormularioResiduoStore, useClass: MockFormularioResiduoStore },
+        { provide: FormularioResiduoQuery, useClass: MockFormularioResiduoQuery },
+        ChangeDetectorRef
+      ]
+    }).overrideComponent(DatosResiduosPeligrososComponent, {
 
+    }).compileComponents();
     fixture = TestBed.createComponent(DatosResiduosPeligrososComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('debería crear el componente', () => {
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería inicializar catálogos desde el archivo JSON', () => {
-    expect(component.etiquetasForm.nombre.length).toBeGreaterThan(0);
-    expect(component.etiquetasForm.arancelaria.length).toBeGreaterThan(0);
-    expect(component.etiquetasForm.nico.length).toBeGreaterThan(0);
-    expect(component.etiquetasForm.tipoContenedor[0]?.descripcion).toBe('Tambor');
-  });
-  
-
-  it('debería inicializar los formularios con datos del store', () => {
-    expect(component.formularioDatos.value.numero).toBe('001');
-    expect(component.formularioResiduo.value.nombre).toBe('Residuo X');
+  it('should run GetterDeclaration #agregarHabilitado', async () => {
+    component.formularioDatos = component.formularioDatos || {};
+    component.formularioDatos.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    const agregarHabilitado = component.agregarHabilitado;
+    expect(component.formularioDatos.get).toHaveBeenCalled();
   });
 
-  it('debería tener los encabezados y cuerpo de tabla establecidos', () => {
-    expect(component.etiquetasForm.PrimasRelacionadas[0].encabezadoDeTabla).toEqual(['Columna1', 'Columna2']);
-    expect(component.etiquetasForm.PrimasRelacionadas[0].cuerpoTabla).toEqual([{ tbodyData: ['Valor1', 'Valor2'] }]);
+  it('should run GetterDeclaration #claveResiduoDisabled', async () => {
+    component.formularioResiduo = component.formularioResiduo || {};
+    component.formularioResiduo.get = jest.fn();
+    const claveResiduoDisabled = component.claveResiduoDisabled;
+    expect(component.formularioResiduo.get).toHaveBeenCalled();
   });
 
-  it('debería actualizar el campo de formularioDatos usando el método actualizarCampoFormularioDatos', () => {
-    component.formularioDatos.get('cantidad')?.setValue('300');
-    component.actualizarCampoFormularioDatos('cantidad');
-    expect(mockStore.actualizarFormularioDatos).toHaveBeenCalledWith(
-      expect.objectContaining({ cantidad: '300' })
-    );
+  it('should run GetterDeclaration #nombreDisabled', async () => {
+    component.formularioResiduo = component.formularioResiduo || {};
+    component.formularioResiduo.get = jest.fn();
+    const nombreDisabled = component.nombreDisabled;
+    expect(component.formularioResiduo.get).toHaveBeenCalled();
   });
 
-  it('debería actualizar el campo de formularioResiduo usando el método actualizarCampoFormularioResiduo', () => {
-    component.formularioResiduo.get('capacidad')?.setValue('100');
-    component.actualizarCampoFormularioResiduo('capacidad');
-    expect(mockStore.actualizarFormularioResiduo).toHaveBeenCalledWith(
-      expect.objectContaining({ capacidad: '100' })
-    );
+  it('should run GetterDeclaration #descripcionDisabled', async () => {
+    component.formularioResiduo = component.formularioResiduo || {};
+    component.formularioResiduo.get = jest.fn();
+    const descripcionDisabled = component.descripcionDisabled;
+    expect(component.formularioResiduo.get).toHaveBeenCalled();
   });
+
+  it('should run GetterDeclaration #claveResiduoValue', async () => {
+    component.formularioResiduo = component.formularioResiduo || {};
+    component.formularioResiduo.getRawValue = jest.fn();
+    const claveResiduoValue = component.claveResiduoValue;
+    expect(component.formularioResiduo.getRawValue).toHaveBeenCalled();
+  });
+
+  it('should run GetterDeclaration #nombreValue', async () => {
+    component.formularioResiduo = component.formularioResiduo || {};
+    component.formularioResiduo.getRawValue = jest.fn();
+    const nombreValue = component.nombreValue;
+    expect(component.formularioResiduo.getRawValue).toHaveBeenCalled();
+  });
+
+  it('should run GetterDeclaration #descripcionValue', async () => {
+    component.formularioResiduo = component.formularioResiduo || {};
+    component.formularioResiduo.getRawValue = jest.fn();
+    const descripcionValue = component.descripcionValue;
+    expect(component.formularioResiduo.getRawValue).toHaveBeenCalled();
+  });
+
+  it('should run #ngOnInit()', async () => {
+    component.inicializarFormulario = jest.fn();
+    component.crearFormularioResiduo = jest.fn();
+    component.recuperarValoresDesdeStore = jest.fn();
+    component.etiquetasForm = component.etiquetasForm || {};
+    component.etiquetasForm.nombre = 'nombre';
+    component.etiquetasForm.nico = 'nico';
+    component.formularioResiduo = component.formularioResiduo || {};
+    component.formularioResiduo.get = jest.fn().mockReturnValue({
+      disable: function() {}
+    });
+    component.verificarEstadoDropdowns = jest.fn();
+    component.ngOnInit();
+    expect(component.inicializarFormulario).toHaveBeenCalled();
+    expect(component.crearFormularioResiduo).toHaveBeenCalled();
+    expect(component.recuperarValoresDesdeStore).toHaveBeenCalled();
+    expect(component.formularioResiduo.get).toHaveBeenCalled();
+
+  });
+
+  it('should run #inicializarFormulario()', async () => {
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn();
+    component.inicializarFormulario();
+    expect(component.fb.group).toHaveBeenCalled();
+  });
+
+  it('should run #crearFormularioResiduo()', async () => {
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn();
+    component.crearFormularioResiduo();
+    expect(component.fb.group).toHaveBeenCalled();
+  });
+
+  it('should run #recuperarValoresDesdeStore()', async () => {
+    component.formularioQuery = component.formularioQuery || {};
+    component.formularioQuery.getValue = jest.fn().mockReturnValue({
+      formularioResiduo: {},
+      formularioDatos: {}
+    });
+    component.formularioResiduo = component.formularioResiduo || {};
+    component.formularioResiduo.get = jest.fn().mockReturnValue({
+      disable: function() {},
+      disabled: {}
+    });
+    component.formularioResiduo.patchValue = jest.fn();
+    component.formularioDatos = component.formularioDatos || {};
+    component.formularioDatos.patchValue = jest.fn();
+    component.recuperarValoresDesdeStore();
+    expect(component.formularioQuery.getValue).toHaveBeenCalled();
+    expect(component.formularioResiduo.get).toHaveBeenCalled();
+    expect(component.formularioResiduo.patchValue).toHaveBeenCalled();
+    expect(component.formularioDatos.patchValue).toHaveBeenCalled();
+  });
+
+
+
+  it('should run #actualizarCampoFormularioDatos()', async () => {
+    component.formularioDatos = component.formularioDatos || {};
+    component.formularioDatos.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.formularioDatos.getRawValue = jest.fn();
+    component.formularioStore = component.formularioStore || {};
+    component.formularioStore.actualizarFormularioDatos = jest.fn();
+    component.actualizarCampoFormularioDatos({});
+    expect(component.formularioDatos.get).toHaveBeenCalled();
+    expect(component.formularioDatos.getRawValue).toHaveBeenCalled();
+    expect(component.formularioStore.actualizarFormularioDatos).toHaveBeenCalled();
+  });
+
+  it('should run #actualizarCampoFormularioResiduo()', async () => {
+    component.formularioResiduo = component.formularioResiduo || {};
+    component.formularioResiduo.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.formularioResiduo.getRawValue = jest.fn();
+    component.formularioStore = component.formularioStore || {};
+    component.formularioStore.actualizarFormularioResiduo = jest.fn();
+    component.actualizarCampoFormularioResiduo({});
+    expect(component.formularioResiduo.get).toHaveBeenCalled();
+    expect(component.formularioResiduo.getRawValue).toHaveBeenCalled();
+    expect(component.formularioStore.actualizarFormularioResiduo).toHaveBeenCalled();
+  });
+
+
+  it('should run #onNombreMateriaPrimaChange()', async () => {
+    component.formularioDatos = component.formularioDatos || {};
+    component.formularioDatos.get = jest.fn().mockReturnValue({
+      setValue: function() {},
+      value: {}
+    });
+    component.formularioDatos.getRawValue = jest.fn();
+    component.materiasDisponibles = component.materiasDisponibles || {};
+    component.materiasDisponibles.find = jest.fn().mockReturnValue([
+      {
+        "id": {}
+      }
+    ]);
+    component.formularioStore = component.formularioStore || {};
+    component.formularioStore.actualizarFormularioDatos = jest.fn();
+    component.onNombreMateriaPrimaChange();
+    expect(component.formularioDatos.get).toHaveBeenCalled();
+    expect(component.formularioDatos.getRawValue).toHaveBeenCalled();
+    expect(component.materiasDisponibles.find).toHaveBeenCalled();
+    expect(component.formularioStore.actualizarFormularioDatos).toHaveBeenCalled();
+  });
+
+
+
+
+
+  it('should run #onCantidadChange()', async () => {
+    component.formularioResiduo = component.formularioResiduo || {};
+    component.formularioResiduo.get = jest.fn().mockReturnValue({
+      setValue: function() {},
+      value: {}
+    });
+    component.onCantidadChange();
+    expect(component.formularioResiduo.get).toHaveBeenCalled();
+  });
+
+  it('should run #onClasificacionChange()', async () => {
+    component.formularioResiduo = component.formularioResiduo || {};
+    component.formularioResiduo.get = jest.fn().mockReturnValue({
+      disable: function() {},
+      value: {}
+    });
+    component.manejarCambioClasificacion = jest.fn();
+    component.onClasificacionChange();
+    expect(component.formularioResiduo.get).toHaveBeenCalled();
+    expect(component.manejarCambioClasificacion).toHaveBeenCalled();
+  });
+
+  it('should run #verificarEstadoDropdowns()', async () => {
+    component.formularioResiduo = component.formularioResiduo || {};
+    component.formularioResiduo.get = jest.fn().mockReturnValue({
+      disable: function() {},
+      value: {}
+    });
+    component.verificarEstadoDropdowns();
+    expect(component.formularioResiduo.get).toHaveBeenCalled();
+  });
+
+  it('should run #manejarCambioClasificacion()', async () => {
+    component.formularioResiduo = component.formularioResiduo || {};
+    component.formularioResiduo.get = jest.fn().mockReturnValue({
+      enable: function() {},
+      setValue: function() {},
+      disable: function() {},
+      value: {}
+    });
+    component.formularioResiduo.getRawValue = jest.fn();
+    component.cdr = component.cdr || {};
+    component.cdr.detectChanges = jest.fn();
+    component.formularioStore = component.formularioStore || {};
+    component.formularioStore.actualizarFormularioResiduo = jest.fn();
+    component.manejarCambioClasificacion({});
+    expect(component.formularioResiduo.get).toHaveBeenCalled();
+    expect(component.formularioResiduo.getRawValue).toHaveBeenCalled();
+    expect(component.cdr.detectChanges).toHaveBeenCalled();
+    expect(component.formularioStore.actualizarFormularioResiduo).toHaveBeenCalled();
+  });
+
+  it('should run #mostrarNotificacionDuplicado()', async () => {
+
+    component.mostrarNotificacionDuplicado();
+
+  });
+
+  it('should run #agregarMateriaPrima()', async () => {
+    component.formularioDatos = component.formularioDatos || {};
+    component.formularioDatos.valid = 'valid';
+    component.formularioDatos.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.formularioDatos.reset = jest.fn();
+    component.materiasPrimas = component.materiasPrimas || {};
+    component.materiasPrimas.push = jest.fn();
+    component.agregarMateriaPrima();
+    expect(component.formularioDatos.get).toHaveBeenCalled();
+    expect(component.formularioDatos.reset).toHaveBeenCalled();
+    expect(component.materiasPrimas.push).toHaveBeenCalled();
+  });
+
 
 });

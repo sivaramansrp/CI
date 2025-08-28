@@ -6,6 +6,9 @@
         <div class="panel panel-default">
           <div class="panel-heading" (click)="mostrar_colapsable()">
             <p class="panel-title espacio-extra">
+               <a aria-label="Repeat"
+                  ><i class="bi bi-clipboard2-fill" aria-hidden="true"></i
+                ></a>
               Opciones de pre-llenado de Solicitud
             </p>
             <button type="button" class="collpase-button collapsed"
@@ -33,7 +36,7 @@
       </div>
     </div>
   </div>
-
+ 
   <div class="row mt-5">
     <form [formGroup]="form">
       <h6>Seleccione el tipo de operación que desea realizar*:</h6>
@@ -42,10 +45,10 @@
           [radioOptions]="btonDeRadio"
           [layout]="'horizontal'"
           formControlName="btonDeRadio"
-          (change)="setValorStore(form,'btonDeRadio')"
+          (change)="setValorStore(form,'btonDeRadio'); tipoTramiteChange.emit(form.get('btonDeRadio')?.value)"
         ></app-input-radio>
         <div *ngIf="form.get('btonDeRadio')?.invalid && form.get('btonDeRadio')?.touched" class="text-danger">
-          Por favor seleccione una opción.
+            Este campo es obligatorio
         </div>
       </div>
 
@@ -54,14 +57,16 @@
           <div class="form-group" [ngClass]="{'disabled-section': !isRadioButtonSelected}">
             <label class="form-label">Justificación*:</label>
             <textarea
-              class="form-control"
-              rows="3"
-              required = "true"
+              class="form-control justificacionBox"
+              rows="10"
+              required="true"
               formControlName="justificacion"
               (change)="setValorStore(form,'justificacion')"
+              maxlength="2000"
+              (input)="validarLongitudMaxima('justificacion', 2000)"
             ></textarea>
             <div *ngIf="form.get('justificacion')?.invalid && form.get('justificacion')?.touched" class="text-danger">
-              Por favor, corrija el motivo o justificación de la importación temporal.
+              Este campo es obligatorio
             </div>
           </div>
         </div>
@@ -77,8 +82,8 @@
           <button
             type="button"
             class="btn btn-primary"
-            (click)="toggleFormControls()"
-            [disabled]="esFormularioSoloLectura || !isRadioButtonSelected"
+            (click)="mostrarModalEstablecimiento()"
+            [disabled]="esFormularioSoloLectura || !isRadioButtonSelected || form.get('btonDeRadio')?.value === '0'"
           >
             Seleccionar establecimiento
           </button>
@@ -98,6 +103,12 @@
               formControlName="rfcDel"
               (change)="setValorStore(datosDelEstablecimiento,'rfcDel')"
             />
+             <div
+            *ngIf="datosDelEstablecimiento.get('rfcDel')?.invalid && datosDelEstablecimiento.get('rfcDel')?.touched && datosDelEstablecimiento.get('rfcDel')?.errors?.['pattern']"
+            class="text-danger">
+              El RFC no tiene un formato valido.
+            </div> 
+            
           </div>
         </div>
         <div class="col-md-8">
@@ -111,12 +122,19 @@
               placeholder=""
               type="text"
               formControlName="denominacion"
+              maxlength="101"
               (change)="setValorStore(datosDelEstablecimiento,'denominacion')"
+              (input)="validarLongitudMaxima('denominacion', 101)"
             />
             <div
             *ngIf="datosDelEstablecimiento.get('denominacion')?.invalid && datosDelEstablecimiento.get('denominacion')?.touched"
             class="text-danger">
-            La denominación es obligatoria.
+            <span *ngIf="datosDelEstablecimiento.get('denominacion')?.errors?.['required']">
+              Este campo es obligatorio
+            </span>
+            <span *ngIf="datosDelEstablecimiento.get('denominacion')?.errors?.['maxlength']">
+              Máximo 100 caracteres permitidos.
+            </span>
           </div>
           </div>
         </div>
@@ -128,24 +146,31 @@
               >Correo electrónico*:
               <span
                 class="bi bi-question-circle-fill"
-                title="Correo electrónico"
+                data-bs-title="ejemplo@dominio.com"
                 data-bs-toggle="tooltip"
+                data-bs-placement="top"
               ></span
             ></label>
             <input
               class="form-control"
               id="correo"
               placeholder=""
-              type="text"
+              type="email"
               formControlName="correo"
+              maxlength="320"
               (change)="setValorStore(datosDelEstablecimiento,'correo')"
+              (input)="validarLongitudMaxima('correo', 320)"
+              [ngClass]="isInvalid(datosDelEstablecimiento, 'correo') ? 'required' : ''"
             />
             <div *ngIf="datosDelEstablecimiento.get('correo')?.invalid && datosDelEstablecimiento.get('correo')?.touched" class="text-danger">
               <span *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['required']">
-                El correo electrónico es obligatorio.
+                Este campo es obligatorio
               </span>
               <span *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['email']">
-                El formato del correo electrónico no es válido.
+                El valor Ingresado no es una dirección válida de correo electrónico
+              </span>
+              <span *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['maxlength']">
+                Máximo 320 caracteres permitidos.
               </span>
             </div>
           </div>
@@ -154,4 +179,21 @@
     </form>
   </div>
 </div>
+</div>
+
+<!-- Modal para Seleccionar establecimiento -->
+<div class="modal" tabindex="-1" [ngClass]="{'show': mostrarModal}" [ngStyle]="{'display': mostrarModal ? 'block' : 'none', 'background': mostrarModal ? 'rgba(0,0,0,0.5)' : 'none'}">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
+    <div class="modal-content">
+      <div class="modal-header">
+      </div>
+      <div class="modal-body text-center">
+        <p>Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.</p>
+      </div>
+      <div class="modal-footer footer-buttons justify-content-center">
+        <button type="button" class="btn btn-primary" (click)="cerrarModal()">Aceptar</button>
+      </div>
+        <div class="row" [ngClass]="{'disabled-section': !isRadioButtonSelected || form.get('btonDeRadio')?.value === '0'}">
+    </div>
+  </div>
 </div>

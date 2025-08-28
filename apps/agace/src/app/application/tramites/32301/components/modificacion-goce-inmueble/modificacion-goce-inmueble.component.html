@@ -10,7 +10,7 @@
     <div class="row">
       <div class="col-12">
         <div class="form-group">
-          <label for="TipoDomicilio" class="form-label">Tipo domicilio *:</label>
+          <label for="TipoDomicilio" class="form-label">Tipo domicilio*:</label>
           <app-input-radio [radioOptions]="radioOptions" [isRequired]="true" [layout]="'horizontal'" [gap]="'50px'"
             formControlName="ideGenerica2" (valueChange)="verificaRadioTipoSem($event)"></app-input-radio>
         </div>
@@ -20,10 +20,16 @@
       <div class="col-12">
         <ng-alert [CONTENIDO]="messageNac" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
         <div class="table-responsive">
-          <ng-table [commonTableHeader]="gridDomiciliosModificadosHeader"
-            [commonTableBody]="gridDomiciliosModificadosData"
-            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></ng-table>
+          <app-tabla-dinamica [configuracionTabla]="configuracionTablas" [datos]="mostrarGridNuevoHeaderData"
+          [tipoSeleccionTabla]="seleccionTabla" (filaSeleccionada)="seleccionDeFilas($event)"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
         </div>
+        @if (mostrarGridNuevoHeaderData.length > 0) {
+        <div class="d-flex justify-content-center">
+          <app-table-pagination [showCurrentPage]="true">
+          </app-table-pagination>
+        </div>
+      }
         <div class="col-12 text-end">
           <button type="button" class="btn btn-default" (click)="openModificarRecordModel()"
             [disabled]="esFormularioSoloLectura">
@@ -32,21 +38,22 @@
         </div>
       </div>
     </div>
-@if(mostrarGridNuevo){
+    @if(mostrarGridNuevo){
     <div>
       <div class="table-responsive">
-        <ng-table [commonTableHeader]="mostrarGridNuevoHeader" [commonTableBody]="mostrarGridNuevoHeaderData"
-          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></ng-table>
+        <app-tabla-dinamica [configuracionTabla]="configuracionTablas" [datos]="mostrarGridNuevoHeaderData"
+          [tipoSeleccionTabla]="seleccionTabla" (filaSeleccionada)="seleccionDeFilas($event)"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
       </div>
       <div class="row mt-3">
         <div class="col-md-12">
           <div class="d-flex justify-content-end">
             <button type="button" name="btnModificarNvo" id="btnModificarDomiciliosNvo" class="btn btn-primary me-2"
-              [disabled]="esFormularioSoloLectura">
+              [disabled]="esFormularioSoloLectura" (click)="modificarDomicilioSeleccionado(seleccionadasFila!)">
               Modificar
             </button>
             <button type="button" name="btnEliminarNvo" id="btnEliminarDomicilioNvo" class="btn btn-danger me-2"
-              [disabled]="esFormularioSoloLectura">
+              [disabled]="esFormularioSoloLectura" (click)="eliminaDomicilioSeleccionado(seleccionadasFila?.id!)">
               Eliminar
             </button>
             <button type="button" name="btnAgregarNvo" id="btnAgregarDomiciliosNvo" class="btn btn-primary me-2"
@@ -57,7 +64,7 @@
         </div>
       </div>
     </div>
-  }
+    }
   </form>
 </div>
 
@@ -86,14 +93,14 @@
           <div class="row">
             <div class="col-md-8">
               <div class="form-group">
-                <label for="direccionInmuebleC" class="form-label">Colonia, calle y número *:</label>
-                <input type="text" id="direccionInmuebleC" formControlName="direccion" class="form-control" />
+                <label for="domicilio" class="form-label">Colonia, calle y número*:</label>
+                <input type="text" id="domicilio" formControlName="domicilio" class="form-control" />
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label for="codigoPostalInmuebleC" class="form-label">Código postal *:</label>
-                <input type="text" id="codigoPostalInmuebleC" formControlName="codigoPostal" class="form-control" />
+                <label for="codigoPostal" class="form-label">Código postal*:</label>
+                <input type="text" id="codigoPostal" formControlName="codigoPostal" class="form-control" />
               </div>
             </div>
           </div>
@@ -109,29 +116,31 @@
             <div class="col-md-4">
               <app-catalogo-select [catalogo]="fraccionArancelaria" formControlName="cveMunicipio"
                 [label]="'Alcaldía o Municipio'" [required]="true" name="cveFraccionArancelaria"
-                [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+                [isDisabled]="esFormularioSoloLectura">
+              </app-catalogo-select>
             </div>
           </div>
           <div class="row">
             <div class="col-md-8">
-              <app-catalogo-select [catalogo]="cveTipoDoc" formControlName="cveTipoDoc" [label]="
-                  'Tipo de documento con el que se acredita el uso y goce'
-                " [required]="true" name="cveTipoDoc" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+              <app-catalogo-select [catalogo]="cveTipoDoc" formControlName="cveTipoDoc"
+                [label]="'Tipo de documento con el que se acredita el uso y goce'" [required]="true" name="cveTipoDoc"
+                [isDisabled]="esFormularioSoloLectura">
+              </app-catalogo-select>
             </div>
           </div>
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
-                <label for="fechaInicialAnteriorCon">Fecha inicial anterior :</label>
-                <input class="form-control" type="date" name="fechaCaducidad" id="fechaInicialAnteriorCon"
-                  formControlName="fechaInicioAnterior" />
+                <label for="fechaInicioDeVigencia">Fecha inicial anterior:</label>
+                <input class="form-control" type="date" name="fechaInicioDeVigencia" id="fechaInicioDeVigencia"
+                  formControlName="fechaInicioDeVigencia" />
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label for="fechaFinalAnteriorCon">Fecha final anterior</label>
-                <input type="date" class="form-control" name="fechaFinalAnteriorCon" id="fechaFinalAnteriorCon"
-                  formControlName="fechaFinAnterior" />
+                <label for="fechaFinVigencia">Fecha final anterior:</label>
+                <input type="date" class="form-control" name="fechaFinVigencia" id="fechaFinVigencia"
+                  formControlName="fechaFinVigencia" />
               </div>
             </div>
           </div>
@@ -145,7 +154,6 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label class="form-label d-block">&nbsp;</label>
-
                 <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura"
                   (click)="cargarDatosRfcPartesC()">
                   Buscar
@@ -178,13 +186,9 @@
           <div class="row mt-3">
             <div class="col-md-12 text-right">
               <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura"
-                (click)="limpiaCamposParteC()">
-                Limpiar
-              </button>
+                (click)="limpiaCamposParteC()">Limpiar</button>
               <button type="button" class="btn btn-primary ms-2" [disabled]="esFormularioSoloLectura"
-                (click)="agregarParteC()">
-                Aceptar
-              </button>
+                (click)="agregarParteC()">Aceptar</button>
             </div>
           </div>
 
@@ -192,7 +196,8 @@
             <div class="col-md-12 table-responsive" id="gridListaModificacionPartes">
               <div class="innercontainer text-center">
                 <ng-table [commonTableHeader]="modificacionPartesHeader" [commonTableBody]="modificacionPartesData"
-                  [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></ng-table>
+                  [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
+                </ng-table>
               </div>
             </div>
           </div>
@@ -209,15 +214,16 @@
           <div class="row">
             <div class="col-md-12">
               <div class="form-group">
-                <label for="observacionesM" class="form-label">Observaciones</label>
-                <textarea class="form-control" rows="3" id="observacionesM" formControlName="observaciones"
+                <label for="observaciones" class="form-label">Observaciones</label>
+                <textarea class="form-control" rows="3" id="observaciones" formControlName="observaciones"
                   style="height: 80px"></textarea>
               </div>
             </div>
           </div>
+
           <div class="button-group d-flex justify-content-center">
             <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura"
-              (click)="guardarDomInmuebleNvo()">
+              (click)="guardarDomInmuebleNvo(direccionGrid)">
               Aceptar
             </button>
             <button type="button" [disabled]="esFormularioSoloLectura" class="btn btn-default"
@@ -226,6 +232,7 @@
             </button>
           </div>
         </form>
+
       </div>
     </div>
   </div>

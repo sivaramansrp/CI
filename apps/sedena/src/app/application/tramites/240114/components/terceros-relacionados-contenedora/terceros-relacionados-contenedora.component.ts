@@ -1,3 +1,4 @@
+import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -60,13 +61,17 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
    * @param {Tramite240114Store} tramiteStore - Store de Akita que maneja el estado del trámite.
    * @param {Tramite240114Query} tramiteQuery - Query de Akita para obtener datos del trámite.
    * @param {ConsultaioQuery} consultaQuery - Query para obtener el estado de la consulta.
+   * @param {Router} router - Router de Angular para la navegación.
+   * @param {ActivatedRoute} activatedRoute - ActivatedRoute de Angular para obtener parámetros de ruta.
    * @returns {void}
    */
   constructor(
     private tramiteStore: Tramite240114Store,
     private tramiteQuery: Tramite240114Query,
-    private consultaQuery: ConsultaioQuery
-  ) {}
+    private consultaQuery: ConsultaioQuery,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
+  ) { }
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
@@ -126,5 +131,70 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
    */
   cerrarModal(): void {
     this.modalComponent.cerrar();
+  }
+  /**
+ * Actualiza la lista de destinatarios finales en el store del trámite.
+ *
+ * @method modificarDestinarioDatos
+ * @param {DestinoFinal[]} event - Lista de destinatarios finales actualizada.
+ * @returns {void}
+ */
+  modificarDestinarioDatos(datos: DestinoFinal): void {
+    this.tramiteStore.actualizarDatosDestinatario(datos);
+    this.irAAcciones();
+  }
+  /**
+   * Actualiza la lista de proveedores en el store del trámite.
+   *
+   * @method modificarProveedorDatos
+   * @param {Proveedor} datos - Proveedor a modificar.
+   * @returns {void}
+   */
+  modificarProveedorDatos(datos: Proveedor): void {
+    this.tramiteStore.actualizarDatosProveedor(datos);
+    this.irAAccionesProveedor();
+  }
+
+  /**
+   * Navega a una ruta relativa dentro del flujo actual.
+   * @method irAAcciones
+   * @param {string} accionesPath - Ruta relativa a la que se desea navegar.
+   * @returns {void}
+   */
+  irAAcciones(): void {
+    this.router.navigate(['../agregar-destino-final'], {
+      relativeTo: this.activatedRoute,
+    });
+  }
+  /**
+   * Navega a una ruta relativa dentro del flujo actual.
+   * @method irAAcciones
+   * @param {string} accionesPath - Ruta relativa a la que se desea navegar.
+   * @returns {void}
+   */
+  irAAccionesProveedor(): void {
+    this.router.navigate(['../agregar-proveedor'], {
+      relativeTo: this.activatedRoute,
+    });
+  }
+  /**
+   * @method eliminarDestinatarioFinal
+   * @description Elimina el primer DestinoFinal final de la tabla de datos.
+   * Si no hay DestinoFinal finales seleccionados, no realiza ninguna acción.
+   */
+  eliminarDestinatarioFinal(datos: DestinoFinal): void {
+    if (datos) {
+      this.tramiteStore.eliminarDestinatarioFinal(datos);
+    }
+  }
+  /**
+   * @method eliminarProveedor
+   * @description Elimina el primer Proveedor final de la tabla de datos.
+   * Si no hay Proveedor finales seleccionados, no realiza ninguna acción.
+   */
+  eliminarProveedor(datos: Proveedor): void {
+    if (datos) {
+      this.tramiteStore.eliminareliminarProveedorFinal(datos);
+    }
   }
 }

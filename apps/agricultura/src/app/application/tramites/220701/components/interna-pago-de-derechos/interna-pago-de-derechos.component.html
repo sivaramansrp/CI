@@ -9,11 +9,11 @@
             <label class="form-label" for="coordenadas">Exento de pago:</label>
             <app-input-radio
               [radioOptions]="exentoPagoRadio"
-              [selectedValue]="exentoPagoValor"
               [isRequired]="false"
               [layout]="'vertical'"
               formControlName="exentoPago"
               [required]="true"
+              [disabled]="esFormularioSoloLectura"
               (valueChange)="cambioValorRadio('exentoPago', $event.toString())"
             ></app-input-radio>
           </div>

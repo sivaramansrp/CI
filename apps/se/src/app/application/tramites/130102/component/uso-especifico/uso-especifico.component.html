@@ -11,7 +11,10 @@
                 formControlName="fraccionArancelariaProsec"
                 [catalogo]="catalogos"
                [required]="true"
-                 [isDisabled]="consultaState.readonly ? true : false"></app-catalogo-select>
+                 [isDisabled]="consultaState.readonly ? true : false"
+                 [tooltipQuestionCircle]="true"
+                 [tooltipQuestionCircleText]="'Especifica la fracción arancelaria del producto en el que se utilizará la mercancía a importar'"
+               ></app-catalogo-select>
                @if (usoEspicificoForm.controls['fraccionArancelariaProsec'].invalid && usoEspicificoForm.controls['fraccionArancelariaProsec'].touched) {
                 <div class="text-danger">
                   @if (usoEspicificoForm.controls['fraccionArancelariaProsec'].errors?.['required']) {
@@ -27,7 +30,12 @@
             <div class="col-8">
                 <label class="form-label text-start" for="descripcion">
                     Descripción fracción PROSEC (Especificar el nombre comercial o técnico del producto en el que se
-                    utilizará la mercancía a importar):*
+                    utilizará la mercancía a importar):*<span
+          class="bi bi-question-circle-fill"
+          title="Especifica el nombre comercial o técnico del producto en el que se utilizará la mercancía a importar"
+          data-bs-toggle="tooltip"
+
+        ></span>
                 </label>
                 <textarea id="descripcionFraccionProsec" class="form-control height" rows="3"
                     formControlName="descripción"></textarea>

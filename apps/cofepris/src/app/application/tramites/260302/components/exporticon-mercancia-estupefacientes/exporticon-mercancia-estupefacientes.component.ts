@@ -26,7 +26,7 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { CommonModule, Location } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { Subject, first, takeUntil, tap } from 'rxjs';
 import {
   Tramite260302State,
@@ -57,6 +57,12 @@ import { Tramite260302Query } from '../../estados/tramite260302Query.query';
 export class ExporticonMercanciaEstupefacientesComponent
   implements OnInit, OnDestroy
 {
+
+  /**
+   * Referencias a los componentes de listas cruzadas.
+   */
+  @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
+
   /**
    * @property {FormGroup} mercanciaForm
    * Formulario reactivo principal para capturar los datos de la mercancía.
@@ -124,7 +130,7 @@ export class ExporticonMercanciaEstupefacientesComponent
    */
   public usoEspesificoLabel: CrossListLable = {
     tituluDeLaIzquierda: 'Uso específico',
-    derecha: 'Uso específico seleccionado',
+    derecha: 'Uso específico seleccionado*:',
   };
 
   /**
@@ -134,7 +140,7 @@ export class ExporticonMercanciaEstupefacientesComponent
    */
   public formaFaramaceuticaLabel: CrossListLable = {
     tituluDeLaIzquierda: 'Forma farmacéutica',
-    derecha: 'Forma farmacéutica',
+    derecha: '*:',
   };
 
   /**
@@ -209,6 +215,58 @@ export class ExporticonMercanciaEstupefacientesComponent
    */
 
   public validoUMTValor:boolean=false;
+
+  /**
+   * Botones de acción para gestionar listas de países en la tercera sección.
+   */
+  farmaceuticaBotons = [
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[0].agregar('t'),
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[0].agregar(''),
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[0].quitar(''),
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[0].quitar('t'),
+    },
+  ];
+
+  /**
+   * Botones de acción para gestionar listas de países en la tercera sección.
+   */
+  paisDeProcedenciaBotons = [
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[0].agregar('t'),
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[0].agregar(''),
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[0].quitar(''),
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[0].quitar('t'),
+    },
+  ];
 
   /**
    * @constructor

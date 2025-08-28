@@ -1,6 +1,5 @@
 import {
   Catalogo,
-  CatalogoSelectComponent,
   ConfiguracionColumna,
   TablaDinamicaComponent,
   TablaSeleccion,
@@ -18,8 +17,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { ContenedorComplementarPlantasComponent } from '../../../tramites/80101/component/contenedor-complementar-plantas/contenedor-complementar-plantas.component';
+import { Modal } from 'bootstrap';
 @Component({
   selector: 'app-gestionar-empresas-subfabricante',
   standalone: true,
@@ -29,6 +31,7 @@ import { Router } from '@angular/router';
     CommonModule,
     CatalogoSelectComponent,
     TituloComponent,
+    ContenedorComplementarPlantasComponent
   ],
   templateUrl: './gestionar-empresas-subfabricante.component.html',
   styleUrl: './gestionar-empresas-subfabricante.component.scss',
@@ -98,6 +101,14 @@ export class GestionarEmpresasSubfabricantesComponent implements OnInit {
     this._estadoCatalogo = valor;
   }
 
+  /**
+   * Indica si se debe mostrar la tabla inicial.
+   * Esta propiedad se utiliza para controlar la visibilidad de la tabla de subfabricantes.
+   *
+   * @type {boolean}
+   * @default false
+   */
+  @Input() showTablaInicial: boolean = false;
 
   /**
    * Obtiene el estado del catálogo.
@@ -263,6 +274,16 @@ export class GestionarEmpresasSubfabricantesComponent implements OnInit {
    */
   plantasSeleccionadas: PlantasSubfabricante[] = [];
 
+
+/**
+ * Reference to the currently open modal instance.
+ * Used to control the modal's state and perform actions such as closing or updating its content.
+ * 
+ * @private
+ * @type {Modal | null}
+ */
+private modalRef: Modal | null = null;
+
   /**
    * Constructor para inicializar el formulario de datos del subcontratista.
    * @param fb - FormBuilder para la creación del formulario reactivo.
@@ -324,6 +345,18 @@ export class GestionarEmpresasSubfabricantesComponent implements OnInit {
    */
   onBuscar(): void {
     this.buscar.emit();
+  }
+
+  /**
+   * Hides the modal dialog associated with the 'complementarPlanta' element.
+   * Initializes the modal reference if the element exists and then hides the modal.
+   */
+  setGuardar(): void {
+   const modalElement = document.getElementById('complementarPlanta');
+    if (modalElement) {
+      this.modalRef = new Modal(modalElement);
+      this.modalRef.hide();
+    }
   }
 
   /**
@@ -417,5 +450,6 @@ export class GestionarEmpresasSubfabricantesComponent implements OnInit {
     if (this.plantasSeleccionadas.length > 0) {
       this.plantasPorComplementar.emit(this.plantasSeleccionadas);
     }
+    
   }
 }

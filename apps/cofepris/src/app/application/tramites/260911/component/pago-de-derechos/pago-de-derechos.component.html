@@ -5,16 +5,20 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label">Clave de referencia:</label>
-            <input
-              class="form-control"
-              placeholder=""
-              type="text"
-              name="claveDeReferencia"
-              formControlName="claveDeReferencia"
-              (change)="setValoresStore(pagoDeDerechosForm,'claveDeReferencia')"
-            />
+              <input
+                class="form-control"
+                placeholder=""
+                type="text"
+                name="claveDeReferencia"
+                formControlName="claveDeReferencia"
+                maxlength="9"
+                (change)="setValoresStore(pagoDeDerechosForm,'claveDeReferencia')"
+                (input)="validarLongitudMaxima('claveDeReferencia', 10)"
+                [disabled]="disabled"
+              />
             <div *ngIf="esInvalido('claveDeReferencia')" class="text-danger">
-              <small *ngIf="pagoDeDerechosForm.controls['claveDeReferencia'].hasError('maxlength')">Máximo 50 caracteres.</small>
+              <small *ngIf="pagoDeDerechosForm.controls['claveDeReferencia'].hasError('required')">Todos los campos de pago son requeridos</small>
+              <small *ngIf="pagoDeDerechosForm.controls['claveDeReferencia'].hasError('maxlength')">Máximo 9 caracteres.</small>
           </div>
           </div>
         </div>
@@ -27,10 +31,13 @@
               type="text"
               name="cadenaPagoDependencia"
               formControlName="cadenaPagoDependencia"
+              maxlength="14"
               (change)="setValoresStore(pagoDeDerechosForm,'cadenaPagoDependencia')"
+              (input)="validarLongitudMaxima('cadenaPagoDependencia', 15)"
+              [disabled]="disabled"
             />
             <div *ngIf="esInvalido('cadenaPagoDependencia')" class="text-danger">
-              <small *ngIf="pagoDeDerechosForm.controls['cadenaPagoDependencia'].hasError('maxlength')">Máximo 50 caracteres.</small>
+              <small *ngIf="pagoDeDerechosForm.controls['cadenaPagoDependencia'].hasError('maxlength')">Máximo 14 caracteres.</small>
           </div>
           </div>
         </div>
@@ -41,12 +48,12 @@
               [label]="'Banco'"
               id="clave"
               formControlName="clave"
-              [isDisabled]="esFormularioSoloLectura" 
+              [isDisabled]="esFormularioSoloLectura || !!pagoDeDerechosForm.get('clave')?.disabled"
               (change)="setValoresStore(pagoDeDerechosForm, 'clave')"
             >
             </app-catalogo-select>
               <div *ngIf="esInvalido('clave')" class="text-danger">
-                <small *ngIf="pagoDeDerechosForm.controls['clave'].hasError('required')">Banco es obligatoria.</small>
+                <small *ngIf="pagoDeDerechosForm.controls['clave'].hasError('required')">Todos los campos de pago son requeridos.</small>
             </div>
             </div>
           </div>
@@ -63,10 +70,14 @@
               name="llaveDePago"
               formControlName="llaveDePago"
               (change)="setValoresStore(pagoDeDerechosForm,'llaveDePago')"
+              (input)="validarLongitudMaxima('llaveDePago', 31)"
+              [ngClass]="{'is-invalid': esInvalido('llaveDePago')}"
+              [disabled]="disabled"
+              maxlength="30"
             />
             <div *ngIf="esInvalido('llaveDePago')" class="text-danger">
-              <small *ngIf="pagoDeDerechosForm.controls['llaveDePago'].hasError('required')">Llave de pago es obligatoria.</small>
-              <small *ngIf="pagoDeDerechosForm.controls['llaveDePago'].hasError('pattern')">Solo se permiten 10 caracteres en mayúsculas y números.</small>
+              <small *ngIf="pagoDeDerechosForm.controls['llaveDePago'].hasError('required')">Todos los campos de pago son requeridos</small>
+              <small *ngIf="pagoDeDerechosForm.controls['llaveDePago'].hasError('longitudMaxima')">Debe capturar exactamente 30 caracteres alfanuméricos en mayúsculas.</small>
           </div>
           </div>
         </div>
@@ -80,9 +91,10 @@
             name="fecPago"
             formControlName="fecPago"
             (change)="setValoresStore(pagoDeDerechosForm,'fecPago'); validarFechaFutura('fecPago')"
+            [disabled]="disabled"
           />
             <div *ngIf="esInvalido('fecPago')" class="text-danger">
-              <small *ngIf="pagoDeDerechosForm.controls['fecPago'].hasError('required')">Fecha de pago es obligatoria.</small>
+              <small *ngIf="pagoDeDerechosForm.controls['fecPago'].hasError('required')">Todos los campos de pago son requeridos.</small>
               <small *ngIf="pagoDeDerechosForm.get('fecPago')?.hasError('fechaLim')">La fecha de pago debe ser menor o igual a la fecha actual</small>
           </div>
           </div>
@@ -96,18 +108,23 @@
               type="text"
               name="impPago"
               formControlName="impPago"
+              maxlength="16"
               (change)="setValoresStore(pagoDeDerechosForm,'impPago'); validarSinComas('impPago')"
+              [disabled]="disabled"
             />
               <div *ngIf="esInvalido('impPago')" class="text-danger">
-                <small *ngIf="pagoDeDerechosForm.controls['impPago'].hasError('maxlength')">Máximo 16 caracteres.</small>
-                <small *ngIf="pagoDeDerechosForm.get('impPago')?.hasError('noComa')">El campo no debe contener comas.</small>
-            </div>
+              <small *ngIf="pagoDeDerechosForm.controls['impPago'].hasError('required')">Todos los campos de pago son requeridos.</small>
+              <small *ngIf="pagoDeDerechosForm.controls['impPago'].hasError('maxlength')">El importe de pago no puede exceder 16 caracteres.</small>
+              <small *ngIf="pagoDeDerechosForm.controls['impPago'].hasError('pattern')">
+               Este campo solo permite números hasta dos decimales.
+              </small>
+          </div>
             </div>
           </div>
       </div>
   
       <div class="d-flex justify-content-end mt-5">
-        <button type="button" class="btn btn-primary ms-2 d-flex" [disabled]="esFormularioSoloLectura" >Borrar datos del pago</button>
+  <button type="button" class="btn btn-primary ms-2 d-flex" [disabled]="disabled" (click)="resetPagoDeDerechos()">Borrar datos del pago</button>
       </div>
     </form>
   </div>

@@ -1,10 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
-
 import { EmpresasLista, EmpresasListaResquesta, ModificacionResquesta } from '../../models/prosec.model';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Subject, map, takeUntil } from 'rxjs';
 import { ProducirMercanciasComponent } from '../../../../shared/components/producir-mercancias/producir-mercancias.component';
 import { ProsecService } from '../../services/prosec/prosec.service';
 import { TABLA_EMPRESAS_LISTA } from '../../constantes/prosec.enum';
@@ -146,9 +145,10 @@ export class ModificacionComponent implements OnInit, OnDestroy {
   isBaja: boolean = true;
   onFilaClic(event: Event): void {
     const TARGET = event.target as HTMLInputElement;
-    if (TARGET.tagName === 'BUTTON' && TARGET.textContent?.trim() === 'BAJA') {
+    if (TARGET.tagName === 'BUTTON' && TARGET.textContent?.trim() === 'Baja') {
       this.isBaja = false;
       TARGET.textContent = 'Activar';
+      this.prosecService.setIsBaja(this.isBaja);
     }
     TARGET.textContent = 'Activar';
   }

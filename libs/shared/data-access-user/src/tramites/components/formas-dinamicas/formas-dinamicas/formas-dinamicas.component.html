@@ -216,6 +216,7 @@
                           [datos]="obtenerInformacionDeFecha(item)"
                           [ngClass]="esValido(item.campo) ? 'required' : ''"
                           [tooltipQuestionCircle]="item.tooltipQuestionCircle ?? false"
+                          [tooltipQuestionCircleText]="item.tooltipTxt ?? '' "
                           [isDisabled]="soloLectura"
                           (valorCambiado)="eventoDeCambioDeValor($event, item.campo, 'date')"
                         ></input-fecha>

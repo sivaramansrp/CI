@@ -9,3 +9,6 @@ td {
   word-spacing: 10px;
   font-size: 15px;
 }
+.alert-align {
+  text-align: center;
+}

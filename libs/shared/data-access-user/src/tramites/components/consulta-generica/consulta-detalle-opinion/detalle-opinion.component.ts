@@ -1,5 +1,5 @@
 import { BodyTablaOpinion, HeaderTablaOpinion, OpinionDetalleOpinion, SolicitudDetalleOpinion } from '../../../../core/models/shared/consulta-generica.model';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -7,6 +7,7 @@ import { CONSULTA_DETALLEOPINIONES } from '../../../../core/enums/consulta-gener
 import { CommonModule } from '@angular/common';
 import { DetallesOpinionService } from '../../../../core/services/consultagenerica/detalles-opinion-service';
 import { FolioQuery } from '../../../../core/queries/folio.query';
+import { OpinionDetalleResponse } from '../../../../core/models/130118/opinion-detalle-response.model';
 
 @Component({
   selector: 'lib-detalle-opinion',
@@ -15,7 +16,11 @@ import { FolioQuery } from '../../../../core/queries/folio.query';
   templateUrl: './detalle-opinion.component.html',
   styleUrl: './detalle-opinion.component.scss',
 })
-export class DetalleOpinionComponent implements OnInit, OnDestroy {
+export class DetalleOpinionComponent implements OnInit, OnChanges, OnDestroy {
+
+  /** Recibe los datos de la opinión desde el componente padre */
+  @Input() solicitud!: OpinionDetalleResponse;
+
   /**
    * Variable para almacenar el folio.
    * @type {string}
@@ -39,12 +44,6 @@ export class DetalleOpinionComponent implements OnInit, OnDestroy {
    * @type {FormGroup}
    */
   public opinionForm!: FormGroup;
-
-  /**
-   * Variable para almacenar los datos de la solicitud.
-   * @type {SolicitudDetalleOpinion | null}
-   */
-  public solicitud!: SolicitudDetalleOpinion | null;
 
   /**
    * Variable para almacenar los datos de la opinión.
@@ -78,6 +77,12 @@ export class DetalleOpinionComponent implements OnInit, OnDestroy {
   public descargarPdfOpinion = DetalleOpinionComponent.descargarPdfOpinion;
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = true;
+
+  /**
    * Constructor para la consulta de opiniones.
    * @param fb FormBuilder para crear formularios reactivos.
    * @param route ActivatedRoute para acceder a los parámetros de la ruta.
@@ -89,28 +94,7 @@ export class DetalleOpinionComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private detallesService: DetallesOpinionService,
     private folioQuery: FolioQuery
-  ) {}
-
-  /**
-   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * Configura los formularios reactivos, recupera el folio y los datos de la solicitud y opinión.
-   */
-  ngOnInit(): void {
-    /** 
-     * Obtener el parámetro 'id' de la URL.
-     */
-    this.id = Number(this.route.snapshot.paramMap.get('id'));
-
-    /** 
-     * Recuperar el folio desde el store.
-     */
-    this.folioQuery
-      .getFolio()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((folio) => {
-        this.folio = folio || '';
-      });
-
+  ) {
     /** 
      * Formulario reactivo para la solicitud de opinión.
      */
@@ -132,13 +116,50 @@ export class DetalleOpinionComponent implements OnInit, OnDestroy {
       fechaGeneracion: ['', Validators.required],
       opinion: ['', Validators.required],
     });
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Configura los formularios reactivos, recupera el folio y los datos de la solicitud y opinión.
+   */
+  ngOnInit(): void {
+    /** 
+     * Obtener el parámetro 'id' de la URL.
+     */
+    this.id = Number(this.route.snapshot.paramMap.get('id'));
 
     /** 
-     * Llamar a los métodos para obtener los datos.
+     * Recuperar el folio desde el store.
      */
-    this.getSolicitud();
-    this.getOpinion();
-    this.getDocumentosOpinion();
+    this.folioQuery
+      .getFolio()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((folio) => {
+        this.folio = folio || '';
+      });
+    this.inicializarEstadoFormulario();    
+  }
+
+  /**
+   * Ciclo de vida: ngOnChanges
+   * Reacciona a cambios en las propiedades de entrada del componente.
+   * @param changes Objeto que contiene los cambios en las propiedades (@Input)
+ */
+  ngOnChanges(changes: SimpleChanges): void {
+      if (changes['solicitud'] && changes['solicitud'].currentValue) {
+        this.getSolicitud();
+      }
+  }
+
+   /**
+   * Evalúa si se debe inicializar o cargar datos.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.solicitudForm.disable();
+      this.opinionForm.disable();
+    } 
   }
 
   /**
@@ -146,26 +167,33 @@ export class DetalleOpinionComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getSolicitud(): void {
-    this.detallesService
-      .getSolicitudDetalleOpinion()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.solicitud = data;
-
-        /** 
-         * Verifica si hay datos y actualiza el formulario.
-         */
-        if (this.solicitud !== null) {
-          const SOLICITUDDATA = this.solicitud;
-          this.solicitudForm.patchValue({
-            areaSolicitante: SOLICITUDDATA.areaSolicitante,
-            estatus: SOLICITUDDATA.estatus,
-            fechaCreacion: SOLICITUDDATA.fechaCreacion,
-            fechaSolicitud: SOLICITUDDATA.fechaSolicitud,
-            justificacionOpinion: SOLICITUDDATA.justificacionOpinion,
-          });
-        }
+    /** 
+     * Verifica si hay datos y actualiza el formulario.
+     */
+    if (this.solicitud !== null) {
+      const SOLICITUDDATA = this.solicitud;
+      this.solicitudForm.patchValue({
+        areaSolicitante: SOLICITUDDATA.area_solicitante,
+        estatus: SOLICITUDDATA.estado_opinion,
+        fechaCreacion: SOLICITUDDATA.fecha_generacion,
+        fechaSolicitud: SOLICITUDDATA.fecha_solicitud,
+        justificacionOpinion: SOLICITUDDATA.justificacion,
       });
+
+      this.opinionForm.patchValue({
+        areaResponsable: SOLICITUDDATA.area_responsable,
+        sentido: SOLICITUDDATA.sentido_opinion,
+        generadoPor: SOLICITUDDATA.emisor_opinion,
+        fechaGeneracion: SOLICITUDDATA.fecha_generacion,
+        opinion: SOLICITUDDATA.descripcion_opinion,
+      });
+
+      this.datosTablaOpiniones = (SOLICITUDDATA.documento_opinion || []).map((doc) => ({
+        id: doc.id_documento ?? 0,
+        documento: doc.nombre_archivo,
+        urlPdf: doc.e_document ?? ''
+      }));
+    }
   }
 
   /**

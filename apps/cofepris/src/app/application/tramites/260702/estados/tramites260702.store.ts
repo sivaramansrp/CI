@@ -2,11 +2,14 @@ import { FilaData, FilaData2, ListaClave } from '../models/fila-modal';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
+import { Destinatario } from '../models/destinatario.model';
+
 /**
  * Interfaz que define el estado de la solicitud 260702.
  * Contiene todas las propiedades necesarias para gestionar los datos del trámite.
  */
 export interface Solicitud260702State {
+  tipoOperacion: string;
   /** Clave de referencia del trámite */
   clavedereferencia: string;
 
@@ -156,6 +159,16 @@ export interface Solicitud260702State {
 
   /** Fracción arancelaria del producto */
   fraccionArancelaria: string;
+  
+  /** Indica si los datos deben hacerse públicos. */
+  hacerlosPublicos: string;
+
+  /** Datos de la tabla */
+   tableData: FilaData[];
+
+  /** Datos de la tabla de destinatarios */
+    tableData2: Destinatario[];
+
 }
 
 /**
@@ -168,6 +181,8 @@ export interface Solicitud260702State {
  */
 export function createInitialSolicitudState(): Solicitud260702State {
   return {
+    /** Tipo de operación del trámite */
+    tipoOperacion: '',
     /** Clave de referencia del trámite */
     clavedereferencia: '',
 
@@ -317,6 +332,13 @@ export function createInitialSolicitudState(): Solicitud260702State {
 
     /** Fracción arancelaria del producto */
     fraccionArancelaria: '',
+
+    /** Indica si los datos deben hacerse públicos. */
+    hacerlosPublicos: '',
+    /** Datos de la tabla */
+    tableData: [],
+    /** Datos de la tabla de destinatarios */
+    tableData2: [],
   };
 }
 /**
@@ -330,6 +352,16 @@ export function createInitialSolicitudState(): Solicitud260702State {
 export class Solicitud260702Store extends Store<Solicitud260702State> {
   constructor() {
     super(createInitialSolicitudState());
+  }
+  /**
+   * Método para actualizar el tipo de operación en el estado.
+   * @param tipoOperacion Tipo de operación a establecer.
+   */
+  public setTipoOperacion(tipoOperacion: string): void {
+    this.update((state) => ({
+      ...state,
+      tipoOperacion,
+    }));
   }
 
   /**
@@ -879,6 +911,36 @@ export class Solicitud260702Store extends Store<Solicitud260702State> {
     this.update((state) => ({
       ...state,
       fraccionArancelaria,
+    }));
+  }
+  /**
+   * Método para actualizar si los datos deben hacerse públicos en el estado.
+   * @param hacerlosPublicos Indica si los datos deben hacerse públicos.
+   */
+  public setHacerlosPublicos(hacerlosPublicos: string): void {
+    this.update((state) => ({
+      ...state,
+      hacerlosPublicos,
+    }));
+  }
+  /**
+   * Método para actualizar los datos de la tabla en el estado.
+   * @param tableData Datos de la tabla a establecer.
+   */
+  public setTableData(tableData: FilaData[]): void {
+    this.update((state) => ({
+      ...state,
+      tableData,
+    }));
+  }
+  /**
+   * Método para actualizar los datos de la tabla de destinatarios en el estado.
+   * @param tableData2 Datos de la tabla de destinatarios a establecer.
+   */
+  public setTableData2(tableData2: Destinatario[]): void {
+    this.update((state) => ({
+      ...state,
+      tableData2,
     }));
   }
 }

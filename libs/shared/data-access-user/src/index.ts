@@ -207,3 +207,4 @@ export * from './core/interceptor/http.interceptor';
 
 export * from './tramites/directives/solo-alfabetos/solo-alfabetos.directive';
 export * from './tramites/constantes/regex.constants';
+export * from './core/servers/api-const';
