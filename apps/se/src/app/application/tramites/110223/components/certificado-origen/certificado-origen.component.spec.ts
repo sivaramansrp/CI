@@ -9,21 +9,20 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { CertificadoOrigenComponent } from './certificado-origen.component';
 import { FormBuilder } from '@angular/forms';
-import { Tramite110204Store } from '../../estados/tramite110204.store';
-import { Tramite110204Query } from '../../estados/tramite110204.query';
+
 import { CertificadosOrigenGridService } from '../../services/certificadosOrigenGrid.service';
 import { ToastrService } from 'ngx-toastr';
 import { SeccionLibQuery, SeccionLibStore } from '@libs/shared/data-access-user/src';
 
 @Injectable()
-class MockTramite110204Store {}
+class MockTramite110223Store {}
 
 @Injectable()
 class MockToastrService { }
 
 
 @Injectable()
-class MockTramite110204Query {
+class MockTramite110223Query {
   formCertificado$ = observableOf({});
   selectAltaPlanta$ = observableOf({});
   selectPaisBloque$ = observableOf({});
@@ -45,8 +44,8 @@ describe('CertificadoOrigenComponent', () => {
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
-        { provide: Tramite110204Store, useClass: MockTramite110204Store },
-        { provide: Tramite110204Query, useClass: MockTramite110204Query },
+        { provide: Tramite110223Store, useClass: MockTramite110223Store },
+        { provide: Tramite110223Query, useClass: MockTramite110223Query },
         { provide: CertificadosOrigenGridService, useClass: MockCertificadosOrigenGridService },
         ToastrService,
         SeccionLibQuery,
