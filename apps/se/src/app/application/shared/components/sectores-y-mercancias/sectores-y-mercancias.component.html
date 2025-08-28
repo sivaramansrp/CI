@@ -6,6 +6,7 @@
         <app-catalogo-select
           [catalogo]="sectorCatalogo"
           formControlName="sector"
+          [required]="true"
           [label]="'Sector'"
           name="sector"
           (change)="
@@ -36,7 +37,7 @@
         [datos]="sectores"
         [tipoSeleccionTabla]="radio"
         [disableSeleccionTablaRadio]="esFormularioSoloLectura"
-        (listaDeFilaSeleccionada)="seleccionarSector($event)"
+        (filaSeleccionada)="seleccionarSector($event)"
       >
       </app-tabla-dinamica>
     </div>
@@ -68,7 +69,7 @@
         [datos]="fraccion"
         [tipoSeleccionTabla]="radio"
         [disableSeleccionTablaRadio]="esFormularioSoloLectura"
-        (listaDeFilaSeleccionada)="seleccionarFraccion($event)"
+        (filaSeleccionada)="seleccionarFraccion($event)"
       >
       </app-tabla-dinamica>
     </div>
