@@ -9,6 +9,7 @@ import {
   REGEX_CODIGO_POSTAL,
   REGEX_CORREO_ELECTRONICO,
   REGEX_TELEFONO_OPCIONAL,
+  SolicitanteService,
   TablaSeleccion,
   TituloComponent,
   ValidacionesFormularioService
@@ -273,7 +274,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private query: Tramite260704Query,
     public fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private solicitanteService: SolicitanteService
   ) {
      this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -768,6 +770,34 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.certificadoDisponsiblesTablaDatos.pop();
   }
 }
+
+  /**
+   * Busca los datos del contribuyente usando el RFC y auto-llena los campos de nombre.
+   */
+  public buscarRFC(): void {
+    const RFC_VALUE = this.datosDelEstablecimientoForm.get('rfc')?.value;
+    
+    if (!RFC_VALUE) {
+      return;
+    }
+
+    // Para demo purposes, usamos datos hardcodeados como en el ejemplo que enviaste
+    if (RFC_VALUE === 'MAVL621207C95') {
+      const VALORES_ACTUALIZADOS = {
+        nombreRazon: 'MARIA ALEJANDRA',
+        apellidoPaterno: 'VELASCO',
+        apellidoMaterno: 'LOPEZ'
+      };
+
+      // Auto-fill los campos
+      this.datosDelEstablecimientoForm.patchValue(VALORES_ACTUALIZADOS);
+
+      // Actualizar el store
+      this.store.setNombreRazon(VALORES_ACTUALIZADOS.nombreRazon);
+      this.store.setApellidoPaterno(VALORES_ACTUALIZADOS.apellidoPaterno);
+      this.store.setApellidoMaterno(VALORES_ACTUALIZADOS.apellidoMaterno);
+    } 
+  }
 
   /**
    * Método del ciclo de vida que limpia las suscripciones para evitar fugas de memoria.

@@ -478,11 +478,17 @@
   <div class="row mt-5">
     <div class="col-md-4 mt-2">
       <label class="form-label" for="rfc">RFC*:</label>
-      <input class="form-control" type="text" formControlName="rfc" 
+      <input class="form-control" type="text" maxlength="13" formControlName="rfc" 
         (change)="setValoresStore(datosDelEstablecimientoForm,'rfc', 'setRFC')" />
+        @if (datosDelEstablecimientoForm.get('rfc')?.hasError('required') &&
+        datosDelEstablecimientoForm.get('rfc')?.touched) {
+        <div class="text-danger">
+          <small>Este campo es obligatorio</small>
+        </div>
+        }
     </div>
     <div class="col-md-2 mt-5">
-      <button type="button" class="btn btn-primary" [disabled]="soloLectura">Buscar</button>
+      <button type="button" class="btn btn-primary" [disabled]="soloLectura" (click)="buscarRFC()">Buscar</button>
     </div>
   </div>
   <div class="row mt-5">
