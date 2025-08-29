@@ -65,7 +65,7 @@
               [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event)"
               (change)="setValoresStore(tipoPersonaForm,'tipoPersona','setTipoPersona')"></app-input-radio>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-6 custom-planta">
             <app-input-radio [radioOptions]="Plantatif" [isRequired]="true" formControlName="tipoPersona"
               [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event)"
              ></app-input-radio>
