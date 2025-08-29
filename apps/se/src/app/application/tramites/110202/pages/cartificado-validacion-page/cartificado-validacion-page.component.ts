@@ -1,11 +1,11 @@
-import { AlertComponent, BtnContinuarComponent, DatosPasos, ListaPasosWizard, PAGO_DE_DERECHOS, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent, PAGO_DE_DERECHOS, SeccionLibStore } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
+import {DatosPasos, ListaPasosWizard, WizardComponent} from '@libs/shared/data-access-user/src';
 import { Subject, takeUntil } from 'rxjs';
 import { PASOS } from '../../constantes/modificacion.enum';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite110202Query } from '../../estados/tramite110202.query';
-
 /**
  * Interfaz que define la estructura de una acción de botón.
  */

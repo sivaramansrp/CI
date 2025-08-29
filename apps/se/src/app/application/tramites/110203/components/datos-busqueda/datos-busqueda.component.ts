@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InputRadioComponent, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { InputRadioComponent, Notificacion, NotificacionesComponent, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Subject, Subscription, distinctUntilChanged,takeUntil } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
@@ -26,7 +26,7 @@ import radioOpciones from '@libs/shared/theme/assets/json/110203/datos-busqueda.
 @Component({
   selector: 'app-datos-busqueda',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule, InputRadioComponent, CatalogoSelectComponent, TableComponent],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, InputRadioComponent, CatalogoSelectComponent, TableComponent,NotificacionesComponent],
   templateUrl: './datos-busqueda.component.html',
   styleUrl: './datos-busqueda.component.css',
 })
@@ -302,16 +302,45 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
     this.datosBusquedaFormulario.get('tratadoAcuerdo')?.updateValueAndValidity();
     this.datosBusquedaFormulario.get('paisBloque')?.updateValueAndValidity();
   }
-
+ /**
+   * Notificación para mostrar alertas al usuario.
+   */
+  alertaNotificacion!: Notificacion;
   /** 
    * Método para realizar la búsqueda y mostrar la tabla de resultados.
    */
-  public buscar(): void {
-     if (!this.datosBusquedaFormulario.valid) {
-    return;
+public buscar(): void {
+  if (!this.datosBusquedaFormulario.valid) {
+    if (this.valorSeleccionado === 'Por número de certificado') {
+      this.alertaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'El número de certificado es requerido',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    } else if (this.valorSeleccionado === 'Por Tratado/Acuerdo País/Bloque') {
+      this.alertaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'La selección de un país/bloque es requerida',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
+  } else {
+    this.verTabla = true;
   }
-    this.verTabla = true; // Mostrar la tabla
-  }
+}
+
 
   /**
    * Restores form values from global state.
