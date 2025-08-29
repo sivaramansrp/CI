@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RequerimientosStates, SolicitudRequerimientosState } from '../../../core/estados/requerimientos.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -8,6 +8,8 @@ import { CommonModule } from '@angular/common';
 import { SolicitudRequerimientoQuery } from '../../../core/queries/requerimientos.query';
 import data from '@libs/shared/theme/assets/json/funcionario/cat-tipo-requerimiento.json';
 
+import { IniciarRequerimientoResponse } from '../../../core/models/130118/Iniciar-requerimiento-response.model';
+
 @Component({
   selector: 'app-capturar-requerimiento',
   standalone: true,
@@ -15,7 +17,7 @@ import data from '@libs/shared/theme/assets/json/funcionario/cat-tipo-requerimie
   templateUrl: './capturar-requerimiento.component.html',
   styleUrl: './capturar-requerimiento.component.scss',
 })
-export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
+export class CapturarRequerimientoComponent implements OnInit, OnDestroy, OnChanges {
   /**
    * Declaración de variable para el formulario
    */
@@ -37,22 +39,31 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
    */
   readonly MAX_CHARS = 10000;
 
+  /** Indica si se debe mostrar el tipo de requerimiento */
+  @Input() isTipoRequerimiento: boolean = true;
+
+  /** Indica si se debe mostrar el área solicitante */
+  @Input() isAreaSolicitante: boolean = true;
+
+  /** Indica si se debe mostrar la justificación del requerimiento */
+  @Input() isJustificacionRequerimiento: boolean = true;
+
+  /** Datos de respuesta de la inicialización del requerimiento */
+  @Input() iniciarResponse!: IniciarRequerimientoResponse;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @Output() formChanged = new EventEmitter<any>();
+
   /**
    * Flag para mostrar mensaje de límite de caracteres alcanzado
    */
   public showCharLimitMessage = false;
+
   constructor(
     private fb: FormBuilder,
     private requerimientosStates: RequerimientosStates,
     private solicitudRequerimientoQuery: SolicitudRequerimientoQuery,
   ) {
-    // do nothing.
-  }
-  /**
-  * Método que se ejecuta al inicializar el componente.
-  */
-  ngOnInit(): void {
-    this.catTipoRequerimiento = data;
     this.solicitudRequerimientoQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -61,7 +72,28 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
     this.crearFormRequerimiento();
+    this.formRequerimiento.valueChanges.subscribe(val => {
+      this.formChanged.emit(this.formRequerimiento.value);
+    });
+  }
+  /**
+  * Método que se ejecuta al inicializar el componente.
+  */
+  ngOnInit(): void {
+    this.catTipoRequerimiento = data;
+    
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['iniciarResponse'] && changes['iniciarResponse'].currentValue) {
+      this.formRequerimiento.patchValue({
+        tipoRequerimiento: '',
+        areaSolicitante: '',
+        justificacionRequerimiento: this.iniciarResponse.justificacion
+      });
+    }
   }
 
   /**
@@ -76,11 +108,21 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
    */
   crearFormRequerimiento(): void {
     this.formRequerimiento = this.fb.group({
-      tipoRequerimiento: [this.solicitudRequerimientosState?.idTipoRequerimiento, [Validators.required]],
-      areaSolicitante: [this.solicitudRequerimientosState?.areaSolicitante, [Validators.required, Validators.maxLength(this.MAX_CHARS)]],
-      justificacionRequerimiento: [this.solicitudRequerimientosState?.justificacionRequerimiento, [Validators.required, Validators.maxLength(this.MAX_CHARS)]]
+      tipoRequerimiento: [
+        this.solicitudRequerimientosState?.idTipoRequerimiento || '',
+        this.isTipoRequerimiento ? [Validators.required] : []
+      ],
+      areaSolicitante: [
+        this.solicitudRequerimientosState?.areaSolicitante || '',
+        this.isAreaSolicitante ? [Validators.required, Validators.maxLength(this.MAX_CHARS)] : [] 
+      ],
+      justificacionRequerimiento: [
+        this.solicitudRequerimientosState?.justificacionRequerimiento || '',
+        this.isJustificacionRequerimiento ? [Validators.required, Validators.maxLength(this.MAX_CHARS)] : []
+      ]
     });
   }
+
   /**
    * Método para establecer el tipo de requerimiento seleccionado 
     * De acuerdo al tipo de requerimiento el observable activa o desactiva el Tab para el requrimiento de documentación

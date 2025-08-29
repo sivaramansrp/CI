@@ -9,7 +9,6 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 import { PartidasDeLaMercanciaModelo } from '../../shared/models/partidas-de-la-mercancia.model';
 
-
 export interface Tramite130115State {
   /**
    * Producto seleccionado en el formulario.
@@ -138,7 +137,7 @@ export interface Tramite130115State {
 export function createInitialState(): Tramite130115State {
   return {
     filaSeleccionada: [],
-    mostrarTabla: false,
+    mostrarTabla: true,
     solicitud: '',
     fraccion: '',
     defaultSelect: 'Inicial',
@@ -179,7 +178,6 @@ export class Tramite130115Store extends Store<Tramite130115State> {
     super(createInitialState());
   }
 
-    
   /**
    * Actualiza el estado del store con los valores proporcionados.
    * Valores a actualizar en el estado.

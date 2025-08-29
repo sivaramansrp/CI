@@ -1,8 +1,10 @@
+import {BehaviorSubject, Observable} from 'rxjs';
 import { Tramite260911State, Tramite260911Store } from '../estados/tramite260911.store';
 import { ENVIRONMENT } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+
+// ...existing code...
 
 /**
  * @description
@@ -14,6 +16,19 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class Solocitud260911Service {
+  /**
+   * Observable para notificar cuando el estado del trámite está disponible.
+   */
+  private tramiteStateSubject = new BehaviorSubject<Tramite260911State | null>(null);
+  tramiteState$ = this.tramiteStateSubject.asObservable();
+
+  /**
+   * Actualiza el estado del trámite y notifica a los suscriptores.
+   */
+  setTramiteState(state: Tramite260911State) {
+    this.tramiteStateSubject.next(state);
+    this.actualizarEstadoFormulario(state);
+  }
   /**
    * @description
    * URL base del servidor principal de la aplicación, proveniente de las variables de entorno.

@@ -29,7 +29,7 @@
     ></textarea>
     <div *ngIf="esInvalido('descripcion')" class="text-danger mt-1">
       <small *ngIf="form.controls['descripcion'].errors?.['required']">
-        Este campo es obligatorio
+        Este campo es obligatorio.
       </small>
       <small *ngIf="form.controls['descripcion'].errors?.['validarSinCaracterAnguloDerecho']">
       Por favor, corrige la descripción/dirección
@@ -62,7 +62,7 @@
         />
         <div *ngIf="esInvalido('cantidad')" class="text-danger">
           <small *ngIf="form.controls['cantidad'].errors?.['required']">
-          Este campo es obligatorio
+          Este campo es obligatorio.
         </small>
         <small *ngIf="form.controls['cantidad'].errors?.['noEsNumero']">
           Por favor, escribe un número entero válido
@@ -76,7 +76,11 @@
         </div>
       </div>
       <div class="col-md-4 form-group">
-        <label class="form-label" for="valorFacturaUSD">Valor factura USD<span class="require" [ngClass]="{'asterisk-red': esInvalido('valorFacturaUSD')}">*</span>:</label>
+        <label class="form-label" for="valorFacturaUSD">Valor factura USD<span class="require" [ngClass]="{'asterisk-red': esInvalido('valorFacturaUSD')}">*</span>:
+        <span *ngIf="mostrarTooltipValorFacturaUSD" class="bi bi-question-circle-fill"
+                     tooltip="En caso de no contar con valor factura proporciona el valor estimado"
+                     data-bs-toggle="tooltip"></span>
+      </label>
         <input
           class="form-control"
           id="valorFacturaUSD"
@@ -89,7 +93,7 @@
         />
         <div *ngIf="esInvalido('valorFacturaUSD')" class="text-danger">
           <small *ngIf="form.controls['valorFacturaUSD'].errors?.['required']">
-          Este campo es obligatorio
+          Este campo es obligatorio.
         </small>
         <small *ngIf="form.controls['valorFacturaUSD'].errors?.['noEsNumero']">
           Por favor, escribe un número entero válido

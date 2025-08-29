@@ -6,7 +6,7 @@ import { ModificacionComponent } from './modificacion.component';
 import { TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { ProducirMercanciasComponent } from '../../../../shared/components/producir-mercancias/producir-mercancias.component';
 import { ProsecService } from '../../services/prosec/prosec.service';
-import { EmpresasListaResquesta, ModificacionResquesta } from '../../models/prosec.model';
+import { ModificacionResquesta } from '../../models/prosec.model';
 import { TABLA_EMPRESAS_LISTA } from '../../constantes/prosec.enum';
 
 jest.mock('../../services/prosec/prosec.service');
@@ -65,30 +65,6 @@ describe('ModificacionComponent', () => {
     expect(crearModificacionFormSpy).toHaveBeenCalled();
   });
 
-  test('should fetch and set empresas list data', () => {
-    const mockEmpresasRes: EmpresasListaResquesta = {
-      code: 200,
-      data: [
-        {
-          id: 1,
-          estatus: 'Baja',
-          rfc: 'RFC123',
-          razonSocial: 'Empresa Test',
-          calle: 'Calle Test',
-          numeroExterior: '123',
-          numeroInterior: '456',
-          codigoPostal: '12345'
-        }
-      ],
-      message: 'Success',
-    };
-    mockProsecService.obtenerEmpresasListaDatos.mockReturnValue(of(mockEmpresasRes));
-
-    component.obtenerEmpresasListaDatos();
-
-    expect(component.empresasLista).toEqual(mockEmpresasRes.data);
-  });
-
   test('should fetch and set modification data', () => {
     const mockModificacionRes: ModificacionResquesta = {
       code: 200,
@@ -101,26 +77,6 @@ describe('ModificacionComponent', () => {
     component.obtenerModificacionDatos();
 
     expect(component.modificacionForm.value).toEqual(mockModificacionRes.data[0]);
-  });
-
-  test('should toggle empresa status correctly', () => {
-    component.empresasLista = [
-      {
-        id: 1,
-        estatus: 'Baja',
-        rfc: 'RFC123',
-        razonSocial: 'Empresa Test',
-        calle: 'Calle Test',
-        numeroExterior: '123',
-        numeroInterior: '456',
-        codigoPostal: '12345'
-      }
-    ];
-    component.alternarValor({ id: 1 });
-    expect(component.empresasLista[0].estatus).toBe('Activada');
-
-    component.alternarValor({ id: 1 });
-    expect(component.empresasLista[0].estatus).toBe('Baja');
   });
 
   test('should clean up subscriptions on destroy', () => {

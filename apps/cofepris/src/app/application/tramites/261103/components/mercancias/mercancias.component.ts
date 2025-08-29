@@ -133,9 +133,13 @@ esFormularioSoloLectura: boolean = false;
    * 
    * Este método realiza las siguientes acciones:
    * 1. Llama al método `crearFormulario` para inicializar o recrear el formulario reactivo.
-   * 2. Evalúa el estado de `esFormularioSoloLectura`:
-   *    - Si es `true`: Deshabilita el formulario de aduanas para evitar modificaciones.
-   *    - Si es `false`: Habilita el formulario de aduanas para permitir la edición.
+   * 2. Evalúa las condiciones de habilitación basándose en `esFormularioSoloLectura` e `ideGenerica1`.
+   * 3. Habilita o deshabilita el formulario según las condiciones evaluadas.
+   * 
+   * Lógica de habilitación:
+   * - Si el formulario está en modo solo lectura, todos los campos se deshabilitan.
+   * - Si no está en modo solo lectura, los campos solo se habilitan si `ideGenerica1` es 'Modificacion'.
+   * - En cualquier otro caso, los campos se deshabilitan.
    * 
    * Este método es útil para sincronizar el estado del formulario con la configuración
    * de solo lectura del componente.
@@ -144,11 +148,31 @@ esFormularioSoloLectura: boolean = false;
    */
   guardarDatosFormulario(): void {
     this.crearFormulario();
-    if (this.esFormularioSoloLectura) {
-      this.aduanaFormulario.disable();
+    
+    // Obtener el valor de ideGenerica1 del estado
+    const IDE_GENERICA_1 = this.seccionState?.ideGenerica1;
+    
+    // Determinar si los campos deben estar habilitados
+    const DEBE_ESTAR_HABILITADO = !this.esFormularioSoloLectura && (IDE_GENERICA_1 === 'Modificacion');
+    
+    if (DEBE_ESTAR_HABILITADO) {
+      this.aduanaFormulario.enable();
     } else {
-       this.aduanaFormulario.enable();
+      this.aduanaFormulario.disable();
     }
+  }
+  
+  /**
+   * Getter que determina si los componentes deben estar deshabilitados.
+   * 
+   * Combina la lógica de `esFormularioSoloLectura` e `ideGenerica1` para determinar
+   * si los componentes de la interfaz (como app-tabla-dinamica y botones) deben estar deshabilitados.
+   * 
+   * @returns {boolean} true si los componentes deben estar deshabilitados, false si deben estar habilitados
+   */
+  get debeEstarDeshabilitado(): boolean {
+    const IDE_GENERICA_1 = this.seccionState?.ideGenerica1;
+    return this.esFormularioSoloLectura || (IDE_GENERICA_1 !== 'Modificacion');
   }
   
   /**

@@ -4,5 +4,11 @@
     "modalidad": "PROSEC",
     "tipoPrograma": "PROGRAMA NUEVO PRODUCTOR DIRECTO",
     "estatus": "Vigente - Activo"
+  },
+  {
+    "folioPrograma": "IMMEX-2",
+    "modalidad": "PROSEC-2",
+    "tipoPrograma": "PROGRAMA NUEVO PRODUCTOR DIRECTO",
+    "estatus": "Vigente - Activo"
   }
 ]

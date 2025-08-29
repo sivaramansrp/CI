@@ -46,7 +46,7 @@ import { Transporte } from '../../models/acuicola.module';
 @Component({
   selector: 'app-transporte',
   templateUrl: './transporte.component.html',
-  styleUrl: './transporte.component.css',
+  styleUrl: './transporte.component.scss',
   standalone: true,
   imports: [TituloComponent, AlertComponent, TablaDinamicaComponent, InputRadioComponent, InputFechaComponent, CatalogoSelectComponent, FormsModule, ReactiveFormsModule, CommonModule ], 
 })

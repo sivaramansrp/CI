@@ -236,3 +236,25 @@ export function dateLessThanOrEqualToday(control: AbstractControl): ValidationEr
     export function getValidDatos(datos: any) {
         return !(esUndefined(datos) || datos === null || datos === '');
     }
+
+    /**
+    * Elimina duplicados de un array de cualquier tipo (primitivos u objetos).
+    * Para objetos, compara usando JSON.stringify (puede tener limitaciones con funciones o propiedades no enumerables).
+    *
+    * @param arr - Array de cualquier tipo.
+    * @returns Un nuevo array sin duplicados.
+    */
+    export function removeDuplicatesFromArray<T>(arr: T[]): T[] {
+      const SEEN = new Set<string>();
+      return arr.filter(item => {
+        const KEY = typeof item === 'object' && item !== null
+          ? JSON.stringify(item)
+          : String(item);
+        if (SEEN.has(KEY)) {
+          return false;
+        }
+        SEEN.add(KEY);
+        return true;
+      });
+    }
+

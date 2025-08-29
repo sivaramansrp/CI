@@ -137,8 +137,6 @@ export class PagoDeDerechosComponent implements OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.formularioDeshabilitado) {
       this.pagoForm?.disable();
-    } else if (!this.formularioDeshabilitado) {
-      this.pagoForm?.enable();
     }
   }
 
@@ -147,7 +145,7 @@ export class PagoDeDerechosComponent implements OnDestroy {
    */
   inicializarFormulario(): void {
     this.pagoForm = this.fb.group({
-      exentoPagoNo: [{ value: this.solicitud220501State.exentoPagoNo }],
+      exentoPagoNo: [{ value: this.solicitud220501State.exentoPagoNo, disabled: true }],
       justificacion: [{ value: this.solicitud220501State.justificacion, disabled: true }],
       claveReferencia: [{ value: this.solicitud220501State.claveReferencia, disabled: true }],
       cadenaDependencia: [{ value: this.solicitud220501State.cadenaDependencia, disabled: true }],

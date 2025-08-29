@@ -23,7 +23,7 @@
             [formControlName]="inputFields[i].controlName"
             (selectionChange)="setValoresStore(form, inputFields[i].controlName)"
             [isDisabled]="esFormularioSoloLectura"
-            [placeholder]="'Selecciona un valor'"
+            [placeholder]="'Seleccione una opción'"
           ></app-catalogo-select>
           <div *ngIf="esInvalido(inputFields[i].controlName)">
           <small
@@ -36,7 +36,7 @@
               )
             "
           >
-            Este campo es obligatorio
+            Este campo es obligatorio.
           </small>
         </div>
         </div>

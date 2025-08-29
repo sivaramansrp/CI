@@ -1,6 +1,6 @@
 import { CargaPorArchivoComponent } from '../../../../shared/components/carga-por-archivo/carga-por-archivo.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 /**
  * Componente para la vista de anexar documentos en el trámite 80101.
@@ -17,4 +17,14 @@ import { Component } from '@angular/core';
   templateUrl: './proveedor-por-archivo-vista.component.html',
   styleUrl: './proveedor-por-archivo-vista.component.scss',
 })
-export class ProveedorPorArchivoVistaComponent {}
+export class ProveedorPorArchivoVistaComponent {
+
+
+   /**
+     * Evento que se emite para cerrar el popup actual.
+     *
+     * Notifica al componente padre que se debe cerrar el popup.
+     * No envía ningún dato, solo indica la acción de cierre.
+     */
+    @Output() cerrarPopup = new EventEmitter<void>();
+}

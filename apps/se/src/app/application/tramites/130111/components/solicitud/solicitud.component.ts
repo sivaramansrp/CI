@@ -1,6 +1,6 @@
-import { Catalogo, ConsultaioQuery, REGEX_NUMERO_DECIMAL_ENTERO, REG_X } from '@ng-mf/data-access-user';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
@@ -169,6 +169,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     * Propiedad privada.
    */
     private seccionState!: Tramite130111State;
+    /**
+     * Indica si se debe mostrar el error de clasificación.
+     */
+    mostrarErrorClasificacion = true;
   /**
    * Constructor del componente.
    */
@@ -244,80 +248,77 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * jest.spyOnInicializa los formularios reactivos `formDelTramite` y `mercanciaForm`.
    */
   
-  inicializarFormularios(): void {
-    this.suscribirseAEstadoDeSolicitud();
-    this.formDelTramite = this.fb.group({
-      solicitud: ['', Validators.required],
-      regimen: [{value:this.seccionState?.regimen,disabled: true}, Validators.required],
-      clasificacion: [{value:this.seccionState?.clasificacion,disabled: true}, Validators.required],
-    });
- 
-    this.mercanciaForm = this.fb.group({
-      producto: [],
-      descripcion: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(10),
-          Validators.maxLength(500),
+  inicializarFormularios(): void {   
+      this.formDelTramite = this.fb.group({
+        solicitud: [this.seccionState?.solicitud, Validators.required],
+        regimen: [this.seccionState?.regimen, Validators.required],
+        clasificacion: [this.seccionState?.clasificacion, Validators.required],
+      });
+   
+      this.mercanciaForm = this.fb.group({
+        producto: [],
+        descripcion: [
+         this.seccionState?.descripcion,
+          [
+            Validators.required,
+            SolicitudComponent.validarSinCaracterAnguloDerecho
+          ],
         ],
-      ],
-      fraccion: ['', Validators.required],
-      cantidad: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern(REG_X.SOLO_NUMEROS),
-          Validators.min(1),
+        fraccion: [this.seccionState?.fraccion, Validators.required],
+        cantidad: [
+          this.seccionState?.cantidad,
+          [
+            Validators.required,
+            SolicitudComponent.validarNumeroTresDecimales,
+            Validators.min(1),
+          ],
         ],
-      ],
- 
-      valorFacturaUSD: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern(REG_X.DECIMALES_DOS_LUGARES),
-          Validators.min(0.01),
+        valorFacturaUSD: [
+          this.seccionState?.valorFacturaUSD,
+          [
+            Validators.required,
+            SolicitudComponent.validarNumeroTresDecimales,
+            Validators.min(0.01),
+          ],
         ],
-      ],
- 
-      unidadMedida: ['', Validators.required],
-    });
-    this.partidasDelaMercanciaForm = this.fb.group({
-      cantidadPartidasDeLaMercancia: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern(REG_X.SOLO_NUMEROS),
-          Validators.maxLength(18),
+   
+        unidadMedida: [this.seccionState?.unidadMedida, Validators.required],
+      });
+      this.partidasDelaMercanciaForm = this.fb.group({
+        cantidadPartidasDeLaMercancia: [
+          this.seccionState?.cantidadPartidasDeLaMercancia,
+          [
+            Validators.required,
+            SolicitudComponent.validarCatorceEnterosTresDecimales,
+            Validators.maxLength(18),
+          ],
         ],
-      ],
-      descripcionPartidasDeLaMercancia: [
-        '',
-        [Validators.required, Validators.maxLength(255)],
-      ],
-      valorPartidaUSDPartidasDeLaMercancia: [
-        '',
-        [
-          Validators.required,
-          Validators.min(0),
-          Validators.pattern(REGEX_NUMERO_DECIMAL_ENTERO),
-          Validators.maxLength(20),
+        descripcionPartidasDeLaMercancia: [
+          this.seccionState?.descripcionPartidasDeLaMercancia,
+          [Validators.required, Validators.maxLength(255)],
         ],
-      ],
-    });
- 
-    this.paisForm = this.fb.group({
-      bloque: [''],
-      usoEspecifico: ['', Validators.required],
-      justificacionImportacionExportacion: ['', [Validators.required]],
-      observaciones: [''],
-    });
-    this.frmRepresentacionForm = this.fb.group({
-      entidad: ['', Validators.required],
-      representacion: ['', Validators.required],
-    });
-  }
+        valorPartidaUSDPartidasDeLaMercancia: [
+          this.seccionState?.valorPartidaUSDPartidasDeLaMercancia,
+          [
+            Validators.required,
+            Validators.min(0),
+            SolicitudComponent.validarCatorceEnterosTresDecimales,
+            Validators.maxLength(20),
+          ],
+        ],
+      });
+   
+      this.paisForm = this.fb.group({
+        bloque: [this.seccionState?.bloque],
+        usoEspecifico: [this.seccionState?.usoEspecifico, Validators.required],
+        justificacionImportacionExportacion: [this.seccionState?.justificacionImportacionExportacion, [Validators.required]],
+        observaciones: [this.seccionState?.observaciones],
+      });
+      this.frmRepresentacionForm = this.fb.group({
+        entidad: [this.seccionState?.entidad, Validators.required],
+        representacion: [this.seccionState?.representacion, Validators.required],
+      });
+    }
   /**
    * jest.spyOnConfigura las suscripciones para actualizar formularios y almacenar estados.
    */
@@ -525,12 +526,22 @@ enCambioDeBloque(bloqueId: number): void {
    * jest.spyOnEvento que incluye el formulario, el campo y el método a ejecutar.
    */
   setValoresStore($event: { form: FormGroup; campo: string }): void {
-    const VALOR = $event.form.get($event.campo)?.value;
-    this.tramite130111Store.actualizarEstado({ [$event.campo]: VALOR });
-    if($event.campo === 'fraccion'){
-      this.tramite130111Store.actualizarEstado({'unidadMedida': '1'});
+  const VALOR = $event.form.get($event.campo)?.value;
+
+  if ($event.campo === 'regimen') {
+    this.formDelTramite.get('clasificacion')?.setValue('');
+    this.mostrarErrorClasificacion = false;
+    this.tramite130111Store.actualizarEstado({
+      [ $event.campo ]: VALOR,
+      clasificacion: ''
+    });
+  } else {
+    this.tramite130111Store.actualizarEstado({ [ $event.campo ]: VALOR });
+    if ($event.campo === 'clasificacion' && VALOR) {
+      this.mostrarErrorClasificacion = true;
     }
   }
+}
  
 /**
  * Determina si el botón "Modificar" debe estar deshabilitado.
@@ -551,5 +562,50 @@ enCambioDeBloque(bloqueId: number): void {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
+  /**
+       * Valida que un número tenga como máximo tres decimales.
+       */
+      static validarNumeroTresDecimales(control: AbstractControl): ValidationErrors | null {
+        const VALOR = control.value;
+        if (VALOR === null || VALOR === undefined || VALOR === '') { return null; }
+  
+        if (!/^\d+(\.\d+)?$/.test(VALOR)) {
+          return { noEsNumero: true };
+        }
+  
+        if (/^\d+\.\d{4,}$/.test(VALOR)) {
+          return { maximoTresDecimales: true };
+        }
+  
+        return null;
+      }
+  
+      /**
+       * Valida que un string no contenga el carácter de ángulo derecho (›).
+       */
+      static validarSinCaracterAnguloDerecho(control: AbstractControl): ValidationErrors | null {
+        if (typeof control.value === 'string' && control.value.includes('›')) {
+          return { validarSinCaracterAnguloDerecho: true };
+        }
+        return null;
+      }
+  
+       /*
+      Valida que un número tenga como máximo 14 enteros y 3 decimales.
+      */
+      static validarCatorceEnterosTresDecimales(control: AbstractControl): ValidationErrors | null {
+        const VALOR = control.value;
+          if (VALOR === null || VALOR === undefined || VALOR === '') { return null; }
+  
+          if (!/^\d*\.?\d*$/.test(VALOR)) {
+            return { noEsNumero: true };
+          }
+  
+          if (!/^\d{1,14}(\.\d{1,3})?$/.test(VALOR)) {
+            return { validarCatorceEnterosTresDecimales: true };
+          }
+  
+          return null;
+      }
 }
  

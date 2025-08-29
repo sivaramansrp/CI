@@ -1,9 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, PASOS4, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
+import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent } from '@ng-mf/data-access-user';
 import { AccionBoton } from '../../models/nuevo-programa-industrial.model';
 import { Subject } from 'rxjs';
-import { Tramite80101Query } from '../../estados/tramite80101.query';
-import { takeUntil } from 'rxjs';
 
 /**
  * Obtiene el valor del índice de la acción del botón y actualiza el estado del componente.
@@ -85,16 +83,8 @@ export class PasoCapturarSolicitudComponent {
    * utilizando los métodos `establecerSeccion` y `establecerFormaValida` del servicio `SeccionLibStore`.
    * La suscripción se gestiona para que se complete automáticamente al destruir el componente mediante `takeUntil` y `destroyNotifier$`.
    */
-  constructor(
-    private tramiteQuery: Tramite80101Query,
-    private seccion: SeccionLibStore
-  ) {
-    this.tramiteQuery.FormaValida$.pipe(
-      takeUntil(this.destroyNotifier$)
-    ).subscribe((res) => {
-      this.seccion.establecerSeccion([true]);
-      this.seccion.establecerFormaValida([res]);
-    });
+  constructor() {
+   // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
 
   /**
