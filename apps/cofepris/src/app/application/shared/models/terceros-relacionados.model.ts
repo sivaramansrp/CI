@@ -200,6 +200,7 @@ export const DESTINATARIO_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Destinatario
 export interface Proveedor {
   nacionalidad?: string;
   tipoPersona?: string;
+  id?: number;
   nombreRazonSocial: string;
   rfc: string;
   curp: string;
@@ -290,6 +291,7 @@ export const PROVEEDOR_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Proveedor>[] =
 export interface Facturador {
   nacionalidad?: string;
   tipoPersona?: string;
+  id?: number;
   nombreRazonSocial: string;
   rfc: string;
   curp: string;

@@ -222,7 +222,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
       rfc: [this.obtenerValor('rfc')],
       curp: [this.obtenerValor('curp')],
       denominacionRazon: [
-        this.obtenerValor('razonSocial'),
+        this.obtenerValor('nombreRazonSocial'),
         [Validators.required, Validators.pattern(REGEX_NOMBRE)],
       ],
       nombres: [
@@ -308,7 +308,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
           numeroExterior: this.datoSeleccionado?.[0]?.numeroExterior,
           numeroInterior: this.datoSeleccionado?.[0]?.numeroInterior,
           lada: this.datoSeleccionado?.[0]?.lada,
-          denominacionRazon: this.datoSeleccionado?.[0]?.razonSocial,
+          denominacionRazon: this.datoSeleccionado?.[0]?.nombreRazonSocial,
           telefono: this.datoSeleccionado?.[0]?.telefono,
           correoElectronico: this.datoSeleccionado?.[0]?.correoElectronico,
         });
@@ -416,8 +416,8 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
       colonia: VALOR_FORMULARIO.colonia || '',
       municipioAlcaldia: '',
       localidad: '',
-      entidadFederativa: VALOR_FORMULARIO.estado || '',
-      estadoLocalidad: VALOR_FORMULARIO.estadoLocalidad || '',
+      entidadFederativa: '',
+      estadoLocalidad: VALOR_FORMULARIO.estado || '',
       codigoPostal: VALOR_FORMULARIO.codigoPostal || '',
       coloniaEquivalente: '',
       nombres: VALOR_FORMULARIO.nombres,
@@ -426,6 +426,10 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
       razonSocial: VALOR_FORMULARIO.razonSocial,
       lada: VALOR_FORMULARIO.lada,
     };
+
+    if (this.datoSeleccionado?.[0]?.id) {
+      NUEVO_PROVEEDOR.id = this.datoSeleccionado[0].id;
+    }
 
     this.proveedores.push(NUEVO_PROVEEDOR);
     this.updateProveedorTablaDatos.emit(this.proveedores);

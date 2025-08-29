@@ -416,10 +416,17 @@ export class Tramite260214Store extends Store<Tramite260214State> {
    */
   public updateProveedorTablaDatos(newProveedores: Proveedor[]): void {
     this.update((state) => {
-      const ACTUALIZADA = [...state.facturadorTablaDatos];
+      const ACTUALIZADA = [...state.proveedorTablaDatos];
 
       newProveedores.forEach((nuevo) => {
-        const INDICE = ACTUALIZADA.findIndex((f) => f?.rfc === nuevo?.rfc);
+        if (!nuevo?.id) {
+          nuevo.id =
+            ACTUALIZADA.length > 0
+              ? Math.max(...ACTUALIZADA.map((f) => f.id ?? 0)) + 1
+              : 1;
+        }
+
+        const INDICE = ACTUALIZADA.findIndex((f) => f.id === nuevo.id);
 
         if (INDICE > -1) {
           ACTUALIZADA[INDICE] = { ...ACTUALIZADA[INDICE], ...nuevo };
@@ -448,7 +455,14 @@ export class Tramite260214Store extends Store<Tramite260214State> {
       const ACTUALIZADA = [...state.facturadorTablaDatos];
 
       newFacturadores.forEach((nuevo) => {
-        const INDICE = ACTUALIZADA.findIndex((f) => f?.rfc === nuevo?.rfc);
+        if (!nuevo?.id) {
+          nuevo.id =
+            ACTUALIZADA.length > 0
+              ? Math.max(...ACTUALIZADA.map((f) => f.id ?? 0)) + 1
+              : 1;
+        }
+
+        const INDICE = ACTUALIZADA.findIndex((f) => f.id === nuevo.id);
 
         if (INDICE > -1) {
           ACTUALIZADA[INDICE] = { ...ACTUALIZADA[INDICE], ...nuevo };
@@ -459,7 +473,7 @@ export class Tramite260214Store extends Store<Tramite260214State> {
 
       return {
         ...state,
-        destinatarioFinalTablaDatos: ACTUALIZADA,
+        facturadorTablaDatos: ACTUALIZADA,
       };
     });
   }

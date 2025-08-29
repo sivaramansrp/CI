@@ -2,7 +2,6 @@ import {
   CODIGO_POSTAL,
   Catalogo,
   CatalogoSelectComponent,
-  REGEX_CODIGO_POSTAL,
   REGEX_CORREO_ELECTRONICO,
   REGEX_IMPORTE_PAGO,
   REGEX_NOMBRE,
@@ -162,8 +161,14 @@ export class AgregarFacturadorComponent
         [Validators.pattern(REGEX_NOMBRE)],
       ],
       pais: [this.obtenerValor('pais'), [Validators.required]],
-      estado: [this.obtenerValor('estadoLocalidad'), [Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)]],
-      codigoPostal: [this.obtenerValor('codigoPostal'),[Validators.pattern(CODIGO_POSTAL)]],
+      estado: [
+        this.obtenerValor('estadoLocalidad'),
+        [Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)],
+      ],
+      codigoPostal: [
+        this.obtenerValor('codigoPostal'),
+        [Validators.pattern(CODIGO_POSTAL)],
+      ],
       colonia: [this.obtenerValor('colonia')],
       calle: [this.obtenerValor('calle'), [Validators.required]],
       numeroExterior: [
@@ -223,7 +228,7 @@ export class AgregarFacturadorComponent
           numeroExterior: this.datoSeleccionado?.[0]?.numeroExterior,
           numeroInterior: this.datoSeleccionado?.[0]?.numeroInterior,
           lada: this.datoSeleccionado?.[0]?.lada,
-          denominacionRazon: this.datoSeleccionado?.[0]?.razonSocial,
+          denominacionRazon: this.datoSeleccionado?.[0]?.nombreRazonSocial,
           telefono: this.datoSeleccionado?.[0]?.telefono,
           correoElectronico: this.datoSeleccionado?.[0]?.correoElectronico,
         });
@@ -286,8 +291,8 @@ export class AgregarFacturadorComponent
       colonia: VALOR_FORMULARIO.colonia || '',
       municipioAlcaldia: '',
       localidad: '',
-      entidadFederativa: VALOR_FORMULARIO.estado || '',
-      estadoLocalidad: '',
+      entidadFederativa: '',
+      estadoLocalidad: VALOR_FORMULARIO.estado || '',
       codigoPostal: VALOR_FORMULARIO.codigoPostal || '',
       coloniaEquivalente: '',
       nombres: VALOR_FORMULARIO.nombres,
@@ -296,6 +301,10 @@ export class AgregarFacturadorComponent
       razonSocial: VALOR_FORMULARIO.razonSocial,
       lada: VALOR_FORMULARIO.lada,
     };
+
+    if (this.datoSeleccionado?.[0]?.id) {
+      NUEVO_FACTURADOR.id = this.datoSeleccionado[0].id;
+    }
 
     this.facturadores.push(NUEVO_FACTURADOR);
     this.updateFacturadorTablaDatos.emit(this.facturadores);

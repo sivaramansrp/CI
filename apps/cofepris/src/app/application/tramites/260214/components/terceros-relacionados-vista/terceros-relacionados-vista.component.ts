@@ -88,7 +88,6 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * Se suscribe a los observables del store para obtener los datos iniciales.
    */
   ngOnInit(): void {
-    this.cargarDatos();
     this.tramiteQuery.getFabricanteTablaDatos$
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
