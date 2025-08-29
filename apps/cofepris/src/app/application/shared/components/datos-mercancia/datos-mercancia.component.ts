@@ -571,6 +571,13 @@ export class DatosMercanciaComponent implements OnInit {
           'fechaCaducidad',
         ];
         break;
+        case 260604:
+          this.elementosNoValidos = [
+            'presentacion',
+            'numeroRegistroSanitario',
+            'fechaCaducidad',
+          ];
+          break;
       default:
         if (this.detalleMercancia) {
           this.elementosNoValidos = [

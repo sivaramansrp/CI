@@ -1074,7 +1074,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, OnChanges
    * @param {string} campo - Nombre del campo a verificar.
    * @returns {boolean} Retorna `true` si el campo es requerido, `false` en caso contrario.
    */
-  esCampoRequerido(campo: string): boolean {
+  esCampoRequerido(campo: string): boolean { 
     return this.elementosRequeridos?.includes(campo) ?? false;
   }
 

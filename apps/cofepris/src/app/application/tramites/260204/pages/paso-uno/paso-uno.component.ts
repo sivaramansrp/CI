@@ -44,7 +44,7 @@ export class PasoUnoComponent implements OnDestroy {
    *
    * @type {number}
    */
-  indice: number = 1;
+  indice: number = 2;
 
   /**
    * Esta variable se utiliza para almacenar el índice del subtítulo.

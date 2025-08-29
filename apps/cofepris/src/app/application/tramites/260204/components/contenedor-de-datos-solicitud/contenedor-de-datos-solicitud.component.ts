@@ -27,7 +27,7 @@ import { Tramite260204Query } from '../../estados/queries/tramite260204Query.que
   templateUrl: './contenedor-de-datos-solicitud.component.html',
   styleUrl: './contenedor-de-datos-solicitud.component.scss',
 })
-export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
+export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Sujeto utilizado como notificador para destruir suscripciones y evitar fugas de memoria.
    * Este observable se completa cuando el componente se destruye.
@@ -118,8 +118,14 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
    *
    * @type {Observable<boolean>}
    */
-  esFormularioSoloLectura!: Observable<boolean>;
-
+  //esFormularioSoloLectura!: Observable<boolean>;
+/**
+   * que indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, el formulario no permite modificaciones por parte del usuario.
+   *
+   * @type {boolean}
+   */
+  esFormularioSoloLectura!: boolean;
   /**
    * Arreglo que almacena los datos seleccionados de la tabla de mercancías.
    * 
@@ -129,7 +135,14 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
    */
   public seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[] = [];
 
-
+  /**
+  * Arreglo que almacena los elementos requeridos para la solicitud.
+  */
+  public elementosRequeridos = ['rfcSanitario', 'denominacionRazon', 'correoElectronico'];
+  /**
+   * Identificador del procedimiento.
+   */
+  public procedureId!: number;
   /**
    * Constructor de la clase ContenedorDeDatosSolicitudComponent.
    * 
@@ -163,25 +176,35 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
    */
   ngOnInit(): void {
     this.tramite260204Query.selectTramiteState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.tramiteState = seccionState;
-        this.opcionConfig.datos = this.tramiteState.opcionConfigDatos;
-        this.scianConfig.datos = this.tramiteState.scianConfigDatos;
-        this.tablaMercanciasConfig.datos = this.tramiteState.tablaMercanciasConfigDatos;
-      })
-    ).subscribe();
-    
-    this.esFormularioSoloLectura = this.consultaQuery.selectConsultaioState$
-    .pipe(
-      map((seccionState) => {
-        if(!seccionState.create && seccionState.procedureId === '260204') {
-          return seccionState.readonly;
-        } 
-        return false;
-      })
-    );
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.tramiteState = seccionState;
+          this.opcionConfig.datos = this.tramiteState.opcionConfigDatos;
+          this.scianConfig.datos = this.tramiteState.scianConfigDatos;
+          this.tablaMercanciasConfig.datos = this.tramiteState.tablaMercanciasConfigDatos;
+        })
+      ).subscribe();
+
+    // this.esFormularioSoloLectura = this.consultaQuery.selectConsultaioState$
+    //   .pipe(
+    //     map((seccionState) => {
+    //       this.procedureId = Number(seccionState.procedureId);
+    //       if (!seccionState.create && seccionState.procedureId === '260204') {
+    //         return seccionState.readonly;
+    //       }
+    //       return false;
+    //     })
+    //   );
+      this.consultaQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+        )
+        .subscribe((seccionState) => {
+          if(!seccionState.create && seccionState.procedureId === '260204') {
+            this.esFormularioSoloLectura = seccionState.readonly;
+          } 
+        });
   }
 
   /**
@@ -206,7 +229,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
    * utilizando el evento proporcionado.
    */
   scianSeleccionado(event: TablaScianConfig[]): void {
-    this.tramite260204Store.updateScianConfigDatos(event);    
+    this.tramite260204Store.updateScianConfigDatos(event);
   }
 
   /**
@@ -246,17 +269,17 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
     }))
   }
 
-    /**
-   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
-   *
-   * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
-   * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
-   *
-   * @returns {void} No retorna ningún valor.
-   */
-    ngOnDestroy(): void {
-      this.destroyNotifier$.next();
-      this.destroyNotifier$.complete();
-    }
+  /**
+ * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+ *
+ * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
+ * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
+ *
+ * @returns {void} No retorna ningún valor.
+ */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 
 }

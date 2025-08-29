@@ -6,4 +6,7 @@
 (scianSeleccionado)="scianSeleccionado($event)"
 (mercanciasSeleccionado)="mercanciasSeleccionado($event)"
 (datosDeTablaSeleccionados)="datosDeTablaSeleccionados($event)"
-[formularioDeshabilitado]="(esFormularioSoloLectura | async) || false"></app-datos-de-la-solicitud>
+[formularioDeshabilitado]="esFormularioSoloLectura"
+ [elementosRequeridos]="elementosRequeridos"
+ [idProcedimiento]="260204"
+ ></app-datos-de-la-solicitud>
