@@ -8,12 +8,18 @@
  * Este componente actúa como un contenedor para gestionar y actualizar los datos de la tabla de destinatarios finales en el store del trámite.
  */
 
+import { Component, OnInit } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
+import {
+  Tramite260214State,
+  Tramite260214Store,
+} from '../../estados/tramite260214Store.store';
+import { ActivatedRoute } from '@angular/router';
 import { AgregarDestinatarioFinalComponent } from '../../../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { Destinatario } from '../../../../shared/models/terceros-relacionados.model';
 import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
-import { Tramite260214Store } from '../../estados/tramite260214Store.store';
+import { Tramite260214Query } from '../../estados/tramite260214Query.query';
 
 /**
  * @component
@@ -46,7 +52,7 @@ import { Tramite260214Store } from '../../estados/tramite260214Store.store';
   templateUrl: './agregar-destinatario-final-contenedora.component.html',
   styleUrl: './agregar-destinatario-final-contenedora.component.scss',
 })
-export class AgregarDestinatarioFinalContenedoraComponent {
+export class AgregarDestinatarioFinalContenedoraComponent implements OnInit {
   /**
    * Identificador numérico del procedimiento actual.
    *
@@ -58,6 +64,41 @@ export class AgregarDestinatarioFinalContenedoraComponent {
    * - Se inicializa con la constante `ID_PROCEDIMIENTO`.
    */
   idProcedimiento: number = ID_PROCEDIMIENTO;
+
+  /**
+   * Notificador para la destrucción del componente.
+   *
+   * @type {Subject<void>}
+   * @description
+   * Se utiliza como mecanismo de cancelación para observables activos.
+   * Al emitir un valor en este subject dentro de `ngOnDestroy`,
+   * se asegura que todas las suscripciones se liberen correctamente,
+   * evitando fugas de memoria.
+   */
+  destroyNotifier$ = new Subject<void>();
+
+  /**
+   * Estado actual del trámite 260214.
+   *
+   * @type {Tramite260214State}
+   * @description
+   * Contiene la información del estado del trámite en curso.
+   * Se inicializa mediante inyección de datos o servicios
+   * y se utiliza para controlar la lógica del componente.
+   */
+  public tramiteState!: Tramite260214State;
+
+  /**
+   * Lista de destinatarios finales en la tabla de datos.
+   *
+   * @type {Destinatario[]}
+   * @description
+   * Arreglo que almacena los registros de destinatarios finales
+   * mostrados en la tabla. Se actualiza dinámicamente a partir de la
+   * interacción del usuario o llamadas a servicios.
+   */
+  destinatarioFinalTablaDatos: Destinatario[] = [];
+
   /**
    * @constructor
    * @description
@@ -65,7 +106,44 @@ export class AgregarDestinatarioFinalContenedoraComponent {
    *
    * @param {Tramite260214Store} tramiteStore - Store que administra el estado del trámite 260214.
    */
-  constructor(public tramiteStore: Tramite260214Store) {}
+  constructor(
+    public tramiteStore: Tramite260214Store,
+    public tramite260214Query: Tramite260214Query,
+    private route: ActivatedRoute
+  ) {
+    this.tramite260214Query.selectTramiteState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.tramiteState = seccionState;
+          this.destinatarioFinalTablaDatos = seccionState.destinatarioFinalTablaDatos;
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * Ciclo de vida de Angular: `ngOnInit`.
+   *
+   * @description
+   * Se ejecuta al inicializar el componente.  
+   *
+   * - Se suscribe a los parámetros de la ruta (`queryParams`).  
+   * - Si el parámetro `update` es igual a `'false'`, se limpia la lista
+   *   de destinatarios finales (`destinatarioFinalTablaDatos`).  
+   *
+   * Esto permite controlar el estado inicial de la tabla de destinatarios
+   * dependiendo de la navegación y parámetros enviados en la URL.
+   */
+  ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      if (params['update'] === 'false') {
+        this.destinatarioFinalTablaDatos = [];
+      } else if (params['update'] === 'true') {
+        this.destinatarioFinalTablaDatos = this.tramiteState.destinatarioFinalTablaModificaDatos;
+      }
+    });
+  }
 
   /**
    * @method updateDestinatarioFinalTablaDatos

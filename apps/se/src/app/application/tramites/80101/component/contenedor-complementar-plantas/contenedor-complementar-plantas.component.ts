@@ -3,9 +3,9 @@ import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/cor
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DetallesPlantasComponent } from '../../../../shared/components/detalles-plantas/detalles-plantas.component';
+import { Location } from '@angular/common';
 import { PlantasSubfabricante } from '../../../../shared/models/empresas-subfabricanta.model';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
-import { Location } from '@angular/common';
 
 /**
  * Regresa a la ruta de la solicitud relativa al contexto actual.
@@ -125,7 +125,7 @@ export class ContenedorComplementarPlantasComponent implements OnInit, OnDestroy
    *
    * @fires guadarEvent
    */
-  setGuardar() {
+  setGuardar(): void {
     this.guadarEvent.emit();
   }
 

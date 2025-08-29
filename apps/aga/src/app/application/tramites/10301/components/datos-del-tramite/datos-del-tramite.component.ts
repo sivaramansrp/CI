@@ -1,23 +1,22 @@
 import {
   AlertComponent,
   CatalogoSelectComponent,
-  CatalogosSelect,
   ConfiguracionColumna,
-  ConsultaioQuery,
-  ConsultaioState,
   CrosslistComponent,
   InputRadioComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
-  ValidacionesFormularioService,
-} from '@ng-mf/data-access-user';
+  ValidacionesFormularioService
+} from '@libs/shared/data-access-user/src';
 import {
   Catalogo,
   Solicitud10301State,
-  Tramite10301Store,
+  Tramite10301Store
 } from '../../estados/tramite10301.store';
 import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { DatosMercancia, RespuestaCatalog } from '../../models/importador-exportador.model';
 import {
   FormArray,
   FormBuilder,
@@ -25,14 +24,14 @@ import {
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
-  Validators,
+  Validators
 } from '@angular/forms';
 import { Subject, Subscription, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { DatosMercancia, RespuestaCatalog } from '../../models/importador-exportador.model';
 import { ImportadorExportadorService } from '../../services/importador-exportador.service';
-import { Tramite10301Query } from '../../estados/tramite10301.query';
+import { Modal } from 'bootstrap';
 import { Solicitud10301Service } from '../../services/solicitud10301.service';
+import { Tramite10301Query } from '../../estados/tramite10301.query';
 
 /**
  * Texto de adjuntar para terceros.
@@ -112,22 +111,22 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   /**
    * Catálogo de aduanas.
    */
-  aduana!: CatalogosSelect;
+  aduana!: Catalogo[];
 
   /**
    * Catálogo de años.
    */
-  ano!: CatalogosSelect;
+  ano!: Catalogo[];
 
   /**
    * Catálogo de condiciones.
    */
-  condicion!: CatalogosSelect;
+  condicion!: Catalogo[];
 
   /**
    * Catálogo de países.
    */
-  pais!: CatalogosSelect;
+  pais!: Catalogo[];
 
   /**
    * Lista de rangos de días seleccionados.
@@ -371,6 +370,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.consultaDatos = seccionState;
           this.esFormularioSoloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
@@ -383,53 +383,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.donanteDomicilio();
-    this.getAduanaIngresara();
-    this.getAno();
-    this.getCondicion();
-    this.getPais();
     this.inicializaCatalogos();
     this.inicializarEstadoFormulario();
-
-    this.subscriptions.push(
-      this.query.selectAduana$.subscribe((aduana) => {
-        this.aduana = {
-          labelNombre: 'Aduana por la que ingresará la mercancía',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: aduana ?? [],
-        };
-      })
-    );
-    this.subscriptions.push(
-      this.query.selectAno$.subscribe((ano) => {
-        this.ano = {
-          labelNombre: 'Año',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: ano || [],
-        };
-      })
-    );
-    this.subscriptions.push(
-      this.query.selectCondicion$.subscribe((condicion) => {
-        this.condicion = {
-          labelNombre: 'Condición de la mercancía',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: condicion ?? [],
-        };
-      })
-    );
-    this.subscriptions.push(
-      this.query.selectPais$.subscribe((pais) => {
-        this.pais = {
-          labelNombre: 'País',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: pais ?? [],
-        };
-      })
-    );
     this.cargarDatosTablaData();
   }
 
@@ -439,9 +394,9 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
-      this.guardarDatosDelFormulario();
+      this.tramiteForm.disable();
     } else {
-      this.donanteDomicilio();
+      this.tramiteForm.enable();
     }
   }
 
@@ -449,7 +404,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Opciones de radio.
    */
   radioOpcions = [
-    { label: 'Sí', value: 'sí' },
+    { label: 'Sí', value: 'si' },
     { label: 'No', value: 'no' },
   ];
 
@@ -475,80 +430,52 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtiene el catálogo de años.
-   */
-  getAno(): void {
-    this.getAnoSubscription = this.importarExportar
-      .getAno()
-      .subscribe((resp) => {
-        if (resp.code === 200) {
-          const RESPONSE = resp.data;
-          this.store.setAno(RESPONSE);
-        }
-      });
-  }
-
-  /**
-   * Obtiene el catálogo de condiciones.
-   */
-  getCondicion(): void {
-    this.getCondicionSubscription = this.importarExportar
-      .getCondicion()
-      .subscribe((resp) => {
-        if (resp.code === 200) {
-          const RESPONSE = resp.data;
-          this.store.setCondicion(RESPONSE);
-        }
-      });
-  }
-
-  /**
-   * Obtiene el catálogo de países.
-   */
-  getPais(): void {
-    this.getPaisSubscription = this.importarExportar
-      .getPais()
-      .subscribe((resp) => {
-        if (resp.code === 200) {
-          const RESPONSE = resp.data;
-          this.store.setPais(RESPONSE);
-        }
-      });
-  }
-
-  /**
    * Inicializa los catálogos necesarios para el componente.
    */
   inicializaCatalogos(): void {
     const FINES$ = this.importarExportar.getFinesDeMercancia().pipe(
       map((resp) => {
         this.fines = resp.data;
-        this.selectRangoDias = this.pais.catalogos.map(
+        this.selectRangoDias = this.fines.map(
           (fines: Catalogo) => fines.descripcion
         );
       })
     );
-    merge(FINES$).pipe(takeUntil(this.destroyNotifier$)).subscribe();
 
-  }
+    const CONDICION$ = this.importarExportar
+      .getCondicion()
+      .pipe(
+        map((resp) => {
+          this.condicion = resp.data;
+        })
+      );
 
-  /**
-   * Obtiene la información de la aduana por la que ingresará la mercancía y actualiza el store con los datos obtenidos.
-   * 
-   * Este método se suscribe al observable `getAduanaIngresara` del servicio `importarExportar`.
-   * Si la respuesta es exitosa (código HTTP 200), almacena los datos recibidos en el estado de la aplicación usando el método `store.setAduana`.
-   * 
-   * @returns void
-   */
-  getAduanaIngresara(): void {
-    this.getAduanaIngresaraSubscription = this.importarExportar
+    const ADUANA$ = this.importarExportar
       .getAduanaIngresara()
-      .subscribe((resp) => {
-        if (resp.code === 200) {
-          const RESPONSE = resp.data;
-          this.store.setAduana(RESPONSE);
-        }
-      });
+      .pipe(
+        map((resp) => {
+          this.aduana = resp.data;
+        })
+      );
+
+    const ANO$ = this.importarExportar
+      .getAno()
+      .pipe(
+        map((resp) => {
+          this.ano = resp.data;
+        })
+      );
+
+    const PAIS$ = this.importarExportar
+      .getPais()
+      .pipe(
+        map((resp) => {
+          this.pais = resp.data;
+        })
+      );
+
+    merge(FINES$, CONDICION$, ADUANA$, ANO$, PAIS$).pipe(takeUntil(this.destroyNotifier$)).subscribe();
+
   }
 
   /**
@@ -570,19 +497,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     return this.validacionesService.isValid(form, field) || false;
   }
 
-  /**
-   * Habilita o deshabilita el formulario `tramiteForm` según el estado de solo lectura.
-   * 
-   * - Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es `true`), el formulario se deshabilita.
-   * - De lo contrario, el formulario se habilita.
-   */
-  guardarDatosDelFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.tramiteForm.disable();
-    } else {
-      this.tramiteForm.enable();
-    }
-  }
   /**
    * Establece los valores en el store de tramite10301.
    *
@@ -626,7 +540,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
 
     this.tramiteForm = this.fb.group({
       importadorExportador: this.fb.group({
-        aduana: [this.solicitudState?.aduana, [Validators.required]],
+        aduana: [this.solicitudState?.aduana, Validators.required],
         nombre: [
           this.solicitudState?.nombre,
           [Validators.required, Validators.maxLength(50)],
@@ -671,6 +585,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
 
     this.agregarMercanciasForm = this.fb.group({
       datosMercancia: this.fb.group({
+        finesElegidos: [ this.solicitudState?.finesElegidos, Validators.required],
         tipoMercancia: [
           this.solicitudState?.tipoMercancia,
           [Validators.required, Validators.maxLength(100)],
@@ -682,21 +597,18 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         condicion: [this.solicitudState?.condicion, Validators.required],
         marca: [
           this.solicitudState?.marca,
-          [Validators.required, Validators.maxLength(50)],
+          [Validators.maxLength(50)],
         ],
-        ano: [this.solicitudState?.ano, [Validators.required]],
+        ano: [this.solicitudState?.ano],
         modelo: [
           this.solicitudState?.modelo,
-          [Validators.required, Validators.maxLength(50)],
+          [Validators.maxLength(50)],
         ],
         serie: [
           this.solicitudState?.serie,
-          [Validators.required, Validators.maxLength(50)],
+          [Validators.maxLength(50)],
         ],
-        condicionMercancia: [
-          this.solicitudState?.condicionMercancia,
-          [Validators.required, Validators.maxLength(50)],
-        ],
+        fechasSeleccionadas: this.fb.array([])
       }),
     });
 
@@ -715,19 +627,67 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Agregar mercancia.
    */
   agregarMercancia(): void {
-    this.importarExportar.agregarMercancia().pipe(takeUntil(this.destroyNotifier$)).subscribe(
-      (respuesta) => {
-        if (respuesta?.success) {
-          respuesta.datos.id = this.mercanciaDatos.length + 1;
-          this.mercanciaDatos = [...this.mercanciaDatos, respuesta.datos];
-          (this.store.setDatosMercancia as (valor: DatosMercancia[]) => void)(this.mercanciaDatos);
-          this.agregarMercanciasForm.reset();
-          this.agregarMercanciasForm.markAsUntouched();
-          this.agregarMercanciasForm.markAsPristine();
-          this.cerrarModal();
+    const FINES = this.agregarMercanciasForm.value.datosMercancia.finesElegidos;
+    const TIPOMERCANCIA = this.agregarMercanciasForm.value.datosMercancia.tipoMercancia;
+    const USOESPECIFICO = this.agregarMercanciasForm.value.datosMercancia.usoEspecifico;
+    const CONDICION = this.agregarMercanciasForm.value.datosMercancia.condicion;
+
+    if (FINES && TIPOMERCANCIA && USOESPECIFICO && CONDICION) {
+      this.importarExportar.agregarMercancia().pipe(takeUntil(this.destroyNotifier$)).subscribe(
+        (respuesta) => {
+          if (respuesta?.success) {
+            respuesta.datos.id = this.mercanciaDatos.length + 1;
+            this.mercanciaDatos = [...this.mercanciaDatos, respuesta.datos];
+            (this.store.setDatosMercancia as (valor: DatosMercancia[]) => void)(this.mercanciaDatos);
+            this.agregarMercanciasForm.reset();
+            this.agregarMercanciasForm.markAsUntouched();
+            this.agregarMercanciasForm.markAsPristine();
+            this.cerrarModal();
+            if (this.modalConfirmacion) {
+              const MODEL = new Modal(this.modalConfirmacion.nativeElement);
+              MODEL.show();
+            }
+          }
         }
-      }
-    );
+      );
+    } else {
+      this.agregarMercanciasForm.markAllAsTouched();
+    }
+  }
+
+  /**
+   * Maneja la selección de condicion.
+   */
+  condicionSeleccion(): void {
+    const CONDICION = this.agregarMercanciasForm.get('datosMercancia.condicion')?.value;
+    this.store.setCondicion(CONDICION);
+  }
+
+  /**
+   * Maneja la selección de la aduana.
+   * Obtiene el valor del formulario y lo establece en el store.
+   */
+  aduanaSeleccion(): void {
+    const ADUANA = this.tramiteForm.get('importadorExportador.aduana')?.value;
+    this.store.setAduana(ADUANA);
+  }
+
+  /**
+   * Maneja la selección de la ano.
+   * Obtiene el valor del formulario y lo establece en el store.
+   */
+  anoSeleccion(): void {
+    const ANO = this.agregarMercanciasForm.get('datosMercancia.ano')?.value;
+    this.store.setAduana(ANO);
+  }
+
+  /**
+   * Maneja la selección de la pais.
+   * Obtiene el valor del formulario y lo establece en el store.
+   */
+  paisSeleccion(): void {
+    const PAIS = this.tramiteForm.get('importadorExportador.pais')?.value;
+    this.store.setAduana(PAIS);
   }
 
   /**
@@ -748,13 +708,37 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Modifica las filas seleccionadas en la tabla de solicitudes.
+   * Abre un modal para realizar los cambios.
+   */
+  modificar(): void {
+    if (this.filaSeleccionadas && this.filaSeleccionadas.length > 0) {
+      this.agregarMercanciasForm.patchValue(this.filaSeleccionadas);
+      if (this.modalElement) {
+        const MODEL = new Modal(this.modalElement.nativeElement);
+        MODEL.show();
+      }
+    }
+  }
+
 /**
    * Obtiene el array del formulario 'fechasSeleccionadas' del grupo de formulario  'datosServicio'.
    *
    * @returns {FormArray} El array de formulario 'fechasSeleccionadas'.
    */
   get fechasSeleccionadas(): FormArray {
-    return this.tramiteForm.get('fechasSeleccionadas') as FormArray;
+    return (this.tramiteForm.get('fechasSeleccionadas') as FormArray) ?? this.fb.array([]);
+  }
+
+  /**
+   * Verifica si el control del formulario es inválido y ha sido tocado.
+   * @param {string} id El nombre del control del formulario.
+   * @returns {boolean | undefined} `true` si el control es inválido y tocado, `null` si no existe el control.
+   */
+  isInvalid(id: string): boolean | undefined {
+    const CONTROL = this.agregarMercanciasForm.get('datosMercancia')?.get(id);
+    return CONTROL ? CONTROL.invalid && CONTROL.touched : undefined;
   }
 
   /**
@@ -764,9 +748,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @returns void
    */
   changeCrosslist(fechas: string[]): void {
-    fechas.forEach((fecha) => {
-      this.fechasSeleccionadas.push(new FormControl(fecha));
-    });
+    const FECHAS = new FormArray([...fechas.map(fecha => new FormControl(fecha))]);
+    (this.agregarMercanciasForm.get('datosMercancia') as FormGroup).setControl('fechasSeleccionadas', FECHAS);
     this.store.setFechasSeleccionadas(fechas);
   }
   

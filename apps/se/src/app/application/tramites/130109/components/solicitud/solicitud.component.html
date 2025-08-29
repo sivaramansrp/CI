@@ -15,6 +15,7 @@
   [unidadCatalogo]="unidadCatalogo"
   [esFormularioSoloLectura] ="esFormularioSoloLectura"
   (setValoresStoreEvent)="setValoresStore($event)"
+  [mostrarErrores]="mostrarErroresMercancia"
 ></app-datos-de-la-mercancia>
 
 
@@ -27,9 +28,10 @@
   [esFormularioSoloLectura] ="esFormularioSoloLectura"
   (filaSeleccionadaChange)="manejarlaFilaSeleccionada($event)"
   (validarYEnviarFormularioEvent)="validarYEnviarFormulario()"
-  
   [disabled]="disabledModificar()"
   (setValoresStoreEvent)="setValoresStore($event)"
+  [mostrarErrores]="mostrarErroresPartidas"
+  (validarAntesDeCargarArchivo)="validarYCargarArchivo()"
 ></app-partidas-de-la-mercancia>
 
 
@@ -51,3 +53,9 @@
 [esFormularioSoloLectura] ="esFormularioSoloLectura"
 (setValoresStoreEvent)="setValoresStore($event)">
 </app-representacion>
+
+<lib-notificaciones
+  *ngIf="mostrarNotificacion"
+  [notificacionInput]="nuevaNotificacion"
+  (confirmacionModal)="mostrarNotificacion = false">
+</lib-notificaciones>

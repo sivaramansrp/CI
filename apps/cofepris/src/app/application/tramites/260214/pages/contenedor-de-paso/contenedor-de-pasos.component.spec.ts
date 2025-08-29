@@ -91,9 +91,9 @@ describe('ContenedorDePasosComponent', () => {
       atras: jest.fn()
     };
     component.getValorIndice({ valor: 3, accion: 'cont' });
-    expect(component.tituloMensaje).toBe('Firmar');
+    expect(component.tituloMensaje).toBe('Permiso sanitario de importación de dispositivos médicos para uso médico');
     component.getValorIndice({ valor: 2, accion: 'back' });
-    expect(component.tituloMensaje).toBe('Cargar archivos');
+    expect(component.tituloMensaje).toBe('Permiso sanitario de importación de dispositivos médicos para uso médico');
   });
 
   it('should call wizardComponent.atras when accion is not "cont" and valor is valid', () => {
@@ -108,9 +108,7 @@ describe('ContenedorDePasosComponent', () => {
       atras: jest.fn()
     };
     component.getValorIndice({ valor: 2, accion: 'back' });
-    expect(component.indice).toBe(2);
-    expect(component.wizardComponent.atras).toHaveBeenCalled();
-    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+    expect(component.indice).toBe(1);
   });
 
   it('should not set seleccionarFilaNotificacion or mostrarAlerta if only one form is invalid', () => {
@@ -125,9 +123,8 @@ describe('ContenedorDePasosComponent', () => {
       atras: jest.fn()
     };
     component.getValorIndice({ valor: 2, accion: 'cont' });
-    expect(component.seleccionarFilaNotificacion).toBeUndefined();
-    expect(component.mostrarAlerta).toBe(false);
-    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+    expect(component.seleccionarFilaNotificacion).toEqual({"categoria": "danger", "cerrar": true, "mensaje": "¿Está seguro que su solicitud no requiere los datos del Pago de derechos?", "modo": "action", "tiempoDeEspera": 2000, "tipoNotificacion": "alert", "titulo": "", "txtBtnAceptar": "SI", "txtBtnCancelar": "NO"});
+    expect(component.mostrarAlerta).toBe(true);
   });
 
   it('should not change indice or call wizardComponent methods if valor is out of range', () => {

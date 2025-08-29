@@ -32,7 +32,13 @@
       <div class="col-md-10">
         <div class="form-group">
           <label class="form-label" for="denominacionEspecificaProducto"
-            >Denominación específica del producto*:</label
+            >Denominación específica del producto<span
+              [ngClass]="
+            {
+              'text-danger': mercanciaForm.get('denominacionEspecificaProducto')?.errors?.['required'] && mercanciaForm.get('denominacionEspecificaProducto')?.touched
+            }"
+              >*</span
+            >:</label
           >
           <input
             class="form-control"
@@ -59,7 +65,13 @@
     <div class="row">
       <div class="col-md-10">
         <div class="form-group">
-          <label class="form-label" for="marca">Marca*:</label>
+          <label class="form-label" for="marca">Marca<span
+              [ngClass]="
+            {
+              'text-danger': mercanciaForm.get('marca')?.errors?.['required'] && mercanciaForm.get('marca')?.touched
+            }"
+              >*</span
+            >:</label>
           <input
             class="form-control"
             id="marca"
@@ -81,7 +93,13 @@
       <div class="col-md-10">
         <div class="form-group">
           <label class="form-label" for="denominacionDistintiva"
-            >Denominación distintiva*:</label
+            >Denominación distintiva<span
+              [ngClass]="
+            {
+              'text-danger': mercanciaForm.get('denominacionDistintiva')?.errors?.['required'] && mercanciaForm.get('denominacionDistintiva')?.touched
+            }"
+            >*</span
+            >:</label
           >
           <input
             class="form-control"
@@ -107,11 +125,15 @@
       <div class="col-md-10">
         <div class="form-group">
           <label class="form-label" for="denominacionComun"
-            >Denominación o nombre científico*:</label
-          >
-           <span
-            tooltip="Denominación común internacional o genérica"
-          >
+            >Denominación o nombre científico<span
+              [ngClass]="
+            {
+              'text-danger': mercanciaForm.get('denominacionComun')?.errors?.['required'] && mercanciaForm.get('denominacionComun')?.touched
+            }"
+            >*</span
+            >: 
+          </label>
+          <span tooltip="Denominación común internacional o genérica">
             <i class="bi bi-question-circle-fill"></i>
           </span>
           <input
@@ -152,7 +174,15 @@
     <div class="row">
       <div class="col-md-10">
         <div class="form-group">
-          <label class="form-label" for="especifique">Especifique*:</label>
+          <label class="form-label" for="especifique"
+            >Especifique<span
+              [ngClass]="
+            {
+              'text-danger': mercanciaForm.get('especifique')?.errors?.['required'] && mercanciaForm.get('especifique')?.touched
+            }"
+            >*</span
+            >:</label
+          >
           <input
             maxlength="100"
             class="form-control"
@@ -187,7 +217,15 @@
     <div class="row">
       <div class="col-md-10">
         <div class="form-group">
-          <label class="form-label" for="especifiqueForma">Especifique*:</label>
+          <label class="form-label" for="especifiqueForma"
+            >Especifique<span
+              [ngClass]="
+            {
+              'text-danger': mercanciaForm.get('especifiqueForma')?.errors?.['required'] && mercanciaForm.get('especifiqueForma')?.touched
+            }"
+            >*</span
+            >:</label
+          >
           <input
             maxlength="100"
             class="form-control"
@@ -225,7 +263,13 @@
       <div class="col-md-10">
         <div class="form-group">
           <label class="form-label" for="especifiqueEstado"
-            >Especifique*:</label
+            >Especifique<span
+              [ngClass]="
+            {
+              'text-danger': mercanciaForm.get('especifiqueEstado')?.errors?.['required'] && mercanciaForm.get('especifiqueEstado')?.touched
+            }"
+            ></span
+            >:</label
           >
           <input
             maxlength="100"
@@ -252,9 +296,15 @@
       <div class="col-md-10">
         <div class="form-group">
           <label class="form-label" for="fraccionArancelaria"
-            >Fracción arancelaria*:</label
-          >
-           <span
+            >Fracción arancelaria<span
+              [ngClass]="
+            {
+              'text-danger': mercanciaForm.get('fraccionArancelaria')?.errors?.['required'] && mercanciaForm.get('fraccionArancelaria')?.touched
+            }"
+            >*</span
+            >: 
+          </label>
+          <span
             tooltip="Descripción numérica o desglose de un código de clasificación que otorga el Sistema Armonizado"
           >
             <i class="bi bi-question-circle-fill"></i>
@@ -265,22 +315,15 @@
             id="fraccionArancelaria"
             type="text"
             formControlName="fraccionArancelaria"
-            (change)="cambiarFraccionArancelaria()"
-            [ngClass]="
-              isValid(mercanciaForm, 'fraccionArancelaria') ? 'required' : ''
-            "
-          />
+            (change)="cambiarFraccionArancelaria()"/>
+          <div class="mensaje-error" *ngIf="mercanciaForm.get('fraccionArancelaria')?.value && mercanciaForm.get('fraccionArancelaria')?.errors?.['pattern'] && mercanciaForm.get('fraccionArancelaria')?.touched">
+            Por favor, sólo escribe dígitos
+          </div>
           <div
             class="mensaje-error"
             *ngIf="mercanciaForm.get('fraccionArancelaria')?.errors?.['required'] && mercanciaForm.get('fraccionArancelaria')?.touched"
           >
             Este campo es obligatorio.
-          </div>
-          <div
-            class="mensaje-error"
-            *ngIf="!mercanciaForm.get('fraccionArancelaria')?.errors?.['required'] && mercanciaForm.get('fraccionArancelaria')?.touched && mercanciaForm.get('fraccionArancelaria')?.value?.length < 8"
-          >
-            Por favor, no escribas menos de 8 caracteres.
           </div>
         </div>
       </div>
@@ -289,7 +332,13 @@
       <div class="col-md-10">
         <div class="form-group">
           <label class="form-label" for="descripcionFraccion"
-            >Descripción de la fracción arancelaria*:</label
+            >Descripción de la fracción arancelaria<span
+              [ngClass]="
+            {
+              'text-danger': mercanciaForm.get('descripcionFraccion')?.errors?.['required'] && mercanciaForm.get('descripcionFraccion')?.touched
+            }"
+            >*</span
+            >:</label
           >
           <input
             class="form-control"
@@ -312,7 +361,13 @@
       <div class="col-md-5">
         <div class="form-group">
           <label class="form-label" for="cantidadUmtValor"
-            >Cantidad UMT*:</label
+            >Cantidad UMT<span
+              [ngClass]="
+            {
+              'text-danger': mercanciaForm.get('cantidadUmtValor')?.errors?.['required'] && mercanciaForm.get('cantidadUmtValor')?.touched
+            }"
+            >*</span
+            >:</label
           >
           <input
             maxlength="16"
@@ -340,10 +395,16 @@
       </div>
       <div class="col-md-5">
         <div class="form-group">
-          <label class="form-label" for="cantidadUmt">UMT*:</label>
-          <span
-            tooltip="Unidad de medida de la tarifa"
-          >
+          <label class="form-label" for="cantidadUmt"
+            >UMT<span
+              [ngClass]="
+            {
+              'text-danger': mercanciaForm.get('cantidadUmt')?.errors?.['required'] && mercanciaForm.get('cantidadUmt')?.touched
+            }"
+            >*</span
+            >:  
+          </label>
+          <span tooltip="Unidad de medida de la tarifa">
             <i class="bi bi-question-circle-fill"></i>
           </span>
           <input
@@ -367,7 +428,13 @@
       <div class="col-md-5">
         <div class="form-group">
           <label class="form-label" for="cantidadUmcValor"
-            >Cantidad UMC*:</label
+            >Cantidad UMC<span
+              [ngClass]="
+            {
+              'text-danger': mercanciaForm.get('cantidadUmcValor')?.errors?.['required'] && mercanciaForm.get('cantidadUmcValor')?.touched
+            }"
+            >*</span
+            >:</label
           >
           <input
             maxlength="16"
@@ -410,7 +477,13 @@
     <div class="row">
       <div class="col-6 ml-1">
         <label class="form-label text-start" for="presentacion">
-          Presentación farmacéutica o tipo de envase*:
+          Presentación farmacéutica o tipo de envase<span
+              [ngClass]="
+            {
+              'text-danger': mercanciaForm.get('presentacion')?.errors?.['required'] && mercanciaForm.get('presentacion')?.touched
+            }"
+            >*</span
+            >:
         </label>
         <textarea
           maxlength="250"
@@ -476,7 +549,7 @@
 
     <div class="row mt-5">
       <div class="col-md-12 mt-3">
-        <div class="panel-group ficha-collapse" id="accordion">
+        <div class="panel-group ficha-collapse mb-0" id="accordion">
           <div class="panel panel-default">
             <div class="panel-heading" (click)="mostrarColapsable(1)">
               <h4 class="panel-title">
@@ -505,12 +578,18 @@
             }
           </div>
         </div>
+        <div
+          class="mensaje-error"
+          *ngIf="mercanciaForm.get('paisDeOriginDatos')?.errors?.['required'] && mercanciaForm.get('paisDeOriginDatos')?.touched"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
     </div>
 
     <div class="row mt-3">
       <div class="col-md-12">
-        <div class="panel-group ficha-collapse" id="accordion">
+        <div class="panel-group ficha-collapse mb-0" id="accordion">
           <div class="panel panel-default">
             <div class="panel-heading" (click)="mostrarColapsable(2)">
               <h4 class="panel-title">
@@ -540,6 +619,12 @@
           </div>
         </div>
       </div>
+      <div
+        class="mensaje-error ml-1"
+        *ngIf="mercanciaForm.get('paisDeProcedenciaDatos')?.errors?.['required'] && mercanciaForm.get('paisDeProcedenciaDatos')?.touched"
+      >
+        Este campo es obligatorio.
+      </div>
     </div>
 
     @if(elementosAnadidos.includes('claveDeLos')){
@@ -547,7 +632,13 @@
       <div class="col-md-10">
         <div class="form-group">
           <label class="form-label" for="claveDeLos"
-            >Clave de los lotes*:</label
+            >Clave de los lotes<span
+              [ngClass]="
+            {
+              'text-danger': mercanciaForm.get('claveDeLos')?.errors?.['required'] && mercanciaForm.get('claveDeLos')?.touched
+            }"
+            ></span
+            >:</label
           >
           <input
             class="form-control"
@@ -638,7 +729,7 @@
     }
     <div class="row mt-3">
       <div class="col-md-12">
-        <div class="panel-group ficha-collapse" id="accordion">
+        <div class="panel-group ficha-collapse mb-0" id="accordion">
           <div class="panel panel-default">
             <div class="panel-heading" (click)="mostrarColapsable(3)">
               <h4 class="panel-title">
@@ -667,6 +758,12 @@
             }
           </div>
         </div>
+      </div>
+      <div
+        class="mensaje-error ml-1"
+        *ngIf="mercanciaForm.get('usoEspecifico')?.errors?.['required'] && mercanciaForm.get('usoEspecifico')?.touched"
+      >
+        Este campo es obligatorio.
       </div>
     </div>
     <ng-template #fecha let-controlName="controlName" let-lableName="lableName">
@@ -719,8 +816,6 @@
           type="button"
           name="agregarScian"
           class="btn btn-primary ms-2"
-          data-bs-toggle="modal"
-          data-bs-target="#modalAgregarScain"
           (click)="agregarMercancia()"
         >
           Agregar

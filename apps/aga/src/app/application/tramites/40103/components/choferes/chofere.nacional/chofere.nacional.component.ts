@@ -25,7 +25,6 @@ import { DatosDelChoferNacional } from '../../../models/registro-muestras-mercan
   providers: [BsModalService],
 })
 export class ChofereNacionalComponent implements OnInit, OnDestroy {
-  // Add your component logic here
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
 
   /**
@@ -217,14 +216,11 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
    * @param data - Los datos del chofer nacional a agregar o actualizar.
    */
   agregarModal(data: DatosDelChoferNacional): void {
-    // Check if we're updating an existing record or adding a new one
-    const existingIndex = this.datosDelChoferNacional.findIndex(item => item.id === data.id);
+    const EXISTING_INDEX = this.datosDelChoferNacional.findIndex(item => item.id === data.id);
     
-    if (existingIndex >= 0) {
-      // Actualizar registro existente
-      this.datosDelChoferNacional[existingIndex] = data;
+    if (EXISTING_INDEX >= 0) {
+      this.datosDelChoferNacional[EXISTING_INDEX] = data;
     } else {
-      // Agregar nuevo registro
       this.datosDelChoferNacional.push(data);
     }
     

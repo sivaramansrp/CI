@@ -6,6 +6,7 @@ import { TramiteFolioService } from '@ng-mf/data-access-user';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 import { ToastrModule } from 'ngx-toastr';
 import { ToastrService } from 'ngx-toastr';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
@@ -24,7 +25,7 @@ describe('PasoTresComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [PasoTresComponent],
-      imports: [FirmaElectronicaComponent, ToastrModule.forRoot()],
+      imports: [FirmaElectronicaComponent, ToastrModule.forRoot(),HttpClientTestingModule],
       providers: [
         { provide: Router, useValue: routerMock },
         { provide: TramiteFolioService, useValue: serviciosExtraordinariosServiceMock },

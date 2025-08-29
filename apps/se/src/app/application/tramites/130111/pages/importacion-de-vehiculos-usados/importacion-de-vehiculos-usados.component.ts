@@ -1,5 +1,5 @@
+import { AVISO, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { PASOS_EXPORTACION } from '../../constants/importacion-de-vehiculos-usados-pasos.enum';
 
 import { AccionBoton } from '../../enums/accionbotton.enum';
@@ -38,6 +38,13 @@ export class ImportacionDeVehiculosUsadosComponent {
    * Se utiliza para navegar entre los pasos del asistente.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  /**
+   * @property {object} TEXTOS - Contiene constantes relacionadas con aviso y firma.
+   * Se utiliza para manejar textos estáticos en la aplicación.
+   */
+    public TEXTOS = {
+    AVISO,
+  };
 
   /**
    * Datos relacionados con los pasos del asistente.

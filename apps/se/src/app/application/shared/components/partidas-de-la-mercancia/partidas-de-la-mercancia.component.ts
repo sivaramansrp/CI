@@ -1,8 +1,8 @@
 
-import { AlertComponent, ConfiguracionColumna, Notificacion } from '@ng-mf/data-access-user';
+import { ALERTARCHIVOMSG, PARTIDASDELAMERCANCIA_TABLA, TEXTOS } from '../../constantes/partidas-de-la-mercancia.enum';
+import { AlertComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, TipoNotificacionEnum } from '@ng-mf/data-access-user';
 import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { PARTIDASDELAMERCANCIA_TABLA, TEXTOS } from '../../constantes/partidas-de-la-mercancia.enum';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
 import { PartidasDeLaMercanciaModelo } from '../../models/partidas-de-la-mercancia.model';
@@ -26,7 +26,8 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     TituloComponent,
     TablaDinamicaComponent,
     TooltipModule,
-    AlertComponent
+    AlertComponent,
+    NotificacionesComponent
   ],
   templateUrl: './partidas-de-la-mercancia.component.html',
   styleUrl: './partidas-de-la-mercancia.component.scss',
@@ -39,9 +40,17 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
   TEXTOS = TEXTOS;
 
   /*
+   * @descripcion Mensaje de alerta para el archivo.
+   */
+  ALERTARCHIVOMSG = ALERTARCHIVOMSG ;
+  /*
    * @descripcion Indica si se debe mostrar una notificación.
    */
   mostrarNotificacion = false;
+  /**
+   *  Indica si se debe mostrar una alerta de archivo.
+   */
+  alertaArchivo = false;
   /**
    * @descripcion Notificación para mostrar mensajes al usuario.
    */
@@ -129,12 +138,45 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    */
   @ViewChild('archivoNacionales') archivoNacionalesElemento!: ElementRef;
 
+  /**
+   * @ViewChild('cargarArchivo') cargarArchivoElemento
+   * Referencia al elemento del DOM para el modal de carga de archivos.
+   */
   @ViewChild('cargarArchivo') cargarArchivoElemento!: ElementRef;		
- 
+
+  /**
+   * selectedRows
+   * Arreglo de filas seleccionadas en la tabla dinámica de partidas de la mercancía.
+   */
+  selectedRows: PartidasDeLaMercanciaModelo[] = [];
+
+  /**
+   * confirmandoEliminar
+   * Bandera que indica si se está confirmando la eliminación de partidas.
+   */
+  confirmandoEliminar = false;
+
+  /**
+   * confirmandoEliminarPartida
+   * Bandera que indica si se está confirmando la eliminación de una partida específica.
+   */
+  confirmandoEliminarPartida = false;
+
+  /**
+   * @Input() mostrarErrores
+   * Bandera que indica si se deben mostrar los mensajes de error en el formulario.
+   */
+  @Input() mostrarErrores: boolean = false;
+
   /**
    * Nombre del archivo seleccionado por el usuario.
    */
   nombreArchivoSeleccionado: string = '';
+
+  /**
+   * Evento emitido antes de cargar un archivo, permitiendo realizar validaciones previas.
+   */
+  @Output() validarAntesDeCargarArchivo = new EventEmitter<void>();
 
   /**
    * Constructor para inicializar el componente e inyectar dependencias.
@@ -169,15 +211,18 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    * boolean Verdadero si el control es inválido, falso en caso contrario.
    */
   esInvalido(nombreControl: string): boolean {
-    const CONTROL = this.partidasDelaMercanciaForm.get(nombreControl);
-    return CONTROL ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) : false;
-  }
+  const CONTROL = this.partidasDelaMercanciaForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
+ }
 
   /**
    * Maneja las filas seleccionadas en la tabla dinámica y emite un evento.
    * Lista de filas seleccionadas.
    */
   handleListaDeFilaSeleccionada(event: PartidasDeLaMercanciaModelo[]): void {
+    this.selectedRows = event;
     this.filaSeleccionadaChange.emit(event);
   }
 
@@ -192,7 +237,37 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    * Navega para modificar una partida específica, emitiendo un evento.
    */
   navegarParaModificarPartida(): void {
-       if (this.modificarPartidaElemento) {
+       if (!this.selectedRows || this.selectedRows.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: 'info',
+        modo: '',
+        titulo: '',
+        mensaje: 'Debe seleccionar un elemento',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+        tamanioModal:'modal-sm'
+      };
+      this.mostrarNotificacion = true;
+      return;
+    }
+    if (this.selectedRows.length > 1) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: 'info',
+        modo: '',
+        titulo: '',
+        mensaje: 'Sólo debe seleccionar un elemento',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+        tamanioModal:'modal-sm'
+      };
+      this.mostrarNotificacion = true;
+      return;
+    }
+    if (this.modificarPartidaElemento) {
       const MODAL_INSTANCIA = new Modal(
         this.modificarPartidaElemento?.nativeElement,
         { backdrop: false }
@@ -201,6 +276,68 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
     }
   }
 
+/**
+ * Muestra una notificación para confirmar la eliminación de las partidas seleccionadas.
+ * Si no hay elementos seleccionados, muestra una alerta informando al usuario que debe seleccionar al menos un elemento.
+ * Si hay elementos seleccionados, muestra una notificación de confirmación para proceder con la eliminación.
+ */
+confirmarEliminarPartida(): void {
+  if (!this.selectedRows || this.selectedRows.length === 0) {
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: 'info',
+      modo: '',
+      titulo: '',
+      mensaje: 'Selecciona un registro a eliminar.',
+      cerrar: true,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+      tamanioModal: 'modal-sm'
+    };
+    this.mostrarNotificacion = true;
+    this.confirmandoEliminarPartida = false;
+    return;
+  }
+  this.nuevaNotificacion = {
+    tipoNotificacion: TipoNotificacionEnum.ALERTA,
+    categoria: 'info',
+    modo: '',
+    titulo: '',
+    mensaje: '¿Está seguro que desea eliminar los registros marcados?',
+    cerrar: false,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: 'Cancelar',
+    tamanioModal: 'modal-md'
+  };
+  this.mostrarNotificacion = true;
+  this.confirmandoEliminarPartida = true;
+}
+
+/**
+ * Maneja la confirmación del modal para eliminar partidas seleccionadas.
+ * Si la bandera `confirmandoEliminarPartida` está activa, elimina las partidas seleccionadas
+ * y restablece la bandera. Además, oculta la notificación.
+ */
+onConfirmacionModal(accion: boolean): void {
+  if (this.confirmandoEliminarPartida && accion === true) {
+    this.eliminarPartidasSeleccionadas();
+    this.confirmandoEliminarPartida = false;
+  }
+  this.mostrarNotificacion = false;
+}
+
+/**
+ * Si existen filas seleccionadas, obtiene sus identificadores y filtra la lista de datos de la tabla
+ * para eliminar aquellas filas cuyos identificadores coincidan con los seleccionados. Finalmente,
+ * limpia la selección de filas.
+ */
+eliminarPartidasSeleccionadas(): void {
+  if (this.selectedRows && this.selectedRows.length > 0) {
+    const IDS_ELIMINAR = this.selectedRows.map(row => row.id); // Use your unique key
+    this.tableBodyData = this.tableBodyData.filter(row => !IDS_ELIMINAR.includes(row.id));
+    this.selectedRows = [];
+  }
+}
   /**
    * Cancela la modificación de una partida específica, cerrando el modal.
    */
@@ -253,15 +390,19 @@ validarModificarPartida(): void {
 enviarArchivo(): void {
   const INPUT_FILE = document.getElementById('archivoNacionales') as HTMLInputElement;
   if (!INPUT_FILE || !INPUT_FILE.files || INPUT_FILE.files.length === 0) {
+    this.alertaArchivo = true;
+    this.mostrarNotificacion = false;
     return;
   }
   const FILE = INPUT_FILE.files[0];
   const EXTENSION = FILE.name.split('.').pop()?.toLowerCase();
   if (EXTENSION !== 'csv') {
     this.mostrarNotificacion = true;
+    this.alertaArchivo = false; 
     return;
   }
   this.mostrarNotificacion = false;
+  this.alertaArchivo = false;
   this.cerrarCargarArchivoModal();
 }
   /**
@@ -281,14 +422,23 @@ enviarArchivo(): void {
    * Abre el modal para cargar un archivo.
    */
   abrirCargarArchivoModal(): void {
-  if (this.cargarArchivoElemento && this.cargarArchivoElemento.nativeElement) {
+  this.validarAntesDeCargarArchivo.emit();
+  }
+  
+  /**
+   * Abre un modal para cargar un archivo utilizando el elemento referenciado en `cargarArchivoElemento`.
+   * Si el elemento existe, se crea una instancia de `Modal` con la opción de fondo deshabilitada (`backdrop: false`)
+   * y se muestra el modal.
+   */
+  abrirCargarArchivoModalReal(): void {
+    if (this.cargarArchivoElemento && this.cargarArchivoElemento.nativeElement) {
       const MODAL_INSTANCIA = new Modal(
         this.cargarArchivoElemento?.nativeElement,
         { backdrop: false }
       );
       MODAL_INSTANCIA.show();
     }
-}
+  }
 /*
  * Cierra el modal para cargar un archivo.
  */
