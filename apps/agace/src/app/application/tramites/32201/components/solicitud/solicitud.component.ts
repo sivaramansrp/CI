@@ -1,6 +1,7 @@
 import * as XLSX from 'xlsx'; // Importa XLSX para leer archivos Excel
-import { AlertComponent, ConsultaioQuery, ConsultaioState, InputCheckComponent, Notificacion, NotificacionesComponent, TituloComponent, VALID_FILE_REGEX } from '@libs/shared/data-access-user/src';
+import { AlertComponent, InputCheckComponent, Notificacion, NotificacionesComponent, TituloComponent, VALID_FILE_REGEX } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud32201State, Tramite32201Store } from '../../estados/tramite32201.store';
 import { Subject, map, takeUntil } from 'rxjs';

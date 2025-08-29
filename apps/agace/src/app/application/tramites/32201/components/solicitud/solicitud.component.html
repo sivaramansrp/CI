@@ -5,24 +5,25 @@
       <div class="form-check">
         <lib-input-check [id]="'regimen_0'" [label]="'Importación temporal para la elaboración, transformación o preparación
               en programas de maquila o de exportación (IMMEX)'" [required]="true" formControlName="regimen_0"
-          (change)="setValoresStore(solicitudForm, 'regimen_0', 'setRegimen_0')"></lib-input-check>
+          (change)="setValoresStore(solicitudForm, 'regimen_0', 'setRegimen_0')" [isDisabled]="esFormularioSoloLectura"></lib-input-check>
       </div>
 
       <div class="form-check">
         <lib-input-check [id]="'regimen_1'" [label]="'Depósito fiscal para someterse al proceso de ensamble y fabricación de
               vehículo a empresas de la industria automotriz terminal'" [required]="true" formControlName="regimen_1"
-          (change)="setValoresStore(solicitudForm, 'regimen_1', 'setRegimen_1')"></lib-input-check>
+          (change)="setValoresStore(solicitudForm, 'regimen_1', 'setRegimen_1')" [isDisabled]="esFormularioSoloLectura"></lib-input-check>
       </div>
 
       <div class="form-check">
         <lib-input-check [id]="'regimen_2'" [label]="'Elaboración, transformación o reparación en recinto fiscalizado'"
           [required]="true" formControlName="regimen_2"
-          (change)="setValoresStore(solicitudForm, 'regimen_2', 'setRegimen_2')"></lib-input-check>
+          (change)="setValoresStore(solicitudForm, 'regimen_2', 'setRegimen_2')" [isDisabled]="esFormularioSoloLectura"></lib-input-check>
       </div>
 
       <div class="form-check">
-        <lib-input-check [id]="'regimen_3'" [label]="'Recinto Fiscalizado Estratégico'" [required]="true"
-          formControlName="regimen_3" (change)="setValoresStore(solicitudForm, 'regimen_3', 'setRegimen_3')"></lib-input-check>
+        <lib-input-check [id]="'regimen_3'" [label]="'Recinto Fiscalizado Estratégico'" 
+          [required]="true" formControlName="regimen_3" 
+          (change)="setValoresStore(solicitudForm, 'regimen_3', 'setRegimen_3')" [isDisabled]="esFormularioSoloLectura"></lib-input-check>
       </div>
     </div>
 
