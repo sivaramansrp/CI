@@ -57,7 +57,7 @@ jobs:
           host: ${{ secrets.REMOTE_SRV_IP }}
           username: ${{ secrets.REMOTE_SRV_USER }}
           key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
-          source: k8s/${{ github.event.inputs.app_name }}/*
+          source: k8s/${{ github.event.inputs.app_name }}/*.yaml
           target: ~/deployments/${{ github.event.inputs.app_name }}/
 
       - name: List files on remote after copy
