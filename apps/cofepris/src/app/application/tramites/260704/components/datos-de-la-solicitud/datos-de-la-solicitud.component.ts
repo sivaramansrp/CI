@@ -6,6 +6,9 @@ import {
   InputFecha,
   InputRadioComponent,
   Pedimento,
+  REGEX_CODIGO_POSTAL,
+  REGEX_CORREO_ELECTRONICO,
+  REGEX_TELEFONO_OPCIONAL,
   TablaSeleccion,
   TituloComponent,
   ValidacionesFormularioService
@@ -622,7 +625,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       cerrar: false,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: 'Cancelar',
+      txtBtnCancelar: '',
     }
     this.elementoParaEliminar = i;
   }
@@ -703,17 +706,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       justificacion: [{ value: this.solicitudState?.justificacion, disabled: this.soloLectura }, [Validators.required]],
       establecimiento: [{ value: this.solicitudState?.establecimiento, disabled: this.soloLectura }, [Validators.required]],
       razonSocial: [{ value: this.solicitudState?.razonSocial, disabled: this.soloLectura }, [Validators.required]],
-      correoElectronico: [{ value: this.solicitudState?.correoElectronico, disabled: this.soloLectura }, [Validators.required]],
+      correoElectronico: [{ value: this.solicitudState?.correoElectronico, disabled: this.soloLectura }, [Validators.required, Validators.pattern(REGEX_CORREO_ELECTRONICO)]],
     }),
     validacionMercanciaForm: this.fb.group({
-      codigoPostal: [{ value: this.solicitudState?.codigoPostal, disabled: this.soloLectura }, [Validators.required]],
+      codigoPostal: [{ value: this.solicitudState?.codigoPostal, disabled: this.soloLectura }, [Validators.required, Validators.pattern(REGEX_CODIGO_POSTAL)]],
       estado: [{ value: this.solicitudState?.estado, disabled: this.soloLectura }, [Validators.required]],
       municipio: [{ value: this.solicitudState?.municipio, disabled: this.soloLectura }, [Validators.required]],
       localidad: [{ value: this.solicitudState?.localidad, disabled: this.soloLectura }, [Validators.required]],
       colonia: [{ value: this.solicitudState?.colonia, disabled: this.soloLectura }, [Validators.required]],
       calle: [{ value: this.solicitudState?.calle, disabled: this.soloLectura }, [Validators.required]],
       lada: [{ value: this.solicitudState?.lada, disabled: this.soloLectura }, [Validators.required]],
-      telefono: [{ value: this.solicitudState?.telefono, disabled: this.soloLectura }, [Validators.required]],
+      telefono: [{ value: this.solicitudState?.telefono, disabled: this.soloLectura }, [Validators.required, Validators.pattern(REGEX_TELEFONO_OPCIONAL)]],
     }),
     validacionScionForm: this.fb.group({
       scian: [{ value: this.solicitudState?.scian, disabled: this.soloLectura }, [Validators.required]],

@@ -11,8 +11,14 @@
     <div class="row mt-5">
       <div class="col-md-6">
         <label>Justificación*:</label>
-        <textarea cols="80" rows="5" formControlName="justificacion" [disabled]="true"
+        <textarea cols="80" rows="5" formControlName="justificacion" [disabled]="true" maxlength="2000"
           (change)="setValoresStore(validacionForm,'justificacion', 'setJustificacion')"></textarea>
+          @if (validacionForm.get('justificacion')?.hasError('required') &&
+            validacionForm.get('justificacion')?.touched) {
+            <div class="text-danger">
+              <small>Este campo es obligatorio</small>
+            </div>
+            } 
       </div>
     </div>
     <ng-titulo titulo="Datos del establecimiento" />
@@ -27,8 +33,14 @@
       </section> } <div class="row mt-5">
         <div class="col-md-8">
           <label for="razonSocial" class="form-label">Denominación o razón social*:</label>
-          <input type="text" class="form-control" size="68" formControlName="razonSocial" 
+          <input type="text" class="form-control" size="68" maxlength="100" formControlName="razonSocial" 
             (change)="setValoresStore(validacionForm,'razonSocial', 'setRazonSocial')" />
+            @if (validacionForm.get('razonSocial')?.hasError('required') &&
+            validacionForm.get('razonSocial')?.touched) {
+            <div class="text-danger">
+              <small>Este campo es obligatorio</small>
+            </div>
+            }
         </div>
         <div class="col-md-4">
           <label for="correoElectronico" class="form-label">Correo electrónico: <span class="bi bi-question-circle-fill"
@@ -37,6 +49,17 @@
           <input type="text" class="form-control" maxlength="320" formControlName="correoElectronico"
             
             (change)="setValoresStore(validacionForm,'correoElectronico', 'setCorreoElectronico')" />
+            @if (validacionForm.get('correoElectronico')?.hasError('required') &&
+            validacionForm.get('correoElectronico')?.touched) {
+            <div class="text-danger">
+              <small>Este campo es obligatorio</small>
+            </div>
+            } @else if (validacionForm.get('correoElectronico')?.hasError('pattern') &&
+            validacionForm.get('correoElectronico')?.touched) {
+            <div class="text-danger">
+              <small>Por favor, escribe una dirección de correo válida</small>
+            </div>
+            }
         </div>
       </div>
     </div>
@@ -49,6 +72,17 @@
         <input type="text" name="codigoPostal" class="form-control" maxlength="12" 
           formControlName="codigoPostal"
           (change)="setValoresStore(validacionMercanciaForm,'codigoPostal', 'setCodigoPostal')" />
+          @if (validacionMercanciaForm.get('codigoPostal')?.hasError('required') &&
+            validacionMercanciaForm.get('codigoPostal')?.touched) {
+            <div class="text-danger">
+              <small>Este campo es obligatorio</small>
+            </div>
+            } @else if (validacionMercanciaForm.get('codigoPostal')?.hasError('pattern') &&
+            validacionMercanciaForm.get('codigoPostal')?.touched) {
+            <div class="text-danger">
+              <small>Por favor, escribe un número entero válido</small>
+            </div>
+            }
       </div>
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Estado'" [required]="true" [isDisabled]="soloLectura"
@@ -62,7 +96,7 @@
       </div>
     </div>
     <div class="row mt-5">
-      <div class="alert alert-warning">
+      <div class="alert alert-warning text-center">
         <strong>¡Precaución!</strong> Debes capturar localidad y colonia
       </div>
     </div>
@@ -91,13 +125,24 @@
     <div class="row">
       <div class="col-md-1">
         <label for="lada" class="form-label">Lada:</label>
-        <input type="text" class="form-control" formControlName="lada" 
+        <input type="text" name="lada" class="form-control" formControlName="lada" maxlength="5"
           (change)="setValoresStore(validacionMercanciaForm,'lada', 'setLada')" />
       </div>
       <div class="col-md-3">
         <label for="telefono" class="form-label">Teléfono*:</label>
-        <input type="text" class="form-control" formControlName="telefono" required="required" 
+        <input type="text" class="form-control" formControlName="telefono" required="required" maxlength="24"
           (change)="setValoresStore(validacionMercanciaForm,'telefono', 'setTelefono')" />
+          @if (validacionMercanciaForm.get('telefono')?.hasError('required') &&
+            validacionMercanciaForm.get('telefono')?.touched) {
+            <div class="text-danger">
+              <small>Este campo es obligatorio</small>
+            </div>
+            } @else if (validacionMercanciaForm.get('telefono')?.hasError('pattern') &&
+            validacionMercanciaForm.get('telefono')?.touched) {
+            <div class="text-danger">
+              <small>Por favor, escribe un número entero válido</small>
+            </div>
+            }
       </div>
     </div>
   </ng-container>
