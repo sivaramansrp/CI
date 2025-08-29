@@ -87,7 +87,7 @@
         <div class="row">
           <div class="col-md-4 mb-4 mt-3">
             <label for="Numero"> Número de Notaria*:</label>
-            <input type="text" id="Numero" name="Numero" class="form-control" formControlName="nombreDeNotaria"
+            <input type="number" id="Numero" name="Numero" class="form-control" formControlName="nombreDeNotaria"
               maxlength="10" [ngClass]="esValido('formaModificaciones', 'nombreDeNotaria') ? 'required' : ''"/>
                <div *ngIf="formaComplimentos.get('formaModificaciones.nombreDeNotaria')?.hasError('required') && formaComplimentos.get('formaModificaciones.nombreDeNotaria')?.touched">
                  <p class="mensaje-error">Este campo es obligatorio.</p>
@@ -102,7 +102,7 @@
         <div class="row mb-4">
           <div class="col-md-4">
             <label for="acta"> Número de acta*:</label>
-            <input type="text" id="acta" name="acta" class="form-control" formControlName="nombreDeActa" maxlength="10"
+            <input type="number" id="acta" name="acta" class="form-control" formControlName="nombreDeActa" maxlength="10"
               [class.is-invalid]="formaComplimentos.get('formaModificaciones')?.get('nombreDeActa')?.invalid && formaComplimentos.get('formaModificaciones')?.get('nombreDeActa')?.touched" />
            <div *ngIf="formaComplimentos.get('formaModificaciones.nombreDeActa')?.hasError('required') && formaComplimentos.get('formaModificaciones.nombreDeActa')?.touched">
             <p class="mensaje-error">Este campo es obligatorio.</p>

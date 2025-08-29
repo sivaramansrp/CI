@@ -2,13 +2,14 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { map, takeUntil } from 'rxjs/operators';
 import { ANEXO_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { AnexoDosYTresComponent } from '../../../../shared/components/anexo-dos-y-tres.component/anexo-dos-y-tres.component';
-import { AnexoEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
+import { AnexoEncabezado, DatosAnexotressUno } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
 import { Tramite80102Store } from '../../estados/tramite80102.store';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-contenedor-annexo-dos-tres',
@@ -76,9 +77,23 @@ export class ContenedorAnnexoDosTresComponent implements OnInit, OnDestroy {
    * @param {Tramite80102Query} query - Servicio para consultar el estado del trámite.
    * @param {Tramite80102Store} store - Servicio para manejar el estado del trámite.
    */
+
+  /**
+   * Instancia del grupo de formulario para gestionar los controles y validación de la sección "Anexo Tres".
+   * Este FormGroup se utiliza para encapsular los campos del formulario y su lógica de validación
+   */
+  public anexoTressFormGroup!: FormGroup;
+
+    /**
+   * Instancia del grupo de formulario para gestionar los controles y validación de la sección "Anexo Tres".
+   * Este FormGroup se utiliza para encapsular los campos del formulario y su lógica de validación
+   */
+  public anexoTressDosFormGroup!: FormGroup;
+
+
   constructor(
     private query: Tramite80102Query,
-    private store: Tramite80102Store, private consultaQuery: ConsultaioQuery
+    private store: Tramite80102Store, private consultaQuery: ConsultaioQuery,private fb: FormBuilder,
   ) {
     this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -111,6 +126,69 @@ export class ContenedorAnnexoDosTresComponent implements OnInit, OnDestroy {
           this.anexoTresTablaLista = anexoTresTablaLista;
         }
       });
+      this.inicializarFormularioDatosSubcontratista();
+    this.obtenerDatosDelAlmacen();
+    this.inicializarFormularioDatosDosSubcontratista();
+    this.obtenerDatosDelAlmacenDos();
+  }
+
+
+  /**
+   * Retrieves data from the store for "Anexo Tres" and updates the form group with the received values.
+   * 
+   * Subscribes to the `selectDatosAnexoTres$` observable from the query service, 
+   * listens until the component is destroyed, and sets the form group's value 
+   * with the emitted data. Also logs the received data to the console for debugging purposes.
+   *
+   * @remarks
+   * This method should be called to synchronize the form group with the latest data from the store.
+   */
+  obtenerDatosDelAlmacen(): void {
+    this.query.selectDatosAnexoTres$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datosAnexoTres) => {
+        this.anexoTressFormGroup.setValue(datosAnexoTres);
+      });
+  }
+
+
+    /**
+     * Recupera datos del segundo almacén (Almacén Dos) suscribiéndose al observable `selectDatosAnexoTressDos$`.
+     * Actualiza el `anexoTressFormGroup` con los datos recibidos.
+     * La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor.
+     *
+     * @remarks
+     * Este método se utiliza normalmente para poblar el grupo de formulario con datos del almacén.
+     */
+    obtenerDatosDelAlmacenDos(): void {
+    this.query.selectDatosAnexoTressDos$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datosAnexoTres) => {
+        this.anexoTressDosFormGroup.setValue(datosAnexoTres);
+      });
+  }
+
+
+  /**
+     * Inicializa el formulario de datos del subcontratista con los datos obtenidos o con valores vacíos si no hay datos disponibles.
+     * @method inicializarFormularioDatosSubcontratista
+     */
+  inicializarFormularioDatosSubcontratista(): void {
+    this.anexoTressFormGroup = this.fb.group({
+      fraccionArancelaria: ['', [Validators.required, Validators.maxLength(10)]],
+      descripcion: ['', [Validators.required, Validators.maxLength(1000)]],
+    });
+  }
+
+    /**
+     * Inicializa el formulario de datos del subcontratista con los datos obtenidos o con valores vacíos si no hay datos disponibles.
+     * @method inicializarFormularioDatosSubcontratista
+     */
+  inicializarFormularioDatosDosSubcontratista(): void {
+    this.anexoTressDosFormGroup = this.fb.group({
+      fraccionArancelaria: ['', [Validators.required, Validators.maxLength(10)]],
+      descripcion: ['', [Validators.required, Validators.maxLength(1000)]],
+    });
   }
 
   /**
@@ -131,6 +209,26 @@ export class ContenedorAnnexoDosTresComponent implements OnInit, OnDestroy {
   public obtenerAnexoTresDevolverLaLlamada(event: AnexoEncabezado[]): void {
     this.anexoTresTablaLista = event ? event : [];
     this.store.setAnnexoTresTableLista(this.anexoTresTablaLista);
+  }
+
+  /**
+     * Modifica los datos de los cumplimientos y los almacena en el estado.
+     *
+     * @param complimentos - Objeto de tipo `DatosComplimentos` que contiene los datos de los cumplimientos a actualizar.
+     * @returns void
+     */
+  modifierComplimentos(complimentos: DatosAnexotressUno): void {
+    this.store.setDatosAnexoTres(complimentos);
+  }
+
+/**
+     * Modifica los datos de los cumplimientos y los almacena en el estado.
+     *
+     * @param complimentos - Objeto de tipo `DatosComplimentos` que contiene los datos de los cumplimientos a actualizar.
+     * @returns void
+     */
+  modifierComplimentosDos(complimentos: DatosAnexotressUno): void {
+    this.store.setDatosAnexoTresDos(complimentos);
   }
 
   /**
