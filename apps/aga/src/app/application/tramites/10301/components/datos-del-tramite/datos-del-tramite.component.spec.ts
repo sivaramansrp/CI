@@ -59,7 +59,7 @@ describe('DatosDelTramiteComponent', () => {
       mockValidacionesService,
       mockSolicitud10301Service
     );
-    // component.solicitudState = {};
+
     component.tramiteForm = new FormBuilder().group({
       importadorExportador: new FormGroup({
         aduana: new FormControl(''),
@@ -193,15 +193,6 @@ describe('DatosDelTramiteComponent', () => {
     expect(mockStore.setDatosMercancia).toHaveBeenCalled();
     expect(component.filaSeleccionadas.length).toBe(0);
   });
-
-  // it('should patch value and show modal in modificar', () => {
-  //   component.filaSeleccionadas = [1];
-  //   component.modalElement = { nativeElement: { click: jest.fn() } } as any;
-  //   component.agregarMercanciasForm.patchValue = jest.fn();
-  //   (global as any).Modal = jest.fn().mockImplementation(() => ({ show: jest.fn() }));
-  //   component.modificar();
-  //   expect(component.agregarMercanciasForm.patchValue).toHaveBeenCalledWith([1]);
-  // });
 
   it('should return FormArray from fechasSeleccionadas getter', () => {
     component.tramiteForm.setControl('fechasSeleccionadas', new FormArray([]));
