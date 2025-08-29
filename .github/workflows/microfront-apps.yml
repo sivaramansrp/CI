@@ -71,7 +71,7 @@ jobs:
             APP_NAME="${{ github.event.inputs.app_name }}"
             IMAGE_TAG="${{ github.event.inputs.image_tag }}"
             DEPLOY_DIR=~/deployments/$APP_NAME
-            DEPLOYMENT_FILE="${APP_NAME}-deployment-dev.yaml"
+            DEPLOYMENT_FILE="k8s/${APP_NAME}-deployment-dev.yaml"
             cd "$DEPLOY_DIR"
             if [ ! -f "$DEPLOYMENT_FILE" ]; then
               echo "ERROR: $DEPLOYMENT_FILE not found in $(pwd)"
