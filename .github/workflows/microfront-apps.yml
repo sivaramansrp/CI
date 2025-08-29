@@ -103,8 +103,21 @@ jobs:
             docker pull ghcr.io/vucem30/dockerized-modulefederation-$APP_NAME:$IMAGE_TAG
             # Update deployment YAML with new image tag
             sed -i "s|ghcr.io/vucem30/dockerized-modulefederation-$APP_NAME:.*|ghcr.io/vucem30/dockerized-modulefederation-$APP_NAME:$IMAGE_TAG|g" "$DEPLOYMENT_FILE"
-            microk8s kubectl apply -f "$DEPLOYMENT_FILE"
-            microk8s kubectl apply -f "$SERVICE_FILE"
-            microk8s kubectl apply -f "$INGRESS_FILE"
-            microk8s kubectl rollout restart deployment modulefederation-$APP_NAME-deployment-dev -n default
-            microk8s kubectl get pods | grep $APP_NAME
+            # Make sure imagePullSecret is present in the YAML (add if missing)
+            if ! grep -q "imagePullSecrets:" $DEPLOYMENT_FILE; then
+              sed -i "/containers:/a\ \ \ \ imagePullSecrets:\n\ \ \ \ \ \ - name: vucem30registrykey" $DEPLOYMENT_FILE
+            fi
+            # Apply K8s resources
+            microk8s kubectl apply -f $DEPLOYMENT_FILE -n $NAMESPACE
+            microk8s kubectl apply -f $SERVICE_FILE -n $NAMESPACE
+            microk8s kubectl apply -f $INGRESS_FILE -n $NAMESPACE
+            # Optionally, delete old pods (if you want a clean slate)
+            DEPLOY_NAME=$(microk8s kubectl get deploy -n $NAMESPACE --no-headers | grep "${{ github.event.repository.name }}" | awk '{print $1}')
+            if [ ! -z "$DEPLOY_NAME" ]; then
+              microk8s kubectl rollout restart deployment/$DEPLOY_NAME -n $NAMESPACE
+            fi
+
+            # Show pod status
+            microk8s kubectl get pods -n $NAMESPACE | grep "${{ github.event.repository.name }}"
+
+            
