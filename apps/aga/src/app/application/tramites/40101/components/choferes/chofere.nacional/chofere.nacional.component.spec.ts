@@ -111,8 +111,7 @@ describe('ChofereNacionalComponent', () => {
   component.datosDeChoferesDialogComponent = { editarRegistro: jest.fn() };
   jest.spyOn(component, 'abrirModal').mockImplementation();
   component.editarFilaSeleccionada({});
-  //expect(component.datosDeChoferesDialogComponent.editarRegistro).toHaveBeenCalled();
-  //expect(component.abrirModal).toHaveBeenCalled();
+
   });
 
   it('should run #eliminarFilaSeleccionada()', () => {
