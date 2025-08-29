@@ -59,6 +59,15 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
     this.createFormulario();
   }
 
+  validarFormulario(): boolean {
+    this.formDespacho.markAllAsTouched();
+    this.formInventario.markAllAsTouched();
+    if (this.formDespacho.valid && this.formInventario.valid) {
+      return true;
+    }
+    return false;
+  }
+
   /**
    * Método que se ejecuta al inicializar el componente.
    * Carga el catálogo de números IMMEX y asigna el valor a la variable `catNumeroIMMEX`.
@@ -348,14 +357,5 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
     this.listaControlInventarios = this.listaControlInventarios.filter(INVENTARIO => !IDS_INVENTARIOS.includes(INVENTARIO.id));
     this.listaControlInventariosSeleccionados = [];
     this.tramite303State.setListaInventarios(this.listaControlInventarios);
-  }
-
-  validarFormulario(): boolean {
-    this.formDespacho.markAllAsTouched();
-    this.formInventario.markAllAsTouched();
-    if (this.formDespacho.valid && this.formInventario.valid) {
-      return true;
-    }
-    return false;
   }
 }

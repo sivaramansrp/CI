@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { DatosPasos, Notificacion, SECCIONES_TRAMITE_303, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@ng-mf/data-access-user';
+import { DespachoMercanciasSolicitudComponent } from '../../components/despacho-mercancias-solicitud/despacho-mercancias-solicitud.component';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { PasoUnoComponent } from '../../../303/pages/paso-uno/paso-uno.component';
@@ -45,7 +46,9 @@ export class RegistroPageComponent implements OnInit {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+  /** Referencia al componente hijo PasoUnoComponent */
   @ViewChild(PasoUnoComponent) SolicitudPasoComponent!: PasoUnoComponent;
+
   constructor(
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
@@ -147,5 +150,4 @@ export class RegistroPageComponent implements OnInit {
   cargaRealizada(cargaRealizada: boolean): void {
     this.seccionCargarDocumentos = cargaRealizada ? false : true;
   }
-
 }

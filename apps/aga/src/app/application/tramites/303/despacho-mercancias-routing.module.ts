@@ -1,4 +1,5 @@
 import { RouterModule, Routes } from '@angular/router';
+import { DespachoMercanciasSolicitudComponent } from './components/despacho-mercancias-solicitud/despacho-mercancias-solicitud.component';
 import { EnlaceOperativoComponent } from './components/enlace-operativo/enlace-operativo.component';
 import { NgModule } from '@angular/core';
 import { RegistroFiguraComponent } from './components/registro-figura/registro-figura.component';
@@ -6,6 +7,10 @@ import { RegistroPageComponent } from './pages/registro-page/registro-page.compo
 import { RegistroTrasportistaComponent } from './components/registro-trasportista/registro-trasportista.component';
 
 export const ROUTES: Routes = [
+  {
+    path: 'despacho-mercancias',
+    component: DespachoMercanciasSolicitudComponent
+  },
   {
     path: 'registro',
     component: RegistroPageComponent,

@@ -7,7 +7,7 @@ import { Tramite303Query } from '../../../../core/queries/tramite303.query';
 @Component({
   selector: 'paso-uno',
   templateUrl: './paso-uno.component.html',
-  styles: ``
+  styles: ''
 })
 export class PasoUnoComponent implements OnInit {
   /** Índice de la pestaña seleccionada */
@@ -17,7 +17,7 @@ export class PasoUnoComponent implements OnInit {
   /** Datos del trámite consultado */
   public tramiteConsultado?: Tramite303Store;
   /** Referencia al componente hijo DespachoMercanciasSolicitudComponent */
-  @ViewChild(DespachoMercanciasSolicitudComponent) SolicitudHijoComponent!: DespachoMercanciasSolicitudComponent;
+  @ViewChild(DespachoMercanciasSolicitudComponent) ComponentDespacho!: DespachoMercanciasSolicitudComponent;
   /**
    * Constructor del componente.
    * @param tramite303State Estado del trámite.
@@ -53,7 +53,7 @@ export class PasoUnoComponent implements OnInit {
   }
 
   validarFormularioPadre(): boolean {
-    return this.SolicitudHijoComponent.validarFormulario();
+    return this.ComponentDespacho.validarFormulario();
   }
 
 }
