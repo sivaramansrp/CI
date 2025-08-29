@@ -34,7 +34,7 @@ import {
   ServicioInmex,
   Servicios,
 } from '../../models/autorizacion-programa-nuevo.model';
-import { Observable, Subject, map,takeUntil } from 'rxjs';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
 import { Tramite80102Store } from '../../estados/tramite80102.store';
@@ -75,7 +75,7 @@ export class ServiciosComponent implements OnInit, OnDestroy {
        * Objeto que representa una nueva notificación para RFC.
        * Se utiliza para mostrar mensajes de alerta o información al usuario.
        */
-      public nuevaNotificacionRfc: Notificacion | null = null;
+  public nuevaNotificacionRfc: Notificacion | null = null;
 
   /**
    * @description
@@ -248,19 +248,19 @@ export class ServiciosComponent implements OnInit, OnDestroy {
    */
   datosEmpresaExtranjera$!: Observable<DatosEmpresaExtranjera[]>;
 
-   /**
-     * Notificador utilizado para manejar la destrucción o desuscripción de observables.
-     * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
-     *
-     * @property {Subject<void>} destroyNotifier$
-     */
-    private destroyNotifier$: Subject<void> = new Subject();
+  /**
+    * Notificador utilizado para manejar la destrucción o desuscripción de observables.
+    * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
+    *
+    * @property {Subject<void>} destroyNotifier$
+    */
+  private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Indica si el formulario debe mostrarse en modo solo lectura.
    * Cuando es verdadero, los campos del formulario no pueden ser editados por el usuario.
    */
-  public esFormularioSoloLectura: boolean = false; 
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -319,17 +319,17 @@ export class ServiciosComponent implements OnInit, OnDestroy {
     this.suscribirseAFields();
     this.getCatalogoPaises();
     this.consultaQuery.selectConsultaioState$
-     .pipe(
-       takeUntil(this.destroyNotifier$),
-       map((seccionState)=>{
-         this.esFormularioSoloLectura = seccionState.readonly; 
-         if(this.esFormularioSoloLectura){
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          if (this.esFormularioSoloLectura) {
             this.formulario.disable();
             this.formularioEmpresaExtranjera.disable();
-         }
-       })
-     )
-     .subscribe()
+          }
+        })
+      )
+      .subscribe()
   }
 
   /**
@@ -337,16 +337,16 @@ export class ServiciosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getCatalogoPaises(): void {
-      this.catalogosServices
-        .getCatalogoPaises(CATALOGOS_ID.CAT_PAISES)
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe((datos) => {
-          const INDICE = this.camposFormulario.findIndex(
-            (ele) => ele.campo === ENTIDADFEDERATIVA
-          );
-          this.camposFormulario[INDICE].opciones = datos;
-          this.Tramite80102Store.setPaisesOrigen(datos);
-        })
+    this.catalogosServices
+      .getCatalogoPaises(CATALOGOS_ID.CAT_PAISES)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos) => {
+        const INDICE = this.camposFormulario.findIndex(
+          (ele) => ele.campo === ENTIDADFEDERATIVA
+        );
+        this.camposFormulario[INDICE].opciones = datos;
+        this.Tramite80102Store.setPaisesOrigen(datos);
+      })
   }
 
   /**
@@ -376,7 +376,7 @@ export class ServiciosComponent implements OnInit, OnDestroy {
    * @method getDatos
    */
   suscribirseADatos(): void {
-      this.Tramite80102Query.selectDatos$
+    this.Tramite80102Query.selectDatos$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos) => {
         this.datos = datos; // Update local `datos` array when store data changes
@@ -388,11 +388,11 @@ export class ServiciosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   suscribirseAFields(): void {
-      this.Tramite80102Query.select((state) => ({
-        rfcEmpresa: state.rfcEmpresa,
-        numeroPrograma: state.numeroPrograma,
-        tiempoPrograma: state.tiempoPrograma,
-      }))
+    this.Tramite80102Query.select((state) => ({
+      rfcEmpresa: state.rfcEmpresa,
+      numeroPrograma: state.numeroPrograma,
+      tiempoPrograma: state.tiempoPrograma,
+    }))
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((fields) => {
         this.rfcEmpresa = fields.rfcEmpresa;
@@ -406,15 +406,15 @@ export class ServiciosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getDatos(): void {
-    
-      this.autorizacionProgrmaNuevoService.getDatos()
+
+    this.autorizacionProgrmaNuevoService.getDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((respuesta) => {
         if (respuesta) {
           this.Tramite80102Store.setInfoRegistro(respuesta);
         }
       })
-    
+
   }
 
   /**
@@ -434,22 +434,25 @@ export class ServiciosComponent implements OnInit, OnDestroy {
    */
   obtenerIngresoSelectList(): void {
     // Fetch AduanaDeIngreso list using the service and store it in the Akita store
-      this.autorizacionProgrmaNuevoService
-        .obtenerIngresoSelectList()
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe((data) => {
-          const DATOS = data as Catalogo[];
+    this.autorizacionProgrmaNuevoService
+      .obtenerIngresoSelectList()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        const DATOS = data as Catalogo[];
 
-          // Set the fetched data into the store
-          this.Tramite80102Store.setAduanaDeIngreso(DATOS);
+        // Set the fetched data into the store
+        this.Tramite80102Store.setAduanaDeIngreso(DATOS);
 
-          // You can also directly assign it to the component if needed, but it's better to use the store for reactivity
-          this.Tramite80102Query.selectAduanaDeIngreso$.subscribe(
-            (aduanaDeIngreso) => {
-              this.aduanaDeIngreso = aduanaDeIngreso;
+        // You can also directly assign it to the component if needed, but it's better to use the store for reactivity
+        this.Tramite80102Query.selectAduanaDeIngreso$.subscribe(
+          (aduanaDeIngreso) => {
+            this.aduanaDeIngreso = aduanaDeIngreso;
+            if (this.aduanaDeIngreso?.length) {
+              this.formulario.get('entidadFederativa')?.setValue(this.aduanaDeIngreso[0].id);
             }
-          );
-        })
+          }
+        );
+      })
   }
 
   /**
@@ -513,7 +516,7 @@ export class ServiciosComponent implements OnInit, OnDestroy {
    */
   manejarConfirmacion(confirmado: boolean): void {
     this.mostrarNotificacionAgregar = false;
-    
+
     if (confirmado) {
       if (this.tipoAccionModal === 'agregar') {
         this.ejecutarAgregarServicio();
@@ -550,7 +553,7 @@ export class ServiciosComponent implements OnInit, OnDestroy {
       const DATOS_IMMEX_ACTUALIZADOS = [...this.datosImmex];
       DATOS_IMMEX_ACTUALIZADOS.splice(INDICE, 1);
       this.Tramite80102Store.setDatosImmex(DATOS_IMMEX_ACTUALIZADOS);
-      
+
       // Limpiar selección
       this.domiciliosSeleccionados = [];
 
@@ -716,15 +719,15 @@ export class ServiciosComponent implements OnInit, OnDestroy {
     }
   }
 
-   /**
-   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
-   * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.
-   * @method ngOnDestroy
-   */
-    ngOnDestroy(): void {
-      this.destroyNotifier$.next();
-      this.destroyNotifier$.complete();
-    }
+  /**
+  * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+  * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.
+  * @method ngOnDestroy
+  */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 
-  
+
 }
