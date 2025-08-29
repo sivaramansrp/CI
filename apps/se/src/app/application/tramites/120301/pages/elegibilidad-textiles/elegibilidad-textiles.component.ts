@@ -14,11 +14,15 @@
  * @requires ./constantes/elegibilidad-de-textiles.enums - Constantes y enumeraciones
  */
 
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+
 import { DatosPasos, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
-import { ListaPasosWizard } from '../../models/elegibilidad-de-textiles.model';
+
 import { PASOS } from '../../constantes/elegibilidad-de-textiles.enums';
+
+import { ListaPasosWizard } from '../../models/elegibilidad-de-textiles.model';
+
 
 /**
  * @interface AccionBoton
@@ -347,7 +351,7 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit {
    * }
    * ```
    */
-  ngOnInit() {
+  ngOnInit(): void {
     this.datosPasos.indice = 1;
     this.indice = 1;
     this.asignarSecciones();

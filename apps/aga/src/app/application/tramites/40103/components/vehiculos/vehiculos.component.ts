@@ -94,20 +94,20 @@ export class VehiculosComponent implements OnInit, OnDestroy {
    * Permite abrir y cerrar el modal de vehículos mediante código Bootstrap.
    * 
    * @type {Modal | null}
-   * @private
+   * @public
    * @memberof VehiculosComponent
    */
-  private vehiculoModalInstance: Modal | null = null;
+  public vehiculoModalInstance: Modal | null = null;
 
   /**
    * Instancia del modal de unidad para control programático.
    * Permite abrir y cerrar el modal de unidades de arrastre mediante código Bootstrap.
    * 
    * @type {Modal | null}
-   * @private
+   * @public
    * @memberof VehiculosComponent
    */
-  private unidadModalInstance: Modal | null = null;
+  public unidadModalInstance: Modal | null = null;
 
   /**
    * Formulario reactivo para la captura y edición de datos de vehículos.

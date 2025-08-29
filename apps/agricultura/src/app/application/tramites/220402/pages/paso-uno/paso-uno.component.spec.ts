@@ -80,4 +80,63 @@ describe('PasoUnoComponent', () => {
     component.seleccionaTab(3);
     expect(component.indice).toBe(3);
   });
+
+  // --- Cobertura adicional en español ---
+  it('debe validar correctamente el formulario principal cuando el solicitante es válido', () => {
+    component.indice = 1;
+    component.solicitante = { form: { invalid: false, markAllAsTouched: jest.fn() } } as any;
+    expect(component.validarFormularios()).toBe(true);
+  });
+
+  it('debe marcar como tocado y retornar falso si el formulario del solicitante es inválido', () => {
+    component.indice = 1;
+    const mockForm = { invalid: true, markAllAsTouched: jest.fn() };
+    component.solicitante = { form: mockForm } as any;
+    expect(component.validarFormularios()).toBe(false);
+    expect(mockForm.markAllAsTouched).toHaveBeenCalled();
+  });
+
+  it('debe retornar verdadero si el índice no es 1 o el solicitante no existe', () => {
+    component.indice = 2;
+    component.solicitante = undefined as any;
+    expect(component.validarFormularios()).toBe(true);
+  });
+
+  it('debe validar todos los formularios y retornar verdadero si todos son válidos', () => {
+    component.formGroupTab1 = { valid: true, controls: {}, markAllAsTouched: jest.fn() } as any;
+    component.formGroupTab2 = { valid: true, controls: {}, markAllAsTouched: jest.fn() } as any;
+    component.solicitudComp = { form: { valid: true, markAllAsTouched: jest.fn() } } as any;
+    component.transporteComp = { transporteForm: { valid: true, markAllAsTouched: jest.fn() }, mostrarErrores: jest.fn() } as any;
+    component.pagoDerechoComp = { FormSolicitud: { valid: true, markAllAsTouched: jest.fn() }, mostrarErrores: jest.fn() } as any;
+    component.destinatarioComp = { destinatarioForm: { valid: true, markAllAsTouched: jest.fn() }, mostrarErrores: jest.fn() } as any;
+    expect(component.validarTodosLosFormularios()).toBe(true);
+  });
+
+  it('debe retornar falso si algún formulario principal es inválido', () => {
+    component.formGroupTab1 = { valid: false, controls: { campo1: { markAsTouched: jest.fn() } }, markAllAsTouched: jest.fn() } as any;
+    component.formGroupTab2 = { valid: true, controls: {}, markAllAsTouched: jest.fn() } as any;
+    expect(component.validarTodosLosFormularios()).toBe(false);
+  });
+
+  it('debe retornar falso si algún formulario hijo es inválido', () => {
+    component.formGroupTab1 = { valid: true, controls: {}, markAllAsTouched: jest.fn() } as any;
+    component.formGroupTab2 = { valid: true, controls: {}, markAllAsTouched: jest.fn() } as any;
+    component.solicitudComp = { form: { valid: false, markAllAsTouched: jest.fn() } } as any;
+    expect(component.validarTodosLosFormularios()).toBe(false);
+  });
+
+  it('debe retornar verdadero si los formularios son undefined', () => {
+    component.formGroupTab1 = undefined as any;
+    component.formGroupTab2 = undefined as any;
+    component.solicitudComp = undefined as any;
+    component.transporteComp = undefined as any;
+    component.pagoDerechoComp = undefined as any;
+    component.destinatarioComp = undefined as any;
+    expect(component.validarTodosLosFormularios()).toBe(true);
+  });
+
+  it('debe retornar la validez total de los formularios con obtenerValidacionTotalFormularios', () => {
+    const resultado = PasoUnoComponent.obtenerValidacionTotalFormularios();
+    expect(resultado).toEqual({ tab1Valid: true, tab2Valid: true });
+  });
 });

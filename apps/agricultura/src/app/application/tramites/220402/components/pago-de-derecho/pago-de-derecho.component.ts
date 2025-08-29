@@ -1,19 +1,25 @@
-import { AbstractControl, FormBuilder, ValidatorFn } from '@angular/forms';
-import { Catalogo, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CatalogosSelect } from '@ng-mf/data-access-user';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+
+import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+
+import { ReplaySubject, Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
+
+import {
+  Catalogo,
+  CatalogosSelect,
+  ConsultaioQuery,
+  ConsultaioState,
+  ValidacionesFormularioService
+} from '@ng-mf/data-access-user';
+
 import { EXENTO_DE_PAGO } from '../../constantes/certificado-zoosanitario.enum';
-import { FormGroup } from '@angular/forms';
-import { MediodetransporteService } from '../../services//medio-de-transporte.service';
-import { ReplaySubject } from 'rxjs';
+import { MediodetransporteService } from '../../services/medio-de-transporte.service';
+
 import { Solicitud220402Query } from '../../estados/queries/tramites220402.query';
-import { Solicitud220402State } from '../../estados/tramites/tramites220402.store';
-import { Solicitud220402Store } from '../../estados/tramites/tramites220402.store';
-import { Subject } from 'rxjs';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
+import { Solicitud220402State, Solicitud220402Store } from '../../estados/tramites/tramites220402.store';
+
 
 @Component({
   selector: 'app-pago-de-derecho',
@@ -252,9 +258,9 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
       this.FormSolicitud.get('datosImportadorExportador.justificacion')?.disable();
     } else {
       // Restablecer solo si hay un valor y se está cambiando
-      const shouldReset = this.FormSolicitud.get('datosImportadorExportador.exentoDePago')?.dirty || false;
+      const SHOULD_RESET = this.FormSolicitud.get('datosImportadorExportador.exentoDePago')?.dirty || false;
       
-      if (shouldReset) {
+      if (SHOULD_RESET) {
         this.FormSolicitud.reset({
           datosImportadorExportador: { exentoDePago: EXENTODEPAGO }
         });
@@ -265,7 +271,7 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
       
       if (EXENTODEPAGO === 'No') {
         // No exenta - habilitar campos de pago
-        if (shouldReset) {
+        if (SHOULD_RESET) {
           this.FormSolicitud.patchValue({
             datosImportadorExportador: { claveDeReferencia: 454000554, importePago: 594.0 }
           });
@@ -392,7 +398,7 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
    * 
    * Este método activa la visualización de errores en el formulario marcando todos los campos como tocados.
    */
-  public mostrarErrores() {
+  public mostrarErrores():void {
     this.FormSolicitud?.markAllAsTouched?.();
     this.cdr.detectChanges();
   }

@@ -3,7 +3,7 @@
   "message": "",
   "datos": {
     "manifesto": true,
-    "aduna": 1,
+    "aduana": "1",
     "nombre": "Electronica",
     "calle": "Calle Principal",
     "numeroExterior": "100",
@@ -11,10 +11,10 @@
     "telefono": "5551234567",
     "correoElectronico": "usuario@ejemplo.com",
     "codigoPostal": "12345",
-    "pais": 1,
+    "pais": "2",
     "estado": "11122",
     "colonia": "55",
-    "opcion": "sí",
+    "opcion": "si",
     "mercanciaDatos": [
       {
         "id": 1,
@@ -25,7 +25,7 @@
         "marca": "Marca Z",
         "serie": "0987654321",
         "usoEspecifico": "Uso personal",
-        "condicion": "Usado"
+        "condicion": "1"
       }
     ]
   }
