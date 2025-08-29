@@ -22,10 +22,10 @@ spec:
           value: dev
         resources:
           requests:
-            memory: "128Mi"
-            cpu: "250m"
-          limits:
-            memory: "256Mi"
+            memory: "512Mi"
             cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
       imagePullSecrets:
       - name: vucem30registrykey
