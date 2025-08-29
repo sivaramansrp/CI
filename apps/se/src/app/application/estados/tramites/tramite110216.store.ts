@@ -212,7 +212,7 @@ export function createInitialState(): Tramite110216State {
       cantidad: '',
       pais: '',
       valorDelaMercancia: '',
-      complementoDelaDescripcion: '',
+      complementoDescripcion: '',
       tipoFactura: '',
       fecha: '',
       numeroFactura: '',
@@ -1167,12 +1167,12 @@ export class Tramite110216Store extends Store<Tramite110216State> {
    * 
    * Este método permite establecer el complemento de la descripción de la mercancía en el formulario.
    * 
-   * @param {string} complementoDelaDescripcion - El complemento de la descripción a establecer.
+   * @param {string} complementoDescripcion - El complemento de la descripción a establecer.
    */
-  public setComplementoDelaDescripcion(complementoDelaDescripcion: string): void {
+  public setComplementoDelaDescripcion(complementoDescripcion: string): void {
     this.update((state) => ({
       ...state,
-      formularioMercancia: { ...state.formularioMercancia, complementoDelaDescripcion },
+      formularioMercancia: { ...state.formularioMercancia, complementoDescripcion },
     }));
   }
 

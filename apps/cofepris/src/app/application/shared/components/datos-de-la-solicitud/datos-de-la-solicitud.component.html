@@ -52,7 +52,7 @@
             [ngClass]="
               isValid(datosSolicitudForm, 'rfcSanitario') ? 'required' : ''
             " />
-          <div *ngIf="datosSolicitudForm.get('rfcSanitario')?.hasError('pattern')" class="mensaje-error">
+          <div *ngIf="datosSolicitudForm.get('rfcSanitario')?.hasError('pattern') && datosSolicitudForm.get('rfcSanitario')?.touched" class="mensaje-error">
             El RFC no tiene un formato válido.
           </div>
           <div class="mensaje-error"
@@ -192,7 +192,7 @@
       <div class="col-md-8">
         <div class="form-group">
           <label class="form-label" for="calle">Calle*:</label>
-          <span tooltip="Domicilio, calle, numero interior, numero exterior, lote">
+          <span tooltip="Domicilio, calle, número interior, número exterior, lote">
             <i class="bi bi-question-circle-fill"></i>
           </span>
           <input class="form-control" id="calle" type="text" maxlength="100" formControlName="calle"
@@ -312,7 +312,6 @@
               name="agregarScian"
               class="btn btn-primary ms-2"
               data-bs-toggle="modal"
-              data-bs-target="#modalAgregarScain"
               (click)="agregarScian()"
               [disabled]="formularioDeshabilitado"
             >
@@ -334,7 +333,7 @@
             id="aviso"
             formControlName="aviso"
           />
-          <label class="form-check-label" for="aviso"
+          <label class="form-check-label fw-300" for="aviso"
             >Aviso de funcionamiento<span *ngIf="esCampoRequerido('aviso')"
               >*</span
             >:
@@ -344,7 +343,7 @@
       <div class="col-md-4">
         <div class="form-check mt-4">
           <label class="form-label mx-1" for="licenciaSanitaria"
-            >No. de licencia sanitaria<span
+            ><b>No. de licencia sanitaria</b><span
               *ngIf="esCampoRequerido('licenciaSanitaria')"
               >*</span
             >:</label
@@ -385,7 +384,7 @@
       <div class="col-md-4" *ngIf="mostrarRegimenYAdunasDeEntradasDatos">
         <div class="form-group">
           <app-catalogo-select [catalogo]="regimenDatos" formControlName="regimen" [label]="'Régimen'"
-            [placeholder]="'Selecciona un valor'" [tooltipQuestionCircle]="true"
+            [placeholder]="'Seleccione una opción'" [isBold]="true" [tooltipQuestionCircle]="true"
             [questionCircleTooltip]="'Régimen al que se destinará la mercancía'" [tooltipQuestionCircleText]="
               'Régimen al que se destinará la mercancía'
             " [required]="true" name="regimen" [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
@@ -393,8 +392,8 @@
       </div>
       <div class="col-md-8" *ngIf="mostrarRegimenYAdunasDeEntradasDatos">
         <div class="form-group form-check">
-          <app-catalogo-select [catalogo]="adunasDeEntradasDatos" formControlName="adunasDeEntradas"
-            [label]="'Aduanas de entradas'" [placeholder]="'Selecciona un valor'" [required]="true"
+          <app-catalogo-select [catalogo]="adunasDeEntradasDatos" [isBold]="true" formControlName="adunasDeEntradas"
+            [label]="'Aduanas de entradas'" [placeholder]="'Seleccione una opción'" [required]="true"
             name="adunasDeEntradas" [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
         </div>
       </div>
@@ -483,8 +482,6 @@
             type="button"
             name="agregarMercancias"
             class="btn btn-primary ms-2"
-            data-bs-toggle="modal"
-            data-bs-target="#modalAgregarMercancias"
             (click)="agregarMercancias()"
             [disabled]="formularioDeshabilitado"
           >
@@ -534,13 +531,13 @@
           <div class="row align-items-center justify-content-start py-2" >
             <div class="col-auto d-flex align-items-start pt-1">
               <input class="form-check-input me-3" type="checkbox" id="manifesto" formControlName="manifesto" />
-              <label class="form-check-label ms-2" for="manifesto" *ngIf="esCampoRequerido('manifesto')">
+              <label class="form-check-label ms-2 mt-2" for="manifesto" *ngIf="esCampoRequerido('manifesto')">
                 <span
                   [ngClass]="
                     datosSolicitudForm.get('manifesto')?.invalid &&
                     (datosSolicitudForm.get('manifesto')?.touched ||
                       datosSolicitudForm.get('manifesto')?.dirty)
-                      ? 'mensaje-error'
+                      ? 'mensaje-error font-weight-bold'
                       : ''
                   "
                 >
@@ -548,8 +545,8 @@
                 >
               </label>
             </div>
-            <div class="col align-items-center" style="margin-left: 38px;">
-              <label for="manifesto">{{ textoManifestoContenido }}</label>
+            <div class="col align-items-center ml-38">
+              <label for="manifesto" class="fw-300">{{ textoManifestoContenido }}</label>
             </div>
           </div>
         </div>
@@ -663,7 +660,7 @@
           Este campo es obligatorio.</small>
         <div class="mensaje-error" *ngIf="
             datosSolicitudForm.get('correoElectronico')?.touched &&
-            datosSolicitudForm.get('correoElectronico')?.hasError('email')
+            datosSolicitudForm.get('correoElectronico')?.hasError('pattern')
           ">
           El valor ingresado no es una dirección válida de correo electrónico.
         </div>

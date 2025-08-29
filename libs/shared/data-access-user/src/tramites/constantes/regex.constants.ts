@@ -820,3 +820,34 @@ export const CERTIFICATE_OF_ORIGIN_NUMBER = /^[A-Za-z0-9]{8,20}$/;
  * Ejemplos inválidos: "123.45", "abc", "12345678901234567"
  */
 export const IMPORTE = /^\d{1,16}$/;
+
+/**
+ * Expresión regular para validar un código postal compuesto por 1 a 12 dígitos.
+ * 
+ * Solo permite cadenas numéricas con una longitud entre 1 y 12 caracteres.
+ * 
+ * Ejemplos válidos:
+ * - "12345"
+ * - "987654321012"
+ * 
+ * Ejemplos no válidos:
+ * - "1234567890123" (más de 12 dígitos)
+ * - "12A45" (contiene caracteres no numéricos)
+ */
+export const CODIGO_POSTAL = /^\d{1,12}$/
+
+/**
+ * Expresión regular que permite únicamente números del 0 al 9.
+ *
+ * - Acepta cualquier cantidad de dígitos (incluido vacío).
+ * - No permite letras, espacios ni caracteres especiales.
+ *
+ * @constant
+ * @type {RegExp}
+ *
+ * @example
+ * SOLO_REGEX_NUMEROS.test("12345"); // true
+ * SOLO_REGEX_NUMEROS.test("abc");   // false
+ * SOLO_REGEX_NUMEROS.test("");      // true (cadena vacía)
+ */
+export const SOLO_REGEX_NUMEROS = /^[0-9]*$/;

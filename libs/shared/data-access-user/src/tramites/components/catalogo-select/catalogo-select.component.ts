@@ -128,14 +128,26 @@ export class CatalogoSelectComponent
   @Input() primerOptionValue!: number;
 
   /**
- * Indica si se debe mostrar el signo de dos puntos (:) después del label del select.
- */
+   * Indica si se debe mostrar el signo de dos puntos (:) después del label del select.
+   */
   @Input() showSemiColon: boolean = true;
 
   /**
- * Indica si se debe agregar un espacio inferior al label del select.
- */
+   * Indica si se debe agregar un espacio inferior al label del select.
+   */
   @Input() isLabelBottomSpace: boolean = false;
+
+  /**
+   * Indica si el texto debe mostrarse en **negrita**.
+   *
+   * @example
+   * <!-- Uso en plantilla -->
+   * <app-titulo [isBold]="true"></app-titulo>
+   *
+   * @type {boolean}
+   * @default false
+   */
+  @Input() isBold: boolean = false;
 
   /**
    * @description Formulario reactivo que contiene el control del select.
