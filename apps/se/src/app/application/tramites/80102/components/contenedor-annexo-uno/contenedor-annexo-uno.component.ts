@@ -11,6 +11,7 @@ import {
 
 } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AnexoUnoComponent } from '../../../../shared/components/anexo-uno/anexo-uno.component';
 import { CommonModule } from '@angular/common';
@@ -18,7 +19,6 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
 import { Tramite80102Store } from '../../estados/tramite80102.store';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-contenedor-annexo-uno',
@@ -223,13 +223,6 @@ export class ContenedorAnnexoUnoComponent implements OnInit, OnDestroy {
   modifierDosComplimentos(complimentos: DatosComplimento): void {
     this.store.setDatosComplimentoDos(complimentos);
   }
-
-
-
-
-
-
-
 
   /**
    * Método para obtener la devolución de llamada del anexo Uno.
