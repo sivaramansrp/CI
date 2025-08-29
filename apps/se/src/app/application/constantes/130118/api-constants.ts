@@ -203,6 +203,12 @@ export const API_POST_INICIAR_REQUERIMIENTO = `sat-t${TRAMITE}/tramite/${NUMFOLI
 export const API_POST_GUARDAR_REQUERIMIENTO = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/requerimiento/generar/guardar`;
 
 /**
+ * API para guardar el requerimiento del trámite 130118
+ * @see https://api-v30.cloud-ultrasist.net/api/tramite-flujo/swagger-ui/index.html#/Generar-Requerimiento/mostrar-firma
+ */
+export const API_POST_GUARDAR_REQUERIMIENTO_MOSTRAR_FIRMA = `tramite/${NUMFOLIOTRAMITE}/requerimiento/generar/mostrar-firmar`;
+
+/**
  * API para consultar los sentidos disponibles
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Catalogos/consulta-sentidos-disponibles
  */

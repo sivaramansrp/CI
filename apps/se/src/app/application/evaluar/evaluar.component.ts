@@ -53,6 +53,7 @@ import { CodigoRespuesta } from '../core/enum/enum-130118';
 import { CriteriosResponse } from '@libs/shared/data-access-user/src/core/models/130118/criterios-response.model';
 import { DictamenForm } from '@libs/shared/data-access-user/src/core/models/130118/dictamen-form.model';
 import { FirmarDictamenService } from '../core/services/evaluar-tramite/firmarDictamen.service';
+import { MostrarFirmarRequerimientoRequest } from '../core/models/evaluar/request/firma-mostrar-requerimiento.request.model';
 
 /**
  * @component
@@ -1552,6 +1553,76 @@ export class EvaluarComponent implements OnInit, OnDestroy {
         }
       });
   }
+
+  /**
+   * @method getMostrarFirma
+   * @description Prepara y muestra la interfaz de firma para el requerimiento
+   * 
+   * Construye el payload con los datos del solicitante y realiza una petición
+   * para mostrar la interfaz de firma. Maneja notificaciones de éxito o error.
+   * 
+   * @returns {void}
+ */
+   getMostrarFirma(): void{
+     const PAYLOAD: MostrarFirmarRequerimientoRequest = {
+       cve_usuario: this.guardarDatos.current_user,
+       id_accion: this.guardarDatos.action_id,
+       justificacion: this.justificacion,
+       alcance_requerimiento: '',
+       solicitante: {
+         nombre: 'Javier',
+         apellido_paterno: 'Chávez',
+         apellido_materno: 'Barrios',
+         rfc: this.guardarDatos.current_user,
+       }
+     };
+
+    this.guardarRequerimientoService.postMostrarFirma(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
+      .subscribe({
+        next: (resp) => {
+          if (resp.codigo === CodigoRespuesta.EXITO) {
+            
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.EXITO,
+              modo: 'action',
+              titulo: 'Éxito',
+              mensaje: resp.mensaje,
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          } else {
+            this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: resp.error || 'Error al mostrar la firma.',
+            mensaje:
+              resp.causa ||
+              resp.mensaje ||
+              'Ocurrió un error al mostrar la firma.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+          }
+        },
+        error: (err) => {
+          const MENSAJE = err?.error?.error || 'Error al mostrar la firma';
+           this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: 'error',
+          modo: 'action',
+          titulo: '',
+          mensaje: MENSAJE,
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        }
+        }
+      });
+   }
 
   /**
    * @method ngOnDestroy
