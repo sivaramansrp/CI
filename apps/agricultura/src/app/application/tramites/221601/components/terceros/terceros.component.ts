@@ -396,8 +396,21 @@ export class TercerosComponent implements OnInit, OnDestroy {
     this.datosPersonales.get('pais')?.setValue(this.paisCatalogo[0].id);
     this.tipoPersonaForm.get('tipoPersona')?.valueChanges.subscribe(value => {
       this.handleTipoPersonaChange(value);
+    
+      this.resetRadioStates();
+      this.inputChecked(value);
     });
     this.updateStoreWithFormData();
+  }
+
+  /**
+   * Resets all radio button states
+   * @memberof TercerosComponent
+   */
+  private resetRadioStates(): void {
+    this.fisica = false;
+    this.moral = false;
+    this.planta = false;
   }
 
   /**
@@ -651,19 +664,18 @@ export class TercerosComponent implements OnInit, OnDestroy {
      * param checkBoxName Nombre del checkbox seleccionado.
      */
   public inputChecked(checkBoxName: string): void {
+    this.resetRadioStates();
+    
     if (checkBoxName === 'fisica') {
       this.fisica = true;
-      this.moral = false;
-      this.planta = false;
     } else if (checkBoxName === 'moral') {
-      this.fisica = false;
       this.moral = true;
-      this.planta = false;
     } else if (checkBoxName === 'planta') {
-      this.fisica = false;
-      this.moral = false;
       this.planta = true;
     }
+    
+    // Update form control value
+    this.tipoPersonaForm.get('tipoPersona')?.setValue(checkBoxName, { emitEvent: false });
   }
 
   /**
@@ -674,6 +686,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
   cambiarRadioFisica(value: string | number): void {
     const VALOR_SELECCIONADO = value as string;
     this.inputChecked(VALOR_SELECCIONADO);
+    this.handleTipoPersonaChange(VALOR_SELECCIONADO);
   }
 
 

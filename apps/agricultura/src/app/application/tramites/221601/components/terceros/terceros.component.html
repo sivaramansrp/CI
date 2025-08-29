@@ -157,7 +157,7 @@
         <div class="row">
           <div class="col-md-8">
             <div class="form-group">
-              <label class="form-label" for="social">Denominación/razón social:*</label>
+              <label class="form-label" for="social">Denominación/razón social*:</label>
               <input class="form-control" id="social" type="text" formControlName="social" maxlength="250" size="29"
                 (change)="setValoresStore(datosPersonales,'social', 'setSocial')" />
               <div class="d-grid">
@@ -226,7 +226,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <app-catalogo-select [catalogo]="coloniaCatalogo" formControlName="colonia" [label]="'Colonia'"
-                [isDisabled]="showPlantaRow" [isDisabled]="esFormularioSoloLectura" [required]="true" name="colonia"
+                [isDisabled]="showPlantaRow" [isDisabled]="esFormularioSoloLectura" [required]="false" name="colonia"
                 (change)="setValoresStore(datosPersonales, 'colonia', 'setColonia')">
               </app-catalogo-select>
             </div>
