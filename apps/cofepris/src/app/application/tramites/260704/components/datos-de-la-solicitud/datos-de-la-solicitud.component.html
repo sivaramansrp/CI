@@ -43,7 +43,7 @@
             }
         </div>
         <div class="col-md-4">
-          <label for="correoElectronico" class="form-label">Correo electrónico: <span class="bi bi-question-circle-fill"
+          <label for="correoElectronico" class="form-label">Correo electrónico*: <span class="bi bi-question-circle-fill"
               title="ejemplo@dominio.com" data-bs-toggle="tooltip"></span>
           </label>
           <input type="text" class="form-control" maxlength="320" formControlName="correoElectronico"
@@ -215,7 +215,7 @@
       <div class="col-md-4 mt-4">
         <div class="form-check mt-3">
           <lib-input-check [id]="'avisoDeFuncionamiento'" [label]="'Aviso de funcionamiento'" [required]="true"
-             formControlName="avisoDeFuncionamiento"
+             formControlName="avisoDeFuncionamiento" [isDisabled]="soloLectura"
             (change)="establecerAvisoDeFuncionamiento($event)"></lib-input-check>
         </div>
       </div>
