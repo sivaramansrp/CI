@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite303Store, Tramite303StoreService } from '../../../../core/estados/tramites/tramite303.store';
+import { DespachoMercanciasSolicitudComponent } from '../../components/despacho-mercancias-solicitud/despacho-mercancias-solicitud.component';
 import { Tramite303Query } from '../../../../core/queries/tramite303.query';
 
 @Component({
@@ -15,6 +16,8 @@ export class PasoUnoComponent implements OnInit {
   private destroyNotifier$: Subject<void> = new Subject();
   /** Datos del trámite consultado */
   public tramiteConsultado?: Tramite303Store;
+  /** Referencia al componente hijo DespachoMercanciasSolicitudComponent */
+  @ViewChild(DespachoMercanciasSolicitudComponent) SolicitudHijoComponent!: DespachoMercanciasSolicitudComponent;
   /**
    * Constructor del componente.
    * @param tramite303State Estado del trámite.
@@ -48,4 +51,9 @@ export class PasoUnoComponent implements OnInit {
     this.indice = i;
     this.tramite303State.setIndice(this.indice);
   }
+
+  validarFormularioPadre(): boolean {
+    return this.SolicitudHijoComponent.validarFormulario();
+  }
+
 }

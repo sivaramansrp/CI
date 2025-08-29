@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
-import { DatosPasos, SeccionLibState } from '@ng-mf/data-access-user';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { DatosPasos, Notificacion, SECCIONES_TRAMITE_303, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
+import { PasoUnoComponent } from '../../../303/pages/paso-uno/paso-uno.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 interface AccionBoton {
@@ -18,7 +19,7 @@ interface AccionBoton {
   templateUrl: './registro-page.component.html',
   styles: '',
 })
-export class RegistroPageComponent {
+export class RegistroPageComponent implements OnInit {
   /** Lista de pasos para el componente wizard */
   pasos: ListaPasosWizard[] = PASOS;
   /** Indice del paso actual */
@@ -35,6 +36,8 @@ export class RegistroPageComponent {
   seccionCargarDocumentos: boolean = true;
   /** Referencia al componente wizard */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  /** Notificación para mostrar mensajes al usuario. */
+  public nuevaNotificacion!: Notificacion;
   /** Datos de los pasos del wizard */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
@@ -42,6 +45,41 @@ export class RegistroPageComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+  @ViewChild(PasoUnoComponent) SolicitudPasoComponent!: PasoUnoComponent;
+  constructor(
+    private seccionQuery: SeccionLibQuery,
+    private seccionStore: SeccionLibStore,
+  ) {
+    // You can add initialization logic here if needed
+  }
+
+  ngOnInit(): void {
+    // Example usage of 'this' to avoid empty lifecycle method error
+    this.indice = 1;
+    this.asignarSecciones()
+  }
+
+  /**
+     * Método para asignar las secciones existentes al stored
+     */
+  private asignarSecciones(): void {
+    const SECCIONES: boolean[] = [];
+    const FORMA_VALIDA: boolean[] = [];
+    for (const LLAVE_SECCION in SECCIONES_TRAMITE_303.PASO_1) {
+      if (
+        Object.prototype.hasOwnProperty.call(
+          SECCIONES_TRAMITE_303.PASO_1,
+          LLAVE_SECCION
+        )
+      ) {
+        // @ts-expect-error - fix this
+        SECCIONES.push(SECCIONES_TRAMITE_303.PASO_1[LLAVE_SECCION]);
+        FORMA_VALIDA.push(false);
+      }
+    }
+    this.seccionStore.establecerSeccion(SECCIONES);
+    this.seccionStore.establecerFormaValida(FORMA_VALIDA);
+  }
 
   /**
    * Selecciona una pestaña en el wizard
@@ -56,9 +94,23 @@ export class RegistroPageComponent {
    * @param e Evento de acción del botón
    */
   getValorIndice(e: AccionBoton): void {
+    const VALIDAR_TRAMITE = this.SolicitudPasoComponent.validarFormularioPadre();
+    if (!VALIDAR_TRAMITE) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: 'Aviso',
+        mensaje: 'Por favor complete todos los campos requeridos.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
     if (e.valor > 0 && e.valor < 3) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
+        this.wizardComponent.indiceActual = 2;
         this.wizardComponent.siguiente();
       } else {
         this.wizardComponent.atras();
@@ -66,11 +118,6 @@ export class RegistroPageComponent {
     }
   }
 
-  siguiente(): void {
-    this.wizardComponent.siguiente();
-    this.indice = this.wizardComponent.indiceActual + 1;
-    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
-  }
   /**
    * Maneja el evento de clic en el botón de carga de archivos
    */

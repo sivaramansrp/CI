@@ -349,4 +349,14 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
     this.listaControlInventariosSeleccionados = [];
     this.tramite303State.setListaInventarios(this.listaControlInventarios);
   }
+
+  validarFormulario(): boolean {
+    debugger
+    this.formDespacho.markAllAsTouched();
+    this.formInventario.markAllAsTouched();
+    if (this.formDespacho.valid && this.formInventario.valid) {
+      return true;
+    }
+    return false;
+  }
 }
