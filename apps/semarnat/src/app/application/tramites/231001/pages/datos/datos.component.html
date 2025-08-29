@@ -3,13 +3,21 @@
     <div class="col-md-12">
       <h1>Aviso de materiales importados de régimen temporal</h1>
     </div>
+    <div class="col-12">
+      @if (esFormaValido) {
+      <div
+        class="alert alert-info alert-danger"
+        [innerHTML]="formErrorAlert"
+      ></div>
+      }
+    </div>
 
     <app-wizard [listaPasos]="pasos"></app-wizard>
   </div>
 
   <div class="row">
     @switch (indice) { @case (1) {
-    <app-solicitante-datos-tabs></app-solicitante-datos-tabs>
+    <app-solicitante-datos-tabs  #pasoUnoRef></app-solicitante-datos-tabs>
     } @case (2) {
     <app-paso-dos></app-paso-dos>
     } @case (3) {
@@ -20,5 +28,5 @@
     [datos]="datosPasos"
     (continuarEvento)="getValorIndice($event)"
   ></btn-continuar>
- <ng-alert [CONTENIDO]="texto" *ngIf="indice === 1"></ng-alert>
+  <ng-alert [CONTENIDO]="aviso"  *ngIf="indice === 1"></ng-alert>
 </div>

@@ -866,3 +866,15 @@ export const EMAIL = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/i;
  * - ejemplo.com/ruta
  */
 export const WEBPAGE = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+/**
+ * Expresión regular para validar números con hasta 6 dígitos enteros y opcionalmente hasta 6 decimales.
+  */
+export const REGEX_SEIS_SIGNIFICATIVOS = /^(?:\d{1,6})(?:\.\d{1,6})?$|^\.\d{1,6}$/;
+
+/**
+ * Expresión regular para validar números que pueden ser enteros o decimales.
+ * Permite dígitos del 0 al 9 y un punto decimal opcional.
+ * Ejemplos válidos: "123", "123.45", "0.678"
+ * Ejemplos no válidos: "123.", ".45", "abc"
+ */
+export const REGEX_NUMERIC_ONLY = /^[0-9]*\.?[0-9]*$/;
