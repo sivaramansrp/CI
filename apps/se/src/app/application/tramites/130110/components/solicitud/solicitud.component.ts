@@ -1,11 +1,12 @@
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Catalogo, ConsultaioQuery, Notificacion } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite130110State, Tramite130110Store } from '../../../../estados/tramites/tramites130110.store';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { ImportacionNeumaticosComercializarService } from '../../services/importacion-neumaticos-comercializar.service';
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
+import { PartidasDeLaMercanciaComponent } from '../../../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 import PartidasdelaTable from '@libs/shared/theme/assets/json/130110/partidas-de-la.json';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
@@ -181,7 +182,29 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Indica si se debe mostrar el error de clasificación.
    */
   mostrarErrorClasificacion = true;
+  /**
+   * Bandera que indica si se deben mostrar los mensajes de error para el formulario de partidas de la mercancía.
+   */
+    mostrarErroresPartidas = false;
+  /**
+   * Bandera que indica si se deben mostrar los mensajes de error para el formulario de mercancía.
+   */
+    mostrarErroresMercancia = false;
+    /*
+      * @descripcion Indica si se debe mostrar una notificación.
+      */
+    mostrarNotificacion = false;
+    /**
+     * @descripcion Notificación para mostrar mensajes al usuario.
+     */
+    public nuevaNotificacion!: Notificacion;
 
+    /**
+   * Referencia al componente `PartidasDeLaMercanciaComponent` dentro de la vista.
+   * Permite acceder a las propiedades y métodos públicos del componente hijo desde el componente padre.
+   */
+  @ViewChild(PartidasDeLaMercanciaComponent) partidasDeLaMercanciaComponent!: PartidasDeLaMercanciaComponent;
+  
   /**
    * Constructor del componente.
    * Inicializa los formularios y suscripciones necesarias.
@@ -437,13 +460,62 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Valida el formulario y muestra la tabla dinámica si es válido.
    */
   validarYEnviarFormulario(): void {
-    if (this.partidasDelaMercanciaForm.invalid) {
-      this.partidasDelaMercanciaForm.markAllAsTouched();
-    } else {
-      this.mostrarTabla = true;
-      this.tramite130110Store.setMostrarTabla(true);
+  ['cantidad', 'valorFacturaUSD'].forEach(controlName => {
+    const CONTROL = this.mercanciaForm.get(controlName);
+    if (CONTROL) {
+      CONTROL.markAsTouched();
+      CONTROL.updateValueAndValidity();
     }
+  });
+  
+  if (this.mercanciaForm.get('cantidad')?.invalid ||
+    this.mercanciaForm.get('valorFacturaUSD')?.invalid
+  ) {
+    this.mostrarErroresMercancia = true;
+    this.mostrarErroresPartidas = false;
+    return;
   }
+  this.mostrarErroresMercancia = false;
+  [
+    'cantidadPartidasDeLaMercancia',
+    'valorPartidaUSDPartidasDeLaMercancia',
+    'descripcionPartidasDeLaMercancia'
+  ].forEach(controlName => {
+    const CONTROL = this.partidasDelaMercanciaForm.get(controlName);
+    if (CONTROL) {
+      CONTROL.markAsTouched();
+      CONTROL.updateValueAndValidity();
+    }
+  });
+  if (
+    this.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.invalid ||
+    this.partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.invalid ||
+    this.partidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.invalid
+  ) {
+    this.mostrarErroresPartidas = true;
+    return;
+  }
+    // Si fracción no tiene valor, mostrar popup y detener flujo
+  if (!this.mercanciaForm.get('fraccion')?.value) {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'info',
+      modo: '',
+      titulo: '',
+      mensaje: 'Debes seleccionar una Fracción arancelaria',
+      cerrar: true,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+      tamanioModal: 'modal-sm'
+    };
+    this.mostrarNotificacion = true;
+    return;
+  }
+  this.mostrarErroresPartidas = false;
+  this.mostrarTabla = true;
+  this.tramite130110Store.actualizarEstado({ mostrarTabla: true });
+}
+
 
   /**
    * Navega para modificar una partida específica y actualiza el estado global.
@@ -614,4 +686,61 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
     return null;
   }
+
+  /**
+     * Valida los formularios de mercancía y partidas de la mercancía antes de permitir la carga de un archivo.
+     */
+    validarYCargarArchivo(): void {
+      ['cantidad', 'valorFacturaUSD'].forEach(controlName => {
+        const CONTROL = this.mercanciaForm.get(controlName);
+        if (CONTROL) {
+          CONTROL.markAsTouched();
+          CONTROL.updateValueAndValidity();
+        }
+      });
+      if (
+        this.mercanciaForm.get('cantidad')?.invalid ||
+        this.mercanciaForm.get('valorFacturaUSD')?.invalid
+      ) {
+        this.mostrarErroresMercancia = true;
+        this.mostrarErroresPartidas = false;
+        return;
+      }
+      this.mostrarErroresMercancia = false;
+      [
+        'cantidadPartidasDeLaMercancia',
+        'valorPartidaUSDPartidasDeLaMercancia',
+        'descripcionPartidasDeLaMercancia'
+      ].forEach(controlName => {
+        const CONTROL = this.partidasDelaMercanciaForm.get(controlName);
+        if (CONTROL) {
+          CONTROL.markAsTouched();
+          CONTROL.updateValueAndValidity();
+        }
+      });
+      if (
+        this.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.invalid ||
+        this.partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.invalid ||
+        this.partidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.invalid
+      ) {
+        this.mostrarErroresPartidas = true;
+        return;
+      }
+      if (!this.mercanciaForm.get('fraccion')?.value) {
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'info',
+          modo: '',
+          titulo: '',
+          mensaje: 'Debes seleccionar una Fracción arancelaria',
+          cerrar: true,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+          tamanioModal: 'modal-sm'
+        };
+        this.mostrarNotificacion = true;
+        return;
+      }
+      this.partidasDeLaMercanciaComponent.abrirCargarArchivoModalReal();
+    }
 }

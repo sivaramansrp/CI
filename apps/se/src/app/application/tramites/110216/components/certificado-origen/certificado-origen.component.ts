@@ -17,7 +17,7 @@ import {
   DisponiblesTabla,
   SeleccionadasTabla
 } from "../../models/certificado-origen.model.js";
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import {
   ConsultaioQuery,
   ConsultaioState
@@ -275,6 +275,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     public tramiteQuery: Tramite110216Query,
     private validacionesService: ValidacionesFormularioService,
     private consultaioQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef
 
   ) { }
 
@@ -441,22 +442,38 @@ actualizarEstadoCampos(): void {
    * Este método configura los campos y validaciones del formulario de mercancías utilizando los datos del estado actual del trámite.
    */
   inicializarFormularioMercancia(): void {
-    this.formularioMercancia = this.fb.group({
-      id:[''],
-      fraccionMercanciaArancelaria: [this.solicitudState?.formularioMercancia?.fraccionMercanciaArancelaria, []],
-      nombreComercialDelaMercancia: [this.solicitudState?.formularioMercancia?.nombreComercialDelaMercancia, []],
-      nombreTecnico: [this.solicitudState?.formularioMercancia?.nombreTecnico, []],
-      nombreEnIngles: [this.solicitudState?.formularioMercancia?.nombreEnIngles, []],
-      otrasInstancias: [this.solicitudState?.formularioMercancia?.otrasInstancias, []],
-      criterioParaConferir: [this.solicitudState?.formularioMercancia?.criterioParaConferir, []],
-      cantidad: [this.solicitudState?.formularioMercancia?.cantidad, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
-      pais: ['', [Validators.required]],
-      valorDelaMercancia: [this.solicitudState?.formularioMercancia?.valorDelaMercancia, [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)]],
-      complementoDelaDescripcion: [this.solicitudState?.formularioMercancia?.complementoDelaDescripcion, [Validators.required]],
-      fecha: [this.solicitudState?.formularioMercancia?.fecha, []],
-      numeroFactura: [this.solicitudState?.formularioMercancia?.numeroFactura, []],
-      tipoFactura: [this.solicitudState?.formularioMercancia?.tipoFactura, []],
-    });
+ this.formularioMercancia = this.fb.group({
+  id: [''],
+  fraccionMercanciaArancelaria: [this.solicitudState?.formularioMercancia?.fraccionMercanciaArancelaria],
+  nombreComercialDelaMercancia: [this.solicitudState?.formularioMercancia?.nombreComercialDelaMercancia],
+  nombreTecnico: [this.solicitudState?.formularioMercancia?.nombreTecnico],
+  nombreEnIngles: [this.solicitudState?.formularioMercancia?.nombreEnIngles],
+  otrasInstancias: [this.solicitudState?.formularioMercancia?.otrasInstancias],
+  criterioParaConferir: [this.solicitudState?.formularioMercancia?.criterioParaConferir],
+  cantidad: [
+    this.solicitudState?.formularioMercancia?.cantidad,
+    [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
+  ],
+  pais: ['', [Validators.required]],
+  valorDelaMercancia: [
+    this.solicitudState?.formularioMercancia?.valorDelaMercancia,
+    [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)],
+  ],
+  complementoDescripcion: [
+    this.solicitudState?.formularioMercancia?.complementoDescripcion,
+    [Validators.required],
+  ],
+  fecha: [this.solicitudState?.formularioMercancia?.fecha, [Validators.required]],
+  numeroFactura: [
+    this.solicitudState?.formularioMercancia?.numeroFactura,
+    [Validators.required],
+  ],
+  tipoFactura: [
+    this.solicitudState?.formularioMercancia?.tipoFactura,
+    [Validators.required],
+  ],
+});
+
     this.inicializarEstadoFormulario();
   }
   /**
@@ -618,19 +635,23 @@ modificarMercanciaSeleccionada(mercanciaSeleccionadasTablaDatos: SeleccionadasTa
         if (!this.modalInstances) {
           this.modalInstances = new Modal(this.modalBuscar.nativeElement);
         }
+        this.modalInstances?.show();
       }
-      this.modalInstances?.show();
-    this.formularioMercancia.patchValue({
-      id: FORM_VALUES.id,
-      fraccionArancelaria: FORM_VALUES.fraccionArancelaria,
-      cantidad: FORM_VALUES.cantidad,
-      unidadMedida: FORM_VALUES.unidadMedida,
-      valorMercancia: FORM_VALUES.valorMercancia,
-      tipoFactura: FORM_VALUES.tipoFactura,
-      numFactura: FORM_VALUES.numFactura,
-      complementoDescripcion: FORM_VALUES.complementoDescripcion,
-      fechaFactura: FORM_VALUES.fechaFactura,
-    });
+    setTimeout(() => {
+      this.formularioMercancia.patchValue({
+        fraccionMercanciaArancelaria: FORM_VALUES.fraccionArancelaria,
+        cantidad: FORM_VALUES.cantidad,
+        pais: FORM_VALUES.unidadMedida,
+        valorDelaMercancia: FORM_VALUES.valorMercancia,
+        tipoFactura: FORM_VALUES.tipoFactura,
+        numeroFactura: FORM_VALUES.numFactura,
+        complementoDescripcion: FORM_VALUES.complementoDescripcion,
+        fecha: FORM_VALUES.fechaFactura,
+      });
+    }, 0);
+  
+
+
 }
 
 /**
@@ -645,24 +666,37 @@ modificarMercanciaSeleccionada(mercanciaSeleccionadasTablaDatos: SeleccionadasTa
  * @param formularioMercancia - El formulario reactivo que contiene los datos de la mercancía.
  */
 activarModal(formularioMercancia: FormGroup): void {
-  const FORM_VALUES = formularioMercancia.value;
+  const FORM_VALUES = formularioMercancia.value;  
+  let hasErrors = false;
+  Object.keys(this.formularioMercancia.controls).forEach((key) => {
+    const CONTROL = this.formularioMercancia.get(key);
+
+    if (CONTROL?.validator && CONTROL.invalid) {
+      CONTROL.markAsTouched();
+      hasErrors = true;
+    }
+  });
+
+  if (hasErrors) {
+    return;
+  }
 
   const NUEVA_MERCANCIA: SeleccionadasTabla = {
-    id: FORM_VALUES.id || this.mercanciaSeleccionadasTablaDatos.length + 1,
+    id: this.mercanciaSeleccionadasFila?.id ?? this.mercanciaSeleccionadasTablaDatos.length + 1,
     fraccionArancelaria: FORM_VALUES.fraccionMercanciaArancelaria,
     cantidad: FORM_VALUES.cantidad,
     unidadMedida: FORM_VALUES.pais,
     valorMercancia: FORM_VALUES.valorDelaMercancia,
     tipoFactura: FORM_VALUES.tipoFactura,
     numFactura: FORM_VALUES.numeroFactura,
-    complementoDescripcion: FORM_VALUES.complementoDelaDescripcion,
+    complementoDescripcion: FORM_VALUES.complementoDescripcion,
     fechaFactura: FORM_VALUES.fecha,
   };
 
   const INDEX = this.mercanciaSeleccionadasTablaDatos.findIndex(
     item => item.id === NUEVA_MERCANCIA.id
   );
-
+this.mercanciaSeleccionadasTablaDatos = []
   if (INDEX !== -1) {
     this.mercanciaSeleccionadasTablaDatos[INDEX] = NUEVA_MERCANCIA;
   } else {
@@ -674,6 +708,7 @@ activarModal(formularioMercancia: FormGroup): void {
   this.store.setMercanciaTablaDatos(this.mercanciaSeleccionadasTablaDatos);
 
   if (this.modalInstances) {
+    this.mercanciaSeleccionadasFila = null;
     this.modalInstances.hide();
   }
 }

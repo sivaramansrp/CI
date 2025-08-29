@@ -1,31 +1,44 @@
+import { Solicitud150103State,Solicitud150103Store } from './solicitud150103.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { Solicitud150103State } from './solicitud150103.store';
-import { Solicitud150103Store } from './solicitud150103.store';
 
 /**
- * @description Servicio que implementa una consulta (`Query`) para acceder al estado de la solicitud.
- * Utiliza la librería Akita para gestionar el estado de la aplicación.
+ * @description
+ * Servicio que implementa una consulta (`Query`) para acceder al estado de la solicitud 150103.
+ * Utiliza la librería Akita para facilitar la gestión y observación del estado de la aplicación.
+ *
+ * Este servicio expone selectores que permiten a los componentes suscribirse y reaccionar ante
+ * cambios en el estado de la solicitud.
+ *
+ * @example
+ * constructor(private solicitudQuery: Solicitud150103Query) {
+ *   this.solicitudQuery.seleccionarSolicitud$.subscribe(state => {
+ *     console.log('Estado actualizado', state);
+ *   });
+ * }
  */
 @Injectable({ providedIn: 'root' })
-/**
- * @description Servicio que implementa una consulta (`Query`) para acceder al estado de la solicitud.
- * Utiliza la librería Akita para gestionar el estado de la aplicación.
- */
 export class Solicitud150103Query extends Query<Solicitud150103State> {
   /**
-   * @description Observable que permite seleccionar el estado completo de la solicitud.
-   * @returns El estado actual de la solicitud (`Solicitud150103State`).
+   * @property seleccionarSolicitud$
+   * @description Observable que emite el estado completo de la solicitud.
+   * Puede ser usado en componentes para reaccionar a cualquier cambio de estado.
+   *
+   * @returns Observable del estado `Solicitud150103State`
    */
   seleccionarSolicitud$ = this.select((state) => {
     return state;
   });
 
   /**
-   * @description Constructor que inicializa la consulta (`Query`) con el store de la solicitud.
-   * @param solicitud150103Store Instancia del store que contiene el estado de la solicitud.
+   * @constructor
+   * @description
+   * Constructor que inicializa el Query a partir del store correspondiente.
+   * Utiliza la clase base `Query` de Akita para observar el estado de la solicitud.
+   *
+   * @param solicitud150103Store Instancia del store que mantiene el estado de la solicitud.
    */
   constructor(protected solicitud150103Store: Solicitud150103Store) {
-    super(solicitud150103Store); // Inicializa el Query con el store proporcionado
+    super(solicitud150103Store);
   }
 }
