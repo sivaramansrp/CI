@@ -134,14 +134,14 @@ export class ContenedorAnnexoDosTresComponent implements OnInit, OnDestroy {
 
 
   /**
-   * Retrieves data from the store for "Anexo Tres" and updates the form group with the received values.
+   * Recupera los datos del almacén para "Anexo Tres" y actualiza el grupo de formulario con los valores recibidos.
    * 
-   * Subscribes to the `selectDatosAnexoTres$` observable from the query service, 
-   * listens until the component is destroyed, and sets the form group's value 
-   * with the emitted data. Also logs the received data to the console for debugging purposes.
+   * Se suscribe al observable `selectDatosAnexoTres$` del servicio de consulta,
+   * escucha hasta que el componente sea destruido y establece el valor del grupo de formulario
+   * con los datos emitidos. Además, registra los datos recibidos en la consola para fines de depuración.
    *
    * @remarks
-   * This method should be called to synchronize the form group with the latest data from the store.
+   * Este método debe llamarse para sincronizar el grupo de formulario con los datos más recientes del almacén.
    */
   obtenerDatosDelAlmacen(): void {
     this.query.selectDatosAnexoTres$

@@ -440,10 +440,10 @@ export class ServiciosComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         const DATOS = data as Catalogo[];
 
-        // Set the fetched data into the store
+        // Establece los datos obtenidos en el store
         this.Tramite80102Store.setAduanaDeIngreso(DATOS);
 
-        // You can also directly assign it to the component if needed, but it's better to use the store for reactivity
+        // También puedes asignarlo directamente al componente si lo necesitas, pero es mejor usar el store para mantener la reactividad
         this.Tramite80102Query.selectAduanaDeIngreso$.subscribe(
           (aduanaDeIngreso) => {
             this.aduanaDeIngreso = aduanaDeIngreso;
