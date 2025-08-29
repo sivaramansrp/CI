@@ -67,11 +67,16 @@ jobs:
           username: ${{ secrets.REMOTE_SRV_USER }}
           key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
           script: |
-            cd ~/deployments/${{ github.event.inputs.app_name }}/
+            set -e
+            APP_NAME="${{ github.event.inputs.app_name }}"
+            IMAGE_TAG="${{ github.event.inputs.image_tag }}"
+            DEPLOY_DIR=~/deployments/$APP_NAME
+            DEPLOYMENT_FILE="${APP_NAME}-deployment-dev.yaml"
+            cd "$DEPLOY_DIR"
+            if [ ! -f "$DEPLOYMENT_FILE" ]; then
+              echo "ERROR: $DEPLOYMENT_FILE not found in $(pwd)"
+              exit 1
+            fi
             docker login --username ${{ secrets.DOCKER_USERNAME }} --password ${{ secrets.DOCKER_PASSWORD }} ghcr.io
-            docker pull ghcr.io/vucem30/dockerized-modulefederation-${{ github.event.inputs.app_name }}:${{ github.event.inputs.image_tag }}
+            docker pull ghcr.io/vucem30/dockerized-modulefederation-$APP_NAME:$IMAGE_TAG
             # Update deployment YAML with new image tag
-            sed -i "s|ghcr.io/vucem30/dockerized-modulefederation-${{ github.event.inputs.app_name }}:.*|ghcr.io/vucem30/dockerized-modulefederation-${{ github.event.inputs.app_name }}:${{ github.event.inputs.image_tag }}|g" ${{ github.event.inputs.app_name }}-deployment-dev.yaml
-            microk8s kubectl apply -f ${{ github.event.inputs.app_name }}-deployment-dev.yaml
-            microk8s kubectl rollout restart deployment modulefederation-${{ github.event.inputs.app_name }}-deployment-dev -n default
-            microk8s kubectl get pods | grep ${{ github.event.inputs.app_name }}
