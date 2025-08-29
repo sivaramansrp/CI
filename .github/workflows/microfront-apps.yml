@@ -66,6 +66,7 @@ jobs:
           key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
           source: k8s/${{github.event.inputs.app_name}}/*.yaml
           target: ~/deployments/${{github.event.inputs.app_name}}/
+          strip_components: 2
 
       - name: List files on remote after copy
         uses: appleboy/ssh-action@v1.0.3
