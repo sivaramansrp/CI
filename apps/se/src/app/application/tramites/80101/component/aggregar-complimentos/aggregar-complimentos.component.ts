@@ -156,8 +156,7 @@ export class AggregarComplimentosComponent implements OnDestroy{
     } else if (SOCIAO_ACCIONISTAS_EXTRANJERA === -1) {
       // Si el RFC no es válido y no existe en la tabla de extranjeros, se agrega a la tabla de datos extranjeros
       this.store.aggregarTablaDatosComplimentosExtranjera(datos);
-    }
-    if(SOCIAO_ACCIONISTAS !== -1 || SOCIAO_ACCIONISTAS_EXTRANJERA !== -1) {
+    } else {
       this.abrirPlantasModal();
     }
   }

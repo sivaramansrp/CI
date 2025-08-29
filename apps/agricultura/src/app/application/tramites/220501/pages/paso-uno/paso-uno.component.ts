@@ -6,6 +6,8 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { PARAMETERO } from '../../constantes/constantes';
 import { SagarpaService } from '../../services/sagarpa/sagarpa.service';
 import { Solicitud220501Store } from '../../estados/tramites220501.store';
+import { Solicitud220502Query } from '../../../220502/estados/tramites220502.query';
+import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
 
 
 /**
@@ -65,6 +67,16 @@ export class PasoUnoComponent implements OnInit, OnDestroy, AfterViewInit {
   parametero = PARAMETERO;
 
   /**
+   * Cantidad de certificados pendientes de autorización.
+   */
+  pendientesAutorizadosCertificados!: number;
+
+  /**
+   * Referencia al componente SolicitudComponent
+   */
+  @ViewChild(SolicitudComponent) solicitudComponent!: SolicitudComponent;
+
+  /**
    * Constructor del componente.
    * Se utiliza para la inyección de dependencias.
    * 
@@ -74,6 +86,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy, AfterViewInit {
     private cdr: ChangeDetectorRef,
     private consultaQuery: ConsultaioQuery,
     private solicitud220501Store: Solicitud220501Store,
+    private solicitud220502Query: Solicitud220502Query,
     private sagarpaService: SagarpaService,
   ) {
     // El constructor se utiliza para la inyección de dependencias.
@@ -84,6 +97,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy, AfterViewInit {
    * @returns {void}
    */
   ngOnInit(): void {
+    this.solicitud220502Query.selectSolicitud$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((solicitud) => {
+        this.pendientesAutorizadosCertificados = Number(solicitud.certificadosAutorizados);
+      })
+    ).subscribe();   
+
     this.consultaQuery.selectConsultaioState$
       .pipe(takeUntil(this.destroyNotifier$),
         map((seccionState) => {

@@ -1,16 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { of, Subject } from 'rxjs';
 import { DomicilioComponent } from './domicilio-establecimiento.component';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Tramite260215Store } from '../../estados/tramites/tramite260215.store';
 import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { of, Subject } from 'rxjs';
-import { NicoInfo } from '../../models/permiso-sanitario.model';
-import { QueryList } from '@angular/core';
-import { CrosslistComponent } from '@libs/shared/data-access-user/src';
+import { ElementRef } from '@angular/core';
 
+/**
+ * Suite de pruebas unitarias para el componente DomicilioComponent
+ * Incluye pruebas para inicialización, formularios reactivos, validaciones y métodos principales
+ */
 describe('DomicilioComponent', () => {
   let component: DomicilioComponent;
   let fixture: ComponentFixture<DomicilioComponent>;
@@ -19,58 +20,8 @@ describe('DomicilioComponent', () => {
   let mockService: jest.Mocked<ServiciosPermisoSanitarioService>;
   let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
 
-  const mockSolicitudData = {
-    codigoPostal: '12345',
-    estado: 'Estado1',
-    muncipio: 'Municipio1',
-    localidad: 'Localidad1',
-    colonia: 'Colonia1',
-    calle: 'Calle Principal 123',
-    lada: '55',
-    telefono: '5555555555',
-    avisoCheckbox: false,
-    licenciaSanitaria: 'LS123456',
-    regimen: 'Regimen1',
-    aduanasEntradas: ['Aduana1', 'Aduana2'],
-    fraccionArancelaria: '12345678',
-    cantidadUMT: '100.5',
-    cantidadUMC: '200.25',
-    presentacion: 'Presentación test',
-  };
-
-  const mockEstadoData = {
-    code: 200,
-    data: [
-      { id: '1', nombre: 'Estado 1' },
-      { id: '2', nombre: 'Estado 2' },
-    ],
-    message: 'Success',
-  };
-
-  const mockNicoData = {
-    code: 200,
-    data: [
-      { clave_Scian: '123456', descripcion_Scian: 'Descripción 1' },
-      { clave_Scian: '789012', descripcion_Scian: 'Descripción 2' },
-    ],
-    message: 'Success',
-  };
-
-  const mockMercanciasData = {
-    code: 200,
-    data: [
-      {
-        id: '1',
-        clasificacion: 'Clasificación 1',
-        especificar: 'Especificar 1',
-        denominacionEspecifica: 'Denominación específica 1',
-      },
-    ],
-    message: 'Success',
-  };
-
   beforeEach(async () => {
-    // Crear mocks
+    // Mock del store
     mockTramite260215Store = {
       setCodigoPostal: jest.fn(),
       setEstado: jest.fn(),
@@ -80,547 +31,371 @@ describe('DomicilioComponent', () => {
       setCalle: jest.fn(),
       setLada: jest.fn(),
       setTelefono: jest.fn(),
-      setAvisoCheckbox: jest.fn(),
-      setLicenciaSanitaria: jest.fn(),
-      setRegimen: jest.fn(),
-      setAduanasEntradas: jest.fn(),
-      update: jest.fn(),
-    } as unknown as jest.Mocked<Tramite260215Store>;
+      setFraccionArancelaria: jest.fn(),
+      setCantidadUMT: jest.fn(),
+      setCantidadUMC: jest.fn(),
+      setPresentacion: jest.fn(),
+    } as any;
 
+    // Mock del query
     mockTramite260215Query = {
-      selectSolicitud$: of(mockSolicitudData),
-      select: jest.fn().mockReturnValue(of(mockSolicitudData)),
-    } as unknown as jest.Mocked<Tramite260215Query>;
+      selectSolicitud$: of({
+        codigoPostal: '12345',
+        estado: 'CDMX',
+        muncipio: 'Miguel Hidalgo',
+        localidad: 'Polanco',
+        colonia: 'Polanco I Sección',
+        calle: 'Presidente Masaryk',
+        lada: '55',
+        telefono: '12345678',
+        fraccionArancelaria: '12345678',
+        cantidadUMT: '100.5',
+        cantidadUMC: '200.25',
+        presentacion: 'Presentación de prueba',
+        avisoCheckbox: false,
+        licenciaSanitaria: '',
+        regimen: '',
+        aduanasEntradas: ''
+      }),
+    } as any;
 
+    // Mock del servicio
     mockService = {
-      getObtenerEstadoList: jest.fn().mockReturnValue(of(mockEstadoData)),
-      getObtenerTablaDatos: jest.fn().mockReturnValue(of(mockNicoData)),
-      getObtenerMercanciasDatos: jest.fn().mockReturnValue(of(mockMercanciasData)),
-    } as unknown as jest.Mocked<ServiciosPermisoSanitarioService>;
+      getObtenerEstadoList: jest.fn().mockReturnValue(of({
+        data: [
+          { id: '1', descripcion: 'CDMX', activo: true },
+          { id: '2', descripcion: 'Jalisco', activo: true }
+        ]
+      })),
+      getEstado: jest.fn().mockReturnValue(of([
+        { id: '1', descripcion: 'CDMX', activo: true }
+      ])),
+      getObtenerTablaDatos: jest.fn().mockReturnValue(of({
+        data: [
+          { clave_Scian: '123456', descripcion_Scian: 'Descripción de prueba' }
+        ]
+      })),
+      getObtenerMercanciasDatos: jest.fn().mockReturnValue(of({
+        data: [
+          { id: '1', descripcion: 'Mercancía de prueba', activo: true }
+        ]
+      }))
+    } as any;
 
+    // Mock del query de consulta
     mockConsultaioQuery = {
-      selectConsultaioState$: of({ readonly: false }),
-    } as unknown as jest.Mocked<ConsultaioQuery>;
+      selectConsultaioState$: of({ readonly: false })
+    } as any;
 
     await TestBed.configureTestingModule({
-      imports: [DomicilioComponent, ReactiveFormsModule, HttpClientTestingModule],
+      imports: [
+        ReactiveFormsModule,
+        DomicilioComponent
+      ],
       providers: [
         FormBuilder,
         { provide: Tramite260215Store, useValue: mockTramite260215Store },
         { provide: Tramite260215Query, useValue: mockTramite260215Query },
         { provide: ServiciosPermisoSanitarioService, useValue: mockService },
-        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
-      ],
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DomicilioComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  describe('Inicialización del Componente', () => {
-    it('debería crear el componente', () => {
-      expect(component).toBeTruthy();
-    });
-
-    it('debería inicializar propiedades con valores predeterminados', () => {
-      expect(component.esFormularioSoloLectura).toBe(false);
-      expect(component.colapsable).toBe(false);
-      expect(component.colapsableDuos).toBe(false);
-      expect(component.colapsableTres).toBe(false);
-      expect(component.nicoTablaDatos).toEqual([]);
-      expect(component.mercanciasTablaDatos).toEqual([]);
-      expect(component.seleccionados).toEqual([]);
-      expect(component.estado).toEqual([]);
-    });
-
-    it('debería inicializar formularios en ngOnInit', () => {
-      component.ngOnInit();
-      fixture.detectChanges();
-
-      expect(component.domicilio).toBeDefined();
-      expect(component.formAgente).toBeDefined();
-      expect(component.formMercancias).toBeDefined();
-    });
-
-    it('debería suscribirse a consultaioQuery y establecer estado de solo lectura', () => {
-      const readonlyState = {
-        readonly: true,
-        procedureId: '',
-        parameter: null,
-        department: '',
-        folioTramite: '',
-        usuario: null,
-        estatus: '',
-        fechaCreacion: '',
-        fechaActualizacion: ''
-      };
-      mockConsultaioQuery.selectConsultaioState$ = of(readonlyState as any);
-
-      component.ngOnInit();
-      fixture.detectChanges();
-
-      expect(component.esFormularioSoloLectura).toBe(true);
-    });
+  it('debería crear el componente correctamente', () => {
+    expect(component).toBeTruthy();
   });
 
-  describe('Inicialización de Formularios', () => {
-    beforeEach(() => {
-      component.ngOnInit();
-      fixture.detectChanges();
-    });
-
-    it('debería inicializar el formulario domicilio con datos de solicitud', () => {
-      expect(component.domicilio.get('codigoPostal')?.value).toBe('12345');
-      expect(component.domicilio.get('estado')?.value).toBe('Estado1');
-      expect(component.domicilio.get('muncipio')?.value).toBe('Municipio1');
-      expect(component.domicilio.get('calle')?.value).toBe('Calle Principal 123');
-      expect(component.domicilio.get('telefono')?.value).toBe('5555555555');
-    });
-
-    it('debería inicializar formAgente con valores vacíos y validadores', () => {
-      expect(component.formAgente.get('claveScianModal')?.value).toBe('');
-      expect(component.formAgente.get('claveDescripcionModal')?.value).toBe('');
-      expect(component.formAgente.get('claveScianModal')?.hasError('required')).toBe(true);
-    });
-
-    it('debería inicializar formMercancias con validadores', () => {
-      expect(component.formMercancias.get('clasificacion')?.hasError('required')).toBe(true);
-      expect(component.formMercancias.get('fraccionArancelaria')?.value).toBe('12345678');
-      expect(component.formMercancias.get('cantidadUMT')?.value).toBe('100.5');
-    });
-
-    it('debería deshabilitar formulario cuando esFormularioSoloLectura es true', () => {
-      component.esFormularioSoloLectura = true;
-      component.guardarDatosFormulario();
-
-      expect(component.domicilio.disabled).toBe(true);
-    });
-
-    it('debería habilitar formulario cuando esFormularioSoloLectura es false', () => {
-      component.esFormularioSoloLectura = false;
-      component.guardarDatosFormulario();
-
-      expect(component.domicilio.enabled).toBe(true);
-    });
+  it('debería inicializar formularios en ngOnInit', () => {
+    component.ngOnInit();
+    expect(component.domicilio).toBeDefined();
+    expect(component.formAgente).toBeDefined();
+    expect(component.formMercancias).toBeDefined();
   });
 
-  describe('Integración de Servicios', () => {
-    beforeEach(() => {
-      component.ngOnInit();
-      fixture.detectChanges();
-    });
+  it('debería validar fracción arancelaria con 8 dígitos exactos', () => {
+    component.ngOnInit();
+    const fraccionControl = component.formMercancias.get('fraccionArancelaria');
+    
+    // Valor válido (8 dígitos)
+    fraccionControl?.setValue('12345678');
+    expect(fraccionControl?.valid).toBe(true);
 
-    it('debería llamar obtenerEstadoList y poblar el array estado', () => {
-      expect(mockService.getObtenerEstadoList).toHaveBeenCalled();
-      expect(component.estado).toEqual(mockEstadoData.data);
-    });
+    // Valor inválido (menos de 8 dígitos)
+    fraccionControl?.setValue('1234567');
+    expect(fraccionControl?.invalid).toBe(true);
 
-    it('debería llamar obtenerTablaDatos y poblar el array nicoTablaDatos', () => {
-      expect(mockService.getObtenerTablaDatos).toHaveBeenCalled();
-      expect(component.nicoTablaDatos).toEqual(mockNicoData.data);
-    });
+    // Valor inválido (más de 8 dígitos)
+    fraccionControl?.setValue('123456789');
+    expect(fraccionControl?.invalid).toBe(true);
 
-    it('debería llamar obtenerMercanciasDatos y poblar el array mercanciasTablaDatos', () => {
-      expect(mockService.getObtenerMercanciasDatos).toHaveBeenCalled();
-      expect(component.mercanciasTablaDatos).toEqual(mockMercanciasData.data);
-    });
+    // Valor inválido (contiene letras)
+    fraccionControl?.setValue('1234567a');
+    expect(fraccionControl?.invalid).toBe(true);
   });
 
-  describe('Métodos de Elementos Colapsables', () => {
-    it('debería alternar el estado de colapsable', () => {
-      expect(component.colapsable).toBe(false);
-      component.mostrar_colapsable();
-      expect(component.colapsable).toBe(true);
-      component.mostrar_colapsable();
-      expect(component.colapsable).toBe(false);
-    });
+  it('debería validar campos requeridos del formulario domicilio', () => {
+    component.ngOnInit();
+    const codigoPostalControl = component.domicilio.get('codigoPostal');
+    const estadoControl = component.domicilio.get('estado');
+    const calleControl = component.domicilio.get('calle');
+    const telefonoControl = component.domicilio.get('telefono');
 
-    it('debería alternar el estado de colapsableDuos', () => {
-      expect(component.colapsableDuos).toBe(false);
-      component.mostrar_colapsableDuos();
-      expect(component.colapsableDuos).toBe(true);
-      component.mostrar_colapsableDuos();
-      expect(component.colapsableDuos).toBe(false);
-    });
+    // Establecer valores vacíos
+    codigoPostalControl?.setValue('');
+    estadoControl?.setValue('');
+    calleControl?.setValue('');
+    telefonoControl?.setValue('');
 
-    it('debería alternar el estado de colapsableTres', () => {
-      expect(component.colapsableTres).toBe(false);
-      component.mostrar_colapsableTres();
-      expect(component.colapsableTres).toBe(true);
-      component.mostrar_colapsableTres();
-      expect(component.colapsableTres).toBe(false);
-    });
+    expect(codigoPostalControl?.invalid).toBe(true);
+    expect(estadoControl?.invalid).toBe(true);
+    expect(calleControl?.invalid).toBe(true);
+    expect(telefonoControl?.invalid).toBe(true);
   });
 
-  describe('Interacciones de Checkbox y Formulario', () => {
-    beforeEach(() => {
-      component.ngOnInit();
-      fixture.detectChanges();
-    });
+  it('debería validar patrones numéricos en código postal', () => {
+    component.ngOnInit();
+    const codigoPostalControl = component.domicilio.get('codigoPostal');
+    
+    // Valor válido (solo números)
+    codigoPostalControl?.setValue('12345');
+    expect(codigoPostalControl?.valid).toBe(true);
 
-    it('debería deshabilitar licenciaSanitaria cuando avisoCheckbox está marcado', () => {
-      const checkboxEvent = { target: { checked: true } } as unknown as Event;
-      component.onAvisoCheckboxChange(checkboxEvent);
-
-      expect(component.domicilio.get('licenciaSanitaria')?.disabled).toBe(true);
-    });
-
-    it('debería habilitar licenciaSanitaria cuando avisoCheckbox está desmarcado', () => {
-      const checkboxEvent = { target: { checked: false } } as unknown as Event;
-      component.onAvisoCheckboxChange(checkboxEvent);
-
-      expect(component.domicilio.get('licenciaSanitaria')?.enabled).toBe(true);
-    });
-
-    it('debería deshabilitar avisoCheckbox cuando licenciaSanitaria tiene valor', () => {
-      const inputEvent = { target: { value: 'LS123456' } } as unknown as Event;
-      component.onLicenciaSanitariaChange(inputEvent);
-
-      expect(component.domicilio.get('avisoCheckbox')?.value).toBe(false);
-      expect(component.domicilio.get('avisoCheckbox')?.disabled).toBe(true);
-    });
-
-    it('debería habilitar avisoCheckbox cuando licenciaSanitaria está vacío', () => {
-      const inputEvent = { target: { value: '' } } as unknown as Event;
-      component.onLicenciaSanitariaChange(inputEvent);
-
-      expect(component.domicilio.get('avisoCheckbox')?.enabled).toBe(true);
-    });
+    // Valor inválido (contiene letras)
+    codigoPostalControl?.setValue('123abc');
+    expect(codigoPostalControl?.invalid).toBe(true);
   });
 
-  describe('Gestión de Tabla - NICO', () => {
-    beforeEach(() => {
-      component.ngOnInit();
-      fixture.detectChanges();
+  it('debería ejecutar validador cantidadUMTValidator correctamente', () => {
+    const validator = DomicilioComponent.cantidadUMTValidator();
+    
+    // Valor válido
+    expect(validator({ value: '123.45' } as any)).toBeNull();
+    
+    // Valor inválido (formato)
+    expect(validator({ value: 'abc.45' } as any)).toEqual({ invalidFormat: true });
+    
+    // Valor null
+    expect(validator({ value: null } as any)).toBeNull();
+    
+    // Precisión excesiva en parte entera
+    expect(validator({ value: '1234567890123.45' } as any)).toEqual({ maxPrecision: true });
+    
+    // Precisión excesiva en decimales
+    expect(validator({ value: '123.123456' } as any)).toEqual({ maxPrecision: true });
+  });
+
+  it('debería ejecutar validador cantidadUMCValidator correctamente', () => {
+    const validator = DomicilioComponent.cantidadUMCValidator();
+    
+    // Valor válido
+    expect(validator({ value: '123.1234567890' } as any)).toBeNull();
+    
+    // Valor inválido (formato)
+    expect(validator({ value: 'abc.45' } as any)).toEqual({ invalidFormat: true });
+    
+    // Valor null
+    expect(validator({ value: null } as any)).toBeNull();
+    
+    // Precisión excesiva en decimales (más de 10)
+    expect(validator({ value: '123.12345678901' } as any)).toEqual({ maxPrecision: true });
+  });
+
+  it('debería autocompletar campos cuando fracción arancelaria tenga 8 dígitos', () => {
+    component.ngOnInit();
+    const fraccionControl = component.formMercancias.get('fraccionArancelaria');
+    const descripcionControl = component.formMercancias.get('descripcionFraccion');
+    const umtControl = component.formMercancias.get('UMT');
+
+    fraccionControl?.setValue('12345678');
+
+    expect(descripcionControl?.value).toBe('Descripción automática de la fracción');
+    expect(umtControl?.value).toBe('KG');
+  });
+
+  it('debería limpiar campos autocompletados cuando fracción arancelaria sea inválida', () => {
+    component.ngOnInit();
+    const fraccionControl = component.formMercancias.get('fraccionArancelaria');
+    const descripcionControl = component.formMercancias.get('descripcionFraccion');
+    const umtControl = component.formMercancias.get('UMT');
+
+    // Valor inválido
+    fraccionControl?.setValue('123');
+    expect(descripcionControl?.value).toBe('');
+    expect(umtControl?.value).toBe('');
+  });
+
+  it('debería alternar estado colapsable', () => {
+    expect(component.colapsable).toBe(false);
+    component.mostrar_colapsable();
+    expect(component.colapsable).toBe(true);
+    component.mostrar_colapsable();
+    expect(component.colapsable).toBe(false);
+  });
+
+  it('debería manejar cambio de licencia sanitaria', () => {
+    component.ngOnInit();
+    const mockEvent = { target: { value: 'LIC123' } } as any;
+    
+    component.onLicenciaSanitariaChange(mockEvent);
+    
+    expect(component.domicilio.get('avisoCheckbox')?.value).toBe(false);
+    expect(component.domicilio.get('avisoCheckbox')?.disabled).toBe(true);
+  });
+
+  it('debería habilitar checkbox cuando licencia sanitaria está vacía', () => {
+    component.ngOnInit();
+    const mockEvent = { target: { value: '' } } as any;
+    
+    component.onLicenciaSanitariaChange(mockEvent);
+    
+    expect(component.domicilio.get('avisoCheckbox')?.disabled).toBe(false);
+  });
+
+  it('debería manejar cambio de checkbox de aviso', () => {
+    component.ngOnInit();
+    const mockEvent = { target: { checked: true } } as any;
+    
+    component.onAvisoCheckboxChange(mockEvent);
+    
+    expect(component.domicilio.get('licenciaSanitaria')?.disabled).toBe(true);
+  });
+
+  it('debería agregar nueva fila cuando el formulario sea válido', () => {
+    component.ngOnInit();
+    component.nicoTablaDatos = [];
+    component.formAgente.patchValue({
+      claveScianModal: '345678',
+      claveDescripcionModal: 'Nueva descripción'
     });
 
-    it('debería manejar el cambio de selección', () => {
-      const mockSelection: NicoInfo[] = [
-        { clave_Scian: '123456', descripcion_Scian: 'Descripción de Prueba' },
-      ];
+    component.agregarFila();
 
-      component.onSeleccionChange(mockSelection);
-
-      expect(component.seleccionados).toEqual(mockSelection);
-    });
-
-    it('debería agregar nueva fila cuando el formulario es válido', () => {
-      component.formAgente.patchValue({
-        claveScianModal: '123456',
-        claveDescripcionModal: 'Descripción de Prueba',
-      });
-
-      const initialLength = component.nicoTablaDatos.length;
-      component.agregarFila();
-
-      expect(component.nicoTablaDatos.length).toBe(initialLength + 1);
-      expect(component.nicoTablaDatos[component.nicoTablaDatos.length - 1]).toEqual({
-        clave_Scian: '123456',
-        descripcion_Scian: 'Descripción de Prueba',
-      });
-      expect(component.formAgente.get('claveScianModal')?.value).toBeNull();
-    });
-
-    it('no debería agregar fila cuando el formulario es inválido', () => {
-      component.formAgente.patchValue({
-        claveScianModal: '', // Inválido - campo requerido
-        claveDescripcionModal: 'Descripción de Prueba',
-      });
-
-      const initialLength = component.nicoTablaDatos.length;
-      component.agregarFila();
-
-      expect(component.nicoTablaDatos.length).toBe(initialLength);
-    });
-
-    it('debería eliminar filas seleccionadas', () => {
-      const testData: NicoInfo[] = [
-        { clave_Scian: '123456', descripcion_Scian: 'Prueba 1' },
-        { clave_Scian: '789012', descripcion_Scian: 'Prueba 2' },
-      ];
-
-      component.nicoTablaDatos = [...testData];
-      component.seleccionados = [testData[0]];
-
-      component.eliminarFila();
-
-      expect(component.nicoTablaDatos.length).toBe(1);
-      expect(component.nicoTablaDatos[0]).toEqual(testData[1]);
-      expect(component.seleccionados).toEqual([]);
-    });
-
-    it('debería mostrar notificación cuando no hay filas seleccionadas para eliminar', () => {
-      component.seleccionados = [];
-
-      component.eliminarFila();
-
-      expect(component.nuevaNotificacion).toEqual(
-        expect.objectContaining({
-          categoria: 'danger',
-          mensaje: 'Selecciona un registro para eliminar.',
-          tipoNotificacion: 'alert',
-        })
-      );
-    });
-
-    it('debería manejar array seleccionados vacío en eliminarFila', () => {
-      component.seleccionados = [];
-      const initialLength = component.nicoTablaDatos.length;
-
-      component.eliminarFila();
-
-      expect(component.nicoTablaDatos.length).toBe(initialLength);
-      expect(component.nuevaNotificacion.categoria).toBe('danger');
+    expect(component.nicoTablaDatos.length).toBe(1);
+    expect(component.nicoTablaDatos[0]).toEqual({
+      clave_Scian: '345678',
+      descripcion_Scian: 'Nueva descripción'
     });
   });
 
-  describe('Integración de CrossList', () => {
-    beforeEach(() => {
-      component.ngOnInit();
-      fixture.detectChanges();
-
-      // Mock de componentes CrossList
-      const mockCrossListComponents = [
-        { agregar: jest.fn(), quitar: jest.fn() },
-        { agregar: jest.fn(), quitar: jest.fn() },
-        { agregar: jest.fn(), quitar: jest.fn() },
-      ] as unknown as CrosslistComponent[];
-
-      component.crossList = new QueryList<CrosslistComponent>();
-      component.crossList.reset(mockCrossListComponents);
+  it('no debería agregar fila cuando el formulario sea inválido', () => {
+    component.ngOnInit();
+    component.nicoTablaDatos = [];
+    component.formAgente.patchValue({
+      claveScianModal: '', // Campo requerido vacío
+      claveDescripcionModal: 'Descripción'
     });
 
-    it('debería llamar agregar con "t" en paisDeProcedenciaBotones[0].funcion', () => {
-      const crossListSpy = component.crossList.toArray()[0];
-      component.paisDeProcedenciaBotones[0].funcion();
+    component.agregarFila();
 
-      expect(crossListSpy.agregar).toHaveBeenCalledWith('t');
-    });
-
-    it('debería llamar agregar con "" en paisDeProcedenciaBotones[1].funcion', () => {
-      const crossListSpy = component.crossList.toArray()[0];
-      component.paisDeProcedenciaBotones[1].funcion();
-
-      expect(crossListSpy.agregar).toHaveBeenCalledWith('');
-    });
-
-    it('debería llamar quitar con "" en paisDeProcedenciaBotones[2].funcion', () => {
-      const crossListSpy = component.crossList.toArray()[0];
-      component.paisDeProcedenciaBotones[2].funcion();
-
-      expect(crossListSpy.quitar).toHaveBeenCalledWith('');
-    });
-
-    it('debería llamar quitar con "t" en paisDeProcedenciaBotones[3].funcion', () => {
-      const crossListSpy = component.crossList.toArray()[0];
-      component.paisDeProcedenciaBotones[3].funcion();
-
-      expect(crossListSpy.quitar).toHaveBeenCalledWith('t');
-    });
-
-    it('debería llamar métodos correctos en paisDeProcedenciaBotonesDuos', () => {
-      const crossListSpy = component.crossList.toArray()[1];
-
-      component.paisDeProcedenciaBotonesDuos[0].funcion();
-      expect(crossListSpy.agregar).toHaveBeenCalledWith('t');
-
-      component.paisDeProcedenciaBotonesDuos[1].funcion();
-      expect(crossListSpy.agregar).toHaveBeenCalledWith('');
-
-      component.paisDeProcedenciaBotonesDuos[2].funcion();
-      expect(crossListSpy.quitar).toHaveBeenCalledWith('');
-
-      component.paisDeProcedenciaBotonesDuos[3].funcion();
-      expect(crossListSpy.quitar).toHaveBeenCalledWith('t');
-    });
-
-    it('debería llamar métodos correctos en paisDeProcedenciaBotonesTres', () => {
-      const crossListSpy = component.crossList.toArray()[2];
-
-      component.paisDeProcedenciaBotonesTres[0].funcion();
-      expect(crossListSpy.agregar).toHaveBeenCalledWith('t');
-
-      component.paisDeProcedenciaBotonesTres[1].funcion();
-      expect(crossListSpy.agregar).toHaveBeenCalledWith('');
-
-      component.paisDeProcedenciaBotonesTres[2].funcion();
-      expect(crossListSpy.quitar).toHaveBeenCalledWith('');
-
-      component.paisDeProcedenciaBotonesTres[3].funcion();
-      expect(crossListSpy.quitar).toHaveBeenCalledWith('t');
-    });
+    expect(component.nicoTablaDatos.length).toBe(0);
   });
 
-  describe('Integración con Store', () => {
-    beforeEach(() => {
-      component.ngOnInit();
-      fixture.detectChanges();
-    });
+  it('debería eliminar elementos seleccionados', () => {
+    component.nicoTablaDatos = [
+      { clave_Scian: '123456', descripcion_Scian: 'Descripción 1' },
+      { clave_Scian: '789012', descripcion_Scian: 'Descripción 2' }
+    ];
+    component.seleccionados = [
+      { clave_Scian: '123456', descripcion_Scian: 'Descripción 1' }
+    ];
 
-    it('debería llamar setValoresStore con parámetros correctos', () => {
-      component.setValoresStore(component.domicilio, 'codigoPostal', 'setCodigoPostal');
+    component.eliminarPedimento(true);
 
-      expect(mockTramite260215Store.setCodigoPostal).toHaveBeenCalledWith('12345');
-    });
-
-    it('debería manejar diferentes tipos de campos en setValoresStore', () => {
-      component.domicilio.get('avisoCheckbox')?.setValue(true);
-      component.setValoresStore(component.domicilio, 'avisoCheckbox', 'setAvisoCheckbox');
-
-      expect(mockTramite260215Store.setAvisoCheckbox).toHaveBeenCalledWith(true);
-    });
+    expect(component.nicoTablaDatos.length).toBe(1);
+    expect(component.nicoTablaDatos[0].clave_Scian).toBe('789012');
+    expect(component.seleccionados.length).toBe(0);
   });
 
-  describe('Gestión de Estado de Formulario', () => {
-    beforeEach(() => {
-      component.ngOnInit();
-      fixture.detectChanges();
-    });
+  it('debería actualizar seleccionados en onSeleccionChange', () => {
+    const nuevosSeleccionados = [
+      { clave_Scian: '123456', descripcion_Scian: 'Test' }
+    ];
 
-    it('debería llamar inicializarFormulario cuando no está en modo solo lectura', () => {
-      component.esFormularioSoloLectura = false;
-      const spy = jest.spyOn(component, 'inicializarFormulario');
+    component.onSeleccionChange(nuevosSeleccionados);
 
-      component.inicializarEstadoFormulario();
-
-      expect(spy).toHaveBeenCalled();
-    });
-
-    it('debería llamar guardarDatosFormulario cuando está en modo solo lectura', () => {
-      component.esFormularioSoloLectura = true;
-      const spy = jest.spyOn(component, 'guardarDatosFormulario');
-
-      component.inicializarEstadoFormulario();
-
-      expect(spy).toHaveBeenCalled();
-    });
+    expect(component.seleccionados).toEqual(nuevosSeleccionados);
   });
 
-  describe('Limpieza del Componente', () => {
-    it('debería completar destroyNotifier$ en ngOnDestroy', () => {
-      const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
-      const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+  it('debería obtener lista de estados del servicio', () => {
+    component.obtenerEstadoList();
 
-      component.ngOnDestroy();
-
-      expect(nextSpy).toHaveBeenCalled();
-      expect(destroyNotifierSpy).toHaveBeenCalled();
-    });
-
-    it('debería desuscribirse de observables para prevenir pérdidas de memoria', () => {
-      const destroyNotifier$ = new Subject<void>();
-      component['destroyNotifier$'] = destroyNotifier$;
-
-      const completeSpy = jest.spyOn(destroyNotifier$, 'complete');
-      const nextSpy = jest.spyOn(destroyNotifier$, 'next');
-
-      component.ngOnDestroy();
-
-      expect(nextSpy).toHaveBeenCalled();
-      expect(completeSpy).toHaveBeenCalled();
-    });
+    expect(mockService.getObtenerEstadoList).toHaveBeenCalled();
   });
 
-  describe('Casos Límite y Manejo de Errores', () => {
-    beforeEach(() => {
-      component.ngOnInit();
-      fixture.detectChanges();
-    });
+  it('debería marcar campos como tocados cuando el formulario es inválido en onAgregar', () => {
+    component.ngOnInit();
+    jest.spyOn(component.formMercancias, 'invalid', 'get').mockReturnValue(true);
+    const markAllAsTouchedSpy = jest.spyOn(component.formMercancias, 'markAllAsTouched');
 
-    it('debería manejar valores null/undefined en controles de formulario', () => {
-      component.domicilio.get('codigoPostal')?.setValue(null);
+    component.onAgregar();
 
-      expect(() => {
-        component.setValoresStore(component.domicilio, 'codigoPostal', 'setCodigoPostal');
-      }).not.toThrow();
-    });
-
-    it('debería manejar arrays vacíos en operaciones de selección', () => {
-      component.seleccionados = [];
-      component.nicoTablaDatos = [];
-
-      expect(() => {
-        component.eliminarFila();
-      }).not.toThrow();
-
-      expect(component.nuevaNotificacion).toBeDefined();
-    });
-
-    it('debería manejar errores de servicio de manera elegante', () => {
-      const errorService = {
-        getObtenerEstadoList: jest.fn().mockReturnValue(of({ data: null })),
-        getObtenerTablaDatos: jest.fn().mockReturnValue(of({ data: null })),
-        getObtenerMercanciasDatos: jest.fn().mockReturnValue(of({ data: null })),
-      } as unknown as jest.Mocked<ServiciosPermisoSanitarioService>;
-
-      TestBed.overrideProvider(ServiciosPermisoSanitarioService, { useValue: errorService });
-
-      expect(() => {
-        component.obtenerEstadoList();
-        component.obtenerTablaDatos();
-        component.obtenerMercanciasDatos();
-      }).not.toThrow();
-    });
+    expect(markAllAsTouchedSpy).toHaveBeenCalled();
   });
 
-  describe('Validación de Formularios', () => {
-    beforeEach(() => {
-      component.ngOnInit();
-      fixture.detectChanges();
-    });
+  it('debería cerrar modal cuando formulario es válido en onAgregar', () => {
+    component.ngOnInit();
+    jest.spyOn(component.formMercancias, 'invalid', 'get').mockReturnValue(false);
+    
+    const mockCloseModal = {
+      nativeElement: { click: jest.fn() }
+    };
+    component.closeModal = mockCloseModal as any;
 
-    it('debería validar campos requeridos en formulario domicilio', () => {
-      const form = component.domicilio;
+    component.onAgregar();
 
-      form.get('codigoPostal')?.setValue('');
-      form.get('estado')?.setValue('');
-      form.get('calle')?.setValue('');
-      form.get('telefono')?.setValue('');
+    expect(mockCloseModal.nativeElement.click).toHaveBeenCalled();
+  });
 
-      expect(form.get('codigoPostal')?.hasError('required')).toBe(true);
-      expect(form.get('estado')?.hasError('required')).toBe(true);
-      expect(form.get('calle')?.hasError('required')).toBe(true);
-      expect(form.get('telefono')?.hasError('required')).toBe(true);
-    });
+  it('debería actualizar descripción cuando cambia la clave SCIAN', () => {
+    component.ngOnInit();
+    component.formAgente.patchValue({ claveScianModal: '123456' });
 
-    it('debería validar patrones para campos numéricos', () => {
-      const form = component.domicilio;
+    component.onCambioClaveScian();
 
-      form.get('codigoPostal')?.setValue('abc123');
-      form.get('lada')?.setValue('abc55');
-      form.get('telefono')?.setValue('555abc5555');
+    expect(component.formAgente.get('claveDescripcionModal')?.value).toBe('123456');
+  });
 
-      expect(form.get('codigoPostal')?.hasError('pattern')).toBe(true);
-      expect(form.get('lada')?.hasError('pattern')).toBe(true);
-      expect(form.get('telefono')?.hasError('pattern')).toBe(true);
-    });
+  it('debería llamar método del store en setValoresStore', () => {
+    component.ngOnInit();
+    const mockForm = component.domicilio;
+    mockForm.patchValue({ codigoPostal: '54321' });
 
-    it('debería validar restricciones de longitud máxima', () => {
-      const form = component.domicilio;
-      const longString = 'a'.repeat(150);
+    component.setValoresStore(mockForm, 'codigoPostal', 'setCodigoPostal');
 
-      form.get('muncipio')?.setValue(longString);
-      form.get('localidad')?.setValue(longString);
-      form.get('colonia')?.setValue(longString);
-      form.get('calle')?.setValue(longString);
+    expect(mockTramite260215Store.setCodigoPostal).toHaveBeenCalledWith('54321');
+  });
 
-      expect(form.get('muncipio')?.hasError('maxlength')).toBe(true);
-      expect(form.get('localidad')?.hasError('maxlength')).toBe(true);
-      expect(form.get('colonia')?.hasError('maxlength')).toBe(true);
-      expect(form.get('calle')?.hasError('maxlength')).toBe(true);
-    });
+  it('debería configurar notificación de eliminación correctamente', () => {
+    component.seleccionados = [
+      { clave_Scian: '123456', descripcion_Scian: 'Test' }
+    ];
 
-    it('debería validar fraccionArancelaria en formMercancias', () => {
-      const form = component.formMercancias;
+    component.eliminarFila();
 
-      form.get('fraccionArancelaria')?.setValue('123'); // Menos de 8 caracteres
-      expect(form.get('fraccionArancelaria')?.hasError('minlength')).toBe(true);
+    expect(component.nuevaNotificacion).toBeDefined();
+    expect(component.nuevaNotificacion.categoria).toBe('danger');
+    expect(component.nuevaNotificacion.modo).toBe('action');
+  });
 
-      form.get('fraccionArancelaria')?.setValue('abc12345'); // Contiene no dígitos
-      expect(form.get('fraccionArancelaria')?.hasError('pattern')).toBe(true);
+  it('debería deshabilitar formulario cuando esFormularioSoloLectura es true', () => {
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
 
-      form.get('fraccionArancelaria')?.setValue('12345678'); // Válido
-      expect(form.get('fraccionArancelaria')?.valid).toBe(true);
-    });
+    expect(component.domicilio.disabled).toBe(true);
+  });
+
+  it('debería completar destroyNotifier$ en ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+
+    component.ngOnDestroy();
+
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

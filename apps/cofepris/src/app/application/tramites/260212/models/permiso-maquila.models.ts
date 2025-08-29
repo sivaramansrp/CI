@@ -134,3 +134,24 @@ export interface EstadoFisico {
   id: number;
   descripcíon: string;
 }
+/**
+ * @description
+ * Interfaz que representa los datos de un fabricante.
+ */
+export interface FabricanteDatos {
+  nombre: string;
+  rfc: string;
+  curp: string;
+  telefono: string;
+  correo: string;
+  calle: string;
+  numeroExterior: string;
+  numeroInterior: string;
+  pais: string;
+  colonia: string;
+  municipio: string;
+  localidad: string;
+  entidadFederativa: string;
+  estado: string;
+  codigoPostal: string;
+}

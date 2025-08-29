@@ -1,13 +1,22 @@
-import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
-import { REGEX_SOLO_DIGITOS } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
-import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+import { CommonModule } from '@angular/common';
+
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { Subject, firstValueFrom, takeUntil } from 'rxjs';
+
 import { Catalogo, CategoriaMensaje, Notificacion, NotificacionesComponent, TipoNotificacionEnum } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent, SharedModule, TituloComponent } from "@libs/shared/data-access-user/src";
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from "@angular/core";
-import { Subject, firstValueFrom, takeUntil } from "rxjs";
-import { Chofer40101Service } from "../../../../estado/chofer40101.service";
+import {
+  CatalogoSelectComponent,
+  SharedModule,
+  TituloComponent
+} from '@libs/shared/data-access-user/src';
+import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+
+import { Chofer40101Service } from '../../../../estado/chofer40101.service';
 import { ChoferesExtranjeros } from '../../../../models/registro-muestras-mercancias.model';
-import { CommonModule } from "@angular/common";
 
 
 @Component({

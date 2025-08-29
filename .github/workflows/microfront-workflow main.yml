@@ -1,0 +1,110 @@
+name: Build, Push, Deploy Microfront App
+
+on:
+  workflow_dispatch:
+    inputs:
+      app_name:
+        description: 'crt'
+        required: true
+        default: 'profepa'
+
+jobs:
+  build-push-deploy:
+    runs-on: ubuntu-latest
+    if: ${{ contains(fromJSON('["crt", "profepa"]'), github.event.inputs.app_name) }}
+    env:
+      APP_NAME: ${{ github.event.inputs.app_name }}
+      IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/dockerized-modulefederation-${{ github.event.inputs.app_name }}-microfront
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Extract version from package.json
+        id: get_version
+        run: |
+          VERSION=$(jq -r .version package.json)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "🎯 Building $IMAGE_NAME:$VERSION"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Angular CLI
+        run: npm install -g @angular/cli
+
+      - name: Build Angular app (Nx)
+        run: npx nx build ${{ github.event.inputs.app_name }} --configuration=production --base-href=/${{ env.APP_NAME }}/
+
+      - name: Inject version into index.html
+        if: hashFiles('script/inject-version.js') != ''
+        run: |
+          if [ -f "script/inject-version.js" ]; then
+            node script/inject-version.js ${{ env.APP_NAME }}
+            echo "✅ Version ${{ env.VERSION }} injected into ${{ env.APP_NAME }}"
+          else
+            echo "⚠️ script/inject-version.js not found, skipping"
+          fi
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GHCR_PAT }}
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            --build-arg APP_NAME=${{ env.APP_NAME }} \
+            --build-arg NODE_ENV=production \
+            --build-arg VERSION=${{ env.VERSION }} \
+            -t $IMAGE_NAME:${{ env.VERSION }} \
+            -f apps/${{ env.APP_NAME }}/Dockerfile.dev \
+            .
+
+      - name: Push Docker image
+        run: |
+          docker push $IMAGE_NAME:${{ env.VERSION }}
+
+      - name: Update image tag in Kubernetes manifests
+        run: |
+          find k8s/${{ env.APP_NAME }}-microfront/ -type f \( -name "*.yaml" -o -name "*.yml" \) -exec \
+            sed -i "s|image: ghcr.io/${{ github.repository_owner }}/dockerized-modulefederation-${{ env.APP_NAME }}-microfront:.*|image: $IMAGE_NAME:${{ env.VERSION }}|g" {} \;
+
+      - name: Upload Kubernetes manifests to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.REMOTE_SRV_IP }}
+          username: ${{ secrets.REMOTE_SRV_USER }}
+          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
+          source: "k8s/${{ github.event.inputs.app_name }}-microfront"
+          target: "~/${{ github.event.inputs.app_name }}-microfront/"
+
+      - name: Deploy on Microk8s via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.REMOTE_SRV_IP }}
+          username: ${{ secrets.REMOTE_SRV_USER }}
+          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
+          script: |
+            set -e
+            cd ~/${{ github.event.inputs.app_name }}-microfront/
+            # Apply all .yaml, .yml, .json files in this directory
+            for f in *.yaml *.yml *.json; do
+              [ -e "$f" ] && microk8s.kubectl apply -f "$f"
+            done
+            # Recursively apply manifests in subdirectories as well
+            find . -type f \( -name '*.yaml' -o -name '*.yml' -o -name '*.json' \) -exec microk8s.kubectl apply -f {} \;
+
+      - name: Wait for deployment to become ready
+        run: sleep 60
+
+# NOTE:
+# - To deploy, go to the Actions tab, run this workflow, and input the app name (e.g., profepa, crt).
+# - The workflow will build, inject version, dockerize, and deploy the specified app.

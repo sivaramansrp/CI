@@ -99,22 +99,5 @@ export class ProsecService {
     this.store.setPlantasDatos(DATOS.plantasDatos);
     this.store.setProductorDatos(DATOS.productorDatos);
   }
-
-  /**
-   * @method formValida
-   * @description
-   * Verifica si todas las secciones del formulario son válidas y actualiza el store correspondiente.
-   * Si todas las validaciones son verdaderas, marca la sección y el formulario como válidos en el store de secciones.
-   * @returns {void}
-   */
-  public formValida(): void {
-    if (
-      this.store.getValue().domiciliosFormaValida &&
-      this.store.getValue().productorFromValida &&
-      this.store.getValue().sectoresFromValida
-    ) {
-      this.seccionStore.establecerSeccion([true]);
-      this.seccionStore.establecerFormaValida([true]);
-    }
-  }
+  
 }

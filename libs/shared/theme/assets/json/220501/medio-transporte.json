@@ -3,11 +3,19 @@
     "data": [
         {
             "id": 1,
-            "descripcion": "Marítimo_01"
+            "descripcion": "Aéreo"
         },
         {
             "id": 2,
-            "descripcion": "Marítimo_02"
+            "descripcion": "Marítimo"
+        },
+        {
+            "id": 3,
+            "descripcion": "Otros"
+        },
+        {
+            "id": 4,
+            "descripcion": "Terrestre"
         }
     ],
     "message": "Consulta exitosa"

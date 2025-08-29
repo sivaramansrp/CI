@@ -17,7 +17,33 @@ import { Solocitud260911Service } from '../../services/service260911.service';
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
 })
+
 export class PasoUnoComponent implements OnInit, OnDestroy {
+  /**
+   * Tipo de trámite seleccionado.
+   */
+  selectedTipoTramite: string = '';
+
+  /**
+   * Maneja el cambio en el tipo de trámite seleccionado.
+   * @param tipo El nuevo tipo de trámite seleccionado.
+   */
+  onTipoTramiteChange(tipo: string): void {
+    this.selectedTipoTramite = tipo;
+  }
+
+  /**
+   * Estado de selección del botón de radio global.
+   */
+  isRadioButtonSelectedGlobal: boolean = false;
+
+  /**
+   * Maneja el cambio en el estado de selección del botón de radio global.
+   * @param selected El nuevo estado de selección del botón de radio.
+   */
+  onRadioButtonSelectedChange(selected: boolean): void {
+    this.isRadioButtonSelectedGlobal = selected;
+  }
 
   /**
    * Indica si se han recibido correctamente los datos desde el servidor.

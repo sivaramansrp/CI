@@ -3,6 +3,7 @@ import { ImportacionDeVehiculosUsadosComponent } from './importacion-de-vehiculo
 import { BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { HttpClientModule } from '@angular/common/http';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('ImportacionDeVehiculosUsadosComponent', () => {
   let component: ImportacionDeVehiculosUsadosComponent;
@@ -12,6 +13,7 @@ describe('ImportacionDeVehiculosUsadosComponent', () => {
     await TestBed.configureTestingModule({
       imports: [WizardComponent, BtnContinuarComponent, SolicitanteComponent,HttpClientModule],
       declarations: [ImportacionDeVehiculosUsadosComponent,PasoUnoComponent],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ImportacionDeVehiculosUsadosComponent);

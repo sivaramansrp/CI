@@ -151,3 +151,26 @@ export const CANCELACION_TABLA = [
     orden: 5
   },
 ];
+/**
+ * Array de pasos del wizard de la pantalla.
+ * Cada paso contiene:
+ *  - indice: número de orden del paso
+ *  - titulo: nombre del paso que se muestra al usuario
+ *  - activo: indica si el paso está actualmente activo
+ *  - completado: indica si el paso ya se completó
+ */
+export const PANTA_WIZARD_PASOS = [
+    {
+      indice: 1,
+      titulo: 'Capturar solicitud',
+      activo: true,
+      completado: true,
+    },    
+    {
+      indice: 2,
+      titulo: 'Firmar solicitud',
+      activo: false,
+      completado: false,
+    },
+  ];
+  

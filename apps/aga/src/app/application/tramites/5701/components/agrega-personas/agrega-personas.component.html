@@ -31,7 +31,7 @@
 <div class="row mt-3">
   <div class="col-md-12">
     <div
-      *ngIf="personas?.length === 0"
+      *ngIf="userHasInteracted && personas?.length === 0"
       class="mensaje-error"
     >
       Se debe agregar por lo menos una persona responsable del despacho.

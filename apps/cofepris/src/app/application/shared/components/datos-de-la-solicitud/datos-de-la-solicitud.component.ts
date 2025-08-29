@@ -755,7 +755,7 @@ export class DatosDeLaSolicitudComponent
           ),
         },
       ],
-      regimenLaMercancia: ['', [Validators.required]],
+      regimenLaMercancia: [this.datosSolicitudFormState.regimenLaMercancia, [Validators.required]],
       aduana: [this.datosSolicitudFormState.aduana, [Validators.required]],
       mercancias: [this.tablaMercanciasConfig.datos, matrizRequerida],
       manifesto: [

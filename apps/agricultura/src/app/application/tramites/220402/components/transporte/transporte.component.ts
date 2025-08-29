@@ -1,15 +1,23 @@
-import { CatalogosSelect, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Catalogo } from '@ng-mf/data-access-user';
+
+import { Subject } from 'rxjs';
+
+import { map, takeUntil } from 'rxjs/operators';
+
+import {
+  Catalogo,
+  CatalogosSelect,
+  ConsultaioQuery,
+  ConsultaioState,
+  ValidacionesFormularioService
+} from '@ng-mf/data-access-user';
+
 import { MediodetransporteService } from '../../services/medio-de-transporte.service';
 import { Solicitud220402Query } from '../../estados/queries/tramites220402.query';
-import { Solicitud220402State } from '../../estados/tramites/tramites220402.store';
-import { Solicitud220402Store } from '../../estados/tramites/tramites220402.store';
-import { Subject } from 'rxjs';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
+import { Solicitud220402State, Solicitud220402Store } from '../../estados/tramites/tramites220402.store';
+
 
 @Component({
   selector: 'app-transporte',
@@ -200,7 +208,7 @@ export class TransporteComponent implements OnDestroy, OnInit {
    * 
    * @returns {void}
    */
-  public mostrarErrores() {
+  public mostrarErrores():void {
     this.transporteForm?.markAllAsTouched?.();
     this.cdr.detectChanges();
   }

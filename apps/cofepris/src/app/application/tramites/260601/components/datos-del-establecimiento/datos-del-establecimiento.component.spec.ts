@@ -11,9 +11,9 @@ import { FormBuilder } from '@angular/forms';
 import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
 import { Tramite260601Store } from '../../../../estados/tramites/tramite260601.store';
 import { Tramite260601Query } from '../../../../estados/queries/tramite260601.query';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { ToastrModule } from 'ngx-toastr';
 
 @Injectable()
 class MockAvisoSanitarioService {}
@@ -26,11 +26,11 @@ class MockTramite260601Query {}
 
 describe('DatosDelEstablecimientoComponent', () => {
   let fixture: ComponentFixture<DatosDelEstablecimientoComponent>;
-  let component: { ngOnDestroy: () => void; manifiestosForm: { get?: any; disable?: any; enable?: any; }; seleccionadaManifiesto: { controls?: any; }; inicializarEstadoFormulario: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; guardarDatosFormulario: jest.Mock<any, any, any> | (() => void); inicializarFormulario: jest.Mock<any, any, any> | (() => void); inicializaCatalogos: jest.Mock<any, any, any> | (() => void); obtenerManifiestos: jest.Mock<any, any, any> | (() => void); tramite260601Query: { selectSeccionState$?: any; }; crearFormulario: jest.Mock<any, any, any> | (() => void); obtenerSCIAN: jest.Mock<any, any, any> | (() => void); obtenerProducto: jest.Mock<any, any, any> | (() => void); estadoSeleccion: jest.Mock<any, any, any> | (() => void); claveScianSeleccion: jest.Mock<any, any, any> | (() => void); regimenesSeleccion: jest.Mock<any, any, any> | (() => void); aduanaSeleccion: jest.Mock<any, any, any> | (() => void); datosDelEstablecimientoForm: { disable?: any; enable?: any; }; domicilloDelEstablecimientoForm: { disable?: any; enable?: any; get?: any; }; scianForm: { disable?: any; enable?: any; get?: any; }; fb: { group?: any; array?: any; }; avisoSanitarioState: { RFCResponsableSanitario?: any; razonSocial?: any; correoElectronico?: any; codigoPostal?: any; cveEstado?: any; descripcionMunicipio?: any; informacionExtra?: any; descripcionColonia?: any; calle?: any; lada?: any; telefono?: any; avisoFuncionamiento?: any; cveRegimenes?: any; cveAduanas?: any; cveSCIAN?: any; cveSCIANDescripcion?: any; seleccionadaManifiesto?: any; informacionConfidencial?: any; }; avisoSanitarioService: { getEstado?: any; getClaveScian?: any; getDescripcionScian?: any; getRegimenes?: any; getAduanas?: any; getManifiestos?: any; }; tramite260601Store: { setEstado?: any; setDescripcionScian?: any; setClaveScian?: any; setCveRegimenes?: any; setCveAduanas?: any; metodoNombre?: any; }; descripcionScianSeleccion: () => void; getSCIANTableData: { tableHeader?: any; tableBody?: any; }; getProductoTableData: { tableHeader?: any; tableBody?: any; }; seleccionarEstablecimiento: () => void; aceptar: () => void; setValoresStore: jest.Mock<any, any, any> | ((arg0: { get: () => { value: {}; }; }, arg1: {}, arg2: {}) => void); onManifiestoCheckboxCambiar: (arg0: { target: { checked: {}; }; }, arg1: {}) => void; modalElement: { nativeElement?: any; }; agregarMercanciaGrid2606: () => void; closeModal: { nativeElement?: any; }; cerrarModal: () => void; destruirNotificador$: { next?: any; complete?: any; }; };
+  let component: { ngOnDestroy: () => void; manifiestosForm: { get?: any; disable?: any; enable?: any; valid?: any; markAllAsTouched?: any; }; seleccionadaManifiesto: { controls?: any; }; inicializarEstadoFormulario: jest.Mock<any, any, any> | (() => void); tramite260601Query: { selectSeccionState$?: any; }; ngOnInit: () => void; guardarDatosFormulario: jest.Mock<any, any, any> | (() => void); inicializarFormulario: jest.Mock<any, any, any> | (() => void); inicializaCatalogos: jest.Mock<any, any, any> | (() => void); obtenerManifiestos: jest.Mock<any, any, any> | (() => void); crearFormulario: jest.Mock<any, any, any> | (() => void); estadoSeleccion: jest.Mock<any, any, any> | (() => void); claveScianSeleccion: jest.Mock<any, any, any> | (() => void); regimenesSeleccion: jest.Mock<any, any, any> | (() => void); aduanaSeleccion: jest.Mock<any, any, any> | (() => void); datosDelEstablecimientoForm: { disable?: any; enable?: any; valid?: any; markAllAsTouched?: any; }; domicilloDelEstablecimientoForm: { disable?: any; enable?: any; get?: any; valid?: any; markAllAsTouched?: any; }; scianForm: { disable?: any; enable?: any; get?: any; reset?: any; valid?: any; markAllAsTouched?: any; }; fb: { group?: any; array?: any; }; avisoSanitarioState: { RFCResponsableSanitario?: any; razonSocial?: any; correoElectronico?: any; codigoPostal?: any; cveEstado?: any; descripcionMunicipio?: any; informacionExtra?: any; descripcionColonia?: any; calle?: any; lada?: any; telefono?: any; avisoFuncionamiento?: any; cveRegimenes?: any; cveAduanas?: any; cveSCIAN?: any; cveSCIANDescripcion?: any; seleccionadaManifiesto?: any; informacionConfidencial?: any; }; avisoSanitarioService: { getEstado?: any; getClaveScian?: any; getDescripcionScian?: any; getRegimenes?: any; getAduanas?: any; obtenerScianTabla?: any; obtenerProducto?: any; getManifiestos?: any; }; tramite260601Store: { setEstado?: any; setDescripcionScian?: any; setClaveScian?: any; setCveRegimenes?: any; setCveAduanas?: any; setScianTabla?: any; setProductoTabla?: any; metodoNombre?: any; setProductoClasificacion?: any; }; descripcionScianSeleccion: () => void; obtenerSCIAN: () => void; seleccionarDomicilios: (arg0: {}) => void; obtenerProducto: () => void; seleccionarEstablecimiento: () => void; aceptar: () => void; setValoresStore: jest.Mock<any, any, any> | ((arg0: { get: () => { value: {}; }; }, arg1: {}, arg2: {}) => void); onManifiestoCheckboxCambiar: (arg0: { target: { checked: {}; }; }, arg1: {}) => void; modalElement: { nativeElement?: any; }; modalInstance: { show?: any; hide?: any; }; agregarMercanciaGrid2606: () => void; closeModal: { nativeElement?: any; }; cerrarModal: () => void; scianSeleccionados: string[]; scianBodyData: string[]; eliminarScianGrid: () => void; agregarSCIAN: () => void; limpiarSCIAN: () => void; limpiarMercancia: () => void; modifyModal: { nativeElement?: any; }; modalAddSCIAN: { nativeElement?: any; }; ngAfterViewInit: () => void; cerrarModificarModal: () => void; abrirModificarModal: (arg0: { cveEspecificoProductoClasifi: {}; cveTipoProducto: {}; fraccionArancelaria: {}; fraccionArancelariaDescripcion: {}; modelo: {}; productoDescripcion: {}; paisDeOrigen: {}; }) => void; modalAddSCIANInstance: { show?: any; hide?: any; }; abrirModalAgregarSCIAN: () => void; cancelarAgregarSCIAN: () => void; validarFormularios: () => void; destruirNotificador$: { next?: any; complete?: any; }; };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, HttpClientTestingModule, ToastrModule.forRoot()  ],
+      imports: [ FormsModule, ReactiveFormsModule, DatosDelEstablecimientoComponent, HttpClientTestingModule, ToastrModule.forRoot()  ],
       declarations: [
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
@@ -39,9 +39,7 @@ describe('DatosDelEstablecimientoComponent', () => {
         { provide: AvisoSanitarioService, useClass: MockAvisoSanitarioService },
         { provide: Tramite260601Store, useClass: MockTramite260601Store },
         { provide: Tramite260601Query, useClass: MockTramite260601Query },
-        ConsultaioQuery,
-        ToastrService,
-        { provide: 'ToastConfig', useValue: {} }
+        ConsultaioQuery
       ]
     }).overrideComponent(DatosDelEstablecimientoComponent, {
 
@@ -64,10 +62,13 @@ describe('DatosDelEstablecimientoComponent', () => {
     component.manifiestosForm = component.manifiestosForm || {};
     component.manifiestosForm.get = jest.fn();
     const seleccionadaManifiesto = component.seleccionadaManifiesto;
+    
   });
 
   it('should run #ngOnInit()', async () => {
     component.inicializarEstadoFormulario = jest.fn();
+    component.tramite260601Query = component.tramite260601Query || {};
+    component.tramite260601Query.selectSeccionState$ = observableOf({});
     component.ngOnInit();
   });
 
@@ -83,8 +84,6 @@ describe('DatosDelEstablecimientoComponent', () => {
     component.tramite260601Query = component.tramite260601Query || {};
     component.tramite260601Query.selectSeccionState$ = observableOf({});
     component.crearFormulario = jest.fn();
-    component.obtenerSCIAN = jest.fn();
-    component.obtenerProducto = jest.fn();
     component.estadoSeleccion = jest.fn();
     component.claveScianSeleccion = jest.fn();
     component.regimenesSeleccion = jest.fn();
@@ -260,19 +259,25 @@ describe('DatosDelEstablecimientoComponent', () => {
   });
 
   it('should run #obtenerSCIAN()', async () => {
-    component.getSCIANTableData = component.getSCIANTableData || {};
-    component.getSCIANTableData.tableHeader = 'tableHeader';
-    component.getSCIANTableData.tableBody = 'tableBody';
+    component.avisoSanitarioService = component.avisoSanitarioService || {};
+    component.avisoSanitarioService.obtenerScianTabla = jest.fn().mockReturnValue(observableOf({}));
+    component.tramite260601Store = component.tramite260601Store || {};
+    component.tramite260601Store.setScianTabla = jest.fn();
     component.obtenerSCIAN();
+  });
+
+  it('should run #seleccionarDomicilios()', async () => {
+
+    component.seleccionarDomicilios({});
 
   });
 
   it('should run #obtenerProducto()', async () => {
-    component.getProductoTableData = component.getProductoTableData || {};
-    component.getProductoTableData.tableHeader = 'tableHeader';
-    component.getProductoTableData.tableBody = 'tableBody';
+    component.avisoSanitarioService = component.avisoSanitarioService || {};
+    component.avisoSanitarioService.obtenerProducto = jest.fn().mockReturnValue(observableOf({}));
+    component.tramite260601Store = component.tramite260601Store || {};
+    component.tramite260601Store.setProductoTabla = jest.fn();
     component.obtenerProducto();
-
   });
 
   it('should run #seleccionarEstablecimiento()', async () => {
@@ -302,6 +307,82 @@ describe('DatosDelEstablecimientoComponent', () => {
     };
     component.cerrarModal();
 
+  });
+
+  it('should run #agregarSCIAN()', async () => {
+    component.scianForm = component.scianForm || {};
+    component.scianForm.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.tramite260601Store = component.tramite260601Store || {};
+    component.tramite260601Store.setScianTabla = jest.fn();
+    component.agregarSCIAN();
+  });
+
+  it('should run #limpiarSCIAN()', async () => {
+    component.scianForm = component.scianForm || {};
+    component.scianForm.reset = jest.fn();
+    component.limpiarSCIAN();
+    
+  });
+
+  it('should run #limpiarMercancia()', async () => {
+    component.tramite260601Store = component.tramite260601Store || {};
+    component.tramite260601Store.setProductoClasificacion = jest.fn();
+    component.limpiarMercancia();
+    
+  });
+
+  it('should run #cerrarModificarModal()', async () => {
+    component.modalInstance = component.modalInstance || {};
+    component.modalInstance.hide = jest.fn();
+    component.cerrarModificarModal();
+    
+  });
+
+  it('should run #abrirModificarModal()', async () => {
+    component.tramite260601Store = component.tramite260601Store || {};
+    component.tramite260601Store.setProductoTabla = jest.fn();
+    component.abrirModificarModal({
+      cveEspecificoProductoClasifi: {},
+      cveTipoProducto: {},
+      fraccionArancelaria: {},
+      fraccionArancelariaDescripcion: {},
+      modelo: {},
+      productoDescripcion: {},
+      paisDeOrigen: {}
+    });
+    
+  });
+
+  it('should run #abrirModalAgregarSCIAN()', async () => {
+    component.modalAddSCIANInstance = component.modalAddSCIANInstance || {};
+    component.modalAddSCIANInstance.show = jest.fn();
+    component.abrirModalAgregarSCIAN();
+    
+  });
+
+  it('should run #cancelarAgregarSCIAN()', async () => {
+    component.modalAddSCIANInstance = component.modalAddSCIANInstance || {};
+    component.modalAddSCIANInstance.hide = jest.fn();
+    component.cancelarAgregarSCIAN();
+    
+  });
+
+  it('should run #validarFormularios()', async () => {
+    component.datosDelEstablecimientoForm = component.datosDelEstablecimientoForm || {};
+    component.datosDelEstablecimientoForm.valid = 'valid';
+    component.datosDelEstablecimientoForm.markAllAsTouched = jest.fn();
+    component.domicilloDelEstablecimientoForm = component.domicilloDelEstablecimientoForm || {};
+    component.domicilloDelEstablecimientoForm.valid = 'valid';
+    component.domicilloDelEstablecimientoForm.markAllAsTouched = jest.fn();
+    component.scianForm = component.scianForm || {};
+    component.scianForm.valid = 'valid';
+    component.scianForm.markAllAsTouched = jest.fn();
+    component.manifiestosForm = component.manifiestosForm || {};
+    component.manifiestosForm.valid = 'valid';
+    component.manifiestosForm.markAllAsTouched = jest.fn();
+    component.validarFormularios();
   });
 
   it('should run #ngOnDestroy()', async () => {

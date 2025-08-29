@@ -49,20 +49,22 @@ export class Tramite220403Query extends Query<FormularioGrupo> {
   });
 
   /**
+   * @property {Observable<any>} setTercerosRelacionados$
+   * @description
+   * Observable que emite los datos de los terceros relacionados en el trámite.
+   */
+  setTercerosRelacionados$ = this.select((state) => {
+    return state.tercerosRelacionados;
+  });
+
+  /**
    * @property {Observable<FormularioGrupo>} selectTramite$
    * @description
    * Observable que emite el estado completo del trámite.
    */
   selectTramite$ = this.select((state) => {
-        return state;
-      });
-
-  /**
-   * @property {Observable<any>} seleccionarTercerosRelacionados$
-   * @description
-   * Observable que emite los terceros relacionados al trámite.
-   */
-  seleccionarTercerosRelacionados$ = this.select(estado => estado.tercerosRelacionados);
+    return state;
+  });
 
   /**
    * @constructor

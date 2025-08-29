@@ -158,6 +158,14 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
   espectaculoAlerta: boolean = false;
 
   /**
+   * @property {boolean} espectaculoAlertaAgregar
+   * @description
+   * Indica si se debe mostrar una alerta relacionada con la acción de agregar plantas seleccionadas a la lista PROSEC.
+   * Se utiliza para advertir al usuario cuando no ha seleccionado ninguna planta para agregar.
+   */
+  espectaculoAlertaAgregar: boolean = false;
+
+  /**
    * @descripcion
    * Configuración de las columnas que se mostrarán en la tabla de plantas.
    */
@@ -254,7 +262,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
             tap((_value) => {
               if (this.forma.valid) {
                 this.AutorizacionProsecStore.setDomiciliosFormaValida(true);
-                this.ProsecService.formValida()
+                
               }
             })
           )
@@ -516,13 +524,26 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   agregarPlantas(): void {
-    if ( this.plantasDatos.length > 0) {
-    this.plantasDatos = [];
-    this.AutorizacionProsecStore.setPlantasDatos([]);
-    this.recuperarProsecDatos();
+    if ( this.listSelectedView.length > 0) {
+      const VALOR = this.AutorizacionProsecStore.getValue().plantasDatos;
+      if (VALOR.length === 0) {
+        return;
+      }
+      const FILTERED_VALOR = VALOR.filter(
+        (item) => !this.AutorizacionProsecStore.getValue().selectedDatos?.includes(item)
+      );
+      this.AutorizacionProsecStore.update(
+        (state) => ({
+          ...state,
+          plantasDatos: FILTERED_VALOR,
+          prosecDatos: this.AutorizacionProsecStore.getValue().selectedDatos,
+          selectedDatos: [],
+        })
+      );
+      this.listSelectedView = [];
     }
     else {
-      this.espectaculoAlerta = true;
+      this.espectaculoAlertaAgregar = true;
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: '',
@@ -535,6 +556,16 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
         txtBtnCancelar: '',
       };
     }
+  }
+
+  /**
+   * @method agregarPlantasconfirmar
+   * @description
+   * Oculta la alerta relacionada con la acción de agregar plantas seleccionadas a la lista PROSEC.
+   * Se utiliza para cerrar el mensaje de advertencia cuando el usuario confirma la acción.
+   */
+  agregarPlantasconfirmar(): void {
+    this.espectaculoAlertaAgregar = false
   }
 
   /**
@@ -644,6 +675,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
           selectedDatos: [],
         })
       );
+      this.listSelectedView = [];
     }
     else {
       this.eliminarPlantasConfirmacion = false;

@@ -58,8 +58,7 @@
   <div class="row">
     <div class="col-md-8">
       <div class="form-group">
-        <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Domicilio, calle, número interior, numero exterior, lote"
-            ata-bs-toggle="tooltip"></span></label>
+        <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill mx-2" tooltip="Domicilio, calle, número interior, numero exterior, lote" placement="top"></span></label>
         <input class="form-control" id="calle" placeholder="" type="text" maxlength="100" formControlName="calle"
           (change)="setValoresStore(domicilio, 'calle', 'setCalle')" />
         <div *ngIf="domicilio.get('calle')?.touched && domicilio.get('calle')?.errors?.['required']"
@@ -123,8 +122,7 @@
     <div class="col-md-4">
       <div class="form-group">
         <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria*:</label>
-         <span class="bi bi-question-circle-fill fs-4 m-1" [title]="'Número de la autorización indicado en el documento emitido por la autoridad sanitaria competente'" data-bs-toggle="tooltip">
-         </span>
+        <span class="bi bi-question-circle-fill mx-2" tooltip="Número de la autorización indicado en el documento emitido por la autoridad sanitaria competente" placement="top"></span>
         <input class="form-control" id="licenciaSanitaria" placeholder="" type="text"
           formControlName="licenciaSanitaria" (change)="
                     setValoresStore(
@@ -155,8 +153,13 @@
     </div>
   </div>
   <div class="row mt-5">
-    <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla"
-      [datos]="mercanciasTablaDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+    <app-tabla-dinamica 
+      [tipoSeleccionTabla]="tablaSeleccionCheckbox" 
+      [configuracionTabla]="mercanciasTabla"
+      [datos]="mercanciasTablaDatos" 
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+      (listaDeFilaSeleccionada)="seleccionarlistaSeccionMercancias($event)"
+    ></app-tabla-dinamica>
 
     <div class="d-flex justify-content-center" *ngIf="esPaginacionVisible">
       <app-table-pagination [totalItems]="totalElementos" [itemsPerPage]="elementosPorPagina"
@@ -166,7 +169,12 @@
     </div>
 
     <div class="container text-end mt-5">
-
+      @if(mercanciasTablaDatos.length > 0) {
+      <button class="btn btn-default me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias"
+        [disabled]="esFormularioSoloLectura" (click)="modificarMercancia()">Modificar</button>
+      <button class="btn btn-danger me-2" data-bs-toggle="modal"
+        [disabled]="esFormularioSoloLectura" (click)="eliminarMercancia()">Eliminar</button>
+      }
       <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias"
         [disabled]="esFormularioSoloLectura">Agregar</button>
     </div>
@@ -307,6 +315,7 @@
               </small>
             </div>
           </div>
+        @if(tieneUsoEspecifico) {
           <div class="form-group">
             <label for="usoEspecifico" class="form-label text-start">Uso específico*:</label>
             <textarea id="usoEspecifico" class="form-control text-area-uso" formControlName="usoEspecifico" (change)="
@@ -328,10 +337,10 @@
               </small>
             </div>
           </div>
+          }
           <div class="form-group">
             <label for="fraccionArancelaria">Fracción arancelaria*:</label>
-            <span class="bi bi-question-circle-fill fs-4 m-1"  [title]="'Descripción numérica o desglose de un código de clasificación que otorga el sistema armonizado'" ata-bs-toggle="tooltip">
-            </span>
+            <span class="bi bi-question-circle-fill" tooltip="Descripción numérica o desglose de un código de clasificación que otorga el sistema armonizado" placement="top"></span>
             <input type="text" id="fraccionArancelaria" (focusout)="setDescripcionFraccion()" formControlName="fraccionArancelaria" class="form-control"
               (change)="
                 setValoresStore(
@@ -397,8 +406,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label for="UMT">UMT:</label>
-                <span class="bi bi-question-circle-fill fs-4 m-1" [title]="'Unidad de medida de la tarifa'" ata-bs-toggle="tooltip">
-                </span>
+                    <span class="bi bi-question-circle-fill mx-2" tooltip="Unidad de medida de la tarifa" placement="top"></span>
                 <input type="text" id="UMT" formControlName="UMT" class="form-control"
                   (change)="setValoresStore(formMercancias, 'UMT', 'setUMT')" />
               </div>
@@ -588,7 +596,7 @@
           }
           <div class="form-group">
             <app-catalogo-select [catalogo]="estado" formControlName="clasificacionToxicologica"
-              [label]="'clasificación toxicológica'" [required]="true" name="clasificacionToxicologica" (change)="
+              [label]="'Clasificación toxicológica'" [required]="true" name="clasificacionToxicologica" (change)="
                 setValoresStore(formMercancias, 'especificar', 'setEspecificar')"
               [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
           </div>

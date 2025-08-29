@@ -1,6 +1,7 @@
 import { ALERTA_PARA, FECHA_DE_FACTURA } from '@libs/shared/data-access-user/src/tramites/constantes/110208/certificado.enum';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AbstractControl, FormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AfterViewInit,Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MERCANCIA_TABLA, MercanciasFormInfo, MercanciasInfo } from '@libs/shared/data-access-user/src/core/models/110208/certificado.model';
 import { Solicitud110208State, Tramite110208Store } from '../../../../estados/tramites/tramite110208.store';
@@ -24,12 +25,26 @@ import { ValidarInicalmenteService } from '../../services/validar-inicalmente/va
     TablaDinamicaComponent,
     ReactiveFormsModule,
     CatalogoSelectComponent,
-    InputFechaComponent,
+    InputFechaComponent,NotificacionesComponent
   ],
   templateUrl: './cargaDeMercancias.component.html',
   styleUrl: './cargaDeMercancias.component.css',
 })
-export class CargaDeMercanciasComponent implements OnInit, OnDestroy {
+export class CargaDeMercanciasComponent implements OnInit, OnDestroy, AfterViewInit {
+  /* Referencia al modal en la plantilla, obtenida con @ViewChild 
+   después de que Angular renderice la vista. */
+  @ViewChild('cargarArchivoModal', { static: false }) cargarArchivoModal!: ElementRef;
+  /* Instancia privada del modal, inicializada en tiempo de ejecución 
+   usando el elemento capturado. */
+  private cargarArchivoInstance!: Modal;
+   /**
+   * Notificación para mostrar alertas al usuario.
+   */
+  alertaNotificacion!: Notificacion;
+  /**
+   * Notificación para mostrar alertas al usuario.
+   */
+  alertaNotificacionModal!:Notificacion;
   /**
    * Formulario reactivo para gestionar los datos de mercancías.
    */
@@ -124,6 +139,48 @@ export class CargaDeMercanciasComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
+ /*  
+ * Inicializa la instancia del modal una vez que la vista  
+ * del componente está completamente renderizada.  
+ * Permite controlar el modal de carga de archivo.  
+ */    
+ngAfterViewInit(): void {
+  if (this.cargarArchivoModal) {
+    this.cargarArchivoInstance = new Modal(this.cargarArchivoModal.nativeElement);
+  }
+}
+/*  
+ * Abre el modal de carga de archivo.  
+ * Se asegura de que la instancia esté creada.  
+ * Permite al usuario seleccionar y cargar un archivo.  
+ */
+cargarArchivo(): void {
+  if (this.cargarArchivoInstance) {
+    this.cargarArchivoInstance.show();
+  }
+}
+/*  
+ * Cierra el modal de carga de archivo.  
+ * Verifica que la instancia del modal exista.  
+ * Oculta la ventana de carga del usuario.  
+ */
+cerrar(): void {
+  if (this.cargarArchivoInstance) {
+    this.cargarArchivoInstance.hide();
+  }
+}
+ /**
+   * compo doc
+   * @type {FormGroup}
+   * @memberof PartidasDeLaMercanciaComponent
+   * @description
+   * Este es un formulario reactivo de Angular representado por un FormGroup.
+   * Se utiliza para manejar y validar los datos del formulario en el componente.
+   */
+  public archivoFormGroup: FormGroup = new FormGroup({
+    archivo: new FormControl(''),
+  });
+
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -156,12 +213,13 @@ export class CargaDeMercanciasComponent implements OnInit, OnDestroy {
       nombreTecnio: [{ value: '', disabled: true }],
       nombreEnIngles: [{ value: '', disabled: true }],
       criterioPara: [{ value: '', disabled: true }],
-      marca: [this.solicitudState?.marca],
+      marca: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9\s]*$/)]],
       umc: [this.solicitudState?.umc],
-      cantidad: [this.solicitudState?.cantidad, Validators.required],
-      valorDeLa: [this.solicitudState?.valorDeLa, Validators.required],
-      complementoDescripcion: [this.solicitudState?.complementoDescripcion, Validators.required],
-      nFactura: [this.solicitudState?.nFactura, Validators.required],
+      cantidad: [this.solicitudState?.cantidad,[Validators.required,CargaDeMercanciasComponent.numericValidator()]],
+      valorDeLa: [this.solicitudState?.valorDeLa,[Validators.required,CargaDeMercanciasComponent.numericValidator()]],
+      complementoDescripcion: [this.solicitudState?.complementoDescripcion,[Validators.maxLength(200),
+      Validators.pattern(/^[a-zA-Z0-9\s.,-]*$/)]],
+      nFactura: [this.solicitudState?.nFactura,[Validators.required,Validators.maxLength(20)]],
       tipoDeFactura: [this.solicitudState?.tipoDeFactura, Validators.required],
       fechaFactura: [this.solicitudState?.fechaFactura, Validators.required],
     });
@@ -169,8 +227,8 @@ export class CargaDeMercanciasComponent implements OnInit, OnDestroy {
       Object.keys(this.formMercancia.controls).forEach((key) => {
         this.formMercancia.get(key)?.disable();
       });
-    }
   }
+}
 
   /**
    * Obtiene los datos de la tabla de mercancías.
@@ -298,8 +356,85 @@ export class CargaDeMercanciasComponent implements OnInit, OnDestroy {
   */
   public esValido(campo: string): boolean | null {
     return this.validacionesService.isValid(this.formMercancia, campo);
+  } 
+ /**
+   * Valida que el valor sea numérico, positivo y con hasta 15 enteros y 4 decimales.
+   * Permite vacío, pero rechaza ceros o negativos.
+   */
+  static numericValidator(): ValidatorFn {
+    const REGEX_VALUE = /^\d{1,15}(\.\d{1,4})?$/;
+  return (control: AbstractControl): ValidationErrors | null => {
+    const VALOR = control.value;
+    if (VALOR === null || VALOR === undefined || VALOR === '') {return null} 
+    if (!REGEX_VALUE.test(VALOR)) {
+      return { invalidNumber: true };
+    }    
+    if (parseFloat(VALOR) <= 0) {
+      return { greaterThanZero: true };
+    } return null;
+  };
+}
+/**
+ * Formatea el valor de un control a 4 decimales.
+ * Si el valor es válido y numérico, lo convierte con precisión fija.
+ * No emite evento al actualizar el control.
+ * Evita errores cuando el valor es nulo o vacío.
+ */
+formatearACuatroDecimales(controlName: string): void {
+  const CONTROL = this.formMercancia.get(controlName);
+  const VALOR = CONTROL?.value;
+  if (VALOR !== null && VALOR !== undefined && VALOR !== '') {
+    const NUMERO = parseFloat(VALOR);
+    if (!isNaN(NUMERO)) {     
+      CONTROL?.setValue(NUMERO.toFixed(4), { emitEvent: false });
+    }
   }
+}
+/**
+ * Muestra una notificación de alerta en pantalla.  
+ * Advierte sobre las mercancías que cumplen con las condiciones establecidas.  
+ * Configura los parámetros del mensaje y su visualización.  
+ */
+buscarAgregar(): void {
+     this.alertaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'La lista de mercancías mostrada solamente contiene aquellas mercancías que tienen un registro de productos vigente para el tratado acuerdo-país/bloque y cuya fracción arancelaria no está asociada a un cupo.',
+          cerrar: false,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };  
+}
+/*
+ * Maneja el evento de cambio en el input de archivo.
+ * Valida que el archivo sea de tipo TXT o CSV.
+ * Muestra una notificación de alerta si el archivo no es válido.
+ */
+eventoDeCambioDeValor(event: Event, controlName: string): void {
+  const INPUT = event.target as HTMLInputElement;
+  const FILE = INPUT.files?.[0];
 
+  if (FILE) {
+    const SELECT_TYPE = ['text/plain', 'text/csv'];
+    if (!SELECT_TYPE.includes(FILE.type)) {
+      this.alertaNotificacionModal = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debes seleccionar un archivo (txt o csv)',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'OK',
+        txtBtnCancelar: ''
+      };
+      INPUT.value = ''; 
+    }
+  }
+}
 
   /**
    * Método que se ejecuta al destruir el componente.

@@ -1,6 +1,6 @@
-import { Catalogo, ConsultaioQuery, REGEX_NUMERO_DECIMAL_ENTERO, REG_X } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { Catalogo, ConsultaioQuery, Notificacion } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
@@ -16,7 +16,9 @@ import { ImportacionDeVehiculosService } from '../../services/importacion-de-veh
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 
 import { Tramite130111State, Tramite130111Store } from '../../../../estados/tramites/tramites130111.store';
+import { ID_PROCEDIMIENTO } from '../../constants/importacion-de-vehiculos-usados-pasos.enum';
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
+import { PartidasDeLaMercanciaComponent } from '../../../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
 import { Tramite130111Query } from '../../../../estados/queries/tramite130111.query';
 
 
@@ -169,6 +171,46 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     * Propiedad privada.
    */
     private seccionState!: Tramite130111State;
+    /**
+     * Indica si se debe mostrar el error de clasificación.
+     */
+    mostrarErrorClasificacion = true;
+
+    /*
+    * Indica si se debe mostrar el tooltip del valor de la factura en USD.
+    */
+    mostrarTooltipValorFacturaUSD = true;
+    /**
+   * Bandera que indica si se deben mostrar los mensajes de error para el formulario de partidas de la mercancía.
+   */
+    mostrarErroresPartidas = false;
+
+  /**
+   * Bandera que indica si se deben mostrar los mensajes de error para el formulario de mercancía.
+   */
+    mostrarErroresMercancia = false;
+
+      /*
+       * @descripcion Indica si se debe mostrar una notificación.
+       */
+      mostrarNotificacion = false;
+      /**
+       * @descripcion Notificación para mostrar mensajes al usuario.
+       */
+      public nuevaNotificacion!: Notificacion;
+
+  /**
+   * Identificador del procedimiento.
+   * @property {number} idProcedimiento
+   */
+  public idProcedimiento = ID_PROCEDIMIENTO;
+
+  /**
+   * Referencia al componente `PartidasDeLaMercanciaComponent` dentro de la vista.
+   * Permite acceder a las propiedades y métodos públicos del componente hijo desde el componente padre.
+   */
+  @ViewChild(PartidasDeLaMercanciaComponent) partidasDeLaMercanciaComponent!: PartidasDeLaMercanciaComponent;
+
   /**
    * Constructor del componente.
    */
@@ -244,80 +286,77 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * jest.spyOnInicializa los formularios reactivos `formDelTramite` y `mercanciaForm`.
    */
   
-  inicializarFormularios(): void {
-    this.suscribirseAEstadoDeSolicitud();
-    this.formDelTramite = this.fb.group({
-      solicitud: ['', Validators.required],
-      regimen: [{value:this.seccionState?.regimen,disabled: true}, Validators.required],
-      clasificacion: [{value:this.seccionState?.clasificacion,disabled: true}, Validators.required],
-    });
- 
-    this.mercanciaForm = this.fb.group({
-      producto: [],
-      descripcion: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(10),
-          Validators.maxLength(500),
+  inicializarFormularios(): void {   
+      this.formDelTramite = this.fb.group({
+        solicitud: [this.seccionState?.solicitud, Validators.required],
+        regimen: [this.seccionState?.regimen, Validators.required],
+        clasificacion: [this.seccionState?.clasificacion, Validators.required],
+      });
+   
+      this.mercanciaForm = this.fb.group({
+        producto: [],
+        descripcion: [
+         this.seccionState?.descripcion,
+          [
+            Validators.required,
+            SolicitudComponent.validarSinCaracterAnguloDerecho
+          ],
         ],
-      ],
-      fraccion: ['', Validators.required],
-      cantidad: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern(REG_X.SOLO_NUMEROS),
-          Validators.min(1),
+        fraccion: [this.seccionState?.fraccion, Validators.required],
+        cantidad: [
+          this.seccionState?.cantidad,
+          [
+            Validators.required,
+            SolicitudComponent.validarNumeroTresDecimales,
+            Validators.min(1),
+          ],
         ],
-      ],
- 
-      valorFacturaUSD: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern(REG_X.DECIMALES_DOS_LUGARES),
-          Validators.min(0.01),
+        valorFacturaUSD: [
+          this.seccionState?.valorFacturaUSD,
+          [
+            Validators.required,
+            SolicitudComponent.validarNumeroTresDecimales,
+            Validators.min(0.01),
+          ],
         ],
-      ],
- 
-      unidadMedida: ['', Validators.required],
-    });
-    this.partidasDelaMercanciaForm = this.fb.group({
-      cantidadPartidasDeLaMercancia: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern(REG_X.SOLO_NUMEROS),
-          Validators.maxLength(18),
+   
+        unidadMedida: [this.seccionState?.unidadMedida, Validators.required],
+      });
+      this.partidasDelaMercanciaForm = this.fb.group({
+        cantidadPartidasDeLaMercancia: [
+          this.seccionState?.cantidadPartidasDeLaMercancia,
+          [
+            Validators.required,
+            SolicitudComponent.validarCatorceEnterosTresDecimales,
+            Validators.maxLength(18),
+          ],
         ],
-      ],
-      descripcionPartidasDeLaMercancia: [
-        '',
-        [Validators.required, Validators.maxLength(255)],
-      ],
-      valorPartidaUSDPartidasDeLaMercancia: [
-        '',
-        [
-          Validators.required,
-          Validators.min(0),
-          Validators.pattern(REGEX_NUMERO_DECIMAL_ENTERO),
-          Validators.maxLength(20),
+        descripcionPartidasDeLaMercancia: [
+          this.seccionState?.descripcionPartidasDeLaMercancia,
+          [Validators.required, Validators.maxLength(255)],
         ],
-      ],
-    });
- 
-    this.paisForm = this.fb.group({
-      bloque: [''],
-      usoEspecifico: ['', Validators.required],
-      justificacionImportacionExportacion: ['', [Validators.required]],
-      observaciones: [''],
-    });
-    this.frmRepresentacionForm = this.fb.group({
-      entidad: ['', Validators.required],
-      representacion: ['', Validators.required],
-    });
-  }
+        valorPartidaUSDPartidasDeLaMercancia: [
+          this.seccionState?.valorPartidaUSDPartidasDeLaMercancia,
+          [
+            Validators.required,
+            Validators.min(0),
+            SolicitudComponent.validarCatorceEnterosTresDecimales,
+            Validators.maxLength(20),
+          ],
+        ],
+      });
+   
+      this.paisForm = this.fb.group({
+        bloque: [this.seccionState?.bloque],
+        usoEspecifico: [this.seccionState?.usoEspecifico, Validators.required],
+        justificacionImportacionExportacion: [this.seccionState?.justificacionImportacionExportacion, [Validators.required]],
+        observaciones: [this.seccionState?.observaciones],
+      });
+      this.frmRepresentacionForm = this.fb.group({
+        entidad: [this.seccionState?.entidad, Validators.required],
+        representacion: [this.seccionState?.representacion, Validators.required],
+      });
+    }
   /**
    * jest.spyOnConfigura las suscripciones para actualizar formularios y almacenar estados.
    */
@@ -445,15 +484,67 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * validarYEnviarFormulario
    * Valida el formulario y muestra la tabla dinámica si es válido.
    */
-  validarYEnviarFormulario(): void {
-    if (this.partidasDelaMercanciaForm.invalid) {
-      this.partidasDelaMercanciaForm.markAllAsTouched();
-    } else {
-      this.mostrarTabla = true;
-      this.tramite130111Store.actualizarEstado({mostrarTabla:true});
-
+validarYEnviarFormulario(): void {
+  ['cantidad', 'valorFacturaUSD'].forEach(controlName => {
+    const CONTROL = this.mercanciaForm.get(controlName);
+    if (CONTROL) {
+      CONTROL.markAsTouched();
+      CONTROL.updateValueAndValidity();
     }
+  });
+
+  
+  if (this.mercanciaForm.get('cantidad')?.invalid ||
+    this.mercanciaForm.get('valorFacturaUSD')?.invalid
+  ) {
+    this.mostrarErroresMercancia = true;
+    this.mostrarErroresPartidas = false;
+    return;
   }
+
+  this.mostrarErroresMercancia = false;
+
+  [
+    'cantidadPartidasDeLaMercancia',
+    'valorPartidaUSDPartidasDeLaMercancia',
+    'descripcionPartidasDeLaMercancia'
+  ].forEach(controlName => {
+    const CONTROL = this.partidasDelaMercanciaForm.get(controlName);
+    if (CONTROL) {
+      CONTROL.markAsTouched();
+      CONTROL.updateValueAndValidity();
+    }
+  });
+
+  if (
+    this.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.invalid ||
+    this.partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.invalid ||
+    this.partidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.invalid
+  ) {
+    this.mostrarErroresPartidas = true;
+    return;
+  }
+
+    // Si fracción no tiene valor, mostrar popup y detener flujo
+  if (!this.mercanciaForm.get('fraccion')?.value) {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'info',
+      modo: '',
+      titulo: '',
+      mensaje: 'Debes seleccionar una Fracción arancelaria',
+      cerrar: true,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+      tamanioModal: 'modal-sm'
+    };
+    this.mostrarNotificacion = true;
+    return;
+  }
+  this.mostrarErroresPartidas = false;
+  this.mostrarTabla = true;
+  this.tramite130111Store.actualizarEstado({ mostrarTabla: true });
+}
  
   /**
    * navegarParaModificarPartida
@@ -525,12 +616,26 @@ enCambioDeBloque(bloqueId: number): void {
    * jest.spyOnEvento que incluye el formulario, el campo y el método a ejecutar.
    */
   setValoresStore($event: { form: FormGroup; campo: string }): void {
-    const VALOR = $event.form.get($event.campo)?.value;
-    this.tramite130111Store.actualizarEstado({ [$event.campo]: VALOR });
-    if($event.campo === 'fraccion'){
-      this.tramite130111Store.actualizarEstado({'unidadMedida': '1'});
+  const VALOR = $event.form.get($event.campo)?.value;
+
+  if ($event.campo === 'regimen') {
+    this.formDelTramite.get('clasificacion')?.setValue('');
+    this.mostrarErrorClasificacion = false;
+    this.tramite130111Store.actualizarEstado({
+      [ $event.campo ]: VALOR,
+      clasificacion: ''
+    });
+  } else {
+    this.tramite130111Store.actualizarEstado({ [ $event.campo ]: VALOR });
+    if ($event.campo === 'clasificacion' && VALOR) {
+      this.mostrarErrorClasificacion = true;
     }
   }
+
+   if ($event.campo === 'fraccion') {
+      this.tramite130111Store.actualizarEstado({ 'unidadMedida': '1' });
+    }
+}
  
 /**
  * Determina si el botón "Modificar" debe estar deshabilitado.
@@ -551,5 +656,114 @@ enCambioDeBloque(bloqueId: number): void {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
+    /**
+    * Valida que un número tenga como máximo tres decimales.
+    */
+  static validarNumeroTresDecimales(control: AbstractControl): ValidationErrors | null {
+    const VALOR = control.value;
+    if (VALOR === null || VALOR === undefined || VALOR === '') { return null; }
+
+    if (!/^\d+(\.\d+)?$/.test(VALOR)) {
+      return { noEsNumero: true };
+    }
+
+    if (/^\d+\.\d{4,}$/.test(VALOR)) {
+      return { maximoTresDecimales: true };
+    }
+
+    return null;
+  }
+
+      /**
+       * Valida que un string no contenga el carácter de ángulo derecho (›).
+       */
+      static validarSinCaracterAnguloDerecho(control: AbstractControl): ValidationErrors | null {
+        if (typeof control.value === 'string' && control.value.includes('›')) {
+          return { validarSinCaracterAnguloDerecho: true };
+        }
+        return null;
+      }
+  
+       /*
+      Valida que un número tenga como máximo 14 enteros y 3 decimales.
+      */
+      static validarCatorceEnterosTresDecimales(control: AbstractControl): ValidationErrors | null {
+        const VALOR = control.value;
+          if (VALOR === null || VALOR === undefined || VALOR === '') { return null; }
+  
+          if (!/^\d*\.?\d*$/.test(VALOR)) {
+            return { noEsNumero: true };
+          }
+  
+          if (!/^\d{1,14}(\.\d{1,3})?$/.test(VALOR)) {
+            return { validarCatorceEnterosTresDecimales: true };
+          }
+  
+          return null;
+      }
+     
+
+    /**
+     * Valida los formularios de mercancía y partidas de la mercancía antes de permitir la carga de un archivo.
+     */
+    validarYCargarArchivo(): void {
+      ['cantidad', 'valorFacturaUSD'].forEach(controlName => {
+        const CONTROL = this.mercanciaForm.get(controlName);
+        if (CONTROL) {
+          CONTROL.markAsTouched();
+          CONTROL.updateValueAndValidity();
+        }
+      });
+
+      if (
+        this.mercanciaForm.get('cantidad')?.invalid ||
+        this.mercanciaForm.get('valorFacturaUSD')?.invalid
+      ) {
+        this.mostrarErroresMercancia = true;
+        this.mostrarErroresPartidas = false;
+        return;
+      }
+
+      this.mostrarErroresMercancia = false;
+
+      [
+        'cantidadPartidasDeLaMercancia',
+        'valorPartidaUSDPartidasDeLaMercancia',
+        'descripcionPartidasDeLaMercancia'
+      ].forEach(controlName => {
+        const CONTROL = this.partidasDelaMercanciaForm.get(controlName);
+        if (CONTROL) {
+          CONTROL.markAsTouched();
+          CONTROL.updateValueAndValidity();
+        }
+      });
+
+      if (
+        this.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.invalid ||
+        this.partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.invalid ||
+        this.partidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.invalid
+      ) {
+        this.mostrarErroresPartidas = true;
+        return;
+      }
+
+      if (!this.mercanciaForm.get('fraccion')?.value) {
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'info',
+          modo: '',
+          titulo: '',
+          mensaje: 'Debes seleccionar una Fracción arancelaria',
+          cerrar: true,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+          tamanioModal: 'modal-sm'
+        };
+        this.mostrarNotificacion = true;
+        return;
+      }
+
+      this.partidasDeLaMercanciaComponent.abrirCargarArchivoModalReal();
+    }  
 }
  

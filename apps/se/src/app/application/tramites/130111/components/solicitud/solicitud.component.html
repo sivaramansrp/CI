@@ -3,8 +3,9 @@
   [inputFields]="datosInputFields"
   [catalogosArray]="catalogosArray"
   [solicitudOpciones]="opcionesSolicitud"
-  (setValoresStoreEvent)="setValoresStore($event)"
   [esFormularioSoloLectura] ="esFormularioSoloLectura"
+  [mostrarErrorClasificacion]="mostrarErrorClasificacion"
+  (setValoresStoreEvent)="setValoresStore($event)"
 ></app-datos-del-tramite>
 
 <app-datos-de-la-mercancia
@@ -12,8 +13,10 @@
   [productoOpciones]="productoOpciones"
   [fraccionCatalogo]="fraccionCatalogo"
   [unidadCatalogo]="unidadCatalogo"
-  (setValoresStoreEvent)="setValoresStore($event)"
   [esFormularioSoloLectura] ="esFormularioSoloLectura"
+  [mostrarTooltipValorFacturaUSD]="mostrarTooltipValorFacturaUSD"
+  [mostrarErrores]="mostrarErroresMercancia"
+  (setValoresStoreEvent)="setValoresStore($event)"
 ></app-datos-de-la-mercancia>
 
 
@@ -23,12 +26,13 @@
   [tableHeaderData]="tableHeaderData"
   [tableBodyData]="tableBodyData"
   [mostrarTabla]="mostrarTabla"
+  [esFormularioSoloLectura] ="esFormularioSoloLectura"
   (filaSeleccionadaChange)="manejarlaFilaSeleccionada($event)"
+  [mostrarErrores]="mostrarErroresPartidas"
   (validarYEnviarFormularioEvent)="validarYEnviarFormulario()"
-  (navegarParaModificarPartidaEvent)="navegarParaModificarPartida()"
   [disabled]="disabledModificar()"
   (setValoresStoreEvent)="setValoresStore($event)"
-  [esFormularioSoloLectura] ="esFormularioSoloLectura"
+  (validarAntesDeCargarArchivo)="validarYCargarArchivo()"
 ></app-partidas-de-la-mercancia>
 
 
@@ -37,9 +41,10 @@
 [elementosDeBloque]="elementosDeBloque"
 [paisesPorBloque]="paisesPorBloque"
 [selectRangoDias]="selectRangoDias"
+[esFormularioSoloLectura] ="esFormularioSoloLectura"
 (bloqueCambiar)="enCambioDeBloque($event)"
 (setValoresStoreEvent)="setValoresStore($event)"
-[esFormularioSoloLectura] ="esFormularioSoloLectura"
+[idProcedimiento] = "idProcedimiento"
 ></app-pais-procendencia>
 
 <app-representacion 
@@ -47,6 +52,12 @@
 [entidadFederativa]="entidadFederativa"
 [representacionFederal]="representacionFederal"
 [TEXTOS]="TEXTOS"
-(setValoresStoreEvent)="setValoresStore($event)"
 [esFormularioSoloLectura] ="esFormularioSoloLectura"
-></app-representacion>
+(setValoresStoreEvent)="setValoresStore($event)">
+</app-representacion>
+
+<lib-notificaciones
+  *ngIf="mostrarNotificacion"
+  [notificacionInput]="nuevaNotificacion"
+  (confirmacionModal)="mostrarNotificacion = false">
+</lib-notificaciones>

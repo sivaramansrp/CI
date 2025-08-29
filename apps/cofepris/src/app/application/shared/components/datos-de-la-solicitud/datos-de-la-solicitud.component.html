@@ -47,7 +47,7 @@
         <div class="form-group">
           <label class="form-label" for="rfcSanitario">RFC del responsable sanitario</label>
           <span class="form-label" *ngIf="esCampoRequerido('rfcSanitario')">*</span>
-          <span class="form-label mx-1">:</span>
+          <span class="form-label">:</span>
           <input class="form-control" id="rfcSanitario" type="text" maxlength="13" formControlName="rfcSanitario"
             [ngClass]="
               isValid(datosSolicitudForm, 'rfcSanitario') ? 'required' : ''
@@ -112,7 +112,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <app-catalogo-select [catalogo]="estadoDatos" formControlName="estado" [label]="'Estado'" [required]="true"
-            name="estado" [placeholder]="'Selecciona un valor'" (selectionChange)="cambioDeEstado($event)"
+            name="estado" [placeholder]="'Seleccione una opción'" (selectionChange)="cambioDeEstado($event)"
             [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
         </div>
       </div>
@@ -404,7 +404,7 @@
             [catalogo]="regimenLaMercanciaDatos"
             formControlName="regimenLaMercancia"
             [label]="'Régimen al que se destinará la mercancía'"
-            [placeholder]="'Selecciona un valor'"
+            [placeholder]="'Seleccione una opción'"
             [required]="true"
             name="regimenLaMercancia"
             [tooltipQuestionCircle]="true"
@@ -417,7 +417,7 @@
       <div class="col-md-4" *ngIf="mostrarCamposDelProcedimiento('domicilio-aduana')">
         <div class="form-group">
           <app-catalogo-select [catalogo]="aduanaDatos" formControlName="aduana" [label]="'Aduana'"
-            [placeholder]="'Selecciona un valor'" [required]="true" name="aduanaDatos"
+            [placeholder]="'Seleccione una opción'" [required]="true" name="aduanaDatos"
             [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
         </div>
       </div>
@@ -467,14 +467,14 @@
           <button
             type="button"
             name="modificarMercancias"
-            class="btn btn-primary"
+            class="btn btn-default"
             (click)="modificarDatos()"
             [disabled]="formularioDeshabilitado"
           >
             Modificar
           </button>
           <button type="button" name="eliminarMercancias"
-            class="btn btn-primary ms-2" (click)="eliminarMercancias()" [disabled]="formularioDeshabilitado">
+            class="btn btn-danger ms-2" (click)="eliminarMercancias()" [disabled]="formularioDeshabilitado">
             Eliminar
           </button>
           
@@ -496,7 +496,7 @@
       <div class="col-md-8" *ngIf="mostrarCamposDelProcedimiento('aduana')">
         <div class="form-group">
           <app-catalogo-select [catalogo]="aduanaDatos" formControlName="aduana" [label]="'Aduana'"
-            [placeholder]="'Selecciona un valor'" [required]="true" name="aduanaDatos"
+            [placeholder]="'Seleccione una opción'" [required]="true" name="aduanaDatos"
             [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
         </div>
       </div>

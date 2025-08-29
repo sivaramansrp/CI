@@ -245,6 +245,22 @@ export interface DatosGenerales {
  */
 export interface DatosDeLaSolicitudInt {
   /**
+   * Número de guía.
+   * @property {string} numeroDeGuia
+   */
+  numeroDeGuia: string;
+
+  /**
+   * Número de Carro de Ferrocarril.
+   * @property {string} numeroFerrocaril
+   */
+  numeroFerrocaril: string;
+  /**
+   * Folio del trámite.
+   * @property {string} folioDelTramite
+   */
+  folioDelTramite: string;
+  /**
    * Justificación de la solicitud.
    * @property {string} justificacion
    */

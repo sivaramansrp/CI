@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PAGO_DE_DERECHOS, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
-import { PASOS } from "../../constantes/modificacion.enum";
-import { SECCIONES_TRAMITE } from '../../models/permiso-importacion-modification.enum';
+import { ERROR_FORMA_ALERT, PASOS } from "../../constantes/modificacion.enum";
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 /**
  * Interfaz que define la estructura de una acción de botón.
@@ -35,13 +35,20 @@ export class SolicitudPageComponent {
   pasos: ListaPasosWizard[] = PASOS;
 
   /**
+   * @property {string} formErrorAlert
+   * @description
+   * Mensaje HTML que se muestra como alerta cuando faltan campos por capturar en el formulario.
+   */
+  public formErrorAlert = ERROR_FORMA_ALERT;
+
+  /**
    * Índice del paso actual.
    * Este valor se utiliza para determinar qué paso está activo en el wizard.
    * Inicialmente se establece en 1, que corresponde al primer paso.
    */
 
   constructor(private seccionStore: SeccionLibStore){
-    this.asignarSecciones();
+    
   }
   indice: number = 1;
 
@@ -50,6 +57,22 @@ export class SolicitudPageComponent {
    * Se utiliza para interactuar con el wizard y controlar su flujo (pasar a siguiente paso, ir al anterior, etc.).
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+    /**
+   * @property {PasoUnoComponent} pasoUnoComponent
+   * @description
+   * Referencia al componente hijo `PasoUnoComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario del primer paso del asistente desde el componente padre.
+   */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+
+  /**
+   * @property {boolean} esFormaValido
+   * @description
+   * Indica si el formulario del paso actual es válido.
+   * Se utiliza para mostrar mensajes de error o controlar la navegación en el asistente.
+   */
+  esFormaValido: boolean = false;
 
   /**
    * Datos de los pasos del asistente.
@@ -94,36 +117,57 @@ export class SolicitudPageComponent {
    * @param e Acción del botón (cont o atras) y el valor asociado a la acción.
    */
   getValorIndice(e: AccionBoton): void {
-    // Verifica si el valor de la acción está en el rango adecuado
-    if (e.valor > 0 && e.valor < 5) {
-      // Actualiza el índice del paso basado en el valor de la acción
-      this.indice = e.valor;
+    
+    this.esFormaValido = false;
+    
+    if (this.indice === 1 && e.accion === 'cont') {
+      const ISVALID = this.validarTodosFormulariosPasoUno();
+      if (!ISVALID) {
+        this.esFormaValido = true;
+        return; 
+      }
+    }
 
-      // Dependiendo de la acción, avanza o retrocede en el wizard
+    let indiceActualizado = e.valor;
+    if (e.accion === 'cont') {
+      indiceActualizado = e.valor + 1;
+    } else if (e.accion === 'ant') {
+      indiceActualizado = e.valor - 1;
+    }
+
+    // Validar que el nuevo índice esté dentro de los límites permitidos
+    if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
+
+      // Actualizar el índice y datosPasos
+      this.indice = indiceActualizado;
+      this.datosPasos.indice = indiceActualizado;
+
       if (e.accion === 'cont') {
-        // Si la acción es 'cont', avanza al siguiente paso
         this.wizardComponent.siguiente();
-      } else {
-        // Si la acción es 'atras', retrocede al paso anterior
+      } else if (e.accion === 'ant') {
         this.wizardComponent.atras();
       }
     }
   }
-
-
-  private asignarSecciones(): void {
-    const SECCIONES: boolean[] = [];
-    const FORMA_VALIDA: boolean[] = [];
-    const PREDETERMINADO = SECCIONES_TRAMITE
-    for (const LLAVE_SECCION in PREDETERMINADO.PASO_1) {
-      if (Object.prototype.hasOwnProperty.call(PREDETERMINADO.PASO_1, LLAVE_SECCION)) {
-        // @ts-expect-error - fix this
-        SECCIONES.push(PREDETERMINADO.PASO_1[LLAVE_SECCION]);
-        FORMA_VALIDA.push(false);
-      }
+/**
+   * @method validarTodosFormulariosPasoUno
+   * @description
+   * Valida todos los formularios del componente `PasoUnoComponent`.
+   * Si la referencia al componente no existe, retorna `true` (no hay formularios que validar).
+   * Llama al método `validarFormularios()` del componente hijo y retorna `false` si algún formulario es inválido.
+   * Retorna `true` si todos los formularios son válidos.
+   *
+   * @returns {boolean} Indica si todos los formularios del paso uno son válidos.
+   */
+  private validarTodosFormulariosPasoUno(): boolean {
+    if (!this.pasoUnoComponent) {
+      return true;
     }
-    this.seccionStore.establecerSeccion(SECCIONES);
-    this.seccionStore.establecerFormaValida(FORMA_VALIDA);
+    const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validarFormularios();
+    if (!ISFORM_VALID_TOUCHED) {
+      return false;
+    }
+    return true;
   }
 
 }

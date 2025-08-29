@@ -1,11 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
 import { CommonModule } from '@angular/common';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { HistoricoProductoresComponent } from '../../components/historico-productores/historico-productores.component';
 import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
+import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
 import { provideHttpClient } from '@angular/common/http';
+import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
+
+// Mock SolicitanteComponent
+@Component({
+  selector: 'solicitante',
+  template: '<div>Mock Solicitante</div>',
+  standalone: true
+})
+class MockSolicitanteComponent {}
 
 
 describe('PasoUnoComponent', () => {
@@ -16,13 +25,11 @@ describe('PasoUnoComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         CommonModule,
-        SolicitanteComponent,
-        HistoricoProductoresComponent,
-        DestinatarioComponent,
-        DatosCertificadoComponent,
+        MockSolicitanteComponent,
         PasoUnoComponent
       ],
-      providers: [provideHttpClient()]
+      providers: [provideHttpClient()],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);
@@ -49,6 +56,13 @@ describe('PasoUnoComponent', () => {
     fixture.detectChanges();
     const solicitanteElement = fixture.debugElement.nativeElement.querySelector('solicitante');
     expect(solicitanteElement).toBeTruthy();
+  });
+
+  it('should render the CertificadoOrigenComponent when indice is 2', () => {
+    component.indice = 2;
+    fixture.detectChanges();
+    const certificadoOrigenElement = fixture.debugElement.nativeElement.querySelector('app-certificado-origen');
+    expect(certificadoOrigenElement).toBeTruthy();
   });
 
   it('should render the HistoricoProductoresComponent when indice is 3', () => {

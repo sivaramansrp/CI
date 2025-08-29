@@ -105,8 +105,7 @@ export const CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Pe
     { encabezado: 'Domicilio', clave: (fila) => fila.domicilioPFE, orden: 3 },
     { encabezado: 'País', clave: (fila) => fila.paisPFE, orden: 4 },
     { encabezado: 'Estado', clave: (fila) => fila.estadoPFE, orden: 5 },
-    { encabezado: 'Correo electrónico', clave: (fila) => fila.correoPFE, orden: 6 },
-    { encabezado: 'Acciones', clave: (fila) => fila.acciones, orden: 7 }
+    { encabezado: 'Correo electrónico', clave: (fila) => fila.correoPFE, orden: 6 }
 ]
 
 /**
@@ -144,7 +143,8 @@ export const TEXTOS = {
     PN: 'Para iniciar la búsqueda de una persona física, ingresa un RFC y da clic en el botón buscar',
     CORREO_TITULO_TOOLTIP: 'ejemplo@dominio.com',
     RFC_TITULO_TOOLTIP: 'Registro Federal de Contribuyente',
-    CAAT_TITULO_TOOLTIP: 'Código alfanumérico armonizado del transportista'
+    CAAT_TITULO_TOOLTIP: 'Código alfanumérico armonizado del transportista',
+    NUMERO_DE_SEGURO_TITULO_TOOLTIP: 'Número de Seguro Social o Número de Identificación Fiscal en el País de Residencia'
 };
 
 /**

@@ -14,11 +14,27 @@
     <div class="row mb-3">
       <div class="col-md-4 mb-3 form-group">
         <label for="numeroRegistroAmbiental">Número del registro ambiental*:</label>
-        <input type="text" class="form-control" formControlName="numeroRegistroAmbiental" id="numeroRegistroAmbiental" maxlength="13" size="30" (change)="actualizarCampoSolicitudForm('numeroRegistroAmbiental')" />
+        <input type="text" class="form-control" formControlName="numeroRegistroAmbiental" id="numeroRegistroAmbiental" maxlength="13" size="30" (change)="actualizarCampoSolicitudForm('numeroRegistroAmbiental')"
+          [ngClass]="solicitudForm.get('numeroRegistroAmbiental')?.invalid && solicitudForm.get('numeroRegistroAmbiental')?.touched ? 'required' : ''"
+          />
+          @if (solicitudForm.get('numeroRegistroAmbiental')?.hasError('required') &&
+          solicitudForm.get('numeroRegistroAmbiental')?.touched) {
+          <div class="text-danger">
+            <small>Este campo es obligatorio</small>
+          </div>
+          }
       </div>
       <div class="col-md-8 mb-3 form-group">
         <label for="descripcionGenerica1">Giro industrial del importador*: </label>
-        <input type="text" class="form-control" formControlName="descripcionGenerica1" id="descripcionGenerica1" maxlength="150" size="105" (change)="actualizarCampoSolicitudForm('descripcionGenerica1')" />
+        <input type="text" class="form-control" formControlName="descripcionGenerica1" id="descripcionGenerica1" maxlength="150" size="105" (change)="actualizarCampoSolicitudForm('descripcionGenerica1')"
+          [ngClass]="solicitudForm.get('descripcionGenerica1')?.invalid && solicitudForm.get('descripcionGenerica1')?.touched ? 'required' : ''"
+          />
+          @if (solicitudForm.get('descripcionGenerica1')?.hasError('required') &&
+          solicitudForm.get('descripcionGenerica1')?.touched) {
+          <div class="text-danger">
+            <small>Este campo es obligatorio</small>
+          </div>
+          }
       </div>
     </div>
     <div class="row mb-3">
@@ -36,21 +52,21 @@
   <h6>Datos de los residuos peligrosos a retornar por primera vez ó subsecuente*:</h6>
   <div class="row mb-3">
     <div class="col-md-12">
-      <ng-table [commonTableHeader]=" etiquetasForm.table[0].encabezadoDeTabla" [commonTableBody]="etiquetasForm.table[0].cuerpoTabla" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></ng-table>
-      <nav aria-label="Page navigation example">
-        <ul class="pagination d-flex justify-content-center">
-          <li class="page-item">
-            <a class="page-link">1</a>
-          </li>
-        </ul>
-      </nav>
+      <app-tabla-dinamica 
+        [configuracionTabla]="configuracionTabla" 
+        [datos]="datosTabla" 
+        [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+        tableId="tablaResiduosPeligrosos"
+        (listaDeFilaSeleccionada)="onFilasSeleccionadas($event)">
+      </app-tabla-dinamica>
     </div>
   </div>
   <div class="row mb-5">
     <div class="col text-end">
       <div class="btn-group">
-        <button class="btn btn-primary me-2" type="button" [disabled]="esFormularioSoloLectura">Borrar</button>
-        <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#modalAgregarMercancias" (click)="agregarOperacionImp()" [disabled]="esFormularioSoloLectura">Agregar</button>
+        <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura || !hayFilasSeleccionadas" (click)="borrarFilasSeleccionadas()">Borrar</button>
+        <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#modalAgregarMercancias" (click)="agregarOperacionImp()" [disabled]="esFormularioSoloLectura">Agregar</button>
       </div>
     </div>
   </div>
@@ -60,7 +76,15 @@
       <div class="col-md-8">
         <div class="form-group mb-3">
           <label for="nombreEmpresaTransportistaResiduos" class="form-label"> Nombre de la empresa transportista de residuos peligrosos*: </label>
-          <input type="text" class="form-control" id="nombreEmpresaTransportistaResiduos" formControlName="nombreEmpresaTransportistaResiduos" (change)="actualizarCampoEmpresaTransportista('nombreEmpresaTransportistaResiduos')" />
+          <input type="text" class="form-control" id="nombreEmpresaTransportistaResiduos" maxlength="80" formControlName="nombreEmpresaTransportistaResiduos" (change)="actualizarCampoEmpresaTransportista('nombreEmpresaTransportistaResiduos')"
+          [ngClass]="formularioEmpresaTransportista.get('nombreEmpresaTransportistaResiduos')?.invalid && formularioEmpresaTransportista.get('nombreEmpresaTransportistaResiduos')?.touched ? 'required' : ''"
+          />
+          @if (formularioEmpresaTransportista.get('nombreEmpresaTransportistaResiduos')?.hasError('required') &&
+          formularioEmpresaTransportista.get('nombreEmpresaTransportistaResiduos')?.touched) {
+          <div class="text-danger">
+            <small>Este campo es obligatorio</small>
+          </div>
+          }
         </div>
       </div>
     </div>
@@ -68,7 +92,15 @@
       <div class="col-md-8">
         <div class="form-group mb-3">
           <label for="numeroAutorizacionSemarnat" class="form-label"> Número de autorización SEMARNAT*: </label>
-          <input type="text" class="form-control" id="numeroAutorizacionSemarnat" formControlName="numeroAutorizacionSemarnat" (change)="actualizarCampoEmpresaTransportista('numeroAutorizacionSemarnat')" />
+          <input type="text" class="form-control" id="numeroAutorizacionSemarnat" maxlength="20" formControlName="numeroAutorizacionSemarnat" (change)="actualizarCampoEmpresaTransportista('numeroAutorizacionSemarnat')"
+          [ngClass]="formularioEmpresaTransportista.get('numeroAutorizacionSemarnat')?.invalid && formularioEmpresaTransportista.get('numeroAutorizacionSemarnat')?.touched ? 'required' : ''"
+           />
+          @if (formularioEmpresaTransportista.get('numeroAutorizacionSemarnat')?.hasError('required') &&
+          formularioEmpresaTransportista.get('numeroAutorizacionSemarnat')?.touched) {
+          <div class="text-danger">
+            <small>Este campo es obligatorio</small>
+          </div>
+          }
         </div>
       </div>
     </div>
@@ -85,7 +117,15 @@
       <div class="col-md-8">
         <div class="form-group mb-3">
           <label for="nombreEmpresaServicioReciclaje" class="form-label">Nombre de la empresa de servicios que realizará el retorno*:</label>
-          <input type="text" class="form-control" id="nombreEmpresaServicioReciclaje" formControlName="nombreEmpresa" (change)="actualizarCampoEmpresaReciclaje('nombreEmpresa')">
+          <input type="text" class="form-control" maxlength="80" id="nombreEmpresaServicioReciclaje" formControlName="nombreEmpresa" (change)="actualizarCampoEmpresaReciclaje('nombreEmpresa')"
+          [ngClass]="formularioEmpresaReciclaje.get('nombreEmpresa')?.invalid && formularioEmpresaReciclaje.get('nombreEmpresa')?.touched ? 'required' : ''"
+          >
+          @if (formularioEmpresaReciclaje.get('nombreEmpresa')?.hasError('required') &&
+          formularioEmpresaReciclaje.get('nombreEmpresa')?.touched) {
+          <div class="text-danger">
+            <small>Este campo es obligatorio</small>
+          </div>
+          }
         </div>
       </div>
     </div>
@@ -93,7 +133,15 @@
       <div class="col-md-8">
         <div class="form-group mb-3">
           <label for="nombreRepresentanteLegal" class="form-label">Nombre del representante legal*:</label>
-          <input type="text" class="form-control" id="nombreRepresentanteLegal" formControlName="representanteLegal" (change)="actualizarCampoEmpresaReciclaje('representanteLegal')">
+          <input type="text" class="form-control" id="nombreRepresentanteLegal" maxlength="80" formControlName="representanteLegal" (change)="actualizarCampoEmpresaReciclaje('representanteLegal')"
+          [ngClass]="formularioEmpresaReciclaje.get('representanteLegal')?.invalid && formularioEmpresaReciclaje.get('representanteLegal')?.touched ? 'required' : ''"
+          >
+          @if (formularioEmpresaReciclaje.get('representanteLegal')?.hasError('required') &&
+          formularioEmpresaReciclaje.get('representanteLegal')?.touched) {
+          <div class="text-danger">
+            <small>Este campo es obligatorio</small>
+          </div>
+          }
         </div>
       </div>
     </div>
@@ -101,13 +149,29 @@
       <div class="col-md-4">
         <div class="form-group mb-3">
           <label for="telefono" class="form-label">Teléfono*:</label>
-          <input type="text" class="form-control" id="telefono" formControlName="telefono" (change)="actualizarCampoEmpresaReciclaje('telefono')">
+          <input type="text" class="form-control" id="telefono" formControlName="telefono" maxlength="20" (change)="actualizarCampoEmpresaReciclaje('telefono')"
+          [ngClass]="formularioEmpresaReciclaje.get('telefono')?.invalid && formularioEmpresaReciclaje.get('telefono')?.touched ? 'required' : ''"
+          >
+          @if (formularioEmpresaReciclaje.get('telefono')?.hasError('required') &&
+          formularioEmpresaReciclaje.get('telefono')?.touched) {
+          <div class="text-danger">
+            <small>Este campo es obligatorio</small>
+          </div>
+          }
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group mb-3">
           <label for="correoElectronico" class="form-label">Correo electrónico*:</label>
-          <input type="email" class="form-control" id="correoElectronico" formControlName="correoElectronico" (change)="actualizarCampoEmpresaReciclaje('correoElectronico')">
+          <input type="email" class="form-control" id="correoElectronico" formControlName="correoElectronico" (change)="actualizarCampoEmpresaReciclaje('correoElectronico')"
+          [ngClass]="formularioEmpresaReciclaje.get('correoElectronico')?.invalid && formularioEmpresaReciclaje.get('correoElectronico')?.touched ? 'required' : ''"
+          >
+          @if (formularioEmpresaReciclaje.get('correoElectronico')?.hasError('required') &&
+          formularioEmpresaReciclaje.get('correoElectronico')?.touched) {
+          <div class="text-danger">
+            <small>Este campo es obligatorio</small>
+          </div>
+          }
         </div>
       </div>
     </div>
@@ -124,7 +188,15 @@
     <div class="col-md-10">
       <div class="form-group">
         <label class="form-label">Información sobre las precauciones de manejo que se debe dar al residuo peligroso*:</label>
-        <textarea class="form-control disabled-color textarea-auto-height" rows="4" formControlName="precaucionesManejo" (change)="actualizarCampoPrecaucionesManejo('precaucionesManejo')"></textarea>
+        <textarea class="form-control disabled-color textarea-auto-height" rows="4" formControlName="precaucionesManejo" maxlength="80" (change)="actualizarCampoPrecaucionesManejo('precaucionesManejo')"
+          [ngClass]="formularioPrecaucionesManejo.get('precaucionesManejo')?.invalid && formularioPrecaucionesManejo.get('precaucionesManejo')?.touched ? 'required' : ''"
+        ></textarea>
+          @if (formularioPrecaucionesManejo.get('precaucionesManejo')?.hasError('required') &&
+          formularioPrecaucionesManejo.get('precaucionesManejo')?.touched) {
+          <div class="text-danger">
+            <small>Este campo es obligatorio</small>
+          </div>
+          }
       </div>
     </div>
   </div>
@@ -135,7 +207,15 @@
     <div class="col-md-8">
       <div class="form-group">
         <label for="razonSocial">Nombre o razón social*:</label>
-        <input type="text" id="razonSocial" formControlName="razonSocial" maxlength="180" class="form-control" />
+        <input type="text" id="razonSocial" formControlName="razonSocial" maxlength="80" class="form-control"
+          [ngClass]="formularioLugarReciclaje.get('razonSocial')?.invalid && formularioLugarReciclaje.get('razonSocial')?.touched ? 'required' : ''"
+        />
+        @if (formularioLugarReciclaje.get('razonSocial')?.hasError('required') &&
+          formularioLugarReciclaje.get('razonSocial')?.touched) {
+          <div class="text-danger">
+            <small>Este campo es obligatorio</small>
+          </div>
+          }
       </div>
     </div>
   </div>
@@ -148,7 +228,15 @@
     <div class="col-md-8">
       <div class="form-group">
         <label for="destinoDomicilio">Domicilio*:</label>
-        <input type="text" id="destinoDomicilio" formControlName="destinoDomicilio" maxlength="180" class="form-control" />
+        <input type="text" id="destinoDomicilio" formControlName="destinoDomicilio" maxlength="80" class="form-control"
+          [ngClass]="formularioLugarReciclaje.get('destinoDomicilio')?.invalid && formularioLugarReciclaje.get('destinoDomicilio')?.touched ? 'required' : ''"
+        />
+        @if (formularioLugarReciclaje.get('destinoDomicilio')?.hasError('required') &&
+          formularioLugarReciclaje.get('destinoDomicilio')?.touched) {
+          <div class="text-danger">
+            <small>Este campo es obligatorio</small>
+          </div>
+          }
       </div>
     </div>
   </div>
@@ -156,7 +244,15 @@
     <div class="col-md-4">
       <div class="form-group">
         <label for="codigoPostal">Código postal*:</label>
-        <input type="text" id="codigoPostal" formControlName="codigoPostal" maxlength="8" readonly class="form-control" />
+        <input type="text" id="codigoPostal" formControlName="codigoPostal" maxlength="12" readonly class="form-control"
+          [ngClass]="formularioLugarReciclaje.get('codigoPostal')?.invalid && formularioLugarReciclaje.get('codigoPostal')?.touched ? 'required' : ''"
+        />
+        @if (formularioLugarReciclaje.get('codigoPostal')?.hasError('required') &&
+          formularioLugarReciclaje.get('codigoPostal')?.touched) {
+          <div class="text-danger">
+            <small>Este campo es obligatorio</small>
+          </div>
+          }
       </div>
     </div>
   </div>
@@ -171,7 +267,7 @@
 <div class="modal fade" id="modalAgregarMercancias" tabindex="-1" aria-labelledby="modalAgregarMercanciasLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
     <div class="modal-content">
-      <app-datos-residuos-peligrosos></app-datos-residuos-peligrosos>
+      <app-datos-residuos-peligrosos (residuoAgregado)="onResiduoAgregado($event)"></app-datos-residuos-peligrosos>
     </div>
   </div>
 </div>

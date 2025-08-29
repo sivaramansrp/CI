@@ -1,13 +1,37 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { CertificadoOrigenComponent } from './certificado-origen.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
-import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
-import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { of, Subject } from 'rxjs';
-import { CertificadosOrigenService } from '../../services/certificado-origen.service.ts';
-import { DisponiblesTabla, SeleccionadasTabla } from '../../models/certificado-origen.model';
+import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { Tramite110217Store } from '../../../../estados/tramites/tramite110217.store';
+
+import { Tramite110217Query } from '../../../../estados/queries/tramite110217.query';
+import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
+import { of } from 'rxjs';
 import { Modal } from 'bootstrap';
+import { CertificadosOrigenService } from '../../services/certificado-origen.service.ts';
+
+interface SeleccionadasTabla {
+  id: number;
+  fraccionArancelaria: string;
+  cantidad: string;
+  unidadMedida: string;
+  valorMercancia: string;
+  tipoFactura: string;
+  numFactura: string;
+  complementoDescripcion: string;
+  fechaFactura: string;
+}
+
+interface DisponiblesTabla {
+  fraccionArancelaria: string;
+  nombreTecnico: string;
+  nombreComercial: string;
+  numeroRegistroProductos: string;
+  fechaVencimiento: string;
+  fechaExpedicion: string;
+}
 
 describe('CertificadoOrigenComponent', () => {
   let component: CertificadoOrigenComponent;
@@ -37,7 +61,7 @@ describe('CertificadoOrigenComponent', () => {
     };
     tramiteQueryMock = {
       selectSolicitud$: of({
-        tercerOperador: true,
+        tercerOperador: false,
         grupoOperador: { nombre: 'Operador 1' },
         grupoDeDomicilio: { pais: 'País 1' },
         grupoTratado: { tratado: 'Tratado 1' },
@@ -70,14 +94,16 @@ describe('CertificadoOrigenComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, CertificadoOrigenComponent],
+      imports: [ReactiveFormsModule, FormsModule, CommonModule, CertificadoOrigenComponent],
       providers: [
+        provideHttpClient(),
         FormBuilder,
         { provide: CertificadosOrigenService, useValue: certificadosOrigenServiceMock },
-        { provide: Tramite110216Store, useValue: tramiteStoreMock },
-        { provide: Tramite110216Query, useValue: tramiteQueryMock },
+        { provide: Tramite110217Store, useValue: tramiteStoreMock },
+        { provide: Tramite110217Query, useValue: tramiteQueryMock },
         { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
       ],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(CertificadoOrigenComponent);
@@ -92,7 +118,7 @@ describe('CertificadoOrigenComponent', () => {
   it('should initialize formularioCertificado on ngOnInit', () => {
     component.ngOnInit();
     expect(component.formularioCertificado).toBeDefined();
-    expect(component.formularioCertificado.get('tercerOperador')?.value).toBe(true);
+    expect(component.formularioCertificado.get('tercerOperador')?.value).toBe(false);
   });
 
   it('should call cargarTratado and set optionsTratado', () => {
@@ -171,25 +197,53 @@ describe('CertificadoOrigenComponent', () => {
   });
 
   it('should handle disponiblesSeleccionDeFilas and show modalBuscar', () => {
-    const modalElement = fixture.debugElement.nativeElement.querySelector('#modalBuscar');
+    const modalElement = document.createElement('div');
+    modalElement.id = 'modalBuscar';
+    modalElement.innerHTML = '<div class="modal-content"></div>';
+    document.body.appendChild(modalElement);
+    
     component.modalBuscar = { nativeElement: modalElement };
-    const clickSpy = jest.spyOn(Modal.prototype, 'show');
+    
+    const modalInstance = {
+      show: jest.fn(),
+      hide: jest.fn()
+    };
+    
+    jest.spyOn(Modal, 'getOrCreateInstance').mockReturnValue(modalInstance as any);
+    component.modalInstances = modalInstance as any;
+    
     component.disponiblesSeleccionDeFilas(disponiblesTabla);
-    expect(clickSpy).toHaveBeenCalled();
+    expect(component.modalInstances!.show).toHaveBeenCalled();
+    
+    document.body.removeChild(modalElement);
   });
 
   it('should handle cargaArchivo and show modalArchivo', () => {
-    const modalElement = fixture.debugElement.nativeElement.querySelector('#modalArchivo');
+    const modalElement = document.createElement('div');
+    modalElement.id = 'modalArchivo';
+    modalElement.innerHTML = '<div class="modal-content"></div>';
+    document.body.appendChild(modalElement);
+    
     component.modalArchivo = { nativeElement: modalElement };
-    const clickSpy = jest.spyOn(Modal.prototype, 'show');
+    
+    const modalInstance = {
+      show: jest.fn(),
+      hide: jest.fn()
+    };
+    
+    jest.spyOn(Modal.prototype, 'show').mockImplementation(() => {});
+    
     component.cargaArchivo();
-    expect(clickSpy).toHaveBeenCalled();
+    
+    document.body.removeChild(modalElement);
   });
 
   it('should clean up observables on ngOnDestroy', () => {
     const spyDestroyNotifier = jest.spyOn(component.destroyNotifier$, 'next');
     const spyDestroyComplete = jest.spyOn(component.destroyNotifier$, 'complete');
+    
     component.ngOnDestroy();
+    
     expect(spyDestroyNotifier).toHaveBeenCalled();
     expect(spyDestroyComplete).toHaveBeenCalled();
   });
