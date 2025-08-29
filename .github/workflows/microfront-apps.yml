@@ -108,16 +108,16 @@ jobs:
               sed -i "/containers:/a\ \ \ \ imagePullSecrets:\n\ \ \ \ \ \ - name: vucem30registrykey" $DEPLOYMENT_FILE
             fi
             # Apply K8s resources
-            microk8s kubectl apply -f $DEPLOYMENT_FILE -n $NAMESPACE
-            microk8s kubectl apply -f $SERVICE_FILE -n $NAMESPACE
-            microk8s kubectl apply -f $INGRESS_FILE -n $NAMESPACE
+            microk8s kubectl apply -f $DEPLOYMENT_FILE -n default
+            microk8s kubectl apply -f $SERVICE_FILE -n default
+            microk8s kubectl apply -f $INGRESS_FILE -n default
             # Optionally, delete old pods (if you want a clean slate)
-            DEPLOY_NAME=$(microk8s kubectl get deploy -n $NAMESPACE --no-headers | grep "${{ github.event.repository.name }}" | awk '{print $1}')
+            DEPLOY_NAME=$(microk8s kubectl get deploy -n default --no-headers | grep "${{ github.event.repository.name }}" | awk '{print $1}')
             if [ ! -z "$DEPLOY_NAME" ]; then
-              microk8s kubectl rollout restart deployment/$DEPLOY_NAME -n $NAMESPACE
+              microk8s kubectl rollout restart deployment/$DEPLOY_NAME -n default
             fi
 
             # Show pod status
-            microk8s kubectl get pods -n $NAMESPACE | grep "${{ github.event.repository.name }}"
+            microk8s kubectl get pods -n default | grep "${{ github.event.repository.name }}"
 
             
