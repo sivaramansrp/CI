@@ -166,6 +166,11 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
   nombreArchivoSeleccionado: string = '';
 
   /**
+   * Evento emitido antes de cargar un archivo, permitiendo realizar validaciones previas.
+   */
+  @Output() validarAntesDeCargarArchivo = new EventEmitter<void>();
+
+  /**
    * Constructor para inicializar el componente e inyectar dependencias.
    * FormBuilder para crear formularios reactivos.
    */
@@ -246,7 +251,12 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
     }
   }
 
-  confirmarEliminarPartida(): void {
+/**
+ * Muestra una notificación para confirmar la eliminación de las partidas seleccionadas.
+ * Si no hay elementos seleccionados, muestra una alerta informando al usuario que debe seleccionar al menos un elemento.
+ * Si hay elementos seleccionados, muestra una notificación de confirmación para proceder con la eliminación.
+ */
+confirmarEliminarPartida(): void {
   if (!this.selectedRows || this.selectedRows.length === 0) {
     this.nuevaNotificacion = {
       tipoNotificacion: TipoNotificacionEnum.ALERTA,
@@ -278,20 +288,30 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
   this.confirmandoEliminarPartida = true;
 }
 
-  onConfirmacionModal(): void {
+/**
+ * Maneja la confirmación del modal para eliminar partidas seleccionadas.
+ * Si la bandera `confirmandoEliminarPartida` está activa, elimina las partidas seleccionadas
+ * y restablece la bandera. Además, oculta la notificación.
+ */
+onConfirmacionModal(): void {
   if (this.confirmandoEliminarPartida) {
     this.eliminarPartidasSeleccionadas();
     this.confirmandoEliminarPartida = false;
   }
   this.mostrarNotificacion = false;
 }
-  eliminarPartidasSeleccionadas(): void {
-    if (this.selectedRows && this.selectedRows.length > 0) {
-      const IDS_ELIMINAR = this.selectedRows.map(row => row.id); // Use your unique key
-      this.tableBodyData = this.tableBodyData.filter(row => !IDS_ELIMINAR.includes(row.id));
-      this.selectedRows = [];
-    }
+/**
+ * Si existen filas seleccionadas, obtiene sus identificadores y filtra la lista de datos de la tabla
+ * para eliminar aquellas filas cuyos identificadores coincidan con los seleccionados. Finalmente,
+ * limpia la selección de filas.
+ */
+eliminarPartidasSeleccionadas(): void {
+  if (this.selectedRows && this.selectedRows.length > 0) {
+    const IDS_ELIMINAR = this.selectedRows.map(row => row.id); // Use your unique key
+    this.tableBodyData = this.tableBodyData.filter(row => !IDS_ELIMINAR.includes(row.id));
+    this.selectedRows = [];
   }
+}
   /**
    * Cancela la modificación de una partida específica, cerrando el modal.
    */
@@ -372,14 +392,23 @@ enviarArchivo(): void {
    * Abre el modal para cargar un archivo.
    */
   abrirCargarArchivoModal(): void {
-  if (this.cargarArchivoElemento && this.cargarArchivoElemento.nativeElement) {
+  this.validarAntesDeCargarArchivo.emit();
+  }
+  
+  /**
+   * Abre un modal para cargar un archivo utilizando el elemento referenciado en `cargarArchivoElemento`.
+   * Si el elemento existe, se crea una instancia de `Modal` con la opción de fondo deshabilitada (`backdrop: false`)
+   * y se muestra el modal.
+   */
+  abrirCargarArchivoModalReal(): void {
+    if (this.cargarArchivoElemento && this.cargarArchivoElemento.nativeElement) {
       const MODAL_INSTANCIA = new Modal(
         this.cargarArchivoElemento?.nativeElement,
         { backdrop: false }
       );
       MODAL_INSTANCIA.show();
     }
-}
+  }
 /*
  * Cierra el modal para cargar un archivo.
  */

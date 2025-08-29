@@ -1,12 +1,13 @@
 import { AbstractControl, ValidationErrors } from '@angular/forms';
 import { Catalogo, ConsultaioQuery, Notificacion } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite130109State, Tramite130109Store } from '../../../../estados/tramites/tramites130109.store';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
+import { PartidasDeLaMercanciaComponent } from '../../../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 import PartidasdelaTable from '@libs/shared/theme/assets/json/130109/partidas-de-la.json';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
@@ -190,6 +191,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       * @descripcion Notificación para mostrar mensajes al usuario.
       */
     public nuevaNotificacion!: Notificacion;
+
+    /**
+     * Referencia al componente `PartidasDeLaMercanciaComponent` dentro de la vista.
+     * Permite acceder a las propiedades y métodos públicos del componente hijo desde el componente padre.
+     */
+    @ViewChild(PartidasDeLaMercanciaComponent) partidasDeLaMercanciaComponent!: PartidasDeLaMercanciaComponent;
 
     /**
      * Constructor del componente.
@@ -652,6 +659,63 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         }
 
         return null;
+    }
+
+      /**
+     * Valida los formularios de mercancía y partidas de la mercancía antes de permitir la carga de un archivo.
+     */
+    validarYCargarArchivo(): void {
+      ['cantidad', 'valorFacturaUSD'].forEach(controlName => {
+        const CONTROL = this.mercanciaForm.get(controlName);
+        if (CONTROL) {
+          CONTROL.markAsTouched();
+          CONTROL.updateValueAndValidity();
+        }
+      });
+      if (
+        this.mercanciaForm.get('cantidad')?.invalid ||
+        this.mercanciaForm.get('valorFacturaUSD')?.invalid
+      ) {
+        this.mostrarErroresMercancia = true;
+        this.mostrarErroresPartidas = false;
+        return;
+      }
+      this.mostrarErroresMercancia = false;
+      [
+        'cantidadPartidasDeLaMercancia',
+        'valorPartidaUSDPartidasDeLaMercancia',
+        'descripcionPartidasDeLaMercancia'
+      ].forEach(controlName => {
+        const CONTROL = this.partidasDelaMercanciaForm.get(controlName);
+        if (CONTROL) {
+          CONTROL.markAsTouched();
+          CONTROL.updateValueAndValidity();
+        }
+      });
+      if (
+        this.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.invalid ||
+        this.partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.invalid ||
+        this.partidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.invalid
+      ) {
+        this.mostrarErroresPartidas = true;
+        return;
+      }
+      if (!this.mercanciaForm.get('fraccion')?.value) {
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'info',
+          modo: '',
+          titulo: '',
+          mensaje: 'Debes seleccionar una Fracción arancelaria',
+          cerrar: true,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+          tamanioModal: 'modal-sm'
+        };
+        this.mostrarNotificacion = true;
+        return;
+      }
+      this.partidasDeLaMercanciaComponent.abrirCargarArchivoModalReal();
     }
 }
    

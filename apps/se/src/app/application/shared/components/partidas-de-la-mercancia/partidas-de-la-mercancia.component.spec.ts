@@ -40,6 +40,7 @@ describe('PartidasDeLaMercanciaComponent', () => {
     const emitSpy = jest.spyOn(component.filaSeleccionadaChange, 'emit');
     const filasSeleccionadas: PartidasDeLaMercanciaModelo[]=[
       {
+        id: '1',
         cantidad: '10',
         unidadDeMedida: 'kg',
         fraccionFrancelaria: '1234.56.78',
@@ -48,6 +49,7 @@ describe('PartidasDeLaMercanciaComponent', () => {
         totalUSD: '1000',
       },
       {
+        id: '2',
         cantidad: '5',
         unidadDeMedida: 'kg',
         fraccionFrancelaria: '8765.43.21',
