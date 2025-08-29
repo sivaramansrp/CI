@@ -88,29 +88,28 @@ describe('DatosDelGeneradorDeResiduosComponent', () => {
       get: function() {}
     });
     component.isInvalid({});
-    // expect(component.solicitudForm.get).toHaveBeenCalled();
+    
   });
 
   it('should run #onSubmit()', async () => {
     component.solicitudForm = component.solicitudForm || {};
     component.solicitudForm.markAllAsTouched = jest.fn();
     component.onSubmit();
-    // expect(component.solicitudForm.markAllAsTouched).toHaveBeenCalled();
+   
   });
 
   it('should run #ngOnInit()', async () => {
     component.inicializarEstadoFormulario = jest.fn();
     component.aduanasdata = jest.fn();
     component.ngOnInit();
-    // expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
-    // expect(component.aduanasdata).toHaveBeenCalled();
+    
   });
 
   it('should run #aduanasdata()', async () => {
     component.serviceMateria = component.serviceMateria || {};
     component.serviceMateria.getSubPartidaFraccion = jest.fn().mockReturnValue(observableOf({}));
     component.aduanasdata();
-    // expect(component.serviceMateria.getSubPartidaFraccion).toHaveBeenCalled();
+    
   });
 
   it('should run #setValoresStore()', async () => {
@@ -123,15 +122,12 @@ describe('DatosDelGeneradorDeResiduosComponent', () => {
         };
       }
     }, {});
-    // expect(component.tramite231001Store.actualizarEstado).toHaveBeenCalled();
   });
 
   it('should run #inicializarEstadoFormulario()', async () => {
     component.guardarDatosFormulario = jest.fn();
     component.inicializarFormulario = jest.fn();
     component.inicializarEstadoFormulario();
-    // expect(component.guardarDatosFormulario).toHaveBeenCalled();
-    // expect(component.inicializarFormulario).toHaveBeenCalled();
   });
 
   it('should run #guardarDatosFormulario()', async () => {
@@ -143,11 +139,6 @@ describe('DatosDelGeneradorDeResiduosComponent', () => {
     component.datosForm.disable = jest.fn();
     component.datosForm.enable = jest.fn();
     component.guardarDatosFormulario();
-    // expect(component.inicializarFormulario).toHaveBeenCalled();
-    // expect(component.solicitudForm.disable).toHaveBeenCalled();
-    // expect(component.solicitudForm.enable).toHaveBeenCalled();
-    // expect(component.datosForm.disable).toHaveBeenCalled();
-    // expect(component.datosForm.enable).toHaveBeenCalled();
   });
 
   it('should run #inicializarFormulario()', async () => {
@@ -160,8 +151,6 @@ describe('DatosDelGeneradorDeResiduosComponent', () => {
     component.seccionState.numeroProgramaImmex = 'numeroProgramaImmex';
     component.seccionState.aduanas = 'aduanas';
     component.inicializarFormulario();
-    // expect(component.obtenerEstadoSolicitud).toHaveBeenCalled();
-    // expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #obtenerEstadoSolicitud()', async () => {

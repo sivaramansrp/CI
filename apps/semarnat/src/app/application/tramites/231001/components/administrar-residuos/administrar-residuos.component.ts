@@ -169,12 +169,55 @@ formErrorAlert: string = 'Faltan campos por capturar.';
  */
 selectedMercancias: MateriaPrima[] = [];
 
-REGEX_NUMERIC_ONLY=REGEX_NUMERIC_ONLY;
-REGEX_NUMEROS_DECIMALES=REGEX_NUMEROS_DECIMALES;
+/**
+ * Expresión regular para validar campos que solo admiten valores numéricos.
+ * 
+ * Se utiliza para validar campos de formulario que requieren únicamente números enteros,
+ * sin permitir caracteres especiales, letras o espacios.
+ * 
+ * @type {RegExp}
+ * @example
+ * // Uso en validadores de formulario
+ * cantidad: ['', [Validators.pattern(this.REGEX_NUMERIC_ONLY)]]
+ */
+REGEX_NUMERIC_ONLY = REGEX_NUMERIC_ONLY;
+
+/**
+ * Expresión regular para validar campos que admiten números decimales.
+ * 
+ * Se utiliza para validar campos de formulario que requieren números con decimales,
+ * permitiendo punto decimal y números enteros. Útil para campos como cantidades,
+ * precios, pesos, etc.
+ * 
+ * @type {RegExp}
+ * @example
+ * // Uso en validadores de formulario
+ * precio: ['', [Validators.pattern(this.REGEX_NUMEROS_DECIMALES)]]
+ */
+REGEX_NUMEROS_DECIMALES = REGEX_NUMEROS_DECIMALES;
+
+/**
+ * Indica si el campo de cantidad tiene el foco activo.
+ * 
+ * Esta propiedad se utiliza para controlar el comportamiento visual y funcional
+ * del campo cantidad cuando el usuario interactúa con él. Permite aplicar
+ * estilos específicos, mostrar ayudas contextuales o ejecutar validaciones
+ * en tiempo real cuando el campo está enfocado.
+ * 
+ * @type {boolean}
+ * @default false
+ * @example
+ * // En el template HTML
+ * <input (focus)="isCantidadFocused = true" 
+ *        (blur)="isCantidadFocused = false"
+ *        [class.focused]="isCantidadFocused">
+ * 
+ * // En el componente para mostrar ayuda contextual
+ * @if (isCantidadFocused) {
+ *   <div class="help-text">Ingrese la cantidad en números</div>
+ * }
+ */
 public isCantidadFocused: boolean = false;
-
-
-
   /**
    * Constructor de la clase
    * FormBuilder para crear formularios reactivos
