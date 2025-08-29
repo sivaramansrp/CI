@@ -60,6 +60,15 @@ jobs:
           source: k8s/${{ github.event.inputs.app_name }}/*
           target: ~/deployments/${{ github.event.inputs.app_name }}/
 
+      - name: List files on remote after copy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.REMOTE_SRV_IP }}
+          username: ${{ secrets.REMOTE_SRV_USER }}
+          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
+          script: |
+            ls -l ~/deployments/${{ github.event.inputs.app_name }}/
+
       - name: SSH Deploy and Restart
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -71,7 +80,7 @@ jobs:
             APP_NAME="${{ github.event.inputs.app_name }}"
             IMAGE_TAG="${{ github.event.inputs.image_tag }}"
             DEPLOY_DIR=~/deployments/$APP_NAME
-            DEPLOYMENT_FILE="k8s/${APP_NAME}-deployment-dev.yaml"
+            DEPLOYMENT_FILE="${APP_NAME}-deployment-dev.yaml"
             cd "$DEPLOY_DIR"
             if [ ! -f "$DEPLOYMENT_FILE" ]; then
               echo "ERROR: $DEPLOYMENT_FILE not found in $(pwd)"
