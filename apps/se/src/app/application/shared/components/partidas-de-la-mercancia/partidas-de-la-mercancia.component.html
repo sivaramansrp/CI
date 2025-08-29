@@ -6,15 +6,15 @@
             <div class="col-md-4">
                <div class="form-group">
                   <label class="form-label" for="cantidadPartidasDeLaMercancia">Cantidad<span 
-                     [ngClass]="{'text-danger': mostrarErrores && esInvalido('cantidadPartidasDeLaMercancia')}"
+                     [ngClass]="{'text-danger': (mostrarErrores && esInvalido('cantidadPartidasDeLaMercancia') || esInvalido('cantidadPartidasDeLaMercancia'))}"
                      >*</span>:</label>
                   <input class="form-control" type="text" id="cantidad" 
                   formControlName="cantidadPartidasDeLaMercancia"
                   appUppercase aria-labelledby="cantidad"
                   maxlength="18"
-                  [ngClass]="{'input-error': mostrarErrores && esInvalido('cantidadPartidasDeLaMercancia')}"
+                  [ngClass]="{'input-error': (mostrarErrores && esInvalido('cantidadPartidasDeLaMercancia') || esInvalido('cantidadPartidasDeLaMercancia'))}"
                   (change)="setValoresStore(partidasDelaMercanciaForm, 'cantidadPartidasDeLaMercancia')" />
-                  <div *ngIf="mostrarErrores && esInvalido('cantidadPartidasDeLaMercancia')" class="text-danger">
+                  <div *ngIf="(mostrarErrores && esInvalido('cantidadPartidasDeLaMercancia') || esInvalido('cantidadPartidasDeLaMercancia'))" class="text-danger">
                      <small *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('required')">
                         La cantidad no debe ser igual a 0
                      </small>
@@ -33,19 +33,19 @@
             <div class="col-md-4">
                <div class="form-group">
                   <label class="form-label me-2" for="valorPartidaUSD">Valor partida USD<span 
-                     [ngClass]="{'text-danger': mostrarErrores &&esInvalido('valorPartidaUSDPartidasDeLaMercancia')}"
+                     [ngClass]="{'text-danger': (mostrarErrores && esInvalido('valorPartidaUSDPartidasDeLaMercancia') || esInvalido('valorPartidaUSDPartidasDeLaMercancia'))}"
                      >*</span>:</label>
                   <span class="bi bi-question-circle-fill"
                      tooltip="En caso de no contar con valor factura proporciona el valor estimado"
                      data-bs-toggle="tooltip"></span>
                   <input class="form-control" type="text" id="valorPartidaUSD"
                   formControlName="valorPartidaUSDPartidasDeLaMercancia" aria-labelledby="valorPartidaUSD" 
-                  [ngClass]="{'input-error': mostrarErrores && esInvalido('valorPartidaUSDPartidasDeLaMercancia')}"
+                  [ngClass]="{'input-error': (mostrarErrores && esInvalido('valorPartidaUSDPartidasDeLaMercancia') || esInvalido('valorPartidaUSDPartidasDeLaMercancia'))}"
                   (change)="
                   setValoresStore(partidasDelaMercanciaForm, 'valorPartidaUSDPartidasDeLaMercancia')" 
                   maxlength="20"
                   />
-                  <div *ngIf="mostrarErrores && esInvalido('valorPartidaUSDPartidasDeLaMercancia')" class="text-danger">
+                  <div *ngIf="(mostrarErrores && esInvalido('valorPartidaUSDPartidasDeLaMercancia') || esInvalido('valorPartidaUSDPartidasDeLaMercancia'))" class="text-danger">
                      <small *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('required')">
                         Debe agregar el valor en dolares de la partida.
                      </small>
@@ -102,7 +102,7 @@
                   (click)="abrirCargarArchivoModal()">
                   Cargar archivo
                   </button>
-                  <button class="btn btn-primary ms-2" (click)="validarYEnviarFormulario()" [disabled]="esFormularioSoloLectura">
+                  <button class="btn btn-primary" (click)="validarYEnviarFormulario()" [disabled]="esFormularioSoloLectura">
                   Agregar
                   </button>
                </div>
@@ -134,6 +134,9 @@
 											   <div *ngIf="mostrarNotificacion" class="col-md-12">
 												 <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
 											  </div>
+                                   <div *ngIf="alertaArchivo" class="col-md-12">
+                                    <ng-alert [CONTENIDO]="ALERTARCHIVOMSG.INSTRUCCIONES" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+                                    </div>
 												 <ng-titulo titulo="Cargar archivo"> </ng-titulo>
 											  
 												 <div class="row align-items-center mb-3">
@@ -161,7 +164,7 @@
                                     <footer class="footer d-flex py-5 gap-3 justify-content-end">
                                         <div class="row btn-row">
                                        <div class="btn-group">
-                                          <button type="button" id="cancelarCHN" name="cancelar" class="btn btn-primary cancel me-2"
+                                          <button type="button" id="cancelarCHN" name="cancelar" class="btn btn-default cancel me-2"
                                              data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">
                                           Cerrar
                                           </button>
@@ -307,5 +310,5 @@
 <lib-notificaciones
   *ngIf="mostrarNotificacion"
   [notificacionInput]="nuevaNotificacion"
-  (confirmacionModal)="onConfirmacionModal()">
+  (confirmacionModal)="onConfirmacionModal($event)">
 </lib-notificaciones>

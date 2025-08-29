@@ -1,8 +1,8 @@
 
+import { ALERTARCHIVOMSG, PARTIDASDELAMERCANCIA_TABLA, TEXTOS } from '../../constantes/partidas-de-la-mercancia.enum';
 import { AlertComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, TipoNotificacionEnum } from '@ng-mf/data-access-user';
 import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { PARTIDASDELAMERCANCIA_TABLA, TEXTOS } from '../../constantes/partidas-de-la-mercancia.enum';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
 import { PartidasDeLaMercanciaModelo } from '../../models/partidas-de-la-mercancia.model';
@@ -40,9 +40,17 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
   TEXTOS = TEXTOS;
 
   /*
+   * @descripcion Mensaje de alerta para el archivo.
+   */
+  ALERTARCHIVOMSG = ALERTARCHIVOMSG ;
+  /*
    * @descripcion Indica si se debe mostrar una notificación.
    */
   mostrarNotificacion = false;
+  /**
+   *  Indica si se debe mostrar una alerta de archivo.
+   */
+  alertaArchivo = false;
   /**
    * @descripcion Notificación para mostrar mensajes al usuario.
    */
@@ -204,7 +212,9 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    */
   esInvalido(nombreControl: string): boolean {
   const CONTROL = this.partidasDelaMercanciaForm.get(nombreControl);
-  return CONTROL ? CONTROL.invalid : false;
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
  }
 
   /**
@@ -242,6 +252,21 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
       this.mostrarNotificacion = true;
       return;
     }
+    if (this.selectedRows.length > 1) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: 'info',
+        modo: '',
+        titulo: '',
+        mensaje: 'Sólo debe seleccionar un elemento',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+        tamanioModal:'modal-sm'
+      };
+      this.mostrarNotificacion = true;
+      return;
+    }
     if (this.modificarPartidaElemento) {
       const MODAL_INSTANCIA = new Modal(
         this.modificarPartidaElemento?.nativeElement,
@@ -263,7 +288,7 @@ confirmarEliminarPartida(): void {
       categoria: 'info',
       modo: '',
       titulo: '',
-      mensaje: 'Debe seleccionar un elemento',
+      mensaje: 'Selecciona un registro a eliminar.',
       cerrar: true,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
@@ -282,7 +307,7 @@ confirmarEliminarPartida(): void {
     cerrar: false,
     txtBtnAceptar: 'Aceptar',
     txtBtnCancelar: 'Cancelar',
-    tamanioModal: 'modal-sm'
+    tamanioModal: 'modal-md'
   };
   this.mostrarNotificacion = true;
   this.confirmandoEliminarPartida = true;
@@ -293,13 +318,14 @@ confirmarEliminarPartida(): void {
  * Si la bandera `confirmandoEliminarPartida` está activa, elimina las partidas seleccionadas
  * y restablece la bandera. Además, oculta la notificación.
  */
-onConfirmacionModal(): void {
-  if (this.confirmandoEliminarPartida) {
+onConfirmacionModal(accion: boolean): void {
+  if (this.confirmandoEliminarPartida && accion === true) {
     this.eliminarPartidasSeleccionadas();
     this.confirmandoEliminarPartida = false;
   }
   this.mostrarNotificacion = false;
 }
+
 /**
  * Si existen filas seleccionadas, obtiene sus identificadores y filtra la lista de datos de la tabla
  * para eliminar aquellas filas cuyos identificadores coincidan con los seleccionados. Finalmente,
@@ -364,15 +390,19 @@ validarModificarPartida(): void {
 enviarArchivo(): void {
   const INPUT_FILE = document.getElementById('archivoNacionales') as HTMLInputElement;
   if (!INPUT_FILE || !INPUT_FILE.files || INPUT_FILE.files.length === 0) {
+    this.alertaArchivo = true;
+    this.mostrarNotificacion = false;
     return;
   }
   const FILE = INPUT_FILE.files[0];
   const EXTENSION = FILE.name.split('.').pop()?.toLowerCase();
   if (EXTENSION !== 'csv') {
     this.mostrarNotificacion = true;
+    this.alertaArchivo = false; 
     return;
   }
   this.mostrarNotificacion = false;
+  this.alertaArchivo = false;
   this.cerrarCargarArchivoModal();
 }
   /**
