@@ -1,7 +1,7 @@
 services:
 #----------------------------------------------------------------
   modulefederation-crt-microfront:
-    image: ghcr.io/vucem30/dockerized-modulefederation-crt-microfront:1.0.1
+    image: ghcr.io/vucem30/dockerized-modulefederation-crt-microfront:1.0.2
     build: 
       context: ./../
       dockerfile: apps/crt/Dockerfile.dev
