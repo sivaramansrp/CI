@@ -35,7 +35,7 @@ jobs:
 
       - name: Tag Docker image
         run: |
-          docker tag ghcr.io/vucem30/dockerized-modulefederation-${{ github.event.inputs.app_name }}:1.0.2 \
+          docker tag ghcr.io/vucem30/dockerized-modulefederation-${{ github.event.inputs.app_name }}:1.0.1 \
             ghcr.io/vucem30/dockerized-modulefederation-${{ github.event.inputs.app_name }}:${{ github.event.inputs.image_tag }}
 
       - name: Push Docker image
