@@ -1,4 +1,4 @@
-import { Destinatario, Fabricante, Facturador, Proveedor } from '../models/terceros-relacionados.model';
+import { Fabricante } from '../models/terceros-relacionados.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -158,27 +158,5 @@ export class TercerosRelacionadosFebService {
    */
   getOtrosTabla(): Observable<Otros[]> {
     return this.http.get<Otros[]>('assets/json/260905/otros.json');
-  }
-
-  /**
-   * Obtiene los datos de la tabla de fabricantes como destinatarios desde un archivo JSON local.
-   *
-   * @returns {Observable<Destinatario[]>} Observable que emite un arreglo de objetos `Destinatario`.
-   * @description Este método realiza una petición HTTP para obtener los datos de la tabla de fabricantes como destinatarios.
-   */
-  getFabricanteTablaDatos(): Observable<Fabricante[]> {
-    return this.http.get<Fabricante[]>('assets/json/260214/fabricante.json');
-  }
-
-  getDestinatarioTablaDatos(): Observable<Destinatario[]> {
-    return this.http.get<Destinatario[]>('assets/json/260214/destinatario-final.json');
-  }
-
-  getProveedorTablaDatos(): Observable<Proveedor[]> {
-    return this.http.get<Proveedor[]>('assets/json/260214/proveedor.json');
-  }
-
-  getFacturadorTablaDatos(): Observable<Facturador[]> {
-    return this.http.get<Facturador[]>('assets/json/260214/facturador.json');
   }
 }

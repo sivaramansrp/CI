@@ -7,6 +7,7 @@ import {
 } from '../../../../shared/models/terceros-relacionados.model';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ImportacionDispositivosMedicosUsoService } from '../../services/importacion-dispositivos-medicos-uso.service';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { TercerosRelacionadosFebService } from '../../../../shared/services/tereceros-relacionados-feb.service';
 import { Tramite260214Query } from '../../estados/tramite260214Query.query';
@@ -78,7 +79,8 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   constructor(
     private tramiteStore: Tramite260214Store,
     private tramiteQuery: Tramite260214Query,
-    private tercerosService: TercerosRelacionadosFebService
+    private tercerosService: TercerosRelacionadosFebService,
+    private importacionDispositivosMedicosUsoService: ImportacionDispositivosMedicosUsoService
   ) {}
 
   /**
@@ -86,6 +88,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * Se suscribe a los observables del store para obtener los datos iniciales.
    */
   ngOnInit(): void {
+    this.cargarDatos();
     this.tramiteQuery.getFabricanteTablaDatos$
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
@@ -116,29 +119,29 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * utilizando el servicio `tercerosService`.
    * Llama internamente a los métodos `add*` para actualizar el store.
    */
-  loadData(): void {
-    this.tercerosService
+  cargarDatos(): void {
+    this.importacionDispositivosMedicosUsoService
       .getFabricanteTablaDatos()
       .pipe(takeUntil(this.destroy$))
       .subscribe((response: Fabricante[]) => {
         this.addFabricantes(response);
       });
 
-    this.tercerosService
+    this.importacionDispositivosMedicosUsoService
       .getDestinatarioTablaDatos()
       .pipe(takeUntil(this.destroy$))
       .subscribe((response: Destinatario[]) => {
         this.addDestinatarios(response);
       });
 
-    this.tercerosService
+    this.importacionDispositivosMedicosUsoService
       .getProveedorTablaDatos()
       .pipe(takeUntil(this.destroy$))
       .subscribe((response: Proveedor[]) => {
         this.addProveedores(response);
       });
 
-    this.tercerosService
+    this.importacionDispositivosMedicosUsoService
       .getFacturadorTablaDatos()
       .pipe(takeUntil(this.destroy$))
       .subscribe((response: Facturador[]) => {
