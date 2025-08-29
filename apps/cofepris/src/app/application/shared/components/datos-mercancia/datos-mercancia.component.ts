@@ -248,8 +248,8 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
   };
 
   /**
-    * Botones de acción para gestionar listas de países en la tercera sección.
-    */
+   * Botones de acción para gestionar listas de países en la tercera sección.
+   */
   paisDeProcedenciaBotonsUno = [
     {
       btnNombre: 'Agregar todos',
@@ -435,6 +435,22 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
       ? true
       : false;
   }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta después de inicializar las vistas del componente.
+   *
+   * Aquí se configuran los **grupos de botones** (`paisDeProcedenciaBotonsUno`, `paisDeProcedenciaBotonsDos`,
+   * `paisDeProcedenciaBotonsTres`) que permiten al usuario interactuar con las listas de países de procedencia.
+   *
+   * Cada grupo de botones ofrece las siguientes acciones:
+   * - **Agregar todos** → Inserta todos los elementos en la lista.
+   * - **Agregar selección** → Inserta únicamente los elementos seleccionados.
+   * - **Restar selección** → Elimina únicamente los elementos seleccionados.
+   * - **Restar todos** → Elimina todos los elementos de la lista.
+   *
+   * Estos botones están asociados a instancias de `crossList` y llaman a los métodos
+   * `agregar()` o `quitar()` según corresponda.
+   */
   ngAfterViewInit(): void {
     this.paisDeProcedenciaBotonsUno = [
       {
@@ -781,31 +797,36 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
   crearMercanciaForm(): void {
     const PAIS_DE_ORIGEN = this.obtenerValor('paisDeOriginDatos') || [];
     const USO_ESPECIFICOS = this.obtenerValor('usoEspecifico') || [];
-    const PAIS_DE_PROCEDENCIA = this.obtenerValor('paisDeProcedenciaDatos') || [];
+    const PAIS_DE_PROCEDENCIA =
+      this.obtenerValor('paisDeProcedenciaDatos') || [];
 
     this.seleccionadasPaisDeOriginDatos = Array.isArray(PAIS_DE_ORIGEN)
       ? PAIS_DE_ORIGEN
       : typeof PAIS_DE_ORIGEN === 'string'
-        ? [PAIS_DE_ORIGEN]
-        : typeof PAIS_DE_ORIGEN === 'number'
-          ? [PAIS_DE_ORIGEN.toString()]
-          : [];
-    this.paisDeOriginColapsable = this.seleccionadasPaisDeOriginDatos.length > 0;
+      ? [PAIS_DE_ORIGEN]
+      : typeof PAIS_DE_ORIGEN === 'number'
+      ? [PAIS_DE_ORIGEN.toString()]
+      : [];
+    this.paisDeOriginColapsable =
+      this.seleccionadasPaisDeOriginDatos.length > 0;
 
     this.seleccionadasUsoEspesificoDatos = Array.isArray(USO_ESPECIFICOS)
       ? USO_ESPECIFICOS
       : typeof USO_ESPECIFICOS === 'string'
-        ? [USO_ESPECIFICOS]
-        : [];
-    this.usoEspesificoColapsable = this.seleccionadasUsoEspesificoDatos.length > 0;
+      ? [USO_ESPECIFICOS]
+      : [];
+    this.usoEspesificoColapsable =
+      this.seleccionadasUsoEspesificoDatos.length > 0;
 
-    this.seleccionadasPaisDeProcedenciaDatos = Array.isArray(PAIS_DE_PROCEDENCIA)
+    this.seleccionadasPaisDeProcedenciaDatos = Array.isArray(
+      PAIS_DE_PROCEDENCIA
+    )
       ? PAIS_DE_PROCEDENCIA
       : typeof PAIS_DE_PROCEDENCIA === 'string'
-        ? [PAIS_DE_PROCEDENCIA]
-        : [];
-    this.paisDeProcedenciaColapsable = this.seleccionadasPaisDeProcedenciaDatos.length > 0;
-
+      ? [PAIS_DE_PROCEDENCIA]
+      : [];
+    this.paisDeProcedenciaColapsable =
+      this.seleccionadasPaisDeProcedenciaDatos.length > 0;
 
     this.mercanciaForm = this.fb.group({
       clasificacionProducto: [
@@ -881,19 +902,13 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
       fechaCaducidad: [this.obtenerValor('fechaCaducidad')],
       paisDeOriginDatos: [
         PAIS_DE_ORIGEN,
-          [Validators.required,
-          matrizRequerida]
+        [Validators.required, matrizRequerida],
       ],
       paisDeProcedenciaDatos: [
         PAIS_DE_PROCEDENCIA,
-       [ Validators.required,
-        matrizRequerida]
+        [Validators.required, matrizRequerida],
       ],
-      usoEspecifico: [
-        USO_ESPECIFICOS,
-        [Validators.required,
-        matrizRequerida]
-      ],
+      usoEspecifico: [USO_ESPECIFICOS, [Validators.required, matrizRequerida]],
     });
 
     const CONTROLS_A_ELIMINAR = [...this.elementosNoValidos];

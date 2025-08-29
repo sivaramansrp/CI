@@ -836,4 +836,18 @@ export const IMPORTE = /^\d{1,16}$/;
  */
 export const CODIGO_POSTAL = /^\d{1,12}$/
 
+/**
+ * Expresión regular que permite únicamente números del 0 al 9.
+ *
+ * - Acepta cualquier cantidad de dígitos (incluido vacío).
+ * - No permite letras, espacios ni caracteres especiales.
+ *
+ * @constant
+ * @type {RegExp}
+ *
+ * @example
+ * SOLO_REGEX_NUMEROS.test("12345"); // true
+ * SOLO_REGEX_NUMEROS.test("abc");   // false
+ * SOLO_REGEX_NUMEROS.test("");      // true (cadena vacía)
+ */
 export const SOLO_REGEX_NUMEROS = /^[0-9]*$/;
