@@ -190,5 +190,8 @@ export class SolicitudDeReporteComponent {
    */
  alCambiarPestana(): void {
   this.esFormaValido = false;
+  this.esFormaValidoDos = false;
+  this.esFormaValidoTres = false;
+  this.esFormaValidoCuatro = false;
 }
 }

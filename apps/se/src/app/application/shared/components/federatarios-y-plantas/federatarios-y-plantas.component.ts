@@ -263,7 +263,7 @@ export class FederatariosYPlantasComponent implements OnInit {
     this.federatariosFormGroup = new FormGroup({
       nombre: new FormControl(
         this.datosFederatarios?.nombre,
-        [Validators.required, Validators.maxLength(20)]
+        [Validators.required, Validators.maxLength(28)]
       ),
       fechaInicioInput: new FormControl(this.datosFederatarios?.fechaDelActa,
         Validators.required
