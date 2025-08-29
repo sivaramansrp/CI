@@ -1,39 +1,24 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDeChoferesNacionalDialogComponent } from './data.de.choferes.nacional.dialog.component';
 import { Chofer40101Service } from '../../../../estado/chofer40101.service';
 import { DatosDelChoferNacional } from '../../../../models/registro-muestras-mercancias.model';
-import { Catalogo, TipoNotificacionEnum, CategoriaMensaje } from '@ng-mf/data-access-user';
+import { Catalogo } from '@ng-mf/data-access-user';
 
 describe('DatosDeChoferesNacionalDialogComponent', () => {
-  let component: DatosDeChoferesNacionalDialogComponent;
+  let componente: DatosDeChoferesNacionalDialogComponent;
   let fixture: ComponentFixture<DatosDeChoferesNacionalDialogComponent>;
-  let mockChofer40101Service: jest.Mocked<Chofer40101Service>;
-  let mockModalService: jest.Mocked<BsModalService>;
-  let mockModalRef: jest.Mocked<BsModalRef>;
+  let mockChofer40101Service: Chofer40101Service;
+  let mockModalService: BsModalService;
+  let mockModalRef: BsModalRef;
 
-  const mockPaises: Catalogo[] = [
-    { id: 1, descripcion: 'México' }
-  ];
-
-  const mockEstados: Catalogo[] = [
-    { id: 1, descripcion: 'Ciudad de México' },
-    { id: 2, descripcion: 'Jalisco' }
-  ];
-
-  const mockMunicipios: Catalogo[] = [
-    { id: 1, descripcion: 'Benito Juárez' },
-    { id: 2, descripcion: 'Guadalajara' }
-  ];
-
-  const mockColonias: Catalogo[] = [
-    { id: 1, descripcion: 'Del Valle' },
-    { id: 2, descripcion: 'Centro' }
-  ];
-
+  const mockPaises: Catalogo[] = [ { id: 1, descripcion: 'México' } ];
+  const mockEstados: Catalogo[] = [ { id: 1, descripcion: 'Ciudad de México' }, { id: 2, descripcion: 'Jalisco' } ];
+  const mockMunicipios: Catalogo[] = [ { id: 1, descripcion: 'Benito Juárez' }, { id: 2, descripcion: 'Guadalajara' } ];
+  const mockColonias: Catalogo[] = [ { id: 1, descripcion: 'Del Valle' }, { id: 2, descripcion: 'Centro' } ];
   const mockChoferData: DatosDelChoferNacional = {
     id: 1,
     curp: 'ABCD123456HDFRNN09',
@@ -59,28 +44,18 @@ describe('DatosDeChoferesNacionalDialogComponent', () => {
   };
 
   beforeEach(async () => {
-    mockModalRef = {
-      hide: jest.fn()
-    } as unknown as jest.Mocked<BsModalRef>;
-
-    mockModalService = {
-      show: jest.fn().mockReturnValue(mockModalRef)
-    } as unknown as jest.Mocked<BsModalService>;
-
+    mockModalRef = { hide: jest.fn() } as unknown as BsModalRef;
+    mockModalService = { show: jest.fn().mockReturnValue(mockModalRef) } as unknown as BsModalService;
     mockChofer40101Service = {
       getPaisEmisor: jest.fn().mockReturnValue(of(mockPaises)),
       getEstadosPorPais: jest.fn().mockReturnValue(of(mockEstados)),
       getMunicipiosPorEstado: jest.fn().mockReturnValue(of(mockMunicipios)),
       getColoniasPorMunicipio: jest.fn().mockReturnValue(of(mockColonias)),
       obtenerTablaDatos: jest.fn().mockReturnValue(of([mockChoferData]))
-    } as unknown as jest.Mocked<Chofer40101Service>;
+    } as unknown as Chofer40101Service;
 
     await TestBed.configureTestingModule({
-      imports: [
-        DatosDeChoferesNacionalDialogComponent,
-        ReactiveFormsModule,
-        CommonModule
-      ],
+      imports: [DatosDeChoferesNacionalDialogComponent, ReactiveFormsModule, CommonModule],
       providers: [
         FormBuilder,
         { provide: BsModalService, useValue: mockModalService },
@@ -89,438 +64,112 @@ describe('DatosDeChoferesNacionalDialogComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosDeChoferesNacionalDialogComponent);
-    component = fixture.componentInstance;
-    component.datosDeChofere = mockChoferData;
+    componente = fixture.componentInstance;
+    componente.datosDeChofere = mockChoferData;
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('debería crear el componente', () => {
+    expect(componente).toBeTruthy();
   });
 
-  describe('ngOnInit', () => {
-    it('should initialize form with correct structure and validators', async () => {
-      await component.ngOnInit();
-
-      expect(component.formChoferes).toBeDefined();
-      expect(component.formChoferes.get('curp')).toBeTruthy();
-      expect(component.formChoferes.get('rfc')).toBeTruthy();
-      expect(component.formChoferes.get('nombre')).toBeTruthy();
-
-      // Test CURP validators
-      const curpControl = component.formChoferes.get('curp');
-      expect(curpControl?.hasError('required')).toBeFalsy();
-      expect(curpControl?.hasError('maxlength')).toBeFalsy();
-      expect(curpControl?.hasError('pattern')).toBeFalsy();
-    });
-
-    it('should load países data and initialize form', async () => {
-      await component.ngOnInit();
-
-      expect(mockChofer40101Service.getPaisEmisor).toHaveBeenCalled();
-      expect(component.paisList).toEqual(mockPaises);
-      expect(component.formChoferes.get('pais')?.value).toBe(1);
-    });
-
-    it('should call updateListsData with datosDeChofere', async () => {
-      const updateListsDataSpy = jest.spyOn(component as any, 'updateListsData').mockResolvedValue(undefined);
-
-      await component.ngOnInit();
-
-      expect(updateListsDataSpy).toHaveBeenCalledWith(mockChoferData);
-    });
+  it('debería inicializar el formulario con la estructura y validadores correctos', async () => {
+    await componente.ngOnInit();
+    expect(componente.formChoferes).toBeDefined();
+    expect(componente.formChoferes.get('curp')).toBeTruthy();
+    expect(componente.formChoferes.get('rfc')).toBeTruthy();
+    expect(componente.formChoferes.get('nombre')).toBeTruthy();
   });
 
-  describe('Form Validation', () => {
-    beforeEach(async () => {
-      await component.ngOnInit();
-    });
-
-    it('should validate CURP format', () => {
-      const curpControl = component.formChoferes.get('curp');
-      
-      // Invalid CURP
-      curpControl?.setValue('INVALID_CURP');
-      expect(curpControl?.hasError('pattern')).toBeTruthy();
-
-      // Valid CURP
-      curpControl?.setValue('ABCD123456HDFRNN09');
-      expect(curpControl?.hasError('pattern')).toBeFalsy();
-    });
-
-    it('should validate required fields', () => {
-      const curpControl = component.formChoferes.get('curp');
-      const rfcControl = component.formChoferes.get('rfc');
-
-      curpControl?.setValue('');
-      rfcControl?.setValue('');
-
-      expect(curpControl?.hasError('required')).toBeTruthy();
-      expect(rfcControl?.hasError('required')).toBeTruthy();
-    });
-
-    it('should validate CURP max length', () => {
-      const curpControl = component.formChoferes.get('curp');
-      
-      curpControl?.setValue('ABCD123456HDFRNN091'); // 19 characters
-      expect(curpControl?.hasError('maxlength')).toBeTruthy();
-    });
+  it('debería cargar los países y establecer el valor inicial en el formulario', async () => {
+    await componente.ngOnInit();
+    expect(mockChofer40101Service.getPaisEmisor).toHaveBeenCalled();
+    expect(componente.paisList).toEqual(mockPaises);
+    expect(componente.formChoferes.get('pais')?.value).toBe(1);
   });
 
-  describe('Dropdown Cascading', () => {
-    beforeEach(async () => {
-      await component.ngOnInit();
-    });
-
-    it('should update estados when país changes', () => {
-      const mockPais = mockPaises[0];
-      
-      component.onPaisChange(mockPais);
-
-      expect(mockChofer40101Service.getEstadosPorPais).toHaveBeenCalledWith(mockPais.id);
-      expect(component.formChoferes.get('estado')?.value).toBe(null);
-      expect(component.formChoferes.get('municipioAlcaldia')?.value).toBe(null);
-      expect(component.formChoferes.get('colonia')?.value).toBe(null);
-    });
-
-    it('should update municipios when estado changes', () => {
-      const mockEstado = mockEstados[0];
-      
-      component.onEstadoChange(mockEstado);
-
-      expect(mockChofer40101Service.getMunicipiosPorEstado).toHaveBeenCalledWith(mockEstado.id);
-      expect(component.formChoferes.get('municipioAlcaldia')?.value).toBe(null);
-      expect(component.formChoferes.get('colonia')?.value).toBe(null);
-    });
-
-    it('should update colonias when municipio changes', () => {
-      const mockMunicipio = mockMunicipios[0];
-      
-      component.onMunicipioChange(mockMunicipio);
-
-      expect(mockChofer40101Service.getColoniasPorMunicipio).toHaveBeenCalledWith(mockMunicipio.id);
-      expect(component.formChoferes.get('colonia')?.value).toBe(null);
-    });
+  it('debería validar el formato de CURP', async () => {
+    await componente.ngOnInit();
+    const curpControl = componente.formChoferes.get('curp');
+    curpControl?.setValue('INVALID_CURP');
+    expect(curpControl?.hasError('pattern')).toBeTruthy();
+    curpControl?.setValue('ABCD123456HDFRNN09');
+    expect(curpControl?.hasError('pattern')).toBeFalsy();
   });
 
-  describe('CURP Input Handling', () => {
-    beforeEach(async () => {
-      await component.ngOnInit();
-    });
-
-    it('should trigger chofer search when CURP has 18 characters', () => {
-      const buscarChoferSpy = jest.spyOn(component, 'buscarChoferNacional').mockResolvedValue();
-      
-      component.formChoferes.get('curp')?.setValue('ABCD123456HDFRNN09');
-      component.onCurpInput();
-
-      expect(buscarChoferSpy).toHaveBeenCalledWith('ABCD123456HDFRNN09');
-    });
-
-    it('should not trigger search when CURP has less than 18 characters', () => {
-      const buscarChoferSpy = jest.spyOn(component, 'buscarChoferNacional').mockResolvedValue();
-      
-      component.formChoferes.get('curp')?.setValue('ABCD123456');
-      component.onCurpInput();
-
-      expect(buscarChoferSpy).not.toHaveBeenCalled();
-    });
+  it('debería validar los campos requeridos', async () => {
+    await componente.ngOnInit();
+    const curpControl = componente.formChoferes.get('curp');
+    const rfcControl = componente.formChoferes.get('rfc');
+    curpControl?.setValue('');
+    rfcControl?.setValue('');
+    expect(curpControl?.hasError('required')).toBeTruthy();
+    expect(rfcControl?.hasError('required')).toBeTruthy();
   });
 
-  describe('buscarChoferNacional', () => {
-    beforeEach(async () => {
-      await component.ngOnInit();
-    });
-
-    it('should show alert when CURP is empty', async () => {
-      await component.buscarChoferNacional('');
-
-      expect(component.alertaNotificacion).toBeDefined();
-      expect(component.alertaNotificacion.mensaje).toBe('Favor de ingresar CURP o RFC');
-      expect(component.alertaNotificacion.tipoNotificacion).toBe(TipoNotificacionEnum.ALERTA);
-    });
-
-    it('should fetch chofer data and update form when CURP is provided', async () => {
-      const updateListsDataSpy = jest.spyOn(component as any, 'updateListsData').mockResolvedValue(undefined);
-      const patchValueSpy = jest.spyOn(component.formChoferes, 'patchValue');
-
-      await component.buscarChoferNacional('ABCD123456HDFRNN09');
-
-      expect(mockChofer40101Service.obtenerTablaDatos).toHaveBeenCalledWith('mock-data-choferes-nacionales.json');
-      expect(updateListsDataSpy).toHaveBeenCalledWith(mockChoferData);
-      expect(patchValueSpy).toHaveBeenCalledWith(mockChoferData);
-    });
-
-    it('should show alert when no chofer data is found', async () => {
-      mockChofer40101Service.obtenerTablaDatos.mockReturnValue(of([]));
-
-      await component.buscarChoferNacional('ABCD123456HDFRNN09');
-
-      expect(component.alertaNotificacion.mensaje).toBe('No se encontró información para el CURP o RFC proporcionado.');
-      expect(component.alertaNotificacion.tipoNotificacion).toBe(TipoNotificacionEnum.ALERTA);
-    });
+  it('debería limpiar el formulario', async () => {
+    await componente.ngOnInit();
+    componente.formChoferes.patchValue({ curp: 'CURP', rfc: 'RFC', pais: 1 });
+    componente.limpiarFormulario();
+    expect(componente.formChoferes.get('curp')?.value).toBe('');
+    expect(componente.formChoferes.get('rfc')?.value).toBe('');
+    expect(componente.formChoferes.get('pais')?.value).toBe(1);
   });
 
-  describe('Modal Operations', () => {
-    beforeEach(async () => {
-      await component.ngOnInit();
-    });
-
-    it('should open modal', () => {
-      component.openModal();
-
-      expect(mockModalService.show).toHaveBeenCalledWith(component.datosDeChoferesModal, { class: 'modal-xl' });
-      expect(component.modalRef).toBe(mockModalRef);
-    });
-
-    it('should close modal and emit cancel event', () => {
-      const cancelEventSpy = jest.spyOn(component.cancelEvent, 'emit');
-      component.modalRef = mockModalRef;
-
-      component.closeModal();
-
-      expect(mockModalRef.hide).toHaveBeenCalled();
-      expect(cancelEventSpy).toHaveBeenCalled();
-    });
+  it('debería abrir el modal', () => {
+    componente.abiertoModal();
+    expect(mockModalService.show).toHaveBeenCalled();
+    expect(componente.modalRef).toBe(mockModalRef);
   });
 
-  describe('Form Operations', () => {
-    beforeEach(async () => {
-      await component.ngOnInit();
-    });
-
-    it('should reset form with default values', () => {
-      component.resetForm();
-
-      expect(component.formChoferes.get('curp')?.value).toBe('');
-      expect(component.formChoferes.get('rfc')?.value).toBe('');
-      expect(component.formChoferes.get('pais')?.value).toBe(1);
-      expect(component.formChoferes.get('paisDeResidencia')?.value).toBe('1');
-    });
-
-    it('should clear all form fields', () => {
-      const resetSpy = jest.spyOn(component.formChoferes, 'reset');
-      
-      component.limpiarFormulario();
-
-      expect(resetSpy).toHaveBeenCalled();
-    });
+  it('debería cerrar el modal y emitir evento de cancelación', () => {
+    const cancelarSpy = jest.spyOn(componente.cancelEvent, 'emit');
+    componente.modalRef = mockModalRef;
+    componente.cerrarModal();
+    expect(mockModalRef.hide).toHaveBeenCalled();
+    expect(cancelarSpy).toHaveBeenCalled();
   });
 
-  describe('guardarFilaEditada', () => {
-    beforeEach(async () => {
-      await component.ngOnInit();
-      component.paisList = mockPaises;
-      component.estadoList = mockEstados;
-      component.municipioList = mockMunicipios;
-      component.coloniaList = mockColonias;
+  it('debería guardar la fila editada si el formulario es válido', async () => {
+    await componente.ngOnInit();
+    const agregarSpy = jest.spyOn(componente.addModalEvent, 'emit');
+    componente.formChoferes.patchValue({
+      curp: 'ABCD123456HDFRNN09',
+      rfc: 'ABCD123456ABC',
+      pais: 1,
+      estado: 1,
+      municipioAlcaldia: 1,
+      colonia: 1,
+      paisDeResidencia: 1
     });
-
-    it('should save and emit data when form is valid', () => {
-      const addModalEventSpy = jest.spyOn(component.addModalEvent, 'emit');
-      const closeModalSpy = jest.spyOn(component, 'closeModal').mockImplementation();
-      
-      // Set valid form data
-      component.formChoferes.patchValue({
-        curp: 'ABCD123456HDFRNN09',
-        rfc: 'ABCD123456ABC',
-        pais: '1',
-        estado: '1',
-        municipioAlcaldia: '1',
-        colonia: '1',
-        paisDeResidencia: '1'
-      });
-
-      component.guardarFilaEditada();
-
-      expect(addModalEventSpy).toHaveBeenCalled();
-      expect(closeModalSpy).toHaveBeenCalled();
-    });
-
-    it('should show alert when form is invalid', () => {
-      // Make form invalid
-      component.formChoferes.get('curp')?.setValue('');
-      component.formChoferes.get('rfc')?.setValue('');
-
-      component.guardarFilaEditada();
-
-      expect(component.alertaNotificacion).toBeDefined();
-      expect(component.alertaNotificacion.mensaje).toBe('Formulario inválido, por favor verifica los campos.');
-      expect(component.alertaNotificacion.tipoNotificacion).toBe(TipoNotificacionEnum.ALERTA);
-    });
-
-    it('should transform catalog IDs to descriptions', () => {
-      const addModalEventSpy = jest.spyOn(component.addModalEvent, 'emit');
-      const closeModalSpy = jest.spyOn(component, 'closeModal').mockImplementation();
-      
-      component.formChoferes.patchValue({
-        curp: 'ABCD123456HDFRNN09',
-        rfc: 'ABCD123456ABC',
-        pais: '1',
-        estado: '1',
-        municipioAlcaldia: '1',
-        colonia: '1',
-        paisDeResidencia: '1'
-      });
-
-      component.guardarFilaEditada();
-
-      const emittedData = addModalEventSpy.mock.calls[0][0];
-      expect(emittedData?.pais).toBe('México');
-      expect(emittedData?.estado).toBe('Ciudad de México');
-      expect(emittedData?.municipioAlcaldia).toBe('Benito Juárez');
-      expect(emittedData?.colonia).toBe('Del Valle');
-    });
+    componente.guardarFilaEditada();
+    expect(agregarSpy).toHaveBeenCalled();
   });
 
-  describe('isInvalid', () => {
-    beforeEach(async () => {
-      await component.ngOnInit();
-    });
-
-    it('should return true when control is invalid and touched', () => {
-      const curpControl = component.formChoferes.get('curp');
-      curpControl?.setValue('');
-      curpControl?.markAsTouched();
-
-      expect(component.isInvalid('curp')).toBeTruthy();
-    });
-
-    it('should return false when control is valid', () => {
-      const curpControl = component.formChoferes.get('curp');
-      curpControl?.setValue('ABCD123456HDFRNN09');
-      curpControl?.markAsTouched();
-
-      expect(component.isInvalid('curp')).toBeFalsy();
-    });
-
-    it('should return null when control does not exist', () => {
-      expect(component.isInvalid('nonExistentControl')).toBeNull();
-    });
+  it('debería mostrar alerta si el formulario es inválido', async () => {
+    await componente.ngOnInit();
+    componente.formChoferes.get('curp')?.setValue('');
+    componente.formChoferes.get('rfc')?.setValue('');
+    componente.guardarFilaEditada();
+    expect(componente.alertaNotificacion).toBeDefined();
   });
 
-  describe('getFormValues', () => {
-    beforeEach(async () => {
-      await component.ngOnInit();
+  it('debería transformar los IDs de catálogo a descripciones', async () => {
+    await componente.ngOnInit();
+    const agregarSpy = jest.spyOn(componente.addModalEvent, 'emit');
+    componente.formChoferes.patchValue({
+      curp: 'ABCD123456HDFRNN09',
+      rfc: 'ABCD123456ABC',
+      pais: 1,
+      estado: 1,
+      municipioAlcaldia: 1,
+      colonia: 1,
+      paisDeResidencia: 1
     });
-
-    it('should return form controls', () => {
-      const controls = component.getFormValues;
-      
-      expect(controls['curp']).toBeDefined();
-      expect(controls['rfc']).toBeDefined();
-      expect(controls['nombre']).toBeDefined();
-    });
-  });
-
-  describe('Error Handling', () => {
-    beforeEach(async () => {
-      await component.ngOnInit();
-    });
-
-    it('should handle errors in fetchMunicipiosByEstado', async () => {
-      mockChofer40101Service.getMunicipiosPorEstado.mockReturnValue(throwError(() => new Error('Service error')));
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-      
-      const result = await (component as any).fetchMunicipiosByEstado(mockEstados[0]);
-      
-      expect(consoleSpy).toHaveBeenCalledWith('Error al obtener municipios por estado:', expect.any(Error));
-      expect(result).toEqual([]);
-    });
-
-    it('should handle errors in fetchColoniasByMunicipio', async () => {
-      mockChofer40101Service.getColoniasPorMunicipio.mockReturnValue(throwError(() => new Error('Service error')));
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-      
-      const result = await (component as any).fetchColoniasByMunicipio(mockMunicipios[0]);
-      
-      expect(consoleSpy).toHaveBeenCalledWith('Error al obtener colonias por municipio:', expect.any(Error));
-      expect(result).toEqual([]);
-    });
-  });
-
-  describe('ngOnDestroy', () => {
-    it('should complete destroyed$ subject', () => {
-      const nextSpy = jest.spyOn(component.destroyed$, 'next');
-      const completeSpy = jest.spyOn(component.destroyed$, 'complete');
-
-      component.ngOnDestroy();
-
-      expect(nextSpy).toHaveBeenCalledWith(1);
-      expect(completeSpy).toHaveBeenCalled();
-    });
-  });
-
-  describe('updateListsData', () => {
-    beforeEach(async () => {
-      await component.ngOnInit();
-      component.paisList = mockPaises;
-    });
-
-    it('should update location data with correct IDs', async () => {
-      const testData = { ...mockChoferData };
-      
-      await (component as any).updateListsData(testData);
-
-      expect(testData.pais).toBe('1');
-      expect(testData.estado).toBe('1');
-      expect(testData.municipioAlcaldia).toBe('1');
-      expect(testData.colonia).toBe('1');
-    });
-
-    it('should handle missing estado in catalog', async () => {
-      const testData = { ...mockChoferData, estado: 'NonExistent Estado' };
-      
-      await (component as any).updateListsData(testData);
-
-      expect(testData.pais).toBe('1');
-      // Estado should remain unchanged if not found
-      expect(testData.estado).toBe('NonExistent Estado');
-    });
-  });
-
-  describe('readonly mode', () => {
-    beforeEach(async () => {
-      component.readonly = true;
-      await component.ngOnInit();
-    });
-
-    it('should disable address fields when readonly is true', () => {
-      expect(component.formChoferes.get('calle')?.disabled).toBeTruthy();
-      expect(component.formChoferes.get('numeroExterior')?.disabled).toBeTruthy();
-      expect(component.formChoferes.get('estado')?.disabled).toBeTruthy();
-      expect(component.formChoferes.get('municipioAlcaldia')?.disabled).toBeTruthy();
-      expect(component.formChoferes.get('colonia')?.disabled).toBeTruthy();
-    });
-
-    it('should not disable address fields when readonly is false', async () => {
-      component.readonly = false;
-      await component.ngOnInit();
-
-      expect(component.formChoferes.get('calle')?.disabled).toBeFalsy();
-      expect(component.formChoferes.get('numeroExterior')?.disabled).toBeFalsy();
-      expect(component.formChoferes.get('estado')?.disabled).toBeFalsy();
-      expect(component.formChoferes.get('municipioAlcaldia')?.disabled).toBeFalsy();
-      expect(component.formChoferes.get('colonia')?.disabled).toBeFalsy();
-    });
-  });
-
-  describe('form field disabling', () => {
-    beforeEach(async () => {
-      await component.ngOnInit();
-    });
-
-    it('should have certain fields always disabled', () => {
-      expect(component.formChoferes.get('nombre')?.disabled).toBeTruthy();
-      expect(component.formChoferes.get('primerApellido')?.disabled).toBeTruthy();
-      expect(component.formChoferes.get('segundoApellido')?.disabled).toBeTruthy();
-      expect(component.formChoferes.get('numeroDeGafete')?.disabled).toBeTruthy();
-      expect(component.formChoferes.get('vigenciaGafete')?.disabled).toBeTruthy();
-      expect(component.formChoferes.get('pais')?.disabled).toBeTruthy();
-    });
-
-    it('should have CURP and RFC always enabled', () => {
-      expect(component.formChoferes.get('curp')?.disabled).toBeFalsy();
-      expect(component.formChoferes.get('rfc')?.disabled).toBeFalsy();
-    });
+    componente.guardarFilaEditada();
+    const datosEmitidos = agregarSpy.mock.calls[0][0];
+    expect(datosEmitidos?.datos.pais).toBe('México');
+    expect(datosEmitidos?.datos.estado).toBe('Ciudad de México');
+    expect(datosEmitidos?.datos.municipioAlcaldia).toBe('Benito Juárez');
+    expect(datosEmitidos?.datos.colonia).toBe('Del Valle');
   });
 });

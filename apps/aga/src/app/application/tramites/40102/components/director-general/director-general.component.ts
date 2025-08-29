@@ -1,4 +1,3 @@
-/* eslint-disable no-empty-function */
 import { Chofer40102Store, Choferesnacionales40102State } from '../../estados/chofer40102.store';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -11,7 +10,7 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'app-director-general',
   templateUrl: './director-general.component.html',
-  styleUrls: ['./director-general.component.scss'],
+  styleUrls: ['./director-general.component.scss']
 })
 export class DirectorGeneralComponent implements OnInit, OnDestroy {
   /**
