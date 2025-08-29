@@ -1501,6 +1501,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
 
     const PAYLOAD: GuardarRequerimiento = {
       id_accion: this.guardarDatos.action_id,
+      cve_usuario: this.guardarDatos.current_user,
       justificacion: this.justificacion,
       alcance_requerimiento: 'X0XX'
     };
