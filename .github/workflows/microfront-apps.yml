@@ -31,7 +31,7 @@ jobs:
 
       - name: Build Docker image for microfront app
         run: |
-          docker compose -f modulefederation-${{ github.event.inputs.app_name }}.yml build --no-cache
+          docker compose -f docker/modulefederation-${{ github.event.inputs.app_name }}-microfront.yml build --no-cache
 
       - name: Tag Docker image
         run: |
