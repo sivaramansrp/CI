@@ -5,7 +5,7 @@
     </div>
     <div class="row mt-5 radios">
       <app-input-radio [radioOptions]="radioOpcions" [selectedValue]="valorSeleccionado" [isRequired]="true"
-        [layout]="'horizontal'" formControlName="tipoOperacion"
+        [layout]="'horizontal'" formControlName="tipoOperacion" [disabled]="soloLectura"
         (change)="setValoresStore(validacionForm,'tipoOperacion', 'setTipoOperacion')"></app-input-radio>
     </div>
     <div class="row mt-5">
@@ -19,7 +19,7 @@
     <div>
       <div class="text-end" *ngIf="esTipoOperacionSeleccionado">
         <button type="button" class="btn btn-primary" title="Selecciona para habilitar los campos del establecimiento"
-          data-bs-toggle="modal" data-bs-target="#modalAlerta" (click)="seleccionarEstablecimiento()"
+          data-bs-toggle="modal" data-bs-target="#modalAlerta" (click)="seleccionarEstablecimiento()" [disabled]="soloLectura"
           > Seleccionar establecimiento </button>
       </div> @if (nuevaNotificacion) { <section>
         <lib-notificaciones [notificacionInput]="nuevaNotificacion"
@@ -51,7 +51,7 @@
           (change)="setValoresStore(validacionMercanciaForm,'codigoPostal', 'setCodigoPostal')" />
       </div>
       <div class="col-md-4">
-        <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Estado'" [required]="true"
+        <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Estado'" [required]="true" [isDisabled]="soloLectura"
            formControlName="estado"
           (change)="setValoresStore(validacionMercanciaForm,'estado', 'setEstado')"></app-catalogo-select>
       </div>
@@ -105,7 +105,7 @@
     <div class="col-md-12 mt-5">
       <label class="form-label mb-5" for="">S.C.I.A.N.*:</label>
       <div>
-        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="encabezados"
+        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="encabezados" [disableSeleccionTablaCheckBox]="soloLectura"
           
           (listaDeFilaSeleccionada)="setTablaSeleccionFabricante($event)" [datos]="certificadoDisponsiblesTablaDatos"
           (click)="verificarSeleccionCheckbox($event)"
@@ -115,9 +115,9 @@
     </div>
     <div class="row">
       <div class="col-md-12 text-end">
-        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalEliminarScian"
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalEliminarScian" [disabled]="soloLectura"
           (click)="eliminarMercanciaGrid()" > Eliminar </button>
-        <button type="button" class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#modalClaveScian"
+        <button type="button" class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#modalClaveScian" [disabled]="soloLectura"
           (click)="agregarMercanciaGrid()" > Agregar </button>
       </div>
     </div>
@@ -138,11 +138,11 @@
           <div class="modal-body">
             <div class="row">
               <app-catalogo-select [catalogo]="catalogoClave.catalogos" [label]="'Clave S.C.I.A.N.'" [required]="true"
-                 formControlName="claveScian"
+                 formControlName="claveScian" [isDisabled]="soloLectura"
                 (change)="setValoresStore(validacionScionForm,'claveScian', 'setClaveScian')"></app-catalogo-select>
               <div class="row">
                 <app-catalogo-select [catalogo]="catalogoClave.catalogos" [label]="'Descripción del S.C.I.A.N.'"
-                  [required]="false"  formControlName="descripcionScian"
+                  [required]="false"  formControlName="descripcionScian" [isDisabled]="soloLectura"
                   (change)="setValoresStore(validacionScionForm,'descripcionScian', 'setDescripcionScian')"></app-catalogo-select>
               </div>
             </div>
@@ -151,11 +151,11 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="pull-right">
-                  <button type="button" name="limpiarSCIAN" class="btn btn-danger" > Limpiar
+                  <button type="button" name="limpiarSCIAN" [disabled]="soloLectura" class="btn btn-danger" > Limpiar
                   </button>
-                  <button type="button" name="cancelar" class="btn btn-default ms-2" data-bs-dismiss="modal" #closeModal
+                  <button type="button" name="cancelar" class="btn btn-default ms-2" [disabled]="soloLectura" data-bs-dismiss="modal" #closeModal
                     > Cancelar </button>
-                  <button type="button" name="agregar" class="btn btn-primary ms-2" > Agregar
+                  <button type="button" name="agregar" class="btn btn-primary ms-2" [disabled]="soloLectura"> Agregar
                   </button>
                 </div>
               </div>
@@ -189,12 +189,12 @@
     <div class="row mt-5">
       <div class="col-md-8">
         <app-catalogo-select [catalogo]="catalogoClave.catalogos" [label]="'Régimen al que se destinarán la mercancías'"
-          [required]="true" [tooltipQuestionCircle]="true"  formControlName="regimen"
+          [required]="true" [tooltipQuestionCircle]="true"  formControlName="regimen" [isDisabled]="soloLectura"
           (change)="setValoresStore(validacionAduanaMercanciaForm,'regimen', 'setRegimen')"></app-catalogo-select>
       </div>
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="catalogoClave.catalogos" [label]="'Aduana'" [required]="true"
-           formControlName="aduana"
+           formControlName="aduana" [isDisabled]="soloLectura"
           (change)="setValoresStore(validacionAduanaMercanciaForm,'aduana', 'setAduana')"></app-catalogo-select>
       </div>
     </div>
@@ -218,12 +218,12 @@
     <div class="col-md-12 mt-4">
       <label class="form-label mb-5" for="">mercancías*:</label>
       <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="mercanciasDatos"
-        [datos]="mercanciasConfiguracionTabla" 
+        [datos]="mercanciasConfiguracionTabla" [disableSeleccionTablaCheckBox]="soloLectura"
         (change)="setValoresStore(validacionDatosMercanciaForm,'mercancia', 'setMercancia')"></app-tabla-dinamica>
     </div>
     <div class="row mt-5">
       <div class="col-md-12 mt-5 d-flex justify-content-end">
-        <button type="button" class="btn btn-primary ms-2 mb-5" data-bs-toggle="modal"
+        <button type="button" class="btn btn-primary ms-2 mb-5" data-bs-toggle="modal" [disabled]="soloLectura"
           data-bs-target="#modalAgregarMercancia"  (click)="agregarMercanciaGrid()"> Modificar
         </button>
       </div>
@@ -239,7 +239,7 @@
             <div class="row mt-5">
               <div class="col-md-8">
                 <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Clasificación del producto'"
-                  [required]="true"  formControlName="clasificacionProducto"
+                  [required]="true"  formControlName="clasificacionProducto" [isDisabled]="soloLectura"
                   (change)="setValoresStore(validacionDatosMercanciaForm,'clasificacionProducto', 'setClasificacionProducto')"></app-catalogo-select>
               </div>
             </div>
@@ -247,7 +247,7 @@
               <div class="col-md-8">
                 <app-catalogo-select [catalogo]="estadoCatalogo.catalogos"
                   [label]="'Especificar clasificación del producto'" [required]="true" 
-                  formControlName="especificarClasificacionProducto"
+                  formControlName="especificarClasificacionProducto" [isDisabled]="soloLectura"
                   (change)="setValoresStore(validacionDatosMercanciaForm,'especificarClasificacionProducto', 'setEspecificarClasificacionProducto')"></app-catalogo-select>
               </div>
             </div>
@@ -426,7 +426,7 @@
     <label class="form-label" for="">Los datos o anexos pueden contener información confidencial ¿Está de acuerdo en
       hacerlos públicos?*:</label>
     <app-input-radio [radioOptions]="opcionesRadioHacerlos" [selectedValue]="hercelosSeleccionados"
-      [layout]="'horizontal'" formControlName="hacerlosPublicos" 
+      [layout]="'horizontal'" formControlName="hacerlosPublicos" [disabled]="soloLectura"
       (change)="setValoresStore(datosDelEstablecimientoForm,'hacerlosPublicos', 'setHacerlosPublicos')"></app-input-radio>
   </div>
   <ng-titulo titulo="Representante legal" />
@@ -437,7 +437,7 @@
         (change)="setValoresStore(datosDelEstablecimientoForm,'rfc', 'setRFC')" />
     </div>
     <div class="col-md-2 mt-5">
-      <button type="button" class="btn btn-primary" >Buscar</button>
+      <button type="button" class="btn btn-primary" [disabled]="soloLectura">Buscar</button>
     </div>
   </div>
   <div class="row mt-5">

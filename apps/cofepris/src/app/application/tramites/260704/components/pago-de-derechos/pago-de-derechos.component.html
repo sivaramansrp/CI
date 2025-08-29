@@ -10,7 +10,7 @@
       <input class="form-control" type="text" formControlName="cadenaDependecia" (change)="setValoresStore(pagoDeDerechosForm,'cadenaDependecia', 'setCadenaDependecia')" />
     </div>
     <div class="col-md-4 mt-3">
-      <app-catalogo-select [catalogo]="bancoCatalogo.catalogos" [label]="'Banco'" formControlName="banco" (change)="setValoresStore(pagoDeDerechosForm,'banco', 'setBanco')"></app-catalogo-select>
+      <app-catalogo-select [catalogo]="bancoCatalogo.catalogos" [isDisabled]="soloLectura" [label]="'Banco'" formControlName="banco" (change)="setValoresStore(pagoDeDerechosForm,'banco', 'setBanco')"></app-catalogo-select>
     </div>
   </div>
   <div class="row mt-5">

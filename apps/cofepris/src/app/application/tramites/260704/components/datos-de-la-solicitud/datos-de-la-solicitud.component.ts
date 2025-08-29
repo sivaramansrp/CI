@@ -4,6 +4,7 @@ import {
   CatalogoSelectComponent,
   InputCheckComponent,
   InputFecha,
+  InputRadioComponent,
   Pedimento,
   TablaSeleccion,
   TituloComponent,
@@ -12,7 +13,7 @@ import {
 import { ColumnasTabla, CrossList, FECHA_FINAL, FECHA_INICIAL, ListaClave, Mercancia } from '../../models/consulta.model';
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { CrosslistComponent, InputFechaComponent, InputRadioComponent, Notificacion, NotificacionesComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { CrosslistComponent, InputFechaComponent, Notificacion, NotificacionesComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud260704State, Tramite260704Store } from '../../estados/Tramite260704.store';
@@ -40,7 +41,7 @@ import { Tramite260704Query } from '../../estados/Tramite260704.query';
     CommonModule,
     NotificacionesComponent,
     InputCheckComponent
-  ],
+],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrls: ['./datos-de-la-solicitud.component.css'],
 })
