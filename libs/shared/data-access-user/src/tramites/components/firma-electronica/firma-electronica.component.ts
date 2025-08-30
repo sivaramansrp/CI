@@ -1,12 +1,15 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { FileType, OperationType } from '../../../core/enums/firma-electronica.enum';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FirmaElectronicaService } from '../../../core/services/shared/firma-electronica/firma-electronica.service';
 import { InputFilaComponent } from '../input-fila/input-fila.component';
 import { LOGIN } from '../../constantes/constantes';
+import { LoginDetalle } from '../../../core/models/usuario/perfilUsuario.model';
 import { ToastrService } from 'ngx-toastr';
 import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
+import { esValidObject } from '../../../core/utils/utilerias';
 
 @Component({
   selector: 'firma-electronica',
@@ -16,7 +19,14 @@ import { ValidacionesFormularioService } from '../../../core/services/shared/val
   templateUrl: './firma-electronica.component.html',
   styleUrl: './firma-electronica.component.scss',
 })
-export class FirmaElectronicaComponent {
+export class FirmaElectronicaComponent implements OnDestroy {
+
+  /**
+   * Un subject utilizado para notificar y completar todas las suscripciones cuando el componente es destruido.
+   * Esto ayuda a prevenir fugas de memoria al garantizar que cualquier suscripción activa vinculada a este notifier
+   * se desuscriba cuando finalice el ciclo de vida del componente.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
   /**
   * Tipo de firma que se va a utilizar en el componente.
   * Este valor es obligatorio y se utiliza para definir el comportamiento o formato
@@ -35,7 +45,7 @@ export class FirmaElectronicaComponent {
    * true  -> La firma es válida y completa.  
    * false -> Hay errores o el proceso de firma no es válido.
    */
-  @Output() valido = new EventEmitter<boolean>();
+  @Output() valido = new EventEmitter<LoginDetalle>();
 
   /**
    * Evento que emite el valor de la firma electrónica generada (en formato base64).
@@ -210,16 +220,37 @@ export class FirmaElectronicaComponent {
         ESLOGIN
       );
 
+      // Crear el payload para la autenticación
+      const PAYLOAD = {
+        "rfc": RESULTADO.rfc,
+        "certificate": RESULTADO.certificado,
+        "privateKey": this.keyFileObj?.name.endsWith('.key') ? this.keyFileObj?.name : '',
+        "password": this.FormCertificado.get('password')?.value || ''
+      }
+
+      this.valido.emit({ rfc: RESULTADO.rfc, tieneLogin: true });
+      this.firmaService.loginFielAuthentication(PAYLOAD).pipe(takeUntil(this.destroyNotifier$)).subscribe({
+        next: (response) => {
+          if(esValidObject(response)){
+            this.toastrService.success('Autenticación exitosa');
+
+          }
+        },
+        error: (error) => {
+          this.toastrService.error('Error en la autenticación');
+        }
+      });
+
       if (ESLOGIN) {
         // Caso login: solo validación
-        this.valido.emit(true);
+        this.valido.emit({ rfc: RESULTADO.rfc, tieneLogin: true });
       } else {
         // Caso firma: emitir datos completos
         if (!RESULTADO.firma) {
           throw new Error('No se generó la firma electrónica');
         }
 
-        this.valido.emit(true);
+        this.valido.emit({ rfc: RESULTADO.rfc, tieneLogin: true });
         this.datosFirma.emit({
           firma: RESULTADO.firma,
           certSerialNumber: RESULTADO.certificado,
@@ -231,7 +262,7 @@ export class FirmaElectronicaComponent {
 
     } catch (error) {
       console.error('Error al firmar:', error);
-      this.valido.emit(false);
+      this.valido.emit({ rfc: '', tieneLogin: false });
 
       let mensaje = 'Error al validar la firma';
 
@@ -248,6 +279,18 @@ export class FirmaElectronicaComponent {
     finally {
       this.isLoading = false;
     }
+  }
+
+
+  /**
+   * Gancho del ciclo de vida que se llama cuando el componente es destruido.
+   * Este método emite un valor al subject `destroyNotifier$` y lo completa,
+   * asegurando que cualquier suscripción vinculada a este notifier se limpie
+   * adecuadamente para prevenir fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
   /**

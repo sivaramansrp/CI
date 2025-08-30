@@ -11,10 +11,11 @@
  */
 
 import * as uuid from 'uuid';
-import { AMBIENTES, PerfilUsuario } from '@ng-mf/data-access-user';
-import { Component, OnInit } from '@angular/core';
+import { AMBIENTES, LoginDetalle,LoginStore, PerfilUsuario } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Rol } from '@ng-mf/data-access-user';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
 import { TipoPersona } from '@ng-mf/data-access-user';
 import { UsuarioStore } from '@libs/shared/data-access-user/src/core/estados/usuario.store';
 
@@ -24,7 +25,13 @@ import { UsuarioStore } from '@libs/shared/data-access-user/src/core/estados/usu
     styleUrl: './auth-page.component.scss',
     host: { 'hostID': uuid.v4().toString() }
 })
-export class AuthPageComponent implements OnInit {
+export class AuthPageComponent implements OnInit,OnDestroy {
+    /**
+     * Un subject utilizado para notificar y completar todas las suscripciones cuando el componente es destruido.
+     * Esto ayuda a prevenir fugas de memoria al garantizar que cualquier suscripción activa vinculada a este notifier
+     * se desuscriba cuando finalice el ciclo de vida del componente.
+     */
+    private destroyNotifier$: Subject<void> = new Subject();
     /**
      * Índice de la pestaña seleccionada.
      */
@@ -47,6 +54,7 @@ export class AuthPageComponent implements OnInit {
     constructor(
         private usuarioStore: UsuarioStore,
         private router: Router,
+        private _loginStore: LoginStore
     ) { }
 
     /**
@@ -73,25 +81,37 @@ export class AuthPageComponent implements OnInit {
      * Si el login es exitoso, establece un usuario de prueba y redirige a la selección de trámite.
      * @param login Indica si el login fue exitoso.
      */
-    validarEFirma(login: boolean,) {
-        if (login) {
+    validarEFirma(login: LoginDetalle) {
+        if (login.tieneLogin) {
             const ROLES: Rol[] = [{ idRol: 1, codigoRol: '', nombre: '', descripcion: '' }];
             const PERFIL_USUARIO: PerfilUsuario = {
                 nombre: '',
                 apellidoPaterno: '',
                 apellidoMaterno: '',
                 nombreCompleto: '',
-                rfc: 'SAAA980822LP1',
+                rfc: login.rfc,
                 correoElectronico: '',
                 tipoPersona: TipoPersona.FISICA
             }
+            this._loginStore.establecerLogin(login.rfc, login.tieneLogin);
             this.usuarioStore.establecerUsuario('LEQI', PERFIL_USUARIO, ROLES, '');
             if (!this.primerAcceso) {
-                window.location.href = '/bandeja-de-tareas-pendientes';
+                this.router.navigate(['/bandeja-de-tareas-pendientes']);
             }
             else {
                 this.router.navigate(['login/condiciones-uso']);
             }
         }
     }
+
+    /**
+   * Gancho del ciclo de vida que se llama cuando el componente es destruido.
+   * Este método emite un valor al subject `destroyNotifier$` y lo completa,
+   * asegurando que cualquier suscripción vinculada a este notifier se limpie
+   * adecuadamente para prevenir fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }
