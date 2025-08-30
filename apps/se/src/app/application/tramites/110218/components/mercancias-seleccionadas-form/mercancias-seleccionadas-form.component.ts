@@ -37,21 +37,13 @@ import { takeUntil } from 'rxjs';
   styleUrl: './mercancias-seleccionadas-form.component.scss',
 })
 export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy, OnChanges {
-  ngOnChanges(): void {
-    // Patch selected row data into the form whenever input changes
-    if (this.selectedRow && this.modifydatosdelcertificado) {
-      this.modifydatosdelcertificado.patchValue({
-        nombreComercial: this.selectedRow.nombreComercial,
-        nombreIngles: this.selectedRow.nombreIngles,
-        cantidad: this.selectedRow.cantidad,
-        fechadelaFactura: this.selectedRow.fechadelaFactura,
-      });
-    }
-  }
   /**
    * Evento para enviar los datos modificados al padre y cerrar el modal.
    */
   @Input() selectedRow!: import('../../models/certificado-tecnico-japon.enum').CompliMentaria;
+  /**
+   * Evento para enviar los datos modificados al padre.
+   */
   @Output() datosModificados = new EventEmitter<import('../../models/certificado-tecnico-japon.enum').CompliMentaria>();
   /**
    * Evento para cerrar el modal.
@@ -199,8 +191,22 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy, 
     this.tipoDeFactura();
     this.getValorStore();
     this.inicializarFormulario();
-    // Patch selected row data after form initialization
     if (this.selectedRow) {
+      this.modifydatosdelcertificado.patchValue({
+        nombreComercial: this.selectedRow.nombreComercial,
+        nombreIngles: this.selectedRow.nombreIngles,
+        cantidad: this.selectedRow.cantidad,
+        fechadelaFactura: this.selectedRow.fechadelaFactura,
+      });
+    }
+  }
+  /**
+   * Detecta cambios en las propiedades de entrada del componente.
+   * Actualiza el formulario con los datos de la fila seleccionada si están disponibles.
+   */
+
+    ngOnChanges(): void {
+    if (this.selectedRow && this.modifydatosdelcertificado) {
       this.modifydatosdelcertificado.patchValue({
         nombreComercial: this.selectedRow.nombreComercial,
         nombreIngles: this.selectedRow.nombreIngles,

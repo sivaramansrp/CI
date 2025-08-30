@@ -44,6 +44,16 @@ export interface Solicitud110218State {
 }
 
 
+/**
+ * Crea el estado inicial para la solicitud 110218.
+ * 
+ * @returns {Solicitud110218State} El estado inicial con todos los campos predefinidos.
+ * 
+ * @remarks
+ * Este estado incluye información relevante para el trámite, como datos de embarque, 
+ * datos personales, información fiscal, datos de contacto y detalles de la mercancía.
+ * Todos los campos se inicializan con valores vacíos, nulos o arreglos vacíos según corresponda.
+ */
 export function createInitialState(): Solicitud110218State {
   return{
     puertodeEmbarque:'',
@@ -79,10 +89,46 @@ export function createInitialState(): Solicitud110218State {
   }
 }
 
+/**
+ * @description
+ * Almacén de estado para el trámite 110218.
+ * Utiliza Akita para la gestión del estado de la solicitud.
+ * 
+ * @componente Tramite110218Store
+ * @autor Equipo de Desarrollo
+ * @since 2024
+ */
+
+/**
+ * Actualiza el estado del trámite 110218 con los valores proporcionados.
+ * 
+ * @param valores - Objeto parcial con las propiedades a actualizar en el estado de la solicitud.
+ */
 @Injectable({
   providedIn: 'root',
 })
+/**
+ * Almacén de estado para el trámite 110218.
+ * Utiliza Akita para la gestión del estado de la solicitud.
+ */
 @StoreConfig({ name: 'tramite110218', resettable: true })
+
+/**
+ * @class Tramite110218Store
+ * @extends Store<Solicitud110218State>
+ * 
+ * @description
+ * Store especializado para manejar el estado de la solicitud 110218.
+ * Proporciona métodos para inicializar y actualizar el estado relacionado con el trámite.
+ * 
+ * @constructor
+ * Inicializa el estado usando la función `createInitialState`.
+ * 
+ * @method setTramite110218State
+ * Actualiza el estado del trámite 110218 con los valores proporcionados.
+ * 
+ * @param valores - Un objeto parcial de tipo `Solicitud110218State` con los valores a actualizar en el estado.
+ */
 export class Tramite110218Store extends Store<Solicitud110218State> {
   constructor() {
     super(createInitialState());

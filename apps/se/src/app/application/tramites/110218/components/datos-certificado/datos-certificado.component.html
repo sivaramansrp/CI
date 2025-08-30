@@ -66,12 +66,7 @@
       </div>
  
       <div class="modal-body">
-  <app-mercancias-seleccionadas-form [selectedRow]="filaSeleccionada" (closeModalEvent)="modalCancelar()" (datosModificados)="onDatosModificados($event)"></app-mercancias-seleccionadas-form>
- 
-        <!-- <footer class="footer d-flex py-5 gap-3 justify-content-end">
-          <button type="button" class="btn btn-primary" (click)="modalCancelar()">Cancelar</button>
-          <button type="button" class="btn btn-primary">Modificar</button>
-        </footer> -->
+        <app-mercancias-seleccionadas-form [selectedRow]="filaSeleccionada" (closeModalEvent)="modalCancelar()" (datosModificados)="onDatosModificados($event)"></app-mercancias-seleccionadas-form>
       </div>
     </div>
   </div>
