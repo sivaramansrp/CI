@@ -155,7 +155,7 @@ export class DatosDeReporteAnnualComponent implements OnDestroy, OnInit {
 
    
 
-    this.inicializarEstadoFormulario();
+    
   }
   /**
    * `
@@ -188,6 +188,7 @@ export class DatosDeReporteAnnualComponent implements OnDestroy, OnInit {
    * @returns {void}
    */
   inicializarEstadoFormulario(): void {
+    this.inicializarFormulario();
     if (this.formularioDeshabilitado) {
       this.formReporteAnnual.disable();
     } else {

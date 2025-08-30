@@ -19,11 +19,11 @@ describe('ChofereNacionalComponent', () => {
   let mockChofer40103Service: jest.Mocked<Chofer40103Service>;
   let mockChofer40103Query: jest.Mocked<Chofer40103Query>;
   let mockConsultaioQuery: ConsultaioQuery = {
-      selectConsultaioState$: of({
-        readonly: true,
-        update: true,
-      } as ConsultaioState),
-    } as ConsultaioQuery;
+    selectConsultaioState$: of({
+      readonly: true,
+      update: true,
+    } as ConsultaioState),
+  } as ConsultaioQuery;
   let mockModalRef: jest.Mocked<BsModalRef>;
 
   const mockChoferData: DatosDelChoferNacional = {
@@ -109,25 +109,24 @@ describe('ChofereNacionalComponent', () => {
 
     it('should handle empty chofer data', () => {
       mockChofer40103Query.selectSolicitud$ = of({ datosDelChoferNacionalAlta: null } as unknown as Choferesnacionales40103State);
-      
+
       component.ngOnInit();
-      
+
       expect(component.datosDelChoferNacional).toEqual([]);
     });
   });
 
   describe('onChofereNationalSelected', () => {
     it('should update selected choferes', () => {
-      const selectedChoferes = [mockChoferData];
-      
-      component.onChofereNationalSelected(selectedChoferes);
-      
-      expect(component.datosDelChoferNacionalSelected).toEqual(selectedChoferes);
+      const selected = [
+        { id: '1', nombre: 'Juan Pérez', licencia: 'ABC123', telefono: '555-1234', correoElectronico: 'juan.perez@email.com' },
+        { id: '2', nombre: 'María García', licencia: 'DEF456', telefono: '555-5678', correoElectronico: 'maria.garcia@email.com' }
+      ];
+      component.onChofereNationalSelected(selected);
+      expect(component.datosDelChoferNacionalSelected).toEqual(selected);
     });
-
     it('should handle empty selection', () => {
       component.onChofereNationalSelected([]);
-      
       expect(component.datosDelChoferNacionalSelected).toEqual([]);
     });
   });
@@ -135,12 +134,10 @@ describe('ChofereNacionalComponent', () => {
   describe('addNewRow', () => {
     it('should reset datosChofere and open modal', () => {
       const mockTemplate = {} as TemplateRef<unknown>;
-      const openModalSpy = jest.spyOn(component, 'openModal').mockImplementation();
-      
+      const abrirModalSpy = jest.spyOn(component, 'abrirModal').mockImplementation();
       component.addNewRow(mockTemplate);
-      
       expect(component.datosChofere).toEqual({} as DatosDelChoferNacional);
-      expect(openModalSpy).toHaveBeenCalledWith(mockTemplate);
+      expect(abrirModalSpy).toHaveBeenCalledWith(mockTemplate);
     });
   });
 
@@ -148,24 +145,20 @@ describe('ChofereNacionalComponent', () => {
     it('should edit selected row when row is selected', () => {
       const mockTemplate = {} as TemplateRef<unknown>;
       component.datosDelChoferNacionalSelected = [mockChoferData];
-      const openModalSpy = jest.spyOn(component, 'openModal').mockImplementation();
-      
+      const abrirModalSpy = jest.spyOn(component, 'abrirModal').mockImplementation();
       component.editSelectedRow(mockTemplate);
-      
       expect(component.datosChofere).toEqual(mockChoferData);
-      expect(openModalSpy).toHaveBeenCalledWith(mockTemplate);
+      expect(abrirModalSpy).toHaveBeenCalledWith(mockTemplate);
     });
 
     it('should show warning when no row is selected', () => {
       const mockTemplate = {} as TemplateRef<unknown>;
       component.datosDelChoferNacionalSelected = [];
       const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
-      const openModalSpy = jest.spyOn(component, 'openModal').mockImplementation();
-      
+      const abrirModalSpy = jest.spyOn(component, 'abrirModal').mockImplementation();
       component.editSelectedRow(mockTemplate);
-      
       expect(consoleSpy).toHaveBeenCalledWith('No rows selected for editing.');
-      expect(openModalSpy).not.toHaveBeenCalled();
+      expect(abrirModalSpy).not.toHaveBeenCalled();
     });
   });
 
@@ -204,10 +197,9 @@ describe('ChofereNacionalComponent', () => {
     });
   });
 
-  describe('openModal', () => {
+  describe('abrirModal', () => {
     it('should open modal with correct configuration', () => {
       bsModalServiceMock.show.mockReturnValue(mockModalRef);
-
       const mockTemplate = {} as TemplateRef<unknown>;
       const testComponent = new ChofereNacionalComponent(
         bsModalServiceMock,
@@ -215,9 +207,7 @@ describe('ChofereNacionalComponent', () => {
         mockChofer40103Query,
         mockConsultaioQuery
       );
-
-      testComponent.openModal(mockTemplate);
-      
+      testComponent.abrirModal(mockTemplate);
       expect(bsModalServiceMock.show).toHaveBeenCalledWith(mockTemplate, {
         class: 'modal-fullscreen'
       });
@@ -225,30 +215,27 @@ describe('ChofereNacionalComponent', () => {
     });
   });
 
-  describe('cancelModal', () => {
+  describe('cancelarModal', () => {
     it('should hide modal and reset reference', () => {
       component.modalRef = mockModalRef;
-      
-      component.cancelModal();
-      
+      component.cancelarModal();
       expect(mockModalRef.hide).toHaveBeenCalled();
       expect(component.modalRef).toBeNull();
     });
 
     it('should handle null modal reference', () => {
       component.modalRef = null;
-      
-      expect(() => component.cancelModal()).not.toThrow();
+      expect(() => component.cancelarModal()).not.toThrow();
       expect(component.modalRef).toBeNull();
     });
   });
 
-  describe('addModal', () => {
+  describe('agregarModal', () => {
     beforeEach(() => {
       component.datosDelChoferNacional = [...mockChoferList];
       component.datosDelChoferNacionalSelected = [mockChoferData];
       component.modalRef = mockModalRef;
-      jest.spyOn(component, 'cancelModal').mockImplementation();
+      jest.spyOn(component, 'cancelarModal').mockImplementation();
     });
 
     it('should add new chofer data and update service', () => {
@@ -258,16 +245,12 @@ describe('ChofereNacionalComponent', () => {
         licencia: 'GHI789',
         telefono: '555-9012'
       } as unknown as DatosDelChoferNacional;
-
-      component.addModal(newChofer);
-      
+      component.agregarModal(newChofer);
       expect(component.datosDelChoferNacional).toContain(newChofer);
       expect(component.datosDelChoferNacional.length).toBe(3);
       expect(component.datosDelChoferNacionalSelected).toEqual([]);
-      expect(mockChofer40103Service.updateDatosDelChoferNacional).toHaveBeenCalledWith(
-        component.datosDelChoferNacional
-      );
-      expect(component.cancelModal).toHaveBeenCalled();
+      expect(mockChofer40103Service.updateDatosDelChoferNacional).toHaveBeenCalledWith(component.datosDelChoferNacional);
+      expect(component.cancelarModal).toHaveBeenCalled();
     });
   });
 
@@ -310,15 +293,13 @@ describe('ChofereNacionalComponent', () => {
         telefono: '555-0000'
       } as unknown as DatosDelChoferNacional;
 
-      component.addModal(newChofer);
-      expect(component.datosDelChoferNacional).toContain(newChofer);
-      
-      component.onChofereNationalSelected([newChofer]);
-      expect(component.datosDelChoferNacionalSelected).toContain(newChofer);
-      
-      component.deleteSelectedRow();
-      expect(component.datosDelChoferNacional).not.toContain(newChofer);
-      expect(component.datosDelChoferNacionalSelected).toEqual([]);
+  component.agregarModal(newChofer);
+  expect(component.datosDelChoferNacional).toContain(newChofer);
+  component.onChofereNationalSelected([newChofer]);
+  expect(component.datosDelChoferNacionalSelected).toContain(newChofer);
+  component.deleteSelectedRow();
+  expect(component.datosDelChoferNacional).not.toContain(newChofer);
+  expect(component.datosDelChoferNacionalSelected).toEqual([]);
     });
   });
 });
