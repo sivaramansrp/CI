@@ -109,11 +109,12 @@ export class RegistroPageComponent implements OnInit {
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
+      return;
     }
     if (e.valor > 0 && e.valor < 3) {
       this.indice = e.valor;
+      this.wizardComponent.indiceActual = this.indice;
       if (e.accion === 'cont') {
-        this.wizardComponent.indiceActual = 2;
         this.wizardComponent.siguiente();
       } else {
         this.wizardComponent.atras();
