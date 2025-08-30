@@ -11,6 +11,7 @@ import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
 import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
 
 import { Component, EventEmitter,Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { OnChanges } from '@angular/core';
 
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -35,7 +36,18 @@ import { takeUntil } from 'rxjs';
   templateUrl: './mercancias-seleccionadas-form.component.html',
   styleUrl: './mercancias-seleccionadas-form.component.scss',
 })
-export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
+export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy, OnChanges {
+  ngOnChanges(): void {
+    // Patch selected row data into the form whenever input changes
+    if (this.selectedRow && this.modifydatosdelcertificado) {
+      this.modifydatosdelcertificado.patchValue({
+        nombreComercial: this.selectedRow.nombreComercial,
+        nombreIngles: this.selectedRow.nombreIngles,
+        cantidad: this.selectedRow.cantidad,
+        fechadelaFactura: this.selectedRow.fechadelaFactura,
+      });
+    }
+  }
   /**
    * Evento para enviar los datos modificados al padre y cerrar el modal.
    */
@@ -187,7 +199,15 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
     this.tipoDeFactura();
     this.getValorStore();
     this.inicializarFormulario();
-    this.tableDataValues();
+    // Patch selected row data after form initialization
+    if (this.selectedRow) {
+      this.modifydatosdelcertificado.patchValue({
+        nombreComercial: this.selectedRow.nombreComercial,
+        nombreIngles: this.selectedRow.nombreIngles,
+        cantidad: this.selectedRow.cantidad,
+        fechadelaFactura: this.selectedRow.fechadelaFactura,
+      });
+    }
   }
 
   /**
@@ -221,12 +241,12 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
    * Actualiza campos como nombre comercial, nombre en inglés, cantidad y fecha de la factura.
    */
   tableDataValues(): void {
-    if (this.receivedData) {
+    if (this.selectedRow) {
       this.modifydatosdelcertificado.patchValue({
-        nombreComercial: this.receivedData[0].nombreComercial,
-        nombreIngles: this.receivedData[0].nombreIngles,
-        cantidad: '100',
-        fechadelaFactura: '2024-11-13',
+        nombreComercial: this.selectedRow.nombreComercial,
+        nombreIngles: this.selectedRow.nombreIngles,
+        cantidad: this.selectedRow.cantidad,
+        fechadelaFactura: this.selectedRow.fechadelaFactura,
       });
     }
   }

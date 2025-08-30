@@ -19,13 +19,14 @@
                 <div class="col-md-12 mb-5">
                     <label class="form-label" for="observaciones">Observaciones:</label>
                     <textarea class="form-control custom-textarea" id="observaciones"
-                        placeholder="Este es un texto de prueba para el llenado de los formularios del sistema." formControlName="observaciones"
+                        placeholder="Este es un texto de prueba para el llenado de los formularios del sistema." 
+                        formControlName="observaciones"
                         [class.bg-white]="!datosDelCertificado.get('observaciones')?.disabled"
-                        maxlength="80"
                         [class.is-invalid]="datosDelCertificado.get('observaciones')?.touched && datosDelCertificado.get('observaciones')?.invalid"
                         (change)="setValorStore(datosDelCertificado,'observaciones')"
+                        maxlength="80"
                         [disabled]="esSoloLectura">
-                </textarea>
+                    </textarea>
                     <div class="invalid-feedback">Este campo es obligatorio.</div>
                 </div>
 

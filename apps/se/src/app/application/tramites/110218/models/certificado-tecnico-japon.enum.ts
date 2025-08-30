@@ -7,6 +7,8 @@ export interface CompliMentaria {
   nombreComercial: string;
   nombreIngles: string;
   númerodeRegistro: string;
+  cantidad?: string;
+  fechadelaFactura?: string;
 }
 
 export const CERTIFICADO_TABLA = [
