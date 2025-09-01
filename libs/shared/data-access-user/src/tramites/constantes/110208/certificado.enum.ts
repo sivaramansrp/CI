@@ -142,7 +142,7 @@ export const MERCANCIA_MODAL_FORMA = [
     labelNombre: 'Cantidad',
     campo: 'cantidad',
     clase: 'col-md-4',
-    tipoInput: 'text',
+    tipoInput: 'number',
     desactivado: false,
     soloLectura: false,
     validadores: [{tipo: 'required'}],
@@ -172,7 +172,7 @@ export const MERCANCIA_MODAL_FORMA = [
     labelNombre: 'Valor de la mercancía(dólares)',
     campo: 'valorDeLaMercancia',
     clase: 'col-md-4',
-    tipoInput: 'text',
+    tipoInput: 'number',
     desactivado: false,
     soloLectura: false,
     validadores: [{tipo: 'required'}],
@@ -189,7 +189,13 @@ export const MERCANCIA_MODAL_FORMA = [
     tipoInput: 'textarea',
     desactivado: false,
     soloLectura: false,
-    validadores: [{tipo: 'required'}],
+     validadores: [
+       { 
+      tipo: 'pattern', 
+      valor: /^[a-zA-Z0-9 ]{0,200}$/, 
+      mensaje: 'Por favor, no escribas más de 200 caracteres' 
+    }
+      ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -203,7 +209,13 @@ export const MERCANCIA_MODAL_FORMA = [
     tipoInput: 'text',
     desactivado: false,
     soloLectura: false,
-    validadores: [{tipo: 'required'}],
+      validadores: [
+       { 
+      tipo: 'pattern', 
+      valor: /^[a-zA-Z0-9 ]{0,20}$/, 
+      mensaje: 'Por favor, no escribas más de 20 caracteres' 
+    }
+    ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
