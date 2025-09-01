@@ -806,7 +806,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Check if more than one row is selected
+   
     if (this.sustanciasSensiblesSeleccionadas.length > 1) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -823,20 +823,14 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // If exactly one row is selected, proceed with modification
-    const SUSTANCIA_SELECCIONADA = this.sustanciasSensiblesSeleccionadas[0];
-    this.formSolicitud.patchValue({
-      numeroCas: SUSTANCIA_SELECCIONADA.numeroCAS,
-      descripcionNoArancelaria: SUSTANCIA_SELECCIONADA.descripcionNoArancelaria,
-      nombreQuimico: SUSTANCIA_SELECCIONADA.nombreQuimico
-    });
-
+    // Proceed with modification logic when exactly one row is selected
     this.modoModificacion = true;
-    this.sustanciaEnModificacion = SUSTANCIA_SELECCIONADA;
+    this.sustanciaEnModificacion = this.sustanciasSensiblesSeleccionadas[0];
+   
   }
 
   agregarListaDeNumeros(): void {
-    // Check if required fields are filled
+    
     const NUMERO_CAS = this.formSolicitud.get('numeroCas')?.value;
 
     if (!NUMERO_CAS) {
