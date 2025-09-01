@@ -2,7 +2,7 @@ services:
 #----------------------------------------------------------------
   modulefederation-dashboard:
 
-    image: ghcr.io/vucem30/dockerized-modulefederation-dashboard:1.0.31
+    image: ghcr.io/vucem30/dockerized-modulefederation-dashboard:1.0.32
 
     build: 
       context: ./../
