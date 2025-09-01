@@ -1,5 +1,14 @@
 <div class="container">
   <div class="row">
+      <div *ngIf="showErrorModal">
+        <div class="alert alert-danger text-center" role="alert">
+          <p>Corrija los siguientes errores:</p>
+          <span style="color: rgb(134, 17, 17)">
+            Debe agregar un(Nombre o razón social para el destinatario)
+          </span>
+        
+        </div>
+      </div>
     <ul class="nav nav-tabs">
       <li [ngClass]="indice === 1 ? 'active' : ''">
         <a data-toggle="tab" (click)="seleccionaTab(1)" (keydown.enter)="seleccionaTab(1)"
@@ -34,27 +43,27 @@
       }
       @case (2) {
         @if(datosRespuestaDisponibles){
-      <app-tratados [tabindex]="2"></app-tratados>
+  <app-tratados #tratados [tabindex]="2"></app-tratados>
         }
       }
       @case (3) {
         @if(datosRespuestaDisponibles){
-      <app-destinatario [tabindex]="3"></app-destinatario>
+  <app-destinatario #destinatario [tabindex]="3"></app-destinatario>
         }
       }
       @case (4) {
         @if(datosRespuestaDisponibles){
-      <app-transporte [tabindex]="4"></app-transporte>
+  <app-transporte #transporte [tabindex]="4"></app-transporte>
         }
       }
       @case (5) {
         @if(datosRespuestaDisponibles){
-      <app-representante-legal [tabindex]="5"></app-representante-legal>
+  <app-representante-legal #representanteLegal [tabindex]="5"></app-representante-legal>
         }
       }
       @case (6) {
          @if(datosRespuestaDisponibles){
-        <app-datos-certificado [tabindex]="6"></app-datos-certificado>
+  <app-datos-certificado #datosCertificado [tabindex]="6"></app-datos-certificado>
          }
       }
       }

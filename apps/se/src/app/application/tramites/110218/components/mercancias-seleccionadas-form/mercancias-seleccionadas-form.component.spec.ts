@@ -69,9 +69,9 @@ describe('MercanciasSeleccionadasFormComponent', () => {
     expect(component.tipodeFacturaOptions).toEqual([{ id: 2, descripcion: 'Factura' }]);
   });
 
-  it('debería actualizar los valores del formulario en tableDataValues si receivedData existe', () => {
+  it('debería actualizar los valores del formulario en tableDataValues si selectedRow existe', () => {
     component.inicializarFormulario();
-    component.receivedData = [{ nombreComercial: 'Com', nombreIngles: 'Ing' }];
+    component.selectedRow = { nombreComercial: 'Com', nombreIngles: 'Ing', cantidad: '100', fechadelaFactura: '2024-11-13' } as any;
     component.tableDataValues();
     expect(component.modifydatosdelcertificado.get('nombreComercial')?.value).toBe('Com');
     expect(component.modifydatosdelcertificado.get('nombreIngles')?.value).toBe('Ing');
