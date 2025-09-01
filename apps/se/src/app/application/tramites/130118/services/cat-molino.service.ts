@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { CatalogosResponse, ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { Observable, catchError, map, throwError } from 'rxjs';
 
-import { API_GET_MOLINO_ACTIVOS } from '../../../../constantes/130118/api-constants';
+import { API_GET_MOLINO_ACTIVOS } from '../server/api-router';
 
 @Injectable({
   providedIn: 'root'

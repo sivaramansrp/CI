@@ -5,8 +5,8 @@ import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 
 import { Observable, catchError, map, throwError } from 'rxjs';
-import { API_GET_INICIO } from '../../../constantes/130118/api-constants';
-import { IniciarRequest } from '../../models/130118/request/iniciar-request.model';
+import { API_GET_INICIO } from '../server/api-router';
+import { IniciarRequest } from '../model/request/iniciar-request.model';
 
 
 @Injectable({

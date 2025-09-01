@@ -1,6 +1,6 @@
-import { API_POST_CADENA_ORIGINAL, IDSOLICITUD } from '../../../constantes/130118/api-constants';
+import { API_POST_CADENA_ORIGINAL, IDSOLICITUD } from '../server/api-router';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
-import { CadenaOriginalRequest } from '../../models/130118/request/cadena-original-request.model';
+import { CadenaOriginalRequest } from '../model/request/cadena-original-request.model';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -25,7 +25,7 @@ export class CadenaOriginal130118Service {
    * @returns Un observable que emite la respuesta del servidor con la cadena original.
    */
   obtenerCadenaOriginal<T>(idSolicitud: string, body: CadenaOriginalRequest): Observable<BaseResponse<T>> {
-  const ENDPOINT = `${this.urlServer}/api/` + API_POST_CADENA_ORIGINAL.replace(IDSOLICITUD, idSolicitud);
+  const ENDPOINT = `${this.urlServer}/api/` + API_POST_CADENA_ORIGINAL(idSolicitud);
 
   return this.http.post<BaseResponse<T>>(ENDPOINT, body).pipe(
     map((response) => response),

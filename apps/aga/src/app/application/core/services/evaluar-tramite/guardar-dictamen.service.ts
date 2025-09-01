@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { GuardarDictamenRequest } from '../../models/evaluar/guardar-dictamen-request.model';
 
-import { API_GET_DICTAMEN, API_POST_GUARDAR_DICTAMEN, IDSOLICITUDDICTAMEN, NUMFOLIOTRAMITE } from '@libs/shared/data-access-user/src/core/servers/api-router';
+import { API_GET_DICTAMEN, API_POST_GUARDAR_DICTAMEN, IDSOLICITUDDICTAMEN } from '@libs/shared/data-access-user/src';
 
 @Injectable({
     providedIn: 'root'
@@ -38,7 +38,7 @@ export class GuardarDictamenService {
     postGuadarDictamen(tramite: number,numFolio: string, PAYLOAD: GuardarDictamenRequest):
         Observable<BaseResponse<string>> {
         const ENDPOINT = `${this.host}` +
-            API_POST_GUARDAR_DICTAMEN.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolio);
+            API_POST_GUARDAR_DICTAMEN(tramite.toString(), numFolio);
 
         return this.http.post<BaseResponse<string>>(ENDPOINT, PAYLOAD);
     }

@@ -3,7 +3,7 @@ import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { API_GET_INICAR_DICTAMEN, API_POST_INICIAR_REQUERIMIENTO, NUMFOLIOTRAMITE, TRAMITE } from '../../../constantes/130118/api-constants';
+import { API_GET_INICAR_DICTAMEN, API_POST_INICIAR_REQUERIMIENTO } from '@libs/shared/data-access-user/src';
 import { Observable } from 'rxjs';
 
 import { IniciarDictamenResponse } from '@libs/shared/data-access-user/src/core/models/130118/iniciar-dictamen-response.model';
@@ -41,7 +41,7 @@ export class IniciarService {
 
   postIniciarDictamen(tramite: number, numFolio: string, PAYLOAD: IniciarRequerimientoRequest):
     Observable<BaseResponse<IniciarDictamenResponse>> {
-    const ENDPOINT = `${this.host}${API_GET_INICAR_DICTAMEN.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolio)}`;
+    const ENDPOINT = `${this.host}${API_GET_INICAR_DICTAMEN(tramite.toString(), numFolio)}`;
 
     return this.http.post<BaseResponse<IniciarDictamenResponse>>(ENDPOINT, PAYLOAD);
   }
@@ -55,7 +55,7 @@ export class IniciarService {
    */
   postIniciarRequerimiento(tramite: number, numFolio: string, PAYLOAD: IniciarRequerimientoRequest):
     Observable<BaseResponse<IniciarRequerimientoResponse>> {
-    const ENDPOINT = `${this.host}${API_POST_INICIAR_REQUERIMIENTO.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolio)}`;
+    const ENDPOINT = `${this.host}${API_POST_INICIAR_REQUERIMIENTO(tramite.toString(), numFolio)}`;
 
     return this.http.post<BaseResponse<IniciarRequerimientoResponse>>(ENDPOINT, PAYLOAD);
   }

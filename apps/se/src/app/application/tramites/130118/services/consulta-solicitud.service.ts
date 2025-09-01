@@ -4,8 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { API_GET_CONSULTA_SOLICITUD, NUMFOLIOTRAMITE } from '../../../constantes/130118/api-constants';
-import { ConsultaSolicitudResponse } from '../../models/130118/response/consultar-solicitud-response.model';
+import { API_GET_CONSULTA_SOLICITUD, NUMFOLIOTRAMITE } from '../server/api-router';
+import { ConsultaSolicitudResponse } from '../model/response/consultar-solicitud-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +33,7 @@ export class ConsultaSolicitudService {
    * @returns Observable que emite la respuesta de la consulta.
    */
   getDetalleSolicitud(numFolio: string): Observable<BaseResponse<ConsultaSolicitudResponse>> {
-    const ENDPOINT = `${this.host}${API_GET_CONSULTA_SOLICITUD.replace(NUMFOLIOTRAMITE, numFolio)}`;
+    const ENDPOINT = `${this.host}${API_GET_CONSULTA_SOLICITUD(NUMFOLIOTRAMITE, numFolio)}`;
     return this.http.get<BaseResponse<ConsultaSolicitudResponse>>(ENDPOINT);
   }
 
