@@ -123,7 +123,7 @@ describe('ResponsableInspeccionEnPuntoComponent', () => {
       tipoContenedor: {
         catalogos: [],
         labelNombre: 'Tipo contenedor',
-        primerOpcion: 'Selecciona un opción',
+        primerOpcion: 'Selecciona una opción',
         required: false,
       },
     };
