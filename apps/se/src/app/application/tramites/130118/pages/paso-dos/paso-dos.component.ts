@@ -31,13 +31,13 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * Evento que se emite para reenviar la solicitud de carga de documentos.
    * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de carga de documentos.
    */
-  @Output() reenviarEvento = new EventEmitter<void>();
+  reenviarEvento = new EventEmitter<void>();
 
   /**
    * Evento que se emite para regresar a la sección de carga de documentos.
    * Este evento se utiliza para notificar a otros componentes que se debe regresar a la sección de carga de documentos.
    */
-  @Output() reenviarRegresarSeccion = new EventEmitter<void>();
+  reenviarRegresarSeccion = new EventEmitter<void>();
 
   /**
    * Clase CSS para la alerta de información.

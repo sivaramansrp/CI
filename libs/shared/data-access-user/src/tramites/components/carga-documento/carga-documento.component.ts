@@ -242,7 +242,10 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
           });
         })
       )
-      .subscribe();
+      .subscribe(() => {
+        // Validar estado inicial después de cargar documentos obligatorios
+        this.actualizarEstadoBotonCargarArchivos();
+      });
   }
 
   /**
@@ -288,6 +291,9 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
             adicionales: [],
             cargado: false,
           }));
+          
+          // Validar estado inicial después de cargar documentos 130118
+          this.actualizarEstadoBotonCargarArchivos();
         },
         error: (err) => {
           console.error('Error obteniendo documentos desde 130118', err);
@@ -355,14 +361,37 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
         return;
       }
 
-      this.documentoSeleccionado =
-        tipo === OPCIONAL
-          ? (this.catalogoDocumentosOpcionales.find(
-            (doc) => doc.id_tipo_documento === id
-          ) as TipoDocumentos)
-          : (this.catalogoDocumentosObligatorios.find(
-            (doc) => doc.id_tipo_documento === id
-          ) as TipoDocumentos);
+      // Buscar el documento tanto en catálogos principales como en adicionales
+      const DOCUMENTO_ENCONTRADO = this.encontrarDocumento(id);
+      
+      if (DOCUMENTO_ENCONTRADO) {
+        this.documentoSeleccionado = DOCUMENTO_ENCONTRADO;
+      } else {
+        // Fallback al método anterior si no se encuentra
+        this.documentoSeleccionado =
+          tipo === OPCIONAL
+            ? (this.catalogoDocumentosOpcionales.find(
+              (doc) => doc.id_tipo_documento === id
+            ) as TipoDocumentos)
+            : (this.catalogoDocumentosObligatorios.find(
+              (doc) => doc.id_tipo_documento === id
+            ) as TipoDocumentos);
+      }
+
+      if (!this.documentoSeleccionado) {
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: 'danger',
+          modo: '',
+          titulo: '',
+          mensaje: 'No se pudo encontrar la configuración del documento',
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        };
+        fileInput.value = '';
+        return;
+      }
 
       const TAMANIO_REQUERIDO: number =
         CargaDocumentoComponent.convertirMbaBytes(
@@ -397,11 +426,8 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
         estatus: 'Pendiente',
       });
 
-      const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(
-        (item) => item.archivo !== undefined && item.archivo !== null
-      );
-
-      this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
+      // Actualizar estado del botón después de cargar archivo
+      this.actualizarEstadoBotonCargarArchivos();
     }
   }
 
@@ -417,6 +443,11 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
         (doc) => doc.id_tipo_documento === item.id_tipo_documento
       );
       if (INDICE !== -1) {
+        // Inicializar adicionales si no existe
+        if (!this.catalogoDocumentosObligatorios[INDICE].adicionales) {
+          this.catalogoDocumentosObligatorios[INDICE].adicionales = [];
+        }
+        
         const NUEVO_ID: number =
           (this.catalogoDocumentosObligatorios[INDICE]?.adicionales?.length ??
             0) + 1;
@@ -441,6 +472,11 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
         (doc) => doc.id_tipo_documento === item.id_tipo_documento
       );
       if (INDICE !== -1) {
+        // Inicializar adicionales si no existe
+        if (!this.documentosOpcionalesSeleccionados[INDICE].adicionales) {
+          this.documentosOpcionalesSeleccionados[INDICE].adicionales = [];
+        }
+        
         const NUEVO_ID: number =
           (this.documentosOpcionalesSeleccionados[INDICE]?.adicionales
             ?.length ?? 0) + 1;
@@ -460,7 +496,139 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
         );
       }
     }
+    
+    // Forzar detección de cambios y actualizar estado del botón después de agregar una parte
+    this.cdr.detectChanges();
+    this.actualizarEstadoBotonCargarArchivos();
   }
+
+  /**
+   * Valida que todos los documentos obligatorios estén completos, incluyendo sus partes adicionales.
+   * @returns {boolean} `true` si todos los documentos obligatorios están cargados, de lo contrario `false`.
+   */
+  private validarDocumentosObligatoriosCompletos(): boolean {
+    return this.catalogoDocumentosObligatorios.every((doc) => {
+      // Verificar documento principal
+      const DOCUMENTO_PRINCIPAL_CARGADO = this.listadoArchivos.some(
+        (archivo) => archivo.id === doc.id_tipo_documento && archivo.archivo
+      );
+      
+      if (!DOCUMENTO_PRINCIPAL_CARGADO) {
+        return false;
+      }
+
+      // Verificar partes adicionales si las hay
+      if (doc.adicionales && doc.adicionales.length > 0) {
+        return doc.adicionales.every((adicional) => {
+          return this.listadoArchivos.some(
+            (archivo) => archivo.id === adicional.id_tipo_documento && archivo.archivo
+          );
+        });
+      }
+
+      return true;
+    });
+  }
+
+  /**
+   * Encontrar un documento por ID en catalogos principales o adicionales.
+   * @param {number} id - El ID del documento a buscar.
+   * @returns {TipoDocumentos | null} El documento encontrado o null.
+   */
+  private encontrarDocumento(id: number): TipoDocumentos | null {
+    // Buscar en documentos obligatorios principales
+    const DOC_OBLIGATORIO = this.catalogoDocumentosObligatorios.find(
+      (doc) => doc.id_tipo_documento === id
+    );
+    if (DOC_OBLIGATORIO) {
+      return DOC_OBLIGATORIO;
+    }
+
+    // Buscar en documentos adicionales de obligatorios
+    for (const DOC of this.catalogoDocumentosObligatorios) {
+      if (DOC.adicionales) {
+        const ADICIONAL = DOC.adicionales.find(
+          (add) => add.id_tipo_documento === id
+        );
+        if (ADICIONAL) {
+          return ADICIONAL;
+        }
+      }
+    }
+
+    // Buscar en documentos opcionales principales
+    const DOC_OPCIONAL = this.documentosOpcionalesSeleccionados.find(
+      (doc) => doc.id_tipo_documento === id
+    );
+    if (DOC_OPCIONAL) {
+      return DOC_OPCIONAL;
+    }
+
+    // Buscar en documentos adicionales de opcionales
+    for (const DOC of this.documentosOpcionalesSeleccionados) {
+      if (DOC.adicionales) {
+        const ADICIONAL = DOC.adicionales.find(
+          (add) => add.id_tipo_documento === id
+        );
+        if (ADICIONAL) {
+          return ADICIONAL;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Actualiza el estado del botón "Cargar archivos" basado en la validación completa de documentos obligatorios.
+   * Debe llamarse después de cualquier operación que modifique los documentos (agregar, eliminar, limpiar).
+   * @returns {void}
+   */
+  private actualizarEstadoBotonCargarArchivos(): void {
+    const TODOS_OBLIGATORIOS_COMPLETOS = this.validarCompletitudDocumentosObligatorios();
+    this.activarBotonCargaArchivos.emit(TODOS_OBLIGATORIOS_COMPLETOS);
+  }
+
+  /**
+ * Verifica si todos los documentos obligatorios han sido cargados
+ * @returns true si todos los docs están listos, false en caso contrario
+ */
+private validarCompletitudDocumentosObligatorios(): boolean {
+  // Si no hay documentos configurados, no podemos continuar
+  if (!this.catalogoDocumentosObligatorios?.length) {
+    return false;
+  }
+
+  // Revisamos cada documento obligatorio
+  for (const DOCUMENTO of this.catalogoDocumentosObligatorios) {
+    // Buscamos si este documento ya fue cargado
+    const ARCHIVO_SUBIDO = this.listadoArchivos.find(
+      archivo => archivo.id === DOCUMENTO.id_tipo_documento
+    );
+    
+    // El documento principal debe estar cargado y sin errores
+    if (!ARCHIVO_SUBIDO?.archivo || ARCHIVO_SUBIDO.estatus === 'Error') {
+      return false;
+    }
+
+    // Si tiene partes adicionales, también las revisamos
+    if (Array.isArray(DOCUMENTO.adicionales) && DOCUMENTO.adicionales.length > 0) {
+      for (const PARTE_ADICIONAL of DOCUMENTO.adicionales) {
+        const ARCHIVO_ADICIONAL = this.listadoArchivos.find(
+          archivo => archivo.id === PARTE_ADICIONAL.id_tipo_documento
+        );
+        
+        // Cada parte adicional también debe estar completa
+        if (!ARCHIVO_ADICIONAL?.archivo || ARCHIVO_ADICIONAL.estatus === 'Error') {
+          return false;
+        }
+      }
+    }
+  }
+
+  // Si llegamos hasta aquí, todo está en orden
+  return true;
+}
 
   /**
    * Verifica si un archivo ya existe en la lista de archivos cargados.
@@ -501,11 +669,8 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
       this.listadoArchivos.splice(INDEX_ARCHIVO, 1);
     }
 
-    const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(
-      (item) => item.archivo !== undefined && item.archivo !== null
-    );
-
-    this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
+    // Actualizar estado del botón después de limpiar archivo
+    this.actualizarEstadoBotonCargarArchivos();
   }
 
   /**
@@ -606,17 +771,23 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
         (adicional: TipoDocumentos) =>
           adicional.id_tipo_documento === item.adicional.id_tipo_documento
       );
-      item.item.adicionales.splice(INDICE_ADICIONAL, 1);
-      const INDICE: number = this.listadoArchivos.findIndex(
-        (f) => f.id === item.id_tipo_documento
-      );
-      this.listadoArchivos.splice(INDICE, 1);
+      
+      if (INDICE_ADICIONAL !== -1) {
+        // Eliminar del array de adicionales
+        item.item.adicionales.splice(INDICE_ADICIONAL, 1);
+        
+        // Eliminar archivo de la lista si existe
+        const INDICE_ARCHIVO: number = this.listadoArchivos.findIndex(
+          (f) => f.id === item.adicional.id_tipo_documento
+        );
+        if (INDICE_ARCHIVO !== -1) {
+          this.listadoArchivos.splice(INDICE_ARCHIVO, 1);
+        }
+      }
 
-      const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(
-        (item) => item.archivo !== undefined && item.archivo !== null
-      );
-
-      this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
+      // Forzar detección de cambios y actualizar estado del botón
+      this.cdr.detectChanges();
+      this.actualizarEstadoBotonCargarArchivos();
     }
   }
 
@@ -660,11 +831,8 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
     }
     this.cdr.detectChanges();
 
-    const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(
-      (item) => item.archivo !== undefined && item.archivo !== null
-    );
-
-    this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
+    // Actualizar estado del botón después de eliminar documento opcional
+    this.actualizarEstadoBotonCargarArchivos();
   }
 
   static convertirKbaBytes(size: number | undefined): number {

@@ -134,13 +134,13 @@ export class SolicitudPageComponent implements OnInit {
    * Evento que se emite para cargar archivos.
    * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
    */
-  @Output() cargarArchivosEvento = new EventEmitter<void>();
+  cargarArchivosEvento = new EventEmitter<void>();
 
   /**
    * Evento que se emite para regresar a la sección de carga de documentos.
    * Este evento se utiliza para notificar a otros componentes que se debe regresar a la sección de carga de documentos.
    */
-  @Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
+  regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
 
   /**
  * Indica si el botón para cargar archivos está habilitado.
