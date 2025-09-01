@@ -147,7 +147,7 @@ export const TABLA_DE_DATOS_DISPONIBLES = {
  * 
  * Este texto se muestra como un mensaje de advertencia cuando no se han agregado mercancías al trámite.
  */
-export const BUSCAR_EMPRESA_ERROR = 'El RFC ingresado es invÃ¡lido, favor de ingresar RFC activo y vigente';
+export const BUSCAR_EMPRESA_ERROR = 'RFC es un dato requerido para realizar la bÃºsqueda.';
 
 /**
  * Mensaje de error mostrado cuando el usuario intenta realizar

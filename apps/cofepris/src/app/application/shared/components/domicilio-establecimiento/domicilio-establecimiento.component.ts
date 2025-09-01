@@ -177,6 +177,11 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   private esFormularioActualizacion: boolean = false;
 
   /**
+   * Indica si el formulario de mercancías ha sido enviado.
+   */
+  public tieneFormularioMercanciasEnviado: boolean = false;
+
+  /**
    * Datos completos de los establecimientos.
    */
   public fullEstablecimientoBodyData = [];
@@ -435,6 +440,11 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Datos de la tabla de selección de checkbox.
    */
   mercanciasTablaDatos: MercanciasInfo[] = [];
+
+  /**
+   * Lista de mercancías seleccionadas.
+   */
+  public seleccionarlistaMercancias: MercanciasInfo[] = [];
 
   /**
    * Lista de aduanas de entrada seleccionadas.
@@ -1030,7 +1040,8 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Este método se utiliza para gestionar la adición dinámica de mercancías en el componente.
    */
   agregarMercancia(): void {
-    if (this.formMercancias.valid) {
+    this.tieneFormularioMercanciasEnviado = true;
+    if (!this.formMercancias.invalid) {
       const RAW = this.formMercancias.getRawValue();
     
       const NUEVA_MERCANCIA: MercanciasInfo = {
@@ -1043,6 +1054,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       this.listaMercancias.push(NUEVA_MERCANCIA);
       this.mercanciasTablaDatos = [...this.listaMercancias];
       this.formMercancias.reset();
+      this.tieneFormularioMercanciasEnviado = false;
     }
   }
 
@@ -1114,6 +1126,61 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   public limpiar(forma: FormGroup): void {
     if (forma) {
       forma.reset();
+    }
+  }
+
+  /**
+   * @method seleccionarlistaSeccionMercancias
+   * @description
+   * Método que selecciona una lista de secciones de mercancías.
+   * @param {event}
+   */
+  public seleccionarlistaSeccionMercancias(event: MercanciasInfo[]): void {
+    this.seleccionarlistaMercancias = event;
+  }
+
+  /**
+   * @method eliminarMercancia
+   * @description
+   * Método que elimina una mercancía de la lista de mercancías seleccionadas.
+   */
+  public eliminarMercancia(): void {
+    if (this.seleccionarlistaMercancias.length > 0) {
+      this.mercanciasTablaDatos = this.mercanciasTablaDatos.filter(
+        (item) => {
+          return !this.seleccionarlistaMercancias.some(selectedItems => 
+            selectedItems.nombreComercial === item.nombreComercial &&
+            selectedItems.nombreComun === item.nombreComun &&
+            selectedItems.fraccionArancelaria === item.fraccionArancelaria &&
+            selectedItems.objetoImportacion === item.objetoImportacion &&
+            selectedItems.cantidadUmt === item.cantidadUmt
+          );
+        }
+      );
+      this.listaMercancias = [...this.mercanciasTablaDatos];
+      this.seleccionarlistaMercancias = [];
+    }
+  }
+
+  /**
+   * @method modificarMercancia
+   * @description
+   * Método que modifica una mercancía de la lista de mercancías seleccionadas.
+   */
+  public modificarMercancia(): void {
+    if(this.seleccionarlistaMercancias.length !== 0) {
+      this.formMercancias.get('nombreComercial')?.setValue(this.seleccionarlistaMercancias[0].nombreComercial);
+      this.formMercancias.get('nombreComun')?.setValue(this.seleccionarlistaMercancias[0].nombreComun);
+      this.formMercancias.get('nombreCientifico')?.setValue(this.seleccionarlistaMercancias[0].nombreCientifico);
+      this.formMercancias.get('usoEspecifico')?.setValue(this.seleccionarlistaMercancias[0].usoEspecifico);
+      this.formMercancias.get('fraccionArancelaria')?.setValue(this.seleccionarlistaMercancias[0].fraccionArancelaria);
+      this.formMercancias.get('descripcionFraccion')?.setValue(this.seleccionarlistaMercancias[0].descripcionFraccion);
+      this.formMercancias.get('cantidadUmt')?.setValue(this.seleccionarlistaMercancias[0].cantidadUmt);
+      this.formMercancias.get('UMC')?.setValue(this.seleccionarlistaMercancias[0].umc);
+      this.formMercancias.get('cantidadUMC')?.setValue(this.seleccionarlistaMercancias[0].cantidadUmc);
+      this.formMercancias.get('porcentajeConcentracion')?.setValue(this.seleccionarlistaMercancias[0].porcentajeConcentracion);
+      this.formMercancias.get('clasificacionToxicologica')?.setValue(this.seleccionarlistaMercancias[0].clasificacionToxicologica);
+      this.formMercancias.get('objetoImportacion')?.setValue(this.seleccionarlistaMercancias[0].objetoImportacion);
     }
   }
 

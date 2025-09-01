@@ -1,16 +1,29 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ERROR_FORMA_ALERT, MENSAJE_DE_EXITO_ETAPA_UNO, PASOS } from '../../constantes/certificado-zoosanitario.enum';
-import { DatosPasos } from '@ng-mf/data-access-user';
+
+import { Subject } from 'rxjs';
+
+import { map, takeUntil } from 'rxjs/operators';
+
+import {
+  DatosPasos,
+  SECCIONES_TRAMITE_220402
+} from '@ng-mf/data-access-user';
+
+import { WizardComponent } from '@libs/shared/data-access-user/src';
+
+import {
+  ERROR_FORMA_ALERT,
+  MENSAJE_DE_EXITO_ETAPA_UNO,
+  PASOS
+} from '../../constantes/certificado-zoosanitario.enum';
+
 import { ListaPasosWizard } from '../../models/pantallas-captura.model';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { SECCIONES_TRAMITE_220402 } from '@ng-mf/data-access-user';
+
 import { SeccionQuery } from '../../../../estados/queries/seccion.query';
-import { SeccionState } from '../../../../estados/seccion.store';
-import { SeccionStore } from '../../../../estados/seccion.store';
-import { Subject } from 'rxjs';
-import { WizardComponent } from '@libs/shared/data-access-user/src';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
+import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
+
 
 /**
  *
@@ -164,12 +177,11 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
         this.esFormaValido = true;
         this.datosPasos.indice = this.indice;
         return;
-      } else {
-        this.esFormaValido = false;
-        this.indice = e.valor;
-        this.datosPasos.indice = this.indice;
-        return;
       }
+      this.esFormaValido = false;
+      this.indice = e.valor;
+      this.datosPasos.indice = this.indice;
+      return;
     }
 
     this.indice = e.valor;

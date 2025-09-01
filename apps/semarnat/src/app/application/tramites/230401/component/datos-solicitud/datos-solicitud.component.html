@@ -50,7 +50,7 @@
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="pantallasActionService.fraccionArancelaria" formControlName="fraccionArancelaria"
           [label]="'Fracción arancelaria'" [required]="true" name="fraccionArancelaria" [isDisabled]="esFormularioSoloLectura"
-          (change)="fraccionArancelariaSeleccion()"></app-catalogo-select>
+          (change)="fraccionArancelariaSeleccion()" [placeholder]="'Seleccione una opción'"></app-catalogo-select>
       </div>
       <div class="col-md-8">
         <div class="form-group">
@@ -95,12 +95,11 @@
             [disabled]="!sustanciasSensiblesSeleccionadas.length">
             Modificar
           </button>
-          <button type="button" name="eliminarListaDeNumeros" class="btn btn-danger ms-2" (click)="eliminarModal()"
-            [disabled]="!sustanciasSensiblesSeleccionadas.length">
+          <button type="button" name="eliminarListaDeNumeros" class="btn btn-danger ms-2" (click)="eliminarModal()">
             Eliminar
           </button>
           <button type="button" name="agregarListaDeNumeros" class="btn btn-primary ms-2" (click)="agregarListaDeNumeros()"
-            [disabled]="!formSolicitud.get('numeroCas')?.value || !formSolicitud.get('fraccionArancelaria')?.value">
+            >
             Agregar
           </button>
         </div>
@@ -108,7 +107,7 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <h5 class="mt-3">List de Número CAS *:</h5>
+        <h5 class="mt-3">List de Número CAS*:</h5>
         <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" [configuracionTabla]="configuracionSustanciasTabla"
           [datos]="sustanciasSensiblesTablaDatos"
           (listaDeFilaSeleccionada)="sustanciasSensiblesSeleccionadas = $event"></app-tabla-dinamica>
@@ -152,7 +151,7 @@
         </div>
         <div class="col-md-6">
           <div class="form-group">
-            <label class="form-label" for="datosNumeroComun">Nombre común *:</label>
+            <label class="form-label" for="datosNumeroComun">Nombre común*:</label>
             <input class="form-control" id="datosNumeroComun" type="text" maxlength="250"
               formControlName="datosNumeroComun" [ngClass]="isValid(formSolicitud, 'datosNumeroComun') ? 'required' : ''"
               (change)="setValoresStore(formSolicitud,'datosNumeroComun')">
@@ -163,7 +162,7 @@
       <div class="row mt-5">
         <div class="col-md-6">
           <div class="form-group">
-            <label class="form-label" for="datosPorcentaje">Porcentaje de concentración *:</label>
+            <label class="form-label" for="datosPorcentaje">Porcentaje de concentración*:</label>
             <input class="form-control" id="datosPorcentaje" type="number"
               formControlName="datosPorcentaje" [ngClass]="isValid(formSolicitud, 'datosPorcentaje') ? 'required' : ''"
               (change)="setValoresStore(formSolicitud,'datosPorcentaje')" maxlength="100">
@@ -266,13 +265,22 @@
             (change)="setValoresStore(formSolicitud,'cantidad')" (click)="buscarRepresentanteRfc()">
             <div class="mensaje-error" *ngIf="formSolicitud.get('cantidad')?.errors?.['maxDigits']">
               Este campo permite 12 enteros y tres decimales</div>
+               <div class="mensaje-error" *ngIf="formSolicitud.get('cantidad')?.errors?.['required'] && formSolicitud.get('cantidad')?.touched">
+              Este campo es obligatorio</div>
         </div>
       </div>
       <div class="col-md-8">
         <div class="form-group">
           <label class="form-label" for="cantidadLetra">Cantidad(letra)*:</label>
-          <input class="form-control" id="cantidadLetra" formControlName="cantidadLetra" type="text">
-        </div>
+          <input class="form-control" id="cantidadLetra" formControlName="cantidadLetra" type="text"
+           [ngClass]="isValid(formSolicitud, 'cantidadLetra') ? 'required' : ''">
+    <div class="custom-error" *ngIf="formSolicitud.get('cantidadLetra')?.errors?.['required'] && formSolicitud.get('cantidadLetra')?.touched">
+      Si la cantidad capturada es mayor a 400 es obligatorio capturar la cantidad en letra.
+    </div>
+    <div class="custom-error mt-2" *ngIf="formSolicitud.get('cantidad')?.value && isCantidadMenorOIgualA400()">
+      Si la cantidad capturada es menor o igual a 400 no es obligatorio anexar la Póliza de seguro y recibo de pago vigentes.
+    </div>
+  </div>
       </div>
     </div>
 

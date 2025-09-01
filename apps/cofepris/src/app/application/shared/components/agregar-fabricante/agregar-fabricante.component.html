@@ -1,5 +1,12 @@
 <div class="container mt-4">
-  <ng-titulo titulo="Agregar fabricante"></ng-titulo>
+  <ng-titulo
+    *ngIf="datoSeleccionado?.[0]?.id; else agregarFabricante"
+    titulo="Modificar fabricante"
+  ></ng-titulo>
+
+  <ng-template #agregarFabricante>
+    <ng-titulo titulo="Agregar fabricante"></ng-titulo>
+  </ng-template>
   <form [formGroup]="agregarFabricanteForm">
     <!-- Datos Generales -->
     <h4>Datos generales</h4>
@@ -35,7 +42,7 @@
             class="form-check-input"
             formControlName="tipoPersona"
             [value]="tipoPersona.FISICA"
-            (change)="changeNacionalidad()"
+            (change)="changeTipoPersona()"
           />
           Física
           <span
@@ -49,7 +56,7 @@
             class="form-check-input"
             formControlName="tipoPersona"
             [value]="tipoPersona.MORAL"
-            (change)="changeNacionalidad()"
+            (change)="changeTipoPersona()"
           />
           Moral
           <span
@@ -57,8 +64,9 @@
             ><i class="bi bi-question-circle-fill"></i
           ></span>
         </div>
-        @if(agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr && habilitarContribuyente === true) {
-          <div class="form-check">
+        @if(agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr &&
+        habilitarContribuyente === true) {
+        <div class="form-check">
           <input
             type="radio"
             class="form-check-input"
@@ -84,6 +92,7 @@
           class="form-control"
           [maxlength]="13"
           formControlName="rfc"
+          (input)="onChangeRfc($event)"
           [ngClass]="esInvalido('rfc') ? 'required' : ''"
         />
         <div *ngIf="esInvalido('rfc')" class="text-danger">
@@ -93,7 +102,8 @@
             Este campo es obligatorio
           </small>
           <small
-            *ngIf="agregarFabricanteForm.controls['rfc'].errors?.['pattern'] && agregarFabricanteForm.controls['rfc']?.touched"
+            *ngIf="(agregarFabricanteForm.controls['rfc'].errors?.['INVALID_RFC_FISICA'] || agregarFabricanteForm.controls['rfc'].errors?.['INVALID_RFC_MORAL']) 
+            && agregarFabricanteForm.controls['rfc']?.touched"
           >
             Existen datos incorrectos que no cumplen con el formato esperado
           </small>
@@ -118,16 +128,23 @@
       </div>
       }
     </div>
-    @if (habilitarContribuyente === true && this.agregarFabricanteForm.get('tipoPersona')?.value) {
-      <div class="row mt-3">
-        <div [ngClass]="agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.NO_CONTRIBUYENTE ? 'col-md-8' : 'col-md-4'">
-          <div class="d-flex justify-content-end mt-2">
+    @if (habilitarContribuyente === true &&
+    this.agregarFabricanteForm.get('tipoPersona')?.value) {
+    <div class="row mt-3">
+      <div
+        [ngClass]="
+          agregarFabricanteForm.get('tipoPersona')?.value ===
+          tipoPersona.NO_CONTRIBUYENTE
+            ? 'col-md-8'
+            : 'col-md-4'
+        "
+      >
+        <div class="d-flex justify-content-end mt-2">
           <button type="button" class="btn btn-primary w-15">Buscar</button>
-          </div>
         </div>
       </div>
-    }
-    }
+    </div>
+    } }
 
     <!-- Datos Personales -->
     @if(agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.FISICA){
@@ -199,8 +216,8 @@
     <div class="row mt-3">
       <div class="col-md-8">
         <label class="form-label"
-          >Denominación/razón social
-          @if(agregarFabricanteForm.controls['razonSocial'].errors?.['required']){
+          >Denominación/razón
+          social@if(agregarFabricanteForm.controls['razonSocial'].errors?.['required']){
           <span class="text-danger">*</span>
           }:</label
         >
@@ -225,9 +242,13 @@
         </div>
       </div>
     </div>
-    } @if (idProcedimiento === 260102 || ((idProcedimiento === 260214 || idProcedimiento === 260219) &&
+    } @if(idProcedimiento === 260102 || ((idProcedimiento === 260214 ||
+    idProcedimiento === 260219) &&
     agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero' &&
-    agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.FISICA)) {
+    agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.FISICA ) ||
+    ( idProcedimiento === 260214 &&
+    agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL &&
+    agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero')) {
     <h4 class="mt-5">Domicilio</h4>
     <div class="row mt-5">
       <div class="col-md-4">
@@ -238,9 +259,27 @@
           [required]="true"
         ></app-catalogo-select>
       </div>
+
       <div class="col-md-4">
-        <label class="form-label">Estado:</label>
-        <input type="text" class="form-control" formControlName="estado" />
+        <label class="form-label" for="estado">Estado*:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="estado"
+          formControlName="estado"
+          [ngClass]="
+            esInvalido('estado') && agregarFabricanteForm.get('estado')?.touched
+              ? 'required'
+              : ''
+          "
+        />
+        <div *ngIf="esInvalido('estado')" class="text-danger">
+          <small
+            *ngIf="agregarFabricanteForm.controls['estado'].errors?.['required'] && agregarFabricanteForm.controls['estado'].touched"
+          >
+            Este campo es obligatorio
+          </small>
+        </div>
       </div>
 
       <div class="col-md-4">
@@ -275,6 +314,7 @@
         <app-catalogo-select
           [catalogo]="estadosDatos"
           formControlName="estado"
+          (selectionChange)="cargarEstados($event)"
           [label]="'Estado/localidad'"
           [required]="true"
           [placeholder]="'Selecciona un valor'"
@@ -285,6 +325,7 @@
         <app-catalogo-select
           [catalogo]="municipiosDatos"
           formControlName="municipio"
+          (selectionChange)="cargarMunicipios($event)"
           [label]="'Municipio/alcaldía'"
           [required]="true"
           [placeholder]="'Selecciona un valor'"
@@ -341,8 +382,7 @@
     <div class="row mt-3">
       <div class="col-md-8">
         <label class="form-label"
-          >Calle
-          @if(agregarFabricanteForm.controls['calle'].errors?.['required']){
+          >Calle@if(agregarFabricanteForm.controls['calle'].errors?.['required']){
           <span class="text-danger">*</span>
           }:</label
         >
@@ -366,10 +406,10 @@
       </div>
       <div class="col-md-4">
         <label class="form-label"
-          >Número exterior
-          @if(agregarFabricanteForm.controls['numeroExterior'].errors?.['required']){
+          >Número
+          exterior@if(agregarFabricanteForm.controls['numeroExterior'].errors?.['required']){
           <span class="text-danger">*</span>
-          } :</label
+          }:</label
         >
         <input
           type="text"
@@ -424,8 +464,8 @@
         </div>
       </div>
       <div class="col-md-4">
-        <label class="form-label mx-1">Correo electrónico:</label>
-        <span tooltip="ejemplo@dominio.com"
+        <label class="form-label mx-1">Correo electrónico:</label
+        ><span tooltip="ejemplo@dominio.com"
           ><i class="bi bi-question-circle-fill"></i
         ></span>
         <input
@@ -479,3 +519,13 @@
     </div>
   </form>
 </div>
+
+@if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones
+    [notificacionInput]="nuevaNotificacion"
+    (confirmacionModal)="eliminarPedimento($event)"
+  >
+  </lib-notificaciones>
+</section>
+}

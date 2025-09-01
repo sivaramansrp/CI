@@ -9,4 +9,45 @@
   [formularioDeshabilitado]="formularioDeshabilitado"
   [datosFederatarios]="datosFederatarios"
   [estadoOptionsConfig]="estadoOptionsConfig"
+  (accionSeccion)="onAccionSeccion($event)"
 ></app-federatarios-y-plantas>
+
+<ng-container *ngIf="mostrarComplementarPlantaPopup">
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <app-complementar-planta (cerrarPopup)="cerrarComplementarPlanta()"></app-complementar-planta>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="mostrarMontosDeInversionPopup">
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <app-montos-de-inversion (cerrarPopup)="cerrarMontosDeInversion()"></app-montos-de-inversion>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="mostrarEmpleadosPopup">
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <app-empleados (cerrarPopup)="cerrarEmpleados()"></app-empleados>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="mostrarCapacidadInstaladaPopup">
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <app-capacidad-instalada (cerrarPopup)="cerrarCapacidadInstalada()"></app-capacidad-instalada>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="mostrarProveedorPorArchivoPopup">
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <app-carga-por-archivo (cerrarPopup)="cerrarProveedorPorArchivo()"></app-carga-por-archivo>
+    </div>
+  </div>
+</ng-container>

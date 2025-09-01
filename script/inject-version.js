@@ -1,21 +1,23 @@
+// script/inject-version.js
 const fs = require('fs');
 const path = require('path');
-const { version } = require('../package.json');
 
-// Accept app name as a command-line argument
-const appName = process.argv[2];
-if (!appName) {
-  console.error('Usage: node script/inject-version.js <app-name>');
+const projectName = process.argv[2];
+if (!projectName) {
+  console.error('❌ Usage: node inject-version.js <project-name>');
   process.exit(1);
 }
 
-const distIndex = path.join(__dirname, `../dist/apps/${appName}/index.html`);
-if (!fs.existsSync(distIndex)) {
-  console.error(`index.html not found at ${distIndex}`);
+const indexPath = path.join('dist', 'apps', projectName, 'index.html');
+const version = process.env.VERSION || require('../package.json').version;
+
+if (!fs.existsSync(indexPath)) {
+  console.error(`❌ File not found: ${indexPath}`);
   process.exit(1);
 }
 
-let indexHtml = fs.readFileSync(distIndex, 'utf8');
-indexHtml = indexHtml.replace('Version: __BUILD_VERSION__', `Version: ${version}`);
-fs.writeFileSync(distIndex, indexHtml);
-console.log(`Injected version ${version} into ${distIndex}`);
+let html = fs.readFileSync(indexPath, 'utf8');
+html = html.replace(/__BUILD_VERSION__/g, `v${version}`);
+fs.writeFileSync(indexPath, html, 'utf8');
+
+console.log(`✅ Injected version ${version} into ${indexPath}`);

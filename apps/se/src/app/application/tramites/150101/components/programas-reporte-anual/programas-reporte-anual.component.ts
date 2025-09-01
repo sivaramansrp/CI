@@ -4,6 +4,7 @@ import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { InputFecha } from '@ng-mf/data-access-user';
+import { Notificacion } from '@ng-mf/data-access-user';
 import { ProgramasReporte } from '../../models/programas-reporte.model';
 import { ReporteFechas } from '../../models/programas-reporte.model';
 import { Solicitud150101Query } from '../../estados/solicitud150101.query';
@@ -85,6 +86,13 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
    */
 
   public fechaFin: InputFecha = FECHA_FIN;
+   /**
+       * @public
+       * @property {Notificacion} nuevaNotificacion
+       * @description Representa una nueva notificación que se utilizará en el componente.
+       * @command Este campo debe ser inicializado antes de su uso.
+       */
+    public nuevaNotificacion!: Notificacion;
 
   /**
    * @description Evento que se emite al seleccionar una fila de la tabla.
@@ -233,6 +241,28 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
       estatus: [{ value: this.solicitud150101State?.estatus, disabled: true }],
     });
   }
+  /*
+    * Muestra una alerta cuando el reporte anual del programa seleccionado ya ha sido presentado anteriormente.
+    * La alerta informa al usuario que debe seleccionar otro programa para presentar el reporte anual.
+    * @returns {void}
+    * 
+    */
+  showAlert(): void {
+   
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: '',
+          mensaje:"El Reporte Anual de el(los) programa(s) seleccionado(s) ha sido presentado anteriormente. Seleccionar otro programa para presentar Reporte Anual.",
+          cerrar: false,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        }
+        
+      }
+    
 
   /**
    * @method inicializarEstadoFormulario
@@ -326,6 +356,7 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
     if (evento instanceof Object) {
       this.filaDeInformeSeleccionada.emit(true);
     }
+    this.showAlert();
     this.periodoReporteAnual.patchValue({
       folioPrograma: evento.folioPrograma,
       modalidad: evento.modalidad,

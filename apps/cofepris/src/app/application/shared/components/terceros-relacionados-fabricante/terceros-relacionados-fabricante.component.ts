@@ -1,7 +1,6 @@
 import {
   AlertComponent,
   ConfiguracionColumna,
-  Fabricante,
   LASTABLA,
   Otros,
   TablaSeleccion,
@@ -15,6 +14,7 @@ import {
 import { Subject,map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Fabricante } from '../../models/terceros-relacionados.model';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { TercerosRelacionadosFebService } from '../../services/tereceros-relacionados-feb.service';
 

@@ -52,6 +52,19 @@ export class DatosDeLaMercanciaComponent implements OnChanges {
    * @description Catálogo que contiene opciones de unidad.
    */
   @Input() unidadCatalogo: Catalogo[] = [];
+
+  /*
+   * @description Emisor de eventos para pasar datos del formulario al componente padre.
+   * @event datosMercanciaChange
+   */
+  @Output() datosMercanciaChange = new EventEmitter();
+  
+  /**
+   * @Input() mostrarErrores
+   * Bandera que indica si se deben mostrar los mensajes de error en el formulario.
+   */
+    @Input() mostrarErrores: boolean = false;
+    
   /**
    * @description Emisor de eventos para pasar datos del formulario al componente padre.
    * @event setValoresStoreEvent
@@ -79,6 +92,7 @@ export class DatosDeLaMercanciaComponent implements OnChanges {
         this.form.enable();
       }
     }
+    
   }
   
 

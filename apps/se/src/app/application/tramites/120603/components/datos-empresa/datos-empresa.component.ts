@@ -127,7 +127,7 @@ opcionSeleccionMexicana = [
    esFormularioVisible = false;
    
   /** Notificación nueva */
-  public nuevaNotificacion: Notificacion | null = null;
+  public nuevaNotificacion!: Notificacion;
 
   /** Indica si el formulario es de solo lectura */  
   esFormularioSoloLectura: boolean = false;
@@ -264,7 +264,7 @@ opcionSeleccionMexicana = [
       cerrar: false,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: 'Cancelar',
+      txtBtnCancelar: '',
     };
 
     this.elementoParaEliminar = i;
@@ -274,7 +274,6 @@ opcionSeleccionMexicana = [
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
-    this.nuevaNotificacion = null;
   }
   /** Método para validar el RFC ingresado en el formulario */
   checkRFCValidation(): void {
