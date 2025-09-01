@@ -1,4 +1,4 @@
-import { API_POST_FIRMA, IDSOLICITUD } from '../../../constantes/130118/api-constants';
+import { API_POST_FIRMA, IDSOLICITUD } from '../server/api-router';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { FirmarRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/firmar-request.model';
@@ -26,7 +26,7 @@ export class Firma130118Service {
    * @returns Observable con la respuesta del servidor.
    */
   enviarFirma<T>(idSolicitud: string | number, body: FirmarRequest): Observable<BaseResponse<T>> {
-  const ENDPOINT = `${this.urlServer}/api/` + API_POST_FIRMA.replace(IDSOLICITUD, String(idSolicitud));
+  const ENDPOINT = `${this.urlServer}/api/` + API_POST_FIRMA(String(idSolicitud));
   return this.http.post<BaseResponse<T>>(ENDPOINT, body).pipe(
     map(response => response),
     catchError(() => {

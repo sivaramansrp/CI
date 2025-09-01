@@ -1,13 +1,13 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
-import { GuadarSolicitudResponse } from '../../models/130118/response/guardar-solicitud-response.model';
+import { GuadarSolicitudResponse } from '../model/response/guardar-solicitud-response.model';
 import { Injectable } from '@angular/core';
 
 import { Observable, catchError, map, throwError } from 'rxjs';
 
-import { API_GET_CERTIFICADO_ANTIGUEDAD, API_GET_MOLINOS_ACERO_HABILITAR, API_POST_SOLICITUD, CVEFRACCION } from '../../../constantes/130118/api-constants';
-import { GuadarSolicitudRequest } from '../../models/130118/request/guardar-solicitud-request.model';
+import { API_GET_CERTIFICADO_ANTIGUEDAD, API_GET_MOLINOS_ACERO_HABILITAR, API_POST_SOLICITUD, CVEFRACCION } from '../server/api-router';
+import { GuadarSolicitudRequest } from '../model/request/guardar-solicitud-request.model';
 
 @Injectable({
   providedIn: 'root'
@@ -75,7 +75,7 @@ export class GuardarService {
   getMolinosHabilitar(cveFraccion: string): Observable<BaseResponse<boolean>> {
     const ENDPOINT =
       `${this.host}` +
-      API_GET_MOLINOS_ACERO_HABILITAR.replace(CVEFRACCION, cveFraccion);
+      API_GET_MOLINOS_ACERO_HABILITAR(cveFraccion);
 
     return this.http.get<BaseResponse<boolean>>(ENDPOINT).pipe(
       map((response) => {

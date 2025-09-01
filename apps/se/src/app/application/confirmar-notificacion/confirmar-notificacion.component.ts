@@ -17,7 +17,7 @@ import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shar
 import { BodyTablaResolucion } from '@libs/shared/data-access-user/src/core/models/shared/consulta-generica.model';
 import { FirmaRequest } from '../core/models/confirmar-notificacion/request/firma-request.model';
 
-import { CodigoRespuesta, PasoNotificacion } from '../core/enum/enum-130118';
+import { CodigoRespuesta, PasoNotificacion } from '../tramites/130118/enum/enum-130118';
 import { AcuseReciboComponent } from '../shared/components/acuse-recibo/acuse-recibo.component';
 import { FirmaConfirmarResponse } from '../core/models/confirmar-notificacion/response/confirmar-notificacion-response.model';
 
@@ -401,7 +401,7 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
    */
   getConfirmarNotificacion(): void {
     const NUMFOLIO = this.guardarDatos.folioTramite;
-    this.confirmarNotificacionService.getIniciarNotificacion(NUMFOLIO).subscribe({
+    this.confirmarNotificacionService.getIniciarNotificacion(this.guardarDatos.procedureId, NUMFOLIO).subscribe({
       next: (response) => {
         if (response.codigo === '00') {
           this.notificacionData = response.datos ?? {} as ConfirmarNotificacionIniciarResponse;

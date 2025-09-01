@@ -3,8 +3,8 @@ import { DocumentoService, TramiteFolioStore } from '@libs/shared/data-access-us
 import { DocumentosQuery } from '@libs/shared/data-access-user/src/core/queries/documentos.query';
 import { CadenaOriginalService } from '@libs/shared/data-access-user/src/core/services/shared/cadena-original/cadena-original.service';
 import { of, throwError } from 'rxjs';
-import { CadenaOriginal130118Service } from '../../../../core/services/130118/cadenaOriginal130118.service';
-import { Firma130118Service } from '../../../../core/services/130118/firma130118.service';
+import { CadenaOriginal130118Service } from '../../services/cadena-original.service';
+import { Firma130118Service } from '../../services/firma130118.service';
 import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
 import { PasoTresComponent } from './paso-tres.component';
 
