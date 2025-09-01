@@ -70,7 +70,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Bandera para mostrar u ocultar la tabla dinámica.
    */
-  mostrarTabla = false;
+  mostrarTabla = true;
 
   /**
    * Tipo de selección de la tabla dinámica (checkbox).
@@ -216,7 +216,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private importacionNeumaticosComercializarService: ImportacionNeumaticosComercializarService,
     private consultaioQuery: ConsultaioQuery,
   ) {
-    this.inicializarFormularios();
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyed$),
@@ -231,19 +230,23 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Ciclo de vida de Angular: inicializa formularios, suscripciones y opciones al cargar el componente.
    */
   ngOnInit(): void {
-    this.configuracionFormularioSuscripciones();
+    this.tramite130110Store.actualizarEstado({
+    solicitud: 'Inicial',
+    producto: 'Nuevo',
+    defaultSelect: 'Inicial',
+    defaultProducto: 'Nuevo'
+  });
+    this.inicializarEstadoFormulario();
     this.opcionesDeBusqueda();
-    this.formularioTotalCount();
-    this.obtenerTablaDatos();
     this.fetchEntidadFederativa();
     this.fetchRepresentacionFederal();
     this.listaDePaisesDisponibles();
 
-    this.tramite130110Query.mostrarTabla$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((mostrarTabla) => {
-        this.mostrarTabla = mostrarTabla;
-      });
+    this.tramite130110Query.select(state => state.tableBodyData)
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((data) => {
+      this.tableBodyData = data || [];
+    });
   }
 
   /**
@@ -265,135 +268,110 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.inicializarFormularios();
   }
 
+    /**
+     * Se suscribe a los cambios del estado de la solicitud en el store de Tramite130111.
+     * Cada vez que el estado cambia, actualiza la propiedad interna `seccionState` con los nuevos datos.
+     * Esta suscripción se cancela automáticamente al destruir el componente para evitar fugas de memoria.
+     */
+    suscribirseAEstadoDeSolicitud(): void {
+      this.tramite130110Query.selectSolicitud$
+        ?.pipe(takeUntil(this.destroyed$))
+        .subscribe((data: Tramite130110State) => {
+          this.seccionState = data;
+        });
+    }
+
   /**
    * Inicializa los formularios reactivos formDelTramite y mercanciaForm.
    */
-  inicializarFormularios(): void {
-    this.formDelTramite = this.fb.group({
-      solicitud: [this.seccionState?.solicitud, Validators.required],
-      regimen: [this.seccionState?.regimen, Validators.required],
-      clasificacion: [this.seccionState?.clasificacion, Validators.required],
-    });
-
-    this.mercanciaForm = this.fb.group({
-      producto: [],
-      descripcion: [
-        this.seccionState?.descripcion,
-        [
-          Validators.required,
-          SolicitudComponent.validarSinCaracterAnguloDerecho
+  inicializarFormularios(): void {  
+    this.suscribirseAEstadoDeSolicitud(); 
+      this.formDelTramite = this.fb.group({
+        solicitud: [this.seccionState?.solicitud, Validators.required],
+        regimen: [this.seccionState?.regimen, Validators.required],
+        clasificacion: [this.seccionState?.clasificacion, Validators.required],
+      });
+   
+      this.mercanciaForm = this.fb.group({
+        producto: [this.seccionState?.producto],
+        descripcion: [
+         this.seccionState?.descripcion,
+          [
+            Validators.required,
+            SolicitudComponent.validarSinCaracterAnguloDerecho
+          ],
         ],
-      ],
-      fraccion: [this.seccionState?.fraccion, Validators.required],
-      cantidad: [
-        this.seccionState?.cantidad,
-        [
-          Validators.required,
-          SolicitudComponent.validarNumeroTresDecimales,
-          Validators.min(1),
+        fraccion: [this.seccionState?.fraccion, Validators.required],
+        cantidad: [
+          this.seccionState?.cantidad,
+          [
+            Validators.required,
+            SolicitudComponent.validarNumeroTresDecimales,
+            Validators.min(1),
+          ],
         ],
-      ],
-      valorFacturaUSD: [
-        this.seccionState?.valorFacturaUSD,
-        [
-          Validators.required,
-          SolicitudComponent.validarNumeroTresDecimales,
-          Validators.min(0.01),
+        valorFacturaUSD: [
+          this.seccionState?.valorFacturaUSD,
+          [
+            Validators.required,
+            SolicitudComponent.validarNumeroTresDecimales,
+            Validators.min(0.01),
+          ],
         ],
-      ],
-      unidadMedida: [this.seccionState?.unidadMedida, Validators.required],
-    });
-
-    this.partidasDelaMercanciaForm = this.fb.group({
-      cantidadPartidasDeLaMercancia: [
-        this.seccionState?.cantidadPartidasDeLaMercancia,
-        [
-          Validators.required,
-          SolicitudComponent.validarCatorceEnterosTresDecimales,
-          Validators.maxLength(18),
+   
+        unidadMedida: [this.seccionState?.unidadMedida, Validators.required],
+      });
+      this.partidasDelaMercanciaForm = this.fb.group({
+        cantidadPartidasDeLaMercancia: [
+          this.seccionState?.cantidadPartidasDeLaMercancia,
+          [
+            Validators.required,
+            SolicitudComponent.validarCatorceEnterosTresDecimales,
+            Validators.maxLength(18),
+          ],
         ],
-      ],
-      descripcionPartidasDeLaMercancia: [
-        this.seccionState?.descripcionPartidasDeLaMercancia,
-        [Validators.required, Validators.maxLength(255)],
-      ],
-      valorPartidaUSDPartidasDeLaMercancia: [
-        this.seccionState?.valorPartidaUSDPartidasDeLaMercancia,
-        [
-          Validators.required,
-          Validators.min(0),
-          SolicitudComponent.validarCatorceEnterosTresDecimales,
-          Validators.maxLength(20),
+        descripcionPartidasDeLaMercancia: [
+          this.seccionState?.descripcionPartidasDeLaMercancia,
+          [Validators.required, Validators.maxLength(255)],
         ],
-      ],
-    });
+        valorPartidaUSDPartidasDeLaMercancia: [
+          this.seccionState?.valorPartidaUSDPartidasDeLaMercancia,
+          [
+            Validators.required,
+            Validators.min(0),
+            SolicitudComponent.validarCatorceEnterosTresDecimales,
+            Validators.maxLength(20),
+          ],
+        ],
+      });
+      this.formularioTotalCount(
+        String(this.seccionState?.cantidadTotal),
+        String(this.seccionState?.valorTotalUSD)
+      );
+      this.paisForm = this.fb.group({
+        bloque: [this.seccionState?.bloque],
+        usoEspecifico: [this.seccionState?.usoEspecifico, Validators.required],
+        justificacionImportacionExportacion: [this.seccionState?.justificacionImportacionExportacion, [Validators.required]],
+        observaciones: [this.seccionState?.observaciones],
+      });
+      this.frmRepresentacionForm = this.fb.group({
+        entidad: [this.seccionState?.entidad, Validators.required],
+        representacion: [this.seccionState?.representacion, Validators.required],
+      });
+    }
 
-    this.paisForm = this.fb.group({
-      bloque: [this.seccionState?.bloque],
-      usoEspecifico: [this.seccionState?.usoEspecifico, Validators.required],
-      justificacionImportacionExportacion: [this.seccionState?.justificacionImportacionExportacion, [Validators.required]],
-      observaciones: [this.seccionState?.observaciones],
-    });
-    this.frmRepresentacionForm = this.fb.group({
-      entidad: [this.seccionState?.entidad, Validators.required],
-      representacion: [this.seccionState?.representacion, Validators.required],
-    });
-  }
 
-  /**
-   * Configura las suscripciones para actualizar formularios y almacenar estados.
-   */
-  configuracionFormularioSuscripciones(): void {
-    this.tramite130110Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.partidasDelaMercanciaForm.patchValue({
-            cantidadPartidasDeLaMercancia: seccionState.cantidadPartidasDeLaMercancia,
-            valorPartidaUSDPartidasDeLaMercancia: seccionState.valorPartidaUSDPartidasDeLaMercancia,
-            descripcionPartidasDeLaMercancia: seccionState.descripcionPartidasDeLaMercancia,
-          });
 
-          this.formDelTramite.patchValue({
-            solicitud: seccionState.solicitud,
-            regimen: seccionState.regimen,
-            clasificacion: seccionState.clasificacion,
-          });
-
-          this.mercanciaForm.patchValue({
-            producto: seccionState.producto,
-            descripcion: seccionState.descripcion,
-            fraccion: seccionState.fraccion,
-            cantidad: seccionState.cantidad,
-            valorFacturaUSD: seccionState.valorFacturaUSD,
-            unidadMedida: seccionState.unidadMedida,
-          });
-
-          this.paisForm.patchValue({
-            bloque: seccionState.bloque,
-            usoEspecifico: seccionState.usoEspecifico,
-            justificacionImportacionExportacion: seccionState.justificacionImportacionExportacion,
-            observaciones: seccionState.observaciones,
-          });
-
-          this.frmRepresentacionForm.patchValue({
-            entidad: seccionState.entidad,
-            representacion: seccionState.representacion,
-          });
-        })
-      )
-      .subscribe();
-  }
-
-  /**
+ /**
+   * formularioTotalCount
    * Crea el formulario reactivo para capturar los totales de las partidas.
    */
-  formularioTotalCount(): void {
-    this.formForTotalCount = this.fb.group({
-      cantidadTotal: [{ value: '', disabled: true }],
-      valorTotalUSD: [{ value: '', disabled: true }],
-    });
-  }
+  formularioTotalCount(cantidadTotal: string , valorTotalUSD: string): void {
+  this.formForTotalCount = this.fb.group({
+    cantidadTotal: [{ value: cantidadTotal, disabled: true }],
+    valorTotalUSD: [{ value: valorTotalUSD, disabled: true }],
+  });
+}
 
   /**
    * Solicita opciones configurables para los formularios desde archivos JSON.
@@ -511,10 +489,47 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.mostrarNotificacion = true;
     return;
   }
-  this.mostrarErroresPartidas = false;
+
+  const CURRENT_TABLE = this.tramite130110Query.getValue().tableBodyData || [];
+  const CANTIDAD = Number(this.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.value);
+  const TOTALUSD = Number(this.partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.value);
+  const PRECIOUNITARIO_USD =
+    CANTIDAD && !isNaN(CANTIDAD) && !isNaN(TOTALUSD)
+      ? (TOTALUSD / CANTIDAD).toFixed(2)
+      : '';
+  const NEW_ROW: PartidasDeLaMercanciaModelo = {
+    id: Date.now().toString(),
+    cantidad: this.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.value,
+    totalUSD: this.partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.value,
+    descripcion: this.partidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.value,
+    unidadDeMedida: this.unidadCatalogo.find(f => String(f.id) === String(this.mercanciaForm.get('unidadMedida')?.value))?.descripcion || '',
+    fraccionFrancelaria: this.fraccionCatalogo.find(f => String(f.id) === String(this.mercanciaForm.get('fraccion')?.value))?.descripcion || '',
+    precioUnitarioUSD: PRECIOUNITARIO_USD
+  };
+  const UPDATED_TABLE = [...CURRENT_TABLE, NEW_ROW];
+  this.tramite130110Store.actualizarEstado({ 
+    tableBodyData: UPDATED_TABLE, 
+    mostrarTabla: true 
+  });
+  this.tableBodyData = UPDATED_TABLE;
   this.mostrarTabla = true;
-  this.tramite130110Store.actualizarEstado({ mostrarTabla: true });
+  const CANTIDAD_TOTAL = this.tableBodyData.reduce(
+  (sum, row) => sum + Number(row.cantidad),
+  0
+);
+const VALOR_TOTAL_USD = this.tableBodyData.reduce(
+  (sum, row) => sum + Number(row.totalUSD),
+  0
+);
+this.tramite130110Store.actualizarEstado({
+  cantidadTotal: String(CANTIDAD_TOTAL),
+  valorTotalUSD: String(VALOR_TOTAL_USD)
+});
+  this.formularioTotalCount(String(CANTIDAD_TOTAL), String(VALOR_TOTAL_USD));
+  this.partidasDelaMercanciaForm.reset();
+  this.mostrarErroresPartidas = false;
 }
+
 
 
   /**
@@ -610,7 +625,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
 
     if ($event.campo === 'fraccion') {
-      this.tramite130110Store.actualizarEstado({ 'unidadMedida': '1' });
+       this.mercanciaForm.get('unidadMedida')?.setValue('1'); 
+       this.tramite130110Store.actualizarEstado({ 'unidadMedida': '1' });
+
+
     }
   }
 
@@ -742,5 +760,31 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         return;
       }
       this.partidasDeLaMercanciaComponent.abrirCargarArchivoModalReal();
+    }
+
+    /*
+    * Método que se ejecuta cuando se eliminan partidas de la tabla.
+    * Actualiza los datos de la tabla y recalcula los totales.  
+    */
+    onPartidasEliminadas(ids: string[]): void {
+      this.tableBodyData = this.tableBodyData.filter(row => !ids.includes(row.id));
+      this.mostrarTabla = this.tableBodyData.length > 0;
+      const CANTIDAD_TOTAL = this.tableBodyData.reduce(
+        (sum, row) => sum + Number(row.cantidad),
+        0
+      );
+      const VALOR_TOTAL_USD = this.tableBodyData.reduce(
+        (sum, row) => sum + Number(row.totalUSD),
+        0
+      );
+    this.tramite130110Store.actualizarEstado({
+       cantidadTotal: String(CANTIDAD_TOTAL),
+       valorTotalUSD: String(VALOR_TOTAL_USD)
+    });
+    this.formularioTotalCount(String(CANTIDAD_TOTAL), String(VALOR_TOTAL_USD));
+      this.tramite130110Store.actualizarEstado({ 
+        tableBodyData: this.tableBodyData, 
+        mostrarTabla: this.mostrarTabla 
+      });
     }
 }
