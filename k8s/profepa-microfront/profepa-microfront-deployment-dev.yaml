@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: front-vucem30-container-dev
-        image: ghcr.io/vucem30-dev/dockerized-modulefederation-profepa-microfront:1.0.3
+        image: ghcr.io/vucem30-dev/dockerized-modulefederation-profepa-microfront:1.0.4
         ports:
         - containerPort: 80
         env:
