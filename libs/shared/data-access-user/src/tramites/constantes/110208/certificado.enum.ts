@@ -229,6 +229,7 @@ export const MERCANCIA_MODAL_FORMA = [
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
-    row: 8
+    row: 8,
+    habilitado:true
   },
 ];
