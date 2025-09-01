@@ -1,253 +1,150 @@
+import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { Store } from '@datorama/akita';
-import { StoreConfig } from '@datorama/akita';
 
 /**
- * @description Interfaz que define el estado de la solicitud.
- * Contiene propiedades relacionadas con los datos de reporte anual.
+ * @description
+ * Interfaz que define la estructura del estado de la solicitud 150103.
+ * Contiene los campos requeridos para la gestión del reporte anual.
  */
 export interface Solicitud150103State {
   /** Fecha de inicio del reporte */
   inicio: string;
+
   /** Fecha de fin del reporte */
   fin: string;
-  /** Folio del programa asociado a la solicitud */
+
+  /** Folio del programa asociado */
   folioPrograma: string;
+
   /** Modalidad del programa */
   modalidad: string;
+
   /** Tipo de programa */
   tipoPrograma: string;
+
   /** Estatus del programa */
   estatus: string;
-  /** Ventas totales */
+
+  /** Total de ventas reportadas */
   ventasTotales: string;
-  /** Total de exportaciones */
+
+  /** Total de exportaciones reportadas */
   totalExportaciones: string;
-  /** Total de importaciones */
+
+  /** Total de importaciones reportadas */
   totalImportaciones: string;
-  /** Saldo calculado */
+
+  /** Saldo calculado del reporte */
   saldo: string;
+
   /** Porcentaje de exportación calculado */
   porcentajeExportacion: string;
-  /** Lista de bienes producidos */
-  /**
-   * @description Arreglo que contiene los datos de los bienes producidos.
-   * Cada elemento del arreglo es de tipo `BienesProducidos` y representa
-   * un bien con sus respectivas características y detalles.
-   */
 }
 
 /**
- * @description Función que crea el estado inicial de la solicitud.
- * @returns El estado inicial de la solicitud con valores predeterminados.
  * @function createInitialState
- * @returns {Solicitud150103State} Estado inicial de la solicitud.
- * 
+ * @description
+ * Función que crea y retorna el estado inicial para el store de la solicitud 150103.
+ * Este estado inicial incluye valores por defecto para todos los campos relacionados con el reporte anual.
+ *
+ * @returns {Solicitud150103State} El objeto de estado inicial para la solicitud 150103.
  */
 export function createInitialState(): Solicitud150103State {
   return {
-    /**
- * Fecha de inicio del reporte.
- */
-inicio: '',
-
-/**
- * Fecha de fin del reporte.
- */
-fin: '',
-
-/**
- * Folio del programa asociado a la solicitud.
- */
-folioPrograma: '',
-
-/**
- * Modalidad del programa.
- */
-modalidad: '',
-
-/**
- * Tipo de programa.
- */
-tipoPrograma: '',
-
-/**
- * Estatus del programa.
- */
-estatus: '',
-
-/**
- * Ventas totales.
- */
-ventasTotales: '',
-
-/**
- * Total de exportaciones.
- */
-totalExportaciones: '',
-
-/**
- * Total de importaciones.
- */
-totalImportaciones: '0',
-
-/**
- * Saldo calculado.
- */
-saldo: '0',
-
-/**
- * Porcentaje de exportación calculado.
- */
-porcentajeExportacion: '0',
+    inicio: '',
+    fin: '',
+    folioPrograma: '',
+    modalidad: '',
+    tipoPrograma: '',
+    estatus: '',
+    ventasTotales: '',
+    totalExportaciones: '',
+    totalImportaciones: '0',
+    saldo: '0',
+    porcentajeExportacion: '0',
   };
 }
 
 /**
- * @description Servicio que gestiona el estado de la solicitud utilizando Akita.
- * Proporciona métodos para actualizar distintas propiedades del estado.
- */
-@Injectable({
-  providedIn: 'root',
-})
-@StoreConfig({ name: 'solicitud150103Store', resettable: true })
-/**
- * @description Servicio que gestiona el estado de la solicitud utilizando Akita.
- * Proporciona métodos para actualizar distintas propiedades del estado.
  * @class Solicitud150103Store
+ * @extends Store<Solicitud150103State>
+ * 
+ * @description
+ * Store especializado para gestionar el estado de la solicitud 150103.
+ * Proporciona métodos para actualizar campos individuales del estado relacionados con el reporte,
+ * como fechas, folio, modalidad, tipo, estatus, totales y porcentajes.
+ * Incluye funcionalidad para restablecer el estado a sus valores iniciales, útil para limpiar formularios
+ * o iniciar nuevas solicitudes.
  */
+@Injectable({ providedIn: 'root' })
+@StoreConfig({ name: 'solicitud150103Store', resettable: true })
 export class Solicitud150103Store extends Store<Solicitud150103State> {
   /**
-   * @description Constructor que inicializa el store con el estado inicial.
+   * @description
+   * Constructor que inicializa el store con su estado inicial.
    */
   constructor() {
     super(createInitialState());
   }
 
-  /**
-   * @description Actualiza la fecha de fin del reporte.
-   * @param fin Fecha de fin como una cadena.
-   */
-  actualizarFin(fin: string): void {
-    this.update((state) => ({
-      ...state,
-      fin,
-    }));
-  }
-
-  /**
-   * @description Actualiza el folio del programa.
-   * @param folioPrograma Folio del programa como una cadena.
-   */
-  actualizarFolioPrograma(folioPrograma: string): void {
-    this.update((state) => ({
-      ...state,
-      folioPrograma,
-    }));
-  }
-
-  /**
-   * @description Actualiza la modalidad del programa.
-   * @param modalidad Modalidad del programa como una cadena.
-   */
-  actualizarModalidad(modalidad: string): void {
-    this.update((state) => ({
-      ...state,
-      modalidad,
-    }));
-  }
-
-  /**
-   * @description Actualiza el tipo de programa.
-   * @param tipoPrograma Tipo de programa como una cadena.
-   */
-  actualizarTipoPrograma(tipoPrograma: string): void {
-    this.update((state) => ({
-      ...state,
-      tipoPrograma,
-    }));
-  }
-
-  /**
-   * @description Actualiza el estatus del programa.
-   * @param estatus Estatus del programa como una cadena.
-   */
-  actualizarEstatus(estatus: string): void {
-    this.update((state) => ({
-      ...state,
-      estatus,
-    }));
-  }
-
-  /**
-   * @description Actualiza la fecha de inicio del reporte.
-   * @param inicio Fecha de inicio como una cadena.
-   */
+  /** Actualiza la fecha de inicio del reporte. */
   actualizarInicio(inicio: string): void {
-    this.update((state) => ({
-      ...state,
-      inicio,
-    }));
+    this.update(state => ({ ...state, inicio }));
   }
 
-  /**
-   * @description Actualiza las ventas totales.
-   * @param ventasTotales Ventas totales como una cadena.
-   */
+  /** Actualiza la fecha de fin del reporte. */
+  actualizarFin(fin: string): void {
+    this.update(state => ({ ...state, fin }));
+  }
+
+  /** Actualiza el folio del programa asociado. */
+  actualizarFolioPrograma(folioPrograma: string): void {
+    this.update(state => ({ ...state, folioPrograma }));
+  }
+
+  /** Actualiza la modalidad del programa. */
+  actualizarModalidad(modalidad: string): void {
+    this.update(state => ({ ...state, modalidad }));
+  }
+
+  /** Actualiza el tipo de programa. */
+  actualizarTipoPrograma(tipoPrograma: string): void {
+    this.update(state => ({ ...state, tipoPrograma }));
+  }
+
+  /** Actualiza el estatus del programa. */
+  actualizarEstatus(estatus: string): void {
+    this.update(state => ({ ...state, estatus }));
+  }
+
+  /** Actualiza el total de ventas. */
   actualizarVentasTotales(ventasTotales: string): void {
-    this.update((state) => ({
-      ...state,
-      ventasTotales,
-    }));
+    this.update(state => ({ ...state, ventasTotales }));
   }
 
-  /**
-   * @description Actualiza el total de exportaciones.
-   * @param totalExportaciones Total de exportaciones como una cadena.
-   */
+  /** Actualiza el total de exportaciones. */
   actualizarTotalExportaciones(totalExportaciones: string): void {
-    this.update((state) => ({
-      ...state,
-      totalExportaciones,
-    }));
+    this.update(state => ({ ...state, totalExportaciones }));
   }
 
-  /**
-   * @description Actualiza el total de importaciones.
-   * @param totalImportaciones Total de importaciones como una cadena.
-   */
+  /** Actualiza el total de importaciones. */
   actualizarTotalImportaciones(totalImportaciones: string): void {
-    this.update((state) => ({
-      ...state,
-      totalImportaciones,
-    }));
+    this.update(state => ({ ...state, totalImportaciones }));
   }
 
-  /**
-   * @description Actualiza el saldo calculado.
-   * @param saldo Saldo como una cadena.
-   */
+  /** Actualiza el saldo calculado del reporte. */
   actualizarSaldo(saldo: string): void {
-    this.update((state) => ({
-      ...state,
-      saldo,
-    }));
+    this.update(state => ({ ...state, saldo }));
   }
 
-  /**
-   * @description Actualiza el porcentaje de exportación calculado.
-   * @param porcentajeExportacion Porcentaje de exportación como una cadena.
-   */
+  /** Actualiza el porcentaje de exportación. */
   actualizarPorcentajeExportacion(porcentajeExportacion: string): void {
-    this.update((state) => ({
-      ...state,
-      porcentajeExportacion,
-    }));
+    this.update(state => ({ ...state, porcentajeExportacion }));
   }
 
-
   /**
-   * Restablece el estado de la tienda a su estado inicial.
+   * Restablece el estado del store a sus valores iniciales.
+   * Se utiliza cuando se requiere limpiar el formulario o iniciar una nueva solicitud.
    */
   resetStore(): void {
     this.reset();

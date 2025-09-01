@@ -46,6 +46,7 @@ export class ModificacionPermisoImportacionSanitario{
    */
   actualizarEstadoFormulario(DATOS: DatosDelSolicituteSeccionState): void {
    this.tramiteStore.setIdeGenerica(DATOS.ideGenerica);
+   this.tramiteStore.setObservaciones(DATOS.observaciones);
     this.tramiteStore.setEstablecimientoRFCResponsableSanitario(DATOS.establecimientoRFCResponsableSanitario)
     this.tramiteStore.setEstablecimientoRazonSocial(DATOS.establecimientoRazonSocial);
     this.tramiteStore.setEstablecimientoCorreoElectronico(DATOS.establecimientoCorreoElectronico);
