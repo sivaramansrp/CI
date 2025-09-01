@@ -86,6 +86,16 @@ export class ContenedorDePasosComponent {
   datosDeLaSolicitudComponent!: DatosDeLaSolicitudComponent;
 
   /**
+  * @property {PasoUnoComponent} pasoUnoComponent
+  * @description
+  * Referencia al componente hijo `PasoUnoComponent` mediante
+  * `@ViewChild`. Permite acceder a sus métodos y propiedades
+  * desde este componente padre.
+  */
+  @ViewChild(PasoUnoComponent)
+  pasoUnoComponent!: PasoUnoComponent;
+
+  /**
    * Referencia al componente hijo `PagoDeDerechosComponent`.
    *
    * Se obtiene mediante `@ViewChild` para poder interactuar con él de forma
@@ -127,7 +137,19 @@ export class ContenedorDePasosComponent {
    * Índice del paso actual en el wizard.
    */
   indice: number = 1;
-
+  /**
+ * @property {string} MENSAJE_DE_ERROR
+ * @description
+ * Propiedad usada para almacenar el mensaje de error actual.
+ * Se inicializa como cadena vacía y se actualiza en función
+ * de las validaciones o errores capturados en el flujo.
+ */
+  MENSAJE_DE_ERROR: string = '';
+  /**
+    * @property {string} infoAlert
+    * Clase CSS usada para mostrar alertas informativas.
+    */
+  public infoAlert = 'alert-danger text-center';
   /**
    * @property {WizardComponent} wizardComponent
    * Referencia al componente del wizard para controlar la navegación entre pasos.
@@ -162,37 +184,39 @@ export class ContenedorDePasosComponent {
    * @param {AccionBoton} e - Acción realizada en el botón (continuar o retroceder) y el índice del paso.
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      this.tituloMensaje = ContenedorDePasosComponent.obtenerNombreDelTítulo(
-        e.valor
-      );
-      if (
-        this.datosDeLaSolicitudComponent.datosSolicitudForm.invalid &&
-        this.pagoDeDerechosComponent.formularioPagoDerechos.invalid
-      ) {
-        this.seleccionarFilaNotificacion = {
-          tipoNotificacion: 'alert',
-          categoria: 'danger',
-          modo: 'action',
-          titulo: '',
-          mensaje: MENSAJE_DE_VALIDACION,
-          cerrar: true,
-          tiempoDeEspera: 2000,
-          txtBtnAceptar: 'Aceptar',
-          txtBtnCancelar: '',
-        };
-        this.mostrarAlerta = true;
-        return;
+    const VALIDO = this.pasoUnoComponent?.validarPasoUno();
+    if (VALIDO) {
+      if (e.valor > 0 && e.valor < 5) {
+        this.tituloMensaje = ContenedorDePasosComponent.obtenerNombreDelTítulo(
+          e.valor
+        );
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else {
+          this.wizardComponent.atras();
+        }
       }
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
+    } else {      
+      this.indice = 1;
+          this.tituloMensaje = ContenedorDePasosComponent.obtenerNombreDelTítulo(
+          this.indice
+        );
+      this.mostrarAlerta = true;
+      this.MENSAJE_DE_ERROR = MENSAJE_DE_VALIDACION;
+    
+      this.seleccionarFilaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: MENSAJE_DE_VALIDACION,
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'SI',
+        txtBtnCancelar: 'NO',
       }
     }
   }
-
   /**
    * @method obtenerNombreDelTítulo
    * Obtiene el título correspondiente al paso actual.

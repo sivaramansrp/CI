@@ -16,7 +16,7 @@ import {
   MENSAJE_SIN_FILA_SELECCIONADA,
   OCULTAR_FACTURADOR,
   OCULTAR_PROVEEDOR,
-  PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR
+  PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR,
 } from '../../constantes/datos-solicitud.enum';
 import {
   Component,
@@ -40,6 +40,7 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { TercerosRelacionadosFebService } from '../../services/tereceros-relacionados-feb.service';
+import { ToastrService } from 'ngx-toastr';
 
 /**
  * @component TercerosRelacionadosComponent
@@ -57,6 +58,7 @@ import { TercerosRelacionadosFebService } from '../../services/tereceros-relacio
     AlertComponent,
     NotificacionesComponent,
   ],
+  providers: [TercerosRelacionadosFebService, ToastrService],
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.css',
 })
@@ -384,11 +386,11 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   private destroy$ = new Subject<void>();
 
-    /**
-      * property TEXTOS
-      * description Textos de alerta utilizados en el componente.
-      */
-     public TEXTOS = MENSAJEDEALERTA;   
+  /**
+   * property TEXTOS
+   * description Textos de alerta utilizados en el componente.
+   */
+  public TEXTOS = MENSAJEDEALERTA;   
 
   /**
    * @method irAAcciones
@@ -396,9 +398,10 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    *
    * @param {string} accionesPath - Ruta relativa hacia la que se desea navegar.
    */
-  irAAcciones(accionesPath: string): void {
+  irAAcciones(accionesPath: string, valor: boolean): void {
     this.router.navigate([accionesPath], {
       relativeTo: this.activatedRoute,
+      queryParams: { update: valor },
     });
   }
   /**
@@ -407,42 +410,17 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
-    this.isAdjuntar = PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR.includes(this.idProcedimiento);
+    this.isAdjuntar = PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR.includes(
+      this.idProcedimiento
+    );
     this.habilitarFacturador = OCULTAR_FACTURADOR.includes(this.idProcedimiento)
       ? false
       : true;
     this.habilitarProveedor = OCULTAR_PROVEEDOR.includes(this.idProcedimiento)
       ? false
       : true;
+    }
 
-    this.tercerosService
-      .getFabricanteTablaDatos()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((response: Destinatario[]) => {
-        this.fabricanteTablaDatos = response;
-      });
-
-    this.tercerosService
-      .getFabricanteTablaDatos()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((response: Destinatario[]) => {
-        this.destinatarioFinalTablaDatos = response;
-      });
-
-    this.tercerosService
-      .getFabricanteTablaDatos()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((response: Proveedor[]) => {
-        this.proveedorTablaDatos = response;
-      });
-
-    this.tercerosService
-      .getFabricanteTablaDatos()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((response: Facturador[]) => {
-        this.facturadorTablaDatos = response;
-      });
-  }
 
   /**
    * Verifica si un campo es requerido según la configuración de campos requeridos.
@@ -467,7 +445,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       return;
     }
     this.fabricanteEventoModificar.emit(this.fabricanteSeleccionadoDatos);
-    this.irAAcciones('../agregar-fabricante');
+    this.irAAcciones('../agregar-fabricante', true);
   }
 
   /**
@@ -483,7 +461,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       return;
     }
     this.destinatarioEventoModificar.emit(this.destinatarioSeleccionadoDatos);
-    this.irAAcciones('../agregar-destinatario-final');
+    this.irAAcciones('../agregar-destinatario-final',true);
   }
 
   /**
@@ -499,7 +477,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       return;
     }
     this.proveedorEventoModificar.emit(this.proveedorSeleccionadoDatos);
-    this.irAAcciones('../agregar-proveedor');
+    this.irAAcciones('../agregar-proveedor',true);
   }
 
   /**
@@ -515,7 +493,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       return;
     }
     this.facturadorEventoModificar.emit(this.facturadorSeleccionadoDatos);
-    this.irAAcciones('../agregar-facturador');
+    this.irAAcciones('../agregar-facturador',true);
   }
 
   /**

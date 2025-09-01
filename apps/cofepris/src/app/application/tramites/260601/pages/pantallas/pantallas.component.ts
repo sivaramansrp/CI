@@ -1,3 +1,4 @@
+import { AVISO_PRIVACIDAD, ERROR_FORMA_ALERT } from '../../constantes/aviso-enum';
 import { Component, ViewChild } from '@angular/core';
 
 import {
@@ -8,7 +9,6 @@ import {
   PASOS,
   WizardComponent,
 } from '@ng-mf/data-access-user';
-import { AVISO_PRIVACIDAD } from '../../constantes/aviso-enum';
 import { CommonModule } from '@angular/common';
 import { DatosComponent } from '../datos/datos.component';
 import { FirmarSolicitudComponent } from '../firmar-solicitud/firmar-solicitud.component';
@@ -86,6 +86,29 @@ export class PantallasComponent {
     txtBtnSig: 'Continuar',
   };
 
+    /**
+   * @property {boolean} esFormaValido
+   * @description
+   * Indica si el formulario actual es válido. Se utiliza para mostrar alertas cuando faltan campos por capturar.
+   * Cuando es `true`, se muestra un mensaje de error indicando que hay campos obligatorios sin completar.
+   */
+  esFormaValido: boolean = false;
+
+  /**
+   * @property {DatosComponent} pasoUnoComponent
+   * @description
+   * Referencia al componente hijo DatosComponent que contiene los formularios del primer paso del trámite.
+   * Se utiliza para acceder a sus métodos de validación y a la información capturada por el usuario.
+   */
+  @ViewChild(DatosComponent) pasoUnoComponent!: DatosComponent;
+  /**
+   * @property {string} formErrorAlert
+   * @description
+   * Mensaje HTML que se muestra como alerta cuando faltan campos por capturar en el formulario.
+   * Utiliza la constante ERROR_FORMA_ALERT definida en los archivos de constantes del módulo.
+   */
+  public formErrorAlert = ERROR_FORMA_ALERT;
+
   /**
    * Selecciona la pestaña especificada.
    *
@@ -101,14 +124,56 @@ export class PantallasComponent {
    * @param e - El botón de acción con el valor y la acción.
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
+    this.esFormaValido = false;
+    
+    if (this.indice === 1 && e.accion === 'cont') {
+      const ISVALID = this.validarTodosFormulariosPasoUno();
+      if (!ISVALID) {
+        this.esFormaValido = true;
+        return; 
+      }
+    }
+
+    let indiceActualizado = e.valor;
+    if (e.accion === 'cont') {
+      indiceActualizado = e.valor + 1;
+    } else if (e.accion === 'ant') {
+      indiceActualizado = e.valor - 1;
+    }
+
+    // Validar que el nuevo índice esté dentro de los límites permitidos
+    if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
+
+      // Actualizar el índice y datosPasos
+      this.indice = indiceActualizado;
+      this.datosPasos.indice = indiceActualizado;
+
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
-      } else {
+      } else if (e.accion === 'ant') {
         this.wizardComponent.atras();
       }
     }
+  }
+ /**
+   * @method validarTodosFormulariosPasoUno
+   * @description
+   * Valida todos los formularios del componente hijo DatosComponent.
+   * Retorna `true` si todos los formularios son válidos, `false` si alguno es inválido.
+   * Si no existe la referencia al componente, retorna `true` por defecto.
+   *
+   * @returns {boolean} `true` si todos los formularios son válidos, `false` si alguno es inválido.
+   * @private
+   */
+  private validarTodosFormulariosPasoUno(): boolean {
+    if (!this.pasoUnoComponent) {
+      return true;
+    }
+    const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validarFormularios();
+    if (!ISFORM_VALID_TOUCHED) {
+      return false;
+    }
+    return true;
   }
 }
 

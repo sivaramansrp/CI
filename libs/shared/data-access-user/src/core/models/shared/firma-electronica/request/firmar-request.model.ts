@@ -68,3 +68,13 @@ export interface FirmarRequest {
   documentos_requeridos: DocumentoRequeridoFirmar[];
 }
 
+/**
+ * Payload para la firma electrónica.
+ */
+export interface FielPayload {
+  certificate: string;
+  privateKey: string;
+  password: string;
+  rfc: string;
+}
+

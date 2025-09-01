@@ -1,17 +1,11 @@
-import { Component, ElementRef, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import {
   Destinatario,
   Fabricante,
-  Facturador as SharedFacturador,
-  Proveedor as SharedProveedor,
+  Facturador,
+  Proveedor,
 } from '../../../../shared/models/terceros-relacionados.model';
 
-interface ProveedorWithId extends SharedProveedor {
-  id: string;
-}
-interface FacturadorWithId extends SharedFacturador {
-  id: string;
-}
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
@@ -46,26 +40,96 @@ import { Tramite260911Store } from '../../estados/tramite260911.store';
   templateUrl: './terceros-relacionados-vista.component.html',
   styleUrl: './terceros-relacionados-vista.component.scss',
 })
-export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
+export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy, OnChanges {
+
+  /**
+   * Tipo de trámite actual.
+   */
+  @Input() tipoTramite: string = '';
+  /**
+   * Estado de habilitación de la tabla de fabricantes.
+   */
+  isFabricanteTablaDatosDisabled: boolean = true;
+  /**
+   * Estado de habilitación de la tabla de destinatarios finales.
+   */
+  isDestinatarioFinalTablaDatosDisabled: boolean = true;
+  /**
+   * Estado de habilitación de la tabla de proveedores.
+   */
+  isProveedorTablaDatosDisabled: boolean = true;
+  /**
+   * Estado de habilitación de la tabla de facturadores.
+   */
+   
+  isFacturadorTablaDatosDisabled: boolean = true;
+  /**
+   * Datos de la tabla de fabricantes.
+   */
   fabricanteTablaDatos: Fabricante[] = [];
+  /**
+   * Datos de la tabla de destinatarios finales.
+   */
   destinatarioFinalTablaDatos: Destinatario[] = [];
-  proveedorTablaDatos: ProveedorWithId[] = [];
-  facturadorTablaDatos: FacturadorWithId[] = [];
-
+  /**
+   * Datos de la tabla de proveedores.
+   */
+  proveedorTablaDatos: Proveedor[] = [];
+  /**
+   * Datos de la tabla de facturadores.
+   */
+  facturadorTablaDatos: Facturador[] = [];
+  /**
+   * Datos de la tabla de fabricantes seleccionados.
+   */
   fabricanteSeleccionadoDatos: Fabricante[] = [];
+  /**
+   * Datos de la tabla de destinatarios finales seleccionados.
+   */
   destinatarioSeleccionadoDatos: Destinatario[] = [];
-  proveedorSeleccionadoDatos: ProveedorWithId[] = [];
-  facturadorSeleccionadoDatos: FacturadorWithId[] = [];
+  /**
+   * Datos de la tabla de proveedores seleccionados.
+   */
+  proveedorSeleccionadoDatos: Proveedor[] = [];
+  /**
+   * Datos de la tabla de facturadores seleccionados.
+   */
+  facturadorSeleccionadoDatos: Facturador[] = [];
 
+  /**
+   * Estado de habilitación de los botones de acción para la tabla de fabricantes.
+   */
   fabricanteButtonState = { showModificar: false, showEliminar: false };
+  /**
+   * Estado de habilitación de los botones de acción para la tabla de destinatarios finales.
+   */
   destinatarioButtonState = { showModificar: false, showEliminar: false };
+  /**
+   * Estado de habilitación de los botones de acción para la tabla de proveedores.
+   */
   proveedorButtonState = { showModificar: false, showEliminar: false };
+  /**
+   * Estado de habilitación de los botones de acción para la tabla de facturadores.
+   */
   facturadorButtonState = { showModificar: false, showEliminar: false };
 
-  esFormularioSoloLectura = false; 
+  /**
+   * Indica si el formulario debe mostrarse en modo de solo lectura.
+   */
+  esFormularioSoloLectura = false;
 
+  /**
+   * Subject para manejar la destrucción del componente.
+   */
   private destroy$ = new Subject<void>();
 
+  /**
+   * Constructor de la clase.
+   *
+   * @param tramiteQuery - Servicio para consultar datos del trámite.
+   * @param tramiteStore - Servicio para almacenar datos del trámite.
+   * @param renderer - Servicio para manipular el DOM.
+   */
   constructor(
     private tramiteQuery: Tramite260911Query,
     private tramiteStore: Tramite260911Store,
@@ -73,7 +137,13 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     private el: ElementRef
   ) {}
 
-
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Suscribe a los observables para obtener los datos de las tablas.
+   *
+   * @method ngOnInit
+   * @returns {void}
+   */
   ngOnInit(): void {
     this.tramiteQuery.getFabricanteTablaDatos$
       .pipe(takeUntil(this.destroy$))
@@ -91,16 +161,36 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((datos) => {
         
-        this.proveedorTablaDatos = datos as ProveedorWithId[];
+        this.proveedorTablaDatos = datos as Proveedor[];
       });
 
     this.tramiteQuery.getFacturadorTablaDatos$
       .pipe(takeUntil(this.destroy$))
       .subscribe((datos) => {
-        this.facturadorTablaDatos = datos as FacturadorWithId[];
+        this.facturadorTablaDatos = datos as Facturador[];
       });
   }
+/**
+ * Método del ciclo de vida de Angular que se ejecuta al detectar cambios en las propiedades de entrada.
+ * Se utiliza para actualizar el estado de los checkboxes de las tablas según el tipo de trámite.
+ *
+ * @method ngOnChanges
+ * @returns {void}
+ */
 
+  ngOnChanges(): void {
+  if (this.tipoTramite === '1' || this.tipoTramite === '2') {
+    this.isFabricanteTablaDatosDisabled = false;
+    this.isDestinatarioFinalTablaDatosDisabled = false;
+    this.isProveedorTablaDatosDisabled = false;
+    this.isFacturadorTablaDatosDisabled = false;
+  } else {
+    this.isFabricanteTablaDatosDisabled = true;
+    this.isDestinatarioFinalTablaDatosDisabled = true;
+    this.isProveedorTablaDatosDisabled = true;
+    this.isFacturadorTablaDatosDisabled = true;
+  }
+}
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Limpia los recursos suscritos para evitar fugas de memoria.
@@ -191,8 +281,8 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   eliminarProveedor(): void {
     if (this.proveedorSeleccionadoDatos.length > 0) {
-      const IDS_TO_DELETE = this.proveedorSeleccionadoDatos.map((p: ProveedorWithId) => p.id);
-      const UPDATED = this.proveedorTablaDatos.filter((p: ProveedorWithId) => !IDS_TO_DELETE.includes(p.id));
+      const IDS_TO_DELETE = this.proveedorSeleccionadoDatos.map((p: Proveedor) => p.id);
+      const UPDATED = this.proveedorTablaDatos.filter((p: Proveedor) => !IDS_TO_DELETE.includes(p.id));
       this.tramiteStore.updateProveedorTablaDatos(UPDATED);
       this.proveedorSeleccionadoDatos = [];
       this.proveedorButtonState = { showModificar: false, showEliminar: false };
@@ -213,8 +303,8 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   eliminarFacturador(): void {
     if (this.facturadorSeleccionadoDatos.length > 0) {
-      const IDS_TO_DELETE = this.facturadorSeleccionadoDatos.map((f: FacturadorWithId) => f.id);
-      const UPDATED = this.facturadorTablaDatos.filter((f: FacturadorWithId) => !IDS_TO_DELETE.includes(f.id));
+      const IDS_TO_DELETE = this.facturadorSeleccionadoDatos.map((f: Facturador) => f.id);
+      const UPDATED = this.facturadorTablaDatos.filter((f: Facturador) => !IDS_TO_DELETE.includes(f.id));
       this.tramiteStore.updateFacturadorTablaDatos(UPDATED);
       this.facturadorSeleccionadoDatos = [];
       this.facturadorButtonState = { showModificar: false, showEliminar: false };
@@ -325,11 +415,11 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    *
    * @param event - El evento de selección que contiene los datos del proveedor.
    */
-  onProveedorSeleccionado(event: ProveedorWithId[] | object): void {
-    let DATOS: ProveedorWithId[] = [];
+  onProveedorSeleccionado(event: Proveedor[] | object): void {
+    let DATOS: Proveedor[] = [];
     if (Array.isArray(event)) {
-      DATOS = event as ProveedorWithId[];
-    } else if (TercerosRelacionadosVistaComponent.isSelectionEvent<ProveedorWithId>(event)) {
+      DATOS = event as Proveedor[];
+    } else if (TercerosRelacionadosVistaComponent.isSelectionEvent<Proveedor>(event)) {
       DATOS = event.selectedRows ?? event.detail ?? [];
     }
     this.proveedorSeleccionadoDatos = DATOS;
@@ -348,11 +438,11 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    *
    * @param event - El evento de selección que contiene los datos del facturador.
    */
-  onFacturadorSeleccionado(event: FacturadorWithId[] | object): void {
-    let DATOS: FacturadorWithId[] = [];
+  onFacturadorSeleccionado(event: Facturador[] | object): void {
+    let DATOS: Facturador[] = [];
     if (Array.isArray(event)) {
-      DATOS = event as FacturadorWithId[];
-    } else if (TercerosRelacionadosVistaComponent.isSelectionEvent<FacturadorWithId>(event)) {
+      DATOS = event as Facturador[];
+    } else if (TercerosRelacionadosVistaComponent.isSelectionEvent<Facturador>(event)) {
       DATOS = event.selectedRows ?? event.detail ?? [];
     }
     this.facturadorSeleccionadoDatos = DATOS;
@@ -387,18 +477,18 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   /**
    * Agrega una lista de proveedores al trámite actual.
    *
-   * @param newProveedores - Un arreglo de objetos `ProveedorWithId` que serán añadidos como proveedores en la tabla de datos.
+   * @param newProveedores - Un arreglo de objetos `Proveedor` que serán añadidos como proveedores en la tabla de datos.
    */
-  addProveedores(newProveedores: ProveedorWithId[]): void {
+  addProveedores(newProveedores: Proveedor[]): void {
     this.tramiteStore.updateProveedorTablaDatos(newProveedores);
   }
 
   /**
    * Agrega una lista de facturadores al trámite actual.
    *
-   * @param newFacturadores - Un arreglo de objetos `FacturadorWithId` que serán añadidos como facturadores en la tabla de datos.
+   * @param newFacturadores - Un arreglo de objetos `Facturador` que serán añadidos como facturadores en la tabla de datos.
    */
-  addFacturadores(newFacturadores: FacturadorWithId[]): void {
+  addFacturadores(newFacturadores: Facturador[]): void {
     this.tramiteStore.updateFacturadorTablaDatos(newFacturadores);
   }
 

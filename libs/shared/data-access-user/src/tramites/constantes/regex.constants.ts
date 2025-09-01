@@ -831,7 +831,20 @@ export const CERTIFICATE_OF_ORIGIN_NUMBER = /^[A-Za-z0-9]{8,20}$/;
  * Ejemplos inválidos: "123.45", "abc", "12345678901234567"
  */
 export const IMPORTE = /^\d{1,16}$/;
-
+/**
+ * Expresión regular para validar números decimales con hasta 13 dígitos enteros y exactamente 2 decimales.
+ *
+ * Ejemplos válidos:
+ * - "1234567890123.12"
+ * - "1.23"
+ *
+ * Ejemplos no válidos:
+ * - "12345678901234.12" (más de 13 dígitos enteros)
+ * - "123.1" (menos de 2 decimales)
+ * - "123" (sin decimales)
+ */
+export const REGEX_DECIMAL_16_TOTAL = /^\d{1,13}\.\d{2}$/;
+ 
 
 /**
  * Expresión regular para validar números con hasta 6 dígitos enteros y opcionalmente hasta 6 decimales.
@@ -866,7 +879,18 @@ export const EMAIL = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/i;
  * - ejemplo.com/ruta
  */
 export const WEBPAGE = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
-/*
+/**
+ * Expresión regular para validar números con hasta 6 dígitos enteros y opcionalmente hasta 6 decimales.
+  */
+export const REGEX_SEIS_SIGNIFICATIVOS = /^(?:\d{1,6})(?:\.\d{1,6})?$|^\.\d{1,6}$/;
+
+/**
+ * Expresión regular para validar números que pueden ser enteros o decimales.
+ * Permite dígitos del 0 al 9 y un punto decimal opcional.
+ * Ejemplos válidos: "123", "123.45", "0.678"
+ * Ejemplos no válidos: "123.", ".45", "abc"
+ */
+export const REGEX_NUMERIC_ONLY = /^[0-9]*\.?[0-9]*$/;/*
   * Expresión regular para validar un número de 8 dígitos.
   * Esta expresión asegura que la cadena contenga exactamente 8 dígitos numéricos (0-9).
   * Ejemplos válidos: "12345678", "00000001"
@@ -874,3 +898,34 @@ export const WEBPAGE = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/
   * Ejemplos no válidos: "1234567" (menos de 8 dígitos), "123456789" (más de 8 dígitos), "1234abcd" (contiene letras)
   */
  export const EIGHT_DIGIT_NUMBER_REGEX = /^\d{8}$/;
+
+/**
+ * Expresión regular para validar un código postal compuesto por 1 a 12 dígitos.
+ * 
+ * Solo permite cadenas numéricas con una longitud entre 1 y 12 caracteres.
+ * 
+ * Ejemplos válidos:
+ * - "12345"
+ * - "987654321012"
+ * 
+ * Ejemplos no válidos:
+ * - "1234567890123" (más de 12 dígitos)
+ * - "12A45" (contiene caracteres no numéricos)
+ */
+export const CODIGO_POSTAL = /^\d{1,12}$/
+
+/**
+ * Expresión regular que permite únicamente números del 0 al 9.
+ *
+ * - Acepta cualquier cantidad de dígitos (incluido vacío).
+ * - No permite letras, espacios ni caracteres especiales.
+ *
+ * @constant
+ * @type {RegExp}
+ *
+ * @example
+ * SOLO_REGEX_NUMEROS.test("12345"); // true
+ * SOLO_REGEX_NUMEROS.test("abc");   // false
+ * SOLO_REGEX_NUMEROS.test("");      // true (cadena vacía)
+ */
+export const SOLO_REGEX_NUMEROS = /^[0-9]*$/;

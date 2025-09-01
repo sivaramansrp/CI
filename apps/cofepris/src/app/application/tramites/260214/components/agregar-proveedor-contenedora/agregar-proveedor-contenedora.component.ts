@@ -8,12 +8,15 @@
  * Este componente actúa como un contenedor para gestionar y actualizar los datos de la tabla de proveedores en el store del trámite.
  */
 
+import { Component, OnInit } from '@angular/core';
+import { Subject,map, takeUntil } from 'rxjs';
+import { Tramite260214State, Tramite260214Store } from '../../estados/tramite260214Store.store';
+import { ActivatedRoute } from '@angular/router';
 import { AgregarProveedorComponent } from '../../../../shared/components/agregar-proveedor/agregar-proveedor.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { Tramite260214Store } from '../../estados/tramite260214Store.store';
+import { Tramite260214Query } from '../../estados/tramite260214Query.query';
 
 /**
  * @component
@@ -46,7 +49,7 @@ import { Tramite260214Store } from '../../estados/tramite260214Store.store';
   templateUrl: './agregar-proveedor-contenedora.component.html',
   styleUrl: './agregar-proveedor-contenedora.component.scss',
 })
-export class AgregarProveedorContenedoraComponent {
+export class AgregarProveedorContenedoraComponent implements OnInit {
   /**
    * Identificador del procedimiento en curso.
    *
@@ -55,6 +58,29 @@ export class AgregarProveedorContenedoraComponent {
    * según el procedimiento activo.
    */
   idProcedimiento: number = ID_PROCEDIMIENTO;
+  destroyNotifier$ = new Subject<void>();
+
+  /**
+   * Estado actual del trámite 260214.
+   *
+   * @type {Tramite260214State}
+   * @description
+   * Contiene la información y valores asociados al estado del trámite en curso.  
+   * Se actualiza a través de `Store` y `Query` que gestionan el flujo
+   * y la persistencia del estado.
+   */
+  public tramiteState!: Tramite260214State;
+
+  /**
+   * Lista de proveedores en la tabla de datos.
+   *
+   * @type {Proveedor[]}
+   * @description
+   * Arreglo que almacena los registros de proveedores mostrados en la tabla.  
+   * Puede ser modificado dinámicamente en función de la interacción del usuario
+   * o por datos obtenidos desde el estado (`tramiteState`) o servicios externos.
+   */
+  proveedorTablaDatos: Proveedor[] = [];
   /**
    * @constructor
    * @description
@@ -62,7 +88,44 @@ export class AgregarProveedorContenedoraComponent {
    *
    * @param {Tramite260214Store} tramite260214Store - Store que administra el estado del trámite 260214.
    */
-  constructor(public tramite260214Store: Tramite260214Store) {}
+  constructor(
+    public tramite260214Store: Tramite260214Store,
+    public tramite260214Query: Tramite260214Query,
+    private route: ActivatedRoute
+  ) {
+    this.tramite260214Query.selectTramiteState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.tramiteState = seccionState;
+          this.proveedorTablaDatos = seccionState.proveedorTablaDatos;
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * Ciclo de vida de Angular: `ngOnInit`.
+   *
+   * @description
+   * Se ejecuta al inicializar el componente.  
+   *
+   * - Se suscribe a los parámetros de la ruta (`queryParams`).  
+   * - Si el parámetro `update` es igual a `'false'`, se limpia la lista
+   *   de proveedores (`proveedorTablaDatos`).  
+   *
+   * Esto permite inicializar la tabla de proveedores vacía o conservar los datos previos
+   * según el valor recibido en la URL.
+   */
+  ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      if (params['update'] === 'false') {
+        this.proveedorTablaDatos = [];
+      } else if (params['update'] === 'true') {
+        this.proveedorTablaDatos = this.tramiteState.proveedorTablaModificaDatos;
+      }
+    });
+}
 
   /**
    * @method updateProveedorTablaDatos

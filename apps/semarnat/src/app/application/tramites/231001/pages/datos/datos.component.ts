@@ -9,6 +9,9 @@ import { PASOS } from '@ng-mf/data-access-user';
 // Importación del componente WizardComponent desde el componente compartido de wizard.
 import { WizardComponent } from '@ng-mf/data-access-user';
 
+import { AVISO } from '../../models/datos.model';
+ 
+import {SolicitanteDatosTabsComponent} from '../solicitante-datos-tabs/solicitante-datos-tabs.component';
 /**
  * Interface representing the action of a button.
  */
@@ -52,6 +55,26 @@ export class DatosComponent {
   pasos: ListaPasosWizard[] = PASOS;
 
   /**
+   * @property aviso
+   * @type {string}
+   *  Texto del aviso de privacidad en formato HTML.
+   */
+
+  aviso= AVISO.Aviso;
+
+  /**
+   * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+   */
+  public formErrorAlert =`<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+      Faltan campos por capturar.
+    </div>
+  </div>
+</div>
+`
+
+  /**
    * @property wizardComponent
    * @type {WizardComponent}
    *  Referencia al componente del wizard.
@@ -64,6 +87,17 @@ export class DatosComponent {
    *  El índice de la pestaña seleccionada.
    */
   indice: number = 1;
+
+  /**
+   * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+   */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: SolicitanteDatosTabsComponent;
+ 
+   /**
+ * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+ * }
+ */
+esFormaValido: boolean = false;
 
   /**
    * The data for the steps in the wizard.
@@ -80,14 +114,39 @@ export class DatosComponent {
    * @param e The action button event containing the action and value.
    */
     public getValorIndice(e: AccionBoton): void {
-      if (e.valor > 0 && e.valor < 5) {
-        this.indice = e.valor;
-        if (e.accion === 'cont') {
-          this.wizardComponent.siguiente();
-        } else {
-          this.wizardComponent.atras();
+      if (e.accion === 'cont') {
+        let isValid = true;
+  
+          if (this.indice === 1 && this.pasoUnoComponent) {
+          isValid = this.pasoUnoComponent.validarTodosLosFormularios();
         }
+        if (!isValid) {
+          this.esFormaValido = true;
+          this.datosPasos.indice = this.indice;
+          return;
+        }
+  
+        this.esFormaValido = false;
+        this.indice = e.valor;
+        this.datosPasos.indice = this.indice;
+  
+        this.wizardComponent.siguiente();
+        return;
       }
+  
+        this.indice = e.valor;
+      this.datosPasos.indice = this.indice;
+      this.wizardComponent.atras();
+  
+  
     }
+    /**
+     * Método que se ejecuta cuando cambia de tab en paso-uno.
+     * Oculta el mensaje de error de validación.
+     */
+    alCambiarPestana(): void {
+      this.esFormaValido = false;
+    }
+    
 
 }

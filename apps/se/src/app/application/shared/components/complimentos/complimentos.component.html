@@ -49,7 +49,7 @@
     <ng-titulo titulo="Obligaciones fiscales" />
     <div class="row">
       <div class="col-md-4">
-       <app-catalogo-select [catalogo]="derechosList" formControlName="opinionPositiva" [label]="'Opinión positiva del SAT'" [required]="false"
+       <app-catalogo-select [catalogo]="derechosList" formControlName="opinionPositiva" [label]="'Opinión positiva del SAT*'" [required]="false"
           [isDisabled]="true"  name="opinionPositiva"></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -87,14 +87,14 @@
         <div class="row">
           <div class="col-md-4 mb-4 mt-3">
             <label for="Numero"> Número de Notaria*:</label>
-            <input type="text" id="Numero" name="Numero" class="form-control" formControlName="nombreDeNotaria"
+            <input type="number" id="Numero" name="Numero" class="form-control" formControlName="nombreDeNotaria"
               maxlength="10" [ngClass]="esValido('formaModificaciones', 'nombreDeNotaria') ? 'required' : ''"/>
                <div *ngIf="formaComplimentos.get('formaModificaciones.nombreDeNotaria')?.hasError('required') && formaComplimentos.get('formaModificaciones.nombreDeNotaria')?.touched">
                  <p class="mensaje-error">Este campo es obligatorio.</p>
                </div>
           </div>
           <div class="col-4 mb-4 mt-1">
-            <app-catalogo-select [catalogo]="estados || []" [label]="'Estado'" [required]="false" name="estado"
+            <app-catalogo-select [catalogo]="estados || []" [label]="'Estado*'" [required]="false" name="estado"
               formControlName="estado" [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
           </div>
         </div>
@@ -102,7 +102,7 @@
         <div class="row mb-4">
           <div class="col-md-4">
             <label for="acta"> Número de acta*:</label>
-            <input type="text" id="acta" name="acta" class="form-control" formControlName="nombreDeActa" maxlength="10"
+            <input type="number" id="acta" name="acta" class="form-control" formControlName="nombreDeActa" maxlength="10"
               [class.is-invalid]="formaComplimentos.get('formaModificaciones')?.get('nombreDeActa')?.invalid && formaComplimentos.get('formaModificaciones')?.get('nombreDeActa')?.touched" />
            <div *ngIf="formaComplimentos.get('formaModificaciones.nombreDeActa')?.hasError('required') && formaComplimentos.get('formaModificaciones.nombreDeActa')?.touched">
             <p class="mensaje-error">Este campo es obligatorio.</p>
@@ -220,7 +220,7 @@
 
         } @else {
         <div [ngClass]="item.class">
-          <label for="{{ item.campo }}">{{ item.labelNombre }} @if (item.required) {*}:</label>
+          <label for="{{ item.campo }}">{{ item.labelNombre }}@if(item.required){*}:</label>
           <input class="form-control" [type]="item.tipo_input" id="{{ item.campo }}" [formControlName]="item.campo"
             [maxlength]="item.maxlength || (item.campo === 'rfc' ? 13 : (item.campo === 'taxId' ? 12 : null))"
             (blur)="onDesenfoque(item.campo)"

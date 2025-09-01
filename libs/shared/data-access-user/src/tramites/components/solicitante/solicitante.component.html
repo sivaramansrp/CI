@@ -1,6 +1,6 @@
 <!-- Formulario dinamico de tipo de personas -->
 <form [formGroup]="form">
-  @if (guardarDatos.consultaioSolicitante) {
+  @if (guardarDatos.consultaioSolicitante && mostrarDatosTramite) {
     <div class="form mt-5" formGroupName="datosTramite">
       <div class="row">
         @for (item of datosTramite; track $index) {

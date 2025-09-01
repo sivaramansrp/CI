@@ -3,13 +3,13 @@
  * Define la estructura de los datos necesarios para la cadena original en el trámite.
  */
 export interface CadenaOriginalRequest {
-    num_folio_tramite: string;
+    num_folio_tramite: string | null;
     boolean_extranjero: boolean;
-    documento_requerido: DocumentoRequerido[];
+    documento_requerido?: DocumentoRequerido[];
     solicitante: Solicitante;
     cve_rol_capturista: string;
     cve_usuario_capturista: string;
-    fecha_firma: Date;
+    fecha_firma: string;
 }
 
 /**

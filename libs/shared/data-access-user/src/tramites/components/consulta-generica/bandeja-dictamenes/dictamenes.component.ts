@@ -1,5 +1,5 @@
 import { BodyTablaDictamenes, HeaderTablaDictamenes } from '../../../../core/models/shared/consulta-generica.model';
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CONSULTA_DICTAMENES } from '../../../../core/enums/consulta-generica.enum';
 import { CommonModule } from '@angular/common';
@@ -14,7 +14,7 @@ import { FolioQuery } from '../../../../core/queries/folio.query';
   templateUrl: './dictamenes.component.html',
   styleUrl: './dictamenes.component.scss',
 })
-export class DictamenesComponent implements OnInit, OnChanges, OnDestroy {
+export class DictamenesComponent implements OnInit, OnDestroy, OnChanges{
   /**
    * Variable para almacenar el folio recuperado desde el store.
    * @type {string}
@@ -42,15 +42,16 @@ export class DictamenesComponent implements OnInit, OnChanges, OnDestroy {
   datosTablaDictamen: BodyTablaDictamenes[] = [];
 
   /**
-   * Método para abrir el detalle del dictamen.
-   */
-  public verDetalle = DictamenesComponent.verDetalle;
-
-  /**
     * @property {DictamenesResponse[]} dictamenes
     * @description Dictamenes de solicitud.
   */
   @Input() dictamenes: DictamenesResponse[] = [];
+
+  /** 
+    * Evento que emite el ID del dictamen seleccionado
+    * @output {number} idDictamenSeleccionado - ID del dictamen seleccionado
+  */
+  @Output() idDictamenSeleccionado = new EventEmitter<number>();
 
   /**
    * Constructor de la clase DictamenesComponent.
@@ -58,6 +59,19 @@ export class DictamenesComponent implements OnInit, OnChanges, OnDestroy {
    * @param dictamenService Servicio para obtener los dictámenes.
    */
   constructor(private folioQuery: FolioQuery, private dictamenService: DictamenesService) {}
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Recupera el folio desde el store y obtiene los dictámenes.
+   */
+  ngOnInit(): void {
+   /**
+   * Recuperar el folio desde el store y asignarlo a la variable folio.
+   */
+    this.folioQuery.getFolio().pipe(takeUntil(this.unsubscribe$)).subscribe((folio) => {
+      this.folio = folio || '';
+    });
+  }
 
   /**
     * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -75,24 +89,6 @@ export class DictamenesComponent implements OnInit, OnChanges, OnDestroy {
         this.datosTablaDictamen = data;
       });
     }
-  }
-
-  /**
-   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * Recupera el folio desde el store y obtiene los dictámenes.
-   */
-  ngOnInit(): void {
-   /**
-   * Recuperar el folio desde el store y asignarlo a la variable folio.
-   */
-    this.folioQuery.getFolio().pipe(takeUntil(this.unsubscribe$)).subscribe((folio) => {
-      this.folio = folio || '';
-    });
-
-   /**
-   * Llamar al método para obtener los dictámenes desde el servicio.
-   */
-    this.getDictamenes();
   }
 
   /**
@@ -114,11 +110,11 @@ export class DictamenesComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Abre la pestaña para mostrar el detalle del dictamen.
-   * @param {number} _id - Es el Id del dictamen.
+   * @param {number} id - Es el Id del dictamen.
    * @returns {void}
    */
-  static verDetalle(_id: number): void {
-    // Lógica para abrir el detalle del dictamen
+  verDetalle(id: number): void {
+    this.idDictamenSeleccionado.emit(id);
   }
 
   /**

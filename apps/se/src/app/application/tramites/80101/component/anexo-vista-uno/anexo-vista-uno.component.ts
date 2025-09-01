@@ -1,8 +1,8 @@
 import { ANEXO_II_SERVICIO, ANEXO_IMPORTACION_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
+import { AnexoDosEncabezado, DatosComplimento } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { Component, Input } from '@angular/core';
 import { ANEXO_I_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { ActivatedRoute } from '@angular/router';
-import { AnexoDosEncabezado, DatosComplimento } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { AnexoUnoComponent } from '../../../../shared/components/anexo-uno/anexo-uno.component';
 import { AnexoUnoEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { CommonModule } from '@angular/common';
@@ -16,11 +16,11 @@ import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
 import { takeUntil } from 'rxjs';
 
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ComplementarFraccionVistaComponent } from '../complementar-fraccion-vista/complementar-fraccion-vista.component';
 import { ContenedorProveedorClienteComponent } from '../contenedor-proveedor-cliente/contenedor-proveedor-cliente.component';
 import { ProveedorPorArchivoVistaComponent } from '../proveedor-por-archivo-vista/proveedor-por-archivo-vista.component';
 import { ProyectoImmexVistaComponent } from '../proyecto-immex-vista/proyecto-immex-vista.component';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 
 /**
@@ -244,6 +244,24 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
    * Se utiliza para determinar en cuál lista (anexo uno o anexo dos) se deben aplicar las modificaciones.
    */
   public selectedTableId: string = '';
+
+  /**
+   * FormGroup para el Anexo Uno.
+   * 
+   * Representa el formulario reactivo asociado al Anexo Uno. 
+   * Contiene los controles y validaciones necesarias para capturar o modificar los datos del Anexo Uno.
+   * Se inicializa posteriormente, normalmente en el `ngOnInit` o en el constructor del componente.
+   */
+  public anexoUnoFormGroup!: FormGroup;
+
+  /**
+   * FormGroup para el Anexo Dos.
+   * 
+   * Representa el formulario reactivo asociado al Anexo Dos. 
+   * Contiene los controles y validaciones necesarias para capturar o modificar los datos del Anexo Dos.
+   * Se inicializa posteriormente, generalmente en el `ngOnInit` o en el constructor del componente.
+   */
+  public anexoDosFormGroup!: FormGroup;
 
   /**
    * Constructor del componente AnexoVistaUnoComponent.

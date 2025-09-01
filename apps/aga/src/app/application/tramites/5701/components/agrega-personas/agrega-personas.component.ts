@@ -154,6 +154,12 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
   claseFormaNovalida = false;
 
   /**
+   * Flag para rastrear si el usuario ha interactuado con el formulario.
+   * Se utiliza para mostrar mensajes de validación solo después de la interacción del usuario.
+   */
+  public userHasInteracted = false;
+
+  /**
    * Constructor del componente `AgregaPersonasComponent`.
    * Se inyectan los servicios necesarios para la funcionalidad del componente.
    *   fb
@@ -323,6 +329,7 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
    * - Resetea el campo 'gafete' y el formulario 'personaForm' después de agregar la persona.
    */
   agregarPersona(): void {
+    this.userHasInteracted = true;
     this.gafeteRespoDespacho.setValidators([
       Validators.required,
       Validators.maxLength(25),
