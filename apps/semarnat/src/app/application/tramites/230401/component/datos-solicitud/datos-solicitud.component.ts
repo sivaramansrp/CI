@@ -806,7 +806,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       return;
     }
 
-   
+    // Check if more than one row is selected
     if (this.sustanciasSensiblesSeleccionadas.length > 1) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -826,7 +826,18 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     // Proceed with modification logic when exactly one row is selected
     this.modoModificacion = true;
     this.sustanciaEnModificacion = this.sustanciasSensiblesSeleccionadas[0];
-   
+    
+    // Populate form fields with selected substance data
+    this.formSolicitud.patchValue({
+      numeroCas: this.sustanciaEnModificacion.numeroCAS,
+      descripcionNoArancelaria: this.sustanciaEnModificacion.descripcionNoArancelaria,
+      nombreQuimico: this.sustanciaEnModificacion.nombreQuimico
+    });
+    
+    // Update the store with the selected values for consistency - handle undefined values
+    this.tramite230401Store.setNumeroCas(this.sustanciaEnModificacion.numeroCAS || '');
+    this.tramite230401Store.setDescripcionNoArancelaria(this.sustanciaEnModificacion.descripcionNoArancelaria || '');
+    this.tramite230401Store.setNombreQuimico(this.sustanciaEnModificacion.nombreQuimico || '');
   }
 
   agregarListaDeNumeros(): void {
