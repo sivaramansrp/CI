@@ -163,6 +163,7 @@ export class FirmaElectronicaComponent implements OnDestroy {
         }
         this.certFileObj = FILE;
         this.cerInputElement = INPUT;
+        this.FormCertificado.get('cer')?.setValue(FILE);
         this.FormCertificado.get('cerFileName')?.setValue(FILE.name);
         this.FormCertificado.get('cerFileName')?.markAsUntouched();
       } else if (type === FileType.PRIVATE_KEY) {
@@ -173,6 +174,7 @@ export class FirmaElectronicaComponent implements OnDestroy {
         }
         this.keyFileObj = FILE;
         this.keyInputElement = INPUT;
+        this.FormCertificado.get('key')?.setValue(FILE);
         this.FormCertificado.get('keyFileName')?.setValue(FILE.name);
         this.FormCertificado.get('keyFileName')?.markAsUntouched();
       }
