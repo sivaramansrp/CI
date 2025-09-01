@@ -452,6 +452,14 @@ export class DatosDelSolicituteSeccionStateStore extends Store<DatosDelSolicitut
   setIdeGenerica(ideGenerica: string): void {
     this.update({ ideGenerica });
   }
+
+  /**
+   * Actualiza las observaciones del trámite.
+   * @param observaciones Nuevas observaciones del trámite.
+   */
+  setObservaciones(observaciones: string): void {
+    this.update({ observaciones });
+  }
   /**
    * Actualiza el valor de la razón social del establecimiento en el estado.
    *

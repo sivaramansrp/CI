@@ -229,7 +229,7 @@ export class Tramite10301Store extends Store<Solicitud10301State> {
   }
 
   /** Actualiza la lista de aduanas disponibles. */
-  public setAduana(aduana: Catalogo[]): void {
+  public setAduana(aduana: Catalogo[] | null): void {
     this.update((state) => ({ ...state, aduana }));
   }
 
@@ -254,7 +254,7 @@ export class Tramite10301Store extends Store<Solicitud10301State> {
   }
 
   /** Actualiza el catálogo de países. */
-  public setPais(pais: Catalogo[]): void {
+  public setPais(pais: Catalogo[] | null): void {
     this.update((state) => ({ ...state, pais }));
   }
 

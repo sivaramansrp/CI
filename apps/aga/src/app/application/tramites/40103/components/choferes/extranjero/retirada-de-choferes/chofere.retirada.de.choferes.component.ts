@@ -97,7 +97,7 @@ export class ChofereRetiradaDeChoferesComponent implements OnInit, OnDestroy {
    */
   constructor(
     private bsModalService: BsModalService,
-    private chofer40103Service: Chofer40103Service,
+    public chofer40103Service: Chofer40103Service,
     private chofer40103Query: Chofer40103Query,
     private consultaioQuery: ConsultaioQuery
   ) {}
@@ -222,21 +222,21 @@ export class ChofereRetiradaDeChoferesComponent implements OnInit, OnDestroy {
    */
   agregarModal(data: ChoferesExtranjeros): void {
     // Crear una copia mutable del arreglo para evitar errores de inmutabilidad
-    const arregloMutable = [...this.datosDelChoferExtranjeros];
+    const ARREGLO_MUTABLE = [...this.datosDelChoferExtranjeros];
     
     // Verificar si estamos actualizando un registro existente o agregando uno nuevo
-    const indiceExistente = arregloMutable.findIndex(item => item.numero === data.numero);
+    const INDICE_EXISTENTE = ARREGLO_MUTABLE.findIndex(item => item.numero === data.numero);
     
-    if (indiceExistente >= 0) {
+    if (INDICE_EXISTENTE >= 0) {
       // Actualizar registro existente
-      arregloMutable[indiceExistente] = data;
+      ARREGLO_MUTABLE[INDICE_EXISTENTE] = data;
     } else {
       // Agregar nuevo registro
-      arregloMutable.push(data);
+      ARREGLO_MUTABLE.push(data);
     }
     
     // Asignar el arreglo modificado de vuelta a la propiedad
-    this.datosDelChoferExtranjeros = arregloMutable;
+    this.datosDelChoferExtranjeros = ARREGLO_MUTABLE;
     
     // Actualizar el estado en el servicio para persistir los cambios
     this.chofer40103Service.updateDatosDelChoferExtranjeroRetirada(this.datosDelChoferExtranjeros);

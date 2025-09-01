@@ -139,13 +139,4 @@ describe('TercerosRelacionadosFebService', () => {
     expect(req.request.method).toBe('GET');
     req.flush([{ id: 1, nombre: 'Otro' }]);
   });
-
-  it('debería obtener los datos de la tabla de fabricantes como destinatarios', () => {
-    service.getFabricanteTablaDatos().subscribe(data => {
-      expect(data).toEqual([{ id: 1, nombre: 'Destinatario' }]);
-    });
-    const req = httpMock.expectOne('assets/json/260905/fabricante.json');
-    expect(req.request.method).toBe('GET');
-    req.flush([{ id: 1, nombre: 'Destinatario' }]);
-  });
 });

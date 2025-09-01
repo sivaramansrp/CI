@@ -2,11 +2,13 @@
 import { Catalogo, ConfiguracionColumna } from '@ng-mf/data-access-user';
 import {
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
   Output,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AlertComponent } from '@ng-mf/data-access-user';
@@ -122,7 +124,21 @@ export class PartidasDeLaMercanciaComponent implements OnChanges {
    */
   CHECKBOX = TablaSeleccion.CHECKBOX;
 
+  /**
+   * Constante que contiene los mensajes de texto utilizados en el componente.
+   */
   MENSAJES_TEXTOS = MENSAJES;
+
+  /**
+   * Referencia al elemento del DOM asociado con el archivo de nacionales.
+   * Utilizado para acceder y manipular directamente el elemento en la plantilla.
+   */
+  @ViewChild('archivoNacionales') archivoNacionalesElemento!: ElementRef;
+
+  /**
+   * Nombre del archivo seleccionado por el usuario.
+   */
+  nombreArchivoSeleccionado: string = '';
 
   /**
    * Constructor para inicializar el componente e inyectar dependencias.
@@ -183,6 +199,19 @@ export class PartidasDeLaMercanciaComponent implements OnChanges {
    */
   navegarParaModificarPartida(): void {
     this.navegarParaModificarPartidaEvent.emit();
+  }
+
+  /**
+   * Maneja el evento de selección de archivo y actualiza el nombre del archivo seleccionado.
+   * @param evento Evento de cambio del input de archivo.
+   */
+  archivoSeleccionado(evento: Event): void {
+    const INPUT = evento.target as HTMLInputElement;
+    if (INPUT.files && INPUT.files.length > 0) {
+      this.nombreArchivoSeleccionado = INPUT.files[0].name;
+    } else {
+      this.nombreArchivoSeleccionado = '';
+    }
   }
 
   /**

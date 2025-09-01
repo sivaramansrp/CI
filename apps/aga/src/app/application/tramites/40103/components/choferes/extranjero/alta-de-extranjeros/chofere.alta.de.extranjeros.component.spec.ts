@@ -199,26 +199,14 @@ describe('ChofereAltaDeExtranjerosComponent', () => {
     });
 
     it('should add new chofer extranjero to the list', () => {
-      const newChofer: ChoferesExtranjeros = {
-        primerApellido: 'Chofer',
-        segundoApellido: 'Test',
-        calle: 'New Street',
-        numeroExterior: '789',
-        numeroInterior: 'C',
-        pais: 'Mexico',
-        estado: 'CDMX',
-        paisDeResidencia: 'Mexico',
-        ciudad: 'Mexico City',
-        codigoPostal: '01000',
-        correoElectronico: 'new@test.com',
-        telefono: '5559876543'
-      };
-
+      const mockChoferes = [
+        { numero: '1', nombre: 'A' },
+        { numero: '2', nombre: 'B' }
+      ];
+      const newChofer = { numero: '3', nombre: 'C' };
+      component.datosDelChoferExtranjeros = [...mockChoferes];
       const initialLength = component.datosDelChoferExtranjeros.length;
-
-
-      component.addModal(newChofer);
-
+      component.agregarModal(newChofer);
       expect(component.datosDelChoferExtranjeros.length).toBe(initialLength + 1);
       expect(component.datosDelChoferExtranjeros).toContain(newChofer);
     });
@@ -240,9 +228,10 @@ describe('ChofereAltaDeExtranjerosComponent', () => {
       };
 
       const initialLength = component.datosDelChoferExtranjeros.length;
-      const spy = jest.spyOn(component, 'openModal');
 
-      component.addNewRow(newChofer as any);
+
+  const spy = jest.spyOn(component, 'abrirModal');
+  component.agregarNuevaFila({} as any);
 
       expect(component.datosChofere).toEqual({});
       expect(spy).toHaveBeenCalled();
@@ -265,10 +254,10 @@ describe('ChofereAltaDeExtranjerosComponent', () => {
       };
 
       const initialLength = component.datosDelChoferExtranjeros.length;
-      const spy = jest.spyOn(component, 'openModal');
-      component.datosDelChoferExtranjerosSelected = [newChofer];
 
-      component.editSelectedRow(newChofer as any);
+  const spy = jest.spyOn(component, 'abrirModal');
+  component.datosDelChoferExtranjerosSelected = [newChofer];
+  component.editarFilaSeleccionada({} as any);
 
       expect(component.datosChofere).toEqual(newChofer);
       expect(spy).toHaveBeenCalled();
@@ -291,9 +280,10 @@ describe('ChofereAltaDeExtranjerosComponent', () => {
       };
 
       const initialLength = component.datosDelChoferExtranjeros.length;
-      const spy = jest.spyOn(component, 'openModal');
 
-      component.editSelectedRow(newChofer as any);
+
+  const spy = jest.spyOn(component, 'abrirModal');
+  component.editarFilaSeleccionada({} as any);
 
       expect(component.datosChofere).not.toEqual(newChofer);
       expect(spy).not.toHaveBeenCalled();
@@ -306,19 +296,16 @@ describe('ChofereAltaDeExtranjerosComponent', () => {
       const initialLength = component.datosDelChoferExtranjeros.length;
       component.datosDelChoferExtranjerosSelected = [newChofer];
 
-      component.deleteSelectedRow();
 
+  component.eliminarFilaSeleccionada();
       expect(component.datosDelChoferExtranjeros.length).toEqual(initialLength - 1);
     });
 
     it('should not delete row when row is NOT selected', () => {
-      // const newChofer: ChoferesExtranjeros = component.datosDelChoferExtranjeros[0];
-
       const initialLength = component.datosDelChoferExtranjeros.length;
       component.datosDelChoferExtranjerosSelected = [];
 
-      component.deleteSelectedRow();
-
+  component.eliminarFilaSeleccionada();
       expect(component.datosDelChoferExtranjeros.length).toEqual(initialLength);
     });
   });

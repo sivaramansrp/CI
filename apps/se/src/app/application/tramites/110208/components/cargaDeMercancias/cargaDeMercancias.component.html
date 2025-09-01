@@ -1,6 +1,6 @@
 <ng-titulo titulo="Carga de mercancías por archivo" />
 <div class="text-end mt-3 mb-4">
-    <button class="btn btn-primary" [disabled]="esFormularioSoloLectura ? true : false">Carga por archivo</button>
+    <button class="btn btn-primary" [disabled]="esFormularioSoloLectura ? true : false" (click)="cargarArchivo()">Carga por archivo</button>
 </div>
 <div class="row mt-5">
     <ng-alert [CONTENIDO]="alerta.inst"></ng-alert>
@@ -183,10 +183,57 @@
                     <div class="pull-left text-muted text-vertical-align-button" id="lblCamposObligatorios">* Campos obligatorios</div>
                     <div class="text-end">
                         <button type="button" class="btn btn-default me-3" data-bs-dismiss="modal" #closeModal [disabled]="esFormularioSoloLectura ? true : false">Cancelar</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" #closeModal [disabled]="esFormularioSoloLectura ? true : false">Agregar</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" #closeModal [disabled]="esFormularioSoloLectura ? true : false" (click)="buscarAgregar()">Agregar</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+ @if (alertaNotificacion) {
+        <div>
+            <lib-notificaciones [notificacionInput]="alertaNotificacion"></lib-notificaciones>
+        </div>
+    }
+    <div
+  class="modal fade"
+  #cargarArchivoModal
+  tabindex="-1"
+  aria-labelledby="confirmModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="row">
+          <ng-titulo titulo="Carga de mercancías por archivo" />
+        </div>
+        <form [formGroup]="archivoFormGroup">
+            <div class="row">
+            <p>Archivo:</p>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <input
+                class="form-control"
+                type="file"
+                formControlName="archivo"
+                id="archivo"   
+                (change)="eventoDeCambioDeValor($event, 'archivo')"             
+            >
+            </div>
+        </div>
+        </form>
+         @if (alertaNotificacionModal) {
+        <div>
+            <lib-notificaciones [notificacionInput]="alertaNotificacionModal"></lib-notificaciones>
+        </div>
+    }
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger me-2 btn-space" (click)="cerrar()">Cerrar</button>
+        <button type="button" class="btn btn-primary btn-space" (click)="cerrar()">Enviar</button>
+    </div>
+  </div>
+</div>
 </div>
