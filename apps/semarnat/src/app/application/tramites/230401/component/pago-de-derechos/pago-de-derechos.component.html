@@ -49,13 +49,8 @@
                     <div class="form-group ">
                         <input-fecha (valorCambiado)="onFechaCambiada($event)" [setFecha]="pagoDerechos.get('fecha')?.value"
                             [datos]="fechaDeLaFacturaInput"></input-fecha>
-                        <!-- <div class="mensaje-error"
-                            *ngIf="pagoDerechos.get('fecha')?.errors?.['required'] && pagoDerechos.get('fecha')?.touched">
-                            Este campo es obligatorio</div>
-                        <div class="mensaje-error" *ngIf="pagoDerechos.get('fecha')?.errors?.['futureDateNotAllowed']">
-                            Debe ser menor o igual a la fecha actual</div> -->
-
-                            <div *ngIf="fechaFuturaSeleccionada" class="text-danger mt-1">
+                        
+            <div *ngIf="fechaFuturaSeleccionada" class="text-danger mt-1">
             La fecha de pago debe ser menor o igual a la fecha actual.
           </div>
                     </div>

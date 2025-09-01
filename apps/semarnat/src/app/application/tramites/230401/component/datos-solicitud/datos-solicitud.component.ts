@@ -159,14 +159,16 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     showUnoTitulo: false,
     showDosTitulo: false
   };
-
-  public paisDelProductoLabel: CrossListLable = {
+  /** Etiquetas para el país de procedencia */
+public paisDelProductoLabel: CrossListLable = {
     tituluDeLaIzquierda: 'País donde se elabora el producto:',
     derecha: 'País(es) seleccionado(s)*:',
     showUnoTitulo: false,
     showDosTitulo: false
   };
-
+  /**
+   * Etiquetas para las aduanas de entrada
+   */
   public aduanasDeEntradaLabel: CrossListLable = {
     tituluDeLaIzquierda: 'Aduanas de entrada disponibles:',
     derecha: 'Aduanas de entrada seleccionadas*:',
@@ -186,11 +188,30 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Propiedades para cross-list de países de procedencia.
    */
   paisDeProcedenciaSeleccionadas: string[] = [];
+
+  /**
+   * Datos de los países de procedencia.
+   */
   paisDeProcedenciaDatos: string[] = [];
+
+  /**
+   * Selección de origen del país.
+   */
   seleccionarOrigenDelPais: string[] = this.crosListaDePaises;
+
+  /**
+   * Fecha de los países de procedencia.
+   */
   paisDeProcedenciaFecha: FormControl = new FormControl('');
+/**
+ * Fecha de los países de procedencia seleccionada.
+ */
+  
   paisDeProcedenciaFechaSeleccionada: FormControl = new FormControl('');
 
+  /**
+   * Botones para la selección de países de procedencia.
+   */
   paisDeProcedenciaBotons = [
     {
       btnNombre: 'Agregar todos',
@@ -312,7 +333,15 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Textos y alertas.
    */
   TEXTOS = ALERTA_DE_MATERIAL;
+
+  /**
+   * Mensajes de error y advertencia.
+   */
   public infoAlert = 'alert-info';
+
+  /**
+   * Indica si se ha seleccionado una fecha futura.
+   */
 
   constructor(
     public pantallasActionService: PantallasActionService,
@@ -327,6 +356,12 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.pantallasActionService.inicializaPasoUnoDatosCatalogos();
   }
 
+  /**
+   * @inheritdoc
+   * @description
+   * Método del ciclo de vida de Angular que se llama después de que el componente ha sido inicializado.
+   * Se utiliza para configurar el estado inicial del componente, suscribirse a observables y preparar datos necesarios.
+   */
   ngOnInit(): void {
     this.solicitud230401Query.selectSolicitud$
       .pipe(
@@ -378,7 +413,14 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  ngOnDestroy(): void {
+/**
+ * @inheritdoc
+ * @description
+ * Método del ciclo de vida de Angular que se llama justo antes de destruir el componente.
+ * Se utiliza para limpiar recursos, cancelar suscripciones y evitar fugas de memoria.
+ * En este caso, emite y completa el observable `destroyNotifier$` para notificar a los suscriptores que deben limpiar sus recursos.
+ */
+ ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
@@ -457,11 +499,11 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   static numericValidator(control: import('@angular/forms').AbstractControl): Record<string, boolean> | null {
     if (!control.value || control.value === '') {
-      return null; // Let required validator handle empty values
+      return null; 
     }
     
     const VALUE = control.value.toString().trim();
-    // Allow only numbers and one decimal point
+   
     const NUMERIC_REGEX = /^\d+(\.\d+)?$/;
 
     if (!NUMERIC_REGEX.test(VALUE)) {
@@ -472,7 +514,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Custom validator to check if the value exceeds 12 digits and 3 decimals
+   * Validador personalizado para verificar si el valor excede 12 dígitos y 3 decimales
    */
   static maxDigitsDecimalsValidator(control: import('@angular/forms').AbstractControl): { [key: string]: boolean } | null {
     if (!control.value || control.value === '') {
@@ -482,12 +524,12 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     const VALUE = control.value.toString();
     const PARTS = VALUE.split('.');
 
-    // Check integer part (max 12 digits)
+   
     if (PARTS[0] && PARTS[0].length > 12) {
       return { 'maxDigitsDecimals': true };
     }
     
-    // Check decimal part (max 3 digits)
+   
     if (PARTS[1] && PARTS[1].length > 3) {
       return { 'maxDigitsDecimals': true };
     }
@@ -627,7 +669,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Cross-list methods
+  // Métodos para cross-list de países de procedencia
   agregar(tipo: string): void {
     if (tipo === CONTINUAR) {
       this.paisDeProcedenciaSeleccionadas = [...this.seleccionarOrigenDelPais];
@@ -787,9 +829,11 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.tramite230401Store.setUnidadDeMedida(UNIDAD_DE_MEDIDA);
   }
 
-  // CRUD methods for sustancias
+ /**
+  * Método para modificar la lista de números
+  */
   modificarListaDeNumeros(): void {
-    // Check if no rows are selected
+    
     if (this.sustanciasSensiblesSeleccionadas.length === 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -806,7 +850,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Check if more than one row is selected
+   
     if (this.sustanciasSensiblesSeleccionadas.length > 1) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -823,23 +867,27 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Proceed with modification logic when exactly one row is selected
+   
     this.modoModificacion = true;
     this.sustanciaEnModificacion = this.sustanciasSensiblesSeleccionadas[0];
     
-    // Populate form fields with selected substance data
+   
     this.formSolicitud.patchValue({
       numeroCas: this.sustanciaEnModificacion.numeroCAS,
       descripcionNoArancelaria: this.sustanciaEnModificacion.descripcionNoArancelaria,
       nombreQuimico: this.sustanciaEnModificacion.nombreQuimico
     });
     
-    // Update the store with the selected values for consistency - handle undefined values
+   
     this.tramite230401Store.setNumeroCas(this.sustanciaEnModificacion.numeroCAS || '');
     this.tramite230401Store.setDescripcionNoArancelaria(this.sustanciaEnModificacion.descripcionNoArancelaria || '');
     this.tramite230401Store.setNombreQuimico(this.sustanciaEnModificacion.nombreQuimico || '');
   }
 
+
+  /**
+   * Método para agregar un nuevo número CAS a la lista
+   */
   agregarListaDeNumeros(): void {
     
     const NUMERO_CAS = this.formSolicitud.get('numeroCas')?.value;
@@ -903,6 +951,9 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.sustanciasSensiblesSeleccionadas = [];
   }
 
+  /**
+   * Método para eliminar un número CAS de la lista
+   */
   eliminarListaDeNumeros(): void {
     if (this.sustanciasSensiblesSeleccionadas.length === 0) {
       return;
@@ -919,7 +970,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
-  eliminarPedimentoConfirmacion(borrar: boolean): void {
+
+eliminarPedimentoConfirmacion(borrar: boolean): void {
     if (borrar) {
       // Handle elimination logic if needed
     }
