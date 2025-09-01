@@ -83,7 +83,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
    */
   @Input() public formularioDeshabilitado: boolean = false;
-
+  
+  /**
+   * @property {boolean} campoRequerido - Indica si el campo es obligatorio.
+   */
+  @Input() public campoRequerido: boolean = false;
   /**
    * @property {EventEmitter<PagoDerechosFormState>} updatePagoDerechos
    * @description Output property that emits the updated state of the payment form whenever changes occur.
