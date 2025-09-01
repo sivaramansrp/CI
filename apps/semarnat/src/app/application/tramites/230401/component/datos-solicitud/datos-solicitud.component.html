@@ -264,8 +264,8 @@
             formControlName="cantidad" [ngClass]="isValid(formSolicitud, 'cantidad') ? 'required' : ''"
             (change)="setValoresStore(formSolicitud,'cantidad')" (input)="buscarRepresentanteRfc()">
             
-            <!-- Show message in BLACK initially, RED when there are validation errors -->
-            <div [ngClass]="formSolicitud.get('cantidad')?.errors && formSolicitud.get('cantidad')?.touched ? 'mensaje-error' : 'mensaje-info'">
+            <!-- Only show numeric error when field is touched and has numeric validation error -->
+            <div class="mensaje-error" *ngIf="formSolicitud.get('cantidad')?.errors?.['numeric'] && formSolicitud.get('cantidad')?.touched">
               Por favor, escribe un número entero válido
             </div>
             
@@ -281,11 +281,7 @@
             <div class="mensaje-error" *ngIf="formSolicitud.get('cantidad')?.errors?.['min'] && formSolicitud.get('cantidad')?.touched">
               La cantidad debe ser mayor a 0
             </div>
-            
-            <div class="mensaje-error" *ngIf="formSolicitud.get('cantidad')?.errors?.['max'] && formSolicitud.get('cantidad')?.touched">
-              La cantidad excede el valor máximo permitido
-            </div>
-        </div>
+          </div>
       </div>
       <div class="col-md-8">
         <div class="form-group">

@@ -455,13 +455,16 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Custom validator to check if the value contains only numeric characters (including decimals)
    */
-  static numericValidator(control: import('@angular/forms').AbstractControl): Record<string, unknown> | null {
-    if (!control.value) {
+  static numericValidator(control: import('@angular/forms').AbstractControl): Record<string, boolean> | null {
+    if (!control.value || control.value === '') {
       return null; // Let required validator handle empty values
     }
+    
+    const VALUE = control.value.toString().trim();
+    // Allow only numbers and one decimal point
+    const NUMERIC_REGEX = /^\d+(\.\d+)?$/;
 
-    const NUMERICREGEX = /^\d+(\.\d{1,3})?$/;
-    if (!NUMERICREGEX.test(control.value)) {
+    if (!NUMERIC_REGEX.test(VALUE)) {
       return { 'numeric': true };
     }
     
@@ -471,8 +474,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Custom validator to check if the value exceeds 12 digits and 3 decimals
    */
-  static maxDigitsDecimalsValidator(control: import('@angular/forms').AbstractControl): Record<string, boolean> | null {
-    if (!control.value) {
+  static maxDigitsDecimalsValidator(control: import('@angular/forms').AbstractControl): { [key: string]: boolean } | null {
+    if (!control.value || control.value === '') {
       return null;
     }
     
