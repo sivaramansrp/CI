@@ -706,11 +706,11 @@ export const TABLE_PROVEEDOR_CLIENTE =[
 export const ANEXO_I_SERVICIO_CATALOGO:Catalogo[]=[
    {
       id: 1,
-      descripcion: 'Option1',
+      descripcion: 'Materia Prima',
     },
     {
       id: 2,
-      descripcion: 'Option2',
+      descripcion: 'Producto terminado',
     },
 ]
 /**
@@ -787,7 +787,7 @@ export const PAIS_DESTINO_CATALOG:Catalogo[] = [
   },
   {
     encabezado: 'Descripción comercial',
-    clave: (ele: AnexoFraccionAnarelaria): string | undefined => ele.anexoDescripcionComercial,
+    clave: (ele: AnexoFraccionAnarelaria): string | undefined => ele.anexoDescripcionComercialExportacion,
     orden: 3,
   },
   {
@@ -795,8 +795,51 @@ export const PAIS_DESTINO_CATALOG:Catalogo[] = [
     clave: (ele: AnexoFraccionAnarelaria): string | undefined => ele.anexoFraccionImportacion,
     orden: 4,
   },
-
- 
+   {
+    encabezado: 'Descripción comercial',
+    clave: (ele: AnexoFraccionAnarelaria): string | undefined => ele.anexoDescripcionComercialImportacion,
+    orden: 5,
+  },
+  {
+    encabezado: 'Anexo II',
+    clave: (ele: AnexoFraccionAnarelaria): string | undefined => ele.anexoDos,
+    orden: 6,
+  },
+  {
+    encabezado: 'Tipo',
+    clave: (ele: AnexoFraccionAnarelaria): string | undefined => ele.tipo,
+    orden: 7,
+  },
+  {
+    encabezado: 'UMT',
+    clave: (ele: AnexoFraccionAnarelaria): string | undefined => ele.umt,
+    orden: 8,
+  },
+  {
+    encabezado: 'Categoria',
+    clave: (ele: AnexoFraccionAnarelaria): string | undefined => ele.catagoria,
+    orden: 9,
+  },
+  {
+    encabezado: 'Valor en moneda mensual',
+    clave: (ele: AnexoFraccionAnarelaria): string | undefined => ele.valorEnMonedaMensual,
+    orden: 10,
+  },
+  {
+    encabezado: 'Valor en moneda anual',
+    clave: (ele: AnexoFraccionAnarelaria): string | undefined => ele.valorEnMonedaAnual,
+    orden: 11,
+  },
+  {
+    encabezado: 'Volumen mensual',
+    clave: (ele: AnexoFraccionAnarelaria): string | undefined => ele.volumenMensual,
+    orden: 12,
+  },
+  {
+    encabezado: 'Volumen anual',
+    clave: (ele: AnexoFraccionAnarelaria): string | undefined => ele.volumenAnual,
+    orden: 13,
+  },
   ]
 /*
   * Constantes para la sección de complementos

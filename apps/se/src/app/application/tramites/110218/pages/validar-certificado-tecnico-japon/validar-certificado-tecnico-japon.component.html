@@ -12,12 +12,12 @@
       <div class="row">
         @switch(indice){
             @case(1){
-                <app-solicitante-tabs [indice]="capturarTapIndice"></app-solicitante-tabs>
+                <app-solicitante-tabs #solicitanteTabs [indice]="capturarTapIndice"></app-solicitante-tabs>
             }@case(2){
               <app-paso-tres></app-paso-tres>
             }
         }
-        <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+  <btn-continuar [datos]="datosPasos" [ocultabotonAnterior]="indice === 1" (continuarEvento)="getValorIndice($event)"></btn-continuar>
     </div>
   }
   @else{

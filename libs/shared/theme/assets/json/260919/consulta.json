@@ -3,7 +3,7 @@
     "cadenadeladependencia": "SALUD-MEX",
     "banco": "1",
     "llavedepago": "LLP987654321",
-    "fechadepago": "2025-05-15",
+    "fechadepago": "10/01/2026",
     "importedepago": "1500.00",
     "tipoPersona": "fisica",
     "nacionalidad":"nacional",
@@ -60,10 +60,25 @@
     "presentacion":"valor ficticio",
     "formaFarmaceutica": "valor ficticio",
     "numeroDeRegistroSanitario": "valor ficticio",
-    "fechaDePago": "2025-05-15",
+    "fechaDePago": "10/01/2026",
     "claveScian": "1",
     "descripcionDelScian": "1",
     "cumplocon": true,
-    "hacerlosRadioOptions":"si"
+    "hacerlosRadioOptions":"si",
+    "tableData":[
+    {
+    "id": 1,
+    "claveScianG": {
+      "claveScian": "325412",
+      "descripcionDelScian": "Fabricación de preparaciones farmacéuticas"
+    }
+  },
+  {
+    "id": 2,
+    "claveScianG": {
+      "claveScian": "325411",
+      "descripcionDelScian": "Fabricación de medicinas y productos farmacéuticos"
+    }
+  } ]
 
   }
