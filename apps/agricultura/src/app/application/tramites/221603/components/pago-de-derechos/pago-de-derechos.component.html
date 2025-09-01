@@ -99,7 +99,7 @@
                 [datos]="INPUT_FECHA_CONFIG" name="fecha"
                 [setFecha]="pagoDerechosForm.get('fecha')?.value"
                 (valorCambiado)="setValoresStore('fecha', 'setFecha')"
-                [isDisabled]="esFormularioSoloLectura"
+                [isDisabled]="esFormularioSoloLectura || disableFecha"
               ></input-fecha>
           </div>
         </div>

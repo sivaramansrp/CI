@@ -57,6 +57,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   disableBanco!: boolean;
 
   /**
+   * Indica si el campo de fecha debe estar deshabilitado.
+   */
+  disableFecha!: boolean;
+
+  /**
    * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
    */
   private destroyNotifier$: Subject<void> = new Subject();
@@ -139,12 +144,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       this.inicializarFormulario();
       if (this.esFormularioSoloLectura) {
       this.disableBanco = true;
-      // this.pagoDerechosForm.get('fecha')?.disable();
+      this.disableFecha = true;
       this.pagoDerechosForm.get('llave')?.disable();
       this.pagoDerechosForm.get('exentoDePago')?.disable();
       } else {
       this.disableBanco = true;
-      // this.pagoDerechosForm.get('fecha')?.enable();
+      this.disableFecha = true;
       this.pagoDerechosForm.get('llave')?.enable();
       this.pagoDerechosForm.get('exentoDePago')?.enable();
       } 
@@ -166,6 +171,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
 this.disableJustificacion = (this.solicitudState?.exento ?? '') !== '1';
 this.disableBanco = (this.solicitudState?.exento ?? '') === '1';
+this.disableFecha = (this.solicitudState?.exento ?? '') === '1';
 
     this.sanidadService
       .obtenerFormularioDatos()
@@ -236,7 +242,7 @@ this.disableBanco = (this.solicitudState?.exento ?? '') === '1';
     this.pagoDerechosForm.get('llave')?.setValue('');
     this.pagoDerechosForm.get('llave')?.disable();
     this.pagoDerechosForm.get('fecha')?.setValue('');
-    this.pagoDerechosForm.get('fecha')?.disable();
+    this.disableFecha = true;
     this.pagoDerechosForm.get('importe')?.setValue('');
     this.pagoDerechosForm.get('importe')?.disable();
   }
