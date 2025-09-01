@@ -833,6 +833,25 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   agregarListaDeNumeros(): void {
+    // Check if required fields are filled
+    const NUMERO_CAS = this.formSolicitud.get('numeroCas')?.value;
+
+    if (!NUMERO_CAS) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'info',
+        titulo: '',
+        mensaje: 'Es necesario agregar un número CAS',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.mostrarAlerta = true;
+      return;
+    }
+
     const SUSTANCIA_SENSIBLE: SustanciaSensible = {
       numeroCAS: this.formSolicitud.get('numeroCas')?.value,
       cas: '',
