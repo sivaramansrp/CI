@@ -152,6 +152,9 @@ export class ManifiestosRepresentanteSeccionComponent
       case 'informacionConfidencialRadio':
         this.representanteStore.setInformacionConfidencial(CONTROL_VALUE);
         break;
+      case 'manifests':
+        this.representanteStore.setManifests(this.manifiestosRepresentanteForm.get('manifests')?.value);
+        break;
       default:
         break;
     }

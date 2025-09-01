@@ -14,6 +14,7 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
 import { PropietarioTipoPersona } from '../models/datos-de-la-solicitud.model';
 
 import { DatosDelSolicituteSeccionState, DatosDelSolicituteSeccionStateStore } from '../../../shared/estados/stores/datos-del-solicitute-seccion.store';
+import { PermisoImportacionBiologicaState, PermisoImportacionBiologicaStore } from '../../../shared/estados/permiso-importacion-biologica.store';
 
 /**
  * @class EstablecimientoService
@@ -30,7 +31,8 @@ export class EstablecimientoService {
    */
   constructor(private http: HttpClient,
     private tramiteStore: DatosDelSolicituteSeccionStateStoreI,
-  private tramiteStoreData: DatosDelSolicituteSeccionStateStore
+  private tramiteStoreData: DatosDelSolicituteSeccionStateStore,
+  private tramite260909: PermisoImportacionBiologicaStore
   ) {
     //constructor
   }
@@ -101,17 +103,41 @@ export class EstablecimientoService {
   this.tramiteStore.setRegimen(DATOS.regimen);
   this.tramiteStore.setAduanasEntradas(DATOS.aduanasEntradas);
   this.tramiteStore.setDescripcionScian(DATOS.descripcionScian);
-   this.tramiteStore.setRepresentanteApellidos(DATOS.apellidoMaterno,DATOS.apellidoPaterno);
-  
 }
-/**
- * 
- * @param DATOS Datos del solicitante que se actualizarán en el estado del formulario.
- * @description Actualiza el formulario con los datos proporcionados.
- */
-actualizarFormulario(DATOS: DatosDelSolicituteSeccionState): void {
-this.tramiteStoreData.setRepresentanteRfc(DATOS.representanteRfc);
-this.tramiteStoreData.setRepresentanteNombre(DATOS.representanteNombre);
-this.tramiteStoreData.setRepresentanteApellidos(DATOS.apellidoPaterno, DATOS.apellidoMaterno);
-}
+  /**
+   * 
+   * @param DATOS Datos del solicitante que se actualizarán en el estado del formulario.
+   * @description Actualiza el formulario con los datos proporcionados.
+   */
+  actualizarFormulario(DATOS: DatosDelSolicituteSeccionState): void {
+  this.tramiteStoreData.setRepresentanteRfc(DATOS.representanteRfc);
+  this.tramiteStoreData.setRepresentanteNombre(DATOS.representanteNombre);
+  this.tramiteStoreData.setRepresentanteApellidos(DATOS.apellidoPaterno, DATOS.apellidoMaterno);
+  this.tramiteStore.setInformacionConfidencial(DATOS.informacionConfidencialRadio);
+  this.tramiteStore.setManifests(DATOS.manifests);
+  }
+
+  /**
+   * Obtiene los datos del pago de derechos.
+   * @returns {Observable<PermisoImportacionBiologicaState>} Un observable con los datos del pago de derechos.
+   */
+  getPagoDerechosDatos(): Observable<PermisoImportacionBiologicaState> {
+      return this.http.get<PermisoImportacionBiologicaState>('assets/json/260909/pago-derechos.json');
+  }
+
+  /**
+   * Actualiza los datos relacionados con el pago de derechos en el formulario,
+   * utilizando la información proporcionada en el estado de PermisoImportacionBiologica.
+   *
+   * @param DATOS - Objeto que contiene los datos necesarios para actualizar el pago de derechos,
+   * incluyendo clave de referencia, cadena de la dependencia, llave de pago, fecha e importe.
+   */
+  actualizarPagoDerechosFormulario(DATOS: PermisoImportacionBiologicaState): void {
+      this.tramite260909.setClaveDeReferncia(DATOS.setClaveDeReferncia);
+      this.tramite260909.setCadenaDeLaDependencia(DATOS.setCadenaDeLaDependencia);
+      this.tramite260909.setLlaveDePago(DATOS.setLlaveDePago);
+      this.tramite260909.setFechaDePago(DATOS.setFechaDePago);
+      this.tramite260909.setImporteDePago(DATOS.setImporteDePago);
+      this.tramite260909.setBanco(DATOS.setBanco);
+  }
 }
