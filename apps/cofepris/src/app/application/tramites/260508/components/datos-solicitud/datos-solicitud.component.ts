@@ -32,5 +32,9 @@ export class DatosSolicitudComponent {
    * Indica si el solicitante tiene uso específico.
    */
   @Input() tieneUsoEspecifico: boolean = true;
+
+  /**
+   * Indica si se debe habilitar el domicilio.
+   */
   tieneDomicilioHabilitar: boolean = true;
 }
