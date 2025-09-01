@@ -7,12 +7,9 @@
     <div>
       <h6>Datos de los residuos y/o materia prima a importar*:</h6>
 
-      <ng-table
-        [commonTableHeader]="tableHeaderData"
-        [commonTableBody]="tableBodyData"
-        [enableScrollbar]="true"
-        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
-      ></ng-table>
+      <app-tabla-dinamica [configuracionTabla]="mercanciasTabla"
+      [datos]="mercanciasTablaDatos" [tipoSeleccionTabla]="tablaSeleccionCheckbox" (listaDeFilaSeleccionada)="onSeleccionMultiple($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+
 
       <form [formGroup]="formularioParaRecuentoTotal">
         <div class="text-center">
@@ -32,8 +29,8 @@
         <div class="col-md-6 col-sm-6"></div>
         <div class="col-md-6 col-sm-6 text-end">
           <div class="btn-group">
-            <button class="btn btn-primary me-2" type="button" [disabled]="esFormularioSoloLectura">Borrar</button>
-            <button class="btn btn-danger" type="button" [disabled]="esFormularioSoloLectura">Agregar</button>
+            <button class="btn btn-primary me-2" type="button" [disabled]="esFormularioSoloLectura||  selectedMercancias.length === 0"  (click)="borrarFilasSeleccionadas()">Borrar</button>
+            <button class="btn btn-danger" type="button" [disabled]="esFormularioSoloLectura" (click)="showForm()">Agregar</button>
           </div>
         </div>
       </div>
@@ -41,10 +38,193 @@
       <div class="col-md-4">
         <app-catalogo-select [catalogo]='aduanas' formControlName="aduanas" [label]="'Aduana de entrada'"
           [required]="true" (change)="setValoresStore(formularioParaRecuentoTotal,'aduanas')" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+          
       </div>
     </div>
         </form>
        
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalBuscar" tabindex="-1" #modalBuscar aria-labelledby="modalBuscar" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+   <div class="col-12">
+    @if (esFormaValido) {
+    <div
+      class="alert alert-info alert-danger text-center"
+      [innerHTML]="formErrorAlert"
+    ></div>
+    }
+  </div>
+  <ng-titulo [titulo]="'Datos de los residuos y/o materia prima a importar'"></ng-titulo>
+  <h4>Agregar materia prima a importar </h4>
+      <form [formGroup]="materiaPrimaForm" id="materiaPrimaForm" class="form-group">
+        <ng-container>
+        <div class="row mt-3">
+          <div class="col-md-8">
+            <div class="form-group">
+              <label for="nombreDeLaMateriaPrima" class="form-label">Nombre de la Materia Prima*:</label>
+              <input
+                type="text"
+                maxlength="120"
+                formControlName="nombreDeLaMateriaPrima"
+                class="form-control"
+                id="nombreDeLaMateriaPrima"
+                (change)="setValoresStore(materiaPrimaForm,'nombreDeLaMateriaPrima')"
+              />
+              <div *ngIf="materiaPrimaForm.get('nombreDeLaMateriaPrima')?.invalid && (materiaPrimaForm.get('nombreDeLaMateriaPrima')?.dirty || materiaPrimaForm.get('nombreDeLaMateriaPrima')?.touched)">
+                  <div *ngIf="materiaPrimaForm.get('nombreDeLaMateriaPrima')?.errors?.['required']">
+                      <small class="mensaje-error">Este campo es obligatorio</small>
+                  </div>
+              </div>
+            </div>
+            
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="cantidad" class="form-label">Cantidad*:</label>
+              <input
+                type="text"
+                formControlName="cantidad"
+                class="form-control"
+                id="cantidad"
+                maxlength="18"
+                (focus)="isCantidadFocused = true"
+                (blur)="isCantidadFocused = false;obtenerLetraCantidad(materiaPrimaForm.get('cantidad')?.value)"
+                (change)="setValoresStore(materiaPrimaForm,'cantidad')"
+              />
+              <div *ngIf="materiaPrimaForm.get('cantidad')?.invalid && (materiaPrimaForm.get('cantidad')?.dirty || materiaPrimaForm.get('cantidad')?.touched)">
+                  <div *ngIf="materiaPrimaForm.get('cantidad')?.errors?.['required']">
+                      <small class="mensaje-error">Este campo es obligatorio</small>
+                  </div>
+                 
+                 <!-- Invalid characters (letters, commas, etc.) -->
+  <div *ngIf="materiaPrimaForm.get('cantidad')?.errors?.['pattern'] && !REGEX_NUMERIC_ONLY.test(materiaPrimaForm.get('cantidad')?.value)">
+    <small class="text-danger">Debe ingresar un número</small>
+  </div>
+
+  <!-- Too many digits before/after decimal -->
+  <div *ngIf="materiaPrimaForm.get('cantidad')?.errors?.['pattern'] && REGEX_NUMERIC_ONLY.test(materiaPrimaForm.get('cantidad')?.value)">
+    <small class="text-danger">No se pueden ingresar más de 6 cifras significativas a la izquierda
+      o a la derecha después del punto decimal (999999.999999)</small>
+  </div>
+  
+              </div>
+              <div *ngIf="isCantidadFocused">
+                <small style="
+                font-weight: 200;
+                color: #f44336; 
+                
+              ">No está permitido capturar "," (coma)</small>
+              </div>
+            </div>
+          </div>
+        </div>
+    
+        <div class="row mt-3">
+          <div class="col-md-8">
+            <div class="form-group">
+              <label for="cantidadEnLetra" class="form-label">Cantidad (letra):</label>
+              <input
+                type="text"
+                formControlName="cantidadEnLetra"
+                class="form-control"
+                id="cantidadEnLetra"
+                (change)="setValoresStore(materiaPrimaForm,'cantidadEnLetra')"
+              />
+            </div>
+          </div>
+          <div class="col-md-4">
+            <app-catalogo-select  (change)="setValoresStore(materiaPrimaForm, 'unidadMedidaComercial')" 
+             formControlName="unidadMedidaComercial" 
+             [catalogo]="comboUnidadMedida" 
+             [label]="'Unidad de medida'"
+             [required]="true"
+             [mostrarErrores]="true"
+             [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+          </div>
+          
+        </div>
+    
+        <div class="row mt-3">
+          <div class="col-md-12">
+            <div class="form-group">
+              <app-catalogo-select  (change)="setValoresStore(materiaPrimaForm, 'capituloFraccion')"  
+               formControlName="capituloFraccion"
+               [catalogo]="comboCapituloFraccion" 
+               [label]="'Capítulo'"
+               [required]="true"
+               [isDisabled]="esFormularioSoloLectura">
+              </app-catalogo-select>
+              
+            </div>
+          </div>
+        </div>
+    
+        <div class="row mt-3">
+          <div class="col-md-12">
+            <div class="form-group">
+              <app-catalogo-select  (change)="setValoresStore(materiaPrimaForm, 'partidaFraccion')" 
+               formControlName="partidaFraccion" 
+               [catalogo]="comboPartidaFraccion" 
+               [label]="'Partida'"
+               [required]="true"
+               [isDisabled]="esFormularioSoloLectura">
+              </app-catalogo-select>
+              
+            </div>
+          </div>
+        </div>
+    
+        <div class="row mt-3">
+          <div class="col-md-4">
+            <div class="form-group">
+              <app-catalogo-select  (change)="setValoresStore(materiaPrimaForm, 'subPartidaFraccion')"   
+               formControlName="subPartidaFraccion" 
+               [catalogo]="comboSubPartidaFraccion" 
+               [label]="'Sub partida'"
+               [required]="true"
+               [isDisabled]="esFormularioSoloLectura">
+             </app-catalogo-select>
+             
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="form-group">
+              <app-catalogo-select (change)="setValoresStore(materiaPrimaForm, 'fraccion')"   
+               formControlName="fraccion" 
+               [catalogo]="comboFraccionArancelariaParametros" 
+               [label]="'Fracción arancelaria'"
+               [required]="true"
+               [isDisabled]="esFormularioSoloLectura">
+          </app-catalogo-select>
+         
+        </div>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-6">
+        <p class="mb-0 text-muted">* Campos obligatorios</p>
+      </div>
+    </div>
+     <div class="row mb-5">
+      
+        <div class="col-md-6 col-sm-6"></div>
+        
+       
+        <div class="col-md-6 col-sm-6 text-end">
+          <div class="btn-group">
+            <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura" #closeModal (click)="cerrarModal()">Cancelar</button>
+            <button class="btn btn-primary" type="button" [disabled]="esFormularioSoloLectura"(click)="guardarMateriaPrima()">Guardar</button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    </form>
+      </div>
     </div>
   </div>
 </div>

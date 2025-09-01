@@ -9,6 +9,7 @@ import { DatosPasos } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { MateriaprimaformserviceService } from '../../services/materia-prima-formservice.service';
 import { OnInit } from '@angular/core';
 import { PASOS } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -105,7 +106,8 @@ export class DatosDelGeneradorDeResiduosComponent implements OnInit {
     private catalogosServices: CatalogosService,
     private tramite231001Query: Tramite231001Query,
     private tramite231001Store: Tramite231001Store,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private serviceMateria:MateriaprimaformserviceService
   ) {
 
     this.consultaioQuery.selectConsultaioState$
@@ -156,7 +158,7 @@ export class DatosDelGeneradorDeResiduosComponent implements OnInit {
    */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
-    this.aduanasdata();
+   this.aduanasdata();
   }
 
   
@@ -164,16 +166,12 @@ export class DatosDelGeneradorDeResiduosComponent implements OnInit {
    * Obtiene los datos de las aduanas desde el servicio de catálogos.
    */
   aduanasdata(): void {
-    this.catalogosServices.getCatalogo(CATALOGOS_ID.CAT_ADUANAS).subscribe({
-      next: (resp) => {
-        if (resp.length > 0) {
-          this.aduanas = resp;
-        }
-      },
-      error: (err) => {
-        console.error('API Error:', err);
-      },
-    });
+    this.serviceMateria.getSubPartidaFraccion().pipe(
+      takeUntil(this.destroyed$)).subscribe(
+      (data) => {
+        this.aduanas = data;
+      }
+    );
   }
 
 
