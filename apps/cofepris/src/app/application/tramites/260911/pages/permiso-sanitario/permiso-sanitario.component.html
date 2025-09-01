@@ -1,10 +1,13 @@
 <div class="container">
+ 
     <div class="row">
       <div class="col-md-12">
         <h1>Modificación al permiso sanitario de importación de dispositivos médicos que cuenten con registro sanitario/ fuentes de radiación</h1>
       </div>
     </div>
-
+ <div *ngIf="message" class="alert alert-danger error-message text-center" style="margin-bottom: 16px;">
+    {{ message }}
+  </div>
     <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
     <div>
       @switch (indice) {

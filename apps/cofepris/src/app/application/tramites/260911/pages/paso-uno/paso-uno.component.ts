@@ -1,4 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { DatosDeLaSolicitudComponent } from '../../component/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { ViewChild } from '@angular/core';
+
+import { DomicilioDelEstablecimientoComponent } from '../../component/domicilio-del-establecimiento/domicilio-del-establecimiento.component';
+import { PagoDeDerechosComponent } from '../../component/pago-de-derechos/pago-de-derechos.component';
+import { TercerosRelacionadosVistaComponent } from '../../component/terceros-relacionados/terceros-relacionados-vista.component';
+
+import { TramitesAsociadoComponent } from '../../component/tramites-asociado/tramites-asociado.component';
 
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 
@@ -19,6 +27,13 @@ import { Solocitud260911Service } from '../../services/service260911.service';
 })
 
 export class PasoUnoComponent implements OnInit, OnDestroy {
+  // Expose child components for parent validation
+  @ViewChild(DatosDeLaSolicitudComponent) datosDeLaSolicitudComponent!: DatosDeLaSolicitudComponent;
+  @ViewChild(DomicilioDelEstablecimientoComponent) domicilioDelEstablecimientoComponent!: DomicilioDelEstablecimientoComponent;
+  @ViewChild(TercerosRelacionadosVistaComponent) tercerosRelacionadosVistaComponent!: TercerosRelacionadosVistaComponent;
+  @ViewChild(PagoDeDerechosComponent) pagoDeDerechosComponent!: PagoDeDerechosComponent;
+  @ViewChild(TramitesAsociadoComponent) tramitesAsociadoComponent!: TramitesAsociadoComponent;
+  // Expose child components for parent validation
   /**
    * Tipo de trámite seleccionado.
    */

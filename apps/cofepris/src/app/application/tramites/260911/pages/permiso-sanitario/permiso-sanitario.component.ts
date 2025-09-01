@@ -1,5 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@ng-mf/data-access-user';
+import { DatosDeLaSolicitudComponent } from '../../component/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+
+import { DomicilioDelEstablecimientoComponent } from '../../component/domicilio-del-establecimiento/domicilio-del-establecimiento.component';
+import { TercerosRelacionadosVistaComponent } from '../../component/terceros-relacionados/terceros-relacionados-vista.component';
+import { TramitesAsociadoComponent } from '../../component/tramites-asociado/tramites-asociado.component';
+
 import { PagoDeDerechosComponent } from '../../component/pago-de-derechos/pago-de-derechos.component';
 
 import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
@@ -17,6 +24,12 @@ interface AccionBoton {
   styleUrls: ['./permiso-sanitario.component.scss']
 })
 export class PermisoSanitarioComponent {
+  @ViewChild(PasoUnoComponent) pasoUnoComponent!: PasoUnoComponent;
+  // Add ViewChilds for child components to access their forms
+  @ViewChild(DatosDeLaSolicitudComponent) datosDeLaSolicitudComponent!: DatosDeLaSolicitudComponent;
+  @ViewChild(DomicilioDelEstablecimientoComponent) domicilioDelEstablecimientoComponent!: DomicilioDelEstablecimientoComponent;
+  @ViewChild(TercerosRelacionadosVistaComponent) tercerosRelacionadosVistaComponent!: TercerosRelacionadosVistaComponent;
+  @ViewChild(TramitesAsociadoComponent) tramitesAsociadoComponent!: TramitesAsociadoComponent;
   /**
    * Access PagoDeDerechosComponent instance
    */
@@ -39,38 +52,74 @@ export class PermisoSanitarioComponent {
    * Handler for the continuarEvento from btn-continuar
    */
   onContinuar(event: AccionBoton): void {
-    this.lastContinueEvent = event;
-    let pagoFormValid = true;
-    let pagoFormDisabled = false;
-    let pagoFormBlank = true;
-    if (this.pagoDeDerechosComponent && this.pagoDeDerechosComponent.pagoDeDerechosForm) {
-      const FORM = this.pagoDeDerechosComponent.pagoDeDerechosForm;
-      pagoFormValid = FORM.valid;
-      pagoFormDisabled = FORM.disabled;
-      const CONTROLS = FORM.controls;
-      pagoFormBlank = Object.keys(CONTROLS).every(key => {
-        const VALUE = CONTROLS[key].value;
-        return VALUE === null || VALUE === '' || typeof VALUE === 'undefined';
+    // Helper to mark all controls as touched, even if disabled
+    const MARK_ALL_CONTROLS_TOUCHED_EVEN_IF_DISABLED = (form: import('@angular/forms').FormGroup): void => {
+      const CONTROLS = Object.values(form.controls);
+      const DISABLED_CONTROLS: import('@angular/forms').AbstractControl[] = [];
+      // Enable all controls before validation
+      CONTROLS.forEach(control => {
+        if (control.disabled) {
+          control.enable({ emitEvent: false });
+          DISABLED_CONTROLS.push(control);
+        }
       });
-      if (pagoFormDisabled && pagoFormBlank) {
-        this.showPaymentModal = true;
-        this.datosPasos.indice = this.indice;
-        this.ocultarBtnAnterior = false;
-        this.datosPasos.txtBtnAnt = 'Anterior';
-        this.datosPasos.txtBtnSig = 'Continuar';
-        return;
-      }
+      // Mark all as touched and validate
+      CONTROLS.forEach(control => {
+        control.markAsTouched();
+        control.updateValueAndValidity();
+      });
+      // Re-disable controls that were originally disabled
+      DISABLED_CONTROLS.forEach(control => {
+        control.disable({ emitEvent: false });
+      });
+    };
+    // Helper to mark all controls as touched in a form
+    // (Removed unused markAllControlsTouched function)
+    this.lastContinueEvent = event;
+  const PAGO_FORM_VALID = true;
+  const PAGO_FORM_BLANK = true;
+  let datosDeLaSolicitudValid = true;
+  let domicilioDelEstablecimientoValid = true;
+
+    // Add similar logic for terceros-relacionados and tramites-asociado if they have forms
+
+    // Validate required fields in datos-de-la-solicitud, domicilio-del-establecimiento, terceros-relacionados-vista
+    if (this.pasoUnoComponent?.datosDeLaSolicitudComponent?.form) {
+      MARK_ALL_CONTROLS_TOUCHED_EVEN_IF_DISABLED(this.pasoUnoComponent.datosDeLaSolicitudComponent.form);
+      datosDeLaSolicitudValid = this.pasoUnoComponent.datosDeLaSolicitudComponent.form.valid;
+    }
+    if (this.pasoUnoComponent?.domicilioDelEstablecimientoComponent?.form) {
+      MARK_ALL_CONTROLS_TOUCHED_EVEN_IF_DISABLED(this.pasoUnoComponent.domicilioDelEstablecimientoComponent.form);
+      domicilioDelEstablecimientoValid = this.pasoUnoComponent.domicilioDelEstablecimientoComponent.form.valid;
     }
   
-    if (this.indice !== 2) {
-      if (!pagoFormValid) {
-        this.showPaymentModal = true;
-      } else {
-        this.getValorIndice(event);
-      }
-    } else {
-      this.getValorIndice(event);
+
+    // Block navigation unless all forms are valid
+    if (!PAGO_FORM_VALID && PAGO_FORM_BLANK) {
+      // Only pago-de-derechos is empty
+      this.showPaymentModal = true;
+      this.message = undefined;
+      return;
     }
+    if (!PAGO_FORM_VALID || !datosDeLaSolicitudValid || !domicilioDelEstablecimientoValid) {
+      // Some required fields are missing
+      this.showPaymentModal = false;
+      this.message = '¡Error de registro! Faltan campos por capturar.';
+      // Optionally scroll to top so user sees the error
+      setTimeout(() => {
+        const ERROR_ELEMENT = document.querySelector('.error-message, .alert-danger');
+        if (ERROR_ELEMENT) {
+          ERROR_ELEMENT.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+      return;
+    }
+
+    // All valid, proceed
+    this.message = undefined;
+    this.showPaymentModal = false;
+    this.getValorIndice(event);
+
     this.datosPasos.indice = this.indice;
     if (this.indice === 1) {
       this.ocultarBtnAnterior = true;

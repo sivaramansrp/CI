@@ -30,23 +30,23 @@
       }
       @case (2) {
   @if(esDatosRespuesta) {
-  <app-datos-de-la-solicitud (tipoTramiteChange)="onTipoTramiteChange($event)"></app-datos-de-la-solicitud>
-  <app-domicilio-del-establecimiento [tipoTramite]="selectedTipoTramite"></app-domicilio-del-establecimiento>
+  <app-datos-de-la-solicitud #datosDeLaSolicitudComponent (tipoTramiteChange)="onTipoTramiteChange($event)"></app-datos-de-la-solicitud>
+  <app-domicilio-del-establecimiento #domicilioDelEstablecimientoComponent [tipoTramite]="selectedTipoTramite"></app-domicilio-del-establecimiento>
   }
       }
       @case (3) {
   @if(esDatosRespuesta) {
-  <app-terceros-relacionados-vista [tabindex]="3" [tipoTramite]="selectedTipoTramite"></app-terceros-relacionados-vista>
+  <app-terceros-relacionados-vista #tercerosRelacionadosVistaComponent [tabindex]="3" [tipoTramite]="selectedTipoTramite"></app-terceros-relacionados-vista>
   }
       }
       @case(4) {
   @if(esDatosRespuesta) {
-  <app-pago-de-derechos [tabindex]="4" [tipoTramite]="selectedTipoTramite"></app-pago-de-derechos>
+  <app-pago-de-derechos #pagoDeDerechosComponent [tabindex]="4" [tipoTramite]="selectedTipoTramite"></app-pago-de-derechos>
   }
       }
       @case(5){
   @if(esDatosRespuesta) {
-  <app-tramites-asociado [tabindex]="5" [tipoTramite]="selectedTipoTramite"></app-tramites-asociado>
+  <app-tramites-asociado #tramitesAsociadoComponent [tabindex]="5" [tipoTramite]="selectedTipoTramite"></app-tramites-asociado>
   }
       }
       }
