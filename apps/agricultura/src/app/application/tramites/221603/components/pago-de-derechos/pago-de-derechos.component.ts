@@ -264,7 +264,6 @@ this.disableFecha = (this.solicitudState?.exento ?? '') === '1';
    * manteniendo los campos deshabilitados que no deben ser editables.
    */
   borrarDatosPago(): void {
-    // Reset form values
     this.pagoDerechosForm.patchValue({
       clave: this.solicitudState.clave, // Keep default value
       dependencia: this.solicitudState.dependencia, // Keep default value
@@ -274,14 +273,10 @@ this.disableFecha = (this.solicitudState?.exento ?? '') === '1';
       importe: this.solicitudState.importe // Keep default value
     });
 
-    // Clear form validation errors
     this.pagoDerechosForm.markAsUntouched();
     this.pagoDerechosForm.markAsPristine();
 
-    // // Reset future date validation flag
-    // this.fechaFuturaSeleccionada = false;
-
-    // Update store with cleared values
+    
     const CLEARED_PAGO_FORM: Solicitud221603State = {
       ...this.solicitudState,
       clave: this.solicitudState.clave,
