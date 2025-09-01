@@ -6,7 +6,7 @@ export const DESTINATARIO_DATOS: DestinatarioDatos = {
   primer: "Perez",
   segundo: "Perez",
   fiscal: "123",
-  razon: "",
+  razon: "razon destinatario",
   calle: "pruebas1",
   letra: "1",
   ciudad: "pruebas2",
