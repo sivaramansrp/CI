@@ -172,7 +172,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <input-fecha [datos]="fechaFacturaInput" [setFecha]="formMercancia.get('fechaFactura')?.value"
-                                (valorCambiado)="cambioFechaFactura($event,formMercancia,'fechaFactura', 'setFechaFactura')"></input-fecha>
+                                (valorCambiado)="cambioFechaFactura($event,formMercancia,'fechaFactura', 'setFechaFactura')" [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
                             </div>
                         </div>
                     </div>
