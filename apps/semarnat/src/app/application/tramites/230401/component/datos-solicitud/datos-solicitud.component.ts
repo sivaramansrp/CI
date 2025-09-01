@@ -1,10 +1,10 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import {
   ALERTA_DE_MATERIAL,
   Catalogo,
   CatalogoPaises,
   ConsultaioQuery,
   CrossListLable,
-  MaxDigitsValidator,
   Notificacion,
   Pedimento,
   REGEX_SOLO_DIGITOS,
@@ -416,18 +416,21 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Verifica si un campo específico es válido.
    */
-  isValid(form: FormGroup, field: string): any {
-    return this.validacionesService.isValid(form, field);
+  isValid(form: FormGroup, field: string): boolean {
+    // eslint-disable-next-line no-implicit-coercion
+    return !!this.validacionesService.isValid(form, field);
   }
 
   /**
    * Verifica si la cantidad es mayor a 400.
    */
   isCantidadMayorA400(): boolean {
-    const cantidad = this.formSolicitud?.get('cantidad')?.value;
-    if (!cantidad) return false;
-    const cantidadNumerica = parseFloat(cantidad);
-    return !isNaN(cantidadNumerica) && cantidadNumerica > 400;
+    const CANTIDAD = this.formSolicitud?.get('cantidad')?.value;
+    if (!CANTIDAD) { 
+      return false;
+    }
+    const CANTIDAD_NUMERICA = parseFloat(CANTIDAD);
+    return !isNaN(CANTIDAD_NUMERICA) && CANTIDAD_NUMERICA > 400;
   }
 
   /**
@@ -445,14 +448,14 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Cierra la notificación de eliminación.
    */
-  cerrarNotificacionEliminacion(evento: boolean): void {
+  cerrarNotificacionEliminacion(_evento: boolean): void {
     this.mostrarNotificacion = false;
   }
 
   /**
    * Custom validator to check if the value contains only numeric characters (including decimals)
    */
-  static numericValidator(control: any): {[key: string]: any} | null {
+  static numericValidator(control: import('@angular/forms').AbstractControl): Record<string, unknown> | null {
     if (!control.value) {
       return null; // Let required validator handle empty values
     }
@@ -468,7 +471,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Custom validator to check if the value exceeds 12 digits and 3 decimals
    */
-  static maxDigitsDecimalsValidator(control: any): {[key: string]: any} | null {
+  static maxDigitsDecimalsValidator(control: import('@angular/forms').AbstractControl): Record<string, boolean> | null {
     if (!control.value) {
       return null;
     }
