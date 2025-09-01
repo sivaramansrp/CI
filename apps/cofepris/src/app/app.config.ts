@@ -1,6 +1,7 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { APP_ROUTES } from './app.routes';
+import { ToastrModule } from 'ngx-toastr';
 import { httpInterceptorFn } from '@ng-mf/data-access-user';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
@@ -16,5 +17,6 @@ export const APPCONFIG: ApplicationConfig = {
     provideRouter(APP_ROUTES),
     provideHttpClient(withInterceptors([httpInterceptorFn])),
     provideAnimations(),
+    importProvidersFrom(ToastrModule.forRoot()),
   ],
 };
