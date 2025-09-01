@@ -789,38 +789,41 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
 
   // CRUD methods for sustancias
   modificarListaDeNumeros(): void {
+    // Check if no rows are selected
     if (this.sustanciasSensiblesSeleccionadas.length === 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'warning',
         modo: 'info',
-        titulo: 'Advertencia',
-        mensaje: 'Debe seleccionar una sustancia para modificar.',
+        titulo: '',
+        mensaje: 'Selecciona sólo un registro para modificar.',
         cerrar: true,
         tiempoDeEspera: 3000,
         txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: 'Cancelar',
+        txtBtnCancelar: '',
       };
       this.mostrarAlerta = true;
       return;
     }
 
+    // Check if more than one row is selected
     if (this.sustanciasSensiblesSeleccionadas.length > 1) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'warning',
         modo: 'info',
-        titulo: 'Advertencia',
-        mensaje: 'Solo puede modificar una sustancia a la vez. Seleccione únicamente un registro.',
+        titulo: '',
+        mensaje: 'Selecciona sólo un registro para modificar.',
         cerrar: true,
         tiempoDeEspera: 3000,
         txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: 'Cancelar',
+        txtBtnCancelar: '',
       };
       this.mostrarAlerta = true;
       return;
     }
 
+    // If exactly one row is selected, proceed with modification
     const SUSTANCIA_SELECCIONADA = this.sustanciasSensiblesSeleccionadas[0];
     this.formSolicitud.patchValue({
       numeroCas: SUSTANCIA_SELECCIONADA.numeroCAS,
@@ -923,9 +926,21 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
 
   eliminarModal(): void {
     if (!this.sustanciasSensiblesSeleccionadas.length) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'info',
+        titulo: '',
+        mensaje: 'Selecciona un registro',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
       this.mostrarAlerta = true;
       return;
     }
+    
     this.seleccionarFilaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
