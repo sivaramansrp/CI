@@ -2,10 +2,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: modulefederation-dashboard-service-dev
+  name: modulefederation-dashboard-microfront-service-dev
 spec:
   selector:
-    app: modulefederation-dashboard-dev
+    app: modulefederation-dashboard-microfront-dev
   ports:
     - protocol: TCP
       port: 4200
