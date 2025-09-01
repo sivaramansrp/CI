@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { API_GET_REQUERIMIENTO_DETALLE, ENVIRONMENT, IDREQUERIMIENTO, TRAMITE } from '../../..';
+import { API_GET_REQUERIMIENTO_DETALLE, COMUN_URL, IDREQUERIMIENTO, TRAMITE } from '../../servers/api-router';
 import { BaseResponse } from '../../models/5701/base-response.model';
 import { Observable } from 'rxjs';
 import { RequerimientoDetalleResponse } from '../../models/130118/requerimiento-detalle-response.model';
@@ -21,7 +21,7 @@ export class DetalleRequerimientoService {
    * @param http HttpClient para realizar peticiones HTTP
    */
   constructor(private http: HttpClient) {
-    this.host = `${ENVIRONMENT.API_HOST}/api/`;
+    this.host = `${COMUN_URL.BASE_URL}`;
   }
 
   /**
