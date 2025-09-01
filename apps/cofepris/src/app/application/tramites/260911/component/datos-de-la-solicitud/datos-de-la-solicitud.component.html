@@ -160,18 +160,21 @@
               (input)="validarLongitudMaxima('correo', 320)"
               [ngClass]="isInvalid(datosDelEstablecimiento, 'correo') ? 'required' : ''"
             />
-            <div *ngIf="datosDelEstablecimiento.get('correo')?.invalid && datosDelEstablecimiento.get('correo')?.touched" class="text-danger">
-              <span *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['required']">
-                Este campo es obligatorio
-              </span>
-              <span *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['email']">
-                El valor Ingresado no es una dirección válida de correo electrónico
-              </span>
-              <span *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['maxlength']">
-                Máximo 320 caracteres permitidos.
-              </span>
-            </div>
-          </div>
+          <div *ngIf="
+  datosDelEstablecimiento.get('correo')?.invalid &&
+  (datosDelEstablecimiento.get('correo')?.touched || datosDelEstablecimiento.get('correo')?.dirty) &&
+  datosDelEstablecimiento.get('correo')?.value &&
+  !datosDelEstablecimiento.get('correo')?.pristine
+" class="text-danger">
+  <span *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['required']">
+    Este campo es obligatorio
+  </span>
+  <div *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['email']">
+    El valor ingresado no es una dirección válida de correo electrónico
+  </div>
+</div>
+
+      </div>
         </div>
       </div>
     </form>

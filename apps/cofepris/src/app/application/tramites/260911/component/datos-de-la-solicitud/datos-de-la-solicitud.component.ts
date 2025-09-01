@@ -322,10 +322,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, AfterViewInit, OnDes
     this.datosDelEstablecimiento = this.fb.group({
       rfcDel: [this.solicitudState?.rfcDel, [Validators.required, Validators.pattern(REGEX_RFC)]],
       denominacion: [this.solicitudState?.denominacion, [Validators.required, Validators.maxLength(100)]],
-      correo: [
-        this.solicitudState?.correo,
-        [Validators.required, DatosDeLaSolicitudComponent.rfcEmailValidator, Validators.maxLength(320)]
-      ],
+     correo: this.fb.control(
+  this.solicitudState?.correo,
+  {
+    validators: [
+      Validators.required,
+      DatosDeLaSolicitudComponent.rfcEmailValidator,
+      Validators.maxLength(320)
+    ],
+    updateOn: 'blur'
+  }
+)
+
     });
 
       // Marcar como touched si no está seleccionado para mostrar el mensaje de error desde el inicio

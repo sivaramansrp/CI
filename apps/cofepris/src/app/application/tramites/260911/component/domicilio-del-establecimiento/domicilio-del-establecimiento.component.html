@@ -24,9 +24,6 @@
               <div *ngIf="form.get('codigoPostal')?.errors?.['pattern'] || form.get('codigoPostal')?.errors?.['min'] || form.get('codigoPostal')?.errors?.['max']">
                 Por favor, escribe un número entero válido
               </div>
-              <div *ngIf="form.get('codigoPostal')?.errors?.['maxlength']">
-                El código postal no puede tener más de 12 dígitos
-              </div>
             </div>
           </div>
         </div>
@@ -69,9 +66,6 @@
               <div *ngIf="form.get('municipioOAlcaldia')?.hasError('required')">
                 Este campo es obligatorio
               </div>
-              <div *ngIf="form.get('municipioOAlcaldia')?.hasError('maxlength')">
-                El municipio o alcaldía no puede tener más de 120 caracteres
-              </div>
             </div>
           </div>
         </div>
@@ -95,16 +89,13 @@
               formControlName="localidad"
               appUppercase
               aria-labelledby="localidad"
-              maxlength="121"
+              maxlength="120"
               (input)="onLocalidadInput($event)"
               (change)="setValorStore(form, 'localidad')"
             />
             <div *ngIf="form.get('localidad')?.touched && form.get('localidad')?.invalid" class="text-danger">
               <div *ngIf="form.get('localidad')?.hasError('required')">
                 Por favor, corrija el localidad.
-              </div>
-              <div *ngIf="form.get('localidad')?.errors?.['maxlength']">
-                La localidad no puede tener más de 120 caracteres
               </div>
             </div>
           </div>
@@ -127,9 +118,6 @@
             <div *ngIf="form.get('colonias')?.touched && form.get('colonias')?.invalid" class="text-danger">
               <div *ngIf="form.get('colonias')?.hasError('required')">
                 Por favor, corrija la colonias.
-              </div>
-              <div *ngIf="form.get('colonias')?.hasError('maxlength')">
-                La colonia no puede tener más de 120 caracteres
               </div>
             </div>
           </div>
@@ -154,9 +142,6 @@
             <div *ngIf="form.get('calle')?.touched && form.get('calle')?.invalid" class="text-danger">
               <div *ngIf="form.get('calle')?.hasError('required')">
                 Este campo es obligatorio
-              </div>
-              <div *ngIf="form.get('calle')?.hasError('maxlength')">
-                La calle no puede tener más de 100 caracteres
               </div>
             </div>
           </div>
@@ -185,9 +170,6 @@
               <div *ngIf="form.get('lada')?.hasError('pattern')">
                 Por favor, escribe un número entero válido
               </div>
-              <div *ngIf="form.get('lada')?.hasError('maxlength')">
-                La lada no puede tener más de 5 dígitos
-              </div>
             </div>
           </div>
         </div>
@@ -212,9 +194,6 @@
               </div>
               <div *ngIf="form.get('telefono')?.errors?.['pattern']">
                 Por favor, escribe un número entero válido
-              </div>
-              <div *ngIf="form.get('telefono')?.errors?.['maxlength']">
-                El teléfono no puede tener más de 30 dígitos
               </div>
             </div>
           </div>
