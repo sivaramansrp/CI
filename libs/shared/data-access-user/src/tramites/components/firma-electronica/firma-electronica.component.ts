@@ -239,7 +239,7 @@ export class FirmaElectronicaComponent implements OnDestroy {
           throw new Error('No se generó la firma electrónica');
         }
 
-        this.valido.emit({ rfc: RESULTADO.rfc, tieneLogin: true });
+        this.valido.emit({ rfc: '', tieneLogin: true });
         this.datosFirma.emit({
           firma: RESULTADO.firma,
           certSerialNumber: RESULTADO.certificado,
