@@ -9,6 +9,7 @@
           <input type="text" class="form-control" id="nombredelRepresentante"
             placeholder="Ingrese el nombre del representante" formControlName="nombredelRepresentante"
             [class.bg-white]="!datosdelexportador.get('nombredelRepresentante')?.disabled"
+            maxlength="70"
             [class.is-invalid]="datosdelexportador.get('nombredelRepresentante')?.touched && datosdelexportador.get('nombredelRepresentante')?.invalid" 
             (change)="setValorStore(datosdelexportador,'nombredelRepresentante')"/>
           <div class="invalid-feedback"
@@ -31,6 +32,7 @@
             formControlName="cargo"
             [class.is-invalid]="datosdelexportador.get('cargo')?.touched && datosdelexportador.get('cargo')?.invalid"
             [class.bg-white]="!datosdelexportador.get('cargo')?.disabled" 
+            maxlength="70"
             (change)="setValorStore(datosdelexportador,'cargo')"/>
           <div class="invalid-feedback"
             *ngIf="datosdelexportador.get('cargo')?.touched && datosdelexportador.get('cargo')?.invalid">
@@ -44,6 +46,7 @@
             formControlName="telefonos"
             [class.is-invalid]="datosdelexportador.get('telefonos')?.touched && datosdelexportador.get('telefonos')?.invalid"
             [class.bg-white]="!datosdelexportador.get('telefonos')?.disabled"
+            maxlength="20"
             (change)="setValorStore(datosdelexportador,'telefonos')" />
           <div class="invalid-feedback"
             *ngIf="datosdelexportador.get('telefonos')?.touched && datosdelexportador.get('telefonos')?.invalid">
@@ -57,6 +60,7 @@
           <input type="text" class="form-control" id="faxs" placeholder="Ingrese el fax" formControlName="faxs"
             [class.is-invalid]="datosdelexportador.get('faxs')?.touched && datosdelexportador.get('faxs')?.invalid" 
             (change)="setValorStore(datosdelexportador,'faxs')"
+            maxlength="20"
             [class.bg-white]="!datosdelexportador.get('faxs')?.disabled" />
           <div class="invalid-feedback"
             *ngIf="datosdelexportador.get('faxs')?.touched && datosdelexportador.get('faxs')?.invalid">
@@ -71,6 +75,7 @@
             placeholder="Ingrese su correo electrónico" formControlName="correoElectronicos"
             [class.is-invalid]="datosdelexportador.get('correoElectronicos')?.touched && datosdelexportador.get('correoElectronicos')?.invalid"
             (change)="setValorStore(datosdelexportador,'correoElectronicos')" 
+            maxlength="70"
             [class.bg-white]="!datosdelexportador.get('correoElectronicos')?.disabled"/>
           <div class="invalid-feedback"
             *ngIf="datosdelexportador.get('correoElectronicos')?.touched && datosdelexportador.get('correoElectronicos')?.invalid">

@@ -1,20 +1,45 @@
-// ...existing code...
-import { CONFIGURATION_TABLA_GENERALES, CONFIGURATION_TABLA_MERCANCIA, MUNICIPIODE_OPCIONS, RADIO_OPCIONS } from '../../constantes/certificado-zoosanitario.enum';
-import { CatalogoSelectComponent, ConfiguracionColumna, FECHA_FINAL, FECHA_INICIO, InputRadioComponent, Notificacion, NotificacionesComponent, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, ChangeDetectorRef, ElementRef, OnDestroy, OnInit, ViewChild, Input } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, } from '@ng-mf/data-access-user';
-import { DatosGenerales, TablaMercancia } from '../../models/pantallas-captura.model';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Solicitud220402State, Solicitud220402Store } from '../../estados/tramites/tramites220402.store';
-import { Subject, map, takeUntil } from 'rxjs';
-import { Catalogo } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { InputFecha } from '@ng-mf/data-access-user';
+
+import { ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+
+import { Subject } from 'rxjs';
+
+import { map, takeUntil } from 'rxjs/operators';
+
+import {
+  Catalogo,
+  ConsultaioQuery,
+  ConsultaioState,
+  InputFecha,
+  ValidacionesFormularioService
+} from '@ng-mf/data-access-user';
+
+import {
+  CatalogoSelectComponent,
+  ConfiguracionColumna,
+  FECHA_FINAL,
+  FECHA_INICIO,
+  InputRadioComponent,
+  Notificacion,
+  NotificacionesComponent,
+  REGEX_SOLO_DIGITOS,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent
+} from '@libs/shared/data-access-user/src';
+
+import { CONFIGURATION_TABLA_GENERALES, CONFIGURATION_TABLA_MERCANCIA, MUNICIPIODE_OPCIONS, RADIO_OPCIONS } from '../../constantes/certificado-zoosanitario.enum';
+import { DatosGenerales, TablaMercancia } from '../../models/pantallas-captura.model';
 import { MediodetransporteService } from '../../services/medio-de-transporte.service';
-import { Modal } from 'bootstrap';
+
 import { Solicitud220402Query } from '../../estados/queries/tramites220402.query';
+
+import { Solicitud220402State, Solicitud220402Store } from '../../estados/tramites/tramites220402.store';
+
+import { Modal } from 'bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
+
 
 /**
  * Componente para la vista de la solicitud de la sección de "220402".
@@ -708,7 +733,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * 
    * @returns {void}
    */
-  public mostrarErrores() {
+  public mostrarErrores():void {
     this.FormSolicitud?.markAllAsTouched?.();
     this.cdr.detectChanges();
   }

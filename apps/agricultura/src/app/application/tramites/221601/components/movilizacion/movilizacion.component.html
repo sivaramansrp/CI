@@ -48,7 +48,7 @@
          <div class="row">
       <div class="col-md-8">
         <div class="form-group">
-          <app-catalogo-select [catalogo]="verificacion" [label]="'Punto de verificación federal'"  [isDisabled]="esFormularioSoloLectura" [placeholder]="'Seleccione un valor'" [tooltipQuestionCircleText]="'Es el primer punto de Inspección Federal dentro del territorio nacional por donde cruzará el embarque'" [tooltipQuestionCircle]="true"
+          <app-catalogo-select [catalogo]="verificacion" [label]="'Punto de verificación federal'"  [isDisabled]="esFormularioSoloLectura" [placeholder]="'Seleccione un opción'" [tooltipQuestionCircleText]="'Es el primer punto de Inspección Federal dentro del territorio nacional por donde cruzará el embarque'" [tooltipQuestionCircle]="true"
             name="verificacion" formControlName="verificacion" (change)="setValoresStore(MedioForm, 'verificacion', 'setVerificacion')" >
           </app-catalogo-select>
         </div>

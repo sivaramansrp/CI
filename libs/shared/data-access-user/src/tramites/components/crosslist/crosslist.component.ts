@@ -175,6 +175,10 @@ export class CrosslistComponent implements OnInit, OnChanges {
       this.fecha.updateValueAndValidity({ emitEvent: false });
       this.fechaSeleccionada.updateValueAndValidity({ emitEvent: false });
     }
+
+    if (changes['botones'] && changes['botones'].currentValue) {
+      this.botones = changes['botones'].currentValue;
+    }
   }
 
   /**
