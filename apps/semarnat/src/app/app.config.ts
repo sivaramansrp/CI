@@ -1,11 +1,11 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { APPINJECT } from './app.inject';
 import { APP_ROUTES } from './app.routes';
 import { ENVIRONMENT } from './environments/environment';
-import { httpInterceptorFn} from '@ng-mf/data-access-user';
+import { httpInterceptorFn } from '@ng-mf/data-access-user';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
-
-import { APPINJECT } from './app.inject';
 
 /**
  * Esta es la configuración principal de la aplicación Agace.
@@ -16,7 +16,8 @@ export const APPCONFIG: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(APP_ROUTES),
-    { provide: APPINJECT, useValue: ENVIRONMENT },
     provideHttpClient(withInterceptors([httpInterceptorFn])),
+    provideAnimations(),
+    { provide: APPINJECT, useValue: ENVIRONMENT },
   ],
 };
