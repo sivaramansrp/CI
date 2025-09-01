@@ -103,7 +103,7 @@ jobs:
             docker pull ghcr.io/vucem30/dockerized-modulefederation-$APP_NAME:$IMAGE_TAG
             # Update deployment YAML with new image tag
             sed -i "s|ghcr.io/vucem30/dockerized-modulefederation-$APP_NAME:.*|ghcr.io/vucem30/dockerized-modulefederation-$APP_NAME:$IMAGE_TAG|g" "$DEPLOYMENT_FILE"
-            microk8s kubectl delete deployment modulefederation-$APP_NAME-deployment-dev -n default
+            
             microk8s kubectl apply -f "$DEPLOYMENT_FILE"
             microk8s kubectl apply -f "$SERVICE_FILE"
             microk8s kubectl apply -f "$INGRESS_FILE"
