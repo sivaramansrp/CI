@@ -121,12 +121,12 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group datepicker-group">
-                            <input-fecha [datos]="fechaIngreso" (valorCambiado)="cambioFechaIngreso($event)" [isDisabled]="soloLectura"></input-fecha>
+                            <input-fecha [datos]="fechaIngreso" [setFecha]="solicitudForm.get('fechaIngreso')?.value" (valorCambiado)="cambioFechaIngreso($event)" [isDisabled]="soloLectura"></input-fecha>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group datepicker-group">
-                            <input-fecha [datos]="vigencia" (valorCambiado)="cambioVigencia($event)" [isDisabled]="soloLectura"></input-fecha>
+                            <input-fecha [datos]="vigencia" [setFecha]="solicitudForm.get('vigencia')?.value" (valorCambiado)="cambioVigencia($event)" [isDisabled]="soloLectura"></input-fecha>
                             <div *ngIf="isInvalid('vigencia') && solicitudForm.controls['vigencia'].errors?.['required']" class="mensaje-error">
                                 Este campo es obligatorio.
                             </div>
