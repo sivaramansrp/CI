@@ -125,7 +125,13 @@ export const MERCANCIA_MODAL_FORMA = [
     tipoInput: 'text',
     desactivado: false,
     soloLectura: false,
-    validadores: [],
+     validadores: [
+       { 
+      tipo: 'pattern', 
+      valor: /^[a-zA-Z0-9 ]{0,50}$/, 
+      mensaje: 'La marca no puede ser mayor a 50 caracteres' 
+    }
+  ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
