@@ -37,8 +37,7 @@ import { IniciarAutorizacionResponse } from '@libs/shared/data-access-user/src/c
 
 import { BodyTablaResolucion, HeaderTablaResolucion } from '@libs/shared/data-access-user/src/core/models/shared/consulta-generica.model';
 import { CONSULTA_RESOLUCIONES } from '@libs/shared/data-access-user/src/core/enums/consulta-generica.enum';
-import { CodigoRespuesta } from '../tramites/130118/enum/enum-130118';
-import { CriteriosResponse } from '@libs/shared/data-access-user/src/core/models/130118/criterios-response.model';
+import { CodigoRespuesta } from '../core/enum/se-core-enum';
 import { FirmaAutorizarDictamenRequest } from '../core/models/autorizar-requerimiento/request/firma-autorizar-request.model';
 import { MostrarFirmaRequest } from '../core/models/autorizar-requerimiento/request/mostrar-firmar-request.model';
 import { MostrarFirmarResponse } from '../core/models/autorizar-requerimiento/response/mostrar-firmar-response.model';

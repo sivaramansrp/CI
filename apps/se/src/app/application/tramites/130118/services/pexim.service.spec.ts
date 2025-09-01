@@ -57,6 +57,7 @@ describe('PeximService', () => {
 
   it('should update store in actualizarEstadoFormulario', () => {
     const datos: Solicitud130118State = {
+      idSolicitud: 123,
       regimenMercancia: 'reg',
       clasifiRegimen: 'clas',
       valueTA: 'val',

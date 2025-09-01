@@ -17,10 +17,9 @@ import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shar
 import { BodyTablaResolucion } from '@libs/shared/data-access-user/src/core/models/shared/consulta-generica.model';
 import { FirmaRequest } from '../core/models/confirmar-notificacion/request/firma-request.model';
 
-import { CodigoRespuesta, PasoNotificacion } from '../tramites/130118/enum/enum-130118';
+import { CodigoRespuesta, PasoNotificacion } from '../core/enum/se-core-enum';
 import { AcuseReciboComponent } from '../shared/components/acuse-recibo/acuse-recibo.component';
 import { FirmaConfirmarResponse } from '../core/models/confirmar-notificacion/response/confirmar-notificacion-response.model';
-
 
 /**
  * @component ConfirmarNotificacionComponent
