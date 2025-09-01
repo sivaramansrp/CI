@@ -211,30 +211,28 @@ export class FirmaElectronicaComponent implements OnDestroy {
         ESLOGIN
       );
 
-      // Crear el payload para la autenticación
-      const PAYLOAD = {
-        "rfc": RESULTADO.rfc,
-        "certificate": RESULTADO.certificado,
-        "privateKey": this.keyFileObj?.name.endsWith('.key') ? this.keyFileObj?.name : '',
-        "password": this.FormCertificado.get('password')?.value || ''
-      }
-
-      this.valido.emit({ rfc: RESULTADO.rfc, tieneLogin: true });
-      this.firmaService.loginFielAuthentication(PAYLOAD).pipe(takeUntil(this.destroyNotifier$)).subscribe({
-        next: (response) => {
-          if(esValidObject(response)){
-            this.toastrService.success('Autenticación exitosa');
-
-          }
-        },
-        error: (error) => {
-          this.toastrService.error('Error en la autenticación');
-        }
-      });
-
       if (ESLOGIN) {
+      // Crear el payload para la autenticación
+        const PAYLOAD = {
+          "rfc": RESULTADO.rfc,
+          "certificate": RESULTADO.certificado,
+          "privateKey": this.keyFileObj?.name.endsWith('.key') ? this.keyFileObj?.name : '',
+          "password": this.FormCertificado.get('password')?.value || ''
+        }
+
         // Caso login: solo validación
         this.valido.emit({ rfc: RESULTADO.rfc, tieneLogin: true });
+        this.firmaService.loginFielAuthentication(PAYLOAD).pipe(takeUntil(this.destroyNotifier$)).subscribe({
+          next: (response) => {
+            if(esValidObject(response)){
+              this.toastrService.success('Autenticación exitosa');
+
+            }
+          },
+          error: (error) => {
+            this.toastrService.error('Error en la autenticación');
+          }
+        });
       } else {
         // Caso firma: emitir datos completos
         if (!RESULTADO.firma) {
