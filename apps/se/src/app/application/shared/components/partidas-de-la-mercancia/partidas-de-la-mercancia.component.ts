@@ -178,6 +178,11 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    */
   @Output() validarAntesDeCargarArchivo = new EventEmitter<void>();
 
+  /*
+   * Evento emitido cuando se eliminan partidas de la tabla.
+   */
+  @Output() partidasEliminadas = new EventEmitter<string[]>();
+
   /**
    * Constructor para inicializar el componente e inyectar dependencias.
    * FormBuilder para crear formularios reactivos.
@@ -332,10 +337,11 @@ onConfirmacionModal(accion: boolean): void {
  * limpia la selección de filas.
  */
 eliminarPartidasSeleccionadas(): void {
-  if (this.selectedRows && this.selectedRows.length > 0) {
-    const IDS_ELIMINAR = this.selectedRows.map(row => row.id); // Use your unique key
+    if (this.selectedRows && this.selectedRows.length > 0) {
+    const IDS_ELIMINAR = this.selectedRows.map(row => row.id);
     this.tableBodyData = this.tableBodyData.filter(row => !IDS_ELIMINAR.includes(row.id));
     this.selectedRows = [];
+    this.partidasEliminadas.emit(IDS_ELIMINAR); 
   }
 }
   /**

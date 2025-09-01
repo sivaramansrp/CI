@@ -125,6 +125,18 @@ export interface Tramite130111State {
    * Indica si la tabla dinámica debe mostrarse.
    */
   mostrarTabla: boolean;
+  /**
+   * Datos del cuerpo de la tabla dinámica.
+   */
+  tableBodyData: PartidasDeLaMercanciaModelo[];
+  /**
+   * Cantidad total de partidas de la mercancía.
+   */
+  cantidadTotal: string;
+  /*
+  Valor total en USD de las partidas de la mercancía.
+  */
+  valorTotalUSD: string;
 }
 
 /**
@@ -138,7 +150,7 @@ export interface Tramite130111State {
 export function createInitialState(): Tramite130111State {
   return {
     filaSeleccionada: [],
-    mostrarTabla: false,
+    mostrarTabla: true,
     solicitud: '',
     fraccion: '',
     defaultSelect: 'Inicial',
@@ -160,6 +172,9 @@ export function createInitialState(): Tramite130111State {
     observaciones: '',
     entidad: '',
     representacion: '',
+    tableBodyData: [],
+    cantidadTotal: '',
+    valorTotalUSD: ''
   };
 }
 
