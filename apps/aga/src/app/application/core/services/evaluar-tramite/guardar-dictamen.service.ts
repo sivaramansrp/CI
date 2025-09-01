@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { GuardarDictamenRequest } from '../../models/evaluar/guardar-dictamen-request.model';
 
-import { API_GET_DICTAMEN, API_POST_GUARDAR_DICTAMEN, IDSOLICITUDDICTAMEN, NUMFOLIOTRAMITE } from '@libs/shared/data-access-user/src/core/constants/api-constants';
+import { API_GET_DICTAMEN, API_POST_GUARDAR_DICTAMEN, IDSOLICITUDDICTAMEN, NUMFOLIOTRAMITE } from '@libs/shared/data-access-user/src/core/servers/api-router';
 
 @Injectable({
     providedIn: 'root'

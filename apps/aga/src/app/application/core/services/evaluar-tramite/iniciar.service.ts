@@ -3,7 +3,7 @@ import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { API_GET_INICAR_DICTAMEN, NUMFOLIOTRAMITE } from '@libs/shared/data-access-user/src/core/constants/api-constants';
+import { API_GET_INICAR_DICTAMEN, NUMFOLIOTRAMITE } from '@libs/shared/data-access-user/src/core/servers/api-router';
 import { Observable } from 'rxjs';
 
 
