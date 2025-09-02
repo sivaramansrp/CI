@@ -36,7 +36,7 @@
         class="col-md-6"
         *ngIf="!registroForm.get('validacionForm.tercerOperador')?.value"
       >
-       <label class="form-label" for="nombres">Periodo</label>
+       <label class="form-label" for="nombres">Periodo:</label>
       <div>
       <input type="radio" class="form-check-input mt-1" id="rangoDeFecha" value="periodo" formControlName="rangoDeFecha" (change)="setValoresStore(validacionForm, 'rangoDeFecha')" />
       </div>
@@ -45,7 +45,7 @@
         class="col-md-6"
         *ngIf="!registroForm.get('validacionForm.tercerOperador')?.value"
       >
-       <label class="form-label" for="nombres">Una sola importación</label>
+       <label class="form-label" for="nombres">Una sola importación:</label>
       <div>
         <input type="radio" class="form-check-input mt-1" id="rangoDeFecha" value="sola" formControlName="rangoDeFecha" (change)="setValoresStore(validacionForm, 'rangoDeFecha')" />
         </div>

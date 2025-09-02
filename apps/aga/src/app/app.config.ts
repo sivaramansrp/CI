@@ -1,12 +1,12 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { APPINJECT } from './app.inject';
 import { APP_ROUTES } from './app.routes';
 import { ENVIRONMENT } from './environments/environment';
+import { ToastrModule } from 'ngx-toastr';
+import { httpInterceptorFn } from '@ng-mf/data-access-user';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
-
-import { APPINJECT } from './app.inject';
-import { httpInterceptorFn } from '@ng-mf/data-access-user';
 
 /**
  * Esta es la configuración principal de la aplicación Agace.
@@ -19,6 +19,7 @@ export const APPCONFIG: ApplicationConfig = {
     provideRouter(APP_ROUTES),
     provideHttpClient(withInterceptors([httpInterceptorFn])),
     { provide: APPINJECT, useValue: ENVIRONMENT },
-    provideAnimations()
+    provideAnimations(),
+    importProvidersFrom(ToastrModule.forRoot()),
   ],
 };
