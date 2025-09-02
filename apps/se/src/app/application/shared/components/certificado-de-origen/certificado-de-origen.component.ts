@@ -992,6 +992,29 @@ ngOnChanges(changes: SimpleChanges):void {
 
   return IS_REGISTRO_FORM_VALID;
 }
+/**
+ * @descripcion
+ * Elimina de la lista `guardarClicado` los elementos previamente seleccionados
+ * cuando se recibe un evento de confirmación, y notifica el cambio al componente padre.
+ *
+ * @detalle
+ * - Obtiene los IDs de los elementos seleccionados en `seleccionadaguardarClicado`.
+ * - Filtra `guardarClicado` eliminando los que coincidan con esos IDs.
+ * - Emite el evento `guardarClicadoChange` con la nueva lista de mercancías.
+ * - Reinicia la notificación (`nuevaNotificacion`) a un objeto vacío.
+ *
+ * @param {boolean} event  
+ * Indica si se debe proceder con la eliminación (`true`) o no (`false`).
+ *
+ * @returns {void}  
+ * No retorna ningún valor.
+ *
+ * @ejemplo
+ * ```ts
+ * this.eliminarErrorMessage(true); // Elimina los elementos seleccionados
+ * this.eliminarErrorMessage(false); // No realiza ninguna acción
+ * ```
+ */
 eliminarErrorMessage(event:boolean): void {
 
   if(event){
