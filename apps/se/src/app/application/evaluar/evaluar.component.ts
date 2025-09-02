@@ -53,6 +53,8 @@ import { CodigoRespuesta } from '../core/enum/enum-130118';
 import { CriteriosResponse } from '@libs/shared/data-access-user/src/core/models/130118/criterios-response.model';
 import { DictamenForm } from '@libs/shared/data-access-user/src/core/models/130118/dictamen-form.model';
 import { FirmarDictamenService } from '../core/services/evaluar-tramite/firmarDictamen.service';
+import { FirmarRequerimientoRequest } from '../core/models/evaluar/request/firmar-requerimiento-request.model';
+import { FirmarRequermientoService } from '../core/services/evaluar-tramite/firmarRequermiento.service';
 import { MostrarFirmarRequerimientoRequest } from '../core/models/evaluar/request/firma-mostrar-requerimiento.request.model';
 
 /**
@@ -150,6 +152,9 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @description Índice de la pestaña de dictamen seleccionada.
    */
   indiceDictamen: number = 1;
+
+  /** Cadena original del requerimiento a firmar */
+  cadenaOriginalRequerimiento!: string;
 
   /** Datos de respuesta al iniciar un requerimiento */
   dataIniciarRequerimiento!: IniciarRequerimientoResponse;
@@ -322,7 +327,8 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     private iniciarService: IniciarService,
     private guardarService: GuardarDictamenService,
     private guardarRequerimientoService: GuardarRequerimientoService,
-    private firmarDictamenService: FirmarDictamenService
+    private firmarDictamenService: FirmarDictamenService,
+    private firmarRequermientoService: FirmarRequermientoService
   ) {
 
     this.consultaioQuery.selectConsultaioState$
@@ -1333,7 +1339,12 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     fechaFin: string;
   }): void {
     this.datosFirmaReales = datos;
-    this.firmaDictamen(datos.firma);
+    if (this.indice === 1) {
+      this.firmaDictamen(datos.firma);
+    } else if (this.indice === 2) {
+      this.firmarRequerimiento(datos.firma);
+    }
+
   }
 
   /**
@@ -1378,7 +1389,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.firmarDictamenService.postGuadarDictamen(this.tramite, NUMFOLIO, PAYLOAD)
+    this.firmarDictamenService.postFirmarDictamen(this.tramite, NUMFOLIO, PAYLOAD)
       .pipe(
         takeUntil(this.destroyNotifier$),
         tap((firmaResponse: BaseResponse<null>) => {
@@ -1504,7 +1515,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       id_accion: this.guardarDatos.action_id,
       cve_usuario: this.guardarDatos.current_user,
       justificacion: this.justificacion,
-      alcance_requerimiento: 'X0XX'
+      alcance_requerimiento: 'X0XX',
     };
 
     this.guardarRequerimientoService.postGuardarRequerimiento(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
@@ -1512,6 +1523,8 @@ export class EvaluarComponent implements OnInit, OnDestroy {
         next: (resp) => {
           if (resp.codigo === CodigoRespuesta.EXITO) {
             this.idRequerimiento = resp.datos?.id_requerimiento || 0;
+            this.getTabs();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
               categoria: CategoriaMensaje.EXITO,
@@ -1523,6 +1536,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
               txtBtnCancelar: '',
             };
           } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
               categoria: CategoriaMensaje.ERROR,
@@ -1539,7 +1553,8 @@ export class EvaluarComponent implements OnInit, OnDestroy {
           }
         },
         error: (err) => {
-          const MENSAJE = err?.error?.error || 'Error al obtener los criterios';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          const MENSAJE = err?.error?.error || 'Ocurrió un error al guardar el requerimiento.';
           this.nuevaNotificacion = {
             tipoNotificacion: 'toastr',
             categoria: 'error',
@@ -1563,25 +1578,26 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * 
    * @returns {void}
  */
-   getMostrarFirma(): void{
-     const PAYLOAD: MostrarFirmarRequerimientoRequest = {
-       cve_usuario: this.guardarDatos.current_user,
-       id_accion: this.guardarDatos.action_id,
-       justificacion: this.justificacion,
-       alcance_requerimiento: '',
-       solicitante: {
-         nombre: 'Javier',
-         apellido_paterno: 'Chávez',
-         apellido_materno: 'Barrios',
-         rfc: this.guardarDatos.current_user,
-       }
-     };
+  mostrarFirmarRequerimiento(): void {
+    const PAYLOAD: MostrarFirmarRequerimientoRequest = {
+      cve_usuario: this.guardarDatos.current_user,
+      id_accion: this.guardarDatos.action_id,
+      justificacion: this.justificacion,
+      alcance_requerimiento: '',
+      solicitante: {
+        nombre: 'Javier',
+        apellido_paterno: 'Chávez',
+        apellido_materno: 'Barrios',
+        rfc: this.guardarDatos.current_user,
+      }
+    };
 
     this.guardarRequerimientoService.postMostrarFirma(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
       .subscribe({
         next: (resp) => {
           if (resp.codigo === CodigoRespuesta.EXITO) {
-            
+            this.firmar = true;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
               categoria: CategoriaMensaje.EXITO,
@@ -1592,37 +1608,131 @@ export class EvaluarComponent implements OnInit, OnDestroy {
               txtBtnAceptar: '',
               txtBtnCancelar: '',
             };
+            this.cadenaOriginalRequerimiento = resp.datos?.cadena_original || '';
           } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             this.nuevaNotificacion = {
-            tipoNotificacion: 'toastr',
-            categoria: CategoriaMensaje.ERROR,
-            modo: 'action',
-            titulo: resp.error || 'Error al mostrar la firma.',
-            mensaje:
-              resp.causa ||
-              resp.mensaje ||
-              'Ocurrió un error al mostrar la firma.',
-            cerrar: false,
-            txtBtnAceptar: '',
-            txtBtnCancelar: '',
-          };
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: resp.error || 'Error al mostrar la firma.',
+              mensaje:
+                resp.causa ||
+                resp.mensaje ||
+                'Ocurrió un error al mostrar la firma.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
           }
         },
         error: (err) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
           const MENSAJE = err?.error?.error || 'Error al mostrar la firma';
-           this.nuevaNotificacion = {
-          tipoNotificacion: 'toastr',
-          categoria: 'error',
-          modo: 'action',
-          titulo: '',
-          mensaje: MENSAJE,
-          cerrar: false,
-          txtBtnAceptar: '',
-          txtBtnCancelar: '',
-        }
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: 'error',
+            modo: 'action',
+            titulo: '',
+            mensaje: MENSAJE,
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          }
         }
       });
-   }
+  }
+
+  /**
+   * Realiza la firma electrónica de un requerimiento.
+   *
+   * Valida que existan los datos necesarios, genera la firma en formato hexadecimal,
+   * construye el payload y envía la solicitud al servicio de firma.
+   * Muestra notificaciones de éxito o error según la respuesta del servicio.
+   *
+   * @param firma - Cadena base64 de la firma electrónica generada por el usuario.
+   */
+  firmarRequerimiento(firma: string): void {
+    if (!this.cadenaOriginalRequerimiento || !this.datosFirmaReales) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'toastr',
+        categoria: CategoriaMensaje.ERROR,
+        modo: 'action',
+        titulo: 'Error',
+        mensaje: 'Faltan datos para completar la firma.',
+        cerrar: false,
+        txtBtnAceptar: '',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    const CADENAHEX = encodeToISO88591Hex(this.cadenaOriginalRequerimiento);
+    const FIRMAHEX = base64ToHex(firma);
+    const NUMFOLIO = this.guardarDatos.folioTramite;
+
+    const PAYLOAD: FirmarRequerimientoRequest = {
+      id_accion: this.guardarDatos.action_id,
+      firma: {
+        cadena_original: CADENAHEX,
+        cert_serial_number: this.datosFirmaReales.certSerialNumber,
+        clave_usuario: this.datosFirmaReales.rfc,
+        fecha_firma: EvaluarComponent.formatFecha(new Date()),
+        clave_rol: 'Dictaminador',
+        sello: FIRMAHEX,
+      },
+      cve_usuario: this.guardarDatos.current_user,
+      requiere_autorizador: false
+    };
+
+    this.firmarRequermientoService.postFirmarRequerimiento(this.tramite, NUMFOLIO, PAYLOAD)
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        tap((firmaResponse: BaseResponse<null>) => {
+          if (firmaResponse.codigo !== '00') {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: 'Error al firmar la solicitud',
+              mensaje: firmaResponse.mensaje || firmaResponse.error || 'Ocurrió un error al procesar la firma.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          } else if (firmaResponse.codigo === CodigoRespuesta.EXITO) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.EXITO,
+              modo: 'action',
+              titulo: 'Firma exitosa',
+              mensaje: 'La firma del dictamen se ha realizado correctamente.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            }
+            this.router.navigate(['bandeja-de-tareas-pendientes']);
+          }
+
+        }),
+        catchError((error) => {
+          if (!this.nuevaNotificacion) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: 'Error inesperado',
+              mensaje: error?.error.error || 'Ocurrió un error al procesar la firma.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
 
   /**
    * @method ngOnDestroy

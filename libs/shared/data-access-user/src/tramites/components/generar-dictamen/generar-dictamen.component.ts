@@ -254,7 +254,7 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
         fechaFinVigenciaAutorizada: this.conformidad.fecha_fin_vigencia,
       });
     }
-    if (changes['dataIniciarDictamen'] && changes['dataIniciarDictamen'].currentValue) {
+    if (changes['dataIniciarDictamen'] && changes['dataIniciarDictamen'].currentValue && this.dictamenForm) {
       this.dictamenForm.patchValue({
         cumplimiento: this.dataIniciarDictamen.ide_sent_dictamen,
         mensajeDictamen: this.dataIniciarDictamen.justificacion,

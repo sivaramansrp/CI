@@ -77,7 +77,7 @@
                         }
                     </ng-container>
                     <div class="d-flex justify-content-lg-end h3">
-                        <button type="button" class="btn btn-default ms-2">Guardar y Firmar</button>
+                        <button type="button" class="btn btn-default ms-2" (click)="mostrarFirmarRequerimiento()">Guardar y Firmar</button>
                         <button class="btn  btn-primary ms-2" type="button" (click)="guardarRequerimiento()">Guardar</button>
                         <button type="button" class="btn btn-default ms-2" (click)="cancelar()">Cancelar</button>
                     </div>
@@ -98,7 +98,7 @@
             </div>
             <div class="row justify-content-center">
                 <div class="col-md-6">
-                    <firma-electronica [tipo]="''" [cadenaOriginal]="cadenaOriginal"
+                    <firma-electronica [tipo]="''" [cadenaOriginal]="cadenaOriginal || cadenaOriginalRequerimiento"
                         (datosFirma)="obtieneFirma($event)"></firma-electronica>
                 </div>
             </div>
