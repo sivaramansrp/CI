@@ -316,9 +316,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Inicializa el modal.
    */
   encontradaModal(): void {
-    console.log('Modal encontrado', this.solicitudForm.valid);
     if (this.solicitudForm.valid) {
-      console.log(this.solicitudForm.value);
       if (this.modalElement) {
         const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
         MODAL_INSTANCE.show();
@@ -413,8 +411,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       'Fecha Ingreso': 'fechaIngreso',
       'Vigencia': 'vigencia',
       'Estado de constancia': 'estadoConstancia',
-      'Existe en VUCEM': 'existeEnVUCEM',
-      'Id constancia': 'idConstancia'
+      'Existe en VUCEM': 'existeEnVUCEM'
     };
     const DATA = LINES.slice(1)
       .map((line) => {
