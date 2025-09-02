@@ -104,6 +104,10 @@ export class ContenedorDePasosComponent {
  */
 esFormaValido: boolean = false;
 
+  /**
+   * Controla la visibilidad del modal de alerta.
+   * @property {boolean} mostrarAlerta
+   */
 esMostrarAlerta: boolean = false;
 
 
