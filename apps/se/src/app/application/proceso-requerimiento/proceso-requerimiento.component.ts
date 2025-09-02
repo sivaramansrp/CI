@@ -6,11 +6,10 @@ import {
   AccionBoton,
   AcuseComponent,
   AnexarDocumentosComponent,
-  AtenderRequerimientoService,
   BtnContinuarComponent,
-  CATALOGOS_ID,
-  Catalogo,
+  CATALOGOS_ID, Catalogo,
   CatalogosService,
+  CategoriaMensaje,
   ConsultaioQuery,
   ConsultaioState,
   ConsultaioStore,
@@ -19,12 +18,16 @@ import {
   EncabezadoRequerimientoComponent,
   FirmaElectronicaComponent,
   ListaPasosWizard,
+  Notificacion,
+  NotificacionesComponent,
   PASOS_REQUERIMIENTOS,
   RequerimientoInformacionComponent,
   TITULO_ACUSE,
   TXT_ALERTA_ACUSE,
   TramiteFolioQueries,
   WizardComponent,
+  base64ToHex,
+  encodeToISO88591Hex
 } from '@ng-mf/data-access-user';
 import {
   AccuseComponentes,
@@ -32,13 +35,22 @@ import {
   Tabulaciones,
 } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
 import { Component, OnDestroy, ViewChild, forwardRef } from '@angular/core';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
+import { AtenderRequerimientoService } from '../core/services/atender-requerimiento/atender-requerimiento.service';
 import { CommonModule } from '@angular/common';
+import { IniciarAtenderRequerimientoResponse } from '../core/models/atender-requerimiento/response/iniciar-atender-requerimiento.model';
 import { LISTA_TRIMITES } from '../shared/constantes/lista-trimites.enums';
+import { Location } from '@angular/common';
 import { OnInit } from '@angular/core';
 import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramites/components/reviewers-tabs/reviewers-tabs.component';
 import { Router } from '@angular/router';
 import { Type } from '@angular/core';
+
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
+import { CodigoRespuesta } from '../core/enum/enum-130118';
+import { FirmarRequest } from '../core/models/atender-requerimiento/request/fimar-request.model';
+import { FirmarResponse } from '../core/models/atender-requerimiento/response/firmar-response.model';
+import { MostrarFirmaRequest } from '../core/models/atender-requerimiento/request/mostrar-firma-request.model';
 
 /**
  * Componente principal para el proceso de requerimiento.
@@ -66,21 +78,50 @@ import { Type } from '@angular/core';
     AcuseComponent,
     forwardRef(() => EncabezadoRequerimientoComponent),
     forwardRef(() => RequerimientoInformacionComponent),
+    NotificacionesComponent
   ],
   providers: [AtenderRequerimientoService],
   templateUrl: './proceso-requerimiento.component.html',
   styleUrl: './proceso-requerimiento.component.scss',
 })
 export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
-   /**
-   * Lista de pasos del wizard de requerimientos.
-   */
+  /**
+  * Lista de pasos del wizard de requerimientos.
+  */
   pasos: ListaPasosWizard[] = PASOS_REQUERIMIENTOS;
 
   /**
    * Índice actual del paso en el wizard.
    */
   indice: number = 1;
+
+  /** 
+   * Datos de respuesta al iniciar un requerimiento
+   */
+  iniciarAtenderRequerimientoData!: IniciarAtenderRequerimientoResponse;
+
+  /**
+* Objeto que contiene los datos reales de la firma electrónica generada después del proceso de firma.
+* Incluye:
+* - firma: Cadena de la firma generada (en base64).
+* - certSerialNumber: Número de serie del certificado digital.
+* - rfc: RFC extraído del certificado.
+* - fechaFin: Fecha de vencimiento del certificado.
+*/
+  datosFirmaReales!: {
+    firma: string;
+    certSerialNumber: string;
+    rfc: string;
+    fechaFin: string;
+  };
+
+  /**
+   * Nueva notificación para mostrar mensajes de error o información al usuario.
+   */
+  nuevaNotificacion: Notificacion | null = null;
+
+  /** Identificador de la solicitud generada tras firmar el requerimiento. */
+  idSolicitud!: number;
 
   /**
    * Lista de trámites disponibles.
@@ -116,6 +157,12 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
    * Estado actual de la consulta.
    */
   guardarDatos!: ConsultaioState;
+
+  /**
+* Cadena original generada a partir de los datos del trámite.
+* Esta cadena será firmada con el certificado digital y la llave privada proporcionados.
+*/
+  cadenaOriginal?: string;
 
   /**
    * Departamento asociado al trámite.
@@ -186,9 +233,10 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
     private consultaioStore: ConsultaioStore,
     private consultaioQuery: ConsultaioQuery,
     private catalogosServices: CatalogosService,
-    private requerimientoService: AtenderRequerimientoService,
     private tramiteQueries: TramiteFolioQueries,
-    private desplazarseHaciaArribaService: DesplazarseHaciaArribaService
+    private desplazarseHaciaArribaService: DesplazarseHaciaArribaService,
+    private atenderRequerimientoService: AtenderRequerimientoService,
+    private location: Location,
   ) {
 
     /**
@@ -203,21 +251,6 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    /**
-     * Obtiene la información del requerimiento desde el servicio.
-     * Extrae y asigna la fecha y justificación del requerimiento.
-     */
-    this.requerimientoService.informacionRequisitos()
-    .pipe(
-      takeUntil(this.destroyNotifier$)
-    ).subscribe({
-      next: (resp): void => {
-        const DATOS = resp.data;
-        this.fechaRequerimiento = DATOS.fechaRequerimiento;
-        this.justificacionRequerimiento = DATOS.justificacionRequerimiento;
-      },
-    });
 
     /**
      * Asigna valores a propiedades locales a partir de `guardarDatos`.
@@ -255,14 +288,14 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
      */
     const URL_ACTUAL = this.router.url;
     this.url = URL_ACTUAL.split('/')[1];
-    
+
     /**
      * Obtiene el folio del trámite actual desde el servicio `tramiteQueries`.
      */
     this.folio = this.tramiteQueries.getTramite();
-      /**
-   * Genera el texto de alerta de acuse con el folio del trámite.
-   */
+    /**
+ * Genera el texto de alerta de acuse con el folio del trámite.
+ */
     this.txtAlerta = TXT_ALERTA_ACUSE(this.folio);
 
     /**
@@ -271,6 +304,8 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
      * Se utiliza para mejorar la experiencia de usuario al cambiar de paso o al inicializar el componente.
      */
     this.desplazarseHaciaArribaService.desplazarArriba();
+
+    this.iniciarAtenderRequerimiento();
   }
 
   /**
@@ -318,14 +353,15 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
     if (e?.valor && e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (this.indice !== 2) {
-          this.consultaioStore.establecerConsultaio(
+        this.consultaioStore.establecerConsultaio(
           this.guardarDatos?.procedureId,
           this.guardarDatos?.parameter,
           this.guardarDatos?.department,
           this.guardarDatos?.folioTramite,
           this.guardarDatos?.tipoDeTramite,
           this.guardarDatos?.estadoDeTramite,
-          true,false,false);
+          true, false, false,
+          this.guardarDatos?.action_id,);
       } else {
         this.consultaioStore.establecerConsultaio(
           this.guardarDatos?.procedureId,
@@ -334,7 +370,11 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
           this.guardarDatos?.folioTramite,
           this.guardarDatos?.tipoDeTramite,
           this.guardarDatos?.estadoDeTramite,
-          false,false,true);
+          false, false, true,
+          this.guardarDatos?.action_id,);
+      }
+      if (this.indice === 4) {
+        this.mostrarFirmarAtenderRequerimiento();
       }
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
@@ -368,11 +408,227 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
    * Recibe la firma electrónica y redirige a la página de acuse si la firma es válida.
    * @param ev - Cadena que representa la firma electrónica obtenida.
    */
-  obtieneFirma(ev: string): void {
-    const FIRMA: string = ev;
-    if (FIRMA) {
-      this.esAcuse = true;
+  obtieneFirma(datos: {
+    firma: string;
+    certSerialNumber: string;
+    rfc: string;
+    fechaFin: string;
+  }): void {
+    this.datosFirmaReales = datos;
+    this.firmarAtenderRequerimiento(datos.firma);
+  }
+
+
+  /**
+   * Inicia la atención de un requerimiento específico.
+   * 
+   * Realiza la consulta al servicio para obtener los datos iniciales del requerimiento
+   * basado en el número de folio del trámite. Maneja la respuesta mostrando notificaciones
+   * de error en caso de fallas y guarda los datos recibidos en la propiedad `iniciarAtenderRequerimientoData`.
+   */
+  iniciarAtenderRequerimiento(): void {
+    const NUMFOLIO = this.guardarDatos.folioTramite;
+    this.atenderRequerimientoService.getIniciarAtenderRequerimiento(NUMFOLIO).subscribe({
+      next: (response) => {
+        if (response.codigo === '00') {
+          this.iniciarAtenderRequerimientoData = response.datos ?? {} as IniciarAtenderRequerimientoResponse;
+        } else {
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: '',
+            mensaje: response.error || 'Error al consultar la notificacion',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+          this.location.back();
+        }
+      },
+      error: (error) => {
+        const MENSAJE = error?.error?.error || 'Error inesperado al consultar notificacion.';
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: 'error',
+          modo: 'action',
+          titulo: '',
+          mensaje: MENSAJE,
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        }
+      }
+    });
+  }
+
+  /**
+   * Muestra los datos de la firma para atender un requerimiento.
+   * Realiza la llamada al servicio para obtener la información necesaria
+   * y guarda la cadena original en `this.cadenaOriginal`.
+   * También maneja notificaciones de éxito o error.
+   */
+  mostrarFirmarAtenderRequerimiento(): void {
+    const PAYLOAD: MostrarFirmaRequest = {
+      documentos_requeridos: []
+    };
+
+    this.atenderRequerimientoService.postFirmarMostrar(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
+      .subscribe({
+        next: (resp) => {
+          if (resp.codigo === CodigoRespuesta.EXITO) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.EXITO,
+              modo: 'action',
+              titulo: 'Éxito',
+              mensaje: resp.mensaje,
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+            this.cadenaOriginal = resp.datos?.cadena_original_atender_requerimiento || '';
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: resp.error || 'Error al mostrar la firma.',
+              mensaje:
+                resp.causa ||
+                resp.mensaje ||
+                'Ocurrió un error al mostrar la firma.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+        },
+        error: (err) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          const MENSAJE = err?.error?.error || 'Error al mostrar la firma';
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: 'error',
+            modo: 'action',
+            titulo: '',
+            mensaje: MENSAJE,
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          }
+        }
+      });
+  }
+
+  /**
+   * Firma electrónicamente un requerimiento utilizando los datos guardados
+   * y la cadena original obtenida previamente.
+   * 
+   * @param firma Cadena base64 de la firma generada por el usuario.
+   */
+  firmarAtenderRequerimiento(firma: string): void {
+    if (!this.cadenaOriginal || !this.datosFirmaReales) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'toastr',
+        categoria: CategoriaMensaje.ERROR,
+        modo: 'action',
+        titulo: 'Error',
+        mensaje: 'Faltan datos para completar la firma.',
+        cerrar: false,
+        txtBtnAceptar: '',
+        txtBtnCancelar: '',
+      };
+      return;
     }
+
+    const CADENAHEX = encodeToISO88591Hex(this.cadenaOriginal);
+    const FIRMAHEX = base64ToHex(firma);
+    const NUMFOLIO = this.guardarDatos.folioTramite;
+
+    const PAYLOAD: FirmarRequest = {
+      id_accion: this.guardarDatos.action_id,
+      firma: {
+        cadena_original: CADENAHEX,
+        cert_serial_number: this.datosFirmaReales.certSerialNumber,
+        clave_usuario: this.datosFirmaReales.rfc,
+        fecha_firma: ProcesoRequerimientoComponent.formatFecha(new Date()),
+        clave_rol: 'CapturistaGubernamental',
+        sello: FIRMAHEX,
+        fecha_fin_vigencia: ProcesoRequerimientoComponent.formatFecha(this.datosFirmaReales.fechaFin),
+        documentos_requeridos: []
+      },
+    };
+
+    this.atenderRequerimientoService.postFirmarAtenderRequerimiento(this.tramite, NUMFOLIO, PAYLOAD)
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        tap((firmaResponse: BaseResponse<FirmarResponse>) => {
+          if (firmaResponse.codigo !== '00') {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: 'Error al firmar la solicitud',
+              mensaje: firmaResponse.mensaje || firmaResponse.error || 'Ocurrió un error al procesar la firma.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          } else if (firmaResponse.codigo === CodigoRespuesta.EXITO) {
+            this.esAcuse = true;
+            this.idSolicitud = firmaResponse.datos?.id_solicitud || 0;
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.EXITO,
+              modo: 'action',
+              titulo: 'Firma exitosa',
+              mensaje: 'La firma del dictamen se ha realizado correctamente.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            }
+          }
+
+        }),
+        catchError((error) => {
+          if (!this.nuevaNotificacion) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: 'Error inesperado',
+              mensaje: error?.error.error || 'Ocurrió un error al procesar la firma.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * Convierte un objeto Date o string de fecha a formato 'YYYY-MM-DD HH:mm:ss'.
+   * @param fecha Fecha a formatear.
+   * @returns Cadena con el formato 'YYYY-MM-DD HH:mm:ss'.
+   */
+  static formatFecha(fecha: string | Date): string {
+    const DATE_OBJ = new Date(fecha);
+    const PAD = (n: number): string => n.toString().padStart(2, '0');
+
+    const YYYY = DATE_OBJ.getFullYear();
+    const MM = PAD(DATE_OBJ.getMonth() + 1);
+    const DD = PAD(DATE_OBJ.getDate());
+    const HH = PAD(DATE_OBJ.getHours());
+    const MM_MINUTES = PAD(DATE_OBJ.getMinutes());
+    const SS = PAD(DATE_OBJ.getSeconds());
+
+    return `${YYYY}-${MM}-${DD} ${HH}:${MM_MINUTES}:${SS}`;
   }
 
   /**
