@@ -66,7 +66,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * 
    * @type {Notificacion}
    */
-  public nuevaNotificacion!: Notificacion;
+  public nuevaNotificacion!: Notificacion | undefined;
 
   /**
    * Lista de objetos de tipo Pedimento asociados al componente.
@@ -159,6 +159,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     labelNombre: string;
     catalogos: Aduanas[];
     primerOpcion: string;
+    required: boolean;
   };
 
   /**
@@ -319,6 +320,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       catalogos: [],
       labelNombre: 'Aduana/sección aduanera',
       primerOpcion: 'Seleccione una opción',
+      required: true
     };
     this.contenedores = {
       catalogos: [],
@@ -615,6 +617,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Limpiar campos del formulario en la sección de contenedor únicamente.
    */
   limpiarCampos(): void {
+    this.radioContenedor = false;
+    this.radioArchivoCsv = false;
+    this.radioManifesto = false;
     // Solo limpiar los campos específicos de la sección contenedor
     const CAMPOS_CONTENEDOR = [
       { campo: 'inicialesContenedor', metodo: 'setInicialesContenedor' },
@@ -1001,7 +1006,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     if (FILE) {
       if (FILE.type !== 'text/csv' && !FILE.name.endsWith('.csv')) {
         this.abrirModal();
-        return;
+    FILE_INPUT.value = '';
+    return;
       }
 
       if (TARGET.files && TARGET.files.length > 0) {
@@ -1024,6 +1030,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
+    this.nuevaNotificacion = undefined;
   }
 
   /**
