@@ -425,6 +425,24 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
  * Evento que se emite cuando se hace clic en **guardar** en la tabla de mercancías.
  * Envía un arreglo de objetos `Mercancia` hacia el componente padre.
  */
+/**
+ * @descripcion
+ * Evento de salida que se emite cuando el usuario hace clic en **guardar**.
+ *
+ * @detalle
+ * Envía al componente padre un arreglo de objetos `Mercancia` con la información
+ * que debe procesarse o almacenarse.
+ *
+ * @ejemplo
+ * ```html
+ * <app-datos-certificado
+ *   (guardarClicadoChange)="onGuardar($event)">
+ * </app-datos-certificado>
+ * ```
+ *
+ * @event guardarClicadoChange
+ * @type {EventEmitter<Mercancia[]>}
+ */
 @Output() guardarClicadoChange = new EventEmitter<Mercancia[]>();
 
 /**
