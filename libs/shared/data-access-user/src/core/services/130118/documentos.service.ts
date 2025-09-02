@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { API_POST_GUARDAR_ACUSE, API_POST_VISTA_PREVIA, ENVIRONMENT, IDSOLICITUD } from '../../..';
+import { API_POST_GUARDAR_ACUSE, API_POST_VISTA_PREVIA, COMUN_URL, IDSOLICITUD } from '../../servers/api-router';
 import { Observable, catchError, throwError } from 'rxjs';
 import { BaseResponse } from '../../models/5701/base-response.model';
 import { DocumentoResponse } from '../../models/shared/documentos-request.model';
@@ -21,7 +21,7 @@ export class DocumentosService {
    * @param http HttpClient para realizar peticiones HTTP
    */
   constructor(private http: HttpClient) {
-    this.host = `${ENVIRONMENT.API_HOST}/api/`;
+    this.host = `${COMUN_URL.BASE_URL}`;
   }
 
   /**
