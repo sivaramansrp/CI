@@ -102,6 +102,8 @@ describe('SolicitudComponent', () => {
         entidad: '',
         representacion: '',
       }),
+      select: jest.fn().mockReturnValue(of({})),
+      getValue: jest.fn().mockReturnValue({})
     } as any;
 
     mockService = {
@@ -171,7 +173,6 @@ describe('SolicitudComponent', () => {
   describe('ngOnInit', () => {
     it('Debe inicializar formularios y configurar suscripciones', () => {
       jest.spyOn(component, 'inicializarFormularios');
-      jest.spyOn(component, 'configuracionFormularioSuscripciones');
       jest.spyOn(component, 'opcionesDeBusqueda');
       jest.spyOn(component, 'formularioTotalCount');
       jest.spyOn(component, 'fetchEntidadFederativa');
@@ -180,7 +181,6 @@ describe('SolicitudComponent', () => {
 
       component.ngOnInit();
 
-      expect(component.configuracionFormularioSuscripciones).toHaveBeenCalled();
       expect(component.opcionesDeBusqueda).toHaveBeenCalled();
       expect(component.formularioTotalCount).toHaveBeenCalled();
       expect(component.fetchEntidadFederativa).toHaveBeenCalled();
@@ -234,10 +234,15 @@ describe('SolicitudComponent', () => {
 
 describe('validarYEnviarFormulario', () => {
   it('Debe establecer mostrarTabla como verdadero si el formulario es válido', () => {
+    component.unidadCatalogo = [{ id: 1, descripcion: 'Pieza' }];
+    component.fraccionCatalogo = [{ id: 1234, descripcion: 'Fracción Test' }];
+
     component.mercanciaForm = TestBed.inject(FormBuilder).group({
       cantidad: ['10', [Validators.required, Validators.pattern('^[0-9]+$')]],
       valorFacturaUSD: ['100', Validators.required],
-      fraccion: ['1234', Validators.required]
+      fraccion: ['1234', Validators.required],
+      unidadMedida: ['1', Validators.required], 
+      descripcion: ['desc', Validators.required],
     });
 
     component.partidasDelaMercanciaForm = TestBed.inject(FormBuilder).group({
@@ -245,6 +250,8 @@ describe('validarYEnviarFormulario', () => {
       descripcionPartidasDeLaMercancia: ['Test', Validators.required],
       valorPartidaUSDPartidasDeLaMercancia: ['100', Validators.required],
     });
+
+    component.mercanciaForm.get('fraccion')?.setValue('1234');
 
     component.validarYEnviarFormulario();
 
