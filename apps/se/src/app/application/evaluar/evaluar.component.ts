@@ -300,6 +300,12 @@ export class EvaluarComponent implements OnInit, OnDestroy {
   tabs!: TabsResponse;
 
   /**
+   * @property {Array<{id: number, nombre: string}>} tabsOpcionEvaluacion
+   * @description Almacena las opciones de evaluación disponibles para las pestañas.
+ */
+  tabsOpcionEvaluacion: { id: number; nombre: string }[] = [];
+
+  /**
  * @constructor
  * @description Constructor del componente. Inicializa los servicios y suscripciones necesarias para la evaluación del trámite.
  * 
@@ -929,6 +935,10 @@ export class EvaluarComponent implements OnInit, OnDestroy {
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
             this.opcionesDisponibles = response.datos ?? [];
+            this.tabsOpcionEvaluacion = this.opcionesDisponibles.map((opcion, i) => ({
+              id: i + 1,
+              nombre: opcion
+            }));
           } else {
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
