@@ -1,4 +1,4 @@
-import { Catalogo, ConfiguracionColumna, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Catalogo, ConfiguracionColumna, ConsultaioQuery, ConsultaioState, REGEX_SOLO_NÚMERO } from '@ng-mf/data-access-user';
 import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Contenedor11202State, Contenedor11202Store } from '../../estados/contenedor11202.store';
 import { CSV_DE_TABLA, ELGIR_DE_ARCHIVO, GRID_CONTENEDORES, SOLICITUD_11202_ENUM } from '../../constantes/retorno-contenedores.enum';
@@ -305,7 +305,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   limpiarCampos(): void {
     const TIPOBUSQUEDA = this.solicitudForm.get('tipoBusqueda')?.value;
-    this.solicitudForm.reset();
+    (this.solicitudForm.get('datosContenedor') as FormGroup)?.reset();
     this.solicitudForm.get('tipoBusqueda')?.setValue(TIPOBUSQUEDA);
     this.mostrarCampos();
     this.contenedores = [];
@@ -472,7 +472,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         inicialesContenedor: [ this.contenedorState?.inicialesContenedor, [Validators.required, Validators.maxLength(10)]],
         numeroContenedor: [ this.contenedorState?.numeroContenedor, [Validators.required, Validators.minLength(6), Validators.maxLength(15)]],
         tipoContenedor: [this.contenedorState?.tipoContenedor],
-        digitoDeControl: [this.contenedorState?.digitoDeControl, [Validators.minLength(1), Validators.maxLength(1)]],
+        digitoDeControl: [this.contenedorState?.digitoDeControl, [Validators.maxLength(1), Validators.pattern(REGEX_SOLO_NÚMERO)]],
       }),
     });
     this.mostrarCampos();
