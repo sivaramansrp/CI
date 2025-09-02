@@ -43,7 +43,7 @@
         </div>
         <div>
           <input type="text" formControlName="cveFolioCaat" name="caat" maxlength="4" class="form-control"
-            (change)="setValoresStore(formulario,'cveFolioCaat', 'establecerCveFolioCaat')" readonly />
+            (change)="setValoresStore(formulario,'cveFolioCaat', 'establecerCveFolioCaat')" />
         </div>
       </div>
       <div class="col col-md-4 mt-4">
@@ -52,7 +52,7 @@
         </div>
         <div>
           <input type="text" formControlName="descripcionTipoCaat" id="descripcionTipoCaat" class="form-control"
-            (change)="setValoresStore(formulario,'descripcionTipoCaat', 'establecerDescripcionTipoCaat')" readonly />
+            (change)="setValoresStore(formulario,'descripcionTipoCaat', 'establecerDescripcionTipoCaat')" />
         </div>
       </div>
     </div>
@@ -61,12 +61,12 @@
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="tipoDeCaatAerea" formControlName="tipoDeCaatAerea"
           [label]="'Tipo de CAAT Aéreo'" name="tipoDeCaatAerea" 
-          (change)="setValoresStore(formulario, 'tipoDeCaatAerea', 'establecerTipoDeCaatAerea')" [isDisabled]="soloLectura"></app-catalogo-select>
+          (change)="setValoresStore(formulario, 'tipoDeCaatAerea', 'establecerTipoDeCaatAerea')" [isDisabled]="true"></app-catalogo-select>
       </div>
 
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="ideCodTransportacionAerea" formControlName="ideCodTransportacionAerea"
-          [label]="'Código de Transportación Aéreo'" name="ideCodTransportacionAerea" [isDisabled]="soloLectura"
+          [label]="'Código de Transportación Aéreo'" name="ideCodTransportacionAerea" [isDisabled]="true"
           (change)="setValoresStore(formulario, 'ideCodTransportacionAerea', 'establecerIdeCodTransportacionAerea')"></app-catalogo-select>
       </div>
     </div>
@@ -75,7 +75,7 @@
       <div class="col-md-4">
         <label for="solicitudIataIcao" class="form-label">Código:</label>
         <input type="text" formControlName="codIataIcao" maxlength="3" class="form-control"
-          (change)="setValoresStore(formulario,'codIataIcao', 'establecerCodIataIcao')" readonly />
+          (change)="setValoresStore(formulario,'codIataIcao', 'establecerCodIataIcao')" />
       </div>
     </div>
   </div>
