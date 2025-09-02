@@ -236,6 +236,18 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
       ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
       : false;
  }
+/*
+
+*/
+/**
+ * Verifica si un control específico dentro del formulario `modificarPartidasDelaMercanciaForm` es inválido y ha sido tocado o modificado.
+ * El nombre del control dentro del formulario a validar.
+ * true si el control es inválido y ha sido tocado o modificado; de lo contrario, `false`.
+ */
+ esInvalidoModal(nombreControl: string): boolean {
+  const CONTROL = this.modificarPartidasDelaMercanciaForm.get(nombreControl);
+  return CONTROL ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) : false;
+}
 
   /**
    * Maneja las filas seleccionadas en la tabla dinámica y emite un evento.

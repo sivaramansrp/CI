@@ -197,6 +197,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
      * Permite acceder a las propiedades y métodos públicos del componente hijo desde el componente padre.
      */
     @ViewChild(PartidasDeLaMercanciaComponent) partidasDeLaMercanciaComponent!: PartidasDeLaMercanciaComponent;
+    /*
+      * modificarPartidasDelaMercanciaForm
+      * Formulario reactivo para modificar las partidas.
+      */
+    modificarPartidasDelaMercanciaForm!: FormGroup;
 
     /**
      * Constructor del componente.
@@ -338,6 +343,29 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           ],
         ],
       });
+      this.modificarPartidasDelaMercanciaForm = this.fb.group({
+        cantidadPartidasDeLaMercancia: [
+          this.seccionState?.cantidadPartidasDeLaMercancia,
+          [
+            Validators.required,
+            SolicitudComponent.validarCatorceEnterosTresDecimales,
+            Validators.maxLength(18),
+          ],
+        ],
+        descripcionPartidasDeLaMercancia: [
+          this.seccionState?.descripcionPartidasDeLaMercancia,
+          [Validators.required, Validators.maxLength(255)],
+        ],
+        valorPartidaUSDPartidasDeLaMercancia: [
+          this.seccionState?.valorPartidaUSDPartidasDeLaMercancia,
+          [
+            Validators.required,
+            Validators.min(0),
+            SolicitudComponent.validarCatorceEnterosTresDecimales,
+            Validators.maxLength(20),
+          ],
+        ],
+      });
       this.formularioTotalCount(
         String(this.seccionState?.cantidadTotal),
         String(this.seccionState?.valorTotalUSD)
@@ -412,6 +440,43 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         this.tramite130109Store.actualizarEstado({filaSeleccionada:this.filaSeleccionada});
       }
     }
+    /**
+	   * onModificarPartidaSeleccionada
+	   * Maneja la modificación de una partida seleccionada.
+	   * @param partida - La partida que se va a modificar.
+	   */
+	  onModificarPartidaSeleccionada(partida: PartidasDeLaMercanciaModelo) :void{
+	    this.modificarPartidasDelaMercanciaForm.setValue({
+	        cantidadPartidasDeLaMercancia: partida.cantidad,
+	        descripcionPartidasDeLaMercancia: partida.descripcion,
+	        valorPartidaUSDPartidasDeLaMercancia: partida.totalUSD
+	      });
+	  }
+	  /**
+	   * onPartidaModificada
+	   * Maneja la modificación de una partida.
+	   * @param partida - La partida que se va a modificar.
+	   */
+	  onPartidaModificada(partida: PartidasDeLaMercanciaModelo): void {
+	    this.tableBodyData = this.tableBodyData.map(row =>
+	      row.id === partida.id ? { ...row, ...partida } : row
+	    );
+	    this.tramite130109Store.actualizarEstado({ tableBodyData: this.tableBodyData });
+	    const CANTIDAD_TOTAL = this.tableBodyData.reduce(
+	      (sum, row) => sum + Number(row.cantidad),
+	      0
+	    );
+	    const VALOR_TOTAL_USD = this.tableBodyData.reduce(
+	      (sum, row) => sum + Number(row.totalUSD),
+	      0
+	    );
+	    this.tramite130109Store.actualizarEstado({
+	      cantidadTotal: String(CANTIDAD_TOTAL),
+	      valorTotalUSD: String(VALOR_TOTAL_USD)
+	    });
+	    this.formularioTotalCount(String(CANTIDAD_TOTAL), String(VALOR_TOTAL_USD));
+	  }
+
   /**
    * Método para obtener los datos de la tabla dinámica.
    * Este método realiza una solicitud al servicio `vehiculosUsadosAdaptadosService` para obtener los datos

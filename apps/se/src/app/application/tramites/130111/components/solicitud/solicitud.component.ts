@@ -49,6 +49,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Formulario reactivo principal para capturar los datos de la solicitud.
    */
   partidasDelaMercanciaForm!: FormGroup;
+  /*
+  * modificarPartidasDelaMercanciaForm
+  * Formulario reactivo para modificar las partidas.
+  */
+  modificarPartidasDelaMercanciaForm!: FormGroup;
   /**
    * jest.spyOnFormulario reactivo para los datos del trámite.
    */
@@ -364,6 +369,30 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           ],
         ],
       });
+      	this.modificarPartidasDelaMercanciaForm = this.fb.group({
+	        cantidadPartidasDeLaMercancia: [
+	          this.seccionState?.cantidadPartidasDeLaMercancia,
+	          [
+	            Validators.required,
+	            SolicitudComponent.validarCatorceEnterosTresDecimales,
+	            Validators.maxLength(18),
+	          ],
+	        ],
+	        descripcionPartidasDeLaMercancia: [
+	          this.seccionState?.descripcionPartidasDeLaMercancia,
+	          [Validators.required, Validators.maxLength(255)],
+	        ],
+	        valorPartidaUSDPartidasDeLaMercancia: [
+	          this.seccionState?.valorPartidaUSDPartidasDeLaMercancia,
+	          [
+	            Validators.required,
+	            Validators.min(0),
+	            SolicitudComponent.validarCatorceEnterosTresDecimales,
+	            Validators.maxLength(20),
+	          ],
+	        ],
+	      });
+
       this.formularioTotalCount(
         String(this.seccionState?.cantidadTotal),
         String(this.seccionState?.valorTotalUSD)
@@ -438,7 +467,43 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       });
     }
   }
- 
+ 	  /**
+	   * onModificarPartidaSeleccionada
+	   * Maneja la modificación de una partida seleccionada.
+	   * @param partida - La partida que se va a modificar.
+	   */
+	  onModificarPartidaSeleccionada(partida: PartidasDeLaMercanciaModelo) :void{
+	    this.modificarPartidasDelaMercanciaForm.setValue({
+	        cantidadPartidasDeLaMercancia: partida.cantidad,
+	        descripcionPartidasDeLaMercancia: partida.descripcion,
+	        valorPartidaUSDPartidasDeLaMercancia: partida.totalUSD
+	      });
+	  }
+	  /**
+	   * onPartidaModificada
+	   * Maneja la modificación de una partida.
+	   * @param partida - La partida que se va a modificar.
+	   */
+	  onPartidaModificada(partida: PartidasDeLaMercanciaModelo): void {
+	    this.tableBodyData = this.tableBodyData.map(row =>
+	      row.id === partida.id ? { ...row, ...partida } : row
+	    );
+	    this.tramite130111Store.actualizarEstado({ tableBodyData: this.tableBodyData });
+	    const CANTIDAD_TOTAL = this.tableBodyData.reduce(
+	      (sum, row) => sum + Number(row.cantidad),
+	      0
+	    );
+	    const VALOR_TOTAL_USD = this.tableBodyData.reduce(
+	      (sum, row) => sum + Number(row.totalUSD),
+	      0
+	    );
+	    this.tramite130111Store.actualizarEstado({
+	      cantidadTotal: String(CANTIDAD_TOTAL),
+	      valorTotalUSD: String(VALOR_TOTAL_USD)
+	    });
+	    this.formularioTotalCount(String(CANTIDAD_TOTAL), String(VALOR_TOTAL_USD));
+	  }
+
   /**
    * validarYEnviarFormulario
    * Valida el formulario y muestra la tabla dinámica si es válido.
