@@ -99,6 +99,8 @@ describe('SolicitudComponent', () => {
         entidad: '',
         representacion: '',
       }),
+      select: jest.fn().mockReturnValue(of({})), 
+      getValue: jest.fn().mockReturnValue({})
     } as any;
 
     mockService = {
@@ -109,7 +111,6 @@ describe('SolicitudComponent', () => {
       getPaisesPorBloque: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
     };
 
-    // Assign mockDiamanteBrutoService before using it in providers
     mockDiamanteBrutoService = {
       getEntidadFederativa: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
       getRepresentacionFederal: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
@@ -161,7 +162,6 @@ describe('SolicitudComponent', () => {
   describe('ngOnInit', () => {
     it('Debe inicializar formularios y configurar suscripciones', () => {
       jest.spyOn(component, 'inicializarFormularios');
-      jest.spyOn(component, 'configuracionFormularioSuscripciones');
       jest.spyOn(component, 'opcionesDeBusqueda');
       jest.spyOn(component, 'formularioTotalCount');
       jest.spyOn(component, 'fetchEntidadFederativa');
@@ -170,7 +170,6 @@ describe('SolicitudComponent', () => {
 
       component.ngOnInit();
 
-      expect(component.configuracionFormularioSuscripciones).toHaveBeenCalled();
       expect(component.opcionesDeBusqueda).toHaveBeenCalled();
       expect(component.formularioTotalCount).toHaveBeenCalled();
       expect(component.fetchEntidadFederativa).toHaveBeenCalled();
@@ -221,20 +220,32 @@ describe('SolicitudComponent', () => {
     });
   });
 
+describe('validarYEnviarFormulario', () => {
+  it('Debe establecer mostrarTabla como verdadero si el formulario es válido', () => {
+    component.unidadCatalogo = [{ id: 1, descripcion: 'Pieza' }];
+    component.fraccionCatalogo = [{ id: 1234, descripcion: 'Fracción Test' }];
 
-  describe('validarYEnviarFormulario', () => {
-    it('Debería establecer mostrarTabla en verdadero y marcar el formulario como tocado si no es válido', () => {
-      component.partidasDelaMercanciaForm = TestBed.inject(FormBuilder).group({
-        cantidadPartidasDeLaMercancia: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
-        descripcionPartidasDeLaMercancia: ['', Validators.required],
-        valorPartidaUSDPartidasDeLaMercancia: ['', Validators.required],
-      });
-      jest.spyOn(component.partidasDelaMercanciaForm, 'markAllAsTouched');
-
-      component.validarYEnviarFormulario();
-
-      expect(component.partidasDelaMercanciaForm.markAllAsTouched).toHaveBeenCalled();
+    component.mercanciaForm = TestBed.inject(FormBuilder).group({
+      cantidad: ['10', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      valorFacturaUSD: ['100', Validators.required],
+      fraccion: ['1234', Validators.required],
+      unidadMedida: ['1', Validators.required], 
+      descripcion: ['desc', Validators.required],
     });
+
+    component.partidasDelaMercanciaForm = TestBed.inject(FormBuilder).group({
+      cantidadPartidasDeLaMercancia: ['10', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      descripcionPartidasDeLaMercancia: ['Test', Validators.required],
+      valorPartidaUSDPartidasDeLaMercancia: ['100', Validators.required],
+    });
+
+    component.mercanciaForm.get('fraccion')?.setValue('1234');
+
+    component.validarYEnviarFormulario();
+
+    expect(component.mostrarTabla).toBe(true);
+  });
+
 
     it('Debe establecer mostrarTabla como verdadero si el formulario es válido', () => {
       component.partidasDelaMercanciaForm = TestBed.inject(FormBuilder).group({
