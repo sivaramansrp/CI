@@ -135,12 +135,16 @@ select {
   opacity: 0.6;
 }
 
-.has-error {
-  border: 1.5px solid red !important;
-}
 
+/* Error highlighting styles */
+.has-error .input-group-text {
+  border: 1.5px solid #dc3545 !important;
+}
+.has-error .require {
+  color: #dc3545 !important;
+}
 .mensaje-error {
-  color: red;
+  color: #dc3545;
   font-size: 12px;
   margin-top: 2px;
 }

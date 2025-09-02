@@ -159,6 +159,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     labelNombre: string;
     catalogos: Aduanas[];
     primerOpcion: string;
+    required: boolean;
   };
 
   /**
@@ -319,6 +320,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       catalogos: [],
       labelNombre: 'Aduana/sección aduanera',
       primerOpcion: 'Seleccione una opción',
+      required: true
     };
     this.contenedores = {
       catalogos: [],
