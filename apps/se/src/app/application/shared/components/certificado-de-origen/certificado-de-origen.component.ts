@@ -248,7 +248,13 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
    * @type {Mercancia[]}
    */
   public seleccionadaguardarClicado: Mercancia[] = [];
-
+/**
+ * @descripcion
+ * Representa la mercancía seleccionada actualmente para ser guardada.  
+ * Inicialmente se define como un objeto vacío tipado como `Mercancia`.
+ *
+ * @type {Mercancia}
+ */
     public seletedccionadaguardarClicado: Mercancia = {} as Mercancia;
 
   /**
