@@ -202,6 +202,14 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
       isValid = false;
     }
 
+    if(this.tercerosRelacionadosComponent) {
+      if (!this.tercerosRelacionadosComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
     return isValid;
   }
   /**
