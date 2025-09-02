@@ -41,7 +41,7 @@ import { CodigoRespuesta } from '../core/enum/se-core-enum';
 import { FirmaAutorizarDictamenRequest } from '../core/models/autorizar-requerimiento/request/firma-autorizar-request.model';
 import { MostrarFirmaRequest } from '../core/models/autorizar-requerimiento/request/mostrar-firmar-request.model';
 import { MostrarFirmarResponse } from '../core/models/autorizar-requerimiento/response/mostrar-firmar-response.model';
-import { ObservacionRequest } from '../tramites/130118/model/request/observacion-guardar-request.model';
+import { ObservacionRequest } from '../core/models/autorizar-requerimiento/request/observacion-guardar-request.model';
 
 @Component({
   selector: 'app-autorizar-dictamen',

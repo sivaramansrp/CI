@@ -49,7 +49,7 @@ import { TabsResponse } from '@libs/shared/data-access-user/src/core/models/1301
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { FirmarDictamenRequest } from '../core/models/evaluar/request/firmar-dictamen-request.model';
 
-import { CodigoRespuesta } from '../tramites/130118/enum/enum-130118';
+import { CodigoRespuesta } from '../core/enum/se-core-enum';
 import { CriteriosResponse } from '@libs/shared/data-access-user/src/core/models/130118/criterios-response.model';
 import { DictamenForm } from '@libs/shared/data-access-user/src/core/models/130118/dictamen-form.model';
 import { FirmarDictamenService } from '../core/services/evaluar-tramite/firmarDictamen.service';
