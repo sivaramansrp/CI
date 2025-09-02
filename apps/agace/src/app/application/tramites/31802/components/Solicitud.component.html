@@ -1,12 +1,14 @@
 <form [formGroup]="registroForm" (ngSubmit)="validarDestinatarioFormulario()">
-  @if (solicitudState.renovacion && !solicitudState.homologacion) {
+  <div class="mt-5">
+    <label class="label-spacing">{{
+      solicitudEnum.MODALIDAD_SOCIO_COMERCIAL
+    }}</label>
+    <label class="label-spacing">{{ solicitudEnum.RUBRO_AERONAVES }}</label>
+  </div>
+
+  @if ((solicitudState.renovacion && !solicitudState.homologacion) ||
+  (solicitudState.renovacion && solicitudState.homologacion)) {
   <ng-container>
-    <div class="mt-5">
-      <label class="label-spacing">{{
-        solicitudEnum.MODALIDAD_SOCIO_COMERCIAL
-      }}</label>
-      <label class="label-spacing">{{ solicitudEnum.RUBRO_MENSAJERIA }}</label>
-    </div>
     <ng-titulo
       titulo="Aviso Único de Renovación en el Registro en el Esquema de Certificación de Empresas"
     />
@@ -56,7 +58,9 @@
         <input
           type="text"
           class="form-control"
-          [ngClass]="{ 'border-danger': esValido(registroForm, 'monedaNacional') }"
+          [ngClass]="{
+            'border-danger': esValido(registroForm, 'monedaNacional')
+          }"
           formControlName="monedaNacional"
           (change)="
             setValoresStore(registroForm, 'monedaNacional', 'setMonedaNacional')
@@ -74,8 +78,7 @@
         <div class="mensaje-error">
           Por favor, no escribas más de 12 caracteres
         </div>
-      }
-      }
+        } }
       </div>
     </div>
     <div class="row mt-5">
@@ -84,7 +87,9 @@
         <input
           type="text"
           class="form-control"
-          [ngClass]="{ 'border-danger': esValido(registroForm, 'numeroOperacion') }"
+          [ngClass]="{
+            'border-danger': esValido(registroForm, 'numeroOperacion')
+          }"
           formControlName="numeroOperacion"
           (change)="
             setValoresStore(
@@ -106,8 +111,7 @@
         <div class="mensaje-error">
           Por favor, no escribas más de 20 caracteres
         </div>
-      }
-      }
+        } }
       </div>
       <div class="col-md-4">
         <label>Llave de pago*:</label>
@@ -125,62 +129,85 @@
         <div class="mensaje-error">
           Por favor, no escribas más de 20 caracteres
         </div>
-      }
-      }
+        } }
       </div>
     </div>
     <div class="row mt-5">
-      <div class="alert alert-info">
-        <label>
+      <div class="col-md-12">
+        <div class="alert alert-info">
           <input
             type="checkbox"
+            class="form-check-input"
             formControlName="manifiesto1"
             (change)="
               setValoresStore(registroForm, 'manifiesto1', 'setManifiesto1')
             "
-          />{{ solicitudEnum.MANIFIESTO_1 }}
-        </label>
+          />
+          <div class="manifiesto-descripcion">
+            <label for="manifiesto1">
+              {{ solicitudEnum.MANIFIESTO_1 }}
+            </label>
+          </div>
+        </div>
+        @if(registroForm.get('manifiesto1')?.touched &&
+        registroForm.get('manifiesto1')?.invalid) {
+        <div class="mensaje-error">Este campo es obligatorio</div>
+        }
       </div>
     </div>
+    @if (solicitudState.renovacion && !solicitudState.homologacion) {
     <div class="row mt-5">
-      <div class="alert alert-info">
-        <label>
+      <div class="col-md-12">
+        <div class="alert alert-info">
           <input
             type="checkbox"
+            class="form-check-input"
             formControlName="manifiesto2"
             (change)="
               setValoresStore(registroForm, 'manifiesto2', 'setManifiesto2')
             "
-          />{{ solicitudEnum.MANIFIESTO_2 }}
-        </label>
+          />
+          <div class="manifiesto-descripcion">
+            <label for="manifiesto2">
+              {{ solicitudEnum.MANIFIESTO_2 }}
+            </label>
+          </div>
+        </div>
+        @if(registroForm.get('manifiesto2')?.touched &&
+        registroForm.get('manifiesto2')?.invalid) {
+        <div class="mensaje-error">Este campo es obligatorio</div>
+        }
       </div>
     </div>
     <div class="row mt-5">
-      <div class="alert alert-info">
-        <label>
+      <div class="col-md-12">
+        <div class="alert alert-info">
           <input
             type="checkbox"
+            class="form-check-input"
             formControlName="manifiesto3"
             (change)="
               setValoresStore(registroForm, 'manifiesto3', 'setManifiesto3')
             "
-          />{{ solicitudEnum.MANIFIESTO_3 }}
-        </label>
+          />
+          <div class="manifiesto-descripcion">
+            <label for="manifiesto3">{{ solicitudEnum.MANIFIESTO_3 }}</label>
+          </div>
+        </div>
+        @if(registroForm.get('manifiesto3')?.touched &&
+        registroForm.get('manifiesto3')?.invalid) {
+        <div class="mensaje-error">Este campo es obligatorio</div>
+        }
       </div>
     </div>
+    }
   </ng-container>
-  } 
-  
-  @if ((solicitudState.homologacion && !solicitudState.renovacion) || (!solicitudState.homologacion && !solicitudState.renovacion)) {
+  } @if ((solicitudState.homologacion && !solicitudState.renovacion) ||
+  (!solicitudState.homologacion && !solicitudState.renovacion) ||
+  (solicitudState.homologacion && solicitudState.renovacion)) {
   <ng-container>
-    <div class="mt-5">
-      <label class="label-spacing">{{
-        solicitudEnum.MODALIDAD_SOCIO_COMERCIAL
-      }}</label>
-      <label class="label-spacing">{{ solicitudEnum.RUBRO_AERONAVES }}</label>
-    </div>
-
-    @if (solicitudState.homologacion && !solicitudState.renovacion) {
+    @if ((solicitudState.homologacion && !solicitudState.renovacion) ||
+    (solicitudState.homologacion && solicitudState.renovacion)) {
     <ng-titulo titulo="Homologación de vigencias" />
 
     <label class="label-spacing">{{
@@ -202,12 +229,19 @@
           formControlName="opcion"
           [layout]="'horizontal'"
           (change)="setValoresStore(registroForm, 'opcion', 'setOpcion')"
-          [disabled]="esFormularioSoloLectura"
         >
         </app-input-radio>
+        @if(registroForm.get('opcion')?.touched &&
+        registroForm.get('opcion')?.invalid) {
+        <div class="mensaje-error">Este campo es obligatorio</div>
+        }
       </div>
     </div>
-
+    @if(solicitudState.opcion === 'si') {
+    <div class="row mt-3">
+      <ng-alert [CONTENIDO]="TEXTOS" [CUSTOMECLASS]="infoAlert"></ng-alert>
+    </div>
+    }
     <div class="row mt-5">
       <div class="col-md-12">
         <div class="alert alert-info">
@@ -223,9 +257,35 @@
             <label for="manifiesto4">{{ solicitudEnum.MANIFIESTO_4 }}</label>
           </div>
         </div>
+        @if(registroForm.get('manifiesto4')?.touched &&
+        registroForm.get('manifiesto4')?.invalid) {
+        <div class="mensaje-error">Este campo es obligatorio</div>
+        }
       </div>
     </div>
-    }    
+    @if (solicitudState.homologacion && solicitudState.renovacion) {
+    <div class="row mt-5">
+      <div class="col-md-12">
+        <div class="alert alert-info">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            formControlName="manifiesto2"
+            (change)="
+              setValoresStore(registroForm, 'manifiesto2', 'setManifiesto2')
+            "
+          />
+          <div class="manifiesto-descripcion">
+            <label for="manifiesto2">{{ solicitudEnum.MANIFIESTO_2 }}</label>
+          </div>
+        </div>
+        @if(registroForm.get('manifiesto2')?.touched &&
+        registroForm.get('manifiesto2')?.invalid) {
+        <div class="mensaje-error">Este campo es obligatorio</div>
+        }
+      </div>
+    </div>
+    } }
     <div class="row mt-5">
       <div class="col-md-12">
         <div class="alert alert-info">
@@ -241,8 +301,19 @@
             <label for="manifiesto5">{{ solicitudEnum.MANIFIESTO_3 }}</label>
           </div>
         </div>
+        @if(registroForm.get('manifiesto5')?.touched &&
+        registroForm.get('manifiesto5')?.invalid) {
+        <div class="mensaje-error">Este campo es obligatorio</div>
+        }
       </div>
     </div>
   </ng-container>
   }
 </form>
+
+@if (nuevaAlertaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaAlertaNotificacion">
+  </lib-notificaciones>
+</section>
+}

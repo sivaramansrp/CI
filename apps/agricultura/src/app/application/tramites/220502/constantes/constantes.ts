@@ -6,24 +6,99 @@ import { MercanciasLista } from '../models/datos-generales.model';
  * Constantes para el catálogo de tipos de solicitud
  */
 export const CATALOGOS_ID = {
+  /**
+   * Catálogo de tipos de solicitud.
+   */
   CAT_TIPO_SOL: 'tipos-solicitud',
+
+  /**
+   * Catálogo de países.
+   */
   CAT_PAISES: 'paises',
+
+  /**
+   * Catálogo de aduanas.
+   */
   CAT_ADUANAS: 'aduanas',
+
+  /**
+   * Identificador del catálogo de secciones de aduanas.
+   */
   CAT_SECCION_ADUANAS: 25,
+
+  /**
+   * Identificador para los datos generales de la solicitud.
+   */
   DATOS_GNRLS_SOL: 5,
+
+  /**
+   * Catálogo de tipos de documento.
+   */
   CAT_TIPO_DOCUMENTO: 'tipos-documento',
+
+  /**
+   * Identificador del catálogo de tipos de operación.
+   */
   CAT_TIPO_OPERACION: 26,
+
+  /**
+   * Catálogo de medios de transporte.
+   */
   CAT_MEDIO_DE_TRANSPORTE: 'medio-de-transporte',
+
+  /**
+   * Catálogo de regímenes de mercancía.
+   */
   CAT_REGIMEN_MERCANCIA: 'regimen-mercancia',
+
+  /**
+   * Catálogo de clasificación de régimen.
+   */
   CAT_CLASIFI_REGIMEN: 'clasifi-regimen',
+
+  /**
+   * Catálogo de fracciones arancelarias.
+   */
   CAT_FRACCION_ARANCELARIA: 'fraccion-arancelaria',
+
+  /**
+   * Catálogo de NICO (Número de Identificación Comercial).
+   */
   CAT_NICO: 'nico',
+
+  /**
+   * Catálogo de unidades de medida tarifaria.
+   */
   CAT_UNIDAD_MEDIDA_TARIFARIA: 'unidad-medida-tarifaria',
+
+  /**
+   * Catálogo de países de origen.
+   */
   CAT_PAIS_ORIGEN: 'pais-origen',
+
+  /**
+   * Catálogo de países de destino.
+   */
   CAT_PAIS_DESTINO: 'pais-destino',
+
+  /**
+   * Catálogo de molinos.
+   */
   CAT_MOLINO: 'molino',
+
+  /**
+   * Catálogo de estados.
+   */
   CAT_ESTADO: 'estado',
+
+  /**
+   * Catálogo de representaciones federales.
+   */
   CAT_REPRESENTACION_FEDERAL: 'representacion-federal',
+
+  /**
+   * Identificador para los datos de persona física.
+   */
   DATOS_PERSONA_FISICA: 21,
 };
 
@@ -85,15 +160,26 @@ export const MERCANCIAS_LISTA: MercanciasLista[] = [
     paisprocedencia: 'País de procedencia',
     certificadoInternacionalElectronico:
       'Certificado Internacional Electrónico',
-  }
+  },
 ];
 
 /**
  * Constante que define el parámetro utilizado para determinar el tipo de datos a mostrar.
  */
 export const PARAMETERO = {
+  /**
+   * Acción que permite al funcionario evaluar el procedimiento.
+   */
   EVALUAR: 'FLUJO_FUNCIONARIO_EVALUAR',
+
+  /**
+   * Acción que permite consultar la información de un procedimiento.
+   */
   READ_PROCEDEMENTO: 'READ_PROCEDURE',
+
+  /**
+   * Acción relacionada con los trámites subsecuentes.
+   */
   SUBSECUENTES: 'SUBSECUENTES',
 };
 
@@ -107,9 +193,24 @@ export const PARAMETERO = {
  * @property {any[]} catalogos - Lista de elementos para llenar el selector correspondiente.
  */
 export const ADUANA_INGRESO = {
+  /**
+   * Etiqueta que se mostrará en el formulario.
+   */
   labelNombre: 'Aduana de ingreso',
+
+  /**
+   * Indica si el campo es obligatorio.
+   */
   required: false,
-  primerOpcion: 'Selecciona un opción',
+
+  /**
+   * Texto que se mostrará como primera opción en el menú desplegable.
+   */
+  primerOpcion: 'Selecciona una opción',
+
+  /**
+   * Lista de catálogos disponibles para el campo.
+   */
   catalogos: [],
 };
 
@@ -122,9 +223,24 @@ export const ADUANA_INGRESO = {
  * @property {any[]} catalogos - Lista de opciones disponibles para seleccionar.
  */
 export const OFICIANA_INSPECCION = {
+  /**
+   * Etiqueta que se mostrará en el formulario.
+   */
   labelNombre: 'Oficina de Inspección de Sanidad Agropecuaria',
+
+  /**
+   * Indica si el campo es obligatorio.
+   */
   required: false,
-  primerOpcion: 'Selecciona un opción',
+
+  /**
+   * Texto que se mostrará como primera opción en el menú desplegable.
+   */
+  primerOpcion: 'Selecciona una opción',
+
+  /**
+   * Lista de catálogos disponibles para el campo.
+   */
   catalogos: [],
 };
 
@@ -137,9 +253,24 @@ export const OFICIANA_INSPECCION = {
  * @property {any[]} catalogos - Lista de opciones disponibles para seleccionar.
  */
 export const PUNTO_INSPECCION = {
+  /**
+   * Etiqueta que se mostrará en el formulario.
+   */
   labelNombre: 'Punto de inspección',
+
+  /**
+   * Indica si el campo es obligatorio.
+   */
   required: false,
-  primerOpcion: 'Selecciona un opción',
+
+  /**
+   * Texto que se mostrará como primera opción en el menú desplegable.
+   */
+  primerOpcion: 'Selecciona una opción',
+
+  /**
+   * Lista de catálogos disponibles para el campo.
+   */
   catalogos: [],
 };
 
@@ -152,9 +283,24 @@ export const PUNTO_INSPECCION = {
  * @property {any[]} catalogos - Lista de opciones disponibles para seleccionar.
  */
 export const ESTABLECIMIENTO = {
+  /**
+   * Etiqueta que se mostrará en el formulario.
+   */
   labelNombre: 'Establecimiento TIF',
+
+  /**
+   * Indica si el campo es obligatorio.
+   */
   required: false,
-  primerOpcion: 'Selecciona un opción',
+
+  /**
+   * Texto que se mostrará como primera opción en el menú desplegable.
+   */
+  primerOpcion: 'Selecciona una opción',
+
+  /**
+   * Lista de catálogos disponibles para el campo.
+   */
   catalogos: [],
 };
 
@@ -167,9 +313,24 @@ export const ESTABLECIMIENTO = {
  * @property {any[]} catalogos - Lista de opciones disponibles para seleccionar.
  */
 export const REGIMEN_DESTINARAN = {
+  /**
+   * Etiqueta que se mostrará en el formulario.
+   */
   labelNombre: 'Régimen al que se destinará la mercancía',
+
+  /**
+   * Indica si el campo es obligatorio.
+   */
   required: false,
-  primerOpcion: 'Selecciona un opción',
+
+  /**
+   * Texto que se mostrará como primera opción en el menú desplegable.
+   */
+  primerOpcion: 'Selecciona una opción',
+
+  /**
+   * Lista de catálogos disponibles para el campo.
+   */
   catalogos: [],
 };
 
@@ -182,9 +343,24 @@ export const REGIMEN_DESTINARAN = {
  * @property {any[]} catalogos - Lista de opciones disponibles para seleccionar.
  */
 export const MOVILIZACION_NACIONAL = {
+  /**
+   * Etiqueta que se mostrará en el formulario.
+   */
   labelNombre: 'Datos para movilización nacional',
+
+  /**
+   * Indica si el campo es obligatorio.
+   */
   required: false,
-  primerOpcion: 'Selecciona un opción',
+
+  /**
+   * Texto que se mostrará como primera opción en el menú desplegable.
+   */
+  primerOpcion: 'Selecciona una opción',
+
+  /**
+   * Lista de catálogos disponibles para el campo.
+   */
   catalogos: [],
 };
 
@@ -197,9 +373,24 @@ export const MOVILIZACION_NACIONAL = {
  * @property {any[]} catalogos - Lista de opciones disponibles para seleccionar.
  */
 export const PUNTO_VERIFICACION = {
+  /**
+   * Etiqueta que se mostrará en el formulario.
+   */
   labelNombre: 'Punto de verificación federal',
+
+  /**
+   * Indica si el campo es obligatorio.
+   */
   required: false,
-  primerOpcion: 'Selecciona un opción',
+
+  /**
+   * Texto que se mostrará como primera opción en el menú desplegable.
+   */
+  primerOpcion: 'Selecciona una opción',
+
+  /**
+   * Lista de catálogos disponibles para el campo.
+   */
   catalogos: [],
 };
 
@@ -212,9 +403,24 @@ export const PUNTO_VERIFICACION = {
  * @property {any[]} catalogos - Lista de opciones disponibles para seleccionar.
  */
 export const EMPRESA_TRANSPORTISTA = {
+  /**
+   * Etiqueta que se mostrará en el formulario.
+   */
   labelNombre: 'Nombre de la empresa transportista',
+
+  /**
+   * Indica si el campo es obligatorio.
+   */
   required: false,
-  primerOpcion: 'Selecciona un opción',
+
+  /**
+   * Texto que se mostrará como primera opción en el menú desplegable.
+   */
+  primerOpcion: 'Selecciona una opción',
+
+  /**
+   * Lista de catálogos disponibles para el campo.
+   */
   catalogos: [],
 };
 
@@ -326,9 +532,24 @@ export const CONFIGURACION_MERCANCIAS_COLUMNAS: ConfiguracionColumna<MercanciasL
  * @property {any[]} catalogos - Lista de opciones disponibles para seleccionar.
  */
 export const CERTIFICADOS_AUTORIZADOS = {
+  /**
+   * Etiqueta que se mostrará en el formulario.
+   */
   labelNombre: 'Certificados autorizados pendientes',
+
+  /**
+   * Indica si el campo es obligatorio.
+   */
   required: true,
-  primerOpcion: 'Selecciona un opción',
+
+  /**
+   * Texto que se mostrará como primera opción en el menú desplegable.
+   */
+  primerOpcion: 'Selecciona una opción',
+
+  /**
+   * Lista de catálogos disponibles para el campo.
+   */
   catalogos: [],
 };
 
@@ -341,9 +562,24 @@ export const CERTIFICADOS_AUTORIZADOS = {
  * @property {any[]} catalogos - Lista de opciones disponibles para seleccionar.
  */
 export const HORA_DE_INSPECCION = {
+  /**
+   * Etiqueta que se mostrará en el formulario.
+   */
   labelNombre: 'Hora de inspección',
+
+  /**
+   * Indica si el campo es obligatorio.
+   */
   required: true,
-  primerOpcion: 'Selecciona un opción',
+
+  /**
+   * Texto que se mostrará como primera opción en el menú desplegable.
+   */
+  primerOpcion: 'Selecciona una opción',
+
+  /**
+   * Lista de catálogos disponibles para el campo.
+   */
   catalogos: [],
 };
 
@@ -356,9 +592,24 @@ export const HORA_DE_INSPECCION = {
  * @property {any[]} catalogos - Lista de opciones disponibles para seleccionar.
  */
 export const ADUANA_DE_INGRESO = {
+  /**
+   * Etiqueta que se mostrará en el formulario.
+   */
   labelNombre: 'Aduana de ingreso',
+
+  /**
+   * Indica si el campo es obligatorio.
+   */
   required: false,
-  primerOpcion: 'Selecciona un opción',
+
+  /**
+   * Texto que se mostrará como primera opción en el menú desplegable.
+   */
+  primerOpcion: 'Selecciona una opción',
+
+  /**
+   * Lista de catálogos disponibles para el campo.
+   */
   catalogos: [],
 };
 
@@ -371,9 +622,24 @@ export const ADUANA_DE_INGRESO = {
  * @property {any[]} catalogos - Lista de opciones disponibles para seleccionar.
  */
 export const SANIDAD_AGROPECUARIA = {
+  /**
+   * Etiqueta que se mostrará en el formulario.
+   */
   labelNombre: 'Oficina de inspección de Sanidad Agropecuaria',
+
+  /**
+   * Indica si el campo es obligatorio.
+   */
   required: false,
-  primerOpcion: 'Selecciona un opción',
+
+  /**
+   * Texto que se mostrará como primera opción en el menú desplegable.
+   */
+  primerOpcion: 'Selecciona una opción',
+
+  /**
+   * Lista de catálogos disponibles para el campo.
+   */
   catalogos: [],
 };
 
@@ -386,9 +652,24 @@ export const SANIDAD_AGROPECUARIA = {
  * @property {any[]} catalogos - Lista de opciones disponibles para seleccionar.
  */
 export const PUNTO_DE_INSPECCION = {
+  /**
+   * Etiqueta mostrada en el formulario.
+   */
   labelNombre: 'Punto de inspección',
+
+  /**
+   * Indica si el campo es obligatorio.
+   */
   required: false,
-  primerOpcion: 'Selecciona un opción',
+
+  /**
+   * Texto que se mostrará como primera opción en el menú desplegable.
+   */
+  primerOpcion: 'Selecciona una opción',
+
+  /**
+   * Lista de catálogos disponibles para el campo.
+   */
   catalogos: [],
 };
 
@@ -401,8 +682,34 @@ export const PUNTO_DE_INSPECCION = {
  * @property {any[]} catalogos - Lista de opciones disponibles para seleccionar.
  */
 export const TIPO_CONTENEDOR = {
+  /**
+   * Etiqueta mostrada en el formulario.
+   */
   labelNombre: 'Tipo contenedor',
+
+  /**
+   * Indica si el campo es obligatorio.
+   */
   required: false,
-  primerOpcion: 'Selecciona un opción',
+
+  /**
+   * Texto que se mostrará como primera opción en el select.
+   */
+  primerOpcion: 'Selecciona una opción',
+
+  /**
+   * Lista de catálogos disponibles para el campo.
+   */
   catalogos: [],
 };
+
+/**
+ * @constant PROCEDURE_ID
+ * @description
+ * Identificador único del procedimiento relacionado con el trámite 220502.
+ * Se utiliza en el componente/servicio para asociar operaciones y
+ * configuraciones a este trámite específico.
+ *
+ * @type {number}
+ */
+export const PROCEDURE_ID = 220502;
