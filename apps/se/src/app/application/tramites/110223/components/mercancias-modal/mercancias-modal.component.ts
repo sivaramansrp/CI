@@ -1,12 +1,14 @@
-import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, Notificacion, NotificacionesComponent } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Observable, Subject,delay, of, takeUntil } from 'rxjs';
-import { CertificadosOrigenGridService } from '../../services/certificadosOrigenGrid.service';
-import { CommonModule } from '@angular/common';
-import { Mercancias } from '../../models/plantas-consulta.model';
-import { Tramite110204Query } from '../../estados/tramite110204.query';
-import { Tramite110204Store } from '../../estados/tramite110204.store';
+import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, Notificacion, NotificacionesComponent, RespuestaCatalogos } from "@libs/shared/data-access-user/src";
+import { Component,EventEmitter, Input, OnDestroy, OnInit, Output} from "@angular/core";
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import {Observable,Subject, delay, of, takeUntil } from "rxjs";
+import { CertificadosOrigenService } from "../../services/certificado-origen.service";
+import { CommonModule } from "@angular/common";
+import { Mercancia } from "../../../../shared/models/modificacion.enum";
+
+import { Tramite110223Query } from "../../query/tramite110223.query";
+import { Tramite110223Store } from "../../estados/Tramite110223.store";
+
 /**
  * Constante que representa la configuración de la fecha final.
  * 
@@ -57,7 +59,32 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    * @property {FormGroup} mercanciaForm
    * @description Formulario reactivo que captura los datos de la mercancía en el modal.
    */
-  mercanciaForm!: FormGroup;
+  mercanciaForm: FormGroup= this.fb.group({
+    id:[],
+  fraccionArancelaria: [{ value: '', disabled: true }],  
+  numeroDeRegistrodeProductos: [{ value: '', disabled: true }], 
+  fechaExpedicion: [{ value: '', disabled: true }],     
+  fechaVencimiento: [{ value: '', disabled: true }],    
+  nombreTecnico: [{ value: '', disabled: true }],
+  nombreComercial: [{ value: '', disabled: true }],
+  normaOrigen: [{ value: '', disabled: true }],
+  cantidad: ['', [Validators.required]],
+  umc: ['', [Validators.required]],
+  tipoFactura: ['', [Validators.required]],
+  valorMercancia: ['', [Validators.required]],
+  fechaFinalInput: ['', [Validators.required]],
+  numeroFactura: ['', [Validators.required]],
+  unidadMedidaMasaBruta: [''],                          
+  complementoClasificacion: ['', [Validators.required]],
+  complementoDescripcion: [''],                       
+  fraccionNaladi: [{ value: '', disabled: true }],
+  fraccionNaladiSa93: [{ value: '', disabled: true }],
+  fraccionNaladiSa96: [{ value: '', disabled: true }],
+  fraccionNaladiSa02: [{ value: '', disabled: true }],
+  nalad: ['']                                         
+});
+
+
 
   /**
    * @property {EventEmitter<any>} guardarClicado
@@ -78,14 +105,15 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    */
   @Output() tablaSeleccionEvent = new EventEmitter();
 
+  
+
 
   /**
  * Array de datos a mostrar en la tabla.
  * Cada elemento de este array representa una fila de la tabla.
  *
  * @type {T[]}
- */
-  @Input() datosSeleccionados!: Mercancias;
+ */ datosSeleccionados!: Mercancia;
   /**
    * Subject utilizado para gestionar el ciclo de vida del componente y cancelar l`as suscripciones.
    */
@@ -120,6 +148,11 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    * Se utiliza para mostrar mensajes de alerta, éxito o información al usuario dentro del componente.
    */
   nuevaNotificacion!: Notificacion;
+    /**
+     * Observable que emite los datos de la mercancia en formato tabla.
+     * @type {Observable<Mercancia[]>}
+     */
+    datosTabla$: Observable<Mercancia[]> = of([]);
 
   /**
    * Constructor del componente MercanciasModalComponent.
@@ -131,13 +164,14 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    public store: Tramite110204Store,
-    public tramiteQuery: Tramite110204Query,
-    public certificadoService: CertificadosOrigenGridService,
+    public store: Tramite110223Store,
+    public tramiteQuery: Tramite110223Query,
+    public certificadoService: CertificadosOrigenService,
   ) {
 
     this.tramiteQuery?.formMercancia$?.pipe(
       takeUntil(this.destroyNotifier$)).subscribe((estado) => {
+
       // eslint-disable-next-line dot-notation
       if (!this.actualizandoFormulario && estado && estado['fraccionNaladiSa02']) {
         this.actualizandoFormulario = true;
@@ -147,6 +181,15 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
     });
     this.facturas$ = this.tramiteQuery.selectFactura$;
     this.umcs$ = this.tramiteQuery.selectUmc$;
+    this.datosTabla$ = this.tramiteQuery.selectmercanciaTabla$;
+    // Suscríbete a los cambios de selectedMercancia para actualizar datosSeleccionados
+    this.tramiteQuery.select(state => state.selectedMercancia)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((selected) => {
+      this.datosSeleccionados = selected as Mercancia;
+      this.parchearValoresDelFormulario();
+      });
+    
 
   }
 
@@ -155,23 +198,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    * Inicializa el formulario reactivo de mercancías y configura las suscripciones necesarias.
    */
   ngOnInit(): void {
-    this.mercanciaForm = this.fb.group({
-      fraccionNaladi: [{ value: '', disabled: true }],
-      fraccionNaladiSa93: [{ value: '', disabled: true }],
-      fraccionNaladiSa96: [{ value: '', disabled: true }],
-      fraccionNaladiSa02: [{ value: '', disabled: true }],
-      nombreComercial: [{ value: '', disabled: true }],
-      nombreTecnico: [{ value: '', disabled: true }],
-      normaOrigen: [{ value: '', disabled: true }],
-      cantidad: ['',[Validators.required]],
-      umc: ['', [Validators.required]],
-      valorMercancia: ['', [Validators.required]],
-      complementoClasificacion: ['', [Validators.required]],
-      fechaFinalInput: ['',[Validators.required]],
-      numeroFactura: ['', [Validators.required]],
-      tipoFactura: ['', [Validators.required]]
-    });
-
+   
     this.parchearValoresDelFormulario();
     this.cargarFactura();
     this.cargarUmc();
@@ -194,6 +221,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
 
     if (this.datosSeleccionados) {
       this.mercanciaForm.patchValue({
+        id:this.datosSeleccionados.id|| 0 ,
         fraccionNaladi: this.datosSeleccionados.fraccionNaladi,
         fraccionNaladiSa93: this.datosSeleccionados.fraccionNaladiSa93,
         fraccionNaladiSa96: this.datosSeleccionados.fraccionNaladiSa96,
@@ -203,11 +231,15 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
         normaOrigen: this.datosSeleccionados.normaOrigen,
         cantidad: this.datosSeleccionados.cantidad,
         umc: this.datosSeleccionados.umc,
+        unidadMedidaMasaBruta:this.datosSeleccionados.unidadMedidaMasaBruta,
         valorMercancia: this.datosSeleccionados.valorMercancia,
         complementoClasificacion: this.datosSeleccionados.complementoClasificacion,
         fechaFinalInput: this.datosSeleccionados.fechaFinalInput,
         numeroFactura: this.datosSeleccionados.numeroFactura,
-        tipoFactura: this.datosSeleccionados.tipoFactura
+        tipoFactura: this.datosSeleccionados.tipoFactura,
+        nalad:this.datosSeleccionados.nalad,
+        complementoDescripcion:this.datosSeleccionados.complementoDescripcion
+
       });
     }
   }
@@ -247,9 +279,8 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    * @param nuevo_valor Nuevo valor de la fecha final.
    */
     public cambioFechaFinal(nuevo_valor: string): void {
-
-      this.mercanciaForm.get('fechaFinal')?.setValue(nuevo_valor);
-      this.mercanciaForm.get('fechaFinal')?.markAsUntouched();
+      this.mercanciaForm.get('fechaFinalInput')?.setValue(nuevo_valor);
+      this.mercanciaForm.get('fechaFinalInput')?.markAsUntouched();
     }
   
 
@@ -258,11 +289,11 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    */
   cargarUmc(): void {
     this.certificadoService
-      .obtenerUmc()
+      .getUMC()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
-        (data: Catalogo[]) => {
-          this.store.setUmc(data)
+        (data: RespuestaCatalogos) => {
+          this.store.setUmc(data.data)
         },
         (error) => {
           console.error('Error al cargar los estados:', error);
@@ -271,6 +302,10 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
   }
 
   activarModal(): void {
+    if(this.mercanciaForm.invalid){
+this.mercanciaForm.markAllAsTouched();
+    }
+    else{
     this.mostrarAlerta = true;
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
@@ -284,25 +319,31 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
       txtBtnCancelar: '',
     }
   }
+  }
 
   /**
    * Dispara el evento para guardar los datos del formulario y muestra una alerta.
    */
   aceptar(): void {
-    this.guardarClicado.emit(this.mercanciaForm.value);
-    this.store.setMercanciaTabla([this.mercanciaForm.value]);
+    const FORM_VALUE: Mercancia = this.mercanciaForm.getRawValue();
+
+    if (!FORM_VALUE.id) {
+      FORM_VALUE.id = Math.floor(Math.random() * 1000); // random ID if new
+    }
+
+    this.store.upsertMercancia(FORM_VALUE);
+
     if (this.mostrarAlerta) {
       of(null)
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          delay(100))
+        .pipe(delay(100), takeUntil(this.destroyNotifier$))
         .subscribe(() => {
           this.cerrarModal();
-          this.tablaSeleccionEvent.emit(true);
         });
     }
   }
   cerrarModal(): void {
+    this.store.clearSelectedMercancia();
+    this.mercanciaForm.reset();
     this.cerrarClicado.emit();
       this.mostrarAlerta = false;
   }
@@ -311,6 +352,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    * Cancela las suscripciones al destruir el componente.
    */
   ngOnDestroy(): void {
+    this.mercanciaForm.reset();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }

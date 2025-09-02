@@ -3,7 +3,7 @@ import { Tramite110202Store, TramiteState } from '../estados/tramite110202.store
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Mercancia } from '../models/configuracion-columna.model';
+import { Mercancia } from '../../../shared/models/modificacion.enum';
 
 @Injectable({
   providedIn: 'root'
