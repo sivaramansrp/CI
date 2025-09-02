@@ -420,11 +420,26 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
   @Output() formaValida: EventEmitter<boolean> = new EventEmitter<boolean>(
     false
   );
-  
-  @Output() guardarClicadoChange = new EventEmitter<Mercancia[]>(); 
+ /**
+ * @descripcion
+ * Evento que se emite cuando se hace clic en **guardar** en la tabla de mercancías.
+ * Envía un arreglo de objetos `Mercancia` hacia el componente padre.
+ */
+@Output() guardarClicadoChange = new EventEmitter<Mercancia[]>();
 
-   @Output() seleccionado = new EventEmitter<Mercancia>();
-   tableErrorMensajeError: boolean = false;
+/**
+ * @descripcion
+ * Evento que se emite cuando una mercancía es **seleccionada** en la tabla.
+ * Envía el objeto `Mercancia` seleccionado al componente padre.
+ */
+@Output() seleccionado = new EventEmitter<Mercancia>();
+
+/**
+ * @descripcion
+ * Bandera para indicar si hay un error de validación en la tabla.
+ * Se utiliza para mostrar mensajes de error al usuario.
+ */
+tableErrorMensajeError: boolean = false;
 
 
   /**
