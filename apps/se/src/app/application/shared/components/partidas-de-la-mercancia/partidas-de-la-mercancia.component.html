@@ -245,15 +245,14 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label class="form-label" for="cantidad">Cantidad<span 
-                     [ngClass]="{'text-danger': esInvalidoModal('cantidadPartidasDeLaMercancia')}"
+                     [ngClass]="{'text-danger': mostrarErroresModal && esInvalidoModal('cantidadPartidasDeLaMercancia')}"
                      >*</span>:</label>
                   <input class="form-control" type="text" id="cantidad"
                          formControlName="cantidadPartidasDeLaMercancia"
                          maxlength="18" 
                          appUppercase aria-labelledby="cantidad" 
-                         [ngClass]="{'is-invalid': esInvalidoModal('cantidadPartidasDeLaMercancia')}"
-                  />
-                  <div *ngIf="modificarPartidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.touched && modificarPartidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.invalid" class="text-danger">
+                         [ngClass]="{'is-invalid': mostrarErroresModal && modificarPartidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.invalid}"/>
+                  <div *ngIf="mostrarErroresModal && modificarPartidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.touched && modificarPartidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.invalid" class="text-danger">
                     <small *ngIf="modificarPartidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.hasError('required')">La cantidad debe ser mayor a cero</small>
                     <small *ngIf="modificarPartidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.hasError('noEsNumero')">La cantidad debe ser un dato numérico.</small>
                     <small *ngIf="modificarPartidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.value === '0' || modificarPartidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.value === 0">La cantidad debe ser mayor a cero.</small>
@@ -264,13 +263,13 @@
               <div class="col-md-7">
                 <div class="form-group">
                   <label class="form-label" for="descripcion">Descripción<span
-                     [ngClass]="{'text-danger': esInvalidoModal('descripcionPartidasDeLaMercancia')}"
+                     [ngClass]="{'text-danger': mostrarErroresModal && esInvalidoModal('descripcionPartidasDeLaMercancia')}"
                      >*</span>: </label>
                   <textarea class="form-control height" rows="3" id="descripcion"
                             formControlName="descripcionPartidasDeLaMercancia"
                             [maxlength]="254" aria-labelledby="descripcion"
-                            [ngClass]="{'input-error': esInvalidoModal('descripcionPartidasDeLaMercancia')}"></textarea>
-                  <div *ngIf="modificarPartidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.touched && modificarPartidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.invalid" class="text-danger">
+                            [ngClass]="{'is-invalid': mostrarErroresModal && modificarPartidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.invalid}" ></textarea>
+                  <div *ngIf="mostrarErroresModal && modificarPartidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.touched && modificarPartidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.invalid" class="text-danger">
                     <small *ngIf="modificarPartidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.hasError('required')">Debe agregar una descripción.</small>
                   </div>
                 </div>
@@ -280,13 +279,13 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label class="form-label" for="valorPartidaUSD">Valor partida USD<span
-                     [ngClass]="{'text-danger': esInvalidoModal('valorPartidaUSDPartidasDeLaMercancia')}"
+                     [ngClass]="{'text-danger': mostrarErroresModal && esInvalidoModal('valorPartidaUSDPartidasDeLaMercancia')}"
                      >*</span>:</label>
                   <input class="form-control" type="text" id="valorPartidaUSD"
                          formControlName="valorPartidaUSDPartidasDeLaMercancia"
                          maxlength="20" aria-labelledby="valorPartidaUSD"
-                         [ngClass]="{'input-error': esInvalidoModal('valorPartidaUSDPartidasDeLaMercancia')}" />
-                  <div *ngIf="modificarPartidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.touched && modificarPartidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.invalid" class="text-danger">
+                         [ngClass]="{'is-invalid': mostrarErroresModal && modificarPartidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.invalid}" />
+                  <div *ngIf="mostrarErroresModal && modificarPartidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.touched && modificarPartidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.invalid" class="text-danger">
                     <small *ngIf="modificarPartidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.hasError('required')">Debe agregar el valor en dólares de la partida.</small>
                     <small *ngIf="modificarPartidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.hasError('noEsNumero')">Debe agregar el valor en dólares de la partida.</small>
                     <small *ngIf="modificarPartidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.value === '0' || modificarPartidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.value === 0">Debe agregar el valor en dólares de la partida.</small>

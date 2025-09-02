@@ -174,6 +174,12 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    */
   @Input() mostrarErrores: boolean = false;
 
+  /*
+   * @Input() mostrarErroresModal
+   * Bandera que indica si se deben mostrar los mensajes de error en el modal.
+   */
+  mostrarErroresModal = false;
+
   /**
    * Nombre del archivo seleccionado por el usuario.
    */
@@ -403,9 +409,11 @@ setValoresStore(form: FormGroup, campo: string): void {
 validarModificarPartida(): void {
   
   if (this.modificarPartidasDelaMercanciaForm.invalid) {
+    this.mostrarErroresModal = true;
     this.modificarPartidasDelaMercanciaForm.markAllAsTouched();
     return;
   }
+  this.mostrarErroresModal = false;
    const PREV = this.selectedRows[0];
   if (!PREV) { return; }
 
